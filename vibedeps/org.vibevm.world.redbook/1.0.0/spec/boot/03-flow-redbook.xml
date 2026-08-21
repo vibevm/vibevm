@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: redbook</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="PROJECT-FOLLOWS-THE-REDBOOK" status="impl/done">This project follows the **redbook** — a collection of AI-native
+development practices, each installed as its own flow with its own
+boot snippet and protocol documents.</fact></p>
+  <p><fact id="THIS-SNIPPET-ONLY-NAMES-THE-COLLECTION" status="impl/done">This snippet only names the
+collection; the members carry the actual rules.</fact></p>
+  <section id="spirit-source" title="The source of the spirit">
+    <p><fact id="practices-distilled-from-the-book" status="spec/done">The practices are distilled from the book *AI-native development*.</fact></p>
+    <p><fact id="THE-BOOK-SHIPS-IN-THIS-PACKAGE" status="impl/done">The book itself ships in this package at `spec/book/ru/` (currently
+in Russian — see `spec/book/README.md` for the edition plan).</fact></p>
+    <p><fact id="spirit-of-the-process-lead" status="spec/done">**The
+general spirit of the process comes from the book**:</fact></p>
+    <list ordered="false">
+      <item><fact id="SPIRIT-TWO-PROCESSES-ONE-TASK" status="spec/done">two processes
+  working one task,</fact></item>
+      <item><fact id="SPIRIT-FILES-AS-THE-ONLY-SHARED-MEMORY" status="spec/done">files as the only shared memory,</fact></item>
+      <item><fact id="SPIRIT-DECISIONS-RECORDED-WITH-THEIR-REASONS" status="spec/done">decisions
+  recorded with their reasons,</fact></item>
+      <item><fact id="SPIRIT-ONE-COMMIT-PER-THOUGHT" status="spec/done">one commit per thought.</fact></item>
+    </list>
+    <p><fact id="DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT" status="impl/done">Do **not** read the book at session boot — it is reference depth,
+not standing instructions.</fact></p>
+    <p><fact id="OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES" status="impl/done">Open a chapter when a philosophy question
+actually arises; the members' boot snippets carry everything a
+session needs.</fact></p>
+  </section>
+  <section id="member-list" title="The members (edition 1.0.0)">
+    <p><fact id="books-core-list-lead" status="impl/done">The book's core — the four IPC requirements and the memory model:</fact></p>
+    <list ordered="false">
+      <item><fact id="MEMBER-TWO-PROCESS-MODEL" status="impl/done">`two-process-model` — the foundation: human and AI as
+  coprocessors; the human owns coherence; files are the IPC.</fact></item>
+      <item><fact id="MEMBER-WAL" status="impl/done">`wal` — the checkpoint file and cold-resume snapshot; session
+  wind-down and resume rituals.</fact></item>
+      <item><fact id="MEMBER-SYNC-FROM-CODE" status="impl/done">`sync-from-code` — the sanctioned reverse path when code changed
+  before the spec.</fact></item>
+      <item><fact id="MEMBER-ATOMIC-COMMITS" status="impl/done">`git-atomic-commits` — one commit, one idea; Conventional Commits;
+  pushed history is frozen.</fact></item>
+      <item><fact id="MEMBER-ADDRESSABLE-SPECS" status="impl/done">`addressable-specs` — `spec://` URIs and stable anchors; correct
+  the agent in twenty tokens.</fact></item>
+      <item><fact id="MEMBER-DECISION-RECORDS" status="impl/done">`decision-records` — record decisions with reasons and revisit
+  triggers, at the anchor they govern.</fact></item>
+      <item><fact id="MEMBER-CONFLICT-PROTOCOL" status="impl/done">`conflict-protocol` — Human &gt; Spec &gt; Tests &gt; Code; REVIEW markers;
+  the conservative-default uncertainty path.</fact></item>
+      <item><fact id="MEMBER-CAMPAIGN-PLANS" status="impl/done">`campaign-plans` — cold-executable plans with phase gates,
+  falsifiable predictions, and an execution ledger.</fact></item>
+      <item><fact id="MEMBER-DISCOVERY-PROMPT" status="impl/done">`discovery-prompt` — the structured collaborative-research prompt
+  for open-ended sessions.</fact></item>
+      <item><fact id="MEMBER-ATTRIBUTION-POLICY" status="impl/done">`git-attribution-policy` — the deliberate authorship posture
+  (human-authored surface by default).</fact></item>
+    </list>
+    <p><fact id="project-practice-list-lead" status="impl/done">The project-practice wave — running a project over the long haul:</fact></p>
+    <list ordered="false">
+      <item><fact id="MEMBER-OPERATING-MODES" status="impl/done">`operating-modes` — codeword-triggered postures; red lines that
+  survive every mode.</fact></item>
+      <item><fact id="MEMBER-HEALTH-AUDIT" status="impl/done">`health-audit` — the periodic judgment sweep over what the gate
+  cannot see.</fact></item>
+      <item><fact id="MEMBER-MANUAL-TESTS" status="impl/done">`manual-tests` — human-runnable walkthroughs for the integration
+  surfaces automation cannot prove.</fact></item>
+      <item><fact id="MEMBER-SECRETS-HYGIENE" status="impl/done">`secrets-hygiene` — surface-secrets never printed or persisted;
+  scope discipline; third-party-code consent.</fact></item>
+      <item><fact id="MEMBER-LICENSING" status="impl/done">`licensing` — a deliberate licence posture; permissive-only
+  dependencies; the EULA-to-open path.</fact></item>
+      <item><fact id="MEMBER-SOURCE-MIRRORS" status="impl/done">`source-mirrors` — single-writer multi-homing; fail-loud
+  fast-forward-only fan-out.</fact></item>
+      <item><fact id="MEMBER-SPEC-GENRES" status="impl/done">`spec-genres` — contract vs lore vs research vs plans; what goes
+  where and who wins.</fact></item>
+      <item><fact id="MEMBER-COMPARATIVE-RESEARCH" status="impl/done">`comparative-research` — evergreen competitor studies with two-way
+  gap analysis and roadmap deltas.</fact></item>
+      <item><fact id="MEMBER-MANAGED-BLOCKS" status="impl/done">`managed-blocks` — how a tool writes into files it does not own
+  (for tool authors).</fact></item>
+      <item><fact id="MEMBER-QUALIFIED-NAMING" status="impl/done">`qualified-naming` — namespaces for package ecosystems (for
+  ecosystem designers).</fact></item>
+      <item><fact id="MEMBER-TOOL-DESIGN-LESSONS" status="impl/done">`tool-design-lessons` — paid-for lessons for self-updating tools
+  and package systems.</fact></item>
+    </list>
+    <p><fact id="cultural-extraction-list-lead" status="impl/done">The cultural-extraction wave — host-scale organisation:</fact></p>
+    <list ordered="false">
+      <item><fact id="MEMBER-DEV-RUNTIME-DOCS" status="impl/done">`dev-runtime-docs` — the running-notes discipline for a project's
+  development-runtime documents.</fact></item>
+      <item><fact id="MEMBER-WAL-SPECSPACES" status="impl/done">`wal-specspaces` — nested projects (specspaces), each carrying its
+  own boot contract, WAL, and cold-resume file.</fact></item>
+    </list>
+    <p><fact id="AN-EDITION-IS-A-TESTED-SET" status="impl/done">An **edition** is a tested set: the umbrella pins every member
+exactly, and the umbrella's version is the edition number.</fact></p>
+    <p><fact id="MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS" status="impl/done">Individual
+members may move ahead on their own lines between editions.</fact></p>
+  </section>
+</spec>

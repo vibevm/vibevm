@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Terraform a Rust codebase (brownfield adoption)</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="EXECUTING-THE-BROWNFIELD-PROTOCOL" status="impl/done">You are executing the BROWNFIELD protocol
+(`spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1` — shipped
+copy under `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/mechanisms/`;
+read it before the first phase, and skim `03-RAID-PLAYBOOK` +
+`05-CAMPAIGN-FORM` for the campaign machinery).</fact></p>
+  <p><fact id="founding-principles-lead" status="impl/done">The founding principles:</fact></p>
+  <list ordered="false">
+    <item><fact id="PRINCIPLE-INVENTORY-NOT-GATE" status="impl/done">**inventory, not gate** (the only precondition is "the workspace
+  compiles");</fact></item>
+    <item><fact id="PRINCIPLE-ASPIRATION-MUST-BE-LABELED" status="impl/done">**aspiration is legal only when labeled**;</fact></item>
+    <item><fact id="PRINCIPLE-CONTRADICTION-IS-DATA" status="impl/done">**contradiction is
+  data**;</fact></item>
+    <item><fact id="PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD" status="impl/done">**characterization is the truth-of-record**;</fact></item>
+    <item><fact id="PRINCIPLE-MONOTONE-UTILITY" status="impl/done">**monotone utility**.</fact></item>
+  </list>
+  <p><fact id="DO-NOT-BULLDOZE-AN-INHABITED-WORLD" status="impl/done">Do not bulldoze an inhabited world.</fact></p>
+  <p><fact id="TOOLCHAIN-INSTALL-OR-RUN-IN-PLACE" status="impl/done">Toolchain: `rust-ai-native` (install once:
+`cargo install --path vibedeps/&lt;stack-slot&gt;/crates/rust-ai-native-cli`, or run
+via `cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml -p
+rust-ai-native-cli --bin rust-ai-native -- &lt;args&gt;`).</fact></p>
+  <section id="phase-inventory" title="Phase −1 — inventory (record reality; change nothing)">
+    <list ordered="true">
+      <item><fact id="INVENTORY-PRECONDITION" status="impl/done">Precondition: `cargo build --workspace` succeeds. (Red build → fix the
+   build first; that is the one true gate.)</fact></item>
+      <item><fact id="INVENTORY-INIT" status="impl/done">`rust-ai-native init` — policies + empty registries. Every crate
+   starts exempt-with-a-reason; nothing is gated yet, and that is correct.</fact></item>
+      <item><fact id="INVENTORY-TESTS-BASELINE" status="impl/done">**Fill `discipline/registry/tests-baseline.json` with reality:** run
+   the suite once (`cargo nextest run --workspace --no-fail-fast`), record
+   every failing test as `failing-known` with a `since` date and a debt id
+   — do NOT fix them now (drive-by repairs destroy the accounting).</fact></item>
+      <item><fact id="INVENTORY-HARVEST-INTENT" status="impl/done">**Harvest intent** into `discipline/registry/intent.json`: WAL "Next" /
+   TASKS / ROADMAP items, `&lt;!-- REVIEW --&gt;` markers, load-bearing
+   TODO/FIXME. The carry-over guarantee: at exit every harvested intention
+   is done | rescoped | rejected(reason) — zero unaccounted.</fact></item>
+      <item><fact id="INVENTORY-FILE-DEBT" status="impl/done">**File debt** into `discipline/registry/debt.json`: failing tests,
+   known-unimplemented specs, contradictions found while reading — each
+   with severity, evidence, disposition, and `touch:` tripwires on its
+   watched paths.</fact></item>
+      <item><fact id="INVENTORY-CHARACTERIZE" status="impl/done">**Characterize** currently-passing observable behavior (golden
+   transcripts under `discipline/golden/`, normalized for volatile
+   fields): these pin "don't break it" independently of whether tests or
+   docs are trustworthy. A pinned bug is visible debt; an unpinned bug is
+   a landmine.</fact></item>
+      <item><fact id="INVENTORY-SPECMAP" status="impl/done">`rust-ai-native specmap` — mint the (initially small) index; commit
+   the whole inventory as its own topic commits.</fact></item>
+    </list>
+  </section>
+  <section id="phase-first-spec-units" title="Phase 0 — the first spec units">
+    <p><fact id="WRITE-THE-FIRST-SPEC-DOCUMENTS" status="impl/done">Write the project's first `spec/` documents for the subsystems you will
+touch first: anchored headings (`{#req-…}`), kind lines (`` `req r1` ``).</fact></p>
+    <p><fact id="UNIMPLEMENTED-BY-PLAN-UNITS-ARE-MARKED-PLANNED" status="impl/done">Unimplemented-by-plan units are marked `planned` — zero coverage there is
+expected, not red.</fact></p>
+    <p><fact id="TAG-IMPLEMENTING-MODULES-AS-YOU-GO" status="impl/done">Tag the implementing modules
+(`specmark::scope!("spec://&lt;ns&gt;/…")`) as you go; `rust-ai-native specmap`
+after each batch keeps the index green.</fact></p>
+  </section>
+  <section id="card-raids" title="Phases 1…N — card raids, crate by crate">
+    <p><fact id="raid-per-crate-in-dependency-order-lead" status="impl/done">Per the Raid Playbook skeleton (scope &amp; freeze → card order → phases →
+batches → differential safety → exit criteria), and per crate in
+dependency order:</fact></p>
+    <list ordered="true">
+      <item><fact id="RAID-DRAIN-THE-CRATE" status="impl/done">**Drain** the crate: unwraps out of domain code (restructure beats
+   testify), one thiserror enum per layer with REQ-citing messages, a
+   doctest per public seam, cells with oracles where variance exists.
+   `rust-ai-native conform check --scope &lt;crate&gt;` is the per-crate lens;
+   `rust-ai-native fast-loop --cell &lt;crate&gt;` keeps the loop under budget.</fact></item>
+      <item><fact id="RAID-FLIP" status="impl/done">**Flip**: add the crate to conform.toml's `[rust] gated` (remove its
+   `[[rust.exempt]]` entry) — legal only at zero findings; a flip must never
+   widen the baseline.</fact></item>
+      <item><fact id="RAID-BEHAVIOR-CHANGES-CARRY-AN-ORACLE" status="impl/done">**Behavior changes carry a differential oracle** (card scaffold-d);
+   golden transcripts must fail loudly when stale, never auto-update.</fact></item>
+      <item><fact id="RAID-PHASE-CLOSES-WITH-THE-FLOOR-GREEN" status="impl/done">Each phase closes with the floor green (`rust-ai-native floor`) and
+   its own topic commits, per the Campaign Form's phase-gate discipline.</fact></item>
+    </list>
+    <p><fact id="TRACK-THE-CAMPAIGN-PER-CAMPAIGN-FORM" status="impl/done">Track the campaign per `05-CAMPAIGN-FORM`: a cold-executable PLAN, the
+BASELINE numbers you started from, PREDICTIONS, a LOG, and a closing
+REPORT.</fact></p>
+    <p><fact id="CAMPAIGN-RESUME-POINTER" status="impl/done">Resume pointer: with a WAL — the standing line at each phase
+boundary; without — the PLAN's status line + LOG tail
+(`06-WAL-CONVENTION` §4).</fact></p>
+  </section>
+  <section id="exit-criteria" title="Exit criteria">
+    <p><fact id="EXIT-CRITERIA" status="impl/done">`rust-ai-native floor` green with every crate either gated or
+exempt-with-a-living-reason; the test-gate baseline shrunk truthfully
+(promotions, not silence); the carry-over guarantee met (every intent
+done | rescoped | rejected); the REPORT written.</fact></p>
+    <p><fact id="HELD-BY-THE-RECURRING-SWEEP" status="impl/done">From here the tree is
+held by the recurring sweep: /rust-ai-native-sweep.</fact></p>
+  </section>
+  <section id="generation-time-assistant" title="The generation-time assistant (before you edit, not instead of the floor)">
+    <p><fact id="STACK-SHIPS-AN-AGENTIC-TYPE-ORACLE" status="impl/done">The stack ships an agentic type oracle.</fact></p>
+    <p><fact id="check-the-hypothetical-content-lead" status="impl/done">Before writing a nontrivial `.rs`
+edit, check the HYPOTHETICAL content instead of paying a red floor
+iteration:</fact></p>
+    <fence lang="sh">vibe bin exec rust-ai-native-tcg -- validate src/cells/&lt;cell&gt;.rs \
+    --content-from - --root .   # the edit on stdin; exit 1 = would fail</fence>
+    <p><fact id="MCP-ALTERNATIVE" status="impl/done">or, when the vibevm MCP server is mounted, call `tcg_validate` with
+`language: "rust"` and the `content` argument (plus `tcg_scope` /
+`tcg_complete` / `tcg_type` for in-scope symbols, type-valid
+completions, and quick info).</fact></p>
+    <p><fact id="RESPONSES-CARRY-THE-SAME-CONFORM-FINDINGS" status="impl/done">Responses carry the SAME conform findings
+as the gate, flagged `baselined` or new, with guide-citing advice — a
+new finding in the answer means the floor WILL go red if you write that
+edit.</fact></p>
+    <p><fact id="ORACLE-PREREQUISITE" status="impl/done">Prerequisite: rust-analyzer on the machine (`rustup component add
+rust-analyzer` — a stack obligation).</fact></p>
+    <p><fact id="ORACLE-HONESTY" status="impl/done">Honesty: the oracle is
+rust-analyzer, not rustc; a clean answer shortens the distance to
+green, and the floor stays the truth (TCG-ORACLE-RUST §5).</fact></p>
+  </section>
+</spec>

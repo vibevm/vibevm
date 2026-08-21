@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">wal-specspaces</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="NON-CENTRAL-WALS-FOR-MULTI-PROJECT-REPOSITORIES" status="impl/done">Non-central WALs for repositories that host more than one project.</fact></p>
+  <p><fact id="THE-WAL-FLOW-GIVES-A-PROJECT-SESSION-DURABLE-STATE" status="impl/done">`flow:org.vibevm.world/wal` gives a project session-durable state: a living
+WAL checkpoint plus a cold-resume snapshot, wind-down and resume
+phrases.</fact></p>
+  <p><fact id="THIS-PACKAGE-EXTENDS-THAT-CONVENTION-TO-SPECSPACES" status="impl/done">This package extends that convention to **specspaces** —
+sub-projects nested in a host repository but worked on as independent
+projects.</fact></p>
+  <p><fact id="EACH-SPECSPACE-CARRIES-ITS-OWN-STATE-REGISTRY-AND-GRAMMAR" status="impl/done">Each specspace carries its own boot contract, WAL, and
+cold-resume file; a one-file registry (`SPECSPACES.md`) at the host
+root names them; the session grammar gains an optional specspace name
+(`RESUME SESSION &lt;name&gt;`, `END SESSION &lt;name&gt;`) that switches a
+session into a specspace **without loading the host's full boot**.</fact></p>
+  <p><fact id="A-BARE-PHRASE-NEVER-WANDERS-INTO-A-SPECSPACE" status="impl/done">A **bare** phrase (no name) never wanders into a specspace on its own:
+it targets the `default` specspace declared in `SPECSPACES.md` if one
+is set, and otherwise the host project itself.</fact></p>
+  <p><fact id="package-contents-lead" status="impl/done">What ships:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/11-flow-wal-specspaces.md` — the boot snippet: how a
+  session recognises specspace phrases, which project a bare phrase
+  targets, and what it loads (and pointedly does not load) for a
+  specspace session.</fact></item>
+    <item><fact id="CONTENT-THE-FULL-PROTOCOL" status="impl/done">`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` — the full
+  protocol: the registry format (with the optional default), target
+  resolution, the scoped grammar, the five laws (boot scoping, state
+  locality, one focus, host rules survive, package state stays out),
+  lifecycle, and a re-derive prompt.</fact></item>
+  </list>
+  <p><fact id="REQUIRES-THE-WAL-FLOW-AT-AN-EXACT-PIN" status="impl/done">Requires `flow:org.vibevm.world/wal` (=1.0.0): specspaces reuse its
+two-file model rather than redefining it.</fact></p>
+  <p><fact id="license-line" status="impl/done">License: UPL-1.0.</fact></p>
+</spec>

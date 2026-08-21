@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Cold resume — `CONTINUE.md` and the session commands</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** The second file of the discipline:
+`CONTINUE.md`, the cold-resume snapshot at the repository root. What
+goes in it, when it is written, the wind-down and resume commands that
+bracket a session, and the precedence rule when the snapshot and the
+WAL disagree.</fact></p>
+  <section id="why" title="Why a second file">
+    <p><fact id="WAL-IS-WRITTEN-FOR-THE-SAME-PROJECT-RHYTHM" status="impl/done">The WAL is written for the next session on the *same* project rhythm:
+terse, current, one page, assuming the reader knows the terrain.</fact></p>
+    <p><fact id="A-COLD-READER-DOES-NOT-KNOW-THE-TERRAIN" status="spec/done">A cold
+reader does not know the terrain: you on a different machine, a
+teammate cloning the repository, a session resuming after weeks or
+after a context compaction.</fact></p>
+    <p><fact id="THE-COLD-READER-NEEDS-THE-TOUR" status="spec/done">The cold reader needs the tour — where
+things are, what commands run, what was decided and why — before the
+one-page checkpoint means anything.</fact></p>
+    <p><fact id="CONTINUE-IS-THAT-TOUR" status="impl/done">`CONTINUE.md` is that tour.</fact></p>
+    <p><fact id="THE-PAIR-PASSES-THE-ACCEPTANCE-TEST" status="impl/done">The pair together passes the discipline's
+acceptance test: **a stranger with only the repository resumes work
+without asking.**</fact></p>
+  </section>
+  <section id="contract" title="The CONTINUE.md contract">
+    <p><fact id="CONTINUE-LIVES-AT-THE-REPOSITORY-ROOT" status="impl/done">`CONTINUE.md` lives at the repository root, where a cold reader looks
+first.</fact></p>
+    <p><fact id="CONTINUE-IS-OVERWRITTEN-WHOLESALE" status="impl/done">It is **overwritten wholesale** every time it is written — never
+appended to, never patched; staleness compounds otherwise.</fact></p>
+    <p><fact id="body-contents-lead" status="impl/done">The body
+includes, at minimum:</fact></p>
+    <list ordered="true">
+      <item><fact id="BODY-TLDR-SUMMARY" status="impl/done">A short TL;DR / executive summary at the top.</fact></item>
+      <item><fact id="BODY-WHERE-WORK-STANDS" status="impl/done">Where work stands: branch, ahead/behind the remote, working-tree
+   status.</fact></item>
+      <item><fact id="BODY-ACTIVE-BLOCKER" status="impl/done">The active blocker, if any, and the exact human action that
+   unblocks it.</fact></item>
+      <item><fact id="BODY-NEXT-STEPS-RECIPE" status="impl/done">The exact next-steps recipe — commands, file paths, line numbers —
+   for whoever picks up cold.</fact></item>
+      <item><fact id="BODY-NON-OBVIOUS-FINDINGS" status="impl/done">Non-obvious findings of the session: API quirks, config gotchas,
+   vendor-specific surprises.</fact></item>
+      <item><fact id="BODY-REPOSITORY-MAP" status="impl/done">A repository map: top-level layout and what each directory or
+   component holds.</fact></item>
+      <item><fact id="BODY-DECISIONS-IN-FORCE" status="impl/done">The architectural and policy decisions still in force, in long
+   form.</fact></item>
+      <item><fact id="BODY-RECENT-COMMIT-CHAIN" status="impl/done">The recent commit chain (last ~25, oneline format), so the cold
+   reader sees velocity and direction.</fact></item>
+      <item><fact id="BODY-QUICK-START-COMMANDS" status="impl/done">Quick-start commands for the workspace.</fact></item>
+      <item><fact id="BODY-PRECEDENCE-POINTER" status="impl/done">A pointer noting that the WAL is the canonical living state and
+    supersedes this snapshot if they diverge.</fact></item>
+    </list>
+    <p><fact id="what-the-item-groups-answer" status="impl/done">Items 1–4 answer "what do I do right now"; items 5–9 answer "what must
+I know before I trust myself here"; item 10 keeps the file honest
+about its own rank.</fact></p>
+  </section>
+  <section id="when" title="When to write it">
+    <list ordered="false">
+      <item><fact id="WRITE-AT-EVERY-EXPLICIT-WIND-DOWN" status="impl/done">**At every explicit wind-down** (the command below). Mandatory.</fact></item>
+      <item><fact id="WRITE-BEFORE-A-MACHINE-SWITCH" status="impl/done">**Before a machine switch** — the other machine gets the tour.</fact></item>
+      <item><fact id="WRITE-BEFORE-A-LONG-GAP" status="impl/done">**Before a long gap** — a vacation, weeks on another project; future
+  you is a cold reader too.</fact></item>
+    </list>
+    <p><fact id="any-session-end-is-a-fine-time" status="impl/done">Any session end is a fine time; the wind-down makes it non-optional.</fact></p>
+  </section>
+  <section id="wind-down" title="The wind-down command">
+    <p><fact id="WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK" status="impl/done">The wind-down is the explicit form of the session-end hook.</fact></p>
+    <p><fact id="SHIP-TRIGGER-PHRASES" status="impl/done">Ship
+trigger phrases: `END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`.</fact></p>
+    <p><fact id="RECOGNISE-THE-INTENT-NOT-THE-EXACT-WORDING" status="impl/done">Recognise the intent, not the exact wording.</fact></p>
+    <p><fact id="A-PROJECT-MAY-ADD-NATIVE-LANGUAGE-TWINS" status="impl/done">A project may add
+native-language twins in its agent instructions — the origin project
+of this flow runs a bilingual Russian/English set.</fact></p>
+    <p><fact id="required-behaviour-lead" status="impl/done">Required behaviour, in order:</fact></p>
+    <list ordered="true">
+      <item><fact id="STEP-OVERWRITE-CONTINUE" status="impl/done">**Overwrite `CONTINUE.md`** wholesale, per the contract above.</fact></item>
+      <item><fact id="STEP-REWRITE-THE-WAL" status="impl/done">**Rewrite `spec/WAL.md`** per
+   [`session-end-hook.md`](session-end-hook.md): fresh date line,
+   current phase, constraints, next step.</fact></item>
+      <item><fact id="STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS" status="impl/done">**Commit in topic-grouped commits.** The snapshot and the WAL
+   update are checkpoint commits; a code or config change landed by
+   the same session is a separate commit.</fact></item>
+      <item><fact id="STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT" status="impl/done">**Push only if the project's autonomy rules sanction it.** No
+   standing autonomy — stop at drafts or at local commits, per the
+   hook's propose-by-default rule.</fact></item>
+      <item><fact id="STEP-EMIT-A-CHAT-TLDR" status="impl/done">**Emit a chat TL;DR** of what the wind-down did: files written,
+   commits created, push status, what the next session should pick up
+   first. One screen; enough detail to verify without opening files.</fact></item>
+    </list>
+    <p><fact id="the-point-of-the-command" status="impl/done">The point of the command is to make session-boundary loss-of-context
+cheap: any session can end at any time and be resumed from
+`CONTINUE.md` plus the WAL with no degradation.</fact></p>
+    <p><fact id="TREAT-IT-AS-A-HARD-CONTRACT-NOT-A-COURTESY" status="impl/done">Treat it as a hard
+contract, not a courtesy.</fact></p>
+  </section>
+  <section id="resume" title="The resume command">
+    <p><fact id="RESUME-TRIGGER-PHRASES" status="impl/done">Trigger phrases: `RESUME SESSION`, `RESTORE CONTEXT` (and twins —
+recognise the intent).</fact></p>
+    <p><fact id="THE-JOB-IS-TO-RESTORE-CONTEXT-AND-REPORT" status="impl/done">The job is to **restore context and report —
+nothing else**:</fact></p>
+    <list ordered="true">
+      <item><fact id="RESUME-STEP-RUN-THE-BOOT-SEQUENCE" status="impl/done">Run the project's boot sequence (whatever its agent instructions
+   define), then read `CONTINUE.md` and `spec/WAL.md`.</fact></item>
+      <item><fact id="RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY" status="impl/done">Verify the repository state empirically: current branch, sync with
+   the remote, working-tree status, recent commits. Never take the
+   snapshot's word for what the tree looks like.</fact></item>
+      <item><fact id="RESUME-STEP-EMIT-A-STATUS-REPORT" status="impl/done">Emit a status report: where work stands, active blockers, and the
+   candidate next steps.</fact></item>
+      <item><fact id="RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION" status="impl/done">**Stop and wait for direction.** No code edits, no commits, no
+   pushes.</fact></item>
+    </list>
+  </section>
+  <section id="not-authorisation" title="Restore is not authorisation">
+    <p><fact id="A-RECORDED-POINTER-IS-A-CANDIDATE-NOT-AUTHORISATION" status="impl/done">Any "resume work at …" pointer in `CONTINUE.md` or the WAL names the
+*candidate* next step for the report — it is not authorisation to
+start it.</fact></p>
+    <p><fact id="why-the-resume-boundary-exists" status="spec/done">The resume boundary exists so the owner can inspect the
+restored state and steer, possibly somewhere other than the recorded
+next step.</fact></p>
+    <p><fact id="booting-into-execution-takes-the-decision-away" status="spec/done">A session that boots straight into execution takes that
+decision away from the owner.</fact></p>
+    <p><fact id="the-misfire-that-produced-the-rule" status="spec/done">This rule is written down because exactly that misfire happened once:
+a resumed session read the recorded pointer as a work order and began
+executing, when the owner wanted a report.</fact></p>
+    <p><fact id="boundary-explicit-ever-since" status="impl/done">The boundary has been
+explicit ever since.</fact></p>
+  </section>
+  <section id="precedence" title="Precedence">
+    <p><fact id="WAL-IS-CANONICAL-CONTINUE-IS-A-SNAPSHOT" status="impl/done">`spec/WAL.md` is canonical; `CONTINUE.md` is a snapshot of the moment
+the last wind-down ran.</fact></p>
+    <p><fact id="ON-DISAGREEMENT-TRUST-THE-WAL-AND-FLAG-IT" status="impl/done">When they disagree — and they will, whenever a
+session updates the WAL without a full wind-down — trust the WAL and
+flag the divergence in your report.</fact></p>
+    <p><fact id="THE-SAME-RULE-COVERS-ANY-OTHER-SNAPSHOT" status="impl/done">The same rule covers any other
+snapshot: a plan document's status line, a README's "current state"
+paragraph.</fact></p>
+    <p><fact id="THE-LIVING-CHECKPOINT-BEATS-A-FROZEN-SNAPSHOT" status="impl/done">The living checkpoint beats a frozen snapshot, always.</fact></p>
+  </section>
+  <section id="never" title="Never">
+    <list ordered="false">
+      <item><fact id="NEVER-APPEND-TO-CONTINUE" status="impl/done">Never append to `CONTINUE.md` — overwrite it wholesale.</fact></item>
+      <item><fact id="NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE" status="impl/done">Never write the snapshot from memory alone — verify branch, tree,
+  and commits empirically first.</fact></item>
+      <item><fact id="NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND" status="impl/done">Never start executing after a resume command — report, then wait.</fact></item>
+      <item><fact id="NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL" status="impl/done">Never treat `CONTINUE.md` as overriding the WAL.</fact></item>
+      <item><fact id="NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN" status="impl/done">Never skip the chat TL;DR on a wind-down: it is how the user
+  verifies the checkpoint without opening files.</fact></item>
+    </list>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-CONTINUE-IS-THE-COLD-READERS-TOUR" status="impl/done">`CONTINUE.md` at the repo root is the cold reader's tour: TL;DR,
+  state, blocker, recipe, findings, map, decisions, commits,
+  quick-start — overwritten wholesale, never appended.</fact></item>
+      <item><fact id="SUM-WHEN-TO-WRITE-IT" status="impl/done">Write it at every wind-down, before machine switches, before gaps.</fact></item>
+      <item><fact id="SUM-WIND-DOWN-SHAPE" status="impl/done">Wind-down: snapshot + WAL rewrite + topic-grouped commits +
+  sanctioned push + chat TL;DR.</fact></item>
+      <item><fact id="SUM-RESUME-SHAPE" status="impl/done">Resume: boot, read both files, verify empirically, report, stop.</fact></item>
+      <item><fact id="SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE" status="impl/done">A recorded next step is a candidate, not authorisation.</fact></item>
+      <item><fact id="SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT" status="impl/done">The WAL supersedes the snapshot wherever they diverge.</fact></item>
+    </list>
+  </section>
+</spec>

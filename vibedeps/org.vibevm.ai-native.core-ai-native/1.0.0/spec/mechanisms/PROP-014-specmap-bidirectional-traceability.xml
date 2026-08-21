@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-014 — specmap: bidirectional spec↔code traceability and the source metamodel</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Status.** Design proposal v0.1 — not implementation-locked.</fact></p>
+  <p><fact id="drafted-for-review-open-until-ratified" status="impl/done">Drafted for review; every decision below is open to challenge until ratified.</fact></p>
+  <p><fact id="companions-lead" status="impl/done">**Companions** (vibevm-hosted, the pilot project's spec tree — cited as context, not shipped here):</fact></p>
+  <list ordered="false">
+    <item><fact id="COMPANION-PROP-000" status="impl/done">PROP-000 (foundation, license policy §3),</fact></item>
+    <item><fact id="COMPANION-PROP-003" status="impl/done">PROP-003 (the LLM-boundary philosophy this PROP extends),</fact></item>
+    <item><fact id="COMPANION-PROP-009" status="impl/done">PROP-009 (boot/loading model — specmap becomes its intra-project counterpart),</fact></item>
+    <item><fact id="COMPANION-PROP-013" status="impl/done">PROP-013 (category C "drift" — specmap mechanizes its detection),</fact></item>
+    <item><fact id="COMPANION-RED-BOOK" status="impl/done">Red Book ch. 2 (files as IPC) and ch. 3 (Sync-from-Code — specmap is its instrumentation).</fact></item>
+  </list>
+  <p><fact id="HOME-SHIPS-WITH-THE-DISCIPLINE" status="impl/done">**Home.** `flow:org.vibevm.ai-native/core-ai-native`, `spec/mechanisms/` — this mechanism ships with the Discipline (URIs `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#…`); its Rust implementation ships in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`specmap-core` + the `rust-ai-native-specmap` binary).</fact></p>
+  <p><fact id="TAG-SYNTAX-SHOWN-IS-THE-RUST-PROJECTION" status="impl/done">The tag *syntax* shown throughout (`#[spec]`, `scope!`) is the Rust projection; other language stacks ship their own projection of the same model.</fact></p>
+  <section id="problem" title="1. Problem statement">
+    <p><fact id="vibevm-scale-and-its-governing-documents" status="spec/done">vibevm is ~52K lines of Rust governed by ~20 PROP documents plus a 99KB owner-frozen spec.</fact></p>
+    <p><fact id="linkage-exists-today-only-in-three-weak-forms" status="spec/done">The linkage between the two layers exists today only as (a) prose cross-references in doc comments, (b) `spec://` URIs cited in commit bodies per the Rule-2 discipline, and (c) the maintainer's head.</fact></p>
+    <p><fact id="drift-is-detected-by-periodic-human-sweep" status="spec/done">AUDIT category C (drift) is detected by periodic human sweep.</fact></p>
+    <p><fact id="the-two-questions-become-unanswerable" status="spec/done">As the codebase grows, the question "which code realises this decision?" and its inverse "which decision justifies this code?" become unanswerable at acceptable cost.</fact></p>
+    <p><fact id="desired-end-state-is-bidirectional-reach" status="spec/done">The desired end-state, by analogy with JS/TS source maps: from any compiled artefact you can reach the source; from any source you can reach the artefacts.</fact></p>
+    <p><fact id="many-to-many-is-the-real-shape" status="spec/done">One spec unit may touch many code items; one code item may serve many spec units.</fact></p>
+    <p><fact id="SYSTEM-REPRESENTS-MANY-TO-MANY-AND-LINTS-ITS-GROWTH" status="spec/done">Many-to-many is undesirable but real; the system must represent it while linting against its growth. *Half built: the representation ships and is exercised — the host index carries 912 edges over 898 code items, so many-to-many is real in practice, not just permitted. Nothing lints its growth: no edges-per-item or fan-out check exists in the specmap ratchet, in `vibe check`'s roster, or anywhere else, so the fan-out can rise without a signal.*</fact></p>
+    <section id="analogy" title="1.1 Where the source-map analogy holds, and where it breaks">
+      <p><fact id="source-maps-work-because-a-compiler-emits-them" status="spec/done">Source maps work because a **compiler emits them as a free, deterministic byproduct of every build**.</fact></p>
+      <p><fact id="between-spec-and-realisation-there-is-no-compiler" status="spec/done">Between a vibevm spec and its Rust realisation there is no compiler — there is a human or an LLM session.</fact></p>
+      <p><fact id="consequences-lead" status="impl/done">Consequences:</fact></p>
+      <list ordered="true">
+        <item><fact id="CONSEQUENCE-MAPPING-IS-CARRIED-NOT-GENERATED" status="impl/done">The mapping cannot be *generated*; it can only be *carried and verified*. Until M1.5's `vibe build` exists, every edge is authored metadata.</fact></item>
+        <item><fact id="CONSEQUENCE-AUTHORED-METADATA-ROTS-UNLESS-THREE-FORCES-HOLD" status="impl/done">Authored metadata rots unless three forces hold simultaneously:</fact></item>
+        <item><fact id="FORCE-EDGES-TRAVEL-WITH-THE-ARTEFACTS" status="impl/done">**Edges travel with the artefacts.** Code-side links live *in the code* (attributes on items) and survive any refactor that moves the item. Spec-side links live *in the spec* (stable anchors). External sidecar maps are rejected (§5.1).</fact></item>
+        <item><fact id="FORCE-INVARIANTS-ARE-MACHINE-CHECKED" status="impl/done">**Invariants are machine-checked.** Dangling references, uncovered requirements, orphan code, and — the load-bearing one — **staleness**: a spec unit carries a revision + content hash; when it changes, every edge pinned to the old revision flips to *suspect* until re-affirmed.</fact></item>
+        <item><fact id="FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK" status="impl/done">**The map is load-bearing in daily work.** A map that is only audited dies (the classical requirements-traceability graveyard). specmap must feed (i) agent context paging — working on a REQ pulls its code, editing an item pulls its specs; (ii) `vibe explain`; (iii) error provenance — failures cite the violated REQ. *Two of the three feeds ship. (ii) is real, under the name `trace explain` rather than `vibe explain` (`specmap/src/explain.rs:199,209`, driven by `cargo xtask trace explain` and `rust-ai-native trace explain`). (iii) is real and enforced: the conform rules `error-message-cites-req` and `error-enum-cites-req` require the `spec://` REQ URI in the Display text itself — "errors are agent food" — and host errors carry it, e.g. `vibe-core/src/error.rs:34` emits `(violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; …)`. **(i) agent context paging has no implementation** — nothing pulls code from a REQ or specs from an item.*</fact></item>
+        <item><fact id="CONSEQUENCE-M1-5-CONVERGENCE" status="impl/done">**M1.5 convergence.** Once `vibe build` generates code from specs, the generator emits specmap edges as a true compiler byproduct — the analogy becomes literal. Hand-authored tags remain as the human-override lane. This PROP defines the format that the future generator will target.</fact></item>
+      </list>
+    </section>
+    <section id="runtime-vision" title="1.2 The runtime vision (AI-native open source)">
+      <p><fact id="RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS" status="impl/plan">For an open-source project, the metamodel (and, on demand, the source behind it) is exposed to *consumers* of the tool at runtime: an agent driving `vibe` can ask not just `--help` but "why does `vibe install` behave this way, under which decisions, realised where, with which known deviations" — and receive a structured subgraph or a rendered explanation. *Specified, not built (→ B-018): there is no runtime channel. The subgraph and the prose render both exist (`explain_json`, `explain_text`) but are reachable only by running a CLI against a checkout — `specmap_query` / `specmap_explain` / `specmap_source` return no hit anywhere, and the MCP servers that would carry it do not offer it: `core-ai-native-mcp` is a transport that ships no tools at all (its `echo` is a `#[cfg(test)]` fixture, `server.rs`), and the host's `vibe-mcp` `explain` op is PROP-018's README relay, unrelated to this map. The stacks' `trace_explain` is the discipline's per-project channel over a checkout, not this metamodel. An agent driving `vibe` cannot ask the running tool anything.*</fact></p>
+      <p><fact id="DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY" status="impl/plan">Distribution rides the existing registry: the metamodel index ships with the package; source fragments are fetched by content hash. *Specified, not built (→ B-016): no package ships an index (no `vibe.toml` lists `specmap.json` in a payload), and there is no fetch-by-content-hash path — `content_hash` hashes, it does not retrieve.*</fact></p>
+      <p><fact id="CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE" status="impl/plan">Closed-source projects ship a redacted profile (§2.8.3). *Specified, not built (→ B-017): the profile has no manifest key, no parser and no redaction path. `[metamodel]` appears in no `vibe.toml`, `conform.toml` or `specmap.toml` in the repository, and no code reads an open/contract/none setting. Nothing is redacted because nothing is exposed at runtime to redact — this fact cannot land before `#RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS` above it does.*</fact></p>
+    </section>
+  </section>
+  <section id="decisions" title="2. Decisions">
+    <quote><fact id="DECISIONS-SECTION-IS-THE-BINDING-MODEL" status="impl/done">Deliverable (в) of the design brief — the binding model — is this section in its entirety.</fact></quote>
+    <section id="addressing-spec" title="2.1 Addressing: spec-side">
+      <p><fact id="kind-line-addressing-spec" status="impl/done">`req r1`</fact></p>
+      <p><fact id="DECISION-EXTEND-THE-SPEC-URI-SCHEME" status="impl/done">**Decision.** Extend the existing `spec://` URI scheme into the canonical spec-side address:</fact></p>
+      <fence>spec://&lt;package&gt;/&lt;doc-path&gt;#&lt;anchor&gt;            — a spec unit
+spec://&lt;package&gt;/&lt;doc-path&gt;#&lt;anchor&gt;~r&lt;N&gt;       — a unit at revision N</fence>
+      <list ordered="false">
+        <item><fact id="URI-PACKAGE-COMPONENT" status="impl/done">`&lt;package&gt;` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).</fact></item>
+        <item><fact id="HEADING-ANCHOR-GRAMMAR-AND-IMMUTABILITY" status="impl/done">`&lt;anchor&gt;` is the explicit `{#anchor}` on a heading. Its grammar is `[A-Za-z][A-Za-z0-9_-]*` — **one law, shared with fact ids** (owner ruling 2026-07-26; it was kebab-only until then, on no recorded reason beyond «already used by every PROP heading»). Kebab remains the convention every existing anchor follows and the one to keep writing; the wider set exists so a heading anchor and a fact id can never be legal in one position and illegal in the other. **Anchors are immutable once published and never reused.** Renaming a unit keeps its anchor; retiring a unit tombstones the anchor (`&lt;!-- RETIRED: superseded by #new-anchor --&gt;`) rather than deleting it.</fact></item>
+        <item><fact id="ANCHORS-ARE-CASE-SENSITIVE-AT-EVERY-LEVEL" status="impl/done">**Anchors are case-SENSITIVE**, at every level: what may be written, duplicate detection, and resolution. `##FOO` and `##foo` are two units; `spec://…#FOO` resolves only to `FOO` and never to `foo`. *Considered and rejected (owner, 2026-07-26): folding case for duplicate detection.* It would flag **29 published pairs across 12 documents** — a section heading `{#kebab-slug}` beside that section's lead normative fact `##KEBAB-SLUG`, which is the convention the two id registers exist for. Byte-exact detection already catches every real duplicate, including `{#FOO}` written beside `##FOO`. **Revisit when:** a case-only collision is observed to mislead a reader in practice.</fact></item>
+        <item><fact id="SPEC-UNIT-SPAN-AND-FACT-UNIT-GRAIN" status="impl/done">A **spec unit** is the span from an anchored heading (or an explicit `REQ` block, §2.2) to the next same-or-higher heading / next unit marker; **fact units** (below) are the sub-heading grain.</fact></item>
+        <item><fact id="FACT-ANCHORS-MINT-THE-FINEST-GRAIN" status="impl/done">**Fact anchors (fact amendment, 2026-07-24 — owner-directed).** A `##&lt;ID&gt;`
+  written as the **first token of a paragraph or a list item** (at any
+  nesting depth, outside fenced/inline code) mints a **fact unit** — the
+  finest addressable grain. `&lt;ID&gt;` follows `[A-Za-z][A-Za-z0-9_-]*` and
+  carries two registers by convention: `UPPER-SLUG` names a normative
+  fact, `kebab-case` a service one (the grammar originates in the host's
+  Progress Control amendment — the PROP-043 §3.8 twin of this clause).
+  The unit's span is the carrying paragraph or item, continuation lines
+  included; an anchored nested item is its own unit. Fact ids share **one
+  address space with heading anchors per document** — the same
+  `spec://&lt;package&gt;/&lt;doc-path&gt;#&lt;ID&gt;` form cites either, and a duplicate id
+  (fact-vs-fact or fact-vs-heading) is an extraction warning, and it is
+  **byte-exact** — case distinguishes two addresses, it does not merge them.
+  Heading anchors were kebab-only when this clause was written; since the
+  owner ruling of 2026-07-26 (§2.1) there is **one grammar for both**, so the
+  register is convention rather than a boundary the parser enforces.
+  Immutability and tombstoning bind fact anchors exactly as
+  heading anchors.</fact></item>
+        <item><fact id="FACT-UNITS-CARRY-NO-KIND-LINE" status="impl/done">Fact units carry no `kind:` line (§2.2 typing stays a heading-unit
+  discipline); their normativity signal is the id register. Edges cite
+  them exactly as heading units (`implements`, `verifies`, `documents`),
+  so code can bind to a single statement instead of a whole section.</fact></item>
+        <item><fact id="MERGE-BEHAVIOUR-IS-OWNED-BY-THE-HOST-CONTRACT" status="impl/done">**Merge behaviour** — the host spec-compiler contract (its PROP-035
+  §7.3 fact-inheritance clause, owner-ratified 2026-07-24) owns it:
+  facts follow their section's fate under the contract↔source merge; a
+  source fact redeclaring a contract fact's id is a **per-fact
+  override**; the merged view re-gates id uniqueness as a build error.
+  This PROP only cites that law — one source of truth.</fact></item>
+      </list>
+    </section>
+    <section id="spec-units" title="2.2 Spec units, normativity, and the two-tier revision discipline">
+      <p><fact id="kind-line-spec-units" status="impl/done">`req r1`</fact></p>
+      <p><fact id="DECISION-FOUR-UNIT-KINDS" status="impl/done">**Decision.** Four unit kinds, each with a different default edge semantics:</fact></p>
+      <table>
+        <tr>
+          <td>Kind</td>
+          <td>Carries</td>
+          <td>Typical edges</td>
+        </tr>
+        <tr>
+          <td><fact id="ROW-KIND-PROP" status="impl/done">`prop`</fact></td>
+          <td><fact status="impl/done">a decision + rationale ("why")</fact></td>
+          <td><fact status="impl/done">`decides`, referenced by REQs — *Specified, not built: `decides` is not a verb this system can emit. The `Verb` enum in `specmark-grammar` is `Implements · Verifies · Documents · Deviates · Informs`, and its own doctest states the verb set is closed (`Verb::parse("fulfills") == None`); `decides` returns zero hits across every crate. The `prop` kind itself parses fine (`mdspec.rs:78`) — it is the edge verb that has no producer, so a decision can be a node and never the tail of the edge this cell names.* @status:spec/done</fact></td>
+        </tr>
+        <tr>
+          <td><fact id="ROW-KIND-REQ" status="impl/done">`req`</fact></td>
+          <td><fact status="impl/done">a normative contract (RFC-2119 MUST/SHOULD/MAY)</fact></td>
+          <td><fact status="impl/done">`implements`, `verifies`</fact></td>
+        </tr>
+        <tr>
+          <td><fact id="ROW-KIND-DESIGN" status="impl/done">`design`</fact></td>
+          <td><fact status="impl/done">shape of a solution ("how", non-binding)</fact></td>
+          <td><fact status="impl/done">`informs`</fact></td>
+        </tr>
+        <tr>
+          <td><fact id="ROW-KIND-GUIDE" status="impl/done">`guide`</fact></td>
+          <td><fact status="impl/done">usage documentation</fact></td>
+          <td><fact status="impl/done">`documents`</fact></td>
+        </tr>
+      </table>
+      <p><fact id="unit-declares-normativity-with-a-kind-line" status="impl/done">A unit declares normativity with a one-line marker directly under its heading:</fact></p>
+      <fence lang="markdown">### Conditional dependencies resolve to a fixed point {#req-conditional-fixpoint}
+`req r2` — predicates are evaluated against resolved project state; each
+pass MUST only add requirements (monotone), guaranteeing convergence.</fence>
+      <p><fact id="revisions-are-two-tier-lead" status="impl/done">**Revisions are two-tier:**</fact></p>
+      <list ordered="false">
+        <item><fact id="REVISION-R-IS-AN-AUTHOR-ASSERTED-SEMANTIC-BUMP" status="impl/done">`r&lt;N&gt;` is an **author-asserted semantic revision**. Bump it only when the *meaning* changes. Editorial edits (typos, wording) do not bump.</fact></item>
+        <item><fact id="REVISION-CONTENT-HASH-AUDITS-THE-BUMP" status="impl/done">The indexer computes a **content hash** of the unit text. Hash changed while `r` did not → `vibe trace` warns: *"editorial-or-forgot-to-bump — confirm."* This catches the human failure mode without making typo fixes expensive. (Prior art: OpenFastTrace's `~rev` integers; Doorstop's reviewed-hash stamps — ideas only, see §6.)</fact></item>
+      </list>
+      <p><fact id="asymmetric-invalidation-rule-lead" status="impl/done">**Asymmetric invalidation rule (load-bearing).**</fact></p>
+      <list ordered="false">
+        <item><fact id="INVALIDATION-SPEC-BUMP-MAKES-EDGES-SUSPECT" status="impl/done">Spec unit `r` bumps → every edge pinned to the old `r` becomes **suspect**; CI gate lists them; each is cleared by re-affirming (updating the pin) after review.</fact></item>
+        <item><fact id="INVALIDATION-CODE-CHANGE-KEEPS-EDGES-VALID" status="spec/done">Code item changes → linked edges stay **valid** (the contract didn't move; implementation detail is free to change). Exception: edges of type `deviates` flip to *review* on either side changing, because a deviation is a statement about both sides. *The rule holds, structurally and by accident; the exception does not. `CodeItem` in the committed index carries `crate_name`, `file`, `item_kind`, `line`, `symbol` and **no content hash**, so a code change is invisible to the edge and cannot invalidate it — the stated behaviour is what the data model can do rather than a decision it enforces. Nothing implements the exception: `deviates` exists as a `Verb` variant with a grammar-mandated reason, and no code on either side treats a deviates edge differently or flips anything to review.*</fact></item>
+      </list>
+    </section>
+    <section id="addressing-code" title="2.3 Addressing: code-side — tags that travel">
+      <p><fact id="kind-line-addressing-code" status="impl/done">`req r1`</fact></p>
+      <p><fact id="DECISION-CODE-LINKS-ARE-SPECMARK-ATTRIBUTES" status="impl/done">**Decision.** Code-side links are inert attributes provided by a tiny `specmark` crate (workspace-internal at first; publishable later).</fact></p>
+      <p><fact id="ATTRIBUTE-IS-A-NO-OP-WITH-TWO-CONSUMERS" status="impl/done">The attribute is a no-op for the compiler — its consumers are (a) the source scanner and (b) rustdoc, into which the macro injects a rendered "Spec:" line so the link is visible in generated docs.</fact></p>
+      <fence lang="rust">use specmark::spec;
+
+/// Parses the `context(&lt;key&gt;)` predicate grammar.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+pub enum ConditionalPredicate { /* … */ }
+
+#[spec(deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2,
+       reason = "boolean composition (`and`/`or`/`not`) intentionally unimplemented; \
+                 surfaces as PredicateError::Unsupported pending PROP-014-pilot decision")]
+impl ConditionalPredicate {
+    pub fn parse(raw: &amp;str) -&gt; Result&lt;Self, PredicateError&gt; { /* … */ }
+}
+
+#[cfg(test)]
+mod tests {
+    use specmark::verifies;
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+    fn fixed_point_is_monotone() { /* … */ }
+}</fence>
+      <p><fact id="grammar-one-edge-per-attribute-lead" status="impl/done">Grammar (one edge per attribute; attributes repeat for multiple edges):</fact></p>
+      <fence>#[spec( &lt;verb&gt; = "&lt;spec-uri&gt;" [, r = &lt;N&gt;] [, reason = "&lt;text&gt;"] )]
+#[verifies("&lt;spec-uri&gt;" [, r = &lt;N&gt;])]            // sugar for tests
+specmark::scope!("&lt;spec-uri&gt;" [, r = &lt;N&gt;]);      // module-level inheritance marker</fence>
+      <p><fact id="rules-lead" status="impl/done">Rules:</fact></p>
+      <list ordered="false">
+        <item><fact id="RULE-VERBS-AND-MANDATORY-REASON" status="impl/done">**Verbs:** `implements`, `verifies`, `documents`, `deviates`, `informs`. `deviates` REQUIRES `reason`.</fact></item>
+        <item><fact id="RULE-IMPLEMENTS-IS-A-CLAIM-ABOUT-CODE-THAT-RUNS" status="impl/done">**`implements` is a claim about code that RUNS, and a bare declaration does not carry one.** A trait, an abstract signature or any other declared shape that no production code implements gets no `implements` edge, however faithfully it describes the requirement. The edge arrives with the implementation.</fact></item>
+        <item><fact id="RULE-WHY-A-DECLARED-SHAPE-MUST-NOT-CLAIM-COVERAGE" status="impl/done">**Why, and it is the whole value of the map:** an edge from a declaration is indistinguishable in the index from an edge from working code, so a reader asking «what implements this REQ» is told a shape and hears a build. The perverse gradient is the point — **the more carefully a project declares its shapes ahead of time, the more false coverage it accumulates**, which punishes exactly the discipline this model exists to reward. Measured instance, 2026-08-05: `vibe_settings::events::Watcher` carried the edge with zero implementors in the tree, and `vibe explain` reported two.</fact></item>
+        <item><fact id="RULE-DROPPING-THE-EDGE-SILENCES-NOTHING" status="impl/done">**Dropping the edge does not hide the declaration**, which is the objection to expect: the module's `specmark::scope!` still covers the item for the orphan gate (`##RULE-SCOPE-INHERITANCE`), the requirement keeps whatever honest edges it has from real code, and the docblock is where «this is promised here» belongs. So the choice is not between a false edge and silence — it is between a false edge and an accurate absence.</fact></item>
+        <item><fact id="RULE-UNIT-OF-CODE-IS-THE-ITEM" status="impl/done">**Unit of code = the item** (fn, struct, enum, trait, impl block, mod). Never lines, never expressions. Line/column spans appear only in the *derived* index (§2.5), where volatility is harmless because the index is regenerated.</fact></item>
+        <item><fact id="RULE-SCOPE-INHERITANCE" status="impl/done">**Scope inheritance.** `specmark::scope!(…)` at the top of a module gives every item inside a default `implements` edge unless the item carries its own `#[spec]` (own tags **replace** the inherited set in v0.1; merge syntax is an open question, §7.2). Private helpers therefore usually need no annotation. Rust note: a true inner attribute (`#![spec(…)]`) on modules is unstable for proc-macros, hence the macro-invocation form.</fact></item>
+        <item><fact id="RULE-GENERATED-CODE-IS-EXCLUDED" status="impl/done">**Generated code** (e.g. `vibe-wire/src/generated/`) is excluded from orphan checks via a directory marker; the *generator input* (JTD schema file) is the taggable unit instead. *BUILT 2026-08-05 — both halves are now real. The exclusion half always was: `rscan` and `ratchet` skip a path containing `/generated/`. The designation half was a decision nobody could act on, because no scanner opened a `.json` at all and the edge model hangs an address off a code SYMBOL, which a JSON document has no obvious equivalent of. Both are answered: a schema's units are its ROOT and each `definitions` entry (`symbol` = `&lt;stem&gt;` and `&lt;stem&gt;::&lt;def&gt;`, `item_kind` = `schema` / `schema-def`), and the tag lives in JTD's own `metadata.spec` block as a verb → URI map. The scanner is opt-in per project through `schema_roots`, empty by default. Measured on the host that raised this: seven wire contracts tagged, 16 units and 7 edges in the map, and `vibe explain` now answers «what implements PROP-000 §16» with all seven, by file and line.*</fact></item>
+        <item><fact id="RULE-ERROR-ENUMS-ARE-CONTRACT" status="impl/done">**Error enums are contract.** Every public error variant whose meaning comes from a REQ carries `implements` on the variant's enum (or `#[spec]` on the variant where precision pays). This is what lets a failing command cite the violated requirement (§2.6).</fact></item>
+        <item><fact id="RULE-MULTIPLICITY-LINT" status="impl/plan">**Multiplicity lint.** An item carrying more than **3** spec edges is flagged by `vibe check`: either the item does too much or the spec units are cut too fine. (Threshold configurable; mirrors the activation-conflict lint philosophy of PROP-003 §2.10.) *Specified, not built (→ B-021): no checker in any layer counts edges per item; `vibe check`'s checks do not include a multiplicity lint.*</fact></item>
+      </list>
+    </section>
+    <section id="edges" title="2.4 The edge model">
+      <p><fact id="kind-line-edges" status="impl/done">`req r1`</fact></p>
+      <p><fact id="edge-model-is-a-typed-directed-multigraph-lead" status="impl/done">A **typed, directed property multigraph**:</fact></p>
+      <list ordered="false">
+        <item><fact id="EDGE-MODEL-NODES" status="impl/plan">**Nodes:** `SpecUnit { uri, kind, r, content_hash }`, `CodeItem { symbol, item_kind, crate_name, file, line }`, plus derived `Command`, `ErrorVariant` views. *Specified, not built (→ B-019): `CodeItem` carries no content hash (see §2.2's own note), and there are no derived `Command` or `ErrorVariant` node views. (`ErrorVariant` exists as a conform **fact** — `conform/src/facts.rs:66` — which is a different graph.)*</fact></item>
+        <item><fact id="EDGE-MODEL-EDGES" status="spec/done">**Edges:** `(CodeItem) --implements/verifies/documents/deviates/informs--&gt; (SpecUnit @ r)`, each with provenance (`authored` | `generated` | `proposed`) and, for `deviates`, the mandatory reason. *(Brownfield amendment:)* spec units additionally carry a lifecycle status (`planned` | `disputed`; `ratified` is the absent default, `retired` a tombstone), and a `disputed` unit names the other anchor of its pair in a `disputes` field. *Specified, not built: the pairing is a unit field and not yet a spec↔spec `conflicts_with` edge; edges into `disputed` units are not frozen — suspect detection reads only the pinned revision (`index.rs:118-131`); and no coverage math over spec units exists, so `planned` scope is neither reported separately nor penalized.*</fact></item>
+        <item><fact id="EDGE-MODEL-DIRECTION-OF-AUTHORITY" status="impl/done">**Direction of authority:** spec → code (the Red Book's top-down flow). The reverse direction is *computed* (the index inverts edges) plus one social channel: a `proposed` edge pool (§4, Phase 2) feeding the Sync-from-Code protocol when code grows meaning the spec lacks.</fact></item>
+      </list>
+    </section>
+    <section id="index" title="2.5 The index: `specmap.json`">
+      <p><fact id="kind-line-index" status="impl/done">`req r1`</fact></p>
+      <p><fact id="DECISION-INDEX-IS-A-DERIVED-COMMITTED-ARTEFACT" status="impl/done">**Decision.** A derived, deterministic, committed artefact, regenerated by `cargo xtask specmap` and gated by `cargo xtask specmap --check` in CI — the exact idiom `check-codegen` already established.</fact></p>
+      <list ordered="false">
+        <item><fact id="INDEX-IS-BUILT-BY-A-SOURCE-SCANNER" status="impl/done">Built by a source scanner (syn or tree-sitter over the workspace; markdown parser over `spec/**`). No macro expansion needed — `#[spec]` is read as text/AST, which also makes the JS/Python bindings (§2.9) uniform.</fact></item>
+        <item><fact id="INDEX-IS-CANONICAL-JSON-WITH-A-SCHEMA" status="impl/done">Canonical JSON (stable ordering), schema under `schemas/specmap.jtd.json` → `vibe-wire` types via the existing codegen pipeline.</fact></item>
+        <item><fact id="INDEX-CONTENTS" status="impl/done">Contents: all nodes (with content hashes and *current* file:line spans), all edges, plus computed tables: coverage per REQ (`{implemented, verified, documented}` bits), orphans (public items with no edge own-or-inherited), suspects (edges whose pinned `r` &lt; unit's current `r`), unbumped-hash warnings. *Re-measured 2026-08-05, and one third of this note had gone stale. The host's committed index has exactly six keys — `code_items`, `edges`, `schema`, `spec_units`, `suspects`, `warnings` — so nodes, edges, suspects and the warnings table are real (5 652 spec units, 915 code items, 932 edges, 205 warnings; the earlier reading of 5 266 / 898 / 912 / 265 was a different tree). **Coverage per REQ is still absent** and **the orphans table is still absent** — orphan coverage is computed at gate time by the ratchet and deliberately never serialised (`ratchet.rs`, `index.rs`). What is no longer true is the content hash: `code_item` now carries `fingerprint`, a `tok1:&lt;sha256&gt;` over the element's TOKEN STREAM (doc comments count as code, ordinary comments and whitespace do not), and it stands on 915 of 915 items — so the map is no longer blind to a change in the code under a link, and a formatter run does not move it.*</fact></item>
+        <item><fact id="INDEX-DETERMINISM-IS-A-TESTED-PROPERTY" status="impl/done">**Determinism is a tested property**, same as the resolver's (PROP-003 §3.3): index twice, assert byte-identical.</fact></item>
+      </list>
+    </section>
+    <section id="queries" title="2.6 Query surface">
+      <p><fact id="kind-line-queries" status="impl/done">`req r1`</fact></p>
+      <fence>vibe trace coverage [--crate X] [--kind req]      # matrix: REQ × {impl, test, doc}
+vibe trace impact &lt;spec-uri&gt;                      # all items/tests reachable from a unit
+vibe trace orphans [--ratchet-file …]             # unjustified public items
+vibe trace stale                                  # suspect edges + unbumped-hash warnings
+vibe explain &lt;command|symbol|spec-uri&gt; [--json|--text|--prose]</fence>
+      <list ordered="false">
+        <item><fact id="QUERY-OUTPUT-FORMATS" status="impl/done">`--json` emits the raw subgraph (agent-friendly); `--text` a deterministic structured rendering; `--prose` an LLM rendering of the same subgraph. **The tool MUST be fully useful without an LLM** — `--prose` is a presentation layer, never the data layer.</fact></item>
+        <item><fact id="QUERY-ERROR-PROVENANCE" status="impl/plan">**Error provenance:** `vibe`'s error rendering looks up the failing error variant in the index and appends `violates spec://…#req-… (r2) — run: vibe explain &lt;uri&gt;`. This is the single highest-leverage consumer: every failure becomes a doorway into the metamodel. *Specified, not built as an index lookup (→ B-019/B-018): error renderings cite `violates spec://…` from compile-time constants — `core-ai-native-mcp/src/error.rs:25`, `:37`, `:48`, pinned by a doctest, and conform's `req_message` (`rules/mod.rs:49`) — with no revision and no `run: vibe explain` hint. The doorway is real; the lookup is not.*</fact></item>
+        <item><fact id="QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT" status="impl/done">During the pilot these live behind `cargo xtask trace …` to avoid touching the CLI surface prematurely; promotion to `vibe trace` / `vibe explain` is a Phase 4 decision (§4).</fact></item>
+      </list>
+    </section>
+    <section id="llm-boundary" title="2.7 The LLM boundary">
+      <p><fact id="llm-boundary-continues-prop-003-lead" status="impl/done">Continuation of PROP-003 §2.5.3's philosophy — *the LLM emits facts and renderings; deterministic machinery decides*:</fact></p>
+      <list ordered="true">
+        <item><fact id="LLM-AS-PROPOSER" status="impl/done">**LLM as proposer.** Link mining (Phase 2) produces edges with provenance `proposed`, stored in `specmap-proposals.json`, never in code. A human (or an explicitly delegated agent session) *affirms* a proposal by writing the actual `#[spec]` attribute — the affirmation IS the code change, reviewed like any diff.</fact></item>
+        <item><fact id="LLM-AS-RENDERER" status="impl/plan">**LLM as renderer.** `vibe explain --prose` feeds the subgraph (spec unit texts + rustdoc of linked items + deviation reasons) to the provider behind `vibe-llm`. The subgraph is the ground truth; the prose cites URIs; hallucination risk is bounded by retrieval, and the `--json` form is always available for verification. *Specified, not built (→ B-020): the prose producer is a deterministic template (`ledger.rs:168`) and the crate's own header says an LLM producer slots in later.*</fact></item>
+        <item><fact id="LLM-NEVER-SILENTLY-WRITES-EDGES" status="impl/done">**LLM never silently writes edges, bumps revisions, or clears suspects.** Those are state transitions with audit cost; they pass through diffs.</fact></item>
+      </list>
+    </section>
+    <section id="runtime" title="2.8 Runtime exposure — the AI-native OSS channel">
+      <list ordered="true">
+        <item><fact id="RUNTIME-TRANSPORT" status="impl/plan">**Transport.** Each stack's discipline MCP server (`rust-ai-native-mcp`, `typescript-ai-native-mcp`, `go-ai-native-mcp`, all built on this package's `core-ai-native-mcp`) exposes `trace_explain(target, {json|prose})` — the subgraph and the prose render — alongside `specmap_check` and `specmap_write`. An agent that drives the stack CLI gets the same via `&lt;lang&gt;-ai-native trace &lt;target&gt; --json`. *Specified, not built (→ B-018): there is no `specmap_source(content_hash) -&gt; fragment` tool and no general `specmap_query`.*</fact></item>
+        <item><fact id="RUNTIME-DISTRIBUTION" status="impl/plan">**Distribution.** The index ships inside the published package (it is small); source fragments resolve by content hash against the package's git registry — the content-addressed identity from PROP-002 already guarantees fetch integrity. *Specified, not built (→ B-016): no published package ships an index. No `vibe.toml` in the repository lists `specmap.json` in its payload, and the only `specmap.json` files under `packages/` are `go-extract` / `ts-extract` test fixtures plus one project's own working index. Content-hash fragment resolution does not exist either — `content_hash` computes hashes for the ledger's cache keys, and nothing resolves a source fragment by one. PROP-002's fetch integrity is real and is not this.*</fact></item>
+        <item><fact id="RUNTIME-PROFILES" status="impl/plan">**Profiles.** `open` (full graph + source), `contract` (spec units + signatures of items, no bodies — the closed-source tier), `none`. Declared in `vibe.toml` `[metamodel] profile = "open"`. *Specified, not built (→ B-017): `[metamodel]` is in no manifest, no schema and no parser; the three profile values have no representation.*</fact></item>
+        <item><fact id="RUNTIME-SECURITY-IS-NON-OPTIONAL" status="spec/done">**Security (non-optional).** The exposed content is *instructions-shaped prose* delivered into a consuming agent's context — a prompt-injection distribution channel by construction. Therefore: (a) the shipped index and fragments are **signed**; consumers verify before use (scheme TBD, §7.6 — sigstore-class is the default candidate); (b) the MCP tool descriptions explicitly frame returned content as *reference data, not instructions*; (c) `vibe check` lints spec units for imperative second-person phrasing outside `guide` kind. This PROP takes the position that the trust layer ships **with** the runtime channel, not after it. *Specified, not built — all three clauses. (a) Nothing is signed: no signing or verification path exists in `vibe-publish`, `vibe-registry` or any engine crate, and this document's own `#OPEN-SIGNING-SCHEME` still calls the scheme undecided and blocking. (b) No MCP tool description carries that framing; the phrase appears nowhere. (c) `vibe check`'s roster has no imperative-phrasing or second-person lint. The position the sentence takes is the right one, and it is why the marker moves rather than the text: the trust layer has **not** shipped, and by this PROP's own standard the runtime channel must not ship until it does — which is consistent with `#RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS` being unbuilt too.*</fact></item>
+      </list>
+    </section>
+    <section id="languages" title="2.9 Language neutrality">
+      <p><fact id="GRAMMAR-IS-LANGUAGE-NEUTRAL" status="impl/done">The grammar (URIs, verbs, `r`, reasons) is language-neutral; only the carrier syntax is per-language.</fact></p>
+      <p><fact id="SPEC-SIDE-IS-ONE-SHARED-ENGINE" status="impl/done">The **spec side is one shared engine** (`core-ai-native-specmap`), so fact-unit extraction (§2.1) reaches every language family — rust, typescript, go — identically through the vendored engine; adding a language never re-implements the spec scanner.</fact></p>
+      <p><fact id="RUST-SHIPS-FIRST" status="impl/done">Rust ships first.</fact></p>
+      <p><fact id="sketches-normative-later-lead" status="spec/done">Sketches, normative later:</fact></p>
+      <list ordered="false">
+        <item><fact id="SKETCH-JAVASCRIPT-TYPESCRIPT" status="spec/done">**JavaScript/TypeScript:** JSDoc carrier — `/** @spec implements spec://… r2 */` on declarations; scanner = tree-sitter.</fact></item>
+        <item><fact id="SKETCH-PYTHON" status="spec/done">**Python:** decorator `@spec(implements="spec://…", r=2)` from a `specmark` package; module-level `__specmap_scope__ = "spec://…"` (NB: not `__spec__`, which importlib owns).</fact></item>
+      </list>
+    </section>
+  </section>
+  <section id="principles" title="3. Principles">
+    <section id="spec-principles" title="3.1 (а) Writing specifications">
+      <list ordered="true">
+        <item><fact id="SPEC-PRINCIPLE-EVERY-STATEMENT-IS-ADDRESSABLE" status="impl/done">**Every normative statement is addressable.** It lives in a unit with a stable `{#anchor}`; anchors are immutable and never reused; retirement is a tombstone, not a deletion.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-ONE-UNIT-ONE-DECISION" status="impl/done">**One unit, one decision.** If a unit needs "and also", it is two units. The unit is the page of the context-memory hierarchy: it must make sense *alone* when paged into an agent's window.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-NORMATIVITY-IS-MARKED" status="impl/done">**Normativity is marked, not implied.** RFC-2119 verbs inside `req` units; everything else is `prop` rationale, `design`, or `guide`. A reader (human or model) must never guess whether a sentence binds.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-NORM-AND-RATIONALE-ARE-SEPARATED" status="impl/done">**Norm and rationale are separated.** The MUST changes rarely and bumps `r`; the "why" evolves freely without invalidating implementations. PROPs hold rationale; REQs hold contract.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-SEMANTIC-EDITS-BUMP-R" status="impl/done">**Semantic edits bump `r`; editorial edits don't; the hash audits the difference.** Forgetting to bump is detected, not punished.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-SPEC-NEVER-RESTATES-HOW" status="impl/done">**Spec states *what* and *why* — never restates *how*.** Implementation detail belongs in rustdoc next to the code (where it cannot drift from the code); the metamodel joins the two layers at query time. A spec that mirrors code is shadow code and drift fuel.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-WRITE-TESTABLY" status="impl/done">**Write testably.** A `req` should imply its verification; if you cannot imagine the `#[verifies]` test, it is `design`, not `req`.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-DEVIATIONS-ARE-FIRST-CLASS" status="impl/done">**Deviations are first-class and honest.** When reality intentionally differs, the code says `deviates` + reason — the generalisation of the existing `&lt;!-- REVIEW: … --&gt;` discipline. An undocumented deviation found by audit is a defect.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-CROSS-REFERENCE-BY-URI-ONLY" status="impl/done">**Cross-reference by URI only.** No "see above", no relative prose pointers — they don't survive paging or reorganisation.</fact></item>
+        <item><fact id="SPEC-PRINCIPLE-UNITS-FIT-A-PAGE" status="impl/plan">**Units fit a page.** Soft target ≤ 120 lines per unit; `vibe check` warns beyond. Long units page badly and hash-churn often. *Specified, not built (→ B-021): no checker warns on spec-unit length; the 120-line figure is a target with no enforcement.*</fact></item>
+      </list>
+    </section>
+    <section id="rust-principles" title="3.2 (б) Writing Rust under specmap">
+      <quote><fact id="RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE" status="impl/done">Deliberately *not* a general style guide — only what traceability and the metamodel require. House rules (clippy `-D warnings`, `forbid(unsafe_code)`, etc.) stay where they are.</fact></quote>
+      <list ordered="true">
+        <item><fact id="RUST-PRINCIPLE-ITEM-IS-THE-UNIT-OF-MEANING" status="impl/done">**The item is the unit of meaning.** Shape code so each public item serves few spec units (≤ 3 edges; lint beyond). If an item needs more, split the item or merge the units.</fact></item>
+        <item><fact id="RUST-PRINCIPLE-TAGS-TRAVEL-WITH-CODE" status="impl/done">**Tags travel with code.** `#[spec]` on items; `scope!` per module for inheritance; private helpers inherit silently. Moving a function moves its link; that is the entire point.</fact></item>
+        <item><fact id="RUST-PRINCIPLE-TYPED-VERBS-NO-BARE-LINKS" status="impl/done">**Typed verbs, no bare links.** `implements` ≠ `documents` ≠ `deviates`; the verb is what makes the graph queryable.</fact></item>
+        <item><fact id="RUST-PRINCIPLE-TESTS-DECLARE-WHAT-THEY-VERIFY" status="impl/done">**Tests declare what they verify.** `#[verifies(uri, r)]` on the test, not a comment. Coverage = REQ × {impl, test} computed, not estimated.</fact></item>
+        <item><fact id="RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER" status="impl/plan">**Rustdoc is the detail layer.** Every tagged public item's doc comment states the *practically important* behaviour — errors, edge cases, performance traps. `vibe explain` composes spec (contract) + rustdoc (detail); neither duplicates the other. *Specified, not built (→ B-020): `explain` cannot compose rustdoc — `CodeItem` carries no doc field and the renderer emits symbol, kind, crate, file, line and edges only.*</fact></item>
+        <item><fact id="RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API" status="impl/done">**No orphan public API.** Every `pub` item is reachable from an edge, own or inherited. Ratcheted: warn → error per crate as migration lands (§4).</fact></item>
+        <item><fact id="RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED" status="impl/done">**Generated code is excluded; its generator input is tagged.** Schema files and macro definitions carry the edges; expansion output is marked generated.</fact></item>
+        <item><fact id="RUST-PRINCIPLE-ERRORS-ARE-CONTRACT-SURFACE" status="impl/done">**Errors are contract surface.** Public error types/variants that signal a requirement carry its edge, enabling error-message provenance. An error no spec explains is an undocumented behaviour.</fact></item>
+      </list>
+    </section>
+    <section id="binding-principles" title="3.3 (в) Binding principles">
+      <p><fact id="SECTION-2-IS-THE-DELIVERABLE" status="impl/done">Section 2 *is* deliverable (в).</fact></p>
+      <p><fact id="five-load-bearing-invariants-lead" status="impl/done">For reading convenience, the five load-bearing invariants:</fact></p>
+      <list ordered="false">
+        <item><fact id="INVARIANT-EDGES-TRAVEL-WITH-ARTEFACTS" status="impl/done">edges travel with artefacts (§2.3);</fact></item>
+        <item><fact id="INVARIANT-TWO-TIER-REVISIONS" status="impl/done">two-tier revisions with asymmetric invalidation (§2.2);</fact></item>
+        <item><fact id="INVARIANT-DERIVED-INDEX-WITH-A-CI-GATE" status="impl/done">derived deterministic committed index with a CI gate (§2.5);</fact></item>
+        <item><fact id="INVARIANT-TOOL-IS-FUNCTIONAL-WITHOUT-AN-LLM" status="impl/done">the tool is fully functional without an LLM, and the LLM only proposes and renders (§2.6–2.7);</fact></item>
+        <item><fact id="INVARIANT-RUNTIME-CHANNEL-SHIPS-SIGNED" status="impl/done">the runtime channel ships signed or not at all (§2.8.4).</fact></item>
+      </list>
+    </section>
+  </section>
+  <section id="migration" title="4. (г) Migration playbook — transforming vibevm with Claude Code">
+    <p><fact id="MIGRATION-STRATEGY-EASY-WINS-FIRST" status="spec/done">**Strategy: easy wins first, ratchet always, never gate the whole repo on day one.**</fact></p>
+    <p><fact id="maximum-perfection-horizon-is-phase-5-plus" status="spec/done">(The maximum-perfection horizon — full backfill of all 12 crates, JS/Py bindings, signed runtime channel — is Phase 5+, listed for honesty, not for scheduling.)</fact></p>
+    <section id="phase-0-tooling-skeleton" title="Phase 0 — tooling skeleton (≈ half a day)">
+      <list ordered="false">
+        <item><fact id="PHASE-0-SPECMARK-CRATE" status="spec/done">`crates/specmark/`: the no-op attribute + `scope!` + `verifies` macros (syn parse of the grammar, rustdoc line injection, zero runtime cost).</fact></item>
+        <item><fact id="PHASE-0-XTASK-SPECMAP-SUBCOMMAND" status="spec/done">`xtask specmap` subcommand: markdown unit parser + syn-based item scanner + canonical JSON emitter; `--check` mode (regenerate-and-diff, the `check-codegen` idiom).</fact></item>
+        <item><fact id="PHASE-0-SCHEMA-AND-CODEGEN" status="spec/done">`schemas/specmap.jtd.json` + codegen.</fact></item>
+        <item><fact id="PHASE-0-ACCEPTANCE" status="spec/done">Acceptance: index builds deterministically twice on the untouched repo (zero edges, full node inventory); CI job wired but non-blocking.</fact></item>
+      </list>
+    </section>
+    <section id="phase-1-pilot" title="Phase 1 — pilot: PROP-003 §2.6.1 × `vibe-resolver/src/conditional.rs`">
+      <p><fact id="phase-1-is-the-smallest-real-loop" status="spec/done">The smallest real loop, chosen deliberately: fresh spec, ~130-line module, and it carries a live design question (the `not`/monotonicity issue) that becomes the first officially traceable REQ with a recorded `deviates`.</fact></p>
+      <list ordered="true">
+        <item><fact id="PHASE-1-UNIT-IFY-THE-SPEC" status="spec/done">Unit-ify §2.6.1: add `req` markers + anchors for (i) the fixed-point/monotonicity contract, (ii) the predicate grammar, (iii) the host-invariance rule. *Anchors added, no prose rewritten* — additions only, owner-frozen text untouched pending sign-off.</fact></item>
+        <item><fact id="PHASE-1-TAG-CONDITIONAL-RS" status="spec/done">Tag `conditional.rs`: `implements` on the enum and `parse`, `deviates` (+ reason) for unimplemented boolean composition, `verifies` on its tests.</fact></item>
+        <item><fact id="PHASE-1-DRIFT-DRILL" status="spec/done">**Drift drill (the acceptance that matters):** semantically edit the fixed-point unit, bump `r` → gate flags the suspect edges; re-affirm → gate clears. Then edit a typo *without* bumping → hash warning fires. Both behaviours demonstrated in one PR description.</fact></item>
+        <item><fact id="PHASE-1-TRACE-EXPLAIN-EMITS-A-SUBGRAPH" status="spec/done">`xtask trace explain conditional::ConditionalPredicate::parse --text` emits a correct subgraph.</fact></item>
+      </list>
+    </section>
+    <section id="phase-2-backfill" title="Phase 2 — backfill `vibe-resolver` with Claude Code">
+      <p><fact id="phase-2-two-link-sources-lead" status="spec/done">Two link sources, both flowing through the `proposed` pool (§2.7), affirmed by diff review:</fact></p>
+      <p><fact id="PHASE-2-LATENT-CORPUS-MINING" status="spec/done">**(a) Latent corpus mining** — the repo already cites `spec://` in commit bodies (Rule 2):</fact></p>
+      <fence>git log --all --pretty='%H %s' --grep='spec://' | …</fence>
+      <p><fact id="PHASE-2-MINED-TRIPLES-SEED-PROPOSED-EDGES" status="spec/done">Each (commit → files touched → URIs cited) triple seeds proposed edges with evidence pointers.</fact></p>
+      <p><fact id="PHASE-2-CRATE-SWEEP-PROMPT" status="spec/done">**(b) Crate sweep.** Claude Code prompt (guardrails included):</fact></p>
+      <fence lang="text">Read spec/modules/vibe-resolver/*.md and crates/vibe-resolver/src/.
+For every public item, propose at most 3 specmap edges using the
+PROP-014 §2.3 grammar. For each proposal output: item path, verb,
+spec URI + r, a one-line evidence quote from BOTH sides, and a
+confidence (high/medium/low). Do NOT edit any file. Do NOT propose
+edges where you cannot quote evidence from the spec side — mark the
+item "candidate orphan" instead. Emit specmap-proposals.json only.</fence>
+      <p><fact id="phase-2-affirmation-session-prompt-lead" status="spec/done">Affirmation session prompt:</fact></p>
+      <fence lang="text">Take specmap-proposals.json entries marked APPROVED in the review
+file. Write the corresponding #[spec]/#[verifies]/scope! annotations.
+One commit per module, Conventional Commits, body citing the spec://
+URIs added. Run `cargo xtask specmap --check` and `cargo test -p
+vibe-resolver` before each commit. Touch nothing outside
+crates/vibe-resolver and the proposals file.</fence>
+      <list ordered="false">
+        <item><fact id="PHASE-2-ACCEPTANCE" status="spec/done">Acceptance: `vibe-resolver` coverage report ≥ 90% of `req` units implemented-and-verified; orphan list for the crate empty or dispositioned in AUDIT; gate flipped to blocking *for this crate only* (the ratchet file lists exempt crates).</fact></item>
+      </list>
+    </section>
+    <section id="phase-3-expansion-and-metrics" title="Phase 3 — expansion + metrics">
+      <list ordered="false">
+        <item><fact id="PHASE-3-CRATE-BY-CRATE" status="spec/done">Crate-by-crate (suggested order: `vibe-core` → `vibe-install` → `vibe-registry` → CLI last), each flipping its ratchet entry.</fact></item>
+        <item><fact id="PHASE-3-INSTRUMENT-THE-ECONOMICS" status="spec/done">**Instrument the economics** — the empirical answer to "will this rot": stale-edge half-life after a normal refactor week; proposals-to-affirmation lag; % of PRs touching tagged items that also touch their pins. Targets set after two weeks of data, recorded in AUDIT.</fact></item>
+      </list>
+    </section>
+    <section id="phase-4-surfaces" title="Phase 4 — surfaces">
+      <list ordered="false">
+        <item><fact id="PHASE-4-PROMOTE-XTASK-TO-VIBE" status="spec/done">Promote `xtask trace`/`explain` → `vibe trace` / `vibe explain` (`--json/--text/--prose`).</fact></item>
+        <item><fact id="PHASE-4-ERROR-PROVENANCE-WIRING" status="spec/done">Error provenance wiring in `vibe-cli` error rendering.</fact></item>
+        <item><fact id="PHASE-4-MCP-TOOLS-BLOCKED-ON-SIGNING" status="spec/done">`vibe-mcp` tools per §2.8 — **blocked on the signing decision (§7.6)**; ships signed or not at all.</fact></item>
+      </list>
+    </section>
+  </section>
+  <section id="rejected" title="5. Rejected alternatives">
+    <list ordered="true">
+      <item><fact id="rejected-external-sidecar-map-only" status="spec/done">**External sidecar map only** (a `specmap.toml` maintained by hand or by tool, no in-source tags). Rots immediately: without a compiler regenerating it, every refactor silently invalidates spans and symbol paths. Kept only as the *derived* index (§2.5), where regeneration is the lifecycle.</fact></item>
+      <item><fact id="rejected-line-range-anchors" status="spec/done">**Line/range anchors** ("PROP-003 lines 410–462", `src/naive.rs:118-160`). Maximally precise and maximally fragile; every upstream edit shifts them. Spans are demoted to derived-index decoration.</fact></item>
+      <item><fact id="rejected-embedding-similarity-as-ground-truth" status="spec/done">**Embedding-similarity recovered links as ground truth.** Non-deterministic core, unexplainable diffs, silent drift. Allowed exactly once in the lifecycle: as a *proposer* in Phase 2, behind human affirmation.</fact></item>
+      <item><fact id="rejected-literate-programming" status="spec/done">**Literate programming / tangle** (spec is the single source; code is extracted). Inverts authority correctly but destroys the entire Rust toolchain experience (rust-analyzer, incremental compile, grep-ability) and forces the spec to carry *how*. The Red Book's layer model (spec=meaning, code=detail) is the opposite bet, deliberately.</fact></item>
+      <item><fact id="rejected-external-requirements-database" status="spec/done">**External requirements database** (DOORS/Doorstop-style items outside the repo). Violates "project facts live in the repo" (CLAUDE.md memory discipline) and splits the review surface. Everything here is files in git — the book's ch. 2 thesis.</fact></item>
+      <item><fact id="rejected-full-formal-specification" status="spec/done">**Full formal specification** (TLA+/Kani/Dafny for the contracts). Wrong genre for prose contracts and process disciplines; *complementary* for isolated algorithmic kernels — the conditional-deps fixed point is a natural first candidate if we ever want a machine-checked model, and the specmap edge type for it would be `verifies`.</fact></item>
+    </list>
+  </section>
+  <section id="prior-art" title="6. Prior art and license posture">
+    <p><fact id="CONVENTIONS-ARE-FREE-CODE-IS-NOT" status="impl/done">Conventions and ideas are free; code is not.</fact></p>
+    <p><fact id="ROLES-ARE-EXPLICIT-PER-PROP-000" status="impl/done">Per PROP-000 §3 (permissive only; GPL/AGPL/LGPL forbidden as dependencies), roles below are explicit.</fact></p>
+    <p><fact id="LICENSE-FIELDS-ARE-RE-VERIFIED-BEFORE-REUSE" status="impl/done">License fields to be re-verified before any code-level reuse.</fact></p>
+    <table>
+      <tr>
+        <td>System</td>
+        <td>License (verify)</td>
+        <td>Role here</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-OPENFASTTRACE" status="spec/done">OpenFastTrace</fact></td>
+        <td><fact status="spec/done">GPL-3.0</fact></td>
+        <td><fact status="spec/done">**Study only.** Borrowed *ideas*: artifact-type chains (req→dsn→impl→utest), `~rev` semantics, coverage states. No code, no linkage.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-STRICTDOC" status="spec/done">strictdoc</fact></td>
+        <td><fact status="spec/done">Apache-2.0</fact></td>
+        <td><fact status="spec/done">Friendly. Grammar/UI patterns for requirement documents.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-DOORSTOP" status="spec/done">Doorstop</fact></td>
+        <td><fact status="spec/done">LGPL-3.0</fact></td>
+        <td><fact status="spec/done">Wrapper-zone per policy if ever executed; borrowed *idea*: reviewed-hash stamps (our two-tier revisions).</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-SPHINX-NEEDS" status="spec/done">Sphinx-needs</fact></td>
+        <td><fact status="spec/done">MIT</fact></td>
+        <td><fact status="spec/done">Friendly. Typed needs/links, filter queries.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-DO-178C" status="spec/done">DO-178C / DOORS culture</fact></td>
+        <td><fact status="spec/done">n/a (standards)</fact></td>
+        <td><fact status="spec/done">The cautionary tale §1.1 is built on: traceability that is audited but not load-bearing dies.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-SOURCE-MAPS" status="spec/done">JS source maps / DWARF</fact></td>
+        <td><fact status="spec/done">n/a</fact></td>
+        <td><fact status="spec/done">The analogy and its precise failure point (§1.1).</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-SYN-TREE-SITTER" status="spec/done">syn / tree-sitter *(`syn` is the live scanner dependency — `Cargo.toml:44`; tree-sitter is in no manifest in this repository.)*</fact></td>
+        <td><fact status="spec/done">MIT/Apache-2.0; MIT</fact></td>
+        <td><fact status="spec/done">Implementation dependencies for the scanner.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PRIOR-ART-SIGSTORE" status="spec/done">sigstore</fact></td>
+        <td><fact status="spec/done">Apache-2.0</fact></td>
+        <td><fact status="spec/done">Default candidate for §2.8.4 signing.</fact></td>
+      </tr>
+    </table>
+    <p><fact id="differentiators-lead" status="impl/done">**Differentiators vs. classical requirements traceability:**</fact></p>
+    <list ordered="false">
+      <item><fact id="DIFFERENTIATOR-CONSUMED-AT-RUNTIME" status="impl/done">(i) the map is consumed at *runtime by agents using the tool*, not only at audit time;</fact></item>
+      <item><fact id="DIFFERENTIATOR-LLM-PARTICIPATES-BEHIND-A-DETERMINISTIC-CORE" status="impl/done">(ii) an LLM participates — strictly as proposer and renderer behind a deterministic core;</fact></item>
+      <item><fact id="DIFFERENTIATOR-DOUBLES-AS-THE-CONTEXT-PAGING-TABLE" status="impl/done">(iii) the map doubles as the context-paging table for agent sessions (PROP-009's intra-project counterpart);</fact></item>
+      <item><fact id="DIFFERENTIATOR-SPECS-ARE-PACKAGE-DISTRIBUTED" status="impl/done">(iv) specs are package-distributed artefacts (vibevm itself), so tracing composes across the registry.</fact></item>
+    </list>
+  </section>
+  <section id="open" title="7. Open questions">
+    <list ordered="true">
+      <item><fact id="OPEN-CROSS-PACKAGE-URIS" status="spec/done">**Cross-package URIs.** Group-qualified `spec://org.vibevm.world/wal/...` grammar and resolution against installed packages — after PROP-008 settles live.</fact></item>
+      <item><fact id="OPEN-INHERITANCE-MERGE" status="spec/done">**Inheritance merge.** v0.1: item tags replace `scope!` defaults. Is a `+implements` extend form needed? Decide on Phase 2 evidence.</fact></item>
+      <item><fact id="OPEN-UNIT-MOVES-ACROSS-DOCUMENTS" status="spec/done">**Unit moves across documents.** Anchor immutability covers renames-in-place; moving a unit between files needs either URI redirect stubs (PROP-012 flavour) or doc-path-free unit IDs. Lean: redirect stubs.</fact></item>
+      <item><fact id="OPEN-EXPLANATION-CACHING" status="spec/done">**Explanation caching.** `--prose` renderings keyed by (subgraph hash, model id) — where cached, when invalidated.</fact></item>
+      <item><fact id="OPEN-THRESHOLDS" status="spec/done">**Thresholds.** 3 edges/item, 120 lines/unit — placeholders until Phase 3 metrics.</fact></item>
+      <item><fact id="OPEN-SIGNING-SCHEME" status="spec/done">**Signing scheme.** sigstore vs. minisign-class vs. registry-native git signatures; decide before Phase 4's MCP exposure; blocking for §2.8.</fact></item>
+      <item><fact id="OPEN-NON-OSS-CONTRACT-PROFILE" status="spec/done">**Non-OSS `contract` profile.** Exactly which item metadata (signatures? doc comments?) is safe to ship; needs a real closed-source consumer to decide.</fact></item>
+      <item><fact id="OPEN-COMMIT-MESSAGE-INTEGRATION" status="spec/done">**Commit-message integration.** Rule 2 already cites `spec://`; should commits citing a REQ auto-link into the index as `informs` provenance? Cheap, probably yes; confirm noise level on Phase 2 history.</fact></item>
+    </list>
+    <p><fact id="this-prop-is-a-design-proposal" status="impl/done">*This PROP is a design proposal.*</fact></p>
+    <p><fact id="RATIFICATION-HAPPENS-THROUGH-PR-REVIEW" status="impl/done">*Ratification — and the `specmark`/xtask implementation start — happens through PR review against this document.*</fact></p>
+    <p><fact id="UNEXERCISED-MECHANISM-IS-REMOVED-FROM-THE-SPEC" status="impl/done">*Any mechanism specified here that is not exercised by the end of Phase 2 is either removed from the spec or annotated in place as **specified, not built** — never carried as unmarked aspiration.*</fact></p>
+  </section>
+</spec>

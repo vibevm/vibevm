@@ -1,0 +1,50 @@
+schema = 1
+source_hash = "sha256:cf7e65abc78b1f8ecc442e3f9dc457f00d8e1828008a291602e001c221dedae2"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:b10be97fb873b78130b9185cc1032a39f64cce8b8673028be84f526bbb746409"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/10-flow-wal.md"
+output = "spec/boot/10-flow-wal.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/wal/WAL-PROTOCOL.md"
+output = "spec/flows/wal/WAL-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/wal/cold-resume.md"
+output = "spec/flows/wal/cold-resume.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/wal/morning-routine.md"
+output = "spec/flows/wal/morning-routine.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/wal/session-end-hook.md"
+output = "spec/flows/wal/session-end-hook.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/skills/wal-status/SKILL.md"
+output = "spec/skills/wal-status/SKILL.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

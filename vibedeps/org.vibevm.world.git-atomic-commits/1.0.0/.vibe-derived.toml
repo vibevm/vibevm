@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:00651a522cb9474e2607376323f38b15ff5dbf355e0b3b8a52236e7a68fdaaab"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:14fbb16488834ff0c03408714b28c2cf316c1b73b5fb7fb9da00a1b7c7d876a6"
+
+[[file]]
+source = "LICENSE"
+output = "LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/30-flow-atomic-commits.md"
+output = "spec/boot/30-flow-atomic-commits.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+output = "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/atomic-commits/splitting-large-changes.md"
+output = "spec/flows/atomic-commits/splitting-large-changes.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:campaign-plans` — cold-executable campaign plans</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT" status="impl/done">A vibevm `flow` package that installs the **campaign plan** format
+into a project: any multi-commit change too big for one session is
+planned as a single document that a fresh session — or a different
+person — can execute with no memory of the planning conversation.</fact></p>
+  <list ordered="false">
+    <item><fact id="FEATURE-FROZEN-BASELINE-ARITHMETIC" status="impl/done">Frozen baseline arithmetic,</fact></item>
+    <item><fact id="FEATURE-FALSIFIABLE-PREDICTIONS" status="impl/done">falsifiable predictions,</fact></item>
+    <item><fact id="FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR" status="impl/done">phases gated on
+  the project's green floor,</fact></item>
+    <item><fact id="FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE" status="impl/done">an execution ledger of hash-level
+  evidence,</fact></item>
+    <item><fact id="FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE" status="impl/done">and a deferrals ledger that seeds the next campaign's
+  mandate.</fact></item>
+  </list>
+  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-PLAN-FORMAT" status="impl/done">`spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
+  campaign is, the five artifact roles (PLAN / BASELINE /
+  PREDICTIONS / LOG / REPORT), and the canonical fifteen-section
+  plan skeleton, each section with a spec and most with a worked
+  mini example.</fact></item>
+    <item><fact id="CONTENT-THE-PHASE-GATES" status="impl/done">`spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
+  discipline (no commits; a red spike rewrites the affected decision
+  before anything lands), phase anatomy, the safe-stop law,
+  resumability, review points, discovered-necessary work.</fact></item>
+    <item><fact id="CONTENT-THE-EXECUTION-LEDGER" status="impl/done">`spec/flows/campaign-plans/execution-ledger.md` — the record half:
+  status-line lifecycle, the prepended execution record, per-phase
+  commit maps, honesty rules, the closing report, the deferrals
+  ledger and the lineage law.</fact></item>
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/40-flow-campaign-plans.md` — boot snippet loaded at
+  session start: when to propose a campaign, the phase-boundary
+  checklist, and the never-do list.</fact></item>
+  </list>
+  <section id="install" title="Install">
+    <fence lang="bash">vibe install flow:campaign-plans</fence>
+  </section>
+  <section id="uninstall" title="Uninstall">
+    <fence lang="bash">vibe uninstall flow:campaign-plans</fence>
+    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</fact></p>
+    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
+  </section>
+  <section id="canonical-home" title="Canonical home">
+    <p><fact id="THIS-PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-FORMAT" status="impl/done">This package is the canonical home of the campaign-plan format.</fact></p>
+    <p><fact id="core-ai-native-defers-from-its-next-release" status="spec/done">The
+AI-Native Discipline (`flow:core-ai-native`) ships its own
+campaign-form document, `spec/05-CAMPAIGN-FORM.md`, which restates
+part of this format; the two are not yet reconciled.</fact></p>
+  </section>
+  <section id="composition" title="Composition">
+    <list ordered="false">
+      <item><fact id="COMPOSES-WAL" status="impl/done">`flow:wal` — a campaign checkpoint updates the WAL's standing line
+  at every phase boundary; the plan file, not the WAL, carries the
+  campaign detail.</fact></item>
+      <item><fact id="COMPOSES-ATOMIC-COMMITS" status="impl/done">`flow:git-atomic-commits` — each phase's commit set follows it:
+  subjects are spelled in the plan, one idea per commit, and the
+  ledger binds hashes to the planned subjects.</fact></item>
+      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — the plan's D-sections are decision
+  records inline; rejected options carry reasons so nobody re-opens
+  a settled question mid-campaign.</fact></item>
+      <item><fact id="COMPOSES-CONFLICT-PROTOCOL" status="impl/done">`flow:conflict-protocol` — review points are the campaign-scale
+  REVIEW marker: OPEN with options, then RESOLVED with the owner's
+  ruling verbatim.</fact></item>
+    </list>
+  </section>
+  <section id="background" title="Philosophical background">
+    <p><fact id="format-crystallized-over-a-dozen-real-campaigns" status="spec/done">The format crystallized over a dozen real campaigns in the origin
+project — a debt drain that took a frozen baseline from 130 findings
+to 10, a package-family rename across five packages, a six-wave
+subsystem landing whose execution corrected two of the plan's own
+decisions and said so in the ledger.</fact></p>
+    <p><fact id="each-was-executed-cold-and-the-format-kept-what-survived" status="spec/done">Each was executed cold, several
+across session boundaries, and the format kept what survived contact
+with execution.</fact></p>
+    <p><fact id="THE-PLAN-IS-A-PROGRAM-AND-THE-LEDGER-IS-ITS-OUTPUT" status="spec/done">Its spirit is the book's "write for the system, not
+for yourself": the plan is a program for whoever runs it next, and
+the ledger is that program's output (*AI-native development*, ships
+in Russian inside `flow:redbook` at `spec/book/ru/`).</fact></p>
+  </section>
+  <section id="license" title="License">
+    <p><fact id="license-line" status="impl/done">UPL-1.0. See [LICENSE.md](LICENSE.md).</fact></p>
+  </section>
+</spec>

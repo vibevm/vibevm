@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:git-practices` — a repository's commit-and-push discipline, as a family</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="AGG-ROLE" status="impl/done">The **git-practices** family aggregates the distinct disciplines a repository applies to its
+Git history.</fact></p>
+  <p><fact id="AGG-CLOSURE-PULLS-THE-WHOLE-FAMILY" status="impl/done">Each is its own installable `flow` package — adoptable alone — and this umbrella
+names a tested set of them; requiring `flow:git-practices` pulls the whole family through the
+dependency closure, each member contributing its own boot snippet.</fact></p>
+  <p><fact id="deliberately-separate-packages-lead" status="impl/done">They are deliberately **separate packages** because they are different things:</fact></p>
+  <list ordered="false">
+    <item><fact id="AGG-MEMBER-CONVENTIONAL-COMMITS" status="impl/done">**`git-conventional-commits`** — the message *format*: `type(scope): subject`, a why-not-what body,
+  the allowed-type set, scope convention, worked examples, anti-patterns.</fact></item>
+    <item><fact id="AGG-MEMBER-ATOMIC-COMMITS" status="impl/done">**`git-atomic-commits`** — the *atomicity* discipline: one commit = one logical idea; when to split
+  a mixed working tree, when to batch, why it matters more in a human-AI team.</fact></item>
+    <item><fact id="AGG-MEMBER-ATTRIBUTION-POLICY" status="impl/done">**`git-attribution-policy`** — the deliberate *authorship posture*: a human-authored surface on
+  every artifact by default, one always-loaded statement of it, and the open-disclosure alternative a
+  project may adopt instead.</fact></item>
+    <item><fact id="AGG-MEMBER-AUTONOMY" status="impl/done">**`git-autonomy`** — the *commit autonomy* posture: routine work proceeds without a handshake; the
+  red lines (history rewrites, force-push, large blobs, CI/signing/secrets) stop and ask.</fact></item>
+  </list>
+  <p><fact id="EACH-IS-ADOPTABLE-ON-ITS-OWN" status="impl/done">A message can be valid Conventional Commits and non-atomic (`feat: add foo, bar, baz`), or atomic
+without the format — so each is adoptable on its own, and the family is how a project takes the
+whole posture at once.</fact></p>
+  <p><fact id="THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY" status="impl/done">The family is complete at four members:
+**human-authored attribution** and **commit autonomy** landed alongside the message format and the
+atomicity discipline, and all four are pinned in this package's `vibe.toml`.</fact></p>
+  <p><fact id="CONTENT-MINIMAL-NO-BOOT-SNIPPET-OF-ITS-OWN" status="impl/done">Content-minimal by design (PROP-028): no boot snippet of its own — the members ship theirs.</fact></p>
+  <section id="install" title="Install">
+    <fence lang="bash">vibe install flow:git-practices</fence>
+  </section>
+  <section id="license" title="License">
+    <p><fact id="license-line" status="impl/done">UPL-1.0 — see `LICENSE`.</fact></p>
+  </section>
+</spec>

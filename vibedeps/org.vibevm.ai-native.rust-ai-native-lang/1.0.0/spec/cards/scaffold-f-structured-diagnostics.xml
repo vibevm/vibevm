@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">CARD: scaffold-f-structured-diagnostics — Structured, Requirement-Citing Diagnostics</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · BETA**</fact></p>
+  <section id="band-one-identity" title="Band 1 — Identity &amp; Recognition">
+    <p><fact id="CLASSIFICATION" status="impl/done">Classification: layer=E (verification) + C (meta); mechanism=scaffold F.</fact></p>
+    <p><fact id="INTENT" status="impl/done">Intent: Engineer compiler/linter/checker output as agent input — stable, structured, citing the violated requirement and the fix surface — because error text is the highest-leverage prompt in the loop.</fact></p>
+    <p><fact id="ALSO-KNOWN-AS" status="spec/done">Also Known As: actionable diagnostics; SARIF output; fix-it hints; structured errors; machine-readable lint.</fact></p>
+    <p><fact id="APPLICABILITY-RECOGNITION" status="impl/done">Applicability / Recognition: Apply when — a custom check emits free-text; an error states what failed but not which REQ or where to fix; tool output is unstable across runs (line shifts, ordering). *Detector seed:* a `thiserror`/lint/conform message without a `spec://` REQ URI and a fix-surface hint → recognition fires (tool output is the agent's percept, R3-011).</fact></p>
+  </section>
+  <section id="band-two-justification" title="Band 2 — Justification &amp; Tradeoffs">
+    <p><fact id="MOTIVATION" status="spec/done">Motivation: A weak agent sees `Error: invalid configuration`. It guesses, burns iterations. With `violates REQ spec://config/r3: tls requires a cert path; fix surface: ConnectionBuilder.cert()`, the agent acts directly. The strong author's "what to do when this fails" is materialized in the message.</fact></p>
+    <p><fact id="STRUCTURE-AND-PARTICIPANTS" status="impl/done">Structure &amp; Participants: *Diagnostic* (structured record) · *REQ citation* (`spec://` URI) · *Fix-surface hint* (where/what) · *Stable format* (SARIF / fixed grammar).</fact></p>
+    <p><fact id="COLLABORATIONS" status="impl/done">Collaborations: Carries failures from Classes C/D/E; feeds the agent loop's next prompt; in raids, structured diagnostics let the orchestrator triage misfires.</fact></p>
+    <p><fact id="GOALS-AND-NON-GOALS" status="impl/done">Goals / Non-Goals: *Goals:* every custom check is agent-actionable. *Non-Goals:* NOT rewriting rustc's own diagnostics (already good); does NOT replace the contract that defines correctness.</fact></p>
+    <p><fact id="CONSEQUENCES" status="spec/done">Consequences: (+) iterations-to-green drop, more for weaker models; (+) diagnostics double as a navigable requirement map. (−) message authoring cost; (−) verbosity vs token budget — keep a compact grammar.</fact></p>
+    <p><fact id="ALTERNATIVES" status="spec/done">Alternatives: free-text errors (wasted conditioning); silent failure (worst). Neither acceptable for an agent loop.</fact></p>
+    <p><fact id="RISKS-AND-ASSUMPTIONS" status="spec/done">Risks &amp; Assumptions: assumes a stable REQ namespace exists (it does — specmap). *Sunset:* none material.</fact></p>
+    <p><fact id="EVIDENCE-AND-TRANSFER-STRENGTH" status="spec/done">Evidence &amp; Transfer-strength: R3-011 (tool output is highest-leverage prompt, theory), R2C-004 (agent conditions on tool text, benchmark). Class: benchmark + theory. Tag: **[E-mid]**.</fact></p>
+  </section>
+  <section id="band-three-operation" title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN a custom check/error message lacks a spec:// REQ URI + fix-surface hint THEN apply
+mode: inline
+routine:
+  1. Add the violated REQ's spec:// URI to the message.
+  2. Add a one-line fix surface: where to change and what.
+  3. Emit in a stable structured form (SARIF for conform; fixed grammar for thiserror).
+  4. Keep it compact (one line of why + one of where).
+checker: conform `error-enum-cites-req` + `error-message-cites-req` (the Class-F halves in `core-ai-native-conform`; every finding renders through the engine's one `req_message`, so error-surface messages must match `violates REQ &lt;uri&gt;: &lt;why&gt;; fix surface: &lt;where&gt;`) — the custom-clippy third channel is `WISH` (→ `BACKLOG.md {#b-050}`: `dylint` links `rustc_private` and will not build on the project's pinned `stable`)
+raid_role: layer=tooling; order=after:none; batch=crate
+budget: active_rules=1; first_signal=lint pass (&lt;60s)</fence>
+  </section>
+</spec>

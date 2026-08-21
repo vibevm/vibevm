@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MCP-CORE v0.1 — the neutral MCP server transport</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Status:** SHIPPED with discipline-core 0.6.0 (MCP-SOVEREIGNTY-PLAN
+Wave 2); the flow foundation is named core-ai-native since the
+package-family rename (PROP-028), and the crate ships as
+core-ai-native-mcp.</fact></p>
+  <p><fact id="TRANSPORT-EVERY-MCP-KIND-SERVER-BUILDS-ON" status="impl/done">The transport every `mcp`-kind package's server builds on:
+this package owns what no single language owns, and a JSON-RPC loop is
+exactly that.</fact></p>
+  <p><fact id="CONSUMERS-VENDOR-THIS-CRATE-BYTE-IDENTICALLY" status="impl/done">Consumers: the per-language discipline servers
+(`rust-ai-native-mcp`, `typescript-ai-native-mcp`) vendor this crate
+byte-identically (sync-engines) and mount their tool sets on it.</fact></p>
+  <p><fact id="RELATED-LAWS-LIVE-IN-THE-CONSUMING-REPO" status="impl/done">**Related:** the consumer-side kind and delivery laws live in the
+consuming repo's PROP-027 (`spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027`);
+the tcg tool grammar in TCG-PROTOCOL-RUST-v0.1 / TCG-PROTOCOL-v0.1 (the
+stacks) is transport-independent and unchanged by this mechanism.</fact></p>
+  <section id="wire" title="1. The wire">
+    <p><fact id="kind-line-wire" status="impl/done">`req r1`</fact></p>
+    <p><fact id="WIRE-IS-LINE-DELIMITED-JSON-RPC-OVER-STDIO" status="impl/done">Line-delimited JSON-RPC 2.0 over stdio — one JSON object per line, no
+Content-Length framing (that is the LSP convention; MCP hosts speak
+lines, and the production vibe-mcp server has spoken exactly this shape
+against every supported agent host since PROP-015).</fact></p>
+    <p><fact id="ANSWERED-PROTOCOL-REVISION" status="impl/done">The answered protocol revision is `2024-11-05`.</fact></p>
+    <p><fact id="inbound-frames-classify-by-id-lead" status="impl/done">Inbound frames classify by `id`:</fact></p>
+    <list ordered="false">
+      <item><fact id="FRAME-WITH-ID-IS-A-REQUEST" status="impl/done">present-and-non-null = a REQUEST that
+  MUST be answered;</fact></item>
+      <item><fact id="FRAME-WITHOUT-ID-IS-A-NOTIFICATION" status="impl/done">absent-or-null = a NOTIFICATION that MUST be absorbed
+  without a response (hosts send `notifications/initialized` and
+  cancellations).</fact></item>
+    </list>
+    <p><fact id="MALFORMED-LINE-MUST-NOT-KILL-THE-LOOP" status="impl/done">A malformed line — non-JSON, or a frame without
+`method` — is answered with JSON-RPC `parse error` (-32700) and MUST
+NOT kill the loop: the loop ends only at end-of-input or a dead
+channel.</fact></p>
+    <p><fact id="TRANSPORT-FAILURE-IS-ONE-THISERROR-ENUM" status="impl/done">Transport-level failure is the layer's one `thiserror` enum,
+each variant citing this mechanism and naming a fix surface.</fact></p>
+  </section>
+  <section id="server" title="2. The loop">
+    <p><fact id="kind-line-server" status="impl/done">`req r1`</fact></p>
+    <p><fact id="SERVER-IS-NAME-VERSION-TOOLSET-OVER-A-TRANSPORT-SEAM" status="impl/done">The server is `(name, version, ToolSet)` driven over a `Transport` seam
+(`read_line` / `write_line`; production = locked stdio, tests = a
+scripted replay double — the whole loop tests with no agent host near
+the suite).</fact></p>
+    <p><fact id="methods-lead" status="impl/done">Methods:</fact></p>
+    <list ordered="false">
+      <item><fact id="METHOD-INITIALIZE" status="impl/done">`initialize` → `{protocolVersion, serverInfo{name,version},
+  capabilities:{tools:{listChanged:false}}}`.</fact></item>
+      <item><fact id="METHOD-TOOLS-LIST" status="impl/done">`tools/list` → the registry's descriptors, stable (sorted) order.</fact></item>
+      <item><fact id="METHOD-TOOLS-CALL" status="impl/done">`tools/call` → dispatch by `name` with `arguments`; a missing `name`
+  is `invalid params` (-32602); an unknown tool is
+  `method not found` (-32601).</fact></item>
+      <item><fact id="METHOD-PING" status="impl/done">`ping` → `{}`.</fact></item>
+      <item><fact id="METHOD-ANYTHING-ELSE" status="impl/done">Anything else → `method not found`.</fact></item>
+    </list>
+  </section>
+  <section id="toolset" title="3. Tools">
+    <p><fact id="kind-line-toolset" status="impl/done">`req r1`</fact></p>
+    <p><fact id="TOOL-IS-DESCRIPTOR-PLUS-RUN" status="impl/done">A tool is `descriptor()` (name, description, `inputSchema` JSON schema)
+plus `run(args) → ToolOutput{report, is_error}`.</fact></p>
+    <p><fact id="REGISTRY-LAST-REGISTRATION-OF-A-NAME-WINS" status="impl/done">The registry maps
+name → tool; the last registration of a name wins.</fact></p>
+    <p><fact id="TOOL-FAILURE-IS-A-RESULT-NEVER-A-PROTOCOL-ERROR" status="impl/done">**Tool-level failure is a RESULT, never a protocol error**: a gate that
+found findings, an oracle that refused — these answer
+`{content:[{type:"text",text:report}], isError:true}` so the agent
+reads the report; protocol errors are reserved for the transport
+grammar itself (unknown tool, malformed params).</fact></p>
+    <p><fact id="REPORTS-SPEAK-THE-CLASS-F-REQ-CITING-GRAMMAR" status="impl/done">Reports speak the
+Class-F REQ-citing grammar of the runners they wrap.</fact></p>
+  </section>
+  <section id="capture" title="4. The capture guard">
+    <p><fact id="kind-line-capture" status="impl/done">`req r1`</fact></p>
+    <p><fact id="CAPTURE-IS-A-PROCESS-LEVEL-REDIRECT" status="impl/done">Everything a tool run says — including CHILD processes (a floor's
+cargo, prettier, node) — goes to the process's stderr channel, so the
+only capture that sees a whole run is a process-level redirect around
+the call: `dup2` over fd 2 on unix, `SetStdHandle(STD_ERROR_HANDLE, …)`
+on Windows, into a temp FILE (a file, not a pipe — a filling pipe
+blocks the writer and deadlocks a chatty floor).</fact></p>
+    <p><fact id="threaded-write-was-rejected-at-the-spike" status="spec/done">A threaded
+`&amp;mut dyn Write` was rejected at the plan's Wave-0 spike: children
+inherit the process handle and bypass it entirely.</fact></p>
+    <p><fact id="LAWS-CAPTURES-MUST-NOT-NEST-OR-RUN-CONCURRENTLY" status="impl/done">Laws: the redirect is process-global, so captures MUST NOT nest or run
+concurrently (the loop dispatches tools sequentially — that is the
+licence); a second simultaneous capture refuses with this unit cited.</fact></p>
+    <p><fact id="RESTORATION-RIDES-DROP" status="impl/done">Restoration rides `Drop`, so a panicking tool cannot leave the process
+mute.</fact></p>
+    <p><fact id="CAPTURE-CELL-IS-THE-AUDITED-HOME-OF-UNSAFETY" status="impl/done">This cell is the crate's audited home of raw-descriptor
+unsafety — nothing else touches fds or std handles.</fact></p>
+  </section>
+  <section id="no-prompts" title="5. No prompts, no vibe">
+    <p><fact id="kind-line-no-prompts" status="impl/done">`req r1`</fact></p>
+    <p><fact id="NO-INTERACTIVE-CHANNEL-TOOLS-MUST-NOT-PROMPT" status="impl/done">A server has no interactive channel: tools MUST NOT prompt — anything
+that would ask becomes an explicit tool parameter (`force`-class flags
+included).</fact></p>
+    <p><fact id="CRATE-KNOWS-NEITHER-VIBE-NOR-A-LANGUAGE" status="impl/done">And nothing in this crate knows vibe, a language, or a
+discipline rule: a server built on it serves with `vibe` absent from
+`PATH` — the consuming repo's PROP-027 §2.6 turns that property into an
+acceptance test.</fact></p>
+  </section>
+</spec>

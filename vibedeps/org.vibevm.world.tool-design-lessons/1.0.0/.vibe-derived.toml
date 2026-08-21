@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:fbf2b8cd4cb0a279019c3e6cdd203f3430230ef64a1f9bd32c1fe542511372e9"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:751f407978081925e01ac6f7ef6231e74a231bca6c643a9e252b86237b7dbabe"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/70-flow-tool-design-lessons.md"
+output = "spec/boot/70-flow-tool-design-lessons.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+output = "spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/tool-design-lessons/packaging-lessons.md"
+output = "spec/flows/tool-design-lessons/packaging-lessons.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/tool-design-lessons/self-updating-tools.md"
+output = "spec/flows/tool-design-lessons/self-updating-tools.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Terraform a TypeScript codebase (brownfield adoption)</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="EXECUTING-THE-BROWNFIELD-PROTOCOL" status="impl/done">You are executing the BROWNFIELD protocol
+(`spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1` — shipped
+copy under `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/mechanisms/`;
+read it before the first phase, and skim `03-RAID-PLAYBOOK` +
+`05-CAMPAIGN-FORM` for the campaign machinery).</fact></p>
+  <p><fact id="founding-principles-lead" status="impl/done">The founding principles:</fact></p>
+  <list ordered="false">
+    <item><fact id="PRINCIPLE-INVENTORY-NOT-GATE" status="impl/done">**inventory, not gate** (the only precondition is "the project
+  type-checks or at least runs");</fact></item>
+    <item><fact id="PRINCIPLE-ASPIRATION-MUST-BE-LABELED" status="impl/done">**aspiration is legal only when
+  labeled**;</fact></item>
+    <item><fact id="PRINCIPLE-CONTRADICTION-IS-DATA" status="impl/done">**contradiction is data**;</fact></item>
+    <item><fact id="PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD" status="impl/done">**characterization is the
+  truth-of-record**;</fact></item>
+    <item><fact id="PRINCIPLE-MONOTONE-UTILITY" status="impl/done">**monotone utility**.</fact></item>
+  </list>
+  <p><fact id="DO-NOT-BULLDOZE-AN-INHABITED-WORLD" status="impl/done">Do not bulldoze an inhabited
+world.</fact></p>
+  <p><fact id="TOOLCHAIN-INSTALL-OR-RUN-IN-PLACE" status="impl/done">Toolchain: `typescript-ai-native` (install once:
+`cargo install --path vibedeps/&lt;stack-slot&gt;/crates/typescript-ai-native-cli`,
+or run via `cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml -p
+typescript-ai-native-cli --bin typescript-ai-native -- &lt;args&gt;`).</fact></p>
+  <p><fact id="PROJECT-NEEDS-NODE-AND-ITS-OWN-TYPESCRIPT" status="impl/done">The
+project itself needs node ≥ 22.6 and its own `typescript` devDependency —
+the structural gate parses with the project's own compiler.</fact></p>
+  <section id="phase-inventory" title="Phase −1 — inventory (record reality; change nothing)">
+    <list ordered="true">
+      <item><fact id="INVENTORY-PRECONDITION" status="impl/done">Precondition: `npx tsc --noEmit` runs (errors are FINDINGS to record,
+   not blockers) and the test runner starts.</fact></item>
+      <item><fact id="INVENTORY-INIT" status="impl/done">`typescript-ai-native init` — policies + empty registries. Nothing is
+   gated yet, and that is correct.</fact></item>
+      <item><fact id="INVENTORY-TESTS-BASELINE" status="impl/done">**Fill `discipline/registry/tests-baseline.json` with reality:** run
+   the suite once (`node --test --test-reporter=tap`), record every
+   failing test as `failing-known` with a `since` date and a debt id — do
+   NOT fix them now (drive-by repairs destroy the accounting).</fact></item>
+      <item><fact id="INVENTORY-HARVEST-INTENT" status="impl/done">**Harvest intent** into `discipline/registry/intent.json`: README
+   roadmaps, TODO/FIXME that carry design, open issues you will honour.
+   The carry-over guarantee: at exit every harvested intention is
+   done | rescoped | rejected(reason) — zero unaccounted.</fact></item>
+      <item><fact id="INVENTORY-FILE-DEBT" status="impl/done">**File debt** into `discipline/registry/debt.json`: failing tests, the
+   `any`/`as`/`!`/`@ts-ignore` hotspots `typescript-ai-native health`
+   counts, missing runtime validation at erasure boundaries — each with
+   severity, evidence, disposition, and `touch:` tripwires.</fact></item>
+      <item><fact id="INVENTORY-CHARACTERIZE" status="impl/done">**Characterize** currently-passing observable behavior (golden
+   transcripts under `discipline/golden/`, normalized for volatile
+   fields). A pinned bug is visible debt; an unpinned bug is a landmine.</fact></item>
+      <item><fact id="INVENTORY-SPECMAP" status="impl/done">`typescript-ai-native specmap` — mint the (initially small) index;
+   commit the whole inventory as its own topic commits.</fact></item>
+    </list>
+  </section>
+  <section id="phase-first-spec-units" title="Phase 0 — the first spec units + the tsconfig floor">
+    <list ordered="true">
+      <item><fact id="PHASE-ZERO-FIRST-SPEC-DOCUMENTS" status="impl/done">Write the project's first `spec/` documents for the subsystems you
+   will touch first: anchored headings (`{#req-…}`), kind lines
+   (`` `req r1` ``). Tag implementing exports as you go
+   (`/** @implements spec://&lt;ns&gt;/… */`, or a file-level `@scope`);
+   `typescript-ai-native specmap` after each batch keeps the index green.</fact></item>
+      <item><fact id="PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR" status="impl/done">Raise `tsconfig.json` toward the GUIDE §1 floor (`strict`,
+   `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
+   `erasableSyntaxOnly`) — one flag at a time; each flag's fallout is
+   inventory (debt entries), not a fix-everything-now mandate.</fact></item>
+    </list>
+  </section>
+  <section id="card-raids" title="Phases 1…N — card raids, cell by cell">
+    <p><fact id="raid-one-directory-at-a-time-lead" status="impl/done">Per the Raid Playbook skeleton (scope &amp; freeze → card order → phases →
+acceptance), raid one directory-at-a-time toward the cell layout:</fact></p>
+    <list ordered="false">
+      <item><fact id="RAID-CARVE-THE-CELL-LAYOUT" status="impl/done">carve `src/cells/&lt;name&gt;/` with `index.ts` seams; imports cross seams
+  only (`ts-cell-isolation` starts enforcing the moment `cells_dir` is
+  set in conform.toml);</fact></item>
+      <item><fact id="RAID-BRAND-PRIMITIVES-AT-SEAMS" status="impl/done">brand meaning-bearing primitives at the seams (card B); validate
+  external data at erasure boundaries through a single-source schema;</fact></item>
+      <item><fact id="RAID-DRAIN-THE-UNSAFE-SET" status="impl/done">drain the unsafe set (`any` → `unknown`+narrowing, checked `as`,
+  assertion functions for `!`), recording the irreducible remainder as
+  reasoned `@ts-expect-error` testimony;</fact></item>
+      <item><fact id="RAID-FREEZE-ONCE-PER-LANDING" status="impl/done">`typescript-ai-native conform freeze` once per raid landing, then the
+  ratchet only shrinks;</fact></item>
+      <item><fact id="RAID-KEEP-THE-FLOOR-GREEN" status="impl/done">keep `typescript-ai-native floor` green at every raid boundary —
+  that is the campaign's safe-stop invariant.</fact></item>
+    </list>
+  </section>
+  <section id="exit" title="Exit">
+    <p><fact id="EXIT-CRITERIA" status="impl/done">The BROWNFIELD §8 carry-over reconciliation (zero unaccounted intent),
+the floor green with every step armed (an empty `floor_disable`), and
+the sweep skill (`/typescript-ai-native-sweep`) taking over as the
+recurring posture.</fact></p>
+  </section>
+  <section id="generation-time-assistant" title="The generation-time assistant during raids">
+    <p><fact id="RAIDS-ARE-WHERE-THE-ORACLE-PAYS" status="impl/done">Card raids rewrite cells wholesale — exactly where the oracle pays for
+itself.</fact></p>
+    <p><fact id="VALIDATE-THE-DRAFT-BEFORE-IT-LANDS" status="impl/done">While drafting a cell replacement, validate the draft BEFORE it
+lands: `vibe bin exec typescript-ai-native-tcg -- validate &lt;file&gt; --content-from -`
+(or the `tcg_validate` MCP tool with `content`).</fact></p>
+    <p><fact id="NON-BASELINED-FINDING-IS-THE-RATCHET-EARLY" status="impl/done">A non-baselined
+`ts-unsafe-in-domain` or `ts-cell-isolation` finding in the answer is
+the ratchet telling you early; `tcg_scope` lists the branded types at
+the seams you are about to cross.</fact></p>
+    <p><fact id="SAFE-STOP-INVARIANT-IS-UNCHANGED" status="impl/done">The raid's safe-stop invariant is
+unchanged — the floor gates the landing; the oracle just makes the
+landing green on the first attempt.</fact></p>
+  </section>
+</spec>

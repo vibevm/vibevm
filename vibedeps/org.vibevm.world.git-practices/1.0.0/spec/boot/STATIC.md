@@ -95,7 +95,7 @@
   why-human-ai-teams → org-vibevm-world--git-atomic-commits--why-human-ai-teams (org.vibevm.world/git-atomic-commits)
 -->
 
-<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/spec/boot/30-flow-atomic-commits.md -->
+<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/spec/boot/30-flow-atomic-commits.xml -->
 
 # Flow: Atomic Commits {#org-vibevm-world--git-atomic-commits--root}
 
@@ -162,7 +162,7 @@ Commits and a violation of the atomic rule. @status:impl/done
 - @fact:org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
   approval. Same for `git push --force`. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/spec/boot/55-flow-attribution-policy.md -->
+<!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/spec/boot/55-flow-attribution-policy.xml -->
 
 # Flow: Attribution Policy {#org-vibevm-world--git-attribution-policy--root}
 
@@ -237,7 +237,7 @@ itself is recorded openly here. @status:spec/done
 Per-surface checks:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/org.vibevm.world.git-autonomy/1.0.0/spec/boot/32-flow-autonomy.md -->
+<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/org.vibevm.world.git-autonomy/1.0.0/spec/boot/32-flow-autonomy.xml -->
 
 # Flow: Commit autonomy {#org-vibevm-world--git-autonomy--root}
 
@@ -272,7 +272,7 @@ Per-surface checks:
 
 @fact:org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/spec/boot/31-flow-conventional-commits.md -->
+<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/spec/boot/31-flow-conventional-commits.xml -->
 
 # Flow: Conventional Commits {#org-vibevm-world--git-conventional-commits--root}
 

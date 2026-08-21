@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">WAL status — the ten-line orientation</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="PRODUCING-THE-FAST-MORNING-READ" status="impl/done">You are producing the fast morning read of the project WAL — the skim
+form of the ritual in `spec/flows/wal/morning-routine.md`.</fact></p>
+  <section id="procedure" title="Procedure">
+    <list ordered="true">
+      <item><fact id="READ-THE-WAL-END-TO-END" status="impl/done">Read `spec/WAL.md` end to end. If the file does not exist, say so,
+   point at `spec/flows/wal/WAL-PROTOCOL.md`, and stop.</fact></item>
+      <item><fact id="STALENESS-WARNING-IS-THE-FIRST-OUTPUT-LINE" status="impl/done">Check the `_Updated:` line (the first line after the title). Older
+   than 24 hours? The warning is your FIRST output line:
+   `WARNING: WAL updated &lt;N&gt; hours ago — may be stale.`</fact></item>
+      <item><fact id="FLAG-A-CONTINUE-DIVERGENCE-AND-TREAT-THE-WAL-AS-CANONICAL" status="impl/done">If `CONTINUE.md` exists at the repository root and disagrees with
+   the WAL on phase, blockers, or next step, flag the divergence and
+   treat the WAL as canonical.</fact></item>
+    </list>
+  </section>
+  <section id="output" title="Output — at most ten lines">
+    <list ordered="false">
+      <item><fact id="OUTPUT-ONE-LINE-CURRENT-PHASE" status="impl/done">One line: current phase and its status.</fact></item>
+      <item><fact id="OUTPUT-UP-TO-THREE-ATTENTION-BULLETS" status="impl/done">Up to three bullets: what needs attention (blockers, risks, pending
+  decisions).</fact></item>
+      <item><fact id="OUTPUT-ONE-LINE-NEXT-PRIORITY-STEP" status="impl/done">One line: the next priority step.</fact></item>
+    </list>
+    <p><fact id="example-shape-lead" status="impl/done">Example shape:</fact></p>
+    <fence>WARNING: WAL updated 26 hours ago — may be stale.
+
+Phase: PROP-003 verification engine, ~70% done
+
+Needs attention:
+- reconcile_pending() is a stub, blocked by issue #12
+- media_refs protobuf schema (#15) — needed before PROP-004
+
+Next step: resolve #12, or start PROP-004 in parallel.</fence>
+    <p><fact id="REPORT-ONLY-DO-NOT-EDIT-OR-EXECUTE" status="impl/done">Report only: do not edit the WAL, and do not start the next step.</fact></p>
+  </section>
+</spec>

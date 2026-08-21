@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:2c69da81f2df4bceb50e484aa2266af757d2242268d19e8f3b55bfe5d9fb924a"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:6c57993629faf7d0348446ce9bde733f2b768beedb4b3cf256be7682a02309b1"
+
+[[file]]
+source = "LICENSE"
+output = "LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/20-flow-sync-from-code.md"
+output = "spec/boot/20-flow-sync-from-code.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+output = "spec/flows/sync-from-code/SYNC-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/sync-from-code/review-workflow.md"
+output = "spec/flows/sync-from-code/review-workflow.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/sync-from-code/when-to-apply.md"
+output = "spec/flows/sync-from-code/when-to-apply.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

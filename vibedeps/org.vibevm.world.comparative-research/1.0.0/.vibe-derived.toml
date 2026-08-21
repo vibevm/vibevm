@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:697167052fb3b5706a3d1202c7cefb1f82768afd7075d8ea46aa8f6df3c2cd50"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:e6d19872b25028cbaabd71e21b2b70aa7676722348184ff5a30eb8a31d34fefa"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/52-flow-comparative-research.md"
+output = "spec/boot/52-flow-comparative-research.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+output = "spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/comparative-research/from-research-to-roadmap.md"
+output = "spec/flows/comparative-research/from-research-to-roadmap.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/comparative-research/research-template.md"
+output = "spec/flows/comparative-research/research-template.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Comparative research template</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** A copy-ready skeleton for a comparative
+research document, then a clause-by-clause commentary on each
+section, then one short worked fragment.</fact></p>
+  <p><fact id="sibling-document-pointers" status="impl/done">The laws these clauses
+enforce live in
+[`COMPARATIVE-RESEARCH-PROTOCOL.md`](COMPARATIVE-RESEARCH-PROTOCOL.md);
+this file is the shape you fill.</fact></p>
+  <section id="skeleton" title="The skeleton">
+    <p><fact id="COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER" status="impl/done">Copy this whole block into a new research document and fill each
+placeholder.</fact></p>
+    <p><fact id="KEEP-THE-SECTION-ORDER" status="impl/done">Keep the section order — it is the reading shape a
+cold reader navigates by.</fact></p>
+    <fence lang="markdown"># &lt;SUBJECT&gt; comparative research and &lt;PROJECT&gt; roadmap deltas
+
+**Status.** Research document — self-contained, evergreen reference.
+It ratifies nothing; each numbered delta in the deltas section maps
+to a future spec home.
+
+**Purpose.** &lt;SUBJECT&gt; (&lt;primary URL&gt;) occupies ground adjacent to
+&lt;PROJECT&gt;: &lt;one sentence on the overlap&gt;. Understanding what they do
+well — and what they don't — is load-bearing intelligence for our
+own roadmap. This document inventories &lt;SUBJECT&gt; as of &lt;capture
+date&gt;, finds where we trail and where we lead, and turns the
+actionable subset into numbered deltas.
+
+**Source corpus.** &lt;where the material came from — docs, pitch,
+changelog&gt;. Verbatim quotes appear in fenced blocks with dates
+throughout. Refresh via the re-fetch list at the end.
+
+| Source | URL | Accessed | Subject version |
+|--------|-----|----------|-----------------|
+| &lt;name&gt; | &lt;url&gt; | &lt;YYYY-MM-DD&gt; | &lt;version&gt; |
+
+**Reading shape.** §1 the subject in its own words · §2 capability
+inventory · §3 where we trail · §4 where we lead · §5 numbered
+deltas · §6 open questions · §7 re-fetch list.
+
+---
+
+## 1. The subject in its own words {#subject-words}
+
+&gt; "&lt;verbatim pitch, quoted exactly&gt;"
+&gt; — &lt;source&gt;, accessed &lt;YYYY-MM-DD&gt;
+
+&lt;One paragraph: their framing, restated only after the quote stands.&gt;
+
+## 2. Capability inventory {#inventory}
+
+For each capability: the verbatim claim, then what it maps to in
+our project.
+
+### 2.1 &lt;capability name&gt;
+
+&gt; "&lt;verbatim quote&gt;"
+&gt; — &lt;source&gt;, accessed &lt;YYYY-MM-DD&gt;
+
+**Maps to.** &lt;our nearest equivalent, or "no equivalent"&gt;.
+
+## 3. Where we trail {#trail}
+
+Gaps where the subject does something we do not. Each names the
+capability, what it would take to match, and the rough size.
+
+### 3.1 &lt;gap name&gt;
+**Their capability.** &lt;what they have, quoted above in §2.&gt;
+**Our gap.** &lt;what we lack.&gt;
+**Size.** &lt;rough effort.&gt;
+
+## 4. Where we lead {#lead}
+
+Decisions in our architecture the subject has not made, made
+differently in a way we believe is wrong, or not exposed.
+
+### 4.1 &lt;lead name&gt;
+&lt;What we do that they do not, and why it matters — same rigor as §3.&gt;
+
+## 5. Roadmap deltas {#deltas}
+
+Numbered proposals. Each carries a priority and a target home. This
+document ratifies none of them.
+
+### D1 — &lt;short delta title&gt;
+Maps to §3.1. **Priority:** HIGH | MEDIUM | LOW.
+**Target home:** &lt;future spec section / milestone&gt;.
+&lt;One paragraph on the proposal.&gt;
+
+## 6. Open questions {#open}
+
+- &lt;what the corpus did not answer; what to ask on refresh.&gt;
+
+## 7. Re-fetch list {#refetch}
+
+To refresh this study, re-fetch in this order and re-audit the delta
+table against what changed:
+
+- &lt;url&gt; — &lt;what it provides&gt; — accessed &lt;YYYY-MM-DD&gt;.
+
+**Capture date:** &lt;YYYY-MM-DD&gt;. **Subject version at capture:**
+&lt;version&gt;.</fence>
+  </section>
+  <section id="commentary" title="Clause-by-clause commentary">
+    <list ordered="false">
+      <item><fact id="CLAUSE-STATUS-LINE" status="impl/done">**Status line.** State up front that the document ratifies
+  nothing. This is the deltas-not-decrees law made visible on line
+  one, so no reader mistakes a proposal for a decision.</fact></item>
+      <item><fact id="CLAUSE-PURPOSE" status="impl/done">**Purpose.** One paragraph, and it must contain the two-way promise
+  — "what they do well *and* what they don't." A purpose that
+  promises only trailing gaps has pre-committed to a one-directional
+  study.</fact></item>
+      <item><fact id="CLAUSE-SOURCE-CORPUS-AND-TABLE" status="impl/done">**Source corpus + table.** Every source with an access date and the
+  subject's version. This table is half of the re-fetch list; filling
+  it now is cheaper than reconstructing it later.</fact></item>
+      <item><fact id="CLAUSE-READING-SHAPE" status="impl/done">**Reading shape.** A one-line section map so a cold reader navigates
+  without reading linearly. Months later, this is how a refresher
+  finds the delta table in ten seconds.</fact></item>
+      <item><fact id="CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS" status="impl/done">**§1 in their own words.** The subject's pitch, quoted, before any
+  analysis. If your document opens with your *summary* of their pitch,
+  you have already broken the quote-first law.</fact></item>
+      <item><fact id="CLAUSE-SECTION-TWO-INVENTORY" status="impl/done">**§2 inventory.** Quote-then-map, one capability at a time. "Maps
+  to: no equivalent" is a finding, not a blank — it is a §3 gap in
+  the making.</fact></item>
+      <item><fact id="CLAUSE-SECTIONS-THREE-AND-FOUR" status="impl/done">**§3 trail / §4 lead.** Both are mandatory. A document that ships
+  with §4 empty has not looked hard enough — every project made
+  *some* decision its competitor did not.</fact></item>
+      <item><fact id="CLAUSE-SECTION-FIVE-DELTAS" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
+  downstream pipeline cites when a delta is accepted or rejected
+  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</fact></item>
+      <item><fact id="CLAUSE-SECTION-SIX-OPEN-QUESTIONS" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
+  in the study itself, and the first questions to ask on refresh.</fact></item>
+      <item><fact id="CLAUSE-SECTION-SEVEN-RE-FETCH-LIST" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,
+  and the capture version — without it, refresh becomes rewrite.</fact></item>
+    </list>
+  </section>
+  <section id="worked" title="Worked fragment">
+    <p><fact id="a-short-invented-illustration" status="impl/done">A short invented illustration — a study of a generic build tool
+*Quarry*: two quotes, one delta.</fact></p>
+    <p><fact id="real-documents-run-longer" status="spec/done">Real documents run longer.</fact></p>
+    <fence lang="markdown">## 1. Quarry in its own words {#quarry-words}
+
+&gt; "Quarry caches every build step by content hash, so a clean build
+&gt; and an incremental build take the same time when nothing changed."
+&gt; — quarry.example/docs/caching, accessed 2026-07-01
+
+Their pitch is determinism-as-speed: identical inputs, identical
+outputs, served from cache.
+
+## 2.1 Remote cache sharing
+
+&gt; "Team members share one remote cache; a step built on CI is never
+&gt; rebuilt on a laptop."
+&gt; — quarry.example/docs/remote, accessed 2026-07-01
+
+**Maps to.** No equivalent — our cache is per-machine only.
+
+## 3.1 Shared remote cache
+**Their capability.** CI-built steps served to every developer.
+**Our gap.** We hash steps locally but never share them.
+**Size.** One storage backend + a cache-key protocol; ~medium.
+
+## 4.1 Offline-first by default
+Quarry's remote cache assumes connectivity; a laptop offline pays
+full rebuild cost. Ours is local-first — no network on the hot path.
+The trade is deliberate: we chose air-gapped reproducibility over
+cross-machine reuse, and that is a moat for regulated users.
+
+## 5. Roadmap deltas
+### D1 — Optional shared remote cache
+Maps to §3.1. **Priority:** MEDIUM.
+**Target home:** a future caching spec section, behind an opt-in flag
+so offline-first stays the default. Ratified here: nothing.
+
+## 7. Re-fetch list
+- quarry.example/docs/remote — the remote-cache pitch quoted in §2.1 —
+  accessed 2026-07-01.
+
+**Capture date:** 2026-07-01. **Subject version at capture:** Quarry 3.2.</fence>
+    <p><fact id="the-fragment-obeys-all-five-laws-lead" status="impl/done">The fragment obeys all five laws in miniature:</fact></p>
+    <list ordered="false">
+      <item><fact id="MINIATURE-LAWS-ONE-AND-TWO" status="impl/done">dated verbatim quotes
+  (Laws 1-2),</fact></item>
+      <item><fact id="MINIATURE-LAW-THREE" status="impl/done">§4 answering §3 the other way (Law 3),</fact></item>
+      <item><fact id="MINIATURE-LAW-FOUR" status="impl/done">D1 numbered and
+  ratifying nothing (Law 4),</fact></item>
+      <item><fact id="MINIATURE-LAW-FIVE" status="impl/done">a closing re-fetch list carrying the capture date and the
+  subject's version at capture (Law 5).</fact></item>
+    </list>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-COPY-THE-SKELETON-WHOLE" status="impl/done">Copy the skeleton whole; keep the section order — it is the reading
+  shape.</fact></item>
+      <item><fact id="SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH" status="impl/done">Fill the source table as you fetch; it is half the re-fetch list.</fact></item>
+      <item><fact id="SUM-QUOTE-BEFORE-MAPPING" status="impl/done">Quote before mapping; map "no equivalent" as a real finding.</fact></item>
+      <item><fact id="SUM-SHIP-BOTH-GAP-DIRECTIONS" status="impl/done">Ship §3 *and* §4; an empty lead section means you stopped early.</fact></item>
+      <item><fact id="SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA" status="impl/done">Number, prioritize, and home every delta; ratify none.</fact></item>
+    </list>
+  </section>
+</spec>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Comparative Research</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS" status="impl/done">This project has a genre for studying external systems — a
+competitor, a predecessor, an adjacent tool.</fact></p>
+  <p><fact id="A-RESEARCH-DOCUMENT-IS-SELF-CONTAINED-AND-EVERGREEN" status="impl/done">A **comparative
+research document** is a self-contained, evergreen study: readable
+months after publication without the original sources, structured
+as a two-way gap analysis, closing with numbered roadmap deltas.</fact></p>
+  <p><fact id="sibling-document-pointers" status="impl/done">Genre law:
+@spec://org.vibevm.world/comparative-research/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL#root.</fact></p>
+  <section id="when" title="When to reach for it">
+    <p><fact id="reach-for-the-skeleton-and-hold-the-laws-lead" status="impl/done">When the user asks to study, evaluate, or compare against an
+external system — "what does X actually do?", "should we copy
+X's feature?", "audit that space before we build" — start from
+the skeleton in
+@spec://org.vibevm.world/comparative-research/flows/comparative-research/research-template#root
+and hold the laws:</fact></p>
+    <list ordered="false">
+      <item><fact id="LAW-QUOTE-FIRST-CRITIQUE-SECOND" status="impl/done">**Quote first, critique second.** The subject speaks in its own
+  words — fenced verbatim quotes with access dates — before any
+  judgement is written.</fact></item>
+      <item><fact id="LAW-TWO-WAY-GAPS" status="impl/done">**Two-way gaps.** One section for where we trail, one for where
+  we lead, argued with equal rigor.</fact></item>
+      <item><fact id="LAW-DELTAS-NOT-DECREES" status="impl/done">**Deltas, not decrees.** Actionable findings become numbered
+  proposals, each with a priority and a target home in the spec
+  tree. The study never ratifies its own proposals; acceptance
+  happens downstream, per
+  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root.</fact></item>
+      <item><fact id="LAW-THE-RE-FETCH-LIST" status="impl/done">**Re-fetch list.** Every source URL with access date, plus the
+  subject's version at capture, so the study can be refreshed
+  instead of rewritten.</fact></item>
+    </list>
+  </section>
+  <section id="never" title="Never">
+    <list ordered="false">
+      <item><fact id="NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND" status="impl/done">Never paraphrase where a dated verbatim quote can stand — the
+  quote survives link rot; the paraphrase decays into rumor.</fact></item>
+      <item><fact id="NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS" status="impl/done">Never write a one-directional gap analysis — trail-only is
+  marketing for the subject, lead-only is marketing for us.</fact></item>
+      <item><fact id="NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC" status="impl/done">Never ratify a delta inside the research doc — it proposes;
+  acceptance is recorded downstream.</fact></item>
+      <item><fact id="NEVER-LET-A-STUDY-SILENTLY-GO-STALE" status="impl/done">Never let a study silently outlive its subject's next major
+  release — stale-flag it and refresh via the re-fetch list.</fact></item>
+    </list>
+  </section>
+</spec>

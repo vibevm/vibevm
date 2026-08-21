@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:126e1cb3c2b3767458be9265d5d7bbb38d9293760840a0e3b2f6a2eb73493003"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:3161c6e4200a4c20178445cdd6c850d63095a10dcf62ccd447b3227c2802d3b5"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/65-flow-managed-blocks.md"
+output = "spec/boot/65-flow-managed-blocks.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+output = "spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/managed-blocks/adoption-guide.md"
+output = "spec/flows/managed-blocks/adoption-guide.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/managed-blocks/rejected-designs.md"
+output = "spec/flows/managed-blocks/rejected-designs.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

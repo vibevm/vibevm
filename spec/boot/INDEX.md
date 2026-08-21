@@ -15,27 +15,27 @@ path = "spec/boot/00-core.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/spec/boot/10-flow-core-ai-native.md"
+path = "vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/spec/boot/10-flow-core-ai-native.xml"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/spec/boot/20-stack-rust-ai-native-lang.md"
+path = "vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/spec/boot/20-stack-rust-ai-native-lang.xml"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/spec/boot/20-stack-typescript-ai-native-lang.md"
+path = "vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/spec/boot/20-stack-typescript-ai-native-lang.xml"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.world.omnichannel/1.0.0/spec/boot/68-flow-omnichannel.md"
+path = "vibedeps/org.vibevm.world.omnichannel/1.0.0/spec/boot/68-flow-omnichannel.xml"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.fractality.delegation-rules/1.0.0/spec/boot/77-flow-delegation-rules.md"
+path = "vibedeps/org.vibevm.fractality.delegation-rules/1.0.0/spec/boot/77-flow-delegation-rules.xml"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/org.vibevm.fractality.delegation-first/1.0.0/spec/boot/76-flow-delegation-first.md"
+path = "vibedeps/org.vibevm.fractality.delegation-first/1.0.0/spec/boot/76-flow-delegation-first.xml"
 kind = "static"
 
 [[entry]]

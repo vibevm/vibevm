@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">WAL Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** What a WAL is in a spec-driven project,
+which files carry the discipline, what belongs in the WAL, how big it
+may get, when it must be updated, and who wins when it disagrees with
+the rest of the system.</fact></p>
+  <p><fact id="sibling-document-pointers" status="impl/done">The rituals around it live in the siblings:
+[`session-end-hook.md`](session-end-hook.md), [`morning-routine.md`](morning-routine.md), [`cold-resume.md`](cold-resume.md).</fact></p>
+  <section id="files" title="The two files">
+    <p><fact id="two-files-lead" status="impl/done">Session-durable state lives in two repository files:</fact></p>
+    <list ordered="false">
+      <item><fact id="FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT" status="impl/done">**`spec/WAL.md` — the living checkpoint.** The *current* state:
+  phase, constraints, done, open, next. Rewritten at every session end.
+  **Canonical:** where it and any snapshot disagree, the WAL wins.</fact></item>
+      <item><fact id="FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT" status="impl/done">**`CONTINUE.md` (repository root) — the cold-resume snapshot.**
+  Written at session end for whoever picks up cold — another machine, a
+  teammate, a long gap. Richer than the WAL, strictly subordinate.
+  Contract: [`cold-resume.md`](cold-resume.md).</fact></item>
+    </list>
+    <p><fact id="RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION" status="impl/done">One invariant governs both: **resumption state lives in the repository,
+never in a session.**</fact></p>
+    <p><fact id="sessions-end-compact-and-crash" status="spec/done">Sessions end, compact, and crash; the repository
+outlives them all.</fact></p>
+    <p><fact id="rest-of-the-document-specifies-the-wal" status="impl/done">The rest of this document specifies the WAL.</fact></p>
+  </section>
+  <section id="what" title="What a WAL is">
+    <p><fact id="WAL-STANDS-FOR-WRITE-AHEAD-LOG" status="spec/done">WAL stands for **Write-Ahead Log** — a name any developer, and any
+coding agent from its training data alone, recognises on sight.</fact></p>
+    <p><fact id="THE-MECHANISM-IS-THE-CHECKPOINT-NOT-THE-LOG" status="impl/done">But the
+mechanism that fits is not the ever-growing database log; it is the
+database **checkpoint**: a snapshot of current state, *overwritten*,
+not appended to — the old one is meaningless once a new one exists.</fact></p>
+    <p><fact id="picture-a-whiteboard-by-the-door" status="spec/done">Picture a whiteboard by the door.</fact></p>
+    <p><fact id="a-good-whiteboard-and-a-bad-one" status="spec/done">A good one carries three lines:
+where we are, what we are doing, what must not be touched; a bad one
+carries three hundred lines of stale history, including tasks closed
+months ago.</fact></p>
+    <p><fact id="WAL-IS-A-WHITEBOARD-NOT-A-JOURNAL" status="impl/done">**The WAL is a whiteboard, not a journal.**</fact></p>
+    <p><fact id="file-serves-both-processes" status="impl/done">The file serves both processes in the human-AI system.</fact></p>
+    <p><fact id="FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY" status="impl/done">For the
+**agent** it is the canonical persistent memory: each session starts
+blank, and the WAL is read first.</fact></p>
+    <p><fact id="FOR-THE-HUMAN-IT-IS-THE-SINGLE-MORNING-RE-READ" status="impl/done">For the **human** it is the single morning
+re-read that synchronises your memory with the project's actual state.</fact></p>
+    <p><fact id="THIS-FILE-ALONE-EXISTS-FOR-SESSION-CONTINUITY" status="impl/done">Everything else in `spec/` is medium-term memory or artefacts; this
+file alone exists for session continuity.</fact></p>
+  </section>
+  <section id="not" title="What a WAL is NOT">
+    <list ordered="false">
+      <item><fact id="NOT-A-LOG" status="impl/done">**Not a log.** Rewritten every session, always describing the
+  *current* state; an append-only WAL rots into an archive nobody reads.</fact></item>
+      <item><fact id="NOT-A-CHANGELOG" status="impl/done">**Not a changelog.** History belongs in `git log` and spec changelogs.</fact></item>
+      <item><fact id="NOT-A-TO-DO-LIST" status="impl/done">**Not a to-do list.** The "Next" section names *one* next action; the
+  backlog belongs in an issue tracker.</fact></item>
+      <item><fact id="NOT-DOCUMENTATION" status="impl/done">**Not documentation.** A fact stable enough to deserve a permanent
+  home belongs in a spec document, not in the WAL.</fact></item>
+    </list>
+  </section>
+  <section id="sections" title="Required sections">
+    <p><fact id="required-sections-lead" status="impl/done">A well-formed `spec/WAL.md` has:</fact></p>
+    <list ordered="true">
+      <item><fact id="SECTION-UPDATED-LINE" status="impl/done">**`_Updated: &lt;ISO 8601 UTC&gt;_`** — the very first line after the
+   title, always and without exception. An outdated WAL is worse than
+   no WAL — false confidence; the date makes staleness detectable fast.</fact></item>
+      <item><fact id="SECTION-CURRENT-PHASE" status="impl/done">**Current phase** — one or two lines naming what the project is
+   working on right now.</fact></item>
+      <item><fact id="SECTION-CONSTRAINTS" status="impl/done">**Constraints** — the "do not touch" list; each entry carries a
+   brief *why*, citing a spec anchor or issue: `match_by_hash(): DO NOT
+   TOUCH — fragile reconnection logic, issue #12`. The most valuable
+   content in the WAL: agents optimise locally, and without the written
+   line an enthusiastic session "improves" what was deliberately left
+   alone. Every constraint is a prevented regression.</fact></item>
+      <item><fact id="SECTION-DONE" status="impl/done">**Done** — completed work collapsed to one-line summaries:
+   "PROP-001 §§1-4 — complete, all tests pass", not five lines of notes.</fact></item>
+      <item><fact id="SECTION-IN-PROGRESS" status="impl/done">**In progress** — what is open, with enough detail that the next
+   session can pick it up. Cite spec anchors (`spec://…`).</fact></item>
+      <item><fact id="SECTION-NEXT" status="impl/done">**Next** — the single next action. Several candidates? List them
+   briefly and mark the default.</fact></item>
+      <item><fact id="SECTION-KNOWN-ISSUES" status="impl/done">**Known issues** — open problems not being worked on right now, so
+   future sessions don't re-discover them.</fact></item>
+      <item><fact id="SECTION-SESSION-CONTEXT" status="impl/done">**Session context** *(optional)* — one-paragraph orientation: what
+   file to open first, what to run, what to avoid.</fact></item>
+    </list>
+  </section>
+  <section id="precision" title="Write for the autonomy you grant">
+    <p><fact id="in-chat-vagueness-gets-a-question-back" status="spec/done">In chat, vague writing gets a question back.</fact></p>
+    <p><fact id="IN-AGENT-MODE-THE-WAL-IS-EXECUTED-LITERALLY" status="spec/done">In agent mode — unattended
+for hours — nobody asks; the WAL is executed literally. Compare:</fact></p>
+    <fence lang="markdown"># Chat-grade WAL (tolerable when a human steers every step)
+Working on verification; open questions around the timeouts.
+
+# Agent-grade WAL (executed literally, unattended)
+## Constraints — do not violate
+- Timeout: 600s, not 300s → spec://oproto/PROP-003#verification.timeout
+- match_by_hash(): DO NOT TOUCH → issue #12, fragile reconnection logic
+## Current task: src/verify.rs → degraded_mode_handler()
+Run: cargo test --package oproto-verify. Done when: all tests green.</fence>
+    <p><fact id="the-second-is-not-bureaucracy" status="spec/done">The second is not bureaucracy: it is the difference between an agent
+that quietly "optimises" the timeout back to 300 s and one that does
+what is needed.</fact></p>
+    <p><fact id="MORE-AUTONOMY-DEMANDS-A-MORE-PRECISE-WAL" status="impl/done">**The more autonomy the agent has, the more precise the
+WAL must be** — coarse context suffices for one supervised step; hours
+unattended demand every constraint explicit and spec-anchored.</fact></p>
+  </section>
+  <section id="triggers" title="Update triggers">
+    <list ordered="false">
+      <item><fact id="TRIGGER-END-OF-EVERY-SESSION" status="impl/done">**At the end of every session.** Non-negotiable; a session that ends
+  without updating the WAL has partially broken the next session.
+  Procedure: [`session-end-hook.md`](session-end-hook.md).</fact></item>
+      <item><fact id="TRIGGER-BEFORE-ANY-DESTRUCTIVE-OPERATION" status="impl/done">**Before any destructive operation.** A big refactor, a `git reset`,
+  a migration — checkpoint first; a failure then restarts known-good.</fact></item>
+      <item><fact id="TRIGGER-WHEN-SWITCHING-CONTEXT-MID-SESSION" status="impl/done">**When switching context mid-session.** Pivoting from FEAT-007 to
+  FEAT-010? Checkpoint FEAT-007 *before* pivoting, or its state is lost.</fact></item>
+    </list>
+  </section>
+  <section id="freshness" title="The freshness rule">
+    <p><fact id="WAL-OLDER-THAN-24-HOURS-IS-PRESUMED-STALE" status="impl/done">A WAL older than **24 hours** is presumed stale: before trusting any
+claim — and before *any* destructive work — verify against reality
+(branch, tree, tests) and confirm divergences with the user.</fact></p>
+    <p><fact id="THE-RULE-BINDS-WHATEVER-THE-TOOLING-DOES" status="impl/done">Tooling
+may warn advisorily; the rule binds regardless.</fact></p>
+  </section>
+  <section id="size" title="Size budget">
+    <p><fact id="WAL-IS-LOADED-AT-THE-START-OF-EVERY-SESSION" status="impl/done">The WAL is loaded into the agent's context at the start of every
+session.</fact></p>
+    <p><fact id="EVERY-TOKEN-IS-A-TAX-PAID-PER-SESSION" status="spec/done">Every token in the WAL is a tax paid per session.</fact></p>
+    <list ordered="false">
+      <item><fact id="BUDGET-TARGET" status="impl/done">**Target:** ≤ 3 000 tokens (roughly one page of plain text).</fact></item>
+      <item><fact id="BUDGET-HARD-LIMIT" status="impl/done">**Hard limit:** 5 000 tokens — past that the WAL hoards history:
+  collapse done items, move stable facts to specs, split epics.</fact></item>
+      <item><fact id="BUDGET-RULE-OF-THUMB" status="impl/done">**Rule of thumb:** unreadable end-to-end in a minute means too long.</fact></item>
+    </list>
+  </section>
+  <section id="conflicts" title="Conflict resolution">
+    <fence>Human  &gt;  Spec  &gt;  Tests  &gt;  Code  &gt;  WAL</fence>
+    <p><fact id="WAL-IS-VOLATILE-BY-DESIGN" status="impl/done">The WAL is volatile by design — a *record* of the current state, not a
+source of truth about intent.</fact></p>
+    <p><fact id="SPEC-WINS-AND-THE-WAL-IS-STALE" status="impl/done">If the WAL says one thing and a spec
+document says another, the spec wins and the WAL is stale.</fact></p>
+    <p><fact id="SURFACE-A-WRONG-WAL-ENTRY-NEVER-SILENTLY-REWRITE-IT" status="impl/done">An agent that believes a WAL entry is wrong does not silently rewrite
+it: complete the task following the spec (not the stale WAL), add a
+`&lt;!-- REVIEW: … --&gt;` marker where the mismatch matters, surface the
+disagreement in the end-of-session report, and let the human reconcile.</fact></p>
+  </section>
+  <section id="example" title="A working example">
+    <fence lang="markdown"># WAL — Project Continuation State
+_Updated: 2026-04-16T18:23:00Z_
+
+## Current phase
+PROP-003 verification engine — IN PROGRESS (~70%)
+
+## Constraints (do not violate without discussion)
+- Timeout = 600s (spec://oproto/PROP-003#verification.timeout);
+  300s caused false positives on VPN users.
+- match_by_hash(): DO NOT TOUCH — fragile reconnection logic, #12.
+
+## Done
+- [x] PROP-001 OPROTO base; PROP-002 edge skeleton (47/52 tests).
+
+## In progress
+- PROP-003: hash matcher and basic timeout DONE; degraded mode TODO
+  (spec://oproto/PROP-003#verification.degraded).
+
+## Next
+src/verify.rs → degraded_mode_handler().
+Start with: `cargo test -p oproto-verify`.
+
+## Known issues
+- reconnection after net loss (#12); media_refs schema ambiguity (#15).</fence>
+  </section>
+  <section id="acceptance" title="The acceptance test">
+    <p><fact id="ACCEPTANCE-TEST-IS-A-STRANGER-WITH-ONLY-THE-REPOSITORY" status="impl/done">One test decides whether the discipline works: **a stranger with only
+the repository resumes work without asking.**</fact></p>
+    <p><fact id="a-stranger-cold-from-files-alone" status="impl/done">A stranger, cold, from
+files alone — not the author remembering, not the agent that wrote it
+reconstructing.</fact></p>
+    <p><fact id="APPLY-THE-TEST-WHEN-IN-DOUBT" status="impl/done">When in doubt what to record or where, apply it.</fact></p>
+  </section>
+  <section id="without" title="Appendix: without a WAL">
+    <p><fact id="A-PROJECT-MAY-DECLINE-THIS-CONVENTION" status="impl/done">A project may decline this convention.</fact></p>
+    <p><fact id="THE-INVARIANT-BINDS-AND-THE-FALLBACK-IS-GIT-LOG" status="impl/done">The invariant still binds —
+resumption state lives in the repository, never in a session — and the
+fallback resume path is `git log` plus a fresh look at the tree: commit
+messages carry session summaries, a plan's status line carries campaign
+state, each session re-derives the rest.</fact></p>
+    <p><fact id="the-cost-of-the-fallback-path" status="spec/done">That works; the cost is three
+places instead of one, no single canonical "now", tokens burned every
+session on re-derivation — and constraints missed first.</fact></p>
+    <p><fact id="RE-DERIVING-STATE-IS-THE-SIGNAL-TO-ADOPT" status="spec/done">A project that
+keeps re-deriving its own state has received the signal to adopt.</fact></p>
+  </section>
+  <section id="re-derive" title="Re-derive for your project">
+    <p><fact id="COPY-THE-TASK-NOT-THE-IMPLEMENTATION" status="impl/done">Copy the task, not the implementation.</fact></p>
+    <p><fact id="re-derive-prompt-lead" status="impl/done">Hand your agent this prompt and
+review its drafts:</fact></p>
+    <fence lang="text">Read this flow's documents (your project installed them — typically `vibedeps/flow-wal/&lt;version&gt;/spec/flows/wal/`, check `vibe.lock`) WAL-PROTOCOL.md end to end, then adapt the WAL
+discipline to this repository:
+1. Draft spec/WAL.md with the required sections and a fresh
+   _Updated: line, filled from the actual tree, not from guesses.
+2. Propose this project's wind-down and resume trigger phrases, with
+   native-language twins if the team is bilingual.
+3. Draft boot lines (CLAUDE.md, AGENTS.md, or equivalent) so every
+   session reads the WAL before anything else.
+4. State the autonomy rule: may a wind-down commit and push, or does
+   it stop at drafts? Default to drafts.
+Show all four as proposals. Apply nothing until I approve.</fence>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-TWO-FILES" status="impl/done">Two files: `spec/WAL.md` — living checkpoint, canonical;
+  `CONTINUE.md` — cold-resume snapshot, subordinate.</fact></item>
+      <item><fact id="SUM-WHITEBOARD-NOT-JOURNAL" status="impl/done">A whiteboard, not a journal: rewrite at session end, never append;
+  date line first; older than 24 hours → verify before trusting.</fact></item>
+      <item><fact id="SUM-SIZE-AND-CONSTRAINTS" status="impl/done">Keep it under a page; stable facts move to specs; constraints are the
+  highest-value content — more autonomy demands more precision.</fact></item>
+      <item><fact id="SUM-SPEC-BEATS-WAL" status="impl/done">Spec beats WAL; a stranger with only the repo resumes without asking.</fact></item>
+    </list>
+  </section>
+</spec>

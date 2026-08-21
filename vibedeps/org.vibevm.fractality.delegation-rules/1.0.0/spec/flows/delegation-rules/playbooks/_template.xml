@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Playbook — &lt;model name&gt; (&lt;slot&gt;)</title>
+  <p>_The extension surface (matrix §routing): one card per worker model,
+this schema, field-calibrated before it routes real work. Copy, fill,
+and cite live runs — a playbook without field data is a hypothesis and
+must say so._</p>
+  <section title="Identity">
+    <list ordered="false">
+      <item>Routing: `model = "&lt;big|small&gt;"` on profile `&lt;name&gt;`; model id
+  `&lt;exact provider id&gt;`.</item>
+      <item>Class: one line — what tier of work this model is for.</item>
+    </list>
+  </section>
+  <section title="Task shapes it wins">
+    <list ordered="false">
+      <item>List the shapes with evidence (run ids or "hypothesis").</item>
+    </list>
+  </section>
+  <section title="Budget defaults">
+    <fence lang="toml">[budget]
+wall_secs = &lt;n&gt;
+max_turns = &lt;n&gt;
+max_output_tokens = &lt;n&gt;</fence>
+  </section>
+  <section title="Tariff rules">
+    <list ordered="false">
+      <item>What the provider meters (calls, tokens, tool invocations) and what
+  the profile must therefore deny or cap (D12 mechanisms, not prose).</item>
+    </list>
+  </section>
+  <section title="Known blind spots (paid-for)">
+    <list ordered="false">
+      <item>Only observed failures belong here, each with what it cost and the
+  countermeasure baked into future work orders.</item>
+    </list>
+  </section>
+  <section title="Escalation">
+    <list ordered="false">
+      <item>Where a failed landing goes next (bigger slot / boss reclaim), per
+  the matrix's bounded-retry rule.</item>
+    </list>
+  </section>
+</spec>

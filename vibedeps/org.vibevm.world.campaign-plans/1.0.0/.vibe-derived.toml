@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:fe012b5269ba2e974fad7c31a5c1c09a4ff9dd55eb4e54af69bc042433655c47"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:0550c0afc583a2c0021dd69a0cdd1ea0543405b65cb572fa517fa6f954256609"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/40-flow-campaign-plans.md"
+output = "spec/boot/40-flow-campaign-plans.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+output = "spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/campaign-plans/execution-ledger.md"
+output = "spec/flows/campaign-plans/execution-ledger.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/campaign-plans/phase-gates.md"
+output = "spec/flows/campaign-plans/phase-gates.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

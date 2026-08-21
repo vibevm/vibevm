@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:85ed2b2e72c474e7c0221995e07ff0e1cf30a2a1ffec8a94c7bf18c3ebfcc556"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:7975ccfbae68d86a4fb4e81ac6d8b75efa976d463aafb6c86460f638881db00d"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/57-flow-secrets-hygiene.md"
+output = "spec/boot/57-flow-secrets-hygiene.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+output = "spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/secrets-hygiene/scope-discipline.md"
+output = "spec/flows/secrets-hygiene/scope-discipline.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/secrets-hygiene/third-party-code-consent.md"
+output = "spec/flows/secrets-hygiene/third-party-code-consent.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

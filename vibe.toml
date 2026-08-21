@@ -3,6 +3,9 @@ name = "vibevm"
 group = "org.vibevm.core"
 version = "1.0.0"
 authors = ["Oleg Chirukhin"]
+# PROP-045: материализация спек зависимостей — XML (слово владельца 2026-08-22,
+# догфуд сценария №0: исходники MD, слоты XML).
+spec_format = "xml"
 
 [requires.packages]
 # The two family aggregators (PROP-028): each pulls its -lang stack + -mcp

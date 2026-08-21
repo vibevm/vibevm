@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">CARD: scaffold-g-doctests — Executable Examples / Doctests</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · BETA**</fact></p>
+  <section id="band-one-identity" title="Band 1 — Identity &amp; Recognition">
+    <p><fact id="CLASSIFICATION" status="impl/done">Classification: layer=C (meta) + G (empirics); mechanism=scaffold G.</fact></p>
+    <p><fact id="INTENT" status="impl/done">Intent: Ship one compiled, runnable example per public seam showing the ONE canonical way to use it — a few-shot usage signal that cannot drift into a lie because it must compile and pass.</fact></p>
+    <p><fact id="ALSO-KNOWN-AS" status="spec/done">Also Known As: doctest; usage example; example-driven docs; golden usage; runnable spec-by-example.</fact></p>
+    <p><fact id="APPLICABILITY-RECOGNITION" status="impl/done">Applicability / Recognition: Apply when — a public seam has no compiled example of canonical use; usage is documented only in prose; multiple usage idioms coexist with no canonical one. *Detector seed:* a `pub` seam item with no doctest demonstrating construction+use → recognition fires (the reference-library result, R2C-008; doctests are the executable half of "primitives + notes").</fact></p>
+  </section>
+  <section id="band-two-justification" title="Band 2 — Justification &amp; Tradeoffs">
+    <p><fact id="MOTIVATION" status="spec/done">Motivation: A weak agent imitates whatever usage it sees nearby (R3-006). If the nearest example is a prose snippet that has drifted, it imitates a lie. A doctest that lies fails CI, so the imitated signal is guaranteed truthful — and it shows the single canonical idiom, suppressing idiom-divergence.</fact></p>
+    <p><fact id="STRUCTURE-AND-PARTICIPANTS" status="impl/done">Structure &amp; Participants: *Doctest* (compiled example in the item's docs) · *examples/ cell* (larger compiled scenario) · *canonical idiom* (the one blessed usage).</fact></p>
+    <p><fact id="COLLABORATIONS" status="impl/done">Collaborations: Encodes the canonical idiom Class B's types enforce; runs in the Class E loop; its truthfulness backs §8 prose discipline.</fact></p>
+    <p><fact id="GOALS-AND-NON-GOALS" status="impl/done">Goals / Non-Goals: *Goals:* every public seam carries ≥1 compiled doctest of canonical use. *Non-Goals:* NOT exhaustive examples (one canonical each); NOT a replacement for property tests (examples show usage, tests check behavior).</fact></p>
+    <p><fact id="CONSEQUENCES" status="spec/done">Consequences: (+) the imitated few-shot signal cannot lie; (+) one canonical idiom suppresses divergence. (−) doctests are code to maintain; (−) over-exampling bloats — one canonical per seam.</fact></p>
+    <p><fact id="ALTERNATIVES" status="spec/done">Alternatives: prose examples (drift silently); separate example files (fine, but doctests sit at the point of use). Prefer compiled, co-located.</fact></p>
+    <p><fact id="RISKS-AND-ASSUMPTIONS" status="spec/done">Risks &amp; Assumptions: assumes the seam has a canonical usage worth blessing. *Sunset:* none material.</fact></p>
+    <p><fact id="EVIDENCE-AND-TRANSFER-STRENGTH" status="spec/done">Evidence &amp; Transfer-strength: R2C-008 (executable reference material transformative, benchmark), R3-006 (codebase as few-shot prompt, theory), H4 (lying prose harms). Class: benchmark + theory. Tag: **[E-strong]**.</fact></p>
+  </section>
+  <section id="band-three-operation" title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN a pub seam item lacks a compiled doctest of canonical construction+use THEN apply
+mode: gate
+routine:
+  1. Write the single canonical usage as a doctest on the seam item.
+  2. Ensure it constructs via the blessed path (Class B builder) and uses the seam.
+  3. For larger scenarios, add an examples/ cell that compiles in CI.
+  4. Confirm the doctest runs green in the per-cell loop.
+checker: conform T-syn `seam-has-doctest` + `cargo test --doc`
+raid_role: layer=cells; order=after:typed-builders; batch=seam
+budget: active_rules=1; first_signal=cargo test --doc (&lt;60s)</fence>
+  </section>
+</spec>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:wal` — Write-Ahead Log discipline</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="PACKAGE-INSTALLS-THE-WAL-PROTOCOL" status="impl/done">A `flow` package that installs the WAL protocol into a project.</fact></p>
+  <p><fact id="WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS" status="impl/done">The WAL
+(Write-Ahead Log) is a short checkpoint file (`spec/WAL.md`) that
+bridges sessions: a coding agent has no memory between invocations, so
+the WAL is the only structured record of "where we are" that survives
+session restarts.</fact></p>
+  <p><fact id="DISCIPLINE-SPANS-TWO-FILES-SINCE-0-2-0" status="impl/done">Since 0.2.0 the discipline spans two files: the
+living checkpoint, plus `CONTINUE.md` — a cold-resume snapshot for
+whoever picks up cold.</fact></p>
+  <p><fact id="PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION" status="impl/done">**This package is the canonical home of the WAL convention.**</fact></p>
+  <p><fact id="DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE" status="spec/done">The
+AI-Native Discipline (`flow:core-ai-native`) still ships its own WAL
+convention document, marked OPTIONAL but preferred; the deference this
+package expects has not landed in one of its releases yet.</fact></p>
+  <p><fact id="package-contents-lead" status="impl/done">The package ships five pieces of content plus a skill:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/wal/WAL-PROTOCOL.md` — full protocol: the two files,
+  what a WAL is and isn't, required sections, agent-grade precision,
+  update triggers, freshness, size budget, the conflict rule, the
+  acceptance test, and a re-derivation prompt.</fact></item>
+    <item><fact id="CONTENT-THE-SESSION-END-HOOK" status="impl/done">`spec/flows/wal/session-end-hook.md` — the wind-down: the
+  step-by-step session-end procedure and the trigger phrases that
+  invoke it explicitly.</fact></item>
+    <item><fact id="CONTENT-THE-MORNING-ROUTINE" status="impl/done">`spec/flows/wal/morning-routine.md` — the human counterpart: a
+  five-minute ritual at the start of each day that keeps the agent's
+  read of the state synchronised with your head.</fact></item>
+    <item><fact id="CONTENT-THE-COLD-RESUME-CONTRACT" status="impl/done">`spec/flows/wal/cold-resume.md` — the `CONTINUE.md` contract and
+  the wind-down / resume session commands.</fact></item>
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/10-flow-wal.md` — boot snippet read by agents at session
+  start, pointing them at the protocol and the WAL itself.</fact></item>
+    <item><fact id="CONTENT-THE-WAL-STATUS-SKILL" status="impl/done">`spec/skills/wal-status/` — an installable agent skill: the
+  ten-line orientation read of the WAL, staleness warning first.</fact></item>
+  </list>
+  <section id="install" title="Install">
+    <fence lang="bash">vibe install flow:wal</fence>
+  </section>
+  <section id="uninstall" title="Uninstall">
+    <fence lang="bash">vibe uninstall flow:wal</fence>
+    <p><fact id="UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet and the skill, but NEVER touches `spec/WAL.md` or `CONTINUE.md`
+(project state, not package state) or user-owned boot files
+(`00-core.md`, `90-user.md`).</fact></p>
+  </section>
+  <section id="changelog" title="What changed in 0.2.0">
+    <list ordered="false">
+      <item><fact id="CHANGE-THE-TWO-FILE-MODEL" status="impl/done">**The two-file model**, absorbed from the AI-Native Discipline's WAL
+  convention: `spec/WAL.md` is the canonical living checkpoint;
+  `CONTINUE.md` at the repository root is the cold-resume snapshot it
+  supersedes.</fact></item>
+      <item><fact id="CHANGE-SESSION-COMMANDS" status="impl/done">**Session commands.** The wind-down (`END SESSION`, `WRAP UP`,
+  `CHECKPOINT AND CLOSE`) and resume (`RESUME SESSION`, `RESTORE
+  CONTEXT`) contracts: overwrite-wholesale snapshot on wind-down;
+  restore, report, and stop on resume.</fact></item>
+      <item><fact id="CHANGE-THE-WAL-STATUS-SKILL" status="impl/done">**The `wal-status` skill.** The fast skim is now an installable
+  skill rather than a hand-pasted prompt snippet.</fact></item>
+      <item><fact id="CHANGE-THE-SPEC-LAYOUT" status="impl/done">**`spec/` layout.** The boot snippet moved from `boot/` to
+  `spec/boot/`, matching the current package layout.</fact></item>
+    </list>
+  </section>
+  <section id="composition" title="Composition">
+    <list ordered="false">
+      <item><fact id="COMPOSES-SYNC-FROM-CODE-AND-ATOMIC-COMMITS" status="impl/done">`flow:sync-from-code` (`20-…`) and `flow:git-atomic-commits` (`30-…`):
+  numeric boot-snippet prefixes are distinct by design. A sync may
+  trigger a WAL update; checkpoint commits follow the project's
+  commit discipline.</fact></item>
+      <item><fact id="COMPOSES-CONFLICT-PROTOCOL" status="impl/done">`flow:conflict-protocol` — the authority hierarchy (Human &gt; Spec &gt;
+  Tests &gt; Code &gt; WAL), including the WAL's place at its bottom, is
+  defined there.</fact></item>
+      <item><fact id="COMPOSES-CAMPAIGN-PLANS" status="impl/done">`flow:campaign-plans` — a campaign checkpoint updates the WAL at
+  phase boundaries.</fact></item>
+    </list>
+  </section>
+  <section id="background" title="Philosophical background">
+    <p><fact id="ideas-are-chapters-two-and-three" status="spec/done">The underlying ideas — two-process cooperation, files as the IPC
+between human and agent, the memory hierarchy (head → WAL → spec →
+code), WAL as the only memory that survives session boundaries — are
+chapters 1–3 of *AI-native development*, shipped in Russian inside
+`flow:redbook` at `spec/book/ru/`. Short version:</fact></p>
+    <list ordered="false">
+      <item><fact id="AGENT-SESSION-HAS-NO-PERSISTENT-MEMORY" status="spec/done">An agent session has no persistent memory. Every morning it wakes
+  up blank; the only things that survive are files.</fact></item>
+      <item><fact id="WELL-WRITTEN-WAL-TELLS-THE-AGENT-WHERE-WORK-STOPPED" status="spec/done">A well-written WAL tells the agent (and your future self) where
+  work stopped, what is safe to change, and what is explicitly
+  off-limits.</fact></item>
+      <item><fact id="WITHOUT-THE-DISCIPLINE-CONTEXT-IS-RE-DERIVED-EVERY-SESSION" status="spec/done">Without that discipline, the agent re-derives context from scratch
+  every session — wasting tokens, missing constraints, drifting from
+  intent.</fact></item>
+    </list>
+    <p><fact id="PACKAGE-ENCODES-THE-DISCIPLINE-AS-PLAIN-MARKDOWN" status="impl/done">This package encodes that discipline as plain Markdown, a tiny boot
+snippet, and one skill.</fact></p>
+    <p><fact id="no-magic-no-agent-product-dependency" status="impl/done">No magic, no dependency on any particular
+agent product.</fact></p>
+  </section>
+  <section id="license" title="License">
+    <p><fact id="license-line" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</fact></p>
+  </section>
+</spec>

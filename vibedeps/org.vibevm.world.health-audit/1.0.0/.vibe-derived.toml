@@ -1,0 +1,45 @@
+schema = 1
+source_hash = "sha256:09541a9b59fbec97d1f6390a79dc35b711fa1d7bdb5b154359f2e3f6520a2f67"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:285a1bbb34da3403dc80fced01fde89950459e3f0204d5ccb14fa95c8d702402"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/42-flow-health-audit.md"
+output = "spec/boot/42-flow-health-audit.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+output = "spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/health-audit/audit-checklist.md"
+output = "spec/flows/health-audit/audit-checklist.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/health-audit/running-an-audit.md"
+output = "spec/flows/health-audit/running-an-audit.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/skills/health-audit/SKILL.md"
+output = "spec/skills/health-audit/SKILL.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

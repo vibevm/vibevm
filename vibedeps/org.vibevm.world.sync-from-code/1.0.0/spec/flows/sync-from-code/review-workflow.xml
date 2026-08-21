@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Sync-from-Code review workflow</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="SYNC-ALWAYS-ENDS-WITH-A-HUMAN-APPROVAL-STEP" status="impl/done">Sync-from-Code always ends with a human approval step.</fact></p>
+  <p><fact id="this-document-is-the-checklist-for-that-step" status="impl/done">This document
+is the checklist the human runs at that step.</fact></p>
+  <section id="input" title="What the agent hands you">
+    <p><fact id="a-proposal-in-three-parts-lead" status="impl/done">A proposal in three parts:</fact></p>
+    <list ordered="true">
+      <item><fact id="PART-A-SPEC-DIFF" status="impl/done">**A spec diff**, shown as a unified diff against the current spec
+   file (not a rewritten file).</fact></item>
+      <item><fact id="PART-AN-INTENT-STATEMENT" status="impl/done">**An intent statement** — one sentence per logical change, naming
+   *why* the code changed.</fact></item>
+      <item><fact id="PART-A-REVISIT-TRIGGER" status="impl/done">**A revisit trigger** — the condition under which the decision
+   should be re-examined.</fact></item>
+    </list>
+    <p><fact id="IF-ANY-OF-THE-THREE-IS-MISSING-THE-PROPOSAL-IS-INCOMPLETE" status="impl/done">If any of the three is missing, the proposal is incomplete.</fact></p>
+    <p><fact id="ASK-THE-AGENT-TO-FILL-THE-GAP-BEFORE-APPROVING" status="impl/done">Ask the
+agent to fill the gap before approving.</fact></p>
+    <p><fact id="DO-NOT-APPROVE-AN-INCOMPLETE-SYNC" status="impl/done">Do not approve an incomplete
+sync: a missing reason or trigger today is a lost decision in six
+months.</fact></p>
+  </section>
+  <section id="checklist" title="The review checklist">
+    <p><fact id="RUN-EVERY-ITEM-BEFORE-APPROVING" status="impl/done">Run every item before approving.</fact></p>
+    <section id="check-intent" title="1. Does the intent match reality?">
+      <p><fact id="READ-THE-INTENT-AGAINST-WHAT-YOU-REMEMBER-DOING" status="impl/done">Read the intent sentence against what you remember doing.</fact></p>
+      <p><fact id="CORRECT-A-MISMATCHED-INTENT-BEFORE-APPROVING" status="impl/done">If the agent
+wrote "changed to 600 s because users on VPN need more time" and you
+actually changed it because "300 s was arbitrary and 600 s felt
+safer", correct the intent before approving.</fact></p>
+      <p><fact id="AN-INCORRECT-INTENT-IS-THE-MOST-DANGEROUS-THING-A-SYNC-CAN-LAND" status="impl/done">An incorrect intent is
+the single most dangerous thing a sync can land — it encodes a
+fiction that the future reader will trust.</fact></p>
+    </section>
+    <section id="check-durability" title="2. Is the reason durable?">
+      <p><fact id="ASK-WILL-THIS-REASON-STILL-BE-VALID-IN-A-YEAR" status="impl/done">Ask: will this reason still be valid in a year?</fact></p>
+      <list ordered="false">
+        <item><fact id="example-durable-profiling-spike" status="impl/done">"Profiling showed a 30 % hot-path spike on this branch" ← yes.</fact></item>
+        <item><fact id="example-non-durable-i-was-testing-something" status="impl/done">"I was testing something" ← no. Revert the code.</fact></item>
+        <item><fact id="example-durable-library-api-change" status="impl/done">"The library we use changed its public API in 0.9" ← yes, but cite
+  the library and the version.</fact></item>
+      </list>
+      <p><fact id="a-non-durable-reason-means-a-non-durable-change" status="spec/done">A non-durable reason means the code change itself is probably
+non-durable.</fact></p>
+      <p><fact id="REVERT-RATHER-THAN-SYNC" status="impl/done">Revert rather than sync.</fact></p>
+    </section>
+    <section id="check-trigger" title="3. Is the revisit trigger concrete?">
+      <p><fact id="WHEN-IT-BREAKS-IS-NOT-A-TRIGGER" status="impl/done">"When it breaks" is not a trigger.</fact></p>
+      <p><fact id="a-trigger-is-a-measurable-signal-lead" status="impl/done">A trigger is a measurable signal:</fact></p>
+      <list ordered="false">
+        <item><fact id="example-trigger-latency-threshold" status="impl/done">"When p99 network latency drops below 100 s, per mon/latency-p99" ← good.</fact></item>
+        <item><fact id="example-trigger-cpu-threshold" status="impl/done">"When CPU usage exceeds 80 % on the hot path" ← good.</fact></item>
+        <item><fact id="example-trigger-later-or-at-some-point" status="impl/done">"Later" / "at some point" / "when we refactor" ← bad. Rewrite.</fact></item>
+      </list>
+      <p><fact id="NO-TRIGGER-MEANS-NO-AUDIT-PATH" status="impl/done">No trigger means no audit path.</fact></p>
+      <p><fact id="a-permanent-fact-with-a-provisional-label" status="spec/done">You are shipping a permanent fact
+with a provisional label.</fact></p>
+    </section>
+    <section id="check-scope" title="4. Does the diff touch only the affected section?">
+      <p><fact id="A-SYNC-THAT-REACHES-BEYOND-THE-AFFECTED-SECTION-IS-OUT-OF-SCOPE" status="impl/done">A sync that also reflows paragraphs, renames anchors, or reorders
+unrelated sections is out of scope.</fact></p>
+      <p><fact id="REJECT-AND-ASK-FOR-A-NARROW-DIFF" status="impl/done">Reject and ask for a narrow diff
+that changes only what the code change demands.</fact></p>
+      <p><fact id="omnibus-spec-edits-make-history-unbisectable" status="spec/done">Omnibus spec edits
+are how history becomes unbisectable.</fact></p>
+    </section>
+    <section id="check-anchor" title="5. Is the anchor citation correct?">
+      <p><fact id="THE-SPEC-DIFF-NAMES-THE-AFFECTED-ANCHOR-EXACTLY" status="impl/done">The spec diff should name the affected anchor (`{#verification.timeout}`)
+exactly.</fact></p>
+      <p><fact id="AN-IMPLEMENTS-MARKER-MUST-MATCH-LETTER-FOR-LETTER" status="impl/done">If the code carries an `// Implements: spec://…` marker,
+the anchor in the marker must match letter-for-letter.</fact></p>
+      <p><fact id="stale-markers-rot-spec-to-code-traceability-silently" status="spec/done">Stale markers
+are how spec-to-code traceability rots silently.</fact></p>
+    </section>
+    <section id="check-surprise" title="6. Is the scope of the code change what you expected?">
+      <p><fact id="SKIM-THE-ACTUAL-DIFF-NOT-JUST-THE-PROPOSAL" status="impl/done">Before approving, skim the actual `git diff` — not just the sync
+proposal.</fact></p>
+      <p><fact id="AN-UNEXPECTED-SECOND-FILE-IS-EITHER-HIDDEN-OR-UNRELATED" status="impl/done">If the code touched a second file you did not expect, that
+second change is either (a) hidden in the proposal and the sync is
+incomplete, or (b) unrelated and should have been a separate change.</fact></p>
+      <p><fact id="HANDLE-THE-SURPRISE-BEFORE-APPROVING-THE-SYNC" status="impl/done">Either way, handle the surprise before approving the sync.</fact></p>
+    </section>
+  </section>
+  <section id="approve" title="On approval">
+    <p><fact id="the-agent-lead" status="impl/done">The agent:</fact></p>
+    <list ordered="true">
+      <item><fact id="APPROVAL-STEP-APPLIES-THE-SPEC-DIFF" status="impl/done">Applies the spec diff.</fact></item>
+      <item><fact id="APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS" status="impl/done">Commits with Conventional Commits format (`docs(spec)` type), a body
+   that cites the code change driving the sync, and the `spec://…` URI
+   of the affected anchor:</fact></item>
+    </list>
+    <fence>   docs(spec): sync timeout into PROP-003 §verification.timeout
+
+   Code changed TIMEOUT from 300 s to 600 s after VPN latency
+   measurement (2026-03-05, 847 messages, 128 users). Spec now
+   carries the value, the reason, and the revisit trigger.
+   Cited by spec://oproto/PROP-003#verification.timeout.</fence>
+    <list ordered="true">
+      <item><fact id="APPROVAL-STEP-STOPS" status="impl/done">Stops. Does not continue into unrelated follow-up work in the
+   same run — a sync is its own atomic step.</fact></item>
+    </list>
+  </section>
+  <section id="reject" title="On rejection">
+    <p><fact id="two-paths-lead" status="impl/done">Two paths:</fact></p>
+    <list ordered="false">
+      <item><fact id="REJECTION-PATH-KEEP-THE-CODE" status="impl/done">**Reject the sync, keep the code.** The code change was right but
+  the proposal's framing was wrong. Ask the agent to redraft with
+  the correct intent. No revert.</fact></item>
+      <item><fact id="REJECTION-PATH-REVERT-THE-CODE" status="impl/done">**Reject the sync, revert the code.** The code change itself was
+  the problem — the proposal surfaced it. Revert with `git revert`
+  or `git checkout --`, and record the lesson in the WAL's Known
+  Issues if it is worth carrying forward.</fact></item>
+    </list>
+    <p><fact id="NEITHER-PATH-SILENTLY-ACCEPTS-A-BAD-SYNC" status="impl/done">Neither path silently accepts a bad sync.</fact></p>
+    <p><fact id="a-silently-accepted-bad-sync-makes-the-spec-fiction" status="spec/done">A silently accepted bad
+sync is how the spec becomes fiction.</fact></p>
+  </section>
+  <section id="why-long" title="Why the checklist is long">
+    <p><fact id="SYNC-IS-THE-ONE-PROTOCOL-THAT-WRITES-SPEC-DRIVEN-BY-CODE" status="impl/done">Sync-from-Code is the one protocol in the project that writes a
+spec change *driven by code*.</fact></p>
+    <p><fact id="EVERY-OTHER-SPEC-CHANGE-IS-HUMAN-INITIATED-FROM-INTENT" status="impl/done">Every other spec change is
+human-initiated from intent.</fact></p>
+    <p><fact id="a-weaker-driver-demands-a-stronger-approval-step" status="spec/done">Because the driver is weaker — reverse
+engineering of intent from a diff — the approval step has to be
+stronger.</fact></p>
+    <p><fact id="six-checks-is-not-bureaucracy" status="spec/done">Six checks is not bureaucracy; it is the reason this flow
+does not produce drift of its own.</fact></p>
+  </section>
+</spec>

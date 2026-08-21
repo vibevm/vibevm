@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:omnichannel` — a capability lives in a library, not in a surface</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="PACKAGE-INSTALLS-THE-SURFACE-DISCIPLINE" status="impl/done">A vibevm `flow` package that installs one architectural rule and the
+vocabulary it needs: a capability lives in a **library**, and the command
+line, the TUI, the MCP server and the HTTP API are **surfaces** over it —
+thin, replaceable, and none of them the base.</fact></p>
+  <p><fact id="the-cost-appears-at-the-second-surface" status="spec/done">The cost never shows up when the first surface is written; it shows
+up when the second one is, because the logic is already inside the first.</fact></p>
+  <p><fact id="TWO-SURFACES-THAT-DISAGREE-CANNOT-BE-ADJUDICATED" status="impl/done">Two surfaces of one capability that answer the same question
+differently cannot be adjudicated: nothing says which is wrong. The
+library is that third place.</fact></p>
+  <p><fact id="package-contents-lead" status="impl/done">This package ships:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md` — the rule, the surface
+  vocabulary and its three classes, what "thin" means per class, how a
+  project declares its floor, and why the coverage table must be derived.</fact></item>
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/68-flow-omnichannel.md` — the boot snippet read at session
+  start: the rule, the vocabulary, the obligations and the never-do list.</fact></item>
+  </list>
+  <section id="not" title="What it is not">
+    <p><fact id="NOT-A-CODE-STYLE-RULE" status="impl/done">It is not a code-style rule and belongs to no language discipline. A
+project writing no AI-native code still has surfaces and still pays for
+letting them diverge.</fact></p>
+    <p><fact id="NOT-A-CHECKLIST-OF-SURFACES-EVERY-PROJECT-OWES" status="impl/done">It is not a checklist of surfaces every project owes. The vocabulary
+names them so two projects mean the same thing; **the floor is the
+project's own declaration**, and an undeclared surface is a choice rather
+than a debt.</fact></p>
+  </section>
+  <section id="test" title="The test that settles arguments">
+    <p><fact id="DELETE-THE-SURFACE-ON-PAPER" status="impl/done">Delete the surface on paper. If anything but presentation and
+transport is lost, the split is wrong — the capability had leaked into the
+surface.</fact></p>
+  </section>
+</spec>

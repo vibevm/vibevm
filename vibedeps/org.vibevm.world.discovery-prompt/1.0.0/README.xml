@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:discovery-prompt` — structured co-inquiry on demand</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="PACKAGE-SHIPS-THE-DISCOVERY-PROMPT" status="impl/done">A vibevm `flow` package that ships the **DISCOVERY
+collaborative-research prompt**: a distributable user-level prompt —
+a full user-side alternative to a system prompt — that turns an LLM
+session into structured co-inquiry.</fact></p>
+  <list ordered="false">
+    <item><fact id="EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR" status="impl/done">Every response follows an
+  explicit grammar (PrimaryHypothesis with a 0.0–1.0 confidence
+  estimate, AlternativeInterpretations, MetaReflection),</fact></item>
+    <item><fact id="SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER" status="impl/done">a mandatory
+  adversarial self-objection precedes every finalized answer,</fact></item>
+    <item><fact id="HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY" status="impl/done">and
+  hashtag knobs (`#hot`, `#cold`, `#reboil`, `#superthink`) steer the
+  session's intensity.</fact></item>
+  </list>
+  <p><fact id="STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE" status="impl/done">Its stance in one line: uncertainty is data,
+not failure.</fact></p>
+  <p><fact id="package-contents-lead" status="impl/done">This package ships the artifact plus two pieces of guidance:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-PROMPT-VERBATIM" status="impl/done">`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` — the prompt
+  itself, **verbatim**. Fill its `&lt;VARIABLES&gt;` block, paste it as
+  the first message of a fresh session, and the session re-frames.</fact></item>
+    <item><fact id="CONTENT-THE-USAGE-GUIDE" status="impl/done">`spec/flows/discovery-prompt/usage.md` — when the grammar's
+  overhead pays off (and when it does not), a piece-by-piece map of
+  the structure, how to read the output, the intensity knobs, the
+  failure modes, and a re-derive prompt for adapting the artifact to
+  your own domain.</fact></item>
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/50-flow-discovery-prompt.md` — boot snippet loaded at
+  session start: deploy the artifact on request, never mix its
+  grammar into coding sessions uninvited.</fact></item>
+  </list>
+  <section id="install" title="Install">
+    <fence lang="bash">vibe install flow:discovery-prompt</fence>
+  </section>
+  <section id="uninstall" title="Uninstall">
+    <fence lang="bash">vibe uninstall flow:discovery-prompt</fence>
+    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the
+boot snippet.</fact></p>
+    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
+  </section>
+  <section id="provenance" title="Provenance">
+    <p><fact id="prompt-authored-in-the-origin-project" status="spec/done">The prompt was authored as a standalone, UPL-licensed artifact in
+the origin project's research tree, where it reached version 3
+through live research sessions.</fact></p>
+    <p><fact id="PACKAGED-UNMODIFIED-BYTE-FOR-BYTE" status="spec/done">It is packaged **unmodified**: the
+shipped file is a byte-for-byte copy, self-describing down to its
+own license block.</fact></p>
+    <p><fact id="ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE" status="impl/done">Adaptation happens on your copy — via the
+re-derive prompt in `usage.md` — never on the shipped file.</fact></p>
+  </section>
+  <section id="composition" title="Composition">
+    <list ordered="false">
+      <item><fact id="COMPOSES-TWO-PROCESS-MODEL" status="spec/done">`flow:two-process-model` — this package is a tool for the
+  human→AI control channel: it programs the AI process's reasoning
+  posture for one session.</fact></item>
+      <item><fact id="COMPOSES-CAMPAIGN-PLANS" status="spec/done">`flow:campaign-plans` — a discovery session often precedes a
+  campaign plan: research first, arithmetic second.</fact></item>
+      <item><fact id="COMPOSES-DECISION-RECORDS" status="spec/done">`flow:decision-records` — a discovery session's converged answer
+  should land as a recorded decision, not evaporate with the chat.</fact></item>
+    </list>
+  </section>
+  <section id="license" title="License">
+    <p><fact id="license-line" status="impl/done">UPL-1.0.</fact></p>
+    <p><fact id="ARTIFACT-CARRIES-ITS-OWN-LICENSE-BLOCK" status="impl/done">The artifact carries its own `&lt;LICENSE&gt;` block (removable
+in private use, not in redistribution); the package license matches
+it.</fact></p>
+  </section>
+</spec>

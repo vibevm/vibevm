@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Splitting a large working tree into atomic commits</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="a-long-session-leaves-the-tree-looking-like-a-weather-map" status="spec/done">A long prototyping session often leaves the working tree looking
+like a weather map: changes everywhere, some connected, some not.</fact></p>
+  <p><fact id="this-document-is-the-splitting-procedure" status="impl/done">This document is the procedure for turning that mess into a
+sequence of atomic commits without losing or reordering work.</fact></p>
+  <section id="precondition" title="Precondition">
+    <p><fact id="THE-TREE-MUST-BUILD-AND-IDEALLY-PASS-TESTS-BEFORE-STARTING" status="impl/done">Before starting, the working tree must build and (ideally) pass
+tests.</fact></p>
+    <p><fact id="STABILISE-TO-GREEN-BEFORE-SPLITTING-A-BROKEN-TREE" status="impl/done">If the tree is broken end to end, do not try to split yet —
+stabilise to a green state first, on a single WIP commit if
+necessary, then split from the green state.</fact></p>
+    <p><fact id="a-broken-starting-point-means-a-moving-target" status="spec/done">A broken intermediate during a split is inevitable sometimes, but a
+broken *starting* point means the split is working with a moving
+target.</fact></p>
+  </section>
+  <section id="inventory" title="Step 1 — inventory">
+    <p><fact id="run-lead" status="impl/done">Run:</fact></p>
+    <fence>git status
+git diff --stat HEAD
+git diff HEAD</fence>
+    <p><fact id="READ-THE-OUTPUT-END-TO-END" status="impl/done">Read the output end to end.</fact></p>
+    <p><fact id="NAME-EVERY-CHANGED-CHUNK-BY-INTENT-NOT-BY-FILE" status="impl/done">The goal is to name every changed
+chunk by **intent**, not by file.</fact></p>
+    <p><fact id="produce-a-list-lead" status="impl/done">Produce a list in a scratch
+document (or a chat message to the agent):</fact></p>
+    <fence>- Added retry helper in retry.rs
+- Used retry helper in http_client.rs
+- Added test for retry helper
+- Renamed `conn` to `connection` in connection.rs
+- Fixed typo in README
+- Reformatted unrelated imports in lib.rs</fence>
+    <p><fact id="six-items-six-intents" status="impl/done">Six items. Six intents.</fact></p>
+    <p><fact id="NOT-NECESSARILY-SIX-COMMITS" status="impl/done">Not necessarily six commits — some will
+collapse together in the next step.</fact></p>
+  </section>
+  <section id="group" title="Step 2 — group">
+    <p><fact id="collapse-items-that-express-the-same-idea-lead" status="impl/done">Collapse items that express the same idea into one commit:</fact></p>
+    <list ordered="false">
+      <item><fact id="GROUP-EXAMPLE-RETRY-HELPER" status="impl/done">"Added retry helper" + "Used retry helper" + "Added test for retry
+  helper" → one commit: `feat(core): retry helper for transient
+  failures`. These three changes are one idea.</fact></item>
+      <item><fact id="GROUP-EXAMPLE-RENAME" status="impl/done">"Renamed `conn` to `connection`" → one commit:
+  `refactor(core): rename conn to connection`. Mechanical rename,
+  one concern.</fact></item>
+      <item><fact id="GROUP-EXAMPLE-TYPO-FIX" status="impl/done">"Fixed typo in README" → one commit: `docs: fix typo in README`.
+  Trivially one concern.</fact></item>
+      <item><fact id="GROUP-EXAMPLE-REFORMATTED-IMPORTS" status="impl/done">"Reformatted unrelated imports" → one commit:
+  `style(core): reformat imports`. Trivially one concern, but see
+  the note below.</fact></item>
+    </list>
+    <p><fact id="six-items-collapsed-to-four-commits" status="impl/done">Six items collapsed to four commits.</fact></p>
+    <p><fact id="THAT-IS-THE-SPLIT-PLAN" status="impl/done">That is the split plan.</fact></p>
+    <section id="accidental" title="Note on accidental changes">
+      <p><fact id="reformatted-imports-are-often-an-auto-format-footprint" status="spec/done">"Reformatted unrelated imports" is often the footprint of an
+auto-format-on-save firing during a different task.</fact></p>
+      <p><fact id="CONSIDER-REVERTING-AN-UNINTENTIONAL-REFORMAT" status="impl/done">If the reformat
+was not intentional, consider reverting it rather than shipping a
+`style` commit for it — tidy is not the same as intentional.</fact></p>
+      <p><fact id="AN-INTENTIONAL-PASS-IS-A-STYLE-COMMIT-A-STRAY-ONE-IS-CRUFT" status="impl/done">An
+intentional formatting pass is a style commit; a stray one is
+cruft.</fact></p>
+    </section>
+  </section>
+  <section id="apply" title="Step 3 — apply">
+    <p><fact id="USE-GIT-ADD-P-TO-STAGE-EXACTLY-THE-HUNKS-THAT-BELONG" status="impl/done">For each planned commit, use `git add -p` (patch mode) to stage
+exactly the hunks that belong to it.</fact></p>
+    <p><fact id="THEN-COMMIT-WITH-THE-APPROPRIATE-CONVENTIONAL-COMMITS-MESSAGE" status="impl/done">Then commit with the
+appropriate Conventional Commits message (the format is the
+`git-conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`).</fact></p>
+    <fence>git add -p                # stage retry-feature hunks
+git commit                # message: feat(core): retry helper ...
+
+git add -p                # stage rename hunks
+git commit                # message: refactor(core): rename conn ...
+
+git add README.md
+git commit                # message: docs: fix typo in README
+
+git add -p                # stage formatting hunks (or skip if accidental)
+git commit                # message: style(core): reformat imports</fence>
+    <p><fact id="RUN-GIT-STATUS-AFTER-EACH-COMMIT" status="impl/done">After each commit run `git status` to verify the remaining tree
+contains only what has not yet been split — no stray staging, no
+hidden files dragged in by a wildcard.</fact></p>
+    <section id="add-all" title="`git add -A` / `git add .`">
+      <p><fact id="AVOID-GIT-ADD-ALL-WHILE-SPLITTING" status="impl/done">Avoid `git add -A` and `git add .` while splitting.</fact></p>
+      <p><fact id="THEY-STAGE-EVERYTHING-AND-DEFEAT-THE-PATCH-MODE-INTENT" status="impl/done">They stage
+*everything*, which defeats the patch-mode intent and may pull in
+files you did not plan to commit (scratch files, credentials,
+large binary outputs).</fact></p>
+      <p><fact id="USE-EXPLICIT-FILE-NAMES-OR-GIT-ADD-P" status="impl/done">Use explicit file names or `git add -p`.</fact></p>
+    </section>
+  </section>
+  <section id="verify" title="Step 4 — verify build between commits">
+    <p><fact id="EACH-INTERMEDIATE-COMMIT-SHOULD-LEAVE-THE-TREE-BUILDABLE" status="impl/done">Whenever feasible, each intermediate commit should leave the tree
+buildable.</fact></p>
+    <p><fact id="run-the-build-after-each-commit-lead" status="impl/done">Run the build (and ideally tests) after each commit,
+not only at the end:</fact></p>
+    <fence>cargo build    # or the local equivalent
+cargo test     # where fast enough to keep in the loop</fence>
+    <p><fact id="BROKEN-INTERMEDIATES-ARE-A-BISECT-LIABILITY" status="impl/done">A split that produces two compilable commits plus two broken
+intermediate commits is a bisect liability — `git bisect` will
+hit the broken intermediates and mis-attribute failures.</fact></p>
+    <p><fact id="SQUASH-THE-INTERMEDIATES-WHEN-GREENNESS-IS-IMPRACTICAL" status="impl/done">If strict between-commit greenness is impractical (for example, a
+rename that must touch six files atomically and cannot be usefully
+decomposed further), squash the intermediates so at least the
+boundary is clean.</fact></p>
+  </section>
+  <section id="spotcheck" title="Step 5 — spot check the log">
+    <p><fact id="after-the-split-lead" status="impl/done">After the split:</fact></p>
+    <fence>git log --oneline -n &lt;N&gt;</fence>
+    <p><fact id="READ-THE-SUBJECT-LINES-BACK" status="impl/done">Read the subject lines back.</fact></p>
+    <p><fact id="EACH-SUBJECT-SHOULD-MAKE-SENSE-IN-ISOLATION" status="impl/done">Each should make sense in isolation.</fact></p>
+    <p><fact id="STOP-ON-AN-UNINFORMATIVE-SUBJECT-LINE" status="impl/done">If you see `chore: more stuff`, `wip`, or `fix: address review` in
+the list, stop — the split is incomplete or the message is
+uninformative.</fact></p>
+    <p><fact id="REWRITE-BEFORE-MOVING-ON" status="impl/done">Rewrite before moving on.</fact></p>
+  </section>
+  <section id="delegate" title="Delegating to the agent">
+    <p><fact id="the-agent-is-better-at-this-than-most-humans-under-pressure" status="spec/done">This is a highly mechanical task and the agent is genuinely better
+at it than most humans under time pressure. A working prompt:</fact></p>
+    <fence>I have a dirty working tree. Before committing:
+1. Run `git status` and `git diff HEAD`.
+2. Name every change by intent (not by file).
+3. Group intents into atomic commits.
+4. Show me the proposed split as: commit number, subject line,
+   list of files / hunks it will stage.
+5. Do NOT run any git commands after the proposal until I approve.
+
+On approval:
+- Execute the split one commit at a time.
+- Run `cargo build` (or the local equivalent) between commits.
+- Stop and surface any build failure before continuing.
+- Do NOT push. That is a separate, explicit step.</fence>
+    <p><fact id="THE-HUMAN-VERIFIES-THE-SPLIT-PLAN" status="impl/done">The human verifies the **split plan**, not each individual
+`git commit` invocation.</fact></p>
+    <p><fact id="that-is-where-the-division-of-labour-pays-off" status="spec/done">That is where the division of labour
+actually pays off.</fact></p>
+  </section>
+  <section id="prepush" title="Before pushing">
+    <p><fact id="after-the-split-before-pushing-lead" status="impl/done">After the split, before `git push`:</fact></p>
+    <list ordered="true">
+      <item><fact id="PREPUSH-RE-READ-THE-LOG" status="impl/done">Re-read the log (`git log --oneline origin/&lt;branch&gt;..HEAD`).</fact></item>
+      <item><fact id="PREPUSH-SKIM-EACH-DIFF" status="impl/done">Skim each diff (`git show &lt;sha&gt;`). Subject should match diff.</fact></item>
+      <item><fact id="PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS" status="impl/done">Check for secrets, large binaries, or scratch files that
+   slipped in.</fact></item>
+      <item><fact id="PREPUSH-ONLY-NOW-PUSH" status="impl/done">Only now push.</fact></item>
+    </list>
+    <p><fact id="PUSHED-HISTORY-IS-FROZEN" status="impl/done">Pushed history is frozen (see
+[`ATOMIC-COMMITS-PROTOCOL.md` §pushed](ATOMIC-COMMITS-PROTOCOL.md#pushed)).</fact></p>
+    <p><fact id="A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT" status="impl/done">Fixing a mistake after the push means a new `fix`/`revert` commit,
+not a force-push.</fact></p>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-STABILISE-THEN-SPLIT" status="impl/done">Stabilise to green first; split second.</fact></item>
+      <item><fact id="SUM-INVENTORY-AND-GROUP-BY-INTENT" status="impl/done">Inventory by intent, not by file. Group by intent.</fact></item>
+      <item><fact id="SUM-STAGE-HUNKS-WITH-GIT-ADD-P" status="impl/done">Use `git add -p` to stage hunks per commit. Avoid `git add -A`.</fact></item>
+      <item><fact id="SUM-BUILD-BETWEEN-COMMITS" status="impl/done">Build between commits when feasible.</fact></item>
+      <item><fact id="SUM-DELEGATE-AND-VERIFY-THE-PLAN" status="impl/done">Delegate the mechanical split to the agent; verify the plan,
+  not the typing.</fact></item>
+      <item><fact id="SUM-PRE-PUSH-REVIEW-IS-SEPARATE" status="impl/done">Pre-push review is a separate, deliberate step.</fact></item>
+    </list>
+  </section>
+</spec>

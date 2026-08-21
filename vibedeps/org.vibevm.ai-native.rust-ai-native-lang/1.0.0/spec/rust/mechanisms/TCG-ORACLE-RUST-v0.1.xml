@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">TCG-ORACLE-RUST v0.1 — the rust-analyzer oracle process model</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-RUST-PLAN v0.1 (Phase 1),
+implemented by its Phases 3–4.**</fact></p>
+  <p><fact id="companion-documents" status="impl/done">The component brief is
+[`tools/vibe-agentic-tcg-rust.md`](../tools/vibe-agentic-tcg-rust.md);
+the message grammar is
+[`TCG-PROTOCOL-RUST-v0.1`](TCG-PROTOCOL-RUST-v0.1.md).</fact></p>
+  <p><fact id="DOCUMENT-OWNS-THE-ORACLE-PROCESS" status="impl/done">This document
+owns the oracle PROCESS: resolution, LSP lifecycle, configuration,
+overlays, quiescence, the approximation posture, and latency.</fact></p>
+  <p><fact id="SPIKE-FACTS-MEASURED-AGAINST-1-93-1" status="impl/done">Spike
+facts cited here were measured against rust-analyzer 1.93.1 on
+2026-07-07 (AGENTIC-TCG-RUST-PLAN Phase 0).</fact></p>
+  <section id="resolution" title="1. The process and its resolution">
+    <p><fact id="kind-line-resolution" status="impl/done">`req r1`</fact></p>
+    <p><fact id="ORACLE-IS-THE-CONSUMERS-OWN-RUST-ANALYZER" status="impl/done">The oracle process is the CONSUMER's own `rust-analyzer` binary — the
+stack never bundles, links, or vendors an analyzer.</fact></p>
+    <p><fact id="resolution-order-lead" status="impl/done">Resolution order,
+run from the project root so `rust-toolchain.toml` pinning is
+honoured, each failure recipe-carrying and never silently skipped:</fact></p>
+    <list ordered="true">
+      <item><fact id="RESOLUTION-RUSTUP-WHICH" status="impl/done">`rustup which rust-analyzer` (the toolchain's component);</fact></item>
+      <item><fact id="RESOLUTION-PATH" status="impl/done">`rust-analyzer` on PATH;</fact></item>
+      <item><fact id="RESOLUTION-HARD-FAILURE" status="impl/done">hard failure: the bridge's `rust-analyzer-missing` error with the
+   recipe `rustup component add rust-analyzer`.</fact></item>
+    </list>
+    <p><fact id="STACK-OBLIGES-THE-MACHINE-TO-CARRY-RUST-ANALYZER" status="impl/done">Installing this stack OBLIGES the machine to carry rust-analyzer (the
+same posture as node ≥ 22.6 for the TS stack): inside the stack's own
+test suite an absent analyzer is a recipe-carrying FAILURE, never a
+skip; outside the stack no obligation exists — a project without
+rust-ai-native gets the product's not-installed recipe and owes
+nothing.</fact></p>
+    <p><fact id="RESOLVED-PATH-AND-VERSION-LAND-IN-INIT" status="spec/done">The resolved path and the server's reported version land in
+the `init` result. *Specified, not built — half of it. The version half ships:
+`init_result` emits `ra_version` (`crates/rust-ai-native-tcg/src/serve.rs:76-86`),
+beside `position_encoding`, `pull_diagnostics` and `quiescent`. The path half
+does not: the path IS resolved — `resolve_rust_analyzer`
+(`crates/rust-ai-native-tcg-bridge/src/lib.rs:146`) returns it — but it is never
+put into the result, and `ra_path` occurs in this package only as the shape
+`TCG-PROTOCOL-RUST-v0.1.md#OP-INIT` promises, never as a field the code emits.*</fact></p>
+  </section>
+  <section id="session" title="2. LSP session and capabilities">
+    <p><fact id="kind-line-session" status="impl/done">`req r2`</fact></p>
+    <p><fact id="BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO" status="impl/done">The bridge speaks LSP 3.17 over the child's stdio (Content-Length
+framing).</fact></p>
+    <p><fact id="initialize-declares-lead" status="impl/done">The `initialize` request declares:</fact></p>
+    <list ordered="false">
+      <item><fact id="DECLARES-UTF8-POSITION-ENCODING" status="impl/done">utf-8 in
+  `general.positionEncodings` (granted by 1.93.1 — positions then need
+  line-base conversion only; the utf-16 fallback converts through the
+  line's text and is unit-tested on non-ASCII content),</fact></item>
+      <item><fact id="DECLARES-PULL-DIAGNOSTICS" status="impl/done">pull diagnostics
+  (`textDocument.diagnostic`),</fact></item>
+      <item><fact id="DECLARES-WORK-DONE-PROGRESS" status="impl/done">`window.workDoneProgress`,</fact></item>
+      <item><fact id="DECLARES-SERVER-STATUS-NOTIFICATION" status="impl/done">and the
+  experimental `serverStatusNotification`.</fact></item>
+    </list>
+    <p><fact id="DOWNSTREAM-FEATURES-KEY-OFF-THE-GRANTED-SET" status="impl/done">Every downstream feature keys
+off the GRANTED set — a capability the server did not grant degrades
+per §6 into a well-formed error or a documented fallback, never a
+crash.</fact></p>
+    <p><fact id="BRIDGE-ANSWERS-THE-SERVERS-OWN-REQUESTS" status="impl/done">The bridge answers the server's own requests:
+`workspace/configuration` (with §3's config object),
+`window/workDoneProgress/create` and `client/registerCapability` (null
+results).</fact></p>
+  </section>
+  <section id="config" title="3. Configuration: experimental diagnostics, deliberately on">
+    <p><fact id="kind-line-config" status="impl/done">`req r3`</fact></p>
+    <p><fact id="SPIKE-FINDING-EXPERIMENTAL-DIAGNOSTICS-ARE-DEFAULT-OFF" status="spec/done">The spike's central finding: rust-analyzer's most valuable native
+diagnostics — type-mismatch (E0308), unresolved-name (E0425) — sit
+behind the DEFAULT-OFF `diagnostics.experimental.enable`.</fact></p>
+    <p><fact id="NULL-CONFIG-ORACLE-ANSWERS-SILENCE" status="spec/done">A
+null-config oracle answers silence for the very classes the tool
+exists to catch.</fact></p>
+    <p><fact id="BRIDGE-SHIPS-ONE-CONFIG-OBJECT" status="impl/done">The bridge therefore ships one config object —
+`{"diagnostics": {"experimental": {"enable": true}}}` — passed BOTH as
+`initializationOptions` and as every `workspace/configuration` answer.</fact></p>
+    <p><fact id="ENABLING-EXPERIMENTAL-IS-A-DOCUMENTED-POSTURE" status="spec/done">This is a deliberate, documented posture: the enabled set is
+experimental by rust-analyzer's own naming, which is one more reason
+§5's approximation statement is spec, not fine print.</fact></p>
+    <p><fact id="FUTURE-CONFIG-NEEDS-EXTEND-ONE-OBJECT" status="spec/done">Future config
+needs (feature flags, cargo target selection) extend this object in
+one place.</fact></p>
+  </section>
+  <section id="overlays" title="4. Overlays and versions">
+    <p><fact id="kind-line-overlays" status="impl/done">`req r4`</fact></p>
+    <p><fact id="OVERLAY-IS-AN-LSP-OWNED-TEXT-DOCUMENT" status="impl/done">An overlay is an LSP-owned text document: `didOpen {uri, version: 1,
+text}` claims the document (the server stops reading disk for it),
+`didChange` with full-text sync and a MONOTONICALLY increasing
+per-document version replaces it, `didClose` releases it back to disk.</fact></p>
+    <p><fact id="rules-are-lsp-native-law-lead" status="impl/done">The rules the TS campaign learned the hard way are LSP-native law
+here and the bridge enforces them structurally:</fact></p>
+    <list ordered="false">
+      <item><fact id="OVERLAY-RULE-VERSIONS-NEVER-REPEAT" status="impl/done">versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived
+  from content); clearing an overlay closes the document and a later
+  reopen starts again at 1 —
+  `crates/rust-ai-native-tcg-bridge/src/oracle.rs:184` (`docs.remove`);</fact></item>
+      <item><fact id="OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK" status="impl/done">`validate` WITHOUT inline content reads the disk file and opens it
+  with that text, so version bookkeeping has exactly one owner (the
+  bridge) and a later disk edit is picked up by the next validate's
+  `didChange`;</fact></item>
+      <item><fact id="OVERLAY-RULE-FILE-NEED-NOT-EXIST-ON-DISK" status="impl/done">an overlaid file need not exist on disk — a hypothetical new module
+  participates via `didOpen` alone (spike-proven: a seeded error in a
+  pure overlay is diagnosed with zero disk writes);</fact></item>
+      <item><fact id="OVERLAY-RULE-NULL-CONTENT-MAPS-TO-DIDCLOSE" status="impl/done">`update {content: null}` maps to `didClose`.</fact></item>
+    </list>
+  </section>
+  <section id="approximation" title="5. The approximation posture (r-a is not rustc)">
+    <p><fact id="kind-line-approximation" status="impl/done">`req r5`</fact></p>
+    <p><fact id="THIS-ORACLE-ANSWERS-WITH-INDEPENDENT-ANALYSIS" status="spec/done">The TS oracle answers with tsc's own engine; THIS oracle answers with
+rust-analyzer's independent analysis, which is deliberately partial.</fact></p>
+    <p><fact id="consequences-all-normative-lead" status="impl/done">Consequences, all normative:</fact></p>
+    <list ordered="false">
+      <item><fact id="CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR" status="impl/done">A clean `validate` does NOT certify a clean floor. The floor
+  (`rust-ai-native floor` — the seven steps: cargo fmt → cargo test →
+  clippy → conform → specmap → test-gate → fast-loop; the compile rides
+  inside the test step) remains the truth; consumer-facing docs repeat
+  it.</fact></item>
+      <item><fact id="DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE" status="impl/done">The differential corpus curates classes INSIDE r-a's native
+  competence; each class is pinned to cargo check through the
+  committed mapping table (1.93.1 rows: E0308↔E0308, E0425↔E0425,
+  E0107↔E0061 arity, E0559↔E0609 unknown-field, E0063↔E0063,
+  E0599↔E0599). Diagnostic CODES may differ for the same defect;
+  existence-grain agreement is the claim, through the table.</fact></item>
+      <item><fact id="KNOWN-SILENCES-ARE-DOCUMENTED-GAP-CASES" status="impl/done">Known silences are DOCUMENTED-GAP corpus cases, not omissions:
+  privacy at 1.93.1 is the standing exhibit — the oracle answers
+  nothing while cargo check speaks (rustc's code depends on the
+  reference shape: E0423 for a use-imported tuple constructor, E0603
+  for the module-path form — one defect class, two codes; the corpus
+  pins the E0423 shape). The case asserts exactly that asymmetry so a
+  future r-a flips it red and the gap list never rots.</fact></item>
+      <item><fact id="OPEN-DELTA-CLASS-IS-NAMED" status="impl/done">Borrow-check subtleties, trait-solver edges, and macro-heavy code
+  are named as the open delta class; no corpus case claims them.</fact></item>
+    </list>
+  </section>
+  <section id="degradation" title="6. Quiescence, degradation, never crashes">
+    <p><fact id="kind-line-degradation" status="impl/done">`req r6`</fact></p>
+    <p><fact id="SERVER-LOADS-THE-WORKSPACE-AFTER-INITIALIZED" status="spec/done">After `initialized`, the server loads the workspace (cargo metadata,
+cache priming).</fact></p>
+    <p><fact id="BRIDGE-WAITS-FOR-QUIESCENT-SERVER-STATUS" status="impl/done">The bridge waits for `experimental/serverStatus` with
+`quiescent: true`, bounded by a deadline — and that flag is the ONLY
+trusted signal.</fact></p>
+    <p><fact id="two-live-chain-findings-lead" status="impl/done">Two live-chain findings harden this (2026-07-07,
+Phase 3):</fact></p>
+    <list ordered="false">
+      <item><fact id="FINDING-A-NO-SERVER-STATUS-ECHO" status="spec/done">(a) rust-analyzer does NOT echo `serverStatusNotification`
+  in its InitializeResult even though it honours the declared client
+  capability, so there is nothing to key a capability check off — the
+  bridge declares and trusts the channel;</fact></item>
+      <item><fact id="FINDING-B-PROGRESS-DRAIN-HEURISTIC-FALSIFIED" status="spec/done">(b) a progress-drain
+  heuristic ("initial workDoneProgress tokens ended") was tried and
+  FALSIFIED twice — a fast first token drains while indexing continues,
+  yielding confident empty answers — so it is deliberately ABSENT, and
+  a replay test pins that progress noise never satisfies the wait.</fact></item>
+    </list>
+    <p><fact id="DEADLINE-PASS-DEGRADES" status="impl/done">A
+deadline pass degrades: answers carry `degraded: true`, so callers
+can distinguish warm truth from cold best-effort.</fact></p>
+    <p><fact id="b5-extends-to-the-whole-session-lead" status="impl/done">B5 extends to the whole
+session:</fact></p>
+    <list ordered="false">
+      <item><fact id="B5-UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR" status="impl/done">an op the relay does not know answers a protocol error naming
+  the known set;</fact></item>
+      <item><fact id="B5-ANALYZER-CRASH-ENDS-THE-SESSION" status="impl/done">an analyzer crash surfaces `oracle-crashed` op-grain
+  and ends the session (the product registry owns respawn-once);</fact></item>
+      <item><fact id="B5-NO-INPUT-MAY-POISON-THE-SESSION" status="impl/done">no input may poison the session.</fact></item>
+    </list>
+  </section>
+  <section id="lifecycle" title="7. Process lifecycle and Windows discipline">
+    <p><fact id="kind-line-lifecycle" status="impl/done">`req r7`</fact></p>
+    <p><fact id="ONE-LONG-LIVED-CHILD-PER-ROOT-SESSION" status="impl/done">One long-lived child per (root, session).</fact></p>
+    <p><fact id="GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY" status="impl/done">Graceful exit is the LSP
+dance — `shutdown` request, `exit` notification — with kill-on-drop as
+the backstop; the no-zombie property is test-asserted (spike-proven:
+clean exit code 0, no surviving pid). *Built 2026-08-05 — the proof caught up
+to the mechanism, which had shipped long before it. The dance ships
+(`shutdown` at `crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so
+does the backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
+`client.rs:346-350`). The assertion now ships too:
+`dropping_the_oracle_kills_the_child_process_no_zombie`
+(`tests/live_oracle.rs`) reads the child PID through
+`ChildTransport::child_pid()`, proves that process is alive, drops the wrapper
+— deliberately NOT the graceful path, so the kill-on-drop backstop is what is
+exercised — and polls the OS process table until the PID is gone, treating a
+recycled PID as dead by comparing `start_time`. Between 2026-08-04 and this
+build the sentence was a promise; it is now a description.*</fact></p>
+    <p><fact id="PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING" status="impl/done">Paths become URIs only after
+verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
+the standing lesson's fourth home).</fact></p>
+    <p><fact id="STDOUT-CARRIES-LSP-FRAMES-ONLY" status="spec/done">stdout carries LSP frames only;
+rust-analyzer's own stderr chatter is drained and discarded by the
+reader (surfaced only in bridge debug logging), so protocol streams
+stay clean. *Specified, not built — the conclusion holds, the mechanism
+described does not. Protocol streams do stay clean, but not by draining:
+the child is spawned `.stderr(std::process::Stdio::null())`
+(`crates/rust-ai-native-tcg-bridge/src/client.rs:303`, and again at
+`lib.rs:163`), so the OS discards the chatter at the pipe and no reader
+ever sees it. There is no bridge debug logging to surface it in — the
+bridge crate has no logging facility at all.*</fact></p>
+  </section>
+  <section id="latency" title="8. Latency posture">
+    <p><fact id="kind-line-latency" status="impl/done">`req r8`</fact></p>
+    <p><fact id="TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED" status="impl/done">Targets are POSTED and MEASURED, never CI-gated (the standing split:
+gate what cannot flake, record what can).</fact></p>
+    <p><fact id="spike-facts-lead" status="impl/done">Spike facts on a minimal
+crate, this box:</fact></p>
+    <list ordered="false">
+      <item><fact id="SPIKE-INIT-HANDSHAKE" status="impl/done">init handshake ~10 ms;</fact></item>
+      <item><fact id="SPIKE-INIT-TO-QUIESCENT" status="impl/done">init-to-quiescent 14.7 s
+  cache-COLD (sysroot indexing dominates) and 2.5 s warm;</fact></item>
+      <item><fact id="SPIKE-WARM-PULL-DIAGNOSTICS" status="impl/done">warm pull
+  diagnostics 1–2 ms;</fact></item>
+      <item><fact id="SPIKE-HOVER" status="impl/done">hover ~1 ms;</fact></item>
+      <item><fact id="SPIKE-COMPLETION" status="impl/done">completion ~19 ms at 118 entries.</fact></item>
+    </list>
+    <p><fact id="posted-targets-lead" status="impl/done">Posted targets for demo-class trees:</fact></p>
+    <list ordered="false">
+      <item><fact id="TARGET-WARM-VALIDATE" status="impl/done">warm `validate` p50 &lt; 500 ms,</fact></item>
+      <item><fact id="TARGET-WARM-COMPLETE" status="spec/done">`complete` p50 &lt; 300 ms — posted, not yet
+  measured: the bench harness times `validate` only
+  (`crates/rust-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms` and no `complete` field); the
+  measurement corpus is deliberately far-future work (`BACKLOG.md`
+  B-042),</fact></item>
+      <item><fact id="TARGET-COLD-INIT-TO-QUIESCENT" status="impl/done">cold init-to-quiescent &lt; 15 s.</fact></item>
+    </list>
+    <p><fact id="BENCH-HARNESS-RECORDS-DISTRIBUTIONS" status="impl/done">The bench
+harness records distributions per run; a target that moves, moves in a
+committed REPORT with a reason — and per the owner's resolution a miss
+CANCELS NOTHING: the campaign proceeds and the miss is reported
+prominently.</fact></p>
+    <p><fact id="LARGE-WORKSPACE-CONSUMERS-ARE-WARNED" status="impl/done">Large-workspace consumers are warned —
+the tcg brief's `##RISK-COLD-INIT-ON-LARGE-WORKSPACES` carries the
+spec-layer warning (14.7 s cache-cold on a minimal crate; a big consumer
+tree may exceed the first-request budget) — and the relay's eager init at
+`serve` start (before the host's first frame) spends the cold cost as
+early as possible. The shipped ceiling is the **45 s** quiescence budget
+(`QUIESCENCE_BUDGET`, `crates/rust-ai-native-tcg/src/lib.rs:33`, used by
+`spawn_oracle` and `serve`); this document's own
+`##TARGET-COLD-INIT-TO-QUIESCENT` posts &lt; 15 s for demo-class trees.</fact></p>
+  </section>
+</spec>

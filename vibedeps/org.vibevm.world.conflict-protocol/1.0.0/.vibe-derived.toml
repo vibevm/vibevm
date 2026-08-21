@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:ef19ea8af000052ec486639859c05f708ed74a80ff70a8ba7e864c510bc207d3"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:551bf2e45318ce8aab58f537be452550464f15d8e63a544f6550abe5a09b98b4"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/35-flow-conflict-protocol.md"
+output = "spec/boot/35-flow-conflict-protocol.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+output = "spec/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/conflict-protocol/failure-modes.md"
+output = "spec/flows/conflict-protocol/failure-modes.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/conflict-protocol/uncertainty-protocol.md"
+output = "spec/flows/conflict-protocol/uncertainty-protocol.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

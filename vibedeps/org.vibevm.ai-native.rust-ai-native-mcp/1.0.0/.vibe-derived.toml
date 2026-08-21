@@ -1,0 +1,620 @@
+schema = 1
+source_hash = "sha256:67dc3c3ef43c9be79c310589c46fc97ec4d883f93998434687389212dee0c7d5"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:1b19d12baa4b67c3c404c8de13dcf3af2253bfb9e6c371c1be8dbf1edb10a2aa"
+
+[[file]]
+source = "Cargo.lock"
+output = "Cargo.lock"
+disposition = "copied"
+
+[[file]]
+source = "Cargo.toml"
+output = "Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "conform.toml"
+output = "conform.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/Cargo.toml"
+output = "crates/rust-ai-native-cli/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/codemod.rs"
+output = "crates/rust-ai-native-cli/src/codemod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/fast_loop.rs"
+output = "crates/rust-ai-native-cli/src/fast_loop.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/floor.rs"
+output = "crates/rust-ai-native-cli/src/floor.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/health.rs"
+output = "crates/rust-ai-native-cli/src/health.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/init.rs"
+output = "crates/rust-ai-native-cli/src/init.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/ledger.rs"
+output = "crates/rust-ai-native-cli/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/lib.rs"
+output = "crates/rust-ai-native-cli/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/main.rs"
+output = "crates/rust-ai-native-cli/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/test_gate.rs"
+output = "crates/rust-ai-native-cli/src/test_gate.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/trace.rs"
+output = "crates/rust-ai-native-cli/src/trace.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/src/tripwire.rs"
+output = "crates/rust-ai-native-cli/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-cli/tests/fresh_project.rs"
+output = "crates/rust-ai-native-cli/tests/fresh_project.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform/Cargo.toml"
+output = "crates/rust-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform/src/lib.rs"
+output = "crates/rust-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform/src/main.rs"
+output = "crates/rust-ai-native-conform/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform/tests/catches_violations.rs"
+output = "crates/rust-ai-native-conform/tests/catches_violations.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/Cargo.toml"
+output = "crates/rust-ai-native-conform-frontend/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/deviation.rs"
+output = "crates/rust-ai-native-conform-frontend/src/deviation.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/lib/deviation_tests.rs"
+output = "crates/rust-ai-native-conform-frontend/src/lib/deviation_tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+output = "crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/lib.rs"
+output = "crates/rust-ai-native-conform-frontend/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/out_of_line.rs"
+output = "crates/rust-ai-native-conform-frontend/src/out_of_line.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/src/sweep.rs"
+output = "crates/rust-ai-native-conform-frontend/src/sweep.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-conform-frontend/tests/engine.rs"
+output = "crates/rust-ai-native-conform-frontend/tests/engine.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/Cargo.toml"
+output = "crates/rust-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/src/lib.rs"
+output = "crates/rust-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/src/main.rs"
+output = "crates/rust-ai-native-mcp/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/src/tools_discipline.rs"
+output = "crates/rust-ai-native-mcp/src/tools_discipline.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/src/tools_tcg.rs"
+output = "crates/rust-ai-native-mcp/src/tools_tcg.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/tests/common/mod.rs"
+output = "crates/rust-ai-native-mcp/tests/common/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/tests/live_chain.rs"
+output = "crates/rust-ai-native-mcp/tests/live_chain.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-mcp/tests/server_replay.rs"
+output = "crates/rust-ai-native-mcp/tests/server_replay.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-specmap/Cargo.toml"
+output = "crates/rust-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-specmap/src/lib.rs"
+output = "crates/rust-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-specmap/src/main.rs"
+output = "crates/rust-ai-native-specmap/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/Cargo.toml"
+output = "crates/rust-ai-native-tcg/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/src/bench.rs"
+output = "crates/rust-ai-native-tcg/src/bench.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/src/lib/tests.rs"
+output = "crates/rust-ai-native-tcg/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/src/lib.rs"
+output = "crates/rust-ai-native-tcg/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/src/main.rs"
+output = "crates/rust-ai-native-tcg/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/src/serve.rs"
+output = "crates/rust-ai-native-tcg/src/serve.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg/tests/finding_parity.rs"
+output = "crates/rust-ai-native-tcg/tests/finding_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/Cargo.toml"
+output = "crates/rust-ai-native-tcg-bridge/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/client.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/client.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/frame.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/frame.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/lib.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/src/position.rs"
+output = "crates/rust-ai-native-tcg-bridge/src/position.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+output = "crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/Cargo.toml"
+output = "crates/vendor/core-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/baseline.rs"
+output = "crates/vendor/core-ai-native-conform/src/baseline.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/config/coverage.rs"
+output = "crates/vendor/core-ai-native-conform/src/config/coverage.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/config/tests.rs"
+output = "crates/vendor/core-ai-native-conform/src/config/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/config/tombstones.rs"
+output = "crates/vendor/core-ai-native-conform/src/config/tombstones.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/config.rs"
+output = "crates/vendor/core-ai-native-conform/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/facts.rs"
+output = "crates/vendor/core-ai-native-conform/src/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/finding.rs"
+output = "crates/vendor/core-ai-native-conform/src/finding.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/lib.rs"
+output = "crates/vendor/core-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/citations.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/citations.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/go.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/go.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/go_parity.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/go_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/matrices.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/matrices.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/naming.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/naming.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/position.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/position.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/rules/typescript_parity.rs"
+output = "crates/vendor/core-ai-native-conform/src/rules/typescript_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/sarif.rs"
+output = "crates/vendor/core-ai-native-conform/src/sarif.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
+output = "crates/vendor/core-ai-native-conform/src/store/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/src/store.rs"
+output = "crates/vendor/core-ai-native-conform/src/store.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-conform/tests/sarif_ingest.rs"
+output = "crates/vendor/core-ai-native-conform/tests/sarif_ingest.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/Cargo.toml"
+output = "crates/vendor/core-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/capture.rs"
+output = "crates/vendor/core-ai-native-mcp/src/capture.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/error.rs"
+output = "crates/vendor/core-ai-native-mcp/src/error.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/lib.rs"
+output = "crates/vendor/core-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/server.rs"
+output = "crates/vendor/core-ai-native-mcp/src/server.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/toolset.rs"
+output = "crates/vendor/core-ai-native-mcp/src/toolset.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-mcp/src/wire.rs"
+output = "crates/vendor/core-ai-native-mcp/src/wire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/Cargo.toml"
+output = "crates/vendor/core-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/config.rs"
+output = "crates/vendor/core-ai-native-specmap/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/cscan.rs"
+output = "crates/vendor/core-ai-native-specmap/src/cscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/explain.rs"
+output = "crates/vendor/core-ai-native-specmap/src/explain.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/fingerprint.rs"
+output = "crates/vendor/core-ai-native-specmap/src/fingerprint.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+output = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+output = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/index.rs"
+output = "crates/vendor/core-ai-native-specmap/src/index.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
+output = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
+output = "crates/vendor/core-ai-native-specmap/src/jtd.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
+output = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/lib.rs"
+output = "crates/vendor/core-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/excludes.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/excludes.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/lines.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/lines.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+output = "crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/rscan.rs"
+output = "crates/vendor/core-ai-native-specmap/src/rscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/scanner.rs"
+output = "crates/vendor/core-ai-native-specmap/src/scanner.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/testgate.rs"
+output = "crates/vendor/core-ai-native-specmap/src/testgate.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+output = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark/Cargo.toml"
+output = "crates/vendor/core-ai-native-specmark/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark/src/lib.rs"
+output = "crates/vendor/core-ai-native-specmark/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark/tests/usage.rs"
+output = "crates/vendor/core-ai-native-specmark/tests/usage.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+output = "crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+output = "crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+output = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "spec/tools/discipline-mcp-rust.md"
+output = "spec/tools/discipline-mcp-rust.xml"
+disposition = "converted"
+
+[[file]]
+source = "specmap.toml"
+output = "specmap.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

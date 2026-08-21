@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Self-updating tools — lessons S1–S7</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** Seven lessons from building a tool that
+installs, switches, and removes its own versions on a live machine.</fact></p>
+  <p><fact id="each-lesson-is-self-contained" status="impl/done">Each is self-contained: the failure that taught it, the law in one
+bolded line, the mechanics that satisfy the law, and a "symptoms you
+need this" line so you can recognise the problem before you have paid
+for it.</fact></p>
+  <p><fact id="vocabulary-is-generic" status="impl/done">Vocabulary is generic — *the launcher*, *the active pointer*,
+*the instance directory* — because the laws outlive any one tool.</fact></p>
+  <section id="live-pointer" title="S1 — activation truth is a live pointer, not the environment">
+    <p><fact id="s1-context-env-was-the-single-source-of-truth" status="spec/done">**Context.** The first design made an environment variable the single
+source of truth for the active version.</fact></p>
+    <p><fact id="s1-context-env-is-frozen-until-the-shell-reloads" status="spec/done">Environment variables are
+inherited at process start and frozen until the shell reloads — so
+every switch or reinstall forced the user to open a new terminal.</fact></p>
+    <p><fact id="s1-context-the-friction-was-structural" status="spec/done">The friction
+was structural, not a bug.</fact></p>
+    <p><fact id="S1-LAW-ACTIVATION-TRUTH-IS-A-LIVE-POINTER" status="impl/done">**The law.** *The active version is a live pointer file read on every
+launch, plus the running binary's own path; the environment is
+advisory, never the truth.*</fact></p>
+    <p><fact id="S1-MECHANICS-A-LAUNCHER-SHIM-READS-THE-POINTER-EACH-RUN" status="impl/done">**Mechanics.** A tiny launcher shim reads an active-pointer file each
+time it runs and executes whatever instance that file names.</fact></p>
+    <p><fact id="S1-MECHANICS-SWITCHING-REWRITES-THE-POINTER" status="impl/done">Switching
+rewrites the pointer, so the **next** invocation in the *same* shell
+picks up the change with no reload — the filesystem is live where the
+shell's environment is frozen.</fact></p>
+    <p><fact id="S1-MECHANICS-THE-BINARY-DERIVES-ITS-IDENTITY-FROM-ITS-OWN-PATH" status="impl/done">The running binary derives its own
+identity from its own path (a `current_exe`-style lookup): it *is* the
+binary, so it knows which version and which home it belongs to without
+consulting any variable.</fact></p>
+    <p><fact id="S1-MECHANICS-KEEP-THE-VARIABLE-BUT-DEMOTE-IT-TO-ADVISORY" status="impl/done">Keep the environment variable set for external
+tools that expect a `HOME`-style value, but demote it to advisory and
+reconcile actual-vs-environment on demand; a managed process whose real
+home disagrees with the stale variable can warn at startup.</fact></p>
+    <p><fact id="s1-symptoms" status="spec/done">**Symptoms you need this.** Users must open a new terminal after every
+switch; scripts break on a stale home variable; "it works after I
+restart my shell."</fact></p>
+  </section>
+  <section id="immutable-instances" title="S2 — the unit of install is a directory, switched by a pointer">
+    <p><fact id="s2-context-the-rename-aside-trick" status="spec/done">**Context.** The first idea for "reinstall over the running binary" was
+a rename-aside trick — rename the running file, write the new one in
+its place.</fact></p>
+    <p><fact id="s2-context-it-worked-and-handles-exactly-one-file" status="spec/done">It was empirically verified to work, and it handles exactly
+one file.</fact></p>
+    <p><fact id="s2-context-a-real-distribution-is-many-locked-files" status="spec/done">But a real distribution is many files — the binary plus
+shared libraries and assets — and all of them are locked while the
+process runs.</fact></p>
+    <p><fact id="S2-LAW-THE-UNIT-IS-A-WHOLE-IMMUTABLE-INSTANCE-DIRECTORY" status="impl/done">**The law.** *The unit of install and switch is a whole immutable
+instance directory; activation is a pointer flip, so nothing in use is
+ever overwritten.*</fact></p>
+    <p><fact id="S2-MECHANICS-EACH-INSTALL-WRITES-A-NEW-DIRECTORY" status="impl/done">**Mechanics.** Each install writes a **new** instance directory and
+leaves every prior one intact.</fact></p>
+    <p><fact id="S2-MECHANICS-SWITCHING-FLIPS-THE-ACTIVE-POINTER" status="impl/done">Switching flips the active pointer (S1)
+to the new directory.</fact></p>
+    <p><fact id="S2-MECHANICS-NO-LOCKS-AND-NO-RELOAD" status="impl/done">Because no in-use file is ever rewritten, there
+are no file locks and no reload — the model is safe even for a shared
+library the OS refuses to replace while it is mapped.</fact></p>
+    <p><fact id="S2-MECHANICS-THE-RUNNING-PROCESS-KEEPS-ITS-OWN-DIRECTORY" status="impl/done">The running
+process keeps its own directory until it exits; reinstalling the
+version you are currently running simply produces a fresh instance and
+leaves the live one untouched.</fact></p>
+    <p><fact id="s2-mechanics-the-rename-aside-trick-was-dropped" status="spec/done">The rename-aside trick was dropped as
+unnecessary once the unit became the directory.</fact></p>
+    <p><fact id="s2-symptoms" status="spec/done">**Symptoms you need this.** "File is locked by another process" on
+reinstall; a self-update that cannot replace its own binary; shared
+libraries that cannot be overwritten while loaded.</fact></p>
+  </section>
+  <section id="cheap-identity" title="S3 — cheap identity: count instances, do not hash gigabytes">
+    <p><fact id="s3-context-a-content-hash-is-a-natural-key" status="spec/done">**Context.** A natural key for an instance is a content hash of the
+built distribution — it deduplicates and it is self-describing.</fact></p>
+    <p><fact id="s3-context-it-does-not-scale" status="spec/done">It does
+not scale.</fact></p>
+    <p><fact id="s3-context-hashing-gigabytes-is-prohibitive" status="spec/done">A distribution may grow to gigabytes and ship as merged
+binaries, and hashing 2 GB+ on every install is prohibitive.</fact></p>
+    <p><fact id="S3-LAW-NEVER-CONTENT-HASH-A-LARGE-PAYLOAD" status="impl/done">**The law.** *Never content-hash a large payload to establish identity;
+use a monotonic instance counter and cheap change detection.*</fact></p>
+    <p><fact id="S3-MECHANICS-THE-INSTANCE-KEY-IS-A-MONOTONIC-COUNTER" status="impl/done">**Mechanics.** The instance key is a monotonic counter — always unique,
+O(1), independent of payload size.</fact></p>
+    <p><fact id="S3-MECHANICS-HASH-SMALL-FILES-AND-STAT-LARGE-ONES" status="impl/done">To decide what to carry between
+instances, hash only **small** files (below a threshold) and trust
+`(size, mtime)` for **large** ones — stat, never read.</fact></p>
+    <p><fact id="S3-MECHANICS-HARDLINK-UNCHANGED-FILES" status="impl/done">Hardlink
+unchanged files into the new instance; copy only the changed ones.</fact></p>
+    <p><fact id="S3-MECHANICS-A-BUILD-CACHE-ANSWERS-DID-ANYTHING-CHANGE" status="impl/done">If a
+persistent build cache preserves mtimes across builds, "did anything
+change" is answered without reading a byte of the big files.</fact></p>
+    <p><fact id="S3-MECHANICS-WHEN-NOTHING-CHANGED-MAKE-NO-NEW-INSTANCE" status="impl/done">When nothing changed, make no new instance at all.</fact></p>
+    <p><fact id="S3-MECHANICS-A-PREBUILT-ARTIFACT-IS-KEYED-AT-PUBLISH" status="impl/done">A prebuilt artifact is
+keyed by the publisher's digest computed **once at publish**, never
+re-hashed locally.</fact></p>
+    <p><fact id="s3-symptoms" status="spec/done">**Symptoms you need this.** Install time grows with payload size; a
+multi-GB asset re-hashed on every run; dedup logic that reads files it
+could have stat'd.</fact></p>
+  </section>
+  <section id="sources-by-reference" title="S4 — hold sources by reference, never bulk-copy them">
+    <p><fact id="s4-context-copying-a-checkout-is-untenable" status="spec/done">**Context.** Copying a source checkout into the tool's own storage is
+untenable: a working tree's build directory is already tens of GB, and
+it churns constantly.</fact></p>
+    <p><fact id="s4-context-copy-once-or-copy-always-both-fail" status="spec/done">Copy it once and you have a stale, enormous
+duplicate; copy it every install and the tool is unusable.</fact></p>
+    <p><fact id="S4-LAW-HOLD-SOURCES-BY-REFERENCE" status="impl/done">**The law.** *Hold sources by reference; never bulk-copy them into the
+tool's own storage.*</fact></p>
+    <p><fact id="S4-MECHANICS-A-TOOL-OWNED-SOURCE-IS-UPDATED-INCREMENTALLY" status="impl/done">**Mechanics.** A tool-owned source is a clone the tool updates
+**incrementally** (fetch and checkout, stash first if dirty), never
+re-clones — so a full rebuild is avoided.</fact></p>
+    <p><fact id="S4-MECHANICS-A-USERS-CHECKOUT-IS-BUILT-IN-PLACE" status="impl/done">A user's own checkout is a
+different origin: reference it by its canonical absolute path and build
+it **in place**, never mutating its VCS state and never copying it.</fact></p>
+    <p><fact id="S4-MECHANICS-RECORDING-THE-PATH-YIELDS-A-LINKED-SOURCE" status="impl/done">Recording that path yields a *linked source* — a later install can
+rebuild from the remembered location without being in the checkout,
+with a clear error if it has moved.</fact></p>
+    <p><fact id="S4-MECHANICS-ONLY-THE-BUILT-DISTRIBUTION-ENTERS-AN-INSTANCE" status="impl/done">Only the built distribution (small
+next to the source, and diff-copied per S3) is placed into an instance;
+the source itself never is.</fact></p>
+    <p><fact id="s4-symptoms" status="spec/done">**Symptoms you need this.** The install root balloons to tens of GB; a
+full re-clone on every install; a build that mutates the user's git
+state.</fact></p>
+  </section>
+  <section id="durable-env-edits" title="S5 — durable environment edits: idempotent, additive, consented, testable">
+    <p><fact id="s5-context-durable-machine-state-outlives-the-process" status="spec/done">**Context.** A tool that puts itself on the search path or sets a home
+variable edits durable machine state that outlives the process.</fact></p>
+    <p><fact id="s5-context-get-it-wrong-and-you-corrupt-a-users-machine" status="spec/done">Get it
+wrong and you corrupt a user's shell profile, duplicate an entry on
+every run, or silently mutate a developer's machine from a test.</fact></p>
+    <p><fact id="S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY" status="impl/done">**The law.** *Edit durable environment state idempotently and
+additively, with consent and honesty — and behind an injectable seam so
+tests never touch the real machine.*</fact></p>
+    <p><fact id="S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL" status="impl/done">**Mechanics.** Five rules, none optional.</fact></p>
+    <p><fact id="S5-MECHANICS-IDEMPOTENT" status="impl/done">**Idempotent** — a marker
+guards the edit, so re-running adds no duplicate line or entry.</fact></p>
+    <p><fact id="S5-MECHANICS-NEVER-CLOBBER" status="impl/done">**Never clobber** — add only your own entry and preserve the rest of
+the search path; you are a guest in a file the user owns.</fact></p>
+    <p><fact id="S5-MECHANICS-OS-AND-SHELL-AWARE" status="impl/done">**OS/shell-aware**
+— the user environment registry on one platform, a marked block in the
+detected shell's rc file (bash/zsh/fish/profile) on another.</fact></p>
+    <p><fact id="S5-MECHANICS-CONSENT-AND-HONESTY" status="impl/done">**Consent
+and honesty** — a mutating edit needs a confirm or an explicit yes flag,
+prints the diff it will apply, and states plainly that the change
+reaches only **new** shells.</fact></p>
+    <p><fact id="S5-MECHANICS-INJECTABLE-SEAM" status="impl/done">**Injectable seam** — the durable writer is
+an interface the tests stub with a temporary file, so the suite
+exercises the rc-file path without mutating the developer's box.</fact></p>
+    <p><fact id="s5-mechanics-managed-blocks-pointer" status="impl/done">(The
+mechanics of writing safely *inside* a shared, human-owned file are a
+lesson of their own — see `flow:managed-blocks`.)</fact></p>
+    <p><fact id="s5-symptoms" status="spec/done">**Symptoms you need this.** Duplicated search-path entries; a clobbered
+profile; tests that pass only on the author's machine; users surprised
+their current shell did not pick up the change.</fact></p>
+  </section>
+  <section id="runnable-knowledge" title="S6 — required tools live in one runnable table">
+    <p><fact id="s6-context-a-from-source-build-needs-a-host-stack" status="spec/done">**Context.** A from-source build needs a specific host stack — a
+compiler, a linker, a version-control client, a language toolchain at a
+minimum version.</fact></p>
+    <p><fact id="s6-context-a-prose-list-drifts" status="spec/done">If that list lives in prose, it drifts from what the
+code actually checks, and bumping the stack means editing several
+disconnected places.</fact></p>
+    <p><fact id="S6-LAW-REQUIRED-TOOLS-LIVE-IN-ONE-RUNNABLE-TABLE" status="impl/done">**The law.** *Keep the required tools in one table the doctor command
+reads and a test asserts — knowledge is runnable, so updates are
+mechanical.*</fact></p>
+    <p><fact id="S6-MECHANICS-ONE-TABLE-WITH-FOUR-COLUMNS" status="impl/done">**Mechanics.** One table, each row `(name, minimum version, check
+command, help URL)`.</fact></p>
+    <p><fact id="S6-MECHANICS-THE-DOCTOR-ITERATES-THE-TABLE" status="impl/done">The doctor command iterates it and reports what is
+missing, with remediation, rather than failing deep in a build.</fact></p>
+    <p><fact id="S6-MECHANICS-A-TEST-ASSERTS-THE-TABLE-IS-WELL-FORMED" status="impl/done">A test
+asserts the table is well-formed, so it cannot rot unnoticed.</fact></p>
+    <p><fact id="S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE" status="impl/done">Related
+knowledge follows the same rule: the default build profile is a single
+constant, and the language pin lives **once, in the workspace manifest**
+(`rust-version`) and is **read** from it at build time — never repeated
+in the tool table by hand. (The toolchain file keeps its own job — the
+channel; the manifest's pin is what the tool checks against, and the
+enforcing compiler reads the same key.)</fact></p>
+    <p><fact id="S6-MECHANICS-THE-DOCTOR-AND-THE-TEST-MOVE-FOR-FREE" status="impl/done">When the stack moves you edit the table, and the doctor and
+the test move with it for free.</fact></p>
+    <p><fact id="S6-MECHANICS-A-SECRET-IS-NEVER-IN-THIS-SET" status="impl/done">A secret (a publish token, say) is
+never in this set — required *to build* and required *to publish* are
+different lists.</fact></p>
+    <p><fact id="s6-symptoms" status="spec/done">**Symptoms you need this.** "Works on my machine" build failures; a
+setup document that lists a tool the checker forgot; a stack bump that
+needs edits in four files.</fact></p>
+  </section>
+  <section id="safe-removal" title="S7 — removal and garbage collection that protect">
+    <p><fact id="s7-context-an-eager-remove-deletes-what-you-are-running" status="spec/done">**Context.** A remove or garbage-collect command that is too eager will
+delete the version you are running out from under you, or wipe a shared
+cache that other tools on the machine depend on.</fact></p>
+    <p><fact id="s7-context-destructive-by-default-loses-trust" status="spec/done">Destructive by default is how a version manager loses a user's trust
+in one command.</fact></p>
+    <p><fact id="S7-LAW-REMOVAL-PROTECTS-THE-ACTIVE-AND-RUNNING-INSTANCE" status="impl/done">**The law.** *Removal protects the active and the running instance and
+never touches shared caches; a wholesale wipe needs an explicit flag and
+a reconfirm.*</fact></p>
+    <p><fact id="S7-MECHANICS-REMOVING-THE-ACTIVE-VERSION-REQUIRES-A-FORCE-FLAG" status="impl/done">**Mechanics.** Removing the **active** version requires a force flag;
+the **running** instance's files are never deleted out from under it
+(best-effort — skipped if locked, collected on a later run; on some
+systems the unlink succeeds and the inode lives until the process
+exits).</fact></p>
+    <p><fact id="S7-MECHANICS-GC-ONLY-INSIDE-THE-TOOLS-OWN-INSTALL-ROOT" status="impl/done">Garbage collection operates **only** inside the tool's own
+install root — never the shared package caches other tools rely on.</fact></p>
+    <p><fact id="S7-MECHANICS-REMOVE-EVERYTHING-NEEDS-A-FLAG-AND-A-RECONFIRM" status="impl/done">A
+"remove everything" needs both an explicit flag **and** a
+re-confirmation, never a bare invocation.</fact></p>
+    <p><fact id="S7-MECHANICS-A-USERS-OWN-SOURCE-TREE-IS-NEVER-REMOVED" status="impl/done">A user's own source tree is
+never removed — the tool only forgets its provenance record; tool-owned
+clones are the tool's to drop.</fact></p>
+    <p><fact id="S7-MECHANICS-HARDLINKED-FILES-ARE-REFCOUNT-SAFE" status="impl/done">Hardlinked files (S3) are refcount-safe:
+dropping one instance never corrupts another that shares its inodes.</fact></p>
+    <p><fact id="s7-symptoms" status="spec/done">**Symptoms you need this.** A garbage-collect that deletes the binary
+you are running; a wipe that nukes a cache shared with other tools; an
+uninstall that removes a user's checkout.</fact></p>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-S1-LIVE-POINTER" status="impl/done">S1 — the active version is a live pointer file plus the running
+  binary's own path; the environment is advisory.</fact></item>
+      <item><fact id="SUM-S2-IMMUTABLE-INSTANCES" status="impl/done">S2 — install and switch a whole immutable directory; flip a pointer,
+  overwrite nothing in use.</fact></item>
+      <item><fact id="SUM-S3-CHEAP-IDENTITY" status="impl/done">S3 — count instances with a monotonic key; hash small files, stat big
+  ones, hardlink the unchanged.</fact></item>
+      <item><fact id="SUM-S4-SOURCES-BY-REFERENCE" status="impl/done">S4 — reference sources, never bulk-copy them; build in place or update
+  a clone incrementally.</fact></item>
+      <item><fact id="SUM-S5-DURABLE-ENV-EDITS" status="impl/done">S5 — durable edits are idempotent, additive, consented, OS-aware, and
+  behind a test seam.</fact></item>
+      <item><fact id="SUM-S6-RUNNABLE-KNOWLEDGE" status="impl/done">S6 — one required-tools table the doctor reads and a test asserts.</fact></item>
+      <item><fact id="SUM-S7-SAFE-REMOVAL" status="impl/done">S7 — protect the active and running instance; a full wipe is
+  flag-plus-reconfirm, never default.</fact></item>
+    </list>
+  </section>
+</spec>

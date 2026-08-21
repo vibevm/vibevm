@@ -1,0 +1,30 @@
+schema = 1
+source_hash = "sha256:1740ac118b4e5e76aecc6f85901581888bb6afeea9bc917a6582968d320df0ab"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:b59220da725e23f7d31ddf707eca72bfdcb1e003307a79ec8acc9bb9ae229435"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/76-flow-delegation-first.md"
+output = "spec/boot/76-flow-delegation-first.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md"
+output = "spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

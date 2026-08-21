@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The AI-Native Pattern Card Format</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · T1 · supersedes part of GUIDE-SPEC-AUTHORING-v0.1**</fact></p>
+  <p><fact id="EVERY-PATTERN-IS-A-CARD" status="spec/done">*Every pattern, scaffold, rule, and anti-pattern in the Discipline is authored as a card in this shape.* *True of the scaffolds, not yet of the rest — and the gap is registered rather than silent. Each stack's `cards/` holds `INDEX.md` plus `scaffold-a` … `scaffold-i` and nothing else; the seven rule and anti-pattern cards this sentence covers (`rule-closed-vocabulary-naming`, `rule-cell-closure`, `rule-contract-first-ordering`, `rule-position-is-a-resource`, `rule-uniformity`, `antipattern-god-file`, `antipattern-lying-prose`) are listed by name under "Pending cards (named, not yet authored)" in every stack's index, deferred deliberately "to honor minimal sufficiency". Read this as the format's scope, not as a completed inventory.*</fact></p>
+  <p><fact id="FORMAT-SYNTHESIZES-THREE-PARENTS" status="impl/done">*The format is a synthesis of three parents: the GoF design-pattern template (teaches WHEN to apply), the OpenJDK JEP template (teaches WHAT COUNTS AS DONE and at what cost), and a third operational layer with no precedent in either — because both predate AI readers.*</fact></p>
+  <section id="why-three-parents" title="0. Why three parents">
+    <list ordered="false">
+      <item><fact id="PARENT-GOF-RECOGNITION" status="impl/done">**GoF → recognition &amp; navigation.** Its load-bearing sections for us are *Applicability* (how to RECOGNIZE the situation from the code) and the neighbour-pattern pointer GoF calls *Related Patterns*, which this format carries under the name *Collaborations* (§1 Band 2 — where to go if this feels wrong).</fact></item>
+      <item><fact id="PARENT-JEP-ACCOUNTABILITY" status="impl/done">**JEP → accountability &amp; tradeoffs.** Its load-bearing sections are *Goals/Non-Goals* (scope discipline — the most-violated boundary in AI work), *Risks &amp; Assumptions*, *Alternatives*.</fact></item>
+      <item><fact id="PARENT-OPERATIONAL-EXECUTION" status="spec/done">**Operational layer → execution.** GoF and JEP assume a human applying judgment once, at design time, with unlimited attention. We know three things they did not: the card is a **runtime trigger**, **raid fuel**, and will be read by a **weak model that cannot hold all cards at once**. So we add *Trigger, Routine, Checker, Raid-role, Budget* — and we make that layer **machine-extractable**, so the harness can deliver just the operational extract to a weak reader (the §6 minimal-sufficiency rule of the Manifesto). *The authoring half is done; the extraction half has no extractor. All five fields are authored, in a fenced `key: value` block that a parser could take as-is — so the layer is machine-**extractable** in the sense of being well-formed. What does not exist is anything that extracts it: `card-ops`, `band_three` and `cards/INDEX` return no reader in any `.rs`, `.ts`, `.go`, `.py`, `.js`, `.sh` or config file in the repository, so no harness can deliver the operational extract to anyone.*</fact></item>
+    </list>
+  </section>
+  <section id="three-bands" title="1. The three bands">
+    <p><fact id="BANDS-1-2-ARE-AUTHORING-PROSE" status="impl/done">Bands 1–2 are prose for the strong author and the human reviewer (full card = authoring/review artifact).</fact></p>
+    <p><fact id="BAND-3-SHIPPED-TO-WEAK-READER" status="spec/done">Band 3 is a machine-extractable block; the harness ships **only Band 3** to a weak reader at runtime once a trigger fires. *Specified, not built: nothing ships anything. There is no trigger evaluator, no band selector and no runtime delivery path for a card; a weak reader today is handed whatever a session chose to paste. The block is extractable and unextracted.*</fact></p>
+    <section id="band-one-identity" title="BAND 1 — Identity &amp; Recognition *(GoF)*">
+      <list ordered="false">
+        <item><fact id="FIELD-CARD-ID-AND-NAME" status="impl/done">**Card ID &amp; Name** — stable slug = a `spec://` anchor (A1).</fact></item>
+        <item><fact id="FIELD-CLASSIFICATION" status="impl/done">**Classification** — two axes (like GoF purpose×scope): *layer* ∈ {A language-shape, B names, C meta, D context, E verification, F spec-binding, G empirics, H weak-reader}; *mechanism* ∈ {scaffold class A–I, rule, anti-pattern}.</fact></item>
+        <item><fact id="FIELD-INTENT" status="impl/done">**Intent** — 1–2 sentences, problem in most general form.</fact></item>
+        <item><fact id="FIELD-ALSO-KNOWN-AS" status="impl/done">**Also Known As** — synonyms, so a model trained on different terms still resolves the card.</fact></item>
+        <item><fact id="FIELD-APPLICABILITY-RECOGNITION" status="impl/done">**Applicability / Recognition** — THE central section: how a reader RECOGNIZES the situation from the code (the smell, the syntactic signature, the metric threshold), written to seed a detector.</fact></item>
+      </list>
+    </section>
+    <section id="band-two-justification" title="BAND 2 — Justification &amp; Tradeoffs *(GoF + JEP)*">
+      <list ordered="false">
+        <item><fact id="FIELD-MOTIVATION" status="impl/done">**Motivation** — a concrete scenario of the pain and the fix.</fact></item>
+        <item><fact id="FIELD-STRUCTURE-AND-PARTICIPANTS" status="impl/done">**Structure &amp; Participants** — the code shape and the roles.</fact></item>
+        <item><fact id="FIELD-COLLABORATIONS" status="impl/done">**Collaborations** — interaction with other cards and the toolchain at runtime.</fact></item>
+        <item><fact id="FIELD-GOALS-AND-NON-GOALS" status="impl/done">**Goals / Non-Goals** *(JEP)* — explicit scope; what this card does NOT do (prevents weak-agent over-application).</fact></item>
+        <item><fact id="FIELD-CONSEQUENCES" status="impl/done">**Consequences** — benefits AND costs; what you can now vary independently.</fact></item>
+        <item><fact id="FIELD-ALTERNATIVES" status="impl/done">**Alternatives** *(JEP)* — other solutions and when each is actually better.</fact></item>
+        <item><fact id="FIELD-RISKS-AND-ASSUMPTIONS" status="impl/done">**Risks &amp; Assumptions** *(JEP)* — what makes it wrong; model/harness assumptions; the **sunset condition** (R-050).</fact></item>
+        <item><fact id="FIELD-EVIDENCE-AND-TRANSFER-STRENGTH" status="impl/done">**Evidence &amp; Transfer-strength** — backing `findings.jsonl` IDs, evidence class, and the honest tag [E-strong]/[E-mid]/[E-hyp]. Keeps cards falsifiable. *Correction to the source, not the field: the field ships and works — every shipped card carries it, and the ids it cites (`R2C-008`, `R2C-003`, `DR2-019`, …) resolve as `#FINDING-*` anchors in `appendix/ATLAS.md`. Resolve them there. No `findings.jsonl` exists to resolve them against (F-088).*</fact></item>
+      </list>
+    </section>
+    <section id="band-three-operation" title="BAND 3 — Operation *(no GoF/JEP precedent; machine-extractable)*">
+      <p><fact id="band-three-fields-lead" status="spec/done">Authored as a fenced ` ```card-ops ` block of `key: value` fields so the harness can parse and deliver it without the prose. *Authored as prescribed in 24 of the 27 shipped cards — and by no harness parsed. The three `scaffold-d-differential-oracle` cards, one per stack, author Band 3 as anchored prose (`#TRIGGER`, `#MODE`, `#ROUTINE-*`) with no `card-ops` fence at all, which is the same fields in a shape this sentence does not describe. Since nothing parses either shape, the divergence has never cost anything; it would on the first day an extractor existed.* Fields:</fact></p>
+      <list ordered="false">
+        <item><fact id="FIELD-TRIGGER" status="impl/done">**trigger** — the precise, ideally machine-detectable condition: `WHEN &lt;signal&gt; THEN apply`.</fact></item>
+        <item><fact id="FIELD-MODE" status="impl/done">**mode** — `inline | gate | raid | review` (where the trigger lives).</fact></item>
+        <item><fact id="FIELD-ROUTINE" status="impl/done">**routine** — ordered steps, target ≤7, each verifiable.</fact></item>
+        <item><fact id="FIELD-CHECKER" status="impl/done">**checker** — the machine verification (conform tier / clippy lint / test), OR `WISH` if none yet (A5: a checkerless card is explicitly a WISH).</fact></item>
+        <item><fact id="FIELD-RAID-ROLE" status="impl/done">**raid_role** — `layer=&lt;phase&gt;`, `order=after:&lt;cards&gt;`, `batch=&lt;cell|crate|seam&gt;` (how it joins a sweep).</fact></item>
+        <item><fact id="FIELD-BUDGET" status="impl/done">**budget** — active-rule cost + first-signal latency (feeds lazy-push: when NOT to load this card).</fact></item>
+      </list>
+    </section>
+  </section>
+  <section id="minimal-sufficiency" title="2. The minimal-sufficiency contract (delivery)">
+    <p><fact id="WEAK-READER-RECEIVES-BAND-3-ONLY" status="spec/done">A weak reader at runtime receives the **Band-3 ops block only** (≈10 lines), selected by trigger match, capped to a small active set. *Specified, not built, and the one number in it is already off: no trigger matcher and no cap exist, so nothing selects and nothing limits; and the ops block runs 13 lines in `scaffold-a-generators.md` against the stated ≈10, with no checker that could have caught the drift. The rule below it — that shipping whole cards to a weak swarm is forbidden — is sound and is currently kept, when it is kept, by the reader.*</fact></p>
+    <p><fact id="BANDS-1-2-CONSUMED-BY-AUTHOR-AND-REVIEWER" status="impl/done">Bands 1–2 are consumed by the strong author when *writing* the card and by a human when *reviewing* it.</fact></p>
+    <p><fact id="SPLIT-IS-MANDATORY" status="impl/done">This split is mandatory: shipping whole cards to a weak swarm reproduces the AGENTbench bloat failure the discipline forbids.</fact></p>
+    <p><fact id="OVERLOADING-ROUTINE-IS-SPLIT-OR-CODEMOD" status="impl/done">If a card's Routine still overloads the weakest readers, it is either split finer or replaced by a Class-I codemod (the card becomes "invoke this checked operation" rather than "follow these steps").</fact></p>
+  </section>
+  <section id="governance" title="3. Governance">
+    <list ordered="false">
+      <item><fact id="FORMAT-CHANGES-ARE-RATIFIED" status="spec/done">The format is a T1 artifact; changes are versioned and ratified, never silent (R-030). *Versioned, not ratified. The version is real — the format carries v0.2 and ships inside a versioned package — but no ratification exists for it: no review gate, no changelog, no approval record anywhere covers this document, and R-030 itself is authored nowhere. Every occurrence of R-030 in the repository is a citation, including two ATLAS entries that say they *refine* it; the ATLAS roster carries no R-030 record to refine. A ratification mechanism does exist at a different grain — PROP-014's unit lifecycle, where `absent = ratified` — and it governs spec units, not this format. "Never silently" is a promise with nothing that could notice a silent change.*</fact></item>
+      <item><fact id="CARD-IS-BETA-UNTIL-CHECKER-EXISTS" status="impl/done">A card is BETA until its checker exists and its evidence IDs are non-empty; beta cards are revised on pilot evidence only.</fact></item>
+      <item><fact id="CARDS-CARRY-SUNSET-CONDITIONS" status="impl/done">Cards carry sunset conditions; when a Risk's "would render unnecessary" clause triggers, the card retires with its checker (R-050).</fact></item>
+      <item><fact id="EMPTY-OPERATIONAL-FIELDS-ARE-A-DEFECT" status="spec/done">Empty operational fields are a defect: a card with no trigger and no checker is prose, and prose is what AGENTbench penalized — complete it or mark it WISH. *Specified, not built: nothing reads the operational fields, so an empty one is a defect by assertion only. No conform rule, CLI step or gate parses a `card-ops` block, which under the Charter's own A5 makes this a WISH rather than a rule. It is already costing something: three shipped cards — `scaffold-d-differential-oracle` in all three stacks — carry no `card-ops` block at all, and no gate noticed.*</fact></item>
+    </list>
+  </section>
+  <section id="authoring-stub" title="4. Authoring stub (copy-paste)">
+    <fence># CARD: &lt;slug&gt; — &lt;Name&gt;
+## Band 1 — Identity &amp; Recognition
+Classification: layer=&lt;A-H&gt;, mechanism=&lt;scaffold A-I | rule | anti-pattern&gt;
+Intent: &lt;1-2 sentences&gt;
+Also Known As: &lt;synonyms&gt;
+Applicability / Recognition: &lt;smell / signature / threshold; detector seed&gt;
+## Band 2 — Justification &amp; Tradeoffs
+Motivation: &lt;concrete scenario&gt;
+Structure &amp; Participants: &lt;code shape + roles&gt;
+Collaborations: &lt;other cards / toolchain&gt;
+Goals / Non-Goals: &lt;in scope / explicitly out&gt;
+Consequences: &lt;benefits + costs + what varies independently&gt;
+Alternatives: &lt;other solutions; when each is better&gt;
+Risks &amp; Assumptions: &lt;what makes it wrong; assumptions; SUNSET condition&gt;
+Evidence &amp; Transfer-strength: &lt;finding IDs · evidence class · [E-strong|E-mid|E-hyp]&gt;
+## Band 3 — Operation
+```card-ops
+trigger: WHEN &lt;signal&gt; THEN apply
+mode: &lt;inline|gate|raid|review&gt;
+routine:
+  1. &lt;step&gt;
+  ...(&lt;=7)
+checker: &lt;conform tier | clippy lint | test&gt;   # or: WISH
+raid_role: layer=&lt;phase&gt;; order=after:&lt;cards&gt;; batch=&lt;cell|crate|seam&gt;
+budget: active_rules=&lt;n&gt;; first_signal=&lt;latency&gt;</fence>
+    <fence/>
+  </section>
+</spec>

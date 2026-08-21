@@ -1,0 +1,30 @@
+schema = 1
+source_hash = "sha256:8cd5500cc6910233a8f291ab3be98e478119157b078ed95fe2a6968f06fa25c7"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:6c85973b8966186c961767f706eaf6c5b245fe38dc72eea73a91a3bf30fdfe78"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/11-flow-wal-specspaces.md"
+output = "spec/boot/11-flow-wal-specspaces.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md"
+output = "spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

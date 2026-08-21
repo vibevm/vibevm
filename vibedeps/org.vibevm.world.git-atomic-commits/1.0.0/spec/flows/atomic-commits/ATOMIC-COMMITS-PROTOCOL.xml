@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Atomic Commits Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *what* an atomic commit
+is, *what* makes a sequence of commits well-formed, *when* a change
+set must be split, and *why* this discipline matters more in a
+human-AI team than in a traditional team.</fact></p>
+  <section id="what" title="What an atomic commit is">
+    <p><fact id="AN-ATOMIC-COMMIT-CARRIES-EXACTLY-ONE-IDEA" status="impl/done">An atomic commit carries **exactly one idea**.</fact></p>
+    <p><fact id="THE-DIFF-SHOWS-EVERY-CHANGE-AND-NOTHING-ELSE" status="impl/done">The diff shows every
+change required to express that idea, and nothing else.</fact></p>
+    <p><fact id="three-equivalent-framings-lead" status="impl/done">Three equivalent framings of the same rule:</fact></p>
+    <list ordered="false">
+      <item><fact id="FRAMING-ONE-LOGICAL-UNIT" status="impl/done">**One logical unit.** The smallest set of edits that, together,
+  express a complete thought and leave the tree in a consistent state.</fact></item>
+      <item><fact id="FRAMING-ONE-INTENT-PER-MESSAGE" status="impl/done">**One intent per message.** If the body needs to say "also, while
+  I was in there, …", the "also" belongs in its own commit.</fact></item>
+      <item><fact id="FRAMING-ONE-THING-TO-VERIFY" status="impl/done">**One thing to verify.** A reviewer should be able to answer "does
+  this commit do what the subject claims?" without having to
+  partition the diff first.</fact></item>
+    </list>
+    <p><fact id="A-BUNDLED-COMMIT-IS-THREE-COMMITS-NOT-ONE" status="impl/done">A commit that bundles "fix typo in README" + "refactor planner" +
+"update schema" is three commits, not one.</fact></p>
+  </section>
+  <section id="why" title="Why atomic commits matter more here">
+    <p><fact id="in-a-pure-human-team-they-are-a-quality-of-life-feature" status="spec/done">In a pure-human team, atomic commits are a quality-of-life feature:</fact></p>
+    <list ordered="false">
+      <item><fact id="QOL-EASIER-REVIEW" status="spec/done">easier review,</fact></item>
+      <item><fact id="QOL-CLEANER-BISECTS" status="spec/done">cleaner bisects,</fact></item>
+      <item><fact id="QOL-VIABLE-CHERRY-PICKS" status="spec/done">viable cherry-picks.</fact></item>
+    </list>
+    <p><fact id="teams-that-skip-the-discipline-ship-anyway" status="spec/done">Teams that skip
+the discipline ship anyway.</fact></p>
+    <p><fact id="in-a-human-ai-team-they-are-load-bearing" status="spec/done">In a human-AI team they are **load-bearing**. Three reasons:</fact></p>
+    <section id="why-diff" title="Diff as verification channel">
+      <p><fact id="the-humans-primary-verification-mechanism-is-reading-the-diff" status="spec/done">The human's primary verification mechanism is reading the diff.</fact></p>
+      <p><fact id="a-mixed-commit-forces-the-human-to-partition-it-first" status="spec/done">If
+one commit mixes three concerns across eight files and ninety lines,
+the human has to mentally partition the diff before assessing any
+single piece.</fact></p>
+      <p><fact id="the-partition-step-is-where-mistakes-slip-through" status="spec/done">That partition step is where mistakes slip through —
+the human is now doing a task the commit structure should have done
+for them.</fact></p>
+      <p><fact id="ONE-CONCERN-PER-COMMIT-MAKES-THE-DIFF-VERIFIABLE-IN-ONE-PASS" status="impl/done">One concern per commit makes the diff directly verifiable
+in one pass.</fact></p>
+    </section>
+    <section id="why-rollback" title="Rollback precision">
+      <p><fact id="some-ai-authored-changes-will-turn-out-to-be-wrong" status="spec/done">Some AI-authored changes will turn out to be wrong.</fact></p>
+      <p><fact id="REVERT-MUST-UNDO-THE-WRONG-THING-AND-NOTHING-ELSE" status="impl/done">When that
+happens, `git revert &lt;sha&gt;` must undo the wrong thing without also
+undoing three correct things that happened to ride in the same
+commit.</fact></p>
+      <p><fact id="THAT-IS-ONLY-POSSIBLE-IF-THEY-WERE-THREE-COMMITS-TO-BEGIN-WITH" status="impl/done">That is only possible if the three things were three
+commits to begin with.</fact></p>
+    </section>
+    <section id="why-log" title="Commit log as decision history">
+      <p><fact id="THE-MESSAGE-IS-THE-ONLY-PLACE-THE-WHY-IS-RECORDED-DURABLY" status="impl/done">The commit message is where the *why* of a **change** is recorded at
+per-change granularity, bound to its diff and surviving spec prose
+decay and WAL overwrites. The *why* of a **decision** has its own
+durable home — the sibling `decision-records` flow puts it at the
+governing spec anchor
+(`spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`)
+— and neither substitutes for the other.</fact></p>
+      <p><fact id="three-rationales-in-one-message-each-get-watered-down" status="spec/done">If one message has to carry three rationales, each one
+gets watered down.</fact></p>
+      <p><fact id="six-months-later-the-log-reads-refactored-stuff" status="spec/done">Six months later the log reads "refactored
+stuff" instead of "replaced SHA-256 with blake3 because the vendor
+library dropped SHA-256 support in 0.9".</fact></p>
+      <p><fact id="ATOMIC-COMMITS-MAKE-THE-LOG-USABLE-AS-A-DECISION-ARCHIVE" status="impl/done">Atomic commits make the log
+usable as a decision archive.</fact></p>
+    </section>
+  </section>
+  <section id="splitting" title="When to split">
+    <p><fact id="A-WORKING-TREE-WITH-MIXED-CONCERNS-MUST-BE-SPLIT" status="impl/done">A working tree with mixed concerns must be split.</fact></p>
+    <p><fact id="THE-TEST-IS-MECHANICAL-THE-WORD-ALSO" status="impl/done">The test is
+one question: can the commit body be written without using the word
+"also"? The word is the trigger; whether an "also" names a second
+intent or is mere prose is the reader's call.</fact></p>
+    <p><fact id="IF-NO-SPLIT" status="impl/done">If no, split.</fact></p>
+    <p><fact id="common-cases-lead" status="impl/done">Common cases:</fact></p>
+    <list ordered="false">
+      <item><fact id="CASE-REFACTOR-PLUS-FEATURE" status="impl/done">**Refactor + feature.** Always separate. The refactor commit
+  leaves behaviour unchanged; the feature commit leaves structure
+  unchanged. One of each.</fact></item>
+      <item><fact id="CASE-TESTS-PLUS-IMPLEMENTATION" status="impl/done">**Tests + implementation they verify.** Usually one commit — both
+  halves of one idea. Exception: adding a battery of tests against
+  pre-existing code is a test-only commit.</fact></item>
+      <item><fact id="CASE-FORMAT-PLUS-SUBSTANCE" status="impl/done">**Format + substance.** Always separate. Whitespace-only commits
+  are fine; mixing whitespace into a semantic change buries the
+  semantic change in noise.</fact></item>
+      <item><fact id="CASE-CROSS-MODULE-CHANGE" status="impl/done">**Cross-module change touching ten files for one reason.** That
+  is still one atomic commit. Do not over-split along file
+  boundaries — the atomic unit is the idea, not the file.</fact></item>
+    </list>
+    <p><fact id="sibling-document-pointers" status="impl/done">Mechanical procedure for producing the split:
+[`splitting-large-changes.md`](splitting-large-changes.md).</fact></p>
+  </section>
+  <section id="batching" title="When to batch">
+    <p><fact id="SOMETIMES-THREE-COUPLED-CHANGES-FORM-ONE-IDEA" status="impl/done">Sometimes three tightly coupled changes form one idea.</fact></p>
+    <p><fact id="example-a-new-type-its-first-user-and-its-test" status="impl/done">Example:
+introducing a new type, the first function that uses it, and the
+test that verifies the function.</fact></p>
+    <p><fact id="NONE-OF-THE-THREE-MAKES-SENSE-ALONE" status="impl/done">None of the three makes sense
+alone; splitting them produces two intermediate commits where the
+tree does not compile.</fact></p>
+    <p><fact id="THE-ONE-IDEA-IS-ONE-ATOMIC-COMMIT" status="impl/done">The one idea is "introduce and test this
+new type" — that is one atomic commit.</fact></p>
+    <p><fact id="THE-RULE-IS-ONE-IDEA-NOT-ONE-HUNK" status="impl/done">The rule is: atomic means *one idea*, not *one hunk*.</fact></p>
+    <p><fact id="USE-JUDGEMENT" status="impl/done">Use judgement.</fact></p>
+    <p><fact id="THE-WORD-ALSO-IS-STILL-THE-TEST" status="impl/done">The word "also" is still the test — if the commit body would need
+to say "introduces type X, also adds function Y using it, also
+tests Y", the phrasing is wrong; if it naturally reads "introduces
+and tests type X", it is one commit.</fact></p>
+    <section id="milestone" title="Milestone commits">
+      <p><fact id="A-SEQUENCE-OF-ATOMIC-COMMITS-CAN-FORM-A-MILESTONE" status="impl/done">Some sessions produce a sequence of atomic commits that together
+form a recognisable milestone — "implemented FEAT-007" or "M1.1
+shipped".</fact></p>
+      <p><fact id="THE-MILESTONE-FRAMING-LIVES-ABOVE-THE-COMMIT-LEVEL" status="impl/done">The individual commits stay atomic; the milestone framing
+lives *above* the commit level, in a separate milestone commit (a
+tag message, a PR description, or a dedicated `chore(release)`
+commit that contains no code changes but narrates the set).</fact></p>
+      <p><fact id="DO-NOT-RETRO-FIT-A-MILESTONE-INTO-ONE-GIANT-COMMIT" status="impl/done">Do not retro-fit a milestone narrative into a single giant commit.</fact></p>
+      <p><fact id="THE-ATOMIC-COMMITS-ARE-THE-SOURCE-OF-TRUTH" status="impl/done">The atomic commits are the source of truth; the milestone is the
+story told over them.</fact></p>
+    </section>
+  </section>
+  <section id="pushed" title="Pushed history is frozen">
+    <p><fact id="once-a-commit-has-been-pushed-lead" status="impl/done">Once a commit has been pushed:</fact></p>
+    <list ordered="false">
+      <item><fact id="FROZEN-NEVER-AMEND" status="impl/done">**Never** `git commit --amend` without explicit human approval.</fact></item>
+      <item><fact id="FROZEN-NEVER-REBASE-THE-PUSHED-RANGE" status="impl/done">**Never** `git rebase -i` the pushed range without explicit
+  human approval.</fact></item>
+      <item><fact id="FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL" status="impl/done">**Never** `git push --force` or `--force-with-lease` without
+  explicit human approval.</fact></item>
+    </list>
+    <p><fact id="A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT" status="impl/done">A mistake in a pushed commit is fixed by a new commit (type
+`fix` or `revert`), not by rewriting history.</fact></p>
+    <p><fact id="non-negotiable-because-others-may-already-have-pulled" status="spec/done">This is non-negotiable
+because other agents and humans may already have pulled the pushed
+commits; rewriting history under them corrupts their view of the
+repository.</fact></p>
+  </section>
+  <section id="ai-advantage" title="The AI advantage">
+    <p><fact id="humans-hate-splitting-commits" status="spec/done">Humans hate splitting commits.</fact></p>
+    <p><fact id="slicing-a-messy-tree-is-cognitively-expensive" status="spec/done">After a long prototyping session the
+working tree is a mess, and slicing it cleanly is cognitively
+expensive.</fact></p>
+    <p><fact id="most-humans-under-deadline-pressure-skip-the-discipline" status="spec/done">Most humans under deadline pressure skip the discipline.</fact></p>
+    <p><fact id="ai-does-not-get-tired" status="spec/done">AI does not get tired.</fact></p>
+    <p><fact id="ai-is-genuinely-happy-to-decompose-a-messy-tree" status="spec/done">AI is genuinely happy to read a messy
+`git status`, propose a five-commit plan that decomposes the mess
+along intent lines, and execute each commit one at a time under
+human verification.</fact></p>
+    <p><fact id="the-human-ai-team-is-strictly-faster-here" status="spec/done">This is one of the places where the human-AI
+team is strictly faster than either participant alone — **delegate
+the split**, verify the plan rather than each commit individually.</fact></p>
+    <p><fact id="a-working-prompt-for-delegation-lead" status="impl/done">A working prompt for delegation:</fact></p>
+    <fence>I have a dirty working tree. Before committing:
+1. Run `git status` and `git diff HEAD`.
+2. Name every change by intent.
+3. Group intents into atomic commits.
+4. Show me the proposed split as: commit number, subject line,
+   list of files / hunks it will stage.
+5. Do NOT run any git commands after the proposal until I approve.
+On approval, execute the split one commit at a time, running the
+local build between commits. Stop and surface any build failure
+before continuing.</fence>
+    <p><fact id="THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT" status="impl/done">The human verifies the split *plan*, not each commit individually.</fact></p>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-ONE-COMMIT-ONE-IDEA" status="impl/done">One commit, one idea. Not one file.</fact></item>
+      <item><fact id="SUM-THE-NO-ALSO-TEST" status="impl/done">The "no 'also' in the body" test screens for violations; whether an "also" names a second intent is the reader's call.</fact></item>
+      <item><fact id="SUM-WHAT-SEPARATES-AND-WHAT-COMBINES" status="impl/done">Refactor vs feature: always separate. Tests with their impl:
+  usually together. Format vs substance: always separate.</fact></item>
+      <item><fact id="SUM-PUSHED-HISTORY-IS-FROZEN" status="impl/done">Pushed history is frozen. Amend/force-push only with human
+  approval.</fact></item>
+      <item><fact id="SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN" status="impl/done">Delegate the split of messy trees to the agent; verify the plan.</fact></item>
+    </list>
+  </section>
+</spec>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The discipline sweep (Rust stack)</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="RUNNING-THE-STANDING-SWEEP" status="impl/done">You are running the standing sweep from the Discipline's Sweep Playbook
+(`spec://org.vibevm.ai-native/core-ai-native/04-SWEEP-PLAYBOOK` — the shipped copy is at
+`vibedeps/flow-core-ai-native/&lt;version&gt;/spec/04-SWEEP-PLAYBOOK.md`; read it
+once per session if you have not).</fact></p>
+  <p><fact id="two-truths-lead" status="impl/done">The two truths:</fact></p>
+  <list ordered="false">
+    <item><fact id="TRUTH-GATES-ARE-THE-FLOOR" status="impl/done">**the gates are the
+  floor, the sweep is the ceiling**,</fact></item>
+    <item><fact id="TRUTH-GATE-IS-TRUTH" status="impl/done">and **the gate is truth, the collector is
+  a guide**.</fact></item>
+  </list>
+  <p><fact id="NEVER-SWEEP-ON-A-RED-TREE" status="impl/done">Never sweep on a red tree.</fact></p>
+  <p><fact id="ACT-ON-COLLECTOR-FACTS" status="impl/done">Act on collector facts, never on
+memory.</fact></p>
+  <p><fact id="ALL-COMMANDS-ARE-THE-SHIPPED-TOOLCHAIN" status="impl/done">All commands below are the shipped toolchain.</fact></p>
+  <p><fact id="IF-NOT-ON-PATH-INSTALL-OR-RUN-IN-PLACE" status="impl/done">If `rust-ai-native` is not
+on PATH, either install it once —
+`cargo install --path vibedeps/&lt;stack-slot&gt;/crates/rust-ai-native-cli` — or run
+it in place: `cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml -p
+rust-ai-native-cli --bin rust-ai-native -- &lt;args&gt;`.</fact></p>
+  <p><fact id="PROJECT-MAY-KEEP-ITS-OWN-WRAPPER" status="impl/done">(A project may also keep
+its own wrapper, e.g. a dev repo's `cargo xtask` — same engine, either way.)</fact></p>
+  <section id="tier-zero" title="Tier 0 — the hard floor (ALWAYS first)">
+    <fence lang="sh">rust-ai-native floor</fence>
+    <p><fact id="RED-FLOOR-ADMITS-ONLY-GREENING-WORK" status="impl/done">Red? The only legal work is making it green — fix, do not proceed.</fact></p>
+    <p><fact id="CHECK-THE-PRINTED-POLICY-ORIGIN-LINES" status="impl/done">Check
+the printed policy-origin lines: `conform: NO conform.toml — topology
+default in force, nothing is gated` means the project is not
+bootstrapped (`rust-ai-native init`), and a green on a defaulted
+policy is vacuous.</fact></p>
+  </section>
+  <section id="tier-one" title="Tier 1 — the ratchet (every run)">
+    <fence lang="sh">rust-ai-native health</fence>
+    <p><fact id="READ-THE-HEALTH-SUMMARY" status="impl/done">Read the summary (the JSON at `discipline/health/latest.json` is the
+work-list; its git diff is the trend).</fact></p>
+    <p><fact id="take-cheapest-wins-lead" status="impl/done">Take one or two cheapest wins, in
+this order:</fact></p>
+    <list ordered="true">
+      <item><fact id="RATCHET-DANGER-BAND-FILES" status="impl/done">**`danger_band_files`** — split any file at the top of the [540,600)
+   band before an edit trips the 600 budget. Idioms: tests-out to a sibling
+   `foo/tests.rs` (`#[cfg(test)] #[path] mod tests;`) first, responsibility
+   split second; every new module keeps the parent's `scope!` URI (GUIDE
+   §14 has the gotchas).</fact></item>
+      <item><fact id="RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES" status="impl/done">**`pub_doctest_promotion_candidates`** — a gated crate at 0 typed-gap
+   enters `gated_pub_doctest` in conform.toml for free; run
+   `rust-ai-native conform check` to confirm the collector's prediction.</fact></item>
+      <item><fact id="RATCHET-PUB-DOCTEST-DRAIN-BACKLOG" status="impl/done">**`pub_doctest_drain_backlog`** — document the smallest-gap crate's
+   types (the four doctest idioms, GUIDE §14), then promote it.</fact></item>
+      <item><fact id="RATCHET-DEVIATION-DEBT" status="impl/done">**`deviation_debt`** — re-justify each `#[spec(deviates)]`: a deviation
+   whose invariant is now encodable in a type is removed and restructured.</fact></item>
+      <item><fact id="RATCHET-CENSUS-REGRESSIONS" status="impl/done">**Census regressions** (`unwrap_domain` / `env_nonroot` /
+   `unsafe_nonaudit` / `error_enums_missing_req` non-zero on a gated
+   crate) — drain immediately; restructure beats testify. On an ungated
+   crate they are the adoption backlog: **flip a crate into `[rust] gated`
+   only after it drains to zero.**</fact></item>
+    </list>
+  </section>
+  <section id="tier-two" title="Tier 2 — drift (weekly)">
+    <list ordered="false">
+      <item><fact id="DRIFT-TRIPWIRE" status="impl/done">`rust-ai-native tripwire` — re-disposition every touched-and-open debt
+  entry; file new deficiencies into `discipline/registry/debt.json`, never
+  leave them as prose.</fact></item>
+      <item><fact id="DRIFT-LEDGER-RENDER" status="impl/done">`rust-ai-native ledger render --check` — the human views
+  (`discipline/DEBT.md` / `INTENT.md`) match their registries; stale →
+  re-render and commit (a registry edit without a re-render is exactly
+  the drift this catches).</fact></item>
+      <item><fact id="DRIFT-DOC-CODE" status="impl/done">Doc/code drift: WAL freshness (if the project keeps one — see
+  `06-WAL-CONVENTION`), architecture docs vs the real tree, roadmap
+  staleness. File `stale-doc` debt.</fact></item>
+      <item><fact id="DRIFT-MARKER-CENSUS" status="impl/done">Marker census: `rg -n 'TODO|FIXME|REVIEW|XXX|HACK'` over the source
+  roots — graduate load-bearing markers into the registries, delete
+  trivial ones.</fact></item>
+      <item><fact id="DRIFT-GOLDEN-TRANSCRIPTS" status="impl/done">Golden transcripts (`discipline/golden/`): must fail loudly, re-captured
+  deliberately (`capture.sh`), never auto-updated.</fact></item>
+    </list>
+  </section>
+  <section id="tier-three" title="Tier 3 — deep judgment (weekly)">
+    <p><fact id="WALK-THE-WISH-RULES" status="impl/done">Walk the WISH rules over the week's diff (typed seams, cell
+isolation/oracles, uniformity, contract-first ordering, lying prose,
+closed-vocabulary naming — GUIDE §1–§10).</fact></p>
+    <p><fact id="CAMPAIGN-SIZED-BACKLOG-BECOMES-A-RAID" status="impl/done">If a Tier-1 backlog has grown
+campaign-sized, plan a raid instead: `03-RAID-PLAYBOOK` +
+`05-CAMPAIGN-FORM`.</fact></p>
+  </section>
+  <section id="closing-a-sweep" title="Closing a sweep">
+    <p><fact id="TOPIC-GROUPED-COMMITS" status="impl/done">Topic-grouped commits, one logical unit each, citing the sweep item.</fact></p>
+    <p><fact id="COMMIT-THE-REFRESHED-HEALTH-JSON" status="impl/done">Commit the refreshed `discipline/health/latest.json` in the same run.</fact></p>
+    <p><fact id="RESUME-POINTER" status="impl/done">Resume pointer: **with a WAL** — bump its standing line at any milestone
+move; **without** — the closing commit message carries the summary (floor
+state, items taken, next candidate).</fact></p>
+    <p><fact id="NEVER-LEAVE-STATE-ONLY-IN-THE-CONVERSATION" status="impl/done">Never leave the sweep's state only in
+this conversation.</fact></p>
+  </section>
+  <section id="generation-time-assistant" title="The generation-time assistant (before you edit, not instead of the floor)">
+    <p><fact id="STACK-SHIPS-AN-AGENTIC-TYPE-ORACLE" status="impl/done">The stack ships an agentic type oracle.</fact></p>
+    <p><fact id="check-the-hypothetical-content-lead" status="impl/done">Before writing a nontrivial `.rs`
+edit, check the HYPOTHETICAL content instead of paying a red floor
+iteration:</fact></p>
+    <fence lang="sh">vibe bin exec rust-ai-native-tcg -- validate src/cells/&lt;cell&gt;.rs \
+    --content-from - --root .   # the edit on stdin; exit 1 = would fail</fence>
+    <p><fact id="MCP-ALTERNATIVE" status="impl/done">or, when the vibevm MCP server is mounted, call `tcg_validate` with
+`language: "rust"` and the `content` argument (plus `tcg_scope` /
+`tcg_complete` / `tcg_type` for in-scope symbols, type-valid
+completions, and quick info).</fact></p>
+    <p><fact id="RESPONSES-CARRY-THE-SAME-CONFORM-FINDINGS" status="impl/done">Responses carry the SAME conform findings
+as the gate, flagged `baselined` or new, with guide-citing advice — a
+new finding in the answer means the floor WILL go red if you write that
+edit.</fact></p>
+    <p><fact id="ORACLE-PREREQUISITE" status="impl/done">Prerequisite: rust-analyzer on the machine (`rustup component add
+rust-analyzer` — a stack obligation).</fact></p>
+    <p><fact id="ORACLE-HONESTY" status="impl/done">Honesty: the oracle is
+rust-analyzer, not rustc; a clean answer shortens the distance to
+green, and the floor stays the truth (TCG-ORACLE-RUST §5).</fact></p>
+  </section>
+</spec>

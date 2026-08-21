@@ -1,0 +1,45 @@
+schema = 1
+source_hash = "sha256:1bd11d9aa2b7b07a0855a73602f5e4f050e4edde241a1ffbabe85d7b891e20f9"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:2753a013652bc43377105ce5c896c29dec6fd9ff347eb165ea784956475751e2"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/book/README.md"
+output = "spec/book/README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/book/ru/chapter-1-two-process-model.md"
+output = "spec/book/ru/chapter-1-two-process-model.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/book/ru/chapter-2-shared-state-and-files.md"
+output = "spec/book/ru/chapter-2-shared-state-and-files.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/book/ru/chapter-3-memory-individual.md"
+output = "spec/book/ru/chapter-3-memory-individual.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/03-flow-redbook.md"
+output = "spec/boot/03-flow-redbook.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

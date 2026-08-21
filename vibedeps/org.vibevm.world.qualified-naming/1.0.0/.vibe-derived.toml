@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:2314ddc863f3d9c9a8a68a21c58d49d08cc4ef43d425dff100c57ee93404f38d"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:f538a6db8c6b772c9e8d56a6947a1badece07b1999d5dcd11a87042950797cde"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/67-flow-qualified-naming.md"
+output = "spec/boot/67-flow-qualified-naming.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md"
+output = "spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/qualified-naming/naming-forks.md"
+output = "spec/flows/qualified-naming/naming-forks.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/qualified-naming/ref-grammar.md"
+output = "spec/flows/qualified-naming/ref-grammar.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

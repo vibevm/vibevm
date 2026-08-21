@@ -1,0 +1,20 @@
+schema = 1
+source_hash = "sha256:1aac79a76caf8f62f0027d90e0791a88b6c0e011c254145f7b4f459dbad3c306"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:0251addffac0e7c28aa1eddaed6bea7ae85e14fb2ae45f203c3478e9ddedbc1c"
+
+[[file]]
+source = "LICENSE"
+output = "LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

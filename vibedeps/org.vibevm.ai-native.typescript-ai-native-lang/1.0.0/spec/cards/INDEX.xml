@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Card Registry — INDEX (TypeScript projection)</title>
+  <p>**Discipline v0.2 · BETA · T2 · TypeScript**</p>
+  <p>*The navigable registry of the TypeScript projection's cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract for a `.ts` edit. These are the TypeScript shape of the nine language-neutral scaffold patterns catalogued in the core `02-EXECUTABLE-SCAFFOLDS.md`; this stack ships its own `cards/` so the weak-reader runtime surface for TypeScript is a TypeScript Band-3 block, never the Rust core's (`GUIDE-AI-NATIVE-TYPESCRIPT.md` §13). Generated/maintained as a derived index (A2/R-030); hand edits are a defect.*</p>
+  <section title="Scaffold cards (the nine executable-scaffold patterns)">
+    <table>
+      <tr>
+        <td>Card</td>
+        <td>Layer</td>
+        <td>Mechanism</td>
+        <td>Trigger mode</td>
+        <td>Transfer</td>
+        <td>Checker status</td>
+      </tr>
+      <tr>
+        <td>`scaffold-a-generators`</td>
+        <td>A+C</td>
+        <td>scaffold A</td>
+        <td>raid/gate</td>
+        <td>[E-strong]</td>
+        <td>specified</td>
+      </tr>
+      <tr>
+        <td>`scaffold-b-typed-builders`</td>
+        <td>E</td>
+        <td>scaffold B</td>
+        <td>gate</td>
+        <td>[E-mid]</td>
+        <td>specified</td>
+      </tr>
+      <tr>
+        <td>`scaffold-c-runnable-contracts`</td>
+        <td>E</td>
+        <td>scaffold C</td>
+        <td>inline</td>
+        <td>[E-mid]</td>
+        <td>specified</td>
+      </tr>
+      <tr>
+        <td>`scaffold-d-differential-oracle`</td>
+        <td>E</td>
+        <td>scaffold D</td>
+        <td>gate</td>
+        <td>[E-mid]</td>
+        <td>specified (pilot)</td>
+      </tr>
+      <tr>
+        <td>`scaffold-e-fast-loop`</td>
+        <td>E+H</td>
+        <td>scaffold E</td>
+        <td>gate</td>
+        <td>[E-strong]</td>
+        <td>shipped (`typescript-ai-native fast-loop`; the tsc half stays a whole-tree floor step — no per-cell project mode without references)</td>
+      </tr>
+      <tr>
+        <td>`scaffold-f-structured-diagnostics`</td>
+        <td>E+C</td>
+        <td>scaffold F</td>
+        <td>inline</td>
+        <td>[E-mid]</td>
+        <td>shipped (`ts-unsafe-in-domain` / `ts-cell-isolation` speak the Class-F grammar, typescript-ai-native-conform)</td>
+      </tr>
+      <tr>
+        <td>`scaffold-g-doctests`</td>
+        <td>C+G</td>
+        <td>scaffold G</td>
+        <td>gate</td>
+        <td>[E-strong]</td>
+        <td>specified (the health collector counts export `@example` coverage; the gate lands with Twoslash wiring)</td>
+      </tr>
+      <tr>
+        <td>`scaffold-h-simulators`</td>
+        <td>E+H</td>
+        <td>scaffold H</td>
+        <td>gate</td>
+        <td>[E-strong]</td>
+        <td>specified</td>
+      </tr>
+      <tr>
+        <td>`scaffold-i-codemods`</td>
+        <td>H+A</td>
+        <td>scaffold I</td>
+        <td>raid</td>
+        <td>**[E-hyp]**</td>
+        <td>pilot prototype shipped (`typescript-ai-native codemod add-cell`); free parameterization stays the open R4 question</td>
+      </tr>
+    </table>
+    <p>The classification axes (layer, mechanism, trigger mode, transfer tag) are language-neutral and carried verbatim from the core catalog so the Rust and TypeScript projections stay comparable. What differs per row is the **checker** (a TypeScript tool, not a Rust one) and the per-language Band-3 routine.</p>
+  </section>
+  <section title="Trigger-mode delivery summary">
+    <list ordered="false">
+      <item>**inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest — `@typescript-eslint` rules in the editor.</item>
+      <item>**gate** (per-merge): B, D, E, G, H — `tsc --noEmit` / `vitest` / type-level tests at the cell's verification gate.</item>
+      <item>**raid** (scheduled/on-adoption): A, I — `ts-morph` codegen and codemods swept across a layer.</item>
+      <item>**review** (human/strong-agent): none yet; reserved for judgment-heavy cards.</item>
+    </list>
+  </section>
+  <section title="TypeScript checker surface (what each card&apos;s checker stands on)">
+    <list ordered="false">
+      <item>**`@typescript-eslint` custom rules** — the inline checkers (C, F) and the `unsafe`-set bans (guide §8): `no-explicit-any`, no-unchecked-`as`, no-`!`, no-`@ts-ignore`, no-bare-primitive-at-seam, diagnostic-cites-REQ.</item>
+      <item>**`tsc --noEmit` + project references** — the per-cell compile gate (E); the maxed `tsconfig` (guide §1) IS a large part of the checker surface.</item>
+      <item>**`tsd` / `expectTypeOf` (vitest)** — type-level assertions (B, and the type-level-testing scaffold, guide §12).</item>
+      <item>**Twoslash** — type-checked examples (G).</item>
+      <item>**`fast-check`** — property/differential oracles (D); `vitest` snapshots for characterization.</item>
+      <item>**codemod post-checks** — atomic apply + `tsc` + `vitest` green (I).</item>
+    </list>
+    <p>All checker statuses are `specified` (defined, not yet implemented): there is **no TypeScript pilot codebase yet** — the forthcoming VibeVM TypeScript surface (UI + scripting) is the pilot, exactly as vibevm-Rust was the Rust pilot. The cards are authored so a card graduates from BETA when its checker is implemented on that pilot AND its evidence IDs are non-empty AND pilot evidence has not falsified it. This mirrors the state Rust's cards were in *before* the terraform implemented their checkers.</p>
+  </section>
+  <section title="Axis coverage (research frame A–H)">
+    <list ordered="false">
+      <item>A language-shape: A (generators), I (codemods)</item>
+      <item>B names &amp; tokens: covered by guide §4 (naming + branding) — candidate future card `rule-closed-vocabulary-naming` / `rule-branding-at-seam`</item>
+      <item>C meta-layer: A, F, G</item>
+      <item>D context &amp; repo: covered by guide §3 (cells, closure) — candidate `rule-cell-closure`</item>
+      <item>E verification: B, C, D, E, F, H</item>
+      <item>F spec-binding: specmap (PROP-014, guide §9) — mechanism, not a card</item>
+      <item>G empirics: G</item>
+      <item>H weak-reader: E, H, I</item>
+    </list>
+  </section>
+  <section title="TypeScript-specific additive coverage (beyond the nine)">
+    <list ordered="false">
+      <item>**Type-level testing** (guide §12) — Class C/D applied to the types themselves (`expectTypeOf`/`tsd`/`@ts-expect-error`). Rust has no readily-available analogue, so this is additive over the shared nine, not a tenth scaffold — it is folded into cards B (type-level surface) and D (type-level differential) as the TypeScript-unique facet of their checkers. A dedicated `rule-type-level-test` card is a candidate if the pilot shows its trigger fires often enough.</item>
+      <item>**The erasure boundary** (guide §2) and the **`unsafe` set** (guide §8) are TypeScript-specific *rules*, enforced through cards C (boundary validators) and the bans' eslint rules; candidate dedicated cards `rule-erasure-boundary-validated` and `antipattern-erased-type-lie` if pilot triggers warrant.</item>
+    </list>
+  </section>
+  <section title="Pending cards (named, not yet authored — pilot will prioritize)">
+    <list ordered="false">
+      <item>`rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.</item>
+      <item>`rule-branding-at-seam` (R3-008, TS) — meaning-bearing primitives crossing a seam are branded.</item>
+      <item>`rule-cell-closure` (R3-001) — editable units declare their full semantic dependency set; no barrel sprawl.</item>
+      <item>`rule-contract-first-ordering` (R3-002) — intent before body.</item>
+      <item>`rule-position-is-a-resource` (R3-003) — critical invariants at file edges; file-length bound.</item>
+      <item>`rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions.</item>
+      <item>`rule-erasure-boundary-validated` (TS) — untyped exterior enters as `unknown` + schema, never `any`/`as`.</item>
+      <item>`antipattern-god-file` (R3-013) — fan-in per file/barrel bounds swarm throughput.</item>
+      <item>`antipattern-lying-prose` (R2C-004/H4) — unverified prose/JSDoc claims near code.</item>
+    </list>
+    <p>These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as the pilot shows which triggers actually fire.</p>
+  </section>
+  <section title="Notes on status">
+    <list ordered="false">
+      <item>**specified** = checker is defined but not yet implemented (no TypeScript pilot yet).</item>
+      <item>**specified (pilot)** = checker defined; implementation is a named pilot task (D's `replacement-has-oracle`).</item>
+      <item>**WISH** = no checker yet (A5); the card is advisory until one exists (I, until weak-agent parameterization is pilot-validated).</item>
+      <item>A card graduates from BETA when its checker is implemented AND its evidence IDs are non-empty AND pilot evidence has not falsified it.</item>
+    </list>
+  </section>
+</spec>

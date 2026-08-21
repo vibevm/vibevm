@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Spec Genres</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="PROJECT-DOCUMENTS-ARE-GENRE-TYPED" status="impl/done">This project's documents are **genre-typed**.</fact></p>
+  <p><fact id="UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS" status="spec/done">One undifferentiated
+pile of markdown rots: contracts bloat with narrative, narrative
+gets treated as binding, and nobody knows what wins.</fact></p>
+  <p><fact id="EVERY-DOCUMENT-BELONGS-TO-EXACTLY-ONE-GENRE" status="impl/done">Every document
+belongs to exactly one genre; the genre decides where it lives, how
+it may change, and what authority it carries.</fact></p>
+  <section id="genre-map" title="The genre map">
+    <table>
+      <tr>
+        <td>Genre</td>
+        <td>Holds</td>
+        <td>Binding?</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-BOOT-FILES" status="impl/done">Boot files</fact></td>
+        <td><fact status="impl/done">Standing instructions read at session start</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-FOUNDATIONAL-DECISIONS" status="impl/done">Foundational decisions</fact></td>
+        <td><fact status="impl/done">Choices that cross every module</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-MODULE-CONTRACTS" status="impl/done">Module contracts</fact></td>
+        <td><fact status="impl/done">What each module does (here: PROP / FEAT)</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-DESIGN-DOCS" status="impl/done">Design docs</fact></td>
+        <td><fact status="impl/done">Why we chose what we chose — the lore</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-RESEARCH-DOCS" status="impl/done">Research docs</fact></td>
+        <td><fact status="impl/done">What *other* projects did</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-CAMPAIGN-PLANS" status="impl/done">Campaign plans</fact></td>
+        <td><fact status="impl/done">Phases and gates of one multi-session change</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-GENRE-THE-CHECKPOINT" status="impl/done">The checkpoint</fact></td>
+        <td><fact status="impl/done">Where work stands right now</fact></td>
+        <td><fact status="impl/done">state, not truth</fact></td>
+      </tr>
+    </table>
+    <p><fact id="full-charters-pointer" status="impl/done">Full charters, mutability rules, and conflict authority:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root.</fact></p>
+  </section>
+  <section id="core-rule" title="Core rule">
+    <p><fact id="NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT" status="impl/done">**Before writing any project document, name its genre first.** Then:</fact></p>
+    <list ordered="true">
+      <item><fact id="CONTRACT-WINS-OVER-LORE" status="impl/done">**Contract wins over lore.** When a design document and the
+   contract it explains disagree, the contract wins and the design
+   document is corrected — lore never silently diverges.</fact></item>
+      <item><fact id="KEEP-THE-TWO-WAY-LINKS" status="impl/done">**Keep the two-way links.** A contract section that has lore
+   links to it; the lore names the section it explains. A cold
+   reader entering from either side finds the other.</fact></item>
+    </list>
+    <p><fact id="routing-table-pointer" status="impl/done">Routing table for new material:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root.</fact></p>
+    <p><fact id="design-docs-pointer" status="impl/done">The contract/lore split in practice:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/design-docs#root.</fact></p>
+  </section>
+  <section id="why" title="Why this matters in a human-AI team">
+    <p><fact id="AGENT-READS-THE-TREE-COLD-EVERY-SESSION" status="spec/done">The agent reads the tree cold every session.</fact></p>
+    <p><fact id="look-alike-prose-gets-implemented-or-softened" status="spec/done">If binding and
+non-binding prose look alike, it will implement a parked idea out of
+a design doc, or soften a contract because the narrative around it
+sounded tentative.</fact></p>
+    <p><fact id="GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING" status="spec/done">Genre typing is what lets a cold reader assign
+authority to a sentence without asking anyone.</fact></p>
+  </section>
+  <section id="never" title="Never">
+    <list ordered="false">
+      <item><fact id="NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC" status="impl/done">Never put normative language — "must", "shall", requirement
+  lists — in a design doc. Extract it to the contract; link back.</fact></item>
+      <item><fact id="NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE" status="impl/done">Never resolve a contract-vs-lore conflict by editing the contract
+  to match the lore. The correction runs the other way.</fact></item>
+      <item><fact id="NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE" status="impl/done">Never create a document without deciding its genre.</fact></item>
+      <item><fact id="NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT" status="impl/done">Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start.</fact></item>
+    </list>
+  </section>
+</spec>

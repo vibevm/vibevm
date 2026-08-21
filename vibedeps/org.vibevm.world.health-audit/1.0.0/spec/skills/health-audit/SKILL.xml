@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Health audit — one run</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="RUNNING-ONE-PERIODIC-HEALTH-AUDIT" status="impl/done">You are running one periodic health audit: a breadth-first judgment
+sweep over what the per-commit gate cannot see.</fact></p>
+  <p><fact id="full-protocol-pointer" status="impl/done">Full protocol:
+@spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root.</fact></p>
+  <p><fact id="PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL" status="impl/done">You produce a **draft** `AUDIT.md`
+section; you do not commit without approval.</fact></p>
+  <section id="procedure" title="Procedure">
+    <list ordered="true">
+      <item><fact id="READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL" status="impl/done">Read `spec/flows/health-audit/audit-checklist.md` and
+   `running-an-audit.md` in full. If neither exists, say so, point at
+   `HEALTH-AUDIT-PROTOCOL.md`, and stop.</fact></item>
+      <item><fact id="READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD" status="impl/done">Read the previous `AUDIT.md` section (if any). Note every finding
+   still `open`, or `filed` with work not landed — these carry forward.</fact></item>
+      <item><fact id="IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES" status="impl/done">Identify this project's gate (its test / lint / CI commands), so you
+   audit what the gate does *not* cover.</fact></item>
+      <item><fact id="WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID" status="impl/done">Walk the checklist breadth-first — A test integrity, B rot outside
+   the gate, C drift, D debt, plus any project-specific rows. Run each
+   mechanical aid (coverage tool, `grep` for skip markers / `TODO` /
+   suppressions, dependency audit, CI-config-vs-tree diff). For A3
+   (tests that encode the wrong behavior), read assertions against
+   intent — there is no mechanical aid.</fact></item>
+      <item><fact id="ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING" status="impl/done">For each finding, assign an ID (`&lt;date&gt;-NN`), a category, a one-line
+   locator, a severity (P1/P2/P3), and a proposed disposition.</fact></item>
+      <item><fact id="CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT" status="impl/done">Carry forward each prior unresolved finding and re-judge its
+   severity. Flag any that has recurred without progress.</fact></item>
+    </list>
+  </section>
+  <section id="output" title="Output">
+    <list ordered="false">
+      <item><fact id="OUTPUT-A-DRAFT-AUDIT-MD-SECTION" status="impl/done">A draft `AUDIT.md` section: dated heading, the finding table (ID /
+  Cat / Finding / Sev / Disp), and notes for `accepted` / `open` rows.</fact></item>
+      <item><fact id="OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE" status="impl/done">A short list of the cheap fixes you propose to make in-run versus the
+  findings you propose to file.</fact></item>
+    </list>
+  </section>
+  <section id="do-not" title="Do not">
+    <list ordered="false">
+      <item><fact id="DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES" status="impl/done">Do not commit anything, edit `AUDIT.md`, or apply any fix until the
+  owner approves the draft.</fact></item>
+      <item><fact id="DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT" status="impl/done">Do not write findings only into the checkpoint file — `AUDIT.md` is
+  the durable home; the checkpoint is reconciled against it afterward.</fact></item>
+      <item><fact id="DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE" status="impl/done">Do not invent findings to fill the table. An honest short audit beats
+  a padded one.</fact></item>
+    </list>
+  </section>
+</spec>

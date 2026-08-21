@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">`flow:licensing` — a deliberate product licence posture</title>
+  <status stage="doc" state="done" audience="user"/>
+  <p><fact id="package-installs-a-licensing-posture-lead" status="impl/done">A vibevm `flow` package that installs a **licensing posture** into a
+project:</fact></p>
+  <list ordered="false">
+    <item><fact id="POSTURE-CHOOSE-THE-PRODUCTS-OWN-LICENCE-ON-PURPOSE" status="impl/done">choose the product's own licence on purpose (not whatever a
+  scaffold dropped in),</fact></item>
+    <item><fact id="POSTURE-KEEP-EVERY-DEPENDENCY-PERMISSIVE-ONLY" status="impl/done">keep every third-party dependency
+  permissive-only,</fact></item>
+    <item><fact id="POSTURE-START-FROM-AN-HONEST-PLACEHOLDER-EULA" status="impl/done">and — where the intent is to open the product
+  later — start from an honest placeholder EULA that states the
+  relicense intent plainly.</fact></item>
+  </list>
+  <p><fact id="GUIDANCE-NOT-LEGAL-ADVICE" status="spec/done">This is guidance, not legal advice; a lawyer signs off on the real
+licence.</fact></p>
+  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content, a skill, and a boot
+snippet:</fact></p>
+  <list ordered="false">
+    <item><fact id="CONTENT-THE-LICENSING-PROTOCOL" status="impl/done">`spec/flows/licensing/LICENSING-PROTOCOL.md` — the postures, the
+  placeholder EULA, the permissive-only dependency rule, the
+  third-party carve-out, keeping statements in sync, and why
+  relicensing is an owner decision.</fact></item>
+    <item><fact id="CONTENT-THE-EULA-TEMPLATE" status="impl/done">`spec/flows/licensing/eula-template.md` — a copy-ready
+  proprietary-with-relicense-intent skeleton with clause-by-clause
+  commentary and an adaptation table.</fact></item>
+    <item><fact id="CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE" status="impl/done">`spec/flows/licensing/dependency-licenses.md` — the allow/deny
+  table, the pre-adoption check over the full transitive graph, and
+  the "weight is not a licence concern" rule.</fact></item>
+    <item><fact id="CONTENT-THE-DRAFT-EULA-SKILL" status="impl/done">`spec/skills/draft-eula/` — an installable skill that drafts or
+  reviews the posture end to end.</fact></item>
+    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/60-flow-licensing.md` — boot snippet: the two standing
+  truths (one stated product licence; permissive-only deps) and the
+  never-do list.</fact></item>
+  </list>
+  <section id="install" title="Install">
+    <fence lang="bash">vibe install flow:licensing</fence>
+  </section>
+  <section id="uninstall" title="Uninstall">
+    <fence lang="bash">vibe uninstall flow:licensing</fence>
+    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet and the skill.</fact></p>
+    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
+  </section>
+  <section id="eula-to-open" title="The EULA-to-open path">
+    <p><fact id="the-placeholder-posture-is-a-way-station" status="spec/done">The placeholder posture is not a dead end — it is a way-station.</fact></p>
+    <p><fact id="THE-RELICENSE-INTENT-CLAUSE-STATES-THE-INTENT-TRUTHFULLY" status="impl/done">Its
+relicense-intent clause says, truthfully, that the owner means to
+open the product under a named permissive licence at a future,
+undecided date.</fact></p>
+    <p><fact id="AT-RELICENSE-TIME-THE-PLACEHOLDER-IS-REPLACED-WHOLESALE" status="impl/done">When that date comes, the placeholder is replaced
+wholesale by the target licence's official text and every manifest
+field moves with it, in one recorded commit.</fact></p>
+    <p><fact id="this-collection-itself-walked-that-path" status="impl/done">This collection itself
+walked that path: its packages ship under UPL-1.0, the licence the
+origin project's placeholder named as its intended destination.</fact></p>
+  </section>
+  <section id="composition" title="Composition">
+    <list ordered="false">
+      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — the licence choice and any relicensing
+  are recorded decisions with reasons; an allowed copyleft exception
+  is one too.</fact></item>
+      <item><fact id="COMPOSES-SECRETS-HYGIENE" status="spec/done">`flow:secrets-hygiene` — a sibling one-place policy; both reward a
+  mechanical check in CI over a prose promise.</fact></item>
+      <item><fact id="COMPOSES-HEALTH-AUDIT" status="spec/done">`flow:health-audit` — a periodic audit line re-runs the dependency
+  licence listing, catching a dependency that relicensed between
+  versions. *Specified, not built: the composition is a good one and the
+  sibling does not yet hold up its end. `flow:health-audit`'s
+  `spec/flows/health-audit/audit-checklist.md` carries no licence line
+  anywhere — its one dependency category, D4 · Dependency staleness, names
+  outdated versions and security advisories and nothing about licences, and
+  the whole of that package's `spec/` returns no hit for `licen` · `copyleft`
+  · `GPL` · `permissive` · `SPDX`. Nor is there a listing for such a line to
+  re-run: no `deny.toml`, no `about.toml`, no SBOM. Until the line exists, this
+  entry describes an intended composition rather than a running one; the body
+  rule is `spec/flows/licensing/dependency-licenses.md#RE-AUDIT-ON-A-SCHEDULE`,
+  demoted on the same evidence.*</fact></item>
+      <item><fact id="COMPOSES-ATTRIBUTION-POLICY" status="spec/done">`flow:git-attribution-policy` — the two together define how the
+  repository presents itself: who authored it, and under what terms
+  it may be used.</fact></item>
+    </list>
+  </section>
+  <section id="background" title="Philosophical background">
+    <p><fact id="extracted-from-the-origin-projects-licensing-decision" status="spec/done">Extracted from the origin project's licensing decision: a
+source-available proprietary EULA with an explicit intent to
+relicense under UPL-1.0, plus the permissive-only dependency
+invariant.</fact></p>
+    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The collection's spirit is the book *AI-native
+development*, shipped in Russian inside `flow:redbook` at
+`spec/book/ru/`.</fact></p>
+  </section>
+  <section id="license" title="License">
+    <p><fact id="license-line" status="impl/done">UPL-1.0. See `LICENSE.md`.</fact></p>
+  </section>
+</spec>

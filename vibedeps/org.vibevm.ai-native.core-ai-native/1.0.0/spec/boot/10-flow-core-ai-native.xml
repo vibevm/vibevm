@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Discipline v0.2 (BETA) — boot snippet</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="FOLLOWS-DISCIPLINE" status="impl/done">This project follows the AI-Native Code Discipline.</fact></p>
+  <p><fact id="corpus-lives-here-lead" status="impl/done">The language-neutral corpus lives in this package:</fact></p>
+  <list ordered="false">
+    <item><fact id="CORPUS-GUIDING-LAYER" status="impl/done">the guiding layer (`spec/00-MANIFESTO.md`,
+  `spec/01-PATTERN-CARD-FORMAT.md`, `spec/02-EXECUTABLE-SCAFFOLDS.md`),</fact></item>
+    <item><fact id="CORPUS-OPERATING-PLAYBOOKS" status="impl/done">the operating playbooks (`spec/03-RAID-PLAYBOOK.md`
+  campaigns, `spec/04-SWEEP-PLAYBOOK.md` the standing sweep, `spec/05-CAMPAIGN-FORM.md`
+  the campaign paper trail, `spec/06-WAL-CONVENTION.md` session-durable state —
+  optional but preferred),</fact></item>
+    <item><fact id="CORPUS-MECHANISM-SPECS" status="impl/done">the mechanism specs under `spec/mechanisms/`
+  (ENGINE-CONFORM, PROP-014 specmap, BROWNFIELD-PROTOCOL, LEDGER-INTENT — the
+  units `spec://org.vibevm.ai-native/core-ai-native/…` tags cite),</fact></item>
+    <item><fact id="CORPUS-APPENDIX" status="impl/done">and `spec/appendix/`.</fact></item>
+  </list>
+  <p><fact id="CARDS-AND-CHECKERS-PER-STACK" status="impl/done">The concrete per-language `cards/` and the
+runnable checkers ship in each language stack, not here.</fact></p>
+  <p><fact id="DO-NOT-READ-ALL-AT-BOOT" status="impl/done">**Do not read it all at boot** — the Discipline's
+own delivery rule is minimal sufficiency:</fact></p>
+  <list ordered="false">
+    <item><fact id="BAND-3-ON-TRIGGER" status="impl/done">load a card's Band-3 ops block only when its trigger
+  fires;</fact></item>
+    <item><fact id="PLAYBOOK-ON-PROCEDURE" status="impl/done">open a playbook when you run its procedure.</fact></item>
+  </list>
+  <p><fact id="two-laws-lead" status="impl/done">The two laws that always apply:</fact></p>
+  <list ordered="true">
+    <item><fact id="LAW-IDIOMATIC-INSIDE-ENGINEERED-AROUND" status="impl/done">**Idiomatic inside the file, engineered around the file.** Code
+   surface stays ordinary and in-distribution; all added strictness
+   lives in types, contracts, metadata, and the verification loop.</fact></item>
+    <item><fact id="LAW-EXPLANATION-IS-RUNNABLE-CAPITAL" status="impl/done">**Explanation capital must be runnable capital.** Prose that could
+   be a checker, doctest, or typed API is a WISH until it becomes one.</fact></item>
+  </list>
+  <p><fact id="CARD-REGISTRY" status="impl/done">Card registry: the active language stack's `spec/cards/INDEX.md` (trigger →
+card; the nine executable scaffolds A–I in their per-language shape).</fact></p>
+  <p><fact id="CROSS-CUTTING-SWEEPS" status="impl/done">Cross-cutting sweeps follow `03-RAID-PLAYBOOK.md`.</fact></p>
+  <p><fact id="RULE-WITH-NO-CHECKER-IS-WISH" status="impl/done">A rule with no checker is a WISH; a deviation with no reason is a
+defect (`#[spec(deviates, reason)]`).</fact></p>
+</spec>

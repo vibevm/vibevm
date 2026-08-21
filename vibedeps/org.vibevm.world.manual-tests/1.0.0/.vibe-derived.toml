@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:436c4b0445c7712b890e46464f5d8a98a02a3b147505a0c4b7b17aa244aa767c"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:06d4ed1c0fac189ec4e0ceca3be7ac94ee4316c37e3a21f937f06a50a5407ed4"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/44-flow-manual-tests.md"
+output = "spec/boot/44-flow-manual-tests.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+output = "spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/manual-tests/authoring-rules.md"
+output = "spec/flows/manual-tests/authoring-rules.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/manual-tests/test-template.md"
+output = "spec/flows/manual-tests/test-template.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

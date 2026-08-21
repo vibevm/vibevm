@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:faf47405bff3d183c7afa460610c444c31c4c74bb8ed2b30505ecd556fe7800a"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:59349e3a246a571143167c958c4dd9e0f62a993a9397aa19268a71ed2ddfbf86"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/25-flow-decision-records.md"
+output = "spec/boot/25-flow-decision-records.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+output = "spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/decision-records/record-template.md"
+output = "spec/flows/decision-records/record-template.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/decision-records/revisit-triggers.md"
+output = "spec/flows/decision-records/revisit-triggers.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

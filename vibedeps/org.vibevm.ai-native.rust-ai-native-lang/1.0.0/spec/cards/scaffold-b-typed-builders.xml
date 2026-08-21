@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">CARD: scaffold-b-typed-builders — Typed Builders / Typestate</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · BETA**</fact></p>
+  <section id="band-one-identity" title="Band 1 — Identity &amp; Recognition">
+    <p><fact id="CLASSIFICATION" status="impl/done">Classification: layer=E (verification); mechanism=scaffold B.</fact></p>
+    <p><fact id="INTENT" status="impl/done">Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `cargo check` before runtime — encoding protocol correctness in types rather than docstrings.</fact></p>
+    <p><fact id="ALSO-KNOWN-AS" status="spec/done">Also Known As: typestate; phantom types; type-state builder; sealed trait; newtype wrapper; make-illegal-states-unrepresentable.</fact></p>
+    <p><fact id="APPLICABILITY-RECOGNITION" status="impl/done">Applicability / Recognition: Apply when — a seam has a usage protocol (order of calls, required fields, valid states); a primitive (`u64`, `String`, `bool`) crosses a boundary where its meaning matters; an API takes multiple same-typed args or a bool flag. *Detector seed:* a pub seam fn taking `&amp;str`/`bool`/multiple `u*` of the same type, OR a runtime check that a struct is "ready" → recognition fires (94% of compile errors are type-level; move the check there).</fact></p>
+  </section>
+  <section id="band-two-justification" title="Band 2 — Justification &amp; Tradeoffs">
+    <p><fact id="MOTIVATION" status="spec/done">Motivation: A weak agent calls `connect(host, port, true, false)` and swaps the bools. With `ConnectionBuilder` requiring `.tls(Tls::Enabled)` and `.host(Host::new(...))`, the swap does not type-check; the error surfaces in the loop, not in production.</fact></p>
+    <p><fact id="STRUCTURE-AND-PARTICIPANTS" status="impl/done">Structure &amp; Participants: *Newtype* (primitive + meaning) · *Typestate marker* (phantom state) · *Builder* (type-mandatory required fields) · *Sealed trait* (closed extension).</fact></p>
+    <p><fact id="COLLABORATIONS" status="impl/done">Collaborations: Shrinks the input space Class D oracles must cover; the compiler is the Class E loop's primary checker; pairs with Class C for runtime invariants types can't express.</fact></p>
+    <p><fact id="GOALS-AND-NON-GOALS" status="impl/done">Goals / Non-Goals: *Goals:* convert probable hallucinations to compile errors at seams. *Non-Goals:* NOT typestate everywhere (ergonomic cost) — scope to seam surfaces; NOT a replacement for contracts on value-range invariants.</fact></p>
+    <p><fact id="CONSEQUENCES" status="spec/done">Consequences: (+) a whole class of misuse becomes uncompilable; (+) the type IS the protocol doc. (−) typestate ergonomics cost for human contributors; (−) over-typing fights idiom — scope tightly.</fact></p>
+    <p><fact id="ALTERNATIVES" status="spec/done">Alternatives: runtime validation (errors surface late — in production, not the loop); a contract (Class C) when the invariant is a value property, not a protocol.</fact></p>
+    <p><fact id="RISKS-AND-ASSUMPTIONS" status="spec/done">Risks &amp; Assumptions: assumes the protocol is type-expressible; some invariants need Class C. *Sunset:* none material. Strong models may be mildly distorted by over-constraint — keep newtype/typestate proportional.</fact></p>
+    <p><fact id="EVIDENCE-AND-TRANSFER-STRENGTH" status="spec/done">Evidence &amp; Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (94% type-level errors; type-awareness cuts compile errors, benchmark). Class: benchmark + theory. Tag: **[E-mid]**.</fact></p>
+  </section>
+  <section id="band-three-operation" title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN a pub seam fn takes &amp;str/bool/duplicate-same-type args, OR a runtime "is-ready" check exists THEN apply
+mode: gate            # introduced at seam design; checked at merge
+routine:
+  1. Wrap each meaning-bearing primitive at the seam in a newtype.
+  2. Encode call-order/required-field protocol as typestate or a type-mandatory builder.
+  3. Seal extension traits; add #[must_use] where ignoring the result is a defect.
+  4. Delete the now-impossible runtime validity checks.
+  5. Confirm the previously-wrong call no longer compiles (add a trybuild ui test).
+checker: conform T-sem `seam-protocol-typed` + trybuild compile-fail test
+raid_role: layer=seams; order=after:none; batch=seam
+budget: active_rules=1; first_signal=cargo check (&lt;60s)</fence>
+  </section>
+</spec>

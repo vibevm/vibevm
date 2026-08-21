@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:4327ef83d934c35dfb9e363f5b2e0c7d38f083f29ad935ae4fec4bce1827d466"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:8735237202959bc72e0463e89d5009b7200363f55f7a442bedce84086db28146"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/55-flow-attribution-policy.md"
+output = "spec/boot/55-flow-attribution-policy.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+output = "spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/attribution-policy/disclosure-alternative.md"
+output = "spec/flows/attribution-policy/disclosure-alternative.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/attribution-policy/enforcement-checklist.md"
+output = "spec/flows/attribution-policy/enforcement-checklist.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

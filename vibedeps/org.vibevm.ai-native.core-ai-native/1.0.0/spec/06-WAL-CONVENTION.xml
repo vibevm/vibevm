@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The WAL Convention — session-durable project state</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred**</fact></p>
+  <p><fact id="sessions-end-a-project-outlives-them" status="spec/done">*Agent sessions end, compact, and crash; a project outlives all of them.*</fact></p>
+  <p><fact id="CONVENTION-KEEPS-STATE-IN-TWO-FILES" status="impl/done">*This
+convention makes session boundaries cheap by keeping the project's living
+state in two repository files.*</fact></p>
+  <p><fact id="WAL-IS-OPTIONAL" status="impl/done">*It is **optional**: every Discipline procedure
+that touches it ([Sweep §4](04-SWEEP-PLAYBOOK.md#output),
+[Campaign Form §4](05-CAMPAIGN-FORM.md#resume), the shipped terraform/sweep
+skills) carries an explicit without-WAL branch.*</fact></p>
+  <p><fact id="WAL-IS-PREFERRED" status="impl/done">*It is **preferred** because the alternative — resumption
+state scattered across commit messages and
+plan-status lines — degrades as a project grows.*</fact></p>
+  <p><fact id="ADOPT-WHEN-MORE-THAN-ONE-SESSION" status="impl/done">*Adopt it when more than one
+session (or more than one operator) will ever touch the tree.*</fact></p>
+  <section id="files" title="1. The two files">
+    <p><fact id="WAL-FILE-DESCRIBES-THE-CURRENT-STATE" status="impl/done">**`spec/WAL.md` — the living checkpoint.** Describes the *current* state:
+a dated standing line (what landed, gate-panel state, what's next, known
+issues), plus a per-session section for the active campaign.</fact></p>
+    <p><fact id="two-hard-rules-lead" status="impl/done">Two hard rules:</fact></p>
+    <list ordered="false">
+      <item><fact id="RULE-REWRITE-NOT-APPEND" status="impl/done">**Rewrite, not append.** The WAL is a checkpoint, not a log — its lead
+  always describes *now*. History lives in git; an append-only WAL rots into
+  an archive nobody reads. (Prior standing lines may be demoted into a
+  PRIOR-tail as they age; the git log is the authoritative per-item record.)</fact></item>
+      <item><fact id="RULE-THE-WAL-IS-CANONICAL" status="impl/done">**The WAL is canonical.** Where the WAL and any snapshot (CONTINUE, a plan's
+  status line, a README) disagree, the WAL wins.</fact></item>
+    </list>
+    <p><fact id="CONTINUE-FILE-IS-THE-COLD-RESUME-SNAPSHOT" status="impl/done">**`CONTINUE.md` (repo root) — the cold-resume snapshot.** Written at session
+end for whoever picks up cold: TL;DR, where work stands (branch, sync,
+tree state), the active blocker and the exact action that unblocks it, the
+next-steps recipe with paths and commands, non-obvious findings, and the
+recent commit chain.</fact></p>
+    <p><fact id="CONTINUE-IS-OVERWRITTEN-WHOLESALE" status="impl/done">Overwritten wholesale each time — staleness compounds
+otherwise.</fact></p>
+    <p><fact id="CONTINUE-IS-A-SNAPSHOT-THE-WAL-SUPERSEDES-IT" status="impl/done">It is a *snapshot*; the WAL supersedes it.</fact></p>
+  </section>
+  <section id="freshness" title="2. The freshness rule">
+    <p><fact id="WAL-OLDER-THAN-24-HOURS-IS-STALE" status="impl/done">A WAL older than **24 hours** is stale: verify the recorded state against
+reality (branch, gates, tree) before any destructive work, and say so to the
+owner when the divergence matters.</fact></p>
+    <p><fact id="FRESHNESS-ENFORCEMENT-IS-ADVISORY" status="impl/done">Tooling may enforce this advisorily (the
+pilot's project linter warns on a stale WAL); the sweep's Tier-2 drift pass
+checks it weekly regardless.</fact></p>
+  </section>
+  <section id="boundaries" title="3. Session boundaries">
+    <list ordered="false">
+      <item><fact id="BOUNDARY-SESSION-END" status="impl/done">**Session end (wind-down):** update the WAL's standing line + session
+  section; rewrite CONTINUE.md; commit both as their own topic commits.
+  The test: a stranger with only the repository resumes without asking.</fact></item>
+      <item><fact id="BOUNDARY-SESSION-RESUME" status="impl/done">**Session resume:** boot per the project's boot sequence, read the WAL,
+  read CONTINUE.md, verify empirically, **report and wait** — a recorded
+  "next step" is the candidate, not an authorisation; the owner steers.</fact></item>
+      <item><fact id="BOUNDARY-MID-WORK-CHECKPOINTS" status="impl/done">**Mid-work checkpoints:** campaigns bump the WAL at phase boundaries
+  ([Campaign Form §3–4](05-CAMPAIGN-FORM.md#gates)); sweeps bump it at
+  milestone moves ([Sweep §4](04-SWEEP-PLAYBOOK.md#output)).</fact></item>
+    </list>
+  </section>
+  <section id="without" title="4. Without a WAL">
+    <p><fact id="OPT-OUT-STILL-OWES-THE-SAME-INVARIANT" status="impl/done">A project that opts out still owes the same invariant — **resumption state
+lives in the repository, never in a session**.</fact></p>
+    <p><fact id="the-fallbacks-lead" status="impl/done">The fallbacks the procedures
+use:</fact></p>
+    <list ordered="false">
+      <item><fact id="FALLBACK-PLAN-STATUS-LINE" status="impl/done">a campaign PLAN carries a status line at its top, updated with each
+  phase's commits;</fact></item>
+      <item><fact id="FALLBACK-SWEEP-CLOSING-COMMIT" status="impl/done">a sweep's closing commit message carries the summary, and the committed
+  health snapshot is the trend record;</fact></item>
+      <item><fact id="FALLBACK-TERRAFORM-REGISTRIES" status="impl/done">the terraform skill's inventory registries (BROWNFIELD §3) hold what a WAL
+  would have held about debt and intent.</fact></item>
+    </list>
+    <p><fact id="fallbacks-work-but-are-weaker" status="spec/done">These fallbacks work; they are simply weaker — three places instead of one,
+no single canonical "now".</fact></p>
+    <p><fact id="SIGNAL-TO-ADOPT-THE-TWO-FILES" status="impl/done">When a without-WAL project notices it keeps
+re-deriving its own state, that is the signal to adopt §1.</fact></p>
+  </section>
+  <section id="scope" title="5. Scope discipline">
+    <p><fact id="WAL-RECORDS-PROJECT-FACTS" status="impl/done">The WAL records *project* facts.</fact></p>
+    <p><fact id="MACHINE-SCOPED-QUIRKS-BELONG-ELSEWHERE" status="impl/done">Machine-scoped quirks (shell behaviors, OS
+footguns of one contributor's box) belong in that machine's user-scoped
+notes or the project's boot user-override file — not in the WAL and not in
+the Discipline's method documents.</fact></p>
+    <p><fact id="KEEP-THE-THREE-LAYERS-APART" status="impl/done">Keep the three layers apart: method
+(this package), project (WAL/CONTINUE), machine (user-owned boot snippet).</fact></p>
+  </section>
+</spec>

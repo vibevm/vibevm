@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Dependency licence discipline</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** The operational side of the
+permissive-only rule: which licences pass, which fail, how to check a
+new dependency before adopting it, and how to keep the check honest
+over time.</fact></p>
+  <p><fact id="GUIDANCE-NOT-LEGAL-ADVICE" status="impl/done">Guidance, not legal advice.</fact></p>
+  <section id="table" title="The allow / deny table">
+    <table>
+      <tr>
+        <td>Class</td>
+        <td>Licences</td>
+        <td>Verdict</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-CLASS-PERMISSIVE" status="spec/done">Permissive</fact></td>
+        <td><fact status="spec/done">MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, Zlib, UPL-1.0</fact></td>
+        <td><fact status="spec/done">**allowed**</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-CLASS-WEAK-COPYLEFT" status="spec/done">Weak copyleft</fact></td>
+        <td><fact status="spec/done">MPL-2.0, EPL</fact></td>
+        <td><fact status="spec/done">**case by case** — file-level copyleft usually does not taint consumers, but confirm the use</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-CLASS-STRONG-COPYLEFT" status="spec/done">Strong copyleft</fact></td>
+        <td><fact status="spec/done">GPL-2.0/3.0, AGPL, LGPL</fact></td>
+        <td><fact status="spec/done">**forbidden by default** — an owner exception, if any, is explicit and recorded</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-CLASS-UNCLEAR-OR-MISSING" status="spec/done">Unclear / missing</fact></td>
+        <td><fact status="spec/done">no licence file, "all rights reserved", custom terms</fact></td>
+        <td><fact status="spec/done">**treat as forbidden** until clarified — no licence means no rights</fact></td>
+      </tr>
+    </table>
+    <p><fact id="why-lgpl-is-in-the-forbidden-row" status="impl/done">The `LGPL` entry is deliberately in the forbidden row: even though its
+copyleft is weaker than GPL, its dynamic-linking obligations are easy
+to violate accidentally in a statically-linked or bundled build, so
+the default is no.</fact></p>
+  </section>
+  <section id="check" title="Checking a dependency before adoption">
+    <list ordered="true">
+      <item><fact id="STEP-FIND-THE-LICENCE" status="impl/done">**Find the licence.** The package's manifest field, its
+   `LICENSE` file, its repository. If these disagree, the most
+   restrictive one wins until the discrepancy is resolved.</fact></item>
+      <item><fact id="STEP-CLASSIFY-IT-AGAINST-THE-TABLE" status="impl/done">**Classify it** against the table. Permissive → proceed.
+   Case-by-case → confirm the specific obligation is met. Forbidden or
+   unclear → stop and surface it as an owner decision.</fact></item>
+      <item><fact id="STEP-CHECK-THE-TRANSITIVE-SET" status="impl/done">**Check the transitive set, not just the direct dependency.** A
+   permissive library that pulls a GPL transitive dependency is a GPL
+   problem. Run the ecosystem's licence-listing over the whole
+   resolved graph, not the top level.</fact></item>
+      <item><fact id="STEP-RECORD-THE-OUTCOME" status="impl/done">**Record the outcome** where dependency decisions live — an
+   allowed non-obvious licence and any case-by-case call is a recorded
+   decision with the reason.</fact></item>
+    </list>
+  </section>
+  <section id="weight" title="Weight is not a licence concern">
+    <p><fact id="REJECT-FOR-LICENCE-ABANDONMENT-SECURITY-OR-API-NEVER-FOR-WEIGHT" status="impl/done">Reject a dependency for its licence, its abandonment, its security
+history, or an API that would poison your interfaces — never for
+being "heavy".</fact></p>
+    <p><fact id="weight-is-not-a-reason-to-under-specify-a-load-bearing-component" status="spec/done">Binary size, crate/package count, and transitive
+weight are not reasons to under-specify a load-bearing component;
+that trades a one-time size cost for ongoing architectural debt.</fact></p>
+    <p><fact id="KEEP-THE-TWO-CONVERSATIONS-SEPARATE" status="impl/done">Keep the two conversations separate: licence discipline here, weight
+nowhere.</fact></p>
+  </section>
+  <section id="honest" title="Keeping the check honest">
+    <list ordered="false">
+      <item><fact id="AUTOMATE-THE-LISTING" status="impl/done">**Automate the listing.** A licence-lister run in CI over the full
+  resolved graph turns "we think everything is permissive" into a
+  fact that fails loudly when a forbidden licence enters. A rule with
+  no checker is a wish.</fact></item>
+      <item><fact id="RE-AUDIT-ON-A-SCHEDULE" status="spec/done">**Re-audit on a schedule.** A dependency can relicense between
+  versions; a periodic audit line (see `flow:health-audit`) re-runs
+  the listing and flags any new non-permissive entry. *Specified, not built,
+  and the sibling it points at does not carry the line: `flow:health-audit`'s
+  `spec/flows/health-audit/audit-checklist.md` has one dependency category, D4
+  · Dependency staleness, whose «Look for» and «Aid» rows name outdated
+  versions and security advisories (`npm audit`, `cargo audit`,
+  `cargo outdated`) and no licence at all — a search of that package's whole
+  `spec/` for `licen` · `copyleft` · `GPL` · `permissive` · `SPDX` returns
+  nothing. Nor is there a listing to re-run: no `deny.toml`, no `about.toml`,
+  no SBOM or SPDX manifest anywhere in the perimeter, and a lockfile that
+  records no licence field. The adopter must therefore author the line itself;
+  `audit-checklist.md` is explicitly «a starting set, not a closed one», which
+  is where it would go.*</fact></item>
+      <item><fact id="POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST" status="impl/done">**Point the product's carve-out at the generated list**, never a
+  hand-maintained copy — the hand copy drifts, the generated one
+  cannot.</fact></item>
+    </list>
+  </section>
+  <section id="forbidden-only" title="When a forbidden licence is the only option">
+    <p><fact id="sometimes-the-best-or-only-library-is-copyleft" status="spec/done">Sometimes the best-or-only library for a job is copyleft.</fact></p>
+    <p><fact id="THAT-IS-AN-OWNER-DECISION-NOT-AN-AGENT-DECISION" status="impl/done">That is an
+owner decision, not an agent decision.</fact></p>
+    <p><fact id="surface-it-with-the-trade-off-stated-lead" status="impl/done">Surface it with the trade-off
+stated:</fact></p>
+    <list ordered="false">
+      <item><fact id="TRADE-OFF-THE-CAPABILITY-GAINED" status="impl/done">the capability gained,</fact></item>
+      <item><fact id="TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED" status="impl/done">the licence obligation incurred,</fact></item>
+      <item><fact id="TRADE-OFF-THE-ALTERNATIVES" status="impl/done">and
+  the alternatives (a permissive competitor, a reimplementation, doing
+  without).</fact></item>
+    </list>
+    <p><fact id="THE-OWNER-MAY-GRANT-A-RECORDED-SCOPED-EXCEPTION" status="impl/done">The owner may grant a recorded, scoped exception — or not.</fact></p>
+    <p><fact id="NEVER-ADOPT-A-FORBIDDEN-LICENCE-SILENTLY" status="impl/done">Never adopt it silently.</fact></p>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-THE-ALLOW-DENY-CLASSES" status="impl/done">Permissive allowed, weak copyleft case-by-case, strong copyleft and
+  unclear licences forbidden by default.</fact></item>
+      <item><fact id="SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH" status="impl/done">Check the whole transitive graph before adopting; the most
+  restrictive licence in the set governs.</fact></item>
+      <item><fact id="SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON" status="impl/done">Weight is never a licence reason — keep those conversations
+  separate.</fact></item>
+      <item><fact id="SUM-AUTOMATE-AND-RE-AUDIT" status="spec/done">Automate the listing in CI and re-audit on a schedule; point the
+  carve-out at the generated list. *One of the three is built, one is a
+  recorded exception, one is built by nothing. Built: the carve-out points at
+  the generated list rather than a hand copy. A recorded exception rather than
+  a gap: the CI listing was wanted, filed, and deliberately declined — the
+  intent «cargo deny in CI (automated license check)» is registered and marked
+  `rescoped`, its resolution reading «couples to the CI decision; the license
+  policy itself is enforced by review», which couples it to a standing
+  owner-level no-CI posture. Built by nothing: the scheduled re-audit, per
+  `##RE-AUDIT-ON-A-SCHEDULE` above — no periodic licence line exists in the
+  `health-audit` flow, in any adopting project's audit record, or in any
+  tooling.*</fact></item>
+      <item><fact id="SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION" status="impl/done">A forbidden licence is only ever adopted by an explicit, recorded
+  owner exception.</fact></item>
+    </list>
+  </section>
+</spec>

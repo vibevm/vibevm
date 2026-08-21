@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The Campaign Form — plans, baselines, and the paper trail</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral**</fact></p>
+  <p><fact id="RAID-PLAYBOOK-GIVES-THE-IN-FLIGHT-SKELETON" status="impl/done">*The [Raid Playbook](03-RAID-PLAYBOOK.md) §1 gives the in-flight skeleton of
+a campaign (scope &amp; freeze → card set &amp; order → phases → batches &amp;
+checkpoints → differential safety → exit criteria).*</fact></p>
+  <p><fact id="THIS-DOCUMENT-IS-THE-PAPER-TRAIL" status="impl/done">*This document is the
+campaign's **paper trail**: the artifacts a campaign writes so it can be
+planned cold, executed by someone (or some session) other than its author,
+paused at any phase boundary, and audited afterwards.*</fact></p>
+  <p><fact id="greenfield-terraform-proved-this-machinery" status="spec/done">*The original
+greenfield terraform proved this machinery; brownfield adoption
+([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md)) and every relocation
+or drain campaign since reuse it.*</fact></p>
+  <p><fact id="historical-instances-live-in-the-pilot-tree" status="impl/done">*Historical instances live in the pilot
+project's tree; this is the distilled form.*</fact></p>
+  <section id="artifacts" title="1. The artifact set">
+    <table>
+      <tr>
+        <td>Artifact</td>
+        <td>Written</td>
+        <td>Purpose</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ARTIFACT-PLAN" status="impl/done">**PLAN**</fact></td>
+        <td><fact status="impl/done">before work starts</fact></td>
+        <td><fact status="impl/done">the cold-executable recipe (see §2)</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ARTIFACT-BASELINE" status="impl/done">**BASELINE**</fact></td>
+        <td><fact status="impl/done">at phase −1 / campaign open</fact></td>
+        <td><fact status="impl/done">the frozen starting facts: gate panel state, inventory counts, the numbers phases are measured against</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ARTIFACT-PREDICTIONS" status="impl/done">**PREDICTIONS**</fact></td>
+        <td><fact status="impl/done">at campaign open</fact></td>
+        <td><fact status="impl/done">falsifiable expectations — what each phase should change, stated *before* execution so the REPORT can honestly say "confirmed / falsified / surprised"</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ARTIFACT-LOG" status="impl/done">**LOG**</fact></td>
+        <td><fact status="impl/done">during execution</fact></td>
+        <td><fact status="impl/done">append-only running record: per-phase entries, deviations from plan, discovered-necessary work, dead ends kept for the record</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ARTIFACT-REPORT" status="impl/done">**REPORT**</fact></td>
+        <td><fact status="impl/done">at campaign close</fact></td>
+        <td><fact status="impl/done">what the campaign taught: results vs PREDICTIONS, cards/rules that misfired, lessons that feed Discipline revision</fact></td>
+      </tr>
+    </table>
+    <p><fact id="SMALL-CAMPAIGNS-MAY-FOLD-BUT-NOT-SKIP" status="impl/done">Small campaigns may fold BASELINE and PREDICTIONS into the PLAN's
+current-state section and the LOG into commit messages — but a campaign that
+skips the REPORT learns nothing durable, and a campaign without a written
+PLAN cannot be resumed by anyone but its author's context window.</fact></p>
+  </section>
+  <section id="plan" title="2. The plan shape">
+    <p><fact id="PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD" status="impl/done">A campaign plan is written **to be executed cold** — by a fresh session with
+no memory of its authoring.</fact></p>
+    <p><fact id="load-bearing-sections-lead" status="impl/done">The load-bearing sections:</fact></p>
+    <list ordered="true">
+      <item><fact id="PLAN-SECTION-READ-FIRST" status="impl/done">**Read-first / boot note** — what to read before this file (the project's
+   boot sequence), and the rule that the project's living state supersedes
+   the plan where they diverge.</fact></item>
+      <item><fact id="PLAN-SECTION-WHY-THIS-EXISTS" status="impl/done">**Why this exists** — the reframe: what debt or gap the campaign pays,
+   in one screen.</fact></item>
+      <item><fact id="PLAN-SECTION-DIRECTIVES-IN-FORCE" status="impl/done">**Directives / decisions in force** — the owner's binding choices, so the
+   executor never re-litigates them.</fact></item>
+      <item><fact id="PLAN-SECTION-CURRENT-STATE-FACTS" status="impl/done">**Current-state facts, verified** — with file:line pointers, gathered at
+   authoring time and marked "do not re-discover". Wrong facts here are the
+   most expensive class of plan bug: verify while writing.</fact></item>
+      <item><fact id="PLAN-SECTION-TARGET-END-STATE" status="impl/done">**Target end-state** — the "what done looks like" tree/diagram.</fact></item>
+      <item><fact id="PLAN-SECTION-DESIGN-DECISIONS" status="impl/done">**Design decisions** — each with its rationale and its rejected
+   alternative, so a surprise mid-execution can be resolved in the spirit of
+   the plan.</fact></item>
+      <item><fact id="PLAN-SECTION-PHASES" status="impl/done">**Phases** — each with: goal, recipe (commands, paths), **its own
+   acceptance gate**, and **its own commit set**. A phase is a safe stop; a
+   failed phase rolls back without losing prior ones.</fact></item>
+      <item><fact id="PLAN-SECTION-RISKS-AND-FALLBACKS" status="impl/done">**Risks &amp; fallbacks** — named, each with its detection signal and its
+   plan-B.</fact></item>
+      <item><fact id="PLAN-SECTION-QUICK-START" status="impl/done">**Quick-start** — the copy-paste block the executing session runs first
+   (floor verification, baseline capture).</fact></item>
+      <item><fact id="PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE" status="impl/done">**Whole-campaign acceptance** — the end-to-end scenario that defines
+    done, ideally frozen as a test.</fact></item>
+    </list>
+  </section>
+  <section id="gates" title="3. Phase-gate discipline">
+    <list ordered="false">
+      <item><fact id="GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY" status="impl/done">**The floor is green at every phase boundary** — the project's full gate
+  panel, not just the parts the phase touched. A phase that leaves the floor
+  red is not done.</fact></item>
+      <item><fact id="GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS" status="impl/done">**Each phase lands its own topic-grouped commits** (one logical unit per
+  commit). The git log is the authoritative per-item record; the LOG
+  narrates, the commits *are* the history.</fact></item>
+      <item><fact id="GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE" status="impl/done">**Behavior changes carry their differential oracle**
+  ([Raid Playbook](03-RAID-PLAYBOOK.md) §1.5): a campaign cannot move
+  behavior silently. Where the campaign's point is byte-stability (a
+  relocation, a rename), the byte-compare IS the oracle — state it in the
+  phase's acceptance.</fact></item>
+      <item><fact id="GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED" status="impl/done">**Discovered-necessary work is legal but recorded**: a mid-phase discovery
+  either enters the current phase explicitly (LOG entry + the phase's
+  commits) or is filed as debt/intent for later — never done silently
+  "while I was here".</fact></item>
+    </list>
+  </section>
+  <section id="resume" title="4. Resumability">
+    <p><fact id="campaign-survives-stopping-lead" status="impl/done">A campaign must survive its executor stopping at any phase boundary
+(see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</fact></p>
+    <list ordered="false">
+      <item><fact id="CAMPAIGN-RESUME-WITH-A-WAL" status="impl/done">*With a WAL (recommended):* the campaign updates the WAL's standing line at
+  every phase boundary (phase landed, floor state, next phase); a session
+  resuming cold reads boot → WAL → the PLAN and continues at the recorded
+  phase.</fact></item>
+      <item><fact id="CAMPAIGN-RESUME-WITHOUT-A-WAL" status="impl/done">*Without a WAL:* the PLAN carries a **status line at its top** ("status:
+  Phase N landed, floor green, next: Phase N+1") that the executor updates
+  as part of each phase's commit set, and the LOG's last entry is the resume
+  pointer. The rule is the same either way: **resumption state lives in the
+  repository, never in a session.**</fact></item>
+    </list>
+  </section>
+  <section id="exit" title="5. Exit">
+    <p><fact id="CAMPAIGN-CLOSES-ON-A-GREEN-FLOOR" status="impl/done">A campaign closes when its whole-campaign acceptance passes on a green
+floor.</fact></p>
+    <p><fact id="closing-motions-lead" status="impl/done">The closing motions:</fact></p>
+    <list ordered="false">
+      <item><fact id="CLOSING-WRITE-THE-REPORT" status="impl/done">write the REPORT (results vs PREDICTIONS,
+  lessons, candidate Discipline revisions),</fact></item>
+      <item><fact id="CLOSING-FILE-EVERY-LEFTOVER" status="impl/done">file every leftover as debt/intent
+  with an id (the BROWNFIELD carry-over guarantee: nothing evaporates),</fact></item>
+      <item><fact id="CLOSING-UPDATE-THE-RESUME-POINTER" status="impl/done">update the resume pointer to "closed",</fact></item>
+      <item><fact id="CLOSING-PUBLISHING-IS-THE-OWNERS-CALL" status="impl/done">and — where the project mirrors its history —
+  leave publishing/mirroring as the owner's explicit call, not the campaign's
+  last step.</fact></item>
+    </list>
+  </section>
+</spec>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Atomic Commits</title>
+  <status stage="impl" state="done"/>
+  <p><fact id="THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE" status="impl/done">This project uses the **atomic commits** discipline as its Git
+contract.</fact></p>
+  <p><fact id="ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY" status="impl/done">One commit carries exactly one idea, and the commit message
+explains *why*.</fact></p>
+  <section id="core-rule" title="Core rule">
+    <p><fact id="ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE" status="impl/done">**One commit = one logical change**, not one file changed.</fact></p>
+    <p><fact id="A-MIXED-SESSION-IS-THREE-COMMITS" status="impl/done">A session that produces (a) a typo fix, (b) a refactor, and (c) a
+schema update is **three** commits, not one.</fact></p>
+    <p><fact id="A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT" status="impl/done">A feature that touches
+fifteen files for one coherent reason is **one** commit, not fifteen.</fact></p>
+  </section>
+  <section id="message-format" title="Message format">
+    <p><fact id="COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW" status="impl/done">Commit messages follow the **git-conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`.</fact></p>
+    <p><fact id="CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY" status="impl/done">Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea).</fact></p>
+    <p><fact id="THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER" status="impl/done">The
+two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
+Commits and a violation of the atomic rule.</fact></p>
+  </section>
+  <section id="session-end" title="Session end">
+    <p><fact id="before-closing-a-session-lead" status="impl/done">Before closing a session:</fact></p>
+    <list ordered="true">
+      <item><fact id="STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE" status="impl/done">Run `git status` and `git diff HEAD`. Name every change by intent.</fact></item>
+      <item><fact id="STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS" status="impl/done">Group changes into atomic commits — one commit per intent, not per
+   file.</fact></item>
+      <item><fact id="STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY" status="impl/done">Stage and commit each group separately with a well-formed message.</fact></item>
+      <item><fact id="STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS" status="impl/done">Do not amend or force-push commits that are already pushed; create a
+   new commit instead, unless the human explicitly approves history
+   rewriting.</fact></item>
+    </list>
+    <p><fact id="splitting-procedure-pointer" status="impl/done">Procedure for splitting a messy working tree:
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root.</fact></p>
+  </section>
+  <section id="why-human-ai-teams" title="Why this matters in a human-AI team">
+    <list ordered="false">
+      <item><fact id="WHY-DIFF-AS-VERIFICATION" status="spec/done">**Diff as verification.** Humans verify code by reading diffs. A
+  diff that mixes three concerns is not verifiable in one pass.</fact></item>
+      <item><fact id="WHY-ROLLBACK-PRECISION" status="impl/done">**Rollback precision.** `git revert &lt;sha&gt;` must undo the wrong
+  thing without also undoing two correct things.</fact></item>
+      <item><fact id="WHY-COMMIT-LOG-AS-DECISION-RECORD" status="impl/done">**Commit log as decision record.** The message is the only place
+  where *why* survives after the WAL and spec prose decay.</fact></item>
+    </list>
+    <p><fact id="full-protocol-pointer" status="impl/done">Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root.</fact></p>
+  </section>
+  <section id="never" title="Never">
+    <list ordered="false">
+      <item><fact id="NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX" status="impl/done">Never mix refactor + feature + docs + bugfix in one commit.</fact></item>
+      <item><fact id="NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED" status="impl/done">Never write a subject that summarises *what* changed — the diff does
+  that. Write *why*.</fact></item>
+      <item><fact id="NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL" status="impl/done">Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`.</fact></item>
+    </list>
+  </section>
+</spec>

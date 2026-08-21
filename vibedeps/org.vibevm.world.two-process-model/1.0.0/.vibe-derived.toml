@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:c117e5d01b5ec1947f45234f92b39cd8dfbe8918859ad4fbfa7ba5c8f2e47168"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:1ffd1b6fdfd78e4b1dcc9f6aaac154eb46b91d562da924d68201615107b1254c"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/05-flow-two-process-model.md"
+output = "spec/boot/05-flow-two-process-model.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+output = "spec/flows/two-process-model/TWO-PROCESS-MODEL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/two-process-model/cognitive-load-split.md"
+output = "spec/flows/two-process-model/cognitive-load-split.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/two-process-model/files-as-ipc.md"
+output = "spec/flows/two-process-model/files-as-ipc.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

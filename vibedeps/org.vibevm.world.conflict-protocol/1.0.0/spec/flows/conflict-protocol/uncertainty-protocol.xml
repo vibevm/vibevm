@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Uncertainty Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *what to do when the
+spec is silent* — the four-step ladder that ends in a conservative
+default plus a REVIEW marker, what "conservative" means precisely,
+and the cases where the ladder does not apply and stopping to ask is
+the only correct move.</fact></p>
+  <section id="silence" title="Silence is not a conflict">
+    <p><fact id="THE-CONFLICT-PROTOCOL-HANDLES-DISAGREEMENT" status="impl/done">The conflict protocol handles disagreement: two sources give two
+answers, and the hierarchy picks the winner.</fact></p>
+    <p><fact id="UNCERTAINTY-IS-THE-OTHER-CASE-NO-SOURCE-ANSWERS" status="impl/done">Uncertainty is the other
+case: *no* source answers at all.</fact></p>
+    <p><fact id="two-examples-of-silence" status="impl/done">The spec defines FAILED and RUNNING
+but not what `retry` does to a RUNNING job; the spec fixes a timeout
+but not what happens to a message that verifies exactly at the
+boundary.</fact></p>
+    <p><fact id="BOTH-CASES-TEMPT-THE-SAME-FAILURE" status="spec/done">Both cases tempt the same failure — inventing an answer silently.</fact></p>
+    <p><fact id="invention-overrides-or-fabricates" status="spec/done">In
+the conflict case the invention overrides someone; in the silence
+case it fabricates semantics nobody decided.</fact></p>
+    <p><fact id="SILENT-INVENTION-IS-WORSE-BECAUSE-IT-IS-INVISIBLE" status="spec/done">Silent invention is
+worse than either wrong answer, because it is invisible: the project
+now behaves in a way no document predicts, and the next reader —
+human or agent — has no way to learn the behavior exists short of
+tripping over it.</fact></p>
+    <p><fact id="NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR" status="impl/done">The rule, compressed: **never silently invent semantic behavior.**</fact></p>
+    <p><fact id="the-ladder-is-how-to-progress-without-inventing" status="impl/done">The ladder below is how to make progress without inventing.</fact></p>
+  </section>
+  <section id="ladder" title="The ladder">
+    <p><fact id="CLIMB-IN-ORDER-AND-STOP-AT-THE-FIRST-RUNG-THAT-ANSWERS" status="impl/done">When the spec is silent on a question, climb in order; stop at the
+first rung that answers.</fact></p>
+    <table>
+      <tr>
+        <td>Step</td>
+        <td>Action</td>
+        <td>What it typically finds</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION" status="spec/done">1</fact></td>
+        <td><fact status="spec/done">Re-read the relevant spec section — in full, not the one line you remember.</fact></td>
+        <td><fact status="spec/done">The answer, two paragraphs away or phrased under a different heading. Most "silence" is a narrow first read.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL" status="spec/done">2</fact></td>
+        <td><fact status="spec/done">Re-read the relevant reference material — the book chapter, design note, ADR, or RFC the spec section grew out of.</fact></td>
+        <td><fact status="spec/done">Intent. The spec records decisions; the reference records *why*, and intent often settles what the decision text left open.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG" status="spec/done">3</fact></td>
+        <td><fact status="spec/done">Look at the closest analog — the nearest similar feature in this project, or the project's named reference implementations.</fact></td>
+        <td><fact status="spec/done">A precedent. Consistency with an existing pattern is itself a decision the project already made.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW" status="spec/done">4</fact></td>
+        <td><fact status="spec/done">Pick the **conservative interpretation**, mark it with a REVIEW, proceed, and flag it in the end-of-session report.</fact></td>
+        <td><fact status="spec/done">Forward progress with a visible, reversible decision instead of a stall or an invention.</fact></td>
+      </tr>
+    </table>
+    <p><fact id="STEP-4-IN-FULL-THE-MARKER-CARRIES-THE-QUESTION-AND-THE-REASON" status="impl/done">Step 4 in full: the marker carries the question and the reason —</fact></p>
+    <fence>&lt;!-- REVIEW: spec silent on &lt;question&gt;; chose &lt;interpretation&gt;
+     because it is the cheapest to reverse --&gt;</fence>
+    <p><fact id="THE-REPORT-NAMES-THE-MARKER-AND-THE-HUMAN-RULES" status="impl/done">— and the report names it, so the human rules in the next cycle and
+the spec gains a sentence.</fact></p>
+    <p><fact id="THE-LADDER-NEVER-ENDS-IN-SILENCE" status="impl/done">The ladder never ends in silence: either a
+source answered, or a marked conservative default did.</fact></p>
+  </section>
+  <section id="conservative" title="What &quot;conservative&quot; means">
+    <p><fact id="CONSERVATIVE-IS-NOT-SMALLEST-DIFF-OR-LEAST-EFFORT" status="impl/done">Conservative is not "smallest diff" or "least effort".</fact></p>
+    <p><fact id="CONSERVATIVE-IS-CHEAPEST-TO-REVERSE" status="impl/done">It is the
+interpretation that is **cheapest to reverse** when the human rules
+the other way next session.</fact></p>
+    <p><fact id="THE-TEST-HOW-MUCH-WORK-IS-THROWN-AWAY-AND-WHOSE" status="impl/done">The test: *if this choice turns out
+wrong, how much work is thrown away — and whose?*</fact></p>
+    <p><fact id="PICK-THE-ANSWER-THAT-MINIMIZES-IT" status="impl/done">Pick the answer
+that minimizes it.</fact></p>
+    <table>
+      <tr>
+        <td>Prefer</td>
+        <td>Over</td>
+        <td>Because</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PREFER-NO-NEW-PUBLIC-SURFACE" status="spec/done">No new public surface</fact></td>
+        <td><fact status="spec/done">A new exported function, flag, endpoint, or format</fact></td>
+        <td><fact status="spec/done">Additions can wait a day; a published surface someone may already depend on is the most expensive thing in software to retract.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PREFER-FAILING-LOUDLY" status="spec/done">Failing loudly</fact></td>
+        <td><fact status="spec/done">Guessing silently</fact></td>
+        <td><fact status="spec/done">An explicit error is diagnosed in seconds; a plausible wrong guess is found in production.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PREFER-THE-NARROWER-BEHAVIOR" status="spec/done">The narrower behavior</fact></td>
+        <td><fact status="spec/done">The broader one</fact></td>
+        <td><fact status="spec/done">Narrow can widen tomorrow without breaking anyone; broad, once observed, cannot narrow.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PREFER-EXISTING-PROJECT-CONVENTION" status="spec/done">Existing project convention</fact></td>
+        <td><fact status="spec/done">External best practice</fact></td>
+        <td><fact status="spec/done">The convention is a recorded project decision; the fashion is not. Overruling it is the human's call.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-PREFER-NO-NEW-DEPENDENCY" status="spec/done">No new dependency</fact></td>
+        <td><fact status="spec/done">Adding one</fact></td>
+        <td><fact status="spec/done">A dependency is a permanent tax, and its removal is a migration.</fact></td>
+      </tr>
+    </table>
+    <p><fact id="REFUSE-TO-INVENT-PUBLIC-SURFACE-WHEN-IN-DOUBT" status="impl/done">The first row deserves emphasis: when in doubt, **refuse to invent
+public surface**.</fact></p>
+    <p><fact id="internal-choices-are-corrections-public-ones-are-commitments" status="spec/done">Internal choices are corrections waiting to happen;
+public ones are commitments.</fact></p>
+  </section>
+  <section id="stop-and-ask" title="When to stop and ask instead">
+    <p><fact id="THE-LADDER-IS-A-PROTOCOL-FOR-REVERSIBLE-UNCERTAINTY" status="impl/done">The ladder is a protocol for *reversible* uncertainty.</fact></p>
+    <p><fact id="some-questions-have-no-conservative-interpretation" status="spec/done">Some questions
+have no conservative interpretation because every answer is a
+commitment.</fact></p>
+    <p><fact id="STOP-AND-ASK-THE-HUMAN-FOR-THESE" status="impl/done">For these, stop and ask the human — mid-session if the
+channel exists, otherwise park the task and say so in the report:</fact></p>
+    <list ordered="false">
+      <item><fact id="STOP-FOR-IRREVERSIBLE-OPERATIONS" status="impl/done">**Irreversible operations** — deleting or migrating data, releasing
+  or publishing artifacts, rewriting pushed history.</fact></item>
+      <item><fact id="STOP-FOR-SECURITY-BOUNDARIES" status="impl/done">**Security boundaries** — authentication, authorization, secrets
+  handling, cryptographic parameters. A "conservative guess" about
+  crypto is a contradiction in terms.</fact></item>
+      <item><fact id="STOP-FOR-EXTERNAL-SIDE-EFFECTS" status="impl/done">**External side effects** — sending mail, charging accounts,
+  calling third-party APIs in ways outsiders observe.</fact></item>
+      <item><fact id="STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK" status="impl/done">**Anything whose reversal costs real work.** Re-run the test from
+  the previous section: if the cheapest-to-reverse option still takes
+  a day to unwind, there is no conservative option. Asking *is* the
+  conservative option.</fact></item>
+    </list>
+    <p><fact id="MARKING-A-REVIEW-IS-FORWARD-MOTION-ON-A-REVERSIBLE-PATH" status="impl/done">Marking a REVIEW and proceeding is forward motion on a reversible
+path.</fact></p>
+    <p><fact id="on-an-irreversible-path-it-is-just-speed" status="spec/done">On an irreversible path it is just speed.</fact></p>
+  </section>
+  <section id="worked-example" title="Worked example">
+    <fence>Task     Implement `jobs retry` per spec §4: "retries failed jobs."
+
+Silence  A job is RUNNING now, but its previous attempt failed. Does
+         it count as failed? §4 does not say.
+
+Step 1   Re-read §4 end to end. FAILED, RUNNING, DONE are defined;
+         the overlap case is not addressed. Still silent.
+
+Step 2   Re-read the job-lifecycle design note. Intent recorded:
+         "retry exists so an operator can recover a dead batch
+         overnight." Suggestive, not decisive. Still silent.
+
+Step 3   Closest analog: `jobs cancel` explicitly skips RUNNING
+         jobs, with a comment saying why. Precedent: mutating
+         commands do not touch RUNNING jobs.
+
+Step 4   Conservative pick: skip RUNNING jobs. Retrying one risks a
+         double execution — expensive to reverse and visible to
+         users; skipping costs one more `retry` invocation tomorrow.
+         Marker beside the implementation:
+
+         // REVIEW: spec silent on RUNNING jobs in `retry`; skipping
+         // them, matching `cancel` — double execution is the
+         // costlier mistake.
+
+Report   "`jobs retry` implemented per §4. Spec is silent on RUNNING
+         jobs; chose to skip them (REVIEW in the retry module) —
+         needs a ruling."
+
+Next     The human confirms "skip is right", adds one sentence to
+         §4, and removes the marker in the same commit.</fence>
+    <list ordered="false">
+      <item><fact id="EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY" status="impl/done">The project moved forward the same day,</fact></item>
+      <item><fact id="EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME" status="impl/done">the decision stayed visible
+  the whole time,</fact></item>
+      <item><fact id="EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE" status="impl/done">and the spec ended one sentence more complete than it
+  started.</fact></item>
+    </list>
+    <p><fact id="that-is-the-ladder-working" status="impl/done">That is the ladder working.</fact></p>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-UNCERTAINTY-IS-NOT-CONFLICT" status="impl/done">Uncertainty is not conflict: no source answers. The temptation —
+  silent invention — is the same, and it is forbidden.</fact></item>
+      <item><fact id="SUM-CLIMB-IN-ORDER" status="impl/done">Climb in order: spec section → reference material → closest analog
+  → conservative default + REVIEW + report.</fact></item>
+      <item><fact id="SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE" status="impl/done">Conservative = cheapest to reverse. Refuse to invent public
+  surface; fail loudly rather than guess silently.</fact></item>
+      <item><fact id="SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS" status="impl/done">Irreversible operations, security boundaries, external side
+  effects: the ladder does not apply. Stop and ask — asking is the
+  conservative choice there.</fact></item>
+      <item><fact id="SUM-THE-END-STATE-IS-ALWAYS-VISIBLE" status="impl/done">The end state is always visible: an answered question, or a marked
+  default awaiting a ruling. Never a silent guess.</fact></item>
+    </list>
+  </section>
+</spec>

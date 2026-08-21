@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">TCG-PROTOCOL v0.1 — the oracle wire protocol, both hops</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="status-line" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-TS-PLAN v0.1 (Phase 1),
+implemented by its Phases 2–4.**</fact></p>
+  <p><fact id="companion-document" status="impl/done">The process model is
+[`TCG-ORACLE-v0.1`](TCG-ORACLE-v0.1.md).</fact></p>
+  <p><fact id="DOCUMENT-OWNS-THE-MESSAGE-GRAMMAR" status="impl/done">This document owns the MESSAGE
+GRAMMAR: framing, envelopes, every operation's request/response shape,
+the enrichment fields the Rust middle layer adds, and the error
+taxonomy.</fact></p>
+  <p><fact id="ONE-SHAPE-SERVES-BOTH-HOPS" status="impl/done">One shape serves both hops — vibe-mcp ⇄ `typescript-ai-native-tcg
+serve` and `typescript-ai-native-tcg` ⇄ `node oracle.ts` — the middle layer ADDS
+fields, it never reshapes.</fact></p>
+  <section id="framing" title="1. Framing and envelopes">
+    <p><fact id="kind-line-framing" status="impl/done">`req r1`</fact></p>
+    <p><fact id="NDJSON-DUPLEX-FRAMING" status="impl/done">NDJSON duplex: one JSON object per line, UTF-8, `\n`-terminated, both
+directions.</fact></p>
+    <p><fact id="REQUESTS-AND-RESPONSES-CORRELATE-BY-ID" status="impl/done">Requests and responses correlate by caller-chosen `id`
+(number, unique per in-flight request).</fact></p>
+    <p><fact id="version-rides-every-frame-lead" status="impl/done">The protocol version rides
+every frame:</fact></p>
+    <fence lang="jsonc">// request
+{"proto": 1, "id": 7, "op": "validate", "params": { /* per-op */ }}
+// success
+{"proto": 1, "id": 7, "ok": true, "result": { /* per-op */ }}
+// failure (op-grain, session survives)
+{"proto": 1, "id": 7, "ok": false,
+ "error": {"kind": "&lt;taxonomy §4&gt;", "detail": "…", "recipe": "…?"}}</fence>
+    <p><fact id="ORACLE-PROTOCOL-IS-INDEPENDENT-OF-EXTRACT-PROTOCOL" status="impl/done">`ORACLE_PROTOCOL = 1` is independent of ts-extract's `PROTOCOL = 1`
+(different channel, different message set; the constants version
+independently).</fact></p>
+    <p><fact id="PROTO-MISMATCH-AND-UNKNOWN-IDS" status="impl/done">A `proto` mismatch is a `protocol` error; responses to
+unknown `id`s are a bridge bug and dropped with a stderr note.</fact></p>
+    <p><fact id="REQUESTS-MAY-BE-PIPELINED" status="impl/done">Requests
+MAY be pipelined; responses come in completion order (the oracle is
+single-threaded per op today, so in practice FIFO — callers must still
+match by `id`, not order).</fact></p>
+  </section>
+  <section id="ops" title="2. Operations">
+    <p><fact id="kind-line-ops" status="impl/done">`req r2`</fact></p>
+    <p><fact id="POSITIONS-ARE-ONE-BASED-LINE-ZERO-BASED-CHARACTER" status="impl/done">Positions are `{line, character}`, 1-based line, 0-based character (the
+TypeScript convention surfaced honestly).</fact></p>
+    <p><fact id="PATHS-ARE-ROOT-RELATIVE-WITH-FORWARD-SLASHES" status="impl/done">Paths are project-root-
+relative with forward slashes.</fact></p>
+    <list ordered="false">
+      <item><fact id="OP-INIT" status="impl/done">**`init`** `{root, cells_dir?, seam?}` →
+  `{ts_version, config_file, root_files}` — builds the service (ORACLE
+  §2–3). `cells_dir`/`seam` are policy-derived DATA the Rust layer
+  passes down (the node side never reads `conform.toml` itself); they
+  feed the `scope` op's cell/seam/branded context and default to
+  none/`"index"`. Re-`init` on a live oracle rebuilds config and
+  policy; overlays are cleared.</fact></item>
+      <item><fact id="OP-UPDATE" status="impl/done">**`update`** `{file, content | null}` → `{version}` — set/clear an
+  overlay (ORACLE §3).</fact></item>
+      <item><fact id="OP-VALIDATE" status="impl/done">**`validate`** `{file, content?}` →
+  `{diagnostics: [{code, category, message, line, character}],
+    facts: [/* ts-extract fact shapes */],
+    markers: [/* §9 marker shapes */], degraded}` — the fact/marker
+  arrays reuse the ts-extract record vocabulary verbatim (`ts_unsafe`,
+  `import`, `item`, `file_metrics`; `{tag, uri, reason, symbol, line}`)
+  so one serde vocabulary serves both tools.</fact></item>
+      <item><fact id="OP-SCOPE" status="impl/done">**`scope`** `{file, position?}` →
+  `{symbols: [{name, kind, type_text}], cell, seam_file,
+    branded: [{name, seam, heuristic}]}`.</fact></item>
+      <item><fact id="OP-COMPLETE" status="impl/done">**`complete`** `{file, position, content?, prefix?, max?}` →
+  `{entries: [{name, kind, type_text, unsafe}]}` — `prefix` filters by
+  name prefix and `max` caps the set (default 50) BEFORE the per-entry
+  checker details are computed: type text and the `unsafe` flag are
+  entry-grain checker work, affordable only after the cut. A caller
+  that wants the raw thousand-entry universe passes no prefix and a
+  large `max`, and pays for it knowingly.</fact></item>
+      <item><fact id="OP-TYPE" status="impl/done">**`type`** `{file, position, content?}` →
+  `{display, documentation}`.</fact></item>
+      <item><fact id="OP-SHUTDOWN" status="impl/done">**`shutdown`** `{}` → `{}` then exit 0.</fact></item>
+    </list>
+  </section>
+  <section id="enrichment" title="3. The enrichment hop (Rust adds, never reshapes)">
+    <p><fact id="kind-line-enrichment" status="impl/done">`req r3`</fact></p>
+    <p><fact id="serve-widens-two-responses-lead" status="impl/done">`typescript-ai-native-tcg serve` speaks §1–§2 upward unchanged and widens two
+responses with policy-derived fields (policy = the project's
+`conform.toml`, read at init; ORACLE §4 keeps the node side
+policy-free):</fact></p>
+    <list ordered="false">
+      <item><fact id="ENRICHMENT-VALIDATE-CONFORM-FINDINGS-AND-ADVICE" status="impl/done">`validate.result` gains
+  `conform_findings: [{rule, message, line, baselined}]` — the REAL
+  rule set (`ts-unsafe-in-domain`, `ts-cell-isolation`, file budget)
+  run over the returned facts via `conform_core::check`, each finding
+  flagged against the project's frozen ratchet baseline — and
+  `advice: [string]` (Class-F strings citing `spec://` REQs).</fact></item>
+      <item><fact id="ENRICHMENT-SCOPE-BRANDED-COMPLETION" status="impl/done">`scope.result.branded` is completed from seam files per the policy's
+  `cells_dir`/`seam`, and `advice` may name the branded constructor a
+  bare primitive at this seam should use.</fact></item>
+      <item><fact id="ENRICHMENT-COMPLETE-UNSAFE-FINALISED" status="impl/done">`complete.result.entries[].unsafe` is finalised against the policy
+  (the node side flags candidates; policy decides).</fact></item>
+    </list>
+    <p><fact id="ENRICHMENT-FIELDS-ARE-ADDITIVE" status="impl/done">A consumer that talks to the oracle directly (no Rust layer) gets
+well-formed §2 responses with no enrichment fields — the fields are
+additive, and their absence means "no policy layer", not an error.</fact></p>
+  </section>
+  <section id="errors" title="4. Error taxonomy">
+    <p><fact id="kind-line-errors" status="impl/done">`req r4`</fact></p>
+    <p><fact id="five-error-kinds-lead" status="impl/done">Five kinds, each actionable, each carried in the §1 error object (and
+mirrored as typed variants in `typescript-ai-native-tcg-bridge`):</fact></p>
+    <table>
+      <tr>
+        <td>kind</td>
+        <td>meaning</td>
+        <td>recipe carried</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ERROR-NODE-MISSING" status="impl/done">`node-missing`</fact></td>
+        <td><fact status="impl/done">node not spawnable</fact></td>
+        <td><fact status="impl/done">install node &gt;= 22.6</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ERROR-TYPESCRIPT-UNRESOLVABLE" status="impl/done">`typescript-unresolvable`</fact></td>
+        <td><fact status="impl/done">consumer install absent (ORACLE §2)</fact></td>
+        <td><fact status="impl/done">`npm install -D typescript`</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ERROR-ORACLE-CRASHED" status="impl/done">`oracle-crashed`</fact></td>
+        <td><fact status="impl/done">child died / stream closed mid-session</fact></td>
+        <td><fact status="impl/done">respawn guidance; the bridge may retry once</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ERROR-PROTOCOL" status="impl/done">`protocol`</fact></td>
+        <td><fact status="impl/done">unparseable frame, `proto` mismatch, unknown op</fact></td>
+        <td><fact status="impl/done">version/upgrade note; unknown-op errors list the known ops</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-ERROR-TIMEOUT" status="impl/done">`timeout`</fact></td>
+        <td><fact status="impl/done">no response within the caller's budget</fact></td>
+        <td><fact status="impl/done">the op and budget, for tuning</fact></td>
+      </tr>
+    </table>
+    <p><fact id="ERRORS-ARE-OP-GRAIN" status="impl/done">Errors are OP-GRAIN wherever possible (the session survives, ORACLE
+§5); only `oracle-crashed` is session-grain.</fact></p>
+  </section>
+  <section id="compat" title="5. Compatibility rules">
+    <p><fact id="kind-line-compat" status="impl/done">`req r5`</fact></p>
+    <p><fact id="COMPAT-ADDITIVE-EVOLUTION" status="impl/done">Additive evolution within a `proto`: new OPTIONAL request params, new
+response fields, and new advice/finding entries are non-breaking; a
+consumer ignores what it does not know.</fact></p>
+    <p><fact id="COMPAT-BREAKING-CHANGES-BUMP-THE-CONSTANT" status="impl/done">Renames, type changes, and
+semantic changes to existing fields bump `ORACLE_PROTOCOL`, and the
+bridge treats a mismatch as its own error class — the same
+cache-retirement posture the extract bridge established.</fact></p>
+    <p><fact id="REPLAY-GOLDENS-PIN-BOTH-SIDES" status="spec/done">Scripted
+doubles pin the INNER side in this package's tests (the no-node double,
+`crates/typescript-ai-native-tcg-bridge/src/transport.rs:312`); the
+fact-parity test (ORACLE §1) pins the vocabulary shared with
+ts-extract. The OUTER shape is not yet pinned — no recorded stream is
+checked into the package and no test constructs an outer frame.</fact></p>
+  </section>
+</spec>

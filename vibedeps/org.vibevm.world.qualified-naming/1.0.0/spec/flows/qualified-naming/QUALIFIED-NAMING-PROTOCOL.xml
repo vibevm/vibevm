@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Qualified Naming Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines the laws that make a
+package namespace scale: why a flat namespace fails, the mandatory
+*group*, the identity tuple, why a rename is a new identity, why short
+names may live only at the human boundary, and why a *collision* and a
+*conflict* are two different failures.</fact></p>
+  <p><fact id="written-for-ecosystem-designers" status="impl/done">It is written for **ecosystem
+designers** — anyone minting the namespace for packages, plugins,
+extensions, or artifacts.</fact></p>
+  <p><fact id="sibling-document-pointers" status="impl/done">Reference grammar: [`ref-grammar.md`](ref-grammar.md);
+the fork-by-fork rationale: [`naming-forks.md`](naming-forks.md).</fact></p>
+  <section id="problem" title="The problem: flat names">
+    <p><fact id="A-FLAT-NAMESPACE-ADDRESSES-BY-A-SINGLE-BARE-NAME" status="spec/done">A flat namespace is one where an artifact is addressed by a single
+bare `name`, unique across the whole registry.</fact></p>
+    <p><fact id="it-fails-in-three-predictable-ways" status="spec/done">It reads beautifully on
+day one (`install wal`) and fails in three predictable ways:</fact></p>
+    <list ordered="false">
+      <item><fact id="FAILURE-SQUATTING" status="spec/done">**Squatting.** The good short names are a finite commons. The first
+  arrival takes `http`, `json`, `auth`; everyone after fights over
+  `http2`, `json-fast`, `auth-real`. The namespace rewards land-grab
+  speed, not quality.</fact></item>
+      <item><fact id="FAILURE-TRUST-AMBIGUITY" status="spec/done">**Trust ambiguity.** In a flat namespace `logger` has no owner you
+  can name. Is this the `logger` you audited last week, or a
+  same-named replacement someone else published? Nothing in the
+  coordinate answers, so trust cannot be delegated — it must be
+  re-established per artifact.</fact></item>
+      <item><fact id="FAILURE-TRANSITIVE-COLLISIONS" status="spec/done">**Transitive collisions.** Two dependencies deep in your graph both
+  want the bare name `utils`, meaning different things. A flat resolver
+  cannot satisfy both; the graph is unbuildable, and the failure
+  surfaces far from either author.</fact></item>
+    </list>
+    <p><fact id="EVERY-LAW-BELOW-IS-A-STRUCTURAL-FIX" status="impl/done">Every law below is a structural fix for one of these, not a
+convenience.</fact></p>
+    <p><fact id="A-GROUPED-NAMESPACE-FIXES-ALL-THREE" status="impl/done">A group-qualified namespace makes squatting local, trust
+delegable, and transitive collisions impossible by construction.</fact></p>
+  </section>
+  <section id="group" title="Law 1 — every artifact carries a group">
+    <p><fact id="IDENTITY-BEGINS-WITH-A-MANDATORY-GROUP" status="impl/done">Identity begins with a **mandatory** `group`: a dot-separated string
+of lowercase segments (`com.example.shop`, `io.acme`, `org.vibevm`).</fact></p>
+    <p><fact id="THE-GROUP-IS-THE-UNIT-OF-OWNERSHIP" status="impl/done">The group is the unit of ownership; `name` is unique *within* it, so
+two owners may both ship a `wal` without colliding.</fact></p>
+    <list ordered="false">
+      <item><fact id="GROUP-UNIQUENESS-IS-DELEGATED" status="impl/done">**Uniqueness is delegated.** The registry guarantees groups are
+  distinct; each group's owner guarantees names are distinct inside
+  it. Global uniqueness falls out of two local guarantees — no central
+  arbiter of every short name.</fact></item>
+      <item><fact id="GROUP-REVERSE-FQDN-IS-RECOMMENDED-NOT-ENFORCED" status="impl/done">**Reverse-FQDN is recommended, not enforced.** Writing the group as
+  a reversed domain (`org.example` for `example.org`) piggybacks on
+  DNS's existing global uniqueness — a convention Sun introduced for
+  Java packages in 1995 for exactly this reason. But whether a group
+  *looks* like a reversed domain is **style**: a matter for humans and
+  linters. The resolver checks only two things — that the group is
+  well-formed grammar, and that it is unique. It never demands you own
+  the domain.</fact></item>
+      <item><fact id="GROUP-GRAMMAR-IS-THE-ONLY-HARD-RULE" status="impl/done">**Grammar is the only hard rule.** Segments are `[a-z0-9_-]+`, ASCII
+  lowercase, dot-separated. That is enforced. Taste is not.</fact></item>
+    </list>
+    <p><fact id="A-MANDATORY-GROUP-REMOVES-A-GREY-ZONE" status="impl/done">Making the group mandatory (rather than optional) removes a grey zone:
+there is no "has a group" versus "no group" fork to reason about — every
+artifact is qualified, always.</fact></p>
+  </section>
+  <section id="identity" title="Law 2 — identity is a tuple">
+    <p><fact id="AN-ARTIFACTS-IDENTITY-IS-THE-TUPLE" status="impl/done">An artifact's identity is the tuple **`(group, name, version,
+content-hash)`**.</fact></p>
+    <p><fact id="two-consequences-carry-the-whole-system" status="impl/done">Two consequences carry the whole system:</fact></p>
+    <list ordered="false">
+      <item><fact id="GROUP-NAME-IS-GLOBALLY-UNIQUE" status="impl/done">**`(group, name)` is globally unique.** It names *the package* across
+  all its versions. Any type tag (a `kind` such as `flow`, `plugin`,
+  `lib`) is metadata — it may help placement or filtering, but it is
+  **not** part of identity and never disambiguates two packages.</fact></item>
+      <item><fact id="CONTENT-HASH-PINS-THE-BYTES" status="impl/done">**`content-hash` pins the bytes.** `(group, name, version)` names a
+  release; the hash proves which bytes that release is. A mirror in a
+  different registry serving the same bytes is the *same* identity; the
+  registry URL is a fetch detail, not part of who the artifact is.</fact></item>
+    </list>
+    <p><fact id="THE-COORDINATE-CARRIES-ITS-OWN-OWNERSHIP-AND-INTEGRITY" status="impl/done">Because identity is a tuple and not a string, the coordinate carries
+its own ownership (`group`) and its own integrity (`content-hash`).</fact></p>
+    <p><fact id="THAT-IS-WHAT-LETS-TRUST-BE-DELEGATED" status="impl/done">That is what lets trust be delegated: you trust `io.acme`, so you trust
+every `io.acme/*` name, without re-auditing each one.</fact></p>
+  </section>
+  <section id="rename" title="Law 3 — a rename is a new identity">
+    <p><fact id="A-CHANGED-GROUP-OR-NAME-IS-A-NEW-PACKAGE" status="impl/done">Change the `group` or the `name`, and you have a **new package** — not
+a renamed one.</fact></p>
+    <p><fact id="THIS-FOLLOWS-FROM-LAW-2-NOT-FROM-POLICY" status="impl/done">This is not a policy choice; it follows from Law 2: the
+identity tuple changed, so the identity changed.</fact></p>
+    <list ordered="false">
+      <item><fact id="RENAME-VERSIONS-NEVER-TRANSFER" status="impl/done">**Versions never transfer.** `io.acme/logger` at `2.3.0` does not
+  make `io.acme/log` start at `2.3.0`. The new name starts its own
+  version line. History stays attached to the coordinate that earned
+  it.</fact></item>
+      <item><fact id="RENAME-NO-COORDINATE-IS-EVER-REUSED" status="impl/done">**No coordinate is ever reused for different content — ever.** Once
+  `com.example.shop/cart@1.4.0` has meant one artifact, that exact
+  `name@version` must never resolve to different bytes for anyone,
+  forever. A consumer who locked `1.4.0` locked a specific meaning;
+  silently repointing it is the one betrayal a package system must make
+  impossible. Yank a bad release, publish a `1.4.1` — but never let the
+  old coordinate mean something new.</fact></item>
+    </list>
+    <p><fact id="the-alias-table-alternative-is-examined-in-naming-forks" status="impl/done">The rejected alternative — an alias table mapping the old name to the
+new — is examined in [`naming-forks.md` §rename](naming-forks.md#rename).</fact></p>
+    <p><fact id="AN-ALIAS-RE-INTRODUCES-THE-AMBIGUITY-THE-GROUP-REMOVED" status="spec/done">It loses because an alias re-introduces exactly the ambiguity the group
+removed: now two coordinates name one artifact, and every reader must
+know the mapping to trust what they read.</fact></p>
+  </section>
+  <section id="short-names" title="Law 4 — short names live only at the boundary">
+    <p><fact id="A-SHORT-NAME-IS-THE-BARE-UNQUALIFIED-NAME-A-HUMAN-TYPES" status="impl/done">A **short name** is the bare, unqualified `name` a human types
+(`install wal`).</fact></p>
+    <p><fact id="A-SHORT-NAME-IS-LEGAL-IN-EXACTLY-ONE-PLACE" status="impl/done">It is a convenience, and it is legal in exactly one
+place: **the human-typed CLI input boundary**, resolved **once** against
+an index of `(group, name)` candidates.</fact></p>
+    <list ordered="false">
+      <item><fact id="SHORT-NAMES-ARE-NEVER-STORED" status="impl/done">**Never stored.** The moment a short name is resolved, the tool
+  writes the *qualified* form (`org.vibevm.world/wal`) into the manifest and
+  lockfile. Persisted state is qualified-only.</fact></item>
+      <item><fact id="SHORT-NAMES-ARE-NEVER-RESOLVED-RECURSIVELY" status="impl/done">**Never resolved recursively.** Resolution happens for a human's
+  argument and nothing else. The dependency graph is built entirely
+  from qualified names, because every author published through the same
+  boundary and stored the qualified form.</fact></item>
+    </list>
+    <p><fact id="THE-BOUNDARY-RULE-MAKES-TRANSITIVE-COLLISIONS-IMPOSSIBLE" status="impl/done">This single rule is what makes **transitive collisions impossible by
+construction**.</fact></p>
+    <p><fact id="AMBIGUITY-CAN-ONLY-ARISE-WHERE-A-HUMAN-IS-PRESENT" status="impl/done">A short name can only be ambiguous at the one place a
+human is present to disambiguate it; it can never be ambiguous three
+levels deep in a graph, because no short name ever reaches that far.</fact></p>
+    <p><fact id="the-cargo-npm-pattern-is-the-same-instinct" status="spec/done">The
+cargo/npm pattern is the same instinct: `add serde` on the command
+line, `serde = "1"` in the manifest.</fact></p>
+  </section>
+  <section id="collision" title="Law 5 — collision and conflict are distinct failures">
+    <p><fact id="two-failures-look-similar-and-must-never-be-merged" status="impl/done">Two failures look similar and must never be merged:</fact></p>
+    <table>
+      <tr>
+        <td>Failure</td>
+        <td>Cause</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-FAILURE-COLLISION" status="impl/done">**Collision**</fact></td>
+        <td><fact status="impl/done">one short name matches two *different* packages (different groups)</fact></td>
+        <td><fact status="impl/done">the human picks a group and records the qualified form</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-FAILURE-CONFLICT" status="impl/done">**Conflict**</fact></td>
+        <td><fact status="impl/done">version requirements cannot all be satisfied — contradictory constraints, a declared incompatibility, an unsatisfiable diamond</fact></td>
+        <td><fact status="impl/done">the human relaxes a constraint or drops a dependency</fact></td>
+      </tr>
+    </table>
+    <list ordered="false">
+      <item><fact id="FAILURES-HAVE-DISTINCT-MACHINE-READABLE-IDENTITIES" status="impl/done">**Distinct machine-readable identities.** Each failure gets its own
+  exit code and its own error type, so a script — or an agent — can
+  branch on *which* failure occurred without parsing prose. The specific
+  numbers are an implementation's choice; the law is only that the two
+  differ and are stable.</fact></item>
+      <item><fact id="NO-INTERACTIVE-PICK-ON-A-COLLISION" status="impl/done">**No interactive pick on a collision.** When a short name is
+  ambiguous, the tool prints *all* candidates with their exact
+  qualified forms and **fails**. It does not offer an arrow-key menu.
+  The choice must be *recorded deliberately* — edited into the manifest
+  by a human — not clicked once and forgotten. A clicked choice leaves
+  no trace of why; a recorded qualified name is self-documenting.</fact></item>
+    </list>
+    <p><fact id="error-shape-detail-pointer" status="impl/done">Error-shape detail — what a good collision message must contain — is in
+[`ref-grammar.md` §errors](ref-grammar.md#errors).</fact></p>
+  </section>
+  <section id="re-derive" title="Re-derive for your project">
+    <p><fact id="re-derive-lead" status="impl/done">Do not copy this document's example groups — copy the *task*, and let
+the agent derive the namespace your ecosystem actually needs:</fact></p>
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-qualified-naming/&lt;version&gt;/spec/flows/qualified-naming/`, check `vibe.lock`) in full, then design the namespace
+for THIS ecosystem:
+1. Name the artifacts it distributes (packages, plugins, extensions)
+   and who owns each — the owner set is your group set.
+2. Choose a group grammar and a recommended style (reverse-FQDN or
+   other). State plainly what is enforced vs merely recommended.
+3. Define the identity tuple and the reference grammar: separators for
+   type / group / version, and which forms are legal where.
+4. State the storage rule (qualified-only in manifests and locks) and
+   the boundary rule (short names resolved once, at CLI input).
+5. Specify collision vs conflict as two failures with two distinct,
+   stable machine identities, each with an example message.
+Show me the design as a short spec. Change nothing in code yet.</fence>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-FLAT-NAMES-FAIL-THREE-WAYS" status="spec/done">Flat names fail three ways: squatting, trust ambiguity, transitive
+  collisions. Groups fix all three structurally.</fact></item>
+      <item><fact id="SUM-EVERY-ARTIFACT-CARRIES-A-MANDATORY-GROUP" status="impl/done">Every artifact carries a mandatory **group**; identity is
+  `(group, name, version, content-hash)` and `(group, name)` is unique.</fact></item>
+      <item><fact id="SUM-REVERSE-FQDN-IS-RECOMMENDED-STYLE" status="impl/done">Reverse-FQDN is recommended style, not enforced law — the resolver
+  checks grammar and uniqueness, nothing about taste.</fact></item>
+      <item><fact id="SUM-A-RENAME-IS-A-NEW-IDENTITY" status="impl/done">A rename is a **new identity**: versions never transfer, and no
+  `name@version` coordinate is ever reused for different content.</fact></item>
+      <item><fact id="SUM-SHORT-NAMES-LIVE-ONLY-AT-THE-BOUNDARY" status="impl/done">Short names live **only** at the human CLI boundary, resolved once;
+  manifests and locks store the qualified form — so transitive
+  collisions cannot exist.</fact></item>
+      <item><fact id="SUM-COLLISION-AND-CONFLICT-ARE-DISTINCT" status="impl/done">**Collision** and **conflict** are distinct failures with distinct
+  machine identities; a collision fails with candidates, never an
+  interactive pick.</fact></item>
+    </list>
+  </section>
+</spec>

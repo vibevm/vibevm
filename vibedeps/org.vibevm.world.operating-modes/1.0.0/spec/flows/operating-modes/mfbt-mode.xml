@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Codeword: «move fast and break things»</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** A worked reference codeword, specified in
+the five-part shape from
+[`OPERATING-MODES-PROTOCOL.md`](OPERATING-MODES-PROTOCOL.md#shape).</fact></p>
+  <p><fact id="THIS-IS-THE-CANONICAL-PRE-AUTHORISED-HEADS-DOWN-POSTURE" status="impl/done">It
+is the canonical example of a pre-authorised heads-down execution
+posture — adopt it, adapt it, or read it as the template for writing
+your own.</fact></p>
+  <section id="trigger" title="1. Trigger phrase">
+    <p><fact id="THE-TRIGGER-IS-CASE-INSENSITIVE-AND-MATCHED-BY-INTENT" status="impl/done">`move fast and break things` — case-insensitive, matched by intent.</fact></p>
+    <p><fact id="RECOGNISABLE-VARIANTS-COUNT-AS-THE-SAME-TRIGGER" status="impl/done">Recognisable variants (`MFBT`, `move fast`) count as the same trigger
+when context makes the intent unambiguous.</fact></p>
+  </section>
+  <section id="description" title="2. Authoritative description">
+    <p><fact id="the-owners-framing-lead" status="impl/done">The owner's framing, given 2026-05-06 and rendered here in
+English rather than the Russian it was spoken in:</fact></p>
+    <quote><fact id="THE-OWNERS-RECORDED-FRAMING" status="impl/done">Aim straight at the maximum version. Work in phases, each phase
+verifiable by tests. Cover everything with tests. The activity is
+approved — begin. Do not pause for confirmations; keep going until
+it is done. Do not economise on time. Do not economise on tokens.
+All of this is too important to economise on. Work at full
+reasoning depth.</fact></quote>
+    <p><fact id="THE-DESCRIPTION-IS-RECORDED-VERBATIM" status="impl/done">A description is recorded verbatim, in the owner's own words and
+language, because the mode is the owner's authorisation, and a
+paraphrase is a different authorisation.</fact></p>
+  </section>
+  <section id="interpretation" title="3. Operative interpretation">
+    <p><fact id="while-the-codeword-is-active-lead" status="impl/done">While the codeword is active:</fact></p>
+    <list ordered="true">
+      <item><fact id="OPERATIVE-AIM-AT-THE-MAXIMUM-VERSION" status="impl/done">**Aim at the maximum version of the deliverable, not the minimum
+   viable.** Do not pre-emptively trim scope to fit a "small first
+   commit". If the planned scope is N slices, walk all N.</fact></item>
+      <item><fact id="OPERATIVE-PHASE-THE-WORK-INTO-TESTABLE-ITERATIONS" status="impl/done">**Phase the work into testable iterations.** Each phase is one
+   logical unit closed by its tests passing — the phasing is for
+   verifiability and clean commit grouping, not for confirmation
+   handshakes.</fact></item>
+      <item><fact id="OPERATIVE-COVER-EVERYTHING-WITH-TESTS" status="impl/done">**Cover everything with tests.** Each new unit lands with hermetic
+   tests; each cross-component flow lands with at least one
+   integration test. The bar: *if it shipped, a test fails when it
+   regresses.*</fact></item>
+      <item><fact id="OPERATIVE-THE-ACTIVITY-IS-PRE-APPROVED" status="impl/done">**The activity is pre-approved. Begin.** Do not ask "shall I
+   start?" — the codeword's invocation is the green light.</fact></item>
+      <item><fact id="OPERATIVE-DO-NOT-PAUSE-FOR-CONFIRMATIONS" status="impl/done">**Do not pause for confirmations. Drive to completion.** Mid-work
+   questions are reserved for genuine ambiguity (the spec is silent,
+   two paths equally defensible), not for "may I proceed?". On real
+   ambiguity, take the conservative reading, mark it for review,
+   proceed, and surface it in the closing report.</fact></item>
+      <item><fact id="OPERATIVE-SPEND-WHATEVER-TIME-AND-TOKENS-THE-WORK-REQUIRES" status="impl/done">**Spend whatever time and tokens the work requires.** No artificial
+   trimming for speed or context economy — read fully, reason fully,
+   write fully.</fact></item>
+      <item><fact id="OPERATIVE-WORK-AT-FULL-REASONING-DEPTH" status="impl/done">**Work at full reasoning depth.** Depth is the explicit ask, not
+   an optional optimisation.</fact></item>
+    </list>
+  </section>
+  <section id="limits" title="4. What it changes / does NOT change">
+    <p><fact id="THE-ROUTINE-LARGE-CHANGE-HANDSHAKE-IS-SUSPENDED" status="impl/done">**Changes.** The default "stop and ask before routine large changes"
+handshake is suspended: implementing a planned milestone, finishing a
+slice, touching many files for one coherent reason all proceed
+without confirmation.</fact></p>
+    <p><fact id="PER-PHASE-MESSAGES-BECOME-STATUS-NOT-REQUESTS" status="impl/done">Per-phase messages become short **status**, not
+requests.</fact></p>
+    <p><fact id="TEST-ALONGSIDE-CADENCE-BECOMES-MANDATORY" status="impl/done">Test-alongside cadence becomes mandatory — no "tests
+later".</fact></p>
+    <p><fact id="every-standing-invariant-survives-unchanged-lead" status="impl/done">**Does NOT change.** Every standing invariant survives unchanged:</fact></p>
+    <list ordered="false">
+      <item><fact id="SURVIVES-THE-PROJECTS-COMMIT-DISCIPLINE" status="impl/done">The project's commit discipline (one logical unit per commit, the
+  project's message format, its attribution posture).</fact></item>
+      <item><fact id="SURVIVES-SECRETS-LICENCE-AND-OUTPUT-CONVENTIONS" status="impl/done">Secrets hygiene, licence constraints, output conventions — all in
+  force.</fact></item>
+      <item><fact id="SURVIVES-THE-RED-LINES" status="impl/done">**The red lines** (see
+  [`OPERATING-MODES-PROTOCOL.md` §red-lines](OPERATING-MODES-PROTOCOL.md#red-lines)):
+  rewriting published history, force-pushing, large binary blobs,
+  CI/signing/secrets changes, and anything whose reversal costs work
+  STILL require explicit owner confirmation. The codeword removes the
+  routine-work handshake; it does not remove the irreversible-
+  threshold handshake.</fact></item>
+    </list>
+    <p><fact id="A-RED-LINE-STOP-IS-THE-MODES-OWN-ESCAPE-HATCH" status="impl/done">If a phase cannot land without crossing a red line, stop at that
+boundary, report, and ask — that is the mode's own escape hatch, not
+a forbidden interruption.</fact></p>
+  </section>
+  <section id="lifecycle" title="5. Lifecycle + cadence">
+    <list ordered="false">
+      <item><fact id="LIFECYCLE-ACTIVATION" status="impl/done">**Activation.** The owner speaks the codeword in a turn. It covers
+  the work described in that turn plus the obvious follow-up phases
+  that complete the same deliverable.</fact></item>
+      <item><fact id="LIFECYCLE-PERSISTENCE-WITHIN-A-SESSION" status="impl/done">**Persistence within a session.** In force for that work cycle; it
+  does not bleed into unrelated later requests unless the owner
+  re-affirms.</fact></item>
+      <item><fact id="LIFECYCLE-PERSISTENCE-ACROSS-SESSIONS" status="impl/done">**Persistence across sessions.** None. A fresh session starts in the
+  default posture; the owner re-invokes if they want it again.</fact></item>
+      <item><fact id="LIFECYCLE-OWNER-SIDE-ABORT" status="impl/done">**Owner-side abort.** Any message signalling "stop", "wait",
+  "slow down", "careful" (by intent, in any language) suspends the
+  mode immediately: finish the in-flight tool call, report state,
+  revert to default pending direction.</fact></item>
+      <item><fact id="LIFECYCLE-AGENT-SIDE-ABORT" status="impl/done">**Agent-side abort.** The agent reverts on its own if it lands on a
+  red-line situation or hits systematic failures it cannot diagnose
+  within the phase. Report and ask.</fact></item>
+      <item><fact id="LIFECYCLE-CADENCE" status="impl/done">**Cadence.** Phase entry (one sentence: what and scope), phase
+  landing (one sentence: what landed, test count, commit subject),
+  hard pivot (one sentence: why the direction changed), and the
+  standard closing summary at the end of the cycle. Status, not
+  requests.</fact></item>
+    </list>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-MFBT-PRE-AUTHORISES-HEADS-DOWN-EXECUTION" status="impl/done">«move fast and break things» pre-authorises heads-down, maximum-
+  version, test-covered execution with the routine handshake
+  suspended.</fact></item>
+      <item><fact id="SUM-IT-WAIVES-CONFIRMATIONS-FOR-ROUTINE-WORK-ONLY" status="impl/done">It waives confirmations for routine work only; every invariant and
+  every red line survives it.</fact></item>
+      <item><fact id="SUM-IT-IS-SCOPED-TO-ONE-WORK-CYCLE" status="impl/done">It is scoped to one work cycle, never crosses a session boundary,
+  and aborts on the owner's word or a red-line situation.</fact></item>
+      <item><fact id="SUM-IT-IS-THE-REFERENCE-INSTANCE-OF-THE-FIVE-PART-SHAPE" status="impl/done">It is the reference instance of the five-part codeword shape — copy
+  it to author your own modes.</fact></item>
+    </list>
+  </section>
+</spec>

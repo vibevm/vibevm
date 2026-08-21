@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Sync-from-Code Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *what* Sync-from-Code is,
+*when* it fires, *what it must produce*, and *where it stops*.</fact></p>
+  <p><fact id="THE-ONLY-SANCTIONED-WAY-TO-CLOSE-A-BOTTOM-UP-GAP" status="impl/done">It is
+the only sanctioned way to close a spec/code gap that was opened by a
+bottom-up edit.</fact></p>
+  <section id="what" title="What Sync-from-Code is">
+    <p><fact id="the-normal-flow-is-top-down-lead" status="impl/done">The **normal** information flow in a spec-driven project is top-down:</fact></p>
+    <fence>head  →  WAL  →  spec  →  code</fence>
+    <p><fact id="THE-TOP-DOWN-CHAIN-FROM-INTENT-TO-CODE" status="impl/done">Intent forms in the human's head; short-lived state lands in the WAL;
+decisions harden into spec; the spec is then implemented in code.</fact></p>
+    <p><fact id="CODE-IS-THE-ARTEFACT-NOT-THE-SOURCE" status="impl/done">Code
+is the artefact, not the source.</fact></p>
+    <p><fact id="SYNC-FROM-CODE-IS-THE-PROTOCOL-FOR-THE-INVERSE-CASE" status="impl/done">**Sync-from-Code is the protocol for the inverse case**: the code
+changed first, and the spec must now follow.</fact></p>
+    <p><fact id="IT-IS-DELIBERATELY-THE-EXCEPTION" status="impl/done">It is deliberately the
+exception — the whole rest of the discipline pushes the other way.</fact></p>
+  </section>
+  <section id="why" title="Why it exists">
+    <p><fact id="two-everyday-situations-lead" status="impl/done">Two everyday situations break the top-down flow:</fact></p>
+    <list ordered="false">
+      <item><fact id="SITUATION-DIRECT-EDITING" status="spec/done">**Direct editing.** The human opens the file and edits. Usually because
+  it is faster than writing an intent for the agent to execute. Often
+  the right call. The issue is not that it happened — the issue is that
+  nothing updated the spec.</fact></item>
+      <item><fact id="SITUATION-IMPERATIVE-CHAT-COMMANDS" status="spec/done">**Imperative chat commands.** The human tells the agent "change the
+  timeout to 600 s" or "use blake3 instead of SHA-256". The agent does
+  the work. Again, legitimate — nobody wants to draft a PROP revision
+  for a five-second decision — but the spec is now wrong.</fact></item>
+    </list>
+    <p><fact id="left-unreconciled-either-case-produces-spec-drift" status="spec/done">Left unreconciled, either case produces spec drift.</fact></p>
+    <p><fact id="the-next-session-corrects-the-code-back" status="spec/done">The next session
+reads the stale spec, sees the 300 s figure, concludes that the code's
+600 s is a bug, and "corrects" it.</fact></p>
+    <p><fact id="the-agent-is-technically-right-by-the-spec-wins-hierarchy" status="spec/done">The agent is technically right by
+the spec-wins hierarchy.</fact></p>
+    <p><fact id="the-real-bug-is-upstream" status="spec/done">The real bug is upstream: the spec lied.</fact></p>
+    <p><fact id="SYNC-FROM-CODE-CLOSES-THE-DRIFT-ON-PURPOSE" status="impl/done">Sync-from-Code is how the drift is closed *on purpose* rather than
+letting it accumulate until a session triggers a wrong-direction "fix".</fact></p>
+  </section>
+  <section id="trigger" title="When to run">
+    <p><fact id="RUN-THE-PROTOCOL-AT-THE-END-OF-THE-SAME-SESSION" status="impl/done">Run the protocol at the end of the **same session** that produced the
+code change.</fact></p>
+    <p><fact id="waiting-even-a-day-is-how-drift-accumulates" status="spec/done">Waiting even a day is how drift accumulates — by then
+other sessions have read the stale spec and made decisions on top of
+it, and now two things need reconciling instead of one.</fact></p>
+    <p><fact id="do-not-run-the-protocol-for-lead" status="impl/done">Do **not** run the protocol for:</fact></p>
+    <list ordered="false">
+      <item><fact id="SKIP-TEMPORARY-HACKS" status="impl/done">**Temporary hacks.** Debug `println!`s, throwaway probes, reproducers
+  that will be reverted within the hour. Record the skip explicitly in
+  the WAL so the next session does not try to sync the hack into the
+  spec:</fact></item>
+    </list>
+    <fence lang="markdown">  ## Constraints
+  - src/verify.rs: temporary trace logging for issue #42, do NOT sync.</fence>
+    <list ordered="false">
+      <item><fact id="SKIP-MECHANICAL-CHANGES" status="impl/done">**Mechanical changes.** `cargo fmt`, import reordering, dead-code
+  removal flagged by the compiler, rename of a private symbol with no
+  spec-level contract. Mechanical changes are below the spec's level of
+  resolution.</fact></item>
+    </list>
+    <list ordered="false">
+      <item><fact id="SKIP-CODE-THE-SPEC-DOES-NOT-MENTION" status="impl/done">**Code that implements something the spec does not mention.** This is
+  a forward-flow case, not a sync case: draft a new spec section from
+  scratch, then reconcile. Sync-from-Code updates existing spec entries,
+  it does not bootstrap them.</fact></item>
+    </list>
+    <p><fact id="sibling-document-pointers" status="impl/done">Edge case: see [`when-to-apply.md`](when-to-apply.md) for the full
+decision table.</fact></p>
+  </section>
+  <section id="procedure" title="Procedure">
+    <p><fact id="FOUR-STEPS-ALWAYS-ENDING-IN-A-HUMAN-APPROVAL" status="impl/done">Four steps, always ending in a human approval.</fact></p>
+    <section id="step-collect" title="1. Collect the diff">
+      <fence>git diff HEAD</fence>
+      <p><fact id="A-WIDER-RANGE-WHEN-SEVERAL-COMMITS-HAVE-LANDED" status="impl/done">…or a wider range (`git diff &lt;base&gt;..HEAD`) if several commits have
+landed since the last spec-aligned state.</fact></p>
+      <p><fact id="THE-DIFF-IS-THE-ONLY-SOURCE-OF-TRUTH-FOR-WHAT-CHANGED" status="impl/done">The diff is the only source
+of truth for what actually changed.</fact></p>
+    </section>
+    <section id="step-intent" title="2. Reconstruct intent">
+      <p><fact id="NAME-THE-WHY-NOT-THE-WHAT" status="impl/done">For each logical hunk, name the *why* — not the *what*, which the diff
+already shows. Example:</fact></p>
+      <list ordered="false">
+        <item><fact id="example-diff" status="impl/done">*Diff:* `-const TIMEOUT: u64 = 300;` / `+const TIMEOUT: u64 = 600;`.</fact></item>
+        <item><fact id="example-intent" status="impl/done">*Intent:* observed false-positive TIMEOUTs for users on high-latency
+  VPNs; 600 s is the empirical threshold at which the false-positive
+  rate drops to zero.</fact></item>
+      </list>
+      <p><fact id="THE-INTENT-SENTENCE-IS-WHAT-LANDS-IN-THE-SPEC" status="impl/done">The intent sentence is what lands in the spec — **not the diff itself**.</fact></p>
+      <p><fact id="IF-YOU-CANNOT-NAME-THE-INTENT-STOP-AND-ASK-THE-HUMAN" status="impl/done">If you cannot name the intent in one sentence, stop and ask the human.</fact></p>
+      <p><fact id="A-HAND-WAVED-INTENT-ENCODES-A-FICTION" status="impl/done">A sync with a missing or hand-waved intent encodes a fiction; better to
+fail loudly than to record one.</fact></p>
+    </section>
+    <section id="step-draft" title="3. Draft the spec delta">
+      <p><fact id="PRODUCE-A-UNIFIED-DIFF-PROPOSAL" status="impl/done">Produce a unified-diff proposal against the relevant spec section.</fact></p>
+      <p><fact id="NOT-A-REWRITTEN-FILE" status="impl/done">Not
+a rewritten file.</fact></p>
+      <p><fact id="three-mandatory-parts-lead" status="impl/done">Three parts are mandatory in every sync:</fact></p>
+      <fence lang="diff"># spec/modules/oproto/PROP-003.md §verification.timeout
+
+- Unverified messages older than 300 seconds get status TIMEOUT.
++ Unverified messages older than 600 seconds get status TIMEOUT.
++
++ **Why 600 s:** 300 s produced false positives for VPN users
++ (measured 2026-03-05 on 847 messages from 128 users).
++ **When to revisit:** if p99 network latency drops below 100 s
++ based on mon/latency-p99.</fence>
+      <list ordered="true">
+        <item><fact id="PART-THE-NEW-VALUE" status="impl/done">**The new value.** The primary change, matching the code.</fact></item>
+        <item><fact id="PART-THE-REASON" status="impl/done">**The reason.** Concrete, measurable where possible — no "felt
+   better". Cite data, an issue number, or a dated observation.</fact></item>
+        <item><fact id="PART-THE-REVISIT-TRIGGER" status="impl/done">**The revisit trigger.** The condition under which this decision
+   should be re-examined. A decision without a revisit trigger becomes
+   a sacred cow.</fact></item>
+      </list>
+      <p><fact id="WITHOUT-ANY-OF-THE-THREE-THE-DRAFT-IS-INCOMPLETE" status="impl/done">Without any of the three, the draft is incomplete.</fact></p>
+    </section>
+    <section id="step-approve" title="4. Surface for approval">
+      <p><fact id="PRINT-THE-PROPOSED-SPEC-DIFF" status="impl/done">Print the proposed spec diff.</fact></p>
+      <p><fact id="DO-NOT-APPLY" status="impl/done">Do not apply.</fact></p>
+      <p><fact id="WAIT-FOR-AN-EXPLICIT-APPLY-FROM-THE-USER" status="impl/done">Wait for an explicit "apply"
+from the user.</fact></p>
+      <p><fact id="ON-APPROVAL-WRITE-THE-DIFF-AND-COMMIT" status="impl/done">On approval: write the diff, commit it using Conventional Commits.</fact></p>
+      <p><fact id="THE-COMMIT-TYPE-IS-DOCS-SPEC" status="impl/done">The
+commit type is `docs(spec)`, the body names the driving code change:</fact></p>
+      <fence>docs(spec): sync timeout to 600s in PROP-003 §verification.timeout
+
+Code changed TIMEOUT from 300 s to 600 s after VPN latency
+measurement (2026-03-05, 847 messages, 128 users). Spec now
+carries the new value, the reason, and the revisit trigger.</fence>
+      <p><fact id="ON-REJECT-REVERT-THE-CODE-OR-REDRAFT-THE-PROPOSAL" status="impl/done">On reject: either revert the code (the code change itself was the
+mistake) or redraft the sync proposal (the agent framed the intent
+incorrectly).</fact></p>
+      <p><fact id="NEVER-SILENTLY-ACCEPT-A-REJECTED-SYNC" status="impl/done">Never silently accept a rejected sync.</fact></p>
+      <p><fact id="review-checklist-pointer" status="impl/done">The full human-side checklist lives in [`review-workflow.md`](review-workflow.md).</fact></p>
+    </section>
+  </section>
+  <section id="non-goals" title="What Sync-from-Code does not do">
+    <list ordered="false">
+      <item><fact id="NON-GOAL-DOES-NOT-REWRITE-CODE-TO-MATCH-THE-SPEC" status="impl/done">**Does not rewrite code to match the spec.** The opposite direction —
+  generation — is a separate flow (`vibe build` territory).</fact></item>
+      <item><fact id="NON-GOAL-DOES-NOT-EDIT-THE-WAL" status="impl/done">**Does not edit the WAL.** A successful sync may later trigger a WAL
+  update ("PROP-003 §timeout synced with code"), but that is a separate
+  step, handled by `flow:wal`'s session-end protocol.</fact></item>
+      <item><fact id="NON-GOAL-DOES-NOT-BATCH" status="impl/done">**Does not batch.** One intent per run. Batching two unrelated code
+  changes into one spec edit defeats intent-per-decision and makes
+  future audits impossible.</fact></item>
+    </list>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-NORMAL-DIRECTION-IS-SPEC-TO-CODE" status="impl/done">Normal direction is spec → code; Sync-from-Code is the exception.</fact></item>
+      <item><fact id="SUM-RUNS-ONCE-IN-THE-SESSION-THAT-CAUSED-THE-DRIFT" status="impl/done">Runs once, immediately, in the session that caused the drift.</fact></item>
+      <item><fact id="SUM-OUTPUT-IS-VALUE-REASON-AND-REVISIT-TRIGGER" status="impl/done">Output: a spec diff with new value + reason + revisit trigger.</fact></item>
+      <item><fact id="SUM-ALWAYS-ENDS-WITH-HUMAN-APPROVAL" status="impl/done">Always ends with human approval. Never silent, never batched, never
+  applied to temporary code.</fact></item>
+    </list>
+  </section>
+</spec>

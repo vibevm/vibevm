@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Manual-Tests Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *why* a project keeps a
+second, human-run test tier alongside its automated suite, *what* a
+manual test is and is not, *when* to run one, *who* runs it, and the
+directory convention that keeps the tier discoverable.</fact></p>
+  <p><fact id="sibling-document-pointers" status="impl/done">The four rules
+each test must satisfy live in [`authoring-rules.md`](authoring-rules.md);
+the copy-ready skeleton lives in [`test-template.md`](test-template.md).</fact></p>
+  <section id="why-second-tier" title="Why a second tier exists">
+    <p><fact id="the-automated-suite-is-hermetic-because-it-lies-about-the-world" status="spec/done">The automated suite is fast and hermetic *because it lies about the
+world*.</fact></p>
+    <p><fact id="to-give-the-same-answer-on-every-machine-it-substitutes" status="spec/done">To run in a second and give the same answer on every machine,
+it substitutes fakes for real dependencies, temporary directories for
+the real per-user layout, and local fixtures for real remotes.</fact></p>
+    <p><fact id="that-substitution-is-the-refactor-loop-and-the-blind-spot" status="spec/done">That
+substitution is exactly what makes it a good refactor loop — and
+exactly why it cannot prove the surfaces that only exist in the real
+world.</fact></p>
+    <p><fact id="those-surfaces-are-enumerable-lead" status="impl/done">Those surfaces are enumerable:</fact></p>
+    <table>
+      <tr>
+        <td>Surface</td>
+        <td>What the automated tier uses</td>
+        <td>What only the real world has</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-SURFACE-AUTHENTICATION" status="spec/done">Authentication</fact></td>
+        <td><fact status="spec/done">An in-process fake or a skipped check</fact></td>
+        <td><fact status="spec/done">Real SSH keys, OAuth flows, API tokens against a real endpoint</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-SURFACE-PER-USER-STATE" status="spec/done">Per-user state</fact></td>
+        <td><fact status="spec/done">A throwaway temp directory</fact></td>
+        <td><fact status="spec/done">The actual on-disk layout the tool creates under the user's home</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-SURFACE-ARTIFACTS-CONSUMERS-READ" status="spec/done">Artifacts consumers read</fact></td>
+        <td><fact status="spec/done">An in-memory value</fact></td>
+        <td><fact status="spec/done">A lockfile (or export, or manifest) byte-for-byte as a downstream consumer receives it</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-SURFACE-HUMAN-INTENT" status="spec/done">Human intent</fact></td>
+        <td><fact status="spec/done">An `assert_eq!` on a string</fact></td>
+        <td><fact status="spec/done">A person reading the output and confirming it says what they meant</fact></td>
+      </tr>
+    </table>
+    <p><fact id="THE-MANUAL-TIER-IS-THAT-LAST-MILE" status="impl/done">The manual tier is that last mile.</fact></p>
+    <p><fact id="THE-MANUAL-TIER-COMPLEMENTS-AND-DOES-NOT-REPLACE" status="impl/done">It **complements** the automated
+suite; it does **not** replace it.</fact></p>
+    <p><fact id="DELETING-AN-AUTOMATED-TEST-GETS-THE-TRADE-BACKWARDS" status="impl/done">Deleting an automated test because
+"the manual walkthrough covers it" gets the trade exactly backwards —
+the fast tier stays the refactor loop, and the manual tier is the
+slower, higher-confidence pass laid over the top.</fact></p>
+  </section>
+  <section id="what" title="What a manual test is">
+    <p><fact id="A-MANUAL-TEST-IS-A-SELF-CONTAINED-MARKDOWN-WALKTHROUGH" status="impl/done">A manual test is a **self-contained markdown walkthrough that a human
+executes top to bottom and finishes with no ambient state left
+behind**.</fact></p>
+    <p><fact id="IT-READS-LIKE-A-RECIPE" status="impl/done">It reads like a recipe: preconditions, a clean-slate setup,
+a numbered sequence of steps — each a command block plus an
+"Expected" paragraph — a teardown, and a list of what to collect if a
+step diverges.</fact></p>
+    <p><fact id="OPEN-IT-FOLLOW-IT-AND-KNOW-PRECISELY-WHICH-STEP-DIVERGED" status="impl/done">Open the file, follow it, and either every step
+matches its Expected or one does not and you know precisely which.</fact></p>
+  </section>
+  <section id="not" title="What a manual test is NOT">
+    <list ordered="false">
+      <item><fact id="NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER" status="impl/done">**Not a replacement for the automated tier.** If a check *can* be
+  made fast and hermetic, it belongs in the automated suite, where it
+  runs on every change. The manual tier is for what genuinely cannot.</fact></item>
+      <item><fact id="NOT-EXPLORATORY-TESTING" status="impl/done">**Not exploratory testing.** Exploration is unscripted, one-off,
+  and discards its steps. A manual test is scripted, repeatable, and
+  **versioned next to the code** — the same reader running it next
+  quarter takes the same path and expects the same output. If the
+  product changes, the walkthrough is edited, not improvised around.</fact></item>
+    </list>
+  </section>
+  <section id="when" title="When to run">
+    <p><fact id="three-triggers-lead" status="impl/done">Three triggers, each independent:</fact></p>
+    <table>
+      <tr>
+        <td>Trigger</td>
+        <td>Why it fires the tier</td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE" status="impl/done">**Before tagging any milestone**</fact></td>
+        <td><fact status="impl/done">The tag claims the shipped features work end to end. Walk every manual test the index marks required for those features first.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE" status="impl/done">**After a change to an integration surface**</fact></td>
+        <td><fact status="impl/done">Auth, per-user layout, consumer-facing artifacts, network I/O — run the relevant walkthroughs *even when the automated suite stays green*. Green fakes do not prove a changed real surface.</fact></td>
+      </tr>
+      <tr>
+        <td><fact id="ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG" status="impl/done">**When a user files an integration bug**</fact></td>
+        <td><fact status="impl/done">Capture their steps as a new manual test. It becomes both the reproducer that confirms the fix and the guard against regression.</fact></td>
+      </tr>
+    </table>
+  </section>
+  <section id="who" title="Who runs it">
+    <p><fact id="A-HUMAN-RUNS-IT-BECAUSE-THE-TIER-EXISTS-FOR-HUMAN-EYES" status="impl/done">A **human** runs it, because the reason the tier exists is human eyes
+on real output.</fact></p>
+    <p><fact id="AN-AGENT-MAY-PRE-RUN-THE-WALKTHROUGH" status="impl/done">An **agent** may *pre-run* the walkthrough — execute
+each step and flag any whose result diverges from its Expected
+paragraph — and that triage is genuinely useful.</fact></p>
+    <p><fact id="THE-PRE-RUN-IS-NOT-THE-SIGN-OFF" status="impl/done">But the pre-run is
+not the sign-off.</fact></p>
+    <p><fact id="only-a-person-can-judge-that-the-output-says-what-was-meant" status="spec/done">Only a person can read the tool's real output and
+judge "yes, that is what I meant".</fact></p>
+    <p><fact id="RECORD-THE-PRE-RUN-AS-TRIAGE-THE-PASS-ONLY-OVER-A-HUMAN-SIGNATURE" status="impl/done">Record the agent's pre-run as
+triage; record the pass only over a human signature.</fact></p>
+  </section>
+  <section id="directory" title="The directory convention">
+    <p><fact id="MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT" status="impl/done">Manual tests live in a dedicated **`manual-tests/`** directory at the
+repository root, separate from end-user documentation — this is a
+contributor-facing checklist for how the product is verified, not how
+it is used.</fact></p>
+    <list ordered="false">
+      <item><fact id="ONE-MARKDOWN-FILE-PER-SCENARIO" status="impl/done">**One markdown file per scenario**, named for the milestone or
+  feature it covers with a short slug: `m1-first-run-smoke.md`,
+  `auth-real-remote.md`. The filename is the index entry; there is no
+  second registry to keep in sync.</fact></item>
+      <item><fact id="AN-INDEX-README-IN-THE-DIRECTORY" status="impl/done">**An index `README.md`** in the directory: a table of the files,
+  what each covers, and which milestone requires it. New test, new
+  row.</fact></item>
+      <item><fact id="KEEP-EACH-FILE-TO-ONE-SCENARIO" status="impl/done">**Keep each file to one scenario.** A walkthrough that has grown
+  past a screen or two of steps is usually two scenarios wearing one
+  filename — split it.</fact></item>
+    </list>
+  </section>
+  <section id="re-derive" title="Re-derive for your project">
+    <p><fact id="re-derive-lead" status="impl/done">Do not copy this protocol's surfaces verbatim — copy the *task*, and
+let the agent enumerate the surfaces this project actually has:</fact></p>
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-manual-tests/&lt;version&gt;/spec/flows/manual-tests/`, check `vibe.lock`) in full, then adapt the tier to this
+project:
+1. List every integration surface the automated suite fakes, mocks,
+   or skips — real auth, the per-user state directory, remote I/O,
+   consumer-facing artifacts, any "does this output read right?"
+   check. Name the file or module that fakes each.
+2. For each surface, say whether a fast hermetic test could cover it
+   instead. If yes, that is an automated-suite gap, not a manual
+   test — flag it separately.
+3. For the genuine remainder, propose a manual-tests/ walkthrough
+   per scenario: milestone-slug filename, one line on what it proves.
+4. Draft the index README table for those files.
+5. Show me the list and the drafts. Write nothing until I approve.</fence>
+  </section>
+  <section id="summary" title="Summary">
+    <list ordered="false">
+      <item><fact id="SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY" status="impl/done">The automated tier proves the logic on fakes; the manual tier
+  proves the world. Complementary, never a substitute.</fact></item>
+      <item><fact id="SUM-WHAT-A-MANUAL-TEST-IS" status="impl/done">A manual test is a self-contained walkthrough run top to bottom
+  that leaves no ambient state — scripted and versioned, not
+  exploratory.</fact></item>
+      <item><fact id="SUM-THE-THREE-TRIGGERS" status="impl/done">Run it before a milestone tag, after any integration-surface
+  change, and to reproduce a user's integration bug.</fact></item>
+      <item><fact id="SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF" status="impl/done">An agent pre-runs and flags mismatches; a human signs off.</fact></item>
+      <item><fact id="SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README" status="impl/done">One file per scenario under `manual-tests/`, indexed by a README.</fact></item>
+    </list>
+  </section>
+</spec>

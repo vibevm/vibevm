@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:01b46a369ae8eb47bc6615a367ed1b2994528c136960d14fe76e80c8c5280b70"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:571b15dbf0437cb7b947469bebd75ec6ddc8aa39d52fb54a18dc8c48ed34bf0b"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/17-flow-spec-genres.md"
+output = "spec/boot/17-flow-spec-genres.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+output = "spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/spec-genres/design-docs.md"
+output = "spec/flows/spec-genres/design-docs.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/spec-genres/when-to-write-what.md"
+output = "spec/flows/spec-genres/when-to-write-what.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"

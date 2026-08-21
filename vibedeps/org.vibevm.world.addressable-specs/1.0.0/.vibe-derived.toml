@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:387661face6ffc96b31342995828f91a65c87b90d8252dc614a4e2f3068e40ff"
+output_format = "xml"
+converter_recipe = "specdoc/1"
+derived_hash = "sha256:948303417b743ce12cff29f76a2a50754b42b37dc9a39ce6728dc707bd43e987"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/15-flow-addressable-specs.md"
+output = "spec/boot/15-flow-addressable-specs.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+output = "spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/addressable-specs/authoring-rules.md"
+output = "spec/flows/addressable-specs/authoring-rules.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/flows/addressable-specs/spec-tree-layout.md"
+output = "spec/flows/addressable-specs/spec-tree-layout.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
