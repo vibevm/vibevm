@@ -495,3 +495,42 @@ fn redbook_materialises_as_six_xml_specs_and_two_verbatim_files() {
     assert!(slot.join("vibe.toml").is_file());
     assert_eq!(manifest.derived_hash, compute_derived_hash(&slot).unwrap());
 }
+
+/// A child STATIC.md/INDEX.md written into a transformed slot by boot
+/// regeneration neither stales the derived hash nor counts against the
+/// slot's format purity — generated projections are outside the derived
+/// identity (the S5 polygon caught both failures live).
+#[test]
+fn generated_boot_artifacts_stay_outside_the_derived_identity() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let slot = dir.path();
+    std::fs::create_dir_all(slot.join("spec/boot")).expect("mkdir");
+    std::fs::write(
+        slot.join("spec/a.xml"),
+        "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
+    )
+    .expect("write");
+    let before = derived::compute_derived_hash(slot).expect("hash");
+    std::fs::write(
+        slot.join("spec/boot/STATIC.md"),
+        "# generated
+",
+    )
+    .expect("write");
+    std::fs::write(
+        slot.join("spec/boot/INDEX.md"),
+        "schema = 1
+",
+    )
+    .expect("write");
+    let after = derived::compute_derived_hash(slot).expect("hash");
+    assert_eq!(before, after, "generated artifacts must not move the hash");
+    assert!(derived::is_generated_boot_artifact(
+        slot,
+        &slot.join("spec/boot/STATIC.md")
+    ));
+    assert!(!derived::is_generated_boot_artifact(
+        slot,
+        &slot.join("spec/boot/03-flow.md")
+    ));
+}

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-21T20:31:22Z",
+  "updated_at": "2026-08-21T21:50:31Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "3a6f7a421c1569bf0dfcf8979c901f26c21f1cf2600c3bd2caf021ee4152aa55",
+      "content_hash": "40257e337cdeeb201fa72c8b2eed3ba05d4368e67e90b880028266ff5710a582",
       "rollup": {
         "explicit": [
           "spec",
@@ -161152,15 +161152,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 26,
-        "fact_count": 25,
+        "marker_count": 27,
+        "fact_count": 26,
         "unmarked_facts": 0
       },
-      "marker_count": 26,
+      "marker_count": 27,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "3a6f7a421c1569bf0dfcf8979c901f26c21f1cf2600c3bd2caf021ee4152aa55",
+        "processed_hash": "40257e337cdeeb201fa72c8b2eed3ba05d4368e67e90b880028266ff5710a582",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161311,10 +161311,16 @@
             "ev": [
               "the S4 worker's report names the exact degradation: effective.rs boot_origin matches literal snippet file names, so a lock-recorded transformed extension falls back to origin=user silently; the fix is scheduled where it first bites (S5)"
             ]
+          },
+          "GENERATED-ARTIFACTS-OUTSIDE-DERIVED": {
+            "v": "confirmed",
+            "ev": [
+              "built the hour it was ruled: derived.rs is_generated_boot_artifact + the collect_hash_files exclusion; pinned by generated_boot_artifacts_stay_outside_the_derived_identity (hash unmoved by child STATIC/INDEX writes); the two failure shapes are quoted live in the S5 worker protocol (stale-derived + purity md=1 on git-practices)"
+            ]
           }
         },
-        "verified_at": "2026-08-21T20:31:22Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B"
+        "verified_at": "2026-08-21T21:50:31Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART"
       }
     },
     "spec/design/README.md": {

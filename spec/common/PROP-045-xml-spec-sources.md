@@ -332,6 +332,19 @@ extension changed, the literal-name match degrades the origin to
 snippet meets `show effective`), keyed by logical document rather than
 literal file name. @status:spec/work
 
+@fact:GENERATED-ARTIFACTS-OUTSIDE-DERIVED **Generated boot artifacts are
+outside the derived identity (S5 polygon finding, law).** Boot
+regeneration writes a child `spec/boot/STATIC.md` / `INDEX.md` INTO a
+dependency slot after materialisation, and by `##BOOT-LANE-SCOPE` those
+projections are Markdown regardless of `spec_format` — so the derived
+hash excludes them (the same exclusion genre as the derived manifest
+itself) and the format-purity claim never counts them: a transformed
+slot's «no foreign-form spec files» is asserted over SOURCES, not over
+projections the machine regenerates at will. The polygon caught both
+failure shapes live before this law existed: a stale derived hash the
+moment boot regenerated, and a fake purity violation on the one slot
+whose snippet compiles to a child STATIC. @status:impl/done
+
 ## 6. Build order {#build-order}
 
 @fact:SLICES S1 pivot + XML frontend/backend + golden round-trips over the
