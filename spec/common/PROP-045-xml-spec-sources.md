@@ -127,13 +127,33 @@ takes the pre-spot-check re-materialise discipline. *Уточни после з�
 формат в свой существующий след; если следа нет — минимальный маркер,
 описанный здесь же.* @status:spec/work
 
-@fact:BOOT-LANE-SCOPE **Scoping decision, owner may veto.** Boot artifacts
-(`spec/boot/STATIC.md`, `INDEX.md`) are generated projections, not
-materialised package content: v1 keeps them Markdown-compiled regardless
-of `spec_format` — an XML SOURCE snippet converts to MD at splice time,
-so the agent-facing boot surface stays one format while the vibedeps
-tree follows the setting. An XML boot lane is named follow-up work, not
-silently dropped. @status:spec/work
+@fact:BOOT-LANE-SCOPE **Boot-lane law under the setting (revised by the
+owner's scenario ruling, 2026-08-21).** Boot artifacts are generated
+projections; v1 keeps the COMPILED static artifact (`spec/boot/STATIC.md`)
+Markdown regardless of `spec_format` — but both lanes must be fully ready
+for a transformed vibedeps tree: the static compiler consumes snippets in
+WHATEVER format the slots materialised (an XML-materialised snippet
+converts at splice time — pivot conversion, both directions), and the
+dynamic lane's entries point at the files as materialised — under
+`spec_format = "xml"` a dynamic INCLUDE target IS an `.xml` file, and
+`INDEX.md` carries that path honestly. The dynamic ROUTER is the reading
+agent itself (PROP-009: boot is pure file-reading; a dynamic entry is an
+INCLUDE resolved by the reader), which is why §5a measures agents, not
+code. A fully-XML compiled static artifact remains named follow-up work.
+@status:spec/work
+
+@fact:SCENARIO-ZERO **The owner's named scenario — acceptance case №0
+(ruling 2026-08-21, verbatim: «все спеки в spec написаны в Markdown,
+внутренние пакеты в packages — в Markdown, а формат материализации —
+XML. Лоадеры и все остальное должны быть к этому готовы. и статические,
+и динамические, все»).** Sources are 100 % Markdown (the host `spec/`
+tree and every `packages/` member); `spec_format = "xml"`; after
+install/materialisation: every vibedeps spec file is dialect XML, the
+static lane compiles clean from those XML snippets, the dynamic lane's
+INCLUDE targets are `.xml` and resolve, and every reader — `vibe
+progress check`, specmap, `vibe check`, `vibe tree», the boot readers —
+is green over the result. This is the polygon's primary run; the three
+mixed-input runs of §5 ride beside it. @status:spec/work
 
 ## 4. Loaders and scanners read all three {#loaders}
 
@@ -166,12 +186,42 @@ the degradation law; **(c)** XML+MD → `mixed`: byte-identical
 copy-through. In all three, the loaders prove themselves: `vibe progress
 check` clean, specmap builds, boot regenerates. @status:spec/work
 
+### 5a. The dynamic-router measurement — external agents {#agent-routing}
+
+@fact:AGENT-ROUTER-MEASURE **The hardest part, named by the owner
+(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The
+dynamic lane has no code router — the reading agent resolves dynamic
+INCLUDEs itself — so readiness for XML targets is an empirical property
+of live agent harnesses, not of this repository's code, and it is
+MEASURED, not assumed. The instrument is the worker lanes this project
+already runs: claudez (a Claude-family agent) and codexrunner (a
+GPT-family agent) are external agents by construction. Protocol: the
+polygon project (scenario №0 state — XML-materialised tree, honest
+`INDEX.md` with static and dynamic entries, at least one `when`-guarded
+conditional entry) plus a probe packet that orders a cold worker to
+perform the standard boot (read STATIC in full, then every INDEX entry,
+resolving dynamic INCLUDEs) and then answer control questions whose
+answers exist ONLY inside dynamically-included XML files (one per
+dynamic entry, plus one inside a `when`-inactive entry that must NOT be
+answered — the negative control). Scoring is by artifact: each answer
+cites the file it came from; the measure is answered/missed per lane,
+per agent family. The run is repeated over the `markdown» and `mixed»
+materialisations of the same tree as the baseline — the DELTA between
+XML and MD scores is the finding, not the absolute number. Results are
+recorded in the polygon's report and this section's facts flip to
+`impl/…` with the measured numbers cited. *Проверь при постройке: probe
+не должен подсказывать формат — пакет говорит «выполни бут по
+CLAUDE.md/INDEX», не «прочитай XML».* @status:spec/work
+
 ## 6. Build order {#build-order}
 
 @fact:SLICES S1 pivot + XML frontend/backend + golden round-trips over the
 redbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the
 setting + transforming materialisation + the hash law → S4 the scanner/
-checker/specmap integration points (the measured `*.md` list) → S5 the
-redbook polygon E2E, three targets → S6 docs, ALPHA-NOTES, judging.
-Each slice lands with its own gates; the polygon is the wave's exit.
-@status:spec/work
+checker/specmap/boot-compiler integration points (the measured `*.md`
+list; the static splice learns XML input, INDEX carries materialised
+paths) → S5 the redbook polygon E2E: scenario №0 first, then the three
+mixed-input targets → S5a the external-agent router measurement (§5a,
+claudez + codexrunner over the polygon) → S6 docs, ALPHA-NOTES, judging.
+Each slice lands with its own gates; the polygon plus the agent
+measurement are the wave's exit. @status:spec/work
