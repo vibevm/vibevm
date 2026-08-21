@@ -589,6 +589,7 @@ dependencies = [
  "core-ai-native-specmark-grammar",
  "glob",
  "proc-macro2",
+ "quick-xml",
  "quote",
  "serde",
  "serde_json",
