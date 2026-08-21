@@ -9677,6 +9677,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/hooks_run.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_workspace::install::hooks_run",
+      "end_line": 5,
+      "fingerprint": "tok1:afa2dab08c7254b6ba1048cef9871486514923d33415437b094dfca69bdb794b"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/model.rs",
       "item_kind": "mod",
       "line": 6,
@@ -18193,6 +18202,14 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/hooks_run.rs",
+      "from_symbol": "vibe_workspace::install::hooks_run",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/install/model.rs",

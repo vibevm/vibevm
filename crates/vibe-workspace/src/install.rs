@@ -43,8 +43,8 @@ use bootgen::validate_redirect_blocks;
 pub use model::{InstallOutcome, ResolvedDep, SlotCheck, SlotVerifier};
 
 use hooks_run::SubtreeOutcome;
+use hooks_run::run_dep_hook;
 pub use hooks_run::run_post_install_hooks;
-use hooks_run::{run_dep_hook, run_post_install_with};
 
 pub use bootgen::verify_boot_graph;
 pub use bootgen::{regenerate_boot, regenerate_boot_from};

@@ -2,6 +2,8 @@
 //! landing (the file crossed the 600-line budget): the dep-hook walk and
 //! both post-install entry points; orchestration stays in the parent.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases");
+
 use super::*;
 
 /// Run one `phase` hook for `dep` against its materialised slot under the
