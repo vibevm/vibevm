@@ -13,7 +13,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#t
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context as _, Result};
+use anyhow::{Context as _, Result, bail};
 use progress_core::doc::ParsedDoc;
 use progress_core::{cache, journal, rollup, scope, sidecar, state};
 use vibe_registry::ShellGit;
@@ -45,6 +45,13 @@ pub(super) struct Ground {
     pub(super) payloads: sidecar::Payloads,
     /// Files the config `exclude` globs removed (`scope::ExcludeReport`).
     pub(super) excluded: usize,
+    /// Observed files that entered as XML sources (PROP-045
+    /// ##PROJECTION-READ): each was parsed through its canonical MD
+    /// projection, so every diagnostic it produces cites projection-
+    /// relative lines — the check verb marks them with the shared
+    /// projection notice rather than letting the numbers pass as
+    /// source-relative.
+    pub(super) xml_sources: BTreeSet<String>,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -94,11 +101,29 @@ pub(super) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     for p in &excludes.stale {
         eprintln!("vibe progress: warning: exclude pattern `{p}` matched no observed file");
     }
+    // One logical document, one form (PROP-045 ##TARGET-MIXED): `X.md` and
+    // `X.xml` beside each other are a split brain — parsing both would
+    // count one document's units twice under two paths, so the pair is a
+    // loud stop before any parse, naming both files.
+    if let Some(collision) = vibe_specdoc::pair_collisions_in(&files).first() {
+        bail!("{}", collision.message());
+    }
     let mut docs = Vec::new();
+    let mut xml_sources = BTreeSet::new();
     for rel in files {
         let full = root.join(&rel);
-        let text = std::fs::read_to_string(&full)
+        // The projection dispatch (PROP-045 ##PROJECTION-READ): `.md` (and
+        // anything else) verbatim, `.xml` through `from_xml →
+        // to_markdown`. The hash is over the text the parser consumes —
+        // the projection — which S1's emitter makes deterministic, so the
+        // cache/verdict mechanics are unchanged: an edit moves the
+        // projection exactly when it moves meaning.
+        let (text, kind) = vibe_specdoc::load_spec_text(&full)
+            .map_err(|e| anyhow::Error::msg(e.to_string()))
             .with_context(|| format!("reading {}", full.display()))?;
+        if kind == vibe_specdoc::SourceKind::XmlProjected {
+            xml_sources.insert(scope::rel_str(&rel));
+        }
         let path = scope::rel_str(&rel);
         let hash = progress_core::parse::content_hash(&text);
         let cached = (!common.no_cache)
@@ -117,6 +142,7 @@ pub(super) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         cache_warning,
         payloads,
         excluded: excludes.dropped,
+        xml_sources,
     })
 }
 

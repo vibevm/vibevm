@@ -1,6 +1,12 @@
 //! Check 9 — every `<!-- REVIEW: YYYY-MM-DD ... -->` marker in
-//! `spec/**/*.md` whose date is older than `review_max_age_days`
+//! `spec/**/*.{md,xml}` whose date is older than `review_max_age_days`
 //! (default 14) is reported as a warning.
+//!
+//! Both serialisations are scanned RAW (PROP-045): the marker is an XML
+//! comment, legal in the dialect, and the projection would DROP it —
+//! comments are layout and never enter the pivot — so the line scan reads
+//! the source bytes and its line numbers stay source-relative for either
+//! form.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
@@ -32,7 +38,10 @@ impl Check for ReviewAgingCheck {
         let max_age_secs = max_age_days * 86_400;
         for path in walk_files(&spec_dir) {
             let lossy = path.to_string_lossy();
-            if !lossy.ends_with(".md") {
+            // PROP-045 ##LOADER-LAW: both spec serialisations carry REVIEW
+            // markers — the comment syntax is shared, so one raw scan
+            // serves both (see the module doc for why not the projection).
+            if !(lossy.ends_with(".md") || lossy.ends_with(".xml")) {
                 continue;
             }
             let body = match fs::read_to_string(&path) {
@@ -263,6 +272,35 @@ mod tests {
             "got: {:?}",
             report.findings
         );
+    }
+
+    /// PROP-045: an XML spec source carries the same `<!-- REVIEW: … -->`
+    /// comment — legal dialect, scanned raw, so the aging verdict and the
+    /// line number are identical to the MD form's.
+    #[test]
+    fn review_marker_in_an_xml_spec_ages_like_the_md_form() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::create_dir_all(project.path().join("spec/notes")).unwrap();
+        fs::write(
+            project.path().join("spec/notes/old-review.xml"),
+            "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+             <!-- REVIEW: 2026-04-01 revisit after the wave -->\n  \
+             <p><fact id=\"X\" status=\"impl/done\">body</fact></p>\n</spec>\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        let aging: Vec<&Finding> = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::ReviewAging && f.severity == Severity::Warning)
+            .collect();
+        assert_eq!(aging.len(), 1, "got: {:?}", report.findings);
+        assert_eq!(
+            aging[0].path.as_deref().unwrap(),
+            Path::new("spec/notes/old-review.xml")
+        );
+        assert_eq!(aging[0].line, Some(2), "source-relative, not projected");
     }
 
     #[test]

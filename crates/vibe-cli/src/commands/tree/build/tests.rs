@@ -147,3 +147,25 @@ fn static_precedence_declared_then_suggested_then_default() {
         (false, LoadOrigin::Suggested)
     );
 }
+
+/// PROP-045 ##PROJECTION-READ: an `.xml` boot source's directives are
+/// collected from the projection — the directive rides in unit text, the
+/// projection preserves it, and the in-place listing names the `.xml`
+/// path it came from.
+#[test]
+fn in_place_directives_collect_from_an_xml_boot_source() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let root = tmp.path();
+    std::fs::create_dir_all(root.join("spec/boot")).expect("mkdir");
+    std::fs::write(
+        root.join("spec/boot/dyn.xml"),
+        "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+         <p>#use spec://org.example/lib/boot</p>\n</spec>\n",
+    )
+    .expect("write xml");
+    let specs = collect_in_place(root, &["spec/boot/dyn.xml".to_string()]);
+    assert_eq!(specs.len(), 1, "{specs:?}");
+    assert_eq!(specs[0].file, "spec/boot/dyn.xml");
+    assert_eq!(specs[0].carrier, Carrier::Use);
+    assert_eq!(specs[0].address.to_string(), "spec://org.example/lib/boot");
+}

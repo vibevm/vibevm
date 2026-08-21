@@ -1,6 +1,11 @@
 //! `vibe show effective` — concatenate the boot files, the WAL, and
 //! every installed package's written files, each with a `spec://`
 //! provenance header (`VIBEVM-SPEC.md` §4.6).
+//!
+//! Every spec source enters through the PROP-045 projection dispatch
+//! (`load_spec_text`): a `.xml` boot file or written file is shown as its
+//! canonical Markdown projection — one effective view, whatever form each
+//! document materialised in. The WAL stays host Markdown, read raw.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
@@ -43,8 +48,12 @@ struct EffectiveSection {
     body: String,
 }
 
-pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
+/// Collect every effective section — the boot dir, the WAL, and the
+/// installed packages' written files — without rendering anything. The
+/// pure half of [`run_effective`], split so the projection law (every
+/// spec source through `load_spec_text`) is testable on the collected
+/// bodies alone.
+fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     let lockfile_path = project_root.join(Lockfile::FILENAME);
     let lockfile = if lockfile_path.exists() {
         Some(
@@ -61,7 +70,8 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     // user-or-package origin: the lockfile's `boot_snippet` field
     // names which package contributed which `NN-…` file. Files not
     // claimed by any lockfile entry (00-core / 90-user / hand-edited)
-    // surface as `user`.
+    // surface as `user`. Both spec serialisations load (PROP-045
+    // ##LOADER-LAW) — an `.xml` boot file renders as its projection.
     let boot_dir = project_root.join("spec/boot");
     if boot_dir.is_dir() {
         let mut entries: Vec<PathBuf> = fs::read_dir(&boot_dir)
@@ -69,7 +79,7 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
             .filter_map(|e| e.ok())
             .filter(|e| e.file_type().map(|t| t.is_file()).unwrap_or(false))
             .map(|e| e.path())
-            .filter(|p| p.extension().map(|x| x == "md").unwrap_or(false))
+            .filter(|p| vibe_specdoc::is_spec_source(p))
             .collect();
         entries.sort();
         for path in entries {
@@ -83,8 +93,7 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
             let rel = format!("spec/boot/{filename}");
             let origin = boot_origin(&filename, lockfile.as_ref());
             let spec_uri = format!("spec://project/boot/{filename}");
-            let body = fs::read_to_string(&path)
-                .with_context(|| format!("reading `{}`", path.display()))?;
+            let (body, _) = load_spec(&path)?;
             sections.push(EffectiveSection {
                 spec_uri,
                 path: rel,
@@ -149,8 +158,7 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
                     });
                     continue;
                 }
-                let body = fs::read_to_string(&abs)
-                    .with_context(|| format!("reading `{}`", abs.display()))?;
+                let (body, _) = load_spec(&abs)?;
                 let suffix = rel_str.trim_start_matches("spec/");
                 sections.push(EffectiveSection {
                     spec_uri: format!("{pkg_uri_root}/{suffix}"),
@@ -161,6 +169,13 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
             }
         }
     }
+
+    Ok(sections)
+}
+
+pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
+    let project_root = resolve_project_root(&args.path)?;
+    let sections = collect_sections(&project_root)?;
 
     if ctx.is_json() {
         let payload = EffectiveReport {
@@ -210,6 +225,16 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     Ok(())
 }
 
+/// One spec source as the effective view shows it — the PROP-045 dispatch
+/// (`load_spec_text`): `.md` verbatim, `.xml` as its canonical projection.
+/// The kind is deliberately dropped here: a provenance concatenation has
+/// no line-citing diagnostics to mark.
+fn load_spec(path: &Path) -> Result<(String, vibe_specdoc::SourceKind)> {
+    vibe_specdoc::load_spec_text(path)
+        .map_err(|e| anyhow::Error::msg(e.to_string()))
+        .with_context(|| format!("reading `{}`", path.display()))
+}
+
 fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
     if filename == "00-core.md" || filename == "90-user.md" {
         return "user".to_string();
@@ -229,4 +254,39 @@ fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
 
 fn normalize_rel_path(p: &Path) -> PathBuf {
     PathBuf::from(machine_json_path(p))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// PROP-045 ##LOADER-LAW: an `.xml` boot file is a first-class boot
+    /// section, and its body is the canonical MD projection — the
+    /// effective view renders one form regardless of how each document
+    /// materialised.
+    #[test]
+    fn an_xml_boot_file_lands_as_its_projection() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("spec/boot")).unwrap();
+        std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
+        std::fs::write(
+            root.join("spec/boot/rules.xml"),
+            "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+             <p><fact id=\"ONLY\" status=\"impl/done\">one rule</fact></p>\n</spec>\n",
+        )
+        .unwrap();
+        let sections = collect_sections(root).expect("collect");
+        let boot = sections
+            .iter()
+            .find(|s| s.path == "spec/boot/rules.xml")
+            .expect("the xml boot file is a section");
+        assert_eq!(boot.origin, "user");
+        assert!(boot.body.contains("@fact:ONLY"), "{}", boot.body);
+        assert!(
+            !boot.body.contains("<spec"),
+            "the body is the projection, not raw XML: {}",
+            boot.body
+        );
+    }
 }

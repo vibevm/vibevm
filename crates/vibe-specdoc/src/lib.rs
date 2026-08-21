@@ -20,6 +20,11 @@
 //!   with `{#id}`, facts → `@fact:<ID> … @status:<stage>/<state>` units,
 //!   fences/tables/quotes/lists in their MD forms, `@fact/code:` + fence
 //!   for typed facts.
+//! * [`load_spec_text`] — the consumers' one dispatch (PROP-045
+//!   ##PROJECTION-READ): `.md` verbatim, `.xml` as its canonical MD
+//!   projection, with the [`SourceKind`] that marks projection-relative
+//!   diagnostics; beside it, the one-document-one-form pair-collision
+//!   law ([`pair_collisions_in`], [`discover_pair_collision`]).
 //!
 //! The dialect is isomorphic to the Markdown-expressible structure — it
 //! cannot express what MD cannot, which is what makes the owner's
@@ -47,6 +52,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 
 pub mod doc;
+pub mod load;
 
 mod md_in;
 mod md_out;
@@ -60,6 +66,10 @@ mod md_in_tests;
 #[cfg(test)]
 mod xml_in_tests;
 
+pub use load::{
+    LoadError, PROJECTION_NOTICE, PairCollision, SourceKind, discover_pair_collision,
+    is_spec_source, load_spec_text, pair_collisions_in,
+};
 pub use md_in::from_markdown;
 pub use md_out::to_markdown;
 pub use xml_in::from_xml;

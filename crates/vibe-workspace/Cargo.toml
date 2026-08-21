@@ -12,6 +12,10 @@ description = "Workspace discovery and the multi-package member model for vibevm
 
 [dependencies]
 specmark.workspace = true
+# The PROP-045 projection dispatch: an XML-materialised boot snippet enters
+# the static splice as its canonical MD projection (##BOOT-LANE-SCOPE,
+# ##PROJECTION-READ), and authored discovery accepts both serialisations.
+vibe-specdoc.workspace = true
 thiserror.workspace = true
 glob.workspace = true
 semver.workspace = true
@@ -21,7 +25,6 @@ tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
 vibe-spec.workspace = true
-vibe-specdoc.workspace = true
 
 [dev-dependencies]
 proptest.workspace = true

@@ -24,6 +24,10 @@ vibe-registry.workspace = true
 vibe-resolver.workspace = true
 progress-core.workspace = true
 vibe-check.workspace = true
+# The PROP-045 projection dispatch (`load_spec_text`): every spec-text read
+# in progress/show/tree routes XML sources through their canonical MD
+# projection (##PROJECTION-READ).
+vibe-specdoc.workspace = true
 vibe-publish.workspace = true
 vibe-workspace.workspace = true
 vibe-mcp.workspace = true

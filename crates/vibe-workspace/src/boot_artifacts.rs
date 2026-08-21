@@ -280,7 +280,15 @@ pub fn render_static(
             compile_normal_entry(entry, workspace_root, self_coord)?
         } else {
             let abs = workspace_root.join(&entry.path);
-            let raw = fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?;
+            // The PROP-045 dispatch (##BOOT-LANE-SCOPE, ##PROJECTION-READ):
+            // an XML-materialised snippet enters the splice as its canonical
+            // MD projection — STATIC.md stays the compiled MARKDOWN artifact
+            // whatever form each slot materialised. Deterministic by S1's
+            // emitter, so the lane stays byte-reproducible.
+            let (raw, _) = vibe_specdoc::load_spec_text(&abs).map_err(|e| WorkspaceError::Io {
+                path: abs.clone(),
+                reason: e.to_string(),
+            })?;
             // R3 (B-011): `#use … as` / `@!` are `normal`-format machinery; a
             // `simple` contribution is carried whole and cannot bind or resolve
             // aliases. Detected on the verbatim text (before any embed), so an

@@ -384,10 +384,15 @@ fn condition_from_when(when: Option<&str>) -> Condition {
 /// boot files plus every `STATIC.md` / `INDEX.md` source path); each that
 /// exists is read and parsed. A bare `spec://` is discretionary and not
 /// collected. An empty result is correct when no boot file carries a marker.
+///
+/// A `.xml` boot source is read through its canonical MD projection
+/// (PROP-045 ##PROJECTION-READ): directives live in unit text, which the
+/// projection preserves, so the marker scan sees exactly what a reader of
+/// the projected file sees.
 fn collect_in_place(root: &Path, boot_files: &[String]) -> Vec<InPlaceSpec> {
     let mut out = Vec::new();
     for file in boot_files {
-        let Ok(text) = fs::read_to_string(root.join(file)) else {
+        let Ok((text, _)) = vibe_specdoc::load_spec_text(&root.join(file)) else {
             continue;
         };
         let directives = Directives::parse(&text);

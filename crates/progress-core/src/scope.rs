@@ -34,7 +34,18 @@ pub const DEFAULT_EXCLUDES: [&str; 8] = [
 /// contracts.
 pub const DEFAULT_EXCLUDE_FILES: [&str; 1] = ["LICENSE.md"];
 
-pub const DEFAULT_INCLUDES: [&str; 2] = ["spec/**/*.md", "packages/**/*.md"];
+/// The default include globs — both spec serialisations, side by side
+/// (PROP-045 ##LOADER-LAW): a project may hold a document as Markdown or
+/// as dialect XML, and the corpus observes whichever form each document
+/// took. One logical document in BOTH forms is not a scope question — the
+/// consumer's pair-collision check rejects it loudly; the globs themselves
+/// stay blind so an explicit project config inherits the same pairing.
+pub const DEFAULT_INCLUDES: [&str; 4] = [
+    "spec/**/*.md",
+    "spec/**/*.xml",
+    "packages/**/*.md",
+    "packages/**/*.xml",
+];
 
 /// The `[progress]` table — knobs that are not about which files are
 /// observed. Absent in most projects, and absent means "the defaults".
@@ -228,6 +239,18 @@ pub fn rel_str(rel: &Path) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn default_includes_observe_both_serialisations() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::create_dir_all(dir.path().join("spec")).expect("mkdir");
+        std::fs::write(dir.path().join("spec/a.md"), "x").expect("write");
+        std::fs::write(dir.path().join("spec/b.xml"), "x").expect("write");
+        let files = observed_files(dir.path(), &ScopeConfig::default()).expect("enumerate");
+        let names: Vec<String> = files.iter().map(|f| rel_str(f)).collect();
+        assert!(names.contains(&"spec/a.md".to_string()), "{names:?}");
+        assert!(names.contains(&"spec/b.xml".to_string()), "{names:?}");
+    }
 
     #[test]
     fn default_excludes_hold_under_explicit_includes() {

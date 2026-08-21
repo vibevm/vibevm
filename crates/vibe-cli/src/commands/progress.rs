@@ -26,7 +26,10 @@ use crate::output::Context;
 #[cfg(test)]
 use progress_core::{doc::ParsedDoc, sidecar};
 #[cfg(test)]
-use std::{collections::BTreeMap, path::PathBuf};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::PathBuf,
+};
 
 /// The campaign-grounding cell every verb enters through: the observed
 /// tree, the campaign zone, and the caches behind them (PROP-043 §7.1).
@@ -112,6 +115,17 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
     let mut errors = 0usize;
     let mut warnings = 0usize;
     for doc in &g.docs {
+        // PROP-045 ##PROJECTION-READ: an XML-sourced document's diagnostics
+        // cite projection-relative lines. The path repeats on every issue
+        // line here, so the notice rides once per document — the header
+        // form of the mark, not a suffix on each line.
+        let folds = rollup::fold_check(doc);
+        if g.xml_sources.contains(&doc.path)
+            && !ctx.is_quiet()
+            && (!doc.issues.is_empty() || !folds.is_empty() || a.exhaustive)
+        {
+            println!("{}: {}", doc.path, vibe_specdoc::PROJECTION_NOTICE);
+        }
         for i in &doc.issues {
             match i.severity {
                 Severity::Error => errors += 1,
@@ -132,7 +146,7 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
         // information, not noise"), so this surfaces the case without
         // failing a gate on legitimate markup. Phase F's folder, which knows
         // it is asserting a fold, runs `fold_check` as a fatal pre-flight.
-        for f in rollup::fold_check(doc) {
+        for f in folds {
             warnings += 1;
             if !ctx.is_quiet() {
                 println!("{}:{}: Warning [FoldLossy] {f}", doc.path, f.line);
@@ -260,7 +274,11 @@ fn weave_cmd(ctx: &Context, a: &ProgressWeaveArgs) -> Result<()> {
         .docs
         .iter()
         .map(|d| -> Result<(String, String)> {
-            let text = std::fs::read_to_string(g.root.join(&d.path))
+            // The same dispatch `ground` read through (PROP-045
+            // ##PROJECTION-READ): a `.xml` source weaves its projection,
+            // exactly the text the parse — and therefore the doc — saw.
+            let (text, _) = vibe_specdoc::load_spec_text(&g.root.join(&d.path))
+                .map_err(|e| anyhow::Error::msg(e.to_string()))
                 .with_context(|| format!("re-reading {}", d.path))?;
             Ok((d.path.clone(), text))
         })

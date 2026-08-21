@@ -19,3 +19,6 @@ quick-xml.workspace = true
 # The Markdown frontend is an ADAPTER over progress-core's own scanner
 # (PROP-045 ##PIVOT-MODEL): this crate never parses Markdown itself.
 progress-core.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

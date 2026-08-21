@@ -30,7 +30,10 @@ use super::super::{ResolvedDep, io_err};
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
     r = 1
 )]
-pub(super) fn build_unit_table(resolution: &[ResolvedDep]) -> HashMap<UnitId, UnitInput> {
+pub(super) fn build_unit_table(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+) -> HashMap<UnitId, UnitInput> {
     // The target-suggestion precedence tier: a package's own `[boot_snippet].link`.
     let suggested: HashMap<(&Group, &str), Option<LinkType>> = resolution
         .iter()
@@ -47,8 +50,11 @@ pub(super) fn build_unit_table(resolution: &[ResolvedDep]) -> HashMap<UnitId, Un
         .map(|dep| {
             let slot = slot_rel_path(dep);
             let snippet = dep.manifest.boot_snippet.as_ref();
-            let own_boot_path = snippet
-                .map(|bs| format!("{slot}/{}", bs.source.to_string_lossy().replace('\\', "/")));
+            // LOGICAL resolution against the materialised slot (PROP-045
+            // ##BOOT-LANE-SCOPE): the manifest names the authored form; a
+            // transforming materialisation may hold the other extension.
+            let own_boot_path =
+                snippet.map(|bs| super::resolve_snippet_source(workspace_root, &slot, &bs.source));
             let default_link = dep.manifest.boot.default_link;
             let edges = dep
                 .requires

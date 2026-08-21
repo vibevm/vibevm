@@ -30,6 +30,11 @@ use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_f
 /// (or no `group`) declares no self coordinate, so its authored `spec/` is
 /// unreachable by `spec://` address — the resolver then errors on any undotted
 /// authority with "no self coordinate".
+mod materialised_read;
+use materialised_read::read_materialised;
+mod snippet_source;
+use snippet_source::resolve_snippet_source;
+
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
     match &root_manifest.project {
         Some(p) => vibe_spec::SelfCoordinate::new(
@@ -60,7 +65,7 @@ pub fn regenerate_boot_from(
     // a package points at its compiled STATIC.md so the whole zone loads, not
     // just the snippet. For a tree with no intermediate static edge this is a
     // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
-    let table = build_unit_table(resolution);
+    let table = build_unit_table(&workspace.root, resolution);
     // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
     // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
     // not recompiled. Keyed on each unit's resolved version.
@@ -106,7 +111,7 @@ pub fn regenerate_boot_from(
         } else {
             root_foundation.clone()
         };
-        let deps = node_dependency_boot(manifest, resolution, &with_static);
+        let deps = node_dependency_boot(&workspace.root, manifest, resolution, &with_static);
         let mut effective = boot::compute_effective_boot(NodeBootInputs {
             own_boot: &own,
             inherited_foundation: &inherited,
@@ -274,7 +279,7 @@ pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceEr
 )]
 pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
     let resolution = read_materialised(&workspace.root)?;
-    let table = build_unit_table(&resolution);
+    let table = build_unit_table(&workspace.root, &resolution);
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
@@ -288,66 +293,14 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
     ))
 }
 
-/// Reconstruct the resolution by reading every `vibedeps/` slot's manifest.
-/// A slot whose `vibe.toml` is missing or carries no `[package]` table is
-/// skipped — it is not a materialised package.
-fn read_materialised(workspace_root: &Path) -> Result<Vec<ResolvedDep>, WorkspaceError> {
-    let vibedeps_dir = workspace_root.join(vibedeps::VIBEDEPS_DIR);
-    if !vibedeps_dir.is_dir() {
-        return Ok(Vec::new());
-    }
-    let mut out = Vec::new();
-    for kind_name in fs::read_dir(&vibedeps_dir).map_err(|e| io_err(&vibedeps_dir, e))? {
-        let kind_name = kind_name.map_err(|e| io_err(&vibedeps_dir, e))?;
-        let kind_name_dir = kind_name.path();
-        if !kind_name_dir.is_dir() {
-            continue;
-        }
-        for version in fs::read_dir(&kind_name_dir).map_err(|e| io_err(&kind_name_dir, e))? {
-            let version = version.map_err(|e| io_err(&kind_name_dir, e))?;
-            let slot = version.path();
-            let manifest_path = slot.join("vibe.toml");
-            if !slot.is_dir() || !manifest_path.is_file() {
-                continue;
-            }
-            let manifest =
-                Manifest::read(&manifest_path).map_err(|e| WorkspaceError::Manifest {
-                    path: manifest_path.clone(),
-                    source: Box::new(e),
-                })?;
-            let Some(pkg) = &manifest.package else {
-                continue;
-            };
-            // A `[requires.packages]` key is group-qualified at parse time
-            // (PROP-008 §2.6), so every `iter_pkgrefs` entry carries a
-            // group; a defensive `filter_map` drops any that somehow does
-            // not rather than panicking.
-            let requires: Vec<(Group, String)> = manifest
-                .requires
-                .iter_pkgrefs()
-                .filter_map(|(g, n)| g.map(|g| (g.clone(), n.to_string())))
-                .collect();
-            out.push(ResolvedDep {
-                kind: pkg.kind,
-                group: pkg.group.clone(),
-                name: pkg.name.clone(),
-                version: pkg.version.clone(),
-                content_dir: slot.clone(),
-                manifest: manifest.clone(),
-                requires,
-                // Boot-only re-derivation from materialised slots — never
-                // re-materialises, so the §2.6 mutable-source flag is moot.
-                source_mutable: false,
-            });
-        }
-    }
-    Ok(out)
-}
-
-/// Discover a node's own authored boot files — every `*.md` in its
-/// `spec/boot/`, minus the generated `INLINE.md` / `INDEX.md`. The
-/// user-owned `00-core.md` / `90-user.md` are `Foundation` / `UserOverride`
-/// by name convention; any other authored file is mid-band (`None`).
+/// Discover a node's own authored boot files — every spec source in its
+/// `spec/boot/` (`.md` or dialect `.xml`, PROP-045 ##LOADER-LAW), minus
+/// the generated `STATIC.md` / `INDEX.md`. The user-owned `00-core.md` /
+/// `90-user.md` are `Foundation` / `UserOverride` by name convention; any
+/// other authored file is mid-band (`None`).
+///
+/// One document, one form (PROP-045 ##TARGET-MIXED): `X.md` + `X.xml` in
+/// one boot dir is a split brain — an error naming both, never a guess.
 ///
 /// `pub(crate)` so [`crate::publish`] can reuse it to regenerate a
 /// staged copy's boot artifacts for the published shape (PROP-009 §2.11).
@@ -360,6 +313,7 @@ pub(crate) fn node_own_boot(
         return Ok(Vec::new());
     }
     let mut files = Vec::new();
+    let mut spec_paths = Vec::new();
     for entry in fs::read_dir(&boot_dir).map_err(|e| io_err(&boot_dir, e))? {
         let entry = entry.map_err(|e| io_err(&boot_dir, e))?;
         let path = entry.path();
@@ -367,7 +321,7 @@ pub(crate) fn node_own_boot(
             continue;
         }
         let name = entry.file_name().to_string_lossy().into_owned();
-        if !name.ends_with(".md") {
+        if !vibe_specdoc::is_spec_source(&path) {
             continue;
         }
         // The generated artifacts are not authored boot.
@@ -384,10 +338,22 @@ pub(crate) fn node_own_boot(
         } else {
             format!("{node_rel}/spec/boot/{name}")
         };
+        spec_paths.push(path.clone());
         files.push(AuthoredBoot {
             path: rel_path,
             category,
             origin: node_rel.to_string(),
+        });
+    }
+    if let Some(collision) = vibe_specdoc::pair_collisions_in(&spec_paths).first() {
+        let rel = collision
+            .markdown
+            .strip_prefix(node_dir)
+            .unwrap_or(&collision.markdown)
+            .to_path_buf();
+        return Err(WorkspaceError::Io {
+            path: rel,
+            reason: collision.message(),
         });
     }
     // Deterministic order — the engine keeps a band's collection order.
@@ -397,8 +363,12 @@ pub(crate) fn node_own_boot(
 
 /// Build the dependency-boot inputs for one node: the transitive closure
 /// of its `[requires]` within `resolution`, each turned into a
-/// [`DependencyBoot`].
+/// [`DependencyBoot`]. Each snippet's path is resolved LOGICALLY against
+/// the materialised slot ([`resolve_snippet_source`], PROP-045
+/// ##BOOT-LANE-SCOPE) so an XML-materialised dependency's boot path — and
+/// the INDEX entry that carries it — names the file that exists.
 fn node_dependency_boot(
+    workspace_root: &Path,
     node_manifest: &Manifest,
     resolution: &[ResolvedDep],
     with_static: &HashSet<UnitId>,
@@ -466,9 +436,7 @@ fn node_dependency_boot(
                     )
                 } else {
                     (
-                        snippet.map(|bs| {
-                            format!("{slot}/{}", bs.source.to_string_lossy().replace('\\', "/"))
-                        }),
+                        snippet.map(|bs| resolve_snippet_source(workspace_root, &slot, &bs.source)),
                         false,
                     )
                 };
@@ -565,4 +533,48 @@ pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), Work
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// PROP-045 ##LOADER-LAW: authored boot discovery accepts BOTH spec
+    /// serialisations (and still skips non-spec strays).
+    #[test]
+    fn authored_discovery_finds_the_xml_form() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let boot = dir.path().join("spec/boot");
+        fs::create_dir_all(&boot).expect("mkdir");
+        fs::write(boot.join("00-core.md"), "# core\n").expect("write");
+        fs::write(
+            boot.join("extra.xml"),
+            "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
+        )
+        .expect("write");
+        fs::write(boot.join("notes.txt"), "x").expect("write");
+        let own = node_own_boot(dir.path(), ".").expect("discover");
+        let paths: Vec<&str> = own.iter().map(|b| b.path.as_str()).collect();
+        assert_eq!(paths, vec!["spec/boot/00-core.md", "spec/boot/extra.xml"]);
+    }
+
+    /// One document, one form (##TARGET-MIXED): `X.md` + `X.xml` in one
+    /// boot dir stops discovery loudly, naming both files.
+    #[test]
+    fn authored_discovery_rejects_a_document_in_both_forms() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let boot = dir.path().join("spec/boot");
+        fs::create_dir_all(&boot).expect("mkdir");
+        fs::write(boot.join("dup.md"), "# d\n").expect("write");
+        fs::write(
+            boot.join("dup.xml"),
+            "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
+        )
+        .expect("write");
+        let err = node_own_boot(dir.path(), ".").expect_err("collision");
+        let text = format!("{err:#}");
+        assert!(text.contains("dup.md"), "{text}");
+        assert!(text.contains("dup.xml"), "{text}");
+        assert!(text.contains("one document, one form"), "{text}");
+    }
 }

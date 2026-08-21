@@ -400,3 +400,53 @@ fn render_static_errors_on_a_missing_contribution() {
     let err = render_static(&b, ws.path(), &coord()).unwrap_err();
     assert!(matches!(err, WorkspaceError::Io { .. }), "{err}");
 }
+
+// ---- PROP-045: an XML-materialised snippet splices as its projection ----
+
+/// A dialect snippet on disk in a temp workspace, its workspace-relative
+/// path returned.
+fn write_xml_snippet(ws: &Path) -> String {
+    let rel = "vibedeps/org.example.lib/1.0.0/spec/boot/snippet.xml";
+    let abs = ws.join(rel);
+    fs::create_dir_all(abs.parent().unwrap()).unwrap();
+    fs::write(
+        &abs,
+        "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
+         <p><fact id=\"XMLBOOT\" status=\"impl/done\">xml-authored rule</fact></p>\n</spec>\n",
+    )
+    .unwrap();
+    rel.to_string()
+}
+
+/// The static splice of an XML snippet is its canonical MD projection —
+/// the fact reads in house Markdown, never raw XML — and byte-deterministic
+/// across renders (##BOOT-LANE-SCOPE: STATIC.md stays the MD artifact).
+#[test]
+fn render_static_projects_an_xml_snippet_deterministically() {
+    let ws = TempDir::new().unwrap();
+    let rel = write_xml_snippet(ws.path());
+    let b = boot(vec![entry(&rel, LinkType::Static, "org.example/lib")]);
+    let first = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
+    let second = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
+    assert_eq!(first, second, "two renders must be byte-equal");
+    // The fact survives (anchor-qualified under the entry's origin, so the
+    // id itself may be prefixed — assert on the id and the body text).
+    assert!(first.contains("XMLBOOT"), "{first}");
+    assert!(first.contains("xml-authored rule"), "{first}");
+    assert!(!first.contains("<spec"), "no raw XML: {first}");
+    // The provenance comment names the materialised (.xml) path.
+    assert!(first.contains(&rel), "{first}");
+    // And the MD lane header still leads — the artifact stays STATIC.md.
+    assert!(first.starts_with("<!-- spec/boot/STATIC.md"), "{first}");
+}
+
+/// The INDEX lane carries the entry path as materialised — the `.xml`
+/// file a session would actually read (##BOOT-LANE-SCOPE: honest paths).
+#[test]
+fn render_index_names_the_materialised_xml_path() {
+    let ws = TempDir::new().unwrap();
+    let rel = write_xml_snippet(ws.path());
+    let b = boot(vec![entry(&rel, LinkType::Dynamic, "org.example/lib")]);
+    let index = render_index(&b, None).unwrap();
+    assert!(index.contains(&rel), "{index}");
+}
