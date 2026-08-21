@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-21T18:54:22Z",
+  "updated_at": "2026-08-21T18:55:39Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161158,7 +161158,140 @@
       },
       "marker_count": 22,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "f643d400124e253525c76aa4a2752617116f2308a07ebed26d720658091fa743",
+        "verdicts": {
+          "MANDATE-VERBATIM": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's chat directives of 2026-08-21, quoted verbatim in the fact the hour they were given; the acceptance (redbook polygon, three modes) is the mandate's own closing sentence"
+            ]
+          },
+          "FOUNDATION-ALREADY-RECORDED": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-043 §8 ##PARSE-XML-GRAMMAR carries the quoted sentence verbatim (spec/modules/vibe-progress/PROP-043-progress-markup.md:600-602 per the XML-MEASURE map)"
+            ]
+          },
+          "PIVOT-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "decision recorded with alternatives; its resolution clause is grounded in the XML-MEASURE map: four independent MD-reading families with real dialect drift (progress-core parse/mod.rs:12, vendored mdspec.rs:232, tree/build.rs:381, vibe-check lib.rs:375) — the new-crate resolution follows from the measured absence of a single frontend"
+            ]
+          },
+          "XML-DIALECT-IS-THE-MD-SUBSET": {
+            "v": "confirmed",
+            "ev": [
+              "an ADR whose enforcement mechanism (closed vocabulary, loud foreign-construct error) mirrors the shipped typed-fact law (PROP-043 PARSE-TYPED-FACT-CODE, built 2026-08-20) — the design is recorded, construction pending S1"
+            ]
+          },
+          "DIALECT-SKETCH": {
+            "v": "confirmed",
+            "ev": [
+              "the sketch is marked first-cut with the refinement clause naming the golden corpus as the finaliser; every element in it maps 1:1 to a construct the markup contract already names"
+            ]
+          },
+          "INLINE-STAYS-MARKDOWN": {
+            "v": "confirmed",
+            "ev": [
+              "decision recorded with the weighed alternative; consistent with the shipped scanner's own law (inline code is blanked, foreign inline grammars opaque — progress-core delimiters.rs:58, PROP-043 PARSE-FOREIGN-OPAQUE)"
+            ]
+          },
+          "XML-PARSER-DEPENDENCY": {
+            "v": "confirmed",
+            "ev": [
+              "the zero-xml-crates premise measured twice independently (boss grep of Cargo.lock 2026-08-21; the XML-MEASURE map's §4 confirms no xml-named package in the root lock); the writer-need argument follows from TARGET-XML being a mandate clause"
+            ]
+          },
+          "XML-PARSER-DEPTH": {
+            "v": "confirmed",
+            "ev": [
+              "the ADR answers the owner's recorded challenge; its factual claims check: quick-xml is the ecosystem's dominant XML crate, the dialect bans DTD/external entities by the subset ADR above, and the escape-hatch seam is the pivot boundary this same PROP defines"
+            ]
+          },
+          "SETTING": {
+            "v": "confirmed",
+            "ev": [
+              "the home follows the measure's reproducibility argument (XML-MEASURE §5: user-config precedence line at user_config.rs:4, PROP-040:35 barring app-prefs from project properties); mixed-as-default preserves byte-identical behaviour for all-MD trees by TARGET-MIXED's copy-through definition"
+            ]
+          },
+          "TARGET-MD": {
+            "v": "confirmed",
+            "ev": [
+              "a mandate clause («Markdown материализация все ещё должна поддерживаться, это важно») restated as the target's contract; construction pending S2/S3"
+            ]
+          },
+          "TARGET-XML": {
+            "v": "confirmed",
+            "ev": [
+              "the mandate's aim clause («мы целимся… в XML (не в mixed!)… основным форматом») restated as the target's acceptance bar; construction pending S1/S3"
+            ]
+          },
+          "TARGET-MIXED": {
+            "v": "confirmed",
+            "ev": [
+              "copy-through is today's shipped materialisation behaviour (vibedeps.rs recursive copy filtering only .git — XML-MEASURE §3.1), named as a target"
+            ]
+          },
+          "HASH-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the ADR adopts the measure's derived-manifest seam over the draft's Unverifiable fallback; grounded in the measured collision law (PROP-010:60-63) and the shipped P011V dispatch-by-recipe-prefix (slot_verify.rs:31) it extends; construction pending S3"
+            ]
+          },
+          "BOOT-LANE-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "the revised law matches the measured boot pipeline (hardcoded STATIC.md/INDEX.md names at boot_artifacts.rs:82-87, literal [boot_snippet].source join at bootgen.rs:469 — the exact breakage points the law addresses); the owner's «и статические, и динамические, все» is quoted in SCENARIO-ZERO which this law serves"
+            ]
+          },
+          "SCENARIO-ZERO": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's scenario ruling quoted verbatim the hour it was given; recorded as the polygon's primary run"
+            ]
+          },
+          "LOADER-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the integration-point list it defers to exists (XML-MEASURE §1.4 extension-gate table + §6 cut-point list); the law itself is the design commitment those points implement in S4"
+            ]
+          },
+          "ADDRESSING-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "format-blind addressing is the only reading consistent with the shipped address space: specmap strips .md from canonical paths (mdspec.rs:202) and anchors are textual ids — the fact commits the XML side to the same space; construction pending S4b"
+            ]
+          },
+          "POLYGON": {
+            "v": "confirmed",
+            "ev": [
+              "the acceptance restates the mandate's own test-project clause with the redbook census behind it (XML-MEASURE §6: 7 files, tables/H4/fences/status/fact-anchors inventoried per file)"
+            ]
+          },
+          "AGENT-ROUTER-MEASURE": {
+            "v": "confirmed",
+            "ev": [
+              "the protocol is recorded with its instrument already live (claudez and codexrunner are the session's operating worker lanes); the dynamic-router-is-the-reader premise is PROP-009's own boot model (CLAUDE.md: boot is pure file-reading, dynamic entries resolved at boot)"
+            ]
+          },
+          "AGENT-ROUTER-MODEL-TIERS": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's advice quoted verbatim the hour it was given; the launcher overrides it relies on exist (CODEXRUNNER_MODEL/EFFORT — SUBAGENT-LAUNCHERS ##launchers-codexrunner)"
+            ]
+          },
+          "SLICES": {
+            "v": "confirmed",
+            "ev": [
+              "the order restates the wave plan with each slice's dependency named; S1 is dispatched (PACKET-XML-S1) as this verdict is written"
+            ]
+          }
+        },
+        "verified_at": "2026-08-21T18:55:39Z",
+        "verify_batch": "P045-DRAFT"
+      }
     },
     "spec/design/README.md": {
       "content_hash": "0cc63bcb1ba1947e561c77d167d4eecb7e4070a2af8ba736ae3deebfc3c9067b",
