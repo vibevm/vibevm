@@ -325,12 +325,12 @@ polygon states honestly which snippet formats its packages use.
 @status:spec/work
 
 @fact:BOOT-ORIGIN-LITERAL-MATCH **`show effective`'s boot-origin match is
-literal-name and will mis-classify a transformed snippet (S4 finding,
-open).** When a lock records a `boot_snippet` whose materialised
-extension changed, the literal-name match degrades the origin to
-`user` silently. Fix rides S5's polygon (the first place a transformed
-snippet meets `show effective`), keyed by logical document rather than
-literal file name. @status:spec/work
+logical-document keyed (S4 finding, closed by S5).** The literal-name
+match silently degraded a transformed snippet's origin to `user»; the
+S5 landing keys the match on the logical stem (`10-flow-wal.md` and
+`10-flow-wal.xml` are one contribution), pinned by the polygon's
+origin test — a snippet materialised into `.xml` reports its package.
+@status:impl/done
 
 @fact:GENERATED-ARTIFACTS-OUTSIDE-DERIVED **Generated boot artifacts are
 outside the derived identity (S5 polygon finding, law).** Boot

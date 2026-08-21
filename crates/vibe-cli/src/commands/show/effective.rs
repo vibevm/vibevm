@@ -236,20 +236,28 @@ fn load_spec(path: &Path) -> Result<(String, vibe_specdoc::SourceKind)> {
 }
 
 fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
-    if filename == "00-core.md" || filename == "90-user.md" {
+    let logical_name = logical_spec_name(Path::new(filename));
+    if matches!(logical_name, Some("00-core" | "90-user")) {
         return "user".to_string();
     }
     let Some(lockfile) = lockfile else {
         return "user".to_string();
     };
-    if let Some(pkg) = lockfile
-        .packages
-        .iter()
-        .find(|p| p.boot_snippet.as_deref() == Some(filename))
-    {
+    if let Some(pkg) = lockfile.packages.iter().find(|p| {
+        p.boot_snippet
+            .as_deref()
+            .and_then(|snippet| logical_spec_name(Path::new(snippet)))
+            == logical_name
+    }) {
         return format!("package:{}/{}@{}", pkg.group, pkg.name, pkg.version);
     }
     "user".to_string()
+}
+
+/// A boot contribution keeps its identity when materialisation changes only
+/// its spec representation (`10-flow-wal.md` -> `10-flow-wal.xml`).
+fn logical_spec_name(path: &Path) -> Option<&str> {
+    path.file_stem().and_then(|stem| stem.to_str())
 }
 
 fn normalize_rel_path(p: &Path) -> PathBuf {

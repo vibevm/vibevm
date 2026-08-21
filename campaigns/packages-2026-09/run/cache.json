@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-21T21:50:31Z",
+  "updated_at": "2026-08-21T22:54:44Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "40257e337cdeeb201fa72c8b2eed3ba05d4368e67e90b880028266ff5710a582",
+      "content_hash": "87c142d7a8c692c9f48e5bf2584fcec16c0d86c88817e1069370c799f2f9f23d",
       "rollup": {
         "explicit": [
           "spec",
@@ -161160,7 +161160,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "40257e337cdeeb201fa72c8b2eed3ba05d4368e67e90b880028266ff5710a582",
+        "processed_hash": "87c142d7a8c692c9f48e5bf2584fcec16c0d86c88817e1069370c799f2f9f23d",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161309,7 +161309,7 @@
           "BOOT-ORIGIN-LITERAL-MATCH": {
             "v": "confirmed",
             "ev": [
-              "the S4 worker's report names the exact degradation: effective.rs boot_origin matches literal snippet file names, so a lock-recorded transformed extension falls back to origin=user silently; the fix is scheduled where it first bites (S5)"
+              "built in the S5 landing: effective.rs boot_origin keys on logical_spec_name (file_stem) for both the boot file and the lock's boot_snippet; the polygon's xml_derivative_matches_legacy_markdown_boot_origin test pins that a .xml-materialised snippet reports its package origin"
             ]
           },
           "GENERATED-ARTIFACTS-OUTSIDE-DERIVED": {
@@ -161319,8 +161319,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-21T21:50:31Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART"
+        "verified_at": "2026-08-21T22:54:44Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5"
       }
     },
     "spec/design/README.md": {
