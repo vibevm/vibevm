@@ -36,6 +36,17 @@ use sha2::{Digest, Sha256};
 use swallowed::check_swallowed_anchors;
 use units::collect_units;
 
+// The shared grammar readers re-exported for the vibe-specdoc adapter
+// (PROP-045 S1: the pivot crate rebuilds block structure OVER this parse —
+// it must not re-lex the anchor/table/list/quote/fence rules or the two
+// crates drift into dialects). Every one of these is a pure function over
+// a text span; opening them changes no behaviour here.
+pub use anchor_token::take_fact_id;
+pub use delimiters::{closes_fence, fence_run};
+pub use facts::{
+    blockquote_prefix_len, is_delimiter_row, list_marker_len, row_cells, task_box_len,
+};
+
 /// Parse one Markdown document.
 pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     let mut doc = ParsedDoc {

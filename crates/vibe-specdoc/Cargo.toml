@@ -1,0 +1,20 @@
+[package]
+name = "vibe-specdoc"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish = false
+repository.workspace = true
+homepage.workspace = true
+description = "The PROP-045 pivot: one document IR, a Markdown frontend over progress-core, an XML frontend/backend, and a Markdown backend"
+
+[dependencies]
+# The XML machinery (PROP-045 ##XML-PARSER-DEPENDENCY): quick-xml carries
+# both the event reader the frontend walks and the Writer with correct
+# escaping — one new workspace dependency, pinned here. MIT.
+quick-xml.workspace = true
+# The Markdown frontend is an ADAPTER over progress-core's own scanner
+# (PROP-045 ##PIVOT-MODEL): this crate never parses Markdown itself.
+progress-core.workspace = true

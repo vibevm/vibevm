@@ -20,7 +20,11 @@ fn list_item_content(line: &str) -> Option<usize> {
 
 /// Byte offset just past the list marker itself (`- ` / `* ` / `+ ` /
 /// `N. ` / `N) `) when the line opens an item, else None.
-fn list_marker_len(line: &str) -> Option<usize> {
+///
+/// Re-exported from [`crate::parse`](super) for the
+/// vibe-specdoc adapter (PROP-045 S1), which reads the same marker grammar
+/// when it rebuilds block structure over a parse — one reader, no drift.
+pub fn list_marker_len(line: &str) -> Option<usize> {
     let indent = line.len() - line.trim_start().len();
     let rest = &line[indent..];
     for pre in ["- ", "* ", "+ "] {
@@ -56,9 +60,12 @@ fn list_marker_len(line: &str) -> Option<usize> {
 /// under §3.9 `#granularity`, `##FACT-ANCHOR-SYNTAX` under §3.8
 /// `#placement` — because the specmark address grammar takes kebab-case
 /// heading anchors only, not a fact anchor's `##<ID>`.)
+/// Re-exported from [`crate::parse`](super) for the
+/// vibe-specdoc adapter (PROP-045 S1) — the checkbox grammar has one
+/// reader, shared with the crate that rebuilds list items over a parse.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement")]
-fn task_box_len(t: &str) -> usize {
+pub fn task_box_len(t: &str) -> usize {
     let b = t.as_bytes();
     if b.len() < 3 || b[0] != b'[' || b[2] != b']' || !matches!(b[1], b' ' | b'x' | b'X') {
         return 0;
@@ -76,7 +83,11 @@ fn task_box_len(t: &str) -> usize {
 }
 
 /// True when every cell of the table row is a `---`/`:--:`-style rule.
-fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
+///
+/// Re-exported from [`crate::parse`](super) for the
+/// vibe-specdoc adapter (PROP-045 S1), which drops the same rows when it
+/// rebuilds a table over a parse — one row grammar, no drift.
+pub fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
     !cells.is_empty()
         && cells.iter().all(|&(s, e)| {
             let t = text[s..e].trim();
@@ -86,7 +97,12 @@ fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
 
 /// Byte spans of the cells of one `|`-delimited row (segments between
 /// bars, plus a leading/trailing bar-less segment when non-empty).
-fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
+///
+/// Re-exported from [`crate::parse`](super) for the
+/// vibe-specdoc adapter (PROP-045 S1), which splits rows with the same
+/// scanner when it rebuilds a table over a parse — one cell grammar, no
+/// drift.
+pub fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
     let bytes = text.as_bytes();
     let bars: Vec<usize> = (s..e).filter(|&i| bytes[i] == b'|').collect();
     let mut out = Vec::new();
@@ -116,7 +132,7 @@ fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
 /// quoted form is no pickier than the plain one: `   ##ID` already mints
 /// an anchor through the caller's leading trim, and `>   ##ID` must too.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]
-pub(super) fn blockquote_prefix_len(t: &str) -> usize {
+pub fn blockquote_prefix_len(t: &str) -> usize {
     let b = t.as_bytes();
     let mut i = 0usize;
     while i < b.len() && b[i] == b'>' {

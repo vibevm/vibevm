@@ -38,7 +38,7 @@ use specmark::spec;
 /// while the prose after them becomes code it ignores. The demand cannot be
 /// satisfied — `##FENCE-AWARE` means a marker written there is not read as
 /// one, and writing it would edit a skeleton consumers copy verbatim.
-pub(super) fn fence_run(trimmed: &str) -> Option<(char, usize)> {
+pub fn fence_run(trimmed: &str) -> Option<(char, usize)> {
     let ch = trimmed.chars().next()?;
     if ch != '`' && ch != '~' {
         return None;
@@ -50,7 +50,11 @@ pub(super) fn fence_run(trimmed: &str) -> Option<(char, usize)> {
 /// Whether `trimmed` closes a fence of character `ch` opened at run length
 /// `open`: the same character, a run at least as long, and nothing else on
 /// the line — an info string makes a line an opener, never a closer.
-pub(super) fn closes_fence(trimmed: &str, ch: char, open: usize) -> bool {
+///
+/// Re-exported from [`crate::parse`](super) beside
+/// [`fence_run`] for the vibe-specdoc adapter (PROP-045 S1), which reads
+/// the same run-matching rule when it recovers fence content over a parse.
+pub fn closes_fence(trimmed: &str, ch: char, open: usize) -> bool {
     fence_run(trimmed).is_some_and(|(c, n)| c == ch && n >= open)
         && trimmed.trim_end().chars().all(|c| c == ch)
 }

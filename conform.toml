@@ -172,3 +172,7 @@ reason = "test-only support crate — consumed exclusively as a dev-dependency, 
 [[rust.exempt]]
 unit = "vibe-spec"
 reason = "PROP-035 spec-compiler, provisional — not yet spec-tagged or REQ-edged; enters the gated list once the format stabilises and its seams are doctested (§15 migration puts vibevm's own adoption last)"
+
+[[rust.exempt]]
+unit = "vibe-specdoc"
+reason = "PROP-045 S1, provisional — enters the gated list once the IR stabilises and its seams are doctested"

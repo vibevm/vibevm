@@ -627,9 +627,9 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/delimiters.rs",
       "item_kind": "fn",
-      "line": 81,
+      "line": 85,
       "symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "end_line": 132,
+      "end_line": 136,
       "fingerprint": "tok1:645c929a433412a5c8fe31fbcbc114feff53bb1c515cc5e6a62faf1ce55ebfd8"
     },
     {
@@ -645,19 +645,19 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 109,
+      "line": 125,
       "symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "end_line": 129,
-      "fingerprint": "tok1:c93d6b77766baeead84e4a87bd7c8dcccef03a4a06c042bbc914a83a63d489cb"
+      "end_line": 145,
+      "fingerprint": "tok1:9c8291e3f26cde89e9e6d31e4d96a8fdbe60b974b4c7a5a9bbe2ca230c0947f6"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 41,
+      "line": 45,
       "symbol": "progress_core::parse::facts::task_box_len",
-      "end_line": 76,
-      "fingerprint": "tok1:caf4fa44382a018b6c0901319559899eaeb4b24dd90f4f634cb5c597643fbc55"
+      "end_line": 83,
+      "fingerprint": "tok1:a9e4594d92ac02691bd2deaf98836c57d49c9bc94122b66ccc045b77b9a86c79"
     },
     {
       "crate_name": "progress-core",
@@ -1588,18 +1588,18 @@
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/lib.rs",
       "item_kind": "mod",
-      "line": 49,
+      "line": 51,
       "symbol": "vibe_check",
-      "end_line": 49,
+      "end_line": 51,
       "fingerprint": "tok1:9f178f8ce367f14475eab8bf03886e33bed28fc96737e9d33c27aae2d3bd1c8b"
     },
     {
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/lib.rs",
       "item_kind": "fn",
-      "line": 405,
+      "line": 407,
       "symbol": "vibe_check::check_project",
-      "end_line": 442,
+      "end_line": 444,
       "fingerprint": "tok1:960a450b6cb89ad0c8e2457c40c868e245fdb18f7befe0f36973b3633020ce89"
     },
     {
@@ -5341,18 +5341,18 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "mod",
-      "line": 45,
+      "line": 46,
       "symbol": "vibe_core::user_config",
-      "end_line": 45,
+      "end_line": 46,
       "fingerprint": "tok1:6e124561b3204d9a310f916e181d129be313c2ae025cceab7a70b8e1c3dc9e87"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "enum",
-      "line": 287,
+      "line": 288,
       "symbol": "vibe_core::user_config::UserConfigError",
-      "end_line": 335,
+      "end_line": 336,
       "fingerprint": "tok1:3ecee68e4bfeb05fca97ea9fcccead2f1855e4b227b06f68464c771e5ea792cb"
     },
     {
@@ -9355,9 +9355,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 398,
+      "line": 404,
       "symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "end_line": 452,
+      "end_line": 458,
       "fingerprint": "tok1:f15c8be8a14695e6ce594ebc56de4f0340888215ea2ef5d195fb1aaaa1dd7a8c"
     },
     {
@@ -10274,7 +10274,7 @@
     {
       "file": "crates/progress-core/src/parse/delimiters.rs",
       "from_symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "line": 102,
+      "line": 106,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#element",
       "verb": "implements"
@@ -10282,7 +10282,7 @@
     {
       "file": "crates/progress-core/src/parse/delimiters.rs",
       "from_symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "line": 103,
+      "line": 107,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#shorthand",
       "verb": "implements"
@@ -10298,7 +10298,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "line": 118,
+      "line": 134,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity",
       "verb": "implements"
@@ -10306,7 +10306,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 59,
+      "line": 66,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity",
       "verb": "implements"
@@ -10314,7 +10314,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 60,
+      "line": 67,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement",
       "verb": "implements"
@@ -10618,7 +10618,7 @@
     {
       "file": "crates/vibe-check/src/lib.rs",
       "from_symbol": "vibe_check",
-      "line": 49,
+      "line": 51,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#root",
       "verb": "implements"
@@ -10626,7 +10626,7 @@
     {
       "file": "crates/vibe-check/src/lib.rs",
       "from_symbol": "vibe_check::check_project",
-      "line": 425,
+      "line": 427,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter",
       "verb": "implements"
@@ -14073,7 +14073,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config",
-      "line": 45,
+      "line": 46,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff",
       "verb": "implements"
@@ -14081,7 +14081,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config::UserConfigError",
-      "line": 302,
+      "line": 303,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
@@ -17808,7 +17808,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "line": 409,
+      "line": 415,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant",
       "verb": "implements",
@@ -30654,6 +30654,267 @@
       "heading": "**This contract's lore and evidence, so a cold reader entering",
       "line": 580,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:39bd68873b2e3eae140bc6089f5f2d46da158eaa21a3ce94de429f92ea748b1a",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "PROP-045: XML spec sources and materialisation targets",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:1681c56e3b70ad37b6555f252505b7ffbf0487dc01ffa9d152f2dda141e44f18",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "1. Mandate",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#mandate"
+    },
+    {
+      "anchor": "MANDATE-VERBATIM",
+      "content_hash": "sha256:15f6cde23d06e88efcc13308259fa77c7de73ddefa90dd6c2e7b343a6755ca07",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "The owner's mandate, verbatim (2026-08-21): «XML как",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "FOUNDATION-ALREADY-RECORDED",
+      "content_hash": "sha256:06dc27fdb3a4b392f95aeab56dfe473ae08a7714448a50b3e5ed032070b4ead7",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "The direction was pre-recorded before the",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#FOUNDATION-ALREADY-RECORDED"
+    },
+    {
+      "anchor": "shape",
+      "content_hash": "sha256:4370ef30ffc04a2d9f95ea8910fd83f9e25f4902c86a5658fb24ff25b8568025",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "2. The shape — one pivot, two frontends, two backends",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape"
+    },
+    {
+      "anchor": "PIVOT-MODEL",
+      "content_hash": "sha256:8a00ca019fde2f86647e1e54277f4e1f9e3fd65f90192a996a87bc225d95fbfd",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Decision (ADR-part).** There is ONE internal document",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#PIVOT-MODEL"
+    },
+    {
+      "anchor": "XML-DIALECT-IS-THE-MD-SUBSET",
+      "content_hash": "sha256:9db018354288437a7f1b0c7659a1d1a16348f75e674b70b58c8d0b8ab983ea02",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Decision (ADR-part).** The XML dialect",
+      "line": 57,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"
+    },
+    {
+      "anchor": "DIALECT-SKETCH",
+      "content_hash": "sha256:ea520e3b0f1f6bacc1525158204c54b8a7f899c65e2042bb65805c3929353c51",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "The dialect, first cut (*построй и уточни: точные",
+      "line": 67,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DIALECT-SKETCH"
+    },
+    {
+      "anchor": "INLINE-STAYS-MARKDOWN",
+      "content_hash": "sha256:695f5b16941efd4b33752b506650c35abd70187dce98ff1793d2a8b3a23add46",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Decision (ADR-part).** Inline content —",
+      "line": 86,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MARKDOWN"
+    },
+    {
+      "anchor": "XML-PARSER-DEPENDENCY",
+      "content_hash": "sha256:9ab21e6dc2dd0d76121f6ed97090887d9f8d0b06073aeabb102dbf2550fd9fb4",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Decision (ADR-part): the XML machinery rides",
+      "line": 97,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-PARSER-DEPENDENCY"
+    },
+    {
+      "anchor": "XML-PARSER-DEPTH",
+      "content_hash": "sha256:8aaf5d451fcf94ea9499a5e362c24e51abd6613b400a2e2c434e18e6509f20c9",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**The heavyweight question, answered on the record",
+      "line": 110,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-PARSER-DEPTH"
+    },
+    {
+      "anchor": "materialisation",
+      "content_hash": "sha256:d03637810036fab39a5fd5adecac439ff8c9bdbb12ae0d8d265eec6fe5246134",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "3. The materialisation setting and the three targets",
+      "line": 132,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation"
+    },
+    {
+      "anchor": "SETTING",
+      "content_hash": "sha256:b6afd4bdd5c94cfc77d70ff3c8162d0f01a5b0052eea33dcbc4259f63113c6e7",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**The setting and its home (revised by the measure —",
+      "line": 134,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SETTING"
+    },
+    {
+      "anchor": "TARGET-MD",
+      "content_hash": "sha256:194e7060d60ab5f2a64e4d4577c151be4a638df8f12bc7d18fbfe660eb2a1d0c",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**`markdown` target:** XML sources emit as Markdown through",
+      "line": 148,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MD"
+    },
+    {
+      "anchor": "TARGET-XML",
+      "content_hash": "sha256:efd0f8fee1fd263aad5451a7f891aa21ab0b730fe80f28dd3a6b8f0a4a120fdb",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**`xml` target:** every source — including Markdown —",
+      "line": 155,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"
+    },
+    {
+      "anchor": "TARGET-MIXED",
+      "content_hash": "sha256:27617128a7d57b87c5a1cf1b5d06d53695bb717f1aa065e7de19f14bb7b36d74",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**`mixed` target:** copy-through; each file keeps its",
+      "line": 160,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MIXED"
+    },
+    {
+      "anchor": "HASH-LAW",
+      "content_hash": "sha256:cf8829177e5e173fa1a7eacf0ccf4ba283d7336c0ba58fff02fec59a2c4e1e2b",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**The hash law under transformation (ADR-part, upgraded by",
+      "line": 163,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW"
+    },
+    {
+      "anchor": "BOOT-LANE-SCOPE",
+      "content_hash": "sha256:ac840cf61b87c4007ea8318703eaecde7665aabdc8a0fbb5e8fcf55218a899f9",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Boot-lane law under the setting (revised by the",
+      "line": 183,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-LANE-SCOPE"
+    },
+    {
+      "anchor": "SCENARIO-ZERO",
+      "content_hash": "sha256:0bffc82cc7bca046d7ed9f772d54defd51e5e9ab3bb1b5fd81061b8daeca9fe5",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**The owner's named scenario — acceptance case №0",
+      "line": 198,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO"
+    },
+    {
+      "anchor": "loaders",
+      "content_hash": "sha256:88bea064a269f9d43999b40e021b2190f1ee81829e64103f9462c478208fceda",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "4. Loaders and scanners read all three",
+      "line": 211,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#loaders"
+    },
+    {
+      "anchor": "LOADER-LAW",
+      "content_hash": "sha256:09919a0c0be449c17275b01ac7f71e133c4a5b043809c9b08cfc4a497ea37059",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "Every consumer of spec sources — the progress scanner and",
+      "line": 213,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#LOADER-LAW"
+    },
+    {
+      "anchor": "ADDRESSING-UNCHANGED",
+      "content_hash": "sha256:131dc5cf84d2cce0166d5ae7044ee64ecb9d507f3cccf5218bf0558ea07c88fe",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "`spec://` addressing is format-blind: anchors",
+      "line": 223,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"
+    },
+    {
+      "anchor": "polygon",
+      "content_hash": "sha256:654f369c25382fffad25181226c5f94487d4dc323e569d90f21afef57d5a85fa",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "5. The redbook polygon — acceptance",
+      "line": 228,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon"
+    },
+    {
+      "anchor": "POLYGON",
+      "content_hash": "sha256:6f4dea83be63e3e97ad101c0e9aee74d2acff843db66dc018ed97b278a025f75",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "A dedicated test project imports `org.vibevm.world/redbook`",
+      "line": 230,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#POLYGON"
+    },
+    {
+      "anchor": "agent-routing",
+      "content_hash": "sha256:c5daaed941b5ff571e110895fb7cda1d380e3eb329438ab8928c590c7aae94d0",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "5a. The dynamic-router measurement — external agents",
+      "line": 242,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#agent-routing"
+    },
+    {
+      "anchor": "AGENT-ROUTER-MEASURE",
+      "content_hash": "sha256:86954ebb4649c7936fde09675c9ad50938516dadc72773bd23795c60d651f9b1",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**The hardest part, named by the owner",
+      "line": 244,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MEASURE"
+    },
+    {
+      "anchor": "AGENT-ROUTER-MODEL-TIERS",
+      "content_hash": "sha256:59c2d4633d715b602a789b1e4dcd49d43e8353bb20c24c5a83942aeb6b1ad290",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Model tiers are a measurement dimension —",
+      "line": 269,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MODEL-TIERS"
+    },
+    {
+      "anchor": "build-order",
+      "content_hash": "sha256:26e985f3da9e096c0ee81f72110cfe6776e008a67840b83171699936e46920f1",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "6. Build order",
+      "line": 287,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#build-order"
+    },
+    {
+      "anchor": "SLICES",
+      "content_hash": "sha256:5a72f2459cb6e648e8e0958be6302da0832db998a34730d9844d3c073ca1605a",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "S1 pivot + XML frontend/backend + golden round-trips over the",
+      "line": 289,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SLICES"
     },
     {
       "anchor": "genre-definition",
@@ -66432,7 +66693,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c479b98659f60bd8c230c50915d12f66492326ce25c582836a5bc6f24e993860",
+      "content_hash": "sha256:02604aa877a79a0163e187285e73b6e1ff7273940ce483095128987aef51930d",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "PROP-011: Incremental install — skip resolution when fresh, materialise only the diff",
@@ -67116,7 +67377,7 @@
     },
     {
       "anchor": "open",
-      "content_hash": "sha256:0962e9ca756b52323695f1787da477b9e72c502028ee7868038bb27dd50d7a52",
+      "content_hash": "sha256:84e484120b6763407864ea3f0b5f119ad82ac056f14b272ccbbb6efc3af781ac",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "5. Resolved questions",
@@ -67197,28 +67458,28 @@
     },
     {
       "anchor": "INTEGRITY-VALUES",
-      "content_hash": "sha256:f22e3186df4bc1a321243527d5beb68ac94c7126f292ea5e5d15753d4aba4763",
+      "content_hash": "sha256:2fd1c84f7ff958ff96b9f663f30b88375903a1edc403011f51ce8bc3e7f570d0",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
-      "heading": "Two values: `trust-presence` (the **default** — skip a slot already present for the resolved version) and `verify` (re-materialise every slot from source, so a hand-edited or corrupted one is silently overwritten). @status:impl/done",
+      "heading": "Two values: `trust-presence` (the **default** — skip a slot already present for the resolved version) and `verify` (a present slot is accepted only after its `content_hash` checks out against the resolution; a diverged slot is re-materialised with a warning naming the package and both hashes). @status:impl/done",
       "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-VALUES"
     },
     {
       "anchor": "INTEGRITY-VERIFY",
-      "content_hash": "sha256:8cf207027e4634d813bc95e8306e1e5de5d0fbddebf4086f2908cc017d09192e",
+      "content_hash": "sha256:b1456bc0d75a88a222d09302b0aa6c4eb3c72b257308a7d5378f868ad06d7715",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
-      "heading": "`verify` is the always-re-copy discipline for an operator who wants a per-install guarantee; `vibe reinstall --force` runs it implicitly. @status:impl/done",
+      "heading": "`verify` without a verifier at the seam — `vibe reinstall --force` and `vibe update`, whose whole point is the unconditional rewrite — remains the always-re-copy discipline; an `Unverifiable` slot (no recorded hash, or unreadable) falls back to the same. @status:impl/done",
       "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-VERIFY"
     },
     {
       "anchor": "INTEGRITY-SPOT-CHECK-DEFERRED",
-      "content_hash": "sha256:dd39fb64de0d16486ae5a4fa60db76ec0ae254db28781badf6efd51dbefc9d69",
+      "content_hash": "sha256:9e3f5b9305b5356e83a66976e02765bea352cf198161829b59c2deb4639014f2",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
-      "heading": "*Implementation note:* a cheaper `content_hash` spot-check — re-hash a present slot, skip only on a match — was considered for `verify` but deferred: `compute_content_hash` lives in `vibe-registry`, a crate `vibe-workspace` does not depend on, so the spot-check waits until that helper is lowered into a shared crate. @status:spec/done",
+      "heading": "*Implementation note, historical and closed:* the `content_hash` spot-check was deferred at v1 because `compute_content_hash` lived only in `vibe-registry`, which `vibe-workspace` does not depend on. **Built 2026-08-21-eve (the P011V landing, commit 75c2d538):** the dependency knot was cut by a seam, not a move — `vibe-workspace` exposes the `SlotVerifier` trait and `vibe-install` (which does depend on `vibe-registry`) supplies `RegistrySlotVerifier`, dispatching by the pin's own recipe label; the sentinel test proves a verified slot is not copied. This note stands as the record of why the seam exists. @status:impl/done",
       "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-SPOT-CHECK-DEFERRED"
     },
@@ -75007,7 +75268,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
-      "line": 409,
+      "line": 415,
       "message": "edge `vibe_workspace::boot_artifacts::write_boot_artifacts` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant` carries no kind/revision line yet"
     },
     {

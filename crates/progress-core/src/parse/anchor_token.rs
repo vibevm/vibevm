@@ -22,7 +22,7 @@ use super::facts::blockquote_prefix_len;
 /// A blockquote paragraph is a countable unit like any other, so its `>`
 /// prefix is consumed before the anchor is looked for — a quoted normative
 /// statement is addressable, and anchored-when-marked reaches it.
-pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, usize) {
+pub fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, usize) {
     match parse_anchor(text, s, e) {
         Some(a) => (Some(a.id.to_string()), a.content_start),
         None => (None, s),

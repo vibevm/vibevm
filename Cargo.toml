@@ -21,6 +21,7 @@ members = [
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
+    "crates/vibe-specdoc",
     "crates/vibe-test-support",
     "crates/vibe-trace",
     "crates/vibe-wire",
@@ -43,6 +44,7 @@ default-members = [
     "crates/vibe-check",
     "crates/vibe-publish",
     "crates/vibe-spec",
+    "crates/vibe-specdoc",
     "crates/vibe-test-support",
     "crates/vibe-trace",
     "crates/vibe-wire",
@@ -78,6 +80,8 @@ vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.0" }
 vibe-check = { path = "crates/vibe-check", version = "1.0.0" }
 vibe-publish = { path = "crates/vibe-publish", version = "1.0.0" }
 vibe-spec = { path = "crates/vibe-spec", version = "1.0.0" }
+# The PROP-045 pivot crate: document IR + MD/XML frontends and backends.
+vibe-specdoc = { path = "crates/vibe-specdoc", version = "1.0.0" }
 # Test-only: linking it isolates the test process's per-user settings home
 # before the first `#[test]` runs (DRIFT-020). Consume as a dev-dependency.
 vibe-test-support = { path = "crates/vibe-test-support", version = "1.0.0" }
@@ -111,6 +115,11 @@ rust-ai-native-specmap = { path = "packages/org.vibevm.ai-native/rust-ai-native-
 specmark = { package = "core-ai-native-specmark", path = "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates/vendor/core-ai-native-specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
+# The XML reader/writer of the PROP-045 spec-source dialect (vibe-specdoc).
+# MIT. One new dependency, decided on the record: PROP-045
+# ##XML-PARSER-DEPENDENCY (alternatives — roxmltree, xml-rs, hand-rolling —
+# weighed and rejected there).
+quick-xml = "0.41.0"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
