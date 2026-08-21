@@ -4,7 +4,7 @@
 //! [`EffectiveBoot`]; this module projects it into the files an AI agent
 //! reads at session start:
 //!
-//! - **`STATIC.md`** — the verbatim concatenation, in composed order, of
+//! - **`STATIC.md`** — the concatenation, in composed order, of
 //!   every `static`-linked contribution. Read first — the priority lane.
 //!   Generated only when the node has static contributions.
 //! - **`INDEX.md`** — a generated TOML manifest: a `schema` version, an
@@ -200,7 +200,11 @@ pub fn render_index(
 /// contributions, in composed order. Returns `None` when the node has no
 /// static contributions (no `STATIC.md` is generated then).
 ///
-/// A `simple` contribution is carried **verbatim** (PROP-035 §3); a `normal`
+/// A `simple` contribution is carried whole — no tree-shaking, no alias
+/// resolution (PROP-035 §3's sense of "verbatim"), though the emitted text
+/// is NOT byte-identical to the source: `#embed`s expand, anchors/links
+/// qualify, trailing whitespace trims, and the generated framing wraps it.
+/// A `normal`
 /// one is **compiled** to its `#use`/`#source`-resolved, tree-shaken closure
 /// (PROP-035 §8, [`compile_normal_entry`]) — so a `normal + static` edge bakes
 /// in only what the contract actually reaches, merged, in dependency order,
@@ -260,7 +264,9 @@ pub fn render_static(
         // contract — compiled (with `@!X` already rewritten to its full
         // address, §7.4) and qualified **per-node** (each node under its own
         // origin, B-006 rider) — not concatenated. A `simple` package is
-        // carried verbatim (its over-load the author's problem, PROP-035 §3).
+        // carried whole — inclusion-verbatim, not byte-verbatim (embeds
+        // expand, anchors qualify; over-load is the author's problem,
+        // PROP-035 §3).
         //
         // Both branches yield `(body, per-node renames)` — the normal branch's
         // renames already carry each node's own origin; the simple branch's are

@@ -6,8 +6,10 @@
 //! with severity ([`Severity`]), the originating check ([`CheckId`]),
 //! and (when applicable) the offending file path / line.
 //!
-//! v0 of `vibe check` (this commit) covers six of the ten checks
-//! listed in [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md):
+//! The cell roster has grown far past the v0 six — `run_all` is the
+//! authoritative inventory (13 cells today); the numbered list below
+//! is the founding six of [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md),
+//! kept as orientation, not as the census:
 //!
 //! 1. [`CheckId::ManifestValidity`] — `vibe.toml` parses and matches
 //!    schema; `vibe.lock` (if present) parses and matches schema.

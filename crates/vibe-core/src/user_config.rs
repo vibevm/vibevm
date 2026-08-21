@@ -34,10 +34,11 @@
 //! say so once ([`left_behind_notice`]), because a config that quietly
 //! stopped being read is the failure that rule exists to prevent.
 //!
-//! v0 deliberately scopes "what runtime consumers do with this layer"
-//! to ZERO — only `vibe show config` reads it today. Wiring user-
-//! config values into `default_cache_root` / `init_tracing` / future
-//! LLM-key paths is a follow-up slice (it requires a workspace-wide
+//! The zero-consumer v0 scoping is history: `vibe install` reads
+//! `install.slot_integrity` (the PROP-011 §5.2 strategy) and
+//! `net.offline` from this layer today, beside `vibe show config`'s
+//! display read. Wiring further values (`default_cache_root`,
+//! `init_tracing`, future LLM-key paths) remains follow-up work.
 //! decision on env-var promotion vs. dedicated config-getters).
 //! Until then this module is informational; the operator must
 //! `export VIBE_REGISTRY_CACHE=…` for the value to actually apply.

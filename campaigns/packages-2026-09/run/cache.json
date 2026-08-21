@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-21T18:26:46Z",
+  "updated_at": "2026-08-21T18:54:22Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "17d55e799e51fa56a8f44e416b43e5bec0a713ef10a24c3277ffb3ef6ccd6620",
+      "content_hash": "f643d400124e253525c76aa4a2752617116f2308a07ebed26d720658091fa743",
       "rollup": {
         "explicit": [
           "spec",
@@ -161152,12 +161152,12 @@
           "spec",
           "work"
         ],
-        "marker_count": 17,
-        "fact_count": 16,
+        "marker_count": 22,
+        "fact_count": 21,
         "unmarked_facts": 0
       },
-      "marker_count": 17,
-      "unit_count": 7,
+      "marker_count": 22,
+      "unit_count": 8,
       "issue_count": 0
     },
     "spec/design/README.md": {
@@ -185622,7 +185622,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
-      "content_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
+      "content_hash": "a58931b65bca54df216721ee35776fab65a79b87dd0396363dc961a4f33d5dcb",
       "rollup": {
         "explicit": [
           "impl",
@@ -185648,7 +185648,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 96,
         "marker_count": 97,
-        "processed_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
+        "processed_hash": "a58931b65bca54df216721ee35776fab65a79b87dd0396363dc961a4f33d5dcb",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -186091,19 +186091,19 @@
           "INTEGRITY-VALUES": {
             "v": "confirmed",
             "ev": [
-              "shipped and honestly marked: vibe-workspace/src/freshness.rs (satisfiability oracle), slot_integrity in vibe-core user_config (trust-presence default; SlotIntegrity threaded into apply.rs:43-53), pin-holding re-resolve, in-workspace file:// mutable discriminator (§2.6 — is_in_workspace_file_source), no new flags (update/reinstall --force are the bypasses; install --help shows none), walk-skip honestly deferred (pin_preferences still absent with its recorded deviates), boot regen whole-tree superseded later by PROP-038 §2.8 exactly as its trigger clause anticipated"
+              "verify now means the hash spot-check: materialise_resolution consults the SlotVerifier seam (install/model.rs), a matching slot lands in skipped without copying, a diverged one re-materialises with the warning naming package and both hashes (integrity_warnings; tests verify_accepts_a_hash_matching_slot_without_copying / verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes)"
             ]
           },
           "INTEGRITY-VERIFY": {
             "v": "confirmed",
             "ev": [
-              "shipped and honestly marked: vibe-workspace/src/freshness.rs (satisfiability oracle), slot_integrity in vibe-core user_config (trust-presence default; SlotIntegrity threaded into apply.rs:43-53), pin-holding re-resolve, in-workspace file:// mutable discriminator (§2.6 — is_in_workspace_file_source), no new flags (update/reinstall --force are the bypasses; install --help shows none), walk-skip honestly deferred (pin_preferences still absent with its recorded deviates), boot regen whole-tree superseded later by PROP-038 §2.8 exactly as its trigger clause anticipated"
+              "the no-verifier path (apply_resolution without a seam — reinstall --force and update) keeps unconditional re-copy, pinned by reinstall.rs's own comment and the trust_presence/unverifiable fallback tests"
             ]
           },
           "INTEGRITY-SPOT-CHECK-DEFERRED": {
             "v": "confirmed",
             "ev": [
-              "shipped and honestly marked: vibe-workspace/src/freshness.rs (satisfiability oracle), slot_integrity in vibe-core user_config (trust-presence default; SlotIntegrity threaded into apply.rs:43-53), pin-holding re-resolve, in-workspace file:// mutable discriminator (§2.6 — is_in_workspace_file_source), no new flags (update/reinstall --force are the bypasses; install --help shows none), walk-skip honestly deferred (pin_preferences still absent with its recorded deviates), boot regen whole-tree superseded later by PROP-038 §2.8 exactly as its trigger clause anticipated"
+              "rewritten as the historical record it now is: the knot was cut by the SlotVerifier seam (vibe-install supplies RegistrySlotVerifier, dispatching by the pin's recipe label) at commit 75c2d538 — the fact names the mechanism and why the seam, not a move, was the answer"
             ]
           },
           "INTEGRITY-LATER-EXTENSION": {
@@ -186233,8 +186233,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest"
+        "verified_at": "2026-08-21T18:54:22Z",
+        "verify_batch": "c4d2-workspace-rest + P011-VERIFY-FLIP"
       }
     },
     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md": {

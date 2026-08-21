@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-21T18:26:47Z",
+  "updated_at": "2026-08-21T18:54:17Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159579,9 +159579,9 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 17,
-      "units": 7,
-      "facts": 16,
+      "markers": 22,
+      "units": 8,
+      "facts": 21,
       "unmarked": 0,
       "issues": 0,
       "campaign": {}
