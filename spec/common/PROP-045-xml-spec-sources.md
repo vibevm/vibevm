@@ -100,6 +100,28 @@ escaping, is maintained and widely fuzzed, and its event model fits the
 pivot walk. The version is pinned at the S1 landing with the workspace's
 usual `workspace = true` discipline. @status:spec/work
 
+@fact:XML-PARSER-DEPTH **The heavyweight question, answered on the record
+(owner's challenge, 2026-08-21 — the Java instinct «сразу брать мощный
+навороченный парсер»).** The Java-world case for a Xerces-class engine is
+the SOAP-era grammar surface: DTD, XSD, XInclude, catalogs. This dialect
+OUTLAWS that surface by construction — a closed ~13-element vocabulary
+where a foreign construct is a loud error, no DTD, no external entities —
+so a heavyweight would buy capability this contract forbids, while its
+Rust incarnation (libxml2 FFI bindings) would pay a C build dependency
+and libxml2's CVE record inside a security-adjacent input path. Three
+recorded consequences: **(a)** the XXE attack class dies by construction
+(quick-xml does not process DTD — here a feature); **(b)** validation is
+OUR closed-vocabulary walk with contract-citing errors, not a schema
+engine's; **(c)** conformance is proven on OUR documents — the golden
+corpus and round-trip property tests over redbook — not assumed from the
+parser's reputation. **Escape hatch, explicit:** the frontend is one
+module behind the pivot seam; if the reader shows conformance holes, it
+swaps to `roxmltree` (the ecosystem's conformance-strongest read-only
+DOM) while the quick-xml Writer stays — a bounded change that alters no
+consumer. quick-xml itself is the ecosystem's de-facto standard (the
+most-used XML crate on crates.io by a wide margin; calamine, the RSS
+stack and docx readers ride it), not a first-hit pick. @status:spec/work
+
 ## 3. The materialisation setting and the three targets {#materialisation}
 
 @fact:SETTING **The user setting** (*построй: дом и имя по образцу
