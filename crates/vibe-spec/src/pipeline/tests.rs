@@ -571,3 +571,26 @@ fn a_normal_entry_compiles_the_same_closure_over_an_xml_dependency() {
     assert!(md_lane.contains("Entry prose."), "{md_lane}");
     assert!(!md_lane.contains("#use"), "{md_lane}");
 }
+
+/// The S4b leftover closes: a FACT-grain address into an XML dependency
+/// resolves — the projection writes the qualified `@fact:` spelling and the
+/// fact grammar now reads both spellings (PROP-043 §8).
+#[test]
+fn a_fact_grain_use_into_an_xml_dependency_resolves() {
+    const FACT_ENTRY: &str = "# Entry {#root}
+
+#use spec://org.vibevm.core/vibevm/common/DEP#FACT-ONE
+";
+    let ws = tempfile::TempDir::new().unwrap();
+    let boot = ws.path().join("spec/boot");
+    std::fs::create_dir_all(&boot).unwrap();
+    std::fs::create_dir_all(ws.path().join("spec/common")).unwrap();
+    std::fs::write(boot.join("00-entry.md"), FACT_ENTRY).unwrap();
+    std::fs::write(ws.path().join("spec/common/DEP.xml"), XML_DEP).unwrap();
+    let out = compile_entry(&ws);
+    assert!(
+        out.contains("the fact body"),
+        "the fact-grain closure over an xml dependency must carry the fact:
+{out}"
+    );
+}

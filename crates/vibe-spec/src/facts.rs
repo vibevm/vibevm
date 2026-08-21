@@ -44,17 +44,26 @@ fn list_item_content(line: &str) -> Option<usize> {
     None
 }
 
-/// A `##<ID>` fact anchor at `line[start..]` (leading whitespace skipped): `##`,
-/// then a valid fact id `[A-Za-z][A-Za-z0-9_-]*`, then whitespace or end of
-/// line. Returns the id.
+/// A fact anchor at `line[start..]` (leading whitespace skipped), in EITHER
+/// spelling the markup contract reads (PROP-043 §8 `##PARSE-FACT-ANCHORS`):
+/// the qualified `@fact:<ID>` or the legacy `##<ID>` — then a valid fact id
+/// `[A-Za-z][A-Za-z0-9_-]*`, then whitespace or end of line. Returns the id.
+/// The qualified form went unread here long after it became the canon —
+/// caught when vibe-specdoc's canonical projection (which writes `@fact:`)
+/// made every XML dependency's fact leaves invisible to `#embed` (the XML
+/// S4b report's first leftover).
 ///
-/// `##` followed by an invalid id — a non-letter head (`##9bad`), an id glued to
-/// a non-space glyph (`##bad!`), or a bare `##`/`###` — is ordinary prose:
-/// `None`, and (unlike a malformed heading anchor) no warning (PROP-035 §5).
+/// An opener followed by an invalid id — a non-letter head (`##9bad`), an id
+/// glued to a non-space glyph (`##bad!`), or a bare opener — is ordinary
+/// prose: `None`, and (unlike a malformed heading anchor) no warning
+/// (PROP-035 §5).
 fn fact_id_at(line: &str, start: usize) -> Option<String> {
     let seg = line.get(start..)?;
     let lead_ws = seg.len() - seg.trim_start().len();
-    let rest = seg[lead_ws..].strip_prefix("##")?;
+    let opened = &seg[lead_ws..];
+    let rest = opened
+        .strip_prefix("@fact:")
+        .or_else(|| opened.strip_prefix("##"))?;
     let id_len = rest
         .chars()
         .take_while(|&c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
@@ -130,6 +139,20 @@ pub(crate) fn segment_block(lines: &[String], start: usize, end: usize) -> Vec<F
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// PROP-043's qualified spelling is a fact anchor here too — the gap the
+    /// XML S4b polygon exposed (the canonical projection writes `@fact:`).
+    #[test]
+    fn the_qualified_spelling_is_a_fact_anchor() {
+        assert_eq!(
+            fact_id_at("@fact:GOOD-ID body", 0),
+            Some("GOOD-ID".to_string())
+        );
+        assert_eq!(fact_id_at("  @fact:x rest", 0), Some("x".to_string()));
+        assert_eq!(fact_id_at("@fact:9bad body", 0), None);
+        assert_eq!(fact_id_at("@fact: body", 0), None);
+        assert_eq!(fact_id_at("##legacy body", 0), Some("legacy".to_string()));
+    }
 
     fn block(src: &str) -> Vec<String> {
         src.lines().map(String::from).collect()
