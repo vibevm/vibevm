@@ -87,6 +87,19 @@ strings. Alternative weighed — a full inline element vocabulary
 (`<code>`, `<a>`, `<b>`) — rejected as cost without a consumer and a
 fresh drift surface between two inline grammars. @status:spec/work
 
+@fact:XML-PARSER-DEPENDENCY **Decision (ADR-part): the XML machinery rides
+`quick-xml`, one new workspace dependency, pinned.** Measured 2026-08-21:
+the tree carries NO xml crate anywhere (Cargo.lock grep across quick-xml /
+roxmltree / xml-rs / xmlparser — zero hits), so the frontend/backend need
+one. Alternatives weighed: `roxmltree` (a clean read-only DOM — but this
+PROP needs an EMITTER as much as a parser, and roxmltree has no writer),
+`xml-rs` (both directions but dated and slow), hand-rolling (a parser for
+a security-adjacent input format is exactly what one does not hand-roll).
+`quick-xml` carries both an event reader and a Writer with correct
+escaping, is maintained and widely fuzzed, and its event model fits the
+pivot walk. The version is pinned at the S1 landing with the workspace's
+usual `workspace = true` discipline. @status:spec/work
+
 ## 3. The materialisation setting and the three targets {#materialisation}
 
 @fact:SETTING **The user setting** (*построй: дом и имя по образцу
