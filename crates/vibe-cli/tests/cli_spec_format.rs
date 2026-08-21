@@ -48,7 +48,7 @@ struct SlotInspection {
 /// One test owns the registry so the real redbook closure is published only
 /// once. The four named CLI runs remain independent temp projects.
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#scenario-zero")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO")]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#polygon")]
 fn redbook_polygon_accepts_scenario_zero_and_all_mixed_targets() {
     assert!(
@@ -80,7 +80,7 @@ fn real_redbook_sources_obey_all_materialisation_targets() {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#boot-origin-literal-match")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH")]
 fn xml_derivative_matches_legacy_markdown_boot_origin() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

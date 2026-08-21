@@ -4633,7 +4633,7 @@
       "line": 48,
       "symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_accepts_scenario_zero_and_all_mixed_targets",
       "end_line": 66,
-      "fingerprint": "tok1:1adbc03d86298d364a2f798825da704aaf89e03ce4fed286e473aa5f873c6dec"
+      "fingerprint": "tok1:26b103da86f4787b39b3b2eec8f4ae50dc11ca7d44f30b695404f277faeae1b6"
     },
     {
       "crate_name": "vibe-cli",
@@ -4642,7 +4642,7 @@
       "line": 82,
       "symbol": "vibe_cli::tests::cli_spec_format::xml_derivative_matches_legacy_markdown_boot_origin",
       "end_line": 135,
-      "fingerprint": "tok1:8d3d30e1e6ce1181ec104692e011f108b6ab37ac04f3a651fda2e607812e4c7b"
+      "fingerprint": "tok1:cfa43b63184bef1ed1b223a1b1428ca7cce14c076ee180d0666f4fd73dc22524"
     },
     {
       "crate_name": "vibe-cli",
@@ -13521,6 +13521,14 @@
     {
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_accepts_scenario_zero_and_all_mixed_targets",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_spec_format.rs",
+      "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_accepts_scenario_zero_and_all_mixed_targets",
       "line": 52,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon",
@@ -13528,18 +13536,10 @@
     },
     {
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
-      "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_accepts_scenario_zero_and_all_mixed_targets",
-      "line": 51,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#scenario-zero",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "from_symbol": "vibe_cli::tests::cli_spec_format::xml_derivative_matches_legacy_markdown_boot_origin",
       "line": 83,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#boot-origin-literal-match",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH",
       "verb": "verifies"
     },
     {
@@ -74928,18 +74928,6 @@
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "line": 543,
       "message": "edge `vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-cli/tests/cli_spec_format.rs",
-      "line": 51,
-      "message": "edge `vibe_cli::tests::cli_spec_format::redbook_polygon_accepts_scenario_zero_and_all_mixed_targets` --verifies--> `spec://org.vibevm.core/vibevm/common/PROP-045#scenario-zero`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-cli/tests/cli_spec_format.rs",
-      "line": 83,
-      "message": "edge `vibe_cli::tests::cli_spec_format::xml_derivative_matches_legacy_markdown_boot_origin` --verifies--> `spec://org.vibevm.core/vibevm/common/PROP-045#boot-origin-literal-match`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
