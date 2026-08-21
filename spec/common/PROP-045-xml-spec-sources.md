@@ -213,6 +213,24 @@ recorded in the polygon's report and this section's facts flip to
 не должен подсказывать формат — пакет говорит «выполни бут по
 CLAUDE.md/INDEX», не «прочитай XML».* @status:spec/work
 
+@fact:AGENT-ROUTER-MODEL-TIERS **Model tiers are a measurement dimension —
+the simpler models go first (owner's advice, verbatim, 2026-08-21: «при
+измерении воркеров через Codex я бы советовал попользоваться не моделью
+gpt-5.6-sol, а в первую очередь более простыми моделями, чтобы проверить
+насколько они вообще справляются с новыми режимами»).** A strong model
+masks format friction; the weak model is the sensitive instrument. The
+Codex-lane probes therefore run the SIMPLER available tiers first
+(`CODEXRUNNER_MODEL`/`CODEXRUNNER_EFFORT` are the launcher's overrides;
+the measurement slice enumerates which tiers the installed codex
+actually serves and records the list), with the pinned strong tier
+(gpt-5.6-sol) run last as the ceiling reference — the per-tier score
+table, not one number, is the deliverable. The symmetric extension on
+the Claude-family lane (a small slot exists there too) is the builder's
+own addition, applied with the same first-simple ordering unless the
+owner says otherwise. The lane DEFAULT for work tasks is untouched: this
+tiering is the measurement protocol's, not the launcher's.
+@status:spec/work
+
 ## 6. Build order {#build-order}
 
 @fact:SLICES S1 pivot + XML frontend/backend + golden round-trips over the
