@@ -18,7 +18,7 @@
 //!
 //! [`facts::parse_anchor`]: crate::parse::anchor_token::parse_anchor
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use crate::doc::{BlockKind, Issue, IssueCode, ParsedDoc, Severity};
 use crate::parse::facts::{fact_anchor_is_qualified, take_fact_id};

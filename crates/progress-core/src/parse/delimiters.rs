@@ -8,7 +8,7 @@
 //! one cell now because they are one rule: **a delimiter is a run, and only
 //! a run of at least the same width closes it.**
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use specmark::spec;
 
@@ -103,8 +103,8 @@ fn backtick_runs(s: &str) -> Vec<(usize, usize)> {
 /// all. It only stops text *outside* every span from being mistaken for
 /// span content, which is what makes a trailing shorthand
 /// (`##SHORTHAND-STANDALONE`) visible on such a paragraph.
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#element")]
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#shorthand")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#element")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#shorthand")]
 pub(super) fn blank_inline_code(s: &str) -> String {
     let runs = backtick_runs(s);
     let mut blanked = vec![false; s.len()];

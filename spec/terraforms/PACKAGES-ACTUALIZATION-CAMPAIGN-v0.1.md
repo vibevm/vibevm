@@ -4,7 +4,7 @@
 
 **status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; executor = claudez workers per SUBAGENT-MODE.toml, boss = Fable; T/F/G still wait for their own word · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26) · AMENDED 2026-08-20: Phase T cancelled by owner ruling, Phase G split, campaign exit = RELEASE 1.0.0 per [TZ-RELEASE-1.0](../../campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md)**
 
-Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
+Contract for everything used here: [PROP-043](../modules/vibe-facts/PROP-043-facts-markup.md) (the markup grammar) and [PROP-047](../modules/vibe-progress/PROP-047-progress-campaigns.md) (the campaign toolchain; split from PROP-043 on 2026-08-22).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
 Task formats: [templates/](../modules/vibe-progress/templates/impl-task.md).
 The method, proven end to end on 58 files and 4 486 units:

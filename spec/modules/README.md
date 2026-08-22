@@ -149,7 +149,7 @@
     — addressable actions (`action://`), typed enablement, the keymap, i18n
     and the headless AIUI surface. **Status: IMPLEMENTED.** @status:doc/done
 - @fact:idx-progress [`vibe-progress/`](vibe-progress/) — inline progress markup and the `vibe progress` tool. @status:doc/done
-  - @fact:idx-prop-043 [PROP-043: Progress Control](vibe-progress/PROP-043-progress-markup.md)
+  - @fact:idx-prop-043 [PROP-043: The facts markup](vibe-facts/PROP-043-facts-markup.md) · [PROP-047: Progress campaigns](vibe-progress/PROP-047-progress-campaigns.md)
     — the `<status>` markup language, the campaign zone, the scan / check /
     report / mirror / weave / rescan / resume tool. **Status: RATIFIED and
     in execution — the spec-actualization campaign is its first consumer.** @status:doc/done

@@ -1,6 +1,6 @@
 //! The parsed-document model: blocks, units, markers, issues.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#placement");
 
 use crate::model::Marker;
 use serde::{Deserialize, Serialize};

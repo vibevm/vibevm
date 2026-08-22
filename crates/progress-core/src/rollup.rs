@@ -8,7 +8,7 @@
 //! unit markers carried. [`fold_check`] verifies exactly that — it never
 //! demands a fold, it only catches a fold that lies.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#rollup");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#rollup");
 
 use crate::doc::{ParsedDoc, Unit};
 use crate::model::{Audience, Granularity, Marker, Stage, State, rollup_key};
@@ -134,7 +134,7 @@ impl fmt::Display for FoldIssue {
 /// Silent by design: a section with no section-level marker, a section
 /// with no unit markers, and a section whose units **disagree** — a mixed
 /// section is not a fold at all and stays fact-marked (§3.9).
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool")]
 pub fn fold_check(doc: &ParsedDoc) -> Vec<FoldIssue> {
     let sections = section_markers(doc);
     let mut out = Vec::new();
@@ -163,7 +163,7 @@ pub fn fold_check(doc: &ParsedDoc) -> Vec<FoldIssue> {
         // from unanimous children is an error rather than information,
         // promote the adapter's fold class back to Error. -->
         //
-        // spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#rollup
+        // spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#rollup
         let pair = (first.stage, first.state);
         if folded.iter().any(|m| (m.stage, m.state) != pair) {
             continue;

@@ -3,7 +3,7 @@
 //! Every write in this crate goes through `write_atomic` (tmp + rename),
 //! so a killed process never leaves a torn JSON on disk.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#cache");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#cache");
 
 use crate::doc::ParsedDoc;
 use crate::rollup::DocRollup;
@@ -209,7 +209,7 @@ impl Cache {
     /// accelerator and it is not. A run whose sidecar is gone is a slow
     /// run, and nothing else about it differs.
     #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#cache"
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#cache"
     )]
     pub fn cached_doc<'p>(
         &self,

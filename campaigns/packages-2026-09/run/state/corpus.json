@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T13:59:45Z",
+  "updated_at": "2026-08-22T17:10:07Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159585,7 +159585,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
+        "processed_hash": "d5fdac219e90ae2d4f21be2606c63698b491478bc8e6494a5d1f53662b244154",
         "summary": {
           "confirmed": 31
         },
@@ -159777,7 +159777,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-22T09:39:19Z",
+        "verified_at": "2026-08-22T13:59:46Z",
         "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC + P045-STATIC-FORMAT"
       }
     },
@@ -168446,6 +168446,698 @@
       }
     },
     {
+      "path": "spec/modules/vibe-facts/PROP-043-facts-markup.md",
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 126,
+      "units": 17,
+      "facts": 125,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {
+        "processed_hash": "54729e9234c018696af408443afa54fec2a6884a7482b8e350ff4cd6ba3a42fe",
+        "summary": {
+          "confirmed": 111
+        },
+        "verdicts": {
+          "self-uri": {
+            "v": "confirmed",
+            "ev": [
+              "the document's own address fact — updated to the new canonical path modules/vibe-facts/PROP-043; verified against the file's location"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "rewritten at the split: keeps the RATIFIED history, points tool/data statuses at PROP-047; matches the actual split"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "companions list retargeted: evidence seam now cited as PROP-047 §4, PROP-047 added as the campaign companion; links verified"
+            ]
+          },
+          "memory-accumulated": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "status-lines-freeform": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "needs-lead": {
+            "v": "confirmed",
+            "ev": [
+              "lead edited to point the tool/campaign needs at PROP-047 §1 — matches where NEED-TOOL/NEED-CAMPAIGN-SUBSTRATE now live"
+            ]
+          },
+          "NEED-MARKUP": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "KNOWLEDGE-IN-SOURCES": {
+            "v": "confirmed",
+            "ev": [
+              "erasure-law reference retargeted to PROP-047 §5.5; claim itself unchanged and still true"
+            ]
+          },
+          "SEPARABILITY-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "reworded from 'Progress Control' to 'the facts machinery' — the layer the law actually governs after the split"
+            ]
+          },
+          "SEP-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "output clause retargeted from '§7 data contracts' to the parsed model + PROP-047 §5; matches progress-core's real surface"
+            ]
+          },
+          "SEP-NON-COLLISION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SEP-SELF-CONTAINED-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "reworded: templates and owner guide correctly attributed to the progress layer beside PROP-047"
+            ]
+          },
+          "SEP-NEVER": {
+            "v": "confirmed",
+            "ev": [
+              "owner-revised 2026-08-22: the no-split clause now binds per layer, with the revision and its cause recorded inline"
+            ]
+          },
+          "BOUNDARY-SPLIT": {
+            "v": "confirmed",
+            "ev": [
+              "new law: quotes the owner's ruling near-verbatim; the layer map matches the two documents as landed; dependency direction matches the crates"
+            ]
+          },
+          "BOUNDARY-CLI": {
+            "v": "confirmed",
+            "ev": [
+              "new plan fact (spec/work): facts check as the lint home, progress check alias, B-100 repair — the CLI wave in flight"
+            ]
+          },
+          "BOUNDARY-CRATES": {
+            "v": "confirmed",
+            "ev": [
+              "new decision: progress-core keeps its name until the progress maturation wave — matches the unrenamed crate"
+            ]
+          },
+          "STATUS-ELEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "POINT-SELF-CLOSING": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FRAGMENT-WRAPPER": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FENCE-AWARE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "DECISION-ELEMENT-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "element-name-why": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "element-name-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "element-name-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-STAGE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-ACTIONSTAGE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-AUDIENCE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-COMMENT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROW-ATTR-REF": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "VOCAB-CLOSED": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "VOCAB-AMENDMENT-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "MULTI-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-IDEA": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-DOC": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-FREEZE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-UNKNOWN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "DECISION-FREEZE-STAGE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "freeze-why": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "freeze-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "freeze-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STAGE-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ORDER-NOT-PROCESS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STATE-PLAN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STATE-WORK": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STATE-DONE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STATE-HOLD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "STATE-VOID": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ACTION-CONTINUE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ACTION-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ACTION-REWORK": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ACTION-REMOVE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ACTIONSTAGE-NARROWS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "AUDIENCE-VALUES": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "AUDIENCE-DOC-USE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-FORMS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-FULL": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-BARE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-NAMES-ITS-KEY": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-DISAMBIGUATION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SHORTHAND-STANDALONE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "placement-lead": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-DOCUMENT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-PARAGRAPH": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-LIST-ITEM": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FACT-ANCHOR-SYNTAX": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FACT-ANCHOR-NAMES-ITS-KEY": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FENCE-IS-AN-EXAMPLE-UNTIL-MARKED": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "WHY-A-FENCE-NEEDED-THIS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ONE-OBJECT-TYPE-IS-IMPLEMENTED": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "UNKNOWN-OBJECT-TYPE-IS-AN-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FACT-ID-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ANCHORED-WHEN-MARKED": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ANCHOR-MARKER-POSITIONS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "DECISION-TWO-REGISTERS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "registers-why": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "registers-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "registers-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "TABLE-ADDRESSING": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "table-positional-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "CELLS-ANCHOR-EXEMPT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-TABLE-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PLACE-FRAGMENT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "NO-ORPHAN-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "SECTION-SPAN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "MAINTENANCE-GRAIN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "CAMPAIGN-GRAIN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "COUNTABLE-UNITS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "DECONSTRUCTION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "INLINE-FRAGMENT": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FORM-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "POST-CAMPAIGN-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROLLUP-DOWNWARD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROLLUP-UPWARD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "ROLLUP-VOID-OUTSIDE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "EXPLICIT-BEATS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-MARKDOWN-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-COUNTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-FACT-ANCHORS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-TYPED-FACT-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-XML-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "PARSE-FOREIGN-OPAQUE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "EVERY-GENRE-IN-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "GENRE-TERMINALS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FUT-XML-STORAGE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          },
+          "FUT-EXTRACTION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
+            ]
+          }
+        },
+        "verified_at": "2026-08-22T17:09:41Z",
+        "verify_batch": "P043-SPLIT"
+      }
+    },
+    {
       "path": "spec/modules/vibe-index/PROP-005-package-index.md",
       "effective": {
         "stage": "impl",
@@ -172913,16 +173605,16 @@
     {
       "path": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "effective": {
-        "stage": "impl",
+        "stage": "spec",
         "state": "done"
       },
       "explicit": {
-        "stage": "impl",
+        "stage": "spec",
         "state": "done"
       },
-      "markers": 192,
-      "units": 29,
-      "facts": 191,
+      "markers": 2,
+      "units": 1,
+      "facts": 1,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -172930,1136 +173622,472 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "23abfbc62042b5ecaf3493208eef2f836f2a407c3faf2362524194cdc2a6d951",
+        "processed_hash": "6e958f24bf3cba05fa33feca6f1c4a76f192f614d0dd7baed05770cf6c635eef",
         "summary": {
-          "confirmed": 178
+          "confirmed": 1
         },
         "verdicts": {
-          "self-uri": {
+          "TOMBSTONE-PROP-043": {
             "v": "confirmed",
             "ev": [
-              "verified against progress-core sources + live CLI this session"
+              "tombstone pointer: names both new homes with exact paths; kept so pre-split citations resolve; verified both target files exist"
+            ]
+          }
+        },
+        "verified_at": "2026-08-22T17:09:41Z",
+        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43 + P2-B068 + P043-SPLIT"
+      }
+    },
+    {
+      "path": "spec/modules/vibe-progress/PROP-047-progress-campaigns.md",
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 72,
+      "units": 15,
+      "facts": 71,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {
+        "processed_hash": "112a3357bdc7b723a7ac12fa25dbbb2d9f07ee700ad97c810073ff52ab275c09",
+        "summary": {
+          "confirmed": 71
+        },
+        "verdicts": {
+          "CAMPAIGN-LAYER-MANDATE": {
+            "v": "confirmed",
+            "ev": [
+              "new mandate fact quoting the owner's 2026-08-22 boundary ruling near-verbatim; the described layer split matches both documents"
             ]
           },
-          "status-line": {
+          "needs-intake": {
             "v": "confirmed",
             "ev": [
-              "F-045: 'implementation is underway (campaign Phase A)' vs live campaign.json phase=C; grep '(provisional)' = 1 hit (only this sentence - zero provisional sections remain); the §5 tool is fully shipped (19 specmap implements edges, all 7 subcommands live)",
-              "D d2f 2026-07-25 (F-045 closed): PROP-043's own status caught up with the campaign it governs - RATIFIED and IMPLEMENTED, the phase lane named as D, zero (provisional) sections left, and the two real gaps named as parity items rather than as unfinished specification"
-            ]
-          },
-          "related": {
-            "v": "confirmed",
-            "ev": [
-              "Dead pointer repaired to the installed slot (org.vibevm.ai-native.core-ai-native/0.8.0); target verified present. File deliberately left UNSEALED: its 30 standing-stale facts belong to the owner-ordered proof-bar re-judgement campaign and this session did not verify them"
-            ]
-          },
-          "memory-accumulated": {
-            "v": "confirmed",
-            "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
-            ]
-          },
-          "status-lines-freeform": {
-            "v": "confirmed",
-            "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
-            ]
-          },
-          "needs-lead": {
-            "v": "confirmed",
-            "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
-            ]
-          },
-          "NEED-MARKUP": {
-            "v": "confirmed",
-            "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+              "new service lead for the moved needs list"
             ]
           },
           "NEED-TOOL": {
             "v": "confirmed",
             "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "NEED-CAMPAIGN-SUBSTRATE": {
             "v": "confirmed",
             "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
-            ]
-          },
-          "KNOWLEDGE-IN-SOURCES": {
-            "v": "confirmed",
-            "ev": [
-              "live corpus meets the need: scan = 58 files/4944 markers/4880 facts/0 unmarked; 7 subcommands live; campaign C in flight (NEED-CAMPAIGN-SUBSTRATE honestly impl/work); erasure exercised - B1f cache rebuild lost zero facts"
-            ]
-          },
-          "SEPARABILITY-LAW": {
-            "v": "confirmed",
-            "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
-            ]
-          },
-          "SEP-CORE": {
-            "v": "confirmed",
-            "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "SEP-ADAPTER": {
             "v": "confirmed",
             "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
-            ]
-          },
-          "SEP-NON-COLLISION": {
-            "v": "confirmed",
-            "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
-            ]
-          },
-          "SEP-SELF-CONTAINED-SPECS": {
-            "v": "confirmed",
-            "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
-            ]
-          },
-          "SEP-NEVER": {
-            "v": "confirmed",
-            "ev": [
-              "progress-core Cargo.toml deps = specmark+serde family only, NO vibe-* (comment cites the §2 law); adapter = vibe-cli cli/progress.rs + commands/progress.rs (2 implements edges into #tool); non-collision held by tests/fixtures/foreign-grammars.md + parser_law.rs"
-            ]
-          },
-          "STATUS-ELEMENT": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "POINT-SELF-CLOSING": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "FRAGMENT-WRAPPER": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "FENCE-AWARE": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "DECISION-ELEMENT-NAME": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "element-name-why": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "element-name-rejected": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "element-name-revisit": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_element: point must self-close (IssueCode::Malformed 'must be self-closing'), wrapper pair (WrapperMismatch when unclosed); blocks.rs fence state machine + blank_inline_code = fence-aware; decision record complete (name/why/rejected/revisit)"
-            ]
-          },
-          "ROW-ATTR-STAGE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "ROW-ATTR-STATE": {
-            "v": "confirmed",
-            "ev": [
-              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions. The §3.2 table is the normative closed list (##VOCAB-CLOSED: 'any value outside the tables is a check error'), so `void` had to land there and not only in §3.4."
-            ]
-          },
-          "ROW-ATTR-ACTION": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "ROW-ATTR-ACTIONSTAGE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "ROW-ATTR-AUDIENCE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "ROW-ATTR-COMMENT": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "ROW-ATTR-REF": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "VOCAB-CLOSED": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "VOCAB-AMENDMENT-ONLY": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "MULTI-MARKERS": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs enums match the table verbatim (7 stages, 4 states, 4 actions, 3 audiences); decode_attrs: audience CSV split (element.rs:186), ref/comment free-form; closed vocab enforced with nearest-value hint ('did you mean', markers.rs push_attr_issues); DuplicateStatus guards the document slot"
-            ]
-          },
-          "STAGE-IDEA": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-SPEC": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-IMPL": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-TEST": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-DOC": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-FREEZE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-UNKNOWN": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "DECISION-FREEZE-STAGE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "freeze-why": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "freeze-rejected": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "freeze-revisit": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STAGE-ORDER": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "ORDER-NOT-PROCESS": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Stage: Unknown declared first = sorts below all, then Idea<Spec<Impl<Test<Doc<Freeze (rollup_key min-by); freeze is a stage with plan/work/done; decision record complete"
-            ]
-          },
-          "STATE-PLAN": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs State{Plan,Work,Done,Hold} exact"
-            ]
-          },
-          "STATE-WORK": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs State{Plan,Work,Done,Hold} exact"
-            ]
-          },
-          "STATE-DONE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs State{Plan,Work,Done,Hold} exact"
-            ]
-          },
-          "STATE-HOLD": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs State{Plan,Work,Done,Hold} exact"
-            ]
-          },
-          "ACTION-CONTINUE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
-            ]
-          },
-          "ACTION-DRIFT": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
-            ]
-          },
-          "ACTION-REWORK": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
-            ]
-          },
-          "ACTION-REMOVE": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
-            ]
-          },
-          "ACTIONSTAGE-NARROWS": {
-            "v": "confirmed",
-            "ev": [
-              "model.rs Action{Continue,Drift,Rework,Remove} exact; actionstage decodes any stage value, absent => targets stage"
-            ]
-          },
-          "AUDIENCE-VALUES": {
-            "v": "confirmed",
-            "ev": [
-              "Audience{User,Author,Dev} + CSV (element.rs:186); dev default; --view doc + --audience live in report CLI (doc-TOC use itself honestly spec/done)"
-            ]
-          },
-          "AUDIENCE-DOC-USE": {
-            "v": "confirmed",
-            "ev": [
-              "Audience{User,Author,Dev} + CSV (element.rs:186); dev default; --view doc + --audience live in report CLI (doc-TOC use itself honestly spec/done)"
-            ]
-          },
-          "SHORTHAND-FORMS": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
-            ]
-          },
-          "SHORTHAND-FULL": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
-            ]
-          },
-          "SHORTHAND-BARE": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
-            ]
-          },
-          "SHORTHAND-DISAMBIGUATION": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
-            ]
-          },
-          "SHORTHAND-STANDALONE": {
-            "v": "confirmed",
-            "ev": [
-              "element.rs lex_shorthand: '://' lookahead refuses @spec:// (lines 226-227); bare => work, @unknown => hold (245-249), unit tests 269-286; markers.rs enforces standalone start(post-anchor)/end position"
-            ]
-          },
-          "placement-lead": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-DOCUMENT": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-SECTION": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-PARAGRAPH": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-LIST-ITEM": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "FACT-ANCHOR-SYNTAX": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "FACT-ID-GRAMMAR": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "ANCHORED-WHEN-MARKED": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "ANCHOR-MARKER-POSITIONS": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "DECISION-TWO-REGISTERS": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "registers-why": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "registers-rejected": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "registers-revisit": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "TABLE-ADDRESSING": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "table-positional-rejected": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "CELLS-ANCHOR-EXEMPT": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-TABLE-CELL": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "PLACE-FRAGMENT": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "NO-ORPHAN-MARKER": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "SECTION-SPAN": {
-            "v": "confirmed",
-            "ev": [
-              "markers.rs placement law: preamble or after-first-H1 => Document ('§3.8 items 1-2 combined' comment), after-heading => Section, else IssueCode::Stranded; facts.rs take_fact_id grammar [A-Za-z][A-Za-z0-9_-]* + boundary; anchors.rs DuplicateId across both id spaces + anchored-when-marked with FactKind::Cell exempt; row_cells + per-cell facts; decision records complete"
-            ]
-          },
-          "MAINTENANCE-GRAIN": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "CAMPAIGN-GRAIN": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "COUNTABLE-UNITS": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "DECONSTRUCTION-LAW": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "INLINE-FRAGMENT": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "FORM-ONLY": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "POST-CAMPAIGN-FOLD": {
-            "v": "confirmed",
-            "ev": [
-              "facts.rs countable kinds Para/Lead/Item/Cell at every nesting level; live: Phase B deconstruction took 3684 paragraphs -> 4880 facts; check --exhaustive is the live campaign gate (reads 0); fold honestly unimplemented (spec/done)"
-            ]
-          },
-          "ROLLUP-DOWNWARD": {
-            "v": "confirmed",
-            "ev": [
-              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
-            ]
-          },
-          "ROLLUP-UPWARD": {
-            "v": "confirmed",
-            "ev": [
-              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
-            ]
-          },
-          "EXPLICIT-BEATS": {
-            "v": "confirmed",
-            "ev": [
-              "rollup.rs: explicit and computed side by side, computed = worst-of via rollup_key min, explicit wins (test explicit_beats_computed_and_worst_of_wins); doc-grain rollup + rollup_project"
+              "moved with (§5)/(§6)→(§3)/(§4)"
             ]
           },
           "CONFIG-FILE": {
             "v": "confirmed",
             "ev": [
-              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "INCLUDE-STYLE": {
             "v": "confirmed",
             "ev": [
-              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEFAULT-EXCLUDES": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-024 sync-from-code 2026-07-26, verified against the shipped code and a live run. DEFAULT_EXCLUDE_FILES = [\"LICENSE.md\"] plus is_excluded_file give the always-on rule its file-name kind; ScopeConfig.exclude + apply_config_excludes give the project-side globs, applied after the includes and after both default kinds. Guard rails exercised: a stale pattern is named on every subcommand, an invalid glob errors with exit 1 and no panic, scan prints the drop count. Effect: corpus 344 -> 308, unmarked 8 992 -> 8 463; authored cards survived (spec/cards/ 10 -> 9, only INDEX.md left), narrowness unit-tested."
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "excludes-rationale": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-024 sync-from-code 2026-07-26, verified against the shipped code and a live run. DEFAULT_EXCLUDE_FILES = [\"LICENSE.md\"] plus is_excluded_file give the always-on rule its file-name kind; ScopeConfig.exclude + apply_config_excludes give the project-side globs, applied after the includes and after both default kinds. Guard rails exercised: a stale pattern is named on every subcommand, an invalid glob errors with exit 1 and no panic, scan prints the drop count. Effect: corpus 344 -> 308, unmarked 8 992 -> 8 463; authored cards survived (spec/cards/ 10 -> 9, only INDEX.md left), narrowness unit-tested."
-            ]
-          },
-          "NESTED-OWNS-SUBTREE": {
-            "v": "confirmed",
-            "ev": [
-              "root progress.toml live (schema=1, include-only enumeration); scope.rs DEFAULT_INCLUDES = ['spec/**/*.md','packages/**/*.md'] (the when-absent default), DEFAULT_EXCLUDES 8 values byte-exact incl '.vibe'; nested-toml ownership honestly spec/done (no nested handling in scope.rs)"
-            ]
-          },
-          "TOOL-ADAPTER": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "TOOL-OUTPUT-FORMS": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "TOOL-INCREMENTAL": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(g): adapter ground() re-parses every observed file per run ('Parse without touching any cache', commands/progress.rs:48); Cache::is_current exists but is called only by its own unit test and doctest - no subcommand takes the incremental path",
-              "E DRIFT-010 2026-07-25: ground() takes the incremental path - FileRecord.parsed carries the ParsedDoc, additive in both directions so CACHE_SCHEMA stays 2 and the live verdict maps needed no migration; --no-cache forces the full parse; warm output byte-identical to cold"
-            ]
-          },
-          "CMD-SCAN": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "CMD-CHECK": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(c): 'lossless folds' check absent - grep fold|lossless over progress-core+adapter = 0 (POST-CAMPAIGN-FOLD itself honestly spec/done); the other listed checks + --exhaustive verified live this session (vocab hints, well-formedness, placement, shorthand, foreign-grammar, exit codes)",
-              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
-            ]
-          },
-          "CMD-REPORT": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(e): evidence column absent - grep evidence in report.rs = 0; the rest verified live: --view done|todo|qa|remove|doc, --audience, per-file+project rollups, explicit-vs-computed, xml/md/json forms",
-              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
-            ]
-          },
-          "CMD-MIRROR": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "CMD-WEAVE": {
-            "v": "confirmed",
-            "ev": [
-              "Measured by the reviewer 2026-07-26, not estimated: `vibe progress weave --max-tokens 1000000 --out <dir>` over the 58-file wave-1 corpus emits exactly 1 shard of 1 138 441 bytes; `weave --digest` is 200 454 bytes. Replaces the prior 'is expected to fit' wording, which had never been exercised - no LOG entry records a weave run anywhere in wave 1 (REPORT prediction 1)."
-            ]
-          },
-          "CMD-RESCAN": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "CMD-RESUME": {
-            "v": "confirmed",
-            "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
-            ]
-          },
-          "EVIDENCE-SEAM": {
-            "v": "confirmed",
-            "ev": [
-              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
-            ]
-          },
-          "EVIDENCE-SPECMAP": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(a): EvidenceProvider referenced nowhere outside progress-core (adapter imports baseline,cache,journal,report,rollup,scope,state,weave - not evidence); no specmap join anywhere in the report path",
-              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
-            ]
-          },
-          "EVIDENCE-MISMATCH-FLAGS": {
-            "v": "confirmed",
-            "ev": [
-              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
-            ]
-          },
-          "EVIDENCE-OPTIONAL": {
-            "v": "confirmed",
-            "ev": [
-              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
-            ]
-          },
-          "VERDICTS-NOT-IN-MARKUP": {
-            "v": "confirmed",
-            "ev": [
-              "evidence.rs: EvidenceProvider seam + NoEvidence null provider + mismatch() helper with unit tests (test/done+0 verifies flagged, freeze/done orphan flagged, impl/work quiet); verdicts live in cache campaign maps only - this very session writes them there, corpus untouched"
-            ]
-          },
-          "FACT-GRAIN-EVIDENCE": {
-            "v": "confirmed",
-            "ev": [
-              "CLOSED 2026-07-26 by moving the family to core-ai-native 0.8.0 (the caret fix, not a re-mint). Measured before/after on the host's own specmap.json, edge targets classified BY THE SOURCE BYTES (##<ID> inline vs {#slug} on a heading). BEFORE (0.7.0 engine): 1041 spec units, 901 edges = 824 heading / 0 fact / 77 unresolved. AFTER (0.8.0): 5267 spec units, 908 edges = 831 heading / 65 FACT / 12 unresolved. Both halves of the claim hold: fact anchors are addressable units, and implements/verifies edges land per fact. Unresolved fell 77 -> 12 because 65 of those 'dangling' edges were correct code tags the unit-grain engine could not see."
-            ]
-          },
-          "DATA-DISCIPLINE": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "CACHE-RECORD": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "STATE-FILES": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(d): live campaign.json fields = schema/updated_at/campaign_id/phase/wave/counters - no 'gates' field (grep gates in state.rs = 0); the five files themselves exist and feed the dashboard",
-              "E DRIFT-008 2026-07-25: the gate panel ships - CampaignState.gates + GateRecord/GateStatus in progress-core, record_gate (replace-by-name, atomic, no process spawn), write_state carries the panel across a scan, and the vibe progress gate subcommand is the automation seam. Byte-identical pre-panel shape until a gate is recorded"
-            ]
-          },
-          "DASHBOARD-READS-ONLY": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "BASELINE-RECORD": {
-            "v": "confirmed",
-            "ev": [
-              "F-065 closed 2026-07-26 by DRIFT-023. `Baseline::store` now exists (crates/progress-core/src/baseline/project.rs, mirroring Cache::store incl. the DRIFT-017 no-op-write skip) and `vibe progress baseline` writes the artefact. PINNED BY ROUND TRIP, not by reading: `progress baseline` then `progress rescan --baseline campaigns/progress-2026-08/baseline.json --control-rate 0` on an unchanged tree = 0 new, 919 carried-forward, 1 changed, and the 1 is invalidation rule 2 firing correctly (crate vibe-cli moved after the verdict), not a writer/reader disagreement; marker_diverged false on all 920 rows. Re-verified independently by the reviewer. PRIOR VERDICT WAS WRONG: this row was flipped drift->confirmed by 0064fd4a on a `Shipped:` line claiming a `store` that had never been written - the `store` in view was Cache::store, a different type in the same crate."
-            ]
-          },
-          "BASELINE-INVALIDATION": {
-            "v": "confirmed",
-            "ev": [
-              "F-046(f): partially shipped while spec/done - hash-changed=>suspect and marker-diverged-outside-campaign flag implemented (baseline.rs rescan, RescanClass New/Changed/CarriedForward); named-crates-commits invalidation and the random control sample NOT implemented (crates: vec![] constant)",
-              "E DRIFT-006/007/009 2026-07-25: the evidence provider reaches the report (specmap-backed SpecmapEvidence + evidence column in all three render forms), check verifies lossless folds (warning severity per the reviewer's EXPLICIT-BEATS ruling), and baseline invalidation gained the named-crate rule plus a deterministic control sample. Floor green exit 0 isolated; specmap regenerated"
-            ]
-          },
-          "ZONE-LAYOUT": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "ZONE-EXCLUDED": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "ZONE-LIFETIMES": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "PROCESS-LAW-ELSEWHERE": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "ERASURE-LAW": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "BASELINE-ACCELERATION": {
-            "v": "confirmed",
-            "ev": [
-              "live campaign artifacts: cache.json per-file records carry hash/markers+positions/counts/rollup + campaign{verify_batch,processed_hash,verdicts,summary}; write_atomic tmp+fsync+rename (the Phase A power-cut lesson); journal.jsonl append-only with torn-tail law (journal.rs:53-74); zone = deferrals.md+harvest/+tasks/+run/ live at campaigns/progress-2026-08/ ('campaigns' in DEFAULT_EXCLUDES); run/ regenerable (mirror rebuilt this session); baseline.json = close-out artifact per §7.3"
-            ]
-          },
-          "PARSE-MARKDOWN-FIRST": {
-            "v": "confirmed",
-            "ev": [
-              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
-            ]
-          },
-          "PARSE-COUNTABLE": {
-            "v": "confirmed",
-            "ev": [
-              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
-            ]
-          },
-          "PARSE-FACT-ANCHORS": {
-            "v": "confirmed",
-            "ev": [
-              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
-            ]
-          },
-          "PARSE-XML-GRAMMAR": {
-            "v": "confirmed",
-            "ev": [
-              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
-            ]
-          },
-          "PARSE-FOREIGN-OPAQUE": {
-            "v": "confirmed",
-            "ev": [
-              "parse/ = 6 modules (DRIFT-002 split; 6 implements edges into #parsing); facts.rs list prefixes '- ',' * ',' + ','N. ','N) ' + is_delimiter_row/header structural; take_fact_id first-token law; foreign grammars opaque (fixtures assert zero false matches); F-015 blockquote-anchor gap already ledgered in B - code matches the written rule"
-            ]
-          },
-          "EVERY-GENRE-IN-SCOPE": {
-            "v": "confirmed",
-            "ev": [
-              "progress.toml scope spans contracts+design+manual-tests+boot (58 files, every genre); B0 converted 73 legacy status lines mechanically to document markers"
-            ]
-          },
-          "GENRE-TERMINALS": {
-            "v": "confirmed",
-            "ev": [
-              "progress.toml scope spans contracts+design+manual-tests+boot (58 files, every genre); B0 converted 73 legacy status lines mechanically to document markers"
-            ]
-          },
-          "maintenance-lead": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "EDIT-UPDATES-MARKER": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "TASK-LOOP": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "FREEZE-NEEDS-EVIDENCE": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "DOC-COVERAGE-RATCHET": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "PERIODIC-REVERIFICATION": {
-            "v": "confirmed",
-            "ev": [
-              "post-campaign rules honestly spec/done: progress check NOT in self-check.sh yet (grep = 0), docdebt.json exists but no ratchet wiring, freeze-evidence gate absent, task-loop practiced inside the campaign but the standing regime awaits close-out; rescan+baseline machinery ready for §7.3 recurrence"
-            ]
-          },
-          "FUT-XML-STORAGE": {
-            "v": "confirmed",
-            "ev": [
-              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
-            ]
-          },
-          "FUT-SECOND-WAVE": {
-            "v": "confirmed",
-            "ev": [
-              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
-            ]
-          },
-          "FUT-EXTRACTION": {
-            "v": "confirmed",
-            "ev": [
-              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
-            ]
-          },
-          "FUT-DASHBOARD": {
-            "v": "confirmed",
-            "ev": [
-              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
-            ]
-          },
-          "DASHBOARD-TERM": {
-            "v": "confirmed",
-            "ev": [
-              "absences verified: no XML storage frontend, scope carries no packages/** wave-2 globs, core not extracted to a standalone distribution, dashboard = 2 minimal files; 'storefront/витрина' 0 hits in the module (terminology held)"
-            ]
-          },
-          "_elements": {
-            "v": "confirmed",
-            "ev": [
-              "F-045: document marker comment 'implementation underway (campaign Phase A)' aged - the journal-derived phase lane reads C and the §5 tool is shipped; the marker value spec/done+continue/impl itself is defensible",
-              "D d2f 2026-07-25 (F-045 closed): PROP-043's own status caught up with the campaign it governs - RATIFIED and IMPLEMENTED, the phase lane named as D, zero (provisional) sections left, and the two real gaps named as parity items rather than as unfinished specification"
-            ]
-          },
-          "CMD-BASELINE": {
-            "v": "confirmed",
-            "ev": [
-              "DRIFT-023 sync-from-code 2026-07-26. Verified against the shipped CLI: ProgressSubcommand (crates/vibe-cli/src/cli/progress.rs) carries Scan/Check/Report/Mirror/Weave/Rescan/Resume/Gate/Baseline. `baseline` implemented in crates/vibe-cli/src/commands/progress/baseline.rs, `gate` in progress-core state.rs record_gate. Both verbs were shipped and undocumented - `gate` since DRIFT-008, `baseline` as of today - so this list was two commands short of the tool."
-            ]
-          },
-          "CMD-GATE": {
-            "v": "confirmed",
-            "ev": [
-              "DRIFT-023 sync-from-code 2026-07-26. Verified against the shipped CLI: ProgressSubcommand (crates/vibe-cli/src/cli/progress.rs) carries Scan/Check/Report/Mirror/Weave/Rescan/Resume/Gate/Baseline. `baseline` implemented in crates/vibe-cli/src/commands/progress/baseline.rs, `gate` in progress-core state.rs record_gate. Both verbs were shipped and undocumented - `gate` since DRIFT-008, `baseline` as of today - so this list was two commands short of the tool."
+              "moved with the internal campaign-zone reference renumbered §7.4→§5.4"
             ]
           },
           "CONFIG-EXCLUDE": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-024 sync-from-code 2026-07-26, verified against the shipped code and a live run. DEFAULT_EXCLUDE_FILES = [\"LICENSE.md\"] plus is_excluded_file give the always-on rule its file-name kind; ScopeConfig.exclude + apply_config_excludes give the project-side globs, applied after the includes and after both default kinds. Guard rails exercised: a stale pattern is named on every subcommand, an invalid glob errors with exit 1 and no panic, scan prints the drop count. Effect: corpus 344 -> 308, unmarked 8 992 -> 8 463; authored cards survived (spec/cards/ 10 -> 9, only INDEX.md left), narrowness unit-tested."
+              "moved with the include-style reference renumbered §4→§2"
+            ]
+          },
+          "NESTED-OWNS-SUBTREE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "TOOL-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "TOOL-OUTPUT-FORMS": {
+            "v": "confirmed",
+            "ev": [
+              "moved with §7.2→§5.2"
+            ]
+          },
+          "TOOL-INCREMENTAL": {
+            "v": "confirmed",
+            "ev": [
+              "moved with §7.1→§5.1"
+            ]
+          },
+          "CMD-SCAN": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "CMD-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "CMD-REPORT": {
+            "v": "confirmed",
+            "ev": [
+              "moved with (§6)→(§4)"
+            ]
+          },
+          "CMD-MIRROR": {
+            "v": "confirmed",
+            "ev": [
+              "moved with §7.1→§5.1"
+            ]
+          },
+          "CMD-WEAVE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "CMD-RESCAN": {
+            "v": "confirmed",
+            "ev": [
+              "moved with §7.3→§5.3"
+            ]
+          },
+          "CMD-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "moved with (§7.3)→(§5.3)"
             ]
           },
           "CMD-SEAL": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-026 sync-from-code 2026-07-26, verified against the shipped verb and live runs. progress-core/src/seal.rs carries the decision (Seal::{Recorded,Current,Unjudged,Unobserved}); commands/progress/seal.rs the verb. Proven by running it: baseline named 5 stale files before and 3 after sealing the two boot files, with MT-02, PROP-026 and PROP-043 still named. THE DISK TEST is the load-bearing one - a sealed file edited with no rescan showed cache content_hash == processed_hash == da61458f26f5 while disk read 73bb2096b927, and seal took the disk value; a content_hash-trusting build prints 'already sealed' there. Re-sealing prints 'already sealed against these bytes' and leaves cache.json byte-identical with verified_at unmoved. Refusing a partially-judged file names the count and the first anchors. COVERAGE NOT RECENCY, recorded because the task assumed otherwise and was wrong: sealing PROP-043 SUCCEEDS (148 verdicts over 147 addressable anchors), and recency is unanswerable because verdict entries carry only v and ev with one verified_at per file (F-075)."
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "STATE-VOID": {
+          "CMD-GATE": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions."
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "ROLLUP-VOID-OUTSIDE": {
+          "CMD-RESUME": {
             "v": "confirmed",
             "ev": [
-              "DRIFT-028 sync-from-code 2026-07-26. State::Void ships in crates/progress-core/src/model.rs (ALL 4->5, as_str, parse) and rollup_key short-circuits on it. PINNED BY A PROPERTY TEST over Stage::ALL x State::ALL x Stage::ALL (245 assertions), asserting both halves: no non-void pair reaches a void key, and void's key is identical at every stage - which is what makes 'regardless of stage' true rather than merely likely. The three worked examples were also driven through the REAL pipeline on scratch files: {spec/void, impl/plan} -> impl/plan, {done, void} -> done, all-void -> void. Both syntaxes come free because element.rs:158 (state=\"...\") and :237 (@stage/state) share State::parse. Serde verified both directions."
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "EVIDENCE-SEAM": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "EVIDENCE-SPECMAP": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "EVIDENCE-MISMATCH-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "EVIDENCE-OPTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "VERDICTS-NOT-IN-MARKUP": {
+            "v": "confirmed",
+            "ev": [
+              "moved with (§7.5)→(§5.5)"
+            ]
+          },
+          "FACT-GRAIN-EVIDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "DATA-DISCIPLINE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "CACHE-RECORD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "CACHE-TALLY-COMPUTED": {
             "v": "confirmed",
             "ev": [
-              "crates/progress-core/src/cache.rs:38-53 — `FileRecord` carries content_hash, rollup, marker_count, unit_count, issue_count and the campaign map, and no `summary`: the stored tally DRIFT-033 removed is absent from the type, not merely unwritten",
-              "crates/progress-core/src/cache.rs:56-87 — `FileRecord::verdict_summary` builds {verdict → count} over the record's own map on read, returning None for a record no campaign judged",
-              "run/cache.json 2026-07-28 — all 58 campaign maps carry exactly {processed_hash, verdicts, verified_at, verify_batch}; no `summary` survives on disk either",
-              "added by 5ad0aaf2 (DRIFT-033 / F-077) after this file's verdicts were formed, which is why it was the corpus's one unjudged anchor at the Phase C opening"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "SHORTHAND-NAMES-ITS-KEY": {
+          "STATE-FILES": {
             "v": "confirmed",
             "ev": [
-              "the claim is about a reader's cost, and it is checkable in the parser: crates/progress-core/src/parse/ recognises the qualified form by its key (`@status:`) and the legacy one by matching a stage/state vocabulary — so the legacy form's recognition really is a dictionary lookup and the qualified one really is a shape test",
-              "the collision space it names is real in this tree rather than hypothetical: the corpus carries `@fact/code:` and `@spec://` in the same `@` namespace, and the sibling fact `SHORTHAND-DISAMBIGUATION` exists precisely because one of those needed disambiguating",
-              "and the migration that acted on this reasoning is the strongest evidence it was right: 27 407 substitutions over 327 files disturbed no verdict, seal or baseline, because the key is spelling and the canonical hash form absorbs it"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "FACT-ANCHOR-NAMES-ITS-KEY": {
+          "DASHBOARD-READS-ONLY": {
             "v": "confirmed",
             "ev": [
-              "the fact's central claim is a correction of a mistaken belief, and it is right: `##ID` was never an ATX heading, because an ATX heading requires a space after the hashes. A session on 2026-08-06 argued the opposite and was wrong on exactly this point",
-              "what remains true is the weaker and stated claim — it READS like one to a linter, to a non-CommonMark parser and to the eye — which is a claim about readers rather than about the grammar, and the fact is careful to say so",
-              "the practical case is in this tree: a markdown-aware reader that anchors on `^#{2,}` sees 13 000 headings in this corpus, and the campaign's own stability instrument matched exactly that pattern"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "FENCE-IS-AN-EXAMPLE-UNTIL-MARKED": {
+          "BASELINE-RECORD": {
             "v": "confirmed",
             "ev": [
-              "the default is implemented and measured: the scan reports 0 unmarked facts over 278 files with 372 fenced blocks in the corpus carrying no facts, so a fence is nobody's assertion unless marked",
-              "the marked half is implemented too and was exercised this session: `spec/modules/vibe-progress/OWNER-GUIDE.md` carries `@fact/code:DAILY-COMMANDS`, whose fenced block is that fact's body — and judging it meant checking seven command lines against their clap definitions, one by one, which is exactly what the marking is for",
-              "and the rule earned its own instance the same day: a walkthrough written into PROP-005 §2.16.1 was deliberately left UNMARKED because it describes a route that does not exist, so nothing in it is asserted"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "WHY-A-FENCE-NEEDED-THIS": {
+          "BASELINE-INVALIDATION": {
             "v": "confirmed",
             "ev": [
-              "the asymmetry it measures is the argument: 372 fenced blocks carried zero facts while all 7255 text blocks carried theirs, so a claim inside a fence belonged to nobody and could be neither judged nor made stale",
-              "the reason a fence cannot simply be given an anchor is structural rather than stylistic — it is a payload, copied out and pasted elsewhere, and an anchor written inside would travel with the copy",
-              "and the two false statements it says survived exactly that way are both on the record: an owner guide asserting a panel step that did not exist, and a layout diagram drawing a directory removed months earlier"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "ONE-OBJECT-TYPE-IS-IMPLEMENTED": {
+          "ZONE-LAYOUT": {
             "v": "confirmed",
             "ev": [
-              "the scope decision rests on a corpus census rather than on taste: fences are the only block kind falling outside fact bodies — the corpus holds no images at all, and 891 of 908 table rows and 84 of 96 block quotes already sit inside a fact",
-              "so a type naming a block kind that is already covered would address nothing, which is the fact's own conclusion and it follows from the numbers rather than being asserted beside them",
-              "the honest form of this is the one the fact takes: `@fact/image` is not deferred, it has no subject"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "UNKNOWN-OBJECT-TYPE-IS-AN-ERROR": {
+          "ZONE-EXCLUDED": {
             "v": "confirmed",
             "ev": [
-              "the alternative it rejects is the failure mode this whole document exists to remove: a grammar that silently ignores an unimplemented type promises what it cannot do, and the author learns years later that nothing read it",
-              "the check is live rather than specified: `vibe progress check --exhaustive` runs in the panel as of 2026-08-06 and reports clean over 278 files, so a typed anchor that the parser does not implement fails a gate rather than passing quietly",
-              "and the fact names two neighbouring error cases in the same breath — a typed anchor that is not its block's last fact, and one with no matching block below it — which is what makes it a rule about the grammar rather than a single guard"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "ZONE-LIFETIMES": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "PROCESS-LAW-ELSEWHERE": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "ERASURE-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "BASELINE-ACCELERATION": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "maintenance-lead": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "EDIT-UPDATES-MARKER": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "TASK-LOOP": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "FREEZE-NEEDS-EVIDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "moved with (§6)→(§4)"
+            ]
+          },
+          "DOC-COVERAGE-RATCHET": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "PERIODIC-REVERIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "moved with §7.3→§5.3"
             ]
           },
           "LIFECYCLE-WHY": {
             "v": "confirmed",
             "ev": [
-              "the premise is this campaign's actual condition rather than a caveat: the corpus is being reworked BY the sessions that judge it, and this session alone added facts to five spec documents while judging in the same pass",
-              "the three-way split it announces — edited, added, removed — is the frame the three sibling facts fill, and the asymmetry it flags (only one announces itself) is verified by each of them separately below"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "LIFECYCLE-EDITED": {
             "v": "confirmed",
             "ev": [
-              "the tooling really does name them by anchor: the campaign's freshness reader compares each judged fact's own paragraph at the judging revision with the text on disk and lists what moved, which is how this session learned that exactly 80 facts across 37 files were owed re-judgement",
-              "and the machinery was built for this case, as the fact says: the cache carries `processed_hash` and `verified_at` per file precisely so the comparison has a baseline",
-              "measured caveat worth recording with the verdict: that reader had to be repaired on 2026-08-06 before it could answer at all — it read the pre-migration marker spelling and therefore reported every judged fact in every stale file as moved"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "LIFECYCLE-ADDED": {
             "v": "confirmed",
             "ev": [
-              "verified against the shipped surface: `vibe progress --help` prints no verb that answers «which facts have no verdict», and the count is obtainable today only by comparing a file's addressable anchors against its verdict map — which is what the campaign-side script does",
-              "the consequence the fact states is exact: an unjudged fact does not enter the verdict total and appears in no percentage. The corpus stood at 98.2 % verified while carrying 142 facts nobody had judged",
-              "and it is the case this session paid: every fact cleared today was invisible until asked for by name"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "LIFECYCLE-DELETED": {
             "v": "confirmed",
             "ev": [
-              "the cache is keyed by anchor and nothing prunes a key whose anchor is gone — verified by the orphan measurement, which finds them by set difference against the mirror's addressable anchors rather than by any signal the cache raises",
-              "and the specimens are named: five orphaned verdicts across three design documents, `authority-line` and `status-line` in two of them and `related` in the third, all produced by a close-out that edited files after they had been judged",
-              "the fact's «keeps counting» clause is the load-bearing half: an orphan inflates the verified total, so the number moves in the flattering direction with no author"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "STALE-IS-NOT-REJUDGE": {
             "v": "confirmed",
             "ev": [
-              "the two questions really do diverge in this corpus, and by a wide margin: 42 stale files carrying 2037 judged verdicts against 121 facts whose own text actually moved, measured 2026-08-06",
-              "the mechanism the fact names is exactly what produces the gap — a file goes stale when facts are merely ADDED, leaving every judged fact untouched, which is what half of this session's own edits did",
-              "so «read the per-fact answer, never the per-file one» is a ratio of roughly seventeen to one here, not a nuance"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "SEAL-IS-A-WHOLE-FILE-ASSERTION": {
             "v": "confirmed",
             "ev": [
-              "the refusal is implemented and fired within an hour of the rule being written: `vibe progress seal` turned down a file whose seven new facts were unjudged, on 2026-08-06",
-              "and it fired again this session in the useful direction — the files sealed today were sealed only after their last unjudged fact was cleared, and the documents this session edited were deliberately NOT sealed because their other verdicts were not re-derived",
-              "the claim that this refusal is the only mechanism making an added fact visible is verified by its sibling `LIFECYCLE-ADDED`: no shipped verb prints the unjudged set, so the seal's complaint is the only place the corpus speaks about it"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-IS-A-LIST-NOT-A-RATIO": {
             "v": "confirmed",
             "ev": [
-              "all three kinds are enumerable in practice and were enumerated today: 142 unjudged facts named by file and anchor, 121 moved facts named by anchor, 5 orphaned verdicts named by anchor",
-              "and the alternative the fact rejects is quantified by the same measurement: re-judging everything would mean revisiting 11 913 verdicts, of which nothing invalidated all but a few hundred",
-              "the session that judged this fact paid the debt exactly as described — item by item, by name, never by percentage"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-UNIT-IS-THE-FILE": {
             "v": "confirmed",
             "ev": [
-              "it follows from the sibling rule rather than standing alone: sealing is a whole-file assertion, so a file is either clear or flagged and there is no half-sealed state to leave",
-              "borne out in practice today: five files were cleared to zero unjudged and sealed; the files with unjudged facts remaining were left flagged rather than partially vouched for"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-CHEAPEST-IS-THE-FILE-YOU-OPENED": {
             "v": "confirmed",
             "ev": [
-              "measured against this session's own work, which is the only honest way to judge a claim about cost: the cheapest clearances were the documents already open — the owner guide being repaired, PROP-005 being amended, PROP-037 having its perimeter written down",
-              "the shared-reading argument is visible in what the judging required: nine facts of the campaign-plan format cost one reading of one section, where nine facts spread over nine documents would have cost nine",
-              "and the corollary the fact draws — a session already editing a document pays almost nothing to clear that document's backlog in the same pass — is what made five files reach zero today without a dedicated debt campaign"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-PROCEDURE": {
             "v": "confirmed",
             "ev": [
-              "the five steps below it are the procedure this session ran, in order, for every file it cleared: measure, pick, judge, merge-and-seal, report",
-              "«on demand and never automatically» holds in the tooling: nothing in the panel or the scan clears debt, and the measurement is a command somebody runs"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-STEP-MEASURE": {
             "v": "confirmed",
             "ev": [
-              "the step is performed and its output is exactly what the fact prescribes — three kinds, worst first, with the files behind them",
-              "its marker is `spec/plan` rather than `impl/done` and that is honest: the printing is done by a campaign-side script, and `vibe progress --help` shows no shipped verb that answers the question, which is the debt recorded by `DEBT-MUST-BE-ASKABLE`"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-STEP-PICK": {
             "v": "confirmed",
             "ev": [
-              "both selection rules the step offers were exercised today: the file this session was about to touch anyway (the owner guide, PROP-005, PROP-037) and the smallest remaining (the two single-fact files cleared first)",
-              "and the choice is recorded rather than silent — each clearing commit says which rule it followed and why"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-STEP-JUDGE": {
             "v": "confirmed",
             "ev": [
-              "the two standards it distinguishes are the ones this session applied: a descriptive fact checked against the tree (the daily commands, against clap definitions at file:line) and a prescriptive one judged on coherence and on every referent resolving (the addressing law, whose two cross-pointers were opened and confirmed)",
-              "«freshly authored text is not exempt» is the clause that bit hardest and proved itself: the TUI boundary's manual-tests clause was written on 2026-08-06, judged on 2026-08-06, and found false in the first minute of judging"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-STEP-SEAL": {
             "v": "confirmed",
             "ev": [
-              "the refusal-as-check framing is verified twice over: `merge-verdicts` refused two batches this session — one because a fact already carried a verdict and the restatement had to be deliberate, one because the file was outside the campaign's observed corpus — and both refusals corrected a wrong assumption rather than obstructing correct work",
-              "and the seal itself refused nothing today, because the files offered to it had been cleared first, which is the same check passing"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-STEP-REPORT": {
             "v": "confirmed",
             "ev": [
-              "performed: every clearing commit in this session states what was cleared and against what, and the running total was reported to the owner in the session's own status",
-              "the reason the step exists is visible in its absence elsewhere — a number that moves silently is one nobody can check, which is the same argument `DEBT-MUST-BE-ASKABLE` makes about the measurement"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-CLOSING-INCLUDES-JUDGING": {
             "v": "confirmed",
             "ev": [
-              "the rule is stated in two homes and both were followed today: every spec section this session added was judged per fact in the commit that added it — PROP-005's webhook and auto-publication sections, PROP-002's index-auth section, PROP-037's perimeter fact",
-              "the failure it prevents is arithmetic rather than rhetorical: the closure ruling moves significant content into the specifications, and content arriving unjudged is new debt, so without this clause every closure would manufacture some",
-              "its marker is `spec/plan` and that is right — nothing enforces the pairing except the seal's refusal, which catches it only when somebody tries to seal"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-ASK-AT-SESSION-START": {
             "v": "confirmed",
             "ev": [
-              "the ruling landed in the contract rather than only in this document: the resume protocol in the host's three instruction files requires the debt in the report beside the gate state and the blockers",
-              "«reporting is not paying» is respected in the same text — the resume contract stops the session after reporting and leaves the next step to the owner",
-              "and this session began by measuring the debt and reporting it before touching anything"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-MUST-BE-ASKABLE": {
             "v": "confirmed",
             "ev": [
-              "the gap it records is real and unchanged: `vibe progress --help` prints no verb answering the question, so the three counts exist only in a campaign-side script",
-              "the script's own docstring calls itself a stopgap and names the shipped verb as the durable home, so the two statements agree rather than drifting",
-              "and the argument — a number that exists only in a hand-written query is a number nobody looks at — is demonstrated by the debt's own history: 47 unjudged facts sat unnoticed until the script was written, and the first thing the script did was find 142"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
           "DEBT-DO-NOT-JUDGE-BLIND": {
             "v": "confirmed",
             "ev": [
-              "the temptation it names is exactly where this session sat all day, which is what makes the rule worth its place: a verdict written to move a number is cheapest to commit while paying down a backlog",
-              "the discipline held in a checkable way rather than an asserted one — every verdict written today carries evidence naming a file:line, a command output, or a resolvable anchor, and where a claim could not be verified the fact was repaired rather than confirmed",
-              "the clearest instance runs the other way: judging the TUI boundary's manual-tests clause could have been a one-line confirmation and instead produced a correction, because the evidence was looked for before the verdict was written"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           },
-          "PARSE-TYPED-FACT-CODE": {
+          "FUT-SECOND-WAVE": {
             "v": "confirmed",
             "ev": [
-              "crates/progress-core/src/parse: parse_anchor_token reads opener/type/id for @fact/<type>:<ID> in the one shared anchor reader; bind_covered_blocks enforces the closed type set (unknown type = FenceBinding error naming <t> and the one implemented type), adjacency (blank lines fine, any other block breaks it, typed fact must close its text block), and attaches the fence verbatim into Fact::body + content_hash — fence edits stale the fact; PAYLOAD_SCHEMA bumped to 2 so pre-feature sidecars are cache misses, not incomplete warm parses",
-              "gates: progress-core 167 tests passed incl. unknown-type error, adjacency error, hash-changes-on-fence-edit, duplicate-across-forms; exhaustive markup check clean over 491 files (zero typed facts in the corpus today — no behaviour change)"
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "FUT-DASHBOARD": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+            ]
+          },
+          "DASHBOARD-TERM": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
           }
         },
-        "verified_at": "2026-08-20T15:27:13Z",
-        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43 + P2-B068"
+        "verified_at": "2026-08-22T17:09:41Z",
+        "verify_batch": "P043-SPLIT"
       }
     },
     {

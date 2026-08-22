@@ -1,6 +1,6 @@
 //! Phase 2 — heading/unit segmentation (the body-span rule).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use super::content_hash;
 use crate::doc::{BlockKind, ParsedDoc, Unit};

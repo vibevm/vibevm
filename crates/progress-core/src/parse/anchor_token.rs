@@ -5,7 +5,7 @@
 //! parses the opener/type/id through these fns, so there is no second lexer
 //! to drift.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use super::facts::blockquote_prefix_len;
 

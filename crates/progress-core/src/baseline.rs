@@ -11,7 +11,7 @@
 //! law): whether a crate moved arrives as data in [`RescanOptions`], probed
 //! by whatever adapter knows how this project stores its history.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline");
 
 use crate::doc::{ParsedDoc, Unit};
 use anyhow::{Context, Result};
@@ -74,7 +74,7 @@ impl BaselineUnit {
     /// assert_eq!(u.crates, vec!["vibe-core"]);
     /// ```
     #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline"
     )]
     pub fn new(
         addr: impl Into<String>,
@@ -117,7 +117,7 @@ impl BaselineUnit {
 /// assert_eq!(crates_from_refs(&refs), vec!["vibe-cli", "vibe-core"]);
 /// ```
 #[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline"
 )]
 pub fn crates_from_refs(refs: &[String]) -> Vec<String> {
     let mut out: BTreeSet<&str> = BTreeSet::new();
@@ -252,7 +252,7 @@ pub fn unit_addr(doc: &ParsedDoc, unit_idx: usize) -> String {
 /// assert_eq!(governing_marker(&doc, &doc.units[1]).as_deref(), Some("impl/work"));
 /// ```
 #[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline"
 )]
 pub fn governing_marker(doc: &ParsedDoc, unit: &Unit) -> Option<String> {
     doc.markers
@@ -277,7 +277,7 @@ pub fn governing_marker(doc: &ParsedDoc, unit: &Unit) -> Option<String> {
 /// assert_eq!(rows.len(), 1, "a unit the baseline never saw is `new`");
 /// ```
 #[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline"
 )]
 pub fn rescan<'a>(
     docs: impl IntoIterator<Item = &'a ParsedDoc>,
@@ -366,7 +366,7 @@ fn moved_crate(unit: &BaselineUnit, states: &BTreeMap<String, CrateState>) -> Op
 /// hand. Rounding up is deliberate: any non-empty pool yields at least one
 /// unit, so the sample cannot silently switch itself off on a small corpus.
 #[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline"
 )]
 fn draw_control_sample(rows: &mut [RescanRow], campaign_id: &str, rate: f64) {
     if rate <= 0.0 {

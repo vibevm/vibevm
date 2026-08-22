@@ -16,7 +16,7 @@
 //! it pointing at superseded text and the warning fired hardest on the
 //! freshest files in the corpus (DRIFT-026 §3).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#CMD-SEAL");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-SEAL");
 
 use crate::cache::Cache;
 use crate::doc::ParsedDoc;
@@ -115,7 +115,7 @@ pub enum Seal {
 /// );
 /// ```
 #[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#CMD-SEAL"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-SEAL"
 )]
 pub fn seal(cache: &mut Cache, doc: &ParsedDoc, verified_at: &str) -> Seal {
     let Some(record) = cache.files.get_mut(&doc.path) else {

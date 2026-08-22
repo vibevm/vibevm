@@ -1,6 +1,6 @@
 //! Phase 1 — the fence state machine and block grouping (lines → blocks).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use super::delimiters::{blank_inline_code, closes_fence, fence_run};
 use crate::doc::{Block, BlockKind, ParsedDoc};
@@ -206,8 +206,8 @@ fn is_frontmatter_fence(line: &str) -> bool {
 ///
 /// A scan that finds no closer answers 0, and the document then parses
 /// precisely as it did before this rule existed.
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#granularity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#placement")]
 fn frontmatter_len(lines: &[&str]) -> usize {
     if !lines.first().is_some_and(|l| is_frontmatter_fence(l)) {
         return 0;

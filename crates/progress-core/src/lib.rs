@@ -20,7 +20,7 @@
 //! assert!(rollup.explicit.is_some());
 //! ```
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#root");
 
 pub mod baseline;
 pub mod cache;

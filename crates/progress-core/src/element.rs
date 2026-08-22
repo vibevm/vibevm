@@ -5,7 +5,7 @@
 //! `<!-- REVIEW -->`) are opaque text by law — the shorthand recognizer
 //! must refuse `@spec://` by lookahead (PROP-043 §3.7).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#markup");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#markup");
 
 use crate::model::{Action, Audience, Stage, State};
 

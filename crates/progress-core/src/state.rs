@@ -3,7 +3,7 @@
 //! The vitrine computes nothing and parses no Markdown: everything it
 //! shows is written here, atomically, after every tool step.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state");
 
 use crate::cache::{Cache, now_utc, write_atomic, write_if_changed};
 use anyhow::{Context as _, Result, bail};
@@ -30,7 +30,7 @@ pub enum GateStatus {
 /// **reported in** by whoever ran the gate — this crate never measures it
 /// (PROP-043 §2: the core runs no command and knows no floor).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state")]
 pub struct GateRecord {
     /// The gate's identity — one record per name, later replaces earlier.
     pub name: String,
@@ -182,7 +182,7 @@ pub fn write_state(
 /// Gates are **recorded, never computed here** — the caller runs the real
 /// gate (a CI step, a local script) and reports what it found. This function
 /// spawns nothing and reads nothing outside `state_dir`.
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#state")]
 pub fn record_gate(state_dir: &Path, gate: GateRecord) -> Result<()> {
     let path = state_dir.join("campaign.json");
     if !path.exists() {

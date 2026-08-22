@@ -2,7 +2,7 @@
 
 <status stage="doc" state="done" action="drift" audience="dev" comment="владельческий гайд; жанр — guide, не контракт; fact grain 2026-07-24; S1 предшествует fact-поправке PROP-043 S3.8 items 4-6 — нет элементов списков, ячеек, ##-якорей (F-020)"/>
 
-- @fact:guide-purpose Этот документ — для человека. Контракт системы — [PROP-043](PROP-043-progress-markup.md);
+- @fact:guide-purpose Этот документ — для человека. Контракт системы — [PROP-043](../vibe-facts/PROP-043-facts-markup.md) (грамматика) и [PROP-047](PROP-047-progress-campaigns.md) (инструмент и кампании);
   план кампании — [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](../../terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md). @status:doc/done
 - @fact:guide-scope Здесь — как этим пользоваться, что смотреть и какие решения ждут лично вас. @status:doc/done
 - @fact:guide-language Язык — русский, потому что аудитория этого файла — владелец проекта. @status:doc/done
@@ -161,7 +161,7 @@ vibe progress rescan --baseline campaigns/<прошлая>/baseline.json
   нетронутое (переносим вердикт)». Дальше — тот же цикл, но объёмом O(дельты):
   дни, не месяц. @status:doc/done
 - @fact:FOUR-SURVIVORS Между кампаниями из зоны кампании хранятся только четыре вещи
-  (PROP-043 §7.4): `baseline.json` (ускоритель перепроверки), `deferrals.md` (открытые
+  (PROP-047 §5.4): `baseline.json` (ускоритель перепроверки), `deferrals.md` (открытые
   хвосты), `harvest/` (сырьё для доки) и `tasks/` (корпус задач). Маркеры тоже
   переживают кампанию, но они живут в спеках — это корпус, а не зона. @status:doc/done
 - @fact:ERASURE-SAFE Всё остальное можно
@@ -173,7 +173,7 @@ vibe progress rescan --baseline campaigns/<прошлая>/baseline.json
   `unknown`: маркер — это state-слой (как WAL), а не нормативный текст;
   ваша правка законна всегда. @status:doc/done
 - @fact:EMERG-TOOL-FALSE-POSITIVE **Инструмент ругается на легальный, по-вашему, случай** — это баг
-  инструмента или пробел PROP-043; фиксируйте как обычный баг, маркер
+  инструмента или пробел PROP-047; фиксируйте как обычный баг, маркер
   временно допустимо сопроводить `comment="check false-positive: …"`. @status:doc/done
 - @fact:EMERG-DASHBOARD-WEIRD **Дашборд показывает странное** — он лишь проекция; истина в
   `campaigns/<id>/run/state/*.json`, а выше неё — маркеры в спеках. Конфликт

@@ -8,7 +8,7 @@
 //! once per crate the baseline names and never once per unit. The core has
 //! no business knowing this project uses git (the separability law, §2).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline");
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;

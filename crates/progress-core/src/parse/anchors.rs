@@ -1,6 +1,6 @@
 //! Phase 5 — the anchor laws (anchored-when-marked, unique ids).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use super::facts::qualified_fact_tokens;
 use crate::doc::{BlockKind, FactKind, Issue, IssueCode, ParsedDoc, Severity};

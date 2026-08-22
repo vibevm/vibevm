@@ -3,7 +3,7 @@
 //! Closed vocabularies per PROP-043 §3.2 — any value outside these enums
 //! is a validation error, never a silent pass-through.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#attributes");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#attributes");
 
 use serde::{Deserialize, Serialize};
 use std::fmt;
