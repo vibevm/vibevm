@@ -2,7 +2,8 @@
 //!
 //! The structural vocabulary is closed (PROP-045
 //! ##XML-DIALECT-IS-THE-MD-SUBSET): `spec`, `title`, `status`, `section`,
-//! `p`, `fact`, `list`, `item`, `table`, `tr`, `td`, `fence`, `quote`.
+//! `p`, `fact`, `facts`, `list`, `item`, `table`, `tr`, `td`, `fence`,
+//! `quote`.
 //! At a section position, an otherwise unknown element whose valid name is
 //! the section anchor and whose sole attribute is `title` is the named form
 //! of `<section id=... title=...>`. At a unit position, an element carrying
@@ -318,7 +319,7 @@ impl<'a> Parser<'a> {
                     doc.sections
                         .push(self.section("section", &attrs, at, was_empty, 2)?);
                 }
-                "p" | "list" | "table" | "fence" | "quote" => {
+                "p" | "list" | "facts" | "table" | "fence" | "quote" => {
                     if have_section {
                         return Err(self.err(
                             at,
@@ -432,7 +433,7 @@ impl<'a> Parser<'a> {
                     s.sections
                         .push(self.section("section", &attrs, at, was_empty, level + 1)?);
                 }
-                "p" | "list" | "table" | "fence" | "quote" => {
+                "p" | "list" | "facts" | "table" | "fence" | "quote" => {
                     if have_subsection {
                         return Err(self.err(
                             at,

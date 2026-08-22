@@ -4,7 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units");
 
-use super::facts::{fact_element, is_fact_element};
+use super::facts::{fact_element, facts_block, is_fact_element};
 use super::reader::{Ev, Parser, Violation, attr, only_attrs};
 use super::{XBlock, XFact, XStatus, XUnit};
 
@@ -29,6 +29,7 @@ pub(super) fn block(
             })
         }
         "fence" => fence(p, attrs, at, was_empty),
+        "facts" => facts_block(p, attrs, at, was_empty),
         "list" => list(p, attrs, at, was_empty),
         "table" => table(p, at, was_empty),
         other => Err(Violation::at(

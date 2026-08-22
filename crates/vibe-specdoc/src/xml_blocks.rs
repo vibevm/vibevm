@@ -26,6 +26,7 @@ impl<'a> Parser<'a> {
                 })
             }
             "fence" => self.fence(attrs, at, was_empty),
+            "facts" => self.facts_block(attrs, at, was_empty),
             "list" => {
                 only_attrs(attrs, &["ordered"], "list", at, self)?;
                 let Some((_, v)) = attrs.iter().find(|(k, _)| k == "ordered") else {
@@ -353,127 +354,6 @@ impl<'a> Parser<'a> {
             ));
         }
         Ok(Unit { fact: None, text })
-    }
-
-    fn is_fact_element(
-        &self,
-        element_name: &str,
-        attrs: &[(String, String)],
-        at: (usize, usize),
-    ) -> Result<bool> {
-        let discriminator = attrs
-            .iter()
-            .find(|(key, _)| key == "fact")
-            .map(|(_, value)| value.as_str());
-        if let Some(value) = discriminator
-            && value != "true"
-        {
-            return Err(self.err(
-                at,
-                format!(
-                    "the `fact` discriminator on <{element_name}> must be \"true\", found `{value}`"
-                ),
-            ));
-        }
-        Ok(element_name == "fact" || discriminator == Some("true"))
-    }
-
-    /// One generic `<fact>` or named fact element: the closed attribute set,
-    /// then text-only content. Returns the fact and its text (the unit's own
-    /// text lives INSIDE the element). Consumes through the matching end tag.
-    fn fact(
-        &mut self,
-        element_name: &str,
-        attrs: &[(String, String)],
-        at: (usize, usize),
-        in_cell: bool,
-        was_empty: bool,
-    ) -> Result<(Fact, String)> {
-        let named = element_name != "fact";
-        let allowed = if named {
-            &[
-                "fact",
-                "status",
-                "action",
-                "actionstage",
-                "audience",
-                "comment",
-                "ref",
-            ][..]
-        } else {
-            &[
-                "id",
-                "fact",
-                "status",
-                "action",
-                "actionstage",
-                "audience",
-                "comment",
-                "ref",
-            ][..]
-        };
-        only_attrs(attrs, allowed, element_name, at, self)?;
-        if named && !super::xml_out::anchor_is_elementable(element_name) {
-            return Err(self.err(
-                at,
-                format!(
-                    "named fact <{element_name}> is not elementable — use <fact id=\"{element_name}\">"
-                ),
-            ));
-        }
-        let id = if named {
-            Some(element_name.to_string())
-        } else {
-            attrs
-                .iter()
-                .find(|(k, _)| k == "id")
-                .map(|(_, v)| v.clone())
-        };
-        if id.is_none() && !in_cell {
-            return Err(self.err(
-                at,
-                "a <fact> needs an `id` — only a table cell may be marked without one (the cell exemption)".into(),
-            ));
-        }
-        let status = match attrs.iter().find(|(k, _)| k == "status") {
-            Some(_) => Some(status_from_attrs(attrs, at, self)?),
-            None => None,
-        };
-        if let Some(id) = &id {
-            self.mint_fact(id.clone(), at)?;
-        }
-        let mut text = String::new();
-        if !was_empty {
-            loop {
-                match self.evs.get(self.i) {
-                    None => {
-                        return Err(Error::at(
-                            0,
-                            format!("unexpected end of input — <{element_name}> never closed"),
-                        ));
-                    }
-                    Some(Ev::End(n)) if n == element_name => {
-                        self.i += 1;
-                        break;
-                    }
-                    Some(Ev::Text(t)) => {
-                        text.push_str(t);
-                        self.i += 1;
-                    }
-                    Some(other) => {
-                        let at2 = self.poss[self.i];
-                        return Err(self.err(
-                            at2,
-                            format!(
-                                "a <{element_name}> fact holds only text — found {}",
-                                kind(other)
-                            ),
-                        ));
-                    }
-                }
-            }
-        }
-        Ok((Fact { id, status }, text))
     }
 
     /// The text of a bare-text leaf (`<title>`): text-only content,

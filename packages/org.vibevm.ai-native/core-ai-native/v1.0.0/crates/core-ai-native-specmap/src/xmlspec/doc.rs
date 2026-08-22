@@ -35,6 +35,7 @@ pub(super) fn anchor_is_elementable(anchor: &str) -> bool {
             | "section"
             | "p"
             | "fact"
+            | "facts"
             | "list"
             | "item"
             | "table"
@@ -150,7 +151,7 @@ fn spec_children(p: &mut Parser) -> Result<XDoc, Violation> {
                 doc.sections
                     .push(section(p, "section", &attrs, at, was_empty, 2)?);
             }
-            "p" | "list" | "table" | "fence" | "quote" => {
+            "p" | "facts" | "list" | "table" | "fence" | "quote" => {
                 if have_section {
                     return Err(Violation::at(
                         at,
@@ -272,7 +273,7 @@ fn section(
                 s.sections
                     .push(section(p, "section", &attrs, at, was_empty, level + 1)?);
             }
-            "p" | "list" | "table" | "fence" | "quote" => {
+            "p" | "facts" | "list" | "table" | "fence" | "quote" => {
                 if have_subsection {
                     return Err(Violation::at(
                         at,

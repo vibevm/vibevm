@@ -49,6 +49,7 @@ pub(crate) fn anchor_is_elementable(anchor: &str) -> bool {
             | "section"
             | "p"
             | "fact"
+            | "facts"
             | "list"
             | "item"
             | "table"
@@ -192,11 +193,26 @@ fn block(w: &mut W, depth: usize, b: &Block) {
         }
         Block::List { ordered, items } => {
             let ord = if *ordered { "true" } else { "false" };
-            start(w, depth, "list", &[("ordered", ord.to_string())]);
-            for item in items {
-                unit(w, depth + 1, "item", item);
+            let all_facts = !items.is_empty()
+                && items
+                    .iter()
+                    .all(|u| u.fact.as_ref().is_some_and(|f| f.is_meaningful()));
+            if all_facts {
+                start(w, depth, "facts", &[("ordered", ord.to_string())]);
+                for item in items {
+                    if let Some(f) = &item.fact {
+                        indent(w, depth + 1);
+                        fact_element(w, f, &item.text);
+                    }
+                }
+                end(w, depth, "facts");
+            } else {
+                start(w, depth, "list", &[("ordered", ord.to_string())]);
+                for item in items {
+                    unit(w, depth + 1, "item", item);
+                }
+                end(w, depth, "list");
             }
-            end(w, depth, "list");
         }
         Block::Table { rows } => {
             start(w, depth, "table", &[]);
@@ -226,6 +242,12 @@ fn unit(w: &mut W, depth: usize, tag: &str, u: &Unit) {
     };
     indent(w, depth);
     let _ = w.write_event(Event::Start(BytesStart::new(tag)));
+    fact_element(w, f, &u.text);
+    let _ = w.write_event(Event::End(BytesEnd::new(tag)));
+}
+
+/// One generic or named fact element, without a carrier wrapper or indent.
+fn fact_element(w: &mut W, f: &Fact, text: &str) {
     let fact_tag =
         f.id.as_deref()
             .filter(|id| anchor_is_elementable(id))
@@ -235,11 +257,10 @@ fn unit(w: &mut W, depth: usize, tag: &str, u: &Unit) {
         fact_tag,
         fact_attrs(f, named).as_slice(),
     )));
-    if !u.text.is_empty() {
-        let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(&u.text))));
+    if !text.is_empty() {
+        let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(text))));
     }
     let _ = w.write_event(Event::End(BytesEnd::new(fact_tag)));
-    let _ = w.write_event(Event::End(BytesEnd::new(tag)));
 }
 
 fn bytes_start<'a>(name: &'a str, attrs: &[(&str, String)]) -> BytesStart<'a> {
@@ -409,6 +430,40 @@ mod tests {
     }
 
     #[test]
+    fn all_fact_lists_use_facts_while_mixed_lists_keep_item_carriers() {
+        let all_fact = from_markdown(
+            "# T {#root}\n\n\
+             - @fact:FIRST first @status:impl/done\n\
+             - @fact:SECOND second @status:spec/work\n",
+        )
+        .expect("all-fact list parses");
+        let facts_xml = to_xml(&all_fact);
+        assert!(
+            facts_xml.contains("<facts ordered=\"false\">"),
+            "{facts_xml}"
+        );
+        assert!(!facts_xml.contains("<item>"), "{facts_xml}");
+        assert_eq!(
+            crate::from_xml(&facts_xml).expect("facts read back"),
+            all_fact
+        );
+        assert_eq!(to_xml(&crate::from_xml(&facts_xml).unwrap()), facts_xml);
+
+        let mixed = from_markdown(
+            "# T {#root}\n\n\
+             - @fact:FIRST first @status:impl/done\n\
+             - plain item\n",
+        )
+        .expect("mixed list parses");
+        let list_xml = to_xml(&mixed);
+        assert!(list_xml.contains("<list ordered=\"false\">"), "{list_xml}");
+        assert!(list_xml.contains("<item>"), "{list_xml}");
+        assert!(!list_xml.contains("<facts"), "{list_xml}");
+        assert_eq!(crate::from_xml(&list_xml).expect("list reads back"), mixed);
+        assert_eq!(to_xml(&crate::from_xml(&list_xml).unwrap()), list_xml);
+    }
+
+    #[test]
     fn elementable_anchor_predicate_is_the_format_boundary() {
         for anchor in ["three-bands", "_private", "a.b-c_1"] {
             assert!(anchor_is_elementable(anchor), "{anchor}");
@@ -417,6 +472,7 @@ mod tests {
             "",
             "2-fast",
             "table",
+            "facts",
             "section",
             "xml-section",
             "XMLThing",

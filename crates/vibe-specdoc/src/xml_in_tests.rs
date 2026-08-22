@@ -243,6 +243,91 @@ fn list_requires_ordered_true_or_false() {
 }
 
 #[test]
+fn canonical_named_facts_group_round_trips_byte_for_byte() {
+    let xml = format!(
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+         <spec {NS_ATTR}>\n  \
+         <facts ordered=\"false\">\n    \
+         <FIRST fact=\"true\" status=\"impl/done\">first</FIRST>\n    \
+         <SECOND fact=\"true\" status=\"spec/work\">second</SECOND>\n  \
+         </facts>\n\
+         </spec>\n"
+    );
+    let doc = ok(&xml);
+    match &doc.preamble[0] {
+        Block::List { ordered, items } => {
+            assert!(!ordered);
+            assert_eq!(items.len(), 2);
+        }
+        other => panic!("{other:?}"),
+    }
+    assert_eq!(to_xml(&doc), xml);
+}
+
+#[test]
+fn generic_fact_is_legal_inside_facts_group() {
+    let xml = format!(
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+         <spec {NS_ATTR}>\n  \
+         <facts ordered=\"true\">\n    \
+         <fact id=\"table\" status=\"impl/done\">fallback</fact>\n  \
+         </facts>\n\
+         </spec>\n"
+    );
+    let doc = ok(&xml);
+    assert_eq!(to_xml(&doc), xml);
+}
+
+#[test]
+fn legacy_all_fact_list_normalizes_to_facts_group() {
+    let doc = ok(&format!(
+        "<spec {NS_ATTR}>\n  <list ordered=\"false\">\n    <item><OLD fact=\"true\" status=\"impl/done\">old</OLD></item>\n  </list>\n</spec>"
+    ));
+    let normalized = to_xml(&doc);
+    assert!(
+        normalized.contains("<facts ordered=\"false\">"),
+        "{normalized}"
+    );
+    assert!(!normalized.contains("<item>"), "{normalized}");
+}
+
+#[test]
+fn item_is_rejected_inside_facts_group() {
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}><facts ordered=\"false\"><item>x</item></facts></spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("mixed lists stay in <list>"), "{err}");
+}
+
+#[test]
+fn bare_text_is_rejected_inside_facts_group() {
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}><facts ordered=\"false\">bare text</facts></spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("text lives inside"), "{err}");
+}
+
+#[test]
+fn empty_facts_group_is_rejected() {
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}><facts ordered=\"false\"/></spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("needs at least one fact"), "{err}");
+}
+
+#[test]
+fn facts_group_requires_ordered_attribute() {
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}><facts><ONLY fact=\"true\">x</ONLY></facts></spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("requires an `ordered`"), "{err}");
+}
+
+#[test]
 fn status_needs_the_pair_spelled_correctly() {
     let err = from_xml(&format!(
         "<spec {NS_ATTR}>\n  <p><fact id=\"X\" status=\"impl\">t</fact></p>\n</spec>"

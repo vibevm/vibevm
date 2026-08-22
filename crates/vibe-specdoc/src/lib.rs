@@ -57,6 +57,7 @@ pub mod load;
 mod md_in;
 mod md_out;
 mod xml_blocks;
+mod xml_facts;
 mod xml_in;
 mod xml_out;
 mod xml_support;
@@ -78,7 +79,7 @@ pub use xml_out::to_xml;
 /// Versioned deterministic-converter identity recorded in every transformed
 /// dependency slot. Bump only when identical source may intentionally emit
 /// different canonical bytes.
-pub const CONVERTER_RECIPE: &str = "specdoc/3";
+pub const CONVERTER_RECIPE: &str = "specdoc/4";
 
 use std::fmt;
 

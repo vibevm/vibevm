@@ -9137,11 +9137,20 @@
     },
     {
       "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_facts.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_specdoc::xml_facts",
+      "end_line": 3,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/xml_in.rs",
       "item_kind": "mod",
-      "line": 19,
+      "line": 20,
       "symbol": "vibe_specdoc::xml_in",
-      "end_line": 19,
+      "end_line": 20,
       "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
     },
     {
@@ -17727,9 +17736,17 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-specdoc/src/xml_facts.rs",
+      "from_symbol": "vibe_specdoc::xml_facts",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-specdoc/src/xml_in.rs",
       "from_symbol": "vibe_specdoc::xml_in",
-      "line": 19,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
       "verb": "implements"
@@ -30903,7 +30920,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7e05ab9fcf8f5ca6a28e4fab543a70d416a3bd5bd7afafdd669a8ab412dce713",
+      "content_hash": "sha256:34d569262a389f7a11b0003419bcdf7855fe55af2869bc0da6aaa0c71ce5b72e",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -30939,7 +30956,7 @@
     },
     {
       "anchor": "shape",
-      "content_hash": "sha256:c68d03e15b3875e975dd257e906561f520ddd65bdc19e6fab6e1d5559e56dbe5",
+      "content_hash": "sha256:eefc7b193121817c8606bfb3d63eebf5b817604136808e0c69c3c4c57a0be08b",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "2. The shape — one pivot, two frontends, two backends",
@@ -30992,12 +31009,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"
     },
     {
+      "anchor": "FACTS-GROUP-ELEMENT",
+      "content_hash": "sha256:d5983962eec1ad0590e1326006736ae487b5699579f1281a2602f204c4cee053",
+      "doc_path": "common/PROP-045",
+      "file": "spec/common/PROP-045-xml-spec-sources.md",
+      "heading": "**Decision (ADR-part; owner ruling 2026-08-22,",
+      "line": 153,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#FACTS-GROUP-ELEMENT"
+    },
+    {
       "anchor": "INLINE-STAYS-MARKDOWN",
       "content_hash": "sha256:695f5b16941efd4b33752b506650c35abd70187dce98ff1793d2a8b3a23add46",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Decision (ADR-part).** Inline content —",
-      "line": 153,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MARKDOWN"
     },
     {
@@ -31006,7 +31032,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Decision (ADR-part): the XML machinery rides",
-      "line": 164,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-PARSER-DEPENDENCY"
     },
     {
@@ -31015,7 +31041,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The heavyweight question, answered on the record",
-      "line": 177,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#XML-PARSER-DEPTH"
     },
     {
@@ -31024,7 +31050,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "3. The materialisation setting and the three targets",
-      "line": 199,
+      "line": 222,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation"
     },
     {
@@ -31033,7 +31059,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The setting and its home (revised by the measure —",
-      "line": 201,
+      "line": 224,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SETTING"
     },
     {
@@ -31042,7 +31068,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**`markdown` target:** XML sources emit as Markdown through",
-      "line": 215,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MD"
     },
     {
@@ -31051,7 +31077,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**`xml` target:** every source — including Markdown —",
-      "line": 222,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"
     },
     {
@@ -31060,7 +31086,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**`mixed` target:** copy-through; each file keeps its",
-      "line": 227,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MIXED"
     },
     {
@@ -31069,7 +31095,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The hash law under transformation (ADR-part, upgraded by",
-      "line": 230,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW"
     },
     {
@@ -31078,7 +31104,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Boot-lane law under the setting (revised by the",
-      "line": 250,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-LANE-SCOPE"
     },
     {
@@ -31087,7 +31113,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The owner's named scenario — acceptance case №0",
-      "line": 265,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SCENARIO-ZERO"
     },
     {
@@ -31096,7 +31122,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "4. Loaders and scanners read all three",
-      "line": 278,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#loaders"
     },
     {
@@ -31105,7 +31131,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "Every consumer of spec sources — the progress scanner and",
-      "line": 280,
+      "line": 303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#LOADER-LAW"
     },
     {
@@ -31114,7 +31140,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Decision (ADR-part): scanners read XML through its",
-      "line": 290,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#PROJECTION-READ"
     },
     {
@@ -31123,16 +31149,16 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "`spec://` addressing is format-blind: anchors",
-      "line": 309,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"
     },
     {
       "anchor": "polygon",
-      "content_hash": "sha256:412524e1eb5d08c0446c6e41228169c11bef51bc75546d527b7097caed8a2cd9",
+      "content_hash": "sha256:29e67b418763903ad49181d3f67b62eca30310780267d783edc335fdc28d2236",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "5. The redbook polygon — acceptance",
-      "line": 314,
+      "line": 337,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon"
     },
     {
@@ -31141,7 +31167,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "A dedicated test project imports `org.vibevm.world/redbook`",
-      "line": 316,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#POLYGON"
     },
     {
@@ -31150,34 +31176,34 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The C++-inheritance machinery is",
-      "line": 328,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#INHERITANCE-PARITY"
     },
     {
       "anchor": "agent-routing",
-      "content_hash": "sha256:c5daaed941b5ff571e110895fb7cda1d380e3eb329438ab8928c590c7aae94d0",
+      "content_hash": "sha256:4c3646c5f14b48d0c3e1d9f8a6089e02591b6ce51e7a7db3ae42ec41ca9a5d80",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "5a. The dynamic-router measurement — external agents",
-      "line": 357,
+      "line": 380,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#agent-routing"
     },
     {
       "anchor": "AGENT-ROUTER-MEASURE",
-      "content_hash": "sha256:86954ebb4649c7936fde09675c9ad50938516dadc72773bd23795c60d651f9b1",
+      "content_hash": "sha256:2c0bb1aff76faf34c0f8ec2a1bb11fde1b10471a50f45e86349137af72053b91",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The hardest part, named by the owner",
-      "line": 359,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MEASURE"
     },
     {
       "anchor": "AGENT-ROUTER-MODEL-TIERS",
-      "content_hash": "sha256:59c2d4633d715b602a789b1e4dcd49d43e8353bb20c24c5a83942aeb6b1ad290",
+      "content_hash": "sha256:af689c06b030757602dfc149a15badcb51e797ec86c561727fbc79223dc8f2d7",
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Model tiers are a measurement dimension —",
-      "line": 384,
+      "line": 418,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MODEL-TIERS"
     },
     {
@@ -31186,7 +31212,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "5b. Questions the build surfaced — dispositions",
-      "line": 402,
+      "line": 444,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#surfaced"
     },
     {
@@ -31195,7 +31221,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**REVIEW markers and comments (S4 finding,",
-      "line": 404,
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#REVIEW-COMMENTS-LAW"
     },
     {
@@ -31204,7 +31230,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**The `normal` boot format over XML slots is",
-      "line": 414,
+      "line": 456,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NORMAL-FORMAT-RESIDUE"
     },
     {
@@ -31213,7 +31239,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**`show effective`'s boot-origin match is",
-      "line": 423,
+      "line": 465,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH"
     },
     {
@@ -31222,7 +31248,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "**Generated boot artifacts are",
-      "line": 431,
+      "line": 473,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#GENERATED-ARTIFACTS-OUTSIDE-DERIVED"
     },
     {
@@ -31231,7 +31257,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "6. Build order",
-      "line": 444,
+      "line": 486,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#build-order"
     },
     {
@@ -31240,7 +31266,7 @@
       "doc_path": "common/PROP-045",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "heading": "S1 pivot + XML frontend/backend + golden round-trips over the",
-      "line": 446,
+      "line": 488,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SLICES"
     },
     {
@@ -75962,7 +75988,7 @@
       "code": "long-section",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "line": 32,
-      "message": "section `2. The shape — one pivot, two frontends, two backends` spans 167 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
+      "message": "section `2. The shape — one pivot, two frontends, two backends` spans 190 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
       "code": "long-section",

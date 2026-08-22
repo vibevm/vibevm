@@ -175,6 +175,10 @@ fn redbook_readme_golden_xml_is_pinned() {
     let golden = std::fs::read_to_string(&golden_path)
         .unwrap_or_else(|e| panic!("golden file missing ({e}); regenerate with UPDATE_GOLDEN=1"));
     assert_eq!(xml, golden, "the README's dialect XML changed");
+    assert!(
+        golden.contains("<facts ordered="),
+        "all-fact band lists use the compact facts group"
+    );
     assert_eq!(
         golden.matches(" fact=\"true\"").count(),
         45,
