@@ -31476,7 +31476,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:43c34f26afcdccd5d6ff590cbc19f6dbdd6b525721e28c8be744b7911904aead",
+      "content_hash": "sha256:7e3b3316274e428192e589b27784b7e797db5b14e2a6175de0db024fbeead106",
       "doc_path": "common/PROP-046",
       "file": "spec/common/PROP-046-adoption-facts-registry.md",
       "heading": "PROP-046 — the adoption-facts registry (`vibefacts/`)",
@@ -31548,7 +31548,7 @@
     },
     {
       "anchor": "laws",
-      "content_hash": "sha256:3bd9213a9b7b8abcbb94b33a8a3a0966e23629bbcd357e7837c70c85bb498fb9",
+      "content_hash": "sha256:22e38e470d1a238d16f0eac8a52975d008cb0a77245ff7901dd819271630aafb",
       "doc_path": "common/PROP-046",
       "file": "spec/common/PROP-046-adoption-facts-registry.md",
       "heading": "3. The five laws",
@@ -31584,10 +31584,10 @@
     },
     {
       "anchor": "LAW-STATIC-INVARIANT",
-      "content_hash": "sha256:50b824921dddf0b2cc0bf0ae35da19bf68e6c52b9f4af7fa35b85f14f31dbd4a",
+      "content_hash": "sha256:24d0e3afd97b505aec65f454130b112710ae11b80bf5be201da0009556a3da35",
       "doc_path": "common/PROP-046",
       "file": "spec/common/PROP-046-adoption-facts-registry.md",
-      "heading": "**L4 — status mutation never touches STATIC.** The owner's ruling (2026-08-22): STATIC is a globally static prefix, loaded once per agent/subagent and cache-stable in the LLM-prompt-cache sense; it is invalidated only by large structural causes (the dependency list changed), never by status flips. The strong form adopted: **statuses are not compiled into STATIC at all** — the static lane is a pure function of structure (dependency list, versions, snippet structure) and NOT a function of the mutable (registry, statuses, dates). A fact's current status is a point query against the registry / the dynamic lane, not prefix knowledge. This law is the bridge to the follow-up cache-stable-prefix wave and is testable as byte-identity of STATIC across rebuilds with unchanged structural inputs. @status:spec/work",
+      "heading": "**L4 — status mutation never touches STATIC.** The owner's ruling (2026-08-22): STATIC is a globally static prefix, loaded once per agent/subagent and cache-stable in the LLM-prompt-cache sense; it is invalidated only by large structural causes (the dependency list changed), never by status flips. The strong form adopted: **statuses are not compiled into STATIC at all** — the static lane is a pure function of structure (dependency list, versions, snippet structure) and NOT a function of the mutable (registry, statuses, dates). A fact's current status is a point query against the registry / the dynamic lane, not prefix knowledge. This law is the bridge to the follow-up cache-stable-prefix wave and is testable as byte-identity of STATIC across rebuilds with unchanged structural inputs. The prefix economy's canon is PROP-048 §3 (##STATIC-ROLE and its neighbours); this fact is that canon's registry-side half. @status:spec/work",
       "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#LAW-STATIC-INVARIANT"
     },
@@ -31662,6 +31662,267 @@
       "heading": "**Does `vibefacts/` join the judged corpus?** Adoption claims are claims — they may deserve verdicts and evidence like any fact. Deferred until W1 lands and the first real overlay exists. @status:spec/work",
       "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#OPEN-JUDGED-CORPUS"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0a3d59f135b3faa76e25e584ccb3037e460c99fefe01bf7526a65649062d1938",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "PROP-048 — Tokenomics: the cost of text is a design law",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:5f8b7b3eed66a99241a23f8c38a265e00128dbca223aabf90cbdfa49e0213c75",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "1. Mandate",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#mandate"
+    },
+    {
+      "anchor": "TOKENOMICS-MANDATE",
+      "content_hash": "sha256:26ead78107326cd3cd2dfe0fef2e31ccf78167a2d11f68dc701d88f792a14798",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The owner's declaration (2026-08-22, chat,",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#TOKENOMICS-MANDATE"
+    },
+    {
+      "anchor": "law",
+      "content_hash": "sha256:3a349cf0c6bf8142694f07580943f4626d1d33dc79ba71372f4d3beb87ea7398",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "2. The law",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#law"
+    },
+    {
+      "anchor": "TOKENOMICS-IS-A-DESIGN-PRESSURE",
+      "content_hash": "sha256:f33cc2f01cafaf07af6410d517d9a7acb3837325e88c63cef2948b9f3539e181",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Every architectural choice in VibeVM",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#TOKENOMICS-IS-A-DESIGN-PRESSURE"
+    },
+    {
+      "anchor": "COST-MODEL",
+      "content_hash": "sha256:040f75e33a8b34467e59978c8b2b3bb6b3da33aedcea53cfd838735c2fabaca8",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The cost model the law reasons with.** Provider prompt",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#COST-MODEL"
+    },
+    {
+      "anchor": "static-prefix",
+      "content_hash": "sha256:7af4ddc74f8531484462e83203dbcead320e06b3a9a823fd23fb912cc747e64e",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "3. STATIC — the cache-stable prefix",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#static-prefix"
+    },
+    {
+      "anchor": "STATIC-ROLE",
+      "content_hash": "sha256:52d9e13c2bb30d90f44cd007a9e53aa11045e7562a69df8b16db4093b4010c7e",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**What STATIC is (the owner's definition, refined): the",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-ROLE"
+    },
+    {
+      "anchor": "STATIC-INVALIDATION-LAW",
+      "content_hash": "sha256:bfa11fc6d4a7844ea6ef7bef50a66b0b058c352e682c6be58951b30b7cf789f1",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Invalidation is structural only.** STATIC may",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-INVALIDATION-LAW"
+    },
+    {
+      "anchor": "STATIC-PREFIX-SHARING",
+      "content_hash": "sha256:a9617b51c9fd5129920904f7a5385d4b54190a532ffbc21775604af45c443f5b",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The multiplier: one prefix, every agent.** When",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-PREFIX-SHARING"
+    },
+    {
+      "anchor": "STATIC-POSITION-LAW",
+      "content_hash": "sha256:a733881514429801565ae533a82ef3ff40c447fcfa05b81b22cccad159d8f6e1",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The prefix is only a prefix if nothing variable",
+      "line": 69,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-POSITION-LAW"
+    },
+    {
+      "anchor": "STATIC-HARDENING-WAVE",
+      "content_hash": "sha256:c819b51a41af75f4795d40574634c0592fab79c66c4396d54acadce88b6e2a56",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The build this declaration names (a future wave,",
+      "line": 77,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-HARDENING-WAVE"
+    },
+    {
+      "anchor": "mechanisms",
+      "content_hash": "sha256:5aede6dcfd715392abc115669d59d77cbe32ecd69704cc9052439be8d9223f46",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "4. Mechanisms already serving the law",
+      "line": 87,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#mechanisms"
+    },
+    {
+      "anchor": "mechanisms-lead",
+      "content_hash": "sha256:5303266b0e4f3545d97447141a75e3f4e9f4987ffb1cdc6d2ebf47c0d1ce4aee",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "Each of these predates this PROP; the roof names what",
+      "line": 89,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#mechanisms-lead"
+    },
+    {
+      "anchor": "MECH-TREE-SHAKING",
+      "content_hash": "sha256:ddd65c9238258e9edcee0b0b9c9b31bc162f98ea58ef3c50bb8f91cb67a0d6ac",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Tree-shaking loading** — the `normal` package",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-TREE-SHAKING"
+    },
+    {
+      "anchor": "MECH-DYNAMIC-CONDITIONS",
+      "content_hash": "sha256:2094ca6459a40ec6aae7d19dd26cfa3a0b26198ab92912989883de087ad53ae1",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The conditional dynamic lane** — a",
+      "line": 96,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-DYNAMIC-CONDITIONS"
+    },
+    {
+      "anchor": "MECH-INDEX-MANIFEST",
+      "content_hash": "sha256:fbdeb49062988fbe202a5cf8824dacd46b553358567f2d0798819437984c2e6d",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**INDEX as a manifest, not a payload** — the boot",
+      "line": 100,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-INDEX-MANIFEST"
+    },
+    {
+      "anchor": "MECH-DELEGATION",
+      "content_hash": "sha256:5abbb317c88f57aa5bc26408e7a815a9b1a11f8a3038257760d0783bb5535de0",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Delegation-first** — bulk execution runs on cheap",
+      "line": 103,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-DELEGATION"
+    },
+    {
+      "anchor": "MECH-QUIET-WORKERS",
+      "content_hash": "sha256:31b728e3a674ff4e8679c4a202bc0bda3232675848066ee7fe0b7a25686e335f",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**The subagent quiet clause and `auto` mode** —",
+      "line": 106,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-QUIET-WORKERS"
+    },
+    {
+      "anchor": "MECH-WEAVE-DIGEST",
+      "content_hash": "sha256:96080b95e81698be2c2e84ff8f95bbd6c1035260d16a964e8291181ac077d190",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Weave digests and sharding** — whole-corpus LLM",
+      "line": 110,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-WEAVE-DIGEST"
+    },
+    {
+      "anchor": "MECH-POINT-QUERIES",
+      "content_hash": "sha256:a0b852fd0eabd42cee699a772477d6ac8df55c4738e1f7b93574e312fef1a14a",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Point queries over prefix knowledge** — the",
+      "line": 113,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-POINT-QUERIES"
+    },
+    {
+      "anchor": "directions",
+      "content_hash": "sha256:2beb708581be86486aba931c1858c59d9b3555749fd6784692a71ae438be4546",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "5. Directions — «в дальнейшем можно сделать ещё больше»",
+      "line": 118,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#directions"
+    },
+    {
+      "anchor": "directions-lead",
+      "content_hash": "sha256:efcd52cc026b54aefe622a2ea21d4c09c13056e8a6558acf89220dabb46ae416",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "Open, deliberately unscheduled; each becomes real work",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#directions-lead"
+    },
+    {
+      "anchor": "DIR-BOOT-COST-METER",
+      "content_hash": "sha256:895d20ee77b7d00d5b94e81ae0813e05e2d5a2aeb166056186089f5349a526b0",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**A boot-cost meter** — measure a session's boot",
+      "line": 123,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-BOOT-COST-METER"
+    },
+    {
+      "anchor": "DIR-CACHE-AWARE-ORDERING",
+      "content_hash": "sha256:206c180995d524ac743b2704a93944a9b307ecab865f30a56f60a8fe9a120f71",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Cache-aware ordering of the variable",
+      "line": 127,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-CACHE-AWARE-ORDERING"
+    },
+    {
+      "anchor": "DIR-PACKET-BUDGETS",
+      "content_hash": "sha256:15fd603572d6c3d9c7502516027d249de704d992cd254eac2db77df6abe20c2d",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Token budgets in worker packets** — a packet",
+      "line": 131,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-PACKET-BUDGETS"
+    },
+    {
+      "anchor": "DIR-DEDUP-READS",
+      "content_hash": "sha256:91b66ec21995cee6f1f5c7cb35cf69fef0552ce70c58c8db4bef550e3cc77014",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Read-once discipline across a session** — the weave",
+      "line": 134,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-DEDUP-READS"
+    },
+    {
+      "anchor": "companions",
+      "content_hash": "sha256:ad9885a4b9ea9957f2237ac3dd7f0e86f2ca8f62fe448550de4aa04ecc14f666",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "6. Companions",
+      "line": 139,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#companions"
+    },
+    {
+      "anchor": "companions-list",
+      "content_hash": "sha256:7be47bbf0f09847c63a303a6c9aa149957f49299245465759b3168ef1fea4d2e",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "The neighbouring canon this roof spans:",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#companions-list"
     },
     {
       "anchor": "genre-definition",

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T20:35:06Z",
+  "updated_at": "2026-08-22T21:14:54Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161354,7 +161354,7 @@
       }
     },
     "spec/common/PROP-046-adoption-facts-registry.md": {
-      "content_hash": "6ea393184c406e399e047e8ae3fb0c3cf79931c2ebbf633040639635246a296a",
+      "content_hash": "dac4fc6d72b57e7b9fdafda079e2a59a1cedf4d42238b7598c53325268f6a150",
       "rollup": {
         "explicit": [
           "spec",
@@ -161376,7 +161376,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6ea393184c406e399e047e8ae3fb0c3cf79931c2ebbf633040639635246a296a",
+        "processed_hash": "dac4fc6d72b57e7b9fdafda079e2a59a1cedf4d42238b7598c53325268f6a150",
         "verdicts": {
           "REGISTRY-MANDATE": {
             "v": "confirmed",
@@ -161429,7 +161429,7 @@
           "LAW-STATIC-INVARIANT": {
             "v": "confirmed",
             "ev": [
-              "owner ruling 2026-08-22: STATIC is a cache-stable prefix invalidated only by structural causes; strong form (statuses never compiled into STATIC) adopted in the dialogue; testable as byte-identity across rebuilds"
+              "one-line canon pointer added to PROP-048 §3; the law text otherwise unchanged and still spec/work awaiting its wave"
             ]
           },
           "LAW-LIFECYCLE": {
@@ -161463,8 +161463,170 @@
             ]
           }
         },
-        "verified_at": "2026-08-22T12:10:02Z",
-        "verify_batch": "P046-VIBEFACTS-SPEC + P046-LANDED"
+        "verified_at": "2026-08-22T21:14:54Z",
+        "verify_batch": "P046-VIBEFACTS-SPEC + P046-LANDED + P048-TOKENOMICS"
+      }
+    },
+    "spec/common/PROP-048-tokenomics.md": {
+      "content_hash": "4d59e977a03efa24476dbc5ac42ec8c9833d358eb9509fbddcb7cfdb263539e8",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
+      },
+      "marker_count": 23,
+      "unit_count": 7,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "4d59e977a03efa24476dbc5ac42ec8c9833d358eb9509fbddcb7cfdb263539e8",
+        "verdicts": {
+          "TOKENOMICS-MANDATE": {
+            "v": "confirmed",
+            "ev": [
+              "owner declaration 2026-08-22 quoted near-verbatim; the subject-matter claim matches the tree (boot lanes, corpora, vibedeps, packets, weaves are all prompt text)"
+            ]
+          },
+          "TOKENOMICS-IS-A-DESIGN-PRESSURE": {
+            "v": "confirmed",
+            "ev": [
+              "the law as declared: token cost as a first-class design axis; cheaper-by-construction over cheaper-by-discipline matches the house pattern (gates over conventions)"
+            ]
+          },
+          "COST-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "provider caching semantics stated correctly: prefix-keyed byte-identity, hit ≪ fresh input ≪ output; the three consequences (stable prefixes pay, mutable after immutable, output first to cut) each map to a live mechanism"
+            ]
+          },
+          "STATIC-ROLE": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's definition refined: load-once cache-stable prefix, byte-identical across sessions and spawns; matches the generated lane (compiled, anchor-qualified, resolution rules inside, front-loaded)"
+            ]
+          },
+          "STATIC-INVALIDATION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "structural-only invalidation enumerated (deps list/versions/snippet structure/format) vs never-mutable (status, date, counter); consistent with PROP-046 ##LAW-STATIC-INVARIANT and PROP-045 ##STATIC-FOLLOWS-THE-TARGET; regeneration determinism already seeded by static-splice tests"
+            ]
+          },
+          "STATIC-PREFIX-SHARING": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's hidden-bonus clause: one prefix shared boss+workers → warm spawns; the stricter no-per-session/no-per-agent requirement follows and is stated"
+            ]
+          },
+          "STATIC-POSITION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "positional caching consequence: everything before the lane must be equally stable, variable strictly after — the refinement the owner asked to have spelled out"
+            ]
+          },
+          "STATIC-HARDENING-WAVE": {
+            "v": "confirmed",
+            "ev": [
+              "future wave honestly spec/plan: status-strip, byte-identity gate, cache-friendliness audit — matches the owner's earlier 'следующей задачей после статусов я попрошу'"
+            ]
+          },
+          "mechanisms-lead": {
+            "v": "confirmed",
+            "ev": [
+              "service lead"
+            ]
+          },
+          "MECH-TREE-SHAKING": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 §3 / ##USE-ANCESTOR-RULE live"
+            ]
+          },
+          "MECH-DYNAMIC-CONDITIONS": {
+            "v": "confirmed",
+            "ev": [
+              "§5a stand measured 36/36 with the negative control clean"
+            ]
+          },
+          "MECH-INDEX-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "INDEX is a TOML manifest read per-entry by construction"
+            ]
+          },
+          "MECH-DELEGATION": {
+            "v": "confirmed",
+            "ev": [
+              "delegation-first flow installed; workers on cheap slots is the session's lived practice"
+            ]
+          },
+          "MECH-QUIET-WORKERS": {
+            "v": "confirmed",
+            "ev": [
+              "subagent-quiet-clause mandatory per packet; AGENT-MODE auto live"
+            ]
+          },
+          "MECH-WEAVE-DIGEST": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-047 ##CMD-WEAVE with 2026-07-26 measurements"
+            ]
+          },
+          "MECH-POINT-QUERIES": {
+            "v": "confirmed",
+            "ev": [
+              "vibe facts get/report live (PROP-046 W1–W3)"
+            ]
+          },
+          "directions-lead": {
+            "v": "confirmed",
+            "ev": [
+              "service lead; each direction gated on the owner's word"
+            ]
+          },
+          "DIR-BOOT-COST-METER": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open; the §5a stand is the named seed"
+            ]
+          },
+          "DIR-CACHE-AWARE-ORDERING": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open"
+            ]
+          },
+          "DIR-PACKET-BUDGETS": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open"
+            ]
+          },
+          "DIR-DEDUP-READS": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open; digest/mirror named as the existing halves"
+            ]
+          },
+          "companions-list": {
+            "v": "confirmed",
+            "ev": [
+              "links verified against the tree"
+            ]
+          }
+        },
+        "verified_at": "2026-08-22T21:14:54Z",
+        "verify_batch": "P048-TOKENOMICS"
       }
     },
     "spec/design/README.md": {
