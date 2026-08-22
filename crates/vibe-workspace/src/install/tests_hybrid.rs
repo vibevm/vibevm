@@ -418,3 +418,122 @@ fn verify_boot_graph_detects_a_stale_artifact() {
     );
     assert_eq!(stale[0].1, "parent");
 }
+
+/// PROP-045 ##INHERITANCE-PARITY — the dynamic-STATIC case as a twin: the
+/// owner's core PROP-038 topology (root →dynamic parent →static child) runs
+/// once over Markdown snippets and once over their runtime XML twins
+/// (`to_xml(from_markdown(..))`, the live dialect form). The compiled
+/// per-unit `STATIC.md` and the root `INDEX.md` must be byte-identical:
+/// the INDEX targets the GENERATED `STATIC.md` (an MD projection in every
+/// format), so no source extension may leak into the dynamic lane.
+#[test]
+fn the_dynamic_static_case_compiles_identically_over_xml_twin_snippets() {
+    const PARENT_MD: &str = "# Parent boot {#parent-boot}\n\nParent body.\n\n";
+    const CHILD_MD: &str = "# Child boot {#child-boot}\n\nChild body.\n\n";
+    let xml_twin = |md: &str| -> String {
+        let doc = vibe_specdoc::from_markdown(md).expect("the twin markdown parses");
+        let xml = vibe_specdoc::to_xml(&doc);
+        let back =
+            vibe_specdoc::to_markdown(&vibe_specdoc::from_xml(&xml).expect("the twin xml reads"));
+        assert_eq!(back, md, "twin precondition: the fixture must be canonical");
+        xml
+    };
+
+    let run = |xml: bool| -> (String, String) {
+        let ext = if xml { "xml" } else { "md" };
+        let ws_dir = TempDir::new().unwrap();
+        write(
+            ws_dir.path(),
+            "vibe.toml",
+            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+             [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
+        );
+        write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+        let parent_body = if xml {
+            xml_twin(PARENT_MD)
+        } else {
+            PARENT_MD.to_string()
+        };
+        let child_body = if xml {
+            xml_twin(CHILD_MD)
+        } else {
+            CHILD_MD.to_string()
+        };
+        let (parent, _p) = dep_with_requires(
+            "parent",
+            "1.0.0",
+            &format!(
+                "[boot_snippet]\nsource = \"boot/parent.{ext}\"\n\n\
+                 [requires.packages]\n\"org.vibevm/child\" = {{ version = \"^1.0\", link = \"static\" }}\n"
+            ),
+            &format!("boot/parent.{ext}"),
+            &parent_body,
+            &["child"],
+        );
+        let (child, _c) = dep_with_boot(
+            "child",
+            "1.0.0",
+            &format!("[boot_snippet]\nsource = \"boot/child.{ext}\"\n"),
+            &format!("boot/child.{ext}"),
+            &child_body,
+        );
+        let ws = Workspace::load(ws_dir.path()).unwrap();
+        apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+        let parent_static = fs::read_to_string(
+            ws_dir
+                .path()
+                .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+        )
+        .unwrap();
+        let root_index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+        (parent_static, root_index)
+    };
+
+    let (md_static, md_index) = run(false);
+    let (xml_static, xml_index) = run(true);
+    // Provenance comments lawfully name the TRUE source file (extension
+    // included) — the one place the source format may show. Everything
+    // else — bodies, qualified anchors, rename table — is byte-identical.
+    let neutral_provenance = |s: &str| -> String {
+        s.lines()
+            .map(|l| {
+                if l.starts_with("<!-- vibe:static ") {
+                    l.replace(".xml -->", ".md -->")
+                } else {
+                    l.to_string()
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    };
+    assert_eq!(
+        neutral_provenance(&md_static),
+        neutral_provenance(&xml_static),
+        "the dynamic-STATIC zone must compile format-blind modulo provenance"
+    );
+    assert_ne!(
+        md_static, xml_static,
+        "provenance honestly names the source file — losing that witness \
+         means the twin stopped exercising an XML lane at all"
+    );
+    // INDEX paths name real materialised files, so a raw-snippet entry
+    // honestly carries the slot's extension; the dynamic-STATIC target is
+    // the GENERATED `STATIC.md` and must be extension-stable across forms.
+    let neutral_paths = |s: &str| s.replace(".xml\"", ".md\"");
+    assert_eq!(
+        neutral_paths(&md_index),
+        neutral_paths(&xml_index),
+        "the INDEX shape must match modulo materialised extensions"
+    );
+    assert!(
+        xml_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+        "the dynamic-STATIC target must stay the generated STATIC.md in the \
+         XML lane: {xml_index}"
+    );
+    assert!(md_static.contains("Parent body."), "{md_static}");
+    assert!(md_static.contains("Child body."), "{md_static}");
+    assert!(
+        md_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+        "{md_index}"
+    );
+}
