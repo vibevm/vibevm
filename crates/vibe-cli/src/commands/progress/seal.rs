@@ -36,7 +36,7 @@ pub fn seal_cmd(ctx: &Context, a: &ProgressSealArgs) -> Result<()> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", a.common.path.display()))?;
     let root = super::super::init::strip_unc_public(root);
-    let Some(campaign) = super::resolve_campaign(&root, a.common.campaign.as_deref()) else {
+    let Some(campaign) = super::resolve_campaign(&root, a.common.campaign.as_deref())? else {
         bail!("`vibe progress seal` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
     let cache_path = campaign.join("run").join("cache.json");

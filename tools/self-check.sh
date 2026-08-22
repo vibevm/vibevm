@@ -870,8 +870,8 @@ run_step "every workspace member declares its licence (PROP-000 §3)" \
 # Safe beside the tripwire, and that was measured rather than assumed before
 # this step was added: the settings home was snapshotted by content across
 # 169 files, both forms of the verb were run, and nothing moved.
-run_step "markup validation (vibe progress check --exhaustive)" \
-  cargo run --quiet -p vibe-cli -- progress check --exhaustive || OVERALL=$?
+run_step "markup validation (vibe facts check --exhaustive)" \
+  cargo run --quiet -p vibe-cli -- facts check --exhaustive || OVERALL=$?
 
 # 12. The tripwire again, over the whole run. Steps 7-10 run seven more test
 # suites (the authored engines, the three stacks, the three mcp packages)

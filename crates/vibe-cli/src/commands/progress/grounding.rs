@@ -21,9 +21,9 @@ use vibe_registry::ShellGit;
 use crate::cli::ProgressCommonArgs;
 
 /// The observed tree + campaign zone, resolved once per invocation.
-pub(super) struct Ground {
+pub(crate) struct Ground {
     pub(super) root: PathBuf,
-    pub(super) docs: Vec<ParsedDoc>,
+    pub(crate) docs: Vec<ParsedDoc>,
     pub(super) campaign: Option<PathBuf>,
     /// The campaign cache, read once at the head of the run: it says what
     /// each observed file hashed to when it was judged, and carries the
@@ -51,7 +51,7 @@ pub(super) struct Ground {
     /// relative lines — the check verb marks them with the shared
     /// projection notice rather than letting the numbers pass as
     /// source-relative.
-    pub(super) xml_sources: BTreeSet<String>,
+    pub(crate) xml_sources: BTreeSet<String>,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -68,14 +68,14 @@ pub(super) struct Ground {
 /// incremental over the content-hash cache" is one function's property
 /// rather than eight — realises `TOOL-INCREMENTAL`.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool")]
-pub(super) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
+pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     let root = common
         .path
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", common.path.display()))?;
     let root = super::super::init::strip_unc_public(root);
     let cfg = scope::load_config(&root)?;
-    let campaign = resolve_campaign(&root, common.campaign.as_deref());
+    let campaign = resolve_campaign(&root, common.campaign.as_deref())?;
 
     // An unreadable cache is a warning and a cold run, never a failure:
     // the cache is derived acceleration and may be deleted at any time
@@ -181,25 +181,56 @@ fn current_branch(root: &Path) -> Option<String> {
 
 /// `--campaign` wins; otherwise the single `campaigns/<id>/` when exactly
 /// one exists; otherwise none (ad-hoc mode — reports work, state does not).
-pub(super) fn resolve_campaign(root: &Path, flag: Option<&Path>) -> Option<PathBuf> {
+pub(super) fn resolve_campaign(root: &Path, flag: Option<&Path>) -> Result<Option<PathBuf>> {
     if let Some(f) = flag {
-        return Some(if f.is_absolute() {
+        let spelling = f.to_string_lossy();
+        if !spelling.contains('/') && !spelling.contains('\\') {
+            let zone = root.join("campaigns");
+            let selected = zone.join(f);
+            if selected.is_dir() {
+                return Ok(Some(selected));
+            }
+            let mut existing: Vec<String> = std::fs::read_dir(&zone)
+                .ok()
+                .into_iter()
+                .flatten()
+                .filter_map(|entry| entry.ok())
+                .filter(|entry| entry.path().is_dir())
+                .map(|entry| entry.file_name().to_string_lossy().into_owned())
+                .collect();
+            existing.sort();
+            let existing = if existing.is_empty() {
+                "<none>".to_string()
+            } else {
+                existing.join(", ")
+            };
+            bail!(
+                "campaign `{}` does not exist under `{}`; existing campaigns: {existing} \
+                 (violates spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUNDARY-CLI; \
+                 fix: pass an existing campaign id or a path containing a separator)",
+                f.display(),
+                zone.display()
+            );
+        }
+        return Ok(Some(if f.is_absolute() {
             f.to_path_buf()
         } else {
             root.join(f)
-        });
+        }));
     }
     let zone = root.join("campaigns");
     let entries: Vec<PathBuf> = std::fs::read_dir(&zone)
-        .ok()?
+        .ok()
+        .into_iter()
+        .flatten()
         .filter_map(|e| e.ok())
         .map(|e| e.path())
         .filter(|p| p.is_dir())
         .collect();
-    match entries.as_slice() {
+    Ok(match entries.as_slice() {
         [one] => Some(one.clone()),
         _ => None,
-    }
+    })
 }
 
 pub(super) fn campaign_id(campaign: &Path) -> String {
@@ -216,7 +247,7 @@ pub(super) fn campaign_id(campaign: &Path) -> String {
 /// why the tally is reported rather than assumed — a skip nobody can see
 /// is an optimisation nobody can debug.
 #[derive(Debug, Default)]
-pub(super) struct Refresh {
+pub(crate) struct Refresh {
     pub(super) campaign: Option<PathBuf>,
     pub(super) writes: BTreeMap<String, bool>,
 }
@@ -245,7 +276,7 @@ impl Refresh {
 /// the verdicts, and a failure to write it fails the run. The sidecar is
 /// derived, lives outside the tree, and a failure to write it is a slower
 /// next run — so it goes second and says nothing either way.
-pub(super) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
+pub(crate) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
     let Some(campaign) = &g.campaign else {
         return Ok(Refresh::default());
     };

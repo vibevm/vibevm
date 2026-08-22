@@ -16,7 +16,7 @@ use vibe_facts::{
 };
 use vibe_workspace::{Workspace, boot_artifacts, vibedeps};
 
-use crate::output;
+use crate::{cli::ProgressCheckArgs, output};
 
 #[derive(Debug, Args)]
 pub struct FactsArgs {
@@ -26,6 +26,9 @@ pub struct FactsArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum FactsSubcommand {
+    /// Validate facts markup. This is the durable spelling of the markup
+    /// lint also available through the transitional `progress check` alias.
+    Check(ProgressCheckArgs),
     /// List registry entries in address order.
     List {
         /// Keep entries from this `<group>/<name>` source only.
@@ -77,27 +80,38 @@ pub enum FactsSubcommand {
     },
 }
 
-pub fn run(_ctx: &output::Context, args: FactsArgs) -> Result<()> {
-    let cwd = std::env::current_dir()?;
-    let root = super::resolve_project_root(&cwd)?;
+pub fn run(ctx: &output::Context, args: FactsArgs) -> Result<()> {
     match args.command {
+        FactsSubcommand::Check(args) => super::facts_check::run(ctx, &args),
         FactsSubcommand::List {
             package,
             status,
             indeterminate,
-        } => list(&root, package.as_deref(), status.as_deref(), indeterminate),
-        FactsSubcommand::Get { address } => get(&root, &address),
+        } => with_project_root(|root| {
+            list(root, package.as_deref(), status.as_deref(), indeterminate)
+        }),
+        FactsSubcommand::Get { address } => with_project_root(|root| get(root, &address)),
         FactsSubcommand::Set {
             address,
             status,
             comment,
-        } => set(&root, address, &status, comment),
-        FactsSubcommand::Rm { address } => rm(&root, &address),
-        FactsSubcommand::Sync { write } => sync_command(&root, write),
-        FactsSubcommand::Adopt { package, prefix } => adopt(&root, &package, prefix.as_deref()),
-        FactsSubcommand::Clean { dry_run } => clean(&root, dry_run),
-        FactsSubcommand::Report { package } => report(&root, package.as_deref()),
+        } => with_project_root(|root| set(root, address, &status, comment)),
+        FactsSubcommand::Rm { address } => with_project_root(|root| rm(root, &address)),
+        FactsSubcommand::Sync { write } => with_project_root(|root| sync_command(root, write)),
+        FactsSubcommand::Adopt { package, prefix } => {
+            with_project_root(|root| adopt(root, &package, prefix.as_deref()))
+        }
+        FactsSubcommand::Clean { dry_run } => with_project_root(|root| clean(root, dry_run)),
+        FactsSubcommand::Report { package } => {
+            with_project_root(|root| report(root, package.as_deref()))
+        }
     }
+}
+
+fn with_project_root<T>(operation: impl FnOnce(&Path) -> Result<T>) -> Result<T> {
+    let cwd = std::env::current_dir()?;
+    let root = super::resolve_project_root(&cwd)?;
+    operation(&root)
 }
 
 fn list(

@@ -305,3 +305,141 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
             .is_file()
     );
 }
+
+const MARKUP_LINT_MOVED_NOTE: &str = "note: the markup lint moved — prefer 'vibe facts check'";
+
+fn markup_fixture(root: &std::path::Path, body: &str) {
+    fs::create_dir_all(root.join("spec")).expect("spec dir");
+    fs::write(root.join("spec/RULE.md"), body).expect("spec");
+    fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
+        .expect("progress config");
+}
+
+fn assert_check_spellings_match(
+    user: &UserScratch,
+    root: &std::path::Path,
+    expected_success: bool,
+) {
+    let facts = user
+        .vibe()
+        .args(["facts", "check", "--exhaustive", "--path"])
+        .arg(root)
+        .output()
+        .expect("vibe facts check");
+    let alias = user
+        .vibe()
+        .args(["progress", "check", "--exhaustive", "--path"])
+        .arg(root)
+        .output()
+        .expect("vibe progress check");
+
+    assert_eq!(facts.status.success(), expected_success, "{facts:?}");
+    assert_eq!(alias.status.code(), facts.status.code(), "exit code");
+    assert_eq!(alias.stdout, facts.stdout, "stdout");
+    let expected_stderr = format!(
+        "{MARKUP_LINT_MOVED_NOTE}\n{}",
+        String::from_utf8_lossy(&facts.stderr)
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&alias.stderr),
+        expected_stderr,
+        "the alias adds exactly one leading stderr line"
+    );
+}
+
+#[test]
+fn facts_check_and_progress_alias_match_on_valid_and_broken_markup() {
+    let user = UserScratch::new();
+    let valid = tempfile::tempdir().expect("valid tree");
+    markup_fixture(
+        valid.path(),
+        "# Rule {#root}\n\n@fact:RULE Valid. @status:impl/done\n",
+    );
+    assert_check_spellings_match(&user, valid.path(), true);
+
+    let broken = tempfile::tempdir().expect("broken tree");
+    markup_fixture(
+        broken.path(),
+        "# Rule {#root}\n\n@fact:RULE Broken. @status:not-a-stage/done\n",
+    );
+    assert_check_spellings_match(&user, broken.path(), false);
+}
+
+#[test]
+fn progress_check_json_suppresses_the_transition_note() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().expect("project");
+    markup_fixture(
+        project.path(),
+        "# Rule {#root}\n\n@fact:RULE Valid. @status:impl/done\n",
+    );
+
+    let output = user
+        .vibe()
+        .args(["--json", "progress", "check", "--path"])
+        .arg(project.path())
+        .output()
+        .expect("JSON progress check");
+    assert!(output.status.success(), "{output:?}");
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        "",
+        "machine mode has no transition note"
+    );
+}
+
+#[test]
+fn bare_campaign_id_resolves_under_campaigns_and_missing_id_creates_nothing() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().expect("project");
+    markup_fixture(
+        project.path(),
+        "# Rule {#root}\n\n@fact:RULE Valid. @status:impl/done\n",
+    );
+    let campaigns = project.path().join("campaigns");
+    fs::create_dir_all(campaigns.join("demo")).expect("demo campaign");
+
+    let existing = user
+        .vibe()
+        .args(["--quiet", "progress", "scan", "--path"])
+        .arg(project.path())
+        .args(["--campaign", "demo"])
+        .output()
+        .expect("scan existing campaign");
+    assert!(existing.status.success(), "{existing:?}");
+    assert!(
+        campaigns.join("demo/run/state/campaign.json").is_file(),
+        "the bare id writes inside campaigns/demo"
+    );
+    assert!(
+        !project.path().join("demo").exists(),
+        "the bare id never resolves from cwd"
+    );
+
+    let missing = user
+        .vibe()
+        .args(["--quiet", "progress", "scan", "--path"])
+        .arg(project.path())
+        .args(["--campaign", "missing"])
+        .output()
+        .expect("scan missing campaign");
+    assert!(!missing.status.success(), "{missing:?}");
+    let stderr = String::from_utf8_lossy(&missing.stderr);
+    assert!(
+        stderr.contains("campaign `missing` does not exist"),
+        "{stderr}"
+    );
+    assert!(stderr.contains("existing campaigns: demo"), "{stderr}");
+    assert!(
+        stderr.contains("fix: pass an existing campaign id"),
+        "{stderr}"
+    );
+    assert!(
+        !campaigns.join("missing").exists(),
+        "no nested garbage zone"
+    );
+    assert!(
+        !project.path().join("missing").exists(),
+        "no cwd garbage zone"
+    );
+}

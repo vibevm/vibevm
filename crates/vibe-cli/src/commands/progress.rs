@@ -7,7 +7,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#t
 use std::path::Path;
 
 use anyhow::{Context as _, Result, bail};
-use progress_core::doc::Severity;
 use progress_core::evidence::{EvidenceProvider, NoEvidence};
 use progress_core::model::Audience;
 use progress_core::report::View;
@@ -33,7 +32,7 @@ use std::{
 
 /// The campaign-grounding cell every verb enters through: the observed
 /// tree, the campaign zone, and the caches behind them (PROP-043 §7.1).
-mod grounding;
+pub(crate) mod grounding;
 
 /// The writer half of the baseline: the campaign's fact-grain verdicts
 /// projected onto §7.3's unit-grain record (DRIFT-023).
@@ -66,6 +65,8 @@ pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
     }
 }
 
+const MARKUP_LINT_MOVED_NOTE: &str = "note: the markup lint moved — prefer 'vibe facts check'";
+
 fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let mut g = ground(a)?;
     let refreshed = refresh_state(&mut g)?;
@@ -93,7 +94,7 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
         );
     } else {
         for source in &g.xml_sources {
-            println!("{}", projection_header(source));
+            println!("{}", super::facts_check::projection_header(source));
         }
         println!(
             "progress scan: {} files, {markers} markers, {unmarked}/{facts} facts unmarked, {errors} errors",
@@ -113,83 +114,16 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     Ok(())
 }
 
-fn projection_header(path: &str) -> String {
-    format!("{path}: {}", vibe_specdoc::PROJECTION_NOTICE)
+fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
+    if !ctx.is_json() {
+        eprintln!("{MARKUP_LINT_MOVED_NOTE}");
+    }
+    super::facts_check::run(ctx, a)
 }
 
-fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
-    let mut g = ground(&a.common)?;
-    let mut errors = 0usize;
-    let mut warnings = 0usize;
-    for doc in &g.docs {
-        // PROP-045 ##PROJECTION-READ: an XML-sourced document's diagnostics
-        // cite projection-relative lines. The path repeats on every issue
-        // line here, so the notice rides once per document — the header
-        // form of the mark, not a suffix on each line.
-        let folds = rollup::fold_check(doc);
-        if g.xml_sources.contains(&doc.path)
-            && !ctx.is_quiet()
-            && (!doc.issues.is_empty() || !folds.is_empty() || a.exhaustive)
-        {
-            println!("{}", projection_header(&doc.path));
-        }
-        for i in &doc.issues {
-            match i.severity {
-                Severity::Error => errors += 1,
-                Severity::Warning => warnings += 1,
-            }
-            if !ctx.is_quiet() {
-                println!(
-                    "{}:{}: {:?} [{:?}] {}",
-                    doc.path, i.line, i.severity, i.code, i.message
-                );
-            }
-        }
-        // Lossless folds (PROP-043 §3.9 `POST-CAMPAIGN-FOLD`): a section
-        // marker that collapses agreeing units must carry everything they
-        // carried. Reported at **warning** severity, not error: a document
-        // cannot distinguish a lying fold from the deliberate explicit
-        // marker `#rollup`'s `EXPLICIT-BEATS` blesses ("a divergence is
-        // information, not noise"), so this surfaces the case without
-        // failing a gate on legitimate markup. Phase F's folder, which knows
-        // it is asserting a fold, runs `fold_check` as a fatal pre-flight.
-        for f in folds {
-            warnings += 1;
-            if !ctx.is_quiet() {
-                println!("{}:{}: Warning [FoldLossy] {f}", doc.path, f.line);
-            }
-        }
-        if a.exhaustive {
-            for &(bi, fi) in &doc.unmarked_facts {
-                errors += 1;
-                if !ctx.is_quiet() {
-                    let f = &doc.blocks[bi].facts[fi];
-                    println!(
-                        "{}:{}: Error [unmarked] {:?} unit carries no marker (--exhaustive)",
-                        doc.path, f.line, f.kind
-                    );
-                }
-            }
-        }
-    }
-    // `check` is read-only by default: the write tail `scan` runs is an
-    // opt-in here, behind `--write-state`, so a validation run that names
-    // a campaign zone cannot rewrite its records or state projections
-    // (G-B010). The single shared `refresh_state` is the one writer — no
-    // second copy — gated rather than forked.
-    if a.write_state {
-        refresh_state(&mut g)?;
-    }
-    if errors > 0 {
-        bail!("progress check: {errors} error(s), {warnings} warning(s)");
-    }
-    if !ctx.is_quiet() {
-        println!(
-            "progress check: clean ({} files, {warnings} warning(s))",
-            g.docs.len()
-        );
-    }
-    Ok(())
+#[cfg(test)]
+fn projection_header(path: &str) -> String {
+    super::facts_check::projection_header(path)
 }
 
 fn parse_view(s: Option<&str>) -> Result<Option<View>> {
@@ -372,7 +306,7 @@ fn gate(ctx: &Context, a: &ProgressGateArgs) -> Result<()> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", a.common.path.display()))?;
     let root = super::init::strip_unc_public(root);
-    let Some(campaign) = resolve_campaign(&root, a.common.campaign.as_deref()) else {
+    let Some(campaign) = resolve_campaign(&root, a.common.campaign.as_deref())? else {
         bail!("`vibe progress gate` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
     let (status, label) = match a.status {

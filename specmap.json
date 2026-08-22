@@ -2072,6 +2072,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/facts_check.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_cli::commands::facts_check",
+      "end_line": 4,
+      "fingerprint": "tok1:faf09ec7d08fda42e18289b4738c8e84cd4fada48af0f33201f362a8eb0a0da4"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/init/mod.rs",
       "item_kind": "mod",
       "line": 10,
@@ -2554,7 +2563,7 @@
       "line": 57,
       "symbol": "vibe_cli::commands::progress::grounding::ground",
       "end_line": 147,
-      "fingerprint": "tok1:4160bffaf9c8a15d117a4d6cf1e951e87c4dadf4b8107cc9253c7231f149337e"
+      "fingerprint": "tok1:e52e6889636374089330254e29fefcd24759ddb71222f153ad52443d5429e64d"
     },
     {
       "crate_name": "vibe-cli",
@@ -11272,6 +11281,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#cli",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/facts_check.rs",
+      "from_symbol": "vibe_cli::commands::facts_check",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUNDARY-CLI",
       "verb": "implements"
     },
     {
