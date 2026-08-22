@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:08ce846d79c72e95c4756e67389dcdea3c543fbd64dd92c505742beea04266ad"
+source_hash = "sha256:3e3e3dd60aed963248d7c2c417680b08f60f651c29333d8f260e9d0c506ef066"
 output_format = "xml"
 converter_recipe = "specdoc/3"
 derived_hash = "sha256:9685695622b1ac57ee03c6db2940388e00105dfceb564c00a678a3e576e589ee"
