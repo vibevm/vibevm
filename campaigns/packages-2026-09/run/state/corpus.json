@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T17:10:07Z",
+  "updated_at": "2026-08-22T17:51:40Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -168553,7 +168553,7 @@
           "BOUNDARY-CLI": {
             "v": "confirmed",
             "ev": [
-              "new plan fact (spec/work): facts check as the lint home, progress check alias, B-100 repair — the CLI wave in flight"
+              "landed: facts_check.rs shared implementation with two entries (byte-identical texts/codes proven by the worker's fixture pair and the live host run), alias stderr note exact and json-suppressed, resolve_campaign fails loud on unknown bare id listing existing zones with zero writes (junk-dir absence tested + live bare-id scan resolved correctly), panel markup line switched to the facts spelling and ran green; B-100 disposition closed in BACKLOG"
             ]
           },
           "BOUNDARY-CRATES": {
@@ -169134,7 +169134,7 @@
           }
         },
         "verified_at": "2026-08-22T17:09:41Z",
-        "verify_batch": "P043-SPLIT"
+        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI"
       }
     },
     {

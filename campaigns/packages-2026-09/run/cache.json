@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T17:10:06Z",
+  "updated_at": "2026-08-22T17:51:41Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -170120,7 +170120,7 @@
       }
     },
     "spec/modules/vibe-facts/PROP-043-facts-markup.md": {
-      "content_hash": "54729e9234c018696af408443afa54fec2a6884a7482b8e350ff4cd6ba3a42fe",
+      "content_hash": "781f2645bfcda2c29bf6029e651094f9c2a1913d0c988f77f6f07f9edbcb8ed4",
       "rollup": {
         "explicit": [
           "impl",
@@ -170128,7 +170128,7 @@
         ],
         "computed": [
           "spec",
-          "work"
+          "done"
         ],
         "effective": [
           "impl",
@@ -170142,7 +170142,7 @@
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "54729e9234c018696af408443afa54fec2a6884a7482b8e350ff4cd6ba3a42fe",
+        "processed_hash": "781f2645bfcda2c29bf6029e651094f9c2a1913d0c988f77f6f07f9edbcb8ed4",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -170231,7 +170231,7 @@
           "BOUNDARY-CLI": {
             "v": "confirmed",
             "ev": [
-              "new plan fact (spec/work): facts check as the lint home, progress check alias, B-100 repair — the CLI wave in flight"
+              "landed: facts_check.rs shared implementation with two entries (byte-identical texts/codes proven by the worker's fixture pair and the live host run), alias stderr note exact and json-suppressed, resolve_campaign fails loud on unknown bare id listing existing zones with zero writes (junk-dir absence tested + live bare-id scan resolved correctly), panel markup line switched to the facts spelling and ran green; B-100 disposition closed in BACKLOG"
             ]
           },
           "BOUNDARY-CRATES": {
@@ -170811,8 +170811,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-22T17:09:41Z",
-        "verify_batch": "P043-SPLIT"
+        "verified_at": "2026-08-22T17:51:41Z",
+        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI"
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {

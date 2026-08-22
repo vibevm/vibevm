@@ -86,7 +86,12 @@ the gate panel switches to the facts spelling. Campaign verbs
 (`scan`/`mirror`/`seal`/`gate`/`baseline`/`rescan`/`resume`/`weave`/`report`)
 stay under `vibe progress`. The same wave repairs B-100: a bare `--campaign
 <id>` resolves against `campaigns/<id>` instead of silently minting a
-cwd-relative state zone. @status:spec/work
+cwd-relative state zone. Landed: `vibe facts check` carries the lint
+byte-identically (one implementation, two entries), the alias prints its
+stderr note (suppressed under --json), the shared campaign resolver fails
+loud on an unknown bare id with the existing zones listed and writes
+nothing, and the gate panel's markup line runs the facts spelling —
+proven live on the original B-100 scenario. @status:impl/done
 
 @fact:BOUNDARY-CRATES **Crate names lag the boundary deliberately.** `progress-core`
 remains the crate name of the facts core for now — renaming it is a mechanical
