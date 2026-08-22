@@ -35,6 +35,27 @@ screen output is spent at the dearest rate, so chatter is the first thing to
 cut (the subagent quiet clause and the `auto` interaction mode exist for
 exactly this). @status:spec/done
 
+@fact:THE-LAYER-LAW **Everything is layered by mutation frequency — the whole
+loaded context is one monotone gradient (owner, 2026-08-23, near-verbatim:
+«всё в приложении устроено слоями; на самой вершине — динамическая загрузка
+быстрых изменений»).** Reading order equals stability order: the
+rarest-changing text reads first, because a change at depth N re-prices every
+byte after it — the earlier a layer sits, the more cache its mutation burns.
+The concrete gradient: *(0)* the instruction files (`CLAUDE.md` / `AGENTS.md`
+/ `GEMINI.md`) — read first, so an edit there resets the ENTIRE cache; they
+carry only what must hit every session (the four rules, the standing
+directives) and change only for large causes, everything else living in specs
+loaded later; *(1)* the generated STATIC lane — structural-events-only (§3),
+and INTERNALLY sorted by the same law: contributions of rarer-changing
+packages belong earlier in the tape; *(2)* the INDEX manifest and the
+conditional dynamic lane — per-boot variability; *(3)* the live session tail —
+task text, tool results, fast state, which lives in context and is never
+compiled into any lane. This is a GLOBAL architectural idea for all of
+VibeVM, not a spec of any one mechanism (owner, 2026-08-23): whenever a new
+system is designed or an existing one changed, the design review checks it
+against this layering — where does each byte it adds sit on the gradient,
+and does anything fast-changing sneak ahead of anything slow. @status:spec/done
+
 ## 3. STATIC — the cache-stable prefix {#static-prefix}
 
 @fact:STATIC-ROLE **What STATIC is (the owner's definition, refined): the
@@ -124,10 +145,14 @@ only by the owner's word: @status:spec/done
   in tokens (prefix / dynamic / on-demand classes) so the economy is a number
   the gates can watch, not a belief; the §5a stand already knows how to drive
   live agents for measurements. @status:spec/plan
-- @fact:DIR-CACHE-AWARE-ORDERING **Cache-aware ordering of the variable
-  tail** — sort the dynamic lane and generated manifests by mutation
-  frequency (stable-first), so even the tail's cold bytes start as late as
-  possible. @status:spec/plan
+- @fact:DIR-CACHE-AWARE-ORDERING **Cache-aware ordering everywhere the
+  generator decides an order** (##THE-LAYER-LAW applied to generated text):
+  inside STATIC, sort contributions by their packages' mutation frequency
+  (stable-first — today the tape follows composed dependency order); in the
+  dynamic lane and generated manifests, the same stable-first sort — so a
+  change re-prices the shortest possible suffix. Needs a stability signal
+  per package (version age, or a declared tier) before it can be built.
+  @status:spec/plan
 - @fact:DIR-PACKET-BUDGETS **Token budgets in worker packets** — a packet
   names its expected read set and output ceiling, making a worker's spend a
   reviewed quantity like its diff. @status:spec/plan

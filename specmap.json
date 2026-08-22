@@ -31665,7 +31665,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0a3d59f135b3faa76e25e584ccb3037e460c99fefe01bf7526a65649062d1938",
+      "content_hash": "sha256:7784811d3c1606b21ed9d415a6dc3b2073bcc5138aa43f37c554a0ae141624cf",
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "PROP-048 — Tokenomics: the cost of text is a design law",
@@ -31692,7 +31692,7 @@
     },
     {
       "anchor": "law",
-      "content_hash": "sha256:3a349cf0c6bf8142694f07580943f4626d1d33dc79ba71372f4d3beb87ea7398",
+      "content_hash": "sha256:a6a1e31bd0f90cb03dc5ef310550264f2c7a860d9e31101ee8840cf40aa310f2",
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "2. The law",
@@ -31718,12 +31718,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#COST-MODEL"
     },
     {
+      "anchor": "THE-LAYER-LAW",
+      "content_hash": "sha256:b7e70425aa1036405f29d5bd38b0bb682a4387ecc0775751ce17f26a7be37652",
+      "doc_path": "common/PROP-048",
+      "file": "spec/common/PROP-048-tokenomics.md",
+      "heading": "**Everything is layered by mutation frequency — the whole",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW"
+    },
+    {
       "anchor": "static-prefix",
       "content_hash": "sha256:7af4ddc74f8531484462e83203dbcead320e06b3a9a823fd23fb912cc747e64e",
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "3. STATIC — the cache-stable prefix",
-      "line": 38,
+      "line": 59,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#static-prefix"
     },
     {
@@ -31732,7 +31741,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**What STATIC is (the owner's definition, refined): the",
-      "line": 40,
+      "line": 61,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-ROLE"
     },
     {
@@ -31741,7 +31750,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Invalidation is structural only.** STATIC may",
-      "line": 50,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-INVALIDATION-LAW"
     },
     {
@@ -31750,7 +31759,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**The multiplier: one prefix, every agent.** When",
-      "line": 61,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-PREFIX-SHARING"
     },
     {
@@ -31759,7 +31768,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**The prefix is only a prefix if nothing variable",
-      "line": 69,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-POSITION-LAW"
     },
     {
@@ -31768,7 +31777,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**The build this declaration names (a future wave,",
-      "line": 77,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#STATIC-HARDENING-WAVE"
     },
     {
@@ -31777,7 +31786,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "4. Mechanisms already serving the law",
-      "line": 87,
+      "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#mechanisms"
     },
     {
@@ -31786,7 +31795,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "Each of these predates this PROP; the roof names what",
-      "line": 89,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#mechanisms-lead"
     },
     {
@@ -31795,7 +31804,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Tree-shaking loading** — the `normal` package",
-      "line": 92,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-TREE-SHAKING"
     },
     {
@@ -31804,7 +31813,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**The conditional dynamic lane** — a",
-      "line": 96,
+      "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-DYNAMIC-CONDITIONS"
     },
     {
@@ -31813,7 +31822,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**INDEX as a manifest, not a payload** — the boot",
-      "line": 100,
+      "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-INDEX-MANIFEST"
     },
     {
@@ -31822,7 +31831,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Delegation-first** — bulk execution runs on cheap",
-      "line": 103,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-DELEGATION"
     },
     {
@@ -31831,7 +31840,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**The subagent quiet clause and `auto` mode** —",
-      "line": 106,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-QUIET-WORKERS"
     },
     {
@@ -31840,7 +31849,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Weave digests and sharding** — whole-corpus LLM",
-      "line": 110,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-WEAVE-DIGEST"
     },
     {
@@ -31849,16 +31858,16 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Point queries over prefix knowledge** — the",
-      "line": 113,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#MECH-POINT-QUERIES"
     },
     {
       "anchor": "directions",
-      "content_hash": "sha256:2beb708581be86486aba931c1858c59d9b3555749fd6784692a71ae438be4546",
+      "content_hash": "sha256:fd8bf2290f208ef9b081a5fb08e8bf3a74a2975ed8b25538afc79b3fb1fd3cfe",
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "5. Directions — «в дальнейшем можно сделать ещё больше»",
-      "line": 118,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#directions"
     },
     {
@@ -31867,7 +31876,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "Open, deliberately unscheduled; each becomes real work",
-      "line": 120,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#directions-lead"
     },
     {
@@ -31876,16 +31885,16 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**A boot-cost meter** — measure a session's boot",
-      "line": 123,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-BOOT-COST-METER"
     },
     {
       "anchor": "DIR-CACHE-AWARE-ORDERING",
-      "content_hash": "sha256:206c180995d524ac743b2704a93944a9b307ecab865f30a56f60a8fe9a120f71",
+      "content_hash": "sha256:2f945214de13266b149b4d25669e3e5ffc2864a86f4022042e6cd5b1244cf4a3",
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
-      "heading": "**Cache-aware ordering of the variable",
-      "line": 127,
+      "heading": "**Cache-aware ordering everywhere the",
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-CACHE-AWARE-ORDERING"
     },
     {
@@ -31894,7 +31903,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Token budgets in worker packets** — a packet",
-      "line": 131,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-PACKET-BUDGETS"
     },
     {
@@ -31903,7 +31912,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "**Read-once discipline across a session** — the weave",
-      "line": 134,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#DIR-DEDUP-READS"
     },
     {
@@ -31912,7 +31921,7 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "6. Companions",
-      "line": 139,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#companions"
     },
     {
@@ -31921,8 +31930,179 @@
       "doc_path": "common/PROP-048",
       "file": "spec/common/PROP-048-tokenomics.md",
       "heading": "The neighbouring canon this roof spans:",
-      "line": 141,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-048#companions-list"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:ab348b627f32fb778da107fb86977b6079c15b16c7e4ac5166bc8aef12579059",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "PROP-049 — the snippet genre: no presupposed disciplines",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#root"
+    },
+    {
+      "anchor": "defect",
+      "content_hash": "sha256:5d82a521fd9ebd0f3d692ee609e43a368460821bc8c76538c6b3a7f762977af0",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "1. The defect this repairs",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#defect"
+    },
+    {
+      "anchor": "PRESUPPOSITION-DEFECT",
+      "content_hash": "sha256:7bf1c65fd9b252bb30a2d60b749c7d1da84b9b2072fae89e11c34fdfe5d0d987",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**Agents creating fresh VibeVM projects created",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#PRESUPPOSITION-DEFECT"
+    },
+    {
+      "anchor": "genre-rule",
+      "content_hash": "sha256:af1ed6d92ea4c79c46911e245179b706e58f03983b743795f0450910b2853624",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "2. The genre rule",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#genre-rule"
+    },
+    {
+      "anchor": "SNIPPET-GENRE-RULE",
+      "content_hash": "sha256:628625a55c76d4ce6b038bf83655162fd1f301dcbeda31b01bf0a57f45194484",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**A boot snippet never presupposes another",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE"
+    },
+    {
+      "anchor": "installed-predicate",
+      "content_hash": "sha256:e827040abdd9e249e052f7b1d58f5816c9deb5418017bab440f6c63f15035424",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "3. The mechanism — the `installed:` predicate",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#installed-predicate"
+    },
+    {
+      "anchor": "INSTALLED-PREDICATE",
+      "content_hash": "sha256:7a6010301396f45513e87ff17945686a7b6e858e3524e4c1df0ea73567a35327",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**`when` grows a second predicate class:",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#INSTALLED-PREDICATE"
+    },
+    {
+      "anchor": "SNIPPET-FRAGMENTS",
+      "content_hash": "sha256:12a6a102291d6bb83e6adc983d30afdb0d042729feb2d287ca1ffc3b405f7352",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**The manifest grows optional snippet fragments.**",
+      "line": 45,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-FRAGMENTS"
+    },
+    {
+      "anchor": "gate",
+      "content_hash": "sha256:0afd5e4a113cc53d8074d3367772c68a4d3c8d5cef9a61a83712585233f91948",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "4. The gate — the concepts dictionary check",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#gate"
+    },
+    {
+      "anchor": "CONCEPTS-DECLARATION",
+      "content_hash": "sha256:500dc8f9f94d31ce1f83026ad647f20892a2f009ce1cd0a26f2ca3e3271b50b0",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**A flow declares its concept tokens.** The",
+      "line": 54,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#CONCEPTS-DECLARATION"
+    },
+    {
+      "anchor": "SNIPPET-PRESUPPOSITION-CHECK",
+      "content_hash": "sha256:481c8126534ab2fa9f93aefe0373915c55c04b43429c2c0e1c79033c62d47dfd",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**The check: a foreign concept in an",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-PRESUPPOSITION-CHECK"
+    },
+    {
+      "anchor": "repairs",
+      "content_hash": "sha256:b0a00d6b336ea99020e2b327faad742017abe811dc6379897db5853f2bef9ecf",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "5. The repairs shipped with the wave",
+      "line": 71,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#repairs"
+    },
+    {
+      "anchor": "FOUR-SNIPPETS-REPAIRED",
+      "content_hash": "sha256:f6d4237d75e66021cbf9b462c7b2af919bb0bb7cd468591edf62d892481598d4",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**The four presupposing snippets move their WAL",
+      "line": 73,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#FOUR-SNIPPETS-REPAIRED"
+    },
+    {
+      "anchor": "REDBOOK-WAL-UNBUNDLED",
+      "content_hash": "sha256:665bda1e827fa47ad9bfc48a485530ff7f357a1cddbecc49ee1ae3edd8c0c52c",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**redbook stops hard-pulling `flow:wal`.** The",
+      "line": 81,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#REDBOOK-WAL-UNBUNDLED"
+    },
+    {
+      "anchor": "WAL-SNIPPET-SCOPE-CLAUSE",
+      "content_hash": "sha256:a95e320e8b6ca1c1f0148b3e130874b0e585fc39aecccfdbf4c77e4d57bdbeef",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**The wal snippet names its own genre.** One",
+      "line": 89,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#WAL-SNIPPET-SCOPE-CLAUSE"
+    },
+    {
+      "anchor": "rollback",
+      "content_hash": "sha256:25877669e45cf7eb891ad09b57680970dd828b35f88022d00259665e1166caef",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "6. Rollback",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#rollback"
+    },
+    {
+      "anchor": "ROLLBACK-SHAPE",
+      "content_hash": "sha256:7e0a49e705060ad426a79882cbc550c2a81c8192e0ac183b5e6aba1b34bad903",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "**The owner's escape hatch, named.** Every change is",
+      "line": 97,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#ROLLBACK-SHAPE"
+    },
+    {
+      "anchor": "companions",
+      "content_hash": "sha256:80d3abe0af764c84dc5aa06f11175bd912beb9d6677fe99d469f2ea1cefa6482",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "7. Companions",
+      "line": 103,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#companions"
+    },
+    {
+      "anchor": "companions-list",
+      "content_hash": "sha256:7a6a742f1bd9e857607df1f0203d7da15da4c3cc4af4fed79d8cdd0fb220a36b",
+      "doc_path": "common/PROP-049",
+      "file": "spec/common/PROP-049-snippet-genre.md",
+      "heading": "[PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md)",
+      "line": 105,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#companions-list"
     },
     {
       "anchor": "genre-definition",

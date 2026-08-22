@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T21:14:54Z",
+  "updated_at": "2026-08-22T23:01:07Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161468,7 +161468,7 @@
       }
     },
     "spec/common/PROP-048-tokenomics.md": {
-      "content_hash": "4d59e977a03efa24476dbc5ac42ec8c9833d358eb9509fbddcb7cfdb263539e8",
+      "content_hash": "135afe38ec6e92f136e71aff8652a521689fdedd87cc01cfde6d6d2d9841d824",
       "rollup": {
         "explicit": [
           "spec",
@@ -161482,15 +161482,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 23,
-        "fact_count": 22,
+        "marker_count": 24,
+        "fact_count": 23,
         "unmarked_facts": 0
       },
-      "marker_count": 23,
+      "marker_count": 24,
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "4d59e977a03efa24476dbc5ac42ec8c9833d358eb9509fbddcb7cfdb263539e8",
+        "processed_hash": "135afe38ec6e92f136e71aff8652a521689fdedd87cc01cfde6d6d2d9841d824",
         "verdicts": {
           "TOKENOMICS-MANDATE": {
             "v": "confirmed",
@@ -161603,7 +161603,7 @@
           "DIR-CACHE-AWARE-ORDERING": {
             "v": "confirmed",
             "ev": [
-              "genuinely open"
+              "widened to every generator-decided order including INSIDE STATIC (stable-first contributions vs today's composed dependency order); honestly names the missing prerequisite (a per-package stability signal)"
             ]
           },
           "DIR-PACKET-BUDGETS": {
@@ -161623,10 +161623,112 @@
             "ev": [
               "links verified against the tree"
             ]
+          },
+          "THE-LAYER-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "owner-amended 2026-08-23: declared a GLOBAL architectural idea with the design-review clause (new systems and changes checked against the gradient); the four-layer gradient text matches the live tree (instruction files → STATIC → INDEX/dynamic → session tail) and the instruction-files-reset-everything consequence is stated"
+            ]
           }
         },
-        "verified_at": "2026-08-22T21:14:54Z",
-        "verify_batch": "P048-TOKENOMICS"
+        "verified_at": "2026-08-22T23:01:07Z",
+        "verify_batch": "P048-TOKENOMICS + P048-LAYER-AMEND"
+      }
+    },
+    "spec/common/PROP-049-snippet-genre.md": {
+      "content_hash": "e2a7a8b8eb11eee075b8eadb5bf156ac76dc55317fb99de03ab163e6a1dc4a66",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 12,
+        "fact_count": 11,
+        "unmarked_facts": 0
+      },
+      "marker_count": 12,
+      "unit_count": 8,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "e2a7a8b8eb11eee075b8eadb5bf156ac76dc55317fb99de03ab163e6a1dc4a66",
+        "verdicts": {
+          "PRESUPPOSITION-DEFECT": {
+            "v": "confirmed",
+            "ev": [
+              "diagnosis verified live this session: init greps 0 WAL, both checks return silently on absence (code comment quoted), redbook vibe.toml hard-pulls flow:wal =1.0.0, the four snippet mention sites grepped with line evidence (sync-from-code imperative, health-audit/git-atomic-commits/conflict-protocol asides)"
+            ]
+          },
+          "SNIPPET-GENRE-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "the owner-approved law as designed in the dialogue: structural conditionality only, prose hedges outlawed with the reason (unverifiable, still teaches unasked); sibling link to THE-LAYER-LAW"
+            ]
+          },
+          "INSTALLED-PREDICATE": {
+            "v": "confirmed",
+            "ev": [
+              "install-time resolution semantics: known at generation, omitted entirely on false — the physical-absence form the tokenomics roof prefers; distinct from session-resolved os:*"
+            ]
+          },
+          "SNIPPET-FRAGMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "additive manifest surface: [boot_snippet] unchanged, optional [[boot_snippet.fragment]] {source, when}; old manifests parse untouched"
+            ]
+          },
+          "CONCEPTS-DECLARATION": {
+            "v": "confirmed",
+            "ev": [
+              "world-assembled dictionary (authored + installed manifests), never checker-hard-coded — matches the house pattern (wire-derive baseline, conform config)"
+            ]
+          },
+          "SNIPPET-PRESUPPOSITION-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "three-point enforcement as approved: compiler form, panel cell with red fixture, future C6 publish gate; error names token, owner, repair"
+            ]
+          },
+          "FOUR-SNIPPETS-REPAIRED": {
+            "v": "confirmed",
+            "ev": [
+              "the four files and their exact mention classes enumerated from the live grep; conflict-protocol's hedge deliberately included with the §2 rationale"
+            ]
+          },
+          "REDBOOK-WAL-UNBUNDLED": {
+            "v": "confirmed",
+            "ev": [
+              "dependency line location verified in redbook vibe.toml; host direct-entry plan mirrors the existing wal-specspaces precedent; install-means-consent restored"
+            ]
+          },
+          "WAL-SNIPPET-SCOPE-CLAUSE": {
+            "v": "confirmed",
+            "ev": [
+              "the single-developer genre clause with the wal-specspaces pointer, per the owner's multi-dev concern"
+            ]
+          },
+          "ROLLBACK-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's condition («всегда можно откатить») made checkable: all changes package-local or additive, no anchor or wire moves"
+            ]
+          },
+          "companions-list": {
+            "v": "confirmed",
+            "ev": [
+              "links verified"
+            ]
+          }
+        },
+        "verified_at": "2026-08-22T23:00:46Z",
+        "verify_batch": "P049-GENRE"
       }
     },
     "spec/design/README.md": {
