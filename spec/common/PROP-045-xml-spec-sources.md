@@ -123,7 +123,18 @@ through the canonical MD projection) and is PINNED by explicit tests
 while the specmap engine's native reader learns the named form
 mirror-wise. The converter recipe bumps again (`specdoc/2` →
 `specdoc/3`); the host re-materialises once, after both shapes land.
-@status:spec/work
+The owner's third clause (2026-08-22, same sitting) binds the boot
+lanes: «статические и динамические лоадеры должны хорошо работать с
+новым синтаксисом фактов» — pinned at the transition's landing by (a)
+the static-splice determinism test running over a NAMED-shape snippet
+whose projected facts survive into STATIC, (b) the vibe-spec
+normal-closure byte-equality test running over BOTH serialisations
+(generic and named) of one dependency, and (c) the polygon re-run at
+specdoc/3, whose control package auto-adopts the named shape through
+to_xml — INDEX targets, STATIC splice and every machine loader then
+exercise the final syntax end-to-end; the agent half of the dynamic
+router is §5a's measurement, deliberately run AFTER this transition so
+it measures the shape that ships. @status:spec/work
 
 @fact:INLINE-STAYS-MARKDOWN **Decision (ADR-part).** Inline content —
 emphasis, inline code, links, `##NAME` citations, `spec://` addresses —
