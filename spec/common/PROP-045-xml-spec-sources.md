@@ -83,6 +83,48 @@ not by a lossy converter. @status:spec/work
 </spec>
 ```
 
+@fact:NAMED-SECTION-ELEMENTS **Decision (ADR-part; owner ruling 2026-08-22,
+verbatim): «Гораздо логичней `<three-bands title=\"…\">`. … Вся суть XML
+нотации в том, что у тебя названия тэгов несут названия сущностей, это
+упрощает работу нейросети».** A section serialises with its ANCHOR as the
+element name — `<three-bands title="1. The three bands">` — because the
+dialect's first reader is an agent, and a tag that names its entity is
+self-describing where an endless `<section>` river is not. The generic
+form `<section id="…" title="…">` remains in the dialect as the REQUIRED
+fallback for the two cases XML itself forbids or the grammar reserves: an
+anchor that is not a valid XML name (leading digit) and an anchor
+colliding with the structural vocabulary (`spec`,`title`,`status`,
+`section`,`p`,`fact`,`list`,`item`,`table`,`tr`,`td`,`fence`,`quote») —
+measured over the live corpus, that tail is 2 anchors of 1393; the
+emitter writes the named form everywhere else, the readers accept both.
+The converter recipe bumps (`specdoc/1` → `specdoc/2`), so every
+transformed slot re-materialises by the derived-manifest law rather than
+lingering in the old shape. The owner's next call arrived the same
+day — facts follow, see `##NAMED-FACT-ELEMENTS`. @status:spec/work
+
+@fact:NAMED-FACT-ELEMENTS **Decision (ADR-part; owner ruling 2026-08-22,
+verbatim): «сконвертируй и факты тоже. Предлагаю такой формат
+`<fact-name fact="true" ...>`. Таким образом кастомный XML-парсер всегда
+может найти соответствующие элементы».** A fact serialises with its ID
+as the element name, carrying the DISCRIMINATOR attribute —
+`<THE-LAW fact="true" status="impl/done">body</THE-LAW>` — so a reader
+that knows nothing of the vocabulary still finds every fact by one
+attribute test. The recognition law: an element IS a fact iff its name
+is `fact` (the generic form, which stays in the dialect) or it carries
+`fact="true"`. The named form is emitted whenever the id passes the
+same elementability predicate sections use (fact-id grammar already
+forbids leading digits, so the fallback tail is vocabulary collisions
+only); the typed-fact fence binding stays by id and does not change.
+The owner's second clause binds the scanners: the progress machinery
+must work when a fact's SOURCE — not a materialised copy — is authored
+XML; the host lane holds by construction (XML sources enter progress
+through the canonical MD projection) and is PINNED by explicit tests
+(an observed .xml source scans unit-for-unit equal to its MD twin),
+while the specmap engine's native reader learns the named form
+mirror-wise. The converter recipe bumps again (`specdoc/2` →
+`specdoc/3`); the host re-materialises once, after both shapes land.
+@status:spec/work
+
 @fact:INLINE-STAYS-MARKDOWN **Decision (ADR-part).** Inline content —
 emphasis, inline code, links, `##NAME` citations, `spec://` addresses —
 rides INSIDE text nodes as literal Markdown conventions, in both
