@@ -208,7 +208,7 @@ pub enum Command {
 
     /// Analyze the resolved spec/dependency tree (PROP-036): the effective
     /// boot load type per package (`static` / `dynamic` / `none`), the
-    /// transitive / condition / STATIC.md flags, the two boot lanes, and the
+    /// transitive / condition / static-lane flags, the two boot lanes, and the
     /// in-place `@spec` markers. Read-only. `--json` emits the machine model
     /// (validated against the shipped `package-tree.schema.v1.json`); a
     /// non-tty or `--plain` renders a static ASCII tree.

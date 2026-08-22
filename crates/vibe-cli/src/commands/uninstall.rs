@@ -15,10 +15,11 @@ use crate::exit_code::InstallError;
 use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::user_config::UserConfig;
 use vibe_core::{Group, PackageRef};
 use vibe_facts::{package_file_path, remove_package_file};
 use vibe_workspace::Workspace;
-use vibe_workspace::install::regenerate_boot;
+use vibe_workspace::install::regenerate_boot_with_spec_format;
 use vibe_workspace::materialization::{DestructiveGuard, guard_destructive};
 use vibe_workspace::vibedeps;
 
@@ -32,6 +33,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
         .context("discovering the workspace enclosing the project")?;
     let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
 
     let pkgref =
         PackageRef::parse(&args.package).with_context(|| format!("parsing `{}`", args.package))?;
@@ -147,7 +150,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
 
     // Regenerate every node's boot artifacts from the remaining
     // materialised state — the uninstalled package is gone from boot.
-    regenerate_boot(&workspace).context("regenerating boot artifacts")?;
+    regenerate_boot_with_spec_format(&workspace, spec_format)
+        .context("regenerating boot artifacts")?;
 
     lockfile.write(workspace.lockfile_path())?;
 

@@ -230,6 +230,12 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
     assert!(materialised.contains("stage=\"impl\" state=\"done\" comment=\"author extra\""));
     let manifest = vibe_workspace::vibedeps::read_derived_manifest(&slot).expect("manifest");
     assert!(manifest.overlay_hash.is_some());
+    fs::create_dir_all(slot.join("spec/boot")).expect("generated boot dir");
+    fs::write(
+        slot.join("spec/boot/STATIC.xml"),
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><spec xmlns=\"https://vibevm.org/spec/1\"><p><fact id=\"GENERATED\" status=\"impl/done\">projection only</fact></p></spec>",
+    )
+    .expect("generated XML lane");
 
     let adopt = user
         .vibe()
@@ -248,6 +254,7 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
         .expect("package facts");
     assert!(facts.contains(first));
     assert!(facts.contains(second));
+    assert!(!facts.contains("GENERATED"));
 
     let report = user
         .vibe()

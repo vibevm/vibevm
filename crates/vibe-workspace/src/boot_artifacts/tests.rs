@@ -9,7 +9,7 @@ use super::*;
 use crate::boot::{BootBand, BootEntry};
 use specmark::verifies;
 use tempfile::TempDir;
-use vibe_core::manifest::{LinkType, PackageFormat, TargetOs, WhenCondition};
+use vibe_core::manifest::{LinkType, PackageFormat, SpecFormat, TargetOs, WhenCondition};
 
 /// The host self coordinate the test workspaces stand in for (B-031). Shared
 /// with `tests_qualify` so every `render_static` / resolver call names one host.
@@ -452,4 +452,50 @@ fn render_index_names_the_materialised_xml_path() {
     let b = boot(vec![entry(&rel, LinkType::Dynamic, "org.example/lib")]);
     let index = render_index(&b, None).unwrap();
     assert!(index.contains(&rel), "{index}");
+}
+
+#[test]
+fn target_format_selects_index_pointer_and_preserves_markdown_bytes() {
+    let ws = TempDir::new().unwrap();
+    let rel = "vibedeps/org.example.lib/1.0.0/spec/boot/rules.md";
+    let abs = ws.path().join(rel);
+    fs::create_dir_all(abs.parent().unwrap()).unwrap();
+    fs::write(&abs, "# Rules {#root}\n\n@fact:ONE one @status:impl/done\n").unwrap();
+    let b = boot(vec![entry(rel, LinkType::Static, "org.example/lib")]);
+
+    let legacy = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
+    let markdown = render_static_with_spec_format(&b, ws.path(), &coord(), SpecFormat::Markdown)
+        .unwrap()
+        .unwrap();
+    assert_eq!(legacy, markdown, "Markdown target bytes must not move");
+
+    let index = render_index_with_spec_format(&b, None, SpecFormat::Xml).unwrap();
+    assert!(index.contains("static = \"spec/boot/STATIC.xml\""));
+}
+
+#[test]
+fn xml_target_crosses_the_pivot_once_per_contribution() {
+    let ws = TempDir::new().unwrap();
+    let mut entries = Vec::new();
+    for (name, fact) in [("one", "ONE"), ("two", "TWO")] {
+        let rel = format!("vibedeps/org.example.{name}/1.0.0/spec/boot/rules.md");
+        let abs = ws.path().join(&rel);
+        fs::create_dir_all(abs.parent().unwrap()).unwrap();
+        fs::write(
+            &abs,
+            format!("# {name} {{#root}}\n\n@fact:{fact} rule @status:impl/done\n"),
+        )
+        .unwrap();
+        entries.push(entry(
+            &rel,
+            LinkType::Static,
+            &format!("org.example/{name}"),
+        ));
+    }
+    let xml = render_static_with_spec_format(&boot(entries), ws.path(), &coord(), SpecFormat::Xml)
+        .unwrap()
+        .unwrap();
+    assert!(xml.starts_with("<!-- spec/boot/STATIC.xml"), "{xml}");
+    assert_eq!(xml.matches("<spec ").count(), 2, "{xml}");
+    assert_eq!(xml.matches("<!-- vibe:static ").count(), 2, "{xml}");
 }

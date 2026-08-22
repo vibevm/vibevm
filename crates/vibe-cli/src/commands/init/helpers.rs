@@ -8,7 +8,7 @@ use anyhow::{Context, Result};
 use serde::Serialize;
 use std::fs;
 use std::path::Path;
-use vibe_core::manifest::{Lockfile, Manifest, ProjectSection, RegistrySection};
+use vibe_core::manifest::{Lockfile, Manifest, ProjectSection, RegistrySection, SpecFormat};
 
 pub(super) fn resolve_name(args: &InitArgs, path: &Path) -> Result<String> {
     if let Some(n) = &args.name {
@@ -156,7 +156,9 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
 
     let workspace = vibe_workspace::Workspace::load(path)
         .with_context(|| "loading the new project to generate its boot artifacts")?;
-    vibe_workspace::install::regenerate_boot(&workspace)
+    // Fresh init writes no `spec_format`; the effective target is therefore
+    // the compatibility-preserving mixed/Markdown lane.
+    vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, SpecFormat::Mixed)
         .with_context(|| "generating the boot artifacts")?;
 
     let mut outcomes = Vec::with_capacity(ARTIFACTS.len());

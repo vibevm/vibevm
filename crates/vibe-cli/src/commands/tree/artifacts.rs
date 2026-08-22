@@ -3,7 +3,7 @@
 //! Two pure readers, no filesystem access — the caller hands in the file
 //! text:
 //!
-//! - [`decompile_static`] parses `STATIC.md`'s on-disk `vibe:static`
+//! - [`decompile_static`] parses the static lane's on-disk `vibe:static`
 //!   open-marker format into its contributions. This is a **dedicated**
 //!   decompiler — it is NOT `vibe_spec::decompile()`, which parses the
 //!   distinct `vibe:begin`/`vibe:end` compiler format and returns empty on
@@ -18,7 +18,7 @@ use serde::Deserialize;
 
 use super::model::{EmbedSpan, IndexEntry, IndexKind, StaticContribution};
 
-/// The opening delimiter of a `STATIC.md` provenance marker.
+/// The opening delimiter of a static-lane provenance marker.
 const MARKER_OPEN: &str = "<!-- vibe:static ";
 /// The closing delimiter of a marker line.
 const MARKER_CLOSE: &str = " -->";
@@ -48,7 +48,7 @@ fn parse_marker(line: &str, line_idx: usize) -> Option<Marker> {
     })
 }
 
-/// Decompile `STATIC.md` text into its ordered contributions (PROP-036 §2.8).
+/// Decompile static-lane text into its ordered contributions (PROP-036 §2.8).
 ///
 /// Each marker opens a region running to the next marker or EOF; the region
 /// yields the source `origin` (`group/name` or a host rel-path) and `path`.

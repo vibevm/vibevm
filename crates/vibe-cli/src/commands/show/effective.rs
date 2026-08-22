@@ -2,10 +2,12 @@
 //! every installed package's written files, each with a `spec://`
 //! provenance header (`VIBEVM-SPEC.md` §4.6).
 //!
-//! Every spec source enters through the PROP-045 projection dispatch
+//! Authored spec sources enter through the PROP-045 projection dispatch
 //! (`load_spec_text`): a `.xml` boot file or written file is shown as its
-//! canonical Markdown projection — one effective view, whatever form each
-//! document materialised in. The WAL stays host Markdown, read raw.
+//! canonical Markdown projection. Generated STATIC is different: it is a
+//! provenance-delimited tape of contributions, not one dialect document, so
+//! the effective view reads either generated spelling verbatim. The WAL stays
+//! host Markdown and is also read raw.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
@@ -16,6 +18,7 @@ use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::machine_json_path;
 use vibe_core::manifest::Lockfile;
+use vibe_workspace::boot_artifacts;
 
 use crate::cli::ShowEffectiveArgs;
 use crate::output;
@@ -74,6 +77,8 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     // ##LOADER-LAW) — an `.xml` boot file renders as its projection.
     let boot_dir = project_root.join("spec/boot");
     if boot_dir.is_dir() {
+        boot_artifacts::resolve_static_path(project_root)
+            .context("resolving the generated STATIC tape")?;
         let mut entries: Vec<PathBuf> = fs::read_dir(&boot_dir)
             .with_context(|| format!("reading `{}`", boot_dir.display()))?
             .filter_map(|e| e.ok())
@@ -93,7 +98,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             let rel = format!("spec/boot/{filename}");
             let origin = boot_origin(&filename, lockfile.as_ref());
             let spec_uri = format!("spec://project/boot/{filename}");
-            let (body, _) = load_spec(&path)?;
+            let body = load_boot_entry(&path)?;
             sections.push(EffectiveSection {
                 spec_uri,
                 path: rel,
@@ -158,7 +163,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     });
                     continue;
                 }
-                let (body, _) = load_spec(&abs)?;
+                let body = load_spec(&abs)?;
                 let suffix = rel_str.trim_start_matches("spec/");
                 sections.push(EffectiveSection {
                     spec_uri: format!("{pkg_uri_root}/{suffix}"),
@@ -225,14 +230,32 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     Ok(())
 }
 
-/// One spec source as the effective view shows it — the PROP-045 dispatch
-/// (`load_spec_text`): `.md` verbatim, `.xml` as its canonical projection.
-/// The kind is deliberately dropped here: a provenance concatenation has
-/// no line-citing diagnostics to mark.
-fn load_spec(path: &Path) -> Result<(String, vibe_specdoc::SourceKind)> {
+/// Load one boot entry. Generated STATIC is a tape, so feeding its complete
+/// contents to a single-document parser would merge provenance boundaries or
+/// reject a valid multi-document XML lane. Show needs only its text and keeps
+/// it verbatim.
+fn load_boot_entry(path: &Path) -> Result<String> {
+    let is_static_tape = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .is_some_and(|name| {
+            name == boot_artifacts::STATIC_FILE || name == boot_artifacts::STATIC_XML_FILE
+        });
+    if is_static_tape {
+        return fs::read_to_string(path).with_context(|| format!("reading `{}`", path.display()));
+    }
+    load_spec(path)
+}
+
+/// One authored spec source as the effective view shows it — the PROP-045
+/// dispatch (`load_spec_text`): `.md` verbatim, `.xml` as its canonical
+/// projection. The source kind is deliberately dropped here: a provenance
+/// concatenation has no line-citing diagnostics to mark.
+fn load_spec(path: &Path) -> Result<String> {
     vibe_specdoc::load_spec_text(path)
         .map_err(|e| anyhow::Error::msg(e.to_string()))
         .with_context(|| format!("reading `{}`", path.display()))
+        .map(|(body, _)| body)
 }
 
 fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
@@ -267,6 +290,30 @@ fn normalize_rel_path(p: &Path) -> PathBuf {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generated_static_tape_is_read_verbatim_in_both_formats() {
+        for format in [
+            vibe_core::manifest::SpecFormat::Markdown,
+            vibe_core::manifest::SpecFormat::Xml,
+        ] {
+            let tmp = tempfile::tempdir().unwrap();
+            let root = tmp.path();
+            std::fs::create_dir_all(root.join("spec/boot")).unwrap();
+            std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
+            let tape = "<!-- vibe:static one -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>one</p></spec>\n\n\
+                        <!-- vibe:static two -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>two</p></spec>\n";
+            let rel = boot_artifacts::static_path(format);
+            std::fs::write(root.join(rel), tape).unwrap();
+
+            let sections = collect_sections(root).expect("collect the STATIC tape");
+            let static_tape = sections
+                .iter()
+                .find(|section| section.path == rel)
+                .expect("the generated tape is a section");
+            assert_eq!(static_tape.body, tape);
+        }
+    }
 
     /// PROP-045 ##LOADER-LAW: an `.xml` boot file is a first-class boot
     /// section, and its body is the canonical MD projection — the

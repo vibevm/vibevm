@@ -2,7 +2,7 @@
 //! artifacts, and the node manifests into the [`PackageTree`] model
 //! (PROP-036 §2.3–§2.5, §3).
 //!
-//! The effective load type is read from the committed `STATIC.md` /
+//! The effective load type is read from the committed format-selected `STATIC` /
 //! `INDEX.md` — what an agent actually reads at boot — never a fresh
 //! recompute (PROP-036 §2.3 decision).
 
@@ -15,6 +15,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use vibe_core::manifest::{LinkType, LockedPackage, Lockfile, Manifest};
 use vibe_spec::Directives;
+use vibe_workspace::boot_artifacts;
 
 use super::artifacts::{self, IndexParse};
 use super::diagnostics;
@@ -43,7 +44,16 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         .with_context(|| format!("reading {}", root.join(Manifest::FILENAME).display()))?;
 
     // Committed boot artifacts — the effective lanes (PROP-036 §2.3).
-    let static_text = read_opt(&root.join("spec/boot/STATIC.md"));
+    let static_path = boot_artifacts::resolve_static_path(root)?;
+    let static_text = static_path.as_deref().and_then(read_opt);
+    let static_wire = static_path.as_ref().map(|path| {
+        format!(
+            "spec/boot/{}",
+            path.file_name()
+                .expect("the static resolver returns a file path")
+                .to_string_lossy()
+        )
+    });
     let index_text = read_opt(&root.join("spec/boot/INDEX.md"));
     let static_contribs = static_text
         .as_deref()
@@ -148,13 +158,16 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     let boot_files: Vec<String> = boot_file_set.into_iter().collect();
 
     let boot = Boot {
-        static_md: static_text.as_deref().map(|t| StaticLane {
-            present: true,
-            path: "spec/boot/STATIC.md".to_string(),
-            bytes: t.len() as u64,
-            lines: t.lines().count() as u64,
-            contributions: static_contribs,
-        }),
+        static_md: static_text
+            .as_deref()
+            .zip(static_wire.clone())
+            .map(|(t, path)| StaticLane {
+                present: true,
+                path,
+                bytes: t.len() as u64,
+                lines: t.lines().count() as u64,
+                contributions: static_contribs,
+            }),
         index_md: IndexLane {
             present: index_text.is_some(),
             path: "spec/boot/INDEX.md".to_string(),

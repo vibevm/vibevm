@@ -1,9 +1,4 @@
-//! Boot-artifact (re)generation — the boot half of the loading model
-//! (PROP-009 §2.7), split from `install.rs` per the file-length budget.
-//! `apply_resolution` (in `super`) drives materialisation then calls
-//! `regenerate_boot_from` here; `regenerate_boot` reconstructs the
-//! resolution from the materialised `vibedeps/` tree for uninstall /
-//! reinstall.
+//! Boot-artifact (re)generation — the boot half of PROP-009's loading model.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
@@ -13,7 +8,7 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_core::Group;
-use vibe_core::manifest::{BootCategory, LinkType, Manifest};
+use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
 
 use crate::boot::hybrid::{UnitId, UnitInput, fingerprint, hoist, resolve_zone};
 use crate::boot::{self, AuthoredBoot, BootEntry, DependencyBoot, EffectiveBoot, NodeBootInputs};
@@ -25,11 +20,7 @@ use super::{ResolvedDep, io_err};
 mod hybrid_emit;
 use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
-/// The workspace root's self coordinate — `<group>/<name>` from its `[project]`
-/// table (B-031: the host is a package coordinate). A root with no `[project]`
-/// (or no `group`) declares no self coordinate, so its authored `spec/` is
-/// unreachable by `spec://` address — the resolver then errors on any undotted
-/// authority with "no self coordinate".
+/// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
 use materialised_read::read_materialised;
 mod snippet_source;
@@ -45,12 +36,18 @@ fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
     }
 }
 
-/// Regenerate every node's boot artifacts from a given `resolution` — the
-/// boot half of [`apply_resolution`], without materialising. Returns the
-/// `rel_path` of every node whose artifacts were written.
+/// Regenerate each node from `resolution`, returning written node paths.
 pub fn regenerate_boot_from(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
+) -> Result<Vec<String>, WorkspaceError> {
+    regenerate_boot_from_with_spec_format(workspace, resolution, SpecFormat::Mixed)
+}
+
+pub fn regenerate_boot_from_with_spec_format(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
 ) -> Result<Vec<String>, WorkspaceError> {
     // The workspace root's self coordinate (B-031): `<group>/<name>` from its
     // `[project]` table — what a `spec://` address names to reach the authored
@@ -93,6 +90,7 @@ pub fn regenerate_boot_from(
         &table,
         &shared,
         &fps,
+        spec_format,
     )?;
 
     // The absolute root's foundation boot — inherited by every member
@@ -111,7 +109,13 @@ pub fn regenerate_boot_from(
         } else {
             root_foundation.clone()
         };
-        let deps = node_dependency_boot(&workspace.root, manifest, resolution, &with_static);
+        let deps = node_dependency_boot(
+            &workspace.root,
+            manifest,
+            resolution,
+            &with_static,
+            spec_format,
+        );
         let mut effective = boot::compute_effective_boot(NodeBootInputs {
             own_boot: &own,
             inherited_foundation: &inherited,
@@ -150,7 +154,13 @@ pub fn regenerate_boot_from(
         // single-copies count as present, and before the artifact write so the
         // rendered lane is the once-each form.
         desubstitute_covered_units(&mut effective, &table);
-        boot_artifacts::write_boot_artifacts(&node_dir, &workspace.root, &self_coord, &effective)?;
+        boot_artifacts::write_boot_artifacts_with_spec_format(
+            &node_dir,
+            &workspace.root,
+            &self_coord,
+            &effective,
+            spec_format,
+        )?;
         nodes_regenerated.push(rel.to_string());
     }
     Ok(nodes_regenerated)
@@ -253,18 +263,21 @@ fn present(snapshot: &[BootEntry], origin: &str) -> bool {
     })
 }
 
-/// Regenerate every node's boot artifacts from the materialised `vibedeps/`
-/// state already on disk — no fresh resolution, no re-materialisation.
-///
-/// Used by `vibe uninstall` (after a slot is removed) and, later, by
-/// `vibe reinstall`. The resolution is reconstructed by reading each
-/// `vibedeps/` slot's own manifest.
+/// Regenerate from materialised `vibedeps/`, without resolving or copying.
 pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceError> {
+    regenerate_boot_with_spec_format(workspace, SpecFormat::Mixed)
+}
+
+/// Regenerate the materialised dependency tree in the selected format.
+pub fn regenerate_boot_with_spec_format(
+    workspace: &Workspace,
+    spec_format: SpecFormat,
+) -> Result<Vec<String>, WorkspaceError> {
     // PROP-012 §2.4 — reject a malformed instruction-file block before
     // any boot-artifact write.
     validate_redirect_blocks(workspace)?;
     let resolution = read_materialised(&workspace.root)?;
-    regenerate_boot_from(workspace, &resolution)
+    regenerate_boot_from_with_spec_format(workspace, &resolution, spec_format)
 }
 
 /// Verify the per-unit boot artifacts are current (PROP-038 §3) — the integrity
@@ -325,7 +338,10 @@ pub(crate) fn node_own_boot(
             continue;
         }
         // The generated artifacts are not authored boot.
-        if name == boot_artifacts::STATIC_FILE || name == boot_artifacts::INDEX_FILE {
+        if name == boot_artifacts::static_file(SpecFormat::Mixed)
+            || name == boot_artifacts::static_file(SpecFormat::Xml)
+            || name == boot_artifacts::INDEX_FILE
+        {
             continue;
         }
         let category = match name.as_str() {
@@ -372,6 +388,7 @@ fn node_dependency_boot(
     node_manifest: &Manifest,
     resolution: &[ResolvedDep],
     with_static: &HashSet<UnitId>,
+    spec_format: SpecFormat,
 ) -> Vec<DependencyBoot> {
     let index: HashMap<(&Group, &str), &ResolvedDep> = resolution
         .iter()
@@ -431,7 +448,10 @@ fn node_dependency_boot(
             let (boot_path, unit_substituted) =
                 if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
                     (
-                        Some(format!("{slot}/spec/boot/{}", boot_artifacts::STATIC_FILE)),
+                        Some(format!(
+                            "{slot}/spec/boot/{}",
+                            boot_artifacts::static_file(spec_format)
+                        )),
                         true,
                     )
                 } else {

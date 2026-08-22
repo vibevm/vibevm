@@ -182,7 +182,7 @@ pub fn run(
             ctx.heading("vibe.lock is fresh — skipping resolution");
             let ws = Workspace::discover(&project_root)
                 .context("re-discovering the workspace for boot regeneration")?;
-            let nodes = vibe_workspace::install::regenerate_boot(&ws)
+            let nodes = vibe_workspace::install::regenerate_boot_with_spec_format(&ws, spec_format)
                 .context("regenerating boot artifacts from the materialised state")?;
             report::emit_fresh_report(ctx, &nodes)
         }
@@ -240,7 +240,7 @@ pub fn run(
 
 /// Effective PROP-045 setting: a project pin is reproducible and wins over
 /// the operator default; absence at both layers preserves legacy `mixed`.
-fn resolve_spec_format(manifest: &Manifest, user_config: &UserConfig) -> SpecFormat {
+pub(crate) fn resolve_spec_format(manifest: &Manifest, user_config: &UserConfig) -> SpecFormat {
     manifest
         .project
         .as_ref()

@@ -28,6 +28,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -37,13 +38,30 @@ use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_workspace::Workspace;
-use vibe_workspace::install::{ResolvedDep, apply_resolution, regenerate_boot};
+use vibe_workspace::install::{
+    ResolvedDep, SlotCheck, SlotVerifier, apply_resolution_with_spec_format,
+    regenerate_boot_with_spec_format,
+};
 use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, ReinstallArgs};
 use crate::commands::install::build_install_resolver;
 use crate::exit_code::InstallError;
 use crate::output;
+
+struct SourceHashes(HashMap<(Group, String), String>);
+
+impl SlotVerifier for SourceHashes {
+    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
+        self.0
+            .get(&(dep.group.clone(), dep.name.clone()))
+            .map(String::as_str)
+    }
+
+    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
+        SlotCheck::Unverifiable
+    }
+}
 
 /// Reload and re-derive exactly one installed transformed slot.
 ///
@@ -81,12 +99,7 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
 
     let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
     let user_config = UserConfig::load().context("loading the user config")?;
-    let spec_format = manifest
-        .project
-        .as_ref()
-        .and_then(|project| project.spec_format)
-        .or(user_config.install.spec_format)
-        .unwrap_or_default();
+    let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
     if spec_format == SpecFormat::Mixed {
         return Ok(true);
     }
@@ -145,6 +158,9 @@ pub fn run(
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
     let lockfile = load_lockfile(&workspace.root)?;
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let spec_format =
+        crate::commands::install::resolve_spec_format(&workspace.root_manifest, &user_config);
 
     if args.force {
         run_force(
@@ -154,9 +170,10 @@ pub fn run(
             &args,
             embedded_root.as_deref(),
             root_offline,
+            spec_format,
         )
     } else {
-        run_regenerate(ctx, &workspace, &lockfile, &args)
+        run_regenerate(ctx, &workspace, &lockfile, &args, spec_format)
     }
 }
 
@@ -167,6 +184,7 @@ fn run_regenerate(
     workspace: &Workspace,
     lockfile: &Lockfile,
     args: &ReinstallArgs,
+    spec_format: SpecFormat,
 ) -> Result<()> {
     // Without `--force` the materialised `vibedeps/` tree is the only
     // content source. Every locked package must have its slot on disk —
@@ -219,7 +237,8 @@ fn run_regenerate(
         return Err(InstallError::UserDeclined.into());
     }
 
-    let nodes = regenerate_boot(workspace).context("regenerating boot artifacts")?;
+    let nodes = regenerate_boot_with_spec_format(workspace, spec_format)
+        .context("regenerating boot artifacts")?;
     emit_report(ctx, false, &nodes, &[]);
     Ok(())
 }
@@ -238,6 +257,7 @@ fn run_force(
     args: &ReinstallArgs,
     embedded_root: Option<&Path>,
     root_offline: bool,
+    spec_format: SpecFormat,
 ) -> Result<()> {
     // No locked packages — `--force` has nothing to re-fetch. Still
     // regenerate boot so a stale artifact is recomputed.
@@ -254,8 +274,15 @@ fn run_force(
         // though with an empty resolution there is nothing to copy. Hooks
         // are not wired into `reinstall` yet (PROP-020 install path lands
         // first); `None` skips hook running.
-        let outcome = apply_resolution(workspace, &[], SlotIntegrity::Verify, None)
-            .context("regenerating the workspace")?;
+        let outcome = apply_resolution_with_spec_format(
+            workspace,
+            &[],
+            SlotIntegrity::Verify,
+            spec_format,
+            None,
+            None,
+        )
+        .context("regenerating the workspace")?;
         emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
         return Ok(());
     }
@@ -329,6 +356,7 @@ fn run_force(
         vibe_registry::store::store_root().context("resolving the machine package store root")?;
 
     let mut resolution: Vec<ResolvedDep> = Vec::with_capacity(lockfile.packages.len());
+    let mut source_hashes = HashMap::new();
     for locked in &lockfile.packages {
         let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
         let cached = resolver
@@ -339,6 +367,10 @@ fn run_force(
                     locked.group, locked.name, locked.version
                 )
             })?;
+        source_hashes.insert(
+            (cached.resolved.group.clone(), cached.resolved.name.clone()),
+            cached.content_hash.clone(),
+        );
         resolution.push(ResolvedDep {
             kind: cached.package_meta().kind,
             group: cached.resolved.group.clone(),
@@ -368,8 +400,15 @@ fn run_force(
     // makes `apply_resolution` overwrite every slot rather than trust a
     // present one — re-materialisation is the whole point of `--force`.
     // Hooks are not wired into `reinstall` yet; `None` skips hook running.
-    let outcome = apply_resolution(workspace, &resolution, SlotIntegrity::Verify, None)
-        .context("re-materialising the workspace")?;
+    let outcome = apply_resolution_with_spec_format(
+        workspace,
+        &resolution,
+        SlotIntegrity::Verify,
+        spec_format,
+        Some(&SourceHashes(source_hashes)),
+        None,
+    )
+    .context("re-materialising the workspace")?;
     emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
     Ok(())
 }

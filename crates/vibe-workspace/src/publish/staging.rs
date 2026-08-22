@@ -10,7 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
-use vibe_core::manifest::{Manifest, OriginSection};
+use vibe_core::manifest::{Manifest, OriginSection, SpecFormat};
 
 use crate::WorkspaceError;
 
@@ -204,7 +204,13 @@ fn regenerate_published_boot(node_dir: &Path, manifest: &Manifest) -> Result<()>
         .as_ref()
         .map(|p| vibe_spec::SelfCoordinate::new(Some(p.group.as_str().to_owned()), p.name.clone()))
         .unwrap_or_else(|| vibe_spec::SelfCoordinate::new(None, String::new()));
-    crate::boot_artifacts::write_boot_artifacts(node_dir, node_dir, &self_coord, &effective)?;
+    crate::boot_artifacts::write_boot_artifacts_with_spec_format(
+        node_dir,
+        node_dir,
+        &self_coord,
+        &effective,
+        SpecFormat::Mixed,
+    )?;
     Ok(())
 }
 

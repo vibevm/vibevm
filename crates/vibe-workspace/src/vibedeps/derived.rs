@@ -414,8 +414,8 @@ fn is_spec_document(rel: &Path) -> bool {
     under_spec || root_readme
 }
 
-/// True for the slot's generated boot artifacts (`spec/boot/STATIC.md`,
-/// `spec/boot/INDEX.md`) — projections bootgen regenerates after
+/// True for the slot's generated boot artifacts (either `STATIC` spelling and
+/// `INDEX.md`) — projections bootgen regenerates after
 /// materialisation, excluded from the derived hash and the format-purity
 /// claim exactly like the derived manifest itself.
 pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
@@ -423,7 +423,9 @@ pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
         return false;
     };
     let slash = path_to_slash(rel);
-    slash == "spec/boot/STATIC.md" || slash == "spec/boot/INDEX.md"
+    slash == "spec/boot/STATIC.md"
+        || slash == "spec/boot/STATIC.xml"
+        || slash == "spec/boot/INDEX.md"
 }
 
 fn collect_hash_files(
@@ -440,8 +442,8 @@ fn collect_hash_files(
             continue;
         }
         // Slot-internal GENERATED boot artifacts are outside the derived
-        // identity: bootgen writes a child `spec/boot/STATIC.md` /
-        // `INDEX.md` into a dependency slot AFTER materialisation, and by
+        // identity: bootgen writes a child `spec/boot/STATIC.*` / `INDEX.md`
+        // into a dependency slot AFTER materialisation, and by
         // the boot-lane law those artifacts are Markdown regardless of
         // spec_format — hashing them would stale every transformed slot
         // the moment its boot regenerates, and counting them would fake a

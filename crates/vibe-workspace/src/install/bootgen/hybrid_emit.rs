@@ -11,7 +11,7 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_core::Group;
-use vibe_core::manifest::LinkType;
+use vibe_core::manifest::{LinkType, SpecFormat};
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
@@ -134,6 +134,7 @@ pub(super) fn emit_package_units(
     table: &HashMap<UnitId, UnitInput>,
     shared: &HashSet<UnitId>,
     fingerprints: &HashMap<UnitId, String>,
+    spec_format: SpecFormat,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -167,10 +168,25 @@ pub(super) fn emit_package_units(
     // an aggregator scores one puller and is never hoisted (§2.4). -->
     for id in &with_static {
         let Some(slot) = slots.get(id) else { continue };
-        let effective = zone_to_effective(id, &zones[id], table, &with_static, &slots, shared);
+        let effective = zone_to_effective(
+            id,
+            &zones[id],
+            table,
+            &with_static,
+            &slots,
+            shared,
+            spec_format,
+        );
         let boot_dir = workspace_root.join(slot).join("spec").join("boot");
         let fp = fingerprints.get(id).map(String::as_str).unwrap_or("");
-        emit_effective(&boot_dir, workspace_root, self_coord, &effective, fp)?;
+        emit_effective(
+            &boot_dir,
+            workspace_root,
+            self_coord,
+            &effective,
+            fp,
+            spec_format,
+        )?;
     }
     Ok(with_static)
 }
@@ -202,6 +218,7 @@ fn zone_to_effective(
     with_static: &HashSet<UnitId>,
     slots: &HashMap<UnitId, String>,
     shared: &HashSet<UnitId>,
+    spec_format: SpecFormat,
 ) -> EffectiveBoot {
     let mut entries: Vec<BootEntry> = Vec::new();
     for member in hybrid::topo_zone(&zone.static_members, table) {
@@ -230,7 +247,7 @@ fn zone_to_effective(
         });
     }
     for (target, when) in &zone.dynamic_edges {
-        let Some(path) = dynamic_target_path(target, with_static, slots, table) else {
+        let Some(path) = dynamic_target_path(target, with_static, slots, table, spec_format) else {
             continue;
         };
         entries.push(BootEntry {
@@ -258,11 +275,15 @@ fn dynamic_target_path(
     with_static: &HashSet<UnitId>,
     slots: &HashMap<UnitId, String>,
     table: &HashMap<UnitId, UnitInput>,
+    spec_format: SpecFormat,
 ) -> Option<String> {
     if with_static.contains(target) {
-        slots
-            .get(target)
-            .map(|slot| format!("{slot}/spec/boot/{}", boot_artifacts::STATIC_FILE))
+        slots.get(target).map(|slot| {
+            format!(
+                "{slot}/spec/boot/{}",
+                boot_artifacts::static_file(spec_format)
+            )
+        })
     } else {
         table.get(target).and_then(|u| u.own_boot_path.clone())
     }
@@ -278,33 +299,55 @@ fn emit_effective(
     self_coord: &vibe_spec::SelfCoordinate,
     effective: &EffectiveBoot,
     fingerprint: &str,
+    spec_format: SpecFormat,
 ) -> Result<(), WorkspaceError> {
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
+    let static_path = boot_dir.join(boot_artifacts::static_file(spec_format));
+    let stale_path = boot_dir.join(if matches!(spec_format, SpecFormat::Xml) {
+        boot_artifacts::STATIC_FILE
+    } else {
+        boot_artifacts::STATIC_XML_FILE
+    });
     // Dirty-subgraph skip (PROP-038 §2.8): if the existing INDEX carries the
     // same fingerprint, this unit's whole static zone is unchanged — skip both
     // writes. An unchanged install thus recompiles nothing and churns no git.
-    let unchanged = fs::read_to_string(&index)
-        .ok()
-        .and_then(|existing| boot_artifacts::read_fingerprint(&existing))
-        .as_deref()
-        == Some(fingerprint);
+    let unchanged = static_path.is_file()
+        && !stale_path.exists()
+        && fs::read_to_string(&index)
+            .ok()
+            .and_then(|existing| boot_artifacts::read_fingerprint(&existing))
+            .as_deref()
+            == Some(fingerprint);
     if unchanged {
         return Ok(());
     }
     fs::create_dir_all(boot_dir).map_err(|e| io_err(boot_dir, e))?;
     fs::write(
         &index,
-        boot_artifacts::render_index(effective, Some(fingerprint))?,
+        boot_artifacts::render_index_with_spec_format(effective, Some(fingerprint), spec_format)?,
     )
     .map_err(|e| io_err(&index, e))?;
-    let static_path = boot_dir.join(boot_artifacts::STATIC_FILE);
-    match boot_artifacts::render_static(effective, workspace_root, self_coord)? {
-        Some(text) => fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?,
-        None => {
-            if static_path.exists() {
-                fs::remove_file(&static_path).map_err(|e| io_err(&static_path, e))?;
-            }
+    match boot_artifacts::render_static_with_spec_format(
+        effective,
+        workspace_root,
+        self_coord,
+        spec_format,
+    )? {
+        Some(text) => {
+            fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;
+            remove_if_exists(&stale_path)?;
         }
+        None => {
+            remove_if_exists(&static_path)?;
+            remove_if_exists(&stale_path)?;
+        }
+    }
+    Ok(())
+}
+
+fn remove_if_exists(path: &Path) -> Result<(), WorkspaceError> {
+    if path.exists() {
+        fs::remove_file(path).map_err(|e| io_err(path, e))?;
     }
     Ok(())
 }

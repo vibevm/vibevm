@@ -513,7 +513,7 @@ fn generated_boot_artifacts_stay_outside_the_derived_identity() {
         slot.join("spec/a.xml"),
         "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
     )
-    .expect("write");
+    .unwrap();
     let before = derived::compute_derived_hash(slot).expect("hash");
     std::fs::write(
         slot.join("spec/boot/STATIC.md"),
@@ -521,17 +521,17 @@ fn generated_boot_artifacts_stay_outside_the_derived_identity() {
 ",
     )
     .expect("write");
-    std::fs::write(
-        slot.join("spec/boot/INDEX.md"),
-        "schema = 1
-",
-    )
-    .expect("write");
+    std::fs::write(slot.join("spec/boot/STATIC.xml"), "generated XML\n").unwrap();
+    std::fs::write(slot.join("spec/boot/INDEX.md"), "schema = 1\n").unwrap();
     let after = derived::compute_derived_hash(slot).expect("hash");
     assert_eq!(before, after, "generated artifacts must not move the hash");
     assert!(derived::is_generated_boot_artifact(
         slot,
         &slot.join("spec/boot/STATIC.md")
+    ));
+    assert!(derived::is_generated_boot_artifact(
+        slot,
+        &slot.join("spec/boot/STATIC.xml")
     ));
     assert!(!derived::is_generated_boot_artifact(
         slot,

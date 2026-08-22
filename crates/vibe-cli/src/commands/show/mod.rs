@@ -4,8 +4,9 @@
 //! ones (`graph`, `node`, `plan`) land alongside the LLM-build
 //! pipeline.
 //!
-//! - `vibe show effective` — concatenate `spec/boot/*.md` (sorted by
-//!   the canonical `NN-` prefix) and every installed package's
+//! - `vibe show effective` — concatenate the generated STATIC tape and
+//!   authored `spec/boot/*.{md,xml}` files (sorted by the canonical
+//!   `NN-` prefix), then every installed package's
 //!   `files_written` (in lockfile order), each preceded by a
 //!   `spec://` provenance header so a cold reader knows which
 //!   package contributed which content.

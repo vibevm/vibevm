@@ -1,7 +1,7 @@
 //! Check 7 — `spec/boot/` exists and holds only spec-source files
 //! (Markdown or dialect XML, PROP-045 ##LOADER-LAW). PROP-009 retired the
 //! `NN-` filename prefix; the directory holds authored boot files and
-//! `vibe`-generated `INDEX.md` / `STATIC.md` artifacts, none numerically
+//! `vibe`-generated `INDEX.md` / `STATIC.*` artifacts, none numerically
 //! prefixed. An `.xml` boot file must parse as the dialect (a foreign
 //! construct is a loud error, never a silent skip), and `X.md` + `X.xml`
 //! beside each other are one document in two forms — an error naming both
@@ -63,12 +63,23 @@ impl Check for BootDirectoryCheck {
         // the dialect is an error, and a document held in BOTH forms is
         // the split brain the mixed target forbids.
         let mut spec_files: Vec<PathBuf> = Vec::new();
+        let mut has_static_md = false;
+        let mut has_static_xml = false;
         for entry in entries.filter_map(|e| e.ok()) {
             let name = entry.file_name().to_string_lossy().into_owned();
             if !entry.file_type().map(|t| t.is_file()).unwrap_or(false) {
                 continue;
             }
             let path = entry.path();
+            // The generated XML lane is intentionally a provenance-framed
+            // stream of one XML document per contribution, not one root
+            // document. Both generated names are therefore recognized before
+            // authored-source dialect validation and pair-collision checks.
+            if name == "STATIC.md" || name == "STATIC.xml" {
+                has_static_md |= name == "STATIC.md";
+                has_static_xml |= name == "STATIC.xml";
+                continue;
+            }
             if !vibe_specdoc::is_spec_source(&path) {
                 report.warn(
                     CheckId::BootDirectory,
@@ -92,6 +103,14 @@ impl Check for BootDirectoryCheck {
                 );
             }
             spec_files.push(path);
+        }
+        if has_static_md && has_static_xml {
+            report.err(
+                CheckId::BootDirectory,
+                Some(boot_rel.clone()),
+                None,
+                "both STATIC.md and STATIC.xml exist — the generator owns one; delete the stray",
+            );
         }
         for collision in vibe_specdoc::pair_collisions_in(&spec_files) {
             let rel = collision
@@ -132,6 +151,39 @@ mod tests {
             "the loading-model boot layout must not be flagged; got: {:?}",
             report.findings
         );
+    }
+
+    #[test]
+    fn boot_dir_accepts_either_generated_static_name_but_rejects_both() {
+        for name in ["STATIC.md", "STATIC.xml"] {
+            let project = tempdir().unwrap();
+            write_minimal_project(project.path());
+            fs::write(
+                project.path().join("spec/boot").join(name),
+                "generated stream\n",
+            )
+            .unwrap();
+            let report = check_project(project.path(), &opts());
+            assert!(
+                !report.findings.iter().any(|f| {
+                    f.check == CheckId::BootDirectory && f.severity == Severity::Error
+                }),
+                "{name} alone must pass; got: {:?}",
+                report.findings
+            );
+        }
+
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(project.path().join("spec/boot/STATIC.md"), "generated\n").unwrap();
+        fs::write(project.path().join("spec/boot/STATIC.xml"), "generated\n").unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(report.findings.iter().any(|f| {
+            f.check == CheckId::BootDirectory
+                && f.severity == Severity::Error
+                && f.message
+                    == "both STATIC.md and STATIC.xml exist — the generator owns one; delete the stray"
+        }));
     }
 
     #[test]

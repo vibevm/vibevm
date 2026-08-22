@@ -3,12 +3,12 @@
 //! of the lane tests along the redirect seam; the lane tests keep the
 //! `STATIC.md` / `INDEX.md` coverage.
 
-use super::super::{SelfCoordinate, write_boot_artifacts};
+use super::super::{SelfCoordinate, write_boot_artifacts, write_boot_artifacts_with_spec_format};
 use super::*;
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use specmark::verifies;
 use tempfile::TempDir;
-use vibe_core::manifest::LinkType;
+use vibe_core::manifest::{LinkType, SpecFormat};
 
 /// The host self coordinate these redirect tests stand in for (B-031). The
 /// redirect-path tests carry no static entries, so the coordinate is never
@@ -44,6 +44,12 @@ fn render_redirect_points_at_the_boot_files() {
     assert!(r.contains("do not edit"));
     assert!(r.contains("spec/boot/STATIC.md"));
     assert!(r.contains("spec/boot/INDEX.md"));
+    assert_eq!(
+        r,
+        render_redirect_with_spec_format(SpecFormat::Markdown),
+        "the Markdown redirect bytes remain unchanged"
+    );
+    assert!(render_redirect_with_spec_format(SpecFormat::Xml).contains("spec/boot/STATIC.xml"));
 }
 
 #[test]
@@ -99,6 +105,34 @@ fn write_boot_artifacts_removes_a_stale_inline() {
     let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &without).unwrap();
     assert!(written.static_lane.is_none());
     assert!(!ws.path().join("spec/boot/STATIC.md").exists());
+}
+
+#[test]
+fn switching_markdown_to_xml_removes_the_owned_stale_name() {
+    let ws = TempDir::new().unwrap();
+    let source = ws.path().join("vibedeps/org.example.rules/1.0.0/rules.md");
+    fs::create_dir_all(source.parent().unwrap()).unwrap();
+    fs::write(
+        &source,
+        "# Rules {#root}\n\n@fact:RULE one @status:impl/done\n",
+    )
+    .unwrap();
+    let b = boot(vec![entry(
+        "vibedeps/org.example.rules/1.0.0/rules.md",
+        LinkType::Static,
+        "org.example/rules",
+    )]);
+
+    write_boot_artifacts_with_spec_format(ws.path(), ws.path(), &coord(), &b, SpecFormat::Markdown)
+        .unwrap();
+    assert!(ws.path().join("spec/boot/STATIC.md").is_file());
+
+    write_boot_artifacts_with_spec_format(ws.path(), ws.path(), &coord(), &b, SpecFormat::Xml)
+        .unwrap();
+    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
+    assert!(ws.path().join("spec/boot/STATIC.xml").is_file());
+    let redirect = fs::read_to_string(ws.path().join("AGENTS.md")).unwrap();
+    assert!(redirect.contains("spec/boot/STATIC.xml"));
 }
 
 // ----- the managed <vibevm> block (PROP-012) -----

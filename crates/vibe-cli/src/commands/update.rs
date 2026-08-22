@@ -15,18 +15,20 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
-use vibe_core::user_config::SlotIntegrity;
+use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
-    ResolvedDep, materialise_subtree, regenerate_boot, run_post_install_hooks,
+    ResolvedDep, SlotCheck, SlotVerifier, materialise_subtree_with_spec_format,
+    regenerate_boot_with_spec_format, run_post_install_hooks,
 };
 use vibe_workspace::vibedeps;
 
@@ -49,6 +51,20 @@ struct PendingInPlace {
     dependencies: Vec<PackageRef>,
 }
 
+struct SourceHashes(HashMap<(Group, String), String>);
+
+impl SlotVerifier for SourceHashes {
+    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
+        self.0
+            .get(&(dep.group.clone(), dep.name.clone()))
+            .map(String::as_str)
+    }
+
+    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
+        SlotCheck::Unverifiable
+    }
+}
+
 pub fn run(
     ctx: &output::Context,
     args: UpdateArgs,
@@ -69,6 +85,8 @@ pub fn run(
         .context("discovering the workspace enclosing the project")?;
     let manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
 
     if manifest.registries.is_empty() {
         bail!(
@@ -135,13 +153,7 @@ pub fn run(
     // local source fails in `build_install_resolver` with the same
     // actionable bail `vibe install --offline` gives.
     let global = vibe_core::GlobalRegistryConfig::load()?;
-    let offline = output::resolve_offline(
-        root_offline,
-        vibe_core::user_config::UserConfig::load()
-            .context("loading the user config")?
-            .net
-            .offline,
-    );
+    let offline = output::resolve_offline(root_offline, user_config.net.offline);
     let resolver = build_install_resolver(
         &install_args_from(&args),
         &manifest,
@@ -313,16 +325,30 @@ pub fn run(
     // run each freshly-placed slot's pre-install hook (PROP-020 §2.1) — no
     // prune, no boot here; boot is regenerated below from the whole tree.
     // `Verify` re-materialises every named slot from the fresh fetch.
-    let subtree = materialise_subtree(
+    let source_hashes = SourceHashes(
+        updated
+            .iter()
+            .map(|(cached, _)| {
+                (
+                    (cached.resolved.group.clone(), cached.resolved.name.clone()),
+                    cached.content_hash.clone(),
+                )
+            })
+            .collect(),
+    );
+    let subtree = materialise_subtree_with_spec_format(
         &workspace.root,
         &resolution,
         SlotIntegrity::Verify,
+        spec_format,
+        Some(&source_hashes),
         Some(&hook_policy),
     )
     .context("re-materialising the updated subtree")?;
 
     // Regenerate every node's boot from the new `vibedeps/` state.
-    regenerate_boot(&workspace).context("regenerating boot artifacts")?;
+    regenerate_boot_with_spec_format(&workspace, spec_format)
+        .context("regenerating boot artifacts")?;
 
     // Replace each subtree package's lockfile entry, carrying the
     // install-scoped metadata (features / language) the version bump does

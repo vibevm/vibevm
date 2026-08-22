@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vibespecs.org/schemas/package-tree/v1.json",
   "title": "vibe package-tree",
-  "description": "Algorithmic snapshot of a vibevm project's spec/dependency tree: the resolved package graph, per-package effective boot load type, the two boot lanes (STATIC.md / INDEX.md), and in-place @spec markers. Produced by `vibe tree --json`.",
+  "description": "Algorithmic snapshot of a vibevm project's spec/dependency tree: the resolved package graph, per-package effective boot load type, the generated static lane plus INDEX.md, and in-place @spec markers. Produced by `vibe tree --json`.",
   "type": "object",
   "required": ["schema_version", "project", "roots", "packages", "boot"],
   "additionalProperties": false,
@@ -81,7 +81,7 @@
         "transitive": { "type": "boolean", "description": "Effective static was forced by a static-transitive ancestor, not the package's own declaration" },
         "declared": { "enum": ["static", "dynamic", "static-transitive", null], "description": "Consumer's declared link for this edge (null = not declared)" },
         "origin": { "enum": ["declared", "suggested", "default", "static-transitive", "when-forced", "none"], "description": "Why type has its value" },
-        "in_static_md": { "type": "boolean", "description": "Physically present as a contribution in STATIC.md (the S column)" },
+        "in_static_md": { "type": "boolean", "description": "Physically present as a contribution in the generated static lane (the S column)" },
         "in_index_md": { "type": "boolean", "description": "Physically present as an entry in INDEX.md" },
         "boot_path": { "type": ["string", "null"], "description": "Project-relative source boot file that landed, if any" }
       }
@@ -104,7 +104,7 @@
       "properties": {
         "present": { "type": "boolean" },
         "path": { "type": "string" },
-        "bytes": { "type": "integer", "minimum": 0, "description": "Total size of STATIC.md — the status-line indicator" },
+        "bytes": { "type": "integer", "minimum": 0, "description": "Total size of the generated static lane — the status-line indicator" },
         "lines": { "type": "integer", "minimum": 0 },
         "contributions": { "type": "array", "items": { "$ref": "#/$defs/staticContribution" } }
       }
@@ -141,7 +141,7 @@
       "properties": {
         "present": { "type": "boolean" },
         "path": { "type": "string" },
-        "static_pointer": { "type": ["string", "null"], "description": "INDEX.md \"static\" field → STATIC.md path, if any" },
+        "static_pointer": { "type": ["string", "null"], "description": "INDEX.md \"static\" field → generated static artifact path, if any" },
         "entries": { "type": "array", "items": { "$ref": "#/$defs/indexEntry" } }
       }
     },

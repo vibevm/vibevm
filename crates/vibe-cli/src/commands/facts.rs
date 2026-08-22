@@ -14,7 +14,7 @@ use vibe_facts::{
     AuthoredFact, FactEntry, FactOrigin, FactStatus, Registry, adoption_counts, authored_facts,
     host_package, orphans, remove_package_file, sync,
 };
-use vibe_workspace::{Workspace, vibedeps};
+use vibe_workspace::{Workspace, boot_artifacts, vibedeps};
 
 use crate::output;
 
@@ -415,7 +415,8 @@ fn collect_slot_specs(root: &Path, dir: &Path, out: &mut Vec<SlotSpecInput>) -> 
             })?;
             let source = rel.to_string_lossy().replace('\\', "/");
             if is_spec_document(&source)
-                && source != "spec/boot/STATIC.md"
+                && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Mixed)
+                && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Xml)
                 && source != "spec/boot/INDEX.md"
             {
                 out.push(SlotSpecInput {

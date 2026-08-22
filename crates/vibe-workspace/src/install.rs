@@ -47,7 +47,10 @@ use hooks_run::run_dep_hook;
 pub use hooks_run::run_post_install_hooks;
 
 pub use bootgen::verify_boot_graph;
-pub use bootgen::{regenerate_boot, regenerate_boot_from};
+pub use bootgen::{
+    regenerate_boot, regenerate_boot_from, regenerate_boot_from_with_spec_format,
+    regenerate_boot_with_spec_format,
+};
 
 /// Materialise a resolution into the workspace and regenerate every node's
 /// boot artifacts (PROP-009 §2.7).
@@ -159,7 +162,8 @@ pub fn apply_resolution_with_spec_format(
     let pruned = prune_stale_slots(&workspace.root, &kept)?;
 
     // 3. Regenerate every node's boot artifacts from the resolution.
-    let nodes_regenerated = regenerate_boot_from(workspace, resolution)?;
+    let nodes_regenerated =
+        regenerate_boot_from_with_spec_format(workspace, resolution, spec_format)?;
 
     Ok(InstallOutcome {
         materialised,
@@ -192,21 +196,7 @@ struct MaterialiseOptions<'a> {
     runner: &'a dyn HookRunner,
 }
 
-/// Materialise a resolution into `vibedeps/` and run each freshly-populated
-/// slot's `pre-install` hook (PROP-009 §2.7, PROP-020 §2.1). The interpreter
-/// `probe` and process `runner` are seams so the hook paths — run, skip, and
-/// the pre-install-failure rollback — are unit-tested without spawning
-/// processes.
-///
-/// PROP-011 §2.3: a slot already present for the resolved (immutable) version
-/// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; under
-/// [`SlotIntegrity::Verify`] it is trusted only when the `slot_verifier`
-/// seam confirms its `content_hash` (a divergence re-materialises it and
-/// warns; no verifier keeps the always-re-copy discipline). Only a new,
-/// version-bumped, or untrusted dependency pays the recursive copy and
-/// re-runs hooks (a skipped slot was never reset, so re-running its hook
-/// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
-/// removes the offending slot and aborts (PROP-020 §2.5).
+#[cfg(test)]
 fn materialise_resolution(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -230,6 +220,21 @@ fn materialise_resolution(
     )
 }
 
+/// Materialise a resolution into `vibedeps/` and run each freshly-populated
+/// slot's `pre-install` hook (PROP-009 §2.7, PROP-020 §2.1). The interpreter
+/// `probe` and process `runner` are seams so the hook paths — run, skip, and
+/// the pre-install-failure rollback — are unit-tested without spawning
+/// processes.
+///
+/// PROP-011 §2.3: a slot already present for the resolved (immutable) version
+/// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; under
+/// [`SlotIntegrity::Verify`] it is trusted only when the `slot_verifier`
+/// seam confirms its `content_hash` (a divergence re-materialises it and
+/// warns; no verifier keeps the always-re-copy discipline). Only a new,
+/// version-bumped, or untrusted dependency pays the recursive copy and
+/// re-runs hooks (a skipped slot was never reset, so re-running its hook
+/// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
+/// removes the offending slot and aborts (PROP-020 §2.5).
 fn materialise_resolution_with_spec_format(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -432,19 +437,41 @@ pub fn materialise_subtree(
     slot_integrity: SlotIntegrity,
     hooks: Option<&HookPolicy>,
 ) -> Result<SubtreeOutcome, WorkspaceError> {
+    materialise_subtree_with_spec_format(
+        workspace_root,
+        resolution,
+        slot_integrity,
+        SpecFormat::Mixed,
+        None,
+        hooks,
+    )
+}
+
+/// Format-aware scoped materialisation used by `vibe update`.
+pub fn materialise_subtree_with_spec_format(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    hooks: Option<&HookPolicy>,
+) -> Result<SubtreeOutcome, WorkspaceError> {
     let Materialised {
         materialised,
         skipped,
         integrity_warnings,
         hook_reports,
-    } = materialise_resolution(
+    } = materialise_resolution_with_spec_format(
         workspace_root,
         resolution,
-        slot_integrity,
-        None,
-        hooks,
-        &SystemProbe,
-        &SystemHookRunner,
+        MaterialiseOptions {
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            hooks,
+            probe: &SystemProbe,
+            runner: &SystemHookRunner,
+        },
     )?;
     Ok(SubtreeOutcome {
         materialised,

@@ -468,6 +468,11 @@ fn stage_node_regenerates_boot_for_the_published_shape() {
         "packages/a/spec/boot/STATIC.md",
         "stale inline lane",
     );
+    write(
+        tmp.path(),
+        "packages/a/spec/boot/STATIC.xml",
+        "stale XML inline lane",
+    );
     write(tmp.path(), "packages/a/CLAUDE.md", "stale dev redirect");
 
     let staged = stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
@@ -488,6 +493,10 @@ fn stage_node_regenerates_boot_for_the_published_shape() {
     assert!(
         !staged.staging.path().join("spec/boot/STATIC.md").exists(),
         "a stale INLINE.md must be cleared in the published copy"
+    );
+    assert!(
+        !staged.staging.path().join("spec/boot/STATIC.xml").exists(),
+        "a stale XML inline lane must be cleared in the published copy"
     );
     // The redirect is regenerated as a thin generated pointer.
     let claude = fs::read_to_string(staged.staging.path().join("CLAUDE.md")).unwrap();

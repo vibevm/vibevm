@@ -3,4 +3,4 @@ schema = 1
 [[fact]]
 address = "spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-MANDATE"
 origin = "spec"
-status = "spec/work"
+status = "impl/done"
