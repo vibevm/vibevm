@@ -311,6 +311,23 @@ the degradation law; **(c)** XML+MD → `mixed`: byte-identical
 copy-through. In all three, the loaders prove themselves: `vibe progress
 check` clean, specmap builds, boot regenerates. @status:spec/work
 
+@fact:INHERITANCE-PARITY **The C++-inheritance machinery is
+format-blind — verified, not assumed (owner clause 2026-08-22,
+verbatim: «проверь что все механизмы "наследования как в C++" которые
+мы сделали для Markdown, точно так же работают и для XML, включая
+новый синтаксис секций и фактов. Если нет, это тоже нужно
+улучшить»).** The B-011 family — `#use spec://… as X` aliasing, `@!X`
+references, the qualified splice (rename-on-splice with every
+reference kept valid), hoist/elision stubs, de-substitution of covered
+units, rename tombstones, and the dynamic-STATIC case — must produce
+BYTE-IDENTICAL compiled closures whether a dependency is authored in
+Markdown or in dialect XML (generic and named shapes both). Pinned by
+a twin-test family in vibe-spec's pipeline: each mechanism runs over
+an MD twin and its to_xml serialisation, outputs compared
+byte-for-byte; mixed trees (one dep MD, one XML) ride the same pins.
+Gaps found by the twins are fixed in the machinery, never by relaxing
+the assert. @status:spec/work
+
 ### 5a. The dynamic-router measurement — external agents {#agent-routing}
 
 @fact:AGENT-ROUTER-MEASURE **The hardest part, named by the owner
