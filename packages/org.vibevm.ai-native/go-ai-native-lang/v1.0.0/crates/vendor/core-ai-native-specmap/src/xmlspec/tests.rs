@@ -39,23 +39,23 @@ const XML_FORM: &str = concat!(
     "</spec>\n",
 );
 
-/// The same document with section identity carried by element names.
+/// The same document with section and fact identity carried by element names.
 const NAMED_XML_FORM: &str = concat!(
     "<spec xmlns=\"https://vibevm.org/spec/1\">\n",
     "  <title id=\"root\">Demo document</title>\n",
     "  <status stage=\"spec\" state=\"work\"/>\n",
-    "  <p><fact id=\"LEAD\" status=\"spec/done\">The lead fact.</fact></p>\n",
+    "  <p><LEAD fact=\"true\" status=\"spec/done\">The lead fact.</LEAD></p>\n",
     "  <laws title=\"The laws\">\n",
     "    <p>`req r2`</p>\n",
     "    <p>Body prose.</p>\n",
     "    <list ordered=\"false\">\n",
-    "      <item><fact id=\"ITEM-FACT\" status=\"impl/done\">an item fact</fact></item>\n",
+    "      <item><ITEM-FACT fact=\"true\" status=\"impl/done\">an item fact</ITEM-FACT></item>\n",
     "      <item>plain item</item>\n",
     "    </list>\n",
     "    <fence lang=\"text\">one\n",
     "two</fence>\n",
     "    <nested title=\"Nested\">\n",
-    "      <p><fact id=\"NESTED\" status=\"impl/work\">nested fact body</fact></p>\n",
+    "      <p><NESTED fact=\"true\" status=\"impl/work\">nested fact body</NESTED></p>\n",
     "    </nested>\n",
     "  </laws>\n",
     "</spec>\n",
@@ -155,7 +155,7 @@ fn one_document_both_forms_gives_one_unit_set() {
 }
 
 #[test]
-fn generic_and_named_xml_forms_give_one_unit_set() {
+fn generic_and_fully_named_xml_forms_give_one_unit_set() {
     let (generic, generic_warnings) = parse_units("spec/test/DOC.xml", XML_FORM, NS);
     let (named, named_warnings) = parse_units("spec/test/DOC.xml", NAMED_XML_FORM, NS);
     assert!(
@@ -219,6 +219,54 @@ fn a_foreign_element_is_a_loud_error() {
         "{}",
         warnings[0].message
     );
+}
+
+#[test]
+fn named_fact_discriminator_accepts_only_true() {
+    for value in ["false", "yes"] {
+        let xml = format!(
+            "<spec xmlns=\"https://vibevm.org/spec/1\"><p><CLAIM fact=\"{value}\">x</CLAIM></p></spec>"
+        );
+        let (units, warnings) = parse_units("spec/test/DOC.xml", &xml, NS);
+        assert!(units.is_empty());
+        assert_eq!(warnings.len(), 1);
+        assert_eq!(warnings[0].code, "xml-dialect");
+        assert!(
+            warnings[0].message.contains("must be \"true\""),
+            "{}",
+            warnings[0].message
+        );
+    }
+}
+
+#[test]
+fn unknown_unit_element_without_fact_discriminator_stays_unknown() {
+    let xml = concat!(
+        "<spec xmlns=\"https://vibevm.org/spec/1\">",
+        "<p><CLAIM>x</CLAIM></p></spec>"
+    );
+    let (units, warnings) = parse_units("spec/test/DOC.xml", xml, NS);
+    assert!(units.is_empty());
+    assert_eq!(warnings[0].code, "xml-dialect");
+    assert!(warnings[0].message.contains("no <CLAIM>"));
+}
+
+#[test]
+fn named_fact_name_obeys_elementability_and_fact_id_grammar() {
+    for (element, needle) in [("bad.id", "fact-id grammar"), ("table", "not elementable")] {
+        let xml = format!(
+            "<spec xmlns=\"https://vibevm.org/spec/1\"><p><{element} fact=\"true\">x</{element}></p></spec>"
+        );
+        let (units, warnings) = parse_units("spec/test/DOC.xml", &xml, NS);
+        assert!(units.is_empty());
+        assert_eq!(warnings.len(), 1);
+        assert_eq!(warnings[0].code, "xml-dialect");
+        assert!(
+            warnings[0].message.contains(needle),
+            "{}",
+            warnings[0].message
+        );
+    }
 }
 
 #[test]

@@ -11,7 +11,7 @@ use super::{XBlock, XDoc, XSection, XTitle};
 
 /// Mirror of vibe-specdoc's named-section boundary. The engine stays
 /// separable, so parity is pinned by tests instead of shared code.
-fn anchor_is_elementable(anchor: &str) -> bool {
+pub(super) fn anchor_is_elementable(anchor: &str) -> bool {
     let mut chars = anchor.chars();
     let Some(first) = chars.next() else {
         return false;

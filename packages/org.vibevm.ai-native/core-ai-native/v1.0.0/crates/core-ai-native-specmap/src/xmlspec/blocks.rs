@@ -1,11 +1,12 @@
 //! Block and leaf descent for the closed XML dialect: `<p>`/`<quote>`/
-//! `<list>`/`<table>`/`<fence>`, the `<fact>` wrapper, and the `<status>`
-//! element. The document/section spine lives in the sibling `doc` module.
+//! `<list>`/`<table>`/`<fence>`, generic and named fact wrappers, and the
+//! `<status>` element. The document/section spine lives in `doc`.
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units");
 
 use super::reader::{Ev, Parser, Violation, attr, only_attrs};
 use super::{XBlock, XFact, XStatus, XUnit};
+use specmark_grammar::is_valid_fact_id;
 
 pub(super) fn block(
     p: &mut Parser,
@@ -222,7 +223,8 @@ fn fence(
 }
 
 /// One unit-bearing leaf (`p`, `item`, `quote`, `td`): bare text, or exactly
-/// one wrapping `<fact>`. `in_cell` permits the id-less marked cell.
+/// one wrapping generic or named fact. `in_cell` permits an id-less generic
+/// marked cell.
 fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUnit, Violation> {
     let mut text = String::new();
     let mut fact: Option<XFact> = None;
@@ -262,7 +264,16 @@ fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUn
                         "CDATA is allowed only inside <fence>",
                     ));
                 }
-                Some(Ev::Start(n, a)) if n == "fact" && fact.is_none() => {
+                Some(Ev::Start(n, a)) if fact.is_none() => {
+                    let element_name = n.clone();
+                    let attrs = a.clone();
+                    let at = p.poss[p.i];
+                    if !is_fact_element(&element_name, &attrs, at)? {
+                        return Err(Violation::at(
+                            at,
+                            format!("the dialect has no <{element_name}> element (inside <{tag}>)"),
+                        ));
+                    }
                     if !text.trim().is_empty() {
                         return Err(Violation::at(
                             p.here(),
@@ -271,14 +282,23 @@ fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUn
                             ),
                         ));
                     }
-                    let at = p.poss[p.i];
-                    let attrs = a.clone();
                     p.i += 1;
-                    let (f, content) = fact_element(p, &attrs, at, in_cell, false)?;
+                    let (f, content) = fact_element(p, &element_name, &attrs, at, in_cell, false)?;
                     fact = Some(f);
                     text = content;
                 }
-                Some(Ev::Empty(n, a)) if n == "fact" && fact.is_none() => {
+                Some(Ev::Empty(n, a)) if fact.is_none() => {
+                    let element_name = n.clone();
+                    let attrs = a.clone();
+                    let at = p.poss[p.i];
+                    if !is_fact_element(&element_name, &attrs, at)? {
+                        return Err(Violation::at(
+                            at,
+                            format!(
+                                "the dialect has no <{element_name}/> element (inside <{tag}>)"
+                            ),
+                        ));
+                    }
                     if !text.trim().is_empty() {
                         return Err(Violation::at(
                             p.here(),
@@ -287,10 +307,8 @@ fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUn
                             ),
                         ));
                     }
-                    let at = p.poss[p.i];
-                    let attrs = a.clone();
                     p.i += 1;
-                    let (f, content) = fact_element(p, &attrs, at, in_cell, true)?;
+                    let (f, content) = fact_element(p, &element_name, &attrs, at, in_cell, true)?;
                     fact = Some(f);
                     text = content;
                 }
@@ -330,31 +348,78 @@ fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUn
     Ok(XUnit { fact: None, text })
 }
 
-/// One `<fact>`: the closed attribute set, then text-only content. Returns
-/// the fact and its text (the unit's own text lives INSIDE the element);
-/// the fact carries the element's native line — the anchor's own line.
+fn is_fact_element(
+    element_name: &str,
+    attrs: &[(String, String)],
+    at: usize,
+) -> Result<bool, Violation> {
+    let discriminator = attr(attrs, "fact");
+    if let Some(value) = discriminator
+        && value != "true"
+    {
+        return Err(Violation::at(
+            at,
+            format!(
+                "the `fact` discriminator on <{element_name}> must be \"true\", found `{value}`"
+            ),
+        ));
+    }
+    Ok(element_name == "fact" || discriminator == Some("true"))
+}
+
+/// One generic `<fact>` or named fact: the closed attribute set, then
+/// text-only content. The fact carries the element's native line.
 fn fact_element(
     p: &mut Parser,
+    element_name: &str,
     attrs: &[(String, String)],
     at: usize,
     in_cell: bool,
     was_empty: bool,
 ) -> Result<(XFact, String), Violation> {
-    only_attrs(
-        attrs,
+    let named = element_name != "fact";
+    let allowed = if named {
         &[
-            "id",
+            "fact",
             "status",
             "action",
             "actionstage",
             "audience",
             "comment",
             "ref",
-        ],
-        "fact",
-        at,
-    )?;
-    let id = attr(attrs, "id").map(str::to_string);
+        ][..]
+    } else {
+        &[
+            "id",
+            "fact",
+            "status",
+            "action",
+            "actionstage",
+            "audience",
+            "comment",
+            "ref",
+        ][..]
+    };
+    only_attrs(attrs, allowed, element_name, at)?;
+    if named && !super::doc::anchor_is_elementable(element_name) {
+        return Err(Violation::at(
+            at,
+            format!(
+                "named fact <{element_name}> is not elementable — use <fact id=\"{element_name}\">"
+            ),
+        ));
+    }
+    if named && !is_valid_fact_id(element_name) {
+        return Err(Violation::at(
+            at,
+            format!("named fact id `{element_name}` does not match the shared fact-id grammar"),
+        ));
+    }
+    let id = if named {
+        Some(element_name.to_string())
+    } else {
+        attr(attrs, "id").map(str::to_string)
+    };
     if id.is_none() && !in_cell {
         return Err(Violation::at(
             at,
@@ -373,10 +438,10 @@ fn fact_element(
                 None => {
                     return Err(Violation::at(
                         0,
-                        "unexpected end of input — <fact> never closed",
+                        format!("unexpected end of input — <{element_name}> never closed"),
                     ));
                 }
-                Some(Ev::End(n)) if n == "fact" => {
+                Some(Ev::End(n)) if n == element_name => {
                     p.i += 1;
                     break;
                 }
@@ -387,7 +452,10 @@ fn fact_element(
                 Some(other) => {
                     return Err(Violation::at(
                         p.here(),
-                        format!("a <fact> holds only text — found {}", other.what()),
+                        format!(
+                            "a <{element_name}> fact holds only text — found {}",
+                            other.what()
+                        ),
                     ));
                 }
             }

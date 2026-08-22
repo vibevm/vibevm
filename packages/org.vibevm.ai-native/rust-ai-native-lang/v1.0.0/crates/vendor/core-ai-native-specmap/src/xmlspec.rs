@@ -5,8 +5,9 @@
 //! `<anchor title=…>` section (or `<title id=…>`) through everything it
 //! governs — nesting IS the heading hierarchy, so a section's span holds its
 //! own blocks and every nested section, exactly as a Markdown span runs to
-//! the next same-or-higher heading. Fact units mint from `<fact id=…>` inside
-//! `<p>` and `<item>` — the first-token grain the Markdown scanner reads; a
+//! the next same-or-higher heading. Fact units mint from generic `<fact id=…>`
+//! or named `<ID fact="true">` elements inside `<p>` and `<item>` — the
+//! first-token grain the Markdown scanner reads; a
 //! `<td>` or `<quote>` fact sits below that grain and mints nothing here,
 //! mirroring `mdspec` over the projection. Section ids and fact ids share ONE
 //! duplicate namespace per document.

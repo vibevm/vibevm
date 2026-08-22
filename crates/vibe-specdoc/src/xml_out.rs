@@ -18,7 +18,8 @@ use quick_xml::name::QName;
 /// spec file (PROP-045 ##DIALECT-SKETCH).
 pub(crate) const NS: &str = "https://vibevm.org/spec/1";
 
-/// Whether a section anchor can carry its identity as an XML element name.
+/// Whether a section anchor or fact id can carry its identity as an XML
+/// element name.
 ///
 /// The named-section form is reserved for ASCII XML names outside the
 /// dialect's structural vocabulary. XML reserves every case-insensitive
@@ -154,11 +155,14 @@ fn push_status_extras(out: &mut Attrs, s: &StatusEl) {
     }
 }
 
-/// The `<fact>` attribute set: id, then the compact `status="stage/state"`
-/// pair, then the same extras in the same canonical order.
-fn fact_attrs(f: &Fact) -> Attrs<'_> {
+/// A fact element's attribute set. The named form starts with its
+/// discriminator, then the compact `status="stage/state"` pair and extras;
+/// the generic fallback starts with `id`, then carries the same status tail.
+fn fact_attrs(f: &Fact, named: bool) -> Attrs<'_> {
     let mut out: Attrs = Vec::new();
-    if let Some(id) = &f.id {
+    if named {
+        out.push(("fact", "true".to_string()));
+    } else if let Some(id) = &f.id {
         out.push(("id", id.clone()));
     }
     if let Some(st) = &f.status {
@@ -222,11 +226,19 @@ fn unit(w: &mut W, depth: usize, tag: &str, u: &Unit) {
     };
     indent(w, depth);
     let _ = w.write_event(Event::Start(BytesStart::new(tag)));
-    let _ = w.write_event(Event::Start(bytes_start("fact", fact_attrs(f).as_slice())));
+    let fact_tag =
+        f.id.as_deref()
+            .filter(|id| anchor_is_elementable(id))
+            .unwrap_or("fact");
+    let named = fact_tag != "fact";
+    let _ = w.write_event(Event::Start(bytes_start(
+        fact_tag,
+        fact_attrs(f, named).as_slice(),
+    )));
     if !u.text.is_empty() {
         let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(&u.text))));
     }
-    let _ = w.write_event(Event::End(BytesEnd::new("fact")));
+    let _ = w.write_event(Event::End(BytesEnd::new(fact_tag)));
     let _ = w.write_event(Event::End(BytesEnd::new(tag)));
 }
 
@@ -337,7 +349,7 @@ mod tests {
              <spec xmlns=\"https://vibevm.org/spec/1\">\n  \
              <title id=\"t\">T</title>\n  \
              <status stage=\"spec\" state=\"work\"/>\n  \
-             <p><fact id=\"A\" status=\"impl/done\">One.</fact></p>\n  \
+             <p><A fact=\"true\" status=\"impl/done\">One.</A></p>\n  \
              <p>plain paragraph</p>\n\
              </spec>\n"
         );
@@ -372,6 +384,27 @@ mod tests {
             "{xml}"
         );
         assert_eq!(crate::from_xml(&xml).expect("reads both forms"), d);
+        assert_eq!(to_xml(&crate::from_xml(&xml).unwrap()), xml);
+    }
+
+    #[test]
+    fn named_facts_and_generic_vocabulary_fallback_are_pinned() {
+        let d = from_markdown(
+            "# T {#root}\n\n\
+             @fact:THE-LAW named @status:impl/done\n\n\
+             @fact:table fallback @status:spec/work\n",
+        )
+        .expect("parses");
+        let xml = to_xml(&d);
+        assert!(
+            xml.contains("<THE-LAW fact=\"true\" status=\"impl/done\">named</THE-LAW>"),
+            "{xml}"
+        );
+        assert!(
+            xml.contains("<fact id=\"table\" status=\"spec/work\">fallback</fact>"),
+            "{xml}"
+        );
+        assert_eq!(crate::from_xml(&xml).expect("reads both fact forms"), d);
         assert_eq!(to_xml(&crate::from_xml(&xml).unwrap()), xml);
     }
 

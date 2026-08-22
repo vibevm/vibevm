@@ -222,8 +222,9 @@ impl<'a> Parser<'a> {
     }
 
     /// One unit-bearing leaf (`p`, `item`, `quote`, `td`): bare text, or
-    /// exactly one wrapping `<fact>`. `allow_empty` permits the empty
-    /// table cell; `in_cell` permits the id-less marked cell.
+    /// exactly one wrapping fact element. The generic form is `<fact>`;
+    /// the named form is selected by `fact="true"`. `in_cell` permits the
+    /// id-less marked cell in the generic form.
     fn unit(&mut self, tag: &str, was_empty: bool, in_cell: bool) -> Result<Unit> {
         let mut text = String::new();
         let mut fact: Option<Fact> = None;
@@ -262,9 +263,19 @@ impl<'a> Parser<'a> {
                         let at = self.poss[self.i];
                         return Err(self.err(at, "CDATA is allowed only inside <fence>".into()));
                     }
-                    Some(Ev::Start(n, a)) if n == "fact" && fact.is_none() => {
+                    Some(Ev::Start(n, a)) if fact.is_none() => {
+                        let at = self.poss[self.i];
+                        let element_name = n.clone();
+                        let attrs = a.clone();
+                        if !self.is_fact_element(&element_name, &attrs, at)? {
+                            return Err(self.err(
+                                at,
+                                format!(
+                                    "the dialect has no <{element_name}> element (inside <{tag}>)"
+                                ),
+                            ));
+                        }
                         if !text.trim().is_empty() {
-                            let at = self.poss[self.i];
                             return Err(self.err(
                                 at,
                                 format!(
@@ -272,16 +283,24 @@ impl<'a> Parser<'a> {
                                 ),
                             ));
                         }
-                        let at = self.poss[self.i];
-                        let attrs = a.clone();
                         self.i += 1;
-                        let (f, content) = self.fact(&attrs, at, in_cell, false)?;
+                        let (f, content) = self.fact(&element_name, &attrs, at, in_cell, false)?;
                         fact = Some(f);
                         text = content;
                     }
-                    Some(Ev::Empty(n, a)) if n == "fact" && fact.is_none() => {
+                    Some(Ev::Empty(n, a)) if fact.is_none() => {
+                        let at = self.poss[self.i];
+                        let element_name = n.clone();
+                        let attrs = a.clone();
+                        if !self.is_fact_element(&element_name, &attrs, at)? {
+                            return Err(self.err(
+                                at,
+                                format!(
+                                    "the dialect has no <{element_name}/> element (inside <{tag}>)"
+                                ),
+                            ));
+                        }
                         if !text.trim().is_empty() {
-                            let at = self.poss[self.i];
                             return Err(self.err(
                                 at,
                                 format!(
@@ -289,10 +308,8 @@ impl<'a> Parser<'a> {
                                 ),
                             ));
                         }
-                        let at = self.poss[self.i];
-                        let attrs = a.clone();
                         self.i += 1;
-                        let (f, content) = self.fact(&attrs, at, in_cell, true)?;
+                        let (f, content) = self.fact(&element_name, &attrs, at, in_cell, true)?;
                         fact = Some(f);
                         text = content;
                     }
@@ -338,35 +355,80 @@ impl<'a> Parser<'a> {
         Ok(Unit { fact: None, text })
     }
 
-    /// One `<fact>`: the closed attribute set, then text-only content.
-    /// Returns the fact and its text (the unit's own text lives INSIDE the
-    /// fact element). Consumes through `</fact>`.
+    fn is_fact_element(
+        &self,
+        element_name: &str,
+        attrs: &[(String, String)],
+        at: (usize, usize),
+    ) -> Result<bool> {
+        let discriminator = attrs
+            .iter()
+            .find(|(key, _)| key == "fact")
+            .map(|(_, value)| value.as_str());
+        if let Some(value) = discriminator
+            && value != "true"
+        {
+            return Err(self.err(
+                at,
+                format!(
+                    "the `fact` discriminator on <{element_name}> must be \"true\", found `{value}`"
+                ),
+            ));
+        }
+        Ok(element_name == "fact" || discriminator == Some("true"))
+    }
+
+    /// One generic `<fact>` or named fact element: the closed attribute set,
+    /// then text-only content. Returns the fact and its text (the unit's own
+    /// text lives INSIDE the element). Consumes through the matching end tag.
     fn fact(
         &mut self,
+        element_name: &str,
         attrs: &[(String, String)],
         at: (usize, usize),
         in_cell: bool,
         was_empty: bool,
     ) -> Result<(Fact, String)> {
-        only_attrs(
-            attrs,
+        let named = element_name != "fact";
+        let allowed = if named {
             &[
-                "id",
+                "fact",
                 "status",
                 "action",
                 "actionstage",
                 "audience",
                 "comment",
                 "ref",
-            ],
-            "fact",
-            at,
-            self,
-        )?;
-        let id = attrs
-            .iter()
-            .find(|(k, _)| k == "id")
-            .map(|(_, v)| v.clone());
+            ][..]
+        } else {
+            &[
+                "id",
+                "fact",
+                "status",
+                "action",
+                "actionstage",
+                "audience",
+                "comment",
+                "ref",
+            ][..]
+        };
+        only_attrs(attrs, allowed, element_name, at, self)?;
+        if named && !super::xml_out::anchor_is_elementable(element_name) {
+            return Err(self.err(
+                at,
+                format!(
+                    "named fact <{element_name}> is not elementable — use <fact id=\"{element_name}\">"
+                ),
+            ));
+        }
+        let id = if named {
+            Some(element_name.to_string())
+        } else {
+            attrs
+                .iter()
+                .find(|(k, _)| k == "id")
+                .map(|(_, v)| v.clone())
+        };
         if id.is_none() && !in_cell {
             return Err(self.err(
                 at,
@@ -387,10 +449,10 @@ impl<'a> Parser<'a> {
                     None => {
                         return Err(Error::at(
                             0,
-                            "unexpected end of input — <fact> never closed",
+                            format!("unexpected end of input — <{element_name}> never closed"),
                         ));
                     }
-                    Some(Ev::End(n)) if n == "fact" => {
+                    Some(Ev::End(n)) if n == element_name => {
                         self.i += 1;
                         break;
                     }
@@ -402,7 +464,10 @@ impl<'a> Parser<'a> {
                         let at2 = self.poss[self.i];
                         return Err(self.err(
                             at2,
-                            format!("a <fact> holds only text — found {}", kind(other)),
+                            format!(
+                                "a <{element_name}> fact holds only text — found {}",
+                                kind(other)
+                            ),
                         ));
                     }
                 }

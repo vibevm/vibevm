@@ -5,7 +5,10 @@
 //! `p`, `fact`, `list`, `item`, `table`, `tr`, `td`, `fence`, `quote`.
 //! At a section position, an otherwise unknown element whose valid name is
 //! the section anchor and whose sole attribute is `title` is the named form
-//! of `<section id=... title=...>`. Every other foreign element or
+//! of `<section id=... title=...>`. At a unit position, an element carrying
+//! `fact="true"` is the named form of `<fact id=...>`; the element name is
+//! validated by the same elementability and fact-id rules as the writer.
+//! Every other foreign element or
 //! attribute, DTD, processing instruction, or non-built-in entity is a
 //! LOUD error naming the construct and its line/column — never a silent
 //! skip.

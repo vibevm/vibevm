@@ -175,6 +175,11 @@ fn redbook_readme_golden_xml_is_pinned() {
     let golden = std::fs::read_to_string(&golden_path)
         .unwrap_or_else(|e| panic!("golden file missing ({e}); regenerate with UPDATE_GOLDEN=1"));
     assert_eq!(xml, golden, "the README's dialect XML changed");
+    assert_eq!(
+        golden.matches(" fact=\"true\"").count(),
+        45,
+        "all 45 README fact anchors use the named form"
+    );
     // The golden is not just pinned — it re-reads, byte-idempotently.
     assert_eq!(to_xml(&from_xml(&golden).unwrap()), golden);
 }

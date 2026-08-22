@@ -1,5 +1,5 @@
 use crate::doc::{Block, SpecDoc};
-use crate::from_xml;
+use crate::{from_xml, to_xml};
 
 const NS_ATTR: &str = "xmlns=\"https://vibevm.org/spec/1\"";
 
@@ -139,6 +139,72 @@ fn ids_use_the_shared_markdown_anchor_grammar() {
         err.message.contains("progress-core anchor grammar"),
         "{err}"
     );
+}
+
+#[test]
+fn named_fact_reads_and_is_the_canonical_writer_form() {
+    let d = ok(&format!(
+        "<spec {NS_ATTR}><p><THE-LAW fact=\"true\" status=\"impl/done\">one law</THE-LAW></p></spec>"
+    ));
+    match &d.preamble[0] {
+        Block::Paragraph(unit) => {
+            assert_eq!(unit.text, "one law");
+            assert_eq!(
+                unit.fact.as_ref().and_then(|fact| fact.id.as_deref()),
+                Some("THE-LAW")
+            );
+        }
+        other => panic!("{other:?}"),
+    }
+    assert!(to_xml(&d).contains("<THE-LAW fact=\"true\" status=\"impl/done\">one law</THE-LAW>"));
+}
+
+#[test]
+fn fact_discriminator_accepts_only_true() {
+    for value in ["false", "yes"] {
+        let err = from_xml(&format!(
+            "<spec {NS_ATTR}><p><CLAIM fact=\"{value}\">x</CLAIM></p></spec>"
+        ))
+        .unwrap_err();
+        assert!(err.message.contains("must be \"true\""), "{err}");
+        assert!(err.message.contains(value), "{err}");
+    }
+}
+
+#[test]
+fn unknown_unit_element_without_fact_discriminator_stays_unknown() {
+    let err = from_xml(&format!("<spec {NS_ATTR}><p><CLAIM>x</CLAIM></p></spec>")).unwrap_err();
+    assert!(err.message.contains("no <CLAIM> element"), "{err}");
+}
+
+#[test]
+fn named_fact_name_must_be_elementable_and_a_valid_fact_id() {
+    let invalid_id = from_xml(&format!(
+        "<spec {NS_ATTR}><p><bad.id fact=\"true\">x</bad.id></p></spec>"
+    ))
+    .unwrap_err();
+    assert!(
+        invalid_id.message.contains("progress-core anchor grammar"),
+        "{invalid_id}"
+    );
+
+    let reserved = from_xml(&format!(
+        "<spec {NS_ATTR}><p><table fact=\"true\">x</table></p></spec>"
+    ))
+    .unwrap_err();
+    assert!(reserved.message.contains("not elementable"), "{reserved}");
+    assert!(
+        reserved.message.contains("<fact id=\"table\">"),
+        "{reserved}"
+    );
+}
+
+#[test]
+fn generic_fact_form_remains_readable() {
+    let d = ok(&format!(
+        "<spec {NS_ATTR}><p><fact id=\"table\" status=\"impl/done\">fallback</fact></p></spec>"
+    ));
+    assert!(to_xml(&d).contains("<fact id=\"table\" status=\"impl/done\">fallback</fact>"));
 }
 
 #[test]

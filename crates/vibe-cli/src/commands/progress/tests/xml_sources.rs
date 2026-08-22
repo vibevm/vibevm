@@ -3,9 +3,8 @@
 
 use super::*;
 
-/// An `.xml` spec scans the same units its MD projection would: the
-/// projection feeds the parser, so facts, blocks and markers are
-/// projection-equal by construction (PROP-045 ##PROJECTION-READ).
+/// An `.xml` spec with named sections and facts scans exactly as its
+/// canonical MD twin (PROP-045 ##PROJECTION-READ).
 #[test]
 fn an_xml_spec_counts_the_same_units_as_its_md_projection() {
     let xml_root = tempfile::tempdir().expect("tempdir");
@@ -13,28 +12,83 @@ fn an_xml_spec_counts_the_same_units_as_its_md_projection() {
     std::fs::write(xml_root.path().join("spec/doc.xml"), XML_SPEC).expect("write xml");
     std::fs::write(xml_root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
 
-    // The MD twin: the canonical projection itself, on disk.
+    // The hand-pinned MD twin is also the canonical projection itself.
     let md_root = tempfile::tempdir().expect("tempdir");
     std::fs::create_dir_all(md_root.path().join("spec")).expect("mkdir");
     let (projection, kind) =
         vibe_specdoc::load_spec_text(&xml_root.path().join("spec/doc.xml")).expect("project");
     assert_eq!(kind, vibe_specdoc::SourceKind::XmlProjected);
-    std::fs::write(md_root.path().join("spec/doc.md"), &projection).expect("write md");
+    assert_eq!(projection, MD_SPEC);
+    std::fs::write(md_root.path().join("spec/doc.md"), MD_SPEC).expect("write md");
     std::fs::write(md_root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
 
     let xml = ground(&args(xml_root.path(), false)).expect("ground xml");
     let md = ground(&args(md_root.path(), false)).expect("ground md");
     assert_eq!(xml.docs.len(), 1);
     assert_eq!(md.docs.len(), 1);
-    // Same fact/marker/block population — the doc differs only in `path`.
-    assert_eq!(xml.docs[0].fact_count, md.docs[0].fact_count);
-    assert_eq!(xml.docs[0].markers.len(), md.docs[0].markers.len());
-    assert_eq!(xml.docs[0].blocks.len(), md.docs[0].blocks.len());
-    assert!(xml.docs[0].fact_count >= 3, "the fixture carries facts");
+    // Full parser parity: units, facts, statuses, hashes and source spans;
+    // only the source path differs.
+    let mut xml_doc = xml.docs[0].clone();
+    xml_doc.path = md.docs[0].path.clone();
+    assert_eq!(xml_doc, md.docs[0]);
+    assert_eq!(xml.docs[0].fact_count, 4);
+    assert_eq!(xml.docs[0].markers.len(), 3);
     // And the source is marked: its diagnostics are projection-relative.
     assert_eq!(xml.xml_sources.len(), 1);
     assert!(xml.xml_sources.contains("spec/doc.xml"));
     assert!(md.xml_sources.is_empty());
+}
+
+#[test]
+fn named_xml_facts_are_addressable_and_stable_across_two_scans() {
+    let root = tempfile::tempdir().expect("tempdir");
+    std::fs::create_dir_all(root.path().join("spec")).expect("mkdir");
+    std::fs::write(root.path().join("spec/doc.xml"), XML_SPEC).expect("write xml");
+    std::fs::write(root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
+    let ctx = Context::from_flags(true, false, None, false);
+
+    scan(&ctx, &args(root.path(), true)).expect("first scan");
+    let first = ground(&args(root.path(), false)).expect("first ground");
+    scan(&ctx, &args(root.path(), true)).expect("second scan");
+    let second = ground(&args(root.path(), false)).expect("second ground");
+
+    let addressed = |doc: &ParsedDoc| {
+        doc.blocks
+            .iter()
+            .flat_map(|block| block.facts.iter())
+            .filter_map(|fact| {
+                fact.id
+                    .as_ref()
+                    .map(|id| (id.clone(), fact.content_hash.clone()))
+            })
+            .collect::<BTreeMap<_, _>>()
+    };
+    let first_facts = addressed(&first.docs[0]);
+    let second_facts = addressed(&second.docs[0]);
+    assert_eq!(first_facts, second_facts, "content identity is scan-stable");
+    assert_eq!(
+        first_facts.keys().map(String::as_str).collect::<Vec<_>>(),
+        ["CODE", "ONLY", "TWO"]
+    );
+    assert!(first_facts.values().all(|hash| !hash.is_empty()));
+
+    check(
+        &ctx,
+        &ProgressCheckArgs {
+            common: args(root.path(), false),
+            exhaustive: false,
+            write_state: false,
+        },
+    )
+    .expect("named XML source passes progress check");
+}
+
+#[test]
+fn scan_report_marks_xml_source_with_projection_header() {
+    assert_eq!(
+        projection_header("spec/doc.xml"),
+        format!("spec/doc.xml: {}", vibe_specdoc::PROJECTION_NOTICE)
+    );
 }
 
 /// One logical document in two forms is a split brain — the run stops
@@ -86,14 +140,23 @@ fn check_write_state_defaults_off_and_parses() {
 
 // ---- PROP-045 ##PROJECTION-READ: XML sources through the projection ----
 
-/// A dialect document with a fact, a list and a fence — shape-heavy enough
-/// that "the same units" means something.
+/// Named facts plus a named section, list and typed fence.
 const XML_SPEC: &str = "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
      <title id=\"doc\">Doc</title>\n  \
-     <p><fact id=\"ONLY\" status=\"impl/done\">one claim</fact></p>\n  \
-     <list ordered=\"false\"><item><fact id=\"TWO\" status=\"spec/done\">two</fact></item><item>plain</item></list>\n  \
-     <p><fact id=\"CODE\" status=\"spec/done\">typed fact</fact></p>\n  \
-     <fence lang=\"rust\" fact=\"CODE\">fn main() {}</fence>\n</spec>";
+     <p><ONLY fact=\"true\" status=\"impl/done\">one claim</ONLY></p>\n  \
+     <laws title=\"Laws\">\n    \
+       <list ordered=\"false\"><item><TWO fact=\"true\" status=\"spec/done\">two</TWO></item><item>plain</item></list>\n    \
+       <p><CODE fact=\"true\" status=\"spec/done\">typed fact</CODE></p>\n    \
+       <fence lang=\"rust\" fact=\"CODE\">fn main() {}</fence>\n  \
+     </laws>\n</spec>";
+
+const MD_SPEC: &str = "# Doc {#doc}\n\n\
+@fact:ONLY one claim @status:impl/done\n\n\
+## Laws {#laws}\n\n\
+- @fact:TWO two @status:spec/done\n\
+- plain\n\n\
+@fact/code:CODE typed fact @status:spec/done\n\n\
+```rust\nfn main() {}\n```\n\n";
 
 /// The `progress.toml` observing both serialisations (the glob crate has no
 /// brace alternation, so the pair is spelled out — the same pairing

@@ -92,6 +92,9 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
             })
         );
     } else {
+        for source in &g.xml_sources {
+            println!("{}", projection_header(source));
+        }
         println!(
             "progress scan: {} files, {markers} markers, {unmarked}/{facts} facts unmarked, {errors} errors",
             g.docs.len()
@@ -110,6 +113,10 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     Ok(())
 }
 
+fn projection_header(path: &str) -> String {
+    format!("{path}: {}", vibe_specdoc::PROJECTION_NOTICE)
+}
+
 fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
     let mut g = ground(&a.common)?;
     let mut errors = 0usize;
@@ -124,7 +131,7 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
             && !ctx.is_quiet()
             && (!doc.issues.is_empty() || !folds.is_empty() || a.exhaustive)
         {
-            println!("{}: {}", doc.path, vibe_specdoc::PROJECTION_NOTICE);
+            println!("{}", projection_header(&doc.path));
         }
         for i in &doc.issues {
             match i.severity {
