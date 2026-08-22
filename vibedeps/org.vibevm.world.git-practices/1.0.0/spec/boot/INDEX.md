@@ -10,4 +10,4 @@
 # vibe:fp 823d6398de55675107dbc4222b08e4a36679b00402c730c0e6d8fb64d74cec7a
 
 schema = 1
-static = "spec/boot/STATIC.md"
+static = "spec/boot/STATIC.xml"

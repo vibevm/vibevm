@@ -1,8 +1,8 @@
 # vibevm — read this first
 
-Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (`spec/boot/STATIC.md` first and in full, then every file `spec/boot/INDEX.md` names), then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
+Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (the generated static lane `spec/boot/STATIC.xml`/`STATIC.md` first and in full, then every file `spec/boot/INDEX.md` names), then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
 
-The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/STATIC.md`. The rules live in that static lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
+The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from the generated static lane in `spec/boot/`. The rules live in that static lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
 Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
@@ -155,7 +155,7 @@ Keep it current-state; prune stale lines.
 
 ## Specspaces — nested projects with their own WAL
 
-This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`spec/boot/11-flow-wal-specspaces.md` in that package) is compiled into the static boot lane `spec/boot/STATIC.md`, and the full protocol is `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` inside that package. This section is the signpost; two rules bind regardless:
+This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`spec/boot/11-flow-wal-specspaces.md` in that package) is compiled into the generated static boot lane in `spec/boot/`, and the full protocol is `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` inside that package. This section is the signpost; two rules bind regardless:
 
 - **Target resolution.** A **bare** session phrase (`восстанови сессию` / `RESUME SESSION` with no name) targets the `default:` declared in `SPECSPACES.md` if one is set, and otherwise **this host project** — never a specspace by accident. Name a specspace (`восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality`) to target it; an explicit name or directory always overrides the default. Registered today: `fractality` (`packages/org.vibevm.fractality/`).
 - **Boot scoping.** A specspace session reads the host's Rules 1–4 above (repo-wide, they bind every commit) plus the specspace's own boot contract → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read the host `spec/boot/`, `spec/WAL.md`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first. A specspace wind-down refreshes that specspace's one-line status in `SPECSPACES.md`; the host WAL is updated only if host files changed in the same session.
@@ -234,7 +234,7 @@ Rationale: the resume boundary exists so the owner can inspect the restored stat
 This project's boot sequence is computed by vibe (the PROP-009 loading
 model). To begin a session, read these files in order:
 
-1. `spec/boot/STATIC.md` — if it exists. The static (priority) lane: read it
+1. `spec/boot/STATIC.xml` — if it exists. The static (priority) lane: read it
    first and in full.
 2. `spec/boot/INDEX.md` — a generated TOML manifest. Read every file named
    by its `[[entry]]` tables, in the listed order. A `kind = "static"`

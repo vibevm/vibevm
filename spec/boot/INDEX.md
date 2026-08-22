@@ -8,7 +8,7 @@
 # system is <name> (windows / macos / linux), and skip it otherwise.
 
 schema = 1
-static = "spec/boot/STATIC.md"
+static = "spec/boot/STATIC.xml"
 
 [[entry]]
 path = "spec/boot/00-core.md"
