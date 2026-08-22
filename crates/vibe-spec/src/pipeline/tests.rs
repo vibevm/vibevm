@@ -558,6 +558,19 @@ fn a_normal_entry_compiles_the_same_closure_over_an_xml_dependency() {
         md_lane, xml_lane,
         "md lane:\n{md_lane}\nxml lane:\n{xml_lane}"
     );
+    // Both serialisations of the one dependency (PROP-045
+    // ##NAMED-FACT-ELEMENTS clause (b)): `XML_DEP` pins the generic
+    // `<section id>`/`<fact id>` form frozen above; the runtime twin
+    // carries the live NAMED shape. One closure, three lanes, all equal.
+    let named_ws = entry_ws(
+        "xml",
+        &vibe_specdoc::to_xml(&vibe_specdoc::from_markdown(MD_DEP_TWIN).expect("twin parses")),
+    );
+    let named_lane = compile_entry(&named_ws);
+    assert_eq!(
+        md_lane, named_lane,
+        "md lane:\n{md_lane}\nnamed-xml lane:\n{named_lane}"
+    );
     // The dependency's section really is inside the closure — fact and kind
     // line included, each qualified under its own origin exactly as over the
     // Markdown twin (the per-node qualify renames both lanes identically,

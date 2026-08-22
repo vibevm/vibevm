@@ -404,7 +404,10 @@ fn render_static_errors_on_a_missing_contribution() {
 // ---- PROP-045: an XML-materialised snippet splices as its projection ----
 
 /// A dialect snippet on disk in a temp workspace, its workspace-relative
-/// path returned.
+/// path returned. The fact ships in the NAMED shape (PROP-045
+/// ##NAMED-FACT-ELEMENTS) — the static-splice pin runs over the final
+/// syntax; the generic `<fact id>` form keeps its own reader pins in
+/// vibe-specdoc.
 fn write_xml_snippet(ws: &Path) -> String {
     let rel = "vibedeps/org.example.lib/1.0.0/spec/boot/snippet.xml";
     let abs = ws.join(rel);
@@ -412,7 +415,7 @@ fn write_xml_snippet(ws: &Path) -> String {
     fs::write(
         &abs,
         "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
-         <p><fact id=\"XMLBOOT\" status=\"impl/done\">xml-authored rule</fact></p>\n</spec>\n",
+         <p><BOOT-RULE fact=\"true\" status=\"impl/done\">xml-authored rule</BOOT-RULE></p>\n</spec>\n",
     )
     .unwrap();
     rel.to_string()
@@ -431,7 +434,7 @@ fn render_static_projects_an_xml_snippet_deterministically() {
     assert_eq!(first, second, "two renders must be byte-equal");
     // The fact survives (anchor-qualified under the entry's origin, so the
     // id itself may be prefixed — assert on the id and the body text).
-    assert!(first.contains("XMLBOOT"), "{first}");
+    assert!(first.contains("BOOT-RULE"), "{first}");
     assert!(first.contains("xml-authored rule"), "{first}");
     assert!(!first.contains("<spec"), "no raw XML: {first}");
     // The provenance comment names the materialised (.xml) path.
