@@ -100,7 +100,11 @@ emitter writes the named form everywhere else, the readers accept both.
 The converter recipe bumps (`specdoc/1` → `specdoc/2`), so every
 transformed slot re-materialises by the derived-manifest law rather than
 lingering in the old shape. The owner's next call arrived the same
-day — facts follow, see `##NAMED-FACT-ELEMENTS`. @status:spec/work
+day — facts follow, see `##NAMED-FACT-ELEMENTS`. Landed: the emitter
+writes named sections everywhere the predicate allows (the live redbook
+README golden carries 7 named / 0 generic), both readers accept both
+forms, and the engine mirrors the predicate verbatim across the
+separability seam. @status:impl/done
 
 @fact:NAMED-FACT-ELEMENTS **Decision (ADR-part; owner ruling 2026-08-22,
 verbatim): «сконвертируй и факты тоже. Предлагаю такой формат
@@ -134,7 +138,17 @@ specdoc/3, whose control package auto-adopts the named shape through
 to_xml — INDEX targets, STATIC splice and every machine loader then
 exercise the final syntax end-to-end; the agent half of the dynamic
 router is §5a's measurement, deliberately run AFTER this transition so
-it measures the shape that ships. @status:spec/work
+it measures the shape that ships. Landed: the recipe is `specdoc/3`,
+the host's 37 slots re-materialised once with named facts live (the
+redbook README golden pins 45), the recognition law holds in both
+readers with `fact="false"` a loud error, progress holds full
+ParsedDoc parity between an XML source and its hand-pinned MD twin
+across two scans, and pins (a)–(c) are in the tree — the splice
+snippet ships `<BOOT-RULE fact="true">`, the normal closure compiles
+three lanes byte-equal, the polygon re-ran 3/3. A live lesson worth
+its line: XML reserves every case-insensitive `xml`-prefixed name, so
+`XMLBOOT` cannot be an element — the predicate refuses it and the
+generic form carries such ids. @status:impl/done
 
 @fact:INLINE-STAYS-MARKDOWN **Decision (ADR-part).** Inline content —
 emphasis, inline code, links, `##NAME` citations, `spec://` addresses —
@@ -326,7 +340,19 @@ a twin-test family in vibe-spec's pipeline: each mechanism runs over
 an MD twin and its to_xml serialisation, outputs compared
 byte-for-byte; mixed trees (one dep MD, one XML) ride the same pins.
 Gaps found by the twins are fixed in the machinery, never by relaxing
-the assert. @status:spec/work
+the assert. Landed: eight twins (four in vibe-spec's pipeline — alias +
+`@!X`, an alias declared inside the projected node over a mixed tree,
+the three-way same-short-anchor splice, fact-grain through an alias —
+comparing lane AND rename map; four on the bootgen floor — the
+static-transitive zone, single-copy hoist, de-substitution over a mixed
+lane, and the dynamic-STATIC install case), every twin minting its XML
+at run time so the family always carries the live dialect form. Parity
+held out of the box at the compile floor: byte-identical, no machinery
+change. The twins NAMED the lawful residue at the install floor —
+`vibe:static` provenance comments cite the true source file (extension
+included) and INDEX raw-snippet paths carry the materialised extension,
+while the dynamic-STATIC target stays the generated, extension-stable
+`STATIC.md` — honest provenance, not a format leak. @status:impl/done
 
 ### 5a. The dynamic-router measurement — external agents {#agent-routing}
 
