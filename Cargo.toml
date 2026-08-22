@@ -11,6 +11,7 @@ members = [
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
+    "crates/vibe-facts",
     "crates/vibe-graph",
     "crates/vibe-index",
     "crates/vibe-install",
@@ -34,6 +35,7 @@ default-members = [
     "crates/vibe-settings",
     "crates/vibe-cli",
     "crates/vibe-core",
+    "crates/vibe-facts",
     "crates/vibe-graph",
     "crates/vibe-index",
     "crates/vibe-install",
@@ -70,6 +72,7 @@ progress-core = { path = "crates/progress-core", version = "1.0.0" }
 vibe-actions = { path = "crates/vibe-actions", version = "1.0.0" }
 vibe-settings = { path = "crates/vibe-settings", version = "1.0.0" }
 vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
+vibe-facts = { path = "crates/vibe-facts", version = "1.0.0" }
 vibe-graph = { path = "crates/vibe-graph", version = "1.0.0" }
 vibe-index = { path = "crates/vibe-index", version = "1.0.0" }
 vibe-install = { path = "crates/vibe-install", version = "1.0.0" }

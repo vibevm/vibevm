@@ -7,7 +7,7 @@
 //! and (when applicable) the offending file path / line.
 //!
 //! The cell roster has grown far past the v0 six — `run_all` is the
-//! authoritative inventory (13 cells today); the numbered list below
+//! authoritative inventory (14 cells today); the numbered list below
 //! is the founding six of [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md),
 //! kept as orientation, not as the census:
 //!
@@ -58,10 +58,10 @@ use specmark::spec;
 pub mod checks;
 
 pub use checks::{
-    ActivationConflictCheck, BootDirectoryCheck, FeaturesGraphCheck, I18nCoverageCheck,
-    LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck,
-    RedirectBlockCheck, ReviewAgingCheck, SubskillStructureCheck, WalFreshnessCheck,
-    WalWellformedCheck,
+    ActivationConflictCheck, BootDirectoryCheck, FactsSyncCheck, FeaturesGraphCheck,
+    I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck,
+    ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, SubskillStructureCheck,
+    WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -115,6 +115,9 @@ pub enum CheckId {
     /// is in the distinct *pre-epoch* state; reported as info so the
     /// pre-epoch population stays countable until a codemod wave rewrites it.
     ManifestEpoch,
+    /// PROP-046 L2 — every present host-spec adoption record agrees with
+    /// its authoritative status marker. Package records are schema-only in W1.
+    FactsSync,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -137,6 +140,7 @@ impl CheckId {
             CheckId::RedirectBlock => "redirect_block",
             CheckId::LocalSourceFreshness => "local_source_freshness",
             CheckId::ManifestEpoch => "manifest_epoch",
+            CheckId::FactsSync => "facts_sync",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -160,6 +164,7 @@ impl CheckId {
             CheckId::RedirectBlock,
             CheckId::LocalSourceFreshness,
             CheckId::ManifestEpoch,
+            CheckId::FactsSync,
         ]
     }
 }
@@ -383,7 +388,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 13);
+/// assert_eq!(checks.len(), 14);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -401,6 +406,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(ActivationConflictCheck),
         Box::new(LocalSourceFreshnessCheck),
         Box::new(ManifestEpochCheck),
+        Box::new(FactsSyncCheck),
     ]
 }
 
@@ -560,6 +566,7 @@ mod tests {
                 CheckId::ActivationConflict,
                 CheckId::LocalSourceFreshness,
                 CheckId::ManifestEpoch,
+                CheckId::FactsSync,
             ]
         );
     }

@@ -1,0 +1,166 @@
+//! Unit oracles for the registry store and host-spec synchronization.
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#model");
+
+use std::fs;
+
+use tempfile::tempdir;
+
+use crate::store::{read_file, write_file};
+use crate::sync;
+use crate::{FactEntry, FactOrigin, FactStatus, Registry, RegistryError};
+
+fn status(value: &str) -> FactStatus {
+    FactStatus::parse(value).expect("test status")
+}
+
+fn package_fact(address: &str, value: &str) -> FactEntry {
+    FactEntry {
+        address: address.to_string(),
+        origin: FactOrigin::Package,
+        package: Some("org.example/pkg".to_string()),
+        status: Some(status(value)),
+        comment: None,
+    }
+}
+
+#[test]
+fn store_round_trip_and_emit_order_are_deterministic() {
+    let temp = tempdir().expect("tempdir");
+    let path = temp.path().join("vibefacts/org.example.pkg.toml");
+    let z = package_fact("spec://org.example/pkg/flows/z#Z", "impl/done");
+    let a = package_fact("spec://org.example/pkg/flows/a#A", "spec/work");
+
+    write_file(&path, [z.clone(), a.clone()]).expect("first emit");
+    let first = fs::read_to_string(&path).expect("first bytes");
+    let loaded = read_file(&path).expect("parse emitted file");
+    assert_eq!(loaded, vec![a.clone(), z.clone()]);
+    assert!(first.find(&a.address) < first.find(&z.address));
+
+    write_file(&path, [a, z]).expect("second emit");
+    assert_eq!(fs::read_to_string(&path).expect("second bytes"), first);
+}
+
+#[test]
+fn store_rejects_duplicate_garbage_status_and_unknown_keys() {
+    let temp = tempdir().expect("tempdir");
+    let path = temp.path().join("facts.toml");
+    let address = "spec://org.example/pkg/flows/x#X";
+    fs::write(
+        &path,
+        format!(
+            "schema = 1\n\n[[fact]]\naddress = \"{address}\"\norigin = \"package\"\npackage = \"org.example/pkg\"\n\n[[fact]]\naddress = \"{address}\"\norigin = \"package\"\npackage = \"org.example/pkg\"\n"
+        ),
+    )
+    .expect("duplicate fixture");
+    assert!(matches!(
+        read_file(&path),
+        Err(RegistryError::DuplicateAddress { .. })
+    ));
+
+    fs::write(
+        &path,
+        format!(
+            "schema = 1\n\n[[fact]]\naddress = \"{address}\"\norigin = \"package\"\npackage = \"org.example/pkg\"\nstatus = \"impl/finished\"\n"
+        ),
+    )
+    .expect("status fixture");
+    assert!(matches!(
+        read_file(&path),
+        Err(RegistryError::TomlRead { .. })
+    ));
+
+    fs::write(
+        &path,
+        format!(
+            "schema = 1\nextra = true\n\n[[fact]]\naddress = \"{address}\"\norigin = \"package\"\npackage = \"org.example/pkg\"\n"
+        ),
+    )
+    .expect("unknown-key fixture");
+    assert!(matches!(
+        read_file(&path),
+        Err(RegistryError::TomlRead { .. })
+    ));
+}
+
+#[test]
+fn sync_detects_and_reconciles_host_status_without_touching_spec() {
+    let temp = tempdir().expect("tempdir");
+    fs::write(
+        temp.path().join("vibe.toml"),
+        "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
+    )
+    .expect("manifest");
+    fs::create_dir_all(temp.path().join("spec/common")).expect("spec dir");
+    let spec = temp.path().join("spec/common/RULE.md");
+    let spec_bytes = "# Rule {#root}\n\n@fact:RULE It is implemented. @status:impl/done\n";
+    fs::write(&spec, spec_bytes).expect("spec");
+
+    let address = "spec://org.example/demo/common/RULE#RULE";
+    let mut registry = Registry::default();
+    registry
+        .upsert(
+            temp.path(),
+            FactEntry::for_host(address, "org.example/demo", Some(status("spec/work")), None)
+                .expect("entry"),
+        )
+        .expect("write registry");
+
+    let mismatches = sync::check(temp.path(), &registry).expect("sync check");
+    assert_eq!(mismatches.len(), 1);
+    assert_eq!(mismatches[0].spec_status, Some(status("impl/done")));
+    assert_eq!(mismatches[0].registry_status, Some(status("spec/work")));
+    assert_eq!(mismatches[0].line, Some(3));
+
+    let applied = sync::reconcile(temp.path(), &mut registry).expect("reconcile");
+    assert_eq!(applied, mismatches);
+    assert!(
+        sync::check(temp.path(), &registry)
+            .expect("clean")
+            .is_empty()
+    );
+    assert_eq!(
+        fs::read_to_string(spec).expect("spec unchanged"),
+        spec_bytes
+    );
+}
+
+/// The snapshot mints addresses in the router's canonical form: a
+/// `PROP-NNN-descriptive-slug.md` filename addresses as `PROP-NNN`
+/// (the CLAUDE.md citation style), so registry keys written from
+/// canonical citations match the scanned spec.
+#[test]
+fn sync_addresses_use_the_canonical_slug_truncated_doc_path() {
+    let temp = tempdir().expect("tempdir");
+    fs::write(
+        temp.path().join("vibe.toml"),
+        "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
+    )
+    .expect("manifest");
+    fs::create_dir_all(temp.path().join("spec/common")).expect("spec dir");
+    fs::write(
+        temp.path().join("spec/common/PROP-099-descriptive-slug.md"),
+        "# Slugged {#root}\n\n@fact:LAW The law. @status:impl/done\n",
+    )
+    .expect("spec");
+
+    let mut registry = Registry::default();
+    registry
+        .upsert(
+            temp.path(),
+            FactEntry::for_host(
+                "spec://org.example/demo/common/PROP-099#LAW",
+                "org.example/demo",
+                Some(status("impl/done")),
+                None,
+            )
+            .expect("entry"),
+        )
+        .expect("write registry");
+
+    assert!(
+        sync::check(temp.path(), &registry)
+            .expect("canonical address matches")
+            .is_empty()
+    );
+}

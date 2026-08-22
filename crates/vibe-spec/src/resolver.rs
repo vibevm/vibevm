@@ -346,6 +346,37 @@ fn id_file_matches(path: &Path, id: &str) -> bool {
             .is_some_and(|rest| rest.starts_with('-'))
 }
 
+/// The forward half of this router's law: a spec file's canonical
+/// citation doc-path — relative to `spec/`, the serialisation extension
+/// stripped, and a `PROP-NNN` / `FEAT-NNN` descriptive-slug filename
+/// truncated to its id (`spec/modules/x/PROP-003-dep-evolution.md`
+/// → `modules/x/PROP-003`), so `resolve_doc` inverts it. Files without
+/// a document id keep their full stem (`boot/00-core`, `WAL`).
+pub fn canonical_doc_path(file_rel: &str) -> String {
+    let rel = file_rel.strip_prefix("spec/").unwrap_or(file_rel);
+    let (dir, name) = match rel.rsplit_once('/') {
+        Some((d, n)) => (Some(d), n),
+        None => (None, rel),
+    };
+    let stem = name
+        .strip_suffix(".md")
+        .or_else(|| name.strip_suffix(".xml"))
+        .unwrap_or(name);
+    let mut parts = stem.split('-');
+    let canonical = match (parts.next(), parts.next()) {
+        (Some(kind @ ("PROP" | "FEAT")), Some(num))
+            if !num.is_empty() && num.bytes().all(|b| b.is_ascii_digit()) =>
+        {
+            format!("{kind}-{num}")
+        }
+        _ => stem.to_string(),
+    };
+    match dir {
+        Some(d) => format!("{d}/{canonical}"),
+        None => canonical,
+    }
+}
+
 /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail).
 fn is_id_stem(s: &str) -> bool {
     let Some((kind, num)) = s.split_once('-') else {

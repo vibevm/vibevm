@@ -289,3 +289,29 @@ fn f6_more_segments_at_equal_prefix_is_newer() {
     let file = r.resolve_file(&addr).unwrap();
     assert!(file.ends_with("1.2.1/spec/API.md"), "{file:?}");
 }
+
+#[test]
+fn canonical_doc_path_is_the_forward_half_of_resolution() {
+    use crate::resolver::canonical_doc_path;
+    // The docstring examples, pinned: slug truncation, extension strip,
+    // spec/-relativity, and the no-id full-stem cases.
+    assert_eq!(
+        canonical_doc_path("spec/modules/x/PROP-003-dep-evolution.md"),
+        "modules/x/PROP-003"
+    );
+    assert_eq!(
+        canonical_doc_path("spec/common/PROP-046-adoption-facts-registry.md"),
+        "common/PROP-046"
+    );
+    assert_eq!(
+        canonical_doc_path("spec/common/FEAT-012-thing.xml"),
+        "common/FEAT-012"
+    );
+    assert_eq!(canonical_doc_path("spec/boot/00-core.md"), "boot/00-core");
+    assert_eq!(canonical_doc_path("spec/WAL.md"), "WAL");
+    // PROP without an all-digit number is not an id stem.
+    assert_eq!(
+        canonical_doc_path("spec/PROP-abc-notes.md"),
+        "PROP-abc-notes"
+    );
+}

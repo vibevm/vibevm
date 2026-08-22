@@ -12,6 +12,7 @@ description = "Deterministic spec linter for vibevm projects (M1+)"
 
 [dependencies]
 specmark.workspace = true
+vibe-facts.workspace = true
 # The PROP-045 projection dispatch: boot-directory validation reads XML
 # boot files through the dialect (##LOADER-LAW, ##PROJECTION-READ).
 vibe-specdoc.workspace = true

@@ -3915,6 +3915,7 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",
+ "vibe-facts",
  "vibe-registry",
  "vibe-resolver",
  "vibe-specdoc",
@@ -3962,6 +3963,7 @@ dependencies = [
  "vibe-actions",
  "vibe-check",
  "vibe-core",
+ "vibe-facts",
  "vibe-graph",
  "vibe-install",
  "vibe-mcp",
@@ -3994,6 +3996,19 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "toml_edit",
  "tracing",
+]
+
+[[package]]
+name = "vibe-facts"
+version = "1.0.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "progress-core",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "vibe-spec",
 ]
 
 [[package]]

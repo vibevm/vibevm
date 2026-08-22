@@ -134,6 +134,7 @@ fn main() -> ExitCode {
             commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)
         }
         Command::Check(args) => commands::check::run(&ctx, args),
+        Command::Facts(args) => commands::facts::run(&ctx, args),
         Command::Explain(args) => commands::explain::run(&ctx, args),
         Command::Query(args) => commands::query::run(&ctx, args),
         Command::Select(args) => commands::select::run(&ctx, args),

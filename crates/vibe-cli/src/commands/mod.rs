@@ -31,6 +31,7 @@ pub mod bin;
 pub mod cache;
 pub mod check;
 pub mod explain;
+pub mod facts;
 pub mod init;
 pub mod install;
 pub mod list;

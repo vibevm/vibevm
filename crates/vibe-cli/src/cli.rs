@@ -194,6 +194,9 @@ pub enum Command {
     /// Run the spec-consistency linter against the project tree.
     Check(CheckArgs),
 
+    /// Inspect and edit the project's consumer-owned adoption-facts registry.
+    Facts(crate::commands::facts::FactsArgs),
+
     /// Inspect computed project state (effective spec, configuration).
     Show(ShowArgs),
 
