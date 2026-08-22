@@ -177,15 +177,15 @@ question and record the answer, with its reason, as a decision record:
 Answer from your platform's edges, not from this catalog's examples.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THE-CATALOG-IS-FOURTEEN-SCARS fact="true" status="impl/done">The catalog is fourteen scars: S1–S7 on self-updating tools, P1–P7
-  on packaging. Read the one that governs your decision.</SUM-THE-CATALOG-IS-FOURTEEN-SCARS></item>
-      <item><SUM-THREE-MAXIMS-SIT-ABOVE-THEM fact="true" status="impl/done">Three maxims sit above them: split by strength, one operation behind
-  thin transports, fail loud instead of degrading.</SUM-THREE-MAXIMS-SIT-ABOVE-THEM></item>
-      <item><SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT fact="true" status="impl/done">Every lesson records the failure that taught it — a decision without
-  its reason decays into cargo-cult.</SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT></item>
-      <item><SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM fact="true" status="impl/done">Re-derive the mechanics for your platform; the laws port, the
-  implementation does not.</SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM></item>
-    </list>
+    <facts ordered="false">
+      <SUM-THE-CATALOG-IS-FOURTEEN-SCARS fact="true" status="impl/done">The catalog is fourteen scars: S1–S7 on self-updating tools, P1–P7
+  on packaging. Read the one that governs your decision.</SUM-THE-CATALOG-IS-FOURTEEN-SCARS>
+      <SUM-THREE-MAXIMS-SIT-ABOVE-THEM fact="true" status="impl/done">Three maxims sit above them: split by strength, one operation behind
+  thin transports, fail loud instead of degrading.</SUM-THREE-MAXIMS-SIT-ABOVE-THEM>
+      <SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT fact="true" status="impl/done">Every lesson records the failure that taught it — a decision without
+  its reason decays into cargo-cult.</SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT>
+      <SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM fact="true" status="impl/done">Re-derive the mechanics for your platform; the laws port, the
+  implementation does not.</SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM>
+    </facts>
   </summary>
 </spec>

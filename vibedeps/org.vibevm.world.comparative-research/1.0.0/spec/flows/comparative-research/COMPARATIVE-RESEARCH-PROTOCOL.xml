@@ -22,12 +22,12 @@ findings into numbered roadmap proposals.</IT-INVENTORIES-QUOTES-MEASURES-AND-TR
 to be **re-readable months after publication without referring to
 the original sources, and to outlast any one external project's URL
 stability**.</THE-DOCUMENT-IS-WRITTEN-TO-OUTLAST-ITS-SOURCES></p>
-    <list ordered="false">
-      <item><ROT-MARKETING-PAGES-GET-REDESIGNED fact="true" status="spec/done">Marketing pages get redesigned,</ROT-MARKETING-PAGES-GET-REDESIGNED></item>
-      <item><ROT-DOCS-SITES-MOVE fact="true" status="spec/done">docs sites move,</ROT-DOCS-SITES-MOVE></item>
-      <item><ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED fact="true" status="spec/done">whole
-  products get acquired and deleted.</ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED></item>
-    </list>
+    <facts ordered="false">
+      <ROT-MARKETING-PAGES-GET-REDESIGNED fact="true" status="spec/done">Marketing pages get redesigned,</ROT-MARKETING-PAGES-GET-REDESIGNED>
+      <ROT-DOCS-SITES-MOVE fact="true" status="spec/done">docs sites move,</ROT-DOCS-SITES-MOVE>
+      <ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED fact="true" status="spec/done">whole
+  products get acquired and deleted.</ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED>
+    </facts>
     <p><a-study-that-links-out-expires fact="true" status="spec/done">A study that merely links out is
 a study that expires.</a-study-that-links-out-expires></p>
     <p><a-quoted-study-stands-after-the-links-rot fact="true" status="spec/done">A study that quotes verbatim with dates is a
@@ -35,20 +35,20 @@ study that stands on its own after the links rot.</a-quoted-study-stands-after-t
   </what>
   <why title="Why the genre exists">
     <p><three-costs-justify-the-effort-lead fact="true" status="spec/done">Three costs justify the effort of a full study over a quick glance:</three-costs-justify-the-effort-lead></p>
-    <list ordered="false">
-      <item><COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES fact="true" status="spec/done">**Unexamined competitors cost roadmap mistakes.** Building in a
+    <facts ordered="false">
+      <COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES fact="true" status="spec/done">**Unexamined competitors cost roadmap mistakes.** Building in a
   space someone else already occupies, without knowing what they
   built, means re-discovering their dead ends at your own expense —
-  or missing the one feature that was the whole point.</COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES></item>
-      <item><COST-EXAMINED-COMPETITORS-YIELD-DELTAS fact="true" status="spec/done">**Examined competitors yield deltas.** Understanding what a rival
+  or missing the one feature that was the whole point.</COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES>
+      <COST-EXAMINED-COMPETITORS-YIELD-DELTAS fact="true" status="spec/done">**Examined competitors yield deltas.** Understanding what a rival
   does well — *and what it does not* — is load-bearing intelligence
   for your own roadmap. Every gap you find is a candidate decision:
-  close it, decline it on record, or note it as already led.</COST-EXAMINED-COMPETITORS-YIELD-DELTAS></item>
-      <item><COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT fact="true" status="spec/done">**The study must outlive link rot and staff turnover.** The person
+  close it, decline it on record, or note it as already led.</COST-EXAMINED-COMPETITORS-YIELD-DELTAS>
+      <COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT fact="true" status="spec/done">**The study must outlive link rot and staff turnover.** The person
   who did the research leaves; the URL 404s; the competitor pivots.
   What remains is the document, and the document is only worth
-  keeping if it is complete on its own terms.</COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT></item>
-    </list>
+  keeping if it is complete on its own terms.</COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT>
+    </facts>
   </why>
   <laws title="The five laws">
     <p><EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS fact="true" status="impl/done">Every comparative research document obeys all five.</EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS></p>
@@ -78,11 +78,11 @@ you wrote.</critiquing-a-paraphrase-is-critiquing-a-straw-man></p>
     </law-quote-first>
     <law-two-way title="Law 3 — Two-way gaps">
       <p><law-three-runs-in-both-directions-lead fact="true" status="impl/done">The analysis runs in **both directions**:</law-three-runs-in-both-directions-lead></p>
-      <list ordered="false">
-        <item><LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL fact="true" status="impl/done">a section for where you
-  trail the subject,</LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL></item>
-        <item><LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD fact="true" status="impl/done">and a section for where you lead it.</LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD></item>
-      </list>
+      <facts ordered="false">
+        <LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL fact="true" status="impl/done">a section for where you
+  trail the subject,</LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL>
+        <LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD fact="true" status="impl/done">and a section for where you lead it.</LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD>
+      </facts>
       <p><one-directional-gap-analysis-is-advocacy-lead fact="true" status="spec/done">One-directional
 gap analysis is not analysis — it is advocacy:</one-directional-gap-analysis-is-advocacy-lead></p>
       <table>
@@ -130,12 +130,12 @@ shelf life; the re-fetch list is what lets a future session *update*
 the study instead of starting over.</the-study-has-a-shelf-life></p>
       <p><record-enough-that-the-refresh-is-mechanical-lead fact="true" status="impl/done">Record enough that the refresh is
 mechanical:</record-enough-that-the-refresh-is-mechanical-lead></p>
-      <list ordered="false">
-        <item><REFETCH-WHICH-URLS fact="true" status="impl/done">which URLs,</REFETCH-WHICH-URLS></item>
-        <item><REFETCH-IN-WHAT-ORDER fact="true" status="impl/done">in what order,</REFETCH-IN-WHAT-ORDER></item>
-        <item><REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS fact="true" status="impl/done">and what version number this
-  capture reflects.</REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS></item>
-      </list>
+      <facts ordered="false">
+        <REFETCH-WHICH-URLS fact="true" status="impl/done">which URLs,</REFETCH-WHICH-URLS>
+        <REFETCH-IN-WHAT-ORDER fact="true" status="impl/done">in what order,</REFETCH-IN-WHAT-ORDER>
+        <REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS fact="true" status="impl/done">and what version number this
+  capture reflects.</REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS>
+      </facts>
     </law-refetch>
   </laws>
   <when title="When to write one">
@@ -165,15 +165,15 @@ overkill; answer it and move on.</a-one-off-lookup-does-not-warrant-a-study></p>
 understanding whole, whose shape will inform decisions more than once.</THE-GENRE-IS-FOR-A-SYSTEM-WORTH-UNDERSTANDING-WHOLE></p>
   </when>
   <not title="What it is not">
-    <list ordered="false">
-      <item><NOT-A-DECISION fact="true" status="impl/done">**Not a decision.** It proposes deltas; ratification is downstream.</NOT-A-DECISION></item>
-      <item><NOT-A-RANT fact="true" status="impl/done">**Not a rant.** Competitive frustration is the trigger; the
-  document is the disciplined product, two-way and quoted.</NOT-A-RANT></item>
-      <item><NOT-A-LIVE-DASHBOARD fact="true" status="impl/done">**Not a live dashboard.** It is a dated snapshot with a refresh
+    <facts ordered="false">
+      <NOT-A-DECISION fact="true" status="impl/done">**Not a decision.** It proposes deltas; ratification is downstream.</NOT-A-DECISION>
+      <NOT-A-RANT fact="true" status="impl/done">**Not a rant.** Competitive frustration is the trigger; the
+  document is the disciplined product, two-way and quoted.</NOT-A-RANT>
+      <NOT-A-LIVE-DASHBOARD fact="true" status="impl/done">**Not a live dashboard.** It is a dated snapshot with a refresh
   procedure — a baseline, not a feed. When it ages, refresh it via
-  the re-fetch list; keep the old capture as historical record.</NOT-A-LIVE-DASHBOARD></item>
-      <item><NOT-A-LINK-FARM fact="true" status="impl/done">**Not a link farm.** Links rot; the quotes are the evidence.</NOT-A-LINK-FARM></item>
-    </list>
+  the re-fetch list; keep the old capture as historical record.</NOT-A-LIVE-DASHBOARD>
+      <NOT-A-LINK-FARM fact="true" status="impl/done">**Not a link farm.** Links rot; the quotes are the evidence.</NOT-A-LINK-FARM>
+    </facts>
   </not>
   <re-derive title="Re-derive for your project">
     <p><re-derive-lead fact="true" status="impl/done">Do not copy this protocol's framing verbatim — copy the *task*, and
@@ -192,18 +192,18 @@ let the agent produce the study your project actually needs:</re-derive-lead></p
 6. Close with the re-fetch list. Show me the draft; apply nothing.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-A-SELF-CONTAINED-EVERGREEN-STUDY fact="true" status="impl/done">A comparative research document is a self-contained, evergreen
-  study of one external system, written to outlast its own sources.</SUM-A-SELF-CONTAINED-EVERGREEN-STUDY></item>
-      <item><SUM-WHY-THE-GENRE-EXISTS fact="true" status="spec/done">It exists because unexamined competitors cost roadmap mistakes and
-  examined ones yield deltas — and the study must survive link rot.</SUM-WHY-THE-GENRE-EXISTS></item>
-      <item><SUM-THE-FIVE-LAWS fact="true" status="impl/done">Five laws: self-containedness (dated verbatim quotes), quote-first
+    <facts ordered="false">
+      <SUM-A-SELF-CONTAINED-EVERGREEN-STUDY fact="true" status="impl/done">A comparative research document is a self-contained, evergreen
+  study of one external system, written to outlast its own sources.</SUM-A-SELF-CONTAINED-EVERGREEN-STUDY>
+      <SUM-WHY-THE-GENRE-EXISTS fact="true" status="spec/done">It exists because unexamined competitors cost roadmap mistakes and
+  examined ones yield deltas — and the study must survive link rot.</SUM-WHY-THE-GENRE-EXISTS>
+      <SUM-THE-FIVE-LAWS fact="true" status="impl/done">Five laws: self-containedness (dated verbatim quotes), quote-first
   then critique, two-way gaps (trail *and* lead), deltas-not-decrees
-  (numbered, prioritized, homed, unratified), and the re-fetch list.</SUM-THE-FIVE-LAWS></item>
-      <item><SUM-WHEN-TO-WRITE-ONE fact="true" status="impl/done">Write one before building in an occupied space, when a competitor
-  alarms, or when "why not do what X does" keeps recurring.</SUM-WHEN-TO-WRITE-ONE></item>
-      <item><SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES fact="true" status="impl/done">The study proposes; the owner decides. See
-  [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES></item>
-    </list>
+  (numbered, prioritized, homed, unratified), and the re-fetch list.</SUM-THE-FIVE-LAWS>
+      <SUM-WHEN-TO-WRITE-ONE fact="true" status="impl/done">Write one before building in an occupied space, when a competitor
+  alarms, or when "why not do what X does" keeps recurring.</SUM-WHEN-TO-WRITE-ONE>
+      <SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES fact="true" status="impl/done">The study proposes; the owner decides. See
+  [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES>
+    </facts>
   </summary>
 </spec>

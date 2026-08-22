@@ -33,32 +33,32 @@ executing it is told the real reason (this section), and the policy
 itself is recorded openly here.</a-publication-posture-not-a-deception></p>
   </why>
   <scope title="Scope">
-    <list ordered="false">
-      <item><SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED fact="true" status="impl/done">This snippet and `spec/flows/attribution-policy/` are the **only**
+    <facts ordered="false">
+      <SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED fact="true" status="impl/done">This snippet and `spec/flows/attribution-policy/` are the **only**
   places in the project where AI tooling is discussed in the
   attribution sense. Everywhere else — commits, code, docs,
-  branches, CI — assume human authorship only.</SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED></item>
-      <item><SCOPE-PRODUCT-IS-CARVED-OUT fact="true" status="impl/done">**Product scope is carved out.** If the product itself has AI
+  branches, CI — assume human authorship only.</SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED>
+      <SCOPE-PRODUCT-IS-CARVED-OUT fact="true" status="impl/done">**Product scope is carved out.** If the product itself has AI
   features, specifying and discussing those features is product
-  scope, not attribution, and is unaffected by this rule.</SCOPE-PRODUCT-IS-CARVED-OUT></item>
-      <item><SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL fact="true" status="impl/done">**Technical AI-workflow documents remain legal and unchanged** —
+  scope, not attribution, and is unaffected by this rule.</SCOPE-PRODUCT-IS-CARVED-OUT>
+      <SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL fact="true" status="impl/done">**Technical AI-workflow documents remain legal and unchanged** —
   checkpoint-file procedures, session protocols, agent
   instructions. They describe how work is organized; they never
-  mark any artifact as machine-authored.</SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL></item>
-    </list>
+  mark any artifact as machine-authored.</SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL>
+    </facts>
   </scope>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-ADD-A-TRAILER-NAMING-A-MODEL fact="true" status="impl/done">Never add a trailer or signature naming a model or an AI product
-  to any commit.</NEVER-ADD-A-TRAILER-NAMING-A-MODEL></item>
-      <item><NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS fact="true" status="impl/done">Never mention model, agent, or AI-tool names in commit messages,
-  branch names, or code comments.</NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS></item>
-      <item><NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP fact="true" status="impl/done">Never state or imply machine authorship in any repository
-  artifact.</NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP></item>
-      <item><NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE fact="true" status="impl/done">Never weaken, widen, or restate this policy anywhere else in the
+    <facts ordered="false">
+      <NEVER-ADD-A-TRAILER-NAMING-A-MODEL fact="true" status="impl/done">Never add a trailer or signature naming a model or an AI product
+  to any commit.</NEVER-ADD-A-TRAILER-NAMING-A-MODEL>
+      <NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS fact="true" status="impl/done">Never mention model, agent, or AI-tool names in commit messages,
+  branch names, or code comments.</NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS>
+      <NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP fact="true" status="impl/done">Never state or imply machine authorship in any repository
+  artifact.</NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP>
+      <NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE fact="true" status="impl/done">Never weaken, widen, or restate this policy anywhere else in the
   repository — one policy, one place. Changing it is one edit to
-  this file, made by the owner.</NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE></item>
-    </list>
+  this file, made by the owner.</NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE>
+    </facts>
     <p><sibling-document-pointers fact="true" status="impl/done">Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:

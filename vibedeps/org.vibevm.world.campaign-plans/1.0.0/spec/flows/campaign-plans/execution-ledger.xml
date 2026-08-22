@@ -51,12 +51,12 @@ session reads first; it must never lag the tree.</THE-STATUS-LINE-MUST-NEVER-LAG
     <p><A-SUMMARY-BLOCK-IS-PREPENDED-AT-CLOSE fact="true" status="impl/done">At close, a summary block is **prepended** into the plan's status
 area — the first thing any future reader sees, above the now-historic
 planning prose. It carries:</A-SUMMARY-BLOCK-IS-PREPENDED-AT-CLOSE></p>
-    <list ordered="false">
-      <item><EXECUTION-RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">the commit range,</EXECUTION-RECORD-THE-COMMIT-RANGE></item>
-      <item><EXECUTION-RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">the per-phase deltas
-  against the target arithmetic,</EXECUTION-RECORD-THE-PER-PHASE-DELTAS></item>
-      <item><EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION fact="true" status="impl/done">and the verdict on every prediction.</EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION></item>
-    </list>
+    <facts ordered="false">
+      <EXECUTION-RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">the commit range,</EXECUTION-RECORD-THE-COMMIT-RANGE>
+      <EXECUTION-RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">the per-phase deltas
+  against the target arithmetic,</EXECUTION-RECORD-THE-PER-PHASE-DELTAS>
+      <EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION fact="true" status="impl/done">and the verdict on every prediction.</EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION>
+    </facts>
     <fence>_Execution record: all six phases ran to the exit state — baseline
 130 → 10, exactly §0's arithmetic; 19 commits (`254b974` …
 `475fa75`). Two predictions falsified and recorded in place: the
@@ -91,35 +91,35 @@ commits: the fixture change deserved its own revert point").</DRIFTED-SUBJECTS-A
   </commit-maps>
   <honesty title="Honesty rules">
     <p><the-ledgers-value-is-its-honesty-lead fact="true" status="impl/done">The ledger's value is exactly proportional to its honesty:</the-ledgers-value-is-its-honesty-lead></p>
-    <list ordered="false">
-      <item><HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE fact="true" status="impl/done">**Say "no target moved" where it is true.** A close panel that
+    <facts ordered="false">
+      <HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE fact="true" status="impl/done">**Say "no target moved" where it is true.** A close panel that
   reports numbers without saying whether they shifted reads as
   concealment in audit. "Corpus 9/9 — no target moved" costs five
-  words and closes the question.</HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE></item>
-      <item><HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO fact="true" status="impl/done">**Execution may correct the plan's own decisions — and says so.**
+  words and closes the question.</HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE>
+      <HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO fact="true" status="impl/done">**Execution may correct the plan's own decisions — and says so.**
   The plan is not sacred; silent divergence is the sin. When
   execution proves a decision wrong or unnecessary, the ledger entry
   states it and the Decision is amended in place, as in the Phase 3
-  map above.</HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO></item>
-      <item><HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS fact="true" status="impl/done">**Falsified predictions are findings, not failures.** They are
+  map above.</HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO>
+      <HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS fact="true" status="impl/done">**Falsified predictions are findings, not failures.** They are
   recorded twice: at the prediction (in place, so the planning prose
   never misleads a re-reader) and in the execution record's verdict
-  list.</HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS></item>
-      <item><HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS fact="true" status="impl/done">**Discovered work appears with its commits.** An entry that was not
+  list.</HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS>
+      <HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS fact="true" status="impl/done">**Discovered work appears with its commits.** An entry that was not
   in the plan says so explicitly — the
   [`phase-gates.md` §discovered-work](phase-gates.md#discovered-work)
-  rule, enforced at write time.</HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS></item>
-    </list>
+  rule, enforced at write time.</HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS>
+    </facts>
   </honesty>
   <report title="The closing report">
     <p><the-campaign-closes-by-checking-every-prediction-lead fact="true" status="impl/done">The campaign closes by checking **every prediction, one by one**:</the-campaign-closes-by-checking-every-prediction-lead></p>
-    <list ordered="false">
-      <item><VERDICT-HELD fact="true" status="impl/done">held (with the observed value),</VERDICT-HELD></item>
-      <item><VERDICT-FALSIFIED fact="true" status="impl/done">falsified (with the observed value
-  and where the correction landed),</VERDICT-FALSIFIED></item>
-      <item><VERDICT-SURPRISED fact="true" status="impl/done">or surprised (something happened
-  the predictions never addressed).</VERDICT-SURPRISED></item>
-    </list>
+    <facts ordered="false">
+      <VERDICT-HELD fact="true" status="impl/done">held (with the observed value),</VERDICT-HELD>
+      <VERDICT-FALSIFIED fact="true" status="impl/done">falsified (with the observed value
+  and where the correction landed),</VERDICT-FALSIFIED>
+      <VERDICT-SURPRISED fact="true" status="impl/done">or surprised (something happened
+  the predictions never addressed).</VERDICT-SURPRISED>
+    </facts>
     <p><THEN-THE-LESSONS fact="true" status="impl/done">Then the lessons: which decisions execution amended, which rules or
 estimates misfired, what the next campaign inherits.</THEN-THE-LESSONS></p>
     <p><A-CAMPAIGN-THAT-SKIPS-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">**A campaign that skips the report learns nothing durable.**</A-CAMPAIGN-THAT-SKIPS-THE-REPORT-LEARNS-NOTHING-DURABLE></p>
@@ -164,19 +164,19 @@ of the next; the chain never breaks, and nothing is re-discovered
 from scratch.</THE-LEDGER-OF-ONE-CAMPAIGN-IS-THE-RAW-MANDATE-OF-THE-NEXT></p>
   </lineage>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE fact="true" status="impl/done">The status line is the lifecycle: PLANNED → EXECUTING →
-  EXECUTED &lt;date&gt;, refreshed at every phase boundary.</SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE></item>
-      <item><SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD fact="true" status="impl/done">At close, prepend the execution record: commit range, deltas
-  against the arithmetic, a verdict on every prediction.</SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD></item>
-      <item><SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS fact="true" status="impl/done">Per-phase commit maps bind hashes to planned subjects and state
+    <facts ordered="false">
+      <SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE fact="true" status="impl/done">The status line is the lifecycle: PLANNED → EXECUTING →
+  EXECUTED &lt;date&gt;, refreshed at every phase boundary.</SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE>
+      <SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD fact="true" status="impl/done">At close, prepend the execution record: commit range, deltas
+  against the arithmetic, a verdict on every prediction.</SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD>
+      <SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS fact="true" status="impl/done">Per-phase commit maps bind hashes to planned subjects and state
   what each commit confirmed or falsified — written at the boundary,
-  not reconstructed later.</SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS></item>
-      <item><SUM-THE-HONESTY-RULES fact="true" status="impl/done">Honesty rules: "no target moved" said aloud; corrected decisions
-  said aloud; falsified predictions recorded in place.</SUM-THE-HONESTY-RULES></item>
-      <item><SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">A campaign that skips the report learns nothing durable.</SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE></item>
-      <item><SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE fact="true" status="impl/done">Deferrals live in the ledger, named and owned — and the next
-  campaign's mandate drains from it.</SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE></item>
-    </list>
+  not reconstructed later.</SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS>
+      <SUM-THE-HONESTY-RULES fact="true" status="impl/done">Honesty rules: "no target moved" said aloud; corrected decisions
+  said aloud; falsified predictions recorded in place.</SUM-THE-HONESTY-RULES>
+      <SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">A campaign that skips the report learns nothing durable.</SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE>
+      <SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE fact="true" status="impl/done">Deferrals live in the ledger, named and owned — and the next
+  campaign's mandate drains from it.</SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE>
+    </facts>
   </summary>
 </spec>

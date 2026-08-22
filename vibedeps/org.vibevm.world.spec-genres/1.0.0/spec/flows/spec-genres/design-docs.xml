@@ -16,26 +16,26 @@ in it must earn its place.</EVERYTHING-IN-A-CONTRACT-MUST-EARN-ITS-PLACE></p>
     <p><THE-SPLIT-IS-LOAD-BEARING-VERSUS-NARRATIVE fact="true" status="impl/done">So the split is not "short versus long" —
 it is "load-bearing versus narrative".</THE-SPLIT-IS-LOAD-BEARING-VERSUS-NARRATIVE></p>
     <p><never-leaves-the-contract-lead fact="true" status="impl/done">**Never leaves the contract:**</never-leaves-the-contract-lead></p>
-    <list ordered="false">
-      <item><KEEP-THE-DECISION-ITSELF fact="true" status="impl/done">The **decision itself** — the value, the shape, the chosen option.</KEEP-THE-DECISION-ITSELF></item>
-      <item><KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY fact="true" status="impl/done">Its **one-paragraph load-bearing why** — the single reason that, if
-  forgotten, would get the decision reverted by accident.</KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY></item>
-      <item><KEEP-THE-CONSTRAINTS fact="true" status="impl/done">The **constraints** the decision must satisfy.</KEEP-THE-CONSTRAINTS></item>
-      <item><KEEP-THE-INVARIANTS fact="true" status="impl/done">The **invariants** it establishes for everything downstream.</KEEP-THE-INVARIANTS></item>
-    </list>
+    <facts ordered="false">
+      <KEEP-THE-DECISION-ITSELF fact="true" status="impl/done">The **decision itself** — the value, the shape, the chosen option.</KEEP-THE-DECISION-ITSELF>
+      <KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY fact="true" status="impl/done">Its **one-paragraph load-bearing why** — the single reason that, if
+  forgotten, would get the decision reverted by accident.</KEEP-THE-ONE-PARAGRAPH-LOAD-BEARING-WHY>
+      <KEEP-THE-CONSTRAINTS fact="true" status="impl/done">The **constraints** the decision must satisfy.</KEEP-THE-CONSTRAINTS>
+      <KEEP-THE-INVARIANTS fact="true" status="impl/done">The **invariants** it establishes for everything downstream.</KEEP-THE-INVARIANTS>
+    </facts>
     <p><spills-out-into-the-design-doc-lead fact="true" status="impl/done">**Spills out into the design doc:**</spills-out-into-the-design-doc-lead></p>
-    <list ordered="false">
-      <item><SPILL-PRECEDENT-STUDIES fact="true" status="impl/done">**Precedent studies** — how three other tools solved this, at
+    <facts ordered="false">
+      <SPILL-PRECEDENT-STUDIES fact="true" status="impl/done">**Precedent studies** — how three other tools solved this, at
   length. (Contrast with the research genre: research studies an
   external system for its own sake; a precedent study in a design doc
-  is marshalled to justify *our* choice.)</SPILL-PRECEDENT-STUDIES></item>
-      <item><SPILL-FORKS-WEIGHED-AT-LENGTH fact="true" status="impl/done">**Forks weighed at length** — every option considered, not just the
-  winner.</SPILL-FORKS-WEIGHED-AT-LENGTH></item>
-      <item><SPILL-PARKED-IDEAS fact="true" status="impl/done">**Parked ideas** — the "we could later…" branches, explicitly
-  marked as not-yet-decided so no one implements them.</SPILL-PARKED-IDEAS></item>
-      <item><SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE fact="true" status="impl/done">**The narrative "how we got here"** — the path of the discussion,
-  the analogies, the owner's mental model.</SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE></item>
-    </list>
+  is marshalled to justify *our* choice.)</SPILL-PRECEDENT-STUDIES>
+      <SPILL-FORKS-WEIGHED-AT-LENGTH fact="true" status="impl/done">**Forks weighed at length** — every option considered, not just the
+  winner.</SPILL-FORKS-WEIGHED-AT-LENGTH>
+      <SPILL-PARKED-IDEAS fact="true" status="impl/done">**Parked ideas** — the "we could later…" branches, explicitly
+  marked as not-yet-decided so no one implements them.</SPILL-PARKED-IDEAS>
+      <SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE fact="true" status="impl/done">**The narrative "how we got here"** — the path of the discussion,
+  the analogies, the owner's mental model.</SPILL-THE-NARRATIVE-HOW-WE-GOT-HERE>
+    </facts>
     <p><THE-BOUNDARY-TEST-CONTRACT-SIDE fact="true" status="impl/done">The test at the boundary: *if deleting this sentence would change
 what an implementer builds, it is contract.*</THE-BOUNDARY-TEST-CONTRACT-SIDE></p>
     <p><THE-BOUNDARY-TEST-LORE-SIDE fact="true" status="impl/done">If deleting it only
@@ -93,18 +93,18 @@ carries only that axis's decision.</THE-DESIGN-DOC-RECORDS-THE-DECOMPOSITION-IN-
     <p><STALENESS-IS-THE-GENRES-NATURE-NOT-A-FLAW fact="true" status="impl/done">That is not a flaw to be patched away — it is the genre's nature, and
 pretending otherwise causes more harm than the staleness itself.</STALENESS-IS-THE-GENRES-NATURE-NOT-A-FLAW></p>
     <p><honest-posture-lead fact="true" status="impl/done">The honest posture:</honest-posture-lead></p>
-    <list ordered="false">
-      <item><CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT fact="true" status="impl/done">**Corrections happen on contract conflict.** When the contract
+    <facts ordered="false">
+      <CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT fact="true" status="impl/done">**Corrections happen on contract conflict.** When the contract
   moves and the design doc now contradicts it, fix the contradicting
-  passage and note what changed. This is targeted, not cosmetic.</CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT></item>
-      <item><WHOLESALE-REWRITES-DO-NOT-HAPPEN fact="true" status="impl/done">**Wholesale rewrites do not happen** just because time passed. A
+  passage and note what changed. This is targeted, not cosmetic.</CORRECTIONS-HAPPEN-ON-CONTRACT-CONFLICT>
+      <WHOLESALE-REWRITES-DO-NOT-HAPPEN fact="true" status="impl/done">**Wholesale rewrites do not happen** just because time passed. A
   design doc is not living documentation to be kept current sentence
   by sentence; that would cost real effort to no benefit and would
-  erase the record of how the thinking actually evolved.</WHOLESALE-REWRITES-DO-NOT-HAPPEN></item>
-      <item><A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED fact="true" status="impl/done">**A superseded design doc is archived, not deleted.** The path from
+  erase the record of how the thinking actually evolved.</WHOLESALE-REWRITES-DO-NOT-HAPPEN>
+      <A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED fact="true" status="impl/done">**A superseded design doc is archived, not deleted.** The path from
   a rejected early design to the shipped one is itself lore the next
-  reader may need.</A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED></item>
-    </list>
+  reader may need.</A-SUPERSEDED-DESIGN-DOC-IS-ARCHIVED-NOT-DELETED>
+    </facts>
     <p><A-DESIGN-DOC-MAY-READ-AS-A-DATED-SNAPSHOT fact="true" status="impl/done">So a design doc is allowed to read as a snapshot with a date on it.</A-DESIGN-DOC-MAY-READ-AS-A-DATED-SNAPSHOT></p>
     <p><IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT fact="true" status="impl/done">What it is never allowed to do is quietly diverge from the contract
 and then get cited as current — that is the exact failure the
@@ -113,17 +113,17 @@ precedence law
 exists to prevent.</IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT></p>
   </staleness>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-WHAT-THE-CONTRACT-KEEPS fact="true" status="impl/done">Contract keeps the decision, its one-paragraph why, constraints,
-  and invariants; everything narrative spills into the design doc.</SUM-WHAT-THE-CONTRACT-KEEPS></item>
-      <item><SUM-THE-BOUNDARY-TEST fact="true" status="impl/done">The boundary test: if deleting a sentence changes what gets built,
-  it is contract; if it only costs the story, it is lore.</SUM-THE-BOUNDARY-TEST></item>
-      <item><SUM-RECORD-FORKS-AS-A-SKELETON fact="true" status="impl/done">Record forks as a fixed skeleton — options, chosen, why, rejected,
-  consequence — so settled questions are not re-litigated.</SUM-RECORD-FORKS-AS-A-SKELETON></item>
-      <item><SUM-DECOMPOSE-INTO-COMPOSABLE-AXES fact="true" status="impl/done">Decompose large designs into independent, composable axes; ship the
-  cheap independent one first.</SUM-DECOMPOSE-INTO-COMPOSABLE-AXES></item>
-      <item><SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT fact="true" status="impl/done">A design doc is a dated snapshot; correct it on contract conflict,
-  never rewrite it wholesale to fake currency.</SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT></item>
-    </list>
+    <facts ordered="false">
+      <SUM-WHAT-THE-CONTRACT-KEEPS fact="true" status="impl/done">Contract keeps the decision, its one-paragraph why, constraints,
+  and invariants; everything narrative spills into the design doc.</SUM-WHAT-THE-CONTRACT-KEEPS>
+      <SUM-THE-BOUNDARY-TEST fact="true" status="impl/done">The boundary test: if deleting a sentence changes what gets built,
+  it is contract; if it only costs the story, it is lore.</SUM-THE-BOUNDARY-TEST>
+      <SUM-RECORD-FORKS-AS-A-SKELETON fact="true" status="impl/done">Record forks as a fixed skeleton — options, chosen, why, rejected,
+  consequence — so settled questions are not re-litigated.</SUM-RECORD-FORKS-AS-A-SKELETON>
+      <SUM-DECOMPOSE-INTO-COMPOSABLE-AXES fact="true" status="impl/done">Decompose large designs into independent, composable axes; ship the
+  cheap independent one first.</SUM-DECOMPOSE-INTO-COMPOSABLE-AXES>
+      <SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT fact="true" status="impl/done">A design doc is a dated snapshot; correct it on contract conflict,
+  never rewrite it wholesale to fake currency.</SUM-A-DATED-SNAPSHOT-CORRECTED-ON-CONFLICT>
+    </facts>
   </summary>
 </spec>

@@ -7,12 +7,12 @@
   <p><rationale-compiler-is-a-page-reimplementation-is-weeks fact="true" status="spec/done">Rationale (owner-decided): asking a compiler about its own language is one page of code; rebuilding name resolution over tree-sitter is weeks.</rationale-compiler-is-a-page-reimplementation-is-weeks></p>
   <p><BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS fact="true" status="spec/done">The balance is made explicit through escalation tiers, not ad-hoc judgment. *Specified, not built: the whole tier vocabulary of §1 is unimplemented. There is no `Tier` type, no `tier` field and no escalation path in `core-ai-native-conform` or in any frontend crate, stack CLI or host driver; `T-lex` / `T-sem` appear nowhere in the tree and `T-syn` only inside three doc comments that quote this document. What is actually explicit is the **frontend** choice, made by the caller at the call site — which is a different mechanism, and an ad-hoc one.*</BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS></p>
   <p><derives-from-lead fact="true" status="impl/done">**Derives from.**</derives-from-lead></p>
-  <list ordered="false">
-    <item><DERIVES-A1-EXPLANATION-CHAINS fact="true" status="impl/done">Charter A1 (findings carry explanation chains),</DERIVES-A1-EXPLANATION-CHAINS></item>
-    <item><DERIVES-A2-CACHED-INCREMENTAL fact="true" status="impl/done">A2 (extraction is cached, incremental),</DERIVES-A2-CACHED-INCREMENTAL></item>
-    <item><DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR fact="true" status="impl/done">A3 (conformance is below the algorithmic floor — no LLM in the checking path),</DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR></item>
-    <item><DERIVES-A5-RULES-SHIP-WITH-CHECKERS fact="true" status="impl/done">A5 (rules ship with checkers).</DERIVES-A5-RULES-SHIP-WITH-CHECKERS></item>
-  </list>
+  <facts ordered="false">
+    <DERIVES-A1-EXPLANATION-CHAINS fact="true" status="impl/done">Charter A1 (findings carry explanation chains),</DERIVES-A1-EXPLANATION-CHAINS>
+    <DERIVES-A2-CACHED-INCREMENTAL fact="true" status="impl/done">A2 (extraction is cached, incremental),</DERIVES-A2-CACHED-INCREMENTAL>
+    <DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR fact="true" status="impl/done">A3 (conformance is below the algorithmic floor — no LLM in the checking path),</DERIVES-A3-BELOW-THE-ALGORITHMIC-FLOOR>
+    <DERIVES-A5-RULES-SHIP-WITH-CHECKERS fact="true" status="impl/done">A5 (rules ship with checkers).</DERIVES-A5-RULES-SHIP-WITH-CHECKERS>
+  </facts>
   <tiers title="1. Escalation tiers">
     <p><RULE-RECORD-DECLARES-ITS-TIER fact="true" status="spec/done">Every rule record declares `tier` — the minimum analysis depth its check requires. *Specified, not built: no rule record declares a tier, because a rule record has no such field. The shipped contract is `pub trait Rule { fn id(&amp;self) -&gt; &amp;'static str; fn why(&amp;self) -&gt; &amp;'static str; fn check(&amp;self, facts: &amp;[SourceFacts]) -&gt; Vec&lt;Finding&gt;; }` (`conform/src/finding.rs:53-57`) — three methods, none of them `tier`. All fifteen shipped rules take whatever facts they are handed.*</RULE-RECORD-DECLARES-ITS-TIER></p>
     <p><ENGINE-RUNS-THE-CHEAPEST-ADEQUATE-FRONTEND fact="true" status="spec/done">The engine runs the cheapest adequate frontend; escalation is declared, never improvised. *Specified, not built: the engine performs no selection, so it can neither pick the cheapest nor escalate. `store.rs:95-118` exposes one entry point per language, each taking a caller-supplied `&amp;dyn Frontend` — the choice is made outside the engine, by whoever calls it, which is precisely the improvisation this sentence rules out.*</ENGINE-RUNS-THE-CHEAPEST-ADEQUATE-FRONTEND></p>
@@ -43,12 +43,12 @@
       </tr>
     </table>
     <p><rule-examples-lead fact="true" status="impl/done">Rule examples:</rule-examples-lead></p>
-    <list ordered="false">
-      <item><EXAMPLE-R-021-FORBIDDEN-IDIOM fact="true" status="impl/plan">R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built (→ B-038): R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.*</EXAMPLE-R-021-FORBIDDEN-IDIOM></item>
-      <item><EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION fact="true" status="spec/done">R-002 import-graph isolation → T-syn (Rust) / T-sem (C++ where headers lie); *The rule is real; the mapping is not. `CellIsolation` carries id `"R-002"` (`conform/src/rules/structure.rs:77-91`) and is projected per language as `TsCellIsolation` and `GoCellIsolation`. What does not exist is either side of the arrow — no tier assigns it a depth, and there is no C++ frontend to escalate to.*</EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION></item>
-      <item><EXAMPLE-R-020-NAMING-VS-MANIFEST fact="true" status="impl/plan">R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built (→ B-038): neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.*</EXAMPLE-R-020-NAMING-VS-MANIFEST></item>
-      <item><EXAMPLE-TYPE-FLOW-RULES fact="true" status="spec/done">type-flow rules (future) → T-sem.</EXAMPLE-TYPE-FLOW-RULES></item>
-    </list>
+    <facts ordered="false">
+      <EXAMPLE-R-021-FORBIDDEN-IDIOM fact="true" status="impl/plan">R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built (→ B-038): R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.*</EXAMPLE-R-021-FORBIDDEN-IDIOM>
+      <EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION fact="true" status="spec/done">R-002 import-graph isolation → T-syn (Rust) / T-sem (C++ where headers lie); *The rule is real; the mapping is not. `CellIsolation` carries id `"R-002"` (`conform/src/rules/structure.rs:77-91`) and is projected per language as `TsCellIsolation` and `GoCellIsolation`. What does not exist is either side of the arrow — no tier assigns it a depth, and there is no C++ frontend to escalate to.*</EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION>
+      <EXAMPLE-R-020-NAMING-VS-MANIFEST fact="true" status="impl/plan">R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built (→ B-038): neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.*</EXAMPLE-R-020-NAMING-VS-MANIFEST>
+      <EXAMPLE-TYPE-FLOW-RULES fact="true" status="spec/done">type-flow rules (future) → T-sem.</EXAMPLE-TYPE-FLOW-RULES>
+    </facts>
   </tiers>
   <frontends title="2. Frontends — borrowed, behind one trait">
     <fence lang="rust">trait Frontend {
@@ -100,18 +100,18 @@
     <p><FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS fact="true" status="impl/done">**Foreign linters as evidence providers.** clippy, eslint, ruff, clang-tidy run as-is; their output is ingested as facts via **SARIF** (the OASIS static-analysis interchange format).</FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS></p>
     <p><LINTERS-ARE-CITED-NOT-REIMPLEMENTED fact="true" status="spec/done">We neither reimplement their checks nor fork them — we *cite* them: a Discipline rule may be `check: { tool: "clippy", id: "...", status: enforced }`, and conform's job is orchestration + the checks no generic linter can know (manifest-vs-name, specmap coverage, cell isolation). *The posture holds; the record shape and two of the three examples do not. Foreign linters really are run as-is and never reforked — the floor shells out to `cargo clippy`, `go vet`, `staticcheck`, `exhaustive`, `prettier`, `tsc` and `eslint`. But the citation is a **floor step**, not a rule field: the `check: { tool, id, status }` shape returns zero hits across the engine, so no rule can cite a linter finding. Of the three checks named as conform's own, **cell isolation ships** (R-002); manifest-vs-name does not (R-020 is unauthored) and specmap coverage cannot, since conform does not depend on the specmap crate. Orchestration, too, lives one layer up in each stack's `floor`, not in the engine.*</LINTERS-ARE-CITED-NOT-REIMPLEMENTED></p>
   </frontends>
-  <facts title="3. The fact store">
+  <section id="facts" title="3. The fact store">
     <p><fact-store-is-the-ledgers-facts-class-lead fact="true" status="impl/done">Language-neutral normalized facts; this is the ledger's "facts class" (LEDGER §3) instantiated:</fact-store-is-the-ledgers-facts-class-lead></p>
     <fence lang="json">{ "fact": "item",   "lang": "rust", "path": "crates/vibe-resolver/src/naive.rs",
   "kind": "struct", "symbol": "vibe_resolver::naive::NaiveDepSolver",
   "span": [29, 41], "hash": "sha256:…", "attrs": ["spec(implements=…, r=2)"] }
 { "fact": "import", "from": "vibe_resolver::naive", "to": "vibe_core::manifest" }
 { "fact": "flag_read", "symbol": "…", "site": "crates/vibe-cli/src/registry.rs:88" }</fence>
-    <list ordered="false">
-      <item><KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION fact="true" status="impl/done">**Key:** `(file content-hash, frontend id+version)`. Facts never rot semantically — re-extraction happens only when the file or the frontend changes. This is what makes conformance incremental: a 1-file diff re-extracts 1 file.</KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION></item>
-      <item><STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED fact="true" status="impl/done">Store: content-addressed, local + CI-cache; never committed (derived data with a deterministic producer).</STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED></item>
-    </list>
-  </facts>
+    <facts ordered="false">
+      <KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION fact="true" status="impl/done">**Key:** `(file content-hash, frontend id+version)`. Facts never rot semantically — re-extraction happens only when the file or the frontend changes. This is what makes conformance incremental: a 1-file diff re-extracts 1 file.</KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION>
+      <STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED fact="true" status="impl/done">Store: content-addressed, local + CI-cache; never committed (derived data with a deterministic producer).</STORE-IS-CONTENT-ADDRESSED-NEVER-COMMITTED>
+    </facts>
+  </section>
   <rules title="4. Rules as queries">
     <p><RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN fact="true" status="impl/done">v0.1: rules are Rust implementations of one trait — `fn check(&amp;self, facts: &amp;[SourceFacts]) -&gt; Vec&lt;Finding&gt;`, alongside `fn id()` and `fn why()` (`core-ai-native-conform/src/finding.rs:51-56`) — compiled into the engine. *The earlier sketch's `specmap: &amp;Index` parameter is dropped: the conform crate carries no dependency on the specmap crate, so the parameter was impossible, not merely absent.*</RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN></p>
     <p><QUERY-DSL-IS-DELIBERATELY-DEFERRED fact="true" status="spec/done">A declarative query DSL (datalog-flavored) is deliberately deferred: we will know its right shape after ~30 real rules exist, not before (Open Question 2).</QUERY-DSL-IS-DELIBERATELY-DEFERRED></p>
@@ -167,12 +167,12 @@ project believing it is gated when it is not — the same disease as a dead
 exclusion, and the same cure: say the name out loud.</A-RETIRED-KEY-BECOMES-A-LOUD-TOMBSTONE-NOT-A-REMOVAL></p>
   </policy>
   <open title="7. Open questions">
-    <list ordered="true">
-      <item><OPEN-RUST-T-SEM-BACKEND fact="true" status="spec/done">rust-analyzer crates vs `rustc_driver` for Rust T-sem (stability vs fidelity) — decide when the first T-sem Rust rule actually lands; none of the Phase ≤4 checks need it.</OPEN-RUST-T-SEM-BACKEND></item>
-      <item><OPEN-QUERY-DSL-SHAPE fact="true" status="spec/done">Query DSL: shape and whether rules become data (loadable rule-packs) — after 30 in-tree rules.</OPEN-QUERY-DSL-SHAPE></item>
-      <item><OPEN-FACT-SCHEMA-VERSIONING fact="true" status="spec/done">Fact schema versioning across frontend upgrades — proposal: schema carries `v`, store segregates by version, mixed reads forbidden.</OPEN-FACT-SCHEMA-VERSIONING></item>
-      <item><OPEN-PERFORMANCE-ENVELOPE fact="true" status="spec/done">Performance envelope targets (full-workspace cold scan budget; warm incremental budget) — set from Phase 4 measurements.</OPEN-PERFORMANCE-ENVELOPE></item>
-    </list>
+    <facts ordered="true">
+      <OPEN-RUST-T-SEM-BACKEND fact="true" status="spec/done">rust-analyzer crates vs `rustc_driver` for Rust T-sem (stability vs fidelity) — decide when the first T-sem Rust rule actually lands; none of the Phase ≤4 checks need it.</OPEN-RUST-T-SEM-BACKEND>
+      <OPEN-QUERY-DSL-SHAPE fact="true" status="spec/done">Query DSL: shape and whether rules become data (loadable rule-packs) — after 30 in-tree rules.</OPEN-QUERY-DSL-SHAPE>
+      <OPEN-FACT-SCHEMA-VERSIONING fact="true" status="spec/done">Fact schema versioning across frontend upgrades — proposal: schema carries `v`, store segregates by version, mixed reads forbidden.</OPEN-FACT-SCHEMA-VERSIONING>
+      <OPEN-PERFORMANCE-ENVELOPE fact="true" status="spec/done">Performance envelope targets (full-workspace cold scan budget; warm incremental budget) — set from Phase 4 measurements.</OPEN-PERFORMANCE-ENVELOPE>
+    </facts>
     <p><UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED fact="true" status="impl/done">*Any frontend or tier specified here that is not exercised by Playbook Phase 4 is either removed from this document or annotated in place as **specified, not built** — never carried as unmarked aspiration.*</UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED></p>
   </open>
 </spec>

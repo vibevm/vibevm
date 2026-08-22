@@ -17,19 +17,19 @@ work the owner has already thought through and approved.</THE-DEFAULT-POSTURE-PR
   <p><A-CODEWORD-REMOVES-THE-OVERHEAD-NOT-THE-GUARDRAILS fact="true" status="impl/done">A codeword removes
 that overhead without removing the guardrails that matter.</A-CODEWORD-REMOVES-THE-OVERHEAD-NOT-THE-GUARDRAILS></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md` — what a
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md` — what a
   mode is, the five-part codeword shape, and the red-lines law that
-  no codeword can erode.</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-MFBT-MODE fact="true" status="impl/done">`spec/flows/operating-modes/mfbt-mode.md` — a worked reference
+  no codeword can erode.</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-MFBT-MODE fact="true" status="impl/done">`spec/flows/operating-modes/mfbt-mode.md` — a worked reference
   codeword, «move fast and break things»: pre-authorised heads-down
-  execution, fully specified in the five-part shape.</CONTENT-THE-MFBT-MODE></item>
-    <item><CONTENT-WRITING-A-CODEWORD fact="true" status="impl/done">`spec/flows/operating-modes/writing-a-codeword.md` — the procedure
-  for adding a new mode to a project's catalogue, with anti-patterns.</CONTENT-WRITING-A-CODEWORD></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/45-flow-operating-modes.md` — boot snippet: the default
+  execution, fully specified in the five-part shape.</CONTENT-THE-MFBT-MODE>
+    <CONTENT-WRITING-A-CODEWORD fact="true" status="impl/done">`spec/flows/operating-modes/writing-a-codeword.md` — the procedure
+  for adding a new mode to a project's catalogue, with anti-patterns.</CONTENT-WRITING-A-CODEWORD>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/45-flow-operating-modes.md` — boot snippet: the default
   posture, how codewords fire, the red-lines law, and the never-do
-  list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:operating-modes</fence>
   </install>
@@ -40,20 +40,20 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
     <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — a mode never overrides the
+    <facts ordered="false">
+      <COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — a mode never overrides the
   uncertainty protocol; genuine ambiguity still takes the
-  conservative default and a REVIEW marker, even at full speed.</COMPOSES-CONFLICT-PROTOCOL></item>
-      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — an accelerated mode still commits one
+  conservative default and a REVIEW marker, even at full speed.</COMPOSES-CONFLICT-PROTOCOL>
+      <COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — an accelerated mode still commits one
   logical unit at a time; its frozen-history rule is one of the red
-  lines every mode preserves.</COMPOSES-ATOMIC-COMMITS></item>
-      <item><COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY fact="true" status="impl/done">`flow:secrets-hygiene` and `flow:git-attribution-policy` — standing
+  lines every mode preserves.</COMPOSES-ATOMIC-COMMITS>
+      <COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY fact="true" status="impl/done">`flow:secrets-hygiene` and `flow:git-attribution-policy` — standing
   invariants that are red lines for mode purposes: no posture relaxes
-  them.</COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY></item>
-      <item><COMPOSES-CAMPAIGN-PLANS fact="true" status="spec/done">`flow:campaign-plans` — a campaign is often run under an
+  them.</COMPOSES-SECRETS-HYGIENE-AND-ATTRIBUTION-POLICY>
+      <COMPOSES-CAMPAIGN-PLANS fact="true" status="spec/done">`flow:campaign-plans` — a campaign is often run under an
   accelerated mode; the plan's phase gates supply the "status, not
-  requests" cadence.</COMPOSES-CAMPAIGN-PLANS></item>
-    </list>
+  requests" cadence.</COMPOSES-CAMPAIGN-PLANS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><extracted-from-the-origin-projects-law fact="true" status="spec/done">Extracted from the origin project's operating-modes law, which

@@ -9,12 +9,12 @@ unambiguous, safe, and recognised the same way every time.</scope-of-this-docume
   <when title="When a new codeword is warranted">
     <p><WRITE-ONE-WHEN-THE-ASKING-ITSELF-HAS-BECOME-OVERHEAD fact="true" status="impl/done">Write one when the owner **repeatedly** asks for the same non-default
 posture — and the asking itself has become overhead. Signs:</WRITE-ONE-WHEN-THE-ASKING-ITSELF-HAS-BECOME-OVERHEAD></p>
-    <list ordered="false">
-      <item><SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE fact="true" status="spec/done">The owner keeps re-explaining the same working style ("just push
-  through, don't check with me on each step").</SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE></item>
-      <item><SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING fact="true" status="spec/done">The agent keeps mis-calibrating because the posture was implicit.</SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING></item>
-      <item><SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING fact="true" status="spec/done">A recognisable phrase is already emerging in how the owner asks.</SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING></item>
-    </list>
+    <facts ordered="false">
+      <SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE fact="true" status="spec/done">The owner keeps re-explaining the same working style ("just push
+  through, don't check with me on each step").</SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE>
+      <SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING fact="true" status="spec/done">The agent keeps mis-calibrating because the posture was implicit.</SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING>
+      <SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING fact="true" status="spec/done">A recognisable phrase is already emerging in how the owner asks.</SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING>
+    </facts>
     <p><ONE-OFF-REQUESTS-DO-NOT-NEED-A-CODEWORD fact="true" status="impl/done">One-off requests do not need a codeword.</ONE-OFF-REQUESTS-DO-NOT-NEED-A-CODEWORD></p>
     <p><A-CODEWORD-IS-FOR-A-POSTURE-WORTH-NAMING-BECAUSE-IT-RECURS fact="true" status="impl/done">A codeword is for a posture
 worth naming because it recurs.</A-CODEWORD-IS-FOR-A-POSTURE-WORTH-NAMING-BECAUSE-IT-RECURS></p>
@@ -46,14 +46,14 @@ lands with green tests before the next begins") are the whole value.</vague-rule
     </step-rules>
     <step-limits title="4. State changes and non-changes — restate the red lines">
       <p><write-explicitly-lead fact="true" status="impl/done">Write, explicitly:</write-explicitly-lead></p>
-      <list ordered="false">
-        <item><STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES fact="true" status="impl/done">**what confirmation behaviour the mode relaxes** (almost always:
-  the routine-work handshake), and</STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES></item>
-        <item><STATE-THAT-THE-RED-LINES-SURVIVE-IT fact="true" status="impl/done">**that the red lines survive it** — reproduce the project's
+      <facts ordered="false">
+        <STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES fact="true" status="impl/done">**what confirmation behaviour the mode relaxes** (almost always:
+  the routine-work handshake), and</STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES>
+        <STATE-THAT-THE-RED-LINES-SURVIVE-IT fact="true" status="impl/done">**that the red lines survive it** — reproduce the project's
   red-line list here, do not merely reference it. The restatement is
   deliberate friction: a mode whose author had to re-type the red
-  lines is a mode whose author confirmed the mode respects them.</STATE-THAT-THE-RED-LINES-SURVIVE-IT></item>
-      </list>
+  lines is a mode whose author confirmed the mode respects them.</STATE-THAT-THE-RED-LINES-SURVIVE-IT>
+      </facts>
       <p><A-MODE-THAT-WOULD-RELAX-A-RED-LINE-IS-MALFORMED fact="true" status="impl/done">A proposed mode that would relax a red line is malformed.</A-MODE-THAT-WOULD-RELAX-A-RED-LINE-IS-MALFORMED></p>
       <p><DO-NOT-CATALOGUE-IT-TELL-THE-OWNER-WHY fact="true" status="impl/done">Do not
 catalogue it; tell the owner why.</DO-NOT-CATALOGUE-IT-TELL-THE-OWNER-WHY></p>
@@ -117,15 +117,15 @@ combination, treat the stricter posture as winning.</WHEN-IN-DOUBT-THE-STRICTER-
     </table>
   </anti-patterns>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD fact="true" status="impl/done">Write a codeword when a non-default posture recurs enough that
-  asking for it is itself overhead.</SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD></item>
-      <item><SUM-THE-TWO-NON-NEGOTIABLE-PARTS fact="true" status="impl/done">Follow the six steps; the verbatim description and the restated red
-  lines are the two non-negotiable parts.</SUM-THE-TWO-NON-NEGOTIABLE-PARTS></item>
-      <item><SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE fact="true" status="impl/done">A mode relaxes confirmation behaviour only; it never touches a red
-  line, alone or composed.</SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE></item>
-      <item><SUM-CATALOGUE-BEFORE-ACTING fact="true" status="impl/done">Catalogue before acting — an uncatalogued phrase is a proposal, not
-  a mode.</SUM-CATALOGUE-BEFORE-ACTING></item>
-    </list>
+    <facts ordered="false">
+      <SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD fact="true" status="impl/done">Write a codeword when a non-default posture recurs enough that
+  asking for it is itself overhead.</SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD>
+      <SUM-THE-TWO-NON-NEGOTIABLE-PARTS fact="true" status="impl/done">Follow the six steps; the verbatim description and the restated red
+  lines are the two non-negotiable parts.</SUM-THE-TWO-NON-NEGOTIABLE-PARTS>
+      <SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE fact="true" status="impl/done">A mode relaxes confirmation behaviour only; it never touches a red
+  line, alone or composed.</SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE>
+      <SUM-CATALOGUE-BEFORE-ACTING fact="true" status="impl/done">Catalogue before acting — an uncatalogued phrase is a proposal, not
+  a mode.</SUM-CATALOGUE-BEFORE-ACTING>
+    </facts>
   </summary>
 </spec>

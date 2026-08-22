@@ -8,10 +8,10 @@
   <p><EACH-PATTERN-IS-ALSO-A-CARD fact="true" status="impl/done">*Each pattern is also a card, shipped per-language in each stack's `cards/`; this catalog is the language-neutral overview and the build order.*</EACH-PATTERN-IS-ALSO-A-CARD></p>
   <definition title="0. Definition">
     <p><two-properties-at-once-lead fact="true" status="impl/done">An **executable scaffold** has two properties at once:</two-properties-at-once-lead></p>
-    <list ordered="true">
-      <item><PROPERTY-RUNS-OR-MACHINE-CHECKS fact="true" status="impl/done">**It runs or machine-checks** — compiles, executes, or evaluates as a checker, emitting a pass/fail (or typed) signal. Prose has no signal.</PROPERTY-RUNS-OR-MACHINE-CHECKS></item>
-      <item><PROPERTY-CARRIES-COGNITION fact="true" status="impl/done">**It carries cognition** — a weak reader USES it instead of re-deriving the understanding.</PROPERTY-CARRIES-COGNITION></item>
-    </list>
+    <facts ordered="true">
+      <PROPERTY-RUNS-OR-MACHINE-CHECKS fact="true" status="impl/done">**It runs or machine-checks** — compiles, executes, or evaluates as a checker, emitting a pass/fail (or typed) signal. Prose has no signal.</PROPERTY-RUNS-OR-MACHINE-CHECKS>
+      <PROPERTY-CARRIES-COGNITION fact="true" status="impl/done">**It carries cognition** — a weak reader USES it instead of re-deriving the understanding.</PROPERTY-CARRIES-COGNITION>
+    </facts>
     <p><prose-fails-the-first-property fact="true" status="impl/done">Prose about a pattern fails (1).</prose-fails-the-first-property></p>
     <p><random-utility-fails-the-second-property fact="true" status="impl/done">A random utility fails (2).</random-utility-fails-the-second-property></p>
     <p><SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE fact="true" status="impl/done">A scaffold is materialized understanding with a pulse.</SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE></p>
@@ -98,22 +98,22 @@
     <p><row-details-live-in-the-card fact="true" status="impl/done">Each row's full Applicability/Routine/Checker is in its card.</row-details-live-in-the-card></p>
   </nine-classes>
   <build-order title="2. Build order (transfer-strength × weak-reader leverage)">
-    <list ordered="true">
-      <item><BUILD-ORDER-E fact="true" status="impl/done">**E (fast loop)** — substrate; nothing pays off without it. First.</BUILD-ORDER-E></item>
-      <item><BUILD-ORDER-G-AND-F fact="true" status="impl/done">**G (doctests) + F (diagnostics)** — cheapest runnable capital; guaranteed-truthful few-shot signal. [E-strong].</BUILD-ORDER-G-AND-F></item>
-      <item><BUILD-ORDER-B-AND-C fact="true" status="impl/done">**B (typed builders) + C (contracts)** — convert hallucinations to compile/assert failures at seams. [E-mid].</BUILD-ORDER-B-AND-C></item>
-      <item><BUILD-ORDER-D fact="true" status="impl/done">**D (differential oracles)** — the modification-specific safety net; the class most worth validating for our actual task. [E-mid].</BUILD-ORDER-D></item>
-      <item><BUILD-ORDER-A-AND-H fact="true" status="impl/done">**A (generators) + H (simulators)** — highest ceiling, highest cost. [E-strong].</BUILD-ORDER-A-AND-H></item>
-      <item><BUILD-ORDER-I fact="true" status="impl/done">**I (codemods)** — potentially decisive for the swarm, but [E-hyp]; prototype and measure before the guide commits to it.</BUILD-ORDER-I></item>
-    </list>
+    <facts ordered="true">
+      <BUILD-ORDER-E fact="true" status="impl/done">**E (fast loop)** — substrate; nothing pays off without it. First.</BUILD-ORDER-E>
+      <BUILD-ORDER-G-AND-F fact="true" status="impl/done">**G (doctests) + F (diagnostics)** — cheapest runnable capital; guaranteed-truthful few-shot signal. [E-strong].</BUILD-ORDER-G-AND-F>
+      <BUILD-ORDER-B-AND-C fact="true" status="impl/done">**B (typed builders) + C (contracts)** — convert hallucinations to compile/assert failures at seams. [E-mid].</BUILD-ORDER-B-AND-C>
+      <BUILD-ORDER-D fact="true" status="impl/done">**D (differential oracles)** — the modification-specific safety net; the class most worth validating for our actual task. [E-mid].</BUILD-ORDER-D>
+      <BUILD-ORDER-A-AND-H fact="true" status="impl/done">**A (generators) + H (simulators)** — highest ceiling, highest cost. [E-strong].</BUILD-ORDER-A-AND-H>
+      <BUILD-ORDER-I fact="true" status="impl/done">**I (codemods)** — potentially decisive for the swarm, but [E-hyp]; prototype and measure before the guide commits to it.</BUILD-ORDER-I>
+    </facts>
   </build-order>
   <reality-checklist title="3. The scaffold-reality checklist (all four must hold)">
-    <list ordered="false">
-      <item><CHECKLIST-RUNS-OR-CHECKS fact="true" status="impl/done">[ ] **Runs/checks:** emits pass/fail or typed signal, not prose.</CHECKLIST-RUNS-OR-CHECKS></item>
-      <item><CHECKLIST-CARRIES-COGNITION fact="true" status="impl/done">[ ] **Carries cognition:** encodes a decision a weak reader would otherwise re-derive.</CHECKLIST-CARRIES-COGNITION></item>
-      <item><CHECKLIST-FAST-ENOUGH fact="true" status="impl/done">[ ] **Fast enough:** signal returns inside the per-cell loop budget (&lt;~60s).</CHECKLIST-FAST-ENOUGH></item>
-      <item><CHECKLIST-CANNOT-SILENTLY-LIE fact="true" status="impl/done">[ ] **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.)</CHECKLIST-CANNOT-SILENTLY-LIE></item>
-    </list>
+    <facts ordered="false">
+      <CHECKLIST-RUNS-OR-CHECKS fact="true" status="impl/done">[ ] **Runs/checks:** emits pass/fail or typed signal, not prose.</CHECKLIST-RUNS-OR-CHECKS>
+      <CHECKLIST-CARRIES-COGNITION fact="true" status="impl/done">[ ] **Carries cognition:** encodes a decision a weak reader would otherwise re-derive.</CHECKLIST-CARRIES-COGNITION>
+      <CHECKLIST-FAST-ENOUGH fact="true" status="impl/done">[ ] **Fast enough:** signal returns inside the per-cell loop budget (&lt;~60s).</CHECKLIST-FAST-ENOUGH>
+      <CHECKLIST-CANNOT-SILENTLY-LIE fact="true" status="impl/done">[ ] **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.)</CHECKLIST-CANNOT-SILENTLY-LIE>
+    </facts>
   </reality-checklist>
   <build-use-boundary title="4. The build/use boundary (a pilot hypothesis worth stating)">
     <p><sharp-capability-line-hypothesis fact="true" status="spec/done">There may be a sharp capability line between *building* a scaffold (Classes A, I — emit/parameterize) and *using* one (Classes G, H — consume).</sharp-capability-line-hypothesis></p>

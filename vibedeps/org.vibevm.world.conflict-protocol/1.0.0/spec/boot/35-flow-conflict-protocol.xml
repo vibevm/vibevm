@@ -11,14 +11,14 @@ error.</CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR></p>
   <hierarchy title="The hierarchy">
     <p><EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY fact="true" status="impl/done">Every disagreement between layers is settled by fixed priority:</EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY></p>
     <fence>Human  &gt;  Spec  &gt;  Tests  &gt;  Code  &gt;  WAL</fence>
-    <list ordered="false">
-      <item><HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY fact="true" status="impl/done">The human may change the spec; nobody else may — silently.</HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY></item>
-      <item><CODE-MUST-CONFORM-TO-THE-SPEC fact="true" status="impl/done">Code must conform to the spec, never the other way around.</CODE-MUST-CONFORM-TO-THE-SPEC></item>
-      <item><TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM fact="true" status="impl/done">Tests are the spec in executable form: a test that contradicts the
-  spec is a bug in exactly one of the two, never both.</TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM></item>
-      <item><THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST fact="true" status="impl/done">The volatile state file (WAL or equivalent) is a record, dead last:
-  when it disagrees with anything above it, it is stale.</THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST></item>
-    </list>
+    <facts ordered="false">
+      <HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY fact="true" status="impl/done">The human may change the spec; nobody else may — silently.</HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY>
+      <CODE-MUST-CONFORM-TO-THE-SPEC fact="true" status="impl/done">Code must conform to the spec, never the other way around.</CODE-MUST-CONFORM-TO-THE-SPEC>
+      <TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM fact="true" status="impl/done">Tests are the spec in executable form: a test that contradicts the
+  spec is a bug in exactly one of the two, never both.</TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM>
+      <THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST fact="true" status="impl/done">The volatile state file (WAL or equivalent) is a record, dead last:
+  when it disagrees with anything above it, it is stale.</THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST>
+    </facts>
     <p><full-protocol-pointer fact="true" status="impl/done">Full protocol:
 @spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root.</full-protocol-pointer></p>
   </hierarchy>
@@ -44,14 +44,14 @@ silently invent semantic behavior.</NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR></p>
 @spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/uncertainty-protocol#root.</full-ladder-pointer></p>
   </uncertainty>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE fact="true" status="impl/done">Never silently modify a normative spec value.</NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE></item>
-      <item><NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER fact="true" status="impl/done">Never resolve a spec-vs-code disagreement by assuming the code is
-  newer. Recency is not authority; the hierarchy is.</NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER></item>
-      <item><NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER fact="true" status="impl/done">Never remove someone else's REVIEW marker without resolving it.</NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER></item>
-      <item><NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT fact="true" status="impl/done">Never invent semantics when the spec is silent — mark the choice
-  and proceed conservatively.</NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE fact="true" status="impl/done">Never silently modify a normative spec value.</NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE>
+      <NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER fact="true" status="impl/done">Never resolve a spec-vs-code disagreement by assuming the code is
+  newer. Recency is not authority; the hierarchy is.</NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER>
+      <NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER fact="true" status="impl/done">Never remove someone else's REVIEW marker without resolving it.</NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER>
+      <NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT fact="true" status="impl/done">Never invent semantics when the spec is silent — mark the choice
+  and proceed conservatively.</NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT>
+    </facts>
     <p><recovery-drills-pointer fact="true" status="impl/done">Recovery drills for when the protocol has already been broken:
 @spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root.</recovery-drills-pointer></p>
   </never>

@@ -38,19 +38,19 @@ collapse together in the next step.</NOT-NECESSARILY-SIX-COMMITS></p>
   </inventory>
   <group title="Step 2 — group">
     <p><collapse-items-that-express-the-same-idea-lead fact="true" status="impl/done">Collapse items that express the same idea into one commit:</collapse-items-that-express-the-same-idea-lead></p>
-    <list ordered="false">
-      <item><GROUP-EXAMPLE-RETRY-HELPER fact="true" status="impl/done">"Added retry helper" + "Used retry helper" + "Added test for retry
+    <facts ordered="false">
+      <GROUP-EXAMPLE-RETRY-HELPER fact="true" status="impl/done">"Added retry helper" + "Used retry helper" + "Added test for retry
   helper" → one commit: `feat(core): retry helper for transient
-  failures`. These three changes are one idea.</GROUP-EXAMPLE-RETRY-HELPER></item>
-      <item><GROUP-EXAMPLE-RENAME fact="true" status="impl/done">"Renamed `conn` to `connection`" → one commit:
+  failures`. These three changes are one idea.</GROUP-EXAMPLE-RETRY-HELPER>
+      <GROUP-EXAMPLE-RENAME fact="true" status="impl/done">"Renamed `conn` to `connection`" → one commit:
   `refactor(core): rename conn to connection`. Mechanical rename,
-  one concern.</GROUP-EXAMPLE-RENAME></item>
-      <item><GROUP-EXAMPLE-TYPO-FIX fact="true" status="impl/done">"Fixed typo in README" → one commit: `docs: fix typo in README`.
-  Trivially one concern.</GROUP-EXAMPLE-TYPO-FIX></item>
-      <item><GROUP-EXAMPLE-REFORMATTED-IMPORTS fact="true" status="impl/done">"Reformatted unrelated imports" → one commit:
+  one concern.</GROUP-EXAMPLE-RENAME>
+      <GROUP-EXAMPLE-TYPO-FIX fact="true" status="impl/done">"Fixed typo in README" → one commit: `docs: fix typo in README`.
+  Trivially one concern.</GROUP-EXAMPLE-TYPO-FIX>
+      <GROUP-EXAMPLE-REFORMATTED-IMPORTS fact="true" status="impl/done">"Reformatted unrelated imports" → one commit:
   `style(core): reformat imports`. Trivially one concern, but see
-  the note below.</GROUP-EXAMPLE-REFORMATTED-IMPORTS></item>
-    </list>
+  the note below.</GROUP-EXAMPLE-REFORMATTED-IMPORTS>
+    </facts>
     <p><six-items-collapsed-to-four-commits fact="true" status="impl/done">Six items collapsed to four commits.</six-items-collapsed-to-four-commits></p>
     <p><THAT-IS-THE-SPLIT-PLAN fact="true" status="impl/done">That is the split plan.</THAT-IS-THE-SPLIT-PLAN></p>
     <accidental title="Note on accidental changes">
@@ -141,27 +141,27 @@ actually pays off.</that-is-where-the-division-of-labour-pays-off></p>
   </delegate>
   <prepush title="Before pushing">
     <p><after-the-split-before-pushing-lead fact="true" status="impl/done">After the split, before `git push`:</after-the-split-before-pushing-lead></p>
-    <list ordered="true">
-      <item><PREPUSH-RE-READ-THE-LOG fact="true" status="impl/done">Re-read the log (`git log --oneline origin/&lt;branch&gt;..HEAD`).</PREPUSH-RE-READ-THE-LOG></item>
-      <item><PREPUSH-SKIM-EACH-DIFF fact="true" status="impl/done">Skim each diff (`git show &lt;sha&gt;`). Subject should match diff.</PREPUSH-SKIM-EACH-DIFF></item>
-      <item><PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS fact="true" status="impl/done">Check for secrets, large binaries, or scratch files that
-   slipped in.</PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS></item>
-      <item><PREPUSH-ONLY-NOW-PUSH fact="true" status="impl/done">Only now push.</PREPUSH-ONLY-NOW-PUSH></item>
-    </list>
+    <facts ordered="true">
+      <PREPUSH-RE-READ-THE-LOG fact="true" status="impl/done">Re-read the log (`git log --oneline origin/&lt;branch&gt;..HEAD`).</PREPUSH-RE-READ-THE-LOG>
+      <PREPUSH-SKIM-EACH-DIFF fact="true" status="impl/done">Skim each diff (`git show &lt;sha&gt;`). Subject should match diff.</PREPUSH-SKIM-EACH-DIFF>
+      <PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS fact="true" status="impl/done">Check for secrets, large binaries, or scratch files that
+   slipped in.</PREPUSH-CHECK-FOR-SECRETS-AND-STRAYS>
+      <PREPUSH-ONLY-NOW-PUSH fact="true" status="impl/done">Only now push.</PREPUSH-ONLY-NOW-PUSH>
+    </facts>
     <p><PUSHED-HISTORY-IS-FROZEN fact="true" status="impl/done">Pushed history is frozen (see
 [`ATOMIC-COMMITS-PROTOCOL.md` §pushed](ATOMIC-COMMITS-PROTOCOL.md#pushed)).</PUSHED-HISTORY-IS-FROZEN></p>
     <p><A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT fact="true" status="impl/done">Fixing a mistake after the push means a new `fix`/`revert` commit,
 not a force-push.</A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT></p>
   </prepush>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-STABILISE-THEN-SPLIT fact="true" status="impl/done">Stabilise to green first; split second.</SUM-STABILISE-THEN-SPLIT></item>
-      <item><SUM-INVENTORY-AND-GROUP-BY-INTENT fact="true" status="impl/done">Inventory by intent, not by file. Group by intent.</SUM-INVENTORY-AND-GROUP-BY-INTENT></item>
-      <item><SUM-STAGE-HUNKS-WITH-GIT-ADD-P fact="true" status="impl/done">Use `git add -p` to stage hunks per commit. Avoid `git add -A`.</SUM-STAGE-HUNKS-WITH-GIT-ADD-P></item>
-      <item><SUM-BUILD-BETWEEN-COMMITS fact="true" status="impl/done">Build between commits when feasible.</SUM-BUILD-BETWEEN-COMMITS></item>
-      <item><SUM-DELEGATE-AND-VERIFY-THE-PLAN fact="true" status="impl/done">Delegate the mechanical split to the agent; verify the plan,
-  not the typing.</SUM-DELEGATE-AND-VERIFY-THE-PLAN></item>
-      <item><SUM-PRE-PUSH-REVIEW-IS-SEPARATE fact="true" status="impl/done">Pre-push review is a separate, deliberate step.</SUM-PRE-PUSH-REVIEW-IS-SEPARATE></item>
-    </list>
+    <facts ordered="false">
+      <SUM-STABILISE-THEN-SPLIT fact="true" status="impl/done">Stabilise to green first; split second.</SUM-STABILISE-THEN-SPLIT>
+      <SUM-INVENTORY-AND-GROUP-BY-INTENT fact="true" status="impl/done">Inventory by intent, not by file. Group by intent.</SUM-INVENTORY-AND-GROUP-BY-INTENT>
+      <SUM-STAGE-HUNKS-WITH-GIT-ADD-P fact="true" status="impl/done">Use `git add -p` to stage hunks per commit. Avoid `git add -A`.</SUM-STAGE-HUNKS-WITH-GIT-ADD-P>
+      <SUM-BUILD-BETWEEN-COMMITS fact="true" status="impl/done">Build between commits when feasible.</SUM-BUILD-BETWEEN-COMMITS>
+      <SUM-DELEGATE-AND-VERIFY-THE-PLAN fact="true" status="impl/done">Delegate the mechanical split to the agent; verify the plan,
+  not the typing.</SUM-DELEGATE-AND-VERIFY-THE-PLAN>
+      <SUM-PRE-PUSH-REVIEW-IS-SEPARATE fact="true" status="impl/done">Pre-push review is a separate, deliberate step.</SUM-PRE-PUSH-REVIEW-IS-SEPARATE>
+    </facts>
   </summary>
 </spec>

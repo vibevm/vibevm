@@ -12,12 +12,12 @@ this file is the mechanics.</protocol-document-pointer></p>
   <grammar title="The grammar">
     <p><a-reference-has-up-to-four-parts fact="true" status="impl/done">A **reference** (the thing a manifest lists or a human types) has up to
 four parts:</a-reference-has-up-to-four-parts></p>
-    <list ordered="false">
-      <item><PART-AN-OPTIONAL-TYPE-TAG fact="true" status="impl/done">an optional type tag,</PART-AN-OPTIONAL-TYPE-TAG></item>
-      <item><PART-AN-OPTIONAL-GROUP-QUALIFIER fact="true" status="impl/done">an optional group qualifier,</PART-AN-OPTIONAL-GROUP-QUALIFIER></item>
-      <item><PART-A-MANDATORY-NAME fact="true" status="impl/done">a mandatory name,</PART-A-MANDATORY-NAME></item>
-      <item><PART-AN-OPTIONAL-VERSION-REQUIREMENT fact="true" status="impl/done">and an optional version requirement.</PART-AN-OPTIONAL-VERSION-REQUIREMENT></item>
-    </list>
+    <facts ordered="false">
+      <PART-AN-OPTIONAL-TYPE-TAG fact="true" status="impl/done">an optional type tag,</PART-AN-OPTIONAL-TYPE-TAG>
+      <PART-AN-OPTIONAL-GROUP-QUALIFIER fact="true" status="impl/done">an optional group qualifier,</PART-AN-OPTIONAL-GROUP-QUALIFIER>
+      <PART-A-MANDATORY-NAME fact="true" status="impl/done">a mandatory name,</PART-A-MANDATORY-NAME>
+      <PART-AN-OPTIONAL-VERSION-REQUIREMENT fact="true" status="impl/done">and an optional version requirement.</PART-AN-OPTIONAL-VERSION-REQUIREMENT>
+    </facts>
     <fence>ref      := [ kind ":" ] [ group "/" ] name [ "@" version ]
 
 group    := segment ( "." segment )*
@@ -70,13 +70,13 @@ not collide with your version syntax and never overload one.</PICK-THREE-THAT-DO
       </tr>
     </table>
     <p><two-rules-govern-the-table fact="true" status="impl/done">Two rules govern the table:</two-rules-govern-the-table></p>
-    <list ordered="false">
-      <item><RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY fact="true" status="impl/done">**Manifests and lockfiles accept the qualified forms only.** A bare
+    <facts ordered="false">
+      <RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY fact="true" status="impl/done">**Manifests and lockfiles accept the qualified forms only.** A bare
   or kind-only name is never written to persisted state (see
-  [§storage](#storage)).</RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY></item>
-      <item><RULE-THE-CLI-ACCEPTS-ALL-FORMS fact="true" status="impl/done">**The CLI accepts all forms.** It is the one place a human is present,
-  so it is the one place a short name may be resolved.</RULE-THE-CLI-ACCEPTS-ALL-FORMS></item>
-    </list>
+  [§storage](#storage)).</RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY>
+      <RULE-THE-CLI-ACCEPTS-ALL-FORMS fact="true" status="impl/done">**The CLI accepts all forms.** It is the one place a human is present,
+  so it is the one place a short name may be resolved.</RULE-THE-CLI-ACCEPTS-ALL-FORMS>
+    </facts>
   </forms>
   <documentation-policy title="Which form documentation should show">
     <p><DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN fact="true" status="impl/done">Documentation examples are not
@@ -158,32 +158,32 @@ manifest, a lockfile, or a dependency edge carries its group. Short
 names exist solely as human CLI input and are rewritten to the
 qualified form the instant they are resolved.</PERSISTED-STATE-IS-QUALIFIED-ONLY></quote>
     <p><consequences-worth-making-explicit fact="true" status="impl/done">Consequences worth making explicit:</consequences-worth-making-explicit></p>
-    <list ordered="false">
-      <item><CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE fact="true" status="impl/done">A **lockfile** entry carries the full tuple: `group`, `name`, the
+    <facts ordered="false">
+      <CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE fact="true" status="impl/done">A **lockfile** entry carries the full tuple: `group`, `name`, the
   resolved `version`, and the `content-hash` that pins the bytes. Two
   registries serving the same hash under the same `(group, name,
   version)` are the same locked entry — the registry is a fetch detail,
-  not part of the lock's identity.</CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE></item>
-      <item><CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES fact="true" status="impl/done">The **dependency graph** is built entirely from qualified names, so a
+  not part of the lock's identity.</CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE>
+      <CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES fact="true" status="impl/done">The **dependency graph** is built entirely from qualified names, so a
   short name never recurses into it. This is the mechanism behind the
   protocol's "no transitive collisions" guarantee — it is enforced *by
-  the storage rule*, not by a separate check.</CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES></item>
-      <item><CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED fact="true" status="impl/done">A **published package's own `[requires]`** is qualified, because its
+  the storage rule*, not by a separate check.</CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES>
+      <CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED fact="true" status="impl/done">A **published package's own `[requires]`** is qualified, because its
   author published through the same boundary. You never inherit another
-  author's short name.</CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED></item>
-    </list>
+  author's short name.</CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED>
+    </facts>
   </storage>
   <errors title="Error shapes">
     <p><A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE fact="true" status="impl/done">A machine-facing failure is only useful if a script or an agent can act
 on it without reading prose.</A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE></p>
     <p><two-shapes-matter fact="true" status="impl/done">Two shapes matter.</two-shapes-matter></p>
     <p><a-collision-must fact="true" status="impl/done">**A collision** (one short name, several owners) must:</a-collision-must></p>
-    <list ordered="true">
-      <item><COLLISION-EXIT-WITH-THE-COLLISION-CODE fact="true" status="impl/done">exit with the collision code — distinct from the conflict code, so a
-   caller branches on the number alone;</COLLISION-EXIT-WITH-THE-COLLISION-CODE></item>
-      <item><COLLISION-LIST-EVERY-CANDIDATE fact="true" status="impl/done">list **every** candidate, each with its exact qualified form; and</COLLISION-LIST-EVERY-CANDIDATE></item>
-      <item><COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT fact="true" status="impl/done">tell the human precisely what to type or record next.</COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT></item>
-    </list>
+    <facts ordered="true">
+      <COLLISION-EXIT-WITH-THE-COLLISION-CODE fact="true" status="impl/done">exit with the collision code — distinct from the conflict code, so a
+   caller branches on the number alone;</COLLISION-EXIT-WITH-THE-COLLISION-CODE>
+      <COLLISION-LIST-EVERY-CANDIDATE fact="true" status="impl/done">list **every** candidate, each with its exact qualified form; and</COLLISION-LIST-EVERY-CANDIDATE>
+      <COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT fact="true" status="impl/done">tell the human precisely what to type or record next.</COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT>
+    </facts>
     <fence>"cart" is ambiguous — 2 packages match:
   1. com.example.shop/cart   (registry shop-public)
   2. io.acme/cart            (registry acme-internal)
@@ -206,18 +206,18 @@ it were a conflict, or vice versa.</a-caller-that-cannot-tell-them-apart-will-re
 automation correct.</DISTINCT-STABLE-CODES-KEEP-AUTOMATION-CORRECT></p>
   </errors>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION fact="true" status="impl/done">A reference is `[kind:][group/]name[@version]` — three axes, three
+    <facts ordered="false">
+      <SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION fact="true" status="impl/done">A reference is `[kind:][group/]name[@version]` — three axes, three
   distinct separators; the delimiter characters are a choice, the
-  distinctness is the law.</SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION></item>
-      <item><SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR fact="true" status="impl/done">Bare and kind-only forms are CLI-input sugar; qualified forms are
-  legal everywhere.</SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR></item>
-      <item><SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE fact="true" status="impl/done">The kind tag validates the resolved type; it never disambiguates.</SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE></item>
-      <item><SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY fact="true" status="impl/done">Persisted state is **qualified-only** — that storage rule is what
-  makes transitive collisions impossible.</SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY></item>
-      <item><SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE fact="true" status="impl/done">A collision lists every candidate with copy-ready qualified forms and
+  distinctness is the law.</SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION>
+      <SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR fact="true" status="impl/done">Bare and kind-only forms are CLI-input sugar; qualified forms are
+  legal everywhere.</SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR>
+      <SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE fact="true" status="impl/done">The kind tag validates the resolved type; it never disambiguates.</SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE>
+      <SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY fact="true" status="impl/done">Persisted state is **qualified-only** — that storage rule is what
+  makes transitive collisions impossible.</SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY>
+      <SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE fact="true" status="impl/done">A collision lists every candidate with copy-ready qualified forms and
   fails; a conflict is a separate failure with a separate, stable
-  machine code.</SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE></item>
-    </list>
+  machine code.</SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE>
+    </facts>
   </summary>
 </spec>

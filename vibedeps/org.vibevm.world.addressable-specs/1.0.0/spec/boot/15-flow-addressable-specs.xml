@@ -34,27 +34,27 @@ the Middle", Liu et al. 2023/2024); a mid-file invariant is an
 invariant the reader statistically skipped.</models-attend-to-the-edges-of-context></p>
   </placement>
   <pointers title="Where the full rules live">
-    <list ordered="false">
-      <item><POINTER-THE-PROTOCOL fact="true" status="impl/done">Why addressability is IPC requirement #1, the URI scheme, the
+    <facts ordered="false">
+      <POINTER-THE-PROTOCOL fact="true" status="impl/done">Why addressability is IPC requirement #1, the URI scheme, the
   token economics:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root</POINTER-THE-PROTOCOL></item>
-      <item><POINTER-THE-AUTHORING-RULES fact="true" status="impl/done">Unit of meaning, normativity marking, deviations, size budgets,
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root</POINTER-THE-PROTOCOL>
+      <POINTER-THE-AUTHORING-RULES fact="true" status="impl/done">Unit of meaning, normativity marking, deviations, size budgets,
   anchor stability:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root</POINTER-THE-AUTHORING-RULES></item>
-      <item><POINTER-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">PROP vs FEAT, what goes where, the `.human/` buffer:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root</POINTER-THE-SPEC-TREE-LAYOUT></item>
-    </list>
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root</POINTER-THE-AUTHORING-RULES>
+      <POINTER-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">PROP vs FEAT, what goes where, the `.human/` buffer:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root</POINTER-THE-SPEC-TREE-LAYOUT>
+    </facts>
   </pointers>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS fact="true" status="impl/done">Never cite a spec section by paraphrase when an anchor exists.</NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS></item>
-      <item><NEVER-DUPLICATE-A-NORMATIVE-VALUE fact="true" status="impl/done">Never duplicate a normative value into a second file — cite its
-  anchor.</NEVER-DUPLICATE-A-NORMATIVE-VALUE></item>
-      <item><NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE fact="true" status="impl/done">Never bury an invariant in the middle of a file.</NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE></item>
-      <item><NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR fact="true" status="impl/done">Never rename or delete an anchor that has ever been cited —
-  anchors are immutable; retire with a tombstone instead.</NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR></item>
-      <item><NEVER-INVENT-AN-ANCHOR fact="true" status="impl/done">Never invent an anchor — resolve the URI and read the unit before
-  acting on it.</NEVER-INVENT-AN-ANCHOR></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS fact="true" status="impl/done">Never cite a spec section by paraphrase when an anchor exists.</NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS>
+      <NEVER-DUPLICATE-A-NORMATIVE-VALUE fact="true" status="impl/done">Never duplicate a normative value into a second file — cite its
+  anchor.</NEVER-DUPLICATE-A-NORMATIVE-VALUE>
+      <NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE fact="true" status="impl/done">Never bury an invariant in the middle of a file.</NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE>
+      <NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR fact="true" status="impl/done">Never rename or delete an anchor that has ever been cited —
+  anchors are immutable; retire with a tombstone instead.</NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR>
+      <NEVER-INVENT-AN-ANCHOR fact="true" status="impl/done">Never invent an anchor — resolve the URI and read the unit before
+  acting on it.</NEVER-INVENT-AN-ANCHOR>
+    </facts>
   </never>
 </spec>

@@ -103,37 +103,37 @@ table against what changed:
 &lt;version&gt;.</fence>
   </skeleton>
   <commentary title="Clause-by-clause commentary">
-    <list ordered="false">
-      <item><CLAUSE-STATUS-LINE fact="true" status="impl/done">**Status line.** State up front that the document ratifies
+    <facts ordered="false">
+      <CLAUSE-STATUS-LINE fact="true" status="impl/done">**Status line.** State up front that the document ratifies
   nothing. This is the deltas-not-decrees law made visible on line
-  one, so no reader mistakes a proposal for a decision.</CLAUSE-STATUS-LINE></item>
-      <item><CLAUSE-PURPOSE fact="true" status="impl/done">**Purpose.** One paragraph, and it must contain the two-way promise
+  one, so no reader mistakes a proposal for a decision.</CLAUSE-STATUS-LINE>
+      <CLAUSE-PURPOSE fact="true" status="impl/done">**Purpose.** One paragraph, and it must contain the two-way promise
   — "what they do well *and* what they don't." A purpose that
   promises only trailing gaps has pre-committed to a one-directional
-  study.</CLAUSE-PURPOSE></item>
-      <item><CLAUSE-SOURCE-CORPUS-AND-TABLE fact="true" status="impl/done">**Source corpus + table.** Every source with an access date and the
+  study.</CLAUSE-PURPOSE>
+      <CLAUSE-SOURCE-CORPUS-AND-TABLE fact="true" status="impl/done">**Source corpus + table.** Every source with an access date and the
   subject's version. This table is half of the re-fetch list; filling
-  it now is cheaper than reconstructing it later.</CLAUSE-SOURCE-CORPUS-AND-TABLE></item>
-      <item><CLAUSE-READING-SHAPE fact="true" status="impl/done">**Reading shape.** A one-line section map so a cold reader navigates
+  it now is cheaper than reconstructing it later.</CLAUSE-SOURCE-CORPUS-AND-TABLE>
+      <CLAUSE-READING-SHAPE fact="true" status="impl/done">**Reading shape.** A one-line section map so a cold reader navigates
   without reading linearly. Months later, this is how a refresher
-  finds the delta table in ten seconds.</CLAUSE-READING-SHAPE></item>
-      <item><CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS fact="true" status="impl/done">**§1 in their own words.** The subject's pitch, quoted, before any
+  finds the delta table in ten seconds.</CLAUSE-READING-SHAPE>
+      <CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS fact="true" status="impl/done">**§1 in their own words.** The subject's pitch, quoted, before any
   analysis. If your document opens with your *summary* of their pitch,
-  you have already broken the quote-first law.</CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS></item>
-      <item><CLAUSE-SECTION-TWO-INVENTORY fact="true" status="impl/done">**§2 inventory.** Quote-then-map, one capability at a time. "Maps
+  you have already broken the quote-first law.</CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS>
+      <CLAUSE-SECTION-TWO-INVENTORY fact="true" status="impl/done">**§2 inventory.** Quote-then-map, one capability at a time. "Maps
   to: no equivalent" is a finding, not a blank — it is a §3 gap in
-  the making.</CLAUSE-SECTION-TWO-INVENTORY></item>
-      <item><CLAUSE-SECTIONS-THREE-AND-FOUR fact="true" status="impl/done">**§3 trail / §4 lead.** Both are mandatory. A document that ships
+  the making.</CLAUSE-SECTION-TWO-INVENTORY>
+      <CLAUSE-SECTIONS-THREE-AND-FOUR fact="true" status="impl/done">**§3 trail / §4 lead.** Both are mandatory. A document that ships
   with §4 empty has not looked hard enough — every project made
-  *some* decision its competitor did not.</CLAUSE-SECTIONS-THREE-AND-FOUR></item>
-      <item><CLAUSE-SECTION-FIVE-DELTAS fact="true" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
+  *some* decision its competitor did not.</CLAUSE-SECTIONS-THREE-AND-FOUR>
+      <CLAUSE-SECTION-FIVE-DELTAS fact="true" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
   downstream pipeline cites when a delta is accepted or rejected
-  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</CLAUSE-SECTION-FIVE-DELTAS></item>
-      <item><CLAUSE-SECTION-SIX-OPEN-QUESTIONS fact="true" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
-  in the study itself, and the first questions to ask on refresh.</CLAUSE-SECTION-SIX-OPEN-QUESTIONS></item>
-      <item><CLAUSE-SECTION-SEVEN-RE-FETCH-LIST fact="true" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,
-  and the capture version — without it, refresh becomes rewrite.</CLAUSE-SECTION-SEVEN-RE-FETCH-LIST></item>
-    </list>
+  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</CLAUSE-SECTION-FIVE-DELTAS>
+      <CLAUSE-SECTION-SIX-OPEN-QUESTIONS fact="true" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
+  in the study itself, and the first questions to ask on refresh.</CLAUSE-SECTION-SIX-OPEN-QUESTIONS>
+      <CLAUSE-SECTION-SEVEN-RE-FETCH-LIST fact="true" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,
+  and the capture version — without it, refresh becomes rewrite.</CLAUSE-SECTION-SEVEN-RE-FETCH-LIST>
+    </facts>
   </commentary>
   <worked title="Worked fragment">
     <p><a-short-invented-illustration fact="true" status="impl/done">A short invented illustration — a study of a generic build tool
@@ -179,24 +179,24 @@ so offline-first stays the default. Ratified here: nothing.
 
 **Capture date:** 2026-07-01. **Subject version at capture:** Quarry 3.2.</fence>
     <p><the-fragment-obeys-all-five-laws-lead fact="true" status="impl/done">The fragment obeys all five laws in miniature:</the-fragment-obeys-all-five-laws-lead></p>
-    <list ordered="false">
-      <item><MINIATURE-LAWS-ONE-AND-TWO fact="true" status="impl/done">dated verbatim quotes
-  (Laws 1-2),</MINIATURE-LAWS-ONE-AND-TWO></item>
-      <item><MINIATURE-LAW-THREE fact="true" status="impl/done">§4 answering §3 the other way (Law 3),</MINIATURE-LAW-THREE></item>
-      <item><MINIATURE-LAW-FOUR fact="true" status="impl/done">D1 numbered and
-  ratifying nothing (Law 4),</MINIATURE-LAW-FOUR></item>
-      <item><MINIATURE-LAW-FIVE fact="true" status="impl/done">a closing re-fetch list carrying the capture date and the
-  subject's version at capture (Law 5).</MINIATURE-LAW-FIVE></item>
-    </list>
+    <facts ordered="false">
+      <MINIATURE-LAWS-ONE-AND-TWO fact="true" status="impl/done">dated verbatim quotes
+  (Laws 1-2),</MINIATURE-LAWS-ONE-AND-TWO>
+      <MINIATURE-LAW-THREE fact="true" status="impl/done">§4 answering §3 the other way (Law 3),</MINIATURE-LAW-THREE>
+      <MINIATURE-LAW-FOUR fact="true" status="impl/done">D1 numbered and
+  ratifying nothing (Law 4),</MINIATURE-LAW-FOUR>
+      <MINIATURE-LAW-FIVE fact="true" status="impl/done">a closing re-fetch list carrying the capture date and the
+  subject's version at capture (Law 5).</MINIATURE-LAW-FIVE>
+    </facts>
   </worked>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-COPY-THE-SKELETON-WHOLE fact="true" status="impl/done">Copy the skeleton whole; keep the section order — it is the reading
-  shape.</SUM-COPY-THE-SKELETON-WHOLE></item>
-      <item><SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH fact="true" status="impl/done">Fill the source table as you fetch; it is half the re-fetch list.</SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH></item>
-      <item><SUM-QUOTE-BEFORE-MAPPING fact="true" status="impl/done">Quote before mapping; map "no equivalent" as a real finding.</SUM-QUOTE-BEFORE-MAPPING></item>
-      <item><SUM-SHIP-BOTH-GAP-DIRECTIONS fact="true" status="impl/done">Ship §3 *and* §4; an empty lead section means you stopped early.</SUM-SHIP-BOTH-GAP-DIRECTIONS></item>
-      <item><SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA fact="true" status="impl/done">Number, prioritize, and home every delta; ratify none.</SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA></item>
-    </list>
+    <facts ordered="false">
+      <SUM-COPY-THE-SKELETON-WHOLE fact="true" status="impl/done">Copy the skeleton whole; keep the section order — it is the reading
+  shape.</SUM-COPY-THE-SKELETON-WHOLE>
+      <SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH fact="true" status="impl/done">Fill the source table as you fetch; it is half the re-fetch list.</SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH>
+      <SUM-QUOTE-BEFORE-MAPPING fact="true" status="impl/done">Quote before mapping; map "no equivalent" as a real finding.</SUM-QUOTE-BEFORE-MAPPING>
+      <SUM-SHIP-BOTH-GAP-DIRECTIONS fact="true" status="impl/done">Ship §3 *and* §4; an empty lead section means you stopped early.</SUM-SHIP-BOTH-GAP-DIRECTIONS>
+      <SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA fact="true" status="impl/done">Number, prioritize, and home every delta; ratify none.</SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA>
+    </facts>
   </summary>
 </spec>

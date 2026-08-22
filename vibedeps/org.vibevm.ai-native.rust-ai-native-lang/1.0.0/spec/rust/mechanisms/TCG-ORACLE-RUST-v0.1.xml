@@ -21,12 +21,12 @@ stack never bundles, links, or vendors an analyzer.</ORACLE-IS-THE-CONSUMERS-OWN
     <p><resolution-order-lead fact="true" status="impl/done">Resolution order,
 run from the project root so `rust-toolchain.toml` pinning is
 honoured, each failure recipe-carrying and never silently skipped:</resolution-order-lead></p>
-    <list ordered="true">
-      <item><RESOLUTION-RUSTUP-WHICH fact="true" status="impl/done">`rustup which rust-analyzer` (the toolchain's component);</RESOLUTION-RUSTUP-WHICH></item>
-      <item><RESOLUTION-PATH fact="true" status="impl/done">`rust-analyzer` on PATH;</RESOLUTION-PATH></item>
-      <item><RESOLUTION-HARD-FAILURE fact="true" status="impl/done">hard failure: the bridge's `rust-analyzer-missing` error with the
-   recipe `rustup component add rust-analyzer`.</RESOLUTION-HARD-FAILURE></item>
-    </list>
+    <facts ordered="true">
+      <RESOLUTION-RUSTUP-WHICH fact="true" status="impl/done">`rustup which rust-analyzer` (the toolchain's component);</RESOLUTION-RUSTUP-WHICH>
+      <RESOLUTION-PATH fact="true" status="impl/done">`rust-analyzer` on PATH;</RESOLUTION-PATH>
+      <RESOLUTION-HARD-FAILURE fact="true" status="impl/done">hard failure: the bridge's `rust-analyzer-missing` error with the
+   recipe `rustup component add rust-analyzer`.</RESOLUTION-HARD-FAILURE>
+    </facts>
     <p><STACK-OBLIGES-THE-MACHINE-TO-CARRY-RUST-ANALYZER fact="true" status="impl/done">Installing this stack OBLIGES the machine to carry rust-analyzer (the
 same posture as node ≥ 22.6 for the TS stack): inside the stack's own
 test suite an absent analyzer is a recipe-carrying FAILURE, never a
@@ -47,17 +47,17 @@ put into the result, and `ra_path` occurs in this package only as the shape
     <p><BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO fact="true" status="impl/done">The bridge speaks LSP 3.17 over the child's stdio (Content-Length
 framing).</BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO></p>
     <p><initialize-declares-lead fact="true" status="impl/done">The `initialize` request declares:</initialize-declares-lead></p>
-    <list ordered="false">
-      <item><DECLARES-UTF8-POSITION-ENCODING fact="true" status="impl/done">utf-8 in
+    <facts ordered="false">
+      <DECLARES-UTF8-POSITION-ENCODING fact="true" status="impl/done">utf-8 in
   `general.positionEncodings` (granted by 1.93.1 — positions then need
   line-base conversion only; the utf-16 fallback converts through the
-  line's text and is unit-tested on non-ASCII content),</DECLARES-UTF8-POSITION-ENCODING></item>
-      <item><DECLARES-PULL-DIAGNOSTICS fact="true" status="impl/done">pull diagnostics
-  (`textDocument.diagnostic`),</DECLARES-PULL-DIAGNOSTICS></item>
-      <item><DECLARES-WORK-DONE-PROGRESS fact="true" status="impl/done">`window.workDoneProgress`,</DECLARES-WORK-DONE-PROGRESS></item>
-      <item><DECLARES-SERVER-STATUS-NOTIFICATION fact="true" status="impl/done">and the
-  experimental `serverStatusNotification`.</DECLARES-SERVER-STATUS-NOTIFICATION></item>
-    </list>
+  line's text and is unit-tested on non-ASCII content),</DECLARES-UTF8-POSITION-ENCODING>
+      <DECLARES-PULL-DIAGNOSTICS fact="true" status="impl/done">pull diagnostics
+  (`textDocument.diagnostic`),</DECLARES-PULL-DIAGNOSTICS>
+      <DECLARES-WORK-DONE-PROGRESS fact="true" status="impl/done">`window.workDoneProgress`,</DECLARES-WORK-DONE-PROGRESS>
+      <DECLARES-SERVER-STATUS-NOTIFICATION fact="true" status="impl/done">and the
+  experimental `serverStatusNotification`.</DECLARES-SERVER-STATUS-NOTIFICATION>
+    </facts>
     <p><DOWNSTREAM-FEATURES-KEY-OFF-THE-GRANTED-SET fact="true" status="impl/done">Every downstream feature keys
 off the GRANTED set — a capability the server did not grant degrades
 per §6 into a well-formed error or a documented fallback, never a
@@ -93,49 +93,49 @@ text}` claims the document (the server stops reading disk for it),
 per-document version replaces it, `didClose` releases it back to disk.</OVERLAY-IS-AN-LSP-OWNED-TEXT-DOCUMENT></p>
     <p><rules-are-lsp-native-law-lead fact="true" status="impl/done">The rules the TS campaign learned the hard way are LSP-native law
 here and the bridge enforces them structurally:</rules-are-lsp-native-law-lead></p>
-    <list ordered="false">
-      <item><OVERLAY-RULE-VERSIONS-NEVER-REPEAT fact="true" status="impl/done">versions never repeat within an
+    <facts ordered="false">
+      <OVERLAY-RULE-VERSIONS-NEVER-REPEAT fact="true" status="impl/done">versions never repeat within an
   overlay's lifetime (a monotonic counter per open document, never derived
   from content); clearing an overlay closes the document and a later
   reopen starts again at 1 —
-  `crates/rust-ai-native-tcg-bridge/src/oracle.rs:184` (`docs.remove`);</OVERLAY-RULE-VERSIONS-NEVER-REPEAT></item>
-      <item><OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK fact="true" status="impl/done">`validate` WITHOUT inline content reads the disk file and opens it
+  `crates/rust-ai-native-tcg-bridge/src/oracle.rs:184` (`docs.remove`);</OVERLAY-RULE-VERSIONS-NEVER-REPEAT>
+      <OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK fact="true" status="impl/done">`validate` WITHOUT inline content reads the disk file and opens it
   with that text, so version bookkeeping has exactly one owner (the
   bridge) and a later disk edit is picked up by the next validate's
-  `didChange`;</OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK></item>
-      <item><OVERLAY-RULE-FILE-NEED-NOT-EXIST-ON-DISK fact="true" status="impl/done">an overlaid file need not exist on disk — a hypothetical new module
+  `didChange`;</OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK>
+      <OVERLAY-RULE-FILE-NEED-NOT-EXIST-ON-DISK fact="true" status="impl/done">an overlaid file need not exist on disk — a hypothetical new module
   participates via `didOpen` alone (spike-proven: a seeded error in a
-  pure overlay is diagnosed with zero disk writes);</OVERLAY-RULE-FILE-NEED-NOT-EXIST-ON-DISK></item>
-      <item><OVERLAY-RULE-NULL-CONTENT-MAPS-TO-DIDCLOSE fact="true" status="impl/done">`update {content: null}` maps to `didClose`.</OVERLAY-RULE-NULL-CONTENT-MAPS-TO-DIDCLOSE></item>
-    </list>
+  pure overlay is diagnosed with zero disk writes);</OVERLAY-RULE-FILE-NEED-NOT-EXIST-ON-DISK>
+      <OVERLAY-RULE-NULL-CONTENT-MAPS-TO-DIDCLOSE fact="true" status="impl/done">`update {content: null}` maps to `didClose`.</OVERLAY-RULE-NULL-CONTENT-MAPS-TO-DIDCLOSE>
+    </facts>
   </overlays>
   <approximation title="5. The approximation posture (r-a is not rustc)">
     <p><kind-line-approximation fact="true" status="impl/done">`req r5`</kind-line-approximation></p>
     <p><THIS-ORACLE-ANSWERS-WITH-INDEPENDENT-ANALYSIS fact="true" status="spec/done">The TS oracle answers with tsc's own engine; THIS oracle answers with
 rust-analyzer's independent analysis, which is deliberately partial.</THIS-ORACLE-ANSWERS-WITH-INDEPENDENT-ANALYSIS></p>
     <p><consequences-all-normative-lead fact="true" status="impl/done">Consequences, all normative:</consequences-all-normative-lead></p>
-    <list ordered="false">
-      <item><CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR fact="true" status="impl/done">A clean `validate` does NOT certify a clean floor. The floor
+    <facts ordered="false">
+      <CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR fact="true" status="impl/done">A clean `validate` does NOT certify a clean floor. The floor
   (`rust-ai-native floor` — the seven steps: cargo fmt → cargo test →
   clippy → conform → specmap → test-gate → fast-loop; the compile rides
   inside the test step) remains the truth; consumer-facing docs repeat
-  it.</CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR></item>
-      <item><DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE fact="true" status="impl/done">The differential corpus curates classes INSIDE r-a's native
+  it.</CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR>
+      <DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE fact="true" status="impl/done">The differential corpus curates classes INSIDE r-a's native
   competence; each class is pinned to cargo check through the
   committed mapping table (1.93.1 rows: E0308↔E0308, E0425↔E0425,
   E0107↔E0061 arity, E0559↔E0609 unknown-field, E0063↔E0063,
   E0599↔E0599). Diagnostic CODES may differ for the same defect;
-  existence-grain agreement is the claim, through the table.</DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE></item>
-      <item><KNOWN-SILENCES-ARE-DOCUMENTED-GAP-CASES fact="true" status="impl/done">Known silences are DOCUMENTED-GAP corpus cases, not omissions:
+  existence-grain agreement is the claim, through the table.</DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE>
+      <KNOWN-SILENCES-ARE-DOCUMENTED-GAP-CASES fact="true" status="impl/done">Known silences are DOCUMENTED-GAP corpus cases, not omissions:
   privacy at 1.93.1 is the standing exhibit — the oracle answers
   nothing while cargo check speaks (rustc's code depends on the
   reference shape: E0423 for a use-imported tuple constructor, E0603
   for the module-path form — one defect class, two codes; the corpus
   pins the E0423 shape). The case asserts exactly that asymmetry so a
-  future r-a flips it red and the gap list never rots.</KNOWN-SILENCES-ARE-DOCUMENTED-GAP-CASES></item>
-      <item><OPEN-DELTA-CLASS-IS-NAMED fact="true" status="impl/done">Borrow-check subtleties, trait-solver edges, and macro-heavy code
-  are named as the open delta class; no corpus case claims them.</OPEN-DELTA-CLASS-IS-NAMED></item>
-    </list>
+  future r-a flips it red and the gap list never rots.</KNOWN-SILENCES-ARE-DOCUMENTED-GAP-CASES>
+      <OPEN-DELTA-CLASS-IS-NAMED fact="true" status="impl/done">Borrow-check subtleties, trait-solver edges, and macro-heavy code
+  are named as the open delta class; no corpus case claims them.</OPEN-DELTA-CLASS-IS-NAMED>
+    </facts>
   </approximation>
   <degradation title="6. Quiescence, degradation, never crashes">
     <p><kind-line-degradation fact="true" status="impl/done">`req r6`</kind-line-degradation></p>
@@ -146,29 +146,29 @@ cache priming).</SERVER-LOADS-THE-WORKSPACE-AFTER-INITIALIZED></p>
 trusted signal.</BRIDGE-WAITS-FOR-QUIESCENT-SERVER-STATUS></p>
     <p><two-live-chain-findings-lead fact="true" status="impl/done">Two live-chain findings harden this (2026-07-07,
 Phase 3):</two-live-chain-findings-lead></p>
-    <list ordered="false">
-      <item><FINDING-A-NO-SERVER-STATUS-ECHO fact="true" status="spec/done">(a) rust-analyzer does NOT echo `serverStatusNotification`
+    <facts ordered="false">
+      <FINDING-A-NO-SERVER-STATUS-ECHO fact="true" status="spec/done">(a) rust-analyzer does NOT echo `serverStatusNotification`
   in its InitializeResult even though it honours the declared client
   capability, so there is nothing to key a capability check off — the
-  bridge declares and trusts the channel;</FINDING-A-NO-SERVER-STATUS-ECHO></item>
-      <item><FINDING-B-PROGRESS-DRAIN-HEURISTIC-FALSIFIED fact="true" status="spec/done">(b) a progress-drain
+  bridge declares and trusts the channel;</FINDING-A-NO-SERVER-STATUS-ECHO>
+      <FINDING-B-PROGRESS-DRAIN-HEURISTIC-FALSIFIED fact="true" status="spec/done">(b) a progress-drain
   heuristic ("initial workDoneProgress tokens ended") was tried and
   FALSIFIED twice — a fast first token drains while indexing continues,
   yielding confident empty answers — so it is deliberately ABSENT, and
-  a replay test pins that progress noise never satisfies the wait.</FINDING-B-PROGRESS-DRAIN-HEURISTIC-FALSIFIED></item>
-    </list>
+  a replay test pins that progress noise never satisfies the wait.</FINDING-B-PROGRESS-DRAIN-HEURISTIC-FALSIFIED>
+    </facts>
     <p><DEADLINE-PASS-DEGRADES fact="true" status="impl/done">A
 deadline pass degrades: answers carry `degraded: true`, so callers
 can distinguish warm truth from cold best-effort.</DEADLINE-PASS-DEGRADES></p>
     <p><b5-extends-to-the-whole-session-lead fact="true" status="impl/done">B5 extends to the whole
 session:</b5-extends-to-the-whole-session-lead></p>
-    <list ordered="false">
-      <item><B5-UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR fact="true" status="impl/done">an op the relay does not know answers a protocol error naming
-  the known set;</B5-UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR></item>
-      <item><B5-ANALYZER-CRASH-ENDS-THE-SESSION fact="true" status="impl/done">an analyzer crash surfaces `oracle-crashed` op-grain
-  and ends the session (the product registry owns respawn-once);</B5-ANALYZER-CRASH-ENDS-THE-SESSION></item>
-      <item><B5-NO-INPUT-MAY-POISON-THE-SESSION fact="true" status="impl/done">no input may poison the session.</B5-NO-INPUT-MAY-POISON-THE-SESSION></item>
-    </list>
+    <facts ordered="false">
+      <B5-UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR fact="true" status="impl/done">an op the relay does not know answers a protocol error naming
+  the known set;</B5-UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR>
+      <B5-ANALYZER-CRASH-ENDS-THE-SESSION fact="true" status="impl/done">an analyzer crash surfaces `oracle-crashed` op-grain
+  and ends the session (the product registry owns respawn-once);</B5-ANALYZER-CRASH-ENDS-THE-SESSION>
+      <B5-NO-INPUT-MAY-POISON-THE-SESSION fact="true" status="impl/done">no input may poison the session.</B5-NO-INPUT-MAY-POISON-THE-SESSION>
+    </facts>
   </degradation>
   <lifecycle title="7. Process lifecycle and Windows discipline">
     <p><kind-line-lifecycle fact="true" status="impl/done">`req r7`</kind-line-lifecycle></p>
@@ -208,26 +208,26 @@ bridge crate has no logging facility at all.*</STDOUT-CARRIES-LSP-FRAMES-ONLY></
 gate what cannot flake, record what can).</TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED></p>
     <p><spike-facts-lead fact="true" status="impl/done">Spike facts on a minimal
 crate, this box:</spike-facts-lead></p>
-    <list ordered="false">
-      <item><SPIKE-INIT-HANDSHAKE fact="true" status="impl/done">init handshake ~10 ms;</SPIKE-INIT-HANDSHAKE></item>
-      <item><SPIKE-INIT-TO-QUIESCENT fact="true" status="impl/done">init-to-quiescent 14.7 s
-  cache-COLD (sysroot indexing dominates) and 2.5 s warm;</SPIKE-INIT-TO-QUIESCENT></item>
-      <item><SPIKE-WARM-PULL-DIAGNOSTICS fact="true" status="impl/done">warm pull
-  diagnostics 1–2 ms;</SPIKE-WARM-PULL-DIAGNOSTICS></item>
-      <item><SPIKE-HOVER fact="true" status="impl/done">hover ~1 ms;</SPIKE-HOVER></item>
-      <item><SPIKE-COMPLETION fact="true" status="impl/done">completion ~19 ms at 118 entries.</SPIKE-COMPLETION></item>
-    </list>
+    <facts ordered="false">
+      <SPIKE-INIT-HANDSHAKE fact="true" status="impl/done">init handshake ~10 ms;</SPIKE-INIT-HANDSHAKE>
+      <SPIKE-INIT-TO-QUIESCENT fact="true" status="impl/done">init-to-quiescent 14.7 s
+  cache-COLD (sysroot indexing dominates) and 2.5 s warm;</SPIKE-INIT-TO-QUIESCENT>
+      <SPIKE-WARM-PULL-DIAGNOSTICS fact="true" status="impl/done">warm pull
+  diagnostics 1–2 ms;</SPIKE-WARM-PULL-DIAGNOSTICS>
+      <SPIKE-HOVER fact="true" status="impl/done">hover ~1 ms;</SPIKE-HOVER>
+      <SPIKE-COMPLETION fact="true" status="impl/done">completion ~19 ms at 118 entries.</SPIKE-COMPLETION>
+    </facts>
     <p><posted-targets-lead fact="true" status="impl/done">Posted targets for demo-class trees:</posted-targets-lead></p>
-    <list ordered="false">
-      <item><TARGET-WARM-VALIDATE fact="true" status="impl/done">warm `validate` p50 &lt; 500 ms,</TARGET-WARM-VALIDATE></item>
-      <item><TARGET-WARM-COMPLETE fact="true" status="spec/done">`complete` p50 &lt; 300 ms — posted, not yet
+    <facts ordered="false">
+      <TARGET-WARM-VALIDATE fact="true" status="impl/done">warm `validate` p50 &lt; 500 ms,</TARGET-WARM-VALIDATE>
+      <TARGET-WARM-COMPLETE fact="true" status="spec/done">`complete` p50 &lt; 300 ms — posted, not yet
   measured: the bench harness times `validate` only
   (`crates/rust-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
   `validate_p50_ms`, `validate_p95_ms` and no `complete` field); the
   measurement corpus is deliberately far-future work (`BACKLOG.md`
-  B-042),</TARGET-WARM-COMPLETE></item>
-      <item><TARGET-COLD-INIT-TO-QUIESCENT fact="true" status="impl/done">cold init-to-quiescent &lt; 15 s.</TARGET-COLD-INIT-TO-QUIESCENT></item>
-    </list>
+  B-042),</TARGET-WARM-COMPLETE>
+      <TARGET-COLD-INIT-TO-QUIESCENT fact="true" status="impl/done">cold init-to-quiescent &lt; 15 s.</TARGET-COLD-INIT-TO-QUIESCENT>
+    </facts>
     <p><BENCH-HARNESS-RECORDS-DISTRIBUTIONS fact="true" status="impl/done">The bench
 harness records distributions per run; a target that moves, moves in a
 committed REPORT with a reason — and per the owner's resolution a miss

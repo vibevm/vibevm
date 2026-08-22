@@ -11,14 +11,14 @@ proceeds on the agent's own judgment, and what always stops for a human first.</
   <routine title="The default: routine proceeds">
     <p><ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING fact="true" status="impl/done">**Routine large changes proceed without asking** — and are committed and pushed — when the
 activity has already been authorised. Routine means:</ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING></p>
-    <list ordered="false">
-      <item><ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE fact="true" status="impl/done">implementing a planned milestone,</ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE></item>
-      <item><ROUTINE-FINISHING-A-FEATURE-SLICE fact="true" status="impl/done">finishing
-  a feature slice,</ROUTINE-FINISHING-A-FEATURE-SLICE></item>
-      <item><ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES fact="true" status="impl/done">a refactor touching many files for one coherent reason,</ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES></item>
-      <item><ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP fact="true" status="impl/done">or any large-but-expected
-  step of work the human has already greenlit.</ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP></item>
-    </list>
+    <facts ordered="false">
+      <ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE fact="true" status="impl/done">implementing a planned milestone,</ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE>
+      <ROUTINE-FINISHING-A-FEATURE-SLICE fact="true" status="impl/done">finishing
+  a feature slice,</ROUTINE-FINISHING-A-FEATURE-SLICE>
+      <ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES fact="true" status="impl/done">a refactor touching many files for one coherent reason,</ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES>
+      <ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP fact="true" status="impl/done">or any large-but-expected
+  step of work the human has already greenlit.</ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP>
+    </facts>
     <p><the-approval-was-given-upstream fact="true" status="spec/done">The approval was given upstream; re-asking "shall I
 proceed?" mid-flow is overhead the human already paid for by authorising the activity.</the-approval-was-given-upstream></p>
     <p><this-default-optimises-for-throughput fact="true" status="spec/done">This default optimises for throughput on work that is understood and approved.</this-default-optimises-for-throughput></p>
@@ -29,13 +29,13 @@ and still respect every red line below.</IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-I
   <red-lines title="The red lines: non-routine stops and asks">
     <p><A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST fact="true" status="impl/done">Regardless of any "proceed" posture, a fixed set of operations **always stops and asks first**,
 because their blast radius or irreversibility exceeds what an agent should assume authority over:</A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST></p>
-    <list ordered="false">
-      <item><RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">**Rewriting published history** — rebasing pushed commits, `git commit --amend` on pushed work.</RED-LINE-REWRITING-PUBLISHED-HISTORY></item>
-      <item><RED-LINE-FORCE-OPERATIONS fact="true" status="impl/done">**Force operations** — `git push --force` / `--force-with-lease`.</RED-LINE-FORCE-OPERATIONS></item>
-      <item><RED-LINE-LARGE-BINARY-BLOBS fact="true" status="impl/done">**Large binary blobs** — anything that bloats the repository irreversibly.</RED-LINE-LARGE-BINARY-BLOBS></item>
-      <item><RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION fact="true" status="impl/done">**CI, signing, or secrets configuration** — changes with reach beyond the working tree.</RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION></item>
-      <item><RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**Anything whose reversal would cost work** — the catch-all; if undoing it is expensive, ask.</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK></item>
-    </list>
+    <facts ordered="false">
+      <RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">**Rewriting published history** — rebasing pushed commits, `git commit --amend` on pushed work.</RED-LINE-REWRITING-PUBLISHED-HISTORY>
+      <RED-LINE-FORCE-OPERATIONS fact="true" status="impl/done">**Force operations** — `git push --force` / `--force-with-lease`.</RED-LINE-FORCE-OPERATIONS>
+      <RED-LINE-LARGE-BINARY-BLOBS fact="true" status="impl/done">**Large binary blobs** — anything that bloats the repository irreversibly.</RED-LINE-LARGE-BINARY-BLOBS>
+      <RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION fact="true" status="impl/done">**CI, signing, or secrets configuration** — changes with reach beyond the working tree.</RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION>
+      <RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**Anything whose reversal would cost work** — the catch-all; if undoing it is expensive, ask.</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK>
+    </facts>
     <p><THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE fact="true" status="impl/done">These are not suspended by a heads-down / "move fast" posture: a mode may remove the
 "may I proceed with routine work?" handshake, but never the "may I cross an irreversible
 threshold?" one.</THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE></p>

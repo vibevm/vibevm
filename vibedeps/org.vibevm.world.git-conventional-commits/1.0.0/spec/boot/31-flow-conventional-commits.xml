@@ -6,12 +6,12 @@
 specification: a **typed header** and a body that explains *why*.</EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS></p>
   <header title="Header">
     <fence>type(scope): short imperative subject line</fence>
-    <list ordered="false">
-      <item><HEADER-SUBJECT-LENGTH-MOOD-AND-CASE fact="true" status="impl/done">Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.</HEADER-SUBJECT-LENGTH-MOOD-AND-CASE></item>
-      <item><HEADER-THE-ALLOWED-TYPE-SET fact="true" status="impl/done">`type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
-  `ci` `revert`.</HEADER-THE-ALLOWED-TYPE-SET></item>
-      <item><HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM fact="true" status="impl/done">`scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).</HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM></item>
-    </list>
+    <facts ordered="false">
+      <HEADER-SUBJECT-LENGTH-MOOD-AND-CASE fact="true" status="impl/done">Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix.</HEADER-SUBJECT-LENGTH-MOOD-AND-CASE>
+      <HEADER-THE-ALLOWED-TYPE-SET fact="true" status="impl/done">`type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
+  `ci` `revert`.</HEADER-THE-ALLOWED-TYPE-SET>
+      <HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM fact="true" status="impl/done">`scope` names the **narrowest accurate** subsystem (a crate, package, module, or area).</HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM>
+    </facts>
   </header>
   <body title="Body">
     <p><BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY fact="true" status="impl/done">A blank line after the subject, then a free-form body that answers *why*, not *what* — the
@@ -22,10 +22,10 @@ allowed-type table, scope rules, body structure, worked examples, and anti-patte
 @spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root.</sibling-document-pointers></p>
   </body>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-SUMMARISE-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — write *why*.</NEVER-SUMMARISE-WHAT-CHANGED></item>
-      <item><NEVER-CAPITALISE-OR-OMIT-THE-TYPE fact="true" status="impl/done">Never capitalise the first word after the `type(scope):` prefix, and never omit the type.</NEVER-CAPITALISE-OR-OMIT-THE-TYPE></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-SUMMARISE-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — write *why*.</NEVER-SUMMARISE-WHAT-CHANGED>
+      <NEVER-CAPITALISE-OR-OMIT-THE-TYPE fact="true" status="impl/done">Never capitalise the first word after the `type(scope):` prefix, and never omit the type.</NEVER-CAPITALISE-OR-OMIT-THE-TYPE>
+    </facts>
   </never>
   <format-is-not-atomicity title="Note — format is not atomicity">
     <p><FORMAT-DOES-NOT-ENFORCE-ATOMICITY fact="true" status="impl/done">Conventional Commits is the message **format**; it does not by itself enforce **atomicity**

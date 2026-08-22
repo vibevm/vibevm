@@ -10,32 +10,32 @@ the others — is multi-master replication, and two writes to the same
 branch diverge.</the-naive-fix-is-multi-master-replication></p>
   <p><this-flow-dissolves-the-failure-mode fact="true" status="impl/done">This flow dissolves that failure mode instead of
 managing it:</this-flow-dissolves-the-failure-mode></p>
-  <list ordered="false">
-    <item><MODEL-ONE-MAINLINE-NO-HOST-PRIMARY fact="true" status="impl/done">there is one **mainline** (the maintainer's local `main`,
-  no host primary),</MODEL-ONE-MAINLINE-NO-HOST-PRIMARY></item>
-    <item><MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA fact="true" status="impl/done">every host is a downstream **read-replica**,</MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA></item>
-    <item><MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD fact="true" status="impl/done">and
+  <facts ordered="false">
+    <MODEL-ONE-MAINLINE-NO-HOST-PRIMARY fact="true" status="impl/done">there is one **mainline** (the maintainer's local `main`,
+  no host primary),</MODEL-ONE-MAINLINE-NO-HOST-PRIMARY>
+    <MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA fact="true" status="impl/done">every host is a downstream **read-replica**,</MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA>
+    <MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD fact="true" status="impl/done">and
   history reaches a host only through a **fast-forward-only fan-out that
-  fails loud** on any divergence and never `--force`s.</MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD></item>
-  </list>
+  fails loud** on any divergence and never `--force`s.</MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD>
+  </facts>
   <p><the-cost-is-paid-once-in-the-model fact="true" status="spec/done">The cost is paid once, in the model, not continuously, in conflict
 resolution.</the-cost-is-paid-once-in-the-model></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
   (multi-homing without multi-master), the model (single-writer
   mainline; hosts as replicas; contributions in via any inbox), what it
-  buys, what it costs, and a re-derive prompt.</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-FANOUT-MECHANICS fact="true" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.md` — the committed
+  buys, what it costs, and a re-derive prompt.</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-FANOUT-MECHANICS fact="true" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.md` — the committed
   credential-free manifest, the fetch/verify/push/report procedure,
   fail-loud semantics, the read-only drift check, bringing a web merge
   home, and a ~15-line reference script with the never-`--force`
-  invariant pinned by a test.</CONTENT-THE-FANOUT-MECHANICS></item>
-    <item><CONTENT-THE-DAILY-LOOP fact="true" status="impl/done">`spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
-  handling reported drift, onboarding a host, offboarding a host.</CONTENT-THE-DAILY-LOOP></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
-  and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  invariant pinned by a test.</CONTENT-THE-FANOUT-MECHANICS>
+    <CONTENT-THE-DAILY-LOOP fact="true" status="impl/done">`spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
+  handling reported drift, onboarding a host, offboarding a host.</CONTENT-THE-DAILY-LOOP>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
+  and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:source-mirrors</fence>
   </install>
@@ -54,16 +54,16 @@ only the two nevers — **never push directly to a replica host**, and
 inbox item the maintainer integrates, not a direct write.</A-CONTRIBUTOR-NEEDS-ONLY-THE-TWO-NEVERS></p>
   </audience>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — pushed history is frozen; a fast-forward-only
+    <facts ordered="false">
+      <COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — pushed history is frozen; a fast-forward-only
   fan-out is that rule's multi-host corollary (a replica only ever
-  advances, never rewrites).</COMPOSES-ATOMIC-COMMITS></item>
-      <item><COMPOSES-WAL fact="true" status="spec/done">`flow:wal` — the fan-out is a natural session wind-down step; the WAL
-  entry notes "fanned out at &lt;checkpoint&gt;".</COMPOSES-WAL></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the host set and the single-writer choice
+  advances, never rewrites).</COMPOSES-ATOMIC-COMMITS>
+      <COMPOSES-WAL fact="true" status="spec/done">`flow:wal` — the fan-out is a natural session wind-down step; the WAL
+  entry notes "fanned out at &lt;checkpoint&gt;".</COMPOSES-WAL>
+      <COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the host set and the single-writer choice
   are recorded decisions, each with a revisit trigger (e.g. "revisit
-  when parallel full-time integrators exceed one").</COMPOSES-DECISION-RECORDS></item>
-    </list>
+  when parallel full-time integrators exceed one").</COMPOSES-DECISION-RECORDS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><practice-crystallized-from-the-origin-projects-law fact="true" status="spec/done">The practice is crystallized from the origin project's source-mirrors

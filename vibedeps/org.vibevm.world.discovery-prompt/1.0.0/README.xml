@@ -6,32 +6,32 @@
 collaborative-research prompt**: a distributable user-level prompt —
 a full user-side alternative to a system prompt — that turns an LLM
 session into structured co-inquiry.</PACKAGE-SHIPS-THE-DISCOVERY-PROMPT></p>
-  <list ordered="false">
-    <item><EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR fact="true" status="impl/done">Every response follows an
+  <facts ordered="false">
+    <EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR fact="true" status="impl/done">Every response follows an
   explicit grammar (PrimaryHypothesis with a 0.0–1.0 confidence
-  estimate, AlternativeInterpretations, MetaReflection),</EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR></item>
-    <item><SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER fact="true" status="impl/done">a mandatory
-  adversarial self-objection precedes every finalized answer,</SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER></item>
-    <item><HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY fact="true" status="impl/done">and
+  estimate, AlternativeInterpretations, MetaReflection),</EVERY-RESPONSE-FOLLOWS-AN-EXPLICIT-GRAMMAR>
+    <SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER fact="true" status="impl/done">a mandatory
+  adversarial self-objection precedes every finalized answer,</SELF-OBJECTION-PRECEDES-EVERY-FINALIZED-ANSWER>
+    <HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY fact="true" status="impl/done">and
   hashtag knobs (`#hot`, `#cold`, `#reboil`, `#superthink`) steer the
-  session's intensity.</HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY></item>
-  </list>
+  session's intensity.</HASHTAG-KNOBS-STEER-THE-SESSION-INTENSITY>
+  </facts>
   <p><STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE fact="true" status="impl/done">Its stance in one line: uncertainty is data,
 not failure.</STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships the artifact plus two pieces of guidance:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROMPT-VERBATIM fact="true" status="impl/done">`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` — the prompt
+  <facts ordered="false">
+    <CONTENT-THE-PROMPT-VERBATIM fact="true" status="impl/done">`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` — the prompt
   itself, **verbatim**. Fill its `&lt;VARIABLES&gt;` block, paste it as
-  the first message of a fresh session, and the session re-frames.</CONTENT-THE-PROMPT-VERBATIM></item>
-    <item><CONTENT-THE-USAGE-GUIDE fact="true" status="impl/done">`spec/flows/discovery-prompt/usage.md` — when the grammar's
+  the first message of a fresh session, and the session re-frames.</CONTENT-THE-PROMPT-VERBATIM>
+    <CONTENT-THE-USAGE-GUIDE fact="true" status="impl/done">`spec/flows/discovery-prompt/usage.md` — when the grammar's
   overhead pays off (and when it does not), a piece-by-piece map of
   the structure, how to read the output, the intensity knobs, the
   failure modes, and a re-derive prompt for adapting the artifact to
-  your own domain.</CONTENT-THE-USAGE-GUIDE></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/50-flow-discovery-prompt.md` — boot snippet loaded at
+  your own domain.</CONTENT-THE-USAGE-GUIDE>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/50-flow-discovery-prompt.md` — boot snippet loaded at
   session start: deploy the artifact on request, never mix its
-  grammar into coding sessions uninvited.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  grammar into coding sessions uninvited.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:discovery-prompt</fence>
   </install>
@@ -52,15 +52,15 @@ own license block.</PACKAGED-UNMODIFIED-BYTE-FOR-BYTE></p>
 re-derive prompt in `usage.md` — never on the shipped file.</ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE></p>
   </provenance>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-TWO-PROCESS-MODEL fact="true" status="spec/done">`flow:two-process-model` — this package is a tool for the
+    <facts ordered="false">
+      <COMPOSES-TWO-PROCESS-MODEL fact="true" status="spec/done">`flow:two-process-model` — this package is a tool for the
   human→AI control channel: it programs the AI process's reasoning
-  posture for one session.</COMPOSES-TWO-PROCESS-MODEL></item>
-      <item><COMPOSES-CAMPAIGN-PLANS fact="true" status="spec/done">`flow:campaign-plans` — a discovery session often precedes a
-  campaign plan: research first, arithmetic second.</COMPOSES-CAMPAIGN-PLANS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — a discovery session's converged answer
-  should land as a recorded decision, not evaporate with the chat.</COMPOSES-DECISION-RECORDS></item>
-    </list>
+  posture for one session.</COMPOSES-TWO-PROCESS-MODEL>
+      <COMPOSES-CAMPAIGN-PLANS fact="true" status="spec/done">`flow:campaign-plans` — a discovery session often precedes a
+  campaign plan: research first, arithmetic second.</COMPOSES-CAMPAIGN-PLANS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — a discovery session's converged answer
+  should land as a recorded decision, not evaporate with the chat.</COMPOSES-DECISION-RECORDS>
+    </facts>
   </composition>
   <license title="License">
     <p><license-line fact="true" status="impl/done">UPL-1.0.</license-line></p>

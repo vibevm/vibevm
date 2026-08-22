@@ -69,12 +69,12 @@ at close — one file, one resume pointer.</THE-ONE-FILE-DIALECT-CARRIES-ALL-FIV
     <p><THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT fact="true" status="impl/done">Very large campaigns may
 split the roles into files; the roles, not the count, are the contract.</THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT></p>
     <p><two-laws-govern-the-set-lead fact="true" status="impl/done">Two laws govern the set:</two-laws-govern-the-set-lead></p>
-    <list ordered="false">
-      <item><LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">**a campaign that skips the REPORT learns
-  nothing durable,**</LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE></item>
-      <item><LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION fact="true" status="impl/done">**and a campaign without a written PLAN cannot be resumed
-  by anyone but its author's context window.**</LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION></item>
-    </list>
+    <facts ordered="false">
+      <LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">**a campaign that skips the REPORT learns
+  nothing durable,**</LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE>
+      <LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION fact="true" status="impl/done">**and a campaign without a written PLAN cannot be resumed
+  by anyone but its author's context window.**</LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION>
+    </facts>
   </artifacts>
   <skeleton title="The section skeleton">
     <p><the-canonical-plan-in-order fact="true" status="impl/done">The canonical plan, in order.</the-canonical-plan-in-order></p>
@@ -83,12 +83,12 @@ execution; 2, 14, and 15 are filled by the executing session.</WHICH-SECTIONS-AR
     <s1-status title="1 — Title and status line">
       <p><the-title-and-the-status-block-lead fact="true" status="impl/done">The title names the campaign and its one-line point; under it, an
 italic status block:</the-title-and-the-status-block-lead></p>
-      <list ordered="false">
-        <item><STATUS-BLOCK-THE-LIFECYCLE-STATE fact="true" status="impl/done">the lifecycle state (`PLANNED` → `EXECUTING` →
-  `EXECUTED &lt;date&gt;`),</STATUS-BLOCK-THE-LIFECYCLE-STATE></item>
-        <item><STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST fact="true" status="impl/done">the tree the plan was written against,</STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST></item>
-        <item><STATUS-BLOCK-THE-COLD-START-FLAG fact="true" status="impl/done">and the cold-start flag.</STATUS-BLOCK-THE-COLD-START-FLAG></item>
-      </list>
+      <facts ordered="false">
+        <STATUS-BLOCK-THE-LIFECYCLE-STATE fact="true" status="impl/done">the lifecycle state (`PLANNED` → `EXECUTING` →
+  `EXECUTED &lt;date&gt;`),</STATUS-BLOCK-THE-LIFECYCLE-STATE>
+        <STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST fact="true" status="impl/done">the tree the plan was written against,</STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST>
+        <STATUS-BLOCK-THE-COLD-START-FLAG fact="true" status="impl/done">and the cold-start flag.</STATUS-BLOCK-THE-COLD-START-FLAG>
+      </facts>
       <p><OWNER-REVIEW-MAY-ANNOTATE-THE-STATE fact="true" status="impl/done">Owner review may annotate the state
 (`ACCEPTED with owner amendments, &lt;date&gt;`) before execution.</OWNER-REVIEW-MAY-ANNOTATE-THE-STATE></p>
       <fence># CACHE-DRAIN-PLAN v0.1 — retire the legacy cache, consumer by consumer
@@ -99,12 +99,12 @@ any phase is a safe stop; the floor is green at every boundary._</fence>
       <p><EMPTY-AT-AUTHORING fact="true" status="impl/done">Empty at authoring.</EMPTY-AT-AUTHORING></p>
       <p><at-close-a-block-is-prepended-lead fact="true" status="impl/done">At close, the executing session prepends a block
 into the status area:</at-close-a-block-is-prepended-lead></p>
-      <list ordered="false">
-        <item><RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">commit range,</RECORD-THE-COMMIT-RANGE></item>
-        <item><RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">per-phase deltas,</RECORD-THE-PER-PHASE-DELTAS></item>
-        <item><RECORD-WHICH-PREDICTIONS-HELD fact="true" status="impl/done">which
-  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).</RECORD-WHICH-PREDICTIONS-HELD></item>
-      </list>
+      <facts ordered="false">
+        <RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">commit range,</RECORD-THE-COMMIT-RANGE>
+        <RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">per-phase deltas,</RECORD-THE-PER-PHASE-DELTAS>
+        <RECORD-WHICH-PREDICTIONS-HELD fact="true" status="impl/done">which
+  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).</RECORD-WHICH-PREDICTIONS-HELD>
+      </facts>
     </s2-execution-record>
     <s3-mandate title="3 — The mandate">
       <p><THE-MANDATE-IS-QUOTED-VERBATIM-AND-DATED fact="true" status="impl/done">The owner's commissioning words, **quoted verbatim and dated** —
@@ -191,11 +191,11 @@ NEXT campaign's opening move, after this queue closes."</EVERY-NON-GOAL-CARRIES-
     </s10-non-goals>
     <s11-quick-start title="11 — Quick-start for the executing session">
       <p><the-quick-start-block-lead fact="true" status="impl/done">The literal shell block a cold session runs first:</the-quick-start-block-lead></p>
-      <list ordered="false">
-        <item><QUICK-START-CONFIRM-THE-TREE fact="true" status="impl/done">confirm the tree,</QUICK-START-CONFIRM-THE-TREE></item>
-        <item><QUICK-START-VERIFY-THE-GREEN-FLOOR fact="true" status="impl/done">verify the green floor,</QUICK-START-VERIFY-THE-GREEN-FLOOR></item>
-        <item><QUICK-START-CAPTURE-THE-BASELINE-NUMBERS fact="true" status="impl/done">capture the baseline numbers.</QUICK-START-CAPTURE-THE-BASELINE-NUMBERS></item>
-      </list>
+      <facts ordered="false">
+        <QUICK-START-CONFIRM-THE-TREE fact="true" status="impl/done">confirm the tree,</QUICK-START-CONFIRM-THE-TREE>
+        <QUICK-START-VERIFY-THE-GREEN-FLOOR fact="true" status="impl/done">verify the green floor,</QUICK-START-VERIFY-THE-GREEN-FLOOR>
+        <QUICK-START-CAPTURE-THE-BASELINE-NUMBERS fact="true" status="impl/done">capture the baseline numbers.</QUICK-START-CAPTURE-THE-BASELINE-NUMBERS>
+      </facts>
       <fence lang="sh">git log --oneline -3        # tree must match the status line
 &lt;gate-panel command&gt;        # full panel green before Phase 0 opens
 &lt;baseline count command&gt;    # must print the §4 baseline figure</fence>
@@ -279,15 +279,15 @@ Adapt the campaign-plan format to this project:
 Do not start a campaign; produce the adapted conventions only.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD fact="true" status="impl/done">A campaign is a multi-commit change executed as gated phases,
-  planned to run cold — by a stranger, today.</SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD></item>
-      <item><SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT fact="true" status="impl/done">Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
-  default. Skip the report and the campaign learns nothing durable.</SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT></item>
-      <item><SUM-THE-PLANS-STANDING-OBLIGATIONS fact="true" status="impl/done">Mandate verbatim; arithmetic exact; facts verified at writing;
+    <facts ordered="false">
+      <SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD fact="true" status="impl/done">A campaign is a multi-commit change executed as gated phases,
+  planned to run cold — by a stranger, today.</SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD>
+      <SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT fact="true" status="impl/done">Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
+  default. Skip the report and the campaign learns nothing durable.</SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT>
+      <SUM-THE-PLANS-STANDING-OBLIGATIONS fact="true" status="impl/done">Mandate verbatim; arithmetic exact; facts verified at writing;
   decisions carry their rejections; predictions falsifiable;
-  non-goals named so they stay visible.</SUM-THE-PLANS-STANDING-OBLIGATIONS></item>
-      <item><SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE fact="true" status="impl/done">The deferrals ledger seeds the next campaign's mandate.</SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE></item>
-    </list>
+  non-goals named so they stay visible.</SUM-THE-PLANS-STANDING-OBLIGATIONS>
+      <SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE fact="true" status="impl/done">The deferrals ledger seeds the next campaign's mandate.</SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE>
+    </facts>
   </summary>
 </spec>

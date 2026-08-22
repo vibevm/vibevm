@@ -12,19 +12,19 @@ one logical idea — is the separate `flow:git-atomic-commits` package.</ATOMICI
 still write a non-atomic commit (`feat: add foo, bar, and baz`), and you can be atomic without
 this format; the two run together, and each is its own package so a project can adopt either.</EACH-DISCIPLINE-IS-ADOPTABLE-ON-ITS-OWN></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-FULL-FORMAT fact="true" status="impl/done">`spec/flows/conventional-commits/conventional-commits.md` — the full format: header shape,
-  the allowed-type table, scope convention, body structure, worked examples, and anti-patterns.</CONTENT-THE-FULL-FORMAT></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/31-flow-conventional-commits.md` — the boot snippet loaded at session start.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  <facts ordered="false">
+    <CONTENT-THE-FULL-FORMAT fact="true" status="impl/done">`spec/flows/conventional-commits/conventional-commits.md` — the full format: header shape,
+  the allowed-type table, scope convention, body structure, worked examples, and anti-patterns.</CONTENT-THE-FULL-FORMAT>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/31-flow-conventional-commits.md` — the boot snippet loaded at session start.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:git-conventional-commits</fence>
   </install>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">Pairs with `flow:git-atomic-commits` (atomicity) — together they are the commit-message half of a
-  `git-practices` posture.</COMPOSES-ATOMIC-COMMITS></item>
-    </list>
+    <facts ordered="false">
+      <COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">Pairs with `flow:git-atomic-commits` (atomicity) — together they are the commit-message half of a
+  `git-practices` posture.</COMPOSES-ATOMIC-COMMITS>
+    </facts>
   </composition>
   <license title="License">
     <p><license-line fact="true" status="impl/done">UPL-1.0 — see `LICENSE`.</license-line></p>

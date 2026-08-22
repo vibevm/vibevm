@@ -19,25 +19,25 @@ are the spec in executable form; volatile state files are records,
 dead last.</HUMAN-CHANGES-THE-SPEC-CODE-CONFORMS-AND-STATE-FILES-ARE-LAST></p>
   <p><RECENCY-DECIDES-NOTHING fact="true" status="impl/done">Recency decides nothing.</RECENCY-DECIDES-NOTHING></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md` — the full
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md` — the full
   protocol: why conflicts are normal, the hierarchy and what each
   relation means operationally, the four-step REVIEW-marker protocol,
   the marker lifecycle, and a worked example of what one silent
   change costs (one bug becoming three, plus two weeks of git
-  archaeology).</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-UNCERTAINTY-PROTOCOL fact="true" status="impl/done">`spec/flows/conflict-protocol/uncertainty-protocol.md` — the
+  archaeology).</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-UNCERTAINTY-PROTOCOL fact="true" status="impl/done">`spec/flows/conflict-protocol/uncertainty-protocol.md` — the
   spec-is-silent path: re-read the spec, re-read the reference, check
   the closest analog, then conservative default + REVIEW + report;
   what "conservative" means (cheapest to reverse), and when to stop
-  and ask instead.</CONTENT-THE-UNCERTAINTY-PROTOCOL></item>
-    <item><CONTENT-THE-FAILURE-MODES fact="true" status="impl/done">`spec/flows/conflict-protocol/failure-modes.md` — three named
+  and ask instead.</CONTENT-THE-UNCERTAINTY-PROTOCOL>
+    <CONTENT-THE-FAILURE-MODES fact="true" status="impl/done">`spec/flows/conflict-protocol/failure-modes.md` — three named
   failures with recovery drills: the silent spec edit, the stale
-  state file after a crash, and the self-contradicting spec.</CONTENT-THE-FAILURE-MODES></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/35-flow-conflict-protocol.md` — boot snippet loaded at
+  state file after a crash, and the self-contradicting spec.</CONTENT-THE-FAILURE-MODES>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/35-flow-conflict-protocol.md` — boot snippet loaded at
   session start: the hierarchy one-liner, the REVIEW contract, the
-  uncertainty ladder, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  uncertainty ladder, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:conflict-protocol</fence>
   </install>
@@ -48,22 +48,22 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
     <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-TWO-PROCESS-MODEL fact="true" status="impl/done">`flow:two-process-model` — the hierarchy is that model's law #1;
-  this package is its enforcement arm.</COMPOSES-TWO-PROCESS-MODEL></item>
-      <item><COMPOSES-SYNC-FROM-CODE fact="true" status="impl/done">`flow:sync-from-code` — the sanctioned *loud* path for code-first
+    <facts ordered="false">
+      <COMPOSES-TWO-PROCESS-MODEL fact="true" status="impl/done">`flow:two-process-model` — the hierarchy is that model's law #1;
+  this package is its enforcement arm.</COMPOSES-TWO-PROCESS-MODEL>
+      <COMPOSES-SYNC-FROM-CODE fact="true" status="impl/done">`flow:sync-from-code` — the sanctioned *loud* path for code-first
   changes. This protocol is what makes the silent path forbidden;
-  sync-from-code is where legitimate code-first reality goes.</COMPOSES-SYNC-FROM-CODE></item>
-      <item><COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — the WAL sits at the hierarchy's tail as a volatile
+  sync-from-code is where legitimate code-first reality goes.</COMPOSES-SYNC-FROM-CODE>
+      <COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — the WAL sits at the hierarchy's tail as a volatile
   record; the stale-WAL recovery drill lives in this package's
-  failure-modes document.</COMPOSES-WAL></item>
-      <item><COMPOSES-ADDRESSABLE-SPECS fact="true" status="spec/done">`flow:addressable-specs` — a REVIEW marker and a correction both
+  failure-modes document.</COMPOSES-WAL>
+      <COMPOSES-ADDRESSABLE-SPECS fact="true" status="spec/done">`flow:addressable-specs` — a REVIEW marker and a correction both
   cite the violated anchor; addressability is what makes a dispute
-  cost twenty tokens instead of two hundred.</COMPOSES-ADDRESSABLE-SPECS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — a resolved conflict often ends as a
+  cost twenty tokens instead of two hundred.</COMPOSES-ADDRESSABLE-SPECS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — a resolved conflict often ends as a
   recorded decision, so the same question is not re-litigated next
-  quarter.</COMPOSES-DECISION-RECORDS></item>
-    </list>
+  quarter.</COMPOSES-DECISION-RECORDS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><practice-extracted-from-the-book fact="true" status="spec/done">The practice is extracted from *AI-native development*, chapters 1–2:

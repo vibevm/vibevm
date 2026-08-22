@@ -17,15 +17,15 @@ branch and tag names, code comments, README and release notes, CI
 metadata — anything a reader of the repository could take as a
 statement of *who or what wrote this*.</ATTRIBUTION-MEANS-AUTHORSHIP-MARKS-IN-REPOSITORY-SURFACES></p>
     <p><what-it-does-not-govern-lead fact="true" status="impl/done">It does **not** govern:</what-it-does-not-govern-lead></p>
-    <list ordered="false">
-      <item><NOT-GOVERNED-PRODUCT-SCOPE fact="true" status="impl/done">**Product scope.** A product may itself have AI features; its
+    <facts ordered="false">
+      <NOT-GOVERNED-PRODUCT-SCOPE fact="true" status="impl/done">**Product scope.** A product may itself have AI features; its
   specs and docs discuss them freely. That is a statement about what
-  the product does, not about who authored the repository.</NOT-GOVERNED-PRODUCT-SCOPE></item>
-      <item><NOT-GOVERNED-WORKFLOW-DOCUMENTS fact="true" status="impl/done">**Workflow documents.** Checkpoint-file protocols, session
+  the product does, not about who authored the repository.</NOT-GOVERNED-PRODUCT-SCOPE>
+      <NOT-GOVERNED-WORKFLOW-DOCUMENTS fact="true" status="impl/done">**Workflow documents.** Checkpoint-file protocols, session
   procedures, agent instructions — the machinery of AI-assisted
   work — remain in place either way. They describe how work is
-  organized, and never mark artifacts as machine-authored.</NOT-GOVERNED-WORKFLOW-DOCUMENTS></item>
-    </list>
+  organized, and never mark artifacts as machine-authored.</NOT-GOVERNED-WORKFLOW-DOCUMENTS>
+    </facts>
   </what>
   <why-deliberate title="Why choose deliberately">
     <p><agents-attribute-themselves-by-default fact="true" status="spec/done">Coding agents attribute themselves by default: trailers in commits,
@@ -57,28 +57,28 @@ decision about their own repository — the same kind of decision as
 not publishing internal tooling or draft history.</the-posture-is-the-owners-publication-decision></p>
     <p><run-it-honestly-lead fact="true" status="impl/done">**Run it honestly.** Two things keep this posture clean rather than
 sneaky:</run-it-honestly-lead></p>
-    <list ordered="true">
-      <item><HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON fact="true" status="impl/done">**The agent is told the real reason.** The policy text (the boot
+    <facts ordered="true">
+      <HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON fact="true" status="impl/done">**The agent is told the real reason.** The policy text (the boot
    snippet's *Why* section) travels with the instruction. An agent
    asked to hide something for an unstated reason will eventually
    contradict the instruction; an agent that knows the rationale
-   applies it correctly to cases the rule text never anticipated.</HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON></item>
-      <item><HONEST-THE-POLICY-IS-RECORDED-OPENLY fact="true" status="impl/done">**The policy itself is recorded openly.** The repository states,
+   applies it correctly to cases the rule text never anticipated.</HONEST-THE-AGENT-IS-TOLD-THE-REAL-REASON>
+      <HONEST-THE-POLICY-IS-RECORDED-OPENLY fact="true" status="impl/done">**The policy itself is recorded openly.** The repository states,
    in exactly one place, that this posture is in force. Anyone
    reading the project's own rules sees the decision; the *surface*
-   (commits, code, docs) is what stays clean.</HONEST-THE-POLICY-IS-RECORDED-OPENLY></item>
-    </list>
+   (commits, code, docs) is what stays clean.</HONEST-THE-POLICY-IS-RECORDED-OPENLY>
+    </facts>
     <p><before-adopting-verify-lead fact="true" status="impl/done">**Before adopting, verify two things:**</before-adopting-verify-lead></p>
-    <list ordered="false">
-      <item><VERIFY-YOUR-JURISDICTION fact="true" status="spec/done">**Your jurisdiction.** If law or regulation applicable to you
+    <facts ordered="false">
+      <VERIFY-YOUR-JURISDICTION fact="true" status="spec/done">**Your jurisdiction.** If law or regulation applicable to you
   *requires* disclosing AI involvement, this posture is not
-  available to you. Use the disclosure alternative.</VERIFY-YOUR-JURISDICTION></item>
-      <item><VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION fact="true" status="spec/done">**Your upstream and your organization.** Some employers, some
+  available to you. Use the disclosure alternative.</VERIFY-YOUR-JURISDICTION>
+      <VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION fact="true" status="spec/done">**Your upstream and your organization.** Some employers, some
   open-source projects, and some package registries require AI
   disclosure in contributions. A contribution to such a destination
   follows the *destination's* rules — the posture governs your
-  repository, not theirs.</VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION></item>
-    </list>
+  repository, not theirs.</VERIFY-YOUR-UPSTREAM-AND-ORGANIZATION>
+    </facts>
   </concealment>
   <single-place title="The single-place law">
     <p><THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE fact="true" status="impl/done">The policy is stated in **exactly one always-loaded place** (the
@@ -111,16 +111,16 @@ procedures) are unaffected. This paragraph is the only place in
 the repository where this topic is discussed.</fence>
   </instructing>
   <slips title="When a slip lands">
-    <list ordered="false">
-      <item><SLIP-UNPUSHED fact="true" status="impl/done">**Unpushed:** amend or rebase the local commit; the surface never
-  shipped, so no history concern exists.</SLIP-UNPUSHED></item>
-      <item><SLIP-PUSHED fact="true" status="impl/done">**Pushed:** pushed history is frozen (see `flow:git-atomic-commits`).
+    <facts ordered="false">
+      <SLIP-UNPUSHED fact="true" status="impl/done">**Unpushed:** amend or rebase the local commit; the surface never
+  shipped, so no history concern exists.</SLIP-UNPUSHED>
+      <SLIP-PUSHED fact="true" status="impl/done">**Pushed:** pushed history is frozen (see `flow:git-atomic-commits`).
   Removing a trailer from a pushed commit means rewriting published
   history — an owner-level decision with real costs to everyone
   downstream. Default: leave the slipped mark in history, fix the
   leak (see [`enforcement-checklist.md`](enforcement-checklist.md)),
-  and let the owner decide whether the one mark warrants a rewrite.</SLIP-PUSHED></item>
-    </list>
+  and let the owner decide whether the one mark warrants a rewrite.</SLIP-PUSHED>
+    </facts>
   </slips>
   <re-derive title="Re-derive for your project">
     <p><COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION fact="true" status="impl/done">Copy the prompt-task, not the prompt-implementation.</COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION></p>
@@ -139,18 +139,18 @@ to regulation changes. Show me the draft; do not apply until I
 approve.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-CHOOSE-THE-POSTURE-DELIBERATELY fact="true" status="impl/done">An attribution posture must be chosen deliberately; tool defaults
-  produce an accidental, inconsistent record.</SUM-CHOOSE-THE-POSTURE-DELIBERATELY></item>
-      <item><SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE fact="true" status="spec/done">The default here: a human-authored surface on every artifact,
+    <facts ordered="false">
+      <SUM-CHOOSE-THE-POSTURE-DELIBERATELY fact="true" status="impl/done">An attribution posture must be chosen deliberately; tool defaults
+  produce an accidental, inconsistent record.</SUM-CHOOSE-THE-POSTURE-DELIBERATELY>
+      <SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE fact="true" status="spec/done">The default here: a human-authored surface on every artifact,
   chosen proactively so future regulation finds no hook; no present
   law is violated by it — verify that holds for *your* jurisdiction
-  and destinations.</SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE></item>
-      <item><SUM-RUN-IT-HONESTLY fact="true" status="impl/done">Run it honestly: the agent knows the real reason; the policy is
-  recorded openly in exactly one place.</SUM-RUN-IT-HONESTLY></item>
-      <item><SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT fact="true" status="impl/done">Product scope and AI-workflow documents are carved out.</SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT></item>
-      <item><SUM-SLIPS-BEFORE-AND-AFTER-PUSH fact="true" status="impl/done">Slips: fix freely before push; after push, the frozen-history rule
-  wins and the owner decides.</SUM-SLIPS-BEFORE-AND-AFTER-PUSH></item>
-    </list>
+  and destinations.</SUM-THE-DEFAULT-IS-A-HUMAN-AUTHORED-SURFACE>
+      <SUM-RUN-IT-HONESTLY fact="true" status="impl/done">Run it honestly: the agent knows the real reason; the policy is
+  recorded openly in exactly one place.</SUM-RUN-IT-HONESTLY>
+      <SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT fact="true" status="impl/done">Product scope and AI-workflow documents are carved out.</SUM-PRODUCT-AND-WORKFLOW-DOCUMENTS-ARE-CARVED-OUT>
+      <SUM-SLIPS-BEFORE-AND-AFTER-PUSH fact="true" status="impl/done">Slips: fix freely before push; after push, the frozen-history rule
+  wins and the owner decides.</SUM-SLIPS-BEFORE-AND-AFTER-PUSH>
+    </facts>
   </summary>
 </spec>

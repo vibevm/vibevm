@@ -57,14 +57,14 @@ it may change, and what authority it carries.</EVERY-DOCUMENT-BELONGS-TO-EXACTLY
   </genre-map>
   <core-rule title="Core rule">
     <p><NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT fact="true" status="impl/done">**Before writing any project document, name its genre first.** Then:</NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT></p>
-    <list ordered="true">
-      <item><CONTRACT-WINS-OVER-LORE fact="true" status="impl/done">**Contract wins over lore.** When a design document and the
+    <facts ordered="true">
+      <CONTRACT-WINS-OVER-LORE fact="true" status="impl/done">**Contract wins over lore.** When a design document and the
    contract it explains disagree, the contract wins and the design
-   document is corrected — lore never silently diverges.</CONTRACT-WINS-OVER-LORE></item>
-      <item><KEEP-THE-TWO-WAY-LINKS fact="true" status="impl/done">**Keep the two-way links.** A contract section that has lore
+   document is corrected — lore never silently diverges.</CONTRACT-WINS-OVER-LORE>
+      <KEEP-THE-TWO-WAY-LINKS fact="true" status="impl/done">**Keep the two-way links.** A contract section that has lore
    links to it; the lore names the section it explains. A cold
-   reader entering from either side finds the other.</KEEP-THE-TWO-WAY-LINKS></item>
-    </list>
+   reader entering from either side finds the other.</KEEP-THE-TWO-WAY-LINKS>
+    </facts>
     <p><routing-table-pointer fact="true" status="impl/done">Routing table for new material:
 @spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root.</routing-table-pointer></p>
     <p><design-docs-pointer fact="true" status="impl/done">The contract/lore split in practice:
@@ -80,14 +80,14 @@ sounded tentative.</look-alike-prose-gets-implemented-or-softened></p>
 authority to a sentence without asking anyone.</GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING></p>
   </why>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC fact="true" status="impl/done">Never put normative language — "must", "shall", requirement
-  lists — in a design doc. Extract it to the contract; link back.</NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC></item>
-      <item><NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE fact="true" status="impl/done">Never resolve a contract-vs-lore conflict by editing the contract
-  to match the lore. The correction runs the other way.</NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE></item>
-      <item><NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE fact="true" status="impl/done">Never create a document without deciding its genre.</NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE></item>
-      <item><NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT fact="true" status="impl/done">Never let lore go unlinked from its contract — an unlinked design
-  doc is invisible at the next cold start.</NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC fact="true" status="impl/done">Never put normative language — "must", "shall", requirement
+  lists — in a design doc. Extract it to the contract; link back.</NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC>
+      <NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE fact="true" status="impl/done">Never resolve a contract-vs-lore conflict by editing the contract
+  to match the lore. The correction runs the other way.</NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE>
+      <NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE fact="true" status="impl/done">Never create a document without deciding its genre.</NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE>
+      <NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT fact="true" status="impl/done">Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start.</NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT>
+    </facts>
   </never>
 </spec>

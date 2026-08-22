@@ -14,29 +14,29 @@ identity scheme, a durable-environment edit, or a package format, read
 the lesson that governs it **first**.</READ-THE-GOVERNING-LESSON-FIRST></p>
     <p><the-law-is-one-line-the-rationale-is-why fact="true" status="impl/done">The law is one line; the
 rationale is why it is not negotiable.</the-law-is-one-line-the-rationale-is-why></p>
-    <list ordered="false">
-      <item><POINTER-SELF-UPDATING-TOOLS fact="true" status="impl/done">Self-updating tools — activation, instances, identity, environment
+    <facts ordered="false">
+      <POINTER-SELF-UPDATING-TOOLS fact="true" status="impl/done">Self-updating tools — activation, instances, identity, environment
   edits, removal:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root.</POINTER-SELF-UPDATING-TOOLS></item>
-      <item><POINTER-PACKAGING-LESSONS fact="true" status="impl/done">Packaging — what ships, what identity is, the bootstrap:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root.</POINTER-PACKAGING-LESSONS></item>
-    </list>
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root.</POINTER-SELF-UPDATING-TOOLS>
+      <POINTER-PACKAGING-LESSONS fact="true" status="impl/done">Packaging — what ships, what identity is, the bootstrap:
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root.</POINTER-PACKAGING-LESSONS>
+    </facts>
     <p><index-and-maxims-pointer fact="true" status="impl/done">The index and the cross-cutting maxims:
 @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root.</index-and-maxims-pointer></p>
   </when>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH fact="true" status="impl/done">Never make an environment variable the source of truth for the
+    <facts ordered="false">
+      <NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH fact="true" status="impl/done">Never make an environment variable the source of truth for the
   active version — env is frozen at process start; read a live pointer
-  file each launch instead.</NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH></item>
-      <item><NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE fact="true" status="impl/done">Never overwrite a file that may be in use — write a new instance
-  directory and flip a pointer.</NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE></item>
-      <item><NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY fact="true" status="impl/done">Never content-hash gigabytes to establish identity — count instances
-  and detect change cheaply.</NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY></item>
-      <item><NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE fact="true" status="impl/done">Never ship prose describing tooling the consumer does not receive —
-  ship the runtime.</NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE></item>
-      <item><NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS fact="true" status="impl/done">Never let a package's identity include build artifacts — identity is
-  the source.</NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS></item>
-    </list>
+  file each launch instead.</NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH>
+      <NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE fact="true" status="impl/done">Never overwrite a file that may be in use — write a new instance
+  directory and flip a pointer.</NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE>
+      <NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY fact="true" status="impl/done">Never content-hash gigabytes to establish identity — count instances
+  and detect change cheaply.</NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY>
+      <NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE fact="true" status="impl/done">Never ship prose describing tooling the consumer does not receive —
+  ship the runtime.</NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE>
+      <NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS fact="true" status="impl/done">Never let a package's identity include build artifacts — identity is
+  the source.</NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS>
+    </facts>
   </never>
 </spec>

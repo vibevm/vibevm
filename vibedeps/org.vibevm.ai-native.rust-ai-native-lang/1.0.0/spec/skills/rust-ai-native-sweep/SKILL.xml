@@ -7,12 +7,12 @@
 `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/04-SWEEP-PLAYBOOK.md`; read it
 once per session if you have not).</RUNNING-THE-STANDING-SWEEP></p>
   <p><two-truths-lead fact="true" status="impl/done">The two truths:</two-truths-lead></p>
-  <list ordered="false">
-    <item><TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**the gates are the
-  floor, the sweep is the ceiling**,</TRUTH-GATES-ARE-THE-FLOOR></item>
-    <item><TRUTH-GATE-IS-TRUTH fact="true" status="impl/done">and **the gate is truth, the collector is
-  a guide**.</TRUTH-GATE-IS-TRUTH></item>
-  </list>
+  <facts ordered="false">
+    <TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**the gates are the
+  floor, the sweep is the ceiling**,</TRUTH-GATES-ARE-THE-FLOOR>
+    <TRUTH-GATE-IS-TRUTH fact="true" status="impl/done">and **the gate is truth, the collector is
+  a guide**.</TRUTH-GATE-IS-TRUTH>
+  </facts>
   <p><NEVER-SWEEP-ON-A-RED-TREE fact="true" status="impl/done">Never sweep on a red tree.</NEVER-SWEEP-ON-A-RED-TREE></p>
   <p><ACT-ON-COLLECTOR-FACTS fact="true" status="impl/done">Act on collector facts, never on
 memory.</ACT-ON-COLLECTOR-FACTS></p>
@@ -39,44 +39,44 @@ policy is vacuous.</CHECK-THE-PRINTED-POLICY-ORIGIN-LINES></p>
 work-list; its git diff is the trend).</READ-THE-HEALTH-SUMMARY></p>
     <p><take-cheapest-wins-lead fact="true" status="impl/done">Take one or two cheapest wins, in
 this order:</take-cheapest-wins-lead></p>
-    <list ordered="true">
-      <item><RATCHET-DANGER-BAND-FILES fact="true" status="impl/done">**`danger_band_files`** — split any file at the top of the [540,600)
+    <facts ordered="true">
+      <RATCHET-DANGER-BAND-FILES fact="true" status="impl/done">**`danger_band_files`** — split any file at the top of the [540,600)
    band before an edit trips the 600 budget. Idioms: tests-out to a sibling
    `foo/tests.rs` (`#[cfg(test)] #[path] mod tests;`) first, responsibility
    split second; every new module keeps the parent's `scope!` URI (GUIDE
-   §14 has the gotchas).</RATCHET-DANGER-BAND-FILES></item>
-      <item><RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES fact="true" status="impl/done">**`pub_doctest_promotion_candidates`** — a gated crate at 0 typed-gap
+   §14 has the gotchas).</RATCHET-DANGER-BAND-FILES>
+      <RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES fact="true" status="impl/done">**`pub_doctest_promotion_candidates`** — a gated crate at 0 typed-gap
    enters `gated_pub_doctest` in conform.toml for free; run
-   `rust-ai-native conform check` to confirm the collector's prediction.</RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES></item>
-      <item><RATCHET-PUB-DOCTEST-DRAIN-BACKLOG fact="true" status="impl/done">**`pub_doctest_drain_backlog`** — document the smallest-gap crate's
-   types (the four doctest idioms, GUIDE §14), then promote it.</RATCHET-PUB-DOCTEST-DRAIN-BACKLOG></item>
-      <item><RATCHET-DEVIATION-DEBT fact="true" status="impl/done">**`deviation_debt`** — re-justify each `#[spec(deviates)]`: a deviation
-   whose invariant is now encodable in a type is removed and restructured.</RATCHET-DEVIATION-DEBT></item>
-      <item><RATCHET-CENSUS-REGRESSIONS fact="true" status="impl/done">**Census regressions** (`unwrap_domain` / `env_nonroot` /
+   `rust-ai-native conform check` to confirm the collector's prediction.</RATCHET-PUB-DOCTEST-PROMOTION-CANDIDATES>
+      <RATCHET-PUB-DOCTEST-DRAIN-BACKLOG fact="true" status="impl/done">**`pub_doctest_drain_backlog`** — document the smallest-gap crate's
+   types (the four doctest idioms, GUIDE §14), then promote it.</RATCHET-PUB-DOCTEST-DRAIN-BACKLOG>
+      <RATCHET-DEVIATION-DEBT fact="true" status="impl/done">**`deviation_debt`** — re-justify each `#[spec(deviates)]`: a deviation
+   whose invariant is now encodable in a type is removed and restructured.</RATCHET-DEVIATION-DEBT>
+      <RATCHET-CENSUS-REGRESSIONS fact="true" status="impl/done">**Census regressions** (`unwrap_domain` / `env_nonroot` /
    `unsafe_nonaudit` / `error_enums_missing_req` non-zero on a gated
    crate) — drain immediately; restructure beats testify. On an ungated
    crate they are the adoption backlog: **flip a crate into `[rust] gated`
-   only after it drains to zero.**</RATCHET-CENSUS-REGRESSIONS></item>
-    </list>
+   only after it drains to zero.**</RATCHET-CENSUS-REGRESSIONS>
+    </facts>
   </tier-one>
   <tier-two title="Tier 2 — drift (weekly)">
-    <list ordered="false">
-      <item><DRIFT-TRIPWIRE fact="true" status="impl/done">`rust-ai-native tripwire` — re-disposition every touched-and-open debt
+    <facts ordered="false">
+      <DRIFT-TRIPWIRE fact="true" status="impl/done">`rust-ai-native tripwire` — re-disposition every touched-and-open debt
   entry; file new deficiencies into `discipline/registry/debt.json`, never
-  leave them as prose.</DRIFT-TRIPWIRE></item>
-      <item><DRIFT-LEDGER-RENDER fact="true" status="impl/done">`rust-ai-native ledger render --check` — the human views
+  leave them as prose.</DRIFT-TRIPWIRE>
+      <DRIFT-LEDGER-RENDER fact="true" status="impl/done">`rust-ai-native ledger render --check` — the human views
   (`discipline/DEBT.md` / `INTENT.md`) match their registries; stale →
   re-render and commit (a registry edit without a re-render is exactly
-  the drift this catches).</DRIFT-LEDGER-RENDER></item>
-      <item><DRIFT-DOC-CODE fact="true" status="impl/done">Doc/code drift: WAL freshness (if the project keeps one — see
+  the drift this catches).</DRIFT-LEDGER-RENDER>
+      <DRIFT-DOC-CODE fact="true" status="impl/done">Doc/code drift: WAL freshness (if the project keeps one — see
   `06-WAL-CONVENTION`), architecture docs vs the real tree, roadmap
-  staleness. File `stale-doc` debt.</DRIFT-DOC-CODE></item>
-      <item><DRIFT-MARKER-CENSUS fact="true" status="impl/done">Marker census: `rg -n 'TODO|FIXME|REVIEW|XXX|HACK'` over the source
+  staleness. File `stale-doc` debt.</DRIFT-DOC-CODE>
+      <DRIFT-MARKER-CENSUS fact="true" status="impl/done">Marker census: `rg -n 'TODO|FIXME|REVIEW|XXX|HACK'` over the source
   roots — graduate load-bearing markers into the registries, delete
-  trivial ones.</DRIFT-MARKER-CENSUS></item>
-      <item><DRIFT-GOLDEN-TRANSCRIPTS fact="true" status="impl/done">Golden transcripts (`discipline/golden/`): must fail loudly, re-captured
-  deliberately (`capture.sh`), never auto-updated.</DRIFT-GOLDEN-TRANSCRIPTS></item>
-    </list>
+  trivial ones.</DRIFT-MARKER-CENSUS>
+      <DRIFT-GOLDEN-TRANSCRIPTS fact="true" status="impl/done">Golden transcripts (`discipline/golden/`): must fail loudly, re-captured
+  deliberately (`capture.sh`), never auto-updated.</DRIFT-GOLDEN-TRANSCRIPTS>
+    </facts>
   </tier-two>
   <tier-three title="Tier 3 — deep judgment (weekly)">
     <p><WALK-THE-WISH-RULES fact="true" status="impl/done">Walk the WISH rules over the week's diff (typed seams, cell

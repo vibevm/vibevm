@@ -14,13 +14,13 @@ property of the product it exercises.</A-WALKTHROUGH-THAT-BREAKS-ANY-OF-THESE-IS
     <p><EVERY-RUN-STARTS-FROM-NOTHING-AND-TOUCHES-NO-REAL-USER-STATE fact="true" status="impl/done">Every run starts from nothing and touches no real user state.</EVERY-RUN-STARTS-FROM-NOTHING-AND-TOUCHES-NO-REAL-USER-STATE></p>
     <p><two-mechanisms-lead fact="true" status="impl/done">Two
 mechanisms, always both:</two-mechanisms-lead></p>
-    <list ordered="false">
-      <item><MECHANISM-A-SCRATCH-PROJECT fact="true" status="impl/done">**A scratch project** created fresh with `mktemp -d`, so the working
-  tree the test operates on is disposable and unique per run.</MECHANISM-A-SCRATCH-PROJECT></item>
-      <item><MECHANISM-AN-ENVIRONMENT-REDIRECT fact="true" status="impl/done">**An environment redirect** pointing the tool's per-user state
+    <facts ordered="false">
+      <MECHANISM-A-SCRATCH-PROJECT fact="true" status="impl/done">**A scratch project** created fresh with `mktemp -d`, so the working
+  tree the test operates on is disposable and unique per run.</MECHANISM-A-SCRATCH-PROJECT>
+      <MECHANISM-AN-ENVIRONMENT-REDIRECT fact="true" status="impl/done">**An environment redirect** pointing the tool's per-user state
   (cache, config, home) into that scratch, so the real per-user
-  directory is never read from or written to.</MECHANISM-AN-ENVIRONMENT-REDIRECT></item>
-    </list>
+  directory is never read from or written to.</MECHANISM-AN-ENVIRONMENT-REDIRECT>
+    </facts>
     <fence>export SCRATCH="$(mktemp -d)"
 export TOOL_HOME="$SCRATCH/tool-home"   # redirect the tool's per-user state
 export PROJECT="$SCRATCH/project"
@@ -85,13 +85,13 @@ short portable note rather than a second full transcript.</NAME-ONE-PRIMARY-PLAT
    flags differ likewise; the trailing component and exit code are
    what the step checks.</fence>
     <p><divergences-worth-a-note-lead fact="true" status="impl/done">Divergences worth a note are the usual ones:</divergences-worth-a-note-lead></p>
-    <list ordered="false">
-      <item><DIVERGENCE-EXECUTABLE-SUFFIX fact="true" status="impl/done">executable suffix,</DIVERGENCE-EXECUTABLE-SUFFIX></item>
-      <item><DIVERGENCE-PATH-SEPARATORS fact="true" status="impl/done">path
-  separators,</DIVERGENCE-PATH-SEPARATORS></item>
-      <item><DIVERGENCE-LINE-ENDINGS fact="true" status="impl/done">line endings,</DIVERGENCE-LINE-ENDINGS></item>
-      <item><DIVERGENCE-FLAGS-ON-PLATFORM-UTILITIES fact="true" status="impl/done">flags on platform utilities.</DIVERGENCE-FLAGS-ON-PLATFORM-UTILITIES></item>
-    </list>
+    <facts ordered="false">
+      <DIVERGENCE-EXECUTABLE-SUFFIX fact="true" status="impl/done">executable suffix,</DIVERGENCE-EXECUTABLE-SUFFIX>
+      <DIVERGENCE-PATH-SEPARATORS fact="true" status="impl/done">path
+  separators,</DIVERGENCE-PATH-SEPARATORS>
+      <DIVERGENCE-LINE-ENDINGS fact="true" status="impl/done">line endings,</DIVERGENCE-LINE-ENDINGS>
+      <DIVERGENCE-FLAGS-ON-PLATFORM-UTILITIES fact="true" status="impl/done">flags on platform utilities.</DIVERGENCE-FLAGS-ON-PLATFORM-UTILITIES>
+    </facts>
     <p><KEEP-THE-CHECK-PLATFORM-INDEPENDENT fact="true" status="impl/done">Keep the *check*
 platform-independent (exit code, the meaningful substring) and let the
 note absorb the cosmetic difference.</KEEP-THE-CHECK-PLATFORM-INDEPENDENT></p>
@@ -126,15 +126,15 @@ session needs to diagnose a divergence, so the reader collects them
 - Platform, tool version, and shell.</fence>
   </exit>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-CLEAN-SLATE fact="true" status="impl/done">**Clean slate:** `mktemp -d` project plus an env redirect for the
-  tool's per-user state; touching real state is a bug in the test.</SUM-CLEAN-SLATE></item>
-      <item><SUM-SELF-CONTAINED fact="true" status="impl/done">**Self-contained:** one file, top to bottom, nothing else needed;
-  every step is a command block plus an Expected paragraph.</SUM-SELF-CONTAINED></item>
-      <item><SUM-PLATFORM-COVERAGE fact="true" status="impl/done">**Platform coverage:** POSIX commands, primary platform first, a
-  portable note where output differs cosmetically.</SUM-PLATFORM-COVERAGE></item>
-      <item><SUM-EXIT-DISCIPLINE fact="true" status="impl/done">**Exit discipline:** a one-command teardown of `$SCRATCH`, and a
-  what-to-collect list gathered before teardown runs.</SUM-EXIT-DISCIPLINE></item>
-    </list>
+    <facts ordered="false">
+      <SUM-CLEAN-SLATE fact="true" status="impl/done">**Clean slate:** `mktemp -d` project plus an env redirect for the
+  tool's per-user state; touching real state is a bug in the test.</SUM-CLEAN-SLATE>
+      <SUM-SELF-CONTAINED fact="true" status="impl/done">**Self-contained:** one file, top to bottom, nothing else needed;
+  every step is a command block plus an Expected paragraph.</SUM-SELF-CONTAINED>
+      <SUM-PLATFORM-COVERAGE fact="true" status="impl/done">**Platform coverage:** POSIX commands, primary platform first, a
+  portable note where output differs cosmetically.</SUM-PLATFORM-COVERAGE>
+      <SUM-EXIT-DISCIPLINE fact="true" status="impl/done">**Exit discipline:** a one-command teardown of `$SCRATCH`, and a
+  what-to-collect list gathered before teardown runs.</SUM-EXIT-DISCIPLINE>
+    </facts>
   </summary>
 </spec>

@@ -17,32 +17,32 @@ X's feature?", "audit that space before we build" — start from
 the skeleton in
 @spec://org.vibevm.world/comparative-research/flows/comparative-research/research-template#root
 and hold the laws:</reach-for-the-skeleton-and-hold-the-laws-lead></p>
-    <list ordered="false">
-      <item><LAW-QUOTE-FIRST-CRITIQUE-SECOND fact="true" status="impl/done">**Quote first, critique second.** The subject speaks in its own
+    <facts ordered="false">
+      <LAW-QUOTE-FIRST-CRITIQUE-SECOND fact="true" status="impl/done">**Quote first, critique second.** The subject speaks in its own
   words — fenced verbatim quotes with access dates — before any
-  judgement is written.</LAW-QUOTE-FIRST-CRITIQUE-SECOND></item>
-      <item><LAW-TWO-WAY-GAPS fact="true" status="impl/done">**Two-way gaps.** One section for where we trail, one for where
-  we lead, argued with equal rigor.</LAW-TWO-WAY-GAPS></item>
-      <item><LAW-DELTAS-NOT-DECREES fact="true" status="impl/done">**Deltas, not decrees.** Actionable findings become numbered
+  judgement is written.</LAW-QUOTE-FIRST-CRITIQUE-SECOND>
+      <LAW-TWO-WAY-GAPS fact="true" status="impl/done">**Two-way gaps.** One section for where we trail, one for where
+  we lead, argued with equal rigor.</LAW-TWO-WAY-GAPS>
+      <LAW-DELTAS-NOT-DECREES fact="true" status="impl/done">**Deltas, not decrees.** Actionable findings become numbered
   proposals, each with a priority and a target home in the spec
   tree. The study never ratifies its own proposals; acceptance
   happens downstream, per
-  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root.</LAW-DELTAS-NOT-DECREES></item>
-      <item><LAW-THE-RE-FETCH-LIST fact="true" status="impl/done">**Re-fetch list.** Every source URL with access date, plus the
+  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root.</LAW-DELTAS-NOT-DECREES>
+      <LAW-THE-RE-FETCH-LIST fact="true" status="impl/done">**Re-fetch list.** Every source URL with access date, plus the
   subject's version at capture, so the study can be refreshed
-  instead of rewritten.</LAW-THE-RE-FETCH-LIST></item>
-    </list>
+  instead of rewritten.</LAW-THE-RE-FETCH-LIST>
+    </facts>
   </when>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND fact="true" status="impl/done">Never paraphrase where a dated verbatim quote can stand — the
-  quote survives link rot; the paraphrase decays into rumor.</NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND></item>
-      <item><NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS fact="true" status="impl/done">Never write a one-directional gap analysis — trail-only is
-  marketing for the subject, lead-only is marketing for us.</NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS></item>
-      <item><NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC fact="true" status="impl/done">Never ratify a delta inside the research doc — it proposes;
-  acceptance is recorded downstream.</NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC></item>
-      <item><NEVER-LET-A-STUDY-SILENTLY-GO-STALE fact="true" status="impl/done">Never let a study silently outlive its subject's next major
-  release — stale-flag it and refresh via the re-fetch list.</NEVER-LET-A-STUDY-SILENTLY-GO-STALE></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND fact="true" status="impl/done">Never paraphrase where a dated verbatim quote can stand — the
+  quote survives link rot; the paraphrase decays into rumor.</NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND>
+      <NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS fact="true" status="impl/done">Never write a one-directional gap analysis — trail-only is
+  marketing for the subject, lead-only is marketing for us.</NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS>
+      <NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC fact="true" status="impl/done">Never ratify a delta inside the research doc — it proposes;
+  acceptance is recorded downstream.</NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC>
+      <NEVER-LET-A-STUDY-SILENTLY-GO-STALE fact="true" status="impl/done">Never let a study silently outlive its subject's next major
+  release — stale-flag it and refresh via the re-fetch list.</NEVER-LET-A-STUDY-SILENTLY-GO-STALE>
+    </facts>
   </never>
 </spec>

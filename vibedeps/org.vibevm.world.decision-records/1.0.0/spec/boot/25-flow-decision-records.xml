@@ -42,16 +42,16 @@ an edit plus a changelog line; history lives in git.</GOVERNING-SPEC-SECTION-IS-
   </core-rule>
   <in-session title="In session">
     <p><in-session-duty-lead fact="true" status="impl/done">When the user makes a decision during a session:</in-session-duty-lead></p>
-    <list ordered="true">
-      <item><PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS fact="true" status="impl/done">Propose recording it at the governing anchor, with all four
+    <facts ordered="true">
+      <PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS fact="true" status="impl/done">Propose recording it at the governing anchor, with all four
    fields, **before the session ends** — an unrecorded decision does
-   not survive the session boundary.</PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS></item>
-      <item><ASK-RATHER-THAN-INVENT-DATA fact="true" status="impl/done">If the why or the trigger is not known, ask. Do not invent data;
-   do not record a two-field stub.</ASK-RATHER-THAN-INVENT-DATA></item>
-      <item><READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE fact="true" status="impl/done">Before changing any value governed by a record, read the record.
+   not survive the session boundary.</PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS>
+      <ASK-RATHER-THAN-INVENT-DATA fact="true" status="impl/done">If the why or the trigger is not known, ask. Do not invent data;
+   do not record a two-field stub.</ASK-RATHER-THAN-INVENT-DATA>
+      <READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE fact="true" status="impl/done">Before changing any value governed by a record, read the record.
    Re-open it only by naming its trigger state ("the trigger fired:
-   …" / "the trigger has not fired, but …").</READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE></item>
-    </list>
+   …" / "the trigger has not fired, but …").</READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE>
+    </facts>
     <p><template-and-examples-pointer fact="true" status="impl/done">Copy-ready template and worked examples:
 @spec://org.vibevm.world/decision-records/flows/decision-records/record-template#root.</template-and-examples-pointer></p>
     <p><trigger-design-pointer fact="true" status="impl/done">Trigger design and the periodic sweep:
@@ -69,15 +69,15 @@ re-litigation.</RECORD-IS-IMMUNITY-FROM-RE-LITIGATION></p>
 hardening into dogma.</TRIGGER-KEEPS-IMMUNITY-FROM-HARDENING-INTO-DOGMA></p>
   </why>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-WRITE-BECAUSE-IT-IS-BETTER fact="true" status="impl/done">Never write "because it is better" — a why cites a measurement, a
-  constraint, or an incident, or it is not a why.</NEVER-WRITE-BECAUSE-IT-IS-BETTER></item>
-      <item><NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE fact="true" status="impl/done">Never re-litigate a recorded decision without naming its trigger
-  state first.</NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE></item>
-      <item><NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY fact="true" status="impl/done">Never put a decision's why into a commit message only. The commit
-  cites the record; the spec carries it.</NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY></item>
-      <item><NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER fact="true" status="impl/done">Never record a decision with a missing reason or a missing revisit
-  trigger — that is a fact with decoration, not a record.</NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-WRITE-BECAUSE-IT-IS-BETTER fact="true" status="impl/done">Never write "because it is better" — a why cites a measurement, a
+  constraint, or an incident, or it is not a why.</NEVER-WRITE-BECAUSE-IT-IS-BETTER>
+      <NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE fact="true" status="impl/done">Never re-litigate a recorded decision without naming its trigger
+  state first.</NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE>
+      <NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY fact="true" status="impl/done">Never put a decision's why into a commit message only. The commit
+  cites the record; the spec carries it.</NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY>
+      <NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER fact="true" status="impl/done">Never record a decision with a missing reason or a missing revisit
+  trigger — that is a fact with decoration, not a record.</NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER>
+    </facts>
   </never>
 </spec>

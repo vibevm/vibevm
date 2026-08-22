@@ -14,17 +14,17 @@ consumer's rust-analyzer.</DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR></p>
   <parity title="1. Wire parity with the TS protocol">
     <p><kind-line-parity fact="true" status="impl/done">`req r1`</kind-line-parity></p>
     <p><outer-hop-is-wire-parity-lead fact="true" status="impl/done">The outer hop is WIRE-PARITY with the TS stack's TCG-PROTOCOL v0.1 §1:</outer-hop-is-wire-parity-lead></p>
-    <list ordered="false">
-      <item><PARITY-NDJSON-DUPLEX fact="true" status="impl/done">NDJSON duplex,</PARITY-NDJSON-DUPLEX></item>
-      <item><PARITY-ONE-JSON-OBJECT-PER-LINE fact="true" status="impl/done">one JSON object per line,</PARITY-ONE-JSON-OBJECT-PER-LINE></item>
-      <item><PARITY-REQUEST-AND-RESPONSE-ENVELOPES fact="true" status="impl/done">`{proto, id, op, params}`
-  requests and `{proto, id, ok, result | error}` responses,</PARITY-REQUEST-AND-RESPONSE-ENVELOPES></item>
-      <item><PARITY-CALLER-CHOSEN-CORRELATION-IDS fact="true" status="impl/done">caller-chosen
-  correlation ids,</PARITY-CALLER-CHOSEN-CORRELATION-IDS></item>
-      <item><PARITY-ORACLE-PROTOCOL-ON-EVERY-FRAME fact="true" status="impl/done">`ORACLE_PROTOCOL = 1` on every frame,</PARITY-ORACLE-PROTOCOL-ON-EVERY-FRAME></item>
-      <item><PARITY-ADDITIVE-ONLY-EVOLUTION fact="true" status="impl/done">additive-only evolution within a proto (new optional params, new response fields —
-  non-breaking; renames/semantic changes bump the constant).</PARITY-ADDITIVE-ONLY-EVOLUTION></item>
-    </list>
+    <facts ordered="false">
+      <PARITY-NDJSON-DUPLEX fact="true" status="impl/done">NDJSON duplex,</PARITY-NDJSON-DUPLEX>
+      <PARITY-ONE-JSON-OBJECT-PER-LINE fact="true" status="impl/done">one JSON object per line,</PARITY-ONE-JSON-OBJECT-PER-LINE>
+      <PARITY-REQUEST-AND-RESPONSE-ENVELOPES fact="true" status="impl/done">`{proto, id, op, params}`
+  requests and `{proto, id, ok, result | error}` responses,</PARITY-REQUEST-AND-RESPONSE-ENVELOPES>
+      <PARITY-CALLER-CHOSEN-CORRELATION-IDS fact="true" status="impl/done">caller-chosen
+  correlation ids,</PARITY-CALLER-CHOSEN-CORRELATION-IDS>
+      <PARITY-ORACLE-PROTOCOL-ON-EVERY-FRAME fact="true" status="impl/done">`ORACLE_PROTOCOL = 1` on every frame,</PARITY-ORACLE-PROTOCOL-ON-EVERY-FRAME>
+      <PARITY-ADDITIVE-ONLY-EVOLUTION fact="true" status="impl/done">additive-only evolution within a proto (new optional params, new response fields —
+  non-breaking; renames/semantic changes bump the constant).</PARITY-ADDITIVE-ONLY-EVOLUTION>
+    </facts>
     <p><ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS fact="true" status="spec/done">One
 language-generic product client (`vibe-tcg`'s `OracleRegistry` link)
 drives BOTH relays with the same frames — the parity is enforced at
@@ -56,8 +56,8 @@ UNCHANGED from the TS shape for parity; the bridge converts to LSP's
 units through the line's text.</POSITIONS-ARE-ONE-BASED-LINE-ZERO-BASED-CHARACTER></p>
     <p><PATHS-ARE-PROJECT-ROOT-RELATIVE fact="true" status="impl/done">Paths are project-root-relative with
 forward slashes.</PATHS-ARE-PROJECT-ROOT-RELATIVE></p>
-    <list ordered="false">
-      <item><OP-INIT fact="true" status="impl/done">**`init`** `{}` → `{ra_version, position_encoding,
+    <facts ordered="false">
+      <OP-INIT fact="true" status="impl/done">**`init`** `{}` → `{ra_version, position_encoding,
   pull_diagnostics, quiescent}` — resolves and spawns the analyzer
   (ORACLE-RUST §1), negotiates capabilities (§2), applies §3 config,
   waits for quiescence bounded by a deadline. Re-`init` on a live
@@ -65,11 +65,11 @@ forward slashes.</PATHS-ARE-PROJECT-ROOT-RELATIVE></p>
   self-inits at `serve` start, so a host's first frame may be any op
   (client init frames remain re-init). The relay serves ONE project,
   so `init` takes no parameters — the root is `run_serve`'s own
-  canonicalized process root.</OP-INIT></item>
-      <item><OP-UPDATE fact="true" status="impl/done">**`update`** `{file, content | null}` → `{version}` — set/replace an
+  canonicalized process root.</OP-INIT>
+      <OP-UPDATE fact="true" status="impl/done">**`update`** `{file, content | null}` → `{version}` — set/replace an
   overlay (`didOpen`/`didChange`, monotonic version) or clear it
-  (`didClose`).</OP-UPDATE></item>
-      <item><OP-VALIDATE fact="true" status="impl/done">**`validate`** `{file, content?}` → `{diagnostics: [{code, category,
+  (`didClose`).</OP-UPDATE>
+      <OP-VALIDATE fact="true" status="impl/done">**`validate`** `{file, content?}` → `{diagnostics: [{code, category,
   message, line, character}], facts: [/* serde `Fact` records */],
   markers: [], conform_findings: [{rule, message, line, baselined}],
   advice: [string], degraded}` — diagnostics from the pull channel
@@ -79,8 +79,8 @@ forward slashes.</PATHS-ARE-PROJECT-ROOT-RELATIVE></p>
   always empty in v0.1 — reserved for parity with the TS shape (Rust's
   marker analog, the specmark tag stream, lives in the specmap engine
   and is not re-extracted here; the field exists so consumers written
-  against either relay see one shape).</OP-VALIDATE></item>
-      <item><OP-SCOPE fact="true" status="impl/done">**`scope`** `{file, position?}` → `{symbols: [{name, kind,
+  against either relay see one shape).</OP-VALIDATE>
+      <OP-SCOPE fact="true" status="impl/done">**`scope`** `{file, position?}` → `{symbols: [{name, kind,
   type_text}], cell, seam_file, branded: [{name, seam, heuristic}]}` —
   symbols via a completion sweep at the position (or a neutral
   top-level position); `cell` is the module path derived from the
@@ -88,19 +88,19 @@ forward slashes.</PATHS-ARE-PROJECT-ROOT-RELATIVE></p>
   conform.toml — derivation, never invented policy); `seam_file` is
   the enclosing `mod.rs`/`lib.rs`; `branded` carries the RUST brand
   analog — seam NEWTYPES (pub tuple structs with a single private
-  field), syn-detected, every entry `heuristic: true`.</OP-SCOPE></item>
-      <item><OP-COMPLETE fact="true" status="impl/done">**`complete`** `{file, position, content?, prefix?, max?}` →
+  field), syn-detected, every entry `heuristic: true`.</OP-SCOPE>
+      <OP-COMPLETE fact="true" status="impl/done">**`complete`** `{file, position, content?, prefix?, max?}` →
   `{entries: [{name, kind, type_text, unsafe}]}` — LSP completion;
   `prefix` filters and `max` caps (default 50) BEFORE per-entry detail
   work; `unsafe: true` flags entries that would land a §6-banned form
   in domain code (v0.1: `unwrap`/`expect` on `Option`/`Result`
   receivers outside test files; name+receiver heuristic, honestly
-  labelled in the brief).</OP-COMPLETE></item>
-      <item><OP-TYPE fact="true" status="impl/done">**`type`** `{file, position, content?}` → `{display,
-  documentation}` — LSP hover, markdown stripped to text.</OP-TYPE></item>
-      <item><OP-SHUTDOWN fact="true" status="impl/done">**`shutdown`** `{}` → `{}` then exit 0 (the LSP shutdown/exit dance
-  toward the child, kill-on-drop as backstop).</OP-SHUTDOWN></item>
-    </list>
+  labelled in the brief).</OP-COMPLETE>
+      <OP-TYPE fact="true" status="impl/done">**`type`** `{file, position, content?}` → `{display,
+  documentation}` — LSP hover, markdown stripped to text.</OP-TYPE>
+      <OP-SHUTDOWN fact="true" status="impl/done">**`shutdown`** `{}` → `{}` then exit 0 (the LSP shutdown/exit dance
+  toward the child, kill-on-drop as backstop).</OP-SHUTDOWN>
+    </facts>
   </ops>
   <enrichment title="3. The enrichment fields (in-process, same engine as the gate)">
     <p><kind-line-enrichment fact="true" status="impl/done">`req r3`</kind-line-enrichment></p>
@@ -180,14 +180,14 @@ because no product remains to edit.*</PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORAC
   <compat title="5. Compatibility rules">
     <p><kind-line-compat fact="true" status="impl/done">`req r5`</kind-line-compat></p>
     <p><compatibility-is-identical-to-the-ts-protocol-lead fact="true" status="impl/done">Identical to the TS protocol's §5, restated:</compatibility-is-identical-to-the-ts-protocol-lead></p>
-    <list ordered="false">
-      <item><COMPAT-ADDITIVE-EVOLUTION fact="true" status="impl/done">additive evolution within
+    <facts ordered="false">
+      <COMPAT-ADDITIVE-EVOLUTION fact="true" status="impl/done">additive evolution within
   a `proto` (optional params, new response fields, new advice/finding
-  entries — consumers ignore the unknown);</COMPAT-ADDITIVE-EVOLUTION></item>
-      <item><COMPAT-BREAKING-CHANGES-BUMP-THE-CONSTANT fact="true" status="impl/done">renames, type changes, and
+  entries — consumers ignore the unknown);</COMPAT-ADDITIVE-EVOLUTION>
+      <COMPAT-BREAKING-CHANGES-BUMP-THE-CONSTANT fact="true" status="impl/done">renames, type changes, and
   semantic changes bump `ORACLE_PROTOCOL` and the bridge treats the
-  mismatch as its own error class.</COMPAT-BREAKING-CHANGES-BUMP-THE-CONSTANT></item>
-    </list>
+  mismatch as its own error class.</COMPAT-BREAKING-CHANGES-BUMP-THE-CONSTANT>
+    </facts>
     <p><REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS fact="true" status="spec/done">Recorded LSP
 transcripts pin the INNER hop in this package's tests (r-a-free in the
 unit suite: `crates/rust-ai-native-tcg-bridge/src/client/tests.rs`,

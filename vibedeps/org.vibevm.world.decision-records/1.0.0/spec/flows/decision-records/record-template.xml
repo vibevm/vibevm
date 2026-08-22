@@ -90,17 +90,17 @@ urge to "optimise" it back to 300 finds an 847-message measurement
 standing in the way.</the-second-line-is-a-decision></p>
     <p><that-is-the-immunity-working fact="true" status="spec/done">That is the immunity working.</that-is-the-immunity-working></p>
     <p><field-by-field-lead fact="true" status="impl/done">Field by field:</field-by-field-lead></p>
-    <list ordered="false">
-      <item><WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE fact="true" status="impl/done">The **why** survives audit because it is *checkable*: the log file
+    <facts ordered="false">
+      <WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE fact="true" status="impl/done">The **why** survives audit because it is *checkable*: the log file
   is named, the sample size is stated. A why with data can be
   re-verified or outgrown; a why without data can only be believed
-  or ignored.</WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE></item>
-      <item><REJECTIONS-ARE-ONE-LINE-EACH fact="true" status="impl/done">The **rejections** are one line each — enough to stop the
+  or ignored.</WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE>
+      <REJECTIONS-ARE-ONE-LINE-EACH fact="true" status="impl/done">The **rejections** are one line each — enough to stop the
   re-proposal ("what about adaptive timeouts?"), cheap enough to
-  write in the same minute.</REJECTIONS-ARE-ONE-LINE-EACH></item>
-      <item><TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION fact="true" status="impl/done">The **trigger** names the exact world-state that reopens the
-  question, and where to look for it.</TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION></item>
-    </list>
+  write in the same minute.</REJECTIONS-ARE-ONE-LINE-EACH>
+      <TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION fact="true" status="impl/done">The **trigger** names the exact world-state that reopens the
+  question, and where to look for it.</TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION>
+    </facts>
   </example-timeout>
   <example-library title="Worked example: a library choice">
     <fence lang="markdown">### Content hashing {#hashing}
@@ -177,16 +177,16 @@ though neither fires itself: what fires a trigger is a re-read
     </table>
   </anti-patterns>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-PASTE-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">Paste the template at the governing anchor; never under a heading
-  without one.</SUM-PASTE-AT-THE-GOVERNING-ANCHOR></item>
-      <item><SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER fact="true" status="impl/done">Why with data; rejections with reasons; trigger with metric,
-  threshold, and observation point.</SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER></item>
-      <item><SUM-THE-BEFORE-AFTER-TEST fact="true" status="impl/done">The before/after test: if the record only says what the code
+    <facts ordered="false">
+      <SUM-PASTE-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">Paste the template at the governing anchor; never under a heading
+  without one.</SUM-PASTE-AT-THE-GOVERNING-ANCHOR>
+      <SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER fact="true" status="impl/done">Why with data; rejections with reasons; trigger with metric,
+  threshold, and observation point.</SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER>
+      <SUM-THE-BEFORE-AFTER-TEST fact="true" status="impl/done">The before/after test: if the record only says what the code
   already says, it is a fact with decoration — complete it or delete
-  it.</SUM-THE-BEFORE-AFTER-TEST></item>
-      <item><SUM-RECORD-IN-THE-DECIDING-SESSION fact="true" status="impl/done">Record in the same session the decision is made. Backfilled whys
-  are fiction.</SUM-RECORD-IN-THE-DECIDING-SESSION></item>
-    </list>
+  it.</SUM-THE-BEFORE-AFTER-TEST>
+      <SUM-RECORD-IN-THE-DECIDING-SESSION fact="true" status="impl/done">Record in the same session the decision is made. Backfilled whys
+  are fiction.</SUM-RECORD-IN-THE-DECIDING-SESSION>
+    </facts>
   </summary>
 </spec>

@@ -5,43 +5,43 @@
   <p><PACKAGE-INSTALLS-A-GENRE-TAXONOMY fact="true" status="impl/done">A `flow` package that installs a **genre taxonomy** for a project's
 documents.</PACKAGE-INSTALLS-A-GENRE-TAXONOMY></p>
   <p><pile-rots-three-ways fact="true" status="spec/done">One undifferentiated pile of markdown rots three ways:</pile-rots-three-ways></p>
-  <list ordered="false">
-    <item><ROT-CONTRACTS-BLOAT-WITH-NARRATIVE fact="true" status="spec/done">contracts bloat with narrative,</ROT-CONTRACTS-BLOAT-WITH-NARRATIVE></item>
-    <item><ROT-NARRATIVE-GETS-TREATED-AS-BINDING fact="true" status="spec/done">narrative gets treated as binding,</ROT-NARRATIVE-GETS-TREATED-AS-BINDING></item>
-    <item><ROT-NOBODY-KNOWS-WHAT-WINS fact="true" status="spec/done">and nobody knows what wins.</ROT-NOBODY-KNOWS-WHAT-WINS></item>
-  </list>
+  <facts ordered="false">
+    <ROT-CONTRACTS-BLOAT-WITH-NARRATIVE fact="true" status="spec/done">contracts bloat with narrative,</ROT-CONTRACTS-BLOAT-WITH-NARRATIVE>
+    <ROT-NARRATIVE-GETS-TREATED-AS-BINDING fact="true" status="spec/done">narrative gets treated as binding,</ROT-NARRATIVE-GETS-TREATED-AS-BINDING>
+    <ROT-NOBODY-KNOWS-WHAT-WINS fact="true" status="spec/done">and nobody knows what wins.</ROT-NOBODY-KNOWS-WHAT-WINS>
+  </facts>
   <p><PACKAGE-SORTS-FIXES-AND-PINS-THE-TWO-LAWS fact="true" status="impl/done">This package sorts every document into a
 genre, fixes what each genre may do, and pins the two laws that keep
 the pile honest — contract wins over lore, and the two-way link that
 lets a cold reader find the lore behind a contract.</PACKAGE-SORTS-FIXES-AND-PINS-THE-TWO-LAWS></p>
   <p><genres-lead fact="true" status="impl/done">The genres:</genres-lead></p>
-  <list ordered="false">
-    <item><GENRE-GROUP-BINDING fact="true" status="impl/done">binding (boot files, foundational decisions, module
-  contracts),</GENRE-GROUP-BINDING></item>
-    <item><GENRE-GROUP-NON-BINDING fact="true" status="impl/done">non-binding (design docs, research docs),</GENRE-GROUP-NON-BINDING></item>
-    <item><GENRE-GROUP-VOLATILE fact="true" status="impl/done">and volatile
-  (campaign plans, the checkpoint).</GENRE-GROUP-VOLATILE></item>
-  </list>
+  <facts ordered="false">
+    <GENRE-GROUP-BINDING fact="true" status="impl/done">binding (boot files, foundational decisions, module
+  contracts),</GENRE-GROUP-BINDING>
+    <GENRE-GROUP-NON-BINDING fact="true" status="impl/done">non-binding (design docs, research docs),</GENRE-GROUP-NON-BINDING>
+    <GENRE-GROUP-VOLATILE fact="true" status="impl/done">and volatile
+  (campaign plans, the checkpoint).</GENRE-GROUP-VOLATILE>
+  </facts>
   <p><CONVENTION-NAMES-MODULE-CONTRACTS-PROP-FEAT fact="true" status="spec/done">The convention here names module
 contracts PROP / FEAT — that is a naming choice this collection
 carries from its origin, and you can rename it for your project; the
 taxonomy is what matters, not the labels.</CONVENTION-NAMES-MODULE-CONTRACTS-PROP-FEAT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md` — the taxonomy:
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md` — the taxonomy:
   why genres exist, the full genre table (charter, mutability,
   reader, authority), the precedence law, the two-way linking law,
-  and a re-derive prompt for adapting the map to any project.</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-DESIGN-DOCS-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/design-docs.md` — the contract/lore split
+  and a re-derive prompt for adapting the map to any project.</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-DESIGN-DOCS-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/design-docs.md` — the contract/lore split
   in practice: what spills out of a contract, what never leaves, the
   fork-by-fork record skeleton, the orthogonal-decomposition lesson,
-  and how a design doc grows stale honestly.</CONTENT-THE-DESIGN-DOCS-GUIDE></item>
-    <item><CONTENT-THE-ROUTING-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/when-to-write-what.md` — the routing table
+  and how a design doc grows stale honestly.</CONTENT-THE-DESIGN-DOCS-GUIDE>
+    <CONTENT-THE-ROUTING-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/when-to-write-what.md` — the routing table
   (situation → genre), the misfiling-smells table, and one worked
-  example of the linking law with both ends wired.</CONTENT-THE-ROUTING-GUIDE></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/17-flow-spec-genres.md` — boot snippet: the genre map,
-  the name-the-genre-first rule, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  example of the linking law with both ends wired.</CONTENT-THE-ROUTING-GUIDE>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/17-flow-spec-genres.md` — boot snippet: the genre map,
+  the name-the-genre-first rule, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:spec-genres</fence>
   </install>
@@ -52,19 +52,19 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
     <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-ADDRESSABLE-SPECS fact="true" status="impl/done">`flow:addressable-specs` — the spec tree layout and stable anchors
+    <facts ordered="false">
+      <COMPOSES-ADDRESSABLE-SPECS fact="true" status="impl/done">`flow:addressable-specs` — the spec tree layout and stable anchors
   live there; genres classify *what* the tree holds, that package
-  fixes *how* it is addressed.</COMPOSES-ADDRESSABLE-SPECS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — a decision record lives at the contract
+  fixes *how* it is addressed.</COMPOSES-ADDRESSABLE-SPECS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — a decision record lives at the contract
   anchor; a design doc is where its long-form story goes. This
-  package draws the line between the two.</COMPOSES-DECISION-RECORDS></item>
-      <item><COMPOSES-COMPARATIVE-RESEARCH fact="true" status="impl/done">`flow:comparative-research` — the research genre has its own
-  package; this taxonomy points at it rather than duplicating it.</COMPOSES-COMPARATIVE-RESEARCH></item>
-      <item><COMPOSES-CAMPAIGN-PLANS fact="true" status="impl/done">`flow:campaign-plans` — the campaign-plan genre has its own
+  package draws the line between the two.</COMPOSES-DECISION-RECORDS>
+      <COMPOSES-COMPARATIVE-RESEARCH fact="true" status="impl/done">`flow:comparative-research` — the research genre has its own
+  package; this taxonomy points at it rather than duplicating it.</COMPOSES-COMPARATIVE-RESEARCH>
+      <COMPOSES-CAMPAIGN-PLANS fact="true" status="impl/done">`flow:campaign-plans` — the campaign-plan genre has its own
   package; here it is one row in the genre table (execution, not
-  truth).</COMPOSES-CAMPAIGN-PLANS></item>
-    </list>
+  truth).</COMPOSES-CAMPAIGN-PLANS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><genre-model-crystallized-from-the-origin-project fact="true" status="spec/done">The genre model is crystallized from the origin project's own

@@ -45,19 +45,19 @@ other foundational decision.</THE-PRODUCTS-LICENCE-DESERVES-A-DELIBERATE-CHOICE>
   <placeholder title="The placeholder EULA">
     <p><THE-THIRD-POSTURE-IS-A-USEFUL-DEFAULT-WHEN-OPENING-IS-INTENDED fact="true" status="spec/done">The third posture is a useful default when the intent is to open the
 product eventually but the final licence is not settled. Its shape:</THE-THIRD-POSTURE-IS-A-USEFUL-DEFAULT-WHEN-OPENING-IS-INTENDED></p>
-    <list ordered="false">
-      <item><SHAPE-A-CLEAR-OWNERSHIP-AND-RESERVATION-LINE fact="true" status="impl/done">A clear ownership and reservation line (copyright, all rights
-  reserved).</SHAPE-A-CLEAR-OWNERSHIP-AND-RESERVATION-LINE></item>
-      <item><SHAPE-A-SHORT-INTERIM-GRANT fact="true" status="impl/done">A short **interim grant** naming exactly what is allowed now (read
+    <facts ordered="false">
+      <SHAPE-A-CLEAR-OWNERSHIP-AND-RESERVATION-LINE fact="true" status="impl/done">A clear ownership and reservation line (copyright, all rights
+  reserved).</SHAPE-A-CLEAR-OWNERSHIP-AND-RESERVATION-LINE>
+      <SHAPE-A-SHORT-INTERIM-GRANT fact="true" status="impl/done">A short **interim grant** naming exactly what is allowed now (read
   for evaluation; build locally) and what is not (redistribute,
-  sublicense, publish, use commercially, remove the notice).</SHAPE-A-SHORT-INTERIM-GRANT></item>
-      <item><SHAPE-AN-EXPLICIT-RELICENSE-INTENT-CLAUSE fact="true" status="impl/done">An explicit **relicense-intent clause**: the owner intends to
+  sublicense, publish, use commercially, remove the notice).</SHAPE-A-SHORT-INTERIM-GRANT>
+      <SHAPE-AN-EXPLICIT-RELICENSE-INTENT-CLAUSE fact="true" status="impl/done">An explicit **relicense-intent clause**: the owner intends to
   relicense under a named permissive licence (e.g. UPL-1.0) at a
   future date, and *that decision is not final*. This clause is the
   honest heart of the posture — it tells a reader the reserved rights
-  are a way-station, not the destination.</SHAPE-AN-EXPLICIT-RELICENSE-INTENT-CLAUSE></item>
-      <item><SHAPE-A-CONTACT-LINE-FOR-LICENSING-INQUIRIES fact="true" status="impl/done">A contact line for licensing inquiries.</SHAPE-A-CONTACT-LINE-FOR-LICENSING-INQUIRIES></item>
-    </list>
+  are a way-station, not the destination.</SHAPE-AN-EXPLICIT-RELICENSE-INTENT-CLAUSE>
+      <SHAPE-A-CONTACT-LINE-FOR-LICENSING-INQUIRIES fact="true" status="impl/done">A contact line for licensing inquiries.</SHAPE-A-CONTACT-LINE-FOR-LICENSING-INQUIRIES>
+    </facts>
     <p><why-the-relicense-intent-clause-matters fact="true" status="spec/done">The relicense-intent clause matters because it sets expectations
 truthfully: contributors and evaluators know the direction of travel
 without being promised a date.</why-the-relicense-intent-clause-matters></p>
@@ -81,13 +81,13 @@ forced to relicense the whole. So the more restrictive the
 product's own licence, the *more* important the permissive-only
 rule.</why-a-stricter-product-licence-tightens-the-rule></quote>
     <p><legitimate-reasons-to-reject-a-dependency-lead fact="true" status="impl/done">Legitimate reasons to reject a dependency:</legitimate-reasons-to-reject-a-dependency-lead></p>
-    <list ordered="false">
-      <item><REJECT-REASON-A-NON-PERMISSIVE-LICENCE fact="true" status="impl/done">a non-permissive licence,</REJECT-REASON-A-NON-PERMISSIVE-LICENCE></item>
-      <item><REJECT-REASON-AN-ABANDONED-UPSTREAM fact="true" status="impl/done">an abandoned upstream,</REJECT-REASON-AN-ABANDONED-UPSTREAM></item>
-      <item><REJECT-REASON-A-DEMONSTRATED-SECURITY-HISTORY fact="true" status="impl/done">a demonstrated security history,</REJECT-REASON-A-DEMONSTRATED-SECURITY-HISTORY></item>
-      <item><REJECT-REASON-AN-API-THAT-WOULD-POISON-YOUR-INTERFACES fact="true" status="impl/done">or an API so
-  bad it would poison your own interfaces.</REJECT-REASON-AN-API-THAT-WOULD-POISON-YOUR-INTERFACES></item>
-    </list>
+    <facts ordered="false">
+      <REJECT-REASON-A-NON-PERMISSIVE-LICENCE fact="true" status="impl/done">a non-permissive licence,</REJECT-REASON-A-NON-PERMISSIVE-LICENCE>
+      <REJECT-REASON-AN-ABANDONED-UPSTREAM fact="true" status="impl/done">an abandoned upstream,</REJECT-REASON-AN-ABANDONED-UPSTREAM>
+      <REJECT-REASON-A-DEMONSTRATED-SECURITY-HISTORY fact="true" status="impl/done">a demonstrated security history,</REJECT-REASON-A-DEMONSTRATED-SECURITY-HISTORY>
+      <REJECT-REASON-AN-API-THAT-WOULD-POISON-YOUR-INTERFACES fact="true" status="impl/done">or an API so
+  bad it would poison your own interfaces.</REJECT-REASON-AN-API-THAT-WOULD-POISON-YOUR-INTERFACES>
+    </facts>
     <p><WEIGHT-IS-NOT-ONE-OF-THEM fact="true" status="impl/done">**Weight is not one of
 them** — binary size and transitive dep count are not licence or
 quality problems; do not reject a strong library for being heavy.</WEIGHT-IS-NOT-ONE-OF-THEM></p>
@@ -124,13 +124,13 @@ terms do not retroactively change; downstream users relied on what
 was published.</published-artifacts-do-not-retroactively-change></p>
     <p><NEVER-RELICENSE-AUTONOMOUSLY fact="true" status="impl/done">Never relicense autonomously.</NEVER-RELICENSE-AUTONOMOUSLY></p>
     <p><when-the-owner-calls-it-lead fact="true" status="impl/done">When the owner calls it:</when-the-owner-calls-it-lead></p>
-    <list ordered="false">
-      <item><RELICENSE-STEP-SWAP-THE-LICENCE-FILE fact="true" status="impl/done">swap the `LICENSE.md`,</RELICENSE-STEP-SWAP-THE-LICENCE-FILE></item>
-      <item><RELICENSE-STEP-UPDATE-EVERY-MANIFEST-FIELD fact="true" status="impl/done">update every manifest `license` field,</RELICENSE-STEP-UPDATE-EVERY-MANIFEST-FIELD></item>
-      <item><RELICENSE-STEP-ADJUST-ANY-PUBLISH-FLAGS fact="true" status="impl/done">adjust
-  any publish flags,</RELICENSE-STEP-ADJUST-ANY-PUBLISH-FLAGS></item>
-      <item><RELICENSE-STEP-RECORD-A-DATED-DECISION fact="true" status="impl/done">and record the change as a dated decision.</RELICENSE-STEP-RECORD-A-DATED-DECISION></item>
-    </list>
+    <facts ordered="false">
+      <RELICENSE-STEP-SWAP-THE-LICENCE-FILE fact="true" status="impl/done">swap the `LICENSE.md`,</RELICENSE-STEP-SWAP-THE-LICENCE-FILE>
+      <RELICENSE-STEP-UPDATE-EVERY-MANIFEST-FIELD fact="true" status="impl/done">update every manifest `license` field,</RELICENSE-STEP-UPDATE-EVERY-MANIFEST-FIELD>
+      <RELICENSE-STEP-ADJUST-ANY-PUBLISH-FLAGS fact="true" status="impl/done">adjust
+  any publish flags,</RELICENSE-STEP-ADJUST-ANY-PUBLISH-FLAGS>
+      <RELICENSE-STEP-RECORD-A-DATED-DECISION fact="true" status="impl/done">and record the change as a dated decision.</RELICENSE-STEP-RECORD-A-DATED-DECISION>
+    </facts>
   </relicense>
   <re-derive title="Re-derive for your project">
     <p><COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION fact="true" status="impl/done">Copy the prompt-task, not the prompt-implementation.</COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION></p>
@@ -147,17 +147,17 @@ product licence choice and any relicensing as MY decision, never
 yours.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-CHOOSE-THE-LICENCE-DELIBERATELY fact="true" status="impl/done">Choose the product's licence deliberately; a placeholder EULA with
-  an honest relicense-intent clause is a valid starting posture.</SUM-CHOOSE-THE-LICENCE-DELIBERATELY></item>
-      <item><SUM-DEPENDENCIES-ARE-PERMISSIVE-ONLY fact="true" status="impl/done">Dependencies are permissive-only; copyleft is forbidden by default
-  and the rule tightens as the product's own licence gets stricter.</SUM-DEPENDENCIES-ARE-PERMISSIVE-ONLY></item>
-      <item><SUM-THE-CARVE-OUT-POINTS-AT-THE-GENERATED-LIST fact="true" status="impl/done">The third-party carve-out points at the real generated list and
-  names study-only material for removal.</SUM-THE-CARVE-OUT-POINTS-AT-THE-GENERATED-LIST></item>
-      <item><SUM-KEEP-EVERY-STATEMENT-IN-SYNC fact="true" status="impl/done">Keep `LICENSE.md` and every manifest `license` field in sync, always
-  in one commit.</SUM-KEEP-EVERY-STATEMENT-IN-SYNC></item>
-      <item><SUM-RELICENSING-IS-AN-OWNER-DECISION fact="true" status="impl/done">Relicensing is an owner decision and an irreversible threshold —
-  never autonomous.</SUM-RELICENSING-IS-AN-OWNER-DECISION></item>
-    </list>
+    <facts ordered="false">
+      <SUM-CHOOSE-THE-LICENCE-DELIBERATELY fact="true" status="impl/done">Choose the product's licence deliberately; a placeholder EULA with
+  an honest relicense-intent clause is a valid starting posture.</SUM-CHOOSE-THE-LICENCE-DELIBERATELY>
+      <SUM-DEPENDENCIES-ARE-PERMISSIVE-ONLY fact="true" status="impl/done">Dependencies are permissive-only; copyleft is forbidden by default
+  and the rule tightens as the product's own licence gets stricter.</SUM-DEPENDENCIES-ARE-PERMISSIVE-ONLY>
+      <SUM-THE-CARVE-OUT-POINTS-AT-THE-GENERATED-LIST fact="true" status="impl/done">The third-party carve-out points at the real generated list and
+  names study-only material for removal.</SUM-THE-CARVE-OUT-POINTS-AT-THE-GENERATED-LIST>
+      <SUM-KEEP-EVERY-STATEMENT-IN-SYNC fact="true" status="impl/done">Keep `LICENSE.md` and every manifest `license` field in sync, always
+  in one commit.</SUM-KEEP-EVERY-STATEMENT-IN-SYNC>
+      <SUM-RELICENSING-IS-AN-OWNER-DECISION fact="true" status="impl/done">Relicensing is an owner decision and an irreversible threshold —
+  never autonomous.</SUM-RELICENSING-IS-AN-OWNER-DECISION>
+    </facts>
   </summary>
 </spec>

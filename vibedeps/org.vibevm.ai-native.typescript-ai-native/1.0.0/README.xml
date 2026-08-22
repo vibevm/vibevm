@@ -5,16 +5,16 @@
   <p><AGG-ROLE fact="true" status="impl/done">The **family aggregator** for AI-Native TypeScript (PROP-028). This package
 carries no code and no prompt content of its own — installing it pulls the
 whole family at one exact-pinned version set:</AGG-ROLE></p>
-  <list ordered="false">
-    <item><AGG-MEMBER-LANG fact="true" status="impl/done">`stack:org.vibevm.ai-native/typescript-ai-native-lang` — the language stack: the
+  <facts ordered="false">
+    <AGG-MEMBER-LANG fact="true" status="impl/done">`stack:org.vibevm.ai-native/typescript-ai-native-lang` — the language stack: the
   TypeScript GUIDE, the cards, and the runnable toolchain
   (`typescript-ai-native`, `typescript-ai-native-conform`, `typescript-ai-native-specmap`,
-  `typescript-ai-native-tcg`).</AGG-MEMBER-LANG></item>
-    <item><AGG-MEMBER-MCP fact="true" status="impl/done">`mcp:org.vibevm.ai-native/typescript-ai-native-mcp` — the same toolchain served over
-  MCP (PROP-027), version-mirroring the stack.</AGG-MEMBER-MCP></item>
-    <item><AGG-MEMBER-CORE fact="true" status="impl/done">`flow:org.vibevm.ai-native/core-ai-native` — the language-neutral discipline core,
-  arriving transitively through the stack.</AGG-MEMBER-CORE></item>
-  </list>
+  `typescript-ai-native-tcg`).</AGG-MEMBER-LANG>
+    <AGG-MEMBER-MCP fact="true" status="impl/done">`mcp:org.vibevm.ai-native/typescript-ai-native-mcp` — the same toolchain served over
+  MCP (PROP-027), version-mirroring the stack.</AGG-MEMBER-MCP>
+    <AGG-MEMBER-CORE fact="true" status="impl/done">`flow:org.vibevm.ai-native/core-ai-native` — the language-neutral discipline core,
+  arriving transitively through the stack.</AGG-MEMBER-CORE>
+  </facts>
   <p><AGG-HOW-TO-REQUIRE fact="true" status="impl/done">Require `stack:org.vibevm.ai-native/typescript-ai-native` (`^0.6`) to get the whole
 family; require `typescript-ai-native-lang` alone if you want the stack
 without the MCP server.</AGG-HOW-TO-REQUIRE></p>

@@ -12,13 +12,13 @@ up when the second one is, because the logic is already inside the first.</the-c
 differently cannot be adjudicated: nothing says which is wrong. The
 library is that third place.</TWO-SURFACES-THAT-DISAGREE-CANNOT-BE-ADJUDICATED></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md` — the rule, the surface
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md` — the rule, the surface
   vocabulary and its three classes, what "thin" means per class, how a
-  project declares its floor, and why the coverage table must be derived.</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/68-flow-omnichannel.md` — the boot snippet read at session
-  start: the rule, the vocabulary, the obligations and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  project declares its floor, and why the coverage table must be derived.</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/68-flow-omnichannel.md` — the boot snippet read at session
+  start: the rule, the vocabulary, the obligations and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <not title="What it is not">
     <p><NOT-A-CODE-STYLE-RULE fact="true" status="impl/done">It is not a code-style rule and belongs to no language discipline. A
 project writing no AI-native code still has surfaces and still pays for

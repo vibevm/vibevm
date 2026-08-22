@@ -183,21 +183,21 @@ on the first try.</P7-MECHANICS-EXTRACT-AGAINST-TWO-REAL-USES></p>
 paid for long before it earns out.</p7-symptoms></p>
   </build-on-demand>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-P1-A-PACKAGE-IS-A-PROJECT fact="true" status="impl/done">P1 — a package is a project; the same layout, the same checks, no
-  package-only convention.</SUM-P1-A-PACKAGE-IS-A-PROJECT></item>
-      <item><SUM-P2-SHIP-THE-RUNTIME fact="true" status="impl/done">P2 — ship the runtime, not prose describing a tool the consumer never
-  receives.</SUM-P2-SHIP-THE-RUNTIME></item>
-      <item><SUM-P3-IDENTITY-IS-THE-SOURCE fact="true" status="impl/done">P3 — identity is the source, excluded by a denylist of never-source
-  dirs, never a per-file allow-list.</SUM-P3-IDENTITY-IS-THE-SOURCE></item>
-      <item><SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE fact="true" status="impl/done">P4 — build output goes to a gitignored location, outside the committed
-  tree and the hash.</SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE></item>
-      <item><SUM-P5-VENDOR-THE-BOOTSTRAP fact="true" status="impl/done">P5 — vendor and commit the bootstrap toolchain beside the code that
-  needs it.</SUM-P5-VENDOR-THE-BOOTSTRAP></item>
-      <item><SUM-P6-SPIKE-FIRST fact="true" status="impl/done">P6 — spike the risky topology on the target platform first; keep an
-  evidence-chosen fallback.</SUM-P6-SPIKE-FIRST></item>
-      <item><SUM-P7-BUILD-ON-REAL-DEMAND fact="true" status="impl/done">P7 — extract the general mechanism when the second consumer arrives,
-  not on speculation.</SUM-P7-BUILD-ON-REAL-DEMAND></item>
-    </list>
+    <facts ordered="false">
+      <SUM-P1-A-PACKAGE-IS-A-PROJECT fact="true" status="impl/done">P1 — a package is a project; the same layout, the same checks, no
+  package-only convention.</SUM-P1-A-PACKAGE-IS-A-PROJECT>
+      <SUM-P2-SHIP-THE-RUNTIME fact="true" status="impl/done">P2 — ship the runtime, not prose describing a tool the consumer never
+  receives.</SUM-P2-SHIP-THE-RUNTIME>
+      <SUM-P3-IDENTITY-IS-THE-SOURCE fact="true" status="impl/done">P3 — identity is the source, excluded by a denylist of never-source
+  dirs, never a per-file allow-list.</SUM-P3-IDENTITY-IS-THE-SOURCE>
+      <SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE fact="true" status="impl/done">P4 — build output goes to a gitignored location, outside the committed
+  tree and the hash.</SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE>
+      <SUM-P5-VENDOR-THE-BOOTSTRAP fact="true" status="impl/done">P5 — vendor and commit the bootstrap toolchain beside the code that
+  needs it.</SUM-P5-VENDOR-THE-BOOTSTRAP>
+      <SUM-P6-SPIKE-FIRST fact="true" status="impl/done">P6 — spike the risky topology on the target platform first; keep an
+  evidence-chosen fallback.</SUM-P6-SPIKE-FIRST>
+      <SUM-P7-BUILD-ON-REAL-DEMAND fact="true" status="impl/done">P7 — extract the general mechanism when the second consumer arrives,
+  not on speculation.</SUM-P7-BUILD-ON-REAL-DEMAND>
+    </facts>
   </summary>
 </spec>

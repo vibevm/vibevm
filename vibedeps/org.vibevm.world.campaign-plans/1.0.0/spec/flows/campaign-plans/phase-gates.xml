@@ -14,28 +14,28 @@ half: [`execution-ledger.md`](execution-ledger.md).</sibling-document-pointers><
     <p><phase-zeros-job-lead fact="true" status="impl/done">Its job
 is to convert the plan's riskiest assumptions into observed facts
 before anything lands:</phase-zeros-job-lead></p>
-    <list ordered="false">
-      <item><PHASE-ZERO-PROBE-THE-ENVIRONMENT fact="true" status="impl/done">probe the environment the phases depend on,</PHASE-ZERO-PROBE-THE-ENVIRONMENT></item>
-      <item><PHASE-ZERO-SPIKE-THE-ONE-MECHANISM fact="true" status="impl/done">spike the one mechanism the design leans on,</PHASE-ZERO-SPIKE-THE-ONE-MECHANISM></item>
-      <item><PHASE-ZERO-RE-MEASURE-THE-NUMBERS fact="true" status="impl/done">re-measure the numbers
-  the arithmetic trusts,</PHASE-ZERO-RE-MEASURE-THE-NUMBERS></item>
-      <item><PHASE-ZERO-VERIFY-WHAT-THE-PLAN-CALLS-INERT fact="true" status="impl/done">verify that whatever the plan calls inert
-  really is inert.</PHASE-ZERO-VERIFY-WHAT-THE-PLAN-CALLS-INERT></item>
-    </list>
+    <facts ordered="false">
+      <PHASE-ZERO-PROBE-THE-ENVIRONMENT fact="true" status="impl/done">probe the environment the phases depend on,</PHASE-ZERO-PROBE-THE-ENVIRONMENT>
+      <PHASE-ZERO-SPIKE-THE-ONE-MECHANISM fact="true" status="impl/done">spike the one mechanism the design leans on,</PHASE-ZERO-SPIKE-THE-ONE-MECHANISM>
+      <PHASE-ZERO-RE-MEASURE-THE-NUMBERS fact="true" status="impl/done">re-measure the numbers
+  the arithmetic trusts,</PHASE-ZERO-RE-MEASURE-THE-NUMBERS>
+      <PHASE-ZERO-VERIFY-WHAT-THE-PLAN-CALLS-INERT fact="true" status="impl/done">verify that whatever the plan calls inert
+  really is inert.</PHASE-ZERO-VERIFY-WHAT-THE-PLAN-CALLS-INERT>
+    </facts>
     <p><three-rules-lead fact="true" status="impl/done">Three rules:</three-rules-lead></p>
-    <list ordered="false">
-      <item><RULE-NO-TREE-CHANGES-SURVIVE-THE-SPIKES fact="true" status="impl/done">**No tree changes survive the spikes.** Scratch directories,
+    <facts ordered="false">
+      <RULE-NO-TREE-CHANGES-SURVIVE-THE-SPIKES fact="true" status="impl/done">**No tree changes survive the spikes.** Scratch directories,
   throwaway scripts, temporary workspaces — all discarded. The only
-  durable output is findings, written into the plan itself.</RULE-NO-TREE-CHANGES-SURVIVE-THE-SPIKES></item>
-      <item><RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER fact="true" status="impl/done">**Phase 0 gates everything after.** A red spike does not "get
+  durable output is findings, written into the plan itself.</RULE-NO-TREE-CHANGES-SURVIVE-THE-SPIKES>
+      <RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER fact="true" status="impl/done">**Phase 0 gates everything after.** A red spike does not "get
   noted for later" — it **rewrites the affected Decision in the plan,
   in place, before Phase 1 commits anything**. The plan is cheap to
   change while nothing is committed; that is the entire point of
-  spiking first.</RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER></item>
-      <item><RULE-FINDINGS-ARE-RECORDED-EVEN-WHEN-GREEN fact="true" status="impl/done">**Findings are recorded even when green.** The phase's exit is a
+  spiking first.</RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER>
+      <RULE-FINDINGS-ARE-RECORDED-EVEN-WHEN-GREEN fact="true" status="impl/done">**Findings are recorded even when green.** The phase's exit is a
   findings list appended under the phase, not a feeling of readiness.
-  Each finding is marked binding on the phases it affects.</RULE-FINDINGS-ARE-RECORDED-EVEN-WHEN-GREEN></item>
-    </list>
+  Each finding is marked binding on the phases it affects.</RULE-FINDINGS-ARE-RECORDED-EVEN-WHEN-GREEN>
+    </facts>
     <p><the-build-topology-spike fact="true" status="spec/done">Two real corrections Phase 0 has bought, anonymized: a build-topology
 spike revealed that a shared engine depended on a fourth component
 the plan's move-set had not listed — the decision was corrected from
@@ -109,27 +109,27 @@ phase touched.</THE-PANEL-IS-THE-FULL-ONE-NOT-THE-PARTS-THE-PHASE-TOUCHED></p>
     <p><A-PHASE-THAT-LEAVES-THE-FLOOR-RED-IS-STILL-OPEN fact="true" status="impl/done">A phase that leaves the floor red is not done; it is
 open, whatever its steps say.</A-PHASE-THAT-LEAVES-THE-FLOOR-RED-IS-STILL-OPEN></p>
     <p><what-the-law-buys-lead fact="true" status="impl/done">What the law buys:</what-the-law-buys-lead></p>
-    <list ordered="false">
-      <item><BUYS-THE-EXECUTOR-CAN-STOP-AT-ANY-BOUNDARY fact="true" status="impl/done">The executor can stop at any boundary — end of day, session death,
-  an owner interrupt — and leave no broken tree behind.</BUYS-THE-EXECUTOR-CAN-STOP-AT-ANY-BOUNDARY></item>
-      <item><BUYS-A-FAILED-PHASE-ROLLS-BACK-ALONE fact="true" status="impl/done">A failed phase rolls back without losing prior phases.</BUYS-A-FAILED-PHASE-ROLLS-BACK-ALONE></item>
-      <item><BUYS-PHASES-MUST-BE-CUT-TO-MAKE-THIS-POSSIBLE fact="true" status="impl/done">Phases must be *cut* to make this possible: a restructuring that
+    <facts ordered="false">
+      <BUYS-THE-EXECUTOR-CAN-STOP-AT-ANY-BOUNDARY fact="true" status="impl/done">The executor can stop at any boundary — end of day, session death,
+  an owner interrupt — and leave no broken tree behind.</BUYS-THE-EXECUTOR-CAN-STOP-AT-ANY-BOUNDARY>
+      <BUYS-A-FAILED-PHASE-ROLLS-BACK-ALONE fact="true" status="impl/done">A failed phase rolls back without losing prior phases.</BUYS-A-FAILED-PHASE-ROLLS-BACK-ALONE>
+      <BUYS-PHASES-MUST-BE-CUT-TO-MAKE-THIS-POSSIBLE fact="true" status="impl/done">Phases must be *cut* to make this possible: a restructuring that
   breaks the build across two phases is one phase, not two. If two
-  steps cannot be separated by a green boundary, they are one phase.</BUYS-PHASES-MUST-BE-CUT-TO-MAKE-THIS-POSSIBLE></item>
-    </list>
+  steps cannot be separated by a green boundary, they are one phase.</BUYS-PHASES-MUST-BE-CUT-TO-MAKE-THIS-POSSIBLE>
+    </facts>
   </safe-stop>
   <resume title="Resumability">
     <p><THE-PLAN-PLUS-THE-LEDGER-ARE-THE-RESUME-POINTER fact="true" status="impl/done">The plan plus its execution ledger are the resume pointer — **no
 conversational context needed**.</THE-PLAN-PLUS-THE-LEDGER-ARE-THE-RESUME-POINTER></p>
     <p><a-fresh-session-reads-boot-then-the-plan-lead fact="true" status="impl/done">A fresh session resumes by reading
 the project's boot documents, then the plan top to bottom:</a-fresh-session-reads-boot-then-the-plan-lead></p>
-    <list ordered="false">
-      <item><RESUME-THE-STATUS-LINE-NAMES-THE-STATE fact="true" status="impl/done">the status
-  line names the campaign's state,</RESUME-THE-STATUS-LINE-NAMES-THE-STATE></item>
-      <item><RESUME-THE-LEDGERS-LAST-ENTRY-NAMES-THE-LAST-LANDED-PHASE fact="true" status="impl/done">the ledger's last entry names the
-  last landed phase,</RESUME-THE-LEDGERS-LAST-ENTRY-NAMES-THE-LAST-LANDED-PHASE></item>
-      <item><RESUME-THE-FIRST-UNEXECUTED-PHASE-IS-THE-WORK fact="true" status="impl/done">and the first unexecuted phase is the work.</RESUME-THE-FIRST-UNEXECUTED-PHASE-IS-THE-WORK></item>
-    </list>
+    <facts ordered="false">
+      <RESUME-THE-STATUS-LINE-NAMES-THE-STATE fact="true" status="impl/done">the status
+  line names the campaign's state,</RESUME-THE-STATUS-LINE-NAMES-THE-STATE>
+      <RESUME-THE-LEDGERS-LAST-ENTRY-NAMES-THE-LAST-LANDED-PHASE fact="true" status="impl/done">the ledger's last entry names the
+  last landed phase,</RESUME-THE-LEDGERS-LAST-ENTRY-NAMES-THE-LAST-LANDED-PHASE>
+      <RESUME-THE-FIRST-UNEXECUTED-PHASE-IS-THE-WORK fact="true" status="impl/done">and the first unexecuted phase is the work.</RESUME-THE-FIRST-UNEXECUTED-PHASE-IS-THE-WORK>
+    </facts>
     <p><the-journal-points-at-the-plan fact="true" status="impl/done">If the project keeps a working journal, the campaign updates the
 journal's standing line at every boundary ("Phase N landed, floor
 green, next: Phase N+1") and the journal points at the plan; the plan
@@ -163,13 +163,13 @@ land in the plan, not in a chat scrollback.</a-reversal-is-normal-not-exceptiona
     <p><MID-PHASE-DISCOVERIES-ARE-LEGAL-BUT-RECORDED fact="true" status="impl/done">Mid-phase discoveries are **legal but recorded — never done silently
 "while I was here."**</MID-PHASE-DISCOVERIES-ARE-LEGAL-BUT-RECORDED></p>
     <p><two-dispositions-lead fact="true" status="impl/done">A discovery has exactly two dispositions:</two-dispositions-lead></p>
-    <list ordered="true">
-      <item><DISPOSITION-ENTER-THE-CURRENT-PHASE-EXPLICITLY fact="true" status="impl/done">**Enter the current phase explicitly:** a ledger entry naming what
+    <facts ordered="true">
+      <DISPOSITION-ENTER-THE-CURRENT-PHASE-EXPLICITLY fact="true" status="impl/done">**Enter the current phase explicitly:** a ledger entry naming what
    was discovered and why it cannot wait, plus its own commit in the
-   phase's commit set.</DISPOSITION-ENTER-THE-CURRENT-PHASE-EXPLICITLY></item>
-      <item><DISPOSITION-DEFER-BY-NAME fact="true" status="impl/done">**Defer by name:** a line in the deferrals ledger with an owner
-   and a disposition, drained by a later phase or a later campaign.</DISPOSITION-DEFER-BY-NAME></item>
-    </list>
+   phase's commit set.</DISPOSITION-ENTER-THE-CURRENT-PHASE-EXPLICITLY>
+      <DISPOSITION-DEFER-BY-NAME fact="true" status="impl/done">**Defer by name:** a line in the deferrals ledger with an owner
+   and a disposition, drained by a later phase or a later campaign.</DISPOSITION-DEFER-BY-NAME>
+    </facts>
     <p><silent-scope-growth-loses-auditability fact="true" status="spec/done">Silent scope growth is how campaigns lose auditability: the diff
 stops mapping to the plan, and the next reader cannot tell the
 planned from the improvised.</silent-scope-growth-loses-auditability></p>
@@ -178,19 +178,19 @@ ledger records deviations precisely because they happen — the rule is
 that every deviation leaves a written trace at the moment it is made.</EVERY-DEVIATION-LEAVES-A-WRITTEN-TRACE-WHEN-IT-IS-MADE></p>
   </discovered-work>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-PHASE-ZERO-COMMITS-NOTHING fact="true" status="impl/done">Phase 0 spikes, probes, and commits nothing; a red spike rewrites
-  the affected Decision before Phase 1 lands a single commit.</SUM-PHASE-ZERO-COMMITS-NOTHING></item>
-      <item><SUM-EVERY-LATER-PHASE-CARRIES-FOUR-ELEMENTS fact="true" status="impl/done">Every later phase carries steps, an exit criterion, its own
-  prediction, and its commit set with subjects spelled in advance.</SUM-EVERY-LATER-PHASE-CARRIES-FOUR-ELEMENTS></item>
-      <item><SUM-ANY-BOUNDARY-IS-A-SAFE-STOP fact="true" status="impl/done">Any phase boundary is a safe stop; the full gate panel is green at
-  every boundary, or the phase is still open.</SUM-ANY-BOUNDARY-IS-A-SAFE-STOP></item>
-      <item><SUM-RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY fact="true" status="impl/done">The plan plus the ledger are the resume pointer; resumption state
-  lives in the repository, never in a session.</SUM-RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY></item>
-      <item><SUM-OWNER-ONLY-DECISIONS-BECOME-REVIEW-POINTS fact="true" status="impl/done">Owner-only decisions become review points: OPEN, then RESOLVED with
-  the ruling verbatim.</SUM-OWNER-ONLY-DECISIONS-BECOME-REVIEW-POINTS></item>
-      <item><SUM-DISCOVERED-WORK-IS-ENTERED-OR-DEFERRED fact="true" status="impl/done">Discovered work enters the phase explicitly or is deferred by name
-  — never done silently.</SUM-DISCOVERED-WORK-IS-ENTERED-OR-DEFERRED></item>
-    </list>
+    <facts ordered="false">
+      <SUM-PHASE-ZERO-COMMITS-NOTHING fact="true" status="impl/done">Phase 0 spikes, probes, and commits nothing; a red spike rewrites
+  the affected Decision before Phase 1 lands a single commit.</SUM-PHASE-ZERO-COMMITS-NOTHING>
+      <SUM-EVERY-LATER-PHASE-CARRIES-FOUR-ELEMENTS fact="true" status="impl/done">Every later phase carries steps, an exit criterion, its own
+  prediction, and its commit set with subjects spelled in advance.</SUM-EVERY-LATER-PHASE-CARRIES-FOUR-ELEMENTS>
+      <SUM-ANY-BOUNDARY-IS-A-SAFE-STOP fact="true" status="impl/done">Any phase boundary is a safe stop; the full gate panel is green at
+  every boundary, or the phase is still open.</SUM-ANY-BOUNDARY-IS-A-SAFE-STOP>
+      <SUM-RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY fact="true" status="impl/done">The plan plus the ledger are the resume pointer; resumption state
+  lives in the repository, never in a session.</SUM-RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY>
+      <SUM-OWNER-ONLY-DECISIONS-BECOME-REVIEW-POINTS fact="true" status="impl/done">Owner-only decisions become review points: OPEN, then RESOLVED with
+  the ruling verbatim.</SUM-OWNER-ONLY-DECISIONS-BECOME-REVIEW-POINTS>
+      <SUM-DISCOVERED-WORK-IS-ENTERED-OR-DEFERRED fact="true" status="impl/done">Discovered work enters the phase explicitly or is deferred by name
+  — never done silently.</SUM-DISCOVERED-WORK-IS-ENTERED-OR-DEFERRED>
+    </facts>
   </summary>
 </spec>

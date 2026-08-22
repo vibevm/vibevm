@@ -58,79 +58,79 @@ PLAN cannot be resumed by anyone but its author's context window.</SMALL-CAMPAIG
     <p><PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD fact="true" status="impl/done">A campaign plan is written **to be executed cold** — by a fresh session with
 no memory of its authoring.</PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD></p>
     <p><load-bearing-sections-lead fact="true" status="impl/done">The load-bearing sections:</load-bearing-sections-lead></p>
-    <list ordered="true">
-      <item><PLAN-SECTION-READ-FIRST fact="true" status="impl/done">**Read-first / boot note** — what to read before this file (the project's
+    <facts ordered="true">
+      <PLAN-SECTION-READ-FIRST fact="true" status="impl/done">**Read-first / boot note** — what to read before this file (the project's
    boot sequence), and the rule that the project's living state supersedes
-   the plan where they diverge.</PLAN-SECTION-READ-FIRST></item>
-      <item><PLAN-SECTION-WHY-THIS-EXISTS fact="true" status="impl/done">**Why this exists** — the reframe: what debt or gap the campaign pays,
-   in one screen.</PLAN-SECTION-WHY-THIS-EXISTS></item>
-      <item><PLAN-SECTION-DIRECTIVES-IN-FORCE fact="true" status="impl/done">**Directives / decisions in force** — the owner's binding choices, so the
-   executor never re-litigates them.</PLAN-SECTION-DIRECTIVES-IN-FORCE></item>
-      <item><PLAN-SECTION-CURRENT-STATE-FACTS fact="true" status="impl/done">**Current-state facts, verified** — with file:line pointers, gathered at
+   the plan where they diverge.</PLAN-SECTION-READ-FIRST>
+      <PLAN-SECTION-WHY-THIS-EXISTS fact="true" status="impl/done">**Why this exists** — the reframe: what debt or gap the campaign pays,
+   in one screen.</PLAN-SECTION-WHY-THIS-EXISTS>
+      <PLAN-SECTION-DIRECTIVES-IN-FORCE fact="true" status="impl/done">**Directives / decisions in force** — the owner's binding choices, so the
+   executor never re-litigates them.</PLAN-SECTION-DIRECTIVES-IN-FORCE>
+      <PLAN-SECTION-CURRENT-STATE-FACTS fact="true" status="impl/done">**Current-state facts, verified** — with file:line pointers, gathered at
    authoring time and marked "do not re-discover". Wrong facts here are the
-   most expensive class of plan bug: verify while writing.</PLAN-SECTION-CURRENT-STATE-FACTS></item>
-      <item><PLAN-SECTION-TARGET-END-STATE fact="true" status="impl/done">**Target end-state** — the "what done looks like" tree/diagram.</PLAN-SECTION-TARGET-END-STATE></item>
-      <item><PLAN-SECTION-DESIGN-DECISIONS fact="true" status="impl/done">**Design decisions** — each with its rationale and its rejected
+   most expensive class of plan bug: verify while writing.</PLAN-SECTION-CURRENT-STATE-FACTS>
+      <PLAN-SECTION-TARGET-END-STATE fact="true" status="impl/done">**Target end-state** — the "what done looks like" tree/diagram.</PLAN-SECTION-TARGET-END-STATE>
+      <PLAN-SECTION-DESIGN-DECISIONS fact="true" status="impl/done">**Design decisions** — each with its rationale and its rejected
    alternative, so a surprise mid-execution can be resolved in the spirit of
-   the plan.</PLAN-SECTION-DESIGN-DECISIONS></item>
-      <item><PLAN-SECTION-PHASES fact="true" status="impl/done">**Phases** — each with: goal, recipe (commands, paths), **its own
+   the plan.</PLAN-SECTION-DESIGN-DECISIONS>
+      <PLAN-SECTION-PHASES fact="true" status="impl/done">**Phases** — each with: goal, recipe (commands, paths), **its own
    acceptance gate**, and **its own commit set**. A phase is a safe stop; a
-   failed phase rolls back without losing prior ones.</PLAN-SECTION-PHASES></item>
-      <item><PLAN-SECTION-RISKS-AND-FALLBACKS fact="true" status="impl/done">**Risks &amp; fallbacks** — named, each with its detection signal and its
-   plan-B.</PLAN-SECTION-RISKS-AND-FALLBACKS></item>
-      <item><PLAN-SECTION-QUICK-START fact="true" status="impl/done">**Quick-start** — the copy-paste block the executing session runs first
-   (floor verification, baseline capture).</PLAN-SECTION-QUICK-START></item>
-      <item><PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE fact="true" status="impl/done">**Whole-campaign acceptance** — the end-to-end scenario that defines
-    done, ideally frozen as a test.</PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE></item>
-    </list>
+   failed phase rolls back without losing prior ones.</PLAN-SECTION-PHASES>
+      <PLAN-SECTION-RISKS-AND-FALLBACKS fact="true" status="impl/done">**Risks &amp; fallbacks** — named, each with its detection signal and its
+   plan-B.</PLAN-SECTION-RISKS-AND-FALLBACKS>
+      <PLAN-SECTION-QUICK-START fact="true" status="impl/done">**Quick-start** — the copy-paste block the executing session runs first
+   (floor verification, baseline capture).</PLAN-SECTION-QUICK-START>
+      <PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE fact="true" status="impl/done">**Whole-campaign acceptance** — the end-to-end scenario that defines
+    done, ideally frozen as a test.</PLAN-SECTION-WHOLE-CAMPAIGN-ACCEPTANCE>
+    </facts>
   </plan>
   <gates title="3. Phase-gate discipline">
-    <list ordered="false">
-      <item><GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY fact="true" status="impl/done">**The floor is green at every phase boundary** — the project's full gate
+    <facts ordered="false">
+      <GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY fact="true" status="impl/done">**The floor is green at every phase boundary** — the project's full gate
   panel, not just the parts the phase touched. A phase that leaves the floor
-  red is not done.</GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY></item>
-      <item><GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS fact="true" status="impl/done">**Each phase lands its own topic-grouped commits** (one logical unit per
+  red is not done.</GATE-FLOOR-GREEN-AT-EVERY-BOUNDARY>
+      <GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS fact="true" status="impl/done">**Each phase lands its own topic-grouped commits** (one logical unit per
   commit). The git log is the authoritative per-item record; the LOG
-  narrates, the commits *are* the history.</GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS></item>
-      <item><GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE fact="true" status="impl/done">**Behavior changes carry their differential oracle**
+  narrates, the commits *are* the history.</GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS>
+      <GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE fact="true" status="impl/done">**Behavior changes carry their differential oracle**
   ([Raid Playbook](03-RAID-PLAYBOOK.md) §1.5): a campaign cannot move
   behavior silently. Where the campaign's point is byte-stability (a
   relocation, a rename), the byte-compare IS the oracle — state it in the
-  phase's acceptance.</GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE></item>
-      <item><GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED fact="true" status="impl/done">**Discovered-necessary work is legal but recorded**: a mid-phase discovery
+  phase's acceptance.</GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE>
+      <GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED fact="true" status="impl/done">**Discovered-necessary work is legal but recorded**: a mid-phase discovery
   either enters the current phase explicitly (LOG entry + the phase's
   commits) or is filed as debt/intent for later — never done silently
-  "while I was here".</GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED></item>
-    </list>
+  "while I was here".</GATE-DISCOVERED-WORK-IS-LEGAL-BUT-RECORDED>
+    </facts>
   </gates>
   <resume title="4. Resumability">
     <p><campaign-survives-stopping-lead fact="true" status="impl/done">A campaign must survive its executor stopping at any phase boundary
 (see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</campaign-survives-stopping-lead></p>
-    <list ordered="false">
-      <item><CAMPAIGN-RESUME-WITH-A-WAL fact="true" status="impl/done">*With a WAL (recommended):* the campaign updates the WAL's standing line at
+    <facts ordered="false">
+      <CAMPAIGN-RESUME-WITH-A-WAL fact="true" status="impl/done">*With a WAL (recommended):* the campaign updates the WAL's standing line at
   every phase boundary (phase landed, floor state, next phase); a session
   resuming cold reads boot → WAL → the PLAN and continues at the recorded
-  phase.</CAMPAIGN-RESUME-WITH-A-WAL></item>
-      <item><CAMPAIGN-RESUME-WITHOUT-A-WAL fact="true" status="impl/done">*Without a WAL:* the PLAN carries a **status line at its top** ("status:
+  phase.</CAMPAIGN-RESUME-WITH-A-WAL>
+      <CAMPAIGN-RESUME-WITHOUT-A-WAL fact="true" status="impl/done">*Without a WAL:* the PLAN carries a **status line at its top** ("status:
   Phase N landed, floor green, next: Phase N+1") that the executor updates
   as part of each phase's commit set, and the LOG's last entry is the resume
   pointer. The rule is the same either way: **resumption state lives in the
-  repository, never in a session.**</CAMPAIGN-RESUME-WITHOUT-A-WAL></item>
-    </list>
+  repository, never in a session.**</CAMPAIGN-RESUME-WITHOUT-A-WAL>
+    </facts>
   </resume>
   <exit title="5. Exit">
     <p><CAMPAIGN-CLOSES-ON-A-GREEN-FLOOR fact="true" status="impl/done">A campaign closes when its whole-campaign acceptance passes on a green
 floor.</CAMPAIGN-CLOSES-ON-A-GREEN-FLOOR></p>
     <p><closing-motions-lead fact="true" status="impl/done">The closing motions:</closing-motions-lead></p>
-    <list ordered="false">
-      <item><CLOSING-WRITE-THE-REPORT fact="true" status="impl/done">write the REPORT (results vs PREDICTIONS,
-  lessons, candidate Discipline revisions),</CLOSING-WRITE-THE-REPORT></item>
-      <item><CLOSING-FILE-EVERY-LEFTOVER fact="true" status="impl/done">file every leftover as debt/intent
-  with an id (the BROWNFIELD carry-over guarantee: nothing evaporates),</CLOSING-FILE-EVERY-LEFTOVER></item>
-      <item><CLOSING-UPDATE-THE-RESUME-POINTER fact="true" status="impl/done">update the resume pointer to "closed",</CLOSING-UPDATE-THE-RESUME-POINTER></item>
-      <item><CLOSING-PUBLISHING-IS-THE-OWNERS-CALL fact="true" status="impl/done">and — where the project mirrors its history —
+    <facts ordered="false">
+      <CLOSING-WRITE-THE-REPORT fact="true" status="impl/done">write the REPORT (results vs PREDICTIONS,
+  lessons, candidate Discipline revisions),</CLOSING-WRITE-THE-REPORT>
+      <CLOSING-FILE-EVERY-LEFTOVER fact="true" status="impl/done">file every leftover as debt/intent
+  with an id (the BROWNFIELD carry-over guarantee: nothing evaporates),</CLOSING-FILE-EVERY-LEFTOVER>
+      <CLOSING-UPDATE-THE-RESUME-POINTER fact="true" status="impl/done">update the resume pointer to "closed",</CLOSING-UPDATE-THE-RESUME-POINTER>
+      <CLOSING-PUBLISHING-IS-THE-OWNERS-CALL fact="true" status="impl/done">and — where the project mirrors its history —
   leave publishing/mirroring as the owner's explicit call, not the campaign's
-  last step.</CLOSING-PUBLISHING-IS-THE-OWNERS-CALL></item>
-    </list>
+  last step.</CLOSING-PUBLISHING-IS-THE-OWNERS-CALL>
+    </facts>
   </exit>
 </spec>

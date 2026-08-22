@@ -67,16 +67,16 @@ step diverges.</IT-READS-LIKE-A-RECIPE></p>
 matches its Expected or one does not and you know precisely which.</OPEN-IT-FOLLOW-IT-AND-KNOW-PRECISELY-WHICH-STEP-DIVERGED></p>
   </what>
   <not title="What a manual test is NOT">
-    <list ordered="false">
-      <item><NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER fact="true" status="impl/done">**Not a replacement for the automated tier.** If a check *can* be
+    <facts ordered="false">
+      <NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER fact="true" status="impl/done">**Not a replacement for the automated tier.** If a check *can* be
   made fast and hermetic, it belongs in the automated suite, where it
-  runs on every change. The manual tier is for what genuinely cannot.</NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER></item>
-      <item><NOT-EXPLORATORY-TESTING fact="true" status="impl/done">**Not exploratory testing.** Exploration is unscripted, one-off,
+  runs on every change. The manual tier is for what genuinely cannot.</NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER>
+      <NOT-EXPLORATORY-TESTING fact="true" status="impl/done">**Not exploratory testing.** Exploration is unscripted, one-off,
   and discards its steps. A manual test is scripted, repeatable, and
   **versioned next to the code** — the same reader running it next
   quarter takes the same path and expects the same output. If the
-  product changes, the walkthrough is edited, not improvised around.</NOT-EXPLORATORY-TESTING></item>
-    </list>
+  product changes, the walkthrough is edited, not improvised around.</NOT-EXPLORATORY-TESTING>
+    </facts>
   </not>
   <when title="When to run">
     <p><three-triggers-lead fact="true" status="impl/done">Three triggers, each independent:</three-triggers-lead></p>
@@ -117,18 +117,18 @@ triage; record the pass only over a human signature.</RECORD-THE-PRE-RUN-AS-TRIA
 repository root, separate from end-user documentation — this is a
 contributor-facing checklist for how the product is verified, not how
 it is used.</MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT></p>
-    <list ordered="false">
-      <item><ONE-MARKDOWN-FILE-PER-SCENARIO fact="true" status="impl/done">**One markdown file per scenario**, named for the milestone or
+    <facts ordered="false">
+      <ONE-MARKDOWN-FILE-PER-SCENARIO fact="true" status="impl/done">**One markdown file per scenario**, named for the milestone or
   feature it covers with a short slug: `m1-first-run-smoke.md`,
   `auth-real-remote.md`. The filename is the index entry; there is no
-  second registry to keep in sync.</ONE-MARKDOWN-FILE-PER-SCENARIO></item>
-      <item><AN-INDEX-README-IN-THE-DIRECTORY fact="true" status="impl/done">**An index `README.md`** in the directory: a table of the files,
+  second registry to keep in sync.</ONE-MARKDOWN-FILE-PER-SCENARIO>
+      <AN-INDEX-README-IN-THE-DIRECTORY fact="true" status="impl/done">**An index `README.md`** in the directory: a table of the files,
   what each covers, and which milestone requires it. New test, new
-  row.</AN-INDEX-README-IN-THE-DIRECTORY></item>
-      <item><KEEP-EACH-FILE-TO-ONE-SCENARIO fact="true" status="impl/done">**Keep each file to one scenario.** A walkthrough that has grown
+  row.</AN-INDEX-README-IN-THE-DIRECTORY>
+      <KEEP-EACH-FILE-TO-ONE-SCENARIO fact="true" status="impl/done">**Keep each file to one scenario.** A walkthrough that has grown
   past a screen or two of steps is usually two scenarios wearing one
-  filename — split it.</KEEP-EACH-FILE-TO-ONE-SCENARIO></item>
-    </list>
+  filename — split it.</KEEP-EACH-FILE-TO-ONE-SCENARIO>
+    </facts>
   </directory>
   <re-derive title="Re-derive for your project">
     <p><re-derive-lead fact="true" status="impl/done">Do not copy this protocol's surfaces verbatim — copy the *task*, and
@@ -148,16 +148,16 @@ project:
 5. Show me the list and the drafts. Write nothing until I approve.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY fact="true" status="impl/done">The automated tier proves the logic on fakes; the manual tier
-  proves the world. Complementary, never a substitute.</SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY></item>
-      <item><SUM-WHAT-A-MANUAL-TEST-IS fact="true" status="impl/done">A manual test is a self-contained walkthrough run top to bottom
+    <facts ordered="false">
+      <SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY fact="true" status="impl/done">The automated tier proves the logic on fakes; the manual tier
+  proves the world. Complementary, never a substitute.</SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY>
+      <SUM-WHAT-A-MANUAL-TEST-IS fact="true" status="impl/done">A manual test is a self-contained walkthrough run top to bottom
   that leaves no ambient state — scripted and versioned, not
-  exploratory.</SUM-WHAT-A-MANUAL-TEST-IS></item>
-      <item><SUM-THE-THREE-TRIGGERS fact="true" status="impl/done">Run it before a milestone tag, after any integration-surface
-  change, and to reproduce a user's integration bug.</SUM-THE-THREE-TRIGGERS></item>
-      <item><SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF fact="true" status="impl/done">An agent pre-runs and flags mismatches; a human signs off.</SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF></item>
-      <item><SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README fact="true" status="impl/done">One file per scenario under `manual-tests/`, indexed by a README.</SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README></item>
-    </list>
+  exploratory.</SUM-WHAT-A-MANUAL-TEST-IS>
+      <SUM-THE-THREE-TRIGGERS fact="true" status="impl/done">Run it before a milestone tag, after any integration-surface
+  change, and to reproduce a user's integration bug.</SUM-THE-THREE-TRIGGERS>
+      <SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF fact="true" status="impl/done">An agent pre-runs and flags mismatches; a human signs off.</SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF>
+      <SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README fact="true" status="impl/done">One file per scenario under `manual-tests/`, indexed by a README.</SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README>
+    </facts>
   </summary>
 </spec>

@@ -12,12 +12,12 @@ codewords lives at the end; this collection ships one worked mode,
 [`mfbt-mode.md`](mfbt-mode.md).</sibling-document-pointers></p>
   <what title="What a mode is">
     <p><a-session-has-a-default-operating-posture-lead fact="true" status="impl/done">A session has a **default operating posture**:</a-session-has-a-default-operating-posture-lead></p>
-    <list ordered="false">
-      <item><DEFAULT-ROUTINE-WORK-PROCEEDS fact="true" status="impl/done">routine work proceeds,</DEFAULT-ROUTINE-WORK-PROCEEDS></item>
-      <item><DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION fact="true" status="impl/done">anything non-routine stops for the owner's confirmation,</DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION></item>
-      <item><DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE fact="true" status="impl/done">and the
-  agent prefers a clarifying question to an irreversible mistake.</DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE></item>
-    </list>
+    <facts ordered="false">
+      <DEFAULT-ROUTINE-WORK-PROCEEDS fact="true" status="impl/done">routine work proceeds,</DEFAULT-ROUTINE-WORK-PROCEEDS>
+      <DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION fact="true" status="impl/done">anything non-routine stops for the owner's confirmation,</DEFAULT-NON-ROUTINE-STOPS-FOR-CONFIRMATION>
+      <DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE fact="true" status="impl/done">and the
+  agent prefers a clarifying question to an irreversible mistake.</DEFAULT-A-QUESTION-IS-PREFERRED-TO-A-MISTAKE>
+    </facts>
     <p><THE-DEFAULT-IS-RIGHT-FOR-MOST-SESSIONS fact="true" status="impl/done">That default is right for most sessions.</THE-DEFAULT-IS-RIGHT-FOR-MOST-SESSIONS></p>
     <p><THE-DEFAULT-IS-WRONG-FOR-PRE-APPROVED-WORK fact="true" status="impl/done">It is the *wrong* posture when the owner has already thought a large
 body of work through, made the decision, and wants it executed end to
@@ -33,19 +33,19 @@ until the work they cover ends.</CODEWORDS-ARE-EXPLICIT-OPT-INS></p>
 behaviour* — never what is permitted.</A-MODE-CHANGES-CONFIRMATION-BEHAVIOUR-NEVER-WHAT-IS-PERMITTED></p>
   </what>
   <why title="Why codewords rather than a settings flag">
-    <list ordered="false">
-      <item><WHY-OPT-IN-PER-WORK-CYCLE fact="true" status="impl/done">**Opt-in per work cycle.** The posture shift is scoped to what the
+    <facts ordered="false">
+      <WHY-OPT-IN-PER-WORK-CYCLE fact="true" status="impl/done">**Opt-in per work cycle.** The posture shift is scoped to what the
   owner is describing right now, not a persistent global that a later
-  session inherits by surprise.</WHY-OPT-IN-PER-WORK-CYCLE></item>
-      <item><WHY-RECOGNISED-BY-INTENT fact="true" status="impl/done">**Recognised by intent.** A spoken phrase carries the owner's
-  framing; the agent reads the intent, not a rigid string.</WHY-RECOGNISED-BY-INTENT></item>
-      <item><WHY-AUDITABLE fact="true" status="impl/done">**Auditable.** The trigger is visible in the transcript. Anyone
-  reading the session sees exactly when the posture changed and back.</WHY-AUDITABLE></item>
-      <item><WHY-BOUNDED-BY-LAW fact="true" status="impl/done">**Bounded by law.** Because a codeword only ever relaxes the
+  session inherits by surprise.</WHY-OPT-IN-PER-WORK-CYCLE>
+      <WHY-RECOGNISED-BY-INTENT fact="true" status="impl/done">**Recognised by intent.** A spoken phrase carries the owner's
+  framing; the agent reads the intent, not a rigid string.</WHY-RECOGNISED-BY-INTENT>
+      <WHY-AUDITABLE fact="true" status="impl/done">**Auditable.** The trigger is visible in the transcript. Anyone
+  reading the session sees exactly when the posture changed and back.</WHY-AUDITABLE>
+      <WHY-BOUNDED-BY-LAW fact="true" status="impl/done">**Bounded by law.** Because a codeword only ever relaxes the
   *routine* handshake, the dangerous handshakes (§red-lines) stay put
   by construction — there is no flag that can be left on to erode
-  them.</WHY-BOUNDED-BY-LAW></item>
-    </list>
+  them.</WHY-BOUNDED-BY-LAW>
+    </facts>
   </why>
   <shape title="The five-part codeword shape">
     <p><every-codeword-is-specified-with-the-same-five-parts-lead fact="true" status="impl/done">Every codeword in a project's catalogue is specified with the same
@@ -85,13 +85,13 @@ it is a proposal.</A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD></p>
     <p><a-small-set-of-operations-survives-every-mode-lead fact="true" status="impl/done">A small
 set of operations survives **every** mode and always requires the
 owner's explicit confirmation:</a-small-set-of-operations-survives-every-mode-lead></p>
-    <list ordered="false">
-      <item><RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published history;</RED-LINE-REWRITING-PUBLISHED-HISTORY></item>
-      <item><RED-LINE-FORCE-PUSHING fact="true" status="impl/done">force-pushing;</RED-LINE-FORCE-PUSHING></item>
-      <item><RED-LINE-IMPORTING-LARGE-BINARY-BLOBS fact="true" status="impl/done">importing large binary blobs;</RED-LINE-IMPORTING-LARGE-BINARY-BLOBS></item>
-      <item><RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS fact="true" status="impl/done">changing CI, signing, or secrets configuration;</RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS></item>
-      <item><RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**anything whose reversal would cost work.**</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK></item>
-    </list>
+    <facts ordered="false">
+      <RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published history;</RED-LINE-REWRITING-PUBLISHED-HISTORY>
+      <RED-LINE-FORCE-PUSHING fact="true" status="impl/done">force-pushing;</RED-LINE-FORCE-PUSHING>
+      <RED-LINE-IMPORTING-LARGE-BINARY-BLOBS fact="true" status="impl/done">importing large binary blobs;</RED-LINE-IMPORTING-LARGE-BINARY-BLOBS>
+      <RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS fact="true" status="impl/done">changing CI, signing, or secrets configuration;</RED-LINE-CHANGING-CI-SIGNING-OR-SECRETS>
+      <RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**anything whose reversal would cost work.**</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK>
+    </facts>
     <p><A-CODEWORD-REMOVES-THE-ROUTINE-WORK-HANDSHAKE fact="true" status="impl/done">A codeword removes the *"may I proceed with routine work?"*
 handshake.</A-CODEWORD-REMOVES-THE-ROUTINE-WORK-HANDSHAKE></p>
     <p><A-CODEWORD-DOES-NOT-REMOVE-THE-IRREVERSIBLE-THRESHOLD-HANDSHAKE fact="true" status="impl/done">It does **not** remove the *"may I cross an irreversible
@@ -99,17 +99,17 @@ threshold?"* handshake.</A-CODEWORD-DOES-NOT-REMOVE-THE-IRREVERSIBLE-THRESHOLD-H
     <p><ONLY-THE-FIRST-QUESTION-IS-EVER-WAIVED fact="true" status="impl/done">The two are different questions, and only the
 first is ever waived.</ONLY-THE-FIRST-QUESTION-IS-EVER-WAIVED></p>
     <p><consequences-that-follow-directly-lead fact="true" status="impl/done">Consequences that follow directly:</consequences-that-follow-directly-lead></p>
-    <list ordered="false">
-      <item><CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE fact="true" status="impl/done">No codeword may be defined that relaxes a red line. A proposed mode
-  that would is malformed — refuse it and say why.</CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE></item>
-      <item><CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH fact="true" status="impl/done">If work under an active mode cannot land without crossing a red
+    <facts ordered="false">
+      <CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE fact="true" status="impl/done">No codeword may be defined that relaxes a red line. A proposed mode
+  that would is malformed — refuse it and say why.</CONSEQUENCE-NO-CODEWORD-MAY-RELAX-A-RED-LINE>
+      <CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH fact="true" status="impl/done">If work under an active mode cannot land without crossing a red
   line, the agent stops at that boundary, reports, and asks. This is
   **not** the interruption the mode forbids — it is the mode's own
-  escape hatch firing.</CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH></item>
-      <item><CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO fact="true" status="impl/done">Every other standing invariant of the project (its attribution
+  escape hatch firing.</CONSEQUENCE-THE-MODES-OWN-ESCAPE-HATCH>
+      <CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO fact="true" status="impl/done">Every other standing invariant of the project (its attribution
   posture, secrets hygiene, licence constraints, output conventions)
-  is a red line for this purpose too: modes never touch them.</CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO></item>
-    </list>
+  is a red line for this purpose too: modes never touch them.</CONSEQUENCE-EVERY-STANDING-INVARIANT-IS-A-RED-LINE-TOO>
+    </facts>
   </red-lines>
   <cadence title="Reporting cadence">
     <p><AN-ACTIVE-MODE-STILL-REPORTS-AS-STATUS-NOT-REQUESTS fact="true" status="impl/done">Even with routine confirmations suspended, an active mode still
@@ -126,10 +126,10 @@ in a consuming project).</A-PROJECT-KEEPS-ITS-CODEWORDS-CATALOGUED-IN-ONE-PLACE>
 recognise a spoken codeword only if it is catalogued, and propose
 adding any new one through the five-part shape before acting on it.</SHIP-RECOGNISE-AND-PROPOSE-THROUGH-THE-FIVE-PART-SHAPE></p>
     <p><one-worked-mode-lead fact="true" status="impl/done">This collection ships one worked mode as a reference:</one-worked-mode-lead></p>
-    <list ordered="false">
-      <item><CATALOGUE-MFBT-MODE fact="true" status="impl/done">[`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:
-  pre-authorised heads-down execution.</CATALOGUE-MFBT-MODE></item>
-    </list>
+    <facts ordered="false">
+      <CATALOGUE-MFBT-MODE fact="true" status="impl/done">[`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:
+  pre-authorised heads-down execution.</CATALOGUE-MFBT-MODE>
+    </facts>
   </catalogue>
   <re-derive title="Re-derive for your project">
     <p><COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION fact="true" status="impl/done">Copy the prompt-task, not the prompt-implementation.</COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION></p>
@@ -146,16 +146,16 @@ we want it. Show me the catalogue as a draft for the boot file; do
 not treat any phrase as active until I approve its five parts.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE fact="true" status="impl/done">A codeword flips the session into an alternate posture for one work
-  cycle; the default is unchanged and modes are explicit opt-ins.</SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE></item>
-      <item><SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL fact="true" status="impl/done">Every codeword is fixed by the five-part shape, or it is a proposal,
-  not a mode.</SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL></item>
-      <item><SUM-THE-RED-LINES-SURVIVE-EVERY-MODE fact="true" status="impl/done">The red lines survive every mode: a codeword waives the routine
-  handshake, never the irreversible-threshold handshake.</SUM-THE-RED-LINES-SURVIVE-EVERY-MODE></item>
-      <item><SUM-REPORT-STATUS-NOT-REQUESTS fact="true" status="impl/done">Report status, not requests, while a mode is active.</SUM-REPORT-STATUS-NOT-REQUESTS></item>
-      <item><SUM-CATALOGUE-BEFORE-ACTING fact="true" status="impl/done">Catalogue the modes in one place; propose new ones through the five
-  parts before acting.</SUM-CATALOGUE-BEFORE-ACTING></item>
-    </list>
+    <facts ordered="false">
+      <SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE fact="true" status="impl/done">A codeword flips the session into an alternate posture for one work
+  cycle; the default is unchanged and modes are explicit opt-ins.</SUM-A-CODEWORD-FLIPS-THE-POSTURE-FOR-ONE-WORK-CYCLE>
+      <SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL fact="true" status="impl/done">Every codeword is fixed by the five-part shape, or it is a proposal,
+  not a mode.</SUM-THE-FIVE-PART-SHAPE-OR-IT-IS-A-PROPOSAL>
+      <SUM-THE-RED-LINES-SURVIVE-EVERY-MODE fact="true" status="impl/done">The red lines survive every mode: a codeword waives the routine
+  handshake, never the irreversible-threshold handshake.</SUM-THE-RED-LINES-SURVIVE-EVERY-MODE>
+      <SUM-REPORT-STATUS-NOT-REQUESTS fact="true" status="impl/done">Report status, not requests, while a mode is active.</SUM-REPORT-STATUS-NOT-REQUESTS>
+      <SUM-CATALOGUE-BEFORE-ACTING fact="true" status="impl/done">Catalogue the modes in one place; propose new ones through the five
+  parts before acting.</SUM-CATALOGUE-BEFORE-ACTING>
+    </facts>
   </summary>
 </spec>

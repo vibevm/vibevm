@@ -119,19 +119,19 @@ have no conservative interpretation because every answer is a
 commitment.</some-questions-have-no-conservative-interpretation></p>
     <p><STOP-AND-ASK-THE-HUMAN-FOR-THESE fact="true" status="impl/done">For these, stop and ask the human — mid-session if the
 channel exists, otherwise park the task and say so in the report:</STOP-AND-ASK-THE-HUMAN-FOR-THESE></p>
-    <list ordered="false">
-      <item><STOP-FOR-IRREVERSIBLE-OPERATIONS fact="true" status="impl/done">**Irreversible operations** — deleting or migrating data, releasing
-  or publishing artifacts, rewriting pushed history.</STOP-FOR-IRREVERSIBLE-OPERATIONS></item>
-      <item><STOP-FOR-SECURITY-BOUNDARIES fact="true" status="impl/done">**Security boundaries** — authentication, authorization, secrets
+    <facts ordered="false">
+      <STOP-FOR-IRREVERSIBLE-OPERATIONS fact="true" status="impl/done">**Irreversible operations** — deleting or migrating data, releasing
+  or publishing artifacts, rewriting pushed history.</STOP-FOR-IRREVERSIBLE-OPERATIONS>
+      <STOP-FOR-SECURITY-BOUNDARIES fact="true" status="impl/done">**Security boundaries** — authentication, authorization, secrets
   handling, cryptographic parameters. A "conservative guess" about
-  crypto is a contradiction in terms.</STOP-FOR-SECURITY-BOUNDARIES></item>
-      <item><STOP-FOR-EXTERNAL-SIDE-EFFECTS fact="true" status="impl/done">**External side effects** — sending mail, charging accounts,
-  calling third-party APIs in ways outsiders observe.</STOP-FOR-EXTERNAL-SIDE-EFFECTS></item>
-      <item><STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK fact="true" status="impl/done">**Anything whose reversal costs real work.** Re-run the test from
+  crypto is a contradiction in terms.</STOP-FOR-SECURITY-BOUNDARIES>
+      <STOP-FOR-EXTERNAL-SIDE-EFFECTS fact="true" status="impl/done">**External side effects** — sending mail, charging accounts,
+  calling third-party APIs in ways outsiders observe.</STOP-FOR-EXTERNAL-SIDE-EFFECTS>
+      <STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK fact="true" status="impl/done">**Anything whose reversal costs real work.** Re-run the test from
   the previous section: if the cheapest-to-reverse option still takes
   a day to unwind, there is no conservative option. Asking *is* the
-  conservative option.</STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK></item>
-    </list>
+  conservative option.</STOP-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-REAL-WORK>
+    </facts>
     <p><MARKING-A-REVIEW-IS-FORWARD-MOTION-ON-A-REVERSIBLE-PATH fact="true" status="impl/done">Marking a REVIEW and proceeding is forward motion on a reversible
 path.</MARKING-A-REVIEW-IS-FORWARD-MOTION-ON-A-REVERSIBLE-PATH></p>
     <p><on-an-irreversible-path-it-is-just-speed fact="true" status="spec/done">On an irreversible path it is just speed.</on-an-irreversible-path-it-is-just-speed></p>
@@ -168,28 +168,28 @@ Report   "`jobs retry` implemented per §4. Spec is silent on RUNNING
 
 Next     The human confirms "skip is right", adds one sentence to
          §4, and removes the marker in the same commit.</fence>
-    <list ordered="false">
-      <item><EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY fact="true" status="impl/done">The project moved forward the same day,</EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY></item>
-      <item><EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME fact="true" status="impl/done">the decision stayed visible
-  the whole time,</EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME></item>
-      <item><EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE fact="true" status="impl/done">and the spec ended one sentence more complete than it
-  started.</EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE></item>
-    </list>
+    <facts ordered="false">
+      <EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY fact="true" status="impl/done">The project moved forward the same day,</EXAMPLE-THE-PROJECT-MOVED-FORWARD-THE-SAME-DAY>
+      <EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME fact="true" status="impl/done">the decision stayed visible
+  the whole time,</EXAMPLE-THE-DECISION-STAYED-VISIBLE-THE-WHOLE-TIME>
+      <EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE fact="true" status="impl/done">and the spec ended one sentence more complete than it
+  started.</EXAMPLE-THE-SPEC-ENDED-ONE-SENTENCE-MORE-COMPLETE>
+    </facts>
     <p><that-is-the-ladder-working fact="true" status="impl/done">That is the ladder working.</that-is-the-ladder-working></p>
   </worked-example>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-UNCERTAINTY-IS-NOT-CONFLICT fact="true" status="impl/done">Uncertainty is not conflict: no source answers. The temptation —
-  silent invention — is the same, and it is forbidden.</SUM-UNCERTAINTY-IS-NOT-CONFLICT></item>
-      <item><SUM-CLIMB-IN-ORDER fact="true" status="impl/done">Climb in order: spec section → reference material → closest analog
-  → conservative default + REVIEW + report.</SUM-CLIMB-IN-ORDER></item>
-      <item><SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE fact="true" status="impl/done">Conservative = cheapest to reverse. Refuse to invent public
-  surface; fail loudly rather than guess silently.</SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE></item>
-      <item><SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS fact="true" status="impl/done">Irreversible operations, security boundaries, external side
+    <facts ordered="false">
+      <SUM-UNCERTAINTY-IS-NOT-CONFLICT fact="true" status="impl/done">Uncertainty is not conflict: no source answers. The temptation —
+  silent invention — is the same, and it is forbidden.</SUM-UNCERTAINTY-IS-NOT-CONFLICT>
+      <SUM-CLIMB-IN-ORDER fact="true" status="impl/done">Climb in order: spec section → reference material → closest analog
+  → conservative default + REVIEW + report.</SUM-CLIMB-IN-ORDER>
+      <SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE fact="true" status="impl/done">Conservative = cheapest to reverse. Refuse to invent public
+  surface; fail loudly rather than guess silently.</SUM-CONSERVATIVE-IS-CHEAPEST-TO-REVERSE>
+      <SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS fact="true" status="impl/done">Irreversible operations, security boundaries, external side
   effects: the ladder does not apply. Stop and ask — asking is the
-  conservative choice there.</SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS></item>
-      <item><SUM-THE-END-STATE-IS-ALWAYS-VISIBLE fact="true" status="impl/done">The end state is always visible: an answered question, or a marked
-  default awaiting a ruling. Never a silent guess.</SUM-THE-END-STATE-IS-ALWAYS-VISIBLE></item>
-    </list>
+  conservative choice there.</SUM-THE-LADDER-DOES-NOT-APPLY-TO-IRREVERSIBLE-QUESTIONS>
+      <SUM-THE-END-STATE-IS-ALWAYS-VISIBLE fact="true" status="impl/done">The end state is always visible: an answered question, or a marked
+  default awaiting a ruling. Never a silent guess.</SUM-THE-END-STATE-IS-ALWAYS-VISIBLE>
+    </facts>
   </summary>
 </spec>

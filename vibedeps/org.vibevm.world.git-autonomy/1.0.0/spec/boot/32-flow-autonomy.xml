@@ -6,24 +6,24 @@
 **commit and push** surface.</THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE></p>
   <routine title="Routine — proceed without asking">
     <p><ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE fact="true" status="impl/done">Routine large changes proceed and are committed/pushed **without** a confirmation handshake:</ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE></p>
-    <list ordered="false">
-      <item><ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE fact="true" status="impl/done">implementing a planned milestone,</ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE></item>
-      <item><ROUTINE-FINISHING-A-FEATURE-SLICE fact="true" status="impl/done">finishing a feature slice,</ROUTINE-FINISHING-A-FEATURE-SLICE></item>
-      <item><ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON fact="true" status="impl/done">touching many files for one
-  coherent reason.</ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON></item>
-    </list>
+    <facts ordered="false">
+      <ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE fact="true" status="impl/done">implementing a planned milestone,</ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE>
+      <ROUTINE-FINISHING-A-FEATURE-SLICE fact="true" status="impl/done">finishing a feature slice,</ROUTINE-FINISHING-A-FEATURE-SLICE>
+      <ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON fact="true" status="impl/done">touching many files for one
+  coherent reason.</ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON>
+    </facts>
     <p><the-approval-was-given-upstream fact="true" status="spec/done">The approval was given upstream, when the work was authorised; a mid-work
 "shall I proceed?" is overhead already paid for.</the-approval-was-given-upstream></p>
   </routine>
   <red-lines title="Non-routine — stop and ask first">
     <p><ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK fact="true" status="impl/done">Ask first for anything whose reversal costs work:</ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK></p>
-    <list ordered="false">
-      <item><RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);</RED-LINE-REWRITING-PUBLISHED-HISTORY></item>
-      <item><RED-LINE-FORCE-PUSH fact="true" status="impl/done">`git push --force` / `--force-with-lease`;</RED-LINE-FORCE-PUSH></item>
-      <item><RED-LINE-LARGE-BINARY-BLOBS fact="true" status="impl/done">bringing in large binary blobs;</RED-LINE-LARGE-BINARY-BLOBS></item>
-      <item><RED-LINE-CI-SIGNING-OR-SECRETS fact="true" status="impl/done">changing CI, signing, or secrets configuration;</RED-LINE-CI-SIGNING-OR-SECRETS></item>
-      <item><RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**any operation whose reversal would cost work.**</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK></item>
-    </list>
+    <facts ordered="false">
+      <RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work);</RED-LINE-REWRITING-PUBLISHED-HISTORY>
+      <RED-LINE-FORCE-PUSH fact="true" status="impl/done">`git push --force` / `--force-with-lease`;</RED-LINE-FORCE-PUSH>
+      <RED-LINE-LARGE-BINARY-BLOBS fact="true" status="impl/done">bringing in large binary blobs;</RED-LINE-LARGE-BINARY-BLOBS>
+      <RED-LINE-CI-SIGNING-OR-SECRETS fact="true" status="impl/done">changing CI, signing, or secrets configuration;</RED-LINE-CI-SIGNING-OR-SECRETS>
+      <RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**any operation whose reversal would cost work.**</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK>
+    </facts>
     <p><WHEN-UNCERTAIN-ASK fact="true" status="impl/done">**When uncertain, ask.**</WHEN-UNCERTAIN-ASK></p>
     <p><sibling-document-pointers fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root.</sibling-document-pointers></p>
   </red-lines>

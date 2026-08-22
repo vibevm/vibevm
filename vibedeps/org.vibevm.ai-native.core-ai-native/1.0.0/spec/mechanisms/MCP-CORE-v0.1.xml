@@ -24,13 +24,13 @@ lines, and the production vibe-mcp server has spoken exactly this shape
 against every supported agent host since PROP-015).</WIRE-IS-LINE-DELIMITED-JSON-RPC-OVER-STDIO></p>
     <p><ANSWERED-PROTOCOL-REVISION fact="true" status="impl/done">The answered protocol revision is `2024-11-05`.</ANSWERED-PROTOCOL-REVISION></p>
     <p><inbound-frames-classify-by-id-lead fact="true" status="impl/done">Inbound frames classify by `id`:</inbound-frames-classify-by-id-lead></p>
-    <list ordered="false">
-      <item><FRAME-WITH-ID-IS-A-REQUEST fact="true" status="impl/done">present-and-non-null = a REQUEST that
-  MUST be answered;</FRAME-WITH-ID-IS-A-REQUEST></item>
-      <item><FRAME-WITHOUT-ID-IS-A-NOTIFICATION fact="true" status="impl/done">absent-or-null = a NOTIFICATION that MUST be absorbed
+    <facts ordered="false">
+      <FRAME-WITH-ID-IS-A-REQUEST fact="true" status="impl/done">present-and-non-null = a REQUEST that
+  MUST be answered;</FRAME-WITH-ID-IS-A-REQUEST>
+      <FRAME-WITHOUT-ID-IS-A-NOTIFICATION fact="true" status="impl/done">absent-or-null = a NOTIFICATION that MUST be absorbed
   without a response (hosts send `notifications/initialized` and
-  cancellations).</FRAME-WITHOUT-ID-IS-A-NOTIFICATION></item>
-    </list>
+  cancellations).</FRAME-WITHOUT-ID-IS-A-NOTIFICATION>
+    </facts>
     <p><MALFORMED-LINE-MUST-NOT-KILL-THE-LOOP fact="true" status="impl/done">A malformed line — non-JSON, or a frame without
 `method` — is answered with JSON-RPC `parse error` (-32700) and MUST
 NOT kill the loop: the loop ends only at end-of-input or a dead
@@ -45,16 +45,16 @@ each variant citing this mechanism and naming a fix surface.</TRANSPORT-FAILURE-
 scripted replay double — the whole loop tests with no agent host near
 the suite).</SERVER-IS-NAME-VERSION-TOOLSET-OVER-A-TRANSPORT-SEAM></p>
     <p><methods-lead fact="true" status="impl/done">Methods:</methods-lead></p>
-    <list ordered="false">
-      <item><METHOD-INITIALIZE fact="true" status="impl/done">`initialize` → `{protocolVersion, serverInfo{name,version},
-  capabilities:{tools:{listChanged:false}}}`.</METHOD-INITIALIZE></item>
-      <item><METHOD-TOOLS-LIST fact="true" status="impl/done">`tools/list` → the registry's descriptors, stable (sorted) order.</METHOD-TOOLS-LIST></item>
-      <item><METHOD-TOOLS-CALL fact="true" status="impl/done">`tools/call` → dispatch by `name` with `arguments`; a missing `name`
+    <facts ordered="false">
+      <METHOD-INITIALIZE fact="true" status="impl/done">`initialize` → `{protocolVersion, serverInfo{name,version},
+  capabilities:{tools:{listChanged:false}}}`.</METHOD-INITIALIZE>
+      <METHOD-TOOLS-LIST fact="true" status="impl/done">`tools/list` → the registry's descriptors, stable (sorted) order.</METHOD-TOOLS-LIST>
+      <METHOD-TOOLS-CALL fact="true" status="impl/done">`tools/call` → dispatch by `name` with `arguments`; a missing `name`
   is `invalid params` (-32602); an unknown tool is
-  `method not found` (-32601).</METHOD-TOOLS-CALL></item>
-      <item><METHOD-PING fact="true" status="impl/done">`ping` → `{}`.</METHOD-PING></item>
-      <item><METHOD-ANYTHING-ELSE fact="true" status="impl/done">Anything else → `method not found`.</METHOD-ANYTHING-ELSE></item>
-    </list>
+  `method not found` (-32601).</METHOD-TOOLS-CALL>
+      <METHOD-PING fact="true" status="impl/done">`ping` → `{}`.</METHOD-PING>
+      <METHOD-ANYTHING-ELSE fact="true" status="impl/done">Anything else → `method not found`.</METHOD-ANYTHING-ELSE>
+    </facts>
   </server>
   <toolset title="3. Tools">
     <p><kind-line-toolset fact="true" status="impl/done">`req r1`</kind-line-toolset></p>

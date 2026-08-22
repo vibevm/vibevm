@@ -69,15 +69,15 @@ level with mainline.</A-SELF-PULL-TARGET-IS-ONLY-VERIFIED></p>
     <p><FAN-OUT-PUSHES-MAINLINE-TO-EVERY-PUSH-TARGET fact="true" status="impl/done">Fan-out pushes mainline to every `push` target.</FAN-OUT-PUSHES-MAINLINE-TO-EVERY-PUSH-TARGET></p>
     <p><the-shape-is-always-the-same-four-steps fact="true" status="impl/done">The shape is always the
 same four steps, per target:</the-shape-is-always-the-same-four-steps></p>
-    <list ordered="true">
-      <item><STEP-FETCH fact="true" status="impl/done">**Fetch** the target's `main` (by URL, read-only).</STEP-FETCH></item>
-      <item><STEP-VERIFY-ANCESTRY fact="true" status="impl/done">**Verify ancestry** — the target's `main` must be an *ancestor* of
+    <facts ordered="true">
+      <STEP-FETCH fact="true" status="impl/done">**Fetch** the target's `main` (by URL, read-only).</STEP-FETCH>
+      <STEP-VERIFY-ANCESTRY fact="true" status="impl/done">**Verify ancestry** — the target's `main` must be an *ancestor* of
    local mainline. If it is not, the target has diverged: abort *that*
-   target, loud (§fail-loud). Do not touch it.</STEP-VERIFY-ANCESTRY></item>
-      <item><STEP-PUSH-FAST-FORWARD-ONLY fact="true" status="impl/done">**Push fast-forward-only** — `main` and tags, never `--force`.</STEP-PUSH-FAST-FORWARD-ONLY></item>
-      <item><STEP-REPORT fact="true" status="impl/done">**Report** the target as `ok`, `sync` (already level), or a named
-   `DRIFT`.</STEP-REPORT></item>
-    </list>
+   target, loud (§fail-loud). Do not touch it.</STEP-VERIFY-ANCESTRY>
+      <STEP-PUSH-FAST-FORWARD-ONLY fact="true" status="impl/done">**Push fast-forward-only** — `main` and tags, never `--force`.</STEP-PUSH-FAST-FORWARD-ONLY>
+      <STEP-REPORT fact="true" status="impl/done">**Report** the target as `ok`, `sync` (already level), or a named
+   `DRIFT`.</STEP-REPORT>
+    </facts>
     <p><THE-PUSH-IS-BY-URL-FROM-THE-MANIFEST fact="true" status="impl/done">The push is **by URL**, from the manifest, so the manifest is the one
 source of truth for the target set — not a pile of git remotes that can
 drift out of step with it.</THE-PUSH-IS-BY-URL-FROM-THE-MANIFEST></p>
@@ -89,8 +89,8 @@ not `git push host-a`, not a click in a web UI — the fan-out.</THE-FAN-OUT-IS-
 mainline does not — almost always a direct write or a force-push to
 that host.</A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK></p>
     <p><the-fan-outs-response-is-fixed fact="true" status="impl/done">The fan-out's response is fixed:</the-fan-outs-response-is-fixed></p>
-    <list ordered="false">
-      <item><RESPONSE-ABORT-THAT-TARGET fact="true" status="spec/done">**Abort that target**, with a message naming the divergence (the
+    <facts ordered="false">
+      <RESPONSE-ABORT-THAT-TARGET fact="true" status="spec/done">**Abort that target**, with a message naming the divergence (the
   host, and the commits it has that mainline lacks). *Half built: the host is
   named, the commits are not — by anything. This document's own reference
   script below aborts the target and prints `"$name: DRIFT — host has commits
@@ -103,11 +103,11 @@ that host.</A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK></p>
   `merge-base` · `is-ancestor` · `ls-remote` · `rev-list` over the standing
   perimeter — the only `ls-remote` in the fan-out is `remote_main`
   (`mirror.rs:157`), reached solely from `probe` and the `self-pull` arm, and
-  `rev-list` appears nowhere.*</RESPONSE-ABORT-THAT-TARGET></item>
-      <item><RESPONSE-NEVER-FORCE fact="true" status="impl/done">**Never `--force`.** The tool has no force path to reach for.</RESPONSE-NEVER-FORCE></item>
-      <item><RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS fact="true" status="impl/done">**Do not block the other targets.** A divergence on host B does not
-  stop host A from receiving its legitimate fast-forward.</RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS></item>
-    </list>
+  `rev-list` appears nowhere.*</RESPONSE-ABORT-THAT-TARGET>
+      <RESPONSE-NEVER-FORCE fact="true" status="impl/done">**Never `--force`.** The tool has no force path to reach for.</RESPONSE-NEVER-FORCE>
+      <RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS fact="true" status="impl/done">**Do not block the other targets.** A divergence on host B does not
+  stop host A from receiving its legitimate fast-forward.</RESPONSE-DO-NOT-BLOCK-THE-OTHER-TARGETS>
+    </facts>
     <quote><A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE fact="true" status="impl/done">A diverged target is a signal to investigate, never something to
 silently clobber.</A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE></quote>
     <p><RECONCILIATION-IS-DELIBERATE-AND-MANUAL fact="true" status="impl/done">Reconciliation is deliberate and manual: fetch the host, inspect the
@@ -193,11 +193,11 @@ done</fence>
     <p><ADAPT-READ-TARGETS-TO-THE-PROJECTS-MANIFEST-FORMAT fact="true" status="impl/done">Adapt `read_targets` to the manifest format the project uses.</ADAPT-READ-TARGETS-TO-THE-PROJECTS-MANIFEST-FORMAT></p>
     <p><the-two-invariants-to-preserve-when-you-port-it fact="true" status="impl/done">The two
 invariants to preserve when you port it:</the-two-invariants-to-preserve-when-you-port-it></p>
-    <list ordered="false">
-      <item><INVARIANT-THE-ANCESTRY-GATE fact="true" status="impl/done">the **ancestry gate** before
-  every push,</INVARIANT-THE-ANCESTRY-GATE></item>
-      <item><INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH fact="true" status="impl/done">and the **absence of any force path**.</INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH></item>
-    </list>
+    <facts ordered="false">
+      <INVARIANT-THE-ANCESTRY-GATE fact="true" status="impl/done">the **ancestry gate** before
+  every push,</INVARIANT-THE-ANCESTRY-GATE>
+      <INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH fact="true" status="impl/done">and the **absence of any force path**.</INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH>
+    </facts>
   </reference>
   <never-force-test title="Pin the invariant with a test">
     <p><A-RULE-WITH-NO-CHECKER-IS-A-WISH fact="true" status="impl/done">A rule with no checker is a wish.</A-RULE-WITH-NO-CHECKER-IS-A-WISH></p>
@@ -215,12 +215,12 @@ contains `--force`, `-f`, or a `+`-prefixed refspec for any ref shape.</BETTER-S
 you cannot run is a rule you cannot trust.</THE-INVARIANT-IS-RUNNABLE-CAPITAL></p>
   </never-force-test>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST fact="true" status="impl/done">The target set is a committed, credential-free manifest — shared,
-  CI-visible, reviewed like code. A local git remote cannot serve it.</SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST></item>
-      <item><SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT fact="true" status="impl/done">Fan-out per target: fetch, verify the target is an ancestor of
-  mainline, push fast-forward-only by URL, report.</SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT></item>
-      <item><SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD fact="true" status="spec/done">A non-fast-forward aborts *that* target loud, names the divergence,
+    <facts ordered="false">
+      <SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST fact="true" status="impl/done">The target set is a committed, credential-free manifest — shared,
+  CI-visible, reviewed like code. A local git remote cannot serve it.</SUM-THE-TARGET-SET-IS-A-COMMITTED-CREDENTIAL-FREE-MANIFEST>
+      <SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT fact="true" status="impl/done">Fan-out per target: fetch, verify the target is an ancestor of
+  mainline, push fast-forward-only by URL, report.</SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT>
+      <SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD fact="true" status="spec/done">A non-fast-forward aborts *that* target loud, names the divergence,
   and never forces. Reconcile into mainline by hand, then re-fan. *Three of the
   four are built and the fourth is half built. Loud per-target abort with the
   other targets still served, and a non-zero exit: `xtask/src/mirror.rs:296-320`.
@@ -232,12 +232,12 @@ you cannot run is a rule you cannot trust.</THE-INVARIANT-IS-RUNNABLE-CAPITAL></
   itself (`mirror.rs:315-319`). What is only half built is «names the
   divergence» in the sense `##RESPONSE-ABORT-THAT-TARGET` defines it: the
   diverged target is named, the commits it carries are not, by any
-  implementation including this document's own reference script.*</SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD></item>
-      <item><SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST fact="true" status="impl/done">A `--check` mode probes drift read-only; bring a web merge home with
-  `merge --ff-only` before fanning out.</SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST></item>
-      <item><SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE fact="true" status="impl/done">Deletions and history rewrites do not propagate — a safety choice.</SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE></item>
-      <item><SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH fact="true" status="impl/done">The reference fan-out is ~15 lines with no force path; pin that
-  absence with a test or a CI grep.</SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH></item>
-    </list>
+  implementation including this document's own reference script.*</SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD>
+      <SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST fact="true" status="impl/done">A `--check` mode probes drift read-only; bring a web merge home with
+  `merge --ff-only` before fanning out.</SUM-CHECK-PROBES-DRIFT-AND-A-WEB-MERGE-COMES-HOME-FIRST>
+      <SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE fact="true" status="impl/done">Deletions and history rewrites do not propagate — a safety choice.</SUM-DELETIONS-AND-REWRITES-DO-NOT-PROPAGATE>
+      <SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH fact="true" status="impl/done">The reference fan-out is ~15 lines with no force path; pin that
+  absence with a test or a CI grep.</SUM-THE-REFERENCE-FAN-OUT-HAS-NO-FORCE-PATH>
+    </facts>
   </summary>
 </spec>

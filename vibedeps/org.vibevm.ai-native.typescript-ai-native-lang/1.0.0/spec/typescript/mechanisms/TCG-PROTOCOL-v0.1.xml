@@ -44,37 +44,37 @@ match by `id`, not order).</REQUESTS-MAY-BE-PIPELINED></p>
 TypeScript convention surfaced honestly).</POSITIONS-ARE-ONE-BASED-LINE-ZERO-BASED-CHARACTER></p>
     <p><PATHS-ARE-ROOT-RELATIVE-WITH-FORWARD-SLASHES fact="true" status="impl/done">Paths are project-root-
 relative with forward slashes.</PATHS-ARE-ROOT-RELATIVE-WITH-FORWARD-SLASHES></p>
-    <list ordered="false">
-      <item><OP-INIT fact="true" status="impl/done">**`init`** `{root, cells_dir?, seam?}` →
+    <facts ordered="false">
+      <OP-INIT fact="true" status="impl/done">**`init`** `{root, cells_dir?, seam?}` →
   `{ts_version, config_file, root_files}` — builds the service (ORACLE
   §2–3). `cells_dir`/`seam` are policy-derived DATA the Rust layer
   passes down (the node side never reads `conform.toml` itself); they
   feed the `scope` op's cell/seam/branded context and default to
   none/`"index"`. Re-`init` on a live oracle rebuilds config and
-  policy; overlays are cleared.</OP-INIT></item>
-      <item><OP-UPDATE fact="true" status="impl/done">**`update`** `{file, content | null}` → `{version}` — set/clear an
-  overlay (ORACLE §3).</OP-UPDATE></item>
-      <item><OP-VALIDATE fact="true" status="impl/done">**`validate`** `{file, content?}` →
+  policy; overlays are cleared.</OP-INIT>
+      <OP-UPDATE fact="true" status="impl/done">**`update`** `{file, content | null}` → `{version}` — set/clear an
+  overlay (ORACLE §3).</OP-UPDATE>
+      <OP-VALIDATE fact="true" status="impl/done">**`validate`** `{file, content?}` →
   `{diagnostics: [{code, category, message, line, character}],
     facts: [/* ts-extract fact shapes */],
     markers: [/* §9 marker shapes */], degraded}` — the fact/marker
   arrays reuse the ts-extract record vocabulary verbatim (`ts_unsafe`,
   `import`, `item`, `file_metrics`; `{tag, uri, reason, symbol, line}`)
-  so one serde vocabulary serves both tools.</OP-VALIDATE></item>
-      <item><OP-SCOPE fact="true" status="impl/done">**`scope`** `{file, position?}` →
+  so one serde vocabulary serves both tools.</OP-VALIDATE>
+      <OP-SCOPE fact="true" status="impl/done">**`scope`** `{file, position?}` →
   `{symbols: [{name, kind, type_text}], cell, seam_file,
-    branded: [{name, seam, heuristic}]}`.</OP-SCOPE></item>
-      <item><OP-COMPLETE fact="true" status="impl/done">**`complete`** `{file, position, content?, prefix?, max?}` →
+    branded: [{name, seam, heuristic}]}`.</OP-SCOPE>
+      <OP-COMPLETE fact="true" status="impl/done">**`complete`** `{file, position, content?, prefix?, max?}` →
   `{entries: [{name, kind, type_text, unsafe}]}` — `prefix` filters by
   name prefix and `max` caps the set (default 50) BEFORE the per-entry
   checker details are computed: type text and the `unsafe` flag are
   entry-grain checker work, affordable only after the cut. A caller
   that wants the raw thousand-entry universe passes no prefix and a
-  large `max`, and pays for it knowingly.</OP-COMPLETE></item>
-      <item><OP-TYPE fact="true" status="impl/done">**`type`** `{file, position, content?}` →
-  `{display, documentation}`.</OP-TYPE></item>
-      <item><OP-SHUTDOWN fact="true" status="impl/done">**`shutdown`** `{}` → `{}` then exit 0.</OP-SHUTDOWN></item>
-    </list>
+  large `max`, and pays for it knowingly.</OP-COMPLETE>
+      <OP-TYPE fact="true" status="impl/done">**`type`** `{file, position, content?}` →
+  `{display, documentation}`.</OP-TYPE>
+      <OP-SHUTDOWN fact="true" status="impl/done">**`shutdown`** `{}` → `{}` then exit 0.</OP-SHUTDOWN>
+    </facts>
   </ops>
   <enrichment title="3. The enrichment hop (Rust adds, never reshapes)">
     <p><kind-line-enrichment fact="true" status="impl/done">`req r3`</kind-line-enrichment></p>
@@ -82,19 +82,19 @@ relative with forward slashes.</PATHS-ARE-ROOT-RELATIVE-WITH-FORWARD-SLASHES></p
 responses with policy-derived fields (policy = the project's
 `conform.toml`, read at init; ORACLE §4 keeps the node side
 policy-free):</serve-widens-two-responses-lead></p>
-    <list ordered="false">
-      <item><ENRICHMENT-VALIDATE-CONFORM-FINDINGS-AND-ADVICE fact="true" status="impl/done">`validate.result` gains
+    <facts ordered="false">
+      <ENRICHMENT-VALIDATE-CONFORM-FINDINGS-AND-ADVICE fact="true" status="impl/done">`validate.result` gains
   `conform_findings: [{rule, message, line, baselined}]` — the REAL
   rule set (`ts-unsafe-in-domain`, `ts-cell-isolation`, file budget)
   run over the returned facts via `conform_core::check`, each finding
   flagged against the project's frozen ratchet baseline — and
-  `advice: [string]` (Class-F strings citing `spec://` REQs).</ENRICHMENT-VALIDATE-CONFORM-FINDINGS-AND-ADVICE></item>
-      <item><ENRICHMENT-SCOPE-BRANDED-COMPLETION fact="true" status="impl/done">`scope.result.branded` is completed from seam files per the policy's
+  `advice: [string]` (Class-F strings citing `spec://` REQs).</ENRICHMENT-VALIDATE-CONFORM-FINDINGS-AND-ADVICE>
+      <ENRICHMENT-SCOPE-BRANDED-COMPLETION fact="true" status="impl/done">`scope.result.branded` is completed from seam files per the policy's
   `cells_dir`/`seam`, and `advice` may name the branded constructor a
-  bare primitive at this seam should use.</ENRICHMENT-SCOPE-BRANDED-COMPLETION></item>
-      <item><ENRICHMENT-COMPLETE-UNSAFE-FINALISED fact="true" status="impl/done">`complete.result.entries[].unsafe` is finalised against the policy
-  (the node side flags candidates; policy decides).</ENRICHMENT-COMPLETE-UNSAFE-FINALISED></item>
-    </list>
+  bare primitive at this seam should use.</ENRICHMENT-SCOPE-BRANDED-COMPLETION>
+      <ENRICHMENT-COMPLETE-UNSAFE-FINALISED fact="true" status="impl/done">`complete.result.entries[].unsafe` is finalised against the policy
+  (the node side flags candidates; policy decides).</ENRICHMENT-COMPLETE-UNSAFE-FINALISED>
+    </facts>
     <p><ENRICHMENT-FIELDS-ARE-ADDITIVE fact="true" status="impl/done">A consumer that talks to the oracle directly (no Rust layer) gets
 well-formed §2 responses with no enrichment fields — the fields are
 additive, and their absence means "no policy layer", not an error.</ENRICHMENT-FIELDS-ARE-ADDITIVE></p>

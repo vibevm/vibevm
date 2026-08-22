@@ -29,13 +29,13 @@ and hashtag intensity knobs (`#hot`, `#cold`, `#reboil`,
 failure.</STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE></p>
   </what>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION fact="true" status="impl/done">Never mix the discovery grammar into a coding session uninvited —
-  its overhead pays off only when the answer space is genuinely open.</NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION></item>
-      <item><NEVER-EDIT-THE-ARTIFACT-IN-PLACE fact="true" status="impl/done">Never edit the artifact in place; adapt a copy via the re-derive
-  prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive.</NEVER-EDIT-THE-ARTIFACT-IN-PLACE></item>
-      <item><NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES fact="true" status="impl/done">Never treat the confidence numbers as guarantees — they are
-  calibration aids, not measurements.</NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION fact="true" status="impl/done">Never mix the discovery grammar into a coding session uninvited —
+  its overhead pays off only when the answer space is genuinely open.</NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION>
+      <NEVER-EDIT-THE-ARTIFACT-IN-PLACE fact="true" status="impl/done">Never edit the artifact in place; adapt a copy via the re-derive
+  prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive.</NEVER-EDIT-THE-ARTIFACT-IN-PLACE>
+      <NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES fact="true" status="impl/done">Never treat the confidence numbers as guarantees — they are
+  calibration aids, not measurements.</NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES>
+    </facts>
   </never>
 </spec>

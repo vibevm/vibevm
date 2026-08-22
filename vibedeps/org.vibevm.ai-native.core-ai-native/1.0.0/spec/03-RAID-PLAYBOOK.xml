@@ -9,29 +9,29 @@
   <when-a-raid title="0. When a raid, not an inline trigger">
     <p><INLINE-HANDLING-IS-ALWAYS-PREFERRED fact="true" status="impl/done">Inline (edit-time) handling is always preferred.</INLINE-HANDLING-IS-ALWAYS-PREFERRED></p>
     <p><escalate-to-a-raid-lead fact="true" status="impl/done">Escalate to a raid when:</escalate-to-a-raid-lead></p>
-    <list ordered="false">
-      <item><ESCALATE-TRIGGER-IS-RAID-MODE fact="true" status="impl/done">a card's trigger is **raid-mode** by nature (e.g. "naming uniformity across a crate" — not worth firing per keystroke, only meaningful in bulk);</ESCALATE-TRIGGER-IS-RAID-MODE></item>
-      <item><ESCALATE-NEW-CARD-ADOPTED fact="true" status="impl/done">a **new card is adopted** and must be applied to existing code repo-wide;</ESCALATE-NEW-CARD-ADOPTED></item>
-      <item><ESCALATE-DEBT-PAST-THRESHOLD fact="true" status="impl/done">**debt accumulates** past a threshold (the A6 debt ledger trips a tripwire);</ESCALATE-DEBT-PAST-THRESHOLD></item>
-      <item><ESCALATE-ATTENTION-BUDGET-INSUFFICIENT fact="true" status="impl/done">the swarm's **attention budget is structurally insufficient** for a class of cross-cutting concern, so it is swept periodically instead of held active.</ESCALATE-ATTENTION-BUDGET-INSUFFICIENT></item>
-    </list>
+    <facts ordered="false">
+      <ESCALATE-TRIGGER-IS-RAID-MODE fact="true" status="impl/done">a card's trigger is **raid-mode** by nature (e.g. "naming uniformity across a crate" — not worth firing per keystroke, only meaningful in bulk);</ESCALATE-TRIGGER-IS-RAID-MODE>
+      <ESCALATE-NEW-CARD-ADOPTED fact="true" status="impl/done">a **new card is adopted** and must be applied to existing code repo-wide;</ESCALATE-NEW-CARD-ADOPTED>
+      <ESCALATE-DEBT-PAST-THRESHOLD fact="true" status="impl/done">**debt accumulates** past a threshold (the A6 debt ledger trips a tripwire);</ESCALATE-DEBT-PAST-THRESHOLD>
+      <ESCALATE-ATTENTION-BUDGET-INSUFFICIENT fact="true" status="impl/done">the swarm's **attention budget is structurally insufficient** for a class of cross-cutting concern, so it is swept periodically instead of held active.</ESCALATE-ATTENTION-BUDGET-INSUFFICIENT>
+    </facts>
   </when-a-raid>
   <plan-skeleton title="1. Raid plan skeleton (every raid is authored to this shape)">
-    <list ordered="true">
-      <item><SKELETON-SCOPE-AND-FREEZE fact="true" status="impl/done">**Scope &amp; freeze.** Which layer(s)/crates are in scope; which surfaces are frozen for the raid's duration. Frozen surfaces may not change except by the raid.</SKELETON-SCOPE-AND-FREEZE></item>
-      <item><SKELETON-CARD-SET-AND-ORDER fact="true" status="impl/done">**Card set &amp; order.** The cards to apply, **topologically sorted** by their Band-3 `raid_role.order` dependencies. Example ordering constraint: naming-uniformity (Class B/names) BEFORE contract-extraction (Class C), because contracts cite names; differential-oracle (Class D) wraps every behavior-changing card as a gate.</SKELETON-CARD-SET-AND-ORDER></item>
-      <item><SKELETON-PER-LAYER-PHASES fact="true" status="impl/done">**Per-layer phases.** The sweep proceeds layer by layer (seams → cells → registry → tests, for Rust), each phase gated green before the next begins. This is the owner's "refactor everything by layers."</SKELETON-PER-LAYER-PHASES></item>
-      <item><SKELETON-BATCH-UNITS-AND-CHECKPOINTS fact="true" status="impl/done">**Batch units &amp; checkpoints.** Per-cell or per-crate batches; each batch has a green-gate checkpoint. The raid is **resumable** — a crash or pause never loses progress, and the raid is never one giant diff (R3-013 determinism; phantom-diff avoidance). WAL-backed where the project keeps a WAL (recommended); otherwise the plan-status-line fallback (`06-WAL-CONVENTION.md`, `05-CAMPAIGN-FORM.md` §4).</SKELETON-BATCH-UNITS-AND-CHECKPOINTS></item>
-      <item><SKELETON-DIFFERENTIAL-SAFETY fact="true" status="impl/done">**Differential safety.** Every card application that changes behavior carries its Class-D oracle. The raid **cannot move behavior silently** — a behavior change without a passing oracle blocks the batch.</SKELETON-DIFFERENTIAL-SAFETY></item>
-      <item><SKELETON-EXIT-CRITERIA fact="true" status="impl/done">**Exit criteria.** All targeted cards' checkers green across scope; the raid's debt ledger at zero; a **raid REPORT** (modeled on the terraform REPORT) listing what the sweep learned — including cards that misfired, false-positive triggers, and routines that overloaded weak readers. The REPORT feeds card revision (cards are beta, revised on pilot evidence only).</SKELETON-EXIT-CRITERIA></item>
-    </list>
+    <facts ordered="true">
+      <SKELETON-SCOPE-AND-FREEZE fact="true" status="impl/done">**Scope &amp; freeze.** Which layer(s)/crates are in scope; which surfaces are frozen for the raid's duration. Frozen surfaces may not change except by the raid.</SKELETON-SCOPE-AND-FREEZE>
+      <SKELETON-CARD-SET-AND-ORDER fact="true" status="impl/done">**Card set &amp; order.** The cards to apply, **topologically sorted** by their Band-3 `raid_role.order` dependencies. Example ordering constraint: naming-uniformity (Class B/names) BEFORE contract-extraction (Class C), because contracts cite names; differential-oracle (Class D) wraps every behavior-changing card as a gate.</SKELETON-CARD-SET-AND-ORDER>
+      <SKELETON-PER-LAYER-PHASES fact="true" status="impl/done">**Per-layer phases.** The sweep proceeds layer by layer (seams → cells → registry → tests, for Rust), each phase gated green before the next begins. This is the owner's "refactor everything by layers."</SKELETON-PER-LAYER-PHASES>
+      <SKELETON-BATCH-UNITS-AND-CHECKPOINTS fact="true" status="impl/done">**Batch units &amp; checkpoints.** Per-cell or per-crate batches; each batch has a green-gate checkpoint. The raid is **resumable** — a crash or pause never loses progress, and the raid is never one giant diff (R3-013 determinism; phantom-diff avoidance). WAL-backed where the project keeps a WAL (recommended); otherwise the plan-status-line fallback (`06-WAL-CONVENTION.md`, `05-CAMPAIGN-FORM.md` §4).</SKELETON-BATCH-UNITS-AND-CHECKPOINTS>
+      <SKELETON-DIFFERENTIAL-SAFETY fact="true" status="impl/done">**Differential safety.** Every card application that changes behavior carries its Class-D oracle. The raid **cannot move behavior silently** — a behavior change without a passing oracle blocks the batch.</SKELETON-DIFFERENTIAL-SAFETY>
+      <SKELETON-EXIT-CRITERIA fact="true" status="impl/done">**Exit criteria.** All targeted cards' checkers green across scope; the raid's debt ledger at zero; a **raid REPORT** (modeled on the terraform REPORT) listing what the sweep learned — including cards that misfired, false-positive triggers, and routines that overloaded weak readers. The REPORT feeds card revision (cards are beta, revised on pilot evidence only).</SKELETON-EXIT-CRITERIA>
+    </facts>
   </plan-skeleton>
   <roles title="2. Roles in a raid">
-    <list ordered="false">
-      <item><ROLE-STRONG-AUTHOR-ORCHESTRATOR fact="true" status="impl/done">**Strong author/orchestrator** — authors the raid plan, sets scope and order, adjudicates review-mode triggers.</ROLE-STRONG-AUTHOR-ORCHESTRATOR></item>
-      <item><ROLE-WEAK-SWARM fact="true" status="impl/done">**Weak swarm** — executes per-batch routines (the Band-3 extract of each card), one batch per agent, meeting only at the merge (R3-013: parallel agents share no state; the merge is the contention point).</ROLE-WEAK-SWARM></item>
-      <item><ROLE-TOOLCHAIN fact="true" status="impl/done">**The toolchain** — runs checkers per batch (conform tiers, `cargo test -p &lt;cell&gt;`, oracles), emits structured diagnostics (Class F) as the agents' percepts.</ROLE-TOOLCHAIN></item>
-    </list>
+    <facts ordered="false">
+      <ROLE-STRONG-AUTHOR-ORCHESTRATOR fact="true" status="impl/done">**Strong author/orchestrator** — authors the raid plan, sets scope and order, adjudicates review-mode triggers.</ROLE-STRONG-AUTHOR-ORCHESTRATOR>
+      <ROLE-WEAK-SWARM fact="true" status="impl/done">**Weak swarm** — executes per-batch routines (the Band-3 extract of each card), one batch per agent, meeting only at the merge (R3-013: parallel agents share no state; the merge is the contention point).</ROLE-WEAK-SWARM>
+      <ROLE-TOOLCHAIN fact="true" status="impl/done">**The toolchain** — runs checkers per batch (conform tiers, `cargo test -p &lt;cell&gt;`, oracles), emits structured diagnostics (Class F) as the agents' percepts.</ROLE-TOOLCHAIN>
+    </facts>
   </roles>
   <terraform-relationship title="3. Relationship to the original terraform">
     <p><first-terraform-proved-the-machinery fact="true" status="spec/done">The first pilot terraform proved the gate-and-phase machinery: phases −1…6, frozen baselines, green gates, a closing REPORT of what the discipline learned about itself.</first-terraform-proved-the-machinery></p>
@@ -39,12 +39,12 @@
     <p><BROWNFIELD-ADOPTION-IS-A-SEQUENCE-OF-RAIDS fact="true" status="impl/done">Adopting the Discipline on an existing codebase follows `mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` and is itself executed as a sequence of raids; the standing between-campaigns counterpart is `04-SWEEP-PLAYBOOK.md`.</BROWNFIELD-ADOPTION-IS-A-SEQUENCE-OF-RAIDS></p>
   </terraform-relationship>
   <raid-cadence title="4. Cadence">
-    <list ordered="false">
-      <item><CADENCE-MICRO-CONTINUOUS fact="true" status="impl/done">**Micro (continuous):** inline triggers in the per-cell loop.</CADENCE-MICRO-CONTINUOUS></item>
-      <item><CADENCE-GATE-PER-MERGE fact="true" status="impl/done">**Gate (per-merge):** gate-mode triggers at the cell's verification gate.</CADENCE-GATE-PER-MERGE></item>
-      <item><CADENCE-RAID-SCHEDULED fact="true" status="impl/done">**Raid (scheduled/on-adoption):** layered sweeps per this playbook.</CADENCE-RAID-SCHEDULED></item>
-      <item><CADENCE-REVIEW-AS-FLAGGED fact="true" status="impl/done">**Review (as-flagged):** review-mode triggers escalated to a stronger reader.</CADENCE-REVIEW-AS-FLAGGED></item>
-    </list>
+    <facts ordered="false">
+      <CADENCE-MICRO-CONTINUOUS fact="true" status="impl/done">**Micro (continuous):** inline triggers in the per-cell loop.</CADENCE-MICRO-CONTINUOUS>
+      <CADENCE-GATE-PER-MERGE fact="true" status="impl/done">**Gate (per-merge):** gate-mode triggers at the cell's verification gate.</CADENCE-GATE-PER-MERGE>
+      <CADENCE-RAID-SCHEDULED fact="true" status="impl/done">**Raid (scheduled/on-adoption):** layered sweeps per this playbook.</CADENCE-RAID-SCHEDULED>
+      <CADENCE-REVIEW-AS-FLAGGED fact="true" status="impl/done">**Review (as-flagged):** review-mode triggers escalated to a stronger reader.</CADENCE-REVIEW-AS-FLAGGED>
+    </facts>
     <p><answers-when-to-switch-on-refactoring fact="true" status="impl/done">Together these answer "when do we switch on rethinking and refactoring": continuously where cheap, in planned sweeps where not.</answers-when-to-switch-on-refactoring></p>
   </raid-cadence>
 </spec>

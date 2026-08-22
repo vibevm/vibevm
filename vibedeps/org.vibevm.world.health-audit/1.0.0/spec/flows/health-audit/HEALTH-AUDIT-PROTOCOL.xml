@@ -70,15 +70,15 @@ thing, which is what caught the initializer defect above.</ONLY-A-READER-CATCHES
   <categories title="What the audit inventories">
     <p><AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT fact="true" status="impl/done">An audit run walks a category checklist breadth-first — one category
 group per blind spot:</AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT></p>
-    <list ordered="false">
-      <item><GROUP-A-TEST-INTEGRITY fact="true" status="impl/done">**A** test integrity (coverage gaps, quarantined
-  tests, tests that encode the wrong behavior),</GROUP-A-TEST-INTEGRITY></item>
-      <item><GROUP-B-ROT-OUTSIDE-THE-GATE fact="true" status="impl/done">**B** rot outside the
-  gate,</GROUP-B-ROT-OUTSIDE-THE-GATE></item>
-      <item><GROUP-C-DRIFT fact="true" status="impl/done">**C** drift (docs, specs, checkpoint, external state),</GROUP-C-DRIFT></item>
-      <item><GROUP-D-DEBT fact="true" status="impl/done">**D** debt
-  (deferred items, aging markers, escape hatches, stale dependencies).</GROUP-D-DEBT></item>
-    </list>
+    <facts ordered="false">
+      <GROUP-A-TEST-INTEGRITY fact="true" status="impl/done">**A** test integrity (coverage gaps, quarantined
+  tests, tests that encode the wrong behavior),</GROUP-A-TEST-INTEGRITY>
+      <GROUP-B-ROT-OUTSIDE-THE-GATE fact="true" status="impl/done">**B** rot outside the
+  gate,</GROUP-B-ROT-OUTSIDE-THE-GATE>
+      <GROUP-C-DRIFT fact="true" status="impl/done">**C** drift (docs, specs, checkpoint, external state),</GROUP-C-DRIFT>
+      <GROUP-D-DEBT fact="true" status="impl/done">**D** debt
+  (deferred items, aging markers, escape hatches, stale dependencies).</GROUP-D-DEBT>
+    </facts>
     <p><checklist-pointer-and-the-list-is-not-fixed fact="true" status="impl/done">Every sub-item, its mechanical aid, and what "bad" looks like lives in
 [`audit-checklist.md`](audit-checklist.md); the list is not fixed
 (see [§living](#living)).</checklist-pointer-and-the-list-is-not-fixed></p>
@@ -134,15 +134,15 @@ points at the active subset.</THE-CHECKPOINT-IS-RECONCILED-BUT-THE-INVENTORY-IS-
       </tr>
     </table>
     <p><SEVERITY-IS-THE-COST-OF-LEAVING-IT fact="true" status="impl/done">Severity is the cost of leaving it:</SEVERITY-IS-THE-COST-OF-LEAVING-IT></p>
-    <list ordered="false">
-      <item><SEVERITY-P1-BLOCKER fact="true" status="impl/done">**P1 — blocker.** A correctness gap, or a defect that can ship wrong
+    <facts ordered="false">
+      <SEVERITY-P1-BLOCKER fact="true" status="impl/done">**P1 — blocker.** A correctness gap, or a defect that can ship wrong
   behavior. Must be resolved before the next milestone is declared
-  shipped.</SEVERITY-P1-BLOCKER></item>
-      <item><SEVERITY-P2-DEBT fact="true" status="impl/done">**P2 — debt.** Real and scheduled — fixed in a dedicated pass, or
-  opportunistically when the area is next touched.</SEVERITY-P2-DEBT></item>
-      <item><SEVERITY-P3-NOTE fact="true" status="impl/done">**P3 — note.** Low cost of leaving; recorded so the next run
-  re-judges it rather than re-discovering it.</SEVERITY-P3-NOTE></item>
-    </list>
+  shipped.</SEVERITY-P1-BLOCKER>
+      <SEVERITY-P2-DEBT fact="true" status="impl/done">**P2 — debt.** Real and scheduled — fixed in a dedicated pass, or
+  opportunistically when the area is next touched.</SEVERITY-P2-DEBT>
+      <SEVERITY-P3-NOTE fact="true" status="impl/done">**P3 — note.** Low cost of leaving; recorded so the next run
+  re-judges it rather than re-discovering it.</SEVERITY-P3-NOTE>
+    </facts>
   </finding>
   <disposition title="Disposition and carry-forward">
     <p><EVERY-FINDING-IS-DISPOSITIONED-BEFORE-THE-RUN-CLOSES fact="true" status="impl/done">Every finding is dispositioned before the run closes.</EVERY-FINDING-IS-DISPOSITIONED-BEFORE-THE-RUN-CLOSES></p>
@@ -184,20 +184,20 @@ perpetually *open*.</A-P2-RIDING-THREE-AUDITS-IS-REALLY-A-P1-OR-AN-ACCEPTANCE></
     <p><THE-CHECKLIST-IS-NOT-FROZEN fact="true" status="impl/done">The checklist is not frozen.</THE-CHECKLIST-IS-NOT-FROZEN></p>
     <p><TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN fact="true" status="impl/done">Two forces reshape it over time, each when its own
 condition holds:</TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN></p>
-    <list ordered="false">
-      <item><FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY fact="true" status="impl/done">**A new defect class becomes a permanent category.** When a run
+    <facts ordered="false">
+      <FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY fact="true" status="impl/done">**A new defect class becomes a permanent category.** When a run
   discovers a kind of rot the checklist did not name, that kind is
   added as a standing row — so the same gap is never re-missed. The
   broken-initializer defect above is exactly what turns "the untested
-  default path" into a permanent coverage line.</FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY></item>
-      <item><FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE fact="true" status="impl/done">**A mechanisable category migrates into the gate.** When a category
+  default path" into a permanent coverage line.</FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY>
+      <FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE fact="true" status="impl/done">**A mechanisable category migrates into the gate.** When a category
   can be checked by a script, it *should* — over time it moves out of
   the manual audit into the linter, the test suite, or CI, becoming an
   automatic per-commit guard. The audit is the judgment-heavy
   *superset*; the gate is the automated *subset* it keeps feeding. The
   long-run goal: each run finds *fewer* things the gate could have
-  caught and *more* that genuinely need judgment.</FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE></item>
-    </list>
+  caught and *more* that genuinely need judgment.</FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE>
+    </facts>
     <p><one-corollary-deserves-its-own-line fact="true" status="impl/done">One corollary deserves its own line.</one-corollary-deserves-its-own-line></p>
     <p><ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION fact="true" status="impl/done">**A project that has adopted a
 rule framework should add a category measuring how deep the adoption
@@ -222,20 +222,20 @@ cron is fixed.</OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED></p>
   </cadence>
   <why-not title="Why not the simpler options">
     <p><three-rejected-shapes-lead fact="true" status="spec/done">Three simpler shapes were considered and rejected:</three-rejected-shapes-lead></p>
-    <list ordered="false">
-      <item><REJECTED-A-ONE-TIME-HARDENING-PASS fact="true" status="spec/done">**A one-time hardening pass instead of a recurring process** —
+    <facts ordered="false">
+      <REJECTED-A-ONE-TIME-HARDENING-PASS fact="true" status="spec/done">**A one-time hardening pass instead of a recurring process** —
   rejected: a one-shot pass decays the day after it lands and rot
   resumes. The value is the *recurrence* and the *trend record*, not
-  the single cleanup.</REJECTED-A-ONE-TIME-HARDENING-PASS></item>
-      <item><REJECTED-RELY-ON-THE-GATE-ALONE fact="true" status="spec/done">**Rely on the gate alone** — rejected: the gate is a regression
+  the single cleanup.</REJECTED-A-ONE-TIME-HARDENING-PASS>
+      <REJECTED-RELY-ON-THE-GATE-ALONE fact="true" status="spec/done">**Rely on the gate alone** — rejected: the gate is a regression
   detector, structurally blind to uncovered code, out-of-gate trees,
   and drift. More gate is good but never sufficient; the
-  broken-initializer defect passed the gate on every commit.</REJECTED-RELY-ON-THE-GATE-ALONE></item>
-      <item><REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT fact="true" status="spec/done">**Track findings only in the checkpoint file** — rejected: the
+  broken-initializer defect passed the gate on every commit.</REJECTED-RELY-ON-THE-GATE-ALONE>
+      <REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT fact="true" status="spec/done">**Track findings only in the checkpoint file** — rejected: the
   checkpoint is volatile, rewritten each session. A durable,
   append-only history is what lets the project see whether it trends
-  healthier or worse. Hence a separate `AUDIT.md`.</REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT></item>
-    </list>
+  healthier or worse. Hence a separate `AUDIT.md`.</REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT>
+    </facts>
     <p><FULL-AUTOMATION-IS-DEFERRED-NOT-REJECTED fact="true" status="spec/done">Full automation is *deferred, not rejected*: the audit's value is
 breadth *plus judgment* — "this test encodes a bug" is not mechanically
 detectable — so it grows category by category (§living), never
@@ -261,21 +261,21 @@ project:
    fields) and show it to me. Create nothing until I approve.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS fact="true" status="impl/done">The gate is a per-commit regression detector; the audit is a
+    <facts ordered="false">
+      <SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS fact="true" status="impl/done">The gate is a per-commit regression detector; the audit is a
   periodic judgment sweep over what the gate cannot see. Complements,
-  not substitutes.</SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS></item>
-      <item><SUM-FOUR-BLIND-SPOTS fact="true" status="spec/done">Four blind spots: uncovered code, out-of-gate trees, drift, slow
-  debt — each individually invisible, collectively corrosive.</SUM-FOUR-BLIND-SPOTS></item>
-      <item><SUM-FINDINGS-LIVE-IN-AUDIT-MD fact="true" status="impl/done">Findings live in `AUDIT.md`: append-only, dated, committed to git —
+  not substitutes.</SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS>
+      <SUM-FOUR-BLIND-SPOTS fact="true" status="spec/done">Four blind spots: uncovered code, out-of-gate trees, drift, slow
+  debt — each individually invisible, collectively corrosive.</SUM-FOUR-BLIND-SPOTS>
+      <SUM-FINDINGS-LIVE-IN-AUDIT-MD fact="true" status="impl/done">Findings live in `AUDIT.md`: append-only, dated, committed to git —
   its history is the project's health trend, not the volatile
   checkpoint. Five fields per finding; four dispositions; unresolved
   findings carry forward, and one that recurs without progress is
-  itself a signal.</SUM-FINDINGS-LIVE-IN-AUDIT-MD></item>
-      <item><SUM-THE-CHECKLIST-IS-LIVING fact="true" status="impl/done">The checklist is living: new defect classes join it, mechanisable
-  ones migrate into the gate.</SUM-THE-CHECKLIST-IS-LIVING></item>
-      <item><SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE fact="true" status="impl/done">Owner-triggered, floor once per milestone. A milestone is never
-  declared done on an un-audited base.</SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE></item>
-    </list>
+  itself a signal.</SUM-FINDINGS-LIVE-IN-AUDIT-MD>
+      <SUM-THE-CHECKLIST-IS-LIVING fact="true" status="impl/done">The checklist is living: new defect classes join it, mechanisable
+  ones migrate into the gate.</SUM-THE-CHECKLIST-IS-LIVING>
+      <SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE fact="true" status="impl/done">Owner-triggered, floor once per milestone. A milestone is never
+  declared done on an un-audited base.</SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE>
+    </facts>
   </summary>
 </spec>

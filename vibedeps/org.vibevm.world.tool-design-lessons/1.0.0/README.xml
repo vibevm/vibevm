@@ -16,24 +16,24 @@ catalog, not a protocol: there is no single procedure to follow, just
 fourteen laws with the failures that earned them and three maxims that
 sit above them.</IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-CATALOG-INDEX fact="true" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
+  <facts ordered="false">
+    <CONTENT-THE-CATALOG-INDEX fact="true" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
   what the lessons are, the index table (lesson id → one-line law →
   where it lives), the three cross-cutting maxims, the meta-lesson
   (record the *why*, not just the *what*), and a re-derive prompt for
-  adapting the laws to your own platform.</CONTENT-THE-CATALOG-INDEX></item>
-    <item><CONTENT-THE-SELF-UPDATING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.md` — lessons
+  adapting the laws to your own platform.</CONTENT-THE-CATALOG-INDEX>
+    <CONTENT-THE-SELF-UPDATING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.md` — lessons
   S1–S7: live-pointer activation, immutable instance directories, cheap
   identity, sources by reference, durable-environment edits, one
-  runnable required-tools table, and safe removal / garbage collection.</CONTENT-THE-SELF-UPDATING-LESSONS></item>
-    <item><CONTENT-THE-PACKAGING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.md` — lessons P1–P7:
+  runnable required-tools table, and safe removal / garbage collection.</CONTENT-THE-SELF-UPDATING-LESSONS>
+    <CONTENT-THE-PACKAGING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.md` — lessons P1–P7:
   a package is a project, ship runtime not prose, identity is the
   source, build output goes elsewhere, vendor the bootstrap, spike
   before the irreversible move, and build the general mechanism on real
-  demand.</CONTENT-THE-PACKAGING-LESSONS></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/70-flow-tool-design-lessons.md` — boot snippet loaded at
-  session start: when to read a lesson first, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  demand.</CONTENT-THE-PACKAGING-LESSONS>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/70-flow-tool-design-lessons.md` — boot snippet loaded at
+  session start: when to read a lesson first, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:tool-design-lessons</fence>
   </install>
@@ -44,21 +44,21 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
     <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-MANAGED-BLOCKS fact="true" status="impl/done">`flow:managed-blocks` — the deep dive on writing safely inside a
+    <facts ordered="false">
+      <COMPOSES-MANAGED-BLOCKS fact="true" status="impl/done">`flow:managed-blocks` — the deep dive on writing safely inside a
   shared, human-owned file; lesson S5 (durable-environment edits) points
-  there for the mechanics of the marked-block edit.</COMPOSES-MANAGED-BLOCKS></item>
-      <item><COMPOSES-QUALIFIED-NAMING fact="true" status="spec/done">`flow:qualified-naming` — the sibling on ecosystem identity; when a
+  there for the mechanics of the marked-block edit.</COMPOSES-MANAGED-BLOCKS>
+      <COMPOSES-QUALIFIED-NAMING fact="true" status="spec/done">`flow:qualified-naming` — the sibling on ecosystem identity; when a
   package is a project (P1) and many of them coexist, stable qualified
-  names are what keep them addressable.</COMPOSES-QUALIFIED-NAMING></item>
-      <item><COMPOSES-MANUAL-TESTS fact="true" status="spec/done">`flow:manual-tests` — several of these lessons were caught only by a
+  names are what keep them addressable.</COMPOSES-QUALIFIED-NAMING>
+      <COMPOSES-MANUAL-TESTS fact="true" status="spec/done">`flow:manual-tests` — several of these lessons were caught only by a
   human-run walk on a real machine, not by an automated suite; the two
-  test tiers reinforce each other.</COMPOSES-MANUAL-TESTS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — every lesson here is a decision record that
+  test tiers reinforce each other.</COMPOSES-MANUAL-TESTS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — every lesson here is a decision record that
   earned its revisit trigger the hard way; that flow generalises the
   record-the-*why* discipline to all decisions, whichever direction they
-  arrive from.</COMPOSES-DECISION-RECORDS></item>
-    </list>
+  arrive from.</COMPOSES-DECISION-RECORDS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><catalog-crystallized-from-the-origin-projects-rework fact="true" status="spec/done">The catalog is crystallized from the origin project's version-manager

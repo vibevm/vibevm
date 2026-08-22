@@ -67,13 +67,13 @@ the migration.</npm-conceded-the-point-with-scope></p>
   <enforce-vs-recommend title="Fork 2 — enforce style versus recommend it">
     <p><fork-2-question fact="true" status="spec/done">Given a group grammar, how hard does the core enforce the reverse-FQDN
 *convention*?</fork-2-question></p>
-    <list ordered="false">
-      <item><OPTION-A-ENFORCE fact="true" status="spec/done">**Option A — enforce.** Require the group to be a domain the
-  publisher provably controls (DNS check, TXT record, the works).</OPTION-A-ENFORCE></item>
-      <item><OPTION-B-RECOMMEND fact="true" status="spec/done">**Option B — recommend.** Enforce only the *grammar* (lowercase,
+    <facts ordered="false">
+      <OPTION-A-ENFORCE fact="true" status="spec/done">**Option A — enforce.** Require the group to be a domain the
+  publisher provably controls (DNS check, TXT record, the works).</OPTION-A-ENFORCE>
+      <OPTION-B-RECOMMEND fact="true" status="spec/done">**Option B — recommend.** Enforce only the *grammar* (lowercase,
   dot-separated segments) and the *uniqueness* of the group; leave
-  reverse-FQDN as a convention for humans and linters.</OPTION-B-RECOMMEND></item>
-    </list>
+  reverse-FQDN as a convention for humans and linters.</OPTION-B-RECOMMEND>
+    </facts>
     <p><CHOSEN-RECOMMEND fact="true" status="impl/done">**Chosen: recommend.**</CHOSEN-RECOMMEND></p>
     <p><reverse-fqdn-piggybacks-on-dns-uniqueness fact="true" status="spec/done">Reverse-FQDN is worth recommending because it
 piggybacks on DNS's existing global uniqueness — the trick Sun adopted
@@ -92,14 +92,14 @@ groupIds and enforces none of it.</maven-made-the-same-call></p>
   </enforce-vs-recommend>
   <short-names title="Fork 3 — where do short names live">
     <p><fork-3-question fact="true" status="spec/done">If a short name is a convenience, *how much* of the system may see it?</fork-3-question></p>
-    <list ordered="false">
-      <item><OPTION-EVERYWHERE fact="true" status="spec/done">**Everywhere.** Short names are first-class: manifests, lockfiles,
-  and dependency edges may all carry them.</OPTION-EVERYWHERE></item>
-      <item><OPTION-NOWHERE fact="true" status="spec/done">**Nowhere.** Ban short names entirely; humans type fully-qualified
-  coordinates always.</OPTION-NOWHERE></item>
-      <item><OPTION-CLI-BOUNDARY-ONLY fact="true" status="spec/done">**CLI boundary only.** Short names are legal solely as human-typed CLI
-  input, resolved once, and never persisted.</OPTION-CLI-BOUNDARY-ONLY></item>
-    </list>
+    <facts ordered="false">
+      <OPTION-EVERYWHERE fact="true" status="spec/done">**Everywhere.** Short names are first-class: manifests, lockfiles,
+  and dependency edges may all carry them.</OPTION-EVERYWHERE>
+      <OPTION-NOWHERE fact="true" status="spec/done">**Nowhere.** Ban short names entirely; humans type fully-qualified
+  coordinates always.</OPTION-NOWHERE>
+      <OPTION-CLI-BOUNDARY-ONLY fact="true" status="spec/done">**CLI boundary only.** Short names are legal solely as human-typed CLI
+  input, resolved once, and never persisted.</OPTION-CLI-BOUNDARY-ONLY>
+    </facts>
     <p><CHOSEN-BOUNDARY-ONLY fact="true" status="impl/done">**Chosen: boundary only.**</CHOSEN-BOUNDARY-ONLY></p>
     <p><everywhere-re-imports-the-transitive-collision-problem fact="true" status="spec/done">"Everywhere" re-imports the flat namespace's
 transitive-collision problem: a short name buried in a transitive
@@ -122,13 +122,13 @@ line, `serde = "1"` in the manifest — generalised into a law.</this-is-the-car
   <rename title="Fork 4 — rename: alias table versus new identity">
     <p><an-author-wants-to-rename-a-published-package fact="true" status="spec/done">An author wants to rename a published package.</an-author-wants-to-rename-a-published-package></p>
     <p><fork-4-question fact="true" status="spec/done">What does the system do?</fork-4-question></p>
-    <list ordered="false">
-      <item><OPTION-ALIAS-TABLE fact="true" status="spec/done">**Alias table.** Keep a mapping `old → new`; resolve the old
-  coordinate to the new artifact so existing consumers keep working.</OPTION-ALIAS-TABLE></item>
-      <item><OPTION-NEW-IDENTITY fact="true" status="spec/done">**New identity.** Treat the renamed package as a genuinely new
+    <facts ordered="false">
+      <OPTION-ALIAS-TABLE fact="true" status="spec/done">**Alias table.** Keep a mapping `old → new`; resolve the old
+  coordinate to the new artifact so existing consumers keep working.</OPTION-ALIAS-TABLE>
+      <OPTION-NEW-IDENTITY fact="true" status="spec/done">**New identity.** Treat the renamed package as a genuinely new
   package: it starts a fresh version line, and the old coordinate is
-  frozen (yanked or left as-is), never repointed.</OPTION-NEW-IDENTITY></item>
-    </list>
+  frozen (yanked or left as-is), never repointed.</OPTION-NEW-IDENTITY>
+    </facts>
     <p><CHOSEN-NEW-IDENTITY fact="true" status="impl/done">**Chosen: new identity.**</CHOSEN-NEW-IDENTITY></p>
     <p><the-alias-table-is-seductive-but-re-introduces-ambiguity fact="true" status="spec/done">The alias table is seductive — it seems to
 spare consumers a migration — but it re-introduces precisely the
@@ -153,19 +153,19 @@ consumer migrates deliberately, by editing a qualified name they can
 see — not silently, through a redirect they cannot.</A-CONSUMER-MIGRATES-DELIBERATELY></p>
   </rename>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-FLAT-VS-GROUPED fact="true" status="impl/done">**Flat vs grouped → grouped.** Verbosity is bounded and bought back at
+    <facts ordered="false">
+      <SUM-FLAT-VS-GROUPED fact="true" status="impl/done">**Flat vs grouped → grouped.** Verbosity is bounded and bought back at
   the boundary; squatting-resistance and delegated trust are structural
-  and cannot be retrofitted onto flat names.</SUM-FLAT-VS-GROUPED></item>
-      <item><SUM-ENFORCE-VS-RECOMMEND fact="true" status="impl/done">**Enforce vs recommend → recommend.** Enforce grammar and uniqueness;
+  and cannot be retrofitted onto flat names.</SUM-FLAT-VS-GROUPED>
+      <SUM-ENFORCE-VS-RECOMMEND fact="true" status="impl/done">**Enforce vs recommend → recommend.** Enforce grammar and uniqueness;
   leave reverse-FQDN as style for humans and linters. Enforcing domain
-  ownership couples publishing to DNS for little gain.</SUM-ENFORCE-VS-RECOMMEND></item>
-      <item><SUM-WHERE-SHORT-NAMES-LIVE fact="true" status="impl/done">**Where short names live → CLI boundary only.** Resolved once against
+  ownership couples publishing to DNS for little gain.</SUM-ENFORCE-VS-RECOMMEND>
+      <SUM-WHERE-SHORT-NAMES-LIVE fact="true" status="impl/done">**Where short names live → CLI boundary only.** Resolved once against
   an index, then stored qualified — which is what makes transitive
-  collisions impossible.</SUM-WHERE-SHORT-NAMES-LIVE></item>
-      <item><SUM-RENAME-IS-A-NEW-IDENTITY fact="true" status="impl/done">**Rename → new identity, not alias.** An alias re-introduces the
+  collisions impossible.</SUM-WHERE-SHORT-NAMES-LIVE>
+      <SUM-RENAME-IS-A-NEW-IDENTITY fact="true" status="impl/done">**Rename → new identity, not alias.** An alias re-introduces the
   ambiguity groups removed; a new identity keeps every coordinate
-  honest and every version line attached to the bytes it named.</SUM-RENAME-IS-A-NEW-IDENTITY></item>
-    </list>
+  honest and every version line attached to the bytes it named.</SUM-RENAME-IS-A-NEW-IDENTITY>
+    </facts>
   </summary>
 </spec>

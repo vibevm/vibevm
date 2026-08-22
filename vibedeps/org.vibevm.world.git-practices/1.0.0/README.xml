@@ -8,17 +8,17 @@ Git history.</AGG-ROLE></p>
 names a tested set of them; requiring `flow:git-practices` pulls the whole family through the
 dependency closure, each member contributing its own boot snippet.</AGG-CLOSURE-PULLS-THE-WHOLE-FAMILY></p>
   <p><deliberately-separate-packages-lead fact="true" status="impl/done">They are deliberately **separate packages** because they are different things:</deliberately-separate-packages-lead></p>
-  <list ordered="false">
-    <item><AGG-MEMBER-CONVENTIONAL-COMMITS fact="true" status="impl/done">**`git-conventional-commits`** — the message *format*: `type(scope): subject`, a why-not-what body,
-  the allowed-type set, scope convention, worked examples, anti-patterns.</AGG-MEMBER-CONVENTIONAL-COMMITS></item>
-    <item><AGG-MEMBER-ATOMIC-COMMITS fact="true" status="impl/done">**`git-atomic-commits`** — the *atomicity* discipline: one commit = one logical idea; when to split
-  a mixed working tree, when to batch, why it matters more in a human-AI team.</AGG-MEMBER-ATOMIC-COMMITS></item>
-    <item><AGG-MEMBER-ATTRIBUTION-POLICY fact="true" status="impl/done">**`git-attribution-policy`** — the deliberate *authorship posture*: a human-authored surface on
+  <facts ordered="false">
+    <AGG-MEMBER-CONVENTIONAL-COMMITS fact="true" status="impl/done">**`git-conventional-commits`** — the message *format*: `type(scope): subject`, a why-not-what body,
+  the allowed-type set, scope convention, worked examples, anti-patterns.</AGG-MEMBER-CONVENTIONAL-COMMITS>
+    <AGG-MEMBER-ATOMIC-COMMITS fact="true" status="impl/done">**`git-atomic-commits`** — the *atomicity* discipline: one commit = one logical idea; when to split
+  a mixed working tree, when to batch, why it matters more in a human-AI team.</AGG-MEMBER-ATOMIC-COMMITS>
+    <AGG-MEMBER-ATTRIBUTION-POLICY fact="true" status="impl/done">**`git-attribution-policy`** — the deliberate *authorship posture*: a human-authored surface on
   every artifact by default, one always-loaded statement of it, and the open-disclosure alternative a
-  project may adopt instead.</AGG-MEMBER-ATTRIBUTION-POLICY></item>
-    <item><AGG-MEMBER-AUTONOMY fact="true" status="impl/done">**`git-autonomy`** — the *commit autonomy* posture: routine work proceeds without a handshake; the
-  red lines (history rewrites, force-push, large blobs, CI/signing/secrets) stop and ask.</AGG-MEMBER-AUTONOMY></item>
-  </list>
+  project may adopt instead.</AGG-MEMBER-ATTRIBUTION-POLICY>
+    <AGG-MEMBER-AUTONOMY fact="true" status="impl/done">**`git-autonomy`** — the *commit autonomy* posture: routine work proceeds without a handshake; the
+  red lines (history rewrites, force-push, large blobs, CI/signing/secrets) stop and ask.</AGG-MEMBER-AUTONOMY>
+  </facts>
   <p><EACH-IS-ADOPTABLE-ON-ITS-OWN fact="true" status="impl/done">A message can be valid Conventional Commits and non-atomic (`feat: add foo, bar, baz`), or atomic
 without the format — so each is adoptable on its own, and the family is how a project takes the
 whole posture at once.</EACH-IS-ADOPTABLE-ON-ITS-OWN></p>

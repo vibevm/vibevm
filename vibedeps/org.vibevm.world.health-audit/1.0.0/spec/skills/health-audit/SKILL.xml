@@ -9,42 +9,42 @@ sweep over what the per-commit gate cannot see.</RUNNING-ONE-PERIODIC-HEALTH-AUD
   <p><PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL fact="true" status="impl/done">You produce a **draft** `AUDIT.md`
 section; you do not commit without approval.</PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL></p>
   <procedure title="Procedure">
-    <list ordered="true">
-      <item><READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL fact="true" status="impl/done">Read `spec/flows/health-audit/audit-checklist.md` and
+    <facts ordered="true">
+      <READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL fact="true" status="impl/done">Read `spec/flows/health-audit/audit-checklist.md` and
    `running-an-audit.md` in full. If neither exists, say so, point at
-   `HEALTH-AUDIT-PROTOCOL.md`, and stop.</READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL></item>
-      <item><READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD fact="true" status="impl/done">Read the previous `AUDIT.md` section (if any). Note every finding
-   still `open`, or `filed` with work not landed — these carry forward.</READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD></item>
-      <item><IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES fact="true" status="impl/done">Identify this project's gate (its test / lint / CI commands), so you
-   audit what the gate does *not* cover.</IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES></item>
-      <item><WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID fact="true" status="impl/done">Walk the checklist breadth-first — A test integrity, B rot outside
+   `HEALTH-AUDIT-PROTOCOL.md`, and stop.</READ-THE-CHECKLIST-AND-THE-RUN-PROCEDURE-IN-FULL>
+      <READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD fact="true" status="impl/done">Read the previous `AUDIT.md` section (if any). Note every finding
+   still `open`, or `filed` with work not landed — these carry forward.</READ-THE-PREVIOUS-SECTION-AND-NOTE-WHAT-CARRIES-FORWARD>
+      <IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES fact="true" status="impl/done">Identify this project's gate (its test / lint / CI commands), so you
+   audit what the gate does *not* cover.</IDENTIFY-THE-PROJECTS-GATE-SO-YOU-AUDIT-WHAT-IT-MISSES>
+      <WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID fact="true" status="impl/done">Walk the checklist breadth-first — A test integrity, B rot outside
    the gate, C drift, D debt, plus any project-specific rows. Run each
    mechanical aid (coverage tool, `grep` for skip markers / `TODO` /
    suppressions, dependency audit, CI-config-vs-tree diff). For A3
    (tests that encode the wrong behavior), read assertions against
-   intent — there is no mechanical aid.</WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID></item>
-      <item><ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING fact="true" status="impl/done">For each finding, assign an ID (`&lt;date&gt;-NN`), a category, a one-line
-   locator, a severity (P1/P2/P3), and a proposed disposition.</ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING></item>
-      <item><CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT fact="true" status="impl/done">Carry forward each prior unresolved finding and re-judge its
-   severity. Flag any that has recurred without progress.</CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT></item>
-    </list>
+   intent — there is no mechanical aid.</WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID>
+      <ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING fact="true" status="impl/done">For each finding, assign an ID (`&lt;date&gt;-NN`), a category, a one-line
+   locator, a severity (P1/P2/P3), and a proposed disposition.</ASSIGN-THE-FIVE-FIELDS-TO-EACH-FINDING>
+      <CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT fact="true" status="impl/done">Carry forward each prior unresolved finding and re-judge its
+   severity. Flag any that has recurred without progress.</CARRY-FORWARD-EACH-PRIOR-UNRESOLVED-FINDING-AND-RE-JUDGE-IT>
+    </facts>
   </procedure>
   <output title="Output">
-    <list ordered="false">
-      <item><OUTPUT-A-DRAFT-AUDIT-MD-SECTION fact="true" status="impl/done">A draft `AUDIT.md` section: dated heading, the finding table (ID /
-  Cat / Finding / Sev / Disp), and notes for `accepted` / `open` rows.</OUTPUT-A-DRAFT-AUDIT-MD-SECTION></item>
-      <item><OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE fact="true" status="impl/done">A short list of the cheap fixes you propose to make in-run versus the
-  findings you propose to file.</OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE></item>
-    </list>
+    <facts ordered="false">
+      <OUTPUT-A-DRAFT-AUDIT-MD-SECTION fact="true" status="impl/done">A draft `AUDIT.md` section: dated heading, the finding table (ID /
+  Cat / Finding / Sev / Disp), and notes for `accepted` / `open` rows.</OUTPUT-A-DRAFT-AUDIT-MD-SECTION>
+      <OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE fact="true" status="impl/done">A short list of the cheap fixes you propose to make in-run versus the
+  findings you propose to file.</OUTPUT-THE-CHEAP-FIXES-VERSUS-THE-FINDINGS-TO-FILE>
+    </facts>
   </output>
   <do-not title="Do not">
-    <list ordered="false">
-      <item><DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES fact="true" status="impl/done">Do not commit anything, edit `AUDIT.md`, or apply any fix until the
-  owner approves the draft.</DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES></item>
-      <item><DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT fact="true" status="impl/done">Do not write findings only into the checkpoint file — `AUDIT.md` is
-  the durable home; the checkpoint is reconciled against it afterward.</DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT></item>
-      <item><DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE fact="true" status="impl/done">Do not invent findings to fill the table. An honest short audit beats
-  a padded one.</DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE></item>
-    </list>
+    <facts ordered="false">
+      <DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES fact="true" status="impl/done">Do not commit anything, edit `AUDIT.md`, or apply any fix until the
+  owner approves the draft.</DO-NOT-COMMIT-OR-FIX-BEFORE-THE-OWNER-APPROVES>
+      <DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT fact="true" status="impl/done">Do not write findings only into the checkpoint file — `AUDIT.md` is
+  the durable home; the checkpoint is reconciled against it afterward.</DO-NOT-WRITE-FINDINGS-ONLY-INTO-THE-CHECKPOINT>
+      <DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE fact="true" status="impl/done">Do not invent findings to fill the table. An honest short audit beats
+  a padded one.</DO-NOT-INVENT-FINDINGS-TO-FILL-THE-TABLE>
+    </facts>
   </do-not>
 </spec>

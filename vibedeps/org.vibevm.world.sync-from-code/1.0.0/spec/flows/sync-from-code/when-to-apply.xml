@@ -59,13 +59,13 @@ flagged, rename of a private symbol that has no public contract.</SKIP-FORMATTIN
 better" or "I don't remember", stop.</IF-THE-HONEST-ANSWER-IS-IT-FELT-BETTER-STOP></p>
       <p><SYNC-IS-NOT-FOR-LAUNDERING-UNREASONED-DRIFT fact="true" status="impl/done">Sync-from-Code is not for
 laundering unreasoned drift into the spec. Two paths:</SYNC-IS-NOT-FOR-LAUNDERING-UNREASONED-DRIFT></p>
-      <list ordered="true">
-        <item><PATH-RECOVER-THE-REASON fact="true" status="impl/done">**Recover the reason.** Re-read the session, the measurements,
+      <facts ordered="true">
+        <PATH-RECOVER-THE-REASON fact="true" status="impl/done">**Recover the reason.** Re-read the session, the measurements,
    the issue. If a durable reason exists, surface it and run the
-   protocol normally.</PATH-RECOVER-THE-REASON></item>
-        <item><PATH-REVERT-THE-CODE fact="true" status="impl/done">**Revert the code.** If no reason can be named, the code change
-   itself is suspect. Revert.</PATH-REVERT-THE-CODE></item>
-      </list>
+   protocol normally.</PATH-RECOVER-THE-REASON>
+        <PATH-REVERT-THE-CODE fact="true" status="impl/done">**Revert the code.** If no reason can be named, the code change
+   itself is suspect. Revert.</PATH-REVERT-THE-CODE>
+      </facts>
       <p><DO-NOT-PRODUCE-A-SPEC-CHANGE-THAT-READS-WE-DO-X-BECAUSE-WE-DO-X fact="true" status="impl/done">Do not produce a spec change that reads "we do X because we do X".</DO-NOT-PRODUCE-A-SPEC-CHANGE-THAT-READS-WE-DO-X-BECAUSE-WE-DO-X></p>
       <p><a-tautology-with-a-date-attached-is-not-a-decision fact="true" status="impl/done">That is not a decision, it is a tautology with a date attached.</a-tautology-with-a-date-attached-is-not-a-decision></p>
     </skip-no-reason>
@@ -73,12 +73,12 @@ laundering unreasoned drift into the spec. Two paths:</SYNC-IS-NOT-FOR-LAUNDERIN
       <p><SKIP-WHEN-THE-CODE-IMPLEMENTS-SOMETHING-THE-SPEC-NEVER-MENTIONS fact="true" status="impl/done">The code implements something the spec does not mention at all.</SKIP-WHEN-THE-CODE-IMPLEMENTS-SOMETHING-THE-SPEC-NEVER-MENTIONS></p>
       <p><this-is-the-forward-flow-case-lead fact="true" status="impl/done">This
 is the forward-flow case:</this-is-the-forward-flow-case-lead></p>
-      <list ordered="false">
-        <item><FORWARD-FLOW-DRAFT-A-NEW-SPEC-SECTION fact="true" status="impl/done">draft a new PROP/FEAT section,</FORWARD-FLOW-DRAFT-A-NEW-SPEC-SECTION></item>
-        <item><FORWARD-FLOW-WRITE-THE-INTENT-FIRST fact="true" status="impl/done">write the
-  intent-first,</FORWARD-FLOW-WRITE-THE-INTENT-FIRST></item>
-        <item><FORWARD-FLOW-THEN-IMPLEMENT-OR-RECONCILE fact="true" status="impl/done">then implement or reconcile.</FORWARD-FLOW-THEN-IMPLEMENT-OR-RECONCILE></item>
-      </list>
+      <facts ordered="false">
+        <FORWARD-FLOW-DRAFT-A-NEW-SPEC-SECTION fact="true" status="impl/done">draft a new PROP/FEAT section,</FORWARD-FLOW-DRAFT-A-NEW-SPEC-SECTION>
+        <FORWARD-FLOW-WRITE-THE-INTENT-FIRST fact="true" status="impl/done">write the
+  intent-first,</FORWARD-FLOW-WRITE-THE-INTENT-FIRST>
+        <FORWARD-FLOW-THEN-IMPLEMENT-OR-RECONCILE fact="true" status="impl/done">then implement or reconcile.</FORWARD-FLOW-THEN-IMPLEMENT-OR-RECONCILE>
+      </facts>
       <p><SYNC-UPDATES-EXISTING-ENTRIES-IT-DOES-NOT-BOOTSTRAP-THEM fact="true" status="impl/done">Sync-from-Code is for
 **updating** existing spec entries, not for bootstrapping them.</SYNC-UPDATES-EXISTING-ENTRIES-IT-DOES-NOT-BOOTSTRAP-THEM></p>
       <p><a-brand-new-section-via-sync-is-a-classic-retrofit fact="true" status="spec/done">Putting a brand-new spec section together via Sync-from-Code
@@ -105,18 +105,18 @@ Can you name the reason in one sentence?         ─ no ─→ recover or revert
 Run Sync-from-Code (SYNC-PROTOCOL.md).</fence>
   </flowchart>
   <boundaries title="Boundary with other flows">
-    <list ordered="false">
-      <item><BOUNDARY-FLOW-WAL fact="true" status="impl/done">**`flow:wal`** handles session continuity. A successful sync may
+    <facts ordered="false">
+      <BOUNDARY-FLOW-WAL fact="true" status="impl/done">**`flow:wal`** handles session continuity. A successful sync may
   trigger a WAL update; that update goes through the WAL flow, not
-  this one.</BOUNDARY-FLOW-WAL></item>
-      <item><BOUNDARY-FLOW-ATOMIC-COMMITS fact="true" status="impl/done">**`flow:git-atomic-commits`** handles commit discipline: one sync,
+  this one.</BOUNDARY-FLOW-WAL>
+      <BOUNDARY-FLOW-ATOMIC-COMMITS fact="true" status="impl/done">**`flow:git-atomic-commits`** handles commit discipline: one sync,
   one commit, one logical idea. The message *format* — Conventional
   Commits, with `docs(spec)` as the type a sync commit carries — is
   defined by the sibling `flow:git-conventional-commits`, not by the
-  atomicity flow and not here.</BOUNDARY-FLOW-ATOMIC-COMMITS></item>
-      <item><BOUNDARY-VIBE-BUILD fact="true" status="spec/done">**`vibe build`** (M1.5+) handles the other direction — generating
+  atomicity flow and not here.</BOUNDARY-FLOW-ATOMIC-COMMITS>
+      <BOUNDARY-VIBE-BUILD fact="true" status="spec/done">**`vibe build`** (M1.5+) handles the other direction — generating
   code from spec. A sync can be followed by a build, but they are
-  independent flows.</BOUNDARY-VIBE-BUILD></item>
-    </list>
+  independent flows.</BOUNDARY-VIBE-BUILD>
+    </facts>
   </boundaries>
 </spec>

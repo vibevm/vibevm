@@ -14,14 +14,14 @@ maintainer's day-to-day loop in [`daily-loop.md`](daily-loop.md).</sibling-docum
     <p><SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS fact="true" status="spec/done">Suppose the same project must live on two git hosts at once — call
 them **host A** and **host B**.</SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS></p>
     <p><the-reasons-are-real fact="true" status="spec/done">The reasons are real:</the-reasons-are-real></p>
-    <list ordered="false">
-      <item><REASON-AUDIENCE-PER-HOST fact="true" status="spec/done">one audience
-  reaches host A and another reaches host B;</REASON-AUDIENCE-PER-HOST></item>
-      <item><REASON-A-HOST-MAY-DISAPPEAR fact="true" status="spec/done">one host may disappear and
-  the history must survive;</REASON-A-HOST-MAY-DISAPPEAR></item>
-      <item><REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST fact="true" status="spec/done">a jurisdiction, a mirror-of-record, or a
-  review community lives on each.</REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST></item>
-    </list>
+    <facts ordered="false">
+      <REASON-AUDIENCE-PER-HOST fact="true" status="spec/done">one audience
+  reaches host A and another reaches host B;</REASON-AUDIENCE-PER-HOST>
+      <REASON-A-HOST-MAY-DISAPPEAR fact="true" status="spec/done">one host may disappear and
+  the history must survive;</REASON-A-HOST-MAY-DISAPPEAR>
+      <REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST fact="true" status="spec/done">a jurisdiction, a mirror-of-record, or a
+  review community lives on each.</REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST>
+    </facts>
     <p><BOTH-MUST-CARRY-THE-SAME-HISTORY fact="true" status="spec/done">Both must always carry the same
 history, and both are canonical *for reading*.</BOTH-MUST-CARRY-THE-SAME-HISTORY></p>
     <p><THE-NAIVE-WAY-IS-TO-LET-EACH-ACCEPT-WRITES fact="true" status="spec/done">The naive way to keep two writable repositories in step is to let each
@@ -97,21 +97,21 @@ UIs are merely nicer inboxes than a mailing list.</this-is-exactly-the-kernels-w
     </integration>
   </model>
   <buys title="What the model buys">
-    <list ordered="false">
-      <item><BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION fact="true" status="impl/done">**Divergence is impossible by construction.** One serial writer means
+    <facts ordered="false">
+      <BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION fact="true" status="impl/done">**Divergence is impossible by construction.** One serial writer means
   no two writes to `main` can race. There is no reconciliation step to
-  get wrong because there is no concurrent write to reconcile.</BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION></item>
-      <item><BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS fact="true" status="impl/done">**Any host can vanish without data loss.** Every host holds the full
+  get wrong because there is no concurrent write to reconcile.</BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION>
+      <BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS fact="true" status="impl/done">**Any host can vanish without data loss.** Every host holds the full
   history of the refs the manifest declares for it; mainline holds the whole
   tree. A host going dark, getting blocked, or deleting the repo costs a line
-  in the manifest, not a commit.</BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS></item>
-      <item><BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST fact="true" status="impl/done">**Audience and jurisdiction per host.** Each host serves its own
+  in the manifest, not a commit.</BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS>
+      <BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST fact="true" status="impl/done">**Audience and jurisdiction per host.** Each host serves its own
   region, community, or compliance surface, while all serve identical
-  history. Adding a host is one manifest entry.</BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST></item>
-      <item><BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">**The invariant is runnable capital.** "Never `--force`" is not a
+  history. Adding a host is one manifest entry.</BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST>
+      <BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">**The invariant is runnable capital.** "Never `--force`" is not a
   prose promise — it is pinned by a test over the push command
-  ([`fanout-mechanics.md` §never-force-test](fanout-mechanics.md#never-force-test)).</BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL></item>
-    </list>
+  ([`fanout-mechanics.md` §never-force-test](fanout-mechanics.md#never-force-test)).</BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL>
+    </facts>
   </buys>
   <costs title="What the model costs">
     <p><ONE-HUMAN-SERIALIZES-EVERY-MERGE fact="true" status="impl/done">Be honest about the bottleneck: **one human serializes every merge.**</ONE-HUMAN-SERIALIZES-EVERY-MERGE></p>
@@ -177,18 +177,18 @@ and let the agent derive the setup your project actually needs:</re-derive-lead>
    approve, and never push to a host as part of this exercise.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT fact="true" status="impl/done">Multi-homing across hosts invites multi-master divergence; this model
-  dissolves it instead of managing it.</SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT></item>
-      <item><SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA fact="true" status="impl/done">One mainline, single-writer, no primary host. Every host is a
+    <facts ordered="false">
+      <SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT fact="true" status="impl/done">Multi-homing across hosts invites multi-master divergence; this model
+  dissolves it instead of managing it.</SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT>
+      <SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA fact="true" status="impl/done">One mainline, single-writer, no primary host. Every host is a
   downstream read-replica. Contributions arrive on any host as inboxes;
-  the maintainer's tree is the merge authority.</SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA></item>
-      <item><SUM-WHAT-IT-BUYS fact="true" status="impl/done">What it buys: divergence impossible by construction, any host can
-  vanish without data loss, audience/jurisdiction per host.</SUM-WHAT-IT-BUYS></item>
-      <item><SUM-WHAT-IT-COSTS fact="true" status="spec/done">What it costs: one human serializes merges. Acceptable — and cheaper
+  the maintainer's tree is the merge authority.</SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA>
+      <SUM-WHAT-IT-BUYS fact="true" status="impl/done">What it buys: divergence impossible by construction, any host can
+  vanish without data loss, audience/jurisdiction per host.</SUM-WHAT-IT-BUYS>
+      <SUM-WHAT-IT-COSTS fact="true" status="spec/done">What it costs: one human serializes merges. Acceptable — and cheaper
   than the alternative — for small-team projects; record a revisit
-  trigger for the day it is not.</SUM-WHAT-IT-COSTS></item>
-      <item><SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">The never-`--force` invariant is runnable capital, not a promise.</SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL></item>
-    </list>
+  trigger for the day it is not.</SUM-WHAT-IT-COSTS>
+      <SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">The never-`--force` invariant is runnable capital, not a promise.</SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL>
+    </facts>
   </summary>
 </spec>

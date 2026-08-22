@@ -98,29 +98,29 @@ added since last audit (new CI steps, new scaffolds, new doc
 generators).</THE-AUDIT-CHECKLIST-LINE></quote>
   </audit>
   <slip-drill title="When a slip lands">
-    <list ordered="true">
-      <item><DRILL-CAUGHT-BEFORE-PUSH fact="true" status="impl/done">**Caught before push:** amend or rebase locally. No further
-   action; this is what the scan exists for.</DRILL-CAUGHT-BEFORE-PUSH></item>
-      <item><DRILL-CAUGHT-AFTER-PUSH fact="true" status="impl/done">**Caught after push:** do **not** rewrite published history on
+    <facts ordered="true">
+      <DRILL-CAUGHT-BEFORE-PUSH fact="true" status="impl/done">**Caught before push:** amend or rebase locally. No further
+   action; this is what the scan exists for.</DRILL-CAUGHT-BEFORE-PUSH>
+      <DRILL-CAUGHT-AFTER-PUSH fact="true" status="impl/done">**Caught after push:** do **not** rewrite published history on
    reflex — the frozen-history rule (`flow:git-atomic-commits` §pushed)
    wins by default. Record the slip, fix the *source* (the tool or
    template that produced it), and surface to the owner: rewriting
    one commit's metadata out of published history is the owner's
-   call, made knowing who has already pulled.</DRILL-CAUGHT-AFTER-PUSH></item>
-      <item><DRILL-EITHER-WAY fact="true" status="impl/done">**Either way:** if the same surface slips twice, the checklist —
-   not the person — is at fault. Add the missing check.</DRILL-EITHER-WAY></item>
-    </list>
+   call, made knowing who has already pulled.</DRILL-CAUGHT-AFTER-PUSH>
+      <DRILL-EITHER-WAY fact="true" status="impl/done">**Either way:** if the same surface slips twice, the checklist —
+   not the person — is at fault. Add the missing check.</DRILL-EITHER-WAY>
+    </facts>
   </slip-drill>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL fact="true" status="impl/done">Eight surfaces; two of them (messages, trailers) get a mechanical
+    <facts ordered="false">
+      <SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL fact="true" status="impl/done">Eight surfaces; two of them (messages, trailers) get a mechanical
   pre-push scan, the rest ride templates, tool configuration, and
-  the periodic audit.</SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL></item>
-      <item><SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP fact="true" status="impl/done">Configure tools not to produce marks; scan as the backstop.</SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP></item>
-      <item><SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS fact="true" status="impl/done">Pre-push slips are amended freely; pushed slips default to
+  the periodic audit.</SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL>
+      <SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP fact="true" status="impl/done">Configure tools not to produce marks; scan as the backstop.</SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP>
+      <SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS fact="true" status="impl/done">Pre-push slips are amended freely; pushed slips default to
   stand-and-fix-the-source, with history rewrite an owner-level
-  exception.</SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS></item>
-      <item><SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE fact="true" status="impl/done">A surface that slips twice earns a new checklist line.</SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE></item>
-    </list>
+  exception.</SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS>
+      <SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE fact="true" status="impl/done">A surface that slips twice earns a new checklist line.</SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE>
+    </facts>
   </summary>
 </spec>

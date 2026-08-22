@@ -29,37 +29,37 @@ first.</CONTINUE-LIVES-AT-THE-REPOSITORY-ROOT></p>
 appended to, never patched; staleness compounds otherwise.</CONTINUE-IS-OVERWRITTEN-WHOLESALE></p>
     <p><body-contents-lead fact="true" status="impl/done">The body
 includes, at minimum:</body-contents-lead></p>
-    <list ordered="true">
-      <item><BODY-TLDR-SUMMARY fact="true" status="impl/done">A short TL;DR / executive summary at the top.</BODY-TLDR-SUMMARY></item>
-      <item><BODY-WHERE-WORK-STANDS fact="true" status="impl/done">Where work stands: branch, ahead/behind the remote, working-tree
-   status.</BODY-WHERE-WORK-STANDS></item>
-      <item><BODY-ACTIVE-BLOCKER fact="true" status="impl/done">The active blocker, if any, and the exact human action that
-   unblocks it.</BODY-ACTIVE-BLOCKER></item>
-      <item><BODY-NEXT-STEPS-RECIPE fact="true" status="impl/done">The exact next-steps recipe — commands, file paths, line numbers —
-   for whoever picks up cold.</BODY-NEXT-STEPS-RECIPE></item>
-      <item><BODY-NON-OBVIOUS-FINDINGS fact="true" status="impl/done">Non-obvious findings of the session: API quirks, config gotchas,
-   vendor-specific surprises.</BODY-NON-OBVIOUS-FINDINGS></item>
-      <item><BODY-REPOSITORY-MAP fact="true" status="impl/done">A repository map: top-level layout and what each directory or
-   component holds.</BODY-REPOSITORY-MAP></item>
-      <item><BODY-DECISIONS-IN-FORCE fact="true" status="impl/done">The architectural and policy decisions still in force, in long
-   form.</BODY-DECISIONS-IN-FORCE></item>
-      <item><BODY-RECENT-COMMIT-CHAIN fact="true" status="impl/done">The recent commit chain (last ~25, oneline format), so the cold
-   reader sees velocity and direction.</BODY-RECENT-COMMIT-CHAIN></item>
-      <item><BODY-QUICK-START-COMMANDS fact="true" status="impl/done">Quick-start commands for the workspace.</BODY-QUICK-START-COMMANDS></item>
-      <item><BODY-PRECEDENCE-POINTER fact="true" status="impl/done">A pointer noting that the WAL is the canonical living state and
-    supersedes this snapshot if they diverge.</BODY-PRECEDENCE-POINTER></item>
-    </list>
+    <facts ordered="true">
+      <BODY-TLDR-SUMMARY fact="true" status="impl/done">A short TL;DR / executive summary at the top.</BODY-TLDR-SUMMARY>
+      <BODY-WHERE-WORK-STANDS fact="true" status="impl/done">Where work stands: branch, ahead/behind the remote, working-tree
+   status.</BODY-WHERE-WORK-STANDS>
+      <BODY-ACTIVE-BLOCKER fact="true" status="impl/done">The active blocker, if any, and the exact human action that
+   unblocks it.</BODY-ACTIVE-BLOCKER>
+      <BODY-NEXT-STEPS-RECIPE fact="true" status="impl/done">The exact next-steps recipe — commands, file paths, line numbers —
+   for whoever picks up cold.</BODY-NEXT-STEPS-RECIPE>
+      <BODY-NON-OBVIOUS-FINDINGS fact="true" status="impl/done">Non-obvious findings of the session: API quirks, config gotchas,
+   vendor-specific surprises.</BODY-NON-OBVIOUS-FINDINGS>
+      <BODY-REPOSITORY-MAP fact="true" status="impl/done">A repository map: top-level layout and what each directory or
+   component holds.</BODY-REPOSITORY-MAP>
+      <BODY-DECISIONS-IN-FORCE fact="true" status="impl/done">The architectural and policy decisions still in force, in long
+   form.</BODY-DECISIONS-IN-FORCE>
+      <BODY-RECENT-COMMIT-CHAIN fact="true" status="impl/done">The recent commit chain (last ~25, oneline format), so the cold
+   reader sees velocity and direction.</BODY-RECENT-COMMIT-CHAIN>
+      <BODY-QUICK-START-COMMANDS fact="true" status="impl/done">Quick-start commands for the workspace.</BODY-QUICK-START-COMMANDS>
+      <BODY-PRECEDENCE-POINTER fact="true" status="impl/done">A pointer noting that the WAL is the canonical living state and
+    supersedes this snapshot if they diverge.</BODY-PRECEDENCE-POINTER>
+    </facts>
     <p><what-the-item-groups-answer fact="true" status="impl/done">Items 1–4 answer "what do I do right now"; items 5–9 answer "what must
 I know before I trust myself here"; item 10 keeps the file honest
 about its own rank.</what-the-item-groups-answer></p>
   </contract>
   <when title="When to write it">
-    <list ordered="false">
-      <item><WRITE-AT-EVERY-EXPLICIT-WIND-DOWN fact="true" status="impl/done">**At every explicit wind-down** (the command below). Mandatory.</WRITE-AT-EVERY-EXPLICIT-WIND-DOWN></item>
-      <item><WRITE-BEFORE-A-MACHINE-SWITCH fact="true" status="impl/done">**Before a machine switch** — the other machine gets the tour.</WRITE-BEFORE-A-MACHINE-SWITCH></item>
-      <item><WRITE-BEFORE-A-LONG-GAP fact="true" status="impl/done">**Before a long gap** — a vacation, weeks on another project; future
-  you is a cold reader too.</WRITE-BEFORE-A-LONG-GAP></item>
-    </list>
+    <facts ordered="false">
+      <WRITE-AT-EVERY-EXPLICIT-WIND-DOWN fact="true" status="impl/done">**At every explicit wind-down** (the command below). Mandatory.</WRITE-AT-EVERY-EXPLICIT-WIND-DOWN>
+      <WRITE-BEFORE-A-MACHINE-SWITCH fact="true" status="impl/done">**Before a machine switch** — the other machine gets the tour.</WRITE-BEFORE-A-MACHINE-SWITCH>
+      <WRITE-BEFORE-A-LONG-GAP fact="true" status="impl/done">**Before a long gap** — a vacation, weeks on another project; future
+  you is a cold reader too.</WRITE-BEFORE-A-LONG-GAP>
+    </facts>
     <p><any-session-end-is-a-fine-time fact="true" status="impl/done">Any session end is a fine time; the wind-down makes it non-optional.</any-session-end-is-a-fine-time></p>
   </when>
   <wind-down title="The wind-down command">
@@ -71,21 +71,21 @@ trigger phrases: `END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`.</SHIP-TRIGGER
 native-language twins in its agent instructions — the origin project
 of this flow runs a bilingual Russian/English set.</A-PROJECT-MAY-ADD-NATIVE-LANGUAGE-TWINS></p>
     <p><required-behaviour-lead fact="true" status="impl/done">Required behaviour, in order:</required-behaviour-lead></p>
-    <list ordered="true">
-      <item><STEP-OVERWRITE-CONTINUE fact="true" status="impl/done">**Overwrite `CONTINUE.md`** wholesale, per the contract above.</STEP-OVERWRITE-CONTINUE></item>
-      <item><STEP-REWRITE-THE-WAL fact="true" status="impl/done">**Rewrite `spec/WAL.md`** per
+    <facts ordered="true">
+      <STEP-OVERWRITE-CONTINUE fact="true" status="impl/done">**Overwrite `CONTINUE.md`** wholesale, per the contract above.</STEP-OVERWRITE-CONTINUE>
+      <STEP-REWRITE-THE-WAL fact="true" status="impl/done">**Rewrite `spec/WAL.md`** per
    [`session-end-hook.md`](session-end-hook.md): fresh date line,
-   current phase, constraints, next step.</STEP-REWRITE-THE-WAL></item>
-      <item><STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS fact="true" status="impl/done">**Commit in topic-grouped commits.** The snapshot and the WAL
+   current phase, constraints, next step.</STEP-REWRITE-THE-WAL>
+      <STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS fact="true" status="impl/done">**Commit in topic-grouped commits.** The snapshot and the WAL
    update are checkpoint commits; a code or config change landed by
-   the same session is a separate commit.</STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS></item>
-      <item><STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT fact="true" status="impl/done">**Push only if the project's autonomy rules sanction it.** No
+   the same session is a separate commit.</STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS>
+      <STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT fact="true" status="impl/done">**Push only if the project's autonomy rules sanction it.** No
    standing autonomy — stop at drafts or at local commits, per the
-   hook's propose-by-default rule.</STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT></item>
-      <item><STEP-EMIT-A-CHAT-TLDR fact="true" status="impl/done">**Emit a chat TL;DR** of what the wind-down did: files written,
+   hook's propose-by-default rule.</STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT>
+      <STEP-EMIT-A-CHAT-TLDR fact="true" status="impl/done">**Emit a chat TL;DR** of what the wind-down did: files written,
    commits created, push status, what the next session should pick up
-   first. One screen; enough detail to verify without opening files.</STEP-EMIT-A-CHAT-TLDR></item>
-    </list>
+   first. One screen; enough detail to verify without opening files.</STEP-EMIT-A-CHAT-TLDR>
+    </facts>
     <p><the-point-of-the-command fact="true" status="impl/done">The point of the command is to make session-boundary loss-of-context
 cheap: any session can end at any time and be resumed from
 `CONTINUE.md` plus the WAL with no degradation.</the-point-of-the-command></p>
@@ -97,17 +97,17 @@ contract, not a courtesy.</TREAT-IT-AS-A-HARD-CONTRACT-NOT-A-COURTESY></p>
 recognise the intent).</RESUME-TRIGGER-PHRASES></p>
     <p><THE-JOB-IS-TO-RESTORE-CONTEXT-AND-REPORT fact="true" status="impl/done">The job is to **restore context and report —
 nothing else**:</THE-JOB-IS-TO-RESTORE-CONTEXT-AND-REPORT></p>
-    <list ordered="true">
-      <item><RESUME-STEP-RUN-THE-BOOT-SEQUENCE fact="true" status="impl/done">Run the project's boot sequence (whatever its agent instructions
-   define), then read `CONTINUE.md` and `spec/WAL.md`.</RESUME-STEP-RUN-THE-BOOT-SEQUENCE></item>
-      <item><RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY fact="true" status="impl/done">Verify the repository state empirically: current branch, sync with
+    <facts ordered="true">
+      <RESUME-STEP-RUN-THE-BOOT-SEQUENCE fact="true" status="impl/done">Run the project's boot sequence (whatever its agent instructions
+   define), then read `CONTINUE.md` and `spec/WAL.md`.</RESUME-STEP-RUN-THE-BOOT-SEQUENCE>
+      <RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY fact="true" status="impl/done">Verify the repository state empirically: current branch, sync with
    the remote, working-tree status, recent commits. Never take the
-   snapshot's word for what the tree looks like.</RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY></item>
-      <item><RESUME-STEP-EMIT-A-STATUS-REPORT fact="true" status="impl/done">Emit a status report: where work stands, active blockers, and the
-   candidate next steps.</RESUME-STEP-EMIT-A-STATUS-REPORT></item>
-      <item><RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION fact="true" status="impl/done">**Stop and wait for direction.** No code edits, no commits, no
-   pushes.</RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION></item>
-    </list>
+   snapshot's word for what the tree looks like.</RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY>
+      <RESUME-STEP-EMIT-A-STATUS-REPORT fact="true" status="impl/done">Emit a status report: where work stands, active blockers, and the
+   candidate next steps.</RESUME-STEP-EMIT-A-STATUS-REPORT>
+      <RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION fact="true" status="impl/done">**Stop and wait for direction.** No code edits, no commits, no
+   pushes.</RESUME-STEP-STOP-AND-WAIT-FOR-DIRECTION>
+    </facts>
   </resume>
   <not-authorisation title="Restore is not authorisation">
     <p><A-RECORDED-POINTER-IS-A-CANDIDATE-NOT-AUTHORISATION fact="true" status="impl/done">Any "resume work at …" pointer in `CONTINUE.md` or the WAL names the
@@ -136,27 +136,27 @@ paragraph.</THE-SAME-RULE-COVERS-ANY-OTHER-SNAPSHOT></p>
     <p><THE-LIVING-CHECKPOINT-BEATS-A-FROZEN-SNAPSHOT fact="true" status="impl/done">The living checkpoint beats a frozen snapshot, always.</THE-LIVING-CHECKPOINT-BEATS-A-FROZEN-SNAPSHOT></p>
   </precedence>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-APPEND-TO-CONTINUE fact="true" status="impl/done">Never append to `CONTINUE.md` — overwrite it wholesale.</NEVER-APPEND-TO-CONTINUE></item>
-      <item><NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE fact="true" status="impl/done">Never write the snapshot from memory alone — verify branch, tree,
-  and commits empirically first.</NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE></item>
-      <item><NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND fact="true" status="impl/done">Never start executing after a resume command — report, then wait.</NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND></item>
-      <item><NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL fact="true" status="impl/done">Never treat `CONTINUE.md` as overriding the WAL.</NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL></item>
-      <item><NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN fact="true" status="impl/done">Never skip the chat TL;DR on a wind-down: it is how the user
-  verifies the checkpoint without opening files.</NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-APPEND-TO-CONTINUE fact="true" status="impl/done">Never append to `CONTINUE.md` — overwrite it wholesale.</NEVER-APPEND-TO-CONTINUE>
+      <NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE fact="true" status="impl/done">Never write the snapshot from memory alone — verify branch, tree,
+  and commits empirically first.</NEVER-WRITE-THE-SNAPSHOT-FROM-MEMORY-ALONE>
+      <NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND fact="true" status="impl/done">Never start executing after a resume command — report, then wait.</NEVER-START-EXECUTING-AFTER-A-RESUME-COMMAND>
+      <NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL fact="true" status="impl/done">Never treat `CONTINUE.md` as overriding the WAL.</NEVER-TREAT-CONTINUE-AS-OVERRIDING-THE-WAL>
+      <NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN fact="true" status="impl/done">Never skip the chat TL;DR on a wind-down: it is how the user
+  verifies the checkpoint without opening files.</NEVER-SKIP-THE-CHAT-TLDR-ON-A-WIND-DOWN>
+    </facts>
   </never>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-CONTINUE-IS-THE-COLD-READERS-TOUR fact="true" status="impl/done">`CONTINUE.md` at the repo root is the cold reader's tour: TL;DR,
+    <facts ordered="false">
+      <SUM-CONTINUE-IS-THE-COLD-READERS-TOUR fact="true" status="impl/done">`CONTINUE.md` at the repo root is the cold reader's tour: TL;DR,
   state, blocker, recipe, findings, map, decisions, commits,
-  quick-start — overwritten wholesale, never appended.</SUM-CONTINUE-IS-THE-COLD-READERS-TOUR></item>
-      <item><SUM-WHEN-TO-WRITE-IT fact="true" status="impl/done">Write it at every wind-down, before machine switches, before gaps.</SUM-WHEN-TO-WRITE-IT></item>
-      <item><SUM-WIND-DOWN-SHAPE fact="true" status="impl/done">Wind-down: snapshot + WAL rewrite + topic-grouped commits +
-  sanctioned push + chat TL;DR.</SUM-WIND-DOWN-SHAPE></item>
-      <item><SUM-RESUME-SHAPE fact="true" status="impl/done">Resume: boot, read both files, verify empirically, report, stop.</SUM-RESUME-SHAPE></item>
-      <item><SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE fact="true" status="impl/done">A recorded next step is a candidate, not authorisation.</SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE></item>
-      <item><SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT fact="true" status="impl/done">The WAL supersedes the snapshot wherever they diverge.</SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT></item>
-    </list>
+  quick-start — overwritten wholesale, never appended.</SUM-CONTINUE-IS-THE-COLD-READERS-TOUR>
+      <SUM-WHEN-TO-WRITE-IT fact="true" status="impl/done">Write it at every wind-down, before machine switches, before gaps.</SUM-WHEN-TO-WRITE-IT>
+      <SUM-WIND-DOWN-SHAPE fact="true" status="impl/done">Wind-down: snapshot + WAL rewrite + topic-grouped commits +
+  sanctioned push + chat TL;DR.</SUM-WIND-DOWN-SHAPE>
+      <SUM-RESUME-SHAPE fact="true" status="impl/done">Resume: boot, read both files, verify empirically, report, stop.</SUM-RESUME-SHAPE>
+      <SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE fact="true" status="impl/done">A recorded next step is a candidate, not authorisation.</SUM-A-RECORDED-NEXT-STEP-IS-A-CANDIDATE>
+      <SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT fact="true" status="impl/done">The WAL supersedes the snapshot wherever they diverge.</SUM-THE-WAL-SUPERSEDES-THE-SNAPSHOT>
+    </facts>
   </summary>
 </spec>

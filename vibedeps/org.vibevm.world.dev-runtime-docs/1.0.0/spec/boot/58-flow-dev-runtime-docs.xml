@@ -14,9 +14,9 @@ exactly where the drift these files exist to prevent lives.</NEVER-SHIP-A-SETUP-
     <p><sibling-document-pointers fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root.</sibling-document-pointers></p>
   </rule>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT fact="true" status="impl/done">Never ship a dev-env or runtime-setup change with its doc update in a later commit.</NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT></item>
-      <item><NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN fact="true" status="impl/done">Never let the setup docs describe a toolchain the project no longer uses.</NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT fact="true" status="impl/done">Never ship a dev-env or runtime-setup change with its doc update in a later commit.</NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT>
+      <NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN fact="true" status="impl/done">Never let the setup docs describe a toolchain the project no longer uses.</NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN>
+    </facts>
   </never>
 </spec>

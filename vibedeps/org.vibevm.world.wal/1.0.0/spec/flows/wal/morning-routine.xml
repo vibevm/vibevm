@@ -13,11 +13,11 @@ claim that "all tests pass" drifts from your memory that the timeout
 test was flaky yesterday.</WITHOUT-THE-MORNING-READ-THE-WAL-ROTS></p>
   <read title="Read before coding">
     <p><before-coding-lead fact="true" status="impl/done">Before opening any code, before starting any agent session:</before-coding-lead></p>
-    <list ordered="true">
-      <item><STEP-OPEN-THE-WAL fact="true" status="impl/done">Open `spec/WAL.md`.</STEP-OPEN-THE-WAL></item>
-      <item><STEP-READ-IT-END-TO-END fact="true" status="impl/done">Read it end to end.</STEP-READ-IT-END-TO-END></item>
-      <item><STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER fact="true" status="impl/done">Compare what it says against what you remember.</STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER></item>
-    </list>
+    <facts ordered="true">
+      <STEP-OPEN-THE-WAL fact="true" status="impl/done">Open `spec/WAL.md`.</STEP-OPEN-THE-WAL>
+      <STEP-READ-IT-END-TO-END fact="true" status="impl/done">Read it end to end.</STEP-READ-IT-END-TO-END>
+      <STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER fact="true" status="impl/done">Compare what it says against what you remember.</STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER>
+    </facts>
   </read>
   <head-wins title="Head wins">
     <p><HEAD-WINS-EDIT-THE-WAL-TO-MATCH-MEMORY fact="true" status="impl/done">If the WAL and your memory disagree, **head wins** — edit the WAL to
@@ -62,11 +62,11 @@ contract is [`cold-resume.md`](cold-resume.md).</cold-resume-contract-pointer></
   </cold>
   <weekly title="Weekly re-read">
     <p><RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY fact="true" status="impl/done">Once a week, re-read the key spec documents end-to-end. Watch for:</RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY></p>
-    <list ordered="false">
-      <item><WATCH-FOR-INTERNAL-CONTRADICTIONS fact="true" status="impl/done">Internal contradictions (§2 says one thing, §5 says another).</WATCH-FOR-INTERNAL-CONTRADICTIONS></item>
-      <item><WATCH-FOR-STALE-REVIEW-MARKERS fact="true" status="impl/done">REVIEW markers older than your configured threshold.</WATCH-FOR-STALE-REVIEW-MARKERS></item>
-      <item><WATCH-FOR-ORPHAN-ANCHORS fact="true" status="impl/done">Orphan anchors (`{#something}` that nothing references).</WATCH-FOR-ORPHAN-ANCHORS></item>
-    </list>
+    <facts ordered="false">
+      <WATCH-FOR-INTERNAL-CONTRADICTIONS fact="true" status="impl/done">Internal contradictions (§2 says one thing, §5 says another).</WATCH-FOR-INTERNAL-CONTRADICTIONS>
+      <WATCH-FOR-STALE-REVIEW-MARKERS fact="true" status="impl/done">REVIEW markers older than your configured threshold.</WATCH-FOR-STALE-REVIEW-MARKERS>
+      <WATCH-FOR-ORPHAN-ANCHORS fact="true" status="impl/done">Orphan anchors (`{#something}` that nothing references).</WATCH-FOR-ORPHAN-ANCHORS>
+    </facts>
     <p><these-drift-silently fact="true" status="spec/done">These drift silently.</these-drift-silently></p>
     <p><A-SCHEDULED-RE-READ-IS-THE-GARBAGE-COLLECTOR fact="true" status="spec/done">A scheduled re-read is the garbage collector for
 the spec corpus.</A-SCHEDULED-RE-READ-IS-THE-GARBAGE-COLLECTOR></p>
@@ -75,36 +75,36 @@ the spec corpus.</A-SCHEDULED-RE-READ-IS-THE-GARBAGE-COLLECTOR></p>
     <p><A-STALE-DATE-LINE-MEANS-THE-LAST-SESSION-DID-NOT-CLOSE fact="true" status="spec/done">If you come back after a week and the WAL's `_Updated:` line is from
 last Tuesday, the previous session clearly did not close cleanly. Your
 move:</A-STALE-DATE-LINE-MEANS-THE-LAST-SESSION-DID-NOT-CLOSE></p>
-    <list ordered="true">
-      <item><STALE-STEP-DO-NOT-START-A-SESSION-YET fact="true" status="impl/done">Do NOT start a new agent session yet.</STALE-STEP-DO-NOT-START-A-SESSION-YET></item>
-      <item><STALE-STEP-RECONSTRUCT-FROM-GIT fact="true" status="impl/done">Look at `git log` and `git diff` for the interval. Reconstruct what
-   actually happened.</STALE-STEP-RECONSTRUCT-FROM-GIT></item>
-      <item><STALE-STEP-REWRITE-THE-WAL-BY-HAND fact="true" status="impl/done">Rewrite the WAL yourself to reflect the true current state.</STALE-STEP-REWRITE-THE-WAL-BY-HAND></item>
-      <item><STALE-STEP-THEN-START-THE-NEXT-SESSION fact="true" status="impl/done">*Now* start the next session.</STALE-STEP-THEN-START-THE-NEXT-SESSION></item>
-    </list>
+    <facts ordered="true">
+      <STALE-STEP-DO-NOT-START-A-SESSION-YET fact="true" status="impl/done">Do NOT start a new agent session yet.</STALE-STEP-DO-NOT-START-A-SESSION-YET>
+      <STALE-STEP-RECONSTRUCT-FROM-GIT fact="true" status="impl/done">Look at `git log` and `git diff` for the interval. Reconstruct what
+   actually happened.</STALE-STEP-RECONSTRUCT-FROM-GIT>
+      <STALE-STEP-REWRITE-THE-WAL-BY-HAND fact="true" status="impl/done">Rewrite the WAL yourself to reflect the true current state.</STALE-STEP-REWRITE-THE-WAL-BY-HAND>
+      <STALE-STEP-THEN-START-THE-NEXT-SESSION fact="true" status="impl/done">*Now* start the next session.</STALE-STEP-THEN-START-THE-NEXT-SESSION>
+    </facts>
     <p><THE-HUMAN-IS-THE-BACKUP-FOR-THE-WAL fact="true" status="impl/done">The human is the backup for the WAL.</THE-HUMAN-IS-THE-BACKUP-FOR-THE-WAL></p>
     <p><where-the-human-is-irreplaceable fact="true" status="spec/done">This is one of the situations
 where the human is irreplaceable in the system, and where ten minutes
 of manual reconciliation prevents hours of agent confusion.</where-the-human-is-irreplaceable></p>
   </stale>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-START-ON-A-WAL-YOU-HAVE-NOT-READ-TODAY fact="true" status="impl/done">Never start an agent session on a WAL you have not read today.</NEVER-START-ON-A-WAL-YOU-HAVE-NOT-READ-TODAY></item>
-      <item><NEVER-FIX-A-STALE-WAL-FROM-MEMORY-ALONE fact="true" status="impl/done">Never "fix" a stale WAL from memory alone — reconstruct from
+    <facts ordered="false">
+      <NEVER-START-ON-A-WAL-YOU-HAVE-NOT-READ-TODAY fact="true" status="impl/done">Never start an agent session on a WAL you have not read today.</NEVER-START-ON-A-WAL-YOU-HAVE-NOT-READ-TODAY>
+      <NEVER-FIX-A-STALE-WAL-FROM-MEMORY-ALONE fact="true" status="impl/done">Never "fix" a stale WAL from memory alone — reconstruct from
   `git log` and `git diff` first; memory is reconstructive, not
-  archival.</NEVER-FIX-A-STALE-WAL-FROM-MEMORY-ALONE></item>
-      <item><NEVER-LET-THE-SKIM-REPLACE-THE-WEEKLY-RE-READ fact="true" status="impl/done">Never let the skim replace the weekly full re-read.</NEVER-LET-THE-SKIM-REPLACE-THE-WEEKLY-RE-READ></item>
-      <item><NEVER-LEAVE-A-KNOWN-DIVERGENCE-FOR-LATER fact="true" status="impl/done">Never leave a known divergence in place "for later" — the very next
-  session will read and trust it.</NEVER-LEAVE-A-KNOWN-DIVERGENCE-FOR-LATER></item>
-    </list>
+  archival.</NEVER-FIX-A-STALE-WAL-FROM-MEMORY-ALONE>
+      <NEVER-LET-THE-SKIM-REPLACE-THE-WEEKLY-RE-READ fact="true" status="impl/done">Never let the skim replace the weekly full re-read.</NEVER-LET-THE-SKIM-REPLACE-THE-WEEKLY-RE-READ>
+      <NEVER-LEAVE-A-KNOWN-DIVERGENCE-FOR-LATER fact="true" status="impl/done">Never leave a known divergence in place "for later" — the very next
+  session will read and trust it.</NEVER-LEAVE-A-KNOWN-DIVERGENCE-FOR-LATER>
+    </facts>
   </never>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-READ-THE-WAL-EVERY-MORNING fact="true" status="impl/done">Read the WAL every morning, end to end, before any session.</SUM-READ-THE-WAL-EVERY-MORNING></item>
-      <item><SUM-HEAD-WINS fact="true" status="impl/done">Head wins: your memory corrects the WAL, never the other way around.</SUM-HEAD-WINS></item>
-      <item><SUM-SKIM-AND-WEEKLY-RE-READ fact="true" status="impl/done">`wal-status` is the fast skim; the weekly full re-read still happens.</SUM-SKIM-AND-WEEKLY-RE-READ></item>
-      <item><SUM-COLD-START-ORDER fact="true" status="impl/done">Cold start? `CONTINUE.md` first for the tour, the WAL for the truth.</SUM-COLD-START-ORDER></item>
-      <item><SUM-STALE-WAL-PROCEDURE fact="true" status="impl/done">Stale WAL: reconstruct from git, rewrite by hand, then start.</SUM-STALE-WAL-PROCEDURE></item>
-    </list>
+    <facts ordered="false">
+      <SUM-READ-THE-WAL-EVERY-MORNING fact="true" status="impl/done">Read the WAL every morning, end to end, before any session.</SUM-READ-THE-WAL-EVERY-MORNING>
+      <SUM-HEAD-WINS fact="true" status="impl/done">Head wins: your memory corrects the WAL, never the other way around.</SUM-HEAD-WINS>
+      <SUM-SKIM-AND-WEEKLY-RE-READ fact="true" status="impl/done">`wal-status` is the fast skim; the weekly full re-read still happens.</SUM-SKIM-AND-WEEKLY-RE-READ>
+      <SUM-COLD-START-ORDER fact="true" status="impl/done">Cold start? `CONTINUE.md` first for the tour, the WAL for the truth.</SUM-COLD-START-ORDER>
+      <SUM-STALE-WAL-PROCEDURE fact="true" status="impl/done">Stale WAL: reconstruct from git, rewrite by hand, then start.</SUM-STALE-WAL-PROCEDURE>
+    </facts>
   </summary>
 </spec>

@@ -16,15 +16,15 @@ networks get faster, the library ships the missing feature, the
 compliance regime shifts — and the decision quietly outlives its
 reason.</data-changes-and-the-decision-outlives-its-reason></p>
     <p><two-failures-lead fact="true" status="spec/done">Without a recorded revisit condition, one of two failures follows:</two-failures-lead></p>
-    <list ordered="false">
-      <item><FAILURE-THE-SACRED-COW fact="true" status="spec/done">**The sacred cow.** The value is written down, so nobody dares
+    <facts ordered="false">
+      <FAILURE-THE-SACRED-COW fact="true" status="spec/done">**The sacred cow.** The value is written down, so nobody dares
   question it. The reason expired long ago; the decision survives on
   the authority of being recorded. Recording — the thing meant to
-  preserve reasoning — now preserves a fossil.</FAILURE-THE-SACRED-COW></item>
-      <item><FAILURE-THE-PERMANENT-RE-LITIGATION fact="true" status="spec/done">**The permanent re-litigation.** The opposite failure: with no
+  preserve reasoning — now preserves a fossil.</FAILURE-THE-SACRED-COW>
+      <FAILURE-THE-PERMANENT-RE-LITIGATION fact="true" status="spec/done">**The permanent re-litigation.** The opposite failure: with no
   stated condition for reopening, every reader feels free to reopen
-  at any time, and the record's immunity is worth nothing.</FAILURE-THE-PERMANENT-RE-LITIGATION></item>
-    </list>
+  at any time, and the record's immunity is worth nothing.</FAILURE-THE-PERMANENT-RE-LITIGATION>
+    </facts>
     <p><TRIGGER-FIXES-BOTH-AT-ONCE fact="true" status="spec/done">The trigger fixes both at once.</TRIGGER-FIXES-BOTH-AT-ONCE></p>
     <p><TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X fact="true" status="impl/done">It tells every future reader *this
 decision stands until X* — which both forbids re-litigation before X
@@ -133,13 +133,13 @@ crosses 100 s — unless the project wires an alert, and most
 decision-grade signals never earn one.</nothing-pages-anyone-for-a-decision-grade-signal></p>
     <p><RE-READING-IS-WHAT-FIRES-TRIGGERS fact="true" status="impl/done">The mechanism that actually
 fires triggers is **re-reading**, on a rhythm:</RE-READING-IS-WHAT-FIRES-TRIGGERS></p>
-    <list ordered="false">
-      <item><RHYTHM-OPPORTUNISTIC fact="true" status="impl/done">**Opportunistic:** whenever a session touches a document, glance
-  at the triggers of the records in it. Cost: seconds.</RHYTHM-OPPORTUNISTIC></item>
-      <item><RHYTHM-PERIODIC fact="true" status="impl/done">**Periodic:** weekly, or at each milestone close — whichever
+    <facts ordered="false">
+      <RHYTHM-OPPORTUNISTIC fact="true" status="impl/done">**Opportunistic:** whenever a session touches a document, glance
+  at the triggers of the records in it. Cost: seconds.</RHYTHM-OPPORTUNISTIC>
+      <RHYTHM-PERIODIC fact="true" status="impl/done">**Periodic:** weekly, or at each milestone close — whichever
   rhythm the project already keeps — sweep all records and check
-  every trigger against current data. Delegate the sweep:</RHYTHM-PERIODIC></item>
-    </list>
+  every trigger against current data. Delegate the sweep:</RHYTHM-PERIODIC>
+    </facts>
     <fence>Sweep the spec tree for decision records — sections carrying the
 Decision / Why / Considered and rejected / When to revisit fields.
 For each record:
@@ -165,46 +165,46 @@ value.</the-failure-to-avoid></p>
     <p><drift-manufactured-where-it-was-to-be-prevented fact="true" status="spec/done">That is drift manufactured at the exact point built to
 prevent it.</drift-manufactured-where-it-was-to-be-prevented></p>
     <p><procedure-lead fact="true" status="impl/done">Procedure:</procedure-lead></p>
-    <list ordered="true">
-      <item><STEP-NAME-THE-FIRED-STATE fact="true" status="impl/done">**Name the fired state.** "The trigger fired: p99 has been at
+    <facts ordered="true">
+      <STEP-NAME-THE-FIRED-STATE fact="true" status="impl/done">**Name the fired state.** "The trigger fired: p99 has been at
    82 s for three consecutive weeks, per the dashboard." This
    sentence opens the re-litigation legitimately — and it is the
-   only thing that does.</STEP-NAME-THE-FIRED-STATE></item>
-      <item><STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA fact="true" status="impl/done">**Re-run the decision with current data.** The old rejected
+   only thing that does.</STEP-NAME-THE-FIRED-STATE>
+      <STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA fact="true" status="impl/done">**Re-run the decision with current data.** The old rejected
    alternatives get first look: their rejection reasons may have
-   expired along with the trigger.</STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA></item>
-      <item><STEP-LAND-ONE-OF-TWO-OUTCOMES fact="true" status="impl/done">**Land one of two outcomes:**</STEP-LAND-ONE-OF-TWO-OUTCOMES></item>
-      <item><OUTCOME-REAFFIRMED fact="true" status="impl/done">**Reaffirmed.** The decision stands on new data. Refresh the
+   expired along with the trigger.</STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA>
+      <STEP-LAND-ONE-OF-TWO-OUTCOMES fact="true" status="impl/done">**Land one of two outcomes:**</STEP-LAND-ONE-OF-TWO-OUTCOMES>
+      <OUTCOME-REAFFIRMED fact="true" status="impl/done">**Reaffirmed.** The decision stands on new data. Refresh the
      why with the new evidence and set a *new* trigger — a fired
-     trigger is spent.</OUTCOME-REAFFIRMED></item>
-      <item><OUTCOME-CHANGED fact="true" status="impl/done">**Changed.** Rewrite the record in place — new decision, new
+     trigger is spent.</OUTCOME-REAFFIRMED>
+      <OUTCOME-CHANGED fact="true" status="impl/done">**Changed.** Rewrite the record in place — new decision, new
      why, new rejections (the old winner joins them, with its
      reason), new trigger. Add a dated line to the document's
-     version history. Git keeps the old text.</OUTCOME-CHANGED></item>
-      <item><STEP-COMMIT-CITING-THE-ANCHOR fact="true" status="impl/done">**Commit citing the anchor.** The commit body names the trigger
+     version history. Git keeps the old text.</OUTCOME-CHANGED>
+      <STEP-COMMIT-CITING-THE-ANCHOR fact="true" status="impl/done">**Commit citing the anchor.** The commit body names the trigger
    state that opened the record and cites the record's anchor; the
-   spec carries the reasoning, the commit points at it.</STEP-COMMIT-CITING-THE-ANCHOR></item>
-    </list>
+   spec carries the reasoning, the commit points at it.</STEP-COMMIT-CITING-THE-ANCHOR>
+    </facts>
     <p><NEVER-DELETE-A-RECORD-REWRITE-IT fact="true" status="impl/done">Never delete a record when a decision changes — rewrite it.</NEVER-DELETE-A-RECORD-REWRITE-IT></p>
     <p><why-rewriting-keeps-citations-live fact="true" status="spec/done">The
 anchor stays stable, every citation into it stays live, and the
 superseded reasoning remains one `git log -p` away.</why-rewriting-keeps-citations-live></p>
   </when-fired>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-NO-CONDITION-MEANS-A-SACRED-COW fact="true" status="spec/done">A decision without a revisit condition becomes a sacred cow — or a
-  permanent re-litigation target. The trigger prevents both.</SUM-NO-CONDITION-MEANS-A-SACRED-COW></item>
-      <item><SUM-WHAT-A-TRIGGER-IS-MADE-OF fact="true" status="impl/done">A trigger is metric + threshold + observation point, or an
+    <facts ordered="false">
+      <SUM-NO-CONDITION-MEANS-A-SACRED-COW fact="true" status="spec/done">A decision without a revisit condition becomes a sacred cow — or a
+  permanent re-litigation target. The trigger prevents both.</SUM-NO-CONDITION-MEANS-A-SACRED-COW>
+      <SUM-WHAT-A-TRIGGER-IS-MADE-OF fact="true" status="impl/done">A trigger is metric + threshold + observation point, or an
   unambiguous external event. "Later" and "when it breaks" are not
-  triggers.</SUM-WHAT-A-TRIGGER-IS-MADE-OF></item>
-      <item><SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE fact="true" status="impl/done">Unobservable triggers are as bad as none: collect the signal or
-  rewrite the trigger.</SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE></item>
-      <item><SUM-TRIGGERS-FIRE-BY-BEING-RE-READ fact="true" status="impl/done">Triggers fire by being re-read: opportunistically on touch,
+  triggers.</SUM-WHAT-A-TRIGGER-IS-MADE-OF>
+      <SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE fact="true" status="impl/done">Unobservable triggers are as bad as none: collect the signal or
+  rewrite the trigger.</SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE>
+      <SUM-TRIGGERS-FIRE-BY-BEING-RE-READ fact="true" status="impl/done">Triggers fire by being re-read: opportunistically on touch,
   periodically by sweep. Delegate the sweep; keep the reopening
-  decision human.</SUM-TRIGGERS-FIRE-BY-BEING-RE-READ></item>
-      <item><SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD fact="true" status="impl/done">A fired trigger re-opens the record, never silently edits the
+  decision human.</SUM-TRIGGERS-FIRE-BY-BEING-RE-READ>
+      <SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD fact="true" status="impl/done">A fired trigger re-opens the record, never silently edits the
   value. Reaffirm with a fresh why and a new trigger, or rewrite in
-  place with a changelog line. Git is the history.</SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD></item>
-    </list>
+  place with a changelog line. Git is the history.</SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD>
+    </facts>
   </summary>
 </spec>

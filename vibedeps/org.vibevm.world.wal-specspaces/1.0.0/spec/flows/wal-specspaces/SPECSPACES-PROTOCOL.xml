@@ -42,45 +42,45 @@ specspace:</AN-OPTIONAL-DEFAULT-LINE-THEN-ONE-ROW-PER-SPECSPACE></p>
 | name | root | wal | continue | status |
 |---|---|---|---|---|
 | fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — ignition PLANNED; next: Phase 0 |</fence>
-    <list ordered="false">
-      <item><FIELD-DEFAULT fact="true" status="impl/done">**`default:`** (optional, above the table) — which target a **bare**
+    <facts ordered="false">
+      <FIELD-DEFAULT fact="true" status="impl/done">**`default:`** (optional, above the table) — which target a **bare**
   session phrase resolves to (see [target resolution](#resolve)).
   `default: host` (or omitting the line entirely) makes a bare phrase
   target the host project; `default: &lt;name&gt;` makes a bare phrase
   target that specspace. Omit it unless the repository's primary work
-  really lives in one specspace.</FIELD-DEFAULT></item>
-      <item><FIELD-NAME fact="true" status="impl/done">**name** — the word used in session phrases. Short, unique,
-  lowercase.</FIELD-NAME></item>
-      <item><FIELD-ROOT fact="true" status="impl/done">**root** — the specspace root, relative to the host root. The
-  specspace's `CLAUDE.md` (or equivalent boot contract) lives here.</FIELD-ROOT></item>
-      <item><FIELD-WAL-AND-CONTINUE fact="true" status="impl/done">**wal**, **continue** — paths relative to root. Defaults are
+  really lives in one specspace.</FIELD-DEFAULT>
+      <FIELD-NAME fact="true" status="impl/done">**name** — the word used in session phrases. Short, unique,
+  lowercase.</FIELD-NAME>
+      <FIELD-ROOT fact="true" status="impl/done">**root** — the specspace root, relative to the host root. The
+  specspace's `CLAUDE.md` (or equivalent boot contract) lives here.</FIELD-ROOT>
+      <FIELD-WAL-AND-CONTINUE fact="true" status="impl/done">**wal**, **continue** — paths relative to root. Defaults are
   `spec/WAL.md` and `CONTINUE.md` per the wal flow; a specspace
   without a spec tree at its root may keep both flat at the root, as
-  the example does. The registry entry is the truth.</FIELD-WAL-AND-CONTINUE></item>
-      <item><FIELD-STATUS fact="true" status="impl/done">**status** — one line, refreshed at every specspace wind-down:
+  the example does. The registry entry is the truth.</FIELD-WAL-AND-CONTINUE>
+      <FIELD-STATUS fact="true" status="impl/done">**status** — one line, refreshed at every specspace wind-down:
   date, campaign/phase state, the next step. A pointer for the
-  *host's* readers; never the specspace's canonical state.</FIELD-STATUS></item>
-    </list>
+  *host's* readers; never the specspace's canonical state.</FIELD-STATUS>
+    </facts>
   </registry>
   <resolve title="Target resolution">
     <p><A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET fact="true" status="impl/done">A resume or wind-down phrase resolves to exactly **one** target — the
 host project or a single specspace — by this order:</A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET></p>
-    <list ordered="true">
-      <item><TARGET-EXPLICIT-WINS-ALWAYS fact="true" status="impl/done">**Explicit target wins, always.** A phrase that names a specspace
+    <facts ordered="true">
+      <TARGET-EXPLICIT-WINS-ALWAYS fact="true" status="impl/done">**Explicit target wins, always.** A phrase that names a specspace
    (`RESUME SESSION &lt;name&gt;`), or that names an explicit directory,
    targets that specspace or directory — **regardless of any declared
    default or prior context**. This is the user's always-available
    escape hatch: an explicit command forces restoration from an
    arbitrary specspace or directory. A name matching no registry row
-   is surfaced, not guessed.</TARGET-EXPLICIT-WINS-ALWAYS></item>
-      <item><TARGET-DECLARED-DEFAULT fact="true" status="impl/done">**Declared default.** A **bare** phrase (no name) uses the
+   is surfaced, not guessed.</TARGET-EXPLICIT-WINS-ALWAYS>
+      <TARGET-DECLARED-DEFAULT fact="true" status="impl/done">**Declared default.** A **bare** phrase (no name) uses the
    specspace named by the `default:` line of `SPECSPACES.md`, when one
-   is declared.</TARGET-DECLARED-DEFAULT></item>
-      <item><TARGET-HOST-FALLBACK fact="true" status="impl/done">**Host fallback.** With no name and no declared default, a bare
+   is declared.</TARGET-DECLARED-DEFAULT>
+      <TARGET-HOST-FALLBACK fact="true" status="impl/done">**Host fallback.** With no name and no declared default, a bare
    phrase targets the **host project** — restore the host root's own
    WAL and cold-resume file, per the host contract's session-command
-   sections.</TARGET-HOST-FALLBACK></item>
-    </list>
+   sections.</TARGET-HOST-FALLBACK>
+    </facts>
     <p><A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE fact="true" status="impl/done">A bare phrase therefore **never silently selects a specspace**.</A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE></p>
     <p><AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL fact="true" status="impl/done">At the
 host root, a bare `RESUME SESSION` / `ВОССТАНОВИ СЕССИЮ` restores the
@@ -123,40 +123,40 @@ line in `SPECSPACES.md`; commit per the host's commit rules; update
 the host WAL **only** if host files changed too.</WIND-DOWN-A-SPECSPACE></p>
   </grammar>
   <laws title="The five laws">
-    <list ordered="true">
-      <item><LAW-BOOT-SCOPING fact="true" status="impl/done">**Boot scoping.** A specspace session loads the host's repo-wide
+    <facts ordered="true">
+      <LAW-BOOT-SCOPING fact="true" status="impl/done">**Boot scoping.** A specspace session loads the host's repo-wide
    rules and the specspace's own files — nothing else from the host.
-   Crossing into host files mid-session is legal but announced.</LAW-BOOT-SCOPING></item>
-      <item><LAW-STATE-LOCALITY fact="true" status="impl/done">**State locality.** A specspace's canonical state lives in the
+   Crossing into host files mid-session is legal but announced.</LAW-BOOT-SCOPING>
+      <LAW-STATE-LOCALITY fact="true" status="impl/done">**State locality.** A specspace's canonical state lives in the
    specspace (its WAL). The registry status line is a pointer, not
    state; the host WAL never carries specspace detail beyond "the
-   specspace exists; see its WAL".</LAW-STATE-LOCALITY></item>
-      <item><LAW-ONE-SESSION-ONE-FOCUS fact="true" status="impl/done">**One session, one focus.** A session serves the host or one
+   specspace exists; see its WAL".</LAW-STATE-LOCALITY>
+      <LAW-ONE-SESSION-ONE-FOCUS fact="true" status="impl/done">**One session, one focus.** A session serves the host or one
    specspace. Work for two projects in one session splits into
    commits per project and updates each project's WAL — and is the
-   exception, said out loud, not the habit.</LAW-ONE-SESSION-ONE-FOCUS></item>
-      <item><LAW-HOST-RULES-SURVIVE fact="true" status="impl/done">**Host rules survive.** Repo-wide non-negotiables (authorship,
+   exception, said out loud, not the habit.</LAW-ONE-SESSION-ONE-FOCUS>
+      <LAW-HOST-RULES-SURVIVE fact="true" status="impl/done">**Host rules survive.** Repo-wide non-negotiables (authorship,
    commit conventions, secrecy rules) bind specspace sessions in
-   full. A specspace may add rules; it may not subtract the host's.</LAW-HOST-RULES-SURVIVE></item>
-      <item><LAW-PACKAGE-STATE-STAYS-OUT fact="true" status="impl/done">**Package state stays out.** WAL, cold-resume, and registry files
+   full. A specspace may add rules; it may not subtract the host's.</LAW-HOST-RULES-SURVIVE>
+      <LAW-PACKAGE-STATE-STAYS-OUT fact="true" status="impl/done">**Package state stays out.** WAL, cold-resume, and registry files
    are project state. No installable package may create, overwrite,
    or delete them on install or uninstall — the same law the wal
-   flow states for its two files.</LAW-PACKAGE-STATE-STAYS-OUT></item>
-    </list>
+   flow states for its two files.</LAW-PACKAGE-STATE-STAYS-OUT>
+    </facts>
   </laws>
   <lifecycle title="Lifecycle">
-    <list ordered="false">
-      <item><LIFECYCLE-REGISTER fact="true" status="impl/done">**Register:** create the specspace root with its boot contract,
+    <facts ordered="false">
+      <LIFECYCLE-REGISTER fact="true" status="impl/done">**Register:** create the specspace root with its boot contract,
   WAL, and cold-resume file; add the registry row; mention the
   registry in the host boot contract so sessions recognise the
-  grammar. First wind-down validates the loop.</LIFECYCLE-REGISTER></item>
-      <item><LIFECYCLE-RETIRE fact="true" status="impl/done">**Retire:** the specspace graduates to its own repository (its
+  grammar. First wind-down validates the loop.</LIFECYCLE-REGISTER>
+      <LIFECYCLE-RETIRE fact="true" status="impl/done">**Retire:** the specspace graduates to its own repository (its
   files move wholesale; its WAL goes with it) or closes (final
   status line says so; the row moves to a "retired" section — the
-  name stays reserved so old phrases fail loudly, not silently).</LIFECYCLE-RETIRE></item>
-      <item><LIFECYCLE-NESTING fact="true" status="impl/done">**Nesting:** one level. A specspace hosting its own specspaces is
-  a sign it wants to be a repository.</LIFECYCLE-NESTING></item>
-    </list>
+  name stays reserved so old phrases fail loudly, not silently).</LIFECYCLE-RETIRE>
+      <LIFECYCLE-NESTING fact="true" status="impl/done">**Nesting:** one level. A specspace hosting its own specspaces is
+  a sign it wants to be a repository.</LIFECYCLE-NESTING>
+    </facts>
   </lifecycle>
   <re-derive title="Re-derive for your project">
     <p><run-this-prompt-once-lead fact="true" status="impl/done">Run this prompt once to adapt the protocol to a concrete host:</run-this-prompt-once-lead></p>
@@ -174,21 +174,21 @@ the host WAL **only** if host files changed too.</WIND-DOWN-A-SPECSPACE></p>
 Do not move any existing project state while adapting.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-WHAT-A-SPECSPACE-IS fact="true" status="impl/done">A specspace is a sub-project with first-class session continuity:
-  own boot contract, own WAL, own cold-resume file.</SUM-WHAT-A-SPECSPACE-IS></item>
-      <item><SUM-THE-REGISTRY fact="true" status="impl/done">`SPECSPACES.md` at the host root is the registry; an optional
+    <facts ordered="false">
+      <SUM-WHAT-A-SPECSPACE-IS fact="true" status="impl/done">A specspace is a sub-project with first-class session continuity:
+  own boot contract, own WAL, own cold-resume file.</SUM-WHAT-A-SPECSPACE-IS>
+      <SUM-THE-REGISTRY fact="true" status="impl/done">`SPECSPACES.md` at the host root is the registry; an optional
   `default:` line sets what a bare phrase targets; its status column
-  is a pointer, never canonical state.</SUM-THE-REGISTRY></item>
-      <item><SUM-TARGET-RESOLUTION fact="true" status="impl/done">Target resolution: an explicit name/directory always wins; a bare
+  is a pointer, never canonical state.</SUM-THE-REGISTRY>
+      <SUM-TARGET-RESOLUTION fact="true" status="impl/done">Target resolution: an explicit name/directory always wins; a bare
   phrase takes the declared default, else the host — never a
-  specspace by accident.</SUM-TARGET-RESOLUTION></item>
-      <item><SUM-THE-SESSION-GRAMMAR fact="true" status="impl/done">Session phrases gain an optional specspace name; resume stays
-  report-then-wait; wind-down operates on the specspace's files.</SUM-THE-SESSION-GRAMMAR></item>
-      <item><SUM-THE-FIVE-LAWS fact="true" status="impl/done">Five laws: boot scoping, state locality, one focus, host rules
-  survive, package state stays out.</SUM-THE-FIVE-LAWS></item>
-      <item><SUM-NESTING-AND-GRADUATION fact="true" status="impl/done">One nesting level; a specspace that outgrows the host graduates
-  to its own repository.</SUM-NESTING-AND-GRADUATION></item>
-    </list>
+  specspace by accident.</SUM-TARGET-RESOLUTION>
+      <SUM-THE-SESSION-GRAMMAR fact="true" status="impl/done">Session phrases gain an optional specspace name; resume stays
+  report-then-wait; wind-down operates on the specspace's files.</SUM-THE-SESSION-GRAMMAR>
+      <SUM-THE-FIVE-LAWS fact="true" status="impl/done">Five laws: boot scoping, state locality, one focus, host rules
+  survive, package state stays out.</SUM-THE-FIVE-LAWS>
+      <SUM-NESTING-AND-GRADUATION fact="true" status="impl/done">One nesting level; a specspace that outgrows the host graduates
+  to its own repository.</SUM-NESTING-AND-GRADUATION>
+    </facts>
   </summary>
 </spec>

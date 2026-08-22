@@ -3,15 +3,15 @@
   <title id="root">The AI-Native Code Discipline — core (flow:org.vibevm.ai-native/core-ai-native)</title>
   <status stage="doc" state="done" audience="user"/>
   <p><core-contents-lead fact="true" status="impl/done">The language-independent core of the Discipline:</core-contents-lead></p>
-  <list ordered="false">
-    <item><CORE-PRINCIPLES fact="true" status="impl/done">principles,</CORE-PRINCIPLES></item>
-    <item><CORE-PATTERN-CARD-FORMAT fact="true" status="impl/done">the pattern-card format,</CORE-PATTERN-CARD-FORMAT></item>
-    <item><CORE-SCAFFOLD-CATALOG fact="true" status="impl/done">the executable-scaffold catalog,</CORE-SCAFFOLD-CATALOG></item>
-    <item><CORE-OPERATING-PLAYBOOKS fact="true" status="impl/done">the operating playbooks (raid, sweep, campaign
-  form, WAL convention),</CORE-OPERATING-PLAYBOOKS></item>
-    <item><CORE-MECHANISM-SPECS fact="true" status="impl/done">and the mechanism specs the shipped checkers
-  implement.</CORE-MECHANISM-SPECS></item>
-  </list>
+  <facts ordered="false">
+    <CORE-PRINCIPLES fact="true" status="impl/done">principles,</CORE-PRINCIPLES>
+    <CORE-PATTERN-CARD-FORMAT fact="true" status="impl/done">the pattern-card format,</CORE-PATTERN-CARD-FORMAT>
+    <CORE-SCAFFOLD-CATALOG fact="true" status="impl/done">the executable-scaffold catalog,</CORE-SCAFFOLD-CATALOG>
+    <CORE-OPERATING-PLAYBOOKS fact="true" status="impl/done">the operating playbooks (raid, sweep, campaign
+  form, WAL convention),</CORE-OPERATING-PLAYBOOKS>
+    <CORE-MECHANISM-SPECS fact="true" status="impl/done">and the mechanism specs the shipped checkers
+  implement.</CORE-MECHANISM-SPECS>
+  </facts>
   <p><CODE-OPTIMAL-TARGET fact="true" status="impl/done">Code optimal for **comprehension and safe modification
 by AI agents — including weak readers** (small models in swarms maintaining
 frontier-authored code).</CODE-OPTIMAL-TARGET></p>
@@ -21,37 +21,37 @@ per-language cards, the guides — ships in each language stack
 (`stack:org.vibevm.ai-native/rust-ai-native-lang` first: `rust-ai-native-conform`, `rust-ai-native-specmap`,
 `rust-ai-native`, the Rust GUIDE and cards).</RUNNABLE-HALF-IN-STACKS></p>
   <reading-order title="Reading order (human reviewer / strong author)">
-    <list ordered="true">
-      <item><READ-MANIFESTO fact="true" status="impl/done">`spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here.</READ-MANIFESTO></item>
-      <item><READ-PATTERN-CARD-FORMAT fact="true" status="impl/done">`spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in.</READ-PATTERN-CARD-FORMAT></item>
-      <item><READ-SCAFFOLDS fact="true" status="impl/done">`spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes.</READ-SCAFFOLDS></item>
-      <item><READ-STACK-GUIDE fact="true" status="impl/done">The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack).</READ-STACK-GUIDE></item>
-      <item><READ-PLAYBOOKS fact="true" status="impl/done">`spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep.</READ-PLAYBOOKS></item>
-      <item><READ-WAL-CONVENTION fact="true" status="impl/done">`spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</READ-WAL-CONVENTION></item>
-      <item><READ-MECHANISMS fact="true" status="impl/done">`spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT, MCP-CORE: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite.</READ-MECHANISMS></item>
-      <item><READ-APPENDIX fact="true" status="impl/done">`spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger).</READ-APPENDIX></item>
-    </list>
+    <facts ordered="true">
+      <READ-MANIFESTO fact="true" status="impl/done">`spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here.</READ-MANIFESTO>
+      <READ-PATTERN-CARD-FORMAT fact="true" status="impl/done">`spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in.</READ-PATTERN-CARD-FORMAT>
+      <READ-SCAFFOLDS fact="true" status="impl/done">`spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes.</READ-SCAFFOLDS>
+      <READ-STACK-GUIDE fact="true" status="impl/done">The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack).</READ-STACK-GUIDE>
+      <READ-PLAYBOOKS fact="true" status="impl/done">`spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep.</READ-PLAYBOOKS>
+      <READ-WAL-CONVENTION fact="true" status="impl/done">`spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</READ-WAL-CONVENTION>
+      <READ-MECHANISMS fact="true" status="impl/done">`spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT, MCP-CORE: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite.</READ-MECHANISMS>
+      <READ-APPENDIX fact="true" status="impl/done">`spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger).</READ-APPENDIX>
+    </facts>
   </reading-order>
   <load-bearing-results title="The two load-bearing results behind everything">
-    <list ordered="false">
-      <item><RESULT-CENTRAL-LAW fact="true" status="impl/done">**Central law (Manifesto §3):** idiomatic inside the file, engineered
+    <facts ordered="false">
+      <RESULT-CENTRAL-LAW fact="true" status="impl/done">**Central law (Manifesto §3):** idiomatic inside the file, engineered
   around the file. Surface stays in-distribution (OOD syntax collapses
   models); strictness moves to types, contracts, meta, and the verification
-  loop.</RESULT-CENTRAL-LAW></item>
-      <item><RESULT-RUNNABLE-CAPITAL fact="true" status="impl/done">**Runnable capital (Manifesto §5):** explanation capital must be
+  loop.</RESULT-CENTRAL-LAW>
+      <RESULT-RUNNABLE-CAPITAL fact="true" status="impl/done">**Runnable capital (Manifesto §5):** explanation capital must be
   executable. Weak agents leapt from executable scaffolds, not prose. Hence
   the nine-class catalog — and why every procedure here is backed by a
-  shipped tool, not a description of one.</RESULT-RUNNABLE-CAPITAL></item>
-    </list>
+  shipped tool, not a description of one.</RESULT-RUNNABLE-CAPITAL>
+    </facts>
   </load-bearing-results>
   <status-and-honesty title="Status and honesty">
     <p><beta-status fact="true" status="impl/done">BETA.</beta-status></p>
     <p><maturity-tags-lead fact="true" status="impl/done">Maturity is tagged throughout:</maturity-tags-lead></p>
-    <list ordered="false">
-      <item><MATURITY-E-STRONG fact="true" status="impl/done">[E-strong] (benchmark-backed),</MATURITY-E-STRONG></item>
-      <item><MATURITY-E-MID fact="true" status="impl/done">[E-mid] (adjacent evidence),</MATURITY-E-MID></item>
-      <item><MATURITY-E-HYP fact="true" status="impl/done">[E-hyp] (first-principles, pilot-gated).</MATURITY-E-HYP></item>
-    </list>
+    <facts ordered="false">
+      <MATURITY-E-STRONG fact="true" status="impl/done">[E-strong] (benchmark-backed),</MATURITY-E-STRONG>
+      <MATURITY-E-MID fact="true" status="impl/done">[E-mid] (adjacent evidence),</MATURITY-E-MID>
+      <MATURITY-E-HYP fact="true" status="impl/done">[E-hyp] (first-principles, pilot-gated).</MATURITY-E-HYP>
+    </facts>
     <p><open-question-transfer fact="true" status="spec/done">The central open question — does the
 executable-scaffold advantage transfer from *generation* to *modification* —
 is unproven and is the pilot's job (see

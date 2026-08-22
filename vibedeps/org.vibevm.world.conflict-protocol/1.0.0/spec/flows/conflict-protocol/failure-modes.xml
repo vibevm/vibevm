@@ -54,23 +54,23 @@ diffs exhaust.</f1-attention-is-the-only-tripwire></p>
 protocol is what suppresses it, so any gap in the protocol lets it
 back in.</F1-IS-THE-DEFAULT-STATE-OF-THE-WORLD></p>
     <p><f1-recovery-drill-lead fact="true" status="impl/done">**Recovery drill.**</f1-recovery-drill-lead></p>
-    <list ordered="true">
-      <item><F1-DRILL-REVERT-THE-SPEC-FILE-ONLY fact="true" status="impl/done">Revert the spec file — and only it — to the last human-approved
+    <facts ordered="true">
+      <F1-DRILL-REVERT-THE-SPEC-FILE-ONLY fact="true" status="impl/done">Revert the spec file — and only it — to the last human-approved
    state (`git restore &lt;spec-file&gt;`, or check out that one file from
    the last good commit). Keep the session's code if it is otherwise
-   correct.</F1-DRILL-REVERT-THE-SPEC-FILE-ONLY></item>
-      <item><F1-DRILL-HANDLE-THE-CODE-SIDE-DIVERGENCE fact="true" status="impl/done">If the code also carries the unauthorized value, you now hold an
+   correct.</F1-DRILL-REVERT-THE-SPEC-FILE-ONLY>
+      <F1-DRILL-HANDLE-THE-CODE-SIDE-DIVERGENCE fact="true" status="impl/done">If the code also carries the unauthorized value, you now hold an
    ordinary Spec &gt; Code divergence: schedule the code fix, or let the
-   agent dispute the restored value properly — with a marker.</F1-DRILL-HANDLE-THE-CODE-SIDE-DIVERGENCE></item>
-      <item><F1-DRILL-STATE-THE-CORRECTION-NEXT-SESSION fact="true" status="impl/done">Open the next session by stating the correction in plain text:
+   agent dispute the restored value properly — with a marker.</F1-DRILL-HANDLE-THE-CODE-SIDE-DIVERGENCE>
+      <F1-DRILL-STATE-THE-CORRECTION-NEXT-SESSION fact="true" status="impl/done">Open the next session by stating the correction in plain text:
    "You changed a spec value without a REVIEW marker. I reverted it.
    If you still believe backoff is better, add a REVIEW with the
-   reason and we will discuss it."</F1-DRILL-STATE-THE-CORRECTION-NEXT-SESSION></item>
-      <item><F1-DRILL-ADD-THE-STANDING-RULE-TO-THE-BOOT-FILE fact="true" status="impl/done">Add the standing rule to the boot file: "Never modify a normative
+   reason and we will discuss it."</F1-DRILL-STATE-THE-CORRECTION-NEXT-SESSION>
+      <F1-DRILL-ADD-THE-STANDING-RULE-TO-THE-BOOT-FILE fact="true" status="impl/done">Add the standing rule to the boot file: "Never modify a normative
    spec value without a REVIEW marker." A correction spoken in chat
    evaporates with the session; a correction in the boot file is
-   re-read at every future session start and compounds.</F1-DRILL-ADD-THE-STANDING-RULE-TO-THE-BOOT-FILE></item>
-    </list>
+   re-read at every future session start and compounds.</F1-DRILL-ADD-THE-STANDING-RULE-TO-THE-BOOT-FILE>
+    </facts>
     <p><F1-STEP-4-IS-THE-ONE-THAT-MATTERS fact="true" status="impl/done">Step 4 is the one that matters.</F1-STEP-4-IS-THE-ONE-THAT-MATTERS></p>
     <p><f1-steps-1-3-fix-the-incident-step-4-lowers-the-rate fact="true" status="impl/done">Steps 1–3 fix the incident; step 4
 lowers the rate.</f1-steps-1-3-fix-the-incident-step-4-lowers-the-rate></p>
@@ -91,18 +91,18 @@ rewrite step and nothing else.</f2-a-crash-deletes-exactly-the-rewrite-step></p>
 files, so it boots from the stale file and trusts it completely —
 executing yesterday's abandoned intent against today's tree.</F2-THE-NEXT-AGENT-BOOTS-FROM-THE-STALE-FILE></p>
     <p><f2-recovery-drill-lead fact="true" status="impl/done">**Recovery drill.**</f2-recovery-drill-lead></p>
-    <list ordered="true">
-      <item><F2-DRILL-DO-NOT-START-A-NEW-SESSION-YET fact="true" status="impl/done">**Do not start a new session yet.** The next agent's first act is
+    <facts ordered="true">
+      <F2-DRILL-DO-NOT-START-A-NEW-SESSION-YET fact="true" status="impl/done">**Do not start a new session yet.** The next agent's first act is
    reading the state file; feed it a lie and it returns work built on
-   the lie.</F2-DRILL-DO-NOT-START-A-NEW-SESSION-YET></item>
-      <item><F2-DRILL-RECONSTRUCT-FROM-THE-DURABLE-RECORD fact="true" status="impl/done">Reconstruct reality from the durable record: `git log` and
+   the lie.</F2-DRILL-DO-NOT-START-A-NEW-SESSION-YET>
+      <F2-DRILL-RECONSTRUCT-FROM-THE-DURABLE-RECORD fact="true" status="impl/done">Reconstruct reality from the durable record: `git log` and
    `git diff` over the crashed session's window, plus the test suite
-   if it is fast. Git survived the crash; the state file did not.</F2-DRILL-RECONSTRUCT-FROM-THE-DURABLE-RECORD></item>
-      <item><F2-DRILL-REWRITE-THE-STATE-FILE-BY-HAND fact="true" status="impl/done">Rewrite the state file by hand — a full rewrite, not an appended
+   if it is fast. Git survived the crash; the state file did not.</F2-DRILL-RECONSTRUCT-FROM-THE-DURABLE-RECORD>
+      <F2-DRILL-REWRITE-THE-STATE-FILE-BY-HAND fact="true" status="impl/done">Rewrite the state file by hand — a full rewrite, not an appended
    correction. Append-mode fixes leave the stale text in place for
-   the next reader to trip over.</F2-DRILL-REWRITE-THE-STATE-FILE-BY-HAND></item>
-      <item><F2-DRILL-ONLY-THEN-START-THE-SESSION fact="true" status="impl/done">Only then start the session.</F2-DRILL-ONLY-THEN-START-THE-SESSION></item>
-    </list>
+   the next reader to trip over.</F2-DRILL-REWRITE-THE-STATE-FILE-BY-HAND>
+      <F2-DRILL-ONLY-THEN-START-THE-SESSION fact="true" status="impl/done">Only then start the session.</F2-DRILL-ONLY-THEN-START-THE-SESSION>
+    </facts>
     <p><F2-THE-HUMAN-IS-THE-LIVE-BACKUP fact="true" status="impl/done">The human is the live backup for the state file.</F2-THE-HUMAN-IS-THE-LIVE-BACKUP></p>
     <p><heads-persist-across-crashes-volatile-files-do-not fact="true" status="spec/done">Heads persist across
 crashes; volatile files do not.</heads-persist-across-crashes-volatile-files-do-not></p>
@@ -126,18 +126,18 @@ files make it worse: readers, human and agent alike, attend to the
 beginning and the end and skim the middle, so contradictions
 accumulate precisely where nobody looks.</f3-long-files-make-it-worse></p>
     <p><f3-recovery-drill-lead fact="true" status="impl/done">**Recovery drill.**</f3-recovery-drill-lead></p>
-    <list ordered="true">
-      <item><F3-DRILL-SCHEDULE-A-FULL-RE-READ fact="true" status="impl/done">Put a full re-read of the key specs on a schedule — weekly on an
-   active project. A calendar item, not an aspiration.</F3-DRILL-SCHEDULE-A-FULL-RE-READ></item>
-      <item><F3-DRILL-NOTE-EVERY-NORMATIVE-VALUE-STATED fact="true" status="impl/done">Read end to end, noting every place a normative value or rule is
-   stated. Duplicates are pre-contradictions.</F3-DRILL-NOTE-EVERY-NORMATIVE-VALUE-STATED></item>
-      <item><F3-DRILL-THE-HUMAN-PICKS-THE-WINNER fact="true" status="impl/done">When two sections disagree, the human picks the winner. This is a
+    <facts ordered="true">
+      <F3-DRILL-SCHEDULE-A-FULL-RE-READ fact="true" status="impl/done">Put a full re-read of the key specs on a schedule — weekly on an
+   active project. A calendar item, not an aspiration.</F3-DRILL-SCHEDULE-A-FULL-RE-READ>
+      <F3-DRILL-NOTE-EVERY-NORMATIVE-VALUE-STATED fact="true" status="impl/done">Read end to end, noting every place a normative value or rule is
+   stated. Duplicates are pre-contradictions.</F3-DRILL-NOTE-EVERY-NORMATIVE-VALUE-STATED>
+      <F3-DRILL-THE-HUMAN-PICKS-THE-WINNER fact="true" status="impl/done">When two sections disagree, the human picks the winner. This is a
    Human &gt; Spec ruling; no automatic rule can make it, because both
-   sections carry equal formal authority.</F3-DRILL-THE-HUMAN-PICKS-THE-WINNER></item>
-      <item><F3-DRILL-FIX-EVERY-ECHO-AND-NOTE-THE-RESOLUTION fact="true" status="impl/done">Fix every echo of the losing version in the same change, and note
+   sections carry equal formal authority.</F3-DRILL-THE-HUMAN-PICKS-THE-WINNER>
+      <F3-DRILL-FIX-EVERY-ECHO-AND-NOTE-THE-RESOLUTION fact="true" status="impl/done">Fix every echo of the losing version in the same change, and note
    the resolution in the spec's changelog so the next full re-read
-   has an anchor.</F3-DRILL-FIX-EVERY-ECHO-AND-NOTE-THE-RESOLUTION></item>
-    </list>
+   has an anchor.</F3-DRILL-FIX-EVERY-ECHO-AND-NOTE-THE-RESOLUTION>
+    </facts>
     <p><PREVENTION-BEATS-RECOVERY-ONE-HOME-PER-VALUE fact="true" status="impl/done">Prevention beats recovery here: give every normative value exactly
 one home and cite it from everywhere else.</PREVENTION-BEATS-RECOVERY-ONE-HOME-PER-VALUE></p>
     <p><A-VALUE-STATED-TWICE-IS-A-CONTRADICTION-ON-A-DELAY-TIMER fact="true" status="spec/done">A value stated twice is a
@@ -149,18 +149,18 @@ the agent inside a session is the process *generating* the garbage;
 only the reader who spans sessions can sweep it.</garbage-collection-does-not-delegate></p>
   </self-contradiction>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-FAILURE-1-SILENT-SPEC-EDIT fact="true" status="impl/done">Failure 1, silent spec edit: revert the file, keep the code, state
+    <facts ordered="false">
+      <SUM-FAILURE-1-SILENT-SPEC-EDIT fact="true" status="impl/done">Failure 1, silent spec edit: revert the file, keep the code, state
   the rule next session, and write the rule into the boot file so the
-  correction compounds instead of evaporating.</SUM-FAILURE-1-SILENT-SPEC-EDIT></item>
-      <item><SUM-FAILURE-2-STALE-STATE-FILE fact="true" status="impl/done">Failure 2, stale state file: the human is the live backup —
+  correction compounds instead of evaporating.</SUM-FAILURE-1-SILENT-SPEC-EDIT>
+      <SUM-FAILURE-2-STALE-STATE-FILE fact="true" status="impl/done">Failure 2, stale state file: the human is the live backup —
   reconstruct from git, rewrite the file wholesale, and only then let
-  a new session boot.</SUM-FAILURE-2-STALE-STATE-FILE></item>
-      <item><SUM-FAILURE-3-SELF-CONTRADICTING-SPEC fact="true" status="impl/done">Failure 3, self-contradicting spec: weekly full re-read, the human
+  a new session boot.</SUM-FAILURE-2-STALE-STATE-FILE>
+      <SUM-FAILURE-3-SELF-CONTRADICTING-SPEC fact="true" status="impl/done">Failure 3, self-contradicting spec: weekly full re-read, the human
   picks the winner, fix every echo in one change, keep each value in
-  exactly one home.</SUM-FAILURE-3-SELF-CONTRADICTING-SPEC></item>
-      <item><SUM-ALL-THREE-SHARE-ONE-MECHANIC fact="true" status="impl/done">All three share one mechanic: state that nobody re-reads drifts.
-  Every drill is re-reading with authority attached.</SUM-ALL-THREE-SHARE-ONE-MECHANIC></item>
-    </list>
+  exactly one home.</SUM-FAILURE-3-SELF-CONTRADICTING-SPEC>
+      <SUM-ALL-THREE-SHARE-ONE-MECHANIC fact="true" status="impl/done">All three share one mechanic: state that nobody re-reads drifts.
+  Every drill is re-reading with authority attached.</SUM-ALL-THREE-SHARE-ONE-MECHANIC>
+    </facts>
   </summary>
 </spec>

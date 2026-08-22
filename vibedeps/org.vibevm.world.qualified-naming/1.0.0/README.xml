@@ -4,15 +4,15 @@
   <status stage="doc" state="done" audience="user"/>
   <p><package-installs-the-qualified-naming-discipline fact="true" status="impl/done">A `flow` package that installs the **qualified naming** discipline for
 package ecosystems:</package-installs-the-qualified-naming-discipline></p>
-  <list ordered="false">
-    <item><LAW-A-MANDATORY-GROUP-ON-EVERY-ARTIFACT fact="true" status="impl/done">a mandatory *group* on every artifact,</LAW-A-MANDATORY-GROUP-ON-EVERY-ARTIFACT></item>
-    <item><LAW-IDENTITY-IS-THE-TUPLE fact="true" status="impl/done">identity as
-  the tuple `(group, name, version, content-hash)`,</LAW-IDENTITY-IS-THE-TUPLE></item>
-    <item><LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY fact="true" status="impl/done">short names allowed
-  only at the human CLI boundary,</LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY></item>
-    <item><LAW-COLLISION-KEPT-DISTINCT-FROM-CONFLICT fact="true" status="impl/done">and *collision* kept strictly distinct
-  from *conflict*.</LAW-COLLISION-KEPT-DISTINCT-FROM-CONFLICT></item>
-  </list>
+  <facts ordered="false">
+    <LAW-A-MANDATORY-GROUP-ON-EVERY-ARTIFACT fact="true" status="impl/done">a mandatory *group* on every artifact,</LAW-A-MANDATORY-GROUP-ON-EVERY-ARTIFACT>
+    <LAW-IDENTITY-IS-THE-TUPLE fact="true" status="impl/done">identity as
+  the tuple `(group, name, version, content-hash)`,</LAW-IDENTITY-IS-THE-TUPLE>
+    <LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY fact="true" status="impl/done">short names allowed
+  only at the human CLI boundary,</LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY>
+    <LAW-COLLISION-KEPT-DISTINCT-FROM-CONFLICT fact="true" status="impl/done">and *collision* kept strictly distinct
+  from *conflict*.</LAW-COLLISION-KEPT-DISTINCT-FROM-CONFLICT>
+  </facts>
   <p><AUDIENCE-IS-ECOSYSTEM-DESIGNERS fact="true" status="impl/done">**Audience: ecosystem designers** — anyone defining a namespace for
 packages, plugins, extensions, or artifacts.</AUDIENCE-IS-ECOSYSTEM-DESIGNERS></p>
   <p><IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE fact="true" status="impl/done">This is a design-time
@@ -21,35 +21,35 @@ rule.</IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE></p>
   <p><get-the-namespace-right-before-the-first-name-is-minted fact="true" status="spec/done">Get the namespace right before the first name is minted;
 retrofitting a group onto a shipped flat registry is costly.</get-the-namespace-right-before-the-first-name-is-minted></p>
   <p><a-flat-namespace-fails-three-ways fact="true" status="spec/done">A flat namespace reads beautifully on day one and fails three ways:</a-flat-namespace-fails-three-ways></p>
-  <list ordered="false">
-    <item><FAILURE-SQUATTING fact="true" status="spec/done">squatting turns good short names into a land-grab,</FAILURE-SQUATTING></item>
-    <item><FAILURE-A-BARE-NAME-NAMES-NO-OWNER fact="true" status="spec/done">a bare name names no
-  owner so trust cannot be delegated,</FAILURE-A-BARE-NAME-NAMES-NO-OWNER></item>
-    <item><FAILURE-TRANSITIVE-NAME-COLLISION fact="true" status="spec/done">and two dependencies deep in a
-  graph can want one name meaning different things.</FAILURE-TRANSITIVE-NAME-COLLISION></item>
-  </list>
+  <facts ordered="false">
+    <FAILURE-SQUATTING fact="true" status="spec/done">squatting turns good short names into a land-grab,</FAILURE-SQUATTING>
+    <FAILURE-A-BARE-NAME-NAMES-NO-OWNER fact="true" status="spec/done">a bare name names no
+  owner so trust cannot be delegated,</FAILURE-A-BARE-NAME-NAMES-NO-OWNER>
+    <FAILURE-TRANSITIVE-NAME-COLLISION fact="true" status="spec/done">and two dependencies deep in a
+  graph can want one name meaning different things.</FAILURE-TRANSITIVE-NAME-COLLISION>
+  </facts>
   <p><groups-fix-all-three-structurally fact="true" status="spec/done">Groups fix all three
 structurally.</groups-fix-all-three-structurally></p>
   <p><THIS-PACKAGE-IS-THAT-FIX-AS-A-STANDING-CONTRACT fact="true" status="impl/done">This package is that fix, made into a standing contract.</THIS-PACKAGE-IS-THAT-FIX-AS-A-STANDING-CONTRACT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md` — the full
+  <facts ordered="false">
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md` — the full
   protocol: why flat names fail, the mandatory group, the identity
   tuple, rename-is-new-identity, short-names-at-the-boundary-only,
   collision versus conflict, and a re-derive prompt for adapting the
-  practice to a concrete ecosystem.</CONTENT-THE-PROTOCOL></item>
-    <item><CONTENT-THE-REF-GRAMMAR fact="true" status="impl/done">`spec/flows/qualified-naming/ref-grammar.md` — the reference grammar
+  practice to a concrete ecosystem.</CONTENT-THE-PROTOCOL>
+    <CONTENT-THE-REF-GRAMMAR fact="true" status="impl/done">`spec/flows/qualified-naming/ref-grammar.md` — the reference grammar
   in EBNF-ish form, the forms table with where-legal per form, worked
   examples with invented groups, the qualified-only storage rule, and
-  the shape a collision error must take.</CONTENT-THE-REF-GRAMMAR></item>
-    <item><CONTENT-THE-NAMING-FORKS fact="true" status="impl/done">`spec/flows/qualified-naming/naming-forks.md` — the design lore
+  the shape a collision error must take.</CONTENT-THE-REF-GRAMMAR>
+    <CONTENT-THE-NAMING-FORKS fact="true" status="impl/done">`spec/flows/qualified-naming/naming-forks.md` — the design lore
   condensed: flat vs grouped (the Cargo-vs-Maven precedent), enforce vs
   recommend, where short names live, and rename as alias vs new
-  identity — each fork resolved, with reasons.</CONTENT-THE-NAMING-FORKS></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/67-flow-qualified-naming.md` — boot snippet loaded at
+  identity — each fork resolved, with reasons.</CONTENT-THE-NAMING-FORKS>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/67-flow-qualified-naming.md` — boot snippet loaded at
   session start: when the practice applies, the laws in one breath, and
-  the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:qualified-naming</fence>
   </install>
@@ -60,18 +60,18 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
     <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-TOOL-DESIGN-LESSONS fact="true" status="spec/done">`flow:tool-design-lessons` — the sibling practice for the authors who
+    <facts ordered="false">
+      <COMPOSES-TOOL-DESIGN-LESSONS fact="true" status="spec/done">`flow:tool-design-lessons` — the sibling practice for the authors who
   *publish into* a namespace; this package designs the namespace they
-  publish into. Together they cover both sides of the registry boundary.</COMPOSES-TOOL-DESIGN-LESSONS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — each fork in `naming-forks.md` is a decision
+  publish into. Together they cover both sides of the registry boundary.</COMPOSES-TOOL-DESIGN-LESSONS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — each fork in `naming-forks.md` is a decision
   a future maintainer will re-open; resolve it for *your* ecosystem and
   record it with a why and a revisit trigger, so the namespace's shape
-  is not re-litigated.</COMPOSES-DECISION-RECORDS></item>
-      <item><COMPOSES-ADDRESSABLE-SPECS fact="true" status="spec/done">`flow:addressable-specs` — the same "one authoritative address per
+  is not re-litigated.</COMPOSES-DECISION-RECORDS>
+      <COMPOSES-ADDRESSABLE-SPECS fact="true" status="spec/done">`flow:addressable-specs` — the same "one authoritative address per
   fact" instinct, applied to artifact identity: a `spec://` anchor names
-  one fact unambiguously, exactly as `(group, name)` names one package.</COMPOSES-ADDRESSABLE-SPECS></item>
-    </list>
+  one fact unambiguously, exactly as `(group, name)` names one package.</COMPOSES-ADDRESSABLE-SPECS>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><discipline-crystallized-from-the-origin-projects-law fact="true" status="spec/done">The discipline is crystallized from the origin project's qualified-naming

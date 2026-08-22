@@ -42,16 +42,16 @@ it**.</IT-BECOMES-A-SHARED-FILE-WITH-THE-TOOLS-BLOCK-IN-IT></p>
     <quote><THE-CO-TENANT-LAW fact="true" status="impl/done">Own exactly one delimited block. Never touch a byte outside it.</THE-CO-TENANT-LAW></quote>
     <p><A-GOOD-CO-TENANT-WRITES-INTO-ITS-OWN-PEN fact="true" status="impl/done">A good co-tenant writes into its own pen and leaves the rest of the
 file to whoever else shares it. Stated operationally:</A-GOOD-CO-TENANT-WRITES-INTO-ITS-OWN-PEN></p>
-    <list ordered="false">
-      <item><TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS fact="true" status="impl/done">The tool reads and rewrites only the content **between** its own
-  opening and closing markers.</TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS></item>
-      <item><EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM fact="true" status="impl/done">Every byte outside that block is another tenant's property,
+    <facts ordered="false">
+      <TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS fact="true" status="impl/done">The tool reads and rewrites only the content **between** its own
+  opening and closing markers.</TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS>
+      <EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM fact="true" status="impl/done">Every byte outside that block is another tenant's property,
   **preserved verbatim** across every operation the tool performs —
-  install, update, uninstall, reconfigure.</EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM></item>
-      <item><THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT fact="true" status="impl/done">The tool assumes it is **never the only tenant**. Even in an empty
+  install, update, uninstall, reconfigure.</EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM>
+      <THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT fact="true" status="impl/done">The tool assumes it is **never the only tenant**. Even in an empty
   project today, a human or a second tool may share the file
-  tomorrow.</THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT></item>
-    </list>
+  tomorrow.</THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT>
+    </facts>
     <p><the-same-rule-a-c-include-obeys fact="true" status="spec/done">This is the same rule a C `#include` obeys: pulling in a dependency
 must never modify the including file's own authored content.</the-same-rule-a-c-include-obeys></p>
   </co-tenant>
@@ -146,22 +146,22 @@ that drifted into the wrong side of a marker.</auto-repair-rationale-pointer></p
   </state-machine>
   <verbs title="The three verbs">
     <p><EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS fact="true" status="impl/done">Everything the tool does to the block is one of three operations.</EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS></p>
-    <list ordered="false">
-      <item><VERB-CREATE fact="true" status="impl/done">**Create** — the file is *absent* of a block. Append the block at
+    <facts ordered="false">
+      <VERB-CREATE fact="true" status="impl/done">**Create** — the file is *absent* of a block. Append the block at
   the **end of the file**, preceded by one blank line of separation.
   If the file itself does not exist, create it containing only the
   block. End-of-file is the humble default: the tool does not claim
-  the attention-priority top of a shared file.</VERB-CREATE></item>
-      <item><VERB-UPDATE fact="true" status="impl/done">**Update** — the file is *present*. Replace the content between the
+  the attention-priority top of a shared file.</VERB-CREATE>
+      <VERB-UPDATE fact="true" status="impl/done">**Update** — the file is *present*. Replace the content between the
   markers with freshly generated content. The markers themselves,
   and every byte outside them, are untouched. If the new body is
-  byte-identical to the old, write nothing (§no-op).</VERB-UPDATE></item>
-      <item><VERB-REMOVE fact="true" status="impl/done">**Remove** — the file is *present* and the tool is uninstalling.
+  byte-identical to the old, write nothing (§no-op).</VERB-UPDATE>
+      <VERB-REMOVE fact="true" status="impl/done">**Remove** — the file is *present* and the tool is uninstalling.
   Delete the block **and its separation** — the blank line the create
   step added — leaving the surrounding content byte-identical to what
   it was before the block ever existed. A remove that leaves a
-  dangling blank line is a remove with a bug.</VERB-REMOVE></item>
-    </list>
+  dangling blank line is a remove with a bug.</VERB-REMOVE>
+    </facts>
     <placement title="Placement belongs to the user">
       <p><THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE fact="true" status="impl/done">The tool decides the block's position **exactly once** — at create,
 appended to the end.</THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE></p>
@@ -252,18 +252,18 @@ block for THIS tool:
 Show me the design before writing any code.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT fact="true" status="spec/done">A whole-file rewrite of a shared file is a data-loss event. Own one
-  delimited block; never touch a byte outside it.</SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT></item>
-      <item><SUM-MARKER-PROPERTIES-AND-VERSIONING fact="true" status="impl/done">Markers must be unique, greppable, paired, and carry an internal
-  do-not-edit notice. Version the marker format from day one.</SUM-MARKER-PROPERTIES-AND-VERSIONING></item>
-      <item><SUM-THREE-STATES fact="true" status="impl/done">Three states: absent → create at end of file; present → update or
-  remove the body; malformed → hard stop, human decides.</SUM-THREE-STATES></item>
-      <item><SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING fact="true" status="impl/done">Remove deletes the block *and* its separation, restoring the file
-  byte-for-byte. Never rewrite when the result is byte-identical.</SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING></item>
-      <item><SUM-CLASSIFY-AT-PLAN-TIME fact="true" status="impl/done">Classify at plan time so mutation never discovers a surprise.</SUM-CLASSIFY-AT-PLAN-TIME></item>
-      <item><SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE fact="true" status="impl/done">Two tools cohabit because each scans only for its own markers —
-  which is why the markers must be unique.</SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE></item>
-    </list>
+    <facts ordered="false">
+      <SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT fact="true" status="spec/done">A whole-file rewrite of a shared file is a data-loss event. Own one
+  delimited block; never touch a byte outside it.</SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT>
+      <SUM-MARKER-PROPERTIES-AND-VERSIONING fact="true" status="impl/done">Markers must be unique, greppable, paired, and carry an internal
+  do-not-edit notice. Version the marker format from day one.</SUM-MARKER-PROPERTIES-AND-VERSIONING>
+      <SUM-THREE-STATES fact="true" status="impl/done">Three states: absent → create at end of file; present → update or
+  remove the body; malformed → hard stop, human decides.</SUM-THREE-STATES>
+      <SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING fact="true" status="impl/done">Remove deletes the block *and* its separation, restoring the file
+  byte-for-byte. Never rewrite when the result is byte-identical.</SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING>
+      <SUM-CLASSIFY-AT-PLAN-TIME fact="true" status="impl/done">Classify at plan time so mutation never discovers a surprise.</SUM-CLASSIFY-AT-PLAN-TIME>
+      <SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE fact="true" status="impl/done">Two tools cohabit because each scans only for its own markers —
+  which is why the markers must be unique.</SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE>
+    </facts>
   </summary>
 </spec>

@@ -7,14 +7,14 @@
 is the checklist the human runs at that step.</this-document-is-the-checklist-for-that-step></p>
   <input title="What the agent hands you">
     <p><a-proposal-in-three-parts-lead fact="true" status="impl/done">A proposal in three parts:</a-proposal-in-three-parts-lead></p>
-    <list ordered="true">
-      <item><PART-A-SPEC-DIFF fact="true" status="impl/done">**A spec diff**, shown as a unified diff against the current spec
-   file (not a rewritten file).</PART-A-SPEC-DIFF></item>
-      <item><PART-AN-INTENT-STATEMENT fact="true" status="impl/done">**An intent statement** — one sentence per logical change, naming
-   *why* the code changed.</PART-AN-INTENT-STATEMENT></item>
-      <item><PART-A-REVISIT-TRIGGER fact="true" status="impl/done">**A revisit trigger** — the condition under which the decision
-   should be re-examined.</PART-A-REVISIT-TRIGGER></item>
-    </list>
+    <facts ordered="true">
+      <PART-A-SPEC-DIFF fact="true" status="impl/done">**A spec diff**, shown as a unified diff against the current spec
+   file (not a rewritten file).</PART-A-SPEC-DIFF>
+      <PART-AN-INTENT-STATEMENT fact="true" status="impl/done">**An intent statement** — one sentence per logical change, naming
+   *why* the code changed.</PART-AN-INTENT-STATEMENT>
+      <PART-A-REVISIT-TRIGGER fact="true" status="impl/done">**A revisit trigger** — the condition under which the decision
+   should be re-examined.</PART-A-REVISIT-TRIGGER>
+    </facts>
     <p><IF-ANY-OF-THE-THREE-IS-MISSING-THE-PROPOSAL-IS-INCOMPLETE fact="true" status="impl/done">If any of the three is missing, the proposal is incomplete.</IF-ANY-OF-THE-THREE-IS-MISSING-THE-PROPOSAL-IS-INCOMPLETE></p>
     <p><ASK-THE-AGENT-TO-FILL-THE-GAP-BEFORE-APPROVING fact="true" status="impl/done">Ask the
 agent to fill the gap before approving.</ASK-THE-AGENT-TO-FILL-THE-GAP-BEFORE-APPROVING></p>
@@ -36,12 +36,12 @@ fiction that the future reader will trust.</AN-INCORRECT-INTENT-IS-THE-MOST-DANG
     </check-intent>
     <check-durability title="2. Is the reason durable?">
       <p><ASK-WILL-THIS-REASON-STILL-BE-VALID-IN-A-YEAR fact="true" status="impl/done">Ask: will this reason still be valid in a year?</ASK-WILL-THIS-REASON-STILL-BE-VALID-IN-A-YEAR></p>
-      <list ordered="false">
-        <item><example-durable-profiling-spike fact="true" status="impl/done">"Profiling showed a 30 % hot-path spike on this branch" ← yes.</example-durable-profiling-spike></item>
-        <item><example-non-durable-i-was-testing-something fact="true" status="impl/done">"I was testing something" ← no. Revert the code.</example-non-durable-i-was-testing-something></item>
-        <item><example-durable-library-api-change fact="true" status="impl/done">"The library we use changed its public API in 0.9" ← yes, but cite
-  the library and the version.</example-durable-library-api-change></item>
-      </list>
+      <facts ordered="false">
+        <example-durable-profiling-spike fact="true" status="impl/done">"Profiling showed a 30 % hot-path spike on this branch" ← yes.</example-durable-profiling-spike>
+        <example-non-durable-i-was-testing-something fact="true" status="impl/done">"I was testing something" ← no. Revert the code.</example-non-durable-i-was-testing-something>
+        <example-durable-library-api-change fact="true" status="impl/done">"The library we use changed its public API in 0.9" ← yes, but cite
+  the library and the version.</example-durable-library-api-change>
+      </facts>
       <p><a-non-durable-reason-means-a-non-durable-change fact="true" status="spec/done">A non-durable reason means the code change itself is probably
 non-durable.</a-non-durable-reason-means-a-non-durable-change></p>
       <p><REVERT-RATHER-THAN-SYNC fact="true" status="impl/done">Revert rather than sync.</REVERT-RATHER-THAN-SYNC></p>
@@ -49,11 +49,11 @@ non-durable.</a-non-durable-reason-means-a-non-durable-change></p>
     <check-trigger title="3. Is the revisit trigger concrete?">
       <p><WHEN-IT-BREAKS-IS-NOT-A-TRIGGER fact="true" status="impl/done">"When it breaks" is not a trigger.</WHEN-IT-BREAKS-IS-NOT-A-TRIGGER></p>
       <p><a-trigger-is-a-measurable-signal-lead fact="true" status="impl/done">A trigger is a measurable signal:</a-trigger-is-a-measurable-signal-lead></p>
-      <list ordered="false">
-        <item><example-trigger-latency-threshold fact="true" status="impl/done">"When p99 network latency drops below 100 s, per mon/latency-p99" ← good.</example-trigger-latency-threshold></item>
-        <item><example-trigger-cpu-threshold fact="true" status="impl/done">"When CPU usage exceeds 80 % on the hot path" ← good.</example-trigger-cpu-threshold></item>
-        <item><example-trigger-later-or-at-some-point fact="true" status="impl/done">"Later" / "at some point" / "when we refactor" ← bad. Rewrite.</example-trigger-later-or-at-some-point></item>
-      </list>
+      <facts ordered="false">
+        <example-trigger-latency-threshold fact="true" status="impl/done">"When p99 network latency drops below 100 s, per mon/latency-p99" ← good.</example-trigger-latency-threshold>
+        <example-trigger-cpu-threshold fact="true" status="impl/done">"When CPU usage exceeds 80 % on the hot path" ← good.</example-trigger-cpu-threshold>
+        <example-trigger-later-or-at-some-point fact="true" status="impl/done">"Later" / "at some point" / "when we refactor" ← bad. Rewrite.</example-trigger-later-or-at-some-point>
+      </facts>
       <p><NO-TRIGGER-MEANS-NO-AUDIT-PATH fact="true" status="impl/done">No trigger means no audit path.</NO-TRIGGER-MEANS-NO-AUDIT-PATH></p>
       <p><a-permanent-fact-with-a-provisional-label fact="true" status="spec/done">You are shipping a permanent fact
 with a provisional label.</a-permanent-fact-with-a-provisional-label></p>
@@ -85,34 +85,34 @@ incomplete, or (b) unrelated and should have been a separate change.</AN-UNEXPEC
   </checklist>
   <approve title="On approval">
     <p><the-agent-lead fact="true" status="impl/done">The agent:</the-agent-lead></p>
-    <list ordered="true">
-      <item><APPROVAL-STEP-APPLIES-THE-SPEC-DIFF fact="true" status="impl/done">Applies the spec diff.</APPROVAL-STEP-APPLIES-THE-SPEC-DIFF></item>
-      <item><APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS fact="true" status="impl/done">Commits with Conventional Commits format (`docs(spec)` type), a body
+    <facts ordered="true">
+      <APPROVAL-STEP-APPLIES-THE-SPEC-DIFF fact="true" status="impl/done">Applies the spec diff.</APPROVAL-STEP-APPLIES-THE-SPEC-DIFF>
+      <APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS fact="true" status="impl/done">Commits with Conventional Commits format (`docs(spec)` type), a body
    that cites the code change driving the sync, and the `spec://…` URI
-   of the affected anchor:</APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS></item>
-    </list>
+   of the affected anchor:</APPROVAL-STEP-COMMITS-WITH-CONVENTIONAL-COMMITS>
+    </facts>
     <fence>   docs(spec): sync timeout into PROP-003 §verification.timeout
 
    Code changed TIMEOUT from 300 s to 600 s after VPN latency
    measurement (2026-03-05, 847 messages, 128 users). Spec now
    carries the value, the reason, and the revisit trigger.
    Cited by spec://oproto/PROP-003#verification.timeout.</fence>
-    <list ordered="true">
-      <item><APPROVAL-STEP-STOPS fact="true" status="impl/done">Stops. Does not continue into unrelated follow-up work in the
-   same run — a sync is its own atomic step.</APPROVAL-STEP-STOPS></item>
-    </list>
+    <facts ordered="true">
+      <APPROVAL-STEP-STOPS fact="true" status="impl/done">Stops. Does not continue into unrelated follow-up work in the
+   same run — a sync is its own atomic step.</APPROVAL-STEP-STOPS>
+    </facts>
   </approve>
   <reject title="On rejection">
     <p><two-paths-lead fact="true" status="impl/done">Two paths:</two-paths-lead></p>
-    <list ordered="false">
-      <item><REJECTION-PATH-KEEP-THE-CODE fact="true" status="impl/done">**Reject the sync, keep the code.** The code change was right but
+    <facts ordered="false">
+      <REJECTION-PATH-KEEP-THE-CODE fact="true" status="impl/done">**Reject the sync, keep the code.** The code change was right but
   the proposal's framing was wrong. Ask the agent to redraft with
-  the correct intent. No revert.</REJECTION-PATH-KEEP-THE-CODE></item>
-      <item><REJECTION-PATH-REVERT-THE-CODE fact="true" status="impl/done">**Reject the sync, revert the code.** The code change itself was
+  the correct intent. No revert.</REJECTION-PATH-KEEP-THE-CODE>
+      <REJECTION-PATH-REVERT-THE-CODE fact="true" status="impl/done">**Reject the sync, revert the code.** The code change itself was
   the problem — the proposal surfaced it. Revert with `git revert`
   or `git checkout --`, and record the lesson in the WAL's Known
-  Issues if it is worth carrying forward.</REJECTION-PATH-REVERT-THE-CODE></item>
-    </list>
+  Issues if it is worth carrying forward.</REJECTION-PATH-REVERT-THE-CODE>
+    </facts>
     <p><NEITHER-PATH-SILENTLY-ACCEPTS-A-BAD-SYNC fact="true" status="impl/done">Neither path silently accepts a bad sync.</NEITHER-PATH-SILENTLY-ACCEPTS-A-BAD-SYNC></p>
     <p><a-silently-accepted-bad-sync-makes-the-spec-fiction fact="true" status="spec/done">A silently accepted bad
 sync is how the spec becomes fiction.</a-silently-accepted-bad-sync-makes-the-spec-fiction></p>

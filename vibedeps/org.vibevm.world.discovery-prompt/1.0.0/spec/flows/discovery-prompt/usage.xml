@@ -26,17 +26,17 @@ collapsing back into confident-sounding helper mode.</EVERYTHING-ELSE-PROTECTS-T
   </what>
   <when title="When to deploy">
     <p><DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN fact="true" status="impl/done">Deploy it where the answer space is genuinely open:</DEPLOY-WHERE-THE-ANSWER-SPACE-IS-OPEN></p>
-    <list ordered="false">
-      <item><OCCASION-RESEARCH-CONVERSATIONS fact="true" status="impl/done">**research
+    <facts ordered="false">
+      <OCCASION-RESEARCH-CONVERSATIONS fact="true" status="impl/done">**research
   conversations** (mapping an unfamiliar field, weighing competing
-  theories),</OCCASION-RESEARCH-CONVERSATIONS></item>
-      <item><OCCASION-DESIGN-EXPLORATION fact="true" status="impl/done">**design exploration** (architecture options before any
-  code exists),</OCCASION-DESIGN-EXPLORATION></item>
-      <item><OCCASION-REQUIREMENTS-DISCOVERY fact="true" status="impl/done">**requirements discovery** (working out what the problem
-  even is),</OCCASION-REQUIREMENTS-DISCOVERY></item>
-      <item><OCCASION-COMPARATIVE-ANALYSIS fact="true" status="impl/done">and **comparative analysis** (trade-off studies whose
-  conclusion is not known in advance).</OCCASION-COMPARATIVE-ANALYSIS></item>
-    </list>
+  theories),</OCCASION-RESEARCH-CONVERSATIONS>
+      <OCCASION-DESIGN-EXPLORATION fact="true" status="impl/done">**design exploration** (architecture options before any
+  code exists),</OCCASION-DESIGN-EXPLORATION>
+      <OCCASION-REQUIREMENTS-DISCOVERY fact="true" status="impl/done">**requirements discovery** (working out what the problem
+  even is),</OCCASION-REQUIREMENTS-DISCOVERY>
+      <OCCASION-COMPARATIVE-ANALYSIS fact="true" status="impl/done">and **comparative analysis** (trade-off studies whose
+  conclusion is not known in advance).</OCCASION-COMPARATIVE-ANALYSIS>
+    </facts>
     <p><DO-NOT-DEPLOY-FOR-ROUTINE-CODING fact="true" status="impl/done">Do **not** deploy it for routine coding sessions.</DO-NOT-DEPLOY-FOR-ROUTINE-CODING></p>
     <p><GRAMMAR-TAXES-EVERY-RESPONSE fact="true" status="impl/done">The grammar taxes
 every response: each answer must carry a primary hypothesis with a
@@ -50,18 +50,18 @@ structure pays for itself only when the alternatives are live options
 and the confidence number tracks something genuinely unresolved.</STRUCTURE-PAYS-ONLY-WHEN-THE-ALTERNATIVES-ARE-LIVE></p>
   </when>
   <deploy title="How to deploy">
-    <list ordered="true">
-      <item><STEP-COPY-THE-FULL-TEXT fact="true" status="impl/done">Copy the full text of [`DISCOVERY-PROMPT.md`](DISCOVERY-PROMPT.md).</STEP-COPY-THE-FULL-TEXT></item>
-      <item><STEP-FILL-VARIABLES-AND-USER-INFO fact="true" status="impl/done">Fill the `&lt;VARIABLES&gt;` block (which model you are talking to) and
+    <facts ordered="true">
+      <STEP-COPY-THE-FULL-TEXT fact="true" status="impl/done">Copy the full text of [`DISCOVERY-PROMPT.md`](DISCOVERY-PROMPT.md).</STEP-COPY-THE-FULL-TEXT>
+      <STEP-FILL-VARIABLES-AND-USER-INFO fact="true" status="impl/done">Fill the `&lt;VARIABLES&gt;` block (which model you are talking to) and
    rewrite `&lt;EXTENSION_USER_INFO&gt;` so it describes *you*, not the
-   original author — [§Re-derive](#re-derive) below automates this.</STEP-FILL-VARIABLES-AND-USER-INFO></item>
-      <item><STEP-PASTE-AS-THE-FIRST-MESSAGE fact="true" status="impl/done">Paste the result as the **first message of a fresh session** — not
+   original author — [§Re-derive](#re-derive) below automates this.</STEP-FILL-VARIABLES-AND-USER-INFO>
+      <STEP-PASTE-AS-THE-FIRST-MESSAGE fact="true" status="impl/done">Paste the result as the **first message of a fresh session** — not
    into an ongoing conversation. The prompt sets a frame; a session
-   that already has momentum in helper mode will not fully re-frame.</STEP-PASTE-AS-THE-FIRST-MESSAGE></item>
-      <item><STEP-SEND-A-THROWAWAY-GREETING fact="true" status="impl/done">Send a throwaway greeting if your interface needs a second message
+   that already has momentum in helper mode will not fully re-frame.</STEP-PASTE-AS-THE-FIRST-MESSAGE>
+      <STEP-SEND-A-THROWAWAY-GREETING fact="true" status="impl/done">Send a throwaway greeting if your interface needs a second message
    to get going — the artifact's closing section hands the first real
-   move to the model.</STEP-SEND-A-THROWAWAY-GREETING></item>
-    </list>
+   move to the model.</STEP-SEND-A-THROWAWAY-GREETING>
+    </facts>
     <p><WORKS-IN-CHAT-PRODUCTS-AND-AGENT-CLIS fact="true" status="spec/done">This works in chat products and agent CLIs alike: anywhere a user can
 send a long first message to an LLM.</WORKS-IN-CHAT-PRODUCTS-AND-AGENT-CLIS></p>
   </deploy>
@@ -130,27 +130,27 @@ send a long first message to an LLM.</WORKS-IN-CHAT-PRODUCTS-AND-AGENT-CLIS></p>
     </table>
   </pieces>
   <read title="How to read the output">
-    <list ordered="false">
-      <item><READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS fact="true" status="spec/done">**Confidence numbers are calibration aids, not decoration.** Watch
+    <facts ordered="false">
+      <READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS fact="true" status="spec/done">**Confidence numbers are calibration aids, not decoration.** Watch
   them move: a claim whose confidence climbs under challenge is
-  crystallizing; one that never moves is not being re-examined.</READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS></item>
-      <item><READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE fact="true" status="spec/done">**AlternativeInterpretations are the anti-anchoring device.** They
+  crystallizing; one that never moves is not being re-examined.</READ-CONFIDENCE-NUMBERS-AS-CALIBRATION-AIDS>
+      <READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE fact="true" status="spec/done">**AlternativeInterpretations are the anti-anchoring device.** They
   keep the session from committing to the first plausible reading of
   your question. When one alternative keeps resurfacing turn after
   turn, promote it — that is the conversation telling you where the
-  live fork is.</READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE></item>
-      <item><READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR fact="true" status="spec/done">**MetaReflection is where drift shows first.** Before the answers
+  live fork is.</READ-ALTERNATIVES-AS-THE-ANTI-ANCHORING-DEVICE>
+      <READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR fact="true" status="spec/done">**MetaReflection is where drift shows first.** Before the answers
   themselves degrade, the reflections go generic — "depth increased,
   novelty 7/10" with nothing behind it. The artifact contrasts a good
   and a bad meta-reflection explicitly; when yours start resembling
-  the bad one, intervene (see [§Failure modes](#failures)).</READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR></item>
-      <item><READ-THE-MANDATORY-OBJECTION fact="true" status="impl/done">**A mandatory objection precedes every finalized answer.** The
+  the bad one, intervene (see [§Failure modes](#failures)).</READ-META-REFLECTION-AS-THE-DRIFT-DETECTOR>
+      <READ-THE-MANDATORY-OBJECTION fact="true" status="impl/done">**A mandatory objection precedes every finalized answer.** The
   ADVERSARIAL AMPLIFICATION rule requires a counter-argument strong
   enough that, were it correct, the primary hypothesis would need
   significant revision — and if no substantive counter-argument
   emerges, the model must flag that it is pattern-matching and
-  restart. An output missing its objection paragraph is off-protocol.</READ-THE-MANDATORY-OBJECTION></item>
-    </list>
+  restart. An output missing its objection paragraph is off-protocol.</READ-THE-MANDATORY-OBJECTION>
+    </facts>
   </read>
   <knobs title="The intensity knobs">
     <p><EVERY-CONTROL-IS-A-LITERAL-HASHTAG fact="true" status="impl/done">Every criticality control — `#hot`, `#cold`, `#reboil` and their
@@ -162,46 +162,46 @@ machinery — the words are generic, and only the `#`-prefixed token triggers.</
     <p><DEFAULT-WITH-NO-HASHTAG fact="true" status="impl/done">With
 no hashtag the session runs the default: robust on established facts,
 exploratory on the open frontier.</DEFAULT-WITH-NO-HASHTAG></p>
-    <list ordered="false">
-      <item><KNOB-HOT fact="true" status="impl/done">`#hot` — force exploration this turn. The model names the modal
+    <facts ordered="false">
+      <KNOB-HOT fact="true" status="impl/done">`#hot` — force exploration this turn. The model names the modal
   (template) answer, then nucleates at least one discrete candidate
   from the tail of the distribution. Turn it when answers converge too
   fast or smell like the textbook. Modifiers: `#adaptive` (default —
   push where the current answer is weakest) or `#fixed` (run the four
-  standard destabilizing operators as listed, more reproducible).</KNOB-HOT></item>
-      <item><KNOB-COLD fact="true" status="impl/done">`#cold` — force consolidation this turn. Stop generating candidates,
+  standard destabilizing operators as listed, more reproducible).</KNOB-HOT>
+      <KNOB-COLD fact="true" status="impl/done">`#cold` — force consolidation this turn. Stop generating candidates,
   freeze the best survivor, verify it hard, lock it in. Turn it when
-  the table is full of options and you need a decision.</KNOB-COLD></item>
-      <item><KNOB-REBOIL fact="true" status="impl/done">`#reboil`, or `#reboil &lt;target&gt;` — one self-correction cycle aimed
+  the table is full of options and you need a decision.</KNOB-COLD>
+      <KNOB-REBOIL fact="true" status="impl/done">`#reboil`, or `#reboil &lt;target&gt;` — one self-correction cycle aimed
   backwards at the previous output: find the weakest load-bearing
   claim, re-open it, try to replace it, report the verdict. Use it
   when you have no specific challenge but suspect weak spots. Honest
   stall is part of the contract: the artifact obliges the model to
   say "this reboil found no improvement that survives" rather than
-  invent a marginal change to look productive — believe that report.</KNOB-REBOIL></item>
-      <item><KNOB-SUPERTHINK fact="true" status="impl/done">`#superthink` — maximum-effort thinking for one hard prompt. Save it
-  for the questions that deserve it.</KNOB-SUPERTHINK></item>
-    </list>
+  invent a marginal change to look productive — believe that report.</KNOB-REBOIL>
+      <KNOB-SUPERTHINK fact="true" status="impl/done">`#superthink` — maximum-effort thinking for one hard prompt. Save it
+  for the questions that deserve it.</KNOB-SUPERTHINK>
+    </facts>
   </knobs>
   <failures title="Failure modes">
-    <list ordered="false">
-      <item><FAILURE-MODEL-IGNORES-THE-GRAMMAR fact="true" status="spec/done">**The model ignores the grammar.** Responses arrive as ordinary
+    <facts ordered="false">
+      <FAILURE-MODEL-IGNORES-THE-GRAMMAR fact="true" status="spec/done">**The model ignores the grammar.** Responses arrive as ordinary
   prose with no hypothesis, alternatives, or reflection. Re-paste the
   STRUCTURAL REQUIREMENTS block from the artifact as your next
-  message and ask for the previous answer in protocol form.</FAILURE-MODEL-IGNORES-THE-GRAMMAR></item>
-      <item><FAILURE-SYCOPHANCY-RELAPSE fact="true" status="spec/done">**Sycophancy relapse.** The model starts agreeing with your framing
+  message and ask for the previous answer in protocol form.</FAILURE-MODEL-IGNORES-THE-GRAMMAR>
+      <FAILURE-SYCOPHANCY-RELAPSE fact="true" status="spec/done">**Sycophancy relapse.** The model starts agreeing with your framing
   instead of testing it — objections go soft, confidence numbers drift
   up in lockstep with your enthusiasm. Invoke the artifact's
   anti-costume test by name and demand a real adversarial
-  amplification against the current favorite.</FAILURE-SYCOPHANCY-RELAPSE></item>
-      <item><FAILURE-COSTUME-MODE fact="true" status="spec/done">**Costume mode.** The vocabulary changed but the behavior did not:
+  amplification against the current favorite.</FAILURE-SYCOPHANCY-RELAPSE>
+      <FAILURE-COSTUME-MODE fact="true" status="spec/done">**Costume mode.** The vocabulary changed but the behavior did not:
   the output is dressed in protocol lexicon while every answer is
   still the modal one. The artifact's own test is the question "did
   behavior change measurably, or only vocabulary?" — if the honest
   answer is "only vocabulary" and a flag-and-rewrite does not fix it,
   restart the session; re-framing mid-stream costs more than a fresh
-  deployment.</FAILURE-COSTUME-MODE></item>
-    </list>
+  deployment.</FAILURE-COSTUME-MODE>
+    </facts>
   </failures>
   <re-derive title="Re-derive for your project">
     <p><ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED fact="true" status="impl/done">The artifact is read-only, but it is built to be adapted: the
@@ -225,20 +225,20 @@ Output the adapted prompt as one paste-ready block, then list every
 change you made against the original.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-USER-LEVEL-PROMPT-NO-TOOLING fact="true" status="impl/done">A user-level prompt: paste it as the first message of a fresh
-  session; no tooling required.</SUM-USER-LEVEL-PROMPT-NO-TOOLING></item>
-      <item><SUM-DEPLOY-FOR-OPEN-ENDED-WORK fact="true" status="impl/done">Deploy for open-ended research, design, requirements, and
-  comparative work — never for routine coding.</SUM-DEPLOY-FOR-OPEN-ENDED-WORK></item>
-      <item><SUM-READ-THE-STRUCTURE-NOT-THE-PROSE fact="true" status="spec/done">Read the structure, not just the prose: confidence movement,
+    <facts ordered="false">
+      <SUM-USER-LEVEL-PROMPT-NO-TOOLING fact="true" status="impl/done">A user-level prompt: paste it as the first message of a fresh
+  session; no tooling required.</SUM-USER-LEVEL-PROMPT-NO-TOOLING>
+      <SUM-DEPLOY-FOR-OPEN-ENDED-WORK fact="true" status="impl/done">Deploy for open-ended research, design, requirements, and
+  comparative work — never for routine coding.</SUM-DEPLOY-FOR-OPEN-ENDED-WORK>
+      <SUM-READ-THE-STRUCTURE-NOT-THE-PROSE fact="true" status="spec/done">Read the structure, not just the prose: confidence movement,
   recurring alternatives, and the quality of meta-reflections carry
-  the signal.</SUM-READ-THE-STRUCTURE-NOT-THE-PROSE></item>
-      <item><SUM-STEER-INTENSITY-WITH-HASHTAGS fact="true" status="impl/done">Steer intensity with hashtags: `#hot` to explore, `#cold` to decide,
-  `#reboil` to self-audit, `#superthink` for the hardest prompts.</SUM-STEER-INTENSITY-WITH-HASHTAGS></item>
-      <item><SUM-WHEN-THE-PROTOCOL-SLIPS fact="true" status="impl/done">When the protocol slips: re-paste the requirements; when it turns
-  into costume: restart.</SUM-WHEN-THE-PROTOCOL-SLIPS></item>
-      <item><SUM-ADAPT-NEVER-EDIT-THE-SHIPPED-ARTIFACT fact="true" status="impl/done">Adapt via the re-derive prompt; never edit the shipped artifact, and
-  keep its license block when the text travels.</SUM-ADAPT-NEVER-EDIT-THE-SHIPPED-ARTIFACT></item>
-    </list>
+  the signal.</SUM-READ-THE-STRUCTURE-NOT-THE-PROSE>
+      <SUM-STEER-INTENSITY-WITH-HASHTAGS fact="true" status="impl/done">Steer intensity with hashtags: `#hot` to explore, `#cold` to decide,
+  `#reboil` to self-audit, `#superthink` for the hardest prompts.</SUM-STEER-INTENSITY-WITH-HASHTAGS>
+      <SUM-WHEN-THE-PROTOCOL-SLIPS fact="true" status="impl/done">When the protocol slips: re-paste the requirements; when it turns
+  into costume: restart.</SUM-WHEN-THE-PROTOCOL-SLIPS>
+      <SUM-ADAPT-NEVER-EDIT-THE-SHIPPED-ARTIFACT fact="true" status="impl/done">Adapt via the re-derive prompt; never edit the shipped artifact, and
+  keep its license block when the text travels.</SUM-ADAPT-NEVER-EDIT-THE-SHIPPED-ARTIFACT>
+    </facts>
   </summary>
 </spec>

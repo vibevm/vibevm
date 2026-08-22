@@ -21,17 +21,17 @@ tool never wrote any.</A-LEGACY-FILE-CARRIES-NO-MARKERS></p>
 legacy file apart from a genuinely fresh host file.</ABSENT-CANNOT-TELL-LEGACY-FROM-FRESH></p>
       <p><DISTINGUISH-THEM-BY-RECOGNISING-THE-OLD-GENERATED-CONTENT fact="true" status="impl/done">Distinguish them by
 recognising the old generated content:</DISTINGUISH-THEM-BY-RECOGNISING-THE-OLD-GENERATED-CONTENT></p>
-      <list ordered="false">
-        <item><DETECT-KNOWN-OLD-FORM-REPLACE-WITH-A-CLEAN-BLOCK-FILE fact="true" status="impl/done">If the entire file matches the tool's **known old generated form**
+      <facts ordered="false">
+        <DETECT-KNOWN-OLD-FORM-REPLACE-WITH-A-CLEAN-BLOCK-FILE fact="true" status="impl/done">If the entire file matches the tool's **known old generated form**
   (match the exact header string the old version wrote — precise, so a
   false positive cannot destroy a hand-authored file), the content
   *was* the tool's. Replace it with a clean file containing just the
-  block; nothing is lost.</DETECT-KNOWN-OLD-FORM-REPLACE-WITH-A-CLEAN-BLOCK-FILE></item>
-        <item><DETECT-OTHERWISE-TAKE-THE-ABSENT-CREATE-PATH fact="true" status="impl/done">Otherwise, take the ordinary **absent → create** path: append a
+  block; nothing is lost.</DETECT-KNOWN-OLD-FORM-REPLACE-WITH-A-CLEAN-BLOCK-FILE>
+        <DETECT-OTHERWISE-TAKE-THE-ABSENT-CREATE-PATH fact="true" status="impl/done">Otherwise, take the ordinary **absent → create** path: append a
   block, preserve every other byte. A file the tool did not generate is
   a file with a co-tenant, even if that co-tenant is the user's past
-  self.</DETECT-OTHERWISE-TAKE-THE-ABSENT-CREATE-PATH></item>
-      </list>
+  self.</DETECT-OTHERWISE-TAKE-THE-ABSENT-CREATE-PATH>
+      </facts>
       <p><MATCH-THE-OLD-FORM-BY-AN-EXACT-STRING fact="true" status="impl/done">Match the old form by an **exact** string, never a loose heuristic:
 here a false positive means wrongly deleting a file a human wrote by
 hand, which is the exact disaster the whole practice exists to prevent.</MATCH-THE-OLD-FORM-BY-AN-EXACT-STRING></p>
@@ -42,15 +42,15 @@ consent when there is any doubt the file is purely tool-owned.</CONVERT-ONCE-AND
       <p><A-SILENT-CONVERSION-IS-THE-SAME-TRUST-VIOLATION fact="true" status="impl/done">A silent
 in-place conversion is the same trust violation as the overwrite it
 replaces. Concretely:</A-SILENT-CONVERSION-IS-THE-SAME-TRUST-VIOLATION></p>
-      <list ordered="false">
-        <item><CONVERSION-ON-FIRST-RUN-CONVERT-AND-PRINT-ONE-LINE fact="true" status="impl/done">On first run of the block-aware version, if the file is the known
-  old form, convert and print one line saying so.</CONVERSION-ON-FIRST-RUN-CONVERT-AND-PRINT-ONE-LINE></item>
-        <item><CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS fact="true" status="impl/done">If the file has drifted from the known form — a human touched it —
+      <facts ordered="false">
+        <CONVERSION-ON-FIRST-RUN-CONVERT-AND-PRINT-ONE-LINE fact="true" status="impl/done">On first run of the block-aware version, if the file is the known
+  old form, convert and print one line saying so.</CONVERSION-ON-FIRST-RUN-CONVERT-AND-PRINT-ONE-LINE>
+        <CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS fact="true" status="impl/done">If the file has drifted from the known form — a human touched it —
   do **not** guess. Take the append path, or stop and ask, depending on
   how destructive a wrong guess would be. When in doubt, append: a
   spurious extra block is a cosmetic annoyance the user can delete; a
-  deleted hand-edit is unrecoverable.</CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS></item>
-      </list>
+  deleted hand-edit is unrecoverable.</CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS>
+      </facts>
     </conversion>
     <changelog title="The changelog note">
       <p><OWNING-A-BLOCK-INSTEAD-OF-A-FILE-CHANGES-THE-CONTRACT fact="true" status="impl/done">A tool that starts owning a block instead of a file has changed its
@@ -128,14 +128,14 @@ is a splice, an append, or a hard stop.</THE-CLASSIFIER-IS-THE-SAFETY-CRITICAL-P
       </tr>
     </table>
     <p><TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS fact="true" status="impl/done">Two assertions deserve their own tests beyond the verdict:</TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS></p>
-    <list ordered="false">
-      <item><ASSERT-PRESERVATION-OF-EVERY-BYTE-OUTSIDE-THE-MARKERS fact="true" status="impl/done">**Preservation.** After a splice, every byte outside the markers is
-  identical to the input — assert on the full file, not just the block.</ASSERT-PRESERVATION-OF-EVERY-BYTE-OUTSIDE-THE-MARKERS></item>
-      <item><ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION fact="true" status="impl/done">**Clean removal.** After a remove, the file equals what it was before
+    <facts ordered="false">
+      <ASSERT-PRESERVATION-OF-EVERY-BYTE-OUTSIDE-THE-MARKERS fact="true" status="impl/done">**Preservation.** After a splice, every byte outside the markers is
+  identical to the input — assert on the full file, not just the block.</ASSERT-PRESERVATION-OF-EVERY-BYTE-OUTSIDE-THE-MARKERS>
+      <ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION fact="true" status="impl/done">**Clean removal.** After a remove, the file equals what it was before
   the block was ever created, separation blank line included — a
   round-trip create-then-remove is the identity function on the
-  surrounding content.</ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION></item>
-    </list>
+  surrounding content.</ASSERT-CLEAN-REMOVAL-IS-THE-IDENTITY-FUNCTION>
+    </facts>
     <p><THE-MOVED-AND-NESTED-ROWS-ARE-THE-ONES-NAIVE-TOOLS-GET-WRONG fact="true" status="impl/done">The moved and nested rows are the ones naive implementations get
 wrong: *moved* tempts a tool to "put the block back where it belongs"
 (never — position is the user's), and *nested* tempts a tool to match
@@ -146,14 +146,14 @@ pair is malformed).</THE-MOVED-AND-NESTED-ROWS-ARE-THE-ONES-NAIVE-TOOLS-GET-WRON
     <p><KEEP-THE-BLOCK-SMALL-STABLE-AND-POINTER-LIKE fact="true" status="impl/done">Keep the block **small, stable, and pointer-like**.</KEEP-THE-BLOCK-SMALL-STABLE-AND-POINTER-LIKE></p>
     <p><the-block-is-a-window-not-storage fact="true" status="spec/done">It is a window
 onto the file every reader already opens; it is not storage.</the-block-is-a-window-not-storage></p>
-    <list ordered="false">
-      <item><GOOD-BLOCK-CONTENT fact="true" status="impl/done">**Good block content:** a few lines that rarely change — a redirect
+    <facts ordered="false">
+      <GOOD-BLOCK-CONTENT fact="true" status="impl/done">**Good block content:** a few lines that rarely change — a redirect
   ("read the boot manifest"), a short set of exports, a single source
-  line, a pointer to where the real payload lives.</GOOD-BLOCK-CONTENT></item>
-      <item><BAD-BLOCK-CONTENT fact="true" status="impl/done">**Bad block content:** a large, frequently regenerated payload — a
+  line, a pointer to where the real payload lives.</GOOD-BLOCK-CONTENT>
+      <BAD-BLOCK-CONTENT fact="true" status="impl/done">**Bad block content:** a large, frequently regenerated payload — a
   hundred lines of generated config, an embedded database, anything
-  that produces a big diff on every run.</BAD-BLOCK-CONTENT></item>
-    </list>
+  that produces a big diff on every run.</BAD-BLOCK-CONTENT>
+    </facts>
     <p><PUT-A-LARGE-PAYLOAD-IN-A-TOOL-OWNED-FILE fact="true" status="impl/done">When the payload is large, put it in a **tool-owned file** — a file
 with a co-tenant of exactly zero, safely under whole-file ownership
 (see [`rejected-designs.md`](rejected-designs.md#whole-file)) — and let
@@ -170,16 +170,16 @@ handshake in the shared space; the payload lives in the tool's own
 room.</the-block-is-the-polite-handshake></p>
   </what-belongs>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-MIGRATE-BY-RECOGNISING-THE-EXACT-OLD-FORM fact="true" status="impl/done">Migrate by recognising the exact old generated form: known form →
+    <facts ordered="false">
+      <SUM-MIGRATE-BY-RECOGNISING-THE-EXACT-OLD-FORM fact="true" status="impl/done">Migrate by recognising the exact old generated form: known form →
   convert once, consent-gated; anything else → append and preserve.
-  Match by exact string, never a heuristic.</SUM-MIGRATE-BY-RECOGNISING-THE-EXACT-OLD-FORM></item>
-      <item><SUM-ANNOUNCE-THE-CONTRACT-CHANGE fact="true" status="impl/done">Announce the contract change in one changelog sentence.</SUM-ANNOUNCE-THE-CONTRACT-CHANGE></item>
-      <item><SUM-PIN-THE-STATE-MACHINE-WITH-FIXTURES fact="true" status="impl/done">Pin the state machine with fixtures: absent, present, moved,
+  Match by exact string, never a heuristic.</SUM-MIGRATE-BY-RECOGNISING-THE-EXACT-OLD-FORM>
+      <SUM-ANNOUNCE-THE-CONTRACT-CHANGE fact="true" status="impl/done">Announce the contract change in one changelog sentence.</SUM-ANNOUNCE-THE-CONTRACT-CHANGE>
+      <SUM-PIN-THE-STATE-MACHINE-WITH-FIXTURES fact="true" status="impl/done">Pin the state machine with fixtures: absent, present, moved,
   duplicated / reversed / lone / nested markers, empty body,
-  byte-identical. Test preservation and clean removal separately.</SUM-PIN-THE-STATE-MACHINE-WITH-FIXTURES></item>
-      <item><SUM-KEEP-THE-BLOCK-SMALL-AND-POINTER-LIKE fact="true" status="impl/done">Keep the block small and pointer-like; large payloads live in a
-  tool-owned file the block points at.</SUM-KEEP-THE-BLOCK-SMALL-AND-POINTER-LIKE></item>
-    </list>
+  byte-identical. Test preservation and clean removal separately.</SUM-PIN-THE-STATE-MACHINE-WITH-FIXTURES>
+      <SUM-KEEP-THE-BLOCK-SMALL-AND-POINTER-LIKE fact="true" status="impl/done">Keep the block small and pointer-like; large payloads live in a
+  tool-owned file the block points at.</SUM-KEEP-THE-BLOCK-SMALL-AND-POINTER-LIKE>
+    </facts>
   </summary>
 </spec>

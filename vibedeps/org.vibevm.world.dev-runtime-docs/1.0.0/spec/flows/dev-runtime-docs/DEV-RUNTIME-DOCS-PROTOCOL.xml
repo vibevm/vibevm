@@ -25,23 +25,23 @@ the guide after something has already broken.</every-contributor-meets-the-rule-
   <audiences title="The two audiences">
     <p><SETUP-DOCS-SERVE-TWO-DISTINCT-READERS fact="true" status="impl/done">Setup docs serve two distinct readers; a change may touch one or both, in the one commit that
 makes the change:</SETUP-DOCS-SERVE-TWO-DISTINCT-READERS></p>
-    <list ordered="false">
-      <item><AUDIENCE-CONTRIBUTOR-BUILD-DOCS fact="true" status="impl/done">**Contributor / build docs** — what to install to clone, build, test, and (if authorised)
+    <facts ordered="false">
+      <AUDIENCE-CONTRIBUTOR-BUILD-DOCS fact="true" status="impl/done">**Contributor / build docs** — what to install to clone, build, test, and (if authorised)
   publish the project. A change to a build prerequisite, a pinned toolchain, or a bootstrap
-  step lands here.</AUDIENCE-CONTRIBUTOR-BUILD-DOCS></item>
-      <item><AUDIENCE-RUNTIME-USER-DOCS fact="true" status="impl/done">**Runtime / user docs** — what an end user installs and configures to run the shipped
+  step lands here.</AUDIENCE-CONTRIBUTOR-BUILD-DOCS>
+      <AUDIENCE-RUNTIME-USER-DOCS fact="true" status="impl/done">**Runtime / user docs** — what an end user installs and configures to run the shipped
   artifact. A change to a user-facing environment variable, path convention, prerequisite, or
-  auth flow lands here.</AUDIENCE-RUNTIME-USER-DOCS></item>
-    </list>
+  auth flow lands here.</AUDIENCE-RUNTIME-USER-DOCS>
+    </facts>
   </audiences>
   <honest title="Keeping them honest">
     <p><THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE fact="true" status="impl/done">The docs are only load-bearing while they are true.</THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE></p>
     <p><two-habits-keep-them-so-lead fact="true" status="impl/done">Two habits keep them so:</two-habits-keep-them-so-lead></p>
-    <list ordered="false">
-      <item><HABIT-SAME-COMMIT-UPDATES fact="true" status="impl/done">**Same-commit updates** (the obligation above) stop new drift at the source.</HABIT-SAME-COMMIT-UPDATES></item>
-      <item><HABIT-A-PERIODIC-READ-THROUGH fact="true" status="impl/done">**A periodic read-through** against the actual toolchain catches the drift that slipped in
-  before the obligation was adopted, or through a change nobody recognised as setup-touching.</HABIT-A-PERIODIC-READ-THROUGH></item>
-    </list>
+    <facts ordered="false">
+      <HABIT-SAME-COMMIT-UPDATES fact="true" status="impl/done">**Same-commit updates** (the obligation above) stop new drift at the source.</HABIT-SAME-COMMIT-UPDATES>
+      <HABIT-A-PERIODIC-READ-THROUGH fact="true" status="impl/done">**A periodic read-through** against the actual toolchain catches the drift that slipped in
+  before the obligation was adopted, or through a change nobody recognised as setup-touching.</HABIT-A-PERIODIC-READ-THROUGH>
+    </facts>
   </honest>
   <re-derive title="Re-derive for your project">
     <p><NAME-YOUR-SETUP-DOCS-AND-CITE-THEM-FROM-YOUR-CONVENTIONS fact="true" status="impl/done">Name your setup docs (one for contributors, one for users, or a single file if the project is

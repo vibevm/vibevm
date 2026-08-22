@@ -120,32 +120,32 @@ tokens and cannot be "helpfully" acted upon.</physical-invisibility-beats-a-logi
   </private-buffer>
   <failure-smell title="Failure smell">
     <p><the-symptoms-of-a-degraded-channel-lead fact="true" status="spec/done">When the channel degrades, the symptoms are always the same:</the-symptoms-of-a-degraded-channel-lead></p>
-    <list ordered="false">
-      <item><SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED fact="true" status="spec/done">the AI re-asks what was settled last week;</SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED></item>
-      <item><SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES fact="true" status="spec/done">"fixes" undo deliberate choices;</SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES></item>
-      <item><SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES fact="true" status="spec/done">the human starts re-reading whole files instead of diffs.</SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES></item>
-    </list>
+    <facts ordered="false">
+      <SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED fact="true" status="spec/done">the AI re-asks what was settled last week;</SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED>
+      <SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES fact="true" status="spec/done">"fixes" undo deliberate choices;</SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES>
+      <SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES fact="true" status="spec/done">the human starts re-reading whole files instead of diffs.</SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES>
+    </facts>
     <p><TREAT-ANY-OF-THESE-AS-A-CHANNEL-OUTAGE fact="true" status="impl/done">Treat any of these as a channel outage — stop feature work and
 repair the files first.</TREAT-ANY-OF-THESE-AS-A-CHANNEL-OUTAGE></p>
     <p><the-repair-is-never-mysterious-lead fact="true" status="spec/done">The repair is never mysterious:</the-repair-is-never-mysterious-lead></p>
-    <list ordered="false">
-      <item><CAUSE-A-PLANE-IS-OVER-BUDGET fact="true" status="spec/done">some plane is over budget,</CAUSE-A-PLANE-IS-OVER-BUDGET></item>
-      <item><CAUSE-A-FACT-HAS-TWO-HOMES fact="true" status="spec/done">some fact has two homes,</CAUSE-A-FACT-HAS-TWO-HOMES></item>
-      <item><CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE fact="true" status="spec/done">or some change was never made visible.</CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE></item>
-    </list>
+    <facts ordered="false">
+      <CAUSE-A-PLANE-IS-OVER-BUDGET fact="true" status="spec/done">some plane is over budget,</CAUSE-A-PLANE-IS-OVER-BUDGET>
+      <CAUSE-A-FACT-HAS-TWO-HOMES fact="true" status="spec/done">some fact has two homes,</CAUSE-A-FACT-HAS-TWO-HOMES>
+      <CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE fact="true" status="spec/done">or some change was never made visible.</CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE>
+    </facts>
   </failure-smell>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL fact="true" status="impl/done">Spec files are not documentation; they are the only channel two
-  processes share. Optional is the one thing they are not.</SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL></item>
-      <item><SUM-THREE-PLANES fact="true" status="impl/done">Three planes: control (budgeted, loaded every session), data
+    <facts ordered="false">
+      <SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL fact="true" status="impl/done">Spec files are not documentation; they are the only channel two
+  processes share. Optional is the one thing they are not.</SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL>
+      <SUM-THREE-PLANES fact="true" status="impl/done">Three planes: control (budgeted, loaded every session), data
   (regenerable artifacts; spec is source, code is binary), signals
-  (minimal, attention-bounded).</SUM-THREE-PLANES></item>
-      <item><SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW fact="true" status="impl/done">Four requirements — addressability, atomicity, conflict rules,
-  visibility — each a sibling flow.</SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW></item>
-      <item><SUM-KEEP-A-PRIVATE-HUMAN-BUFFER fact="true" status="impl/done">Keep a private human buffer physically invisible to the agent.</SUM-KEEP-A-PRIVATE-HUMAN-BUFFER></item>
-      <item><SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL fact="true" status="impl/done">When the AI seems to forget or undo things, suspect the channel
-  before the model.</SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL></item>
-    </list>
+  (minimal, attention-bounded).</SUM-THREE-PLANES>
+      <SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW fact="true" status="impl/done">Four requirements — addressability, atomicity, conflict rules,
+  visibility — each a sibling flow.</SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW>
+      <SUM-KEEP-A-PRIVATE-HUMAN-BUFFER fact="true" status="impl/done">Keep a private human buffer physically invisible to the agent.</SUM-KEEP-A-PRIVATE-HUMAN-BUFFER>
+      <SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL fact="true" status="impl/done">When the AI seems to forget or undo things, suspect the channel
+  before the model.</SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL>
+    </facts>
   </summary>
 </spec>

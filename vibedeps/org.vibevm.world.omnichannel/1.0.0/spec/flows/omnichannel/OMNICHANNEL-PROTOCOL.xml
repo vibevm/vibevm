@@ -62,17 +62,17 @@ surface legitimately does for itself.</THE-CLASS-IS-THE-USEFUL-UNIT></p>
   </vocabulary>
   <thinness title="What &quot;thin&quot; means, per class">
     <p><THIN-IS-DEFINED-PER-CLASS-NOT-GLOBALLY fact="true" status="impl/done">"Thin" cannot be one rule, because the classes fail differently:</THIN-IS-DEFINED-PER-CLASS-NOT-GLOBALLY></p>
-    <list ordered="false">
-      <item><THIN-LOCAL fact="true" status="impl/done">**local** — the surface may own presentation entirely: column
+    <facts ordered="false">
+      <THIN-LOCAL fact="true" status="impl/done">**local** — the surface may own presentation entirely: column
   widths, colour, paging, progress. It may not own a decision. If removing
   the surface would lose a rule about *what is true*, the rule is in the
-  wrong place.</THIN-LOCAL></item>
-      <item><THIN-AGENT fact="true" status="impl/done">**agent-facing** — the surface owns its description and schema, and
+  wrong place.</THIN-LOCAL>
+      <THIN-AGENT fact="true" status="impl/done">**agent-facing** — the surface owns its description and schema, and
   those are part of the surface, not of the library: an MCP tool's prose is
-  written for a reader the library never sees. It owns nothing else.</THIN-AGENT></item>
-      <item><THIN-NETWORKED fact="true" status="impl/done">**networked** — the surface owns its wire contract and its version
-  policy. It may translate; it may not compute.</THIN-NETWORKED></item>
-    </list>
+  written for a reader the library never sees. It owns nothing else.</THIN-AGENT>
+      <THIN-NETWORKED fact="true" status="impl/done">**networked** — the surface owns its wire contract and its version
+  policy. It may translate; it may not compute.</THIN-NETWORKED>
+    </facts>
     <p><THE-TEST-IS-DELETION-OF-THE-SURFACE fact="true" status="impl/done">The test that settles arguments: **delete the surface on paper.** If
 anything but presentation and transport is lost, the split is wrong.</THE-TEST-IS-DELETION-OF-THE-SURFACE></p>
   </thinness>
@@ -97,16 +97,16 @@ registered agent tools, its routes. Deriving it is a separate build; being
 able to derive it is a property of this vocabulary.</THE-VOCABULARY-IS-MACHINE-READABLE-SO-THE-TABLE-CAN-BE-A-QUERY></p>
   </derived>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE fact="true" status="impl/done">Never define a capability inside a surface.</NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE></item>
-      <item><NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE fact="true" status="impl/done">Never treat one surface as the reference the others are ported
-  from — the library is the reference, or there is none.</NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE></item>
-      <item><NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY fact="true" status="impl/done">Never let two surfaces answer one question differently; when they
+    <facts ordered="false">
+      <NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE fact="true" status="impl/done">Never define a capability inside a surface.</NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE>
+      <NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE fact="true" status="impl/done">Never treat one surface as the reference the others are ported
+  from — the library is the reference, or there is none.</NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE>
+      <NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY fact="true" status="impl/done">Never let two surfaces answer one question differently; when they
   do, the fix belongs in the library, not in whichever surface was
-  reported.</NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY></item>
-      <item><NEVER-HAND-MAINTAIN-THE-TABLE fact="true" status="impl/done">Never hand-maintain the coverage table.</NEVER-HAND-MAINTAIN-THE-TABLE></item>
-      <item><NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST fact="true" status="impl/done">Never read the vocabulary as a list of surfaces every project owes.
-  It is a naming scheme; the floor is the project's own declaration.</NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST></item>
-    </list>
+  reported.</NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY>
+      <NEVER-HAND-MAINTAIN-THE-TABLE fact="true" status="impl/done">Never hand-maintain the coverage table.</NEVER-HAND-MAINTAIN-THE-TABLE>
+      <NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST fact="true" status="impl/done">Never read the vocabulary as a list of surfaces every project owes.
+  It is a naming scheme; the floor is the project's own declaration.</NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST>
+    </facts>
   </never>
 </spec>

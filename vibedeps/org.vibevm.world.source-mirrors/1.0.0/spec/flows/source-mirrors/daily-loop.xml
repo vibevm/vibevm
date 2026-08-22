@@ -60,18 +60,18 @@ writer — nothing pushes but you, when you say so.</THAT-IS-WHAT-KEEPS-MAINLINE
   <integrate title="Integrating an accepted change">
     <p><a-contribution-reaches-mainline-one-of-two-ways fact="true" status="impl/done">A contribution reaches mainline one of two ways, depending on where you
 accepted it:</a-contribution-reaches-mainline-one-of-two-ways></p>
-    <list ordered="false">
-      <item><ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI fact="true" status="impl/done">**You merged it via a host's web UI.** That host's `main` is now
-  ahead. Bring it home *before* fanning out:</ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI></item>
-    </list>
+    <facts ordered="false">
+      <ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI fact="true" status="impl/done">**You merged it via a host's web UI.** That host's `main` is now
+  ahead. Bring it home *before* fanning out:</ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI>
+    </facts>
     <fence lang="sh">  git fetch &lt;that-host-url&gt; main
   git merge --ff-only FETCH_HEAD
   project-mirror</fence>
     <p><bring-home-pointer fact="true" status="impl/done">See [`fanout-mechanics.md` §bring-home](fanout-mechanics.md#bring-home).</bring-home-pointer></p>
-    <list ordered="false">
-      <item><ROUTE-YOU-INTEGRATE-LOCALLY fact="true" status="impl/done">**You integrate locally** — a fork branch, or an emailed patch. On
-  `main` with a clean tree:</ROUTE-YOU-INTEGRATE-LOCALLY></item>
-    </list>
+    <facts ordered="false">
+      <ROUTE-YOU-INTEGRATE-LOCALLY fact="true" status="impl/done">**You integrate locally** — a fork branch, or an emailed patch. On
+  `main` with a clean tree:</ROUTE-YOU-INTEGRATE-LOCALLY>
+    </facts>
     <fence lang="sh">  git fetch &lt;contributor-url&gt; &lt;their-branch&gt;   # or: git am &lt; patch.eml
   git merge --ff-only FETCH_HEAD               # or your chosen merge
   project-mirror</fence>
@@ -90,23 +90,23 @@ loud instead of silently reconciled.</drift-is-almost-always-a-direct-write-or-a
     <p><THE-FAN-OUT-REFUSES-TO-FORCE-BY-DESIGN fact="true" status="impl/done">It will not — the
 fan-out refuses to force, by design.</THE-FAN-OUT-REFUSES-TO-FORCE-BY-DESIGN></p>
     <p><reconcile-deliberately fact="true" status="impl/done">Reconcile deliberately:</reconcile-deliberately></p>
-    <list ordered="true">
-      <item><DRIFT-STEP-INVESTIGATE fact="true" status="impl/done">**Investigate.** Fetch the host and look at what it has that you do
-   not.</DRIFT-STEP-INVESTIGATE></item>
-    </list>
+    <facts ordered="true">
+      <DRIFT-STEP-INVESTIGATE fact="true" status="impl/done">**Investigate.** Fetch the host and look at what it has that you do
+   not.</DRIFT-STEP-INVESTIGATE>
+    </facts>
     <fence lang="sh">   git fetch &lt;host-url&gt; main
    git log --oneline main..FETCH_HEAD    # the host's extra commits</fence>
-    <list ordered="true">
-      <item><DRIFT-STEP-DECIDE fact="true" status="impl/done">**Decide.** Are those commits wanted? Usually someone pushed a real
-   fix directly. Sometimes it is junk to discard.</DRIFT-STEP-DECIDE></item>
-      <item><DRIFT-STEP-RECONCILE-INTO-MAINLINE fact="true" status="impl/done">**Reconcile *into* mainline.** Merge or cherry-pick the wanted
-   commits onto mainline. Now mainline is ahead of the host again.</DRIFT-STEP-RECONCILE-INTO-MAINLINE></item>
-    </list>
+    <facts ordered="true">
+      <DRIFT-STEP-DECIDE fact="true" status="impl/done">**Decide.** Are those commits wanted? Usually someone pushed a real
+   fix directly. Sometimes it is junk to discard.</DRIFT-STEP-DECIDE>
+      <DRIFT-STEP-RECONCILE-INTO-MAINLINE fact="true" status="impl/done">**Reconcile *into* mainline.** Merge or cherry-pick the wanted
+   commits onto mainline. Now mainline is ahead of the host again.</DRIFT-STEP-RECONCILE-INTO-MAINLINE>
+    </facts>
     <fence lang="sh">   git merge FETCH_HEAD                  # or cherry-pick the good ones</fence>
-    <list ordered="true">
-      <item><DRIFT-STEP-RE-FAN fact="true" status="impl/done">**Re-fan.** `project-mirror` — the host fast-forwards cleanly,
-   because mainline now contains its history.</DRIFT-STEP-RE-FAN></item>
-    </list>
+    <facts ordered="true">
+      <DRIFT-STEP-RE-FAN fact="true" status="impl/done">**Re-fan.** `project-mirror` — the host fast-forwards cleanly,
+   because mainline now contains its history.</DRIFT-STEP-RE-FAN>
+    </facts>
     <quote><A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE fact="true" status="impl/done">A diverged target is a signal to investigate, never something to
 silently clobber.</A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE></quote>
     <p><NEVER-FIX-DRIFT-BY-OVERWRITING-THE-HOST fact="true" status="impl/done">The one thing you never do is "fix" drift by overwriting the host to
@@ -116,37 +116,37 @@ which is precisely the data the loud failure was protecting.</overwriting-discar
   </drift>
   <onboard title="Onboarding a new host">
     <p><adding-a-host-is-deliberately-small fact="true" status="impl/done">Adding a host is deliberately small:</adding-a-host-is-deliberately-small></p>
-    <list ordered="true">
-      <item><ONBOARD-STEP-CREATE-AN-EMPTY-REPO fact="true" status="impl/done">**Create an empty repo** on the new host (no README, no initial
+    <facts ordered="true">
+      <ONBOARD-STEP-CREATE-AN-EMPTY-REPO fact="true" status="impl/done">**Create an empty repo** on the new host (no README, no initial
    commit — it must be empty so the first fan-out is a clean
-   fast-forward from nothing).</ONBOARD-STEP-CREATE-AN-EMPTY-REPO></item>
-      <item><ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY fact="true" status="impl/done">**Add one manifest entry** — name, url, mode, refs — and commit it.
-   The commit is the audit trail for "when did this host join".</ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY></item>
-    </list>
+   fast-forward from nothing).</ONBOARD-STEP-CREATE-AN-EMPTY-REPO>
+      <ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY fact="true" status="impl/done">**Add one manifest entry** — name, url, mode, refs — and commit it.
+   The commit is the audit trail for "when did this host join".</ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY>
+    </facts>
     <fence lang="toml">   [[target]]
    name = "host-c"
    url  = "git@host-c.example:org/project.git"
    mode = "push"
    refs = ["main", "tags"]
    audience = "region-3"</fence>
-    <list ordered="true">
-      <item><ONBOARD-STEP-ENSURE-ACCESS fact="true" status="impl/done">**Ensure access** — your key can push to it (`push` mode), or the
-   host is configured to mirror itself (`self-pull` mode).</ONBOARD-STEP-ENSURE-ACCESS></item>
-      <item><ONBOARD-STEP-FIRST-FAN-OUT fact="true" status="impl/done">**First fan-out.** `project-mirror`. The new host receives the full
-   history; every existing host is a no-op.</ONBOARD-STEP-FIRST-FAN-OUT></item>
-    </list>
+    <facts ordered="true">
+      <ONBOARD-STEP-ENSURE-ACCESS fact="true" status="impl/done">**Ensure access** — your key can push to it (`push` mode), or the
+   host is configured to mirror itself (`self-pull` mode).</ONBOARD-STEP-ENSURE-ACCESS>
+      <ONBOARD-STEP-FIRST-FAN-OUT fact="true" status="impl/done">**First fan-out.** `project-mirror`. The new host receives the full
+   history; every existing host is a no-op.</ONBOARD-STEP-FIRST-FAN-OUT>
+    </facts>
     <p><THAT-IS-THE-ENTIRE-ONBOARDING fact="true" status="impl/done">That is the entire onboarding.</THAT-IS-THE-ENTIRE-ONBOARDING></p>
     <p><the-model-was-built-for-a-living-host-set fact="true" status="spec/done">No re-architecture, no cutover — the
 model was built for the host set to be *living*.</the-model-was-built-for-a-living-host-set></p>
   </onboard>
   <offboard title="Offboarding a host">
     <p><removing-a-host-is-smaller-still fact="true" status="impl/done">Removing a host is smaller still:</removing-a-host-is-smaller-still></p>
-    <list ordered="true">
-      <item><OFFBOARD-STEP-DELETE-ITS-TARGET-ENTRY fact="true" status="impl/done">**Delete its `[[target]]` entry** from the manifest and commit the
-   removal. The fan-out stops targeting it immediately.</OFFBOARD-STEP-DELETE-ITS-TARGET-ENTRY></item>
-      <item><OFFBOARD-STEP-OPTIONALLY-ARCHIVE-THE-HOST-COPY fact="true" status="impl/done">**Optionally archive the host copy** — leave it read-only as a
-   historical mirror, or delete the repo on that host.</OFFBOARD-STEP-OPTIONALLY-ARCHIVE-THE-HOST-COPY></item>
-    </list>
+    <facts ordered="true">
+      <OFFBOARD-STEP-DELETE-ITS-TARGET-ENTRY fact="true" status="impl/done">**Delete its `[[target]]` entry** from the manifest and commit the
+   removal. The fan-out stops targeting it immediately.</OFFBOARD-STEP-DELETE-ITS-TARGET-ENTRY>
+      <OFFBOARD-STEP-OPTIONALLY-ARCHIVE-THE-HOST-COPY fact="true" status="impl/done">**Optionally archive the host copy** — leave it read-only as a
+   historical mirror, or delete the repo on that host.</OFFBOARD-STEP-OPTIONALLY-ARCHIVE-THE-HOST-COPY>
+    </facts>
     <p><NOTHING-IS-LOST-EITHER-WAY fact="true" status="impl/done">Nothing is lost either way: **every remaining host
 holds the full history of the declared refs, and mainline holds the whole
 tree.**</NOTHING-IS-LOST-EITHER-WAY></p>
@@ -157,20 +157,20 @@ is the payoff of "every host is a complete replica": the host set can
 shrink as freely as it grew.</the-host-set-can-shrink-as-freely-as-it-grew></p>
   </offboard>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-AUTHOR-ON-MAINLINE-AND-FAN-OUT-AT-CHECKPOINTS fact="true" status="impl/done">Author on mainline as normal; fan out at natural checkpoints, never as
-  a background daemon.</SUM-AUTHOR-ON-MAINLINE-AND-FAN-OUT-AT-CHECKPOINTS></item>
-      <item><SUM-A-CHANGE-LANDS-IN-MAINLINE-FIRST fact="true" status="impl/done">A change lands in mainline *first*; the fan-out is what puts it on the
-  hosts. A web-UI merge is an inbox event, not integration.</SUM-A-CHANGE-LANDS-IN-MAINLINE-FIRST></item>
-      <item><SUM-DRIFT-IS-RECONCILED-INTO-MAINLINE fact="true" status="impl/done">Drift is investigated and reconciled *into* mainline, then re-fanned —
-  never cleared by clobbering the host.</SUM-DRIFT-IS-RECONCILED-INTO-MAINLINE></item>
-      <item><SUM-ONBOARD-AND-OFFBOARD fact="true" status="impl/done">Onboard a host: empty repo → one manifest entry → first fan-out.
-  Offboard: remove the entry, optionally archive the copy.</SUM-ONBOARD-AND-OFFBOARD></item>
-      <item><SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY fact="true" status="impl/done">Every host holds the full history of
+    <facts ordered="false">
+      <SUM-AUTHOR-ON-MAINLINE-AND-FAN-OUT-AT-CHECKPOINTS fact="true" status="impl/done">Author on mainline as normal; fan out at natural checkpoints, never as
+  a background daemon.</SUM-AUTHOR-ON-MAINLINE-AND-FAN-OUT-AT-CHECKPOINTS>
+      <SUM-A-CHANGE-LANDS-IN-MAINLINE-FIRST fact="true" status="impl/done">A change lands in mainline *first*; the fan-out is what puts it on the
+  hosts. A web-UI merge is an inbox event, not integration.</SUM-A-CHANGE-LANDS-IN-MAINLINE-FIRST>
+      <SUM-DRIFT-IS-RECONCILED-INTO-MAINLINE fact="true" status="impl/done">Drift is investigated and reconciled *into* mainline, then re-fanned —
+  never cleared by clobbering the host.</SUM-DRIFT-IS-RECONCILED-INTO-MAINLINE>
+      <SUM-ONBOARD-AND-OFFBOARD fact="true" status="impl/done">Onboard a host: empty repo → one manifest entry → first fan-out.
+  Offboard: remove the entry, optionally archive the copy.</SUM-ONBOARD-AND-OFFBOARD>
+      <SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY fact="true" status="impl/done">Every host holds the full history of
   the refs the manifest declares for it (`main` + tags today; any deliberately
   declared branch later), so the set grows and shrinks without data loss. Refs
   outside that set live only where they were authored — the fan-out is
-  replication of a declared line, not a backup of the whole tree.</SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY></item>
-    </list>
+  replication of a declared line, not a backup of the whole tree.</SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY>
+    </facts>
   </summary>
 </spec>

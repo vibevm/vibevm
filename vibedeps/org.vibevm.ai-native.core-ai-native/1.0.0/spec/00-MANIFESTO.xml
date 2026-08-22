@@ -26,14 +26,14 @@
   </target-function>
   <six-axioms title="2. The six axioms, projected to the language level">
     <p><axioms-lead fact="true" status="impl/done">The axioms are unchanged from the Charter; here is what each *means for how code and its metadata are written*.</axioms-lead></p>
-    <list ordered="false">
-      <item><AXIOM-A1-EXPLAINABILITY fact="true" status="impl/done">**A1 — Explainability.** Every artifact carries a machine-resolvable chain from code to requirement to rationale (`spec://` URIs, in-source `#[spec(...)]` edges). Unexplainable code is unmergeable. *Language-level:* identifiers, errors, and items are anchored to requirements, not free-floating.</AXIOM-A1-EXPLAINABILITY></item>
-      <item><AXIOM-A2-NEVER-PAY-TWICE fact="true" status="impl/done">**A2 — Never pay twice.** Derived cognition is materialized content-addressed and dependency-tracked. *Language-level:* anything mechanically derivable (boilerplate, indexes, glue) is generated, not hand-maintained; the strong author's analysis is stored, not re-run.</AXIOM-A2-NEVER-PAY-TWICE></item>
-      <item><AXIOM-A3-ALGORITHMIC-FLOOR fact="true" status="impl/done">**A3 — Algorithmic floor.** Where a deterministic procedure exists, the LLM is forbidden; its outputs sink below the floor. *Language-level:* push as much intent as possible into machine-checkable form — types, exhaustiveness, contracts — so a checker, not a model, enforces it. **This is the engine of the central law (§3).**</AXIOM-A3-ALGORITHMIC-FLOOR></item>
-      <item><AXIOM-A4-HUMAN-ACCOUNTABILITY fact="true" status="impl/done">**A4 — Human accountability.** AI checks and proposes; the human is the accountable author; diffs stay human-reviewable. *Language-level:* no change is so clever a human cannot review it; determinism keeps diffs semantic.</AXIOM-A4-HUMAN-ACCOUNTABILITY></item>
-      <item><AXIOM-A5-RULE-IS-CODE fact="true" status="impl/done">**A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. *Language-level:* a style rule with no linter is not a rule; it is documentation that decays (see §6). Rulebook health is the wish-ratio, not the page count.</AXIOM-A5-RULE-IS-CODE></item>
-      <item><AXIOM-A6-REALITY-BEFORE-ASPIRATION fact="true" status="impl/done">**A6 — Reality before aspiration.** Gates measure deltas against inventoried reality; debt, unimplemented intent, and contradiction are first-class tracked objects. *Language-level:* the code's actual state — not its intended state — is what tooling reasons over.</AXIOM-A6-REALITY-BEFORE-ASPIRATION></item>
-    </list>
+    <facts ordered="false">
+      <AXIOM-A1-EXPLAINABILITY fact="true" status="impl/done">**A1 — Explainability.** Every artifact carries a machine-resolvable chain from code to requirement to rationale (`spec://` URIs, in-source `#[spec(...)]` edges). Unexplainable code is unmergeable. *Language-level:* identifiers, errors, and items are anchored to requirements, not free-floating.</AXIOM-A1-EXPLAINABILITY>
+      <AXIOM-A2-NEVER-PAY-TWICE fact="true" status="impl/done">**A2 — Never pay twice.** Derived cognition is materialized content-addressed and dependency-tracked. *Language-level:* anything mechanically derivable (boilerplate, indexes, glue) is generated, not hand-maintained; the strong author's analysis is stored, not re-run.</AXIOM-A2-NEVER-PAY-TWICE>
+      <AXIOM-A3-ALGORITHMIC-FLOOR fact="true" status="impl/done">**A3 — Algorithmic floor.** Where a deterministic procedure exists, the LLM is forbidden; its outputs sink below the floor. *Language-level:* push as much intent as possible into machine-checkable form — types, exhaustiveness, contracts — so a checker, not a model, enforces it. **This is the engine of the central law (§3).**</AXIOM-A3-ALGORITHMIC-FLOOR>
+      <AXIOM-A4-HUMAN-ACCOUNTABILITY fact="true" status="impl/done">**A4 — Human accountability.** AI checks and proposes; the human is the accountable author; diffs stay human-reviewable. *Language-level:* no change is so clever a human cannot review it; determinism keeps diffs semantic.</AXIOM-A4-HUMAN-ACCOUNTABILITY>
+      <AXIOM-A5-RULE-IS-CODE fact="true" status="impl/done">**A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. *Language-level:* a style rule with no linter is not a rule; it is documentation that decays (see §6). Rulebook health is the wish-ratio, not the page count.</AXIOM-A5-RULE-IS-CODE>
+      <AXIOM-A6-REALITY-BEFORE-ASPIRATION fact="true" status="impl/done">**A6 — Reality before aspiration.** Gates measure deltas against inventoried reality; debt, unimplemented intent, and contradiction are first-class tracked objects. *Language-level:* the code's actual state — not its intended state — is what tooling reasons over.</AXIOM-A6-REALITY-BEFORE-ASPIRATION>
+    </facts>
   </six-axioms>
   <the-central-law title="3. The central law: idiomatic inside the file, engineered around the file">
     <p><strongest-empirical-result fact="true" status="spec/done">The strongest empirical result we found, dated and controlled: models collapse on out-of-distribution *surface syntax* (EsoLang-Bench, Mar 2026: frontier models 0–11% on esoteric languages they could solve trivially in Python) — **and** current agents largely *recover* that collapse through tools and in-session strategy (the Jun 2026 follow-up: the same tasks, 87–100% with file-editing + interpreter loops).</strongest-empirical-result></p>
@@ -42,12 +42,12 @@
     <quote><CENTRAL-LAW fact="true" status="impl/done">**Keep the code surface inside the training distribution. Put all the strictness into the meta-layer, the type system, and the verification loop — which sit AROUND the code, not in its syntax.**</CENTRAL-LAW></quote>
     <p><RUST-LOOKS-ORDINARY fact="true" status="impl/done">Concretely: AI-Native Rust looks like *ordinary idiomatic Rust* at the token level (no invented notation, no exotic dialect — that would inherit the OOD penalty).</RUST-LOOKS-ORDINARY></p>
     <p><unusual-is-everything-around-it-lead fact="true" status="impl/done">What is unusual is everything around it:</unusual-is-everything-around-it-lead></p>
-    <list ordered="false">
-      <item><ENVELOPE-DENSE-METADATA fact="true" status="impl/done">dense machine-checkable metadata,</ENVELOPE-DENSE-METADATA></item>
-      <item><ENVELOPE-CONTRACT-BEARING-TYPES fact="true" status="impl/done">contract-bearing types,</ENVELOPE-CONTRACT-BEARING-TYPES></item>
-      <item><ENVELOPE-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">executable scaffolds,</ENVELOPE-EXECUTABLE-SCAFFOLDS></item>
-      <item><ENVELOPE-VERIFICATION-LOOP fact="true" status="impl/done">and a fast per-unit verification loop.</ENVELOPE-VERIFICATION-LOOP></item>
-    </list>
+    <facts ordered="false">
+      <ENVELOPE-DENSE-METADATA fact="true" status="impl/done">dense machine-checkable metadata,</ENVELOPE-DENSE-METADATA>
+      <ENVELOPE-CONTRACT-BEARING-TYPES fact="true" status="impl/done">contract-bearing types,</ENVELOPE-CONTRACT-BEARING-TYPES>
+      <ENVELOPE-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">executable scaffolds,</ENVELOPE-EXECUTABLE-SCAFFOLDS>
+      <ENVELOPE-VERIFICATION-LOOP fact="true" status="impl/done">and a fast per-unit verification loop.</ENVELOPE-VERIFICATION-LOOP>
+    </facts>
     <p><NOT-STRANGER-BUT-STRICTER fact="true" status="impl/done">We do not make the language stranger; we make its envelope stricter.</NOT-STRANGER-BUT-STRICTER></p>
   </the-central-law>
   <stricter-not-simpler title="4. Stricter, not simpler — and where the strictness lives">
@@ -81,65 +81,65 @@
     <p><CARD-CARRIES-FOUR-PARTS fact="true" status="impl/done">Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.md`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost).</CARD-CARRIES-FOUR-PARTS></p>
     <p><HARNESS-DELIVERS-LAZY-PUSH fact="true" status="spec/done">The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). *Specified, not built at card grain: no harness reads a card. Lazy-push itself is real one level up — `vibe` implements `DeliveryMode::LazyPush` for **subskills**, matching an agent's task description against a subskill `description`, with `vibe check` enforcing that a lazy-push unit carries one and warning on activation overlap between siblings. Nothing applies that machinery to cards: no reader of `card-ops`, of a card `trigger`, or of `cards/INDEX.md` exists in any language anywhere in the repository. Card delivery today is a boot instruction a session follows by hand, not an activation match the harness computes.*</HARNESS-DELIVERS-LAZY-PUSH></p>
     <p><triggers-escalate-lead fact="true" status="impl/done">Triggers escalate by cost:</triggers-escalate-lead></p>
-    <list ordered="true">
-      <item><TRIGGER-INLINE fact="true" status="impl/done">**Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate.</TRIGGER-INLINE></item>
-      <item><TRIGGER-GATE fact="true" status="impl/done">**Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke.</TRIGGER-GATE></item>
-      <item><TRIGGER-RAID fact="true" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`).</TRIGGER-RAID></item>
-      <item><TRIGGER-REVIEW fact="true" status="impl/done">**Review (human/strong-agent)** — needs judgment a weak reader lacks.</TRIGGER-REVIEW></item>
-    </list>
+    <facts ordered="true">
+      <TRIGGER-INLINE fact="true" status="impl/done">**Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate.</TRIGGER-INLINE>
+      <TRIGGER-GATE fact="true" status="impl/done">**Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke.</TRIGGER-GATE>
+      <TRIGGER-RAID fact="true" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`).</TRIGGER-RAID>
+      <TRIGGER-REVIEW fact="true" status="impl/done">**Review (human/strong-agent)** — needs judgment a weak reader lacks.</TRIGGER-REVIEW>
+    </facts>
     <p><grounded-in-agentbench fact="true" status="spec/done">This is grounded in the AGENTbench result (Feb 2026): bloated context *hurts* weak agents; minimal, sufficient context helps.</grounded-in-agentbench></p>
     <p><MINIMAL-SUFFICIENCY-OBEYED fact="true" status="impl/done">The discipline therefore proselytizes minimal sufficiency — and obeys it: this package is a full authoring/review artifact, but runtime delivery to a weak reader is an *extract* (the card's ops block), never the whole corpus.</MINIMAL-SUFFICIENCY-OBEYED></p>
   </delivery>
   <honest-boundary title="7. The honest boundary (what we do not yet know)">
     <p><beta-status fact="true" status="impl/done">This is a beta.</beta-status></p>
     <p><stated-plainly-lead fact="true" status="spec/done">Stated plainly so the pilot can falsify it:</stated-plainly-lead></p>
-    <list ordered="false">
-      <item><BOUNDARY-TRANSFER-UNPROVEN fact="true" status="spec/done">**Transfer is unproven.** The executable-scaffold result is generation, not modification. [E-mid].</BOUNDARY-TRANSFER-UNPROVEN></item>
-      <item><BOUNDARY-THERE-IS-A-FLOOR fact="true" status="spec/done">**There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, and our target Qwen-32B may sit lower on some axes) did *not* recover — scaffolds amplify capability, they do not create it. The discipline lowers the floor; it does not remove it.</BOUNDARY-THERE-IS-A-FLOOR></item>
-      <item><BOUNDARY-SURFACE-IS-CURRENT fact="true" status="spec/done">**Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. *The obligation stands; the sunset it names has no carrier. R-050 is authored in no document that ships — every occurrence across this package, the language stacks, the engine crates and the host is a citation, and the ATLAS roster it would live in holds only `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` ids. Nothing schedules the re-check, expires the law, or records when it was last examined. The sunset **mechanism** does exist one grain over — every one of the 22 entries in the host's debt registry carries a `sunset` field, and cards carry a `Sunset:` clause in their Risks band — so the pattern is proven and simply not applied to this law.*</BOUNDARY-SURFACE-IS-CURRENT></item>
-      <item><BOUNDARY-MEASUREMENT-DEFERRED fact="true" status="spec/done">**Measurement is deferred by design.** We build the core on internal logic plus others' published evidence, and instrument later, at a buyer's expense. Every card therefore carries a falsifiable `prediction` in place of a present measurement.</BOUNDARY-MEASUREMENT-DEFERRED></item>
-    </list>
+    <facts ordered="false">
+      <BOUNDARY-TRANSFER-UNPROVEN fact="true" status="spec/done">**Transfer is unproven.** The executable-scaffold result is generation, not modification. [E-mid].</BOUNDARY-TRANSFER-UNPROVEN>
+      <BOUNDARY-THERE-IS-A-FLOOR fact="true" status="spec/done">**There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, and our target Qwen-32B may sit lower on some axes) did *not* recover — scaffolds amplify capability, they do not create it. The discipline lowers the floor; it does not remove it.</BOUNDARY-THERE-IS-A-FLOOR>
+      <BOUNDARY-SURFACE-IS-CURRENT fact="true" status="spec/done">**Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. *The obligation stands; the sunset it names has no carrier. R-050 is authored in no document that ships — every occurrence across this package, the language stacks, the engine crates and the host is a citation, and the ATLAS roster it would live in holds only `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` ids. Nothing schedules the re-check, expires the law, or records when it was last examined. The sunset **mechanism** does exist one grain over — every one of the 22 entries in the host's debt registry carries a `sunset` field, and cards carry a `Sunset:` clause in their Risks band — so the pattern is proven and simply not applied to this law.*</BOUNDARY-SURFACE-IS-CURRENT>
+      <BOUNDARY-MEASUREMENT-DEFERRED fact="true" status="spec/done">**Measurement is deferred by design.** We build the core on internal logic plus others' published evidence, and instrument later, at a buyer's expense. Every card therefore carries a falsifiable `prediction` in place of a present measurement.</BOUNDARY-MEASUREMENT-DEFERRED>
+    </facts>
     <p><names-its-own-failure-modes fact="true" status="spec/done">A discipline that names its own failure modes is more trustworthy than one that hides them.</names-its-own-failure-modes></p>
     <p><this-one-names-them fact="true" status="spec/done">This one names them.</this-one-names-them></p>
   </honest-boundary>
   <package-map title="8. The package map">
     <p><guiding-layer-lead fact="true" status="impl/done">**Guiding layer (T1, language-independent):**</guiding-layer-lead></p>
-    <list ordered="false">
-      <item><MAP-MANIFESTO fact="true" status="impl/done">`00-MANIFESTO.md` — this document.</MAP-MANIFESTO></item>
-      <item><MAP-PATTERN-CARD-FORMAT fact="true" status="impl/done">`01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).</MAP-PATTERN-CARD-FORMAT></item>
-      <item><MAP-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.</MAP-EXECUTABLE-SCAFFOLDS></item>
-      <item><MAP-RAID-PLAYBOOK fact="true" status="impl/done">`03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).</MAP-RAID-PLAYBOOK></item>
-      <item><MAP-SWEEP-PLAYBOOK fact="true" status="impl/done">`04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.</MAP-SWEEP-PLAYBOOK></item>
-      <item><MAP-CAMPAIGN-FORM fact="true" status="impl/done">`05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</MAP-CAMPAIGN-FORM></item>
-      <item><MAP-WAL-CONVENTION fact="true" status="impl/done">`06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</MAP-WAL-CONVENTION></item>
-    </list>
+    <facts ordered="false">
+      <MAP-MANIFESTO fact="true" status="impl/done">`00-MANIFESTO.md` — this document.</MAP-MANIFESTO>
+      <MAP-PATTERN-CARD-FORMAT fact="true" status="impl/done">`01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).</MAP-PATTERN-CARD-FORMAT>
+      <MAP-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.</MAP-EXECUTABLE-SCAFFOLDS>
+      <MAP-RAID-PLAYBOOK fact="true" status="impl/done">`03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).</MAP-RAID-PLAYBOOK>
+      <MAP-SWEEP-PLAYBOOK fact="true" status="impl/done">`04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.</MAP-SWEEP-PLAYBOOK>
+      <MAP-CAMPAIGN-FORM fact="true" status="impl/done">`05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</MAP-CAMPAIGN-FORM>
+      <MAP-WAL-CONVENTION fact="true" status="impl/done">`06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</MAP-WAL-CONVENTION>
+    </facts>
     <p><mechanisms-lead fact="true" status="impl/done">**Mechanisms (T1, language-independent; implemented per-stack):**</mechanisms-lead></p>
-    <list ordered="false">
-      <item><MAP-ENGINE-CONFORM fact="true" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</MAP-ENGINE-CONFORM></item>
-      <item><MAP-PROP-014-SPECMAP fact="true" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.</MAP-PROP-014-SPECMAP></item>
-      <item><MAP-BROWNFIELD-PROTOCOL fact="true" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</MAP-BROWNFIELD-PROTOCOL></item>
-      <item><MAP-LEDGER-INTENT fact="true" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.</MAP-LEDGER-INTENT></item>
-    </list>
+    <facts ordered="false">
+      <MAP-ENGINE-CONFORM fact="true" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</MAP-ENGINE-CONFORM>
+      <MAP-PROP-014-SPECMAP fact="true" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.</MAP-PROP-014-SPECMAP>
+      <MAP-BROWNFIELD-PROTOCOL fact="true" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</MAP-BROWNFIELD-PROTOCOL>
+      <MAP-LEDGER-INTENT fact="true" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.</MAP-LEDGER-INTENT>
+    </facts>
     <p><SPEC-UNIT-URI-FORM fact="true" status="impl/done">Spec-unit URIs for this package read `spec://org.vibevm.ai-native/core-ai-native/&lt;docpath&gt;#&lt;anchor&gt;` (e.g. `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).</SPEC-UNIT-URI-FORM></p>
     <p><language-projections-lead fact="true" status="impl/done">**Language projections (T2):**</language-projections-lead></p>
-    <list ordered="false">
-      <item><MAP-RUST-GUIDE fact="true" status="impl/done">`spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)</MAP-RUST-GUIDE></item>
-      <item><MAP-RUST-TCG fact="true" status="idea/plan">`rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4).</MAP-RUST-TCG></item>
-      <item><MAP-RUST-TCG-AGENTIC fact="true" status="impl/done">The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.</MAP-RUST-TCG-AGENTIC></item>
-      <item><MAP-TYPESCRIPT-GUIDE fact="true" status="impl/done">`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.</MAP-TYPESCRIPT-GUIDE></item>
-      <item><MAP-TYPESCRIPT-TCG fact="true" status="unknown/hold">`typescript/tools/typescript-ai-native-tcg.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch). @status:unknown</MAP-TYPESCRIPT-TCG></item>
-      <item><MAP-OTHER-LANGUAGES fact="true" status="spec/done">Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.</MAP-OTHER-LANGUAGES></item>
-    </list>
+    <facts ordered="false">
+      <MAP-RUST-GUIDE fact="true" status="impl/done">`spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)</MAP-RUST-GUIDE>
+      <MAP-RUST-TCG fact="true" status="idea/plan">`rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4).</MAP-RUST-TCG>
+      <MAP-RUST-TCG-AGENTIC fact="true" status="impl/done">The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.</MAP-RUST-TCG-AGENTIC>
+      <MAP-TYPESCRIPT-GUIDE fact="true" status="impl/done">`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.</MAP-TYPESCRIPT-GUIDE>
+      <MAP-TYPESCRIPT-TCG fact="true" status="unknown/hold">`typescript/tools/typescript-ai-native-tcg.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch). @status:unknown</MAP-TYPESCRIPT-TCG>
+      <MAP-OTHER-LANGUAGES fact="true" status="spec/done">Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.</MAP-OTHER-LANGUAGES>
+    </facts>
     <p><cards-lead fact="true" status="impl/done">**Cards (the patterns) — shipped per-language by each stack:**</cards-lead></p>
-    <list ordered="false">
-      <item><MAP-CARDS-INDEX fact="true" status="impl/done">`cards/INDEX.md` — registry, axes, trigger modes (one per language stack).</MAP-CARDS-INDEX></item>
-      <item><MAP-CARDS-SCAFFOLDS fact="true" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</MAP-CARDS-SCAFFOLDS></item>
-    </list>
+    <facts ordered="false">
+      <MAP-CARDS-INDEX fact="true" status="impl/done">`cards/INDEX.md` — registry, axes, trigger modes (one per language stack).</MAP-CARDS-INDEX>
+      <MAP-CARDS-SCAFFOLDS fact="true" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</MAP-CARDS-SCAFFOLDS>
+    </facts>
     <p><appendix-lead fact="true" status="impl/done">**Appendix (synthesis provenance):**</appendix-lead></p>
-    <list ordered="false">
-      <item><MAP-CONTRADICTION-MAP fact="true" status="impl/done">`appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.</MAP-CONTRADICTION-MAP></item>
-      <item><MAP-ATLAS fact="true" status="impl/done">`appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</MAP-ATLAS></item>
-    </list>
+    <facts ordered="false">
+      <MAP-CONTRADICTION-MAP fact="true" status="impl/done">`appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.</MAP-CONTRADICTION-MAP>
+      <MAP-ATLAS fact="true" status="impl/done">`appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</MAP-ATLAS>
+    </facts>
     <p><ADOPTION-PLAN-LIVES-OUTSIDE fact="true" status="impl/done">The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot.</ADOPTION-PLAN-LIVES-OUTSIDE></p>
   </package-map>
 </spec>

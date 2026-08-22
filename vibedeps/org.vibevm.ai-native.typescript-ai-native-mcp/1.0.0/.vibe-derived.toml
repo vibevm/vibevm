@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:eabe016ca7e2584881398f6eb795f9da160aed912f2217b11e3d6d35eda8a49f"
+source_hash = "sha256:17febfafb1a69469444a8db04d886f623037f30fa64c0d88708c061ebe19307e"
 output_format = "xml"
-converter_recipe = "specdoc/3"
-derived_hash = "sha256:afa2d0a8d3ee6a7a1668569d123942af0a228546e5a1fc09f44240d711a326ba"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:b14d492cdd924dd3aff4c4954b88771ed1d35b59f817983f424367b40e632bc9"
 
 [[file]]
 source = "Cargo.lock"

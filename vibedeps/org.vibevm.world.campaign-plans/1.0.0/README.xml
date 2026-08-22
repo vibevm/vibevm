@@ -6,35 +6,35 @@
 into a project: any multi-commit change too big for one session is
 planned as a single document that a fresh session — or a different
 person — can execute with no memory of the planning conversation.</PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT></p>
-  <list ordered="false">
-    <item><FEATURE-FROZEN-BASELINE-ARITHMETIC fact="true" status="impl/done">Frozen baseline arithmetic,</FEATURE-FROZEN-BASELINE-ARITHMETIC></item>
-    <item><FEATURE-FALSIFIABLE-PREDICTIONS fact="true" status="impl/done">falsifiable predictions,</FEATURE-FALSIFIABLE-PREDICTIONS></item>
-    <item><FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR fact="true" status="impl/done">phases gated on
-  the project's green floor,</FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR></item>
-    <item><FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE fact="true" status="impl/done">an execution ledger of hash-level
-  evidence,</FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE></item>
-    <item><FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE fact="true" status="impl/done">and a deferrals ledger that seeds the next campaign's
-  mandate.</FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE></item>
-  </list>
+  <facts ordered="false">
+    <FEATURE-FROZEN-BASELINE-ARITHMETIC fact="true" status="impl/done">Frozen baseline arithmetic,</FEATURE-FROZEN-BASELINE-ARITHMETIC>
+    <FEATURE-FALSIFIABLE-PREDICTIONS fact="true" status="impl/done">falsifiable predictions,</FEATURE-FALSIFIABLE-PREDICTIONS>
+    <FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR fact="true" status="impl/done">phases gated on
+  the project's green floor,</FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR>
+    <FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE fact="true" status="impl/done">an execution ledger of hash-level
+  evidence,</FEATURE-AN-EXECUTION-LEDGER-OF-HASH-LEVEL-EVIDENCE>
+    <FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE fact="true" status="impl/done">and a deferrals ledger that seeds the next campaign's
+  mandate.</FEATURE-A-DEFERRALS-LEDGER-THAT-SEEDS-THE-NEXT-MANDATE>
+  </facts>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-PLAN-FORMAT fact="true" status="impl/done">`spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
+  <facts ordered="false">
+    <CONTENT-THE-PLAN-FORMAT fact="true" status="impl/done">`spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
   campaign is, the five artifact roles (PLAN / BASELINE /
   PREDICTIONS / LOG / REPORT), and the canonical fifteen-section
   plan skeleton, each section with a spec and most with a worked
-  mini example.</CONTENT-THE-PLAN-FORMAT></item>
-    <item><CONTENT-THE-PHASE-GATES fact="true" status="impl/done">`spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
+  mini example.</CONTENT-THE-PLAN-FORMAT>
+    <CONTENT-THE-PHASE-GATES fact="true" status="impl/done">`spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
   discipline (no commits; a red spike rewrites the affected decision
   before anything lands), phase anatomy, the safe-stop law,
-  resumability, review points, discovered-necessary work.</CONTENT-THE-PHASE-GATES></item>
-    <item><CONTENT-THE-EXECUTION-LEDGER fact="true" status="impl/done">`spec/flows/campaign-plans/execution-ledger.md` — the record half:
+  resumability, review points, discovered-necessary work.</CONTENT-THE-PHASE-GATES>
+    <CONTENT-THE-EXECUTION-LEDGER fact="true" status="impl/done">`spec/flows/campaign-plans/execution-ledger.md` — the record half:
   status-line lifecycle, the prepended execution record, per-phase
   commit maps, honesty rules, the closing report, the deferrals
-  ledger and the lineage law.</CONTENT-THE-EXECUTION-LEDGER></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/40-flow-campaign-plans.md` — boot snippet loaded at
+  ledger and the lineage law.</CONTENT-THE-EXECUTION-LEDGER>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/40-flow-campaign-plans.md` — boot snippet loaded at
   session start: when to propose a campaign, the phase-boundary
-  checklist, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  checklist, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:campaign-plans</fence>
   </install>
@@ -52,20 +52,20 @@ campaign-form document, `spec/05-CAMPAIGN-FORM.md`, which restates
 part of this format; the two are not yet reconciled.</core-ai-native-defers-from-its-next-release></p>
   </canonical-home>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — a campaign checkpoint updates the WAL's standing line
+    <facts ordered="false">
+      <COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — a campaign checkpoint updates the WAL's standing line
   at every phase boundary; the plan file, not the WAL, carries the
-  campaign detail.</COMPOSES-WAL></item>
-      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — each phase's commit set follows it:
+  campaign detail.</COMPOSES-WAL>
+      <COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — each phase's commit set follows it:
   subjects are spelled in the plan, one idea per commit, and the
-  ledger binds hashes to the planned subjects.</COMPOSES-ATOMIC-COMMITS></item>
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the plan's D-sections are decision
+  ledger binds hashes to the planned subjects.</COMPOSES-ATOMIC-COMMITS>
+      <COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the plan's D-sections are decision
   records inline; rejected options carry reasons so nobody re-opens
-  a settled question mid-campaign.</COMPOSES-DECISION-RECORDS></item>
-      <item><COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — review points are the campaign-scale
+  a settled question mid-campaign.</COMPOSES-DECISION-RECORDS>
+      <COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — review points are the campaign-scale
   REVIEW marker: OPEN with options, then RESOLVED with the owner's
-  ruling verbatim.</COMPOSES-CONFLICT-PROTOCOL></item>
-    </list>
+  ruling verbatim.</COMPOSES-CONFLICT-PROTOCOL>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><format-crystallized-over-a-dozen-real-campaigns fact="true" status="spec/done">The format crystallized over a dozen real campaigns in the origin

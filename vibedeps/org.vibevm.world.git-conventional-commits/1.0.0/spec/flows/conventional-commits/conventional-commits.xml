@@ -8,18 +8,18 @@ specification.</ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION></p>
 and scope convention each commit must carry.</this-document-is-the-shape-body-and-scope-convention></p>
   <header title="Header">
     <fence>type(scope): short imperative subject line</fence>
-    <list ordered="false">
-      <item><HEADER-TARGET-LENGTH-AND-HARD-LIMIT fact="true" status="impl/done">**Target length:** ≤ 60 characters. **Hard limit:** 72. Git web
+    <facts ordered="false">
+      <HEADER-TARGET-LENGTH-AND-HARD-LIMIT fact="true" status="impl/done">**Target length:** ≤ 60 characters. **Hard limit:** 72. Git web
   UIs truncate beyond that, and a truncated subject on the commit
   list is how decisions become invisible to readers who scan rather
-  than scroll.</HEADER-TARGET-LENGTH-AND-HARD-LIMIT></item>
-      <item><HEADER-IMPERATIVE-MOOD fact="true" status="impl/done">**Imperative mood.** "add", not "added"; "fix", not "fixes"; "refactor",
+  than scroll.</HEADER-TARGET-LENGTH-AND-HARD-LIMIT>
+      <HEADER-IMPERATIVE-MOOD fact="true" status="impl/done">**Imperative mood.** "add", not "added"; "fix", not "fixes"; "refactor",
   not "refactored". The subject completes the sentence *"If applied,
-  this commit will …"*.</HEADER-IMPERATIVE-MOOD></item>
-      <item><HEADER-LOWERCASE fact="true" status="impl/done">**Lowercase.** Including the first word after the `type(scope):`
+  this commit will …"*.</HEADER-IMPERATIVE-MOOD>
+      <HEADER-LOWERCASE fact="true" status="impl/done">**Lowercase.** Including the first word after the `type(scope):`
   prefix. The typed prefix is the visual anchor; a capitalised
-  first word competes with it for attention.</HEADER-LOWERCASE></item>
-    </list>
+  first word competes with it for attention.</HEADER-LOWERCASE>
+    </facts>
     <types title="Allowed types">
       <table>
         <tr>
@@ -93,29 +93,29 @@ project-wide `.gitattributes` addition).</scope-is-optional-in-the-grammar-but-o
   <body title="Body">
     <p><A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY fact="true" status="impl/done">A single blank line after the subject, then a free-form body.</A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY></p>
     <body-include title="What to include">
-      <list ordered="false">
-        <item><INCLUDE-WHY-THIS-CHANGE-WAS-MADE fact="true" status="impl/done">**Why this change was made.** Link to the spec section, issue,
+      <facts ordered="false">
+        <INCLUDE-WHY-THIS-CHANGE-WAS-MADE fact="true" status="impl/done">**Why this change was made.** Link to the spec section, issue,
   measurement, or conversation that drove it. Use `spec://…` URIs
   so future sessions can follow the reference without having to
-  guess where it is documented.</INCLUDE-WHY-THIS-CHANGE-WAS-MADE></item>
-        <item><INCLUDE-WHAT-FOLLOWS-FROM-IT fact="true" status="impl/done">**What follows from it.** Consequences that are invisible in
+  guess where it is documented.</INCLUDE-WHY-THIS-CHANGE-WAS-MADE>
+        <INCLUDE-WHAT-FOLLOWS-FROM-IT fact="true" status="impl/done">**What follows from it.** Consequences that are invisible in
   the diff: "this unblocks FEAT-007"; "after this, old callers
-  must be migrated"; "this is a temporary workaround for #42".</INCLUDE-WHAT-FOLLOWS-FROM-IT></item>
-        <item><INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**What was considered and rejected.** One line each. Future-you
+  must be migrated"; "this is a temporary workaround for #42".</INCLUDE-WHAT-FOLLOWS-FROM-IT>
+        <INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**What was considered and rejected.** One line each. Future-you
   re-opens this conversation every six months unless the log says
   "we considered adaptive timeout and rejected it because of UX
-  unpredictability".</INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED></item>
-      </list>
+  unpredictability".</INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED>
+      </facts>
     </body-include>
     <body-skip title="What to skip">
-      <list ordered="false">
-        <item><SKIP-WHAT-THE-DIFF-ALREADY-SHOWS fact="true" status="impl/done">**Do not describe what the diff already shows.** "This commit
+      <facts ordered="false">
+        <SKIP-WHAT-THE-DIFF-ALREADY-SHOWS fact="true" status="impl/done">**Do not describe what the diff already shows.** "This commit
   adds a function `foo()`" is noise — the diff shows that. The
-  message should answer "why did `foo()` need to exist?".</SKIP-WHAT-THE-DIFF-ALREADY-SHOWS></item>
-        <item><SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE fact="true" status="impl/done">**Do not include implementation details that will change on
+  message should answer "why did `foo()` need to exist?".</SKIP-WHAT-THE-DIFF-ALREADY-SHOWS>
+        <SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE fact="true" status="impl/done">**Do not include implementation details that will change on
   the next refactor.** They rot faster than the surrounding prose
-  and mislead readers once stale.</SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE></item>
-      </list>
+  and mislead readers once stale.</SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE>
+      </facts>
     </body-skip>
     <body-length title="Body length">
       <p><BODY-LENGTH-IS-FREE-FORM fact="true" status="impl/done">Free-form.</BODY-LENGTH-IS-FREE-FORM></p>
@@ -222,11 +222,11 @@ carries the new value, the reason, and the revisit trigger.</fence>
 with the subject `feat(core): add foo, bar, and baz` is syntactically
 valid Conventional Commits *and* a violation of the atomic rule. Both
 rules run together:</A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE></p>
-    <list ordered="true">
-      <item><BOTH-RULES-ONE-IDEA-PER-COMMIT fact="true" status="impl/done">The commit carries exactly one idea (atomic).</BOTH-RULES-ONE-IDEA-PER-COMMIT></item>
-      <item><BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE fact="true" status="impl/done">The message announces that idea in the Conventional Commits shape
-   (`type(scope): subject` + *why* body).</BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE></item>
-    </list>
+    <facts ordered="true">
+      <BOTH-RULES-ONE-IDEA-PER-COMMIT fact="true" status="impl/done">The commit carries exactly one idea (atomic).</BOTH-RULES-ONE-IDEA-PER-COMMIT>
+      <BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE fact="true" status="impl/done">The message announces that idea in the Conventional Commits shape
+   (`type(scope): subject` + *why* body).</BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE>
+    </facts>
     <p><PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED fact="true" status="impl/done">Pass both, and the commit is well-formed.</PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED></p>
   </atomicity>
 </spec>

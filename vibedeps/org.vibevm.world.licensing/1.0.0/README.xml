@@ -4,36 +4,36 @@
   <status stage="doc" state="done" audience="user"/>
   <p><package-installs-a-licensing-posture-lead fact="true" status="impl/done">A vibevm `flow` package that installs a **licensing posture** into a
 project:</package-installs-a-licensing-posture-lead></p>
-  <list ordered="false">
-    <item><POSTURE-CHOOSE-THE-PRODUCTS-OWN-LICENCE-ON-PURPOSE fact="true" status="impl/done">choose the product's own licence on purpose (not whatever a
-  scaffold dropped in),</POSTURE-CHOOSE-THE-PRODUCTS-OWN-LICENCE-ON-PURPOSE></item>
-    <item><POSTURE-KEEP-EVERY-DEPENDENCY-PERMISSIVE-ONLY fact="true" status="impl/done">keep every third-party dependency
-  permissive-only,</POSTURE-KEEP-EVERY-DEPENDENCY-PERMISSIVE-ONLY></item>
-    <item><POSTURE-START-FROM-AN-HONEST-PLACEHOLDER-EULA fact="true" status="impl/done">and — where the intent is to open the product
+  <facts ordered="false">
+    <POSTURE-CHOOSE-THE-PRODUCTS-OWN-LICENCE-ON-PURPOSE fact="true" status="impl/done">choose the product's own licence on purpose (not whatever a
+  scaffold dropped in),</POSTURE-CHOOSE-THE-PRODUCTS-OWN-LICENCE-ON-PURPOSE>
+    <POSTURE-KEEP-EVERY-DEPENDENCY-PERMISSIVE-ONLY fact="true" status="impl/done">keep every third-party dependency
+  permissive-only,</POSTURE-KEEP-EVERY-DEPENDENCY-PERMISSIVE-ONLY>
+    <POSTURE-START-FROM-AN-HONEST-PLACEHOLDER-EULA fact="true" status="impl/done">and — where the intent is to open the product
   later — start from an honest placeholder EULA that states the
-  relicense intent plainly.</POSTURE-START-FROM-AN-HONEST-PLACEHOLDER-EULA></item>
-  </list>
+  relicense intent plainly.</POSTURE-START-FROM-AN-HONEST-PLACEHOLDER-EULA>
+  </facts>
   <p><GUIDANCE-NOT-LEGAL-ADVICE fact="true" status="spec/done">This is guidance, not legal advice; a lawyer signs off on the real
 licence.</GUIDANCE-NOT-LEGAL-ADVICE></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content, a skill, and a boot
 snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-LICENSING-PROTOCOL fact="true" status="impl/done">`spec/flows/licensing/LICENSING-PROTOCOL.md` — the postures, the
+  <facts ordered="false">
+    <CONTENT-THE-LICENSING-PROTOCOL fact="true" status="impl/done">`spec/flows/licensing/LICENSING-PROTOCOL.md` — the postures, the
   placeholder EULA, the permissive-only dependency rule, the
   third-party carve-out, keeping statements in sync, and why
-  relicensing is an owner decision.</CONTENT-THE-LICENSING-PROTOCOL></item>
-    <item><CONTENT-THE-EULA-TEMPLATE fact="true" status="impl/done">`spec/flows/licensing/eula-template.md` — a copy-ready
+  relicensing is an owner decision.</CONTENT-THE-LICENSING-PROTOCOL>
+    <CONTENT-THE-EULA-TEMPLATE fact="true" status="impl/done">`spec/flows/licensing/eula-template.md` — a copy-ready
   proprietary-with-relicense-intent skeleton with clause-by-clause
-  commentary and an adaptation table.</CONTENT-THE-EULA-TEMPLATE></item>
-    <item><CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE fact="true" status="impl/done">`spec/flows/licensing/dependency-licenses.md` — the allow/deny
+  commentary and an adaptation table.</CONTENT-THE-EULA-TEMPLATE>
+    <CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE fact="true" status="impl/done">`spec/flows/licensing/dependency-licenses.md` — the allow/deny
   table, the pre-adoption check over the full transitive graph, and
-  the "weight is not a licence concern" rule.</CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE></item>
-    <item><CONTENT-THE-DRAFT-EULA-SKILL fact="true" status="impl/done">`spec/skills/draft-eula/` — an installable skill that drafts or
-  reviews the posture end to end.</CONTENT-THE-DRAFT-EULA-SKILL></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/60-flow-licensing.md` — boot snippet: the two standing
+  the "weight is not a licence concern" rule.</CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE>
+    <CONTENT-THE-DRAFT-EULA-SKILL fact="true" status="impl/done">`spec/skills/draft-eula/` — an installable skill that drafts or
+  reviews the posture end to end.</CONTENT-THE-DRAFT-EULA-SKILL>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/60-flow-licensing.md` — boot snippet: the two standing
   truths (one stated product licence; permissive-only deps) and the
-  never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:licensing</fence>
   </install>
@@ -57,13 +57,13 @@ walked that path: its packages ship under UPL-1.0, the licence the
 origin project's placeholder named as its intended destination.</this-collection-itself-walked-that-path></p>
   </eula-to-open>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the licence choice and any relicensing
+    <facts ordered="false">
+      <COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the licence choice and any relicensing
   are recorded decisions with reasons; an allowed copyleft exception
-  is one too.</COMPOSES-DECISION-RECORDS></item>
-      <item><COMPOSES-SECRETS-HYGIENE fact="true" status="spec/done">`flow:secrets-hygiene` — a sibling one-place policy; both reward a
-  mechanical check in CI over a prose promise.</COMPOSES-SECRETS-HYGIENE></item>
-      <item><COMPOSES-HEALTH-AUDIT fact="true" status="spec/done">`flow:health-audit` — a periodic audit line re-runs the dependency
+  is one too.</COMPOSES-DECISION-RECORDS>
+      <COMPOSES-SECRETS-HYGIENE fact="true" status="spec/done">`flow:secrets-hygiene` — a sibling one-place policy; both reward a
+  mechanical check in CI over a prose promise.</COMPOSES-SECRETS-HYGIENE>
+      <COMPOSES-HEALTH-AUDIT fact="true" status="spec/done">`flow:health-audit` — a periodic audit line re-runs the dependency
   licence listing, catching a dependency that relicensed between
   versions. *Specified, not built: the composition is a good one and the
   sibling does not yet hold up its end. `flow:health-audit`'s
@@ -75,11 +75,11 @@ origin project's placeholder named as its intended destination.</this-collection
   re-run: no `deny.toml`, no `about.toml`, no SBOM. Until the line exists, this
   entry describes an intended composition rather than a running one; the body
   rule is `spec/flows/licensing/dependency-licenses.md#RE-AUDIT-ON-A-SCHEDULE`,
-  demoted on the same evidence.*</COMPOSES-HEALTH-AUDIT></item>
-      <item><COMPOSES-ATTRIBUTION-POLICY fact="true" status="spec/done">`flow:git-attribution-policy` — the two together define how the
+  demoted on the same evidence.*</COMPOSES-HEALTH-AUDIT>
+      <COMPOSES-ATTRIBUTION-POLICY fact="true" status="spec/done">`flow:git-attribution-policy` — the two together define how the
   repository presents itself: who authored it, and under what terms
-  it may be used.</COMPOSES-ATTRIBUTION-POLICY></item>
-    </list>
+  it may be used.</COMPOSES-ATTRIBUTION-POLICY>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><extracted-from-the-origin-projects-licensing-decision fact="true" status="spec/done">Extracted from the origin project's licensing decision: a

@@ -7,12 +7,12 @@ foundational mental model of the redbook collection.</PACKAGE-INSTALLS-THE-TWO-P
   <p><the-human-and-the-ai-are-two-processors fact="true" status="spec/done">The human and
 the AI are two processors with radically different architectures
 working one task:</the-human-and-the-ai-are-two-processors></p>
-  <list ordered="false">
-    <item><THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE fact="true" status="spec/done">the human owns meaning, memory between sessions,
-  and coherence;</THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE></item>
-    <item><THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE fact="true" status="spec/done">the AI owns throughput, mechanical consistency, and
-  formal structure.</THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE></item>
-  </list>
+  <facts ordered="false">
+    <THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE fact="true" status="spec/done">the human owns meaning, memory between sessions,
+  and coherence;</THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE>
+    <THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE fact="true" status="spec/done">the AI owns throughput, mechanical consistency, and
+  formal structure.</THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE>
+  </facts>
   <p><FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE fact="true" status="spec/done">Files are the only memory the two share.</FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE></p>
   <p><both-default-metaphors-collapse-the-same-way fact="true" status="spec/done">The two default metaphors — "boss and subordinate", "human and
 tool" — both collapse on real projects, and both for the same
@@ -21,21 +21,21 @@ cognitive load.</both-default-metaphors-collapse-the-same-way></p>
   <p><PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS fact="true" status="impl/done">This package installs the alternative as standing
 session instructions plus three reference documents.</PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-MODEL fact="true" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
+  <facts ordered="false">
+    <CONTENT-THE-MODEL fact="true" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
   why the common metaphors fail, the complementary strengths table,
   the productive cycle, and the one assignment that never moves
-  (the human owns coherence).</CONTENT-THE-MODEL></item>
-    <item><CONTENT-THE-COGNITIVE-LOAD-SPLIT fact="true" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.md` — the
+  (the human owns coherence).</CONTENT-THE-MODEL>
+    <CONTENT-THE-COGNITIVE-LOAD-SPLIT fact="true" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.md` — the
   operational responsibility table: human-only work, AI-only work,
   shared work split by nature; and the four consequences of the
-  AI's zero cross-session memory.</CONTENT-THE-COGNITIVE-LOAD-SPLIT></item>
-    <item><CONTENT-FILES-AS-IPC fact="true" status="impl/done">`spec/flows/two-process-model/files-as-ipc.md` — the reframe of
+  AI's zero cross-session memory.</CONTENT-THE-COGNITIVE-LOAD-SPLIT>
+    <CONTENT-FILES-AS-IPC fact="true" status="impl/done">`spec/flows/two-process-model/files-as-ipc.md` — the reframe of
   spec files from "documentation" to the inter-process channel:
-  three planes, their budgets, and the four IPC requirements.</CONTENT-FILES-AS-IPC></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
-  session start: the architecture in brief and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  three planes, their budgets, and the four IPC requirements.</CONTENT-FILES-AS-IPC>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
+  session start: the architecture in brief and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:two-process-model</fence>
   </install>
@@ -48,18 +48,18 @@ boot snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
   <composition title="Composition">
     <p><this-flow-is-the-root-of-the-collection fact="true" status="spec/done">This flow is the root of the redbook collection — the other members
 are its consequences:</this-flow-is-the-root-of-the-collection></p>
-    <list ordered="false">
-      <item><COMPOSES-THE-FOUR-IPC-REQUIREMENTS fact="true" status="impl/done">The four IPC requirements map to `flow:addressable-specs`
+    <facts ordered="false">
+      <COMPOSES-THE-FOUR-IPC-REQUIREMENTS fact="true" status="impl/done">The four IPC requirements map to `flow:addressable-specs`
   (addressability), `flow:git-atomic-commits` (atomicity),
   `flow:conflict-protocol` (conflict rules), and `flow:wal` plus
-  `flow:sync-from-code` (visibility).</COMPOSES-THE-FOUR-IPC-REQUIREMENTS></item>
-      <item><COMPOSES-THE-MEMORY-ASYMMETRY fact="true" status="impl/done">The memory asymmetry is operationalized by
+  `flow:sync-from-code` (visibility).</COMPOSES-THE-FOUR-IPC-REQUIREMENTS>
+      <COMPOSES-THE-MEMORY-ASYMMETRY fact="true" status="impl/done">The memory asymmetry is operationalized by
   `flow:decision-records` (record decisions, not facts) and
-  `flow:wal` (the checkpoint that survives the session).</COMPOSES-THE-MEMORY-ASYMMETRY></item>
-      <item><COMPOSES-CAMPAIGN-PLANS fact="true" status="impl/done">Coherence at multi-session scale is `flow:campaign-plans`.</COMPOSES-CAMPAIGN-PLANS></item>
-      <item><COMPOSES-DISCOVERY-PROMPT fact="true" status="impl/done">Programming the AI process's reasoning posture for research is
-  `flow:discovery-prompt`.</COMPOSES-DISCOVERY-PROMPT></item>
-    </list>
+  `flow:wal` (the checkpoint that survives the session).</COMPOSES-THE-MEMORY-ASYMMETRY>
+      <COMPOSES-CAMPAIGN-PLANS fact="true" status="impl/done">Coherence at multi-session scale is `flow:campaign-plans`.</COMPOSES-CAMPAIGN-PLANS>
+      <COMPOSES-DISCOVERY-PROMPT fact="true" status="impl/done">Programming the AI process's reasoning posture for research is
+  `flow:discovery-prompt`.</COMPOSES-DISCOVERY-PROMPT>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><distilled-from-chapters-one-and-two fact="true" status="spec/done">Distilled from *AI-native development*, chapter 1 («Два процесса,

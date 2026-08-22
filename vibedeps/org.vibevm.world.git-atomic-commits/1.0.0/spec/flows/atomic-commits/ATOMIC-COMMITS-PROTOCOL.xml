@@ -11,25 +11,25 @@ human-AI team than in a traditional team.</scope-of-this-document></p>
     <p><THE-DIFF-SHOWS-EVERY-CHANGE-AND-NOTHING-ELSE fact="true" status="impl/done">The diff shows every
 change required to express that idea, and nothing else.</THE-DIFF-SHOWS-EVERY-CHANGE-AND-NOTHING-ELSE></p>
     <p><three-equivalent-framings-lead fact="true" status="impl/done">Three equivalent framings of the same rule:</three-equivalent-framings-lead></p>
-    <list ordered="false">
-      <item><FRAMING-ONE-LOGICAL-UNIT fact="true" status="impl/done">**One logical unit.** The smallest set of edits that, together,
-  express a complete thought and leave the tree in a consistent state.</FRAMING-ONE-LOGICAL-UNIT></item>
-      <item><FRAMING-ONE-INTENT-PER-MESSAGE fact="true" status="impl/done">**One intent per message.** If the body needs to say "also, while
-  I was in there, …", the "also" belongs in its own commit.</FRAMING-ONE-INTENT-PER-MESSAGE></item>
-      <item><FRAMING-ONE-THING-TO-VERIFY fact="true" status="impl/done">**One thing to verify.** A reviewer should be able to answer "does
+    <facts ordered="false">
+      <FRAMING-ONE-LOGICAL-UNIT fact="true" status="impl/done">**One logical unit.** The smallest set of edits that, together,
+  express a complete thought and leave the tree in a consistent state.</FRAMING-ONE-LOGICAL-UNIT>
+      <FRAMING-ONE-INTENT-PER-MESSAGE fact="true" status="impl/done">**One intent per message.** If the body needs to say "also, while
+  I was in there, …", the "also" belongs in its own commit.</FRAMING-ONE-INTENT-PER-MESSAGE>
+      <FRAMING-ONE-THING-TO-VERIFY fact="true" status="impl/done">**One thing to verify.** A reviewer should be able to answer "does
   this commit do what the subject claims?" without having to
-  partition the diff first.</FRAMING-ONE-THING-TO-VERIFY></item>
-    </list>
+  partition the diff first.</FRAMING-ONE-THING-TO-VERIFY>
+    </facts>
     <p><A-BUNDLED-COMMIT-IS-THREE-COMMITS-NOT-ONE fact="true" status="impl/done">A commit that bundles "fix typo in README" + "refactor planner" +
 "update schema" is three commits, not one.</A-BUNDLED-COMMIT-IS-THREE-COMMITS-NOT-ONE></p>
   </what>
   <why title="Why atomic commits matter more here">
     <p><in-a-pure-human-team-they-are-a-quality-of-life-feature fact="true" status="spec/done">In a pure-human team, atomic commits are a quality-of-life feature:</in-a-pure-human-team-they-are-a-quality-of-life-feature></p>
-    <list ordered="false">
-      <item><QOL-EASIER-REVIEW fact="true" status="spec/done">easier review,</QOL-EASIER-REVIEW></item>
-      <item><QOL-CLEANER-BISECTS fact="true" status="spec/done">cleaner bisects,</QOL-CLEANER-BISECTS></item>
-      <item><QOL-VIABLE-CHERRY-PICKS fact="true" status="spec/done">viable cherry-picks.</QOL-VIABLE-CHERRY-PICKS></item>
-    </list>
+    <facts ordered="false">
+      <QOL-EASIER-REVIEW fact="true" status="spec/done">easier review,</QOL-EASIER-REVIEW>
+      <QOL-CLEANER-BISECTS fact="true" status="spec/done">cleaner bisects,</QOL-CLEANER-BISECTS>
+      <QOL-VIABLE-CHERRY-PICKS fact="true" status="spec/done">viable cherry-picks.</QOL-VIABLE-CHERRY-PICKS>
+    </facts>
     <p><teams-that-skip-the-discipline-ship-anyway fact="true" status="spec/done">Teams that skip
 the discipline ship anyway.</teams-that-skip-the-discipline-ship-anyway></p>
     <p><in-a-human-ai-team-they-are-load-bearing fact="true" status="spec/done">In a human-AI team they are **load-bearing**. Three reasons:</in-a-human-ai-team-they-are-load-bearing></p>
@@ -79,20 +79,20 @@ one question: can the commit body be written without using the word
 intent or is mere prose is the reader's call.</THE-TEST-IS-MECHANICAL-THE-WORD-ALSO></p>
     <p><IF-NO-SPLIT fact="true" status="impl/done">If no, split.</IF-NO-SPLIT></p>
     <p><common-cases-lead fact="true" status="impl/done">Common cases:</common-cases-lead></p>
-    <list ordered="false">
-      <item><CASE-REFACTOR-PLUS-FEATURE fact="true" status="impl/done">**Refactor + feature.** Always separate. The refactor commit
+    <facts ordered="false">
+      <CASE-REFACTOR-PLUS-FEATURE fact="true" status="impl/done">**Refactor + feature.** Always separate. The refactor commit
   leaves behaviour unchanged; the feature commit leaves structure
-  unchanged. One of each.</CASE-REFACTOR-PLUS-FEATURE></item>
-      <item><CASE-TESTS-PLUS-IMPLEMENTATION fact="true" status="impl/done">**Tests + implementation they verify.** Usually one commit — both
+  unchanged. One of each.</CASE-REFACTOR-PLUS-FEATURE>
+      <CASE-TESTS-PLUS-IMPLEMENTATION fact="true" status="impl/done">**Tests + implementation they verify.** Usually one commit — both
   halves of one idea. Exception: adding a battery of tests against
-  pre-existing code is a test-only commit.</CASE-TESTS-PLUS-IMPLEMENTATION></item>
-      <item><CASE-FORMAT-PLUS-SUBSTANCE fact="true" status="impl/done">**Format + substance.** Always separate. Whitespace-only commits
+  pre-existing code is a test-only commit.</CASE-TESTS-PLUS-IMPLEMENTATION>
+      <CASE-FORMAT-PLUS-SUBSTANCE fact="true" status="impl/done">**Format + substance.** Always separate. Whitespace-only commits
   are fine; mixing whitespace into a semantic change buries the
-  semantic change in noise.</CASE-FORMAT-PLUS-SUBSTANCE></item>
-      <item><CASE-CROSS-MODULE-CHANGE fact="true" status="impl/done">**Cross-module change touching ten files for one reason.** That
+  semantic change in noise.</CASE-FORMAT-PLUS-SUBSTANCE>
+      <CASE-CROSS-MODULE-CHANGE fact="true" status="impl/done">**Cross-module change touching ten files for one reason.** That
   is still one atomic commit. Do not over-split along file
-  boundaries — the atomic unit is the idea, not the file.</CASE-CROSS-MODULE-CHANGE></item>
-    </list>
+  boundaries — the atomic unit is the idea, not the file.</CASE-CROSS-MODULE-CHANGE>
+    </facts>
     <p><sibling-document-pointers fact="true" status="impl/done">Mechanical procedure for producing the split:
 [`splitting-large-changes.md`](splitting-large-changes.md).</sibling-document-pointers></p>
   </splitting>
@@ -127,13 +127,13 @@ story told over them.</THE-ATOMIC-COMMITS-ARE-THE-SOURCE-OF-TRUTH></p>
   </batching>
   <pushed title="Pushed history is frozen">
     <p><once-a-commit-has-been-pushed-lead fact="true" status="impl/done">Once a commit has been pushed:</once-a-commit-has-been-pushed-lead></p>
-    <list ordered="false">
-      <item><FROZEN-NEVER-AMEND fact="true" status="impl/done">**Never** `git commit --amend` without explicit human approval.</FROZEN-NEVER-AMEND></item>
-      <item><FROZEN-NEVER-REBASE-THE-PUSHED-RANGE fact="true" status="impl/done">**Never** `git rebase -i` the pushed range without explicit
-  human approval.</FROZEN-NEVER-REBASE-THE-PUSHED-RANGE></item>
-      <item><FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL fact="true" status="impl/done">**Never** `git push --force` or `--force-with-lease` without
-  explicit human approval.</FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL></item>
-    </list>
+    <facts ordered="false">
+      <FROZEN-NEVER-AMEND fact="true" status="impl/done">**Never** `git commit --amend` without explicit human approval.</FROZEN-NEVER-AMEND>
+      <FROZEN-NEVER-REBASE-THE-PUSHED-RANGE fact="true" status="impl/done">**Never** `git rebase -i` the pushed range without explicit
+  human approval.</FROZEN-NEVER-REBASE-THE-PUSHED-RANGE>
+      <FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL fact="true" status="impl/done">**Never** `git push --force` or `--force-with-lease` without
+  explicit human approval.</FROZEN-NEVER-FORCE-PUSH-WITHOUT-APPROVAL>
+    </facts>
     <p><A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT fact="true" status="impl/done">A mistake in a pushed commit is fixed by a new commit (type
 `fix` or `revert`), not by rewriting history.</A-MISTAKE-IN-A-PUSHED-COMMIT-IS-FIXED-BY-A-NEW-COMMIT></p>
     <p><non-negotiable-because-others-may-already-have-pulled fact="true" status="spec/done">This is non-negotiable
@@ -169,14 +169,14 @@ before continuing.</fence>
     <p><THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT fact="true" status="impl/done">The human verifies the split *plan*, not each commit individually.</THE-HUMAN-VERIFIES-THE-PLAN-NOT-EACH-COMMIT></p>
   </ai-advantage>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-ONE-COMMIT-ONE-IDEA fact="true" status="impl/done">One commit, one idea. Not one file.</SUM-ONE-COMMIT-ONE-IDEA></item>
-      <item><SUM-THE-NO-ALSO-TEST fact="true" status="impl/done">The "no 'also' in the body" test screens for violations; whether an "also" names a second intent is the reader's call.</SUM-THE-NO-ALSO-TEST></item>
-      <item><SUM-WHAT-SEPARATES-AND-WHAT-COMBINES fact="true" status="impl/done">Refactor vs feature: always separate. Tests with their impl:
-  usually together. Format vs substance: always separate.</SUM-WHAT-SEPARATES-AND-WHAT-COMBINES></item>
-      <item><SUM-PUSHED-HISTORY-IS-FROZEN fact="true" status="impl/done">Pushed history is frozen. Amend/force-push only with human
-  approval.</SUM-PUSHED-HISTORY-IS-FROZEN></item>
-      <item><SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN fact="true" status="impl/done">Delegate the split of messy trees to the agent; verify the plan.</SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN></item>
-    </list>
+    <facts ordered="false">
+      <SUM-ONE-COMMIT-ONE-IDEA fact="true" status="impl/done">One commit, one idea. Not one file.</SUM-ONE-COMMIT-ONE-IDEA>
+      <SUM-THE-NO-ALSO-TEST fact="true" status="impl/done">The "no 'also' in the body" test screens for violations; whether an "also" names a second intent is the reader's call.</SUM-THE-NO-ALSO-TEST>
+      <SUM-WHAT-SEPARATES-AND-WHAT-COMBINES fact="true" status="impl/done">Refactor vs feature: always separate. Tests with their impl:
+  usually together. Format vs substance: always separate.</SUM-WHAT-SEPARATES-AND-WHAT-COMBINES>
+      <SUM-PUSHED-HISTORY-IS-FROZEN fact="true" status="impl/done">Pushed history is frozen. Amend/force-push only with human
+  approval.</SUM-PUSHED-HISTORY-IS-FROZEN>
+      <SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN fact="true" status="impl/done">Delegate the split of messy trees to the agent; verify the plan.</SUM-DELEGATE-THE-SPLIT-AND-VERIFY-THE-PLAN>
+    </facts>
   </summary>
 </spec>

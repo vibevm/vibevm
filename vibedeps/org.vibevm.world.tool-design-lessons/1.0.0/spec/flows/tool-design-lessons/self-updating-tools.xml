@@ -211,20 +211,20 @@ you are running; a wipe that nukes a cache shared with other tools; an
 uninstall that removes a user's checkout.</s7-symptoms></p>
   </safe-removal>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-S1-LIVE-POINTER fact="true" status="impl/done">S1 — the active version is a live pointer file plus the running
-  binary's own path; the environment is advisory.</SUM-S1-LIVE-POINTER></item>
-      <item><SUM-S2-IMMUTABLE-INSTANCES fact="true" status="impl/done">S2 — install and switch a whole immutable directory; flip a pointer,
-  overwrite nothing in use.</SUM-S2-IMMUTABLE-INSTANCES></item>
-      <item><SUM-S3-CHEAP-IDENTITY fact="true" status="impl/done">S3 — count instances with a monotonic key; hash small files, stat big
-  ones, hardlink the unchanged.</SUM-S3-CHEAP-IDENTITY></item>
-      <item><SUM-S4-SOURCES-BY-REFERENCE fact="true" status="impl/done">S4 — reference sources, never bulk-copy them; build in place or update
-  a clone incrementally.</SUM-S4-SOURCES-BY-REFERENCE></item>
-      <item><SUM-S5-DURABLE-ENV-EDITS fact="true" status="impl/done">S5 — durable edits are idempotent, additive, consented, OS-aware, and
-  behind a test seam.</SUM-S5-DURABLE-ENV-EDITS></item>
-      <item><SUM-S6-RUNNABLE-KNOWLEDGE fact="true" status="impl/done">S6 — one required-tools table the doctor reads and a test asserts.</SUM-S6-RUNNABLE-KNOWLEDGE></item>
-      <item><SUM-S7-SAFE-REMOVAL fact="true" status="impl/done">S7 — protect the active and running instance; a full wipe is
-  flag-plus-reconfirm, never default.</SUM-S7-SAFE-REMOVAL></item>
-    </list>
+    <facts ordered="false">
+      <SUM-S1-LIVE-POINTER fact="true" status="impl/done">S1 — the active version is a live pointer file plus the running
+  binary's own path; the environment is advisory.</SUM-S1-LIVE-POINTER>
+      <SUM-S2-IMMUTABLE-INSTANCES fact="true" status="impl/done">S2 — install and switch a whole immutable directory; flip a pointer,
+  overwrite nothing in use.</SUM-S2-IMMUTABLE-INSTANCES>
+      <SUM-S3-CHEAP-IDENTITY fact="true" status="impl/done">S3 — count instances with a monotonic key; hash small files, stat big
+  ones, hardlink the unchanged.</SUM-S3-CHEAP-IDENTITY>
+      <SUM-S4-SOURCES-BY-REFERENCE fact="true" status="impl/done">S4 — reference sources, never bulk-copy them; build in place or update
+  a clone incrementally.</SUM-S4-SOURCES-BY-REFERENCE>
+      <SUM-S5-DURABLE-ENV-EDITS fact="true" status="impl/done">S5 — durable edits are idempotent, additive, consented, OS-aware, and
+  behind a test seam.</SUM-S5-DURABLE-ENV-EDITS>
+      <SUM-S6-RUNNABLE-KNOWLEDGE fact="true" status="impl/done">S6 — one required-tools table the doctor reads and a test asserts.</SUM-S6-RUNNABLE-KNOWLEDGE>
+      <SUM-S7-SAFE-REMOVAL fact="true" status="impl/done">S7 — protect the active and running instance; a full wipe is
+  flag-plus-reconfirm, never default.</SUM-S7-SAFE-REMOVAL>
+    </facts>
   </summary>
 </spec>

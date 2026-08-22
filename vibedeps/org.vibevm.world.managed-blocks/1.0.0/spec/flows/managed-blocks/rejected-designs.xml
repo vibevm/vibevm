@@ -142,30 +142,30 @@ report with three parts.</ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-R
 
 No files were changed.</fence>
     <p><THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT fact="true" status="impl/done">Three properties make this drill correct:</THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT></p>
-    <list ordered="false">
-      <item><DRILL-IT-CHANGES-NOTHING fact="true" status="impl/done">**It changes nothing.** The file is left exactly as found, so the
-  human debugs the real state, not a half-repaired one.</DRILL-IT-CHANGES-NOTHING></item>
-      <item><DRILL-IT-IS-SPECIFIC fact="true" status="impl/done">**It is specific.** Line numbers and the exact defect mean the human
-  fixes it in seconds, without opening the tool's source.</DRILL-IT-IS-SPECIFIC></item>
-      <item><DRILL-IT-NAMES-THE-UNBLOCKING-ACTION fact="true" status="impl/done">**It names the unblocking action.** The report ends by telling the
+    <facts ordered="false">
+      <DRILL-IT-CHANGES-NOTHING fact="true" status="impl/done">**It changes nothing.** The file is left exactly as found, so the
+  human debugs the real state, not a half-repaired one.</DRILL-IT-CHANGES-NOTHING>
+      <DRILL-IT-IS-SPECIFIC fact="true" status="impl/done">**It is specific.** Line numbers and the exact defect mean the human
+  fixes it in seconds, without opening the tool's source.</DRILL-IT-IS-SPECIFIC>
+      <DRILL-IT-NAMES-THE-UNBLOCKING-ACTION fact="true" status="impl/done">**It names the unblocking action.** The report ends by telling the
   human precisely what to do, so a hard stop is a thirty-second detour,
-  not a support ticket.</DRILL-IT-NAMES-THE-UNBLOCKING-ACTION></item>
-    </list>
+  not a support ticket.</DRILL-IT-NAMES-THE-UNBLOCKING-ACTION>
+    </facts>
   </drill>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY fact="true" status="spec/done">**Sidecar** — forfeits the one property that made the host file
-  worth writing to: its consumer already reads it.</SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY></item>
-      <item><SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE fact="true" status="spec/done">**Model / heuristic detection** — a nondeterministic gate on a
+    <facts ordered="false">
+      <SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY fact="true" status="spec/done">**Sidecar** — forfeits the one property that made the host file
+  worth writing to: its consumer already reads it.</SUM-SIDECAR-FORFEITS-THE-HOST-FILES-ONE-PROPERTY>
+      <SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE fact="true" status="spec/done">**Model / heuristic detection** — a nondeterministic gate on a
   destructive write; the region you may overwrite must be provable
-  before you write.</SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE></item>
-      <item><SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES fact="true" status="spec/done">**Auto-repair** — destroys evidence and guesses which region is
-  canonical; may delete user content that drifted between markers.</SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES></item>
-      <item><SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES fact="true" status="impl/done">**Whole-file ownership** — fine only for permanently machine-only
+  before you write.</SUM-MODEL-DETECTION-IS-A-NONDETERMINISTIC-GATE>
+      <SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES fact="true" status="spec/done">**Auto-repair** — destroys evidence and guesses which region is
+  canonical; may delete user content that drifted between markers.</SUM-AUTO-REPAIR-DESTROYS-EVIDENCE-AND-GUESSES>
+      <SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES fact="true" status="impl/done">**Whole-file ownership** — fine only for permanently machine-only
   files, marked loudly; the moment a human edits it, you are a
-  co-tenant and owe them a block.</SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES></item>
-      <item><SUM-MALFORMED-GOES-TO-THE-DRILL fact="true" status="impl/done">**Malformed → the drill**: change nothing, report what was found vs
-  expected, name the exact human action that unblocks.</SUM-MALFORMED-GOES-TO-THE-DRILL></item>
-    </list>
+  co-tenant and owe them a block.</SUM-WHOLE-FILE-OWNERSHIP-IS-FOR-MACHINE-ONLY-FILES>
+      <SUM-MALFORMED-GOES-TO-THE-DRILL fact="true" status="impl/done">**Malformed → the drill**: change nothing, report what was found vs
+  expected, name the exact human action that unblocks.</SUM-MALFORMED-GOES-TO-THE-DRILL>
+    </facts>
   </summary>
 </spec>

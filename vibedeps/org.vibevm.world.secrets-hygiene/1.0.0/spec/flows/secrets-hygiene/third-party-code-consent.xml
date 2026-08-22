@@ -29,18 +29,18 @@ governed until stronger content inspection exists.</the-gate-governs-until-conte
   </third-party>
   <consent-gate title="The consent gate">
     <p><consent-gate-lead fact="true" status="impl/done">Trust is governed cheaply by an **allow-list plus first-run consent**:</consent-gate-lead></p>
-    <list ordered="false">
-      <item><GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY fact="true" status="impl/done">**Allow-listed publishers run silently.** A configured list of
+    <facts ordered="false">
+      <GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY fact="true" status="impl/done">**Allow-listed publishers run silently.** A configured list of
   trusted package groups runs its hooks with no prompt. A team's own
   namespace, or a vendor it has audited and decided to trust, goes on
   the list. This is the escape hatch that keeps trusted, high-volume
-  workflows friction-free.</GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY></item>
-      <item><GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT fact="true" status="impl/done">**Everyone else gets first-run consent.** The first time a
+  workflows friction-free.</GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY>
+      <GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT fact="true" status="impl/done">**Everyone else gets first-run consent.** The first time a
   non-allow-listed package would run a hook, the tool prints **exactly
   what will run** — the phase, the script path, the publishing group —
   and asks for a yes/no. Declining skips the hook and marks the
-  install as hooks-skipped: surfaced, never silent.</GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT></item>
-    </list>
+  install as hooks-skipped: surfaced, never silent.</GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT>
+    </facts>
     <table>
       <tr>
         <td>Publisher</td>
@@ -135,19 +135,19 @@ hook is safe, the conservative default applies — treat it as untrusted
 and ask the human.</WHEN-UNCERTAIN-TREAT-AS-UNTRUSTED-AND-ASK></p>
   </residual-risk>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-HOOKS-ARE-THIRD-PARTY-CODE fact="true" status="spec/done">Install/build hooks are third-party code running with your
-  privileges — a real trust surface.</SUM-HOOKS-ARE-THIRD-PARTY-CODE></item>
-      <item><SUM-THE-GATE-IS-ALLOW-LIST-PLUS-CONSENT fact="true" status="impl/done">The gate: allow-listed publishers run silently; everyone else gets
-  first-run consent showing the exact script.</SUM-THE-GATE-IS-ALLOW-LIST-PLUS-CONSENT></item>
-      <item><SUM-CI-ABORTS-AND-SILENCE-NEVER-MEANS-YES fact="true" status="impl/done">A non-interactive/CI run **aborts** rather than running unseen code;
-  silence never means yes.</SUM-CI-ABORTS-AND-SILENCE-NEVER-MEANS-YES></item>
-      <item><SUM-HOOKS-ARE-VERSIONED-FILES fact="true" status="impl/done">Hooks are versioned, reviewable files referenced by path — never
-  inline manifest strings that hide code and resist review.</SUM-HOOKS-ARE-VERSIONED-FILES></item>
-      <item><SUM-NO-SECRET-IN-A-HOOKS-ENVIRONMENT fact="true" status="impl/done">A secret is never placed in a hook's environment (Law 3 at its
-  sharpest).</SUM-NO-SECRET-IN-A-HOOKS-ENVIRONMENT></item>
-      <item><SUM-THE-RESIDUAL-RISK-IS-RECORDED fact="true" status="impl/done">The residual risk is accepted deliberately and recorded here, not
-  left unstated; when in doubt, treat as untrusted and ask.</SUM-THE-RESIDUAL-RISK-IS-RECORDED></item>
-    </list>
+    <facts ordered="false">
+      <SUM-HOOKS-ARE-THIRD-PARTY-CODE fact="true" status="spec/done">Install/build hooks are third-party code running with your
+  privileges — a real trust surface.</SUM-HOOKS-ARE-THIRD-PARTY-CODE>
+      <SUM-THE-GATE-IS-ALLOW-LIST-PLUS-CONSENT fact="true" status="impl/done">The gate: allow-listed publishers run silently; everyone else gets
+  first-run consent showing the exact script.</SUM-THE-GATE-IS-ALLOW-LIST-PLUS-CONSENT>
+      <SUM-CI-ABORTS-AND-SILENCE-NEVER-MEANS-YES fact="true" status="impl/done">A non-interactive/CI run **aborts** rather than running unseen code;
+  silence never means yes.</SUM-CI-ABORTS-AND-SILENCE-NEVER-MEANS-YES>
+      <SUM-HOOKS-ARE-VERSIONED-FILES fact="true" status="impl/done">Hooks are versioned, reviewable files referenced by path — never
+  inline manifest strings that hide code and resist review.</SUM-HOOKS-ARE-VERSIONED-FILES>
+      <SUM-NO-SECRET-IN-A-HOOKS-ENVIRONMENT fact="true" status="impl/done">A secret is never placed in a hook's environment (Law 3 at its
+  sharpest).</SUM-NO-SECRET-IN-A-HOOKS-ENVIRONMENT>
+      <SUM-THE-RESIDUAL-RISK-IS-RECORDED fact="true" status="impl/done">The residual risk is accepted deliberately and recorded here, not
+  left unstated; when in doubt, treat as untrusted and ask.</SUM-THE-RESIDUAL-RISK-IS-RECORDED>
+    </facts>
   </summary>
 </spec>

@@ -25,14 +25,14 @@ cultural-extraction wave), so two projects on the same edition run
 byte-identical text of every member they share.</AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS></p>
     <p><MEMBERS-EVOLVE-BETWEEN-EDITIONS fact="true" status="impl/done">Members evolve on their own version lines between editions; a new
 edition is a new umbrella version with refreshed pins.</MEMBERS-EVOLVE-BETWEEN-EDITIONS></p>
-    <list ordered="false">
-      <item><EDITION-0-1-0 fact="true" status="impl/done">**Edition 0.1.0** — the book's core: the ten flows for the
-  two-process model, the file IPC, and the memory model.</EDITION-0-1-0></item>
-      <item><EDITION-0-2-0 fact="true" status="impl/done">**Edition 0.2.0** (the second edition) — added eleven project-practice
-  flows for running a project over the long haul.</EDITION-0-2-0></item>
-      <item><EDITION-1-0-0 fact="true" status="impl/done">**Edition 1.0.0** (this edition) — remints the tested
-  collection as the stable 1.0 world.</EDITION-1-0-0></item>
-    </list>
+    <facts ordered="false">
+      <EDITION-0-1-0 fact="true" status="impl/done">**Edition 0.1.0** — the book's core: the ten flows for the
+  two-process model, the file IPC, and the memory model.</EDITION-0-1-0>
+      <EDITION-0-2-0 fact="true" status="impl/done">**Edition 0.2.0** (the second edition) — added eleven project-practice
+  flows for running a project over the long haul.</EDITION-0-2-0>
+      <EDITION-1-0-0 fact="true" status="impl/done">**Edition 1.0.0** (this edition) — remints the tested
+  collection as the stable 1.0 world.</EDITION-1-0-0>
+    </facts>
   </editions>
   <members title="Members (edition 1.0.0)">
     <p><books-core-table-lead fact="true" status="impl/done">The book's core:</books-core-table-lead></p>
@@ -150,13 +150,13 @@ rules, the book carries the *why* behind all of them.</THE-BOOK-IS-REFERENCE-DEP
     <p><complementary-layers-lead fact="true" status="spec/done">The redbook and the AI-Native Code Discipline
 (`flow:org.vibevm.ai-native/core-ai-native` and its language families) are
 complementary layers:</complementary-layers-lead></p>
-    <list ordered="false">
-      <item><LAYER-REDBOOK-IS-PURE-METHOD fact="true" status="spec/done">**redbook** is pure method — its value survives with only a git
+    <facts ordered="false">
+      <LAYER-REDBOOK-IS-PURE-METHOD fact="true" status="spec/done">**redbook** is pure method — its value survives with only a git
   repository and a markdown editor. Any product, any language, any
-  agent.</LAYER-REDBOOK-IS-PURE-METHOD></item>
-      <item><LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR fact="true" status="impl/done">**The Discipline** is code-enforced rigor — pattern cards, gates,
-  and runnable checkers shipped per language.</LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR></item>
-    </list>
+  agent.</LAYER-REDBOOK-IS-PURE-METHOD>
+      <LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR fact="true" status="impl/done">**The Discipline** is code-enforced rigor — pattern cards, gates,
+  and runnable checkers shipped per language.</LAYER-DISCIPLINE-IS-CODE-ENFORCED-RIGOR>
+    </facts>
     <p><THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP fact="true" status="spec/done">Where the two describe the same practice, **the redbook package is
 canonical**: `flow:wal` is the canonical home of the WAL convention
 and `flow:campaign-plans` of the campaign-plan format. That is this

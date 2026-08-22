@@ -9,18 +9,18 @@ descriptions of them.</TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN></p>
   <p><NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY fact="true" status="impl/done">The language-neutral method (manifesto, playbooks, mechanism specs)
 comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY></p>
   <what-ships title="What ships">
-    <list ordered="false">
-      <item><SHIPS-FOUR-BINARIES fact="true" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`,
+    <facts ordered="false">
+      <SHIPS-FOUR-BINARIES fact="true" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`,
   declared as `[[binary]]` in `vibe.toml` for PROP-025 lockfile
-  dispatch):</SHIPS-FOUR-BINARIES></item>
-      <item><SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`typescript-ai-native` — the umbrella tool: `init` (bootstrap
+  dispatch):</SHIPS-FOUR-BINARIES>
+      <SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`typescript-ai-native` — the umbrella tool: `init` (bootstrap
     policies + registries), `floor` (the portable verification floor —
     prettier → tsc → tests → eslint → conform → specmap → test-gate, one
     exit code), `conform`, `specmap`, `trace`, `test-gate`, `tripwire`,
-    `health`, `fast-loop`, `codemod`.</SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA></item>
-      <item><SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM fact="true" status="impl/done">`typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM></item>
-      <item><SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP fact="true" status="impl/done">`typescript-ai-native-specmap` — the traceability engine alone (PROP-014).</SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP></item>
-      <item><SHIPS-TYPESCRIPT-AI-NATIVE-TCG fact="true" status="impl/done">`typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
+    `health`, `fast-loop`, `codemod`.</SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA>
+      <SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM fact="true" status="impl/done">`typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM>
+      <SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP fact="true" status="impl/done">`typescript-ai-native-specmap` — the traceability engine alone (PROP-014).</SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP>
+      <SHIPS-TYPESCRIPT-AI-NATIVE-TCG fact="true" status="impl/done">`typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
     TCG-PROTOCOL-v0.1): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own `typescript` install over
@@ -28,27 +28,27 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-M
     **Prerequisite:** node ≥ 22.6 and the project's own `typescript`
     devDependency — the same install the `tsc` floor step needs, so the
     oracle adds no new dependency. The floor stays the truth; the oracle
-    exists so the floor stays green on the first try.</SHIPS-TYPESCRIPT-AI-NATIVE-TCG></item>
-      <item><SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The TypeScript guide and cards**
+    exists so the floor stays green on the first try.</SHIPS-TYPESCRIPT-AI-NATIVE-TCG>
+      <SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The TypeScript guide and cards**
   (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`, `spec/cards/` — the
   nine scaffolds A–I in their TypeScript shape, Band-3 ops blocks for
-  weak readers).</SHIPS-GUIDE-AND-CARDS></item>
-      <item><SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
+  weak readers).</SHIPS-GUIDE-AND-CARDS>
+      <SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
   `/typescript-ai-native-terraform` (brownfield adoption per BROWNFIELD-PROTOCOL)
   and `/typescript-ai-native-sweep` (the recurring sweep per the Sweep
-  Playbook).</SHIPS-TWO-AGENT-SKILLS></item>
-      <item><SHIPS-TWO-NODE-SIDE-TOOLS fact="true" status="impl/done">**Two node-side tools** (`tools/`, run directly under node ≥ 22.6
+  Playbook).</SHIPS-TWO-AGENT-SKILLS>
+      <SHIPS-TWO-NODE-SIDE-TOOLS fact="true" status="impl/done">**Two node-side tools** (`tools/`, run directly under node ≥ 22.6
   type-stripping): `ts-extract`, the Compiler-API fact extractor the
   conform frontend and the specmap scanner drive; and `ts-oracle`, the
   long-lived language-service oracle behind `typescript-ai-native-tcg`.
-  Both resolve the CONSUMER project's `typescript` at runtime.</SHIPS-TWO-NODE-SIDE-TOOLS></item>
-      <item><SHIPS-MECHANISM-SPECS fact="true" status="impl/done">**The TypeScript mechanism specs and tool briefs** —
+  Both resolve the CONSUMER project's `typescript` at runtime.</SHIPS-TWO-NODE-SIDE-TOOLS>
+      <SHIPS-MECHANISM-SPECS fact="true" status="impl/done">**The TypeScript mechanism specs and tool briefs** —
   `spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` and
-  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`.</SHIPS-MECHANISM-SPECS></item>
-      <item><NEUTRAL-ENGINES-RIDE-ALONG-VENDORED fact="true" status="impl/done">**The neutral engines ride along as vendored copies**
+  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`.</SHIPS-MECHANISM-SPECS>
+      <NEUTRAL-ENGINES-RIDE-ALONG-VENDORED fact="true" status="impl/done">**The neutral engines ride along as vendored copies**
   (`crates/vendor/core-ai-native-{conform,specmap,specmark,specmark-grammar}`),
-  so the slot is its own Cargo workspace and builds standalone.</NEUTRAL-ENGINES-RIDE-ALONG-VENDORED></item>
-    </list>
+  so the slot is its own Cargo workspace and builds standalone.</NEUTRAL-ENGINES-RIDE-ALONG-VENDORED>
+    </facts>
   </what-ships>
   <running-the-tools title="Running the tools">
     <p><running-forms-lead fact="true" status="impl/done">Three supported forms, from your project root (where `vibedeps/` is):</running-forms-lead></p>

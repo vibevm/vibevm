@@ -105,19 +105,19 @@ perform.</EVERYTHING-ELSE-EXISTS-TO-MAKE-THAT-JOB-CHEAP></p>
   <cycle title="What a productive cycle looks like">
     <p><the-cycle-lead fact="true" status="impl/done">A working session is a loop in which each side does what the other
 cannot:</the-cycle-lead></p>
-    <list ordered="true">
-      <item><CYCLE-THE-HUMAN-DECIDES fact="true" status="impl/done">**The human decides.** Reads the current state (the checkpoint
+    <facts ordered="true">
+      <CYCLE-THE-HUMAN-DECIDES fact="true" status="impl/done">**The human decides.** Reads the current state (the checkpoint
    file), makes the one pending decision (a timeout value, an
-   approach), updates the spec. Minutes, not hours.</CYCLE-THE-HUMAN-DECIDES></item>
-      <item><CYCLE-THE-AI-GENERATES fact="true" status="impl/done">**The AI generates.** Receives a precise task with an address
+   approach), updates the spec. Minutes, not hours.</CYCLE-THE-HUMAN-DECIDES>
+      <CYCLE-THE-AI-GENERATES fact="true" status="impl/done">**The AI generates.** Receives a precise task with an address
    into the spec ("implement §5.3; the timeout changed yesterday —
    re-read it; do not touch the matcher"). Produces code, tests,
-   and the updated shared state.</CYCLE-THE-AI-GENERATES></item>
-      <item><CYCLE-THE-HUMAN-VERIFIES fact="true" status="impl/done">**The human verifies.** Reads the diff, not the codebase. Checks
-   that the tests cover what the spec says. Commits.</CYCLE-THE-HUMAN-VERIFIES></item>
-      <item><CYCLE-THE-STATE-CARRIES-OVER fact="true" status="impl/done">**The state carries over.** The checkpoint file and the spec —
-   not anyone's memory — carry the result into the next session.</CYCLE-THE-STATE-CARRIES-OVER></item>
-    </list>
+   and the updated shared state.</CYCLE-THE-AI-GENERATES>
+      <CYCLE-THE-HUMAN-VERIFIES fact="true" status="impl/done">**The human verifies.** Reads the diff, not the codebase. Checks
+   that the tests cover what the spec says. Commits.</CYCLE-THE-HUMAN-VERIFIES>
+      <CYCLE-THE-STATE-CARRIES-OVER fact="true" status="impl/done">**The state carries over.** The checkpoint file and the spec —
+   not anyone's memory — carry the result into the next session.</CYCLE-THE-STATE-CARRIES-OVER>
+    </facts>
     <p><the-unproductive-mirror-image fact="true" status="spec/done">The same task given as "finish the verification module" produces the
 unproductive mirror image: the AI re-reads everything, guesses the
 intent, "improves" adjacent code, and the human spends two hours
@@ -148,17 +148,17 @@ as a draft for the project's boot file. Do not apply until I
 approve.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY fact="true" status="spec/done">Boss/subordinate and human/tool both fail the same way: the human
-  carries 100% of the thinking.</SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY></item>
-      <item><SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES fact="true" status="spec/done">Human and AI are coprocessors with complementary profiles; route
-  work with the grain.</SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES></item>
-      <item><SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT fact="true" status="impl/done">The boundary between zones moves; human ownership of coherence
-  does not.</SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT></item>
-      <item><SUM-THE-PRODUCTIVE-CYCLE fact="true" status="impl/done">A productive cycle is decide → generate → verify → carry over, and
+    <facts ordered="false">
+      <SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY fact="true" status="spec/done">Boss/subordinate and human/tool both fail the same way: the human
+  carries 100% of the thinking.</SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY>
+      <SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES fact="true" status="spec/done">Human and AI are coprocessors with complementary profiles; route
+  work with the grain.</SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES>
+      <SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT fact="true" status="impl/done">The boundary between zones moves; human ownership of coherence
+  does not.</SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT>
+      <SUM-THE-PRODUCTIVE-CYCLE fact="true" status="impl/done">A productive cycle is decide → generate → verify → carry over, and
   the human's steps are the cheap ones — if the shared state is
-  maintained.</SUM-THE-PRODUCTIVE-CYCLE></item>
-      <item><SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP fact="true" status="impl/done">Everything else in this collection exists to keep that cycle cheap.</SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP></item>
-    </list>
+  maintained.</SUM-THE-PRODUCTIVE-CYCLE>
+      <SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP fact="true" status="impl/done">Everything else in this collection exists to keep that cycle cheap.</SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP>
+    </facts>
   </summary>
 </spec>

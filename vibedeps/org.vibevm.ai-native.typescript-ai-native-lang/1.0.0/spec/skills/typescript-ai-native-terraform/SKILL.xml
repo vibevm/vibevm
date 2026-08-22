@@ -8,16 +8,16 @@ copy under `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/mechanisms/`;
 read it before the first phase, and skim `03-RAID-PLAYBOOK` +
 `05-CAMPAIGN-FORM` for the campaign machinery).</EXECUTING-THE-BROWNFIELD-PROTOCOL></p>
   <p><founding-principles-lead fact="true" status="impl/done">The founding principles:</founding-principles-lead></p>
-  <list ordered="false">
-    <item><PRINCIPLE-INVENTORY-NOT-GATE fact="true" status="impl/done">**inventory, not gate** (the only precondition is "the project
-  type-checks or at least runs");</PRINCIPLE-INVENTORY-NOT-GATE></item>
-    <item><PRINCIPLE-ASPIRATION-MUST-BE-LABELED fact="true" status="impl/done">**aspiration is legal only when
-  labeled**;</PRINCIPLE-ASPIRATION-MUST-BE-LABELED></item>
-    <item><PRINCIPLE-CONTRADICTION-IS-DATA fact="true" status="impl/done">**contradiction is data**;</PRINCIPLE-CONTRADICTION-IS-DATA></item>
-    <item><PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD fact="true" status="impl/done">**characterization is the
-  truth-of-record**;</PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD></item>
-    <item><PRINCIPLE-MONOTONE-UTILITY fact="true" status="impl/done">**monotone utility**.</PRINCIPLE-MONOTONE-UTILITY></item>
-  </list>
+  <facts ordered="false">
+    <PRINCIPLE-INVENTORY-NOT-GATE fact="true" status="impl/done">**inventory, not gate** (the only precondition is "the project
+  type-checks or at least runs");</PRINCIPLE-INVENTORY-NOT-GATE>
+    <PRINCIPLE-ASPIRATION-MUST-BE-LABELED fact="true" status="impl/done">**aspiration is legal only when
+  labeled**;</PRINCIPLE-ASPIRATION-MUST-BE-LABELED>
+    <PRINCIPLE-CONTRADICTION-IS-DATA fact="true" status="impl/done">**contradiction is data**;</PRINCIPLE-CONTRADICTION-IS-DATA>
+    <PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD fact="true" status="impl/done">**characterization is the
+  truth-of-record**;</PRINCIPLE-CHARACTERIZATION-IS-THE-TRUTH-OF-RECORD>
+    <PRINCIPLE-MONOTONE-UTILITY fact="true" status="impl/done">**monotone utility**.</PRINCIPLE-MONOTONE-UTILITY>
+  </facts>
   <p><DO-NOT-BULLDOZE-AN-INHABITED-WORLD fact="true" status="impl/done">Do not bulldoze an inhabited
 world.</DO-NOT-BULLDOZE-AN-INHABITED-WORLD></p>
   <p><TOOLCHAIN-INSTALL-OR-RUN-IN-PLACE fact="true" status="impl/done">Toolchain: `typescript-ai-native` (install once:
@@ -28,60 +28,60 @@ typescript-ai-native-cli --bin typescript-ai-native -- &lt;args&gt;`).</TOOLCHAI
 project itself needs node ≥ 22.6 and its own `typescript` devDependency —
 the structural gate parses with the project's own compiler.</PROJECT-NEEDS-NODE-AND-ITS-OWN-TYPESCRIPT></p>
   <phase-inventory title="Phase −1 — inventory (record reality; change nothing)">
-    <list ordered="true">
-      <item><INVENTORY-PRECONDITION fact="true" status="impl/done">Precondition: `npx tsc --noEmit` runs (errors are FINDINGS to record,
-   not blockers) and the test runner starts.</INVENTORY-PRECONDITION></item>
-      <item><INVENTORY-INIT fact="true" status="impl/done">`typescript-ai-native init` — policies + empty registries. Nothing is
-   gated yet, and that is correct.</INVENTORY-INIT></item>
-      <item><INVENTORY-TESTS-BASELINE fact="true" status="impl/done">**Fill `discipline/registry/tests-baseline.json` with reality:** run
+    <facts ordered="true">
+      <INVENTORY-PRECONDITION fact="true" status="impl/done">Precondition: `npx tsc --noEmit` runs (errors are FINDINGS to record,
+   not blockers) and the test runner starts.</INVENTORY-PRECONDITION>
+      <INVENTORY-INIT fact="true" status="impl/done">`typescript-ai-native init` — policies + empty registries. Nothing is
+   gated yet, and that is correct.</INVENTORY-INIT>
+      <INVENTORY-TESTS-BASELINE fact="true" status="impl/done">**Fill `discipline/registry/tests-baseline.json` with reality:** run
    the suite once (`node --test --test-reporter=tap`), record every
    failing test as `failing-known` with a `since` date and a debt id — do
-   NOT fix them now (drive-by repairs destroy the accounting).</INVENTORY-TESTS-BASELINE></item>
-      <item><INVENTORY-HARVEST-INTENT fact="true" status="impl/done">**Harvest intent** into `discipline/registry/intent.json`: README
+   NOT fix them now (drive-by repairs destroy the accounting).</INVENTORY-TESTS-BASELINE>
+      <INVENTORY-HARVEST-INTENT fact="true" status="impl/done">**Harvest intent** into `discipline/registry/intent.json`: README
    roadmaps, TODO/FIXME that carry design, open issues you will honour.
    The carry-over guarantee: at exit every harvested intention is
-   done | rescoped | rejected(reason) — zero unaccounted.</INVENTORY-HARVEST-INTENT></item>
-      <item><INVENTORY-FILE-DEBT fact="true" status="impl/done">**File debt** into `discipline/registry/debt.json`: failing tests, the
+   done | rescoped | rejected(reason) — zero unaccounted.</INVENTORY-HARVEST-INTENT>
+      <INVENTORY-FILE-DEBT fact="true" status="impl/done">**File debt** into `discipline/registry/debt.json`: failing tests, the
    `any`/`as`/`!`/`@ts-ignore` hotspots `typescript-ai-native health`
    counts, missing runtime validation at erasure boundaries — each with
-   severity, evidence, disposition, and `touch:` tripwires.</INVENTORY-FILE-DEBT></item>
-      <item><INVENTORY-CHARACTERIZE fact="true" status="impl/done">**Characterize** currently-passing observable behavior (golden
+   severity, evidence, disposition, and `touch:` tripwires.</INVENTORY-FILE-DEBT>
+      <INVENTORY-CHARACTERIZE fact="true" status="impl/done">**Characterize** currently-passing observable behavior (golden
    transcripts under `discipline/golden/`, normalized for volatile
-   fields). A pinned bug is visible debt; an unpinned bug is a landmine.</INVENTORY-CHARACTERIZE></item>
-      <item><INVENTORY-SPECMAP fact="true" status="impl/done">`typescript-ai-native specmap` — mint the (initially small) index;
-   commit the whole inventory as its own topic commits.</INVENTORY-SPECMAP></item>
-    </list>
+   fields). A pinned bug is visible debt; an unpinned bug is a landmine.</INVENTORY-CHARACTERIZE>
+      <INVENTORY-SPECMAP fact="true" status="impl/done">`typescript-ai-native specmap` — mint the (initially small) index;
+   commit the whole inventory as its own topic commits.</INVENTORY-SPECMAP>
+    </facts>
   </phase-inventory>
   <phase-first-spec-units title="Phase 0 — the first spec units + the tsconfig floor">
-    <list ordered="true">
-      <item><PHASE-ZERO-FIRST-SPEC-DOCUMENTS fact="true" status="impl/done">Write the project's first `spec/` documents for the subsystems you
+    <facts ordered="true">
+      <PHASE-ZERO-FIRST-SPEC-DOCUMENTS fact="true" status="impl/done">Write the project's first `spec/` documents for the subsystems you
    will touch first: anchored headings (`{#req-…}`), kind lines
    (`` `req r1` ``). Tag implementing exports as you go
    (`/** @implements spec://&lt;ns&gt;/… */`, or a file-level `@scope`);
-   `typescript-ai-native specmap` after each batch keeps the index green.</PHASE-ZERO-FIRST-SPEC-DOCUMENTS></item>
-      <item><PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR fact="true" status="impl/done">Raise `tsconfig.json` toward the GUIDE §1 floor (`strict`,
+   `typescript-ai-native specmap` after each batch keeps the index green.</PHASE-ZERO-FIRST-SPEC-DOCUMENTS>
+      <PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR fact="true" status="impl/done">Raise `tsconfig.json` toward the GUIDE §1 floor (`strict`,
    `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
    `erasableSyntaxOnly`) — one flag at a time; each flag's fallout is
-   inventory (debt entries), not a fix-everything-now mandate.</PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR></item>
-    </list>
+   inventory (debt entries), not a fix-everything-now mandate.</PHASE-ZERO-RAISE-THE-TSCONFIG-FLOOR>
+    </facts>
   </phase-first-spec-units>
   <card-raids title="Phases 1…N — card raids, cell by cell">
     <p><raid-one-directory-at-a-time-lead fact="true" status="impl/done">Per the Raid Playbook skeleton (scope &amp; freeze → card order → phases →
 acceptance), raid one directory-at-a-time toward the cell layout:</raid-one-directory-at-a-time-lead></p>
-    <list ordered="false">
-      <item><RAID-CARVE-THE-CELL-LAYOUT fact="true" status="impl/done">carve `src/cells/&lt;name&gt;/` with `index.ts` seams; imports cross seams
+    <facts ordered="false">
+      <RAID-CARVE-THE-CELL-LAYOUT fact="true" status="impl/done">carve `src/cells/&lt;name&gt;/` with `index.ts` seams; imports cross seams
   only (`ts-cell-isolation` starts enforcing the moment `cells_dir` is
-  set in conform.toml);</RAID-CARVE-THE-CELL-LAYOUT></item>
-      <item><RAID-BRAND-PRIMITIVES-AT-SEAMS fact="true" status="impl/done">brand meaning-bearing primitives at the seams (card B); validate
-  external data at erasure boundaries through a single-source schema;</RAID-BRAND-PRIMITIVES-AT-SEAMS></item>
-      <item><RAID-DRAIN-THE-UNSAFE-SET fact="true" status="impl/done">drain the unsafe set (`any` → `unknown`+narrowing, checked `as`,
+  set in conform.toml);</RAID-CARVE-THE-CELL-LAYOUT>
+      <RAID-BRAND-PRIMITIVES-AT-SEAMS fact="true" status="impl/done">brand meaning-bearing primitives at the seams (card B); validate
+  external data at erasure boundaries through a single-source schema;</RAID-BRAND-PRIMITIVES-AT-SEAMS>
+      <RAID-DRAIN-THE-UNSAFE-SET fact="true" status="impl/done">drain the unsafe set (`any` → `unknown`+narrowing, checked `as`,
   assertion functions for `!`), recording the irreducible remainder as
-  reasoned `@ts-expect-error` testimony;</RAID-DRAIN-THE-UNSAFE-SET></item>
-      <item><RAID-FREEZE-ONCE-PER-LANDING fact="true" status="impl/done">`typescript-ai-native conform freeze` once per raid landing, then the
-  ratchet only shrinks;</RAID-FREEZE-ONCE-PER-LANDING></item>
-      <item><RAID-KEEP-THE-FLOOR-GREEN fact="true" status="impl/done">keep `typescript-ai-native floor` green at every raid boundary —
-  that is the campaign's safe-stop invariant.</RAID-KEEP-THE-FLOOR-GREEN></item>
-    </list>
+  reasoned `@ts-expect-error` testimony;</RAID-DRAIN-THE-UNSAFE-SET>
+      <RAID-FREEZE-ONCE-PER-LANDING fact="true" status="impl/done">`typescript-ai-native conform freeze` once per raid landing, then the
+  ratchet only shrinks;</RAID-FREEZE-ONCE-PER-LANDING>
+      <RAID-KEEP-THE-FLOOR-GREEN fact="true" status="impl/done">keep `typescript-ai-native floor` green at every raid boundary —
+  that is the campaign's safe-stop invariant.</RAID-KEEP-THE-FLOOR-GREEN>
+    </facts>
   </card-raids>
   <exit title="Exit">
     <p><EXIT-CRITERIA fact="true" status="impl/done">The BROWNFIELD §8 carry-over reconciliation (zero unaccounted intent),

@@ -25,14 +25,14 @@ state machine, and what belongs inside the block:
 @spec://org.vibevm.world/managed-blocks/flows/managed-blocks/adoption-guide#root.</adoption-guide-pointer></p>
   </when>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK fact="true" status="impl/done">Never write outside your own block. Every byte beyond your markers
-  is another tenant's property.</NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK></item>
-      <item><NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR fact="true" status="impl/done">Never gate a destructive write on a nondeterministic detector —
-  the block is found by a deterministic byte scan or not at all.</NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR></item>
-      <item><NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK fact="true" status="impl/done">Never auto-repair a malformed block. Hard stop, precise report;
-  the human decides.</NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK></item>
-      <item><NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL fact="true" status="impl/done">Never rewrite a file when the result is byte-identical.</NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK fact="true" status="impl/done">Never write outside your own block. Every byte beyond your markers
+  is another tenant's property.</NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK>
+      <NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR fact="true" status="impl/done">Never gate a destructive write on a nondeterministic detector —
+  the block is found by a deterministic byte scan or not at all.</NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR>
+      <NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK fact="true" status="impl/done">Never auto-repair a malformed block. Hard stop, precise report;
+  the human decides.</NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK>
+      <NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL fact="true" status="impl/done">Never rewrite a file when the result is byte-identical.</NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL>
+    </facts>
   </never>
 </spec>

@@ -11,16 +11,16 @@ proves the world.</THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-TH
 replaces it.</THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES></p>
   <when title="When to propose writing one">
     <p><propose-a-manual-test-lead fact="true" status="impl/done">Propose a manual test — do not wait to be asked — whenever:</propose-a-manual-test-lead></p>
-    <list ordered="false">
-      <item><TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS fact="true" status="impl/done">**A new integration surface lands.** Real authentication, the
+    <facts ordered="false">
+      <TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS fact="true" status="impl/done">**A new integration surface lands.** Real authentication, the
   per-user state directory on a real filesystem, a lockfile as a
   downstream consumer sees it, network-facing I/O — anything the
-  automated tier fakes now has a real-world form that nothing proves.</TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS></item>
-      <item><TRIGGER-A-MILESTONE-APPROACHES fact="true" status="impl/done">**A milestone approaches.** Before tagging, every run the index
-  marks required for the shipped features must have been executed.</TRIGGER-A-MILESTONE-APPROACHES></item>
-      <item><TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG fact="true" status="impl/done">**A user reports an integration bug.** Its reproduction steps
-  become a manual test, so the next session can replay them exactly.</TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG></item>
-    </list>
+  automated tier fakes now has a real-world form that nothing proves.</TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS>
+      <TRIGGER-A-MILESTONE-APPROACHES fact="true" status="impl/done">**A milestone approaches.** Before tagging, every run the index
+  marks required for the shipped features must have been executed.</TRIGGER-A-MILESTONE-APPROACHES>
+      <TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG fact="true" status="impl/done">**A user reports an integration bug.** Its reproduction steps
+  become a manual test, so the next session can replay them exactly.</TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG>
+    </facts>
     <p><sibling-document-pointers fact="true" status="impl/done">The format, authoring rules, and copy-ready skeleton live under
 @spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root.</sibling-document-pointers></p>
   </when>
@@ -36,19 +36,19 @@ tool's output and say "yes, that is what I meant".</THE-SIGN-OFF-IS-A-HUMANS></p
 pre-run; never record the pass.</REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS></p>
   </roles>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE fact="true" status="impl/done">**Never let a manual test touch real user state.** Every run
+    <facts ordered="false">
+      <NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE fact="true" status="impl/done">**Never let a manual test touch real user state.** Every run
   isolates its project into a scratch directory and redirects the
   tool's per-user cache into that scratch. A test that mutates the
-  real per-user state is a bug in the test.</NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE></item>
-      <item><NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH fact="true" status="impl/done">**Never write a step without an "Expected" paragraph.** A command
-  with no stated outcome cannot pass or fail; it is not a test step.</NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH></item>
-      <item><NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED fact="true" status="impl/done">**Never tag a milestone with the index's required runs
+  real per-user state is a bug in the test.</NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE>
+      <NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH fact="true" status="impl/done">**Never write a step without an "Expected" paragraph.** A command
+  with no stated outcome cannot pass or fail; it is not a test step.</NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH>
+      <NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED fact="true" status="impl/done">**Never tag a milestone with the index's required runs
   unexecuted.** Green automated suite plus unrun manual tests is not
-  a shippable milestone.</NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED></item>
-      <item><NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN fact="true" status="impl/done">**Never delete a failing manual test to make the panel green.** A
+  a shippable milestone.</NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED>
+      <NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN fact="true" status="impl/done">**Never delete a failing manual test to make the panel green.** A
   test that caught something is working; file what it caught and fix
-  the product, not the test.</NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN></item>
-    </list>
+  the product, not the test.</NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN>
+    </facts>
   </never>
 </spec>

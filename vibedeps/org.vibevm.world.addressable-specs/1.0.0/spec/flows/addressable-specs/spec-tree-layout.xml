@@ -32,16 +32,16 @@ layout serves is defined in
     <p><SPEC-OR-SPECS-PICK-ONE fact="true" status="impl/done">`spec/` or `specs/` — either; pick one and never mix.</SPEC-OR-SPECS-PICK-ONE></p>
     <p><three-zones-lead fact="true" status="impl/done">The tree
 divides into three zones with different loss semantics:</three-zones-lead></p>
-    <list ordered="false">
-      <item><ZONE-SHARED-STATE fact="true" status="impl/done">**shared
+    <facts ordered="false">
+      <ZONE-SHARED-STATE fact="true" status="impl/done">**shared
   state** (`spec/` — losing it is a catastrophe, it is the only channel
-  between the two processes),</ZONE-SHARED-STATE></item>
-      <item><ZONE-ARTIFACTS fact="true" status="impl/done">**artifacts** (`src/`, `tests/` — losing
-  a file is an inconvenience; it can be regenerated from the spec),</ZONE-ARTIFACTS></item>
-      <item><ZONE-PRIVATE-BUFFERS fact="true" status="impl/done">and
+  between the two processes),</ZONE-SHARED-STATE>
+      <ZONE-ARTIFACTS fact="true" status="impl/done">**artifacts** (`src/`, `tests/` — losing
+  a file is an inconvenience; it can be regenerated from the spec),</ZONE-ARTIFACTS>
+      <ZONE-PRIVATE-BUFFERS fact="true" status="impl/done">and
   **private buffers** (`.human/` — one process's memory, invisible to
-  the other).</ZONE-PRIVATE-BUFFERS></item>
-    </list>
+  the other).</ZONE-PRIVATE-BUFFERS>
+    </facts>
     <p><HARNESS-ENTRY-FILES-ARE-THIN-REDIRECTS fact="true" status="impl/done">Harness entry files (`CLAUDE.md`, `AGENTS.md`, and whatever the next
 tool demands) should be thin redirects into `spec/BOOT.md`.</HARNESS-ENTRY-FILES-ARE-THIN-REDIRECTS></p>
     <p><one-boot-sequence-many-doors fact="true" status="spec/done">One boot
@@ -162,13 +162,13 @@ copy-paste correction snippets ("you are drifting, re-read the
 spec"), negotiation notes, half-formed doubts.</HUMAN-BUFFER-HOLDS-TEXT-THE-AGENT-MUST-NEVER-SEE></p>
     <p><two-reasons-lead fact="true" status="impl/done">Two reasons to keep
 it out:</two-reasons-lead></p>
-    <list ordered="false">
-      <item><REASON-TOKEN-COST fact="true" status="spec/done">**Token cost.** Every file the agent reads is context spent; a
-  shortcuts file is pure overhead for any task.</REASON-TOKEN-COST></item>
-      <item><REASON-REACTION-RISK fact="true" status="spec/done">**Reaction risk.** An agent that reads "you are drifting" mid-task
+    <facts ordered="false">
+      <REASON-TOKEN-COST fact="true" status="spec/done">**Token cost.** Every file the agent reads is context spent; a
+  shortcuts file is pure overhead for any task.</REASON-TOKEN-COST>
+      <REASON-REACTION-RISK fact="true" status="spec/done">**Reaction risk.** An agent that reads "you are drifting" mid-task
   may *respond* to it — reflecting on drift it has not committed,
-  polluting the session with a correction nobody issued.</REASON-REACTION-RISK></item>
-    </list>
+  polluting the session with a correction nobody issued.</REASON-REACTION-RISK>
+    </facts>
     <p><PHYSICAL-INVISIBILITY-BEATS-LOGICAL-PROHIBITION fact="true" status="impl/done">The enforcement rule: **physical invisibility beats logical
 prohibition.**</PHYSICAL-INVISIBILITY-BEATS-LOGICAL-PROHIBITION></p>
     <p><DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE fact="true" status="impl/done">Do not write "never read `.human/`" in the boot file
@@ -186,11 +186,11 @@ mechanism.</the-principle-survives-the-mechanism></p>
   </human-buffer>
   <naming title="Naming maps to addressing">
     <p><layout-is-the-uri-scheme-lead fact="true" status="impl/done">The layout is the URI scheme made physical:</layout-is-the-uri-scheme-lead></p>
-    <list ordered="false">
-      <item><SEGMENT-MODULE-IS-THE-DIRECTORY fact="true" status="impl/done">the directory name under `spec/modules/` is the `&lt;module&gt;` segment;</SEGMENT-MODULE-IS-THE-DIRECTORY></item>
-      <item><SEGMENT-DOC-IS-THE-FILE-NAME fact="true" status="impl/done">the file name minus `.md` is the `&lt;doc&gt;` segment;</SEGMENT-DOC-IS-THE-FILE-NAME></item>
-      <item><SEGMENT-FRAGMENT-IS-THE-ANCHOR fact="true" status="impl/done">the `{#anchor}` in the file is the fragment.</SEGMENT-FRAGMENT-IS-THE-ANCHOR></item>
-    </list>
+    <facts ordered="false">
+      <SEGMENT-MODULE-IS-THE-DIRECTORY fact="true" status="impl/done">the directory name under `spec/modules/` is the `&lt;module&gt;` segment;</SEGMENT-MODULE-IS-THE-DIRECTORY>
+      <SEGMENT-DOC-IS-THE-FILE-NAME fact="true" status="impl/done">the file name minus `.md` is the `&lt;doc&gt;` segment;</SEGMENT-DOC-IS-THE-FILE-NAME>
+      <SEGMENT-FRAGMENT-IS-THE-ANCHOR fact="true" status="impl/done">the `{#anchor}` in the file is the fragment.</SEGMENT-FRAGMENT-IS-THE-ANCHOR>
+    </facts>
     <p><A-URI-RESOLVES-WITH-ZERO-INDEX fact="true" status="impl/done">`spec://com.example.shop/PROP-001#verification.timeout` resolves with
 zero index: `spec/modules/com.example.shop/PROP-001.md`, then find
 `{#verification.timeout}`.</A-URI-RESOLVES-WITH-ZERO-INDEX></p>
@@ -215,18 +215,18 @@ Output a migration table. Move nothing yet.</fence>
 is load-bearing, so it deserves the same care as a schema migration.</MIGRATE-IN-SMALL-REVIEWABLE-STEPS></p>
   </migrating>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THREE-ZONES fact="true" status="impl/done">Three zones: shared state (`spec/`), artifacts (`src/`, `tests/`),
+    <facts ordered="false">
+      <SUM-THREE-ZONES fact="true" status="impl/done">Three zones: shared state (`spec/`), artifacts (`src/`, `tests/`),
   private buffers (`.human/`). Their loss semantics differ; treat
-  them accordingly.</SUM-THREE-ZONES></item>
-      <item><SUM-PROP-IS-LAW-FEAT-IS-A-SLICE fact="true" status="impl/done">PROP is standing law, FEAT is a slice under it; lasting decisions
-  migrate up. Numbers are part of URIs — never renumber.</SUM-PROP-IS-LAW-FEAT-IS-A-SLICE></item>
-      <item><SUM-EVERY-FACT-HAS-A-DESIGNATED-HOME fact="true" status="impl/done">Every fact has a designated home; when in doubt, it goes into the
-  spec tree, where a fresh clone can find it.</SUM-EVERY-FACT-HAS-A-DESIGNATED-HOME></item>
-      <item><SUM-HUMAN-BUFFER-IS-ENFORCED-BY-INVISIBILITY fact="true" status="impl/done">`.human/` is enforced by ignore-file invisibility, not by a rule
-  the agent must read to obey.</SUM-HUMAN-BUFFER-IS-ENFORCED-BY-INVISIBILITY></item>
-      <item><SUM-NAMES-ARE-THE-URI-SEGMENTS fact="true" status="impl/done">Directory and file names *are* the URI segments — resolution must
-  work with zero index.</SUM-NAMES-ARE-THE-URI-SEGMENTS></item>
-    </list>
+  them accordingly.</SUM-THREE-ZONES>
+      <SUM-PROP-IS-LAW-FEAT-IS-A-SLICE fact="true" status="impl/done">PROP is standing law, FEAT is a slice under it; lasting decisions
+  migrate up. Numbers are part of URIs — never renumber.</SUM-PROP-IS-LAW-FEAT-IS-A-SLICE>
+      <SUM-EVERY-FACT-HAS-A-DESIGNATED-HOME fact="true" status="impl/done">Every fact has a designated home; when in doubt, it goes into the
+  spec tree, where a fresh clone can find it.</SUM-EVERY-FACT-HAS-A-DESIGNATED-HOME>
+      <SUM-HUMAN-BUFFER-IS-ENFORCED-BY-INVISIBILITY fact="true" status="impl/done">`.human/` is enforced by ignore-file invisibility, not by a rule
+  the agent must read to obey.</SUM-HUMAN-BUFFER-IS-ENFORCED-BY-INVISIBILITY>
+      <SUM-NAMES-ARE-THE-URI-SEGMENTS fact="true" status="impl/done">Directory and file names *are* the URI segments — resolution must
+  work with zero index.</SUM-NAMES-ARE-THE-URI-SEGMENTS>
+    </facts>
   </summary>
 </spec>

@@ -19,12 +19,12 @@ touch anything outside it.</AN-INTEGRATION-IS-BOUND-TO-ITS-GRANTED-SCOPE></p>
 targets organization `X` on some host, the integration that creates,
 updates, or even *probes* repositories may act on `X` and nowhere
 else:</act-on-the-declared-target-and-nowhere-else-lead></p>
-    <list ordered="false">
-      <item><SCOPE-NO-OTHER-ORGANIZATIONS fact="true" status="impl/done">**No other organizations** on the same host.</SCOPE-NO-OTHER-ORGANIZATIONS></item>
-      <item><SCOPE-NO-USER-NAMESPACES fact="true" status="impl/done">**No user namespaces** on the same host.</SCOPE-NO-USER-NAMESPACES></item>
-      <item><SCOPE-NO-UNRELATED-ENDPOINTS fact="true" status="impl/done">**No endpoints** unrelated to the target — no account-wide reads,
-  no listing of resources outside `X`.</SCOPE-NO-UNRELATED-ENDPOINTS></item>
-    </list>
+    <facts ordered="false">
+      <SCOPE-NO-OTHER-ORGANIZATIONS fact="true" status="impl/done">**No other organizations** on the same host.</SCOPE-NO-OTHER-ORGANIZATIONS>
+      <SCOPE-NO-USER-NAMESPACES fact="true" status="impl/done">**No user namespaces** on the same host.</SCOPE-NO-USER-NAMESPACES>
+      <SCOPE-NO-UNRELATED-ENDPOINTS fact="true" status="impl/done">**No endpoints** unrelated to the target — no account-wide reads,
+  no listing of resources outside `X`.</SCOPE-NO-UNRELATED-ENDPOINTS>
+    </facts>
     <p><a-credential-may-technically-reach-further fact="true" status="spec/done">The credential may technically be able to reach further — a token
 scoped broadly can write to many repos.</a-credential-may-technically-reach-further></p>
     <p><TECHNICAL-REACH-IS-NOT-PERMISSION fact="true" status="impl/done">Technical reach is not
@@ -46,12 +46,12 @@ if not target.starts_with(declared_scope + "/"):
     <p><THE-CHECK-IS-A-GUARD-AT-THE-BOUNDARY fact="true" status="impl/done">The check is a **guard at the boundary** — the single point where the
 integration is about to act on a resource.</THE-CHECK-IS-A-GUARD-AT-THE-BOUNDARY></p>
     <p><the-check-runs-on-every-action-lead fact="true" status="impl/done">It runs on every action:</the-check-runs-on-every-action-lead></p>
-    <list ordered="false">
-      <item><GUARDED-ACTION-CREATE fact="true" status="impl/done">create,</GUARDED-ACTION-CREATE></item>
-      <item><GUARDED-ACTION-MODIFY fact="true" status="impl/done">modify,</GUARDED-ACTION-MODIFY></item>
-      <item><GUARDED-ACTION-DELETE fact="true" status="impl/done">delete,</GUARDED-ACTION-DELETE></item>
-      <item><GUARDED-ACTION-PROBE fact="true" status="impl/done">probe.</GUARDED-ACTION-PROBE></item>
-    </list>
+    <facts ordered="false">
+      <GUARDED-ACTION-CREATE fact="true" status="impl/done">create,</GUARDED-ACTION-CREATE>
+      <GUARDED-ACTION-MODIFY fact="true" status="impl/done">modify,</GUARDED-ACTION-MODIFY>
+      <GUARDED-ACTION-DELETE fact="true" status="impl/done">delete,</GUARDED-ACTION-DELETE>
+      <GUARDED-ACTION-PROBE fact="true" status="impl/done">probe.</GUARDED-ACTION-PROBE>
+    </facts>
     <p><AN-UNGUARDED-CODE-PATH-IS-A-BUG fact="true" status="impl/done">A code path that reaches a host
 endpoint without passing the check is a bug, caught in review, on the
 same footing as a code path that prints a secret value.</AN-UNGUARDED-CODE-PATH-IS-A-BUG></p>
@@ -82,11 +82,11 @@ same question can be answered by several sources of differing trust —
 a primary registry and a mirror, a canonical index and a fallback —
 the sources are consulted in **trust order**, highest first, and the
 first source with a valid answer **wins outright**:</trust-order-highest-first-lead></p>
-    <list ordered="false">
-      <item><TRUST-ITERATE-IN-PRIORITY-ORDER fact="true" status="impl/done">The resolver iterates sources in priority order.</TRUST-ITERATE-IN-PRIORITY-ORDER></item>
-      <item><TRUST-FIRST-VALID-ANSWER-TERMINATES fact="true" status="impl/done">The first that returns a satisfying answer terminates the search.</TRUST-FIRST-VALID-ANSWER-TERMINATES></item>
-      <item><TRUST-ANSWERS-ARE-NOT-MERGED fact="true" status="impl/done">Answers are **not merged** across sources of different trust.</TRUST-ANSWERS-ARE-NOT-MERGED></item>
-    </list>
+    <facts ordered="false">
+      <TRUST-ITERATE-IN-PRIORITY-ORDER fact="true" status="impl/done">The resolver iterates sources in priority order.</TRUST-ITERATE-IN-PRIORITY-ORDER>
+      <TRUST-FIRST-VALID-ANSWER-TERMINATES fact="true" status="impl/done">The first that returns a satisfying answer terminates the search.</TRUST-FIRST-VALID-ANSWER-TERMINATES>
+      <TRUST-ANSWERS-ARE-NOT-MERGED fact="true" status="impl/done">Answers are **not merged** across sources of different trust.</TRUST-ANSWERS-ARE-NOT-MERGED>
+    </facts>
     <p><this-prevents-a-lower-trust-source-from-influencing fact="true" status="impl/done">This prevents a lower-trust source from influencing a result when a
 higher-trust source already has a valid answer.</this-prevents-a-lower-trust-source-from-influencing></p>
     <p><unioning-would-let-a-malicious-mirror-inject-an-entry fact="true" status="spec/done">If answers were
@@ -131,20 +131,20 @@ across trust boundaries is audited against it.</IT-LIVES-ONCE-GLOBALLY-AND-EVERY
 module-local blast; these failures are not module-local.</module-local-rules-bound-module-local-blast></p>
   </global>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-ACT-ONLY-INSIDE-THE-DECLARED-SCOPE fact="true" status="impl/done">An integration acts only inside the scope its credential was
+    <facts ordered="false">
+      <SUM-ACT-ONLY-INSIDE-THE-DECLARED-SCOPE fact="true" status="impl/done">An integration acts only inside the scope its credential was
   declared for — no other orgs, no user namespaces, no unrelated
-  endpoints. Technical reach is not permission.</SUM-ACT-ONLY-INSIDE-THE-DECLARED-SCOPE></item>
-      <item><SUM-ENFORCEMENT-IS-AN-EXPLICIT-PREFIX-CHECK fact="true" status="impl/done">Enforcement is an explicit prefix check at the boundary, run on
-  every action.</SUM-ENFORCEMENT-IS-AN-EXPLICIT-PREFIX-CHECK></item>
-      <item><SUM-A-VIOLATION-IS-AN-ERROR-NOT-A-WARNING fact="true" status="impl/done">A scope violation is an **error that refuses the action**, never a
+  endpoints. Technical reach is not permission.</SUM-ACT-ONLY-INSIDE-THE-DECLARED-SCOPE>
+      <SUM-ENFORCEMENT-IS-AN-EXPLICIT-PREFIX-CHECK fact="true" status="impl/done">Enforcement is an explicit prefix check at the boundary, run on
+  every action.</SUM-ENFORCEMENT-IS-AN-EXPLICIT-PREFIX-CHECK>
+      <SUM-A-VIOLATION-IS-AN-ERROR-NOT-A-WARNING fact="true" status="impl/done">A scope violation is an **error that refuses the action**, never a
   warning that proceeds. Widening scope is an owner configuration
-  change, not a runtime decision.</SUM-A-VIOLATION-IS-AN-ERROR-NOT-A-WARNING></item>
-      <item><SUM-TRUST-ORDERING-HIGHEST-FIRST-NEVER-MERGE fact="true" status="impl/done">Trust ordering: consult sources highest-trust first, first valid
+  change, not a runtime decision.</SUM-A-VIOLATION-IS-AN-ERROR-NOT-A-WARNING>
+      <SUM-TRUST-ORDERING-HIGHEST-FIRST-NEVER-MERGE fact="true" status="impl/done">Trust ordering: consult sources highest-trust first, first valid
   answer wins, never merge — so a low-trust source cannot influence a
-  resolution a trusted source has settled.</SUM-TRUST-ORDERING-HIGHEST-FIRST-NEVER-MERGE></item>
-      <item><SUM-GLOBAL-BECAUSE-THE-BLAST-RADIUS-IS-THE-ACCOUNT fact="true" status="spec/done">These rules are global because the blast radius is the whole
-  account; every credential-bearing path is audited against them.</SUM-GLOBAL-BECAUSE-THE-BLAST-RADIUS-IS-THE-ACCOUNT></item>
-    </list>
+  resolution a trusted source has settled.</SUM-TRUST-ORDERING-HIGHEST-FIRST-NEVER-MERGE>
+      <SUM-GLOBAL-BECAUSE-THE-BLAST-RADIUS-IS-THE-ACCOUNT fact="true" status="spec/done">These rules are global because the blast radius is the whole
+  account; every credential-bearing path is audited against them.</SUM-GLOBAL-BECAUSE-THE-BLAST-RADIUS-IS-THE-ACCOUNT>
+    </facts>
   </summary>
 </spec>

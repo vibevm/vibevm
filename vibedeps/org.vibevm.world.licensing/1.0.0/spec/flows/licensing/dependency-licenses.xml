@@ -41,21 +41,21 @@ to violate accidentally in a statically-linked or bundled build, so
 the default is no.</why-lgpl-is-in-the-forbidden-row></p>
   </section>
   <check title="Checking a dependency before adoption">
-    <list ordered="true">
-      <item><STEP-FIND-THE-LICENCE fact="true" status="impl/done">**Find the licence.** The package's manifest field, its
+    <facts ordered="true">
+      <STEP-FIND-THE-LICENCE fact="true" status="impl/done">**Find the licence.** The package's manifest field, its
    `LICENSE` file, its repository. If these disagree, the most
-   restrictive one wins until the discrepancy is resolved.</STEP-FIND-THE-LICENCE></item>
-      <item><STEP-CLASSIFY-IT-AGAINST-THE-TABLE fact="true" status="impl/done">**Classify it** against the table. Permissive → proceed.
+   restrictive one wins until the discrepancy is resolved.</STEP-FIND-THE-LICENCE>
+      <STEP-CLASSIFY-IT-AGAINST-THE-TABLE fact="true" status="impl/done">**Classify it** against the table. Permissive → proceed.
    Case-by-case → confirm the specific obligation is met. Forbidden or
-   unclear → stop and surface it as an owner decision.</STEP-CLASSIFY-IT-AGAINST-THE-TABLE></item>
-      <item><STEP-CHECK-THE-TRANSITIVE-SET fact="true" status="impl/done">**Check the transitive set, not just the direct dependency.** A
+   unclear → stop and surface it as an owner decision.</STEP-CLASSIFY-IT-AGAINST-THE-TABLE>
+      <STEP-CHECK-THE-TRANSITIVE-SET fact="true" status="impl/done">**Check the transitive set, not just the direct dependency.** A
    permissive library that pulls a GPL transitive dependency is a GPL
    problem. Run the ecosystem's licence-listing over the whole
-   resolved graph, not the top level.</STEP-CHECK-THE-TRANSITIVE-SET></item>
-      <item><STEP-RECORD-THE-OUTCOME fact="true" status="impl/done">**Record the outcome** where dependency decisions live — an
+   resolved graph, not the top level.</STEP-CHECK-THE-TRANSITIVE-SET>
+      <STEP-RECORD-THE-OUTCOME fact="true" status="impl/done">**Record the outcome** where dependency decisions live — an
    allowed non-obvious licence and any case-by-case call is a recorded
-   decision with the reason.</STEP-RECORD-THE-OUTCOME></item>
-    </list>
+   decision with the reason.</STEP-RECORD-THE-OUTCOME>
+    </facts>
   </check>
   <weight title="Weight is not a licence concern">
     <p><REJECT-FOR-LICENCE-ABANDONMENT-SECURITY-OR-API-NEVER-FOR-WEIGHT fact="true" status="impl/done">Reject a dependency for its licence, its abandonment, its security
@@ -68,12 +68,12 @@ that trades a one-time size cost for ongoing architectural debt.</weight-is-not-
 nowhere.</KEEP-THE-TWO-CONVERSATIONS-SEPARATE></p>
   </weight>
   <honest title="Keeping the check honest">
-    <list ordered="false">
-      <item><AUTOMATE-THE-LISTING fact="true" status="impl/done">**Automate the listing.** A licence-lister run in CI over the full
+    <facts ordered="false">
+      <AUTOMATE-THE-LISTING fact="true" status="impl/done">**Automate the listing.** A licence-lister run in CI over the full
   resolved graph turns "we think everything is permissive" into a
   fact that fails loudly when a forbidden licence enters. A rule with
-  no checker is a wish.</AUTOMATE-THE-LISTING></item>
-      <item><RE-AUDIT-ON-A-SCHEDULE fact="true" status="spec/done">**Re-audit on a schedule.** A dependency can relicense between
+  no checker is a wish.</AUTOMATE-THE-LISTING>
+      <RE-AUDIT-ON-A-SCHEDULE fact="true" status="spec/done">**Re-audit on a schedule.** A dependency can relicense between
   versions; a periodic audit line (see `flow:health-audit`) re-runs
   the listing and flags any new non-permissive entry. *Specified, not built,
   and the sibling it points at does not carry the line: `flow:health-audit`'s
@@ -86,11 +86,11 @@ nowhere.</KEEP-THE-TWO-CONVERSATIONS-SEPARATE></p>
   no SBOM or SPDX manifest anywhere in the perimeter, and a lockfile that
   records no licence field. The adopter must therefore author the line itself;
   `audit-checklist.md` is explicitly «a starting set, not a closed one», which
-  is where it would go.*</RE-AUDIT-ON-A-SCHEDULE></item>
-      <item><POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST fact="true" status="impl/done">**Point the product's carve-out at the generated list**, never a
+  is where it would go.*</RE-AUDIT-ON-A-SCHEDULE>
+      <POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST fact="true" status="impl/done">**Point the product's carve-out at the generated list**, never a
   hand-maintained copy — the hand copy drifts, the generated one
-  cannot.</POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST></item>
-    </list>
+  cannot.</POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST>
+    </facts>
   </honest>
   <forbidden-only title="When a forbidden licence is the only option">
     <p><sometimes-the-best-or-only-library-is-copyleft fact="true" status="spec/done">Sometimes the best-or-only library for a job is copyleft.</sometimes-the-best-or-only-library-is-copyleft></p>
@@ -98,25 +98,25 @@ nowhere.</KEEP-THE-TWO-CONVERSATIONS-SEPARATE></p>
 owner decision, not an agent decision.</THAT-IS-AN-OWNER-DECISION-NOT-AN-AGENT-DECISION></p>
     <p><surface-it-with-the-trade-off-stated-lead fact="true" status="impl/done">Surface it with the trade-off
 stated:</surface-it-with-the-trade-off-stated-lead></p>
-    <list ordered="false">
-      <item><TRADE-OFF-THE-CAPABILITY-GAINED fact="true" status="impl/done">the capability gained,</TRADE-OFF-THE-CAPABILITY-GAINED></item>
-      <item><TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED fact="true" status="impl/done">the licence obligation incurred,</TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED></item>
-      <item><TRADE-OFF-THE-ALTERNATIVES fact="true" status="impl/done">and
+    <facts ordered="false">
+      <TRADE-OFF-THE-CAPABILITY-GAINED fact="true" status="impl/done">the capability gained,</TRADE-OFF-THE-CAPABILITY-GAINED>
+      <TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED fact="true" status="impl/done">the licence obligation incurred,</TRADE-OFF-THE-LICENCE-OBLIGATION-INCURRED>
+      <TRADE-OFF-THE-ALTERNATIVES fact="true" status="impl/done">and
   the alternatives (a permissive competitor, a reimplementation, doing
-  without).</TRADE-OFF-THE-ALTERNATIVES></item>
-    </list>
+  without).</TRADE-OFF-THE-ALTERNATIVES>
+    </facts>
     <p><THE-OWNER-MAY-GRANT-A-RECORDED-SCOPED-EXCEPTION fact="true" status="impl/done">The owner may grant a recorded, scoped exception — or not.</THE-OWNER-MAY-GRANT-A-RECORDED-SCOPED-EXCEPTION></p>
     <p><NEVER-ADOPT-A-FORBIDDEN-LICENCE-SILENTLY fact="true" status="impl/done">Never adopt it silently.</NEVER-ADOPT-A-FORBIDDEN-LICENCE-SILENTLY></p>
   </forbidden-only>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-THE-ALLOW-DENY-CLASSES fact="true" status="impl/done">Permissive allowed, weak copyleft case-by-case, strong copyleft and
-  unclear licences forbidden by default.</SUM-THE-ALLOW-DENY-CLASSES></item>
-      <item><SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH fact="true" status="impl/done">Check the whole transitive graph before adopting; the most
-  restrictive licence in the set governs.</SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH></item>
-      <item><SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON fact="true" status="impl/done">Weight is never a licence reason — keep those conversations
-  separate.</SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON></item>
-      <item><SUM-AUTOMATE-AND-RE-AUDIT fact="true" status="spec/done">Automate the listing in CI and re-audit on a schedule; point the
+    <facts ordered="false">
+      <SUM-THE-ALLOW-DENY-CLASSES fact="true" status="impl/done">Permissive allowed, weak copyleft case-by-case, strong copyleft and
+  unclear licences forbidden by default.</SUM-THE-ALLOW-DENY-CLASSES>
+      <SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH fact="true" status="impl/done">Check the whole transitive graph before adopting; the most
+  restrictive licence in the set governs.</SUM-CHECK-THE-WHOLE-TRANSITIVE-GRAPH>
+      <SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON fact="true" status="impl/done">Weight is never a licence reason — keep those conversations
+  separate.</SUM-WEIGHT-IS-NEVER-A-LICENCE-REASON>
+      <SUM-AUTOMATE-AND-RE-AUDIT fact="true" status="spec/done">Automate the listing in CI and re-audit on a schedule; point the
   carve-out at the generated list. *One of the three is built, one is a
   recorded exception, one is built by nothing. Built: the carve-out points at
   the generated list rather than a hand copy. A recorded exception rather than
@@ -127,9 +127,9 @@ stated:</surface-it-with-the-trade-off-stated-lead></p>
   owner-level no-CI posture. Built by nothing: the scheduled re-audit, per
   `##RE-AUDIT-ON-A-SCHEDULE` above — no periodic licence line exists in the
   `health-audit` flow, in any adopting project's audit record, or in any
-  tooling.*</SUM-AUTOMATE-AND-RE-AUDIT></item>
-      <item><SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION fact="true" status="impl/done">A forbidden licence is only ever adopted by an explicit, recorded
-  owner exception.</SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION></item>
-    </list>
+  tooling.*</SUM-AUTOMATE-AND-RE-AUDIT>
+      <SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION fact="true" status="impl/done">A forbidden licence is only ever adopted by an explicit, recorded
+  owner exception.</SUM-A-FORBIDDEN-LICENCE-NEEDS-A-RECORDED-OWNER-EXCEPTION>
+    </facts>
   </summary>
 </spec>

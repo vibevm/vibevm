@@ -7,12 +7,12 @@
 `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/04-SWEEP-PLAYBOOK.md`; read it
 once per session if you have not).</RUNNING-THE-STANDING-SWEEP></p>
   <p><two-truths-lead fact="true" status="impl/done">The two truths:</two-truths-lead></p>
-  <list ordered="false">
-    <item><TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**the gates are the
-  floor, the sweep is the ceiling**,</TRUTH-GATES-ARE-THE-FLOOR></item>
-    <item><TRUTH-GATE-IS-TRUTH fact="true" status="impl/done">and **the gate is truth, the collector is
-  a guide**.</TRUTH-GATE-IS-TRUTH></item>
-  </list>
+  <facts ordered="false">
+    <TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**the gates are the
+  floor, the sweep is the ceiling**,</TRUTH-GATES-ARE-THE-FLOOR>
+    <TRUTH-GATE-IS-TRUTH fact="true" status="impl/done">and **the gate is truth, the collector is
+  a guide**.</TRUTH-GATE-IS-TRUTH>
+  </facts>
   <p><NEVER-SWEEP-ON-A-RED-TREE fact="true" status="impl/done">Never sweep on a red tree.</NEVER-SWEEP-ON-A-RED-TREE></p>
   <p><ACT-ON-COLLECTOR-FACTS fact="true" status="impl/done">Act on collector facts, never on
 memory.</ACT-ON-COLLECTOR-FACTS></p>
@@ -41,32 +41,32 @@ to catch.</CHECK-THE-PRINTED-POLICY-LINES></p>
     <p><READ-THE-HEALTH-SUMMARY fact="true" status="impl/done">Read the summary (the JSON at `discipline/health/latest-typescript.json` is
 the work-list; its git diff is the trend).</READ-THE-HEALTH-SUMMARY></p>
     <p><take-cheapest-wins-lead fact="true" status="impl/done">Take one or two cheapest wins:</take-cheapest-wins-lead></p>
-    <list ordered="true">
-      <item><RATCHET-DANGER-BAND-FILES fact="true" status="impl/done">**danger-band files** — split any file at the top of the [540,600) band
+    <facts ordered="true">
+      <RATCHET-DANGER-BAND-FILES fact="true" status="impl/done">**danger-band files** — split any file at the top of the [540,600) band
    before an edit trips the 600 budget; the new module keeps (or gains) its
-   own `@scope` marker so the orphan gate never regresses.</RATCHET-DANGER-BAND-FILES></item>
-      <item><RATCHET-UNREASONED-SUPPRESSIONS fact="true" status="impl/done">**unreasoned suppressions** — every `@ts-expect-error` WITHOUT
+   own `@scope` marker so the orphan gate never regresses.</RATCHET-DANGER-BAND-FILES>
+      <RATCHET-UNREASONED-SUPPRESSIONS fact="true" status="impl/done">**unreasoned suppressions** — every `@ts-expect-error` WITHOUT
    `-- reason` in the census is unrecorded testimony: add the reason or fix
    the underlying type. `@ts-ignore` is never acceptable — replace with
-   `@ts-expect-error -- reason` and watch it fail when the error goes.</RATCHET-UNREASONED-SUPPRESSIONS></item>
-      <item><RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE fact="true" status="impl/done">**export doc-example coverage** — exports without an `@example` (or
+   `@ts-expect-error -- reason` and watch it fail when the error goes.</RATCHET-UNREASONED-SUPPRESSIONS>
+      <RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE fact="true" status="impl/done">**export doc-example coverage** — exports without an `@example` (or
    fenced block) are retrieval gaps; document the highest-traffic seam
-   first.</RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE></item>
-      <item><RATCHET-ORPHAN-BACKLOG fact="true" status="impl/done">**orphan backlog** — untagged exports the ratchet will block on: tag the
+   first.</RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE>
+      <RATCHET-ORPHAN-BACKLOG fact="true" status="impl/done">**orphan backlog** — untagged exports the ratchet will block on: tag the
    export (`@implements spec://…`), `@scope` its file, or move it out of
-   the public surface.</RATCHET-ORPHAN-BACKLOG></item>
-    </list>
+   the public surface.</RATCHET-ORPHAN-BACKLOG>
+    </facts>
   </tier-one>
   <tier-two title="Tier 2 — weekly">
-    <list ordered="false">
-      <item><WEEKLY-FAST-LOOP fact="true" status="impl/done">`typescript-ai-native fast-loop` — every cell answers inside the budget;
-  a cell with NO tests fails the check (the loop must exist).</WEEKLY-FAST-LOOP></item>
-      <item><WEEKLY-TRIPWIRE fact="true" status="impl/done">`typescript-ai-native tripwire --base origin/main` — debt that this
+    <facts ordered="false">
+      <WEEKLY-FAST-LOOP fact="true" status="impl/done">`typescript-ai-native fast-loop` — every cell answers inside the budget;
+  a cell with NO tests fails the check (the loop must exist).</WEEKLY-FAST-LOOP>
+      <WEEKLY-TRIPWIRE fact="true" status="impl/done">`typescript-ai-native tripwire --base origin/main` — debt that this
   week's changes touched; each fired entry is addressed in the PR text:
-  pulled-in, re-dispositioned, or consciously deferred.</WEEKLY-TRIPWIRE></item>
-      <item><WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS fact="true" status="impl/done">Re-read the `floor_disable` list and the `[[typescript.exempt]]` list: does each reason
-  still hold?</WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS></item>
-    </list>
+  pulled-in, re-dispositioned, or consciously deferred.</WEEKLY-TRIPWIRE>
+      <WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS fact="true" status="impl/done">Re-read the `floor_disable` list and the `[[typescript.exempt]]` list: does each reason
+  still hold?</WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS>
+    </facts>
   </tier-two>
   <output-contract title="Output contract">
     <p><END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE fact="true" status="impl/done">End every sweep with an outcome table — this stack's own

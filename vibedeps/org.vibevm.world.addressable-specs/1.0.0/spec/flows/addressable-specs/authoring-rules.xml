@@ -177,14 +177,14 @@ big spec, it is two specs sharing a file.</A-SPEC-PAST-ITS-BUDGET-IS-TWO-SPECS><
   </budgets>
   <splitting title="When to split a document">
     <p><split-triggers-lead fact="true" status="impl/done">Split when any of these fires:</split-triggers-lead></p>
-    <list ordered="false">
-      <item><SPLIT-WHEN-OVER-BUDGET fact="true" status="impl/done">the document is over its size budget (§[budgets](#budgets));</SPLIT-WHEN-OVER-BUDGET></item>
-      <item><SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO fact="true" status="impl/done">a unit needs "and also" — that is two units, and often two homes;</SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO></item>
-      <item><SPLIT-WHEN-TWO-AUDIENCES-EMERGE fact="true" status="impl/done">two audiences have emerged (contract readers vs tutorial readers);</SPLIT-WHEN-TWO-AUDIENCES-EMERGE></item>
-      <item><SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE fact="true" status="impl/done">one section is cited from outside far more than the rest — promote
+    <facts ordered="false">
+      <SPLIT-WHEN-OVER-BUDGET fact="true" status="impl/done">the document is over its size budget (§[budgets](#budgets));</SPLIT-WHEN-OVER-BUDGET>
+      <SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO fact="true" status="impl/done">a unit needs "and also" — that is two units, and often two homes;</SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO>
+      <SPLIT-WHEN-TWO-AUDIENCES-EMERGE fact="true" status="impl/done">two audiences have emerged (contract readers vs tutorial readers);</SPLIT-WHEN-TWO-AUDIENCES-EMERGE>
+      <SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE fact="true" status="impl/done">one section is cited from outside far more than the rest — promote
   it to its own document so its URI shortens and its neighbours stop
-  riding along into every context window.</SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE></item>
-    </list>
+  riding along into every context window.</SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE>
+    </facts>
     <p><SPLITTING-IS-CHEAP-IF-ANCHORS-SURVIVE fact="true" status="impl/done">Splitting is cheap precisely because citations point at anchors, not
 page numbers — provided the anchors survive the move
 (§[anchor-stability](#anchor-stability)).</SPLITTING-IS-CHEAP-IF-ANCHORS-SURVIVE></p>
@@ -206,18 +206,18 @@ and needs the delta in five seconds, without running a diff.</who-the-changelog-
 markers, commit bodies, other specs, or the WAL is a public symbol;
 renaming it is a breaking change that silently snaps every citation
 — the exact failure addressability exists to prevent.</A-CITED-ANCHOR-IS-A-PUBLIC-SYMBOL></p>
-    <list ordered="false">
-      <item><NEVER-RENAME-A-CITED-ANCHOR fact="true" status="impl/done">Never rename a cited anchor. If the heading text must change, the
-  `{#id}` stays.</NEVER-RENAME-A-CITED-ANCHOR></item>
-      <item><NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING fact="true" status="impl/done">Never reuse an anchor for a different meaning. An address that
+    <facts ordered="false">
+      <NEVER-RENAME-A-CITED-ANCHOR fact="true" status="impl/done">Never rename a cited anchor. If the heading text must change, the
+  `{#id}` stays.</NEVER-RENAME-A-CITED-ANCHOR>
+      <NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING fact="true" status="impl/done">Never reuse an anchor for a different meaning. An address that
   once meant one thing and now means another is worse than a dead
-  link.</NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING></item>
-      <item><RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE fact="true" status="impl/done">Retire with a tombstone, do not delete:
+  link.</NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING>
+      <RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE fact="true" status="impl/done">Retire with a tombstone, do not delete:
   `&lt;!-- RETIRED: superseded by {#new-anchor} --&gt;` under the old
-  heading location.</RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE></item>
-      <item><A-MOVED-UNIT-LEAVES-A-TOMBSTONE fact="true" status="impl/done">Moving a unit to another document leaves a tombstone at the old
-  address pointing to the new one.</A-MOVED-UNIT-LEAVES-A-TOMBSTONE></item>
-    </list>
+  heading location.</RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE>
+      <A-MOVED-UNIT-LEAVES-A-TOMBSTONE fact="true" status="impl/done">Moving a unit to another document leaves a tombstone at the old
+  address pointing to the new one.</A-MOVED-UNIT-LEAVES-A-TOMBSTONE>
+    </facts>
     <p><delegate-the-audit-lead fact="true" status="impl/done">Delegate the audit — it is mechanical and the agent is good at it:</delegate-the-audit-lead></p>
     <fence>Audit this repository for addressability:
 1. List every spec heading that states a decision, constraint, or
@@ -229,22 +229,22 @@ Report as three tables: location, problem, suggested fix.
 Do not edit anything yet.</fence>
   </anchor-stability>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-ONE-UNIT-ONE-DECISION fact="true" status="impl/done">One unit, one decision; a unit makes sense alone, on one page.</SUM-ONE-UNIT-ONE-DECISION></item>
-      <item><SUM-NORMATIVITY-IS-MARKED fact="true" status="impl/done">Normativity is marked with RFC-2119 verbs — nobody guesses what
-  binds.</SUM-NORMATIVITY-IS-MARKED></item>
-      <item><SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE fact="true" status="impl/done">Contract and rationale are separate; the spec never restates
-  *how*. A spec that mirrors code is shadow code.</SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE></item>
-      <item><SUM-EVERY-CONTRACT-IMPLIES-A-TEST fact="true" status="impl/done">Every contract implies a test; the unit
+    <facts ordered="false">
+      <SUM-ONE-UNIT-ONE-DECISION fact="true" status="impl/done">One unit, one decision; a unit makes sense alone, on one page.</SUM-ONE-UNIT-ONE-DECISION>
+      <SUM-NORMATIVITY-IS-MARKED fact="true" status="impl/done">Normativity is marked with RFC-2119 verbs — nobody guesses what
+  binds.</SUM-NORMATIVITY-IS-MARKED>
+      <SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE fact="true" status="impl/done">Contract and rationale are separate; the spec never restates
+  *how*. A spec that mirrors code is shadow code.</SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE>
+      <SUM-EVERY-CONTRACT-IMPLIES-A-TEST fact="true" status="impl/done">Every contract implies a test; the unit
   names it, by a `Test:` line or by a rendered edge where the graph is
-  mechanized.</SUM-EVERY-CONTRACT-IMPLIES-A-TEST></item>
-      <item><SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN fact="true" status="impl/done">Deviations are recorded where they happen, with reasons; the
-  undocumented one is the defect.</SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN></item>
-      <item><SUM-THE-SIZE-BUDGETS fact="true" status="impl/done">Budgets: boot ≤ 500 tokens, WAL ≤ 3000, module spec ≤ 5000 —
-  split when over.</SUM-THE-SIZE-BUDGETS></item>
-      <item><SUM-THE-CHANGELOG-LINE fact="true" status="impl/done">Changelog: one dated line per semantic change, with the reason.</SUM-THE-CHANGELOG-LINE></item>
-      <item><SUM-ANCHORS-ARE-IMMUTABLE fact="true" status="impl/done">Anchors are immutable once cited; retirement is a tombstone,
-  never a deletion or a silent rename.</SUM-ANCHORS-ARE-IMMUTABLE></item>
-    </list>
+  mechanized.</SUM-EVERY-CONTRACT-IMPLIES-A-TEST>
+      <SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN fact="true" status="impl/done">Deviations are recorded where they happen, with reasons; the
+  undocumented one is the defect.</SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN>
+      <SUM-THE-SIZE-BUDGETS fact="true" status="impl/done">Budgets: boot ≤ 500 tokens, WAL ≤ 3000, module spec ≤ 5000 —
+  split when over.</SUM-THE-SIZE-BUDGETS>
+      <SUM-THE-CHANGELOG-LINE fact="true" status="impl/done">Changelog: one dated line per semantic change, with the reason.</SUM-THE-CHANGELOG-LINE>
+      <SUM-ANCHORS-ARE-IMMUTABLE fact="true" status="impl/done">Anchors are immutable once cited; retirement is a tombstone,
+  never a deletion or a silent rename.</SUM-ANCHORS-ARE-IMMUTABLE>
+    </facts>
   </summary>
 </spec>

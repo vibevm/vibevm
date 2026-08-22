@@ -21,28 +21,28 @@ confirmation.</NON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION></p>
     <p><codeword-catalogue-pointer fact="true" status="impl/done">The project's codewords are catalogued in
 @spec://org.vibevm.world/operating-modes/flows/operating-modes/OPERATING-MODES-PROTOCOL#root.</codeword-catalogue-pointer></p>
     <p><RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING fact="true" status="impl/done">Recognise a codeword by intent, not exact wording. When one fires:</RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING></p>
-    <list ordered="true">
-      <item><ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE fact="true" status="impl/done">Acknowledge which mode is now active and what it changes.</ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE></item>
-      <item><ON-FIRING-APPLY-THE-OPERATIVE-RULES fact="true" status="impl/done">Apply its operative rules for the current work cycle.</ON-FIRING-APPLY-THE-OPERATIVE-RULES></item>
-      <item><ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS fact="true" status="impl/done">Drop back to the default posture when the cycle ends — a mode
-   **never** persists into a new session uninvoked.</ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS></item>
-    </list>
+    <facts ordered="true">
+      <ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE fact="true" status="impl/done">Acknowledge which mode is now active and what it changes.</ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE>
+      <ON-FIRING-APPLY-THE-OPERATIVE-RULES fact="true" status="impl/done">Apply its operative rules for the current work cycle.</ON-FIRING-APPLY-THE-OPERATIVE-RULES>
+      <ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS fact="true" status="impl/done">Drop back to the default posture when the cycle ends — a mode
+   **never** persists into a new session uninvoked.</ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS>
+    </facts>
     <p><worked-mode-pointer fact="true" status="impl/done">The catalogue ships one worked mode:
 @spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root — heads-down
 pre-authorised execution («move fast and break things»).</worked-mode-pointer></p>
   </codewords>
   <red-lines title="The red-lines law">
     <p><red-lines-survive-every-mode-lead fact="true" status="impl/done">A small set of red lines survives **every** mode:</red-lines-survive-every-mode-lead></p>
-    <list ordered="false">
-      <item><RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published
-  history,</RED-LINE-REWRITING-PUBLISHED-HISTORY></item>
-      <item><RED-LINE-FORCE-PUSHING fact="true" status="impl/done">force-pushing,</RED-LINE-FORCE-PUSHING></item>
-      <item><RED-LINE-IMPORTING-LARGE-BINARIES fact="true" status="impl/done">importing large binaries,</RED-LINE-IMPORTING-LARGE-BINARIES></item>
-      <item><RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION fact="true" status="impl/done">touching
-  CI/signing/secrets configuration,</RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION></item>
-      <item><RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK fact="true" status="impl/done">and any operation whose reversal
-  costs work.</RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK></item>
-    </list>
+    <facts ordered="false">
+      <RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">rewriting published
+  history,</RED-LINE-REWRITING-PUBLISHED-HISTORY>
+      <RED-LINE-FORCE-PUSHING fact="true" status="impl/done">force-pushing,</RED-LINE-FORCE-PUSHING>
+      <RED-LINE-IMPORTING-LARGE-BINARIES fact="true" status="impl/done">importing large binaries,</RED-LINE-IMPORTING-LARGE-BINARIES>
+      <RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION fact="true" status="impl/done">touching
+  CI/signing/secrets configuration,</RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION>
+      <RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK fact="true" status="impl/done">and any operation whose reversal
+  costs work.</RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK>
+    </facts>
     <p><A-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY fact="true" status="impl/done">A codeword removes the "may I proceed with routine work?"
 handshake; it does **not** remove the "may I cross an irreversible
 threshold?" handshake.</A-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY></p>
@@ -54,15 +54,15 @@ landed, tests green, moving to N+1" is right; "phase N landed — shall
 I proceed?" is the exact overhead the codeword was spoken to remove.</REPORT-STATUS-NOT-REQUESTS-UNDER-AN-ACCELERATED-MODE></p>
   </cadence>
   <never title="Never">
-    <list ordered="false">
-      <item><NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE fact="true" status="impl/done">Never cross a red line under any mode — the handshake for
-  irreversible operations is unconditional.</NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE></item>
-      <item><NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY fact="true" status="impl/done">Never carry an active mode across a session boundary; every session
-  starts in the default posture.</NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY></item>
-      <item><NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD fact="true" status="impl/done">Never act on a codeword that is not in the catalogue — propose
-  adding it first.</NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD></item>
-      <item><NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED fact="true" status="impl/done">Never reply to your own completed work with a permission question
-  when a mode pre-authorised it — report status and continue.</NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE fact="true" status="impl/done">Never cross a red line under any mode — the handshake for
+  irreversible operations is unconditional.</NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE>
+      <NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY fact="true" status="impl/done">Never carry an active mode across a session boundary; every session
+  starts in the default posture.</NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY>
+      <NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD fact="true" status="impl/done">Never act on a codeword that is not in the catalogue — propose
+  adding it first.</NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD>
+      <NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED fact="true" status="impl/done">Never reply to your own completed work with a permission question
+  when a mode pre-authorised it — report status and continue.</NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED>
+    </facts>
   </never>
 </spec>

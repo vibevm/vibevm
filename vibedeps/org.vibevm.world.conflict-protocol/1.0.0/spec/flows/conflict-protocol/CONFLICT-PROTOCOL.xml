@@ -17,13 +17,13 @@ human edits them.</the-human-edits-them></p>
 no hallway conversation, no "as we discussed yesterday".</THERE-IS-NO-THIRD-CHANNEL></p>
     <p><TWO-WRITERS-WILL-PRODUCE-CONTRADICTIONS fact="true" status="spec/done">Two writers
 over one file set *will* produce contradictions:</TWO-WRITERS-WILL-PRODUCE-CONTRADICTIONS></p>
-    <list ordered="false">
-      <item><CONTRADICTION-A-VALUE-CHANGED-IN-CODE-NOT-IN-THE-SPEC fact="true" status="spec/done">a value changed in
-  code but not in the spec,</CONTRADICTION-A-VALUE-CHANGED-IN-CODE-NOT-IN-THE-SPEC></item>
-      <item><CONTRADICTION-A-TEST-ASSERTING-YESTERDAYS-RULE fact="true" status="spec/done">a test asserting yesterday's rule,</CONTRADICTION-A-TEST-ASSERTING-YESTERDAYS-RULE></item>
-      <item><CONTRADICTION-A-STATE-FILE-DESCRIBING-REVERTED-WORK fact="true" status="spec/done">a state
-  file describing work that was later reverted.</CONTRADICTION-A-STATE-FILE-DESCRIBING-REVERTED-WORK></item>
-    </list>
+    <facts ordered="false">
+      <CONTRADICTION-A-VALUE-CHANGED-IN-CODE-NOT-IN-THE-SPEC fact="true" status="spec/done">a value changed in
+  code but not in the spec,</CONTRADICTION-A-VALUE-CHANGED-IN-CODE-NOT-IN-THE-SPEC>
+      <CONTRADICTION-A-TEST-ASSERTING-YESTERDAYS-RULE fact="true" status="spec/done">a test asserting yesterday's rule,</CONTRADICTION-A-TEST-ASSERTING-YESTERDAYS-RULE>
+      <CONTRADICTION-A-STATE-FILE-DESCRIBING-REVERTED-WORK fact="true" status="spec/done">a state
+  file describing work that was later reverted.</CONTRADICTION-A-STATE-FILE-DESCRIBING-REVERTED-WORK>
+    </facts>
     <p><CONTRADICTION-IS-NORMAL-COOPERATION-NOT-AN-ERROR fact="true" status="impl/done">This is normal cooperation, not an error.</CONTRADICTION-IS-NORMAL-COOPERATION-NOT-AN-ERROR></p>
     <p><treating-contradiction-as-shameful-hides-it fact="true" status="spec/done">Treating each contradiction
 as a failure to be ashamed of is counterproductive — it trains both
@@ -94,36 +94,36 @@ deletes the project's only automatic tripwire for divergence.</THE-FORBIDDEN-THI
     <p><the-agent-will-sometimes-believe-the-spec-is-wrong fact="true" status="spec/done">The agent will sometimes believe the spec is wrong — and sometimes it
 will *be* wrong.</the-agent-will-sometimes-believe-the-spec-is-wrong></p>
     <p><the-protocol-when-that-happens fact="true" status="impl/done">The protocol when that happens:</the-protocol-when-that-happens></p>
-    <list ordered="true">
-      <item><REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS fact="true" status="impl/done">**Implement what the spec says.** The spec wins the current cycle,
-   including when you disagree with it.</REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS></item>
-      <item><REVIEW-STEP-ADD-A-MARKER-WITH-A-REASON fact="true" status="impl/done">**Add a REVIEW marker at the point of disagreement**, always with
-   a reason:</REVIEW-STEP-ADD-A-MARKER-WITH-A-REASON></item>
-    </list>
+    <facts ordered="true">
+      <REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS fact="true" status="impl/done">**Implement what the spec says.** The spec wins the current cycle,
+   including when you disagree with it.</REVIEW-STEP-IMPLEMENT-WHAT-THE-SPEC-SAYS>
+      <REVIEW-STEP-ADD-A-MARKER-WITH-A-REASON fact="true" status="impl/done">**Add a REVIEW marker at the point of disagreement**, always with
+   a reason:</REVIEW-STEP-ADD-A-MARKER-WITH-A-REASON>
+    </facts>
     <fence>   &lt;!-- REVIEW: §5.3 would be better served by exponential backoff
         than a fixed 600s timeout, because retries cluster at the
         boundary under VPN latency --&gt;</fence>
-    <list ordered="true">
-      <item><REVIEW-STEP-SURFACE-IT-IN-THE-END-OF-SESSION-REPORT fact="true" status="impl/done">**Surface it in the end-of-session report:** "Implemented the
+    <facts ordered="true">
+      <REVIEW-STEP-SURFACE-IT-IN-THE-END-OF-SESSION-REPORT fact="true" status="impl/done">**Surface it in the end-of-session report:** "Implemented the
    fixed timeout per §5.3; propose exponential backoff instead — see
-   REVIEW in PROP-001 §5.3."</REVIEW-STEP-SURFACE-IT-IN-THE-END-OF-SESSION-REPORT></item>
-      <item><REVIEW-STEP-THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE fact="true" status="impl/done">**The human decides in the next cycle** — accepts (and changes the
-   spec) or rejects (and the marker comes out).</REVIEW-STEP-THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE></item>
-    </list>
+   REVIEW in PROP-001 §5.3."</REVIEW-STEP-SURFACE-IT-IN-THE-END-OF-SESSION-REPORT>
+      <REVIEW-STEP-THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE fact="true" status="impl/done">**The human decides in the next cycle** — accepts (and changes the
+   spec) or rejects (and the marker comes out).</REVIEW-STEP-THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE>
+    </facts>
     <p><three-lines-of-text fact="true" status="spec/done">Three lines of text.</three-lines-of-text></p>
     <p><seconds-to-write-a-minute-to-read fact="true" status="spec/done">Seconds to write, a minute to read.</seconds-to-write-a-minute-to-read></p>
     <p><that-is-the-entire-price-of-no-silent-override fact="true" status="spec/done">That is the
 entire price of never having a silent override in the repository.</that-is-the-entire-price-of-no-silent-override></p>
     <placement title="Where markers go">
-      <list ordered="false">
-        <item><MARKER-GOES-IN-THE-SPEC fact="true" status="impl/done">**In the spec**, next to the contested clause, when the dispute is
-  about what the rule should *be*.</MARKER-GOES-IN-THE-SPEC></item>
-        <item><MARKER-GOES-IN-THE-CODE fact="true" status="impl/done">**In the code**, next to the implementing lines, when the dispute
+      <facts ordered="false">
+        <MARKER-GOES-IN-THE-SPEC fact="true" status="impl/done">**In the spec**, next to the contested clause, when the dispute is
+  about what the rule should *be*.</MARKER-GOES-IN-THE-SPEC>
+        <MARKER-GOES-IN-THE-CODE fact="true" status="impl/done">**In the code**, next to the implementing lines, when the dispute
   is about how the rule lands in practice — in the language's own
-  comment syntax (`// REVIEW: …`); the HTML form is for Markdown.</MARKER-GOES-IN-THE-CODE></item>
-        <item><MARKER-ALWAYS-CARRIES-A-REASON fact="true" status="impl/done">**Always with a reason.** A bare `REVIEW: check this` cannot be
-  ruled on; markers without reasons are noise wearing a uniform.</MARKER-ALWAYS-CARRIES-A-REASON></item>
-      </list>
+  comment syntax (`// REVIEW: …`); the HTML form is for Markdown.</MARKER-GOES-IN-THE-CODE>
+        <MARKER-ALWAYS-CARRIES-A-REASON fact="true" status="impl/done">**Always with a reason.** A bare `REVIEW: check this` cannot be
+  ruled on; markers without reasons are noise wearing a uniform.</MARKER-ALWAYS-CARRIES-A-REASON>
+      </facts>
     </placement>
     <bureaucracy title="The bureaucracy objection">
       <p><on-first-contact-it-reads-as-bureaucracy fact="true" status="spec/done">On first contact this protocol reads as bureaucracy.</on-first-contact-it-reads-as-bureaucracy></p>
@@ -165,17 +165,17 @@ proposing 300s, and the human rules on it next morning in a minute.</WITH-THE-PR
   </silent-change>
   <lifecycle title="Marker lifecycle">
     <p><A-MARKER-IS-A-MESSAGE-IN-FLIGHT-NOT-A-PERMANENT-ANNOTATION fact="true" status="impl/done">A REVIEW marker is a message in flight, not a permanent annotation.</A-MARKER-IS-A-MESSAGE-IN-FLIGHT-NOT-A-PERMANENT-ANNOTATION></p>
-    <list ordered="true">
-      <item><LIFECYCLE-PLACED fact="true" status="impl/done">**Placed** — during work, with a reason, at the point of
-   disagreement.</LIFECYCLE-PLACED></item>
-      <item><LIFECYCLE-SURFACED fact="true" status="impl/done">**Surfaced** — named in the end-of-session report with its file
-   and section, so the human never has to grep for surprises.</LIFECYCLE-SURFACED></item>
-      <item><LIFECYCLE-RESOLVED fact="true" status="impl/done">**Resolved** — the human accepts (the spec changes) or rejects
-   (the proposal dies; record one line of *why* if it will recur).</LIFECYCLE-RESOLVED></item>
-      <item><LIFECYCLE-REMOVED-IN-THE-RESOLVING-CHANGE fact="true" status="impl/done">**Removed in the same change that resolves it.** A resolved marker
+    <facts ordered="true">
+      <LIFECYCLE-PLACED fact="true" status="impl/done">**Placed** — during work, with a reason, at the point of
+   disagreement.</LIFECYCLE-PLACED>
+      <LIFECYCLE-SURFACED fact="true" status="impl/done">**Surfaced** — named in the end-of-session report with its file
+   and section, so the human never has to grep for surprises.</LIFECYCLE-SURFACED>
+      <LIFECYCLE-RESOLVED fact="true" status="impl/done">**Resolved** — the human accepts (the spec changes) or rejects
+   (the proposal dies; record one line of *why* if it will recur).</LIFECYCLE-RESOLVED>
+      <LIFECYCLE-REMOVED-IN-THE-RESOLVING-CHANGE fact="true" status="impl/done">**Removed in the same change that resolves it.** A resolved marker
    left in place is indistinguishable from an open one, and the next
-   reader will re-litigate it.</LIFECYCLE-REMOVED-IN-THE-RESOLVING-CHANGE></item>
-    </list>
+   reader will re-litigate it.</LIFECYCLE-REMOVED-IN-THE-RESOLVING-CHANGE>
+    </facts>
     <p><AGING-MARKERS-ARE-AUDIT-INPUT fact="true" status="impl/done">Aging markers are audit input.</AGING-MARKERS-ARE-AUDIT-INPUT></p>
     <p><A-LONG-LIVED-MARKER-MEANS-SURFACING-FAILED fact="true" status="impl/done">A marker that survives more than a few
 sessions means step 2 failed — the surfacing channel is broken or
@@ -183,12 +183,12 @@ reports go unread.</A-LONG-LIVED-MARKER-MEANS-SURFACING-FAILED></p>
     <p><SWEEP-FOR-REVIEW-MARKERS-PERIODICALLY fact="true" status="impl/done">Sweep for `REVIEW:` periodically; every hit is an
 open decision the human owes, or a removal someone forgot.</SWEEP-FOR-REVIEW-MARKERS-PERIODICALLY></p>
     <p><two-standing-prohibitions fact="true" status="impl/done">Two standing prohibitions:</two-standing-prohibitions></p>
-    <list ordered="false">
-      <item><NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT fact="true" status="impl/done">never remove another writer's marker
-  without resolving it (that is deleting mail unread),</NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT></item>
-      <item><NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT fact="true" status="impl/done">and never
-  "resolve" your own marker by deciding the human would probably agree.</NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT></item>
-    </list>
+    <facts ordered="false">
+      <NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT fact="true" status="impl/done">never remove another writer's marker
+  without resolving it (that is deleting mail unread),</NEVER-REMOVE-ANOTHER-WRITERS-MARKER-WITHOUT-RESOLVING-IT>
+      <NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT fact="true" status="impl/done">and never
+  "resolve" your own marker by deciding the human would probably agree.</NEVER-RESOLVE-YOUR-OWN-MARKER-BY-ASSUMING-AGREEMENT>
+    </facts>
   </lifecycle>
   <re-derive title="Re-derive for your project">
     <p><this-document-states-the-practice-in-project-neutral-terms fact="true" status="impl/done">This document states the practice in project-neutral terms.</this-document-states-the-practice-in-project-neutral-terms></p>
@@ -209,17 +209,17 @@ practice to this project:
 Show me the draft before writing anything.</fence>
   </re-derive>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-CONTRADICTION-IS-COOPERATION-ONLY-SILENCE-DAMAGES fact="true" status="spec/done">Two writers on one file set will contradict each other; that is
-  cooperation working. Only *silent* contradiction does damage.</SUM-CONTRADICTION-IS-COOPERATION-ONLY-SILENCE-DAMAGES></item>
-      <item><SUM-FIXED-PRIORITY-SETTLES-EVERYTHING fact="true" status="impl/done">Fixed priority settles everything: Human &gt; Spec &gt; Tests &gt; Code &gt;
-  WAL. Recency settles nothing.</SUM-FIXED-PRIORITY-SETTLES-EVERYTHING></item>
-      <item><SUM-THE-REVIEW-CYCLE fact="true" status="impl/done">Disagree with the spec? Implement it anyway, mark `REVIEW:` with a
-  reason, surface it in the report, let the human rule next cycle.</SUM-THE-REVIEW-CYCLE></item>
-      <item><SUM-A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-ONE-OF-THE-TWO fact="true" status="impl/done">A test contradicting the spec is a bug in exactly one of the two —
-  never both, and never fixed by weakening the test blind.</SUM-A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-ONE-OF-THE-TWO></item>
-      <item><SUM-MARKERS-ARE-MESSAGES-IN-FLIGHT fact="true" status="impl/done">Markers are messages in flight: placed, surfaced, resolved, removed
-  in the resolving change. Aging markers mean the channel is broken.</SUM-MARKERS-ARE-MESSAGES-IN-FLIGHT></item>
-    </list>
+    <facts ordered="false">
+      <SUM-CONTRADICTION-IS-COOPERATION-ONLY-SILENCE-DAMAGES fact="true" status="spec/done">Two writers on one file set will contradict each other; that is
+  cooperation working. Only *silent* contradiction does damage.</SUM-CONTRADICTION-IS-COOPERATION-ONLY-SILENCE-DAMAGES>
+      <SUM-FIXED-PRIORITY-SETTLES-EVERYTHING fact="true" status="impl/done">Fixed priority settles everything: Human &gt; Spec &gt; Tests &gt; Code &gt;
+  WAL. Recency settles nothing.</SUM-FIXED-PRIORITY-SETTLES-EVERYTHING>
+      <SUM-THE-REVIEW-CYCLE fact="true" status="impl/done">Disagree with the spec? Implement it anyway, mark `REVIEW:` with a
+  reason, surface it in the report, let the human rule next cycle.</SUM-THE-REVIEW-CYCLE>
+      <SUM-A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-ONE-OF-THE-TWO fact="true" status="impl/done">A test contradicting the spec is a bug in exactly one of the two —
+  never both, and never fixed by weakening the test blind.</SUM-A-TEST-CONTRADICTING-THE-SPEC-IS-A-BUG-IN-ONE-OF-THE-TWO>
+      <SUM-MARKERS-ARE-MESSAGES-IN-FLIGHT fact="true" status="impl/done">Markers are messages in flight: placed, surfaced, resolved, removed
+  in the resolving change. Aging markers mean the channel is broken.</SUM-MARKERS-ARE-MESSAGES-IN-FLIGHT>
+    </facts>
   </summary>
 </spec>

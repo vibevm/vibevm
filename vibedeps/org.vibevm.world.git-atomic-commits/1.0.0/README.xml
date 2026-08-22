@@ -15,19 +15,19 @@ is reading the diff, and a commit that mixes three concerns across
 eight files is not verifiable in one pass.</in-a-human-ai-team-they-are-load-bearing></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships the **atomicity** discipline (the message **format** is the separate
 `flow:git-conventional-commits` package):</package-contents-lead></p>
-  <list ordered="false">
-    <item><CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
+  <facts ordered="false">
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
   protocol: what an atomic commit is, why it matters more in a
   human-AI team than elsewhere, when to split, when to batch, and the
-  rule that pushed history is frozen.</CONTENT-THE-FULL-PROTOCOL></item>
-    <item><CONTENT-THE-SPLITTING-PROCEDURE fact="true" status="impl/done">`spec/flows/atomic-commits/splitting-large-changes.md` — mechanical
+  rule that pushed history is frozen.</CONTENT-THE-FULL-PROTOCOL>
+    <CONTENT-THE-SPLITTING-PROCEDURE fact="true" status="impl/done">`spec/flows/atomic-commits/splitting-large-changes.md` — mechanical
   procedure for turning a messy working tree into a sequence of
   atomic commits using `git add -p`, including a prompt for
-  delegating the split to the agent.</CONTENT-THE-SPLITTING-PROCEDURE></item>
-    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/30-flow-atomic-commits.md` — boot snippet loaded at
+  delegating the split to the agent.</CONTENT-THE-SPLITTING-PROCEDURE>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/30-flow-atomic-commits.md` — boot snippet loaded at
   session start, pointing the agent at the protocol and the never-do
-  list.</CONTENT-THE-BOOT-SNIPPET></item>
-  </list>
+  list.</CONTENT-THE-BOOT-SNIPPET>
+  </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:git-atomic-commits</fence>
   </install>
@@ -39,16 +39,16 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
 never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">
-    <list ordered="false">
-      <item><COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES fact="true" status="impl/done">Works with `flow:wal` (`10-…`) and `flow:sync-from-code` (`20-…`):
-  numeric boot-snippet prefixes are distinct by design.</COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES></item>
-      <item><COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE fact="true" status="impl/done">`flow:sync-from-code`'s final step is a `docs(spec)` commit; this
+    <facts ordered="false">
+      <COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES fact="true" status="impl/done">Works with `flow:wal` (`10-…`) and `flow:sync-from-code` (`20-…`):
+  numeric boot-snippet prefixes are distinct by design.</COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES>
+      <COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE fact="true" status="impl/done">`flow:sync-from-code`'s final step is a `docs(spec)` commit; this
   flow is why the sync lands as its own commit and not folded into the
   code change. The *format* of that message is pinned by the sibling
-  `flow:git-conventional-commits`, not here.</COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE></item>
-      <item><COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT fact="true" status="impl/done">End-of-session WAL rewrite (from `flow:wal`) ends in a commit;
-  git-atomic-commits is how that commit is shaped.</COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT></item>
-    </list>
+  `flow:git-conventional-commits`, not here.</COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE>
+      <COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT fact="true" status="impl/done">End-of-session WAL rewrite (from `flow:wal`) ends in a commit;
+  git-atomic-commits is how that commit is shaped.</COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT>
+    </facts>
   </composition>
   <background title="Philosophical background">
     <p><extracted-from-the-books-second-chapter fact="true" status="spec/done">The rule is extracted from *AI-native development*, chapter 2

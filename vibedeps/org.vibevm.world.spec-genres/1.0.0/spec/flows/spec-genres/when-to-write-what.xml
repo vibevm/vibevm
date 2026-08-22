@@ -72,14 +72,14 @@ both settles a constraint *and* produced pages of reasoning is a
 contract edit *and* a design doc.</MANY-TASKS-LAND-ON-TWO-ROWS-AT-ONCE></p>
       <p><SPLIT-ALONG-THE-BINDING-LINE fact="true" status="impl/done">That is not ambiguity to resolve by
 picking one; it is a signal to **split along the binding line**:</SPLIT-ALONG-THE-BINDING-LINE></p>
-      <list ordered="false">
-        <item><SPAN-THE-BINDING-HALF-GOES-TO-THE-CONTRACT fact="true" status="impl/done">The binding half — the constraint, the invariant, the chosen value
-  — goes to the contract, in contract shape.</SPAN-THE-BINDING-HALF-GOES-TO-THE-CONTRACT></item>
-        <item><SPAN-THE-NARRATIVE-HALF-GOES-TO-THE-DESIGN-DOC fact="true" status="impl/done">The narrative half — the forks, the precedents, the path — goes to
-  the design doc, in story shape.</SPAN-THE-NARRATIVE-HALF-GOES-TO-THE-DESIGN-DOC></item>
-        <item><SPAN-THE-TWO-WAY-LINK-JOINS-THEM fact="true" status="impl/done">The two-way link joins them, so neither half is lost and the
-  authority is unambiguous.</SPAN-THE-TWO-WAY-LINK-JOINS-THEM></item>
-      </list>
+      <facts ordered="false">
+        <SPAN-THE-BINDING-HALF-GOES-TO-THE-CONTRACT fact="true" status="impl/done">The binding half — the constraint, the invariant, the chosen value
+  — goes to the contract, in contract shape.</SPAN-THE-BINDING-HALF-GOES-TO-THE-CONTRACT>
+        <SPAN-THE-NARRATIVE-HALF-GOES-TO-THE-DESIGN-DOC fact="true" status="impl/done">The narrative half — the forks, the precedents, the path — goes to
+  the design doc, in story shape.</SPAN-THE-NARRATIVE-HALF-GOES-TO-THE-DESIGN-DOC>
+        <SPAN-THE-TWO-WAY-LINK-JOINS-THEM fact="true" status="impl/done">The two-way link joins them, so neither half is lost and the
+  authority is unambiguous.</SPAN-THE-TWO-WAY-LINK-JOINS-THEM>
+      </facts>
       <p><THE-TELL-IS-THE-WORD-AND fact="true" status="impl/done">The tell that you are facing a spanning situation is the word "and":
 "we decided the timeout is 600 s *and* here is the whole latency
 study."</THE-TELL-IS-THE-WORD-AND></p>
@@ -161,17 +161,17 @@ between lore that survives a cold start and lore that is silently
 lost at the next session boundary.</what-the-pair-of-links-buys></p>
   </linking-example>
   <summary title="Summary">
-    <list ordered="false">
-      <item><SUM-ROUTE-BY-SITUATION fact="true" status="impl/done">Route by situation: constraint → contract; narrative why → design
+    <facts ordered="false">
+      <SUM-ROUTE-BY-SITUATION fact="true" status="impl/done">Route by situation: constraint → contract; narrative why → design
   doc; external study → research; phased change → campaign plan;
-  current state → checkpoint; durable choice → record at the anchor.</SUM-ROUTE-BY-SITUATION></item>
-      <item><SUM-A-DECISION-PRODUCES-BOTH fact="true" status="impl/done">A decision usually produces both a compact record at the contract
+  current state → checkpoint; durable choice → record at the anchor.</SUM-ROUTE-BY-SITUATION>
+      <SUM-A-DECISION-PRODUCES-BOTH fact="true" status="impl/done">A decision usually produces both a compact record at the contract
   anchor and — if large — a linked design doc; the record is binding,
-  the design doc is its footnote.</SUM-A-DECISION-PRODUCES-BOTH></item>
-      <item><SUM-SMELLS-FLAG-MISFILINGS fact="true" status="impl/done">Smells flag misfilings: history in a contract, a design doc cited
-  as binding, a checkpoint older than the last release.</SUM-SMELLS-FLAG-MISFILINGS></item>
-      <item><SUM-WIRE-BOTH-DIRECTIONS-OR-NEITHER fact="true" status="impl/done">Wire both link directions or neither — a one-way link loses the
-  lore from the other side.</SUM-WIRE-BOTH-DIRECTIONS-OR-NEITHER></item>
-    </list>
+  the design doc is its footnote.</SUM-A-DECISION-PRODUCES-BOTH>
+      <SUM-SMELLS-FLAG-MISFILINGS fact="true" status="impl/done">Smells flag misfilings: history in a contract, a design doc cited
+  as binding, a checkpoint older than the last release.</SUM-SMELLS-FLAG-MISFILINGS>
+      <SUM-WIRE-BOTH-DIRECTIONS-OR-NEITHER fact="true" status="impl/done">Wire both link directions or neither — a one-way link loses the
+  lore from the other side.</SUM-WIRE-BOTH-DIRECTIONS-OR-NEITHER>
+    </facts>
   </summary>
 </spec>
