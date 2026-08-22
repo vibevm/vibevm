@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T17:51:40Z",
+  "updated_at": "2026-08-22T20:35:05Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -168455,15 +168455,15 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 126,
-      "units": 17,
-      "facts": 125,
+      "markers": 132,
+      "units": 18,
+      "facts": 131,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "54729e9234c018696af408443afa54fec2a6884a7482b8e350ff4cd6ba3a42fe",
+        "processed_hash": "781f2645bfcda2c29bf6029e651094f9c2a1913d0c988f77f6f07f9edbcb8ed4",
         "summary": {
-          "confirmed": 111
+          "confirmed": 117
         },
         "verdicts": {
           "self-uri": {
@@ -169131,10 +169131,46 @@
             "ev": [
               "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
             ]
+          },
+          "CONFIG-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "renamed to facts.toml with the silent progress.toml legacy fallback — matches scope.rs load_config (facts wins, pinned by test) and the host git mv"
+            ]
+          },
+          "INCLUDE-STYLE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets"
+            ]
+          },
+          "DEFAULT-EXCLUDES": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; the always-on lists live in scope.rs and match"
+            ]
+          },
+          "excludes-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; campaign-zone reference now cross-document (PROP-047 §5.4)"
+            ]
+          },
+          "CONFIG-EXCLUDE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; section-number self-reference neutralised to 'this section'"
+            ]
+          },
+          "NESTED-OWNS-SUBTREE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets"
+            ]
           }
         },
-        "verified_at": "2026-08-22T17:09:41Z",
-        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI"
+        "verified_at": "2026-08-22T17:51:41Z",
+        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI + P043-CONFIG-REPATRIATION"
       }
     },
     {
@@ -173648,15 +173684,15 @@
         "stage": "impl",
         "state": "work"
       },
-      "markers": 72,
+      "markers": 67,
       "units": 15,
-      "facts": 71,
+      "facts": 66,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
         "processed_hash": "112a3357bdc7b723a7ac12fa25dbbb2d9f07ee700ad97c810073ff52ab275c09",
         "summary": {
-          "confirmed": 71
+          "confirmed": 66
         },
         "verdicts": {
           "CAMPAIGN-LAYER-MANDATE": {
@@ -173686,43 +173722,7 @@
           "SEP-ADAPTER": {
             "v": "confirmed",
             "ev": [
-              "moved with (§5)/(§6)→(§3)/(§4)"
-            ]
-          },
-          "CONFIG-FILE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "INCLUDE-STYLE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "DEFAULT-EXCLUDES": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "excludes-rationale": {
-            "v": "confirmed",
-            "ev": [
-              "moved with the internal campaign-zone reference renumbered §7.4→§5.4"
-            ]
-          },
-          "CONFIG-EXCLUDE": {
-            "v": "confirmed",
-            "ev": [
-              "moved with the include-style reference renumbered §4→§2"
-            ]
-          },
-          "NESTED-OWNS-SUBTREE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+              "adapter line retargeted to the facts.toml discovery — matches load_config"
             ]
           },
           "TOOL-ADAPTER": {
@@ -174084,10 +174084,16 @@
             "ev": [
               "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
+          },
+          "CONFIG-MOVED-TO-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "pointer fact: names the new home PROP-043 §6, the facts.toml spelling and the legacy fallback; keeps the §2 number so the 047 section map stays stable; matches the landed files"
+            ]
           }
         },
         "verified_at": "2026-08-22T17:09:41Z",
-        "verify_batch": "P043-SPLIT"
+        "verify_batch": "P043-SPLIT + P043-CONFIG-REPATRIATION"
       }
     },
     {

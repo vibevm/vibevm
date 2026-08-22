@@ -1,4 +1,4 @@
-# Progress Control scope (PROP-043 §4) — wave 1 of the spec-actualization
+# The facts scope (PROP-043 §6, the facts home) — wave 1 of the spec-actualization
 # campaign: the host `spec/` tree only. `packages/` waves come later;
 # widen this include list when the owner opens wave 2.
 #
@@ -27,7 +27,7 @@
 # for what an include glob cannot say — "everything under this subtree
 # except these named files". The design's PURPOSE is unchanged, since an
 # enumerated exclude is as explicit and reviewable as an enumerated
-# include; see PROP-043 ##CONFIG-EXCLUDE for the guard rails.
+# include; see PROP-043 ##CONFIG-EXCLUDE (modules/vibe-facts) for the guard rails.
 # WAVE 2 opened 2026-07-26 (PACKAGES-ACTUALIZATION-CAMPAIGN ratified): the two
 # authored package namespaces join the scope. The host's 58 files STAY in
 # scope — wave 2 does not un-measure wave 1, and both corpora share one

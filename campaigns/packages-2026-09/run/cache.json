@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T17:51:41Z",
+  "updated_at": "2026-08-22T20:35:06Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -170120,7 +170120,7 @@
       }
     },
     "spec/modules/vibe-facts/PROP-043-facts-markup.md": {
-      "content_hash": "781f2645bfcda2c29bf6029e651094f9c2a1913d0c988f77f6f07f9edbcb8ed4",
+      "content_hash": "13e4f0dd081b03808e42fd6ee67a8d1ed094b541ad343eaec0d1f77e749ad732",
       "rollup": {
         "explicit": [
           "impl",
@@ -170134,15 +170134,15 @@
           "impl",
           "done"
         ],
-        "marker_count": 126,
-        "fact_count": 125,
+        "marker_count": 132,
+        "fact_count": 131,
         "unmarked_facts": 0
       },
-      "marker_count": 126,
-      "unit_count": 17,
+      "marker_count": 132,
+      "unit_count": 18,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "781f2645bfcda2c29bf6029e651094f9c2a1913d0c988f77f6f07f9edbcb8ed4",
+        "processed_hash": "13e4f0dd081b03808e42fd6ee67a8d1ed094b541ad343eaec0d1f77e749ad732",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -170809,10 +170809,46 @@
             "ev": [
               "moved verbatim from modules/vibe-progress/PROP-043 at the owner's 2026-08-22 facts/progress boundary split; anchor and text unchanged, doc-path only"
             ]
+          },
+          "CONFIG-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "renamed to facts.toml with the silent progress.toml legacy fallback — matches scope.rs load_config (facts wins, pinned by test) and the host git mv"
+            ]
+          },
+          "INCLUDE-STYLE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets"
+            ]
+          },
+          "DEFAULT-EXCLUDES": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; the always-on lists live in scope.rs and match"
+            ]
+          },
+          "excludes-rationale": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; campaign-zone reference now cross-document (PROP-047 §5.4)"
+            ]
+          },
+          "CONFIG-EXCLUDE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets; section-number self-reference neutralised to 'this section'"
+            ]
+          },
+          "NESTED-OWNS-SUBTREE": {
+            "v": "confirmed",
+            "ev": [
+              "moved back to the facts home per the owner's 2026-08-22 correction (scope is a facts-layer concern); text unchanged except the named retargets"
+            ]
           }
         },
-        "verified_at": "2026-08-22T17:51:41Z",
-        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI"
+        "verified_at": "2026-08-22T20:35:06Z",
+        "verify_batch": "P043-SPLIT + P043-BOUNDARY-CLI + P043-CONFIG-REPATRIATION"
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
@@ -175339,7 +175375,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-047-progress-campaigns.md": {
-      "content_hash": "112a3357bdc7b723a7ac12fa25dbbb2d9f07ee700ad97c810073ff52ab275c09",
+      "content_hash": "ed3dbecb9f824c3dafa18e8e01906412b58f2ab0d621d31e49bfda6b6feba330",
       "rollup": {
         "explicit": [
           "impl",
@@ -175353,15 +175389,15 @@
           "impl",
           "work"
         ],
-        "marker_count": 72,
-        "fact_count": 71,
+        "marker_count": 67,
+        "fact_count": 66,
         "unmarked_facts": 0
       },
-      "marker_count": 72,
+      "marker_count": 67,
       "unit_count": 15,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "112a3357bdc7b723a7ac12fa25dbbb2d9f07ee700ad97c810073ff52ab275c09",
+        "processed_hash": "ed3dbecb9f824c3dafa18e8e01906412b58f2ab0d621d31e49bfda6b6feba330",
         "verdicts": {
           "CAMPAIGN-LAYER-MANDATE": {
             "v": "confirmed",
@@ -175390,43 +175426,7 @@
           "SEP-ADAPTER": {
             "v": "confirmed",
             "ev": [
-              "moved with (§5)/(§6)→(§3)/(§4)"
-            ]
-          },
-          "CONFIG-FILE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "INCLUDE-STYLE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "DEFAULT-EXCLUDES": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
-            ]
-          },
-          "excludes-rationale": {
-            "v": "confirmed",
-            "ev": [
-              "moved with the internal campaign-zone reference renumbered §7.4→§5.4"
-            ]
-          },
-          "CONFIG-EXCLUDE": {
-            "v": "confirmed",
-            "ev": [
-              "moved with the include-style reference renumbered §4→§2"
-            ]
-          },
-          "NESTED-OWNS-SUBTREE": {
-            "v": "confirmed",
-            "ev": [
-              "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
+              "adapter line retargeted to the facts.toml discovery — matches load_config"
             ]
           },
           "TOOL-ADAPTER": {
@@ -175788,10 +175788,16 @@
             "ev": [
               "moved verbatim from modules/vibe-progress/PROP-043 §§4-7/10/11 into the progress home at the 2026-08-22 boundary split; anchor and text unchanged except the renumbered internal §-references named in the landing"
             ]
+          },
+          "CONFIG-MOVED-TO-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "pointer fact: names the new home PROP-043 §6, the facts.toml spelling and the legacy fallback; keeps the §2 number so the 047 section map stays stable; matches the landed files"
+            ]
           }
         },
-        "verified_at": "2026-08-22T17:09:41Z",
-        "verify_batch": "P043-SPLIT"
+        "verified_at": "2026-08-22T20:35:06Z",
+        "verify_batch": "P043-SPLIT + P043-CONFIG-REPATRIATION"
       }
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {

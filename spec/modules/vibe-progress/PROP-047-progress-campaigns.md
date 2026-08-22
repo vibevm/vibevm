@@ -16,49 +16,18 @@ founding motivation of PROP-043 §1): @status:spec/done
    afterwards as the steering mechanism for further development. @status:impl/work
 
 - @fact:SEP-ADAPTER The **vibevm adapter** contributes the `vibe progress` CLI surface (§3), the
-  `progress.toml` discovery, and the specmap evidence provider (§4). All
+  `facts.toml` discovery, and the specmap evidence provider (§4). All
   vibevm-specific knowledge lives here. @status:impl/done
 
-## 2. Scope configuration — `progress.toml` {#config}
+## 2. Scope configuration — moved to the facts home {#config-moved}
 
-- @fact:CONFIG-FILE Optional dev-mode mechanics, configured by a `progress.toml` at the package
-  root (the `clippy.toml` pattern — tool config, not manifest pollution). @status:impl/done
-- @fact:INCLUDE-STYLE Include-style globs name what **is** observed (not gitignore-style excludes): @status:impl/done
-
-```toml
-schema = 1
-include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
-```
-
-- @fact:DEFAULT-EXCLUDES **Default excludes** (applied always, even under explicit includes),
-  in two kinds. **By directory**, matched against any path component:
-  `vibedeps/`, `.vibe/`, `refs/`, `fixtures/`, `campaigns/`, `target/`,
-  `node_modules/`, `**/vendor/`. **By file name**, matched against the
-  basename wherever it sits: `LICENSE.md`. @status:impl/done
-- @fact:excludes-rationale Rationale: regenerated dependency copies must
-  never carry authored markup (PROP-009's install-never-edits-authored-spec
-  law), third-party and test-asserted content is off-limits, and the campaign
-  zone (§5.4) is not itself corpus. A licence is the same case one granularity
-  down — verbatim text the observing project neither authored nor is the
-  source of truth for, replaced wholesale from upstream — so it needed the
-  file-name kind rather than a directory. @status:spec/done
-- @fact:CONFIG-EXCLUDE **Project-side `exclude`** — an optional list of globs in
-  `progress.toml`, matched against the `/`-separated repo-relative path and
-  applied **after** the includes and after both default kinds. It exists for
-  what an include glob cannot say: *everything under this subtree except these
-  named files* — a derived index, a generated projection, anything whose own
-  words make a hand edit a defect. §2 is include-style so that nothing is
-  observed by accident, and an **enumerated** exclude list serves that purpose
-  exactly as well as an enumerated include list; both are explicit and both
-  are reviewable. It must not become a wildcard escape hatch, so: a pattern
-  matching **no** observed file is reported by name on every subcommand, the
-  count of files it removes is printed by `scan`, an invalid glob is a clean
-  error naming the pattern, and an absent key behaves as a config that never
-  had one. @status:impl/done
-- @fact:NESTED-OWNS-SUBTREE A nested package with its own
-  `progress.toml` owns its subtree (the host aggregates; it does not reach in) —
-  this is how a specspace keeps its own cadence. @status:spec/done
-
+@fact:CONFIG-MOVED-TO-FACTS **Scope configuration is a facts-layer concern and
+lives in PROP-043 §6** (owner correction 2026-08-22: «what is observed» is a
+universal question every facts consumer answers — the campaign toolchain
+merely consumes the same scope through the facts core). The config file is
+`facts.toml`; `progress.toml` is read as a silent legacy fallback for the
+transition. This heading keeps its number so the section map below stays
+stable. @status:spec/done
 
 ## 3. The tool — `vibe progress` {#tool}
 

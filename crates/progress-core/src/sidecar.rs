@@ -113,7 +113,7 @@ pub fn branch_slug(branch: Option<&str>) -> String {
 }
 
 /// Where one campaign's payloads live, first hit wins (DRIFT-016 §4.2):
-/// an explicit `[progress] cache_dir` from `progress.toml` — absolute, or
+/// an explicit `[progress] cache_dir` from `facts.toml` — absolute, or
 /// relative to the project root — otherwise
 /// `<settings-home>/progress-cache/<repo-id>/<branch-slug>/`. The campaign
 /// id keys the leaf either way, so two campaigns in one checkout share the

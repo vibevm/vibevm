@@ -1,8 +1,8 @@
-//! Observed-tree scoping: `progress.toml` include globs, the always-on
+//! Observed-tree scoping: `facts.toml` include globs, the always-on
 //! default excludes — by directory and by file name — and the project's own
-//! enumerated `exclude` globs (PROP-043 §4).
+//! enumerated `exclude` globs (PROP-043 §6, the facts home).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#config");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#config");
 
 use anyhow::{Context, Result};
 use serde::Deserialize;
@@ -96,9 +96,15 @@ impl Default for ScopeConfig {
     }
 }
 
-/// Load `progress.toml` at `root`, falling back to defaults when absent.
+/// Load `facts.toml` at `root`, falling back to defaults when absent.
+/// `progress.toml` is read as a silent legacy spelling for the transition
+/// (PROP-043 ##CONFIG-FILE — the observed tree is a facts-layer concern);
+/// when both exist the facts spelling wins.
 pub fn load_config(root: &Path) -> Result<ScopeConfig> {
-    let path = root.join("progress.toml");
+    let mut path = root.join("facts.toml");
+    if !path.exists() {
+        path = root.join("progress.toml");
+    }
     if !path.exists() {
         return Ok(ScopeConfig::default());
     }
@@ -360,6 +366,23 @@ mod tests {
             format!("{err:#}").contains("packages/a**/x.md"),
             "error must name the pattern: {err:#}"
         );
+    }
+
+    #[test]
+    fn facts_toml_wins_over_the_legacy_progress_spelling() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("facts.toml"),
+            "schema = 1\ninclude = [\"facts/**/*.md\"]\n",
+        )
+        .expect("write facts");
+        std::fs::write(
+            dir.path().join("progress.toml"),
+            "schema = 1\ninclude = [\"legacy/**/*.md\"]\n",
+        )
+        .expect("write legacy");
+        let cfg = load_config(dir.path()).expect("load");
+        assert_eq!(cfg.include, vec!["facts/**/*.md"]);
     }
 
     #[test]
