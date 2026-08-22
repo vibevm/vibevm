@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T09:39:18Z",
+  "updated_at": "2026-08-22T12:10:02Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159585,7 +159585,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "1224e2f133a4f5836920ee3b71e785149e76ab5c5a4c8490253439ec9bdc19b1",
+        "processed_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
         "summary": {
           "confirmed": 31
         },
@@ -159777,7 +159777,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-22T08:39:33Z",
+        "verified_at": "2026-08-22T09:39:19Z",
         "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC"
       }
     },
@@ -159797,6 +159797,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
+        "processed_hash": "d9d0068c4e4f0cce0ca4ff9d7d65f5bb6fedd9bd0272b45e715aba768554f89e",
         "summary": {
           "confirmed": 14
         },
@@ -159804,49 +159805,49 @@
           "REGISTRY-MANDATE": {
             "v": "confirmed",
             "ev": [
-              "owner design ruling 2026-08-22 quoted near-verbatim from the chat dialogue; all elements of the quoted design present in the law sections"
+              "W1 700a91f1 (crate+CLI+gate), W2 7548144f (derivation merge, point re-derivation, adopt), W3 (clean/report/uninstall dialog) — every quoted element of the owner's design implemented; the STATIC strong form explicitly deferred to its own wave in the landing text"
             ]
           },
           "WHY-THE-AXIS-IS-MISSING": {
             "v": "confirmed",
             "ev": [
-              "axis check against live vocabulary: progress-core model.rs enums Stage/State/Action{Continue,Drift,Rework,Remove}/Audience — no per-consumer adoption axis exists; genre split verified against packages (core-ai-native ships engines in-package; wal/git-practices are practice genre)"
+              "analytic fact; axis check against progress-core enums stands; spec/done is the correct terminal for a rationale that requires no code"
             ]
           },
           "REGISTRY-HOME": {
             "v": "confirmed",
             "ev": [
-              "design decision recorded as agreed in the dialogue: per-package TOML files, tracked, root vibefacts/; matches house root-file style (AGENT-MODE.toml) and slot-naming convention of vibedeps"
+              "vibefacts/ tracked at root, per-source TOML (spec.toml live with the first self-adoption entry), file-per-package lifecycle proven by clean/uninstall tests"
             ]
           },
           "REGISTRY-KEY": {
             "v": "confirmed",
             "ev": [
-              "fully-qualified spec:// addressing exists (PROP-029); owner's requirement to store source package address quoted in the mandate"
+              "entries keyed by full spec:// address; minting through vibe_spec::canonical_doc_path (forward router law, pinned in resolver tests + slug-truncation test in vibe-facts)"
             ]
           },
           "TRI-STATE": {
             "v": "confirmed",
             "ev": [
-              "dialect check: Fact.status is Option in the pivot model (doc.rs is_meaningful id||status); host judged-corpus law unchanged (scan reports 0/21512-class unmarked-fact accounting)"
+              "status Option in schema; indeterminate rendering in list/report; host judged corpus unchanged (scan clean at 493 files)"
             ]
           },
           "LAW-SOVEREIGNTY": {
             "v": "confirmed",
             "ev": [
-              "owner's import-ignores-statuses rule quoted; bulk-adopt escape hatch accepted in the dialogue for implementation-shipping packages"
+              "import path never writes the registry (no such code path exists); adopt fills absent-only with added/kept counts (W2 CLI oracle)"
             ]
           },
           "LAW-SYNC": {
             "v": "confirmed",
             "ev": [
-              "asymmetric tie-break accepted by owner («с остальным я полностью согласен»): spec authoritative for host facts, registry for package facts; machine gate over convention — house pattern (panel gates)"
+              "facts_sync cell in roster+oracle; live red/green cycle on the host (dirty overlay → check error → sync --write → clean); needed-doc-paths narrowing paid live on the terraform file defect"
             ]
           },
           "LAW-DERIVATION": {
             "v": "confirmed",
             "ev": [
-              "hash-law collision analysed against slot_verify.rs (recipe+hash checks) and PROP-045 ##HASH-LAW; point-edit-as-re-derivation accepted by owner; per-package registry file hash as slot input drives targeted staleness"
+              "overlay_hash in DerivedManifest (old wire reads, doctest green); replace-if-present preserving extras pinned; format_is_current + slot_verify compare live registry file; live wal-slot probe: set flipped the slot in place, rm restored exact committed bytes"
             ]
           },
           "LAW-STATIC-INVARIANT": {
@@ -159858,13 +159859,13 @@
           "LAW-LIFECYCLE": {
             "v": "confirmed",
             "ev": [
-              "owner's keep-on-removal + uninstall dialog + facts clean quoted in the mandate; tombstone-style reporting on upgrade drift accepted"
+              "W3: lockfile-driven clean with dry-run and named removals (CLI oracle), attended-only uninstall deletion with clean hint under automation flags, spec.toml excluded from orphanhood by construction"
             ]
           },
           "CLI-FACTS": {
             "v": "confirmed",
             "ev": [
-              "verb set covers the owner's CRUD/search/transitions plus the accepted refinements (adopt/sync/clean/report); uninstall verb exists in the CLI surface"
+              "all eight verbs live: list/get/set/rm/sync (W1), adopt (W2), clean/report (W3); report prints ? for unavailable denominators; every flip is an auditable command"
             ]
           },
           "WAVES": {
@@ -159886,7 +159887,8 @@
             ]
           }
         },
-        "verify_batch": "P046-VIBEFACTS-SPEC"
+        "verified_at": "2026-08-22T09:39:19Z",
+        "verify_batch": "P046-VIBEFACTS-SPEC + P046-LANDED"
       }
     },
     {
