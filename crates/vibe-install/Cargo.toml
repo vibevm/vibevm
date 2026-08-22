@@ -24,6 +24,7 @@ specmark.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 vibe-core.workspace = true
+vibe-facts.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
 vibe-workspace.workspace = true

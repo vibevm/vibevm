@@ -32,8 +32,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
-use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_core::user_config::SlotIntegrity;
+use vibe_core::manifest::{Lockfile, Manifest, Materialization, SpecFormat};
+use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_workspace::Workspace;
@@ -44,6 +44,96 @@ use crate::cli::{InstallArgs, ReinstallArgs};
 use crate::commands::install::build_install_resolver;
 use crate::exit_code::InstallError;
 use crate::output;
+
+/// Reload and re-derive exactly one installed transformed slot.
+///
+/// `false` means the package has no versioned slot. Mixed and in-place slots
+/// are deliberately left alone by W2 because they carry no derived manifest.
+pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<bool> {
+    let Some((group_text, name)) = package.split_once('/') else {
+        bail!("package must use the `<group>/<name>` form: {package}");
+    };
+    if name.is_empty() || name.contains('/') {
+        bail!("package must use the `<group>/<name>` form: {package}");
+    }
+    let group = Group::parse(group_text)?;
+    let workspace = Workspace::discover(project_root)
+        .context("discovering the workspace enclosing the facts registry")?;
+    let lockfile = load_lockfile(&workspace.root)?;
+    let Some(locked) = lockfile
+        .packages
+        .iter()
+        .find(|locked| locked.group == group && locked.name == name)
+    else {
+        return Ok(false);
+    };
+    if locked.materialization.is_in_place() {
+        return Ok(true);
+    }
+    if !vibedeps::is_materialised(
+        &workspace.root,
+        &locked.group,
+        &locked.name,
+        &locked.version,
+    ) {
+        return Ok(false);
+    }
+
+    let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let spec_format = manifest
+        .project
+        .as_ref()
+        .and_then(|project| project.spec_format)
+        .or(user_config.install.spec_format)
+        .unwrap_or_default();
+    if spec_format == SpecFormat::Mixed {
+        return Ok(true);
+    }
+
+    let global = vibe_core::GlobalRegistryConfig::load()?;
+    // Every installed copy package was inserted into the immutable machine
+    // store before its slot was written. Point re-derivation therefore reads
+    // that exact locked source locally and never needs a registry walk.
+    let offline = true;
+    let resolver = build_install_resolver(
+        &resolver_args(),
+        &workspace.root_manifest,
+        None,
+        &workspace.root,
+        &global,
+        offline,
+        &lockfile.packages,
+    )
+    .context("building the point re-derivation resolver")?;
+    let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
+    let store_root =
+        vibe_registry::store::store_root().context("resolving the machine package store root")?;
+    let cached = resolver
+        .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
+        .with_context(|| format!("re-fetching `{package}` for point re-derivation"))?;
+    let mode = match cached
+        .manifest
+        .package
+        .as_ref()
+        .map(|package| package.materialization)
+    {
+        Some(Materialization::Hardlink) => vibedeps::CopyMode::Hardlink,
+        _ => vibedeps::CopyMode::Copy,
+    };
+    vibedeps::materialise_with_spec_format(
+        &workspace.root,
+        &cached.resolved.group,
+        &cached.resolved.name,
+        &cached.resolved.version,
+        &cached.cache_dir,
+        mode,
+        spec_format,
+        &cached.content_hash,
+    )
+    .with_context(|| format!("re-deriving the installed `{package}` slot"))?;
+    Ok(true)
+}
 
 pub fn run(
     ctx: &output::Context,

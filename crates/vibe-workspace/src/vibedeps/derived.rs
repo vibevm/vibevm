@@ -10,6 +10,8 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use vibe_core::Group;
 use vibe_core::manifest::SpecFormat;
+use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
+use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
 
 use super::{CopyMode, io_err, place_file, slot_abs_path};
 use crate::{WorkspaceError, path_to_slash};
@@ -60,6 +62,8 @@ pub struct DerivedManifest {
     pub source_hash: String,
     pub output_format: SpecFormat,
     pub converter_recipe: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub overlay_hash: Option<String>,
     pub derived_hash: String,
     #[serde(default, rename = "file")]
     pub files: Vec<DerivedFile>,
@@ -87,6 +91,14 @@ pub fn materialise_with_spec_format(
     if spec_format == SpecFormat::Mixed {
         return super::materialise_with(workspace_root, group, name, version, content_src, mode);
     }
+    let package = format!("{group}/{name}");
+    let registry =
+        Registry::load(workspace_root).map_err(|error| WorkspaceError::SpecMaterialization {
+            path: workspace_root.join("vibefacts"),
+            reason: format!("package adoption registry cannot be loaded: {error}"),
+        })?;
+    let overlay = registry.package_overlay(&package);
+    let overlay_hash = overlay_file_hash(workspace_root, &package);
     let slot = slot_abs_path(workspace_root, group, name, version);
     if !content_src.is_dir() {
         return Err(WorkspaceError::SpecMaterialization {
@@ -107,7 +119,7 @@ pub fn materialise_with_spec_format(
     let mut written = Vec::new();
     let mut files = Vec::new();
     for (rel, source) in sources {
-        let transformed = transform_file(&source, &rel, spec_format)?;
+        let transformed = transform_file(&source, &rel, spec_format, &package, &overlay)?;
         let output_rel = transformed
             .as_ref()
             .map_or_else(|| rel.clone(), |(path, _)| path.clone());
@@ -150,6 +162,7 @@ pub fn materialise_with_spec_format(
         source_hash: source_hash.to_string(),
         output_format: spec_format,
         converter_recipe: CONVERTER_RECIPE.to_string(),
+        overlay_hash,
         derived_hash,
         files,
     };
@@ -188,9 +201,25 @@ pub fn format_is_current(slot: &Path, expected: SpecFormat) -> bool {
     match expected {
         SpecFormat::Mixed => !manifest_path.exists(),
         SpecFormat::Markdown | SpecFormat::Xml => {
-            read_derived_manifest(slot).is_ok_and(|manifest| manifest.output_format == expected)
+            read_derived_manifest(slot).is_ok_and(|manifest| {
+                manifest.output_format == expected
+                    && manifest.overlay_hash == current_overlay_hash_for_slot(slot)
+            })
         }
     }
+}
+
+/// Derive the package overlay's current byte identity from a canonical slot
+/// path without widening the public freshness API.
+pub fn current_overlay_hash_for_slot(slot: &Path) -> Option<String> {
+    let package_dir = slot.parent()?;
+    let vibedeps_dir = package_dir.parent()?;
+    if vibedeps_dir.file_name()?.to_str()? != super::VIBEDEPS_DIR {
+        return None;
+    }
+    let workspace_root = vibedeps_dir.parent()?;
+    let package_key = package_dir.file_name()?.to_str()?;
+    overlay_file_hash(workspace_root, package_key)
 }
 
 /// Recipe-0 content hash over a transformed slot, excluding its own derived
@@ -250,6 +279,8 @@ fn transform_file(
     source: &Path,
     rel: &Path,
     format: SpecFormat,
+    package: &str,
+    overlay: &PackageOverlay,
 ) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
     if !is_spec_document(rel) {
         return Ok(None);
@@ -259,32 +290,112 @@ fn transform_file(
         (format, extension),
         (SpecFormat::Xml, Some("md")) | (SpecFormat::Markdown, Some("xml"))
     );
-    if !opposite {
+    let address_prefix = format!(
+        "spec://{package}/{}#",
+        vibe_spec::canonical_doc_path(&path_to_slash(rel))
+    );
+    let overlay_applies = overlay.contains_document(&address_prefix);
+    if !opposite && !overlay_applies {
         return Ok(None);
     }
-    let Ok(text) = fs::read_to_string(source) else {
-        return Ok(None);
+    let text = match fs::read_to_string(source) {
+        Ok(text) => text,
+        Err(error) if overlay_applies => {
+            return Err(WorkspaceError::SpecMaterialization {
+                path: source.to_path_buf(),
+                reason: format!("overlay-targeted spec cannot be read as text: {error}"),
+            });
+        }
+        Err(_) => return Ok(None),
     };
-    let (converted, target_extension) = match format {
-        SpecFormat::Xml => (
-            vibe_specdoc::from_markdown(&text)
-                .ok()
-                .map(|doc| vibe_specdoc::to_xml(&doc)),
-            "xml",
-        ),
-        SpecFormat::Markdown => (
-            vibe_specdoc::from_xml(&text)
-                .ok()
-                .map(|doc| vibe_specdoc::to_markdown(&doc)),
-            "md",
-        ),
+    let parsed = match extension {
+        Some("md") => vibe_specdoc::from_markdown(&text),
+        Some("xml") => vibe_specdoc::from_xml(&text),
+        _ => return Ok(None),
+    };
+    let mut doc = match parsed {
+        Ok(doc) => doc,
+        Err(error) if overlay_applies => {
+            return Err(WorkspaceError::SpecMaterialization {
+                path: source.to_path_buf(),
+                reason: format!("overlay-targeted spec cannot enter the pivot: {error}"),
+            });
+        }
+        Err(_) => return Ok(None),
+    };
+    apply_overlay(&mut doc, &address_prefix, overlay);
+    let (converted, output) = match format {
+        SpecFormat::Xml => (vibe_specdoc::to_xml(&doc), rel.with_extension("xml")),
+        SpecFormat::Markdown => (vibe_specdoc::to_markdown(&doc), rel.with_extension("md")),
         SpecFormat::Mixed => return Ok(None),
     };
-    let Some(converted) = converted else {
-        return Ok(None);
-    };
-    let output = rel.with_extension(target_extension);
     Ok(Some((output, converted.into_bytes())))
+}
+
+fn apply_overlay(doc: &mut SpecDoc, address_prefix: &str, overlay: &PackageOverlay) {
+    apply_blocks(&mut doc.preamble, address_prefix, overlay);
+    for section in &mut doc.sections {
+        apply_section(section, address_prefix, overlay);
+    }
+}
+
+fn apply_section(section: &mut Section, address_prefix: &str, overlay: &PackageOverlay) {
+    apply_blocks(&mut section.blocks, address_prefix, overlay);
+    for child in &mut section.sections {
+        apply_section(child, address_prefix, overlay);
+    }
+}
+
+fn apply_blocks(blocks: &mut [Block], address_prefix: &str, overlay: &PackageOverlay) {
+    for block in blocks {
+        match block {
+            Block::Paragraph(unit) | Block::Quote(unit) => {
+                apply_unit(unit, address_prefix, overlay);
+            }
+            Block::List { items, .. } => {
+                for unit in items {
+                    apply_unit(unit, address_prefix, overlay);
+                }
+            }
+            Block::Table { rows } => {
+                for unit in rows.iter_mut().flatten() {
+                    apply_unit(unit, address_prefix, overlay);
+                }
+            }
+            Block::Fence { .. } => {}
+        }
+    }
+}
+
+fn apply_unit(unit: &mut Unit, address_prefix: &str, overlay: &PackageOverlay) {
+    let Some(fact) = unit.fact.as_mut() else {
+        return;
+    };
+    let Some(id) = fact.id.as_deref() else {
+        return;
+    };
+    let Some(status) = overlay.status_for(&format!("{address_prefix}{id}")) else {
+        return;
+    };
+    match fact.status.as_mut() {
+        Some(authored) => {
+            authored.stage = status.stage();
+            authored.state = status.state();
+        }
+        None => fact.status = Some(status_element(status)),
+    }
+}
+
+fn status_element(status: FactStatus) -> StatusEl {
+    StatusEl {
+        stage: status.stage(),
+        state: status.state(),
+        action: None,
+        actionstage: None,
+        audience: Vec::new(),
+        comment: None,
+        r#ref: None,
+    }
 }
 
 fn is_spec_document(rel: &Path) -> bool {

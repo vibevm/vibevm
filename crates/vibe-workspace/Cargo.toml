@@ -24,6 +24,7 @@ serde.workspace = true
 tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
+vibe-facts.workspace = true
 vibe-spec.workspace = true
 
 [dev-dependencies]

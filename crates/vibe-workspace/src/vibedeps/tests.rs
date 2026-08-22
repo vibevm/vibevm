@@ -1,9 +1,4 @@
-//! Unit tests for the vibedeps cell, out-of-line per the file-length
-//! budget. Included via cfg(test) #[path] mod tests; the module-tree
-//! position is unchanged, so use super::* resolves as in the inline form.
-//!
-//! Non-`#[test]` helpers carry `#[cfg(test)]` so the file-grain conform
-//! frontend scopes their `unwrap`s as test code.
+//! Out-of-line unit oracles for the vibedeps cell.
 
 use super::*;
 use specmark::verifies;
@@ -28,6 +23,22 @@ fn write(dir: &Path, rel: &str, body: &str) {
     let path = dir.join(rel);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, body).unwrap();
+}
+
+#[cfg(test)]
+fn derive_markdown(ws: &Path, src: &Path, name: &str) -> PathBuf {
+    materialise_with_spec_format(
+        ws,
+        &g("org.example"),
+        name,
+        &version("1.0.0"),
+        src,
+        CopyMode::Copy,
+        SpecFormat::Markdown,
+        "sha256:source",
+    )
+    .unwrap();
+    slot_abs_path(ws, &g("org.example"), name, &version("1.0.0"))
 }
 
 #[test]
@@ -272,7 +283,6 @@ fn in_place_slot_path_is_unversioned() {
 )]
 fn materialise_in_place_moves_the_clone_keeping_git() {
     let ws = TempDir::new().unwrap();
-    // A fetched clone: content plus a `.git` (the live working tree).
     let clone = TempDir::new().unwrap();
     write(clone.path(), "vibe.toml", "[package]\n");
     write(clone.path(), ".git/HEAD", "ref: refs/heads/main\n");
@@ -283,10 +293,8 @@ fn materialise_in_place_moves_the_clone_keeping_git() {
     let slot = ws.path().join("vibedeps/org.vibevm.giant");
     assert!(slot.join("vibe.toml").is_file());
     assert!(slot.join("src/main.rs").is_file());
-    // The `.git` is preserved — the slot stays a git working tree.
     assert!(slot.join(".git/HEAD").is_file());
     assert!(is_in_place_slot(ws.path(), &g("org.vibevm"), "giant"));
-    // The source was moved, not copied.
     assert!(!clone.path().join("vibe.toml").exists());
 }
 
@@ -496,10 +504,6 @@ fn redbook_materialises_as_six_xml_specs_and_two_verbatim_files() {
     assert_eq!(manifest.derived_hash, compute_derived_hash(&slot).unwrap());
 }
 
-/// A child STATIC.md/INDEX.md written into a transformed slot by boot
-/// regeneration neither stales the derived hash nor counts against the
-/// slot's format purity — generated projections are outside the derived
-/// identity (the S5 polygon caught both failures live).
 #[test]
 fn generated_boot_artifacts_stay_outside_the_derived_identity() {
     let dir = tempfile::tempdir().expect("tempdir");
@@ -533,4 +537,62 @@ fn generated_boot_artifacts_stay_outside_the_derived_identity() {
         slot,
         &slot.join("spec/boot/03-flow.md")
     ));
+}
+
+#[test]
+fn package_overlay_is_a_same_format_derivation_input() {
+    let src = TempDir::new().unwrap();
+    let marked = "# Rules\n\n@fact:A A. <status stage=\"spec\" state=\"work\" action=\"drift\" comment=\"author\"/>\n\n@fact:B B. @status:spec/done\n";
+    let untouched = "# Raw\n\n@fact:RAW   Spacing stays.   @status:spec/work\n";
+    write(src.path(), "spec/RULE.md", marked);
+    write(src.path(), "spec/RAW.md", untouched);
+    let ws = TempDir::new().unwrap();
+    write(
+        ws.path(),
+        "vibefacts/org.example.overlay.toml",
+        "schema = 1\n\n[[fact]]\naddress = \"spec://org.example/overlay/RULE#A\"\norigin = \"package\"\npackage = \"org.example/overlay\"\nstatus = \"impl/done\"\n\n[[fact]]\naddress = \"spec://org.example/overlay/RULE#B\"\norigin = \"package\"\npackage = \"org.example/overlay\"\n",
+    );
+    let slot = derive_markdown(ws.path(), src.path(), "overlay");
+    let result = fs::read_to_string(slot.join("spec/RULE.md")).unwrap();
+    assert!(result.contains("stage=\"impl\" state=\"done\" action=\"drift\" comment=\"author\""));
+    assert!(result.contains("@fact:B B. @status:spec/done"));
+    assert_eq!(
+        fs::read_to_string(slot.join("spec/RAW.md")).unwrap(),
+        untouched
+    );
+    let manifest = read_derived_manifest(&slot).unwrap();
+    assert_eq!(
+        manifest
+            .files
+            .iter()
+            .find(|file| file.source == "spec/RULE.md")
+            .map(|file| file.disposition),
+        Some(DerivedFileDisposition::Converted)
+    );
+    assert_eq!(
+        manifest.overlay_hash,
+        vibe_facts::overlay_file_hash(ws.path(), "org.example/overlay")
+    );
+    assert!(format_is_current(&slot, SpecFormat::Markdown));
+    fs::write(
+        ws.path().join("vibefacts/org.example.overlay.toml"),
+        "schema = 1\n",
+    )
+    .unwrap();
+    assert!(!format_is_current(&slot, SpecFormat::Markdown));
+
+    let empty = TempDir::new().unwrap();
+    write(
+        empty.path(),
+        "vibefacts/org.example.plain.toml",
+        "schema = 1\n",
+    );
+    let with_empty = derive_markdown(empty.path(), src.path(), "plain");
+    let empty_bytes = fs::read(with_empty.join("spec/RULE.md")).unwrap();
+    let absent = TempDir::new().unwrap();
+    let without_dir = derive_markdown(absent.path(), src.path(), "plain");
+    assert_eq!(
+        empty_bytes,
+        fs::read(without_dir.join("spec/RULE.md")).unwrap()
+    );
 }

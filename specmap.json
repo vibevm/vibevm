@@ -5440,10 +5440,19 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 314,
+      "line": 316,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 422,
+      "end_line": 424,
       "fingerprint": "tok1:2d2e52850797fa37bdce84c20b4b9275e16559c4704a9fbc8b4c1900899c8295"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/overlay.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_facts::overlay",
+      "end_line": 3,
+      "fingerprint": "tok1:0abf65d3f6e1a4769ac4455015931a108063b1a0049ac9676694a584abe6dcb9"
     },
     {
       "crate_name": "vibe-facts",
@@ -10084,45 +10093,45 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 328,
+      "line": 336,
       "symbol": "vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once",
-      "end_line": 342,
+      "end_line": 350,
       "fingerprint": "tok1:84bf25b0184f1a36564df450028c078c52003bc02c70cffa12ca4a30af3d33e1"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 256,
+      "line": 267,
       "symbol": "vibe_workspace::vibedeps::tests::in_place_slot_path_is_unversioned",
-      "end_line": 266,
+      "end_line": 277,
       "fingerprint": "tok1:5e145eb914e11ebadc6e1f93db37ffade8307250b0509298cf852b289c47bfd2"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 293,
+      "line": 301,
       "symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
-      "end_line": 313,
+      "end_line": 321,
       "fingerprint": "tok1:fcc59c8a4894d230d704a86ff8eea2dd64a411ddc2579c6a400f1bbcf06282b2"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 226,
+      "line": 237,
       "symbol": "vibe_workspace::vibedeps::tests::materialise_hardlink_mode_places_the_full_tree",
-      "end_line": 254,
+      "end_line": 265,
       "fingerprint": "tok1:f596087ce9a6f9ff7104b1221231f7318e403e8037fe4fd6e8e002d10dfa33c9"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 268,
+      "line": 279,
       "symbol": "vibe_workspace::vibedeps::tests::materialise_in_place_moves_the_clone_keeping_git",
-      "end_line": 291,
+      "end_line": 299,
       "fingerprint": "tok1:db7b0170d17b84e811d453e52c7a32f01d45558c4692bcd5c77e9a6c70ca2463"
     },
     {
@@ -14377,9 +14386,17 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 324,
+      "line": 326,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/overlay.rs",
+      "from_symbol": "vibe_facts::overlay",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#laws",
       "verb": "implements"
     },
     {
@@ -18715,7 +18732,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once",
-      "line": 329,
+      "line": 337,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#vendoring",
       "verb": "verifies",
@@ -18724,7 +18741,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::in_place_slot_path_is_unversioned",
-      "line": 257,
+      "line": 268,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18733,7 +18750,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
-      "line": 294,
+      "line": 302,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18742,7 +18759,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::materialise_hardlink_mode_places_the_full_tree",
-      "line": 227,
+      "line": 238,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#hardlink",
       "verb": "verifies",
@@ -18751,7 +18768,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::materialise_in_place_moves_the_clone_keeping_git",
-      "line": 269,
+      "line": 280,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -76300,31 +76317,31 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "line": 227,
+      "line": 238,
       "message": "edge `vibe_workspace::vibedeps::tests::materialise_hardlink_mode_places_the_full_tree` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#hardlink` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "line": 257,
+      "line": 268,
       "message": "edge `vibe_workspace::vibedeps::tests::in_place_slot_path_is_unversioned` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "line": 269,
+      "line": 280,
       "message": "edge `vibe_workspace::vibedeps::tests::materialise_in_place_moves_the_clone_keeping_git` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "line": 294,
+      "line": 302,
       "message": "edge `vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "line": 329,
+      "line": 337,
       "message": "edge `vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#vendoring` carries no kind/revision line yet"
     },
     {

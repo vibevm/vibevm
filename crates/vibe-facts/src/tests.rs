@@ -164,3 +164,42 @@ fn sync_addresses_use_the_canonical_slug_truncated_doc_path() {
             .is_empty()
     );
 }
+
+#[test]
+fn package_overlay_filters_statuses_and_hashes_exact_file_bytes() {
+    let temp = tempdir().expect("tempdir");
+    let mut registry = Registry::default();
+    let done = package_fact("spec://org.example/pkg/spec/RULE#DONE", "impl/done");
+    let mut indeterminate = package_fact(
+        "spec://org.example/pkg/spec/RULE#INDETERMINATE",
+        "spec/work",
+    );
+    indeterminate.status = None;
+    registry
+        .upsert(temp.path(), done.clone())
+        .expect("done entry");
+    registry
+        .upsert(temp.path(), indeterminate.clone())
+        .expect("indeterminate entry");
+
+    let overlay = registry.package_overlay("org.example/pkg");
+    assert_eq!(overlay.status_for(&done.address), done.status);
+    assert_eq!(overlay.status_for(&indeterminate.address), None);
+    assert!(overlay.contains_address(&indeterminate.address));
+    assert!(overlay.contains_document("spec://org.example/pkg/spec/RULE#"));
+    assert!(!overlay.is_empty());
+    assert!(registry.package_overlay("org.example/other").is_empty());
+
+    let first = crate::overlay_file_hash(temp.path(), "org.example/pkg").expect("hash");
+    fs::write(
+        temp.path().join("vibefacts/org.example.pkg.toml"),
+        "schema = 1\n",
+    )
+    .expect("replace bytes");
+    let second = crate::overlay_file_hash(temp.path(), "org.example/pkg").expect("new hash");
+    assert_ne!(first, second);
+    assert_eq!(
+        crate::overlay_file_hash(temp.path(), "org.example/missing"),
+        None
+    );
+}

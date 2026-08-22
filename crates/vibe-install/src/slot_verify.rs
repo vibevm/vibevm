@@ -139,6 +139,16 @@ impl SlotVerifier for RegistrySlotVerifier {
                 ),
             };
         }
+        let live_overlay_hash = live_overlay_hash(slot_abs);
+        if manifest.overlay_hash != live_overlay_hash {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "derived manifest overlay_hash is {}, live package overlay hashes to {}",
+                    option_hash(&manifest.overlay_hash),
+                    option_hash(&live_overlay_hash)
+                ),
+            };
+        }
         match vibe_workspace::vibedeps::compute_derived_hash(slot_abs) {
             Ok(actual) if actual == manifest.derived_hash => SlotCheck::Verified,
             Ok(actual) => SlotCheck::DivergedDetail {
@@ -152,4 +162,19 @@ impl SlotVerifier for RegistrySlotVerifier {
             },
         }
     }
+}
+
+fn live_overlay_hash(slot: &Path) -> Option<String> {
+    let package_dir = slot.parent()?;
+    let vibedeps_dir = package_dir.parent()?;
+    if vibedeps_dir.file_name()?.to_str()? != vibe_workspace::vibedeps::VIBEDEPS_DIR {
+        return None;
+    }
+    let project_root = vibedeps_dir.parent()?;
+    let package_key = package_dir.file_name()?.to_str()?;
+    vibe_facts::overlay_file_hash(project_root, package_key)
+}
+
+fn option_hash(hash: &Option<String>) -> &str {
+    hash.as_deref().unwrap_or("<none>")
 }

@@ -58,11 +58,16 @@ fn facts_crud_filters_and_spec_to_registry_sync() {
     assert!(list.status.success());
     assert!(String::from_utf8_lossy(&list.stdout).contains(host));
 
-    user.vibe()
+    let deferred = user
+        .vibe()
         .current_dir(project.path())
         .args(["facts", "set", package, "impl/done"])
-        .assert()
-        .success();
+        .output()
+        .expect("set uninstalled package fact");
+    assert!(deferred.status.success());
+    assert!(
+        String::from_utf8_lossy(&deferred.stdout).contains("not installed; will apply at install")
+    );
     assert!(
         project
             .path()
@@ -108,4 +113,89 @@ fn facts_crud_filters_and_spec_to_registry_sync() {
         fs::read_to_string(spec).expect("spec unchanged"),
         spec_bytes
     );
+}
+
+#[test]
+fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().expect("project");
+    let registry = tempfile::tempdir().expect("registry");
+    let package = registry
+        .path()
+        .join("org.example")
+        .join("facts-pkg")
+        .join("v1.0.0");
+    fs::create_dir_all(package.join("spec")).expect("package spec dir");
+    fs::write(
+        package.join("vibe.toml"),
+        "[package]\ngroup = \"org.example\"\nname = \"facts-pkg\"\nkind = \"flow\"\nversion = \"1.0.0\"\nepoch = 1\n",
+    )
+    .expect("package manifest");
+    fs::write(
+        package.join("spec/RULE.md"),
+        "# Rules\n\n@fact:FIRST First. <status stage=\"spec\" state=\"work\" comment=\"author extra\"/>\n\n@fact:SECOND Second. @status:impl/done\n",
+    )
+    .expect("package spec");
+    fs::write(
+        project.path().join("vibe.toml"),
+        "[project]\ngroup = \"org.consumer\"\nname = \"demo\"\nversion = \"0.1.0\"\nspec_format = \"markdown\"\n",
+    )
+    .expect("project manifest");
+
+    user.vibe()
+        .args(["install", "org.example/facts-pkg@=1.0.0", "--path"])
+        .arg(project.path())
+        .arg("--registry")
+        .arg(registry.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let first = "spec://org.example/facts-pkg/RULE#FIRST";
+    let second = "spec://org.example/facts-pkg/RULE#SECOND";
+    user.vibe()
+        .current_dir(project.path())
+        .args(["facts", "set", first, "impl/done"])
+        .assert()
+        .success();
+
+    let slot = project.path().join("vibedeps/org.example.facts-pkg/1.0.0");
+    let materialised = fs::read_to_string(slot.join("spec/RULE.md")).expect("slot spec");
+    assert!(materialised.contains("stage=\"impl\" state=\"done\" comment=\"author extra\""));
+    let manifest = vibe_workspace::vibedeps::read_derived_manifest(&slot).expect("manifest");
+    assert!(manifest.overlay_hash.is_some());
+
+    let adopt = user
+        .vibe()
+        .current_dir(project.path())
+        .args(["facts", "adopt", "--package", "org.example/facts-pkg"])
+        .output()
+        .expect("adopt");
+    assert!(
+        adopt.status.success(),
+        "{}",
+        String::from_utf8_lossy(&adopt.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&adopt.stdout);
+    assert!(stdout.contains("added=1 kept=1"), "{stdout}");
+    let facts = fs::read_to_string(project.path().join("vibefacts/org.example.facts-pkg.toml"))
+        .expect("package facts");
+    assert!(facts.contains(first));
+    assert!(facts.contains(second));
+
+    user.vibe()
+        .current_dir(project.path())
+        .args(["facts", "rm", first])
+        .assert()
+        .success();
+    let restored = fs::read_to_string(slot.join("spec/RULE.md")).expect("restored slot spec");
+    assert!(restored.contains("stage=\"spec\" state=\"work\" comment=\"author extra\""));
+
+    user.vibe()
+        .arg("check")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--quiet")
+        .assert()
+        .success();
 }

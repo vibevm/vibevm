@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#model");
 
+pub mod overlay;
 mod store;
 pub mod sync;
 
@@ -18,6 +19,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 use specmark::spec;
 use thiserror::Error;
 
+pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use store::Registry;
 
 /// A validated progress-core stage/state pair as it appears on the TOML wire.

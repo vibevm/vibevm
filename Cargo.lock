@@ -4005,6 +4005,7 @@ dependencies = [
  "core-ai-native-specmark",
  "progress-core",
  "serde",
+ "sha2",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
@@ -4063,6 +4064,7 @@ dependencies = [
  "thiserror 2.0.18",
  "tracing",
  "vibe-core",
+ "vibe-facts",
  "vibe-registry",
  "vibe-resolver",
  "vibe-workspace",
@@ -4236,6 +4238,7 @@ dependencies = [
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
+ "vibe-facts",
  "vibe-spec",
  "vibe-specdoc",
 ]

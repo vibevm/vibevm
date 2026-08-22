@@ -27,6 +27,16 @@ use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
 use vibe_registry::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
+use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
+
+mod fetched {
+    pub struct Fetched {
+        pub cached: vibe_registry::CachedPackage,
+    }
+}
+
+#[path = "../src/slot_verify.rs"]
+mod production_slot_verify;
 
 /// An [`InstallSource`] serving two immutable fixture packages from temp
 /// trees with REAL `vibe-registry` content hashes — the fixture dir is
@@ -426,4 +436,45 @@ fn transformed_verify_accepts_intact_and_repairs_derived_hash_divergence() {
         repaired.outcome.integrity_warnings[0]
     );
     assert!(project.join(SLOT_A).join("target/SENTINEL").is_file());
+}
+
+#[test]
+fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
+    let outer = TempDir::new().unwrap();
+    fixture_pkg(outer.path(), "pkg-a", "# package A content\n");
+    fixture_pkg(outer.path(), "pkg-b", "# package B content\n");
+    write(
+        outer.path(),
+        "project/vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    );
+    let source = FixtureSource {
+        fixtures: outer.path().to_path_buf(),
+        graph: two_package_graph(),
+    };
+    let project = outer.path().join("project");
+    run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    write(&project, "vibefacts/org.vibevm.pkg-b.toml", "schema = 1\n");
+
+    let pkgref = PackageRef::parse("org.vibevm/pkg-b").unwrap();
+    let cached = source
+        .resolve_and_fetch(&pkgref, outer.path(), None)
+        .unwrap();
+    let dep = ResolvedDep {
+        kind: cached.package_meta().kind,
+        group: cached.resolved.group.clone(),
+        name: cached.resolved.name.clone(),
+        version: cached.resolved.version.clone(),
+        content_dir: cached.cache_dir.clone(),
+        manifest: cached.manifest.clone(),
+        requires: Vec::new(),
+        source_mutable: false,
+    };
+    let verifier =
+        production_slot_verify::RegistrySlotVerifier::from_fetched(&[fetched::Fetched { cached }]);
+    let verdict = verifier.verify_slot_for_format(&dep, &project.join(SLOT_B), SpecFormat::Xml);
+    assert!(matches!(
+        verdict,
+        SlotCheck::DivergedDetail { ref reason } if reason.contains("overlay_hash")
+    ));
 }
