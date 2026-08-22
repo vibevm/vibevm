@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T12:10:02Z",
+  "updated_at": "2026-08-22T13:59:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
+      "content_hash": "d5fdac219e90ae2d4f21be2606c63698b491478bc8e6494a5d1f53662b244154",
       "rollup": {
         "explicit": [
           "spec",
@@ -161160,7 +161160,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
+        "processed_hash": "d5fdac219e90ae2d4f21be2606c63698b491478bc8e6494a5d1f53662b244154",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161345,12 +161345,12 @@
           "STATIC-FOLLOWS-THE-TARGET": {
             "v": "confirmed",
             "ev": [
-              "owner ruling 2026-08-22 quoted near-verbatim; honestly records that it owner-revises the extension-stable STATIC.md residue named at the INHERITANCE-PARITY landing; wave perimeter enumerated from the live machinery (hybrid_emit dynamic_target_path, bootgen, generated CLAUDE.md block, INDEX targets, parity twins, by-name consumers)"
+              "owner ruling quoted; extension law + tape decision recorded BEFORE the build; landed 7d494f53/40e67d56: format module with exactly-one resolver (loud on both), polygon pins the three-target switch with stray deletion, markdown path byte-identical, host lane re-landed as STATIC.xml (26 <spec contributions verified live), INDEX pointer and generated instruction block follow, in-slot generated lane (git-practices) moved the same way; the build itself surfaced a missed machine reader (show effective) and it now reads the tape raw — recorded in the landing text"
             ]
           }
         },
-        "verified_at": "2026-08-22T09:39:19Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC"
+        "verified_at": "2026-08-22T13:59:46Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC + P045-STATIC-FORMAT"
       }
     },
     "spec/common/PROP-046-adoption-facts-registry.md": {

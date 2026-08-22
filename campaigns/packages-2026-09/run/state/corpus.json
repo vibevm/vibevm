@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T12:10:02Z",
+  "updated_at": "2026-08-22T13:59:45Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159773,12 +159773,12 @@
           "STATIC-FOLLOWS-THE-TARGET": {
             "v": "confirmed",
             "ev": [
-              "owner ruling 2026-08-22 quoted near-verbatim; honestly records that it owner-revises the extension-stable STATIC.md residue named at the INHERITANCE-PARITY landing; wave perimeter enumerated from the live machinery (hybrid_emit dynamic_target_path, bootgen, generated CLAUDE.md block, INDEX targets, parity twins, by-name consumers)"
+              "owner ruling quoted; extension law + tape decision recorded BEFORE the build; landed 7d494f53/40e67d56: format module with exactly-one resolver (loud on both), polygon pins the three-target switch with stray deletion, markdown path byte-identical, host lane re-landed as STATIC.xml (26 <spec contributions verified live), INDEX pointer and generated instruction block follow, in-slot generated lane (git-practices) moved the same way; the build itself surfaced a missed machine reader (show effective) and it now reads the tape raw — recorded in the landing text"
             ]
           }
         },
         "verified_at": "2026-08-22T09:39:19Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC"
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC + P045-STATIC-FORMAT"
       }
     },
     {
@@ -159797,7 +159797,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "d9d0068c4e4f0cce0ca4ff9d7d65f5bb6fedd9bd0272b45e715aba768554f89e",
+        "processed_hash": "6ea393184c406e399e047e8ae3fb0c3cf79931c2ebbf633040639635246a296a",
         "summary": {
           "confirmed": 14
         },
@@ -159887,7 +159887,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-22T09:39:19Z",
+        "verified_at": "2026-08-22T12:10:02Z",
         "verify_batch": "P046-VIBEFACTS-SPEC + P046-LANDED"
       }
     },

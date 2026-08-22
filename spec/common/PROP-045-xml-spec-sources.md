@@ -275,7 +275,29 @@ target path in hybrid emit, the bootgen emitter, the generated CLAUDE.md
 boot block, INDEX raw-snippet targets, the parity twins that pin the
 `.md` name, and every by-name consumer of `spec/boot/STATIC.md` (hooks,
 docs). Ordered by the owner as the next act after PROP-046's status
-waves. @status:spec/work
+waves. The compilate-form decision (recorded before the build): STATIC
+is and stays an AGENT-facing tape of contributions — under the `xml`
+target each contribution emits through the pivot's to_xml instead of
+the markdown projection, the `<!-- vibe:static … -->` provenance
+separators stay comments, and a single well-formed root is
+deliberately NOT promised (the compiled lane is not an input to the
+machine readers today, and wrapping thirty documents under one root
+would change anchor semantics for no consumer); the extension law is
+`xml → STATIC.xml`, `markdown → STATIC.md`, `mixed → STATIC.md` (the
+single canonical compilate for a per-file target, resolving PROP-046
+##OPEN-MIXED-STATIC); exactly one STATIC file may exist — both present
+is a loud generator error; consumers learn the name from the generated
+sources (the CLAUDE.md boot block, INDEX, the redirect) or by
+exactly-one existence, never by guessing. Landed (7d494f53 +
+40e67d56): the format module owns both names with the stray deleted on
+a switch (polygon-pinned across all three targets), contributions cross
+to_xml once post-qualification with the markdown path byte-identical,
+every chooser and generated-name exclusion selects through the module,
+exactly-one resolution replaced guessing in every machine reader (a
+new one — `show effective` — was found by the build itself and reads
+the lane as the tape it is), boot_directory fails loud on both names,
+and the host lane re-landed as STATIC.xml with 26 contributions.
+@status:impl/done
 
 @fact:HASH-LAW **The hash law under transformation (ADR-part, upgraded by
 the measure).** Source identity is untouched: the lockfile
