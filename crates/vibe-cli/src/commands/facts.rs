@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#cli");
 
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -9,8 +10,10 @@ use anyhow::{Context, Result, bail};
 use clap::{Args, Subcommand};
 use vibe_core::Group;
 use vibe_core::manifest::Lockfile;
-use vibe_facts::{FactEntry, FactOrigin, FactStatus, Registry, host_package, sync};
-use vibe_specdoc::doc::{Block, Section, SpecDoc, Unit};
+use vibe_facts::{
+    AuthoredFact, FactEntry, FactOrigin, FactStatus, Registry, adoption_counts, authored_facts,
+    host_package, orphans, remove_package_file, sync,
+};
 use vibe_workspace::{Workspace, vibedeps};
 
 use crate::output;
@@ -60,6 +63,18 @@ pub enum FactsSubcommand {
         #[arg(long)]
         prefix: Option<String>,
     },
+    /// Remove registry files whose source packages are no longer installed.
+    Clean {
+        /// Name orphaned files without deleting them.
+        #[arg(long)]
+        dry_run: bool,
+    },
+    /// Summarise consumer adoption against facts authored by each package.
+    Report {
+        /// Report only this `<group>/<name>` source package.
+        #[arg(long)]
+        package: Option<String>,
+    },
 }
 
 pub fn run(_ctx: &output::Context, args: FactsArgs) -> Result<()> {
@@ -80,6 +95,8 @@ pub fn run(_ctx: &output::Context, args: FactsArgs) -> Result<()> {
         FactsSubcommand::Rm { address } => rm(&root, &address),
         FactsSubcommand::Sync { write } => sync_command(&root, write),
         FactsSubcommand::Adopt { package, prefix } => adopt(&root, &package, prefix.as_deref()),
+        FactsSubcommand::Clean { dry_run } => clean(&root, dry_run),
+        FactsSubcommand::Report { package } => report(&root, package.as_deref()),
     }
 }
 
@@ -160,40 +177,26 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
 
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     let slot = installed_slot(root, package)?;
-    let inputs = slot_spec_inputs(&slot)?;
-    let mut authored = Vec::new();
-    for input in inputs {
-        let text = fs::read_to_string(&input.output)
-            .with_context(|| format!("reading `{}`", input.output.display()))?;
-        let doc = match input.output.extension().and_then(|ext| ext.to_str()) {
-            Some("md") => vibe_specdoc::from_markdown(&text),
-            Some("xml") => vibe_specdoc::from_xml(&text),
-            _ => continue,
-        }
-        .with_context(|| format!("parsing `{}` through vibe-specdoc", input.output.display()))?;
-        let address_prefix = format!(
-            "spec://{package}/{}#",
-            vibe_spec::canonical_doc_path(&input.source)
-        );
-        collect_authored(&doc, &address_prefix, &mut authored);
-    }
-    authored.sort_by(|a, b| a.0.cmp(&b.0));
+    let authored = slot_authored_facts(&slot, package)?;
 
     let mut registry = Registry::load(root)?;
     let mut added = 0usize;
     let mut kept = 0usize;
-    for (address, status) in authored {
-        if prefix.is_some_and(|prefix| !address.starts_with(prefix)) {
+    for authored in authored {
+        if prefix.is_some_and(|prefix| !authored.address.starts_with(prefix)) {
             continue;
         }
-        if registry.get(&address).is_some() {
+        let Some(status) = authored.status else {
+            continue;
+        };
+        if registry.get(&authored.address).is_some() {
             kept += 1;
             continue;
         }
         registry.upsert(
             root,
             FactEntry {
-                address,
+                address: authored.address,
                 origin: FactOrigin::Package,
                 package: Some(package.to_string()),
                 status: Some(status),
@@ -207,12 +210,124 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
     Ok(())
 }
 
+fn clean(root: &Path, dry_run: bool) -> Result<()> {
+    let installed = installed_packages(root)?;
+    let registry = Registry::load(root)?;
+    let package_files: BTreeSet<String> = registry
+        .entries()
+        .filter(|entry| entry.origin == FactOrigin::Package)
+        .filter_map(|entry| entry.package.clone())
+        .collect();
+    let orphaned = orphans(root, &installed)?;
+    let mut removed = 0usize;
+    for orphan in &orphaned {
+        let file = project_relative(root, &orphan.file);
+        if dry_run {
+            println!(
+                "would remove {file} ({} entries; package {})",
+                orphan.entries, orphan.package
+            );
+        } else if remove_package_file(root, &orphan.package)? {
+            removed += 1;
+            println!(
+                "removed {file} ({} entries; package {})",
+                orphan.entries, orphan.package
+            );
+        }
+    }
+    let kept = package_files.len().saturating_sub(removed);
+    if dry_run {
+        println!(
+            "facts clean --dry-run: removed=0 kept={} orphaned={}",
+            package_files.len(),
+            orphaned.len()
+        );
+    } else {
+        println!("facts clean: removed={removed} kept={kept}");
+    }
+    Ok(())
+}
+
+fn report(root: &Path, selected: Option<&str>) -> Result<()> {
+    let registry = Registry::load(root)?;
+    let installed = installed_packages(root)?;
+    let packages: BTreeSet<String> = match selected {
+        Some(package) => [package.to_string()].into_iter().collect(),
+        None => registry
+            .entries()
+            .filter(|entry| entry.origin == FactOrigin::Package)
+            .filter_map(|entry| entry.package.clone())
+            .collect(),
+    };
+    let mut adopted = 0usize;
+    let mut indeterminate = 0usize;
+    let mut total_authored = 0usize;
+    let mut unavailable = 0usize;
+    for package in &packages {
+        let authored = if installed.contains(package) {
+            materialised_slot(root, package)?
+                .map(|slot| slot_authored_facts(&slot, package))
+                .transpose()?
+        } else {
+            None
+        };
+        let counts = adoption_counts(&registry, package, authored.as_deref().unwrap_or_default());
+        adopted += counts.adopted;
+        indeterminate += counts.indeterminate;
+        if authored.is_some() {
+            total_authored += counts.total_authored;
+            println!(
+                "{package}  {}/{} (indeterminate {})",
+                counts.adopted, counts.total_authored, counts.indeterminate
+            );
+        } else {
+            unavailable += 1;
+            println!(
+                "{package}  {}/? (indeterminate {}) — total unavailable: package has no materialised slot",
+                counts.adopted, counts.indeterminate
+            );
+        }
+    }
+    println!(
+        "TOTAL  adopted={adopted} authored={total_authored} indeterminate={indeterminate} packages={} unavailable={unavailable}",
+        packages.len()
+    );
+    Ok(())
+}
+
+fn installed_packages(root: &Path) -> Result<BTreeSet<String>> {
+    let workspace = Workspace::discover(root)?;
+    let lock_path = workspace.root.join(Lockfile::FILENAME);
+    if !lock_path.is_file() {
+        return Ok(BTreeSet::new());
+    }
+    let lock = Lockfile::read(&lock_path)
+        .with_context(|| format!("reading `{}` as installedness source", lock_path.display()))?;
+    Ok(lock
+        .packages
+        .iter()
+        .map(|package| format!("{}/{}", package.group, package.name))
+        .collect())
+}
+
+fn project_relative(root: &Path, path: &Path) -> String {
+    path.strip_prefix(root)
+        .unwrap_or(path)
+        .to_string_lossy()
+        .replace('\\', "/")
+}
+
 struct SlotSpecInput {
     source: String,
     output: PathBuf,
 }
 
 fn installed_slot(root: &Path, package: &str) -> Result<PathBuf> {
+    materialised_slot(root, package)?
+        .with_context(|| format!("package `{package}` has no materialised installed slot"))
+}
+
+fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
     let Some((group, name)) = package.split_once('/') else {
         bail!("package must use the `<group>/<name>` form: {package}");
     };
@@ -227,21 +342,21 @@ fn installed_slot(root: &Path, package: &str) -> Result<PathBuf> {
     let locked = lock
         .packages
         .iter()
-        .find(|locked| locked.group == group && locked.name == name)
-        .with_context(|| format!("package `{package}` is not installed"))?;
-    let slot = vibedeps::slot_abs_path(
-        &workspace.root,
-        &locked.group,
-        &locked.name,
-        &locked.version,
-    );
-    if !slot.is_dir() {
-        bail!(
-            "package `{package}` has no materialised slot at `{}`",
-            slot.display()
-        );
-    }
-    Ok(slot)
+        .find(|locked| locked.group == group && locked.name == name);
+    let Some(locked) = locked else {
+        return Ok(None);
+    };
+    let slot = if locked.materialization.is_in_place() {
+        vibedeps::in_place_slot_abs_path(&workspace.root, &locked.group, &locked.name)
+    } else {
+        vibedeps::slot_abs_path(
+            &workspace.root,
+            &locked.group,
+            &locked.name,
+            &locked.version,
+        )
+    };
+    Ok(slot.is_dir().then_some(slot))
 }
 
 fn slot_spec_inputs(slot: &Path) -> Result<Vec<SlotSpecInput>> {
@@ -260,6 +375,28 @@ fn slot_spec_inputs(slot: &Path) -> Result<Vec<SlotSpecInput>> {
     collect_slot_specs(slot, slot, &mut inputs)?;
     inputs.sort_by(|a, b| a.source.cmp(&b.source));
     Ok(inputs)
+}
+
+fn slot_authored_facts(slot: &Path, package: &str) -> Result<Vec<AuthoredFact>> {
+    let inputs = slot_spec_inputs(slot)?;
+    let mut authored = Vec::new();
+    for input in inputs {
+        let text = fs::read_to_string(&input.output)
+            .with_context(|| format!("reading `{}`", input.output.display()))?;
+        let doc = match input.output.extension().and_then(|ext| ext.to_str()) {
+            Some("md") => vibe_specdoc::from_markdown(&text),
+            Some("xml") => vibe_specdoc::from_xml(&text),
+            _ => continue,
+        }
+        .with_context(|| format!("parsing `{}` through vibe-specdoc", input.output.display()))?;
+        let address_prefix = format!(
+            "spec://{package}/{}#",
+            vibe_spec::canonical_doc_path(&input.source)
+        );
+        authored.extend(authored_facts(&doc, &address_prefix));
+    }
+    authored.sort_by(|a, b| a.address.cmp(&b.address));
+    Ok(authored)
 }
 
 fn collect_slot_specs(root: &Path, dir: &Path, out: &mut Vec<SlotSpecInput>) -> Result<()> {
@@ -298,52 +435,6 @@ fn is_spec_document(rel: &str) -> bool {
         Some("md" | "xml")
     );
     spec_extension && (rel.starts_with("spec/") || matches!(rel, "README.md" | "README.xml"))
-}
-
-fn collect_authored(doc: &SpecDoc, prefix: &str, out: &mut Vec<(String, FactStatus)>) {
-    collect_blocks(&doc.preamble, prefix, out);
-    for section in &doc.sections {
-        collect_section(section, prefix, out);
-    }
-}
-
-fn collect_section(section: &Section, prefix: &str, out: &mut Vec<(String, FactStatus)>) {
-    collect_blocks(&section.blocks, prefix, out);
-    for child in &section.sections {
-        collect_section(child, prefix, out);
-    }
-}
-
-fn collect_blocks(blocks: &[Block], prefix: &str, out: &mut Vec<(String, FactStatus)>) {
-    for block in blocks {
-        match block {
-            Block::Paragraph(unit) | Block::Quote(unit) => collect_unit(unit, prefix, out),
-            Block::List { items, .. } => {
-                for unit in items {
-                    collect_unit(unit, prefix, out);
-                }
-            }
-            Block::Table { rows } => {
-                for unit in rows.iter().flatten() {
-                    collect_unit(unit, prefix, out);
-                }
-            }
-            Block::Fence { .. } => {}
-        }
-    }
-}
-
-fn collect_unit(unit: &Unit, prefix: &str, out: &mut Vec<(String, FactStatus)>) {
-    let Some(fact) = unit.fact.as_ref() else {
-        return;
-    };
-    let (Some(id), Some(status)) = (fact.id.as_deref(), fact.status.as_ref()) else {
-        return;
-    };
-    out.push((
-        format!("{prefix}{id}"),
-        FactStatus::new(status.stage, status.state),
-    ));
 }
 
 fn sync_command(root: &Path, write: bool) -> Result<()> {

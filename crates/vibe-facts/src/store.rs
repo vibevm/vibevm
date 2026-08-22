@@ -226,7 +226,7 @@ pub(crate) fn write_file(
     })
 }
 
-fn remove_empty_home(home: &Path) -> Result<(), RegistryError> {
+pub(crate) fn remove_empty_home(home: &Path) -> Result<(), RegistryError> {
     if !home.is_dir() {
         return Ok(());
     }

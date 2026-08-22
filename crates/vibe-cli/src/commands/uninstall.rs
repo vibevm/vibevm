@@ -16,6 +16,7 @@ use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{Group, PackageRef};
+use vibe_facts::{package_file_path, remove_package_file};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::regenerate_boot;
 use vibe_workspace::materialization::{DestructiveGuard, guard_destructive};
@@ -150,7 +151,57 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
 
     lockfile.write(workspace.lockfile_path())?;
 
-    emit_report(ctx, group, &pkgref.name, &version.to_string(), &slot)
+    let package = format!("{group}/{}", pkgref.name);
+    let adoption_facts =
+        handle_adoption_facts(&project_root, &package, interactive, args.assume_yes)?;
+    emit_report(
+        ctx,
+        group,
+        &pkgref.name,
+        &version.to_string(),
+        &slot,
+        &adoption_facts,
+    )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum AdoptionFactsDisposition {
+    Absent,
+    Removed(String),
+    Kept(String),
+}
+
+fn handle_adoption_facts(
+    project_root: &Path,
+    package: &str,
+    interactive: bool,
+    assume_yes: bool,
+) -> Result<AdoptionFactsDisposition> {
+    let file = package_file_path(project_root, package);
+    if !file.is_file() {
+        return Ok(AdoptionFactsDisposition::Absent);
+    }
+    let display = file
+        .strip_prefix(project_root)
+        .unwrap_or(&file)
+        .to_string_lossy()
+        .replace('\\', "/");
+    let remove = if interactive && !assume_yes {
+        Confirm::new()
+            .with_prompt(format!("Remove its adoption facts ({display})?"))
+            .default(false)
+            .interact()
+            .context("reading adoption-facts confirmation")?
+    } else {
+        false
+    };
+    if !remove {
+        return Ok(AdoptionFactsDisposition::Kept(display));
+    }
+    if !remove_package_file(project_root, package)? {
+        bail!("adoption facts `{display}` disappeared before removal");
+    }
+    Ok(AdoptionFactsDisposition::Removed(display))
 }
 
 /// Remove the matching pkgref from the project manifest's
@@ -179,22 +230,52 @@ fn emit_report(
     name: &str,
     version: &str,
     slot: &str,
+    adoption_facts: &AdoptionFactsDisposition,
 ) -> Result<()> {
     if ctx.is_json() {
+        let adoption_facts = match adoption_facts {
+            AdoptionFactsDisposition::Absent => serde_json::json!({"status": "absent"}),
+            AdoptionFactsDisposition::Removed(path) => {
+                serde_json::json!({"status": "removed", "path": path})
+            }
+            AdoptionFactsDisposition::Kept(path) => serde_json::json!({
+                "status": "kept",
+                "path": path,
+                "hint": "run `vibe facts clean` to drop orphaned overlays",
+            }),
+        };
         ctx.emit_json(&serde_json::json!({
             "ok": true,
             "command": "uninstall",
             "package": format!("{group}/{name}"),
             "version": version,
             "removed_slot": slot,
+            "adoption_facts": adoption_facts,
         }))?;
         return Ok(());
     }
     if ctx.is_quiet() {
-        ctx.summary(&format!("vibe uninstall: {group}/{name}@{version} removed"));
+        let facts = match adoption_facts {
+            AdoptionFactsDisposition::Kept(path) => {
+                format!("; kept {path}; run `vibe facts clean` to drop orphaned overlays")
+            }
+            AdoptionFactsDisposition::Removed(path) => format!("; removed {path}"),
+            AdoptionFactsDisposition::Absent => String::new(),
+        };
+        ctx.summary(&format!(
+            "vibe uninstall: {group}/{name}@{version} removed{facts}"
+        ));
         return Ok(());
     }
     ctx.removed(slot);
+    match adoption_facts {
+        AdoptionFactsDisposition::Absent => {}
+        AdoptionFactsDisposition::Removed(path) => ctx.removed(path),
+        AdoptionFactsDisposition::Kept(path) => ctx.skipped(
+            path,
+            "adoption facts kept; run `vibe facts clean` to drop orphaned overlays",
+        ),
+    }
     ctx.summary(&format!(
         "\nUninstalled {group}/{name}@{version} — removed its vibedeps/ slot, regenerated boot."
     ));

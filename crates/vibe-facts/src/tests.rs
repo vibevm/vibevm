@@ -2,13 +2,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#model");
 
+use std::collections::BTreeSet;
 use std::fs;
 
 use tempfile::tempdir;
 
 use crate::store::{read_file, write_file};
 use crate::sync;
-use crate::{FactEntry, FactOrigin, FactStatus, Registry, RegistryError};
+use crate::{
+    FactEntry, FactOrigin, FactStatus, Registry, RegistryError, adoption_counts, authored_facts,
+    orphans, package_file_path, remove_package_file,
+};
 
 fn status(value: &str) -> FactStatus {
     FactStatus::parse(value).expect("test status")
@@ -202,4 +206,97 @@ fn package_overlay_filters_statuses_and_hashes_exact_file_bytes() {
         crate::overlay_file_hash(temp.path(), "org.example/missing"),
         None
     );
+}
+
+#[test]
+fn lifecycle_reports_only_uninstalled_package_files_and_prunes_empty_home() {
+    let temp = tempdir().expect("tempdir");
+    let mut registry = Registry::default();
+    let package = package_fact("spec://org.example/pkg/spec/RULE#ONE", "impl/done");
+    registry
+        .upsert(temp.path(), package)
+        .expect("package overlay");
+    registry
+        .upsert(
+            temp.path(),
+            FactEntry {
+                address: "spec://org.consumer/demo/common/RULE#HOST".to_string(),
+                origin: FactOrigin::Spec,
+                package: None,
+                status: Some(status("impl/done")),
+                comment: None,
+            },
+        )
+        .expect("host overlay");
+
+    let installed = BTreeSet::from(["org.example/pkg".to_string()]);
+    assert!(
+        orphans(temp.path(), &installed)
+            .expect("installed")
+            .is_empty()
+    );
+
+    let orphaned = orphans(temp.path(), &BTreeSet::new()).expect("orphans");
+    assert_eq!(orphaned.len(), 1);
+    assert_eq!(orphaned[0].package, "org.example/pkg");
+    assert_eq!(orphaned[0].entries, 1);
+    assert_eq!(
+        orphaned[0].file,
+        package_file_path(temp.path(), "org.example/pkg")
+    );
+    assert!(remove_package_file(temp.path(), "org.example/pkg").expect("remove"));
+    assert!(!remove_package_file(temp.path(), "org.example/pkg").expect("absent"));
+    assert!(temp.path().join("vibefacts/spec.toml").is_file());
+
+    let package_only = tempdir().expect("package-only tempdir");
+    let mut registry = Registry::default();
+    registry
+        .upsert(
+            package_only.path(),
+            package_fact("spec://org.example/pkg/spec/RULE#ONE", "impl/done"),
+        )
+        .expect("package-only overlay");
+    assert!(
+        remove_package_file(package_only.path(), "org.example/pkg").expect("remove package-only")
+    );
+    assert!(!package_only.path().join("vibefacts").exists());
+}
+
+#[test]
+fn shared_pivot_counts_authored_adopted_and_indeterminate_facts() {
+    let doc = vibe_specdoc::from_markdown(
+        "# Rules\n\n@fact:FIRST First. @status:impl/done\n\n## Child\n\n- @fact:SECOND Second.\n",
+    )
+    .expect("pivot parse");
+    let authored = authored_facts(&doc, "spec://org.example/pkg/RULE#");
+    assert_eq!(authored.len(), 2);
+    assert_eq!(authored[0].address, "spec://org.example/pkg/RULE#FIRST");
+    assert_eq!(authored[0].status, Some(status("impl/done")));
+    assert_eq!(authored[1].address, "spec://org.example/pkg/RULE#SECOND");
+    assert_eq!(authored[1].status, None);
+
+    let temp = tempdir().expect("tempdir");
+    let mut registry = Registry::default();
+    registry
+        .upsert(
+            temp.path(),
+            package_fact("spec://org.example/pkg/RULE#FIRST", "impl/done"),
+        )
+        .expect("adopted entry");
+    registry
+        .upsert(
+            temp.path(),
+            FactEntry {
+                address: "spec://org.example/pkg/RULE#SECOND".to_string(),
+                origin: FactOrigin::Package,
+                package: Some("org.example/pkg".to_string()),
+                status: None,
+                comment: None,
+            },
+        )
+        .expect("indeterminate entry");
+    let counts = adoption_counts(&registry, "org.example/pkg", &authored);
+    assert_eq!(counts.adopted, 1);
+    assert_eq!(counts.indeterminate, 1);
+    assert_eq!(counts.total_authored, 2);
 }

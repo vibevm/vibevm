@@ -20,6 +20,9 @@ toml.workspace = true
 # The spec:// router's forward law (canonical_doc_path) — sync mints
 # addresses in the same form the router resolves.
 vibe-spec.workspace = true
+# The PROP-045 pivot IR is the one shared traversal for authored package
+# facts used by both adopt and the adoption report.
+vibe-specdoc.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
