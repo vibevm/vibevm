@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T08:39:33Z",
+  "updated_at": "2026-08-22T09:39:19Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "1224e2f133a4f5836920ee3b71e785149e76ab5c5a4c8490253439ec9bdc19b1",
+      "content_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
       "rollup": {
         "explicit": [
           "spec",
@@ -161152,15 +161152,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 31,
-        "fact_count": 30,
+        "marker_count": 32,
+        "fact_count": 31,
         "unmarked_facts": 0
       },
-      "marker_count": 31,
+      "marker_count": 32,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1224e2f133a4f5836920ee3b71e785149e76ab5c5a4c8490253439ec9bdc19b1",
+        "processed_hash": "4ffd31399fbd3f60582237630c045f1fbd100ddd038d09c700f59ab42274bc1c",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161341,10 +161341,130 @@
             "ev": [
               "owner ruling 2026-08-22 quoted near-verbatim; law implemented both sides: writer branch xml_out.rs (all-fact condition over is_meaningful), reader facts_block in new pivot xml_facts.rs + engine xmlspec/facts.rs with the four loud errors pinned by tests (non-fact child, bare text, empty group, missing ordered); facts reserved in both elementability predicates; both forms parse to the same Block::List and legacy normalises (pinned); engine parity test proves content-hash identity between shapes; golden re-pinned with two <facts> groups / 45 named facts; recipe specdoc/4, host 37/37 slots re-materialised (commits 0c429f0a, a242db25); regression sweep gpt-5.5@low over rebuilt polygons 9/9 with clean negative control"
             ]
+          },
+          "STATIC-FOLLOWS-THE-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "owner ruling 2026-08-22 quoted near-verbatim; honestly records that it owner-revises the extension-stable STATIC.md residue named at the INHERITANCE-PARITY landing; wave perimeter enumerated from the live machinery (hybrid_emit dynamic_target_path, bootgen, generated CLAUDE.md block, INDEX targets, parity twins, by-name consumers)"
+            ]
           }
         },
-        "verified_at": "2026-08-22T08:39:33Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP"
+        "verified_at": "2026-08-22T09:39:19Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP + P046-VIBEFACTS-SPEC"
+      }
+    },
+    "spec/common/PROP-046-adoption-facts-registry.md": {
+      "content_hash": "d9d0068c4e4f0cce0ca4ff9d7d65f5bb6fedd9bd0272b45e715aba768554f89e",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 15,
+        "fact_count": 14,
+        "unmarked_facts": 0
+      },
+      "marker_count": 15,
+      "unit_count": 7,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "d9d0068c4e4f0cce0ca4ff9d7d65f5bb6fedd9bd0272b45e715aba768554f89e",
+        "verdicts": {
+          "REGISTRY-MANDATE": {
+            "v": "confirmed",
+            "ev": [
+              "owner design ruling 2026-08-22 quoted near-verbatim from the chat dialogue; all elements of the quoted design present in the law sections"
+            ]
+          },
+          "WHY-THE-AXIS-IS-MISSING": {
+            "v": "confirmed",
+            "ev": [
+              "axis check against live vocabulary: progress-core model.rs enums Stage/State/Action{Continue,Drift,Rework,Remove}/Audience — no per-consumer adoption axis exists; genre split verified against packages (core-ai-native ships engines in-package; wal/git-practices are practice genre)"
+            ]
+          },
+          "REGISTRY-HOME": {
+            "v": "confirmed",
+            "ev": [
+              "design decision recorded as agreed in the dialogue: per-package TOML files, tracked, root vibefacts/; matches house root-file style (AGENT-MODE.toml) and slot-naming convention of vibedeps"
+            ]
+          },
+          "REGISTRY-KEY": {
+            "v": "confirmed",
+            "ev": [
+              "fully-qualified spec:// addressing exists (PROP-029); owner's requirement to store source package address quoted in the mandate"
+            ]
+          },
+          "TRI-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "dialect check: Fact.status is Option in the pivot model (doc.rs is_meaningful id||status); host judged-corpus law unchanged (scan reports 0/21512-class unmarked-fact accounting)"
+            ]
+          },
+          "LAW-SOVEREIGNTY": {
+            "v": "confirmed",
+            "ev": [
+              "owner's import-ignores-statuses rule quoted; bulk-adopt escape hatch accepted in the dialogue for implementation-shipping packages"
+            ]
+          },
+          "LAW-SYNC": {
+            "v": "confirmed",
+            "ev": [
+              "asymmetric tie-break accepted by owner («с остальным я полностью согласен»): spec authoritative for host facts, registry for package facts; machine gate over convention — house pattern (panel gates)"
+            ]
+          },
+          "LAW-DERIVATION": {
+            "v": "confirmed",
+            "ev": [
+              "hash-law collision analysed against slot_verify.rs (recipe+hash checks) and PROP-045 ##HASH-LAW; point-edit-as-re-derivation accepted by owner; per-package registry file hash as slot input drives targeted staleness"
+            ]
+          },
+          "LAW-STATIC-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "owner ruling 2026-08-22: STATIC is a cache-stable prefix invalidated only by structural causes; strong form (statuses never compiled into STATIC) adopted in the dialogue; testable as byte-identity across rebuilds"
+            ]
+          },
+          "LAW-LIFECYCLE": {
+            "v": "confirmed",
+            "ev": [
+              "owner's keep-on-removal + uninstall dialog + facts clean quoted in the mandate; tombstone-style reporting on upgrade drift accepted"
+            ]
+          },
+          "CLI-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "verb set covers the owner's CRUD/search/transitions plus the accepted refinements (adopt/sync/clean/report); uninstall verb exists in the CLI surface"
+            ]
+          },
+          "WAVES": {
+            "v": "confirmed",
+            "ev": [
+              "build order is the owner's explicit sequencing 2026-08-22: status waves first, then the STATIC-format wave («следующим действием после правки статусов»), then the cache-stable-prefix wave (announced as the task after statuses)"
+            ]
+          },
+          "OPEN-MIXED-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open: mixed target is per-file copy-through while STATIC is a single generated compilate; deferred to the STATIC-format wave by design"
+            ]
+          },
+          "OPEN-JUDGED-CORPUS": {
+            "v": "confirmed",
+            "ev": [
+              "genuinely open: deferred until W1 produces the first real overlay; noted as a claims-need-evidence question"
+            ]
+          }
+        },
+        "verified_at": "2026-08-22T09:39:19Z",
+        "verify_batch": "P046-VIBEFACTS-SPEC"
       }
     },
     "spec/design/README.md": {

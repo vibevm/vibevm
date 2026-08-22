@@ -259,6 +259,24 @@ it is the future primary. @status:spec/work
 @fact:TARGET-MIXED **`mixed` target:** copy-through; each file keeps its
 authored format. @status:spec/work
 
+@fact:STATIC-FOLLOWS-THE-TARGET **STATIC obeys the same materialisation
+rules as everything else (owner ruling 2026-08-22, chat, near-verbatim:
+«при рематериализации у нас STATIC.md в формате Markdown вне зависимости
+от того, какой формат материализации выбран, это плохо. На STATIC должны
+действовать те же правила, что и на всю остальную рематериализацию —
+должен появиться STATIC.xml»).** The generated static lane emits in the
+project's materialisation format: `STATIC.xml` under the `xml` target,
+`STATIC.md` under `markdown` (the `mixed` extension is the STATIC-format
+wave's open call — PROP-046 ##OPEN-MIXED-STATIC). This owner-revises the
+extension-stable-`STATIC.md` residue named at the inheritance-parity
+landing (##INHERITANCE-PARITY): what was lawful residue is now a defect
+to fix. The wave's perimeter, known in advance: the dynamic-STATIC
+target path in hybrid emit, the bootgen emitter, the generated CLAUDE.md
+boot block, INDEX raw-snippet targets, the parity twins that pin the
+`.md` name, and every by-name consumer of `spec/boot/STATIC.md` (hooks,
+docs). Ordered by the owner as the next act after PROP-046's status
+waves. @status:spec/work
+
 @fact:HASH-LAW **The hash law under transformation (ADR-part, upgraded by
 the measure).** Source identity is untouched: the lockfile
 `content_hash` and the machine store keep hashing the SOURCE form
