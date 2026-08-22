@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T00:24:41Z",
+  "updated_at": "2026-08-22T01:45:10Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159585,9 +159585,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "87c142d7a8c692c9f48e5bf2584fcec16c0d86c88817e1069370c799f2f9f23d",
+        "processed_hash": "f69db916adec4ae39e5561d7a04cf1e8549314594f4c75ae1093fca9efa919df",
         "summary": {
-          "confirmed": 26
+          "confirmed": 29
         },
         "verdicts": {
           "MANDATE-VERBATIM": {
@@ -159745,10 +159745,28 @@
             "ev": [
               "built the hour it was ruled: derived.rs is_generated_boot_artifact + the collect_hash_files exclusion; pinned by generated_boot_artifacts_stay_outside_the_derived_identity (hash unmoved by child STATIC/INDEX writes); the two failure shapes are quoted live in the S5 worker protocol (stale-derived + purity md=1 on git-practices)"
             ]
+          },
+          "NAMED-SECTION-ELEMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "xml_out.rs anchor_is_elementable gates the named form; the redbook README golden pins 7 named / 0 generic sections; xml_in.rs accepts both forms; the engine copies the predicate verbatim across the separability seam (xmlspec/doc.rs) with its own parity test; recipe bumped specdoc/1->2 and slots re-materialised"
+            ]
+          },
+          "NAMED-FACT-ELEMENTS": {
+            "v": "confirmed",
+            "ev": [
+              "writer names every elementable fact id with fact=\"true\" first (xml_out.rs fact_attrs/unit); recognition law in both readers: name==fact OR fact=\"true\", fact=\"false\" a loud error (xml_blocks.rs is_fact_element + engine xmlspec/blocks.rs); recipe specdoc/3, host 37 slots re-materialised, redbook golden 45 named facts; progress parity: an .xml source scans ParsedDoc-equal to its hand-pinned MD twin across two scans (progress/tests/xml_sources.rs); loader pins (a) BOOT-RULE named-shape splice snippet, (b) three-lane normal closure, (c) polygon 3/3 at specdoc/3"
+            ]
+          },
+          "INHERITANCE-PARITY": {
+            "v": "confirmed",
+            "ev": [
+              "eight twins: four in vibe-spec pipeline/inheritance_parity_tests.rs comparing lane AND rename map over runtime to_xml twins incl. mixed trees; four on the bootgen floor (tests_inheritance_parity.rs + tests_hybrid.rs dynamic-STATIC case); compile floor byte-identical out of the box; lawful install-floor residue named by the twins: vibe:static provenance cites the true source file, INDEX raw-snippet paths carry the materialised extension, the dynamic-STATIC target stays the generated extension-stable STATIC.md"
+            ]
           }
         },
-        "verified_at": "2026-08-21T22:54:44Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5"
+        "verified_at": "2026-08-22T01:00:56Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS"
       }
     },
     {

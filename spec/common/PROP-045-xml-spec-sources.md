@@ -379,7 +379,18 @@ XML and MD scores is the finding, not the absolute number. Results are
 recorded in the polygon's report and this section's facts flip to
 `impl/…` with the measured numbers cited. *Проверь при постройке: probe
 не должен подсказывать формат — пакет говорит «выполни бут по
-CLAUDE.md/INDEX», не «прочитай XML».* @status:spec/work
+CLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the
+final dialect — named sections and facts, specdoc/3): **36/36 PASS,
+XML−MD delta = 0 everywhere.** The polygon (redbook closure + three
+`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`
+negative control) ran three materialisations × three lanes — codex
+gpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with
+a format-blind probe; every beacon answered with its exact
+materialised source path, and the inactive entry was correctly
+reported unreadable in all nine cells with zero beacon leakage.
+Report: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;
+the harness is a reusable regression stand (`setup.sh` + the weak-tier
+sweep as the sensitive detector). @status:impl/done
 
 @fact:AGENT-ROUTER-MODEL-TIERS **Model tiers are a measurement dimension —
 the simpler models go first (owner's advice, verbatim, 2026-08-21: «при
@@ -396,8 +407,16 @@ table, not one number, is the deliverable. The symmetric extension on
 the Claude-family lane (a small slot exists there too) is the builder's
 own addition, applied with the same first-simple ordering unless the
 owner says otherwise. The lane DEFAULT for work tasks is untouched: this
-tiering is the measurement protocol's, not the launcher's.
-@status:spec/work
+tiering is the measurement protocol's, not the launcher's. MEASURED
+(2026-08-22): the installed codex serves exactly two tiers — `gpt-5.5`
+and `gpt-5.6-sol` (`gpt-5.5-codex`, `gpt-5.1-codex-mini`,
+`codex-mini-latest` error on the ping; list recorded in the stand's
+`tiers.txt`); effort served as the second simplicity axis. The
+sensitive instrument went first per the owner's ordering — gpt-5.5@low,
+two full sweeps, 18/18 — and the ceiling gpt-5.6-sol@xhigh matched it
+9/9: the per-tier table shows NO tier gradient, i.e. the final
+dialect's format friction sits below even the cheap tier's noise
+floor. Claude-family symmetric run: claudez big 9/9. @status:impl/done
 
 ### 5b. Questions the build surfaced — dispositions {#surfaced}
 

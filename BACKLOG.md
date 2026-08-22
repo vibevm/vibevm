@@ -922,6 +922,18 @@ structure, and it goes when the file does.
 | @fact:B099-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-20 (та же посадка P2-PREFS)**: help говорит правду об enriched write (diff-from-default + comment-preserve + role-marker через atomic rewrite), сверено по `vibe-settings/src/persist/mod.rs` |
 | @fact:B099-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
 
+### B-100 — `vibe progress --campaign <id>` трактует голый id как путь от cwd и молча создаёт мусорную зону {#b-100}
+
+| | |
+|---|---|
+| @fact:B100-ANCHOR **anchor** | `vibe progress mirror --campaign packages-2026-09` (из корня репозитория) |
+| @fact:B100-LOCATOR **locator** | справка обещает «campaigns/\<id\>/», но значение резолвится как путь относительно cwd: голый `packages-2026-09` создал `\<root\>/packages-2026-09/run/mirror` (492 файла) вместо ошибки «зона не найдена»; рабочее написание — полный путь `campaigns/packages-2026-09` |
+| @fact:B100-SEVERITY **severity** | P3 |
+| @fact:B100-DISPOSITION **disposition** | `open` — кандидат: резолвить голое имя через `campaigns/\<id\>/` и падать громко, если каталога нет; путь с разделителем оставить как есть |
+| @fact:B100-FILED **filed by** | замер §5a PROP-045, 2026-08-22 |
+
+- @fact:B100-SUT **Суть.** Создание state-зоны — побочный эффект записи; неверно разрешённое значение флага не должно материализовывать новую зону молча. Обнаружено при подготовке суждения: mirror отработал «успешно» в свежесозданный мусорный каталог в корне хоста, и только несовпадение пути выдало промах. Мусор удалён руками в той же сессии.
+
 ### B-078 — «у JTD нет nullable» оказалось ложью, и записанное расхождение журнала стало разрешимым {#b-078}
 
 | | |
