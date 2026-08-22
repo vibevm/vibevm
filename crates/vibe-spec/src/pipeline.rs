@@ -397,4 +397,6 @@ mod collision_tests;
 #[cfg(test)]
 mod fold_tests;
 #[cfg(test)]
+mod inheritance_parity_tests;
+#[cfg(test)]
 mod tests;

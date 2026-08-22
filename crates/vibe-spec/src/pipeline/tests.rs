@@ -507,7 +507,9 @@ const XML_DEP: &str = concat!(
 
 /// The dependency's canonical Markdown twin — byte-exact the projection of
 /// [`XML_DEP`] (the trailing blank line included: blocks close with one).
-const MD_DEP_TWIN: &str = concat!(
+/// `pub(super)` so the inheritance-parity twin family (a sibling module)
+/// reuses the same fixture.
+pub(super) const MD_DEP_TWIN: &str = concat!(
     "# Dep {#d}\n\n",
     "## The laws {#laws}\n\n",
     "`req r1`\n\n",

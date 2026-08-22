@@ -478,5 +478,9 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 mod tests;
 
 #[cfg(test)]
+#[path = "boot_artifacts/tests_inheritance_parity.rs"]
+mod tests_inheritance_parity;
+
+#[cfg(test)]
 #[path = "boot_artifacts/tests_qualify.rs"]
 mod tests_qualify;
