@@ -4,13 +4,13 @@
   <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md`. Composes with the GraalVM overlay via build-time-CDI runtimes; never with the Spring overlay (one container per target). Only named sections rewired.</p>
   <p>Framing note. Jakarta EE is the one platform in the whole study whose own architecture *is* the Discipline's triple: **specifications** (the Jakarta/MicroProfile documents) ↔ **implementations** (vendors) ↔ **conformance suites** (the TCKs). A platform that certifies implementations against a spec with an executable test kit has already conceded every philosophical point this Discipline argues; the overlay's job is merely to keep application code as honest as the platform's governance. Practically it is the Spring overlay's sibling: CDI is the container, the resolution is the same **framework-free core with ring placement** — so this guide states only the deltas.</p>
   <p>**Scope honesty.** MicroProfile-era services on certified runtimes (Open Liberty, Quarkus, Helidon, Payara, WildFly). Classic monolithic EE estates enter via the brownfield protocol as adopted code.</p>
-  <section id="baseline" title="§0 additions — baseline">
+  <baseline title="§0 additions — baseline">
     <list ordered="false">
       <item>**Pin the spec levels, not just the runtime:** the target Jakarta EE platform/profile version and MicroProfile version are declared in the build; vendor BOM pinned. **Portability is a check, not a hope:** cells and seams depend on `jakarta.*`/`org.eclipse.microprofile.*` APIs at most (boundary), vendor packages (`io.quarkus..`, `com.ibm..`, etc.) are boundary-of-boundary — ArchUnit-enforced, and the rule is what keeps the second implementation possible.</item>
       <item>**TCK resonance, used not admired:** where a seam wraps a platform service, the platform's own TCK answers "does the runtime behave"; conform answers "does our code behave" — the two suites are complementary GEP rows, not overlap.</item>
     </list>
-  </section>
-  <section id="cdi" title="§1&apos;/§3&apos; — CDI as composition root">
+  </baseline>
+  <cdi title="§1&apos;/§3&apos; — CDI as composition root">
     <list ordered="false">
       <item>**No `@Inject`, no scopes, no interceptor bindings inside cells.** Cells are `new`-constructed.</item>
       <item>**Producers are the registry:** explicit `@Produces` methods in a composition module construct cells with their capabilities — the hand-written switch in CDI clothing:</item>
@@ -29,15 +29,15 @@ public class SolverProducer {
       <item>**Bean discovery mode `annotated`** (explicit `beans.xml`), never `all` — implicit-bean archaeology is the CDI form of component scanning and is banned for the same reason.</item>
       <item>**MicroProfile Config is the runtime flag tier, with provenance built in:** ConfigSources are *ordinal-ordered* (system props &gt; env &gt; files &gt; defaults) — the platform ships the Discipline's provenance chain natively; flags resolve once into a config record at the composition root, `@ConfigProperty` field-sprinkling in domain code is banned.</item>
     </list>
-  </section>
-  <section id="boundary" title="§4&apos; — boundary machinery">
+  </cdi>
+  <boundary title="§4&apos; — boundary machinery">
     <list ordered="false">
       <item>**Fault-tolerance annotations (`@Retry`, `@CircuitBreaker`, `@Timeout`, `@Fallback`) are interceptors** — hidden control flow under R-021 — and live only on boundary/orchestration beans. If a retry policy is *domain* behavior, the cell implements it explicitly against its clock capability, testable without a container.</item>
       <item>**JPA entity quarantine:** entities are proxy-laden, lazily-loaded, lifecycle-managed objects — citizens of the second language. **Entities never cross into cells**; persistence sits behind repository seams returning records, mapping done in the adapter. The N+1 problem, detached-entity traps, and dirty-checking surprises all stay in the ring built to contain them.</item>
       <item>JAX-RS resources, servlets, messaging listeners: boundary adapters that parse (DTO → validation → domain types), call seams, translate sealed results to protocol responses with the REQ URI rendered on errors (PROP-014 §2.6). Health (`mp-health`) and metrics (`mp-metrics`/Telemetry) are boundary exports.</item>
     </list>
-  </section>
-  <section id="risks" title="§8&apos; — additional risk rows">
+  </boundary>
+  <risks title="§8&apos; — additional risk rows">
     <table>
       <tr>
         <td>Footgun</td>
@@ -81,5 +81,5 @@ public class SolverProducer {
       </tr>
     </table>
     <p>**Overlay note.** The platform already believes in specs, implementations, and conformance kits; this overlay only asks the application to live up to its own runtime's governance model. The framework-free-core test from the Spring overlay applies verbatim: cells compile without `jakarta.*` on the classpath.</p>
-  </section>
+  </risks>
 </spec>

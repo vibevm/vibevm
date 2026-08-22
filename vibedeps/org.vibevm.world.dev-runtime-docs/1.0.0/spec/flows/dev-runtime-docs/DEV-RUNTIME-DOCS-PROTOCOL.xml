@@ -2,52 +2,52 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Load-bearing setup docs</title>
   <status stage="spec" state="done"/>
-  <p><fact id="SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING" status="impl/done">A project's **setup and runtime documentation** is load-bearing: it is the file a
+  <p><SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING fact="true" status="impl/done">A project's **setup and runtime documentation** is load-bearing: it is the file a
 contributor or user reaches for when the build breaks, the environment is wrong, or a
-prerequisite is missing.</fact></p>
-  <p><fact id="when-the-doc-drifts-the-failure-happens-anyway" status="spec/done">When that doc drifts from reality, the failure it was meant to
-prevent happens anyway — with no signpost to the fix.</fact></p>
-  <section id="obligation" title="The obligation">
-    <p><fact id="EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT" status="impl/done">**Every change that touches the toolchain, prerequisites, environment variables, paths, or
-bootstrap steps updates the relevant setup/runtime doc in the SAME commit.**</fact></p>
-    <p><fact id="NEVER-DEFER-THE-DOC-UPDATE-TO-LATER" status="impl/done">Never ship a
+prerequisite is missing.</SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING></p>
+  <p><when-the-doc-drifts-the-failure-happens-anyway fact="true" status="spec/done">When that doc drifts from reality, the failure it was meant to
+prevent happens anyway — with no signpost to the fix.</when-the-doc-drifts-the-failure-happens-anyway></p>
+  <obligation title="The obligation">
+    <p><EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT fact="true" status="impl/done">**Every change that touches the toolchain, prerequisites, environment variables, paths, or
+bootstrap steps updates the relevant setup/runtime doc in the SAME commit.**</EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT></p>
+    <p><NEVER-DEFER-THE-DOC-UPDATE-TO-LATER fact="true" status="impl/done">Never ship a
 setup change with the doc update deferred to "later" — later is where the drift lives, and a
 contributor hitting a broken setup with no matching doc is exactly the failure these files
-exist to prevent.</fact></p>
-  </section>
-  <section id="why-central" title="Why pin it centrally">
-    <p><fact id="PIN-THE-OBLIGATION-IN-THE-FOUNDATIONAL-CONVENTIONS" status="impl/done">Pin the obligation in the project's **foundational conventions** — the material read early,
-at session boot — not only inside the guides themselves.</fact></p>
-    <p><fact id="every-contributor-meets-the-rule-before-touching-env-code" status="spec/done">That way every contributor meets
+exist to prevent.</NEVER-DEFER-THE-DOC-UPDATE-TO-LATER></p>
+  </obligation>
+  <why-central title="Why pin it centrally">
+    <p><PIN-THE-OBLIGATION-IN-THE-FOUNDATIONAL-CONVENTIONS fact="true" status="impl/done">Pin the obligation in the project's **foundational conventions** — the material read early,
+at session boot — not only inside the guides themselves.</PIN-THE-OBLIGATION-IN-THE-FOUNDATIONAL-CONVENTIONS></p>
+    <p><every-contributor-meets-the-rule-before-touching-env-code fact="true" status="spec/done">That way every contributor meets
 the rule *before* touching env or toolchain code, rather than only when they happen to open
-the guide after something has already broken.</fact></p>
-  </section>
-  <section id="audiences" title="The two audiences">
-    <p><fact id="SETUP-DOCS-SERVE-TWO-DISTINCT-READERS" status="impl/done">Setup docs serve two distinct readers; a change may touch one or both, in the one commit that
-makes the change:</fact></p>
+the guide after something has already broken.</every-contributor-meets-the-rule-before-touching-env-code></p>
+  </why-central>
+  <audiences title="The two audiences">
+    <p><SETUP-DOCS-SERVE-TWO-DISTINCT-READERS fact="true" status="impl/done">Setup docs serve two distinct readers; a change may touch one or both, in the one commit that
+makes the change:</SETUP-DOCS-SERVE-TWO-DISTINCT-READERS></p>
     <list ordered="false">
-      <item><fact id="AUDIENCE-CONTRIBUTOR-BUILD-DOCS" status="impl/done">**Contributor / build docs** — what to install to clone, build, test, and (if authorised)
+      <item><AUDIENCE-CONTRIBUTOR-BUILD-DOCS fact="true" status="impl/done">**Contributor / build docs** — what to install to clone, build, test, and (if authorised)
   publish the project. A change to a build prerequisite, a pinned toolchain, or a bootstrap
-  step lands here.</fact></item>
-      <item><fact id="AUDIENCE-RUNTIME-USER-DOCS" status="impl/done">**Runtime / user docs** — what an end user installs and configures to run the shipped
+  step lands here.</AUDIENCE-CONTRIBUTOR-BUILD-DOCS></item>
+      <item><AUDIENCE-RUNTIME-USER-DOCS fact="true" status="impl/done">**Runtime / user docs** — what an end user installs and configures to run the shipped
   artifact. A change to a user-facing environment variable, path convention, prerequisite, or
-  auth flow lands here.</fact></item>
+  auth flow lands here.</AUDIENCE-RUNTIME-USER-DOCS></item>
     </list>
-  </section>
-  <section id="honest" title="Keeping them honest">
-    <p><fact id="THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE" status="impl/done">The docs are only load-bearing while they are true.</fact></p>
-    <p><fact id="two-habits-keep-them-so-lead" status="impl/done">Two habits keep them so:</fact></p>
+  </audiences>
+  <honest title="Keeping them honest">
+    <p><THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE fact="true" status="impl/done">The docs are only load-bearing while they are true.</THE-DOCS-ARE-ONLY-LOAD-BEARING-WHILE-THEY-ARE-TRUE></p>
+    <p><two-habits-keep-them-so-lead fact="true" status="impl/done">Two habits keep them so:</two-habits-keep-them-so-lead></p>
     <list ordered="false">
-      <item><fact id="HABIT-SAME-COMMIT-UPDATES" status="impl/done">**Same-commit updates** (the obligation above) stop new drift at the source.</fact></item>
-      <item><fact id="HABIT-A-PERIODIC-READ-THROUGH" status="impl/done">**A periodic read-through** against the actual toolchain catches the drift that slipped in
-  before the obligation was adopted, or through a change nobody recognised as setup-touching.</fact></item>
+      <item><HABIT-SAME-COMMIT-UPDATES fact="true" status="impl/done">**Same-commit updates** (the obligation above) stop new drift at the source.</HABIT-SAME-COMMIT-UPDATES></item>
+      <item><HABIT-A-PERIODIC-READ-THROUGH fact="true" status="impl/done">**A periodic read-through** against the actual toolchain catches the drift that slipped in
+  before the obligation was adopted, or through a change nobody recognised as setup-touching.</HABIT-A-PERIODIC-READ-THROUGH></item>
     </list>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="NAME-YOUR-SETUP-DOCS-AND-CITE-THEM-FROM-YOUR-CONVENTIONS" status="impl/done">Name your setup docs (one for contributors, one for users, or a single file if the project is
+  </honest>
+  <re-derive title="Re-derive for your project">
+    <p><NAME-YOUR-SETUP-DOCS-AND-CITE-THEM-FROM-YOUR-CONVENTIONS fact="true" status="impl/done">Name your setup docs (one for contributors, one for users, or a single file if the project is
 small), state the same-commit obligation in your foundational conventions, and cite the two
-docs from there.</fact></p>
-    <p><fact id="THE-PATTERN-IS-FILENAME-AGNOSTIC" status="impl/done">The pattern is filename-agnostic — what matters is that a setup change and
-its doc update are never separable.</fact></p>
-  </section>
+docs from there.</NAME-YOUR-SETUP-DOCS-AND-CITE-THEM-FROM-YOUR-CONVENTIONS></p>
+    <p><THE-PATTERN-IS-FILENAME-AGNOSTIC fact="true" status="impl/done">The pattern is filename-agnostic — what matters is that a setup change and
+its doc update are never separable.</THE-PATTERN-IS-FILENAME-AGNOSTIC></p>
+  </re-derive>
 </spec>

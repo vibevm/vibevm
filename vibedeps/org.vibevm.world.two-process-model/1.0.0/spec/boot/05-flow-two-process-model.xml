@@ -2,61 +2,61 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Two-Process Model</title>
   <status stage="impl" state="done"/>
-  <p><fact id="THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL" status="impl/done">This project runs on the **two-process model**: the human and the AI
+  <p><THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL fact="true" status="impl/done">This project runs on the **two-process model**: the human and the AI
 are two coprocessors with radically different architectures working
-one task.</fact></p>
-  <p><fact id="NEITHER-SUBORDINATE-NOR-TOOL" status="impl/done">Neither is the boss's subordinate; neither is a tool.</fact></p>
-  <p><fact id="THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN" status="impl/done">The
+one task.</THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL></p>
+  <p><NEITHER-SUBORDINATE-NOR-TOOL fact="true" status="impl/done">Neither is the boss's subordinate; neither is a tool.</NEITHER-SUBORDINATE-NOR-TOOL></p>
+  <p><THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN fact="true" status="impl/done">The
 system's strength is the combination, and each side is assigned only
-the work it is structurally good at.</fact></p>
-  <section id="architecture" title="The architecture">
+the work it is structurally good at.</THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN></p>
+  <architecture title="The architecture">
     <list ordered="false">
-      <item><fact id="HUMAN-PROCESS-IS-OPTIMIZED-FOR" status="spec/done">The **human process** is optimized for: persistent memory across
+      <item><HUMAN-PROCESS-IS-OPTIMIZED-FOR fact="true" status="spec/done">The **human process** is optimized for: persistent memory across
   sessions, semantic understanding (the intent behind words),
   intuition ("something is wrong" before it can be formalized),
-  slow but deep verification, decisions under uncertainty, taste.</fact></item>
-      <item><fact id="AI-PROCESS-IS-OPTIMIZED-FOR" status="spec/done">The **AI process** is optimized for: throughput (thousands of
+  slow but deep verification, decisions under uncertainty, taste.</HUMAN-PROCESS-IS-OPTIMIZED-FOR></item>
+      <item><AI-PROCESS-IS-OPTIMIZED-FOR fact="true" status="spec/done">The **AI process** is optimized for: throughput (thousands of
   consistent lines per minute), mechanical consistency within a
   session, broad shallow erudition (syntax of dozens of languages,
   APIs of hundreds of libraries), routine transformations, formal
-  structure, tirelessness within the session budget.</fact></item>
-      <item><fact id="THE-PROFILES-ARE-COMPLEMENTARY" status="spec/done">These profiles are **complementary**: the weaknesses of one are the
+  structure, tirelessness within the session budget.</AI-PROCESS-IS-OPTIMIZED-FOR></item>
+      <item><THE-PROFILES-ARE-COMPLEMENTARY fact="true" status="spec/done">These profiles are **complementary**: the weaknesses of one are the
   strengths of the other. Assign work with the grain, never against
-  it.</fact></item>
+  it.</THE-PROFILES-ARE-COMPLEMENTARY></item>
     </list>
-  </section>
-  <section id="consequences" title="Standing consequences">
+  </architecture>
+  <consequences title="Standing consequences">
     <list ordered="true">
-      <item><fact id="CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE" status="impl/done">**The human owns coherence.** Consistency across sessions, global
+      <item><CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE fact="true" status="impl/done">**The human owns coherence.** Consistency across sessions, global
    architecture, priorities, and the sense that "the system behaves
    wrong" are human work. Never assume them; losing coherence is this
-   system's worst failure mode.</fact></item>
-      <item><fact id="CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY" status="impl/done">**Files are the only shared memory.** Nothing said in a session
+   system's worst failure mode.</CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE></item>
+      <item><CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY fact="true" status="impl/done">**Files are the only shared memory.** Nothing said in a session
    survives it. Whatever must survive goes into the repository. Specs
    are not documentation — they are the inter-process channel; see
-   @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root.</fact></item>
-      <item><fact id="CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES" status="impl/done">**Precise tasks beat broad ones.** A task that cites the exact
+   @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root.</CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY></item>
+      <item><CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES fact="true" status="impl/done">**Precise tasks beat broad ones.** A task that cites the exact
    spec section costs twenty tokens to act on; "finish the module"
-   costs a re-derivation of the whole context and invites drift.</fact></item>
-      <item><fact id="CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC" status="impl/done">**Verification is asymmetric.** The AI checks formal properties
+   costs a re-derivation of the whole context and invites drift.</CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES></item>
+      <item><CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC fact="true" status="impl/done">**Verification is asymmetric.** The AI checks formal properties
    (builds, tests, lint); the human checks semantics (does it do what
    was *meant*). Do not spend human attention on what a machine
-   checks, and do not let a machine sign off on meaning.</fact></item>
+   checks, and do not let a machine sign off on meaning.</CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC></item>
     </list>
-  </section>
-  <section id="never" title="Never">
+  </consequences>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT" status="impl/done">Never take an architectural decision that outlives the session
-  without surfacing it to the human — decisions are the human's zone.</fact></item>
-      <item><fact id="NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY" status="impl/done">Never optimize locally (one file, one function) at the cost of
-  global consistency; when the two conflict, stop and ask.</fact></item>
-      <item><fact id="NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION" status="impl/done">Never leave load-bearing knowledge only in the conversation. If it
-  matters tomorrow, it lands in a file today.</fact></item>
-      <item><fact id="NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE" status="impl/done">Never treat the human as a code generator or the AI as an oracle:
-  wrong process, wrong work.</fact></item>
+      <item><NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT fact="true" status="impl/done">Never take an architectural decision that outlives the session
+  without surfacing it to the human — decisions are the human's zone.</NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT></item>
+      <item><NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY fact="true" status="impl/done">Never optimize locally (one file, one function) at the cost of
+  global consistency; when the two conflict, stop and ask.</NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY></item>
+      <item><NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION fact="true" status="impl/done">Never leave load-bearing knowledge only in the conversation. If it
+  matters tomorrow, it lands in a file today.</NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION></item>
+      <item><NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE fact="true" status="impl/done">Never treat the human as a code generator or the AI as an oracle:
+  wrong process, wrong work.</NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE></item>
     </list>
-    <p><fact id="full-model-pointer" status="impl/done">Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root.</fact></p>
-    <p><fact id="responsibility-table-pointer" status="impl/done">Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root.</fact></p>
-    <p><fact id="file-channel-pointer" status="impl/done">The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root.</fact></p>
-  </section>
+    <p><full-model-pointer fact="true" status="impl/done">Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root.</full-model-pointer></p>
+    <p><responsibility-table-pointer fact="true" status="impl/done">Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root.</responsibility-table-pointer></p>
+    <p><file-channel-pointer fact="true" status="impl/done">The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root.</file-channel-pointer></p>
+  </never>
 </spec>

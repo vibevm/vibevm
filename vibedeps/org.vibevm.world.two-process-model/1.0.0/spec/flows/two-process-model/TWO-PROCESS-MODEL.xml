@@ -2,62 +2,62 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The Two-Process Model</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines the mental model the
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines the mental model the
 whole redbook collection rests on: *what* the human and the AI each
 are as computational processes, *why* the two dominant metaphors for
 working with an AI fail on real projects, *how* a productive cycle
 between the two processes looks, and *what* standing consequences
-follow.</fact></p>
-  <p><fact id="every-other-flow-is-a-consequence" status="spec/done">Every other flow in the collection is a consequence of this
-model.</fact></p>
-  <section id="wrong-metaphors" title="The two wrong metaphors">
-    <p><fact id="everyone-begins-with-one-of-two-mental-models" status="spec/done">Everyone who starts working with a language model on a production
-project begins with one of two mental models.</fact></p>
-    <p><fact id="BOTH-FAIL-AND-BOTH-FAIL-THE-SAME-WAY" status="spec/done">Both fail, and both fail the same way.</fact></p>
-    <section id="boss" title="Boss and subordinate">
-      <p><fact id="the-boss-and-subordinate-loop" status="spec/done">The human formulates the task, the AI executes, the human inspects,
-the AI fixes.</fact></p>
-      <p><fact id="the-loop-is-familiar" status="spec/done">Familiar — most of the industry runs on it.</fact></p>
-      <p><fact id="THE-AI-IS-A-BAD-SUBORDINATE" status="spec/done">But the AI
+follow.</scope-of-this-document></p>
+  <p><every-other-flow-is-a-consequence fact="true" status="spec/done">Every other flow in the collection is a consequence of this
+model.</every-other-flow-is-a-consequence></p>
+  <wrong-metaphors title="The two wrong metaphors">
+    <p><everyone-begins-with-one-of-two-mental-models fact="true" status="spec/done">Everyone who starts working with a language model on a production
+project begins with one of two mental models.</everyone-begins-with-one-of-two-mental-models></p>
+    <p><BOTH-FAIL-AND-BOTH-FAIL-THE-SAME-WAY fact="true" status="spec/done">Both fail, and both fail the same way.</BOTH-FAIL-AND-BOTH-FAIL-THE-SAME-WAY></p>
+    <boss title="Boss and subordinate">
+      <p><the-boss-and-subordinate-loop fact="true" status="spec/done">The human formulates the task, the AI executes, the human inspects,
+the AI fixes.</the-boss-and-subordinate-loop></p>
+      <p><the-loop-is-familiar fact="true" status="spec/done">Familiar — most of the industry runs on it.</the-loop-is-familiar></p>
+      <p><THE-AI-IS-A-BAD-SUBORDINATE fact="true" status="spec/done">But the AI
 is a *bad subordinate*: it remembers nothing between sessions, it
 does not ask clarifying questions when the task is vague — it
 guesses, confidently and often wrongly — and it does not learn from
-last week's corrections, because for it there was no last week.</fact></p>
-      <p><fact id="THE-DEEPER-FAILURE-IS-LOAD-DISTRIBUTION" status="spec/done">The deeper failure is load distribution.</fact></p>
-      <p><fact id="THE-HUMAN-CARRIES-ALL-OF-THE-THINKING" status="spec/done">In this model the human
+last week's corrections, because for it there was no last week.</THE-AI-IS-A-BAD-SUBORDINATE></p>
+      <p><THE-DEEPER-FAILURE-IS-LOAD-DISTRIBUTION fact="true" status="spec/done">The deeper failure is load distribution.</THE-DEEPER-FAILURE-IS-LOAD-DISTRIBUTION></p>
+      <p><THE-HUMAN-CARRIES-ALL-OF-THE-THINKING fact="true" status="spec/done">In this model the human
 carries all of the thinking: planning, decomposition, verification,
-the big picture.</fact></p>
-      <p><fact id="the-ai-contributes-fast-hands" status="spec/done">The AI contributes fast hands.</fact></p>
-      <p><fact id="fast-hands-are-an-expensive-goal" status="spec/done">If fast hands were
+the big picture.</THE-HUMAN-CARRIES-ALL-OF-THE-THINKING></p>
+      <p><the-ai-contributes-fast-hands fact="true" status="spec/done">The AI contributes fast hands.</the-ai-contributes-fast-hands></p>
+      <p><fast-hands-are-an-expensive-goal fact="true" status="spec/done">If fast hands were
 the goal, the strongest model on the market would be an expensive
-way to buy them.</fact></p>
-    </section>
-    <section id="tool" title="Human and tool">
-      <p><fact id="the-ai-as-a-very-good-autocomplete" status="spec/done">The AI as a very good autocomplete: start a function, it finishes;
-describe a component, it generates.</fact></p>
-      <p><fact id="A-TOOL-HAS-NO-NOTION-OF-THE-PROJECT" status="spec/done">Fine for small tasks, corrosive
-for a months-long project — a tool has no notion of the project.</fact></p>
-      <p><fact id="A-TOOL-OPTIMIZES-LOCALLY-AND-DESTROYS-GLOBAL-CONSISTENCY" status="spec/done">It
+way to buy them.</fast-hands-are-an-expensive-goal></p>
+    </boss>
+    <tool title="Human and tool">
+      <p><the-ai-as-a-very-good-autocomplete fact="true" status="spec/done">The AI as a very good autocomplete: start a function, it finishes;
+describe a component, it generates.</the-ai-as-a-very-good-autocomplete></p>
+      <p><A-TOOL-HAS-NO-NOTION-OF-THE-PROJECT fact="true" status="spec/done">Fine for small tasks, corrosive
+for a months-long project — a tool has no notion of the project.</A-TOOL-HAS-NO-NOTION-OF-THE-PROJECT></p>
+      <p><A-TOOL-OPTIMIZES-LOCALLY-AND-DESTROYS-GLOBAL-CONSISTENCY fact="true" status="spec/done">It
 optimizes locally (this file, this function) and can quietly destroy
-global consistency doing so.</fact></p>
-      <p><fact id="EVERY-INVOCATION-IS-A-DISCONNECTED-ACT" status="spec/done">Every invocation is a disconnected act.</fact></p>
-    </section>
-    <section id="shared-mistake" title="The shared mistake">
-      <p><fact id="THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD" status="spec/done">In both models the human takes on **one hundred percent of the
+global consistency doing so.</A-TOOL-OPTIMIZES-LOCALLY-AND-DESTROYS-GLOBAL-CONSISTENCY></p>
+      <p><EVERY-INVOCATION-IS-A-DISCONNECTED-ACT fact="true" status="spec/done">Every invocation is a disconnected act.</EVERY-INVOCATION-IS-A-DISCONNECTED-ACT></p>
+    </tool>
+    <shared-mistake title="The shared mistake">
+      <p><THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD fact="true" status="spec/done">In both models the human takes on **one hundred percent of the
 cognitive load**, and the human is not built for sustained 100%
-load on non-routine work.</fact></p>
-      <p><fact id="BOTH-MODELS-WASTE-THE-ACTUAL-OPPORTUNITY" status="spec/done">Both models also waste the actual
+load on non-routine work.</THE-HUMAN-TAKES-ON-ONE-HUNDRED-PERCENT-OF-THE-COGNITIVE-LOAD></p>
+      <p><BOTH-MODELS-WASTE-THE-ACTUAL-OPPORTUNITY fact="true" status="spec/done">Both models also waste the actual
 opportunity: distributing *thinking* — not typing — across two
-processes with different architectures.</fact></p>
-    </section>
-  </section>
-  <section id="coprocessors" title="Coprocessors">
-    <p><fact id="picture-a-cpu-and-a-gpu" status="spec/done">Picture a system with two processors of *different architectures*
-working one task — a CPU and a GPU.</fact></p>
-    <p><fact id="the-cpu-and-the-gpu-each-win-elsewhere" status="spec/done">The CPU wins on sequential logic
+processes with different architectures.</BOTH-MODELS-WASTE-THE-ACTUAL-OPPORTUNITY></p>
+    </shared-mistake>
+  </wrong-metaphors>
+  <coprocessors title="Coprocessors">
+    <p><picture-a-cpu-and-a-gpu fact="true" status="spec/done">Picture a system with two processors of *different architectures*
+working one task — a CPU and a GPU.</picture-a-cpu-and-a-gpu></p>
+    <p><the-cpu-and-the-gpu-each-win-elsewhere fact="true" status="spec/done">The CPU wins on sequential logic
 with deep dependencies, the GPU on massive parallelism of simple
-operations.</fact></p>
-    <p><fact id="NEITHER-IS-BETTER-THE-POWER-IS-THE-SPLIT" status="spec/done">Neither is "better"; the system's power is the split.</fact></p>
+operations.</the-cpu-and-the-gpu-each-win-elsewhere></p>
+    <p><NEITHER-IS-BETTER-THE-POWER-IS-THE-SPLIT fact="true" status="spec/done">Neither is "better"; the system's power is the split.</NEITHER-IS-BETTER-THE-POWER-IS-THE-SPLIT></p>
     <table>
       <tr>
         <td/>
@@ -65,79 +65,79 @@ operations.</fact></p>
         <td>Weak at</td>
       </tr>
       <tr>
-        <td><fact id="ROW-HUMAN" status="spec/done">**Human**</fact></td>
+        <td><ROW-HUMAN fact="true" status="spec/done">**Human**</ROW-HUMAN></td>
         <td><fact status="spec/done">persistent memory (weeks, years); intent and the "spirit" of a decision; intuition ahead of formalization; deep verification across the whole project; decisions under uncertainty; taste — aesthetic, ethical, UX</fact></td>
         <td><fact status="spec/done">throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); holding many details at once (7±2); routine repetition; work under fatigue</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-AI" status="spec/done">**AI**</fact></td>
+        <td><ROW-AI fact="true" status="spec/done">**AI**</ROW-AI></td>
         <td><fact status="spec/done">throughput (thousands of consistent lines per minute); mechanical consistency within a session; broad shallow erudition (syntaxes, APIs); routine transforms and boilerplate; formal structure (parse, transform, generate); tirelessness within the session budget</fact></td>
         <td><fact status="spec/done">persistent memory (none across sessions); the spirit of a decision (follows the letter); long-range coherence; decisions needing context beyond the window; catching its own errors; volition — it cannot want the project to succeed</fact></td>
       </tr>
     </table>
-    <p><fact id="THE-TWO-COLUMNS-ARE-COMPLEMENTARY" status="spec/done">The key observation: **the two columns are complementary**.</fact></p>
-    <p><fact id="THE-WEAKNESSES-OF-EACH-ARE-THE-STRENGTHS-OF-THE-OTHER" status="spec/done">The weaknesses of each process are the strengths of the other.</fact></p>
-    <p><fact id="the-human-holds-the-picture-the-ai-holds-the-details" status="spec/done">The human
+    <p><THE-TWO-COLUMNS-ARE-COMPLEMENTARY fact="true" status="spec/done">The key observation: **the two columns are complementary**.</THE-TWO-COLUMNS-ARE-COMPLEMENTARY></p>
+    <p><THE-WEAKNESSES-OF-EACH-ARE-THE-STRENGTHS-OF-THE-OTHER fact="true" status="spec/done">The weaknesses of each process are the strengths of the other.</THE-WEAKNESSES-OF-EACH-ARE-THE-STRENGTHS-OF-THE-OTHER></p>
+    <p><the-human-holds-the-picture-the-ai-holds-the-details fact="true" status="spec/done">The human
 is slow but remembers everything and holds the picture; the AI is
-fast but forgets everything and holds the details.</fact></p>
-    <p><fact id="ROUTING-WITH-THE-GRAIN-BEATS-EITHER-PARTICIPANT-ALONE" status="spec/done">A system that
+fast but forgets everything and holds the details.</the-human-holds-the-picture-the-ai-holds-the-details></p>
+    <p><ROUTING-WITH-THE-GRAIN-BEATS-EITHER-PARTICIPANT-ALONE fact="true" status="spec/done">A system that
 routes work with the grain of this table gets more than either
-participant alone.</fact></p>
-    <p><fact id="ROUTING-AGAINST-THE-GRAIN-EXHAUSTS-THE-HUMAN" status="spec/done">A system that routes against it gets an exhausted
-human supervising a drifting machine.</fact></p>
-  </section>
-  <section id="boundary" title="The boundary moves; one thing does not">
-    <p><fact id="the-line-shifts-with-capability-criticality-and-the-hour" status="spec/done">Where exactly the line sits between "human work" and "AI work"
+participant alone.</ROUTING-WITH-THE-GRAIN-BEATS-EITHER-PARTICIPANT-ALONE></p>
+    <p><ROUTING-AGAINST-THE-GRAIN-EXHAUSTS-THE-HUMAN fact="true" status="spec/done">A system that routes against it gets an exhausted
+human supervising a drifting machine.</ROUTING-AGAINST-THE-GRAIN-EXHAUSTS-THE-HUMAN></p>
+  </coprocessors>
+  <boundary title="The boundary moves; one thing does not">
+    <p><the-line-shifts-with-capability-criticality-and-the-hour fact="true" status="spec/done">Where exactly the line sits between "human work" and "AI work"
 shifts with model capability, with the project's criticality, even
-with the hour of the day.</fact></p>
-    <p><fact id="DO-NOT-FREEZE-THE-TABLE-INTO-DOGMA" status="impl/done">Do not freeze the table into dogma —
-recalibrate it per project and per year.</fact></p>
-    <p><fact id="ONE-ASSIGNMENT-NEVER-MOVES-THE-HUMAN-OWNS-COHERENCE" status="impl/done">One assignment never moves: **the human owns coherence** — the
+with the hour of the day.</the-line-shifts-with-capability-criticality-and-the-hour></p>
+    <p><DO-NOT-FREEZE-THE-TABLE-INTO-DOGMA fact="true" status="impl/done">Do not freeze the table into dogma —
+recalibrate it per project and per year.</DO-NOT-FREEZE-THE-TABLE-INTO-DOGMA></p>
+    <p><ONE-ASSIGNMENT-NEVER-MOVES-THE-HUMAN-OWNS-COHERENCE fact="true" status="impl/done">One assignment never moves: **the human owns coherence** — the
 agreement between iterations, between modules, between what the
-system does and what it is for.</fact></p>
-    <p><fact id="the-ai-cannot-own-coherence" status="spec/done">The AI cannot own it, because
-coherence lives across sessions and the AI does not.</fact></p>
-    <p><fact id="EVERYTHING-ELSE-EXISTS-TO-MAKE-THAT-JOB-CHEAP" status="impl/done">Everything else
+system does and what it is for.</ONE-ASSIGNMENT-NEVER-MOVES-THE-HUMAN-OWNS-COHERENCE></p>
+    <p><the-ai-cannot-own-coherence fact="true" status="spec/done">The AI cannot own it, because
+coherence lives across sessions and the AI does not.</the-ai-cannot-own-coherence></p>
+    <p><EVERYTHING-ELSE-EXISTS-TO-MAKE-THAT-JOB-CHEAP fact="true" status="impl/done">Everything else
 in this collection — checkpoint files, addressable specs, conflict
 rules — exists to make that one human job cheap enough to actually
-perform.</fact></p>
-  </section>
-  <section id="cycle" title="What a productive cycle looks like">
-    <p><fact id="the-cycle-lead" status="impl/done">A working session is a loop in which each side does what the other
-cannot:</fact></p>
+perform.</EVERYTHING-ELSE-EXISTS-TO-MAKE-THAT-JOB-CHEAP></p>
+  </boundary>
+  <cycle title="What a productive cycle looks like">
+    <p><the-cycle-lead fact="true" status="impl/done">A working session is a loop in which each side does what the other
+cannot:</the-cycle-lead></p>
     <list ordered="true">
-      <item><fact id="CYCLE-THE-HUMAN-DECIDES" status="impl/done">**The human decides.** Reads the current state (the checkpoint
+      <item><CYCLE-THE-HUMAN-DECIDES fact="true" status="impl/done">**The human decides.** Reads the current state (the checkpoint
    file), makes the one pending decision (a timeout value, an
-   approach), updates the spec. Minutes, not hours.</fact></item>
-      <item><fact id="CYCLE-THE-AI-GENERATES" status="impl/done">**The AI generates.** Receives a precise task with an address
+   approach), updates the spec. Minutes, not hours.</CYCLE-THE-HUMAN-DECIDES></item>
+      <item><CYCLE-THE-AI-GENERATES fact="true" status="impl/done">**The AI generates.** Receives a precise task with an address
    into the spec ("implement §5.3; the timeout changed yesterday —
    re-read it; do not touch the matcher"). Produces code, tests,
-   and the updated shared state.</fact></item>
-      <item><fact id="CYCLE-THE-HUMAN-VERIFIES" status="impl/done">**The human verifies.** Reads the diff, not the codebase. Checks
-   that the tests cover what the spec says. Commits.</fact></item>
-      <item><fact id="CYCLE-THE-STATE-CARRIES-OVER" status="impl/done">**The state carries over.** The checkpoint file and the spec —
-   not anyone's memory — carry the result into the next session.</fact></item>
+   and the updated shared state.</CYCLE-THE-AI-GENERATES></item>
+      <item><CYCLE-THE-HUMAN-VERIFIES fact="true" status="impl/done">**The human verifies.** Reads the diff, not the codebase. Checks
+   that the tests cover what the spec says. Commits.</CYCLE-THE-HUMAN-VERIFIES></item>
+      <item><CYCLE-THE-STATE-CARRIES-OVER fact="true" status="impl/done">**The state carries over.** The checkpoint file and the spec —
+   not anyone's memory — carry the result into the next session.</CYCLE-THE-STATE-CARRIES-OVER></item>
     </list>
-    <p><fact id="the-unproductive-mirror-image" status="spec/done">The same task given as "finish the verification module" produces the
+    <p><the-unproductive-mirror-image fact="true" status="spec/done">The same task given as "finish the verification module" produces the
 unproductive mirror image: the AI re-reads everything, guesses the
 intent, "improves" adjacent code, and the human spends two hours
 partitioning a diff that mixes the asked-for change with three
-unasked ones.</fact></p>
-    <p><fact id="THE-DIFFERENCE-IS-WHETHER-THE-HUMAN-DID-STEPS-ONE-AND-THREE" status="spec/done">Same model, same tooling — the difference is whether the human did
-steps 1 and 3.</fact></p>
-  </section>
-  <section id="dated" title="The model is dated, deliberately">
-    <p><fact id="the-model-fits-the-current-generation" status="spec/done">This is the model for the current generation of AI: strong enough to
-be a real partner, not yet reliable enough to be autonomous.</fact></p>
-    <p><fact id="the-model-will-change" status="spec/done">It will
-change.</fact></p>
-    <p><fact id="RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE" status="impl/done">Re-derive the split when the underlying capabilities move —
-that is what the revisit discipline (flow:decision-records) is for.</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION" status="impl/done">Copy the prompt-task, not the prompt-implementation.</fact></p>
-    <p><fact id="re-derive-lead" status="impl/done">Paste this to
-your agent in a fresh session:</fact></p>
+unasked ones.</the-unproductive-mirror-image></p>
+    <p><THE-DIFFERENCE-IS-WHETHER-THE-HUMAN-DID-STEPS-ONE-AND-THREE fact="true" status="spec/done">Same model, same tooling — the difference is whether the human did
+steps 1 and 3.</THE-DIFFERENCE-IS-WHETHER-THE-HUMAN-DID-STEPS-ONE-AND-THREE></p>
+  </cycle>
+  <dated title="The model is dated, deliberately">
+    <p><the-model-fits-the-current-generation fact="true" status="spec/done">This is the model for the current generation of AI: strong enough to
+be a real partner, not yet reliable enough to be autonomous.</the-model-fits-the-current-generation></p>
+    <p><the-model-will-change fact="true" status="spec/done">It will
+change.</the-model-will-change></p>
+    <p><RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE fact="true" status="impl/done">Re-derive the split when the underlying capabilities move —
+that is what the revisit discipline (flow:decision-records) is for.</RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE></p>
+  </dated>
+  <re-derive title="Re-derive for your project">
+    <p><COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION fact="true" status="impl/done">Copy the prompt-task, not the prompt-implementation.</COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION></p>
+    <p><re-derive-lead fact="true" status="impl/done">Paste this to
+your agent in a fresh session:</re-derive-lead></p>
     <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-two-process-model/&lt;version&gt;/spec/flows/two-process-model/`, check `vibe.lock`) end to end. Then look at THIS
 project: its criticality, team size, test maturity, and how capable
 the models we use actually are. Produce a one-page project-specific
@@ -146,19 +146,19 @@ work is delegated to the AI by default, and where the boundary is
 deliberately different from the generic table (say why). Propose it
 as a draft for the project's boot file. Do not apply until I
 approve.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY" status="spec/done">Boss/subordinate and human/tool both fail the same way: the human
-  carries 100% of the thinking.</fact></item>
-      <item><fact id="SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES" status="spec/done">Human and AI are coprocessors with complementary profiles; route
-  work with the grain.</fact></item>
-      <item><fact id="SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT" status="impl/done">The boundary between zones moves; human ownership of coherence
-  does not.</fact></item>
-      <item><fact id="SUM-THE-PRODUCTIVE-CYCLE" status="impl/done">A productive cycle is decide → generate → verify → carry over, and
+      <item><SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY fact="true" status="spec/done">Boss/subordinate and human/tool both fail the same way: the human
+  carries 100% of the thinking.</SUM-BOTH-METAPHORS-FAIL-THE-SAME-WAY></item>
+      <item><SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES fact="true" status="spec/done">Human and AI are coprocessors with complementary profiles; route
+  work with the grain.</SUM-COPROCESSORS-WITH-COMPLEMENTARY-PROFILES></item>
+      <item><SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT fact="true" status="impl/done">The boundary between zones moves; human ownership of coherence
+  does not.</SUM-THE-BOUNDARY-MOVES-BUT-COHERENCE-DOES-NOT></item>
+      <item><SUM-THE-PRODUCTIVE-CYCLE fact="true" status="impl/done">A productive cycle is decide → generate → verify → carry over, and
   the human's steps are the cheap ones — if the shared state is
-  maintained.</fact></item>
-      <item><fact id="SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP" status="impl/done">Everything else in this collection exists to keep that cycle cheap.</fact></item>
+  maintained.</SUM-THE-PRODUCTIVE-CYCLE></item>
+      <item><SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP fact="true" status="impl/done">Everything else in this collection exists to keep that cycle cheap.</SUM-EVERYTHING-ELSE-KEEPS-THAT-CYCLE-CHEAP></item>
     </list>
-  </section>
+  </summary>
 </spec>

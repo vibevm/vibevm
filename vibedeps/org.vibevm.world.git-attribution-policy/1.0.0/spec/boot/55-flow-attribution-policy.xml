@@ -2,66 +2,66 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Attribution Policy</title>
   <status stage="impl" state="done"/>
-  <p><fact id="THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE" status="impl/done">This project keeps its repository **human-authored on every
-surface**.</fact></p>
-  <p><fact id="THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET" status="impl/done">This is the project's chosen default posture; the
+  <p><THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE fact="true" status="impl/done">This project keeps its repository **human-authored on every
+surface**.</THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE></p>
+  <p><THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET fact="true" status="impl/done">This is the project's chosen default posture; the
 alternative (open disclosure) is documented in this flow's
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/disclosure-alternative#root
-and a project may adopt it instead by editing this snippet.</fact></p>
-  <section id="rule" title="The rule">
-    <p><fact id="NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM" status="impl/done">Never attribute authorship of any part of this repository to an
+and a project may adopt it instead by editing this snippet.</THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET></p>
+  <rule title="The rule">
+    <p><NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM fact="true" status="impl/done">Never attribute authorship of any part of this repository to an
 artificial-intelligence or neural-network–based system of any kind —
 no commit messages, no Git trailers (`Co-Authored-By`,
 `Signed-off-by: &lt;model-name&gt;`, or similar), no branch or worktree
 names, no code comments, no README lines, no release notes, no CI
-metadata.</fact></p>
-    <p><fact id="THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION" status="impl/done">This applies to every such system regardless of provider,
-model family, or whether it runs locally or in a cloud.</fact></p>
-  </section>
-  <section id="why" title="Why — the honest reason">
-    <p><fact id="some-jurisdictions-regulate-machine-authorship" status="spec/done">Some jurisdictions regulate or may come to regulate machine
-authorship of software.</fact></p>
-    <p><fact id="the-owner-removes-the-hook-proactively" status="spec/done">This project is not currently subject to
+metadata.</NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM></p>
+    <p><THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION fact="true" status="impl/done">This applies to every such system regardless of provider,
+model family, or whether it runs locally or in a cloud.</THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION></p>
+  </rule>
+  <why title="Why — the honest reason">
+    <p><some-jurisdictions-regulate-machine-authorship fact="true" status="spec/done">Some jurisdictions regulate or may come to regulate machine
+authorship of software.</some-jurisdictions-regulate-machine-authorship></p>
+    <p><the-owner-removes-the-hook-proactively fact="true" status="spec/done">This project is not currently subject to
 such regulation and violates no present law; the owner chooses the
 posture proactively, so that any future regulation finds no hook in
-this repository.</fact></p>
-    <p><fact id="THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE" status="impl/done">The surface this repository presents is: a human
-wrote this code, full stop.</fact></p>
-    <p><fact id="a-publication-posture-not-a-deception" status="spec/done">This is a *publication posture chosen by the repository's owner*,
+this repository.</the-owner-removes-the-hook-proactively></p>
+    <p><THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE fact="true" status="impl/done">The surface this repository presents is: a human
+wrote this code, full stop.</THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE></p>
+    <p><a-publication-posture-not-a-deception fact="true" status="spec/done">This is a *publication posture chosen by the repository's owner*,
 not a deception of any party entitled to the information: the agent
 executing it is told the real reason (this section), and the policy
-itself is recorded openly here.</fact></p>
-  </section>
-  <section id="scope" title="Scope">
+itself is recorded openly here.</a-publication-posture-not-a-deception></p>
+  </why>
+  <scope title="Scope">
     <list ordered="false">
-      <item><fact id="SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED" status="impl/done">This snippet and `spec/flows/attribution-policy/` are the **only**
+      <item><SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED fact="true" status="impl/done">This snippet and `spec/flows/attribution-policy/` are the **only**
   places in the project where AI tooling is discussed in the
   attribution sense. Everywhere else — commits, code, docs,
-  branches, CI — assume human authorship only.</fact></item>
-      <item><fact id="SCOPE-PRODUCT-IS-CARVED-OUT" status="impl/done">**Product scope is carved out.** If the product itself has AI
+  branches, CI — assume human authorship only.</SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED></item>
+      <item><SCOPE-PRODUCT-IS-CARVED-OUT fact="true" status="impl/done">**Product scope is carved out.** If the product itself has AI
   features, specifying and discussing those features is product
-  scope, not attribution, and is unaffected by this rule.</fact></item>
-      <item><fact id="SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL" status="impl/done">**Technical AI-workflow documents remain legal and unchanged** —
+  scope, not attribution, and is unaffected by this rule.</SCOPE-PRODUCT-IS-CARVED-OUT></item>
+      <item><SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL fact="true" status="impl/done">**Technical AI-workflow documents remain legal and unchanged** —
   checkpoint-file procedures, session protocols, agent
   instructions. They describe how work is organized; they never
-  mark any artifact as machine-authored.</fact></item>
+  mark any artifact as machine-authored.</SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL></item>
     </list>
-  </section>
-  <section id="never" title="Never">
+  </scope>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-ADD-A-TRAILER-NAMING-A-MODEL" status="impl/done">Never add a trailer or signature naming a model or an AI product
-  to any commit.</fact></item>
-      <item><fact id="NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS" status="impl/done">Never mention model, agent, or AI-tool names in commit messages,
-  branch names, or code comments.</fact></item>
-      <item><fact id="NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP" status="impl/done">Never state or imply machine authorship in any repository
-  artifact.</fact></item>
-      <item><fact id="NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE" status="impl/done">Never weaken, widen, or restate this policy anywhere else in the
+      <item><NEVER-ADD-A-TRAILER-NAMING-A-MODEL fact="true" status="impl/done">Never add a trailer or signature naming a model or an AI product
+  to any commit.</NEVER-ADD-A-TRAILER-NAMING-A-MODEL></item>
+      <item><NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS fact="true" status="impl/done">Never mention model, agent, or AI-tool names in commit messages,
+  branch names, or code comments.</NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS></item>
+      <item><NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP fact="true" status="impl/done">Never state or imply machine authorship in any repository
+  artifact.</NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP></item>
+      <item><NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE fact="true" status="impl/done">Never weaken, widen, or restate this policy anywhere else in the
   repository — one policy, one place. Changing it is one edit to
-  this file, made by the owner.</fact></item>
+  this file, made by the owner.</NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE></item>
     </list>
-    <p><fact id="sibling-document-pointers" status="impl/done">Full policy and rationale:
+    <p><sibling-document-pointers fact="true" status="impl/done">Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root.</fact></p>
-  </section>
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root.</sibling-document-pointers></p>
+  </never>
 </spec>

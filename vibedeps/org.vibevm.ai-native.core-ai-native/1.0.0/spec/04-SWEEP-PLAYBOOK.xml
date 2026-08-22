@@ -2,130 +2,130 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The Sweep Playbook — the standing guardian</title>
   <status stage="spec" state="done"/>
-  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral**</fact></p>
-  <p><fact id="SWEEP-IS-THE-RECURRING-COUNTERPART" status="impl/done">*The recurring counterpart of the
-[Raid Playbook](03-RAID-PLAYBOOK.md).*</fact></p>
-  <p><fact id="RAID-IS-A-SCHEDULED-CAMPAIGN" status="impl/done">*A raid is a scheduled campaign — scoped,
-planned, finite.*</fact></p>
-  <p><fact id="SWEEP-IS-THE-STANDING-RUN" status="impl/done">*The **sweep** is the standing run that, executed
+  <p><status-line fact="true" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral**</status-line></p>
+  <p><SWEEP-IS-THE-RECURRING-COUNTERPART fact="true" status="impl/done">*The recurring counterpart of the
+[Raid Playbook](03-RAID-PLAYBOOK.md).*</SWEEP-IS-THE-RECURRING-COUNTERPART></p>
+  <p><RAID-IS-A-SCHEDULED-CAMPAIGN fact="true" status="impl/done">*A raid is a scheduled campaign — scoped,
+planned, finite.*</RAID-IS-A-SCHEDULED-CAMPAIGN></p>
+  <p><SWEEP-IS-THE-STANDING-RUN fact="true" status="impl/done">*The **sweep** is the standing run that, executed
 daily (or several times a day on an active tree), keeps a codebase inside the
-Discipline instead of letting it drift back out between campaigns.*</fact></p>
-  <p><fact id="TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR" status="impl/done">*Terraforming brings a tree into the
+Discipline instead of letting it drift back out between campaigns.*</SWEEP-IS-THE-STANDING-RUN></p>
+  <p><TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR fact="true" status="impl/done">*Terraforming brings a tree into the
 Discipline ([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md)); raids move it
-in planned steps; the sweep holds the ground in between.*</fact></p>
-  <p><fact id="STACKS-SHIP-TOOLS-THIS-DOCUMENT-IS-METHOD" status="impl/done">*Each language stack
+in planned steps; the sweep holds the ground in between.*</TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR></p>
+  <p><STACKS-SHIP-TOOLS-THIS-DOCUMENT-IS-METHOD fact="true" status="impl/done">*Each language stack
 ships the concrete tools and idioms (the Rust stack:
 `rust-ai-native floor | health | test-gate | tripwire`, plus the sweep-idiom
-section of its GUIDE); this document is the method.*</fact></p>
-  <section id="truths" title="0. The two truths">
+section of its GUIDE); this document is the method.*</STACKS-SHIP-TOOLS-THIS-DOCUMENT-IS-METHOD></p>
+  <truths title="0. The two truths">
     <list ordered="true">
-      <item><fact id="TRUTH-GATES-ARE-THE-FLOOR" status="impl/done">**The gates are the floor; the sweep is the
+      <item><TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**The gates are the floor; the sweep is the
    ceiling.** The binary gates — format check, tests, lints, the conform gate,
    the specmap check — say pass/fail and MUST be green before any sweep work.
    The collector's advisory facts (coverage gaps, danger bands, backlogs) sit
    *above* that floor and say what to harden next. A green sweep on a red floor
-   is a contradiction: fix the floor.</fact></item>
-      <item><fact id="TRUTH-GATE-IS-TRUTH-COLLECTOR-IS-A-GUIDE" status="impl/done">**The gate is truth; the
+   is a contradiction: fix the floor.</TRUTH-GATES-ARE-THE-FLOOR></item>
+      <item><TRUTH-GATE-IS-TRUTH-COLLECTOR-IS-A-GUIDE fact="true" status="impl/done">**The gate is truth; the
    collector is a guide.** When the collector says a unit is ready to gate, the
-   gate confirms or refutes it. Trust the gate.</fact></item>
+   gate confirms or refutes it. Trust the gate.</TRUTH-GATE-IS-TRUTH-COLLECTOR-IS-A-GUIDE></item>
     </list>
-    <p><fact id="SWEEP-IS-COLLECTOR-FIRST" status="impl/done">Law 2 governs the sweep's shape: explanation capital
+    <p><SWEEP-IS-COLLECTOR-FIRST fact="true" status="impl/done">Law 2 governs the sweep's shape: explanation capital
 must be runnable capital, so the sweep is **collector-first** — a deterministic,
 no-LLM fact-gatherer (the stack's `health` tool) computes the objective state,
-and the operator (human or agent) acts on facts, not vibes.</fact></p>
-    <p><fact id="UNMECHANISED-CHECKS-ROUTE-TO-JUDGMENT" status="impl/done">Where a check cannot be mechanised yet
+and the operator (human or agent) acts on facts, not vibes.</SWEEP-IS-COLLECTOR-FIRST></p>
+    <p><UNMECHANISED-CHECKS-ROUTE-TO-JUDGMENT fact="true" status="impl/done">Where a check cannot be mechanised yet
 (the WISH rules), the sweep names it and routes it to judgment — it never
-pretends prose is a gate.</fact></p>
-  </section>
-  <section id="tiers" title="1. Tier structure">
-    <p><fact id="TIER-0-HARD-FLOOR" status="impl/done">**Tier 0 — the hard floor (every run, binary, first).**
-Never sweep on a red tree.</fact></p>
-    <p><fact id="TIER-0-RUN-THE-FLOOR-COMMAND" status="impl/done">Run the stack's floor command (format →
+pretends prose is a gate.</UNMECHANISED-CHECKS-ROUTE-TO-JUDGMENT></p>
+  </truths>
+  <tiers title="1. Tier structure">
+    <p><TIER-0-HARD-FLOOR fact="true" status="impl/done">**Tier 0 — the hard floor (every run, binary, first).**
+Never sweep on a red tree.</TIER-0-HARD-FLOOR></p>
+    <p><TIER-0-RUN-THE-FLOOR-COMMAND fact="true" status="impl/done">Run the stack's floor command (format →
 build/tests → lints → conform gate → traceability check → test-gate where a
-baseline registry exists → fast-loop budgets where enforced).</fact></p>
-    <p><fact id="TIER-0-RED-GATE-IS-THE-ONLY-WORK" status="impl/done">If any gate is red, the only work is making
-it green.</fact></p>
-    <p><fact id="TIER-1-RATCHET" status="impl/done">**Tier 1 — the ratchet (every run; act on the collector's
+baseline registry exists → fast-loop budgets where enforced).</TIER-0-RUN-THE-FLOOR-COMMAND></p>
+    <p><TIER-0-RED-GATE-IS-THE-ONLY-WORK fact="true" status="impl/done">If any gate is red, the only work is making
+it green.</TIER-0-RED-GATE-IS-THE-ONLY-WORK></p>
+    <p><TIER-1-RATCHET fact="true" status="impl/done">**Tier 1 — the ratchet (every run; act on the collector's
 facts).** Run the health collector and work its output in cheapest-win-first
-order.</fact></p>
-    <p><fact id="canonical-moves-lead" status="impl/done">The canonical moves, each driven by a collector field,
-never by memory:</fact></p>
+order.</TIER-1-RATCHET></p>
+    <p><canonical-moves-lead fact="true" status="impl/done">The canonical moves, each driven by a collector field,
+never by memory:</canonical-moves-lead></p>
     <list ordered="false">
-      <item><fact id="MOVE-SPLIT-THE-DANGER-BAND" status="impl/done">**Split the danger band before it trips** —
+      <item><MOVE-SPLIT-THE-DANGER-BAND fact="true" status="impl/done">**Split the danger band before it trips** —
   files approaching the length budget are landmines; measure with the rule
-  (physical lines), not the eye.</fact></item>
-      <item><fact id="MOVE-WIDEN-A-GATE-FOR-FREE" status="impl/done">**Widen a gate for free** — a unit the collector
+  (physical lines), not the eye.</MOVE-SPLIT-THE-DANGER-BAND></item>
+      <item><MOVE-WIDEN-A-GATE-FOR-FREE fact="true" status="impl/done">**Widen a gate for free** — a unit the collector
   shows at zero drain (e.g. full doctest coverage) enters the corresponding gate
-  list with zero work; the gate run confirms the prediction.</fact></item>
-      <item><fact id="MOVE-DRAIN-THE-SMALLEST-BACKLOG" status="impl/done">**Drain the smallest backlog** — take the
+  list with zero work; the gate run confirms the prediction.</MOVE-WIDEN-A-GATE-FOR-FREE></item>
+      <item><MOVE-DRAIN-THE-SMALLEST-BACKLOG fact="true" status="impl/done">**Drain the smallest backlog** — take the
   smallest-gap ungated unit, bring it to zero, then flip it into the gate (the
   expand-as-you-conform rhythm: **a unit enters a gate only after it drains to
-  zero** — a flip must never widen a baseline).</fact></item>
-      <item><fact id="MOVE-REJUSTIFY-THE-DEVIATION-DEBT" status="impl/done">**Re-justify the deviation debt** — walk
+  zero** — a flip must never widen a baseline).</MOVE-DRAIN-THE-SMALLEST-BACKLOG></item>
+      <item><MOVE-REJUSTIFY-THE-DEVIATION-DEBT fact="true" status="impl/done">**Re-justify the deviation debt** — walk
   each recorded deviation: does its reason still hold? A deviation whose
   invariant has since been encoded in a type/checker is removed and
-  restructured. *A deviation with no live reason is a defect.*</fact></item>
-      <item><fact id="MOVE-CATCH-CENSUS-REGRESSIONS" status="impl/done">**Catch census regressions** — for gated
+  restructured. *A deviation with no live reason is a defect.*</MOVE-REJUSTIFY-THE-DEVIATION-DEBT></item>
+      <item><MOVE-CATCH-CENSUS-REGRESSIONS fact="true" status="impl/done">**Catch census regressions** — for gated
   units the violation censuses must stay zero; a non-zero is a fresh violation
   that slipped a local check. Restructure beats testify: encode the invariant in
-  a type or contract rather than recording an excuse.</fact></item>
+  a type or contract rather than recording an excuse.</MOVE-CATCH-CENSUS-REGRESSIONS></item>
     </list>
-    <p><fact id="TIER-2-DRIFT" status="impl/done">**Tier 2 — drift (weekly; the slow rot the gates don't see).**</fact></p>
+    <p><TIER-2-DRIFT fact="true" status="impl/done">**Tier 2 — drift (weekly; the slow rot the gates don't see).**</TIER-2-DRIFT></p>
     <list ordered="false">
-      <item><fact id="DRIFT-DEBT-REGISTRY" status="impl/done">**Debt registry:** run the tripwire tool; re-disposition
+      <item><DRIFT-DEBT-REGISTRY fact="true" status="impl/done">**Debt registry:** run the tripwire tool; re-disposition
   any touched-and-open entry
   ([BROWNFIELD §3](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#registries)).
-  New deficiencies found while sweeping are *filed* there, not left as prose.</fact></item>
-      <item><fact id="DRIFT-DOC-CODE" status="impl/done">**Doc/code drift:** state checkpoints vs reality (see
+  New deficiencies found while sweeping are *filed* there, not left as prose.</DRIFT-DEBT-REGISTRY></item>
+      <item><DRIFT-DOC-CODE fact="true" status="impl/done">**Doc/code drift:** state checkpoints vs reality (see
   [WAL convention](06-WAL-CONVENTION.md) — freshness rule); architecture
   docs vs the real layout; roadmap self-staleness. A stale doc that governs
-  code is filed as `stale-doc` debt.</fact></item>
-      <item><fact id="DRIFT-MARKER-CENSUS" status="impl/done">**Marker census:** every TODO/FIXME/REVIEW/HACK is a
+  code is filed as `stale-doc` debt.</DRIFT-DOC-CODE></item>
+      <item><DRIFT-MARKER-CENSUS fact="true" status="impl/done">**Marker census:** every TODO/FIXME/REVIEW/HACK is a
   WISH or a deferred decision — load-bearing ones graduate into the debt/intent
   registries, trivial ones are resolved or deleted. Prose that promises and
-  doesn't deliver is false training signal.</fact></item>
-      <item><fact id="DRIFT-GOLDEN-TRANSCRIPTS" status="impl/done">**Golden transcripts:** characterization oracles
+  doesn't deliver is false training signal.</DRIFT-MARKER-CENSUS></item>
+      <item><DRIFT-GOLDEN-TRANSCRIPTS fact="true" status="impl/done">**Golden transcripts:** characterization oracles
   must fail loudly and be re-captured deliberately, never auto-updated — an
-  auto-updated golden is a test that always passes.</fact></item>
-      <item><fact id="DRIFT-TRACEABILITY-KIND-HYGIENE" status="impl/done">**Traceability kind hygiene:** a code edge
+  auto-updated golden is a test that always passes.</DRIFT-GOLDEN-TRANSCRIPTS></item>
+      <item><DRIFT-TRACEABILITY-KIND-HYGIENE fact="true" status="impl/done">**Traceability kind hygiene:** a code edge
   into an unmarked spec unit prompts marking the unit's kind/revision in the
-  same change — a unit that code points at is not informative.</fact></item>
+  same change — a unit that code points at is not informative.</DRIFT-TRACEABILITY-KIND-HYGIENE></item>
     </list>
-    <p><fact id="TIER-3-DEEP-JUDGMENT" status="impl/done">**Tier 3 — deep judgment (weekly/biweekly; the WISH
+    <p><TIER-3-DEEP-JUDGMENT fact="true" status="impl/done">**Tier 3 — deep judgment (weekly/biweekly; the WISH
 rules).** The rules no checker mechanises yet — reviewed by a human or strong
 agent so they are not silently skipped, each a candidate to graduate into a real
-checker.</fact></p>
-    <p><fact id="TIER-3-CONCRETE-LIST-LIVES-IN-THE-STACK" status="impl/done">The stack's GUIDE and cards carry the
+checker.</TIER-3-DEEP-JUDGMENT></p>
+    <p><TIER-3-CONCRETE-LIST-LIVES-IN-THE-STACK fact="true" status="impl/done">The stack's GUIDE and cards carry the
 concrete list (typed seams, cell isolation and oracles, uniformity,
-contract-first ordering, lying prose, closed-vocabulary naming).</fact></p>
-    <p><fact id="TIER-3-MAY-LAUNCH-A-RAID" status="impl/done">Tier 3 may also launch a full
+contract-first ordering, lying prose, closed-vocabulary naming).</TIER-3-CONCRETE-LIST-LIVES-IN-THE-STACK></p>
+    <p><TIER-3-MAY-LAUNCH-A-RAID fact="true" status="impl/done">Tier 3 may also launch a full
 [raid](03-RAID-PLAYBOOK.md) when a Tier-1 backlog grows campaign-sized —
-plan it per the [Campaign Form](05-CAMPAIGN-FORM.md).</fact></p>
-  </section>
-  <section id="collector" title="2. The collector contract">
-    <p><fact id="collector-is-the-sweeps-instrument" status="impl/done">The health collector is the sweep's
-instrument.</fact></p>
-    <p><fact id="collector-must-be-lead" status="impl/done">It MUST be:</fact></p>
+plan it per the [Campaign Form](05-CAMPAIGN-FORM.md).</TIER-3-MAY-LAUNCH-A-RAID></p>
+  </tiers>
+  <collector title="2. The collector contract">
+    <p><collector-is-the-sweeps-instrument fact="true" status="impl/done">The health collector is the sweep's
+instrument.</collector-is-the-sweeps-instrument></p>
+    <p><collector-must-be-lead fact="true" status="impl/done">It MUST be:</collector-must-be-lead></p>
     <list ordered="false">
-      <item><fact id="COLLECTOR-DETERMINISTIC" status="impl/done">**deterministic**
+      <item><COLLECTOR-DETERMINISTIC fact="true" status="impl/done">**deterministic**
   (same tree → byte-identical output, so its committed snapshot's diff IS the
-  health trend),</fact></item>
-      <item><fact id="COLLECTOR-ADVISORY" status="impl/done">**advisory** (it never fails the build — the gates do),</fact></item>
-      <item><fact id="COLLECTOR-NO-LLM" status="impl/done">**no-LLM**,</fact></item>
-      <item><fact id="COLLECTOR-SINGLE-SOURCED" status="impl/done">and **single-sourced** (it reads the gate policies — the conform
+  health trend),</COLLECTOR-DETERMINISTIC></item>
+      <item><COLLECTOR-ADVISORY fact="true" status="impl/done">**advisory** (it never fails the build — the gates do),</COLLECTOR-ADVISORY></item>
+      <item><COLLECTOR-NO-LLM fact="true" status="impl/done">**no-LLM**,</COLLECTOR-NO-LLM></item>
+      <item><COLLECTOR-SINGLE-SOURCED fact="true" status="impl/done">and **single-sourced** (it reads the gate policies — the conform
   and specmap configs — never hardcoded lists, so its numbers cannot drift from
-  what the gates enforce).</fact></item>
+  what the gates enforce).</COLLECTOR-SINGLE-SOURCED></item>
     </list>
-    <p><fact id="COUNT-THE-LIST-NOT-THE-RECORD" status="impl/done">Count the list, not the record: any inventory the
+    <p><COUNT-THE-LIST-NOT-THE-RECORD fact="true" status="impl/done">Count the list, not the record: any inventory the
 sweep acts on comes from the collector or a config, never from memory or a
-document's stale snapshot.</fact></p>
-    <p><fact id="PROMOTION-LADDER" status="impl/done">**The promotion ladder** — how the rule set grows: a Tier-3
+document's stale snapshot.</COUNT-THE-LIST-NOT-THE-RECORD></p>
+    <p><PROMOTION-LADDER fact="true" status="impl/done">**The promotion ladder** — how the rule set grows: a Tier-3
 WISH rule becomes mechanisable → add it to the collector as a census (cheap,
-advisory) → once proven, promote it to a blocking gate rule.</fact></p>
-    <p><fact id="EXTENDING-THE-COLLECTOR-IS-RATCHET-WORK" status="impl/done">Extending the collector is
-itself ratchet work.</fact></p>
-  </section>
-  <section id="cadence" title="3. Cadence">
+advisory) → once proven, promote it to a blocking gate rule.</PROMOTION-LADDER></p>
+    <p><EXTENDING-THE-COLLECTOR-IS-RATCHET-WORK fact="true" status="impl/done">Extending the collector is
+itself ratchet work.</EXTENDING-THE-COLLECTOR-IS-RATCHET-WORK></p>
+  </collector>
+  <cadence title="3. Cadence">
     <table>
       <tr>
         <td>Tier</td>
@@ -133,74 +133,74 @@ itself ratchet work.</fact></p>
         <td>Weekly</td>
       </tr>
       <tr>
-        <td><fact id="ROW-TIER-0" status="impl/done">0 — hard floor</fact></td>
+        <td><ROW-TIER-0 fact="true" status="impl/done">0 — hard floor</ROW-TIER-0></td>
         <td><fact status="impl/done">✓</fact></td>
         <td><fact status="impl/done">✓</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TIER-1" status="impl/done">1 — ratchet</fact></td>
+        <td><ROW-TIER-1 fact="true" status="impl/done">1 — ratchet</ROW-TIER-1></td>
         <td><fact status="impl/done">✓</fact></td>
         <td><fact status="impl/done">✓</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TIER-2" status="impl/done">2 — drift</fact></td>
+        <td><ROW-TIER-2 fact="true" status="impl/done">2 — drift</ROW-TIER-2></td>
         <td/>
         <td><fact status="impl/done">✓</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TIER-3" status="impl/done">3 — deep judgment / raid</fact></td>
+        <td><ROW-TIER-3 fact="true" status="impl/done">3 — deep judgment / raid</ROW-TIER-3></td>
         <td/>
         <td><fact status="impl/done">✓</fact></td>
       </tr>
     </table>
-    <p><fact id="DAILY-RUN-IS-LIGHT" status="impl/done">The daily run is light: floor green, then one or two
-cheapest Tier-1 wins.</fact></p>
-    <p><fact id="WEEKLY-RUN-ADDS-DRIFT-AND-JUDGMENT" status="impl/done">The weekly run adds the drift and judgment
-tiers.</fact></p>
-    <p><fact id="ANY-SINGLE-ITEM-IS-A-SAFE-STOP" status="impl/done">**Any single item is a safe
+    <p><DAILY-RUN-IS-LIGHT fact="true" status="impl/done">The daily run is light: floor green, then one or two
+cheapest Tier-1 wins.</DAILY-RUN-IS-LIGHT></p>
+    <p><WEEKLY-RUN-ADDS-DRIFT-AND-JUDGMENT fact="true" status="impl/done">The weekly run adds the drift and judgment
+tiers.</WEEKLY-RUN-ADDS-DRIFT-AND-JUDGMENT></p>
+    <p><ANY-SINGLE-ITEM-IS-A-SAFE-STOP fact="true" status="impl/done">**Any single item is a safe
 stop** — the sweep is incremental by construction, and the collector
-re-derives the remaining work each run.</fact></p>
-  </section>
-  <section id="output" title="4. Output of a sweep">
-    <p><fact id="SWEEP-LANDS-TOPIC-GROUPED-COMMITS" status="impl/done">Each sweep that changes the tree lands
+re-derives the remaining work each run.</ANY-SINGLE-ITEM-IS-A-SAFE-STOP></p>
+  </cadence>
+  <output title="4. Output of a sweep">
+    <p><SWEEP-LANDS-TOPIC-GROUPED-COMMITS fact="true" status="impl/done">Each sweep that changes the tree lands
 topic-grouped commits (one logical unit each), citing the sweep item that drove
-them.</fact></p>
-    <p><fact id="REFRESH-THE-HEALTH-SNAPSHOT" status="impl/done">Refresh the committed health snapshot in the same
-run — its diff records the trend.</fact></p>
-    <p><fact id="resume-pointer-lead" status="impl/done">**Resume pointer** (see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</fact></p>
+them.</SWEEP-LANDS-TOPIC-GROUPED-COMMITS></p>
+    <p><REFRESH-THE-HEALTH-SNAPSHOT fact="true" status="impl/done">Refresh the committed health snapshot in the same
+run — its diff records the trend.</REFRESH-THE-HEALTH-SNAPSHOT></p>
+    <p><resume-pointer-lead fact="true" status="impl/done">**Resume pointer** (see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</resume-pointer-lead></p>
     <list ordered="false">
-      <item><fact id="SWEEP-RESUME-WITH-A-WAL" status="impl/done">*With a WAL (recommended):* bump the WAL's standing line at any sweep that
+      <item><SWEEP-RESUME-WITH-A-WAL fact="true" status="impl/done">*With a WAL (recommended):* bump the WAL's standing line at any sweep that
   moves a milestone (a gate widened, a backlog unit cleared); the health
-  snapshot plus the WAL is the next sweep's starting point.</fact></item>
-      <item><fact id="SWEEP-RESUME-WITHOUT-A-WAL" status="impl/done">*Without a WAL:* the sweep's closing commit message carries the summary —
+  snapshot plus the WAL is the next sweep's starting point.</SWEEP-RESUME-WITH-A-WAL></item>
+      <item><SWEEP-RESUME-WITHOUT-A-WAL fact="true" status="impl/done">*Without a WAL:* the sweep's closing commit message carries the summary —
   floor state, the Tier-1 items taken, the next candidate — and the committed
   health snapshot is the resume pointer. Nothing may live only in the
-  operator's head or the session transcript.</fact></item>
+  operator's head or the session transcript.</SWEEP-RESUME-WITHOUT-A-WAL></item>
     </list>
-  </section>
-  <section id="non-goals" title="5. What the sweep deliberately does NOT do">
+  </output>
+  <non-goals title="5. What the sweep deliberately does NOT do">
     <list ordered="false">
-      <item><fact id="NON-GOAL-DOES-NOT-REPLACE-THE-GATES" status="impl/done">It does **not** replace the gates (Tier 0 is the floor, the sweep hardens
-  what sits above it).</fact></item>
-      <item><fact id="NON-GOAL-DOES-NOT-AUTO-FIX" status="impl/done">It does **not** auto-fix. The collector gathers facts; the operator acts.
+      <item><NON-GOAL-DOES-NOT-REPLACE-THE-GATES fact="true" status="impl/done">It does **not** replace the gates (Tier 0 is the floor, the sweep hardens
+  what sits above it).</NON-GOAL-DOES-NOT-REPLACE-THE-GATES></item>
+      <item><NON-GOAL-DOES-NOT-AUTO-FIX fact="true" status="impl/done">It does **not** auto-fix. The collector gathers facts; the operator acts.
   Mechanising a fix is a separate, deliberate promotion (a new gate rule or
-  a codemod).</fact></item>
-      <item><fact id="NON-GOAL-DOES-NOT-TOUCH-FROZEN-SURFACES" status="impl/done">It does **not** touch owner-frozen surfaces or owner-court decisions
-  without sanction; drift found in them is *filed* as debt, not fixed.</fact></item>
-      <item><fact id="NON-GOAL-DOES-NOT-MEASURE-EFFECTIVENESS" status="impl/done">It does **not** measure effectiveness (deferred by design); it records
-  objective state.</fact></item>
+  a codemod).</NON-GOAL-DOES-NOT-AUTO-FIX></item>
+      <item><NON-GOAL-DOES-NOT-TOUCH-FROZEN-SURFACES fact="true" status="impl/done">It does **not** touch owner-frozen surfaces or owner-court decisions
+  without sanction; drift found in them is *filed* as debt, not fixed.</NON-GOAL-DOES-NOT-TOUCH-FROZEN-SURFACES></item>
+      <item><NON-GOAL-DOES-NOT-MEASURE-EFFECTIVENESS fact="true" status="impl/done">It does **not** measure effectiveness (deferred by design); it records
+  objective state.</NON-GOAL-DOES-NOT-MEASURE-EFFECTIVENESS></item>
     </list>
-  </section>
-  <section id="instantiate" title="6. Instantiating for a project">
-    <p><fact id="CONSUMER-RUNS-THE-SHIPPED-SKILL" status="impl/done">A consumer project runs the sweep from the
+  </non-goals>
+  <instantiate title="6. Instantiating for a project">
+    <p><CONSUMER-RUNS-THE-SHIPPED-SKILL fact="true" status="impl/done">A consumer project runs the sweep from the
 shipped skill (the Rust stack ships `rust-ai-native-sweep`) against the shipped
 tools; the only per-project material is the policy files the gates already
 require and, optionally, a thin local instance document recording project
-snapshot numbers and machine-scoped quirks.</fact></p>
-    <p><fact id="KEEP-THE-THREE-LAYERS-APART" status="impl/done">Keep the three layers apart: **method** (this
+snapshot numbers and machine-scoped quirks.</CONSUMER-RUNS-THE-SHIPPED-SKILL></p>
+    <p><KEEP-THE-THREE-LAYERS-APART fact="true" status="impl/done">Keep the three layers apart: **method** (this
 document), **language idioms** (the stack's GUIDE/cards), **project instance**
-(the consumer's own notes).</fact></p>
-    <p><fact id="MACHINE-QUIRK-IS-NOT-PROJECT-FACT" status="impl/done">A machine quirk is not project fact; a
-project number is not method.</fact></p>
-  </section>
+(the consumer's own notes).</KEEP-THE-THREE-LAYERS-APART></p>
+    <p><MACHINE-QUIRK-IS-NOT-PROJECT-FACT fact="true" status="impl/done">A machine quirk is not project fact; a
+project number is not method.</MACHINE-QUIRK-IS-NOT-PROJECT-FACT></p>
+  </instantiate>
 </spec>

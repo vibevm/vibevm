@@ -2,77 +2,77 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:comparative-research` — study the competition, evergreen</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE" status="impl/done">A `flow` package that installs the **comparative research** genre
-into a project.</fact></p>
-  <p><fact id="THE-OUTPUT-IS-A-SELF-CONTAINED-EVERGREEN-DOCUMENT" status="impl/done">When you study an external system — a competitor, a
+  <p><PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE fact="true" status="impl/done">A `flow` package that installs the **comparative research** genre
+into a project.</PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE></p>
+  <p><THE-OUTPUT-IS-A-SELF-CONTAINED-EVERGREEN-DOCUMENT fact="true" status="impl/done">When you study an external system — a competitor, a
 predecessor, an adjacent tool — the output is a self-contained,
 evergreen document: readable months later without the original
 sources, structured as a two-way gap analysis, closing with numbered
-roadmap deltas that the study *proposes but never ratifies*.</fact></p>
-  <p><fact id="the-genre-exists-because-the-alternatives-fail" status="spec/done">The genre exists because the cheap alternatives fail.</fact></p>
-  <p><fact id="a-bookmark-rots-when-the-url-moves" status="spec/done">A bookmark
-rots when the URL moves.</fact></p>
-  <p><fact id="a-verbal-comparison-evaporates-and-gets-re-argued" status="spec/done">A quick verbal "they do X, we should too"
-evaporates and gets re-argued next quarter.</fact></p>
-  <p><fact id="a-one-directional-rant-is-marketing-for-them" status="spec/done">A one-directional rant
-about a rival's shiny feature is marketing you wrote for them.</fact></p>
-  <p><fact id="A-REAL-STUDY-QUOTES-MEASURES-AND-PROPOSES" status="impl/done">A
+roadmap deltas that the study *proposes but never ratifies*.</THE-OUTPUT-IS-A-SELF-CONTAINED-EVERGREEN-DOCUMENT></p>
+  <p><the-genre-exists-because-the-alternatives-fail fact="true" status="spec/done">The genre exists because the cheap alternatives fail.</the-genre-exists-because-the-alternatives-fail></p>
+  <p><a-bookmark-rots-when-the-url-moves fact="true" status="spec/done">A bookmark
+rots when the URL moves.</a-bookmark-rots-when-the-url-moves></p>
+  <p><a-verbal-comparison-evaporates-and-gets-re-argued fact="true" status="spec/done">A quick verbal "they do X, we should too"
+evaporates and gets re-argued next quarter.</a-verbal-comparison-evaporates-and-gets-re-argued></p>
+  <p><a-one-directional-rant-is-marketing-for-them fact="true" status="spec/done">A one-directional rant
+about a rival's shiny feature is marketing you wrote for them.</a-one-directional-rant-is-marketing-for-them></p>
+  <p><A-REAL-STUDY-QUOTES-MEASURES-AND-PROPOSES fact="true" status="impl/done">A
 real study quotes the subject verbatim with dates, measures it in
 *both* directions, and turns the actionable trailing gaps into
-numbered, prioritized, homed proposals a human can weigh.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+numbered, prioritized, homed proposals a human can weigh.</A-REAL-STUDY-QUOTES-MEASURES-AND-PROPOSES></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-GENRE-LAW" status="impl/done">`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`
+    <item><CONTENT-THE-GENRE-LAW fact="true" status="impl/done">`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`
   — the genre law: what a comparative study is, why it exists, the
   five laws (self-containedness, quote-first, two-way gaps,
   deltas-not-decrees, the re-fetch list), when to write one, and a
-  re-derive prompt.</fact></item>
-    <item><fact id="CONTENT-THE-RESEARCH-TEMPLATE" status="impl/done">`spec/flows/comparative-research/research-template.md` — a
+  re-derive prompt.</CONTENT-THE-GENRE-LAW></item>
+    <item><CONTENT-THE-RESEARCH-TEMPLATE fact="true" status="impl/done">`spec/flows/comparative-research/research-template.md` — a
   copy-ready skeleton (purpose, source table, reading shape, the
   subject in its own words, inventory, trail, lead, numbered deltas,
   open questions, re-fetch list), clause-by-clause commentary, and a
-  short worked fragment.</fact></item>
-    <item><fact id="CONTENT-THE-ROADMAP-PIPELINE" status="impl/done">`spec/flows/comparative-research/from-research-to-roadmap.md` — the
+  short worked fragment.</CONTENT-THE-RESEARCH-TEMPLATE></item>
+    <item><CONTENT-THE-ROADMAP-PIPELINE fact="true" status="impl/done">`spec/flows/comparative-research/from-research-to-roadmap.md` — the
   downstream pipeline: delta → owner review → accepted deltas become
   recorded decisions, rejected deltas stay archived with their
-  reason, plus refresh discipline and the honesty rule.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/52-flow-comparative-research.md` — boot snippet: the
-  genre exists, reach for the template on request, hold the laws.</fact></item>
+  reason, plus refresh discipline and the honesty rule.</CONTENT-THE-ROADMAP-PIPELINE></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/52-flow-comparative-research.md` — boot snippet: the
+  genre exists, reach for the template on request, hold the laws.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:comparative-research</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:comparative-research</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-DISCOVERY-PROMPT" status="impl/done">`flow:discovery-prompt` — a discovery session is *how* the raw
+      <item><COMPOSES-DISCOVERY-PROMPT fact="true" status="impl/done">`flow:discovery-prompt` — a discovery session is *how* the raw
   study conversation runs; this genre is *where* its output
-  crystallizes into a durable, evergreen document.</fact></item>
-      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — an accepted delta lands as a recorded
+  crystallizes into a durable, evergreen document.</COMPOSES-DISCOVERY-PROMPT></item>
+      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — an accepted delta lands as a recorded
   decision with a revisit trigger at its target anchor; the study
-  points at the record.</fact></item>
-      <item><fact id="COMPOSES-SPEC-GENRES" status="impl/done">`flow:spec-genres` — this is the research genre's own package; the
+  points at the record.</COMPOSES-DECISION-RECORDS></item>
+      <item><COMPOSES-SPEC-GENRES fact="true" status="impl/done">`flow:spec-genres` — this is the research genre's own package; the
   full genre map (research alongside PROP, FEAT, WAL, and the rest)
-  lives there.</fact></item>
+  lives there.</COMPOSES-SPEC-GENRES></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="crystallized-from-the-origin-projects-research-doc-practice" status="spec/done">The genre is crystallized from the origin project's research-doc
+  </composition>
+  <background title="Philosophical background">
+    <p><crystallized-from-the-origin-projects-research-doc-practice fact="true" status="spec/done">The genre is crystallized from the origin project's research-doc
 practice — evergreen backgrounders that outlived their sources and
-fed a research → roadmap-delta → contract pipeline.</fact></p>
-    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The collection's
+fed a research → roadmap-delta → contract pipeline.</crystallized-from-the-origin-projects-research-doc-practice></p>
+    <p><collections-spirit-is-the-redbook fact="true" status="spec/done">The collection's
 spirit is the book *AI-native development*, which ships in Russian
-inside `flow:redbook` at `spec/book/ru/`.</fact></p>
-    <p><fact id="short-version-a-studied-competitor-is-intelligence" status="spec/done">Short version: a competitor
+inside `flow:redbook` at `spec/book/ru/`.</collections-spirit-is-the-redbook></p>
+    <p><short-version-a-studied-competitor-is-intelligence fact="true" status="spec/done">Short version: a competitor
 you have not studied is a roadmap mistake waiting to happen; a
-competitor you have studied — in both directions — is intelligence.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</fact></p>
-  </section>
+competitor you have studied — in both directions — is intelligence.</short-version-a-studied-competitor-is-intelligence></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</license-line></p>
+  </license>
 </spec>

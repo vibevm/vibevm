@@ -2,77 +2,77 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:managed-blocks` — write into files you do not own</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE" status="impl/done">A `flow` package that installs one discipline: **how a tool writes
+  <p><PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE fact="true" status="impl/done">A `flow` package that installs one discipline: **how a tool writes
 into a file it does not own** — an agent-instruction file, a shell rc,
 an ssh config, a shared project config — without destroying what the
-other tenants put there.</fact></p>
-  <p><fact id="FIRST-INSTALL-INTO-A-NON-TRIVIAL-HOST-FILE-IS-A-DATA-LOSS-EVENT" status="spec/done">The first install of a whole-file-overwriting
+other tenants put there.</PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE></p>
+  <p><FIRST-INSTALL-INTO-A-NON-TRIVIAL-HOST-FILE-IS-A-DATA-LOSS-EVENT fact="true" status="spec/done">The first install of a whole-file-overwriting
 tool into a project with a non-trivial host file is a data-loss event;
-this practice is how it stops being one.</fact></p>
-  <p><fact id="AUDIENCE-IS-TOOL-AUTHORS" status="impl/done">**Audience: tool authors.** Anyone whose software writes into files it
-does not solely own.</fact></p>
-  <p><fact id="IF-YOUR-TOOL-WRITES-A-FILE-OTHERS-EDIT-THIS-IS-FOR-YOU" status="impl/done">If your tool `write()`s a file a human or another
-tool also edits, this is for you.</fact></p>
-  <p><fact id="the-law-fits-on-one-line" status="impl/done">The law fits on one line:</fact></p>
+this practice is how it stops being one.</FIRST-INSTALL-INTO-A-NON-TRIVIAL-HOST-FILE-IS-A-DATA-LOSS-EVENT></p>
+  <p><AUDIENCE-IS-TOOL-AUTHORS fact="true" status="impl/done">**Audience: tool authors.** Anyone whose software writes into files it
+does not solely own.</AUDIENCE-IS-TOOL-AUTHORS></p>
+  <p><IF-YOUR-TOOL-WRITES-A-FILE-OTHERS-EDIT-THIS-IS-FOR-YOU fact="true" status="impl/done">If your tool `write()`s a file a human or another
+tool also edits, this is for you.</IF-YOUR-TOOL-WRITES-A-FILE-OTHERS-EDIT-THIS-IS-FOR-YOU></p>
+  <p><the-law-fits-on-one-line fact="true" status="impl/done">The law fits on one line:</the-law-fits-on-one-line></p>
   <fence>Own exactly one delimited block; never touch a byte outside it.</fence>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md` — the full
+    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md` — the full
   protocol: the co-tenant law, marker design (unique, greppable,
   paired, self-documenting, versioned), the absent / present /
   malformed state machine, the three verbs (create / update / remove),
   plan-time classification, the byte-identical no-op, and multi-tool
-  cohabitation.</fact></item>
-    <item><fact id="CONTENT-THE-REJECTED-DESIGNS" status="impl/done">`spec/flows/managed-blocks/rejected-designs.md` — four designs that
+  cohabitation.</CONTENT-THE-PROTOCOL></item>
+    <item><CONTENT-THE-REJECTED-DESIGNS fact="true" status="impl/done">`spec/flows/managed-blocks/rejected-designs.md` — four designs that
   look reasonable and are wrong (sidecar, model-based detection,
   auto-repair, whole-file ownership), each with its full why, plus the
-  malformed-state hard-stop drill.</fact></item>
-    <item><fact id="CONTENT-THE-ADOPTION-GUIDE" status="impl/done">`spec/flows/managed-blocks/adoption-guide.md` — migrating an
+  malformed-state hard-stop drill.</CONTENT-THE-REJECTED-DESIGNS></item>
+    <item><CONTENT-THE-ADOPTION-GUIDE fact="true" status="impl/done">`spec/flows/managed-blocks/adoption-guide.md` — migrating an
   overwriting tool onto a block, a fixture table that pins the state
   machine, and what belongs inside the block versus a tool-owned file
-  it points at.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/65-flow-managed-blocks.md` — boot snippet loaded at
+  it points at.</CONTENT-THE-ADOPTION-GUIDE></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/65-flow-managed-blocks.md` — boot snippet loaded at
   session start: the one-line law, when to read the protocol, and the
-  never-do list.</fact></item>
+  never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:managed-blocks</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:managed-blocks</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched — which is, fittingly, the
-whole point of the practice.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched — which is, fittingly, the
+whole point of the practice.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-TOOL-DESIGN-LESSONS" status="impl/done">`flow:tool-design-lessons` — the sibling package for tool authors;
+      <item><COMPOSES-TOOL-DESIGN-LESSONS fact="true" status="impl/done">`flow:tool-design-lessons` — the sibling package for tool authors;
   managed blocks is one deep-dive lesson from it, extracted so it can
-  be installed on its own.</fact></item>
-      <item><fact id="COMPOSES-ATTRIBUTION-POLICY-AND-WAL" status="impl/done">`flow:git-attribution-policy` and `flow:wal` — their instruction files
+  be installed on its own.</COMPOSES-TOOL-DESIGN-LESSONS></item>
+      <item><COMPOSES-ATTRIBUTION-POLICY-AND-WAL fact="true" status="impl/done">`flow:git-attribution-policy` and `flow:wal` — their instruction files
   are exactly the kind of shared, hand-authored file this protocol
   protects. A tool that writes an attribution snippet or a WAL redirect
-  into `CLAUDE.md` must do it as a block, not an overwrite.</fact></item>
-      <item><fact id="COMPOSES-CONFLICT-PROTOCOL" status="impl/done">`flow:conflict-protocol` — a malformed block is a conflict surfaced
+  into `CLAUDE.md` must do it as a block, not an overwrite.</COMPOSES-ATTRIBUTION-POLICY-AND-WAL></item>
+      <item><COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — a malformed block is a conflict surfaced
   to the human, never silently resolved; both practices refuse to guess
-  when two writers disagree, and both hard-stop instead of auto-fixing.</fact></item>
+  when two writers disagree, and both hard-stop instead of auto-fixing.</COMPOSES-CONFLICT-PROTOCOL></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="practice-crystallized-from-the-origin-projects-law" status="spec/done">The practice is crystallized from the origin project's
+  </composition>
+  <background title="Philosophical background">
+    <p><practice-crystallized-from-the-origin-projects-law fact="true" status="spec/done">The practice is crystallized from the origin project's
 managed-redirect-block law — the rule that a tool owns one delimited,
 machine-findable region of a shared file and never touches a byte
-outside it, with a hard stop on any malformed state.</fact></p>
-    <p><fact id="ORIGIN-MARKERS-ARE-ONE-EXAMPLE-AND-THE-RULE-IS-GENERIC" status="impl/done">The origin's own
+outside it, with a hard stop on any malformed state.</practice-crystallized-from-the-origin-projects-law></p>
+    <p><ORIGIN-MARKERS-ARE-ONE-EXAMPLE-AND-THE-RULE-IS-GENERIC fact="true" status="impl/done">The origin's own
 markers (`&lt;vibevm&gt;`) and host file (`CLAUDE.md`) appear here only as
 one worked example among others (shell rc, ssh config); the rule is
-generic to any tool and any shared file.</fact></p>
-    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The collection's spirit is the
+generic to any tool and any shared file.</ORIGIN-MARKERS-ARE-ONE-EXAMPLE-AND-THE-RULE-IS-GENERIC></p>
+    <p><collections-spirit-is-the-redbook fact="true" status="spec/done">The collection's spirit is the
 book *AI-native development*, which ships in Russian inside
-`flow:redbook` at `spec/book/ru/`.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See `LICENSE.md`.</fact></p>
-  </section>
+`flow:redbook` at `spec/book/ru/`.</collections-spirit-is-the-redbook></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See `LICENSE.md`.</license-line></p>
+  </license>
 </spec>

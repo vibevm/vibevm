@@ -1,8 +1,8 @@
 schema = 1
 source_hash = "sha256:01ea0dbb19c1c3ba4af1cdfcb8c947c437f0dd2cab818672d18ba4818d57b6eb"
 output_format = "xml"
-converter_recipe = "specdoc/1"
-derived_hash = "sha256:b47be7ab1bce084111e76c5c0b804306d118461c7c53616574fd8918f333b0fc"
+converter_recipe = "specdoc/3"
+derived_hash = "sha256:0c2590e11c2df47eb30338c3cfd7a3ec7b92e6ae4d1d99bb8a4555bc3975fde3"
 
 [[file]]
 source = "AGENTS.md"

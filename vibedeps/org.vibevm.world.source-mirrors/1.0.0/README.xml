@@ -2,81 +2,81 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:source-mirrors` — one mainline, hosts as replicas</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE" status="impl/done">A `flow` package that installs the **single-writer source mirrors**
-discipline into a project.</fact></p>
-  <p><fact id="the-naive-fix-is-multi-master-replication" status="spec/done">When the same source must live on more than
+  <p><PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE fact="true" status="impl/done">A `flow` package that installs the **single-writer source mirrors**
+discipline into a project.</PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE></p>
+  <p><the-naive-fix-is-multi-master-replication fact="true" status="spec/done">When the same source must live on more than
 one git host, the naive fix — let each host accept writes and mirror to
 the others — is multi-master replication, and two writes to the same
-branch diverge.</fact></p>
-  <p><fact id="this-flow-dissolves-the-failure-mode" status="impl/done">This flow dissolves that failure mode instead of
-managing it:</fact></p>
+branch diverge.</the-naive-fix-is-multi-master-replication></p>
+  <p><this-flow-dissolves-the-failure-mode fact="true" status="impl/done">This flow dissolves that failure mode instead of
+managing it:</this-flow-dissolves-the-failure-mode></p>
   <list ordered="false">
-    <item><fact id="MODEL-ONE-MAINLINE-NO-HOST-PRIMARY" status="impl/done">there is one **mainline** (the maintainer's local `main`,
-  no host primary),</fact></item>
-    <item><fact id="MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA" status="impl/done">every host is a downstream **read-replica**,</fact></item>
-    <item><fact id="MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD" status="impl/done">and
+    <item><MODEL-ONE-MAINLINE-NO-HOST-PRIMARY fact="true" status="impl/done">there is one **mainline** (the maintainer's local `main`,
+  no host primary),</MODEL-ONE-MAINLINE-NO-HOST-PRIMARY></item>
+    <item><MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA fact="true" status="impl/done">every host is a downstream **read-replica**,</MODEL-EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA></item>
+    <item><MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD fact="true" status="impl/done">and
   history reaches a host only through a **fast-forward-only fan-out that
-  fails loud** on any divergence and never `--force`s.</fact></item>
+  fails loud** on any divergence and never `--force`s.</MODEL-FAN-OUT-IS-FF-ONLY-AND-FAILS-LOUD></item>
   </list>
-  <p><fact id="the-cost-is-paid-once-in-the-model" status="spec/done">The cost is paid once, in the model, not continuously, in conflict
-resolution.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+  <p><the-cost-is-paid-once-in-the-model fact="true" status="spec/done">The cost is paid once, in the model, not continuously, in conflict
+resolution.</the-cost-is-paid-once-in-the-model></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
+    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
   (multi-homing without multi-master), the model (single-writer
   mainline; hosts as replicas; contributions in via any inbox), what it
-  buys, what it costs, and a re-derive prompt.</fact></item>
-    <item><fact id="CONTENT-THE-FANOUT-MECHANICS" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.md` — the committed
+  buys, what it costs, and a re-derive prompt.</CONTENT-THE-PROTOCOL></item>
+    <item><CONTENT-THE-FANOUT-MECHANICS fact="true" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.md` — the committed
   credential-free manifest, the fetch/verify/push/report procedure,
   fail-loud semantics, the read-only drift check, bringing a web merge
   home, and a ~15-line reference script with the never-`--force`
-  invariant pinned by a test.</fact></item>
-    <item><fact id="CONTENT-THE-DAILY-LOOP" status="impl/done">`spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
-  handling reported drift, onboarding a host, offboarding a host.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
-  and the never-do list.</fact></item>
+  invariant pinned by a test.</CONTENT-THE-FANOUT-MECHANICS></item>
+    <item><CONTENT-THE-DAILY-LOOP fact="true" status="impl/done">`spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
+  handling reported drift, onboarding a host, offboarding a host.</CONTENT-THE-DAILY-LOOP></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
+  and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:source-mirrors</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:source-mirrors</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="audience" title="Audience">
-    <p><fact id="THIS-FLOW-IS-MAINTAINER-FACING" status="impl/done">This flow is **maintainer-facing**: the fan-out, the manifest, and drift
-reconciliation are the integrator's job.</fact></p>
-    <p><fact id="A-CONTRIBUTOR-NEEDS-ONLY-THE-TWO-NEVERS" status="impl/done">A day-to-day contributor needs
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <audience title="Audience">
+    <p><THIS-FLOW-IS-MAINTAINER-FACING fact="true" status="impl/done">This flow is **maintainer-facing**: the fan-out, the manifest, and drift
+reconciliation are the integrator's job.</THIS-FLOW-IS-MAINTAINER-FACING></p>
+    <p><A-CONTRIBUTOR-NEEDS-ONLY-THE-TWO-NEVERS fact="true" status="impl/done">A day-to-day contributor needs
 only the two nevers — **never push directly to a replica host**, and
 **never `--force` anything** — plus the knowledge that their PR is an
-inbox item the maintainer integrates, not a direct write.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+inbox item the maintainer integrates, not a direct write.</A-CONTRIBUTOR-NEEDS-ONLY-THE-TWO-NEVERS></p>
+  </audience>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-ATOMIC-COMMITS" status="impl/done">`flow:git-atomic-commits` — pushed history is frozen; a fast-forward-only
+      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — pushed history is frozen; a fast-forward-only
   fan-out is that rule's multi-host corollary (a replica only ever
-  advances, never rewrites).</fact></item>
-      <item><fact id="COMPOSES-WAL" status="spec/done">`flow:wal` — the fan-out is a natural session wind-down step; the WAL
-  entry notes "fanned out at &lt;checkpoint&gt;".</fact></item>
-      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — the host set and the single-writer choice
+  advances, never rewrites).</COMPOSES-ATOMIC-COMMITS></item>
+      <item><COMPOSES-WAL fact="true" status="spec/done">`flow:wal` — the fan-out is a natural session wind-down step; the WAL
+  entry notes "fanned out at &lt;checkpoint&gt;".</COMPOSES-WAL></item>
+      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — the host set and the single-writer choice
   are recorded decisions, each with a revisit trigger (e.g. "revisit
-  when parallel full-time integrators exceed one").</fact></item>
+  when parallel full-time integrators exceed one").</COMPOSES-DECISION-RECORDS></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="practice-crystallized-from-the-origin-projects-law" status="spec/done">The practice is crystallized from the origin project's source-mirrors
+  </composition>
+  <background title="Philosophical background">
+    <p><practice-crystallized-from-the-origin-projects-law fact="true" status="spec/done">The practice is crystallized from the origin project's source-mirrors
 law — a hub-and-spoke, benevolent-dictator model in the Linux-kernel
 tradition (patches arrive as inboxes, the maintainer's tree is the merge
-authority, a hub mirrors out).</fact></p>
-    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The collection's spirit is the book
+authority, a hub mirrors out).</practice-crystallized-from-the-origin-projects-law></p>
+    <p><collections-spirit-is-the-redbook fact="true" status="spec/done">The collection's spirit is the book
 *AI-native development*, which ships in Russian inside `flow:redbook` at
-`spec/book/ru/`.</fact></p>
-    <p><fact id="MAKE-DIVERGENCE-IMPOSSIBLE-AND-PROVE-THE-INVARIANT" status="spec/done">Short version: make divergence impossible by
-construction, and prove the invariant with a test rather than a promise.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</fact></p>
-  </section>
+`spec/book/ru/`.</collections-spirit-is-the-redbook></p>
+    <p><MAKE-DIVERGENCE-IMPOSSIBLE-AND-PROVE-THE-INVARIANT fact="true" status="spec/done">Short version: make divergence impossible by
+construction, and prove the invariant with a test rather than a promise.</MAKE-DIVERGENCE-IMPOSSIBLE-AND-PROVE-THE-INVARIANT></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</license-line></p>
+  </license>
 </spec>

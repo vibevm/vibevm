@@ -7,7 +7,7 @@ clean-room from the codex-first study note (DC1–DC6) and the IGNITION
 campaign's live field data. This document is **policy**: a boss applies
 it per task; the Phase-6 boot snippet loads it; the Campaign-2
 initiative system will read the same axes as data._</p>
-  <section id="law" title="The one law">
+  <law title="The one law">
     <p>**Delegate when verification is cheaper than generation.**</p>
     <p>Every routing question reduces to an economic asymmetry: the boss will
 pay either way — once to *do* the task, or once to *specify* it plus
@@ -23,8 +23,8 @@ almost always does.</p>
 a work order, delegate; if writing the prompt forces the decisions, the
 task is design — keep it.* The matrix below turns that instinct into a
 procedure.</p>
-  </section>
-  <section id="axes" title="The four axes">
+  </law>
+  <axes title="The four axes">
     <p>Score the task on four axes before routing. Each axis has flat,
 enumerable values — no scales, no vibes.</p>
     <list ordered="true">
@@ -53,8 +53,8 @@ enumerable values — no scales, no vibes.</p>
       <item>**Size** — honest boss-time to do it directly.</item>
       <item>`S` (≤ ~15 min), `M` (≤ ~1 h), `L` (&gt; 1 h).</item>
     </list>
-  </section>
-  <section id="verdict" title="The verdict procedure">
+  </axes>
+  <verdict title="The verdict procedure">
     <p>Apply in order; the first rule that fires decides. Steps 1–3 are
 KEEP-gates; a task that survives them is delegated by step 4.</p>
     <list ordered="true">
@@ -82,8 +82,8 @@ delegated task is either precision-compiled (scenario 1) or ordered to
 boot from named files (scenario 2). A big task with a thin prompt
 produces plausible non-conformant output that costs more to review
 than to rewrite.</p>
-  </section>
-  <section id="never-delegate" title="The never-delegate set">
+  </verdict>
+  <never-delegate title="The never-delegate set">
     <p>Hard boundary, not preference (DC2). These stay with the boss under
 every economic reading:</p>
     <list ordered="false">
@@ -103,8 +103,8 @@ every economic reading:</p>
   anything).</item>
       <item>**Tiny edits** — sub-minute changes cost more to specify than to do.</item>
     </list>
-  </section>
-  <section id="sizing" title="Sizing the packet">
+  </never-delegate>
+  <sizing title="Sizing the packet">
     <list ordered="false">
       <item>**Big models get coarse one-shots** (owner mandate, confirmed in the
   field): a whole module with its tests and a self-verify command
@@ -119,8 +119,8 @@ every economic reading:</p>
   the retry budget is part of the verification cost, and past it the
   economics have inverted.</item>
     </list>
-  </section>
-  <section id="review-loop" title="The boss-as-reviewer loop">
+  </sizing>
+  <review-loop title="The boss-as-reviewer loop">
     <p>Delegated output is advisory until proven (DC5):</p>
     <list ordered="true">
       <item>The packet carries `task.acceptance` — commands the pod runs in the
@@ -133,8 +133,8 @@ every economic reading:</p>
    a wrong-context landing) feed the playbook of the model that
    produced them.</item>
     </list>
-  </section>
-  <section id="routing" title="Routing is data">
+  </review-loop>
+  <routing title="Routing is data">
     <p>This procedure has an **executable form**: the fractality initiative
 engine ships it as data + calculus
 (`fractality-initiative/src/matrix.toml` + `route.rs`; surfaced as
@@ -150,8 +150,8 @@ defaults, tariff rules, blind spots — lives in the
 [playbooks](playbooks/), one card per model, `_template.md` for new
 ones. Tariff hygiene is mechanism, not advice (D12): workers get web
 tools denied by profile; documents are fetched once, locally.</p>
-  </section>
-  <section id="worked" title="Worked verdicts">
+  </routing>
+  <worked title="Worked verdicts">
     <table>
       <tr>
         <td>Task</td>
@@ -194,5 +194,5 @@ tools denied by profile; documents are fetched once, locally.</p>
         <td>keep (tiny edit)</td>
       </tr>
     </table>
-  </section>
+  </worked>
 </spec>

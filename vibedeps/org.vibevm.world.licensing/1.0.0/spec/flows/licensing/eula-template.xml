@@ -2,12 +2,12 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">EULA placeholder template</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** A copy-ready skeleton for the
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** A copy-ready skeleton for the
 proprietary-with-relicense-intent posture, followed by clause-by-clause
-commentary.</fact></p>
-  <p><fact id="IT-IS-A-STARTING-DRAFT-NOT-LEGAL-ADVICE" status="spec/done">It is a starting draft, not legal advice — have a
-lawyer review any licence before you rely on it.</fact></p>
-  <section id="skeleton" title="The skeleton">
+commentary.</scope-of-this-document></p>
+  <p><IT-IS-A-STARTING-DRAFT-NOT-LEGAL-ADVICE fact="true" status="spec/done">It is a starting draft, not legal advice — have a
+lawyer review any licence before you rely on it.</IT-IS-A-STARTING-DRAFT-NOT-LEGAL-ADVICE></p>
+  <skeleton title="The skeleton">
     <fence># &lt;Product&gt; — Proprietary License (EULA placeholder)
 
 Copyright (c) &lt;year&gt; &lt;owner&gt;. All rights reserved.
@@ -48,78 +48,78 @@ Reference material under &lt;study-only paths&gt; is the property of its
 respective authors, redistributed under each work's own terms, and is
 NOT part of the distribution — it must be removed before any
 redistribution.</fence>
-  </section>
-  <section id="commentary" title="Clause commentary">
+  </skeleton>
+  <commentary title="Clause commentary">
     <list ordered="false">
-      <item><fact id="CLAUSE-RESERVATION-LINE" status="impl/done">**Reservation line.** "All rights reserved" plus "No license …
+      <item><CLAUSE-RESERVATION-LINE fact="true" status="impl/done">**Reservation line.** "All rights reserved" plus "No license …
   granted" makes the default explicit: absent this grant, nobody has
   any rights. Everything below is an exception carved out of that
-  default.</fact></item>
-      <item><fact id="CLAUSE-THE-INTERIM-GRANT" status="impl/done">**The interim grant.** Read-for-evaluation and build-locally are the
+  default.</CLAUSE-RESERVATION-LINE></item>
+      <item><CLAUSE-THE-INTERIM-GRANT fact="true" status="impl/done">**The interim grant.** Read-for-evaluation and build-locally are the
   minimum that lets someone assess the software; the four `NOT`
   clauses reserve everything that matters commercially. Adjust the
   list to the actual posture — some projects allow internal use, some
-  do not.</fact></item>
-      <item><fact id="CLAUSE-THE-RELICENSE-INTENT-CLAUSE" status="impl/done">**The relicense-intent clause.** The honest core. It names the
+  do not.</CLAUSE-THE-INTERIM-GRANT></item>
+      <item><CLAUSE-THE-RELICENSE-INTENT-CLAUSE fact="true" status="impl/done">**The relicense-intent clause.** The honest core. It names the
   intended target licence and states plainly that the decision is not
   final. It promises a *direction*, never a date. Removing it turns
   the posture from "opening later" into "reserved indefinitely" —
-  keep it only if that is the truth.</fact></item>
-      <item><fact id="CLAUSE-THE-THIRD-PARTY-SECTION" status="impl/done">**The third-party section.** Separated by a rule so no reader
+  keep it only if that is the truth.</CLAUSE-THE-RELICENSE-INTENT-CLAUSE></item>
+      <item><CLAUSE-THE-THIRD-PARTY-SECTION fact="true" status="impl/done">**The third-party section.** Separated by a rule so no reader
   confuses the product's reserved terms with the dependencies'
   permissive ones. It points at the *generated* dependency list, not
-  a hand-copied one that will drift.</fact></item>
-      <item><fact id="CLAUSE-STUDY-ONLY-MATERIAL" status="impl/done">**Study-only material.** Anything vendored for reference but not
+  a hand-copied one that will drift.</CLAUSE-THE-THIRD-PARTY-SECTION></item>
+      <item><CLAUSE-STUDY-ONLY-MATERIAL fact="true" status="impl/done">**Study-only material.** Anything vendored for reference but not
   shipped is named with the removal instruction, so a redistribution
   does not accidentally carry third-party work under the product's
-  notice.</fact></item>
+  notice.</CLAUSE-STUDY-ONLY-MATERIAL></item>
     </list>
-  </section>
-  <section id="adapting" title="Adapting it">
+  </commentary>
+  <adapting title="Adapting it">
     <table>
       <tr>
         <td>You want</td>
         <td>Change</td>
       </tr>
       <tr>
-        <td><fact id="ROW-WANT-PERMISSIVE-FROM-THE-START" status="impl/done">Permissive from the start</fact></td>
+        <td><ROW-WANT-PERMISSIVE-FROM-THE-START fact="true" status="impl/done">Permissive from the start</ROW-WANT-PERMISSIVE-FROM-THE-START></td>
         <td><fact status="impl/done">discard this template; use the target licence's official text and set the manifest field to its SPDX id</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED" status="impl/done">Reserved with no opening planned</fact></td>
+        <td><ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED fact="true" status="impl/done">Reserved with no opening planned</ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED></td>
         <td><fact status="impl/done">drop the relicense-intent clause — but only if that is genuinely the intent</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-WANT-INTERNAL-USE-ALLOWED" status="impl/done">Allow internal/organizational use</fact></td>
+        <td><ROW-WANT-INTERNAL-USE-ALLOWED fact="true" status="impl/done">Allow internal/organizational use</ROW-WANT-INTERNAL-USE-ALLOWED></td>
         <td><fact status="impl/done">add an explicit internal-use grant to the interim list</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-WANT-A-DIFFERENT-TARGET-LICENCE" status="impl/done">A different target licence</fact></td>
+        <td><ROW-WANT-A-DIFFERENT-TARGET-LICENCE fact="true" status="impl/done">A different target licence</ROW-WANT-A-DIFFERENT-TARGET-LICENCE></td>
         <td><fact status="impl/done">name it in the relicense clause and keep the file's own text ready to swap in at relicense time</fact></td>
       </tr>
     </table>
-  </section>
-  <section id="promotion" title="When it becomes the real licence">
-    <p><fact id="AT-RELICENSE-TIME-THE-SWAP-IS-ONE-RECORDED-OPERATION" status="impl/done">At relicense time the placeholder is replaced wholesale by the target
+  </adapting>
+  <promotion title="When it becomes the real licence">
+    <p><AT-RELICENSE-TIME-THE-SWAP-IS-ONE-RECORDED-OPERATION fact="true" status="impl/done">At relicense time the placeholder is replaced wholesale by the target
 licence's official text (not edited into it), every manifest
 `license` field moves to the target's SPDX identifier in the same
-commit, and the change is recorded as a dated decision.</fact></p>
-    <p><fact id="the-placeholder-is-not-itself-the-destination" status="spec/done">The
+commit, and the change is recorded as a dated decision.</AT-RELICENSE-TIME-THE-SWAP-IS-ONE-RECORDED-OPERATION></p>
+    <p><the-placeholder-is-not-itself-the-destination fact="true" status="spec/done">The
 placeholder's job was to hold the posture honestly until that moment;
-it is not itself the destination.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+it is not itself the destination.</the-placeholder-is-not-itself-the-destination></p>
+  </promotion>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-THE-SKELETON-CAPTURES-THE-POSTURE" status="impl/done">The skeleton captures the proprietary-with-relicense-intent posture:
+      <item><SUM-THE-SKELETON-CAPTURES-THE-POSTURE fact="true" status="impl/done">The skeleton captures the proprietary-with-relicense-intent posture:
   reservation, a minimal interim grant, the honest relicense clause,
-  and the third-party carve-out.</fact></item>
-      <item><fact id="SUM-FILL-THE-PLACEHOLDERS-AND-KEEP-THE-CLAUSE-ONLY-IF-TRUE" status="impl/done">Fill the placeholders; keep the relicense clause only if opening is
-  the real intent.</fact></item>
-      <item><fact id="SUM-POINT-AT-THE-GENERATED-LIST-AND-NAME-STUDY-ONLY-MATERIAL" status="impl/done">Point the third-party section at the generated list; name study-only
-  material for removal.</fact></item>
-      <item><fact id="SUM-AT-RELICENSE-TIME-SWAP-WHOLESALE-AND-MOVE-EVERY-FIELD" status="impl/done">At relicense time, swap in the target's official text wholesale and
-  move every manifest field with it.</fact></item>
-      <item><fact id="SUM-IT-IS-A-DRAFT-TO-HAND-A-LAWYER" status="impl/done">It is a draft to hand a lawyer, not legal advice.</fact></item>
+  and the third-party carve-out.</SUM-THE-SKELETON-CAPTURES-THE-POSTURE></item>
+      <item><SUM-FILL-THE-PLACEHOLDERS-AND-KEEP-THE-CLAUSE-ONLY-IF-TRUE fact="true" status="impl/done">Fill the placeholders; keep the relicense clause only if opening is
+  the real intent.</SUM-FILL-THE-PLACEHOLDERS-AND-KEEP-THE-CLAUSE-ONLY-IF-TRUE></item>
+      <item><SUM-POINT-AT-THE-GENERATED-LIST-AND-NAME-STUDY-ONLY-MATERIAL fact="true" status="impl/done">Point the third-party section at the generated list; name study-only
+  material for removal.</SUM-POINT-AT-THE-GENERATED-LIST-AND-NAME-STUDY-ONLY-MATERIAL></item>
+      <item><SUM-AT-RELICENSE-TIME-SWAP-WHOLESALE-AND-MOVE-EVERY-FIELD fact="true" status="impl/done">At relicense time, swap in the target's official text wholesale and
+  move every manifest field with it.</SUM-AT-RELICENSE-TIME-SWAP-WHOLESALE-AND-MOVE-EVERY-FIELD></item>
+      <item><SUM-IT-IS-A-DRAFT-TO-HAND-A-LAWYER fact="true" status="impl/done">It is a draft to hand a lawyer, not legal advice.</SUM-IT-IS-A-DRAFT-TO-HAND-A-LAWYER></item>
     </list>
-  </section>
+  </summary>
 </spec>

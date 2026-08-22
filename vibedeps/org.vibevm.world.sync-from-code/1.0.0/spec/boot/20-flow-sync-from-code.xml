@@ -2,51 +2,51 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Sync-from-Code</title>
   <status stage="impl" state="done"/>
-  <p><fact id="THE-PROJECT-USES-SYNC-FROM-CODE" status="impl/done">This project uses the **Sync-from-Code** protocol to reconcile specs with
-code when the code changed first.</fact></p>
-  <section id="direction" title="Default direction is unchanged">
-    <p><fact id="INFORMATION-FLOWS-TOP-DOWN" status="impl/done">Information flows top-down: head → WAL → spec → code.</fact></p>
-    <p><fact id="SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE" status="impl/done">Sync-from-Code does
-not flip that rule.</fact></p>
-    <p><fact id="the-exceptional-path-for-two-legitimate-cases-lead" status="impl/done">It is the **exceptional path** for two legitimate
-cases where the bottom layer moves before the layer above it:</fact></p>
+  <p><THE-PROJECT-USES-SYNC-FROM-CODE fact="true" status="impl/done">This project uses the **Sync-from-Code** protocol to reconcile specs with
+code when the code changed first.</THE-PROJECT-USES-SYNC-FROM-CODE></p>
+  <direction title="Default direction is unchanged">
+    <p><INFORMATION-FLOWS-TOP-DOWN fact="true" status="impl/done">Information flows top-down: head → WAL → spec → code.</INFORMATION-FLOWS-TOP-DOWN></p>
+    <p><SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE fact="true" status="impl/done">Sync-from-Code does
+not flip that rule.</SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE></p>
+    <p><the-exceptional-path-for-two-legitimate-cases-lead fact="true" status="impl/done">It is the **exceptional path** for two legitimate
+cases where the bottom layer moves before the layer above it:</the-exceptional-path-for-two-legitimate-cases-lead></p>
     <list ordered="false">
-      <item><fact id="CASE-THE-USER-EDITED-CODE-DIRECTLY" status="spec/done">The user edited code directly because writing five lines in an editor
-  was faster than articulating the intent in a spec edit first.</fact></item>
-      <item><fact id="CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND" status="spec/done">The user told the agent "change the timeout to 600 s" (or similar) in
-  chat. The agent changed the code; nobody touched the spec.</fact></item>
+      <item><CASE-THE-USER-EDITED-CODE-DIRECTLY fact="true" status="spec/done">The user edited code directly because writing five lines in an editor
+  was faster than articulating the intent in a spec edit first.</CASE-THE-USER-EDITED-CODE-DIRECTLY></item>
+      <item><CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND fact="true" status="spec/done">The user told the agent "change the timeout to 600 s" (or similar) in
+  chat. The agent changed the code; nobody touched the spec.</CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND></item>
     </list>
-    <p><fact id="in-both-cases-the-spec-is-now-stale" status="spec/done">In both cases the spec is now stale.</fact></p>
-    <p><fact id="without-sync-from-code-the-next-session-fixes-the-code-back" status="spec/done">Without Sync-from-Code, the next
+    <p><in-both-cases-the-spec-is-now-stale fact="true" status="spec/done">In both cases the spec is now stale.</in-both-cases-the-spec-is-now-stale></p>
+    <p><without-sync-from-code-the-next-session-fixes-the-code-back fact="true" status="spec/done">Without Sync-from-Code, the next
 session reads the stale spec, concludes the code is wrong, and "fixes"
-it back — correctly by the spec-wins rule, but wrong in outcome.</fact></p>
-  </section>
-  <section id="trigger" title="Trigger">
-    <p><fact id="RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION" status="impl/done">Run the protocol exactly once, as the last step of the same session that
-caused the drift.</fact></p>
-    <p><fact id="DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES" status="impl/done">Do not postpone it to "tomorrow" — drift accumulates.</fact></p>
+it back — correctly by the spec-wins rule, but wrong in outcome.</without-sync-from-code-the-next-session-fixes-the-code-back></p>
+  </direction>
+  <trigger title="Trigger">
+    <p><RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION fact="true" status="impl/done">Run the protocol exactly once, as the last step of the same session that
+caused the drift.</RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION></p>
+    <p><DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES fact="true" status="impl/done">Do not postpone it to "tomorrow" — drift accumulates.</DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES></p>
     <list ordered="true">
-      <item><fact id="STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT" status="impl/done">Read `git diff HEAD` and reconstruct the *intent* behind each change.</fact></item>
-      <item><fact id="STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION" status="impl/done">Draft a diff against the relevant spec section. Include: new value,
+      <item><STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT fact="true" status="impl/done">Read `git diff HEAD` and reconstruct the *intent* behind each change.</STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT></item>
+      <item><STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION fact="true" status="impl/done">Draft a diff against the relevant spec section. Include: new value,
    reason, and the condition under which the decision should be
-   revisited.</fact></item>
-      <item><fact id="STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY" status="impl/done">Surface the spec-diff draft to the user. **Do not apply.**</fact></item>
-      <item><fact id="STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT" status="impl/done">On approval, apply + commit (`docs(spec): sync &lt;section&gt; with code`).
-   On reject, either revert the code or redraft the proposal.</fact></item>
+   revisited.</STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION></item>
+      <item><STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY fact="true" status="impl/done">Surface the spec-diff draft to the user. **Do not apply.**</STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY></item>
+      <item><STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT fact="true" status="impl/done">On approval, apply + commit (`docs(spec): sync &lt;section&gt; with code`).
+   On reject, either revert the code or redraft the proposal.</STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT></item>
     </list>
-    <p><fact id="full-protocol-pointer" status="impl/done">Full protocol: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root.</fact></p>
-  </section>
-  <section id="never" title="Never">
+    <p><full-protocol-pointer fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root.</full-protocol-pointer></p>
+  </trigger>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE" status="impl/done">Never silently update a spec to match the code. A silent update erases
-  the human's mental model of what the project intends.</fact></item>
-      <item><fact id="NEVER-PAPER-OVER-A-TEMPORARY-HACK" status="impl/done">Never use Sync-from-Code to paper over a temporary hack. For
+      <item><NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE fact="true" status="impl/done">Never silently update a spec to match the code. A silent update erases
+  the human's mental model of what the project intends.</NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE></item>
+      <item><NEVER-PAPER-OVER-A-TEMPORARY-HACK fact="true" status="impl/done">Never use Sync-from-Code to paper over a temporary hack. For
   throwaway debug code, record in the WAL:
-  `&lt;file&gt;: temporary, do not sync to spec`.</fact></item>
-      <item><fact id="NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES" status="impl/done">Never batch two unrelated code changes into one spec edit. One intent
-  per sync run.</fact></item>
+  `&lt;file&gt;: temporary, do not sync to spec`.</NEVER-PAPER-OVER-A-TEMPORARY-HACK></item>
+      <item><NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES fact="true" status="impl/done">Never batch two unrelated code changes into one spec edit. One intent
+  per sync run.</NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES></item>
     </list>
-    <p><fact id="sibling-document-pointers" status="impl/done">Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
-Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root.</fact></p>
-  </section>
+    <p><sibling-document-pointers fact="true" status="impl/done">Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
+Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root.</sibling-document-pointers></p>
+  </never>
 </spec>

@@ -2,79 +2,79 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:addressable-specs` — correct an agent in twenty tokens</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE" status="impl/done">A vibevm `flow` package that installs the **addressable
+  <p><PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE fact="true" status="impl/done">A vibevm `flow` package that installs the **addressable
 specifications** practice into a project: `spec://` URIs, stable
 `{#anchor}`s on every heading that decides something, and the spec
-tree layout that makes both resolvable with zero tooling.</fact></p>
-  <p><fact id="SPEC-FILES-ARE-THE-IPC-CHANNEL-NOT-DOCUMENTATION" status="spec/done">Spec files in a human-agent team are not documentation — they are
+tree layout that makes both resolvable with zero tooling.</PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE></p>
+  <p><SPEC-FILES-ARE-THE-IPC-CHANNEL-NOT-DOCUMENTATION fact="true" status="spec/done">Spec files in a human-agent team are not documentation — they are
 the IPC channel between two processes, and the first requirement on
-that channel is addressability.</fact></p>
-  <p><fact id="paraphrase-costs-hundreds-of-tokens-an-anchor-costs-twenty" status="spec/done">"You did the verification wrong"
+that channel is addressability.</SPEC-FILES-ARE-THE-IPC-CHANNEL-NOT-DOCUMENTATION></p>
+  <p><paraphrase-costs-hundreds-of-tokens-an-anchor-costs-twenty fact="true" status="spec/done">"You did the verification wrong"
 costs the agent hundreds of tokens of guessing; "you are violating
 `spec://com.example.shop/PROP-001#verification.timeout` — 600 s, not
-300 s" costs about twenty and hits exactly.</fact></p>
-  <p><fact id="PACKAGE-IS-THAT-DIFFERENCE-AS-A-STANDING-CONTRACT" status="impl/done">This package is that
-difference, made into a standing contract.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+300 s" costs about twenty and hits exactly.</paraphrase-costs-hundreds-of-tokens-an-anchor-costs-twenty></p>
+  <p><PACKAGE-IS-THAT-DIFFERENCE-AS-A-STANDING-CONTRACT fact="true" status="impl/done">This package is that
+difference, made into a standing contract.</PACKAGE-IS-THAT-DIFFERENCE-AS-A-STANDING-CONTRACT></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md` —
+    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md` —
   full protocol: why addressability is IPC requirement #1, the URI
   scheme and anchor grammar, reverse-DNS module names, the
   single-source and placement rules, the bidirectional graph that
   `Implements:` markers and `Test:` lines create, and a re-derive
-  prompt for adapting the practice to a concrete project.</fact></item>
-    <item><fact id="CONTENT-THE-AUTHORING-RULES" status="impl/done">`spec/flows/addressable-specs/authoring-rules.md` — how to write
+  prompt for adapting the practice to a concrete project.</CONTENT-THE-PROTOCOL></item>
+    <item><CONTENT-THE-AUTHORING-RULES fact="true" status="impl/done">`spec/flows/addressable-specs/authoring-rules.md` — how to write
   units that stay addressable: one unit = one decision, normativity
   marked with RFC-2119 verbs, deviations recorded honestly, size
   budgets, changelog lines, and the rule that anchors are immutable
-  once cited.</fact></item>
-    <item><fact id="CONTENT-THE-SPEC-TREE-LAYOUT" status="impl/done">`spec/flows/addressable-specs/spec-tree-layout.md` — the reference
+  once cited.</CONTENT-THE-AUTHORING-RULES></item>
+    <item><CONTENT-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">`spec/flows/addressable-specs/spec-tree-layout.md` — the reference
   tree: PROP vs FEAT, the what-goes-where decision table, and the
-  `.human/` private buffer enforced by ignore-file invisibility.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/15-flow-addressable-specs.md` — boot snippet loaded at
+  `.human/` private buffer enforced by ignore-file invisibility.</CONTENT-THE-SPEC-TREE-LAYOUT></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/15-flow-addressable-specs.md` — boot snippet loaded at
   session start: the correction contract, the single-source and
-  placement rules, and the never-do list.</fact></item>
+  placement rules, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:addressable-specs</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:addressable-specs</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the
-boot snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the
+boot snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-TWO-PROCESS-MODEL" status="impl/done">`flow:two-process-model` — establishes the four IPC requirements
+      <item><COMPOSES-TWO-PROCESS-MODEL fact="true" status="impl/done">`flow:two-process-model` — establishes the four IPC requirements
   on shared files; addressability is the first of them, and this
-  package is its full elaboration.</fact></item>
-      <item><fact id="COMPOSES-ATOMIC-COMMITS" status="impl/done">`flow:git-atomic-commits` — one commit, one logical idea, so a spec
+  package is its full elaboration.</COMPOSES-TWO-PROCESS-MODEL></item>
+      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — one commit, one logical idea, so a spec
   change and the code that satisfies it land as one citable unit. The
   rule that commit bodies cite `spec://` URIs is the sibling
   `flow:git-conventional-commits`', which owns the message *format*;
-  this package defines what those URIs resolve to.</fact></item>
-      <item><fact id="COMPOSES-CONFLICT-PROTOCOL" status="impl/done">`flow:conflict-protocol` — corrections and REVIEW markers cite the
-  violated anchor rather than paraphrasing it.</fact></item>
-      <item><fact id="COMPOSES-WAL" status="impl/done">`flow:wal` — WAL Constraints and next-step pointers cite anchors,
-  so a resumed session lands on the exact unit.</fact></item>
-      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — records live at the anchors they govern;
+  this package defines what those URIs resolve to.</COMPOSES-ATOMIC-COMMITS></item>
+      <item><COMPOSES-CONFLICT-PROTOCOL fact="true" status="impl/done">`flow:conflict-protocol` — corrections and REVIEW markers cite the
+  violated anchor rather than paraphrasing it.</COMPOSES-CONFLICT-PROTOCOL></item>
+      <item><COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — WAL Constraints and next-step pointers cite anchors,
+  so a resumed session lands on the exact unit.</COMPOSES-WAL></item>
+      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — records live at the anchors they govern;
   a decision without an address cannot be cited or superseded
-  cleanly.</fact></item>
+  cleanly.</COMPOSES-DECISION-RECORDS></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="practice-extracted-from-the-book" status="spec/done">The practice is extracted from *AI-native development*, chapter 2
+  </composition>
+  <background title="Philosophical background">
+    <p><practice-extracted-from-the-book fact="true" status="spec/done">The practice is extracted from *AI-native development*, chapter 2
 (*"Shared state: файлы как IPC"*, subsections on addressability, the
 Lost-in-the-Middle placement rule, control-plane size budgets, and
-the practical file structure).</fact></p>
-    <p><fact id="CHAPTER-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK" status="impl/done">The chapter ships in Russian inside
-`flow:redbook` at `spec/book/ru/`.</fact></p>
-    <p><fact id="BOTTLENECK-IS-TELLING-THE-MACHINE" status="spec/done">Short version: the human knows
+the practical file structure).</practice-extracted-from-the-book></p>
+    <p><CHAPTER-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK fact="true" status="impl/done">The chapter ships in Russian inside
+`flow:redbook` at `spec/book/ru/`.</CHAPTER-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK></p>
+    <p><BOTTLENECK-IS-TELLING-THE-MACHINE fact="true" status="spec/done">Short version: the human knows
 instantly what the agent got wrong; the bottleneck is telling the
-machine — so make every fact in the project pointable in one URI.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See `LICENSE.md`.</fact></p>
-  </section>
+machine — so make every fact in the project pointable in one URI.</BOTTLENECK-IS-TELLING-THE-MACHINE></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See `LICENSE.md`.</license-line></p>
+  </license>
 </spec>

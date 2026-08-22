@@ -2,97 +2,97 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The discipline sweep (TypeScript stack)</title>
   <status stage="impl" state="done"/>
-  <p><fact id="RUNNING-THE-STANDING-SWEEP" status="impl/done">You are running the standing sweep from the Discipline's Sweep Playbook
+  <p><RUNNING-THE-STANDING-SWEEP fact="true" status="impl/done">You are running the standing sweep from the Discipline's Sweep Playbook
 (`spec://org.vibevm.ai-native/core-ai-native/04-SWEEP-PLAYBOOK` — the shipped copy is at
 `vibedeps/flow-core-ai-native/&lt;version&gt;/spec/04-SWEEP-PLAYBOOK.md`; read it
-once per session if you have not).</fact></p>
-  <p><fact id="two-truths-lead" status="impl/done">The two truths:</fact></p>
+once per session if you have not).</RUNNING-THE-STANDING-SWEEP></p>
+  <p><two-truths-lead fact="true" status="impl/done">The two truths:</two-truths-lead></p>
   <list ordered="false">
-    <item><fact id="TRUTH-GATES-ARE-THE-FLOOR" status="impl/done">**the gates are the
-  floor, the sweep is the ceiling**,</fact></item>
-    <item><fact id="TRUTH-GATE-IS-TRUTH" status="impl/done">and **the gate is truth, the collector is
-  a guide**.</fact></item>
+    <item><TRUTH-GATES-ARE-THE-FLOOR fact="true" status="impl/done">**the gates are the
+  floor, the sweep is the ceiling**,</TRUTH-GATES-ARE-THE-FLOOR></item>
+    <item><TRUTH-GATE-IS-TRUTH fact="true" status="impl/done">and **the gate is truth, the collector is
+  a guide**.</TRUTH-GATE-IS-TRUTH></item>
   </list>
-  <p><fact id="NEVER-SWEEP-ON-A-RED-TREE" status="impl/done">Never sweep on a red tree.</fact></p>
-  <p><fact id="ACT-ON-COLLECTOR-FACTS" status="impl/done">Act on collector facts, never on
-memory.</fact></p>
-  <p><fact id="ALL-COMMANDS-ARE-THE-SHIPPED-TOOLCHAIN" status="impl/done">All commands below are the shipped toolchain.</fact></p>
-  <p><fact id="IF-NOT-ON-PATH-INSTALL-OR-RUN-IN-PLACE" status="impl/done">If `typescript-ai-native` is
+  <p><NEVER-SWEEP-ON-A-RED-TREE fact="true" status="impl/done">Never sweep on a red tree.</NEVER-SWEEP-ON-A-RED-TREE></p>
+  <p><ACT-ON-COLLECTOR-FACTS fact="true" status="impl/done">Act on collector facts, never on
+memory.</ACT-ON-COLLECTOR-FACTS></p>
+  <p><ALL-COMMANDS-ARE-THE-SHIPPED-TOOLCHAIN fact="true" status="impl/done">All commands below are the shipped toolchain.</ALL-COMMANDS-ARE-THE-SHIPPED-TOOLCHAIN></p>
+  <p><IF-NOT-ON-PATH-INSTALL-OR-RUN-IN-PLACE fact="true" status="impl/done">If `typescript-ai-native` is
 not on PATH, either install it once —
 `cargo install --path vibedeps/&lt;stack-slot&gt;/crates/typescript-ai-native-cli`
 — or run it in place: `cargo run --manifest-path
 vibedeps/&lt;stack-slot&gt;/Cargo.toml -p typescript-ai-native-cli --bin
-typescript-ai-native -- &lt;args&gt;`.</fact></p>
-  <section id="tier-zero" title="Tier 0 — the hard floor (ALWAYS first)">
+typescript-ai-native -- &lt;args&gt;`.</IF-NOT-ON-PATH-INSTALL-OR-RUN-IN-PLACE></p>
+  <tier-zero title="Tier 0 — the hard floor (ALWAYS first)">
     <fence lang="sh">typescript-ai-native floor</fence>
-    <p><fact id="FLOOR-HAS-SEVEN-STEPS" status="impl/done">Seven steps: prettier → tsc → tests → eslint → conform → specmap →
-test-gate.</fact></p>
-    <p><fact id="RED-FLOOR-ADMITS-ONLY-GREENING-WORK" status="impl/done">Red? The only legal work is making it green — fix, do not
-proceed.</fact></p>
-    <p><fact id="CHECK-THE-PRINTED-POLICY-LINES" status="impl/done">Check the printed policy lines: a
+    <p><FLOOR-HAS-SEVEN-STEPS fact="true" status="impl/done">Seven steps: prettier → tsc → tests → eslint → conform → specmap →
+test-gate.</FLOOR-HAS-SEVEN-STEPS></p>
+    <p><RED-FLOOR-ADMITS-ONLY-GREENING-WORK fact="true" status="impl/done">Red? The only legal work is making it green — fix, do not
+proceed.</RED-FLOOR-ADMITS-ONLY-GREENING-WORK></p>
+    <p><CHECK-THE-PRINTED-POLICY-LINES fact="true" status="impl/done">Check the printed policy lines: a
 `NO conform.toml — topology default in force` line means the project is not
 bootstrapped (`typescript-ai-native init`) and any green under it is vacuous,
 and every `DISABLED by policy` line is a standing decision to re-question
 weekly — a floor that shrank quietly is the failure mode this line exists
-to catch.</fact></p>
-  </section>
-  <section id="tier-one" title="Tier 1 — the ratchet (every run)">
+to catch.</CHECK-THE-PRINTED-POLICY-LINES></p>
+  </tier-zero>
+  <tier-one title="Tier 1 — the ratchet (every run)">
     <fence lang="sh">typescript-ai-native health</fence>
-    <p><fact id="READ-THE-HEALTH-SUMMARY" status="impl/done">Read the summary (the JSON at `discipline/health/latest-typescript.json` is
-the work-list; its git diff is the trend).</fact></p>
-    <p><fact id="take-cheapest-wins-lead" status="impl/done">Take one or two cheapest wins:</fact></p>
+    <p><READ-THE-HEALTH-SUMMARY fact="true" status="impl/done">Read the summary (the JSON at `discipline/health/latest-typescript.json` is
+the work-list; its git diff is the trend).</READ-THE-HEALTH-SUMMARY></p>
+    <p><take-cheapest-wins-lead fact="true" status="impl/done">Take one or two cheapest wins:</take-cheapest-wins-lead></p>
     <list ordered="true">
-      <item><fact id="RATCHET-DANGER-BAND-FILES" status="impl/done">**danger-band files** — split any file at the top of the [540,600) band
+      <item><RATCHET-DANGER-BAND-FILES fact="true" status="impl/done">**danger-band files** — split any file at the top of the [540,600) band
    before an edit trips the 600 budget; the new module keeps (or gains) its
-   own `@scope` marker so the orphan gate never regresses.</fact></item>
-      <item><fact id="RATCHET-UNREASONED-SUPPRESSIONS" status="impl/done">**unreasoned suppressions** — every `@ts-expect-error` WITHOUT
+   own `@scope` marker so the orphan gate never regresses.</RATCHET-DANGER-BAND-FILES></item>
+      <item><RATCHET-UNREASONED-SUPPRESSIONS fact="true" status="impl/done">**unreasoned suppressions** — every `@ts-expect-error` WITHOUT
    `-- reason` in the census is unrecorded testimony: add the reason or fix
    the underlying type. `@ts-ignore` is never acceptable — replace with
-   `@ts-expect-error -- reason` and watch it fail when the error goes.</fact></item>
-      <item><fact id="RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE" status="impl/done">**export doc-example coverage** — exports without an `@example` (or
+   `@ts-expect-error -- reason` and watch it fail when the error goes.</RATCHET-UNREASONED-SUPPRESSIONS></item>
+      <item><RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE fact="true" status="impl/done">**export doc-example coverage** — exports without an `@example` (or
    fenced block) are retrieval gaps; document the highest-traffic seam
-   first.</fact></item>
-      <item><fact id="RATCHET-ORPHAN-BACKLOG" status="impl/done">**orphan backlog** — untagged exports the ratchet will block on: tag the
+   first.</RATCHET-EXPORT-DOC-EXAMPLE-COVERAGE></item>
+      <item><RATCHET-ORPHAN-BACKLOG fact="true" status="impl/done">**orphan backlog** — untagged exports the ratchet will block on: tag the
    export (`@implements spec://…`), `@scope` its file, or move it out of
-   the public surface.</fact></item>
+   the public surface.</RATCHET-ORPHAN-BACKLOG></item>
     </list>
-  </section>
-  <section id="tier-two" title="Tier 2 — weekly">
+  </tier-one>
+  <tier-two title="Tier 2 — weekly">
     <list ordered="false">
-      <item><fact id="WEEKLY-FAST-LOOP" status="impl/done">`typescript-ai-native fast-loop` — every cell answers inside the budget;
-  a cell with NO tests fails the check (the loop must exist).</fact></item>
-      <item><fact id="WEEKLY-TRIPWIRE" status="impl/done">`typescript-ai-native tripwire --base origin/main` — debt that this
+      <item><WEEKLY-FAST-LOOP fact="true" status="impl/done">`typescript-ai-native fast-loop` — every cell answers inside the budget;
+  a cell with NO tests fails the check (the loop must exist).</WEEKLY-FAST-LOOP></item>
+      <item><WEEKLY-TRIPWIRE fact="true" status="impl/done">`typescript-ai-native tripwire --base origin/main` — debt that this
   week's changes touched; each fired entry is addressed in the PR text:
-  pulled-in, re-dispositioned, or consciously deferred.</fact></item>
-      <item><fact id="WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS" status="impl/done">Re-read the `floor_disable` list and the `[[typescript.exempt]]` list: does each reason
-  still hold?</fact></item>
+  pulled-in, re-dispositioned, or consciously deferred.</WEEKLY-TRIPWIRE></item>
+      <item><WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS fact="true" status="impl/done">Re-read the `floor_disable` list and the `[[typescript.exempt]]` list: does each reason
+  still hold?</WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS></item>
     </list>
-  </section>
-  <section id="output-contract" title="Output contract">
-    <p><fact id="END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE" status="impl/done">End every sweep with an outcome table — this stack's own
+  </tier-two>
+  <output-contract title="Output contract">
+    <p><END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE fact="true" status="impl/done">End every sweep with an outcome table — this stack's own
 addition, and not something the Sweep Playbook prescribes: per tier, what ran,
 what was found, the ONE ratchet item taken, and what was deliberately left
 (with why). The Playbook's own closing contract is its §4 «Output of a sweep»
 — topic-grouped commits, the refreshed health snapshot, the resume pointer —
-and it holds here unchanged.</fact></p>
-    <p><fact id="green-gates-only-is-not-a-sweep" status="spec/done">A sweep that only reports green gates did the
-floor's job, not the sweep's.</fact></p>
-  </section>
-  <section id="generation-time-assistant" title="The generation-time assistant (before you edit, not instead of the floor)">
-    <p><fact id="STACK-SHIPS-AN-AGENTIC-TYPE-ORACLE" status="impl/done">The stack ships an agentic type oracle.</fact></p>
-    <p><fact id="check-the-hypothetical-content-lead" status="impl/done">Before writing a nontrivial `.ts`
+and it holds here unchanged.</END-EVERY-SWEEP-WITH-THE-OUTCOME-TABLE></p>
+    <p><green-gates-only-is-not-a-sweep fact="true" status="spec/done">A sweep that only reports green gates did the
+floor's job, not the sweep's.</green-gates-only-is-not-a-sweep></p>
+  </output-contract>
+  <generation-time-assistant title="The generation-time assistant (before you edit, not instead of the floor)">
+    <p><STACK-SHIPS-AN-AGENTIC-TYPE-ORACLE fact="true" status="impl/done">The stack ships an agentic type oracle.</STACK-SHIPS-AN-AGENTIC-TYPE-ORACLE></p>
+    <p><check-the-hypothetical-content-lead fact="true" status="impl/done">Before writing a nontrivial `.ts`
 edit, check the HYPOTHETICAL content instead of paying a red floor
-iteration:</fact></p>
+iteration:</check-the-hypothetical-content-lead></p>
     <fence lang="sh">vibe bin exec typescript-ai-native-tcg -- validate src/cells/&lt;cell&gt;/index.ts \
     --content-from - --root .   # the edit on stdin; exit 1 = would fail</fence>
-    <p><fact id="MCP-ALTERNATIVE" status="impl/done">or, when the vibevm MCP server is mounted, call `tcg_validate` with the
+    <p><MCP-ALTERNATIVE fact="true" status="impl/done">or, when the vibevm MCP server is mounted, call `tcg_validate` with the
 `content` argument (plus `tcg_scope` / `tcg_complete` / `tcg_type` for
-in-scope symbols, type-valid completions, and quick info).</fact></p>
-    <p><fact id="RESPONSES-CARRY-THE-SAME-CONFORM-FINDINGS" status="impl/done">Responses
+in-scope symbols, type-valid completions, and quick info).</MCP-ALTERNATIVE></p>
+    <p><RESPONSES-CARRY-THE-SAME-CONFORM-FINDINGS fact="true" status="impl/done">Responses
 carry the SAME conform findings as the gate, flagged `baselined` or new,
 with guide-citing advice — a new finding in the answer means the floor
-WILL go red if you write that edit.</fact></p>
-    <p><fact id="FLOOR-STAYS-THE-TRUTH" status="impl/done">The floor stays the truth; the
-oracle exists so you reach it green on the first try.</fact></p>
-  </section>
+WILL go red if you write that edit.</RESPONSES-CARRY-THE-SAME-CONFORM-FINDINGS></p>
+    <p><FLOOR-STAYS-THE-TRUTH fact="true" status="impl/done">The floor stays the truth; the
+oracle exists so you reach it green on the first try.</FLOOR-STAYS-THE-TRUTH></p>
+  </generation-time-assistant>
 </spec>

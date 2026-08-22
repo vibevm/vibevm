@@ -2,27 +2,27 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Executable Scaffolds — The Runnable-Capital Catalog</title>
   <status stage="spec" state="done"/>
-  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · T1**</fact></p>
-  <p><fact id="CATALOG-IS-THE-OPERATIONAL-CORE" status="impl/done">*The operational core of "explanation capital must be runnable capital" (Manifesto §5).*</fact></p>
-  <p><fact id="NINE-CLASSES-CARRY-COGNITION" status="impl/done">*Nine classes of artifact that carry a strong author's cognition in a form a weak reader CONSUMES rather than re-derives.*</fact></p>
-  <p><fact id="EACH-PATTERN-IS-ALSO-A-CARD" status="impl/done">*Each pattern is also a card, shipped per-language in each stack's `cards/`; this catalog is the language-neutral overview and the build order.*</fact></p>
-  <section id="definition" title="0. Definition">
-    <p><fact id="two-properties-at-once-lead" status="impl/done">An **executable scaffold** has two properties at once:</fact></p>
+  <p><status-line fact="true" status="impl/done">**Discipline v0.2 · status: BETA · T1**</status-line></p>
+  <p><CATALOG-IS-THE-OPERATIONAL-CORE fact="true" status="impl/done">*The operational core of "explanation capital must be runnable capital" (Manifesto §5).*</CATALOG-IS-THE-OPERATIONAL-CORE></p>
+  <p><NINE-CLASSES-CARRY-COGNITION fact="true" status="impl/done">*Nine classes of artifact that carry a strong author's cognition in a form a weak reader CONSUMES rather than re-derives.*</NINE-CLASSES-CARRY-COGNITION></p>
+  <p><EACH-PATTERN-IS-ALSO-A-CARD fact="true" status="impl/done">*Each pattern is also a card, shipped per-language in each stack's `cards/`; this catalog is the language-neutral overview and the build order.*</EACH-PATTERN-IS-ALSO-A-CARD></p>
+  <definition title="0. Definition">
+    <p><two-properties-at-once-lead fact="true" status="impl/done">An **executable scaffold** has two properties at once:</two-properties-at-once-lead></p>
     <list ordered="true">
-      <item><fact id="PROPERTY-RUNS-OR-MACHINE-CHECKS" status="impl/done">**It runs or machine-checks** — compiles, executes, or evaluates as a checker, emitting a pass/fail (or typed) signal. Prose has no signal.</fact></item>
-      <item><fact id="PROPERTY-CARRIES-COGNITION" status="impl/done">**It carries cognition** — a weak reader USES it instead of re-deriving the understanding.</fact></item>
+      <item><PROPERTY-RUNS-OR-MACHINE-CHECKS fact="true" status="impl/done">**It runs or machine-checks** — compiles, executes, or evaluates as a checker, emitting a pass/fail (or typed) signal. Prose has no signal.</PROPERTY-RUNS-OR-MACHINE-CHECKS></item>
+      <item><PROPERTY-CARRIES-COGNITION fact="true" status="impl/done">**It carries cognition** — a weak reader USES it instead of re-deriving the understanding.</PROPERTY-CARRIES-COGNITION></item>
     </list>
-    <p><fact id="prose-fails-the-first-property" status="impl/done">Prose about a pattern fails (1).</fact></p>
-    <p><fact id="random-utility-fails-the-second-property" status="impl/done">A random utility fails (2).</fact></p>
-    <p><fact id="SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE" status="impl/done">A scaffold is materialized understanding with a pulse.</fact></p>
-    <p><fact id="empirical-basis-esolang-follow-up" status="spec/done">**Empirical basis.** EsoLang follow-up (Jun 2026): weak agents given a *written* strategy barely moved (Sonnet 12→12); given an *executable* helper library, they leapt (12→64).</fact></p>
-    <p><fact id="mechanism-not-the-idea-but-the-code" status="spec/done">Mechanism: mid-tier models lack not the idea but the ability to build the reusable code that carries it (R2C-008).</fact></p>
-    <p><fact id="TRANSFER-TAG-LEGEND" status="impl/done">**Transfer tags.** [E-strong] = directly supported by that generation result; [E-mid] = supported by other ledger findings; [E-hyp] = first-principles, validate in pilot.</fact></p>
-    <p><fact id="transfer-to-modification-is-the-pilots-job" status="spec/done">The result is about *generation*; transfer to *modification* is the pilot's job.</fact></p>
-    <p><fact id="floor-haiku-stayed-near-it" status="spec/done">**The floor.** Even with the executable library, Haiku-4.5 stayed near the floor.</fact></p>
-    <p><fact id="SCAFFOLDS-AMPLIFY-NOT-CREATE" status="spec/done">Scaffolds amplify capability; they do not create it.</fact></p>
-  </section>
-  <section id="nine-classes" title="1. The nine classes">
+    <p><prose-fails-the-first-property fact="true" status="impl/done">Prose about a pattern fails (1).</prose-fails-the-first-property></p>
+    <p><random-utility-fails-the-second-property fact="true" status="impl/done">A random utility fails (2).</random-utility-fails-the-second-property></p>
+    <p><SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE fact="true" status="impl/done">A scaffold is materialized understanding with a pulse.</SCAFFOLD-IS-UNDERSTANDING-WITH-A-PULSE></p>
+    <p><empirical-basis-esolang-follow-up fact="true" status="spec/done">**Empirical basis.** EsoLang follow-up (Jun 2026): weak agents given a *written* strategy barely moved (Sonnet 12→12); given an *executable* helper library, they leapt (12→64).</empirical-basis-esolang-follow-up></p>
+    <p><mechanism-not-the-idea-but-the-code fact="true" status="spec/done">Mechanism: mid-tier models lack not the idea but the ability to build the reusable code that carries it (R2C-008).</mechanism-not-the-idea-but-the-code></p>
+    <p><TRANSFER-TAG-LEGEND fact="true" status="impl/done">**Transfer tags.** [E-strong] = directly supported by that generation result; [E-mid] = supported by other ledger findings; [E-hyp] = first-principles, validate in pilot.</TRANSFER-TAG-LEGEND></p>
+    <p><transfer-to-modification-is-the-pilots-job fact="true" status="spec/done">The result is about *generation*; transfer to *modification* is the pilot's job.</transfer-to-modification-is-the-pilots-job></p>
+    <p><floor-haiku-stayed-near-it fact="true" status="spec/done">**The floor.** Even with the executable library, Haiku-4.5 stayed near the floor.</floor-haiku-stayed-near-it></p>
+    <p><SCAFFOLDS-AMPLIFY-NOT-CREATE fact="true" status="spec/done">Scaffolds amplify capability; they do not create it.</SCAFFOLDS-AMPLIFY-NOT-CREATE></p>
+  </definition>
+  <nine-classes title="1. The nine classes">
     <table>
       <tr>
         <td>Class</td>
@@ -32,93 +32,93 @@
         <td>Card</td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-A" status="impl/done">**A**</fact></td>
+        <td><ROW-CLASS-A fact="true" status="impl/done">**A**</ROW-CLASS-A></td>
         <td><fact status="impl/done">Generators / codegen</fact></td>
         <td><fact status="impl/done">structural decisions, as named inputs to an emitter</fact></td>
         <td><fact status="impl/done">[E-strong]</fact></td>
         <td><fact status="impl/done">`scaffold-a-generators`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-B" status="impl/done">**B**</fact></td>
+        <td><ROW-CLASS-B fact="true" status="impl/done">**B**</ROW-CLASS-B></td>
         <td><fact status="impl/done">Typed builders / typestate</fact></td>
         <td><fact status="impl/done">protocol correctness, as types the compiler checks</fact></td>
         <td><fact status="impl/done">[E-mid]</fact></td>
         <td><fact status="impl/done">`scaffold-b-typed-builders`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-C" status="impl/done">**C**</fact></td>
+        <td><ROW-CLASS-C fact="true" status="impl/done">**C**</ROW-CLASS-C></td>
         <td><fact status="impl/done">Runnable contracts</fact></td>
         <td><fact status="impl/done">invariants, as executing assertions/proofs</fact></td>
         <td><fact status="impl/done">[E-mid]</fact></td>
         <td><fact status="impl/done">`scaffold-c-runnable-contracts`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-D" status="impl/done">**D**</fact></td>
+        <td><ROW-CLASS-D fact="true" status="impl/done">**D**</ROW-CLASS-D></td>
         <td><fact status="impl/done">Differential / characterization oracles</fact></td>
         <td><fact status="impl/done">behavior, as a runnable old-vs-new check</fact></td>
         <td><fact status="impl/done">[E-mid]</fact></td>
         <td><fact status="impl/done">`scaffold-d-differential-oracle`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-E" status="impl/done">**E**</fact></td>
+        <td><ROW-CLASS-E fact="true" status="impl/done">**E**</ROW-CLASS-E></td>
         <td><fact status="impl/done">Per-cell fast verification loop</fact></td>
         <td><fact status="impl/done">the substrate that makes all signals fast enough</fact></td>
         <td><fact status="impl/done">[E-strong]</fact></td>
         <td><fact status="impl/done">`scaffold-e-fast-loop`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-F" status="impl/done">**F**</fact></td>
+        <td><ROW-CLASS-F fact="true" status="impl/done">**F**</ROW-CLASS-F></td>
         <td><fact status="impl/done">Structured, REQ-citing diagnostics</fact></td>
         <td><fact status="impl/done">debugging cognition, in the error text</fact></td>
         <td><fact status="impl/done">[E-mid]</fact></td>
         <td><fact status="impl/done">`scaffold-f-structured-diagnostics`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-G" status="impl/done">**G**</fact></td>
+        <td><ROW-CLASS-G fact="true" status="impl/done">**G**</ROW-CLASS-G></td>
         <td><fact status="impl/done">Executable examples / doctests</fact></td>
         <td><fact status="impl/done">canonical usage, as compiled examples that cannot lie</fact></td>
         <td><fact status="impl/done">[E-strong]</fact></td>
         <td><fact status="impl/done">`scaffold-g-doctests`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-H" status="impl/done">**H**</fact></td>
+        <td><ROW-CLASS-H fact="true" status="impl/done">**H**</ROW-CLASS-H></td>
         <td><fact status="impl/done">Local simulators / reference models</fact></td>
         <td><fact status="impl/done">subsystem semantics, as a runnable model</fact></td>
         <td><fact status="impl/done">[E-strong]</fact></td>
         <td><fact status="impl/done">`scaffold-h-simulators`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CLASS-I" status="impl/done">**I**</fact></td>
+        <td><ROW-CLASS-I fact="true" status="impl/done">**I**</ROW-CLASS-I></td>
         <td><fact status="impl/done">Scaffolded edit operations / codemods</fact></td>
         <td><fact status="impl/done">a multi-file change, as one checked operation</fact></td>
         <td><fact status="impl/done">[E-hyp]</fact></td>
         <td><fact status="impl/done">`scaffold-i-codemods`</fact></td>
       </tr>
     </table>
-    <p><fact id="row-details-live-in-the-card" status="impl/done">Each row's full Applicability/Routine/Checker is in its card.</fact></p>
-  </section>
-  <section id="build-order" title="2. Build order (transfer-strength × weak-reader leverage)">
+    <p><row-details-live-in-the-card fact="true" status="impl/done">Each row's full Applicability/Routine/Checker is in its card.</row-details-live-in-the-card></p>
+  </nine-classes>
+  <build-order title="2. Build order (transfer-strength × weak-reader leverage)">
     <list ordered="true">
-      <item><fact id="BUILD-ORDER-E" status="impl/done">**E (fast loop)** — substrate; nothing pays off without it. First.</fact></item>
-      <item><fact id="BUILD-ORDER-G-AND-F" status="impl/done">**G (doctests) + F (diagnostics)** — cheapest runnable capital; guaranteed-truthful few-shot signal. [E-strong].</fact></item>
-      <item><fact id="BUILD-ORDER-B-AND-C" status="impl/done">**B (typed builders) + C (contracts)** — convert hallucinations to compile/assert failures at seams. [E-mid].</fact></item>
-      <item><fact id="BUILD-ORDER-D" status="impl/done">**D (differential oracles)** — the modification-specific safety net; the class most worth validating for our actual task. [E-mid].</fact></item>
-      <item><fact id="BUILD-ORDER-A-AND-H" status="impl/done">**A (generators) + H (simulators)** — highest ceiling, highest cost. [E-strong].</fact></item>
-      <item><fact id="BUILD-ORDER-I" status="impl/done">**I (codemods)** — potentially decisive for the swarm, but [E-hyp]; prototype and measure before the guide commits to it.</fact></item>
+      <item><BUILD-ORDER-E fact="true" status="impl/done">**E (fast loop)** — substrate; nothing pays off without it. First.</BUILD-ORDER-E></item>
+      <item><BUILD-ORDER-G-AND-F fact="true" status="impl/done">**G (doctests) + F (diagnostics)** — cheapest runnable capital; guaranteed-truthful few-shot signal. [E-strong].</BUILD-ORDER-G-AND-F></item>
+      <item><BUILD-ORDER-B-AND-C fact="true" status="impl/done">**B (typed builders) + C (contracts)** — convert hallucinations to compile/assert failures at seams. [E-mid].</BUILD-ORDER-B-AND-C></item>
+      <item><BUILD-ORDER-D fact="true" status="impl/done">**D (differential oracles)** — the modification-specific safety net; the class most worth validating for our actual task. [E-mid].</BUILD-ORDER-D></item>
+      <item><BUILD-ORDER-A-AND-H fact="true" status="impl/done">**A (generators) + H (simulators)** — highest ceiling, highest cost. [E-strong].</BUILD-ORDER-A-AND-H></item>
+      <item><BUILD-ORDER-I fact="true" status="impl/done">**I (codemods)** — potentially decisive for the swarm, but [E-hyp]; prototype and measure before the guide commits to it.</BUILD-ORDER-I></item>
     </list>
-  </section>
-  <section id="reality-checklist" title="3. The scaffold-reality checklist (all four must hold)">
+  </build-order>
+  <reality-checklist title="3. The scaffold-reality checklist (all four must hold)">
     <list ordered="false">
-      <item><fact id="CHECKLIST-RUNS-OR-CHECKS" status="impl/done">[ ] **Runs/checks:** emits pass/fail or typed signal, not prose.</fact></item>
-      <item><fact id="CHECKLIST-CARRIES-COGNITION" status="impl/done">[ ] **Carries cognition:** encodes a decision a weak reader would otherwise re-derive.</fact></item>
-      <item><fact id="CHECKLIST-FAST-ENOUGH" status="impl/done">[ ] **Fast enough:** signal returns inside the per-cell loop budget (&lt;~60s).</fact></item>
-      <item><fact id="CHECKLIST-CANNOT-SILENTLY-LIE" status="impl/done">[ ] **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.)</fact></item>
+      <item><CHECKLIST-RUNS-OR-CHECKS fact="true" status="impl/done">[ ] **Runs/checks:** emits pass/fail or typed signal, not prose.</CHECKLIST-RUNS-OR-CHECKS></item>
+      <item><CHECKLIST-CARRIES-COGNITION fact="true" status="impl/done">[ ] **Carries cognition:** encodes a decision a weak reader would otherwise re-derive.</CHECKLIST-CARRIES-COGNITION></item>
+      <item><CHECKLIST-FAST-ENOUGH fact="true" status="impl/done">[ ] **Fast enough:** signal returns inside the per-cell loop budget (&lt;~60s).</CHECKLIST-FAST-ENOUGH></item>
+      <item><CHECKLIST-CANNOT-SILENTLY-LIE fact="true" status="impl/done">[ ] **Cannot silently lie:** if it drifts from reality it FAILS (compile error / assert / red test), never misleads. (The doctest-vs-comment distinction.)</CHECKLIST-CANNOT-SILENTLY-LIE></item>
     </list>
-  </section>
-  <section id="build-use-boundary" title="4. The build/use boundary (a pilot hypothesis worth stating)">
-    <p><fact id="sharp-capability-line-hypothesis" status="spec/done">There may be a sharp capability line between *building* a scaffold (Classes A, I — emit/parameterize) and *using* one (Classes G, H — consume).</fact></p>
-    <p><fact id="evidence-haiku-did-not-improve" status="spec/done">Evidence: Haiku did not improve even with the executable library, suggesting the barrier is not the scaffold's presence but the ability to wield it.</fact></p>
-    <p><fact id="WEAKEST-TIER-GETS-CONSUME-ONLY-SCAFFOLDS" status="spec/done">If true, the weakest swarm tier should receive consume-only scaffolds (G/H) and invoke-only operations (I as a fixed command), never build-it-yourself scaffolds.</fact></p>
-    <p><fact id="prime-pilot-question" status="spec/done">Prime pilot question (R4).</fact></p>
-  </section>
+  </reality-checklist>
+  <build-use-boundary title="4. The build/use boundary (a pilot hypothesis worth stating)">
+    <p><sharp-capability-line-hypothesis fact="true" status="spec/done">There may be a sharp capability line between *building* a scaffold (Classes A, I — emit/parameterize) and *using* one (Classes G, H — consume).</sharp-capability-line-hypothesis></p>
+    <p><evidence-haiku-did-not-improve fact="true" status="spec/done">Evidence: Haiku did not improve even with the executable library, suggesting the barrier is not the scaffold's presence but the ability to wield it.</evidence-haiku-did-not-improve></p>
+    <p><WEAKEST-TIER-GETS-CONSUME-ONLY-SCAFFOLDS fact="true" status="spec/done">If true, the weakest swarm tier should receive consume-only scaffolds (G/H) and invoke-only operations (I as a fixed command), never build-it-yourself scaffolds.</WEAKEST-TIER-GETS-CONSUME-ONLY-SCAFFOLDS></p>
+    <p><prime-pilot-question fact="true" status="spec/done">Prime pilot question (R4).</prime-pilot-question></p>
+  </build-use-boundary>
 </spec>

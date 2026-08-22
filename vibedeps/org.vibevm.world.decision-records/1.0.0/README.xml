@@ -2,83 +2,83 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:decision-records` — record why, not just what</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE" status="impl/done">A `flow` package that installs the **decisions, not facts**
-discipline into a project.</fact></p>
-  <p><fact id="FACT-IS-RECOVERABLE-REASON-IS-NOT" status="spec/done">A fact ("timeout is 600 s") is
+  <p><PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE fact="true" status="impl/done">A `flow` package that installs the **decisions, not facts**
+discipline into a project.</PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE></p>
+  <p><FACT-IS-RECOVERABLE-REASON-IS-NOT fact="true" status="spec/done">A fact ("timeout is 600 s") is
 recoverable from the code in a second; the *reason* cannot be
-recovered at all.</fact></p>
-  <p><fact id="FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR" status="impl/done">So every choice a future reader could plausibly
+recovered at all.</FACT-IS-RECOVERABLE-REASON-IS-NOT></p>
+  <p><FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">So every choice a future reader could plausibly
 re-open gets a four-field record — Decision / Why / Considered and
 rejected / When to revisit — at the spec anchor that governs the
-value.</fact></p>
-  <p><fact id="tribal-knowledge-in-a-pure-human-team" status="spec/done">In a pure-human team, unrecorded reasoning limps along as tribal
-knowledge — someone can still ask Vasya why the library was chosen.</fact></p>
-  <p><fact id="AGENT-CANNOT-ASK-VASYA" status="spec/done">The agent cannot ask Vasya.</fact></p>
-  <p><fact id="re-derivation-ends-in-re-litigation" status="spec/done">It re-derives from the code, the code
+value.</FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR></p>
+  <p><tribal-knowledge-in-a-pure-human-team fact="true" status="spec/done">In a pure-human team, unrecorded reasoning limps along as tribal
+knowledge — someone can still ask Vasya why the library was chosen.</tribal-knowledge-in-a-pure-human-team></p>
+  <p><AGENT-CANNOT-ASK-VASYA fact="true" status="spec/done">The agent cannot ask Vasya.</AGENT-CANNOT-ASK-VASYA></p>
+  <p><re-derivation-ends-in-re-litigation fact="true" status="spec/done">It re-derives from the code, the code
 shows the value but not the constraint, and the decision gets
 re-litigated: "600 s looks arbitrary, propose 300 s for
-performance."</fact></p>
-  <p><fact id="RECORD-IS-IMMUNITY-TRIGGER-KEEPS-IT-HONEST" status="spec/done">A recorded decision is immunity from re-litigation;
-the revisit trigger keeps the immunity from hardening into dogma.</fact></p>
-  <p><fact id="NO-ADR-DIRECTORY-NO-NUMBERED-LOG" status="impl/done">There is deliberately no `adr/` directory and no immutable numbered
+performance."</re-derivation-ends-in-re-litigation></p>
+  <p><RECORD-IS-IMMUNITY-TRIGGER-KEEPS-IT-HONEST fact="true" status="spec/done">A recorded decision is immunity from re-litigation;
+the revisit trigger keeps the immunity from hardening into dogma.</RECORD-IS-IMMUNITY-TRIGGER-KEEPS-IT-HONEST></p>
+  <p><NO-ADR-DIRECTORY-NO-NUMBERED-LOG fact="true" status="impl/done">There is deliberately no `adr/` directory and no immutable numbered
 log: the governing spec section IS the record, evolution is an edit
-plus a changelog line, and history lives in git.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+plus a changelog line, and history lives in git.</NO-ADR-DIRECTORY-NO-NUMBERED-LOG></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-PROTOCOL" status="impl/done">`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md` — full
+    <item><CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md` — full
   protocol: facts versus decisions, why the asymmetry is load-bearing
   in a human-AI team, the four-field record, placement at the
   governing anchor (contrasted with classic ADR), when to write a
   record, the rejected-alternatives and invariants section patterns,
-  and a re-derive prompt for adapting the practice to any project.</fact></item>
-    <item><fact id="CONTENT-THE-RECORD-TEMPLATE" status="impl/done">`spec/flows/decision-records/record-template.md` — the copy-ready
+  and a re-derive prompt for adapting the practice to any project.</CONTENT-THE-PROTOCOL></item>
+    <item><CONTENT-THE-RECORD-TEMPLATE fact="true" status="impl/done">`spec/flows/decision-records/record-template.md` — the copy-ready
   template, two fully worked examples (a timeout constant, a library
-  choice), and the anti-pattern table.</fact></item>
-    <item><fact id="CONTENT-THE-REVISIT-TRIGGERS" status="impl/done">`spec/flows/decision-records/revisit-triggers.md` — trigger anatomy
+  choice), and the anti-pattern table.</CONTENT-THE-RECORD-TEMPLATE></item>
+    <item><CONTENT-THE-REVISIT-TRIGGERS fact="true" status="impl/done">`spec/flows/decision-records/revisit-triggers.md` — trigger anatomy
   (metric + threshold + observation point), good/bad trigger table,
   the periodic sweep that actually fires triggers, and the reopening
-  procedure.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/25-flow-decision-records.md` — boot snippet loaded at
+  procedure.</CONTENT-THE-REVISIT-TRIGGERS></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/25-flow-decision-records.md` — boot snippet loaded at
   session start: the core rule, the in-session recording duty, and
-  the never-do list.</fact></item>
+  the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:decision-records</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:decision-records</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-ADDRESSABLE-SPECS" status="impl/done">`flow:addressable-specs` — records live at anchors; the stable
+      <item><COMPOSES-ADDRESSABLE-SPECS fact="true" status="impl/done">`flow:addressable-specs` — records live at anchors; the stable
   `spec://…#anchor` address is what makes a record citable from code
-  comments, commits, and the session journal.</fact></item>
-      <item><fact id="COMPOSES-SYNC-FROM-CODE" status="impl/done">`flow:sync-from-code` — its spec delta (value + reason + revisit
+  comments, commits, and the session journal.</COMPOSES-ADDRESSABLE-SPECS></item>
+      <item><COMPOSES-SYNC-FROM-CODE fact="true" status="impl/done">`flow:sync-from-code` — its spec delta (value + reason + revisit
   trigger) is precisely a decision record born from a code-first
   change; this package generalises that trio to *all* decisions,
-  whichever direction they arrive from.</fact></item>
-      <item><fact id="COMPOSES-WAL" status="impl/done">`flow:wal` — WAL Constraints entries cite recorded decisions
+  whichever direction they arrive from.</COMPOSES-SYNC-FROM-CODE></item>
+      <item><COMPOSES-WAL fact="true" status="impl/done">`flow:wal` — WAL Constraints entries cite recorded decisions
   ("timeout is 600 s, not 300 → §verification.timeout") instead of
-  restating the reasoning.</fact></item>
-      <item><fact id="COMPOSES-ATOMIC-COMMITS" status="impl/done">`flow:git-atomic-commits` — commit bodies cite the record, never
+  restating the reasoning.</COMPOSES-WAL></item>
+      <item><COMPOSES-ATOMIC-COMMITS fact="true" status="impl/done">`flow:git-atomic-commits` — commit bodies cite the record, never
   replace it: the spec carries the why, the commit points at the
-  anchor.</fact></item>
+  anchor.</COMPOSES-ATOMIC-COMMITS></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="practice-extracted-from-the-book" status="spec/done">The practice is extracted from *AI-native development*, chapter 3
+  </composition>
+  <background title="Philosophical background">
+    <p><practice-extracted-from-the-book fact="true" status="spec/done">The practice is extracted from *AI-native development*, chapter 3
 (*«Архитектура памяти»*, subsection *«Решения, а не факты»*) and the
-memory-architecture conclusions of chapter 1.</fact></p>
-    <p><fact id="BOOK-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK" status="impl/done">The book ships in
-Russian inside `flow:redbook` at `spec/book/ru/`.</fact></p>
-    <p><fact id="AGENT-HAS-NO-MEMORY-BETWEEN-SESSIONS" status="spec/done">Short version: the
+memory-architecture conclusions of chapter 1.</practice-extracted-from-the-book></p>
+    <p><BOOK-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK fact="true" status="impl/done">The book ships in
+Russian inside `flow:redbook` at `spec/book/ru/`.</BOOK-SHIPS-IN-RUSSIAN-INSIDE-REDBOOK></p>
+    <p><AGENT-HAS-NO-MEMORY-BETWEEN-SESSIONS fact="true" status="spec/done">Short version: the
 agent has no memory between sessions — a recorded decision is the
-only kind of memory it can ever have.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</fact></p>
-  </section>
+only kind of memory it can ever have.</AGENT-HAS-NO-MEMORY-BETWEEN-SESSIONS></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</license-line></p>
+  </license>
 </spec>

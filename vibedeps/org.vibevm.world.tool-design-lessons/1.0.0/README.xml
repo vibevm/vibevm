@@ -2,77 +2,77 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:tool-design-lessons` — lessons for tool authors</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS" status="impl/done">A `flow` package that installs a **lessons catalog** for tool authors:
+  <p><PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS fact="true" status="impl/done">A `flow` package that installs a **lessons catalog** for tool authors:
 numbered, self-contained lessons distilled from building a self-updating
-CLI and the package ecosystem around it.</fact></p>
-  <p><fact id="EACH-LESSON-IS-A-SCAR-CAPTURED-AS-CONTEXT-LAW-WHY" status="impl/done">Each lesson is a scar — a
+CLI and the package ecosystem around it.</PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS></p>
+  <p><EACH-LESSON-IS-A-SCAR-CAPTURED-AS-CONTEXT-LAW-WHY fact="true" status="impl/done">Each lesson is a scar — a
 design that seemed reasonable, shipped, and taught its cost — captured
 as **context + the law + why**, so you can read the one that governs the
-decision in front of you and skip the rest.</fact></p>
-  <p><fact id="AUDIENCE-IS-TOOL-AUTHORS" status="impl/done">**Audience: tool authors** — anyone building a self-updating CLI, an
-installer, a version manager, or a package system.</fact></p>
-  <p><fact id="IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL" status="impl/done">This is a lessons
+decision in front of you and skip the rest.</EACH-LESSON-IS-A-SCAR-CAPTURED-AS-CONTEXT-LAW-WHY></p>
+  <p><AUDIENCE-IS-TOOL-AUTHORS fact="true" status="impl/done">**Audience: tool authors** — anyone building a self-updating CLI, an
+installer, a version manager, or a package system.</AUDIENCE-IS-TOOL-AUTHORS></p>
+  <p><IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL fact="true" status="impl/done">This is a lessons
 catalog, not a protocol: there is no single procedure to follow, just
 fourteen laws with the failures that earned them and three maxims that
-sit above them.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+sit above them.</IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-CATALOG-INDEX" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
+    <item><CONTENT-THE-CATALOG-INDEX fact="true" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
   what the lessons are, the index table (lesson id → one-line law →
   where it lives), the three cross-cutting maxims, the meta-lesson
   (record the *why*, not just the *what*), and a re-derive prompt for
-  adapting the laws to your own platform.</fact></item>
-    <item><fact id="CONTENT-THE-SELF-UPDATING-LESSONS" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.md` — lessons
+  adapting the laws to your own platform.</CONTENT-THE-CATALOG-INDEX></item>
+    <item><CONTENT-THE-SELF-UPDATING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.md` — lessons
   S1–S7: live-pointer activation, immutable instance directories, cheap
   identity, sources by reference, durable-environment edits, one
-  runnable required-tools table, and safe removal / garbage collection.</fact></item>
-    <item><fact id="CONTENT-THE-PACKAGING-LESSONS" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.md` — lessons P1–P7:
+  runnable required-tools table, and safe removal / garbage collection.</CONTENT-THE-SELF-UPDATING-LESSONS></item>
+    <item><CONTENT-THE-PACKAGING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.md` — lessons P1–P7:
   a package is a project, ship runtime not prose, identity is the
   source, build output goes elsewhere, vendor the bootstrap, spike
   before the irreversible move, and build the general mechanism on real
-  demand.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/70-flow-tool-design-lessons.md` — boot snippet loaded at
-  session start: when to read a lesson first, and the never-do list.</fact></item>
+  demand.</CONTENT-THE-PACKAGING-LESSONS></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/70-flow-tool-design-lessons.md` — boot snippet loaded at
+  session start: when to read a lesson first, and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:tool-design-lessons</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:tool-design-lessons</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-MANAGED-BLOCKS" status="impl/done">`flow:managed-blocks` — the deep dive on writing safely inside a
+      <item><COMPOSES-MANAGED-BLOCKS fact="true" status="impl/done">`flow:managed-blocks` — the deep dive on writing safely inside a
   shared, human-owned file; lesson S5 (durable-environment edits) points
-  there for the mechanics of the marked-block edit.</fact></item>
-      <item><fact id="COMPOSES-QUALIFIED-NAMING" status="spec/done">`flow:qualified-naming` — the sibling on ecosystem identity; when a
+  there for the mechanics of the marked-block edit.</COMPOSES-MANAGED-BLOCKS></item>
+      <item><COMPOSES-QUALIFIED-NAMING fact="true" status="spec/done">`flow:qualified-naming` — the sibling on ecosystem identity; when a
   package is a project (P1) and many of them coexist, stable qualified
-  names are what keep them addressable.</fact></item>
-      <item><fact id="COMPOSES-MANUAL-TESTS" status="spec/done">`flow:manual-tests` — several of these lessons were caught only by a
+  names are what keep them addressable.</COMPOSES-QUALIFIED-NAMING></item>
+      <item><COMPOSES-MANUAL-TESTS fact="true" status="spec/done">`flow:manual-tests` — several of these lessons were caught only by a
   human-run walk on a real machine, not by an automated suite; the two
-  test tiers reinforce each other.</fact></item>
-      <item><fact id="COMPOSES-DECISION-RECORDS" status="impl/done">`flow:decision-records` — every lesson here is a decision record that
+  test tiers reinforce each other.</COMPOSES-MANUAL-TESTS></item>
+      <item><COMPOSES-DECISION-RECORDS fact="true" status="impl/done">`flow:decision-records` — every lesson here is a decision record that
   earned its revisit trigger the hard way; that flow generalises the
   record-the-*why* discipline to all decisions, whichever direction they
-  arrive from.</fact></item>
+  arrive from.</COMPOSES-DECISION-RECORDS></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="catalog-crystallized-from-the-origin-projects-rework" status="spec/done">The catalog is crystallized from the origin project's version-manager
+  </composition>
+  <background title="Philosophical background">
+    <p><catalog-crystallized-from-the-origin-projects-rework fact="true" status="spec/done">The catalog is crystallized from the origin project's version-manager
 rework (the switch from environment-as-truth to a live pointer, immutable
 instances, and cheap identity) and its code-bearing-packages laws (a
-package is a project, identity is the source, vendor the bootstrap).</fact></p>
-    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The
+package is a project, identity is the source, vendor the bootstrap).</catalog-crystallized-from-the-origin-projects-rework></p>
+    <p><collections-spirit-is-the-redbook fact="true" status="spec/done">The
 collection's spirit is the book *AI-native development*, which ships in
-Russian inside `flow:redbook` at `spec/book/ru/`.</fact></p>
-    <p><fact id="A-SELF-MANAGING-TOOL-EDITS-A-LIVE-MACHINE" status="spec/done">Short version: a tool
+Russian inside `flow:redbook` at `spec/book/ru/`.</collections-spirit-is-the-redbook></p>
+    <p><A-SELF-MANAGING-TOOL-EDITS-A-LIVE-MACHINE fact="true" status="spec/done">Short version: a tool
 that manages itself edits a live machine, and every one of these laws is
-a place where the obvious design quietly cost more than the careful one.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</fact></p>
-  </section>
+a place where the obvious design quietly cost more than the careful one.</A-SELF-MANAGING-TOOL-EDITS-A-LIVE-MACHINE></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See [`LICENSE.md`](LICENSE.md).</license-line></p>
+  </license>
 </spec>

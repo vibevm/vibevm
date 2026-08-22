@@ -2,70 +2,70 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: WAL Specspaces</title>
   <status stage="impl" state="done"/>
-  <p><fact id="THE-PROJECT-MAY-HOST-SPECSPACES" status="impl/done">This project may host **specspaces** — sub-projects nested in the
+  <p><THE-PROJECT-MAY-HOST-SPECSPACES fact="true" status="impl/done">This project may host **specspaces** — sub-projects nested in the
 repository that are worked on as independent projects, each with its
-own boot contract, WAL, and cold-resume file.</fact></p>
-  <p><fact id="THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT" status="impl/done">The registry is
+own boot contract, WAL, and cold-resume file.</THE-PROJECT-MAY-HOST-SPECSPACES></p>
+  <p><THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT fact="true" status="impl/done">The registry is
 `SPECSPACES.md` at the host root; if that file is absent, no
-specspaces exist and this snippet is inert.</fact></p>
-  <section id="recognise" title="Recognising a specspace session">
+specspaces exist and this snippet is inert.</THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT></p>
+  <recognise title="Recognising a specspace session">
     <list ordered="true">
-      <item><fact id="RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME" status="impl/done">A resume or wind-down phrase carrying a specspace name —
+      <item><RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME fact="true" status="impl/done">A resume or wind-down phrase carrying a specspace name —
    `RESUME SESSION &lt;name&gt;`, `END SESSION &lt;name&gt;`, or the project's
-   language twins — targets that specspace, not the host project.</fact></item>
-      <item><fact id="RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT" status="impl/done">A session whose task clearly lives inside a registered specspace
+   language twins — targets that specspace, not the host project.</RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME></item>
+      <item><RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT fact="true" status="impl/done">A session whose task clearly lives inside a registered specspace
    root follows that specspace's boot contract, even without the
-   phrase. When in doubt, ask which project the session is for.</fact></item>
+   phrase. When in doubt, ask which project the session is for.</RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT></item>
     </list>
-  </section>
-  <section id="default" title="Which project a bare phrase targets">
-    <p><fact id="A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET" status="impl/done">A session phrase resolves to exactly **one** target — the host
-project or a single specspace — by this order:</fact></p>
+  </recognise>
+  <default title="Which project a bare phrase targets">
+    <p><A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET fact="true" status="impl/done">A session phrase resolves to exactly **one** target — the host
+project or a single specspace — by this order:</A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET></p>
     <list ordered="true">
-      <item><fact id="TARGET-EXPLICIT-WINS-ALWAYS" status="impl/done">**Explicit target wins, always.** A phrase that names a specspace
+      <item><TARGET-EXPLICIT-WINS-ALWAYS fact="true" status="impl/done">**Explicit target wins, always.** A phrase that names a specspace
    (`RESUME SESSION &lt;name&gt;`), or that names an explicit directory,
    targets that specspace or directory — regardless of any declared
    default. This is how the user forces restoration from an arbitrary
    specspace or directory. A name matching no registry row is
-   surfaced, not guessed.</fact></item>
-      <item><fact id="TARGET-DECLARED-DEFAULT" status="impl/done">**Declared default.** A **bare** phrase (no name) uses the
+   surfaced, not guessed.</TARGET-EXPLICIT-WINS-ALWAYS></item>
+      <item><TARGET-DECLARED-DEFAULT fact="true" status="impl/done">**Declared default.** A **bare** phrase (no name) uses the
    specspace named by the `default:` line of `SPECSPACES.md`, if one
-   is declared.</fact></item>
-      <item><fact id="TARGET-HOST-FALLBACK" status="impl/done">**Host fallback.** With no name and no declared default, a bare
+   is declared.</TARGET-DECLARED-DEFAULT></item>
+      <item><TARGET-HOST-FALLBACK fact="true" status="impl/done">**Host fallback.** With no name and no declared default, a bare
    phrase targets the **host project** — restore the host root's own
    WAL and cold-resume file, per the host contract's session-command
-   sections.</fact></item>
+   sections.</TARGET-HOST-FALLBACK></item>
     </list>
-    <p><fact id="A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE" status="impl/done">A bare phrase therefore **never silently selects a specspace**.</fact></p>
-    <p><fact id="AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL" status="impl/done">At the
+    <p><A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE fact="true" status="impl/done">A bare phrase therefore **never silently selects a specspace**.</A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE></p>
+    <p><AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL fact="true" status="impl/done">At the
 host root, a bare `восстанови сессию` / `RESUME SESSION` restores the
-**host** WAL — not a registered specspace such as `fractality`.</fact></p>
-    <p><fact id="TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT" status="impl/done">Targeting a specspace requires naming it (or declaring it the default).</fact></p>
-  </section>
-  <section id="scoping" title="The boot-scoping law">
-    <p><fact id="A-SPECSPACE-SESSION-READS-IN-ORDER" status="impl/done">A specspace session reads, in order:</fact></p>
+**host** WAL — not a registered specspace such as `fractality`.</AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL></p>
+    <p><TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT fact="true" status="impl/done">Targeting a specspace requires naming it (or declaring it the default).</TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT></p>
+  </default>
+  <scoping title="The boot-scoping law">
+    <p><A-SPECSPACE-SESSION-READS-IN-ORDER fact="true" status="impl/done">A specspace session reads, in order:</A-SPECSPACE-SESSION-READS-IN-ORDER></p>
     <list ordered="true">
-      <item><fact id="READS-THE-HOSTS-REPO-WIDE-RULES" status="impl/done">the host's repo-wide non-negotiable rules (the section the host
-   contract marks as binding for every commit),</fact></item>
-      <item><fact id="READS-THE-SPECSPACES-OWN-BOOT-CONTRACT" status="impl/done">the specspace's own boot contract (`CLAUDE.md` at the specspace
-   root, or the equivalent boot contract living there),</fact></item>
-      <item><fact id="READS-THE-SPECSPACE-WAL" status="impl/done">the specspace WAL,</fact></item>
-      <item><fact id="READS-THE-SPECSPACE-COLD-RESUME-FILE" status="impl/done">the specspace cold-resume file (the WAL wins where they diverge),</fact></item>
-      <item><fact id="READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES" status="impl/done">any active plan the specspace WAL names.</fact></item>
+      <item><READS-THE-HOSTS-REPO-WIDE-RULES fact="true" status="impl/done">the host's repo-wide non-negotiable rules (the section the host
+   contract marks as binding for every commit),</READS-THE-HOSTS-REPO-WIDE-RULES></item>
+      <item><READS-THE-SPECSPACES-OWN-BOOT-CONTRACT fact="true" status="impl/done">the specspace's own boot contract (`CLAUDE.md` at the specspace
+   root, or the equivalent boot contract living there),</READS-THE-SPECSPACES-OWN-BOOT-CONTRACT></item>
+      <item><READS-THE-SPECSPACE-WAL fact="true" status="impl/done">the specspace WAL,</READS-THE-SPECSPACE-WAL></item>
+      <item><READS-THE-SPECSPACE-COLD-RESUME-FILE fact="true" status="impl/done">the specspace cold-resume file (the WAL wins where they diverge),</READS-THE-SPECSPACE-COLD-RESUME-FILE></item>
+      <item><READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES fact="true" status="impl/done">any active plan the specspace WAL names.</READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES></item>
     </list>
-    <p><fact id="IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS" status="impl/done">It does **not** load the host's full boot sequence, the host WAL, or
+    <p><IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS fact="true" status="impl/done">It does **not** load the host's full boot sequence, the host WAL, or
 host specs — unless the task explicitly crosses into the host
-project, and then the session says so before touching host files.</fact></p>
-  </section>
-  <section id="commands" title="Session commands, scoped">
-    <p><fact id="SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES" status="impl/done">Wind-down and resume phrases carrying a specspace name operate on
+project, and then the session says so before touching host files.</IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS></p>
+  </scoping>
+  <commands title="Session commands, scoped">
+    <p><SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES fact="true" status="impl/done">Wind-down and resume phrases carrying a specspace name operate on
 that specspace's WAL and cold-resume file, and refresh the
-specspace's one-line status in `SPECSPACES.md`.</fact></p>
-    <p><fact id="THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED" status="impl/done">The host WAL is
-updated only when host files actually changed in the session.</fact></p>
-    <p><fact id="RESUME-REMAINS-REPORT-THEN-WAIT" status="impl/done">Resume remains report-then-wait: restore, verify state empirically,
-report, stop.</fact></p>
-    <p><fact id="sibling-document-pointers" status="impl/done">Full protocol:
-@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.</fact></p>
-  </section>
+specspace's one-line status in `SPECSPACES.md`.</SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES></p>
+    <p><THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED fact="true" status="impl/done">The host WAL is
+updated only when host files actually changed in the session.</THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED></p>
+    <p><RESUME-REMAINS-REPORT-THEN-WAIT fact="true" status="impl/done">Resume remains report-then-wait: restore, verify state empirically,
+report, stop.</RESUME-REMAINS-REPORT-THEN-WAIT></p>
+    <p><sibling-document-pointers fact="true" status="impl/done">Full protocol:
+@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.</sibling-document-pointers></p>
+  </commands>
 </spec>

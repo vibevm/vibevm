@@ -2,182 +2,182 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Comparative Research Protocol</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines what a *comparative
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines what a *comparative
 research document* is, why the genre exists, the five laws every
 such document obeys, when to write one, and how the study connects
-to the roadmap without ever ratifying itself.</fact></p>
-  <p><fact id="sibling-document-pointers" status="impl/done">Copy-ready skeleton:
+to the roadmap without ever ratifying itself.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">Copy-ready skeleton:
 [`research-template.md`](research-template.md); the downstream
-pipeline: [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</fact></p>
-  <section id="what" title="What the genre is">
-    <p><fact id="A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM" status="impl/done">A comparative research document is a **self-contained, evergreen
+pipeline: [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</sibling-document-pointers></p>
+  <what title="What the genre is">
+    <p><A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM fact="true" status="impl/done">A comparative research document is a **self-contained, evergreen
 study of one external system** — a competitor, a predecessor, an
-adjacent tool that occupies ground near yours.</fact></p>
-    <p><fact id="IT-INVENTORIES-QUOTES-MEASURES-AND-TRANSLATES" status="impl/done">It inventories what
+adjacent tool that occupies ground near yours.</A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM></p>
+    <p><IT-INVENTORIES-QUOTES-MEASURES-AND-TRANSLATES fact="true" status="impl/done">It inventories what
 that system does, quotes it in its own words, measures it in two
 directions against your own project, and translates the actionable
-findings into numbered roadmap proposals.</fact></p>
-    <p><fact id="evergreen-is-the-load-bearing-adjective" status="impl/done">"Evergreen" is the load-bearing adjective.</fact></p>
-    <p><fact id="THE-DOCUMENT-IS-WRITTEN-TO-OUTLAST-ITS-SOURCES" status="impl/done">The document is written
+findings into numbered roadmap proposals.</IT-INVENTORIES-QUOTES-MEASURES-AND-TRANSLATES></p>
+    <p><evergreen-is-the-load-bearing-adjective fact="true" status="impl/done">"Evergreen" is the load-bearing adjective.</evergreen-is-the-load-bearing-adjective></p>
+    <p><THE-DOCUMENT-IS-WRITTEN-TO-OUTLAST-ITS-SOURCES fact="true" status="impl/done">The document is written
 to be **re-readable months after publication without referring to
 the original sources, and to outlast any one external project's URL
-stability**.</fact></p>
+stability**.</THE-DOCUMENT-IS-WRITTEN-TO-OUTLAST-ITS-SOURCES></p>
     <list ordered="false">
-      <item><fact id="ROT-MARKETING-PAGES-GET-REDESIGNED" status="spec/done">Marketing pages get redesigned,</fact></item>
-      <item><fact id="ROT-DOCS-SITES-MOVE" status="spec/done">docs sites move,</fact></item>
-      <item><fact id="ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED" status="spec/done">whole
-  products get acquired and deleted.</fact></item>
+      <item><ROT-MARKETING-PAGES-GET-REDESIGNED fact="true" status="spec/done">Marketing pages get redesigned,</ROT-MARKETING-PAGES-GET-REDESIGNED></item>
+      <item><ROT-DOCS-SITES-MOVE fact="true" status="spec/done">docs sites move,</ROT-DOCS-SITES-MOVE></item>
+      <item><ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED fact="true" status="spec/done">whole
+  products get acquired and deleted.</ROT-PRODUCTS-GET-ACQUIRED-AND-DELETED></item>
     </list>
-    <p><fact id="a-study-that-links-out-expires" status="spec/done">A study that merely links out is
-a study that expires.</fact></p>
-    <p><fact id="a-quoted-study-stands-after-the-links-rot" status="spec/done">A study that quotes verbatim with dates is a
-study that stands on its own after the links rot.</fact></p>
-  </section>
-  <section id="why" title="Why the genre exists">
-    <p><fact id="three-costs-justify-the-effort-lead" status="spec/done">Three costs justify the effort of a full study over a quick glance:</fact></p>
+    <p><a-study-that-links-out-expires fact="true" status="spec/done">A study that merely links out is
+a study that expires.</a-study-that-links-out-expires></p>
+    <p><a-quoted-study-stands-after-the-links-rot fact="true" status="spec/done">A study that quotes verbatim with dates is a
+study that stands on its own after the links rot.</a-quoted-study-stands-after-the-links-rot></p>
+  </what>
+  <why title="Why the genre exists">
+    <p><three-costs-justify-the-effort-lead fact="true" status="spec/done">Three costs justify the effort of a full study over a quick glance:</three-costs-justify-the-effort-lead></p>
     <list ordered="false">
-      <item><fact id="COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES" status="spec/done">**Unexamined competitors cost roadmap mistakes.** Building in a
+      <item><COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES fact="true" status="spec/done">**Unexamined competitors cost roadmap mistakes.** Building in a
   space someone else already occupies, without knowing what they
   built, means re-discovering their dead ends at your own expense —
-  or missing the one feature that was the whole point.</fact></item>
-      <item><fact id="COST-EXAMINED-COMPETITORS-YIELD-DELTAS" status="spec/done">**Examined competitors yield deltas.** Understanding what a rival
+  or missing the one feature that was the whole point.</COST-UNEXAMINED-COMPETITORS-COST-ROADMAP-MISTAKES></item>
+      <item><COST-EXAMINED-COMPETITORS-YIELD-DELTAS fact="true" status="spec/done">**Examined competitors yield deltas.** Understanding what a rival
   does well — *and what it does not* — is load-bearing intelligence
   for your own roadmap. Every gap you find is a candidate decision:
-  close it, decline it on record, or note it as already led.</fact></item>
-      <item><fact id="COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT" status="spec/done">**The study must outlive link rot and staff turnover.** The person
+  close it, decline it on record, or note it as already led.</COST-EXAMINED-COMPETITORS-YIELD-DELTAS></item>
+      <item><COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT fact="true" status="spec/done">**The study must outlive link rot and staff turnover.** The person
   who did the research leaves; the URL 404s; the competitor pivots.
   What remains is the document, and the document is only worth
-  keeping if it is complete on its own terms.</fact></item>
+  keeping if it is complete on its own terms.</COST-THE-STUDY-MUST-OUTLIVE-LINK-ROT></item>
     </list>
-  </section>
-  <section id="laws" title="The five laws">
-    <p><fact id="EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS" status="impl/done">Every comparative research document obeys all five.</fact></p>
-    <p><fact id="the-laws-separate-a-study-from-a-rant" status="spec/done">They are what
-separate a study from a bookmark dump or a competitive-envy rant.</fact></p>
-    <section id="law-self-contained" title="Law 1 — Self-containedness">
-      <p><fact id="LAW-ONE-THE-DOCUMENT-MUST-STAND-WHEN-ITS-SOURCES-VANISH" status="impl/done">The document must stand when its sources vanish.</fact></p>
-      <p><fact id="LAW-ONE-QUOTE-VERBATIM-WITH-AN-ACCESS-DATE" status="impl/done">Quote the subject
+  </why>
+  <laws title="The five laws">
+    <p><EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS fact="true" status="impl/done">Every comparative research document obeys all five.</EVERY-DOCUMENT-OBEYS-ALL-FIVE-LAWS></p>
+    <p><the-laws-separate-a-study-from-a-rant fact="true" status="spec/done">They are what
+separate a study from a bookmark dump or a competitive-envy rant.</the-laws-separate-a-study-from-a-rant></p>
+    <law-self-contained title="Law 1 — Self-containedness">
+      <p><LAW-ONE-THE-DOCUMENT-MUST-STAND-WHEN-ITS-SOURCES-VANISH fact="true" status="impl/done">The document must stand when its sources vanish.</LAW-ONE-THE-DOCUMENT-MUST-STAND-WHEN-ITS-SOURCES-VANISH></p>
+      <p><LAW-ONE-QUOTE-VERBATIM-WITH-AN-ACCESS-DATE fact="true" status="impl/done">Quote the subject
 **verbatim in fenced blocks, each carrying an access date**, rather
-than linking and trusting the link.</fact></p>
-      <p><fact id="LAW-ONE-A-FUTURE-READER-RECONSTRUCTS-WITHOUT-FETCHING" status="impl/done">A future reader with no network
+than linking and trusting the link.</LAW-ONE-QUOTE-VERBATIM-WITH-AN-ACCESS-DATE></p>
+      <p><LAW-ONE-A-FUTURE-READER-RECONSTRUCTS-WITHOUT-FETCHING fact="true" status="impl/done">A future reader with no network
 access, opening the file a year later, must be able to reconstruct
-what the subject claimed without fetching anything.</fact></p>
-      <p><fact id="LAW-ONE-LINKS-ARE-POINTERS-QUOTES-ARE-EVIDENCE" status="impl/done">Links are
-pointers for refresh; quotes are the evidence of record.</fact></p>
-    </section>
-    <section id="law-quote-first" title="Law 2 — Quote first, critique second">
-      <p><fact id="LAW-TWO-THE-SUBJECT-SPEAKS-BEFORE-IT-IS-JUDGED" status="impl/done">The subject speaks **in its own words before it is judged**.</fact></p>
-      <p><fact id="LAW-TWO-PRESENT-THE-QUOTE-THEN-ANALYZE" status="impl/done">Present
+what the subject claimed without fetching anything.</LAW-ONE-A-FUTURE-READER-RECONSTRUCTS-WITHOUT-FETCHING></p>
+      <p><LAW-ONE-LINKS-ARE-POINTERS-QUOTES-ARE-EVIDENCE fact="true" status="impl/done">Links are
+pointers for refresh; quotes are the evidence of record.</LAW-ONE-LINKS-ARE-POINTERS-QUOTES-ARE-EVIDENCE></p>
+    </law-self-contained>
+    <law-quote-first title="Law 2 — Quote first, critique second">
+      <p><LAW-TWO-THE-SUBJECT-SPEAKS-BEFORE-IT-IS-JUDGED fact="true" status="impl/done">The subject speaks **in its own words before it is judged**.</LAW-TWO-THE-SUBJECT-SPEAKS-BEFORE-IT-IS-JUDGED></p>
+      <p><LAW-TWO-PRESENT-THE-QUOTE-THEN-ANALYZE fact="true" status="impl/done">Present
 the verbatim quote — the pitch, the feature description, the design
-claim — and only *then* analyze, praise, or fault it.</fact></p>
-      <p><fact id="critiquing-a-paraphrase-is-critiquing-a-straw-man" status="spec/done">Critiquing a
+claim — and only *then* analyze, praise, or fault it.</LAW-TWO-PRESENT-THE-QUOTE-THEN-ANALYZE></p>
+      <p><critiquing-a-paraphrase-is-critiquing-a-straw-man fact="true" status="spec/done">Critiquing a
 paraphrase is critiquing a straw man: the paraphrase is already your
 reading, and a reader cannot check your judgement against a summary
-you wrote.</fact></p>
-      <p><fact id="LAW-TWO-QUOTE-THEN-JUDGE-EVERY-TIME" status="impl/done">Quote, then judge, in that order, every time.</fact></p>
-    </section>
-    <section id="law-two-way" title="Law 3 — Two-way gaps">
-      <p><fact id="law-three-runs-in-both-directions-lead" status="impl/done">The analysis runs in **both directions**:</fact></p>
+you wrote.</critiquing-a-paraphrase-is-critiquing-a-straw-man></p>
+      <p><LAW-TWO-QUOTE-THEN-JUDGE-EVERY-TIME fact="true" status="impl/done">Quote, then judge, in that order, every time.</LAW-TWO-QUOTE-THEN-JUDGE-EVERY-TIME></p>
+    </law-quote-first>
+    <law-two-way title="Law 3 — Two-way gaps">
+      <p><law-three-runs-in-both-directions-lead fact="true" status="impl/done">The analysis runs in **both directions**:</law-three-runs-in-both-directions-lead></p>
       <list ordered="false">
-        <item><fact id="LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL" status="impl/done">a section for where you
-  trail the subject,</fact></item>
-        <item><fact id="LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD" status="impl/done">and a section for where you lead it.</fact></item>
+        <item><LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL fact="true" status="impl/done">a section for where you
+  trail the subject,</LAW-THREE-A-SECTION-FOR-WHERE-YOU-TRAIL></item>
+        <item><LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD fact="true" status="impl/done">and a section for where you lead it.</LAW-THREE-A-SECTION-FOR-WHERE-YOU-LEAD></item>
       </list>
-      <p><fact id="one-directional-gap-analysis-is-advocacy-lead" status="spec/done">One-directional
-gap analysis is not analysis — it is advocacy:</fact></p>
+      <p><one-directional-gap-analysis-is-advocacy-lead fact="true" status="spec/done">One-directional
+gap analysis is not analysis — it is advocacy:</one-directional-gap-analysis-is-advocacy-lead></p>
       <table>
         <tr>
           <td>One-directional study</td>
           <td>What it actually is</td>
         </tr>
         <tr>
-          <td><fact id="ROW-ONE-DIRECTIONAL-TRAIL-ONLY" status="spec/done">Only finds where you trail</fact></td>
+          <td><ROW-ONE-DIRECTIONAL-TRAIL-ONLY fact="true" status="spec/done">Only finds where you trail</ROW-ONE-DIRECTIONAL-TRAIL-ONLY></td>
           <td><fact status="spec/done">Marketing for the competitor</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-ONE-DIRECTIONAL-LEAD-ONLY" status="spec/done">Only finds where you lead</fact></td>
+          <td><ROW-ONE-DIRECTIONAL-LEAD-ONLY fact="true" status="spec/done">Only finds where you lead</ROW-ONE-DIRECTIONAL-LEAD-ONLY></td>
           <td><fact status="spec/done">Marketing for yourself</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-FINDS-BOTH-ARGUED-EQUALLY" status="spec/done">Finds both, argued equally</fact></td>
+          <td><ROW-FINDS-BOTH-ARGUED-EQUALLY fact="true" status="spec/done">Finds both, argued equally</ROW-FINDS-BOTH-ARGUED-EQUALLY></td>
           <td><fact status="spec/done">Intelligence you can act on</fact></td>
         </tr>
       </table>
-      <p><fact id="WHERE-YOU-LEAD-DESERVES-THE-SAME-RIGOR" status="impl/done">Where you lead deserves the same rigor as where you trail: name the
-decision you made that they did not, and say why it matters.</fact></p>
-      <p><fact id="envy-blinds-you-to-the-moat-you-already-have" status="spec/done">Envy in
-one direction blinds you to the moat you already have.</fact></p>
-    </section>
-    <section id="law-deltas" title="Law 4 — Deltas, not decrees">
-      <p><fact id="LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS" status="impl/done">Actionable findings become **numbered roadmap deltas**, each with a
+      <p><WHERE-YOU-LEAD-DESERVES-THE-SAME-RIGOR fact="true" status="impl/done">Where you lead deserves the same rigor as where you trail: name the
+decision you made that they did not, and say why it matters.</WHERE-YOU-LEAD-DESERVES-THE-SAME-RIGOR></p>
+      <p><envy-blinds-you-to-the-moat-you-already-have fact="true" status="spec/done">Envy in
+one direction blinds you to the moat you already have.</envy-blinds-you-to-the-moat-you-already-have></p>
+    </law-two-way>
+    <law-deltas title="Law 4 — Deltas, not decrees">
+      <p><LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS fact="true" status="impl/done">Actionable findings become **numbered roadmap deltas**, each with a
 **priority** and a **target home** — "maps to a future spec section",
-not a change ratified here.</fact></p>
-      <p><fact id="LAW-FOUR-THE-DOCUMENT-PROPOSES-IT-DOES-NOT-DECIDE" status="impl/done">The research document *proposes*; it does
-not *decide*.</fact></p>
-      <p><fact id="a-self-ratifying-study-skips-the-review" status="spec/done">A study that quietly rewrites the roadmap inside itself
+not a change ratified here.</LAW-FOUR-FINDINGS-BECOME-NUMBERED-PRIORITIZED-HOMED-DELTAS></p>
+      <p><LAW-FOUR-THE-DOCUMENT-PROPOSES-IT-DOES-NOT-DECIDE fact="true" status="impl/done">The research document *proposes*; it does
+not *decide*.</LAW-FOUR-THE-DOCUMENT-PROPOSES-IT-DOES-NOT-DECIDE></p>
+      <p><a-self-ratifying-study-skips-the-review fact="true" status="spec/done">A study that quietly rewrites the roadmap inside itself
 has skipped the review where a human weighs the proposal against
-everything else competing for the same effort.</fact></p>
-      <p><fact id="LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE" status="impl/done">Keep the two acts
+everything else competing for the same effort.</a-self-ratifying-study-skips-the-review></p>
+      <p><LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE fact="true" status="impl/done">Keep the two acts
 separate: the study argues, the owner decides
-([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</fact></p>
-    </section>
-    <section id="law-refetch" title="Law 5 — The re-fetch list">
-      <p><fact id="LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST" status="impl/done">The document closes with **every source URL, its access date, and
+([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE></p>
+    </law-deltas>
+    <law-refetch title="Law 5 — The re-fetch list">
+      <p><LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST fact="true" status="impl/done">The document closes with **every source URL, its access date, and
 the subject's version at capture** — the exact list needed to refresh
-the study later.</fact></p>
-      <p><fact id="the-study-has-a-shelf-life" status="impl/done">Because the subject keeps shipping, the study has a
+the study later.</LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST></p>
+      <p><the-study-has-a-shelf-life fact="true" status="impl/done">Because the subject keeps shipping, the study has a
 shelf life; the re-fetch list is what lets a future session *update*
-the study instead of starting over.</fact></p>
-      <p><fact id="record-enough-that-the-refresh-is-mechanical-lead" status="impl/done">Record enough that the refresh is
-mechanical:</fact></p>
+the study instead of starting over.</the-study-has-a-shelf-life></p>
+      <p><record-enough-that-the-refresh-is-mechanical-lead fact="true" status="impl/done">Record enough that the refresh is
+mechanical:</record-enough-that-the-refresh-is-mechanical-lead></p>
       <list ordered="false">
-        <item><fact id="REFETCH-WHICH-URLS" status="impl/done">which URLs,</fact></item>
-        <item><fact id="REFETCH-IN-WHAT-ORDER" status="impl/done">in what order,</fact></item>
-        <item><fact id="REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS" status="impl/done">and what version number this
-  capture reflects.</fact></item>
+        <item><REFETCH-WHICH-URLS fact="true" status="impl/done">which URLs,</REFETCH-WHICH-URLS></item>
+        <item><REFETCH-IN-WHAT-ORDER fact="true" status="impl/done">in what order,</REFETCH-IN-WHAT-ORDER></item>
+        <item><REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS fact="true" status="impl/done">and what version number this
+  capture reflects.</REFETCH-WHAT-VERSION-THIS-CAPTURE-REFLECTS></item>
       </list>
-    </section>
-  </section>
-  <section id="when" title="When to write one">
-    <p><fact id="not-every-glance-warrants-a-full-study" status="spec/done">Not every glance at a competitor warrants a full study. Write one
-when:</fact></p>
+    </law-refetch>
+  </laws>
+  <when title="When to write one">
+    <p><not-every-glance-warrants-a-full-study fact="true" status="spec/done">Not every glance at a competitor warrants a full study. Write one
+when:</not-every-glance-warrants-a-full-study></p>
     <table>
       <tr>
         <td>Trigger</td>
         <td>Why it warrants the full genre</td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE" status="spec/done">Before building in a space others occupy</fact></td>
+        <td><ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE fact="true" status="spec/done">Before building in a space others occupy</ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE></td>
         <td><fact status="spec/done">Cheaper to learn their dead ends than to re-walk them</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING" status="spec/done">A competitor ships something alarming</fact></td>
+        <td><ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING fact="true" status="spec/done">A competitor ships something alarming</ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING></td>
         <td><fact status="spec/done">An emotional reaction needs a structured study to become a decision</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION" status="spec/done">"Why don't we just do what X does?" recurs</fact></td>
+        <td><ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION fact="true" status="spec/done">"Why don't we just do what X does?" recurs</ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION></td>
         <td><fact status="spec/done">A recurring question deserves a durable, citable answer, not a repeated verbal one</fact></td>
       </tr>
     </table>
-    <p><fact id="a-one-off-lookup-does-not-warrant-a-study" status="impl/done">For a one-off factual lookup — "does X support Windows?" — a study is
-overkill; answer it and move on.</fact></p>
-    <p><fact id="THE-GENRE-IS-FOR-A-SYSTEM-WORTH-UNDERSTANDING-WHOLE" status="impl/done">The genre is for a *system* worth
-understanding whole, whose shape will inform decisions more than once.</fact></p>
-  </section>
-  <section id="not" title="What it is not">
+    <p><a-one-off-lookup-does-not-warrant-a-study fact="true" status="impl/done">For a one-off factual lookup — "does X support Windows?" — a study is
+overkill; answer it and move on.</a-one-off-lookup-does-not-warrant-a-study></p>
+    <p><THE-GENRE-IS-FOR-A-SYSTEM-WORTH-UNDERSTANDING-WHOLE fact="true" status="impl/done">The genre is for a *system* worth
+understanding whole, whose shape will inform decisions more than once.</THE-GENRE-IS-FOR-A-SYSTEM-WORTH-UNDERSTANDING-WHOLE></p>
+  </when>
+  <not title="What it is not">
     <list ordered="false">
-      <item><fact id="NOT-A-DECISION" status="impl/done">**Not a decision.** It proposes deltas; ratification is downstream.</fact></item>
-      <item><fact id="NOT-A-RANT" status="impl/done">**Not a rant.** Competitive frustration is the trigger; the
-  document is the disciplined product, two-way and quoted.</fact></item>
-      <item><fact id="NOT-A-LIVE-DASHBOARD" status="impl/done">**Not a live dashboard.** It is a dated snapshot with a refresh
+      <item><NOT-A-DECISION fact="true" status="impl/done">**Not a decision.** It proposes deltas; ratification is downstream.</NOT-A-DECISION></item>
+      <item><NOT-A-RANT fact="true" status="impl/done">**Not a rant.** Competitive frustration is the trigger; the
+  document is the disciplined product, two-way and quoted.</NOT-A-RANT></item>
+      <item><NOT-A-LIVE-DASHBOARD fact="true" status="impl/done">**Not a live dashboard.** It is a dated snapshot with a refresh
   procedure — a baseline, not a feed. When it ages, refresh it via
-  the re-fetch list; keep the old capture as historical record.</fact></item>
-      <item><fact id="NOT-A-LINK-FARM" status="impl/done">**Not a link farm.** Links rot; the quotes are the evidence.</fact></item>
+  the re-fetch list; keep the old capture as historical record.</NOT-A-LIVE-DASHBOARD></item>
+      <item><NOT-A-LINK-FARM fact="true" status="impl/done">**Not a link farm.** Links rot; the quotes are the evidence.</NOT-A-LINK-FARM></item>
     </list>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="re-derive-lead" status="impl/done">Do not copy this protocol's framing verbatim — copy the *task*, and
-let the agent produce the study your project actually needs:</fact></p>
+  </not>
+  <re-derive title="Re-derive for your project">
+    <p><re-derive-lead fact="true" status="impl/done">Do not copy this protocol's framing verbatim — copy the *task*, and
+let the agent produce the study your project actually needs:</re-derive-lead></p>
     <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-comparative-research/&lt;version&gt;/spec/flows/comparative-research/`, check `vibe.lock`) in full, then run one study:
 1. Name the external system to study and why now (building nearby /
    they shipped something / a recurring "why not do what X does").
@@ -190,20 +190,20 @@ let the agent produce the study your project actually needs:</fact></p>
 5. Turn the actionable trailing gaps into numbered deltas, each with
    a priority and a target home in our spec tree. Ratify none.
 6. Close with the re-fetch list. Show me the draft; apply nothing.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-A-SELF-CONTAINED-EVERGREEN-STUDY" status="impl/done">A comparative research document is a self-contained, evergreen
-  study of one external system, written to outlast its own sources.</fact></item>
-      <item><fact id="SUM-WHY-THE-GENRE-EXISTS" status="spec/done">It exists because unexamined competitors cost roadmap mistakes and
-  examined ones yield deltas — and the study must survive link rot.</fact></item>
-      <item><fact id="SUM-THE-FIVE-LAWS" status="impl/done">Five laws: self-containedness (dated verbatim quotes), quote-first
+      <item><SUM-A-SELF-CONTAINED-EVERGREEN-STUDY fact="true" status="impl/done">A comparative research document is a self-contained, evergreen
+  study of one external system, written to outlast its own sources.</SUM-A-SELF-CONTAINED-EVERGREEN-STUDY></item>
+      <item><SUM-WHY-THE-GENRE-EXISTS fact="true" status="spec/done">It exists because unexamined competitors cost roadmap mistakes and
+  examined ones yield deltas — and the study must survive link rot.</SUM-WHY-THE-GENRE-EXISTS></item>
+      <item><SUM-THE-FIVE-LAWS fact="true" status="impl/done">Five laws: self-containedness (dated verbatim quotes), quote-first
   then critique, two-way gaps (trail *and* lead), deltas-not-decrees
-  (numbered, prioritized, homed, unratified), and the re-fetch list.</fact></item>
-      <item><fact id="SUM-WHEN-TO-WRITE-ONE" status="impl/done">Write one before building in an occupied space, when a competitor
-  alarms, or when "why not do what X does" keeps recurring.</fact></item>
-      <item><fact id="SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES" status="impl/done">The study proposes; the owner decides. See
-  [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</fact></item>
+  (numbered, prioritized, homed, unratified), and the re-fetch list.</SUM-THE-FIVE-LAWS></item>
+      <item><SUM-WHEN-TO-WRITE-ONE fact="true" status="impl/done">Write one before building in an occupied space, when a competitor
+  alarms, or when "why not do what X does" keeps recurring.</SUM-WHEN-TO-WRITE-ONE></item>
+      <item><SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES fact="true" status="impl/done">The study proposes; the owner decides. See
+  [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES></item>
     </list>
-  </section>
+  </summary>
 </spec>

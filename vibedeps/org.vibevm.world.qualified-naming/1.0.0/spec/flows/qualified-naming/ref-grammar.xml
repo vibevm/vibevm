@@ -2,21 +2,21 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Reference grammar</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** The concrete grammar for a package
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The concrete grammar for a package
 reference, the table of legal forms and where each is legal, worked
 examples with invented groups, the rule for what persisted state
-stores, and the shape a collision error must take.</fact></p>
-  <p><fact id="protocol-document-pointer" status="impl/done">The *why* behind
+stores, and the shape a collision error must take.</scope-of-this-document></p>
+  <p><protocol-document-pointer fact="true" status="impl/done">The *why* behind
 these choices lives in [`QUALIFIED-NAMING-PROTOCOL.md`](QUALIFIED-NAMING-PROTOCOL.md);
-this file is the mechanics.</fact></p>
-  <section id="grammar" title="The grammar">
-    <p><fact id="a-reference-has-up-to-four-parts" status="impl/done">A **reference** (the thing a manifest lists or a human types) has up to
-four parts:</fact></p>
+this file is the mechanics.</protocol-document-pointer></p>
+  <grammar title="The grammar">
+    <p><a-reference-has-up-to-four-parts fact="true" status="impl/done">A **reference** (the thing a manifest lists or a human types) has up to
+four parts:</a-reference-has-up-to-four-parts></p>
     <list ordered="false">
-      <item><fact id="PART-AN-OPTIONAL-TYPE-TAG" status="impl/done">an optional type tag,</fact></item>
-      <item><fact id="PART-AN-OPTIONAL-GROUP-QUALIFIER" status="impl/done">an optional group qualifier,</fact></item>
-      <item><fact id="PART-A-MANDATORY-NAME" status="impl/done">a mandatory name,</fact></item>
-      <item><fact id="PART-AN-OPTIONAL-VERSION-REQUIREMENT" status="impl/done">and an optional version requirement.</fact></item>
+      <item><PART-AN-OPTIONAL-TYPE-TAG fact="true" status="impl/done">an optional type tag,</PART-AN-OPTIONAL-TYPE-TAG></item>
+      <item><PART-AN-OPTIONAL-GROUP-QUALIFIER fact="true" status="impl/done">an optional group qualifier,</PART-AN-OPTIONAL-GROUP-QUALIFIER></item>
+      <item><PART-A-MANDATORY-NAME fact="true" status="impl/done">a mandatory name,</PART-A-MANDATORY-NAME></item>
+      <item><PART-AN-OPTIONAL-VERSION-REQUIREMENT fact="true" status="impl/done">and an optional version requirement.</PART-AN-OPTIONAL-VERSION-REQUIREMENT></item>
     </list>
     <fence>ref      := [ kind ":" ] [ group "/" ] name [ "@" version ]
 
@@ -28,15 +28,15 @@ version  := &lt;a version requirement in your scheme, e.g. semver&gt;
 
 lower    := "a" … "z"
 digit    := "0" … "9"</fence>
-    <p><fact id="THREE-AXES-THREE-SEPARATORS" status="impl/done">**Three axes, three separators.** The type tag, the group, and the
+    <p><THREE-AXES-THREE-SEPARATORS fact="true" status="impl/done">**Three axes, three separators.** The type tag, the group, and the
 version each attach with a *different* delimiter — `:` then `/` then
-`@` — so the parser never has to guess which axis a token belongs to.</fact></p>
-    <p><fact id="THE-DELIMITER-CHARACTERS-ARE-A-DESIGN-CHOICE" status="impl/done">The specific delimiter characters are a design choice; the load-bearing
-rule is that the three axes stay lexically distinct.</fact></p>
-    <p><fact id="PICK-THREE-THAT-DO-NOT-COLLIDE-AND-NEVER-OVERLOAD-ONE" status="impl/done">Pick three that do
-not collide with your version syntax and never overload one.</fact></p>
-  </section>
-  <section id="forms" title="The forms">
+`@` — so the parser never has to guess which axis a token belongs to.</THREE-AXES-THREE-SEPARATORS></p>
+    <p><THE-DELIMITER-CHARACTERS-ARE-A-DESIGN-CHOICE fact="true" status="impl/done">The specific delimiter characters are a design choice; the load-bearing
+rule is that the three axes stay lexically distinct.</THE-DELIMITER-CHARACTERS-ARE-A-DESIGN-CHOICE></p>
+    <p><PICK-THREE-THAT-DO-NOT-COLLIDE-AND-NEVER-OVERLOAD-ONE fact="true" status="impl/done">Pick three that do
+not collide with your version syntax and never overload one.</PICK-THREE-THAT-DO-NOT-COLLIDE-AND-NEVER-OVERLOAD-ONE></p>
+  </grammar>
+  <forms title="The forms">
     <table>
       <tr>
         <td>Form</td>
@@ -44,45 +44,45 @@ not collide with your version syntax and never overload one.</fact></p>
         <td>Where legal</td>
       </tr>
       <tr>
-        <td><fact id="ROW-FORM-BARE-NAME" status="impl/done">**bare name**</fact></td>
+        <td><ROW-FORM-BARE-NAME fact="true" status="impl/done">**bare name**</ROW-FORM-BARE-NAME></td>
         <td><fact status="impl/done">`wal`</fact></td>
         <td><fact status="impl/done">CLI input only — resolved once via the index</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FORM-KIND-AND-NAME" status="impl/done">**kind + name**</fact></td>
+        <td><ROW-FORM-KIND-AND-NAME fact="true" status="impl/done">**kind + name**</ROW-FORM-KIND-AND-NAME></td>
         <td><fact status="impl/done">`flow:wal`</fact></td>
         <td><fact status="impl/done">CLI input only — kind is validated after resolution</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FORM-GROUP-QUALIFIED" status="impl/done">**group-qualified**</fact></td>
+        <td><ROW-FORM-GROUP-QUALIFIED fact="true" status="impl/done">**group-qualified**</ROW-FORM-GROUP-QUALIFIED></td>
         <td><fact status="impl/done">`org.vibevm.world/wal`</fact></td>
         <td><fact status="impl/done">**anywhere** — CLI, manifests, lockfiles</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FORM-KIND-AND-GROUP-QUALIFIED" status="impl/done">**kind + group-qualified**</fact></td>
+        <td><ROW-FORM-KIND-AND-GROUP-QUALIFIED fact="true" status="impl/done">**kind + group-qualified**</ROW-FORM-KIND-AND-GROUP-QUALIFIED></td>
         <td><fact status="impl/done">`flow:org.vibevm.world/wal`</fact></td>
         <td><fact status="impl/done">anywhere — the fully explicit form</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FORM-VERSIONED" status="impl/done">**versioned**</fact></td>
+        <td><ROW-FORM-VERSIONED fact="true" status="impl/done">**versioned**</ROW-FORM-VERSIONED></td>
         <td><fact status="impl/done">`org.vibevm.world/wal@0.6.0`</fact></td>
         <td><fact status="impl/done">anywhere a specific release is meant</fact></td>
       </tr>
     </table>
-    <p><fact id="two-rules-govern-the-table" status="impl/done">Two rules govern the table:</fact></p>
+    <p><two-rules-govern-the-table fact="true" status="impl/done">Two rules govern the table:</two-rules-govern-the-table></p>
     <list ordered="false">
-      <item><fact id="RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY" status="impl/done">**Manifests and lockfiles accept the qualified forms only.** A bare
+      <item><RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY fact="true" status="impl/done">**Manifests and lockfiles accept the qualified forms only.** A bare
   or kind-only name is never written to persisted state (see
-  [§storage](#storage)).</fact></item>
-      <item><fact id="RULE-THE-CLI-ACCEPTS-ALL-FORMS" status="impl/done">**The CLI accepts all forms.** It is the one place a human is present,
-  so it is the one place a short name may be resolved.</fact></item>
+  [§storage](#storage)).</RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY></item>
+      <item><RULE-THE-CLI-ACCEPTS-ALL-FORMS fact="true" status="impl/done">**The CLI accepts all forms.** It is the one place a human is present,
+  so it is the one place a short name may be resolved.</RULE-THE-CLI-ACCEPTS-ALL-FORMS></item>
     </list>
-  </section>
-  <section id="documentation-policy" title="Which form documentation should show">
-    <p><fact id="DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN" status="impl/done">Documentation examples are not
+  </forms>
+  <documentation-policy title="Which form documentation should show">
+    <p><DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN fact="true" status="impl/done">Documentation examples are not
 illustrations — readers copy them and run them. So the form an example shows
 is a claim that the command works when pasted, and that claim differs by
-verb.</fact></p>
+verb.</DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN></p>
     <table>
       <tr>
         <td>context</td>
@@ -90,48 +90,48 @@ verb.</fact></p>
         <td>why</td>
       </tr>
       <tr>
-        <td><fact id="ROW-DOC-INSTALL" status="impl/done">an **install** command</fact></td>
+        <td><ROW-DOC-INSTALL fact="true" status="impl/done">an **install** command</ROW-DOC-INSTALL></td>
         <td><fact status="impl/done">**qualified**</fact></td>
         <td><fact status="impl/done">works unconditionally; a short name needs a configured registry index, which the reader may not have</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-DOC-UNINSTALL-UPDATE" status="impl/done">an **uninstall / update** command</fact></td>
+        <td><ROW-DOC-UNINSTALL-UPDATE fact="true" status="impl/done">an **uninstall / update** command</ROW-DOC-UNINSTALL-UPDATE></td>
         <td><fact status="impl/done">**short**</fact></td>
         <td><fact status="impl/done">resolves from the lockfile alone — no network, no index — and it is what a person actually types</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-DOC-FILE-CONTENTS" status="impl/done">**file contents** (manifest, lockfile, JSON samples)</fact></td>
+        <td><ROW-DOC-FILE-CONTENTS fact="true" status="impl/done">**file contents** (manifest, lockfile, JSON samples)</ROW-DOC-FILE-CONTENTS></td>
         <td><fact status="impl/done">**qualified**</fact></td>
         <td><fact status="impl/done">the only form ever stored there, per [§storage](#storage)</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-DOC-PROSE" status="impl/done">**prose**</fact></td>
+        <td><ROW-DOC-PROSE fact="true" status="impl/done">**prose**</ROW-DOC-PROSE></td>
         <td><fact status="impl/done">author's discretion</fact></td>
         <td><fact status="impl/done">nothing is executed</fact></td>
       </tr>
     </table>
-    <p><fact id="THE-ASYMMETRY-IS-THE-POINT" status="impl/done">**The asymmetry is the point, and it is not
+    <p><THE-ASYMMETRY-IS-THE-POINT fact="true" status="impl/done">**The asymmetry is the point, and it is not
 tidiness.** A short name in an install example fails for a reader whose
 registry index is unconfigured, while a qualified name in an uninstall
 example is merely longer than what anyone would type. The rule follows the
-failure, not the symmetry.</fact></p>
-    <p><fact id="SHORT-FORMS-IN-DOCS-ARE-NOT-ERRORS" status="impl/done">**A short form in documentation is
+failure, not the symmetry.</THE-ASYMMETRY-IS-THE-POINT></p>
+    <p><SHORT-FORMS-IN-DOCS-ARE-NOT-ERRORS fact="true" status="impl/done">**A short form in documentation is
 not an error to be swept.** It is legal input and it is implemented; this
 policy governs what NEW examples should show, and existing ones are
 corrected where a reader would actually be misled — not counted and
 mass-replaced. A worked example naming a package that does not exist has no
-qualified form to be rewritten into.</fact></p>
-    <p><fact id="THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES" status="impl/done">**The kind tag validates, it never disambiguates.**</fact></p>
-    <p><fact id="THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH" status="impl/done">If a reference
+qualified form to be rewritten into.</SHORT-FORMS-IN-DOCS-ARE-NOT-ERRORS></p>
+    <p><THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES fact="true" status="impl/done">**The kind tag validates, it never disambiguates.**</THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES></p>
+    <p><THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH fact="true" status="impl/done">If a reference
 carries `kind:`, the resolver checks that the resolved package's type
-matches, and errors on a mismatch.</fact></p>
-    <p><fact id="A-REAL-AMBIGUITY-IS-ALWAYS-A-GROUP-COLLISION" status="impl/done">It cannot pick between two packages,
+matches, and errors on a mismatch.</THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH></p>
+    <p><A-REAL-AMBIGUITY-IS-ALWAYS-A-GROUP-COLLISION fact="true" status="impl/done">It cannot pick between two packages,
 because `(group, name)` is already unique — a real ambiguity is always
 a *group* collision, resolved by qualifying the group, never by adding a
-kind.</fact></p>
-  </section>
-  <section id="examples" title="Worked examples">
-    <p><fact id="invented-groups-lead" status="impl/done">Invented groups, to keep the mechanics product-neutral:</fact></p>
+kind.</A-REAL-AMBIGUITY-IS-ALWAYS-A-GROUP-COLLISION></p>
+  </documentation-policy>
+  <examples title="Worked examples">
+    <p><invented-groups-lead fact="true" status="impl/done">Invented groups, to keep the mechanics product-neutral:</invented-groups-lead></p>
     <fence>cart                          # bare — CLI sugar; resolves if exactly
                               #   one group owns a package named "cart"
 
@@ -144,80 +144,80 @@ com.example.shop/cart@1.4.0   # a specific release
 
 io.acme/logger@^2.1           # a version *requirement*, not a pin;
                               #   the lockfile records the pin it chose</fence>
-    <p><fact id="manifest-fragment-lead" status="impl/done">A manifest fragment, after the tool resolved a human's `add cart`:</fact></p>
+    <p><manifest-fragment-lead fact="true" status="impl/done">A manifest fragment, after the tool resolved a human's `add cart`:</manifest-fragment-lead></p>
     <fence lang="toml">[requires]
 "com.example.shop/cart" = "1.4.0"
 "io.acme/logger"        = "^2.1"</fence>
-    <p><fact id="THE-HUMAN-TYPED-THE-SHORT-NAMES-THE-TOOL-STORED-THE-QUALIFIED-ONES" status="impl/done">Note what is *not* here: no bare `cart`, no `logger` — the human typed
-those, the tool stored the qualified forms.</fact></p>
-  </section>
-  <section id="storage" title="What gets stored">
-    <p><fact id="the-single-storage-rule-stated-once" status="impl/done">The single storage rule, stated here as the anchor every restatement echoes:</fact></p>
-    <quote><fact id="PERSISTED-STATE-IS-QUALIFIED-ONLY" status="impl/done">**Persisted state is qualified-only.** Every reference written to a
+    <p><THE-HUMAN-TYPED-THE-SHORT-NAMES-THE-TOOL-STORED-THE-QUALIFIED-ONES fact="true" status="impl/done">Note what is *not* here: no bare `cart`, no `logger` — the human typed
+those, the tool stored the qualified forms.</THE-HUMAN-TYPED-THE-SHORT-NAMES-THE-TOOL-STORED-THE-QUALIFIED-ONES></p>
+  </examples>
+  <storage title="What gets stored">
+    <p><the-single-storage-rule-stated-once fact="true" status="impl/done">The single storage rule, stated here as the anchor every restatement echoes:</the-single-storage-rule-stated-once></p>
+    <quote><PERSISTED-STATE-IS-QUALIFIED-ONLY fact="true" status="impl/done">**Persisted state is qualified-only.** Every reference written to a
 manifest, a lockfile, or a dependency edge carries its group. Short
 names exist solely as human CLI input and are rewritten to the
-qualified form the instant they are resolved.</fact></quote>
-    <p><fact id="consequences-worth-making-explicit" status="impl/done">Consequences worth making explicit:</fact></p>
+qualified form the instant they are resolved.</PERSISTED-STATE-IS-QUALIFIED-ONLY></quote>
+    <p><consequences-worth-making-explicit fact="true" status="impl/done">Consequences worth making explicit:</consequences-worth-making-explicit></p>
     <list ordered="false">
-      <item><fact id="CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE" status="impl/done">A **lockfile** entry carries the full tuple: `group`, `name`, the
+      <item><CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE fact="true" status="impl/done">A **lockfile** entry carries the full tuple: `group`, `name`, the
   resolved `version`, and the `content-hash` that pins the bytes. Two
   registries serving the same hash under the same `(group, name,
   version)` are the same locked entry — the registry is a fetch detail,
-  not part of the lock's identity.</fact></item>
-      <item><fact id="CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES" status="impl/done">The **dependency graph** is built entirely from qualified names, so a
+  not part of the lock's identity.</CONSEQUENCE-A-LOCKFILE-ENTRY-CARRIES-THE-FULL-TUPLE></item>
+      <item><CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES fact="true" status="impl/done">The **dependency graph** is built entirely from qualified names, so a
   short name never recurses into it. This is the mechanism behind the
   protocol's "no transitive collisions" guarantee — it is enforced *by
-  the storage rule*, not by a separate check.</fact></item>
-      <item><fact id="CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED" status="impl/done">A **published package's own `[requires]`** is qualified, because its
+  the storage rule*, not by a separate check.</CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES></item>
+      <item><CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED fact="true" status="impl/done">A **published package's own `[requires]`** is qualified, because its
   author published through the same boundary. You never inherit another
-  author's short name.</fact></item>
+  author's short name.</CONSEQUENCE-A-PUBLISHED-PACKAGES-REQUIRES-IS-QUALIFIED></item>
     </list>
-  </section>
-  <section id="errors" title="Error shapes">
-    <p><fact id="A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE" status="impl/done">A machine-facing failure is only useful if a script or an agent can act
-on it without reading prose.</fact></p>
-    <p><fact id="two-shapes-matter" status="impl/done">Two shapes matter.</fact></p>
-    <p><fact id="a-collision-must" status="impl/done">**A collision** (one short name, several owners) must:</fact></p>
+  </storage>
+  <errors title="Error shapes">
+    <p><A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE fact="true" status="impl/done">A machine-facing failure is only useful if a script or an agent can act
+on it without reading prose.</A-MACHINE-FACING-FAILURE-MUST-BE-ACTIONABLE-WITHOUT-PROSE></p>
+    <p><two-shapes-matter fact="true" status="impl/done">Two shapes matter.</two-shapes-matter></p>
+    <p><a-collision-must fact="true" status="impl/done">**A collision** (one short name, several owners) must:</a-collision-must></p>
     <list ordered="true">
-      <item><fact id="COLLISION-EXIT-WITH-THE-COLLISION-CODE" status="impl/done">exit with the collision code — distinct from the conflict code, so a
-   caller branches on the number alone;</fact></item>
-      <item><fact id="COLLISION-LIST-EVERY-CANDIDATE" status="impl/done">list **every** candidate, each with its exact qualified form; and</fact></item>
-      <item><fact id="COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT" status="impl/done">tell the human precisely what to type or record next.</fact></item>
+      <item><COLLISION-EXIT-WITH-THE-COLLISION-CODE fact="true" status="impl/done">exit with the collision code — distinct from the conflict code, so a
+   caller branches on the number alone;</COLLISION-EXIT-WITH-THE-COLLISION-CODE></item>
+      <item><COLLISION-LIST-EVERY-CANDIDATE fact="true" status="impl/done">list **every** candidate, each with its exact qualified form; and</COLLISION-LIST-EVERY-CANDIDATE></item>
+      <item><COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT fact="true" status="impl/done">tell the human precisely what to type or record next.</COLLISION-TELL-THE-HUMAN-WHAT-TO-TYPE-NEXT></item>
     </list>
     <fence>"cart" is ambiguous — 2 packages match:
   1. com.example.shop/cart   (registry shop-public)
   2. io.acme/cart            (registry acme-internal)
 Re-run with the qualified form, e.g.  install com.example.shop/cart</fence>
-    <p><fact id="THE-CANDIDATE-LIST-IS-THE-WHOLE-POINT" status="impl/done">The candidate list is the whole point: the human copies one line and
-records it.</fact></p>
-    <p><fact id="THERE-IS-NO-INTERACTIVE-MENU" status="impl/done">There is **no interactive menu** — a picked choice leaves no
-record of *why* that group; a pasted qualified name is self-explaining.</fact></p>
-    <p><fact id="A-CONFLICT-IS-A-DIFFERENT-FAILURE-WITH-A-DIFFERENT-CODE" status="impl/done">**A conflict** (unsatisfiable versions) is a *different* failure with a
-*different* code.</fact></p>
-    <p><fact id="a-conflict-names-the-incompatible-constraints" status="impl/done">It names the incompatible constraints and the packages
-that imposed them, so the human can relax one:</fact></p>
+    <p><THE-CANDIDATE-LIST-IS-THE-WHOLE-POINT fact="true" status="impl/done">The candidate list is the whole point: the human copies one line and
+records it.</THE-CANDIDATE-LIST-IS-THE-WHOLE-POINT></p>
+    <p><THERE-IS-NO-INTERACTIVE-MENU fact="true" status="impl/done">There is **no interactive menu** — a picked choice leaves no
+record of *why* that group; a pasted qualified name is self-explaining.</THERE-IS-NO-INTERACTIVE-MENU></p>
+    <p><A-CONFLICT-IS-A-DIFFERENT-FAILURE-WITH-A-DIFFERENT-CODE fact="true" status="impl/done">**A conflict** (unsatisfiable versions) is a *different* failure with a
+*different* code.</A-CONFLICT-IS-A-DIFFERENT-FAILURE-WITH-A-DIFFERENT-CODE></p>
+    <p><a-conflict-names-the-incompatible-constraints fact="true" status="impl/done">It names the incompatible constraints and the packages
+that imposed them, so the human can relax one:</a-conflict-names-the-incompatible-constraints></p>
     <fence>version conflict on io.acme/logger:
   com.example.shop/cart  requires  ^2.1
   org.example.tools/audit requires  &lt;2.0
 no version satisfies both.</fence>
-    <p><fact id="a-caller-that-cannot-tell-them-apart-will-retry-wrongly" status="spec/done">A caller that cannot tell these two apart will retry a collision as if
-it were a conflict, or vice versa.</fact></p>
-    <p><fact id="DISTINCT-STABLE-CODES-KEEP-AUTOMATION-CORRECT" status="impl/done">Distinct, stable codes are what keep
-automation correct.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+    <p><a-caller-that-cannot-tell-them-apart-will-retry-wrongly fact="true" status="spec/done">A caller that cannot tell these two apart will retry a collision as if
+it were a conflict, or vice versa.</a-caller-that-cannot-tell-them-apart-will-retry-wrongly></p>
+    <p><DISTINCT-STABLE-CODES-KEEP-AUTOMATION-CORRECT fact="true" status="impl/done">Distinct, stable codes are what keep
+automation correct.</DISTINCT-STABLE-CODES-KEEP-AUTOMATION-CORRECT></p>
+  </errors>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION" status="impl/done">A reference is `[kind:][group/]name[@version]` — three axes, three
+      <item><SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION fact="true" status="impl/done">A reference is `[kind:][group/]name[@version]` — three axes, three
   distinct separators; the delimiter characters are a choice, the
-  distinctness is the law.</fact></item>
-      <item><fact id="SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR" status="impl/done">Bare and kind-only forms are CLI-input sugar; qualified forms are
-  legal everywhere.</fact></item>
-      <item><fact id="SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE" status="impl/done">The kind tag validates the resolved type; it never disambiguates.</fact></item>
-      <item><fact id="SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY" status="impl/done">Persisted state is **qualified-only** — that storage rule is what
-  makes transitive collisions impossible.</fact></item>
-      <item><fact id="SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE" status="impl/done">A collision lists every candidate with copy-ready qualified forms and
+  distinctness is the law.</SUM-A-REFERENCE-IS-KIND-GROUP-NAME-VERSION></item>
+      <item><SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR fact="true" status="impl/done">Bare and kind-only forms are CLI-input sugar; qualified forms are
+  legal everywhere.</SUM-BARE-AND-KIND-ONLY-FORMS-ARE-CLI-SUGAR></item>
+      <item><SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE fact="true" status="impl/done">The kind tag validates the resolved type; it never disambiguates.</SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE></item>
+      <item><SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY fact="true" status="impl/done">Persisted state is **qualified-only** — that storage rule is what
+  makes transitive collisions impossible.</SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY></item>
+      <item><SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE fact="true" status="impl/done">A collision lists every candidate with copy-ready qualified forms and
   fails; a conflict is a separate failure with a separate, stable
-  machine code.</fact></item>
+  machine code.</SUM-A-COLLISION-LISTS-CANDIDATES-A-CONFLICT-IS-SEPARATE></item>
     </list>
-  </section>
+  </summary>
 </spec>

@@ -2,69 +2,69 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Running an audit</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This is the operational procedure for one
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This is the operational procedure for one
 audit run, start to finish, plus the exact shape of an `AUDIT.md`
-section and a worked example on an invented generic project.</fact></p>
-  <p><fact id="companion-document-pointers" status="impl/done">The
+section and a worked example on an invented generic project.</scope-of-this-document></p>
+  <p><companion-document-pointers fact="true" status="impl/done">The
 categories you walk in step 2: [`audit-checklist.md`](audit-checklist.md);
-the rationale: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</fact></p>
-  <p><fact id="A-RUN-MUST-FINISH-THE-INVENTORY" status="impl/done">A run must finish the **inventory**.</fact></p>
-  <p><fact id="A-RUN-NEED-NOT-FINISH-EVERY-FIX" status="impl/done">It need not finish every *fix* —
-fixing is the work the inventory schedules.</fact></p>
-  <section id="steps" title="The run, step by step">
+the rationale: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</companion-document-pointers></p>
+  <p><A-RUN-MUST-FINISH-THE-INVENTORY fact="true" status="impl/done">A run must finish the **inventory**.</A-RUN-MUST-FINISH-THE-INVENTORY></p>
+  <p><A-RUN-NEED-NOT-FINISH-EVERY-FIX fact="true" status="impl/done">It need not finish every *fix* —
+fixing is the work the inventory schedules.</A-RUN-NEED-NOT-FINISH-EVERY-FIX></p>
+  <steps title="The run, step by step">
     <list ordered="true">
-      <item><fact id="STEP-OPEN-A-DATED-SECTION" status="impl/done">**Open a dated section** in `AUDIT.md` at the repository root. If
+      <item><STEP-OPEN-A-DATED-SECTION fact="true" status="impl/done">**Open a dated section** in `AUDIT.md` at the repository root. If
    the file does not exist yet, create it with a one-line header and
-   start the first section. The section heading is the run date.</fact></item>
+   start the first section. The section heading is the run date.</STEP-OPEN-A-DATED-SECTION></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-WALK-THE-CHECKLIST-BREADTH-FIRST" status="impl/done">**Walk the checklist breadth-first.** Go category by category
+      <item><STEP-WALK-THE-CHECKLIST-BREADTH-FIRST fact="true" status="impl/done">**Walk the checklist breadth-first.** Go category by category
    through [`audit-checklist.md`](audit-checklist.md) — A, then B, then
    C, then D, then any project-specific rows. Run each mechanical aid;
    where there is no aid (A3 especially), read with judgment. Breadth
-   first: touch every category once before going deep on any one.</fact></item>
+   first: touch every category once before going deep on any one.</STEP-WALK-THE-CHECKLIST-BREADTH-FIRST></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-RECORD-EVERY-FINDING-AS-YOU-GO" status="impl/done">**Record every finding** as you go — ID, category, locator,
+      <item><STEP-RECORD-EVERY-FINDING-AS-YOU-GO fact="true" status="impl/done">**Record every finding** as you go — ID, category, locator,
    severity, disposition. Do not batch this to the end; a finding
-   un-recorded at the moment of discovery is a finding lost.</fact></item>
+   un-recorded at the moment of discovery is a finding lost.</STEP-RECORD-EVERY-FINDING-AS-YOU-GO></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-CARRY-FORWARD-AND-RE-JUDGE" status="impl/done">**Carry forward** every still-`open` finding, and every `filed` one
+      <item><STEP-CARRY-FORWARD-AND-RE-JUDGE fact="true" status="impl/done">**Carry forward** every still-`open` finding, and every `filed` one
    whose work has not landed, from the previous run's section.
    Re-list each under the new run and **re-judge its severity**. A
    finding that has recurred untouched across runs is itself a signal —
    escalate it or honestly *accept* it; do not let it ride as `open`
-   forever.</fact></item>
+   forever.</STEP-CARRY-FORWARD-AND-RE-JUDGE></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-FIX-THE-CHEAP-FINDINGS-AND-FILE-THE-REST" status="impl/done">**Fix the cheap findings in-run.** Small P1/P2 findings get fixed on
+      <item><STEP-FIX-THE-CHEAP-FINDINGS-AND-FILE-THE-REST fact="true" status="impl/done">**Fix the cheap findings in-run.** Small P1/P2 findings get fixed on
    the spot as normal commits; the finding's disposition becomes
    `fixed` and records the commit hash. **File the rest** — a finding
    too large for the run becomes tracked work (a checkpoint "known
    issues" entry, a `TASKS.md` line, a design note) and its disposition
-   becomes `filed` with a pointer to where it was filed.</fact></item>
+   becomes `filed` with a pointer to where it was filed.</STEP-FIX-THE-CHEAP-FINDINGS-AND-FILE-THE-REST></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-RECONCILE-THE-CHECKPOINT" status="impl/done">**Reconcile the checkpoint.** Bring the living checkpoint's "known
+      <item><STEP-RECONCILE-THE-CHECKPOINT fact="true" status="impl/done">**Reconcile the checkpoint.** Bring the living checkpoint's "known
    issues" (the WAL / `CONTINUE.md` / status file) into agreement with
    this run's `open` and `filed` findings, so the volatile checkpoint
    and the durable inventory tell the same story. The findings live in
-   `AUDIT.md`; the checkpoint only points at the active subset.</fact></item>
+   `AUDIT.md`; the checkpoint only points at the active subset.</STEP-RECONCILE-THE-CHECKPOINT></item>
     </list>
     <list ordered="true">
-      <item><fact id="STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY" status="impl/done">**Commit.** Commit `AUDIT.md` as its own change — e.g.
+      <item><STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY fact="true" status="impl/done">**Commit.** Commit `AUDIT.md` as its own change — e.g.
    `docs(audit): &lt;run-date&gt; health audit` — and each in-run fix as its
    own separate commit. The audit section and the fixes are different
-   ideas; they are different commits.</fact></item>
+   ideas; they are different commits.</STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY></item>
     </list>
-  </section>
-  <section id="format" title="The `AUDIT.md` section format">
-    <p><fact id="AUDIT-MD-IS-APPEND-ONLY" status="impl/done">`AUDIT.md` is append-only: each run **prepends or appends a new dated
-section**, never rewrites an old one.</fact></p>
-    <p><fact id="PAST-SECTIONS-ARE-FROZEN-HISTORY" status="impl/done">Past sections are frozen history
-— the trend lives in their accumulation.</fact></p>
-    <p><fact id="one-section-looks-like-this" status="impl/done">One section looks like this:</fact></p>
+  </steps>
+  <format title="The `AUDIT.md` section format">
+    <p><AUDIT-MD-IS-APPEND-ONLY fact="true" status="impl/done">`AUDIT.md` is append-only: each run **prepends or appends a new dated
+section**, never rewrites an old one.</AUDIT-MD-IS-APPEND-ONLY></p>
+    <p><PAST-SECTIONS-ARE-FROZEN-HISTORY fact="true" status="impl/done">Past sections are frozen history
+— the trend lives in their accumulation.</PAST-SECTIONS-ARE-FROZEN-HISTORY></p>
+    <p><one-section-looks-like-this fact="true" status="impl/done">One section looks like this:</one-section-looks-like-this></p>
     <fence lang="markdown">## 2026-07-07 {#2026-07-07}
 
 _Run by: owner + agent. Milestone M4 close-out. Prior run: 2026-05-30._
@@ -83,74 +83,74 @@ _Run by: owner + agent. Milestone M4 close-out. Prior run: 2026-05-30._
   linter; revisit when the linter ships the fix (tracking upstream #812).
 - 2026-05-30-07 carried forward untouched for the second run — escalate
   to a scheduled upgrade pass before M5, or it becomes a standing risk.</fence>
-    <p><fact id="EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS" status="impl/done">Every finding is one table row carrying the five fields.</fact></p>
-    <p><fact id="THE-DISP-COLUMN-RECORDS-WHERE-THE-FINDING-WENT" status="impl/done">The `Disp`
+    <p><EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS fact="true" status="impl/done">Every finding is one table row carrying the five fields.</EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS></p>
+    <p><THE-DISP-COLUMN-RECORDS-WHERE-THE-FINDING-WENT fact="true" status="impl/done">The `Disp`
 column records not just the disposition word but *where it went*: the
 commit hash for `fixed`, the destination for `filed`, and `accepted` /
-`open` findings get a one-line note below the table.</fact></p>
-  </section>
-  <section id="worked-example" title="A worked run — &quot;Acme API&quot;">
-    <p><fact id="take-an-invented-project" status="impl/done">Take an invented project: a REST service, `pytest` + `ruff` + a GitHub
-Actions gate.</fact></p>
-    <p><fact id="a-milestone-closed-and-the-owner-triggers-an-audit" status="impl/done">A milestone just closed; the owner triggers an audit.
-The run, narrated:</fact></p>
+`open` findings get a one-line note below the table.</THE-DISP-COLUMN-RECORDS-WHERE-THE-FINDING-WENT></p>
+  </format>
+  <worked-example title="A worked run — &quot;Acme API&quot;">
+    <p><take-an-invented-project fact="true" status="impl/done">Take an invented project: a REST service, `pytest` + `ruff` + a GitHub
+Actions gate.</take-an-invented-project></p>
+    <p><a-milestone-closed-and-the-owner-triggers-an-audit fact="true" status="impl/done">A milestone just closed; the owner triggers an audit.
+The run, narrated:</a-milestone-closed-and-the-owner-triggers-an-audit></p>
     <list ordered="false">
-      <item><fact id="EXAMPLE-A-TEST-INTEGRITY" status="impl/done">**A (test integrity).** The coverage tool shows the payment-retry
+      <item><EXAMPLE-A-TEST-INTEGRITY fact="true" status="impl/done">**A (test integrity).** The coverage tool shows the payment-retry
   branch at 0% — nobody tests the retry path (A1, P1, too large to fix
   now → *filed*). Reading assertions, `test_checkout_total` asserts a
   total that is a known rounding bug; the test guards the bug (A3, P1,
   a two-line fix → *fixed* in-run). Two `@pytest.mark.skip` tests turn
-  out stale and green-if-enabled (A2, P3, *fixed* by deleting them).</fact></item>
+  out stale and green-if-enabled (A2, P3, *fixed* by deleting them).</EXAMPLE-A-TEST-INTEGRITY></item>
     </list>
     <list ordered="false">
-      <item><fact id="EXAMPLE-B-ROT-OUTSIDE-THE-GATE" status="impl/done">**B (rot outside the gate).** `scripts/migrate/` has its own tests
+      <item><EXAMPLE-B-ROT-OUTSIDE-THE-GATE fact="true" status="impl/done">**B (rot outside the gate).** `scripts/migrate/` has its own tests
   that no CI job runs; diffing the workflow against the tree finds the
   gap (B1, P2, → *filed*). A new `notifications` package was added last
   milestone and is absent from the coverage matrix (B2, P2, → *fixed*
-  by adding it to the workflow).</fact></item>
+  by adding it to the workflow).</EXAMPLE-B-ROT-OUTSIDE-THE-GATE></item>
     </list>
     <list ordered="false">
-      <item><fact id="EXAMPLE-C-DRIFT" status="impl/done">**C (drift).** `API.md` still documents a `--legacy` flag removed two
+      <item><EXAMPLE-C-DRIFT fact="true" status="impl/done">**C (drift).** `API.md` still documents a `--legacy` flag removed two
   milestones back (C1/C2, P2, → *fixed*). The `CONTINUE.md` checkpoint
-  claims a phase in progress that shipped (C3, reconciled in step 6).</fact></item>
+  claims a phase in progress that shipped (C3, reconciled in step 6).</EXAMPLE-C-DRIFT></item>
     </list>
     <list ordered="false">
-      <item><fact id="EXAMPLE-D-DEBT" status="impl/done">**D (debt).** `git blame` dates a `FIXME: temporary` in `billing.py`
+      <item><EXAMPLE-D-DEBT fact="true" status="impl/done">**D (debt).** `git blame` dates a `FIXME: temporary` in `billing.py`
   to eleven months ago (D2, P2, → *filed*). A file-scope lint-disable
   is deliberate — it guards a linter false positive — so it is
   *accepted* with the reason and a revisit trigger (D3, P3). The
   dependency audit flags `libfoo` two majors behind with an open
   advisory; it was *open* last run too, so it carries forward and gets
-  escalated (D4, P1, *open* → escalated).</fact></item>
+  escalated (D4, P1, *open* → escalated).</EXAMPLE-D-DEBT></item>
     </list>
-    <p><fact id="EXAMPLE-THE-RUN-CLOSES-WITH-THE-SECTION-AND-SEPARATE-COMMITS" status="impl/done">The run closes: `AUDIT.md` gets the section above, the three in-run
+    <p><EXAMPLE-THE-RUN-CLOSES-WITH-THE-SECTION-AND-SEPARATE-COMMITS fact="true" status="impl/done">The run closes: `AUDIT.md` gets the section above, the three in-run
 fixes are three separate commits, the checkpoint's known-issues list
 now matches the `filed`/`open` findings, and the section is committed
-as `docs(audit): 2026-07-07 health audit`.</fact></p>
-    <p><fact id="EXAMPLE-THE-NEXT-RUN-OPENS-BY-RE-READING-THESE-ROWS" status="impl/done">The next run will open by
-re-reading this section's `open` and `filed` rows.</fact></p>
-  </section>
-  <section id="owes" title="What the run does and does not owe">
+as `docs(audit): 2026-07-07 health audit`.</EXAMPLE-THE-RUN-CLOSES-WITH-THE-SECTION-AND-SEPARATE-COMMITS></p>
+    <p><EXAMPLE-THE-NEXT-RUN-OPENS-BY-RE-READING-THESE-ROWS fact="true" status="impl/done">The next run will open by
+re-reading this section's `open` and `filed` rows.</EXAMPLE-THE-NEXT-RUN-OPENS-BY-RE-READING-THESE-ROWS></p>
+  </worked-example>
+  <owes title="What the run does and does not owe">
     <list ordered="false">
-      <item><fact id="OWES-A-COMPLETE-INVENTORY" status="impl/done">**Owes:** a complete inventory. Every category walked, every finding
+      <item><OWES-A-COMPLETE-INVENTORY fact="true" status="impl/done">**Owes:** a complete inventory. Every category walked, every finding
   recorded and dispositioned, every prior `open`/`filed` finding
-  carried forward and re-judged, the checkpoint reconciled.</fact></item>
-      <item><fact id="DOES-NOT-OWE-EVERY-FIX" status="impl/done">**Does not owe:** every fix. A P1 that needs a design pass is *filed*,
+  carried forward and re-judged, the checkpoint reconciled.</OWES-A-COMPLETE-INVENTORY></item>
+      <item><DOES-NOT-OWE-EVERY-FIX fact="true" status="impl/done">**Does not owe:** every fix. A P1 that needs a design pass is *filed*,
   not force-fixed inside the audit; the inventory's job is to schedule
-  it, not to complete it.</fact></item>
+  it, not to complete it.</DOES-NOT-OWE-EVERY-FIX></item>
     </list>
-  </section>
-  <section id="summary" title="Summary">
+  </owes>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-THE-SEVEN-STEPS" status="impl/done">Seven steps: open a dated section → walk the checklist breadth-first
+      <item><SUM-THE-SEVEN-STEPS fact="true" status="impl/done">Seven steps: open a dated section → walk the checklist breadth-first
   → record each finding → carry forward prior unresolved findings → fix
-  the cheap ones and file the rest → reconcile the checkpoint → commit.</fact></item>
-      <item><fact id="SUM-AUDIT-MD-IS-APPEND-ONLY" status="impl/done">`AUDIT.md` is append-only: new dated section each run, old sections
+  the cheap ones and file the rest → reconcile the checkpoint → commit.</SUM-THE-SEVEN-STEPS></item>
+      <item><SUM-AUDIT-MD-IS-APPEND-ONLY fact="true" status="impl/done">`AUDIT.md` is append-only: new dated section each run, old sections
   frozen. One table row per finding, five fields, disposition records
-  where it went.</fact></item>
-      <item><fact id="SUM-FIX-CHEAP-FILE-THE-REST-COMMIT-SEPARATELY" status="impl/done">Fix cheap findings in-run as separate commits; file the rest; the
-  audit section is its own commit.</fact></item>
-      <item><fact id="SUM-THE-RUN-MUST-FINISH-THE-INVENTORY" status="impl/done">The run must finish the inventory, not every fix.</fact></item>
+  where it went.</SUM-AUDIT-MD-IS-APPEND-ONLY></item>
+      <item><SUM-FIX-CHEAP-FILE-THE-REST-COMMIT-SEPARATELY fact="true" status="impl/done">Fix cheap findings in-run as separate commits; file the rest; the
+  audit section is its own commit.</SUM-FIX-CHEAP-FILE-THE-REST-COMMIT-SEPARATELY></item>
+      <item><SUM-THE-RUN-MUST-FINISH-THE-INVENTORY fact="true" status="impl/done">The run must finish the inventory, not every fix.</SUM-THE-RUN-MUST-FINISH-THE-INVENTORY></item>
     </list>
-  </section>
+  </summary>
 </spec>

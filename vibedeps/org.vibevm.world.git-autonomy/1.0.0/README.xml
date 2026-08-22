@@ -2,28 +2,28 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:git-autonomy` — routine proceeds, red lines stop and ask</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE" status="impl/done">A vibevm `flow` package that installs the **commit/push autonomy** posture: routine, authorised
+  <p><PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE fact="true" status="impl/done">A vibevm `flow` package that installs the **commit/push autonomy** posture: routine, authorised
 large changes proceed and are committed/pushed without a confirmation handshake, while a fixed
-set of non-routine, hard-to-reverse operations always stops and asks a human first.</fact></p>
-  <p><fact id="THE-RED-LINE-SET-IS-NEVER-SUSPENDED" status="impl/done">The red-line set — rewriting published history, force-push, large binary blobs, CI / signing /
+set of non-routine, hard-to-reverse operations always stops and asks a human first.</PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE></p>
+  <p><THE-RED-LINE-SET-IS-NEVER-SUSPENDED fact="true" status="impl/done">The red-line set — rewriting published history, force-push, large binary blobs, CI / signing /
 secrets configuration, and the catch-all *anything whose reversal would cost work* — is never
 suspended, not even by a heads-down "move fast" posture: a mode may remove the "may I proceed
-with routine work?" handshake, never the "may I cross an irreversible threshold?" one.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships:</fact></p>
+with routine work?" handshake, never the "may I cross an irreversible threshold?" one.</THE-RED-LINE-SET-IS-NEVER-SUSPENDED></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-FULL-PROTOCOL" status="impl/done">`spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
-  survive every mode, and how to re-derive your own red-line set.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start.</fact></item>
+    <item><CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
+  survive every mode, and how to re-derive your own red-line set.</CONTENT-THE-FULL-PROTOCOL></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:git-autonomy</fence>
-  </section>
-  <section id="composition" title="Composition">
+  </install>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-THE-GIT-PRACTICES-FAMILY" status="impl/done">A member of the `flow:git-practices` family (the commit-and-push discipline).</fact></item>
+      <item><COMPOSES-THE-GIT-PRACTICES-FAMILY fact="true" status="impl/done">A member of the `flow:git-practices` family (the commit-and-push discipline).</COMPOSES-THE-GIT-PRACTICES-FAMILY></item>
     </list>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0 — see `LICENSE`.</fact></p>
-  </section>
+  </composition>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0 — see `LICENSE`.</license-line></p>
+  </license>
 </spec>

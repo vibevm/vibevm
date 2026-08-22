@@ -2,181 +2,181 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Decision Records Protocol</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines the difference between
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines the difference between
 a *fact* and a *decision*, why recording decisions is load-bearing
 in a human-AI team, the four fields every record carries, *where*
 records live (at the governing spec anchor, not in an ADR silo),
 *when* to write one, and the two section patterns for larger
-documents.</fact></p>
-  <p><fact id="companion-document-pointers" status="impl/done">Copy-ready template: [`record-template.md`](record-template.md);
-trigger design: [`revisit-triggers.md`](revisit-triggers.md).</fact></p>
-  <section id="facts-vs-decisions" title="Facts versus decisions">
-    <p><fact id="BLAKE3-LINE-IS-A-FACT" status="spec/done">"We hash with blake3" is a **fact**.</fact></p>
-    <p><fact id="a-fact-is-recovered-with-one-grep" status="spec/done">Any reader — human or agent —
-recovers it from the code in a second with one grep.</fact></p>
-    <p><fact id="BLAKE3-WITH-ITS-REASON-IS-A-DECISION" status="spec/done">"We hash with blake3 because SHA-256 drags in an OpenSSL dependency,
+documents.</scope-of-this-document></p>
+  <p><companion-document-pointers fact="true" status="impl/done">Copy-ready template: [`record-template.md`](record-template.md);
+trigger design: [`revisit-triggers.md`](revisit-triggers.md).</companion-document-pointers></p>
+  <facts-vs-decisions title="Facts versus decisions">
+    <p><BLAKE3-LINE-IS-A-FACT fact="true" status="spec/done">"We hash with blake3" is a **fact**.</BLAKE3-LINE-IS-A-FACT></p>
+    <p><a-fact-is-recovered-with-one-grep fact="true" status="spec/done">Any reader — human or agent —
+recovers it from the code in a second with one grep.</a-fact-is-recovered-with-one-grep></p>
+    <p><BLAKE3-WITH-ITS-REASON-IS-A-DECISION fact="true" status="spec/done">"We hash with blake3 because SHA-256 drags in an OpenSSL dependency,
 and we need minimal binary size for edge servers on weak hardware"
-is a **decision**.</fact></p>
-    <p><fact id="no-grep-recovers-a-decision" status="spec/done">No grep recovers it: the constraint lives outside
-the code, and the code is byte-identical either way.</fact></p>
-    <p><fact id="ASYMMETRY-IS-ABSOLUTE" status="spec/done">The asymmetry is absolute: **a fact is recoverable from the code in
-a second; a decision cannot be recovered at all.**</fact></p>
-    <p><fact id="reasoning-is-gone-once-it-leaves-working-memory" status="spec/done">Once reasoning
+is a **decision**.</BLAKE3-WITH-ITS-REASON-IS-A-DECISION></p>
+    <p><no-grep-recovers-a-decision fact="true" status="spec/done">No grep recovers it: the constraint lives outside
+the code, and the code is byte-identical either way.</no-grep-recovers-a-decision></p>
+    <p><ASYMMETRY-IS-ABSOLUTE fact="true" status="spec/done">The asymmetry is absolute: **a fact is recoverable from the code in
+a second; a decision cannot be recovered at all.**</ASYMMETRY-IS-ABSOLUTE></p>
+    <p><reasoning-is-gone-once-it-leaves-working-memory fact="true" status="spec/done">Once reasoning
 leaves working memory — the human's after two months, the agent's at
-session end — it is gone unless written down.</fact></p>
-    <p><fact id="DECISION-FORM-IS-WORTH-TEN-FACT-FORMS" status="spec/done">The decision form is
-worth ten of the fact form.</fact></p>
-  </section>
-  <section id="why" title="Why this is load-bearing in a human-AI team">
-    <p><fact id="tribal-knowledge-in-a-pure-human-team" status="spec/done">In a pure-human team, unrecorded reasoning survives as tribal
+session end — it is gone unless written down.</reasoning-is-gone-once-it-leaves-working-memory></p>
+    <p><DECISION-FORM-IS-WORTH-TEN-FACT-FORMS fact="true" status="spec/done">The decision form is
+worth ten of the fact form.</DECISION-FORM-IS-WORTH-TEN-FACT-FORMS></p>
+  </facts-vs-decisions>
+  <why title="Why this is load-bearing in a human-AI team">
+    <p><tribal-knowledge-in-a-pure-human-team fact="true" status="spec/done">In a pure-human team, unrecorded reasoning survives as tribal
 knowledge: "Why this library?" — "Vasya tried five alternatives
-three months ago; only this one worked with our glibc."</fact></p>
-    <p><fact id="AGENT-CANNOT-ASK-VASYA" status="spec/done">The agent cannot ask Vasya.</fact></p>
-    <p><fact id="EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY" status="spec/done">Every session is a brilliant new
+three months ago; only this one worked with our glibc."</tribal-knowledge-in-a-pure-human-team></p>
+    <p><AGENT-CANNOT-ASK-VASYA fact="true" status="spec/done">The agent cannot ask Vasya.</AGENT-CANNOT-ASK-VASYA></p>
+    <p><EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY fact="true" status="spec/done">Every session is a brilliant new
 developer with zero project memory: knowledge that is not in a file
-the agent can read does not exist for it.</fact></p>
-    <p><fact id="two-failure-modes-lead" status="spec/done">Two failure modes follow:</fact></p>
+the agent can read does not exist for it.</EVERY-SESSION-IS-A-NEW-DEVELOPER-WITH-ZERO-MEMORY></p>
+    <p><two-failure-modes-lead fact="true" status="spec/done">Two failure modes follow:</two-failure-modes-lead></p>
     <list ordered="false">
-      <item><fact id="FAILURE-RE-DERIVATION" status="spec/done">**Re-derivation.** The code shows the value, not the constraint.
+      <item><FAILURE-RE-DERIVATION fact="true" status="spec/done">**Re-derivation.** The code shows the value, not the constraint.
   The agent sees `TIMEOUT = 600`, finds no reason, concludes the
   number is arbitrary, and proposes 300 s "for performance" — the
-  15 % of VPN users who needed the 600 s are invisible in the code.</fact></item>
-      <item><fact id="FAILURE-RE-LITIGATION" status="spec/done">**Re-litigation.** Every unrecorded decision is re-opened by every
+  15 % of VPN users who needed the 600 s are invisible in the code.</FAILURE-RE-DERIVATION></item>
+      <item><FAILURE-RE-LITIGATION fact="true" status="spec/done">**Re-litigation.** Every unrecorded decision is re-opened by every
   future reader, at an hour of re-analysis per re-open — with no
-  guarantee of the same answer, because the original data is gone.</fact></item>
+  guarantee of the same answer, because the original data is gone.</FAILURE-RE-LITIGATION></item>
     </list>
-    <p><fact id="RECORD-IS-IMMUNITY-FROM-RE-LITIGATION" status="spec/done">A recorded decision is **immunity from re-litigation**: the next
+    <p><RECORD-IS-IMMUNITY-FROM-RE-LITIGATION fact="true" status="spec/done">A recorded decision is **immunity from re-litigation**: the next
 proposal to "optimise" the timeout is answered by the record in one
-read, not an hour of archaeology.</fact></p>
-    <p><fact id="TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST" status="spec/done">The trigger field keeps the
+read, not an hour of archaeology.</RECORD-IS-IMMUNITY-FROM-RE-LITIGATION></p>
+    <p><TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST fact="true" status="spec/done">The trigger field keeps the
 immunity honest — without it the decision hardens into a sacred cow
-([`revisit-triggers.md` §sacred-cows](revisit-triggers.md#sacred-cows)).</fact></p>
-  </section>
-  <section id="four-fields" title="The four-field record">
-    <p><fact id="EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS" status="impl/done">Every record carries exactly four fields:</fact></p>
+([`revisit-triggers.md` §sacred-cows](revisit-triggers.md#sacred-cows)).</TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST></p>
+  </why>
+  <four-fields title="The four-field record">
+    <p><EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS fact="true" status="impl/done">Every record carries exactly four fields:</EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS></p>
     <table>
       <tr>
         <td>Field</td>
         <td>Requirement</td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-DECISION" status="impl/done">**Decision**</fact></td>
+        <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
         <td><fact status="impl/done">The chosen value or approach. One line.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-WHY" status="impl/done">**Why**</fact></td>
+        <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
         <td><fact status="impl/done">The observation that forced the choice — concrete, measured, cited. Name the data: log path, sample size, benchmark, incident, upstream constraint.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-CONSIDERED-AND-REJECTED" status="impl/done">**Considered and rejected**</fact></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
         <td><fact status="impl/done">One line per alternative, each carrying the reason it lost. A loser without a reason invites the evaluation to be re-run.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-WHEN-TO-REVISIT" status="impl/done">**When to revisit**</fact></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
         <td><fact status="impl/done">A measurable trigger: metric + threshold + where it is observed. "Later" is not a trigger.</fact></td>
       </tr>
     </table>
-    <p><fact id="why-three-of-the-four-fields-exist" status="spec/done">Three of the four fields exist so the argument is *never re-had*:
+    <p><why-three-of-the-four-fields-exist fact="true" status="spec/done">Three of the four fields exist so the argument is *never re-had*:
 the why answers "is this arbitrary?", the rejections "did you
-consider X?", the trigger "is it time to reconsider?".</fact></p>
-    <p><fact id="template-and-examples-pointer" status="impl/done">Copy-ready
-shape and worked examples: [`record-template.md`](record-template.md).</fact></p>
-  </section>
-  <section id="placement" title="Where records live">
-    <p><fact id="RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR" status="impl/done">**At the spec anchor that governs the value.**</fact></p>
-    <p><fact id="timeout-record-sits-under-the-verification-heading" status="spec/done">The timeout record
+consider X?", the trigger "is it time to reconsider?".</why-three-of-the-four-fields-exist></p>
+    <p><template-and-examples-pointer fact="true" status="impl/done">Copy-ready
+shape and worked examples: [`record-template.md`](record-template.md).</template-and-examples-pointer></p>
+  </four-fields>
+  <placement title="Where records live">
+    <p><RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">**At the spec anchor that governs the value.**</RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR></p>
+    <p><timeout-record-sits-under-the-verification-heading fact="true" status="spec/done">The timeout record
 lives in the spec section that defines verification timing — under
-the very heading a reader lands on when asking "why 600?".</fact></p>
-    <p><fact id="departure-from-classic-adr-lead" status="impl/done">This
-deliberately departs from classic ADR practice:</fact></p>
+the very heading a reader lands on when asking "why 600?".</timeout-record-sits-under-the-verification-heading></p>
+    <p><departure-from-classic-adr-lead fact="true" status="impl/done">This
+deliberately departs from classic ADR practice:</departure-from-classic-adr-lead></p>
     <table>
       <tr>
         <td>Classic ADR</td>
         <td>This protocol</td>
       </tr>
       <tr>
-        <td><fact id="ROW-ADR-SILO" status="spec/done">`adr/0007-use-blake3.md` — a separate silo</fact></td>
+        <td><ROW-ADR-SILO fact="true" status="spec/done">`adr/0007-use-blake3.md` — a separate silo</ROW-ADR-SILO></td>
         <td><fact status="spec/done">The record sits inside the governing spec section</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ADR-IMMUTABLE" status="spec/done">Immutable, append-only; changes chain via "superseded by ADR-0042"</fact></td>
+        <td><ROW-ADR-IMMUTABLE fact="true" status="spec/done">Immutable, append-only; changes chain via "superseded by ADR-0042"</ROW-ADR-IMMUTABLE></td>
         <td><fact status="spec/done">The section is edited in place; a dated changelog line notes the change; git holds the history</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ADR-MUST-BE-SOUGHT" status="spec/done">The reader must know the ADR exists and go find it</fact></td>
+        <td><ROW-ADR-MUST-BE-SOUGHT fact="true" status="spec/done">The reader must know the ADR exists and go find it</ROW-ADR-MUST-BE-SOUGHT></td>
         <td><fact status="spec/done">The record rides along with every read of the section</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ADR-NUMBERED-BY-TIME" status="spec/done">Numbered by time of decision</fact></td>
+        <td><ROW-ADR-NUMBERED-BY-TIME fact="true" status="spec/done">Numbered by time of decision</ROW-ADR-NUMBERED-BY-TIME></td>
         <td><fact status="spec/done">Anchored by the thing decided</fact></td>
       </tr>
     </table>
-    <p><fact id="the-reason-is-the-reader" status="spec/done">The reason is the reader.</fact></p>
-    <p><fact id="agent-loads-context-by-anchor" status="spec/done">An agent loads context by anchor: when it
+    <p><the-reason-is-the-reader fact="true" status="spec/done">The reason is the reader.</the-reason-is-the-reader></p>
+    <p><agent-loads-context-by-anchor fact="true" status="spec/done">An agent loads context by anchor: when it
 reads the section governing the value, a co-located record arrives
-for free, at the exact moment of temptation to "fix" the value.</fact></p>
-    <p><fact id="a-record-in-a-silo-is-never-looked-up" status="spec/done">A
+for free, at the exact moment of temptation to "fix" the value.</agent-loads-context-by-anchor></p>
+    <p><a-record-in-a-silo-is-never-looked-up fact="true" status="spec/done">A
 record in a silo requires the agent to know to look — and it will
-not, because nothing at the anchor points at `adr/0007`.</fact></p>
-    <p><fact id="SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY" status="spec/done">Silos
-preserve reasoning technically and lose it practically.</fact></p>
-    <p><fact id="placement-consequences-lead" status="impl/done">Consequences of the placement rule:</fact></p>
+not, because nothing at the anchor points at `adr/0007`.</a-record-in-a-silo-is-never-looked-up></p>
+    <p><SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY fact="true" status="spec/done">Silos
+preserve reasoning technically and lose it practically.</SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY></p>
+    <p><placement-consequences-lead fact="true" status="impl/done">Consequences of the placement rule:</placement-consequences-lead></p>
     <list ordered="false">
-      <item><fact id="CONSEQUENCE-NO-ADR-DIRECTORY" status="impl/done">**No `adr/` directory.** The spec tree is the only home.</fact></item>
-      <item><fact id="CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD" status="impl/done">**The spec section IS the record.** No second artefact to sync.</fact></item>
-      <item><fact id="CONSEQUENCE-EVOLUTION-IS-AN-EDIT" status="impl/done">**Evolution is an edit.** Rewrite the record in place, add a dated
+      <item><CONSEQUENCE-NO-ADR-DIRECTORY fact="true" status="impl/done">**No `adr/` directory.** The spec tree is the only home.</CONSEQUENCE-NO-ADR-DIRECTORY></item>
+      <item><CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD fact="true" status="impl/done">**The spec section IS the record.** No second artefact to sync.</CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD></item>
+      <item><CONSEQUENCE-EVOLUTION-IS-AN-EDIT fact="true" status="impl/done">**Evolution is an edit.** Rewrite the record in place, add a dated
   changelog line; the old text is one `git log -p` away. Procedure:
-  [`revisit-triggers.md` §when-fired](revisit-triggers.md#when-fired).</fact></item>
-      <item><fact id="CONSEQUENCE-RECORDS-ARE-CITABLE" status="impl/done">**Records are citable.** Give every record's heading an explicit
+  [`revisit-triggers.md` §when-fired](revisit-triggers.md#when-fired).</CONSEQUENCE-EVOLUTION-IS-AN-EDIT></item>
+      <item><CONSEQUENCE-RECORDS-ARE-CITABLE fact="true" status="impl/done">**Records are citable.** Give every record's heading an explicit
   anchor — `spec://&lt;project&gt;/&lt;doc&gt;#&lt;anchor&gt;` or any stable
-  path-plus-anchor form — so comments and commits can point at it.</fact></item>
+  path-plus-anchor form — so comments and commits can point at it.</CONSEQUENCE-RECORDS-ARE-CITABLE></item>
     </list>
-  </section>
-  <section id="when" title="When to write one">
-    <p><fact id="WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE" status="impl/done">Write a record for any choice a future reader could plausibly
-re-open:</fact></p>
+  </placement>
+  <when title="When to write one">
+    <p><WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE fact="true" status="impl/done">Write a record for any choice a future reader could plausibly
+re-open:</WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE></p>
     <table>
       <tr>
         <td>Occasion</td>
         <td>Example</td>
       </tr>
       <tr>
-        <td><fact id="ROW-OCCASION-LIBRARY-PICK" status="impl/done">Library / dependency pick</fact></td>
+        <td><ROW-OCCASION-LIBRARY-PICK fact="true" status="impl/done">Library / dependency pick</ROW-OCCASION-LIBRARY-PICK></td>
         <td><fact status="impl/done">blake3 over SHA-256; one HTTP client over another</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-OCCASION-CONSTANT" status="impl/done">Constant with consequences</fact></td>
+        <td><ROW-OCCASION-CONSTANT fact="true" status="impl/done">Constant with consequences</ROW-OCCASION-CONSTANT></td>
         <td><fact status="impl/done">timeouts, retry counts, buffer sizes, thresholds</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-OCCASION-PROTOCOL-SHAPE" status="impl/done">Protocol / format shape</fact></td>
+        <td><ROW-OCCASION-PROTOCOL-SHAPE fact="true" status="impl/done">Protocol / format shape</ROW-OCCASION-PROTOCOL-SHAPE></td>
         <td><fact status="impl/done">wire format, schema, identity scheme, directory layout</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-OCCASION-REJECTED-APPROACH" status="impl/done">Rejected approach</fact></td>
+        <td><ROW-OCCASION-REJECTED-APPROACH fact="true" status="impl/done">Rejected approach</ROW-OCCASION-REJECTED-APPROACH></td>
         <td><fact status="impl/done">a road not taken that someone will propose again</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-OCCASION-PROCESS-RULE" status="impl/done">Process rule</fact></td>
+        <td><ROW-OCCASION-PROCESS-RULE fact="true" status="impl/done">Process rule</ROW-OCCASION-PROCESS-RULE></td>
         <td><fact status="impl/done">a review gate, a commit convention, a naming law</fact></td>
       </tr>
     </table>
-    <p><fact id="DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE" status="impl/done">Do **not** write records for facts with no plausible alternative, or
+    <p><DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE fact="true" status="impl/done">Do **not** write records for facts with no plausible alternative, or
 for implementation details the next refactor invalidates — those rot
-faster than they pay back.</fact></p>
-    <p><fact id="THE-COMPETENT-NEWCOMER-TEST" status="impl/done">The test: *would a competent newcomer,
-reading the code cold, plausibly propose changing this?*</fact></p>
-    <p><fact id="WRITE-IN-THE-SESSION-THAT-DECIDES" status="impl/done">The moment of writing is the moment of deciding — same session,
-before it ends.</fact></p>
-    <p><fact id="backfilled-reasoning-is-fiction" status="spec/done">Reasoning unwritten at session end does not survive
-it; a record backfilled a week later is fiction with confidence.</fact></p>
-  </section>
-  <section id="rejected-alternatives" title="The rejected-alternatives section">
-    <p><fact id="bigger-documents-outgrow-a-single-record" status="spec/done">Bigger documents — design proposals, subsystem specs — accumulate
-more rejected options than fit in one record.</fact></p>
-    <p><fact id="CLOSE-BIG-DOCUMENTS-WITH-A-REJECTED-OPTIONS-SECTION" status="impl/done">Close the document
+faster than they pay back.</DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE></p>
+    <p><THE-COMPETENT-NEWCOMER-TEST fact="true" status="impl/done">The test: *would a competent newcomer,
+reading the code cold, plausibly propose changing this?*</THE-COMPETENT-NEWCOMER-TEST></p>
+    <p><WRITE-IN-THE-SESSION-THAT-DECIDES fact="true" status="impl/done">The moment of writing is the moment of deciding — same session,
+before it ends.</WRITE-IN-THE-SESSION-THAT-DECIDES></p>
+    <p><backfilled-reasoning-is-fiction fact="true" status="spec/done">Reasoning unwritten at session end does not survive
+it; a record backfilled a week later is fiction with confidence.</backfilled-reasoning-is-fiction></p>
+  </when>
+  <rejected-alternatives title="The rejected-alternatives section">
+    <p><bigger-documents-outgrow-a-single-record fact="true" status="spec/done">Bigger documents — design proposals, subsystem specs — accumulate
+more rejected options than fit in one record.</bigger-documents-outgrow-a-single-record></p>
+    <p><CLOSE-BIG-DOCUMENTS-WITH-A-REJECTED-OPTIONS-SECTION fact="true" status="impl/done">Close the document
 with a section where **every rejected option gets one line with its
-reason**:</fact></p>
+reason**:</CLOSE-BIG-DOCUMENTS-WITH-A-REJECTED-OPTIONS-SECTION></p>
     <fence lang="markdown">## Rejected alternatives {#rejected}
 
 - **A one-time hardening pass instead of a recurring process** —
@@ -185,16 +185,16 @@ reason**:</fact></p>
   regression detector, blind by construction to uncovered code.
 - **Fully automate the audit now** — deferred, not rejected: value
   is breadth plus judgment; automation grows category by category.</fence>
-    <p><fact id="why-the-line-with-reason-format" status="spec/done">The line-with-reason format is the entire value: a bare list of
+    <p><why-the-line-with-reason-format fact="true" status="spec/done">The line-with-reason format is the entire value: a bare list of
 losers invites the evaluation to be re-run; a reasoned list answers
-the future proposal before it is made.</fact></p>
-    <p><fact id="MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED" status="impl/done">Mark honest deferrals
-*deferred, not rejected* — a deferral has a built-in revisit.</fact></p>
-  </section>
-  <section id="invariants-restatement" title="The invariants restatement">
-    <p><fact id="FOUNDATIONAL-DOCUMENTS-CLOSE-WITH-INVARIANTS" status="impl/done">Foundational documents — the ones pinning decisions every other
+the future proposal before it is made.</why-the-line-with-reason-format></p>
+    <p><MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED fact="true" status="impl/done">Mark honest deferrals
+*deferred, not rejected* — a deferral has a built-in revisit.</MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED></p>
+  </rejected-alternatives>
+  <invariants-restatement title="The invariants restatement">
+    <p><FOUNDATIONAL-DOCUMENTS-CLOSE-WITH-INVARIANTS fact="true" status="impl/done">Foundational documents — the ones pinning decisions every other
 document assumes — close with an **Invariants** section: the most
-load-bearing decisions as one-liners, each pointing at its record.</fact></p>
+load-bearing decisions as one-liners, each pointing at its record.</FOUNDATIONAL-DOCUMENTS-CLOSE-WITH-INVARIANTS></p>
     <fence lang="markdown">## Invariants {#invariants}
 
 (Restated from the records above. If anything below seems violated
@@ -202,13 +202,13 @@ in practice, stop and reconcile before proceeding.)
 
 1. **Hashing is blake3.** No OpenSSL-linked digest anywhere. See §hashing.
 2. **Verification timeout is 600 s.** Not 300. See §verification.timeout.</fence>
-    <p><fact id="why-the-restatement-earns-its-place" status="spec/done">The restatement is a concession to attention: a hurried reader — or
+    <p><why-the-restatement-earns-its-place fact="true" status="spec/done">The restatement is a concession to attention: a hurried reader — or
 an agent deep into a long session — reads the invariants even when
-reading nothing else; each line points back at the full reasoning.</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="COPY-THE-TASK-NOT-THE-EXAMPLES" status="impl/done">Do not copy this protocol's examples verbatim — copy the *task*, and
-let the agent re-derive the records the project actually needs:</fact></p>
+reading nothing else; each line points back at the full reasoning.</why-the-restatement-earns-its-place></p>
+  </invariants-restatement>
+  <re-derive title="Re-derive for your project">
+    <p><COPY-THE-TASK-NOT-THE-EXAMPLES fact="true" status="impl/done">Do not copy this protocol's examples verbatim — copy the *task*, and
+let the agent re-derive the records the project actually needs:</COPY-THE-TASK-NOT-THE-EXAMPLES></p>
     <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-decision-records/&lt;version&gt;/spec/flows/decision-records/`, check `vibe.lock`) in full, then adapt the practice
 to this project:
 1. Inventory where design decisions currently live here (spec tree,
@@ -223,21 +223,21 @@ to this project:
 4. Propose revisit triggers only from signals this project actually
    observes: CI timings, monitoring, benchmarks, dependency audits.
 5. Show me the drafts as diffs. Apply nothing until I approve.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-RECORD-DECISIONS-NOT-FACTS" status="spec/done">A fact is recoverable from the code in a second; a decision cannot
-  be recovered at all. Record decisions.</fact></item>
-      <item><fact id="SUM-FOUR-FIELDS-ALWAYS" status="impl/done">Four fields, always: Decision / Why (measured, cited) / Considered
+      <item><SUM-RECORD-DECISIONS-NOT-FACTS fact="true" status="spec/done">A fact is recoverable from the code in a second; a decision cannot
+  be recovered at all. Record decisions.</SUM-RECORD-DECISIONS-NOT-FACTS></item>
+      <item><SUM-FOUR-FIELDS-ALWAYS fact="true" status="impl/done">Four fields, always: Decision / Why (measured, cited) / Considered
   and rejected (one line each, with reasons) / When to revisit (a
-  measurable trigger).</fact></item>
-      <item><fact id="SUM-RECORDS-LIVE-AT-THE-ANCHOR" status="impl/done">Records live at the governing spec anchor. No ADR silo; the
-  section is the record; git is the history.</fact></item>
-      <item><fact id="SUM-RECORD-IN-THE-SAME-SESSION" status="impl/done">Record in the same session the decision is made.</fact></item>
-      <item><fact id="SUM-CLOSING-SECTIONS-BY-DOCUMENT-SIZE" status="impl/done">Bigger docs close with rejected alternatives; foundational docs
-  with an invariants restatement.</fact></item>
-      <item><fact id="SUM-IMMUNITY-AND-ITS-TRIGGER" status="spec/done">A recorded decision is immunity from re-litigation; the trigger
-  keeps it from becoming dogma.</fact></item>
+  measurable trigger).</SUM-FOUR-FIELDS-ALWAYS></item>
+      <item><SUM-RECORDS-LIVE-AT-THE-ANCHOR fact="true" status="impl/done">Records live at the governing spec anchor. No ADR silo; the
+  section is the record; git is the history.</SUM-RECORDS-LIVE-AT-THE-ANCHOR></item>
+      <item><SUM-RECORD-IN-THE-SAME-SESSION fact="true" status="impl/done">Record in the same session the decision is made.</SUM-RECORD-IN-THE-SAME-SESSION></item>
+      <item><SUM-CLOSING-SECTIONS-BY-DOCUMENT-SIZE fact="true" status="impl/done">Bigger docs close with rejected alternatives; foundational docs
+  with an invariants restatement.</SUM-CLOSING-SECTIONS-BY-DOCUMENT-SIZE></item>
+      <item><SUM-IMMUNITY-AND-ITS-TRIGGER fact="true" status="spec/done">A recorded decision is immunity from re-litigation; the trigger
+  keeps it from becoming dogma.</SUM-IMMUNITY-AND-ITS-TRIGGER></item>
     </list>
-  </section>
+  </summary>
 </spec>

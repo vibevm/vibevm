@@ -2,17 +2,17 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Naming forks</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** The design forks a namespace author faces,
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The design forks a namespace author faces,
 each with its options, the choice this practice recommends, and the
-reasoning — so a future designer need not re-litigate settled ground.</fact></p>
-  <p><fact id="four-forks" status="impl/done">Four forks: flat versus grouped, enforce versus recommend, where short
-names live, and rename as alias versus new identity.</fact></p>
-  <p><fact id="protocol-document-pointer" status="impl/done">The laws these forks produce are in [`QUALIFIED-NAMING-PROTOCOL.md`](QUALIFIED-NAMING-PROTOCOL.md).</fact></p>
-  <section id="flat-vs-grouped" title="Fork 1 — flat versus grouped">
-    <p><fact id="fork-1-question" status="spec/done">The root fork: is an artifact addressed by a bare `name` unique across
-the whole registry, or by a `group`-qualified coordinate?</fact></p>
-    <p><fact id="both-models-shipped-at-scale" status="spec/done">Both models shipped at scale, so the trade is empirical, not
-theoretical:</fact></p>
+reasoning — so a future designer need not re-litigate settled ground.</scope-of-this-document></p>
+  <p><four-forks fact="true" status="impl/done">Four forks: flat versus grouped, enforce versus recommend, where short
+names live, and rename as alias versus new identity.</four-forks></p>
+  <p><protocol-document-pointer fact="true" status="impl/done">The laws these forks produce are in [`QUALIFIED-NAMING-PROTOCOL.md`](QUALIFIED-NAMING-PROTOCOL.md).</protocol-document-pointer></p>
+  <flat-vs-grouped title="Fork 1 — flat versus grouped">
+    <p><fork-1-question fact="true" status="spec/done">The root fork: is an artifact addressed by a bare `name` unique across
+the whole registry, or by a `group`-qualified coordinate?</fork-1-question></p>
+    <p><both-models-shipped-at-scale fact="true" status="spec/done">Both models shipped at scale, so the trade is empirical, not
+theoretical:</both-models-shipped-at-scale></p>
     <table>
       <tr>
         <td>Aspect</td>
@@ -20,152 +20,152 @@ theoretical:</fact></p>
         <td>Grouped (Maven `groupId:artifactId`)</td>
       </tr>
       <tr>
-        <td><fact id="ROW-ASPECT-SHORT-NAME-ERGONOMICS" status="spec/done">Short-name ergonomics</fact></td>
+        <td><ROW-ASPECT-SHORT-NAME-ERGONOMICS fact="true" status="spec/done">Short-name ergonomics</ROW-ASPECT-SHORT-NAME-ERGONOMICS></td>
         <td><fact status="spec/done">best — `serde`, `express`</fact></td>
         <td><fact status="spec/done">worse — `org.example:widget`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ASPECT-SQUATTING-PRESSURE" status="spec/done">Squatting pressure</fact></td>
+        <td><ROW-ASPECT-SQUATTING-PRESSURE fact="true" status="spec/done">Squatting pressure</ROW-ASPECT-SQUATTING-PRESSURE></td>
         <td><fact status="spec/done">high — names are a finite commons</fact></td>
         <td><fact status="spec/done">low — squatting is local to a group</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ASPECT-TRUST-DELEGATION" status="spec/done">Trust delegation</fact></td>
+        <td><ROW-ASPECT-TRUST-DELEGATION fact="true" status="spec/done">Trust delegation</ROW-ASPECT-TRUST-DELEGATION></td>
         <td><fact status="spec/done">per-artifact — the name names no owner</fact></td>
         <td><fact status="spec/done">per-group — a group maps to an owner</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ASPECT-COMPOSITION" status="spec/done">Composition</fact></td>
+        <td><ROW-ASPECT-COMPOSITION fact="true" status="spec/done">Composition</ROW-ASPECT-COMPOSITION></td>
         <td><fact status="spec/done">transitive name clashes possible</fact></td>
         <td><fact status="spec/done">clash-free — the group disambiguates</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ASPECT-ONBOARDING-COST" status="spec/done">Onboarding cost</fact></td>
+        <td><ROW-ASPECT-ONBOARDING-COST fact="true" status="spec/done">Onboarding cost</ROW-ASPECT-ONBOARDING-COST></td>
         <td><fact status="spec/done">trivial</fact></td>
         <td><fact status="spec/done">a group must be chosen up front</fact></td>
       </tr>
     </table>
-    <p><fact id="flat-systems-bought-ergonomics-and-paid-with-squatting" status="spec/done">**What each bought and paid.** Flat systems bought day-one ergonomics
+    <p><flat-systems-bought-ergonomics-and-paid-with-squatting fact="true" status="spec/done">**What each bought and paid.** Flat systems bought day-one ergonomics
 and paid with a squatting arms race and a trust vacuum — `serde` reads
 clean, but nothing in the coordinate tells you *who* stands behind it,
 and two deep dependencies wanting the same bare name cannot both be
-satisfied.</fact></p>
-    <p><fact id="grouped-systems-paid-verbosity-and-bought-it-back-twice" status="spec/done">Grouped systems paid verbosity up front — nobody enjoys
+satisfied.</flat-systems-bought-ergonomics-and-paid-with-squatting></p>
+    <p><grouped-systems-paid-verbosity-and-bought-it-back-twice fact="true" status="spec/done">Grouped systems paid verbosity up front — nobody enjoys
 typing `org.apache.commons` — and bought it back twice: a group maps to
 an owner (so trust is delegated wholesale, not re-earned per artifact),
-and group-qualified coordinates compose without collision at any depth.</fact></p>
-    <p><fact id="CHOSEN-GROUPED" status="impl/done">**Chosen: grouped.**</fact></p>
-    <p><fact id="the-verbosity-is-real-but-bounded" status="spec/done">The verbosity is real but bounded, and Fork 3
-buys most of it back with a short name at the human boundary.</fact></p>
-    <p><fact id="SQUATTING-AND-TRUST-PROPERTIES-ARE-STRUCTURAL" status="spec/done">The
+and group-qualified coordinates compose without collision at any depth.</grouped-systems-paid-verbosity-and-bought-it-back-twice></p>
+    <p><CHOSEN-GROUPED fact="true" status="impl/done">**Chosen: grouped.**</CHOSEN-GROUPED></p>
+    <p><the-verbosity-is-real-but-bounded fact="true" status="spec/done">The verbosity is real but bounded, and Fork 3
+buys most of it back with a short name at the human boundary.</the-verbosity-is-real-but-bounded></p>
+    <p><SQUATTING-AND-TRUST-PROPERTIES-ARE-STRUCTURAL fact="true" status="spec/done">The
 squatting and trust properties are structural — they cannot be patched
-onto a flat namespace after the fact.</fact></p>
-    <p><fact id="npm-conceded-the-point-with-scope" status="spec/done">npm itself conceded the point by
+onto a flat namespace after the fact.</SQUATTING-AND-TRUST-PROPERTIES-ARE-STRUCTURAL></p>
+    <p><npm-conceded-the-point-with-scope fact="true" status="spec/done">npm itself conceded the point by
 bolting on `@scope/` once flat names ran out; starting grouped avoids
-the migration.</fact></p>
-  </section>
-  <section id="enforce-vs-recommend" title="Fork 2 — enforce style versus recommend it">
-    <p><fact id="fork-2-question" status="spec/done">Given a group grammar, how hard does the core enforce the reverse-FQDN
-*convention*?</fact></p>
+the migration.</npm-conceded-the-point-with-scope></p>
+  </flat-vs-grouped>
+  <enforce-vs-recommend title="Fork 2 — enforce style versus recommend it">
+    <p><fork-2-question fact="true" status="spec/done">Given a group grammar, how hard does the core enforce the reverse-FQDN
+*convention*?</fork-2-question></p>
     <list ordered="false">
-      <item><fact id="OPTION-A-ENFORCE" status="spec/done">**Option A — enforce.** Require the group to be a domain the
-  publisher provably controls (DNS check, TXT record, the works).</fact></item>
-      <item><fact id="OPTION-B-RECOMMEND" status="spec/done">**Option B — recommend.** Enforce only the *grammar* (lowercase,
+      <item><OPTION-A-ENFORCE fact="true" status="spec/done">**Option A — enforce.** Require the group to be a domain the
+  publisher provably controls (DNS check, TXT record, the works).</OPTION-A-ENFORCE></item>
+      <item><OPTION-B-RECOMMEND fact="true" status="spec/done">**Option B — recommend.** Enforce only the *grammar* (lowercase,
   dot-separated segments) and the *uniqueness* of the group; leave
-  reverse-FQDN as a convention for humans and linters.</fact></item>
+  reverse-FQDN as a convention for humans and linters.</OPTION-B-RECOMMEND></item>
     </list>
-    <p><fact id="CHOSEN-RECOMMEND" status="impl/done">**Chosen: recommend.**</fact></p>
-    <p><fact id="reverse-fqdn-piggybacks-on-dns-uniqueness" status="spec/done">Reverse-FQDN is worth recommending because it
+    <p><CHOSEN-RECOMMEND fact="true" status="impl/done">**Chosen: recommend.**</CHOSEN-RECOMMEND></p>
+    <p><reverse-fqdn-piggybacks-on-dns-uniqueness fact="true" status="spec/done">Reverse-FQDN is worth recommending because it
 piggybacks on DNS's existing global uniqueness — the trick Sun adopted
 for Java packages in 1995 — so two independent authors almost never
-collide by accident.</fact></p>
-    <p><fact id="enforcing-domain-ownership-buys-little-and-costs-a-lot" status="spec/done">But enforcing domain ownership buys little and
+collide by accident.</reverse-fqdn-piggybacks-on-dns-uniqueness></p>
+    <p><enforcing-domain-ownership-buys-little-and-costs-a-lot fact="true" status="spec/done">But enforcing domain ownership buys little and
 costs a lot: it couples publishing to DNS administration, breaks for
 internal registries with no public domain, and still does not stop a
-determined bad actor who *does* own a domain.</fact></p>
-    <p><fact id="THE-RESOLVERS-JOB-IS-NARROW" status="impl/done">The resolver's job is
+determined bad actor who *does* own a domain.</enforcing-domain-ownership-buys-little-and-costs-a-lot></p>
+    <p><THE-RESOLVERS-JOB-IS-NARROW fact="true" status="impl/done">The resolver's job is
 narrow — check grammar, check uniqueness — and taste is left to
-linters.</fact></p>
-    <p><fact id="maven-made-the-same-call" status="spec/done">Maven made the same call: it recommends reverse-FQDN
-groupIds and enforces none of it.</fact></p>
-    <p><fact id="THE-GRAMMAR-IS-THE-CONTRACT-THE-STYLE-IS-GUIDANCE" status="impl/done">The grammar is the contract; the style is guidance.</fact></p>
-  </section>
-  <section id="short-names" title="Fork 3 — where do short names live">
-    <p><fact id="fork-3-question" status="spec/done">If a short name is a convenience, *how much* of the system may see it?</fact></p>
+linters.</THE-RESOLVERS-JOB-IS-NARROW></p>
+    <p><maven-made-the-same-call fact="true" status="spec/done">Maven made the same call: it recommends reverse-FQDN
+groupIds and enforces none of it.</maven-made-the-same-call></p>
+    <p><THE-GRAMMAR-IS-THE-CONTRACT-THE-STYLE-IS-GUIDANCE fact="true" status="impl/done">The grammar is the contract; the style is guidance.</THE-GRAMMAR-IS-THE-CONTRACT-THE-STYLE-IS-GUIDANCE></p>
+  </enforce-vs-recommend>
+  <short-names title="Fork 3 — where do short names live">
+    <p><fork-3-question fact="true" status="spec/done">If a short name is a convenience, *how much* of the system may see it?</fork-3-question></p>
     <list ordered="false">
-      <item><fact id="OPTION-EVERYWHERE" status="spec/done">**Everywhere.** Short names are first-class: manifests, lockfiles,
-  and dependency edges may all carry them.</fact></item>
-      <item><fact id="OPTION-NOWHERE" status="spec/done">**Nowhere.** Ban short names entirely; humans type fully-qualified
-  coordinates always.</fact></item>
-      <item><fact id="OPTION-CLI-BOUNDARY-ONLY" status="spec/done">**CLI boundary only.** Short names are legal solely as human-typed CLI
-  input, resolved once, and never persisted.</fact></item>
+      <item><OPTION-EVERYWHERE fact="true" status="spec/done">**Everywhere.** Short names are first-class: manifests, lockfiles,
+  and dependency edges may all carry them.</OPTION-EVERYWHERE></item>
+      <item><OPTION-NOWHERE fact="true" status="spec/done">**Nowhere.** Ban short names entirely; humans type fully-qualified
+  coordinates always.</OPTION-NOWHERE></item>
+      <item><OPTION-CLI-BOUNDARY-ONLY fact="true" status="spec/done">**CLI boundary only.** Short names are legal solely as human-typed CLI
+  input, resolved once, and never persisted.</OPTION-CLI-BOUNDARY-ONLY></item>
     </list>
-    <p><fact id="CHOSEN-BOUNDARY-ONLY" status="impl/done">**Chosen: boundary only.**</fact></p>
-    <p><fact id="everywhere-re-imports-the-transitive-collision-problem" status="spec/done">"Everywhere" re-imports the flat namespace's
+    <p><CHOSEN-BOUNDARY-ONLY fact="true" status="impl/done">**Chosen: boundary only.**</CHOSEN-BOUNDARY-ONLY></p>
+    <p><everywhere-re-imports-the-transitive-collision-problem fact="true" status="spec/done">"Everywhere" re-imports the flat namespace's
 transitive-collision problem: a short name buried in a transitive
 manifest is ambiguous at a point where no human is present to
-disambiguate it.</fact></p>
-    <p><fact id="nowhere-throws-away-the-ergonomic-win" status="spec/done">"Nowhere" is collision-safe but throws away the entire
+disambiguate it.</everywhere-re-imports-the-transitive-collision-problem></p>
+    <p><nowhere-throws-away-the-ergonomic-win fact="true" status="spec/done">"Nowhere" is collision-safe but throws away the entire
 ergonomic win of Fork 1's concession — nobody wants to type
-`org.example.tools/widget` at a prompt.</fact></p>
-    <p><fact id="BOUNDARY-ONLY-IS-THE-SWEET-SPOT" status="impl/done">"Boundary only" is the sweet spot, and its property is decisive:
+`org.example.tools/widget` at a prompt.</nowhere-throws-away-the-ergonomic-win></p>
+    <p><BOUNDARY-ONLY-IS-THE-SWEET-SPOT fact="true" status="impl/done">"Boundary only" is the sweet spot, and its property is decisive:
 short-name resolution happens *once*, for a human's argument, against an
-index — then the qualified form is stored.</fact></p>
-    <p><fact id="A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH" status="impl/done">Because persisted state is
+index — then the qualified form is stored.</BOUNDARY-ONLY-IS-THE-SWEET-SPOT></p>
+    <p><A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH fact="true" status="impl/done">Because persisted state is
 qualified-only, the dependency graph is built entirely from qualified
-names, and **a short name never recurses into the graph**.</fact></p>
-    <p><fact id="TRANSITIVE-COLLISIONS-BECOME-IMPOSSIBLE-BY-CONSTRUCTION" status="impl/done">Transitive collisions become impossible by construction rather than by a runtime
-check.</fact></p>
-    <p><fact id="this-is-the-cargo-npm-split-generalised" status="spec/done">This is exactly the cargo/npm split — `add serde` on the command
-line, `serde = "1"` in the manifest — generalised into a law.</fact></p>
-  </section>
-  <section id="rename" title="Fork 4 — rename: alias table versus new identity">
-    <p><fact id="an-author-wants-to-rename-a-published-package" status="spec/done">An author wants to rename a published package.</fact></p>
-    <p><fact id="fork-4-question" status="spec/done">What does the system do?</fact></p>
+names, and **a short name never recurses into the graph**.</A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH></p>
+    <p><TRANSITIVE-COLLISIONS-BECOME-IMPOSSIBLE-BY-CONSTRUCTION fact="true" status="impl/done">Transitive collisions become impossible by construction rather than by a runtime
+check.</TRANSITIVE-COLLISIONS-BECOME-IMPOSSIBLE-BY-CONSTRUCTION></p>
+    <p><this-is-the-cargo-npm-split-generalised fact="true" status="spec/done">This is exactly the cargo/npm split — `add serde` on the command
+line, `serde = "1"` in the manifest — generalised into a law.</this-is-the-cargo-npm-split-generalised></p>
+  </short-names>
+  <rename title="Fork 4 — rename: alias table versus new identity">
+    <p><an-author-wants-to-rename-a-published-package fact="true" status="spec/done">An author wants to rename a published package.</an-author-wants-to-rename-a-published-package></p>
+    <p><fork-4-question fact="true" status="spec/done">What does the system do?</fork-4-question></p>
     <list ordered="false">
-      <item><fact id="OPTION-ALIAS-TABLE" status="spec/done">**Alias table.** Keep a mapping `old → new`; resolve the old
-  coordinate to the new artifact so existing consumers keep working.</fact></item>
-      <item><fact id="OPTION-NEW-IDENTITY" status="spec/done">**New identity.** Treat the renamed package as a genuinely new
+      <item><OPTION-ALIAS-TABLE fact="true" status="spec/done">**Alias table.** Keep a mapping `old → new`; resolve the old
+  coordinate to the new artifact so existing consumers keep working.</OPTION-ALIAS-TABLE></item>
+      <item><OPTION-NEW-IDENTITY fact="true" status="spec/done">**New identity.** Treat the renamed package as a genuinely new
   package: it starts a fresh version line, and the old coordinate is
-  frozen (yanked or left as-is), never repointed.</fact></item>
+  frozen (yanked or left as-is), never repointed.</OPTION-NEW-IDENTITY></item>
     </list>
-    <p><fact id="CHOSEN-NEW-IDENTITY" status="impl/done">**Chosen: new identity.**</fact></p>
-    <p><fact id="the-alias-table-is-seductive-but-re-introduces-ambiguity" status="spec/done">The alias table is seductive — it seems to
+    <p><CHOSEN-NEW-IDENTITY fact="true" status="impl/done">**Chosen: new identity.**</CHOSEN-NEW-IDENTITY></p>
+    <p><the-alias-table-is-seductive-but-re-introduces-ambiguity fact="true" status="spec/done">The alias table is seductive — it seems to
 spare consumers a migration — but it re-introduces precisely the
-ambiguity groups were built to remove.</fact></p>
-    <p><fact id="under-an-alias-every-reader-must-consult-the-mapping" status="spec/done">Under an alias, two coordinates
+ambiguity groups were built to remove.</the-alias-table-is-seductive-but-re-introduces-ambiguity></p>
+    <p><under-an-alias-every-reader-must-consult-the-mapping fact="true" status="spec/done">Under an alias, two coordinates
 now name one artifact, and every reader must consult the mapping to know
-that `old/foo` and `new/foo` are the same bytes.</fact></p>
-    <p><fact id="trust-stops-being-delegable-under-an-alias" status="spec/done">Trust stops being
+that `old/foo` and `new/foo` are the same bytes.</under-an-alias-every-reader-must-consult-the-mapping></p>
+    <p><trust-stops-being-delegable-under-an-alias fact="true" status="spec/done">Trust stops being
 delegable: the coordinate no longer tells the whole truth about
 ownership, because the *real* owner is one hop away through a table the
-reader must know exists.</fact></p>
-    <p><fact id="NEW-IDENTITY-KEEPS-EVERY-COORDINATE-HONEST" status="impl/done">New identity keeps every coordinate honest.</fact></p>
-    <p><fact id="A-CHANGED-TUPLE-IS-A-CHANGED-IDENTITY" status="impl/done">Identity is the tuple
+reader must know exists.</trust-stops-being-delegable-under-an-alias></p>
+    <p><NEW-IDENTITY-KEEPS-EVERY-COORDINATE-HONEST fact="true" status="impl/done">New identity keeps every coordinate honest.</NEW-IDENTITY-KEEPS-EVERY-COORDINATE-HONEST></p>
+    <p><A-CHANGED-TUPLE-IS-A-CHANGED-IDENTITY fact="true" status="impl/done">Identity is the tuple
 `(group, name, version, content-hash)`; change the group or name and the
 tuple changed, so the identity changed — this is a consequence of the
-identity law, not an extra rule.</fact></p>
-    <p><fact id="THE-OLD-COORDINATE-STAYS-WELDED-TO-ITS-BYTES" status="impl/done">The old `name@version` stays welded to
+identity law, not an extra rule.</A-CHANGED-TUPLE-IS-A-CHANGED-IDENTITY></p>
+    <p><THE-OLD-COORDINATE-STAYS-WELDED-TO-ITS-BYTES fact="true" status="impl/done">The old `name@version` stays welded to
 the bytes it always meant (no coordinate is *ever* reused for different
-content), and the new name earns its own history from `0.1.0` forward.</fact></p>
-    <p><fact id="A-CONSUMER-MIGRATES-DELIBERATELY" status="impl/done">A
+content), and the new name earns its own history from `0.1.0` forward.</THE-OLD-COORDINATE-STAYS-WELDED-TO-ITS-BYTES></p>
+    <p><A-CONSUMER-MIGRATES-DELIBERATELY fact="true" status="impl/done">A
 consumer migrates deliberately, by editing a qualified name they can
-see — not silently, through a redirect they cannot.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+see — not silently, through a redirect they cannot.</A-CONSUMER-MIGRATES-DELIBERATELY></p>
+  </rename>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-FLAT-VS-GROUPED" status="impl/done">**Flat vs grouped → grouped.** Verbosity is bounded and bought back at
+      <item><SUM-FLAT-VS-GROUPED fact="true" status="impl/done">**Flat vs grouped → grouped.** Verbosity is bounded and bought back at
   the boundary; squatting-resistance and delegated trust are structural
-  and cannot be retrofitted onto flat names.</fact></item>
-      <item><fact id="SUM-ENFORCE-VS-RECOMMEND" status="impl/done">**Enforce vs recommend → recommend.** Enforce grammar and uniqueness;
+  and cannot be retrofitted onto flat names.</SUM-FLAT-VS-GROUPED></item>
+      <item><SUM-ENFORCE-VS-RECOMMEND fact="true" status="impl/done">**Enforce vs recommend → recommend.** Enforce grammar and uniqueness;
   leave reverse-FQDN as style for humans and linters. Enforcing domain
-  ownership couples publishing to DNS for little gain.</fact></item>
-      <item><fact id="SUM-WHERE-SHORT-NAMES-LIVE" status="impl/done">**Where short names live → CLI boundary only.** Resolved once against
+  ownership couples publishing to DNS for little gain.</SUM-ENFORCE-VS-RECOMMEND></item>
+      <item><SUM-WHERE-SHORT-NAMES-LIVE fact="true" status="impl/done">**Where short names live → CLI boundary only.** Resolved once against
   an index, then stored qualified — which is what makes transitive
-  collisions impossible.</fact></item>
-      <item><fact id="SUM-RENAME-IS-A-NEW-IDENTITY" status="impl/done">**Rename → new identity, not alias.** An alias re-introduces the
+  collisions impossible.</SUM-WHERE-SHORT-NAMES-LIVE></item>
+      <item><SUM-RENAME-IS-A-NEW-IDENTITY fact="true" status="impl/done">**Rename → new identity, not alias.** An alias re-introduces the
   ambiguity groups removed; a new identity keeps every coordinate
-  honest and every version line attached to the bytes it named.</fact></item>
+  honest and every version line attached to the bytes it named.</SUM-RENAME-IS-A-NEW-IDENTITY></item>
     </list>
-  </section>
+  </summary>
 </spec>

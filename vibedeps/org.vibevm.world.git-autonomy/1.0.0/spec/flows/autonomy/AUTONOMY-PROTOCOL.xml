@@ -2,58 +2,58 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Commit autonomy protocol</title>
   <status stage="spec" state="done"/>
-  <p><fact id="an-agent-is-constantly-deciding-whether-to-ask" status="spec/done">An agent working in a repository is constantly deciding: *do I just do this, or do I stop and
-ask?*</fact></p>
-  <p><fact id="too-many-handshakes-crawl-too-few-risk-a-mistake" status="spec/done">Too many confirmation handshakes make an authorised body of work crawl; too few risk an
-irreversible mistake.</fact></p>
-  <p><fact id="this-protocol-draws-the-line-on-the-commit-and-push-surface" status="impl/done">This protocol draws the line on the **commit and push** surface: what
-proceeds on the agent's own judgment, and what always stops for a human first.</fact></p>
-  <section id="routine" title="The default: routine proceeds">
-    <p><fact id="ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING" status="impl/done">**Routine large changes proceed without asking** — and are committed and pushed — when the
-activity has already been authorised. Routine means:</fact></p>
+  <p><an-agent-is-constantly-deciding-whether-to-ask fact="true" status="spec/done">An agent working in a repository is constantly deciding: *do I just do this, or do I stop and
+ask?*</an-agent-is-constantly-deciding-whether-to-ask></p>
+  <p><too-many-handshakes-crawl-too-few-risk-a-mistake fact="true" status="spec/done">Too many confirmation handshakes make an authorised body of work crawl; too few risk an
+irreversible mistake.</too-many-handshakes-crawl-too-few-risk-a-mistake></p>
+  <p><this-protocol-draws-the-line-on-the-commit-and-push-surface fact="true" status="impl/done">This protocol draws the line on the **commit and push** surface: what
+proceeds on the agent's own judgment, and what always stops for a human first.</this-protocol-draws-the-line-on-the-commit-and-push-surface></p>
+  <routine title="The default: routine proceeds">
+    <p><ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING fact="true" status="impl/done">**Routine large changes proceed without asking** — and are committed and pushed — when the
+activity has already been authorised. Routine means:</ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-ASKING></p>
     <list ordered="false">
-      <item><fact id="ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE" status="impl/done">implementing a planned milestone,</fact></item>
-      <item><fact id="ROUTINE-FINISHING-A-FEATURE-SLICE" status="impl/done">finishing
-  a feature slice,</fact></item>
-      <item><fact id="ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES" status="impl/done">a refactor touching many files for one coherent reason,</fact></item>
-      <item><fact id="ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP" status="impl/done">or any large-but-expected
-  step of work the human has already greenlit.</fact></item>
+      <item><ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE fact="true" status="impl/done">implementing a planned milestone,</ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE></item>
+      <item><ROUTINE-FINISHING-A-FEATURE-SLICE fact="true" status="impl/done">finishing
+  a feature slice,</ROUTINE-FINISHING-A-FEATURE-SLICE></item>
+      <item><ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES fact="true" status="impl/done">a refactor touching many files for one coherent reason,</ROUTINE-A-REFACTOR-TOUCHING-MANY-FILES></item>
+      <item><ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP fact="true" status="impl/done">or any large-but-expected
+  step of work the human has already greenlit.</ROUTINE-ANY-LARGE-BUT-EXPECTED-AUTHORISED-STEP></item>
     </list>
-    <p><fact id="the-approval-was-given-upstream" status="spec/done">The approval was given upstream; re-asking "shall I
-proceed?" mid-flow is overhead the human already paid for by authorising the activity.</fact></p>
-    <p><fact id="this-default-optimises-for-throughput" status="spec/done">This default optimises for throughput on work that is understood and approved.</fact></p>
-    <p><fact id="IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-IN-FORCE" status="impl/done">It presumes the
+    <p><the-approval-was-given-upstream fact="true" status="spec/done">The approval was given upstream; re-asking "shall I
+proceed?" mid-flow is overhead the human already paid for by authorising the activity.</the-approval-was-given-upstream></p>
+    <p><this-default-optimises-for-throughput fact="true" status="spec/done">This default optimises for throughput on work that is understood and approved.</this-default-optimises-for-throughput></p>
+    <p><IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-IN-FORCE fact="true" status="impl/done">It presumes the
 other disciplines are in force — the changes still land as atomic commits in the message format,
-and still respect every red line below.</fact></p>
-  </section>
-  <section id="red-lines" title="The red lines: non-routine stops and asks">
-    <p><fact id="A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST" status="impl/done">Regardless of any "proceed" posture, a fixed set of operations **always stops and asks first**,
-because their blast radius or irreversibility exceeds what an agent should assume authority over:</fact></p>
+and still respect every red line below.</IT-PRESUMES-THE-OTHER-DISCIPLINES-ARE-IN-FORCE></p>
+  </routine>
+  <red-lines title="The red lines: non-routine stops and asks">
+    <p><A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST fact="true" status="impl/done">Regardless of any "proceed" posture, a fixed set of operations **always stops and asks first**,
+because their blast radius or irreversibility exceeds what an agent should assume authority over:</A-FIXED-SET-OF-OPERATIONS-ALWAYS-STOPS-AND-ASKS-FIRST></p>
     <list ordered="false">
-      <item><fact id="RED-LINE-REWRITING-PUBLISHED-HISTORY" status="impl/done">**Rewriting published history** — rebasing pushed commits, `git commit --amend` on pushed work.</fact></item>
-      <item><fact id="RED-LINE-FORCE-OPERATIONS" status="impl/done">**Force operations** — `git push --force` / `--force-with-lease`.</fact></item>
-      <item><fact id="RED-LINE-LARGE-BINARY-BLOBS" status="impl/done">**Large binary blobs** — anything that bloats the repository irreversibly.</fact></item>
-      <item><fact id="RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION" status="impl/done">**CI, signing, or secrets configuration** — changes with reach beyond the working tree.</fact></item>
-      <item><fact id="RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK" status="impl/done">**Anything whose reversal would cost work** — the catch-all; if undoing it is expensive, ask.</fact></item>
+      <item><RED-LINE-REWRITING-PUBLISHED-HISTORY fact="true" status="impl/done">**Rewriting published history** — rebasing pushed commits, `git commit --amend` on pushed work.</RED-LINE-REWRITING-PUBLISHED-HISTORY></item>
+      <item><RED-LINE-FORCE-OPERATIONS fact="true" status="impl/done">**Force operations** — `git push --force` / `--force-with-lease`.</RED-LINE-FORCE-OPERATIONS></item>
+      <item><RED-LINE-LARGE-BINARY-BLOBS fact="true" status="impl/done">**Large binary blobs** — anything that bloats the repository irreversibly.</RED-LINE-LARGE-BINARY-BLOBS></item>
+      <item><RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION fact="true" status="impl/done">**CI, signing, or secrets configuration** — changes with reach beyond the working tree.</RED-LINE-CI-SIGNING-OR-SECRETS-CONFIGURATION></item>
+      <item><RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**Anything whose reversal would cost work** — the catch-all; if undoing it is expensive, ask.</RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK></item>
     </list>
-    <p><fact id="THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE" status="impl/done">These are not suspended by a heads-down / "move fast" posture: a mode may remove the
+    <p><THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE fact="true" status="impl/done">These are not suspended by a heads-down / "move fast" posture: a mode may remove the
 "may I proceed with routine work?" handshake, but never the "may I cross an irreversible
-threshold?" one.</fact></p>
-    <p><fact id="THE-AGENT-STOPS-REPORTS-AND-ASKS-AT-THE-BOUNDARY" status="impl/done">If a step cannot land without crossing a red line, the agent stops at that
-boundary, reports, and asks.</fact></p>
-  </section>
-  <section id="uncertain" title="When uncertain, ask">
-    <p><fact id="THE-LINE-IS-A-JUDGMENT-CALL" status="impl/done">The line between routine and non-routine is a judgment call.</fact></p>
-    <p><fact id="DEFAULT-TO-ASKING-NEAR-THE-BOUNDARY" status="impl/done">When a change sits near the
+threshold?" one.</THE-RED-LINES-ARE-NOT-SUSPENDED-BY-A-MOVE-FAST-POSTURE></p>
+    <p><THE-AGENT-STOPS-REPORTS-AND-ASKS-AT-THE-BOUNDARY fact="true" status="impl/done">If a step cannot land without crossing a red line, the agent stops at that
+boundary, reports, and asks.</THE-AGENT-STOPS-REPORTS-AND-ASKS-AT-THE-BOUNDARY></p>
+  </red-lines>
+  <uncertain title="When uncertain, ask">
+    <p><THE-LINE-IS-A-JUDGMENT-CALL fact="true" status="impl/done">The line between routine and non-routine is a judgment call.</THE-LINE-IS-A-JUDGMENT-CALL></p>
+    <p><DEFAULT-TO-ASKING-NEAR-THE-BOUNDARY fact="true" status="impl/done">When a change sits near the
 boundary — its reversal cost is unclear, or it touches a surface the human tends to guard —
-default to asking.</fact></p>
-    <p><fact id="a-surplus-question-costs-a-moment" status="spec/done">A surplus question costs a moment; a surplus irreversible action costs work.</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="NAME-YOUR-OWN-RED-LINE-SET" status="impl/done">Name your own red-line set — the operations in *your* stack whose reversal costs real work
+default to asking.</DEFAULT-TO-ASKING-NEAR-THE-BOUNDARY></p>
+    <p><a-surplus-question-costs-a-moment fact="true" status="spec/done">A surplus question costs a moment; a surplus irreversible action costs work.</a-surplus-question-costs-a-moment></p>
+  </uncertain>
+  <re-derive title="Re-derive for your project">
+    <p><NAME-YOUR-OWN-RED-LINE-SET fact="true" status="impl/done">Name your own red-line set — the operations in *your* stack whose reversal costs real work
 (a production deploy, a schema migration, a published release) — and state that everything
-outside it, once authorised, proceeds without a handshake.</fact></p>
-    <p><fact id="the-shape-is-universal-the-red-lines-are-yours" status="spec/done">The shape is universal; the specific
-red lines are yours.</fact></p>
-  </section>
+outside it, once authorised, proceeds without a handshake.</NAME-YOUR-OWN-RED-LINE-SET></p>
+    <p><the-shape-is-universal-the-red-lines-are-yours fact="true" status="spec/done">The shape is universal; the specific
+red lines are yours.</the-shape-is-universal-the-red-lines-are-yours></p>
+  </re-derive>
 </spec>

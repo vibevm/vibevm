@@ -2,38 +2,38 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Revisit triggers</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** Why a decision without a revisit
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** Why a decision without a revisit
 condition rots into a sacred cow, what a measurable trigger is made
 of, good and bad trigger shapes, the periodic sweep that actually
-fires triggers, and the procedure when one fires.</fact></p>
-  <p><fact id="record-shape-pointer" status="impl/done">The record shape
-itself lives in [`record-template.md`](record-template.md).</fact></p>
-  <section id="sacred-cows" title="Why decisions rot without triggers">
-    <p><fact id="EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA" status="spec/done">Every decision is correct *relative to data*: 600 s is right while
-15 % of users sit behind slow corporate VPNs.</fact></p>
-    <p><fact id="data-changes-and-the-decision-outlives-its-reason" status="spec/done">Then the data changes —
+fires triggers, and the procedure when one fires.</scope-of-this-document></p>
+  <p><record-shape-pointer fact="true" status="impl/done">The record shape
+itself lives in [`record-template.md`](record-template.md).</record-shape-pointer></p>
+  <sacred-cows title="Why decisions rot without triggers">
+    <p><EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA fact="true" status="spec/done">Every decision is correct *relative to data*: 600 s is right while
+15 % of users sit behind slow corporate VPNs.</EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA></p>
+    <p><data-changes-and-the-decision-outlives-its-reason fact="true" status="spec/done">Then the data changes —
 networks get faster, the library ships the missing feature, the
 compliance regime shifts — and the decision quietly outlives its
-reason.</fact></p>
-    <p><fact id="two-failures-lead" status="spec/done">Without a recorded revisit condition, one of two failures follows:</fact></p>
+reason.</data-changes-and-the-decision-outlives-its-reason></p>
+    <p><two-failures-lead fact="true" status="spec/done">Without a recorded revisit condition, one of two failures follows:</two-failures-lead></p>
     <list ordered="false">
-      <item><fact id="FAILURE-THE-SACRED-COW" status="spec/done">**The sacred cow.** The value is written down, so nobody dares
+      <item><FAILURE-THE-SACRED-COW fact="true" status="spec/done">**The sacred cow.** The value is written down, so nobody dares
   question it. The reason expired long ago; the decision survives on
   the authority of being recorded. Recording — the thing meant to
-  preserve reasoning — now preserves a fossil.</fact></item>
-      <item><fact id="FAILURE-THE-PERMANENT-RE-LITIGATION" status="spec/done">**The permanent re-litigation.** The opposite failure: with no
+  preserve reasoning — now preserves a fossil.</FAILURE-THE-SACRED-COW></item>
+      <item><FAILURE-THE-PERMANENT-RE-LITIGATION fact="true" status="spec/done">**The permanent re-litigation.** The opposite failure: with no
   stated condition for reopening, every reader feels free to reopen
-  at any time, and the record's immunity is worth nothing.</fact></item>
+  at any time, and the record's immunity is worth nothing.</FAILURE-THE-PERMANENT-RE-LITIGATION></item>
     </list>
-    <p><fact id="TRIGGER-FIXES-BOTH-AT-ONCE" status="spec/done">The trigger fixes both at once.</fact></p>
-    <p><fact id="TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X" status="impl/done">It tells every future reader *this
+    <p><TRIGGER-FIXES-BOTH-AT-ONCE fact="true" status="spec/done">The trigger fixes both at once.</TRIGGER-FIXES-BOTH-AT-ONCE></p>
+    <p><TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X fact="true" status="impl/done">It tells every future reader *this
 decision stands until X* — which both forbids re-litigation before X
-and mandates it after.</fact></p>
-    <p><fact id="NO-CONDITION-MEANS-A-SACRED-COW" status="spec/done">A decision without a revisit condition
-becomes a sacred cow; a decision with one stays alive.</fact></p>
-  </section>
-  <section id="anatomy" title="Anatomy of a measurable trigger">
-    <p><fact id="A-TRIGGER-HAS-THREE-PARTS" status="impl/done">A trigger has three parts:</fact></p>
+and mandates it after.</TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X></p>
+    <p><NO-CONDITION-MEANS-A-SACRED-COW fact="true" status="spec/done">A decision without a revisit condition
+becomes a sacred cow; a decision with one stays alive.</NO-CONDITION-MEANS-A-SACRED-COW></p>
+  </sacred-cows>
+  <anatomy title="Anatomy of a measurable trigger">
+    <p><A-TRIGGER-HAS-THREE-PARTS fact="true" status="impl/done">A trigger has three parts:</A-TRIGGER-HAS-THREE-PARTS></p>
     <table>
       <tr>
         <td>Part</td>
@@ -41,38 +41,38 @@ becomes a sacred cow; a decision with one stays alive.</fact></p>
         <td>Example</td>
       </tr>
       <tr>
-        <td><fact id="ROW-PART-METRIC" status="impl/done">**Metric**</fact></td>
+        <td><ROW-PART-METRIC fact="true" status="impl/done">**Metric**</ROW-PART-METRIC></td>
         <td><fact status="impl/done">What signal is watched?</fact></td>
         <td><fact status="impl/done">p99 delivery latency</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-PART-THRESHOLD" status="impl/done">**Threshold**</fact></td>
+        <td><ROW-PART-THRESHOLD fact="true" status="impl/done">**Threshold**</ROW-PART-THRESHOLD></td>
         <td><fact status="impl/done">What value crossing counts?</fact></td>
         <td><fact status="impl/done">below 100 s</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-PART-OBSERVATION-POINT" status="impl/done">**Observation point**</fact></td>
+        <td><ROW-PART-OBSERVATION-POINT fact="true" status="impl/done">**Observation point**</ROW-PART-OBSERVATION-POINT></td>
         <td><fact status="impl/done">Where would one look?</fact></td>
         <td><fact status="impl/done">the network monitoring dashboard</fact></td>
       </tr>
     </table>
-    <p><fact id="ALL-THREE-OR-IT-IS-NOT-A-TRIGGER" status="impl/done">All three, or it is not a trigger.</fact></p>
-    <p><fact id="why-each-of-the-three-parts-is-needed" status="spec/done">A metric without a threshold
+    <p><ALL-THREE-OR-IT-IS-NOT-A-TRIGGER fact="true" status="impl/done">All three, or it is not a trigger.</ALL-THREE-OR-IT-IS-NOT-A-TRIGGER></p>
+    <p><why-each-of-the-three-parts-is-needed fact="true" status="spec/done">A metric without a threshold
 cannot fire; a threshold without an observation point cannot be
-checked; an observation point nobody has is a wish.</fact></p>
-    <p><fact id="EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT" status="impl/done">**Event triggers** are the sanctioned variant for non-numeric
-conditions: an external event that is unambiguous when it happens.</fact></p>
-    <p><fact id="event-trigger-examples" status="spec/done">"A compliance requirement mandates a NIST-approved hash"; "upstream
-ships no release for 24 months"; "the vendor removes the v1 API".</fact></p>
-    <p><fact id="EVENT-TRIGGERS-TAKE-THE-SAME-TEST" status="impl/done">The test is the same — a stranger could answer yes-or-no today.</fact></p>
-    <p><fact id="UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE" status="impl/done">**Unobservable triggers** are as bad as none.</fact></p>
-    <p><fact id="COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER" status="impl/done">If the trigger names a
+checked; an observation point nobody has is a wish.</why-each-of-the-three-parts-is-needed></p>
+    <p><EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT fact="true" status="impl/done">**Event triggers** are the sanctioned variant for non-numeric
+conditions: an external event that is unambiguous when it happens.</EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT></p>
+    <p><event-trigger-examples fact="true" status="spec/done">"A compliance requirement mandates a NIST-approved hash"; "upstream
+ships no release for 24 months"; "the vendor removes the v1 API".</event-trigger-examples></p>
+    <p><EVENT-TRIGGERS-TAKE-THE-SAME-TEST fact="true" status="impl/done">The test is the same — a stranger could answer yes-or-no today.</EVENT-TRIGGERS-TAKE-THE-SAME-TEST></p>
+    <p><UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE fact="true" status="impl/done">**Unobservable triggers** are as bad as none.</UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE></p>
+    <p><COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER fact="true" status="impl/done">If the trigger names a
 metric the project does not collect, either start collecting it or
-rewrite the trigger against a signal that exists.</fact></p>
-    <p><fact id="sweep-reports-unobservable-triggers" status="impl/done">The periodic sweep
-below reports these explicitly.</fact></p>
-  </section>
-  <section id="good-bad" title="Good and bad triggers">
+rewrite the trigger against a signal that exists.</COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER></p>
+    <p><sweep-reports-unobservable-triggers fact="true" status="impl/done">The periodic sweep
+below reports these explicitly.</sweep-reports-unobservable-triggers></p>
+  </anatomy>
+  <good-bad title="Good and bad triggers">
     <table>
       <tr>
         <td>Trigger</td>
@@ -80,65 +80,65 @@ below reports these explicitly.</fact></p>
         <td>Why</td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-P99-LATENCY" status="impl/done">"p99 delivery latency drops below 100 s, per the monitoring dashboard"</fact></td>
+        <td><ROW-TRIGGER-P99-LATENCY fact="true" status="impl/done">"p99 delivery latency drops below 100 s, per the monitoring dashboard"</ROW-TRIGGER-P99-LATENCY></td>
         <td><fact status="impl/done">Good</fact></td>
         <td><fact status="impl/done">Metric, threshold, observation point.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-HOT-PATH-CPU" status="impl/done">"hot-path CPU exceeds 80 % in the weekly perf run"</fact></td>
+        <td><ROW-TRIGGER-HOT-PATH-CPU fact="true" status="impl/done">"hot-path CPU exceeds 80 % in the weekly perf run"</ROW-TRIGGER-HOT-PATH-CPU></td>
         <td><fact status="impl/done">Good</fact></td>
         <td><fact status="impl/done">Fires from a run that already happens.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-UPSTREAM-SILENT" status="impl/done">"upstream ships no release for 24 months"</fact></td>
+        <td><ROW-TRIGGER-UPSTREAM-SILENT fact="true" status="impl/done">"upstream ships no release for 24 months"</ROW-TRIGGER-UPSTREAM-SILENT></td>
         <td><fact status="impl/done">Good</fact></td>
         <td><fact status="impl/done">Event; checkable from the repository today.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-COMPLIANCE-MANDATE" status="impl/done">"a compliance mandate requires a NIST-approved hash"</fact></td>
+        <td><ROW-TRIGGER-COMPLIANCE-MANDATE fact="true" status="impl/done">"a compliance mandate requires a NIST-approved hash"</ROW-TRIGGER-COMPLIANCE-MANDATE></td>
         <td><fact status="impl/done">Good</fact></td>
         <td><fact status="impl/done">Unambiguous external event.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-WHEN-IT-BREAKS" status="impl/done">"when it breaks"</fact></td>
+        <td><ROW-TRIGGER-WHEN-IT-BREAKS fact="true" status="impl/done">"when it breaks"</ROW-TRIGGER-WHEN-IT-BREAKS></td>
         <td><fact status="impl/done">Bad</fact></td>
         <td><fact status="impl/done">Breakage is undefined and arrives too late to be a review.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-LATER" status="impl/done">"later" / "at some point"</fact></td>
+        <td><ROW-TRIGGER-LATER fact="true" status="impl/done">"later" / "at some point"</ROW-TRIGGER-LATER></td>
         <td><fact status="impl/done">Bad</fact></td>
         <td><fact status="impl/done">Never fires. This is "revisit: never" in costume.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-WHEN-WE-REFACTOR" status="impl/done">"when we refactor"</fact></td>
+        <td><ROW-TRIGGER-WHEN-WE-REFACTOR fact="true" status="impl/done">"when we refactor"</ROW-TRIGGER-WHEN-WE-REFACTOR></td>
         <td><fact status="impl/done">Bad</fact></td>
         <td><fact status="impl/done">Names an unrelated activity, not a signal about *this* decision.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM" status="impl/done">"if it becomes a problem"</fact></td>
+        <td><ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM fact="true" status="impl/done">"if it becomes a problem"</ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM></td>
         <td><fact status="impl/done">Bad</fact></td>
         <td><fact status="impl/done">No metric, no threshold, no observer — pure vibes.</fact></td>
       </tr>
     </table>
-    <p><fact id="THE-MECHANICAL-TEST" status="impl/done">The mechanical test: *"when it breaks" is not a trigger; a trigger
-is a measurable signal.*</fact></p>
-    <p><fact id="THE-FIVE-MINUTE-STRANGER-TEST" status="impl/done">If a stranger with access to the
+    <p><THE-MECHANICAL-TEST fact="true" status="impl/done">The mechanical test: *"when it breaks" is not a trigger; a trigger
+is a measurable signal.*</THE-MECHANICAL-TEST></p>
+    <p><THE-FIVE-MINUTE-STRANGER-TEST fact="true" status="impl/done">If a stranger with access to the
 observation point could not answer "has it fired?" in five minutes,
-rewrite it.</fact></p>
-  </section>
-  <section id="periodic-sweep" title="The periodic sweep">
-    <p><fact id="TRIGGERS-DO-NOT-FIRE-THEMSELVES" status="spec/done">Triggers do not fire themselves.</fact></p>
-    <p><fact id="nothing-pages-anyone-for-a-decision-grade-signal" status="spec/done">Nothing pages anyone when p99
+rewrite it.</THE-FIVE-MINUTE-STRANGER-TEST></p>
+  </good-bad>
+  <periodic-sweep title="The periodic sweep">
+    <p><TRIGGERS-DO-NOT-FIRE-THEMSELVES fact="true" status="spec/done">Triggers do not fire themselves.</TRIGGERS-DO-NOT-FIRE-THEMSELVES></p>
+    <p><nothing-pages-anyone-for-a-decision-grade-signal fact="true" status="spec/done">Nothing pages anyone when p99
 crosses 100 s — unless the project wires an alert, and most
-decision-grade signals never earn one.</fact></p>
-    <p><fact id="RE-READING-IS-WHAT-FIRES-TRIGGERS" status="impl/done">The mechanism that actually
-fires triggers is **re-reading**, on a rhythm:</fact></p>
+decision-grade signals never earn one.</nothing-pages-anyone-for-a-decision-grade-signal></p>
+    <p><RE-READING-IS-WHAT-FIRES-TRIGGERS fact="true" status="impl/done">The mechanism that actually
+fires triggers is **re-reading**, on a rhythm:</RE-READING-IS-WHAT-FIRES-TRIGGERS></p>
     <list ordered="false">
-      <item><fact id="RHYTHM-OPPORTUNISTIC" status="impl/done">**Opportunistic:** whenever a session touches a document, glance
-  at the triggers of the records in it. Cost: seconds.</fact></item>
-      <item><fact id="RHYTHM-PERIODIC" status="impl/done">**Periodic:** weekly, or at each milestone close — whichever
+      <item><RHYTHM-OPPORTUNISTIC fact="true" status="impl/done">**Opportunistic:** whenever a session touches a document, glance
+  at the triggers of the records in it. Cost: seconds.</RHYTHM-OPPORTUNISTIC></item>
+      <item><RHYTHM-PERIODIC fact="true" status="impl/done">**Periodic:** weekly, or at each milestone close — whichever
   rhythm the project already keeps — sweep all records and check
-  every trigger against current data. Delegate the sweep:</fact></item>
+  every trigger against current data. Delegate the sweep:</RHYTHM-PERIODIC></item>
     </list>
     <fence>Sweep the spec tree for decision records — sections carrying the
 Decision / Why / Considered and rejected / When to revisit fields.
@@ -151,60 +151,60 @@ For each record:
 Report a table: anchor, trigger, state, evidence. End with the list
 of unobservable triggers — each needs either a data source or a
 rewritten trigger. I will decide which records to reopen.</fence>
-    <p><fact id="SWEEP-OUTPUT-IS-A-REVIEW-QUEUE-NOT-AN-EDIT" status="impl/done">The sweep's output is a review queue, not an edit.</fact></p>
-    <p><fact id="FIRING-A-TRIGGER-IS-A-HUMAN-DECISION-POINT" status="impl/done">Firing a trigger
+    <p><SWEEP-OUTPUT-IS-A-REVIEW-QUEUE-NOT-AN-EDIT fact="true" status="impl/done">The sweep's output is a review queue, not an edit.</SWEEP-OUTPUT-IS-A-REVIEW-QUEUE-NOT-AN-EDIT></p>
+    <p><FIRING-A-TRIGGER-IS-A-HUMAN-DECISION-POINT fact="true" status="impl/done">Firing a trigger
 is a human decision-point, because what fires is a *question*, not
-an answer.</fact></p>
-  </section>
-  <section id="when-fired" title="When a trigger fires">
-    <p><fact id="RE-OPEN-THE-RECORD-NEVER-SILENTLY-EDIT-THE-VALUE" status="impl/done">Re-open the record — do not silently edit the value.</fact></p>
-    <p><fact id="the-failure-to-avoid" status="spec/done">The failure to
+an answer.</FIRING-A-TRIGGER-IS-A-HUMAN-DECISION-POINT></p>
+  </periodic-sweep>
+  <when-fired title="When a trigger fires">
+    <p><RE-OPEN-THE-RECORD-NEVER-SILENTLY-EDIT-THE-VALUE fact="true" status="impl/done">Re-open the record — do not silently edit the value.</RE-OPEN-THE-RECORD-NEVER-SILENTLY-EDIT-THE-VALUE></p>
+    <p><the-failure-to-avoid fact="true" status="spec/done">The failure to
 avoid: the constant changes in code, the record keeps the old why,
 and the spec now testifies to a reason that no longer produced the
-value.</fact></p>
-    <p><fact id="drift-manufactured-where-it-was-to-be-prevented" status="spec/done">That is drift manufactured at the exact point built to
-prevent it.</fact></p>
-    <p><fact id="procedure-lead" status="impl/done">Procedure:</fact></p>
+value.</the-failure-to-avoid></p>
+    <p><drift-manufactured-where-it-was-to-be-prevented fact="true" status="spec/done">That is drift manufactured at the exact point built to
+prevent it.</drift-manufactured-where-it-was-to-be-prevented></p>
+    <p><procedure-lead fact="true" status="impl/done">Procedure:</procedure-lead></p>
     <list ordered="true">
-      <item><fact id="STEP-NAME-THE-FIRED-STATE" status="impl/done">**Name the fired state.** "The trigger fired: p99 has been at
+      <item><STEP-NAME-THE-FIRED-STATE fact="true" status="impl/done">**Name the fired state.** "The trigger fired: p99 has been at
    82 s for three consecutive weeks, per the dashboard." This
    sentence opens the re-litigation legitimately — and it is the
-   only thing that does.</fact></item>
-      <item><fact id="STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA" status="impl/done">**Re-run the decision with current data.** The old rejected
+   only thing that does.</STEP-NAME-THE-FIRED-STATE></item>
+      <item><STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA fact="true" status="impl/done">**Re-run the decision with current data.** The old rejected
    alternatives get first look: their rejection reasons may have
-   expired along with the trigger.</fact></item>
-      <item><fact id="STEP-LAND-ONE-OF-TWO-OUTCOMES" status="impl/done">**Land one of two outcomes:**</fact></item>
-      <item><fact id="OUTCOME-REAFFIRMED" status="impl/done">**Reaffirmed.** The decision stands on new data. Refresh the
+   expired along with the trigger.</STEP-RE-RUN-THE-DECISION-WITH-CURRENT-DATA></item>
+      <item><STEP-LAND-ONE-OF-TWO-OUTCOMES fact="true" status="impl/done">**Land one of two outcomes:**</STEP-LAND-ONE-OF-TWO-OUTCOMES></item>
+      <item><OUTCOME-REAFFIRMED fact="true" status="impl/done">**Reaffirmed.** The decision stands on new data. Refresh the
      why with the new evidence and set a *new* trigger — a fired
-     trigger is spent.</fact></item>
-      <item><fact id="OUTCOME-CHANGED" status="impl/done">**Changed.** Rewrite the record in place — new decision, new
+     trigger is spent.</OUTCOME-REAFFIRMED></item>
+      <item><OUTCOME-CHANGED fact="true" status="impl/done">**Changed.** Rewrite the record in place — new decision, new
      why, new rejections (the old winner joins them, with its
      reason), new trigger. Add a dated line to the document's
-     version history. Git keeps the old text.</fact></item>
-      <item><fact id="STEP-COMMIT-CITING-THE-ANCHOR" status="impl/done">**Commit citing the anchor.** The commit body names the trigger
+     version history. Git keeps the old text.</OUTCOME-CHANGED></item>
+      <item><STEP-COMMIT-CITING-THE-ANCHOR fact="true" status="impl/done">**Commit citing the anchor.** The commit body names the trigger
    state that opened the record and cites the record's anchor; the
-   spec carries the reasoning, the commit points at it.</fact></item>
+   spec carries the reasoning, the commit points at it.</STEP-COMMIT-CITING-THE-ANCHOR></item>
     </list>
-    <p><fact id="NEVER-DELETE-A-RECORD-REWRITE-IT" status="impl/done">Never delete a record when a decision changes — rewrite it.</fact></p>
-    <p><fact id="why-rewriting-keeps-citations-live" status="spec/done">The
+    <p><NEVER-DELETE-A-RECORD-REWRITE-IT fact="true" status="impl/done">Never delete a record when a decision changes — rewrite it.</NEVER-DELETE-A-RECORD-REWRITE-IT></p>
+    <p><why-rewriting-keeps-citations-live fact="true" status="spec/done">The
 anchor stays stable, every citation into it stays live, and the
-superseded reasoning remains one `git log -p` away.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+superseded reasoning remains one `git log -p` away.</why-rewriting-keeps-citations-live></p>
+  </when-fired>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-NO-CONDITION-MEANS-A-SACRED-COW" status="spec/done">A decision without a revisit condition becomes a sacred cow — or a
-  permanent re-litigation target. The trigger prevents both.</fact></item>
-      <item><fact id="SUM-WHAT-A-TRIGGER-IS-MADE-OF" status="impl/done">A trigger is metric + threshold + observation point, or an
+      <item><SUM-NO-CONDITION-MEANS-A-SACRED-COW fact="true" status="spec/done">A decision without a revisit condition becomes a sacred cow — or a
+  permanent re-litigation target. The trigger prevents both.</SUM-NO-CONDITION-MEANS-A-SACRED-COW></item>
+      <item><SUM-WHAT-A-TRIGGER-IS-MADE-OF fact="true" status="impl/done">A trigger is metric + threshold + observation point, or an
   unambiguous external event. "Later" and "when it breaks" are not
-  triggers.</fact></item>
-      <item><fact id="SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE" status="impl/done">Unobservable triggers are as bad as none: collect the signal or
-  rewrite the trigger.</fact></item>
-      <item><fact id="SUM-TRIGGERS-FIRE-BY-BEING-RE-READ" status="impl/done">Triggers fire by being re-read: opportunistically on touch,
+  triggers.</SUM-WHAT-A-TRIGGER-IS-MADE-OF></item>
+      <item><SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE fact="true" status="impl/done">Unobservable triggers are as bad as none: collect the signal or
+  rewrite the trigger.</SUM-UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE></item>
+      <item><SUM-TRIGGERS-FIRE-BY-BEING-RE-READ fact="true" status="impl/done">Triggers fire by being re-read: opportunistically on touch,
   periodically by sweep. Delegate the sweep; keep the reopening
-  decision human.</fact></item>
-      <item><fact id="SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD" status="impl/done">A fired trigger re-opens the record, never silently edits the
+  decision human.</SUM-TRIGGERS-FIRE-BY-BEING-RE-READ></item>
+      <item><SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD fact="true" status="impl/done">A fired trigger re-opens the record, never silently edits the
   value. Reaffirm with a fresh why and a new trigger, or rewrite in
-  place with a changelog line. Git is the history.</fact></item>
+  place with a changelog line. Git is the history.</SUM-A-FIRED-TRIGGER-RE-OPENS-THE-RECORD></item>
     </list>
-  </section>
+  </summary>
 </spec>

@@ -13,7 +13,7 @@ across sub-agents is fractality's own system. The decidable *how* — the routin
 the per-model playbooks — is the sibling **delegation-rules** flow
 (`spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`);
 this document is the standing *directive* above that calculus.</p>
-  <section id="thesis" title="The scarce resource">
+  <thesis title="The scarce resource">
     <p>In a boss–worker setup the boss agent's **context and reasoning are the
 scarcest, most expensive resource in the room** — a large, metered,
 finite budget that every token of grunt work spends. The cheap worker
@@ -32,8 +32,8 @@ smart work, architecture, judgment, review — and **95% to the workers**
 for delegable execution, because that is the real split between judgment
 and execution. Under-delegating is the failure this directive exists to
 prevent.</p>
-  </section>
-  <section id="default" title="Delegate execution by default">
+  </thesis>
+  <default title="Delegate execution by default">
     <p>Delegate execution; keep the boss for **architecture, planning,
 judgment, and review**. Size the packet coarsely — goal, exact
 paths/APIs, non-goals, an acceptance command — and let a capable worker
@@ -45,8 +45,8 @@ only before the *delegation step*.</p>
 merely orchestrates moves few tokens and wins big; the moment it does
 the token-heavy work itself, the arithmetic inverts. Never let the boss
 carry the token-heavy execution.</p>
-  </section>
-  <section id="calculus" title="The calculus">
+  </default>
+  <calculus title="The calculus">
     <p>The decision rule is one law: **delegate when verification is cheaper
 than generation.** Score the task — error cost, context transferability,
 verifiability, size — and run the verdict procedure in the
@@ -55,8 +55,8 @@ cheapest worker; a substantial but verifiable one goes to the capable
 worker as a coarse one-shot; the rest stays boss-side. Routing works in
 capability slots (`big` / `small`) that map to models — today `big` is
 GLM-5.2 (below).</p>
-  </section>
-  <section id="big-model" title="Don&apos;t fear the big model">
+  </calculus>
+  <big-model title="Don&apos;t fear the big model">
     <p>The capable worker slot — today **GLM-5.2** (the `big` slot; name it
 explicitly so it is reached for systematically, and grow the list of
 supported big models as new ones land) — is for **substantial one-shot
@@ -65,8 +65,8 @@ document distilled — not just trivia. `glm-5-turbo` (the `small` slot)
 takes bounded mechanical transforms. Big models earn coarse prompts:
 state the goal and the acceptance, not a line-by-line script. Under-using
 the capable slot on only-trivia is the same waste as not delegating at all.</p>
-  </section>
-  <section id="strong-form" title="The strong, mandatory form">
+  </big-model>
+  <strong-form title="The strong, mandatory form">
     <p>A project may harden this directive from a **default** into a **mandatory
 law**: delegation is not merely preferred but required for every bulk,
 mechanical, or read-and-summarize step, and the boss records per session
@@ -80,8 +80,8 @@ run to finish. In vibevm's fractality this strong form is the workspace's
 ⛔ DELEGATION LAW — a mandatory, mechanized delegation contract with the
 delegated/kept scoreboard and the live-observation protocol; a project's
 exact scoreboard format and telemetry channel live in its host contract.</p>
-  </section>
-  <section id="recursion" title="Enable recursion when a task needs it">
+  </strong-form>
+  <recursion title="Enable recursion when a task needs it">
     <p>**RLM** — recursive language-model delegation: a worker that itself
 sub-delegates or escalates, rather than the boss doing so — is off by
 default. When a task is deep enough to need it, **recommend enabling RLM**
@@ -91,8 +91,8 @@ spawn`) and/or `ask_boss = true` (so it may escalate). That is your whole
 part — you recommend enabling RLM and set the flag; fractality's RLM
 machinery then decides how the recursion descends and ascends. Do not drive
 or shape the recursion yourself.</p>
-  </section>
-  <section id="swarm" title="Swarm and fan-out">
+  </recursion>
+  <swarm title="Swarm and fan-out">
     <p>When a task fans out into many parallel pieces, that is still **one
 first-level delegation**: hand the whole fan-out to fractality
 (`fractality spawn &lt;packet&gt;`, then `fractality wait` / `fractality tree` to
@@ -102,8 +102,8 @@ prescribe how it parallelizes, do not manage the sub-workers yourself. Your
 job begins and ends at the first-level hand-off and the review of the
 result; how the work is divided below that is fractality's system, not
 yours to direct.</p>
-  </section>
-  <section id="review" title="Always review">
+  </swarm>
+  <review title="Always review">
     <p>**Delegated output is advisory until you read the diff as you would a
 contributor's pull request and the acceptance/gate is green** — whatever
 the worker claimed. Verification is the boss's half of the bargain;
@@ -113,8 +113,8 @@ delegation safe cannot itself be handed to the thing being checked.</p>
     <p>Bound the retries: a failed packet escalates at most twice (cheap →
 capable → boss reclaims); past that the economics have inverted and the
 boss takes it.</p>
-  </section>
-  <section id="never-delegate" title="The never-delegate set">
+  </review>
+  <never-delegate title="The never-delegate set">
     <p>Always the boss's own work, regardless of the calculus:</p>
     <list ordered="false">
       <item>**Secrets and credential surfaces** — anything reading, writing, or
@@ -133,8 +133,8 @@ boss takes it.</p>
 facing actions, published-history rewrites, and the like) bind *before*
 a task is delegated, not only when done directly — the never-delegate
 set is narrower than that gate and never replaces it.</p>
-  </section>
-  <section id="surface" title="Surface the analysis out loud">
+  </never-delegate>
+  <surface title="Surface the analysis out loud">
     <p>For **any non-trivial task**, before executing, **state how the work
 could be delegated or parallelized** — through the harness's own agent
 fan-out where it has one, or through the worker fabric, with the fabric
@@ -142,16 +142,16 @@ preferred where both fit. This is an out-loud verdict the user sees
 every time, per non-trivial task — even when the verdict is "keep it
 boss-side", and then you say *why* (which never-delegate reason, or the
 cost math). Trivial mechanical edits are exempt: just do them.</p>
-  </section>
-  <section id="harness" title="Announce the harness first">
+  </surface>
+  <harness title="Announce the harness first">
     <p>In the **first response of every session**, state plainly which
 harness/agent and model is running it, and treat that as a cached fact
 for the rest of the session. The host decides the delegation menu — some
 harnesses have their own agent-spawn, others have the worker fabric as
 their only route — so the analysis above reads the cached host instead
 of re-deriving it each time.</p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
+  </harness>
+  <re-derive title="Re-derive for your project">
     <p>Copy the *task*, not the wording. Paste this to your boss agent:</p>
     <fence>Read spec/flows/delegation-first/ and its sibling delegation-rules flow.
 Then map them onto THIS setup:
@@ -164,8 +164,8 @@ Then map them onto THIS setup:
    step out loud: how it splits, what delegates, what stays boss-side
    and why.
 Show me the mapping; change no workflow until I approve.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
       <item>The boss's context and reasoning are the scarce, expensive resource;
   cheap workers are idle capital. Delegate execution by default.</item>
@@ -181,5 +181,5 @@ Show me the mapping; change no workflow until I approve.</fence>
       <item>Surface the delegation analysis out loud on every non-trivial task;
   announce the harness once per session.</item>
     </list>
-  </section>
+  </summary>
 </spec>

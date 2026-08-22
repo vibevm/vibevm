@@ -2,144 +2,144 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The AI-Native Code Discipline — Manifesto</title>
   <status stage="spec" state="done"/>
-  <p><fact id="status-line" status="impl/done">**Discipline v0.2 · status: BETA · supersedes DISCIPLINE-CHARTER-v0.1**</fact></p>
-  <p><fact id="root-document" status="impl/done">*This is the root document of the Discipline.*</fact></p>
-  <p><fact id="DISCIPLINE-IS-A-PRODUCT" status="impl/done">*The Discipline is a product in its own right: a language-independent set of principles, plus per-language projections, for writing code that is optimal for COMPREHENSION and SAFE MODIFICATION by AI agents — explicitly including weak readers.*</fact></p>
-  <p><fact id="VIBEVM-IS-FIRST-PILOT" status="impl/done">*vibevm is the first pilot of this product, not its scope boundary.*</fact></p>
-  <p><fact id="MATURITY-MARKED-EVERYWHERE" status="impl/done">*Maturity is marked everywhere.*</fact></p>
-  <p><fact id="MATURITY-CLAIM-CLASSES" status="impl/done">*Some claims are benchmark-backed [E-strong], some are supported by adjacent evidence [E-mid], some are first-principles awaiting validation [E-hyp].*</fact></p>
-  <p><fact id="FALSIFIABLE-BETA" status="impl/done">*This document is a falsifiable beta, revised on pilot evidence only.*</fact></p>
-  <section id="what-this-is" title="0. What this is, in one paragraph">
-    <p><fact id="generation-is-already-good" status="spec/done">Code generation by frontier models is already good.</fact></p>
-    <p><fact id="unsolved-problem-is-the-lifecycle" status="spec/done">The unsolved problem is the rest of the lifecycle: a model — often a *different, weaker* model than the author — must later read, understand, and safely change that code.</fact></p>
-    <p><fact id="discipline-optimizes-for-that" status="impl/done">The Discipline optimizes for that.</fact></p>
-    <p><fact id="SINGLE-DESIGN-TARGET" status="impl/done">Its single design target is to **lower the minimum model capability required to maintain code safely**, so that a swarm of small agents can maintain code that a frontier model authored.</fact></p>
-  </section>
-  <section id="target-function" title="1. The target function: author/reader asymmetry">
-    <p><fact id="economics-that-justify" status="spec/done">The economics that justify everything below: a strong author runs **once**; weak readers run **thousands of times**.</fact></p>
-    <p><fact id="MOVES-COST-TO-AUTHORING-TIME" status="impl/done">So the discipline moves cost from maintenance-time to authoring-time.</fact></p>
-    <p><fact id="AUTHOR-MATERIALIZES-CAPITAL" status="impl/done">The strong author materializes expensive cognition into infrastructure — meta-layer, contracts, executable scaffolds, recorded rationale — and the weak swarm lives off that capital.</fact></p>
-    <p><fact id="CAPABILITY-GAP-COMPENSATOR" status="impl/done">**The Discipline is a capability-gap compensator.**</fact></p>
-    <p><fact id="CLEVER-CONSTRUCT-IS-THEFT" status="impl/done">A clever construct with no materialized rationale is theft from the reader pool.</fact></p>
-    <p><fact id="simpler-is-the-wrong-frame" status="spec/done">This is why "make the code simpler" is the wrong frame.</fact></p>
-    <p><fact id="LOWERING-THE-FLOOR-NOT-THE-CEILING" status="impl/done">We are not lowering the ceiling of what the code does; we are lowering the floor of who can safely touch it.</fact></p>
-  </section>
-  <section id="six-axioms" title="2. The six axioms, projected to the language level">
-    <p><fact id="axioms-lead" status="impl/done">The axioms are unchanged from the Charter; here is what each *means for how code and its metadata are written*.</fact></p>
+  <p><status-line fact="true" status="impl/done">**Discipline v0.2 · status: BETA · supersedes DISCIPLINE-CHARTER-v0.1**</status-line></p>
+  <p><root-document fact="true" status="impl/done">*This is the root document of the Discipline.*</root-document></p>
+  <p><DISCIPLINE-IS-A-PRODUCT fact="true" status="impl/done">*The Discipline is a product in its own right: a language-independent set of principles, plus per-language projections, for writing code that is optimal for COMPREHENSION and SAFE MODIFICATION by AI agents — explicitly including weak readers.*</DISCIPLINE-IS-A-PRODUCT></p>
+  <p><VIBEVM-IS-FIRST-PILOT fact="true" status="impl/done">*vibevm is the first pilot of this product, not its scope boundary.*</VIBEVM-IS-FIRST-PILOT></p>
+  <p><MATURITY-MARKED-EVERYWHERE fact="true" status="impl/done">*Maturity is marked everywhere.*</MATURITY-MARKED-EVERYWHERE></p>
+  <p><MATURITY-CLAIM-CLASSES fact="true" status="impl/done">*Some claims are benchmark-backed [E-strong], some are supported by adjacent evidence [E-mid], some are first-principles awaiting validation [E-hyp].*</MATURITY-CLAIM-CLASSES></p>
+  <p><FALSIFIABLE-BETA fact="true" status="impl/done">*This document is a falsifiable beta, revised on pilot evidence only.*</FALSIFIABLE-BETA></p>
+  <what-this-is title="0. What this is, in one paragraph">
+    <p><generation-is-already-good fact="true" status="spec/done">Code generation by frontier models is already good.</generation-is-already-good></p>
+    <p><unsolved-problem-is-the-lifecycle fact="true" status="spec/done">The unsolved problem is the rest of the lifecycle: a model — often a *different, weaker* model than the author — must later read, understand, and safely change that code.</unsolved-problem-is-the-lifecycle></p>
+    <p><discipline-optimizes-for-that fact="true" status="impl/done">The Discipline optimizes for that.</discipline-optimizes-for-that></p>
+    <p><SINGLE-DESIGN-TARGET fact="true" status="impl/done">Its single design target is to **lower the minimum model capability required to maintain code safely**, so that a swarm of small agents can maintain code that a frontier model authored.</SINGLE-DESIGN-TARGET></p>
+  </what-this-is>
+  <target-function title="1. The target function: author/reader asymmetry">
+    <p><economics-that-justify fact="true" status="spec/done">The economics that justify everything below: a strong author runs **once**; weak readers run **thousands of times**.</economics-that-justify></p>
+    <p><MOVES-COST-TO-AUTHORING-TIME fact="true" status="impl/done">So the discipline moves cost from maintenance-time to authoring-time.</MOVES-COST-TO-AUTHORING-TIME></p>
+    <p><AUTHOR-MATERIALIZES-CAPITAL fact="true" status="impl/done">The strong author materializes expensive cognition into infrastructure — meta-layer, contracts, executable scaffolds, recorded rationale — and the weak swarm lives off that capital.</AUTHOR-MATERIALIZES-CAPITAL></p>
+    <p><CAPABILITY-GAP-COMPENSATOR fact="true" status="impl/done">**The Discipline is a capability-gap compensator.**</CAPABILITY-GAP-COMPENSATOR></p>
+    <p><CLEVER-CONSTRUCT-IS-THEFT fact="true" status="impl/done">A clever construct with no materialized rationale is theft from the reader pool.</CLEVER-CONSTRUCT-IS-THEFT></p>
+    <p><simpler-is-the-wrong-frame fact="true" status="spec/done">This is why "make the code simpler" is the wrong frame.</simpler-is-the-wrong-frame></p>
+    <p><LOWERING-THE-FLOOR-NOT-THE-CEILING fact="true" status="impl/done">We are not lowering the ceiling of what the code does; we are lowering the floor of who can safely touch it.</LOWERING-THE-FLOOR-NOT-THE-CEILING></p>
+  </target-function>
+  <six-axioms title="2. The six axioms, projected to the language level">
+    <p><axioms-lead fact="true" status="impl/done">The axioms are unchanged from the Charter; here is what each *means for how code and its metadata are written*.</axioms-lead></p>
     <list ordered="false">
-      <item><fact id="AXIOM-A1-EXPLAINABILITY" status="impl/done">**A1 — Explainability.** Every artifact carries a machine-resolvable chain from code to requirement to rationale (`spec://` URIs, in-source `#[spec(...)]` edges). Unexplainable code is unmergeable. *Language-level:* identifiers, errors, and items are anchored to requirements, not free-floating.</fact></item>
-      <item><fact id="AXIOM-A2-NEVER-PAY-TWICE" status="impl/done">**A2 — Never pay twice.** Derived cognition is materialized content-addressed and dependency-tracked. *Language-level:* anything mechanically derivable (boilerplate, indexes, glue) is generated, not hand-maintained; the strong author's analysis is stored, not re-run.</fact></item>
-      <item><fact id="AXIOM-A3-ALGORITHMIC-FLOOR" status="impl/done">**A3 — Algorithmic floor.** Where a deterministic procedure exists, the LLM is forbidden; its outputs sink below the floor. *Language-level:* push as much intent as possible into machine-checkable form — types, exhaustiveness, contracts — so a checker, not a model, enforces it. **This is the engine of the central law (§3).**</fact></item>
-      <item><fact id="AXIOM-A4-HUMAN-ACCOUNTABILITY" status="impl/done">**A4 — Human accountability.** AI checks and proposes; the human is the accountable author; diffs stay human-reviewable. *Language-level:* no change is so clever a human cannot review it; determinism keeps diffs semantic.</fact></item>
-      <item><fact id="AXIOM-A5-RULE-IS-CODE" status="impl/done">**A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. *Language-level:* a style rule with no linter is not a rule; it is documentation that decays (see §6). Rulebook health is the wish-ratio, not the page count.</fact></item>
-      <item><fact id="AXIOM-A6-REALITY-BEFORE-ASPIRATION" status="impl/done">**A6 — Reality before aspiration.** Gates measure deltas against inventoried reality; debt, unimplemented intent, and contradiction are first-class tracked objects. *Language-level:* the code's actual state — not its intended state — is what tooling reasons over.</fact></item>
+      <item><AXIOM-A1-EXPLAINABILITY fact="true" status="impl/done">**A1 — Explainability.** Every artifact carries a machine-resolvable chain from code to requirement to rationale (`spec://` URIs, in-source `#[spec(...)]` edges). Unexplainable code is unmergeable. *Language-level:* identifiers, errors, and items are anchored to requirements, not free-floating.</AXIOM-A1-EXPLAINABILITY></item>
+      <item><AXIOM-A2-NEVER-PAY-TWICE fact="true" status="impl/done">**A2 — Never pay twice.** Derived cognition is materialized content-addressed and dependency-tracked. *Language-level:* anything mechanically derivable (boilerplate, indexes, glue) is generated, not hand-maintained; the strong author's analysis is stored, not re-run.</AXIOM-A2-NEVER-PAY-TWICE></item>
+      <item><AXIOM-A3-ALGORITHMIC-FLOOR fact="true" status="impl/done">**A3 — Algorithmic floor.** Where a deterministic procedure exists, the LLM is forbidden; its outputs sink below the floor. *Language-level:* push as much intent as possible into machine-checkable form — types, exhaustiveness, contracts — so a checker, not a model, enforces it. **This is the engine of the central law (§3).**</AXIOM-A3-ALGORITHMIC-FLOOR></item>
+      <item><AXIOM-A4-HUMAN-ACCOUNTABILITY fact="true" status="impl/done">**A4 — Human accountability.** AI checks and proposes; the human is the accountable author; diffs stay human-reviewable. *Language-level:* no change is so clever a human cannot review it; determinism keeps diffs semantic.</AXIOM-A4-HUMAN-ACCOUNTABILITY></item>
+      <item><AXIOM-A5-RULE-IS-CODE fact="true" status="impl/done">**A5 — Rule = code.** Every rule ships a checker or is explicitly a WISH. *Language-level:* a style rule with no linter is not a rule; it is documentation that decays (see §6). Rulebook health is the wish-ratio, not the page count.</AXIOM-A5-RULE-IS-CODE></item>
+      <item><AXIOM-A6-REALITY-BEFORE-ASPIRATION fact="true" status="impl/done">**A6 — Reality before aspiration.** Gates measure deltas against inventoried reality; debt, unimplemented intent, and contradiction are first-class tracked objects. *Language-level:* the code's actual state — not its intended state — is what tooling reasons over.</AXIOM-A6-REALITY-BEFORE-ASPIRATION></item>
     </list>
-  </section>
-  <section id="the-central-law" title="3. The central law: idiomatic inside the file, engineered around the file">
-    <p><fact id="strongest-empirical-result" status="spec/done">The strongest empirical result we found, dated and controlled: models collapse on out-of-distribution *surface syntax* (EsoLang-Bench, Mar 2026: frontier models 0–11% on esoteric languages they could solve trivially in Python) — **and** current agents largely *recover* that collapse through tools and in-session strategy (the Jun 2026 follow-up: the same tasks, 87–100% with file-editing + interpreter loops).</fact></p>
-    <p><fact id="in-context-learning-could-not-teach" status="spec/done">In-context learning could **not** teach the unfamiliar surface (few-shot gave ~0 benefit); the recovery came from the verification loop and from building executable helpers, not from prose.</fact></p>
-    <p><fact id="law-that-follows-lead" status="impl/done">The law that follows:</fact></p>
-    <quote><fact id="CENTRAL-LAW" status="impl/done">**Keep the code surface inside the training distribution. Put all the strictness into the meta-layer, the type system, and the verification loop — which sit AROUND the code, not in its syntax.**</fact></quote>
-    <p><fact id="RUST-LOOKS-ORDINARY" status="impl/done">Concretely: AI-Native Rust looks like *ordinary idiomatic Rust* at the token level (no invented notation, no exotic dialect — that would inherit the OOD penalty).</fact></p>
-    <p><fact id="unusual-is-everything-around-it-lead" status="impl/done">What is unusual is everything around it:</fact></p>
+  </six-axioms>
+  <the-central-law title="3. The central law: idiomatic inside the file, engineered around the file">
+    <p><strongest-empirical-result fact="true" status="spec/done">The strongest empirical result we found, dated and controlled: models collapse on out-of-distribution *surface syntax* (EsoLang-Bench, Mar 2026: frontier models 0–11% on esoteric languages they could solve trivially in Python) — **and** current agents largely *recover* that collapse through tools and in-session strategy (the Jun 2026 follow-up: the same tasks, 87–100% with file-editing + interpreter loops).</strongest-empirical-result></p>
+    <p><in-context-learning-could-not-teach fact="true" status="spec/done">In-context learning could **not** teach the unfamiliar surface (few-shot gave ~0 benefit); the recovery came from the verification loop and from building executable helpers, not from prose.</in-context-learning-could-not-teach></p>
+    <p><law-that-follows-lead fact="true" status="impl/done">The law that follows:</law-that-follows-lead></p>
+    <quote><CENTRAL-LAW fact="true" status="impl/done">**Keep the code surface inside the training distribution. Put all the strictness into the meta-layer, the type system, and the verification loop — which sit AROUND the code, not in its syntax.**</CENTRAL-LAW></quote>
+    <p><RUST-LOOKS-ORDINARY fact="true" status="impl/done">Concretely: AI-Native Rust looks like *ordinary idiomatic Rust* at the token level (no invented notation, no exotic dialect — that would inherit the OOD penalty).</RUST-LOOKS-ORDINARY></p>
+    <p><unusual-is-everything-around-it-lead fact="true" status="impl/done">What is unusual is everything around it:</unusual-is-everything-around-it-lead></p>
     <list ordered="false">
-      <item><fact id="ENVELOPE-DENSE-METADATA" status="impl/done">dense machine-checkable metadata,</fact></item>
-      <item><fact id="ENVELOPE-CONTRACT-BEARING-TYPES" status="impl/done">contract-bearing types,</fact></item>
-      <item><fact id="ENVELOPE-EXECUTABLE-SCAFFOLDS" status="impl/done">executable scaffolds,</fact></item>
-      <item><fact id="ENVELOPE-VERIFICATION-LOOP" status="impl/done">and a fast per-unit verification loop.</fact></item>
+      <item><ENVELOPE-DENSE-METADATA fact="true" status="impl/done">dense machine-checkable metadata,</ENVELOPE-DENSE-METADATA></item>
+      <item><ENVELOPE-CONTRACT-BEARING-TYPES fact="true" status="impl/done">contract-bearing types,</ENVELOPE-CONTRACT-BEARING-TYPES></item>
+      <item><ENVELOPE-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">executable scaffolds,</ENVELOPE-EXECUTABLE-SCAFFOLDS></item>
+      <item><ENVELOPE-VERIFICATION-LOOP fact="true" status="impl/done">and a fast per-unit verification loop.</ENVELOPE-VERIFICATION-LOOP></item>
     </list>
-    <p><fact id="NOT-STRANGER-BUT-STRICTER" status="impl/done">We do not make the language stranger; we make its envelope stricter.</fact></p>
-  </section>
-  <section id="stricter-not-simpler" title="4. Stricter, not simpler — and where the strictness lives">
-    <p><fact id="MORE-DISCIPLINE-NOT-LESS" status="impl/done">"AI-native" is **more** discipline, not less — but the added strictness lives exclusively in machine-checkable form.</fact></p>
-    <p><fact id="MORE-TYPES-NEVER-MORE-SYNTAX" status="impl/done">More types, more contracts, more verification, more metadata — never more exotic syntax.</fact></p>
-    <p><fact id="CONSTRAINT-NEEDS-A-CHECKER" status="impl/done">Every constraint we add must be either enforced by a checker (A5) or it does not exist.</fact></p>
-    <p><fact id="remembered-rule-decays" status="spec/done">A rule a model must *remember* is a rule that decays; a rule a compiler *enforces* is a rule that holds.</fact></p>
-    <p><fact id="STRICTNESS-IS-THE-COMPILERS" status="impl/done">The discipline's strictness is the compiler's strictness, extended.</fact></p>
-    <p><fact id="BANS-CARRY-ESCAPE-HATCHES" status="impl/done">**Bans carry escape hatches.**</fact></p>
-    <p><fact id="FORBIDDEN-LEGAL-WITH-REASON" status="impl/done">Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason* — the `unsafe` / `#[spec(deviates, reason)]` pattern.</fact></p>
-    <p><fact id="BAN-WITHOUT-HATCH-IS-A-BUG" status="impl/done">A ban with no escape hatch is a bug in the discipline; a deviation with no reason is a bug in the code.</fact></p>
-    <p><fact id="PARITY-ACROSS-PROJECTIONS" status="impl/done">**The strictness is equal across projections.** No language projection enforces the discipline more weakly than another; a rule the pilot enforces is either enforced in every projection or its absence carries a recorded reason.</fact></p>
-    <p><fact id="PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH" status="impl/done">This is the projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG`: an unexplained asymmetry between projections is a bug in the discipline exactly as a reasonless deviation is a bug in the code. A projection is weaker *with machinery and a recorded reason* — a language genuinely lacking an idiom's analogue (the compiler already enforces it; the idiom does not exist in that language) records that, and the recorded reason is the escape hatch.</fact></p>
-    <p><fact id="PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE" status="impl/done">The pilot language is the current reference bar because it is furthest along, not because it is privileged; as a projection matures past the pilot on some axis, the bar rises to it. A new language inherits the law on arrival — it is a projection of the one discipline, held to the same floor.</fact></p>
-    <p><fact id="PARITY-GAP-IS-NEVER-SILENT" status="spec/done">A projection weaker on some rule with no recorded reason is not a smaller stack; it is the discipline silently decaying — the failure mode A5 and A6 exist to make impossible. Weakening a rule for a projection because building its checker is harder there is the same category of error as dropping the rule for being unused (§4): the checker is built or the reason is recorded, never the rule quietly relaxed.</fact></p>
-  </section>
-  <section id="runnable-capital" title="5. Runnable capital: explanation must be executable">
-    <p><fact id="second-decisive-result" status="spec/done">The second decisive result: weak agents given a *written* distillation of a strong agent's strategy barely improved; given an *executable* helper library carrying the same strategy, they leapt (Sonnet 4.6 on Brainfuck: 12→12 with text, 12→64 with runnable helpers).</fact></p>
-    <p><fact id="mechanism-cannot-build-the-code" status="spec/done">The mechanism: mid-tier models do not lack the idea; they cannot build the reusable code to carry it out.</fact></p>
-    <p><fact id="EXPLANATION-MUST-BE-RUNNABLE-CAPITAL" status="impl/done">Therefore: **explanation capital must be runnable capital.**</fact></p>
-    <p><fact id="META-LAYER-SHIPS-SCAFFOLDS" status="impl/done">The meta-layer ships *executable scaffolds* — generators, typed builders, runnable contracts, differential oracles, compiled examples, local simulators (the nine classes; see `02-EXECUTABLE-SCAFFOLDS.md`).</fact></p>
-    <p><fact id="PROSE-IS-A-WISH" status="impl/done">Prose that *could* be a checker, a doctest, or a typed API is a WISH until it becomes one.</fact></p>
-    <p><fact id="spec-weaker-than-shipped-macro" status="spec/done">A spec that says "use the registry pattern" is weaker than one that ships the registry macro plus a working example.</fact></p>
-    <p><fact id="boundary-result-is-generation" status="spec/done">**The honest boundary on this:** that result is about *generation* against an unfamiliar target.</fact></p>
-    <p><fact id="boundary-transfer-is-e-mid" status="spec/done">Transfer to *comprehension and modification* of in-distribution Rust is [E-mid] — plausible, not yet measured on our codebase.</fact></p>
-    <p><fact id="boundary-pilot-must-validate" status="spec/done">It is the primary thing the pilot must validate.</fact></p>
-  </section>
-  <section id="delivery" title="6. Delivery: the discipline is not &quot;know N rules&quot;">
-    <p><fact id="owner-worry-is-correct" status="spec/done">The owner's central worry is correct: a weak model cannot apply forty rules at once, in the right order.</fact></p>
-    <p><fact id="RULES-NEVER-ALL-ACTIVE-AT-ONCE" status="impl/done">The resolution is that **rules are never all active at once.**</fact></p>
-    <p><fact id="CARD-CARRIES-FOUR-PARTS" status="impl/done">Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.md`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost).</fact></p>
-    <p><fact id="HARNESS-DELIVERS-LAZY-PUSH" status="spec/done">The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). *Specified, not built at card grain: no harness reads a card. Lazy-push itself is real one level up — `vibe` implements `DeliveryMode::LazyPush` for **subskills**, matching an agent's task description against a subskill `description`, with `vibe check` enforcing that a lazy-push unit carries one and warning on activation overlap between siblings. Nothing applies that machinery to cards: no reader of `card-ops`, of a card `trigger`, or of `cards/INDEX.md` exists in any language anywhere in the repository. Card delivery today is a boot instruction a session follows by hand, not an activation match the harness computes.*</fact></p>
-    <p><fact id="triggers-escalate-lead" status="impl/done">Triggers escalate by cost:</fact></p>
+    <p><NOT-STRANGER-BUT-STRICTER fact="true" status="impl/done">We do not make the language stranger; we make its envelope stricter.</NOT-STRANGER-BUT-STRICTER></p>
+  </the-central-law>
+  <stricter-not-simpler title="4. Stricter, not simpler — and where the strictness lives">
+    <p><MORE-DISCIPLINE-NOT-LESS fact="true" status="impl/done">"AI-native" is **more** discipline, not less — but the added strictness lives exclusively in machine-checkable form.</MORE-DISCIPLINE-NOT-LESS></p>
+    <p><MORE-TYPES-NEVER-MORE-SYNTAX fact="true" status="impl/done">More types, more contracts, more verification, more metadata — never more exotic syntax.</MORE-TYPES-NEVER-MORE-SYNTAX></p>
+    <p><CONSTRAINT-NEEDS-A-CHECKER fact="true" status="impl/done">Every constraint we add must be either enforced by a checker (A5) or it does not exist.</CONSTRAINT-NEEDS-A-CHECKER></p>
+    <p><remembered-rule-decays fact="true" status="spec/done">A rule a model must *remember* is a rule that decays; a rule a compiler *enforces* is a rule that holds.</remembered-rule-decays></p>
+    <p><STRICTNESS-IS-THE-COMPILERS fact="true" status="impl/done">The discipline's strictness is the compiler's strictness, extended.</STRICTNESS-IS-THE-COMPILERS></p>
+    <p><BANS-CARRY-ESCAPE-HATCHES fact="true" status="impl/done">**Bans carry escape hatches.**</BANS-CARRY-ESCAPE-HATCHES></p>
+    <p><FORBIDDEN-LEGAL-WITH-REASON fact="true" status="impl/done">Forbidden-by-default constructs (raw `unwrap` in domain logic, inline asm, proc-macro magic, stringly-typed protocols) remain legal *with machinery and a recorded reason* — the `unsafe` / `#[spec(deviates, reason)]` pattern.</FORBIDDEN-LEGAL-WITH-REASON></p>
+    <p><BAN-WITHOUT-HATCH-IS-A-BUG fact="true" status="impl/done">A ban with no escape hatch is a bug in the discipline; a deviation with no reason is a bug in the code.</BAN-WITHOUT-HATCH-IS-A-BUG></p>
+    <p><PARITY-ACROSS-PROJECTIONS fact="true" status="impl/done">**The strictness is equal across projections.** No language projection enforces the discipline more weakly than another; a rule the pilot enforces is either enforced in every projection or its absence carries a recorded reason.</PARITY-ACROSS-PROJECTIONS></p>
+    <p><PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH fact="true" status="impl/done">This is the projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG`: an unexplained asymmetry between projections is a bug in the discipline exactly as a reasonless deviation is a bug in the code. A projection is weaker *with machinery and a recorded reason* — a language genuinely lacking an idiom's analogue (the compiler already enforces it; the idiom does not exist in that language) records that, and the recorded reason is the escape hatch.</PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH></p>
+    <p><PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE fact="true" status="impl/done">The pilot language is the current reference bar because it is furthest along, not because it is privileged; as a projection matures past the pilot on some axis, the bar rises to it. A new language inherits the law on arrival — it is a projection of the one discipline, held to the same floor.</PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE></p>
+    <p><PARITY-GAP-IS-NEVER-SILENT fact="true" status="spec/done">A projection weaker on some rule with no recorded reason is not a smaller stack; it is the discipline silently decaying — the failure mode A5 and A6 exist to make impossible. Weakening a rule for a projection because building its checker is harder there is the same category of error as dropping the rule for being unused (§4): the checker is built or the reason is recorded, never the rule quietly relaxed.</PARITY-GAP-IS-NEVER-SILENT></p>
+  </stricter-not-simpler>
+  <runnable-capital title="5. Runnable capital: explanation must be executable">
+    <p><second-decisive-result fact="true" status="spec/done">The second decisive result: weak agents given a *written* distillation of a strong agent's strategy barely improved; given an *executable* helper library carrying the same strategy, they leapt (Sonnet 4.6 on Brainfuck: 12→12 with text, 12→64 with runnable helpers).</second-decisive-result></p>
+    <p><mechanism-cannot-build-the-code fact="true" status="spec/done">The mechanism: mid-tier models do not lack the idea; they cannot build the reusable code to carry it out.</mechanism-cannot-build-the-code></p>
+    <p><EXPLANATION-MUST-BE-RUNNABLE-CAPITAL fact="true" status="impl/done">Therefore: **explanation capital must be runnable capital.**</EXPLANATION-MUST-BE-RUNNABLE-CAPITAL></p>
+    <p><META-LAYER-SHIPS-SCAFFOLDS fact="true" status="impl/done">The meta-layer ships *executable scaffolds* — generators, typed builders, runnable contracts, differential oracles, compiled examples, local simulators (the nine classes; see `02-EXECUTABLE-SCAFFOLDS.md`).</META-LAYER-SHIPS-SCAFFOLDS></p>
+    <p><PROSE-IS-A-WISH fact="true" status="impl/done">Prose that *could* be a checker, a doctest, or a typed API is a WISH until it becomes one.</PROSE-IS-A-WISH></p>
+    <p><spec-weaker-than-shipped-macro fact="true" status="spec/done">A spec that says "use the registry pattern" is weaker than one that ships the registry macro plus a working example.</spec-weaker-than-shipped-macro></p>
+    <p><boundary-result-is-generation fact="true" status="spec/done">**The honest boundary on this:** that result is about *generation* against an unfamiliar target.</boundary-result-is-generation></p>
+    <p><boundary-transfer-is-e-mid fact="true" status="spec/done">Transfer to *comprehension and modification* of in-distribution Rust is [E-mid] — plausible, not yet measured on our codebase.</boundary-transfer-is-e-mid></p>
+    <p><boundary-pilot-must-validate fact="true" status="spec/done">It is the primary thing the pilot must validate.</boundary-pilot-must-validate></p>
+  </runnable-capital>
+  <delivery title="6. Delivery: the discipline is not &quot;know N rules&quot;">
+    <p><owner-worry-is-correct fact="true" status="spec/done">The owner's central worry is correct: a weak model cannot apply forty rules at once, in the right order.</owner-worry-is-correct></p>
+    <p><RULES-NEVER-ALL-ACTIVE-AT-ONCE fact="true" status="impl/done">The resolution is that **rules are never all active at once.**</RULES-NEVER-ALL-ACTIVE-AT-ONCE></p>
+    <p><CARD-CARRIES-FOUR-PARTS fact="true" status="impl/done">Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.md`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost).</CARD-CARRIES-FOUR-PARTS></p>
+    <p><HARNESS-DELIVERS-LAZY-PUSH fact="true" status="spec/done">The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). *Specified, not built at card grain: no harness reads a card. Lazy-push itself is real one level up — `vibe` implements `DeliveryMode::LazyPush` for **subskills**, matching an agent's task description against a subskill `description`, with `vibe check` enforcing that a lazy-push unit carries one and warning on activation overlap between siblings. Nothing applies that machinery to cards: no reader of `card-ops`, of a card `trigger`, or of `cards/INDEX.md` exists in any language anywhere in the repository. Card delivery today is a boot instruction a session follows by hand, not an activation match the harness computes.*</HARNESS-DELIVERS-LAZY-PUSH></p>
+    <p><triggers-escalate-lead fact="true" status="impl/done">Triggers escalate by cost:</triggers-escalate-lead></p>
     <list ordered="true">
-      <item><fact id="TRIGGER-INLINE" status="impl/done">**Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate.</fact></item>
-      <item><fact id="TRIGGER-GATE" status="impl/done">**Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke.</fact></item>
-      <item><fact id="TRIGGER-RAID" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`).</fact></item>
-      <item><fact id="TRIGGER-REVIEW" status="impl/done">**Review (human/strong-agent)** — needs judgment a weak reader lacks.</fact></item>
+      <item><TRIGGER-INLINE fact="true" status="impl/done">**Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate.</TRIGGER-INLINE></item>
+      <item><TRIGGER-GATE fact="true" status="impl/done">**Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke.</TRIGGER-GATE></item>
+      <item><TRIGGER-RAID fact="true" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`).</TRIGGER-RAID></item>
+      <item><TRIGGER-REVIEW fact="true" status="impl/done">**Review (human/strong-agent)** — needs judgment a weak reader lacks.</TRIGGER-REVIEW></item>
     </list>
-    <p><fact id="grounded-in-agentbench" status="spec/done">This is grounded in the AGENTbench result (Feb 2026): bloated context *hurts* weak agents; minimal, sufficient context helps.</fact></p>
-    <p><fact id="MINIMAL-SUFFICIENCY-OBEYED" status="impl/done">The discipline therefore proselytizes minimal sufficiency — and obeys it: this package is a full authoring/review artifact, but runtime delivery to a weak reader is an *extract* (the card's ops block), never the whole corpus.</fact></p>
-  </section>
-  <section id="honest-boundary" title="7. The honest boundary (what we do not yet know)">
-    <p><fact id="beta-status" status="impl/done">This is a beta.</fact></p>
-    <p><fact id="stated-plainly-lead" status="spec/done">Stated plainly so the pilot can falsify it:</fact></p>
+    <p><grounded-in-agentbench fact="true" status="spec/done">This is grounded in the AGENTbench result (Feb 2026): bloated context *hurts* weak agents; minimal, sufficient context helps.</grounded-in-agentbench></p>
+    <p><MINIMAL-SUFFICIENCY-OBEYED fact="true" status="impl/done">The discipline therefore proselytizes minimal sufficiency — and obeys it: this package is a full authoring/review artifact, but runtime delivery to a weak reader is an *extract* (the card's ops block), never the whole corpus.</MINIMAL-SUFFICIENCY-OBEYED></p>
+  </delivery>
+  <honest-boundary title="7. The honest boundary (what we do not yet know)">
+    <p><beta-status fact="true" status="impl/done">This is a beta.</beta-status></p>
+    <p><stated-plainly-lead fact="true" status="spec/done">Stated plainly so the pilot can falsify it:</stated-plainly-lead></p>
     <list ordered="false">
-      <item><fact id="BOUNDARY-TRANSFER-UNPROVEN" status="spec/done">**Transfer is unproven.** The executable-scaffold result is generation, not modification. [E-mid].</fact></item>
-      <item><fact id="BOUNDARY-THERE-IS-A-FLOOR" status="spec/done">**There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, and our target Qwen-32B may sit lower on some axes) did *not* recover — scaffolds amplify capability, they do not create it. The discipline lowers the floor; it does not remove it.</fact></item>
-      <item><fact id="BOUNDARY-SURFACE-IS-CURRENT" status="spec/done">**Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. *The obligation stands; the sunset it names has no carrier. R-050 is authored in no document that ships — every occurrence across this package, the language stacks, the engine crates and the host is a citation, and the ATLAS roster it would live in holds only `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` ids. Nothing schedules the re-check, expires the law, or records when it was last examined. The sunset **mechanism** does exist one grain over — every one of the 22 entries in the host's debt registry carries a `sunset` field, and cards carry a `Sunset:` clause in their Risks band — so the pattern is proven and simply not applied to this law.*</fact></item>
-      <item><fact id="BOUNDARY-MEASUREMENT-DEFERRED" status="spec/done">**Measurement is deferred by design.** We build the core on internal logic plus others' published evidence, and instrument later, at a buyer's expense. Every card therefore carries a falsifiable `prediction` in place of a present measurement.</fact></item>
+      <item><BOUNDARY-TRANSFER-UNPROVEN fact="true" status="spec/done">**Transfer is unproven.** The executable-scaffold result is generation, not modification. [E-mid].</BOUNDARY-TRANSFER-UNPROVEN></item>
+      <item><BOUNDARY-THERE-IS-A-FLOOR fact="true" status="spec/done">**There is a floor.** Even with executable scaffolds, the weakest models (Haiku-4.5-class, and our target Qwen-32B may sit lower on some axes) did *not* recover — scaffolds amplify capability, they do not create it. The discipline lowers the floor; it does not remove it.</BOUNDARY-THERE-IS-A-FLOOR></item>
+      <item><BOUNDARY-SURFACE-IS-CURRENT fact="true" status="spec/done">**Surface-distribution is current.** The "stay in-distribution" law is tied to today's model generation; it carries a sunset (R-050) and must be re-checked as models change. *The obligation stands; the sunset it names has no carrier. R-050 is authored in no document that ships — every occurrence across this package, the language stacks, the engine crates and the host is a citation, and the ATLAS roster it would live in holds only `BLD-` / `DR1-` / `DR2-` / `R2C-` / `R3-` ids. Nothing schedules the re-check, expires the law, or records when it was last examined. The sunset **mechanism** does exist one grain over — every one of the 22 entries in the host's debt registry carries a `sunset` field, and cards carry a `Sunset:` clause in their Risks band — so the pattern is proven and simply not applied to this law.*</BOUNDARY-SURFACE-IS-CURRENT></item>
+      <item><BOUNDARY-MEASUREMENT-DEFERRED fact="true" status="spec/done">**Measurement is deferred by design.** We build the core on internal logic plus others' published evidence, and instrument later, at a buyer's expense. Every card therefore carries a falsifiable `prediction` in place of a present measurement.</BOUNDARY-MEASUREMENT-DEFERRED></item>
     </list>
-    <p><fact id="names-its-own-failure-modes" status="spec/done">A discipline that names its own failure modes is more trustworthy than one that hides them.</fact></p>
-    <p><fact id="this-one-names-them" status="spec/done">This one names them.</fact></p>
-  </section>
-  <section id="package-map" title="8. The package map">
-    <p><fact id="guiding-layer-lead" status="impl/done">**Guiding layer (T1, language-independent):**</fact></p>
+    <p><names-its-own-failure-modes fact="true" status="spec/done">A discipline that names its own failure modes is more trustworthy than one that hides them.</names-its-own-failure-modes></p>
+    <p><this-one-names-them fact="true" status="spec/done">This one names them.</this-one-names-them></p>
+  </honest-boundary>
+  <package-map title="8. The package map">
+    <p><guiding-layer-lead fact="true" status="impl/done">**Guiding layer (T1, language-independent):**</guiding-layer-lead></p>
     <list ordered="false">
-      <item><fact id="MAP-MANIFESTO" status="impl/done">`00-MANIFESTO.md` — this document.</fact></item>
-      <item><fact id="MAP-PATTERN-CARD-FORMAT" status="impl/done">`01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).</fact></item>
-      <item><fact id="MAP-EXECUTABLE-SCAFFOLDS" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.</fact></item>
-      <item><fact id="MAP-RAID-PLAYBOOK" status="impl/done">`03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).</fact></item>
-      <item><fact id="MAP-SWEEP-PLAYBOOK" status="impl/done">`04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.</fact></item>
-      <item><fact id="MAP-CAMPAIGN-FORM" status="impl/done">`05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</fact></item>
-      <item><fact id="MAP-WAL-CONVENTION" status="impl/done">`06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</fact></item>
+      <item><MAP-MANIFESTO fact="true" status="impl/done">`00-MANIFESTO.md` — this document.</MAP-MANIFESTO></item>
+      <item><MAP-PATTERN-CARD-FORMAT fact="true" status="impl/done">`01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).</MAP-PATTERN-CARD-FORMAT></item>
+      <item><MAP-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.</MAP-EXECUTABLE-SCAFFOLDS></item>
+      <item><MAP-RAID-PLAYBOOK fact="true" status="impl/done">`03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).</MAP-RAID-PLAYBOOK></item>
+      <item><MAP-SWEEP-PLAYBOOK fact="true" status="impl/done">`04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.</MAP-SWEEP-PLAYBOOK></item>
+      <item><MAP-CAMPAIGN-FORM fact="true" status="impl/done">`05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</MAP-CAMPAIGN-FORM></item>
+      <item><MAP-WAL-CONVENTION fact="true" status="impl/done">`06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</MAP-WAL-CONVENTION></item>
     </list>
-    <p><fact id="mechanisms-lead" status="impl/done">**Mechanisms (T1, language-independent; implemented per-stack):**</fact></p>
+    <p><mechanisms-lead fact="true" status="impl/done">**Mechanisms (T1, language-independent; implemented per-stack):**</mechanisms-lead></p>
     <list ordered="false">
-      <item><fact id="MAP-ENGINE-CONFORM" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</fact></item>
-      <item><fact id="MAP-PROP-014-SPECMAP" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.</fact></item>
-      <item><fact id="MAP-BROWNFIELD-PROTOCOL" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</fact></item>
-      <item><fact id="MAP-LEDGER-INTENT" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.</fact></item>
+      <item><MAP-ENGINE-CONFORM fact="true" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</MAP-ENGINE-CONFORM></item>
+      <item><MAP-PROP-014-SPECMAP fact="true" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.</MAP-PROP-014-SPECMAP></item>
+      <item><MAP-BROWNFIELD-PROTOCOL fact="true" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</MAP-BROWNFIELD-PROTOCOL></item>
+      <item><MAP-LEDGER-INTENT fact="true" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.</MAP-LEDGER-INTENT></item>
     </list>
-    <p><fact id="SPEC-UNIT-URI-FORM" status="impl/done">Spec-unit URIs for this package read `spec://org.vibevm.ai-native/core-ai-native/&lt;docpath&gt;#&lt;anchor&gt;` (e.g. `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).</fact></p>
-    <p><fact id="language-projections-lead" status="impl/done">**Language projections (T2):**</fact></p>
+    <p><SPEC-UNIT-URI-FORM fact="true" status="impl/done">Spec-unit URIs for this package read `spec://org.vibevm.ai-native/core-ai-native/&lt;docpath&gt;#&lt;anchor&gt;` (e.g. `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).</SPEC-UNIT-URI-FORM></p>
+    <p><language-projections-lead fact="true" status="impl/done">**Language projections (T2):**</language-projections-lead></p>
     <list ordered="false">
-      <item><fact id="MAP-RUST-GUIDE" status="impl/done">`spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)</fact></item>
-      <item><fact id="MAP-RUST-TCG" status="idea/plan">`rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4).</fact></item>
-      <item><fact id="MAP-RUST-TCG-AGENTIC" status="impl/done">The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.</fact></item>
-      <item><fact id="MAP-TYPESCRIPT-GUIDE" status="impl/done">`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.</fact></item>
-      <item><fact id="MAP-TYPESCRIPT-TCG" status="unknown/hold">`typescript/tools/typescript-ai-native-tcg.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch). @status:unknown</fact></item>
-      <item><fact id="MAP-OTHER-LANGUAGES" status="spec/done">Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.</fact></item>
+      <item><MAP-RUST-GUIDE fact="true" status="impl/done">`spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)</MAP-RUST-GUIDE></item>
+      <item><MAP-RUST-TCG fact="true" status="idea/plan">`rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4).</MAP-RUST-TCG></item>
+      <item><MAP-RUST-TCG-AGENTIC fact="true" status="impl/done">The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.</MAP-RUST-TCG-AGENTIC></item>
+      <item><MAP-TYPESCRIPT-GUIDE fact="true" status="impl/done">`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.</MAP-TYPESCRIPT-GUIDE></item>
+      <item><MAP-TYPESCRIPT-TCG fact="true" status="unknown/hold">`typescript/tools/typescript-ai-native-tcg.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch). @status:unknown</MAP-TYPESCRIPT-TCG></item>
+      <item><MAP-OTHER-LANGUAGES fact="true" status="spec/done">Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.</MAP-OTHER-LANGUAGES></item>
     </list>
-    <p><fact id="cards-lead" status="impl/done">**Cards (the patterns) — shipped per-language by each stack:**</fact></p>
+    <p><cards-lead fact="true" status="impl/done">**Cards (the patterns) — shipped per-language by each stack:**</cards-lead></p>
     <list ordered="false">
-      <item><fact id="MAP-CARDS-INDEX" status="impl/done">`cards/INDEX.md` — registry, axes, trigger modes (one per language stack).</fact></item>
-      <item><fact id="MAP-CARDS-SCAFFOLDS" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</fact></item>
+      <item><MAP-CARDS-INDEX fact="true" status="impl/done">`cards/INDEX.md` — registry, axes, trigger modes (one per language stack).</MAP-CARDS-INDEX></item>
+      <item><MAP-CARDS-SCAFFOLDS fact="true" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</MAP-CARDS-SCAFFOLDS></item>
     </list>
-    <p><fact id="appendix-lead" status="impl/done">**Appendix (synthesis provenance):**</fact></p>
+    <p><appendix-lead fact="true" status="impl/done">**Appendix (synthesis provenance):**</appendix-lead></p>
     <list ordered="false">
-      <item><fact id="MAP-CONTRADICTION-MAP" status="impl/done">`appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.</fact></item>
-      <item><fact id="MAP-ATLAS" status="impl/done">`appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</fact></item>
+      <item><MAP-CONTRADICTION-MAP fact="true" status="impl/done">`appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.</MAP-CONTRADICTION-MAP></item>
+      <item><MAP-ATLAS fact="true" status="impl/done">`appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</MAP-ATLAS></item>
     </list>
-    <p><fact id="ADOPTION-PLAN-LIVES-OUTSIDE" status="impl/done">The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot.</fact></p>
-  </section>
+    <p><ADOPTION-PLAN-LIVES-OUTSIDE fact="true" status="impl/done">The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot.</ADOPTION-PLAN-LIVES-OUTSIDE></p>
+  </package-map>
 </spec>

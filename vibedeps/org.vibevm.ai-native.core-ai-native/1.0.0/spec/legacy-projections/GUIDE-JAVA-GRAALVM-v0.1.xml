@@ -4,37 +4,37 @@
   <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md`. Composes with the Spring overlay (Boot AOT) and with Jakarta-family runtimes built for ahead-of-time CDI; only named sections are rewired.</p>
   <p>Framing note. Native Image is the profile where the Discipline's anti-magic rules stop being style and become **physics**: the closed-world assumption means reflection, dynamic proxies, JNI, resources, and serialization exist only if *declared at build time* — everything reachable is statically known, which is axiom A3 enforced by a compiler instead of a review. The trunk already banned runtime magic in cells; this overlay collects the dividend: a trunk-conformant core needs **zero reachability metadata of its own**, and every line of metadata the *boundary* needs becomes visible, versioned, and countable. The price is paid in toolchain honesty: build minutes, library compatibility vetting, and a debugging story different from the JVM's.</p>
   <p>**Scope honesty.** CLIs, serverless/short-lived workloads, and services where startup latency and footprint dominate. JIT-on-JVM remains the right target for peak-throughput long-running services unless measured otherwise; this overlay never pretends the trade is free.</p>
-  <section id="baseline" title="§0 additions — baseline">
+  <baseline title="§0 additions — baseline">
     <list ordered="false">
       <item>**Toolchain:** a maintained Native Image distribution, pinned like any compiler; `native-maven-plugin`/Gradle equivalent in the build, native compilation in CI from day one (a "we'll go native later" project discovers its reflection debt at the worst moment).</item>
       <item>**Library admission = adopted-code vetting:** a dependency enters only if it ships its own reachability metadata, is covered by the shared GraalVM reachability-metadata repository, or passes the tracing agent cleanly. The vetting result is recorded per dependency (a facts-class ledger entry keyed by artifact+version — never re-vetted twice, A2).</item>
       <item>**Build reporting on:** the image build's analysis output (included classes/methods) is retained per release — it is the most literal A1 inventory any profile in the set produces: the binary's contents as a machine-readable list.</item>
     </list>
-  </section>
-  <section id="cells" title="§1&apos; — cells and build-time initialization">
+  </baseline>
+  <cells title="§1&apos; — cells and build-time initialization">
     <p>Import-is-execution returns at a *third* time coordinate: class initializers can run **at image build**, their resulting heap snapshotted into the binary.</p>
     <list ordered="false">
       <item>The trunk's ban on side-effectful static init now pays out directly: **cells are build-time-initializable by construction** — faster startup, smaller image, and the rule that was discipline on the JVM is an optimization flag here.</item>
       <item>Anything that must initialize at run time (touches environment, clocks, file descriptors, randomness seeds) lives at the boundary and is enumerated in the **run-time-init manifest** — a committed, diffed list. An unexplained addition to it is a finding.</item>
       <item>**Heap-snapshot caution:** nothing captured at build time may embed build-host state (paths, env, time, random seeds). A conform check greps the snapshot-eligible set for the platform-capability types the trunk already bans in cells.</item>
     </list>
-  </section>
-  <section id="flags" title="§3&apos; — flags and the AOT tier migration">
+  </cells>
+  <flags title="§3&apos; — flags and the AOT tier migration">
     <p>The overlay's most important finding, stated plainly: **under AOT, the two flag tiers migrate.** Conditions the container or the build evaluates ahead of time (Spring AOT resolves `@ConditionalOn...` and profiles at build; image building freezes the classpath) turn what the trunk called *runtime* flags into *build* flags — silently, if no one audits.</p>
     <list ordered="false">
       <item>Rule: every flag in the registry is classified `build | runtime` **per target**; composing this overlay forces a re-audit of the classification, and the audit diff is part of the overlay's adoption PR.</item>
       <item>Flags that must remain runtime under Native Image use mechanisms that survive AOT (config values read at startup by ordinary code — the trunk's config record — not container conditionals).</item>
       <item>Tree-shaking honesty: the unselected cell is genuinely absent from the image — the assembly tier finally has C++/cargo-grade meaning in Java.</item>
     </list>
-  </section>
-  <section id="magic" title="§4&apos;/§6&apos; — magic accounting">
+  </flags>
+  <magic title="§4&apos;/§6&apos; — magic accounting">
     <list ordered="false">
       <item>**Reachability metadata is generated, not hand-grown:** the tracing agent runs over the boundary test suite; outputs are committed and **diffed like code**. The metric the overlay contributes to the Charter's dashboard: **`reflect-config` (and proxy/resource/serialization configs) size and growth rate = magic debt**, tracked exactly like wish-ratio. A trunk-conformant core contributes zero; every entry is boundary-attributable or it is a finding.</item>
       <item>Dynamic proxies require declaration; the trunk's seams (plain interfaces, `new`-constructed cells) need none. `Unsafe`, agents, `invokedynamic`-heavy bytecode tricks: boundary-of-boundary, vetted per library.</item>
       <item>Observability honesty: no agent attach, JFR reduced, no hot bytecode tooling — the boundary exports metrics/health explicitly; debugging uses native debug info (kept, not stripped — same rule as Go's symbol retention, same A1 reason).</item>
     </list>
-  </section>
-  <section id="risks" title="§8&apos; — additional risk rows">
+  </magic>
+  <risks title="§8&apos; — additional risk rows">
     <table>
       <tr>
         <td>Footgun</td>
@@ -73,5 +73,5 @@
       </tr>
     </table>
     <p>**Overlay note.** This is the profile where the Discipline and the platform want the same world — closed, declared, inventoried. Adopting it on a trunk-conformant codebase is cheap; adopting it on a reflection-rich codebase is the brownfield protocol with a compiler holding the baseline.</p>
-  </section>
+  </risks>
 </spec>

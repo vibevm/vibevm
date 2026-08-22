@@ -5,7 +5,7 @@
   <p>**Normative stack.** Rule corpus: *MISRA C++:2008* (228 rules in three classes — Required, Advisory, Document — targeting ISO C++:2003). Process layer: *MISRA Compliance:2020*, which supersedes the compliance/deviation/process sections of the 2008 text. This guide does not re-litigate MISRA; it **operationalizes** it: the Discipline's machinery turns the Compliance:2020 paper organs into executable, versioned artifacts (§8). Successor note: MISRA C++:2023 (C++17-based, absorbing the AUTOSAR guidelines) is the edition a new contract should probably cite; this profile is pinned to 2008 because that is the normative text in hand — a `cpp-misra2023` profile is a mechanical sibling once that text is available.</p>
   <p>Framing note. This profile is not a style preference but a contractual condition: automotive, rail, and medical supply chains demand demonstrable compliance, with a named technical authority behind every deviation. That last clause is axiom A4 arriving from the outside world: **the agent may draft deviation records; only the owner approves them.** Licensing note: the MISRA texts are copyrighted; this guide cites rule numbers and paraphrases tersely, and the repo must hold its own licensed copies rather than reproductions.</p>
   <p>**Scope honesty.** Delivered target code only. Test harnesses, build tooling, and generators are outside the MISRA scope (they are not delivered) and follow `cpp-traditional` instead; the oracle logic that *is* compiled into both worlds must satisfy this profile (§7).</p>
-  <section id="baseline" title="0. Language baseline">
+  <baseline title="0. Language baseline">
     <list ordered="false">
       <item>**C++03, conforming mode, no extensions** — the only profile where the language version is pinned by the normative text itself.</item>
       <item>**The GRP is a committed artifact:** `terraform/registry/misra-grp.json` records each guideline's class and the project's re-categorization. The only-stricter matrix of Compliance:2020 §5 (Required→Mandatory allowed; Mandatory immovable; Advisory may move anywhere including Disapplied-with-rationale) is enforced by a conform meta-check **on the GRP file itself** — an illegal re-categorization fails the build, not a review.</item>
@@ -17,8 +17,8 @@
       <item>**Suppression policy:** an in-source tool suppression is legal **only when it cites a deviation id** (`D-NNNN`); conform's T-lex sweep fails any suppression token without one, and any `D-NNNN` without a registry record. Deviations live as records (§5, §8), never as naked pragmas.</item>
       <item>**Checkers:** commercial MISRA analyzers slot in as conform **evidence providers** (ENGINE §2) via their reports; their published coverage matrices — fully / partially / not statically checkable, as in the LDRA-style summaries — import directly as GEP fragments declaring per-rule enforcement strength.</item>
     </list>
-  </section>
-  <section id="cells" title="1. Cells">
+  </baseline>
+  <cells title="1. Cells">
     <p>A cell is a static-library target behind one seam, as in the sibling profiles — under static-allocation physics:</p>
     <list ordered="false">
       <item>**All cell instances are statically allocated.** No factories returning ownership (nothing to own); construction is **two-phase**: trivially-constructible statics, then an explicit `init()` pass invoked from `main` in deterministic order before any use — the profile's answer to the initialization-order fiasco, since `constinit` does not exist in C++03. Registration-at-load is banned as in every profile.</item>
@@ -26,16 +26,16 @@
       <item>**Platform capabilities are injected** — doubly mandatory in this profile, since the C library is gone (18-0-1) and time/io/env have no legal ambient form anyway. The capability seams are where boundary modules wrap whatever the certified platform provides.</item>
       <item>**Brownfield resonance:** the 0-1-x family (unreachable, dead, unused) is enforced as a **ratchet** per BROWNFIELD §B1 — baseline first, monotone shrink after — not as a day-one wall.</item>
     </list>
-  </section>
-  <section id="seams" title="2. Seams">
+  </cells>
+  <seams title="2. Seams">
     <list ordered="false">
       <item>Seams are pure abstract base classes; overriding functions repeat the `virtual` keyword (10-3-2 — C++03 has no `override`), exactly one definition per virtual in the hierarchy (10-3-1), pure-virtual overridden only by pure-virtual where intended (10-3-3).</item>
       <item>Non-copyability uses the C++03 idiom MISRA itself codifies: copy assignment declared protected/private in abstract classes (12-8-2); copy constructors private and undefined.</item>
       <item>Member data private (11-0-1); composition over inheritance MUST; no behavior-bearing bases; no virtual call reaches a derived body from ctor/dtor (12-1-1).</item>
       <item>**Seam ABI under no-heap:** methods take inputs by `const&amp;` and produce through caller-provided storage (§4) — payload ownership never crosses the seam because ownership transfer does not exist here.</item>
     </list>
-  </section>
-  <section id="flags" title="3. Registry and flags">
+  </seams>
+  <flags title="3. Registry and flags">
     <list ordered="false">
       <item>**The build tier dominates.** Link-time selection (which variant's library is linked) is the primary flag mechanism: it costs nothing at runtime and no static footprint for unselected variants. Runtime selection is still legal but priced honestly: every selectable variant is a live static instance, and the registry returns a `Seam&amp;` chosen once at startup.</item>
     </list>
@@ -51,8 +51,8 @@ DepSolver&amp; depSolver(Config const&amp; cfg)
       <item>Preprocessor confinement is normative, not just house style: `#define` only at global scope (16-0-2), no `#undef` (16-0-3), no function-like macros (16-0-4), include hygiene per 16-0-1.</item>
       <item>No self-registration, no singletons-as-wiring — same as siblings, with less language left to cheat with.</item>
     </list>
-  </section>
-  <section id="errors" title="4. Errors as contract">
+  </flags>
+  <errors title="4. Errors as contract">
     <p>The isomorphism "expected failures are values" survives, in its oldest clothing:</p>
     <list ordered="false">
       <item>**Status-enum return + caller-provided out-parameter.** No exceptions (house), no heap (18-4-1), no unions (9-5-1), no `variant` (C++03): the failure *is* the return value, the payload travels through a reference the caller owns. This is an honest degradation from value-semantic `Result` and the guide says so.</item>
@@ -62,8 +62,8 @@ DepSolver&amp; depSolver(Config const&amp; cfg)
       <item>Single point of exit (6-6-5) and terminated `else if` chains (6-4-2) shape function bodies; run-time failure minimization is a documented strategy per 0-3-1 (a Document-class obligation the conform report links to).</item>
       <item>**Concurrency:** out of the 2008 corpus's scope and out of this profile's cells; any threading lives behind platform capability seams under the project's safety case.</item>
     </list>
-  </section>
-  <section id="specmark" title="5. specmark carrier">
+  </errors>
+  <specmark title="5. specmark carrier">
     <p>The shared `/// @spec` carrier (Traditional §5) — chosen precisely because it survives C++03 toolchains. Two profile-specific extensions:</p>
     <list ordered="false">
       <item>**External normative namespace:** MISRA guidelines enter the specmap as read-only foreign units under `misra://cpp2008/&lt;rule-id&gt;` (e.g. `misra://cpp2008/9-5-1`). Code never `implements` them; it may only `deviates` them. This is the first foreign namespace in the specmap and is flagged as a pending PROP-014 amendment.</item>
@@ -71,17 +71,17 @@ DepSolver&amp; depSolver(Config const&amp; cfg)
     </list>
     <fence>/// @spec deviates misra://cpp2008/&lt;rule-id&gt; permit=&lt;permit-id&gt; reason="..." deviation=D-NNNN</fence>
     <p>The line is the in-source anchor; the *record* lives in the registry (§8) carrying the Compliance:2020 §4.2 fields. Reason mandatory; `D-NNNN` mandatory; permit optional but preferred (§8).</p>
-  </section>
-  <section id="naming" title="6. Naming (R-020/R-021 bindings)">
+  </specmark>
+  <naming title="6. Naming (R-020/R-021 bindings)">
     <list ordered="false">
       <item>Computed `{Variant}{Seam}` grammar as everywhere.</item>
       <item>The theater list is largely **subsumed by the corpus itself**: implicit conversions (12-1-3), function-like macros (16-0-4), C-style casts (5-2-4), shadowing (2-10-2), const-stripping (5-2-5), array decay at calls (5-2-12). House residue: template metaprogramming confined to infra (templates are regulated, 14-x, not banned — but TMP in domain cells fails R-021 regardless); operator overloading beyond value semantics; `friend` beyond test fixtures.</item>
     </list>
-  </section>
-  <section id="replacement" title="7. Replacement protocol (R-040 binding)">
+  </naming>
+  <replacement title="7. Replacement protocol (R-040 binding)">
     <p>Differential oracle as in the siblings, with a scope split: the **harness** (generators, comparison driver) lives outside MISRA scope and follows `cpp-traditional`; the **cells under test** compile under this profile unchanged. Golden artifacts follow the promotion protocol; a healed known-failing case is promoted, never silently absorbed (xfail-strict, BROWNFIELD §4).</p>
-  </section>
-  <section id="framework" title="8. The Compliance:2020 framework, operationalized">
+  </replacement>
+  <framework title="8. The Compliance:2020 framework, operationalized">
     <p>The discovery this profile is built on: MISRA Compliance:2020 and the Discipline are convergent evolution — the same organs grown independently. The mapping is therefore mechanical:</p>
     <table>
       <tr>
@@ -121,9 +121,9 @@ DepSolver&amp; depSolver(Config const&amp; cfg)
         <td>`conform report --gcs`: per-guideline Compliant / Deviations / Violations / Disapplied, generated at release, signed into the release slice (LEDGER §release)</td>
       </tr>
     </table>
-  </section>
-  <section id="docs" title="9. Doc layer">
+  </framework>
+  <docs title="9. Doc layer">
     <p>Doxygen on tagged exports as in the siblings, plus the release obligations: the GCS, the GEP, deviation records and permits ship with the delivery package per Compliance:2020 §7.4 — all generated artifacts of the registries, not hand-maintained prose.</p>
     <p>**First carrier note.** No C++ exists in vibevm, and this profile additionally requires licensed normative texts and (for a credible GEP) a qualified commercial checker as evidence provider. It ships genre-complete, unexercised, and carrier-relative under the same house clause as its siblings.</p>
-  </section>
+  </docs>
 </spec>

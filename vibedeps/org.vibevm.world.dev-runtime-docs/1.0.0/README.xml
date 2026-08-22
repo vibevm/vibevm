@@ -2,33 +2,33 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:dev-runtime-docs` — setup docs that never drift</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE" status="impl/done">A vibevm `flow` package that installs a small, load-bearing discipline: a project's
+  <p><PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE fact="true" status="impl/done">A vibevm `flow` package that installs a small, load-bearing discipline: a project's
 **setup and runtime documentation is updated in the same commit** as any change to the
-toolchain, prerequisites, environment, paths, or bootstrap steps.</fact></p>
-  <p><fact id="setup-docs-are-the-file-someone-opens-when-things-break" status="spec/done">Setup docs are the file someone opens when the build breaks or the environment is wrong.</fact></p>
-  <p><fact id="THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE" status="impl/done">A deferred doc update is exactly the drift these files exist to prevent — so the update is
-never separable from the change that necessitates it.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships:</fact></p>
+toolchain, prerequisites, environment, paths, or bootstrap steps.</PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE></p>
+  <p><setup-docs-are-the-file-someone-opens-when-things-break fact="true" status="spec/done">Setup docs are the file someone opens when the build breaks or the environment is wrong.</setup-docs-are-the-file-someone-opens-when-things-break></p>
+  <p><THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE fact="true" status="impl/done">A deferred doc update is exactly the drift these files exist to prevent — so the update is
+never separable from the change that necessitates it.</THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-FULL-PROTOCOL" status="impl/done">`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
+    <item><CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
   pinned in the project's foundational conventions, the contributor-vs-runtime audience
-  split, and how to keep the docs honest.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
-  rule and the never-do list.</fact></item>
+  split, and how to keep the docs honest.</CONTENT-THE-FULL-PROTOCOL></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
+  rule and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:dev-runtime-docs</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:dev-runtime-docs</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot snippet.</fact></p>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="extracted-from-vibevms-own-foundational-conventions" status="spec/done">Extracted from vibevm's own foundational conventions (PROP-000 §19): the obligation that a
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+  </uninstall>
+  <background title="Philosophical background">
+    <p><extracted-from-vibevms-own-foundational-conventions fact="true" status="spec/done">Extracted from vibevm's own foundational conventions (PROP-000 §19): the obligation that a
 change touching prerequisites/toolchain/env/paths ships with the matching guide update in the
-same commit, pinned centrally so it is met during the boot-sequence read-order.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE`.</fact></p>
-  </section>
+same commit, pinned centrally so it is met during the boot-sequence read-order.</extracted-from-vibevms-own-foundational-conventions></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE`.</license-line></p>
+  </license>
 </spec>

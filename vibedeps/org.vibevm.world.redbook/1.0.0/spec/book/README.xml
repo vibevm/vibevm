@@ -5,7 +5,7 @@
 the book the redbook collection distills. The collection takes the
 **general spirit of the process** from it; the member flows are its
 practices in installable form.</p>
-  <section id="editions" title="Editions">
+  <editions title="Editions">
     <list ordered="false">
       <item>`ru/` — the Russian text, included **as-is** from the author's
   manuscript. Currently the only edition, and therefore the
@@ -15,8 +15,8 @@ practices in installable form.</p>
   the Russian edition remains as a translation. Until then, the
   Russian text is the reference.</item>
     </list>
-  </section>
-  <section id="contents" title="Contents">
+  </editions>
+  <contents title="Contents">
     <list ordered="false">
       <item>`ru/chapter-1-two-process-model.md` — Два процесса, одна задача:
   the coprocessor model, the cognitive load split, shared memory.</item>
@@ -32,5 +32,5 @@ member flows' boot snippets and protocol documents.</p>
     <p>Chapter texts are verbatim; internal references to material outside
 these chapters (e.g. the Safe Harbor note) resolve at the book's own
 public home, not inside this package.</p>
-  </section>
+  </contents>
 </spec>

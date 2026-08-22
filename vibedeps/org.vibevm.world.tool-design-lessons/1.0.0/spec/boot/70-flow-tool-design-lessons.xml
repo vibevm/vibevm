@@ -2,41 +2,41 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Tool Design Lessons</title>
   <status stage="impl" state="done"/>
-  <p><fact id="PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF" status="impl/done">This project builds a tool that manages itself — a self-updating CLI,
-an installer, a version manager, or a package system.</fact></p>
-  <p><fact id="THE-LESSONS-CATALOG-IS-INSTALLED" status="impl/done">The **tool
+  <p><PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF fact="true" status="impl/done">This project builds a tool that manages itself — a self-updating CLI,
+an installer, a version manager, or a package system.</PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF></p>
+  <p><THE-LESSONS-CATALOG-IS-INSTALLED fact="true" status="impl/done">The **tool
 design lessons** catalog is installed: numbered, self-contained
 lessons, each one paid for by shipping such a tool and the ecosystem
-around it.</fact></p>
-  <section id="when" title="When to read">
-    <p><fact id="READ-THE-GOVERNING-LESSON-FIRST" status="impl/done">Before you design an activation model, an install pipeline, an
+around it.</THE-LESSONS-CATALOG-IS-INSTALLED></p>
+  <when title="When to read">
+    <p><READ-THE-GOVERNING-LESSON-FIRST fact="true" status="impl/done">Before you design an activation model, an install pipeline, an
 identity scheme, a durable-environment edit, or a package format, read
-the lesson that governs it **first**.</fact></p>
-    <p><fact id="the-law-is-one-line-the-rationale-is-why" status="impl/done">The law is one line; the
-rationale is why it is not negotiable.</fact></p>
+the lesson that governs it **first**.</READ-THE-GOVERNING-LESSON-FIRST></p>
+    <p><the-law-is-one-line-the-rationale-is-why fact="true" status="impl/done">The law is one line; the
+rationale is why it is not negotiable.</the-law-is-one-line-the-rationale-is-why></p>
     <list ordered="false">
-      <item><fact id="POINTER-SELF-UPDATING-TOOLS" status="impl/done">Self-updating tools — activation, instances, identity, environment
+      <item><POINTER-SELF-UPDATING-TOOLS fact="true" status="impl/done">Self-updating tools — activation, instances, identity, environment
   edits, removal:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root.</fact></item>
-      <item><fact id="POINTER-PACKAGING-LESSONS" status="impl/done">Packaging — what ships, what identity is, the bootstrap:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root.</fact></item>
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root.</POINTER-SELF-UPDATING-TOOLS></item>
+      <item><POINTER-PACKAGING-LESSONS fact="true" status="impl/done">Packaging — what ships, what identity is, the bootstrap:
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root.</POINTER-PACKAGING-LESSONS></item>
     </list>
-    <p><fact id="index-and-maxims-pointer" status="impl/done">The index and the cross-cutting maxims:
-@spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root.</fact></p>
-  </section>
-  <section id="never" title="Never">
+    <p><index-and-maxims-pointer fact="true" status="impl/done">The index and the cross-cutting maxims:
+@spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root.</index-and-maxims-pointer></p>
+  </when>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH" status="impl/done">Never make an environment variable the source of truth for the
+      <item><NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH fact="true" status="impl/done">Never make an environment variable the source of truth for the
   active version — env is frozen at process start; read a live pointer
-  file each launch instead.</fact></item>
-      <item><fact id="NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE" status="impl/done">Never overwrite a file that may be in use — write a new instance
-  directory and flip a pointer.</fact></item>
-      <item><fact id="NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY" status="impl/done">Never content-hash gigabytes to establish identity — count instances
-  and detect change cheaply.</fact></item>
-      <item><fact id="NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE" status="impl/done">Never ship prose describing tooling the consumer does not receive —
-  ship the runtime.</fact></item>
-      <item><fact id="NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS" status="impl/done">Never let a package's identity include build artifacts — identity is
-  the source.</fact></item>
+  file each launch instead.</NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH></item>
+      <item><NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE fact="true" status="impl/done">Never overwrite a file that may be in use — write a new instance
+  directory and flip a pointer.</NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE></item>
+      <item><NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY fact="true" status="impl/done">Never content-hash gigabytes to establish identity — count instances
+  and detect change cheaply.</NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY></item>
+      <item><NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE fact="true" status="impl/done">Never ship prose describing tooling the consumer does not receive —
+  ship the runtime.</NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE></item>
+      <item><NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS fact="true" status="impl/done">Never let a package's identity include build artifacts — identity is
+  the source.</NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS></item>
     </list>
-  </section>
+  </never>
 </spec>

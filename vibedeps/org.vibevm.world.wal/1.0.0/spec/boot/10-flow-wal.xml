@@ -2,66 +2,66 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: WAL (Write-Ahead Log)</title>
   <status stage="impl" state="done"/>
-  <p><fact id="PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY" status="impl/done">This project uses **WAL discipline** for session continuity.</fact></p>
-  <p><fact id="two-files-carry-it-lead" status="impl/done">Two files
-carry it:</fact></p>
+  <p><PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY fact="true" status="impl/done">This project uses **WAL discipline** for session continuity.</PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY></p>
+  <p><two-files-carry-it-lead fact="true" status="impl/done">Two files
+carry it:</two-files-carry-it-lead></p>
   <list ordered="false">
-    <item><fact id="FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT" status="impl/done">`spec/WAL.md` — the living checkpoint. **Canonical.**</fact></item>
-    <item><fact id="FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT" status="impl/done">`CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
-  supersedes it wherever they diverge.</fact></item>
+    <item><FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">`spec/WAL.md` — the living checkpoint. **Canonical.**</FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT></item>
+    <item><FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT fact="true" status="impl/done">`CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
+  supersedes it wherever they diverge.</FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT></item>
   </list>
-  <section id="session-start" title="At the start of every session">
+  <session-start title="At the start of every session">
     <list ordered="true">
-      <item><fact id="READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE" status="impl/done">Read `spec/WAL.md` **before** doing anything else. The `wal-status`
-   skill, where installed, is the fast form of this read.</fact></item>
-      <item><fact id="VERIFY-THE-UPDATED-LINE-IS-CURRENT" status="impl/done">Verify the `_Updated:` line is current. If it is older than 24
+      <item><READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE fact="true" status="impl/done">Read `spec/WAL.md` **before** doing anything else. The `wal-status`
+   skill, where installed, is the fast form of this read.</READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE></item>
+      <item><VERIFY-THE-UPDATED-LINE-IS-CURRENT fact="true" status="impl/done">Verify the `_Updated:` line is current. If it is older than 24
    hours, ask the user to confirm state before acting on anything the
-   WAL claims — and before any destructive work.</fact></item>
-      <item><fact id="HONOUR-EVERY-CONSTRAINT-VERBATIM" status="impl/done">Honour every constraint listed in the WAL's **Constraints** section
+   WAL claims — and before any destructive work.</VERIFY-THE-UPDATED-LINE-IS-CURRENT></item>
+      <item><HONOUR-EVERY-CONSTRAINT-VERBATIM fact="true" status="impl/done">Honour every constraint listed in the WAL's **Constraints** section
    verbatim. These are the "do not touch" rules: violate them only
-   after an explicit, in-session confirmation from the user.</fact></item>
+   after an explicit, in-session confirmation from the user.</HONOUR-EVERY-CONSTRAINT-VERBATIM></item>
     </list>
-  </section>
-  <section id="during" title="During the session">
+  </session-start>
+  <during title="During the session">
     <list ordered="true">
-      <item><fact id="PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL" status="impl/done">If the user makes a decision that affects future sessions, propose
+      <item><PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL fact="true" status="impl/done">If the user makes a decision that affects future sessions, propose
    adding it to the WAL (or the spec, if it's architectural). Do not
-   silently file it as "remembered."</fact></item>
-      <item><fact id="STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT" status="impl/done">If you find yourself about to violate a Constraint, stop and surface
+   silently file it as "remembered."</PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL></item>
+      <item><STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT fact="true" status="impl/done">If you find yourself about to violate a Constraint, stop and surface
    the question explicitly. A violation snuck past in a diff is a
-   future bug.</fact></item>
+   future bug.</STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT></item>
     </list>
-  </section>
-  <section id="session-end" title="At the end of every session">
+  </during>
+  <session-end title="At the end of every session">
     <list ordered="true">
-      <item><fact id="REWRITE-THE-WAL-NEVER-APPEND-TO-IT" status="impl/done">Rewrite `spec/WAL.md` per the protocol in
+      <item><REWRITE-THE-WAL-NEVER-APPEND-TO-IT fact="true" status="impl/done">Rewrite `spec/WAL.md` per the protocol in
    @spec://org.vibevm.world/wal/flows/wal/session-end-hook#root.
    Rewrite, not append — the WAL must reflect the **current** state,
    not the history. History lives in `git log` and in milestone commit
-   messages; the WAL is a checkpoint, not a journal.</fact></item>
+   messages; the WAL is a checkpoint, not a journal.</REWRITE-THE-WAL-NEVER-APPEND-TO-IT></item>
     </list>
-  </section>
-  <section id="commands" title="Session commands">
+  </session-end>
+  <commands title="Session commands">
     <list ordered="true">
-      <item><fact id="RECOGNISE-THE-WIND-DOWN-PHRASES" status="impl/done">Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
+      <item><RECOGNISE-THE-WIND-DOWN-PHRASES fact="true" status="impl/done">Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
    `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the
    intent, not the exact wording). A wind-down invokes the full
    session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per
-   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root.</fact></item>
-      <item><fact id="RECOGNISE-THE-RESUME-PHRASES" status="impl/done">Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
+   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root.</RECOGNISE-THE-WIND-DOWN-PHRASES></item>
+      <item><RECOGNISE-THE-RESUME-PHRASES fact="true" status="impl/done">Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
    CONTEXT`. Restore context, verify the repository state empirically,
    emit a status report — then **stop and wait for direction**. A
-   recorded "next step" is a candidate, not authorisation.</fact></item>
+   recorded "next step" is a candidate, not authorisation.</RECOGNISE-THE-RESUME-PHRASES></item>
     </list>
-  </section>
-  <section id="scope" title="Scope of this flow">
+  </commands>
+  <scope title="Scope of this flow">
     <list ordered="false">
-      <item><fact id="FLOW-OWNS-ONLY-ITS-OWN-FILES" status="impl/done">This flow owns only the protocol files under `spec/flows/wal/`, the
-  `wal-status` skill, and this boot snippet.</fact></item>
-      <item><fact id="WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE" status="impl/done">`spec/WAL.md` and `CONTINUE.md` are **project state**, not package
+      <item><FLOW-OWNS-ONLY-ITS-OWN-FILES fact="true" status="impl/done">This flow owns only the protocol files under `spec/flows/wal/`, the
+  `wal-status` skill, and this boot snippet.</FLOW-OWNS-ONLY-ITS-OWN-FILES></item>
+      <item><WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE fact="true" status="impl/done">`spec/WAL.md` and `CONTINUE.md` are **project state**, not package
   state — the package never creates, deletes, or overwrites them as
-  part of install or uninstall.</fact></item>
+  part of install or uninstall.</WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE></item>
     </list>
-    <p><fact id="full-protocol-pointer" status="impl/done">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root.</fact></p>
-  </section>
+    <p><full-protocol-pointer fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root.</full-protocol-pointer></p>
+  </scope>
 </spec>

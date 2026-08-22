@@ -1,8 +1,8 @@
 schema = 1
 source_hash = "sha256:fb01b6d78218eafa8d34c11686fda6b026ef54f861d4d68a06de2fdb9d08b6a4"
 output_format = "xml"
-converter_recipe = "specdoc/1"
-derived_hash = "sha256:de7d092f65e4b22bf0f8c2f64a3f61da978ee279797a4dc798252d33bc968c72"
+converter_recipe = "specdoc/3"
+derived_hash = "sha256:b9995b0608eb20b961a563c0638ee6c98559fa6c5cff45fe7d9aa0d3af2ffde0"
 
 [[file]]
 source = "LICENSE"

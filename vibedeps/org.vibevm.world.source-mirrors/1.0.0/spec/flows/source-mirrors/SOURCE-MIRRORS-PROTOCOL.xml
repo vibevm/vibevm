@@ -2,123 +2,123 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Source Mirrors Protocol</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *the problem* that
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *the problem* that
 multi-homing a git source across several hosts creates, *the model*
 that dissolves it (a single-writer mainline with every host as a
 downstream read-replica), *what the model buys*, *what it costs*, and
-*how to re-derive* the practice for your own project.</fact></p>
-  <p><fact id="sibling-document-pointers" status="impl/done">The mechanics of
+*how to re-derive* the practice for your own project.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">The mechanics of
 the fan-out live in [`fanout-mechanics.md`](fanout-mechanics.md); the
-maintainer's day-to-day loop in [`daily-loop.md`](daily-loop.md).</fact></p>
-  <section id="problem" title="The problem">
-    <p><fact id="SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS" status="spec/done">Suppose the same project must live on two git hosts at once — call
-them **host A** and **host B**.</fact></p>
-    <p><fact id="the-reasons-are-real" status="spec/done">The reasons are real:</fact></p>
+maintainer's day-to-day loop in [`daily-loop.md`](daily-loop.md).</sibling-document-pointers></p>
+  <problem title="The problem">
+    <p><SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS fact="true" status="spec/done">Suppose the same project must live on two git hosts at once — call
+them **host A** and **host B**.</SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS></p>
+    <p><the-reasons-are-real fact="true" status="spec/done">The reasons are real:</the-reasons-are-real></p>
     <list ordered="false">
-      <item><fact id="REASON-AUDIENCE-PER-HOST" status="spec/done">one audience
-  reaches host A and another reaches host B;</fact></item>
-      <item><fact id="REASON-A-HOST-MAY-DISAPPEAR" status="spec/done">one host may disappear and
-  the history must survive;</fact></item>
-      <item><fact id="REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST" status="spec/done">a jurisdiction, a mirror-of-record, or a
-  review community lives on each.</fact></item>
+      <item><REASON-AUDIENCE-PER-HOST fact="true" status="spec/done">one audience
+  reaches host A and another reaches host B;</REASON-AUDIENCE-PER-HOST></item>
+      <item><REASON-A-HOST-MAY-DISAPPEAR fact="true" status="spec/done">one host may disappear and
+  the history must survive;</REASON-A-HOST-MAY-DISAPPEAR></item>
+      <item><REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST fact="true" status="spec/done">a jurisdiction, a mirror-of-record, or a
+  review community lives on each.</REASON-JURISDICTION-MIRROR-OR-COMMUNITY-PER-HOST></item>
     </list>
-    <p><fact id="BOTH-MUST-CARRY-THE-SAME-HISTORY" status="spec/done">Both must always carry the same
-history, and both are canonical *for reading*.</fact></p>
-    <p><fact id="THE-NAIVE-WAY-IS-TO-LET-EACH-ACCEPT-WRITES" status="spec/done">The naive way to keep two writable repositories in step is to let each
-accept writes and mirror to the other.</fact></p>
-    <p><fact id="THAT-IS-MULTI-MASTER-REPLICATION" status="spec/done">That is **multi-master
+    <p><BOTH-MUST-CARRY-THE-SAME-HISTORY fact="true" status="spec/done">Both must always carry the same
+history, and both are canonical *for reading*.</BOTH-MUST-CARRY-THE-SAME-HISTORY></p>
+    <p><THE-NAIVE-WAY-IS-TO-LET-EACH-ACCEPT-WRITES fact="true" status="spec/done">The naive way to keep two writable repositories in step is to let each
+accept writes and mirror to the other.</THE-NAIVE-WAY-IS-TO-LET-EACH-ACCEPT-WRITES></p>
+    <p><THAT-IS-MULTI-MASTER-REPLICATION fact="true" status="spec/done">That is **multi-master
 replication**, and it has one failure mode that never goes away: two
 independent writes to the same branch **diverge**, and then something
-must merge them or one must be force-overwritten.</fact></p>
-    <p><fact id="EVERY-ADDED-HOST-MULTIPLIES-THE-RACE" status="spec/done">Every added host
-multiplies the race.</fact></p>
-    <p><fact id="A-DIVERGENCE-MEANS-CONFLICT-ARCHAEOLOGY-ON-PUBLISHED-HISTORY" status="spec/done">The moment a divergence appears, a human is doing
-conflict archaeology on published history — the most expensive kind.</fact></p>
-  </section>
-  <section id="model" title="The model">
-    <p><fact id="THE-FIX-IS-STRUCTURAL-NOT-OPERATIONAL" status="impl/done">The fix is structural, not operational.</fact></p>
-    <p><fact id="ADOPT-THE-HUB-AND-SPOKE-SHAPE" status="impl/done">Adopt the **hub-and-spoke /
+must merge them or one must be force-overwritten.</THAT-IS-MULTI-MASTER-REPLICATION></p>
+    <p><EVERY-ADDED-HOST-MULTIPLIES-THE-RACE fact="true" status="spec/done">Every added host
+multiplies the race.</EVERY-ADDED-HOST-MULTIPLIES-THE-RACE></p>
+    <p><A-DIVERGENCE-MEANS-CONFLICT-ARCHAEOLOGY-ON-PUBLISHED-HISTORY fact="true" status="spec/done">The moment a divergence appears, a human is doing
+conflict archaeology on published history — the most expensive kind.</A-DIVERGENCE-MEANS-CONFLICT-ARCHAEOLOGY-ON-PUBLISHED-HISTORY></p>
+  </problem>
+  <model title="The model">
+    <p><THE-FIX-IS-STRUCTURAL-NOT-OPERATIONAL fact="true" status="impl/done">The fix is structural, not operational.</THE-FIX-IS-STRUCTURAL-NOT-OPERATIONAL></p>
+    <p><ADOPT-THE-HUB-AND-SPOKE-SHAPE fact="true" status="impl/done">Adopt the **hub-and-spoke /
 benevolent-dictator** shape (the Linux-kernel workflow): make mainline
-**single-writer**, and demote every host to a downstream replica.</fact></p>
-    <section id="mainline" title="Mainline is one local tree; no host is primary">
-      <p><fact id="MAINLINE-IS-THE-MAINTAINERS-INTEGRATED-LOCAL-MAIN" status="impl/done">Mainline is the maintainer's integrated local `main`.</fact></p>
-      <p><fact id="MAINLINE-HAS-NO-PRIMARY-HOST" status="impl/done">It has **no
+**single-writer**, and demote every host to a downstream replica.</ADOPT-THE-HUB-AND-SPOKE-SHAPE></p>
+    <mainline title="Mainline is one local tree; no host is primary">
+      <p><MAINLINE-IS-THE-MAINTAINERS-INTEGRATED-LOCAL-MAIN fact="true" status="impl/done">Mainline is the maintainer's integrated local `main`.</MAINLINE-IS-THE-MAINTAINERS-INTEGRATED-LOCAL-MAIN></p>
+      <p><MAINLINE-HAS-NO-PRIMARY-HOST fact="true" status="impl/done">It has **no
 primary host** — it is not "the host A copy" or "the host B copy"; it
-is what the maintainer has blessed, replicated equally to every host.</fact></p>
-      <p><fact id="ONE-SERIAL-WRITER-MEANS-TWO-WRITES-CANNOT-RACE" status="impl/done">Because exactly one writer advances mainline, and does so **serially**,
-two divergent writes to `main` cannot race.</fact></p>
-      <p><fact id="THE-MULTI-MASTER-PROBLEM-IS-ABSENT-BY-CONSTRUCTION" status="impl/done">The multi-master problem is
-**absent by construction, not patched after the fact.**</fact></p>
-      <p><fact id="the-cost-of-both-repos-canonical-is-paid-once" status="spec/done">The cost of
+is what the maintainer has blessed, replicated equally to every host.</MAINLINE-HAS-NO-PRIMARY-HOST></p>
+      <p><ONE-SERIAL-WRITER-MEANS-TWO-WRITES-CANNOT-RACE fact="true" status="impl/done">Because exactly one writer advances mainline, and does so **serially**,
+two divergent writes to `main` cannot race.</ONE-SERIAL-WRITER-MEANS-TWO-WRITES-CANNOT-RACE></p>
+      <p><THE-MULTI-MASTER-PROBLEM-IS-ABSENT-BY-CONSTRUCTION fact="true" status="impl/done">The multi-master problem is
+**absent by construction, not patched after the fact.**</THE-MULTI-MASTER-PROBLEM-IS-ABSENT-BY-CONSTRUCTION></p>
+      <p><the-cost-of-both-repos-canonical-is-paid-once fact="true" status="spec/done">The cost of
 "both repos canonical" is paid once, in the model, not continuously, in
-conflict resolution.</fact></p>
-    </section>
-    <section id="replicas" title="Every host is a downstream read-replica">
-      <p><fact id="EACH-HOST-IS-CANONICAL-FOR-READING-AND-A-REPLICA-FOR-WRITING" status="impl/done">Each host is canonical for *reading* in its audience, and a replica for
-*writing* — nobody writes a target directly.</fact></p>
-      <p><fact id="A-DIRECT-WRITE-OR-A-FORCE-PUSH-MAKES-A-TARGET-DIVERGE" status="impl/done">A direct write to a target, or a force-push, makes it **diverge** from
-mainline.</fact></p>
-      <p><fact id="THE-MODEL-DETECTS-DIVERGENCE-AND-FAILS-LOUD" status="impl/done">The model
+conflict resolution.</the-cost-of-both-repos-canonical-is-paid-once></p>
+    </mainline>
+    <replicas title="Every host is a downstream read-replica">
+      <p><EACH-HOST-IS-CANONICAL-FOR-READING-AND-A-REPLICA-FOR-WRITING fact="true" status="impl/done">Each host is canonical for *reading* in its audience, and a replica for
+*writing* — nobody writes a target directly.</EACH-HOST-IS-CANONICAL-FOR-READING-AND-A-REPLICA-FOR-WRITING></p>
+      <p><A-DIRECT-WRITE-OR-A-FORCE-PUSH-MAKES-A-TARGET-DIVERGE fact="true" status="impl/done">A direct write to a target, or a force-push, makes it **diverge** from
+mainline.</A-DIRECT-WRITE-OR-A-FORCE-PUSH-MAKES-A-TARGET-DIVERGE></p>
+      <p><THE-MODEL-DETECTS-DIVERGENCE-AND-FAILS-LOUD fact="true" status="impl/done">The model
 does not paper over that: the tooling detects it and **fails loud**
-rather than reconciling silently.</fact></p>
-      <p><fact id="A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE" status="impl/done">A diverged target is a signal to
-investigate, never something to clobber.</fact></p>
-    </section>
-    <section id="integration" title="Contributions arrive anywhere; the maintainer integrates">
-      <p><fact id="A-CHANGE-REACHES-MAINLINE-ONLY-BY-THE-MAINTAINER-INTEGRATING-IT" status="impl/done">A change reaches mainline only by the maintainer integrating it.</fact></p>
-      <p><fact id="PROPOSALS-ARRIVE-HOWEVER-IS-CONVENIENT" status="impl/done">Proposals arrive however is convenient — a web PR on host A, a web PR
+rather than reconciling silently.</THE-MODEL-DETECTS-DIVERGENCE-AND-FAILS-LOUD></p>
+      <p><A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE fact="true" status="impl/done">A diverged target is a signal to
+investigate, never something to clobber.</A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE></p>
+    </replicas>
+    <integration title="Contributions arrive anywhere; the maintainer integrates">
+      <p><A-CHANGE-REACHES-MAINLINE-ONLY-BY-THE-MAINTAINER-INTEGRATING-IT fact="true" status="impl/done">A change reaches mainline only by the maintainer integrating it.</A-CHANGE-REACHES-MAINLINE-ONLY-BY-THE-MAINTAINER-INTEGRATING-IT></p>
+      <p><PROPOSALS-ARRIVE-HOWEVER-IS-CONVENIENT fact="true" status="impl/done">Proposals arrive however is convenient — a web PR on host A, a web PR
 on host B, a branch on a fork, an emailed patch — and are reviewed
-where they land.</fact></p>
-      <p><fact id="ACCEPTING-ONE-MEANS-BRINGING-ITS-COMMITS-INTO-MAINLINE" status="impl/done">Accepting one means bringing its commits into local
-mainline, then fanning out.</fact></p>
+where they land.</PROPOSALS-ARRIVE-HOWEVER-IS-CONVENIENT></p>
+      <p><ACCEPTING-ONE-MEANS-BRINGING-ITS-COMMITS-INTO-MAINLINE fact="true" status="impl/done">Accepting one means bringing its commits into local
+mainline, then fanning out.</ACCEPTING-ONE-MEANS-BRINGING-ITS-COMMITS-INTO-MAINLINE></p>
       <table>
         <tr>
           <td>Surface</td>
           <td>Role</td>
         </tr>
         <tr>
-          <td><fact id="ROW-SURFACE-WEB-PR-UI" status="impl/done">A host's web PR UI</fact></td>
+          <td><ROW-SURFACE-WEB-PR-UI fact="true" status="impl/done">A host's web PR UI</ROW-SURFACE-WEB-PR-UI></td>
           <td><fact status="impl/done">**Inbox** and review surface</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-SURFACE-LOCAL-MAIN" status="impl/done">The maintainer's local `main`</fact></td>
+          <td><ROW-SURFACE-LOCAL-MAIN fact="true" status="impl/done">The maintainer's local `main`</ROW-SURFACE-LOCAL-MAIN></td>
           <td><fact status="impl/done">**Merge authority**</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-SURFACE-HOST-AFTER-FAN-OUT" status="impl/done">Every host after fan-out</fact></td>
+          <td><ROW-SURFACE-HOST-AFTER-FAN-OUT fact="true" status="impl/done">Every host after fan-out</ROW-SURFACE-HOST-AFTER-FAN-OUT></td>
           <td><fact status="impl/done">**Read-replica** of that authority</fact></td>
         </tr>
       </table>
-      <p><fact id="THE-WEB-PR-UIS-ARE-INBOXES-NOT-THE-MERGE-AUTHORITY" status="impl/done">The web PR UIs are *inboxes and review surfaces, not the merge
-authority*.</fact></p>
-      <p><fact id="this-is-exactly-the-kernels-workflow" status="spec/done">This is exactly the kernel's "patches by email, integrated
+      <p><THE-WEB-PR-UIS-ARE-INBOXES-NOT-THE-MERGE-AUTHORITY fact="true" status="impl/done">The web PR UIs are *inboxes and review surfaces, not the merge
+authority*.</THE-WEB-PR-UIS-ARE-INBOXES-NOT-THE-MERGE-AUTHORITY></p>
+      <p><this-is-exactly-the-kernels-workflow fact="true" status="spec/done">This is exactly the kernel's "patches by email, integrated
 in the maintainer's tree, pushed to a hub that mirrors out" — the web
-UIs are merely nicer inboxes than a mailing list.</fact></p>
-    </section>
-  </section>
-  <section id="buys" title="What the model buys">
+UIs are merely nicer inboxes than a mailing list.</this-is-exactly-the-kernels-workflow></p>
+    </integration>
+  </model>
+  <buys title="What the model buys">
     <list ordered="false">
-      <item><fact id="BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION" status="impl/done">**Divergence is impossible by construction.** One serial writer means
+      <item><BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION fact="true" status="impl/done">**Divergence is impossible by construction.** One serial writer means
   no two writes to `main` can race. There is no reconciliation step to
-  get wrong because there is no concurrent write to reconcile.</fact></item>
-      <item><fact id="BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS" status="impl/done">**Any host can vanish without data loss.** Every host holds the full
+  get wrong because there is no concurrent write to reconcile.</BUYS-DIVERGENCE-IS-IMPOSSIBLE-BY-CONSTRUCTION></item>
+      <item><BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS fact="true" status="impl/done">**Any host can vanish without data loss.** Every host holds the full
   history of the refs the manifest declares for it; mainline holds the whole
   tree. A host going dark, getting blocked, or deleting the repo costs a line
-  in the manifest, not a commit.</fact></item>
-      <item><fact id="BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST" status="impl/done">**Audience and jurisdiction per host.** Each host serves its own
+  in the manifest, not a commit.</BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS></item>
+      <item><BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST fact="true" status="impl/done">**Audience and jurisdiction per host.** Each host serves its own
   region, community, or compliance surface, while all serve identical
-  history. Adding a host is one manifest entry.</fact></item>
-      <item><fact id="BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL" status="impl/done">**The invariant is runnable capital.** "Never `--force`" is not a
+  history. Adding a host is one manifest entry.</BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST></item>
+      <item><BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">**The invariant is runnable capital.** "Never `--force`" is not a
   prose promise — it is pinned by a test over the push command
-  ([`fanout-mechanics.md` §never-force-test](fanout-mechanics.md#never-force-test)).</fact></item>
+  ([`fanout-mechanics.md` §never-force-test](fanout-mechanics.md#never-force-test)).</BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL></item>
     </list>
-  </section>
-  <section id="costs" title="What the model costs">
-    <p><fact id="ONE-HUMAN-SERIALIZES-EVERY-MERGE" status="impl/done">Be honest about the bottleneck: **one human serializes every merge.**</fact></p>
-    <p><fact id="MAINLINE-ADVANCES-ONLY-AS-FAST-AS-THE-MAINTAINER-INTEGRATES" status="impl/done">Mainline advances only as fast as the maintainer integrates.</fact></p>
-    <p><fact id="there-is-no-parallel-write-path" status="spec/done">There is
+  </buys>
+  <costs title="What the model costs">
+    <p><ONE-HUMAN-SERIALIZES-EVERY-MERGE fact="true" status="impl/done">Be honest about the bottleneck: **one human serializes every merge.**</ONE-HUMAN-SERIALIZES-EVERY-MERGE></p>
+    <p><MAINLINE-ADVANCES-ONLY-AS-FAST-AS-THE-MAINTAINER-INTEGRATES fact="true" status="impl/done">Mainline advances only as fast as the maintainer integrates.</MAINLINE-ADVANCES-ONLY-AS-FAST-AS-THE-MAINTAINER-INTEGRATES></p>
+    <p><there-is-no-parallel-write-path fact="true" status="spec/done">There is
 no parallel write path — that is the whole point, and it is also the
-whole cost.</fact></p>
+whole cost.</there-is-no-parallel-write-path></p>
     <table>
       <tr>
         <td>Property</td>
@@ -126,42 +126,42 @@ whole cost.</fact></p>
         <td>Single-writer mainline</td>
       </tr>
       <tr>
-        <td><fact id="ROW-COST-CONCURRENT-WRITES" status="spec/done">Concurrent writes</fact></td>
+        <td><ROW-COST-CONCURRENT-WRITES fact="true" status="spec/done">Concurrent writes</ROW-COST-CONCURRENT-WRITES></td>
         <td><fact status="spec/done">Allowed, and they race</fact></td>
         <td><fact status="spec/done">Serialized through one tree</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-COST-DIVERGENCE" status="spec/done">Divergence</fact></td>
+        <td><ROW-COST-DIVERGENCE fact="true" status="spec/done">Divergence</ROW-COST-DIVERGENCE></td>
         <td><fact status="spec/done">Possible; must be reconciled</fact></td>
         <td><fact status="spec/done">Impossible by construction</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-COST-MERGE-THROUGHPUT" status="spec/done">Merge throughput</fact></td>
+        <td><ROW-COST-MERGE-THROUGHPUT fact="true" status="spec/done">Merge throughput</ROW-COST-MERGE-THROUGHPUT></td>
         <td><fact status="spec/done">Many writers</fact></td>
         <td><fact status="spec/done">One writer (the bottleneck)</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-COST-FAILURE-SURFACE" status="spec/done">Failure surface</fact></td>
+        <td><ROW-COST-FAILURE-SURFACE fact="true" status="spec/done">Failure surface</ROW-COST-FAILURE-SURFACE></td>
         <td><fact status="spec/done">Reconcile published history</fact></td>
         <td><fact status="spec/done">A loud abort before any harm</fact></td>
       </tr>
     </table>
-    <p><fact id="for-a-small-team-the-trade-is-strongly-positive" status="spec/done">For a **small-team or single-maintainer project**, the trade is
+    <p><for-a-small-team-the-trade-is-strongly-positive fact="true" status="spec/done">For a **small-team or single-maintainer project**, the trade is
 strongly positive: integration is not the throughput limit (review and
 design are), and the maintainer was serializing the important merges
-anyway.</fact></p>
-    <p><fact id="THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH" status="impl/done">The model just makes that serialization the *only* write path,
-so nothing can sneak around it and diverge.</fact></p>
-    <p><fact id="when-a-project-outgrows-one-integrator-this-is-the-wrong-tool" status="spec/done">When a project outgrows one
+anyway.</for-a-small-team-the-trade-is-strongly-positive></p>
+    <p><THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH fact="true" status="impl/done">The model just makes that serialization the *only* write path,
+so nothing can sneak around it and diverge.</THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH></p>
+    <p><when-a-project-outgrows-one-integrator-this-is-the-wrong-tool fact="true" status="spec/done">When a project outgrows one
 integrator — several full-time committers merging in parallel all day —
 this model is the wrong tool, and the honest answer is to add
 one-directional server-side mirroring or move to a shared-forge
-workflow.</fact></p>
-    <p><fact id="RECORD-THAT-AS-A-REVISIT-TRIGGER" status="impl/done">Record that as a revisit trigger, not a someday-maybe.</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="re-derive-lead" status="impl/done">Do not copy the host names or the script verbatim — copy the *task*,
-and let the agent derive the setup your project actually needs:</fact></p>
+workflow.</when-a-project-outgrows-one-integrator-this-is-the-wrong-tool></p>
+    <p><RECORD-THAT-AS-A-REVISIT-TRIGGER fact="true" status="impl/done">Record that as a revisit trigger, not a someday-maybe.</RECORD-THAT-AS-A-REVISIT-TRIGGER></p>
+  </costs>
+  <re-derive title="Re-derive for your project">
+    <p><re-derive-lead fact="true" status="impl/done">Do not copy the host names or the script verbatim — copy the *task*,
+and let the agent derive the setup your project actually needs:</re-derive-lead></p>
     <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-source-mirrors/&lt;version&gt;/spec/flows/source-mirrors/`, check `vibe.lock`) in full, then adapt it to this project:
 1. List every git host this source must live on, and for each: is it a
    push target (we push to it) or self-mirroring (it pulls itself)?
@@ -175,20 +175,20 @@ and let the agent derive the setup your project actually needs:</fact></p>
    (a test or a CI grep) that proves --force can never be emitted.
 5. Show me the manifest and the script as diffs. Apply nothing until I
    approve, and never push to a host as part of this exercise.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT" status="impl/done">Multi-homing across hosts invites multi-master divergence; this model
-  dissolves it instead of managing it.</fact></item>
-      <item><fact id="SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA" status="impl/done">One mainline, single-writer, no primary host. Every host is a
+      <item><SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT fact="true" status="impl/done">Multi-homing across hosts invites multi-master divergence; this model
+  dissolves it instead of managing it.</SUM-MULTI-HOMING-INVITES-DIVERGENCE-AND-THIS-MODEL-DISSOLVES-IT></item>
+      <item><SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA fact="true" status="impl/done">One mainline, single-writer, no primary host. Every host is a
   downstream read-replica. Contributions arrive on any host as inboxes;
-  the maintainer's tree is the merge authority.</fact></item>
-      <item><fact id="SUM-WHAT-IT-BUYS" status="impl/done">What it buys: divergence impossible by construction, any host can
-  vanish without data loss, audience/jurisdiction per host.</fact></item>
-      <item><fact id="SUM-WHAT-IT-COSTS" status="spec/done">What it costs: one human serializes merges. Acceptable — and cheaper
+  the maintainer's tree is the merge authority.</SUM-ONE-MAINLINE-EVERY-HOST-A-REPLICA></item>
+      <item><SUM-WHAT-IT-BUYS fact="true" status="impl/done">What it buys: divergence impossible by construction, any host can
+  vanish without data loss, audience/jurisdiction per host.</SUM-WHAT-IT-BUYS></item>
+      <item><SUM-WHAT-IT-COSTS fact="true" status="spec/done">What it costs: one human serializes merges. Acceptable — and cheaper
   than the alternative — for small-team projects; record a revisit
-  trigger for the day it is not.</fact></item>
-      <item><fact id="SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL" status="impl/done">The never-`--force` invariant is runnable capital, not a promise.</fact></item>
+  trigger for the day it is not.</SUM-WHAT-IT-COSTS></item>
+      <item><SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">The never-`--force` invariant is runnable capital, not a promise.</SUM-THE-NEVER-FORCE-INVARIANT-IS-RUNNABLE-CAPITAL></item>
     </list>
-  </section>
+  </summary>
 </spec>

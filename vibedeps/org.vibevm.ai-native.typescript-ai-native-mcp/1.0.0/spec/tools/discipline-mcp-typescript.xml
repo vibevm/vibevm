@@ -2,128 +2,128 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">typescript-ai-native-mcp — the server brief</title>
   <status stage="spec" state="done"/>
-  <p><fact id="SERVED-OVER-MCP-AS-ONE-STDIO-BINARY" status="impl/done">**What it is.** The AI-Native TypeScript discipline served over MCP:
+  <p><SERVED-OVER-MCP-AS-ONE-STDIO-BINARY fact="true" status="impl/done">**What it is.** The AI-Native TypeScript discipline served over MCP:
 one stdio binary, seventeen tools, launched by an agent host straight
-from this package's slot.</fact></p>
-  <p><fact id="SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE" status="impl/done">Serving needs no vibe anywhere on the machine
-(PROP-027 §2.6; the live chain scrubs PATH to prove it).</fact></p>
-  <p><fact id="TRANSPORT-IS-THE-VENDORED-MCP-CORE" status="impl/done">Transport: the
+from this package's slot.</SERVED-OVER-MCP-AS-ONE-STDIO-BINARY></p>
+  <p><SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE fact="true" status="impl/done">Serving needs no vibe anywhere on the machine
+(PROP-027 §2.6; the live chain scrubs PATH to prove it).</SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE></p>
+  <p><TRANSPORT-IS-THE-VENDORED-MCP-CORE fact="true" status="impl/done">Transport: the
 vendored `mcp-core` (line-delimited JSON-RPC 2.0, protocol
-`2024-11-05` — MCP-CORE-v0.1).</fact></p>
-  <p><fact id="THE-TS-ORACLE-IS-THE-COMPILER" status="spec/done">The TS oracle IS the compiler (the
+`2024-11-05` — MCP-CORE-v0.1).</TRANSPORT-IS-THE-VENDORED-MCP-CORE></p>
+  <p><THE-TS-ORACLE-IS-THE-COMPILER fact="true" status="spec/done">The TS oracle IS the compiler (the
 LanguageService is tsc's own engine) — no approximation caveat rides
-these answers.</fact></p>
-  <p><fact id="THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL" status="impl/done">**One engine, one truth.** The tools call the SAME lib fns the CLIs
+these answers.</THE-TS-ORACLE-IS-THE-COMPILER></p>
+  <p><THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL fact="true" status="impl/done">**One engine, one truth.** The tools call the SAME lib fns the CLIs
 call, and the `=X.Y.Z` pin on `stack:org.vibevm.ai-native/typescript-ai-native-lang`
 holds this package's vendored copies and the consumer's installed stack
-to one resolved version set.</fact></p>
-  <p><fact id="TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT" status="impl/done">Tool-level failure — a red gate, an
+to one resolved version set.</THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL></p>
+  <p><TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT fact="true" status="impl/done">Tool-level failure — a red gate, an
 absent-toolchain refusal WITH ITS RECIPE — is an `isError` RESULT;
-protocol errors are reserved for the transport grammar.</fact></p>
-  <section id="parity-map" title="The parity map">
+protocol errors are reserved for the transport grammar.</TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT></p>
+  <parity-map title="The parity map">
     <table>
       <tr>
         <td>Tool</td>
         <td>CLI</td>
       </tr>
       <tr>
-        <td><fact id="ROW-INIT" status="impl/done">`init`</fact></td>
+        <td><ROW-INIT fact="true" status="impl/done">`init`</ROW-INIT></td>
         <td><fact status="impl/done">`typescript-ai-native init [--namespace] [--force]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FLOOR" status="impl/done">`floor`</fact></td>
+        <td><ROW-FLOOR fact="true" status="impl/done">`floor`</ROW-FLOOR></td>
         <td><fact status="impl/done">`typescript-ai-native floor [--keep-going]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CONFORM-CHECK" status="impl/done">`conform_check`</fact></td>
+        <td><ROW-CONFORM-CHECK fact="true" status="impl/done">`conform_check`</ROW-CONFORM-CHECK></td>
         <td><fact status="impl/done">`typescript-ai-native-conform check [--scope] [--baseline]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CONFORM-FREEZE" status="impl/done">`conform_freeze`</fact></td>
+        <td><ROW-CONFORM-FREEZE fact="true" status="impl/done">`conform_freeze`</ROW-CONFORM-FREEZE></td>
         <td><fact status="impl/done">`typescript-ai-native-conform freeze [--baseline]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-SPECMAP-CHECK" status="impl/done">`specmap_check`</fact></td>
+        <td><ROW-SPECMAP-CHECK fact="true" status="impl/done">`specmap_check`</ROW-SPECMAP-CHECK></td>
         <td><fact status="impl/done">`typescript-ai-native-specmap --check`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-SPECMAP-WRITE" status="impl/done">`specmap_write`</fact></td>
+        <td><ROW-SPECMAP-WRITE fact="true" status="impl/done">`specmap_write`</ROW-SPECMAP-WRITE></td>
         <td><fact status="impl/done">`typescript-ai-native-specmap`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRACE-EXPLAIN" status="impl/done">`trace_explain`</fact></td>
+        <td><ROW-TRACE-EXPLAIN fact="true" status="impl/done">`trace_explain`</ROW-TRACE-EXPLAIN></td>
         <td><fact status="impl/done">`typescript-ai-native trace &lt;target&gt; [--json] [--prose]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TEST-GATE" status="impl/done">`test_gate`</fact></td>
+        <td><ROW-TEST-GATE fact="true" status="impl/done">`test_gate`</ROW-TEST-GATE></td>
         <td><fact status="impl/done">`typescript-ai-native test-gate [--baseline]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TRIPWIRE" status="impl/done">`tripwire`</fact></td>
+        <td><ROW-TRIPWIRE fact="true" status="impl/done">`tripwire`</ROW-TRIPWIRE></td>
         <td><fact status="impl/done">`typescript-ai-native tripwire [--base] [--debt]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-HEALTH" status="impl/done">`health`</fact></td>
+        <td><ROW-HEALTH fact="true" status="impl/done">`health`</ROW-HEALTH></td>
         <td><fact status="impl/done">`typescript-ai-native health [--out]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FAST-LOOP" status="impl/done">`fast_loop`</fact></td>
+        <td><ROW-FAST-LOOP fact="true" status="impl/done">`fast_loop`</ROW-FAST-LOOP></td>
         <td><fact status="impl/done">`typescript-ai-native fast-loop [--cell] [--budget-secs] [--enforce-budget]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-CODEMOD-ADD-CELL" status="impl/done">`codemod_add_cell`</fact></td>
+        <td><ROW-CODEMOD-ADD-CELL fact="true" status="impl/done">`codemod_add_cell`</ROW-CODEMOD-ADD-CELL></td>
         <td><fact status="impl/done">`typescript-ai-native codemod add-cell &lt;cell&gt; &lt;spec-uri&gt;`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TCG-VALIDATE" status="impl/done">`tcg_validate`</fact></td>
+        <td><ROW-TCG-VALIDATE fact="true" status="impl/done">`tcg_validate`</ROW-TCG-VALIDATE></td>
         <td><fact status="impl/done">`typescript-ai-native-tcg validate &lt;file&gt; [--content-from]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TCG-SCOPE" status="impl/done">`tcg_scope`</fact></td>
+        <td><ROW-TCG-SCOPE fact="true" status="impl/done">`tcg_scope`</ROW-TCG-SCOPE></td>
         <td><fact status="impl/done">`typescript-ai-native-tcg scope &lt;file&gt; [--position]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TCG-COMPLETE" status="impl/done">`tcg_complete`</fact></td>
+        <td><ROW-TCG-COMPLETE fact="true" status="impl/done">`tcg_complete`</ROW-TCG-COMPLETE></td>
         <td><fact status="impl/done">`typescript-ai-native-tcg complete &lt;file&gt; --position [--prefix] [--max]`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TCG-TYPE" status="impl/done">`tcg_type`</fact></td>
+        <td><ROW-TCG-TYPE fact="true" status="impl/done">`tcg_type`</ROW-TCG-TYPE></td>
         <td><fact status="impl/done">`typescript-ai-native-tcg type &lt;file&gt; --position`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-TCG-BENCH" status="impl/done">`tcg_bench`</fact></td>
+        <td><ROW-TCG-BENCH fact="true" status="impl/done">`tcg_bench`</ROW-TCG-BENCH></td>
         <td><fact status="impl/done">`typescript-ai-native-tcg bench --corpus --report`</fact></td>
       </tr>
     </table>
-    <p><fact id="THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY" status="impl/done">`typescript-ai-native-specmap --gate` (the package-self-trace form) stays
-CLI-only, as on the rust side.</fact></p>
-    <p><fact id="THE-TS-UMBRELLA-HAS-NO-LEDGER-COMMAND" status="impl/done">The TS umbrella has no ledger command —
-seventeen tools, not eighteen.</fact></p>
-  </section>
-  <section id="discipline-tools" title="The discipline half">
-    <p><fact id="TWELVE-THIN-ADAPTERS-OVER-THE-LIB-FNS" status="impl/done">Twelve thin adapters over `typescript_ai_native_cli` /
+    <p><THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY fact="true" status="impl/done">`typescript-ai-native-specmap --gate` (the package-self-trace form) stays
+CLI-only, as on the rust side.</THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY></p>
+    <p><THE-TS-UMBRELLA-HAS-NO-LEDGER-COMMAND fact="true" status="impl/done">The TS umbrella has no ledger command —
+seventeen tools, not eighteen.</THE-TS-UMBRELLA-HAS-NO-LEDGER-COMMAND></p>
+  </parity-map>
+  <discipline-tools title="The discipline half">
+    <p><TWELVE-THIN-ADAPTERS-OVER-THE-LIB-FNS fact="true" status="impl/done">Twelve thin adapters over `typescript_ai_native_cli` /
 `typescript_ai_native_conform` / `typescript_ai_native_specmap` lib fns, each
 wrapped in the stderr-capture guard — an agent's report carries the
-run's whole story (node, tsc, prettier, eslint children included).</fact></p>
-    <p><fact id="EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY" status="impl/done">Every schema carries the optional `language` property; a
+run's whole story (node, tsc, prettier, eslint children included).</TWELVE-THIN-ADAPTERS-OVER-THE-LIB-FNS></p>
+    <p><EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY fact="true" status="impl/done">Every schema carries the optional `language` property; a
 non-`typescript` value refuses with the recipe naming that language's
-own server (PROP-026 §2 continuity).</fact></p>
-    <p><fact id="HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS" status="impl/done">Heavy tools say «expect minutes»;
-nothing prompts.</fact></p>
-  </section>
-  <section id="tcg-tools" title="The tcg half">
-    <p><fact id="ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS" status="impl/done">The four oracle ops + the bench harness over ONE persistent
+own server (PROP-026 §2 continuity).</EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY></p>
+    <p><HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS fact="true" status="impl/done">Heavy tools say «expect minutes»;
+nothing prompts.</HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS></p>
+  </discipline-tools>
+  <tcg-tools title="The tcg half">
+    <p><ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS fact="true" status="impl/done">The four oracle ops + the bench harness over ONE persistent
 LanguageService session shared by all five tools: lazy-spawned and
 `init`-ed on first use (the policy's topology — cells dir, seam —
-rides the init), respawned ONCE per op on a crashed session.</fact></p>
-    <p><fact id="ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE" status="impl/done">Enrichment
+rides the init), respawned ONCE per op on a crashed session.</ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS></p>
+    <p><ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE fact="true" status="impl/done">Enrichment
 goes through `typescript_ai_native_tcg::enrich_validate` — the gate's own
 rules — with the policy reloaded per call, so a mid-session freeze is
-honoured immediately.</fact></p>
-    <p><fact id="TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT" status="impl/done">`tcg_validate`'s `isError` mirrors the one-shot
-exit contract: an error diagnostic OR a non-baselined finding.</fact></p>
-    <p><fact id="THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED" status="impl/done">The
+honoured immediately.</ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE></p>
+    <p><TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT fact="true" status="impl/done">`tcg_validate`'s `isError` mirrors the one-shot
+exit contract: an error diagnostic OR a non-baselined finding.</TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT></p>
+    <p><THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED fact="true" status="impl/done">The
 NDJSON serve relay (`typescript-ai-native-tcg serve`, TCG-PROTOCOL-v0.1) remains
-shipped in the stack as the non-MCP embedding form.</fact></p>
-  </section>
+shipped in the stack as the non-MCP embedding form.</THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED></p>
+  </tcg-tools>
 </spec>

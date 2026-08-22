@@ -4,19 +4,19 @@
   <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md` (the trunk). Only the sections named here are rewired; everything else — carrier, naming, errors-as-sealed-results, suppression policy, risk rows — is inherited. Composition: combines with the GraalVM overlay (Spring Boot AOT); never with the Jakarta overlay (one container per target).</p>
   <p>Framing note. Spring is the place where the Discipline's oldest ban — *no DI containers* — meets the ecosystem where DI containers won. The overlay does not pretend Spring away and does not surrender to it; it resolves by **ring placement**: Spring is legalized as *machinery of the composition root and the boundary*, and nowhere else. The trunk's second language (runtime assembly via reflection and proxies) gets a territory with a border, and the border is enforced by ArchUnit, not by hope. The slogan of this overlay: **framework-free core** — a cell compiled without Spring on the classpath is the test that it belongs to the first language.</p>
   <p>**Scope honesty.** Spring Boot 3.x-era applications. Legacy XML/Spring 4-5 codebases enter through the brownfield protocol as adopted code, not through this overlay.</p>
-  <section id="baseline" title="§0 additions — baseline">
+  <baseline title="§0 additions — baseline">
     <list ordered="false">
       <item>**Boot BOM pinned**; starters are audited dependencies, not magic: every starter admitted to the build is listed with the auto-configurations it activates (one-time inventory, then diffed). `spring-boot-properties-migrator` class tooling at upgrades.</item>
       <item>**ArchUnit ring rule (the overlay's load-bearing check):** `..cells..` may not depend on `org.springframework..` — committed as a test, failing red the day someone "just adds `@Component`".</item>
     </list>
-  </section>
-  <section id="cells" title="§1&apos; — cells">
+  </baseline>
+  <cells title="§1&apos; — cells">
     <p>Inherited, plus: **no Spring types in cells, period.** No stereotypes (`@Component`/`@Service`), no `@Autowired`, no `ApplicationContext` awareness, no Spring events, no `@Value`. A cell is constructed by `new`, in a `@Bean` method, with everything it needs — which is precisely why it tests in microseconds without a context (§7').</p>
-  </section>
-  <section id="seams" title="§2&apos; — seams">
+  </cells>
+  <seams title="§2&apos; — seams">
     <p>Inherited, plus: **no Spring types in seam signatures** — no `ResponseEntity`, no Spring Data `Page`/`Pageable`, no `MultipartFile`. Where pagination or streaming is part of the domain contract, the seams module defines its own small records (`Slice`, `PageRequest`); boundary adapters translate. A seam that leaks a framework type has annexed the cell into the second language.</p>
-  </section>
-  <section id="flags" title="§3&apos; — registry and flags">
+  </seams>
+  <flags title="§3&apos; — registry and flags">
     <p>The trunk's hand-written registry **is** idiomatic Spring, written the way Spring's own documentation recommends for libraries:</p>
     <fence lang="java">@Configuration(proxyBeanMethods = false)
 public class SolverConfig {
@@ -39,18 +39,18 @@ public class SolverConfig {
       <item>**Runtime tier:** `@ConfigurationProperties` records with constructor binding, validated at startup — the config object the trunk's §3 demanded, container-built. No `@Value` scatter; no `Environment` lookups outside the boundary.</item>
       <item>**Constructor injection only.** Field injection is banned (it is reflection-through-the-back-door and makes the framework-free test impossible); single-constructor classes need no annotation at all. A circular dependency is a design failure to fix, not a `@Lazy`/setter workaround to apply.</item>
     </list>
-  </section>
-  <section id="errors" title="§4&apos; — errors and proxies">
+  </flags>
+  <errors title="§4&apos; — errors and proxies">
     <p>Inherited (sealed results at seams), plus the overlay's two honesty paragraphs:</p>
     <list ordered="false">
       <item>**Exception translation is boundary work:** Spring's unchecked hierarchies (`DataAccessException` and kin) are translated into seam error types in adapters; framework exceptions never cross inward.</item>
       <item>**Proxy honesty:** `@Transactional`, `@Cacheable`, `@Async`, `@Retryable` are dynamic proxies — **self-invocation silently skips them**, final methods defeat them, and they constitute hidden control flow (R-021) if sprinkled into domain logic. They are legal only on boundary/use-case orchestration classes; transaction boundaries live where use-cases are composed, never inside cells — which is where the DDD mainstream puts them anyway. A cell that needs "a transaction" actually needs a unit-of-work capability on its seam.</item>
     </list>
-  </section>
-  <section id="tests" title="§7&apos; — replacement and tests">
+  </errors>
+  <tests title="§7&apos; — replacement and tests">
     <p>Inherited, plus the test pyramid binding: **cell tests are plain JUnit** — no context, no `@SpringBootTest`, no Mockito (trunk rule), constructor + injected fakes, microseconds. Boundary slices use `@WebMvcTest`/`@DataJpaTest`-class slices; **full `@SpringBootTest` contexts are few and live at the top** — each one is counted, because context startup is the test suite's wish-ratio. Testcontainers (MIT) for real-infrastructure boundary tests. A cell test that needs the container running is a misplaced boundary test — move it, don't speed it up.</p>
-  </section>
-  <section id="risks" title="§8&apos; — additional risk rows">
+  </tests>
+  <risks title="§8&apos; — additional risk rows">
     <table>
       <tr>
         <td>Footgun</td>
@@ -104,5 +104,5 @@ public class SolverConfig {
       </tr>
     </table>
     <p>**Overlay note.** Everything this overlay forbids has a sanctioned home one ring out; the discipline is placement, not abstinence. The framework-free-core test (cells compile without Spring) is the overlay's single most valuable artifact — cheap, binary, and brutally honest.</p>
-  </section>
+  </risks>
 </spec>

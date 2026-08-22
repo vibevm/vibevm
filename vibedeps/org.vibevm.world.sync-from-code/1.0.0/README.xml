@@ -2,67 +2,67 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:sync-from-code` — reconcile specs with code when code changes first</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL" status="impl/done">A vibevm `flow` package that installs the **Sync-from-Code** protocol into
-a project.</fact></p>
-  <p><fact id="SYNC-FROM-CODE-IS-THE-EXCEPTIONAL-PATH-OFF-TOP-DOWN-FLOW" status="impl/done">The normal information flow in a spec-driven project is
+  <p><PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL fact="true" status="impl/done">A vibevm `flow` package that installs the **Sync-from-Code** protocol into
+a project.</PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL></p>
+  <p><SYNC-FROM-CODE-IS-THE-EXCEPTIONAL-PATH-OFF-TOP-DOWN-FLOW fact="true" status="impl/done">The normal information flow in a spec-driven project is
 top-down (head → WAL → spec → code); Sync-from-Code is the *exceptional*
-path for closing spec drift when code moves before the spec.</fact></p>
-  <p><fact id="two-legitimate-situations-lead" status="impl/done">Two legitimate situations break top-down flow:</fact></p>
+path for closing spec drift when code moves before the spec.</SYNC-FROM-CODE-IS-THE-EXCEPTIONAL-PATH-OFF-TOP-DOWN-FLOW></p>
+  <p><two-legitimate-situations-lead fact="true" status="impl/done">Two legitimate situations break top-down flow:</two-legitimate-situations-lead></p>
   <list ordered="false">
-    <item><fact id="SITUATION-THE-USER-EDITS-CODE-DIRECTLY" status="spec/done">The user edits code directly in the editor because it's faster than
-  articulating the intent to the agent first.</fact></item>
-    <item><fact id="SITUATION-THE-USER-GIVES-AN-IMPERATIVE-CHAT-COMMAND" status="spec/done">The user gives an imperative command in chat ("change the timeout to
-  600 s") and the agent edits code without touching the spec.</fact></item>
+    <item><SITUATION-THE-USER-EDITS-CODE-DIRECTLY fact="true" status="spec/done">The user edits code directly in the editor because it's faster than
+  articulating the intent to the agent first.</SITUATION-THE-USER-EDITS-CODE-DIRECTLY></item>
+    <item><SITUATION-THE-USER-GIVES-AN-IMPERATIVE-CHAT-COMMAND fact="true" status="spec/done">The user gives an imperative command in chat ("change the timeout to
+  600 s") and the agent edits code without touching the spec.</SITUATION-THE-USER-GIVES-AN-IMPERATIVE-CHAT-COMMAND></item>
   </list>
-  <p><fact id="in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back" status="spec/done">In both cases the spec is now wrong; left unreconciled, the next session
+  <p><in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back fact="true" status="spec/done">In both cases the spec is now wrong; left unreconciled, the next session
 reads the stale spec, concludes the code is in error, and "fixes" the
-code back — correctly by the spec-wins rule, wrong in outcome.</fact></p>
-  <p><fact id="THE-FLOW-IS-THE-SANCTIONED-WAY-TO-CLOSE-THAT-GAP" status="impl/done">This
-flow is the sanctioned way to close that gap.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+code back — correctly by the spec-wins rule, wrong in outcome.</in-both-cases-the-spec-is-now-wrong-and-gets-fixed-back></p>
+  <p><THE-FLOW-IS-THE-SANCTIONED-WAY-TO-CLOSE-THAT-GAP fact="true" status="impl/done">This
+flow is the sanctioned way to close that gap.</THE-FLOW-IS-THE-SANCTIONED-WAY-TO-CLOSE-THAT-GAP></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-FULL-PROTOCOL" status="impl/done">`spec/flows/sync-from-code/SYNC-PROTOCOL.md` — full protocol: what
+    <item><CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/sync-from-code/SYNC-PROTOCOL.md` — full protocol: what
   Sync-from-Code is, when to run it, what the draft spec diff must
   contain (value + reason + revisit trigger), and what it explicitly
-  does not do.</fact></item>
-    <item><fact id="CONTENT-THE-DECISION-TABLE" status="impl/done">`spec/flows/sync-from-code/when-to-apply.md` — decision table:
+  does not do.</CONTENT-THE-FULL-PROTOCOL></item>
+    <item><CONTENT-THE-DECISION-TABLE fact="true" status="impl/done">`spec/flows/sync-from-code/when-to-apply.md` — decision table:
   *should I run it right now?*, including the cases where you should
-  **not** (temporary hacks, mechanical changes, unnamed reasons).</fact></item>
-    <item><fact id="CONTENT-THE-REVIEW-CHECKLIST" status="impl/done">`spec/flows/sync-from-code/review-workflow.md` — human-side checklist
+  **not** (temporary hacks, mechanical changes, unnamed reasons).</CONTENT-THE-DECISION-TABLE></item>
+    <item><CONTENT-THE-REVIEW-CHECKLIST fact="true" status="impl/done">`spec/flows/sync-from-code/review-workflow.md` — human-side checklist
   for the approval step: six checks that catch bad syncs before they
-  land.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/20-flow-sync-from-code.md` — boot snippet loaded at
-  session start, pointing the agent at the protocol.</fact></item>
+  land.</CONTENT-THE-REVIEW-CHECKLIST></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/20-flow-sync-from-code.md` — boot snippet loaded at
+  session start, pointing the agent at the protocol.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:sync-from-code</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:sync-from-code</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
-never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
+snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
+never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
     <list ordered="false">
-      <item><fact id="COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES" status="impl/done">Works with `flow:wal` (`10-…`) and `flow:git-atomic-commits` (`30-…`):
-  numeric boot-snippet prefixes are distinct by design.</fact></item>
-      <item><fact id="COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE" status="impl/done">A successful sync *may* trigger a WAL update; that update goes
-  through `flow:wal`'s session-end hook, not this flow.</fact></item>
-      <item><fact id="COMPOSES-ATOMIC-COMMITS-FOR-THE-COMMIT-MESSAGE" status="impl/done">A sync ends in a `docs(spec)` commit; message formatting is pinned
-  by `flow:git-atomic-commits`.</fact></item>
+      <item><COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES fact="true" status="impl/done">Works with `flow:wal` (`10-…`) and `flow:git-atomic-commits` (`30-…`):
+  numeric boot-snippet prefixes are distinct by design.</COMPOSES-WAL-AND-ATOMIC-COMMITS-BY-DISTINCT-PREFIXES></item>
+      <item><COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE fact="true" status="impl/done">A successful sync *may* trigger a WAL update; that update goes
+  through `flow:wal`'s session-end hook, not this flow.</COMPOSES-WAL-FOR-THE-SESSION-END-UPDATE></item>
+      <item><COMPOSES-ATOMIC-COMMITS-FOR-THE-COMMIT-MESSAGE fact="true" status="impl/done">A sync ends in a `docs(spec)` commit; message formatting is pinned
+  by `flow:git-atomic-commits`.</COMPOSES-ATOMIC-COMMITS-FOR-THE-COMMIT-MESSAGE></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="extracted-from-the-books-third-chapter" status="spec/done">The protocol is extracted from *AI-native development*, chapter 3
-(*"Архитектура памяти"*, subsection "Протокол Sync-from-Code").</fact></p>
-    <p><fact id="short-version-spec-driven-projects-need-the-inverse-path" status="spec/done">Short
+  </composition>
+  <background title="Philosophical background">
+    <p><extracted-from-the-books-third-chapter fact="true" status="spec/done">The protocol is extracted from *AI-native development*, chapter 3
+(*"Архитектура памяти"*, subsection "Протокол Sync-from-Code").</extracted-from-the-books-third-chapter></p>
+    <p><short-version-spec-driven-projects-need-the-inverse-path fact="true" status="spec/done">Short
 version: spec-driven projects need a named, rare, human-approved path
 for the inverse flow; without one, drift accumulates silently and the
-spec stops being authoritative.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE` and the surrounding registry for distribution terms.</fact></p>
-  </section>
+spec stops being authoritative.</short-version-spec-driven-projects-need-the-inverse-path></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE` and the surrounding registry for distribution terms.</license-line></p>
+  </license>
 </spec>

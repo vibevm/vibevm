@@ -2,86 +2,86 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">AI-Native TypeScript (Discipline v0.2) — boot snippet</title>
   <status stage="impl" state="done"/>
-  <p><fact id="TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE" status="impl/done">TypeScript code in this
+  <p><TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE fact="true" status="impl/done">TypeScript code in this
 project follows the AI-Native TypeScript guide
-(`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package).</fact></p>
-  <p><fact id="READ-THE-GUIDE-FOR-STRUCTURE" status="impl/done">Read the
+(`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package).</TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE></p>
+  <p><READ-THE-GUIDE-FOR-STRUCTURE fact="true" status="impl/done">Read the
 guide when authoring or reviewing structure; per-edit work needs only
-the card whose trigger fires.</fact></p>
-  <p><fact id="CARD-REGISTRY-FOR-TYPESCRIPT" status="impl/done">Card registry for TypeScript: `spec/cards/INDEX.md` in this package (trigger →
-card; the nine executable scaffolds A–I in their TypeScript shape).</fact></p>
-  <p><fact id="STACK-SHIPS-ITS-OWN-CARDS-PROJECTION" status="impl/done">This
+the card whose trigger fires.</READ-THE-GUIDE-FOR-STRUCTURE></p>
+  <p><CARD-REGISTRY-FOR-TYPESCRIPT fact="true" status="impl/done">Card registry for TypeScript: `spec/cards/INDEX.md` in this package (trigger →
+card; the nine executable scaffolds A–I in their TypeScript shape).</CARD-REGISTRY-FOR-TYPESCRIPT></p>
+  <p><STACK-SHIPS-ITS-OWN-CARDS-PROJECTION fact="true" status="impl/done">This
 stack ships its own `spec/cards/` projection — the weak-reader runtime surface
 for `.ts` edits is a TypeScript card's Band-3 ops block, never the Rust
-one.</fact></p>
-  <p><fact id="core-cards-are-the-rust-pilot-reference-set" status="spec/done">(The core `cards/` are the Rust pilot's reference set; a future
+one.</STACK-SHIPS-ITS-OWN-CARDS-PROJECTION></p>
+  <p><core-cards-are-the-rust-pilot-reference-set fact="true" status="spec/done">(The core `cards/` are the Rust pilot's reference set; a future
 symmetry pass may unify both languages' Band-3 in the core — see the
-guide's tooling note.)</fact></p>
-  <p><fact id="standing-rules-lead" status="impl/done">Standing rules at the surface level:</fact></p>
+guide's tooling note.)</core-cards-are-the-rust-pilot-reference-set></p>
+  <p><standing-rules-lead fact="true" status="impl/done">Standing rules at the surface level:</standing-rules-lead></p>
   <list ordered="false">
-    <item><fact id="RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE" status="impl/done">Ordinary idiomatic TypeScript at the token level — no invented dialect,
+    <item><RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE fact="true" status="impl/done">Ordinary idiomatic TypeScript at the token level — no invented dialect,
   no type-level wizardry in domain code (deep conditional/recursive types
   are the OOD tail, treated like `unsafe`). Strictness lives in the
   envelope: the maxed `tsconfig`, branded types at seams, runtime
   validators at the erasure boundary, `spec://` metadata, per-cell fast
-  verification (`tsc --noEmit -p &lt;cell&gt;` + `vitest run &lt;cell&gt;`, &lt; ~60s).</fact></item>
-    <item><fact id="RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER" status="impl/done">The compiler is a configurable verifier: the project `tsconfig` is a
+  verification (`tsc --noEmit -p &lt;cell&gt;` + `vitest run &lt;cell&gt;`, &lt; ~60s).</RULE-ORDINARY-IDIOMATIC-TYPESCRIPT-SURFACE></item>
+    <item><RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER fact="true" status="impl/done">The compiler is a configurable verifier: the project `tsconfig` is a
   versioned discipline artifact at the strictest practical floor
   (`strict` + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes` +
   `erasableSyntaxOnly`); loosening a mandatory flag needs
-  `deviates` + reason.</fact></item>
-    <item><fact id="RULE-CELLS" status="impl/done">Cells: one cell = one file-set with a single public entry (`index.ts`
+  `deviates` + reason.</RULE-COMPILER-IS-A-CONFIGURABLE-VERIFIER></item>
+    <item><RULE-CELLS fact="true" status="impl/done">Cells: one cell = one file-set with a single public entry (`index.ts`
   as the seam); cells import seams + core only, never sibling cells'
   internals. No barrel-file ambient re-export sprawl; ambient coupling
-  (module-level mutable singletons, `declare global`) is forbidden.</fact></item>
-    <item><fact id="RULE-UNSAFE-SET-IS-FORBIDDEN-IN-DOMAIN-CODE" status="impl/done">Types are erased and can be lied to. The `unsafe` set —
+  (module-level mutable singletons, `declare global`) is forbidden.</RULE-CELLS></item>
+    <item><RULE-UNSAFE-SET-IS-FORBIDDEN-IN-DOMAIN-CODE fact="true" status="impl/done">Types are erased and can be lied to. The `unsafe` set —
   `any` / unchecked `as` / `!` / `@ts-ignore` — is forbidden in domain
   code; escape hatches are `unknown` + a runtime validator, `as` only
   after a check, an `asserts` function, and `@ts-expect-error -- reason`
-  (never `@ts-ignore`). Each deviation carries a recorded reason.</fact></item>
-    <item><fact id="RULE-BRANDING-RECOVERS-NOMINAL-TYPING" status="impl/done">Structural typing is recovered to nominal by branding: a meaning-bearing
+  (never `@ts-ignore`). Each deviation carries a recorded reason.</RULE-UNSAFE-SET-IS-FORBIDDEN-IN-DOMAIN-CODE></item>
+    <item><RULE-BRANDING-RECOVERS-NOMINAL-TYPING fact="true" status="impl/done">Structural typing is recovered to nominal by branding: a meaning-bearing
   primitive crossing a seam is a branded type, so the wrong same-shaped
-  value fails `tsc`.</fact></item>
-    <item><fact id="RULE-TYPED-SEAM-FAILURES" status="impl/done">Failure on a seam is a typed value (`Result&lt;T, E&gt;` / discriminated
+  value fails `tsc`.</RULE-BRANDING-RECOVERS-NOMINAL-TYPING></item>
+    <item><RULE-TYPED-SEAM-FAILURES fact="true" status="impl/done">Failure on a seam is a typed value (`Result&lt;T, E&gt;` / discriminated
   union), never an untyped `throw`; the `E` union cites `spec://` REQs and
-  its exhaustive `switch` is compiler-checked.</fact></item>
-    <item><fact id="RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN" status="impl/done">Untyped external data (network, JSON, `process.env`, user input) enters
+  its exhaustive `switch` is compiler-checked.</RULE-TYPED-SEAM-FAILURES></item>
+    <item><RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN fact="true" status="impl/done">Untyped external data (network, JSON, `process.env`, user input) enters
   as `unknown` and is narrowed only through a single-source schema
-  (Zod/Valibot) that is both the static type and the runtime check.</fact></item>
-    <item><fact id="RULE-EXAMPLE-PER-SEAM" status="impl/done">Every public seam carries one type-checked example (Twoslash) of
+  (Zod/Valibot) that is both the static type and the runtime check.</RULE-EXTERNAL-DATA-ENTERS-AS-UNKNOWN></item>
+    <item><RULE-EXAMPLE-PER-SEAM fact="true" status="impl/done">Every public seam carries one type-checked example (Twoslash) of
   canonical use, and public generic/branded/union surfaces carry a
   type-level test (`expectTypeOf`/`tsd`). Replacing a non-trivial cell
-  requires a differential oracle (`fast-check`).</fact></item>
-    <item><fact id="RULE-UNIFORMITY-IS-LOAD-BEARING" status="impl/done">Uniformity is load-bearing: one idiom per operation; exceptions are
-  marked, or they propagate as false training signal.</fact></item>
+  requires a differential oracle (`fast-check`).</RULE-EXAMPLE-PER-SEAM></item>
+    <item><RULE-UNIFORMITY-IS-LOAD-BEARING fact="true" status="impl/done">Uniformity is load-bearing: one idiom per operation; exceptions are
+  marked, or they propagate as false training signal.</RULE-UNIFORMITY-IS-LOAD-BEARING></item>
   </list>
-  <p><fact id="shipped-toolchain-lead" status="impl/done">The shipped toolchain (this stack materialises it; no dev tree needed):</fact></p>
+  <p><shipped-toolchain-lead fact="true" status="impl/done">The shipped toolchain (this stack materialises it; no dev tree needed):</shipped-toolchain-lead></p>
   <list ordered="false">
-    <item><fact id="TOOLCHAIN-TYPESCRIPT-AI-NATIVE-UMBRELLA" status="impl/done">`typescript-ai-native` — `init` (bootstrap policies + registries),
+    <item><TOOLCHAIN-TYPESCRIPT-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`typescript-ai-native` — `init` (bootstrap policies + registries),
   `floor` (prettier→tsc→tests→eslint→conform→specmap→test-gate, one exit
   code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
-  over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`;</fact></item>
-    <item><fact id="TOOLCHAIN-NARROW-ENGINES" status="impl/done">plus
-  the narrow `typescript-ai-native-conform` and `typescript-ai-native-specmap` engines,</fact></item>
-    <item><fact id="TOOLCHAIN-AGENTIC-TYPE-ORACLE" status="impl/done">and
+  over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`;</TOOLCHAIN-TYPESCRIPT-AI-NATIVE-UMBRELLA></item>
+    <item><TOOLCHAIN-NARROW-ENGINES fact="true" status="impl/done">plus
+  the narrow `typescript-ai-native-conform` and `typescript-ai-native-specmap` engines,</TOOLCHAIN-NARROW-ENGINES></item>
+    <item><TOOLCHAIN-AGENTIC-TYPE-ORACLE fact="true" status="impl/done">and
   the agentic type oracle `typescript-ai-native-tcg`
   (also served over MCP by `mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
   PROP-027; persistent enriching `serve`
   relay + one-shot `validate`/`scope`/`complete`/`type`/`bench`: check an
   edit against in-memory overlays BEFORE writing it, with the SAME
-  conform rules as the gate — GUIDE §14, §15 move 5).</fact></item>
+  conform rules as the gate — GUIDE §14, §15 move 5).</TOOLCHAIN-AGENTIC-TYPE-ORACLE></item>
   </list>
-  <p><fact id="STRUCTURAL-GATE-PARSES-THROUGH-THE-PROJECT-TYPESCRIPT" status="impl/done">The
+  <p><STRUCTURAL-GATE-PARSES-THROUGH-THE-PROJECT-TYPESCRIPT fact="true" status="impl/done">The
 structural gate parses through the PROJECT's own `typescript` install
-(node ≥ 22.6; the same devDependency the tsc floor step needs).</fact></p>
-  <p><fact id="RUN-VIBE-NATIVELY-FROM-PATH-OR-IN-PLACE" status="impl/done">Run
+(node ≥ 22.6; the same devDependency the tsc floor step needs).</STRUCTURAL-GATE-PARSES-THROUGH-THE-PROJECT-TYPESCRIPT></p>
+  <p><RUN-VIBE-NATIVELY-FROM-PATH-OR-IN-PLACE fact="true" status="impl/done">Run
 vibe-natively (`vibe bin exec typescript-ai-native -- &lt;args&gt;` —
 PROP-025 lockfile dispatch; `vibe bin build` pre-builds), from PATH
 (`cargo install --path
 vibedeps/&lt;stack-slot&gt;/crates/typescript-ai-native-cli`), or in place via
 `cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml -p
-typescript-ai-native-cli --bin typescript-ai-native -- &lt;args&gt;`.</fact></p>
-  <p><fact id="PROCEDURES-AS-AGENT-SKILLS" status="impl/done">Procedures as agent skills: `/typescript-ai-native-sweep` (recurring),
+typescript-ai-native-cli --bin typescript-ai-native -- &lt;args&gt;`.</RUN-VIBE-NATIVELY-FROM-PATH-OR-IN-PLACE></p>
+  <p><PROCEDURES-AS-AGENT-SKILLS fact="true" status="impl/done">Procedures as agent skills: `/typescript-ai-native-sweep` (recurring),
 `/typescript-ai-native-terraform` (brownfield adoption) — `vibe skill install`
-projects them.</fact></p>
+projects them.</PROCEDURES-AS-AGENT-SKILLS></p>
 </spec>

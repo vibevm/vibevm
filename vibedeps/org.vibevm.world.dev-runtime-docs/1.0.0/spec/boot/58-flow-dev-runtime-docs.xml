@@ -2,21 +2,21 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Load-bearing setup docs</title>
   <status stage="impl" state="done"/>
-  <p><fact id="SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING" status="impl/done">A project's setup and runtime documentation is **load-bearing** — it is the file
+  <p><SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING fact="true" status="impl/done">A project's setup and runtime documentation is **load-bearing** — it is the file
 someone reaches for when the build breaks, the environment is wrong, or a
-prerequisite is missing.</fact></p>
-  <section id="rule" title="The rule">
-    <p><fact id="EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT" status="impl/done">Every change that touches the **toolchain, prerequisites, environment variables,
+prerequisite is missing.</SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING></p>
+  <rule title="The rule">
+    <p><EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT fact="true" status="impl/done">Every change that touches the **toolchain, prerequisites, environment variables,
 paths, or bootstrap steps** updates the relevant setup/runtime doc **in the same
-commit**.</fact></p>
-    <p><fact id="NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED" status="impl/done">Never ship a setup change with the doc update deferred — deferral is
-exactly where the drift these files exist to prevent lives.</fact></p>
-    <p><fact id="sibling-document-pointers" status="impl/done">Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root.</fact></p>
-  </section>
-  <section id="never" title="Never">
+commit**.</EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT></p>
+    <p><NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED fact="true" status="impl/done">Never ship a setup change with the doc update deferred — deferral is
+exactly where the drift these files exist to prevent lives.</NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED></p>
+    <p><sibling-document-pointers fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root.</sibling-document-pointers></p>
+  </rule>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT" status="impl/done">Never ship a dev-env or runtime-setup change with its doc update in a later commit.</fact></item>
-      <item><fact id="NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN" status="impl/done">Never let the setup docs describe a toolchain the project no longer uses.</fact></item>
+      <item><NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT fact="true" status="impl/done">Never ship a dev-env or runtime-setup change with its doc update in a later commit.</NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT></item>
+      <item><NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN fact="true" status="impl/done">Never let the setup docs describe a toolchain the project no longer uses.</NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN></item>
     </list>
-  </section>
+  </never>
 </spec>

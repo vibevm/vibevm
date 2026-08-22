@@ -2,27 +2,27 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">mcp:org.vibevm.ai-native/typescript-ai-native-mcp</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="SERVED-OVER-MCP-AS-ONE-STDIO-BINARY" status="impl/done">The AI-Native TypeScript discipline served over MCP: one stdio binary
+  <p><SERVED-OVER-MCP-AS-ONE-STDIO-BINARY fact="true" status="impl/done">The AI-Native TypeScript discipline served over MCP: one stdio binary
 (`typescript-ai-native-mcp`), seventeen tools — the whole
 `typescript-ai-native` command surface (init, the seven-step floor,
 the ts-tsc conform and specmap gates, trace, test-gate, tripwire,
 health, fast-loop, codemod) plus the tcg type oracle (validate / scope
 / complete / type / bench over a persistent LanguageService session —
-tsc's own engine, agreement by construction).</fact></p>
+tsc's own engine, agreement by construction).</SERVED-OVER-MCP-AS-ONE-STDIO-BINARY></p>
   <list ordered="false">
-    <item><fact id="INSTALL-PULLS-THE-MATCHING-STACK-AT-THE-EXACT-PIN" status="impl/done">**Install:** `vibe install mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
+    <item><INSTALL-PULLS-THE-MATCHING-STACK-AT-THE-EXACT-PIN fact="true" status="impl/done">**Install:** `vibe install mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
   the exact `=` pin pulls the matching
-  `stack:org.vibevm.ai-native/typescript-ai-native-lang`.</fact></item>
-    <item><fact id="REGISTER-WRITES-THE-SERVER-INTO-THE-AGENT-CONFIG" status="impl/done">**Register:** `vibe mcp install` writes the server into your agent's
+  `stack:org.vibevm.ai-native/typescript-ai-native-lang`.</INSTALL-PULLS-THE-MATCHING-STACK-AT-THE-EXACT-PIN></item>
+    <item><REGISTER-WRITES-THE-SERVER-INTO-THE-AGENT-CONFIG fact="true" status="impl/done">**Register:** `vibe mcp install` writes the server into your agent's
   config (a vibevm-managed entry; `vibe bin build
-  typescript-ai-native-mcp` compiles the artifact).</fact></item>
-    <item><fact id="SERVE-NEEDS-NO-VIBE-IN-THE-RUNTIME-PATH" status="impl/done">**Serve:** the agent host launches the binary directly. No vibe in
-  the runtime path.</fact></item>
+  typescript-ai-native-mcp` compiles the artifact).</REGISTER-WRITES-THE-SERVER-INTO-THE-AGENT-CONFIG></item>
+    <item><SERVE-NEEDS-NO-VIBE-IN-THE-RUNTIME-PATH fact="true" status="impl/done">**Serve:** the agent host launches the binary directly. No vibe in
+  the runtime path.</SERVE-NEEDS-NO-VIBE-IN-THE-RUNTIME-PATH></item>
   </list>
-  <p><fact id="server-brief-pointer" status="impl/done">The brief (tool inventory, the tool↔CLI parity map, the session and
+  <p><server-brief-pointer fact="true" status="impl/done">The brief (tool inventory, the tool↔CLI parity map, the session and
 capture semantics):
-[`spec/tools/discipline-mcp-typescript.md`](spec/tools/discipline-mcp-typescript.md).</fact></p>
-  <p><fact id="PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT" status="impl/done">Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
+[`spec/tools/discipline-mcp-typescript.md`](spec/tools/discipline-mcp-typescript.md).</server-brief-pointer></p>
+  <p><PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT fact="true" status="impl/done">Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
 own `typescript` devDependency — absent tools hard-fail with the
-install recipe, through MCP as on the CLI.</fact></p>
+install recipe, through MCP as on the CLI.</PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT></p>
 </spec>

@@ -4,7 +4,7 @@
   <p>**Status.** Beta; one of three sibling C++ profiles (`cpp-traditional`, `cpp-modern`, `cpp-misra2008`). Sections isomorphic vertically (Rust/TS/Python guides) and horizontally (sibling profiles). Profile granularity is per build target; cross-profile boundaries follow the adopted-code semantics referenced in the Traditional guide's header.</p>
   <p>Framing note — the opposite bet from Traditional. Instead of shrinking C++ to its 2010 core, this profile rides the standard's own convergence toward the Discipline: **concepts make seam contracts compiler-checked, `std::expected` makes errors values, `constinit` makes import-purity a keyword, `std::variant` makes exhaustiveness free.** The subset is still selected — but selected from C++23, bounded by what GCC, Clang, and MSVC all ship today. Patterns dissolve nearly as far as in Rust: Strategy = concept + composition root; Visitor = `variant` + `visit`; Decorator = wrapper; Observer = explicit signal seam; Singleton = forbidden.</p>
   <p>**Scope honesty.** For code targeting current mainstream toolchains. Conservative/vendor toolchains → `cpp-traditional`; certification contracts → `cpp-misra2008`. Per-feature honesty: features enter the baseline only when all three majors ship them; this guide marks the exceptions explicitly rather than pretending the front is even.</p>
-  <section id="baseline" title="0. Language baseline">
+  <baseline title="0. Language baseline">
     <list ordered="false">
       <item>**Standard: C++23**, restricted to the three-major intersection. In baseline: `std::expected`, `std::print`, ranges, concepts, `constinit`/`consteval`, `std::jthread`/`stop_token`, designated initializers, `std::span`/`string_view`. **Out of baseline, named honestly:** modules (toolchain/CMake shear still real — per-cell experiments only, behind a build option); C++26 contracts and static reflection (the latter is the future native specmark carrier — when reflection lands across the majors, `/// @spec` comments become introspectable annotations; noted, not used).</item>
       <item>**Exceptions: panic-only.** The standard library throws, so `-fno-exceptions` is dishonest here; instead: `throw` is reserved for invariant violations (the panic analog), **expected failures cross seams as `std::expected`**, and every seam function is either `noexcept` or `expected`-returning — the failure surface lives in the signature, compiler-visible (§4).</item>
@@ -13,8 +13,8 @@
       <item>**`constexpr`-first:** pure logic SHOULD be `constexpr`; `consteval` where compile-time-only is the contract. A `static_assert` over `constexpr` logic is a test that costs nothing at runtime — prefer it where it fits.</item>
       <item>**Build/deps:** CMake presets + vcpkg manifest mode (MIT), lockfile committed (A2). Sanitizers (ASan/UBSan, TSan for concurrent cells) gate the test suite; libFuzzer feeds differential oracles (§7).</item>
     </list>
-  </section>
-  <section id="cells" title="1. Cells">
+  </baseline>
+  <cells title="1. Cells">
     <p>A cell is a static/OBJECT CMake target behind one seam, public headers via CMake file sets.</p>
     <list ordered="false">
       <item>**Import-purity becomes a keyword.** Every namespace-scope object in a cell is `constexpr` or `constinit` — dynamic initialization at load is thereby a *compile error*, not a lint finding. The same rule that is a T-lex grep in Traditional and a two-phase-init convention in MISRA is compiler-enforced here; this tier upgrade is the profile's best argument for itself.</item>
@@ -25,16 +25,16 @@
     <fence lang="cpp">/// @spec implements spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r2
 /// @cell seam=DepSolver variant=sat replaces=naive flag=solver
 class SatDepSolver final : public DepSolver { /* ... */ };</fence>
-  </section>
-  <section id="seams" title="2. Seams">
+  </cells>
+  <seams title="2. Seams">
     <list ordered="false">
       <item>**Concepts are the primary seam form** for in-process composition: the contract is compiler-checked at the use site, zero virtual cost, and the registry monomorphizes at the composition root.</item>
       <item>**Runtime-selected seams** (anything behind a flag) get the type-erased form: a pure ABC or a small hand-rolled erased wrapper. The concept and the ABC describe the same contract; conform checks the ABC satisfies the concept (`static_assert(DepSolverConcept&lt;AbcFacade&gt;)` — drift between the two forms is a build error).</item>
       <item>Composition over inheritance is a MUST at seams; no behavior-bearing bases, no CRTP in domain code (infra only). Customization-point-object machinery is infra-only; domain code calls named functions.</item>
       <item>Values crossing seams SHOULD be aggregates with designated initializers; owning transfers are `unique_ptr`/value moves — no raw owning anywhere.</item>
     </list>
-  </section>
-  <section id="flags" title="3. Registry and flags">
+  </seams>
+  <flags title="3. Registry and flags">
     <fence lang="cpp">// registry.cpp — the only flag reader.
 auto make_dep_solver(Flags const&amp; flags, DepProvider&amp; provider)
     -&gt; std::unique_ptr&lt;DepSolver&gt; {
@@ -48,8 +48,8 @@ auto make_dep_solver(Flags const&amp; flags, DepProvider&amp; provider)
       <item>**Delivery-mode honesty:** in-process C++ has no cheap lazy code loading; eager is the only mode, presence is the build tier's job. Shared-library plugin loading is boundary infrastructure, not a cell concern.</item>
       <item>No self-registering statics (now impossible in cells anyway — `constinit` killed them), no DI frameworks, no link-seam magic.</item>
     </list>
-  </section>
-  <section id="errors" title="4. Errors as contract">
+  </flags>
+  <errors title="4. Errors as contract">
     <list ordered="false">
       <item>**Expected failures are values:** seams return `std::expected&lt;T, E&gt;`; `E` is a small struct carrying `code` and the violated REQ URI (`static constexpr std::string_view spec`); rendering appends the URI (PROP-014 §2.6). `std::error_code` interop MAY exist at boundaries.</item>
       <item>**`throw` = invariant violation only** (panic analog); never throw across a seam — every seam function is `noexcept` or returns `expected`, and conform checks exactly that disjunction (T-sem). Inside a cell, RAII + exceptions for truly exceptional paths is legal; the seam is where the contract is owed.</item>
@@ -57,20 +57,20 @@ auto make_dep_solver(Flags const&amp; flags, DepProvider&amp; provider)
       <item>**Structured concurrency:** `std::jthread` + `stop_token` over raw `std::thread`; `.detach()` banned; coroutines are legal **only behind an async seam that owns their lifetime** — no detached `co_spawn`-style fire-and-forget. Direction note: senders/receivers (`std::execution`, C++26; stdexec today, Apache-2.0) is where this profile's async seam form is headed; not yet baseline.</item>
       <item>**Lifetime honesty:** `string_view`/`span` never cross a seam into storage; parameters yes, members no (T-sem: tidy dangling checks + review).</item>
     </list>
-  </section>
-  <section id="specmark" title="5. specmark carrier">
+  </errors>
+  <specmark title="5. specmark carrier">
     <p>Identical to Traditional §5 — the shared `/// @spec` Doxygen-comment carrier, read via libclang comment attachment; one carrier across all three profiles because uniformity within a language beats per-profile cleverness. Future note: C++26 static reflection is the path to a native, introspectable carrier; when the three majors ship it, a `specmark` annotation library supersedes comments by mechanical migration. ≤3 edges per item or split.</p>
-  </section>
-  <section id="naming" title="6. Naming (R-020/R-021 bindings)">
+  </specmark>
+  <naming title="6. Naming (R-020/R-021 bindings)">
     <list ordered="false">
       <item>Computed `{Variant}{Seam}` → `SatDepSolver`; linted against the manifest.</item>
       <item>**Forbidden in cells regardless of elegance:** `std::enable_if`/SFINAE where a concept suffices (concepts are MUST for constraints); macro metaprogramming; implicit conversions (`explicit` MUST, conversion operators banned); operator overloading beyond value semantics; ADL customization tricks in domain code; `reinterpret_cast`/`const_cast` outside boundary files; clever `auto` that hides ownership (owning returns are spelled `std::unique_ptr&lt;T&gt;` or `T`, never deduced).</item>
     </list>
-  </section>
-  <section id="replacement" title="7. Replacement protocol (R-040 binding)">
+  </naming>
+  <replacement title="7. Replacement protocol (R-040 binding)">
     <p>A cell with `replaces=` ships a differential oracle: property-style tests driving old and new cells through the seam — libFuzzer or seeded generators — asserting agreement modulo a documented divergence list; `/// @verifies`-tagged; sanitizers on. Golden artifacts follow the promotion protocol (CI never regenerates).</p>
-  </section>
-  <section id="risks" title="8. Risk table (what conform must cover for this profile)">
+  </replacement>
+  <risks title="8. Risk table (what conform must cover for this profile)">
     <table>
       <tr>
         <td>Footgun</td>
@@ -143,9 +143,9 @@ auto make_dep_solver(Flags const&amp; flags, DepProvider&amp; provider)
         <td>T-syn + index</td>
       </tr>
     </table>
-  </section>
-  <section id="docs" title="9. Doc layer">
+  </risks>
+  <docs title="9. Doc layer">
     <p>Doxygen on every tagged export: error codes with REQ URIs, lifetime/ownership of every view and pointer, `noexcept` rationale, concurrency assumptions, complexity traps. Carrier doubles as doc line; spec stays thin.</p>
     <p>**First carrier note.** No C++ exists in vibevm; profile ships genre-complete but unexercised. House clause is carrier-relative, identical to the Traditional guide's footer.</p>
-  </section>
+  </docs>
 </spec>

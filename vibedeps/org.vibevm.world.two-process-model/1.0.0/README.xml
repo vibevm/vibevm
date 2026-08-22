@@ -2,73 +2,73 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">`flow:two-process-model` — human and AI as coprocessors</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL" status="impl/done">A vibevm `flow` package that installs the **two-process model** — the
-foundational mental model of the redbook collection.</fact></p>
-  <p><fact id="the-human-and-the-ai-are-two-processors" status="spec/done">The human and
+  <p><PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL fact="true" status="impl/done">A vibevm `flow` package that installs the **two-process model** — the
+foundational mental model of the redbook collection.</PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL></p>
+  <p><the-human-and-the-ai-are-two-processors fact="true" status="spec/done">The human and
 the AI are two processors with radically different architectures
-working one task:</fact></p>
+working one task:</the-human-and-the-ai-are-two-processors></p>
   <list ordered="false">
-    <item><fact id="THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE" status="spec/done">the human owns meaning, memory between sessions,
-  and coherence;</fact></item>
-    <item><fact id="THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE" status="spec/done">the AI owns throughput, mechanical consistency, and
-  formal structure.</fact></item>
+    <item><THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE fact="true" status="spec/done">the human owns meaning, memory between sessions,
+  and coherence;</THE-HUMAN-OWNS-MEANING-MEMORY-AND-COHERENCE></item>
+    <item><THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE fact="true" status="spec/done">the AI owns throughput, mechanical consistency, and
+  formal structure.</THE-AI-OWNS-THROUGHPUT-CONSISTENCY-AND-STRUCTURE></item>
   </list>
-  <p><fact id="FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE" status="spec/done">Files are the only memory the two share.</fact></p>
-  <p><fact id="both-default-metaphors-collapse-the-same-way" status="spec/done">The two default metaphors — "boss and subordinate", "human and
+  <p><FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE fact="true" status="spec/done">Files are the only memory the two share.</FILES-ARE-THE-ONLY-MEMORY-THE-TWO-SHARE></p>
+  <p><both-default-metaphors-collapse-the-same-way fact="true" status="spec/done">The two default metaphors — "boss and subordinate", "human and
 tool" — both collapse on real projects, and both for the same
 reason: the human ends up carrying one hundred percent of the
-cognitive load.</fact></p>
-  <p><fact id="PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS" status="impl/done">This package installs the alternative as standing
-session instructions plus three reference documents.</fact></p>
-  <p><fact id="package-contents-lead" status="impl/done">This package ships three pieces of content plus a boot snippet:</fact></p>
+cognitive load.</both-default-metaphors-collapse-the-same-way></p>
+  <p><PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS fact="true" status="impl/done">This package installs the alternative as standing
+session instructions plus three reference documents.</PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS></p>
+  <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <list ordered="false">
-    <item><fact id="CONTENT-THE-MODEL" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
+    <item><CONTENT-THE-MODEL fact="true" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
   why the common metaphors fail, the complementary strengths table,
   the productive cycle, and the one assignment that never moves
-  (the human owns coherence).</fact></item>
-    <item><fact id="CONTENT-THE-COGNITIVE-LOAD-SPLIT" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.md` — the
+  (the human owns coherence).</CONTENT-THE-MODEL></item>
+    <item><CONTENT-THE-COGNITIVE-LOAD-SPLIT fact="true" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.md` — the
   operational responsibility table: human-only work, AI-only work,
   shared work split by nature; and the four consequences of the
-  AI's zero cross-session memory.</fact></item>
-    <item><fact id="CONTENT-FILES-AS-IPC" status="impl/done">`spec/flows/two-process-model/files-as-ipc.md` — the reframe of
+  AI's zero cross-session memory.</CONTENT-THE-COGNITIVE-LOAD-SPLIT></item>
+    <item><CONTENT-FILES-AS-IPC fact="true" status="impl/done">`spec/flows/two-process-model/files-as-ipc.md` — the reframe of
   spec files from "documentation" to the inter-process channel:
-  three planes, their budgets, and the four IPC requirements.</fact></item>
-    <item><fact id="CONTENT-THE-BOOT-SNIPPET" status="impl/done">`spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
-  session start: the architecture in brief and the never-do list.</fact></item>
+  three planes, their budgets, and the four IPC requirements.</CONTENT-FILES-AS-IPC></item>
+    <item><CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
+  session start: the architecture in brief and the never-do list.</CONTENT-THE-BOOT-SNIPPET></item>
   </list>
-  <section id="install" title="Install">
+  <install title="Install">
     <fence lang="bash">vibe install flow:two-process-model</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:two-process-model</fence>
-    <p><fact id="UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE" status="impl/done">Uninstalling removes every file the package wrote, including the
-boot snippet.</fact></p>
-    <p><fact id="USER-OWNED-FILES-ARE-NEVER-TOUCHED" status="impl/done">User-owned files are never touched.</fact></p>
-  </section>
-  <section id="composition" title="Composition">
-    <p><fact id="this-flow-is-the-root-of-the-collection" status="spec/done">This flow is the root of the redbook collection — the other members
-are its consequences:</fact></p>
+    <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the
+boot snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files are never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
+  </uninstall>
+  <composition title="Composition">
+    <p><this-flow-is-the-root-of-the-collection fact="true" status="spec/done">This flow is the root of the redbook collection — the other members
+are its consequences:</this-flow-is-the-root-of-the-collection></p>
     <list ordered="false">
-      <item><fact id="COMPOSES-THE-FOUR-IPC-REQUIREMENTS" status="impl/done">The four IPC requirements map to `flow:addressable-specs`
+      <item><COMPOSES-THE-FOUR-IPC-REQUIREMENTS fact="true" status="impl/done">The four IPC requirements map to `flow:addressable-specs`
   (addressability), `flow:git-atomic-commits` (atomicity),
   `flow:conflict-protocol` (conflict rules), and `flow:wal` plus
-  `flow:sync-from-code` (visibility).</fact></item>
-      <item><fact id="COMPOSES-THE-MEMORY-ASYMMETRY" status="impl/done">The memory asymmetry is operationalized by
+  `flow:sync-from-code` (visibility).</COMPOSES-THE-FOUR-IPC-REQUIREMENTS></item>
+      <item><COMPOSES-THE-MEMORY-ASYMMETRY fact="true" status="impl/done">The memory asymmetry is operationalized by
   `flow:decision-records` (record decisions, not facts) and
-  `flow:wal` (the checkpoint that survives the session).</fact></item>
-      <item><fact id="COMPOSES-CAMPAIGN-PLANS" status="impl/done">Coherence at multi-session scale is `flow:campaign-plans`.</fact></item>
-      <item><fact id="COMPOSES-DISCOVERY-PROMPT" status="impl/done">Programming the AI process's reasoning posture for research is
-  `flow:discovery-prompt`.</fact></item>
+  `flow:wal` (the checkpoint that survives the session).</COMPOSES-THE-MEMORY-ASYMMETRY></item>
+      <item><COMPOSES-CAMPAIGN-PLANS fact="true" status="impl/done">Coherence at multi-session scale is `flow:campaign-plans`.</COMPOSES-CAMPAIGN-PLANS></item>
+      <item><COMPOSES-DISCOVERY-PROMPT fact="true" status="impl/done">Programming the AI process's reasoning posture for research is
+  `flow:discovery-prompt`.</COMPOSES-DISCOVERY-PROMPT></item>
     </list>
-  </section>
-  <section id="background" title="Philosophical background">
-    <p><fact id="distilled-from-chapters-one-and-two" status="spec/done">Distilled from *AI-native development*, chapter 1 («Два процесса,
-одна задача») and chapter 2 («Shared state: файлы как IPC»).</fact></p>
-    <p><fact id="collections-spirit-is-the-redbook" status="spec/done">The
+  </composition>
+  <background title="Philosophical background">
+    <p><distilled-from-chapters-one-and-two fact="true" status="spec/done">Distilled from *AI-native development*, chapter 1 («Два процесса,
+одна задача») and chapter 2 («Shared state: файлы как IPC»).</distilled-from-chapters-one-and-two></p>
+    <p><collections-spirit-is-the-redbook fact="true" status="spec/done">The
 book ships in Russian inside `flow:redbook` at `spec/book/ru/`; the
-collection takes the general spirit of the process from it.</fact></p>
-  </section>
-  <section id="license" title="License">
-    <p><fact id="license-line" status="impl/done">UPL-1.0. See `LICENSE.md`.</fact></p>
-  </section>
+collection takes the general spirit of the process from it.</collections-spirit-is-the-redbook></p>
+  </background>
+  <license title="License">
+    <p><license-line fact="true" status="impl/done">UPL-1.0. See `LICENSE.md`.</license-line></p>
+  </license>
 </spec>

@@ -2,232 +2,232 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The audit category checklist</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This is the checklist an audit run walks
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This is the checklist an audit run walks
 breadth-first: four category groups (A–D), every sub-item spelled out
 with *what to look for*, a *generic mechanical aid* (a grep, a coverage
-tool, a config diff), and *what "bad" looks like*.</fact></p>
-  <p><fact id="THE-CHECKLIST-IS-LIVING" status="impl/done">The checklist is
-**living** — the closing section is the law for extending it.</fact></p>
-  <p><fact id="companion-document-pointers" status="impl/done">The
+tool, a config diff), and *what "bad" looks like*.</scope-of-this-document></p>
+  <p><THE-CHECKLIST-IS-LIVING fact="true" status="impl/done">The checklist is
+**living** — the closing section is the law for extending it.</THE-CHECKLIST-IS-LIVING></p>
+  <p><companion-document-pointers fact="true" status="impl/done">The
 run procedure that consumes this list:
 [`running-an-audit.md`](running-an-audit.md); the rationale for the
-whole practice: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</fact></p>
-  <p><fact id="TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT" status="impl/done">Translate every "aid" into your stack's equivalent:</fact></p>
+whole practice: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</companion-document-pointers></p>
+  <p><TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT fact="true" status="impl/done">Translate every "aid" into your stack's equivalent:</TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT></p>
   <list ordered="false">
-    <item><fact id="AID-THE-COVERAGE-TOOL" status="impl/done">"the coverage
-  tool" is whatever your language ships,</fact></item>
-    <item><fact id="AID-GREP" status="impl/done">"grep" is any repo-wide search,</fact></item>
-    <item><fact id="AID-THE-CI-CONFIG" status="impl/done">"the CI config" is your pipeline file.</fact></item>
+    <item><AID-THE-COVERAGE-TOOL fact="true" status="impl/done">"the coverage
+  tool" is whatever your language ships,</AID-THE-COVERAGE-TOOL></item>
+    <item><AID-GREP fact="true" status="impl/done">"grep" is any repo-wide search,</AID-GREP></item>
+    <item><AID-THE-CI-CONFIG fact="true" status="impl/done">"the CI config" is your pipeline file.</AID-THE-CI-CONFIG></item>
   </list>
-  <section id="a-test-integrity" title="A — Test integrity">
-    <p><fact id="THE-GATE-PROVES-COVERED-CODE-BEHAVES" status="impl/done">The gate proves covered code behaves.</fact></p>
-    <p><fact id="GROUP-A-AUDITS-WHETHER-THE-COVERAGE-IS-REAL" status="impl/done">This group audits whether the
-coverage is real and whether the tests assert the *right* thing.</fact></p>
-    <section id="a1" title="A1 · Coverage gaps">
+  <a-test-integrity title="A — Test integrity">
+    <p><THE-GATE-PROVES-COVERED-CODE-BEHAVES fact="true" status="impl/done">The gate proves covered code behaves.</THE-GATE-PROVES-COVERED-CODE-BEHAVES></p>
+    <p><GROUP-A-AUDITS-WHETHER-THE-COVERAGE-IS-REAL fact="true" status="impl/done">This group audits whether the
+coverage is real and whether the tests assert the *right* thing.</GROUP-A-AUDITS-WHETHER-THE-COVERAGE-IS-REAL></p>
+    <a1 title="A1 · Coverage gaps">
       <list ordered="false">
-        <item><fact id="A1-LOOK-FOR" status="impl/done">**Look for.** Production paths exercised only through a proxy, or not
+        <item><A1-LOOK-FOR fact="true" status="impl/done">**Look for.** Production paths exercised only through a proxy, or not
   at all — especially default/happy paths everyone assumes is tested
   because the feature "works". A branch with no direct test is a branch
-  that can break green.</fact></item>
-        <item><fact id="A1-AID" status="impl/done">**Aid.** The coverage tool, read by *file and branch*, not just the
+  that can break green.</A1-LOOK-FOR></item>
+        <item><A1-AID fact="true" status="impl/done">**Aid.** The coverage tool, read by *file and branch*, not just the
   headline percentage. Cross-check: does the critical path have a test
-  that would fail if the path broke?</fact></item>
-        <item><fact id="A1-BAD" status="impl/done">**Bad.** The initializer's default-config path has no direct test;
+  that would fail if the path broke?</A1-AID></item>
+        <item><A1-BAD fact="true" status="impl/done">**Bad.** The initializer's default-config path has no direct test;
   the end-to-end suite drives a stand-in fixture and never touches the
-  real code path it is supposed to certify.</fact></item>
+  real code path it is supposed to certify.</A1-BAD></item>
       </list>
-    </section>
-    <section id="a2" title="A2 · Quarantined tests">
+    </a1>
+    <a2 title="A2 · Quarantined tests">
       <list ordered="false">
-        <item><fact id="A2-LOOK-FOR" status="impl/done">**Look for.** Tests that are skipped, ignored, disabled, or
+        <item><A2-LOOK-FOR fact="true" status="impl/done">**Look for.** Tests that are skipped, ignored, disabled, or
   commented out. Are they red? stale? has the quarantine become
-  permanent and forgotten?</fact></item>
-        <item><fact id="A2-AID" status="impl/done">**Aid.** `grep` for your framework's skip markers (`@skip`,
+  permanent and forgotten?</A2-LOOK-FOR></item>
+        <item><A2-AID fact="true" status="impl/done">**Aid.** `grep` for your framework's skip markers (`@skip`,
   `#[ignore]`, `xit`, `it.skip`, `@Disabled`, `-` in a plan file); run
-  the suite once *with* skips enabled and read what fails.</fact></item>
-        <item><fact id="A2-BAD" status="impl/done">**Bad.** A test disabled "temporarily" two milestones ago, still
-  red, now load-bearing coverage that everyone forgot is off.</fact></item>
+  the suite once *with* skips enabled and read what fails.</A2-AID></item>
+        <item><A2-BAD fact="true" status="impl/done">**Bad.** A test disabled "temporarily" two milestones ago, still
+  red, now load-bearing coverage that everyone forgot is off.</A2-BAD></item>
       </list>
-    </section>
-    <section id="a3" title="A3 · Tests that encode the wrong behavior">
+    </a2>
+    <a3 title="A3 · Tests that encode the wrong behavior">
       <list ordered="false">
-        <item><fact id="A3-LOOK-FOR" status="impl/done">**Look for.** A test that asserts *current* output rather than
+        <item><A3-LOOK-FOR fact="true" status="impl/done">**Look for.** A test that asserts *current* output rather than
   *intended* behavior. It stays green while the behavior is a defect —
-  detectable only by reading the assertion against the spec or intent.</fact></item>
-        <item><fact id="A3-AID" status="impl/done">**Aid.** None mechanical — this is pure judgment. Read the highest-
+  detectable only by reading the assertion against the spec or intent.</A3-LOOK-FOR></item>
+        <item><A3-AID fact="true" status="impl/done">**Aid.** None mechanical — this is pure judgment. Read the highest-
   value assertions against what the feature is *supposed* to do, not
-  against what it currently emits.</fact></item>
-        <item><fact id="A3-BAD" status="impl/done">**Bad.** A test named `test_init_default` asserts the initializer
-  writes a value that is itself broken; the test guards the bug.</fact></item>
+  against what it currently emits.</A3-AID></item>
+        <item><A3-BAD fact="true" status="impl/done">**Bad.** A test named `test_init_default` asserts the initializer
+  writes a value that is itself broken; the test guards the bug.</A3-BAD></item>
       </list>
-    </section>
-  </section>
-  <section id="b-rot" title="B — Rot outside the gate">
-    <p><fact id="THE-GATE-ONLY-CERTIFIES-WHAT-IT-RUNS" status="impl/done">The gate only certifies what it runs.</fact></p>
-    <p><fact id="GROUP-B-AUDITS-WHAT-THE-GATE-DOES-NOT-RUN" status="impl/done">This group audits everything it
-does not run, and whether its reach is shrinking.</fact></p>
-    <section id="b1" title="B1 · Unreached trees">
+    </a3>
+  </a-test-integrity>
+  <b-rot title="B — Rot outside the gate">
+    <p><THE-GATE-ONLY-CERTIFIES-WHAT-IT-RUNS fact="true" status="impl/done">The gate only certifies what it runs.</THE-GATE-ONLY-CERTIFIES-WHAT-IT-RUNS></p>
+    <p><GROUP-B-AUDITS-WHAT-THE-GATE-DOES-NOT-RUN fact="true" status="impl/done">This group audits everything it
+does not run, and whether its reach is shrinking.</GROUP-B-AUDITS-WHAT-THE-GATE-DOES-NOT-RUN></p>
+    <b1 title="B1 · Unreached trees">
       <list ordered="false">
-        <item><fact id="B1-LOOK-FOR" status="impl/done">**Look for.** Anything the test command does not execute: a separate
+        <item><B1-LOOK-FOR fact="true" status="impl/done">**Look for.** Anything the test command does not execute: a separate
   workspace or sub-project, standalone scripts, fixtures/examples/docs
   samples that no test parses, a second language's directory with its
-  own untriggered suite.</fact></item>
-        <item><fact id="B1-AID" status="impl/done">**Aid.** Diff *what exists on disk* against *what the gate names*.
+  own untriggered suite.</B1-LOOK-FOR></item>
+        <item><B1-AID fact="true" status="impl/done">**Aid.** Diff *what exists on disk* against *what the gate names*.
   List every top-level tree; for each, name the CI job that touches
-  it. A tree no job names is unreached.</fact></item>
-        <item><fact id="B1-BAD" status="impl/done">**Bad.** A `fixtures/` or `examples/` directory carrying retired
+  it. A tree no job names is unreached.</B1-AID></item>
+        <item><B1-BAD fact="true" status="impl/done">**Bad.** A `fixtures/` or `examples/` directory carrying retired
   schema across two milestones; a helper sub-project whose own tests
-  went red months ago and nobody saw.</fact></item>
+  went red months ago and nobody saw.</B1-BAD></item>
       </list>
-    </section>
-    <section id="b2" title="B2 · Gate completeness">
+    </b1>
+    <b2 title="B2 · Gate completeness">
       <list ordered="false">
-        <item><fact id="B2-LOOK-FOR" status="impl/done">**Look for.** Does the gate still cover every module and every
+        <item><B2-LOOK-FOR fact="true" status="impl/done">**Look for.** Does the gate still cover every module and every
   target? A new module, a disabled test target, or a moved file can
-  quietly carve a hole in the coverage the gate is assumed to have.</fact></item>
-        <item><fact id="B2-AID" status="impl/done">**Aid.** Diff the CI config / test manifest against the current
+  quietly carve a hole in the coverage the gate is assumed to have.</B2-LOOK-FOR></item>
+        <item><B2-AID fact="true" status="impl/done">**Aid.** Diff the CI config / test manifest against the current
   module list. Confirm the test command's glob still matches every
-  package it should.</fact></item>
-        <item><fact id="B2-BAD" status="impl/done">**Bad.** A newly added module is absent from the CI matrix; a
+  package it should.</B2-AID></item>
+        <item><B2-BAD fact="true" status="impl/done">**Bad.** A newly added module is absent from the CI matrix; a
   `test = false` or an excluded path silently drops a package from the
-  run while everything stays green.</fact></item>
+  run while everything stays green.</B2-BAD></item>
       </list>
-    </section>
-  </section>
-  <section id="c-drift" title="C — Drift">
-    <p><fact id="NOTHING-IN-GROUP-C-FAILS-A-TEST" status="impl/done">Nothing here fails a test.</fact></p>
-    <p><fact id="GROUP-C-IS-CODE-AND-ITS-DESCRIPTIONS-OUT-OF-STEP" status="impl/done">Everything here is code and its descriptions
-falling out of step.</fact></p>
-    <section id="c1" title="C1 · Doc drift">
+    </b2>
+  </b-rot>
+  <c-drift title="C — Drift">
+    <p><NOTHING-IN-GROUP-C-FAILS-A-TEST fact="true" status="impl/done">Nothing here fails a test.</NOTHING-IN-GROUP-C-FAILS-A-TEST></p>
+    <p><GROUP-C-IS-CODE-AND-ITS-DESCRIPTIONS-OUT-OF-STEP fact="true" status="impl/done">Everything here is code and its descriptions
+falling out of step.</GROUP-C-IS-CODE-AND-ITS-DESCRIPTIONS-OUT-OF-STEP></p>
+    <c1 title="C1 · Doc drift">
       <list ordered="false">
-        <item><fact id="C1-LOOK-FOR" status="impl/done">**Look for.** User-facing docs, READMEs, and help text versus the
+        <item><C1-LOOK-FOR fact="true" status="impl/done">**Look for.** User-facing docs, READMEs, and help text versus the
   code's actual behavior — flags that no longer exist, examples that no
-  longer run, described defaults that changed.</fact></item>
-        <item><fact id="C1-AID" status="impl/done">**Aid.** Run the doc's own examples. `grep` docs for command/flag
-  names and confirm each still exists in the code.</fact></item>
-        <item><fact id="C1-BAD" status="impl/done">**Bad.** The README's quick-start invokes a renamed command; a
-  documented default contradicts the shipped one.</fact></item>
+  longer run, described defaults that changed.</C1-LOOK-FOR></item>
+        <item><C1-AID fact="true" status="impl/done">**Aid.** Run the doc's own examples. `grep` docs for command/flag
+  names and confirm each still exists in the code.</C1-AID></item>
+        <item><C1-BAD fact="true" status="impl/done">**Bad.** The README's quick-start invokes a renamed command; a
+  documented default contradicts the shipped one.</C1-BAD></item>
       </list>
-    </section>
-    <section id="c2" title="C2 · Spec drift">
+    </c1>
+    <c2 title="C2 · Spec drift">
       <list ordered="false">
-        <item><fact id="C2-LOOK-FOR" status="impl/done">**Look for.** A spec/design doc self-contradicting or contradicting
+        <item><C2-LOOK-FOR fact="true" status="impl/done">**Look for.** A spec/design doc self-contradicting or contradicting
   another; the spec versus shipped reality; dead cross-references to
-  files or anchors that no longer exist.</fact></item>
-        <item><fact id="C2-AID" status="impl/done">**Aid.** `grep` for internal reference links / anchors and resolve
+  files or anchors that no longer exist.</C2-LOOK-FOR></item>
+        <item><C2-AID fact="true" status="impl/done">**Aid.** `grep` for internal reference links / anchors and resolve
   each. Read paired documents for contradicting numbers (a version, a
-  limit, a threshold stated twice).</fact></item>
-        <item><fact id="C2-BAD" status="impl/done">**Bad.** One section says schema v4 while another says v5; a doc
-  references a directory that is not on disk.</fact></item>
+  limit, a threshold stated twice).</C2-AID></item>
+        <item><C2-BAD fact="true" status="impl/done">**Bad.** One section says schema v4 while another says v5; a doc
+  references a directory that is not on disk.</C2-BAD></item>
       </list>
-    </section>
-    <section id="c3" title="C3 · Checkpoint drift">
+    </c2>
+    <c3 title="C3 · Checkpoint drift">
       <list ordered="false">
-        <item><fact id="C3-LOOK-FOR" status="impl/done">**Look for.** Does the living checkpoint (WAL / `CONTINUE.md` /
+        <item><C3-LOOK-FOR fact="true" status="impl/done">**Look for.** Does the living checkpoint (WAL / `CONTINUE.md` /
   status file) match the tree, the branch, and the commit chain? A
-  stale checkpoint mis-orients the next session.</fact></item>
-        <item><fact id="C3-AID" status="impl/done">**Aid.** Read the checkpoint's "current phase / next / known issues"
-  against `git log --oneline` and the actual working tree.</fact></item>
-        <item><fact id="C3-BAD" status="impl/done">**Bad.** The checkpoint claims a phase is in progress that shipped
+  stale checkpoint mis-orients the next session.</C3-LOOK-FOR></item>
+        <item><C3-AID fact="true" status="impl/done">**Aid.** Read the checkpoint's "current phase / next / known issues"
+  against `git log --oneline` and the actual working tree.</C3-AID></item>
+        <item><C3-BAD fact="true" status="impl/done">**Bad.** The checkpoint claims a phase is in progress that shipped
   three commits ago; its "known issues" list omits the audit's open
-  findings.</fact></item>
+  findings.</C3-BAD></item>
       </list>
-    </section>
-    <section id="c4" title="C4 · Outward drift">
+    </c3>
+    <c4 title="C4 · Outward drift">
       <list ordered="false">
-        <item><fact id="C4-LOOK-FOR" status="impl/done">**Look for.** External state the project depends on or publishes to —
+        <item><C4-LOOK-FOR fact="true" status="impl/done">**Look for.** External state the project depends on or publishes to —
   live registries, deployed config, downstream consumers — versus what
-  the code now expects.</fact></item>
-        <item><fact id="C4-AID" status="impl/done">**Aid.** Reconcile the code's assumptions against the real external
+  the code now expects.</C4-LOOK-FOR></item>
+        <item><C4-AID fact="true" status="impl/done">**Aid.** Reconcile the code's assumptions against the real external
   surface: query the live endpoint, diff deployed config against the
-  repo's copy.</fact></item>
-        <item><fact id="C4-BAD" status="impl/done">**Bad.** The tool expects an org/namespace layout the live registry
+  repo's copy.</C4-AID></item>
+        <item><C4-BAD fact="true" status="impl/done">**Bad.** The tool expects an org/namespace layout the live registry
   no longer matches; a downstream consumer still reads a field the code
-  stopped writing.</fact></item>
+  stopped writing.</C4-BAD></item>
       </list>
-    </section>
-  </section>
-  <section id="d-debt" title="D — Debt accumulation">
-    <p><fact id="GROUP-D-IS-SLOW-CHEAP-AND-COLLECTIVELY-CORROSIVE" status="spec/done">Slow, individually cheap, collectively corrosive.</fact></p>
-    <p><fact id="GROUP-D-COUNTS-THE-DEBT" status="impl/done">This group counts it.</fact></p>
-    <section id="d1" title="D1 · Deferred &amp; parked items">
+    </c4>
+  </c-drift>
+  <d-debt title="D — Debt accumulation">
+    <p><GROUP-D-IS-SLOW-CHEAP-AND-COLLECTIVELY-CORROSIVE fact="true" status="spec/done">Slow, individually cheap, collectively corrosive.</GROUP-D-IS-SLOW-CHEAP-AND-COLLECTIVELY-CORROSIVE></p>
+    <p><GROUP-D-COUNTS-THE-DEBT fact="true" status="impl/done">This group counts it.</GROUP-D-COUNTS-THE-DEBT></p>
+    <d1 title="D1 · Deferred &amp; parked items">
       <list ordered="false">
-        <item><fact id="D1-LOOK-FOR" status="impl/done">**Look for.** Every "deferred" / "parked" / "known issue" entry in
+        <item><D1-LOOK-FOR fact="true" status="impl/done">**Look for.** Every "deferred" / "parked" / "known issue" entry in
   the checkpoint and design docs: still valid? still wanted? silently
-  overtaken by later work and never closed?</fact></item>
-        <item><fact id="D1-AID" status="impl/done">**Aid.** `grep` for "deferred", "parked", "TODO(later)", "known
-  issue"; walk each entry and re-judge it against current reality.</fact></item>
-        <item><fact id="D1-BAD" status="impl/done">**Bad.** A parked item resolved by unrelated work months ago still
-  sits open, padding the debt list and hiding the live ones.</fact></item>
+  overtaken by later work and never closed?</D1-LOOK-FOR></item>
+        <item><D1-AID fact="true" status="impl/done">**Aid.** `grep` for "deferred", "parked", "TODO(later)", "known
+  issue"; walk each entry and re-judge it against current reality.</D1-AID></item>
+        <item><D1-BAD fact="true" status="impl/done">**Bad.** A parked item resolved by unrelated work months ago still
+  sits open, padding the debt list and hiding the live ones.</D1-BAD></item>
       </list>
-    </section>
-    <section id="d2" title="D2 · Aging markers">
+    </d1>
+    <d2 title="D2 · Aging markers">
       <list ordered="false">
-        <item><fact id="D2-LOOK-FOR" status="impl/done">**Look for.** In-code `TODO`, `FIXME`, `HACK`, `XXX`, `REVIEW`
-  markers. How old? still true? attached to code that shipped anyway?</fact></item>
-        <item><fact id="D2-AID" status="impl/done">**Aid.** `grep -rn` the marker set; for the oldest, `git blame` the
+        <item><D2-LOOK-FOR fact="true" status="impl/done">**Look for.** In-code `TODO`, `FIXME`, `HACK`, `XXX`, `REVIEW`
+  markers. How old? still true? attached to code that shipped anyway?</D2-LOOK-FOR></item>
+        <item><D2-AID fact="true" status="impl/done">**Aid.** `grep -rn` the marker set; for the oldest, `git blame` the
   line to date it. A marker older than a milestone is a decision, not a
-  note.</fact></item>
-        <item><fact id="D2-BAD" status="impl/done">**Bad.** A `FIXME: temporary` from a year ago on a code path now in
-  production; a `TODO` describing a design the code diverged from.</fact></item>
+  note.</D2-AID></item>
+        <item><D2-BAD fact="true" status="impl/done">**Bad.** A `FIXME: temporary` from a year ago on a code path now in
+  production; a `TODO` describing a design the code diverged from.</D2-BAD></item>
       </list>
-    </section>
-    <section id="d3" title="D3 · Escape hatches">
+    </d2>
+    <d3 title="D3 · Escape hatches">
       <list ordered="false">
-        <item><fact id="D3-LOOK-FOR" status="impl/done">**Look for.** Suppressions of the gate's own checks — lint-disable
+        <item><D3-LOOK-FOR fact="true" status="impl/done">**Look for.** Suppressions of the gate's own checks — lint-disable
   comments, `#[allow(...)]`, `// eslint-disable`, `@SuppressWarnings`,
   `# type: ignore`, `--no-verify` habits. Each justified once, never
-  revisited.</fact></item>
-        <item><fact id="D3-AID" status="impl/done">**Aid.** `grep -rn` for the suppression syntaxes; for each, ask
-  whether the reason still holds or the code can now be fixed properly.</fact></item>
-        <item><fact id="D3-BAD" status="impl/done">**Bad.** A blanket suppression at file scope that now hides a real
-  warning added long after the original justification.</fact></item>
+  revisited.</D3-LOOK-FOR></item>
+        <item><D3-AID fact="true" status="impl/done">**Aid.** `grep -rn` for the suppression syntaxes; for each, ask
+  whether the reason still holds or the code can now be fixed properly.</D3-AID></item>
+        <item><D3-BAD fact="true" status="impl/done">**Bad.** A blanket suppression at file scope that now hides a real
+  warning added long after the original justification.</D3-BAD></item>
       </list>
-    </section>
-    <section id="d4" title="D4 · Dependency staleness">
+    </d3>
+    <d4 title="D4 · Dependency staleness">
       <list ordered="false">
-        <item><fact id="D4-LOOK-FOR" status="impl/done">**Look for.** Outdated dependencies and open security advisories.
-  Pinned versions drifting behind; a transitive advisory nobody saw.</fact></item>
-        <item><fact id="D4-AID" status="impl/done">**Aid.** The dependency manager's outdated/audit command
+        <item><D4-LOOK-FOR fact="true" status="impl/done">**Look for.** Outdated dependencies and open security advisories.
+  Pinned versions drifting behind; a transitive advisory nobody saw.</D4-LOOK-FOR></item>
+        <item><D4-AID fact="true" status="impl/done">**Aid.** The dependency manager's outdated/audit command
   (`npm outdated` / `npm audit`, `cargo outdated` / `cargo audit`,
-  `pip list --outdated`, `go list -u -m all`, etc.).</fact></item>
-        <item><fact id="D4-BAD" status="impl/done">**Bad.** A dependency two majors behind with a known CVE; a lockfile
-  that has not been refreshed since before the last advisory batch.</fact></item>
+  `pip list --outdated`, `go list -u -m all`, etc.).</D4-AID></item>
+        <item><D4-BAD fact="true" status="impl/done">**Bad.** A dependency two majors behind with a known CVE; a lockfile
+  that has not been refreshed since before the last advisory batch.</D4-BAD></item>
       </list>
-    </section>
-  </section>
-  <section id="extending" title="Extending the checklist">
-    <p><fact id="THE-LIST-IS-A-STARTING-SET-NOT-A-CLOSED-ONE" status="impl/done">This list is a starting set, not a closed one.</fact></p>
-    <p><fact id="TWO-RULES-GOVERN-THE-LISTS-GROWTH" status="impl/done">Two rules govern its
-growth, each applying when its own condition holds:</fact></p>
+    </d4>
+  </d-debt>
+  <extending title="Extending the checklist">
+    <p><THE-LIST-IS-A-STARTING-SET-NOT-A-CLOSED-ONE fact="true" status="impl/done">This list is a starting set, not a closed one.</THE-LIST-IS-A-STARTING-SET-NOT-A-CLOSED-ONE></p>
+    <p><TWO-RULES-GOVERN-THE-LISTS-GROWTH fact="true" status="impl/done">Two rules govern its
+growth, each applying when its own condition holds:</TWO-RULES-GOVERN-THE-LISTS-GROWTH></p>
     <list ordered="true">
-      <item><fact id="GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW" status="impl/done">**A new defect class becomes a permanent row.** When a run finds a
+      <item><GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW fact="true" status="impl/done">**A new defect class becomes a permanent row.** When a run finds a
    kind of rot no category named, add it here as a standing sub-item,
-   so the same gap is never re-missed.</fact></item>
-      <item><fact id="GROWTH-RULE-A-MECHANISABLE-ROW-MIGRATES-INTO-THE-GATE" status="impl/done">**A mechanisable row migrates into the gate.** When a category can
+   so the same gap is never re-missed.</GROWTH-RULE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-ROW></item>
+      <item><GROWTH-RULE-A-MECHANISABLE-ROW-MIGRATES-INTO-THE-GATE fact="true" status="impl/done">**A mechanisable row migrates into the gate.** When a category can
    be fully checked by a script, move it out of this manual list and
    into the linter / test suite / CI — the audit is the judgment-heavy
-   superset that keeps feeding the automated subset.</fact></item>
+   superset that keeps feeding the automated subset.</GROWTH-RULE-A-MECHANISABLE-ROW-MIGRATES-INTO-THE-GATE></item>
     </list>
-    <p><fact id="ONE-MORE-ROW-DEPTH-OF-ADOPTION" status="impl/done">One row every maturing project eventually needs: **depth of adoption.**</fact></p>
-    <p><fact id="ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION" status="impl/done">If the project claims to follow a convention — a spec discipline, a
+    <p><ONE-MORE-ROW-DEPTH-OF-ADOPTION fact="true" status="impl/done">One row every maturing project eventually needs: **depth of adoption.**</ONE-MORE-ROW-DEPTH-OF-ADOPTION></p>
+    <p><ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION fact="true" status="impl/done">If the project claims to follow a convention — a spec discipline, a
 naming law, a commit format — add a category that measures *how deep*
 the adoption actually goes (how many modules truly carry it), not
-merely that it is documented.</fact></p>
-    <p><fact id="adopted-is-true-at-the-surface-first" status="spec/done">"Adopted" is true at the surface long
-before it is true throughout; only a depth row catches the gap.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+merely that it is documented.</ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION></p>
+    <p><adopted-is-true-at-the-surface-first fact="true" status="spec/done">"Adopted" is true at the surface long
+before it is true throughout; only a depth row catches the gap.</adopted-is-true-at-the-surface-first></p>
+  </extending>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST" status="impl/done">Four groups: A test integrity, B rot outside the gate, C drift,
-  D debt. Walk all four breadth-first.</fact></item>
-      <item><fact id="SUM-EACH-ROW-NAMES-LOOK-FOR-AID-AND-BAD" status="impl/done">Each row names what to look for, a mechanical aid, and what "bad"
-  looks like — translate every aid into your stack's equivalent.</fact></item>
-      <item><fact id="SUM-A3-HAS-NO-MECHANICAL-AID" status="spec/done">A3 (tests that encode the wrong behavior) has no mechanical aid; it
-  is pure judgment and often the highest-value finding.</fact></item>
-      <item><fact id="SUM-THE-CHECKLIST-GROWS" status="impl/done">The checklist grows: new defect classes join it, mechanisable rows
+      <item><SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST fact="true" status="impl/done">Four groups: A test integrity, B rot outside the gate, C drift,
+  D debt. Walk all four breadth-first.</SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST></item>
+      <item><SUM-EACH-ROW-NAMES-LOOK-FOR-AID-AND-BAD fact="true" status="impl/done">Each row names what to look for, a mechanical aid, and what "bad"
+  looks like — translate every aid into your stack's equivalent.</SUM-EACH-ROW-NAMES-LOOK-FOR-AID-AND-BAD></item>
+      <item><SUM-A3-HAS-NO-MECHANICAL-AID fact="true" status="spec/done">A3 (tests that encode the wrong behavior) has no mechanical aid; it
+  is pure judgment and often the highest-value finding.</SUM-A3-HAS-NO-MECHANICAL-AID></item>
+      <item><SUM-THE-CHECKLIST-GROWS fact="true" status="impl/done">The checklist grows: new defect classes join it, mechanisable rows
   leave for the gate, and a maturing project adds a depth-of-adoption
-  row.</fact></item>
+  row.</SUM-THE-CHECKLIST-GROWS></item>
     </list>
-  </section>
+  </summary>
 </spec>

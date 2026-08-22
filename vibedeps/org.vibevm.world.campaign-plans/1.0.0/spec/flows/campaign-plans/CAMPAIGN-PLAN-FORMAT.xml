@@ -2,33 +2,33 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">The Campaign Plan Format</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *what* a campaign is,
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *what* a campaign is,
 *which* artifact roles its paper trail carries, and the *canonical
 section skeleton* of a campaign plan — the one document that lets a
-large change be planned once and executed cold.</fact></p>
-  <p><fact id="sibling-document-pointers" status="impl/done">Phase mechanics:
+large change be planned once and executed cold.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">Phase mechanics:
 [`phase-gates.md`](phase-gates.md); the record half:
-[`execution-ledger.md`](execution-ledger.md).</fact></p>
-  <section id="what" title="What a campaign is">
-    <p><fact id="A-CAMPAIGN-IS-A-MULTI-COMMIT-CHANGE-TOO-BIG-FOR-ONE-SESSION" status="impl/done">A campaign is a multi-commit change too big for one session: a
+[`execution-ledger.md`](execution-ledger.md).</sibling-document-pointers></p>
+  <what title="What a campaign is">
+    <p><A-CAMPAIGN-IS-A-MULTI-COMMIT-CHANGE-TOO-BIG-FOR-ONE-SESSION fact="true" status="impl/done">A campaign is a multi-commit change too big for one session: a
 package-family rename, a debt drain across the whole codebase, a new
-subsystem landed in six waves.</fact></p>
-    <p><fact id="A-CAMPAIGN-IS-GATED-BY-PHASES-AND-PLANNED-TO-RUN-COLD" status="impl/done">It is executed as **gated phases** —
+subsystem landed in six waves.</A-CAMPAIGN-IS-A-MULTI-COMMIT-CHANGE-TOO-BIG-FOR-ONE-SESSION></p>
+    <p><A-CAMPAIGN-IS-GATED-BY-PHASES-AND-PLANNED-TO-RUN-COLD fact="true" status="impl/done">It is executed as **gated phases** —
 each ends with the project's full gate panel green — and it is
 planned to run **cold**: by a fresh session with no memory of the
 planning conversation, by a different person, or by the author after
-total context loss.</fact></p>
-    <p><fact id="THE-TEST-IS-WHETHER-A-STRANGER-COULD-EXECUTE-IT-TODAY" status="impl/done">The test of a good plan is not "could I execute
-this tomorrow?" but "could a stranger execute this today?".</fact></p>
-    <p><fact id="PAY-THE-FORMATS-COST-ONLY-FOR-WORK-THAT-SPANS-SESSIONS" status="impl/done">The
+total context loss.</A-CAMPAIGN-IS-GATED-BY-PHASES-AND-PLANNED-TO-RUN-COLD></p>
+    <p><THE-TEST-IS-WHETHER-A-STRANGER-COULD-EXECUTE-IT-TODAY fact="true" status="impl/done">The test of a good plan is not "could I execute
+this tomorrow?" but "could a stranger execute this today?".</THE-TEST-IS-WHETHER-A-STRANGER-COULD-EXECUTE-IT-TODAY></p>
+    <p><PAY-THE-FORMATS-COST-ONLY-FOR-WORK-THAT-SPANS-SESSIONS fact="true" status="impl/done">The
 format's cost is real: pay it only when the work spans sessions or
-more than a handful of commits.</fact></p>
-    <p><fact id="THE-CARRIER-CHOICE-LIVES-IN-FLOW-ADDRESSABLE-SPECS" status="impl/done">What decides whether to pay this format's cost at all — or take
+more than a handful of commits.</PAY-THE-FORMATS-COST-ONLY-FOR-WORK-THAT-SPANS-SESSIONS></p>
+    <p><THE-CARRIER-CHOICE-LIVES-IN-FLOW-ADDRESSABLE-SPECS fact="true" status="impl/done">What decides whether to pay this format's cost at all — or take
 another carrier for the work — is a choice with its own rule, and
-that rule lives in `flow:addressable-specs`'s `#what-goes-where`.</fact></p>
-  </section>
-  <section id="artifacts" title="The five artifact roles">
-    <p><fact id="paper-trail-carries-five-roles-lead" status="impl/done">A campaign's paper trail carries five roles:</fact></p>
+that rule lives in `flow:addressable-specs`'s `#what-goes-where`.</THE-CARRIER-CHOICE-LIVES-IN-FLOW-ADDRESSABLE-SPECS></p>
+  </what>
+  <artifacts title="The five artifact roles">
+    <p><paper-trail-carries-five-roles-lead fact="true" status="impl/done">A campaign's paper trail carries five roles:</paper-trail-carries-five-roles-lead></p>
     <table>
       <tr>
         <td>Role</td>
@@ -36,234 +36,234 @@ that rule lives in `flow:addressable-specs`'s `#what-goes-where`.</fact></p>
         <td>Purpose</td>
       </tr>
       <tr>
-        <td><fact id="ROW-ROLE-PLAN" status="impl/done">**PLAN**</fact></td>
+        <td><ROW-ROLE-PLAN fact="true" status="impl/done">**PLAN**</ROW-ROLE-PLAN></td>
         <td><fact status="impl/done">before work starts</fact></td>
         <td><fact status="impl/done">the cold-executable recipe</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ROLE-BASELINE" status="impl/done">**BASELINE**</fact></td>
+        <td><ROW-ROLE-BASELINE fact="true" status="impl/done">**BASELINE**</ROW-ROLE-BASELINE></td>
         <td><fact status="impl/done">at campaign open</fact></td>
         <td><fact status="impl/done">the frozen starting facts: gate-panel state, inventory counts, the numbers phases are measured against</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ROLE-PREDICTIONS" status="impl/done">**PREDICTIONS**</fact></td>
+        <td><ROW-ROLE-PREDICTIONS fact="true" status="impl/done">**PREDICTIONS**</ROW-ROLE-PREDICTIONS></td>
         <td><fact status="impl/done">at campaign open</fact></td>
         <td><fact status="impl/done">falsifiable expectations, stated *before* execution so the report can honestly say confirmed / falsified / surprised</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ROLE-LOG" status="impl/done">**LOG**</fact></td>
+        <td><ROW-ROLE-LOG fact="true" status="impl/done">**LOG**</ROW-ROLE-LOG></td>
         <td><fact status="impl/done">during execution</fact></td>
         <td><fact status="impl/done">the running record: per-phase commit maps, deviations, discovered work</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ROLE-REPORT" status="impl/done">**REPORT**</fact></td>
+        <td><ROW-ROLE-REPORT fact="true" status="impl/done">**REPORT**</ROW-ROLE-REPORT></td>
         <td><fact status="impl/done">at campaign close</fact></td>
         <td><fact status="impl/done">results vs predictions; what the campaign taught</fact></td>
       </tr>
     </table>
-    <p><fact id="THE-ONE-FILE-DIALECT-CARRIES-ALL-FIVE-ROLES" status="impl/done">**The one-file dialect (default).** One plan document carries all
+    <p><THE-ONE-FILE-DIALECT-CARRIES-ALL-FIVE-ROLES fact="true" status="impl/done">**The one-file dialect (default).** One plan document carries all
 five roles: the baseline in the target-arithmetic and current-state
 sections, the predictions in their own section, the log in the
 execution ledger, the report in the execution-record block prepended
-at close — one file, one resume pointer.</fact></p>
-    <p><fact id="THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT" status="impl/done">Very large campaigns may
-split the roles into files; the roles, not the count, are the contract.</fact></p>
-    <p><fact id="two-laws-govern-the-set-lead" status="impl/done">Two laws govern the set:</fact></p>
+at close — one file, one resume pointer.</THE-ONE-FILE-DIALECT-CARRIES-ALL-FIVE-ROLES></p>
+    <p><THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT fact="true" status="impl/done">Very large campaigns may
+split the roles into files; the roles, not the count, are the contract.</THE-ROLES-NOT-THE-COUNT-ARE-THE-CONTRACT></p>
+    <p><two-laws-govern-the-set-lead fact="true" status="impl/done">Two laws govern the set:</two-laws-govern-the-set-lead></p>
     <list ordered="false">
-      <item><fact id="LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE" status="impl/done">**a campaign that skips the REPORT learns
-  nothing durable,**</fact></item>
-      <item><fact id="LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION" status="impl/done">**and a campaign without a written PLAN cannot be resumed
-  by anyone but its author's context window.**</fact></item>
+      <item><LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE fact="true" status="impl/done">**a campaign that skips the REPORT learns
+  nothing durable,**</LAW-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE></item>
+      <item><LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION fact="true" status="impl/done">**and a campaign without a written PLAN cannot be resumed
+  by anyone but its author's context window.**</LAW-NO-WRITTEN-PLAN-MEANS-NO-RESUMPTION></item>
     </list>
-  </section>
-  <section id="skeleton" title="The section skeleton">
-    <p><fact id="the-canonical-plan-in-order" status="impl/done">The canonical plan, in order.</fact></p>
-    <p><fact id="WHICH-SECTIONS-ARE-WRITTEN-BEFORE-EXECUTION" status="impl/done">Sections 1 and 3–13 are written before
-execution; 2, 14, and 15 are filled by the executing session.</fact></p>
-    <section id="s1-status" title="1 — Title and status line">
-      <p><fact id="the-title-and-the-status-block-lead" status="impl/done">The title names the campaign and its one-line point; under it, an
-italic status block:</fact></p>
+  </artifacts>
+  <skeleton title="The section skeleton">
+    <p><the-canonical-plan-in-order fact="true" status="impl/done">The canonical plan, in order.</the-canonical-plan-in-order></p>
+    <p><WHICH-SECTIONS-ARE-WRITTEN-BEFORE-EXECUTION fact="true" status="impl/done">Sections 1 and 3–13 are written before
+execution; 2, 14, and 15 are filled by the executing session.</WHICH-SECTIONS-ARE-WRITTEN-BEFORE-EXECUTION></p>
+    <s1-status title="1 — Title and status line">
+      <p><the-title-and-the-status-block-lead fact="true" status="impl/done">The title names the campaign and its one-line point; under it, an
+italic status block:</the-title-and-the-status-block-lead></p>
       <list ordered="false">
-        <item><fact id="STATUS-BLOCK-THE-LIFECYCLE-STATE" status="impl/done">the lifecycle state (`PLANNED` → `EXECUTING` →
-  `EXECUTED &lt;date&gt;`),</fact></item>
-        <item><fact id="STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST" status="impl/done">the tree the plan was written against,</fact></item>
-        <item><fact id="STATUS-BLOCK-THE-COLD-START-FLAG" status="impl/done">and the cold-start flag.</fact></item>
+        <item><STATUS-BLOCK-THE-LIFECYCLE-STATE fact="true" status="impl/done">the lifecycle state (`PLANNED` → `EXECUTING` →
+  `EXECUTED &lt;date&gt;`),</STATUS-BLOCK-THE-LIFECYCLE-STATE></item>
+        <item><STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST fact="true" status="impl/done">the tree the plan was written against,</STATUS-BLOCK-THE-TREE-THE-PLAN-WAS-WRITTEN-AGAINST></item>
+        <item><STATUS-BLOCK-THE-COLD-START-FLAG fact="true" status="impl/done">and the cold-start flag.</STATUS-BLOCK-THE-COLD-START-FLAG></item>
       </list>
-      <p><fact id="OWNER-REVIEW-MAY-ANNOTATE-THE-STATE" status="impl/done">Owner review may annotate the state
-(`ACCEPTED with owner amendments, &lt;date&gt;`) before execution.</fact></p>
+      <p><OWNER-REVIEW-MAY-ANNOTATE-THE-STATE fact="true" status="impl/done">Owner review may annotate the state
+(`ACCEPTED with owner amendments, &lt;date&gt;`) before execution.</OWNER-REVIEW-MAY-ANNOTATE-THE-STATE></p>
       <fence># CACHE-DRAIN-PLAN v0.1 — retire the legacy cache, consumer by consumer
 _Status: PLANNED · written against tree `57fa42e` · cold-executable:
 any phase is a safe stop; the floor is green at every boundary._</fence>
-    </section>
-    <section id="s2-execution-record" title="2 — Execution record (prepended at close)">
-      <p><fact id="EMPTY-AT-AUTHORING" status="impl/done">Empty at authoring.</fact></p>
-      <p><fact id="at-close-a-block-is-prepended-lead" status="impl/done">At close, the executing session prepends a block
-into the status area:</fact></p>
+    </s1-status>
+    <s2-execution-record title="2 — Execution record (prepended at close)">
+      <p><EMPTY-AT-AUTHORING fact="true" status="impl/done">Empty at authoring.</EMPTY-AT-AUTHORING></p>
+      <p><at-close-a-block-is-prepended-lead fact="true" status="impl/done">At close, the executing session prepends a block
+into the status area:</at-close-a-block-is-prepended-lead></p>
       <list ordered="false">
-        <item><fact id="RECORD-THE-COMMIT-RANGE" status="impl/done">commit range,</fact></item>
-        <item><fact id="RECORD-THE-PER-PHASE-DELTAS" status="impl/done">per-phase deltas,</fact></item>
-        <item><fact id="RECORD-WHICH-PREDICTIONS-HELD" status="impl/done">which
-  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).</fact></item>
+        <item><RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">commit range,</RECORD-THE-COMMIT-RANGE></item>
+        <item><RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">per-phase deltas,</RECORD-THE-PER-PHASE-DELTAS></item>
+        <item><RECORD-WHICH-PREDICTIONS-HELD fact="true" status="impl/done">which
+  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).</RECORD-WHICH-PREDICTIONS-HELD></item>
       </list>
-    </section>
-    <section id="s3-mandate" title="3 — The mandate">
-      <p><fact id="THE-MANDATE-IS-QUOTED-VERBATIM-AND-DATED" status="impl/done">The owner's commissioning words, **quoted verbatim and dated** —
-never paraphrased into blandness.</fact></p>
-      <p><fact id="SCOPE-QUESTIONS-RESOLVE-AGAINST-THE-MANDATE" status="impl/done">Scope questions resolve against
-this text; the executor never re-litigates it.</fact></p>
+    </s2-execution-record>
+    <s3-mandate title="3 — The mandate">
+      <p><THE-MANDATE-IS-QUOTED-VERBATIM-AND-DATED fact="true" status="impl/done">The owner's commissioning words, **quoted verbatim and dated** —
+never paraphrased into blandness.</THE-MANDATE-IS-QUOTED-VERBATIM-AND-DATED></p>
+      <p><SCOPE-QUESTIONS-RESOLVE-AGAINST-THE-MANDATE fact="true" status="impl/done">Scope questions resolve against
+this text; the executor never re-litigates it.</SCOPE-QUESTIONS-RESOLVE-AGAINST-THE-MANDATE></p>
       <fence>Mandate (owner, 2026-07-07): "take everything listed in the previous
 campaign's deferral ledger and plan its implementation; do not wait
 for the full pilot — build a small demo project instead."</fence>
-    </section>
-    <section id="s4-arithmetic" title="4 — Target arithmetic">
-      <p><fact id="BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE" status="impl/done">Baseline and exit state as **exact counts** that reconcile: every
-baseline unit ends in the exit state or in a phase that removes it.</fact></p>
-      <p><fact id="VAGUE-TARGETS-MAKE-THE-REPORT-UNWRITABLE" status="impl/done">Vague targets make the report unwritable.</fact></p>
+    </s3-mandate>
+    <s4-arithmetic title="4 — Target arithmetic">
+      <p><BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE fact="true" status="impl/done">Baseline and exit state as **exact counts** that reconcile: every
+baseline unit ends in the exit state or in a phase that removes it.</BASELINE-AND-EXIT-STATE-ARE-EXACT-COUNTS-THAT-RECONCILE></p>
+      <p><VAGUE-TARGETS-MAKE-THE-REPORT-UNWRITABLE fact="true" status="impl/done">Vague targets make the report unwritable.</VAGUE-TARGETS-MAKE-THE-REPORT-UNWRITABLE></p>
       <fence>Baseline at plan time: 130 findings = 68 message-format + 28
 file-budget + 24 banned-call + 8 owner-gated + 2 one-shots.
 Exit state: 10 = 8 owner-gated (out of scope) + 2 parked (named).
 Everything else reaches zero.</fence>
-    </section>
-    <section id="s5-facts" title="5 — Current-state facts (verified; do not re-discover)">
-      <p><fact id="FACTS-ARE-GATHERED-AT-AUTHORING-WITH-POINTERS" status="impl/done">Facts gathered at authoring, with file-and-line pointers, marked so
-the executor trusts them instead of re-investigating.</fact></p>
-      <p><fact id="WRONG-FACTS-HERE-ARE-THE-MOST-EXPENSIVE-PLAN-BUG" status="spec/done">**Wrong facts
+    </s4-arithmetic>
+    <s5-facts title="5 — Current-state facts (verified; do not re-discover)">
+      <p><FACTS-ARE-GATHERED-AT-AUTHORING-WITH-POINTERS fact="true" status="impl/done">Facts gathered at authoring, with file-and-line pointers, marked so
+the executor trusts them instead of re-investigating.</FACTS-ARE-GATHERED-AT-AUTHORING-WITH-POINTERS></p>
+      <p><WRONG-FACTS-HERE-ARE-THE-MOST-EXPENSIVE-PLAN-BUG fact="true" status="spec/done">**Wrong facts
 here are the most expensive class of plan bug: verify while
-writing.**</fact></p>
-      <p><fact id="the-stale-trio-a-real-campaign-recorded" status="spec/done">A real campaign recorded three files as stale at
+writing.**</WRONG-FACTS-HERE-ARE-THE-MOST-EXPENSIVE-PLAN-BUG></p>
+      <p><the-stale-trio-a-real-campaign-recorded fact="true" status="spec/done">A real campaign recorded three files as stale at
 566/556/554 lines; the true sizes were 609/612/608 — the author
-counted non-blank lines where the gate counts physical ones.</fact></p>
-      <p><fact id="a-phase-zero-probe-caught-it" status="spec/done">A Phase
-0 probe caught what would have pruned live debt as stale.</fact></p>
-    </section>
-    <section id="s6-decisions" title="6 — Decisions D1–DN">
-      <p><fact id="EVERY-DESIGN-DECISION-IS-NUMBERED" status="impl/done">Every design decision, numbered.</fact></p>
-      <p><fact id="EACH-DECISION-WEIGHS-ITS-OPTIONS-AND-REASONS-EVERY-REJECTION" status="impl/done">Each weighs its options, marks the
+counted non-blank lines where the gate counts physical ones.</the-stale-trio-a-real-campaign-recorded></p>
+      <p><a-phase-zero-probe-caught-it fact="true" status="spec/done">A Phase
+0 probe caught what would have pruned live debt as stale.</a-phase-zero-probe-caught-it></p>
+    </s5-facts>
+    <s6-decisions title="6 — Decisions D1–DN">
+      <p><EVERY-DESIGN-DECISION-IS-NUMBERED fact="true" status="impl/done">Every design decision, numbered.</EVERY-DESIGN-DECISION-IS-NUMBERED></p>
+      <p><EACH-DECISION-WEIGHS-ITS-OPTIONS-AND-REASONS-EVERY-REJECTION fact="true" status="impl/done">Each weighs its options, marks the
 chosen one, and gives every rejection a reason — so a mid-execution
 surprise is resolved in the spirit of the plan, and nobody re-opens
-a settled question.</fact></p>
-      <p><fact id="REJECTIONS-ARE-AS-LOAD-BEARING-AS-THE-CHOICE" status="impl/done">Rejections are as load-bearing as the choice.</fact></p>
+a settled question.</EACH-DECISION-WEIGHS-ITS-OPTIONS-AND-REASONS-EVERY-REJECTION></p>
+      <p><REJECTIONS-ARE-AS-LOAD-BEARING-AS-THE-CHOICE fact="true" status="impl/done">Rejections are as load-bearing as the choice.</REJECTIONS-ARE-AS-LOAD-BEARING-AS-THE-CHOICE></p>
       <fence>### D4 — how the shared engine reaches both consumers
 - (α) rewrite cross-package paths at install time — real product
   surface; rejected here, named as future work in the follow-up spec.
 - (β) align the two layouts — breaks a published invariant; rejected.
 - (γ) vendor-sync (CHOSEN): one authored home, byte-identical synced
   copies, a `--check` gate makes drift mechanically impossible.</fence>
-    </section>
-    <section id="s7-predictions" title="7 — Predictions">
-      <p><fact id="PREDICTIONS-ARE-NUMBERED-FALSIFIABLE-AND-CHECKED-ONE-BY-ONE" status="impl/done">Numbered, falsifiable, stated before execution, checked one by one in
+    </s6-decisions>
+    <s7-predictions title="7 — Predictions">
+      <p><PREDICTIONS-ARE-NUMBERED-FALSIFIABLE-AND-CHECKED-ONE-BY-ONE fact="true" status="impl/done">Numbered, falsifiable, stated before execution, checked one by one in
 the report — "P3 — fewer than 10 test expectations break across all
-68 message edits: most tests match error kinds, not strings."</fact></p>
-      <p><fact id="A-PREDICTION-THAT-CANNOT-FAIL-IS-A-HOPE" status="impl/done">A prediction that cannot fail is a hope, not a prediction.</fact></p>
-    </section>
-    <section id="s8-phases" title="8 — Phases">
-      <p><fact id="PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS" status="impl/done">Phase 0 is always spikes and probes and produces no commits; every
+68 message edits: most tests match error kinds, not strings."</PREDICTIONS-ARE-NUMBERED-FALSIFIABLE-AND-CHECKED-ONE-BY-ONE></p>
+      <p><A-PREDICTION-THAT-CANNOT-FAIL-IS-A-HOPE fact="true" status="impl/done">A prediction that cannot fail is a hope, not a prediction.</A-PREDICTION-THAT-CANNOT-FAIL-IS-A-HOPE></p>
+    </s7-predictions>
+    <s8-phases title="8 — Phases">
+      <p><PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS fact="true" status="impl/done">Phase 0 is always spikes and probes and produces no commits; every
 later phase carries numbered steps, its own exit criterion, its own
 prediction, and its planned commit set with subjects spelled in
-advance.</fact></p>
-      <p><fact id="phase-anatomy-pointer" status="impl/done">Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md).</fact></p>
-      <p><fact id="A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM" status="impl/done">**A plan references feature documents; it does not restate them.**
+advance.</PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS></p>
+      <p><phase-anatomy-pointer fact="true" status="impl/done">Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md).</phase-anatomy-pointer></p>
+      <p><A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM fact="true" status="impl/done">**A plan references feature documents; it does not restate them.**
 Where a campaign executes work that has its own feature documents,
 the plan's phases and batches name those documents and stop there.
 The plan stays what it is — a statement of order, intent and
 acceptance — while each feature's own contract stays in one place
-with one author.</fact></p>
-      <p><fact id="the-plan-is-the-copy-that-goes-stale" status="spec/done">This is the general addressing law
+with one author.</A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM></p>
+      <p><the-plan-is-the-copy-that-goes-stale fact="true" status="spec/done">This is the general addressing law
 (`flow:addressable-specs`'s `##A-NORMATIVE-VALUE-LIVES-AT-EXACTLY-ONE-ANCHOR`)
 applied to this genre, and the echo names its anchor as that law requires.
 Restating a feature's substance inside the plan produces two statements of one
 truth with nothing forcing them to agree, and the plan is the copy that will go
-stale, because it is the one built to be thrown away.</fact></p>
-    </section>
-    <section id="s9-risks" title="9 — Risks and fallbacks">
-      <p><fact id="EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B" status="impl/done">Named risks, each with its detection signal and its plan B — "flaky
+stale, because it is the one built to be thrown away.</the-plan-is-the-copy-that-goes-stale></p>
+    </s8-phases>
+    <s9-risks title="9 — Risks and fallbacks">
+      <p><EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B fact="true" status="impl/done">Named risks, each with its detection signal and its plan B — "flaky
 network: re-probe at each network-facing step; worst case those
-steps land red-pending-network, recorded, everything else lands."</fact></p>
-      <p><fact id="A-RISK-WITHOUT-A-FALLBACK-IS-A-WISH" status="impl/done">A risk without a fallback is a wish that nothing goes wrong.</fact></p>
-    </section>
-    <section id="s10-non-goals" title="10 — Non-goals">
-      <p><fact id="NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE" status="impl/done">"What this plan deliberately does NOT do" — **named, so they stay
-visible.**</fact></p>
-      <p><fact id="EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION" status="impl/done">Each non-goal carries a reason and a disposition: deferred
+steps land red-pending-network, recorded, everything else lands."</EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B></p>
+      <p><A-RISK-WITHOUT-A-FALLBACK-IS-A-WISH fact="true" status="impl/done">A risk without a fallback is a wish that nothing goes wrong.</A-RISK-WITHOUT-A-FALLBACK-IS-A-WISH></p>
+    </s9-risks>
+    <s10-non-goals title="10 — Non-goals">
+      <p><NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE fact="true" status="impl/done">"What this plan deliberately does NOT do" — **named, so they stay
+visible.**</NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE></p>
+      <p><EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION fact="true" status="impl/done">Each non-goal carries a reason and a disposition: deferred
 to a named follow-up, held by the owner, or rejected outright —
 "does NOT extend the gate to the two remaining modules: that is the
-NEXT campaign's opening move, after this queue closes."</fact></p>
-    </section>
-    <section id="s11-quick-start" title="11 — Quick-start for the executing session">
-      <p><fact id="the-quick-start-block-lead" status="impl/done">The literal shell block a cold session runs first:</fact></p>
+NEXT campaign's opening move, after this queue closes."</EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION></p>
+    </s10-non-goals>
+    <s11-quick-start title="11 — Quick-start for the executing session">
+      <p><the-quick-start-block-lead fact="true" status="impl/done">The literal shell block a cold session runs first:</the-quick-start-block-lead></p>
       <list ordered="false">
-        <item><fact id="QUICK-START-CONFIRM-THE-TREE" status="impl/done">confirm the tree,</fact></item>
-        <item><fact id="QUICK-START-VERIFY-THE-GREEN-FLOOR" status="impl/done">verify the green floor,</fact></item>
-        <item><fact id="QUICK-START-CAPTURE-THE-BASELINE-NUMBERS" status="impl/done">capture the baseline numbers.</fact></item>
+        <item><QUICK-START-CONFIRM-THE-TREE fact="true" status="impl/done">confirm the tree,</QUICK-START-CONFIRM-THE-TREE></item>
+        <item><QUICK-START-VERIFY-THE-GREEN-FLOOR fact="true" status="impl/done">verify the green floor,</QUICK-START-VERIFY-THE-GREEN-FLOOR></item>
+        <item><QUICK-START-CAPTURE-THE-BASELINE-NUMBERS fact="true" status="impl/done">capture the baseline numbers.</QUICK-START-CAPTURE-THE-BASELINE-NUMBERS></item>
       </list>
       <fence lang="sh">git log --oneline -3        # tree must match the status line
 &lt;gate-panel command&gt;        # full panel green before Phase 0 opens
 &lt;baseline count command&gt;    # must print the §4 baseline figure</fence>
-    </section>
-    <section id="s12-acceptance" title="12 — Whole-campaign acceptance">
-      <p><fact id="ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE" status="impl/done">A runnable script asserting the end state — the campaign's definition
-of done, executed on a green floor at close, cited by the report.</fact></p>
+    </s11-quick-start>
+    <s12-acceptance title="12 — Whole-campaign acceptance">
+      <p><ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE fact="true" status="impl/done">A runnable script asserting the end state — the campaign's definition
+of done, executed on a green floor at close, cited by the report.</ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE></p>
       <fence lang="sh">&lt;gate-panel command&gt;; echo "EXIT=$?"    # exit 0
 test ! -d src/legacy_cache              # the drained module is gone
 &lt;banned-pattern search&gt; | wc -l         # 0 references remain</fence>
-    </section>
-    <section id="s13-review-points" title="13 — Review points">
-      <p><fact id="REVIEW-POINTS-GO-OPEN-THEN-RESOLVED" status="impl/done">Decisions only the owner can make, escalated as numbered points:
+    </s12-acceptance>
+    <s13-review-points title="13 — Review points">
+      <p><REVIEW-POINTS-GO-OPEN-THEN-RESOLVED fact="true" status="impl/done">Decisions only the owner can make, escalated as numbered points:
 `OPEN` with options and the executor's recommendation, later
 annotated `RESOLVED` with the ruling verbatim
-([`phase-gates.md` §review-points](phase-gates.md#review-points)).</fact></p>
-    </section>
-    <section id="s14-ledger" title="14 — Execution ledger">
-      <p><fact id="THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS" status="impl/done">Filled by the executing session: per-phase commit maps binding hashes
+([`phase-gates.md` §review-points](phase-gates.md#review-points)).</REVIEW-POINTS-GO-OPEN-THEN-RESOLVED></p>
+    </s13-review-points>
+    <s14-ledger title="14 — Execution ledger">
+      <p><THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS fact="true" status="impl/done">Filled by the executing session: per-phase commit maps binding hashes
 to the planned subjects, with what each commit confirmed or falsified
-([`execution-ledger.md`](execution-ledger.md)).</fact></p>
-    </section>
-    <section id="s15-deferrals" title="15 — Deferrals ledger">
-      <p><fact id="EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION" status="impl/done">Everything the campaign chose not to do, named, one line each, with
-an owner and a disposition.</fact></p>
-      <p><fact id="NOTHING-EVAPORATES" status="impl/done">Nothing evaporates: leftover work is in a
+([`execution-ledger.md`](execution-ledger.md)).</THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS></p>
+    </s14-ledger>
+    <s15-deferrals title="15 — Deferrals ledger">
+      <p><EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION fact="true" status="impl/done">Everything the campaign chose not to do, named, one line each, with
+an owner and a disposition.</EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION></p>
+      <p><NOTHING-EVAPORATES fact="true" status="impl/done">Nothing evaporates: leftover work is in a
 commit or in this ledger
-([`execution-ledger.md` §deferrals](execution-ledger.md#deferrals)).</fact></p>
-    </section>
-  </section>
-  <section id="lineage" title="The lineage law">
-    <p><fact id="A-CLOSED-CAMPAIGNS-DEFERRALS-BECOME-THE-NEXT-MANDATE" status="impl/done">A closed campaign's deferrals ledger **becomes the next campaign's
+([`execution-ledger.md` §deferrals](execution-ledger.md#deferrals)).</NOTHING-EVAPORATES></p>
+    </s15-deferrals>
+  </skeleton>
+  <lineage title="The lineage law">
+    <p><A-CLOSED-CAMPAIGNS-DEFERRALS-BECOME-THE-NEXT-MANDATE fact="true" status="impl/done">A closed campaign's deferrals ledger **becomes the next campaign's
 mandate**: the owner commissions the follow-up by pointing at it, and
-the new plan's opening table maps each deferral to a closing phase.</fact></p>
-    <p><fact id="CAMPAIGNS-FORM-A-CHAIN" status="impl/done">Campaigns form a chain — no work item is lost between links, and no
-campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)).</fact></p>
-  </section>
-  <section id="temporary" title="A plan is a temporary artifact">
-    <p><fact id="A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED" status="impl/done">A campaign plan is **temporary by design**. When it has been
+the new plan's opening table maps each deferral to a closing phase.</A-CLOSED-CAMPAIGNS-DEFERRALS-BECOME-THE-NEXT-MANDATE></p>
+    <p><CAMPAIGNS-FORM-A-CHAIN fact="true" status="impl/done">Campaigns form a chain — no work item is lost between links, and no
+campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)).</CAMPAIGNS-FORM-A-CHAIN></p>
+  </lineage>
+  <temporary title="A plan is a temporary artifact">
+    <p><A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED fact="true" status="impl/done">A campaign plan is **temporary by design**. When it has been
 executed it must be possible to delete it and have nothing break. If
 deleting a finished plan breaks something, that something was
-depending on scaffolding.</fact></p>
-    <p><fact id="THE-TEST-IS-DELETION-NOT-TIDINESS" status="impl/done">The test is deletion, and it is worth stating as a test rather
+depending on scaffolding.</A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED></p>
+    <p><THE-TEST-IS-DELETION-NOT-TIDINESS fact="true" status="impl/done">The test is deletion, and it is worth stating as a test rather
 than as a preference: a project cannot tell, by looking, whether its
 plans are load-bearing. Asking "could this file be removed today?"
 answers it in one question, and answers it the same way for every
-plan.</fact></p>
-    <p><fact id="SIGNIFICANT-CONTENT-MOVES-INTO-THE-SPECS-ON-CLOSURE" status="impl/done">Significant content — a rule the campaign established, a
+plan.</THE-TEST-IS-DELETION-NOT-TIDINESS></p>
+    <p><SIGNIFICANT-CONTENT-MOVES-INTO-THE-SPECS-ON-CLOSURE fact="true" status="impl/done">Significant content — a rule the campaign established, a
 decision with its reasons, a measurement that will be re-read — moves
 **into the specifications** as the item closes. What stays in the plan
-is the record of doing, which git already keeps.</fact></p>
-    <p><fact id="TOMBSTONES-ARE-PROCESS-SUPPORT-NOT-STRUCTURE" status="impl/done">A **tombstone** — the one-line trace a closed row leaves in
+is the record of doing, which git already keeps.</SIGNIFICANT-CONTENT-MOVES-INTO-THE-SPECS-ON-CLOSURE></p>
+    <p><TOMBSTONES-ARE-PROCESS-SUPPORT-NOT-STRUCTURE fact="true" status="impl/done">A **tombstone** — the one-line trace a closed row leaves in
 the plan — is process support for whoever is walking the plan, and
 nothing more. It is not part of the project's structure, nothing may
-cite it, and it goes when the plan goes.</fact></p>
-    <p><fact id="WHY-DISPOSABLE-ZONES-KEEP-DURABLE-FINDINGS" status="spec/done">The failure this prevents has a shape worth recognising: a
+cite it, and it goes when the plan goes.</TOMBSTONES-ARE-PROCESS-SUPPORT-NOT-STRUCTURE></p>
+    <p><WHY-DISPOSABLE-ZONES-KEEP-DURABLE-FINDINGS fact="true" status="spec/done">The failure this prevents has a shape worth recognising: a
 correct, carefully-argued finding written into a campaign document,
 which behaves exactly as the zone promises — it is disposable, so it
 is disposed of, and the finding is rediscovered months later at full
-cost. The zone was not wrong; filing something durable there was.</fact></p>
-    <p><fact id="THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS" status="impl/done">The other half of this rule — that a statement cites the spec
+cost. The zone was not wrong; filing something durable there was.</WHY-DISPOSABLE-ZONES-KEEP-DURABLE-FINDINGS></p>
+    <p><THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS fact="true" status="impl/done">The other half of this rule — that a statement cites the spec
 element and never the plan row, and that re-pointing citations is part
 of closing — belongs to the addressable-specs flow, at
 `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#disposable-targets`.
-One law, two homes, one pointer.</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="re-derive-lead" status="impl/done">Run this prompt once to adapt the format to a concrete project:</fact></p>
+One law, two homes, one pointer.</THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS></p>
+  </temporary>
+  <re-derive title="Re-derive for your project">
+    <p><re-derive-lead fact="true" status="impl/done">Run this prompt once to adapt the format to a concrete project:</re-derive-lead></p>
     <fence>Read CAMPAIGN-PLAN-FORMAT.md, phase-gates.md, and execution-ledger.md.
 Adapt the campaign-plan format to this project:
 1. Name the gate panel: the exact commands that define this project's
@@ -277,17 +277,17 @@ Adapt the campaign-plan format to this project:
 6. Record the adapted conventions in the project's boot documents so
    every future session loads them.
 Do not start a campaign; produce the adapted conventions only.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD" status="impl/done">A campaign is a multi-commit change executed as gated phases,
-  planned to run cold — by a stranger, today.</fact></item>
-      <item><fact id="SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT" status="impl/done">Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
-  default. Skip the report and the campaign learns nothing durable.</fact></item>
-      <item><fact id="SUM-THE-PLANS-STANDING-OBLIGATIONS" status="impl/done">Mandate verbatim; arithmetic exact; facts verified at writing;
+      <item><SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD fact="true" status="impl/done">A campaign is a multi-commit change executed as gated phases,
+  planned to run cold — by a stranger, today.</SUM-A-CAMPAIGN-IS-GATED-PHASES-PLANNED-TO-RUN-COLD></item>
+      <item><SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT fact="true" status="impl/done">Five roles: PLAN, BASELINE, PREDICTIONS, LOG, REPORT — one file by
+  default. Skip the report and the campaign learns nothing durable.</SUM-FIVE-ROLES-ONE-FILE-BY-DEFAULT></item>
+      <item><SUM-THE-PLANS-STANDING-OBLIGATIONS fact="true" status="impl/done">Mandate verbatim; arithmetic exact; facts verified at writing;
   decisions carry their rejections; predictions falsifiable;
-  non-goals named so they stay visible.</fact></item>
-      <item><fact id="SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE" status="impl/done">The deferrals ledger seeds the next campaign's mandate.</fact></item>
+  non-goals named so they stay visible.</SUM-THE-PLANS-STANDING-OBLIGATIONS></item>
+      <item><SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE fact="true" status="impl/done">The deferrals ledger seeds the next campaign's mandate.</SUM-THE-DEFERRALS-LEDGER-SEEDS-THE-NEXT-MANDATE></item>
     </list>
-  </section>
+  </summary>
 </spec>

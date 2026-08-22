@@ -2,148 +2,148 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Commit message format</title>
   <status stage="spec" state="done"/>
-  <p><fact id="ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION" status="impl/done">All commits in this project follow the [Conventional Commits](https://www.conventionalcommits.org/)
-specification.</fact></p>
-  <p><fact id="this-document-is-the-shape-body-and-scope-convention" status="impl/done">This document is the message shape, body structure,
-and scope convention each commit must carry.</fact></p>
-  <section id="header" title="Header">
+  <p><ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION fact="true" status="impl/done">All commits in this project follow the [Conventional Commits](https://www.conventionalcommits.org/)
+specification.</ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION></p>
+  <p><this-document-is-the-shape-body-and-scope-convention fact="true" status="impl/done">This document is the message shape, body structure,
+and scope convention each commit must carry.</this-document-is-the-shape-body-and-scope-convention></p>
+  <header title="Header">
     <fence>type(scope): short imperative subject line</fence>
     <list ordered="false">
-      <item><fact id="HEADER-TARGET-LENGTH-AND-HARD-LIMIT" status="impl/done">**Target length:** ≤ 60 characters. **Hard limit:** 72. Git web
+      <item><HEADER-TARGET-LENGTH-AND-HARD-LIMIT fact="true" status="impl/done">**Target length:** ≤ 60 characters. **Hard limit:** 72. Git web
   UIs truncate beyond that, and a truncated subject on the commit
   list is how decisions become invisible to readers who scan rather
-  than scroll.</fact></item>
-      <item><fact id="HEADER-IMPERATIVE-MOOD" status="impl/done">**Imperative mood.** "add", not "added"; "fix", not "fixes"; "refactor",
+  than scroll.</HEADER-TARGET-LENGTH-AND-HARD-LIMIT></item>
+      <item><HEADER-IMPERATIVE-MOOD fact="true" status="impl/done">**Imperative mood.** "add", not "added"; "fix", not "fixes"; "refactor",
   not "refactored". The subject completes the sentence *"If applied,
-  this commit will …"*.</fact></item>
-      <item><fact id="HEADER-LOWERCASE" status="impl/done">**Lowercase.** Including the first word after the `type(scope):`
+  this commit will …"*.</HEADER-IMPERATIVE-MOOD></item>
+      <item><HEADER-LOWERCASE fact="true" status="impl/done">**Lowercase.** Including the first word after the `type(scope):`
   prefix. The typed prefix is the visual anchor; a capitalised
-  first word competes with it for attention.</fact></item>
+  first word competes with it for attention.</HEADER-LOWERCASE></item>
     </list>
-    <section id="types" title="Allowed types">
+    <types title="Allowed types">
       <table>
         <tr>
           <td>Type</td>
           <td>When to use</td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-FEAT" status="impl/done">`feat`</fact></td>
+          <td><ROW-TYPE-FEAT fact="true" status="impl/done">`feat`</ROW-TYPE-FEAT></td>
           <td><fact status="impl/done">New user-visible functionality.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-FIX" status="impl/done">`fix`</fact></td>
+          <td><ROW-TYPE-FIX fact="true" status="impl/done">`fix`</ROW-TYPE-FIX></td>
           <td><fact status="impl/done">Bug fix. Name what broke and what it now does.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-CHORE" status="impl/done">`chore`</fact></td>
+          <td><ROW-TYPE-CHORE fact="true" status="impl/done">`chore`</ROW-TYPE-CHORE></td>
           <td><fact status="impl/done">Housekeeping with no behaviour change.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-DOCS" status="impl/done">`docs`</fact></td>
+          <td><ROW-TYPE-DOCS fact="true" status="impl/done">`docs`</ROW-TYPE-DOCS></td>
           <td><fact status="impl/done">Documentation, including spec updates.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-BUILD" status="impl/done">`build`</fact></td>
+          <td><ROW-TYPE-BUILD fact="true" status="impl/done">`build`</ROW-TYPE-BUILD></td>
           <td><fact status="impl/done">Build system, external dependency, toolchain pin.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-TEST" status="impl/done">`test`</fact></td>
+          <td><ROW-TYPE-TEST fact="true" status="impl/done">`test`</ROW-TYPE-TEST></td>
           <td><fact status="impl/done">Add or fix tests; no production-code change.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-REFACTOR" status="impl/done">`refactor`</fact></td>
+          <td><ROW-TYPE-REFACTOR fact="true" status="impl/done">`refactor`</ROW-TYPE-REFACTOR></td>
           <td><fact status="impl/done">Internal restructuring; no behaviour change.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-PERF" status="impl/done">`perf`</fact></td>
+          <td><ROW-TYPE-PERF fact="true" status="impl/done">`perf`</ROW-TYPE-PERF></td>
           <td><fact status="impl/done">Performance improvement.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-STYLE" status="impl/done">`style`</fact></td>
+          <td><ROW-TYPE-STYLE fact="true" status="impl/done">`style`</ROW-TYPE-STYLE></td>
           <td><fact status="impl/done">Formatting / whitespace; no semantic change.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-CI" status="impl/done">`ci`</fact></td>
+          <td><ROW-TYPE-CI fact="true" status="impl/done">`ci`</ROW-TYPE-CI></td>
           <td><fact status="impl/done">CI or pipeline configuration.</fact></td>
         </tr>
         <tr>
-          <td><fact id="ROW-TYPE-REVERT" status="impl/done">`revert`</fact></td>
+          <td><ROW-TYPE-REVERT fact="true" status="impl/done">`revert`</ROW-TYPE-REVERT></td>
           <td><fact status="impl/done">Revert a previous commit; reference the reverted SHA in the body.</fact></td>
         </tr>
       </table>
-      <p><fact id="USE-EXACTLY-ONE-TYPE" status="impl/done">Use exactly one.</fact></p>
-      <p><fact id="TWO-TYPES-AT-ONCE-MEANS-TWO-COMMITS" status="impl/done">If a commit feels like two types at once, it is
-two commits.</fact></p>
-    </section>
-    <section id="scope" title="Scope">
-      <p><fact id="SCOPE-NAMES-THE-MOST-AFFECTED-SUBSYSTEM" status="impl/done">Scope names the most affected subsystem — a crate, a package, a
-module, a documentation area.</fact></p>
-      <p><fact id="examples-of-scope-from-this-project" status="impl/done">Examples from this project:
-`core`, `install`, `wal`, `registry`, `spec`, `build`.</fact></p>
-      <p><fact id="CHOOSE-THE-NARROWEST-ACCURATE-SCOPE" status="impl/done">Choose the **narrowest accurate** scope.</fact></p>
-      <p><fact id="the-narrower-form-hits-the-log-filter-correctly" status="spec/done">`feat(wal): add morning
+      <p><USE-EXACTLY-ONE-TYPE fact="true" status="impl/done">Use exactly one.</USE-EXACTLY-ONE-TYPE></p>
+      <p><TWO-TYPES-AT-ONCE-MEANS-TWO-COMMITS fact="true" status="impl/done">If a commit feels like two types at once, it is
+two commits.</TWO-TYPES-AT-ONCE-MEANS-TWO-COMMITS></p>
+    </types>
+    <scope title="Scope">
+      <p><SCOPE-NAMES-THE-MOST-AFFECTED-SUBSYSTEM fact="true" status="impl/done">Scope names the most affected subsystem — a crate, a package, a
+module, a documentation area.</SCOPE-NAMES-THE-MOST-AFFECTED-SUBSYSTEM></p>
+      <p><examples-of-scope-from-this-project fact="true" status="impl/done">Examples from this project:
+`core`, `install`, `wal`, `registry`, `spec`, `build`.</examples-of-scope-from-this-project></p>
+      <p><CHOOSE-THE-NARROWEST-ACCURATE-SCOPE fact="true" status="impl/done">Choose the **narrowest accurate** scope.</CHOOSE-THE-NARROWEST-ACCURATE-SCOPE></p>
+      <p><the-narrower-form-hits-the-log-filter-correctly fact="true" status="spec/done">`feat(wal): add morning
 routine` is better than `feat(core): add wal morning routine`,
 because readers filter the log by scope and the narrower form hits
-the filter correctly.</fact></p>
-      <p><fact id="scope-is-optional-in-the-grammar-but-omit-it-only-with-reason" status="spec/done">Scope is optional in the strict Conventional Commits grammar, but
+the filter correctly.</the-narrower-form-hits-the-log-filter-correctly></p>
+      <p><scope-is-optional-in-the-grammar-but-omit-it-only-with-reason fact="true" status="spec/done">Scope is optional in the strict Conventional Commits grammar, but
 omit it only when the change legitimately has no scope (e.g. a
-project-wide `.gitattributes` addition).</fact></p>
-    </section>
-  </section>
-  <section id="body" title="Body">
-    <p><fact id="A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY" status="impl/done">A single blank line after the subject, then a free-form body.</fact></p>
-    <section id="body-include" title="What to include">
+project-wide `.gitattributes` addition).</scope-is-optional-in-the-grammar-but-omit-it-only-with-reason></p>
+    </scope>
+  </header>
+  <body title="Body">
+    <p><A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY fact="true" status="impl/done">A single blank line after the subject, then a free-form body.</A-BLANK-LINE-AFTER-THE-SUBJECT-THEN-A-FREE-FORM-BODY></p>
+    <body-include title="What to include">
       <list ordered="false">
-        <item><fact id="INCLUDE-WHY-THIS-CHANGE-WAS-MADE" status="impl/done">**Why this change was made.** Link to the spec section, issue,
+        <item><INCLUDE-WHY-THIS-CHANGE-WAS-MADE fact="true" status="impl/done">**Why this change was made.** Link to the spec section, issue,
   measurement, or conversation that drove it. Use `spec://…` URIs
   so future sessions can follow the reference without having to
-  guess where it is documented.</fact></item>
-        <item><fact id="INCLUDE-WHAT-FOLLOWS-FROM-IT" status="impl/done">**What follows from it.** Consequences that are invisible in
+  guess where it is documented.</INCLUDE-WHY-THIS-CHANGE-WAS-MADE></item>
+        <item><INCLUDE-WHAT-FOLLOWS-FROM-IT fact="true" status="impl/done">**What follows from it.** Consequences that are invisible in
   the diff: "this unblocks FEAT-007"; "after this, old callers
-  must be migrated"; "this is a temporary workaround for #42".</fact></item>
-        <item><fact id="INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED" status="impl/done">**What was considered and rejected.** One line each. Future-you
+  must be migrated"; "this is a temporary workaround for #42".</INCLUDE-WHAT-FOLLOWS-FROM-IT></item>
+        <item><INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**What was considered and rejected.** One line each. Future-you
   re-opens this conversation every six months unless the log says
   "we considered adaptive timeout and rejected it because of UX
-  unpredictability".</fact></item>
+  unpredictability".</INCLUDE-WHAT-WAS-CONSIDERED-AND-REJECTED></item>
       </list>
-    </section>
-    <section id="body-skip" title="What to skip">
+    </body-include>
+    <body-skip title="What to skip">
       <list ordered="false">
-        <item><fact id="SKIP-WHAT-THE-DIFF-ALREADY-SHOWS" status="impl/done">**Do not describe what the diff already shows.** "This commit
+        <item><SKIP-WHAT-THE-DIFF-ALREADY-SHOWS fact="true" status="impl/done">**Do not describe what the diff already shows.** "This commit
   adds a function `foo()`" is noise — the diff shows that. The
-  message should answer "why did `foo()` need to exist?".</fact></item>
-        <item><fact id="SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE" status="impl/done">**Do not include implementation details that will change on
+  message should answer "why did `foo()` need to exist?".</SKIP-WHAT-THE-DIFF-ALREADY-SHOWS></item>
+        <item><SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE fact="true" status="impl/done">**Do not include implementation details that will change on
   the next refactor.** They rot faster than the surrounding prose
-  and mislead readers once stale.</fact></item>
+  and mislead readers once stale.</SKIP-IMPLEMENTATION-DETAILS-THAT-WILL-CHANGE></item>
       </list>
-    </section>
-    <section id="body-length" title="Body length">
-      <p><fact id="BODY-LENGTH-IS-FREE-FORM" status="impl/done">Free-form.</fact></p>
-      <p><fact id="A-THREE-LINE-BODY-IS-FINE-FOR-A-SMALL-FIX" status="impl/done">A three-line body is fine for a small fix.</fact></p>
-      <p><fact id="A-TWENTY-LINE-BODY-IS-FINE-FOR-A-MILESTONE-COMMIT" status="impl/done">A twenty-line
-body is fine for a milestone commit where the reasoning matters.</fact></p>
-      <p><fact id="brevity-at-the-expense-of-the-why-costs-every-future-read" status="spec/done">Length is not a virtue, but brevity at the expense of the *why* is
-a cost paid on every future read.</fact></p>
-    </section>
-    <section id="body-format" title="Body format">
-      <p><fact id="PREFER-PARAGRAPHS-WHEN-THE-REASONING-IS-CONTINUOUS" status="impl/done">Prefer paragraphs over bullet lists when the reasoning is
-continuous.</fact></p>
-      <p><fact id="BULLETS-ARE-FOR-GENUINELY-PARALLEL-ITEMS" status="impl/done">Bullets are for enumerations of genuinely parallel
-items — three rejected alternatives, four affected callers.</fact></p>
-      <p><fact id="DO-NOT-BULLET-A-SINGLE-PARAGRAPH-OF-PROSE" status="impl/done">Do not
-bullet a single paragraph of prose into pieces.</fact></p>
-    </section>
-  </section>
-  <section id="examples" title="Worked examples">
-    <section id="example-small-fix" title="Small fix">
+    </body-skip>
+    <body-length title="Body length">
+      <p><BODY-LENGTH-IS-FREE-FORM fact="true" status="impl/done">Free-form.</BODY-LENGTH-IS-FREE-FORM></p>
+      <p><A-THREE-LINE-BODY-IS-FINE-FOR-A-SMALL-FIX fact="true" status="impl/done">A three-line body is fine for a small fix.</A-THREE-LINE-BODY-IS-FINE-FOR-A-SMALL-FIX></p>
+      <p><A-TWENTY-LINE-BODY-IS-FINE-FOR-A-MILESTONE-COMMIT fact="true" status="impl/done">A twenty-line
+body is fine for a milestone commit where the reasoning matters.</A-TWENTY-LINE-BODY-IS-FINE-FOR-A-MILESTONE-COMMIT></p>
+      <p><brevity-at-the-expense-of-the-why-costs-every-future-read fact="true" status="spec/done">Length is not a virtue, but brevity at the expense of the *why* is
+a cost paid on every future read.</brevity-at-the-expense-of-the-why-costs-every-future-read></p>
+    </body-length>
+    <body-format title="Body format">
+      <p><PREFER-PARAGRAPHS-WHEN-THE-REASONING-IS-CONTINUOUS fact="true" status="impl/done">Prefer paragraphs over bullet lists when the reasoning is
+continuous.</PREFER-PARAGRAPHS-WHEN-THE-REASONING-IS-CONTINUOUS></p>
+      <p><BULLETS-ARE-FOR-GENUINELY-PARALLEL-ITEMS fact="true" status="impl/done">Bullets are for enumerations of genuinely parallel
+items — three rejected alternatives, four affected callers.</BULLETS-ARE-FOR-GENUINELY-PARALLEL-ITEMS></p>
+      <p><DO-NOT-BULLET-A-SINGLE-PARAGRAPH-OF-PROSE fact="true" status="impl/done">Do not
+bullet a single paragraph of prose into pieces.</DO-NOT-BULLET-A-SINGLE-PARAGRAPH-OF-PROSE></p>
+    </body-format>
+  </body>
+  <examples title="Worked examples">
+    <example-small-fix title="Small fix">
       <fence>fix(wal): stop crashing on missing _Updated line
 
 Treat a WAL without `_Updated:` as "age = infinite" rather than
 panicking. The guard previously short-circuited the whole status
 check, so stale-WAL projects could not run `vibe check`. Tested
 against an empty WAL and a WAL whose first line is a stray comment.</fence>
-    </section>
-    <section id="example-feature" title="Feature">
+    </example-small-fix>
+    <example-feature title="Feature">
       <fence>feat(registry): freshness TTL for cloned mirrors
 
 Cache under ~/.vibe/registries/&lt;hash&gt;/ now carries a meta.toml
@@ -153,31 +153,31 @@ pull regardless. Rationale: every `vibe install` hitting the
 network was making offline work painful and slow.
 
 Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.</fence>
-    </section>
-    <section id="example-refactor" title="Refactor">
+    </example-feature>
+    <example-refactor title="Refactor">
       <fence>refactor(core): hoist timestamp helper out of vibe-cli
 
 Both vibe-cli and vibe-registry needed `now_unix_utc`. Keeping it
 in vibe-cli forced vibe-registry to depend on the CLI crate, which
 violates the intended dependency direction. Moved to
 `vibe_core::timestamp`. No behaviour change; 78 tests still green.</fence>
-    </section>
-    <section id="example-revert" title="Revert">
+    </example-refactor>
+    <example-revert title="Revert">
       <fence>revert: "feat(install): auto-retry on 429"
 
 Reverts 1a2b3c4. The retry loop was masking real rate-limit bugs
 in the registry layer. Correct fix is to surface the 429 upstream
 and let the caller decide. Issue #47.</fence>
-    </section>
-    <section id="example-docs-sync" title="Docs sync (from sync-from-code flow)">
+    </example-revert>
+    <example-docs-sync title="Docs sync (from sync-from-code flow)">
       <fence>docs(spec): sync timeout to 600s in PROP-003 §verification.timeout
 
 Code changed TIMEOUT from 300 s to 600 s after VPN latency
 measurement (2026-03-05, 847 messages, 128 users). Spec now
 carries the new value, the reason, and the revisit trigger.</fence>
-    </section>
-  </section>
-  <section id="antipatterns" title="Anti-patterns">
+    </example-docs-sync>
+  </examples>
+  <antipatterns title="Anti-patterns">
     <table>
       <tr>
         <td>Bad subject</td>
@@ -185,48 +185,48 @@ carries the new value, the reason, and the revisit trigger.</fence>
         <td>Fix</td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-UPDATES" status="impl/done">`updates`</fact></td>
+        <td><ROW-ANTI-UPDATES fact="true" status="impl/done">`updates`</ROW-ANTI-UPDATES></td>
         <td><fact status="impl/done">No type, no scope, no *why*.</fact></td>
         <td><fact status="impl/done">`docs(spec): add freshness TTL rationale`</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-WIP" status="impl/done">`wip`</fact></td>
+        <td><ROW-ANTI-WIP fact="true" status="impl/done">`wip`</ROW-ANTI-WIP></td>
         <td><fact status="impl/done">Not a finished thought.</fact></td>
         <td><fact status="impl/done">Squash into the next real commit.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-FIXED-BUG" status="impl/done">`fixed bug`</fact></td>
+        <td><ROW-ANTI-FIXED-BUG fact="true" status="impl/done">`fixed bug`</ROW-ANTI-FIXED-BUG></td>
         <td><fact status="impl/done">Nothing learned from the log.</fact></td>
         <td><fact status="impl/done">Name the bug and what drove the fix.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-THREE-IDEAS" status="impl/done">`feat: add foo, bar, and baz`</fact></td>
+        <td><ROW-ANTI-THREE-IDEAS fact="true" status="impl/done">`feat: add foo, bar, and baz`</ROW-ANTI-THREE-IDEAS></td>
         <td><fact status="impl/done">Three ideas, one commit.</fact></td>
         <td><fact status="impl/done">Split.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-HUGE-REFACTOR" status="impl/done">`feat(core): huge refactor`</fact></td>
+        <td><ROW-ANTI-HUGE-REFACTOR fact="true" status="impl/done">`feat(core): huge refactor`</ROW-ANTI-HUGE-REFACTOR></td>
         <td><fact status="impl/done">Behaviour change rolled into refactor.</fact></td>
         <td><fact status="impl/done">Two commits: refactor first, feature second.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-CAPITALISED-VAGUE" status="impl/done">`Fix: handle edge case`</fact></td>
+        <td><ROW-ANTI-CAPITALISED-VAGUE fact="true" status="impl/done">`Fix: handle edge case`</ROW-ANTI-CAPITALISED-VAGUE></td>
         <td><fact status="impl/done">Capitalised, vague, no scope.</fact></td>
         <td><fact status="impl/done">`fix(verify): handle empty sender_id`</fact></td>
       </tr>
     </table>
-  </section>
-  <section id="atomicity" title="Interaction with the git-atomic-commits rule">
-    <p><fact id="CONVENTIONAL-COMMITS-DOES-NOT-ENFORCE-ATOMICITY" status="impl/done">Conventional Commits does not by itself enforce atomicity.</fact></p>
-    <p><fact id="A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE" status="impl/done">A commit
+  </antipatterns>
+  <atomicity title="Interaction with the git-atomic-commits rule">
+    <p><CONVENTIONAL-COMMITS-DOES-NOT-ENFORCE-ATOMICITY fact="true" status="impl/done">Conventional Commits does not by itself enforce atomicity.</CONVENTIONAL-COMMITS-DOES-NOT-ENFORCE-ATOMICITY></p>
+    <p><A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE fact="true" status="impl/done">A commit
 with the subject `feat(core): add foo, bar, and baz` is syntactically
 valid Conventional Commits *and* a violation of the atomic rule. Both
-rules run together:</fact></p>
+rules run together:</A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE></p>
     <list ordered="true">
-      <item><fact id="BOTH-RULES-ONE-IDEA-PER-COMMIT" status="impl/done">The commit carries exactly one idea (atomic).</fact></item>
-      <item><fact id="BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE" status="impl/done">The message announces that idea in the Conventional Commits shape
-   (`type(scope): subject` + *why* body).</fact></item>
+      <item><BOTH-RULES-ONE-IDEA-PER-COMMIT fact="true" status="impl/done">The commit carries exactly one idea (atomic).</BOTH-RULES-ONE-IDEA-PER-COMMIT></item>
+      <item><BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE fact="true" status="impl/done">The message announces that idea in the Conventional Commits shape
+   (`type(scope): subject` + *why* body).</BOTH-RULES-THE-CONVENTIONAL-COMMITS-SHAPE></item>
     </list>
-    <p><fact id="PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED" status="impl/done">Pass both, and the commit is well-formed.</fact></p>
-  </section>
+    <p><PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED fact="true" status="impl/done">Pass both, and the commit is well-formed.</PASS-BOTH-AND-THE-COMMIT-IS-WELL-FORMED></p>
+  </atomicity>
 </spec>

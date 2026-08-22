@@ -2,18 +2,18 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Decision record template</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** The copy-ready shape of a decision
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The copy-ready shape of a decision
 record, what each of the four fields must contain, two fully worked
-examples, and the anti-pattern table.</fact></p>
-  <p><fact id="companion-document-pointers" status="impl/done">The reasoning behind the
+examples, and the anti-pattern table.</scope-of-this-document></p>
+  <p><companion-document-pointers fact="true" status="impl/done">The reasoning behind the
 practice lives in
 [`DECISION-RECORDS-PROTOCOL.md`](DECISION-RECORDS-PROTOCOL.md);
-trigger design in [`revisit-triggers.md`](revisit-triggers.md).</fact></p>
-  <section id="template" title="The template">
-    <p><fact id="PASTE-UNDER-THE-GOVERNING-SPEC-HEADING" status="impl/done">Paste under the spec heading that governs the value.</fact></p>
-    <p><fact id="GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR" status="impl/done">Give that
+trigger design in [`revisit-triggers.md`](revisit-triggers.md).</companion-document-pointers></p>
+  <template title="The template">
+    <p><PASTE-UNDER-THE-GOVERNING-SPEC-HEADING fact="true" status="impl/done">Paste under the spec heading that governs the value.</PASTE-UNDER-THE-GOVERNING-SPEC-HEADING></p>
+    <p><GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR fact="true" status="impl/done">Give that
 heading an explicit anchor — a record is only as good as its
-address.</fact></p>
+address.</GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR></p>
     <fence lang="markdown">### &lt;The thing decided&gt; {#&lt;stable-anchor&gt;}
 
 **Decision:** &lt;the chosen value or approach, one line&gt;.
@@ -27,8 +27,8 @@ upstream constraint and version&gt;.
 - &lt;alternative 2&gt; — rejected: &lt;reason&gt;.
 
 **When to revisit:** &lt;metric + threshold + where it is observed&gt;.</fence>
-  </section>
-  <section id="fields" title="What each field must contain">
+  </template>
+  <fields title="What each field must contain">
     <table>
       <tr>
         <td>Field</td>
@@ -36,32 +36,32 @@ upstream constraint and version&gt;.
         <td>Fails when</td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-DECISION" status="impl/done">**Decision**</fact></td>
+        <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
         <td><fact status="impl/done">A reader can act on it without asking anyone.</fact></td>
         <td><fact status="impl/done">It hedges ("probably", "for now") without a trigger.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-WHY" status="impl/done">**Why**</fact></td>
+        <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
         <td><fact status="impl/done">It cites data someone could check: a log, a count, a benchmark, a version.</fact></td>
         <td><fact status="impl/done">It appeals to taste ("cleaner") or restates the decision.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-CONSIDERED-AND-REJECTED" status="impl/done">**Considered and rejected**</fact></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
         <td><fact status="impl/done">Each line names the loser *and* the reason it lost.</fact></td>
         <td><fact status="impl/done">It lists losers without reasons — or lists nothing.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-FIELD-WHEN-TO-REVISIT" status="impl/done">**When to revisit**</fact></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
         <td><fact status="impl/done">Metric + threshold + observation point; a stranger can answer "has it fired?".</fact></td>
         <td><fact status="impl/done">"Later", "when it breaks", "when we refactor".</fact></td>
       </tr>
     </table>
-  </section>
-  <section id="example-timeout" title="Worked example: a constant with consequences">
-    <p><fact id="worked-example-session-narration" status="unknown/hold">The session that produced this record: the human measured VPN
+  </fields>
+  <example-timeout title="Worked example: a constant with consequences">
+    <p><worked-example-session-narration fact="true" status="unknown/hold">The session that produced this record: the human measured VPN
 delivery latency, raised a timeout from 300 s to 600 s, and wrote
 the record into the spec section governing verification timing —
-same session, before close. @status:unknown</fact></p>
+same session, before close. @status:unknown</worked-example-session-narration></p>
     <fence lang="markdown">### Verification timeout {#verification.timeout}
 
 **Decision:** 600 seconds.
@@ -79,30 +79,30 @@ logs/vpn-test-2026-03-05.log, 847 messages, 128 users.
 
 **When to revisit:** when p99 delivery latency drops below 100 s
 per the network monitoring dashboard.</fence>
-    <p><fact id="side-by-side-lead" status="impl/done">The difference this buys, side by side:</fact></p>
+    <p><side-by-side-lead fact="true" status="impl/done">The difference this buys, side by side:</side-by-side-lead></p>
     <fence>Before:  "Timeout: 600 s"
 After:   "600 s, because VPN false positives — measured, here is
           the data, here is what lost, here is when to reconsider."</fence>
-    <p><fact id="the-first-line-is-a-fact" status="spec/done">The first line is a fact; the code already says it.</fact></p>
-    <p><fact id="the-second-line-is-a-decision" status="spec/done">The second is a
+    <p><the-first-line-is-a-fact fact="true" status="spec/done">The first line is a fact; the code already says it.</the-first-line-is-a-fact></p>
+    <p><the-second-line-is-a-decision fact="true" status="spec/done">The second is a
 decision: the next session that reads `TIMEOUT = 600` and feels the
 urge to "optimise" it back to 300 finds an 847-message measurement
-standing in the way.</fact></p>
-    <p><fact id="that-is-the-immunity-working" status="spec/done">That is the immunity working.</fact></p>
-    <p><fact id="field-by-field-lead" status="impl/done">Field by field:</fact></p>
+standing in the way.</the-second-line-is-a-decision></p>
+    <p><that-is-the-immunity-working fact="true" status="spec/done">That is the immunity working.</that-is-the-immunity-working></p>
+    <p><field-by-field-lead fact="true" status="impl/done">Field by field:</field-by-field-lead></p>
     <list ordered="false">
-      <item><fact id="WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE" status="impl/done">The **why** survives audit because it is *checkable*: the log file
+      <item><WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE fact="true" status="impl/done">The **why** survives audit because it is *checkable*: the log file
   is named, the sample size is stated. A why with data can be
   re-verified or outgrown; a why without data can only be believed
-  or ignored.</fact></item>
-      <item><fact id="REJECTIONS-ARE-ONE-LINE-EACH" status="impl/done">The **rejections** are one line each — enough to stop the
+  or ignored.</WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE></item>
+      <item><REJECTIONS-ARE-ONE-LINE-EACH fact="true" status="impl/done">The **rejections** are one line each — enough to stop the
   re-proposal ("what about adaptive timeouts?"), cheap enough to
-  write in the same minute.</fact></item>
-      <item><fact id="TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION" status="impl/done">The **trigger** names the exact world-state that reopens the
-  question, and where to look for it.</fact></item>
+  write in the same minute.</REJECTIONS-ARE-ONE-LINE-EACH></item>
+      <item><TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION fact="true" status="impl/done">The **trigger** names the exact world-state that reopens the
+  question, and where to look for it.</TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION></item>
     </list>
-  </section>
-  <section id="example-library" title="Worked example: a library choice">
+  </example-timeout>
+  <example-library title="Worked example: a library choice">
     <fence lang="markdown">### Content hashing {#hashing}
 
 **Decision:** blake3 for every content hash.
@@ -122,15 +122,15 @@ coupling for edge servers on weak hardware. blake3 also measured
 **When to revisit:** if a compliance requirement mandates a
 NIST-approved hash, or blake3 upstream ships no release for
 24 months.</fence>
-    <p><fact id="note-the-trigger-shape" status="spec/done">Note the trigger's shape: two disjunct conditions, both observable —
+    <p><note-the-trigger-shape fact="true" status="spec/done">Note the trigger's shape: two disjunct conditions, both observable —
 one an unambiguous external event, one a threshold on a fact anyone
-can check from the upstream repository today.</fact></p>
-    <p><fact id="either-condition-fires-unprompted" status="spec/done">Either can be answered
+can check from the upstream repository today.</note-the-trigger-shape></p>
+    <p><either-condition-fires-unprompted fact="true" status="spec/done">Either can be answered
 yes-or-no by a stranger without the project instrumenting anything —
 though neither fires itself: what fires a trigger is a re-read
-([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)).</fact></p>
-  </section>
-  <section id="anti-patterns" title="Anti-patterns">
+([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)).</either-condition-fires-unprompted></p>
+  </example-library>
+  <anti-patterns title="Anti-patterns">
     <table>
       <tr>
         <td>Anti-pattern</td>
@@ -139,54 +139,54 @@ though neither fires itself: what fires a trigger is a re-read
         <td>Fix</td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-TAUTOLOGY" status="impl/done">Tautology</fact></td>
+        <td><ROW-ANTI-TAUTOLOGY fact="true" status="impl/done">Tautology</ROW-ANTI-TAUTOLOGY></td>
         <td><fact status="impl/done">"600 s, because that is our timeout."</fact></td>
         <td><fact status="impl/done">We do X because we do X — restates the decision, zero information.</fact></td>
         <td><fact status="impl/done">Name the observation that forced the value.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-UNFALSIFIABLE-WHY" status="impl/done">Unfalsifiable why</fact></td>
+        <td><ROW-ANTI-UNFALSIFIABLE-WHY fact="true" status="impl/done">Unfalsifiable why</ROW-ANTI-UNFALSIFIABLE-WHY></td>
         <td><fact status="impl/done">"blake3 felt cleaner." / "because it is better."</fact></td>
         <td><fact status="impl/done">Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything.</fact></td>
         <td><fact status="impl/done">Cite a measurement, constraint, or incident.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-REJECTIONS-WITHOUT-REASONS" status="impl/done">Rejections without reasons</fact></td>
+        <td><ROW-ANTI-REJECTIONS-WITHOUT-REASONS fact="true" status="impl/done">Rejections without reasons</ROW-ANTI-REJECTIONS-WITHOUT-REASONS></td>
         <td><fact status="impl/done">"Considered: adaptive timeout, 300 s + retry."</fact></td>
         <td><fact status="impl/done">The evaluation gets re-run; the bare list answers nothing.</fact></td>
         <td><fact status="impl/done">One line per loser, each with the reason it lost.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-REVISIT-LATER" status="impl/done">"Revisit: later"</fact></td>
+        <td><ROW-ANTI-REVISIT-LATER fact="true" status="impl/done">"Revisit: later"</ROW-ANTI-REVISIT-LATER></td>
         <td><fact status="impl/done">"Revisit when needed."</fact></td>
         <td><fact status="impl/done">Never fires; the record hardens into a sacred cow.</fact></td>
         <td><fact status="impl/done">Metric + threshold + observation point.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-WHY-IN-THE-COMMIT-ONLY" status="impl/done">Why lives in the commit only</fact></td>
+        <td><ROW-ANTI-WHY-IN-THE-COMMIT-ONLY fact="true" status="impl/done">Why lives in the commit only</ROW-ANTI-WHY-IN-THE-COMMIT-ONLY></td>
         <td><fact status="impl/done">Reasoning in the commit body; spec carries the bare value.</fact></td>
         <td><fact status="impl/done">Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`.</fact></td>
         <td><fact status="impl/done">The spec carries the why; the commit cites the anchor.</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-ANTI-BACKFILLED-MEMORY" status="impl/done">Backfilled memory</fact></td>
+        <td><ROW-ANTI-BACKFILLED-MEMORY fact="true" status="impl/done">Backfilled memory</ROW-ANTI-BACKFILLED-MEMORY></td>
         <td><fact status="impl/done">Writing the why a week later, from recollection.</fact></td>
         <td><fact status="impl/done">Reconstructed reasoning is fiction with confidence; the data is gone.</fact></td>
         <td><fact status="impl/done">Record in the session that decides — or mark the why TODO(owner).</fact></td>
       </tr>
     </table>
-  </section>
-  <section id="summary" title="Summary">
+  </anti-patterns>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-PASTE-AT-THE-GOVERNING-ANCHOR" status="impl/done">Paste the template at the governing anchor; never under a heading
-  without one.</fact></item>
-      <item><fact id="SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER" status="impl/done">Why with data; rejections with reasons; trigger with metric,
-  threshold, and observation point.</fact></item>
-      <item><fact id="SUM-THE-BEFORE-AFTER-TEST" status="impl/done">The before/after test: if the record only says what the code
+      <item><SUM-PASTE-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">Paste the template at the governing anchor; never under a heading
+  without one.</SUM-PASTE-AT-THE-GOVERNING-ANCHOR></item>
+      <item><SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER fact="true" status="impl/done">Why with data; rejections with reasons; trigger with metric,
+  threshold, and observation point.</SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER></item>
+      <item><SUM-THE-BEFORE-AFTER-TEST fact="true" status="impl/done">The before/after test: if the record only says what the code
   already says, it is a fact with decoration — complete it or delete
-  it.</fact></item>
-      <item><fact id="SUM-RECORD-IN-THE-DECIDING-SESSION" status="impl/done">Record in the same session the decision is made. Backfilled whys
-  are fiction.</fact></item>
+  it.</SUM-THE-BEFORE-AFTER-TEST></item>
+      <item><SUM-RECORD-IN-THE-DECIDING-SESSION fact="true" status="impl/done">Record in the same session the decision is made. Backfilled whys
+  are fiction.</SUM-RECORD-IN-THE-DECIDING-SESSION></item>
     </list>
-  </section>
+  </summary>
 </spec>

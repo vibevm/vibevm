@@ -2,202 +2,202 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Packaging — lessons P1–P7</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** Seven lessons from turning a discipline into
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** Seven lessons from turning a discipline into
 a distributable package: what a package *is*, what ships inside it, what
 establishes its identity, how it builds without polluting the consumer,
-and when to generalise its machinery.</fact></p>
-  <p><fact id="each-lesson-is-self-contained" status="impl/done">Each lesson is self-contained —
+and when to generalise its machinery.</scope-of-this-document></p>
+  <p><each-lesson-is-self-contained fact="true" status="impl/done">Each lesson is self-contained —
 the failure that taught it, the law in one bolded line, the mechanics,
-and a "symptoms you need this" line.</fact></p>
-  <p><fact id="vocabulary-is-generic" status="impl/done">Vocabulary is generic — *the
+and a "symptoms you need this" line.</each-lesson-is-self-contained></p>
+  <p><vocabulary-is-generic fact="true" status="impl/done">Vocabulary is generic — *the
 package*, *the consumer*, *the slot* — because the laws port even where
-the build system does not.</fact></p>
-  <section id="package-is-project" title="P1 — a package is a project">
-    <p><fact id="p1-context-a-bespoke-layout-costs-an-author-and-the-tooling" status="spec/done">**Context.** If a package has its own bespoke layout, an author must
+the build system does not.</vocabulary-is-generic></p>
+  <package-is-project title="P1 — a package is a project">
+    <p><p1-context-a-bespoke-layout-costs-an-author-and-the-tooling fact="true" status="spec/done">**Context.** If a package has its own bespoke layout, an author must
 learn a package-only directory convention, and the tooling that
-validates an ordinary project cannot be pointed at a package.</fact></p>
-    <p><fact id="p1-context-two-shapes-means-two-of-everything" status="spec/done">Two shapes
+validates an ordinary project cannot be pointed at a package.</p1-context-a-bespoke-layout-costs-an-author-and-the-tooling></p>
+    <p><p1-context-two-shapes-means-two-of-everything fact="true" status="spec/done">Two shapes
 means two of everything — two linters, two mental models, two ways to
-be wrong.</fact></p>
-    <p><fact id="P1-LAW-A-PACKAGE-IS-A-PROJECT" status="impl/done">**The law.** *A package is a project — the distributable unit is
+be wrong.</p1-context-two-shapes-means-two-of-everything></p>
+    <p><P1-LAW-A-PACKAGE-IS-A-PROJECT fact="true" status="impl/done">**The law.** *A package is a project — the distributable unit is
 structurally identical to a working project, with no package-only
-convention to learn.*</fact></p>
-    <p><fact id="P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST" status="impl/done">**Mechanics.** Prompt and spec content lives under a `spec/` subtree
+convention to learn.*</P1-LAW-A-PACKAGE-IS-A-PROJECT></p>
+    <p><P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST fact="true" status="impl/done">**Mechanics.** Prompt and spec content lives under a `spec/` subtree
 laid out exactly as an ordinary project's; arbitrary code lives at the
 root (a build manifest plus source), exactly as a project root holds
-it; one manifest file names the package.</fact></p>
-    <p><fact id="P1-MECHANICS-AUTHORING-A-PACKAGE-IS-AUTHORING-A-PROJECT" status="impl/done">Then authoring a package *is*
+it; one manifest file names the package.</P1-MECHANICS-SPEC-SUBTREE-CODE-AT-THE-ROOT-ONE-MANIFEST></p>
+    <p><P1-MECHANICS-AUTHORING-A-PACKAGE-IS-AUTHORING-A-PROJECT fact="true" status="impl/done">Then authoring a package *is*
 authoring a project — the same check command applies unchanged, the
 same boot computation runs, the same layout is validated by the same
-rules.</fact></p>
-    <p><fact id="P1-MECHANICS-CODE-IS-OPTIONAL" status="impl/done">Code is optional: a prompt-only package simply has no code at
-its root.</fact></p>
-    <p><fact id="P1-MECHANICS-ONE-OBJECT-MADE-INSTALLABLE" status="impl/done">The distributable and the working project are one object,
-one made installable.</fact></p>
-    <p><fact id="p1-symptoms" status="spec/done">**Symptoms you need this.** A package-only folder convention nobody
+rules.</P1-MECHANICS-AUTHORING-A-PACKAGE-IS-AUTHORING-A-PROJECT></p>
+    <p><P1-MECHANICS-CODE-IS-OPTIONAL fact="true" status="impl/done">Code is optional: a prompt-only package simply has no code at
+its root.</P1-MECHANICS-CODE-IS-OPTIONAL></p>
+    <p><P1-MECHANICS-ONE-OBJECT-MADE-INSTALLABLE fact="true" status="impl/done">The distributable and the working project are one object,
+one made installable.</P1-MECHANICS-ONE-OBJECT-MADE-INSTALLABLE></p>
+    <p><p1-symptoms fact="true" status="spec/done">**Symptoms you need this.** A package-only folder convention nobody
 remembers; a project linter that refuses to run against a package;
 documentation that exists only to explain how packages differ from
-projects.</fact></p>
-  </section>
-  <section id="ship-runtime" title="P2 — ship the runtime, not a description of it">
-    <p><fact id="p2-context-the-tooling-was-hardcoded-inside-one-workspace" status="spec/done">**Context.** The discipline's tooling was hardcoded inside one
-workspace.</fact></p>
-    <p><fact id="p2-context-installing-gave-a-description-of-checkers-you-lacked" status="spec/done">Installing the discipline package gave a consumer a
+projects.</p1-symptoms></p>
+  </package-is-project>
+  <ship-runtime title="P2 — ship the runtime, not a description of it">
+    <p><p2-context-the-tooling-was-hardcoded-inside-one-workspace fact="true" status="spec/done">**Context.** The discipline's tooling was hardcoded inside one
+workspace.</p2-context-the-tooling-was-hardcoded-inside-one-workspace></p>
+    <p><p2-context-installing-gave-a-description-of-checkers-you-lacked fact="true" status="spec/done">Installing the discipline package gave a consumer a
 *description* of checkers they did not have — to actually run the
 discipline they would have to re-implement the very tools already
-written.</fact></p>
-    <p><fact id="p2-context-documented-but-not-distributable" status="spec/done">The practice was documented but not distributable.</fact></p>
-    <p><fact id="P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT" status="impl/done">**The law.** *Ship the runtime, not a description of it — a practice's
-tooling travels inside the package.*</fact></p>
-    <p><fact id="P2-MECHANICS-THE-PACKAGE-CARRIES-THE-EXECUTABLE-FORM" status="impl/done">**Mechanics.** If a package documents a checker, a linter, a generator,
+written.</p2-context-installing-gave-a-description-of-checkers-you-lacked></p>
+    <p><p2-context-documented-but-not-distributable fact="true" status="spec/done">The practice was documented but not distributable.</p2-context-documented-but-not-distributable></p>
+    <p><P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT fact="true" status="impl/done">**The law.** *Ship the runtime, not a description of it — a practice's
+tooling travels inside the package.*</P2-LAW-SHIP-THE-RUNTIME-NOT-A-DESCRIPTION-OF-IT></p>
+    <p><P2-MECHANICS-THE-PACKAGE-CARRIES-THE-EXECUTABLE-FORM fact="true" status="impl/done">**Mechanics.** If a package documents a checker, a linter, a generator,
 or a build step, the package carries the **executable** form of it, not
-only the prose.</fact></p>
-    <p><fact id="P2-MECHANICS-THE-EXACT-FAILURE-TO-DESIGN-OUT" status="impl/done">"Install X and you get a description of a tool you do
-not have" is the exact failure to design out.</fact></p>
-    <p><fact id="P2-MECHANICS-THE-ARTIFACTS-AND-THE-RUNTIME-SHIP-TOGETHER" status="impl/done">A consumer who installs
+only the prose.</P2-MECHANICS-THE-PACKAGE-CARRIES-THE-EXECUTABLE-FORM></p>
+    <p><P2-MECHANICS-THE-EXACT-FAILURE-TO-DESIGN-OUT fact="true" status="impl/done">"Install X and you get a description of a tool you do
+not have" is the exact failure to design out.</P2-MECHANICS-THE-EXACT-FAILURE-TO-DESIGN-OUT></p>
+    <p><P2-MECHANICS-THE-ARTIFACTS-AND-THE-RUNTIME-SHIP-TOGETHER fact="true" status="impl/done">A consumer who installs
 the package holds the working tool the same moment they hold the words
 that describe it — the strong-author artifacts (the guide, the cards)
 and the runtime (the checkers) ship together or the practice is not
-really distributable.</fact></p>
-    <p><fact id="p2-symptoms" status="spec/done">**Symptoms you need this.** "Install this, then go build the tool it
+really distributable.</P2-MECHANICS-THE-ARTIFACTS-AND-THE-RUNTIME-SHIP-TOGETHER></p>
+    <p><p2-symptoms fact="true" status="spec/done">**Symptoms you need this.** "Install this, then go build the tool it
 describes"; a practice only its author can actually run; a gap between
-what the doc promises and what the install delivers.</fact></p>
-  </section>
-  <section id="identity-is-source" title="P3 — identity is the source, excluded by denylist">
-    <p><fact id="p3-context-hashing-the-whole-directory-pulls-in-build-output" status="spec/done">**Context.** Hashing or copying a package's whole directory pulls in
+what the doc promises and what the install delivers.</p2-symptoms></p>
+  </ship-runtime>
+  <identity-is-source title="P3 — identity is the source, excluded by denylist">
+    <p><p3-context-hashing-the-whole-directory-pulls-in-build-output fact="true" status="spec/done">**Context.** Hashing or copying a package's whole directory pulls in
 build output — non-deterministic (timestamps, host paths, incremental
-state) and potentially gigabytes.</fact></p>
-    <p><fact id="p3-context-that-makes-identity-unstable-and-materialisation-ruinous" status="spec/done">That makes identity unstable and
+state) and potentially gigabytes.</p3-context-hashing-the-whole-directory-pulls-in-build-output></p>
+    <p><p3-context-that-makes-identity-unstable-and-materialisation-ruinous fact="true" status="spec/done">That makes identity unstable and
 materialisation ruinous: the same source yields a different hash on
-every build, and the copy drags tens of GB of artifacts.</fact></p>
-    <p><fact id="P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST" status="impl/done">**The law.** *Identity is the source, never build artifacts — exclude
+every build, and the copy drags tens of GB of artifacts.</p3-context-that-makes-identity-unstable-and-materialisation-ruinous></p>
+    <p><P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST fact="true" status="impl/done">**The law.** *Identity is the source, never build artifacts — exclude
 them by a denylist of never-source directories, not a per-file
-allow-list.*</fact></p>
-    <p><fact id="P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE" status="impl/done">**Mechanics.** A short denylist names what was **never** source — VCS
+allow-list.*</P3-LAW-IDENTITY-IS-THE-SOURCE-EXCLUDED-BY-DENYLIST></p>
+    <p><P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE fact="true" status="impl/done">**Mechanics.** A short denylist names what was **never** source — VCS
 internals, caches, build output (for example `.git/`, `target/`,
-`node_modules/`) plus an optional package-level ignore file.</fact></p>
-    <p><fact id="P3-MECHANICS-HASH-COPY-AND-SLOT-OPERATE-OVER-SOURCE-MINUS-DENYLIST" status="impl/done">The
+`node_modules/`) plus an optional package-level ignore file.</P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE></p>
+    <p><P3-MECHANICS-HASH-COPY-AND-SLOT-OPERATE-OVER-SOURCE-MINUS-DENYLIST fact="true" status="impl/done">The
 identity hash, the snapshot copy, and the materialised slot all operate
-over the source *minus* that denylist.</fact></p>
-    <p><fact id="P3-MECHANICS-IT-MUST-BE-A-DENYLIST-NOT-AN-ALLOW-LIST" status="impl/done">It must be a **denylist, not an
+over the source *minus* that denylist.</P3-MECHANICS-HASH-COPY-AND-SLOT-OPERATE-OVER-SOURCE-MINUS-DENYLIST></p>
+    <p><P3-MECHANICS-IT-MUST-BE-A-DENYLIST-NOT-AN-ALLOW-LIST fact="true" status="impl/done">It must be a **denylist, not an
 allow-list**: a per-file allow-list resurrects a write manifest that
 someone has to maintain and breaks the verbatim guarantee — a human
 reading the package directory should see *exactly* what materialises,
-with no path rewriting and no hidden selection.</fact></p>
-    <p><fact id="P3-MECHANICS-THE-DENYLIST-INTRODUCES-NO-CHOICE" status="impl/done">The denylist only
-formalises "what was never source"; it introduces no choice.</fact></p>
-    <p><fact id="p3-symptoms" status="spec/done">**Symptoms you need this.** Identity changes when nothing but the build
+with no path rewriting and no hidden selection.</P3-MECHANICS-IT-MUST-BE-A-DENYLIST-NOT-AN-ALLOW-LIST></p>
+    <p><P3-MECHANICS-THE-DENYLIST-INTRODUCES-NO-CHOICE fact="true" status="impl/done">The denylist only
+formalises "what was never source"; it introduces no choice.</P3-MECHANICS-THE-DENYLIST-INTRODUCES-NO-CHOICE></p>
+    <p><p3-symptoms fact="true" status="spec/done">**Symptoms you need this.** Identity changes when nothing but the build
 changed; a per-file ship list nobody keeps current; a materialise step
-that copies gigabytes of build output.</fact></p>
-  </section>
-  <section id="build-output-elsewhere" title="P4 — build output goes to a gitignored location">
-    <p><fact id="p4-context-building-consumer-side-in-place-is-tempting" status="spec/done">**Context.** Once a package can carry code, building it consumer-side is
-tempting to do in place.</fact></p>
-    <p><fact id="p4-context-in-tree-output-pollutes-and-flips-the-hash" status="spec/done">But writing build output into the committed
+that copies gigabytes of build output.</p3-symptoms></p>
+  </identity-is-source>
+  <build-output-elsewhere title="P4 — build output goes to a gitignored location">
+    <p><p4-context-building-consumer-side-in-place-is-tempting fact="true" status="spec/done">**Context.** Once a package can carry code, building it consumer-side is
+tempting to do in place.</p4-context-building-consumer-side-in-place-is-tempting></p>
+    <p><p4-context-in-tree-output-pollutes-and-flips-the-hash fact="true" status="spec/done">But writing build output into the committed
 tree pollutes it, and folding that output into identity (P3) makes the
-hash flip on every build.</fact></p>
-    <p><fact id="P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION" status="impl/done">**The law.** *Build output goes to a gitignored location, never the
-committed tree and never the identity hash.*</fact></p>
-    <p><fact id="P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT" status="impl/done">**Mechanics.** A build hook directs its output to a gitignored path
+hash flip on every build.</p4-context-in-tree-output-pollutes-and-flips-the-hash></p>
+    <p><P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION fact="true" status="impl/done">**The law.** *Build output goes to a gitignored location, never the
+committed tree and never the identity hash.*</P4-LAW-BUILD-OUTPUT-GOES-TO-A-GITIGNORED-LOCATION></p>
+    <p><P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT fact="true" status="impl/done">**Mechanics.** A build hook directs its output to a gitignored path
 **outside** the committed slot; the hook is handed the project root so
-it can address that location explicitly.</fact></p>
-    <p><fact id="P4-MECHANICS-THE-SLOTS-RESET-SEMANTICS-ARE-TRIVIALLY-SAFE" status="impl/done">The slot's reset semantics are
+it can address that location explicitly.</P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT></p>
+    <p><P4-MECHANICS-THE-SLOTS-RESET-SEMANTICS-ARE-TRIVIALLY-SAFE fact="true" status="impl/done">The slot's reset semantics are
 then trivially safe — there is nothing in the slot to reset, because
-the build never wrote there.</fact></p>
-    <p><fact id="P4-MECHANICS-A-LANGUAGE-NATIVE-CONSUMER-MAY-SKIP-THE-HOOK" status="impl/done">A language-native consumer may instead
+the build never wrote there.</P4-MECHANICS-THE-SLOTS-RESET-SEMANTICS-ARE-TRIVIALLY-SAFE></p>
+    <p><P4-MECHANICS-A-LANGUAGE-NATIVE-CONSUMER-MAY-SKIP-THE-HOOK fact="true" status="impl/done">A language-native consumer may instead
 reference the shipped source through its own toolchain and skip the
-hook entirely.</fact></p>
-    <p><fact id="P4-MECHANICS-THE-TREE-AND-THE-HASH-SEE-ONLY-SOURCE" status="impl/done">Either path, the committed tree and the identity hash
+hook entirely.</P4-MECHANICS-A-LANGUAGE-NATIVE-CONSUMER-MAY-SKIP-THE-HOOK></p>
+    <p><P4-MECHANICS-THE-TREE-AND-THE-HASH-SEE-ONLY-SOURCE fact="true" status="impl/done">Either path, the committed tree and the identity hash
 see only source; build output lives where version control already
-ignores it.</fact></p>
-    <p><fact id="p4-symptoms" status="spec/done">**Symptoms you need this.** A build that dirties the committed tree;
+ignores it.</P4-MECHANICS-THE-TREE-AND-THE-HASH-SEE-ONLY-SOURCE></p>
+    <p><p4-symptoms fact="true" status="spec/done">**Symptoms you need this.** A build that dirties the committed tree;
 identity that flips after a build; a re-materialise that clobbers build
-state the slot should never have held.</fact></p>
-  </section>
-  <section id="vendor-bootstrap" title="P5 — vendor and commit the bootstrap toolchain">
-    <p><fact id="p5-context-a-chicken-and-egg-risk" status="spec/done">**Context.** A tool that consumes its own discipline toolchain has a
+state the slot should never have held.</p4-symptoms></p>
+  </build-output-elsewhere>
+  <vendor-bootstrap title="P5 — vendor and commit the bootstrap toolchain">
+    <p><p5-context-a-chicken-and-egg-risk fact="true" status="spec/done">**Context.** A tool that consumes its own discipline toolchain has a
 chicken-and-egg risk: a fresh clone cannot build because the tool that
-builds it is not there yet.</fact></p>
-    <p><fact id="p5-context-the-bootstrap-must-exist-before-the-first-build" status="spec/done">The bootstrap has to come from somewhere
-that exists before the first build.</fact></p>
-    <p><fact id="P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN" status="impl/done">**The law.** *Vendor and commit the bootstrap toolchain beside the code
-that needs it — there is no chicken-and-egg.*</fact></p>
-    <p><fact id="P5-MECHANICS-THE-CONSUMED-TOOLCHAIN-LIVES-IN-A-COMMITTED-SLOT" status="impl/done">**Mechanics.** The consumed toolchain lives in a **committed** slot, so
+builds it is not there yet.</p5-context-a-chicken-and-egg-risk></p>
+    <p><p5-context-the-bootstrap-must-exist-before-the-first-build fact="true" status="spec/done">The bootstrap has to come from somewhere
+that exists before the first build.</p5-context-the-bootstrap-must-exist-before-the-first-build></p>
+    <p><P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN fact="true" status="impl/done">**The law.** *Vendor and commit the bootstrap toolchain beside the code
+that needs it — there is no chicken-and-egg.*</P5-LAW-VENDOR-AND-COMMIT-THE-BOOTSTRAP-TOOLCHAIN></p>
+    <p><P5-MECHANICS-THE-CONSUMED-TOOLCHAIN-LIVES-IN-A-COMMITTED-SLOT fact="true" status="impl/done">**Mechanics.** The consumed toolchain lives in a **committed** slot, so
 a fresh clone builds from a clean checkout with **no prior install
-step** — the dependency target already exists in the tree.</fact></p>
-    <p><fact id="P5-MECHANICS-THE-DEVELOPMENT-LOOP-STAYS-ERGONOMIC" status="impl/done">The
+step** — the dependency target already exists in the tree.</P5-MECHANICS-THE-CONSUMED-TOOLCHAIN-LIVES-IN-A-COMMITTED-SLOT></p>
+    <p><P5-MECHANICS-THE-DEVELOPMENT-LOOP-STAYS-ERGONOMIC fact="true" status="impl/done">The
 development loop stays ergonomic: editing the in-repo package source
 re-materialises the slot on the next install, so the consumed copy
-tracks the edited source without a manual wipe.</fact></p>
-    <p><fact id="P5-MECHANICS-VENDORED-VERSIONED-AND-OFFLINE-BUILDABLE" status="impl/done">The toolchain a build
+tracks the edited source without a manual wipe.</P5-MECHANICS-THE-DEVELOPMENT-LOOP-STAYS-ERGONOMIC></p>
+    <p><P5-MECHANICS-VENDORED-VERSIONED-AND-OFFLINE-BUILDABLE fact="true" status="impl/done">The toolchain a build
 needs is vendored beside the code that needs it, versioned and offline-
 buildable — not fetched from a network the first build cannot yet
-reach.</fact></p>
-    <p><fact id="p5-symptoms" status="spec/done">**Symptoms you need this.** "Run the installer before you can build the
+reach.</P5-MECHANICS-VENDORED-VERSIONED-AND-OFFLINE-BUILDABLE></p>
+    <p><p5-symptoms fact="true" status="spec/done">**Symptoms you need this.** "Run the installer before you can build the
 installer"; a clone that will not build offline; a bootstrap step that
-assumes the tool is already on the search path.</fact></p>
-  </section>
-  <section id="spike-first" title="P6 — spike before the irreversible move">
-    <p><fact id="p6-context-a-cross-workspace-topology-has-sharp-platform-edges" status="spec/done">**Context.** Relocating code across a workspace boundary, or adopting a
+assumes the tool is already on the search path.</p5-symptoms></p>
+  </vendor-bootstrap>
+  <spike-first title="P6 — spike before the irreversible move">
+    <p><p6-context-a-cross-workspace-topology-has-sharp-platform-edges fact="true" status="spec/done">**Context.** Relocating code across a workspace boundary, or adopting a
 cross-workspace topology, has sharp platform-specific edges — on one OS,
-path canonicalisation adds a prefix and the build tool mishandles it.</fact></p>
-    <p><fact id="p6-context-discovering-it-after-the-move-costs-an-unwind" status="spec/done">Discover that *after* the move and you have paid for a migration you
-must now unwind under pressure.</fact></p>
-    <p><fact id="P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE" status="impl/done">**The law.** *Spike the risky topology empirically on the target
+path canonicalisation adds a prefix and the build tool mishandles it.</p6-context-a-cross-workspace-topology-has-sharp-platform-edges></p>
+    <p><p6-context-discovering-it-after-the-move-costs-an-unwind fact="true" status="spec/done">Discover that *after* the move and you have paid for a migration you
+must now unwind under pressure.</p6-context-discovering-it-after-the-move-costs-an-unwind></p>
+    <p><P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE fact="true" status="impl/done">**The law.** *Spike the risky topology empirically on the target
 platform before the irreversible move; keep an evidence-chosen
-fallback.*</fact></p>
-    <p><fact id="P6-MECHANICS-VALIDATE-ON-THE-ACTUAL-TARGET-HOST" status="impl/done">**Mechanics.** Before physically relocating anything, validate the
+fallback.*</P6-LAW-SPIKE-THE-RISKY-TOPOLOGY-BEFORE-THE-IRREVERSIBLE-MOVE></p>
+    <p><P6-MECHANICS-VALIDATE-ON-THE-ACTUAL-TARGET-HOST fact="true" status="impl/done">**Mechanics.** Before physically relocating anything, validate the
 risky arrangement on the **actual target host** — the one with the
-sharp edges, not the friendliest one to hand.</fact></p>
-    <p><fact id="P6-MECHANICS-CHOOSE-THE-FALLBACK-ON-SPIKE-EVIDENCE" status="impl/done">Keep a rejected-but-
+sharp edges, not the friendliest one to hand.</P6-MECHANICS-VALIDATE-ON-THE-ACTUAL-TARGET-HOST></p>
+    <p><P6-MECHANICS-CHOOSE-THE-FALLBACK-ON-SPIKE-EVIDENCE fact="true" status="impl/done">Keep a rejected-but-
 retained alternative ready, and choose between the primary design and
-the fallback on spike **evidence**, not by default or by taste.</fact></p>
-    <p><fact id="P6-MECHANICS-THE-MOVE-HAPPENS-ONLY-AFTER-THE-TOPOLOGY-IS-PROVEN" status="impl/done">The
+the fallback on spike **evidence**, not by default or by taste.</P6-MECHANICS-CHOOSE-THE-FALLBACK-ON-SPIKE-EVIDENCE></p>
+    <p><P6-MECHANICS-THE-MOVE-HAPPENS-ONLY-AFTER-THE-TOPOLOGY-IS-PROVEN fact="true" status="impl/done">The
 irreversible move happens only after the topology is proven to work
-where it actually has to.</fact></p>
-    <p><fact id="p6-symptoms" status="spec/done">**Symptoms you need this.** A migration that works on the author's OS
+where it actually has to.</P6-MECHANICS-THE-MOVE-HAPPENS-ONLY-AFTER-THE-TOPOLOGY-IS-PROVEN></p>
+    <p><p6-symptoms fact="true" status="spec/done">**Symptoms you need this.** A migration that works on the author's OS
 and breaks on the user's; a topology adopted on faith and unwound in a
-panic; "it should work" standing in for "I ran it on the target."</fact></p>
-  </section>
-  <section id="build-on-demand" title="P7 — build the general mechanism on real demand">
-    <p><fact id="p7-context-a-neutral-core-is-tempting-to-extract-up-front" status="spec/done">**Context.** A language-neutral core is a genuine reusable artifact, and
-that makes it tempting to extract up front.</fact></p>
-    <p><fact id="p7-context-extracting-before-a-second-consumer-is-speculative" status="spec/done">But extracting it before a
+panic; "it should work" standing in for "I ran it on the target."</p6-symptoms></p>
+  </spike-first>
+  <build-on-demand title="P7 — build the general mechanism on real demand">
+    <p><p7-context-a-neutral-core-is-tempting-to-extract-up-front fact="true" status="spec/done">**Context.** A language-neutral core is a genuine reusable artifact, and
+that makes it tempting to extract up front.</p7-context-a-neutral-core-is-tempting-to-extract-up-front></p>
+    <p><p7-context-extracting-before-a-second-consumer-is-speculative fact="true" status="spec/done">But extracting it before a
 second consumer exists is speculative: you design the abstraction
 against a single use, and the second use reshapes it anyway — so you
-pay for generality twice.</fact></p>
-    <p><fact id="P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES" status="impl/done">**The law.** *Extract the general mechanism when the second consumer
-arrives, not before.*</fact></p>
-    <p><fact id="P7-MECHANICS-SHIP-IN-ONE-PLACE-AND-DOCUMENT-THE-EXTRACTION" status="impl/done">**Mechanics.** Ship the whole thing in the one place that needs it now,
+pay for generality twice.</p7-context-extracting-before-a-second-consumer-is-speculative></p>
+    <p><P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES fact="true" status="impl/done">**The law.** *Extract the general mechanism when the second consumer
+arrives, not before.*</P7-LAW-EXTRACT-WHEN-THE-SECOND-CONSUMER-ARRIVES></p>
+    <p><P7-MECHANICS-SHIP-IN-ONE-PLACE-AND-DOCUMENT-THE-EXTRACTION fact="true" status="impl/done">**Mechanics.** Ship the whole thing in the one place that needs it now,
 and **document** the future extraction as a clean follow-up with an
-explicit trigger ("taken when the first non-X pilot needs it").</fact></p>
-    <p><fact id="P7-MECHANICS-THE-ORDERING-IS-DRIVEN-BY-REAL-DEMAND" status="impl/done">The end
+explicit trigger ("taken when the first non-X pilot needs it").</P7-MECHANICS-SHIP-IN-ONE-PLACE-AND-DOCUMENT-THE-EXTRACTION></p>
+    <p><P7-MECHANICS-THE-ORDERING-IS-DRIVEN-BY-REAL-DEMAND fact="true" status="impl/done">The end
 state may well be symmetric — a neutral core with per-language frontends
 — but the ordering is driven by real second-consumer demand, not built
-on speculation.</fact></p>
-    <p><fact id="P7-MECHANICS-EXTRACT-AGAINST-TWO-REAL-USES" status="impl/done">When the second consumer is real, you extract against
+on speculation.</P7-MECHANICS-THE-ORDERING-IS-DRIVEN-BY-REAL-DEMAND></p>
+    <p><P7-MECHANICS-EXTRACT-AGAINST-TWO-REAL-USES fact="true" status="impl/done">When the second consumer is real, you extract against
 **two** real uses instead of one imagined one, and the abstraction fits
-on the first try.</fact></p>
-    <p><fact id="p7-symptoms" status="spec/done">**Symptoms you need this.** An abstraction with exactly one caller; a
+on the first try.</P7-MECHANICS-EXTRACT-AGAINST-TWO-REAL-USES></p>
+    <p><p7-symptoms fact="true" status="spec/done">**Symptoms you need this.** An abstraction with exactly one caller; a
 "reusable core" reshaped the moment its second user appears; generality
-paid for long before it earns out.</fact></p>
-  </section>
-  <section id="summary" title="Summary">
+paid for long before it earns out.</p7-symptoms></p>
+  </build-on-demand>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-P1-A-PACKAGE-IS-A-PROJECT" status="impl/done">P1 — a package is a project; the same layout, the same checks, no
-  package-only convention.</fact></item>
-      <item><fact id="SUM-P2-SHIP-THE-RUNTIME" status="impl/done">P2 — ship the runtime, not prose describing a tool the consumer never
-  receives.</fact></item>
-      <item><fact id="SUM-P3-IDENTITY-IS-THE-SOURCE" status="impl/done">P3 — identity is the source, excluded by a denylist of never-source
-  dirs, never a per-file allow-list.</fact></item>
-      <item><fact id="SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE" status="impl/done">P4 — build output goes to a gitignored location, outside the committed
-  tree and the hash.</fact></item>
-      <item><fact id="SUM-P5-VENDOR-THE-BOOTSTRAP" status="impl/done">P5 — vendor and commit the bootstrap toolchain beside the code that
-  needs it.</fact></item>
-      <item><fact id="SUM-P6-SPIKE-FIRST" status="impl/done">P6 — spike the risky topology on the target platform first; keep an
-  evidence-chosen fallback.</fact></item>
-      <item><fact id="SUM-P7-BUILD-ON-REAL-DEMAND" status="impl/done">P7 — extract the general mechanism when the second consumer arrives,
-  not on speculation.</fact></item>
+      <item><SUM-P1-A-PACKAGE-IS-A-PROJECT fact="true" status="impl/done">P1 — a package is a project; the same layout, the same checks, no
+  package-only convention.</SUM-P1-A-PACKAGE-IS-A-PROJECT></item>
+      <item><SUM-P2-SHIP-THE-RUNTIME fact="true" status="impl/done">P2 — ship the runtime, not prose describing a tool the consumer never
+  receives.</SUM-P2-SHIP-THE-RUNTIME></item>
+      <item><SUM-P3-IDENTITY-IS-THE-SOURCE fact="true" status="impl/done">P3 — identity is the source, excluded by a denylist of never-source
+  dirs, never a per-file allow-list.</SUM-P3-IDENTITY-IS-THE-SOURCE></item>
+      <item><SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE fact="true" status="impl/done">P4 — build output goes to a gitignored location, outside the committed
+  tree and the hash.</SUM-P4-BUILD-OUTPUT-GOES-ELSEWHERE></item>
+      <item><SUM-P5-VENDOR-THE-BOOTSTRAP fact="true" status="impl/done">P5 — vendor and commit the bootstrap toolchain beside the code that
+  needs it.</SUM-P5-VENDOR-THE-BOOTSTRAP></item>
+      <item><SUM-P6-SPIKE-FIRST fact="true" status="impl/done">P6 — spike the risky topology on the target platform first; keep an
+  evidence-chosen fallback.</SUM-P6-SPIKE-FIRST></item>
+      <item><SUM-P7-BUILD-ON-REAL-DEMAND fact="true" status="impl/done">P7 — extract the general mechanism when the second consumer arrives,
+  not on speculation.</SUM-P7-BUILD-ON-REAL-DEMAND></item>
     </list>
-  </section>
+  </summary>
 </spec>

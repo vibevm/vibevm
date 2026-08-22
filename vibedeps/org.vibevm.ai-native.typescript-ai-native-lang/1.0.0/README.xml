@@ -2,25 +2,25 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">AI-Native TypeScript (stack:org.vibevm.ai-native/typescript-ai-native-lang)</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN" status="impl/done">The TypeScript projection of the AI-Native Code Discipline — and the
+  <p><TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN fact="true" status="impl/done">The TypeScript projection of the AI-Native Code Discipline — and the
 **runnable toolchain** that enforces it (PROP-024 code-bearing packages):
 installing this stack yields working checkers and procedures, not
-descriptions of them.</fact></p>
-  <p><fact id="NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY" status="impl/done">The language-neutral method (manifesto, playbooks, mechanism specs)
-comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</fact></p>
-  <section id="what-ships" title="What ships">
+descriptions of them.</TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN></p>
+  <p><NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY fact="true" status="impl/done">The language-neutral method (manifesto, playbooks, mechanism specs)
+comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY></p>
+  <what-ships title="What ships">
     <list ordered="false">
-      <item><fact id="SHIPS-FOUR-BINARIES" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`,
+      <item><SHIPS-FOUR-BINARIES fact="true" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`,
   declared as `[[binary]]` in `vibe.toml` for PROP-025 lockfile
-  dispatch):</fact></item>
-      <item><fact id="SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA" status="impl/done">`typescript-ai-native` — the umbrella tool: `init` (bootstrap
+  dispatch):</SHIPS-FOUR-BINARIES></item>
+      <item><SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`typescript-ai-native` — the umbrella tool: `init` (bootstrap
     policies + registries), `floor` (the portable verification floor —
     prettier → tsc → tests → eslint → conform → specmap → test-gate, one
     exit code), `conform`, `specmap`, `trace`, `test-gate`, `tripwire`,
-    `health`, `fast-loop`, `codemod`.</fact></item>
-      <item><fact id="SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM" status="impl/done">`typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</fact></item>
-      <item><fact id="SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP" status="impl/done">`typescript-ai-native-specmap` — the traceability engine alone (PROP-014).</fact></item>
-      <item><fact id="SHIPS-TYPESCRIPT-AI-NATIVE-TCG" status="impl/done">`typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
+    `health`, `fast-loop`, `codemod`.</SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA></item>
+      <item><SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM fact="true" status="impl/done">`typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM></item>
+      <item><SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP fact="true" status="impl/done">`typescript-ai-native-specmap` — the traceability engine alone (PROP-014).</SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP></item>
+      <item><SHIPS-TYPESCRIPT-AI-NATIVE-TCG fact="true" status="impl/done">`typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
     TCG-PROTOCOL-v0.1): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own `typescript` install over
@@ -28,30 +28,30 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</fact></p>
     **Prerequisite:** node ≥ 22.6 and the project's own `typescript`
     devDependency — the same install the `tsc` floor step needs, so the
     oracle adds no new dependency. The floor stays the truth; the oracle
-    exists so the floor stays green on the first try.</fact></item>
-      <item><fact id="SHIPS-GUIDE-AND-CARDS" status="impl/done">**The TypeScript guide and cards**
+    exists so the floor stays green on the first try.</SHIPS-TYPESCRIPT-AI-NATIVE-TCG></item>
+      <item><SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The TypeScript guide and cards**
   (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`, `spec/cards/` — the
   nine scaffolds A–I in their TypeScript shape, Band-3 ops blocks for
-  weak readers).</fact></item>
-      <item><fact id="SHIPS-TWO-AGENT-SKILLS" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
+  weak readers).</SHIPS-GUIDE-AND-CARDS></item>
+      <item><SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
   `/typescript-ai-native-terraform` (brownfield adoption per BROWNFIELD-PROTOCOL)
   and `/typescript-ai-native-sweep` (the recurring sweep per the Sweep
-  Playbook).</fact></item>
-      <item><fact id="SHIPS-TWO-NODE-SIDE-TOOLS" status="impl/done">**Two node-side tools** (`tools/`, run directly under node ≥ 22.6
+  Playbook).</SHIPS-TWO-AGENT-SKILLS></item>
+      <item><SHIPS-TWO-NODE-SIDE-TOOLS fact="true" status="impl/done">**Two node-side tools** (`tools/`, run directly under node ≥ 22.6
   type-stripping): `ts-extract`, the Compiler-API fact extractor the
   conform frontend and the specmap scanner drive; and `ts-oracle`, the
   long-lived language-service oracle behind `typescript-ai-native-tcg`.
-  Both resolve the CONSUMER project's `typescript` at runtime.</fact></item>
-      <item><fact id="SHIPS-MECHANISM-SPECS" status="impl/done">**The TypeScript mechanism specs and tool briefs** —
+  Both resolve the CONSUMER project's `typescript` at runtime.</SHIPS-TWO-NODE-SIDE-TOOLS></item>
+      <item><SHIPS-MECHANISM-SPECS fact="true" status="impl/done">**The TypeScript mechanism specs and tool briefs** —
   `spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` and
-  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`.</fact></item>
-      <item><fact id="NEUTRAL-ENGINES-RIDE-ALONG-VENDORED" status="impl/done">**The neutral engines ride along as vendored copies**
+  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`.</SHIPS-MECHANISM-SPECS></item>
+      <item><NEUTRAL-ENGINES-RIDE-ALONG-VENDORED fact="true" status="impl/done">**The neutral engines ride along as vendored copies**
   (`crates/vendor/core-ai-native-{conform,specmap,specmark,specmark-grammar}`),
-  so the slot is its own Cargo workspace and builds standalone.</fact></item>
+  so the slot is its own Cargo workspace and builds standalone.</NEUTRAL-ENGINES-RIDE-ALONG-VENDORED></item>
     </list>
-  </section>
-  <section id="running-the-tools" title="Running the tools">
-    <p><fact id="running-forms-lead" status="impl/done">Three supported forms, from your project root (where `vibedeps/` is):</fact></p>
+  </what-ships>
+  <running-the-tools title="Running the tools">
+    <p><running-forms-lead fact="true" status="impl/done">Three supported forms, from your project root (where `vibedeps/` is):</running-forms-lead></p>
     <fence lang="sh"># (a) vibe-native (PROP-025) — build once in the slot, dispatch through
 #     the project's lockfile:
 vibe bin build            # or straight to:
@@ -63,15 +63,15 @@ cargo install --path vibedeps/&lt;stack-slot&gt;/crates/typescript-ai-native-cli
 # (c) zero-install, run in place
 cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml \
     -p typescript-ai-native-cli --bin typescript-ai-native -- floor</fence>
-    <p><fact id="STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY" status="impl/done">`&lt;stack-slot&gt;` is this package's materialised directory (e.g.
-`stack-typescript-ai-native-lang/1.0.0` — check your `vibe.lock`).</fact></p>
-    <p><fact id="SLOT-BUILD-DROPS-A-TARGET-DIRECTORY" status="impl/done">Building in the
+    <p><STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY fact="true" status="impl/done">`&lt;stack-slot&gt;` is this package's materialised directory (e.g.
+`stack-typescript-ai-native-lang/1.0.0` — check your `vibe.lock`).</STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY></p>
+    <p><SLOT-BUILD-DROPS-A-TARGET-DIRECTORY fact="true" status="impl/done">Building in the
 slot drops a `target/` there; add `vibedeps/**/target/` to your
 `.gitignore` (build output is already excluded from the package's content
 hash, PROP-024 §2.2). A repo that also carries Rust keeps
-`[workspace] exclude = ["vibedeps"]`.</fact></p>
-  </section>
-  <section id="the-lifecycle" title="The lifecycle">
+`[workspace] exclude = ["vibedeps"]`.</SLOT-BUILD-DROPS-A-TARGET-DIRECTORY></p>
+  </running-the-tools>
+  <the-lifecycle title="The lifecycle">
     <fence lang="sh">vibe install                          # materialise this stack into vibedeps/
 npm install -D typescript prettier eslint typescript-eslint
 typescript-ai-native init             # policies + registries + external spec resolution
@@ -79,10 +79,10 @@ typescript-ai-native init             # policies + registries + external spec re
 typescript-ai-native floor            # the gate panel, one exit code
 /typescript-ai-native-sweep           # the recurring sweep (agent skill)
 /typescript-ai-native-terraform       # brownfield adoption (agent skill)</fence>
-    <p><fact id="wiring-and-sweep-pointers" status="impl/done">The wiring recipe — install, binaries, project toolchain, bootstrap,
+    <p><wiring-and-sweep-pointers fact="true" status="impl/done">The wiring recipe — install, binaries, project toolchain, bootstrap,
 the generation-time oracle — is GUIDE §15; the sweep idioms are GUIDE
-§16.</fact></p>
-    <p><fact id="POLICIES-STAY-WITH-THE-CONSUMER-PROJECT" status="impl/done">The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
-this package ships engines, never policy (PROP-024 §2.2).</fact></p>
-  </section>
+§16.</wiring-and-sweep-pointers></p>
+    <p><POLICIES-STAY-WITH-THE-CONSUMER-PROJECT fact="true" status="impl/done">The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
+this package ships engines, never policy (PROP-024 §2.2).</POLICIES-STAY-WITH-THE-CONSUMER-PROJECT></p>
+  </the-lifecycle>
 </spec>

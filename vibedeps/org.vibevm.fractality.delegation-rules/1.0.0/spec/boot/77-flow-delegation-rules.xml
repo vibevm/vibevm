@@ -15,7 +15,7 @@ mechanical → the `small` model slot; everything else delegable → the
 shapes, blind spots) lives in the
 [playbooks](../flows/delegation-rules/playbooks/); routing names
 slots, never vendors.</p>
-  <section id="worker-choice" title="The axis also picks the worker">
+  <worker-choice title="The axis also picks the worker">
     <p>Verifiability decides not just *whether* to delegate but
 *which* worker gets it. A high-verifiability delegable task
 goes to the `big` GLM slot — the review is cheap, so the
@@ -28,21 +28,21 @@ native sub-agent tool (Claude Code's `Agent` / `Task` /
 reflex default for delegable execution: it spends the
 expensive process without the cost saving the `big` slot
 gives (delegation-first `#route`).</p>
-  </section>
-  <section id="never-delegate" title="The never-delegate set">
+  </worker-choice>
+  <never-delegate title="The never-delegate set">
     <p>Always the boss's own work: secrets and credential surfaces;
 destructive or irreversible operations; architecture, spec, and plan
 authoring; tasks whose ambiguity IS the design; **review of delegated
 output**; tiny edits.</p>
-  </section>
-  <section id="scenarios" title="The two work-order scenarios">
+  </never-delegate>
+  <scenarios title="The two work-order scenarios">
     <p>Every delegated packet picks one, explicitly: **(1)** compile the
 context in — exact files, patterns, commands, self-verify; or **(2)**
 order the worker to boot from named corpus files first. A big task
 with a thin prompt and no boot order is banned — it produces plausible
 wrong output that costs more to review than to rewrite.</p>
-  </section>
-  <section id="never" title="Never">
+  </scenarios>
+  <never title="Never">
     <list ordered="false">
       <item>Never delegate anything in the never-delegate set — the economics
   never justify it.</item>
@@ -53,5 +53,5 @@ wrong output that costs more to review than to rewrite.</p>
       <item>Never let a delegation surprise die in chat — it belongs in the
   producing model's playbook.</item>
     </list>
-  </section>
+  </never>
 </spec>

@@ -2,46 +2,46 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Flow: Qualified Naming</title>
   <status stage="impl" state="done"/>
-  <p><fact id="PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE" status="impl/done">This project ships the **qualified-naming** practice for *ecosystem
+  <p><PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE fact="true" status="impl/done">This project ships the **qualified-naming** practice for *ecosystem
 designers* — anyone defining a namespace for packages, plugins,
-extensions, or artifacts.</fact></p>
-  <p><fact id="IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE" status="impl/done">It is a design discipline, not a runtime
+extensions, or artifacts.</PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE></p>
+  <p><IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE fact="true" status="impl/done">It is a design discipline, not a runtime
 rule: it binds the moment an identifier is minted, not every edit that
-uses one.</fact></p>
-  <section id="when" title="When this applies">
-    <p><fact id="READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED" status="impl/done">When you design any user-facing namespace — a package registry, a
+uses one.</IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE></p>
+  <when title="When this applies">
+    <p><READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED fact="true" status="impl/done">When you design any user-facing namespace — a package registry, a
 plugin id scheme, an artifact coordinate, an extension marketplace —
 read @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL#root
-**before the first name is minted**.</fact></p>
-    <p><fact id="retrofitting-a-group-is-a-migration" status="spec/done">Retrofitting a group onto a
-shipped flat namespace is a migration; getting it right first is free.</fact></p>
-  </section>
-  <section id="laws" title="The laws in one breath">
+**before the first name is minted**.</READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED></p>
+    <p><retrofitting-a-group-is-a-migration fact="true" status="spec/done">Retrofitting a group onto a
+shipped flat namespace is a migration; getting it right first is free.</retrofitting-a-group-is-a-migration></p>
+  </when>
+  <laws title="The laws in one breath">
     <list ordered="false">
-      <item><fact id="LAW-EVERY-ARTIFACT-CARRIES-A-GROUP" status="impl/done">Every artifact carries a **group**; identity is the tuple
+      <item><LAW-EVERY-ARTIFACT-CARRIES-A-GROUP fact="true" status="impl/done">Every artifact carries a **group**; identity is the tuple
   `(group, name, version, content-hash)`, and `(group, name)` is
-  globally unique.</fact></item>
-      <item><fact id="LAW-A-RENAME-IS-A-NEW-IDENTITY" status="impl/done">A **rename is a new identity** — versions never transfer, and no
-  `name@version` coordinate is ever reused for different content.</fact></item>
-      <item><fact id="LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY" status="impl/done">**Short names resolve only at the human CLI boundary**, once,
-  against an index; manifests and lockfiles store the qualified form.</fact></item>
-      <item><fact id="LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT" status="impl/done">A **collision** (one short name, two groups) and a **conflict** (a
+  globally unique.</LAW-EVERY-ARTIFACT-CARRIES-A-GROUP></item>
+      <item><LAW-A-RENAME-IS-A-NEW-IDENTITY fact="true" status="impl/done">A **rename is a new identity** — versions never transfer, and no
+  `name@version` coordinate is ever reused for different content.</LAW-A-RENAME-IS-A-NEW-IDENTITY></item>
+      <item><LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY fact="true" status="impl/done">**Short names resolve only at the human CLI boundary**, once,
+  against an index; manifests and lockfiles store the qualified form.</LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY></item>
+      <item><LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT fact="true" status="impl/done">A **collision** (one short name, two groups) and a **conflict** (a
   version contradiction) are distinct failures with distinct
-  machine-readable identities.</fact></item>
+  machine-readable identities.</LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT></item>
     </list>
-    <p><fact id="grammar-and-forms-pointer" status="impl/done">Grammar and forms: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/ref-grammar#root.</fact></p>
-    <p><fact id="fork-by-fork-rationale-pointer" status="impl/done">Fork-by-fork rationale: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/naming-forks#root.</fact></p>
-  </section>
-  <section id="never" title="Never">
+    <p><grammar-and-forms-pointer fact="true" status="impl/done">Grammar and forms: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/ref-grammar#root.</grammar-and-forms-pointer></p>
+    <p><fork-by-fork-rationale-pointer fact="true" status="impl/done">Fork-by-fork rationale: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/naming-forks#root.</fork-by-fork-rationale-pointer></p>
+  </laws>
+  <never title="Never">
     <list ordered="false">
-      <item><fact id="NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE" status="impl/done">Never store a short (unqualified) name in a manifest, lockfile, or
-  dependency graph — it is CLI sugar, nothing more.</fact></item>
-      <item><fact id="NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT" status="impl/done">Never reuse a `name@version` coordinate for different content: a
-  coordinate that meant one artifact must never mean another.</fact></item>
-      <item><fact id="NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY" status="impl/done">Never resolve a naming ambiguity interactively — fail with the
-  candidate list and let a human record the qualified form.</fact></item>
-      <item><fact id="NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME" status="impl/done">Never treat a change of group or name as a rename — it is a new
-  package, and versions do not carry over.</fact></item>
+      <item><NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE fact="true" status="impl/done">Never store a short (unqualified) name in a manifest, lockfile, or
+  dependency graph — it is CLI sugar, nothing more.</NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE></item>
+      <item><NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT fact="true" status="impl/done">Never reuse a `name@version` coordinate for different content: a
+  coordinate that meant one artifact must never mean another.</NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT></item>
+      <item><NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY fact="true" status="impl/done">Never resolve a naming ambiguity interactively — fail with the
+  candidate list and let a human record the qualified form.</NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY></item>
+      <item><NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME fact="true" status="impl/done">Never treat a change of group or name as a rename — it is a new
+  package, and versions do not carry over.</NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME></item>
     </list>
-  </section>
+  </never>
 </spec>

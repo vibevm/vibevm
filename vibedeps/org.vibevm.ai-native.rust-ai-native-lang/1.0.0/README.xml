@@ -2,24 +2,24 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">AI-Native Rust (stack:org.vibevm.ai-native/rust-ai-native-lang)</title>
   <status stage="doc" state="done" audience="user"/>
-  <p><fact id="RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN" status="impl/done">The Rust projection of the AI-Native Code Discipline — and the **runnable
+  <p><RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN fact="true" status="impl/done">The Rust projection of the AI-Native Code Discipline — and the **runnable
 toolchain** that enforces it (PROP-024 code-bearing packages): installing
 this stack yields working checkers and procedures, not descriptions of
-them.</fact></p>
-  <p><fact id="NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY" status="impl/done">The language-neutral method (manifesto, playbooks, mechanism specs)
-comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</fact></p>
-  <section id="what-ships" title="What ships">
+them.</RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN></p>
+  <p><NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY fact="true" status="impl/done">The language-neutral method (manifesto, playbooks, mechanism specs)
+comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY></p>
+  <what-ships title="What ships">
     <list ordered="false">
-      <item><fact id="SHIPS-FOUR-BINARIES" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`;
+      <item><SHIPS-FOUR-BINARIES fact="true" status="impl/done">**Four binaries** (this package's own Cargo workspace, `crates/`;
   crate names carry the `-rust` suffix per the GUIDE §2 language-suffix
-  rule):</fact></item>
-      <item><fact id="SHIPS-RUST-AI-NATIVE-UMBRELLA" status="impl/done">`rust-ai-native` — the umbrella tool: `init` (bootstrap policies +
+  rule):</SHIPS-FOUR-BINARIES></item>
+      <item><SHIPS-RUST-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`rust-ai-native` — the umbrella tool: `init` (bootstrap policies +
     registries), `floor` (the portable verification floor), `conform`,
     `specmap`, `trace`, `test-gate`, `tripwire`, `health`, `fast-loop`,
-    `codemod`.</fact></item>
-      <item><fact id="SHIPS-RUST-AI-NATIVE-CONFORM" status="impl/done">`rust-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</fact></item>
-      <item><fact id="SHIPS-RUST-AI-NATIVE-SPECMAP" status="impl/done">`rust-ai-native-specmap` — the traceability engine alone (PROP-014).</fact></item>
-      <item><fact id="SHIPS-RUST-AI-NATIVE-TCG" status="impl/done">`rust-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-RUST /
+    `codemod`.</SHIPS-RUST-AI-NATIVE-UMBRELLA></item>
+      <item><SHIPS-RUST-AI-NATIVE-CONFORM fact="true" status="impl/done">`rust-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM).</SHIPS-RUST-AI-NATIVE-CONFORM></item>
+      <item><SHIPS-RUST-AI-NATIVE-SPECMAP fact="true" status="impl/done">`rust-ai-native-specmap` — the traceability engine alone (PROP-014).</SHIPS-RUST-AI-NATIVE-SPECMAP></item>
+      <item><SHIPS-RUST-AI-NATIVE-TCG fact="true" status="impl/done">`rust-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-RUST /
     TCG-PROTOCOL-RUST): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own rust-analyzer over
@@ -27,26 +27,26 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</fact></p>
     **Prerequisite:** installing this stack obliges the machine to
     carry rust-analyzer (`rustup component add rust-analyzer`).
     Honesty: rust-analyzer is not rustc — the oracle shortens the
-    distance to green; `rust-ai-native floor` stays the truth.</fact></item>
-      <item><fact id="SHIPS-GUIDE-AND-CARDS" status="impl/done">**The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.md`,
+    distance to green; `rust-ai-native floor` stays the truth.</SHIPS-RUST-AI-NATIVE-TCG></item>
+      <item><SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.md`,
   `spec/cards/` — the nine scaffolds in their Rust shape, Band-3 ops
-  blocks for weak readers).</fact></item>
-      <item><fact id="SHIPS-TWO-AGENT-SKILLS" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
+  blocks for weak readers).</SHIPS-GUIDE-AND-CARDS></item>
+      <item><SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
   `/rust-ai-native-terraform` (brownfield adoption per BROWNFIELD-PROTOCOL) and
-  `/rust-ai-native-sweep` (the recurring sweep per the Sweep Playbook).</fact></item>
-      <item><fact id="SHIPS-SPECMARK-PROC-MACRO" status="impl/done">**The specmark proc-macro**
+  `/rust-ai-native-sweep` (the recurring sweep per the Sweep Playbook).</SHIPS-TWO-AGENT-SKILLS></item>
+      <item><SHIPS-SPECMARK-PROC-MACRO fact="true" status="impl/done">**The specmark proc-macro**
   (`crates/vendor/core-ai-native-specmark`, taken under the dependency alias
   `specmark`, which is the name your code writes) — the inert
-  `#[spec]`/`scope!` tags your code carries.</fact></item>
-      <item><fact id="SHIPS-SPECMAP-WIRE-SCHEMA" status="impl/done">**The specmap wire types**
+  `#[spec]`/`scope!` tags your code carries.</SHIPS-SPECMARK-PROC-MACRO></item>
+      <item><SHIPS-SPECMAP-WIRE-SCHEMA fact="true" status="impl/done">**The specmap wire types**
   (`crates/vendor/core-ai-native-specmap/src/generated/`) — generated from
   `specmap.jtd.json`, whose home is the `core-ai-native` package's
   `schemas/` (a canonical `specmap.example.json` sits beside it);
-  regeneration is a maintainer dev-op in the dev repo.</fact></item>
+  regeneration is a maintainer dev-op in the dev repo.</SHIPS-SPECMAP-WIRE-SCHEMA></item>
     </list>
-  </section>
-  <section id="running-the-tools" title="Running the tools">
-    <p><fact id="running-forms-lead" status="impl/done">Three supported forms, from your project root (where `vibedeps/` is):</fact></p>
+  </what-ships>
+  <running-the-tools title="Running the tools">
+    <p><running-forms-lead fact="true" status="impl/done">Three supported forms, from your project root (where `vibedeps/` is):</running-forms-lead></p>
     <fence lang="sh"># (a) vibe-native (PROP-025) — build once in the slot, dispatch through
 #     the project's lockfile (two projects on different versions get
 #     different binaries):
@@ -59,24 +59,24 @@ cargo install --path vibedeps/&lt;stack-slot&gt;/crates/rust-ai-native-cli
 # (c) zero-install, run in place
 cargo run --manifest-path vibedeps/&lt;stack-slot&gt;/Cargo.toml \
     -p rust-ai-native-cli --bin rust-ai-native -- floor</fence>
-    <p><fact id="STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY" status="impl/done">`&lt;stack-slot&gt;` is this package's materialised directory (e.g.
-`stack-rust-ai-native-lang/1.0.0` — check your `vibe.lock`).</fact></p>
-    <p><fact id="SLOT-BUILD-DROPS-A-TARGET-DIRECTORY" status="impl/done">Building in the
+    <p><STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY fact="true" status="impl/done">`&lt;stack-slot&gt;` is this package's materialised directory (e.g.
+`stack-rust-ai-native-lang/1.0.0` — check your `vibe.lock`).</STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY></p>
+    <p><SLOT-BUILD-DROPS-A-TARGET-DIRECTORY fact="true" status="impl/done">Building in the
 slot drops a `target/` there; add `vibedeps/**/target/` to your
 `.gitignore` (build output is already excluded from the package's content
-hash, PROP-024 §2.2).</fact></p>
-  </section>
-  <section id="the-lifecycle" title="The lifecycle">
+hash, PROP-024 §2.2).</SLOT-BUILD-DROPS-A-TARGET-DIRECTORY></p>
+  </running-the-tools>
+  <the-lifecycle title="The lifecycle">
     <fence lang="sh">vibe install                       # materialise this stack into vibedeps/
 rust-ai-native init               # policies + registries + external spec resolution
 # … write spec units, tag code (GUIDE §13), adopt crate by crate …
 rust-ai-native floor              # the gate panel, one exit code
 /rust-ai-native-sweep                  # the recurring sweep (agent skill)
 /rust-ai-native-terraform                    # brownfield adoption (agent skill)</fence>
-    <p><fact id="wiring-and-sweep-pointers" status="impl/done">The wiring recipe — the specmark path-dep, the first spec unit, the
+    <p><wiring-and-sweep-pointers fact="true" status="impl/done">The wiring recipe — the specmark path-dep, the first spec unit, the
 expand-as-you-conform rhythm — is GUIDE §13; the sweep idioms are GUIDE
-§14.</fact></p>
-    <p><fact id="POLICIES-STAY-WITH-THE-CONSUMER-PROJECT" status="impl/done">The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
-this package ships engines, never policy (PROP-024 §2.2).</fact></p>
-  </section>
+§14.</wiring-and-sweep-pointers></p>
+    <p><POLICIES-STAY-WITH-THE-CONSUMER-PROJECT fact="true" status="impl/done">The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
+this package ships engines, never policy (PROP-024 §2.2).</POLICIES-STAY-WITH-THE-CONSUMER-PROJECT></p>
+  </the-lifecycle>
 </spec>

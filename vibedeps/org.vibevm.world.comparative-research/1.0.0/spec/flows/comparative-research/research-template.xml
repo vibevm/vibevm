@@ -2,18 +2,18 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Comparative research template</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** A copy-ready skeleton for a comparative
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** A copy-ready skeleton for a comparative
 research document, then a clause-by-clause commentary on each
-section, then one short worked fragment.</fact></p>
-  <p><fact id="sibling-document-pointers" status="impl/done">The laws these clauses
+section, then one short worked fragment.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">The laws these clauses
 enforce live in
 [`COMPARATIVE-RESEARCH-PROTOCOL.md`](COMPARATIVE-RESEARCH-PROTOCOL.md);
-this file is the shape you fill.</fact></p>
-  <section id="skeleton" title="The skeleton">
-    <p><fact id="COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER" status="impl/done">Copy this whole block into a new research document and fill each
-placeholder.</fact></p>
-    <p><fact id="KEEP-THE-SECTION-ORDER" status="impl/done">Keep the section order — it is the reading shape a
-cold reader navigates by.</fact></p>
+this file is the shape you fill.</sibling-document-pointers></p>
+  <skeleton title="The skeleton">
+    <p><COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER fact="true" status="impl/done">Copy this whole block into a new research document and fill each
+placeholder.</COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER></p>
+    <p><KEEP-THE-SECTION-ORDER fact="true" status="impl/done">Keep the section order — it is the reading shape a
+cold reader navigates by.</KEEP-THE-SECTION-ORDER></p>
     <fence lang="markdown"># &lt;SUBJECT&gt; comparative research and &lt;PROJECT&gt; roadmap deltas
 
 **Status.** Research document — self-contained, evergreen reference.
@@ -101,44 +101,44 @@ table against what changed:
 
 **Capture date:** &lt;YYYY-MM-DD&gt;. **Subject version at capture:**
 &lt;version&gt;.</fence>
-  </section>
-  <section id="commentary" title="Clause-by-clause commentary">
+  </skeleton>
+  <commentary title="Clause-by-clause commentary">
     <list ordered="false">
-      <item><fact id="CLAUSE-STATUS-LINE" status="impl/done">**Status line.** State up front that the document ratifies
+      <item><CLAUSE-STATUS-LINE fact="true" status="impl/done">**Status line.** State up front that the document ratifies
   nothing. This is the deltas-not-decrees law made visible on line
-  one, so no reader mistakes a proposal for a decision.</fact></item>
-      <item><fact id="CLAUSE-PURPOSE" status="impl/done">**Purpose.** One paragraph, and it must contain the two-way promise
+  one, so no reader mistakes a proposal for a decision.</CLAUSE-STATUS-LINE></item>
+      <item><CLAUSE-PURPOSE fact="true" status="impl/done">**Purpose.** One paragraph, and it must contain the two-way promise
   — "what they do well *and* what they don't." A purpose that
   promises only trailing gaps has pre-committed to a one-directional
-  study.</fact></item>
-      <item><fact id="CLAUSE-SOURCE-CORPUS-AND-TABLE" status="impl/done">**Source corpus + table.** Every source with an access date and the
+  study.</CLAUSE-PURPOSE></item>
+      <item><CLAUSE-SOURCE-CORPUS-AND-TABLE fact="true" status="impl/done">**Source corpus + table.** Every source with an access date and the
   subject's version. This table is half of the re-fetch list; filling
-  it now is cheaper than reconstructing it later.</fact></item>
-      <item><fact id="CLAUSE-READING-SHAPE" status="impl/done">**Reading shape.** A one-line section map so a cold reader navigates
+  it now is cheaper than reconstructing it later.</CLAUSE-SOURCE-CORPUS-AND-TABLE></item>
+      <item><CLAUSE-READING-SHAPE fact="true" status="impl/done">**Reading shape.** A one-line section map so a cold reader navigates
   without reading linearly. Months later, this is how a refresher
-  finds the delta table in ten seconds.</fact></item>
-      <item><fact id="CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS" status="impl/done">**§1 in their own words.** The subject's pitch, quoted, before any
+  finds the delta table in ten seconds.</CLAUSE-READING-SHAPE></item>
+      <item><CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS fact="true" status="impl/done">**§1 in their own words.** The subject's pitch, quoted, before any
   analysis. If your document opens with your *summary* of their pitch,
-  you have already broken the quote-first law.</fact></item>
-      <item><fact id="CLAUSE-SECTION-TWO-INVENTORY" status="impl/done">**§2 inventory.** Quote-then-map, one capability at a time. "Maps
+  you have already broken the quote-first law.</CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS></item>
+      <item><CLAUSE-SECTION-TWO-INVENTORY fact="true" status="impl/done">**§2 inventory.** Quote-then-map, one capability at a time. "Maps
   to: no equivalent" is a finding, not a blank — it is a §3 gap in
-  the making.</fact></item>
-      <item><fact id="CLAUSE-SECTIONS-THREE-AND-FOUR" status="impl/done">**§3 trail / §4 lead.** Both are mandatory. A document that ships
+  the making.</CLAUSE-SECTION-TWO-INVENTORY></item>
+      <item><CLAUSE-SECTIONS-THREE-AND-FOUR fact="true" status="impl/done">**§3 trail / §4 lead.** Both are mandatory. A document that ships
   with §4 empty has not looked hard enough — every project made
-  *some* decision its competitor did not.</fact></item>
-      <item><fact id="CLAUSE-SECTION-FIVE-DELTAS" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
+  *some* decision its competitor did not.</CLAUSE-SECTIONS-THREE-AND-FOUR></item>
+      <item><CLAUSE-SECTION-FIVE-DELTAS fact="true" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
   downstream pipeline cites when a delta is accepted or rejected
-  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</fact></item>
-      <item><fact id="CLAUSE-SECTION-SIX-OPEN-QUESTIONS" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
-  in the study itself, and the first questions to ask on refresh.</fact></item>
-      <item><fact id="CLAUSE-SECTION-SEVEN-RE-FETCH-LIST" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,
-  and the capture version — without it, refresh becomes rewrite.</fact></item>
+  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</CLAUSE-SECTION-FIVE-DELTAS></item>
+      <item><CLAUSE-SECTION-SIX-OPEN-QUESTIONS fact="true" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
+  in the study itself, and the first questions to ask on refresh.</CLAUSE-SECTION-SIX-OPEN-QUESTIONS></item>
+      <item><CLAUSE-SECTION-SEVEN-RE-FETCH-LIST fact="true" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,
+  and the capture version — without it, refresh becomes rewrite.</CLAUSE-SECTION-SEVEN-RE-FETCH-LIST></item>
     </list>
-  </section>
-  <section id="worked" title="Worked fragment">
-    <p><fact id="a-short-invented-illustration" status="impl/done">A short invented illustration — a study of a generic build tool
-*Quarry*: two quotes, one delta.</fact></p>
-    <p><fact id="real-documents-run-longer" status="spec/done">Real documents run longer.</fact></p>
+  </commentary>
+  <worked title="Worked fragment">
+    <p><a-short-invented-illustration fact="true" status="impl/done">A short invented illustration — a study of a generic build tool
+*Quarry*: two quotes, one delta.</a-short-invented-illustration></p>
+    <p><real-documents-run-longer fact="true" status="spec/done">Real documents run longer.</real-documents-run-longer></p>
     <fence lang="markdown">## 1. Quarry in its own words {#quarry-words}
 
 &gt; "Quarry caches every build step by content hash, so a clean build
@@ -178,25 +178,25 @@ so offline-first stays the default. Ratified here: nothing.
   accessed 2026-07-01.
 
 **Capture date:** 2026-07-01. **Subject version at capture:** Quarry 3.2.</fence>
-    <p><fact id="the-fragment-obeys-all-five-laws-lead" status="impl/done">The fragment obeys all five laws in miniature:</fact></p>
+    <p><the-fragment-obeys-all-five-laws-lead fact="true" status="impl/done">The fragment obeys all five laws in miniature:</the-fragment-obeys-all-five-laws-lead></p>
     <list ordered="false">
-      <item><fact id="MINIATURE-LAWS-ONE-AND-TWO" status="impl/done">dated verbatim quotes
-  (Laws 1-2),</fact></item>
-      <item><fact id="MINIATURE-LAW-THREE" status="impl/done">§4 answering §3 the other way (Law 3),</fact></item>
-      <item><fact id="MINIATURE-LAW-FOUR" status="impl/done">D1 numbered and
-  ratifying nothing (Law 4),</fact></item>
-      <item><fact id="MINIATURE-LAW-FIVE" status="impl/done">a closing re-fetch list carrying the capture date and the
-  subject's version at capture (Law 5).</fact></item>
+      <item><MINIATURE-LAWS-ONE-AND-TWO fact="true" status="impl/done">dated verbatim quotes
+  (Laws 1-2),</MINIATURE-LAWS-ONE-AND-TWO></item>
+      <item><MINIATURE-LAW-THREE fact="true" status="impl/done">§4 answering §3 the other way (Law 3),</MINIATURE-LAW-THREE></item>
+      <item><MINIATURE-LAW-FOUR fact="true" status="impl/done">D1 numbered and
+  ratifying nothing (Law 4),</MINIATURE-LAW-FOUR></item>
+      <item><MINIATURE-LAW-FIVE fact="true" status="impl/done">a closing re-fetch list carrying the capture date and the
+  subject's version at capture (Law 5).</MINIATURE-LAW-FIVE></item>
     </list>
-  </section>
-  <section id="summary" title="Summary">
+  </worked>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-COPY-THE-SKELETON-WHOLE" status="impl/done">Copy the skeleton whole; keep the section order — it is the reading
-  shape.</fact></item>
-      <item><fact id="SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH" status="impl/done">Fill the source table as you fetch; it is half the re-fetch list.</fact></item>
-      <item><fact id="SUM-QUOTE-BEFORE-MAPPING" status="impl/done">Quote before mapping; map "no equivalent" as a real finding.</fact></item>
-      <item><fact id="SUM-SHIP-BOTH-GAP-DIRECTIONS" status="impl/done">Ship §3 *and* §4; an empty lead section means you stopped early.</fact></item>
-      <item><fact id="SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA" status="impl/done">Number, prioritize, and home every delta; ratify none.</fact></item>
+      <item><SUM-COPY-THE-SKELETON-WHOLE fact="true" status="impl/done">Copy the skeleton whole; keep the section order — it is the reading
+  shape.</SUM-COPY-THE-SKELETON-WHOLE></item>
+      <item><SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH fact="true" status="impl/done">Fill the source table as you fetch; it is half the re-fetch list.</SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH></item>
+      <item><SUM-QUOTE-BEFORE-MAPPING fact="true" status="impl/done">Quote before mapping; map "no equivalent" as a real finding.</SUM-QUOTE-BEFORE-MAPPING></item>
+      <item><SUM-SHIP-BOTH-GAP-DIRECTIONS fact="true" status="impl/done">Ship §3 *and* §4; an empty lead section means you stopped early.</SUM-SHIP-BOTH-GAP-DIRECTIONS></item>
+      <item><SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA fact="true" status="impl/done">Number, prioritize, and home every delta; ratify none.</SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA></item>
     </list>
-  </section>
+  </summary>
 </spec>

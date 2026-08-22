@@ -2,38 +2,38 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">Spec Genres Protocol</title>
   <status stage="spec" state="done"/>
-  <p><fact id="scope-of-this-document" status="impl/done">**Scope of this document.** This file defines *why* project
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *why* project
 documents are sorted into genres, *which* genres exist and what each
 one is for, *who wins* when two of them disagree, and *how* the
 two-way links keep the non-binding genres reachable from a cold
-start.</fact></p>
-  <p><fact id="this-file-is-the-taxonomy" status="impl/done">It is the taxonomy; the sibling documents are the routing
-table and the contract/lore split in practice.</fact></p>
-  <section id="why" title="Why genres exist">
-    <p><fact id="three-failures-lead" status="spec/done">Left alone, a spec tree becomes one undifferentiated pile of
-markdown, and three failures follow, every time:</fact></p>
+start.</scope-of-this-document></p>
+  <p><this-file-is-the-taxonomy fact="true" status="impl/done">It is the taxonomy; the sibling documents are the routing
+table and the contract/lore split in practice.</this-file-is-the-taxonomy></p>
+  <why title="Why genres exist">
+    <p><three-failures-lead fact="true" status="spec/done">Left alone, a spec tree becomes one undifferentiated pile of
+markdown, and three failures follow, every time:</three-failures-lead></p>
     <list ordered="false">
-      <item><fact id="FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE" status="spec/done">**Contracts bloat with narrative.** A discussion log — every fork,
+      <item><FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE fact="true" status="spec/done">**Contracts bloat with narrative.** A discussion log — every fork,
   every analogy, every rejected branch — gets poured into the
   document that an implementer must read as a contract. Now the
-  contract is unreadable as a contract.</fact></item>
-      <item><fact id="FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING" status="spec/done">**Narrative gets treated as binding.** A paragraph of "here is how
+  contract is unreadable as a contract.</FAILURE-CONTRACTS-BLOAT-WITH-NARRATIVE></item>
+      <item><FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING fact="true" status="spec/done">**Narrative gets treated as binding.** A paragraph of "here is how
   we were thinking about it" sits next to a requirement, in the same
-  font, and a later reader implements the musing.</fact></item>
-      <item><fact id="FAILURE-NOBODY-KNOWS-WHAT-WINS" status="spec/done">**Nobody knows what wins.** Two documents say different things and
+  font, and a later reader implements the musing.</FAILURE-NARRATIVE-GETS-TREATED-AS-BINDING></item>
+      <item><FAILURE-NOBODY-KNOWS-WHAT-WINS fact="true" status="spec/done">**Nobody knows what wins.** Two documents say different things and
   there is no rule for which one is authoritative, so the conflict is
-  resolved by whoever edited last, not by design.</fact></item>
+  resolved by whoever edited last, not by design.</FAILURE-NOBODY-KNOWS-WHAT-WINS></item>
     </list>
-    <p><fact id="GENRE-TYPING-REMOVES-ALL-THREE" status="impl/done">Genre typing removes all three.</fact></p>
-    <p><fact id="THE-KIND-FIXES-CHARTER-MUTABILITY-AUDIENCE-AND-AUTHORITY" status="impl/done">Each document declares what kind of
+    <p><GENRE-TYPING-REMOVES-ALL-THREE fact="true" status="impl/done">Genre typing removes all three.</GENRE-TYPING-REMOVES-ALL-THREE></p>
+    <p><THE-KIND-FIXES-CHARTER-MUTABILITY-AUDIENCE-AND-AUTHORITY fact="true" status="impl/done">Each document declares what kind of
 thing it is; the kind fixes its charter, its mutability, its
 audience, and — decisively — its authority when it collides with
-another document.</fact></p>
-  </section>
-  <section id="genres" title="The genre table">
-    <p><fact id="EACH-GENRE-HAS-CHARTER-MUTABILITY-READER-AND-AUTHORITY" status="impl/done">Each genre has a **charter** (what it is for), a **mutability** (how
+another document.</THE-KIND-FIXES-CHARTER-MUTABILITY-AUDIENCE-AND-AUTHORITY></p>
+  </why>
+  <genres title="The genre table">
+    <p><EACH-GENRE-HAS-CHARTER-MUTABILITY-READER-AND-AUTHORITY fact="true" status="impl/done">Each genre has a **charter** (what it is for), a **mutability** (how
 it is allowed to change), a **reader**, and an **authority** (what
-wins on conflict).</fact></p>
+wins on conflict).</EACH-GENRE-HAS-CHARTER-MUTABILITY-READER-AND-AUTHORITY></p>
     <table>
       <tr>
         <td>Genre</td>
@@ -43,156 +43,156 @@ wins on conflict).</fact></p>
         <td>Authority</td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-BOOT-FILES" status="impl/done">**Boot files**</fact></td>
+        <td><ROW-GENRE-BOOT-FILES fact="true" status="impl/done">**Boot files**</ROW-GENRE-BOOT-FILES></td>
         <td><fact status="impl/done">Standing instructions loaded at session start; small and stable</fact></td>
         <td><fact status="impl/done">Rare, deliberate edits</fact></td>
         <td><fact status="impl/done">Every session, first</fact></td>
         <td><fact status="impl/done">Binding</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-FOUNDATIONAL-DECISIONS" status="impl/done">**Foundational decisions**</fact></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">**Foundational decisions**</ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
         <td><fact status="impl/done">Choices that cross every module (identity, versioning, licensing)</fact></td>
         <td><fact status="impl/done">Amended by decision record</fact></td>
         <td><fact status="impl/done">Everyone</fact></td>
         <td><fact status="impl/done">Binding</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-MODULE-CONTRACTS" status="impl/done">**Module contracts**</fact></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">**Module contracts**</ROW-GENRE-MODULE-CONTRACTS></td>
         <td><fact status="impl/done">What one module does — its behaviour, constraints, invariants (this convention: PROP / FEAT)</fact></td>
         <td><fact status="impl/done">Edit + changelog line</fact></td>
         <td><fact status="impl/done">Implementers</fact></td>
         <td><fact status="impl/done">Binding</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-DESIGN-DOCS" status="impl/done">**Design docs**</fact></td>
+        <td><ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">**Design docs**</ROW-GENRE-DESIGN-DOCS></td>
         <td><fact status="impl/done">Why we chose what we chose — the narrative lore behind a contract</fact></td>
         <td><fact status="impl/done">Rewritten freely; corrected on contract conflict</fact></td>
         <td><fact status="impl/done">Anyone tracing intent</fact></td>
         <td><fact status="impl/done">Non-binding</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-RESEARCH-DOCS" status="impl/done">**Research docs**</fact></td>
+        <td><ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">**Research docs**</ROW-GENRE-RESEARCH-DOCS></td>
         <td><fact status="impl/done">What *other* projects/systems did — external studies, prior art</fact></td>
         <td><fact status="impl/done">Superseded by newer study</fact></td>
         <td><fact status="impl/done">Anyone surveying the field</fact></td>
         <td><fact status="impl/done">Non-binding</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-CAMPAIGN-PLANS" status="impl/done">**Campaign plans**</fact></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">**Campaign plans**</ROW-GENRE-CAMPAIGN-PLANS></td>
         <td><fact status="impl/done">The phases and gates of one multi-session change</fact></td>
         <td><fact status="impl/done">Ticked as executed; archived when done</fact></td>
         <td><fact status="impl/done">The crew running it</fact></td>
         <td><fact status="impl/done">Non-binding (execution, not truth)</fact></td>
       </tr>
       <tr>
-        <td><fact id="ROW-GENRE-THE-CHECKPOINT" status="impl/done">**The checkpoint**</fact></td>
+        <td><ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">**The checkpoint**</ROW-GENRE-THE-CHECKPOINT></td>
         <td><fact status="impl/done">Where work stands *right now* — branch, blocker, next step</fact></td>
         <td><fact status="impl/done">Overwritten every session</fact></td>
         <td><fact status="impl/done">The next session, first</fact></td>
         <td><fact status="impl/done">State, not truth</fact></td>
       </tr>
     </table>
-    <p><fact id="two-axes-separate-the-genres" status="impl/done">Two axes separate the binding genres from the rest.</fact></p>
-    <p><fact id="BINDING-GENRES-SAY-WHAT-THE-SYSTEM-MUST-DO" status="impl/done">**Boot,
+    <p><two-axes-separate-the-genres fact="true" status="impl/done">Two axes separate the binding genres from the rest.</two-axes-separate-the-genres></p>
+    <p><BINDING-GENRES-SAY-WHAT-THE-SYSTEM-MUST-DO fact="true" status="impl/done">**Boot,
 foundational decisions, and module contracts are binding** — they say
-what the system *is* and *must do*.</fact></p>
-    <p><fact id="NON-BINDING-GENRES-EXPLAIN-THEY-DO-NOT-REQUIRE" status="impl/done">**Design and research are
-non-binding** — they explain, they do not require.</fact></p>
-    <p><fact id="VOLATILE-GENRES-TRACK-EXECUTION-AND-STATE" status="impl/done">**Campaign plans
+what the system *is* and *must do*.</BINDING-GENRES-SAY-WHAT-THE-SYSTEM-MUST-DO></p>
+    <p><NON-BINDING-GENRES-EXPLAIN-THEY-DO-NOT-REQUIRE fact="true" status="impl/done">**Design and research are
+non-binding** — they explain, they do not require.</NON-BINDING-GENRES-EXPLAIN-THEY-DO-NOT-REQUIRE></p>
+    <p><VOLATILE-GENRES-TRACK-EXECUTION-AND-STATE fact="true" status="impl/done">**Campaign plans
 and the checkpoint are volatile** — they track execution and state,
-which change faster than truth and must never be mistaken for it.</fact></p>
-    <section id="contract-vs-lore" title="Contract versus lore, precisely">
-      <p><fact id="the-line-that-does-the-most-work" status="impl/done">The line that does the most work is between a **module contract** and
-a **design doc**.</fact></p>
-      <p><fact id="LOAD-BEARING-RATIONALE-STAYS-INSIDE-THE-CONTRACT" status="impl/done">The load-bearing rationale — the decision itself,
+which change faster than truth and must never be mistaken for it.</VOLATILE-GENRES-TRACK-EXECUTION-AND-STATE></p>
+    <contract-vs-lore title="Contract versus lore, precisely">
+      <p><the-line-that-does-the-most-work fact="true" status="impl/done">The line that does the most work is between a **module contract** and
+a **design doc**.</the-line-that-does-the-most-work></p>
+      <p><LOAD-BEARING-RATIONALE-STAYS-INSIDE-THE-CONTRACT fact="true" status="impl/done">The load-bearing rationale — the decision itself,
 its one-paragraph why, the constraints, the invariants — stays
-*inside* the contract.</fact></p>
-      <p><fact id="NARRATIVE-RATIONALE-MOVES-OUT-INTO-A-DESIGN-DOC" status="impl/done">The narrative rationale — the full discussion,
+*inside* the contract.</LOAD-BEARING-RATIONALE-STAYS-INSIDE-THE-CONTRACT></p>
+      <p><NARRATIVE-RATIONALE-MOVES-OUT-INTO-A-DESIGN-DOC fact="true" status="impl/done">The narrative rationale — the full discussion,
 the forks weighed at length, the precedents studied, the ideas parked
-for later — moves *out* into a design doc.</fact></p>
-      <p><fact id="what-the-split-buys-both-sides" status="spec/done">The contract stays
+for later — moves *out* into a design doc.</NARRATIVE-RATIONALE-MOVES-OUT-INTO-A-DESIGN-DOC></p>
+      <p><what-the-split-buys-both-sides fact="true" status="spec/done">The contract stays
 readable as a contract; the lore stays available to anyone who wants
-the whole story.</fact></p>
-      <p><fact id="RESEARCH-AND-DESIGN-POINT-IN-OPPOSITE-DIRECTIONS" status="impl/done">Design and research both point away from the contract, but in
+the whole story.</what-the-split-buys-both-sides></p>
+      <p><RESEARCH-AND-DESIGN-POINT-IN-OPPOSITE-DIRECTIONS fact="true" status="impl/done">Design and research both point away from the contract, but in
 opposite directions: **research studies what other projects did;
-design records why we chose what we chose.**</fact></p>
-      <p><fact id="a-competitor-backgrounder-is-research" status="impl/done">A backgrounder on a
-competitor is research.</fact></p>
-      <p><fact id="our-own-modules-reasoning-is-design" status="impl/done">The reasoning behind our own module is
-design.</fact></p>
-    </section>
-  </section>
-  <section id="precedence" title="The precedence law">
-    <quote><fact id="CONTRACT-WINS-OVER-LORE" status="impl/done">When a design document and the contract it explains disagree, the
-contract wins and the design document is corrected.</fact></quote>
-    <p><fact id="not-a-tie-breaker-of-convenience" status="spec/done">This is not a tie-breaker of convenience; it is the rule that keeps
-lore honest.</fact></p>
-    <p><fact id="LORE-IS-ALLOWED-TO-BE-WRONG" status="impl/done">Lore is allowed to be wrong — it records what was true
-when it was written, and the world moves.</fact></p>
-    <p><fact id="LORE-MAY-NOT-SILENTLY-DIVERGE-AND-BE-CITED-AS-CURRENT" status="impl/done">What lore is *not* allowed
-to do is silently diverge and then get cited as if current.</fact></p>
-    <p><fact id="THE-CORRECTION-ALWAYS-RUNS-ONE-WAY" status="impl/done">So the
-correction always runs one way:</fact></p>
+design records why we chose what we chose.**</RESEARCH-AND-DESIGN-POINT-IN-OPPOSITE-DIRECTIONS></p>
+      <p><a-competitor-backgrounder-is-research fact="true" status="impl/done">A backgrounder on a
+competitor is research.</a-competitor-backgrounder-is-research></p>
+      <p><our-own-modules-reasoning-is-design fact="true" status="impl/done">The reasoning behind our own module is
+design.</our-own-modules-reasoning-is-design></p>
+    </contract-vs-lore>
+  </genres>
+  <precedence title="The precedence law">
+    <quote><CONTRACT-WINS-OVER-LORE fact="true" status="impl/done">When a design document and the contract it explains disagree, the
+contract wins and the design document is corrected.</CONTRACT-WINS-OVER-LORE></quote>
+    <p><not-a-tie-breaker-of-convenience fact="true" status="spec/done">This is not a tie-breaker of convenience; it is the rule that keeps
+lore honest.</not-a-tie-breaker-of-convenience></p>
+    <p><LORE-IS-ALLOWED-TO-BE-WRONG fact="true" status="impl/done">Lore is allowed to be wrong — it records what was true
+when it was written, and the world moves.</LORE-IS-ALLOWED-TO-BE-WRONG></p>
+    <p><LORE-MAY-NOT-SILENTLY-DIVERGE-AND-BE-CITED-AS-CURRENT fact="true" status="impl/done">What lore is *not* allowed
+to do is silently diverge and then get cited as if current.</LORE-MAY-NOT-SILENTLY-DIVERGE-AND-BE-CITED-AS-CURRENT></p>
+    <p><THE-CORRECTION-ALWAYS-RUNS-ONE-WAY fact="true" status="impl/done">So the
+correction always runs one way:</THE-CORRECTION-ALWAYS-RUNS-ONE-WAY></p>
     <list ordered="false">
-      <item><fact id="FIX-THE-DESIGN-DOC-WHEN-THE-CONTRACT-MOVED" status="impl/done">The contract changed; a design doc now contradicts it → **fix the
-  design doc**, add a line noting what moved.</fact></item>
-      <item><fact id="A-FORBIDDEN-PROPOSAL-IS-A-PARKED-IDEA" status="impl/done">A design doc proposes something the contract forbids → the design
+      <item><FIX-THE-DESIGN-DOC-WHEN-THE-CONTRACT-MOVED fact="true" status="impl/done">The contract changed; a design doc now contradicts it → **fix the
+  design doc**, add a line noting what moved.</FIX-THE-DESIGN-DOC-WHEN-THE-CONTRACT-MOVED></item>
+      <item><A-FORBIDDEN-PROPOSAL-IS-A-PARKED-IDEA fact="true" status="impl/done">A design doc proposes something the contract forbids → the design
   doc is a **parked idea**, marked as such, never mistaken for the
-  rule.</fact></item>
-      <item><fact id="NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE" status="impl/done">Never edit the contract to match the lore. That inverts the
-  authority and lets a stale musing rewrite the system.</fact></item>
+  rule.</A-FORBIDDEN-PROPOSAL-IS-A-PARKED-IDEA></item>
+      <item><NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE fact="true" status="impl/done">Never edit the contract to match the lore. That inverts the
+  authority and lets a stale musing rewrite the system.</NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE></item>
     </list>
-    <p><fact id="VOLATILE-NEVER-OVERRIDES-BINDING" status="impl/done">The same ordering holds for the volatile genres against the binding
+    <p><VOLATILE-NEVER-OVERRIDES-BINDING fact="true" status="impl/done">The same ordering holds for the volatile genres against the binding
 ones: a campaign plan or a checkpoint entry never overrides a
-contract.</fact></p>
-    <p><fact id="A-DISAGREEING-CHECKPOINT-IS-STALE" status="impl/done">If the checkpoint says one thing and the contract another,
-the checkpoint is stale — state posing as truth — and gets corrected.</fact></p>
-  </section>
-  <section id="linking" title="The two-way linking law">
-    <p><fact id="a-non-binding-document-must-be-findable" status="spec/done">A non-binding document is only useful if a cold reader can *find* it.</fact></p>
-    <p><fact id="THE-LINK-MAKES-LORE-SURVIVE-A-COLD-START" status="impl/done">The link is the mechanism that makes the lore survive a cold start.</fact></p>
-    <quote><fact id="TWO-WAY-LINKING-LAW" status="impl/done">A contract section that has lore links to it. The lore links back.
-A cold reader entering from either side finds the other.</fact></quote>
-    <p><fact id="concretely-lead" status="impl/done">Concretely:</fact></p>
+contract.</VOLATILE-NEVER-OVERRIDES-BINDING></p>
+    <p><A-DISAGREEING-CHECKPOINT-IS-STALE fact="true" status="impl/done">If the checkpoint says one thing and the contract another,
+the checkpoint is stale — state posing as truth — and gets corrected.</A-DISAGREEING-CHECKPOINT-IS-STALE></p>
+  </precedence>
+  <linking title="The two-way linking law">
+    <p><a-non-binding-document-must-be-findable fact="true" status="spec/done">A non-binding document is only useful if a cold reader can *find* it.</a-non-binding-document-must-be-findable></p>
+    <p><THE-LINK-MAKES-LORE-SURVIVE-A-COLD-START fact="true" status="impl/done">The link is the mechanism that makes the lore survive a cold start.</THE-LINK-MAKES-LORE-SURVIVE-A-COLD-START></p>
+    <quote><TWO-WAY-LINKING-LAW fact="true" status="impl/done">A contract section that has lore links to it. The lore links back.
+A cold reader entering from either side finds the other.</TWO-WAY-LINKING-LAW></quote>
+    <p><concretely-lead fact="true" status="impl/done">Concretely:</concretely-lead></p>
     <list ordered="false">
-      <item><fact id="EVERY-DESIGN-DOC-NAMES-ITS-CONTRACT-SECTIONS" status="impl/done">Every design doc names the contract section(s) it explains.</fact></item>
-      <item><fact id="EVERY-CONTRACT-SECTION-WITH-LORE-LINKS-TO-IT" status="impl/done">Every contract section that has a design doc links to it — from a
+      <item><EVERY-DESIGN-DOC-NAMES-ITS-CONTRACT-SECTIONS fact="true" status="impl/done">Every design doc names the contract section(s) it explains.</EVERY-DESIGN-DOC-NAMES-ITS-CONTRACT-SECTIONS></item>
+      <item><EVERY-CONTRACT-SECTION-WITH-LORE-LINKS-TO-IT fact="true" status="impl/done">Every contract section that has a design doc links to it — from a
   `Related` line, a footnote, an anchor reference — so a session
   reading the contract during boot discovers the rationale *without
-  being told it exists*.</fact></item>
-      <item><fact id="A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK" status="impl/done">A one-directional link is a latent break: follow the tree from the
+  being told it exists*.</EVERY-CONTRACT-SECTION-WITH-LORE-LINKS-TO-IT></item>
+      <item><A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK fact="true" status="impl/done">A one-directional link is a latent break: follow the tree from the
   unlinked side and the other half is invisible. Both directions or
-  neither.</fact></item>
+  neither.</A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK></item>
     </list>
-    <p><fact id="AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT" status="impl/done">This is why an unlinked design doc counts as a defect, not merely
-untidy.</fact></p>
-    <p><fact id="why-an-unlinked-doc-costs" status="spec/done">It holds real reasoning that the next cold reader will never
+    <p><AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT fact="true" status="impl/done">This is why an unlinked design doc counts as a defect, not merely
+untidy.</AN-UNLINKED-DESIGN-DOC-IS-A-DEFECT></p>
+    <p><why-an-unlinked-doc-costs fact="true" status="spec/done">It holds real reasoning that the next cold reader will never
 reach, and so the project will re-derive — or re-litigate — a
-question it already settled.</fact></p>
-  </section>
-  <section id="placing" title="Placing a document">
-    <p><fact id="placing-routine-lead" status="impl/done">The routine is short, and it runs *before* the first sentence:</fact></p>
+question it already settled.</why-an-unlinked-doc-costs></p>
+  </linking>
+  <placing title="Placing a document">
+    <p><placing-routine-lead fact="true" status="impl/done">The routine is short, and it runs *before* the first sentence:</placing-routine-lead></p>
     <list ordered="true">
-      <item><fact id="PLACE-NAME-THE-GENRE" status="impl/done">**Name the genre.** Is this binding or explanatory? Does it
+      <item><PLACE-NAME-THE-GENRE fact="true" status="impl/done">**Name the genre.** Is this binding or explanatory? Does it
    describe our system (contract/design) or someone else's
-   (research)? Is it truth (contract) or state (checkpoint/plan)?</fact></item>
-      <item><fact id="PLACE-PUT-IT-IN-THAT-GENRES-HOME" status="impl/done">**Put it in that genre's home** and give it that genre's shape —
-   a contract reads as a contract, a design doc reads as a story.</fact></item>
-      <item><fact id="PLACE-WIRE-THE-LINKS" status="impl/done">**Wire the links** if it is lore: name its contract, and add the
-   back-link from the contract.</fact></item>
-      <item><fact id="PLACE-DO-NOT-BLEND" status="impl/done">**Do not blend.** If the draft is half requirement and half
-   story, it is two documents — split it along the binding line.</fact></item>
+   (research)? Is it truth (contract) or state (checkpoint/plan)?</PLACE-NAME-THE-GENRE></item>
+      <item><PLACE-PUT-IT-IN-THAT-GENRES-HOME fact="true" status="impl/done">**Put it in that genre's home** and give it that genre's shape —
+   a contract reads as a contract, a design doc reads as a story.</PLACE-PUT-IT-IN-THAT-GENRES-HOME></item>
+      <item><PLACE-WIRE-THE-LINKS fact="true" status="impl/done">**Wire the links** if it is lore: name its contract, and add the
+   back-link from the contract.</PLACE-WIRE-THE-LINKS></item>
+      <item><PLACE-DO-NOT-BLEND fact="true" status="impl/done">**Do not blend.** If the draft is half requirement and half
+   story, it is two documents — split it along the binding line.</PLACE-DO-NOT-BLEND></item>
     </list>
-    <p><fact id="sibling-document-pointers" status="impl/done">The decision table for common situations lives in
+    <p><sibling-document-pointers fact="true" status="impl/done">The decision table for common situations lives in
 [`when-to-write-what.md`](when-to-write-what.md); the contract/lore
 split, with the fork-by-fork record shape, lives in
-[`design-docs.md`](design-docs.md).</fact></p>
-  </section>
-  <section id="re-derive" title="Re-derive for your project">
-    <p><fact id="DO-NOT-ADOPT-THIS-TABLE-VERBATIM" status="impl/done">Do not adopt this table verbatim — your project already has genres,
-named or not.</fact></p>
-    <p><fact id="re-derive-prompt-lead" status="impl/done">Have the agent surface them and map yours onto this
-frame:</fact></p>
+[`design-docs.md`](design-docs.md).</sibling-document-pointers></p>
+  </placing>
+  <re-derive title="Re-derive for your project">
+    <p><DO-NOT-ADOPT-THIS-TABLE-VERBATIM fact="true" status="impl/done">Do not adopt this table verbatim — your project already has genres,
+named or not.</DO-NOT-ADOPT-THIS-TABLE-VERBATIM></p>
+    <p><re-derive-prompt-lead fact="true" status="impl/done">Have the agent surface them and map yours onto this
+frame:</re-derive-prompt-lead></p>
     <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-spec-genres/&lt;version&gt;/spec/flows/spec-genres/`, check `vibe.lock`) in full, then adapt it to this project:
 1. Inventory every kind of document this repo already holds (specs,
    ADRs, RFCs, design docs, wikis, READMEs, runbooks, planning docs,
@@ -208,19 +208,19 @@ frame:</fact></p>
    that name no contract.
 5. Show me the genre map and the misfilings as a plan. Change
    nothing until I approve.</fence>
-  </section>
-  <section id="summary" title="Summary">
+  </re-derive>
+  <summary title="Summary">
     <list ordered="false">
-      <item><fact id="SUM-THE-PILE-ROTS-THREE-WAYS" status="spec/done">One undifferentiated pile of markdown rots three ways: contracts
-  bloat, narrative goes binding, nobody knows what wins.</fact></item>
-      <item><fact id="SUM-SEVEN-GENRES-THREE-AUTHORITIES" status="impl/done">Seven genres, three authorities: binding (boot, foundational,
+      <item><SUM-THE-PILE-ROTS-THREE-WAYS fact="true" status="spec/done">One undifferentiated pile of markdown rots three ways: contracts
+  bloat, narrative goes binding, nobody knows what wins.</SUM-THE-PILE-ROTS-THREE-WAYS></item>
+      <item><SUM-SEVEN-GENRES-THREE-AUTHORITIES fact="true" status="impl/done">Seven genres, three authorities: binding (boot, foundational,
   contracts), non-binding (design, research), volatile (plans, the
-  checkpoint).</fact></item>
-      <item><fact id="SUM-CONTRACT-WINS-OVER-LORE" status="impl/done">Contract wins over lore. Lore is corrected on conflict, never the
-  other way, and never silently diverges.</fact></item>
-      <item><fact id="SUM-TWO-WAY-LINKS-ARE-THE-MECHANISM" status="impl/done">Two-way links are the mechanism: a cold reader entering from either
-  the contract or the lore finds the other.</fact></item>
-      <item><fact id="SUM-NAME-THE-GENRE-FIRST" status="impl/done">Name the genre before writing the first sentence.</fact></item>
+  checkpoint).</SUM-SEVEN-GENRES-THREE-AUTHORITIES></item>
+      <item><SUM-CONTRACT-WINS-OVER-LORE fact="true" status="impl/done">Contract wins over lore. Lore is corrected on conflict, never the
+  other way, and never silently diverges.</SUM-CONTRACT-WINS-OVER-LORE></item>
+      <item><SUM-TWO-WAY-LINKS-ARE-THE-MECHANISM fact="true" status="impl/done">Two-way links are the mechanism: a cold reader entering from either
+  the contract or the lore finds the other.</SUM-TWO-WAY-LINKS-ARE-THE-MECHANISM></item>
+      <item><SUM-NAME-THE-GENRE-FIRST fact="true" status="impl/done">Name the genre before writing the first sentence.</SUM-NAME-THE-GENRE-FIRST></item>
     </list>
-  </section>
+  </summary>
 </spec>
