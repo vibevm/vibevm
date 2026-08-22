@@ -150,6 +150,38 @@ its line: XML reserves every case-insensitive `xml`-prefixed name, so
 `XMLBOOT` cannot be an element — the predicate refuses it and the
 generic form carries such ids. @status:impl/done
 
+@fact:FACTS-GROUP-ELEMENT **Decision (ADR-part; owner ruling 2026-08-22,
+near-verbatim): «Не правильней ли не включать внутри list элементы item,
+а сразу ставить в тело list элементы типа `<THE-LAW fact="true"...>`? И
+вместо `<list>` использовать тэг `<facts>` — это новое слово для
+зарезервированного словарика… Если же список состоит из обычного текста
+(там могут даже иногда встречаться факты), то все элементы — это item и
+группировка — list, а факты в нём рендерятся как сейчас».** The law: a
+list whose every item is exactly one meaningful fact materialises as the
+vocabulary element `<facts ordered="…">` with the fact elements (named
+or generic) directly in its body — no `<item>` wrappers; any other list
+(plain text, or mixed with occasional facts) keeps today's
+`<list>`/`<item>` shape with facts rendered inside items. `facts` joins
+the reserved vocabulary (an anchor named `facts` falls back to the
+generic form); `ordered` carries over exactly as on `<list>`; the model
+is unchanged — both shapes parse to the same `Block::List`, so the
+reader accepts BOTH forms (old materialisations in the wild stay
+readable) and a rewrite normalises the all-fact shape to `<facts>`.
+Loud errors guard the grouping: a non-fact child inside `<facts>`, bare
+text inside `<facts>`, an empty `<facts>`. Both readers — the pivot and
+the specmap engine's native one — learn the form mirror-wise; the
+converter recipe bumps `specdoc/3` → `specdoc/4` and the host
+re-materialises once. Landed: the writer branch, the `facts_block`
+parser (split into the pivot's own `xml_facts.rs` along the engine's
+seam) and the vocabulary word sit in both readers with the four loud
+errors pinned; the engine proves model-identity by content hash
+between the two shapes; the redbook README golden re-pins with two
+`<facts>` groups and the same 45 named facts; the host's 37 slots
+re-materialised at `specdoc/4`; and the §5a stand re-ran as the
+regression tool it was left as — polygons rebuilt on the new shape
+(121 files carry groups), the sensitive tier (`gpt-5.5`@`low`) swept
+9/9 with the negative control clean. @status:impl/done
+
 @fact:INLINE-STAYS-MARKDOWN **Decision (ADR-part).** Inline content —
 emphasis, inline code, links, `##NAME` citations, `spec://` addresses —
 rides INSIDE text nodes as literal Markdown conventions, in both

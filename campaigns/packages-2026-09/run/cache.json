@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T01:45:28Z",
+  "updated_at": "2026-08-22T08:39:33Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "d6a8af825ac74f3a4fadbd61b4ba06d41ea7749dc993c019c8fe330cfdff0df2",
+      "content_hash": "1224e2f133a4f5836920ee3b71e785149e76ab5c5a4c8490253439ec9bdc19b1",
       "rollup": {
         "explicit": [
           "spec",
@@ -161152,15 +161152,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 30,
-        "fact_count": 29,
+        "marker_count": 31,
+        "fact_count": 30,
         "unmarked_facts": 0
       },
-      "marker_count": 30,
+      "marker_count": 31,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d6a8af825ac74f3a4fadbd61b4ba06d41ea7749dc993c019c8fe330cfdff0df2",
+        "processed_hash": "1224e2f133a4f5836920ee3b71e785149e76ab5c5a4c8490253439ec9bdc19b1",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161335,10 +161335,16 @@
             "ev": [
               "eight twins: four in vibe-spec pipeline/inheritance_parity_tests.rs comparing lane AND rename map over runtime to_xml twins incl. mixed trees; four on the bootgen floor (tests_inheritance_parity.rs + tests_hybrid.rs dynamic-STATIC case); compile floor byte-identical out of the box; lawful install-floor residue named by the twins: vibe:static provenance cites the true source file, INDEX raw-snippet paths carry the materialised extension, the dynamic-STATIC target stays the generated extension-stable STATIC.md"
             ]
+          },
+          "FACTS-GROUP-ELEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "owner ruling 2026-08-22 quoted near-verbatim; law implemented both sides: writer branch xml_out.rs (all-fact condition over is_meaningful), reader facts_block in new pivot xml_facts.rs + engine xmlspec/facts.rs with the four loud errors pinned by tests (non-fact child, bare text, empty group, missing ordered); facts reserved in both elementability predicates; both forms parse to the same Block::List and legacy normalises (pinned); engine parity test proves content-hash identity between shapes; golden re-pinned with two <facts> groups / 45 named facts; recipe specdoc/4, host 37/37 slots re-materialised (commits 0c429f0a, a242db25); regression sweep gpt-5.5@low over rebuilt polygons 9/9 with clean negative control"
+            ]
           }
         },
-        "verified_at": "2026-08-22T01:45:28Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A"
+        "verified_at": "2026-08-22T08:39:33Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP"
       }
     },
     "spec/design/README.md": {

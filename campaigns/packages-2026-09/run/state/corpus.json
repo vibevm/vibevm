@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-22T01:45:10Z",
+  "updated_at": "2026-08-22T08:39:32Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159579,15 +159579,15 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 30,
+      "markers": 31,
       "units": 9,
-      "facts": 29,
+      "facts": 30,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f69db916adec4ae39e5561d7a04cf1e8549314594f4c75ae1093fca9efa919df",
+        "processed_hash": "d6a8af825ac74f3a4fadbd61b4ba06d41ea7749dc993c019c8fe330cfdff0df2",
         "summary": {
-          "confirmed": 29
+          "confirmed": 30
         },
         "verdicts": {
           "MANDATE-VERBATIM": {
@@ -159701,13 +159701,13 @@
           "AGENT-ROUTER-MEASURE": {
             "v": "confirmed",
             "ev": [
-              "the protocol is recorded with its instrument already live (claudez and codexrunner are the session's operating worker lanes); the dynamic-router-is-the-reader premise is PROP-009's own boot model (CLAUDE.md: boot is pure file-reading, dynamic entries resolved at boot)"
+              "stand at campaigns/packages-2026-09/xml-measure (setup/enum-tiers/run-probe/score); polygon per contract: scenario-zero materialisations x3, INDEX with 2 active os:windows dynamic entries + 1 os:linux negative, beacons only inside dynamically-included files, probe prompt names no file format; measured 2026-08-22 on the final dialect: 36/36 PASS, XML-MD delta 0, zero negative-control leakage; artifacts in vibevm-xmlmeasure/runs (scores.csv + transcripts), report RESULTS-2026-08-22.md"
             ]
           },
           "AGENT-ROUTER-MODEL-TIERS": {
             "v": "confirmed",
             "ev": [
-              "the owner's advice quoted verbatim the hour it was given; the launcher overrides it relies on exist (CODEXRUNNER_MODEL/EFFORT — SUBAGENT-LAUNCHERS ##launchers-codexrunner)"
+              "live tier enumeration: installed codex serves gpt-5.5 and gpt-5.6-sol only (three mini/codex candidates error; tiers.txt); simple-first honoured: gpt-5.5@low ran first and twice (18/18), ceiling gpt-5.6-sol@xhigh last (9/9), claudez big symmetric (9/9); per-tier table shows no gradient"
             ]
           },
           "SLICES": {
@@ -159763,10 +159763,16 @@
             "ev": [
               "eight twins: four in vibe-spec pipeline/inheritance_parity_tests.rs comparing lane AND rename map over runtime to_xml twins incl. mixed trees; four on the bootgen floor (tests_inheritance_parity.rs + tests_hybrid.rs dynamic-STATIC case); compile floor byte-identical out of the box; lawful install-floor residue named by the twins: vibe:static provenance cites the true source file, INDEX raw-snippet paths carry the materialised extension, the dynamic-STATIC target stays the generated extension-stable STATIC.md"
             ]
+          },
+          "FACTS-GROUP-ELEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "owner ruling 2026-08-22 quoted near-verbatim; law implemented both sides: writer branch xml_out.rs (all-fact condition over is_meaningful), reader facts_block in new pivot xml_facts.rs + engine xmlspec/facts.rs with the four loud errors pinned by tests (non-fact child, bare text, empty group, missing ordered); facts reserved in both elementability predicates; both forms parse to the same Block::List and legacy normalises (pinned); engine parity test proves content-hash identity between shapes; golden re-pinned with two <facts> groups / 45 named facts; recipe specdoc/4, host 37/37 slots re-materialised (commits 0c429f0a, a242db25); regression sweep gpt-5.5@low over rebuilt polygons 9/9 with clean negative control"
+            ]
           }
         },
-        "verified_at": "2026-08-22T01:00:56Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS"
+        "verified_at": "2026-08-22T01:45:28Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B + P045-GEN-ART + P045-S5 + P045-TAGS + P045-5A + P045-FACTS-GROUP"
       }
     },
     {
