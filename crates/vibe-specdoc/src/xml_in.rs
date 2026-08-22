@@ -1,13 +1,14 @@
 //! `from_xml` — the closed-dialect XML frontend (quick-xml Reader).
 //!
-//! The vocabulary is closed (PROP-045 ##XML-DIALECT-IS-THE-MD-SUBSET):
-//! `spec`, `title`, `status`, `section`, `p`, `fact`, `list`, `item`,
-//! `table`, `tr`, `td`, `fence`, `quote` — thirteen elements, nothing
-//! else. A foreign element or attribute, a DTD, a processing instruction,
-//! or an entity that is not one of XML's five built-ins (or a character
-//! reference) is a LOUD error naming the construct and its line/column —
-//! never a silent skip. That is what makes the owner's degradation law
-//! hold by construction: the dialect cannot express what Markdown cannot.
+//! The structural vocabulary is closed (PROP-045
+//! ##XML-DIALECT-IS-THE-MD-SUBSET): `spec`, `title`, `status`, `section`,
+//! `p`, `fact`, `list`, `item`, `table`, `tr`, `td`, `fence`, `quote`.
+//! At a section position, an otherwise unknown element whose valid name is
+//! the section anchor and whose sole attribute is `title` is the named form
+//! of `<section id=... title=...>`. Every other foreign element or
+//! attribute, DTD, processing instruction, or non-built-in entity is a
+//! LOUD error naming the construct and its line/column — never a silent
+//! skip.
 //!
 //! One shared id namespace (the DuplicateId law, progress-core's message
 //! verbatim): the title anchor, section ids and fact ids all mint into it.
@@ -292,7 +293,7 @@ impl<'a> Parser<'a> {
                     }
                     title.text = self.leaf_text("title", was_empty)?;
                     if let Some(id) = &title.id {
-                        self.mint(id.clone(), at)?;
+                        self.mint_heading(id.clone(), at)?;
                     }
                     doc.title = Some(title);
                 }
@@ -311,7 +312,8 @@ impl<'a> Parser<'a> {
                 "section" => {
                     have_content = true;
                     have_section = true;
-                    doc.sections.push(self.section(&attrs, at, was_empty, 2)?);
+                    doc.sections
+                        .push(self.section("section", &attrs, at, was_empty, 2)?);
                 }
                 "p" | "list" | "table" | "fence" | "quote" => {
                     if have_section {
@@ -325,6 +327,15 @@ impl<'a> Parser<'a> {
                     have_content = true;
                     let b = self.block(&name, &attrs, at, was_empty)?;
                     blocks.push((b, at));
+                }
+                other
+                    if super::xml_out::anchor_is_elementable(other)
+                        && attrs.iter().any(|(name, _)| name == "title") =>
+                {
+                    have_content = true;
+                    have_section = true;
+                    doc.sections
+                        .push(self.section(other, &attrs, at, was_empty, 2)?);
                 }
                 other => {
                     return Err(self.err(
@@ -343,6 +354,7 @@ impl<'a> Parser<'a> {
 
     fn section(
         &mut self,
+        element_name: &str,
         attrs: &[(String, String)],
         at: (usize, usize),
         was_empty: bool,
@@ -354,15 +366,20 @@ impl<'a> Parser<'a> {
                 "section nesting deeper than five levels is not Markdown-expressible (ATX headings stop at H6)".into(),
             ));
         }
-        only_attrs(attrs, &["id", "title"], "section", at, self)?;
-        let id = attrs
-            .iter()
-            .find(|(k, _)| k == "id")
-            .map(|(_, v)| v.clone());
+        let id = if element_name == "section" {
+            only_attrs(attrs, &["id", "title"], "section", at, self)?;
+            attrs
+                .iter()
+                .find(|(k, _)| k == "id")
+                .map(|(_, v)| v.clone())
+        } else {
+            only_attrs(attrs, &["title"], element_name, at, self)?;
+            Some(element_name.to_string())
+        };
         let Some((_, title)) = attrs.iter().find(|(k, _)| k == "title") else {
             return Err(self.err(
                 at,
-                "the <section> element requires a `title` attribute".into(),
+                format!("the <{element_name}> element requires a `title` attribute"),
             ));
         };
         let mut s = Section {
@@ -373,7 +390,7 @@ impl<'a> Parser<'a> {
             sections: Vec::new(),
         };
         if let Some(id) = &id {
-            self.mint(id.clone(), at)?;
+            self.mint_heading(id.clone(), at)?;
         }
         if was_empty {
             return Ok(s);
@@ -390,7 +407,7 @@ impl<'a> Parser<'a> {
                         format!("unexpected end of input — section {title:?} never closed"),
                     ));
                 }
-                Some(Ev::End(n)) if n == "section" => {
+                Some(Ev::End(n)) if n == element_name => {
                     self.i += 1;
                     break;
                 }
@@ -410,7 +427,7 @@ impl<'a> Parser<'a> {
                 "section" => {
                     have_subsection = true;
                     s.sections
-                        .push(self.section(&attrs, at, was_empty, level + 1)?);
+                        .push(self.section("section", &attrs, at, was_empty, level + 1)?);
                 }
                 "p" | "list" | "table" | "fence" | "quote" => {
                     if have_subsection {
@@ -423,6 +440,14 @@ impl<'a> Parser<'a> {
                     }
                     let b = self.block(&name, &attrs, at, was_empty)?;
                     blocks.push((b, at));
+                }
+                other
+                    if super::xml_out::anchor_is_elementable(other)
+                        && attrs.iter().any(|(name, _)| name == "title") =>
+                {
+                    have_subsection = true;
+                    s.sections
+                        .push(self.section(other, &attrs, at, was_empty, level + 1)?);
                 }
                 other => {
                     return Err(self.err(
@@ -440,7 +465,20 @@ impl<'a> Parser<'a> {
         Ok(s)
     }
 
-    pub(super) fn mint(&mut self, id: String, at: (usize, usize)) -> Result<()> {
+    fn mint_heading(&mut self, id: String, at: (usize, usize)) -> Result<()> {
+        if id.is_empty() || id.trim() != id || id.contains(['}', '\r', '\n']) {
+            return Err(self.err(
+                at,
+                format!(
+                    "id `{id}` is not a Markdown-expressible heading anchor — use a non-empty single-line value without `}}`"
+                ),
+            ));
+        }
+        self.ids.push((id, at));
+        Ok(())
+    }
+
+    pub(super) fn mint_fact(&mut self, id: String, at: (usize, usize)) -> Result<()> {
         let spelling = format!("@fact:{id} body");
         let (parsed, _) = progress_core::parse::take_fact_id(&spelling, 0, spelling.len());
         if parsed.as_deref() != Some(id.as_str()) {

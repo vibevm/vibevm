@@ -9,6 +9,42 @@ use super::blocks::{block, status_element};
 use super::reader::{Ev, NS, Parser, Violation, attr, only_attrs, validate_fence_bindings};
 use super::{XBlock, XDoc, XSection, XTitle};
 
+/// Mirror of vibe-specdoc's named-section boundary. The engine stays
+/// separable, so parity is pinned by tests instead of shared code.
+fn anchor_is_elementable(anchor: &str) -> bool {
+    let mut chars = anchor.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !(first.is_ascii_alphabetic() || first == '_')
+        || !chars.all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+    {
+        return false;
+    }
+    if anchor
+        .get(..3)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("xml"))
+    {
+        return false;
+    }
+    !matches!(
+        anchor,
+        "spec"
+            | "title"
+            | "status"
+            | "section"
+            | "p"
+            | "fact"
+            | "list"
+            | "item"
+            | "table"
+            | "tr"
+            | "td"
+            | "fence"
+            | "quote"
+    )
+}
+
 /// The `<spec>` root and everything under it.
 pub(super) fn document(p: &mut Parser) -> Result<XDoc, Violation> {
     p.skip_ws_text()?;
@@ -111,7 +147,8 @@ fn spec_children(p: &mut Parser) -> Result<XDoc, Violation> {
             "section" => {
                 have_content = true;
                 have_section = true;
-                doc.sections.push(section(p, &attrs, at, was_empty, 2)?);
+                doc.sections
+                    .push(section(p, "section", &attrs, at, was_empty, 2)?);
             }
             "p" | "list" | "table" | "fence" | "quote" => {
                 if have_section {
@@ -124,6 +161,15 @@ fn spec_children(p: &mut Parser) -> Result<XDoc, Violation> {
                 }
                 have_content = true;
                 blocks.push(block(p, &name, &attrs, at, was_empty)?);
+            }
+            other
+                if anchor_is_elementable(other)
+                    && attrs.iter().any(|(name, _)| name == "title") =>
+            {
+                have_content = true;
+                have_section = true;
+                doc.sections
+                    .push(section(p, other, &attrs, at, was_empty, 2)?);
             }
             other => {
                 return Err(Violation::at(
@@ -142,6 +188,7 @@ fn spec_children(p: &mut Parser) -> Result<XDoc, Violation> {
 
 fn section(
     p: &mut Parser,
+    element_name: &str,
     attrs: &[(String, String)],
     at: usize,
     was_empty: bool,
@@ -153,12 +200,17 @@ fn section(
             "section nesting deeper than five levels is not Markdown-expressible (ATX headings stop at H6)",
         ));
     }
-    only_attrs(attrs, &["id", "title"], "section", at)?;
-    let id = attr(attrs, "id").map(str::to_string);
+    let id = if element_name == "section" {
+        only_attrs(attrs, &["id", "title"], "section", at)?;
+        attr(attrs, "id").map(str::to_string)
+    } else {
+        only_attrs(attrs, &["title"], element_name, at)?;
+        Some(element_name.to_string())
+    };
     let Some(title) = attr(attrs, "title") else {
         return Err(Violation::at(
             at,
-            "the <section> element requires a `title` attribute",
+            format!("the <{element_name}> element requires a `title` attribute"),
         ));
     };
     let title = title.to_string();
@@ -197,7 +249,7 @@ fn section(
                     ),
                 ));
             }
-            Some(Ev::End(n)) if n == "section" => {
+            Some(Ev::End(n)) if n == element_name => {
                 s.end_line = p.poss[p.i] as u32;
                 p.i += 1;
                 break;
@@ -218,7 +270,7 @@ fn section(
             "section" => {
                 have_subsection = true;
                 s.sections
-                    .push(section(p, &attrs, at, was_empty, level + 1)?);
+                    .push(section(p, "section", &attrs, at, was_empty, level + 1)?);
             }
             "p" | "list" | "table" | "fence" | "quote" => {
                 if have_subsection {
@@ -230,6 +282,14 @@ fn section(
                     ));
                 }
                 blocks.push(block(p, &name, &attrs, at, was_empty)?);
+            }
+            other
+                if anchor_is_elementable(other)
+                    && attrs.iter().any(|(name, _)| name == "title") =>
+            {
+                have_subsection = true;
+                s.sections
+                    .push(section(p, other, &attrs, at, was_empty, level + 1)?);
             }
             other => {
                 return Err(Violation::at(

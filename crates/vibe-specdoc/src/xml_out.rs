@@ -18,6 +18,46 @@ use quick_xml::name::QName;
 /// spec file (PROP-045 ##DIALECT-SKETCH).
 pub(crate) const NS: &str = "https://vibevm.org/spec/1";
 
+/// Whether a section anchor can carry its identity as an XML element name.
+///
+/// The named-section form is reserved for ASCII XML names outside the
+/// dialect's structural vocabulary. XML reserves every case-insensitive
+/// `xml` prefix, so those anchors stay in the generic `<section id=...>`
+/// fallback too.
+pub(crate) fn anchor_is_elementable(anchor: &str) -> bool {
+    let mut chars = anchor.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !(first.is_ascii_alphabetic() || first == '_')
+        || !chars.all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+    {
+        return false;
+    }
+    if anchor
+        .get(..3)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("xml"))
+    {
+        return false;
+    }
+    !matches!(
+        anchor,
+        "spec"
+            | "title"
+            | "status"
+            | "section"
+            | "p"
+            | "fact"
+            | "list"
+            | "item"
+            | "table"
+            | "tr"
+            | "td"
+            | "fence"
+            | "quote"
+    )
+}
+
 type W = Writer<Vec<u8>>;
 /// Owned attribute pairs (`&str` keys, pre-`to_string` values) — one
 /// uniform shape every emitter below speaks.
@@ -53,11 +93,17 @@ pub fn to_xml(doc: &SpecDoc) -> String {
 
 fn section(w: &mut W, depth: usize, s: &Section) {
     let mut attrs: Attrs = Vec::new();
-    if let Some(id) = &s.id {
+    let tag =
+        s.id.as_deref()
+            .filter(|id| anchor_is_elementable(id))
+            .unwrap_or("section");
+    if tag == "section"
+        && let Some(id) = &s.id
+    {
         attrs.push(("id", id.clone()));
     }
     attrs.push(("title", s.title.clone()));
-    start(w, depth, "section", &attrs);
+    start(w, depth, tag, &attrs);
     if let Some(st) = &s.status {
         empty(w, depth + 1, "status", status_attrs(st).as_slice());
     }
@@ -67,7 +113,7 @@ fn section(w: &mut W, depth: usize, s: &Section) {
     for sub in &s.sections {
         section(w, depth + 1, sub);
     }
-    end(w, depth, "section");
+    end(w, depth, tag);
 }
 
 /// The `<status>` attribute set, one fixed order: stage, state, action,
@@ -304,5 +350,47 @@ mod tests {
         assert!(xml.contains("&lt;"), "{xml}");
         let back = crate::from_xml(&xml).unwrap();
         assert_eq!(back, d);
+    }
+
+    #[test]
+    fn named_sections_and_generic_fallbacks_are_pinned() {
+        let d = from_markdown(
+            "# T {#root}\n\n\
+             ## Named {#three-bands}\n\nbody\n\n\
+             ## Leading digit {#2-fast}\n\nbody\n\n\
+             ## Structural word {#table}\n\nbody\n",
+        )
+        .expect("parses");
+        let xml = to_xml(&d);
+        assert!(xml.contains("<three-bands title=\"Named\">"), "{xml}");
+        assert!(
+            xml.contains("<section id=\"2-fast\" title=\"Leading digit\">"),
+            "{xml}"
+        );
+        assert!(
+            xml.contains("<section id=\"table\" title=\"Structural word\">"),
+            "{xml}"
+        );
+        assert_eq!(crate::from_xml(&xml).expect("reads both forms"), d);
+        assert_eq!(to_xml(&crate::from_xml(&xml).unwrap()), xml);
+    }
+
+    #[test]
+    fn elementable_anchor_predicate_is_the_format_boundary() {
+        for anchor in ["three-bands", "_private", "a.b-c_1"] {
+            assert!(anchor_is_elementable(anchor), "{anchor}");
+        }
+        for anchor in [
+            "",
+            "2-fast",
+            "table",
+            "section",
+            "xml-section",
+            "XMLThing",
+            "has space",
+            "éclair",
+        ] {
+            assert!(!anchor_is_elementable(anchor), "{anchor}");
+        }
     }
 }

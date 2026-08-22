@@ -14,7 +14,7 @@ a **tested set** of them and carries the book itself.</fact></p>
   <p><fact id="REQUIRING-THE-UMBRELLA-INSTALLS-THE-WHOLE-COLLECTION" status="impl/done">Requiring `flow:redbook` installs the whole collection: the members
 arrive through the dependency closure, each contributing its own
 boot snippet and its own `spec/flows/&lt;name&gt;/` documents.</fact></p>
-  <section id="editions" title="The edition model">
+  <editions title="The edition model">
     <p><fact id="THE-UMBRELLAS-VERSION-IS-THE-EDITION-NUMBER" status="impl/done">The umbrella's version is the **edition number**.</fact></p>
     <p><fact id="AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS" status="impl/done">An edition is a
 tested set: every member is pinned exactly (`=X.Y.Z`), so no member's
@@ -33,8 +33,8 @@ edition is a new umbrella version with refreshed pins.</fact></p>
       <item><fact id="EDITION-1-0-0" status="impl/done">**Edition 1.0.0** (this edition) — remints the tested
   collection as the stable 1.0 world.</fact></item>
     </list>
-  </section>
-  <section id="members" title="Members (edition 1.0.0)">
+  </editions>
+  <members title="Members (edition 1.0.0)">
     <p><fact id="books-core-table-lead" status="impl/done">The book's core:</fact></p>
     <table>
       <tr>
@@ -133,8 +133,8 @@ edition is a new umbrella version with refreshed pins.</fact></p>
         <td><fact status="impl/done">Paid-for lessons for self-updating tools and package systems.</fact></td>
       </tr>
     </table>
-  </section>
-  <section id="book" title="The book">
+  </members>
+  <book title="The book">
     <p><fact id="the-collection-takes-its-spirit-from-the-book" status="spec/done">The collection takes the general spirit of the process from the
 book.</fact></p>
     <p><fact id="THE-FULL-TEXT-SHIPS-UNDER-SPEC-BOOK-RU" status="impl/done">The full text ships in this package under `spec/book/ru/` —
@@ -145,8 +145,8 @@ the Russian text is the reference.</fact></p>
     <p><fact id="book-readme-pointer" status="impl/done">See `spec/book/README.md`.</fact></p>
     <p><fact id="THE-BOOK-IS-REFERENCE-DEPTH" status="spec/done">The book is reference depth: the member flows carry the operational
 rules, the book carries the *why* behind all of them.</fact></p>
-  </section>
-  <section id="discipline" title="Relation to the AI-Native Discipline">
+  </book>
+  <discipline title="Relation to the AI-Native Discipline">
     <p><fact id="complementary-layers-lead" status="spec/done">The redbook and the AI-Native Code Discipline
 (`flow:org.vibevm.ai-native/core-ai-native` and its language families) are
 complementary layers:</fact></p>
@@ -164,18 +164,18 @@ package's position, and the Discipline has not recorded it: as of
 core-ai-native 0.8.0 its `05-CAMPAIGN-FORM.md` and
 `06-WAL-CONVENTION.md` carry no deferral, so the two remain parallel
 copies until one lands.</fact></p>
-  </section>
-  <section id="install" title="Install">
+  </discipline>
+  <install title="Install">
     <fence lang="bash">vibe install flow:redbook</fence>
-  </section>
-  <section id="uninstall" title="Uninstall">
+  </install>
+  <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:redbook</fence>
     <p><fact id="UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES" status="impl/done">Uninstalling the umbrella removes its own files; member packages are
 removed by uninstalling them individually.</fact></p>
-  </section>
-  <section id="license" title="License">
+  </uninstall>
+  <license title="License">
     <p><fact id="license-line" status="impl/done">UPL-1.0. See `LICENSE.md`.</fact></p>
     <p><fact id="THE-BOOK-TEXT-SHIPS-UNDER-THE-SAME-TERMS" status="impl/done">The book text under `spec/book/` is the
 author's manuscript and ships under the same terms.</fact></p>
-  </section>
+  </license>
 </spec>

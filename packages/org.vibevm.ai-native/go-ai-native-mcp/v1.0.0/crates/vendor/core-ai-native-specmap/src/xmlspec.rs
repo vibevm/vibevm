@@ -1,14 +1,15 @@
 //! XML side of the scanner: anchored spec units out of dialect-XML sources
 //! (PROP-045 §2 — the same unit grammar `mdspec` reads out of Markdown).
 //!
-//! A unit is the span from an anchored `<section id=…>` (or `<title id=…>`)
-//! through everything it governs — nesting IS the heading hierarchy, so a
-//! section's span holds its own blocks and every nested section, exactly as
-//! a Markdown span runs to the next same-or-higher heading. Fact units mint
-//! from `<fact id=…>` inside `<p>` and `<item>` — the first-token grain the
-//! Markdown scanner reads; a `<td>` or `<quote>` fact sits below that grain
-//! and mints nothing here, mirroring `mdspec` over the projection. Section
-//! ids and fact ids share ONE duplicate namespace per document.
+//! A unit is the span from an anchored generic `<section id=…>` or named
+//! `<anchor title=…>` section (or `<title id=…>`) through everything it
+//! governs — nesting IS the heading hierarchy, so a section's span holds its
+//! own blocks and every nested section, exactly as a Markdown span runs to
+//! the next same-or-higher heading. Fact units mint from `<fact id=…>` inside
+//! `<p>` and `<item>` — the first-token grain the Markdown scanner reads; a
+//! `<td>` or `<quote>` fact sits below that grain and mints nothing here,
+//! mirroring `mdspec` over the projection. Section ids and fact ids share ONE
+//! duplicate namespace per document.
 //!
 //! Positions are NATIVE: the 1-based line of the element in the XML source
 //! (PROP-045 §4 — the engine side lives without the projection caveat the

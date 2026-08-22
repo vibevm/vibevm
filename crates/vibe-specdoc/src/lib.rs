@@ -78,7 +78,7 @@ pub use xml_out::to_xml;
 /// Versioned deterministic-converter identity recorded in every transformed
 /// dependency slot. Bump only when identical source may intentionally emit
 /// different canonical bytes.
-pub const CONVERTER_RECIPE: &str = "specdoc/1";
+pub const CONVERTER_RECIPE: &str = "specdoc/2";
 
 use std::fmt;
 

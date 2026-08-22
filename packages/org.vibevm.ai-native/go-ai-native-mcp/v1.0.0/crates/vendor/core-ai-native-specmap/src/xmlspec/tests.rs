@@ -39,6 +39,28 @@ const XML_FORM: &str = concat!(
     "</spec>\n",
 );
 
+/// The same document with section identity carried by element names.
+const NAMED_XML_FORM: &str = concat!(
+    "<spec xmlns=\"https://vibevm.org/spec/1\">\n",
+    "  <title id=\"root\">Demo document</title>\n",
+    "  <status stage=\"spec\" state=\"work\"/>\n",
+    "  <p><fact id=\"LEAD\" status=\"spec/done\">The lead fact.</fact></p>\n",
+    "  <laws title=\"The laws\">\n",
+    "    <p>`req r2`</p>\n",
+    "    <p>Body prose.</p>\n",
+    "    <list ordered=\"false\">\n",
+    "      <item><fact id=\"ITEM-FACT\" status=\"impl/done\">an item fact</fact></item>\n",
+    "      <item>plain item</item>\n",
+    "    </list>\n",
+    "    <fence lang=\"text\">one\n",
+    "two</fence>\n",
+    "    <nested title=\"Nested\">\n",
+    "      <p><fact id=\"NESTED\" status=\"impl/work\">nested fact body</fact></p>\n",
+    "    </nested>\n",
+    "  </laws>\n",
+    "</spec>\n",
+);
+
 const MD_TWIN: &str = concat!(
     "# Demo document {#root}\n\n",
     "<status stage=\"spec\" state=\"work\"/>\n\n",
@@ -130,6 +152,37 @@ fn one_document_both_forms_gives_one_unit_set() {
     assert_eq!(xu[2].revision.as_deref(), Some(&2));
     assert!(xu[0].kind.is_none());
     assert!(xu[4].kind.is_none());
+}
+
+#[test]
+fn generic_and_named_xml_forms_give_one_unit_set() {
+    let (generic, generic_warnings) = parse_units("spec/test/DOC.xml", XML_FORM, NS);
+    let (named, named_warnings) = parse_units("spec/test/DOC.xml", NAMED_XML_FORM, NS);
+    assert!(
+        generic_warnings.is_empty(),
+        "generic: {}",
+        fmt_warnings(&generic_warnings)
+    );
+    assert!(
+        named_warnings.is_empty(),
+        "named: {}",
+        fmt_warnings(&named_warnings)
+    );
+    assert_eq!(generic.len(), named.len());
+    for (generic, named) in generic.iter().zip(named.iter()) {
+        assert_eq!(identity(generic), identity(named));
+        assert_eq!(generic.docPath, named.docPath);
+    }
+}
+
+#[test]
+fn named_section_positions_are_native_source_lines() {
+    let (units, warnings) = parse_units("spec/test/DOC.xml", NAMED_XML_FORM, NS);
+    assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
+    let line_of = |anchor: &str| units.iter().find(|u| u.anchor == anchor).map(|u| u.line);
+    assert_eq!(line_of("laws"), Some(5), "the <laws> line");
+    assert_eq!(line_of("nested"), Some(14), "the <nested> line");
+    assert_eq!(line_of("NESTED"), Some(15), "the nested fact line");
 }
 
 #[test]

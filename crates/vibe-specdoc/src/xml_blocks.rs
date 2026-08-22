@@ -378,7 +378,7 @@ impl<'a> Parser<'a> {
             None => None,
         };
         if let Some(id) = &id {
-            self.mint(id.clone(), at)?;
+            self.mint_fact(id.clone(), at)?;
         }
         let mut text = String::new();
         if !was_empty {

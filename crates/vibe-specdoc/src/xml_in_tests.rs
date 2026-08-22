@@ -32,6 +32,32 @@ fn foreign_attribute_is_a_loud_error() {
 }
 
 #[test]
+fn named_section_foreign_attribute_is_a_loud_error() {
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}>\n  <three-bands title=\"Three\" tone=\"nice\"/>\n</spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("<three-bands>"), "{}", err);
+    assert!(err.message.contains("`tone`"), "{}", err);
+    assert!(err.message.contains("vocabulary is closed"), "{}", err);
+}
+
+#[test]
+fn reserved_or_xml_prefixed_element_is_not_a_named_section() {
+    for name in ["xml-section", "XMLThing"] {
+        let err = from_xml(&format!(
+            "<spec {NS_ATTR}>\n  <{name} title=\"Not a section\"/>\n</spec>"
+        ))
+        .unwrap_err();
+        assert!(
+            err.message.contains("unknown") || err.message.contains("no <"),
+            "{err}"
+        );
+        assert!(err.message.contains(name), "{err}");
+    }
+}
+
+#[test]
 fn dtd_is_forbidden() {
     let err = from_xml(&format!(
         "<!DOCTYPE spec [\n<!ENTITY x \"y\">]>\n<spec {NS_ATTR}/>"
