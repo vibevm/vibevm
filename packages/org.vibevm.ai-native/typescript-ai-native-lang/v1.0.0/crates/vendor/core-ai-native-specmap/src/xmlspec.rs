@@ -30,6 +30,7 @@ use specmark_grammar::{is_valid_anchor, is_valid_fact_id};
 
 mod blocks;
 mod doc;
+mod facts;
 mod mdout;
 mod reader;
 
