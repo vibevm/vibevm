@@ -102,6 +102,48 @@ direction) → class + emitted target + loss diff — lives in
 unit tests; the CLI verb is a thin walker / prompter / writer over it,
 in the house thin-command genre. @status:spec/done
 
+@fact:FROM-AND-TO Both directions are first-class on every converting
+verb (owner, 2026-08-24, verbatim: «В настройках у обеих должно быть из
+какого формата в какой (я так понял что ты запланировал только MD->XML,
+а хочется чтобы была и XML->MD. Параметры --from и --to)»). The surface
+is `--from <markdown|xml>` + `--to <markdown|xml>` (`md` an alias of
+`markdown` on both): `--to` is required, `--from` defaults to the
+counterpart of `--to`, and `--from` equal to `--to` is a loud error —
+never a silent no-op. `--from` is a FILTER: only sources currently in
+that form are selected; everything else reports `already`/skips
+unchanged. @status:spec/done
+
+@fact:CONVERT-PACKAGE-SRC `vibe refactor convert-package-src [--from …]
+--to … <package-root>…` converts WHOLE PACKAGES, not individual files
+(owner, 2026-08-24, verbatim: «Она будет конвертировать целиком пакеты,
+в отличие от предыдущей команды, которая конвертирует конкретные
+классы»). Each argument is a package root — a directory carrying
+`vibe.toml` (anything else is a loud error; that validation is what
+distinguishes this verb from pointing `convert-source` at a bare
+directory) — and the conversion walks every spec source under that
+root with the same core, the same skips and the same honesty contract
+as `convert-source` (##HONESTY-BY-REVERSE applies file by file).
+@status:spec/done
+
+@fact:CONVERT-SPEC-SRC `vibe refactor convert-spec-src [--from …]
+--to … [<package-root>]` converts the `spec/` directory of the chosen
+package; with no argument it targets the CURRENT ROOT PROJECT's
+`spec/` tree (owner, 2026-08-24, verbatim: «она конвертирует
+директорию spec для выбранного пакета (если не сказано что -
+конвертирует текущий корневой проект)»), resolved the same way the
+other project-rooted verbs resolve it. @status:spec/done
+
+@fact:WRAPPERS-SHARE-THE-CORE The two package-shaped verbs are thin
+wrappers: they resolve WHICH directories to convert and then run the
+very same walker and classification core `convert-source` runs (owner,
+2026-08-24, verbatim: «Внутри они используют тот же код что
+convert-src, вызываемый для разных директорий по смыслу») — no second
+conversion path, no second honesty check to drift. Canonical names
+follow the owner's own spellings (`convert-package-src`,
+`convert-spec-src`), and `convert-src` rides as an alias of
+`convert-source`, so both spelling families the owner used in chat
+resolve. @status:spec/done
+
 ## 4. Applying it to our own tree {#application}
 
 @fact:APPLICATION-PLAN The mandate's third clause is a build of its own:
