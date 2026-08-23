@@ -43,6 +43,7 @@ pub mod prefs;
 pub mod progress;
 pub mod progress_evidence;
 pub mod query;
+pub mod refactor;
 pub mod registry;
 pub mod reinstall;
 pub mod search;

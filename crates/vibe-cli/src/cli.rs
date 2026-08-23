@@ -202,6 +202,9 @@ pub enum Command {
     /// what blocked them (PROP-050 ##VIBE-WHY).
     Why(crate::commands::why::WhyArgs),
 
+    /// Meaning-preserving rewrites of authored source trees.
+    Refactor(crate::commands::refactor::RefactorArgs),
+
     /// The sealed-circle report for one provider: open / sealed / the
     /// named circle, who actually befriends it, which grants its
     /// allow-friends rejects, and whether it is in the root's friend

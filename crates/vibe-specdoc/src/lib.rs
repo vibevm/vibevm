@@ -54,6 +54,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 pub mod doc;
 pub mod load;
 
+mod convert;
 mod md_in;
 mod md_out;
 mod xml_blocks;
@@ -63,10 +64,13 @@ mod xml_out;
 mod xml_support;
 
 #[cfg(test)]
+mod convert_tests;
+#[cfg(test)]
 mod md_in_tests;
 #[cfg(test)]
 mod xml_in_tests;
 
+pub use convert::{Conversion, Direction, convert};
 pub use load::{
     LoadError, PROJECTION_NOTICE, PairCollision, SourceKind, discover_pair_collision,
     is_spec_source, load_spec_text, pair_collisions_in,

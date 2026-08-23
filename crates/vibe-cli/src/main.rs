@@ -136,6 +136,7 @@ fn main() -> ExitCode {
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Facts(args) => commands::facts::run(&ctx, args),
         Command::Why(args) => commands::why::run(&ctx, args),
+        Command::Refactor(args) => commands::refactor::run(&ctx, args),
         Command::Friends(args) => commands::friends::run(&ctx, args),
         Command::Explain(args) => commands::explain::run(&ctx, args),
         Command::Query(args) => commands::query::run(&ctx, args),
