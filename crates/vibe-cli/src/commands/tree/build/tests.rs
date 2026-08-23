@@ -169,3 +169,107 @@ fn in_place_directives_collect_from_an_xml_boot_source() {
     assert_eq!(specs[0].carrier, Carrier::Use);
     assert_eq!(specs[0].address.to_string(), "spec://org.example/lib/boot");
 }
+
+/// PROP-050 ##VIBE-WHY: the suffix is quiet exactly for the arrivals a
+/// reader could already tell from the tree — a root edge (rule (1)) and a
+/// lock with no visibility fields at all. A chain admission names its
+/// rule; an override names the node that rewrote the decisive edge.
+#[test]
+fn provenance_suffix_is_quiet_for_plain_arrivals() {
+    assert_eq!(provenance_suffix(None, None), "");
+    assert_eq!(provenance_suffix(Some("root-edge"), None), "");
+}
+
+#[test]
+fn provenance_suffix_names_chain_rule_and_override_coordinate() {
+    assert_eq!(
+        provenance_suffix(Some("friends-chain"), None),
+        " [friends-chain]"
+    );
+    assert_eq!(
+        provenance_suffix(Some("public-chain"), None),
+        " [public-chain]"
+    );
+    assert_eq!(
+        provenance_suffix(Some("root-edge"), Some("org.x/root")),
+        " [via-override: org.x/root]"
+    );
+    assert_eq!(
+        provenance_suffix(Some("friends-chain"), Some("org.x/root")),
+        " [friends-chain] [via-override: org.x/root]"
+    );
+}
+
+/// The text renderer carries the suffix on the member row (PROP-050
+/// ##VIBE-WHY): a friends-chain member renders annotated, a root-edge
+/// neighbour renders exactly as before — the annotation is text-render
+/// only and never widens the frozen v1 JSON contract.
+#[test]
+fn plain_render_carries_the_provenance_suffix() {
+    let mut chained = fixture_package("org.x/wal");
+    chained.provenance_suffix = " [friends-chain]".to_string();
+    let plain_root_edge = fixture_package("org.x/api");
+
+    let tree = PackageTree {
+        schema_version: SCHEMA_VERSION,
+        generated_at: None,
+        tool_version: None,
+        project: Project {
+            root: "/tmp/x".to_string(),
+            name: Some("x".to_string()),
+            is_workspace: false,
+            self_coord: "org.vibevm.core/vibevm".to_string(),
+        },
+        roots: vec!["org.x/api".to_string()],
+        packages: vec![chained, plain_root_edge],
+        boot: Boot {
+            static_md: None,
+            index_md: IndexLane {
+                present: false,
+                path: "spec/boot/INDEX.md".to_string(),
+                static_pointer: None,
+                entries: Vec::new(),
+            },
+        },
+        in_place_specs: Vec::new(),
+        diagnostics: Vec::new(),
+    };
+    let out = crate::commands::tree::plain::render(&tree);
+    assert!(
+        out.lines()
+            .any(|line| line.contains("org.x/wal [friends-chain]")),
+        "the chain-admitted member carries its suffix:\n{out}"
+    );
+    assert!(
+        out.lines()
+            .any(|line| line.starts_with("org.x/api") && !line.contains('[')),
+        "the root-edge member stays unannotated:\n{out}"
+    );
+}
+
+/// A minimal `Package` for the render test — load type `None`, no deps,
+/// and a `provenance_suffix` the caller fills in.
+fn fixture_package(id: &str) -> Package {
+    let (group, name) = id.split_once('/').expect("group/name id");
+    Package {
+        id: id.to_string(),
+        group: group.to_string(),
+        name: name.to_string(),
+        kind: "flow".to_string(),
+        version: "0.1.0".to_string(),
+        content_hash: None,
+        source: None,
+        load: Load {
+            load_type: LoadType::None,
+            transitive: false,
+            declared: None,
+            origin: LoadOrigin::None,
+            in_static_md: false,
+            in_index_md: false,
+            boot_path: None,
+        },
+        condition: Condition::absent(),
+        dependencies: Vec::new(),
+        provenance_suffix: String::new(),
+    }
+}

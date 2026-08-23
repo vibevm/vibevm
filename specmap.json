@@ -2153,6 +2153,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/closure_diff.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::install::closure_diff",
+      "end_line": 12,
+      "fingerprint": "tok1:7b7948e2a15c20bbb0a680226982ddc084672442e37650afcb856292378646e7"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
       "line": 57,
@@ -11562,6 +11571,14 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/closure_diff.rs",
+      "from_symbol": "vibe_cli::commands::install::closure_diff",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification",
       "verb": "implements"
     },
     {

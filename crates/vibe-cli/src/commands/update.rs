@@ -33,7 +33,9 @@ use vibe_workspace::install::{
 use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, UpdateArgs};
-use crate::commands::install::{build_install_resolver, exact_pinned_pkgref};
+use crate::commands::install::{
+    build_install_resolver, emit_closure_diff, exact_pinned_pkgref, lane_sizes,
+};
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
@@ -85,6 +87,12 @@ pub fn run(
         .context("discovering the workspace enclosing the project")?;
     let manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
+    // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
+    // snapshot: the lock as loaded (before the entry replacements below
+    // mutate it in place) and the boot lanes' byte sizes. Diffed against
+    // the post-write state once the apply is durable.
+    let old_lock = lockfile.clone();
+    let lanes_before = lane_sizes(&workspace.root);
     let user_config = UserConfig::load().context("loading the user config")?;
     let spec_format = crate::commands::install::resolve_spec_format(&manifest, &user_config);
 
@@ -369,6 +377,20 @@ pub fn run(
     }
     lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
     lockfile.write(workspace.lockfile_path())?;
+
+    // PROP-050 ##VERIFY-LOCK-DIFF — the closure diff after the apply is
+    // durable (lock written, boot regenerated): entering/leaving members,
+    // version moves, and the lane byte delta against the pre-apply
+    // snapshot. Ahead of the post-install hooks and the report, mirroring
+    // the `vibe install` emit order.
+    emit_closure_diff(
+        ctx,
+        "update",
+        &old_lock,
+        &lockfile,
+        &lanes_before,
+        &lane_sizes(&workspace.root),
+    );
 
     // PROP-020 §2.1 — post-install hooks run once the updated packages are
     // durable (lockfile written, boot regenerated).

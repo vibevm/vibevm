@@ -260,6 +260,7 @@ mod tests {
             },
             condition: Condition::absent(),
             dependencies: deps.iter().map(|s| s.to_string()).collect(),
+            provenance_suffix: String::new(),
         }
     }
 

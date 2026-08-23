@@ -275,6 +275,7 @@ mod tests {
             },
             condition: Condition::absent(),
             dependencies: Vec::new(),
+            provenance_suffix: String::new(),
         }
     }
 
@@ -299,6 +300,7 @@ mod tests {
             },
             condition: Condition::absent(),
             dependencies: Vec::new(),
+            provenance_suffix: String::new(),
         }
     }
 

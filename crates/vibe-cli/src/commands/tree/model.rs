@@ -63,6 +63,14 @@ pub struct Package {
     pub load: Load,
     pub condition: Condition,
     pub dependencies: Vec<String>,
+    /// Text-render-only visibility provenance (PROP-050 ##VIBE-WHY): the
+    /// ` [friends-chain]` / ` [via-override: …]` suffix the plain renderer
+    /// appends to a member admitted through the friend closure or an
+    /// override — empty for a plain root-edge arrival. Never serialised:
+    /// the v1 `--json` contract is frozen and the annotation is
+    /// text-render only.
+    #[serde(skip)]
+    pub provenance_suffix: String,
 }
 
 /// `source` — where the bytes came from on this install (informational).

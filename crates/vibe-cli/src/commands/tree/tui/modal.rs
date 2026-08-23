@@ -224,6 +224,7 @@ mod tests {
                 value: Some("windows".to_string()),
             },
             dependencies: vec!["org.demo/dep-a".to_string(), "org.demo/dep-b".to_string()],
+            provenance_suffix: String::new(),
         }
     }
 

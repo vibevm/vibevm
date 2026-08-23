@@ -290,7 +290,25 @@ fn build_package(
         },
         condition,
         dependencies: p.dependencies.iter().map(|d| d.qualified_name()).collect(),
+        provenance_suffix: provenance_suffix(p.admitted_by.as_deref(), p.via_override.as_deref()),
     }
+}
+
+/// The text-render provenance suffix for one member (PROP-050 ##VIBE-WHY):
+/// ` [friends-chain]` when the lock records a non-trivial admitting rule,
+/// ` [via-override: <coordinate>]` when a path-scoped override admitted
+/// the decisive edge, both when both hold. A root-edge arrival (and a
+/// lock with no visibility fields at all) stays silent — the suffix names
+/// only what a reader could not otherwise tell from the tree.
+fn provenance_suffix(admitted_by: Option<&str>, via_override: Option<&str>) -> String {
+    let mut suffix = String::new();
+    if let Some(rule) = admitted_by.filter(|rule| *rule != "root-edge") {
+        suffix.push_str(&format!(" [{rule}]"));
+    }
+    if let Some(coordinate) = via_override {
+        suffix.push_str(&format!(" [via-override: {coordinate}]"));
+    }
+    suffix
 }
 
 /// Decide `(transitive, origin)` from the effective type and the declared /

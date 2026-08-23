@@ -104,7 +104,10 @@ fn walk(
     let repeated = expanded.contains(id);
     let marker = if repeated { " (*)" } else { "" };
     rows.push(Row {
-        name: format!("{prefix}{connector}{id}{marker}"),
+        // A non-trivial admission (friend closure, override — PROP-050
+        // ##VIBE-WHY) rides as a suffix; a plain root-edge arrival adds
+        // nothing, so the ordinary tree stays as quiet as before.
+        name: format!("{prefix}{connector}{id}{marker}{}", pkg.provenance_suffix),
         load: load_label(pkg.load.load_type),
         transitive: pkg.load.transitive,
         condition: pkg.condition.present,
@@ -234,6 +237,7 @@ mod tests {
             },
             condition: Condition::absent(),
             dependencies: deps.iter().map(|s| s.to_string()).collect(),
+            provenance_suffix: String::new(),
         }
     }
 

@@ -11,10 +11,12 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+mod closure_diff;
 mod project_local;
 mod report;
 mod resolver;
 
+pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use project_local::project_packages_root;
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
 pub(crate) use vibe_install::exact_pinned_pkgref;
@@ -143,6 +145,10 @@ pub fn run(
             crate::commands::init::current_timestamp_utc(),
         )
     };
+    // PROP-050 ##VERIFY-LOCK-DIFF — the lane-size half of the pre-apply
+    // snapshot, taken beside the lock snapshot so one read point feeds
+    // the whole diff. Sampled again after a successful apply below.
+    let lanes_before = lane_sizes(&workspace.root);
     let resolver = build_install_resolver(
         &args,
         &manifest,
@@ -243,6 +249,23 @@ pub fn run(
                 spec_format,
                 &hook_policy,
             )?;
+            // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
+            // the closure diff (the pre-apply lock snapshot vs the freshly
+            // written one, lane bytes before/after): a mid-graph re-export
+            // widening is a reviewed event, not a silent seep. Emitted ahead
+            // of the final report so the `--json` stream keeps the report as
+            // its last document. A read failure of the just-written lock
+            // skips the diff rather than failing the completed install.
+            if let Ok(new_lock) = Lockfile::read(&lockfile_path) {
+                emit_closure_diff(
+                    ctx,
+                    "install",
+                    &lockfile_snapshot,
+                    &new_lock,
+                    &lanes_before,
+                    &lane_sizes(&workspace.root),
+                );
+            }
             report::emit_report(ctx, &applied)
         }
     }

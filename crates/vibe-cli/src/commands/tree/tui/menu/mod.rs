@@ -363,6 +363,7 @@ pub(super) mod test_support {
             },
             condition: Condition::absent(),
             dependencies: Vec::new(),
+            provenance_suffix: String::new(),
         };
         PackageTree {
             schema_version: SCHEMA_VERSION,
