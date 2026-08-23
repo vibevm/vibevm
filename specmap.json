@@ -32217,7 +32217,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:feecb9e4d82e988337c4a571ee38329d535381c8ad0d22588bf79b1921042579",
+      "content_hash": "sha256:9dbeec14dfabc3e67b0dced9fda16281e9c554d6ff41a08313794f39f6c03b0e",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "PROP-050: Dependency visibility — access, friendship, and the friend closure",
@@ -32226,10 +32226,10 @@
     },
     {
       "anchor": "status-line",
-      "content_hash": "sha256:ffff34cc61a3d7b9ab60883c6ce8966f5ab5da11010c664d687e27b0a24ddb50",
+      "content_hash": "sha256:10e8c568ec3491bfee52757249352922453a945d868ef38645c56b2ae7a8546f",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Status: DESIGN — owner-ratified through three passes, 2026-08-23** (ordering word: «Я предлагаю переработать систему транзитивности… Не переходи к реализации, вначале нужно хорошо запроектировать»). Ruled: F1–F4, F6 as drafted; F5 overruled to no-legacy/irreversible (§6); defaults recast — `access` defaults **public**, `friend` defaults **false** (##DEFAULT-PUBLIC-RATIONALE, F3); F7 softened to warnings (##CONCEPTS-GATE-SOFTENED); F8 designed (§2.8); F9 official-and-quiet. Still open: F8 design review, F9 root-only placement, F10 implication, ##CONCEPT-GATE-DIRECTION. Nothing is implemented yet. @status:spec/work",
+      "heading": "**Status: DESIGN FULLY RATIFIED — 2026-08-23, four owner passes; ready to build.** Ruled: F1–F4, F6 as drafted; F5 overruled to no-legacy/irreversible (§6); defaults recast — `access` defaults **public**, `friend` defaults **false** (##DEFAULT-PUBLIC-RATIONALE, F3); F7 softened to warnings (##CONCEPTS-GATE-SOFTENED); F8 ratified as designed (§2.8); F9 official, quiet, **any-node** (§2.9); F10 implication ratified. The only unruled sketch is ##CONCEPT-GATE-DIRECTION (non-blocking). The build plan is [`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`](../terraforms/VISIBILITY-BUILD-PLAN-v0.1.md); implementation starts on the owner's word. @status:spec/done",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#status-line"
     },
@@ -32280,7 +32280,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:8c56b16f8a2315807153c65f9a105500bdfcb927d7932f9b3f92a8158a7ff23b",
+      "content_hash": "sha256:bd05bbfef672906d3a1f2f56f08687c4ae74174d0468762716491b96e3690c25",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2. The model",
@@ -32370,7 +32370,7 @@
     },
     {
       "anchor": "friendship",
-      "content_hash": "sha256:e80386f6ffe3d12c4d23b8c9888ea485bf29140ee7f9d31cd4e517fd20398257",
+      "content_hash": "sha256:4e8e587628fa6ae211e6a5ab4fbaa21d63b6f58540d7a22ce9d889031cd5f604",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.3 Friendship — consumer-declared, two grant forms",
@@ -32397,10 +32397,10 @@
     },
     {
       "anchor": "FRIENDS-ONLY-IMPLIES-FRIEND",
-      "content_hash": "sha256:75421f63e7427bd59928813f5dfad26ba28942960e22b853916e52490c09ef9f",
+      "content_hash": "sha256:ba12947fbe33038d56c0d36d8bcfc7b186074260ad9e57915dabee465d018f5c",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Proposed implication (fork F10): a `friends-only` mark implies `friend = true` on its own edge.** Vouching for a package as part of your substance while standing in no relation to it is incoherent — and under the strict `friend = false` default, a `friends-only` chain would otherwise need *two* marks per hop (`access = \"friends-only\"` ∧ `friend = true`), where forgetting the second silently kills the chain. With the implication, the owner's `A → B → C → D` chain works from one mark per hop, exactly as originally intended; an explicit `friend = false` beside a `friends-only` mark overrides the implication and yields the lawful **no-vouch** cell of ##ACCESS-FRIEND-MATRIX (terminal delivery to the circle) — no lint, it is a real intent. Awaiting the owner's word. @status:spec/work",
+      "heading": "**The implication — owner-ratified (F10, 2026-08-23): a `friends-only` mark implies `friend = true` on its own edge.** Vouching for a package as part of your substance while standing in no relation to it is incoherent — and under the strict `friend = false` default, a `friends-only` chain would otherwise need *two* marks per hop, where forgetting the second silently kills the chain. With the implication, the owner's `A → B → C → D` chain works from one mark per hop, exactly as originally intended; an explicit `friend = false` beside a `friends-only` mark overrides the implication and yields the lawful **no-vouch** cell of ##ACCESS-FRIEND-MATRIX (terminal delivery to the circle) — no lint, it is a real intent. @status:spec/done",
       "line": 51,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FRIENDS-ONLY-IMPLIES-FRIEND"
     },
@@ -32460,7 +32460,7 @@
     },
     {
       "anchor": "closure",
-      "content_hash": "sha256:b1c67b6f95466380ed1299a8d48e0792fb32b254e66158fe0f9f5260a8dae54a",
+      "content_hash": "sha256:4833674ab69df27df4f5467de447de23854811243f86ce04fdea7e74711c5122",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.4 The friend closure — transitivity through friends-only edges",
@@ -32469,10 +32469,10 @@
     },
     {
       "anchor": "GRANTS-DEFINITION",
-      "content_hash": "sha256:e9c83ac2eaa516f6da14d3c09fa3fef524419e4c833c180b9d1d8addd03afb91",
+      "content_hash": "sha256:4095d01886f6b3abc8bc428223ffc7095ec171951ec43a1eb9335fb87a0867db",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "For a node `N`, define `grants(N)` = the targets of `N`'s edges carrying `friend = true` (explicit under the `false` default — or implied by a `friends-only` mark if F10 is ratified), plus `N`'s `friends` list, minus `N`'s `unfriend` list (§2.6). These are the packages `N` *directly* befriends. @status:spec/done",
+      "heading": "For a node `N`, define `grants(N)` = the targets of `N`'s edges carrying `friend = true` (explicit under the `false` default, or implied by a `friends-only` mark per F10 — an explicit `friend = false` beside the mark wins), plus `N`'s `friends` list, minus `N`'s `unfriend` list (§2.6). These are the packages `N` *directly* befriends. @status:spec/done",
       "line": 75,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#GRANTS-DEFINITION"
     },
@@ -32577,7 +32577,7 @@
     },
     {
       "anchor": "allow-friends",
-      "content_hash": "sha256:1c0313007a323d27edbaa136daead7d126e91fb663c22fd8049a1b5094f0a633",
+      "content_hash": "sha256:dc66b471f88cfecb1bed4602896f84af496ba5aada1324b833f5c1075da4ce38",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.8 `allow-friends` — the provider's sealed circle",
@@ -32586,74 +32586,110 @@
     },
     {
       "anchor": "ALLOW-FRIENDS-DESIGN",
-      "content_hash": "sha256:f41bc140d738ed5558f50c95f8195ca4832968a34f8c1834af768bf675885bab",
+      "content_hash": "sha256:8a519122b33b54fc77aa10473c008f7cbd90b903ebc39379b8631ec098fc4d32",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Owner-ordered design (F8, 2026-08-23: «спроектируй механизм allow-friends… похоже на возможность построить exhaustive замыкание sealed classes»).** A provider `G` may declare, node-level, who is permitted to *enter friendship with it* — the Java-`sealed`/`permits` shape transplanted onto the friendship relation: @status:spec/work",
+      "heading": "**Owner-ordered design (F8, 2026-08-23: «спроектируй механизм allow-friends… похоже на возможность построить exhaustive замыкание sealed classes»).** A provider `G` may declare, node-level, who is permitted to *enter friendship with it* — the Java-`sealed`/`permits` shape transplanted onto the friendship relation (design ratified — «годится»): @status:spec/done",
       "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-DESIGN"
     },
     {
       "anchor": "ALLOW-FRIENDS-STATES",
-      "content_hash": "sha256:ff1458950004e79228729c86b066d8c3750f612417012c60bc524819199978b7",
+      "content_hash": "sha256:d29732ec8d54ef860703c5f8bdcf7e5179814dcd954371ccbdc999592ed4568c",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Three states: field **absent** — friendship is open, anyone's grant works (the default, today's semantics); **empty list** — sealed: nobody enters, the gated substance exists only in `G`'s own dev world; **a list** — exactly the named circle. @status:spec/work",
+      "heading": "Three states: field **absent** — friendship is open, anyone's grant works (the default, today's semantics); **empty list** — sealed: nobody enters, the gated substance exists only in `G`'s own dev world; **a list** — exactly the named circle. @status:spec/done",
       "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-STATES"
     },
     {
       "anchor": "ALLOW-FRIENDS-CHECKPOINT",
-      "content_hash": "sha256:bb6dc40f88c4b70ff9fde09ec9051c19d2f8caed827b19971c9c7f92e125378b",
+      "content_hash": "sha256:9d216bea0deb9331bab52c4f2cd9c2c82d0f13b300ef542d054ffe38115a6c77",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The check sits on the **grant giver**: a grant `N → G` (an explicit `friend = true` edge, a `friends` entry, or an F10-implied one) participates in any closure only if `allow-friends(G)` is absent or covers `N`. A friends-only re-export hop `F → G` in `C(R)` likewise requires `F` permitted by `G`. A rejected grant is a **warning, never an error** (the §5 unknown-target precedent) — the closure simply does not grow there. @status:spec/work",
+      "heading": "The check sits on the **grant giver**: a grant `N → G` (an explicit `friend = true` edge, a `friends` entry, or an F10-implied one) participates in any closure only if `allow-friends(G)` is absent or covers `N`. A friends-only re-export hop `F → G` in `C(R)` likewise requires `F` permitted by `G`. A rejected grant is a **warning, never an error** (the §5 unknown-target precedent) — the closure simply does not grow there. @status:spec/done",
       "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-CHECKPOINT"
     },
     {
       "anchor": "ALLOW-FRIENDS-EXHAUSTIVE",
-      "content_hash": "sha256:e4f73ede77832a2562a5d43647d9af53dccdfcfa9d131a83c3a21043b3d7898a",
+      "content_hash": "sha256:de8b9fc36bd6fce637a609d27739cda32048739e72b2395e51ad8feb53fa0374",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The sealed payoff is **enumerability**: `G`'s inner world becomes computable from `G`'s manifest plus its permitted members' — `vibe friends org.x/g` lists who *may* befriend `G`, who actually does, and through which chains. The exhaustive closure the owner names. @status:spec/work",
+      "heading": "The sealed payoff is **enumerability**: `G`'s inner world becomes computable from `G`'s manifest plus its permitted members' — `vibe friends org.x/g` lists who *may* befriend `G`, who actually does, and through which chains. The exhaustive closure the owner names. @status:spec/done",
       "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-EXHAUSTIVE"
     },
     {
       "anchor": "ALLOW-FRIENDS-TRANSIT",
-      "content_hash": "sha256:e7adf822756a93d0966732594f82cbdf04b6d1651cc6089361f673c0ea1152fd",
+      "content_hash": "sha256:92491d3cf2a88f2469e51ff4028d7d5aa1cfb57234375b5fe65431740ffc7652",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Trusted friends are **non-sealed points by design**: `G` curates its immediate circle; a permitted friend `F` that friends-only-marks its own `F → G` edge extends `G`'s substance to `F`'s friends — vouching onward is exactly what admission to the circle licenses (as a `permits`-listed subtype may itself be `non-sealed`). A provider wanting no transit keeps its circle to leaves it trusts not to re-export. @status:spec/work",
+      "heading": "Trusted friends are **non-sealed points by design**: `G` curates its immediate circle; a permitted friend `F` that friends-only-marks its own `F → G` edge extends `G`'s substance to `F`'s friends — vouching onward is exactly what admission to the circle licenses (as a `permits`-listed subtype may itself be `non-sealed`). A provider wanting no transit keeps its circle to leaves it trusts not to re-export. @status:spec/done",
       "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-TRANSIT"
     },
     {
       "anchor": "ALLOW-FRIENDS-OVERRIDABLE",
-      "content_hash": "sha256:ed6a6f655797a86264bc62917ac91fb6aaf23b69f512b72e3ddbd91664148a54",
+      "content_hash": "sha256:bffb0550201b8540c4819191ff95718cab81015c42e154e906dc7b819d8cc5d7",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**`override` breaks the seal — owner-ruled:** «механизм override должен всё равно иметь возможность взломать эти рёбра». A node-targeted override entry — `\"org.x/g\" = { allow-friends = \"*\" }` (or a replacement list) — rewrites the permits list in the root's perspective, quietly, like every override (F9). @status:spec/work",
+      "heading": "**`override` breaks the seal — owner-ruled:** «механизм override должен всё равно иметь возможность взломать эти рёбра». A node-targeted override entry — `\"org.x/g\" = { allow-friends = \"*\" }` (or a replacement list) — rewrites the permits list in the root's perspective, quietly, like every override (F9, §2.9). @status:spec/done",
       "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ALLOW-FRIENDS-OVERRIDABLE"
     },
     {
-      "anchor": "example",
-      "content_hash": "sha256:898fe069367dda179fca148541b69e8b79ddfdbfb750cee846502632e6b67ce9",
+      "anchor": "override",
+      "content_hash": "sha256:214a2d3fe363ff65948d4f6c4b1a1f161dd0993ad27503b4694bdcfbc979c338",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "2.9 Worked example — the owner's chain",
+      "heading": "2.9 `override` — the sanctioned break-in, anywhere in the graph",
       "line": 127,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#override"
+    },
+    {
+      "anchor": "OVERRIDE-ANYWHERE",
+      "content_hash": "sha256:d83baf406139426b36c3ebe82202ca04cc29235811adc2373a6014b0ca1ed4f6",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "**Owner-ruled (2026-08-23): `override` is lawful in any manifest, not only the root** («разрешён не только в корневом манифесте, а где угодно»). Any node `N` may carry an `[override]` table whose entries rewrite *foreign* edges — their `access`, `friend`, presence (`exclude = true`), or a target's `allow-friends` — and the rewrite acts wherever `N` stands on the chain: an aggregator repairs or reshapes a member's edge for **all of its own consumers**, exactly as it curates its delivery with `exclude`. The threat model follows the owner's earlier ruling: a deliberate break-in is not an attack (the developer can edit any file on disk anyway); this is the official verb that replaces reflection-style hacks — and it stays **quiet** (pull-based provenance only). @status:spec/done",
+      "line": 129,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE"
+    },
+    {
+      "anchor": "OVERRIDE-PATH-SEMANTICS",
+      "content_hash": "sha256:c42c22ad0400a9c44cdc94fe82926bb3ac8768323c7430bdc7d8ee9a8a6f19ae",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "**Path-stack semantics.** An override applies to chains that pass through its declarant: walking a chain `R → … → N → … → P → Q`, the effective attributes of the edge `P → Q` are its declared attributes masked by the `[override]` tables of the chain's nodes in order, **nearer-to-root applied later and winning** — the root can re-override any intermediary, the payer always has the final word; between intermediaries, the outer (closer to `R`) wins on the chains it participates in. Effective attributes are therefore per-chain; `E(R)` and the `grow` rule quantify **existentially over chains** (a package is present / a hop extends the closure if *some* chain admits it), which is the diamond behaviour `exclude` already has. Determinism is preserved — masks are static declarations, the graph is acyclic, and the implementation dedups identical mask-states while walking the DAG (override tables are rare, so the practical state count stays small). @status:spec/done",
+      "line": 131,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-PATH-SEMANTICS"
+    },
+    {
+      "anchor": "OVERRIDE-IS-CONTRACT-MIDGRAPH",
+      "content_hash": "sha256:207add8a8866928f6ba7b1ab993c49a28397a336db055ace81fba93c73e41f1d",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "**A mid-graph override is contract; the root's is private.** An `[override]` in a package's manifest changes what that package delivers — it is part of the package's versioned surface, subject to ##ACCESS-IS-SEMVER-SURFACE like any access change (expansive entries additionally ride at the breaker's own risk: the broken-into provider promised nothing). The consumer root's `[override]` binds nobody downstream and is versioned by nothing but its own repository. Observability is pull-based only, per the quiet ruling: lock provenance marks and `vibe why … — via override of <node>` answer whoever asks; nothing shouts at install time. @status:spec/done",
+      "line": 133,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-IS-CONTRACT-MIDGRAPH"
+    },
+    {
+      "anchor": "example",
+      "content_hash": "sha256:927706f7f2822cae6000ac313b7449539b3a8e2213eab274b01d7791bd5d75a0",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "2.10 Worked example — the owner's chain",
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#example"
     },
     {
       "anchor": "worked-example",
-      "content_hash": "sha256:14b8827d076444a49aa9527fc02ab44ed3aae3c183f628338d3274ba7481a024",
+      "content_hash": "sha256:333593759b7929a9f4285cb1f3b5a0959ca4dde04a1165eecbb67dc4fc3baf23",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The ordering message's chain `A → B → C → D` (D a practice), with each intermediate marking its dependency edge `friends-only` (each mark implying its own grant under F10; under plain `friend = false` defaults, each hop also writes `friend = true` explicitly): `grants(A) ⊇ {B}` (A's explicit grant on its own edge), so `B ∈ C(A)`; `B`'s edge `B → C` is friends-only and `C ∈ grants(B)`, so `C ∈ C(A)`; `C → D` likewise, so `D ∈ C(A)` — «загрузившись в D мы получим, что по цепочке транзитивности, D является другом для A». Traversal: `A → B` by rule (1); `B → C` by rule (3) with `B ∈ C(A)`; `C → D` by rule (3) with `C ∈ C(A)` — so `D ∈ E(A)` and D materialises for A. If `B` had declared `unfriend = [\"…/C\"]`, the chain would break at `B` for every root above `B` — while a sibling path `A → B′ → C` (B′ friends-only-marking C) would deliver C and D intact. @status:spec/done",
-      "line": 129,
+      "heading": "The ordering message's chain `A → B → C → D` (D a practice), with each intermediate marking its dependency edge `friends-only` (each mark implying its own grant per F10): `grants(A) ⊇ {B}` (A's explicit grant on its own edge), so `B ∈ C(A)`; `B`'s edge `B → C` is friends-only and `C ∈ grants(B)`, so `C ∈ C(A)`; `C → D` likewise, so `D ∈ C(A)` — «загрузившись в D мы получим, что по цепочке транзитивности, D является другом для A». Traversal: `A → B` by rule (1); `B → C` by rule (3) with `B ∈ C(A)`; `C → D` by rule (3) with `C ∈ C(A)` — so `D ∈ E(A)` and D materialises for A. If `B` had declared `unfriend = [\"…/C\"]`, the chain would break at `B` for every root above `B` — while a sibling path `A → B′ → C` (B′ friends-only-marking C) would deliver C and D intact. @status:spec/done",
+      "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#worked-example"
     },
     {
@@ -32662,7 +32698,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "3. Layering — visibility above materialisation",
-      "line": 133,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#layering"
     },
     {
@@ -32671,7 +32707,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner ruling, adopted as the layer boundary:** «признак типа static-transitive должен применяться уже ПОСЛЕ вычисления замыкания друзей, потому что замыкание друзей — это свойство логики связей в приложении, а транзитивная статичность — это свойство материализации, более логически низкая структура». The pipeline becomes: @status:spec/work",
-      "line": 135,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VISIBILITY-ABOVE-MATERIALISATION"
     },
     {
@@ -32680,7 +32716,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The `link` axis (`static` / `dynamic` / `static-transitive` / `static-hard`) survives intact as **materialisation strength within the visible graph**: «возможность спускать вниз по иерархии признак статичности всё так же очень нужна… как отдельная ось, ортогональная нашему замыканию друзей». @status:spec/work",
-      "line": 146,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#LINK-AXIS-ORTHOGONAL"
     },
     {
@@ -32689,7 +32725,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Forcing never widens visibility.** A `static-transitive` edge propagates staticness across *traversable* edges only: it can make a visible package static, never make an invisible package visible. The hybrid linker's forced-descent (`resolve_zone`, PROP-038 §2.2) simply walks `E(R)`'s subgraph instead of the raw requires graph; hoisting counts (PROP-038 §5.2) count within `E(R)`. @status:spec/work",
-      "line": 147,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORCING-NEVER-WIDENS"
     },
     {
@@ -32698,7 +32734,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "This ordering is THE-LAYER-LAW (PROP-048) applied to the pipeline itself: the logical stratum (who exists) is more stable and more upstream than the materialisation stratum (how it loads); a change in link mode never invalidates the visibility computation above it. @status:spec/work",
-      "line": 148,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#layer-law-fit"
     },
     {
@@ -32707,7 +32743,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4. System interactions",
-      "line": 152,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#interactions"
     },
     {
@@ -32716,7 +32752,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.1 Resolver and lock",
-      "line": 154,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#resolver"
     },
     {
@@ -32725,7 +32761,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Version resolution operates on `E(R)` only: private edges of non-root packages contribute no constraints, fetch nothing, and cannot conflict. `vibe.lock` records `E(R)` — the lock of a consumer no longer contains other packages' dev-world entries. Version unification (one node per `(group, name)`, PROP-003/017) is unchanged *within* the effective set. A welcome simplification vs code ecosystems: the Cargo-RFC-1977 problem («may private deps duplicate at different versions?») does not arise — an invisible package has no copies at all. @status:spec/work",
-      "line": 156,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"
     },
     {
@@ -32734,7 +32770,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**The interleaving, named honestly.** Computing `E(R)` needs edges; edges live in manifests of *resolved* versions; constraints come only from `E(R)` — so the walk is joint: the resolver expands the graph following only traversable edges, with `C(R)` recomputed monotonically as newly-resolved manifests contribute grants and marks (all predicates are static edge attributes of already-chosen nodes, so the joint fixpoint stays deterministic). Reading a manifest to learn that its edge is private is a **metadata read, not materialisation** — package *content* is fetched for `E(R)` members only. The Cargo lesson (RFC 1977 lost six years to resolver entanglement; RFC 3516 lives by decoupling) is honoured structurally: visibility stays a pure edge predicate the walk *consults* — never a quantity the version solver optimises over. @status:spec/work",
-      "line": 158,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING"
     },
     {
@@ -32743,7 +32779,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.2 Materialisation and `vibedeps/`",
-      "line": 160,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#materialisation"
     },
     {
@@ -32752,7 +32788,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "`vibedeps/` holds exactly `E(R)`: an excluded or invisible package leaves no slot, no cache entry for the root's world, no lane text. This is the structural fix for the WAL specimen: a wal flow declared `private` (or `friends-only`) by whatever requires it simply never arrives in a consumer's tree — no snippet, no `spec/WAL.md` scaffold, no INDEX row. @status:spec/work",
-      "line": 162,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#MATERIALISE-EFFECTIVE-ONLY"
     },
     {
@@ -32761,7 +32797,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.3 PROP-049 under visibility — what the genre machinery still does",
-      "line": 164,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prop-049-fate"
     },
     {
@@ -32770,7 +32806,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The ordering message asks whether «наша система с контролем flows» is still needed. No standalone \"flows control\" system exists in the spec tree (verified 2026-08-23: PROP-009's `flow` is an ordering *category*; PROP-028's flows are package *kinds*); the referent is read as the PROP-049 genre machinery — `installed:` predicates, snippet fragments, `concepts`, and the presupposition gate — built precisely against the WAL seepage this PROP now fixes structurally. Fork **F7** confirms the referent. @status:spec/work",
-      "line": 166,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#flows-control-identification"
     },
     {
@@ -32779,7 +32815,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Recommendation: keep PROP-049, re-scoped — the two systems solve different halves.** Visibility controls *structural arrival* (whether a package exists in `E(R)`); the genre machinery controls *textual behaviour* (what a snippet may presuppose, and how text adapts to a neighbour's presence). With visibility live: (a) `installed:` predicates and fragments remain THE adaptivity mechanism — an `installed:` predicate now queries `E(R)`, and a fragment binding to an absent friend stays physically omitted exactly as today; (b) the presupposition gate remains the authoring lint that catches a snippet textually assuming what its package did not lawfully receive; (c) what *dissolves* is the unbundling pressure — a future redbook-like collection may keep a wal-like member on a `friends-only`/`private` edge instead of expelling it. @status:spec/work",
-      "line": 168,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PROP-049-DIVISION-OF-LABOUR"
     },
     {
@@ -32788,7 +32824,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Direction (F7 follow-up): concept-gated fragments.** Today the `concepts` array feeds exactly one consumer — the presupposition gate's dictionary (`crates/vibe-check/src/checks/snippet_presupposition.rs`): lexeme → owning package, matched against unconditional snippet text. A natural completion is `when = \"concept:WAL\"` — a fragment gated on «some package in `E(R)` declares this concept», resolving a discipline as an **interface** rather than a named implementation (`installed:` stays the exact-package form). Several packages could then carry one discipline interchangeably. Deferred to the owner's F7 ruling. @status:spec/work",
-      "line": 170,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CONCEPT-GATE-DIRECTION"
     },
     {
@@ -32797,7 +32833,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**One PROP-049 rule must tighten.** The presupposition lint currently exempts mentions of the package's own declared dependencies. Under visibility that exemption is too wide: a mention of an own **private** dependency in *unconditional* snippet text presupposes a package that never reaches any consumer — lawful only inside an `installed:`-gated fragment (which, for a private dependency, fires only in the declarant's own dev world, §4.4 — exactly right). The exemption narrows to *edges that seep* (public, or friends-only). This is a concrete PROP-049 amendment shipped with the implementation wave, in the warning genre of ##CONCEPTS-GATE-SOFTENED. @status:spec/done",
-      "line": 172,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#DEPS-EXEMPTION-NARROWS"
     },
     {
@@ -32806,7 +32842,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner-ruled (F7, 2026-08-23): the gate speaks in warnings, with lawful homonymy, owner-dedup, and a subtree mute.** The owner's fear is exact — «термин WAL вообще супер ходовой, его многие используют в разных смыслах» — so: (a) a foreign-concept mention is a **warning** («пакет X использует концепт из пакета Y»), never an error; (b) **homonymy is lawful** — a package that declares the lexeme in its own `concepts` owns the word in its own world and triggers nothing; (c) **dedup across owners** — when several packages declare one lexeme, a legitimate relation to *any one* of them (own declaration, or a seeping edge to one owner) silences the warning — «достаточно лишь одного» — and an unexplained use warns once, naming all owners, not once per owner; (d) node-level **`ignore-concept-warnings = [\"WAL\", …]`** mutes the named concepts for the entire subtree hanging off that manifest. The machinery stays under this softening — «фича полезная, но очень нишевая». @status:spec/done",
-      "line": 174,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CONCEPTS-GATE-SOFTENED"
     },
     {
@@ -32815,7 +32851,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.4 Equipotence and the dev world",
-      "line": 176,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#dev-world"
     },
     {
@@ -32824,7 +32860,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Rule (1) of §2.5 — the root's own edges always traverse — combined with explicit `private` marks resolves the open tail of the equipotence wave (PROP-024): a package's `[requires]` is simultaneously its dev-set and its contract, **split per-edge by `access`** rather than by section. When the package is the consumer root (a dev checkout — `[project]` or `[package]`, equipotently), *all* its edges traverse and its private tooling materialises; when it is consumed as a dependency, only its seeping edges do. No separate dev-dependencies section needed. @status:spec/work",
-      "line": 178,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PRIVATE-IS-THE-DEV-WORLD"
     },
     {
@@ -32833,7 +32869,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.5 vibefacts",
-      "line": 180,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#vibefacts"
     },
     {
@@ -32842,7 +32878,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The adoption-facts registry (PROP-046) keys per-source files by installed packages; its universe follows `E(R)` mechanically. Registry entries for packages that leave the effective set surface through the existing `facts_sync` / lifecycle machinery (PROP-046 L5) — no new mechanism, one new reason entries become stale. @status:spec/work",
-      "line": 182,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#facts-scope-follows-visibility"
     },
     {
@@ -32851,7 +32887,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.6 Collections and families",
-      "line": 184,
+      "line": 192,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#collections"
     },
     {
@@ -32860,7 +32896,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "A PROP-028 collection's whole point is aggregation: its member edges are the type case for `access = \"public\"` (redbook's ~21 exact-pinned members must seep to redbook's consumers — that is what depending on the collection *means*). A family's internal shared core is the type case for `friends-only` (members befriend each other through the family's marks; outsiders opt in or see nothing). Migration inventory in §6. @status:spec/work",
-      "line": 186,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#COLLECTIONS-DECLARE-PUBLIC"
     },
     {
@@ -32869,7 +32905,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "5. Prior art — what the neighbours teach",
-      "line": 190,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art"
     },
     {
@@ -32878,7 +32914,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Three research sweeps (2026-08-23; JVM lineage — JPMS / sealed / Kotlin / Swift; module-graph lineage — OSGi / Eclipse PDE / Bazel / Buck / Pants; dependency-manager lineage — Gradle / Maven / Cargo / npm / C++ `friend` and C++20 modules) ground this section; the full worker reports are archived in [`spec/research/dependency-visibility-2026-08/`](../research/dependency-visibility-2026-08/01-jvm-lineage.md). The map, on the two axes that matter — who declares, and what a denial costs: @status:spec/work",
-      "line": 192,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art-method"
     },
     {
@@ -32887,7 +32923,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Adopted into the model on prior-art strength:** (1) the **conjunction rule** — an edge materialises iff provider access permits ∧ consumer grant permits (Pants' \"both ends must agree\", Swift `@_spi`'s handshake) — §2.5 rule (3) is exactly this; (2) the **closure shape** — first hop a direct grant, then zero-or-more re-export marks — is Bazel's `deps`-then-`exports*` and JPMS implied readability, both battle-tested recursive; (3) **friend groups need no new primitive** — befriending a collection whose member edges are `friends-only` already delivers the members through the ordinary closure, giving Bazel-`package_group`-style composition for free and dodging Swift's rejected \"large, complex manifests mingling all the layers\"; (4) **unknown allowlist targets warn, never fail** (JPMS qualified-export precedent) — a `friends`/`unfriend` entry naming a package absent from every chain is a lint, §7; (5) **denial is legibility, not failure** — every surveyed system hard-fails because a missing symbol breaks a build; a missing prompt lane merely changes what loads, so our enforcement output is the pruning report (`vibe why`, §7), and only graph cycles remain hard errors. @status:spec/work",
-      "line": 212,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PRIOR-ART-ADOPTIONS"
     },
     {
@@ -32896,7 +32932,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**An access mark is versioned surface.** OSGi's verdict on `reexport` — «once you have added re-export you cannot remove it without considering the corresponding API change» — and Cargo's `public = true` semver reasoning transfer whole: widening an edge (`private → friends-only → public`) is a feature; **narrowing one is a breaking change** of the declaring package, versioned like any contract change. The publish gate (C6 family) checks access narrowing against the previous published version. @status:spec/work",
-      "line": 214,
+      "line": 222,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-IS-SEMVER-SURFACE"
     },
     {
@@ -32905,7 +32941,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**What C++'s non-transitivity protected, restored by other means.** C++ keeps `friend` non-transitive so the set that can touch you stays enumerable *by reading one file*; our marks keep the closure enumerable but **not local** — a mid-graph package can widen `C(R)` in a patch release the root never reads. Three controls restore the audit: (a) the lock records `E(R)` with per-package lane cost, so `vibe update` surfaces closure drift as a reviewable diff («+2 packages, +3.1k static-lane tokens»); (b) ##ACCESS-IS-SEMVER-SURFACE makes silent widening a versioning violation; (c) an optional per-lane token budget cap (a PROP-048 direction) turns runaway growth into a loud stop. @status:spec/work",
-      "line": 216,
+      "line": 224,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CLOSURE-DRIFT-CONTROL"
     },
     {
@@ -32914,7 +32950,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Authoring norm for narrowing marks** (the JPMS community rule, transposed and then inverted by the public default): since presence flows by default, the author's duty is to **narrow deliberately** — mark `private` every edge that is not part of your consumable substance (WAL-class disciplines, dev tooling, heavy optional companions), and `friends-only` what only your inner circle should build on. Aggregator-style «one edge pulls the world» is lawful for collections, whose members are their declared substance (§4.6); everyone else answers for every public edge with its lane cost (§7 measurements make the bill legible). Advisory, policed by the §7 lints, enforced by nobody — strict-deps culture with the autofix command in place of ceremony. @status:spec/done",
-      "line": 218,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#REEXPORT-USAGE-NORM"
     },
     {
@@ -32923,16 +32959,16 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Deliberately not taken:** OSGi `uses:`-style implicit constraint propagation (prompt text has no class space — a budget concern must never become a global satisfiability problem); Kotlin's compilation-unit boundary (visibility binds to declared edges and coordinates, never to «whatever landed in one lane»); graph-global unification of any visibility knob (Cargo's feature-unification scar — closures are per-root by construction, §2.1, and never merge); provider-side allowlists (F8); npm-`exports`-style named sub-package surfaces — a real direction (a grant admitting one declared fragment rather than a package's whole contribution) that composes naturally with PROP-049 fragments, deferred until the package-level system has run in anger. @status:spec/work",
-      "line": 220,
+      "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art-rejections"
     },
     {
       "anchor": "migration",
-      "content_hash": "sha256:ae0201d4dc5e58f2ac96df079cf6e9d34c11a9d284e0b06de7c294e9ead7bf95",
+      "content_hash": "sha256:32593b16349367102592eadebffea19f7c6aa53cb255871e38bb6fa20a158ddc",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "6. Migration",
-      "line": 224,
+      "line": 232,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration"
     },
     {
@@ -32941,7 +32977,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner ruling (2026-08-23) — no legacy read, no backward compatibility:** «нужно переделать существующие пакеты, никакого legacy-чтения и обратной совместимости; система, которую мы сейчас сделаем, становится основной и не откатываемой никуда; пакеты предыдущих форматов не имеют смысла (поэтому их нужно улучшить)». The strict reading — with the ruled defaults, `access = \"public\"` / `friend = false` (##DEFAULT-PUBLIC-RATIONALE, F3) — is the **only** reading; the implementation wave marks the tree's manifests in the same wave the machinery lands. This overrules the draft's legacy-read/ratchet proposal. @status:spec/done",
-      "line": 226,
+      "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#MIGRATION-NO-LEGACY"
     },
     {
@@ -32950,7 +32986,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Why the §5 flag-day graveyard does not forbid this: those lessons price a default flip across an **open** ecosystem of foreign artefacts (JPMS: the world's jars; Swift: every existing package). This tree is a closed world — every manifest that exists lives in this repository, C6 publication is frozen, and there are no external consumers yet — so the «flag day» is an ordinary all-packages refactoring wave over owned files. The public presence default (##DEFAULT-PUBLIC-RATIONALE) softens it further: an unmarked manifest behaves exactly as today, so a partially-marked tree merely *keeps seeping where not yet narrowed* — degraded budget, never a broken world. The atomic wave + §7 golden snapshot remain the standard for landing cleanly, as review hygiene rather than a survival condition. @status:spec/done",
-      "line": 228,
+      "line": 236,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-flag-day-scope"
     },
     {
@@ -32959,16 +32995,16 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Re-marking inventory (in-wave per ##MIGRATION-NO-LEGACY; under the public default the work is **deliberate narrowing**, not blanket re-annotation): redbook's 21 member edges, stack aggregators' cores, `delegation-first → delegation-rules`, `wal-specspaces → wal`, host root edges — all correct under the default, **no marks needed**; dev-/tooling edges across the tree → explicit `private`; `git-practices` family internals → first candidate for `friends-only` dogfooding; and the door PROP-049's unbundling closed re-opens as an *option* — a redbook-like collection may again carry a wal-like member on an explicit `private`/`friends-only` edge, a separate decision for its author. The 8 world packages' `[boot_snippet] link = \"static\"` self-suggestions are materialisation-axis and untouched. @status:spec/work",
-      "line": 230,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-inventory"
     },
     {
       "anchor": "migration-shape",
-      "content_hash": "sha256:540053da443a13ff7b733e6676fad3408af324573d2031b300298e62c4b612b3",
+      "content_hash": "sha256:2dc3c52fb0fe8d5ed325172050e4bbad154a48ac9b7f052f2605bc3fb2f741f4",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Implementation shape (post-approval, separate wave, ask-first per Rule 4 only where its list applies): (1) `vibe-core` manifest schema — the new edge/node fields, strict semantics only; (2) `C(R)`/`E(R)` computation as a new pure module consumed by resolver + bootgen; (3) linker re-scoped to `E(R)`; (4) PROP-049 exemption narrowing; (5) package-tree/`vibe why` observability (§7); (6) re-marking of **every** package manifest in the tree (the inventory above); (7) the golden landing snapshot + measurement pass (§7). Steps 1–5 are machinery, step 6 is the flip, and the wave lands **atomically** — no commit leaves the tree half-marked (##migration-flag-day-scope). @status:spec/done",
-      "line": 232,
+      "heading": "Implementation shape (post-approval, separate wave, ask-first per Rule 4 only where its list applies): (1) `vibe-core` manifest schema — the new edge/node fields, strict semantics only; (2) `C(R)`/`E(R)` computation as a new pure module consumed by resolver + bootgen; (3) linker re-scoped to `E(R)`; (4) PROP-049 exemption narrowing; (5) package-tree/`vibe why` observability (§7); (6) re-marking of **every** package manifest in the tree (the inventory above); (7) the golden landing snapshot + measurement pass (§7). Steps 1–5 are machinery, step 6 is the flip, and the wave lands **atomically** — no commit leaves the tree half-marked (##migration-flag-day-scope). The wave-by-wave build plan elaborating this shape is [`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`](../terraforms/VISIBILITY-BUILD-PLAN-v0.1.md). @status:spec/done",
+      "line": 240,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-shape"
     },
     {
@@ -32977,7 +33013,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "7. Verification and measurement — «РЕАЛЬНО ХОРОШО»",
-      "line": 236,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification"
     },
     {
@@ -32986,7 +33022,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The owner's bar is explicit: «перестроить статические и динамические лоадеры и проверить, что всё работает РЕАЛЬНО ХОРОШО. Измерить, проверить, посмотреть на тестовых примерах». The implementation wave carries, as first-class deliverables: @status:spec/work",
-      "line": 238,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification-plan"
     },
     {
@@ -32995,7 +33031,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Golden chains.** Fixture worlds for every §2 rule — the owner's `A → B → C → D` chain verbatim (test №1), the unfriend break, the diamond-with-exclude, public-presence-without-friendship, the dev-world flip (same package as root vs as dependency) — each asserting the exact `E(R)`, lock content, and lane bytes. @status:spec/work",
-      "line": 240,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-GOLDEN-CHAIN"
     },
     {
@@ -33004,7 +33040,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Determinism and the landing snapshot.** Re-runs over identical inputs are byte-identical (the PROP-038 §5 stability bar, extended to visibility inputs). Since there is no legacy mode (##MIGRATION-NO-LEGACY), the correctness artefact is the **golden snapshot of the re-marked world**: the wave captures the intended `E(R)` and lane composition per root, the one-time diff against the pre-visibility lanes is read by hand at landing (expected: WAL-class removals, zero accidental losses), and a panel cell pins the snapshot thereafter. @status:spec/done",
-      "line": 241,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-BYTE-STABILITY"
     },
     {
@@ -33013,7 +33049,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Measurement.** Before/after per-root metrics, recorded in the wave's harvest: effective-set package count, lane byte sizes, fetch/materialise counts and install wall-time. The tokenomics claim (§1) must show up as numbers, not prose. @status:spec/work",
-      "line": 242,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-MEASURE"
     },
     {
@@ -33022,7 +33058,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Observability: `vibe why <group>/<name>`.** For any package, print the chains that admit it into `E(R)` — each hop annotated with its rule ((1)/(2)/(3)), access mark, and friendship provenance — and for an absent package, the nearest blocked chains and *what* blocked them (private edge / missing friendship / unfriend / exclude). The debugging surface without which a visibility system rots into folklore; `vibe tree` gains the same annotations. @status:spec/work",
-      "line": 243,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY"
     },
     {
@@ -33031,7 +33067,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Closure-drift visibility.** The lock carries `E(R)` with each member's lane cost (bytes/tokens of its contribution); `vibe update` prints the closure diff — packages entering/leaving and the lane-cost delta — so a mid-graph re-export widening (##CLOSURE-DRIFT-CONTROL) is a reviewed event, not a silent seep. @status:spec/work",
-      "line": 244,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LOCK-DIFF"
     },
     {
@@ -33040,7 +33076,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Hygiene lints.** Dead `friends`/`unfriend`/`exclude` entries naming packages that never appear in any chain (warning, per the JPMS qualified-export precedent); friends-only edges whose declarant nobody befriends (unreachable sharing); a `friend = false` edge to a package with no friends-only edges (a no-op mark); grants whose admitted chains contribute no lane text this root ever loads — each reported with the lane cost the grant admits, so an unused or cost-heavy friendship is visible (the consumer-side mirror of Eclipse's rotting x-friends lists). Advisory, in `vibe check`. @status:spec/work",
-      "line": 245,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LINTS"
     },
     {
@@ -33049,7 +33085,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "8. Rollback",
-      "line": 249,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#rollback"
     },
     {
@@ -33058,16 +33094,16 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**By owner ruling — none.** Until implementation this document changes nothing. Once the wave lands, visibility is the primary and irreversible model — «становится основной и не откатываемой никуда» — and pre-visibility manifest reading retires with it; there is no legacy mode to fall back to, and the old formats are not preserved («пакеты предыдущих форматов не имеют смысла»). `formats/EPOCHS.toml` is untouched; the safety that replaces rollback is the atomic wave + golden snapshot of §6/§7. @status:spec/done",
-      "line": 251,
+      "line": 259,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#rollback-shape"
     },
     {
       "anchor": "forks",
-      "content_hash": "sha256:bfb3b3d0210501759bc74f8ddb8b8a8fc4a86512fbe0c47c3d77dedbe9cadbf3",
+      "content_hash": "sha256:90257cda73d1ba031e714c8060ec012cccccdaf9b3e70c9982283df208c0cee2",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "9. Open forks for the owner",
-      "line": 255,
+      "line": 263,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#forks"
     },
     {
@@ -33076,7 +33112,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The reconstruction forks, with the owner's 2026-08-23 rulings recorded; F7–F9 remain live: @status:spec/work",
-      "line": 257,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#fork-list"
     },
     {
@@ -33085,7 +33121,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F1 — «internal» ≡ `access = \"friends-only\"`. RATIFIED** («правильный термин — friends-only»): one mark is both the seepage gate and the friendship re-export (§2.4); no separate `internal` field exists. @status:spec/done",
-      "line": 259,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F1-INTERNAL"
     },
     {
@@ -33094,7 +33130,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F2 — the anti-list is `unfriend`. RATIFIED**; `enemy` is retired. @status:spec/done",
-      "line": 260,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F2-NAMING"
     },
     {
@@ -33103,7 +33139,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F3 — `friend` default. RE-RULED 2026-08-23 to `false`.** The original `true` belonged to the one-field paradigm; with access and friendship separated, friendship is a raised privilege granted only explicitly («Не давать повышенных привилегий там, где они могут и не пригодиться»). Paired with the same ruling's **access default flip to `public`** (##DEFAULT-PUBLIC-RATIONALE): presence generous, friendship stingy. See F10 for the one ergonomic consequence. @status:spec/done",
-      "line": 261,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F3-DEFAULT-FRIEND"
     },
     {
@@ -33112,7 +33148,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F4 — `exclude` is per-edge, Maven-style, arbitrarily deep within the edge's subtree. RATIFIED** («можно per-ребро делать глубокие эксклюды по иерархии — это не глобальный deny-list, это сужение в рамках поддерева»). No global deny-list. F9 may re-house the syntax inside `override`; the semantics stand. @status:spec/done",
-      "line": 262,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F4-EXCLUDE-SCOPE"
     },
     {
@@ -33121,7 +33157,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F5 — migration. OVERRULED by the owner:** no legacy read, no backward compatibility, the system is primary and irreversible; every existing package is re-marked in the landing wave (##MIGRATION-NO-LEGACY, ##migration-flag-day-scope). The draft's autodetect+ratchet proposal is retired. @status:spec/done",
-      "line": 263,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F5-MIGRATION"
     },
     {
@@ -33130,7 +33166,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F6 — public gives presence, not friendship. RATIFIED** («access и friend разные понятия, public даёт присутствие но не дружбу»); the composition of the two marks on one edge is pinned as ##PUBLIC-PLUS-FRIEND. @status:spec/done",
-      "line": 264,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F6-PUBLIC-NO-FRIENDSHIP"
     },
     {
@@ -33139,44 +33175,53 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F7 — PROP-049's fate. RULED 2026-08-23: keep, softened.** The gate becomes a warning system with lawful homonymy, owner-dedup and the `ignore-concept-warnings` subtree mute — ##CONCEPTS-GATE-SOFTENED carries the four rulings; ##DEPS-EXEMPTION-NARROWS joins the same genre. ##CONCEPT-GATE-DIRECTION (`when = \"concept:X\"`) stays a sketch, unruled. @status:spec/done",
-      "line": 265,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F7-PROP-049"
     },
     {
       "anchor": "FORK-F8-PROVIDER-ALLOWLIST",
-      "content_hash": "sha256:f1b8509ba78ec66174e23b5aca991d328b4ee3ce4785ea9dd4e3031f79cf94d9",
+      "content_hash": "sha256:b8e091a7f45d6ff855e9ff50868c4fd1069582539a4199b00f49f02b70935073",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**F8 — provider-side allowlists. RULED 2026-08-23: design it** («спроектируй механизм allow-friends… похоже на exhaustive замыкание sealed classes. Но механизм override должен всё равно иметь возможность взломать эти рёбра!»). Designed as §2.8 (##ALLOW-FRIENDS-DESIGN): node-level permits list; absent = open, `[]` = sealed, list = the circle; checked on the grant giver; rejected grant = warning; enumerable via `vibe friends`; trusted friends are non-sealed transit points; `override` breaks the seal by node-targeted entry. §2.8 awaits the owner's review. @status:spec/work",
-      "line": 266,
+      "heading": "**F8 — provider-side allowlists. RULED and design RATIFIED 2026-08-23** («спроектируй механизм allow-friends…» → design delivered as §2.8 → «годится»): node-level permits list; absent = open, `[]` = sealed, list = the circle; checked on the grant giver; rejected grant = warning; enumerable via `vibe friends`; trusted friends are non-sealed transit points; `override` breaks the seal by node-targeted entry. @status:spec/done",
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F8-PROVIDER-ALLOWLIST"
     },
     {
       "anchor": "FORK-F9-OVERRIDE",
-      "content_hash": "sha256:e2c5152846b19fd8facb7e8052e32849f50f78fc68f8a0a5d3869aac1d01068c",
+      "content_hash": "sha256:fcf770a91256ab5fc0bf240eedd470ccac5a2512961e1fd87ac47bf00b96ab18",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**F9 — `override`: the official, QUIET break-in. RULED 2026-08-23 in substance.** The owner's reasoning, adopted verbatim into the design: deliberate developer break-in is not a threat model — «он всё равно может пойти и руками поправить любые свойства пакетов на диске», as Java's reflection era proved; and languages with no sanctioned privacy story (Python) breed confusion about what the intended surface *is*. So vibevm ships an **official break-in verb instead of hacks** — and ships it **quiet**: no install-time notices («это будет постоянный мусор… иллюзия безопасности, а не безопасность»). Observability stays *pull-based only*: the lock's provenance mark and `vibe why … — via root override` answer whoever asks, and nothing shouts at whoever doesn't. `exclude` stays a separate directive (ruled: «список exclude убирать не надо»). The subtraction-vs-expansion analysis stands: overrides are a static mask over edge attributes applied before both fixpoints (deterministic, order-independent, acyclic-preserving; dead entries warn); expansive overrides breach ##ACCESS-IS-SEMVER-SURFACE at the breaker's own risk. **Root-only placement stands as the recommendation** (JPMS `--add-exports` / Gradle `resolutionStrategy` precedent: break-ins live with the party that runs and pays, never mid-graph) — unruled, widen only by the owner's word. Sketch: `[override]` `\"org.x/col -> org.x/m\" = { access = \"public\" }` · `{ friend = false }` · `{ exclude = true }` · node-targeted `\"org.x/g\" = { allow-friends = \"*\" }`. @status:spec/work",
-      "line": 267,
+      "heading": "**F9 — `override`: the official, QUIET break-in, lawful ANYWHERE. RULED 2026-08-23 (two passes).** First pass: deliberate developer break-in is not a threat model — «он всё равно может пойти и руками поправить любые свойства пакетов на диске», as Java's reflection era proved; languages with no sanctioned privacy story (Python) breed confusion about the intended surface; so vibevm ships an **official break-in verb instead of hacks**, and ships it **quiet** — no install-time notices («постоянный мусор… иллюзия безопасности»), pull-based provenance only. `exclude` stays a separate directive («список exclude убирать не надо»). Second pass: the draft's root-only recommendation is **overruled** — «разрешён не только в корневом манифесте, а где угодно»; the any-node semantics (path-stack masks, nearer-to-root wins, existential-over-chains, mid-graph override as versioned contract) is the body's §2.9. The subtraction-vs-expansion analysis stands: expansive entries breach ##ACCESS-IS-SEMVER-SURFACE at the breaker's own risk. @status:spec/done",
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F9-OVERRIDE"
     },
     {
       "anchor": "FORK-F10-IMPLICATION",
-      "content_hash": "sha256:bee4d6b5b73f8b1ab2fb7ecb8a10cdd024139215f44d3638fc8a4a1825294463",
+      "content_hash": "sha256:145106bbba8cd404e013c9e8dbbe70e5dba86b1ef5a7a47bed65a0772b648289",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**F10 — `friends-only` implies `friend = true` on its own edge. PROPOSED** (##FRIENDS-ONLY-IMPLIES-FRIEND): under the new `false` default a friends-only chain otherwise needs two marks per hop, and forgetting the grant half silently kills the chain. Explicit `friend = false` beside the mark wins, producing the lawful no-vouch cell of ##ACCESS-FRIEND-MATRIX (deliver to the circle, chain stops) — the matrix pass corrected an earlier draft note that mislabelled this a dead mark. Awaiting the owner's word. @status:spec/work",
-      "line": 268,
+      "heading": "**F10 — `friends-only` implies `friend = true` on its own edge. RATIFIED 2026-08-23** (##FRIENDS-ONLY-IMPLIES-FRIEND): one mark per hop makes the chain; explicit `friend = false` beside the mark wins, producing the lawful no-vouch cell of ##ACCESS-FRIEND-MATRIX. @status:spec/done",
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F10-IMPLICATION"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:80c08bf21787eeb8910c864777aa599a7c211bba9edc4f82a0f5e0968a89d835",
+      "content_hash": "sha256:1934ae4a31f01dfccea7ed7e5dda3567eb9ca43c013a1b8a5391f187655a8885",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "10. Version history",
-      "line": 272,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#history"
+    },
+    {
+      "anchor": "HISTORY-FINAL-RATIFICATION",
+      "content_hash": "sha256:ef4ef26075b5001828c579cded101009d933e9967308021ea64bbe51bbbab190",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "**2026-08-23 (fourth pass) — design closed, build planned.** F10 ratified (the implication); §2.8 `allow-friends` ratified as designed; F9 re-ruled to **any-node** override — root-only overruled, the path-stack semantics (nearer-to-root wins, existential over chains, mid-graph override is versioned contract) lands as §2.9; the worked example moves to §2.10. The access×friend matrix (##ACCESS-FRIEND-MATRIX) and the transit/use-case facts (##TRANSIT-WITHOUT-DECLARATION, ##FRIENDS-ONLY-USE-CASES) had landed between passes. Build plan authored: `spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`; implementation awaits the owner's start word. @status:spec/done",
+      "line": 282,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-FINAL-RATIFICATION"
     },
     {
       "anchor": "HISTORY-DEFAULTS-RECAST",
@@ -33184,7 +33229,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 (third pass) — defaults recast, remaining forks ruled.** Owner re-rulings: `access` defaults **public** (##DEFAULT-PUBLIC-RATIONALE — loaders must not silently lose what was always available; the observability asymmetry seals it), `friend` defaults **false** (F3 re-ruled — friendship is a raised privilege; presence generous, friendship stingy). F7 ruled: the concepts gate softens to warnings with lawful homonymy, owner-dedup and `ignore-concept-warnings` (##CONCEPTS-GATE-SOFTENED). F8 ruled: `allow-friends` designed (§2.8) — sealed-`permits` shape, override-breakable. F9 ruled in substance: the override is official and **quiet** (no install notices; pull-based provenance only); `exclude` stays separate; root-only stands as recommendation. F10 filed (friends-only implies its own grant). Migration softened accordingly: an unmarked tree seeps as today instead of breaking (##migration-flag-day-scope); the wave's work is deliberate narrowing. @status:spec/done",
-      "line": 274,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-DEFAULTS-RECAST"
     },
     {
@@ -33193,7 +33238,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 (later the same day) — core ratified by the owner.** F1 (friends-only ≡ the re-export mark), F2 (`unfriend`), F3 (`friend = true` default on own edges), F4 (per-edge deep-subtree `exclude`) and F6 (access ⊥ friendship; ##PUBLIC-PLUS-FRIEND added) ruled as drafted. F5 **overruled**: no legacy read, no backward compatibility, irreversible — ##MIGRATION-NO-LEGACY replaces the autodetect+ratchet proposal; §7/§8 re-anchored to the atomic wave + golden snapshot. F7 (concepts mechanics + ##CONCEPT-GATE-DIRECTION) and F8 (allow-list mechanics) explained, rulings pending; F9 (`override`, the root-side sanctioned break-in) filed with the subtraction-vs-expansion analysis. @status:spec/done",
-      "line": 275,
+      "line": 284,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-RATIFIED-CORE"
     },
     {
@@ -33202,7 +33247,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 — drafted (owner-ordered).** The visibility model: per-edge `access` (public / private-default / friends-only), consumer-declared friendship (per-edge flag + node list), the friend closure as a least fixpoint over friends-only re-exports, `unfriend` (node-scoped) and `exclude` (edge-scoped) growth controls, root-driven materialisation. Layering: visibility above materialisation (owner ruling); the `link` axis survives re-scoped to the effective set. Interactions: resolver/lock/vibedeps on `E(R)` only; PROP-049 kept re-scoped with the deps-exemption narrowed; the dev-world reading resolves the equipotence wave's open tail. Migration by per-manifest legacy read; verification plan with golden chains, byte-stability, measurement, and `vibe why`. Prior-art synthesis and §9 forks await the owner. @status:spec/work",
-      "line": 276,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-DRAFTED"
     },
     {
