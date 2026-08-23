@@ -378,12 +378,24 @@ fn empty_fact_with_an_id_is_a_valid_unit() {
 }
 
 #[test]
-fn table_cell_pipe_and_newline_are_rejected() {
-    let err = from_xml(&format!(
-        "<spec {NS_ATTR}>\n  <table><tr><td>a | b</td></tr></table>\n</spec>"
-    ))
-    .unwrap_err();
-    assert!(err.message.contains("cannot hold `|`"), "{}", err);
+fn table_cell_code_span_pipes_are_accepted() {
+    for text in ["`a | b`", "`a \\| b`"] {
+        let document = ok(&format!(
+            "<spec {NS_ATTR}>\n  <table><tr><td>{text}</td></tr></table>\n</spec>"
+        ));
+        assert!(to_xml(&document).contains(&format!("<td>{text}</td>")));
+    }
+}
+
+#[test]
+fn table_cell_bare_pipe_and_newline_are_rejected() {
+    for text in ["a | b", "a\nb"] {
+        let err = from_xml(&format!(
+            "<spec {NS_ATTR}>\n  <table><tr><td>{text}</td></tr></table>\n</spec>"
+        ))
+        .unwrap_err();
+        assert!(err.message.contains("cannot hold `|`"), "{err}");
+    }
 }
 
 #[test]

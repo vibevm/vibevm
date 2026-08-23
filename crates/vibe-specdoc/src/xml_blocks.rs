@@ -325,7 +325,7 @@ impl<'a> Parser<'a> {
             }
         }
         let text = text.trim().to_string();
-        if tag == "td" && (text.contains('|') || text.contains('\n')) {
+        if tag == "td" && (text.contains('\n') || has_markdown_table_pipe(&text)) {
             let at = self.poss[self.i.saturating_sub(1)];
             return Err(self.err(
                 at,
@@ -440,4 +440,20 @@ impl<'a> Parser<'a> {
         }
         Ok(el)
     }
+}
+
+/// Whether Markdown's own scanner would treat a pipe as a table delimiter.
+///
+/// `blank_inline_code` is deliberately private to progress-core, so route a
+/// prefixed one-line probe through its public document parser and inspect the
+/// resulting `scan_text`. This keeps run-matched backtick semantics in the one
+/// shared implementation without widening progress-core's API.
+fn has_markdown_table_pipe(text: &str) -> bool {
+    let probe = format!("x{text}");
+    let parsed = progress_core::parse::parse_document("<td>", &probe);
+    parsed
+        .blocks
+        .first()
+        .and_then(|block| block.scan_text.strip_prefix('x'))
+        .map_or_else(|| text.contains('|'), |scan_text| scan_text.contains('|'))
 }

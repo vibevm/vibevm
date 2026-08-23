@@ -224,7 +224,8 @@ impl<'a> Adapter<'a> {
             if table_first {
                 let (rs, re) = table_runs[pending];
                 pending += 1;
-                let (table, placed) = self.table_block(b, text, &line_span, rs, re, &facts);
+                let (table, placed) =
+                    self.table_block(b, text, scan_text, &line_span, rs, re, &facts);
                 blocks.push(table);
                 facts.retain(|i| !placed.contains(i));
                 continue;
@@ -285,6 +286,7 @@ impl<'a> Adapter<'a> {
         &self,
         b: &progress_core::doc::Block,
         text: &str,
+        scan_text: &str,
         line_span: &dyn Fn(usize) -> (usize, usize),
         rs: usize,
         re: usize,
@@ -294,8 +296,8 @@ impl<'a> Adapter<'a> {
         let mut placed: Vec<usize> = Vec::new();
         for li in rs..=re {
             let (ls, le) = line_span(li);
-            let cells = row_cells(text, ls, le);
-            if cells.is_empty() || is_delimiter_row(&cells, text) {
+            let cells = row_cells(scan_text, ls, le);
+            if cells.is_empty() || is_delimiter_row(&cells, scan_text) {
                 continue;
             }
             // The Cell facts of this row, in order.

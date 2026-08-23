@@ -105,3 +105,23 @@ fn multiline_inline_code_pipe_is_not_a_table_on_reparse() {
         "{result:?}"
     );
 }
+
+#[test]
+fn table_cell_code_span_pipe_survives_full_trip() {
+    let source = "| `a | b` |\n";
+    let result = convert(source, Direction::ToXml).expect("convert table cell code span");
+    assert!(
+        !matches!(result, Conversion::IrDivergent { .. }),
+        "{result:?}"
+    );
+}
+
+#[test]
+fn table_cell_escaped_code_span_pipe_survives_full_trip() {
+    let source = "| `a \\| b` |\n";
+    let result = convert(source, Direction::ToXml).expect("convert escaped table cell code span");
+    assert!(
+        !matches!(result, Conversion::IrDivergent { .. }),
+        "{result:?}"
+    );
+}
