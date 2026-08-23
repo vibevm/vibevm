@@ -51,6 +51,8 @@
 - @fact:FRIENDS-ONLY-IMPLIES-FRIEND **The implication — owner-ratified (F10, 2026-08-23): a `friends-only` mark implies `friend = true` on its own edge.** Vouching for a package as part of your substance while standing in no relation to it is incoherent — and under the strict `friend = false` default, a `friends-only` chain would otherwise need *two* marks per hop, where forgetting the second silently kills the chain. With the implication, the owner's `A → B → C → D` chain works from one mark per hop, exactly as originally intended; an explicit `friend = false` beside a `friends-only` mark overrides the implication and yields the lawful **no-vouch** cell of ##ACCESS-FRIEND-MATRIX (terminal delivery to the circle) — no lint, it is a real intent. @status:spec/done
 - @fact:FRIENDS-LIST **Node-level `friends = ["group/name", …]`.** Explicit befriending of *any* package — «можно указать и свои прямые зависимости, и вообще любые зависимости» — including ones the node does not require directly (e.g. a practice known to arrive deep in the closure whose friends-only companions the root wants). @status:spec/work
 
+@fact:VISIBILITY-SECTION **The node-level vocabulary lives in one role-blind `[visibility]` section** — `friends`, `unfriend`, `allow-friends` (§2.8), `ignore-concept-warnings` (##CONCEPTS-GATE-SOFTENED) — plus the sibling top-level `[override]` table (§2.9). One section serves both manifest roles by construction (PROP-024 equipotence): no field is duplicated between `[project]` and `[package]`. @status:spec/done
+
 @fact:PUBLIC-PLUS-FRIEND **`access` and `friend` compose independently on one edge** (owner-confirmed 2026-08-23: «access и friend разные понятия»). The two marks point in opposite directions, so their product is well-defined. The default shape — `public` presence, no friendship — is plain delivery: «Q reaches everyone above me; I take none of its gated substance». Adding `friend = true` to a public edge reads: «and *for myself* I enter friendship with Q, so Q's friends-only doors are open in my own perspective». That friendship does **not** travel onward through a public edge — re-exporting friendship is exactly what the `friends-only` mark does (##PUBLIC-GIVES-PRESENCE-NOT-FRIENDSHIP) — so in another root's closure a public edge contributes presence and nothing more. The remaining corner — «deliver publicly *and* vouch friendship onward» in a single edge — is deliberately inexpressible: a consumer that wants Q's gated substance opts in with its own `friends` line, which is the payer-decides invariant. @status:spec/done
 
 @fact:ACCESS-FRIEND-MATRIX **The full 3 × 2 matrix (owner-requested completeness check, 2026-08-23).** For an edge `P → Q`, read across three observers — an arbitrary consumer above `P`; a friend of `P`'s (a root `R` with `P ∈ C(R)`); and `P` itself as root (its dev world). `friend` answers one question everywhere — «does the observer get Q's *own gated substance*» — while `access` picks the audience that gets `Q` at all: @status:spec/done
@@ -113,8 +115,7 @@ grow:  if F ∈ C(R), and G ∈ grants(F), and F's edge F → G has access = "fr
 @fact:ALLOW-FRIENDS-DESIGN **Owner-ordered design (F8, 2026-08-23: «спроектируй механизм allow-friends… похоже на возможность построить exhaustive замыкание sealed classes»).** A provider `G` may declare, node-level, who is permitted to *enter friendship with it* — the Java-`sealed`/`permits` shape transplanted onto the friendship relation (design ratified — «годится»): @status:spec/done
 
 ```toml
-[package]
-# …
+[visibility]
 allow-friends = ["org.a/x", "org.b/*"]   # the permits list; "*" after a group = any member
 ```
 
