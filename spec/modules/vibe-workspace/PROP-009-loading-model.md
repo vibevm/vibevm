@@ -6,6 +6,8 @@
 
 @fact:status-line **Status: IMPLEMENTED** — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22, and every session of this repository boots on them (`STATIC.md` first, then the TOML `INDEX.md` with its `[[entry]]` grammar). The dynamic-entry `when` gate (OS-scoped) shipped 2026-05-22 — see §8. Phase 8's **engine-backed** effective-spec projection stays v1.5 scope; the plain `vibe show effective` concatenation is live. @status:impl/done
 
+@fact:VISIBILITY-LAYER-ABOVE **Visibility sits above this model (2026-08-23, PROP-050 §3):** the whole loading pipeline — the `link` axis of §2.4, the boot closure, the lanes — now operates on the consumer root's **effective set E(R)** computed by the visibility layer (access / friendship / exclusions / overrides). A package outside `E(R)` is not resolved, not locked, not materialised and appears in no lane; the `link` axis decides only *how* an effective member loads, never *whether* it arrives. @status:impl/done
+
 @fact:related **Related:** [`VIBEVM-SPEC.md` §4.2 / §4.6 / §6 / §13.1](../../../VIBEVM-SPEC.md); [PROP-007](PROP-007-workspace.md) (workspace — PROP-009 answers its [§6 question 3](PROP-007-workspace.md#open)); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.md) (subskills, delivery modes, the `[activation]` vocabulary); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (identity, registry). @status:spec/done
 
 @fact:design-rationale **Design rationale:** [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) — the *why*, the static/dynamic-linking metaphor, the fork-by-fork record. Non-normative; this PROP is the contract. @status:spec/done

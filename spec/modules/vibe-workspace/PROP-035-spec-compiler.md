@@ -246,7 +246,7 @@ spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]
 
 ## 12. Transitive static — folding in PROP-034 {#transitive-inline}
 
-- @fact:STATIC-TRANSITIVE-FOLD `static-transitive` may be set at the top of a package hierarchy; then every element below it in the dependency graph is pulled `static`, **regardless of what it declared before**. @status:impl/done
+- @fact:STATIC-TRANSITIVE-FOLD `static-transitive` may be set at the top of a package hierarchy; then every element below it in the dependency graph is pulled `static`, **regardless of what it declared before**. Since the visibility layer landed (2026-08-23, PROP-050 §3), «below it» means *below it within the effective set E(R)*: the fold walks visible edges only and never widens visibility (PROP-050 ##FORCING-NEVER-WIDENS). @status:impl/done
 - @fact:transitive-safety This is safe precisely because the static build is algorithmic, not LLM-driven, and loses nothing. It is the path to large highly-optimized builds. @status:impl/done
 
 - @fact:EMISSION-LAYER This is PROP-034 §2.1/§2.3 (transitive links + dedup + topological order + cycle rejection), which becomes the **emission layer** of this compiler: after §8's pipeline resolves directives, PROP-034's linker deduplicates and dependency-orders the node list into `STATIC.md` / `INDEX.md`. @status:impl/done
