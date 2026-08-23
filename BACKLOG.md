@@ -182,6 +182,54 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 - @fact:B101-SUT **Суть.** `local_source_freshness` честно предупреждает, но предписанный им же `vibe install --assume-yes` НЕ чинит: кэш отдаёт старые байты под новым замком. Оператор без знания внутренностей ходит по кругу предупреждения.
 
+### B-102 — изолирующий per-edge proof маски строгости — O(рёбра × analyze) {#b-102}
+
+| | |
+|---|---|
+| @fact:B102-ANCHOR **anchor** | `crates/vibe-install/src/visibility_projection.rs` (`edge_contributes`) |
+| @fact:B102-LOCATOR **locator** | на каждое ребро решённого графа клонируется весь VisibilityGraph и гоняется полный `analyze`; на мирах в десятки узлов незаметно, на сотнях станет квадратично-дорогим |
+| @fact:B102-SEVERITY **severity** | P3 — корректность доказана голденами; чисто стоимость |
+| @fact:B102-DISPOSITION **disposition** | `open` — кандидаты: инкрементальный analyze, батч-доказательство рёбер одной целью, кэш масочных состояний |
+| @fact:B102-FILED **filed by** | стройка PROP-050 (W2), 2026-08-23 |
+
+- @fact:B102-SUT **Суть.** Маска строгости считается честно, но самым дорогим из корректных способов. Пока графы маленькие — норм; вырастут — переписать доказательство.
+
+### B-103 — hygiene-линт не называет цену гранта; budget-cap на ленту не реализован {#b-103}
+
+| | |
+|---|---|
+| @fact:B103-ANCHOR **anchor** | PROP-050 `##VERIFY-LINTS` (полная форма: «each reported with the lane cost the grant admits») + `##CLOSURE-DRIFT-CONTROL` (c): per-lane token budget cap — PROP-048-направление |
+| @fact:B103-LOCATOR **locator** | `crates/vibe-check/src/checks/visibility_hygiene.rs` репортит мёртвые записи и отвергнутые гранты без токен-цены; lock несёт lane-байты только диффом (W5b), per-package cost не считается |
+| @fact:B103-SEVERITY **severity** | P3 — наблюдаемость есть, экономическая аннотация — нет |
+| @fact:B103-DISPOSITION **disposition** | `open` — считать вклад пакета в ленты при материализации, писать в lock, аннотировать линт и `vibe why`; cap — по слову владельца (PROP-048 DIR) |
+| @fact:B103-FILED **filed by** | стройка PROP-050 (W5), 2026-08-23 |
+
+- @fact:B103-SUT **Суть.** «Неиспользуемый грант виден» — сделано; «неиспользуемый грант стоит вам N токенов» — ещё нет.
+
+### B-104 — ключ `override` живёт в двух смыслах: легаси `[[override]]`-пины и visibility-таблица {#b-104}
+
+| | |
+|---|---|
+| @fact:B104-ANCHOR **anchor** | PROP-050 `##OVERRIDE-KEY-COEXISTENCE`; `crates/vibe-core/src/manifest/package/visibility.rs` (ManifestWire untagged union) |
+| @fact:B104-LOCATOR **locator** | одно имя ключа — две формы (array-of-tables vs table); одновременное использование — громкая ошибка; читателю манифеста нужно знать различие форм |
+| @fact:B104-SEVERITY **severity** | P3 — работает и протестировано; долг ясности схемы |
+| @fact:B104-DISPOSITION **disposition** | `open` — ретирование/переименование легаси-пинов отдельной волной (no-legacy право уже есть) |
+| @fact:B104-FILED **filed by** | стройка PROP-050 (W1, находка воркера), 2026-08-23 |
+
+- @fact:B104-SUT **Суть.** Соседство осознанное и валидированное, но имя-омоним в схеме — источник будущей путаницы; выпрямить, пока экосистема закрыта.
+
+### B-105 — `when = "concept:X"` — гейт по концепту-интерфейсу, скетч без рулинга {#b-105}
+
+| | |
+|---|---|
+| @fact:B105-ANCHOR **anchor** | PROP-050 `##CONCEPT-GATE-DIRECTION` |
+| @fact:B105-LOCATOR **locator** | сегодня `concepts` питает только словарь пресуппозиционного гейта; загрузочного предиката по концепту нет — только точечный `installed:<группа>/<имя>` |
+| @fact:B105-SEVERITY **severity** | P3 — фича-направление |
+| @fact:B105-DISPOSITION **disposition** | `open` — ждёт владельческого слова; реализация ляжет в WhenCondition + bootgen conditions одной малой волной |
+| @fact:B105-FILED **filed by** | стройка PROP-050 (F7-диалог), 2026-08-23 |
+
+- @fact:B105-SUT **Суть.** Концепт как интерфейс («какой-нибудь пакет мира несёт WAL-дисциплину»), пакет — как реализация; фрагменты смогут привязываться к дисциплине, а не к имени носителя.
+
 ### B-077 — TUI пишет путь сохранения настроек трижды, и это единственное, что отделяет его от «доделан» {#b-077}
 
 | | |

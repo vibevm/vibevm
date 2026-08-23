@@ -32541,7 +32541,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dc6ac93a2c4884fdd349fd40d82b704c29a2b2c64c8fb2b7efc7472fa2029602",
+      "content_hash": "sha256:7377398e1d20a6ccdc634eee6d6389d5d569136ed646618c7582796578c035fc",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "PROP-050: Dependency visibility — access, friendship, and the friend closure",
@@ -32550,10 +32550,10 @@
     },
     {
       "anchor": "status-line",
-      "content_hash": "sha256:10e8c568ec3491bfee52757249352922453a945d868ef38645c56b2ae7a8546f",
+      "content_hash": "sha256:076d64adda709b3513a749745677487d14c67d30e427ab2fcb7f90064ee00807",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Status: DESIGN FULLY RATIFIED — 2026-08-23, four owner passes; ready to build.** Ruled: F1–F4, F6 as drafted; F5 overruled to no-legacy/irreversible (§6); defaults recast — `access` defaults **public**, `friend` defaults **false** (##DEFAULT-PUBLIC-RATIONALE, F3); F7 softened to warnings (##CONCEPTS-GATE-SOFTENED); F8 ratified as designed (§2.8); F9 official, quiet, **any-node** (§2.9); F10 implication ratified. The only unruled sketch is ##CONCEPT-GATE-DIRECTION (non-blocking). The build plan is [`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`](../terraforms/VISIBILITY-BUILD-PLAN-v0.1.md); implementation starts on the owner's word. @status:spec/done",
+      "heading": "**Status: BUILT — 2026-08-23.** The full build landed the same day the design closed: W1 engine + manifest vocabulary, W2 resolution/lock on `E(R)` (schema v6, provenance), W3 lane goldens, W4 gate softening, W5 observability (`vibe why`/`vibe friends`/closure diff/tree annotations/hygiene cell), W6 power-instrument proofs, W7 deliberate narrowing (fractality group; host lanes byte-identical), W8 close-out. Build record: [`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`](../terraforms/VISIBILITY-BUILD-PLAN-v0.1.md); measurements: [`spec/research/dependency-visibility-2026-08/04-measurements.md`](../research/dependency-visibility-2026-08/04-measurements.md); leftovers: BACKLOG B-102..B-105. All ten forks stand ruled (F1–F4, F6, F10 as drafted; F5 → no-legacy; F7 → warnings; F8 → designed+ratified; F9 → official, quiet, any-node); the only unruled sketch is ##CONCEPT-GATE-DIRECTION (B-105, non-blocking). Ratification history in §9/§10 stands as authored. @status:impl/done",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#status-line"
     },
@@ -32568,7 +32568,7 @@
     },
     {
       "anchor": "motivation",
-      "content_hash": "sha256:1eea01a9ddb53e91232086f0c132194c7f31111641ded3915382b5f919f3d824",
+      "content_hash": "sha256:373304122b5981be333abefaa912eb614d16b1c4ec309c5a66e00abbbd98beb9",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "1. Motivation — seepage is a budget defect, not a secrecy defect",
@@ -32577,10 +32577,10 @@
     },
     {
       "anchor": "seepage-today",
-      "content_hash": "sha256:024b7495a46fc6c08a2f81a3d615bc2f3b5d8033d840eab83c3158774a09fdb7",
+      "content_hash": "sha256:885611af8422d4304b8d7c24c050b4b5d1fc1bff90c7da77f2dc1f2cc724b60a",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Today the requires closure IS the effective set: every transitive dependency of every dependency reaches the consumer root, lands in `INDEX.md` (or, forced, in the static lane), and spends the root's context budget. The only controls are materialisation-side (`link` modes decide *how* a package loads, never *whether* it arrives) and the PROP-049 genre machinery (which polices *textual presupposition*, not structural arrival). The WAL leak — every new project sprouting `spec/WAL.md` because a package chain delivered the wal flow — is the type specimen of the defect class. @status:spec/work",
+      "heading": "Today the requires closure IS the effective set: every transitive dependency of every dependency reaches the consumer root, lands in `INDEX.md` (or, forced, in the static lane), and spends the root's context budget. The only controls are materialisation-side (`link` modes decide *how* a package loads, never *whether* it arrives) and the PROP-049 genre machinery (which polices *textual presupposition*, not structural arrival). The WAL leak — every new project sprouting `spec/WAL.md` because a package chain delivered the wal flow — is the type specimen of the defect class. @status:impl/done",
       "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#seepage-today"
     },
@@ -32604,7 +32604,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:09b3e1595fb81c1d366fe28fdc155e0a15c4d8ab964eee049f14482be9ddce8d",
+      "content_hash": "sha256:07a0d44563f92537fa767be4b3ff6ce366b3da2947b4a87aae459198d023d782",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2. The model",
@@ -32847,7 +32847,7 @@
     },
     {
       "anchor": "effective-set",
-      "content_hash": "sha256:5d351b6134bbb86c5dfb6e37d9602ee673940aface2182b6d3d36b466bcedeac",
+      "content_hash": "sha256:63003a900b7abc8720fce927e60578bea0c1afff286eca01419211d42d23f71c",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.5 Traversability and the effective set",
@@ -32865,10 +32865,10 @@
     },
     {
       "anchor": "effective-set-is-the-universe",
-      "content_hash": "sha256:0920dd40403c7f16494733ddc2e673fe41d1e911b9d8cae20ed2a34352002ad3",
+      "content_hash": "sha256:062935f69c5f1e2b59d098eebb585307a81e492f33cbaf7562ed5653e04cde6f",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Everything downstream — version resolution, `vibedeps/` materialisation, link-mode assignment, lane compilation, `installed:` predicates, the facts registry — operates on `E(R)` and nothing else. Visibility is computed once, first, and every other system consumes its output (§3). @status:spec/work",
+      "heading": "Everything downstream — version resolution, `vibedeps/` materialisation, link-mode assignment, lane compilation, `installed:` predicates, the facts registry — operates on `E(R)` and nothing else. Visibility is computed once, first, and every other system consumes its output (§3). @status:impl/done",
       "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#effective-set-is-the-universe"
     },
@@ -33045,7 +33045,7 @@
     },
     {
       "anchor": "layering",
-      "content_hash": "sha256:22f63decf5383fb4622cb06d3ef240f5e1f0941e1ad13d52e6b207ad300ae56e",
+      "content_hash": "sha256:753c27d5d29c9da33dad5e634318785d08752e849281bd6ad51d30eafdea5ee7",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "3. Layering — visibility above materialisation",
@@ -33054,43 +33054,43 @@
     },
     {
       "anchor": "VISIBILITY-ABOVE-MATERIALISATION",
-      "content_hash": "sha256:fa68fe7faf58c35d440c91236d8adc625fd588e94cc45f0c6e534ccf2f738327",
+      "content_hash": "sha256:5d0653d879abcfdb7880b7279aab8e4f2aaacdcaa46986fa0fa53c9023de892a",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Owner ruling, adopted as the layer boundary:** «признак типа static-transitive должен применяться уже ПОСЛЕ вычисления замыкания друзей, потому что замыкание друзей — это свойство логики связей в приложении, а транзитивная статичность — это свойство материализации, более логически низкая структура». The pipeline becomes: @status:spec/work",
+      "heading": "**Owner ruling, adopted as the layer boundary:** «признак типа static-transitive должен применяться уже ПОСЛЕ вычисления замыкания друзей, потому что замыкание друзей — это свойство логики связей в приложении, а транзитивная статичность — это свойство материализации, более логически низкая структура». The pipeline becomes: @status:impl/done",
       "line": 147,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VISIBILITY-ABOVE-MATERIALISATION"
     },
     {
       "anchor": "LINK-AXIS-ORTHOGONAL",
-      "content_hash": "sha256:48fd986c09eac76b66000346a0216f89ab290f69d55376436f4b89873741c3c1",
+      "content_hash": "sha256:031906c3640c78d690f2157052a24a76b184ee6bab01ad50ba86e6b07f9575de",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The `link` axis (`static` / `dynamic` / `static-transitive` / `static-hard`) survives intact as **materialisation strength within the visible graph**: «возможность спускать вниз по иерархии признак статичности всё так же очень нужна… как отдельная ось, ортогональная нашему замыканию друзей». @status:spec/work",
+      "heading": "The `link` axis (`static` / `dynamic` / `static-transitive` / `static-hard`) survives intact as **materialisation strength within the visible graph**: «возможность спускать вниз по иерархии признак статичности всё так же очень нужна… как отдельная ось, ортогональная нашему замыканию друзей». @status:impl/done",
       "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#LINK-AXIS-ORTHOGONAL"
     },
     {
       "anchor": "FORCING-NEVER-WIDENS",
-      "content_hash": "sha256:f8a331912b6d1c63193c289a852bee80e648fa6ca06d0e3089d2c95c9d8bfb75",
+      "content_hash": "sha256:8c68c0d3b865d5047ad8336d1623989a0277b31ffb375dcabeb3a245e9989d58",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Forcing never widens visibility.** A `static-transitive` edge propagates staticness across *traversable* edges only: it can make a visible package static, never make an invisible package visible. The hybrid linker's forced-descent (`resolve_zone`, PROP-038 §2.2) simply walks `E(R)`'s subgraph instead of the raw requires graph; hoisting counts (PROP-038 §5.2) count within `E(R)`. @status:spec/work",
+      "heading": "**Forcing never widens visibility.** A `static-transitive` edge propagates staticness across *traversable* edges only: it can make a visible package static, never make an invisible package visible. The hybrid linker's forced-descent (`resolve_zone`, PROP-038 §2.2) simply walks `E(R)`'s subgraph instead of the raw requires graph; hoisting counts (PROP-038 §5.2) count within `E(R)`. @status:impl/done",
       "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORCING-NEVER-WIDENS"
     },
     {
       "anchor": "layer-law-fit",
-      "content_hash": "sha256:6c25fce54775c7b58e1a98e06db6c9981e0b241a2c3ec155ec3fa333a63ea682",
+      "content_hash": "sha256:14d3ef934035e07c923068ec0c8283bca693ef1feb2b861045b8130f42d530bc",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "This ordering is THE-LAYER-LAW (PROP-048) applied to the pipeline itself: the logical stratum (who exists) is more stable and more upstream than the materialisation stratum (how it loads); a change in link mode never invalidates the visibility computation above it. @status:spec/work",
+      "heading": "This ordering is THE-LAYER-LAW (PROP-048) applied to the pipeline itself: the logical stratum (who exists) is more stable and more upstream than the materialisation stratum (how it loads); a change in link mode never invalidates the visibility computation above it. @status:impl/done",
       "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#layer-law-fit"
     },
     {
       "anchor": "interactions",
-      "content_hash": "sha256:2bdfb48ed1c2f35d2aaa983758f19bc892190b93cd3a13391ababbf39d56b7ae",
+      "content_hash": "sha256:0d4698de71329c7be94fe7823868c72bda3757aa7d1672d5d8ff0a8733626481",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4. System interactions",
@@ -33099,7 +33099,7 @@
     },
     {
       "anchor": "resolver",
-      "content_hash": "sha256:eefeb670f290c505a0f956eb365b977088fa65577aa97a7a64059e11f8103f3a",
+      "content_hash": "sha256:465db12b45c6cc6e2f9600a8322d16fb3941376181ae7e230aa178dbbfe8acab",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.1 Resolver and lock",
@@ -33108,25 +33108,25 @@
     },
     {
       "anchor": "RESOLVE-EFFECTIVE-ONLY",
-      "content_hash": "sha256:b7a6e016ddc3d862416289ab23dad5c33b1ce29e15f9a7c1ab85f96a719c0050",
+      "content_hash": "sha256:7a7de8e80fc4b686bdd78b7a4d4c569d7143337ff09bc58112232b360eac70f4",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Version resolution operates on `E(R)` only: private edges of non-root packages contribute no constraints, fetch nothing, and cannot conflict. `vibe.lock` records `E(R)` — the lock of a consumer no longer contains other packages' dev-world entries. Version unification (one node per `(group, name)`, PROP-003/017) is unchanged *within* the effective set. A welcome simplification vs code ecosystems: the Cargo-RFC-1977 problem («may private deps duplicate at different versions?») does not arise — an invisible package has no copies at all. @status:spec/work",
+      "heading": "Version resolution operates on `E(R)` only: private edges of non-root packages contribute no constraints, fetch nothing, and cannot conflict. `vibe.lock` records `E(R)` — the lock of a consumer no longer contains other packages' dev-world entries. Version unification (one node per `(group, name)`, PROP-003/017) is unchanged *within* the effective set. A welcome simplification vs code ecosystems: the Cargo-RFC-1977 problem («may private deps duplicate at different versions?») does not arise — an invisible package has no copies at all. @status:impl/done",
       "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"
     },
     {
       "anchor": "RESOLVE-PRUNE-INTERLEAVING",
-      "content_hash": "sha256:c34d9232cf9094d27aa687b558c5684acba295e9de722873304f3c51eb6e9da4",
+      "content_hash": "sha256:f8909d4820ed7601f4cd65693c6e3f9d72b7a16ab2f3722fe7c66d8e4e642a29",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**The interleaving, named honestly.** Computing `E(R)` needs edges; edges live in manifests of *resolved* versions; constraints come only from `E(R)` — so the walk is joint: the resolver expands the graph following only traversable edges, with `C(R)` recomputed monotonically as newly-resolved manifests contribute grants and marks (all predicates are static edge attributes of already-chosen nodes, so the joint fixpoint stays deterministic). Reading a manifest to learn that its edge is private is a **metadata read, not materialisation** — package *content* is fetched for `E(R)` members only. The Cargo lesson (RFC 1977 lost six years to resolver entanglement; RFC 3516 lives by decoupling) is honoured structurally: visibility stays a pure edge predicate the walk *consults* — never a quantity the version solver optimises over. @status:spec/work",
+      "heading": "**The interleaving, named honestly.** Computing `E(R)` needs edges; edges live in manifests of *resolved* versions; constraints come only from `E(R)` — so the walk is joint: the resolver expands the graph following only traversable edges, with `C(R)` recomputed monotonically as newly-resolved manifests contribute grants and marks (all predicates are static edge attributes of already-chosen nodes, so the joint fixpoint stays deterministic). Reading a manifest to learn that its edge is private is a **metadata read, not materialisation** — package *content* is fetched for `E(R)` members only. The Cargo lesson (RFC 1977 lost six years to resolver entanglement; RFC 3516 lives by decoupling) is honoured structurally: visibility stays a pure edge predicate the walk *consults* — never a quantity the version solver optimises over. @status:impl/done",
       "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING"
     },
     {
       "anchor": "materialisation",
-      "content_hash": "sha256:ae01df910175d6a9fab312d14a9e82299a9e0e865b747e73a522e53938e4f722",
+      "content_hash": "sha256:e306f65049e545c22934c1e6050cf049f65e61f1f7a2f0b490e5b3cf94f4b345",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.2 Materialisation and `vibedeps/`",
@@ -33135,16 +33135,16 @@
     },
     {
       "anchor": "MATERIALISE-EFFECTIVE-ONLY",
-      "content_hash": "sha256:5736ec4285fcfb5956855c60845c793fe73f41149d846922bb2e482131b06c36",
+      "content_hash": "sha256:dd365acac30f8c1d47702ec0c47166013481292328d262240e2243a0ed6105af",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "`vibedeps/` holds exactly `E(R)`: an excluded or invisible package leaves no slot, no cache entry for the root's world, no lane text. This is the structural fix for the WAL specimen: a wal flow declared `private` (or `friends-only`) by whatever requires it simply never arrives in a consumer's tree — no snippet, no `spec/WAL.md` scaffold, no INDEX row. @status:spec/work",
+      "heading": "`vibedeps/` holds exactly `E(R)`: an excluded or invisible package leaves no slot, no cache entry for the root's world, no lane text. This is the structural fix for the WAL specimen: a wal flow declared `private` (or `friends-only`) by whatever requires it simply never arrives in a consumer's tree — no snippet, no `spec/WAL.md` scaffold, no INDEX row. @status:impl/done",
       "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#MATERIALISE-EFFECTIVE-ONLY"
     },
     {
       "anchor": "prop-049-fate",
-      "content_hash": "sha256:b49d656795f01f55815ab53f73c78756d1284dba7f4d9af25ccbcbdca5737a15",
+      "content_hash": "sha256:ecaf5099f7ec6bee43e726b87c758b06c885ab9b5aaae418c6dec87ba1010012",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.3 PROP-049 under visibility — what the genre machinery still does",
@@ -33153,19 +33153,19 @@
     },
     {
       "anchor": "flows-control-identification",
-      "content_hash": "sha256:227f950f1209ed3cf5490b2b7abbc48d317f6ca6aef69455e8d6cf6370c34408",
+      "content_hash": "sha256:fe2f888d8b678f56f9db3053eace62f1afc758d98a9fada498c0850688d17a5e",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The ordering message asks whether «наша система с контролем flows» is still needed. No standalone \"flows control\" system exists in the spec tree (verified 2026-08-23: PROP-009's `flow` is an ordering *category*; PROP-028's flows are package *kinds*); the referent is read as the PROP-049 genre machinery — `installed:` predicates, snippet fragments, `concepts`, and the presupposition gate — built precisely against the WAL seepage this PROP now fixes structurally. Fork **F7** confirms the referent. @status:spec/work",
+      "heading": "The ordering message asks whether «наша система с контролем flows» is still needed. No standalone \"flows control\" system exists in the spec tree (verified 2026-08-23: PROP-009's `flow` is an ordering *category*; PROP-028's flows are package *kinds*); the referent is read as the PROP-049 genre machinery — `installed:` predicates, snippet fragments, `concepts`, and the presupposition gate — built precisely against the WAL seepage this PROP now fixes structurally. Fork **F7** confirms the referent. @status:impl/done",
       "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#flows-control-identification"
     },
     {
       "anchor": "PROP-049-DIVISION-OF-LABOUR",
-      "content_hash": "sha256:64441519a3ff7858083018e9df85df6d7355a1c90ac8e63068181e57d72e2436",
+      "content_hash": "sha256:0cb89f9e0994c130979ff3def11e9981f48ce29907f424e2efdd8790470ff744",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Recommendation: keep PROP-049, re-scoped — the two systems solve different halves.** Visibility controls *structural arrival* (whether a package exists in `E(R)`); the genre machinery controls *textual behaviour* (what a snippet may presuppose, and how text adapts to a neighbour's presence). With visibility live: (a) `installed:` predicates and fragments remain THE adaptivity mechanism — an `installed:` predicate now queries `E(R)`, and a fragment binding to an absent friend stays physically omitted exactly as today; (b) the presupposition gate remains the authoring lint that catches a snippet textually assuming what its package did not lawfully receive; (c) what *dissolves* is the unbundling pressure — a future redbook-like collection may keep a wal-like member on a `friends-only`/`private` edge instead of expelling it. @status:spec/work",
+      "heading": "**Recommendation: keep PROP-049, re-scoped — the two systems solve different halves.** Visibility controls *structural arrival* (whether a package exists in `E(R)`); the genre machinery controls *textual behaviour* (what a snippet may presuppose, and how text adapts to a neighbour's presence). With visibility live: (a) `installed:` predicates and fragments remain THE adaptivity mechanism — an `installed:` predicate now queries `E(R)`, and a fragment binding to an absent friend stays physically omitted exactly as today; (b) the presupposition gate remains the authoring lint that catches a snippet textually assuming what its package did not lawfully receive; (c) what *dissolves* is the unbundling pressure — a future redbook-like collection may keep a wal-like member on a `friends-only`/`private` edge instead of expelling it. @status:impl/done",
       "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PROP-049-DIVISION-OF-LABOUR"
     },
@@ -33198,7 +33198,7 @@
     },
     {
       "anchor": "dev-world",
-      "content_hash": "sha256:5ed8921575a5fd87deaecc0a52d7269f1950d55d923eb2aa4680ffae7c6712e5",
+      "content_hash": "sha256:833354ff7eed9d70ac0f16354b4b0f66e0fe54e9a4445b042635e029c062eb6a",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.4 Equipotence and the dev world",
@@ -33207,16 +33207,16 @@
     },
     {
       "anchor": "PRIVATE-IS-THE-DEV-WORLD",
-      "content_hash": "sha256:40841fda32fd8b2178356b1ecf8512e6c0257f5c6b231ff01699d0040e7d310e",
+      "content_hash": "sha256:f6ae902973f108ce5b5ae94aeb92e73282b40a55dea854636d7d3a757d43b213",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Rule (1) of §2.5 — the root's own edges always traverse — combined with explicit `private` marks resolves the open tail of the equipotence wave (PROP-024): a package's `[requires]` is simultaneously its dev-set and its contract, **split per-edge by `access`** rather than by section. When the package is the consumer root (a dev checkout — `[project]` or `[package]`, equipotently), *all* its edges traverse and its private tooling materialises; when it is consumed as a dependency, only its seeping edges do. No separate dev-dependencies section needed. @status:spec/work",
+      "heading": "Rule (1) of §2.5 — the root's own edges always traverse — combined with explicit `private` marks resolves the open tail of the equipotence wave (PROP-024): a package's `[requires]` is simultaneously its dev-set and its contract, **split per-edge by `access`** rather than by section. When the package is the consumer root (a dev checkout — `[project]` or `[package]`, equipotently), *all* its edges traverse and its private tooling materialises; when it is consumed as a dependency, only its seeping edges do. No separate dev-dependencies section needed. @status:impl/done",
       "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PRIVATE-IS-THE-DEV-WORLD"
     },
     {
       "anchor": "vibefacts",
-      "content_hash": "sha256:48e9900de605cb0326d7166a158ac77706e26ba1d6bd1d41f9d32a51c0c86c7e",
+      "content_hash": "sha256:0b277d6f77513f3dd02acae14ccc19ffd8caf87630285f6a4f5083607b17d931",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.5 vibefacts",
@@ -33225,16 +33225,16 @@
     },
     {
       "anchor": "facts-scope-follows-visibility",
-      "content_hash": "sha256:6a6f3152ebcedfbfd77b9208894157b83e020964db9d0325d35924864b5f955d",
+      "content_hash": "sha256:7905ca74ecd63058df0faf6c0d493e82c36e3f37c63709c61fc65f1aa871cd1a",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The adoption-facts registry (PROP-046) keys per-source files by installed packages; its universe follows `E(R)` mechanically. Registry entries for packages that leave the effective set surface through the existing `facts_sync` / lifecycle machinery (PROP-046 L5) — no new mechanism, one new reason entries become stale. @status:spec/work",
+      "heading": "The adoption-facts registry (PROP-046) keys per-source files by installed packages; its universe follows `E(R)` mechanically. Registry entries for packages that leave the effective set surface through the existing `facts_sync` / lifecycle machinery (PROP-046 L5) — no new mechanism, one new reason entries become stale. @status:impl/done",
       "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#facts-scope-follows-visibility"
     },
     {
       "anchor": "collections",
-      "content_hash": "sha256:274239f5499827daa70280a399244a25de1cafc8cf71493a5882cb7b2f648e15",
+      "content_hash": "sha256:dad7a14e69d04756c8d32413dc4ea2f43b5fe411a51b045eb351a6f1d1d96635",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.6 Collections and families",
@@ -33243,10 +33243,10 @@
     },
     {
       "anchor": "COLLECTIONS-DECLARE-PUBLIC",
-      "content_hash": "sha256:8e12c6845ea5777746f9b0243611c30d8ac37ba1bddcc46890bb40a580236de6",
+      "content_hash": "sha256:71284323cc2924455cdc0ccfc716b97a16103993eaf2550a3cec7c279ffd075f",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "A PROP-028 collection's whole point is aggregation: its member edges are the type case for `access = \"public\"` (redbook's ~21 exact-pinned members must seep to redbook's consumers — that is what depending on the collection *means*). A family's internal shared core is the type case for `friends-only` (members befriend each other through the family's marks; outsiders opt in or see nothing). Migration inventory in §6. @status:spec/work",
+      "heading": "A PROP-028 collection's whole point is aggregation: its member edges are the type case for `access = \"public\"` (redbook's ~21 exact-pinned members must seep to redbook's consumers — that is what depending on the collection *means*). A family's internal shared core is the type case for `friends-only` (members befriend each other through the family's marks; outsiders opt in or see nothing). Migration inventory in §6. @status:impl/done",
       "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#COLLECTIONS-DECLARE-PUBLIC"
     },
@@ -33315,7 +33315,7 @@
     },
     {
       "anchor": "migration",
-      "content_hash": "sha256:32593b16349367102592eadebffea19f7c6aa53cb255871e38bb6fa20a158ddc",
+      "content_hash": "sha256:4b856e58da68e13ef26c833a3696f40746a13776c38af1c5f9310e6dcb8acba1",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "6. Migration",
@@ -33342,10 +33342,10 @@
     },
     {
       "anchor": "migration-inventory",
-      "content_hash": "sha256:ec0848d93761009f3f0ab254531b88dcc3736052e3dbed11314cce9a6ad93924",
+      "content_hash": "sha256:8c0683e019d4e59c987d381e840c0e822aa5e09118576b1dcda40f485f123b6d",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "Re-marking inventory (in-wave per ##MIGRATION-NO-LEGACY; under the public default the work is **deliberate narrowing**, not blanket re-annotation): redbook's 21 member edges, stack aggregators' cores, `delegation-first → delegation-rules`, `wal-specspaces → wal`, host root edges — all correct under the default, **no marks needed**; dev-/tooling edges across the tree → explicit `private`; `git-practices` family internals → first candidate for `friends-only` dogfooding; and the door PROP-049's unbundling closed re-opens as an *option* — a redbook-like collection may again carry a wal-like member on an explicit `private`/`friends-only` edge, a separate decision for its author. The 8 world packages' `[boot_snippet] link = \"static\"` self-suggestions are materialisation-axis and untouched. @status:spec/work",
+      "heading": "Re-marking inventory (in-wave per ##MIGRATION-NO-LEGACY; under the public default the work is **deliberate narrowing**, not blanket re-annotation): redbook's 21 member edges, stack aggregators' cores, `delegation-first → delegation-rules`, `wal-specspaces → wal`, host root edges — all correct under the default, **no marks needed**; dev-/tooling edges across the tree → explicit `private`; `git-practices` family internals → first candidate for `friends-only` dogfooding; and the door PROP-049's unbundling closed re-opens as an *option* — a redbook-like collection may again carry a wal-like member on an explicit `private`/`friends-only` edge, a separate decision for its author. The 8 world packages' `[boot_snippet] link = \"static\"` self-suggestions are materialisation-axis and untouched. @status:impl/done",
       "line": 242,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-inventory"
     },
@@ -33360,7 +33360,7 @@
     },
     {
       "anchor": "verification",
-      "content_hash": "sha256:738aa4de21ccf6b4d57cbf7cf5028c299d58078a67380453c56d9ebc5c9a5e6e",
+      "content_hash": "sha256:031603cbe440801652cdb8537dc06a30b74fc26d8ea895abefa167cb6b9ccac8",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "7. Verification and measurement — «РЕАЛЬНО ХОРОШО»",
@@ -33369,19 +33369,19 @@
     },
     {
       "anchor": "verification-plan",
-      "content_hash": "sha256:7d21951c7d11a9e149e7de3244c2c046318bf7b8a43659dc4f15851c8a1091af",
+      "content_hash": "sha256:7da3bee9f37a950b0d7af7d186f74a710e31097b07f3fd3becfd68d2e89dfb4f",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "The owner's bar is explicit: «перестроить статические и динамические лоадеры и проверить, что всё работает РЕАЛЬНО ХОРОШО. Измерить, проверить, посмотреть на тестовых примерах». The implementation wave carries, as first-class deliverables: @status:spec/work",
+      "heading": "The owner's bar is explicit: «перестроить статические и динамические лоадеры и проверить, что всё работает РЕАЛЬНО ХОРОШО. Измерить, проверить, посмотреть на тестовых примерах». The implementation wave carries, as first-class deliverables: @status:impl/done",
       "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification-plan"
     },
     {
       "anchor": "VERIFY-GOLDEN-CHAIN",
-      "content_hash": "sha256:4218d84b1b7e60c89d5423885cba3d4d91b5910e4395014bf950ed062a9fdc77",
+      "content_hash": "sha256:ebee13293344f4f767c0308c3ea9a4c7dcd6b43d7165a0752ad7a22236a768be",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Golden chains.** Fixture worlds for every §2 rule — the owner's `A → B → C → D` chain verbatim (test №1), the unfriend break, the diamond-with-exclude, public-presence-without-friendship, the dev-world flip (same package as root vs as dependency) — each asserting the exact `E(R)`, lock content, and lane bytes. @status:spec/work",
+      "heading": "**Golden chains.** Fixture worlds for every §2 rule — the owner's `A → B → C → D` chain verbatim (test №1), the unfriend break, the diamond-with-exclude, public-presence-without-friendship, the dev-world flip (same package as root vs as dependency) — each asserting the exact `E(R)`, lock content, and lane bytes. @status:impl/done",
       "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-GOLDEN-CHAIN"
     },
@@ -33396,37 +33396,37 @@
     },
     {
       "anchor": "VERIFY-MEASURE",
-      "content_hash": "sha256:e30d565b6c0e4cd2a8e9e6727c3cbf623047ff90ea4dc20230aeed46ba226867",
+      "content_hash": "sha256:26f5b5f2c83b91c318119d4416d50af31b62d8d1f4f1b2eed3d86879daf206e8",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Measurement.** Before/after per-root metrics, recorded in the wave's harvest: effective-set package count, lane byte sizes, fetch/materialise counts and install wall-time. The tokenomics claim (§1) must show up as numbers, not prose. @status:spec/work",
+      "heading": "**Measurement.** Before/after per-root metrics, recorded in the wave's harvest: effective-set package count, lane byte sizes, fetch/materialise counts and install wall-time. The tokenomics claim (§1) must show up as numbers, not prose. @status:impl/done",
       "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-MEASURE"
     },
     {
       "anchor": "VIBE-WHY",
-      "content_hash": "sha256:14a6c839e52429bd64b52f4998e1e06b1dfa925aed6f7a385f7f5d34c94d8027",
+      "content_hash": "sha256:a714d1cf43945f4a0679177ed02fb5cdf826e457b538bc2934afbd335761c567",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Observability: `vibe why <group>/<name>`.** For any package, print the chains that admit it into `E(R)` — each hop annotated with its rule ((1)/(2)/(3)), access mark, and friendship provenance — and for an absent package, the nearest blocked chains and *what* blocked them (private edge / missing friendship / unfriend / exclude). The debugging surface without which a visibility system rots into folklore; `vibe tree` gains the same annotations. @status:spec/work",
+      "heading": "**Observability: `vibe why <group>/<name>`.** For any package, print the chains that admit it into `E(R)` — each hop annotated with its rule ((1)/(2)/(3)), access mark, and friendship provenance — and for an absent package, the nearest blocked chains and *what* blocked them (private edge / missing friendship / unfriend / exclude). The debugging surface without which a visibility system rots into folklore; `vibe tree` gains the same annotations. @status:impl/done",
       "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY"
     },
     {
       "anchor": "VERIFY-LOCK-DIFF",
-      "content_hash": "sha256:9c4bad1ba3cfc43f6581cc1c5f0b02c18cc3e8ba64d12a2c11fcd0ebcfd6bc2d",
+      "content_hash": "sha256:816f27c48be676f6bbc181723055d9cee5d89b03a1f4f1e418153f654ce241f1",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Closure-drift visibility.** The lock carries `E(R)` with each member's lane cost (bytes/tokens of its contribution); `vibe update` prints the closure diff — packages entering/leaving and the lane-cost delta — so a mid-graph re-export widening (##CLOSURE-DRIFT-CONTROL) is a reviewed event, not a silent seep. @status:spec/work",
+      "heading": "**Closure-drift visibility.** The lock carries `E(R)` with each member's lane cost (bytes/tokens of its contribution); `vibe update` prints the closure diff — packages entering/leaving and the lane-cost delta — so a mid-graph re-export widening (##CLOSURE-DRIFT-CONTROL) is a reviewed event, not a silent seep. @status:impl/done",
       "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LOCK-DIFF"
     },
     {
       "anchor": "VERIFY-LINTS",
-      "content_hash": "sha256:843586309f7ef2b47b8711b2f25dc75969c6d55047574e09862fa823d243ec17",
+      "content_hash": "sha256:f7cc233a2ac54566f2cbc7b053e8b79d05f7d9fbaa5030b60523268138f01f49",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "**Hygiene lints.** Dead `friends`/`unfriend`/`exclude` entries naming packages that never appear in any chain (warning, per the JPMS qualified-export precedent); friends-only edges whose declarant nobody befriends (unreachable sharing); a `friend = false` edge to a package with no friends-only edges (a no-op mark); grants whose admitted chains contribute no lane text this root ever loads — each reported with the lane cost the grant admits, so an unused or cost-heavy friendship is visible (the consumer-side mirror of Eclipse's rotting x-friends lists). Advisory, in `vibe check`. @status:spec/work",
+      "heading": "**Hygiene lints (built as the `visibility_hygiene` cell; the per-grant lane-cost figure is deferred — BACKLOG B-103).** Dead `friends`/`unfriend`/`exclude` entries naming packages that never appear in any chain (warning, per the JPMS qualified-export precedent); friends-only edges whose declarant nobody befriends (unreachable sharing); a `friend = false` edge to a package with no friends-only edges (a no-op mark); grants whose admitted chains contribute no lane text this root ever loads — each reported with the lane cost the grant admits, so an unused or cost-heavy friendship is visible (the consumer-side mirror of Eclipse's rotting x-friends lists). Advisory, in `vibe check`. @status:impl/done",
       "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LINTS"
     },
