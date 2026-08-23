@@ -1,0 +1,133 @@
+# Dependency-manager & C++ visibility, transitivity, exclusion — research notes for PROP-050
+
+> Research worker report, 2026-08-23. Consumer: [PROP-050 §5](../../common/PROP-050-dependency-visibility.md#prior-art).
+> Scope: Gradle, Maven, Cargo/Rust, npm/Node, C++ `friend` + C++20 modules.
+
+Enforcement-point summary (the axis that most determines what a design can promise):
+
+| System | Visibility declared by | Enforced at | Failure mode if violated |
+|---|---|---|---|
+| Gradle | **provider** (`api`/`implementation`) | dependency *resolution* (variant attributes) | consumer compile error |
+| Maven | **provider** (scope/`optional`) + **consumer** (`<exclusions>`) | resolution (tree walk, nearest-wins) | `NoClassDefFoundError` at runtime |
+| Cargo | nobody (manifest is neutral); **code** via `pub use` | rustc lint (unstable) | semver breakage, dup versions |
+| npm `exports` | **provider** (subpath seal) | Node loader, *runtime/bundle* | `ERR_PACKAGE_PATH_NOT_EXPORTED` |
+| C++ `friend` | **provider** (grantor class) | compile-time access control | compile error |
+
+---
+
+## 1. Gradle — `api` vs `implementation`
+
+| Primitive | Consumer compile CP | Consumer runtime CP | Notes |
+|---|---|---|---|
+| `api` | ✅ | ✅ | dep is part of your ABI |
+| `implementation` | ❌ | ✅ | **still present at runtime** |
+| `compileOnly` | ✅ (own only) | ❌ | not published to consumers at all |
+| `runtimeOnly` | ❌ | ✅ | JDBC drivers, SLF4J bindings |
+| `compileOnlyApi` | ✅ | ❌ | annotations (`@Nullable`) |
+
+**The load-bearing fact:** `implementation` hides a dep from the consumer's *compile* classpath but it is *"still exposed to consumers at runtime"* ([java_library_plugin](https://docs.gradle.org/current/userguide/java_library_plugin.html)). Visibility ≠ presence. Hiding is about **what you may name**, not **what ships**.
+
+**Default & rationale.** `implementation` is the default recommendation — *"Prefer the `implementation` configuration over `api` when possible."* Rationale is measured, not aesthetic: **compile avoidance**. Gradle hashes each dependency's ABI; a non-ABI change to an `implementation` dep recompiles nothing downstream, while any ABI change to an `api` dep recompiles every transitive consumer ([incremental-compiler-avoidance](https://blog.gradle.org/incremental-compiler-avoidance), [our-approach-to-faster-compilation](https://blog.gradle.org/our-approach-to-faster-compilation)). Docs claim *"faster compilation thanks to reduced classpath size"* + *"less recompilations."* The public benchmark suite is `gradle/performance-comparisons`; the blog itself publishes no % figures — treat "dramatic" as directional.
+
+**Why `compile` was killed.** `compile`/`runtime` *"did not support fine-grained scoping"* — every dep leaked to every consumer's compile classpath, so classpaths grew monotonically and ABI churn recompiled the world. Deprecated in Gradle 6, **removed in Gradle 7.0** ([upgrading_version_6](https://docs.gradle.org/current/userguide/upgrading_version_6.html)). A billion-line-scale ecosystem hard-removed a default because leakage was unpayable.
+
+**Transitivity.** Exactly one hop of opt-in: `api` re-exports one level; the consumer must itself declare `api` to propagate further. So an `api` chain is a chain of *explicit per-node marks* — structurally identical to the re-export-mark model.
+
+**Exclusion.** Per-edge `exclude group:, module:`, configuration-wide `configurations.all { exclude … }`, plus **dependency constraints** (version-only, non-adding) and **capabilities/`ComponentModuleMetadata`** for "these two modules are the same thing." Gradle resolves by **highest version wins** (not nearest), so exclusion is the only true pruning tool.
+
+**Verdict.** Community consensus is unambiguously "prefer `implementation`, justify `api`." The residual pain: `api` is *provider-declared*, so a library author with no incentive to economise leaks by default, and consumers cannot un-leak — only `exclude`, which breaks compilation.
+
+> **COPY:** the two-lane split (in-context vs present-but-unlisted) and the *default-to-private* posture. **COPY:** compile-avoidance as the measurable justification — the vibevm analogue is cache-stable prefix survival: a `public` edge that changes invalidates every downstream root's prefix cache, exactly as an `api` ABI change recompiles the world. **AVOID:** provider-only declaration. Consumer-declared friendship fixes Gradle's incentive bug — the party paying tokens is the party granting.
+
+---
+
+## 2. Maven — scopes, `optional`, per-edge `<exclusions>`
+
+| Primitive | Effect on consumer of *my* artifact |
+|---|---|
+| `compile` (default) | transitive, both classpaths |
+| `provided` | **not transitive**; container supplies it |
+| `runtime` | transitive at runtime only |
+| `test` | not transitive |
+| `import` (pom only) | splices a BOM's `<dependencyManagement>` — *version data only, adds no nodes* |
+| `optional=true` | **not transitive**; consumer must re-declare |
+| `<exclusions>` | prunes a subtree **under one edge** |
+
+**`optional=true`.** *"Project-B is not included in the classpath of Project-X… You need to declare it directly in the POM of Project X"* ([optional-and-excludes](https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html)). Verdict: this is *private-with-an-advertised-handle*. Maven's own guidance is to prefer splitting the module; optional deps are the classic source of "works in the library's tests, `NoClassDefFoundError` in the consumer."
+
+**`<exclusions>` — exact semantics.** *"Exclusions are set on a specific dependency… that artifact will not be added to your project's classpath **by way of the dependency in which the exclusion was declared**"* and *"exclusions work on the entire dependency graph below the point where they are declared."* Crucially: *"Project-D is **not** excluded globally"* — if another edge also reaches D, **D still enters the graph**. Wildcards (`<groupId>*</groupId><artifactId>*</artifactId>`) exclude all transitives of that edge.
+
+**Mediation:** **nearest definition wins** (shortest path to root; ties → first declared) ([dependency-mechanism](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)). Exclusion interacts badly with this: pruning the nearest path silently promotes a *further, older* version rather than removing the artifact.
+
+**Global deny-list:** `maven-enforcer-plugin` `bannedDependencies`, patterns `groupId[:artifactId][:version]` with wildcards, and `<includes>` acting as *exceptions carved out of an exclude* ([bannedDependencies](https://maven.apache.org/enforcer/enforcer-rules/bannedDependencies.html)). This is the closest existing analogue to a hard `exclude`: a separate **verification pass**, not a resolution primitive.
+
+**Pitfall:** exclusion whack-a-mole. Because exclusions are per-edge and non-global, banning one artifact across a large POM means N exclusions, re-audited on every upgrade — which is precisely why enforcer's global rule exists.
+
+> **COPY:** per-edge subtree exclusion as the *scoping unit*, and the explicit doctrine that it is **not global** (node-local pruning is right). **COPY:** the enforcer split — a hard global ban should be a **separate assertion layer over the resolved closure**, not another edge attribute, so it's diffable and non-order-dependent. **AVOID:** `optional=true`'s silent-drop semantics; make re-declaration a resolver *error*, not a runtime surprise. **AVOID:** nearest-wins — for prompt packages, "which text won" must be deterministic and explainable, not path-length-derived.
+
+---
+
+## 3. Cargo / Rust
+
+| Primitive | Effect |
+|---|---|
+| manifest `[dependencies]` | **visibility-neutral** — links the crate, exposes nothing |
+| `pub use` in code | the actual re-export; the *only* leak mechanism |
+| `public = true` (unstable) | marks dep as part of your public API |
+| `exported_private_dependencies` lint | warns when a private dep's type appears in your public API |
+| `default-features = false` | subtractive pruning of optional subtrees |
+
+**The structural lesson:** Cargo's manifest **cannot leak**. Adding a dep gives consumers nothing; leakage requires a deliberate `pub use` or a `pub fn f() -> dep::T` in source. Visibility lives at the *content* layer, not the *edge* layer. Consequence: Cargo needs no `api`/`implementation` split — but it also cannot *detect* leaks without the compiler, hence RFC 1977.
+
+**Status (verified):** RFC 1977 ([1977-public-private-dependencies](https://rust-lang.github.io/rfcs/1977-public-private-dependencies.html)) **languished ~6 years** over its resolver section and was **superseded by RFC 3516** ([3516-public-private-dependencies](https://rust-lang.github.io/rfcs/3516-public-private-dependencies.html)) explicitly to *decouple the resolver changes* for a faster path. **Still unstable**: nightly + `-Zpublic-dependency`, MSRV 1.83 for the `public` key ([cargo unstable](https://doc.rust-lang.org/cargo/reference/unstable.html)); tracking [rust#44663](https://github.com/rust-lang/rust/issues/44663), [cargo#6129](https://github.com/rust-lang/cargo/issues/6129). **Motivation:** (a) semver hazard — bumping a private dep is not a breaking change, bumping a public one is; (b) **duplicate-version tolerance** — private deps may be co-instantiated at multiple versions, public ones must unify.
+
+**Cautionary tale — feature unification.** Features are *additive* and unified **graph-globally**: a feature enabled by any one crate turns on for all. Mutually-exclusive features are "officially unsupported." Resolver v2 (RFC 2957) had to carve out dev/build/proc-macro/target-specific edges because *"feature-unification is an inherently global decision"* ([2957-cargo-features2](https://rust-lang.github.io/rfcs/2957-cargo-features2.html), [3692-feature-unification](https://rust-lang.github.io/rfcs/3692-feature-unification.html)). Real bite: `cargo test` builds the binary *with* dev-dependency features that `cargo build` omits.
+
+> **COPY, hard:** the six-year lesson — **keep visibility out of the resolver**. Compute the closure first, then apply visibility as a *filter/annotation* over the resolved graph. RFC 1977 died on resolver entanglement; RFC 3516 lives by avoiding it. **COPY:** the semver coupling — a `public` prompt-edge should make the provider's version bump a *consumer-visible* change; `private` should not. **AVOID absolutely:** graph-global unification of any visibility knob. If "friend" grants unify across the graph, one leaf enabling a grant silently expands every root's context. Friendship must be **per-root-scoped**, resolved into a per-root closure, never merged. **COPY:** `default-features = false` as the ergonomic default-pruning verb.
+
+---
+
+## 4. npm / Node
+
+| Primitive | Effect |
+|---|---|
+| `exports` map | **seals the file surface**: subpaths not listed become hard errors |
+| `peerDependencies` | inverted requirement: "*my consumer* must provide this" |
+| `peerDependenciesMeta.optional` | declared but not auto-installed |
+| `bundledDependencies` | vendored into the published tarball |
+
+**`exports`.** *"When the `exports` field is defined, all subpaths of the package are encapsulated and no longer available to importers"* — `require('pkg/internal.js')` throws `ERR_PACKAGE_PATH_NOT_EXPORTED` ([nodejs packages](https://nodejs.org/api/packages.html)). This is **provider-side sealing of the file surface**, orthogonal to the dependency graph: it doesn't say who may depend on you, it says *which of your files are addressable*. Migration was famously painful (mass deep-import breakage across the ecosystem) but is now considered correct.
+
+**`peerDependencies`.** Semantically "host/plugin compatibility." npm ≤6 warned only; **npm 7+ auto-installs peers**, while `peerDependenciesMeta: {optional:true}` peers are *not* auto-installed ([npm rfcs#289](https://github.com/npm/rfcs/discussions/289)). Net effect: a peer edge is a **constraint plus a dedup guarantee** (one React, not three) rather than a visibility control.
+
+> **COPY:** `exports` as a *separate axis from the dep graph* — a prompt package should be able to publish a named entry-point map (`"exports": { "core": …, "advanced": … }`) so a friend grant admits *a declared surface*, not "everything in the package." That is the single cheapest token-seepage lever here, and it is provider-side (the author knows which snippet is the small one). **CONSIDER:** peer-style inversion for the case "I need this in context but the root must choose the version/variant" — a way for a mid-graph package to *request* rather than *inject*. **AVOID:** auto-satisfaction of peers; for prompt text, silent injection is the exact failure being designed against.
+
+---
+
+## 5. C++ `friend` — and the transitivity contrast
+
+Exact rules (cppreference `cpp/language/friend`; ISO `[class.friend]`):
+
+| Property | Holds? |
+|---|---|
+| Provider-granted (declared *inside* the granting class) | ✅ — you cannot befriend yourself into a class you don't own |
+| **Transitive** ("friend of a friend") | ❌ |
+| **Inherited** (base's friends ≠ derived's; derived's ≠ base's) | ❌ |
+| **Reciprocal** | ❌ — must be declared both ways |
+| Grants access to *all* privates (no partial grant) | ✅ — all-or-nothing |
+
+**What non-transitivity protects: locality of audit.** The set of code that can break a class's invariants is *enumerable by reading one file* — the class definition. Transitive friendship would make that set unbounded and non-local: granting X would silently grant everyone X later befriends, in code you don't read and can't veto. The standard trades expressiveness for a **closed-form proof obligation**. The standing critique (Meyers, Sutter, `isocpp` guidance) is the mirror image: friendship is the *strongest* coupling in C++ — all-or-nothing, so a grant that needs one field exposes every field — hence "prefer non-member non-friend functions."
+
+**C++20 modules** add the second half of the picture: `export import M;` re-exports M's exported names to *your* importers — an explicit, per-module re-export mark. And the standard splits **visibility** (name lookup finds it — controlled by `export`) from **reachability** (the compiler can use its semantic properties — *not* controlled by `export`) ([andreasfertig reachability-and-visibility](https://andreasfertig.com/blog/2021/11/cpp20-modules-reachability-and-visibility/), [vector-of-bool modules-2](https://vector-of-bool.github.io/2019/03/31/modules-2.html)). Same shape as Gradle's compile-vs-runtime: **hidden ≠ absent**.
+
+**Analysis of the vibevm inversion.** Two independent flips:
+
+1. **Provider → consumer declaration.** This *improves* incentive alignment. In C++ the grantor also owns the invariant, so grantor and cost-bearer coincide — the design is sound. In Gradle/Maven the *provider* declares and the *consumer* pays (classpath bloat, recompiles), which is exactly why leakage accumulated until `compile` had to be deleted. The vibevm domain matches Gradle's, not C++'s: the token bill lands on the root. Consumer-declared friendship puts the grant with the payer. **Keep it.**
+
+2. **Non-transitive → transitive-via-explicit-marks.** Explicit marks preserve **enumerability** (every hop is a written token; the closure is statically computable and diffable) but **not locality** — the closure's contents live in files the root neither owns nor reviews, and a mid-graph package can widen it in a patch release. That is the precise protection C++ bought with non-transitivity, and marks alone do not buy it back. Cheap restorations, in order of value:
+   - **Resolve the friend closure into the lockfile with a per-node token cost and a total** — so `vibe update` shows a *diff* ("+3 packages, +4.1k tokens into the static lane"). This converts a non-local risk into a reviewable event, and is the direct analogue of `mvn dependency:tree` / `gradle dependencies`.
+   - **Budget cap, not depth cap.** Depth limits are arbitrary; a token ceiling per lane is the actual invariant. Resolution fails loudly on breach rather than silently seeping.
+   - **Treat adding a re-export mark as a semver-major event for the provider** (Cargo's `public = true` reasoning, applied to marks rather than deps).
+   - Additionally, borrow C++'s critique: **avoid all-or-nothing grants.** Pair friendship with npm-`exports`-style named surfaces so a grant admits a declared entry point, not the package's whole text.
+
+`unfriend` and `exclude` are the missing verbs in every system surveyed *as first-class primitives* — Maven approximates them with per-edge `<exclusions>` (node-local, non-global) plus enforcer `bannedDependencies` (a separate global assertion pass). That two-layer split is worth copying verbatim: **`unfriend` = graph edit (node-local, order-sensitive, prunes a subtree); `exclude` = post-resolution assertion (subtree-scoped, order-independent, fails the build if the package appears at all).** Keeping them in different layers is what makes `exclude` explainable, and it is the one thing Maven got right that Gradle's `configurations.all { exclude }` blurs.
