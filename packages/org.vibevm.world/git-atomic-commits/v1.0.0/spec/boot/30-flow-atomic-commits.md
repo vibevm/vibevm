@@ -51,7 +51,7 @@ Commits and a violation of the atomic rule. @status:impl/done
 - @fact:WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
   thing without also undoing two correct things. @status:impl/done
 - @fact:WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
-  where *why* survives after the WAL and spec prose decay. @status:impl/done
+  where *why* survives after volatile session notes and spec prose decay. @status:impl/done
 
 @fact:full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @status:impl/done
 

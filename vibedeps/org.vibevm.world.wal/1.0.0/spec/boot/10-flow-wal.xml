@@ -62,6 +62,12 @@ carry it:</two-files-carry-it-lead></p>
   state — the package never creates, deletes, or overwrites them as
   part of install or uninstall.</WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE>
     </facts>
+    <p><WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION fact="true" status="impl/done">This flow is the
+**single-developer, central-WAL convention**. A multi-developer project
+chooses its own session-durability scheme — many WALs (the registered-
+subprojects form is `flow:wal-specspaces`), or none — by not installing
+this flow or by superseding it; nothing in VibeVM requires a WAL
+(PROP-049).</WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION></p>
     <p><full-protocol-pointer fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root.</full-protocol-pointer></p>
   </scope>
 </spec>

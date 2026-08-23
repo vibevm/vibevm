@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Redbook member — wal</title>
+  <p><MEMBER-WAL fact="true" status="impl/done">`wal` — the checkpoint file and cold-resume snapshot; session
+wind-down and resume rituals.</MEMBER-WAL></p>
+</spec>

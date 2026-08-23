@@ -15,4 +15,10 @@ requires_kinds = []
 
 [boot_snippet]
 source = "spec/boot/20-flow-sync-from-code.md"
+
 category = "flow"
+
+[[boot_snippet.fragment]]
+source = "spec/boot/20a-wal-binding.md"
+when = "installed:org.vibevm.world/wal"
+

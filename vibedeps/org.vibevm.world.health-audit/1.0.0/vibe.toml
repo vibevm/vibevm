@@ -15,7 +15,12 @@ requires_kinds = []
 
 [boot_snippet]
 source = "spec/boot/42-flow-health-audit.md"
+
 category = "flow"
+
+[[boot_snippet.fragment]]
+source = "spec/boot/42a-wal-binding.md"
+when = "installed:org.vibevm.world/wal"
 
 [[skill]]
 name = "health-audit"

@@ -16,6 +16,7 @@ requires_kinds = []
 [boot_snippet]
 source = "spec/boot/10-flow-wal.md"
 category = "flow"
+concepts = ["WAL", "spec/WAL.md", "CONTINUE.md"]
 
 [[skill]]
 name = "wal-status"

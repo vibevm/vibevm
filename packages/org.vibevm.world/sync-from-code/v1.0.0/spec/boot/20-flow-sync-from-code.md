@@ -7,7 +7,7 @@ code when the code changed first. @status:impl/done
 
 ## Default direction is unchanged {#direction}
 
-@fact:INFORMATION-FLOWS-TOP-DOWN Information flows top-down: head → WAL → spec → code. @status:impl/done
+@fact:INFORMATION-FLOWS-TOP-DOWN Information flows top-down: head → durable session state → spec → code. @status:impl/done
 
 @fact:SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE Sync-from-Code does
 not flip that rule. @status:impl/done
@@ -48,7 +48,7 @@ caused the drift. @status:impl/done
 - @fact:NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE Never silently update a spec to match the code. A silent update erases
   the human's mental model of what the project intends. @status:impl/done
 - @fact:NEVER-PAPER-OVER-A-TEMPORARY-HACK Never use Sync-from-Code to paper over a temporary hack. For
-  throwaway debug code, record in the WAL:
+  throwaway debug code, record in your durable session state:
   `<file>: temporary, do not sync to spec`. @status:impl/done
 - @fact:NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES Never batch two unrelated code changes into one spec edit. One intent
   per sync run. @status:impl/done

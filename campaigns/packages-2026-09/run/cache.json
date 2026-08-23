@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-22T23:01:07Z",
+  "updated_at": "2026-08-23T00:25:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -63977,7 +63977,7 @@
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/boot/35-flow-conflict-protocol.md": {
-      "content_hash": "16ddcbbf50be74669eae81d37426d99ff36705be2ff2142b4f10d629888baaca",
+      "content_hash": "d92a9cf7f40a4ca98b587dea4f1eee03dee5b56da31c32d2437e4ba3f10719df",
       "rollup": {
         "explicit": [
           "impl",
@@ -63999,7 +63999,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "16ddcbbf50be74669eae81d37426d99ff36705be2ff2142b4f10d629888baaca",
+        "processed_hash": "d92a9cf7f40a4ca98b587dea4f1eee03dee5b56da31c32d2437e4ba3f10719df",
         "verdicts": {
           "PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET": {
             "v": "confirmed",
@@ -64240,8 +64240,40 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T11:21:51Z",
+        "verified_at": "2026-08-23T00:25:13Z",
         "verify_batch": "C5-MINT-WORLD-INHERIT"
+      }
+    },
+    "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/boot/35a-wal-binding.md": {
+      "content_hash": "43a36b7e35b3660fa40024ba42acd8cae998f279a55f09c2e3cb7edd9607a99d",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
+        "fact_count": 1,
+        "unmarked_facts": 0
+      },
+      "marker_count": 1,
+      "unit_count": 1,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "43a36b7e35b3660fa40024ba42acd8cae998f279a55f09c2e3cb7edd9607a99d",
+        "verdicts": {
+          "CONFLICT-WAL-BINDING": {
+            "v": "confirmed",
+            "ev": [
+              "new installed:-guarded fragment landed by the PROP-049 wave; text is the concept binding the main snippet generalised away; verified live — the fragment materialises into the slot and the host STATIC (wal installed) and is absent by construction where the guard fails"
+            ]
+          }
+        },
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "P049-PACKAGES"
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md": {
@@ -76292,7 +76324,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v1.0.0/spec/boot/30-flow-atomic-commits.md": {
-      "content_hash": "14ff6b83eeb1fa86923740c295238f8b6d4862de7b12da1b96a861313046424d",
+      "content_hash": "cc7738383907f908318cf28ade88f979840ab5a80c48d2bcd91399ee5cb0653f",
       "rollup": {
         "explicit": [
           "impl",
@@ -76314,7 +76346,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "14ff6b83eeb1fa86923740c295238f8b6d4862de7b12da1b96a861313046424d",
+        "processed_hash": "cc7738383907f908318cf28ade88f979840ab5a80c48d2bcd91399ee5cb0653f",
         "verdicts": {
           "THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -76543,7 +76575,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T11:21:51Z",
+        "verified_at": "2026-08-23T00:25:13Z",
         "verify_batch": "C5-MINT-WORLD-INHERIT"
       }
     },
@@ -88135,7 +88167,7 @@
       }
     },
     "packages/org.vibevm.world/health-audit/v1.0.0/spec/boot/42-flow-health-audit.md": {
-      "content_hash": "fba52085d27c2559d5f6833858927ddc8fd11d91586e0bd5b3f64c20470ea488",
+      "content_hash": "a874bd6e92f7dfafa0baea0c9bf71145681e2d0554733a8e58c345a568439f6f",
       "rollup": {
         "explicit": [
           "impl",
@@ -88157,7 +88189,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fba52085d27c2559d5f6833858927ddc8fd11d91586e0bd5b3f64c20470ea488",
+        "processed_hash": "a874bd6e92f7dfafa0baea0c9bf71145681e2d0554733a8e58c345a568439f6f",
         "verdicts": {
           "PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -88335,8 +88367,40 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T11:21:51Z",
+        "verified_at": "2026-08-23T00:25:13Z",
         "verify_batch": "C5-MINT-WORLD-INHERIT"
+      }
+    },
+    "packages/org.vibevm.world/health-audit/v1.0.0/spec/boot/42a-wal-binding.md": {
+      "content_hash": "6ca3d00d3e1dccdb3767b08a9110833432e885e20d762e7fe03189fec541597b",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
+        "fact_count": 1,
+        "unmarked_facts": 0
+      },
+      "marker_count": 1,
+      "unit_count": 1,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "6ca3d00d3e1dccdb3767b08a9110833432e885e20d762e7fe03189fec541597b",
+        "verdicts": {
+          "AUDIT-WAL-BINDING": {
+            "v": "confirmed",
+            "ev": [
+              "new installed:-guarded fragment landed by the PROP-049 wave; text is the concept binding the main snippet generalised away; verified live — the fragment materialises into the slot and the host STATIC (wal installed) and is absent by construction where the guard fails"
+            ]
+          }
+        },
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "P049-PACKAGES"
       }
     },
     "packages/org.vibevm.world/health-audit/v1.0.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
@@ -116125,7 +116189,7 @@
       }
     },
     "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03-flow-redbook.md": {
-      "content_hash": "e4d4caefc90706e3865700e60cf6613896a3fc6ff560a318b7bde4c93ee68a5f",
+      "content_hash": "ba9d489538cf9e2127762d78387ba7342b11a443279f7607d0fe954f034b258c",
       "rollup": {
         "explicit": [
           "impl",
@@ -116139,15 +116203,15 @@
           "impl",
           "done"
         ],
-        "marker_count": 40,
-        "fact_count": 39,
+        "marker_count": 38,
+        "fact_count": 37,
         "unmarked_facts": 0
       },
-      "marker_count": 40,
+      "marker_count": 38,
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "e4d4caefc90706e3865700e60cf6613896a3fc6ff560a318b7bde4c93ee68a5f",
+        "processed_hash": "ba9d489538cf9e2127762d78387ba7342b11a443279f7607d0fe954f034b258c",
         "verdicts": {
           "PROJECT-FOLLOWS-THE-REDBOOK": {
             "v": "confirmed",
@@ -116280,17 +116344,6 @@
             ],
             "src": [
               1,
-              3
-            ]
-          },
-          "MEMBER-WAL": {
-            "v": "confirmed",
-            "ev": [
-              "наследование чеканки C5: текст факта скопирован из судимого packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md (слот-копия v1.0.0, дельта — только версии 1.0.0 в живых списках); исходные улики там же"
-            ],
-            "src": [
-              1,
-              2,
               3
             ]
           },
@@ -116531,17 +116584,6 @@
               3
             ]
           },
-          "MEMBER-WAL-SPECSPACES": {
-            "v": "confirmed",
-            "ev": [
-              "наследование чеканки C5: текст факта скопирован из судимого packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md (слот-копия v1.0.0, дельта — только версии 1.0.0 в живых списках); исходные улики там же"
-            ],
-            "src": [
-              1,
-              2,
-              3
-            ]
-          },
           "AN-EDITION-IS-A-TESTED-SET": {
             "v": "confirmed",
             "ev": [
@@ -116565,8 +116607,72 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T11:21:52Z",
+        "verified_at": "2026-08-23T00:25:13Z",
         "verify_batch": "C5-MINT-WORLD-INHERIT"
+      }
+    },
+    "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03a-member-wal.md": {
+      "content_hash": "a3783b7f9ca4145c3fdf6625ef64e26a9f7707743fc813909afb181d9ffbdcdd",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
+        "fact_count": 1,
+        "unmarked_facts": 0
+      },
+      "marker_count": 1,
+      "unit_count": 1,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "a3783b7f9ca4145c3fdf6625ef64e26a9f7707743fc813909afb181d9ffbdcdd",
+        "verdicts": {
+          "MEMBER-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "moved verbatim from 03-flow-redbook.md into an installed:wal catalog fragment (PROP-049 ##REDBOOK-WAL-UNBUNDLED's catalog consequence); anchor unchanged"
+            ]
+          }
+        },
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "P049-PACKAGES"
+      }
+    },
+    "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03b-member-wal-specspaces.md": {
+      "content_hash": "83dd5e7c33307fcb62b797ae585c96d886efd8d671f9d53f35b5138e2f3b4958",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
+        "fact_count": 1,
+        "unmarked_facts": 0
+      },
+      "marker_count": 1,
+      "unit_count": 1,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "83dd5e7c33307fcb62b797ae585c96d886efd8d671f9d53f35b5138e2f3b4958",
+        "verdicts": {
+          "MEMBER-WAL-SPECSPACES": {
+            "v": "confirmed",
+            "ev": [
+              "moved from 03-flow-redbook.md into an installed:wal-specspaces catalog fragment; one word generalised (WAL → checkpoint file) because the fragment's guard names a different owner than the concept — the gate itself demanded it"
+            ]
+          }
+        },
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "P049-PACKAGES"
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md": {
@@ -133710,7 +133816,7 @@
       }
     },
     "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/boot/20-flow-sync-from-code.md": {
-      "content_hash": "2fb76f5a8b871bab6da3331159e144527d3db900cf057f1a59ebd1ddea3582c7",
+      "content_hash": "13f8fccd99bc0cf8ed9756115353db55eeac3699d6064f09bc1642b7243f2fcf",
       "rollup": {
         "explicit": [
           "impl",
@@ -133732,7 +133838,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "2fb76f5a8b871bab6da3331159e144527d3db900cf057f1a59ebd1ddea3582c7",
+        "processed_hash": "13f8fccd99bc0cf8ed9756115353db55eeac3699d6064f09bc1642b7243f2fcf",
         "verdicts": {
           "THE-PROJECT-USES-SYNC-FROM-CODE": {
             "v": "confirmed",
@@ -133939,8 +134045,40 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T11:21:52Z",
+        "verified_at": "2026-08-23T00:25:13Z",
         "verify_batch": "C5-MINT-WORLD-INHERIT"
+      }
+    },
+    "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/boot/20a-wal-binding.md": {
+      "content_hash": "8db1bc856b59e2b555efc5dabce214ed27f58fbf3b5e1e58fa8ff13b799adec7",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
+        "fact_count": 1,
+        "unmarked_facts": 0
+      },
+      "marker_count": 1,
+      "unit_count": 1,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "8db1bc856b59e2b555efc5dabce214ed27f58fbf3b5e1e58fa8ff13b799adec7",
+        "verdicts": {
+          "SYNC-WAL-BINDING": {
+            "v": "confirmed",
+            "ev": [
+              "new installed:-guarded fragment landed by the PROP-049 wave; text is the concept binding the main snippet generalised away; verified live — the fragment materialises into the slot and the host STATIC (wal installed) and is absent by construction where the guard fails"
+            ]
+          }
+        },
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "P049-PACKAGES"
       }
     },
     "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md": {
@@ -151212,7 +151350,7 @@
       }
     },
     "packages/org.vibevm.world/wal/v1.0.0/spec/boot/10-flow-wal.md": {
-      "content_hash": "82d483b006d9a1edc3ef4a411676cad39dfeef0cd1ec99c4c819b8521b1d769b",
+      "content_hash": "4d53ad05ddeea8e6fa2ef6827a72317381949288a1c9c476ecd48274f031df4c",
       "rollup": {
         "explicit": [
           "impl",
@@ -151226,15 +151364,15 @@
           "impl",
           "done"
         ],
-        "marker_count": 16,
-        "fact_count": 15,
+        "marker_count": 17,
+        "fact_count": 16,
         "unmarked_facts": 0
       },
-      "marker_count": 16,
+      "marker_count": 17,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "82d483b006d9a1edc3ef4a411676cad39dfeef0cd1ec99c4c819b8521b1d769b",
+        "processed_hash": "4d53ad05ddeea8e6fa2ef6827a72317381949288a1c9c476ecd48274f031df4c",
         "verdicts": {
           "PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY": {
             "v": "confirmed",
@@ -151398,10 +151536,16 @@
               1,
               3
             ]
+          },
+          "WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's multi-developer scope clause (PROP-049 ##WAL-SNIPPET-SCOPE-CLAUSE): single-dev central-WAL convention, alternatives named (wal-specspaces / none), nothing in VibeVM requires a WAL — matches the machinery (init scaffolds none, absent-WAL checks return silently)"
+            ]
           }
         },
-        "verified_at": "2026-08-20T11:21:52Z",
-        "verify_batch": "C5-MINT-WORLD-INHERIT"
+        "verified_at": "2026-08-23T00:25:13Z",
+        "verify_batch": "C5-MINT-WORLD-INHERIT + P049-PACKAGES"
       }
     },
     "packages/org.vibevm.world/wal/v1.0.0/spec/flows/wal/WAL-PROTOCOL.md": {
@@ -161636,7 +161780,7 @@
       }
     },
     "spec/common/PROP-049-snippet-genre.md": {
-      "content_hash": "e2a7a8b8eb11eee075b8eadb5bf156ac76dc55317fb99de03ab163e6a1dc4a66",
+      "content_hash": "8c06d43b86b5b1d4159c1e07f33a5e48b2f3d0248709c981895e5813f16de161",
       "rollup": {
         "explicit": [
           "spec",

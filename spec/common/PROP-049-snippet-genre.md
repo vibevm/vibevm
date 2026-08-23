@@ -63,10 +63,14 @@ unconditional snippet is an error.** A vibe-check cell scans authored
 snippet sources: a token owned by package D, found word-bounded in the main
 snippet (or any fragment NOT guarded by `installed:D`) of package P≠D, is an
 ERROR naming the token, the owner and the repair («move the mention into a
-fragment guarded by installed:<D>, or drop it»). Proven by a red fixture; a
-future publish wave runs the same cell as a C6 gate. Enforcement is
-three-point: the compiler (fragments are the only lawful conditional form),
-the panel/check (this cell), the publish gate. @status:spec/work
+fragment guarded by installed:<D>, or drop it»). **The dependency
+exemption:** a declared `[requires]` on D guarantees co-installation, so P's
+bare mention of D's concepts is lawful (wal-specspaces presupposes the wal it
+hard-requires by construction). Code spans and fences are opaque to the scan,
+as to every markup scanner. Proven by a red fixture; a future publish wave
+runs the same cell as a C6 gate. Enforcement is three-point: the compiler
+(fragments are the only lawful conditional form), the panel/check (this
+cell), the publish gate. @status:spec/work
 
 ## 5. The repairs shipped with the wave {#repairs}
 
@@ -84,7 +88,10 @@ discipline is an explicit `flow:org.vibevm.world/wal` install — installation
 returns to meaning consent. The host adds its own direct
 `flow:org.vibevm.world/wal` entry (static-transitive, like its
 wal-specspaces neighbour), so the host's lanes keep the flow it genuinely
-runs. @status:spec/work
+runs. **The catalog consequence:** once unbundled, the book snippet's member
+lines about the wal family are presuppositions like any other — they move
+into `installed:`-guarded fragments, so the edition's catalog shows the
+members a project actually installed. @status:spec/work
 
 @fact:WAL-SNIPPET-SCOPE-CLAUSE **The wal snippet names its own genre.** One
 added clause: this flow is the single-developer, central-WAL convention;

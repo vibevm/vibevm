@@ -58,9 +58,9 @@ the run procedure:
   part of the close-out, not an optional extra. @status:impl/done
 - @fact:NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION Never let a finding vanish without a disposition. Every finding is
   fixed, filed, accepted, or open — silence is not an option. @status:impl/done
-- @fact:NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT Never keep findings only in the volatile checkpoint file (the WAL /
-  CONTINUE). The durable home is `AUDIT.md`; the checkpoint is
-  reconciled *against* it, never a substitute for it. @status:impl/done
+- @fact:NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT Never keep findings only in the volatile session checkpoint files.
+  The durable home is `AUDIT.md`; a checkpoint is reconciled *against*
+  it, never a substitute for it. @status:impl/done
 - @fact:NEVER-LET-THE-CHECKLIST-FOSSILIZE Never let the checklist fossilize. A new defect class a run
   discovers becomes a permanent category, so the same gap is never
   re-missed. @status:impl/done

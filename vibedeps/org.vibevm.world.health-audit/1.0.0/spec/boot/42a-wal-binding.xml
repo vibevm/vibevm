@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Health audit — the WAL binding</title>
+  <p><AUDIT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile session
+checkpoints of the finding rule are `spec/WAL.md` and `CONTINUE.md` —
+reconciled against `AUDIT.md`, never its substitute.</AUDIT-WAL-BINDING></p>
+</spec>

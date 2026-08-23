@@ -16,14 +16,14 @@ error. @status:spec/done
 @fact:EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY Every disagreement between layers is settled by fixed priority: @status:impl/done
 
 ```
-Human  >  Spec  >  Tests  >  Code  >  WAL
+Human  >  Spec  >  Tests  >  Code  >  volatile state
 ```
 
 - @fact:HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY The human may change the spec; nobody else may — silently. @status:impl/done
 - @fact:CODE-MUST-CONFORM-TO-THE-SPEC Code must conform to the spec, never the other way around. @status:impl/done
 - @fact:TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM Tests are the spec in executable form: a test that contradicts the
   spec is a bug in exactly one of the two, never both. @status:impl/done
-- @fact:THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST The volatile state file (WAL or equivalent) is a record, dead last:
+- @fact:THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST The volatile state file is a record, dead last:
   when it disagrees with anything above it, it is stale. @status:impl/done
 
 @fact:full-protocol-pointer Full protocol:

@@ -15,6 +15,8 @@ requires_kinds = []
 
 [boot_snippet]
 source = "spec/boot/03-flow-redbook.md"
+
+
 category = "flow"
 
 # Edition 1.0.0 — the 1.0 release edition. An edition is a tested set:
@@ -22,10 +24,18 @@ category = "flow"
 # edition number. Members evolve on their own lines between editions.
 # This edition adds the wave-2 practices (operating-modes through
 # tool-design-lessons) to the ten of edition 0.1.0.
+
+[[boot_snippet.fragment]]
+source = "spec/boot/03a-member-wal.md"
+when = "installed:org.vibevm.world/wal"
+
+[[boot_snippet.fragment]]
+source = "spec/boot/03b-member-wal-specspaces.md"
+when = "installed:org.vibevm.world/wal-specspaces"
+
 [requires.packages]
 # The book's core (edition 0.1.0)
 "flow:org.vibevm.world/two-process-model" = "=1.0.0"
-"flow:org.vibevm.world/wal" = "=1.0.0"
 "flow:org.vibevm.world/sync-from-code" = "=1.0.0"
 "flow:org.vibevm.world/git-practices" = "=1.0.0"
 "flow:org.vibevm.world/addressable-specs" = "=1.0.0"

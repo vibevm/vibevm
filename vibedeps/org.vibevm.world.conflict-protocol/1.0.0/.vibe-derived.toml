@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:ef19ea8af000052ec486639859c05f708ed74a80ff70a8ba7e864c510bc207d3"
+source_hash = "sha256:dc8d4a94d0a1693bd8af2d373eea84b93e300d7a6d2ffccef49e4be2cf8ed88a"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:e2baac36fe49f845eb84af2378459477f45c2c999a9fb06fbbae3798941184d7"
+derived_hash = "sha256:e8c5204e585cc5a94bccc6d3ba43d41b23e0f255bb542872598ad91764ce9742"
 
 [[file]]
 source = "LICENSE.md"
@@ -17,6 +17,11 @@ disposition = "converted"
 [[file]]
 source = "spec/boot/35-flow-conflict-protocol.md"
 output = "spec/boot/35-flow-conflict-protocol.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/35a-wal-binding.md"
+output = "spec/boot/35a-wal-binding.xml"
 disposition = "converted"
 
 [[file]]

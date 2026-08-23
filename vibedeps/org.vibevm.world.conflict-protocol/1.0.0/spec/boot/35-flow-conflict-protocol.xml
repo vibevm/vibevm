@@ -10,13 +10,13 @@ error.</CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR></p>
   <p><WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY fact="true" status="impl/done">What is forbidden is resolving a contradiction silently.</WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY></p>
   <hierarchy title="The hierarchy">
     <p><EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY fact="true" status="impl/done">Every disagreement between layers is settled by fixed priority:</EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY></p>
-    <fence>Human  &gt;  Spec  &gt;  Tests  &gt;  Code  &gt;  WAL</fence>
+    <fence>Human  &gt;  Spec  &gt;  Tests  &gt;  Code  &gt;  volatile state</fence>
     <facts ordered="false">
       <HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY fact="true" status="impl/done">The human may change the spec; nobody else may — silently.</HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY>
       <CODE-MUST-CONFORM-TO-THE-SPEC fact="true" status="impl/done">Code must conform to the spec, never the other way around.</CODE-MUST-CONFORM-TO-THE-SPEC>
       <TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM fact="true" status="impl/done">Tests are the spec in executable form: a test that contradicts the
   spec is a bug in exactly one of the two, never both.</TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM>
-      <THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST fact="true" status="impl/done">The volatile state file (WAL or equivalent) is a record, dead last:
+      <THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST fact="true" status="impl/done">The volatile state file is a record, dead last:
   when it disagrees with anything above it, it is stale.</THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST>
     </facts>
     <p><full-protocol-pointer fact="true" status="impl/done">Full protocol:

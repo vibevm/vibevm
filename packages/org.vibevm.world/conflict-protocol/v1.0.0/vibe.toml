@@ -15,4 +15,10 @@ requires_kinds = []
 
 [boot_snippet]
 source = "spec/boot/35-flow-conflict-protocol.md"
+
 category = "flow"
+
+[[boot_snippet.fragment]]
+source = "spec/boot/35a-wal-binding.md"
+when = "installed:org.vibevm.world/wal"
+

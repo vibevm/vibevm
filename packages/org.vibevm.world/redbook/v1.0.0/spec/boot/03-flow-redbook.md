@@ -39,8 +39,6 @@ session needs. @status:impl/done
 
 - @fact:MEMBER-TWO-PROCESS-MODEL `two-process-model` — the foundation: human and AI as
   coprocessors; the human owns coherence; files are the IPC. @status:impl/done
-- @fact:MEMBER-WAL `wal` — the checkpoint file and cold-resume snapshot; session
-  wind-down and resume rituals. @status:impl/done
 - @fact:MEMBER-SYNC-FROM-CODE `sync-from-code` — the sanctioned reverse path when code changed
   before the spec. @status:impl/done
 - @fact:MEMBER-ATOMIC-COMMITS `git-atomic-commits` — one commit, one idea; Conventional Commits;
@@ -87,8 +85,6 @@ session needs. @status:impl/done
 
 - @fact:MEMBER-DEV-RUNTIME-DOCS `dev-runtime-docs` — the running-notes discipline for a project's
   development-runtime documents. @status:impl/done
-- @fact:MEMBER-WAL-SPECSPACES `wal-specspaces` — nested projects (specspaces), each carrying its
-  own boot contract, WAL, and cold-resume file. @status:impl/done
 
 @fact:AN-EDITION-IS-A-TESTED-SET An **edition** is a tested set: the umbrella pins every member
 exactly, and the umbrella's version is the edition number. @status:impl/done

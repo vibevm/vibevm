@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:1bd11d9aa2b7b07a0855a73602f5e4f050e4edde241a1ffbabe85d7b891e20f9"
+source_hash = "sha256:ba71ad722a2707be7b8c4e9a7b6d4cc6640a056dd22a4c6ef782ad49d77e2e47"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:93f45ea17f88c14e1027c783aac773444dd96733e98b1c30791c01ad8cc5baaf"
+derived_hash = "sha256:eb766e13d730a12aabc241fd3938c68e74d8cd21be90d3194b7d31f5ad3dfe58"
 
 [[file]]
 source = "LICENSE.md"
@@ -37,6 +37,16 @@ disposition = "converted"
 [[file]]
 source = "spec/boot/03-flow-redbook.md"
 output = "spec/boot/03-flow-redbook.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/03a-member-wal.md"
+output = "spec/boot/03a-member-wal.xml"
+disposition = "converted"
+
+[[file]]
+source = "spec/boot/03b-member-wal-specspaces.md"
+output = "spec/boot/03b-member-wal-specspaces.xml"
 disposition = "converted"
 
 [[file]]

@@ -59,4 +59,11 @@ carry it: @status:impl/done
   state — the package never creates, deletes, or overwrites them as
   part of install or uninstall. @status:impl/done
 
+@fact:WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION This flow is the
+**single-developer, central-WAL convention**. A multi-developer project
+chooses its own session-durability scheme — many WALs (the registered-
+subprojects form is `flow:wal-specspaces`), or none — by not installing
+this flow or by superseding it; nothing in VibeVM requires a WAL
+(PROP-049). @status:impl/done
+
 @fact:full-protocol-pointer Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @status:impl/done

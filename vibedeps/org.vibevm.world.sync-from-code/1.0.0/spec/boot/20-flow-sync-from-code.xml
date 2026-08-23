@@ -5,7 +5,7 @@
   <p><THE-PROJECT-USES-SYNC-FROM-CODE fact="true" status="impl/done">This project uses the **Sync-from-Code** protocol to reconcile specs with
 code when the code changed first.</THE-PROJECT-USES-SYNC-FROM-CODE></p>
   <direction title="Default direction is unchanged">
-    <p><INFORMATION-FLOWS-TOP-DOWN fact="true" status="impl/done">Information flows top-down: head → WAL → spec → code.</INFORMATION-FLOWS-TOP-DOWN></p>
+    <p><INFORMATION-FLOWS-TOP-DOWN fact="true" status="impl/done">Information flows top-down: head → durable session state → spec → code.</INFORMATION-FLOWS-TOP-DOWN></p>
     <p><SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE fact="true" status="impl/done">Sync-from-Code does
 not flip that rule.</SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE></p>
     <p><the-exceptional-path-for-two-legitimate-cases-lead fact="true" status="impl/done">It is the **exceptional path** for two legitimate
@@ -41,7 +41,7 @@ caused the drift.</RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION></p>
       <NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE fact="true" status="impl/done">Never silently update a spec to match the code. A silent update erases
   the human's mental model of what the project intends.</NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE>
       <NEVER-PAPER-OVER-A-TEMPORARY-HACK fact="true" status="impl/done">Never use Sync-from-Code to paper over a temporary hack. For
-  throwaway debug code, record in the WAL:
+  throwaway debug code, record in your durable session state:
   `&lt;file&gt;: temporary, do not sync to spec`.</NEVER-PAPER-OVER-A-TEMPORARY-HACK>
       <NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES fact="true" status="impl/done">Never batch two unrelated code changes into one spec edit. One intent
   per sync run.</NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES>

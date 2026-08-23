@@ -42,7 +42,7 @@ Commits and a violation of the atomic rule.</THE-TWO-ARE-DISTINCT-AND-RUN-TOGETH
       <WHY-ROLLBACK-PRECISION fact="true" status="impl/done">**Rollback precision.** `git revert &lt;sha&gt;` must undo the wrong
   thing without also undoing two correct things.</WHY-ROLLBACK-PRECISION>
       <WHY-COMMIT-LOG-AS-DECISION-RECORD fact="true" status="impl/done">**Commit log as decision record.** The message is the only place
-  where *why* survives after the WAL and spec prose decay.</WHY-COMMIT-LOG-AS-DECISION-RECORD>
+  where *why* survives after volatile session notes and spec prose decay.</WHY-COMMIT-LOG-AS-DECISION-RECORD>
     </facts>
     <p><full-protocol-pointer fact="true" status="impl/done">Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root.</full-protocol-pointer></p>
   </why-human-ai-teams>

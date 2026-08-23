@@ -20,6 +20,7 @@ spec_format = "xml"
 # the static lane `spec/boot/STATIC.md`, delivers RESUME/END SESSION target
 # resolution and the SPECSPACES.md registry. Resolves locally from packages/
 # (its transitive wal =1.0.0 pin is present there).
+"flow:org.vibevm.world/wal" = { version = "^1.0.0", link = "static-transitive" }
 "flow:org.vibevm.world/wal-specspaces" = "^1.0.0"
 
 # The omnichannel flow — a capability lives in a library; CLI, TUI and MCP are
