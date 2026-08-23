@@ -179,6 +179,7 @@ impl<'a> Adapter<'a> {
     fn text_blocks(&self, b: &progress_core::doc::Block) -> Result<Vec<Block>> {
         let mut blocks: Vec<Block> = Vec::new();
         let text = b.source_text.as_str();
+        let scan_text = b.scan_text.as_str();
         let n_lines = text.lines().count();
         let line_span = |li: usize| -> (usize, usize) {
             let start = text.lines().take(li).map(|l| l.len() + 1).sum::<usize>();
@@ -186,7 +187,8 @@ impl<'a> Adapter<'a> {
             (start, start + l.len())
         };
         let is_table = |li: usize| -> bool {
-            text.lines()
+            scan_text
+                .lines()
                 .nth(li)
                 .is_some_and(|l| l.trim_start().starts_with('|'))
         };
@@ -388,9 +390,9 @@ impl<'a> Adapter<'a> {
             .unwrap_or(false)
     }
 
-    /// The first marker progress-core attached to this fact: its
-    /// granularity matches the fact kind (or is a fragment wrapper inside
-    /// the unit) and its line falls inside the fact's own line range.
+    /// The first whole-unit marker progress-core attached to this fact.
+    /// Fragment wrappers remain verbatim inline Markdown in [`Unit::text`];
+    /// the pivot's fact status represents only the carrier unit itself.
     fn marker_for(
         &self,
         b: &progress_core::doc::Block,
@@ -398,11 +400,9 @@ impl<'a> Adapter<'a> {
     ) -> Option<&'a Marker> {
         let end_line = b.line_start + b.source_text[..f.span.1].matches('\n').count();
         let gran_ok = |g: Granularity| match f.kind {
-            FactKind::Para | FactKind::Lead => {
-                g == Granularity::Paragraph || g == Granularity::Fragment
-            }
-            FactKind::Item => g == Granularity::Item || g == Granularity::Fragment,
-            FactKind::Cell => g == Granularity::Cell || g == Granularity::Fragment,
+            FactKind::Para | FactKind::Lead => g == Granularity::Paragraph,
+            FactKind::Item => g == Granularity::Item,
+            FactKind::Cell => g == Granularity::Cell,
         };
         self.doc
             .markers

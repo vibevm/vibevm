@@ -76422,7 +76422,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cb4435b5c80c600a9d5e7502e9ded341825fb8507616ad03d85b257991671098",
+      "content_hash": "sha256:5470aa5f1ae0745d18c52fbc0dd2ccc5f24eb3d235916aad2cf4d5c69f3f9c5f",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "CONVERT-SOURCE — стройка глагола и флип корпуса на XML",
@@ -76449,7 +76449,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:aec76785f1aa933454d92e669dd566ee38833f57bf12dcc1ac388b7b75775efa",
+      "content_hash": "sha256:5df6b0569bfc7e95a5f104c5ce38a654cb7cb4618c7680cb32a63bec4e9b5010",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Нарезка",
@@ -76476,7 +76476,7 @@
     },
     {
       "anchor": "K2-INVENTORY",
-      "content_hash": "sha256:e4eb215c157d8d8e2c4a4387cc6d0b88e7ab1ab724a80f65cfadf1353804c6ec",
+      "content_hash": "sha256:50da214b25db87beac24ff1c08bc51b331a83a6936a9b593c922bbf8336ea44b",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K2 — инвентарь. СНЯТ 2026-08-24** живым инструментом",
@@ -76485,11 +76485,11 @@
     },
     {
       "anchor": "K2-5-ENGINEERING-TAIL",
-      "content_hash": "sha256:bf0f989893d3889918dde582e0ef7c8e51b900f770a079f27674f717bb98def0",
+      "content_hash": "sha256:e890672833fee4297c4be387c2c8ec3a9ec478992316151d7c7d83892226d17d",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K2.5 — инженерный хвост инвентаря (делегируется).**",
-      "line": 76,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K2-5-ENGINEERING-TAIL"
     },
     {
@@ -76498,7 +76498,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K3 — хостовый `spec/`.** Конверсия всего дерева",
-      "line": 88,
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K3-HOST-SPEC"
     },
     {
@@ -76507,7 +76507,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K4 — `packages/`.** Каждый член (world, ai-native,",
-      "line": 95,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K4-PACKAGES"
     },
     {
@@ -76516,7 +76516,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K5 — рематериализация.** `rm -rf",
-      "line": 100,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K5-REMATERIALISE"
     },
     {
@@ -76525,7 +76525,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap",
-      "line": 107,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K6-GATES"
     },
     {
@@ -76534,7 +76534,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,",
-      "line": 113,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K7-WINDDOWN"
     },
     {
@@ -76543,7 +76543,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Приёмка",
-      "line": 116,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#acceptance"
     },
     {
@@ -76552,7 +76552,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "В периметре не остаётся ни одного авторского",
-      "line": 118,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#CONVERT-ACCEPTANCE"
     },
     {

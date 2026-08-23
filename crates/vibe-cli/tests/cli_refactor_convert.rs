@@ -177,6 +177,100 @@ fn recursive_walk_never_converts_vibedeps() {
 }
 
 #[test]
+fn recursive_walk_reports_node_modules_once_and_never_converts_it() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let foreign = temp.path().join("node_modules");
+    let nested = foreign.join("package").join("docs");
+    fs::create_dir_all(&nested).expect("create foreign corpus");
+    let first = foreign.join("README.md");
+    let second = nested.join("guide.md");
+    fs::write(&first, CANONICAL_MD).expect("write foreign readme");
+    fs::write(&second, CANONICAL_MD).expect("write foreign guide");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-source",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert!(first.exists());
+    assert!(second.exists());
+    assert!(!foreign.join("README.xml").exists());
+    assert!(!nested.join("guide.xml").exists());
+    let stdout = text(&output.stdout);
+    assert_eq!(
+        stdout
+            .lines()
+            .filter(|line| line.starts_with("skipped-foreign "))
+            .count(),
+        1,
+        "{stdout}"
+    );
+    assert!(stdout.contains("skipped-foreign=1"), "{stdout}");
+
+    let explicit = vibe(&[
+        "refactor",
+        "convert-source",
+        "--to",
+        "xml",
+        path_text(&second),
+    ]);
+    assert!(!explicit.status.success());
+    assert!(second.exists());
+    assert!(text(&explicit.stderr).contains("node_modules"));
+}
+
+#[test]
+fn recursive_walk_reports_and_preserves_harness_contract() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let source = temp.path().join("SKILL.md");
+    let skill = format!("---\nname: fixture\n---\n{CANONICAL_MD}");
+    fs::write(&source, &skill).expect("write skill contract");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-source",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert_eq!(fs::read_to_string(&source).expect("read skill"), skill);
+    assert!(!temp.path().join("SKILL.xml").exists());
+    let stdout = text(&output.stdout);
+    assert!(stdout.contains("skipped-harness"), "{stdout}");
+    assert!(stdout.contains("skipped-harness=1"), "{stdout}");
+}
+
+#[test]
+fn explicit_harness_contract_is_loudly_refused() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let source = temp.path().join("SKILL.md");
+    fs::write(&source, CANONICAL_MD).expect("write skill contract");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-source",
+        "--to",
+        "xml",
+        path_text(&source),
+    ]);
+
+    assert!(!output.status.success());
+    assert_eq!(
+        fs::read_to_string(&source).expect("read skill"),
+        CANONICAL_MD
+    );
+    assert!(!temp.path().join("SKILL.xml").exists());
+    assert!(text(&output.stdout).contains("refused"));
+    assert!(text(&output.stderr).contains("harness contract"));
+}
+
+#[test]
 fn generated_marker_is_skipped_by_walk_but_explicit_file_overrides_it() {
     let temp = tempfile::tempdir().expect("tempdir");
     let source = temp.path().join("generated.md");

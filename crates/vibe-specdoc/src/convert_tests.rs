@@ -73,3 +73,35 @@ fn malformed_source_error_keeps_its_position() {
     assert!(error.line > 0, "error must carry a line: {error}");
     assert!(error.to_string().contains("line "), "{error}");
 }
+
+#[test]
+fn markdown_status_comment_with_inline_code_round_trips_verbatim() {
+    let source = "# T {#t}\n\n\
+                  <status stage=\"impl\" state=\"work\" \
+                  comment=\"shipped with `471e3b1b`\"/>\n\n";
+    let parsed = from_markdown(source).expect("parse Markdown status");
+    let xml = to_xml(&parsed);
+    let projected = crate::to_markdown(&crate::from_xml(&xml).expect("parse projected XML"));
+    assert_eq!(projected, source);
+}
+
+#[test]
+fn fragment_wrapper_beside_unit_status_is_not_ir_divergent() {
+    let source = "@fact:X <status stage=\"spec\" state=\"void\">Retired.\
+                  </status> @status:spec/void\n";
+    let result = convert(source, Direction::ToXml).expect("convert fragment status");
+    assert!(
+        !matches!(result, Conversion::IrDivergent { .. }),
+        "{result:?}"
+    );
+}
+
+#[test]
+fn multiline_inline_code_pipe_is_not_a_table_on_reparse() {
+    let source = "CLI `session begin|end|show\n|ls` stays inline.\n";
+    let result = convert(source, Direction::ToXml).expect("convert multiline inline code");
+    assert!(
+        !matches!(result, Conversion::IrDivergent { .. }),
+        "{result:?}"
+    );
+}

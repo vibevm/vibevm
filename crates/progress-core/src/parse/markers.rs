@@ -116,8 +116,20 @@ fn extract_from_span(
     let bytes = text.as_bytes();
     while i < e {
         if text[i..e].starts_with("<status") {
-            if let Some(el) = element::lex_element(text, i) {
+            if let Some(scan_el) = element::lex_element(text, i) {
                 let line = b.line_start + text[..i].matches('\n').count();
+                let Some(el) = element::lex_element(&b.source_text, i) else {
+                    doc.issues.push(Issue {
+                        severity: Severity::Error,
+                        line,
+                        code: IssueCode::Malformed,
+                        message:
+                            "status marker found by the scanner cannot be lexed from its raw source"
+                                .into(),
+                    });
+                    i += scan_el.tag_len;
+                    continue;
+                };
                 let d = element::decode_attrs(&el.attrs);
                 push_attr_issues(doc, &d, &el.errors, line);
                 let form = if el.self_closing {
@@ -258,4 +270,21 @@ fn build_marker(
         granularity: gran,
         line,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::parse_document;
+
+    #[test]
+    fn point_marker_attributes_keep_inline_code_verbatim() {
+        let source = "# H {#h}\n\n\
+                      <status stage=\"impl\" state=\"work\" \
+                      comment=\"shipped with `471e3b1b`\" ref=\"`release-proof`\"/>\n";
+        let doc = parse_document("x.md", source);
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        let marker = doc.document_marker().expect("document marker");
+        assert_eq!(marker.comment.as_deref(), Some("shipped with `471e3b1b`"));
+        assert_eq!(marker.r#ref.as_deref(), Some("`release-proof`"));
+    }
 }

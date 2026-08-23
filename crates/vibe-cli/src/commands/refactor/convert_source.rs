@@ -25,6 +25,8 @@ enum Discovered {
     Candidate,
     Already,
     SkippedGenerated,
+    SkippedForeign,
+    SkippedHarness,
     Refused(String),
 }
 
@@ -35,6 +37,8 @@ struct Counts {
     lossy_confirmed: usize,
     refused: usize,
     skipped_generated: usize,
+    skipped_foreign: usize,
+    skipped_harness: usize,
     dry_run: usize,
 }
 
@@ -85,6 +89,14 @@ pub(super) fn run_conversion(
                 println!("skipped-generated {}", path.display());
                 counts.skipped_generated += 1;
             }
+            Discovered::SkippedForeign => {
+                println!("skipped-foreign {}", path.display());
+                counts.skipped_foreign += 1;
+            }
+            Discovered::SkippedHarness => {
+                println!("skipped-harness {}", path.display());
+                counts.skipped_harness += 1;
+            }
             Discovered::Refused(reason) => {
                 report_refusal(&path, &reason, conversion.dry_run);
                 counts.refused += 1;
@@ -124,6 +136,20 @@ fn discover_argument(
         );
         return Ok(());
     }
+    if path.is_file() && path_has_node_modules(path) {
+        discovered.insert(
+            path.to_path_buf(),
+            Discovered::Refused("node_modules is foreign and never converted".to_string()),
+        );
+        return Ok(());
+    }
+    if path.is_file() && is_harness_contract(path) {
+        discovered.insert(
+            path.to_path_buf(),
+            Discovered::Refused("harness contract is never converted".to_string()),
+        );
+        return Ok(());
+    }
     if path.is_file() {
         let extension = path.extension().and_then(|value| value.to_str());
         if extension == Some(conversion.to.extension()) {
@@ -140,6 +166,10 @@ fn discover_argument(
         return Ok(());
     }
     if path.is_dir() {
+        if path_has_node_modules(path) {
+            discovered.insert(path.to_path_buf(), Discovered::SkippedForeign);
+            return Ok(());
+        }
         return walk_directory(path, conversion, discovered);
     }
     discovered.insert(
@@ -165,11 +195,19 @@ fn walk_directory(
             .file_type()
             .with_context(|| format!("reading file type for `{}`", path.display()))?;
         if file_type.is_dir() {
+            if is_foreign_directory(&path) {
+                discovered.entry(path).or_insert(Discovered::SkippedForeign);
+                continue;
+            }
             if should_skip_directory(&path) {
                 continue;
             }
             walk_directory(&path, conversion, discovered)?;
         } else if file_type.is_file() && is_spec_source(&path) {
+            if is_harness_contract(&path) {
+                discovered.entry(path).or_insert(Discovered::SkippedHarness);
+                continue;
+            }
             let extension = path.extension().and_then(|value| value.to_str());
             if extension == Some(conversion.from.extension()) {
                 let source = fs::read_to_string(&path)
@@ -195,9 +233,31 @@ fn should_skip_directory(path: &Path) -> bool {
     name == "target" || name == "vibedeps" || name.starts_with('.')
 }
 
+fn is_foreign_directory(path: &Path) -> bool {
+    path.file_name()
+        .and_then(|value| value.to_str())
+        .is_some_and(|name| name == "node_modules")
+}
+
 fn path_has_vibedeps(path: &Path) -> bool {
     path.components()
         .any(|component| component.as_os_str() == "vibedeps")
+}
+
+fn path_has_node_modules(path: &Path) -> bool {
+    path.components()
+        .any(|component| component.as_os_str() == "node_modules")
+}
+
+fn is_harness_contract(path: &Path) -> bool {
+    path.file_name()
+        .and_then(|value| value.to_str())
+        .is_some_and(|name| {
+            matches!(
+                name,
+                "CLAUDE.md" | "AGENTS.md" | "GEMINI.md" | "MEMORY.md" | "SKILL.md"
+            )
+        })
 }
 
 fn has_generated_marker(source: &str) -> bool {
@@ -415,12 +475,14 @@ fn report_refusal(path: &Path, reason: &str, dry_run: bool) {
 
 fn print_summary(counts: &Counts) {
     println!(
-        "summary converted={} already={} lossy-confirmed={} refused={} skipped-generated={} dry-run={}",
+        "summary converted={} already={} lossy-confirmed={} refused={} skipped-generated={} skipped-foreign={} skipped-harness={} dry-run={}",
         counts.converted,
         counts.already,
         counts.lossy_confirmed,
         counts.refused,
         counts.skipped_generated,
+        counts.skipped_foreign,
+        counts.skipped_harness,
         counts.dry_run
     );
 }
