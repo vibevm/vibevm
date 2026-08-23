@@ -1732,9 +1732,9 @@
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/checks/snippet_presupposition.rs",
       "item_kind": "mod",
-      "line": 3,
+      "line": 8,
       "symbol": "vibe_check::checks::snippet_presupposition",
-      "end_line": 3,
+      "end_line": 8,
       "fingerprint": "tok1:9c4ddf281848827dae1793c9226d17cd863ac7ddb4bd2b036dc2db62e209fc15"
     },
     {
@@ -11036,7 +11036,7 @@
     {
       "file": "crates/vibe-check/src/checks/snippet_presupposition.rs",
       "from_symbol": "vibe_check::checks::snippet_presupposition",
-      "line": 3,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#gate",
       "verb": "implements"
@@ -32046,7 +32046,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:b01756e098817c3d9708a9e7acf18541df2bf69ca3ee9f5deabc9f45c89ad720",
+      "content_hash": "sha256:f0fe067b459c5b746841acc9a01198880289c55da987bef386655c00680d7bb3",
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "PROP-049 — the snippet genre: no presupposed disciplines",
@@ -32118,7 +32118,7 @@
     },
     {
       "anchor": "gate",
-      "content_hash": "sha256:7e39cbc55a944225c587937e6d896082698cafd9d5dfdfcf011444f7998c9241",
+      "content_hash": "sha256:e37da6aea96410a842befccd1d8193c7343c4ce480b367a21e64a018358b1663",
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "4. The gate — the concepts dictionary check",
@@ -32136,7 +32136,7 @@
     },
     {
       "anchor": "SNIPPET-PRESUPPOSITION-CHECK",
-      "content_hash": "sha256:bd919f9b6c266413e39a4826721fce06ef8e0b1b5e69683fa1b76ed6c2257f91",
+      "content_hash": "sha256:4a218c1274964de68bec9d05f52a39cc0262230aafcb3efd50336f3ccf86af0c",
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "**The check: a foreign concept in an",
@@ -32149,7 +32149,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "5. The repairs shipped with the wave",
-      "line": 75,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#repairs"
     },
     {
@@ -32158,7 +32158,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "**The four presupposing snippets move their WAL",
-      "line": 77,
+      "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#FOUR-SNIPPETS-REPAIRED"
     },
     {
@@ -32167,7 +32167,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "**redbook stops hard-pulling `flow:wal`.** The",
-      "line": 85,
+      "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#REDBOOK-WAL-UNBUNDLED"
     },
     {
@@ -32176,7 +32176,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "**The wal snippet names its own genre.** One",
-      "line": 96,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#WAL-SNIPPET-SCOPE-CLAUSE"
     },
     {
@@ -32185,7 +32185,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "6. Rollback",
-      "line": 102,
+      "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#rollback"
     },
     {
@@ -32194,7 +32194,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "**The owner's escape hatch, named.** Every change is",
-      "line": 104,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#ROLLBACK-SHAPE"
     },
     {
@@ -32203,7 +32203,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "7. Companions",
-      "line": 110,
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#companions"
     },
     {
@@ -32212,7 +32212,7 @@
       "doc_path": "common/PROP-049",
       "file": "spec/common/PROP-049-snippet-genre.md",
       "heading": "[PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md)",
-      "line": 112,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-049#companions-list"
     },
     {

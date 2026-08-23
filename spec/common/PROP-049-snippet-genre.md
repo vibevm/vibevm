@@ -70,7 +70,13 @@ hard-requires by construction). Code spans and fences are opaque to the scan,
 as to every markup scanner. Proven by a red fixture; a future publish wave
 runs the same cell as a C6 gate. Enforcement is three-point: the compiler
 (fragments are the only lawful conditional form), the panel/check (this
-cell), the publish gate. @status:spec/work
+cell), the publish gate. **Softened 2026-08-23 (owner F7 ruling, PROP-050
+[##CONCEPTS-GATE-SOFTENED](PROP-050-dependency-visibility.md#prop-049-fate)):
+the cell speaks in WARNINGS, homonymy is lawful (an own `concepts`
+declaration owns the word), several owners dedup into one warning silenced
+by a lawful relation to any one of them; the `ignore-concept-warnings`
+subtree mute and the seeping-edges narrowing of the dependency exemption
+land with the visibility waves.** @status:impl/done
 
 ## 5. The repairs shipped with the wave {#repairs}
 

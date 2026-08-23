@@ -1,4 +1,9 @@
 //! PROP-049 §4 — foreign discipline concepts require structural guards.
+//! The genre is advisory (PROP-050 ##CONCEPTS-GATE-SOFTENED): a violation is
+//! a warning, homonymy is lawful (declaring the lexeme in the package's own
+//! `[boot_snippet].concepts` owns the word in its world), and several owners
+//! of one lexeme dedup into a single warning silenced by any one lawful
+//! relation.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-049#gate");
 
@@ -182,27 +187,39 @@ fn scan_source(
             if !contains_concept(&visible, concept) {
                 continue;
             }
-            for owner in owners {
-                if owner == &package.owner
+            // Homonymy is lawful: a package declaring the lexeme in its own
+            // concepts owns the word in its own world (PROP-050
+            // ##CONCEPTS-GATE-SOFTENED) — check before the owner loop.
+            if package.snippet.concepts.contains(concept) {
+                continue;
+            }
+            // Owner-dedup: one lawful relation to ANY owner legitimises the
+            // mention, and an unexplained use warns once naming all owners.
+            let lawful = owners.iter().any(|owner| {
+                owner == &package.owner
                     || package.requires.contains(owner)
                     || guarded_by(guard, owner)
-                {
-                    continue;
-                }
-                let line_number = line_index + 1;
-                report.err(
-                    CheckId::SnippetPresupposition,
-                    Some(rel.clone()),
-                    Some(line_number),
-                    format!(
-                        "{rel_label}:{line_number}: foreign concept `{concept}` belongs to package \
-                         `{owner}` (violates \
-                         spec://org.vibevm.core/vibevm/common/PROP-049#gate; fix: move the mention \
-                         into a [[boot_snippet.fragment]] guarded by when = \"installed:{owner}\", \
-                         or drop it)"
-                    ),
-                );
+            });
+            if lawful {
+                continue;
             }
+            let owner_list = owners
+                .iter()
+                .map(|owner| format!("`{owner}`"))
+                .collect::<Vec<_>>()
+                .join(", ");
+            let line_number = line_index + 1;
+            report.warn(
+                CheckId::SnippetPresupposition,
+                Some(rel.clone()),
+                Some(line_number),
+                format!(
+                    "{rel_label}:{line_number}: foreign concept `{concept}` belongs to package(s) \
+                     {owner_list} (PROP-050 ##CONCEPTS-GATE-SOFTENED; fix: move the mention into a \
+                     [[boot_snippet.fragment]] guarded by when = \"installed:<one of the owners>\", \
+                     declare the lexeme in your own [boot_snippet].concepts, or drop it)"
+                ),
+            );
         }
     }
 }
@@ -293,25 +310,27 @@ mod tests {
         fs::write(path, body).unwrap();
     }
 
-    fn write_owner(root: &Path) {
+    fn write_owner(root: &Path, name: &str) {
         write(
             root,
-            "packages/org.example/d/v1.0.0/vibe.toml",
-            r#"[package]
+            &format!("packages/org.example/{name}/v1.0.0/vibe.toml"),
+            &format!(
+                r#"[package]
 group = "org.example"
-name = "d"
+name = "{name}"
 kind = "flow"
 version = "1.0.0"
 
 [boot_snippet]
 source = "boot/main.md"
 concepts = ["WAL"]
-"#,
+"#
+            ),
         );
         write(
             root,
-            "packages/org.example/d/v1.0.0/boot/main.md",
-            "# D\n\nThe WAL discipline.\n",
+            &format!("packages/org.example/{name}/v1.0.0/boot/main.md"),
+            &format!("# {}\n\nThe WAL discipline.\n", name.to_uppercase()),
         );
     }
 
@@ -360,16 +379,16 @@ source = "boot/main.md"
     }
 
     #[test]
-    fn foreign_concept_in_main_snippet_is_one_error() {
+    fn foreign_concept_in_main_snippet_is_one_warning() {
         let project = tempdir().unwrap();
-        write_owner(project.path());
+        write_owner(project.path(), "d");
         write_consumer(project.path(), false, false, "The WAL is canonical.\n");
 
         let report = run(project.path());
         assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
         let finding = &report.findings[0];
         assert_eq!(finding.check, CheckId::SnippetPresupposition);
-        assert_eq!(finding.severity, Severity::Error);
+        assert_eq!(finding.severity, Severity::Warning);
         assert_eq!(finding.line, Some(1));
         assert!(finding.message.contains("WAL"), "{finding:?}");
         assert!(finding.message.contains("org.example/d"), "{finding:?}");
@@ -378,7 +397,7 @@ source = "boot/main.md"
     #[test]
     fn foreign_concept_in_matching_installed_fragment_is_clean() {
         let project = tempdir().unwrap();
-        write_owner(project.path());
+        write_owner(project.path(), "d");
         write_consumer(project.path(), true, true, "The WAL is canonical.\n");
         assert!(run(project.path()).findings.is_empty());
     }
@@ -396,7 +415,88 @@ source = "boot/main.md"
     #[test]
     fn a_declared_dependency_on_the_owner_makes_the_mention_lawful() {
         let project = tempdir().unwrap();
-        write_owner(project.path());
+        write_owner(project.path(), "d");
+        write(
+            project.path(),
+            "packages/org.example/p/v1.0.0/vibe.toml",
+            r#"[package]
+group = "org.example"
+name = "p"
+kind = "flow"
+version = "1.0.0"
+
+[boot_snippet]
+source = "boot/main.md"
+
+[requires.packages]
+"flow:org.example/d" = "^1.0.0"
+"#,
+        );
+        write(
+            project.path(),
+            "packages/org.example/p/v1.0.0/boot/main.md",
+            "The WAL is canonical here too.\n",
+        );
+        assert!(run(project.path()).findings.is_empty());
+    }
+
+    /// PROP-050 ##CONCEPTS-GATE-SOFTENED, lawful homonymy: a package that
+    /// declares the lexeme in its own `[boot_snippet].concepts` owns the
+    /// word in its own world, despite the foreign owner.
+    #[test]
+    fn own_concept_declaration_makes_the_homonym_lawful() {
+        let project = tempdir().unwrap();
+        write_owner(project.path(), "d");
+        write(
+            project.path(),
+            "packages/org.example/p/v1.0.0/vibe.toml",
+            r#"[package]
+group = "org.example"
+name = "p"
+kind = "flow"
+version = "1.0.0"
+
+[boot_snippet]
+source = "boot/main.md"
+concepts = ["WAL"]
+"#,
+        );
+        write(
+            project.path(),
+            "packages/org.example/p/v1.0.0/boot/main.md",
+            "Our WAL is a different discipline.\n",
+        );
+        assert!(run(project.path()).findings.is_empty());
+    }
+
+    /// PROP-050 ##CONCEPTS-GATE-SOFTENED, owner-dedup: an unexplained use
+    /// of a multi-owner lexeme warns once, naming every owner.
+    #[test]
+    fn two_owners_one_warning_naming_both() {
+        let project = tempdir().unwrap();
+        write_owner(project.path(), "d");
+        write_owner(project.path(), "e");
+        write_consumer(project.path(), false, false, "The WAL is canonical.\n");
+
+        let report = run(project.path());
+        assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
+        let finding = &report.findings[0];
+        assert_eq!(finding.severity, Severity::Warning);
+        assert!(
+            finding
+                .message
+                .contains("package(s) `org.example/d`, `org.example/e`"),
+            "{finding:?}"
+        );
+    }
+
+    /// PROP-050 ##CONCEPTS-GATE-SOFTENED: a relation to ANY ONE of several
+    /// owners legitimises the mention — here a `[requires]` edge to one.
+    #[test]
+    fn a_dependency_on_one_of_two_owners_silences_the_warning() {
+        let project = tempdir().unwrap();
+        write_owner(project.path(), "d");
+        write_owner(project.path(), "e");
         write(
             project.path(),
             "packages/org.example/p/v1.0.0/vibe.toml",
