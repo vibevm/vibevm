@@ -17,8 +17,8 @@ requires_kinds = []
 # redbook practices and the AI-Native stack from birth. This flow also pulls
 # its sibling delegation-rules — the directive names the calculus it sits above.
 [requires.packages]
-"flow:org.vibevm.world/redbook" = "^1.0.0"
-"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
+"flow:org.vibevm.world/redbook" = { version = "^1.0.0", access = "private" }
+"stack:org.vibevm.ai-native/rust-ai-native" = { version = "^1.0.0", access = "private" }
 "flow:org.vibevm.fractality/delegation-rules" = "^1.0.0"
 
 [boot_snippet]
