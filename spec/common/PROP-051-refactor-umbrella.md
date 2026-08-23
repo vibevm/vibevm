@@ -102,6 +102,21 @@ direction) → class + emitted target + loss diff — lives in
 unit tests; the CLI verb is a thin walker / prompter / writer over it,
 in the house thin-command genre. @status:impl/done
 
+@fact:FOREIGN-AND-HARNESS-SKIPS Two skip classes the K2 inventory proved
+(2026-08-24), amending ##CONVERT-SOURCE-SURFACE: the walk also skips
+**`node_modules/` directories** — foreign vendored trees are the same
+genre as `vibedeps/`, never authored here (the inventory found 129
+third-party `.md` under package tool dirs, including files only the
+foreign author may reshape) — and **harness-contract basenames**
+(`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `MEMORY.md`, `SKILL.md`):
+their FILENAME and format are an external harness's contract (a
+`SKILL.md` carries YAML frontmatter the pivot does not model — the
+inventory showed conversion would strip it and break the skill), so
+they stay Markdown by law, reported as their own skip class rather
+than silently converted. An explicit file argument does NOT override
+either skip — unlike the generated-marker skip, these are not
+heuristics. @status:spec/done
+
 @fact:FROM-AND-TO Both directions are first-class on every converting
 verb (owner, 2026-08-24, verbatim: «В настройках у обеих должно быть из
 какого формата в какой (я так понял что ты запланировал только MD->XML,

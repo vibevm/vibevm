@@ -33663,7 +33663,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6f06b2d64c2d7873a6a737a50aed2f5f6542fed01262a54a704e6148300b7d59",
+      "content_hash": "sha256:bb0a58576b3385f34ad19beae6f4471ae352a318dbae1652048e3e5e347b48bf",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "PROP-051: vibe refactor — the source-refactoring umbrella",
@@ -33717,7 +33717,7 @@
     },
     {
       "anchor": "convert-source",
-      "content_hash": "sha256:8d06b3bcf62729f550f461c5f342a8f43766d3cfda92ba28836287d8524a5a42",
+      "content_hash": "sha256:146a8ed700cc3663713c249e9b6237a4fbcd94ed7090079f6ba7cca88a8ff4fc",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "3. convert-source",
@@ -33779,12 +33779,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-CORE-IN-SPECDOC"
     },
     {
+      "anchor": "FOREIGN-AND-HARNESS-SKIPS",
+      "content_hash": "sha256:d2367da0d716d198abb2b24f0ba7ea4513dd12c56b5ab901abdbae3259369411",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "Two skip classes the K2 inventory proved",
+      "line": 105,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#FOREIGN-AND-HARNESS-SKIPS"
+    },
+    {
       "anchor": "FROM-AND-TO",
       "content_hash": "sha256:4e760267d704c1b85adb5fe04ffecb47e436ed54630645a567afaa5a688d40e2",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "Both directions are first-class on every converting",
-      "line": 105,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#FROM-AND-TO"
     },
     {
@@ -33793,7 +33802,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "`vibe refactor convert-package-src [--from …]",
-      "line": 116,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-PACKAGE-SRC"
     },
     {
@@ -33802,7 +33811,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "`vibe refactor convert-spec-src [--from …]",
-      "line": 128,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-SPEC-SRC"
     },
     {
@@ -33811,7 +33820,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "The two package-shaped verbs are thin",
-      "line": 136,
+      "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#WRAPPERS-SHARE-THE-CORE"
     },
     {
@@ -33820,7 +33829,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "4. Applying it to our own tree",
-      "line": 147,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#application"
     },
     {
@@ -33829,7 +33838,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "The mandate's third clause is a build of its own:",
-      "line": 149,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#APPLICATION-PLAN"
     },
     {
@@ -33838,7 +33847,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "5. History",
-      "line": 162,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#history"
     },
     {
@@ -33847,7 +33856,7 @@
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "2026-08-23: mandated, designed and ratified in",
-      "line": 164,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#HISTORY-COMMISSIONED"
     },
     {
@@ -76413,7 +76422,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:36b43585397598ae534a8c8c6e30749a1c0c6ff5d3c3d83f1e860629ecfd0fe2",
+      "content_hash": "sha256:cb4435b5c80c600a9d5e7502e9ded341825fb8507616ad03d85b257991671098",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "CONVERT-SOURCE — стройка глагола и флип корпуса на XML",
@@ -76440,7 +76449,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:772f125f5060d09af9dc93c200e0988c7eb9e7b386e0a121f00577dddd192f61",
+      "content_hash": "sha256:aec76785f1aa933454d92e669dd566ee38833f57bf12dcc1ac388b7b75775efa",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Нарезка",
@@ -76467,12 +76476,21 @@
     },
     {
       "anchor": "K2-INVENTORY",
-      "content_hash": "sha256:e49a33c4b53a84a666081e4ba2682f8fef79405f6cf8cb55c508a309dacd3cde",
+      "content_hash": "sha256:e4eb215c157d8d8e2c4a4387cc6d0b88e7ab1ab724a80f65cfadf1353804c6ec",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
-      "heading": "**K2 — инвентарь.** `--dry-run --to xml` над `spec/` и",
+      "heading": "**K2 — инвентарь. СНЯТ 2026-08-24** живым инструментом",
       "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K2-INVENTORY"
+    },
+    {
+      "anchor": "K2-5-ENGINEERING-TAIL",
+      "content_hash": "sha256:bf0f989893d3889918dde582e0ef7c8e51b900f770a079f27674f717bb98def0",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K2.5 — инженерный хвост инвентаря (делегируется).**",
+      "line": 76,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K2-5-ENGINEERING-TAIL"
     },
     {
       "anchor": "K3-HOST-SPEC",
@@ -76480,7 +76498,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K3 — хостовый `spec/`.** Конверсия всего дерева",
-      "line": 52,
+      "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K3-HOST-SPEC"
     },
     {
@@ -76489,7 +76507,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K4 — `packages/`.** Каждый член (world, ai-native,",
-      "line": 59,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K4-PACKAGES"
     },
     {
@@ -76498,7 +76516,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K5 — рематериализация.** `rm -rf",
-      "line": 64,
+      "line": 100,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K5-REMATERIALISE"
     },
     {
@@ -76507,7 +76525,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap",
-      "line": 71,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K6-GATES"
     },
     {
@@ -76516,7 +76534,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,",
-      "line": 77,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K7-WINDDOWN"
     },
     {
@@ -76525,7 +76543,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Приёмка",
-      "line": 80,
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#acceptance"
     },
     {
@@ -76534,7 +76552,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "В периметре не остаётся ни одного авторского",
-      "line": 82,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#CONVERT-ACCEPTANCE"
     },
     {
