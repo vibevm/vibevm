@@ -236,37 +236,39 @@ impl FactEntry {
 /// )
 /// .unwrap();
 /// assert_eq!(vibe_facts::host_package(dir.path()).unwrap(), "org.example/demo");
+///
+/// // Role-equipotence: a package-rooted checkout answers the same way.
+/// std::fs::write(
+///     dir.path().join("vibe.toml"),
+///     "[package]\nname = \"b\"\ngroup = \"org.x\"\nkind = \"flow\"\nversion = \"1.0.0\"\n",
+/// )
+/// .unwrap();
+/// assert_eq!(vibe_facts::host_package(dir.path()).unwrap(), "org.x/b");
 /// ```
 pub fn host_package(project_root: &Path) -> Result<String, RegistryError> {
-    #[derive(Deserialize)]
-    struct Manifest {
-        project: Project,
-    }
-    #[derive(Deserialize)]
-    struct Project {
-        group: String,
-        name: String,
-    }
-
+    // Role-blind (PROP-024 ##MANIFEST-ROLES-ARE-EQUIPOTENT): a package-rooted
+    // dev checkout keeps its adoption registry exactly as a project does.
     let path = project_root.join("vibe.toml");
-    let text = std::fs::read_to_string(&path).map_err(|source| RegistryError::Io {
-        path: path.clone(),
-        source,
+    let manifest = vibe_core::manifest::Manifest::read(&path).map_err(|source| {
+        RegistryError::InvalidManifest {
+            path: path.clone(),
+            reason: source.to_string(),
+        }
     })?;
-    let manifest: Manifest = toml::from_str(&text).map_err(|source| RegistryError::TomlRead {
-        path: path.clone(),
-        source,
-    })?;
-    if manifest.project.group.trim().is_empty() || manifest.project.name.trim().is_empty() {
+    let Some(node) = manifest.consumer_node() else {
         return Err(RegistryError::InvalidManifest {
             path,
-            reason: "`[project].group` and `[project].name` must be non-empty".to_string(),
+            reason: "the root manifest carries neither `[project]` nor `[package]`".to_string(),
         });
-    }
-    Ok(format!(
-        "{}/{}",
-        manifest.project.group, manifest.project.name
-    ))
+    };
+    let Some(group) = node.group else {
+        return Err(RegistryError::InvalidManifest {
+            path,
+            reason: "the root declares no `group` — spec:// addressing needs `<group>/<name>`"
+                .to_string(),
+        });
+    };
+    Ok(format!("{group}/{}", node.name))
 }
 
 /// Extract the `<group>/<name>` source coordinate from a full fact address.

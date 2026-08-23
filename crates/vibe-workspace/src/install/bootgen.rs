@@ -30,10 +30,12 @@ use conditions::{active_snippet, installed_identities};
 use transitive::static_transitive_closure;
 
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
-    match &root_manifest.project {
-        Some(p) => vibe_spec::SelfCoordinate::new(
-            p.group.as_ref().map(|g| g.as_str().to_owned()),
-            p.name.clone(),
+    // Role-blind: a package-rooted checkout compiles its lanes exactly as a
+    // project does (PROP-024 ##MANIFEST-ROLES-ARE-EQUIPOTENT).
+    match root_manifest.consumer_node() {
+        Some(node) => vibe_spec::SelfCoordinate::new(
+            node.group.as_ref().map(|g| g.as_str().to_owned()),
+            node.name,
         ),
         None => vibe_spec::SelfCoordinate::new(None, String::new()),
     }

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-23T00:25:24Z",
+  "updated_at": "2026-08-23T09:34:09Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -158253,7 +158253,7 @@
       }
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
+      "content_hash": "3c9863ad9e8421797526ebd0ade20f6858dbf1f9760efa8d7763cf7047090549",
       "rollup": {
         "explicit": [
           "spec",
@@ -158267,11 +158267,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 88,
-        "fact_count": 87,
+        "marker_count": 89,
+        "fact_count": 88,
         "unmarked_facts": 0
       },
-      "marker_count": 88,
+      "marker_count": 89,
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
@@ -158279,7 +158279,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
+        "processed_hash": "3c9863ad9e8421797526ebd0ade20f6858dbf1f9760efa8d7763cf7047090549",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -158812,10 +158812,16 @@
             "ev": [
               "referents resolve 2026-08-01: the successor-trigger honesty is correct (the previous trigger fired with the TS pilot and is spent — recorded in ##placement-rejected beside it); observation points resolve: the sync-engines xtask task exists and the *-ai-native-lang / *-ai-native-mcp package set is enumerable in packages/org.vibevm.ai-native/; byte-identical-vendor failure is a decidable fired state"
             ]
+          },
+          "MANIFEST-ROLES-ARE-EQUIPOTENT": {
+            "v": "confirmed",
+            "ev": [
+              "owner law 2026-08-23 quoted near-verbatim; the divergence audit enumerated and repaired through one role-blind view (Manifest::consumer_node + NodeRole cosmetic): bootgen self coordinate, vibe-facts host reader, resolve_spec_format (with the new [package].spec_format field), tree model, workspace-origin name; twin tests prove identical answers from either role (cli spec_format twins green, facts doctest answers org.x/b from a package root); lawful role-specific surfaces named (publish, requires semantics); panel green"
+            ]
           }
         },
-        "verified_at": "2026-08-13T17:36:33Z",
-        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13"
+        "verified_at": "2026-08-23T09:34:09Z",
+        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13 + P024-EQUIPOTENCE"
       }
     },
     "spec/common/PROP-028-package-families.md": {

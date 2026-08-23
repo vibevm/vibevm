@@ -273,6 +273,26 @@ L4 (implemented checkers) ships in the package whose language they check. @statu
 
 ## 3. Manifest / schema surface {#surface}
 
+- @fact:MANIFEST-ROLES-ARE-EQUIPOTENT **`[project]` and `[package]` are
+  equipotent consumer nodes (owner law, 2026-08-23, near-verbatim: «и
+  project, и package могут быть потребительской единицей — в репозитории,
+  где разрабатывается пакет, корневой vibe.toml имеет тип package, и всё
+  там обязано работать точно так же; сам маркер — косметическое свойство
+  для человека или UI; разошлись по возможностям — дефект, один и тот же
+  код обслуживает обе роли»).** One grammar, one file, the role declared
+  by its XOR section — and every consumer operation (install, lockfile,
+  boot-lane generation, `installed:` resolution, `vibe facts`,
+  `spec_format`, tree/show) reads the role-blind
+  `Manifest::consumer_node()` view and never matches on the role.
+  `[package]` gains `spec_format` so a package-rooted dev checkout pins
+  its materialisation like a project. Role-SPECIFIC surfaces stay lawful
+  where the role is the subject (publish ships packages; a package's
+  `[requires]` is a consumer contract, a project's is its own install
+  set). Landed with twin tests (spec_format resolution and the facts
+  host coordinate answered identically from either role) after the
+  divergence audit: bootgen's self coordinate, the facts host reader,
+  spec_format resolution, the tree model and the workspace-origin name
+  all went through the one view. @status:impl/done
 - @fact:SURF-NO-NEW-FIELD **No new required manifest field.** `[boot_snippet].source` becomes
   `spec/`-relative (a value change, not a schema change). `[package].materialization`
   stays `snapshot` for a vendored code-bearing package. @status:spec/done

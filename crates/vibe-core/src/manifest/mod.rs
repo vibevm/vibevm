@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
+mod consumer;
 mod document;
 pub mod i18n;
 mod lockfile;
@@ -19,6 +20,7 @@ pub mod purl;
 mod redirect;
 mod subskill;
 
+pub use consumer::{ConsumerNode, NodeRole};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,

@@ -24,6 +24,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#g
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
+
+use crate::manifest::SpecFormat;
 use specmark::spec;
 
 use crate::error::Result;
@@ -92,6 +94,13 @@ pub struct PackageMeta {
     /// absence as info so the pre-epoch population stays countable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub epoch: Option<u32>,
+    /// `[package].spec_format` — the PROP-045 materialisation setting for a
+    /// package-rooted consumer node: a dev checkout whose ROOT manifest is
+    /// this package pins its dependency materialisation exactly as a
+    /// `[project]` does (the role-equipotence law, PROP-024
+    /// ##MANIFEST-ROLES-ARE-EQUIPOTENT).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spec_format: Option<SpecFormat>,
     /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
     /// (`false`) means the version is a **snapshot**: its content may
     /// still flow under the same version string, and a hash mismatch is

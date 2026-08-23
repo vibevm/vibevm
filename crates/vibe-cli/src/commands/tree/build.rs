@@ -180,19 +180,14 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     // the bare name when the project declares no `group`. A display string on
     // the model; the address a `spec://` link must name to reach the authored
     // `spec/` tree.
-    let self_coord = manifest
-        .project
+    let node = manifest.consumer_node();
+    let self_coord = node
         .as_ref()
-        .map(|p| {
-            p.group
-                .as_ref()
-                .map(|g| format!("{g}/{}", p.name))
-                .unwrap_or_else(|| p.name.clone())
-        })
+        .map(vibe_core::manifest::ConsumerNode::coordinate)
         .unwrap_or_default();
     let project = Project {
         root: root.display().to_string(),
-        name: manifest.project.as_ref().map(|p| p.name.clone()),
+        name: node.map(|n| n.name),
         is_workspace: manifest.is_workspace_root(),
         self_coord,
     };

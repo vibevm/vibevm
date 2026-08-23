@@ -4880,6 +4880,15 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/consumer.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_core::manifest::consumer",
+      "end_line": 10,
+      "fingerprint": "tok1:6462f761e1dab8e366e3c8e54a88f5d226c14f3ee15890c119a6b085e7f37744"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "mod",
       "line": 28,
@@ -5089,9 +5098,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package.rs",
       "item_kind": "enum",
-      "line": 277,
+      "line": 286,
       "symbol": "vibe_core::manifest::package::Materialization",
-      "end_line": 325,
+      "end_line": 334,
       "fingerprint": "tok1:65c877351cb20d9e0003f1d107267a7129b6ac1a44c706c1c1024ba849765ec8"
     },
     {
@@ -5170,9 +5179,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "item_kind": "fn",
-      "line": 103,
+      "line": 104,
       "symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "end_line": 133,
+      "end_line": 134,
       "fingerprint": "tok1:6e3590b3dcd83b043c92e1c32fefafd7b2235e2da6927d88e5269b539b96bd24"
     },
     {
@@ -5449,9 +5458,9 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 320,
+      "line": 322,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 428,
+      "end_line": 430,
       "fingerprint": "tok1:2d2e52850797fa37bdce84c20b4b9275e16559c4704a9fbc8b4c1900899c8295"
     },
     {
@@ -9850,18 +9859,18 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 518,
+      "line": 520,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 545,
+      "end_line": 547,
       "fingerprint": "tok1:c4cfd7121ca24f83cf3f771831a928568312f037b26bc5860b4096d6b3fa50e1"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 289,
+      "line": 291,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 313,
+      "end_line": 315,
       "fingerprint": "tok1:89f6e217b0ccb04dc783fd31a30ef0847145c03484a16c2ba42424b1b7974e32"
     },
     {
@@ -13910,6 +13919,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/consumer.rs",
+      "from_symbol": "vibe_core::manifest::consumer",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document",
       "line": 28,
@@ -14125,7 +14142,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
       "from_symbol": "vibe_core::manifest::package::Materialization",
-      "line": 305,
+      "line": 314,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
       "verb": "implements",
@@ -14198,7 +14215,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "from_symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "line": 104,
+      "line": 105,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats",
       "verb": "verifies"
@@ -14457,7 +14474,7 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 330,
+      "line": 332,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
@@ -18554,7 +18571,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 523,
+      "line": 525,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -18563,7 +18580,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 295,
+      "line": 297,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -26593,7 +26610,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:595e6d7b0fd56ac8a080773ae52a053b222510a382f8cdab0beabf0feb5951fd",
+      "content_hash": "sha256:8fea8a55456fbeece5480fea705a56475486d867bfd89965d0b57efd2a901c49",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -27304,7 +27321,7 @@
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:7561677d9cc0945317f23abd66900c36f3947fb3cf3520cd741d88d0bc11a0f1",
+      "content_hash": "sha256:300d6f4407f2eab99b6210fcf8730cad540aa0168bf332b672fd1f2a43086d12",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "3. Manifest / schema surface",
@@ -27312,12 +27329,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#surface"
     },
     {
+      "anchor": "MANIFEST-ROLES-ARE-EQUIPOTENT",
+      "content_hash": "sha256:a4c5f6cc54c23fae1f8a5fa9a63f9f96083f7d6068d99829a80f2cb7e8414fca",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "**`[project]` and `[package]` are",
+      "line": 276,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#MANIFEST-ROLES-ARE-EQUIPOTENT"
+    },
+    {
       "anchor": "SURF-NO-NEW-FIELD",
       "content_hash": "sha256:e453a176cf8bf3365ffe6e6b47b3ed5c3cc54ae722ee616a49f8057358dab572",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**No new required manifest field.** `[boot_snippet].source` becomes",
-      "line": 276,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-NO-NEW-FIELD"
     },
     {
@@ -27326,7 +27352,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Optional `.vibeignore`** at the package root — newline-delimited globs added",
-      "line": 279,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-VIBEIGNORE"
     },
     {
@@ -27335,7 +27361,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**`[hooks].post-install`** (PROP-020) is the build lever; **`VIBE_PROJECT_ROOT`**",
-      "line": 281,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-HOOKS"
     },
     {
@@ -27344,7 +27370,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**`vibe.lock`** is unaffected — identity is still `content_hash`, now over the",
-      "line": 283,
+      "line": 303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-LOCK-UNAFFECTED"
     },
     {
@@ -27353,7 +27379,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "4. Rejected / deferred alternatives",
-      "line": 288,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#rejected"
     },
     {
@@ -27362,7 +27388,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Hash and copy build output too** — rejected: non-deterministic and",
-      "line": 290,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-HASH-BUILD-OUTPUT"
     },
     {
@@ -27371,7 +27397,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Consumer adds the slot crates as its own workspace members** (no package",
-      "line": 293,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-CONSUMER-MEMBERS"
     },
     {
@@ -27380,7 +27406,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**`materialization = \"in-place\"` for tool packages** — rejected: `in-place`",
-      "line": 300,
+      "line": 320,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-IN-PLACE"
     },
     {
@@ -27389,7 +27415,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Publish the tool crates to crates.io and depend on the published versions** —",
-      "line": 304,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-CRATES-IO"
     },
     {
@@ -27398,7 +27424,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it",
-      "line": 308,
+      "line": 328,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-ALLOW-LIST"
     },
     {
@@ -27407,7 +27433,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "5. Out of scope",
-      "line": 315,
+      "line": 335,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#out-of-scope"
     },
     {
@@ -27416,7 +27442,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Auto-detecting the build system / language** of a code-bearing package —",
-      "line": 317,
+      "line": 337,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-AUTODETECT"
     },
     {
@@ -27425,7 +27451,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Sandboxing the build hook** — inherits PROP-020 §4's posture (hooks run with",
-      "line": 320,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-SANDBOX"
     },
     {
@@ -27434,7 +27460,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Out of scope when written; since delivered.** TypeScript shipped no",
-      "line": 322,
+      "line": 342,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-TS-CHECKER"
     },
     {
@@ -27443,7 +27469,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "6. Acceptance",
-      "line": 329,
+      "line": 349,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#acceptance"
     },
     {
@@ -27452,7 +27478,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "A package may carry code at its root and prompt content under `spec/`;",
-      "line": 331,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-SHAPE"
     },
     {
@@ -27461,7 +27487,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "`content_hash`, the snapshot copy, and the materialised slot exclude `.git/`,",
-      "line": 333,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-HASH-EXCLUDES"
     },
     {
@@ -27470,7 +27496,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "`[boot_snippet].source` resolves `spec/`-relative; the generated `INDEX.md`",
-      "line": 336,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-BOOT-RESOLVES"
     },
     {
@@ -27479,7 +27505,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "vibevm builds from a clean checkout, consuming its discipline toolchain (incl.",
-      "line": 338,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-CLEAN-CLONE"
     },
     {
@@ -27488,7 +27514,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "An external Rust project can install `stack:org.vibevm.ai-native/rust-ai-native-lang` and run",
-      "line": 341,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-EXTERNAL-CONSUMER"
     },
     {
@@ -27497,7 +27523,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:spec/done",
-      "line": 343,
+      "line": 363,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-FLOOR-GREEN"
     },
     {
@@ -27506,7 +27532,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "7. Version history",
-      "line": 347,
+      "line": 367,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#history"
     },
     {
@@ -27515,7 +27541,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**2026-06-27 — draft 1.** Owner-directed: make the discipline self-sufficient",
-      "line": 349,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HIST-DRAFT-1"
     },
     {
@@ -76121,7 +76147,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/package.rs",
-      "line": 305,
+      "line": 314,
       "message": "edge `vibe_core::manifest::package::Materialization` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes` carries no kind/revision line yet"
     },
     {
@@ -76793,13 +76819,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 295,
+      "line": 297,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 523,
+      "line": 525,
       "message": "edge `vibe_workspace::install::bootgen::validate_redirect_blocks` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time` carries no kind/revision line yet"
     },
     {

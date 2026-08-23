@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-23T00:25:25Z",
+  "updated_at": "2026-08-23T09:34:08Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -156707,9 +156707,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 88,
+      "markers": 89,
       "units": 16,
-      "facts": 87,
+      "facts": 88,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -156719,7 +156719,7 @@
         "marker_count": 77,
         "processed_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
         "summary": {
-          "confirmed": 88
+          "confirmed": 89
         },
         "verdicts": {
           "status-line": {
@@ -157253,10 +157253,16 @@
             "ev": [
               "referents resolve 2026-08-01: the successor-trigger honesty is correct (the previous trigger fired with the TS pilot and is spent — recorded in ##placement-rejected beside it); observation points resolve: the sync-engines xtask task exists and the *-ai-native-lang / *-ai-native-mcp package set is enumerable in packages/org.vibevm.ai-native/; byte-identical-vendor failure is a decidable fired state"
             ]
+          },
+          "MANIFEST-ROLES-ARE-EQUIPOTENT": {
+            "v": "confirmed",
+            "ev": [
+              "owner law 2026-08-23 quoted near-verbatim; the divergence audit enumerated and repaired through one role-blind view (Manifest::consumer_node + NodeRole cosmetic): bootgen self coordinate, vibe-facts host reader, resolve_spec_format (with the new [package].spec_format field), tree model, workspace-origin name; twin tests prove identical answers from either role (cli spec_format twins green, facts doctest answers org.x/b from a package root); lawful role-specific surfaces named (publish, requires semantics); panel green"
+            ]
           }
         },
         "verified_at": "2026-08-13T17:36:33Z",
-        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13"
+        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13 + P024-EQUIPOTENCE"
       }
     },
     {

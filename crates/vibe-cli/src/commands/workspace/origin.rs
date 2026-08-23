@@ -33,13 +33,9 @@ pub(super) fn build_origin_info(workspace: &Workspace) -> OriginInfo {
 /// package `name`, or a literal `unknown` if the root carries neither (a
 /// virtual `[workspace]`-only coordinator).
 pub(super) fn root_identity_name(root: &Manifest) -> String {
-    if let Some(p) = &root.project {
-        return p.name.clone();
-    }
-    if let Some(p) = &root.package {
-        return p.name.clone();
-    }
-    "unknown".to_string()
+    root.consumer_node()
+        .map(|node| node.name)
+        .unwrap_or_else(|| "unknown".to_string())
 }
 
 /// Run `git remote get-url origin` in `dir`. Returns `None` when `dir` is
