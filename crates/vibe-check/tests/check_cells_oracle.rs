@@ -21,7 +21,7 @@ use vibe_check::{
     FactsSyncCheck, FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck,
     LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck,
     ReviewAgingCheck, Severity, SnippetPresuppositionCheck, SubskillStructureCheck,
-    WalFreshnessCheck, WalWellformedCheck, all_checks, check_project,
+    VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck, all_checks, check_project,
 };
 
 /// 2026-05-04T12:00:00Z — a frozen clock, so freshness / aging math
@@ -101,6 +101,7 @@ fn each_cell_reports_its_own_check_id() {
             Box::new(SnippetPresuppositionCheck),
             CheckId::SnippetPresupposition,
         ),
+        (Box::new(VisibilityHygieneCheck), CheckId::VisibilityHygiene),
     ];
     assert_eq!(cells.len(), CheckId::all().len(), "one cell per CheckId");
     for (cell, expected) in &cells {
@@ -132,6 +133,7 @@ fn all_checks_registers_every_cell_in_dispatch_order() {
             CheckId::ManifestEpoch,
             CheckId::FactsSync,
             CheckId::SnippetPresupposition,
+            CheckId::VisibilityHygiene,
         ]
     );
 }

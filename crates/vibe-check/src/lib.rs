@@ -7,7 +7,7 @@
 //! and (when applicable) the offending file path / line.
 //!
 //! The cell roster has grown far past the v0 six — `run_all` is the
-//! authoritative inventory (15 cells today); the numbered list below
+//! authoritative inventory (16 cells today); the numbered list below
 //! is the founding six of [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md),
 //! kept as orientation, not as the census:
 //!
@@ -61,7 +61,7 @@ pub use checks::{
     ActivationConflictCheck, BootDirectoryCheck, FactsSyncCheck, FeaturesGraphCheck,
     I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck,
     ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, SnippetPresuppositionCheck,
-    SubskillStructureCheck, WalFreshnessCheck, WalWellformedCheck,
+    SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -121,6 +121,11 @@ pub enum CheckId {
     /// PROP-049 §4 — a snippet may mention a foreign discipline concept only
     /// in a fragment guarded by that discipline's `installed:` predicate.
     SnippetPresupposition,
+    /// PROP-050 ##VERIFY-LINTS — the visibility analysis of the installed
+    /// world surfaces its diagnostics as warnings: rejected allow-friends
+    /// grants, dead `friends`/`unfriend`/`[override]` entries, lockfile
+    /// members without a readable slot manifest.
+    VisibilityHygiene,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -145,6 +150,7 @@ impl CheckId {
             CheckId::ManifestEpoch => "manifest_epoch",
             CheckId::FactsSync => "facts_sync",
             CheckId::SnippetPresupposition => "snippet_presupposition",
+            CheckId::VisibilityHygiene => "visibility_hygiene",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -170,6 +176,7 @@ impl CheckId {
             CheckId::ManifestEpoch,
             CheckId::FactsSync,
             CheckId::SnippetPresupposition,
+            CheckId::VisibilityHygiene,
         ]
     }
 }
@@ -393,7 +400,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 15);
+/// assert_eq!(checks.len(), 16);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -413,6 +420,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(ManifestEpochCheck),
         Box::new(FactsSyncCheck),
         Box::new(SnippetPresuppositionCheck),
+        Box::new(VisibilityHygieneCheck),
     ]
 }
 
@@ -574,6 +582,7 @@ mod tests {
                 CheckId::ManifestEpoch,
                 CheckId::FactsSync,
                 CheckId::SnippetPresupposition,
+                CheckId::VisibilityHygiene,
             ]
         );
     }

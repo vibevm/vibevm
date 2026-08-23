@@ -197,6 +197,17 @@ pub enum Command {
     /// Inspect and edit the project's consumer-owned adoption-facts registry.
     Facts(crate::commands::facts::FactsArgs),
 
+    /// Explain why a package is in (or out of) this project's effective
+    /// world: the admitting chain with its rule, or the blocked edges and
+    /// what blocked them (PROP-050 ##VIBE-WHY).
+    Why(crate::commands::why::WhyArgs),
+
+    /// The sealed-circle report for one provider: open / sealed / the
+    /// named circle, who actually befriends it, which grants its
+    /// allow-friends rejects, and whether it is in the root's friend
+    /// closure (PROP-050 ##ALLOW-FRIENDS-EXHAUSTIVE).
+    Friends(crate::commands::friends::FriendsArgs),
+
     /// Inspect computed project state (effective spec, configuration).
     Show(ShowArgs),
 

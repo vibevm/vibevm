@@ -21,6 +21,7 @@ pub mod redirect_block;
 pub mod review_aging;
 pub mod snippet_presupposition;
 pub mod subskill_structure;
+pub mod visibility_hygiene;
 pub mod wal_freshness;
 pub mod wal_wellformed;
 
@@ -37,6 +38,7 @@ pub use redirect_block::RedirectBlockCheck;
 pub use review_aging::ReviewAgingCheck;
 pub use snippet_presupposition::SnippetPresuppositionCheck;
 pub use subskill_structure::SubskillStructureCheck;
+pub use visibility_hygiene::VisibilityHygieneCheck;
 pub use wal_freshness::WalFreshnessCheck;
 pub use wal_wellformed::WalWellformedCheck;
 
