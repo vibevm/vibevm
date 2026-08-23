@@ -125,8 +125,18 @@ pub fn run(
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
     let lockfile_path = workspace.root.join(Lockfile::FILENAME);
+    // An unsupported-schema lock reads as EMPTY on the install path: install
+    // is the regeneration verb the schema policy names, so it must never
+    // refuse to run because the artifact it is about to rewrite is outdated.
     let lockfile_snapshot = if lockfile_path.exists() {
-        Lockfile::read(&lockfile_path)?
+        match Lockfile::read(&lockfile_path) {
+            Ok(lock) => lock,
+            Err(vibe_core::Error::UnsupportedLockfile { .. }) => Lockfile::empty(
+                generated_by(),
+                crate::commands::init::current_timestamp_utc(),
+            ),
+            Err(other) => return Err(other.into()),
+        }
     } else {
         Lockfile::empty(
             generated_by(),

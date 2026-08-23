@@ -44,16 +44,24 @@ pub struct Fetched {
 
 /// Load the workspace lockfile, or an empty one stamped with the
 /// caller's identity when none exists yet.
+///
+/// A lockfile on an unsupported schema version reads as *empty* here, not as
+/// an error: `vibe install` is the regeneration path the schema policy names
+/// («the fix is always to regenerate with `vibe install`»), so it must never
+/// refuse to run because the artifact it is about to rewrite is outdated.
+/// Every other reader keeps the strict rejection.
 pub(crate) fn load_or_empty_lockfile(root: &Path, generated_by: &str) -> Result<Lockfile> {
     let path = root.join(Lockfile::FILENAME);
     if path.exists() {
-        Ok(Lockfile::read(&path)?)
-    } else {
-        Ok(Lockfile::empty(
-            generated_by.to_string(),
-            vibe_core::timestamp::now_utc(),
-        ))
+        match Lockfile::read(&path) {
+            Err(vibe_core::Error::UnsupportedLockfile { .. }) => {}
+            other => return Ok(other?),
+        }
     }
+    Ok(Lockfile::empty(
+        generated_by.to_string(),
+        vibe_core::timestamp::now_utc(),
+    ))
 }
 
 /// Build the resolved language chain from a caller override + the
@@ -144,4 +152,28 @@ where
         }
     }
     Ok(ctx)
+}
+
+#[cfg(test)]
+mod lock_regeneration_tests {
+    use super::load_or_empty_lockfile;
+
+    /// An unsupported-schema lock must read as EMPTY on the install path —
+    /// install is the regeneration verb and may never refuse to run because
+    /// the artifact it is about to rewrite is outdated (PROP-050 W2 landing).
+    #[test]
+    fn unsupported_schema_lock_reads_as_empty() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("vibe.lock"),
+            "[meta]\ngenerated_by = \"vibe old\"\ngenerated_at = \"2026-01-01T00:00:00Z\"\nschema_version = 5\n",
+        )
+        .expect("write v5 lock");
+        let lock = load_or_empty_lockfile(dir.path(), "vibe test").expect("reads as empty");
+        assert!(lock.packages.is_empty());
+        assert_eq!(
+            lock.meta.schema_version,
+            vibe_core::manifest::CURRENT_SCHEMA_VERSION
+        );
+    }
 }
