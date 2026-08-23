@@ -1,9 +1,13 @@
 //! PROP-049 §4 — foreign discipline concepts require structural guards.
 //! The genre is advisory (PROP-050 ##CONCEPTS-GATE-SOFTENED): a violation is
 //! a warning, homonymy is lawful (declaring the lexeme in the package's own
-//! `[boot_snippet].concepts` owns the word in its world), and several owners
-//! of one lexeme dedup into a single warning silenced by any one lawful
-//! relation.
+//! `[boot_snippet].concepts` owns the word in its world), several owners of
+//! one lexeme dedup into a single warning silenced by any one lawful
+//! relation, and an `[visibility].ignore-concept-warnings` entry — the
+//! package's own or the project root's — mutes a named concept outright.
+//! The dependency exemption covers only seeping edges (PROP-050
+//! ##DEPS-EXEMPTION-NARROWS): a private `[requires]` edge reaches no
+//! consumer, so presupposing it in unconditional text still warns.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-049#gate");
 
@@ -12,7 +16,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
-use vibe_core::manifest::{BootSnippet, Manifest, WhenCondition};
+use vibe_core::manifest::{AccessLevel, BootSnippet, Manifest, WhenCondition};
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
 
@@ -30,6 +34,7 @@ impl Check for SnippetPresuppositionCheck {
         if dictionary.is_empty() {
             return;
         }
+        let root_ignored = root_ignored_concepts(project_root);
         for package in authored_snippets(project_root) {
             scan_source(
                 project_root,
@@ -37,6 +42,7 @@ impl Check for SnippetPresuppositionCheck {
                 &package.snippet.source,
                 None,
                 &dictionary,
+                &root_ignored,
                 report,
             );
             for fragment in &package.snippet.fragments {
@@ -46,6 +52,7 @@ impl Check for SnippetPresuppositionCheck {
                     &fragment.source,
                     fragment.when.as_ref(),
                     &dictionary,
+                    &root_ignored,
                     report,
                 );
             }
@@ -58,10 +65,15 @@ struct AuthoredSnippet {
     root: PathBuf,
     owner: String,
     snippet: BootSnippet,
-    /// `group/name` of every `[requires]` package: a declared dependency
-    /// guarantees co-installation, so presupposing it is lawful
-    /// (PROP-049 §4, the dependency exemption).
-    requires: BTreeSet<String>,
+    /// `group/name` of every `[requires]` package reached over a seeping
+    /// edge (public or friends-only): those edges carry the target toward
+    /// consumers, so presupposing them is lawful (PROP-049 §4, the
+    /// dependency exemption). A private edge reaches no consumer and
+    /// exempts nothing (PROP-050 ##DEPS-EXEMPTION-NARROWS).
+    requires_seeping: BTreeSet<String>,
+    /// PROP-050 ##CONCEPTS-GATE-SOFTENED (d): lexemes the package's own
+    /// `[visibility].ignore-concept-warnings` mutes for its whole world.
+    ignored: BTreeSet<String>,
 }
 
 type ConceptDictionary = BTreeMap<String, BTreeSet<String>>;
@@ -103,17 +115,29 @@ fn authored_snippets(project_root: &Path) -> Vec<AuthoredSnippet> {
             continue;
         };
         let version = package.version.clone();
-        let requires = manifest
+        // PROP-050 ##DEPS-EXEMPTION-NARROWS: only seeping edges (public,
+        // friends-only) justify the dependency exemption — a private
+        // edge never reaches a consumer, so it contributes no coordinate.
+        let requires_seeping = manifest
             .requires
             .iter_pkgrefs()
-            .filter_map(|(group, name)| group.map(|g| format!("{g}/{name}")))
+            .filter_map(|(group, name)| {
+                let group = group?;
+                (manifest.requires.access_for(group, name) != AccessLevel::Private)
+                    .then(|| format!("{group}/{name}"))
+            })
             .collect();
+        let ignored = manifest
+            .visibility
+            .map(|visibility| visibility.ignore_concept_warnings.into_iter().collect())
+            .unwrap_or_default();
         let owner = format!("{}/{}", package.group, package.name);
         let candidate = AuthoredSnippet {
             root,
             owner: owner.clone(),
             snippet,
-            requires,
+            requires_seeping,
+            ignored,
         };
         match newest.get(&owner) {
             Some((held, _)) if *held >= version => {}
@@ -123,6 +147,18 @@ fn authored_snippets(project_root: &Path) -> Vec<AuthoredSnippet> {
         }
     }
     newest.into_values().map(|(_, snippet)| snippet).collect()
+}
+
+/// PROP-050 ##CONCEPTS-GATE-SOFTENED (d): the project root's
+/// `[visibility].ignore-concept-warnings` mutes the named lexemes for
+/// the entire tree. A missing or unreadable root manifest is not an
+/// error — the mute list is simply empty.
+fn root_ignored_concepts(project_root: &Path) -> BTreeSet<String> {
+    Manifest::read(project_root.join(Manifest::FILENAME))
+        .ok()
+        .and_then(|manifest| manifest.visibility)
+        .map(|visibility| visibility.ignore_concept_warnings.into_iter().collect())
+        .unwrap_or_default()
 }
 
 /// Locate only the manifest shapes named by PROP-049: authored
@@ -158,6 +194,7 @@ fn scan_source(
     source: &Path,
     guard: Option<&WhenCondition>,
     dictionary: &ConceptDictionary,
+    root_ignored: &BTreeSet<String>,
     report: &mut CheckReport,
 ) {
     let path = package.root.join(source);
@@ -187,6 +224,13 @@ fn scan_source(
             if !contains_concept(&visible, concept) {
                 continue;
             }
+            // PROP-050 ##CONCEPTS-GATE-SOFTENED (d): the lexeme is muted by
+            // the scanned package's own
+            // `[visibility].ignore-concept-warnings` or by the project
+            // root's — the root mutes the whole tree.
+            if package.ignored.contains(concept) || root_ignored.contains(concept) {
+                continue;
+            }
             // Homonymy is lawful: a package declaring the lexeme in its own
             // concepts owns the word in its own world (PROP-050
             // ##CONCEPTS-GATE-SOFTENED) — check before the owner loop.
@@ -197,7 +241,7 @@ fn scan_source(
             // mention, and an unexplained use warns once naming all owners.
             let lawful = owners.iter().any(|owner| {
                 owner == &package.owner
-                    || package.requires.contains(owner)
+                    || package.requires_seeping.contains(owner)
                     || guarded_by(guard, owner)
             });
             if lawful {
@@ -217,7 +261,8 @@ fn scan_source(
                     "{rel_label}:{line_number}: foreign concept `{concept}` belongs to package(s) \
                      {owner_list} (PROP-050 ##CONCEPTS-GATE-SOFTENED; fix: move the mention into a \
                      [[boot_snippet.fragment]] guarded by when = \"installed:<one of the owners>\", \
-                     declare the lexeme in your own [boot_snippet].concepts, or drop it)"
+                     declare the lexeme in your own [boot_snippet].concepts, add the lexeme to \
+                     [visibility].ignore-concept-warnings, or drop it)"
                 ),
             );
         }
@@ -295,229 +340,4 @@ fn is_word_character(character: char) -> bool {
 }
 
 #[cfg(test)]
-mod tests {
-    use std::fs;
-    use std::path::Path;
-
-    use tempfile::tempdir;
-
-    use super::SnippetPresuppositionCheck;
-    use crate::{Check, CheckId, CheckOptions, CheckReport, Severity};
-
-    fn write(root: &Path, rel: &str, body: &str) {
-        let path = root.join(rel);
-        fs::create_dir_all(path.parent().unwrap()).unwrap();
-        fs::write(path, body).unwrap();
-    }
-
-    fn write_owner(root: &Path, name: &str) {
-        write(
-            root,
-            &format!("packages/org.example/{name}/v1.0.0/vibe.toml"),
-            &format!(
-                r#"[package]
-group = "org.example"
-name = "{name}"
-kind = "flow"
-version = "1.0.0"
-
-[boot_snippet]
-source = "boot/main.md"
-concepts = ["WAL"]
-"#
-            ),
-        );
-        write(
-            root,
-            &format!("packages/org.example/{name}/v1.0.0/boot/main.md"),
-            &format!("# {}\n\nThe WAL discipline.\n", name.to_uppercase()),
-        );
-    }
-
-    fn write_consumer(root: &Path, fragment: bool, guarded: bool, body: &str) {
-        let fragment_decl = if fragment {
-            format!(
-                "\n[[boot_snippet.fragment]]\nsource = \"boot/foreign.md\"{}\n",
-                if guarded {
-                    "\nwhen = \"installed:org.example/d\""
-                } else {
-                    ""
-                }
-            )
-        } else {
-            String::new()
-        };
-        write(
-            root,
-            "packages/org.example/p/v1.0.0/vibe.toml",
-            &format!(
-                r#"[package]
-group = "org.example"
-name = "p"
-kind = "flow"
-version = "1.0.0"
-
-[boot_snippet]
-source = "boot/main.md"
-{fragment_decl}"#
-            ),
-        );
-        write(
-            root,
-            "packages/org.example/p/v1.0.0/boot/main.md",
-            if fragment { "# P\n" } else { body },
-        );
-        if fragment {
-            write(root, "packages/org.example/p/v1.0.0/boot/foreign.md", body);
-        }
-    }
-
-    fn run(root: &Path) -> CheckReport {
-        let mut report = CheckReport::default();
-        SnippetPresuppositionCheck.run(root, &CheckOptions::default(), &mut report);
-        report
-    }
-
-    #[test]
-    fn foreign_concept_in_main_snippet_is_one_warning() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write_consumer(project.path(), false, false, "The WAL is canonical.\n");
-
-        let report = run(project.path());
-        assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
-        let finding = &report.findings[0];
-        assert_eq!(finding.check, CheckId::SnippetPresupposition);
-        assert_eq!(finding.severity, Severity::Warning);
-        assert_eq!(finding.line, Some(1));
-        assert!(finding.message.contains("WAL"), "{finding:?}");
-        assert!(finding.message.contains("org.example/d"), "{finding:?}");
-    }
-
-    #[test]
-    fn foreign_concept_in_matching_installed_fragment_is_clean() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write_consumer(project.path(), true, true, "The WAL is canonical.\n");
-        assert!(run(project.path()).findings.is_empty());
-    }
-
-    #[test]
-    fn empty_concepts_dictionary_is_clean() {
-        let project = tempdir().unwrap();
-        write_consumer(project.path(), false, false, "The WAL is canonical.\n");
-        assert!(run(project.path()).findings.is_empty());
-    }
-
-    /// PROP-049 §4, the dependency exemption: a declared `[requires]` on the
-    /// concept's owner guarantees co-installation, so the bare mention is
-    /// lawful without a fragment.
-    #[test]
-    fn a_declared_dependency_on_the_owner_makes_the_mention_lawful() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/vibe.toml",
-            r#"[package]
-group = "org.example"
-name = "p"
-kind = "flow"
-version = "1.0.0"
-
-[boot_snippet]
-source = "boot/main.md"
-
-[requires.packages]
-"flow:org.example/d" = "^1.0.0"
-"#,
-        );
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/boot/main.md",
-            "The WAL is canonical here too.\n",
-        );
-        assert!(run(project.path()).findings.is_empty());
-    }
-
-    /// PROP-050 ##CONCEPTS-GATE-SOFTENED, lawful homonymy: a package that
-    /// declares the lexeme in its own `[boot_snippet].concepts` owns the
-    /// word in its own world, despite the foreign owner.
-    #[test]
-    fn own_concept_declaration_makes_the_homonym_lawful() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/vibe.toml",
-            r#"[package]
-group = "org.example"
-name = "p"
-kind = "flow"
-version = "1.0.0"
-
-[boot_snippet]
-source = "boot/main.md"
-concepts = ["WAL"]
-"#,
-        );
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/boot/main.md",
-            "Our WAL is a different discipline.\n",
-        );
-        assert!(run(project.path()).findings.is_empty());
-    }
-
-    /// PROP-050 ##CONCEPTS-GATE-SOFTENED, owner-dedup: an unexplained use
-    /// of a multi-owner lexeme warns once, naming every owner.
-    #[test]
-    fn two_owners_one_warning_naming_both() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write_owner(project.path(), "e");
-        write_consumer(project.path(), false, false, "The WAL is canonical.\n");
-
-        let report = run(project.path());
-        assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
-        let finding = &report.findings[0];
-        assert_eq!(finding.severity, Severity::Warning);
-        assert!(
-            finding
-                .message
-                .contains("package(s) `org.example/d`, `org.example/e`"),
-            "{finding:?}"
-        );
-    }
-
-    /// PROP-050 ##CONCEPTS-GATE-SOFTENED: a relation to ANY ONE of several
-    /// owners legitimises the mention — here a `[requires]` edge to one.
-    #[test]
-    fn a_dependency_on_one_of_two_owners_silences_the_warning() {
-        let project = tempdir().unwrap();
-        write_owner(project.path(), "d");
-        write_owner(project.path(), "e");
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/vibe.toml",
-            r#"[package]
-group = "org.example"
-name = "p"
-kind = "flow"
-version = "1.0.0"
-
-[boot_snippet]
-source = "boot/main.md"
-
-[requires.packages]
-"flow:org.example/d" = "^1.0.0"
-"#,
-        );
-        write(
-            project.path(),
-            "packages/org.example/p/v1.0.0/boot/main.md",
-            "The WAL is canonical here too.\n",
-        );
-        assert!(run(project.path()).findings.is_empty());
-    }
-}
+mod tests;
