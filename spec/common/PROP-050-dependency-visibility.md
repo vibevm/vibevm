@@ -59,12 +59,12 @@
 
 | `access` | `friend` | consumer above P | friend of P | P as root | practical name |
 |---|---|---|---|---|---|
-| `public` | `false` *(defaults)* | gets Q | gets Q | gets Q | plain delivery — the ordinary edge |
-| `public` | `true` | gets Q | gets Q | gets Q **+ Q's circle** | delivery + personal friendship |
-| `friends-only` | `true` | — | gets Q **+ Q ∈ C(R)**: chain continues, Q's circle opens | gets Q + Q's circle | the chain link — transit with vouching (the F10 shape) |
-| `friends-only` | `false` | — | gets Q, chain **stops**: Q's circle stays shut | gets Q only | terminal delivery to the circle — share without vouching |
-| `private` | `false` | — | — | gets Q | dev tool |
-| `private` | `true` | — | — | gets Q + Q's circle | dev tool with deep integration |
+| @fact:MX-PUBLIC-BARE `public` @status:spec/done | `false` *(defaults)* @status:spec/done | gets Q @status:spec/done | gets Q @status:spec/done | gets Q @status:spec/done | plain delivery — the ordinary edge @status:spec/done |
+| @fact:MX-PUBLIC-FRIEND `public` @status:spec/done | `true` @status:spec/done | gets Q @status:spec/done | gets Q @status:spec/done | gets Q **+ Q's circle** @status:spec/done | delivery + personal friendship @status:spec/done |
+| @fact:MX-FO-VOUCHED `friends-only` @status:spec/done | `true` @status:spec/done | — @status:spec/done | gets Q **+ Q ∈ C(R)**: chain continues, Q's circle opens @status:spec/done | gets Q + Q's circle @status:spec/done | the chain link — transit with vouching (the F10 shape) @status:spec/done |
+| @fact:MX-FO-NOVOUCH `friends-only` @status:spec/done | `false` @status:spec/done | — @status:spec/done | gets Q, chain **stops**: Q's circle stays shut @status:spec/done | gets Q only @status:spec/done | terminal delivery to the circle — share without vouching @status:spec/done |
+| @fact:MX-PRIVATE-BARE `private` @status:spec/done | `false` @status:spec/done | — @status:spec/done | — @status:spec/done | gets Q @status:spec/done | dev tool @status:spec/done |
+| @fact:MX-PRIVATE-FRIEND `private` @status:spec/done | `true` @status:spec/done | — @status:spec/done | — @status:spec/done | gets Q + Q's circle @status:spec/done | dev tool with deep integration @status:spec/done |
 
 - @fact:MATRIX-COMPLETENESS All six cells are distinct and each names a real intent — no redundancy, no gap. The one that *looked* dead — `friends-only` + `friend = false` — turns out load-bearing: it separates **delivery to the circle** from **vouching onward**, which is exactly the distinction the two-parameter split exists to express (rule (3) grants presence from the mark alone; the `grow` rule demands mark ∧ grant for the chain to continue). The parameter set is confirmed correct by exhaustion. @status:spec/done
 
@@ -88,7 +88,7 @@ grow:  if F ∈ C(R), and G ∈ grants(F), and F's edge F → G has access = "fr
 
 @fact:PUBLIC-GIVES-PRESENCE-NOT-FRIENDSHIP **Public gives presence, not friendship** (owner-ratified, F6). A package that seeps to `R` through public edges does *not* thereby join `C(R)`, and its own friends-only edges stay closed to `R` unless `R` (or a chain of friends-only re-exports reaching `R`) befriends it explicitly. Friendship never grows through public or private edges — only through `friends-only` marks, which are explicit and rare (never a default), compounded by the `friend = false` default on the grant side. This is the built-in answer to «чтобы это замыкание не росло бесконтрольно»: the closure grows exactly along deliberate marks, backed by deliberate grants, and nowhere else. @status:spec/done
 
-@fact:closure-determinism `C(R)` is a monotone least fixpoint over per-edge static predicates: deterministic, order-independent, computable in `O(nodes + edges)`, no interaction with the effective set (which is computed *after* it, §2.5) and none with materialisation (§3). Cycles in `requires` remain a hard generate-time error exactly as in the linker today (PROP-034 §2.3). @status:spec/work
+@fact:closure-determinism `C(R)` is a monotone least fixpoint over per-edge static predicates — deterministic and order-independent. With §2.9's path-stack masks in the picture, the closure and the reachable mask-states form **one joint monotone fixpoint** (alternating expansion until stable; masks are static declarations and both sets only grow, so termination and determinism hold; implementations dedup normalized mask-states) — the earlier draft's «computed strictly before the effective set» reading was corrected at the W1 landing, where the implementation surfaced the contradiction. Materialisation (§3) stays outside either computation. Cycles in `requires` remain a hard generate-time error exactly as in the linker today (PROP-034 §2.3). @status:impl/done
 
 ### 2.5 Traversability and the effective set {#effective-set}
 
@@ -130,6 +130,8 @@ allow-friends = ["org.a/x", "org.b/*"]   # the permits list; "*" after a group =
 @fact:OVERRIDE-ANYWHERE **Owner-ruled (2026-08-23): `override` is lawful in any manifest, not only the root** («разрешён не только в корневом манифесте, а где угодно»). Any node `N` may carry an `[override]` table whose entries rewrite *foreign* edges — their `access`, `friend`, presence (`exclude = true`), or a target's `allow-friends` — and the rewrite acts wherever `N` stands on the chain: an aggregator repairs or reshapes a member's edge for **all of its own consumers**, exactly as it curates its delivery with `exclude`. The threat model follows the owner's earlier ruling: a deliberate break-in is not an attack (the developer can edit any file on disk anyway); this is the official verb that replaces reflection-style hacks — and it stays **quiet** (pull-based provenance only). @status:spec/done
 
 @fact:OVERRIDE-PATH-SEMANTICS **Path-stack semantics.** An override applies to chains that pass through its declarant: walking a chain `R → … → N → … → P → Q`, the effective attributes of the edge `P → Q` are its declared attributes masked by the `[override]` tables of the chain's nodes in order, **nearer-to-root applied later and winning** — the root can re-override any intermediary, the payer always has the final word; between intermediaries, the outer (closer to `R`) wins on the chains it participates in. Effective attributes are therefore per-chain; `E(R)` and the `grow` rule quantify **existentially over chains** (a package is present / a hop extends the closure if *some* chain admits it), which is the diamond behaviour `exclude` already has. Determinism is preserved — masks are static declarations, the graph is acyclic, and the implementation dedups identical mask-states while walking the DAG (override tables are rare, so the practical state count stays small). @status:spec/done
+
+@fact:OVERRIDE-KEY-COEXISTENCE **Syntax note (W1 landing):** the manifest already carried `[[override]]` — the array-of-tables registry-pin form (`OverrideSection`). The visibility table lives under the same `override` key as an ordinary table; the wire layer distinguishes the two shapes structurally (array vs table), either form alone is lawful, and one manifest carrying both is a loud validation/serialisation error rather than a silent merge. A future wave may retire or rename the legacy form; until then the coexistence is deliberate. @status:impl/done
 
 @fact:OVERRIDE-IS-CONTRACT-MIDGRAPH **A mid-graph override is contract; the root's is private.** An `[override]` in a package's manifest changes what that package delivers — it is part of the package's versioned surface, subject to ##ACCESS-IS-SEMVER-SURFACE like any access change (expansive entries additionally ride at the breaker's own risk: the broken-into provider promised nothing). The consumer root's `[override]` binds nobody downstream and is versioned by nothing but its own repository. Observability is pull-based only, per the quiet ruling: lock provenance marks and `vibe why … — via override of <node>` answer whoever asks; nothing shouts at install time. @status:spec/done
 
@@ -202,21 +204,21 @@ allow-friends = ["org.a/x", "org.b/*"]   # the permits list; "*" after a group =
 
 | System | Direction | Closest primitive to ours | Verdict used here |
 |---|---|---|---|
-| JPMS `requires transitive` | provider re-export | the closure `grow` rule — same recursive shape | adopt shape; adopt its usage norm |
-| JPMS `exports … to` | provider allowlist | `friends-only` (opposite direction) | unknown target = warning, not error |
-| Java `sealed … permits` | provider allowlist | friends list | allowlist needs one maintenance domain — ours has it (the consumer's own file) |
-| Swift SE-0409 access-level-on-imports | **consumer, per-edge** | `access` — the closest precedent alive | validates the core; they deferred the default flip twice |
-| Swift `@_spi` | bilateral handshake | `friends-only` ∧ friendship | conjunction, adopted (§2.5) |
-| OSGi `Require-Bundle; visibility:=reexport` | provider re-export | `friends-only` as re-export | its irreversibility lesson → ##ACCESS-IS-SEMVER-SURFACE |
-| Eclipse `x-friends` | provider allowlist | friends-only | provider lists rot because the payer can't edit them — the inversion argument |
-| Bazel `deps` + `exports*` chains | provider re-export | the closure formula, verbatim | battle-tested shape of §2.4 |
-| Buck `within_view` | **consumer cap, wins conflicts** | `exclude` | exclusion beats any grant, adopted |
-| Pants dependency/dependents rules | both ends must agree | rule (3) of §2.5 | conjunction as the core evaluation rule |
-| Gradle `api`/`implementation` | provider | `public`/`private` | the `compile`-removal precedent: leakage-by-default is unpayable |
-| Maven `<exclusions>` / enforcer | consumer edge / assertion pass | `exclude` / deferred deny-list | two-layer split, adopted in F4 |
-| Cargo RFC 1977 → 3516 | provider mark | `public` | six years lost to resolver entanglement — keep visibility a pre-filter |
-| npm `exports` map | provider surface seal | (none yet) | sub-package surfaces — deferred direction |
-| C++ `friend` | provider, deliberately non-transitive | the anti-model | what non-transitivity protects → ##CLOSURE-DRIFT-CONTROL |
+| @fact:PA-JPMS-RT JPMS `requires transitive` @status:spec/done | provider re-export @status:spec/done | the closure `grow` rule — same recursive shape @status:spec/done | adopt shape; adopt its usage norm @status:spec/done |
+| @fact:PA-JPMS-QE JPMS `exports … to` @status:spec/done | provider allowlist @status:spec/done | `friends-only` (opposite direction) @status:spec/done | unknown target = warning, not error @status:spec/done |
+| @fact:PA-SEALED Java `sealed … permits` @status:spec/done | provider allowlist @status:spec/done | friends list @status:spec/done | allowlist needs one maintenance domain — ours has it (the consumer's own file) @status:spec/done |
+| @fact:PA-SWIFT-0409 Swift SE-0409 access-level-on-imports @status:spec/done | **consumer, per-edge** @status:spec/done | `access` — the closest precedent alive @status:spec/done | validates the core; they deferred the default flip twice @status:spec/done |
+| @fact:PA-SWIFT-SPI Swift `@_spi` @status:spec/done | bilateral handshake @status:spec/done | `friends-only` ∧ friendship @status:spec/done | conjunction, adopted (§2.5) @status:spec/done |
+| @fact:PA-OSGI-REEXPORT OSGi `Require-Bundle; visibility:=reexport` @status:spec/done | provider re-export @status:spec/done | `friends-only` as re-export @status:spec/done | its irreversibility lesson → ##ACCESS-IS-SEMVER-SURFACE @status:spec/done |
+| @fact:PA-ECLIPSE-XFRIENDS Eclipse `x-friends` @status:spec/done | provider allowlist @status:spec/done | friends-only @status:spec/done | provider lists rot because the payer can't edit them — the inversion argument @status:spec/done |
+| @fact:PA-BAZEL-EXPORTS Bazel `deps` + `exports*` chains @status:spec/done | provider re-export @status:spec/done | the closure formula, verbatim @status:spec/done | battle-tested shape of §2.4 @status:spec/done |
+| @fact:PA-BUCK-WITHINVIEW Buck `within_view` @status:spec/done | **consumer cap, wins conflicts** @status:spec/done | `exclude` @status:spec/done | exclusion beats any grant, adopted @status:spec/done |
+| @fact:PA-PANTS-CONJ Pants dependency/dependents rules @status:spec/done | both ends must agree @status:spec/done | rule (3) of §2.5 @status:spec/done | conjunction as the core evaluation rule @status:spec/done |
+| @fact:PA-GRADLE-API Gradle `api`/`implementation` @status:spec/done | provider @status:spec/done | `public`/`private` @status:spec/done | the `compile`-removal precedent: leakage-by-default is unpayable @status:spec/done |
+| @fact:PA-MAVEN-EXCL Maven `<exclusions>` / enforcer @status:spec/done | consumer edge / assertion pass @status:spec/done | `exclude` / deferred deny-list @status:spec/done | two-layer split, adopted in F4 @status:spec/done |
+| @fact:PA-CARGO-1977 Cargo RFC 1977 → 3516 @status:spec/done | provider mark @status:spec/done | `public` @status:spec/done | six years lost to resolver entanglement — keep visibility a pre-filter @status:spec/done |
+| @fact:PA-NPM-EXPORTS npm `exports` map @status:spec/done | provider surface seal @status:spec/done | (none yet) @status:spec/done | sub-package surfaces — deferred direction @status:spec/done |
+| @fact:PA-CPP-FRIEND C++ `friend` @status:spec/done | provider, deliberately non-transitive @status:spec/done | the anti-model @status:spec/done | what non-transitivity protects → ##CLOSURE-DRIFT-CONTROL @status:spec/done |
 
 @fact:PRIOR-ART-ADOPTIONS **Adopted into the model on prior-art strength:** (1) the **conjunction rule** — an edge materialises iff provider access permits ∧ consumer grant permits (Pants' "both ends must agree", Swift `@_spi`'s handshake) — §2.5 rule (3) is exactly this; (2) the **closure shape** — first hop a direct grant, then zero-or-more re-export marks — is Bazel's `deps`-then-`exports*` and JPMS implied readability, both battle-tested recursive; (3) **friend groups need no new primitive** — befriending a collection whose member edges are `friends-only` already delivers the members through the ordinary closure, giving Bazel-`package_group`-style composition for free and dodging Swift's rejected "large, complex manifests mingling all the layers"; (4) **unknown allowlist targets warn, never fail** (JPMS qualified-export precedent) — a `friends`/`unfriend` entry naming a package absent from every chain is a lint, §7; (5) **denial is legibility, not failure** — every surveyed system hard-fails because a missing symbol breaks a build; a missing prompt lane merely changes what loads, so our enforcement output is the pruning report (`vibe why`, §7), and only graph cycles remain hard errors. @status:spec/work
 

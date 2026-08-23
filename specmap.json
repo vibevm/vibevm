@@ -4900,127 +4900,127 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "struct",
-      "line": 50,
+      "line": 52,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 184,
-      "fingerprint": "tok1:e1fabd7ad426c0012c5104b3d597acb7f51e10b54fd1361c1f18e76f46d83bc2"
+      "end_line": 194,
+      "fingerprint": "tok1:540eb68ee4e57ed310de9d22d08f3debb792a2773aaa1aea2bb5356ca7bdc51d"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 488,
+      "line": 450,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_manifest_parses_under_its_laws",
-      "end_line": 502,
+      "end_line": 464,
       "fingerprint": "tok1:8c47d1d02d2acd0cacf3bdb93016ad219a39267352000af4f5e94708d6a2c34e"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 574,
+      "line": 536,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_requires_exact_pins",
-      "end_line": 591,
+      "end_line": 553,
       "fingerprint": "tok1:fead8cf0a052565b3d4dca69bb79ef8f0ba08d009a244e44d5bbf8b4a9bfe0de"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 528,
+      "line": 490,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_without_a_server_is_refused",
-      "end_line": 542,
+      "end_line": 504,
       "fingerprint": "tok1:0533caa937ddd842ca52dd263e7b47cc7a771062a59c78766279ff90bdd4e2f4"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 562,
+      "line": 524,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_args_substitute_only_the_closed_set",
-      "end_line": 572,
+      "end_line": 534,
       "fingerprint": "tok1:e23e2a1c7d5693045022697146ae73b4df7399aa251c477427b35efdcb1f0570"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 544,
+      "line": 506,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_binary_must_resolve_and_names_must_be_unique",
-      "end_line": 560,
+      "end_line": 522,
       "fingerprint": "tok1:a94215bf8d80192c02a59754b5b7fe5e433d36acf31f08903f9c317acfba587d"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 504,
+      "line": 466,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_table_is_refused_outside_the_mcp_kind",
-      "end_line": 526,
+      "end_line": 488,
       "fingerprint": "tok1:87de873a3a59344f2f7cca9d369a0fe0cce21483e26c0eb8bc7450445d6e89c2"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 186,
+      "line": 166,
       "symbol": "vibe_core::manifest::document::tests::origin_marker_parses",
-      "end_line": 212,
-      "fingerprint": "tok1:f4a189366aad20b22238c4e272c101af16fb632ee56603c2c502fc77c1a8fd24"
+      "end_line": 191,
+      "fingerprint": "tok1:1f35ab18ea14d14ae39f8677d1c7d39825fda3c6d310b51edbe28ba35c9795e9"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 264,
+      "line": 241,
       "symbol": "vibe_core::manifest::document::tests::package_declares_skills_and_roundtrips",
-      "end_line": 296,
-      "fingerprint": "tok1:ca075ed2e59c6d58d2fb757b1d15b9a03494e77a39f179076e15e635ea38ae47"
+      "end_line": 271,
+      "fingerprint": "tok1:255715c62200fe8b8e2db5fe64118039a950ea4ebd5fac9d48287b3caae1d287"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 235,
+      "line": 213,
       "symbol": "vibe_core::manifest::document::tests::rejects_no_role_section",
-      "end_line": 243,
+      "end_line": 221,
       "fingerprint": "tok1:8b4e3ebf3cc71336afd93ba2e519aa735f178026cdd8a37a9677cd8618d0cfab"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 245,
+      "line": 223,
       "symbol": "vibe_core::manifest::document::tests::rejects_package_role_section_without_package",
-      "end_line": 262,
-      "fingerprint": "tok1:2b7f74cccfdc6c56283e9f4fb66f7079c88a9066b1c1fad5e3091aac1d9c51f9"
+      "end_line": 239,
+      "fingerprint": "tok1:0f564627d0d35d1d6e0800d87910392ca2156ec34d748bbc73ad1b5843d26e6c"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 214,
+      "line": 193,
       "symbol": "vibe_core::manifest::document::tests::rejects_project_and_package_together",
-      "end_line": 233,
-      "fingerprint": "tok1:b306a5be7ccf149c393193a62fef13ce9167a38c9b5b7d5ec678569b5933da74"
+      "end_line": 211,
+      "fingerprint": "tok1:cbd4f6ce38a4c0ba1ebbaf52c66b69740498275907043e30285c6671d020d1ac"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 298,
+      "line": 273,
       "symbol": "vibe_core::manifest::document::tests::rejects_skill_section_without_package",
-      "end_line": 315,
-      "fingerprint": "tok1:ff30f645cac6c7166d3955707bbb708b005c88967bc170385e1c45bd2caa39e9"
+      "end_line": 289,
+      "fingerprint": "tok1:0bd98243a85984a11465cfe8ce3e3434e087718e1051ed0ef81dd4f76b7fb229"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 155,
+      "line": 137,
       "symbol": "vibe_core::manifest::document::tests::root_package_composes_workspace_and_package",
-      "end_line": 175,
-      "fingerprint": "tok1:2a57ccbb93d2a8b98efb3954f49c6032e6e5fec992f5dff18cc657fd0e40ec9b"
+      "end_line": 155,
+      "fingerprint": "tok1:9b53342cd9642516b3617fff3dc2df9c2abbd3d2183098a46520e319512c158d"
     },
     {
       "crate_name": "vibe-core",
@@ -5183,6 +5183,15 @@
       "symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
       "end_line": 134,
       "fingerprint": "tok1:6e3590b3dcd83b043c92e1c32fefafd7b2235e2da6927d88e5269b539b96bd24"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/visibility.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::manifest::package::visibility",
+      "end_line": 1,
+      "fingerprint": "tok1:65b4896da26959c9f7082319c227c2966c53e2a4d74052a512080cee13fd5c08"
     },
     {
       "crate_name": "vibe-core",
@@ -5444,6 +5453,60 @@
       "symbol": "vibe_core::values",
       "end_line": 9,
       "fingerprint": "tok1:e49631fd03ed79ca95dab2cae280795e1cb80ccf18cd66e9cb99a1c0f0ede52d"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/mod.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility",
+      "end_line": 1,
+      "fingerprint": "tok1:65b4896da26959c9f7082319c227c2966c53e2a4d74052a512080cee13fd5c08"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/closure.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility::closure",
+      "end_line": 1,
+      "fingerprint": "tok1:61c79d3227f02ff5bc588d0063f2b5af92c3d1e766552a42b7312b62640a3f11"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/diagnostics.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility::diagnostics",
+      "end_line": 1,
+      "fingerprint": "tok1:7b7948e2a15c20bbb0a680226982ddc084672442e37650afcb856292378646e7"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/effective.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility::effective",
+      "end_line": 1,
+      "fingerprint": "tok1:7f943461e0ab03314f1f8af4cb10ece2c587c9350e0d05c00752702273485006"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/graph.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility::graph",
+      "end_line": 1,
+      "fingerprint": "tok1:65b4896da26959c9f7082319c227c2966c53e2a4d74052a512080cee13fd5c08"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/visibility/tests.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_core::visibility::tests",
+      "end_line": 1,
+      "fingerprint": "tok1:842ec1c19df79fd2a14b6f422093b0b6c99cfe33f288c121adda83ac2fe072fc"
     },
     {
       "crate_name": "vibe-facts",
@@ -13937,7 +14000,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 61,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
@@ -13946,7 +14009,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_manifest_parses_under_its_laws",
-      "line": 489,
+      "line": 451,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13954,7 +14017,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_requires_exact_pins",
-      "line": 575,
+      "line": 537,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#exact-pin",
       "verb": "verifies"
@@ -13962,7 +14025,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_without_a_server_is_refused",
-      "line": 529,
+      "line": 491,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13970,7 +14033,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_args_substitute_only_the_closed_set",
-      "line": 563,
+      "line": 525,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13978,7 +14041,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_binary_must_resolve_and_names_must_be_unique",
-      "line": 545,
+      "line": 507,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13986,7 +14049,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_table_is_refused_outside_the_mcp_kind",
-      "line": 505,
+      "line": 467,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13994,7 +14057,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::origin_marker_parses",
-      "line": 187,
+      "line": 167,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos",
       "verb": "verifies",
@@ -14003,7 +14066,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::package_declares_skills_and_roundtrips",
-      "line": 265,
+      "line": 242,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl",
       "verb": "verifies",
@@ -14012,7 +14075,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::rejects_no_role_section",
-      "line": 236,
+      "line": 214,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "verifies",
@@ -14021,7 +14084,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::rejects_package_role_section_without_package",
-      "line": 246,
+      "line": 224,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "verifies",
@@ -14030,7 +14093,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::rejects_project_and_package_together",
-      "line": 215,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "verifies",
@@ -14039,7 +14102,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::rejects_skill_section_without_package",
-      "line": 299,
+      "line": 274,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl",
       "verb": "verifies",
@@ -14048,7 +14111,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::root_package_composes_workspace_and_package",
-      "line": 156,
+      "line": 138,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root-package",
       "verb": "verifies",
@@ -14219,6 +14282,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/visibility.rs",
+      "from_symbol": "vibe_core::manifest::package::visibility",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#model",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-core/src/manifest/package/weak_deps.rs",
@@ -14461,6 +14532,54 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#typed-value-system",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/mod.rs",
+      "from_symbol": "vibe_core::visibility",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/closure.rs",
+      "from_symbol": "vibe_core::visibility::closure",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#closure",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/diagnostics.rs",
+      "from_symbol": "vibe_core::visibility::diagnostics",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/effective.rs",
+      "from_symbol": "vibe_core::visibility::effective",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#effective-set",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/graph.rs",
+      "from_symbol": "vibe_core::visibility::graph",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/visibility/tests.rs",
+      "from_symbol": "vibe_core::visibility::tests",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#example",
       "verb": "implements"
     },
     {
@@ -32217,7 +32336,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:89f8091313fb41cb734a632751db55a3479e6f2470db2ab5e102152084fc73fb",
+      "content_hash": "sha256:84aa72a4b0efaf9d49c85d7ee23b5922164f2ea94eb4e41e56aaa1e606db68eb",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "PROP-050: Dependency visibility — access, friendship, and the friend closure",
@@ -32280,7 +32399,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:889a627ff02dd93e666a4716e0f4c692cc9b216c4cff9bb0fda8f23c964575a9",
+      "content_hash": "sha256:1a59632dd093c80e73f36b736dcd8fd317f0c48034f8c4e99ae49594804ec41a",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2. The model",
@@ -32370,7 +32489,7 @@
     },
     {
       "anchor": "friendship",
-      "content_hash": "sha256:7102575c2efde389128dcf20a825dc5007bc51025c6c37570952ce417e1b327c",
+      "content_hash": "sha256:482a4fe4efe0d8d74d0b57b4f1d60dd4ba09bd5e6f2bee2e277ad8c60590ecad",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.3 Friendship — consumer-declared, two grant forms",
@@ -32469,7 +32588,7 @@
     },
     {
       "anchor": "closure",
-      "content_hash": "sha256:4833674ab69df27df4f5467de447de23854811243f86ce04fdea7e74711c5122",
+      "content_hash": "sha256:c2005bb337ced6270f3703146837322fdca517246a4a9c51fb85e21f4ca59919",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.4 The friend closure — transitivity through friends-only edges",
@@ -32514,10 +32633,10 @@
     },
     {
       "anchor": "closure-determinism",
-      "content_hash": "sha256:92e62637683075d4296518e298e2ca64e3da3d4ae6e1e24a34d8aaaad07dee67",
+      "content_hash": "sha256:c24861d35d11e65ba7d5fd701ef4f3ab6ee5a3c0c6f02e15c8f2de2552a2309c",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
-      "heading": "`C(R)` is a monotone least fixpoint over per-edge static predicates: deterministic, order-independent, computable in `O(nodes + edges)`, no interaction with the effective set (which is computed *after* it, §2.5) and none with materialisation (§3). Cycles in `requires` remain a hard generate-time error exactly as in the linker today (PROP-034 §2.3). @status:spec/work",
+      "heading": "`C(R)` is a monotone least fixpoint over per-edge static predicates — deterministic and order-independent. With §2.9's path-stack masks in the picture, the closure and the reachable mask-states form **one joint monotone fixpoint** (alternating expansion until stable; masks are static declarations and both sets only grow, so termination and determinism hold; implementations dedup normalized mask-states) — the earlier draft's «computed strictly before the effective set» reading was corrected at the W1 landing, where the implementation surfaced the contradiction. Materialisation (§3) stays outside either computation. Cycles in `requires` remain a hard generate-time error exactly as in the linker today (PROP-034 §2.3). @status:impl/done",
       "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#closure-determinism"
     },
@@ -32649,7 +32768,7 @@
     },
     {
       "anchor": "override",
-      "content_hash": "sha256:214a2d3fe363ff65948d4f6c4b1a1f161dd0993ad27503b4694bdcfbc979c338",
+      "content_hash": "sha256:85bccf0cc15e0130ae93f5b0a49e4259e20c650141974ddd107de0ba4fcf1736",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.9 `override` — the sanctioned break-in, anywhere in the graph",
@@ -32675,12 +32794,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-PATH-SEMANTICS"
     },
     {
+      "anchor": "OVERRIDE-KEY-COEXISTENCE",
+      "content_hash": "sha256:03a2104403ad68c68530330c42e77c6c72d273fa6b2969e8d48d1517e09e71c6",
+      "doc_path": "common/PROP-050",
+      "file": "spec/common/PROP-050-dependency-visibility.md",
+      "heading": "**Syntax note (W1 landing):** the manifest already carried `[[override]]` — the array-of-tables registry-pin form (`OverrideSection`). The visibility table lives under the same `override` key as an ordinary table; the wire layer distinguishes the two shapes structurally (array vs table), either form alone is lawful, and one manifest carrying both is a loud validation/serialisation error rather than a silent merge. A future wave may retire or rename the legacy form; until then the coexistence is deliberate. @status:impl/done",
+      "line": 134,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-KEY-COEXISTENCE"
+    },
+    {
       "anchor": "OVERRIDE-IS-CONTRACT-MIDGRAPH",
       "content_hash": "sha256:207add8a8866928f6ba7b1ab993c49a28397a336db055ace81fba93c73e41f1d",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**A mid-graph override is contract; the root's is private.** An `[override]` in a package's manifest changes what that package delivers — it is part of the package's versioned surface, subject to ##ACCESS-IS-SEMVER-SURFACE like any access change (expansive entries additionally ride at the breaker's own risk: the broken-into provider promised nothing). The consumer root's `[override]` binds nobody downstream and is versioned by nothing but its own repository. Observability is pull-based only, per the quiet ruling: lock provenance marks and `vibe why … — via override of <node>` answer whoever asks; nothing shouts at install time. @status:spec/done",
-      "line": 134,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-IS-CONTRACT-MIDGRAPH"
     },
     {
@@ -32689,7 +32817,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "2.10 Worked example — the owner's chain",
-      "line": 136,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#example"
     },
     {
@@ -32698,7 +32826,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The ordering message's chain `A → B → C → D` (D a practice), with each intermediate marking its dependency edge `friends-only` (each mark implying its own grant per F10): `grants(A) ⊇ {B}` (A's explicit grant on its own edge), so `B ∈ C(A)`; `B`'s edge `B → C` is friends-only and `C ∈ grants(B)`, so `C ∈ C(A)`; `C → D` likewise, so `D ∈ C(A)` — «загрузившись в D мы получим, что по цепочке транзитивности, D является другом для A». Traversal: `A → B` by rule (1); `B → C` by rule (3) with `B ∈ C(A)`; `C → D` by rule (3) with `C ∈ C(A)` — so `D ∈ E(A)` and D materialises for A. If `B` had declared `unfriend = [\"…/C\"]`, the chain would break at `B` for every root above `B` — while a sibling path `A → B′ → C` (B′ friends-only-marking C) would deliver C and D intact. @status:spec/done",
-      "line": 138,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#worked-example"
     },
     {
@@ -32707,7 +32835,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "3. Layering — visibility above materialisation",
-      "line": 142,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#layering"
     },
     {
@@ -32716,7 +32844,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner ruling, adopted as the layer boundary:** «признак типа static-transitive должен применяться уже ПОСЛЕ вычисления замыкания друзей, потому что замыкание друзей — это свойство логики связей в приложении, а транзитивная статичность — это свойство материализации, более логически низкая структура». The pipeline becomes: @status:spec/work",
-      "line": 144,
+      "line": 146,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VISIBILITY-ABOVE-MATERIALISATION"
     },
     {
@@ -32725,7 +32853,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The `link` axis (`static` / `dynamic` / `static-transitive` / `static-hard`) survives intact as **materialisation strength within the visible graph**: «возможность спускать вниз по иерархии признак статичности всё так же очень нужна… как отдельная ось, ортогональная нашему замыканию друзей». @status:spec/work",
-      "line": 155,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#LINK-AXIS-ORTHOGONAL"
     },
     {
@@ -32734,7 +32862,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Forcing never widens visibility.** A `static-transitive` edge propagates staticness across *traversable* edges only: it can make a visible package static, never make an invisible package visible. The hybrid linker's forced-descent (`resolve_zone`, PROP-038 §2.2) simply walks `E(R)`'s subgraph instead of the raw requires graph; hoisting counts (PROP-038 §5.2) count within `E(R)`. @status:spec/work",
-      "line": 156,
+      "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORCING-NEVER-WIDENS"
     },
     {
@@ -32743,7 +32871,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "This ordering is THE-LAYER-LAW (PROP-048) applied to the pipeline itself: the logical stratum (who exists) is more stable and more upstream than the materialisation stratum (how it loads); a change in link mode never invalidates the visibility computation above it. @status:spec/work",
-      "line": 157,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#layer-law-fit"
     },
     {
@@ -32752,7 +32880,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4. System interactions",
-      "line": 161,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#interactions"
     },
     {
@@ -32761,7 +32889,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.1 Resolver and lock",
-      "line": 163,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#resolver"
     },
     {
@@ -32770,7 +32898,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Version resolution operates on `E(R)` only: private edges of non-root packages contribute no constraints, fetch nothing, and cannot conflict. `vibe.lock` records `E(R)` — the lock of a consumer no longer contains other packages' dev-world entries. Version unification (one node per `(group, name)`, PROP-003/017) is unchanged *within* the effective set. A welcome simplification vs code ecosystems: the Cargo-RFC-1977 problem («may private deps duplicate at different versions?») does not arise — an invisible package has no copies at all. @status:spec/work",
-      "line": 165,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-EFFECTIVE-ONLY"
     },
     {
@@ -32779,7 +32907,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**The interleaving, named honestly.** Computing `E(R)` needs edges; edges live in manifests of *resolved* versions; constraints come only from `E(R)` — so the walk is joint: the resolver expands the graph following only traversable edges, with `C(R)` recomputed monotonically as newly-resolved manifests contribute grants and marks (all predicates are static edge attributes of already-chosen nodes, so the joint fixpoint stays deterministic). Reading a manifest to learn that its edge is private is a **metadata read, not materialisation** — package *content* is fetched for `E(R)` members only. The Cargo lesson (RFC 1977 lost six years to resolver entanglement; RFC 3516 lives by decoupling) is honoured structurally: visibility stays a pure edge predicate the walk *consults* — never a quantity the version solver optimises over. @status:spec/work",
-      "line": 167,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING"
     },
     {
@@ -32788,7 +32916,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.2 Materialisation and `vibedeps/`",
-      "line": 169,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#materialisation"
     },
     {
@@ -32797,7 +32925,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "`vibedeps/` holds exactly `E(R)`: an excluded or invisible package leaves no slot, no cache entry for the root's world, no lane text. This is the structural fix for the WAL specimen: a wal flow declared `private` (or `friends-only`) by whatever requires it simply never arrives in a consumer's tree — no snippet, no `spec/WAL.md` scaffold, no INDEX row. @status:spec/work",
-      "line": 171,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#MATERIALISE-EFFECTIVE-ONLY"
     },
     {
@@ -32806,7 +32934,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.3 PROP-049 under visibility — what the genre machinery still does",
-      "line": 173,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prop-049-fate"
     },
     {
@@ -32815,7 +32943,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The ordering message asks whether «наша система с контролем flows» is still needed. No standalone \"flows control\" system exists in the spec tree (verified 2026-08-23: PROP-009's `flow` is an ordering *category*; PROP-028's flows are package *kinds*); the referent is read as the PROP-049 genre machinery — `installed:` predicates, snippet fragments, `concepts`, and the presupposition gate — built precisely against the WAL seepage this PROP now fixes structurally. Fork **F7** confirms the referent. @status:spec/work",
-      "line": 175,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#flows-control-identification"
     },
     {
@@ -32824,7 +32952,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Recommendation: keep PROP-049, re-scoped — the two systems solve different halves.** Visibility controls *structural arrival* (whether a package exists in `E(R)`); the genre machinery controls *textual behaviour* (what a snippet may presuppose, and how text adapts to a neighbour's presence). With visibility live: (a) `installed:` predicates and fragments remain THE adaptivity mechanism — an `installed:` predicate now queries `E(R)`, and a fragment binding to an absent friend stays physically omitted exactly as today; (b) the presupposition gate remains the authoring lint that catches a snippet textually assuming what its package did not lawfully receive; (c) what *dissolves* is the unbundling pressure — a future redbook-like collection may keep a wal-like member on a `friends-only`/`private` edge instead of expelling it. @status:spec/work",
-      "line": 177,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PROP-049-DIVISION-OF-LABOUR"
     },
     {
@@ -32833,7 +32961,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Direction (F7 follow-up): concept-gated fragments.** Today the `concepts` array feeds exactly one consumer — the presupposition gate's dictionary (`crates/vibe-check/src/checks/snippet_presupposition.rs`): lexeme → owning package, matched against unconditional snippet text. A natural completion is `when = \"concept:WAL\"` — a fragment gated on «some package in `E(R)` declares this concept», resolving a discipline as an **interface** rather than a named implementation (`installed:` stays the exact-package form). Several packages could then carry one discipline interchangeably. Deferred to the owner's F7 ruling. @status:spec/work",
-      "line": 179,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CONCEPT-GATE-DIRECTION"
     },
     {
@@ -32842,7 +32970,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**One PROP-049 rule must tighten.** The presupposition lint currently exempts mentions of the package's own declared dependencies. Under visibility that exemption is too wide: a mention of an own **private** dependency in *unconditional* snippet text presupposes a package that never reaches any consumer — lawful only inside an `installed:`-gated fragment (which, for a private dependency, fires only in the declarant's own dev world, §4.4 — exactly right). The exemption narrows to *edges that seep* (public, or friends-only). This is a concrete PROP-049 amendment shipped with the implementation wave, in the warning genre of ##CONCEPTS-GATE-SOFTENED. @status:spec/done",
-      "line": 181,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#DEPS-EXEMPTION-NARROWS"
     },
     {
@@ -32851,7 +32979,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner-ruled (F7, 2026-08-23): the gate speaks in warnings, with lawful homonymy, owner-dedup, and a subtree mute.** The owner's fear is exact — «термин WAL вообще супер ходовой, его многие используют в разных смыслах» — so: (a) a foreign-concept mention is a **warning** («пакет X использует концепт из пакета Y»), never an error; (b) **homonymy is lawful** — a package that declares the lexeme in its own `concepts` owns the word in its own world and triggers nothing; (c) **dedup across owners** — when several packages declare one lexeme, a legitimate relation to *any one* of them (own declaration, or a seeping edge to one owner) silences the warning — «достаточно лишь одного» — and an unexplained use warns once, naming all owners, not once per owner; (d) node-level **`ignore-concept-warnings = [\"WAL\", …]`** mutes the named concepts for the entire subtree hanging off that manifest. The machinery stays under this softening — «фича полезная, но очень нишевая». @status:spec/done",
-      "line": 183,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CONCEPTS-GATE-SOFTENED"
     },
     {
@@ -32860,7 +32988,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.4 Equipotence and the dev world",
-      "line": 185,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#dev-world"
     },
     {
@@ -32869,7 +32997,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Rule (1) of §2.5 — the root's own edges always traverse — combined with explicit `private` marks resolves the open tail of the equipotence wave (PROP-024): a package's `[requires]` is simultaneously its dev-set and its contract, **split per-edge by `access`** rather than by section. When the package is the consumer root (a dev checkout — `[project]` or `[package]`, equipotently), *all* its edges traverse and its private tooling materialises; when it is consumed as a dependency, only its seeping edges do. No separate dev-dependencies section needed. @status:spec/work",
-      "line": 187,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PRIVATE-IS-THE-DEV-WORLD"
     },
     {
@@ -32878,7 +33006,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.5 vibefacts",
-      "line": 189,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#vibefacts"
     },
     {
@@ -32887,7 +33015,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The adoption-facts registry (PROP-046) keys per-source files by installed packages; its universe follows `E(R)` mechanically. Registry entries for packages that leave the effective set surface through the existing `facts_sync` / lifecycle machinery (PROP-046 L5) — no new mechanism, one new reason entries become stale. @status:spec/work",
-      "line": 191,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#facts-scope-follows-visibility"
     },
     {
@@ -32896,7 +33024,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "4.6 Collections and families",
-      "line": 193,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#collections"
     },
     {
@@ -32905,16 +33033,16 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "A PROP-028 collection's whole point is aggregation: its member edges are the type case for `access = \"public\"` (redbook's ~21 exact-pinned members must seep to redbook's consumers — that is what depending on the collection *means*). A family's internal shared core is the type case for `friends-only` (members befriend each other through the family's marks; outsiders opt in or see nothing). Migration inventory in §6. @status:spec/work",
-      "line": 195,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#COLLECTIONS-DECLARE-PUBLIC"
     },
     {
       "anchor": "prior-art",
-      "content_hash": "sha256:fbf1e05933ec01c141b3b3fb4e7cf32b71bc8aa7892b7fd5953247b2f940ba31",
+      "content_hash": "sha256:c5bccae09c953f834294a5f9b4a4edd1b34e39a1d8eae016229cce7987a57edc",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "5. Prior art — what the neighbours teach",
-      "line": 199,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art"
     },
     {
@@ -32923,7 +33051,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Three research sweeps (2026-08-23; JVM lineage — JPMS / sealed / Kotlin / Swift; module-graph lineage — OSGi / Eclipse PDE / Bazel / Buck / Pants; dependency-manager lineage — Gradle / Maven / Cargo / npm / C++ `friend` and C++20 modules) ground this section; the full worker reports are archived in [`spec/research/dependency-visibility-2026-08/`](../research/dependency-visibility-2026-08/01-jvm-lineage.md). The map, on the two axes that matter — who declares, and what a denial costs: @status:spec/work",
-      "line": 201,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art-method"
     },
     {
@@ -32932,7 +33060,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Adopted into the model on prior-art strength:** (1) the **conjunction rule** — an edge materialises iff provider access permits ∧ consumer grant permits (Pants' \"both ends must agree\", Swift `@_spi`'s handshake) — §2.5 rule (3) is exactly this; (2) the **closure shape** — first hop a direct grant, then zero-or-more re-export marks — is Bazel's `deps`-then-`exports*` and JPMS implied readability, both battle-tested recursive; (3) **friend groups need no new primitive** — befriending a collection whose member edges are `friends-only` already delivers the members through the ordinary closure, giving Bazel-`package_group`-style composition for free and dodging Swift's rejected \"large, complex manifests mingling all the layers\"; (4) **unknown allowlist targets warn, never fail** (JPMS qualified-export precedent) — a `friends`/`unfriend` entry naming a package absent from every chain is a lint, §7; (5) **denial is legibility, not failure** — every surveyed system hard-fails because a missing symbol breaks a build; a missing prompt lane merely changes what loads, so our enforcement output is the pruning report (`vibe why`, §7), and only graph cycles remain hard errors. @status:spec/work",
-      "line": 221,
+      "line": 223,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#PRIOR-ART-ADOPTIONS"
     },
     {
@@ -32941,7 +33069,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**An access mark is versioned surface.** OSGi's verdict on `reexport` — «once you have added re-export you cannot remove it without considering the corresponding API change» — and Cargo's `public = true` semver reasoning transfer whole: widening an edge (`private → friends-only → public`) is a feature; **narrowing one is a breaking change** of the declaring package, versioned like any contract change. The publish gate (C6 family) checks access narrowing against the previous published version. @status:spec/work",
-      "line": 223,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#ACCESS-IS-SEMVER-SURFACE"
     },
     {
@@ -32950,7 +33078,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**What C++'s non-transitivity protected, restored by other means.** C++ keeps `friend` non-transitive so the set that can touch you stays enumerable *by reading one file*; our marks keep the closure enumerable but **not local** — a mid-graph package can widen `C(R)` in a patch release the root never reads. Three controls restore the audit: (a) the lock records `E(R)` with per-package lane cost, so `vibe update` surfaces closure drift as a reviewable diff («+2 packages, +3.1k static-lane tokens»); (b) ##ACCESS-IS-SEMVER-SURFACE makes silent widening a versioning violation; (c) an optional per-lane token budget cap (a PROP-048 direction) turns runaway growth into a loud stop. @status:spec/work",
-      "line": 225,
+      "line": 227,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#CLOSURE-DRIFT-CONTROL"
     },
     {
@@ -32959,7 +33087,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Authoring norm for narrowing marks** (the JPMS community rule, transposed and then inverted by the public default): since presence flows by default, the author's duty is to **narrow deliberately** — mark `private` every edge that is not part of your consumable substance (WAL-class disciplines, dev tooling, heavy optional companions), and `friends-only` what only your inner circle should build on. Aggregator-style «one edge pulls the world» is lawful for collections, whose members are their declared substance (§4.6); everyone else answers for every public edge with its lane cost (§7 measurements make the bill legible). Advisory, policed by the §7 lints, enforced by nobody — strict-deps culture with the autofix command in place of ceremony. @status:spec/done",
-      "line": 227,
+      "line": 229,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#REEXPORT-USAGE-NORM"
     },
     {
@@ -32968,7 +33096,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Deliberately not taken:** OSGi `uses:`-style implicit constraint propagation (prompt text has no class space — a budget concern must never become a global satisfiability problem); Kotlin's compilation-unit boundary (visibility binds to declared edges and coordinates, never to «whatever landed in one lane»); graph-global unification of any visibility knob (Cargo's feature-unification scar — closures are per-root by construction, §2.1, and never merge); provider-side allowlists (F8); npm-`exports`-style named sub-package surfaces — a real direction (a grant admitting one declared fragment rather than a package's whole contribution) that composes naturally with PROP-049 fragments, deferred until the package-level system has run in anger. @status:spec/work",
-      "line": 229,
+      "line": 231,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#prior-art-rejections"
     },
     {
@@ -32977,7 +33105,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "6. Migration",
-      "line": 233,
+      "line": 235,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration"
     },
     {
@@ -32986,7 +33114,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Owner ruling (2026-08-23) — no legacy read, no backward compatibility:** «нужно переделать существующие пакеты, никакого legacy-чтения и обратной совместимости; система, которую мы сейчас сделаем, становится основной и не откатываемой никуда; пакеты предыдущих форматов не имеют смысла (поэтому их нужно улучшить)». The strict reading — with the ruled defaults, `access = \"public\"` / `friend = false` (##DEFAULT-PUBLIC-RATIONALE, F3) — is the **only** reading; the implementation wave marks the tree's manifests in the same wave the machinery lands. This overrules the draft's legacy-read/ratchet proposal. @status:spec/done",
-      "line": 235,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#MIGRATION-NO-LEGACY"
     },
     {
@@ -32995,7 +33123,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Why the §5 flag-day graveyard does not forbid this: those lessons price a default flip across an **open** ecosystem of foreign artefacts (JPMS: the world's jars; Swift: every existing package). This tree is a closed world — every manifest that exists lives in this repository, C6 publication is frozen, and there are no external consumers yet — so the «flag day» is an ordinary all-packages refactoring wave over owned files. The public presence default (##DEFAULT-PUBLIC-RATIONALE) softens it further: an unmarked manifest behaves exactly as today, so a partially-marked tree merely *keeps seeping where not yet narrowed* — degraded budget, never a broken world. The atomic wave + §7 golden snapshot remain the standard for landing cleanly, as review hygiene rather than a survival condition. @status:spec/done",
-      "line": 237,
+      "line": 239,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-flag-day-scope"
     },
     {
@@ -33004,7 +33132,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Re-marking inventory (in-wave per ##MIGRATION-NO-LEGACY; under the public default the work is **deliberate narrowing**, not blanket re-annotation): redbook's 21 member edges, stack aggregators' cores, `delegation-first → delegation-rules`, `wal-specspaces → wal`, host root edges — all correct under the default, **no marks needed**; dev-/tooling edges across the tree → explicit `private`; `git-practices` family internals → first candidate for `friends-only` dogfooding; and the door PROP-049's unbundling closed re-opens as an *option* — a redbook-like collection may again carry a wal-like member on an explicit `private`/`friends-only` edge, a separate decision for its author. The 8 world packages' `[boot_snippet] link = \"static\"` self-suggestions are materialisation-axis and untouched. @status:spec/work",
-      "line": 239,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-inventory"
     },
     {
@@ -33013,7 +33141,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "Implementation shape (post-approval, separate wave, ask-first per Rule 4 only where its list applies): (1) `vibe-core` manifest schema — the new edge/node fields, strict semantics only; (2) `C(R)`/`E(R)` computation as a new pure module consumed by resolver + bootgen; (3) linker re-scoped to `E(R)`; (4) PROP-049 exemption narrowing; (5) package-tree/`vibe why` observability (§7); (6) re-marking of **every** package manifest in the tree (the inventory above); (7) the golden landing snapshot + measurement pass (§7). Steps 1–5 are machinery, step 6 is the flip, and the wave lands **atomically** — no commit leaves the tree half-marked (##migration-flag-day-scope). The wave-by-wave build plan elaborating this shape is [`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`](../terraforms/VISIBILITY-BUILD-PLAN-v0.1.md). @status:spec/done",
-      "line": 241,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#migration-shape"
     },
     {
@@ -33022,7 +33150,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "7. Verification and measurement — «РЕАЛЬНО ХОРОШО»",
-      "line": 245,
+      "line": 247,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification"
     },
     {
@@ -33031,7 +33159,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The owner's bar is explicit: «перестроить статические и динамические лоадеры и проверить, что всё работает РЕАЛЬНО ХОРОШО. Измерить, проверить, посмотреть на тестовых примерах». The implementation wave carries, as first-class deliverables: @status:spec/work",
-      "line": 247,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#verification-plan"
     },
     {
@@ -33040,7 +33168,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Golden chains.** Fixture worlds for every §2 rule — the owner's `A → B → C → D` chain verbatim (test №1), the unfriend break, the diamond-with-exclude, public-presence-without-friendship, the dev-world flip (same package as root vs as dependency) — each asserting the exact `E(R)`, lock content, and lane bytes. @status:spec/work",
-      "line": 249,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-GOLDEN-CHAIN"
     },
     {
@@ -33049,7 +33177,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Determinism and the landing snapshot.** Re-runs over identical inputs are byte-identical (the PROP-038 §5 stability bar, extended to visibility inputs). Since there is no legacy mode (##MIGRATION-NO-LEGACY), the correctness artefact is the **golden snapshot of the re-marked world**: the wave captures the intended `E(R)` and lane composition per root, the one-time diff against the pre-visibility lanes is read by hand at landing (expected: WAL-class removals, zero accidental losses), and a panel cell pins the snapshot thereafter. @status:spec/done",
-      "line": 250,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-BYTE-STABILITY"
     },
     {
@@ -33058,7 +33186,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Measurement.** Before/after per-root metrics, recorded in the wave's harvest: effective-set package count, lane byte sizes, fetch/materialise counts and install wall-time. The tokenomics claim (§1) must show up as numbers, not prose. @status:spec/work",
-      "line": 251,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-MEASURE"
     },
     {
@@ -33067,7 +33195,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Observability: `vibe why <group>/<name>`.** For any package, print the chains that admit it into `E(R)` — each hop annotated with its rule ((1)/(2)/(3)), access mark, and friendship provenance — and for an absent package, the nearest blocked chains and *what* blocked them (private edge / missing friendship / unfriend / exclude). The debugging surface without which a visibility system rots into folklore; `vibe tree` gains the same annotations. @status:spec/work",
-      "line": 252,
+      "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY"
     },
     {
@@ -33076,7 +33204,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Closure-drift visibility.** The lock carries `E(R)` with each member's lane cost (bytes/tokens of its contribution); `vibe update` prints the closure diff — packages entering/leaving and the lane-cost delta — so a mid-graph re-export widening (##CLOSURE-DRIFT-CONTROL) is a reviewed event, not a silent seep. @status:spec/work",
-      "line": 253,
+      "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LOCK-DIFF"
     },
     {
@@ -33085,7 +33213,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**Hygiene lints.** Dead `friends`/`unfriend`/`exclude` entries naming packages that never appear in any chain (warning, per the JPMS qualified-export precedent); friends-only edges whose declarant nobody befriends (unreachable sharing); a `friend = false` edge to a package with no friends-only edges (a no-op mark); grants whose admitted chains contribute no lane text this root ever loads — each reported with the lane cost the grant admits, so an unused or cost-heavy friendship is visible (the consumer-side mirror of Eclipse's rotting x-friends lists). Advisory, in `vibe check`. @status:spec/work",
-      "line": 254,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#VERIFY-LINTS"
     },
     {
@@ -33094,7 +33222,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "8. Rollback",
-      "line": 258,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#rollback"
     },
     {
@@ -33103,7 +33231,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**By owner ruling — none.** Until implementation this document changes nothing. Once the wave lands, visibility is the primary and irreversible model — «становится основной и не откатываемой никуда» — and pre-visibility manifest reading retires with it; there is no legacy mode to fall back to, and the old formats are not preserved («пакеты предыдущих форматов не имеют смысла»). `formats/EPOCHS.toml` is untouched; the safety that replaces rollback is the atomic wave + golden snapshot of §6/§7. @status:spec/done",
-      "line": 260,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#rollback-shape"
     },
     {
@@ -33112,7 +33240,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "9. Open forks for the owner",
-      "line": 264,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#forks"
     },
     {
@@ -33121,7 +33249,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "The reconstruction forks, with the owner's 2026-08-23 rulings recorded; F7–F9 remain live: @status:spec/work",
-      "line": 266,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#fork-list"
     },
     {
@@ -33130,7 +33258,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F1 — «internal» ≡ `access = \"friends-only\"`. RATIFIED** («правильный термин — friends-only»): one mark is both the seepage gate and the friendship re-export (§2.4); no separate `internal` field exists. @status:spec/done",
-      "line": 268,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F1-INTERNAL"
     },
     {
@@ -33139,7 +33267,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F2 — the anti-list is `unfriend`. RATIFIED**; `enemy` is retired. @status:spec/done",
-      "line": 269,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F2-NAMING"
     },
     {
@@ -33148,7 +33276,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F3 — `friend` default. RE-RULED 2026-08-23 to `false`.** The original `true` belonged to the one-field paradigm; with access and friendship separated, friendship is a raised privilege granted only explicitly («Не давать повышенных привилегий там, где они могут и не пригодиться»). Paired with the same ruling's **access default flip to `public`** (##DEFAULT-PUBLIC-RATIONALE): presence generous, friendship stingy. See F10 for the one ergonomic consequence. @status:spec/done",
-      "line": 270,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F3-DEFAULT-FRIEND"
     },
     {
@@ -33157,7 +33285,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F4 — `exclude` is per-edge, Maven-style, arbitrarily deep within the edge's subtree. RATIFIED** («можно per-ребро делать глубокие эксклюды по иерархии — это не глобальный deny-list, это сужение в рамках поддерева»). No global deny-list. F9 may re-house the syntax inside `override`; the semantics stand. @status:spec/done",
-      "line": 271,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F4-EXCLUDE-SCOPE"
     },
     {
@@ -33166,7 +33294,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F5 — migration. OVERRULED by the owner:** no legacy read, no backward compatibility, the system is primary and irreversible; every existing package is re-marked in the landing wave (##MIGRATION-NO-LEGACY, ##migration-flag-day-scope). The draft's autodetect+ratchet proposal is retired. @status:spec/done",
-      "line": 272,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F5-MIGRATION"
     },
     {
@@ -33175,7 +33303,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F6 — public gives presence, not friendship. RATIFIED** («access и friend разные понятия, public даёт присутствие но не дружбу»); the composition of the two marks on one edge is pinned as ##PUBLIC-PLUS-FRIEND. @status:spec/done",
-      "line": 273,
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F6-PUBLIC-NO-FRIENDSHIP"
     },
     {
@@ -33184,7 +33312,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F7 — PROP-049's fate. RULED 2026-08-23: keep, softened.** The gate becomes a warning system with lawful homonymy, owner-dedup and the `ignore-concept-warnings` subtree mute — ##CONCEPTS-GATE-SOFTENED carries the four rulings; ##DEPS-EXEMPTION-NARROWS joins the same genre. ##CONCEPT-GATE-DIRECTION (`when = \"concept:X\"`) stays a sketch, unruled. @status:spec/done",
-      "line": 274,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F7-PROP-049"
     },
     {
@@ -33193,7 +33321,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F8 — provider-side allowlists. RULED and design RATIFIED 2026-08-23** («спроектируй механизм allow-friends…» → design delivered as §2.8 → «годится»): node-level permits list; absent = open, `[]` = sealed, list = the circle; checked on the grant giver; rejected grant = warning; enumerable via `vibe friends`; trusted friends are non-sealed transit points; `override` breaks the seal by node-targeted entry. @status:spec/done",
-      "line": 275,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F8-PROVIDER-ALLOWLIST"
     },
     {
@@ -33202,7 +33330,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F9 — `override`: the official, QUIET break-in, lawful ANYWHERE. RULED 2026-08-23 (two passes).** First pass: deliberate developer break-in is not a threat model — «он всё равно может пойти и руками поправить любые свойства пакетов на диске», as Java's reflection era proved; languages with no sanctioned privacy story (Python) breed confusion about the intended surface; so vibevm ships an **official break-in verb instead of hacks**, and ships it **quiet** — no install-time notices («постоянный мусор… иллюзия безопасности»), pull-based provenance only. `exclude` stays a separate directive («список exclude убирать не надо»). Second pass: the draft's root-only recommendation is **overruled** — «разрешён не только в корневом манифесте, а где угодно»; the any-node semantics (path-stack masks, nearer-to-root wins, existential-over-chains, mid-graph override as versioned contract) is the body's §2.9. The subtraction-vs-expansion analysis stands: expansive entries breach ##ACCESS-IS-SEMVER-SURFACE at the breaker's own risk. @status:spec/done",
-      "line": 276,
+      "line": 278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F9-OVERRIDE"
     },
     {
@@ -33211,7 +33339,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**F10 — `friends-only` implies `friend = true` on its own edge. RATIFIED 2026-08-23** (##FRIENDS-ONLY-IMPLIES-FRIEND): one mark per hop makes the chain; explicit `friend = false` beside the mark wins, producing the lawful no-vouch cell of ##ACCESS-FRIEND-MATRIX. @status:spec/done",
-      "line": 277,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#FORK-F10-IMPLICATION"
     },
     {
@@ -33220,7 +33348,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "10. Version history",
-      "line": 281,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#history"
     },
     {
@@ -33229,7 +33357,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 (fourth pass) — design closed, build planned.** F10 ratified (the implication); §2.8 `allow-friends` ratified as designed; F9 re-ruled to **any-node** override — root-only overruled, the path-stack semantics (nearer-to-root wins, existential over chains, mid-graph override is versioned contract) lands as §2.9; the worked example moves to §2.10. The access×friend matrix (##ACCESS-FRIEND-MATRIX) and the transit/use-case facts (##TRANSIT-WITHOUT-DECLARATION, ##FRIENDS-ONLY-USE-CASES) had landed between passes. Build plan authored: `spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`; implementation awaits the owner's start word. @status:spec/done",
-      "line": 283,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-FINAL-RATIFICATION"
     },
     {
@@ -33238,7 +33366,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 (third pass) — defaults recast, remaining forks ruled.** Owner re-rulings: `access` defaults **public** (##DEFAULT-PUBLIC-RATIONALE — loaders must not silently lose what was always available; the observability asymmetry seals it), `friend` defaults **false** (F3 re-ruled — friendship is a raised privilege; presence generous, friendship stingy). F7 ruled: the concepts gate softens to warnings with lawful homonymy, owner-dedup and `ignore-concept-warnings` (##CONCEPTS-GATE-SOFTENED). F8 ruled: `allow-friends` designed (§2.8) — sealed-`permits` shape, override-breakable. F9 ruled in substance: the override is official and **quiet** (no install notices; pull-based provenance only); `exclude` stays separate; root-only stands as recommendation. F10 filed (friends-only implies its own grant). Migration softened accordingly: an unmarked tree seeps as today instead of breaking (##migration-flag-day-scope); the wave's work is deliberate narrowing. @status:spec/done",
-      "line": 284,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-DEFAULTS-RECAST"
     },
     {
@@ -33247,7 +33375,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 (later the same day) — core ratified by the owner.** F1 (friends-only ≡ the re-export mark), F2 (`unfriend`), F3 (`friend = true` default on own edges), F4 (per-edge deep-subtree `exclude`) and F6 (access ⊥ friendship; ##PUBLIC-PLUS-FRIEND added) ruled as drafted. F5 **overruled**: no legacy read, no backward compatibility, irreversible — ##MIGRATION-NO-LEGACY replaces the autodetect+ratchet proposal; §7/§8 re-anchored to the atomic wave + golden snapshot. F7 (concepts mechanics + ##CONCEPT-GATE-DIRECTION) and F8 (allow-list mechanics) explained, rulings pending; F9 (`override`, the root-side sanctioned break-in) filed with the subtraction-vs-expansion analysis. @status:spec/done",
-      "line": 285,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-RATIFIED-CORE"
     },
     {
@@ -33256,7 +33384,7 @@
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.md",
       "heading": "**2026-08-23 — drafted (owner-ordered).** The visibility model: per-edge `access` (public / private-default / friends-only), consumer-declared friendship (per-edge flag + node list), the friend closure as a least fixpoint over friends-only re-exports, `unfriend` (node-scoped) and `exclude` (edge-scoped) growth controls, root-driven materialisation. Layering: visibility above materialisation (owner ruling); the `link` axis survives re-scoped to the effective set. Interactions: resolver/lock/vibedeps on `E(R)` only; PROP-049 kept re-scoped with the deps-exemption narrowed; the dev-world reading resolves the equipotence wave's open tail. Migration by per-manifest legacy read; verification plan with golden chains, byte-stability, measurement, and `vibe why`. Prior-art synthesis and §9 forks await the owner. @status:spec/work",
-      "line": 286,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-DRAFTED"
     },
     {
@@ -77113,49 +77241,49 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document.rs",
-      "line": 61,
+      "line": 63,
       "message": "edge `vibe_core::manifest::document::Manifest` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 156,
+      "line": 138,
       "message": "edge `vibe_core::manifest::document::tests::root_package_composes_workspace_and_package` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root-package` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 187,
+      "line": 167,
       "message": "edge `vibe_core::manifest::document::tests::origin_marker_parses` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 215,
+      "line": 194,
       "message": "edge `vibe_core::manifest::document::tests::rejects_project_and_package_together` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 236,
+      "line": 214,
       "message": "edge `vibe_core::manifest::document::tests::rejects_no_role_section` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 246,
+      "line": 224,
       "message": "edge `vibe_core::manifest::document::tests::rejects_package_role_section_without_package` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 265,
+      "line": 242,
       "message": "edge `vibe_core::manifest::document::tests::package_declares_skills_and_roundtrips` pins r3 but `spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
-      "line": 299,
+      "line": 274,
       "message": "edge `vibe_core::manifest::document::tests::rejects_skill_section_without_package` pins r3 but `spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl` carries no kind/revision line yet"
     },
     {
