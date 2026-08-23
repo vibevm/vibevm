@@ -33602,6 +33602,159 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#HISTORY-DRAFTED"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:489bb8e943bbf7dcfea7630ea3a3a35a3dd9d4105473a14bd2f7d5729f1474ca",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "PROP-051: vibe refactor — the source-refactoring umbrella",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:63df2a7b92ab78792ac030b5c93b77885b3209564e1e0eacbdedc15b2106a5c9",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "1. Mandate",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#mandate"
+    },
+    {
+      "anchor": "REFACTOR-MANDATE-VERBATIM",
+      "content_hash": "sha256:d3f2689fc64e7944bec82dff742e6774636dedffd3ff1e804b682c536a70554a",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The owner's mandate, verbatim (2026-08-23,",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#REFACTOR-MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "VIBEDEPS-NEVER-CONVERTED",
+      "content_hash": "sha256:3af4d57d62943d57158328df7d87f825e662579b9adf9403578e40b797f18e2d",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The owner's fourth clause, verbatim",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#VIBEDEPS-NEVER-CONVERTED"
+    },
+    {
+      "anchor": "umbrella",
+      "content_hash": "sha256:2c2e30c6e925c75c0098af7cd4eb0df682abd81d6e8bdbff4f94685b8eb603fa",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "2. The umbrella",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#umbrella"
+    },
+    {
+      "anchor": "UMBRELLA-VERB",
+      "content_hash": "sha256:b02486ce5bd0b9dd00ce97d34c502bcffb1e1911d8345f0c0492cb21da4dc5fe",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "`vibe refactor <verb>` is the command family for",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#UMBRELLA-VERB"
+    },
+    {
+      "anchor": "convert-source",
+      "content_hash": "sha256:ead2d4e895c4d84432dc784a7616fda53dd4e5792753247295a1cb67e1331618",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "3. convert-source",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#convert-source"
+    },
+    {
+      "anchor": "CONVERT-SOURCE-SURFACE",
+      "content_hash": "sha256:2658001978c749fc8e3400575a0ffebba064465f9e8729daaa69e5856ad867fa",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "`vibe refactor convert-source --to",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-SOURCE-SURFACE"
+    },
+    {
+      "anchor": "ONE-DOCUMENT-ONE-FORM-ON-CONVERT",
+      "content_hash": "sha256:6d3139424bf1c62835f2b7fd3acc3878b359476e0e9f9ecb262299e947a95a17",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "A conversion writes the sibling",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"
+    },
+    {
+      "anchor": "HONESTY-BY-REVERSE",
+      "content_hash": "sha256:a6264d0098522fb01ab91eaabcc15db72c9f24e05de8642db0c9712b477dd556",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The destructiveness check is the owner's law,",
+      "line": 68,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"
+    },
+    {
+      "anchor": "LOSS-REPORT",
+      "content_hash": "sha256:99a4dc4cc9ea68a26c6dbdcd69ceedb749384b488aafcc0a197eb019fe0c88c7",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The class-2 description is honest and concrete: it",
+      "line": 82,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#LOSS-REPORT"
+    },
+    {
+      "anchor": "FORCE-AND-PROMPT",
+      "content_hash": "sha256:c31a1269cde374d35e81ba538c77be7c1f8e5ac049d10393db99257414163544",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "On a TTY, class-2 files prompt per file",
+      "line": 90,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"
+    },
+    {
+      "anchor": "CONVERT-CORE-IN-SPECDOC",
+      "content_hash": "sha256:49216559d3ce3ef786e0e9af898dd94bf898301b0bd96a9b905c4b4275b5e62b",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The classification core — (source text,",
+      "line": 98,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#CONVERT-CORE-IN-SPECDOC"
+    },
+    {
+      "anchor": "application",
+      "content_hash": "sha256:46a6de974581e0b2ecfed517406d91eb2f9d9c3b1db604ef351e4116a06800c1",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "4. Applying it to our own tree",
+      "line": 105,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#application"
+    },
+    {
+      "anchor": "APPLICATION-PLAN",
+      "content_hash": "sha256:72d6831c03b3c314f94f315544a640889fe3b855b9543f42d209ffcd515abfd3",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "The mandate's third clause is a build of its own:",
+      "line": 107,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#APPLICATION-PLAN"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "sha256:0d109017bd14c5263ddaa93a7120ca441795a09d7075aa6dd0a909d04e1c647e",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "5. History",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#history"
+    },
+    {
+      "anchor": "HISTORY-COMMISSIONED",
+      "content_hash": "sha256:32064602a84566e59b3e73bbc32838ccfd596729918de1841dc4528926cfabf0",
+      "doc_path": "common/PROP-051",
+      "file": "spec/common/PROP-051-refactor-umbrella.md",
+      "heading": "2026-08-23: mandated, designed and ratified in",
+      "line": 122,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#HISTORY-COMMISSIONED"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",
@@ -76161,6 +76314,123 @@
       "heading": "**2026-07-15 — IMPLEMENTED.** All five phases of the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md) landed on `main` (`d487d4e`…`381095e`), floor green throughout. In `vibe-workspace`: the per-unit recursive compiler (`boot::hybrid` — `resolve_zone` / `topo_zone`), soft hoisting (`hybrid::hoist`) with `#use` markers and shared-by hints, the `static-hard` opt-out on `LinkType`, Merkle fingerprints (`hybrid::fingerprint`) driving the emit-side dirty-subgraph skip (§2.8), and the `verify_boot_graph` integrity check (§3). Emission lives in `install/bootgen` + `bootgen/hybrid_emit`. 178 tests, specmap 0 orphans. Deferred (plan §15): broad conversion of real packages (DEF-3), a `proptest` fuzz sweep (DEF-5), and the `vibe check` CLI wiring (DEF-6). Today's tree is byte-stable — `static` reaches the lane only through the root's `static-transitive` edge, so nothing is per-unit-emitted yet. @status:spec/done",
       "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HISTORY-IMPLEMENTED"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:6d562d83cfcd27f88d319aedf846ff8b2906c6e45dff5e073963eb2e151d31ef",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "CONVERT-SOURCE — стройка глагола и флип корпуса на XML",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#root"
+    },
+    {
+      "anchor": "perimeter",
+      "content_hash": "sha256:b5abcd755dc2fe93253b7061e8214e4c61312126f778d46ad764b98b448694a2",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "Периметр",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#perimeter"
+    },
+    {
+      "anchor": "CONVERT-PERIMETER",
+      "content_hash": "sha256:a180a4777f5dee64c8103d50704b98d317235560336a95482c351229ee55c372",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "Мандат владельца покрывает **авторские исходники",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#CONVERT-PERIMETER"
+    },
+    {
+      "anchor": "slices",
+      "content_hash": "sha256:7769861eab5d8211ed75cacc34a3c606fd773a7d4e83b634a65bc4e759c9993f",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "Нарезка",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#slices"
+    },
+    {
+      "anchor": "K1-TOOL",
+      "content_hash": "sha256:623eec4be0d809a15f0f8f589796ec1d62997e151ed6c9209269102b4d4a8ac7",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K1 — глагол.** Ядро классификации в `vibe-specdoc`",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K1-TOOL"
+    },
+    {
+      "anchor": "K2-INVENTORY",
+      "content_hash": "sha256:e49a33c4b53a84a666081e4ba2682f8fef79405f6cf8cb55c508a309dacd3cde",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K2 — инвентарь.** `--dry-run --to xml` над `spec/` и",
+      "line": 30,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K2-INVENTORY"
+    },
+    {
+      "anchor": "K3-HOST-SPEC",
+      "content_hash": "sha256:3da11ab129392da7b7a8fc7450af48f337e78286339e3f1eefb8190d5551a228",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K3 — хостовый `spec/`.** Конверсия всего дерева",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K3-HOST-SPEC"
+    },
+    {
+      "anchor": "K4-PACKAGES",
+      "content_hash": "sha256:90d0f843b8e24173a8aed5b4fb890a28a6bf6f9a36f500ad3bba782e6f589400",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K4 — `packages/`.** Каждый член (world, ai-native,",
+      "line": 43,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K4-PACKAGES"
+    },
+    {
+      "anchor": "K5-REMATERIALISE",
+      "content_hash": "sha256:7926a9fd2051c988040b56988a80afe9a83b9443845ba22a9bcd0636aa1ea507",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K5 — рематериализация.** `rm -rf",
+      "line": 48,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K5-REMATERIALISE"
+    },
+    {
+      "anchor": "K6-GATES",
+      "content_hash": "sha256:4a687126b590f058828e02fb87d6883fa6d2f86caccd900d5d884778853c4275",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K6-GATES"
+    },
+    {
+      "anchor": "K7-WINDDOWN",
+      "content_hash": "sha256:9c87816533ba71c59b887c960b2a43e1e09495dc4be0a1057218294ac3209d98",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K7-WINDDOWN"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:70735f5315ae0d00c058cb7a279c939fba64517d0c87a2f7b1d1ae6fa07461c3",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "Приёмка",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#acceptance"
+    },
+    {
+      "anchor": "CONVERT-ACCEPTANCE",
+      "content_hash": "sha256:f2da137ebb5492d184d466c4a7e949400f31512b5169caf41e5a400bfe3e8265",
+      "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
+      "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
+      "heading": "В периметре не остаётся ни одного авторского",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#CONVERT-ACCEPTANCE"
     },
     {
       "anchor": "group-b",
