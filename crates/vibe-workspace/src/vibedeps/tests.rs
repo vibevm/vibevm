@@ -458,7 +458,7 @@ fn markdown_format_converts_xml_and_copies_a_rejected_candidate_verbatim() {
 }
 
 #[test]
-fn redbook_materialises_as_six_xml_specs_and_two_verbatim_files() {
+fn redbook_materialises_as_eight_xml_specs_and_two_verbatim_files() {
     let ws = TempDir::new().unwrap();
     let source = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../packages/org.vibevm.world/redbook/v1.0.0");
@@ -491,7 +491,7 @@ fn redbook_materialises_as_six_xml_specs_and_two_verbatim_files() {
         .iter()
         .filter(|file| file.disposition == DerivedFileDisposition::Copied)
         .count();
-    assert_eq!(converted, 6);
+    assert_eq!(converted, 8);
     assert_eq!(copied, 2);
     assert!(slot.join("README.xml").is_file());
     assert!(slot.join("spec/boot/03-flow-redbook.xml").is_file());

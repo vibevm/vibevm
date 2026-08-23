@@ -35,6 +35,7 @@ use super::{UnitId, UnitInput};
 /// let mut table = HashMap::new();
 /// table.insert(id.clone(), UnitInput {
 ///     own_boot_path: Some("a.md".to_string()),
+///     fragments: vec![],
 ///     origin: String::new(),
 ///     when: None,
 ///     edges: vec![],
@@ -79,8 +80,27 @@ fn compute(
         hasher.update(unit.own_boot_path.as_deref().unwrap_or("-").as_bytes());
         hasher.update(b"@");
         hasher.update(version_of(id, versions));
-        hasher.update(b"\ngated:");
-        hasher.update(if unit.when.is_some() { b"1" } else { b"0" });
+        hasher.update(b"\nwhen:");
+        hasher.update(
+            unit.when
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_else(|| "-".to_string())
+                .as_bytes(),
+        );
+        for fragment in &unit.fragments {
+            hasher.update(b"\nfragment:");
+            hasher.update(fragment.path.as_bytes());
+            hasher.update(b"@when:");
+            hasher.update(
+                fragment
+                    .when
+                    .as_ref()
+                    .map(ToString::to_string)
+                    .unwrap_or_else(|| "-".to_string())
+                    .as_bytes(),
+            );
+        }
 
         // Sort edges deterministically so the fingerprint is stable.
         let mut edges = unit.edges.clone();
@@ -90,15 +110,13 @@ fn compute(
             hasher.update(link_wire(edge.link).as_bytes());
             hasher.update(b"->");
             hasher.update(pkgref(&edge.target).as_bytes());
-            // A static edge to a non-gated target propagates the child's
-            // fingerprint (Merkle); a dynamic edge — or a gated target —
-            // contributes the target's identity only, breaking propagation.
-            let gated = table.get(&edge.target).and_then(|u| u.when).is_some();
+            // A static edge propagates the child's whole contribution graph;
+            // a dynamic edge contributes identity only and breaks propagation.
             let is_static = matches!(
                 edge.link,
                 LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
             );
-            if is_static && !gated {
+            if is_static {
                 let child = compute(&edge.target, table, versions, memo, on_stack);
                 hasher.update(b" static-fp:");
                 hasher.update(child.as_bytes());

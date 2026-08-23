@@ -538,16 +538,18 @@ impl std::fmt::Display for TargetOs {
 /// `[boot_snippet]` — the boot contribution a package ships (package-role).
 ///
 /// ```
-/// use vibe_core::manifest::{BootSnippet, BootCategory, LinkType};
-///
+/// use vibe_core::manifest::BootSnippet;
 /// let b: BootSnippet = toml::from_str(r#"
 ///     source = "boot/10-flow-wal.md"
-///     category = "flow"
-///     link = "dynamic"
+///     concepts = ["WAL", "spec/WAL.md"]
+///
+///     [[fragment]]
+///     source = "boot/11-flow-wal-extra.md"
+///     when = "installed:org.vibevm.world/redbook"
 /// "#).unwrap();
 /// assert_eq!(b.source.to_str(), Some("boot/10-flow-wal.md"));
-/// assert_eq!(b.category, Some(BootCategory::Flow));
-/// assert_eq!(b.link, Some(LinkType::Dynamic));
+/// assert_eq!(b.concepts, ["WAL", "spec/WAL.md"]);
+/// assert_eq!(b.fragments.len(), 1);
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -564,14 +566,20 @@ pub struct BootSnippet {
     /// consumer's own `link` declaration always wins.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub link: Option<LinkType>,
-    /// Activation condition (PROP-009 §2.4 / §2.6). When set, the snippet
-    /// is a conditional contribution: the computed-view engine renders it
-    /// as a `dynamic` `INDEX.md` entry — regardless of `link` — carrying
-    /// this condition, and the agent reads the file at boot only when it
-    /// holds. For v1 the only condition is an OS match (`when = "os:linux"`).
+    /// Activation condition: `os:*` remains a dynamic INDEX predicate;
+    /// `installed:*` is resolved while artifacts are generated.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub when: Option<WhenCondition>,
+    /// Additional independently conditional contributions from this package.
+    #[serde(default, skip_serializing_if = "Vec::is_empty", rename = "fragment")]
+    pub fragments: Vec<BootSnippetFragment>,
+    /// Tokens that identify this package's discipline (PROP-049 §4).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub concepts: Vec<String>,
 }
+
+mod fragment;
+pub use fragment::BootSnippetFragment;
 
 mod capabilities;
 pub use capabilities::{

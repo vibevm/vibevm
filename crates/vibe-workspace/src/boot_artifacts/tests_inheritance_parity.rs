@@ -118,6 +118,7 @@ fn insert(
         uid(name),
         UnitInput {
             own_boot_path: boot.map(str::to_string),
+            fragments: Vec::new(),
             origin: pkgref(name),
             when: None,
             edges,

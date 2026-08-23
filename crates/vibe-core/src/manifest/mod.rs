@@ -25,11 +25,11 @@ pub use lockfile::{
     VirtualCapabilityRecord,
 };
 pub use package::{
-    BinaryDecl, BootCategory, BootSnippet, Compatibility, ConditionalTarget, ConflictsList,
-    FeaturesTable, GitPackageDep, GitRefKind, HooksDecl, LinkType, MCP_ARG_VARS, Materialization,
-    McpServerDecl, Obsoletes, PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture,
-    Recommends, Requires, RequiresAny, SkillDecl, Suggests, TargetOs, VarRegistryDep,
-    WhenCondition,
+    BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment, Compatibility, ConditionalTarget,
+    ConflictsList, FeaturesTable, GitPackageDep, GitRefKind, HooksDecl, LinkType, MCP_ARG_VARS,
+    Materialization, McpServerDecl, Obsoletes, PackageFormat, PackageMeta, PathPackageDep,
+    Provides, PublishPosture, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TargetOs,
+    VarRegistryDep, WhenCondition,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,

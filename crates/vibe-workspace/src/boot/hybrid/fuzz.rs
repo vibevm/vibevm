@@ -65,6 +65,7 @@ fn arb_table() -> impl Strategy<Value = (HashMap<UnitId, UnitInput>, HashMap<Uni
                     uid(i),
                     UnitInput {
                         own_boot_path: Some(format!("vibedeps/u{i}/1.0.0/boot.md")),
+                        fragments: Vec::new(),
                         origin: format!("org.vibevm/u{i}"),
                         when: None,
                         edges,
@@ -87,12 +88,11 @@ fn static_ancestors(target: &UnitId, table: &HashMap<UnitId, UnitInput>) -> Hash
     let mut parents: HashMap<UnitId, Vec<UnitId>> = HashMap::new();
     for (id, unit) in table {
         for edge in &unit.edges {
-            let gated = table.get(&edge.target).and_then(|u| u.when).is_some();
             let is_static = matches!(
                 edge.link,
                 LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
             );
-            if is_static && !gated {
+            if is_static {
                 parents
                     .entry(edge.target.clone())
                     .or_default()

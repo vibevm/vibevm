@@ -39,6 +39,7 @@ use super::{UnitId, UnitInput};
 /// let stat = |t: &str| UnitEdge { target: id(t), link: LinkType::Static };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
 ///     own_boot_path: Some("x.md".to_string()),
+///     fragments: vec![],
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
@@ -61,12 +62,10 @@ pub fn soft_static_pulls(table: &HashMap<UnitId, UnitInput>) -> HashMap<UnitId, 
         for edge in &unit.edges {
             match edge.link {
                 LinkType::Static => {
-                    if !gated(&edge.target, table) {
-                        pulls
-                            .entry(edge.target.clone())
-                            .or_default()
-                            .insert(uid.clone());
-                    }
+                    pulls
+                        .entry(edge.target.clone())
+                        .or_default()
+                        .insert(uid.clone());
                 }
                 LinkType::StaticTransitive => {
                     for member in forced_subtree(&edge.target, table) {
@@ -95,6 +94,7 @@ pub fn soft_static_pulls(table: &HashMap<UnitId, UnitInput>) -> HashMap<UnitId, 
 /// let stat = |t: &str| UnitEdge { target: id(t), link: LinkType::Static };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
 ///     own_boot_path: Some("x.md".to_string()),
+///     fragments: vec![],
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
@@ -111,27 +111,20 @@ pub fn shared_packages(table: &HashMap<UnitId, UnitInput>) -> HashSet<UnitId> {
     soft_static_pulls(table)
         .into_iter()
         .filter(|(pkg, pullers)| {
-            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.own_boot_path.is_some())
+            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.has_static_boot())
         })
         .map(|(pkg, _)| pkg)
         .collect()
 }
 
-/// Whether a package carries a `when` gate (stays dynamic even under a forced
-/// static subtree — PROP-009 §2.4).
-fn gated(id: &UnitId, table: &HashMap<UnitId, UnitInput>) -> bool {
-    table.get(id).and_then(|u| u.when).is_some()
-}
-
 /// The forced-static subtree of a `static-transitive` edge's target: the
-/// target plus every package transitively reachable through `requires`, minus
-/// any `when`-gated package (which stays dynamic and breaks the force there,
-/// matching [`super::resolve_zone`]). Cycle-guarded.
+/// target plus every package transitively reachable through `requires`.
+/// Read-time predicates remain attached to individual contributions.
 fn forced_subtree(root: &UnitId, table: &HashMap<UnitId, UnitInput>) -> HashSet<UnitId> {
     let mut seen: HashSet<UnitId> = HashSet::new();
     let mut stack = vec![root.clone()];
     while let Some(id) = stack.pop() {
-        if seen.contains(&id) || gated(&id, table) {
+        if seen.contains(&id) {
             continue;
         }
         seen.insert(id.clone());

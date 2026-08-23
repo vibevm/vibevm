@@ -116,10 +116,10 @@ fn static_hard_compiles_the_child_in() {
     assert!(m.dynamic_edges.is_empty());
 }
 
-/// A `when`-gated package stays dynamic even under a static edge — OS
-/// content must never reach the wrong OS (PROP-009 §2.4).
+/// A `when` predicate gates a contribution, not the target's graph node.
+/// Emission keeps the contribution dynamic while preserving static children.
 #[test]
-fn when_gate_stays_dynamic_under_a_static_edge() {
+fn when_gate_does_not_hide_a_static_target_graph() {
     use vibe_core::manifest::{TargetOs, WhenCondition};
     let win = WhenCondition::Os(TargetOs::Windows);
     let units = table(vec![
@@ -127,8 +127,6 @@ fn when_gate_stays_dynamic_under_a_static_edge() {
         gated_unit("win", win, &[]),
     ]);
     let m = resolve_zone(&id("root"), &units);
-    // The static edge does not compile a gated target in.
-    assert_eq!(static_names(&m), vec!["root"]);
-    assert_eq!(dynamic_names(&m), vec!["win"]);
-    assert_eq!(m.dynamic_edges[0].1, Some(win));
+    assert_eq!(static_names(&m), vec!["root", "win"]);
+    assert!(m.dynamic_edges.is_empty());
 }

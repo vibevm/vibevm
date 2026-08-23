@@ -37,6 +37,8 @@ use std::collections::{BinaryHeap, HashMap, HashSet};
 use vibe_core::Group;
 use vibe_core::manifest::{LinkType, PackageFormat, WhenCondition};
 
+use super::BootContribution;
+
 pub mod fingerprint;
 pub mod hoist;
 
@@ -85,6 +87,7 @@ pub struct UnitEdge {
 /// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
 /// let unit = |boot: &str, edges: Vec<UnitEdge>| UnitInput {
 ///     own_boot_path: Some(boot.to_string()),
+///     fragments: vec![],
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
@@ -107,6 +110,8 @@ pub struct UnitInput {
     /// `None` for a boot-less package (it still threads the ordering) or a
     /// workspace node (whose authored boot is separate dynamic content).
     pub own_boot_path: Option<String>,
+    /// Additional independently conditional contributions from this unit.
+    pub fragments: Vec<BootContribution>,
     /// Provenance label — a `<group>/<name>` pkgref, for the `STATIC.md`
     /// provenance marker.
     pub origin: String,
@@ -123,6 +128,43 @@ pub struct UnitInput {
     /// when it is compiled into a `STATIC.md`; `Simple` (the default) keeps
     /// the verbatim concatenation.
     pub format: PackageFormat,
+}
+
+impl UnitInput {
+    /// Whether this unit has content eligible for the static lane.
+    pub(crate) fn has_static_boot(&self) -> bool {
+        (self.own_boot_path.is_some() && self.when.is_none())
+            || self
+                .fragments
+                .iter()
+                .any(|fragment| fragment.when.is_none())
+    }
+
+    /// The number of active contributions eligible for the static lane.
+    pub(crate) fn static_boot_count(&self) -> usize {
+        usize::from(self.own_boot_path.is_some() && self.when.is_none())
+            + self
+                .fragments
+                .iter()
+                .filter(|fragment| fragment.when.is_none())
+                .count()
+    }
+
+    /// The sole static contribution path, when there is exactly one.
+    pub(crate) fn single_static_boot_path(&self) -> Option<&str> {
+        if self.static_boot_count() != 1 {
+            return None;
+        }
+        if self.when.is_none()
+            && let Some(path) = self.own_boot_path.as_deref()
+        {
+            return Some(path);
+        }
+        self.fragments
+            .iter()
+            .find(|fragment| fragment.when.is_none())
+            .map(|fragment| fragment.path.as_str())
+    }
 }
 
 /// The membership of one unit's static zone (PROP-038 §2.2) — the recursion's
@@ -162,7 +204,7 @@ pub struct ZoneMembership {
 /// let g = Group::parse("org.vibevm").unwrap();
 /// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
-///     own_boot_path: None, origin: String::new(), when: None, edges,
+///     own_boot_path: None, fragments: vec![], origin: String::new(), when: None, edges,
 ///     format: Default::default(),
 /// };
 /// // root →(dynamic) a: the dynamic edge BREAKS the zone — `a` is not compiled
@@ -218,17 +260,14 @@ fn descend(
     let mut edges = unit.edges.clone();
     edges.sort_by(|a, b| pkgref(&a.target).cmp(&pkgref(&b.target)));
     for edge in &edges {
-        // A `when`-gated target is dynamic irrespective of the edge or the
-        // forced flag (PROP-009 §2.4 — OS-correctness). Otherwise a
-        // `static-transitive` ancestor (`forced`) or a `static` /
-        // `static-transitive` edge keeps it in the static zone.
-        let gated = units.get(&edge.target).and_then(|u| u.when).is_some();
-        let stays_static = !gated
-            && (forced
-                || matches!(
-                    edge.link,
-                    LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
-                ));
+        // Link controls graph membership. Read-time conditions live on each
+        // contribution and are projected later; they do not hide unrelated
+        // unconditional fragments or a target's dependency zone.
+        let stays_static = forced
+            || matches!(
+                edge.link,
+                LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
+            );
         if stays_static {
             // Only `static-transitive` forces the subtree; `static` and
             // `static-hard` compile the target but honour its own edges.
@@ -242,7 +281,7 @@ fn descend(
                 membership,
             );
         } else if dynamic_seen.insert(edge.target.clone()) {
-            let when = units.get(&edge.target).and_then(|u| u.when);
+            let when = units.get(&edge.target).and_then(|u| u.when.clone());
             membership.dynamic_edges.push((edge.target.clone(), when));
         }
     }
@@ -262,7 +301,7 @@ fn descend(
 /// let g = Group::parse("org.vibevm").unwrap();
 /// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
-///     own_boot_path: None, origin: String::new(), when: None, edges,
+///     own_boot_path: None, fragments: vec![], origin: String::new(), when: None, edges,
 ///     format: Default::default(),
 /// };
 /// // root →(static) a: both compile in; the dependency `a` orders before the

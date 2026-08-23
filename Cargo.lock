@@ -3912,6 +3912,7 @@ version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
+ "semver",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",

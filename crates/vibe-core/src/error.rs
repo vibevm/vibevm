@@ -92,8 +92,9 @@ pub enum Error {
 
     #[error(
         "invalid `when` condition `{input}`: {reason} \
-         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
-          fix: correct the `when` predicate on the dependency)"
+         (violates spec://org.vibevm.core/vibevm/common/PROP-049#installed-predicate; \
+          fix: use `os:windows`, `os:macos`, `os:linux`, or \
+          `installed:<group>/<name>` with a valid package identity)"
     )]
     BadWhenCondition { input: String, reason: String },
 

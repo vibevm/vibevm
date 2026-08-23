@@ -154,12 +154,37 @@ link = "static"
 
 #[test]
 fn boot_snippet_minimal_form_parses() {
-    // `source` is the only required field; `category`, `link`, and
-    // `when` are optional and absent here.
+    // `source` is the only required field; all additive fields default.
     let bs: BootSnippet = toml::from_str("source = \"boot/10-flow-wal.md\"\n").unwrap();
     assert!(bs.category.is_none());
     assert!(bs.link.is_none());
     assert!(bs.when.is_none());
+    assert!(bs.fragments.is_empty());
+    assert!(bs.concepts.is_empty());
+}
+
+#[test]
+fn boot_snippet_parses_fragments_and_concepts() {
+    let bs: BootSnippet = toml::from_str(
+        r#"source = "boot/main.md"
+concepts = ["WAL", "spec/WAL.md"]
+
+[[fragment]]
+source = "boot/wal.md"
+when = "installed:org.vibevm.world/wal"
+"#,
+    )
+    .unwrap();
+    assert_eq!(bs.concepts, ["WAL", "spec/WAL.md"]);
+    assert_eq!(bs.fragments.len(), 1);
+    assert_eq!(bs.fragments[0].source, PathBuf::from("boot/wal.md"));
+    assert_eq!(
+        bs.fragments[0]
+            .when
+            .as_ref()
+            .and_then(WhenCondition::installed_identity),
+        Some((&Group::parse("org.vibevm.world").unwrap(), "wal"))
+    );
 }
 
 #[test]

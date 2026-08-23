@@ -23,8 +23,11 @@ use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_f
 /// The workspace root's B-031 `<group>/<name>` self coordinate, when declared.
 mod materialised_read;
 use materialised_read::read_materialised;
+mod conditions;
 mod snippet_source;
-use snippet_source::resolve_snippet_source;
+mod transitive;
+use conditions::{active_snippet, installed_identities};
+use transitive::static_transitive_closure;
 
 fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
     match &root_manifest.project {
@@ -79,7 +82,7 @@ pub fn regenerate_boot_from_with_spec_format(
     let shared: HashSet<UnitId> = pulls
         .iter()
         .filter(|(pkg, pullers)| {
-            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.own_boot_path.is_some())
+            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.has_static_boot())
         })
         .map(|(pkg, _)| pkg.clone())
         .collect();
@@ -225,7 +228,7 @@ pub fn desubstitute_covered_units(
         let boot_bearing: Vec<UnitId> = zone
             .static_members
             .iter()
-            .filter(|m| *m != id && table.get(*m).is_some_and(|u| u.own_boot_path.is_some()))
+            .filter(|m| *m != id && table.get(*m).is_some_and(|u| u.has_static_boot()))
             .cloned()
             .collect();
         let covered = boot_bearing
@@ -234,14 +237,17 @@ pub fn desubstitute_covered_units(
         if !covered {
             continue;
         }
-        match &table[id].own_boot_path {
-            // The package ships its own snippet: point back at it (its text
-            // then enters the lane once, through this entry).
+        let unit = &table[id];
+        if unit.static_boot_count() > 1 {
+            // One BootEntry cannot represent several authored files. Keep the
+            // compiled unit artifact so every fragment remains present once.
+            continue;
+        }
+        match unit.single_static_boot_path() {
             Some(snippet) => {
-                entry.path = snippet.clone();
+                entry.path = snippet.to_string();
                 entry.unit_substituted = false;
             }
-            // A contentless umbrella: emit a stub, no second copy.
             None => entry.elided = true,
         }
     }
@@ -390,6 +396,7 @@ fn node_dependency_boot(
     with_static: &HashSet<UnitId>,
     spec_format: SpecFormat,
 ) -> Vec<DependencyBoot> {
+    let installed = installed_identities(resolution);
     let index: HashMap<(&Group, &str), &ResolvedDep> = resolution
         .iter()
         .map(|d| ((&d.group, d.name.as_str()), d))
@@ -439,24 +446,35 @@ fn node_dependency_boot(
                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
             };
             let snippet = dep.manifest.boot_snippet.as_ref();
+            let active = active_snippet(workspace_root, &slot, snippet, &installed);
+            let main = active.main;
+            let all_fragments = active.fragments;
             // PROP-038 §2.1: a dependency that statically links a child is read
             // through its compiled STATIC.md (carrying the whole zone), not its
             // raw snippet. A leaf keeps pointing at the snippet (byte-compat).
             // B-006: remember which entries had their path substituted up to a
             // unit-STATIC — `desubstitute_covered_units` rolls the substitution
             // back (or elides it) once the zone is covered member-by-member.
-            let (boot_path, unit_substituted) =
+            let (boot_path, when, fragments, unit_substituted) =
                 if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
                     (
                         Some(format!(
                             "{slot}/spec/boot/{}",
                             boot_artifacts::static_file(spec_format)
                         )),
+                        main.as_ref()
+                            .and_then(|contribution| contribution.when.clone()),
+                        all_fragments
+                            .into_iter()
+                            .filter(|fragment| fragment.when.is_some())
+                            .collect(),
                         true,
                     )
                 } else {
                     (
-                        snippet.map(|bs| resolve_snippet_source(workspace_root, &slot, &bs.source)),
+                        main.as_ref().map(|contribution| contribution.path.clone()),
+                        main.and_then(|contribution| contribution.when),
+                        all_fragments,
                         false,
                     )
                 };
@@ -465,6 +483,7 @@ fn node_dependency_boot(
                 group: dep.group.clone(),
                 name: dep.name.clone(),
                 boot_path,
+                fragments,
                 category: snippet.and_then(|bs| bs.category),
                 // An `inline-transitive` edge (or membership in one's closure)
                 // forces `inline` (PROP-035 §12); otherwise only a direct
@@ -476,9 +495,9 @@ fn node_dependency_boot(
                     node_manifest.requires.declared_link(&dep.group, &dep.name)
                 },
                 suggested_link: snippet.and_then(|bs| bs.link),
-                // The package's `[boot_snippet].when` OS gate, if any — it
-                // forces the entry `dynamic` (PROP-009 §2.4).
-                when: snippet.and_then(|bs| bs.when),
+                // Only an `os:*` predicate can remain after generation-time
+                // `installed:*` resolution.
+                when,
                 requires: dep.requires.clone(),
                 // PROP-035 §3 — the package's declared format. A `normal`
                 // dependency pulled `static` is compiled to its closure by
@@ -494,36 +513,6 @@ fn node_dependency_boot(
             }
         })
         .collect()
-}
-
-/// The inline-transitive closure (PROP-035 §12): every `(group, name)`
-/// reachable through a direct `[requires.packages]` edge the consumer
-/// declared `inline-transitive` — the edge's target and its whole `requires`
-/// closure. Membership forces the boot entry `inline`.
-fn static_transitive_closure(
-    node_manifest: &Manifest,
-    index: &HashMap<(&Group, &str), &ResolvedDep>,
-) -> HashSet<(Group, String)> {
-    let mut queue: VecDeque<(Group, String)> = node_manifest
-        .requires
-        .iter_pkgrefs()
-        .filter_map(|(g, n)| g.map(|g| (g.clone(), n.to_string())))
-        .filter(|(g, n)| {
-            node_manifest.requires.declared_link(g, n) == Some(LinkType::StaticTransitive)
-        })
-        .collect();
-    let mut forced: HashSet<(Group, String)> = HashSet::new();
-    while let Some((group, name)) = queue.pop_front() {
-        if !forced.insert((group.clone(), name.clone())) {
-            continue;
-        }
-        if let Some(dep) = index.get(&(&group, name.as_str())) {
-            for (rg, rn) in &dep.requires {
-                queue.push_back((rg.clone(), rn.clone()));
-            }
-        }
-    }
-    forced
 }
 
 /// Validate every node's agent instruction files before any mutation

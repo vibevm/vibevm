@@ -34,6 +34,7 @@ pub(super) fn build_unit_table(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
 ) -> HashMap<UnitId, UnitInput> {
+    let installed = super::installed_identities(resolution);
     // The target-suggestion precedence tier: a package's own `[boot_snippet].link`.
     let suggested: HashMap<(&Group, &str), Option<LinkType>> = resolution
         .iter()
@@ -53,8 +54,11 @@ pub(super) fn build_unit_table(
             // LOGICAL resolution against the materialised slot (PROP-045
             // ##BOOT-LANE-SCOPE): the manifest names the authored form; a
             // transforming materialisation may hold the other extension.
-            let own_boot_path =
-                snippet.map(|bs| super::resolve_snippet_source(workspace_root, &slot, &bs.source));
+            let active = super::active_snippet(workspace_root, &slot, snippet, &installed);
+            let (own_boot_path, when) = match active.main {
+                Some(contribution) => (Some(contribution.path), contribution.when),
+                None => (None, None),
+            };
             let default_link = dep.manifest.boot.default_link;
             let edges = dep
                 .requires
@@ -77,8 +81,9 @@ pub(super) fn build_unit_table(
                 (dep.group.clone(), dep.name.clone()),
                 UnitInput {
                     own_boot_path,
+                    fragments: active.fragments,
                     origin: format!("{}/{}", dep.group, dep.name),
-                    when: snippet.and_then(|bs| bs.when),
+                    when,
                     edges,
                     // PROP-035 §3 — carry the package's format so a `normal`
                     // unit is compiled (not concatenated) when it enters a
@@ -202,7 +207,7 @@ fn has_static_children(
 ) -> bool {
     zone.static_members
         .iter()
-        .any(|m| m != id && table.get(m).is_some_and(|u| u.own_boot_path.is_some()))
+        .any(|m| m != id && table.get(m).is_some_and(|u| u.has_static_boot()))
 }
 
 /// Project a resolved zone into an [`EffectiveBoot`] the existing
@@ -225,46 +230,77 @@ fn zone_to_effective(
         let Some(unit) = table.get(&member) else {
             continue;
         };
-        let Some(path) = &unit.own_boot_path else {
-            continue; // a boot-less member threads the order but adds no text
-        };
         // A shared member is hoisted to the global root STATIC.md; leave a
         // #use marker in place of its content (PROP-038 §2.5). A unit is never
         // hoisted out of its own zone (`root_id` owns the zone).
         let hoisted = &member != root_id && shared.contains(&member);
-        entries.push(BootEntry {
-            path: path.clone(),
-            band: BootBand::Dependency,
-            link: LinkType::Static,
-            when: None,
-            origin: unit.origin.clone(),
-            use_ref: hoisted,
-            // A `normal` static member is compiled to its closure by
-            // `render_static` (PROP-035 §8); `simple` stays verbatim.
-            format: unit.format,
-            unit_substituted: false,
-            elided: false,
-        });
+        let mut push = |path: &str, when: Option<vibe_core::manifest::WhenCondition>| {
+            let link = if when.is_some() {
+                LinkType::Dynamic
+            } else {
+                LinkType::Static
+            };
+            entries.push(BootEntry {
+                path: path.to_string(),
+                band: BootBand::Dependency,
+                link,
+                when,
+                origin: unit.origin.clone(),
+                use_ref: hoisted && link == LinkType::Static,
+                format: unit.format,
+                unit_substituted: false,
+                elided: false,
+            });
+        };
+        if let Some(path) = &unit.own_boot_path {
+            push(path, unit.when.clone());
+        }
+        for fragment in &unit.fragments {
+            push(&fragment.path, fragment.when.clone());
+        }
     }
-    for (target, when) in &zone.dynamic_edges {
-        let Some(path) = dynamic_target_path(target, with_static, slots, table, spec_format) else {
+    for (target, _) in &zone.dynamic_edges {
+        let Some(unit) = table.get(target) else {
             continue;
         };
-        entries.push(BootEntry {
-            path,
-            band: BootBand::Dependency,
-            link: LinkType::Dynamic,
-            when: *when,
-            origin: format!("{}/{}", target.0, target.1),
-            use_ref: false,
-            // A dynamic edge is read by reference (INDEX.md), never compiled
-            // into the static lane, so its format does not matter here.
-            format: Default::default(),
-            unit_substituted: false,
-            elided: false,
-        });
+        let compiled = dynamic_target_path(target, with_static, slots, spec_format);
+        if let Some(path) = compiled.as_ref() {
+            entries.push(dynamic_entry(path, None, &unit.origin));
+        }
+        if let Some(path) = &unit.own_boot_path
+            && (compiled.is_none() || unit.when.is_some())
+        {
+            entries.push(dynamic_entry(path, unit.when.clone(), &unit.origin));
+        }
+        for fragment in &unit.fragments {
+            if compiled.is_none() || fragment.when.is_some() {
+                entries.push(dynamic_entry(
+                    &fragment.path,
+                    fragment.when.clone(),
+                    &unit.origin,
+                ));
+            }
+        }
     }
     EffectiveBoot { entries }
+}
+
+fn dynamic_entry(
+    path: &str,
+    when: Option<vibe_core::manifest::WhenCondition>,
+    origin: &str,
+) -> BootEntry {
+    BootEntry {
+        path: path.to_string(),
+        band: BootBand::Dependency,
+        link: LinkType::Dynamic,
+        when,
+        origin: origin.to_string(),
+        use_ref: false,
+        format: Default::default(),
+        unit_substituted: false,
+        elided: false,
+    }
 }
 
 /// Where a dynamic edge's target is read from: its compiled `STATIC.md` when
@@ -274,7 +310,6 @@ fn dynamic_target_path(
     target: &UnitId,
     with_static: &HashSet<UnitId>,
     slots: &HashMap<UnitId, String>,
-    table: &HashMap<UnitId, UnitInput>,
     spec_format: SpecFormat,
 ) -> Option<String> {
     if with_static.contains(target) {
@@ -285,7 +320,7 @@ fn dynamic_target_path(
             )
         })
     } else {
-        table.get(target).and_then(|u| u.own_boot_path.clone())
+        None
     }
 }
 
@@ -373,22 +408,30 @@ pub(super) fn append_hoisted(
     }
     for id in hybrid::topo_zone(shared, table) {
         let Some(unit) = table.get(&id) else { continue };
-        let Some(path) = &unit.own_boot_path else {
-            continue;
+        let origin = format!("{} [shared by {}]", unit.origin, shared_by(&id, pulls));
+        let mut push = |path: &str| {
+            effective.entries.push(BootEntry {
+                path: path.to_string(),
+                band: BootBand::Dependency,
+                link: LinkType::Static,
+                when: None,
+                origin: origin.clone(),
+                use_ref: false,
+                format: unit.format,
+                unit_substituted: false,
+                elided: false,
+            });
         };
-        effective.entries.push(BootEntry {
-            path: path.clone(),
-            band: BootBand::Dependency,
-            link: LinkType::Static,
-            when: None,
-            origin: format!("{} [shared by {}]", unit.origin, shared_by(&id, pulls)),
-            use_ref: false,
-            // A hoisted `normal` package is still compiled to its closure
-            // (PROP-035 §8) at the single hoist point.
-            format: unit.format,
-            unit_substituted: false,
-            elided: false,
-        });
+        if unit.when.is_none()
+            && let Some(path) = &unit.own_boot_path
+        {
+            push(path);
+        }
+        for fragment in &unit.fragments {
+            if fragment.when.is_none() {
+                push(&fragment.path);
+            }
+        }
     }
 }
 

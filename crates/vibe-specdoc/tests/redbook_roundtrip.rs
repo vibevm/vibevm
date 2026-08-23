@@ -13,8 +13,9 @@
 use std::path::PathBuf;
 use vibe_specdoc::{from_markdown, from_xml, to_markdown, to_xml};
 
-/// The corpus: `packages/org.vibevm.world/redbook/v1.0.0/**/*.md` — seven
-/// files exactly (XML-MEASURE §6.1). Tests run from the crate dir.
+/// The corpus: `packages/org.vibevm.world/redbook/v1.0.0/**/*.md` — nine
+/// files exactly (the seven of XML-MEASURE §6.1 plus the two PROP-049
+/// member fragments). Tests run from the crate dir.
 fn corpus() -> Vec<(String, String)> {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../packages/org.vibevm.world/redbook/v1.0.0");
@@ -37,7 +38,11 @@ fn corpus() -> Vec<(String, String)> {
         }
     }
     files.sort();
-    assert_eq!(files.len(), 7, "the redbook carries exactly seven MD files");
+    assert_eq!(
+        files.len(),
+        9,
+        "the redbook carries exactly nine MD files (seven of XML-MEASURE §6.1 \n         plus the two PROP-049 member fragments)"
+    );
     files
 }
 

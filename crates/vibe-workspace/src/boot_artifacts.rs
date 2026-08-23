@@ -93,6 +93,8 @@ const INDEX_HEADER: &str = "\
 # The computed boot sequence (PROP-009 §2.3). Read every file the
 # `[[entry]]` list names, in order.
 #
+# `installed:<group>/<name>` is resolved during generation: true
+# contributions appear normally; false contributions are absent entirely.
 # A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`
 # entry: an INCLUDE resolved at boot — when it also carries
 # `when = \"os:<name>\"`, read the file only if the session's operating
@@ -199,7 +201,7 @@ pub fn render_index_with_spec_format(
                 } else {
                     "static"
                 },
-                when: e.when.map(|w| w.to_string()),
+                when: e.when.as_ref().map(ToString::to_string),
             })
             .collect(),
     };

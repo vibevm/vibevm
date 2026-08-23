@@ -101,6 +101,9 @@ pub struct DependencyBoot {
     /// snippet. A boot-less dependency still takes part in the
     /// topological order; it simply contributes no entry.
     pub boot_path: Option<String>,
+    /// Additional independently conditional boot contributions from this
+    /// package, already filtered for install-time predicates.
+    pub fragments: Vec<BootContribution>,
     /// The dependency's declared `[boot_snippet].category`, if any.
     pub category: Option<BootCategory>,
     /// The consumer's per-dependency `link` declaration
@@ -131,6 +134,16 @@ pub struct DependencyBoot {
     /// snippet — or elide it — once every boot-bearing member of its zone is
     /// present individually in the lane. `false` for every other construction.
     pub unit_substituted: bool,
+}
+
+/// One resolved boot contribution beyond a package's main snippet.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BootContribution {
+    /// Workspace-root-relative, forward-slashed source path.
+    pub path: String,
+    /// Residual read-time predicate. Install-time predicates are resolved
+    /// before this model is built, so only `os:*` may remain.
+    pub when: Option<WhenCondition>,
 }
 
 /// One entry in a node's computed effective boot sequence.
@@ -269,9 +282,6 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
     // entry, but its position still threaded the ordering above.
     for &i in &order {
         let dep = &inputs.dependencies[i];
-        let Some(path) = &dep.boot_path else {
-            continue;
-        };
         // PROP-009 §2.4 precedence: consumer's per-dep declaration, then
         // the package's suggestion, then the workspace default, then
         // `static`.
@@ -288,31 +298,32 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             LinkType::StaticTransitive | LinkType::StaticHard => LinkType::Static,
             other => other,
         };
-        // A conditional snippet is `dynamic` by nature (PROP-009 §2.4): a
-        // `when` cannot be honoured by the verbatim `static` lane or a
-        // direct `static` read, so it forces the dynamic INCLUDE form
-        // whatever the `link` precedence resolved to.
-        let link = if dep.when.is_some() {
-            LinkType::Dynamic
-        } else {
-            link
+        let mut push_contribution = |path: &str, when: Option<WhenCondition>, substituted: bool| {
+            // A read-time conditional contribution is `dynamic` by nature:
+            // `os:*` must remain in INDEX whatever link precedence resolved.
+            let contribution_link = if when.is_some() {
+                LinkType::Dynamic
+            } else {
+                link
+            };
+            entries.push(BootEntry {
+                path: path.to_string(),
+                band: band_for(dep.category, BootBand::Dependency),
+                link: contribution_link,
+                when,
+                origin: format!("{}/{}", dep.group, dep.name),
+                use_ref: false,
+                format: dep.format,
+                unit_substituted: substituted,
+                elided: false,
+            });
         };
-        entries.push(BootEntry {
-            path: path.clone(),
-            band: band_for(dep.category, BootBand::Dependency),
-            link,
-            when: dep.when,
-            origin: format!("{}/{}", dep.group, dep.name),
-            use_ref: false,
-            // Carry the dependency's format so the static renderer knows
-            // whether to compile the closure (`normal`) or concatenate
-            // verbatim (`simple`) — PROP-035 §8.
-            format: dep.format,
-            // B-006: carry the substitution flag so the lane-dedup pass can
-            // see which entries point at a compiled unit-STATIC.
-            unit_substituted: dep.unit_substituted,
-            elided: false,
-        });
+        if let Some(path) = &dep.boot_path {
+            push_contribution(path, dep.when.clone(), dep.unit_substituted);
+        }
+        for fragment in &dep.fragments {
+            push_contribution(&fragment.path, fragment.when.clone(), false);
+        }
     }
 
     // Stable sort by band. The collection order above — inherited, then

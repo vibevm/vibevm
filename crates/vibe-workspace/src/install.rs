@@ -569,6 +569,10 @@ pub(super) fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 mod tests;
 
 #[cfg(test)]
+#[path = "install/tests_installed_fragments.rs"]
+mod tests_installed_fragments;
+
+#[cfg(test)]
 #[path = "install/test_helpers.rs"]
 mod test_helpers;
 
