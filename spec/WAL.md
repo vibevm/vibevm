@@ -117,8 +117,7 @@ delegation-first ≈32→2 пакета. Авторитеты: `spec/common/PROP
   переустановкой (применено на W7). @status:impl/done
 
 @fact:WAL-EXPECTED-DIAGNOSTICS **Ожидаемые числа:** `vibe check` → 0 errors,
-2 warnings (`wal_freshness`, `wal_wellformed` — закрываются этим
-чекпойнтом), 0 info; judging-debt: «no debt»; specmap: 0 suspects,
+0 warnings, 0 info (оба WAL-предупреждения закрыты этим чекпойнтом); judging-debt: «no debt»; specmap: 0 suspects,
 240 warnings (фон). Любое другое движение — находка. @status:impl/done
 
 ## State {#state}
@@ -132,6 +131,15 @@ HEAD `aaeecc2e`, зеркала синхронны (`mirror: all push targets sy
 шесть worktree снесла; архив воркеров стройки —
 `C:\Users\olegc\git\v\cache\agents\sorted\W{1,2,3,4A,4B,5A,5B,6}-*/`
 (логи+отчёты+meta). @status:impl/done
+
+## done {#done}
+
+- @fact:WAL-DONE-VISIBILITY **2026-08-23 — стройка PROP-050 целиком** (W1
+  движок+словарь · W2 резолюция/lock на E(R) · W3 лейн-голдены · W4
+  смягчение гейта концептов · W5 наблюдаемость · W6 инструменты силы ·
+  W7 осознанное сужение · W8 закрытие с приёмкой построчно). @status:impl/done
+- @fact:WAL-DONE-RELEASE **до 2026-08-20 — релизный марафон C0–C10 кроме C6**
+  (история — в git log и ТЗ; здесь не накапливается). @status:impl/done
 
 ## Known issues {#known-issues}
 
