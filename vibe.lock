@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-08-23T18:34:00Z"
+generated_at = "2026-08-23T19:15:28Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
