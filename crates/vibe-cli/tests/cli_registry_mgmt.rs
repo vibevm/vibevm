@@ -2701,7 +2701,10 @@ fn omnibus_install_exercises_every_prop003_surface() {
 
     let lock: vibe_core::manifest::Lockfile =
         toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
-    assert_eq!(lock.meta.schema_version, 5);
+    assert_eq!(
+        lock.meta.schema_version,
+        vibe_core::manifest::CURRENT_SCHEMA_VERSION
+    );
     assert_eq!(lock.meta.language_chain, vec!["ru", "en"]);
     // Three packages: the two CLI roots plus `org.vibevm/integration-beta`,
     // pulled in by alpha's conditional dep
