@@ -33,6 +33,12 @@ pub struct ResolvedDep {
     /// `(group, name)` of every package this one directly requires — the
     /// edges of the dependency-boot topological order.
     pub requires: Vec<(Group, String)>,
+    /// Visibility rule that admitted this package into the consumer's
+    /// effective set: `root-edge`, `public-chain`, or `friends-chain`.
+    pub admitted_by: Option<String>,
+    /// Coordinate of the node whose path-scoped override admitted the
+    /// decisive edge, when an override changed its access.
+    pub via_override: Option<String>,
     /// `true` iff the package came from a mutable local `file://` source — an
     /// in-repo / local-directory registry (`--registry <path>`, the
     /// package-authoring shape). Such a source is a working tree the author

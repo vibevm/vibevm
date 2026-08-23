@@ -25,9 +25,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use std::collections::BTreeSet;
 use std::path::Path;
 
 use vibe_core::PackageRef;
+use vibe_core::manifest::Manifest;
 use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
 
@@ -38,6 +40,7 @@ mod fetched;
 mod plan;
 mod record;
 mod slot_verify;
+mod visibility_projection;
 
 pub use apply::{ApplyReport, apply, apply_with_spec_format};
 pub use error::Error;
@@ -48,6 +51,10 @@ pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
     merge_root_dependencies, record_git_source,
 };
+pub use visibility_projection::{
+    FilteringDepProvider, Projection, ProjectionInput, metadata_manifest, project,
+    solve_with_visibility_mask,
+};
 
 /// The package source an install runs against — the seam between the
 /// orchestrator and whatever registry topology the caller composed
@@ -57,8 +64,9 @@ pub use record::{
 /// Canonical implementation shape:
 ///
 /// ```no_run
+/// use std::collections::BTreeSet;
 /// use std::path::Path;
-/// use vibe_core::PackageRef;
+/// use vibe_core::{PackageRef, manifest::Manifest};
 /// use vibe_install::InstallSource;
 /// use vibe_registry::{CachedPackage, LocalRegistry, RegistryError};
 /// use vibe_resolver::{ResolvedGraph, SolveError};
@@ -79,6 +87,20 @@ pub use record::{
 ///     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
 ///         // Build the solver from the caller's selected cells.
 ///         # let _ = roots;
+///         # unimplemented!()
+///     }
+///
+///     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+///         # let _ = pkg;
+///         # unimplemented!()
+///     }
+///
+///     fn solve_masked(
+///         &self,
+///         roots: &[PackageRef],
+///         blocked: &BTreeSet<(String, String)>,
+///     ) -> Result<ResolvedGraph, SolveError> {
+///         # let _ = (roots, blocked);
 ///         # unimplemented!()
 ///     }
 ///
@@ -109,6 +131,18 @@ pub trait InstallSource {
     /// Run the depsolver against this source, returning the full
     /// transitive graph the pipeline will fetch and materialise.
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
+
+    /// Read one solved package's manifest through the source's metadata-only
+    /// provider path. This must never fetch or materialise package content.
+    fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError>;
+
+    /// Re-run the selected solver cell while masking the named
+    /// `parent -> target` edges in every parent manifest it reads.
+    fn solve_masked(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError>;
 
     /// Place an `in-place` package (PROP-022 §2.4) directly into its project
     /// `slot`: a fresh `git clone --recurse-submodules` when the slot is

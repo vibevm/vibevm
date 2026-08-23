@@ -50,6 +50,8 @@ pub(super) fn read_materialised(workspace_root: &Path) -> Result<Vec<ResolvedDep
                 content_dir: slot.clone(),
                 manifest: manifest.clone(),
                 requires,
+                admitted_by: None,
+                via_override: None,
                 // Boot-only re-derivation from materialised slots — never
                 // re-materialises, so the §2.6 mutable-source flag is moot.
                 source_mutable: false,

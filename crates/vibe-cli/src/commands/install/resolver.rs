@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use std::collections::BTreeSet;
 use std::path::Path;
 
 use anyhow::{Context, Result, anyhow, bail};
@@ -11,9 +12,12 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{
     EffectiveRegistryConfig, GlobalRegistryConfig, Group, PackageRef, merge_effective,
 };
-use vibe_install::InstallSource;
+use vibe_install::{InstallSource, metadata_manifest, solve_with_visibility_mask};
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError};
-use vibe_resolver::EmbeddedPrecedence;
+use vibe_resolver::{
+    EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider, LocalRegistryDepProvider,
+    MultiRegistryDepProvider, SolveError,
+};
 
 use crate::cli::InstallArgs;
 use crate::registry::ProviderCell;
@@ -207,6 +211,61 @@ impl InstallSource for InstallResolver {
         solver.solve(roots)
     }
 
+    fn manifest_of(&self, pkg: &PackageRef) -> Result<vibe_core::manifest::Manifest, SolveError> {
+        match self {
+            Self::Local(registry, _) => {
+                metadata_manifest(&LocalRegistryDepProvider::new(registry), pkg)
+            }
+            Self::Multi(resolver, _) => {
+                metadata_manifest(&MultiRegistryDepProvider::new(resolver), pkg)
+            }
+            Self::Embedded {
+                locals,
+                declared,
+                precedence,
+                short_circuit,
+                ..
+            } => metadata_manifest(
+                &embedded_provider(locals, declared.as_deref(), *precedence, *short_circuit),
+                pkg,
+            ),
+        }
+    }
+
+    fn solve_masked(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<vibe_resolver::ResolvedGraph, SolveError> {
+        match self {
+            Self::Local(registry, solver) => solve_with_visibility_mask(
+                LocalRegistryDepProvider::new(registry),
+                *solver,
+                roots,
+                blocked,
+            ),
+            Self::Multi(resolver, solver) => solve_with_visibility_mask(
+                MultiRegistryDepProvider::new(resolver),
+                *solver,
+                roots,
+                blocked,
+            ),
+            Self::Embedded {
+                locals,
+                declared,
+                precedence,
+                short_circuit,
+                solver,
+                ..
+            } => solve_with_visibility_mask(
+                embedded_provider(locals, declared.as_deref(), *precedence, *short_circuit),
+                *solver,
+                roots,
+                blocked,
+            ),
+        }
+    }
+
     fn materialise_in_place(
         &self,
         pkgref: &PackageRef,
@@ -262,6 +321,22 @@ impl InstallSource for InstallResolver {
             },
         }
     }
+}
+
+fn embedded_provider<'a>(
+    locals: &'a [LocalRegistry],
+    declared: Option<&'a MultiRegistryResolver>,
+    precedence: EmbeddedPrecedence,
+    short_circuit: bool,
+) -> EmbeddedDepProvider<'a> {
+    let local =
+        LocalCompositeDepProvider::new(locals.iter().map(LocalRegistryDepProvider::new).collect());
+    EmbeddedDepProvider::new(
+        local,
+        declared.map(MultiRegistryDepProvider::new),
+        precedence,
+        short_circuit,
+    )
 }
 
 impl InstallResolver {

@@ -9,6 +9,7 @@ use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
+use vibe_core::visibility::{Analysis, ProvenanceRule};
 use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
@@ -27,6 +28,7 @@ use crate::fetched::{
     load_or_empty_lockfile, tailor_feature_request,
 };
 use crate::record::exact_pinned_pkgref;
+use crate::visibility_projection::resolve_effective;
 use crate::{InstallSource, events};
 
 /// What the caller asked to install. `roots` is empty for the
@@ -238,6 +240,7 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
 
     // 2. Run the depsolver.
     observer.on(PlanEvent::ResolvingRoots { roots: roots.len() });
+    let mut strict_roots = solve_roots.clone();
     let graph = match source.solve(&solve_roots) {
         Ok(graph) => graph,
         Err(e) if solve_roots != roots => {
@@ -247,10 +250,17 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
             observer.on(PlanEvent::HeldPinsConflicted {
                 error: e.to_string(),
             });
+            strict_roots.clone_from(&roots);
             source.solve(&roots)?
         }
         Err(e) => return Err(e.into()),
     };
+
+    let root_id = visibility_root_id(&manifest);
+    let effective = resolve_effective(source, &strict_roots, &manifest, &root_id, graph)?;
+    let graph = effective.graph;
+    let mut visibility_analysis = effective.analysis;
+    let _visibility_iterations = effective.iterations;
 
     if graph.packages.len() > roots.len() {
         observer.on(PlanEvent::GraphSolved {
@@ -316,7 +326,10 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
         &workspace.root,
         &language_chain,
         &request.features,
+        &manifest,
+        &root_id,
         &mut fetched,
+        &mut visibility_analysis,
         observer,
     )?;
 
@@ -327,23 +340,33 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     //    time.
     let resolution: Vec<ResolvedDep> = fetched
         .iter()
-        .map(|f| ResolvedDep {
-            kind: f.cached.package_meta().kind,
-            group: f.cached.resolved.group.clone(),
-            name: f.cached.resolved.name.clone(),
-            version: f.cached.resolved.version.clone(),
-            content_dir: f.cached.cache_dir.clone(),
-            manifest: f.cached.manifest.clone(),
-            // A `[requires.packages]` dependency pkgref is
-            // group-qualified (PROP-008 §2.6).
-            requires: f
-                .meta
-                .dependencies
-                .iter()
-                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-                .collect(),
-            // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
-            source_mutable: is_in_workspace_file_source(&f.cached.source_uri, &workspace.root),
+        .map(|f| {
+            let coordinate = format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name);
+            let provenance = visibility_analysis.effective.get(&coordinate);
+            ResolvedDep {
+                kind: f.cached.package_meta().kind,
+                group: f.cached.resolved.group.clone(),
+                name: f.cached.resolved.name.clone(),
+                version: f.cached.resolved.version.clone(),
+                content_dir: f.cached.cache_dir.clone(),
+                manifest: f.cached.manifest.clone(),
+                // A `[requires.packages]` dependency pkgref is
+                // group-qualified (PROP-008 §2.6).
+                requires: f
+                    .meta
+                    .dependencies
+                    .iter()
+                    .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
+                    .collect(),
+                admitted_by: provenance.map(|witness| match witness.rule {
+                    ProvenanceRule::RootEdge => "root-edge".to_string(),
+                    ProvenanceRule::PublicChain => "public-chain".to_string(),
+                    ProvenanceRule::FriendsChain => "friends-chain".to_string(),
+                }),
+                via_override: provenance.and_then(|witness| witness.via_override.clone()),
+                // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
+                source_mutable: is_in_workspace_file_source(&f.cached.source_uri, &workspace.root),
+            }
         })
         .collect();
 
@@ -357,6 +380,13 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
         fetched,
         resolution,
     })))
+}
+
+fn visibility_root_id(manifest: &Manifest) -> String {
+    manifest
+        .consumer_node()
+        .map(|node| node.coordinate())
+        .unwrap_or_else(|| "__vibevm__/workspace-root".to_string())
 }
 
 fn slots_match_spec_format(

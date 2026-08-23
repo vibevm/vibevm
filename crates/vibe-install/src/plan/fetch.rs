@@ -180,7 +180,10 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
     workspace_root: &Path,
     language_chain: &[String],
     root_features: &FeatureRequest,
+    root_manifest: &Manifest,
+    root_id: &str,
     fetched: &mut Vec<Fetched>,
+    visibility_analysis: &mut Analysis,
     observer: &dyn PlanObserver,
 ) -> Result<()> {
     const COND_DEP_MAX_ITER: usize = 5;
@@ -252,20 +255,58 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             std::collections::HashSet::new();
         combined.retain(|r| seen.insert((r.group.clone(), r.name.to_string())));
         let new_graph = source.solve(&combined)?;
-        for node in new_graph.iter() {
-            if fetched.iter().any(|g| {
-                g.cached.resolved.group == node.group && g.cached.resolved.name == node.name
-            }) {
-                continue;
-            }
-            fetched.push(fetch_or_defer(
+        let effective = crate::visibility_projection::resolve_effective(
+            source,
+            &combined,
+            root_manifest,
+            root_id,
+            new_graph,
+        )?;
+        *visibility_analysis = effective.analysis;
+        sync_fetched_to_graph(
+            source,
+            &effective.graph,
+            lockfile,
+            store_root,
+            root_features,
+            workspace_root,
+            fetched,
+        )?;
+    }
+}
+
+fn sync_fetched_to_graph<S: InstallSource + ?Sized>(
+    source: &S,
+    graph: &vibe_resolver::ResolvedGraph,
+    lockfile: &Lockfile,
+    store_root: &Path,
+    root_features: &FeatureRequest,
+    workspace_root: &Path,
+    fetched: &mut Vec<Fetched>,
+) -> Result<()> {
+    let mut existing = std::mem::take(fetched);
+    let mut next = Vec::with_capacity(graph.packages.len());
+    for node in graph.iter() {
+        let retained = existing.iter().position(|candidate| {
+            candidate.cached.resolved.group == node.group
+                && candidate.cached.resolved.name == node.name
+                && candidate.cached.resolved.version == node.version
+        });
+        let mut item = match retained {
+            Some(index) => existing.remove(index),
+            None => fetch_or_defer(
                 source,
                 node,
                 lockfile,
                 store_root,
                 root_features,
                 workspace_root,
-            )?);
-        }
+            )?,
+        };
+        item.meta.dependencies.clone_from(&node.dependencies);
+        item.meta.is_root = node.is_root;
+        next.push(item);
     }
+    *fetched = next;
+    Ok(())
 }

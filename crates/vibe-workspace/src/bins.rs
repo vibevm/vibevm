@@ -350,7 +350,7 @@ mod tests {
 [meta]
 generated_by = "vibe-test"
 generated_at = "2026-07-07T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "stack"

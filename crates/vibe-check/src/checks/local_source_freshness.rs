@@ -160,7 +160,7 @@ mod tests {
     fn write_local_lock(project: &Path, source_url: &str, content_hash: &str) {
         let lockfile = format!(
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-08-05T00:00:00Z\"\n\
-             schema_version = 5\n\
+             schema_version = 6\n\
              \n[[package]]\n\
              kind = \"flow\"\n\
              group = \"org.vibevm\"\n\
@@ -250,7 +250,7 @@ mod tests {
         // recorded one — must NOT be flagged: only `local` is reconciled here.
         let lockfile = format!(
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-08-05T00:00:00Z\"\n\
-             schema_version = 5\n\
+             schema_version = 6\n\
              \n[[package]]\n\
              kind = \"flow\"\n\
              group = \"org.vibevm\"\n\

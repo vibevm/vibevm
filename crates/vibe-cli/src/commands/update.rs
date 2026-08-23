@@ -282,6 +282,8 @@ pub fn run(
                 .iter()
                 .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
                 .collect(),
+            admitted_by: None,
+            via_override: None,
             // Mutable iff an in-workspace `file://` self-hosting source the
             // author edits in place (PROP-011 §2.6); recorded so the materialise
             // pass re-copies its slot.
@@ -448,6 +450,8 @@ fn locked_package(
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: dependencies.to_vec(),
+        admitted_by: old.and_then(|package| package.admitted_by.clone()),
+        via_override: old.and_then(|package| package.via_override.clone()),
         overridden: cached.overridden,
         source_kind: Some(source_kind),
         via_redirect: cached.via_redirect.clone(),

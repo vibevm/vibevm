@@ -19,7 +19,7 @@ const FIXTURE: &str = r#"
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T12:00:00Z"
-schema_version = 5
+schema_version = 6
 solver = "resolvo-0.x"
 root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]
 
@@ -40,6 +40,8 @@ files_written = [
 "spec/boot/10-flow-wal.md",
 ]
 dependencies = ["org.vibevm/atomic-commits@=0.1.0"]
+admitted_by = "friends-chain"
+via_override = "org.vibevm/root"
 
 [[package]]
 kind = "stack"
@@ -65,7 +67,7 @@ source_kind = "registry"
 )]
 fn parses_fully() {
     let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
-    assert_eq!(lf.meta.schema_version, 5);
+    assert_eq!(lf.meta.schema_version, 6);
     assert_eq!(lf.meta.solver.as_deref(), Some("resolvo-0.x"));
     assert_eq!(lf.meta.root_dependencies.len(), 2);
     assert_eq!(lf.packages.len(), 2);
@@ -82,6 +84,8 @@ fn parses_fully() {
         "org.vibevm/atomic-commits"
     );
     assert_eq!(wal.source_kind, Some(SourceKind::Registry));
+    assert_eq!(wal.admitted_by.as_deref(), Some("friends-chain"));
+    assert_eq!(wal.via_override.as_deref(), Some("org.vibevm/root"));
     assert!(!wal.overridden);
 }
 
@@ -94,10 +98,34 @@ fn roundtrip() {
 }
 
 #[test]
-fn empty_lockfile_has_v5_defaults() {
+fn absent_visibility_provenance_is_not_serialized() {
+    let raw = r#"
+[meta]
+generated_by = "vibe"
+generated_at = "2026-08-23T00:00:00Z"
+schema_version = 6
+
+[[package]]
+kind = "flow"
+name = "plain"
+group = "org.vibevm"
+version = "1.0.0"
+source_url = "file:///plain"
+content_hash = "sha256:abc"
+"#;
+    let lock: Lockfile = toml::from_str(raw).unwrap();
+    assert!(lock.packages[0].admitted_by.is_none());
+    assert!(lock.packages[0].via_override.is_none());
+    let rendered = toml::to_string_pretty(&lock).unwrap();
+    assert!(!rendered.contains("admitted_by"));
+    assert!(!rendered.contains("via_override"));
+}
+
+#[test]
+fn empty_lockfile_has_v6_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 5);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 6);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -114,7 +142,7 @@ fn read_accepts_current_version() {
         .write(&path)
         .unwrap();
     let lf = Lockfile::read(&path).unwrap();
-    assert_eq!(lf.meta.schema_version, 5);
+    assert_eq!(lf.meta.schema_version, 6);
 }
 
 #[test]
@@ -123,13 +151,13 @@ fn read_accepts_current_version() {
     r = 1
 )]
 fn read_rejects_non_current_version() {
-    // A pre-v5 lockfile is rejected outright — no legacy reader, no
+    // A pre-v6 lockfile is rejected outright — no legacy reader, no
     // migration. The fix is to regenerate with `vibe install`.
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("vibe.lock");
     std::fs::write(
         &path,
-        "[meta]\ngenerated_by = \"old\"\ngenerated_at = \"x\"\nschema_version = 4\n",
+        "[meta]\ngenerated_by = \"old\"\ngenerated_at = \"x\"\nschema_version = 5\n",
     )
     .unwrap();
     let err = Lockfile::read(&path).unwrap_err();
@@ -137,8 +165,8 @@ fn read_rejects_non_current_version() {
         matches!(
             err,
             crate::error::Error::UnsupportedLockfile {
-                found: 4,
-                expected: 5
+                found: 5,
+                expected: 6
             }
         ),
         "{err}"
@@ -157,7 +185,7 @@ fn path_source_kind_round_trips() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "flow"
@@ -201,7 +229,7 @@ fn override_flag_round_trips() {
 [meta]
 generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "flow"
@@ -238,7 +266,7 @@ fn materialization_round_trips() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "feat"
@@ -274,7 +302,7 @@ fn rejects_unknown_package_field() {
 [meta]
 generated_by = "vibe"
 generated_at = "2026-05-21T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "flow"

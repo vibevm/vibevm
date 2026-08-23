@@ -48,6 +48,8 @@ pub(super) fn dep_with_boot(
         content_dir: pkg.path().to_path_buf(),
         manifest,
         requires: vec![],
+        admitted_by: None,
+        via_override: None,
         source_mutable: false,
     };
     (dep, pkg)

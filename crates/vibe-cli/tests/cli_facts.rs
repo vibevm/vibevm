@@ -126,7 +126,7 @@ fn facts_clean_names_orphans_preserves_spec_and_honours_dry_run() {
     .expect("manifest");
     fs::write(
         project.path().join("vibe.lock"),
-        "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-08-22T00:00:00Z\"\nschema_version = 5\n",
+        "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-08-22T00:00:00Z\"\nschema_version = 6\n",
     )
     .expect("empty lockfile");
     fs::create_dir_all(project.path().join("vibefacts")).expect("facts home");

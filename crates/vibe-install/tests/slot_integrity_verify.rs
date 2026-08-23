@@ -16,6 +16,7 @@
 //! UAC installer detection, PROP-007 §9.5): the binary name carries no
 //! `install` substring.
 
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -100,6 +101,23 @@ impl InstallSource for FixtureSource {
         Ok(self.graph.clone())
     }
 
+    fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        let path = self
+            .fixtures
+            .join(pkg.name.to_string())
+            .join(Manifest::FILENAME);
+        Manifest::read(path)
+            .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
+    }
+
+    fn solve_masked(
+        &self,
+        _roots: &[PackageRef],
+        _blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError> {
+        Ok(self.graph.clone())
+    }
+
     fn materialise_in_place(
         &self,
         _pkgref: &PackageRef,
@@ -117,11 +135,16 @@ fn write(root: &Path, rel: &str, body: &str) {
 
 /// One fixture package: a manifest plus a spec file with distinct bytes.
 fn fixture_pkg(fixtures: &Path, name: &str, body: &str) {
+    let requires = if name == "pkg-a" {
+        "\n[requires.packages]\n\"org.vibevm/pkg-b\" = \"^1\"\n"
+    } else {
+        ""
+    };
     write(
         fixtures,
         &format!("{name}/vibe.toml"),
         &format!(
-            "[package]\ngroup = \"org.vibevm\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"1.0.0\"\n"
+            "[package]\ngroup = \"org.vibevm\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"1.0.0\"\n{requires}"
         ),
     );
     write(fixtures, &format!("{name}/spec/flows/{name}/SPEC.md"), body);
@@ -468,6 +491,8 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         content_dir: cached.cache_dir.clone(),
         manifest: cached.manifest.clone(),
         requires: Vec::new(),
+        admitted_by: None,
+        via_override: None,
         source_mutable: false,
     };
     let verifier =

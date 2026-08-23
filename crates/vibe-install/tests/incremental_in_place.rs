@@ -12,6 +12,7 @@
 //! substring.
 
 use std::cell::RefCell;
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -61,6 +62,21 @@ impl InstallSource for MockSource {
         Ok(self.graph.clone())
     }
 
+    fn manifest_of(&self, _pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        Manifest::parse_str(
+            "[package]\ngroup = \"org.vibevm\"\nname = \"giant\"\nkind = \"feat\"\nversion = \"1.0.0\"\n",
+        )
+        .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
+    }
+
+    fn solve_masked(
+        &self,
+        _roots: &[PackageRef],
+        _blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError> {
+        Ok(self.graph.clone())
+    }
+
     fn materialise_in_place(
         &self,
         pkgref: &PackageRef,
@@ -107,7 +123,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
     );
 
     // The lockfile already records `org.vibevm/giant` as an in-place package
-    // (schema v5). The recorded commit differs from FETCHED_COMMIT so the test
+    // (schema v6). The recorded commit differs from FETCHED_COMMIT so the test
     // can tell the rewritten lockfile apart from this provisional value.
     write(
         root,
@@ -115,7 +131,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
         "[meta]\n\
          generated_by = \"vibe test\"\n\
          generated_at = \"2026-06-27T00:00:00Z\"\n\
-         schema_version = 5\n\n\
+         schema_version = 6\n\n\
          [[package]]\n\
          kind = \"feat\"\n\
          name = \"giant\"\n\

@@ -46,8 +46,9 @@ use super::{Materialization, read_toml, write_toml};
 /// History (for the record only — earlier versions are not read):
 /// `1` M0/M1.1 · `2` per-package registries · `3` PROP-003 features ·
 /// `4` PROP-007 workspace path-source (`source_kind = "path"`) ·
-/// `5` PROP-008 qualified naming (the per-package `group` field).
-pub const CURRENT_SCHEMA_VERSION: u32 = 5;
+/// `5` PROP-008 qualified naming (the per-package `group` field) ·
+/// `6` PROP-050 visibility provenance.
+pub const CURRENT_SCHEMA_VERSION: u32 = 6;
 
 fn is_false(b: &bool) -> bool {
     !*b
@@ -93,7 +94,7 @@ pub struct Lockfile {
 /// let m: LockfileMeta = toml::from_str(r#"
 ///     generated_by = "vibe 0.1.0"
 ///     generated_at = "2026-05-21T12:00:00Z"
-///     schema_version = 5
+///     schema_version = 6
 ///     solver = "resolvo-0.x"
 /// "#).unwrap();
 /// assert_eq!(m.schema_version, CURRENT_SCHEMA_VERSION);
@@ -304,6 +305,15 @@ pub struct LockedPackage {
     /// Empty for pre-resolver installs and v1 lockfiles.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub dependencies: Vec<PackageRef>,
+
+    /// Visibility rule that admitted this package into the effective set.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub admitted_by: Option<String>,
+
+    /// Coordinate of the node whose path-scoped override admitted the
+    /// decisive edge, when one changed its access.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub via_override: Option<String>,
 
     /// `true` iff this package was resolved through a `[[override]]` in
     /// `vibe.toml` rather than through the registry layer. Surfaces in

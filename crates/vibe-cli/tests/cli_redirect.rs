@@ -206,7 +206,7 @@ fn list_json_surfaces_via_redirect_for_redirect_resolved_package() {
         r#"[meta]
 generated_by = "test"
 generated_at = "2026-01-01T00:00:00Z"
-schema_version = 5
+schema_version = 6
 
 [[package]]
 kind = "flow"

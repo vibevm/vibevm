@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::{ContentHash, PackageName, PackageRef, SourceUrl, VersionSpec};
 use vibe_resolver::ResolvedNode;
+use vibe_workspace::install::ResolvedDep;
 
 use crate::fetched::Fetched;
 
@@ -166,7 +167,11 @@ pub fn record_git_source(manifest: &mut Manifest, dep: GitPackageDep) {
 /// `vibedeps/` slot — deterministic from `(kind, name, version)` — so
 /// `files_written` stays empty and the `NN-` `boot_snippet` filename
 /// is retired.
-pub(crate) fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -> LockedPackage {
+pub(crate) fn locked_package_from_fetched(
+    f: &Fetched,
+    resolved: &ResolvedDep,
+    language: Option<&str>,
+) -> LockedPackage {
     let c = &f.cached;
     let source_kind = if c.overridden {
         SourceKind::Override
@@ -194,6 +199,8 @@ pub(crate) fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: f.meta.dependencies.clone(),
+        admitted_by: resolved.admitted_by.clone(),
+        via_override: resolved.via_override.clone(),
         overridden: c.overridden,
         source_kind: Some(source_kind),
         via_redirect: c.via_redirect.clone(),

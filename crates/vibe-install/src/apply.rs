@@ -9,7 +9,7 @@ use std::collections::BTreeSet;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_resolver::ResolvedNode;
+use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookPolicy, HookReport};
 use vibe_workspace::install::{
@@ -167,9 +167,28 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     let resolved_language: Option<String> = language_chain.first().cloned().filter(|l| l != "en");
     lockfile.packages.clear();
     for f in &fetched {
-        lockfile
-            .packages
-            .push(locked_package_from_fetched(f, resolved_language.as_deref()));
+        let resolved = resolution
+            .iter()
+            .find(|candidate| {
+                candidate.group == f.cached.resolved.group
+                    && candidate.name == f.cached.resolved.name
+            })
+            .ok_or_else(|| {
+                Error::Solve(
+                    DepProviderError::Other(format!(
+                        "resolved package `{}/{}` has no matching visibility metadata \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-050#resolver; \
+                          fix: report the mismatched Fetched/ResolvedDep sets in vibe-install)",
+                        f.cached.resolved.group, f.cached.resolved.name
+                    ))
+                    .into(),
+                )
+            })?;
+        lockfile.packages.push(locked_package_from_fetched(
+            f,
+            resolved,
+            resolved_language.as_deref(),
+        ));
     }
     lockfile.meta.generated_at = vibe_core::timestamp::now_utc();
     if !language_chain.is_empty() && language_chain != ["en"] {

@@ -292,8 +292,8 @@ mod tests {
     }
 
     /// Parse a `Lockfile` from a `[[package]]` body, prepending the meta
-    /// block. `roots` becomes `meta.root_dependencies`. Schema v5 — the
-    /// PROP-008 qualified-naming lockfile.
+    /// block. `roots` becomes `meta.root_dependencies`. Schema v6 carries
+    /// qualified naming plus optional visibility provenance.
     fn lockfile(roots: &[&str], packages_toml: &str) -> Lockfile {
         let roots_list = roots
             .iter()
@@ -301,7 +301,7 @@ mod tests {
             .collect::<Vec<_>>()
             .join(", ");
         let text = format!(
-            "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"x\"\nschema_version = 5\n\
+            "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"x\"\nschema_version = 6\n\
              root_dependencies = [{roots_list}]\n\n{packages_toml}"
         );
         toml::from_str(&text).unwrap()
