@@ -2684,10 +2684,19 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/refactor.rs",
+      "file": "crates/vibe-cli/src/commands/refactor/mod.rs",
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_cli::commands::refactor",
+      "end_line": 3,
+      "fingerprint": "tok1:9a07cc0e30b9a37cdcb17cca20fc20b721b4d40908a3a2d74ef99c974472b05a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::refactor::convert_source",
       "end_line": 3,
       "fingerprint": "tok1:9a07cc0e30b9a37cdcb17cca20fc20b721b4d40908a3a2d74ef99c974472b05a"
     },
@@ -12068,8 +12077,16 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-cli/src/commands/refactor.rs",
+      "file": "crates/vibe-cli/src/commands/refactor/mod.rs",
       "from_symbol": "vibe_cli::commands::refactor",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#convert-source",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+      "from_symbol": "vibe_cli::commands::refactor::convert_source",
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#convert-source",

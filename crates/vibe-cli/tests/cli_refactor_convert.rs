@@ -14,6 +14,15 @@ fn vibe(args: &[&str]) -> Output {
         .expect("run vibe")
 }
 
+fn vibe_in(cwd: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_vibe"))
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .current_dir(cwd)
+        .args(args)
+        .output()
+        .expect("run vibe in fixture directory")
+}
+
 fn text(bytes: &[u8]) -> String {
     String::from_utf8_lossy(bytes).into_owned()
 }
@@ -228,4 +237,196 @@ fn empty_directory_succeeds_and_missing_path_is_an_honest_error() {
     let stderr = text(&missing.stderr);
     assert!(stderr.contains("missing.md"), "{stderr}");
     assert!(stderr.contains("does not exist"), "{stderr}");
+}
+
+#[test]
+fn refactor_help_lists_the_conversion_family_and_visible_alias() {
+    let output = vibe(&["refactor", "--help"]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    let stdout = text(&output.stdout);
+    assert!(stdout.contains("convert-source"), "{stdout}");
+    assert!(stdout.contains("convert-src"), "{stdout}");
+    assert!(stdout.contains("convert-package-src"), "{stdout}");
+    assert!(stdout.contains("convert-spec-src"), "{stdout}");
+}
+
+#[test]
+fn package_src_converts_the_whole_package_but_skips_vibedeps() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    fs::write(temp.path().join("README.md"), CANONICAL_MD).expect("write readme");
+    let spec = temp.path().join("spec");
+    fs::create_dir(&spec).expect("create spec");
+    fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
+    let dependency = temp.path().join("vibedeps").join("slot");
+    fs::create_dir_all(&dependency).expect("create dependency slot");
+    fs::write(dependency.join("dependency.md"), CANONICAL_MD).expect("write dependency");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-package-src",
+        "--from",
+        "md",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert!(temp.path().join("README.xml").is_file());
+    assert!(!temp.path().join("README.md").exists());
+    assert!(spec.join("inside.xml").is_file());
+    assert!(!spec.join("inside.md").exists());
+    assert!(dependency.join("dependency.md").is_file());
+    assert!(!dependency.join("dependency.xml").exists());
+}
+
+#[test]
+fn package_src_refuses_a_directory_without_vibe_manifest() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let source = temp.path().join("untouched.md");
+    fs::write(&source, CANONICAL_MD).expect("write source");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-package-src",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(!output.status.success());
+    assert_eq!(
+        fs::read(&source).expect("read source"),
+        CANONICAL_MD.as_bytes()
+    );
+    assert!(!temp.path().join("untouched.xml").exists());
+    assert!(text(&output.stdout).contains("refused"));
+    let stderr = text(&output.stderr);
+    assert!(stderr.contains("vibe.toml"), "{stderr}");
+}
+
+#[test]
+fn spec_src_converts_only_the_package_spec_directory() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    let readme = temp.path().join("README.md");
+    fs::write(&readme, CANONICAL_MD).expect("write readme");
+    let spec = temp.path().join("spec");
+    fs::create_dir(&spec).expect("create spec");
+    fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-spec-src",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert!(spec.join("inside.xml").is_file());
+    assert!(!spec.join("inside.md").exists());
+    assert_eq!(
+        fs::read(&readme).expect("read readme"),
+        CANONICAL_MD.as_bytes()
+    );
+    assert!(!temp.path().join("README.xml").exists());
+}
+
+#[test]
+fn spec_src_without_argument_finds_the_nearest_project_root() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    let spec = temp.path().join("spec");
+    fs::create_dir(&spec).expect("create spec");
+    fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
+    let nested = temp.path().join("one").join("two");
+    fs::create_dir_all(&nested).expect("create nested cwd");
+
+    let output = vibe_in(&nested, &["refactor", "convert-spec-src", "--to", "xml"]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert!(spec.join("inside.xml").is_file());
+    assert!(!spec.join("inside.md").exists());
+}
+
+#[test]
+fn equal_from_and_to_are_rejected_by_every_conversion_verb() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    fs::create_dir(temp.path().join("spec")).expect("create spec");
+    let root = path_text(temp.path());
+    let cases: &[&[&str]] = &[
+        &[
+            "refactor",
+            "convert-source",
+            "--from",
+            "xml",
+            "--to",
+            "xml",
+            root,
+        ],
+        &[
+            "refactor",
+            "convert-package-src",
+            "--from",
+            "xml",
+            "--to",
+            "xml",
+            root,
+        ],
+        &[
+            "refactor",
+            "convert-spec-src",
+            "--from",
+            "xml",
+            "--to",
+            "xml",
+            root,
+        ],
+    ];
+
+    for args in cases {
+        let output = vibe(args);
+        assert!(
+            !output.status.success(),
+            "args unexpectedly succeeded: {args:?}"
+        );
+        let stderr = text(&output.stderr);
+        assert!(stderr.contains("must differ"), "{args:?}: {stderr}");
+    }
+}
+
+#[test]
+fn convert_src_alias_runs_convert_source() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    let source = temp.path().join("alias.md");
+    fs::write(&source, CANONICAL_MD).expect("write source");
+
+    let output = vibe(&["refactor", "convert-src", "--to", "xml", path_text(&source)]);
+
+    assert!(output.status.success(), "stderr: {}", text(&output.stderr));
+    assert!(!source.exists());
+    assert!(temp.path().join("alias.xml").is_file());
+}
+
+#[test]
+fn spec_src_refuses_a_package_without_spec_directory() {
+    let temp = tempfile::tempdir().expect("tempdir");
+    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+
+    let output = vibe(&[
+        "refactor",
+        "convert-spec-src",
+        "--to",
+        "xml",
+        path_text(temp.path()),
+    ]);
+
+    assert!(!output.status.success());
+    assert!(text(&output.stdout).contains("refused"));
+    let stderr = text(&output.stderr);
+    assert!(stderr.contains("spec/"), "{stderr}");
 }

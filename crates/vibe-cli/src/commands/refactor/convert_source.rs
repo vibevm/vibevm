@@ -1,4 +1,4 @@
-//! `vibe refactor` — meaning-preserving source rewrites (PROP-051).
+//! Shared discovery, honesty, prompting, and write pipeline for source conversion.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-051#convert-source");
 
@@ -8,72 +8,16 @@ use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use clap::{Args, Subcommand, ValueEnum};
-use vibe_specdoc::{Conversion, Direction, convert, is_spec_source};
+use vibe_specdoc::{Conversion, convert, is_spec_source};
 
 use crate::output;
 
-/// Arguments for the refactoring command family.
-#[derive(Debug, Args)]
-pub struct RefactorArgs {
-    #[command(subcommand)]
-    command: RefactorCommand,
-}
+use super::{ResolvedConversion, SourceFormat};
 
-#[derive(Debug, Subcommand)]
-enum RefactorCommand {
-    /// Convert authored spec sources through the vibe-specdoc pivot.
-    ConvertSource(ConvertSourceArgs),
-}
-
-/// Arguments for `vibe refactor convert-source`.
-#[derive(Debug, Args)]
-struct ConvertSourceArgs {
-    /// Target source format (`md` is an alias for `markdown`).
-    #[arg(long, value_enum)]
-    to: TargetFormat,
-
-    /// Permit IR-stable byte/content losses. Never permits IR divergence.
-    #[arg(long)]
-    force: bool,
-
-    /// Classify and report without writing; always exits successfully.
-    #[arg(long)]
-    dry_run: bool,
-
-    /// Files or directories to convert. Defaults to the current directory.
-    #[arg(value_name = "PATH")]
-    paths: Vec<PathBuf>,
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-enum TargetFormat {
-    Xml,
-    #[value(alias = "md")]
-    Markdown,
-}
-
-impl TargetFormat {
-    fn direction(self) -> Direction {
-        match self {
-            TargetFormat::Xml => Direction::ToXml,
-            TargetFormat::Markdown => Direction::ToMarkdown,
-        }
-    }
-
-    fn extension(self) -> &'static str {
-        match self {
-            TargetFormat::Xml => "xml",
-            TargetFormat::Markdown => "md",
-        }
-    }
-
-    fn source_extension(self) -> &'static str {
-        match self {
-            TargetFormat::Xml => "md",
-            TargetFormat::Markdown => "xml",
-        }
-    }
+#[derive(Debug)]
+pub(super) enum ConversionTarget {
+    Path(PathBuf),
+    Refused { path: PathBuf, reason: String },
 }
 
 #[derive(Debug)]
@@ -108,23 +52,23 @@ enum PromptAnswer {
     All,
 }
 
-/// Run one refactoring-family command.
-pub fn run(ctx: &output::Context, args: RefactorArgs) -> Result<()> {
-    match args.command {
-        RefactorCommand::ConvertSource(args) => run_convert_source(ctx, args),
-    }
-}
-
-fn run_convert_source(ctx: &output::Context, args: ConvertSourceArgs) -> Result<()> {
-    let paths = if args.paths.is_empty() {
-        vec![PathBuf::from(".")]
-    } else {
-        args.paths.clone()
-    };
+pub(super) fn run_conversion(
+    ctx: &output::Context,
+    targets: Vec<ConversionTarget>,
+    conversion: ResolvedConversion,
+    command_name: &str,
+) -> Result<()> {
     let mut discovered = BTreeMap::new();
-    for path in &paths {
-        if let Err(error) = discover_argument(path, args.to, &mut discovered) {
-            discovered.insert(path.clone(), Discovered::Refused(format!("{error:#}")));
+    for target in targets {
+        match target {
+            ConversionTarget::Path(path) => {
+                if let Err(error) = discover_argument(&path, &conversion, &mut discovered) {
+                    discovered.insert(path, Discovered::Refused(format!("{error:#}")));
+                }
+            }
+            ConversionTarget::Refused { path, reason } => {
+                discovered.insert(path, Discovered::Refused(reason));
+            }
         }
     }
 
@@ -142,20 +86,20 @@ fn run_convert_source(ctx: &output::Context, args: ConvertSourceArgs) -> Result<
                 counts.skipped_generated += 1;
             }
             Discovered::Refused(reason) => {
-                report_refusal(&path, &reason, args.dry_run);
+                report_refusal(&path, &reason, conversion.dry_run);
                 counts.refused += 1;
             }
             Discovered::Candidate => {
-                process_candidate(&path, &args, attended, &mut accept_all, &mut counts);
+                process_candidate(&path, &conversion, attended, &mut accept_all, &mut counts)
             }
         }
     }
     print_summary(&counts);
 
-    if args.dry_run {
+    if conversion.dry_run {
         Ok(())
     } else if counts.refused > 0 {
-        bail!("convert-source refused {} file(s)", counts.refused)
+        bail!("{command_name} refused {} file(s)", counts.refused)
     } else {
         Ok(())
     }
@@ -163,7 +107,7 @@ fn run_convert_source(ctx: &output::Context, args: ConvertSourceArgs) -> Result<
 
 fn discover_argument(
     path: &Path,
-    target: TargetFormat,
+    conversion: &ResolvedConversion,
     discovered: &mut BTreeMap<PathBuf, Discovered>,
 ) -> Result<()> {
     if !path.exists() {
@@ -182,21 +126,21 @@ fn discover_argument(
     }
     if path.is_file() {
         let extension = path.extension().and_then(|value| value.to_str());
-        if extension == Some(target.extension()) {
+        if extension == Some(conversion.to.extension()) {
             discovered.insert(path.to_path_buf(), Discovered::Already);
-        } else if extension == Some(target.source_extension()) {
+        } else if extension == Some(conversion.from.extension()) {
             // An explicit file overrides only the generated marker skip.
             discovered.insert(path.to_path_buf(), Discovered::Candidate);
         } else {
             discovered.insert(
                 path.to_path_buf(),
-                Discovered::Refused("file is not an md/xml spec source".to_string()),
+                Discovered::Refused("file is not a selected md/xml spec source".to_string()),
             );
         }
         return Ok(());
     }
     if path.is_dir() {
-        return walk_directory(path, target, discovered);
+        return walk_directory(path, conversion, discovered);
     }
     discovered.insert(
         path.to_path_buf(),
@@ -207,7 +151,7 @@ fn discover_argument(
 
 fn walk_directory(
     directory: &Path,
-    target: TargetFormat,
+    conversion: &ResolvedConversion,
     discovered: &mut BTreeMap<PathBuf, Discovered>,
 ) -> Result<()> {
     let mut entries = fs::read_dir(directory)
@@ -224,19 +168,21 @@ fn walk_directory(
             if should_skip_directory(&path) {
                 continue;
             }
-            walk_directory(&path, target, discovered)?;
-        } else if file_type.is_file()
-            && is_spec_source(&path)
-            && path.extension().and_then(|value| value.to_str()) == Some(target.source_extension())
-        {
-            let source = fs::read_to_string(&path)
-                .with_context(|| format!("reading `{}`", path.display()))?;
-            let item = if has_generated_marker(&source) {
-                Discovered::SkippedGenerated
-            } else {
-                Discovered::Candidate
-            };
-            discovered.entry(path).or_insert(item);
+            walk_directory(&path, conversion, discovered)?;
+        } else if file_type.is_file() && is_spec_source(&path) {
+            let extension = path.extension().and_then(|value| value.to_str());
+            if extension == Some(conversion.from.extension()) {
+                let source = fs::read_to_string(&path)
+                    .with_context(|| format!("reading `{}`", path.display()))?;
+                let item = if has_generated_marker(&source) {
+                    Discovered::SkippedGenerated
+                } else {
+                    Discovered::Candidate
+                };
+                discovered.entry(path).or_insert(item);
+            } else if extension == Some(conversion.to.extension()) {
+                discovered.entry(path).or_insert(Discovered::Already);
+            }
         }
     }
     Ok(())
@@ -263,12 +209,12 @@ fn has_generated_marker(source: &str) -> bool {
 
 fn process_candidate(
     path: &Path,
-    args: &ConvertSourceArgs,
+    conversion: &ResolvedConversion,
     attended: bool,
     accept_all: &mut bool,
     counts: &mut Counts,
 ) {
-    let sibling = path.with_extension(args.to.extension());
+    let sibling = path.with_extension(conversion.to.extension());
     if sibling.exists() {
         report_refusal(
             path,
@@ -276,7 +222,7 @@ fn process_candidate(
                 "target `{}` already exists; refusing a paired document",
                 sibling.display()
             ),
-            args.dry_run,
+            conversion.dry_run,
         );
         counts.refused += 1;
         return;
@@ -284,34 +230,38 @@ fn process_candidate(
     let source = match fs::read_to_string(path) {
         Ok(source) => source,
         Err(error) => {
-            report_refusal(path, &format!("read failed: {error}"), args.dry_run);
+            report_refusal(path, &format!("read failed: {error}"), conversion.dry_run);
             counts.refused += 1;
             return;
         }
     };
-    let conversion = match convert(&source, args.to.direction()) {
-        Ok(conversion) => conversion,
+    let converted = match convert(&source, conversion.to.direction()) {
+        Ok(converted) => converted,
         Err(error) => {
-            report_refusal(path, &format!("source parse failed: {error}"), args.dry_run);
+            report_refusal(
+                path,
+                &format!("source parse failed: {error}"),
+                conversion.dry_run,
+            );
             counts.refused += 1;
             return;
         }
     };
 
-    match conversion {
+    match converted {
         Conversion::ByteStable { output } => {
-            if args.dry_run {
+            if conversion.dry_run {
                 println!("dry-run byte-stable {}", path.display());
                 counts.dry_run += 1;
             } else {
-                write_or_refuse(path, &output, args.to, "converted", counts, false);
+                write_or_refuse(path, &output, conversion.to, "converted", counts, false);
             }
         }
-        Conversion::IrStableLoss { output, loss } => {
-            process_lossy(path, &output, &loss, args, attended, accept_all, counts);
-        }
+        Conversion::IrStableLoss { output, loss } => process_lossy(
+            path, &output, &loss, conversion, attended, accept_all, counts,
+        ),
         Conversion::IrDivergent { detail } => {
-            if args.dry_run {
+            if conversion.dry_run {
                 println!("dry-run ir-divergent {}: {detail}", path.display());
             } else {
                 report_refusal(
@@ -329,18 +279,18 @@ fn process_lossy(
     path: &Path,
     output: &str,
     loss: &str,
-    args: &ConvertSourceArgs,
+    conversion: &ResolvedConversion,
     attended: bool,
     accept_all: &mut bool,
     counts: &mut Counts,
 ) {
-    if args.dry_run {
+    if conversion.dry_run {
         println!("dry-run ir-stable-loss {}\n{loss}", path.display());
         counts.dry_run += 1;
         return;
     }
 
-    let disposition = loss_disposition(args.force, attended, *accept_all);
+    let disposition = loss_disposition(conversion.force, attended, *accept_all);
     let approved = match disposition {
         LossDisposition::Convert => {
             println!("loss {}\n{loss}", path.display());
@@ -364,7 +314,7 @@ fn process_lossy(
         }
     };
     if approved {
-        write_or_refuse(path, output, args.to, "lossy-confirmed", counts, true);
+        write_or_refuse(path, output, conversion.to, "lossy-confirmed", counts, true);
     } else {
         println!("refused {}", path.display());
         if disposition == LossDisposition::Refuse {
@@ -407,7 +357,7 @@ fn prompt_for_loss(path: &Path) -> Result<PromptAnswer> {
 fn write_or_refuse(
     path: &Path,
     output: &str,
-    target: TargetFormat,
+    target: SourceFormat,
     status: &str,
     counts: &mut Counts,
     lossy: bool,
@@ -429,7 +379,7 @@ fn write_or_refuse(
     }
 }
 
-fn write_conversion(path: &Path, output: &str, target: TargetFormat) -> Result<()> {
+fn write_conversion(path: &Path, output: &str, target: SourceFormat) -> Result<()> {
     let sibling = path.with_extension(target.extension());
     if sibling.exists() {
         bail!(
