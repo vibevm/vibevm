@@ -275,6 +275,91 @@ pub fn dep_solver<'a>(
     }
 }
 
+/// The embedded DepProvider composite — one construction site (R-001) for
+/// the local-family + optional-declared shape three `dep_solver` arms and
+/// the visibility surfaces below all share.
+fn embedded_dep_provider<'a>(
+    locals: Vec<&'a LocalRegistry>,
+    declared: Option<&'a MultiRegistryResolver>,
+    precedence: EmbeddedPrecedence,
+    short_circuit: bool,
+) -> EmbeddedDepProvider<'a> {
+    EmbeddedDepProvider::new(
+        LocalCompositeDepProvider::new(
+            locals
+                .into_iter()
+                .map(LocalRegistryDepProvider::new)
+                .collect(),
+        ),
+        declared.map(MultiRegistryDepProvider::new),
+        precedence,
+        short_circuit,
+    )
+}
+
+/// Metadata-only manifest read through the selected `DepProvider` cell —
+/// the `InstallSource::manifest_of` construction site (R-001). Never
+/// fetches package content.
+pub fn metadata_manifest_cell(
+    resource: ProviderResource<'_>,
+    pkg: &vibe_core::PackageRef,
+) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
+    match resource {
+        ProviderResource::Local(r) => {
+            vibe_install::metadata_manifest(&LocalRegistryDepProvider::new(r), pkg)
+        }
+        ProviderResource::Multi(m) => {
+            vibe_install::metadata_manifest(&MultiRegistryDepProvider::new(m), pkg)
+        }
+        ProviderResource::Embedded {
+            locals,
+            declared,
+            precedence,
+            short_circuit,
+        } => vibe_install::metadata_manifest(
+            &embedded_dep_provider(locals, declared, precedence, short_circuit),
+            pkg,
+        ),
+    }
+}
+
+/// The masked re-solve through the selected provider and solver cells —
+/// the `InstallSource::solve_masked` construction site (R-001). The same
+/// selection the ordinary solve made, wrapped in the visibility mask.
+pub fn solve_masked_cell(
+    flags: &SelectionFlags,
+    resource: ProviderResource<'_>,
+    roots: &[vibe_core::PackageRef],
+    blocked: &std::collections::BTreeSet<(String, String)>,
+) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+    let solver = Some(flags.solver.value);
+    match resource {
+        ProviderResource::Local(r) => vibe_install::solve_with_visibility_mask(
+            LocalRegistryDepProvider::new(r),
+            solver,
+            roots,
+            blocked,
+        ),
+        ProviderResource::Multi(m) => vibe_install::solve_with_visibility_mask(
+            MultiRegistryDepProvider::new(m),
+            solver,
+            roots,
+            blocked,
+        ),
+        ProviderResource::Embedded {
+            locals,
+            declared,
+            precedence,
+            short_circuit,
+        } => vibe_install::solve_with_visibility_mask(
+            embedded_dep_provider(locals, declared, precedence, short_circuit),
+            solver,
+            roots,
+            blocked,
+        ),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

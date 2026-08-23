@@ -12,12 +12,9 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{
     EffectiveRegistryConfig, GlobalRegistryConfig, Group, PackageRef, merge_effective,
 };
-use vibe_install::{InstallSource, metadata_manifest, solve_with_visibility_mask};
+use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError};
-use vibe_resolver::{
-    EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider, LocalRegistryDepProvider,
-    MultiRegistryDepProvider, SolveError,
-};
+use vibe_resolver::{EmbeddedPrecedence, SolveError};
 
 use crate::cli::InstallArgs;
 use crate::registry::ProviderCell;
@@ -185,51 +182,13 @@ impl InstallSource for InstallResolver {
             InstallResolver::Embedded { solver, .. } => (ProviderCell::Embedded, *solver),
         };
         let flags = crate::registry::selection_flags(provider_cell, solver_override);
-        let solver = match self {
-            InstallResolver::Local(r, _) => {
-                crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Local(r))
-            }
-            InstallResolver::Multi(m, _) => {
-                crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Multi(m))
-            }
-            InstallResolver::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-                ..
-            } => crate::registry::dep_solver(
-                &flags,
-                crate::registry::ProviderResource::Embedded {
-                    locals: locals.iter().collect(),
-                    declared: declared.as_deref(),
-                    precedence: *precedence,
-                    short_circuit: *short_circuit,
-                },
-            ),
-        };
-        solver.solve(roots)
+        crate::registry::dep_solver(&flags, self.provider_resource()).solve(roots)
     }
 
     fn manifest_of(&self, pkg: &PackageRef) -> Result<vibe_core::manifest::Manifest, SolveError> {
-        match self {
-            Self::Local(registry, _) => {
-                metadata_manifest(&LocalRegistryDepProvider::new(registry), pkg)
-            }
-            Self::Multi(resolver, _) => {
-                metadata_manifest(&MultiRegistryDepProvider::new(resolver), pkg)
-            }
-            Self::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-                ..
-            } => metadata_manifest(
-                &embedded_provider(locals, declared.as_deref(), *precedence, *short_circuit),
-                pkg,
-            ),
-        }
+        // Cell selection lives in the registry module (R-001); this method
+        // only routes the resource the resolver already owns.
+        crate::registry::metadata_manifest_cell(self.provider_resource(), pkg)
     }
 
     fn solve_masked(
@@ -237,33 +196,13 @@ impl InstallSource for InstallResolver {
         roots: &[PackageRef],
         blocked: &BTreeSet<(String, String)>,
     ) -> Result<vibe_resolver::ResolvedGraph, SolveError> {
-        match self {
-            Self::Local(registry, solver) => solve_with_visibility_mask(
-                LocalRegistryDepProvider::new(registry),
-                *solver,
-                roots,
-                blocked,
-            ),
-            Self::Multi(resolver, solver) => solve_with_visibility_mask(
-                MultiRegistryDepProvider::new(resolver),
-                *solver,
-                roots,
-                blocked,
-            ),
-            Self::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-                solver,
-                ..
-            } => solve_with_visibility_mask(
-                embedded_provider(locals, declared.as_deref(), *precedence, *short_circuit),
-                *solver,
-                roots,
-                blocked,
-            ),
-        }
+        let (provider_cell, solver_override) = match self {
+            InstallResolver::Local(_, s) => (ProviderCell::Local, *s),
+            InstallResolver::Multi(_, s) => (ProviderCell::Multi, *s),
+            InstallResolver::Embedded { solver, .. } => (ProviderCell::Embedded, *solver),
+        };
+        let flags = crate::registry::selection_flags(provider_cell, solver_override);
+        crate::registry::solve_masked_cell(&flags, self.provider_resource(), roots, blocked)
     }
 
     fn materialise_in_place(
@@ -323,23 +262,29 @@ impl InstallSource for InstallResolver {
     }
 }
 
-fn embedded_provider<'a>(
-    locals: &'a [LocalRegistry],
-    declared: Option<&'a MultiRegistryResolver>,
-    precedence: EmbeddedPrecedence,
-    short_circuit: bool,
-) -> EmbeddedDepProvider<'a> {
-    let local =
-        LocalCompositeDepProvider::new(locals.iter().map(LocalRegistryDepProvider::new).collect());
-    EmbeddedDepProvider::new(
-        local,
-        declared.map(MultiRegistryDepProvider::new),
-        precedence,
-        short_circuit,
-    )
-}
-
 impl InstallResolver {
+    /// The borrowed [`ProviderResource`] this resolver's variant owns — the
+    /// one routing shape `solve` / `manifest_of` / `solve_masked` all hand to
+    /// the registry module's construction sites (R-001).
+    fn provider_resource(&self) -> crate::registry::ProviderResource<'_> {
+        match self {
+            InstallResolver::Local(r, _) => crate::registry::ProviderResource::Local(r),
+            InstallResolver::Multi(m, _) => crate::registry::ProviderResource::Multi(m),
+            InstallResolver::Embedded {
+                locals,
+                declared,
+                precedence,
+                short_circuit,
+                ..
+            } => crate::registry::ProviderResource::Embedded {
+                locals: locals.iter().collect(),
+                declared: declared.as_deref(),
+                precedence: *precedence,
+                short_circuit: *short_circuit,
+            },
+        }
+    }
+
     /// Enumerate every `group` that publishes a package of the bare
     /// `name` — the candidate set short-name resolution (PROP-008
     /// §2.6) walks. The local-directory path scans the registry tree;
