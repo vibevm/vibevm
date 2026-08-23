@@ -1,6 +1,6 @@
 # PROP-051: vibe refactor — the source-refactoring umbrella {#root}
 
-<status stage="impl" state="work" comment="commissioned and ruled by the owner 2026-08-23/24 (mandate quoted in §1 verbatim); convert-source landed 2026-08-24 (K1, bf6a9bd9) — the family verbs (##FROM-AND-TO, ##CONVERT-PACKAGE-SRC, ##CONVERT-SPEC-SRC) and the application K2-K7 ride spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md"/>
+<status stage="impl" state="work" comment="commissioned and ruled by the owner 2026-08-23/24 (mandate quoted in §1 verbatim); the verb family landed 2026-08-24 (K1 bf6a9bd9 + K1b 2609cfc3, panel all green both) — the application K2-K7 rides spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md"/>
 
 ## 1. Mandate {#mandate}
 
@@ -111,7 +111,7 @@ is `--from <markdown|xml>` + `--to <markdown|xml>` (`md` an alias of
 counterpart of `--to`, and `--from` equal to `--to` is a loud error —
 never a silent no-op. `--from` is a FILTER: only sources currently in
 that form are selected; everything else reports `already`/skips
-unchanged. @status:spec/done
+unchanged. @status:impl/done
 
 @fact:CONVERT-PACKAGE-SRC `vibe refactor convert-package-src [--from …]
 --to … <package-root>…` converts WHOLE PACKAGES, not individual files
@@ -123,7 +123,7 @@ distinguishes this verb from pointing `convert-source` at a bare
 directory) — and the conversion walks every spec source under that
 root with the same core, the same skips and the same honesty contract
 as `convert-source` (##HONESTY-BY-REVERSE applies file by file).
-@status:spec/done
+@status:impl/done
 
 @fact:CONVERT-SPEC-SRC `vibe refactor convert-spec-src [--from …]
 --to … [<package-root>]` converts the `spec/` directory of the chosen
@@ -131,7 +131,7 @@ package; with no argument it targets the CURRENT ROOT PROJECT's
 `spec/` tree (owner, 2026-08-24, verbatim: «она конвертирует
 директорию spec для выбранного пакета (если не сказано что -
 конвертирует текущий корневой проект)»), resolved the same way the
-other project-rooted verbs resolve it. @status:spec/done
+other project-rooted verbs resolve it. @status:impl/done
 
 @fact:WRAPPERS-SHARE-THE-CORE The two package-shaped verbs are thin
 wrappers: they resolve WHICH directories to convert and then run the
@@ -142,7 +142,7 @@ conversion path, no second honesty check to drift. Canonical names
 follow the owner's own spellings (`convert-package-src`,
 `convert-spec-src`), and `convert-src` rides as an alias of
 `convert-source`, so both spelling families the owner used in chat
-resolve. @status:spec/done
+resolve. @status:impl/done
 
 ## 4. Applying it to our own tree {#application}
 

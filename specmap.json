@@ -33663,7 +33663,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:43f99ac222bbb0dc53b9cf5bc23cbbc9273edf51add6597a90738f2199c0523b",
+      "content_hash": "sha256:6f06b2d64c2d7873a6a737a50aed2f5f6542fed01262a54a704e6148300b7d59",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "PROP-051: vibe refactor — the source-refactoring umbrella",
@@ -33717,7 +33717,7 @@
     },
     {
       "anchor": "convert-source",
-      "content_hash": "sha256:24a63da23f5fe7d1e60a1cebcdfb8658e144c7fa24c2ec227fe3b805ae013107",
+      "content_hash": "sha256:8d06b3bcf62729f550f461c5f342a8f43766d3cfda92ba28836287d8524a5a42",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "3. convert-source",
@@ -33780,7 +33780,7 @@
     },
     {
       "anchor": "FROM-AND-TO",
-      "content_hash": "sha256:f12211ed19eeebc2338a1d8c20ebe9fd40af9c270ac0629ea5fc82e3ec590126",
+      "content_hash": "sha256:4e760267d704c1b85adb5fe04ffecb47e436ed54630645a567afaa5a688d40e2",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "Both directions are first-class on every converting",
@@ -33789,7 +33789,7 @@
     },
     {
       "anchor": "CONVERT-PACKAGE-SRC",
-      "content_hash": "sha256:83353591e08f751273f677d34a754da44f55e85330b5b71527c86c0af97e379f",
+      "content_hash": "sha256:7249c40a88cafd0de6d868fb1161f0caddd5aa64d4f5a66f8a126c460db0664a",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "`vibe refactor convert-package-src [--from …]",
@@ -33798,7 +33798,7 @@
     },
     {
       "anchor": "CONVERT-SPEC-SRC",
-      "content_hash": "sha256:ca3a929ea5f79b3b77bf4dafc404458d95cb65a693157846761436bdb4df3dee",
+      "content_hash": "sha256:4fc978971ea40c1305cc31bc3e179095a6286834abd68c33744d3b2caeaadce8",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "`vibe refactor convert-spec-src [--from …]",
@@ -33807,7 +33807,7 @@
     },
     {
       "anchor": "WRAPPERS-SHARE-THE-CORE",
-      "content_hash": "sha256:3c35e4e0f8bffc3e9c2f70284bd837115f5269e0cd01ced1ef85660d3603275b",
+      "content_hash": "sha256:d2521742ce0db8a598e97ab158feed4344517aa3155d8c65cde72b08ac1dd378",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.md",
       "heading": "The two package-shaped verbs are thin",
@@ -76413,7 +76413,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:05a42aef8f3fc9246fc4ff3fa5626e8143909990cb267dd968a4e660ae59f369",
+      "content_hash": "sha256:36b43585397598ae534a8c8c6e30749a1c0c6ff5d3c3d83f1e860629ecfd0fe2",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "CONVERT-SOURCE — стройка глагола и флип корпуса на XML",
@@ -76440,7 +76440,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:1488cb300a8dd64a479c583b10f5f48686b508fa11c85fa74bfed53a804b9b4f",
+      "content_hash": "sha256:772f125f5060d09af9dc93c200e0988c7eb9e7b386e0a121f00577dddd192f61",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Нарезка",
@@ -76458,7 +76458,7 @@
     },
     {
       "anchor": "K1B-FAMILY",
-      "content_hash": "sha256:d99bf4f803b0f54fa57d1726485869811476582a3e698dc15cbf6fc665d1f1b7",
+      "content_hash": "sha256:cf3b2908cd7b709d3320a6f88cd8addfa7d217b416e9ec74d4b85af8caa5065e",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K1b — семейство глаголов (довесок после посадки",
@@ -76471,7 +76471,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K2 — инвентарь.** `--dry-run --to xml` над `spec/` и",
-      "line": 42,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K2-INVENTORY"
     },
     {
@@ -76480,7 +76480,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K3 — хостовый `spec/`.** Конверсия всего дерева",
-      "line": 48,
+      "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K3-HOST-SPEC"
     },
     {
@@ -76489,7 +76489,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K4 — `packages/`.** Каждый член (world, ai-native,",
-      "line": 55,
+      "line": 59,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K4-PACKAGES"
     },
     {
@@ -76498,7 +76498,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K5 — рематериализация.** `rm -rf",
-      "line": 60,
+      "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K5-REMATERIALISE"
     },
     {
@@ -76507,7 +76507,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap",
-      "line": 67,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K6-GATES"
     },
     {
@@ -76516,7 +76516,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,",
-      "line": 73,
+      "line": 77,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K7-WINDDOWN"
     },
     {
@@ -76525,7 +76525,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "Приёмка",
-      "line": 76,
+      "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#acceptance"
     },
     {
@@ -76534,7 +76534,7 @@
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "heading": "В периметре не остаётся ни одного авторского",
-      "line": 78,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#CONVERT-ACCEPTANCE"
     },
     {

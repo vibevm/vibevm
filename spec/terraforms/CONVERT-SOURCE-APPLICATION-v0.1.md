@@ -1,6 +1,6 @@
 # CONVERT-SOURCE — стройка глагола и флип корпуса на XML {#root}
 
-_STATUS: K1 ПОСАЖЕН (`bf6a9bd9`, панель all green) — 2026-08-24 · K1b (семейство глаголов) в делегированной стройке · закон: `spec/common/PROP-051-refactor-umbrella.md` · пивот готов заранее (PROP-045, `specdoc/4`, хост уже `spec_format = "xml"`)
+_STATUS: ИНСТРУМЕНТ ГОТОВ — K1 (`bf6a9bd9`) + K1b (`2609cfc3`) посажены, обе панели all green — 2026-08-24 · дальше K2 (dry-run-инвентарь корпуса) · закон: `spec/common/PROP-051-refactor-umbrella.md` · пивот готов заранее (PROP-045, `specdoc/4`, хост уже `spec_format = "xml"`)
 
 <status stage="impl" state="work" comment="нарезка K1-K7; числа инвентаря заполняются dry-run'ом после K1"/>
 
@@ -37,7 +37,11 @@ _STATUS: K1 ПОСАЖЕН (`bf6a9bd9`, панель all green) — 2026-08-24 �
 текущий корневой проект) — тонкие врапперы над тем же ядром
 (##WRAPPERS-SHARE-THE-CORE), плюс алиас `convert-src`. Отдельный
 воркер на тёплом worktree K1 или свежий пакет — по состоянию K1.
-@status:impl/plan
+ПОСАЖЕН 2026-08-24 (`2609cfc3`): тот же codex-воркер свежим тредом на
+тёплом worktree; санкционированный сплит `refactor/{mod,convert_source}.rs`;
+отказ резолюции корня едет тем же refused-счётчиком, что и файл;
+`visible_alias` вместо скрытого clap-`alias` (воркер поймал конфликт
+пакета с требованием видимости в `--help`). @status:impl/done
 
 @fact:K2-INVENTORY **K2 — инвентарь.** `--dry-run --to xml` над `spec/` и
 `packages/` — классы по всем ~115 + ~1511 файлам; числа сюда в план.
