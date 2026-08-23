@@ -431,3 +431,61 @@ fn package_meta_roundtrips_an_explicit_frozen() {
     let back: PackageMeta = toml::from_str(&rendered).unwrap();
     assert!(back.frozen);
 }
+
+#[test]
+fn requires_visibility_metadata_roundtrips_exactly() {
+    let requires: Requires = toml::from_str(
+        r#"[packages]
+"org.vibevm/wal" = { version = "^1.0", access = "friends-only", friend = false, exclude = ["org.x/heavy"] }
+"org.vibevm/api" = { version = "^1.0", access = "public" }
+"#,
+    )
+    .unwrap();
+    assert_eq!(
+        requires.declared_access(&org(), "wal"),
+        Some(AccessLevel::FriendsOnly)
+    );
+    assert_eq!(requires.declared_friend(&org(), "wal"), Some(false));
+    assert_eq!(requires.excludes_for(&org(), "wal"), ["org.x/heavy"]);
+    assert!(!requires.friend_for(&org(), "wal"));
+    assert_eq!(
+        requires.declared_access(&org(), "api"),
+        Some(AccessLevel::Public)
+    );
+    let rendered = toml::to_string(&requires).unwrap();
+    let back: Requires = toml::from_str(&rendered).unwrap();
+    assert_eq!(back, requires);
+}
+
+#[test]
+fn requires_friend_defaults_apply_f10_only() {
+    let requires: Requires = toml::from_str(
+        r#"[packages]
+"org.vibevm/implied" = { version = "^1", access = "friends-only" }
+"org.vibevm/stopped" = { version = "^1", access = "friends-only", friend = false }
+"org.vibevm/plain" = "^1"
+"#,
+    )
+    .unwrap();
+    assert!(requires.friend_for(&org(), "implied"));
+    assert!(!requires.friend_for(&org(), "stopped"));
+    assert!(!requires.friend_for(&org(), "plain"));
+}
+
+#[test]
+fn requires_visibility_metadata_supports_every_source_kind() {
+    let requires: Requires = toml::from_str(
+        r#"[packages]
+"org.vibevm/registry" = { version = "^1", access = "private" }
+"org.vibevm/git" = { git = "https://example.test/git", rev = "abc", friend = true }
+"org.vibevm/path" = { path = "../path", exclude = [] }
+"org.vibevm/var" = { version.var = "core", access = "public" }
+"#,
+    )
+    .unwrap();
+    let rendered = toml::to_string(&requires).unwrap();
+    let back: Requires = toml::from_str(&rendered).unwrap();
+    assert_eq!(back, requires);
+    assert_eq!(back.declared_friend(&org(), "git"), Some(true));
+    assert!(back.excludes.contains_key("org.vibevm/path"));
+}

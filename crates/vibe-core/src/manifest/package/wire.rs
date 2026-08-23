@@ -13,7 +13,7 @@ use crate::error::{Error, Result};
 use crate::manifest::project::AuthKind;
 use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
-use super::capabilities::{Requires, link_key};
+use super::capabilities::{AccessLevel, Requires, link_key};
 use super::deps::{inline_to_git_dep, inline_to_path_dep, inline_to_var_dep};
 use super::{GitPackageDep, GitRefKind, LinkType, PathPackageDep, VarRegistryDep};
 
@@ -58,6 +58,12 @@ pub(super) struct InlinePackageDepWire {
     /// into `Requires::links` by the `TryFrom` conversion.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     link: Option<LinkType>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    access: Option<AccessLevel>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    friend: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    exclude: Option<Vec<String>>,
 }
 
 /// The `version` field of an inline `[requires.packages]` entry — either a
@@ -81,18 +87,25 @@ impl From<Requires> for RequiresWire {
                 .group
                 .as_ref()
                 .and_then(|g| r.links.get(&link_key(g, p.name.as_str())).copied());
+            let (access, friend, exclude) = p.group.as_ref().map_or((None, None, None), |group| {
+                visibility_wire(&r, group, p.name.as_str())
+            });
             let constraint = version_spec_to_constraint_str(&p.version);
-            // A registry dep carrying a declared `link` cannot use the
-            // bare constraint-string form — it must round-trip as an
-            // inline table so the `link` field has somewhere to live.
-            let value = match link {
-                Some(link) => RequiresPackageEntryWire::Inline(InlinePackageDepWire {
-                    version: Some(VersionFieldWire::Constraint(constraint)),
-                    link: Some(link),
-                    ..Default::default()
-                }),
-                None => RequiresPackageEntryWire::Constraint(constraint),
-            };
+            // A registry dep carrying per-edge metadata needs the inline
+            // form so every explicit declaration survives round-trip.
+            let value =
+                if link.is_some() || access.is_some() || friend.is_some() || exclude.is_some() {
+                    RequiresPackageEntryWire::Inline(InlinePackageDepWire {
+                        version: Some(VersionFieldWire::Constraint(constraint)),
+                        link,
+                        access,
+                        friend,
+                        exclude,
+                        ..Default::default()
+                    })
+                } else {
+                    RequiresPackageEntryWire::Constraint(constraint)
+                };
             packages.insert(key, value);
         }
         for g in &r.git_packages {
@@ -123,6 +136,9 @@ impl From<Requires> for RequiresWire {
                 },
                 token_env: g.token_env.clone(),
                 link: r.links.get(&link_key(&g.group, &g.name)).copied(),
+                access: r.accesses.get(&link_key(&g.group, &g.name)).copied(),
+                friend: r.friend_flags.get(&link_key(&g.group, &g.name)).copied(),
+                exclude: r.excludes.get(&link_key(&g.group, &g.name)).cloned(),
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
         }
@@ -135,6 +151,9 @@ impl From<Requires> for RequiresWire {
                     .map(|v| VersionFieldWire::Constraint(version_spec_to_constraint_str(v))),
                 path: Some(p.path.clone()),
                 link: r.links.get(&link_key(&p.group, &p.name)).copied(),
+                access: r.accesses.get(&link_key(&p.group, &p.name)).copied(),
+                friend: r.friend_flags.get(&link_key(&p.group, &p.name)).copied(),
+                exclude: r.excludes.get(&link_key(&p.group, &p.name)).cloned(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
@@ -144,6 +163,9 @@ impl From<Requires> for RequiresWire {
             let inline = InlinePackageDepWire {
                 version: Some(VersionFieldWire::Var { var: v.var.clone() }),
                 link: r.links.get(&link_key(&v.group, &v.name)).copied(),
+                access: r.accesses.get(&link_key(&v.group, &v.name)).copied(),
+                friend: r.friend_flags.get(&link_key(&v.group, &v.name)).copied(),
+                exclude: r.excludes.get(&link_key(&v.group, &v.name)).cloned(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
@@ -164,6 +186,9 @@ impl TryFrom<RequiresWire> for Requires {
         let mut path_packages: Vec<PathPackageDep> = Vec::new();
         let mut var_packages: Vec<VarRegistryDep> = Vec::new();
         let mut links: BTreeMap<String, LinkType> = BTreeMap::new();
+        let mut accesses: BTreeMap<String, AccessLevel> = BTreeMap::new();
+        let mut friend_flags: BTreeMap<String, bool> = BTreeMap::new();
+        let mut excludes: BTreeMap<String, Vec<String>> = BTreeMap::new();
         for (key, entry) in w.packages {
             let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -175,24 +200,21 @@ impl TryFrom<RequiresWire> for Requires {
                     );
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
-                    // Record the consumer's `link` declaration (PROP-009
-                    // §2.4) before the source-kind dispatch — `link` is
-                    // valid on every source kind. Every declared value is
-                    // stored, an explicit `static` included: writing
-                    // `link = "dynamic"` overrides a workspace
-                    // `[boot].default_link` / a package-suggested link, and
-                    // that intent is lost if explicit `static` is dropped.
+                    // Per-edge metadata is source-kind independent and keeps
+                    // explicit defaults distinguishable from absent fields.
                     if let Some(link) = inline.link {
                         links.insert(link_key(&group, &name), link);
                     }
-                    // Dispatch on source-kind: path wins over git wins over
-                    // registry. A registry-resolved entry whose version is a
-                    // `[workspace.versions]` placeholder is held in var_packages
-                    // for the workspace loader to resolve. Each `inline_to_*`
-                    // rejects fields belonging to a different source-kind.
-                    // The discriminating field is taken out of the wire form
-                    // and passed by value, so the callee never re-checks an
-                    // Option the dispatch already proved.
+                    if let Some(access) = inline.access {
+                        accesses.insert(link_key(&group, &name), access);
+                    }
+                    if let Some(friend) = inline.friend {
+                        friend_flags.insert(link_key(&group, &name), friend);
+                    }
+                    if let Some(exclude) = inline.exclude.clone() {
+                        excludes.insert(link_key(&group, &name), exclude);
+                    }
+                    // Source dispatch stays path, git, variable, registry.
                     let mut inline = inline;
                     if let Some(path) = inline.path.take() {
                         path_packages.push(
@@ -253,8 +275,24 @@ impl TryFrom<RequiresWire> for Requires {
             path_packages,
             var_packages,
             links,
+            accesses,
+            friend_flags,
+            excludes,
         })
     }
+}
+
+fn visibility_wire(
+    requires: &Requires,
+    group: &Group,
+    name: &str,
+) -> (Option<AccessLevel>, Option<bool>, Option<Vec<String>>) {
+    let key = link_key(group, name);
+    (
+        requires.accesses.get(&key).copied(),
+        requires.friend_flags.get(&key).copied(),
+        requires.excludes.get(&key).cloned(),
+    )
 }
 
 fn parse_pkgref_key(key: &str) -> Result<(Option<PackageKind>, Group, String)> {

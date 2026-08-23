@@ -25,6 +25,7 @@ pub mod settings;
 pub mod timestamp;
 pub mod user_config;
 pub mod values;
+pub mod visibility;
 
 pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;

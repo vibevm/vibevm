@@ -590,10 +590,10 @@ pub struct BootSnippet {
 mod fragment;
 pub use fragment::BootSnippetFragment;
 
+mod visibility;
+pub(crate) use visibility::{ManifestWire, validate_visibility};
 mod capabilities;
-pub use capabilities::{
-    ConditionalTarget, ConflictsList, Obsoletes, Provides, Requires, RequiresAny,
-};
+pub use capabilities::*;
 
 #[cfg(test)]
 #[path = "package/tests.rs"]

@@ -24,37 +24,29 @@ fn minimal_project_parses() {
 
 #[test]
 fn full_project_parses() {
-    let raw = r#"
-[project]
+    let raw = r#"[project]
 name = "my-client"
 version = "0.0.1"
 authors = ["Oleg <oleg@example.com>"]
-
 [requires.packages]
 "org.vibevm/wal" = "^0.3"
 "org.vibevm/rust-cli" = "^0.1.0"
-
 [active]
 stack = "rust-cli"
-
 [llm]
 default_provider = "anthropic"
 default_model = "claude-sonnet-4-7"
-
 [[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"
-
 [[registry]]
 name = "corporate"
 url = "git@internal:packages"
 naming = "name"
-
 [[mirror]]
 of = "vibespecs"
 url = "https://mirror.internal/vibespecs"
 priority = 1
-
 [[override]]
 pkgref = "org.vibevm/wal"
 source_url = "git@mycompany:forks/wal"
@@ -77,25 +69,20 @@ reason = "pending upstream PR"
 
 #[test]
 fn package_manifest_parses() {
-    let raw = r#"
-[package]
+    let raw = r#"[package]
 group = "org.vibevm"
 name = "wal"
 kind = "flow"
 version = "0.3.0"
 license = "EULA"
 description = "Write-Ahead Log discipline"
-
 [compatibility]
 min_vibe_version = "0.1.0"
-
 [boot_snippet]
 source = "boot/10-flow-wal.md"
 category = "flow"
-
 [provides]
 capabilities = ["discipline:wal@0.3.0"]
-
 [requires.packages]
 "org.vibevm/atomic-commits" = "^0.1"
 "#;
@@ -117,11 +104,9 @@ capabilities = ["discipline:wal@0.3.0"]
 
 #[test]
 fn workspace_root_with_members_parses() {
-    let raw = r#"
-[project]
+    let raw = r#"[project]
 name = "monorepo"
 version = "0.0.1"
-
 [workspace]
 members = ["packages/flow-wal", "packages/feat-auth", "packages/stack-*"]
 "#;
@@ -132,14 +117,11 @@ members = ["packages/flow-wal", "packages/feat-auth", "packages/stack-*"]
 
 #[test]
 fn workspace_versions_parse_and_round_trip() {
-    let raw = r#"
-[project]
+    let raw = r#"[project]
 name = "mono"
 version = "0.0.1"
-
 [workspace]
 members = ["packages/a"]
-
 [workspace.versions]
 core = "0.0.1"
 ui = "^0.3"
@@ -159,13 +141,11 @@ ui = "^0.3"
 )]
 fn root_package_composes_workspace_and_package() {
     // cargo-style: the root crate is itself publishable. PROP-007 §2.9.
-    let raw = r#"
-[package]
+    let raw = r#"[package]
 group = "org.vibevm"
 name = "umbrella"
 kind = "stack"
 version = "0.1.0"
-
 [workspace]
 members = ["packages/core"]
 "#;
@@ -195,7 +175,6 @@ group = "org.vibevm"
 name = "wal"
 kind = "flow"
 version = "0.3.0"
-
 [origin]
 upstream = "https://github.com/you/monorepo"
 path = "packages/flow-wal"
@@ -221,7 +200,6 @@ fn rejects_project_and_package_together() {
 [project]
 name = "demo"
 version = "0.0.1"
-
 [package]
 group = "org.vibevm"
 name = "demo"
@@ -252,7 +230,6 @@ fn rejects_package_role_section_without_package() {
 [project]
 name = "demo"
 version = "0.0.1"
-
 [boot_snippet]
 source = "boot/x.md"
 "#;
@@ -270,13 +247,11 @@ group = "org.vibevm"
 name = "vim"
 kind = "tool"
 version = "0.1.0"
-
 [[skill]]
 name = "vim"
 path = "skills/vim"
 description = "Drive vim from an agent"
 agents = ["claude", "opencode"]
-
 [[skill]]
 name = "vim-quickref"
 path = "skills/vim-quickref/SKILL.md"
@@ -304,7 +279,6 @@ fn rejects_skill_section_without_package() {
 [project]
 name = "demo"
 version = "0.0.1"
-
 [[skill]]
 name = "vim"
 path = "skills/vim"
@@ -329,7 +303,6 @@ group = "org.vibevm"
 name = "x"
 kind = "flow"
 version = "0.1.0"
-
 [target."context(stack:rust)".dependencies]
 packages = { "org.vibevm/rust-best-practices" = "^0.1" }
 "#;
@@ -345,7 +318,6 @@ fn rejects_unknown_top_level_section() {
 [project]
 name = "demo"
 version = "0.0.1"
-
 [mystery]
 value = 1
 "#;
@@ -358,21 +330,17 @@ fn mirrors_for_filters_and_sorts() {
 [project]
 name = "demo"
 version = "0.1.0"
-
 [[registry]]
 name = "vibespecs"
 url = "git@host:org"
-
 [[mirror]]
 of = "vibespecs"
 url = "https://a"
 priority = 2
-
 [[mirror]]
 of = "vibespecs"
 url = "https://b"
 priority = 1
-
 [[mirror]]
 of = "*"
 url = "https://catchall"
@@ -412,7 +380,6 @@ fn boot_section_parses_and_round_trips() {
 [project]
 name = "demo"
 version = "0.1.0"
-
 [boot]
 default_link = "dynamic"
 "#;
@@ -437,7 +404,6 @@ fn boot_section_is_consumer_side_allowed_without_package() {
 [project]
 name = "demo"
 version = "0.1.0"
-
 [boot]
 default_link = "static"
 "#;
@@ -450,7 +416,6 @@ fn boot_section_rejects_unknown_field() {
 [project]
 name = "demo"
 version = "0.1.0"
-
 [boot]
 mystery = "x"
 "#;
@@ -469,14 +434,11 @@ kind = "mcp"
 version = "0.6.0"
 license = "EULA"
 description = "the AI-Native Rust discipline over MCP"
-
 [requires.packages]
 {requires_line}
-
 [[binary]]
 name = "rust-ai-native-mcp"
 crate = "crates/rust-ai-native-mcp"
-
 [[mcp_server]]
 name = "rust-ai-native"
 binary = "rust-ai-native-mcp"

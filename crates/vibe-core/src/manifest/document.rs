@@ -30,7 +30,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
+use serde::ser::Error as _;
+use serde::{Deserialize, Serialize, Serializer};
 use specmark::spec;
 
 use crate::error::{Error, Result};
@@ -39,8 +40,9 @@ use crate::package_ref::PackageRef;
 use super::i18n::I18nDecl;
 use super::package::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
-    HooksDecl, LinkType, MCP_ARG_VARS, McpServerDecl, Obsoletes, PackageMeta, Provides, Recommends,
-    Requires, RequiresAny, SkillDecl, Suggests,
+    HooksDecl, LinkType, MCP_ARG_VARS, ManifestWire, McpServerDecl, Obsoletes, OverrideTable,
+    PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, VisibilityMeta,
+    validate_visibility,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -62,8 +64,8 @@ use super::{read_toml, write_toml};
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1
 )]
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[serde(try_from = "ManifestWire")]
 pub struct Manifest {
     /// `[project]` — identity of a non-publishable consumer node. Mutually
     /// exclusive with `package`.
@@ -174,6 +176,14 @@ pub struct Manifest {
     #[serde(default, rename = "override", skip_serializing_if = "Vec::is_empty")]
     pub overrides: Vec<OverrideSection>,
 
+    /// `[visibility]` — role-blind friendship and sealed-circle declarations.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<VisibilityMeta>,
+
+    /// `[override]` — path-scoped rewrites of foreign edges or nodes.
+    #[serde(default, rename = "override", skip_serializing_if = "Option::is_none")]
+    pub override_table: Option<OverrideTable>,
+
     /// `[i18n]` — project-level language preference (PROP-003 §2.7).
     #[serde(default, skip_serializing_if = "I18nDecl::is_default")]
     pub i18n: I18nDecl,
@@ -181,6 +191,17 @@ pub struct Manifest {
     /// `[boot]` — workspace-wide loading settings (PROP-009 §2.6).
     #[serde(default, skip_serializing_if = "BootSection::is_empty")]
     pub boot: BootSection,
+}
+
+impl Serialize for Manifest {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        ManifestWire::try_from(self.clone())
+            .map_err(S::Error::custom)?
+            .serialize(serializer)
+    }
 }
 
 /// `[workspace]` — declares the member packages a node coordinates.
@@ -350,6 +371,15 @@ impl Manifest {
                          or [workspace]"
                     .to_string(),
             });
+        }
+
+        if let Some(table) = &self.override_table {
+            table
+                .targets()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+        }
+        if let Some(meta) = &self.visibility {
+            validate_visibility(meta).map_err(|reason| Error::InvalidManifest { reason })?;
         }
 
         if !has_package {
@@ -559,3 +589,6 @@ impl Manifest {
 #[cfg(test)]
 #[path = "document/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "document/tests_visibility.rs"]
+mod tests_visibility;

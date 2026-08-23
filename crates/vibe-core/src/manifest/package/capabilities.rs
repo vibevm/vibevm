@@ -11,6 +11,9 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
+pub use super::visibility::{
+    AccessLevel, AllowFriendsOverride, OverrideEntry, OverrideTable, OverrideTarget, VisibilityMeta,
+};
 use super::wire::RequiresWire;
 use super::{GitPackageDep, LinkType, PathPackageDep, VarRegistryDep};
 use crate::capability_ref::CapabilityRef;
@@ -97,6 +100,12 @@ pub struct Requires {
     /// default applied) or [`Requires::declared_link`] (raw — distinguishes
     /// an absent declaration from an explicit one).
     pub links: BTreeMap<String, LinkType>,
+    /// Explicit per-edge seepage declarations, keyed by `<group>/<name>`.
+    pub accesses: BTreeMap<String, AccessLevel>,
+    /// Explicit per-edge friendship flags, keyed by `<group>/<name>`.
+    pub friend_flags: BTreeMap<String, bool>,
+    /// Per-edge deep subtree exclusions, keyed by `<group>/<name>`.
+    pub excludes: BTreeMap<String, Vec<String>>,
 }
 
 impl Requires {
@@ -107,6 +116,9 @@ impl Requires {
             && self.path_packages.is_empty()
             && self.var_packages.is_empty()
             && self.links.is_empty()
+            && self.accesses.is_empty()
+            && self.friend_flags.is_empty()
+            && self.excludes.is_empty()
     }
 
     /// Return every root dependency's `(group, name)` identity in a single
@@ -151,6 +163,83 @@ impl Requires {
     /// distinction is lost if explicit `static` is folded into "absent".
     pub fn declared_link(&self, group: &Group, name: &str) -> Option<LinkType> {
         self.links.get(&link_key(group, name)).copied()
+    }
+
+    /// The edge access explicitly declared for `<group>/<name>`.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{AccessLevel, Requires};
+    /// use vibe_core::Group;
+    ///
+    /// let group = Group::parse("org.x").unwrap();
+    /// let requires: Requires = toml::from_str(
+    ///     "[packages]\n\"org.x/api\" = { version = \"^1\", access = \"private\" }",
+    /// ).unwrap();
+    /// assert_eq!(requires.declared_access(&group, "api"), Some(AccessLevel::Private));
+    /// ```
+    pub fn declared_access(&self, group: &Group, name: &str) -> Option<AccessLevel> {
+        self.accesses.get(&link_key(group, name)).copied()
+    }
+
+    /// The effective edge access, including the public default.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{AccessLevel, Requires};
+    /// use vibe_core::Group;
+    ///
+    /// let group = Group::parse("org.x").unwrap();
+    /// assert_eq!(Requires::default().access_for(&group, "api"), AccessLevel::Public);
+    /// ```
+    pub fn access_for(&self, group: &Group, name: &str) -> AccessLevel {
+        self.declared_access(group, name).unwrap_or_default()
+    }
+
+    /// The friendship flag explicitly declared for `<group>/<name>`.
+    ///
+    /// ```
+    /// use vibe_core::manifest::Requires;
+    /// use vibe_core::Group;
+    ///
+    /// let group = Group::parse("org.x").unwrap();
+    /// let requires: Requires = toml::from_str(
+    ///     "[packages]\n\"org.x/api\" = { version = \"^1\", friend = false }",
+    /// ).unwrap();
+    /// assert_eq!(requires.declared_friend(&group, "api"), Some(false));
+    /// ```
+    pub fn declared_friend(&self, group: &Group, name: &str) -> Option<bool> {
+        self.friend_flags.get(&link_key(group, name)).copied()
+    }
+
+    /// The effective friendship flag, including the friends-only implication.
+    ///
+    /// ```
+    /// use vibe_core::manifest::Requires;
+    /// use vibe_core::Group;
+    ///
+    /// let group = Group::parse("org.x").unwrap();
+    /// let requires: Requires = toml::from_str(
+    ///     "[packages]\n\"org.x/api\" = { version = \"^1\", access = \"friends-only\" }",
+    /// ).unwrap();
+    /// assert!(requires.friend_for(&group, "api"));
+    /// ```
+    pub fn friend_for(&self, group: &Group, name: &str) -> bool {
+        self.declared_friend(group, name)
+            .unwrap_or_else(|| self.access_for(group, name) == AccessLevel::FriendsOnly)
+    }
+
+    /// The edge-scoped deep exclusions for `<group>/<name>`.
+    ///
+    /// ```
+    /// use vibe_core::manifest::Requires;
+    /// use vibe_core::Group;
+    ///
+    /// let group = Group::parse("org.x").unwrap();
+    /// assert!(Requires::default().excludes_for(&group, "api").is_empty());
+    /// ```
+    pub fn excludes_for(&self, group: &Group, name: &str) -> &[String] {
+        self.excludes
+            .get(&link_key(group, name))
+            .map_or(&[], Vec::as_slice)
     }
 }
 
