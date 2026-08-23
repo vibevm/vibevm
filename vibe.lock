@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-08-23T17:09:33Z"
+generated_at = "2026-08-23T18:34:00Z"
 schema_version = 6
 root_dependencies = [
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
@@ -18,13 +18,9 @@ name = "delegation-first"
 group = "org.vibevm.fractality"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.fractality/delegation-first/v1.0.0"
-content_hash = "sha256:1740ac118b4e5e76aecc6f85901581888bb6afeea9bc917a6582968d320df0ab"
+content_hash = "sha256:cf987cf05ed46476fbbbbdfde972589e2ddd42cb24124c11338a68531924cefc"
 files_written = []
-dependencies = [
-    "flow:org.vibevm.fractality/delegation-rules@=1.0.0",
-    "flow:org.vibevm.world/redbook@=1.0.0",
-    "stack:org.vibevm.ai-native/rust-ai-native@=1.0.0",
-]
+dependencies = ["flow:org.vibevm.fractality/delegation-rules@=1.0.0"]
 admitted_by = "root-edge"
 source_kind = "local"
 
@@ -191,12 +187,8 @@ name = "delegation-rules"
 group = "org.vibevm.fractality"
 version = "1.0.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.fractality/delegation-rules/v1.0.0"
-content_hash = "sha256:01ea0dbb19c1c3ba4af1cdfcb8c947c437f0dd2cab818672d18ba4818d57b6eb"
+content_hash = "sha256:561401426e5192d0d72012efc8d5ce1d0a84949473fd92ec8c54efb94742485b"
 files_written = []
-dependencies = [
-    "flow:org.vibevm.world/redbook@=1.0.0",
-    "stack:org.vibevm.ai-native/rust-ai-native@=1.0.0",
-]
 admitted_by = "public-chain"
 source_kind = "local"
 
