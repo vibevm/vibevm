@@ -25,7 +25,7 @@ CLAUDE-блок).</R0-INVENTORY></p>
 переезда: модуль объявляет НОВЫЕ имена, продукт ещё на старых —
 поэтому R1 и R2 садятся одним локальным актом на worktree воркеров,
 панель — по завершению R4.</R1-LAYOUT-MODULE></p>
-    <p><R2-CRATE-MIGRATIONS fact="true" status="impl/plan">**R2 — миграция крейтов (веер воркеров, дизъюнктные
+    <p><R2-CRATE-MIGRATIONS fact="true" status="impl/done">**R2 — миграция крейтов (веер воркеров, дизъюнктные
 периметры).** Пакеты: (a) vibe-workspace — bootgen/материализация/
 INDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблоны,
 команды, refactor-глагол (L5: новые spec homes + громкий рецепт на
@@ -33,7 +33,7 @@ INDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблон�
 excludes) + vibe-spec (glob/resolver); (d) vibe-index/vibe-registry/
 vibe-specdoc хвосты + xtask + tools/self-check.sh + .claude/hooks +
 specmap.toml. Все через layout-модуль; свои tempdir-скаффолды тестов
-переезжают в тех же пакетах.</R2-CRATE-MIGRATIONS></p>
+переезжают в тех же пакетах. ПОСАЖЕН 2026-08-24 (`011e6614`): четыре среза четырьмя воркерами (R2A codex — 39 файлов workspace, два сплита; R2B/R2C/R2D claudez — cli 696 тестов, чеки 500, хвосты с полным триажем остатка); боксовый коллапс на трёх сборках пережит по протоколу выживших, украденные гейты добраны боссом; панель all green.</R2-CRATE-MIGRATIONS></p>
     <p><R3-TEST-SWEEP fact="true" status="impl/plan">**R3 — тестовый свип (воркеры).** Остаточные интеграционные
 тесты и фикстуры-скаффолды всех крейтов на новую раскладку;
 byte-чувствительные голдены пакетных движков НЕ трогаются руками —

@@ -110,25 +110,50 @@ done
 
 cd "$(dirname "$0")/.." || exit 2
 
+# Progress observability (owner request 2026-08-24: a silent panel looks
+# hung): every step prints a numbered, timestamped start line, a
+# completion line with the step's wall-clock, and — while a long step is
+# silently chewing (cargo test --workspace can be minutes without a
+# byte) — a 30-second "still in step" heartbeat from a background ticker.
+STEP_TOTAL=$(grep -c '^run_step ' "$0")
+STEP_NO=0
+
 step() {
   if [ "$QUIET" -eq 0 ]; then
-    printf '\n=== %s ===\n' "$1" >&2
+    printf '\n=== [%d/%d %s] %s ===\n' "$STEP_NO" "$STEP_TOTAL" "$(date +%H:%M:%S)" "$1" >&2
   fi
 }
 
 run_step() {
   local label="$1"; shift
+  STEP_NO=$((STEP_NO + 1))
   step "$label"
-  if "$@"; then
-    return 0
-  else
-    local rc=$?
-    echo "self-check: \`$label\` failed (exit $rc)" >&2
-    if [ "$KEEP_GOING" -eq 0 ]; then
-      exit "$rc"
-    fi
-    return "$rc"
+  local started=$SECONDS ticker=""
+  if [ "$QUIET" -eq 0 ]; then
+    ( while sleep 30; do
+        printf 'self-check: … still in [%d/%d] %s, +%ss\n' \
+          "$STEP_NO" "$STEP_TOTAL" "$label" "$((SECONDS - started))" >&2
+      done ) &
+    ticker=$!
   fi
+  local rc=0
+  "$@" || rc=$?
+  if [ -n "$ticker" ]; then
+    kill "$ticker" 2>/dev/null
+    wait "$ticker" 2>/dev/null
+  fi
+  if [ "$rc" -eq 0 ]; then
+    if [ "$QUIET" -eq 0 ]; then
+      printf 'self-check: ✓ [%d/%d] %s (%ss)\n' \
+        "$STEP_NO" "$STEP_TOTAL" "$label" "$((SECONDS - started))" >&2
+    fi
+    return 0
+  fi
+  echo "self-check: \`$label\` failed (exit $rc, ${label:+step $STEP_NO/$STEP_TOTAL, }$((SECONDS - started))s)" >&2
+  if [ "$KEEP_GOING" -eq 0 ]; then
+    exit "$rc"
+  fi
+  return "$rc"
 }
 
 OVERALL=0

@@ -77719,7 +77719,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3184e4842079262a6a000c504fb4ef7cd5f2a895cc1c2515f8d73fa70345c1c2",
+      "content_hash": "sha256:ea824ba0039af8f1405b3e976b13df9e356617f179f14b20fe613296e86801f9",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "RELAYOUT — переезд на корень vibevm/ (PROP-052)",
@@ -77746,7 +77746,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:d572123ca6ff9fdd1eb137e7297de85b65322bf5d6dcda68acd860fa0a026cc6",
+      "content_hash": "sha256:90a5ab5489ce04e7f1f84b742131f9de2faa91d711c8703e61900a161ede7189",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "Нарезка R1-R7",
@@ -77764,10 +77764,10 @@
     },
     {
       "anchor": "R2-CRATE-MIGRATIONS",
-      "content_hash": "sha256:4e264353f333dd29222d5af2593af7d0945c43777dd1848234d501be6f7afbeb",
+      "content_hash": "sha256:e47bc4cd9760e64fef27bdbb48fc8b2f1eaba649eac4d42106e3fb4f9998dc12",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R2 — миграция крейтов (веер воркеров, дизъюнктные\nпериметры).** Пакеты: (a) vibe-workspace — bootgen/материализация/\nINDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблоны,\nкоманды, refactor-глагол (L5: новые spec homes + громкий рецепт на\nстаром корне); (c) vibe-check + vibe-facts + progress-core (scope.rs\nexcludes) + vibe-spec (glob/resolver); (d) vibe-index/vibe-registry/\nvibe-specdoc хвосты + xtask + tools/self-check.sh + .claude/hooks +\nspecmap.toml. Все через layout-модуль; свои tempdir-скаффолды тестов\nпереезжают в тех же пакетах. @status:impl/plan",
+      "heading": "**R2 — миграция крейтов (веер воркеров, дизъюнктные\nпериметры).** Пакеты: (a) vibe-workspace — bootgen/материализация/\nINDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблоны,\nкоманды, refactor-глагол (L5: новые spec homes + громкий рецепт на\nстаром корне); (c) vibe-check + vibe-facts + progress-core (scope.rs\nexcludes) + vibe-spec (glob/resolver); (d) vibe-index/vibe-registry/\nvibe-specdoc хвосты + xtask + tools/self-check.sh + .claude/hooks +\nspecmap.toml. Все через layout-модуль; свои tempdir-скаффолды тестов\nпереезжают в тех же пакетах. ПОСАЖЕН 2026-08-24 (`011e6614`): четыре среза четырьмя воркерами (R2A codex — 39 файлов workspace, два сплита; R2B/R2C/R2D claudez — cli 696 тестов, чеки 500, хвосты с полным триажем остатка); боксовый коллапс на трёх сборках пережит по протоколу выживших, украденные гейты добраны боссом; панель all green. @status:impl/done",
       "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R2-CRATE-MIGRATIONS"
     },

@@ -1689,3 +1689,21 @@ count; for `F0-GENPOC` it re-ran the acceptance suite itself (4/4, exit 0); for
 Everything matched. The one flaw found was a transcription artifact in a block
 the report called "verbatim" — a duplicated fragment of one line — which changed
 no conclusion but is exactly why the rule is *re-measure*, not *re-read*.
+
+@fact:fact-two-cold-cargo-builds-are-this-boxes-ceiling **Потолок этого
+бокса — ДВА холодных cargo-воркера, не три (2026-08-24, оплачено волной
+смертей).** Три параллельных worktree-сборки (R2A/R2B/R2C) исчерпали
+процессные ресурсы Windows: MSVC `link.exe` начал падать с
+`0xc0000142` (DLL initialization failure), затем перестало работать
+САМО СОЗДАНИЕ процессов (даже `Get-Date`), и волна убила все три
+харнесс-задачи разом (воркеры-выжившие дописали, что успели; R2A умер,
+не добежав до финальных гейтов — хвост добрал босс). Правила: (i)
+холодных cargo-воркеров — максимум 2 одновременно, третий слот только
+текстовый; (ii) сигнатура `0xc0000142`/отказ спавна шелла = ресурсный
+коллапс бокса, не дефект пакета — лечится последовательностью, не
+ретраем; (iii) вотчер за выжившими — инструмент Monitor харнесса
+(sleep-циклы фоновых Bash-задач культятся политикой), критерий смерти —
+result-событие ИЛИ ≥5 мин тишины лога; (iv) провизия worktree топит
+`find -newer PACKET` (checkout моложе пакета) — босс касается пакета
+`touch`-ем ПОСЛЕДНИМ актом провизии, а пакеты несут newermt-окно.
+@status:impl/done
