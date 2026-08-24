@@ -80,7 +80,7 @@ const MANIFEST: &str = "sync-engines.toml";
 /// xtask carries no vibe-core edge; the single home of the root names
 /// is `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4 relayout
 /// sweep retires this duplication.
-const FAMILY_ROOT: &str = "packages/org.vibevm.ai-native";
+const FAMILY_ROOT: &str = "vibevm/vibepacks/org.vibevm.ai-native";
 
 /// Directories the enumeration below never descends into. Build output
 /// and VCS state are not content (same reasoning as `file_set`);
@@ -276,7 +276,21 @@ fn mirror_crate(src: &Path, dst: &Path) -> Result<usize> {
 fn sync_all(root: &Path, manifest: &SyncManifest, check: bool) -> Result<(usize, Vec<String>)> {
     let mut ops = 0usize;
     let mut drift_lines = Vec::new();
-    for set in &manifest.sync {
+    let sets_total = manifest.sync.len();
+    for (set_no, set) in manifest.sync.iter().enumerate() {
+        // Per-set progress (owner request 2026-08-24): a full mirror walks
+        // thousands of files and used to look hung; the narration goes to
+        // stderr so the summary line on stdout stays the machine surface.
+        let started = std::time::Instant::now();
+        let ops_before = ops;
+        let drift_before = drift_lines.len();
+        eprintln!(
+            "sync-engines: [{}/{sets_total}] {} → {} target(s) × {} crate(s)…",
+            set_no + 1,
+            set.source_root,
+            set.targets.len(),
+            set.crates.len(),
+        );
         for target in &set.targets {
             for krate in &set.crates {
                 let src = root.join(&set.source_root).join(krate);
@@ -307,6 +321,27 @@ fn sync_all(root: &Path, manifest: &SyncManifest, check: bool) -> Result<(usize,
                     ops += mirror_crate(&src, &dst)?;
                 }
             }
+        }
+        let secs = started.elapsed().as_secs();
+        if check {
+            let drift_here = drift_lines.len() - drift_before;
+            eprintln!(
+                "sync-engines: [{}/{sets_total}] {} — {} ({secs}s)",
+                set_no + 1,
+                set.source_root,
+                if drift_here == 0 {
+                    "clean".to_string()
+                } else {
+                    format!("{drift_here} drift item(s)")
+                },
+            );
+        } else {
+            eprintln!(
+                "sync-engines: [{}/{sets_total}] {} — {} file op(s) ({secs}s)",
+                set_no + 1,
+                set.source_root,
+                ops - ops_before,
+            );
         }
     }
     Ok((ops, drift_lines))
