@@ -1,0 +1,545 @@
+schema = 1
+source_hash = "sha256:85d32c735119970ff3bdb288e92be66bb576ffb5283c4139251a819ac6c1797c"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:0aad7efa292bb8468aa127cde5b598eee215b6a73c178e70e592a0652bccc3fa"
+
+[[file]]
+source = "Cargo.lock"
+output = "Cargo.lock"
+disposition = "copied"
+
+[[file]]
+source = "Cargo.toml"
+output = "Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "conform-baseline.json"
+output = "conform-baseline.json"
+disposition = "copied"
+
+[[file]]
+source = "conform.toml"
+output = "conform.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/Cargo.toml"
+output = "crates/core-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/baseline.rs"
+output = "crates/core-ai-native-conform/src/baseline.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/config/coverage.rs"
+output = "crates/core-ai-native-conform/src/config/coverage.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/config/tests.rs"
+output = "crates/core-ai-native-conform/src/config/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/config/tombstones.rs"
+output = "crates/core-ai-native-conform/src/config/tombstones.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/config.rs"
+output = "crates/core-ai-native-conform/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/facts.rs"
+output = "crates/core-ai-native-conform/src/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/finding.rs"
+output = "crates/core-ai-native-conform/src/finding.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/lib.rs"
+output = "crates/core-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/budget.rs"
+output = "crates/core-ai-native-conform/src/rules/budget.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/citations.rs"
+output = "crates/core-ai-native-conform/src/rules/citations.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+output = "crates/core-ai-native-conform/src/rules/deviation_reason_tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/diagnostics.rs"
+output = "crates/core-ai-native-conform/src/rules/diagnostics.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/go.rs"
+output = "crates/core-ai-native-conform/src/rules/go.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/go_parity.rs"
+output = "crates/core-ai-native-conform/src/rules/go_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/matrices.rs"
+output = "crates/core-ai-native-conform/src/rules/matrices.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/mod.rs"
+output = "crates/core-ai-native-conform/src/rules/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/naming.rs"
+output = "crates/core-ai-native-conform/src/rules/naming.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/position.rs"
+output = "crates/core-ai-native-conform/src/rules/position.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/structure.rs"
+output = "crates/core-ai-native-conform/src/rules/structure.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/tests.rs"
+output = "crates/core-ai-native-conform/src/rules/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/typescript.rs"
+output = "crates/core-ai-native-conform/src/rules/typescript.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/rules/typescript_parity.rs"
+output = "crates/core-ai-native-conform/src/rules/typescript_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/sarif.rs"
+output = "crates/core-ai-native-conform/src/sarif.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/store/tests.rs"
+output = "crates/core-ai-native-conform/src/store/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/src/store.rs"
+output = "crates/core-ai-native-conform/src/store.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-conform/tests/sarif_ingest.rs"
+output = "crates/core-ai-native-conform/tests/sarif_ingest.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/Cargo.toml"
+output = "crates/core-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/capture.rs"
+output = "crates/core-ai-native-mcp/src/capture.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/error.rs"
+output = "crates/core-ai-native-mcp/src/error.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/lib.rs"
+output = "crates/core-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/server.rs"
+output = "crates/core-ai-native-mcp/src/server.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/toolset.rs"
+output = "crates/core-ai-native-mcp/src/toolset.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-mcp/src/wire.rs"
+output = "crates/core-ai-native-mcp/src/wire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/Cargo.toml"
+output = "crates/core-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/config.rs"
+output = "crates/core-ai-native-specmap/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/cscan.rs"
+output = "crates/core-ai-native-specmap/src/cscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/explain.rs"
+output = "crates/core-ai-native-specmap/src/explain.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/fingerprint.rs"
+output = "crates/core-ai-native-specmap/src/fingerprint.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/generated/mod.rs"
+output = "crates/core-ai-native-specmap/src/generated/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+output = "crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/index/tests.rs"
+output = "crates/core-ai-native-specmap/src/index/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/index.rs"
+output = "crates/core-ai-native-specmap/src/index.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/jtd/positions.rs"
+output = "crates/core-ai-native-specmap/src/jtd/positions.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/jtd/tests.rs"
+output = "crates/core-ai-native-specmap/src/jtd/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/jtd.rs"
+output = "crates/core-ai-native-specmap/src/jtd.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/ledger.rs"
+output = "crates/core-ai-native-specmap/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/lib.rs"
+output = "crates/core-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/mdspec/excludes.rs"
+output = "crates/core-ai-native-specmap/src/mdspec/excludes.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/mdspec/lines.rs"
+output = "crates/core-ai-native-specmap/src/mdspec/lines.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/mdspec/tests.rs"
+output = "crates/core-ai-native-specmap/src/mdspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/mdspec/walk.rs"
+output = "crates/core-ai-native-specmap/src/mdspec/walk.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/mdspec.rs"
+output = "crates/core-ai-native-specmap/src/mdspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/ratchet.rs"
+output = "crates/core-ai-native-specmap/src/ratchet.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/rscan.rs"
+output = "crates/core-ai-native-specmap/src/rscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/scanner.rs"
+output = "crates/core-ai-native-specmap/src/scanner.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/testgate.rs"
+output = "crates/core-ai-native-specmap/src/testgate.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/tripwire.rs"
+output = "crates/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/blocks.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/blocks.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/doc.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/doc.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/facts.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/mdout.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/mdout.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/tests.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark/Cargo.toml"
+output = "crates/core-ai-native-specmark/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark/src/lib.rs"
+output = "crates/core-ai-native-specmark/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark/tests/usage.rs"
+output = "crates/core-ai-native-specmark/tests/usage.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark-grammar/Cargo.toml"
+output = "crates/core-ai-native-specmark-grammar/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+output = "crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmark-grammar/src/lib.rs"
+output = "crates/core-ai-native-specmark-grammar/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "schemas/specmap.example.json"
+output = "schemas/specmap.example.json"
+disposition = "copied"
+
+[[file]]
+source = "schemas/specmap.jtd.json"
+output = "schemas/specmap.jtd.json"
+disposition = "copied"
+
+[[file]]
+source = "specmap.toml"
+output = "specmap.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/00-MANIFESTO.xml"
+output = "vibevm/vibespecs/00-MANIFESTO.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml"
+output = "vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml"
+output = "vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/03-RAID-PLAYBOOK.xml"
+output = "vibevm/vibespecs/03-RAID-PLAYBOOK.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/04-SWEEP-PLAYBOOK.xml"
+output = "vibevm/vibespecs/04-SWEEP-PLAYBOOK.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/05-CAMPAIGN-FORM.xml"
+output = "vibevm/vibespecs/05-CAMPAIGN-FORM.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/06-WAL-CONVENTION.xml"
+output = "vibevm/vibespecs/06-WAL-CONVENTION.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/appendix/ATLAS.xml"
+output = "vibevm/vibespecs/appendix/ATLAS.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml"
+output = "vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
+output = "vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-MODERN-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-MODERN-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-GO-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-GO-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-SPRING-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-SPRING-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-JAVA-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-KOTLIN-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-KOTLIN-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-PYTHON-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-PYTHON-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/legacy-projections/GUIDE-TYPESCRIPT-v0.1.xml"
+output = "vibevm/vibespecs/legacy-projections/GUIDE-TYPESCRIPT-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml"
+output = "vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml"
+output = "vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml"
+output = "vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/mechanisms/MCP-CORE-v0.1.xml"
+output = "vibevm/vibespecs/mechanisms/MCP-CORE-v0.1.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml"
+output = "vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml"
+disposition = "copied"

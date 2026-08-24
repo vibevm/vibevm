@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:513425721227cf0f93e80c0687e5aeee99785f90417f0ccd17cbbf1cce6e8a6d"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:990d5a556ffe892a91fee88a515b3da233044ab9a988af831a62e4b10ae9d5e0"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
+output = "vibevm/vibespecs/boot/62-flow-source-mirrors.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/source-mirrors/daily-loop.xml"
+output = "vibevm/vibespecs/flows/source-mirrors/daily-loop.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml"
+output = "vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml"
+disposition = "copied"

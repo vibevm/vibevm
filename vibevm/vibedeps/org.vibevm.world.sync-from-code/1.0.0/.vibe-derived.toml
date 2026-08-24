@@ -1,0 +1,45 @@
+schema = 1
+source_hash = "sha256:fe5cb5e5bae0ca51e48c78fbe6b853f3fe15f7c7174093f65679fe8100d07cff"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:1921718d4e81a1b8a23230b87c348609b2addf4c443daae140c481ab974806c0"
+
+[[file]]
+source = "LICENSE"
+output = "LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+output = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+output = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/sync-from-code/review-workflow.xml"
+output = "vibevm/vibespecs/flows/sync-from-code/review-workflow.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml"
+output = "vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml"
+disposition = "copied"

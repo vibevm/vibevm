@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:bfaf10ec5162680e88aec0e612dc8e5bc319fb6a6f7a29d32c977bd706436a9f"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:edce2e08e6dbdf4d45936cd05297bf9a83c6049584a450eb80b129bd73c2cb2d"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
+output = "vibevm/vibespecs/boot/40-flow-campaign-plans.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
+output = "vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml"
+output = "vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/campaign-plans/phase-gates.xml"
+output = "vibevm/vibespecs/flows/campaign-plans/phase-gates.xml"
+disposition = "copied"

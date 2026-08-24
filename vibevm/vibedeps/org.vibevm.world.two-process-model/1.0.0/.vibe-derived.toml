@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:1c449058f2d92e1d54d937703d3f92f77dfcf20fc506db405962ede4dcb970e9"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:e418e4b78bb52bd342581e9174a195e3e041b4efaca25f1c6e852c52142ccd85"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/05-flow-two-process-model.xml"
+output = "vibevm/vibespecs/boot/05-flow-two-process-model.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml"
+output = "vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml"
+output = "vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml"
+output = "vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml"
+disposition = "copied"

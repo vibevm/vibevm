@@ -1,0 +1,50 @@
+schema = 1
+source_hash = "sha256:282f6d9224c9500b529f3a3cff78af490733107d429cc5c61cc26ddf11578f00"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:22fceb0a1f91741a467150b65bb4eb15542644057b9f3477dcf60298fa80772a"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/10-flow-wal.xml"
+output = "vibevm/vibespecs/boot/10-flow-wal.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/wal/cold-resume.xml"
+output = "vibevm/vibespecs/flows/wal/cold-resume.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/wal/morning-routine.xml"
+output = "vibevm/vibespecs/flows/wal/morning-routine.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/wal/session-end-hook.xml"
+output = "vibevm/vibespecs/flows/wal/session-end-hook.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/skills/wal-status/SKILL.md"
+output = "vibevm/vibespecs/skills/wal-status/SKILL.xml"
+disposition = "converted"

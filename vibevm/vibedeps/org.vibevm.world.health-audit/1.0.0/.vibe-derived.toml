@@ -1,0 +1,50 @@
+schema = 1
+source_hash = "sha256:c5fe5531b42cdd076322b1abef1922c883a21896012cc30ed15fe87d41d40944"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:b12fb8bc0c1bbacdcf58a18fd5e75f173d0ef72a691c9b6495aaa903cc4df0a9"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/42-flow-health-audit.xml"
+output = "vibevm/vibespecs/boot/42-flow-health-audit.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/42a-wal-binding.xml"
+output = "vibevm/vibespecs/boot/42a-wal-binding.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/health-audit/audit-checklist.xml"
+output = "vibevm/vibespecs/flows/health-audit/audit-checklist.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/health-audit/running-an-audit.xml"
+output = "vibevm/vibespecs/flows/health-audit/running-an-audit.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/skills/health-audit/SKILL.md"
+output = "vibevm/vibespecs/skills/health-audit/SKILL.xml"
+disposition = "converted"

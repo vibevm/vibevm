@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:219cf85d21a7cc1d48ffa8a8585e33819ffbd315e02a8aa06fcf7df2781ca460"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:60fe01b366d63a1c54596d4c3c9164ac8e40f2eb21f1a6f2b49da97f395ecf7b"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/65-flow-managed-blocks.xml"
+output = "vibevm/vibespecs/boot/65-flow-managed-blocks.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml"
+output = "vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml"
+output = "vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml"
+disposition = "copied"

@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:efa3f0eee72e836ae44efac14cb42a2e2b383ac5d553cdd2392e721dbc0bf289"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:6386331ec1b12fa9d5e234f0329ececfcf27f547e977c96be7280751b1957395"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/17-flow-spec-genres.xml"
+output = "vibevm/vibespecs/boot/17-flow-spec-genres.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/spec-genres/design-docs.xml"
+output = "vibevm/vibespecs/flows/spec-genres/design-docs.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml"
+output = "vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml"
+disposition = "copied"

@@ -1,0 +1,30 @@
+schema = 1
+source_hash = "sha256:20d9fb1eba8956e660e6bc05c837772ad5433e1f1dea70d48a0a5f7a0cd3302a"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:195a9a48188c090847eccf180db7434e1621f945b0fa5cdffd8aa8a17b393dff"
+
+[[file]]
+source = "LICENSE"
+output = "LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
+output = "vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"
+disposition = "copied"

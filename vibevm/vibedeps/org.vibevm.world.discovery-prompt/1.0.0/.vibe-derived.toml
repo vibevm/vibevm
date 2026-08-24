@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:ccf0a9e67479244393904da14962b76538dc2d438f64898c8033213ce85efbcf"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:b88c0dbc006c3794d47813bcf8489c7d888727af64f9f0454c68ee1baa393705"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
+output = "vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
+output = "vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/discovery-prompt/usage.xml"
+output = "vibevm/vibespecs/flows/discovery-prompt/usage.xml"
+disposition = "copied"

@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:2cebc951c04713d795ffed805adb671c0b473b9128d160714ce0a91882d944c7"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:058cd19aa9f1fa4eeaa31f595368a88b39d3953113a74c2fe15e76cacc219fa3"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/52-flow-comparative-research.xml"
+output = "vibevm/vibespecs/boot/52-flow-comparative-research.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml"
+output = "vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/comparative-research/research-template.xml"
+output = "vibevm/vibespecs/flows/comparative-research/research-template.xml"
+disposition = "copied"

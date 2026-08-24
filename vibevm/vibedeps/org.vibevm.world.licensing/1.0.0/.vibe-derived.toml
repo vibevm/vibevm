@@ -1,0 +1,45 @@
+schema = 1
+source_hash = "sha256:58540c6a82cb326e476df221578884054a0320a5f9ac317c7da7bec8a7bb5331"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:989333570850f355a543df2d6aca8647bd024898b4f939a05ace2dd1a919d021"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/60-flow-licensing.xml"
+output = "vibevm/vibespecs/boot/60-flow-licensing.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/licensing/dependency-licenses.xml"
+output = "vibevm/vibespecs/flows/licensing/dependency-licenses.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/licensing/eula-template.xml"
+output = "vibevm/vibespecs/flows/licensing/eula-template.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/skills/draft-eula/SKILL.md"
+output = "vibevm/vibespecs/skills/draft-eula/SKILL.xml"
+disposition = "converted"

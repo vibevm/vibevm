@@ -1,0 +1,2220 @@
+schema = 1
+source_hash = "sha256:a9727b441ae67b6364e8709ed894130f6f9a5f4428d786fbda7539af463a9e32"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:7a22267ddbab9941b85651137935cca43456724d4c1141d499703a25d06a74ec"
+
+[[file]]
+source = "AGENTS.md"
+output = "AGENTS.md"
+disposition = "copied"
+
+[[file]]
+source = "CLAUDE.md"
+output = "CLAUDE.md"
+disposition = "copied"
+
+[[file]]
+source = "GEMINI.md"
+output = "GEMINI.md"
+disposition = "copied"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.lock"
+output = "vibe.lock"
+disposition = "copied"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-addressable-specs/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-addressable-specs/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/LICENSE"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/conventional-commits.md"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/conventional-commits.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/spec/flows/atomic-commits/splitting-large-changes.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-atomic-commits/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-atomic-commits/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/disclosure-alternative.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/enforcement-checklist.md"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/spec/flows/attribution-policy/enforcement-checklist.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-attribution-policy/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-attribution-policy/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/execution-ledger.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/phase-gates.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-campaign-plans/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-campaign-plans/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/research-template.md"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/spec/flows/comparative-research/research-template.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-comparative-research/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-comparative-research/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/failure-modes.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-conflict-protocol/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.lock"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.lock"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/README.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/baseline.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/baseline.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/config.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/facts.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/finding.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/finding.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/lib.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/budget.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/budget.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/diagnostics.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/diagnostics.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/mod.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/structure.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/structure.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/tests.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/typescript.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/rules/typescript.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/sarif.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/sarif.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/store.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-conform/src/store.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/capture.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/capture.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/error.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/error.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/lib.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/server.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/server.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/toolset.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/toolset.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/wire.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-mcp/src/wire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/config.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/explain.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/explain.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/mod.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/index.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/index.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ledger.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/lib.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/mdspec.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/mdspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ratchet.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/ratchet.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/rscan.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/rscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/scanner.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/scanner.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/testgate.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/testgate.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/tripwire.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/src/lib.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/tests/usage.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark/tests/usage.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/Cargo.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib.rs"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/crates/core-ai-native-specmark-grammar/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/00-MANIFESTO.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/00-MANIFESTO.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/01-PATTERN-CARD-FORMAT.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/01-PATTERN-CARD-FORMAT.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/03-RAID-PLAYBOOK.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/03-RAID-PLAYBOOK.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/05-CAMPAIGN-FORM.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/05-CAMPAIGN-FORM.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/06-WAL-CONVENTION.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/06-WAL-CONVENTION.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/ATLAS.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/ATLAS.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/CONTRADICTION-MAP.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/appendix/CONTRADICTION-MAP.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/MCP-CORE-v0.1.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/MCP-CORE-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/specmap.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/specmap.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-core-ai-native/0.7.0/vibe.toml"
+output = "vibevm/vibedeps/flow-core-ai-native/0.7.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/revisit-triggers.md"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/revisit-triggers.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-decision-records/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-decision-records/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/usage.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-discovery-prompt/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/audit-checklist.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/audit-checklist.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/running-an-audit.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/running-an-audit.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-health-audit/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-health-audit/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/dependency-licenses.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/spec/flows/licensing/eula-template.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/SKILL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-licensing/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-licensing/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/adoption-guide.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-managed-blocks/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-managed-blocks/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/authoring-rules.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/authoring-rules.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/test-template.md"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/spec/flows/manual-tests/test-template.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-manual-tests/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-manual-tests/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/mfbt-mode.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/writing-a-codeword.md"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/spec/flows/operating-modes/writing-a-codeword.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-operating-modes/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-operating-modes/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/naming-forks.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/naming-forks.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/ref-grammar.md"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/spec/flows/qualified-naming/ref-grammar.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-qualified-naming/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-qualified-naming/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/README.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/README.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-1-two-process-model.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-3-memory-individual.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/spec/book/ru/chapter-3-memory-individual.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-redbook/0.2.0/vibe.toml"
+output = "vibevm/vibedeps/flow-redbook/0.2.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/scope-discipline.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-secrets-hygiene/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/daily-loop.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/spec/flows/source-mirrors/fanout-mechanics.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-source-mirrors/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-source-mirrors/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/design-docs.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/design-docs.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/when-to-write-what.md"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/spec/flows/spec-genres/when-to-write-what.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-spec-genres/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-spec-genres/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/LICENSE"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/LICENSE"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/review-workflow.md"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/review-workflow.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/when-to-apply.md"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/spec/flows/sync-from-code/when-to-apply.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-sync-from-code/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-sync-from-code/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-tool-design-lessons/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/README.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/cognitive-load-split.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/spec/flows/two-process-model/files-as-ipc.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-two-process-model/0.1.0/vibe.toml"
+output = "vibevm/vibedeps/flow-two-process-model/0.1.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/LICENSE.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/README.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/morning-routine.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/flows/wal/session-end-hook.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md"
+output = "vibevm/vibedeps/flow-wal/0.2.0/spec/skills/wal-status/SKILL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/flow-wal/0.2.0/vibe.toml"
+output = "vibevm/vibedeps/flow-wal/0.2.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.lock"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.lock"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/LICENSE.md"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/README.md"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/main.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/src/tools_tcg.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/common/mod.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/common/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/server_replay.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-mcp/tests/server_replay.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/capture.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/capture.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/error.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/error.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/server.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/server.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/toolset.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/toolset.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/wire.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-mcp/src/wire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/spec/tools/discipline-mcp-rust.md"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/spec/tools/discipline-mcp-rust.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/specmap.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/specmap.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/vibe.toml"
+output = "vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/README.md"
+output = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/vibe.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native/0.7.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.lock"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.lock"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/LICENSE.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/README.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/README.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/codemod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/fast_loop.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/floor.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/health.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/init.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/test_gate.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/trace.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-cli/tests/fresh_project.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform/tests/catches_violations.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-env-audit/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-specmap/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/bench.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/main.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/src/serve.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg/tests/finding_parity.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/frame.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/src/position.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/rust-ai-native-tcg-bridge/tests/live_oracle.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/baseline.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/finding.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/diagnostics.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/rules/typescript.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-conform/src/store.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/config.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/explain.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/index.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/ratchet.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/rscan.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/scanner.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/testgate.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark/tests/usage.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/Cargo.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/INDEX.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/INDEX.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-a-generators.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-a-generators.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-b-typed-builders.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-b-typed-builders.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-c-runnable-contracts.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-c-runnable-contracts.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-d-differential-oracle.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-d-differential-oracle.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-e-fast-loop.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-e-fast-loop.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-f-structured-diagnostics.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-f-structured-diagnostics.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-g-doctests.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-g-doctests.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-h-simulators.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-h-simulators.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-i-codemods.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/cards/scaffold-i-codemods.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/specmap.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/specmap.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/vibe.toml"
+output = "vibevm/vibedeps/stack-rust-ai-native-lang/0.7.0/vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+output = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/INDEX.md"
+output = "vibevm/vibespecs/boot/INDEX.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibevm/vibespecs/flows/delegation-rules/DECISION-MATRIX.xml"
+output = "vibevm/vibespecs/flows/delegation-rules/DECISION-MATRIX.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/_template.xml"
+output = "vibevm/vibespecs/flows/delegation-rules/playbooks/_template.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5-turbo.xml"
+output = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5-turbo.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5.2.xml"
+output = "vibevm/vibespecs/flows/delegation-rules/playbooks/glm-5.2.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/delegation-rules/routing-policy.toml"
+output = "vibevm/vibespecs/flows/delegation-rules/routing-policy.toml"
+disposition = "copied"

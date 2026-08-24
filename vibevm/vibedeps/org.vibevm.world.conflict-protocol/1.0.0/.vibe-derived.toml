@@ -1,0 +1,45 @@
+schema = 1
+source_hash = "sha256:d0d0d6c9eb86965c1e860d8bde78dfddda6221a0c5a05b4ad3cc4cbb6c46be13"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:19dabf1eb11c6e79e140d08a70b182aaeb638d8e093c6089c5fbb46bed3d0d69"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
+output = "vibevm/vibespecs/boot/35-flow-conflict-protocol.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/35a-wal-binding.xml"
+output = "vibevm/vibespecs/boot/35a-wal-binding.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml"
+output = "vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml"
+output = "vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml"
+disposition = "copied"

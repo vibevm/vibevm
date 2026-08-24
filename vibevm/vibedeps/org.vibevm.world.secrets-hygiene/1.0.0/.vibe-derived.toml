@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:a0fadcb6acebe689da3a69674b4286d1b5e6613126d76cebcf54bb6efe7913b5"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:9f88ae60e069db8768ce69f28ce849052b67fd253c3de99ccf6460a3508699cb"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+output = "vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml"
+output = "vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"
+output = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"
+disposition = "copied"

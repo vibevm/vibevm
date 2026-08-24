@@ -1,0 +1,55 @@
+schema = 1
+source_hash = "sha256:fa0471032b687d1b0d76d3c373375d2e813f47c047ef9415f5177726a91f0801"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:fdcc33983f5b6640a1302885f2509a136278700bb36fa13a8d75fb88903d4645"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/book/README.md"
+output = "vibevm/vibespecs/book/README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml"
+output = "vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/book/ru/chapter-2-shared-state-and-files.xml"
+output = "vibevm/vibespecs/book/ru/chapter-2-shared-state-and-files.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/book/ru/chapter-3-memory-individual.xml"
+output = "vibevm/vibespecs/book/ru/chapter-3-memory-individual.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/03-flow-redbook.xml"
+output = "vibevm/vibespecs/boot/03-flow-redbook.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/03a-member-wal.xml"
+output = "vibevm/vibespecs/boot/03a-member-wal.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/03b-member-wal-specspaces.xml"
+output = "vibevm/vibespecs/boot/03b-member-wal-specspaces.xml"
+disposition = "copied"

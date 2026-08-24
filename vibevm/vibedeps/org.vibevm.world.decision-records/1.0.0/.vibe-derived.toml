@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:58a4905681bcf573c6058f453194ac46cd49f21b11b0ffec7e252b3582fb0ba9"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:0ceb1b9914a7676939dfc48bb73a2f60f19806ac6593bc05d106e3c112812198"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/25-flow-decision-records.xml"
+output = "vibevm/vibespecs/boot/25-flow-decision-records.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/decision-records/record-template.xml"
+output = "vibevm/vibespecs/flows/decision-records/record-template.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/decision-records/revisit-triggers.xml"
+output = "vibevm/vibespecs/flows/decision-records/revisit-triggers.xml"
+disposition = "copied"

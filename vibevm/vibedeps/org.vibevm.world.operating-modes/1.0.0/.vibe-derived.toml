@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:14df4a5727d6e3d006cb49da609e6ff6b72d0a83af23565f5adbf70da6e52e9c"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:fa3999b0ae7765e1c9b8fe5e57a0d83956ec246697267b3115b7b093d74fd2d7"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/45-flow-operating-modes.xml"
+output = "vibevm/vibespecs/boot/45-flow-operating-modes.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml"
+output = "vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml"
+output = "vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml"
+disposition = "copied"

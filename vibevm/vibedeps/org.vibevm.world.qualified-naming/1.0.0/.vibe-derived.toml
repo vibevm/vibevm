@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:af4359813fdb32960bd221180ca2c3dc02f9d5d0cf00c5723f1d5352e0914e6a"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:dbf9d7e5333e7c7871268a159be6343672f2bd1dc533a86d7f00c1788b945eb4"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+output = "vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/qualified-naming/naming-forks.xml"
+output = "vibevm/vibespecs/flows/qualified-naming/naming-forks.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml"
+output = "vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml"
+disposition = "copied"

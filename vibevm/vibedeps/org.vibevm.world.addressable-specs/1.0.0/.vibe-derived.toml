@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:41523f2fb4e3d22111e27fa35f7ab1b6b766d93b6bf5fc690c6f4004406cd481"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:6cc9cfae8d1fc1fd1ade42dd0e766a43669bfe54be17c7d444efd214e487bfec"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
+output = "vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml"
+output = "vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml"
+output = "vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml"
+disposition = "copied"

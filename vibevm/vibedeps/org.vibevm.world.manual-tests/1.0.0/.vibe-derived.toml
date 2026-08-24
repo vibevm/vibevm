@@ -1,0 +1,40 @@
+schema = 1
+source_hash = "sha256:46d3f0f2b8b3ace13dd07c853798716e26e970bd926b83628b7a080c612235dc"
+output_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:9e54319622daae7a4d9831f29a9f494a4d6d6f949dbe233bf7ab7fc8129efc94"
+
+[[file]]
+source = "LICENSE.md"
+output = "LICENSE.md"
+disposition = "copied"
+
+[[file]]
+source = "README.md"
+output = "README.xml"
+disposition = "converted"
+
+[[file]]
+source = "vibe.toml"
+output = "vibe.toml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/boot/44-flow-manual-tests.xml"
+output = "vibevm/vibespecs/boot/44-flow-manual-tests.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
+output = "vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/manual-tests/authoring-rules.xml"
+output = "vibevm/vibespecs/flows/manual-tests/authoring-rules.xml"
+disposition = "copied"
+
+[[file]]
+source = "vibevm/vibespecs/flows/manual-tests/test-template.xml"
+output = "vibevm/vibespecs/flows/manual-tests/test-template.xml"
+disposition = "copied"
