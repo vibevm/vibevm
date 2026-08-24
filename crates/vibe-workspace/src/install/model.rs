@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Manifest, SpecFormat};
-use vibe_core::{Group, PackageKind};
+use vibe_core::{ContentHash, Group, PackageKind};
 
 use crate::hooks::HookReport;
 
@@ -27,6 +27,9 @@ pub struct ResolvedDep {
     /// On-disk directory holding the package's fetched content tree — the
     /// source `vibedeps` materialisation copies verbatim.
     pub content_dir: PathBuf,
+    /// Fetched shippable-tree identity. Boot-only reconstruction may carry
+    /// `None`; every path that materialises a slot requires `Some`.
+    pub source_hash: Option<ContentHash>,
     /// The package's parsed manifest (its `vibe.toml`) — read for the
     /// `[boot_snippet]` contribution.
     pub manifest: Manifest,
@@ -55,8 +58,8 @@ pub struct ResolvedDep {
 /// [`SlotVerifier`] seam, consumed by the materialise pass below.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SlotCheck {
-    /// The slot's tree hashes to the recorded `content_hash` — the fast
-    /// path may accept it without copying.
+    /// The slot's record and payload verify, or its legacy tree hashes to the
+    /// recorded `content_hash`; the fast path may accept it without copying.
     Verified,
     /// The slot's tree diverges from the recorded `content_hash` —
     /// re-materialise it and warn, naming the package and both hashes.
@@ -79,8 +82,8 @@ pub enum SlotCheck {
 /// The `verify`-mode slot spot-check seam (PROP-011 §2.3/§5.2). The
 /// materialise pass calls it for a present, immutable slot **only** under
 /// [`SlotIntegrity::Verify`], handing the resolved dep and the slot's
-/// absolute path; the implementation hashes the slot and compares against
-/// the hash the resolution records.
+/// absolute path. New slots verify their typed record and recorded payload;
+/// legacy slots retain their historical tree-hash checks.
 ///
 /// A seam, not a call, because this crate deliberately depends on neither
 /// hash crate: `compute_content_hash` lives in `vibe-registry` (and its
@@ -114,8 +117,9 @@ pub enum SlotCheck {
 /// assert!(consult(&AlwaysDiverged));
 /// ```
 pub trait SlotVerifier {
-    /// The fetched source tree's recipe-labelled content hash, used as the
-    /// immutable input identity in a transformed slot manifest.
+    /// The verifier's fetched expected source identity. Materialisation reads
+    /// [`ResolvedDep::source_hash`] directly; this lookup exists only inside
+    /// verifier implementations that retain a fetched-set index.
     fn source_hash<'a>(&'a self, _dep: &ResolvedDep) -> Option<&'a str> {
         None
     }

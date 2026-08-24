@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "description": "`.vibe-slot.toml` schema 1 — the source identity and complete materialiser-owned file footprint for one dependency slot (PROP-054 §14.3).",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::slot_record"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "source_hash": {
+      "type": "string"
+    },
+    "spec_format": {
+      "enum": ["mixed", "markdown", "xml"],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "file": {
+      "elements": {
+        "ref": "slot_file"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Sorted materialiser-owned payload rows. The record itself and every unrecorded path are outside this list."
+      }
+    }
+  },
+  "optionalProperties": {
+    "converter_recipe": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "derived_hash": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "overlay_hash": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "slot_file": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "source": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "disposition": {
+          "enum": ["converted", "copied"],
+          "metadata": {
+            "x-default": null,
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    }
+  }
+}

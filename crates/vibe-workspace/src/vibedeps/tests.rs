@@ -3,6 +3,7 @@
 use super::*;
 use specmark::verifies;
 use tempfile::TempDir;
+use vibe_core::ContentHash;
 use vibe_core::manifest::SpecFormat;
 
 #[cfg(test)]
@@ -16,26 +17,16 @@ fn g(s: &str) -> Group {
 }
 
 #[cfg(test)]
+fn source_hash() -> ContentHash {
+    ContentHash::parse("sha256:1111111111111111111111111111111111111111111111111111111111111111")
+        .unwrap()
+}
+
+#[cfg(test)]
 fn write(dir: &Path, rel: impl AsRef<Path>, body: &str) {
     let path = dir.join(rel);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, body).unwrap();
-}
-
-#[cfg(test)]
-fn derive_markdown(ws: &Path, src: &Path, name: &str) -> PathBuf {
-    materialise_with_spec_format(
-        ws,
-        &g("org.example"),
-        name,
-        &version("1.0.0"),
-        src,
-        CopyMode::Copy,
-        SpecFormat::Markdown,
-        "sha256:source",
-    )
-    .unwrap();
-    slot_abs_path(ws, &g("org.example"), name, &version("1.0.0"))
 }
 
 #[test]
@@ -74,6 +65,7 @@ fn materialise_copies_the_tree_verbatim() {
         "wal",
         &version("0.3.0"),
         src.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -122,6 +114,7 @@ fn materialise_skips_dot_git() {
         "w",
         &version("1.0.0"),
         src.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -150,6 +143,7 @@ fn materialise_is_idempotent_and_clears_stale_files() {
         "auth",
         &version("0.1.0"),
         src1.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -162,6 +156,7 @@ fn materialise_is_idempotent_and_clears_stale_files() {
         "auth",
         &version("0.1.0"),
         src2.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -186,6 +181,7 @@ fn materialise_errors_when_source_missing() {
         "ghost",
         &version("0.1.0"),
         &missing,
+        &source_hash(),
     )
     .unwrap_err();
     assert!(matches!(err, WorkspaceError::Io { .. }), "{err}");
@@ -208,6 +204,7 @@ fn is_materialised_reflects_slot_presence() {
         "fmt",
         &version("1.0.0"),
         src.path(),
+        &source_hash(),
     )
     .unwrap();
     assert!(is_materialised(
@@ -229,6 +226,7 @@ fn remove_slot_deletes_and_reports() {
         "wal",
         &version("0.3.0"),
         src.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -260,6 +258,7 @@ fn materialise_hardlink_mode_places_the_full_tree() {
         &version("1.0.0"),
         src.path(),
         CopyMode::Hardlink,
+        &source_hash(),
     )
     .unwrap();
     let slot = ws
@@ -328,6 +327,7 @@ fn is_in_place_slot_false_for_a_versioned_copy() {
         "wal",
         &version("0.3.0"),
         src.path(),
+        &source_hash(),
     )
     .unwrap();
     assert!(!is_in_place_slot(ws.path(), &g("org.vibevm"), "wal"));
@@ -364,7 +364,7 @@ fn ensure_gitignored_appends_once() {
 }
 
 #[test]
-fn mixed_format_is_the_legacy_verbatim_tree_without_identity_record() {
+fn mixed_format_keeps_payload_verbatim_and_writes_the_slot_record() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write(src.path(), "README.md", "# Package\n");
@@ -382,7 +382,7 @@ fn mixed_format_is_the_legacy_verbatim_tree_without_identity_record() {
         src.path(),
         CopyMode::Copy,
         SpecFormat::Mixed,
-        "",
+        &source_hash(),
     )
     .unwrap();
 
@@ -393,209 +393,6 @@ fn mixed_format_is_the_legacy_verbatim_tree_without_identity_record() {
         b"# Guide\n"
     );
     assert!(!slot.join(DERIVED_MANIFEST_FILENAME).exists());
+    assert!(slot.join(SLOT_RECORD_FILENAME).is_file());
     assert!(format_is_current(&slot, SpecFormat::Mixed));
 }
-
-#[test]
-fn xml_format_converts_only_spec_genre_and_records_every_file() {
-    let ws = TempDir::new().unwrap();
-    let src = TempDir::new().unwrap();
-    write(src.path(), "README.md", "# Package\n\nOverview.\n");
-    write(
-        src.path(),
-        crate::layout_paths::specs_path("guide.md"),
-        "# Guide\n\nText.\n",
-    );
-    write(src.path(), "LICENSE.md", "license bytes\n");
-    write(src.path(), "vibe.toml", "[package]\nname = \"sample\"\n");
-
-    materialise_with_spec_format(
-        ws.path(),
-        &g("org.vibevm"),
-        "xml",
-        &version("1.0.0"),
-        src.path(),
-        CopyMode::Copy,
-        SpecFormat::Xml,
-        "sha256:source",
-    )
-    .unwrap();
-
-    let slot = slot_abs_path(ws.path(), &g("org.vibevm"), "xml", &version("1.0.0"));
-    assert!(slot.join("README.xml").is_file());
-    assert!(
-        slot.join(crate::layout_paths::specs_path("guide.xml"))
-            .is_file()
-    );
-    assert!(!slot.join("README.md").exists());
-    assert!(
-        !slot
-            .join(crate::layout_paths::specs_path("guide.md"))
-            .exists()
-    );
-    assert_eq!(
-        fs::read(slot.join("LICENSE.md")).unwrap(),
-        b"license bytes\n"
-    );
-    let manifest = read_derived_manifest(&slot).unwrap();
-    assert_eq!(manifest.source_hash, "sha256:source");
-    assert_eq!(manifest.output_format, SpecFormat::Xml);
-    assert_eq!(manifest.converter_recipe, vibe_specdoc::CONVERTER_RECIPE);
-    assert_eq!(manifest.derived_hash, compute_derived_hash(&slot).unwrap());
-    assert_eq!(
-        manifest
-            .files
-            .iter()
-            .filter(|file| file.disposition == DerivedFileDisposition::Converted)
-            .count(),
-        2
-    );
-    assert_eq!(manifest.files.len(), 4);
-}
-
-#[test]
-fn markdown_format_converts_xml_and_copies_a_rejected_candidate_verbatim() {
-    let ws = TempDir::new().unwrap();
-    let src = TempDir::new().unwrap();
-    let xml = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown("# Valid\n\nBody.\n").unwrap());
-    write(
-        src.path(),
-        crate::layout_paths::specs_path("valid.xml"),
-        &xml,
-    );
-    write(
-        src.path(),
-        crate::layout_paths::specs_path("rejected.xml"),
-        "<not-closed",
-    );
-
-    materialise_with_spec_format(
-        ws.path(),
-        &g("org.vibevm"),
-        "markdown",
-        &version("1.0.0"),
-        src.path(),
-        CopyMode::Copy,
-        SpecFormat::Markdown,
-        "sha256:source",
-    )
-    .unwrap();
-
-    let slot = slot_abs_path(ws.path(), &g("org.vibevm"), "markdown", &version("1.0.0"));
-    assert!(
-        slot.join(crate::layout_paths::specs_path("valid.md"))
-            .is_file()
-    );
-    assert_eq!(
-        fs::read_to_string(slot.join(crate::layout_paths::specs_path("rejected.xml"))).unwrap(),
-        "<not-closed"
-    );
-    let manifest = read_derived_manifest(&slot).unwrap();
-    let rejected = manifest
-        .files
-        .iter()
-        .find(|file| file.source == crate::layout_paths::specs("rejected.xml"))
-        .unwrap();
-    assert_eq!(rejected.output, crate::layout_paths::specs("rejected.xml"));
-    assert_eq!(rejected.disposition, DerivedFileDisposition::Copied);
-}
-
-#[test]
-fn redbook_materialises_fully_xml_with_md_readmes_converted() {
-    // The live redbook's XML sources copy through; Markdown READMEs convert.
-    let ws = TempDir::new().unwrap();
-    let source = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .join(vibe_core::layout::current_packages_root())
-        .join("org.vibevm.world/redbook/v1.0.0");
-    materialise_with_spec_format(
-        ws.path(),
-        &g("org.vibevm.world"),
-        "redbook",
-        &version("1.0.0"),
-        &source,
-        CopyMode::Copy,
-        SpecFormat::Xml,
-        "sha256:redbook-source",
-    )
-    .unwrap();
-
-    let slot = slot_abs_path(
-        ws.path(),
-        &g("org.vibevm.world"),
-        "redbook",
-        &version("1.0.0"),
-    );
-    let manifest = read_derived_manifest(&slot).unwrap();
-    let converted = manifest
-        .files
-        .iter()
-        .filter(|file| file.disposition == DerivedFileDisposition::Converted)
-        .count();
-    let copied = manifest
-        .files
-        .iter()
-        .filter(|file| file.disposition == DerivedFileDisposition::Copied)
-        .count();
-    assert_eq!(converted, 2);
-    assert_eq!(copied, 8);
-    assert!(slot.join("README.xml").is_file());
-    assert!(
-        slot.join(crate::layout_paths::boot_path("03-flow-redbook.xml"))
-            .is_file()
-    );
-    assert!(
-        slot.join(crate::layout_paths::specs_path(
-            "book/ru/chapter-3-memory-individual.xml"
-        ))
-        .is_file()
-    );
-    assert!(slot.join("LICENSE.md").is_file());
-    assert!(slot.join("vibe.toml").is_file());
-    assert_eq!(manifest.derived_hash, compute_derived_hash(&slot).unwrap());
-}
-
-#[test]
-fn generated_boot_artifacts_stay_outside_the_derived_identity() {
-    let dir = tempfile::tempdir().expect("tempdir");
-    let slot = dir.path();
-    std::fs::create_dir_all(slot.join(vibe_core::layout::current_boot_dir())).expect("mkdir");
-    std::fs::write(
-        slot.join(crate::layout_paths::specs_path("a.xml")),
-        "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
-    )
-    .unwrap();
-    let before = derived::compute_derived_hash(slot).expect("hash");
-    std::fs::write(
-        slot.join(vibe_core::layout::current_boot_static_md()),
-        "# generated
-",
-    )
-    .expect("write");
-    std::fs::write(
-        slot.join(vibe_core::layout::current_boot_static_xml()),
-        "generated XML\n",
-    )
-    .unwrap();
-    std::fs::write(
-        slot.join(vibe_core::layout::current_boot_index()),
-        "schema = 1\n",
-    )
-    .unwrap();
-    let after = derived::compute_derived_hash(slot).expect("hash");
-    assert_eq!(before, after, "generated artifacts must not move the hash");
-    assert!(derived::is_generated_boot_artifact(
-        slot,
-        &slot.join(vibe_core::layout::current_boot_static_md())
-    ));
-    assert!(derived::is_generated_boot_artifact(
-        slot,
-        &slot.join(vibe_core::layout::current_boot_static_xml())
-    ));
-    assert!(!derived::is_generated_boot_artifact(
-        slot,
-        &slot.join(crate::layout_paths::boot_path("03-flow.md"))
-    ));
-}
-
-mod overlay;

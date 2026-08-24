@@ -2,7 +2,8 @@
 //! §2.9): a fetch lands the payload as a write-once store entry, and
 //! `vibedeps/` materialisation reads its bytes from THAT entry — the
 //! store is the source, the slot is the materialised copy, and the
-//! slot hashes to the very `content_hash` the lockfile will pin (the
+//! slot record carries the very `content_hash` the lockfile will pin and
+//! verifies every copied payload file (the
 //! read-side gate's green half; the red half — a tampered entry
 //! failing the pin check with the package named — is proven in
 //! `vibe-registry`'s `fetch_with_pin_names_a_tampered_store_entry`).
@@ -14,7 +15,7 @@
 use std::fs;
 use std::path::Path;
 
-use vibe_core::{Group, PackageRef};
+use vibe_core::{ContentHash, Group, PackageRef};
 use vibe_registry::LocalRegistry;
 use vibe_workspace::vibedeps;
 
@@ -64,8 +65,16 @@ fn materialisation_reads_its_bytes_from_the_store_entry() {
 
     // Materialise into the project's `vibedeps/` FROM the entry.
     let group = Group::parse("org.vibevm").unwrap();
-    let written =
-        vibedeps::materialise(&workspace_root, &group, "wal", &resolved.version, &entry).unwrap();
+    let source_hash = ContentHash::from_validated(cached.content_hash.clone());
+    let written = vibedeps::materialise(
+        &workspace_root,
+        &group,
+        "wal",
+        &resolved.version,
+        &entry,
+        &source_hash,
+    )
+    .unwrap();
     assert!(
         !written.is_empty(),
         "the slot must receive the entry's files"
@@ -90,10 +99,20 @@ fn materialisation_reads_its_bytes_from_the_store_entry() {
     // the store replaced it (PROP-010 §2.7).
     assert!(!workspace_root.join(".vibe/cache").exists());
 
-    // The read-side gate's green half: the materialised slot hashes to
-    // exactly the `content_hash` the fetch computed (and the lockfile
-    // pins) — the copy the project commits is the copy the store
-    // verified.
-    let slot_hash = vibe_registry::compute_content_hash(&slot).unwrap();
-    assert_eq!(slot_hash, cached.content_hash);
+    // The read-side gate's green half is record-aware: metadata is not part
+    // of the frozen package hash recipe, while every recorded payload file
+    // proves the bytes copied from the store entry.
+    let record = vibedeps::read_slot_record(&slot).unwrap();
+    assert_eq!(record.source_hash, source_hash);
+    assert!(vibedeps::verify_recorded_files(&slot, &record).is_ok());
+    assert!(
+        !written
+            .iter()
+            .any(|path| path == Path::new(vibedeps::SLOT_RECORD_FILENAME))
+    );
+    assert_eq!(
+        vibe_registry::compute_content_hash(&entry).unwrap(),
+        cached.content_hash,
+        "the frozen source/cache recipe remains byte-identical"
+    );
 }

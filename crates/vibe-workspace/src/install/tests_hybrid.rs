@@ -20,6 +20,29 @@ impl SlotVerifier for SourceHash {
 }
 
 #[test]
+fn copy_materialisation_requires_a_fetched_source_hash() {
+    let workspace = TempDir::new().unwrap();
+    let (mut dep, _package) = dep_with_boot("wal", "0.3.0", "", "boot/wal.md", "# wal");
+    dep.source_hash = None;
+    let ws = Workspace::load({
+        write(
+            workspace.path(),
+            "vibe.toml",
+            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n",
+        );
+        workspace.path()
+    })
+    .unwrap();
+    let error = apply_resolution(&ws, &[dep], SlotIntegrity::Verify, None).unwrap_err();
+    assert!(
+        error
+            .to_string()
+            .contains("requires the fetched source_hash"),
+        "{error}"
+    );
+}
+
+#[test]
 fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     // PROP-038 §2.2 — the owner's core case: a `dynamic`-linked package that
     // statically links its own dependency. `parent` is dynamic from root, but

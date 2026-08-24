@@ -315,6 +315,15 @@ foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"
 
+# ── Derived workspace state ────────────────────────────────────────────────
+[format.slot-record]
+epoch = 1
+schema = "schemas/slot_record.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "none"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

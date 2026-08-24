@@ -48,6 +48,9 @@ pub(super) fn read_materialised(workspace_root: &Path) -> Result<Vec<ResolvedDep
                 name: pkg.name.clone(),
                 version: pkg.version.clone(),
                 content_dir: slot.clone(),
+                source_hash: vibedeps::read_slot_record(&slot)
+                    .ok()
+                    .map(|record| record.source_hash),
                 manifest: manifest.clone(),
                 requires,
                 admitted_by: None,

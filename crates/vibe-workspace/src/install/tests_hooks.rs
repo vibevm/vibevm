@@ -35,6 +35,7 @@ fn dep_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         name: name.to_string(),
         version: ver(version),
         content_dir: pkg.path().to_path_buf(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,
@@ -181,6 +182,7 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         name: name.to_string(),
         version: ver(version),
         content_dir: pkg.path().to_path_buf(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,
@@ -284,6 +286,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
         name: "giant".to_string(),
         version: ver("1.0.0"),
         content_dir: clone.path().to_path_buf(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,
@@ -396,6 +399,7 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
         name: name.to_string(),
         version: ver(version),
         content_dir: pkg.path().to_path_buf(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,
@@ -480,6 +484,7 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
         "stray",
         &ver("0.1.0"),
         stray.path(),
+        &source_hash(),
     )
     .unwrap();
 
@@ -542,6 +547,7 @@ fn already_placed_in_place_slot_runs_hook_without_moving() {
         name: "giant".to_string(),
         version: ver("1.0.0"),
         content_dir: slot.clone(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,

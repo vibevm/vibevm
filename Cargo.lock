@@ -4244,6 +4244,7 @@ dependencies = [
  "vibe-facts",
  "vibe-spec",
  "vibe-specdoc",
+ "vibe-wire",
 ]
 
 [[package]]

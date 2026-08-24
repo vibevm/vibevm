@@ -244,6 +244,17 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
     let materialised =
         fs::read_to_string(slot.join(common::spec_rel("RULE.md"))).expect("slot spec");
     assert!(materialised.contains("stage=\"impl\" state=\"done\" comment=\"author extra\""));
+    let record = vibe_workspace::vibedeps::read_slot_record(&slot).expect("slot record");
+    assert!(record.overlay_hash.is_some());
+    assert!(
+        vibe_workspace::vibedeps::verify_recorded_files(&slot, &record).is_ok(),
+        "every transformed payload row carries its actual hash"
+    );
+    assert!(
+        !slot
+            .join(vibe_workspace::vibedeps::DERIVED_MANIFEST_FILENAME)
+            .exists()
+    );
     let manifest = vibe_workspace::vibedeps::read_derived_manifest(&slot).expect("manifest");
     assert!(manifest.overlay_hash.is_some());
     fs::create_dir_all(slot.join(common::spec_rel("boot"))).expect("generated boot dir");

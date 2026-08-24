@@ -7,13 +7,15 @@
 //! <workspace-root>/<live-dependency-root>/<group>.<name>/<version>/
 //! ```
 //!
-//! The slot holds the package's published tree **verbatim**. Unified
-//! resolution (PROP-007 §2.4) guarantees one version per package, so a
-//! single slot serves the whole workspace. The materialisation tree is committed to the
-//! repository — a fresh clone is bootable with no `vibe install`, and the
-//! dependency corpus stays visible and diffable.
+//! The slot's payload holds the package's published tree **verbatim** beside
+//! one reserved `.vibe-slot.toml` identity/footprint record. Unified resolution
+//! (PROP-007 §2.4) guarantees one version per package, so a single slot serves
+//! the whole workspace. The materialisation tree is committed to the repository
+//! — a fresh clone is bootable with no `vibe install`, and the dependency corpus
+//! stays visible and diffable.
 //!
-//! This module owns only the **layout** and the **verbatim copy**. It is
+//! This module owns the **layout**, the **verbatim payload copy**, and its
+//! materialisation record. It is
 //! additive: it never retires the legacy `[writes]` mirror layout
 //! (`VIBEVM-SPEC.md` §13.1). That retirement is the `vibe install`
 //! switch-over — a later PROP-009 phase — and removing the mirror path
@@ -24,16 +26,22 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use vibe_core::{Group, layout};
+use vibe_core::{ContentHash, Group, layout};
 
 use crate::{WorkspaceError, layout_paths};
 
 mod derived;
+mod slot_record;
 
 pub use derived::{
     CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,
     DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
     read_derived_manifest,
+};
+pub use slot_record::{
+    SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,
+    compute_recorded_payload_hash, read_slot_record, sha256_file, verify_recorded_files,
+    write_slot_record,
 };
 
 /// Directory name of the materialisation tree's final component.
@@ -86,15 +94,15 @@ pub fn is_materialised(
 /// nested repository. Symlinks are skipped: a committed dependency tree
 /// must be portable, and a published package ships plain files.
 ///
-/// Returns the slot-relative paths of every file written, forward-slashed
-/// and sorted, so the caller can report — and, in a later phase, record —
-/// the materialised footprint.
+/// Returns the slot-relative payload paths, forward-slashed and sorted. The
+/// slot record is written last from that footprint and is not returned.
 pub fn materialise(
     workspace_root: &Path,
     group: &Group,
     name: &str,
     version: &semver::Version,
     content_src: &Path,
+    source_hash: &ContentHash,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
     materialise_with(
         workspace_root,
@@ -103,6 +111,7 @@ pub fn materialise(
         version,
         content_src,
         CopyMode::Copy,
+        source_hash,
     )
 }
 
@@ -128,6 +137,7 @@ pub fn materialise_with(
     version: &semver::Version,
     content_src: &Path,
     mode: CopyMode,
+    source_hash: &ContentHash,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
     let slot = slot_abs_path(workspace_root, group, name, version);
     let slot_label = slot_rel_path(group, name, version);
@@ -140,6 +150,7 @@ pub fn materialise_with(
             ),
         });
     }
+    refuse_reserved_source_record(content_src)?;
 
     // Idempotent: clear an existing slot so the result is exactly the
     // source — no leftovers from an earlier content revision.
@@ -151,7 +162,52 @@ pub fn materialise_with(
     let mut written: Vec<PathBuf> = Vec::new();
     copy_tree(content_src, content_src, &slot, mode, &mut written)?;
     written.sort();
+    let files = written
+        .iter()
+        .map(|relative| {
+            let destination = slot.join(relative);
+            let sha256 = sha256_file(&destination).map_err(|reason| {
+                WorkspaceError::SpecMaterialization {
+                    path: destination,
+                    reason: format!("materialised payload cannot be hashed: {reason}"),
+                }
+            })?;
+            Ok(SlotFile {
+                path: crate::path_to_slash(relative),
+                sha256,
+                source: None,
+                disposition: None,
+            })
+        })
+        .collect::<Result<Vec<_>, WorkspaceError>>()?;
+    let record = SlotRecord {
+        schema: SLOT_RECORD_SCHEMA,
+        source_hash: source_hash.clone(),
+        spec_format: vibe_core::manifest::SpecFormat::Mixed,
+        converter_recipe: None,
+        derived_hash: None,
+        overlay_hash: None,
+        files,
+    };
+    write_slot_record(&slot, &record).map_err(|reason| WorkspaceError::SpecMaterialization {
+        path: slot.join(SLOT_RECORD_FILENAME),
+        reason,
+    })?;
     Ok(written)
+}
+
+fn refuse_reserved_source_record(content_src: &Path) -> Result<(), WorkspaceError> {
+    let reserved = content_src.join(SLOT_RECORD_FILENAME);
+    match fs::symlink_metadata(&reserved) {
+        Ok(_) => Err(WorkspaceError::SpecMaterialization {
+            path: reserved,
+            reason: format!(
+                "authored root `{SLOT_RECORD_FILENAME}` is reserved for materialisation metadata"
+            ),
+        }),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(io_err(&reserved, error)),
+    }
 }
 
 /// Remove a package's dependency slot, if it exists. Returns `true` when a
@@ -383,3 +439,9 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod tests_slot_record;
+
+#[cfg(test)]
+mod tests_transformed;

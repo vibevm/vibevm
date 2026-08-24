@@ -21,6 +21,7 @@ use std::collections::HashSet;
 use std::fs;
 use std::path::Path;
 
+use vibe_core::ContentHash;
 use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 
@@ -281,6 +282,7 @@ fn materialise_resolution_with_spec_format(
                 continue;
             }
             if !already_placed {
+                required_source_hash(dep)?;
                 vibedeps::materialise_in_place(
                     workspace_root,
                     &dep.group,
@@ -336,10 +338,9 @@ fn materialise_resolution_with_spec_format(
         // and no verifier at all (or an unverifiable slot) keeps the
         // shipped always-re-copy discipline.
         let trusted = present
-            && format_current
             && !dep.source_mutable
             && match slot_integrity {
-                SlotIntegrity::TrustPresence => true,
+                SlotIntegrity::TrustPresence => format_current,
                 SlotIntegrity::Verify => match slot_verifier {
                     None => false,
                     Some(verifier) => {
@@ -369,17 +370,7 @@ fn materialise_resolution_with_spec_format(
             skipped.push(slot);
             continue;
         }
-        let source_hash = if spec_format.is_transformed() {
-            slot_verifier
-                .and_then(|verifier| verifier.source_hash(dep))
-                .ok_or_else(|| WorkspaceError::SpecMaterialization {
-                    path: dep.content_dir.clone(),
-                    reason: "transformed materialisation requires the fetched source hash"
-                        .to_string(),
-                })?
-        } else {
-            ""
-        };
+        let source_hash = required_source_hash(dep)?;
         vibedeps::materialise_with_spec_format(
             workspace_root,
             &dep.group,
@@ -418,6 +409,18 @@ fn materialise_resolution_with_spec_format(
         integrity_warnings,
         hook_reports,
     })
+}
+
+fn required_source_hash(dep: &ResolvedDep) -> Result<&ContentHash, WorkspaceError> {
+    dep.source_hash
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::SpecMaterialization {
+            path: dep.content_dir.clone(),
+            reason: format!(
+                "materialisation of `{}/{}@{}` requires the fetched source_hash",
+                dep.group, dep.name, dep.version
+            ),
+        })
 }
 
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree

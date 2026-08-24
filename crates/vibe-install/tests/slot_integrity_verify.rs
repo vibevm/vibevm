@@ -23,7 +23,7 @@ use std::path::{Path, PathBuf};
 use tempfile::TempDir;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageRef};
+use vibe_core::{ContentHash, Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
 use vibe_registry::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
@@ -299,7 +299,7 @@ fn verify_accepts_untouched_slots_without_copying() {
 
 #[test]
 fn verify_rematerialises_a_corrupted_slot_and_warns() {
-    let (source, outer, project) = installed_project(SlotIntegrity::Verify);
+    let (source, _outer, project) = installed_project(SlotIntegrity::Verify);
 
     // Corrupt pkg-b's slot: different bytes inside an existing file — the
     // slot diverges from every recorded hash while still being "present
@@ -309,8 +309,14 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
         .join(vibe_core::layout::current_specs_root())
         .join("flows/pkg-b/SPEC.md");
     fs::write(&spec_b, "# TAMPERED content\n").unwrap();
-    let actual = compute_content_hash(&slot_b).unwrap();
-    let expected = compute_content_hash(&outer.path().join("pkg-b")).unwrap();
+    let record = vibe_workspace::vibedeps::read_slot_record(&slot_b).unwrap();
+    let row = record
+        .files
+        .iter()
+        .find(|file| slot_b.join(&file.path) == spec_b)
+        .unwrap();
+    let expected = row.sha256.clone();
+    let actual = vibe_workspace::vibedeps::sha256_file(&spec_b).unwrap();
     assert_ne!(actual, expected, "the tamper must actually diverge");
 
     // pkg-a stays intact; its sentinel proves the pass did not blindly
@@ -333,7 +339,7 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
         "# package B content\n",
         "the corrupted slot is restored from source"
     );
-    // The warn line names the package and BOTH hashes.
+    // The warn line names the package and both per-file hashes.
     assert_eq!(second.outcome.integrity_warnings.len(), 1);
     let warn = &second.outcome.integrity_warnings[0];
     assert!(
@@ -342,7 +348,7 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
     );
     assert!(
         warn.contains(&expected),
-        "warn carries the locked hash: {warn}"
+        "warn carries the recorded file hash: {warn}"
     );
     assert!(
         warn.contains(&actual),
@@ -352,6 +358,28 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
         project.join(SLOT_A).join("target/SENTINEL").is_file(),
         "the intact slot was not re-copied"
     );
+}
+
+#[test]
+fn verify_rejects_a_malformed_new_slot_record() {
+    let (source, _outer, project) = installed_project(SlotIntegrity::Verify);
+    let record_path = project
+        .join(SLOT_A)
+        .join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME);
+    let mut wire = fs::read_to_string(&record_path).unwrap();
+    wire.push_str("unknown = true\n");
+    fs::write(&record_path, wire).unwrap();
+
+    let second = run_install(&source, &project, SlotIntegrity::Verify);
+    assert_eq!(second.outcome.materialised, vec![SLOT_A]);
+    assert_eq!(second.outcome.skipped, vec![SLOT_B]);
+    assert_eq!(second.outcome.integrity_warnings.len(), 1);
+    assert!(
+        second.outcome.integrity_warnings[0].contains("slot record is invalid"),
+        "{}",
+        second.outcome.integrity_warnings[0]
+    );
+    assert!(vibe_workspace::vibedeps::read_slot_record(&project.join(SLOT_A)).is_ok());
 }
 
 #[test]
@@ -469,11 +497,49 @@ fn transformed_verify_accepts_intact_and_repairs_derived_hash_divergence() {
     assert_eq!(repaired.outcome.skipped, vec![SLOT_A]);
     assert_eq!(repaired.outcome.integrity_warnings.len(), 1);
     assert!(
-        repaired.outcome.integrity_warnings[0].contains("derived_hash mismatch"),
+        repaired.outcome.integrity_warnings[0].contains("slot record payload is invalid"),
         "{}",
         repaired.outcome.integrity_warnings[0]
     );
     assert!(project.join(SLOT_A).join("target/SENTINEL").is_file());
+}
+
+#[test]
+fn transformed_verifier_accepts_a_legacy_derived_manifest_without_a_record() {
+    let outer = TempDir::new().unwrap();
+    fixture_pkg(outer.path(), "pkg-a", "# package A content\n");
+    fixture_pkg(outer.path(), "pkg-b", "# package B content\n");
+    write(
+        outer.path(),
+        "project/vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    );
+    let source = FixtureSource {
+        fixtures: outer.path().to_path_buf(),
+        graph: two_package_graph(),
+    };
+    let project = outer.path().join("project");
+    run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    let slot = project.join(SLOT_A);
+    let legacy = vibe_workspace::vibedeps::read_derived_manifest(&slot).unwrap();
+    fs::remove_file(slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME)).unwrap();
+    let wire = format!(
+        "schema = {}\nsource_hash = \"{}\"\noutput_format = \"{}\"\nconverter_recipe = \"{}\"\nderived_hash = \"{}\"\n",
+        legacy.schema,
+        legacy.source_hash,
+        legacy.output_format.as_str(),
+        legacy.converter_recipe,
+        legacy.derived_hash
+    );
+    write(
+        &slot,
+        vibe_workspace::vibedeps::DERIVED_MANIFEST_FILENAME,
+        &wire,
+    );
+    let verified = run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    assert_eq!(verified.outcome.skipped, vec![SLOT_A, SLOT_B]);
+    assert!(verified.outcome.materialised.is_empty());
+    assert!(verified.outcome.integrity_warnings.is_empty());
 }
 
 #[test]
@@ -511,6 +577,7 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         name: cached.resolved.name.clone(),
         version: cached.resolved.version.clone(),
         content_dir: cached.cache_dir.clone(),
+        source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
         manifest: cached.manifest.clone(),
         requires: Vec::new(),
         admitted_by: None,

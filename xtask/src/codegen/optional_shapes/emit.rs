@@ -49,6 +49,7 @@ const REQUIRED_NULLABLE_FORM: &str =
 /// vocabulary `pub enum`, a stranger) has no rule.
 struct TypeDecls<'a> {
     aliases: BTreeMap<&'a str, &'a str>,
+    enums: BTreeSet<&'a str>,
     structs: BTreeSet<&'a str>,
 }
 
@@ -206,6 +207,7 @@ fn lookup(
 fn type_decls(src: &str) -> TypeDecls<'_> {
     let mut decls = TypeDecls {
         aliases: BTreeMap::new(),
+        enums: BTreeSet::new(),
         structs: BTreeSet::new(),
     };
     for chunk in src.split_inclusive('\n') {
@@ -222,6 +224,10 @@ fn type_decls(src: &str) -> TypeDecls<'_> {
             && let Some(name) = rest.strip_suffix(" {")
         {
             decls.structs.insert(name);
+        } else if let Some(rest) = text.strip_prefix("pub enum ")
+            && let Some(name) = rest.strip_suffix(" {")
+        {
+            decls.enums.insert(name);
         }
     }
     decls
@@ -229,9 +235,8 @@ fn type_decls(src: &str) -> TypeDecls<'_> {
 
 /// Classify an `Option<Box<…>>` payload the way the schema classifies
 /// its form: a primitive (or a local `pub type` alias resolving to one)
-/// is a scalar, a `pub struct` the file declares is a structure, and
-/// anything else refuses — an optional vocabulary, an undeclared name or
-/// a stranger is none of the pass's shapes.
+/// is a scalar, a declared `pub enum` is a vocabulary, a `pub struct` is a
+/// structure, and any undeclared name or stranger refuses.
 fn classify_payload(
     ty: &str,
     decls: &TypeDecls<'_>,
@@ -287,12 +292,14 @@ fn classify_payload(
     if decls.structs.contains(ty) {
         return Ok(ShapeClass::Structure);
     }
+    if decls.enums.contains(ty) {
+        return Ok(ShapeClass::Vocabulary);
+    }
     bail!(
         "{file}:{line}: the optional field `{ident}` carries the payload \
-         type `{ty}`, which this file declares as neither a `pub type` alias \
-         nor a `pub struct` — an optional vocabulary or a stranger, and the \
-         pass has no shape rule for either.\n\
-         Fix: give the member a scalar or structure form, or teach \
+         type `{ty}`, which this file declares as neither a `pub type` alias, \
+         `pub enum`, nor `pub struct`, so the pass refuses to guess.\n\
+         Fix: give the member a scalar, vocabulary, or structure form, or teach \
          `optional_shapes.rs` this one, then run `cargo xtask codegen`."
     );
 }

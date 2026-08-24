@@ -8,16 +8,20 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use vibe_core::Group;
 use vibe_core::layout;
 use vibe_core::manifest::SpecFormat;
+use vibe_core::{ContentHash, Group};
 use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
 use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
 
-use super::{CopyMode, io_err, place_file, slot_abs_path};
+use super::{
+    CopyMode, SLOT_RECORD_FILENAME, SlotFile, SlotFileDisposition, SlotRecord,
+    compute_recorded_payload_hash, io_err, place_file, read_slot_record, sha256_file,
+    slot_abs_path, write_slot_record,
+};
 use crate::{WorkspaceError, path_to_slash};
 
-/// Name of the identity record present only in transformed slots.
+/// Legacy transformed-slot identity filename, retained read-only.
 pub const DERIVED_MANIFEST_FILENAME: &str = ".vibe-derived.toml";
 /// Current specdoc pivot recipe recorded in transformed-slot manifests.
 pub const CONVERTER_RECIPE: &str = vibe_specdoc::CONVERTER_RECIPE;
@@ -72,8 +76,8 @@ pub struct DerivedManifest {
 
 /// Materialise a package in the requested representation.
 ///
-/// `Mixed` delegates to the existing byte-for-byte materialiser and writes no
-/// metadata. `Markdown` and `Xml` transform only spec-genre documents: any
+/// `Mixed` delegates to the byte-for-byte materialiser. `Markdown` and `Xml`
+/// transform only spec-genre documents: any
 /// `.md`/`.xml` below the live specs root, plus the package-root README pair.
 /// Files already in the target format and every non-spec file copy verbatim.
 /// An opposite-format candidate that the pivot rejects also copies verbatim
@@ -87,10 +91,18 @@ pub fn materialise_with_spec_format(
     content_src: &Path,
     mode: CopyMode,
     spec_format: SpecFormat,
-    source_hash: &str,
+    source_hash: &ContentHash,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
     if spec_format == SpecFormat::Mixed {
-        return super::materialise_with(workspace_root, group, name, version, content_src, mode);
+        return super::materialise_with(
+            workspace_root,
+            group,
+            name,
+            version,
+            content_src,
+            mode,
+            source_hash,
+        );
     }
     let package = format!("{group}/{name}");
     let registry =
@@ -99,7 +111,14 @@ pub fn materialise_with_spec_format(
             reason: format!("package adoption registry cannot be loaded: {error}"),
         })?;
     let overlay = registry.package_overlay(&package);
-    let overlay_hash = overlay_file_hash(workspace_root, &package);
+    let overlay_hash = overlay_file_hash(workspace_root, &package)
+        .map(|hash| {
+            ContentHash::parse(&hash).map_err(|error| WorkspaceError::SpecMaterialization {
+                path: workspace_root.join(layout::current_vibefacts_root()),
+                reason: format!("package overlay hash is invalid: {error}"),
+            })
+        })
+        .transpose()?;
     let slot = slot_abs_path(workspace_root, group, name, version);
     if !content_src.is_dir() {
         return Err(WorkspaceError::SpecMaterialization {
@@ -107,6 +126,7 @@ pub fn materialise_with_spec_format(
             reason: "source content tree does not exist or is not a directory".to_string(),
         });
     }
+    super::refuse_reserved_source_record(content_src)?;
     if slot.exists() {
         fs::remove_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
     }
@@ -140,47 +160,102 @@ pub fn materialise_with_spec_format(
         }
         let disposition = if let Some((_, bytes)) = transformed {
             fs::write(&destination, bytes).map_err(|e| io_err(&destination, e))?;
-            DerivedFileDisposition::Converted
+            SlotFileDisposition::Converted
         } else {
             place_file(&source, &destination, mode)?;
-            DerivedFileDisposition::Copied
+            SlotFileDisposition::Copied
         };
-        files.push(DerivedFile {
-            source: path_to_slash(&rel),
-            output: output_wire,
-            disposition,
+        let sha256 =
+            sha256_file(&destination).map_err(|reason| WorkspaceError::SpecMaterialization {
+                path: destination.clone(),
+                reason: format!("materialised payload cannot be hashed: {reason}"),
+            })?;
+        files.push(SlotFile {
+            path: output_wire,
+            sha256,
+            source: Some(path_to_slash(&rel)),
+            disposition: Some(disposition),
         });
         written.push(output_rel);
     }
 
-    let derived_hash =
-        compute_derived_hash(&slot).map_err(|reason| WorkspaceError::SpecMaterialization {
+    written.sort();
+    files.sort_by(|a, b| a.path.cmp(&b.path));
+    let derived_hash = compute_recorded_payload_hash(&slot, &files).map_err(|reason| {
+        WorkspaceError::SpecMaterialization {
             path: slot.clone(),
             reason: format!("derived tree cannot be hashed: {reason}"),
-        })?;
-    let manifest = DerivedManifest {
-        schema: DERIVED_MANIFEST_SCHEMA,
-        source_hash: source_hash.to_string(),
-        output_format: spec_format,
-        converter_recipe: CONVERTER_RECIPE.to_string(),
+        }
+    })?;
+    let record = SlotRecord {
+        schema: super::SLOT_RECORD_SCHEMA,
+        source_hash: source_hash.clone(),
+        spec_format,
+        converter_recipe: Some(CONVERTER_RECIPE.to_string()),
         overlay_hash,
-        derived_hash,
+        derived_hash: Some(derived_hash),
         files,
     };
-    let manifest_path = slot.join(DERIVED_MANIFEST_FILENAME);
-    let wire =
-        toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::SpecMaterialization {
-            path: manifest_path.clone(),
-            reason: format!("derived manifest cannot be encoded: {e}"),
-        })?;
-    fs::write(&manifest_path, wire).map_err(|e| io_err(&manifest_path, e))?;
-    written.push(PathBuf::from(DERIVED_MANIFEST_FILENAME));
-    written.sort();
+    write_slot_record(&slot, &record).map_err(|reason| WorkspaceError::SpecMaterialization {
+        path: slot.join(SLOT_RECORD_FILENAME),
+        reason,
+    })?;
     Ok(written)
 }
 
 /// Read and validate the typed derived manifest from `slot`.
 pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
+    let record_path = slot.join(SLOT_RECORD_FILENAME);
+    match fs::symlink_metadata(&record_path) {
+        Ok(_) => {
+            let record = read_slot_record(slot)?;
+            if record.spec_format == SpecFormat::Mixed {
+                return Err("slot record describes a mixed slot, not a derived slot".to_string());
+            }
+            let converter_recipe = record
+                .converter_recipe
+                .ok_or_else(|| "transformed slot record has no converter_recipe".to_string())?;
+            let derived_hash = record
+                .derived_hash
+                .ok_or_else(|| "transformed slot record has no derived_hash".to_string())?;
+            let files = record
+                .files
+                .into_iter()
+                .map(|file| {
+                    let source = file.source.ok_or_else(|| {
+                        format!("transformed slot row `{}` has no source", file.path)
+                    })?;
+                    let disposition = match file.disposition.ok_or_else(|| {
+                        format!("transformed slot row `{}` has no disposition", file.path)
+                    })? {
+                        SlotFileDisposition::Converted => DerivedFileDisposition::Converted,
+                        SlotFileDisposition::Copied => DerivedFileDisposition::Copied,
+                    };
+                    Ok(DerivedFile {
+                        source,
+                        output: file.path,
+                        disposition,
+                    })
+                })
+                .collect::<Result<Vec<_>, String>>()?;
+            return Ok(DerivedManifest {
+                schema: DERIVED_MANIFEST_SCHEMA,
+                source_hash: record.source_hash.as_str().to_string(),
+                output_format: record.spec_format,
+                converter_recipe,
+                overlay_hash: record.overlay_hash.map(|hash| hash.as_str().to_string()),
+                derived_hash: derived_hash.as_str().to_string(),
+                files,
+            });
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => {
+            return Err(format!(
+                "cannot inspect slot record `{}`: {error}",
+                record_path.display()
+            ));
+        }
+    }
     let path = slot.join(DERIVED_MANIFEST_FILENAME);
     let text = fs::read_to_string(&path).map_err(|e| format!("cannot read manifest: {e}"))?;
     let manifest: DerivedManifest =
@@ -194,10 +269,27 @@ pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
     Ok(manifest)
 }
 
-/// Cheap freshness gate consulted before presence trust: mixed slots carry no
-/// manifest; transformed slots carry a valid schema-1 manifest naming the
-/// effective output format. No content hash is computed here.
+/// Cheap freshness gate consulted before presence trust. New slot records are
+/// preferred; legacy derived manifests remain readable when no record exists.
 pub fn format_is_current(slot: &Path, expected: SpecFormat) -> bool {
+    let record_path = slot.join(SLOT_RECORD_FILENAME);
+    match fs::symlink_metadata(&record_path) {
+        Ok(_) => {
+            return read_slot_record(slot).is_ok_and(|record| {
+                record.spec_format == expected
+                    && match expected {
+                        SpecFormat::Mixed => true,
+                        SpecFormat::Markdown | SpecFormat::Xml => {
+                            record.converter_recipe.as_deref() == Some(CONVERTER_RECIPE)
+                                && record.overlay_hash.as_ref().map(ContentHash::as_str)
+                                    == current_overlay_hash_for_slot(slot).as_deref()
+                        }
+                    }
+            });
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(_) => return false,
+    }
     let manifest_path = slot.join(DERIVED_MANIFEST_FILENAME);
     match expected {
         SpecFormat::Mixed => !manifest_path.exists(),
@@ -225,10 +317,27 @@ pub fn current_overlay_hash_for_slot(slot: &Path) -> Option<String> {
     overlay_file_hash(workspace_root, package_key)
 }
 
-/// Recipe-0 content hash over a transformed slot, excluding its own derived
-/// manifest on the caller side. The standard frozen exclusions and byte feed
-/// are unchanged: `normalised_path || NUL || bytes || NUL`.
+/// Recipe-0 content hash over a transformed slot. New records hash exactly
+/// their payload rows; legacy slots retain the frozen walk/exclusion recipe.
 pub fn compute_derived_hash(slot: &Path) -> Result<String, String> {
+    let record_path = slot.join(SLOT_RECORD_FILENAME);
+    match fs::symlink_metadata(&record_path) {
+        Ok(_) => {
+            let record = read_slot_record(slot)?;
+            if record.spec_format == SpecFormat::Mixed {
+                return Err("cannot compute a derived hash for a mixed slot record".to_string());
+            }
+            return compute_recorded_payload_hash(slot, &record.files)
+                .map(|hash| hash.as_str().to_string());
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => {
+            return Err(format!(
+                "cannot inspect slot record `{}`: {error}",
+                record_path.display()
+            ));
+        }
+    }
     let mut entries = Vec::new();
     collect_hash_files(slot, slot, &mut entries)?;
     entries.sort_by(|a, b| a.0.cmp(&b.0));
@@ -436,7 +545,9 @@ fn collect_hash_files(
         let entry = entry.map_err(|e| format!("cannot walk `{}`: {e}", dir.display()))?;
         let name = entry.file_name();
         let name_text = name.to_string_lossy();
-        if LEGACY0_EXCLUDES.contains(&name_text.as_ref()) || name_text == DERIVED_MANIFEST_FILENAME
+        if LEGACY0_EXCLUDES.contains(&name_text.as_ref())
+            || name_text == DERIVED_MANIFEST_FILENAME
+            || name_text == SLOT_RECORD_FILENAME
         {
             continue;
         }

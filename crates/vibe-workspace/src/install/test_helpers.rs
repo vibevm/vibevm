@@ -6,7 +6,7 @@
 
 use super::*;
 use tempfile::TempDir;
-use vibe_core::{Group, PackageKind};
+use vibe_core::{ContentHash, Group, PackageKind};
 
 #[cfg(test)]
 pub(super) fn write(dir: &Path, rel: impl AsRef<Path>, body: &str) {
@@ -35,6 +35,12 @@ pub(super) fn ver(s: &str) -> semver::Version {
     semver::Version::parse(s).unwrap()
 }
 
+#[cfg(test)]
+pub(super) fn source_hash() -> ContentHash {
+    ContentHash::parse("sha256:1111111111111111111111111111111111111111111111111111111111111111")
+        .unwrap()
+}
+
 /// A `ResolvedDep` with a content tree written into a fresh temp dir.
 /// The `TempDir` is returned so the caller keeps it alive.
 #[cfg(test)]
@@ -61,6 +67,7 @@ pub(super) fn dep_with_boot(
         name: name.to_string(),
         version: ver(version),
         content_dir: pkg.path().to_path_buf(),
+        source_hash: Some(source_hash()),
         manifest,
         requires: vec![],
         admitted_by: None,

@@ -10,12 +10,13 @@ use std::process::Output;
 use common::{UserScratch, copy_tree, git_available, run_git, workspace_root};
 use serde_json::Value;
 use specmark::verifies;
-use vibe_core::Group;
 use vibe_core::manifest::{Lockfile, SpecFormat};
+use vibe_core::{ContentHash, Group};
 use vibe_workspace::boot_artifacts;
 use vibe_workspace::vibedeps::{
-    CONVERTER_RECIPE, CopyMode, DERIVED_MANIFEST_FILENAME, compute_derived_hash,
-    materialise_with_spec_format, read_derived_manifest, slot_abs_path,
+    CONVERTER_RECIPE, CopyMode, DERIVED_MANIFEST_FILENAME, SLOT_RECORD_FILENAME,
+    compute_derived_hash, materialise_with_spec_format, read_derived_manifest, read_slot_record,
+    sha256_file, slot_abs_path, verify_recorded_files,
 };
 
 const REDBOOK_GROUP: &str = "org.vibevm.world";
@@ -175,6 +176,17 @@ fn assert_slots(
             version: package.version.to_string(),
         };
         let slot = slot(project, &coordinate);
+        let record = read_slot_record(&slot).unwrap();
+        assert_eq!(record.source_hash, package.content_hash);
+        assert_eq!(record.spec_format, format);
+        assert!(verify_recorded_files(&slot, &record).is_ok());
+        assert!(
+            record
+                .files
+                .iter()
+                .all(|file| file.sha256 == sha256_file(&slot.join(&file.path)).unwrap())
+        );
+        assert!(!slot.join(DERIVED_MANIFEST_FILENAME).exists());
         if format.is_transformed() {
             let derived = read_derived_manifest(&slot).unwrap();
             assert_eq!(derived.output_format, format);
@@ -188,7 +200,8 @@ fn assert_slots(
                 SpecFormat::Mixed => unreachable!(),
             }
         } else {
-            assert!(!slot.join(DERIVED_MANIFEST_FILENAME).exists());
+            assert!(record.converter_recipe.is_none());
+            assert!(record.derived_hash.is_none());
             assert_eq!(collect_bytes(&sources[&coordinate]), collect_bytes(&slot));
         }
     }
@@ -285,6 +298,7 @@ fn generated(rel: &Path) -> bool {
         || path == boot_artifacts::static_path(SpecFormat::Xml)
         || path == common::index_rel()
         || path == DERIVED_MANIFEST_FILENAME
+        || path == SLOT_RECORD_FILENAME
 }
 
 fn collect_bytes(root: &Path) -> BTreeMap<String, Vec<u8>> {
@@ -491,7 +505,7 @@ fn xml_from_markdown(markdown: &str) -> String {
         source.path(),
         CopyMode::Copy,
         SpecFormat::Xml,
-        "sha256:test-source",
+        &ContentHash::parse("sha256:aaaaaaaaaaaaaaaa").unwrap(),
     )
     .unwrap();
     fs::read_to_string(slot(output.path(), &coordinate).join(common::spec_rel("input.xml")))

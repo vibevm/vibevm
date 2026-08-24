@@ -1,6 +1,6 @@
 //! The `slot_integrity = verify` spot-check (PROP-011 §2.3/§5.2): before
-//! the §2.3 fast path trusts a present slot, hash it and compare against
-//! the `content_hash` the resolution carries — the lockfile pin on the
+//! the §2.3 fast path trusts a present slot, validate its slot record and
+//! recorded payload against the `content_hash` the resolution carries — the lockfile pin on the
 //! fresh-lock path, the fetch's own hash on a re-resolve (which becomes
 //! the next lockfile pin either way). A match accepts the slot WITHOUT
 //! the re-copy: the spot-check REPLACES the work, it does not add to it —
@@ -12,27 +12,22 @@
 //! neither hash crate, so it takes the check as the
 //! [`SlotVerifier`](vibe_workspace::install::SlotVerifier) seam and THIS
 //! crate — which already depends on `vibe-registry` — supplies the
-//! hasher. The registry's native [`compute_content_hash`] is the right
-//! function for a second reason: it computes recipe 0 (`sha256:`), the
-//! recipe every lockfile hash is written with, so the comparison is
-//! same-recipe by construction; a `sha256-tree/1:` pin (PROP-044 §4.7)
-//! dispatches to the tree recipe so both wire forms `ContentHash` accepts
-//! verify correctly.
+//! hasher. Slots predating `.vibe-slot.toml` retain the registry tree-hash
+//! path, including recipe dispatch for both historical wire forms.
 
 use std::collections::HashMap;
 use std::path::Path;
 
-use vibe_core::Group;
 use vibe_core::manifest::SpecFormat;
+use vibe_core::{ContentHash, Group};
 use vibe_registry::{RecipeId, compute_content_hash, compute_content_hash_with};
 use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
 
 use crate::fetched::Fetched;
 
-/// The [`SlotVerifier`] for the apply phase: hash a present slot with
-/// `vibe-registry`'s content hasher and compare against the hash recorded
-/// for the resolved package in the fetched set. A package the resolution
-/// did not fetch (or whose slot cannot be hashed) reports
+/// The [`SlotVerifier`] for the apply phase: prefer the typed slot record and
+/// its exact payload list, falling back to historical hash recipes only when
+/// no new record exists. A package the resolution did not fetch reports
 /// [`SlotCheck::Unverifiable`] and falls back to the re-copy discipline.
 pub(crate) struct RegistrySlotVerifier {
     /// The expected `content_hash` per resolved `(group, name)` — the
@@ -58,24 +53,11 @@ impl RegistrySlotVerifier {
                 .collect(),
         }
     }
-}
 
-impl SlotVerifier for RegistrySlotVerifier {
-    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
-        self.expected
-            .get(&(dep.group.clone(), dep.name.clone()))
-            .map(String::as_str)
-    }
-
-    fn verify_slot(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
+    fn verify_legacy_mixed(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
         let Some(expected) = self.expected.get(&(dep.group.clone(), dep.name.clone())) else {
             return SlotCheck::Unverifiable;
         };
-        // Dispatch on the pin's recipe label (PROP-044 §4.7): the value
-        // says how it was computed, so the slot is hashed the same way.
-        // Recipe 0 (`sha256:`) is the registry default and the form every
-        // lockfile in existence carries; `sha256-tree/1:` selects the
-        // tree recipe.
         let computed = if expected.starts_with(RecipeId::Tree1.label()) {
             compute_content_hash_with(RecipeId::Tree1, slot_abs)
         } else {
@@ -87,21 +69,106 @@ impl SlotVerifier for RegistrySlotVerifier {
                 expected: expected.clone(),
                 actual,
             },
-            // An unhashable slot (locked file, permission denied) cannot be
-            // vouched for — the re-copy both repairs and supersedes it.
             Err(_) => SlotCheck::Unverifiable,
         }
     }
 
-    fn verify_slot_for_format(
+    fn verify_record(
         &self,
         dep: &ResolvedDep,
         slot_abs: &Path,
         spec_format: SpecFormat,
     ) -> SlotCheck {
-        if spec_format == SpecFormat::Mixed {
-            return self.verify_slot(dep, slot_abs);
+        let record = match vibe_workspace::vibedeps::read_slot_record(slot_abs) {
+            Ok(record) => record,
+            Err(reason) => {
+                return SlotCheck::DivergedDetail {
+                    reason: format!("slot record is invalid: {reason}"),
+                };
+            }
+        };
+        let Some(expected_source) = self.source_hash(dep) else {
+            return SlotCheck::Unverifiable;
+        };
+        if record.source_hash.as_str() != expected_source {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "slot record source_hash is {}, fetched source_hash is {expected_source}",
+                    record.source_hash.as_str()
+                ),
+            };
         }
+        if record.spec_format != spec_format {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "slot record spec_format is {}, effective format is {}",
+                    record.spec_format.as_str(),
+                    spec_format.as_str()
+                ),
+            };
+        }
+        if spec_format.is_transformed() {
+            if record.converter_recipe.as_deref()
+                != Some(vibe_workspace::vibedeps::CONVERTER_RECIPE)
+            {
+                return SlotCheck::DivergedDetail {
+                    reason: format!(
+                        "slot record converter_recipe is {}, current recipe is {}",
+                        record.converter_recipe.as_deref().unwrap_or("<none>"),
+                        vibe_workspace::vibedeps::CONVERTER_RECIPE
+                    ),
+                };
+            }
+            let live_overlay_hash = live_overlay_hash(slot_abs);
+            if record.overlay_hash.as_ref().map(ContentHash::as_str) != live_overlay_hash.as_deref()
+            {
+                return SlotCheck::DivergedDetail {
+                    reason: format!(
+                        "slot record overlay_hash is {}, live package overlay hashes to {}",
+                        option_content_hash(&record.overlay_hash),
+                        option_hash(&live_overlay_hash)
+                    ),
+                };
+            }
+        }
+        if let Err(reason) = vibe_workspace::vibedeps::verify_recorded_files(slot_abs, &record) {
+            return SlotCheck::DivergedDetail {
+                reason: format!("slot record payload is invalid: {reason}"),
+            };
+        }
+        if spec_format.is_transformed() {
+            let Some(expected_derived) = record.derived_hash.as_ref() else {
+                return SlotCheck::DivergedDetail {
+                    reason: "transformed slot record has no derived_hash".to_string(),
+                };
+            };
+            match vibe_workspace::vibedeps::compute_recorded_payload_hash(slot_abs, &record.files) {
+                Ok(actual) if &actual == expected_derived => {}
+                Ok(actual) => {
+                    return SlotCheck::DivergedDetail {
+                        reason: format!(
+                            "derived_hash mismatch: record has {}, payload hashes to {}",
+                            expected_derived.as_str(),
+                            actual.as_str()
+                        ),
+                    };
+                }
+                Err(reason) => {
+                    return SlotCheck::DivergedDetail {
+                        reason: format!("derived_hash cannot be computed: {reason}"),
+                    };
+                }
+            }
+        }
+        SlotCheck::Verified
+    }
+
+    fn verify_legacy_derived(
+        &self,
+        dep: &ResolvedDep,
+        slot_abs: &Path,
+        spec_format: SpecFormat,
+    ) -> SlotCheck {
         let Some(expected_source) = self.source_hash(dep) else {
             return SlotCheck::Unverifiable;
         };
@@ -164,6 +231,39 @@ impl SlotVerifier for RegistrySlotVerifier {
     }
 }
 
+impl SlotVerifier for RegistrySlotVerifier {
+    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
+        self.expected
+            .get(&(dep.group.clone(), dep.name.clone()))
+            .map(String::as_str)
+    }
+
+    fn verify_slot(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
+        self.verify_slot_for_format(dep, slot_abs, SpecFormat::Mixed)
+    }
+
+    fn verify_slot_for_format(
+        &self,
+        dep: &ResolvedDep,
+        slot_abs: &Path,
+        spec_format: SpecFormat,
+    ) -> SlotCheck {
+        let record_path = slot_abs.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME);
+        match std::fs::symlink_metadata(&record_path) {
+            Ok(_) => self.verify_record(dep, slot_abs, spec_format),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => match spec_format {
+                SpecFormat::Mixed => self.verify_legacy_mixed(dep, slot_abs),
+                SpecFormat::Markdown | SpecFormat::Xml => {
+                    self.verify_legacy_derived(dep, slot_abs, spec_format)
+                }
+            },
+            Err(error) => SlotCheck::DivergedDetail {
+                reason: format!("slot record cannot be inspected: {error}"),
+            },
+        }
+    }
+}
+
 fn live_overlay_hash(slot: &Path) -> Option<String> {
     let package_dir = slot.parent()?;
     // The slot sits under the layout's dependency root — which may be
@@ -188,4 +288,8 @@ fn live_overlay_hash(slot: &Path) -> Option<String> {
 
 fn option_hash(hash: &Option<String>) -> &str {
     hash.as_deref().unwrap_or("<none>")
+}
+
+fn option_content_hash(hash: &Option<ContentHash>) -> &str {
+    hash.as_ref().map(ContentHash::as_str).unwrap_or("<none>")
 }

@@ -100,10 +100,11 @@ pub struct Report {
     Ok(())
 }
 
-/// The schema side of the same cut: an optional member resolving to a
-/// vocabulary enum refuses while the decisions are read.
+/// A vocabulary is now a supported optional shape, but its absent-key policy
+/// remains explicit: without `x-default: null` the schema side refuses before
+/// generated Rust is touched.
 #[test]
-fn an_optional_vocabulary_member_refuses_on_the_schema_side() -> Result<()> {
+fn an_optional_vocabulary_without_a_default_policy_refuses() -> Result<()> {
     let doc = json!({
         "optionalProperties": {
             "kind": { "ref": "package_kind" }
@@ -112,13 +113,17 @@ fn an_optional_vocabulary_member_refuses_on_the_schema_side() -> Result<()> {
             "package_kind": { "enum": ["feat", "flow"] }
         }
     });
-    let err = shapes(doc).expect_err("an enum form is neither class");
+    let err = shapes(doc).expect_err("an optional vocabulary must declare its absent policy");
     let msg = err.to_string();
-    assert!(msg.contains("a vocabulary enum"), "names the form: {msg}");
+    assert!(
+        msg.contains("optional vocabulary field"),
+        "names the form: {msg}"
+    );
     assert!(
         msg.contains("optionalProperties.kind"),
         "names the site: {msg}"
     );
+    assert!(msg.contains("x-default"), "names the missing policy: {msg}");
     Ok(())
 }
 

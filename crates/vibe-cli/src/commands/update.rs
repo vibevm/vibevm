@@ -22,7 +22,7 @@ use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
-use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
@@ -285,6 +285,7 @@ pub fn run(
             name: cached.resolved.name.clone(),
             version: cached.resolved.version.clone(),
             content_dir: cached.cache_dir.clone(),
+            source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
             manifest: cached.manifest.clone(),
             requires: deps
                 .iter()

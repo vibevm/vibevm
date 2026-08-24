@@ -56,6 +56,7 @@ pub enum FormatId {
     Lockfile,
     Manifest,
     McpTools,
+    SlotRecord,
 }
 
 /// How many independent parsers read a format — the second policy axis
@@ -110,6 +111,7 @@ impl FormatId {
         FormatId::Lockfile,
         FormatId::Manifest,
         FormatId::McpTools,
+        FormatId::SlotRecord,
     ];
 
     /// The registry id, verbatim (e.g. `cli-init-report`).
@@ -152,6 +154,7 @@ impl FormatId {
             FormatId::Lockfile => "lockfile",
             FormatId::Manifest => "manifest",
             FormatId::McpTools => "mcp-tools",
+            FormatId::SlotRecord => "slot-record",
         }
     }
 
@@ -195,6 +198,7 @@ impl FormatId {
             FormatId::Lockfile => 1,
             FormatId::Manifest => 1,
             FormatId::McpTools => 1,
+            FormatId::SlotRecord => 1,
         }
     }
 
@@ -238,6 +242,7 @@ impl FormatId {
             FormatId::Lockfile => true,
             FormatId::Manifest => false,
             FormatId::McpTools => true,
+            FormatId::SlotRecord => true,
         }
     }
 
@@ -281,6 +286,7 @@ impl FormatId {
             FormatId::Lockfile => ForeignParsers::Ours,
             FormatId::Manifest => ForeignParsers::Many,
             FormatId::McpTools => ForeignParsers::Many,
+            FormatId::SlotRecord => ForeignParsers::None,
         }
     }
 }

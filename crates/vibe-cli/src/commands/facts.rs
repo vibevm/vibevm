@@ -374,6 +374,29 @@ fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
 }
 
 fn slot_spec_inputs(slot: &Path) -> Result<Vec<SlotSpecInput>> {
+    let record_path = slot.join(vibedeps::SLOT_RECORD_FILENAME);
+    match fs::symlink_metadata(&record_path) {
+        Ok(_) => {
+            let record = vibedeps::read_slot_record(slot)
+                .map_err(|reason| anyhow::anyhow!("invalid slot record: {reason}"))?;
+            return Ok(record
+                .files
+                .into_iter()
+                .filter_map(|file| {
+                    let source = file.source.unwrap_or_else(|| file.path.clone());
+                    is_spec_document(&source).then(|| SlotSpecInput {
+                        source,
+                        output: slot.join(file.path),
+                    })
+                })
+                .collect());
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => {
+            return Err(error)
+                .with_context(|| format!("inspecting slot record `{}`", record_path.display()));
+        }
+    }
     if let Ok(manifest) = vibedeps::read_derived_manifest(slot) {
         return Ok(manifest
             .files

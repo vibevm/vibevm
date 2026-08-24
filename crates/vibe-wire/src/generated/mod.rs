@@ -22,4 +22,5 @@ pub mod list_report;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
 pub mod shared;
+pub mod slot_record;
 pub mod uninstall_report;

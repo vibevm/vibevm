@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::visibility::{Analysis, ProvenanceRule};
-use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
 use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_resolver::{
@@ -387,6 +387,7 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
                 name: f.cached.resolved.name.clone(),
                 version: f.cached.resolved.version.clone(),
                 content_dir: f.cached.cache_dir.clone(),
+                source_hash: Some(ContentHash::from_validated(f.cached.content_hash.clone())),
                 manifest: f.cached.manifest.clone(),
                 // A `[requires.packages]` dependency pkgref is
                 // group-qualified (PROP-008 §2.6).

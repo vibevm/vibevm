@@ -35,7 +35,7 @@ use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
-use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, Group, PackageKind, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
@@ -142,7 +142,7 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         &cached.cache_dir,
         mode,
         spec_format,
-        &cached.content_hash,
+        &ContentHash::from_validated(cached.content_hash.clone()),
     )
     .with_context(|| format!("re-deriving the installed `{package}` slot"))?;
     Ok(true)
@@ -377,6 +377,7 @@ fn run_force(
             name: cached.resolved.name.clone(),
             version: cached.resolved.version.clone(),
             content_dir: cached.cache_dir.clone(),
+            source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
             manifest: cached.manifest.clone(),
             // The recorded resolution edges — `apply_resolution` walks
             // them to compose each node's dependency boot. A lockfile

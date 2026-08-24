@@ -90,6 +90,8 @@ pub(super) fn apply_optional_shapes(
 enum ShapeClass {
     /// A `type` form: string, boolean, timestamp, a number.
     Scalar,
+    /// An `enum` form: one closed vocabulary value.
+    Vocabulary,
     /// A `properties` / `optionalProperties` form: a generated struct.
     Structure,
 }
@@ -99,6 +101,7 @@ impl ShapeClass {
     fn as_str(self) -> &'static str {
         match self {
             ShapeClass::Scalar => "scalar",
+            ShapeClass::Vocabulary => "vocabulary",
             ShapeClass::Structure => "structure",
         }
     }
@@ -318,6 +321,7 @@ fn site_decision(
         // Box is the noise, and the decision is already made.
         ShapeClass::Structure => Decision::OptionValue,
         ShapeClass::Scalar => scalar_decision(site, schema)?,
+        ShapeClass::Vocabulary => vocabulary_decision(site, schema)?,
     };
     Ok(Some((class, decision)))
 }
@@ -366,21 +370,22 @@ fn resolve_form<'a>(
 }
 
 /// Classify a resolved form by its JTD shape: a `type` form is a scalar,
-/// a `properties` / `optionalProperties` form is a structure. Anything
-/// else — an `enum` vocabulary, a `discriminator` union, an empty form —
-/// has no rule in this pass and refuses rather than passes for
+/// an `enum` is a vocabulary, and a `properties` / `optionalProperties`
+/// form is a structure. Anything else — a `discriminator` union or empty
+/// form — has no rule in this pass and refuses rather than passes for
 /// processed: the tally would otherwise catch it as a bare count, which
 /// names nothing.
 fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result<ShapeClass> {
     if form.contains_key("type") {
         return Ok(ShapeClass::Scalar);
     }
+    if form.contains_key("enum") {
+        return Ok(ShapeClass::Vocabulary);
+    }
     if form.contains_key("properties") || form.contains_key("optionalProperties") {
         return Ok(ShapeClass::Structure);
     }
-    let shape = if form.contains_key("enum") {
-        "a vocabulary enum"
-    } else if form.contains_key("discriminator") {
+    let shape = if form.contains_key("discriminator") {
         "a discriminator union"
     } else {
         "no JTD form at all"
@@ -395,6 +400,35 @@ fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result
         schema.display(),
         path
     );
+}
+
+/// An optional vocabulary has one supported absent-key policy: `null` keeps
+/// it as `Option<Enum>`. Unlike a boolean scalar, an enum has no zero value to
+/// collapse to; any non-null default would require a named generator-owned
+/// function and is refused until a real format needs one.
+fn vocabulary_decision(site: &Site<'_>, schema: &Path) -> Result<Decision> {
+    let Some(annotation) = site.node.get("metadata").and_then(|m| m.get("x-default")) else {
+        bail!(
+            "schema {}: the optional vocabulary field `{}` carries no \
+             `metadata.\"x-default\"` — an absent key must be declared as \
+             `null` before the generator may emit `Option<Enum>`.\n\
+             Fix: add `\"x-default\": null`, then run `cargo xtask codegen`.",
+            schema.display(),
+            site.path
+        );
+    };
+    if annotation == &Value::Null {
+        return Ok(Decision::OptionValue);
+    }
+    bail!(
+        "schema {}: the optional vocabulary field `{}` carries \
+         `metadata.\"x-default\"` = {} — only `null` is supported for a \
+         vocabulary; any named default needs a new generator-owned function.\n\
+         Fix: set the annotation to `null`, then run `cargo xtask codegen`.",
+        schema.display(),
+        site.path,
+        annotation
+    )
 }
 
 /// Read one scalar site's `metadata."x-default"` and rule on it: `null`

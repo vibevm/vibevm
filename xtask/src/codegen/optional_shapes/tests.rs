@@ -33,6 +33,23 @@ pub struct ListEntry {
 }
 "#;
 
+/// The optional enum shape the slot-record schema introduces.
+const OPTIONAL_ENUM: &str = r#"#[derive(Serialize, Deserialize)]
+pub struct SlotFile {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub disposition: Option<Box<Disposition>>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum Disposition {
+    #[serde(rename = "converted")]
+    Converted,
+
+    #[serde(rename = "copied")]
+    Copied,
+}
+"#;
+
 /// The optional structure of the real `entry` output, payload included.
 const OPTIONAL_STRUCT: &str = r#"#[derive(Serialize, Deserialize)]
 pub struct VersionEntry {
@@ -135,6 +152,37 @@ fn a_false_defaulted_bool_collapses_to_the_bare_bool() -> Result<()> {
 pub struct ListEntry {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub overridden: bool,
+}
+"#
+    );
+    Ok(())
+}
+
+#[test]
+fn a_null_defaulted_vocabulary_keeps_the_option_and_lifts_the_box() -> Result<()> {
+    let doc = json!({
+        "optionalProperties": {
+            "disposition": {
+                "enum": ["converted", "copied"],
+                "metadata": { "x-default": null }
+            }
+        }
+    });
+    assert_eq!(
+        apply(OPTIONAL_ENUM, "slot_record/mod.rs", doc)?,
+        r#"#[derive(Serialize, Deserialize)]
+pub struct SlotFile {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disposition: Option<Disposition>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum Disposition {
+    #[serde(rename = "converted")]
+    Converted,
+
+    #[serde(rename = "copied")]
+    Copied,
 }
 "#
     );
