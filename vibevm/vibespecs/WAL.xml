@@ -1,87 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — чекпойнт 2026-08-24 (ночь: четыре волны дня посажены и раскатаны)</title>
-  <status stage="impl" state="done" comment="переезд vibevm/, normal-флип, install-фиксы + vibe clean, фикс bootstrap-генераторов трёх стеков; панель all green, дерево чисто, зеркала синхронны"/>
+  <title id="root">WAL — чекпойнт 2026-08-25 (дизайн-день: PROP-054 и ТЗ исполнителя посажены)</title>
+  <status stage="spec" state="done" comment="лайфсайкл и машина расширений спроектированы по четырём владельческим рулингам; спека и входное ТЗ мультиагентной коробки на main; стройка не начата — ждёт владельческого запуска коробки"/>
   <current-phase title="Current phase">
-    <p><WAL-PHASE fact="true" status="impl/done">Четыре посаженные волны 2026-08-24. (1) **Переезд vibevm/**
-(PROP-052 BUILT): 4 корня хоста, spec внутри 86 пакетов, флип
-USE_NEW_LAYOUT, свип; specmap 0 unresolved, clean-room, агентская проба
-— ecb0a5de…4edb5f2c. (2) **Normal-флип**: 42 живых слота vibepacks в
-`format = "normal"`; PROP-035 четыре поправки — seed стрипает `.xml`,
-multi-doc closure получает doc-slug вне контракт-домов, qualify узнал
-ячейки K6.5 и блок-цитаты, вложенные ноды поглощаются (READ-ONCE),
-`@spec` — агентское ребро (вклейка только `#use`; реализованный
-##OPEN-CLOSURE-EXPLOSION откатил лейн с 2.5 MB к снипетному размеру) —
-b56c604b/b82b7423/db4a36e8. (3) **Install-фиксы + vibe clean**
-(PROP-011 три рулинга; PROP-053): explicit-pkgref строит ПОЛНУЮ
-резолюцию (мир не сносится, e2e вкл. --offline); ноль зависимостей —
-штатный fresh-no-op; same-version дрейф local-источника лечится
-hash-guard'ом write-once кэша (insert_current_at, 5 фетч-путей);
-`vibe clean` — derived-only (vibedeps + generated boot по маркеру), лок
-и машинный кэш неприкосновенны; цепочка `vibe clean install [pkgref]` —
-1cfdec31/eb9103ab. (4) **Bootstrap-генераторы трёх стеков** (находка
-владельца в consumer-воркспейсе): `… init` эмитил `spec_roots =
-["spec"]` и ходил по старому вибедепс-шейпу; rust-фикс портирован из
-consumer-репарации (9cc8161) в канон, typescript и go закрыты тем же
-жанром с regression-ассертами, fresh-e2e свипнуты, mcp — синком;
-перематериализация боево подтвердила hash-guard — f4fbee14.</WAL-PHASE></p>
+    <p><WAL-PHASE fact="true" status="spec/done">Дизайн-день 2026-08-25. **PROP-054**
+(`vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml`, `a11d881f`) — лайфсайкл
+Maven-жанра (девять фаз validate→…→deploy + clean, цепочка обобщает
+PROP-053) и единая машина расширений: `[[extension]]`-грамматика, пять
+хендлеров (builtin/script/binary/native/agent), двухъярусный компилятор —
+staged-трансформы и pass tier (полный IR за `compiler_internals`; пять
+уровней IR; пассы transform/lowering/frontend/backend; verifier между
+пассами; рефакторинг `compile_static_inner` в композируемый конвейер);
+installation-is-consent + observability (реестр/трейс/lane-analyzer);
+C-ABI/VST-провод нативов, prebuilt closed-source; ревизия материализации
+— слот-рекорд `.vibe-slot.toml` и дифф вместо wipe (сегодня install
+убивает слотовые `target/` — `##WIPE-TODAY`). §14 Reference и §15
+Glossary — под младших исполнителей. **ТЗ коробки**
+(`campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`,
+`dbd7a772`) — восемь инкрементальных волн R1–R8, каждый шаг с
+демо-блоком; правила, мины, SPEC-DEBT-протокол. Панель: утренний полный
+прогон all green 54/54; вечерние правки — только доки; финальную панель
+владелец санкционировал словом. specmap 6702/0/0.</WAL-PHASE></p>
   </current-phase>
   <constraints title="Constraints — do not violate">
     <p><WAL-C-EPOCHS fact="true" status="impl/done">`formats/EPOCHS.toml` не трогать; `public` флипает
 только владелец.</WAL-C-EPOCHS></p>
     <p><WAL-C-ANCHORS fact="true" status="impl/done">Якорь с вердиктом не заменяют — надгробие с
 наследником; `spec://`-адреса стабильны; фрозен-слоты пакетов —
-замороженная история (их код не чинится); синк-таргеты (mcp, vendor) —
-write-through: править только авторскую копию, разносит
-`cargo xtask sync-engines`; пакетные воркспейсы форматирует ИХ
-собственный `cargo fmt` (хостовый их не видит).</WAL-C-ANCHORS></p>
-    <p><WAL-C-AT-SPEC fact="true" status="impl/done">`@spec` в компиляторе — НЕ ребро вклейки (PROP-035
-§7.4, рулинг 2026-08-24): обязанность читать — агентская; вклеивает
-только явный `#use`. Не возвращать вклейку — лейн раздувается
-десятикратно прозаическими указателями.</WAL-C-AT-SPEC></p>
-    <p><WAL-C-CACHE-REFRESH fact="true" status="impl/done">Машинный кэш write-once, НО с гардом дрейфа:
-`insert_current_at` сверяет sidecar-хэш со свежим source-хэшем и
-рефрешит расходящуюся запись — не обходить кэш руками и не возвращать
-голый `insert_at` в фетч-пути. Дрейф той-же-версии для local-источников
-— норма (владельческая политика «версия не бампается на каждую
-правку»), guard его ловит.</WAL-C-CACHE-REFRESH></p>
-    <p><WAL-C-PANEL-JOBS fact="true" status="impl/done">Панель на занятом боксе — `CARGO_BUILD_JOBS=4`:
-полный параллелизм линкеров ловит 0xc0000142 даже одной панелью.
-Прочее прежнее: потолок 2 холодных cargo-воркера, вотчеры только
-Monitor, убийства PID-точечно.</WAL-C-PANEL-JOBS></p>
+замороженная история; синк-таргеты (mcp, vendor) — write-through: править
+только авторскую копию, разносит `cargo xtask sync-engines`; пакетные
+воркспейсы форматирует ИХ собственный `cargo fmt`.</WAL-C-ANCHORS></p>
+    <p><WAL-C-AT-SPEC fact="true" status="impl/done">`@spec` в компиляторе — НЕ ребро вклейки (PROP-035,
+рулинг 2026-08-24): вклеивает только явный `#use`.</WAL-C-AT-SPEC></p>
+    <p><WAL-C-CACHE-REFRESH fact="true" status="impl/done">Машинный кэш write-once с гардом дрейфа
+(`insert_current_at`): не обходить руками, голый `insert_at` в фетч-пути
+не возвращать.</WAL-C-CACHE-REFRESH></p>
+    <p><WAL-C-PANEL-JOBS fact="true" status="impl/done">Панель на занятом боксе — `CARGO_BUILD_JOBS=4`
+(0xc0000142 от полного параллелизма линкеров); потолок 2 холодных
+cargo-воркера; вотчеры только Monitor; убийства PID-точечно.</WAL-C-PANEL-JOBS></p>
     <p><WAL-C-WIN-LOCKS fact="true" status="impl/done">Windows-локи: user-mapped section (1224) на
 STATIC/INDEX и Access denied (5) на свапе generated — транзиент: снести
-`generated.new-*`, перегнать. `check-codegen` диффит против ИНДЕКСА —
-свежий генерат требует `git add` до зелени шага. WAL-проза: строка-
-продолжение факта не начинается с `+ ` (MD-проекция читает её
-list-item'ом).</WAL-C-WIN-LOCKS></p>
+`generated.new-*`, перегнать. `check-codegen` диффит против ИНДЕКСА.
+WAL-проза: строка-продолжение факта не начинается с `+ `.</WAL-C-WIN-LOCKS></p>
+    <p><WAL-C-SCAN-WRITES fact="true" status="impl/done">`vibe progress scan --campaign` — ПИШУЩИЙ верб:
+перепроецирует run/-стейт кампании на текущие include-глобы и прунит
+out-of-scope записи С ВЕРДИКТАМИ (2026-08-25 чуть не унёс 377k строк
+кэша; откатано). Диагностика долга — только `judging-debt.py` /
+`text-stability.py`; scan с зоной гонять лишь когда изменение стейта —
+цель.</WAL-C-SCAN-WRITES></p>
     <p><WAL-C-LANDING-ORDER fact="true" status="impl/done">Порядок посадки: дифф → `cargo fmt --all` (плюс
-пакетные fmt при правках пакетов) → `cargo xtask specmap` → панель
-(вердикт по хвосту `all green`) → суд → коммит →
+пакетные fmt) → `cargo xtask specmap` → панель (вердикт по хвосту
+`all green`) → суд (если трогался судимый корпус) → коммит →
 `cargo xtask mirror`.</WAL-C-LANDING-ORDER></p>
   </constraints>
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">Кандидаты (владельческие, сессия не начинает сама):
-(1) релиз 1.0.0 — инспекция по RELEASE-INSPECTION-CHECKLIST.md → PAT →
-С6-публикация → тег (TASKS.md, TZ-RELEASE §10); (2) B-107 (наблюдать ли
-пакетный XML-корпус фактов; 3 мёртвых exclude) и прежние B-103/B-105;
-(3) добить `impl/plan → impl/done` в PROP-053 и PROP-011-рулингах
-(чисто доковая правка — код и тесты зелёные); (4) TS fresh-e2e на этом
-боксе красен из-за отсутствующих `tools/*/node_modules` — `npm install`
-в ts-extract/ts-oracle лечит (панель класс штатно скипает).</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="spec/work">Кандидаты (владельческие, сессия не начинает сама):
+(1) запуск мультиагентной коробки по
+`campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (коробка
+читает PROP-054 целиком первым; права на коммит/пуш — слово владельца;
+статусы фактов спек исполнитель не двигает — SPEC-DEBT-протокол);
+(2) релиз 1.0.0 — PAT → С6 → тег; (3) B-107 и прежние B-103/B-105;
+(4) `impl/plan → impl/done` в PROP-053 и PROP-011-рулингах; (5) TS
+fresh-e2e — `npm install` в tools/ts-extract и ts-oracle; (6) открытые
+развилки PROP-054 §13 — create-бюджет, deploy-цели.</WAL-NEXT></p>
   </next>
   <known-issues title="Known issues">
-    <p><WAL-ISSUES fact="true" status="impl/work">2 softened-concept warnings панели — штатные (PROP-050
-F7). Шаг 53: 3 dead-exclude предупреждения facts.toml (B-107). B-106 —
-гниль 116 старых ссылок (P3). Прежние очереди (37 stale-форматов, аудит
-2026-08-06-01, релиз за PAT) — без изменений.</WAL-ISSUES></p>
+    <p><WAL-ISSUES fact="true" status="impl/work">2 softened-concept warnings панели — штатные. Шаг 53:
+3 dead-exclude предупреждения facts.toml (B-107). B-106 — гниль 116
+старых ссылок (P3). Прежние очереди (37 stale-форматов, аудит
+2026-08-06-01, релиз за PAT) — без изменений. `AGENT-MODE.toml` вернулся
+в `auto` (временный collab кончился с сессией).</WAL-ISSUES></p>
   </known-issues>
   <done title="Done">
-    <p><WAL-DONE fact="true" status="impl/done">2026-08-24 целиком: переезд vibevm/ (утро) → normal-флип
-42 пакетов с дозреванием компилятора (день) → install-фиксы
-и vibe clean (вечер) → фикс bootstrap-генераторов трёх стеков (ночь).
-Панели all green после каждой волны; спеки дня: PROP-052 BUILT,
-PROP-035 четыре поправки, PROP-011 три рулинга, PROP-053 новый.
-Нарация sync-engines `[k/9]` жива; hash-guard кэша проверен боем.</WAL-DONE></p>
+    <p><WAL-DONE fact="true" status="spec/done">2026-08-25: дизайн-день целиком — PROP-054 по четырём
+дословным рулингам владельца (эпик-мандат; полный IR/LLVM-ярус с флагом;
+no-consent + observability + VST/prebuilt; фазы «окей», план
+инкрементальный) и входное ТЗ коробки. Прежний хвост (2026-08-24: переезд
+vibevm/, normal-флип, install-фиксы + vibe clean, генераторы стеков) — в
+истории, `af68fa85` и ниже.</WAL-DONE></p>
   </done>
 </spec>
