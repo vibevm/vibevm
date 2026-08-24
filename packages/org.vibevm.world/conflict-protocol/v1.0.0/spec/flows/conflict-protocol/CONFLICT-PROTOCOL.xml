@@ -48,19 +48,19 @@ obey.</the-fix-there-is-a-memory-fence></p>
       </tr>
       <tr>
         <td><ROW-HUMAN-BEATS-SPEC fact="true" status="impl/done">**Human &gt; Spec**</ROW-HUMAN-BEATS-SPEC></td>
-        <td><fact status="impl/done">The human may change the spec — that is what winning means here. A human instruction that contradicts the spec is not a conflict; it is a spec change that has not been written down yet. Write it down, then follow it.</fact></td>
+        <td><ROW-HUMAN-BEATS-SPEC-OPERATIONAL-MEANING fact="true" status="impl/done">The human may change the spec — that is what winning means here. A human instruction that contradicts the spec is not a conflict; it is a spec change that has not been written down yet. Write it down, then follow it.</ROW-HUMAN-BEATS-SPEC-OPERATIONAL-MEANING></td>
       </tr>
       <tr>
         <td><ROW-SPEC-BEATS-CODE fact="true" status="impl/done">**Spec &gt; Code**</ROW-SPEC-BEATS-CODE></td>
-        <td><fact status="impl/done">Code must conform to the spec. When they disagree, the code is wrong *by definition* until the human rules otherwise. Fix the code, or dispute the spec with a REVIEW marker — never by editing the spec.</fact></td>
+        <td><ROW-SPEC-BEATS-CODE-OPERATIONAL-MEANING fact="true" status="impl/done">Code must conform to the spec. When they disagree, the code is wrong *by definition* until the human rules otherwise. Fix the code, or dispute the spec with a REVIEW marker — never by editing the spec.</ROW-SPEC-BEATS-CODE-OPERATIONAL-MEANING></td>
       </tr>
       <tr>
         <td><ROW-TESTS-ARE-THE-SPEC-EXECUTABLE fact="true" status="impl/done">**Tests = Spec, executable**</ROW-TESTS-ARE-THE-SPEC-EXECUTABLE></td>
-        <td><fact status="impl/done">Tests are the spec in executable form (next section).</fact></td>
+        <td><ROW-TESTS-ARE-THE-SPEC-EXECUTABLE-OPERATIONAL-MEANING fact="true" status="impl/done">Tests are the spec in executable form (next section).</ROW-TESTS-ARE-THE-SPEC-EXECUTABLE-OPERATIONAL-MEANING></td>
       </tr>
       <tr>
         <td><ROW-CODE-BEATS-WAL fact="true" status="impl/done">**Code &gt; WAL**</ROW-CODE-BEATS-WAL></td>
-        <td><fact status="impl/done">The volatile state file (WAL or equivalent) is a record of where work stands, not a source of truth about intended behaviour. When it disagrees with anything above it, it is stale — correct the record, not the truth.</fact></td>
+        <td><ROW-CODE-BEATS-WAL-OPERATIONAL-MEANING fact="true" status="impl/done">The volatile state file (WAL or equivalent) is a record of where work stands, not a source of truth about intended behaviour. When it disagrees with anything above it, it is stale — correct the record, not the truth.</ROW-CODE-BEATS-WAL-OPERATIONAL-MEANING></td>
       </tr>
     </table>
     <p><THE-ORDER-IS-TOTAL-AND-ACYCLIC fact="true" status="impl/done">Unlike rock-paper-scissors — or rock-paper-scissors-lizard-Spock —

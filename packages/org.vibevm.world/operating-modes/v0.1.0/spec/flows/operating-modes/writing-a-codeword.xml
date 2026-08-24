@@ -91,28 +91,28 @@ combination, treat the stricter posture as winning.</WHEN-IN-DOUBT-THE-STRICTER-
       </tr>
       <tr>
         <td><ROW-SMELL-NO-VERBATIM-DESCRIPTION fact="true" status="spec/done">A codeword with no verbatim description</ROW-SMELL-NO-VERBATIM-DESCRIPTION></td>
-        <td><fact status="spec/done">the authorisation is the agent's paraphrase, not the owner's intent</fact></td>
-        <td><fact status="spec/done">record the owner's words</fact></td>
+        <td><ROW-SMELL-NO-VERBATIM-DESCRIPTION-WHY-IT-FAILS fact="true" status="spec/done">the authorisation is the agent's paraphrase, not the owner's intent</ROW-SMELL-NO-VERBATIM-DESCRIPTION-WHY-IT-FAILS></td>
+        <td><ROW-SMELL-NO-VERBATIM-DESCRIPTION-FIX fact="true" status="spec/done">record the owner's words</ROW-SMELL-NO-VERBATIM-DESCRIPTION-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-BE-CAREFUL-MODE fact="true" status="spec/done">"be careful mode" as a codeword</ROW-SMELL-BE-CAREFUL-MODE></td>
-        <td><fact status="spec/done">the default posture is already careful; a mode *relaxes*, it does not re-assert the default</fact></td>
-        <td><fact status="spec/done">drop it; the default covers it</fact></td>
+        <td><ROW-SMELL-BE-CAREFUL-MODE-WHY-IT-FAILS fact="true" status="spec/done">the default posture is already careful; a mode *relaxes*, it does not re-assert the default</ROW-SMELL-BE-CAREFUL-MODE-WHY-IT-FAILS></td>
+        <td><ROW-SMELL-BE-CAREFUL-MODE-FIX fact="true" status="spec/done">drop it; the default covers it</ROW-SMELL-BE-CAREFUL-MODE-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-NO-RED-LINES-LISTED fact="true" status="spec/done">A mode that lists no red lines</ROW-SMELL-NO-RED-LINES-LISTED></td>
-        <td><fact status="spec/done">nothing confirms it respects them</fact></td>
-        <td><fact status="spec/done">restate the full list in part 4</fact></td>
+        <td><ROW-SMELL-NO-RED-LINES-LISTED-WHY-IT-FAILS fact="true" status="spec/done">nothing confirms it respects them</ROW-SMELL-NO-RED-LINES-LISTED-WHY-IT-FAILS></td>
+        <td><ROW-SMELL-NO-RED-LINES-LISTED-FIX fact="true" status="spec/done">restate the full list in part 4</ROW-SMELL-NO-RED-LINES-LISTED-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING fact="true" status="spec/done">A phrase acted on before cataloguing</ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING></td>
-        <td><fact status="spec/done">non-repeatable, unauditable behaviour</fact></td>
-        <td><fact status="spec/done">catalogue first, act second</fact></td>
+        <td><ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING-WHY-IT-FAILS fact="true" status="spec/done">non-repeatable, unauditable behaviour</ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING-WHY-IT-FAILS></td>
+        <td><ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING-FIX fact="true" status="spec/done">catalogue first, act second</ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE fact="true" status="spec/done">A mode that persists across sessions silently</ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE></td>
-        <td><fact status="spec/done">a later session inherits a posture nobody re-authorised</fact></td>
-        <td><fact status="spec/done">make non-persistence explicit</fact></td>
+        <td><ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE-WHY-IT-FAILS fact="true" status="spec/done">a later session inherits a posture nobody re-authorised</ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE-WHY-IT-FAILS></td>
+        <td><ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE-FIX fact="true" status="spec/done">make non-persistence explicit</ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE-FIX></td>
       </tr>
     </table>
   </anti-patterns>

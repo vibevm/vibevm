@@ -69,18 +69,18 @@ gate   = "cargo test"                  # even an LLM refactor is done only when 
         </tr>
         <tr>
           <td><KIND-ALGORITHMIC fact="true" status="spec/done">`algorithmic`</KIND-ALGORITHMIC></td>
-          <td><fact status="spec/done">a deterministic engine</fact></td>
-          <td><fact status="spec/done">`vibe bin exec &lt;provider&gt; -- &lt;invoke&gt;` (PROP-025)</fact></td>
+          <td><KIND-ALGORITHMIC-EDITS-PRODUCED-BY fact="true" status="spec/done">a deterministic engine</KIND-ALGORITHMIC-EDITS-PRODUCED-BY></td>
+          <td><KIND-ALGORITHMIC-DISPATCH fact="true" status="spec/done">`vibe bin exec &lt;provider&gt; -- &lt;invoke&gt;` (PROP-025)</KIND-ALGORITHMIC-DISPATCH></td>
         </tr>
         <tr>
           <td><KIND-LLM fact="true" status="spec/done">`llm`</KIND-LLM></td>
-          <td><fact status="spec/done">an agent filling a `prompt` template</fact></td>
-          <td><fact status="spec/done">hand the agent the prompt + context; it proposes edits</fact></td>
+          <td><KIND-LLM-EDITS-PRODUCED-BY fact="true" status="spec/done">an agent filling a `prompt` template</KIND-LLM-EDITS-PRODUCED-BY></td>
+          <td><KIND-LLM-DISPATCH fact="true" status="spec/done">hand the agent the prompt + context; it proposes edits</KIND-LLM-DISPATCH></td>
         </tr>
         <tr>
           <td><KIND-HYBRID fact="true" status="spec/done">`hybrid`</KIND-HYBRID></td>
-          <td><fact status="spec/done">both — mechanical transform + an agent for the judgment part</fact></td>
-          <td><fact status="spec/done">the provider orchestrates the callback</fact></td>
+          <td><KIND-HYBRID-EDITS-PRODUCED-BY fact="true" status="spec/done">both — mechanical transform + an agent for the judgment part</KIND-HYBRID-EDITS-PRODUCED-BY></td>
+          <td><KIND-HYBRID-DISPATCH fact="true" status="spec/done">the provider orchestrates the callback</KIND-HYBRID-DISPATCH></td>
         </tr>
       </table>
       <facts ordered="false">
@@ -141,23 +141,23 @@ gate   = "cargo test"                  # even an LLM refactor is done only when 
       </tr>
       <tr>
         <td><PA-VSCODE fact="true" status="spec/done">**VS Code `contributes.commands`**</PA-VSCODE></td>
-        <td><fact status="spec/done">MIT</fact></td>
-        <td><fact status="spec/done">**The closest model.** Extensions declare commands in their manifest; the host discovers and registers them into one command registry. This PROP is the same, applied to refactorings, composed at install.</fact></td>
+        <td><PA-VSCODE-LICENSE-VERIFY fact="true" status="spec/done">MIT</PA-VSCODE-LICENSE-VERIFY></td>
+        <td><PA-VSCODE-ROLE-HERE fact="true" status="spec/done">**The closest model.** Extensions declare commands in their manifest; the host discovers and registers them into one command registry. This PROP is the same, applied to refactorings, composed at install.</PA-VSCODE-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-LSP fact="true" status="spec/done">LSP code actions / `executeCommand`</PA-LSP></td>
-        <td><fact status="spec/done">n/a (protocol)</fact></td>
-        <td><fact status="spec/done">Dynamic "what actions apply here" advertisement — the `applies_to` filter surface.</fact></td>
+        <td><PA-LSP-LICENSE-VERIFY fact="true" status="spec/done">n/a (protocol)</PA-LSP-LICENSE-VERIFY></td>
+        <td><PA-LSP-ROLE-HERE fact="true" status="spec/done">Dynamic "what actions apply here" advertisement — the `applies_to` filter surface.</PA-LSP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-OPENREWRITE fact="true" status="spec/done">OpenRewrite recipe registry</PA-OPENREWRITE></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">Recipes discovered from the classpath, listed and composed — a typed, gated operation catalog.</fact></td>
+        <td><PA-OPENREWRITE-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</PA-OPENREWRITE-LICENSE-VERIFY></td>
+        <td><PA-OPENREWRITE-ROLE-HERE fact="true" status="spec/done">Recipes discovered from the classpath, listed and composed — a typed, gated operation catalog.</PA-OPENREWRITE-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-CARGO fact="true" status="spec/done">cargo custom subcommands</PA-CARGO></td>
-        <td><fact status="spec/done">n/a (cargo)</fact></td>
-        <td><fact status="spec/done">`cargo-&lt;x&gt;` on PATH extends the CLI by discovery — extensibility, but without a manifest or a precompiled cache (the gap this PROP closes).</fact></td>
+        <td><PA-CARGO-LICENSE-VERIFY fact="true" status="spec/done">n/a (cargo)</PA-CARGO-LICENSE-VERIFY></td>
+        <td><PA-CARGO-ROLE-HERE fact="true" status="spec/done">`cargo-&lt;x&gt;` on PATH extends the CLI by discovery — extensibility, but without a manifest or a precompiled cache (the gap this PROP closes).</PA-CARGO-ROLE-HERE></td>
       </tr>
     </table>
     <p><DIFFERENTIATORS fact="true" status="spec/done">**Differentiators.**</DIFFERENTIATORS></p>

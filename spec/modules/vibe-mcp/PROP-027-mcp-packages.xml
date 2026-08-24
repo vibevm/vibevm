@@ -167,48 +167,48 @@ code-bearing + binaries + exact-pin composition end to end):</COMPOSITION-LAW></
         </tr>
         <tr>
           <td><ROW-CODE-BEARING fact="true" status="impl/done">Code-bearing layout</ROW-CODE-BEARING></td>
-          <td><fact status="impl/done">PROP-024</fact></td>
-          <td><fact status="impl/done">the package IS code-bearing by definition; `spec/` for prompt content, crates at root</fact></td>
+          <td><ROW-CODE-BEARING-SPEC fact="true" status="impl/done">PROP-024</ROW-CODE-BEARING-SPEC></td>
+          <td><ROW-CODE-BEARING-COMPOSITION-RULE fact="true" status="impl/done">the package IS code-bearing by definition; `spec/` for prompt content, crates at root</ROW-CODE-BEARING-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-BINARIES fact="true" status="impl/done">Binaries</ROW-BINARIES></td>
-          <td><fact status="impl/done">PROP-025</fact></td>
-          <td><fact status="impl/done">`[[mcp_server]].binary` references them; `vibe bin list/build/exec` see them like any other</fact></td>
+          <td><ROW-BINARIES-SPEC fact="true" status="impl/done">PROP-025</ROW-BINARIES-SPEC></td>
+          <td><ROW-BINARIES-COMPOSITION-RULE fact="true" status="impl/done">`[[mcp_server]].binary` references them; `vibe bin list/build/exec` see them like any other</ROW-BINARIES-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-SKILLS fact="true" status="impl/done">Skills</ROW-SKILLS></td>
-          <td><fact status="impl/done">PROP-015 §2.8, PROP-018 §2.4</fact></td>
-          <td><fact status="impl/done">`[[skill]]` legal; a server may ship its teaching skill</fact></td>
+          <td><ROW-SKILLS-SPEC fact="true" status="impl/done">PROP-015 §2.8, PROP-018 §2.4</ROW-SKILLS-SPEC></td>
+          <td><ROW-SKILLS-COMPOSITION-RULE fact="true" status="impl/done">`[[skill]]` legal; a server may ship its teaching skill</ROW-SKILLS-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-BOOT-SNIPPET fact="true" status="impl/done">Boot snippet</ROW-BOOT-SNIPPET></td>
-          <td><fact status="impl/done">PROP-009</fact></td>
-          <td><fact status="impl/done">legal but not required; agents learn servers via registration, not boot text</fact></td>
+          <td><ROW-BOOT-SNIPPET-SPEC fact="true" status="impl/done">PROP-009</ROW-BOOT-SNIPPET-SPEC></td>
+          <td><ROW-BOOT-SNIPPET-COMPOSITION-RULE fact="true" status="impl/done">legal but not required; agents learn servers via registration, not boot text</ROW-BOOT-SNIPPET-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-HOOKS fact="true" status="impl/done">Hooks</ROW-HOOKS></td>
-          <td><fact status="impl/done">PROP-020</fact></td>
-          <td><fact status="impl/done">pre/post-install hooks run in the slot as usual</fact></td>
+          <td><ROW-HOOKS-SPEC fact="true" status="impl/done">PROP-020</ROW-HOOKS-SPEC></td>
+          <td><ROW-HOOKS-COMPOSITION-RULE fact="true" status="impl/done">pre/post-install hooks run in the slot as usual</ROW-HOOKS-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-MATERIALIZATION fact="true" status="impl/done">Materialization modes</ROW-MATERIALIZATION></td>
-          <td><fact status="impl/done">PROP-022</fact></td>
-          <td><fact status="impl/done">snapshot/in-place per the standard rules</fact></td>
+          <td><ROW-MATERIALIZATION-SPEC fact="true" status="impl/done">PROP-022</ROW-MATERIALIZATION-SPEC></td>
+          <td><ROW-MATERIALIZATION-COMPOSITION-RULE fact="true" status="impl/done">snapshot/in-place per the standard rules</ROW-MATERIALIZATION-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-BRIDGES fact="true" status="impl/done">Bridges / submodules</ROW-BRIDGES></td>
-          <td><fact status="impl/done">PROP-023 / PROP-021</fact></td>
-          <td><fact status="impl/done">no special-casing</fact></td>
+          <td><ROW-BRIDGES-SPEC fact="true" status="impl/done">PROP-023 / PROP-021</ROW-BRIDGES-SPEC></td>
+          <td><ROW-BRIDGES-COMPOSITION-RULE fact="true" status="impl/done">no special-casing</ROW-BRIDGES-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-PUBLISH fact="true" status="impl/done">Publish</ROW-PUBLISH></td>
-          <td><fact status="impl/done">PROP-002 §2.10</fact></td>
-          <td><fact status="impl/done">standard registry publish; the exact-pin law travels in the manifest</fact></td>
+          <td><ROW-PUBLISH-SPEC fact="true" status="impl/done">PROP-002 §2.10</ROW-PUBLISH-SPEC></td>
+          <td><ROW-PUBLISH-COMPOSITION-RULE fact="true" status="impl/done">standard registry publish; the exact-pin law travels in the manifest</ROW-PUBLISH-COMPOSITION-RULE></td>
         </tr>
         <tr>
           <td><ROW-MUTABILITY fact="true" status="impl/done">In-workspace mutability</ROW-MUTABILITY></td>
-          <td><fact status="impl/done">PROP-011 §2.6</fact></td>
-          <td><fact status="impl/done">dev-loop re-materialisation applies</fact></td>
+          <td><ROW-MUTABILITY-SPEC fact="true" status="impl/done">PROP-011 §2.6</ROW-MUTABILITY-SPEC></td>
+          <td><ROW-MUTABILITY-COMPOSITION-RULE fact="true" status="impl/done">dev-loop re-materialisation applies</ROW-MUTABILITY-COMPOSITION-RULE></td>
         </tr>
       </table>
     </composition>

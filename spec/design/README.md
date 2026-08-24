@@ -14,13 +14,13 @@
 
 | Directory | Holds | Normative? |
 | --- | --- | --- |
-| @fact:ROW-BOOT [`boot/`](../boot/) @status:doc/done |  Session-boot instructions read at the start of every session @status:doc/done |  yes @status:doc/done |
-| @fact:ROW-COMMON [`common/`](../common/) @status:doc/done |  Foundation decisions crossing every crate (PROP-000, PROP-006) @status:doc/done |  yes @status:doc/done |
-| @fact:ROW-MODULES [`modules/`](../modules/) @status:doc/done |  Per-crate PROP / FEAT — the implementation contract @status:doc/done |  yes @status:doc/done |
-| @fact:ROW-NO-DECISIONS `decisions/` — **never created, and never will be** @status:doc/done |  Nothing. A reopenable decision's four-field record lives **inside the `common/` or `modules/` section that governs the value** — the installed flow's `#NO-SEPARATE-ADR-DIRECTORY` and `#SUM-RECORDS-LIVE-AT-THE-ANCHOR`. Do not search for this directory; its absence is the design @status:doc/done |  n/a @status:doc/done |
-| @fact:ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @status:doc/done |  Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @status:doc/done |  no @status:doc/done |
-| @fact:ROW-DESIGN `design/` (this directory) @status:doc/done |  Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @status:doc/done |  no @status:doc/done |
-| @fact:ROW-WAL [`WAL.md`](../WAL.md) @status:doc/done |  Volatile current-state checkpoint, rewritten each session @status:doc/done |  n/a @status:doc/done |
+| @fact:ROW-BOOT [`boot/`](../boot/) @status:doc/done |  @fact:ROW-BOOT-HOLDS Session-boot instructions read at the start of every session @status:doc/done |  @fact:ROW-BOOT-NORMATIVE yes @status:doc/done |
+| @fact:ROW-COMMON [`common/`](../common/) @status:doc/done |  @fact:ROW-COMMON-HOLDS Foundation decisions crossing every crate (PROP-000, PROP-006) @status:doc/done |  @fact:ROW-COMMON-NORMATIVE yes @status:doc/done |
+| @fact:ROW-MODULES [`modules/`](../modules/) @status:doc/done |  @fact:ROW-MODULES-HOLDS Per-crate PROP / FEAT — the implementation contract @status:doc/done |  @fact:ROW-MODULES-NORMATIVE yes @status:doc/done |
+| @fact:ROW-NO-DECISIONS `decisions/` — **never created, and never will be** @status:doc/done |  @fact:ROW-NO-DECISIONS-HOLDS Nothing. A reopenable decision's four-field record lives **inside the `common/` or `modules/` section that governs the value** — the installed flow's `#NO-SEPARATE-ADR-DIRECTORY` and `#SUM-RECORDS-LIVE-AT-THE-ANCHOR`. Do not search for this directory; its absence is the design @status:doc/done |  @fact:ROW-NO-DECISIONS-NORMATIVE n/a @status:doc/done |
+| @fact:ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @status:doc/done |  @fact:ROW-RESEARCH-HOLDS Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @status:doc/done |  @fact:ROW-RESEARCH-NORMATIVE no @status:doc/done |
+| @fact:ROW-DESIGN `design/` (this directory) @status:doc/done |  @fact:ROW-DESIGN-HOLDS Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @status:doc/done |  @fact:ROW-DESIGN-NORMATIVE no @status:doc/done |
+| @fact:ROW-WAL [`WAL.md`](../WAL.md) @status:doc/done |  @fact:ROW-WAL-HOLDS Volatile current-state checkpoint, rewritten each session @status:doc/done |  @fact:ROW-WAL-NORMATIVE n/a @status:doc/done |
 
 @fact:research-vs-design `legacy-spec/research/` (archived) and `design/` are both non-normative, but they look in opposite directions: the archived research studies what *other* projects did; `design/` records why *we* chose what we chose. @status:doc/done
 
@@ -41,9 +41,9 @@ No.** @status:doc/done
 
 |  | The question | What must be named | Fails when |
 | --- | --- | --- | --- |
-| @fact:Q1-CONDITION **Q1 · the condition** @status:doc/done |  Complete *«this stands while X»*, where X is **outside this project's own definitions** @status:doc/done |  an external dependency, a measured value, or a stated scope limit (`in v1`, `until`, `v2+`) @status:doc/done |  X is a term we defined — changing it is a migration, not a re-decision @status:doc/done |
-| @fact:Q2-OBSERVATION-POINT **Q2 · the observation point** @status:doc/done |  Could a stranger check X **today**? @status:doc/done |  a file, a command, an upstream repository, a version, or a measurement this project already takes @status:doc/done |  nothing observes X — the record would carry the unobservable trigger `#UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE` forbids @status:doc/done |
-| @fact:Q3-LOSER **Q3 · the loser** @status:doc/done |  Was an alternative **available at the time**, and could someone re-propose it? @status:doc/done |  one named alternative and the reason it lost @status:doc/done |  nothing was in contention — the section is a fact wearing a `Decision` label, and `#DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE` says do not record it @status:doc/done |
+| @fact:Q1-CONDITION **Q1 · the condition** @status:doc/done |  @fact:Q1-CONDITION-THE-QUESTION Complete *«this stands while X»*, where X is **outside this project's own definitions** @status:doc/done |  @fact:Q1-CONDITION-WHAT-MUST-BE-NAMED an external dependency, a measured value, or a stated scope limit (`in v1`, `until`, `v2+`) @status:doc/done |  @fact:Q1-CONDITION-FAILS-WHEN X is a term we defined — changing it is a migration, not a re-decision @status:doc/done |
+| @fact:Q2-OBSERVATION-POINT **Q2 · the observation point** @status:doc/done |  @fact:Q2-OBSERVATION-POINT-THE-QUESTION Could a stranger check X **today**? @status:doc/done |  @fact:Q2-OBSERVATION-POINT-WHAT-MUST-BE-NAMED a file, a command, an upstream repository, a version, or a measurement this project already takes @status:doc/done |  @fact:Q2-OBSERVATION-POINT-FAILS-WHEN nothing observes X — the record would carry the unobservable trigger `#UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE` forbids @status:doc/done |
+| @fact:Q3-LOSER **Q3 · the loser** @status:doc/done |  @fact:Q3-LOSER-THE-QUESTION Was an alternative **available at the time**, and could someone re-propose it? @status:doc/done |  @fact:Q3-LOSER-WHAT-MUST-BE-NAMED one named alternative and the reason it lost @status:doc/done |  @fact:Q3-LOSER-FAILS-WHEN nothing was in contention — the section is a fact wearing a `Decision` label, and `#DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE` says do not record it @status:doc/done |
 
 @fact:CRITERION-IS-THE-RECORD-SHAPE The three questions are the flow's own record
 with the *Decision* removed: Q1 + Q2 are `#A-TRIGGER-HAS-THREE-PARTS`, Q3 is

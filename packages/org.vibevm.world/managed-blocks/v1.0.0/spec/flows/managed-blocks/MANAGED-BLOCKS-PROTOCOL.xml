@@ -66,19 +66,19 @@ alone on its own line.</THE-BLOCK-IS-BOUNDED-BY-AN-OPENING-AND-A-CLOSING-MARKER>
       </tr>
       <tr>
         <td><ROW-MARKER-UNIQUE fact="true" status="impl/done">**Unique**</ROW-MARKER-UNIQUE></td>
-        <td><fact status="impl/done">The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# &gt;&gt;&gt; toolname &gt;&gt;&gt;`, `&lt;toolname&gt;`, `# BEGIN toolname`. A generic `# BEGIN` will collide.</fact></td>
+        <td><ROW-MARKER-UNIQUE-REQUIREMENT fact="true" status="impl/done">The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# &gt;&gt;&gt; toolname &gt;&gt;&gt;`, `&lt;toolname&gt;`, `# BEGIN toolname`. A generic `# BEGIN` will collide.</ROW-MARKER-UNIQUE-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-MARKER-GREPPABLE fact="true" status="impl/done">**Greppable**</ROW-MARKER-GREPPABLE></td>
-        <td><fact status="impl/done">Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why.</fact></td>
+        <td><ROW-MARKER-GREPPABLE-REQUIREMENT fact="true" status="impl/done">Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why.</ROW-MARKER-GREPPABLE-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-MARKER-PAIRED fact="true" status="impl/done">**Paired**</ROW-MARKER-PAIRED></td>
-        <td><fact status="impl/done">A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed.</fact></td>
+        <td><ROW-MARKER-PAIRED-REQUIREMENT fact="true" status="impl/done">A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed.</ROW-MARKER-PAIRED-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-MARKER-SELF-DOCUMENTING fact="true" status="impl/done">**Self-documenting**</ROW-MARKER-SELF-DOCUMENTING></td>
-        <td><fact status="impl/done">The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs.</fact></td>
+        <td><ROW-MARKER-SELF-DOCUMENTING-REQUIREMENT fact="true" status="impl/done">The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs.</ROW-MARKER-SELF-DOCUMENTING-REQUIREMENT></td>
       </tr>
     </table>
     <p><a-worked-block-using-bare-tags fact="true" status="impl/done">A worked block, using bare tags (chosen here because the primary
@@ -119,18 +119,18 @@ own markers.</THE-TOOL-CLASSIFIES-THE-HOST-FILE-BEFORE-WRITING></p>
       </tr>
       <tr>
         <td><ROW-STATE-ABSENT fact="true" status="impl/done">**Absent**</ROW-STATE-ABSENT></td>
-        <td><fact status="impl/done">Zero markers</fact></td>
-        <td><fact status="impl/done">Create: append a fresh block (§verbs).</fact></td>
+        <td><ROW-STATE-ABSENT-MARKER-COUNT fact="true" status="impl/done">Zero markers</ROW-STATE-ABSENT-MARKER-COUNT></td>
+        <td><ROW-STATE-ABSENT-ALLOWED-ACTION fact="true" status="impl/done">Create: append a fresh block (§verbs).</ROW-STATE-ABSENT-ALLOWED-ACTION></td>
       </tr>
       <tr>
         <td><ROW-STATE-PRESENT fact="true" status="impl/done">**Present**</ROW-STATE-PRESENT></td>
-        <td><fact status="impl/done">Exactly one opener, then exactly one closer, in order</fact></td>
-        <td><fact status="impl/done">Update or remove the body between them.</fact></td>
+        <td><ROW-STATE-PRESENT-MARKER-COUNT fact="true" status="impl/done">Exactly one opener, then exactly one closer, in order</ROW-STATE-PRESENT-MARKER-COUNT></td>
+        <td><ROW-STATE-PRESENT-ALLOWED-ACTION fact="true" status="impl/done">Update or remove the body between them.</ROW-STATE-PRESENT-ALLOWED-ACTION></td>
       </tr>
       <tr>
         <td><ROW-STATE-MALFORMED fact="true" status="impl/done">**Malformed**</ROW-STATE-MALFORMED></td>
-        <td><fact status="impl/done">Anything else — two+ of either marker, an opener with no closer, a closer with no opener, or a closer before its opener</fact></td>
-        <td><fact status="impl/done">**Hard stop.** Change nothing; report.</fact></td>
+        <td><ROW-STATE-MALFORMED-MARKER-COUNT fact="true" status="impl/done">Anything else — two+ of either marker, an opener with no closer, a closer with no opener, or a closer before its opener</ROW-STATE-MALFORMED-MARKER-COUNT></td>
+        <td><ROW-STATE-MALFORMED-ALLOWED-ACTION fact="true" status="impl/done">**Hard stop.** Change nothing; report.</ROW-STATE-MALFORMED-ALLOWED-ACTION></td>
       </tr>
     </table>
     <p><MALFORMED-IS-THE-LOAD-BEARING-STATE fact="true" status="impl/done">Malformed is the load-bearing state.</MALFORMED-IS-THE-LOAD-BEARING-STATE></p>

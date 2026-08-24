@@ -30,15 +30,15 @@ occurred.</THE-LEDGER-BINDS-INTENT-TO-REAL-COMMITS></p>
       </tr>
       <tr>
         <td><ROW-STATE-PLANNED fact="true" status="impl/done">`PLANNED`</ROW-STATE-PLANNED></td>
-        <td><fact status="impl/done">authored; optionally annotated `ACCEPTED with owner amendments, &lt;date&gt;` after review</fact></td>
+        <td><ROW-STATE-PLANNED-WHEN fact="true" status="impl/done">authored; optionally annotated `ACCEPTED with owner amendments, &lt;date&gt;` after review</ROW-STATE-PLANNED-WHEN></td>
       </tr>
       <tr>
         <td><ROW-STATE-EXECUTING fact="true" status="impl/done">`EXECUTING`</ROW-STATE-EXECUTING></td>
-        <td><fact status="impl/done">flipped when Phase 0 opens; since Phase 0 commits nothing, the flip rides the plan-amendment commit that records the Phase 0 findings, or Phase 1's first commit</fact></td>
+        <td><ROW-STATE-EXECUTING-WHEN fact="true" status="impl/done">flipped when Phase 0 opens; since Phase 0 commits nothing, the flip rides the plan-amendment commit that records the Phase 0 findings, or Phase 1's first commit</ROW-STATE-EXECUTING-WHEN></td>
       </tr>
       <tr>
         <td><ROW-STATE-EXECUTED fact="true" status="impl/done">`EXECUTED &lt;date&gt;`</ROW-STATE-EXECUTED></td>
-        <td><fact status="impl/done">flipped at close, together with the prepended execution record</fact></td>
+        <td><ROW-STATE-EXECUTED-WHEN fact="true" status="impl/done">flipped at close, together with the prepended execution record</ROW-STATE-EXECUTED-WHEN></td>
       </tr>
     </table>
     <p><THE-LINES-TAIL-IS-REFRESHED-AT-EVERY-LATER-BOUNDARY fact="true" status="impl/done">At every later phase boundary the executing session refreshes the

@@ -72,28 +72,28 @@ false.</a-partial-record-reads-as-a-false-claim></p>
       </tr>
       <tr>
         <td><ROW-COMPARE-REPOSITORY-SURFACE fact="true" status="impl/done">Repository surface</ROW-COMPARE-REPOSITORY-SURFACE></td>
-        <td><fact status="impl/done">human-authored, uniformly</fact></td>
-        <td><fact status="impl/done">provenance-marked, uniformly</fact></td>
+        <td><ROW-COMPARE-REPOSITORY-SURFACE-CONCEALMENT-DEFAULT fact="true" status="impl/done">human-authored, uniformly</ROW-COMPARE-REPOSITORY-SURFACE-CONCEALMENT-DEFAULT></td>
+        <td><ROW-COMPARE-REPOSITORY-SURFACE-DISCLOSURE fact="true" status="impl/done">provenance-marked, uniformly</ROW-COMPARE-REPOSITORY-SURFACE-DISCLOSURE></td>
       </tr>
       <tr>
         <td><ROW-COMPARE-REGULATORY-POSTURE fact="true" status="spec/done">Regulatory posture</ROW-COMPARE-REGULATORY-POSTURE></td>
-        <td><fact status="spec/done">no hook for future regulation</fact></td>
-        <td><fact status="spec/done">compliant where disclosure is required</fact></td>
+        <td><ROW-COMPARE-REGULATORY-POSTURE-CONCEALMENT-DEFAULT fact="true" status="spec/done">no hook for future regulation</ROW-COMPARE-REGULATORY-POSTURE-CONCEALMENT-DEFAULT></td>
+        <td><ROW-COMPARE-REGULATORY-POSTURE-DISCLOSURE fact="true" status="spec/done">compliant where disclosure is required</ROW-COMPARE-REGULATORY-POSTURE-DISCLOSURE></td>
       </tr>
       <tr>
         <td><ROW-COMPARE-PROVENANCE-DATA fact="true" status="impl/done">Provenance data</ROW-COMPARE-PROVENANCE-DATA></td>
-        <td><fact status="impl/done">none in artifacts (sessions/logs only)</fact></td>
-        <td><fact status="impl/done">in-history, queryable</fact></td>
+        <td><ROW-COMPARE-PROVENANCE-DATA-CONCEALMENT-DEFAULT fact="true" status="impl/done">none in artifacts (sessions/logs only)</ROW-COMPARE-PROVENANCE-DATA-CONCEALMENT-DEFAULT></td>
+        <td><ROW-COMPARE-PROVENANCE-DATA-DISCLOSURE fact="true" status="impl/done">in-history, queryable</ROW-COMPARE-PROVENANCE-DATA-DISCLOSURE></td>
       </tr>
       <tr>
         <td><ROW-COMPARE-MAIN-RISK fact="true" status="spec/done">Main risk</ROW-COMPARE-MAIN-RISK></td>
-        <td><fact status="spec/done">none under present law; posture must be re-verified as law changes</fact></td>
-        <td><fact status="spec/done">permanent record; withdrawal impossible</fact></td>
+        <td><ROW-COMPARE-MAIN-RISK-CONCEALMENT-DEFAULT fact="true" status="spec/done">none under present law; posture must be re-verified as law changes</ROW-COMPARE-MAIN-RISK-CONCEALMENT-DEFAULT></td>
+        <td><ROW-COMPARE-MAIN-RISK-DISCLOSURE fact="true" status="spec/done">permanent record; withdrawal impossible</ROW-COMPARE-MAIN-RISK-DISCLOSURE></td>
       </tr>
       <tr>
         <td><ROW-COMPARE-ENFORCEMENT fact="true" status="impl/done">Enforcement</ROW-COMPARE-ENFORCEMENT></td>
-        <td><fact status="impl/done">scan for present marks</fact></td>
-        <td><fact status="impl/done">scan for missing marks</fact></td>
+        <td><ROW-COMPARE-ENFORCEMENT-CONCEALMENT-DEFAULT fact="true" status="impl/done">scan for present marks</ROW-COMPARE-ENFORCEMENT-CONCEALMENT-DEFAULT></td>
+        <td><ROW-COMPARE-ENFORCEMENT-DISCLOSURE fact="true" status="impl/done">scan for missing marks</ROW-COMPARE-ENFORCEMENT-DISCLOSURE></td>
       </tr>
     </table>
   </comparison>

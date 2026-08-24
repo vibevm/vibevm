@@ -18,38 +18,38 @@ it may change, and what authority it carries.</EVERY-DOCUMENT-BELONGS-TO-EXACTLY
       </tr>
       <tr>
         <td><ROW-GENRE-BOOT-FILES fact="true" status="impl/done">Boot files</ROW-GENRE-BOOT-FILES></td>
-        <td><fact status="impl/done">Standing instructions read at session start</fact></td>
-        <td><fact status="impl/done">yes</fact></td>
+        <td><ROW-GENRE-BOOT-FILES-HOLDS fact="true" status="impl/done">Standing instructions read at session start</ROW-GENRE-BOOT-FILES-HOLDS></td>
+        <td><ROW-GENRE-BOOT-FILES-BINDING fact="true" status="impl/done">yes</ROW-GENRE-BOOT-FILES-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">Foundational decisions</ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
-        <td><fact status="impl/done">Choices that cross every module</fact></td>
-        <td><fact status="impl/done">yes</fact></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS fact="true" status="impl/done">Choices that cross every module</ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING fact="true" status="impl/done">yes</ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">Module contracts</ROW-GENRE-MODULE-CONTRACTS></td>
-        <td><fact status="impl/done">What each module does (here: PROP / FEAT)</fact></td>
-        <td><fact status="impl/done">yes</fact></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-HOLDS fact="true" status="impl/done">What each module does (here: PROP / FEAT)</ROW-GENRE-MODULE-CONTRACTS-HOLDS></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-BINDING fact="true" status="impl/done">yes</ROW-GENRE-MODULE-CONTRACTS-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">Design docs</ROW-GENRE-DESIGN-DOCS></td>
-        <td><fact status="impl/done">Why we chose what we chose — the lore</fact></td>
-        <td><fact status="impl/done">no</fact></td>
+        <td><ROW-GENRE-DESIGN-DOCS-HOLDS fact="true" status="impl/done">Why we chose what we chose — the lore</ROW-GENRE-DESIGN-DOCS-HOLDS></td>
+        <td><ROW-GENRE-DESIGN-DOCS-BINDING fact="true" status="impl/done">no</ROW-GENRE-DESIGN-DOCS-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">Research docs</ROW-GENRE-RESEARCH-DOCS></td>
-        <td><fact status="impl/done">What *other* projects did</fact></td>
-        <td><fact status="impl/done">no</fact></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-HOLDS fact="true" status="impl/done">What *other* projects did</ROW-GENRE-RESEARCH-DOCS-HOLDS></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-BINDING fact="true" status="impl/done">no</ROW-GENRE-RESEARCH-DOCS-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">Campaign plans</ROW-GENRE-CAMPAIGN-PLANS></td>
-        <td><fact status="impl/done">Phases and gates of one multi-session change</fact></td>
-        <td><fact status="impl/done">no</fact></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-HOLDS fact="true" status="impl/done">Phases and gates of one multi-session change</ROW-GENRE-CAMPAIGN-PLANS-HOLDS></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-BINDING fact="true" status="impl/done">no</ROW-GENRE-CAMPAIGN-PLANS-BINDING></td>
       </tr>
       <tr>
         <td><ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">The checkpoint</ROW-GENRE-THE-CHECKPOINT></td>
-        <td><fact status="impl/done">Where work stands right now</fact></td>
-        <td><fact status="impl/done">state, not truth</fact></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-HOLDS fact="true" status="impl/done">Where work stands right now</ROW-GENRE-THE-CHECKPOINT-HOLDS></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-BINDING fact="true" status="impl/done">state, not truth</ROW-GENRE-THE-CHECKPOINT-BINDING></td>
       </tr>
     </table>
     <p><full-charters-pointer fact="true" status="impl/done">Full charters, mutability rules, and conflict authority:

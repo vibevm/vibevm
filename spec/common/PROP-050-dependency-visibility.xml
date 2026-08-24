@@ -48,51 +48,51 @@
         </tr>
         <tr>
           <td><MX-PUBLIC-BARE fact="true" status="spec/done">`public`</MX-PUBLIC-BARE></td>
-          <td><fact status="spec/done">`false` *(defaults)*</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">plain delivery — the ordinary edge</fact></td>
+          <td><MX-PUBLIC-BARE-FRIEND fact="true" status="spec/done">`false` *(defaults)*</MX-PUBLIC-BARE-FRIEND></td>
+          <td><MX-PUBLIC-BARE-CONSUMER-ABOVE-P fact="true" status="spec/done">gets Q</MX-PUBLIC-BARE-CONSUMER-ABOVE-P></td>
+          <td><MX-PUBLIC-BARE-FRIEND-OF-P fact="true" status="spec/done">gets Q</MX-PUBLIC-BARE-FRIEND-OF-P></td>
+          <td><MX-PUBLIC-BARE-P-AS-ROOT fact="true" status="spec/done">gets Q</MX-PUBLIC-BARE-P-AS-ROOT></td>
+          <td><MX-PUBLIC-BARE-PRACTICAL-NAME fact="true" status="spec/done">plain delivery — the ordinary edge</MX-PUBLIC-BARE-PRACTICAL-NAME></td>
         </tr>
         <tr>
           <td><MX-PUBLIC-FRIEND fact="true" status="spec/done">`public`</MX-PUBLIC-FRIEND></td>
-          <td><fact status="spec/done">`true`</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">gets Q **+ Q's circle**</fact></td>
-          <td><fact status="spec/done">delivery + personal friendship</fact></td>
+          <td><MX-PUBLIC-FRIEND-FRIEND fact="true" status="spec/done">`true`</MX-PUBLIC-FRIEND-FRIEND></td>
+          <td><MX-PUBLIC-FRIEND-CONSUMER-ABOVE-P fact="true" status="spec/done">gets Q</MX-PUBLIC-FRIEND-CONSUMER-ABOVE-P></td>
+          <td><MX-PUBLIC-FRIEND-FRIEND-OF-P fact="true" status="spec/done">gets Q</MX-PUBLIC-FRIEND-FRIEND-OF-P></td>
+          <td><MX-PUBLIC-FRIEND-P-AS-ROOT fact="true" status="spec/done">gets Q **+ Q's circle**</MX-PUBLIC-FRIEND-P-AS-ROOT></td>
+          <td><MX-PUBLIC-FRIEND-PRACTICAL-NAME fact="true" status="spec/done">delivery + personal friendship</MX-PUBLIC-FRIEND-PRACTICAL-NAME></td>
         </tr>
         <tr>
           <td><MX-FO-VOUCHED fact="true" status="spec/done">`friends-only`</MX-FO-VOUCHED></td>
-          <td><fact status="spec/done">`true`</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">gets Q **+ Q ∈ C(R)**: chain continues, Q's circle opens</fact></td>
-          <td><fact status="spec/done">gets Q + Q's circle</fact></td>
-          <td><fact status="spec/done">the chain link — transit with vouching (the F10 shape)</fact></td>
+          <td><MX-FO-VOUCHED-FRIEND fact="true" status="spec/done">`true`</MX-FO-VOUCHED-FRIEND></td>
+          <td><MX-FO-VOUCHED-CONSUMER-ABOVE-P fact="true" status="spec/done">—</MX-FO-VOUCHED-CONSUMER-ABOVE-P></td>
+          <td><MX-FO-VOUCHED-FRIEND-OF-P fact="true" status="spec/done">gets Q **+ Q ∈ C(R)**: chain continues, Q's circle opens</MX-FO-VOUCHED-FRIEND-OF-P></td>
+          <td><MX-FO-VOUCHED-P-AS-ROOT fact="true" status="spec/done">gets Q + Q's circle</MX-FO-VOUCHED-P-AS-ROOT></td>
+          <td><MX-FO-VOUCHED-PRACTICAL-NAME fact="true" status="spec/done">the chain link — transit with vouching (the F10 shape)</MX-FO-VOUCHED-PRACTICAL-NAME></td>
         </tr>
         <tr>
           <td><MX-FO-NOVOUCH fact="true" status="spec/done">`friends-only`</MX-FO-NOVOUCH></td>
-          <td><fact status="spec/done">`false`</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">gets Q, chain **stops**: Q's circle stays shut</fact></td>
-          <td><fact status="spec/done">gets Q only</fact></td>
-          <td><fact status="spec/done">terminal delivery to the circle — share without vouching</fact></td>
+          <td><MX-FO-NOVOUCH-FRIEND fact="true" status="spec/done">`false`</MX-FO-NOVOUCH-FRIEND></td>
+          <td><MX-FO-NOVOUCH-CONSUMER-ABOVE-P fact="true" status="spec/done">—</MX-FO-NOVOUCH-CONSUMER-ABOVE-P></td>
+          <td><MX-FO-NOVOUCH-FRIEND-OF-P fact="true" status="spec/done">gets Q, chain **stops**: Q's circle stays shut</MX-FO-NOVOUCH-FRIEND-OF-P></td>
+          <td><MX-FO-NOVOUCH-P-AS-ROOT fact="true" status="spec/done">gets Q only</MX-FO-NOVOUCH-P-AS-ROOT></td>
+          <td><MX-FO-NOVOUCH-PRACTICAL-NAME fact="true" status="spec/done">terminal delivery to the circle — share without vouching</MX-FO-NOVOUCH-PRACTICAL-NAME></td>
         </tr>
         <tr>
           <td><MX-PRIVATE-BARE fact="true" status="spec/done">`private`</MX-PRIVATE-BARE></td>
-          <td><fact status="spec/done">`false`</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">gets Q</fact></td>
-          <td><fact status="spec/done">dev tool</fact></td>
+          <td><MX-PRIVATE-BARE-FRIEND fact="true" status="spec/done">`false`</MX-PRIVATE-BARE-FRIEND></td>
+          <td><MX-PRIVATE-BARE-CONSUMER-ABOVE-P fact="true" status="spec/done">—</MX-PRIVATE-BARE-CONSUMER-ABOVE-P></td>
+          <td><MX-PRIVATE-BARE-FRIEND-OF-P fact="true" status="spec/done">—</MX-PRIVATE-BARE-FRIEND-OF-P></td>
+          <td><MX-PRIVATE-BARE-P-AS-ROOT fact="true" status="spec/done">gets Q</MX-PRIVATE-BARE-P-AS-ROOT></td>
+          <td><MX-PRIVATE-BARE-PRACTICAL-NAME fact="true" status="spec/done">dev tool</MX-PRIVATE-BARE-PRACTICAL-NAME></td>
         </tr>
         <tr>
           <td><MX-PRIVATE-FRIEND fact="true" status="spec/done">`private`</MX-PRIVATE-FRIEND></td>
-          <td><fact status="spec/done">`true`</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">—</fact></td>
-          <td><fact status="spec/done">gets Q + Q's circle</fact></td>
-          <td><fact status="spec/done">dev tool with deep integration</fact></td>
+          <td><MX-PRIVATE-FRIEND-FRIEND fact="true" status="spec/done">`true`</MX-PRIVATE-FRIEND-FRIEND></td>
+          <td><MX-PRIVATE-FRIEND-CONSUMER-ABOVE-P fact="true" status="spec/done">—</MX-PRIVATE-FRIEND-CONSUMER-ABOVE-P></td>
+          <td><MX-PRIVATE-FRIEND-FRIEND-OF-P fact="true" status="spec/done">—</MX-PRIVATE-FRIEND-FRIEND-OF-P></td>
+          <td><MX-PRIVATE-FRIEND-P-AS-ROOT fact="true" status="spec/done">gets Q + Q's circle</MX-PRIVATE-FRIEND-P-AS-ROOT></td>
+          <td><MX-PRIVATE-FRIEND-PRACTICAL-NAME fact="true" status="spec/done">dev tool with deep integration</MX-PRIVATE-FRIEND-PRACTICAL-NAME></td>
         </tr>
       </table>
       <facts ordered="false">
@@ -197,93 +197,93 @@ allow-friends = ["org.a/x", "org.b/*"]   # the permits list; "*" after a group =
       </tr>
       <tr>
         <td><PA-JPMS-RT fact="true" status="spec/done">JPMS `requires transitive`</PA-JPMS-RT></td>
-        <td><fact status="spec/done">provider re-export</fact></td>
-        <td><fact status="spec/done">the closure `grow` rule — same recursive shape</fact></td>
-        <td><fact status="spec/done">adopt shape; adopt its usage norm</fact></td>
+        <td><PA-JPMS-RT-DIRECTION fact="true" status="spec/done">provider re-export</PA-JPMS-RT-DIRECTION></td>
+        <td><PA-JPMS-RT-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">the closure `grow` rule — same recursive shape</PA-JPMS-RT-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-JPMS-RT-VERDICT-USED-HERE fact="true" status="spec/done">adopt shape; adopt its usage norm</PA-JPMS-RT-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-JPMS-QE fact="true" status="spec/done">JPMS `exports … to`</PA-JPMS-QE></td>
-        <td><fact status="spec/done">provider allowlist</fact></td>
-        <td><fact status="spec/done">`friends-only` (opposite direction)</fact></td>
-        <td><fact status="spec/done">unknown target = warning, not error</fact></td>
+        <td><PA-JPMS-QE-DIRECTION fact="true" status="spec/done">provider allowlist</PA-JPMS-QE-DIRECTION></td>
+        <td><PA-JPMS-QE-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`friends-only` (opposite direction)</PA-JPMS-QE-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-JPMS-QE-VERDICT-USED-HERE fact="true" status="spec/done">unknown target = warning, not error</PA-JPMS-QE-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-SEALED fact="true" status="spec/done">Java `sealed … permits`</PA-SEALED></td>
-        <td><fact status="spec/done">provider allowlist</fact></td>
-        <td><fact status="spec/done">friends list</fact></td>
-        <td><fact status="spec/done">allowlist needs one maintenance domain — ours has it (the consumer's own file)</fact></td>
+        <td><PA-SEALED-DIRECTION fact="true" status="spec/done">provider allowlist</PA-SEALED-DIRECTION></td>
+        <td><PA-SEALED-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">friends list</PA-SEALED-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-SEALED-VERDICT-USED-HERE fact="true" status="spec/done">allowlist needs one maintenance domain — ours has it (the consumer's own file)</PA-SEALED-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-SWIFT-0409 fact="true" status="spec/done">Swift SE-0409 access-level-on-imports</PA-SWIFT-0409></td>
-        <td><fact status="spec/done">**consumer, per-edge**</fact></td>
-        <td><fact status="spec/done">`access` — the closest precedent alive</fact></td>
-        <td><fact status="spec/done">validates the core; they deferred the default flip twice</fact></td>
+        <td><PA-SWIFT-0409-DIRECTION fact="true" status="spec/done">**consumer, per-edge**</PA-SWIFT-0409-DIRECTION></td>
+        <td><PA-SWIFT-0409-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`access` — the closest precedent alive</PA-SWIFT-0409-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-SWIFT-0409-VERDICT-USED-HERE fact="true" status="spec/done">validates the core; they deferred the default flip twice</PA-SWIFT-0409-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-SWIFT-SPI fact="true" status="spec/done">Swift `@_spi`</PA-SWIFT-SPI></td>
-        <td><fact status="spec/done">bilateral handshake</fact></td>
-        <td><fact status="spec/done">`friends-only` ∧ friendship</fact></td>
-        <td><fact status="spec/done">conjunction, adopted (§2.5)</fact></td>
+        <td><PA-SWIFT-SPI-DIRECTION fact="true" status="spec/done">bilateral handshake</PA-SWIFT-SPI-DIRECTION></td>
+        <td><PA-SWIFT-SPI-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`friends-only` ∧ friendship</PA-SWIFT-SPI-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-SWIFT-SPI-VERDICT-USED-HERE fact="true" status="spec/done">conjunction, adopted (§2.5)</PA-SWIFT-SPI-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-OSGI-REEXPORT fact="true" status="spec/done">OSGi `Require-Bundle; visibility:=reexport`</PA-OSGI-REEXPORT></td>
-        <td><fact status="spec/done">provider re-export</fact></td>
-        <td><fact status="spec/done">`friends-only` as re-export</fact></td>
-        <td><fact status="spec/done">its irreversibility lesson → ##ACCESS-IS-SEMVER-SURFACE</fact></td>
+        <td><PA-OSGI-REEXPORT-DIRECTION fact="true" status="spec/done">provider re-export</PA-OSGI-REEXPORT-DIRECTION></td>
+        <td><PA-OSGI-REEXPORT-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`friends-only` as re-export</PA-OSGI-REEXPORT-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-OSGI-REEXPORT-VERDICT-USED-HERE fact="true" status="spec/done">its irreversibility lesson → ##ACCESS-IS-SEMVER-SURFACE</PA-OSGI-REEXPORT-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-ECLIPSE-XFRIENDS fact="true" status="spec/done">Eclipse `x-friends`</PA-ECLIPSE-XFRIENDS></td>
-        <td><fact status="spec/done">provider allowlist</fact></td>
-        <td><fact status="spec/done">friends-only</fact></td>
-        <td><fact status="spec/done">provider lists rot because the payer can't edit them — the inversion argument</fact></td>
+        <td><PA-ECLIPSE-XFRIENDS-DIRECTION fact="true" status="spec/done">provider allowlist</PA-ECLIPSE-XFRIENDS-DIRECTION></td>
+        <td><PA-ECLIPSE-XFRIENDS-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">friends-only</PA-ECLIPSE-XFRIENDS-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-ECLIPSE-XFRIENDS-VERDICT-USED-HERE fact="true" status="spec/done">provider lists rot because the payer can't edit them — the inversion argument</PA-ECLIPSE-XFRIENDS-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-BAZEL-EXPORTS fact="true" status="spec/done">Bazel `deps` + `exports*` chains</PA-BAZEL-EXPORTS></td>
-        <td><fact status="spec/done">provider re-export</fact></td>
-        <td><fact status="spec/done">the closure formula, verbatim</fact></td>
-        <td><fact status="spec/done">battle-tested shape of §2.4</fact></td>
+        <td><PA-BAZEL-EXPORTS-DIRECTION fact="true" status="spec/done">provider re-export</PA-BAZEL-EXPORTS-DIRECTION></td>
+        <td><PA-BAZEL-EXPORTS-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">the closure formula, verbatim</PA-BAZEL-EXPORTS-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-BAZEL-EXPORTS-VERDICT-USED-HERE fact="true" status="spec/done">battle-tested shape of §2.4</PA-BAZEL-EXPORTS-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-BUCK-WITHINVIEW fact="true" status="spec/done">Buck `within_view`</PA-BUCK-WITHINVIEW></td>
-        <td><fact status="spec/done">**consumer cap, wins conflicts**</fact></td>
-        <td><fact status="spec/done">`exclude`</fact></td>
-        <td><fact status="spec/done">exclusion beats any grant, adopted</fact></td>
+        <td><PA-BUCK-WITHINVIEW-DIRECTION fact="true" status="spec/done">**consumer cap, wins conflicts**</PA-BUCK-WITHINVIEW-DIRECTION></td>
+        <td><PA-BUCK-WITHINVIEW-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`exclude`</PA-BUCK-WITHINVIEW-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-BUCK-WITHINVIEW-VERDICT-USED-HERE fact="true" status="spec/done">exclusion beats any grant, adopted</PA-BUCK-WITHINVIEW-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-PANTS-CONJ fact="true" status="spec/done">Pants dependency/dependents rules</PA-PANTS-CONJ></td>
-        <td><fact status="spec/done">both ends must agree</fact></td>
-        <td><fact status="spec/done">rule (3) of §2.5</fact></td>
-        <td><fact status="spec/done">conjunction as the core evaluation rule</fact></td>
+        <td><PA-PANTS-CONJ-DIRECTION fact="true" status="spec/done">both ends must agree</PA-PANTS-CONJ-DIRECTION></td>
+        <td><PA-PANTS-CONJ-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">rule (3) of §2.5</PA-PANTS-CONJ-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-PANTS-CONJ-VERDICT-USED-HERE fact="true" status="spec/done">conjunction as the core evaluation rule</PA-PANTS-CONJ-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-GRADLE-API fact="true" status="spec/done">Gradle `api`/`implementation`</PA-GRADLE-API></td>
-        <td><fact status="spec/done">provider</fact></td>
-        <td><fact status="spec/done">`public`/`private`</fact></td>
-        <td><fact status="spec/done">the `compile`-removal precedent: leakage-by-default is unpayable</fact></td>
+        <td><PA-GRADLE-API-DIRECTION fact="true" status="spec/done">provider</PA-GRADLE-API-DIRECTION></td>
+        <td><PA-GRADLE-API-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`public`/`private`</PA-GRADLE-API-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-GRADLE-API-VERDICT-USED-HERE fact="true" status="spec/done">the `compile`-removal precedent: leakage-by-default is unpayable</PA-GRADLE-API-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-MAVEN-EXCL fact="true" status="spec/done">Maven `&lt;exclusions&gt;` / enforcer</PA-MAVEN-EXCL></td>
-        <td><fact status="spec/done">consumer edge / assertion pass</fact></td>
-        <td><fact status="spec/done">`exclude` / deferred deny-list</fact></td>
-        <td><fact status="spec/done">two-layer split, adopted in F4</fact></td>
+        <td><PA-MAVEN-EXCL-DIRECTION fact="true" status="spec/done">consumer edge / assertion pass</PA-MAVEN-EXCL-DIRECTION></td>
+        <td><PA-MAVEN-EXCL-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`exclude` / deferred deny-list</PA-MAVEN-EXCL-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-MAVEN-EXCL-VERDICT-USED-HERE fact="true" status="spec/done">two-layer split, adopted in F4</PA-MAVEN-EXCL-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-CARGO-1977 fact="true" status="spec/done">Cargo RFC 1977 → 3516</PA-CARGO-1977></td>
-        <td><fact status="spec/done">provider mark</fact></td>
-        <td><fact status="spec/done">`public`</fact></td>
-        <td><fact status="spec/done">six years lost to resolver entanglement — keep visibility a pre-filter</fact></td>
+        <td><PA-CARGO-1977-DIRECTION fact="true" status="spec/done">provider mark</PA-CARGO-1977-DIRECTION></td>
+        <td><PA-CARGO-1977-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">`public`</PA-CARGO-1977-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-CARGO-1977-VERDICT-USED-HERE fact="true" status="spec/done">six years lost to resolver entanglement — keep visibility a pre-filter</PA-CARGO-1977-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-NPM-EXPORTS fact="true" status="spec/done">npm `exports` map</PA-NPM-EXPORTS></td>
-        <td><fact status="spec/done">provider surface seal</fact></td>
-        <td><fact status="spec/done">(none yet)</fact></td>
-        <td><fact status="spec/done">sub-package surfaces — deferred direction</fact></td>
+        <td><PA-NPM-EXPORTS-DIRECTION fact="true" status="spec/done">provider surface seal</PA-NPM-EXPORTS-DIRECTION></td>
+        <td><PA-NPM-EXPORTS-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">(none yet)</PA-NPM-EXPORTS-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-NPM-EXPORTS-VERDICT-USED-HERE fact="true" status="spec/done">sub-package surfaces — deferred direction</PA-NPM-EXPORTS-VERDICT-USED-HERE></td>
       </tr>
       <tr>
         <td><PA-CPP-FRIEND fact="true" status="spec/done">C++ `friend`</PA-CPP-FRIEND></td>
-        <td><fact status="spec/done">provider, deliberately non-transitive</fact></td>
-        <td><fact status="spec/done">the anti-model</fact></td>
-        <td><fact status="spec/done">what non-transitivity protects → ##CLOSURE-DRIFT-CONTROL</fact></td>
+        <td><PA-CPP-FRIEND-DIRECTION fact="true" status="spec/done">provider, deliberately non-transitive</PA-CPP-FRIEND-DIRECTION></td>
+        <td><PA-CPP-FRIEND-CLOSEST-PRIMITIVE-TO-OUR fact="true" status="spec/done">the anti-model</PA-CPP-FRIEND-CLOSEST-PRIMITIVE-TO-OUR></td>
+        <td><PA-CPP-FRIEND-VERDICT-USED-HERE fact="true" status="spec/done">what non-transitivity protects → ##CLOSURE-DRIFT-CONTROL</PA-CPP-FRIEND-VERDICT-USED-HERE></td>
       </tr>
     </table>
     <p><PRIOR-ART-ADOPTIONS fact="true" status="spec/work">**Adopted into the model on prior-art strength:** (1) the **conjunction rule** — an edge materialises iff provider access permits ∧ consumer grant permits (Pants' "both ends must agree", Swift `@_spi`'s handshake) — §2.5 rule (3) is exactly this; (2) the **closure shape** — first hop a direct grant, then zero-or-more re-export marks — is Bazel's `deps`-then-`exports*` and JPMS implied readability, both battle-tested recursive; (3) **friend groups need no new primitive** — befriending a collection whose member edges are `friends-only` already delivers the members through the ordinary closure, giving Bazel-`package_group`-style composition for free and dodging Swift's rejected "large, complex manifests mingling all the layers"; (4) **unknown allowlist targets warn, never fail** (JPMS qualified-export precedent) — a `friends`/`unfriend` entry naming a package absent from every chain is a lint, §7; (5) **denial is legibility, not failure** — every surveyed system hard-fails because a missing symbol breaks a build; a missing prompt lane merely changes what loads, so our enforcement output is the pruning report (`vibe why`, §7), and only graph cycles remain hard errors.</PRIOR-ART-ADOPTIONS></p>

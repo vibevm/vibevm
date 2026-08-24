@@ -73,23 +73,23 @@ version = "0.3.0"</fence>
         </tr>
         <tr>
           <td><ROW-QUALIFIED fact="true" status="impl/done">`org.vibevm.world/wal`</ROW-QUALIFIED></td>
-          <td><fact status="impl/done">qualified — the form written into manifests (see §2.6, [PROP-002](PROP-002-decentralized-registry.xml))</fact></td>
-          <td><fact status="impl/done">resolved exactly</fact></td>
+          <td><ROW-QUALIFIED-CONTEXT fact="true" status="impl/done">qualified — the form written into manifests (see §2.6, [PROP-002](PROP-002-decentralized-registry.xml))</ROW-QUALIFIED-CONTEXT></td>
+          <td><ROW-QUALIFIED-BEHAVIOUR fact="true" status="impl/done">resolved exactly</ROW-QUALIFIED-BEHAVIOUR></td>
         </tr>
         <tr>
           <td><ROW-QUALIFIED-KIND fact="true" status="impl/done">`flow:org.vibevm.world/wal`</ROW-QUALIFIED-KIND></td>
-          <td><fact status="impl/done">qualified + kind</fact></td>
-          <td><fact status="impl/done">resolved exactly; **kind validated against the manifest**</fact></td>
+          <td><ROW-QUALIFIED-KIND-CONTEXT fact="true" status="impl/done">qualified + kind</ROW-QUALIFIED-KIND-CONTEXT></td>
+          <td><ROW-QUALIFIED-KIND-BEHAVIOUR fact="true" status="impl/done">resolved exactly; **kind validated against the manifest**</ROW-QUALIFIED-KIND-BEHAVIOUR></td>
         </tr>
         <tr>
           <td><ROW-SHORT fact="true" status="impl/done">`wal`</ROW-SHORT></td>
-          <td><fact status="impl/done">short — CLI sugar</fact></td>
-          <td><fact status="impl/done">resolved via the index (§2.6)</fact></td>
+          <td><ROW-SHORT-CONTEXT fact="true" status="impl/done">short — CLI sugar</ROW-SHORT-CONTEXT></td>
+          <td><ROW-SHORT-BEHAVIOUR fact="true" status="impl/done">resolved via the index (§2.6)</ROW-SHORT-BEHAVIOUR></td>
         </tr>
         <tr>
           <td><ROW-SHORT-KIND fact="true" status="impl/done">`flow:wal`</ROW-SHORT-KIND></td>
-          <td><fact status="impl/done">short + kind</fact></td>
-          <td><fact status="impl/done">resolved via the index; kind validated</fact></td>
+          <td><ROW-SHORT-KIND-CONTEXT fact="true" status="impl/done">short + kind</ROW-SHORT-KIND-CONTEXT></td>
+          <td><ROW-SHORT-KIND-BEHAVIOUR fact="true" status="impl/done">resolved via the index; kind validated</ROW-SHORT-KIND-BEHAVIOUR></td>
         </tr>
       </table>
       <facts ordered="false">

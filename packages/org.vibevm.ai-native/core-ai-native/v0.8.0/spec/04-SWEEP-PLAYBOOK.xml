@@ -134,23 +134,23 @@ itself ratchet work.</EXTENDING-THE-COLLECTOR-IS-RATCHET-WORK></p>
       </tr>
       <tr>
         <td><ROW-TIER-0 fact="true" status="impl/done">0 — hard floor</ROW-TIER-0></td>
-        <td><fact status="impl/done">✓</fact></td>
-        <td><fact status="impl/done">✓</fact></td>
+        <td><ROW-TIER-0-DAILY-OR-PER-ACTIVE-SESS fact="true" status="impl/done">✓</ROW-TIER-0-DAILY-OR-PER-ACTIVE-SESS></td>
+        <td><ROW-TIER-0-WEEKLY fact="true" status="impl/done">✓</ROW-TIER-0-WEEKLY></td>
       </tr>
       <tr>
         <td><ROW-TIER-1 fact="true" status="impl/done">1 — ratchet</ROW-TIER-1></td>
-        <td><fact status="impl/done">✓</fact></td>
-        <td><fact status="impl/done">✓</fact></td>
+        <td><ROW-TIER-1-DAILY-OR-PER-ACTIVE-SESS fact="true" status="impl/done">✓</ROW-TIER-1-DAILY-OR-PER-ACTIVE-SESS></td>
+        <td><ROW-TIER-1-WEEKLY fact="true" status="impl/done">✓</ROW-TIER-1-WEEKLY></td>
       </tr>
       <tr>
         <td><ROW-TIER-2 fact="true" status="impl/done">2 — drift</ROW-TIER-2></td>
         <td/>
-        <td><fact status="impl/done">✓</fact></td>
+        <td><ROW-TIER-2-WEEKLY fact="true" status="impl/done">✓</ROW-TIER-2-WEEKLY></td>
       </tr>
       <tr>
         <td><ROW-TIER-3 fact="true" status="impl/done">3 — deep judgment / raid</ROW-TIER-3></td>
         <td/>
-        <td><fact status="impl/done">✓</fact></td>
+        <td><ROW-TIER-3-WEEKLY fact="true" status="impl/done">✓</ROW-TIER-3-WEEKLY></td>
       </tr>
     </table>
     <p><DAILY-RUN-IS-LIGHT fact="true" status="impl/done">The daily run is light: floor green, then one or two

@@ -25,28 +25,28 @@ project's tree; this is the distilled form.*</historical-instances-live-in-the-p
       </tr>
       <tr>
         <td><ROW-ARTIFACT-PLAN fact="true" status="impl/done">**PLAN**</ROW-ARTIFACT-PLAN></td>
-        <td><fact status="impl/done">before work starts</fact></td>
-        <td><fact status="impl/done">the cold-executable recipe (see §2)</fact></td>
+        <td><ROW-ARTIFACT-PLAN-WRITTEN fact="true" status="impl/done">before work starts</ROW-ARTIFACT-PLAN-WRITTEN></td>
+        <td><ROW-ARTIFACT-PLAN-PURPOSE fact="true" status="impl/done">the cold-executable recipe (see §2)</ROW-ARTIFACT-PLAN-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ARTIFACT-BASELINE fact="true" status="impl/done">**BASELINE**</ROW-ARTIFACT-BASELINE></td>
-        <td><fact status="impl/done">at phase −1 / campaign open</fact></td>
-        <td><fact status="impl/done">the frozen starting facts: gate panel state, inventory counts, the numbers phases are measured against</fact></td>
+        <td><ROW-ARTIFACT-BASELINE-WRITTEN fact="true" status="impl/done">at phase −1 / campaign open</ROW-ARTIFACT-BASELINE-WRITTEN></td>
+        <td><ROW-ARTIFACT-BASELINE-PURPOSE fact="true" status="impl/done">the frozen starting facts: gate panel state, inventory counts, the numbers phases are measured against</ROW-ARTIFACT-BASELINE-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ARTIFACT-PREDICTIONS fact="true" status="impl/done">**PREDICTIONS**</ROW-ARTIFACT-PREDICTIONS></td>
-        <td><fact status="impl/done">at campaign open</fact></td>
-        <td><fact status="impl/done">falsifiable expectations — what each phase should change, stated *before* execution so the REPORT can honestly say "confirmed / falsified / surprised"</fact></td>
+        <td><ROW-ARTIFACT-PREDICTIONS-WRITTEN fact="true" status="impl/done">at campaign open</ROW-ARTIFACT-PREDICTIONS-WRITTEN></td>
+        <td><ROW-ARTIFACT-PREDICTIONS-PURPOSE fact="true" status="impl/done">falsifiable expectations — what each phase should change, stated *before* execution so the REPORT can honestly say "confirmed / falsified / surprised"</ROW-ARTIFACT-PREDICTIONS-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ARTIFACT-LOG fact="true" status="impl/done">**LOG**</ROW-ARTIFACT-LOG></td>
-        <td><fact status="impl/done">during execution</fact></td>
-        <td><fact status="impl/done">append-only running record: per-phase entries, deviations from plan, discovered-necessary work, dead ends kept for the record</fact></td>
+        <td><ROW-ARTIFACT-LOG-WRITTEN fact="true" status="impl/done">during execution</ROW-ARTIFACT-LOG-WRITTEN></td>
+        <td><ROW-ARTIFACT-LOG-PURPOSE fact="true" status="impl/done">append-only running record: per-phase entries, deviations from plan, discovered-necessary work, dead ends kept for the record</ROW-ARTIFACT-LOG-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ARTIFACT-REPORT fact="true" status="impl/done">**REPORT**</ROW-ARTIFACT-REPORT></td>
-        <td><fact status="impl/done">at campaign close</fact></td>
-        <td><fact status="impl/done">what the campaign taught: results vs PREDICTIONS, cards/rules that misfired, lessons that feed Discipline revision</fact></td>
+        <td><ROW-ARTIFACT-REPORT-WRITTEN fact="true" status="impl/done">at campaign close</ROW-ARTIFACT-REPORT-WRITTEN></td>
+        <td><ROW-ARTIFACT-REPORT-PURPOSE fact="true" status="impl/done">what the campaign taught: results vs PREDICTIONS, cards/rules that misfired, lessons that feed Discipline revision</ROW-ARTIFACT-REPORT-PURPOSE></td>
       </tr>
     </table>
     <p><SMALL-CAMPAIGNS-MAY-FOLD-BUT-NOT-SKIP fact="true" status="impl/done">Small campaigns may fold BASELINE and PREDICTIONS into the PLAN's

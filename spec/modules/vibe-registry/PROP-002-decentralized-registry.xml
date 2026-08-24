@@ -83,23 +83,23 @@ auth = "ssh"                                     # ssh-agent / keys; URL must be
         </tr>
         <tr>
           <td><ROW-AUTH-NONE fact="true" status="impl/done">`none` (default)</ROW-AUTH-NONE></td>
-          <td><fact status="impl/done">Read-only HTTPS or `file://`. **No** credentials are sent; `git ls-remote` / `clone` / `fetch` run with `credential.helper` and `core.askPass` reset to empty **unconditionally — regardless of TTY** (so GUI / GCM popups are never raised for a public registry). A public registry sends no credentials, so a 401 / 403 is not a login failure — it means "no public answer here": the resolver classifies the registry as absent and walks to the next entry, same fall-through as 404.</fact></td>
-          <td><fact status="impl/done">Public registries (the default for both `vibespecs` and `vibespecs-gitverse`).</fact></td>
+          <td><ROW-AUTH-NONE-WHAT-VIBEVM-DOES fact="true" status="impl/done">Read-only HTTPS or `file://`. **No** credentials are sent; `git ls-remote` / `clone` / `fetch` run with `credential.helper` and `core.askPass` reset to empty **unconditionally — regardless of TTY** (so GUI / GCM popups are never raised for a public registry). A public registry sends no credentials, so a 401 / 403 is not a login failure — it means "no public answer here": the resolver classifies the registry as absent and walks to the next entry, same fall-through as 404.</ROW-AUTH-NONE-WHAT-VIBEVM-DOES></td>
+          <td><ROW-AUTH-NONE-WHEN-TO-USE fact="true" status="impl/done">Public registries (the default for both `vibespecs` and `vibespecs-gitverse`).</ROW-AUTH-NONE-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-AUTH-TOKEN-ENV fact="true" status="impl/done">`token-env`</ROW-AUTH-TOKEN-ENV></td>
-          <td><fact status="impl/done">Reads a personal access token from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` (or the explicit `token_env` override) and injects it into the URL as `https://x-access-token:&lt;TOKEN&gt;@&lt;host&gt;/...` for the duration of the git invocation. The token is never logged, never recorded in the lockfile, never appears in git's stderr (modern git redacts passwords). On 401 with the token set: hard error (the token is wrong / expired / scoped wrong). On token absent: hard error directing the operator at the env-var; resolver does not silently fall through.</fact></td>
-          <td><fact status="impl/done">Private organisation registries; CI; agent harnesses. Symmetric with the publish-side `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` already specified in §2.10.</fact></td>
+          <td><ROW-AUTH-TOKEN-ENV-WHAT-VIBEVM-DOES fact="true" status="impl/done">Reads a personal access token from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` (or the explicit `token_env` override) and injects it into the URL as `https://x-access-token:&lt;TOKEN&gt;@&lt;host&gt;/...` for the duration of the git invocation. The token is never logged, never recorded in the lockfile, never appears in git's stderr (modern git redacts passwords). On 401 with the token set: hard error (the token is wrong / expired / scoped wrong). On token absent: hard error directing the operator at the env-var; resolver does not silently fall through.</ROW-AUTH-TOKEN-ENV-WHAT-VIBEVM-DOES></td>
+          <td><ROW-AUTH-TOKEN-ENV-WHEN-TO-USE fact="true" status="impl/done">Private organisation registries; CI; agent harnesses. Symmetric with the publish-side `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` already specified in §2.10.</ROW-AUTH-TOKEN-ENV-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-AUTH-CREDENTIAL-HELPER fact="true" status="impl/done">`credential-helper`</ROW-AUTH-CREDENTIAL-HELPER></td>
-          <td><fact status="impl/done">The opt-in mode. Vibe leaves `credential.helper` / `core.askPass` untouched; the system git falls through to whatever is configured in `~/.gitconfig` (Git Credential Manager on Windows, `osxkeychain` on macOS, `libsecret` on Linux). GUI prompts may appear; that is the point. Only consulted when an interactive TTY is attached *and* `--unattended` is not set; in non-TTY / scripted runs this collapses to the same behaviour as `none` (helpers silenced, 401 → walk).</fact></td>
-          <td><fact status="impl/done">Operators with corporate SSO already wired through GCM and a working interactive workflow.</fact></td>
+          <td><ROW-AUTH-CREDENTIAL-HELPER-WHAT-VIBEVM-DOES fact="true" status="impl/done">The opt-in mode. Vibe leaves `credential.helper` / `core.askPass` untouched; the system git falls through to whatever is configured in `~/.gitconfig` (Git Credential Manager on Windows, `osxkeychain` on macOS, `libsecret` on Linux). GUI prompts may appear; that is the point. Only consulted when an interactive TTY is attached *and* `--unattended` is not set; in non-TTY / scripted runs this collapses to the same behaviour as `none` (helpers silenced, 401 → walk).</ROW-AUTH-CREDENTIAL-HELPER-WHAT-VIBEVM-DOES></td>
+          <td><ROW-AUTH-CREDENTIAL-HELPER-WHEN-TO-USE fact="true" status="impl/done">Operators with corporate SSO already wired through GCM and a working interactive workflow.</ROW-AUTH-CREDENTIAL-HELPER-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-AUTH-SSH fact="true" status="impl/done">`ssh`</ROW-AUTH-SSH></td>
-          <td><fact status="impl/done">URL must be ssh-form (`git@host:org`, `ssh://...`). Authentication is delegated to the system ssh-agent and keys. Vibe does not touch ssh config, does not ask for passphrases — if a passphrase prompt appears, that is the operator's ssh-agent decision.</fact></td>
-          <td><fact status="impl/done">The classic developer workflow on personal machines with ssh keys configured.</fact></td>
+          <td><ROW-AUTH-SSH-WHAT-VIBEVM-DOES fact="true" status="impl/done">URL must be ssh-form (`git@host:org`, `ssh://...`). Authentication is delegated to the system ssh-agent and keys. Vibe does not touch ssh config, does not ask for passphrases — if a passphrase prompt appears, that is the operator's ssh-agent decision.</ROW-AUTH-SSH-WHAT-VIBEVM-DOES></td>
+          <td><ROW-AUTH-SSH-WHEN-TO-USE fact="true" status="impl/done">The classic developer workflow on personal machines with ssh keys configured.</ROW-AUTH-SSH-WHEN-TO-USE></td>
         </tr>
       </table>
       <p><TOKEN-ENV-DEFAULTING fact="true" status="impl/done">**`token_env` defaulting.** When `auth = "token-env"` and `token_env` is omitted, the env-var name is derived from the registry's host: lowercase host, dots and hyphens to underscores, prefixed with `VIBEVM_REGISTRY_TOKEN_` and uppercased. For `https://gitlab.company.com/vibespecs` the default is `VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM`. Operators who want stable env-var names across host migrations set `token_env` explicitly; everyone else gets a working default.</TOKEN-ENV-DEFAULTING></p>
@@ -120,23 +120,23 @@ auth = "ssh"                                     # ssh-agent / keys; URL must be
         </tr>
         <tr>
           <td><ROW-MTX-NONE fact="true" status="impl/done">`auth = none`</ROW-MTX-NONE></td>
-          <td><fact status="impl/done">**Helpers silenced; 401 → walk**</fact></td>
-          <td><fact status="impl/done">Helpers silenced; 401 → walk</fact></td>
+          <td><ROW-MTX-NONE-INTERACTIVE-TTY-NO-UNATT fact="true" status="impl/done">**Helpers silenced; 401 → walk**</ROW-MTX-NONE-INTERACTIVE-TTY-NO-UNATT></td>
+          <td><ROW-MTX-NONE-NON-INTERACTIVE-NO-TTY-O fact="true" status="impl/done">Helpers silenced; 401 → walk</ROW-MTX-NONE-NON-INTERACTIVE-NO-TTY-O></td>
         </tr>
         <tr>
           <td><ROW-MTX-TOKEN-ENV fact="true" status="impl/done">`auth = token-env`</ROW-MTX-TOKEN-ENV></td>
-          <td><fact status="impl/done">Token injected; helpers silenced regardless (token wins)</fact></td>
-          <td><fact status="impl/done">Token injected; helpers silenced</fact></td>
+          <td><ROW-MTX-TOKEN-ENV-INTERACTIVE-TTY-NO-UNATT fact="true" status="impl/done">Token injected; helpers silenced regardless (token wins)</ROW-MTX-TOKEN-ENV-INTERACTIVE-TTY-NO-UNATT></td>
+          <td><ROW-MTX-TOKEN-ENV-NON-INTERACTIVE-NO-TTY-O fact="true" status="impl/done">Token injected; helpers silenced</ROW-MTX-TOKEN-ENV-NON-INTERACTIVE-NO-TTY-O></td>
         </tr>
         <tr>
           <td><ROW-MTX-CREDENTIAL-HELPER fact="true" status="impl/done">`auth = credential-helper`</ROW-MTX-CREDENTIAL-HELPER></td>
-          <td><fact status="impl/done">Helpers untouched; GCM / keychain may pop up</fact></td>
-          <td><fact status="impl/done">Helpers silenced; behaves like `none`</fact></td>
+          <td><ROW-MTX-CREDENTIAL-HELPER-INTERACTIVE-TTY-NO-UNATT fact="true" status="impl/done">Helpers untouched; GCM / keychain may pop up</ROW-MTX-CREDENTIAL-HELPER-INTERACTIVE-TTY-NO-UNATT></td>
+          <td><ROW-MTX-CREDENTIAL-HELPER-NON-INTERACTIVE-NO-TTY-O fact="true" status="impl/done">Helpers silenced; behaves like `none`</ROW-MTX-CREDENTIAL-HELPER-NON-INTERACTIVE-NO-TTY-O></td>
         </tr>
         <tr>
           <td><ROW-MTX-SSH fact="true" status="impl/done">`auth = ssh`</ROW-MTX-SSH></td>
-          <td><fact status="impl/done">URL must be ssh-form; behaviour delegated to ssh-agent / system</fact></td>
-          <td><fact status="impl/done">Same</fact></td>
+          <td><ROW-MTX-SSH-INTERACTIVE-TTY-NO-UNATT fact="true" status="impl/done">URL must be ssh-form; behaviour delegated to ssh-agent / system</ROW-MTX-SSH-INTERACTIVE-TTY-NO-UNATT></td>
+          <td><ROW-MTX-SSH-NON-INTERACTIVE-NO-TTY-O fact="true" status="impl/done">Same</ROW-MTX-SSH-NON-INTERACTIVE-NO-TTY-O></td>
         </tr>
       </table>
       <p><NONE-DEFAULT-SAFE fact="true" status="impl/done">This is what makes the `none` default safe everywhere — CI / opencode harnesses **and** an interactive `vibe install` at a real terminal — with no GUI popup for a public-registry 401. An operator who genuinely needs to authenticate against a host declares `auth = "credential-helper"` (or `token-env`) for that registry; the public default never prompts.</NONE-DEFAULT-SAFE></p>
@@ -288,38 +288,38 @@ reason     = "awaiting upstream PR #42"     # surfaces in `vibe list --overrides
         </tr>
         <tr>
           <td><ROW-GS-VERSION fact="true" status="impl/done">`version`</ROW-GS-VERSION></td>
-          <td><fact status="impl/done">optional (registry) / optional (git)</fact></td>
-          <td><fact status="impl/done">Version constraint. Registry-resolved: identical semantics to the bare-string form. Git-source: **verification only** — after resolving the package version from the git ref, the constraint must be satisfied; otherwise the install fails with `VersionMismatch`.</fact></td>
+          <td><ROW-GS-VERSION-REQUIRED fact="true" status="impl/done">optional (registry) / optional (git)</ROW-GS-VERSION-REQUIRED></td>
+          <td><ROW-GS-VERSION-MEANING fact="true" status="impl/done">Version constraint. Registry-resolved: identical semantics to the bare-string form. Git-source: **verification only** — after resolving the package version from the git ref, the constraint must be satisfied; otherwise the install fails with `VersionMismatch`.</ROW-GS-VERSION-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-GIT fact="true" status="impl/done">`git`</ROW-GS-GIT></td>
-          <td><fact status="impl/done">required for git-source</fact></td>
-          <td><fact status="impl/done">Full git URL of the single-package repository. Same URL grammar as `[[registry]] url` and `[[override]] source_url` — `git@host:…`, `ssh://`, `https://`, `file://`. No host shorthands.</fact></td>
+          <td><ROW-GS-GIT-REQUIRED fact="true" status="impl/done">required for git-source</ROW-GS-GIT-REQUIRED></td>
+          <td><ROW-GS-GIT-MEANING fact="true" status="impl/done">Full git URL of the single-package repository. Same URL grammar as `[[registry]] url` and `[[override]] source_url` — `git@host:…`, `ssh://`, `https://`, `file://`. No host shorthands.</ROW-GS-GIT-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-TAG fact="true" status="impl/done">`tag`</ROW-GS-TAG></td>
-          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
-          <td><fact status="impl/done">Immutable tag. Resolved commit pinned in lockfile; force-pushed tag rewrite caught as `IntegrityError` per §2.1.</fact></td>
+          <td><ROW-GS-TAG-REQUIRED fact="true" status="impl/done">one of `tag`/`rev`/`branch` is required</ROW-GS-TAG-REQUIRED></td>
+          <td><ROW-GS-TAG-MEANING fact="true" status="impl/done">Immutable tag. Resolved commit pinned in lockfile; force-pushed tag rewrite caught as `IntegrityError` per §2.1.</ROW-GS-TAG-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-REV fact="true" status="impl/done">`rev`</ROW-GS-REV></td>
-          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
-          <td><fact status="impl/done">Commit SHA (full or short, ≥ 7 chars). Most strict; lockfile records the same SHA.</fact></td>
+          <td><ROW-GS-REV-REQUIRED fact="true" status="impl/done">one of `tag`/`rev`/`branch` is required</ROW-GS-REV-REQUIRED></td>
+          <td><ROW-GS-REV-MEANING fact="true" status="impl/done">Commit SHA (full or short, ≥ 7 chars). Most strict; lockfile records the same SHA.</ROW-GS-REV-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-BRANCH fact="true" status="impl/done">`branch`</ROW-GS-BRANCH></td>
-          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
-          <td><fact status="impl/done">Mutable branch. Lockfile records the resolved commit at install time; subsequent `vibe update` re-walks branch HEAD. **Mutable** — see "Mutability and `vibe update`" below.</fact></td>
+          <td><ROW-GS-BRANCH-REQUIRED fact="true" status="impl/done">one of `tag`/`rev`/`branch` is required</ROW-GS-BRANCH-REQUIRED></td>
+          <td><ROW-GS-BRANCH-MEANING fact="true" status="impl/done">Mutable branch. Lockfile records the resolved commit at install time; subsequent `vibe update` re-walks branch HEAD. **Mutable** — see "Mutability and `vibe update`" below.</ROW-GS-BRANCH-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-AUTH fact="true" status="impl/done">`auth`</ROW-GS-AUTH></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Per-source auth regime. Same enum as `[[registry]] auth`: `"none" | "token-env" | "credential-helper" | "ssh"`. Default `"none"`.</fact></td>
+          <td><ROW-GS-AUTH-REQUIRED fact="true" status="impl/done">optional</ROW-GS-AUTH-REQUIRED></td>
+          <td><ROW-GS-AUTH-MEANING fact="true" status="impl/done">Per-source auth regime. Same enum as `[[registry]] auth`: `"none" | "token-env" | "credential-helper" | "ssh"`. Default `"none"`.</ROW-GS-AUTH-MEANING></td>
         </tr>
         <tr>
           <td><ROW-GS-TOKEN-ENV fact="true" status="impl/done">`token_env`</ROW-GS-TOKEN-ENV></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Env-var name when `auth = "token-env"`. Default derived from URL host (same rule as `[[registry]]` per §2.2.1).</fact></td>
+          <td><ROW-GS-TOKEN-ENV-REQUIRED fact="true" status="impl/done">optional</ROW-GS-TOKEN-ENV-REQUIRED></td>
+          <td><ROW-GS-TOKEN-ENV-MEANING fact="true" status="impl/done">Env-var name when `auth = "token-env"`. Default derived from URL host (same rule as `[[registry]]` per §2.2.1).</ROW-GS-TOKEN-ENV-MEANING></td>
         </tr>
       </table>
       <p><GS-EXACTLY-ONE-REF fact="true" status="impl/done">**Exactly one** of `tag` / `rev` / `branch` must be present in a git-source declaration. Zero is rejected at parse time with `MissingRef`. Two or more rejected with `ConflictingRefs`. There is no "default branch HEAD" fall-back — too magical for a security-sensitive surface; explicit &gt; implicit.</GS-EXACTLY-ONE-REF></p>
@@ -363,33 +363,33 @@ overridden      = false</fence>
         </tr>
         <tr>
           <td><ROW-CMP-ROLE fact="true" status="impl/done">Role</ROW-CMP-ROLE></td>
-          <td><fact status="impl/done">Primary declaration</fact></td>
-          <td><fact status="impl/done">Patch on top of an existing declaration</fact></td>
+          <td><ROW-CMP-ROLE-REQUIRES-PACKAGES-GIT-SO fact="true" status="impl/done">Primary declaration</ROW-CMP-ROLE-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-ROLE-OVERRIDE fact="true" status="impl/done">Patch on top of an existing declaration</ROW-CMP-ROLE-OVERRIDE></td>
         </tr>
         <tr>
           <td><ROW-CMP-PAIRS fact="true" status="impl/done">Pairs with</ROW-CMP-PAIRS></td>
-          <td><fact status="impl/done">A bare `[requires.packages]` entry? No — git-source IS the declaration</fact></td>
-          <td><fact status="impl/done">A `[requires.packages]` entry — override patches it</fact></td>
+          <td><ROW-CMP-PAIRS-REQUIRES-PACKAGES-GIT-SO fact="true" status="impl/done">A bare `[requires.packages]` entry? No — git-source IS the declaration</ROW-CMP-PAIRS-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-PAIRS-OVERRIDE fact="true" status="impl/done">A `[requires.packages]` entry — override patches it</ROW-CMP-PAIRS-OVERRIDE></td>
         </tr>
         <tr>
           <td><ROW-CMP-LOCKFILE fact="true" status="impl/done">Lockfile marker</ROW-CMP-LOCKFILE></td>
-          <td><fact status="impl/done">`source_kind = "git"`</fact></td>
-          <td><fact status="impl/done">`source_kind = "override"`, `overridden = true`</fact></td>
+          <td><ROW-CMP-LOCKFILE-REQUIRES-PACKAGES-GIT-SO fact="true" status="impl/done">`source_kind = "git"`</ROW-CMP-LOCKFILE-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-LOCKFILE-OVERRIDE fact="true" status="impl/done">`source_kind = "override"`, `overridden = true`</ROW-CMP-LOCKFILE-OVERRIDE></td>
         </tr>
         <tr>
           <td><ROW-CMP-LIFETIME fact="true" status="impl/done">Typical lifetime</ROW-CMP-LIFETIME></td>
-          <td><fact status="impl/done">Long-lived (project's normal architecture)</fact></td>
-          <td><fact status="impl/done">Short-lived (awaiting upstream PR / hotfix)</fact></td>
+          <td><ROW-CMP-LIFETIME-REQUIRES-PACKAGES-GIT-SO fact="true" status="impl/done">Long-lived (project's normal architecture)</ROW-CMP-LIFETIME-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-LIFETIME-OVERRIDE fact="true" status="impl/done">Short-lived (awaiting upstream PR / hotfix)</ROW-CMP-LIFETIME-OVERRIDE></td>
         </tr>
         <tr>
           <td><ROW-CMP-LIST fact="true" status="spec/done">`vibe list --overrides` (specified, not shipped)</ROW-CMP-LIST></td>
-          <td><fact status="spec/done">Not surfaced (it is a normal dependency) @status:impl/done</fact></td>
-          <td><fact status="spec/done">Surfaced via the lockfile's `overridden` field @status:impl/done</fact></td>
+          <td><ROW-CMP-LIST-REQUIRES-PACKAGES-GIT-SO fact="true" status="spec/done">Not surfaced (it is a normal dependency) @status:impl/done</ROW-CMP-LIST-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-LIST-OVERRIDE fact="true" status="spec/done">Surfaced via the lockfile's `overridden` field @status:impl/done</ROW-CMP-LIST-OVERRIDE></td>
         </tr>
         <tr>
           <td><ROW-CMP-REMOVAL fact="true" status="impl/done">Removal</ROW-CMP-REMOVAL></td>
-          <td><fact status="impl/done">`vibe uninstall &lt;pkgref&gt;` drops the entry</fact></td>
-          <td><fact status="impl/done">Drop the `[[override]]` block; the underlying dependency comes back</fact></td>
+          <td><ROW-CMP-REMOVAL-REQUIRES-PACKAGES-GIT-SO fact="true" status="impl/done">`vibe uninstall &lt;pkgref&gt;` drops the entry</ROW-CMP-REMOVAL-REQUIRES-PACKAGES-GIT-SO></td>
+          <td><ROW-CMP-REMOVAL-OVERRIDE fact="true" status="impl/done">Drop the `[[override]]` block; the underlying dependency comes back</ROW-CMP-REMOVAL-OVERRIDE></td>
         </tr>
       </table>
       <p><GS-AND-OVERRIDE-COMPOSE fact="true" status="impl/done">A project may use both: declare `flow:internal` through `[requires.packages]` git-source (the architecture), and override `flow:wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins.</GS-AND-OVERRIDE-COMPOSE></p>
@@ -429,33 +429,33 @@ description = "Delegated to acme-corp; contact maintainers@acme.example"</fence>
         </tr>
         <tr>
           <td><ROW-RD-TARGET-URL fact="true" status="impl/done">`target_url`</ROW-RD-TARGET-URL></td>
-          <td><fact status="impl/done">required</fact></td>
-          <td><fact status="impl/done">Full git URL of the package's actual content repository. Same URL grammar as `[[registry]] url`.</fact></td>
+          <td><ROW-RD-TARGET-URL-REQUIRED fact="true" status="impl/done">required</ROW-RD-TARGET-URL-REQUIRED></td>
+          <td><ROW-RD-TARGET-URL-MEANING fact="true" status="impl/done">Full git URL of the package's actual content repository. Same URL grammar as `[[registry]] url`.</ROW-RD-TARGET-URL-MEANING></td>
         </tr>
         <tr>
           <td><ROW-RD-REF-POLICY fact="true" status="impl/done">`ref_policy`</ROW-RD-REF-POLICY></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">`"pass-through-tag"` (default) or `"pinned"`.</fact></td>
+          <td><ROW-RD-REF-POLICY-REQUIRED fact="true" status="impl/done">optional</ROW-RD-REF-POLICY-REQUIRED></td>
+          <td><ROW-RD-REF-POLICY-MEANING fact="true" status="impl/done">`"pass-through-tag"` (default) or `"pinned"`.</ROW-RD-REF-POLICY-MEANING></td>
         </tr>
         <tr>
           <td><ROW-RD-PINNED-REF fact="true" status="impl/done">`pinned_ref`</ROW-RD-PINNED-REF></td>
-          <td><fact status="impl/done">required iff `ref_policy = "pinned"`</fact></td>
-          <td><fact status="impl/done">Tag, branch, or commit on `target_url` that ALL consumers resolve to, regardless of which version they ask for.</fact></td>
+          <td><ROW-RD-PINNED-REF-REQUIRED fact="true" status="impl/done">required iff `ref_policy = "pinned"`</ROW-RD-PINNED-REF-REQUIRED></td>
+          <td><ROW-RD-PINNED-REF-MEANING fact="true" status="impl/done">Tag, branch, or commit on `target_url` that ALL consumers resolve to, regardless of which version they ask for.</ROW-RD-PINNED-REF-MEANING></td>
         </tr>
         <tr>
           <td><ROW-RD-AUTH fact="true" status="impl/done">`auth`</ROW-RD-AUTH></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Auth regime for `target_url`. Same enum as `[[registry]]` auth. Default `"none"`.</fact></td>
+          <td><ROW-RD-AUTH-REQUIRED fact="true" status="impl/done">optional</ROW-RD-AUTH-REQUIRED></td>
+          <td><ROW-RD-AUTH-MEANING fact="true" status="impl/done">Auth regime for `target_url`. Same enum as `[[registry]]` auth. Default `"none"`.</ROW-RD-AUTH-MEANING></td>
         </tr>
         <tr>
           <td><ROW-RD-TOKEN-ENV fact="true" status="impl/done">`token_env`</ROW-RD-TOKEN-ENV></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Env-var name when `auth = "token-env"`. Default derived from target host.</fact></td>
+          <td><ROW-RD-TOKEN-ENV-REQUIRED fact="true" status="impl/done">optional</ROW-RD-TOKEN-ENV-REQUIRED></td>
+          <td><ROW-RD-TOKEN-ENV-MEANING fact="true" status="impl/done">Env-var name when `auth = "token-env"`. Default derived from target host.</ROW-RD-TOKEN-ENV-MEANING></td>
         </tr>
         <tr>
           <td><ROW-RD-DESCRIPTION fact="true" status="impl/done">`description`</ROW-RD-DESCRIPTION></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Free-form text shown to operators.</fact></td>
+          <td><ROW-RD-DESCRIPTION-REQUIRED fact="true" status="impl/done">optional</ROW-RD-DESCRIPTION-REQUIRED></td>
+          <td><ROW-RD-DESCRIPTION-MEANING fact="true" status="impl/done">Free-form text shown to operators.</ROW-RD-DESCRIPTION-MEANING></td>
         </tr>
       </table>
       <p><REDIRECT-RESOLVER-FLOW fact="true" status="impl/done">**Resolver behaviour.** When fetching a package manifest at a ref `T` from a registry-level `&lt;stub_url&gt;`:</REDIRECT-RESOLVER-FLOW></p>
@@ -512,38 +512,38 @@ overridden      = false</fence>
         </tr>
         <tr>
           <td><ROW-MECH-DIRECT fact="true" status="impl/done">`[[registry]]` direct package</ROW-MECH-DIRECT></td>
-          <td><fact status="impl/done">Registry owner</fact></td>
-          <td><fact status="impl/done">Long</fact></td>
-          <td><fact status="impl/done">`source_kind = "registry"`, `via_redirect = null`</fact></td>
-          <td><fact status="impl/done">Standard ownership</fact></td>
+          <td><ROW-MECH-DIRECT-SET-BY fact="true" status="impl/done">Registry owner</ROW-MECH-DIRECT-SET-BY></td>
+          <td><ROW-MECH-DIRECT-LIFETIME fact="true" status="impl/done">Long</ROW-MECH-DIRECT-LIFETIME></td>
+          <td><ROW-MECH-DIRECT-LOCKFILE-MARKER fact="true" status="impl/done">`source_kind = "registry"`, `via_redirect = null`</ROW-MECH-DIRECT-LOCKFILE-MARKER></td>
+          <td><ROW-MECH-DIRECT-USE-CASE fact="true" status="impl/done">Standard ownership</ROW-MECH-DIRECT-USE-CASE></td>
         </tr>
         <tr>
           <td><ROW-MECH-STUB fact="true" status="impl/done">`[[registry]]` stub (this section)</ROW-MECH-STUB></td>
-          <td><fact status="impl/done">Registry owner</fact></td>
-          <td><fact status="impl/done">Long</fact></td>
-          <td><fact status="impl/done">`source_kind = "registry"`, `via_redirect = &lt;stub_url&gt;`</fact></td>
-          <td><fact status="impl/done">Owner delegates content hosting to external party</fact></td>
+          <td><ROW-MECH-STUB-SET-BY fact="true" status="impl/done">Registry owner</ROW-MECH-STUB-SET-BY></td>
+          <td><ROW-MECH-STUB-LIFETIME fact="true" status="impl/done">Long</ROW-MECH-STUB-LIFETIME></td>
+          <td><ROW-MECH-STUB-LOCKFILE-MARKER fact="true" status="impl/done">`source_kind = "registry"`, `via_redirect = &lt;stub_url&gt;`</ROW-MECH-STUB-LOCKFILE-MARKER></td>
+          <td><ROW-MECH-STUB-USE-CASE fact="true" status="impl/done">Owner delegates content hosting to external party</ROW-MECH-STUB-USE-CASE></td>
         </tr>
         <tr>
           <td><ROW-MECH-MIRROR fact="true" status="impl/done">`[[mirror]]`</ROW-MECH-MIRROR></td>
-          <td><fact status="impl/done">Consumer</fact></td>
-          <td><fact status="impl/done">Long</fact></td>
-          <td><fact status="impl/done">`source_kind = "registry"`; mirror URL not in lockfile</fact></td>
-          <td><fact status="impl/done">Operator-side fallback URL for the same content</fact></td>
+          <td><ROW-MECH-MIRROR-SET-BY fact="true" status="impl/done">Consumer</ROW-MECH-MIRROR-SET-BY></td>
+          <td><ROW-MECH-MIRROR-LIFETIME fact="true" status="impl/done">Long</ROW-MECH-MIRROR-LIFETIME></td>
+          <td><ROW-MECH-MIRROR-LOCKFILE-MARKER fact="true" status="impl/done">`source_kind = "registry"`; mirror URL not in lockfile</ROW-MECH-MIRROR-LOCKFILE-MARKER></td>
+          <td><ROW-MECH-MIRROR-USE-CASE fact="true" status="impl/done">Operator-side fallback URL for the same content</ROW-MECH-MIRROR-USE-CASE></td>
         </tr>
         <tr>
           <td><ROW-MECH-OVERRIDE fact="true" status="impl/done">`[[override]]`</ROW-MECH-OVERRIDE></td>
-          <td><fact status="impl/done">Consumer</fact></td>
-          <td><fact status="impl/done">Short</fact></td>
-          <td><fact status="impl/done">`source_kind = "override"`, `overridden = true`</fact></td>
-          <td><fact status="impl/done">Operator-side patch / fork pin</fact></td>
+          <td><ROW-MECH-OVERRIDE-SET-BY fact="true" status="impl/done">Consumer</ROW-MECH-OVERRIDE-SET-BY></td>
+          <td><ROW-MECH-OVERRIDE-LIFETIME fact="true" status="impl/done">Short</ROW-MECH-OVERRIDE-LIFETIME></td>
+          <td><ROW-MECH-OVERRIDE-LOCKFILE-MARKER fact="true" status="impl/done">`source_kind = "override"`, `overridden = true`</ROW-MECH-OVERRIDE-LOCKFILE-MARKER></td>
+          <td><ROW-MECH-OVERRIDE-USE-CASE fact="true" status="impl/done">Operator-side patch / fork pin</ROW-MECH-OVERRIDE-USE-CASE></td>
         </tr>
         <tr>
           <td><ROW-MECH-GIT-SOURCE fact="true" status="impl/done">`[requires.packages]` git-source (§2.4.1)</ROW-MECH-GIT-SOURCE></td>
-          <td><fact status="impl/done">Consumer</fact></td>
-          <td><fact status="impl/done">Long</fact></td>
-          <td><fact status="impl/done">`source_kind = "git"`</fact></td>
-          <td><fact status="impl/done">Consumer declares package not in any registry</fact></td>
+          <td><ROW-MECH-GIT-SOURCE-SET-BY fact="true" status="impl/done">Consumer</ROW-MECH-GIT-SOURCE-SET-BY></td>
+          <td><ROW-MECH-GIT-SOURCE-LIFETIME fact="true" status="impl/done">Long</ROW-MECH-GIT-SOURCE-LIFETIME></td>
+          <td><ROW-MECH-GIT-SOURCE-LOCKFILE-MARKER fact="true" status="impl/done">`source_kind = "git"`</ROW-MECH-GIT-SOURCE-LOCKFILE-MARKER></td>
+          <td><ROW-MECH-GIT-SOURCE-USE-CASE fact="true" status="impl/done">Consumer declares package not in any registry</ROW-MECH-GIT-SOURCE-USE-CASE></td>
         </tr>
       </table>
       <p><STUB-VS-MIRROR-AXIS fact="true" status="impl/done">The key distinction between **stub** and **mirror** is *who controls the indirection*. Mirror is consumer-side (the operator's `vibe.toml` says "if vibespecs is slow, try this URL for the same content"). Stub is org-side (the registry owner's stub repo says "for this specific package, the content lives over there"). Same wire-level effect (redirected fetch), inverse control axis.</STUB-VS-MIRROR-AXIS></p>

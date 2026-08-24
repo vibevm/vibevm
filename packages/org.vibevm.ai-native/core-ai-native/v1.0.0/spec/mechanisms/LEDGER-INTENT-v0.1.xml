@@ -29,15 +29,15 @@
       </tr>
       <tr>
         <td><ROW-CLASS-FACTS fact="true" status="impl/done">**Facts**</ROW-CLASS-FACTS></td>
-        <td><fact status="impl/done">parsed items, import edges, spans, hashes, lint findings</fact></td>
-        <td><fact status="impl/done">`(file content-hash, producer id + version)`</fact></td>
-        <td><fact status="impl/done">**No** — purely syntactic; invalid only when the file or the producer changes. By construction never stale.</fact></td>
+        <td><ROW-CLASS-FACTS-EXAMPLES fact="true" status="impl/done">parsed items, import edges, spans, hashes, lint findings</ROW-CLASS-FACTS-EXAMPLES></td>
+        <td><ROW-CLASS-FACTS-KEY fact="true" status="impl/done">`(file content-hash, producer id + version)`</ROW-CLASS-FACTS-KEY></td>
+        <td><ROW-CLASS-FACTS-ROTS fact="true" status="impl/done">**No** — purely syntactic; invalid only when the file or the producer changes. By construction never stale.</ROW-CLASS-FACTS-ROTS></td>
       </tr>
       <tr>
         <td><ROW-CLASS-INTERPRETATIONS fact="true" status="spec/done">**Interpretations**</ROW-CLASS-INTERPRETATIONS></td>
-        <td><fact status="spec/done">item summaries, explanation renders, legacy-unit classifications, link proposals, overlap judgments @status:impl/done</fact></td>
-        <td><fact status="spec/done">`(subject hashes, spec revs touched, **epoch**, producer id, prompt rev, model id)` — *Specified, not built: the shipped key is three of these six. `ledger.rs:136` composes `content_hash(producer \n epoch \n subject)`; `spec revs touched`, `prompt rev` and `model id` are in no key, and `prompt_rev` / `model_id` appear nowhere in the crate outside the header comment that quotes this row. §4's entry shape already marks the last two optional (`model_id?`, `prompt_rev?`); this cell states them unconditionally.*</fact></td>
-        <td><fact status="spec/done">**Yes** — hence the epoch in the key. @status:impl/done</fact></td>
+        <td><ROW-CLASS-INTERPRETATIONS-EXAMPLES fact="true" status="spec/done">item summaries, explanation renders, legacy-unit classifications, link proposals, overlap judgments @status:impl/done</ROW-CLASS-INTERPRETATIONS-EXAMPLES></td>
+        <td><ROW-CLASS-INTERPRETATIONS-KEY fact="true" status="spec/done">`(subject hashes, spec revs touched, **epoch**, producer id, prompt rev, model id)` — *Specified, not built: the shipped key is three of these six. `ledger.rs:136` composes `content_hash(producer \n epoch \n subject)`; `spec revs touched`, `prompt rev` and `model id` are in no key, and `prompt_rev` / `model_id` appear nowhere in the crate outside the header comment that quotes this row. §4's entry shape already marks the last two optional (`model_id?`, `prompt_rev?`); this cell states them unconditionally.*</ROW-CLASS-INTERPRETATIONS-KEY></td>
+        <td><ROW-CLASS-INTERPRETATIONS-ROTS fact="true" status="spec/done">**Yes** — hence the epoch in the key. @status:impl/done</ROW-CLASS-INTERPRETATIONS-ROTS></td>
       </tr>
     </table>
     <p><CONFORM-FACT-STORE-IS-THE-FACTS-CLASS fact="true" status="impl/done">The conform engine's fact store (ENGINE §3) is the facts class instantiated.</CONFORM-FACT-STORE-IS-THE-FACTS-CLASS></p>

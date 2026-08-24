@@ -52,39 +52,39 @@ that framing became the spine of the design.</linking-frame></p>
       </tr>
       <tr>
         <td><ROW-LINK-COMPILE fact="true" status="doc/done">Compile + link time</ROW-LINK-COMPILE></td>
-        <td><fact status="doc/done">`vibe install`</fact></td>
+        <td><ROW-LINK-COMPILE-VIBEVM fact="true" status="doc/done">`vibe install`</ROW-LINK-COMPILE-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-LOAD fact="true" status="doc/done">Load + run time</ROW-LINK-LOAD></td>
-        <td><fact status="doc/done">start of an AI session</fact></td>
+        <td><ROW-LINK-LOAD-VIBEVM fact="true" status="doc/done">start of an AI session</ROW-LINK-LOAD-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-OBJECT fact="true" status="doc/done">Object file / library</ROW-LINK-OBJECT></td>
-        <td><fact status="doc/done">a package (flow / feat / stack / tool)</fact></td>
+        <td><ROW-LINK-OBJECT-VIBEVM fact="true" status="doc/done">a package (flow / feat / stack / tool)</ROW-LINK-OBJECT-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-EXECUTABLE fact="true" status="doc/done">The executable</ROW-LINK-EXECUTABLE></td>
-        <td><fact status="doc/done">a node's effective boot sequence</fact></td>
+        <td><ROW-LINK-EXECUTABLE-VIBEVM fact="true" status="doc/done">a node's effective boot sequence</ROW-LINK-EXECUTABLE-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-LOADER fact="true" status="doc/done">The dynamic loader (`ld.so`)</ROW-LINK-LOADER></td>
-        <td><fact status="doc/done">the AI agent following INCLUDE pointers</fact></td>
+        <td><ROW-LINK-LOADER-VIBEVM fact="true" status="doc/done">the AI agent following INCLUDE pointers</ROW-LINK-LOADER-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-DT-NEEDED fact="true" status="doc/done">`DT_NEEDED` entry</ROW-LINK-DT-NEEDED></td>
-        <td><fact status="doc/done">an INCLUDE pointer (a `spec://` reference)</fact></td>
+        <td><ROW-LINK-DT-NEEDED-VIBEVM fact="true" status="doc/done">an INCLUDE pointer (a `spec://` reference)</ROW-LINK-DT-NEEDED-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-STATIC fact="true" status="doc/done">Static linking (`.a` copied into the binary)</ROW-LINK-STATIC></td>
-        <td><fact status="doc/done">`vibe install` inlines a dependency's boot</fact></td>
+        <td><ROW-LINK-STATIC-VIBEVM fact="true" status="doc/done">`vibe install` inlines a dependency's boot</ROW-LINK-STATIC-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-DYNAMIC fact="true" status="doc/done">Dynamic linking (`.so` referenced, resolved at load)</ROW-LINK-DYNAMIC></td>
-        <td><fact status="doc/done">the INCLUDE pointer stays; the agent resolves it</fact></td>
+        <td><ROW-LINK-DYNAMIC-VIBEVM fact="true" status="doc/done">the INCLUDE pointer stays; the agent resolves it</ROW-LINK-DYNAMIC-VIBEVM></td>
       </tr>
       <tr>
         <td><ROW-LINK-VENDOR fact="true" status="doc/done">`vendor/` / `~/.cargo/registry`</ROW-LINK-VENDOR></td>
-        <td><fact status="doc/done">the materialised-dependency tree</fact></td>
+        <td><ROW-LINK-VENDOR-VIBEVM fact="true" status="doc/done">the materialised-dependency tree</ROW-LINK-VENDOR-VIBEVM></td>
       </tr>
     </table>
     <p><AGENT-IS-THE-LOADER fact="true" status="doc/done">The load-bearing consequence: **at session start, the AI agent is the loader.** Every
@@ -186,21 +186,21 @@ time, for each entry-point node `vibe` generates:</inclusion-types-lead></p>
       </tr>
       <tr>
         <td><ROW-COST-INLINE fact="true" status="doc/done">`inline` (ships as `link = "static"`)</ROW-COST-INLINE></td>
-        <td><fact status="doc/done">~1 (already in `STATIC.md`)</fact></td>
-        <td><fact status="doc/done">duplicated (bounded — few items)</fact></td>
-        <td><fact status="doc/done">critical disciplines, top-level skills</fact></td>
+        <td><ROW-COST-INLINE-READS-AT-BOOT fact="true" status="doc/done">~1 (already in `STATIC.md`)</ROW-COST-INLINE-READS-AT-BOOT></td>
+        <td><ROW-COST-INLINE-CONTENT-ON-DISK fact="true" status="doc/done">duplicated (bounded — few items)</ROW-COST-INLINE-CONTENT-ON-DISK></td>
+        <td><ROW-COST-INLINE-USE fact="true" status="doc/done">critical disciplines, top-level skills</ROW-COST-INLINE-USE></td>
       </tr>
       <tr>
         <td><ROW-COST-STATIC fact="true" status="doc/done">`static` (ships as `link = "dynamic"`)</ROW-COST-STATIC></td>
-        <td><fact status="doc/done">1 + N (N parallelisable)</fact></td>
-        <td><fact status="doc/done">lives once</fact></td>
-        <td><fact status="doc/done">the default — ordinary dependencies</fact></td>
+        <td><ROW-COST-STATIC-READS-AT-BOOT fact="true" status="doc/done">1 + N (N parallelisable)</ROW-COST-STATIC-READS-AT-BOOT></td>
+        <td><ROW-COST-STATIC-CONTENT-ON-DISK fact="true" status="doc/done">lives once</ROW-COST-STATIC-CONTENT-ON-DISK></td>
+        <td><ROW-COST-STATIC-USE fact="true" status="doc/done">the default — ordinary dependencies</ROW-COST-STATIC-USE></td>
       </tr>
       <tr>
         <td><ROW-COST-DYNAMIC fact="true" status="doc/done">`dynamic`</ROW-COST-DYNAMIC></td>
-        <td><fact status="doc/done">1 + N + graph-walk</fact></td>
-        <td><fact status="doc/done">lives once</fact></td>
-        <td><fact status="doc/done">conditional / context-gated boot</fact></td>
+        <td><ROW-COST-DYNAMIC-READS-AT-BOOT fact="true" status="doc/done">1 + N + graph-walk</ROW-COST-DYNAMIC-READS-AT-BOOT></td>
+        <td><ROW-COST-DYNAMIC-CONTENT-ON-DISK fact="true" status="doc/done">lives once</ROW-COST-DYNAMIC-CONTENT-ON-DISK></td>
+        <td><ROW-COST-DYNAMIC-USE fact="true" status="doc/done">conditional / context-gated boot</ROW-COST-DYNAMIC-USE></td>
       </tr>
     </table>
     <p><dynamic-is-lazy-pull fact="true" status="doc/done">`dynamic` is, mechanically, the subskill `lazy-pull` delivery mode (PROP-003 §2.5) —

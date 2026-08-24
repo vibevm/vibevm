@@ -49,13 +49,13 @@ governed until stronger content inspection exists.</the-gate-governs-until-conte
       </tr>
       <tr>
         <td><ROW-GATE-ALLOW-LISTED fact="true" status="impl/done">Allow-listed</ROW-GATE-ALLOW-LISTED></td>
-        <td><fact status="impl/done">Runs silently</fact></td>
-        <td><fact status="impl/done">Runs silently</fact></td>
+        <td><ROW-GATE-ALLOW-LISTED-INTERACTIVE-RUN fact="true" status="impl/done">Runs silently</ROW-GATE-ALLOW-LISTED-INTERACTIVE-RUN></td>
+        <td><ROW-GATE-ALLOW-LISTED-NON-INTERACTIVE-CI-RUN fact="true" status="impl/done">Runs silently</ROW-GATE-ALLOW-LISTED-NON-INTERACTIVE-CI-RUN></td>
       </tr>
       <tr>
         <td><ROW-GATE-NOT-ALLOW-LISTED fact="true" status="impl/done">Not allow-listed</ROW-GATE-NOT-ALLOW-LISTED></td>
-        <td><fact status="impl/done">Prompts, showing the exact script</fact></td>
-        <td><fact status="impl/done">**Aborts** unless an explicit opt-in flag is passed</fact></td>
+        <td><ROW-GATE-NOT-ALLOW-LISTED-INTERACTIVE-RUN fact="true" status="impl/done">Prompts, showing the exact script</ROW-GATE-NOT-ALLOW-LISTED-INTERACTIVE-RUN></td>
+        <td><ROW-GATE-NOT-ALLOW-LISTED-NON-INTERACTIVE-CI-RUN fact="true" status="impl/done">**Aborts** unless an explicit opt-in flag is passed</ROW-GATE-NOT-ALLOW-LISTED-NON-INTERACTIVE-CI-RUN></td>
       </tr>
     </table>
   </consent-gate>

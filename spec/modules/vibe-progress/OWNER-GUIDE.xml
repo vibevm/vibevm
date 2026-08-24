@@ -21,31 +21,31 @@
       </tr>
       <tr>
         <td><ST-IDEA fact="true" status="doc/done">`idea`</ST-IDEA></td>
-        <td><fact status="doc/done">идея, ещё не специфицирована</fact></td>
+        <td><ST-IDEA-COLUMN-2 fact="true" status="doc/done">идея, ещё не специфицирована</ST-IDEA-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-SPEC fact="true" status="doc/done">`spec`</ST-SPEC></td>
-        <td><fact status="doc/done">пишем/написали спеку</fact></td>
+        <td><ST-SPEC-COLUMN-2 fact="true" status="doc/done">пишем/написали спеку</ST-SPEC-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-IMPL fact="true" status="doc/done">`impl`</ST-IMPL></td>
-        <td><fact status="doc/done">реализуем/реализовано</fact></td>
+        <td><ST-IMPL-COLUMN-2 fact="true" status="doc/done">реализуем/реализовано</ST-IMPL-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-TEST fact="true" status="doc/done">`test`</ST-TEST></td>
-        <td><fact status="doc/done">тестируем/протестировано</fact></td>
+        <td><ST-TEST-COLUMN-2 fact="true" status="doc/done">тестируем/протестировано</ST-TEST-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-DOC fact="true" status="doc/done">`doc`</ST-DOC></td>
-        <td><fact status="doc/done">документируем/задокументировано</fact></td>
+        <td><ST-DOC-COLUMN-2 fact="true" status="doc/done">документируем/задокументировано</ST-DOC-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-FREEZE fact="true" status="doc/done">`freeze`</ST-FREEZE></td>
-        <td><fact status="doc/done">замораживаем (plan → work → done = заморожено; разморозка = смена маркера назад)</fact></td>
+        <td><ST-FREEZE-COLUMN-2 fact="true" status="doc/done">замораживаем (plan → work → done = заморожено; разморозка = смена маркера назад)</ST-FREEZE-COLUMN-2></td>
       </tr>
       <tr>
         <td><ST-UNKNOWN fact="true" status="doc/done">`unknown`</ST-UNKNOWN></td>
-        <td><fact status="doc/done">«смотрел и не понял» — явный запрос на триаж</fact></td>
+        <td><ST-UNKNOWN-COLUMN-2 fact="true" status="doc/done">«смотрел и не понял» — явный запрос на триаж</ST-UNKNOWN-COLUMN-2></td>
       </tr>
     </table>
     <table>
@@ -55,19 +55,19 @@
       </tr>
       <tr>
         <td><SS-PLAN fact="true" status="doc/done">`plan`</SS-PLAN></td>
-        <td><fact status="doc/done">собираемся</fact></td>
+        <td><SS-PLAN-COLUMN-2 fact="true" status="doc/done">собираемся</SS-PLAN-COLUMN-2></td>
       </tr>
       <tr>
         <td><SS-WORK fact="true" status="doc/done">`work`</SS-WORK></td>
-        <td><fact status="doc/done">делаем</fact></td>
+        <td><SS-WORK-COLUMN-2 fact="true" status="doc/done">делаем</SS-WORK-COLUMN-2></td>
       </tr>
       <tr>
         <td><SS-DONE fact="true" status="doc/done">`done`</SS-DONE></td>
-        <td><fact status="doc/done">сделали (для этой стадии)</fact></td>
+        <td><SS-DONE-COLUMN-2 fact="true" status="doc/done">сделали (для этой стадии)</SS-DONE-COLUMN-2></td>
       </tr>
       <tr>
         <td><SS-HOLD fact="true" status="doc/done">`hold`</SS-HOLD></td>
-        <td><fact status="doc/done">сознательно отложено</fact></td>
+        <td><SS-HOLD-COLUMN-2 fact="true" status="doc/done">сознательно отложено</SS-HOLD-COLUMN-2></td>
       </tr>
     </table>
     <p><optional-fields-lead fact="true" status="doc/done">Необязательные поля:</optional-fields-lead></p>

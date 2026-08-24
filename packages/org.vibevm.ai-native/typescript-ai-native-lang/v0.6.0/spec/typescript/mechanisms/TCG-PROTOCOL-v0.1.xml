@@ -111,28 +111,28 @@ mirrored as typed variants in `typescript-ai-native-tcg-bridge`):</five-error-ki
       </tr>
       <tr>
         <td><ROW-ERROR-NODE-MISSING fact="true" status="impl/done">`node-missing`</ROW-ERROR-NODE-MISSING></td>
-        <td><fact status="impl/done">node not spawnable</fact></td>
-        <td><fact status="impl/done">install node &gt;= 22.6</fact></td>
+        <td><ROW-ERROR-NODE-MISSING-MEANING fact="true" status="impl/done">node not spawnable</ROW-ERROR-NODE-MISSING-MEANING></td>
+        <td><ROW-ERROR-NODE-MISSING-RECIPE-CARRIED fact="true" status="impl/done">install node &gt;= 22.6</ROW-ERROR-NODE-MISSING-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-TYPESCRIPT-UNRESOLVABLE fact="true" status="impl/done">`typescript-unresolvable`</ROW-ERROR-TYPESCRIPT-UNRESOLVABLE></td>
-        <td><fact status="impl/done">consumer install absent (ORACLE §2)</fact></td>
-        <td><fact status="impl/done">`npm install -D typescript`</fact></td>
+        <td><ROW-ERROR-TYPESCRIPT-UNRESOLVABLE-MEANING fact="true" status="impl/done">consumer install absent (ORACLE §2)</ROW-ERROR-TYPESCRIPT-UNRESOLVABLE-MEANING></td>
+        <td><ROW-ERROR-TYPESCRIPT-UNRESOLVABLE-RECIPE-CARRIED fact="true" status="impl/done">`npm install -D typescript`</ROW-ERROR-TYPESCRIPT-UNRESOLVABLE-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-ORACLE-CRASHED fact="true" status="impl/done">`oracle-crashed`</ROW-ERROR-ORACLE-CRASHED></td>
-        <td><fact status="impl/done">child died / stream closed mid-session</fact></td>
-        <td><fact status="impl/done">respawn guidance; the bridge may retry once</fact></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-MEANING fact="true" status="impl/done">child died / stream closed mid-session</ROW-ERROR-ORACLE-CRASHED-MEANING></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED fact="true" status="impl/done">respawn guidance; the bridge may retry once</ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-PROTOCOL fact="true" status="impl/done">`protocol`</ROW-ERROR-PROTOCOL></td>
-        <td><fact status="impl/done">unparseable frame, `proto` mismatch, unknown op</fact></td>
-        <td><fact status="impl/done">version/upgrade note; unknown-op errors list the known ops</fact></td>
+        <td><ROW-ERROR-PROTOCOL-MEANING fact="true" status="impl/done">unparseable frame, `proto` mismatch, unknown op</ROW-ERROR-PROTOCOL-MEANING></td>
+        <td><ROW-ERROR-PROTOCOL-RECIPE-CARRIED fact="true" status="impl/done">version/upgrade note; unknown-op errors list the known ops</ROW-ERROR-PROTOCOL-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-TIMEOUT fact="true" status="impl/done">`timeout`</ROW-ERROR-TIMEOUT></td>
-        <td><fact status="impl/done">no response within the caller's budget</fact></td>
-        <td><fact status="impl/done">the op and budget, for tuning</fact></td>
+        <td><ROW-ERROR-TIMEOUT-MEANING fact="true" status="impl/done">no response within the caller's budget</ROW-ERROR-TIMEOUT-MEANING></td>
+        <td><ROW-ERROR-TIMEOUT-RECIPE-CARRIED fact="true" status="impl/done">the op and budget, for tuning</ROW-ERROR-TIMEOUT-RECIPE-CARRIED></td>
       </tr>
     </table>
     <p><ERRORS-ARE-OP-GRAIN fact="true" status="impl/done">Errors are OP-GRAIN wherever possible (the session survives, ORACLE

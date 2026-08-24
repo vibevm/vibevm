@@ -47,23 +47,23 @@
         </tr>
         <tr>
           <td><ROW-EX-ROOT fact="true" status="impl/done">`root/…/STATIC.md`</ROW-EX-ROOT></td>
-          <td><fact status="impl/done">— (no A, B, C, D)</fact></td>
-          <td><fact status="impl/done">`root→A` **dynamic** → break; A is a reference in `root/INDEX.md`</fact></td>
+          <td><ROW-EX-ROOT-CONTAINS fact="true" status="impl/done">— (no A, B, C, D)</ROW-EX-ROOT-CONTAINS></td>
+          <td><ROW-EX-ROOT-BECAUSE fact="true" status="impl/done">`root→A` **dynamic** → break; A is a reference in `root/INDEX.md`</ROW-EX-ROOT-BECAUSE></td>
         </tr>
         <tr>
           <td><ROW-EX-A fact="true" status="impl/done">`vibedeps/A/…/STATIC.md`</ROW-EX-A></td>
-          <td><fact status="impl/done">**A + B** (no C)</fact></td>
-          <td><fact status="impl/done">`A→B` **static** → B compiled in; `B→C` **dynamic** → C breaks</fact></td>
+          <td><ROW-EX-A-CONTAINS fact="true" status="impl/done">**A + B** (no C)</ROW-EX-A-CONTAINS></td>
+          <td><ROW-EX-A-BECAUSE fact="true" status="impl/done">`A→B` **static** → B compiled in; `B→C` **dynamic** → C breaks</ROW-EX-A-BECAUSE></td>
         </tr>
         <tr>
           <td><ROW-EX-B fact="true" status="impl/done">`vibedeps/B/…/STATIC.md`</ROW-EX-B></td>
-          <td><fact status="impl/done">B</fact></td>
-          <td><fact status="impl/done">`B→C` **dynamic** → C is a reference in `B/INDEX.md`</fact></td>
+          <td><ROW-EX-B-CONTAINS fact="true" status="impl/done">B</ROW-EX-B-CONTAINS></td>
+          <td><ROW-EX-B-BECAUSE fact="true" status="impl/done">`B→C` **dynamic** → C is a reference in `B/INDEX.md`</ROW-EX-B-BECAUSE></td>
         </tr>
         <tr>
           <td><ROW-EX-C fact="true" status="impl/done">`vibedeps/C/…/STATIC.md`</ROW-EX-C></td>
-          <td><fact status="impl/done">**C + D + all under D**</fact></td>
-          <td><fact status="impl/done">`C→D` **static-transitive** → forces the subtree</fact></td>
+          <td><ROW-EX-C-CONTAINS fact="true" status="impl/done">**C + D + all under D**</ROW-EX-C-CONTAINS></td>
+          <td><ROW-EX-C-BECAUSE fact="true" status="impl/done">`C→D` **static-transitive** → forces the subtree</ROW-EX-C-BECAUSE></td>
         </tr>
       </table>
     </edge-recursion>

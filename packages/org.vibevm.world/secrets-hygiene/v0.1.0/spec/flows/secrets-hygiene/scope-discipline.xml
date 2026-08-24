@@ -104,11 +104,11 @@ influence.</TRUST-ORDERING-CLOSES-THAT-SURFACE></p>
       </tr>
       <tr>
         <td><ROW-MERGE-UNION-ACROSS-SOURCES fact="true" status="spec/done">Union across sources</ROW-MERGE-UNION-ACROSS-SOURCES></td>
-        <td><fact status="spec/done">Inject an entry into any resolution — a poisoned version wins if it sorts first</fact></td>
+        <td><ROW-MERGE-UNION-ACROSS-SOURCES-WHAT-A-MALICIOUS-LOW-TRU fact="true" status="spec/done">Inject an entry into any resolution — a poisoned version wins if it sorts first</ROW-MERGE-UNION-ACROSS-SOURCES-WHAT-A-MALICIOUS-LOW-TRU></td>
       </tr>
       <tr>
         <td><ROW-MERGE-FIRST-TRUSTED-WINS fact="true" status="spec/done">First-trusted-wins (this rule)</ROW-MERGE-FIRST-TRUSTED-WINS></td>
-        <td><fact status="spec/done">Nothing, once a trusted source has answered — it is never consulted</fact></td>
+        <td><ROW-MERGE-FIRST-TRUSTED-WINS-WHAT-A-MALICIOUS-LOW-TRU fact="true" status="spec/done">Nothing, once a trusted source has answered — it is never consulted</ROW-MERGE-FIRST-TRUSTED-WINS-WHAT-A-MALICIOUS-LOW-TRU></td>
       </tr>
     </table>
   </trust-ordering>

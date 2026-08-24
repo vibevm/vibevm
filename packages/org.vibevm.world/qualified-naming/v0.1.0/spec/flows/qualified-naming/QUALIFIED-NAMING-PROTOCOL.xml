@@ -139,13 +139,13 @@ line, `serde = "1"` in the manifest.</the-cargo-npm-pattern-is-the-same-instinct
       </tr>
       <tr>
         <td><ROW-FAILURE-COLLISION fact="true" status="impl/done">**Collision**</ROW-FAILURE-COLLISION></td>
-        <td><fact status="impl/done">one short name matches two *different* packages (different groups)</fact></td>
-        <td><fact status="impl/done">the human picks a group and records the qualified form</fact></td>
+        <td><ROW-FAILURE-COLLISION-CAUSE fact="true" status="impl/done">one short name matches two *different* packages (different groups)</ROW-FAILURE-COLLISION-CAUSE></td>
+        <td><ROW-FAILURE-COLLISION-RESOLUTION fact="true" status="impl/done">the human picks a group and records the qualified form</ROW-FAILURE-COLLISION-RESOLUTION></td>
       </tr>
       <tr>
         <td><ROW-FAILURE-CONFLICT fact="true" status="impl/done">**Conflict**</ROW-FAILURE-CONFLICT></td>
-        <td><fact status="impl/done">version requirements cannot all be satisfied — contradictory constraints, a declared incompatibility, an unsatisfiable diamond</fact></td>
-        <td><fact status="impl/done">the human relaxes a constraint or drops a dependency</fact></td>
+        <td><ROW-FAILURE-CONFLICT-CAUSE fact="true" status="impl/done">version requirements cannot all be satisfied — contradictory constraints, a declared incompatibility, an unsatisfiable diamond</ROW-FAILURE-CONFLICT-CAUSE></td>
+        <td><ROW-FAILURE-CONFLICT-RESOLUTION fact="true" status="impl/done">the human relaxes a constraint or drops a dependency</ROW-FAILURE-CONFLICT-RESOLUTION></td>
       </tr>
     </table>
     <facts ordered="false">

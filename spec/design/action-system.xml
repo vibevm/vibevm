@@ -52,53 +52,53 @@ AIUI and every other surface possible (DO12). Modules:</CRATE-INVARIANT></p>
       </tr>
       <tr>
         <td><ROW-MOD-ADDRESS fact="true" status="doc/done">`address`</ROW-MOD-ADDRESS></td>
-        <td><fact status="doc/done">The `action://&lt;group&gt;/&lt;name&gt;[?params]` address type, its grammar, parse/format, uniqueness, tombstone/alias</fact></td>
-        <td><fact status="doc/done">Δ1</fact></td>
+        <td><ROW-MOD-ADDRESS-OWNS fact="true" status="doc/done">The `action://&lt;group&gt;/&lt;name&gt;[?params]` address type, its grammar, parse/format, uniqueness, tombstone/alias</ROW-MOD-ADDRESS-OWNS></td>
+        <td><ROW-MOD-ADDRESS-KEY-DELTAS fact="true" status="doc/done">Δ1</ROW-MOD-ADDRESS-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-ACTION fact="true" status="doc/done">`action`</ROW-MOD-ACTION></td>
-        <td><fact status="doc/done">The **Action** value (address · presentation · param-schema · enablement · invoke) and its immutable resolved snapshot</fact></td>
-        <td><fact status="doc/done">Δ2</fact></td>
+        <td><ROW-MOD-ACTION-OWNS fact="true" status="doc/done">The **Action** value (address · presentation · param-schema · enablement · invoke) and its immutable resolved snapshot</ROW-MOD-ACTION-OWNS></td>
+        <td><ROW-MOD-ACTION-KEY-DELTAS fact="true" status="doc/done">Δ2</ROW-MOD-ACTION-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-REGISTRY fact="true" status="doc/done">`registry`</ROW-MOD-REGISTRY></td>
-        <td><fact status="doc/done">The collision-erroring registry: register/lookup, referential-integrity checks, full enumeration</fact></td>
-        <td><fact status="doc/done">Δ3, Δ12</fact></td>
+        <td><ROW-MOD-REGISTRY-OWNS fact="true" status="doc/done">The collision-erroring registry: register/lookup, referential-integrity checks, full enumeration</ROW-MOD-REGISTRY-OWNS></td>
+        <td><ROW-MOD-REGISTRY-KEY-DELTAS fact="true" status="doc/done">Δ3, Δ12</ROW-MOD-REGISTRY-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-PARAMS fact="true" status="doc/done">`params`</ROW-MOD-PARAMS></td>
-        <td><fact status="doc/done">The typed, serialisable named-parameter **schema** + **values** + validation</fact></td>
-        <td><fact status="doc/done">Δ4</fact></td>
+        <td><ROW-MOD-PARAMS-OWNS fact="true" status="doc/done">The typed, serialisable named-parameter **schema** + **values** + validation</ROW-MOD-PARAMS-OWNS></td>
+        <td><ROW-MOD-PARAMS-KEY-DELTAS fact="true" status="doc/done">Δ4</ROW-MOD-PARAMS-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-CONTEXT fact="true" status="doc/done">`context`</ROW-MOD-CONTEXT></td>
-        <td><fact status="doc/done">The typed **context snapshot** (a `TypeId`-keyed typemap), context keys, and the pure **enablement** predicate → `{visible, enabled, reason}`</fact></td>
-        <td><fact status="doc/done">Δ5</fact></td>
+        <td><ROW-MOD-CONTEXT-OWNS fact="true" status="doc/done">The typed **context snapshot** (a `TypeId`-keyed typemap), context keys, and the pure **enablement** predicate → `{visible, enabled, reason}`</ROW-MOD-CONTEXT-OWNS></td>
+        <td><ROW-MOD-CONTEXT-KEY-DELTAS fact="true" status="doc/done">Δ5</ROW-MOD-CONTEXT-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-INVOKE fact="true" status="doc/done">`invoke`</ROW-MOD-INVOKE></td>
-        <td><fact status="doc/done">Invocation: sync/async, typed **result/error**, cancellation, the **capability** check</fact></td>
-        <td><fact status="doc/done">Δ8, Δ11</fact></td>
+        <td><ROW-MOD-INVOKE-OWNS fact="true" status="doc/done">Invocation: sync/async, typed **result/error**, cancellation, the **capability** check</ROW-MOD-INVOKE-OWNS></td>
+        <td><ROW-MOD-INVOKE-KEY-DELTAS fact="true" status="doc/done">Δ8, Δ11</ROW-MOD-INVOKE-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-I18N fact="true" status="doc/done">`i18n`</ROW-MOD-I18N></td>
-        <td><fact status="doc/done">The address-keyed message **catalogue** (Fluent-backed), `MessageKey`, `ResolvedLabel {value, original_en}`, locale swap</fact></td>
-        <td><fact status="doc/done">Δ13</fact></td>
+        <td><ROW-MOD-I18N-OWNS fact="true" status="doc/done">The address-keyed message **catalogue** (Fluent-backed), `MessageKey`, `ResolvedLabel {value, original_en}`, locale swap</ROW-MOD-I18N-OWNS></td>
+        <td><ROW-MOD-I18N-KEY-DELTAS fact="true" status="doc/done">Δ13</ROW-MOD-I18N-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-KEYMAP fact="true" status="doc/done">`keymap`</ROW-MOD-KEYMAP></td>
-        <td><fact status="doc/done">Key → (address, args) binding, the pure **3-state resolver**, chord model (timers live in the adapter)</fact></td>
-        <td><fact status="doc/done">Δ9</fact></td>
+        <td><ROW-MOD-KEYMAP-OWNS fact="true" status="doc/done">Key → (address, args) binding, the pure **3-state resolver**, chord model (timers live in the adapter)</ROW-MOD-KEYMAP-OWNS></td>
+        <td><ROW-MOD-KEYMAP-KEY-DELTAS fact="true" status="doc/done">Δ9</ROW-MOD-KEYMAP-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-SEARCH fact="true" status="doc/done">`search`</ROW-MOD-SEARCH></td>
-        <td><fact status="doc/done">The **Search Everywhere** engine: the provider trait (two-phase), the match/rank pipeline, tabs, dedup, recency, freeze-on-more</fact></td>
-        <td><fact status="doc/done">Δ7, Δ14, Δ16</fact></td>
+        <td><ROW-MOD-SEARCH-OWNS fact="true" status="doc/done">The **Search Everywhere** engine: the provider trait (two-phase), the match/rank pipeline, tabs, dedup, recency, freeze-on-more</ROW-MOD-SEARCH-OWNS></td>
+        <td><ROW-MOD-SEARCH-KEY-DELTAS fact="true" status="doc/done">Δ7, Δ14, Δ16</ROW-MOD-SEARCH-KEY-DELTAS></td>
       </tr>
       <tr>
         <td><ROW-MOD-SURFACE fact="true" status="doc/done">`surface`</ROW-MOD-SURFACE></td>
-        <td><fact status="doc/done">The **Surface** adapter trait (the seam) + the headless **AIUI** surface + the serialisable model-state view</fact></td>
-        <td><fact status="doc/done">Δ10, Δ15</fact></td>
+        <td><ROW-MOD-SURFACE-OWNS fact="true" status="doc/done">The **Surface** adapter trait (the seam) + the headless **AIUI** surface + the serialisable model-state view</ROW-MOD-SURFACE-OWNS></td>
+        <td><ROW-MOD-SURFACE-KEY-DELTAS fact="true" status="doc/done">Δ10, Δ15</ROW-MOD-SURFACE-KEY-DELTAS></td>
       </tr>
     </table>
     <p><crate-consumers fact="true" status="doc/done">Consumers: **`vibe-cli`** hosts the TUI Surface (Spec 2 revises PROP-037 to sit on this crate);

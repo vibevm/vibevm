@@ -112,15 +112,15 @@
         </tr>
         <tr>
           <td><ABSENCE-CACHED fact="true" status="impl/done">is in the cache</ABSENCE-CACHED></td>
-          <td><fact status="impl/done">nothing — it is used and materialised ([`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution))</fact></td>
+          <td><ABSENCE-CACHED-WHAT-THE-USER-IS-TOLD fact="true" status="impl/done">nothing — it is used and materialised ([`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution))</ABSENCE-CACHED-WHAT-THE-USER-IS-TOLD></td>
         </tr>
         <tr>
           <td><ABSENCE-WITHDRAWN fact="true" status="spec/work">is gone, but a tombstone stands for its name</ABSENCE-WITHDRAWN></td>
-          <td><fact status="spec/work">**the tombstone's reason and its successor** — we know it existed and why it went ([PROP-005 §2.4](../vibe-index/PROP-005-package-index.xml#layout))</fact></td>
+          <td><ABSENCE-WITHDRAWN-WHAT-THE-USER-IS-TOLD fact="true" status="spec/work">**the tombstone's reason and its successor** — we know it existed and why it went ([PROP-005 §2.4](../vibe-index/PROP-005-package-index.xml#layout))</ABSENCE-WITHDRAWN-WHAT-THE-USER-IS-TOLD></td>
         </tr>
         <tr>
           <td><ABSENCE-NEVER-THERE fact="true" status="spec/work">is gone with no record, or never existed</ABSENCE-NEVER-THERE></td>
-          <td><fact status="spec/work">**"no such package"** — the same error a typo in `vibe.toml` produces</fact></td>
+          <td><ABSENCE-NEVER-THERE-WHAT-THE-USER-IS-TOLD fact="true" status="spec/work">**"no such package"** — the same error a typo in `vibe.toml` produces</ABSENCE-NEVER-THERE-WHAT-THE-USER-IS-TOLD></td>
         </tr>
       </table>
       <facts ordered="false">

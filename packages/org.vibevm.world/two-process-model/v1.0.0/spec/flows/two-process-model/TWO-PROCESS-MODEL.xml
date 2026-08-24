@@ -66,13 +66,13 @@ operations.</the-cpu-and-the-gpu-each-win-elsewhere></p>
       </tr>
       <tr>
         <td><ROW-HUMAN fact="true" status="spec/done">**Human**</ROW-HUMAN></td>
-        <td><fact status="spec/done">persistent memory (weeks, years); intent and the "spirit" of a decision; intuition ahead of formalization; deep verification across the whole project; decisions under uncertainty; taste — aesthetic, ethical, UX</fact></td>
-        <td><fact status="spec/done">throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); holding many details at once (7±2); routine repetition; work under fatigue</fact></td>
+        <td><ROW-HUMAN-STRONG-AT fact="true" status="spec/done">persistent memory (weeks, years); intent and the "spirit" of a decision; intuition ahead of formalization; deep verification across the whole project; decisions under uncertainty; taste — aesthetic, ethical, UX</ROW-HUMAN-STRONG-AT></td>
+        <td><ROW-HUMAN-WEAK-AT fact="true" status="spec/done">throughput (reads and writes slowly); mechanical consistency (typos, forgotten twin files); holding many details at once (7±2); routine repetition; work under fatigue</ROW-HUMAN-WEAK-AT></td>
       </tr>
       <tr>
         <td><ROW-AI fact="true" status="spec/done">**AI**</ROW-AI></td>
-        <td><fact status="spec/done">throughput (thousands of consistent lines per minute); mechanical consistency within a session; broad shallow erudition (syntaxes, APIs); routine transforms and boilerplate; formal structure (parse, transform, generate); tirelessness within the session budget</fact></td>
-        <td><fact status="spec/done">persistent memory (none across sessions); the spirit of a decision (follows the letter); long-range coherence; decisions needing context beyond the window; catching its own errors; volition — it cannot want the project to succeed</fact></td>
+        <td><ROW-AI-STRONG-AT fact="true" status="spec/done">throughput (thousands of consistent lines per minute); mechanical consistency within a session; broad shallow erudition (syntaxes, APIs); routine transforms and boilerplate; formal structure (parse, transform, generate); tirelessness within the session budget</ROW-AI-STRONG-AT></td>
+        <td><ROW-AI-WEAK-AT fact="true" status="spec/done">persistent memory (none across sessions); the spirit of a decision (follows the letter); long-range coherence; decisions needing context beyond the window; catching its own errors; volition — it cannot want the project to succeed</ROW-AI-WEAK-AT></td>
       </tr>
     </table>
     <p><THE-TWO-COLUMNS-ARE-COMPLEMENTARY fact="true" status="spec/done">The key observation: **the two columns are complementary**.</THE-TWO-COLUMNS-ARE-COMPLEMENTARY></p>

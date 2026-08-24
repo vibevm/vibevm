@@ -27,18 +27,18 @@ other foundational decision.</THE-PRODUCTS-LICENCE-DESERVES-A-DELIBERATE-CHOICE>
       </tr>
       <tr>
         <td><ROW-POSTURE-PERMISSIVE-OPEN fact="true" status="spec/done">**Permissive open** (MIT / Apache-2.0 / UPL-1.0)</ROW-POSTURE-PERMISSIVE-OPEN></td>
-        <td><fact status="spec/done">anyone may use and redistribute, with attribution / patent terms</fact></td>
-        <td><fact status="spec/done">the product is meant to be adopted widely from day one</fact></td>
+        <td><ROW-POSTURE-PERMISSIVE-OPEN-WHAT-IT-SAYS fact="true" status="spec/done">anyone may use and redistribute, with attribution / patent terms</ROW-POSTURE-PERMISSIVE-OPEN-WHAT-IT-SAYS></td>
+        <td><ROW-POSTURE-PERMISSIVE-OPEN-WHEN-IT-FITS fact="true" status="spec/done">the product is meant to be adopted widely from day one</ROW-POSTURE-PERMISSIVE-OPEN-WHEN-IT-FITS></td>
       </tr>
       <tr>
         <td><ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE fact="true" status="spec/done">**Proprietary / source-available**</ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE></td>
-        <td><fact status="spec/done">source is readable, rights are reserved</fact></td>
-        <td><fact status="spec/done">the owner wants evaluation and review but not yet redistribution</fact></td>
+        <td><ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE-WHAT-IT-SAYS fact="true" status="spec/done">source is readable, rights are reserved</ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE-WHAT-IT-SAYS></td>
+        <td><ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE-WHEN-IT-FITS fact="true" status="spec/done">the owner wants evaluation and review but not yet redistribution</ROW-POSTURE-PROPRIETARY-SOURCE-AVAILABLE-WHEN-IT-FITS></td>
       </tr>
       <tr>
         <td><ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT fact="true" status="spec/done">**Proprietary with relicense intent** (the placeholder)</ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT></td>
-        <td><fact status="spec/done">reserved now, with a stated plan to open later</fact></td>
-        <td><fact status="spec/done">the owner intends to open the product but has not finalized the terms</fact></td>
+        <td><ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT-WHAT-IT-SAYS fact="true" status="spec/done">reserved now, with a stated plan to open later</ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT-WHAT-IT-SAYS></td>
+        <td><ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT-WHEN-IT-FITS fact="true" status="spec/done">the owner intends to open the product but has not finalized the terms</ROW-POSTURE-PROPRIETARY-WITH-RELICENSE-INTENT-WHEN-IT-FITS></td>
       </tr>
     </table>
   </decide>

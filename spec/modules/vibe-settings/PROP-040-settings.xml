@@ -76,21 +76,21 @@ are **reported**, never silent (the `.editorconfig root=true` pitfall, §4.4.6).
       </tr>
       <tr>
         <td><ROW-L1 fact="true" status="spec/done">L1</ROW-L1></td>
-        <td><fact status="spec/done">`~/.vibe/settings.toml`</fact></td>
-        <td><fact status="spec/done">no (user home)</fact></td>
-        <td><fact status="spec/done">user's global defaults</fact></td>
+        <td><ROW-L1-PATH fact="true" status="spec/done">`~/.vibe/settings.toml`</ROW-L1-PATH></td>
+        <td><ROW-L1-COMMITTED fact="true" status="spec/done">no (user home)</ROW-L1-COMMITTED></td>
+        <td><ROW-L1-ROLE fact="true" status="spec/done">user's global defaults</ROW-L1-ROLE></td>
       </tr>
       <tr>
         <td><ROW-L2 fact="true" status="spec/done">L2</ROW-L2></td>
-        <td><fact status="spec/done">`&lt;repo&gt;/.vibe/settings.toml`</fact></td>
-        <td><fact status="spec/done">**yes**</fact></td>
-        <td><fact status="spec/done">team's project preferences</fact></td>
+        <td><ROW-L2-PATH fact="true" status="spec/done">`&lt;repo&gt;/.vibe/settings.toml`</ROW-L2-PATH></td>
+        <td><ROW-L2-COMMITTED fact="true" status="spec/done">**yes**</ROW-L2-COMMITTED></td>
+        <td><ROW-L2-ROLE fact="true" status="spec/done">team's project preferences</ROW-L2-ROLE></td>
       </tr>
       <tr>
         <td><ROW-L3 fact="true" status="spec/done">L3</ROW-L3></td>
-        <td><fact status="spec/done">`&lt;repo&gt;/.vibe/settings.local.toml`</fact></td>
-        <td><fact status="spec/done">**no** (gitignored)</fact></td>
-        <td><fact status="spec/done">user's per-project fine-tuning</fact></td>
+        <td><ROW-L3-PATH fact="true" status="spec/done">`&lt;repo&gt;/.vibe/settings.local.toml`</ROW-L3-PATH></td>
+        <td><ROW-L3-COMMITTED fact="true" status="spec/done">**no** (gitignored)</ROW-L3-COMMITTED></td>
+        <td><ROW-L3-ROLE fact="true" status="spec/done">user's per-project fine-tuning</ROW-L3-ROLE></td>
       </tr>
     </table>
     <p><role-marker fact="true" status="spec/done">REQ {#role-marker}. Each file carries a header comment naming its role and precedence (e.g.

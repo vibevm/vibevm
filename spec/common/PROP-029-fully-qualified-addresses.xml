@@ -20,18 +20,18 @@
       </tr>
       <tr>
         <td><CARRIER-PKGREF fact="true" status="spec/done">pkgref (manifests, lockfiles, prose)</CARRIER-PKGREF></td>
-        <td><fact status="spec/done">`[&lt;kind&gt;:]&lt;group&gt;/&lt;name&gt;`</fact></td>
-        <td><fact status="spec/done">`stack:org.vibevm.ai-native/rust-ai-native-lang`</fact></td>
+        <td><CARRIER-PKGREF-FORM fact="true" status="spec/done">`[&lt;kind&gt;:]&lt;group&gt;/&lt;name&gt;`</CARRIER-PKGREF-FORM></td>
+        <td><CARRIER-PKGREF-EXAMPLE fact="true" status="spec/done">`stack:org.vibevm.ai-native/rust-ai-native-lang`</CARRIER-PKGREF-EXAMPLE></td>
       </tr>
       <tr>
         <td><CARRIER-SPEC-URI fact="true" status="spec/done">`spec://` authority (the `&lt;module&gt;` segment)</CARRIER-SPEC-URI></td>
-        <td><fact status="spec/done">`&lt;group&gt;/&lt;name&gt;` — the name is the first path segment</fact></td>
-        <td><fact status="spec/done">`spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor`</fact></td>
+        <td><CARRIER-SPEC-URI-FORM fact="true" status="spec/done">`&lt;group&gt;/&lt;name&gt;` — the name is the first path segment</CARRIER-SPEC-URI-FORM></td>
+        <td><CARRIER-SPEC-URI-EXAMPLE fact="true" status="spec/done">`spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor`</CARRIER-SPEC-URI-EXAMPLE></td>
       </tr>
       <tr>
         <td><CARRIER-REPO-NAME fact="true" status="spec/done">repo name (flat, one segment)</CARRIER-REPO-NAME></td>
-        <td><fact status="spec/done">`&lt;group&gt;.&lt;name&gt;` — `/` is illegal in a repo name; the name is the last label</fact></td>
-        <td><fact status="spec/done">`org.vibevm.ai-native.rust-ai-native-lang`</fact></td>
+        <td><CARRIER-REPO-NAME-FORM fact="true" status="spec/done">`&lt;group&gt;.&lt;name&gt;` — `/` is illegal in a repo name; the name is the last label</CARRIER-REPO-NAME-FORM></td>
+        <td><CARRIER-REPO-NAME-EXAMPLE fact="true" status="spec/done">`org.vibevm.ai-native.rust-ai-native-lang`</CARRIER-REPO-NAME-EXAMPLE></td>
       </tr>
     </table>
     <facts ordered="false">

@@ -21,28 +21,28 @@ theoretical:</both-models-shipped-at-scale></p>
       </tr>
       <tr>
         <td><ROW-ASPECT-SHORT-NAME-ERGONOMICS fact="true" status="spec/done">Short-name ergonomics</ROW-ASPECT-SHORT-NAME-ERGONOMICS></td>
-        <td><fact status="spec/done">best — `serde`, `express`</fact></td>
-        <td><fact status="spec/done">worse — `org.example:widget`</fact></td>
+        <td><ROW-ASPECT-SHORT-NAME-ERGONOMICS-FLAT-CARGO-NPM-UNSCOPED fact="true" status="spec/done">best — `serde`, `express`</ROW-ASPECT-SHORT-NAME-ERGONOMICS-FLAT-CARGO-NPM-UNSCOPED></td>
+        <td><ROW-ASPECT-SHORT-NAME-ERGONOMICS-GROUPED-MAVEN-GROUPID-AR fact="true" status="spec/done">worse — `org.example:widget`</ROW-ASPECT-SHORT-NAME-ERGONOMICS-GROUPED-MAVEN-GROUPID-AR></td>
       </tr>
       <tr>
         <td><ROW-ASPECT-SQUATTING-PRESSURE fact="true" status="spec/done">Squatting pressure</ROW-ASPECT-SQUATTING-PRESSURE></td>
-        <td><fact status="spec/done">high — names are a finite commons</fact></td>
-        <td><fact status="spec/done">low — squatting is local to a group</fact></td>
+        <td><ROW-ASPECT-SQUATTING-PRESSURE-FLAT-CARGO-NPM-UNSCOPED fact="true" status="spec/done">high — names are a finite commons</ROW-ASPECT-SQUATTING-PRESSURE-FLAT-CARGO-NPM-UNSCOPED></td>
+        <td><ROW-ASPECT-SQUATTING-PRESSURE-GROUPED-MAVEN-GROUPID-AR fact="true" status="spec/done">low — squatting is local to a group</ROW-ASPECT-SQUATTING-PRESSURE-GROUPED-MAVEN-GROUPID-AR></td>
       </tr>
       <tr>
         <td><ROW-ASPECT-TRUST-DELEGATION fact="true" status="spec/done">Trust delegation</ROW-ASPECT-TRUST-DELEGATION></td>
-        <td><fact status="spec/done">per-artifact — the name names no owner</fact></td>
-        <td><fact status="spec/done">per-group — a group maps to an owner</fact></td>
+        <td><ROW-ASPECT-TRUST-DELEGATION-FLAT-CARGO-NPM-UNSCOPED fact="true" status="spec/done">per-artifact — the name names no owner</ROW-ASPECT-TRUST-DELEGATION-FLAT-CARGO-NPM-UNSCOPED></td>
+        <td><ROW-ASPECT-TRUST-DELEGATION-GROUPED-MAVEN-GROUPID-AR fact="true" status="spec/done">per-group — a group maps to an owner</ROW-ASPECT-TRUST-DELEGATION-GROUPED-MAVEN-GROUPID-AR></td>
       </tr>
       <tr>
         <td><ROW-ASPECT-COMPOSITION fact="true" status="spec/done">Composition</ROW-ASPECT-COMPOSITION></td>
-        <td><fact status="spec/done">transitive name clashes possible</fact></td>
-        <td><fact status="spec/done">clash-free — the group disambiguates</fact></td>
+        <td><ROW-ASPECT-COMPOSITION-FLAT-CARGO-NPM-UNSCOPED fact="true" status="spec/done">transitive name clashes possible</ROW-ASPECT-COMPOSITION-FLAT-CARGO-NPM-UNSCOPED></td>
+        <td><ROW-ASPECT-COMPOSITION-GROUPED-MAVEN-GROUPID-AR fact="true" status="spec/done">clash-free — the group disambiguates</ROW-ASPECT-COMPOSITION-GROUPED-MAVEN-GROUPID-AR></td>
       </tr>
       <tr>
         <td><ROW-ASPECT-ONBOARDING-COST fact="true" status="spec/done">Onboarding cost</ROW-ASPECT-ONBOARDING-COST></td>
-        <td><fact status="spec/done">trivial</fact></td>
-        <td><fact status="spec/done">a group must be chosen up front</fact></td>
+        <td><ROW-ASPECT-ONBOARDING-COST-FLAT-CARGO-NPM-UNSCOPED fact="true" status="spec/done">trivial</ROW-ASPECT-ONBOARDING-COST-FLAT-CARGO-NPM-UNSCOPED></td>
+        <td><ROW-ASPECT-ONBOARDING-COST-GROUPED-MAVEN-GROUPID-AR fact="true" status="spec/done">a group must be chosen up front</ROW-ASPECT-ONBOARDING-COST-GROUPED-MAVEN-GROUPID-AR></td>
       </tr>
     </table>
     <p><flat-systems-bought-ergonomics-and-paid-with-squatting fact="true" status="spec/done">**What each bought and paid.** Flat systems bought day-one ergonomics

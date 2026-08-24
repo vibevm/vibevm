@@ -635,57 +635,57 @@ description; the **key is its default binding** (the map, not the identity):</AC
         </tr>
         <tr>
           <td><ROW-ACT-SEARCH fact="true" status="spec/done">`search.everywhere`</ROW-ACT-SEARCH></td>
-          <td><fact status="spec/done">`F1`</fact></td>
-          <td><fact status="spec/done">Search Everywhere</fact></td>
-          <td><fact status="spec/done">Search packages, cards, and actions; run a found action.</fact></td>
+          <td><ROW-ACT-SEARCH-KEY fact="true" status="spec/done">`F1`</ROW-ACT-SEARCH-KEY></td>
+          <td><ROW-ACT-SEARCH-NAME fact="true" status="spec/done">Search Everywhere</ROW-ACT-SEARCH-NAME></td>
+          <td><ROW-ACT-SEARCH-DESCRIPTION fact="true" status="spec/done">Search packages, cards, and actions; run a found action.</ROW-ACT-SEARCH-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-SORT fact="true" status="spec/done">`sort`</ROW-ACT-SORT></td>
-          <td><fact status="spec/done">`F2`</fact></td>
-          <td><fact status="spec/done">Sort &amp; shape…</fact></td>
-          <td><fact status="spec/done">Choose the ordering and tree shape for the current view.</fact></td>
+          <td><ROW-ACT-SORT-KEY fact="true" status="spec/done">`F2`</ROW-ACT-SORT-KEY></td>
+          <td><ROW-ACT-SORT-NAME fact="true" status="spec/done">Sort &amp; shape…</ROW-ACT-SORT-NAME></td>
+          <td><ROW-ACT-SORT-DESCRIPTION fact="true" status="spec/done">Choose the ordering and tree shape for the current view.</ROW-ACT-SORT-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-MODE fact="true" status="spec/done">`mode.set`</ROW-ACT-MODE></td>
-          <td><fact status="spec/done">`F3`</fact></td>
-          <td><fact status="spec/done">Switch mode…</fact></td>
-          <td><fact status="spec/done">Switch between tree, sub-tables, and tabs display.</fact></td>
+          <td><ROW-ACT-MODE-KEY fact="true" status="spec/done">`F3`</ROW-ACT-MODE-KEY></td>
+          <td><ROW-ACT-MODE-NAME fact="true" status="spec/done">Switch mode…</ROW-ACT-MODE-NAME></td>
+          <td><ROW-ACT-MODE-DESCRIPTION fact="true" status="spec/done">Switch between tree, sub-tables, and tabs display.</ROW-ACT-MODE-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-COPY fact="true" status="spec/done">`copy`</ROW-ACT-COPY></td>
-          <td><fact status="spec/done">`F6`</fact></td>
-          <td><fact status="spec/done">Copy</fact></td>
-          <td><fact status="spec/done">Copy the current screen (Markdown) to the clipboard or a file.</fact></td>
+          <td><ROW-ACT-COPY-KEY fact="true" status="spec/done">`F6`</ROW-ACT-COPY-KEY></td>
+          <td><ROW-ACT-COPY-NAME fact="true" status="spec/done">Copy</ROW-ACT-COPY-NAME></td>
+          <td><ROW-ACT-COPY-DESCRIPTION fact="true" status="spec/done">Copy the current screen (Markdown) to the clipboard or a file.</ROW-ACT-COPY-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-COPY-SETTINGS fact="true" status="spec/done">`copy.settings`</ROW-ACT-COPY-SETTINGS></td>
-          <td><fact status="spec/done">`↑F6`</fact></td>
-          <td><fact status="spec/done">Copy settings…</fact></td>
-          <td><fact status="spec/done">Choose the copy format and destination.</fact></td>
+          <td><ROW-ACT-COPY-SETTINGS-KEY fact="true" status="spec/done">`↑F6`</ROW-ACT-COPY-SETTINGS-KEY></td>
+          <td><ROW-ACT-COPY-SETTINGS-NAME fact="true" status="spec/done">Copy settings…</ROW-ACT-COPY-SETTINGS-NAME></td>
+          <td><ROW-ACT-COPY-SETTINGS-DESCRIPTION fact="true" status="spec/done">Choose the copy format and destination.</ROW-ACT-COPY-SETTINGS-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-FOLD fact="true" status="spec/done">`fold.toggle`</ROW-ACT-FOLD></td>
-          <td><fact status="spec/done">`Space`</fact></td>
-          <td><fact status="spec/done">Fold / unfold</fact></td>
-          <td><fact status="spec/done">Fold or unfold the selected node.</fact></td>
+          <td><ROW-ACT-FOLD-KEY fact="true" status="spec/done">`Space`</ROW-ACT-FOLD-KEY></td>
+          <td><ROW-ACT-FOLD-NAME fact="true" status="spec/done">Fold / unfold</ROW-ACT-FOLD-NAME></td>
+          <td><ROW-ACT-FOLD-DESCRIPTION fact="true" status="spec/done">Fold or unfold the selected node.</ROW-ACT-FOLD-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-CARD fact="true" status="spec/done">`card.open`</ROW-ACT-CARD></td>
-          <td><fact status="spec/done">`Enter`</fact></td>
-          <td><fact status="spec/done">Open details</fact></td>
-          <td><fact status="spec/done">Open the detail card for the selected package.</fact></td>
+          <td><ROW-ACT-CARD-KEY fact="true" status="spec/done">`Enter`</ROW-ACT-CARD-KEY></td>
+          <td><ROW-ACT-CARD-NAME fact="true" status="spec/done">Open details</ROW-ACT-CARD-NAME></td>
+          <td><ROW-ACT-CARD-DESCRIPTION fact="true" status="spec/done">Open the detail card for the selected package.</ROW-ACT-CARD-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-TABS fact="true" status="spec/done">`tab.next` / `tab.prev`</ROW-ACT-TABS></td>
-          <td><fact status="spec/done">`↑→` / `↑←`</fact></td>
-          <td><fact status="spec/done">Next / previous tab</fact></td>
-          <td><fact status="spec/done">Move between tabs in tabs mode.</fact></td>
+          <td><ROW-ACT-TABS-KEY fact="true" status="spec/done">`↑→` / `↑←`</ROW-ACT-TABS-KEY></td>
+          <td><ROW-ACT-TABS-NAME fact="true" status="spec/done">Next / previous tab</ROW-ACT-TABS-NAME></td>
+          <td><ROW-ACT-TABS-DESCRIPTION fact="true" status="spec/done">Move between tabs in tabs mode.</ROW-ACT-TABS-DESCRIPTION></td>
         </tr>
         <tr>
           <td><ROW-ACT-QUIT fact="true" status="spec/done">`quit`</ROW-ACT-QUIT></td>
-          <td><fact status="spec/done">`Esc` (base)</fact></td>
-          <td><fact status="spec/done">Quit</fact></td>
-          <td><fact status="spec/done">Leave `vibe tree` (with confirmation).</fact></td>
+          <td><ROW-ACT-QUIT-KEY fact="true" status="spec/done">`Esc` (base)</ROW-ACT-QUIT-KEY></td>
+          <td><ROW-ACT-QUIT-NAME fact="true" status="spec/done">Quit</ROW-ACT-QUIT-NAME></td>
+          <td><ROW-ACT-QUIT-DESCRIPTION fact="true" status="spec/done">Leave `vibe tree` (with confirmation).</ROW-ACT-QUIT-DESCRIPTION></td>
         </tr>
       </table>
       <p><CATALOGUE-ENUMERABLE fact="true" status="spec/done">REQ. This catalogue is the **enumerable** source for both the footer and the Search

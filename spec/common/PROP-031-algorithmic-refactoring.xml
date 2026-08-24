@@ -64,18 +64,18 @@
         </tr>
         <tr>
           <td><TIER-PRODUCT fact="true" status="spec/done">**product — vibevm**</TIER-PRODUCT></td>
-          <td><fact status="spec/done">the project object-model: lockfile, `vibe.toml` graph, boot manifest (`spec/boot/INDEX.md`), the embedded registry (PROP-030), package FQIDs (PROP-029)</fact></td>
-          <td><fact status="spec/done">`rename-package`, `move-package-between-groups`, `repoint-dependency`, `relocate-boot-snippet`, `split-package` / `merge-package`</fact></td>
+          <td><TIER-PRODUCT-OWNS-KNOWS fact="true" status="spec/done">the project object-model: lockfile, `vibe.toml` graph, boot manifest (`spec/boot/INDEX.md`), the embedded registry (PROP-030), package FQIDs (PROP-029)</TIER-PRODUCT-OWNS-KNOWS></td>
+          <td><TIER-PRODUCT-REPRESENTATIVE-OPERATION fact="true" status="spec/done">`rename-package`, `move-package-between-groups`, `repoint-dependency`, `relocate-boot-snippet`, `split-package` / `merge-package`</TIER-PRODUCT-REPRESENTATIVE-OPERATION></td>
         </tr>
         <tr>
           <td><TIER-DISCIPLINE fact="true" status="spec/done">**discipline — specmark / specmap** (language-neutral)</TIER-DISCIPLINE></td>
-          <td><fact status="spec/done">the `spec://` address space and the spec↔code edge graph</fact></td>
-          <td><fact status="spec/done">`rename-address`, `move-unit` (the capsule), `retarget-edge`, `bump-revision` + re-affirm pins</fact></td>
+          <td><TIER-DISCIPLINE-OWNS-KNOWS fact="true" status="spec/done">the `spec://` address space and the spec↔code edge graph</TIER-DISCIPLINE-OWNS-KNOWS></td>
+          <td><TIER-DISCIPLINE-REPRESENTATIVE-OPERATION fact="true" status="spec/done">`rename-address`, `move-unit` (the capsule), `retarget-edge`, `bump-revision` + re-affirm pins</TIER-DISCIPLINE-REPRESENTATIVE-OPERATION></td>
         </tr>
         <tr>
           <td><TIER-LANGUAGE fact="true" status="spec/done">**language — rust-ai-native / typescript-ai-native**</TIER-LANGUAGE></td>
-          <td><fact status="spec/done">code symbols + their spec tags, per language</fact></td>
-          <td><fact status="spec/done">`rename-symbol` (+ its `#[spec]`/`scope!` tags), `move-item` (+ its edges), `change-signature` — **wrapping** an existing engine (§2.5)</fact></td>
+          <td><TIER-LANGUAGE-OWNS-KNOWS fact="true" status="spec/done">code symbols + their spec tags, per language</TIER-LANGUAGE-OWNS-KNOWS></td>
+          <td><TIER-LANGUAGE-REPRESENTATIVE-OPERATION fact="true" status="spec/done">`rename-symbol` (+ its `#[spec]`/`scope!` tags), `move-item` (+ its edges), `change-signature` — **wrapping** an existing engine (§2.5)</TIER-LANGUAGE-REPRESENTATIVE-OPERATION></td>
         </tr>
       </table>
       <facts ordered="false">
@@ -136,38 +136,38 @@ relocate-boot-snippet &lt;slot&gt; &lt;to&gt;                  # move a boot ent
       </tr>
       <tr>
         <td><PA-OPENREWRITE fact="true" status="spec/done">OpenRewrite</PA-OPENREWRITE></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">**Study — the closest prior art.** Typed, composable, *gated* refactoring "recipes" over a Lossless Semantic Tree. The recipe = a typed operation; the LST = the model. Borrow the *shape* (recipes + a checked model), not code.</fact></td>
+        <td><PA-OPENREWRITE-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</PA-OPENREWRITE-LICENSE-VERIFY></td>
+        <td><PA-OPENREWRITE-ROLE-HERE fact="true" status="spec/done">**Study — the closest prior art.** Typed, composable, *gated* refactoring "recipes" over a Lossless Semantic Tree. The recipe = a typed operation; the LST = the model. Borrow the *shape* (recipes + a checked model), not code.</PA-OPENREWRITE-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-RUST-ANALYZER fact="true" status="spec/done">rust-analyzer</PA-RUST-ANALYZER></td>
-        <td><fact status="spec/done">Apache-2.0 / MIT</fact></td>
-        <td><fact status="spec/done">Wrap candidate for the Rust language tier (rename, SSR) via its library crates or LSP.</fact></td>
+        <td><PA-RUST-ANALYZER-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0 / MIT</PA-RUST-ANALYZER-LICENSE-VERIFY></td>
+        <td><PA-RUST-ANALYZER-ROLE-HERE fact="true" status="spec/done">Wrap candidate for the Rust language tier (rename, SSR) via its library crates or LSP.</PA-RUST-ANALYZER-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-AST-GREP fact="true" status="spec/done">ast-grep</PA-AST-GREP></td>
-        <td><fact status="spec/done">MIT</fact></td>
-        <td><fact status="spec/done">Wrap candidate — structural search/replace, multi-language, CLI + rules.</fact></td>
+        <td><PA-AST-GREP-LICENSE-VERIFY fact="true" status="spec/done">MIT</PA-AST-GREP-LICENSE-VERIFY></td>
+        <td><PA-AST-GREP-ROLE-HERE fact="true" status="spec/done">Wrap candidate — structural search/replace, multi-language, CLI + rules.</PA-AST-GREP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-TS-MORPH fact="true" status="spec/done">ts-morph</PA-TS-MORPH></td>
-        <td><fact status="spec/done">MIT</fact></td>
-        <td><fact status="spec/done">Wrap candidate for the TypeScript language tier (AST refactoring library).</fact></td>
+        <td><PA-TS-MORPH-LICENSE-VERIFY fact="true" status="spec/done">MIT</PA-TS-MORPH-LICENSE-VERIFY></td>
+        <td><PA-TS-MORPH-ROLE-HERE fact="true" status="spec/done">Wrap candidate for the TypeScript language tier (AST refactoring library).</PA-TS-MORPH-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-COMBY fact="true" status="spec/done">comby</PA-COMBY></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">Study/wrap — structural rewriting across languages.</fact></td>
+        <td><PA-COMBY-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</PA-COMBY-LICENSE-VERIFY></td>
+        <td><PA-COMBY-ROLE-HERE fact="true" status="spec/done">Study/wrap — structural rewriting across languages.</PA-COMBY-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-LSP fact="true" status="spec/done">LSP rename / SSR</PA-LSP></td>
-        <td><fact status="spec/done">n/a (protocol)</fact></td>
-        <td><fact status="spec/done">The interaction model the CLI operations mirror headlessly.</fact></td>
+        <td><PA-LSP-LICENSE-VERIFY fact="true" status="spec/done">n/a (protocol)</PA-LSP-LICENSE-VERIFY></td>
+        <td><PA-LSP-ROLE-HERE fact="true" status="spec/done">The interaction model the CLI operations mirror headlessly.</PA-LSP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-JSCODESHIFT fact="true" status="spec/done">jscodeshift / codemod.com</PA-JSCODESHIFT></td>
-        <td><fact status="spec/done">MIT</fact></td>
-        <td><fact status="spec/done">Study — the codemod-as-script lineage (the discipline's Scaffold I already draws on it).</fact></td>
+        <td><PA-JSCODESHIFT-LICENSE-VERIFY fact="true" status="spec/done">MIT</PA-JSCODESHIFT-LICENSE-VERIFY></td>
+        <td><PA-JSCODESHIFT-ROLE-HERE fact="true" status="spec/done">Study — the codemod-as-script lineage (the discipline's Scaffold I already draws on it).</PA-JSCODESHIFT-ROLE-HERE></td>
       </tr>
     </table>
     <p><DIFFERENTIATORS fact="true" status="spec/done">**Differentiators.**</DIFFERENTIATORS></p>

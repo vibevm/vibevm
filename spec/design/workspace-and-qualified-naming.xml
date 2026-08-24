@@ -30,23 +30,23 @@
       </tr>
       <tr>
         <td><ROW-AXIS-A fact="true" status="doc/done">**A. Workspace**</ROW-AXIS-A></td>
-        <td><fact status="doc/done">Project = a set of modules; structure declared in `vibe.toml`</fact></td>
-        <td><fact status="doc/done">cargo `[workspace]`, Maven `&lt;modules&gt;`</fact></td>
+        <td><ROW-AXIS-A-ESSENCE fact="true" status="doc/done">Project = a set of modules; structure declared in `vibe.toml`</ROW-AXIS-A-ESSENCE></td>
+        <td><ROW-AXIS-A-ANALOGUE fact="true" status="doc/done">cargo `[workspace]`, Maven `&lt;modules&gt;`</ROW-AXIS-A-ANALOGUE></td>
       </tr>
       <tr>
         <td><ROW-AXIS-B fact="true" status="doc/done">**B. Selective publish**</ROW-AXIS-B></td>
-        <td><fact status="doc/done">Each module publishes / does not, by choice</fact></td>
-        <td><fact status="doc/done">cargo `publish = false`, Maven `deploy.skip`</fact></td>
+        <td><ROW-AXIS-B-ESSENCE fact="true" status="doc/done">Each module publishes / does not, by choice</ROW-AXIS-B-ESSENCE></td>
+        <td><ROW-AXIS-B-ANALOGUE fact="true" status="doc/done">cargo `publish = false`, Maven `deploy.skip`</ROW-AXIS-B-ANALOGUE></td>
       </tr>
       <tr>
         <td><ROW-AXIS-C fact="true" status="doc/done">**C. Qualified naming**</ROW-AXIS-C></td>
-        <td><fact status="doc/done">Reverse-FQDN at the top (`org.vibevm.wal`), short aliases (`wal`) kept</fact></td>
-        <td><fact status="doc/done">Maven `groupId:artifactId`</fact></td>
+        <td><ROW-AXIS-C-ESSENCE fact="true" status="doc/done">Reverse-FQDN at the top (`org.vibevm.wal`), short aliases (`wal`) kept</ROW-AXIS-C-ESSENCE></td>
+        <td><ROW-AXIS-C-ANALOGUE fact="true" status="doc/done">Maven `groupId:artifactId`</ROW-AXIS-C-ANALOGUE></td>
       </tr>
       <tr>
         <td><ROW-AXIS-D fact="true" status="doc/done">**D. Conflict-aware resolve**</ROW-AXIS-D></td>
-        <td><fact status="doc/done">Collision → show alternatives; conflict → fail without applying; full-auto → fail</fact></td>
-        <td><fact status="doc/done">npm / Maven</fact></td>
+        <td><ROW-AXIS-D-ESSENCE fact="true" status="doc/done">Collision → show alternatives; conflict → fail without applying; full-auto → fail</ROW-AXIS-D-ESSENCE></td>
+        <td><ROW-AXIS-D-ANALOGUE fact="true" status="doc/done">npm / Maven</ROW-AXIS-D-ANALOGUE></td>
       </tr>
     </table>
     <p><axis-a-eighty-percent fact="true" status="doc/done">Axis A alone closes roughly 80% of the request — multi-package projects, local cross-deps, selective publish, both extremes — and it depends on nothing. That was the good news delivered early: the heavy part (naming, discovery) is separable and can come later.</axis-a-eighty-percent></p>
@@ -112,43 +112,43 @@ Axis D (conflict-aware)     — depends on C; the conflict half partly exists al
       </tr>
       <tr>
         <td><ROW-PREC-LOCKFILE fact="true" status="doc/done">Lockfile</ROW-PREC-LOCKFILE></td>
-        <td><fact status="doc/done">One `Cargo.lock` at the workspace root; no per-crate locks</fact></td>
-        <td><fact status="doc/done">**No lockfile at all** — a known reproducibility gap; the parent POM's `&lt;dependencyManagement&gt;` plays the "single source of versions" role</fact></td>
+        <td><ROW-PREC-LOCKFILE-CARGO fact="true" status="doc/done">One `Cargo.lock` at the workspace root; no per-crate locks</ROW-PREC-LOCKFILE-CARGO></td>
+        <td><ROW-PREC-LOCKFILE-MAVEN fact="true" status="doc/done">**No lockfile at all** — a known reproducibility gap; the parent POM's `&lt;dependencyManagement&gt;` plays the "single source of versions" role</ROW-PREC-LOCKFILE-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-RESOLUTION fact="true" status="doc/done">Resolution</ROW-PREC-RESOLUTION></td>
-        <td><fact status="doc/done">Unified across the workspace — one version of each dep</fact></td>
-        <td><fact status="doc/done">"Nearest-wins" per build; reproducibility is discipline + fixed versions</fact></td>
+        <td><ROW-PREC-RESOLUTION-CARGO fact="true" status="doc/done">Unified across the workspace — one version of each dep</ROW-PREC-RESOLUTION-CARGO></td>
+        <td><ROW-PREC-RESOLUTION-MAVEN fact="true" status="doc/done">"Nearest-wins" per build; reproducibility is discipline + fixed versions</ROW-PREC-RESOLUTION-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-MEMBERS fact="true" status="doc/done">Members</ROW-PREC-MEMBERS></td>
-        <td><fact status="doc/done">Each is a full crate with its own `Cargo.toml`</fact></td>
-        <td><fact status="doc/done">Each is a full module with its own `pom.xml` + `&lt;parent&gt;`</fact></td>
+        <td><ROW-PREC-MEMBERS-CARGO fact="true" status="doc/done">Each is a full crate with its own `Cargo.toml`</ROW-PREC-MEMBERS-CARGO></td>
+        <td><ROW-PREC-MEMBERS-MAVEN fact="true" status="doc/done">Each is a full module with its own `pom.xml` + `&lt;parent&gt;`</ROW-PREC-MEMBERS-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-VERSION-INHERITANCE fact="true" status="doc/done">Version inheritance</ROW-PREC-VERSION-INHERITANCE></td>
-        <td><fact status="doc/done">`version.workspace = true` from `[workspace.package]`</fact></td>
-        <td><fact status="doc/done">Modules often share the parent's `${project.version}`</fact></td>
+        <td><ROW-PREC-VERSION-INHERITANCE-CARGO fact="true" status="doc/done">`version.workspace = true` from `[workspace.package]`</ROW-PREC-VERSION-INHERITANCE-CARGO></td>
+        <td><ROW-PREC-VERSION-INHERITANCE-MAVEN fact="true" status="doc/done">Modules often share the parent's `${project.version}`</ROW-PREC-VERSION-INHERITANCE-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-CENTRAL-VERSIONS fact="true" status="doc/done">Centralised versions</ROW-PREC-CENTRAL-VERSIONS></td>
-        <td><fact status="doc/done">`[workspace.dependencies]` + `{ workspace = true }`</fact></td>
-        <td><fact status="doc/done">`&lt;dependencyManagement&gt;` (per-artifact) + `&lt;properties&gt;` (named placeholders)</fact></td>
+        <td><ROW-PREC-CENTRAL-VERSIONS-CARGO fact="true" status="doc/done">`[workspace.dependencies]` + `{ workspace = true }`</ROW-PREC-CENTRAL-VERSIONS-CARGO></td>
+        <td><ROW-PREC-CENTRAL-VERSIONS-MAVEN fact="true" status="doc/done">`&lt;dependencyManagement&gt;` (per-artifact) + `&lt;properties&gt;` (named placeholders)</ROW-PREC-CENTRAL-VERSIONS-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-NESTED fact="true" status="doc/done">Nested workspaces</ROW-PREC-NESTED></td>
-        <td><fact status="doc/done">**Forbidden** — to avoid "which workspace is mine" ambiguity</fact></td>
-        <td><fact status="doc/done">Parent POMs nest to arbitrary depth</fact></td>
+        <td><ROW-PREC-NESTED-CARGO fact="true" status="doc/done">**Forbidden** — to avoid "which workspace is mine" ambiguity</ROW-PREC-NESTED-CARGO></td>
+        <td><ROW-PREC-NESTED-MAVEN fact="true" status="doc/done">Parent POMs nest to arbitrary depth</ROW-PREC-NESTED-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-PUBLISH fact="true" status="doc/done">Publish</ROW-PREC-PUBLISH></td>
-        <td><fact status="doc/done">`cargo publish -p &lt;crate&gt;` — per-crate, to crates.io</fact></td>
-        <td><fact status="doc/done">`mvn deploy` — per-module; `&lt;skip&gt;` opts a module out</fact></td>
+        <td><ROW-PREC-PUBLISH-CARGO fact="true" status="doc/done">`cargo publish -p &lt;crate&gt;` — per-crate, to crates.io</ROW-PREC-PUBLISH-CARGO></td>
+        <td><ROW-PREC-PUBLISH-MAVEN fact="true" status="doc/done">`mvn deploy` — per-module; `&lt;skip&gt;` opts a module out</ROW-PREC-PUBLISH-MAVEN></td>
       </tr>
       <tr>
         <td><ROW-PREC-NAMING fact="true" status="doc/done">Top-level naming</ROW-PREC-NAMING></td>
-        <td><fact status="doc/done">Flat crate names on crates.io</fact></td>
-        <td><fact status="doc/done">`groupId:artifactId` — reverse-FQDN groupId</fact></td>
+        <td><ROW-PREC-NAMING-CARGO fact="true" status="doc/done">Flat crate names on crates.io</ROW-PREC-NAMING-CARGO></td>
+        <td><ROW-PREC-NAMING-MAVEN fact="true" status="doc/done">`groupId:artifactId` — reverse-FQDN groupId</ROW-PREC-NAMING-MAVEN></td>
       </tr>
     </table>
     <p><drawn-lead fact="true" status="doc/done">The decisions vibevm drew from this:</drawn-lead></p>

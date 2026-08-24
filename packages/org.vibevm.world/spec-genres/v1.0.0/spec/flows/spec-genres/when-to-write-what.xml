@@ -21,38 +21,38 @@ file.</READ-WRITE-AND-WIRE-THE-LINK></p>
       </tr>
       <tr>
         <td><ROW-SITUATION-NEW-CONSTRAINT fact="true" status="impl/done">A new constraint or invariant is discovered</ROW-SITUATION-NEW-CONSTRAINT></td>
-        <td><fact status="impl/done">**Contract section**</fact></td>
-        <td><fact status="impl/done">Add a changelog line naming what changed and why</fact></td>
+        <td><ROW-SITUATION-NEW-CONSTRAINT-TARGET-GENRE fact="true" status="impl/done">**Contract section**</ROW-SITUATION-NEW-CONSTRAINT-TARGET-GENRE></td>
+        <td><ROW-SITUATION-NEW-CONSTRAINT-ALSO-DO fact="true" status="impl/done">Add a changelog line naming what changed and why</ROW-SITUATION-NEW-CONSTRAINT-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-BIG-NARRATIVE-WHY fact="true" status="impl/done">A big narrative "why we chose this"</ROW-SITUATION-BIG-NARRATIVE-WHY></td>
-        <td><fact status="impl/done">**Design doc**</fact></td>
-        <td><fact status="impl/done">Link it to the contract; add the back-link at the anchor</fact></td>
+        <td><ROW-SITUATION-BIG-NARRATIVE-WHY-TARGET-GENRE fact="true" status="impl/done">**Design doc**</ROW-SITUATION-BIG-NARRATIVE-WHY-TARGET-GENRE></td>
+        <td><ROW-SITUATION-BIG-NARRATIVE-WHY-ALSO-DO fact="true" status="impl/done">Link it to the contract; add the back-link at the anchor</ROW-SITUATION-BIG-NARRATIVE-WHY-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-COMPETITOR-STUDY fact="true" status="impl/done">A study of a competitor or ecosystem tool</ROW-SITUATION-COMPETITOR-STUDY></td>
-        <td><fact status="impl/done">**Research doc**</fact></td>
-        <td><fact status="impl/done">Cite the version/date studied; it will be superseded</fact></td>
+        <td><ROW-SITUATION-COMPETITOR-STUDY-TARGET-GENRE fact="true" status="impl/done">**Research doc**</ROW-SITUATION-COMPETITOR-STUDY-TARGET-GENRE></td>
+        <td><ROW-SITUATION-COMPETITOR-STUDY-ALSO-DO fact="true" status="impl/done">Cite the version/date studied; it will be superseded</ROW-SITUATION-COMPETITOR-STUDY-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-MULTI-SESSION-CHANGE fact="true" status="impl/done">A multi-session change with phases</ROW-SITUATION-MULTI-SESSION-CHANGE></td>
-        <td><fact status="impl/done">**Campaign plan**</fact></td>
-        <td><fact status="impl/done">Name the gate that ends each phase</fact></td>
+        <td><ROW-SITUATION-MULTI-SESSION-CHANGE-TARGET-GENRE fact="true" status="impl/done">**Campaign plan**</ROW-SITUATION-MULTI-SESSION-CHANGE-TARGET-GENRE></td>
+        <td><ROW-SITUATION-MULTI-SESSION-CHANGE-ALSO-DO fact="true" status="impl/done">Name the gate that ends each phase</ROW-SITUATION-MULTI-SESSION-CHANGE-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-WHERE-WORK-STANDS fact="true" status="impl/done">Where the work stands right now</ROW-SITUATION-WHERE-WORK-STANDS></td>
-        <td><fact status="impl/done">**The checkpoint**</fact></td>
-        <td><fact status="impl/done">Overwrite the old state; do not append</fact></td>
+        <td><ROW-SITUATION-WHERE-WORK-STANDS-TARGET-GENRE fact="true" status="impl/done">**The checkpoint**</ROW-SITUATION-WHERE-WORK-STANDS-TARGET-GENRE></td>
+        <td><ROW-SITUATION-WHERE-WORK-STANDS-ALSO-DO fact="true" status="impl/done">Overwrite the old state; do not append</ROW-SITUATION-WHERE-WORK-STANDS-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-DURABLE-CHOICE fact="true" status="impl/done">A durable choice (library, constant, protocol shape)</ROW-SITUATION-DURABLE-CHOICE></td>
-        <td><fact status="impl/done">**Decision record at the contract anchor**</fact></td>
-        <td><fact status="impl/done">The long-form story, if any, goes in a linked design doc</fact></td>
+        <td><ROW-SITUATION-DURABLE-CHOICE-TARGET-GENRE fact="true" status="impl/done">**Decision record at the contract anchor**</ROW-SITUATION-DURABLE-CHOICE-TARGET-GENRE></td>
+        <td><ROW-SITUATION-DURABLE-CHOICE-ALSO-DO fact="true" status="impl/done">The long-form story, if any, goes in a linked design doc</ROW-SITUATION-DURABLE-CHOICE-ALSO-DO></td>
       </tr>
       <tr>
         <td><ROW-SITUATION-STANDING-INSTRUCTION fact="true" status="impl/done">A standing instruction every session needs</ROW-SITUATION-STANDING-INSTRUCTION></td>
-        <td><fact status="impl/done">**Boot file**</fact></td>
-        <td><fact status="impl/done">Keep it small; link out to the full protocol</fact></td>
+        <td><ROW-SITUATION-STANDING-INSTRUCTION-TARGET-GENRE fact="true" status="impl/done">**Boot file**</ROW-SITUATION-STANDING-INSTRUCTION-TARGET-GENRE></td>
+        <td><ROW-SITUATION-STANDING-INSTRUCTION-ALSO-DO fact="true" status="impl/done">Keep it small; link out to the full protocol</ROW-SITUATION-STANDING-INSTRUCTION-ALSO-DO></td>
       </tr>
     </table>
     <p><two-rows-are-easy-to-confuse fact="true" status="impl/done">Two rows are easy to confuse.</two-rows-are-easy-to-confuse></p>
@@ -99,28 +99,28 @@ link behind — not to leave it where it is because moving is work.</MOVE-THE-MI
       </tr>
       <tr>
         <td><ROW-SMELL-CONTRACT-QUOTES-HISTORY fact="true" status="impl/done">A contract quotes three paragraphs of history</ROW-SMELL-CONTRACT-QUOTES-HISTORY></td>
-        <td><fact status="impl/done">Lore leaked into a contract</fact></td>
-        <td><fact status="impl/done">Move the history to a design doc; leave a one-line why + link</fact></td>
+        <td><ROW-SMELL-CONTRACT-QUOTES-HISTORY-DIAGNOSIS fact="true" status="impl/done">Lore leaked into a contract</ROW-SMELL-CONTRACT-QUOTES-HISTORY-DIAGNOSIS></td>
+        <td><ROW-SMELL-CONTRACT-QUOTES-HISTORY-FIX fact="true" status="impl/done">Move the history to a design doc; leave a one-line why + link</ROW-SMELL-CONTRACT-QUOTES-HISTORY-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING fact="true" status="impl/done">A design doc is cited as if binding ("per the design doc we must…")</ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING></td>
-        <td><fact status="impl/done">A contract is hiding inside lore</fact></td>
-        <td><fact status="impl/done">Extract the normative sentence to the contract; the design doc keeps the story</fact></td>
+        <td><ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING-DIAGNOSIS fact="true" status="impl/done">A contract is hiding inside lore</ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING-DIAGNOSIS></td>
+        <td><ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING-FIX fact="true" status="impl/done">Extract the normative sentence to the contract; the design doc keeps the story</ROW-SMELL-DESIGN-DOC-CITED-AS-BINDING-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE fact="true" status="impl/done">A checkpoint entry is older than the last release</ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE></td>
-        <td><fact status="impl/done">State posing as truth</fact></td>
-        <td><fact status="impl/done">The checkpoint is stale; overwrite it — real invariants belong in a contract</fact></td>
+        <td><ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE-DIAGNOSIS fact="true" status="impl/done">State posing as truth</ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE-DIAGNOSIS></td>
+        <td><ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE-FIX fact="true" status="impl/done">The checkpoint is stale; overwrite it — real invariants belong in a contract</ROW-SMELL-CHECKPOINT-OLDER-THAN-THE-RELEASE-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC fact="true" status="impl/done">A campaign plan is quoted to justify a behaviour</ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC></td>
-        <td><fact status="impl/done">An execution doc treated as a spec</fact></td>
-        <td><fact status="impl/done">The behaviour's authority is the contract; the plan only tracked the work</fact></td>
+        <td><ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC-DIAGNOSIS fact="true" status="impl/done">An execution doc treated as a spec</ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC-DIAGNOSIS></td>
+        <td><ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC-FIX fact="true" status="impl/done">The behaviour's authority is the contract; the plan only tracked the work</ROW-SMELL-CAMPAIGN-PLAN-AS-SPEC-FIX></td>
       </tr>
       <tr>
         <td><ROW-SMELL-RESEARCH-PRESCRIBES fact="true" status="impl/done">A research doc prescribes what *we* must build</ROW-SMELL-RESEARCH-PRESCRIBES></td>
-        <td><fact status="impl/done">Research drifted into design/contract</fact></td>
-        <td><fact status="impl/done">Split: the external study stays research; our resulting choice becomes a contract decision</fact></td>
+        <td><ROW-SMELL-RESEARCH-PRESCRIBES-DIAGNOSIS fact="true" status="impl/done">Research drifted into design/contract</ROW-SMELL-RESEARCH-PRESCRIBES-DIAGNOSIS></td>
+        <td><ROW-SMELL-RESEARCH-PRESCRIBES-FIX fact="true" status="impl/done">Split: the external study stays research; our resulting choice becomes a contract decision</ROW-SMELL-RESEARCH-PRESCRIBES-FIX></td>
       </tr>
     </table>
     <p><THE-UNIFYING-TELL fact="true" status="impl/done">The unifying tell: **binding weight in a non-binding genre, or

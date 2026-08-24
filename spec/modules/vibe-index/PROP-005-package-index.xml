@@ -482,21 +482,21 @@ vibe-index stop &lt;data-dir&gt;                                       # gracefu
         </tr>
         <tr>
           <td><OP-REMOVE fact="true" status="impl/done">full deletion — `remove`</OP-REMOVE></td>
-          <td><fact status="impl/done">a version, or every version of a name</fact></td>
-          <td><fact status="impl/done">**nothing.** The package is indistinguishable from one that never existed</fact></td>
-          <td><fact status="impl/done">**built** — the verb emits its journal fact and the projector applies it</fact></td>
+          <td><OP-REMOVE-ENTITY fact="true" status="impl/done">a version, or every version of a name</OP-REMOVE-ENTITY></td>
+          <td><OP-REMOVE-WHAT-REMAINS fact="true" status="impl/done">**nothing.** The package is indistinguishable from one that never existed</OP-REMOVE-WHAT-REMAINS></td>
+          <td><OP-REMOVE-STATE-TODAY fact="true" status="impl/done">**built** — the verb emits its journal fact and the projector applies it</OP-REMOVE-STATE-TODAY></td>
         </tr>
         <tr>
           <td><OP-YANK fact="true" status="impl/done">withdraw one version — the `yank` verb</OP-YANK></td>
-          <td><fact status="impl/done">one version</fact></td>
-          <td><fact status="impl/done">the record, carrying `yanked` on the wire: a build that already pinned this version keeps working, a fresh resolution passes over it</fact></td>
-          <td><fact status="impl/done">**built.** The verb emits the fact, the projector sets the flag from it, and the wire omits the flag when false</fact></td>
+          <td><OP-YANK-ENTITY fact="true" status="impl/done">one version</OP-YANK-ENTITY></td>
+          <td><OP-YANK-WHAT-REMAINS fact="true" status="impl/done">the record, carrying `yanked` on the wire: a build that already pinned this version keeps working, a fresh resolution passes over it</OP-YANK-WHAT-REMAINS></td>
+          <td><OP-YANK-STATE-TODAY fact="true" status="impl/done">**built.** The verb emits the fact, the projector sets the flag from it, and the wire omits the flag when false</OP-YANK-STATE-TODAY></td>
         </tr>
         <tr>
           <td><OP-RETIRE fact="true" status="impl/done">retire a name — the `bury` verb</OP-RETIRE></td>
-          <td><fact status="impl/done">a bare name</fact></td>
-          <td><fact status="impl/done">a tombstone: the reason, and a successor to redirect to ([§2.4](#layout))</fact></td>
-          <td><fact status="impl/done">**built.** The verb emits the fact; the projector is the only arm that PRODUCES a carrier from one, dropping the name's packages across every group and leaving the tombstone in their place</fact></td>
+          <td><OP-RETIRE-ENTITY fact="true" status="impl/done">a bare name</OP-RETIRE-ENTITY></td>
+          <td><OP-RETIRE-WHAT-REMAINS fact="true" status="impl/done">a tombstone: the reason, and a successor to redirect to ([§2.4](#layout))</OP-RETIRE-WHAT-REMAINS></td>
+          <td><OP-RETIRE-STATE-TODAY fact="true" status="impl/done">**built.** The verb emits the fact; the projector is the only arm that PRODUCES a carrier from one, dropping the name's packages across every group and leaving the tombstone in their place</OP-RETIRE-STATE-TODAY></td>
         </tr>
       </table>
       <facts ordered="false">

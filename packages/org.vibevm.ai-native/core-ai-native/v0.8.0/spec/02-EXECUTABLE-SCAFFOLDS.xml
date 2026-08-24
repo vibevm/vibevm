@@ -33,66 +33,66 @@
       </tr>
       <tr>
         <td><ROW-CLASS-A fact="true" status="impl/done">**A**</ROW-CLASS-A></td>
-        <td><fact status="impl/done">Generators / codegen</fact></td>
-        <td><fact status="impl/done">structural decisions, as named inputs to an emitter</fact></td>
-        <td><fact status="impl/done">[E-strong]</fact></td>
-        <td><fact status="impl/done">`scaffold-a-generators`</fact></td>
+        <td><ROW-CLASS-A-NAME fact="true" status="impl/done">Generators / codegen</ROW-CLASS-A-NAME></td>
+        <td><ROW-CLASS-A-CARRIES fact="true" status="impl/done">structural decisions, as named inputs to an emitter</ROW-CLASS-A-CARRIES></td>
+        <td><ROW-CLASS-A-TRANSFER fact="true" status="impl/done">[E-strong]</ROW-CLASS-A-TRANSFER></td>
+        <td><ROW-CLASS-A-CARD fact="true" status="impl/done">`scaffold-a-generators`</ROW-CLASS-A-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-B fact="true" status="impl/done">**B**</ROW-CLASS-B></td>
-        <td><fact status="impl/done">Typed builders / typestate</fact></td>
-        <td><fact status="impl/done">protocol correctness, as types the compiler checks</fact></td>
-        <td><fact status="impl/done">[E-mid]</fact></td>
-        <td><fact status="impl/done">`scaffold-b-typed-builders`</fact></td>
+        <td><ROW-CLASS-B-NAME fact="true" status="impl/done">Typed builders / typestate</ROW-CLASS-B-NAME></td>
+        <td><ROW-CLASS-B-CARRIES fact="true" status="impl/done">protocol correctness, as types the compiler checks</ROW-CLASS-B-CARRIES></td>
+        <td><ROW-CLASS-B-TRANSFER fact="true" status="impl/done">[E-mid]</ROW-CLASS-B-TRANSFER></td>
+        <td><ROW-CLASS-B-CARD fact="true" status="impl/done">`scaffold-b-typed-builders`</ROW-CLASS-B-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-C fact="true" status="impl/done">**C**</ROW-CLASS-C></td>
-        <td><fact status="impl/done">Runnable contracts</fact></td>
-        <td><fact status="impl/done">invariants, as executing assertions/proofs</fact></td>
-        <td><fact status="impl/done">[E-mid]</fact></td>
-        <td><fact status="impl/done">`scaffold-c-runnable-contracts`</fact></td>
+        <td><ROW-CLASS-C-NAME fact="true" status="impl/done">Runnable contracts</ROW-CLASS-C-NAME></td>
+        <td><ROW-CLASS-C-CARRIES fact="true" status="impl/done">invariants, as executing assertions/proofs</ROW-CLASS-C-CARRIES></td>
+        <td><ROW-CLASS-C-TRANSFER fact="true" status="impl/done">[E-mid]</ROW-CLASS-C-TRANSFER></td>
+        <td><ROW-CLASS-C-CARD fact="true" status="impl/done">`scaffold-c-runnable-contracts`</ROW-CLASS-C-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-D fact="true" status="impl/done">**D**</ROW-CLASS-D></td>
-        <td><fact status="impl/done">Differential / characterization oracles</fact></td>
-        <td><fact status="impl/done">behavior, as a runnable old-vs-new check</fact></td>
-        <td><fact status="impl/done">[E-mid]</fact></td>
-        <td><fact status="impl/done">`scaffold-d-differential-oracle`</fact></td>
+        <td><ROW-CLASS-D-NAME fact="true" status="impl/done">Differential / characterization oracles</ROW-CLASS-D-NAME></td>
+        <td><ROW-CLASS-D-CARRIES fact="true" status="impl/done">behavior, as a runnable old-vs-new check</ROW-CLASS-D-CARRIES></td>
+        <td><ROW-CLASS-D-TRANSFER fact="true" status="impl/done">[E-mid]</ROW-CLASS-D-TRANSFER></td>
+        <td><ROW-CLASS-D-CARD fact="true" status="impl/done">`scaffold-d-differential-oracle`</ROW-CLASS-D-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-E fact="true" status="impl/done">**E**</ROW-CLASS-E></td>
-        <td><fact status="impl/done">Per-cell fast verification loop</fact></td>
-        <td><fact status="impl/done">the substrate that makes all signals fast enough</fact></td>
-        <td><fact status="impl/done">[E-strong]</fact></td>
-        <td><fact status="impl/done">`scaffold-e-fast-loop`</fact></td>
+        <td><ROW-CLASS-E-NAME fact="true" status="impl/done">Per-cell fast verification loop</ROW-CLASS-E-NAME></td>
+        <td><ROW-CLASS-E-CARRIES fact="true" status="impl/done">the substrate that makes all signals fast enough</ROW-CLASS-E-CARRIES></td>
+        <td><ROW-CLASS-E-TRANSFER fact="true" status="impl/done">[E-strong]</ROW-CLASS-E-TRANSFER></td>
+        <td><ROW-CLASS-E-CARD fact="true" status="impl/done">`scaffold-e-fast-loop`</ROW-CLASS-E-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-F fact="true" status="impl/done">**F**</ROW-CLASS-F></td>
-        <td><fact status="impl/done">Structured, REQ-citing diagnostics</fact></td>
-        <td><fact status="impl/done">debugging cognition, in the error text</fact></td>
-        <td><fact status="impl/done">[E-mid]</fact></td>
-        <td><fact status="impl/done">`scaffold-f-structured-diagnostics`</fact></td>
+        <td><ROW-CLASS-F-NAME fact="true" status="impl/done">Structured, REQ-citing diagnostics</ROW-CLASS-F-NAME></td>
+        <td><ROW-CLASS-F-CARRIES fact="true" status="impl/done">debugging cognition, in the error text</ROW-CLASS-F-CARRIES></td>
+        <td><ROW-CLASS-F-TRANSFER fact="true" status="impl/done">[E-mid]</ROW-CLASS-F-TRANSFER></td>
+        <td><ROW-CLASS-F-CARD fact="true" status="impl/done">`scaffold-f-structured-diagnostics`</ROW-CLASS-F-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-G fact="true" status="impl/done">**G**</ROW-CLASS-G></td>
-        <td><fact status="impl/done">Executable examples / doctests</fact></td>
-        <td><fact status="impl/done">canonical usage, as compiled examples that cannot lie</fact></td>
-        <td><fact status="impl/done">[E-strong]</fact></td>
-        <td><fact status="impl/done">`scaffold-g-doctests`</fact></td>
+        <td><ROW-CLASS-G-NAME fact="true" status="impl/done">Executable examples / doctests</ROW-CLASS-G-NAME></td>
+        <td><ROW-CLASS-G-CARRIES fact="true" status="impl/done">canonical usage, as compiled examples that cannot lie</ROW-CLASS-G-CARRIES></td>
+        <td><ROW-CLASS-G-TRANSFER fact="true" status="impl/done">[E-strong]</ROW-CLASS-G-TRANSFER></td>
+        <td><ROW-CLASS-G-CARD fact="true" status="impl/done">`scaffold-g-doctests`</ROW-CLASS-G-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-H fact="true" status="impl/done">**H**</ROW-CLASS-H></td>
-        <td><fact status="impl/done">Local simulators / reference models</fact></td>
-        <td><fact status="impl/done">subsystem semantics, as a runnable model</fact></td>
-        <td><fact status="impl/done">[E-strong]</fact></td>
-        <td><fact status="impl/done">`scaffold-h-simulators`</fact></td>
+        <td><ROW-CLASS-H-NAME fact="true" status="impl/done">Local simulators / reference models</ROW-CLASS-H-NAME></td>
+        <td><ROW-CLASS-H-CARRIES fact="true" status="impl/done">subsystem semantics, as a runnable model</ROW-CLASS-H-CARRIES></td>
+        <td><ROW-CLASS-H-TRANSFER fact="true" status="impl/done">[E-strong]</ROW-CLASS-H-TRANSFER></td>
+        <td><ROW-CLASS-H-CARD fact="true" status="impl/done">`scaffold-h-simulators`</ROW-CLASS-H-CARD></td>
       </tr>
       <tr>
         <td><ROW-CLASS-I fact="true" status="impl/done">**I**</ROW-CLASS-I></td>
-        <td><fact status="impl/done">Scaffolded edit operations / codemods</fact></td>
-        <td><fact status="impl/done">a multi-file change, as one checked operation</fact></td>
-        <td><fact status="impl/done">[E-hyp]</fact></td>
-        <td><fact status="impl/done">`scaffold-i-codemods`</fact></td>
+        <td><ROW-CLASS-I-NAME fact="true" status="impl/done">Scaffolded edit operations / codemods</ROW-CLASS-I-NAME></td>
+        <td><ROW-CLASS-I-CARRIES fact="true" status="impl/done">a multi-file change, as one checked operation</ROW-CLASS-I-CARRIES></td>
+        <td><ROW-CLASS-I-TRANSFER fact="true" status="impl/done">[E-hyp]</ROW-CLASS-I-TRANSFER></td>
+        <td><ROW-CLASS-I-CARD fact="true" status="impl/done">`scaffold-i-codemods`</ROW-CLASS-I-CARD></td>
       </tr>
     </table>
     <p><row-details-live-in-the-card fact="true" status="impl/done">Each row's full Applicability/Routine/Checker is in its card.</row-details-live-in-the-card></p>

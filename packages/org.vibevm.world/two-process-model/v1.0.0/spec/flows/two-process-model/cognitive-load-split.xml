@@ -44,23 +44,23 @@ everything — the AI has no memory between sessions.</scope-of-this-document></
         </tr>
         <tr>
           <td><ROW-WRITING-SPECS fact="true" status="impl/done">Writing specs</ROW-WRITING-SPECS></td>
-          <td><fact status="impl/done">the idea and the decision; approves the final text</fact></td>
-          <td><fact status="impl/done">structure, formalization, gap-finding</fact></td>
+          <td><ROW-WRITING-SPECS-HUMAN-CONTRIBUTES fact="true" status="impl/done">the idea and the decision; approves the final text</ROW-WRITING-SPECS-HUMAN-CONTRIBUTES></td>
+          <td><ROW-WRITING-SPECS-AI-CONTRIBUTES fact="true" status="impl/done">structure, formalization, gap-finding</ROW-WRITING-SPECS-AI-CONTRIBUTES></td>
         </tr>
         <tr>
           <td><ROW-CODE-REVIEW fact="true" status="impl/done">Code review</ROW-CODE-REVIEW></td>
-          <td><fact status="impl/done">semantics — does it do what was *meant*</fact></td>
-          <td><fact status="impl/done">formal properties — builds, tests pass, lint is clean</fact></td>
+          <td><ROW-CODE-REVIEW-HUMAN-CONTRIBUTES fact="true" status="impl/done">semantics — does it do what was *meant*</ROW-CODE-REVIEW-HUMAN-CONTRIBUTES></td>
+          <td><ROW-CODE-REVIEW-AI-CONTRIBUTES fact="true" status="impl/done">formal properties — builds, tests pass, lint is clean</ROW-CODE-REVIEW-AI-CONTRIBUTES></td>
         </tr>
         <tr>
           <td><ROW-DEBUGGING fact="true" status="impl/done">Debugging</ROW-DEBUGGING></td>
-          <td><fact status="impl/done">the hypothesis</fact></td>
-          <td><fact status="impl/done">evidence collection (logs, traces, live probing) and hypothesis testing</fact></td>
+          <td><ROW-DEBUGGING-HUMAN-CONTRIBUTES fact="true" status="impl/done">the hypothesis</ROW-DEBUGGING-HUMAN-CONTRIBUTES></td>
+          <td><ROW-DEBUGGING-AI-CONTRIBUTES fact="true" status="impl/done">evidence collection (logs, traces, live probing) and hypothesis testing</ROW-DEBUGGING-AI-CONTRIBUTES></td>
         </tr>
         <tr>
           <td><ROW-DOCUMENTATION fact="true" status="impl/done">Documentation</ROW-DOCUMENTATION></td>
-          <td><fact status="impl/done">checks it reflects reality</fact></td>
-          <td><fact status="impl/done">generates the update from the diff</fact></td>
+          <td><ROW-DOCUMENTATION-HUMAN-CONTRIBUTES fact="true" status="impl/done">checks it reflects reality</ROW-DOCUMENTATION-HUMAN-CONTRIBUTES></td>
+          <td><ROW-DOCUMENTATION-AI-CONTRIBUTES fact="true" status="impl/done">generates the update from the diff</ROW-DOCUMENTATION-AI-CONTRIBUTES></td>
         </tr>
       </table>
     </both>

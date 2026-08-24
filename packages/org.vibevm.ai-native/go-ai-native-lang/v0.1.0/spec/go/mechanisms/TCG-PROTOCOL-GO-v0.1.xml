@@ -136,28 +136,28 @@ renames against the shared table (§1):</five-error-kinds-lead></p>
       </tr>
       <tr>
         <td><ROW-ERROR-GOPLS-MISSING fact="true" status="impl/done">`gopls-missing`</ROW-ERROR-GOPLS-MISSING></td>
-        <td><fact status="impl/done">no gopls resolvable (ORACLE-GO §1)</fact></td>
-        <td><fact status="impl/done">`go install golang.org/x/tools/gopls@latest`</fact></td>
+        <td><ROW-ERROR-GOPLS-MISSING-MEANING fact="true" status="impl/done">no gopls resolvable (ORACLE-GO §1)</ROW-ERROR-GOPLS-MISSING-MEANING></td>
+        <td><ROW-ERROR-GOPLS-MISSING-RECIPE-CARRIED fact="true" status="impl/done">`go install golang.org/x/tools/gopls@latest`</ROW-ERROR-GOPLS-MISSING-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-WORKSPACE-UNLOADABLE fact="true" status="impl/done">`workspace-unloadable`</ROW-ERROR-WORKSPACE-UNLOADABLE></td>
-        <td><fact status="impl/done">the project failed to load (no go.mod, `go env` failed)</fact></td>
-        <td><fact status="impl/done">check `go env` / `go list ./...` standalone</fact></td>
+        <td><ROW-ERROR-WORKSPACE-UNLOADABLE-MEANING fact="true" status="impl/done">the project failed to load (no go.mod, `go env` failed)</ROW-ERROR-WORKSPACE-UNLOADABLE-MEANING></td>
+        <td><ROW-ERROR-WORKSPACE-UNLOADABLE-RECIPE-CARRIED fact="true" status="impl/done">check `go env` / `go list ./...` standalone</ROW-ERROR-WORKSPACE-UNLOADABLE-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-ORACLE-CRASHED fact="true" status="impl/done">`oracle-crashed`</ROW-ERROR-ORACLE-CRASHED></td>
-        <td><fact status="impl/done">child died / stream closed mid-session</fact></td>
-        <td><fact status="impl/done">respawn guidance; the host registry retries once</fact></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-MEANING fact="true" status="impl/done">child died / stream closed mid-session</ROW-ERROR-ORACLE-CRASHED-MEANING></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED fact="true" status="impl/done">respawn guidance; the host registry retries once</ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-PROTOCOL fact="true" status="impl/done">`protocol`</ROW-ERROR-PROTOCOL></td>
-        <td><fact status="impl/done">unparseable frame, proto mismatch, unknown op</fact></td>
-        <td><fact status="impl/done">version note; unknown-op errors list the known ops</fact></td>
+        <td><ROW-ERROR-PROTOCOL-MEANING fact="true" status="impl/done">unparseable frame, proto mismatch, unknown op</ROW-ERROR-PROTOCOL-MEANING></td>
+        <td><ROW-ERROR-PROTOCOL-RECIPE-CARRIED fact="true" status="impl/done">version note; unknown-op errors list the known ops</ROW-ERROR-PROTOCOL-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-TIMEOUT fact="true" status="impl/done">`timeout`</ROW-ERROR-TIMEOUT></td>
-        <td><fact status="impl/done">no response within the caller's budget</fact></td>
-        <td><fact status="impl/done">the op and the budget, for tuning</fact></td>
+        <td><ROW-ERROR-TIMEOUT-MEANING fact="true" status="impl/done">no response within the caller's budget</ROW-ERROR-TIMEOUT-MEANING></td>
+        <td><ROW-ERROR-TIMEOUT-RECIPE-CARRIED fact="true" status="impl/done">the op and the budget, for tuning</ROW-ERROR-TIMEOUT-RECIPE-CARRIED></td>
       </tr>
     </table>
     <p><RENAMES-RIDE-WITHOUT-A-PRODUCT-EDIT fact="true" status="impl/done">The product's link layer special-cases only `oracle-crashed`

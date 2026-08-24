@@ -25,21 +25,21 @@
       </tr>
       <tr>
         <td><ROW-TIER-T-LEX fact="true" status="spec/done">**T-lex**</ROW-TIER-T-LEX></td>
-        <td><fact status="spec/done">textual invariants (forbidden tokens, file layout, license headers)</fact></td>
-        <td><fact status="spec/done">ripgrep-class scan (MIT/Unlicense) — *Specified, not built: this tier has no implementation and no backend. No ripgrep-class scanner is wired into the engine, and no forbidden-token, file-layout or license-header rule exists in the roster (`rules/mod.rs:21-25`).*</fact></td>
-        <td><fact status="spec/done">~free</fact></td>
+        <td><ROW-TIER-T-LEX-CAPABILITY fact="true" status="spec/done">textual invariants (forbidden tokens, file layout, license headers)</ROW-TIER-T-LEX-CAPABILITY></td>
+        <td><ROW-TIER-T-LEX-BACKEND fact="true" status="spec/done">ripgrep-class scan (MIT/Unlicense) — *Specified, not built: this tier has no implementation and no backend. No ripgrep-class scanner is wired into the engine, and no forbidden-token, file-layout or license-header rule exists in the roster (`rules/mod.rs:21-25`).*</ROW-TIER-T-LEX-BACKEND></td>
+        <td><ROW-TIER-T-LEX-COST fact="true" status="spec/done">~free</ROW-TIER-T-LEX-COST></td>
       </tr>
       <tr>
         <td><ROW-TIER-T-SYN fact="true" status="spec/done">**T-syn**</ROW-TIER-T-SYN></td>
-        <td><fact status="spec/done">structure: items, attributes, imports, spans, hashes @status:impl/done</fact></td>
-        <td><fact status="spec/done">tree-sitter (MIT) universal; `syn` (MIT/Apache-2.0) for Rust precision — *Half built: the `syn` half is real and running (`rust-ai-native-conform-frontend`, whose own module doc calls itself "the Rust T-syn frontend"). The **universal tree-sitter backend does not exist** — `tree-sitter` / `tree_sitter` return no hit in any crate or manifest in the repository, so there is no universal path and each language got a bespoke frontend instead. The capability column is accurate; the tier that would name it is not.*</fact></td>
-        <td><fact status="spec/done">cheap, incremental @status:impl/done</fact></td>
+        <td><ROW-TIER-T-SYN-CAPABILITY fact="true" status="spec/done">structure: items, attributes, imports, spans, hashes @status:impl/done</ROW-TIER-T-SYN-CAPABILITY></td>
+        <td><ROW-TIER-T-SYN-BACKEND fact="true" status="spec/done">tree-sitter (MIT) universal; `syn` (MIT/Apache-2.0) for Rust precision — *Half built: the `syn` half is real and running (`rust-ai-native-conform-frontend`, whose own module doc calls itself "the Rust T-syn frontend"). The **universal tree-sitter backend does not exist** — `tree-sitter` / `tree_sitter` return no hit in any crate or manifest in the repository, so there is no universal path and each language got a bespoke frontend instead. The capability column is accurate; the tier that would name it is not.*</ROW-TIER-T-SYN-BACKEND></td>
+        <td><ROW-TIER-T-SYN-COST fact="true" status="spec/done">cheap, incremental @status:impl/done</ROW-TIER-T-SYN-COST></td>
       </tr>
       <tr>
         <td><ROW-TIER-T-SEM fact="true" status="spec/done">**T-sem**</ROW-TIER-T-SEM></td>
-        <td><fact status="spec/done">types, name resolution, macro/template expansion, real import graphs</fact></td>
-        <td><fact status="spec/done">per-language compiler frontend (§2) — *Partly built, but not as a tier: one real compiler frontend ships. `typescript-ai-native-conform-frontend` reaches the TypeScript Compiler API through the packaged `tools/ts-extract` sidecar, and the Go stack drives `gopls` as an LSP oracle in `go-ai-native-tcg`. Neither is reachable as a **tier**: both are plain `Frontend` implementations a caller names directly, there is nothing to escalate from, and no rule declares it needs them.*</fact></td>
-        <td><fact status="spec/done">expensive; cached hard</fact></td>
+        <td><ROW-TIER-T-SEM-CAPABILITY fact="true" status="spec/done">types, name resolution, macro/template expansion, real import graphs</ROW-TIER-T-SEM-CAPABILITY></td>
+        <td><ROW-TIER-T-SEM-BACKEND fact="true" status="spec/done">per-language compiler frontend (§2) — *Partly built, but not as a tier: one real compiler frontend ships. `typescript-ai-native-conform-frontend` reaches the TypeScript Compiler API through the packaged `tools/ts-extract` sidecar, and the Go stack drives `gopls` as an LSP oracle in `go-ai-native-tcg`. Neither is reachable as a **tier**: both are plain `Frontend` implementations a caller names directly, there is nothing to escalate from, and no rule declares it needs them.*</ROW-TIER-T-SEM-BACKEND></td>
+        <td><ROW-TIER-T-SEM-COST fact="true" status="spec/done">expensive; cached hard</ROW-TIER-T-SEM-COST></td>
       </tr>
     </table>
     <p><rule-examples-lead fact="true" status="impl/done">Rule examples:</rule-examples-lead></p>
@@ -65,33 +65,33 @@
       </tr>
       <tr>
         <td><ROW-FRONTEND-RUST fact="true" status="impl/done">Rust</ROW-FRONTEND-RUST></td>
-        <td><fact status="impl/done">`syn` in-process</fact></td>
-        <td><fact status="impl/done">rust-analyzer crates or `rustc_driver` (nightly caveat) — *Specified, not built: the T-sem column names software that is absent. `rust-analyzer`, `rustc_driver`, `ra_ap` and `hir` return no hit in the engine, in `rust-ai-native-conform-frontend`, or in any manifest. The T-syn column is exact and running.* @status:spec/done</fact></td>
-        <td><fact status="impl/done">MIT/Apache-2.0 — clean</fact></td>
+        <td><ROW-FRONTEND-RUST-T-SYN fact="true" status="impl/done">`syn` in-process</ROW-FRONTEND-RUST-T-SYN></td>
+        <td><ROW-FRONTEND-RUST-T-SEM fact="true" status="impl/done">rust-analyzer crates or `rustc_driver` (nightly caveat) — *Specified, not built: the T-sem column names software that is absent. `rust-analyzer`, `rustc_driver`, `ra_ap` and `hir` return no hit in the engine, in `rust-ai-native-conform-frontend`, or in any manifest. The T-syn column is exact and running.* @status:spec/done</ROW-FRONTEND-RUST-T-SEM></td>
+        <td><ROW-FRONTEND-RUST-LICENSE-POSTURE fact="true" status="impl/done">MIT/Apache-2.0 — clean</ROW-FRONTEND-RUST-LICENSE-POSTURE></td>
       </tr>
       <tr>
         <td><ROW-FRONTEND-CPP fact="true" status="spec/done">C++ — *Specified, not built, in full: there is no C++ frontend at either depth. `tree-sitter`, `tree-sitter-cpp`, `libclang` and `clang-sys` return no hit anywhere in the repository, no C++ crate exists in any workspace, and the `Fact` model (`conform/src/facts.rs:25`) carries no C++ variant. This row is a design intention; the three language stacks that ship are Rust, TypeScript and Go.*</ROW-FRONTEND-CPP></td>
-        <td><fact status="spec/done">tree-sitter-cpp</fact></td>
-        <td><fact status="spec/done">**libclang** via `clang-sys` — the one-page-AST path</fact></td>
-        <td><fact status="spec/done">Apache-2.0 w/ LLVM exception — clean</fact></td>
+        <td><ROW-FRONTEND-CPP-T-SYN fact="true" status="spec/done">tree-sitter-cpp</ROW-FRONTEND-CPP-T-SYN></td>
+        <td><ROW-FRONTEND-CPP-T-SEM fact="true" status="spec/done">**libclang** via `clang-sys` — the one-page-AST path</ROW-FRONTEND-CPP-T-SEM></td>
+        <td><ROW-FRONTEND-CPP-LICENSE-POSTURE fact="true" status="spec/done">Apache-2.0 w/ LLVM exception — clean</ROW-FRONTEND-CPP-LICENSE-POSTURE></td>
       </tr>
       <tr>
         <td><ROW-FRONTEND-TS-JS fact="true" status="impl/done">TS/JS</ROW-FRONTEND-TS-JS></td>
-        <td><fact status="impl/done">tree-sitter / SWC (Apache-2.0) — *Specified, not built, and ruled a non-build: neither tree-sitter nor SWC returns a hit anywhere in the repository, and the B-023 study (2026-08-03/04) recommends never building one — the shipped sidecar already parses at this depth (next cell), so a second syntactic parser would be a duplicate in any outcome.* @status:spec/done</fact></td>
-        <td><fact status="impl/done">TypeScript compiler API via a Node **sidecar process** — *Built, at parser depth: `tools/ts-extract`'s `extract.ts` drives the Compiler API's parser surface only — `createSourceFile`, `forEachChild`, `createScanner`, the JSDoc readers — and never constructs a `Program` or calls `getTypeChecker`, so no type-level fact is extracted and the cell's implied T-sem is in substance T-syn (B-023 evidence + the owner's counter-probe). The checker deepening of this same sidecar is deferred by the owner's ruling, 2026-08-04, verbatim: «давай B-023 отложим до тех пор, пока не появится ещё какое-то правило кроме "as_cross с не локальной областью". Не нужно забывать об этом, это нормальное продолжение развития, просто это кандидат на середину или конец бэклога» — it waits for a second type-requiring rule.* @status:spec/done</fact></td>
-        <td><fact status="impl/done">Apache-2.0 — clean</fact></td>
+        <td><ROW-FRONTEND-TS-JS-T-SYN fact="true" status="impl/done">tree-sitter / SWC (Apache-2.0) — *Specified, not built, and ruled a non-build: neither tree-sitter nor SWC returns a hit anywhere in the repository, and the B-023 study (2026-08-03/04) recommends never building one — the shipped sidecar already parses at this depth (next cell), so a second syntactic parser would be a duplicate in any outcome.* @status:spec/done</ROW-FRONTEND-TS-JS-T-SYN></td>
+        <td><ROW-FRONTEND-TS-JS-T-SEM fact="true" status="impl/done">TypeScript compiler API via a Node **sidecar process** — *Built, at parser depth: `tools/ts-extract`'s `extract.ts` drives the Compiler API's parser surface only — `createSourceFile`, `forEachChild`, `createScanner`, the JSDoc readers — and never constructs a `Program` or calls `getTypeChecker`, so no type-level fact is extracted and the cell's implied T-sem is in substance T-syn (B-023 evidence + the owner's counter-probe). The checker deepening of this same sidecar is deferred by the owner's ruling, 2026-08-04, verbatim: «давай B-023 отложим до тех пор, пока не появится ещё какое-то правило кроме "as_cross с не локальной областью". Не нужно забывать об этом, это нормальное продолжение развития, просто это кандидат на середину или конец бэклога» — it waits for a second type-requiring rule.* @status:spec/done</ROW-FRONTEND-TS-JS-T-SEM></td>
+        <td><ROW-FRONTEND-TS-JS-LICENSE-POSTURE fact="true" status="impl/done">Apache-2.0 — clean</ROW-FRONTEND-TS-JS-LICENSE-POSTURE></td>
       </tr>
       <tr>
         <td><ROW-FRONTEND-GO fact="true" status="impl/done">Go</ROW-FRONTEND-GO></td>
-        <td><fact status="impl/done">`go/parser`+`go/ast` via a stdlib-only **`go run` sidecar** (go-extract)</fact></td>
-        <td><fact status="impl/done">gopls / `go vet` as evidence providers — *Built, but at another layer, and not as evidence providers. Both tools run: `go vet ./...` is step 2 of the Go floor (`go-ai-native-cli/src/floor.rs:115-120`) and `gopls` is driven as a long-lived LSP oracle by `go-ai-native-tcg`. Neither reaches conform — conform ingests no output from either, so nothing they know becomes a fact. Read this cell as naming where semantic depth lives in the Go stack, not as a conform frontend.* @status:spec/done</fact></td>
-        <td><fact status="impl/done">BSD-3 — clean</fact></td>
+        <td><ROW-FRONTEND-GO-T-SYN fact="true" status="impl/done">`go/parser`+`go/ast` via a stdlib-only **`go run` sidecar** (go-extract)</ROW-FRONTEND-GO-T-SYN></td>
+        <td><ROW-FRONTEND-GO-T-SEM fact="true" status="impl/done">gopls / `go vet` as evidence providers — *Built, but at another layer, and not as evidence providers. Both tools run: `go vet ./...` is step 2 of the Go floor (`go-ai-native-cli/src/floor.rs:115-120`) and `gopls` is driven as a long-lived LSP oracle by `go-ai-native-tcg`. Neither reaches conform — conform ingests no output from either, so nothing they know becomes a fact. Read this cell as naming where semantic depth lives in the Go stack, not as a conform frontend.* @status:spec/done</ROW-FRONTEND-GO-T-SEM></td>
+        <td><ROW-FRONTEND-GO-LICENSE-POSTURE fact="true" status="impl/done">BSD-3 — clean</ROW-FRONTEND-GO-LICENSE-POSTURE></td>
       </tr>
       <tr>
         <td><ROW-FRONTEND-PYTHON fact="true" status="spec/done">Python — *Specified, not built, in full: there is no Python frontend at either depth. `rustpython`, `symtable`, `cpython` and any Python sidecar return no hit in the engine, its manifests or any frontend crate, and the `Fact` model carries no Python variant. The B-023 study (2026-08-03/04) finds both columns feasible on the ready sidecar precedent (go-extract / ts-extract) and prefers the CPython sidecar over an in-process RustPython parser — but the frontend has no consumer: no `python-ai-native-lang` package exists, so building it now would be dead engine code. It waits on a product decision about a Python stack (B-023's disposition, owner-ruled 2026-08-04).*</ROW-FRONTEND-PYTHON></td>
-        <td><fact status="spec/done">RustPython parser (MIT) in-process</fact></td>
-        <td><fact status="spec/done">CPython `ast`/`symtable` via sidecar</fact></td>
-        <td><fact status="spec/done">PSF / MIT — clean</fact></td>
+        <td><ROW-FRONTEND-PYTHON-T-SYN fact="true" status="spec/done">RustPython parser (MIT) in-process</ROW-FRONTEND-PYTHON-T-SYN></td>
+        <td><ROW-FRONTEND-PYTHON-T-SEM fact="true" status="spec/done">CPython `ast`/`symtable` via sidecar</ROW-FRONTEND-PYTHON-T-SEM></td>
+        <td><ROW-FRONTEND-PYTHON-LICENSE-POSTURE fact="true" status="spec/done">PSF / MIT — clean</ROW-FRONTEND-PYTHON-LICENSE-POSTURE></td>
       </tr>
     </table>
     <p><TIER-VOCABULARY fact="true" status="spec/done">**The tier vocabulary (document taxonomy).** T-lex / T-syn / T-sem name the depth an enforcement mechanism reads at: **T-lex** — lexical (tokens, pragmas, build tags; no parse), **T-syn** — syntactic (parser-grade extraction), **T-sem** — semantic (compiler/type-grade). The taxonomy classifies rules and frontends in prose and tables; it is deliberately not (yet) a code-level type — the rule registry's tier column is a later-phase mechanism.</TIER-VOCABULARY></p>

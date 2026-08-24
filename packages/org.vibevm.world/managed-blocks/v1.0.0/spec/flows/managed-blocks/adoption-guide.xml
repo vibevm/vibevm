@@ -78,53 +78,53 @@ is a splice, an append, or a hard stop.</THE-CLASSIFIER-IS-THE-SAFETY-CRITICAL-P
       </tr>
       <tr>
         <td><ROW-FIXTURE-ABSENT fact="true" status="impl/done">**Absent**</ROW-FIXTURE-ABSENT></td>
-        <td><fact status="impl/done">No markers anywhere</fact></td>
-        <td><fact status="impl/done">`absent` → create</fact></td>
+        <td><ROW-FIXTURE-ABSENT-MARKER-CONTENT fact="true" status="impl/done">No markers anywhere</ROW-FIXTURE-ABSENT-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-ABSENT-EXPECTED-VERDICT fact="true" status="impl/done">`absent` → create</ROW-FIXTURE-ABSENT-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-PRESENT fact="true" status="impl/done">**Present**</ROW-FIXTURE-PRESENT></td>
-        <td><fact status="impl/done">One opener, then one closer, in order</fact></td>
-        <td><fact status="impl/done">`present` → splice</fact></td>
+        <td><ROW-FIXTURE-PRESENT-MARKER-CONTENT fact="true" status="impl/done">One opener, then one closer, in order</ROW-FIXTURE-PRESENT-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-PRESENT-EXPECTED-VERDICT fact="true" status="impl/done">`present` → splice</ROW-FIXTURE-PRESENT-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-MOVED fact="true" status="impl/done">**Moved**</ROW-FIXTURE-MOVED></td>
-        <td><fact status="impl/done">One ordered pair, but at the top of the file, preceded by user text</fact></td>
-        <td><fact status="impl/done">`present` → splice **in place** (never relocate)</fact></td>
+        <td><ROW-FIXTURE-MOVED-MARKER-CONTENT fact="true" status="impl/done">One ordered pair, but at the top of the file, preceded by user text</ROW-FIXTURE-MOVED-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-MOVED-EXPECTED-VERDICT fact="true" status="impl/done">`present` → splice **in place** (never relocate)</ROW-FIXTURE-MOVED-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-DUPLICATED-OPENER fact="true" status="impl/done">**Duplicated opener**</ROW-FIXTURE-DUPLICATED-OPENER></td>
-        <td><fact status="impl/done">Two openers, one closer</fact></td>
-        <td><fact status="impl/done">`malformed` → hard stop</fact></td>
+        <td><ROW-FIXTURE-DUPLICATED-OPENER-MARKER-CONTENT fact="true" status="impl/done">Two openers, one closer</ROW-FIXTURE-DUPLICATED-OPENER-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-DUPLICATED-OPENER-EXPECTED-VERDICT fact="true" status="impl/done">`malformed` → hard stop</ROW-FIXTURE-DUPLICATED-OPENER-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-DUPLICATED-CLOSER fact="true" status="impl/done">**Duplicated closer**</ROW-FIXTURE-DUPLICATED-CLOSER></td>
-        <td><fact status="impl/done">One opener, two closers</fact></td>
-        <td><fact status="impl/done">`malformed` → hard stop</fact></td>
+        <td><ROW-FIXTURE-DUPLICATED-CLOSER-MARKER-CONTENT fact="true" status="impl/done">One opener, two closers</ROW-FIXTURE-DUPLICATED-CLOSER-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-DUPLICATED-CLOSER-EXPECTED-VERDICT fact="true" status="impl/done">`malformed` → hard stop</ROW-FIXTURE-DUPLICATED-CLOSER-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-REVERSED-ORDER fact="true" status="impl/done">**Reversed order**</ROW-FIXTURE-REVERSED-ORDER></td>
-        <td><fact status="impl/done">A closer appears before its opener</fact></td>
-        <td><fact status="impl/done">`malformed` → hard stop</fact></td>
+        <td><ROW-FIXTURE-REVERSED-ORDER-MARKER-CONTENT fact="true" status="impl/done">A closer appears before its opener</ROW-FIXTURE-REVERSED-ORDER-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-REVERSED-ORDER-EXPECTED-VERDICT fact="true" status="impl/done">`malformed` → hard stop</ROW-FIXTURE-REVERSED-ORDER-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-ONE-MARKER-ONLY fact="true" status="impl/done">**One marker only**</ROW-FIXTURE-ONE-MARKER-ONLY></td>
-        <td><fact status="impl/done">An opener with no closer (or vice versa)</fact></td>
-        <td><fact status="impl/done">`malformed` → hard stop</fact></td>
+        <td><ROW-FIXTURE-ONE-MARKER-ONLY-MARKER-CONTENT fact="true" status="impl/done">An opener with no closer (or vice versa)</ROW-FIXTURE-ONE-MARKER-ONLY-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-ONE-MARKER-ONLY-EXPECTED-VERDICT fact="true" status="impl/done">`malformed` → hard stop</ROW-FIXTURE-ONE-MARKER-ONLY-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-NESTED fact="true" status="impl/done">**Nested**</ROW-FIXTURE-NESTED></td>
-        <td><fact status="impl/done">An opener, another opener, then two closers</fact></td>
-        <td><fact status="impl/done">`malformed` → hard stop</fact></td>
+        <td><ROW-FIXTURE-NESTED-MARKER-CONTENT fact="true" status="impl/done">An opener, another opener, then two closers</ROW-FIXTURE-NESTED-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-NESTED-EXPECTED-VERDICT fact="true" status="impl/done">`malformed` → hard stop</ROW-FIXTURE-NESTED-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-EMPTY-BODY fact="true" status="impl/done">**Empty body**</ROW-FIXTURE-EMPTY-BODY></td>
-        <td><fact status="impl/done">One ordered pair with nothing between</fact></td>
-        <td><fact status="impl/done">`present` → splice (a valid empty block)</fact></td>
+        <td><ROW-FIXTURE-EMPTY-BODY-MARKER-CONTENT fact="true" status="impl/done">One ordered pair with nothing between</ROW-FIXTURE-EMPTY-BODY-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-EMPTY-BODY-EXPECTED-VERDICT fact="true" status="impl/done">`present` → splice (a valid empty block)</ROW-FIXTURE-EMPTY-BODY-EXPECTED-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-FIXTURE-BYTE-IDENTICAL fact="true" status="impl/done">**Byte-identical**</ROW-FIXTURE-BYTE-IDENTICAL></td>
-        <td><fact status="impl/done">Present, and new body equals old body</fact></td>
-        <td><fact status="impl/done">`present` → **no write**</fact></td>
+        <td><ROW-FIXTURE-BYTE-IDENTICAL-MARKER-CONTENT fact="true" status="impl/done">Present, and new body equals old body</ROW-FIXTURE-BYTE-IDENTICAL-MARKER-CONTENT></td>
+        <td><ROW-FIXTURE-BYTE-IDENTICAL-EXPECTED-VERDICT fact="true" status="impl/done">`present` → **no write**</ROW-FIXTURE-BYTE-IDENTICAL-EXPECTED-VERDICT></td>
       </tr>
     </table>
     <p><TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS fact="true" status="impl/done">Two assertions deserve their own tests beyond the verdict:</TWO-ASSERTIONS-DESERVE-THEIR-OWN-TESTS></p>

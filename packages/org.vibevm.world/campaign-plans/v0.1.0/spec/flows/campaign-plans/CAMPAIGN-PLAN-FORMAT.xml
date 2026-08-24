@@ -37,28 +37,28 @@ that rule lives in `flow:addressable-specs`'s `#what-goes-where`.</THE-CARRIER-C
       </tr>
       <tr>
         <td><ROW-ROLE-PLAN fact="true" status="impl/done">**PLAN**</ROW-ROLE-PLAN></td>
-        <td><fact status="impl/done">before work starts</fact></td>
-        <td><fact status="impl/done">the cold-executable recipe</fact></td>
+        <td><ROW-ROLE-PLAN-WRITTEN fact="true" status="impl/done">before work starts</ROW-ROLE-PLAN-WRITTEN></td>
+        <td><ROW-ROLE-PLAN-PURPOSE fact="true" status="impl/done">the cold-executable recipe</ROW-ROLE-PLAN-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ROLE-BASELINE fact="true" status="impl/done">**BASELINE**</ROW-ROLE-BASELINE></td>
-        <td><fact status="impl/done">at campaign open</fact></td>
-        <td><fact status="impl/done">the frozen starting facts: gate-panel state, inventory counts, the numbers phases are measured against</fact></td>
+        <td><ROW-ROLE-BASELINE-WRITTEN fact="true" status="impl/done">at campaign open</ROW-ROLE-BASELINE-WRITTEN></td>
+        <td><ROW-ROLE-BASELINE-PURPOSE fact="true" status="impl/done">the frozen starting facts: gate-panel state, inventory counts, the numbers phases are measured against</ROW-ROLE-BASELINE-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ROLE-PREDICTIONS fact="true" status="impl/done">**PREDICTIONS**</ROW-ROLE-PREDICTIONS></td>
-        <td><fact status="impl/done">at campaign open</fact></td>
-        <td><fact status="impl/done">falsifiable expectations, stated *before* execution so the report can honestly say confirmed / falsified / surprised</fact></td>
+        <td><ROW-ROLE-PREDICTIONS-WRITTEN fact="true" status="impl/done">at campaign open</ROW-ROLE-PREDICTIONS-WRITTEN></td>
+        <td><ROW-ROLE-PREDICTIONS-PURPOSE fact="true" status="impl/done">falsifiable expectations, stated *before* execution so the report can honestly say confirmed / falsified / surprised</ROW-ROLE-PREDICTIONS-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ROLE-LOG fact="true" status="impl/done">**LOG**</ROW-ROLE-LOG></td>
-        <td><fact status="impl/done">during execution</fact></td>
-        <td><fact status="impl/done">the running record: per-phase commit maps, deviations, discovered work</fact></td>
+        <td><ROW-ROLE-LOG-WRITTEN fact="true" status="impl/done">during execution</ROW-ROLE-LOG-WRITTEN></td>
+        <td><ROW-ROLE-LOG-PURPOSE fact="true" status="impl/done">the running record: per-phase commit maps, deviations, discovered work</ROW-ROLE-LOG-PURPOSE></td>
       </tr>
       <tr>
         <td><ROW-ROLE-REPORT fact="true" status="impl/done">**REPORT**</ROW-ROLE-REPORT></td>
-        <td><fact status="impl/done">at campaign close</fact></td>
-        <td><fact status="impl/done">results vs predictions; what the campaign taught</fact></td>
+        <td><ROW-ROLE-REPORT-WRITTEN fact="true" status="impl/done">at campaign close</ROW-ROLE-REPORT-WRITTEN></td>
+        <td><ROW-ROLE-REPORT-PURPOSE fact="true" status="impl/done">results vs predictions; what the campaign taught</ROW-ROLE-REPORT-PURPOSE></td>
       </tr>
     </table>
     <p><THE-ONE-FILE-DIALECT-CARRIES-ALL-FIVE-ROLES fact="true" status="impl/done">**The one-file dialect (default).** One plan document carries all

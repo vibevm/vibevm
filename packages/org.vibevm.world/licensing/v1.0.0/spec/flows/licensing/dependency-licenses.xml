@@ -16,23 +16,23 @@ over time.</scope-of-this-document></p>
       </tr>
       <tr>
         <td><ROW-CLASS-PERMISSIVE fact="true" status="spec/done">Permissive</ROW-CLASS-PERMISSIVE></td>
-        <td><fact status="spec/done">MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, Zlib, UPL-1.0</fact></td>
-        <td><fact status="spec/done">**allowed**</fact></td>
+        <td><ROW-CLASS-PERMISSIVE-LICENCES fact="true" status="spec/done">MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, Zlib, UPL-1.0</ROW-CLASS-PERMISSIVE-LICENCES></td>
+        <td><ROW-CLASS-PERMISSIVE-VERDICT fact="true" status="spec/done">**allowed**</ROW-CLASS-PERMISSIVE-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-CLASS-WEAK-COPYLEFT fact="true" status="spec/done">Weak copyleft</ROW-CLASS-WEAK-COPYLEFT></td>
-        <td><fact status="spec/done">MPL-2.0, EPL</fact></td>
-        <td><fact status="spec/done">**case by case** — file-level copyleft usually does not taint consumers, but confirm the use</fact></td>
+        <td><ROW-CLASS-WEAK-COPYLEFT-LICENCES fact="true" status="spec/done">MPL-2.0, EPL</ROW-CLASS-WEAK-COPYLEFT-LICENCES></td>
+        <td><ROW-CLASS-WEAK-COPYLEFT-VERDICT fact="true" status="spec/done">**case by case** — file-level copyleft usually does not taint consumers, but confirm the use</ROW-CLASS-WEAK-COPYLEFT-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-CLASS-STRONG-COPYLEFT fact="true" status="spec/done">Strong copyleft</ROW-CLASS-STRONG-COPYLEFT></td>
-        <td><fact status="spec/done">GPL-2.0/3.0, AGPL, LGPL</fact></td>
-        <td><fact status="spec/done">**forbidden by default** — an owner exception, if any, is explicit and recorded</fact></td>
+        <td><ROW-CLASS-STRONG-COPYLEFT-LICENCES fact="true" status="spec/done">GPL-2.0/3.0, AGPL, LGPL</ROW-CLASS-STRONG-COPYLEFT-LICENCES></td>
+        <td><ROW-CLASS-STRONG-COPYLEFT-VERDICT fact="true" status="spec/done">**forbidden by default** — an owner exception, if any, is explicit and recorded</ROW-CLASS-STRONG-COPYLEFT-VERDICT></td>
       </tr>
       <tr>
         <td><ROW-CLASS-UNCLEAR-OR-MISSING fact="true" status="spec/done">Unclear / missing</ROW-CLASS-UNCLEAR-OR-MISSING></td>
-        <td><fact status="spec/done">no licence file, "all rights reserved", custom terms</fact></td>
-        <td><fact status="spec/done">**treat as forbidden** until clarified — no licence means no rights</fact></td>
+        <td><ROW-CLASS-UNCLEAR-OR-MISSING-LICENCES fact="true" status="spec/done">no licence file, "all rights reserved", custom terms</ROW-CLASS-UNCLEAR-OR-MISSING-LICENCES></td>
+        <td><ROW-CLASS-UNCLEAR-OR-MISSING-VERDICT fact="true" status="spec/done">**treat as forbidden** until clarified — no licence means no rights</ROW-CLASS-UNCLEAR-OR-MISSING-VERDICT></td>
       </tr>
     </table>
     <p><why-lgpl-is-in-the-forbidden-row fact="true" status="impl/done">The `LGPL` entry is deliberately in the forbidden row: even though its

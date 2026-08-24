@@ -405,23 +405,23 @@ flow:migration-discipline = "^0.1"</fence>
           </tr>
           <tr>
             <td><ROW-SIDECAR fact="true" status="spec/done">Sidecar `README.ru.md`</ROW-SIDECAR></td>
-            <td><fact status="spec/done">filesystem-flat; trivial glob `*.ru.md`; `README.md` keeps original visibility; new languages added in place</fact></td>
-            <td><fact status="spec/done">one extra dot in filename</fact></td>
+            <td><ROW-SIDECAR-PRO fact="true" status="spec/done">filesystem-flat; trivial glob `*.ru.md`; `README.md` keeps original visibility; new languages added in place</ROW-SIDECAR-PRO></td>
+            <td><ROW-SIDECAR-CON fact="true" status="spec/done">one extra dot in filename</ROW-SIDECAR-CON></td>
           </tr>
           <tr>
             <td><ROW-LANG-DIRECTORY fact="true" status="spec/done">Directory `i18n/ru/README.md`</ROW-LANG-DIRECTORY></td>
-            <td><fact status="spec/done">clean grouping per language; easy `i18n/&lt;lang&gt;/` cp-r for whole-language operations</fact></td>
-            <td><fact status="spec/done">doubles directory depth; mirroring the canonical tree under each `i18n/&lt;lang&gt;/` is fragile</fact></td>
+            <td><ROW-LANG-DIRECTORY-PRO fact="true" status="spec/done">clean grouping per language; easy `i18n/&lt;lang&gt;/` cp-r for whole-language operations</ROW-LANG-DIRECTORY-PRO></td>
+            <td><ROW-LANG-DIRECTORY-CON fact="true" status="spec/done">doubles directory depth; mirroring the canonical tree under each `i18n/&lt;lang&gt;/` is fragile</ROW-LANG-DIRECTORY-CON></td>
           </tr>
           <tr>
             <td><ROW-UNDERSCORE-SUFFIX fact="true" status="spec/done">Suffix `README_RU.md`</ROW-UNDERSCORE-SUFFIX></td>
-            <td><fact status="spec/done">shortest visual diff</fact></td>
-            <td><fact status="spec/done">uppercase code conflicts with UNIX case-insensitive filesystems' case-folding; `_RU` is not a BCP-47 tag; collides with files that happen to end in `_&lt;word&gt;`</fact></td>
+            <td><ROW-UNDERSCORE-SUFFIX-PRO fact="true" status="spec/done">shortest visual diff</ROW-UNDERSCORE-SUFFIX-PRO></td>
+            <td><ROW-UNDERSCORE-SUFFIX-CON fact="true" status="spec/done">uppercase code conflicts with UNIX case-insensitive filesystems' case-folding; `_RU` is not a BCP-47 tag; collides with files that happen to end in `_&lt;word&gt;`</ROW-UNDERSCORE-SUFFIX-CON></td>
           </tr>
           <tr>
             <td><ROW-INLINE-TOML fact="true" status="spec/done">Inline TOML keys (`title.ru = "..."`)</ROW-INLINE-TOML></td>
-            <td><fact status="spec/done">great for short strings</fact></td>
-            <td><fact status="spec/done">doesn't scale to a multi-paragraph protocol document</fact></td>
+            <td><ROW-INLINE-TOML-PRO fact="true" status="spec/done">great for short strings</ROW-INLINE-TOML-PRO></td>
+            <td><ROW-INLINE-TOML-CON fact="true" status="spec/done">doesn't scale to a multi-paragraph protocol document</ROW-INLINE-TOML-CON></td>
           </tr>
         </table>
         <p><sidecar-wins fact="true" status="spec/done">Sidecar wins on every operationally-relevant axis. It's also the pattern Pandoc, Gettext PO bundles, MDX, and Hugo i18n converge to.</sidecar-wins></p>
@@ -636,59 +636,59 @@ files_written = [
         </tr>
         <tr>
           <td><ROW-ENC-REQUIRES fact="true" status="spec/done">`requires X = "^1.2"`</ROW-ENC-REQUIRES></td>
-          <td><fact status="spec/done">`RULE_PKG_REQUIRES`: ¬this ∨ matching_X</fact></td>
+          <td><ROW-ENC-REQUIRES-LIBSOLV-RULE fact="true" status="spec/done">`RULE_PKG_REQUIRES`: ¬this ∨ matching_X</ROW-ENC-REQUIRES-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-REQUIRES-ANY fact="true" status="spec/done">`requires_any [{X, Y}]`</ROW-ENC-REQUIRES-ANY></td>
-          <td><fact status="spec/done">`RULE_PKG_REQUIRES`: ¬this ∨ X_or_Y (a synthetic literal expanded into actual choices via auxiliary clauses)</fact></td>
+          <td><ROW-ENC-REQUIRES-ANY-LIBSOLV-RULE fact="true" status="spec/done">`RULE_PKG_REQUIRES`: ¬this ∨ X_or_Y (a synthetic literal expanded into actual choices via auxiliary clauses)</ROW-ENC-REQUIRES-ANY-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-PROVIDES fact="true" status="spec/done">`provides cap:foo`</ROW-ENC-PROVIDES></td>
-          <td><fact status="spec/done">identity rule: this ⇒ "cap:foo" virtual literal asserted</fact></td>
+          <td><ROW-ENC-PROVIDES-LIBSOLV-RULE fact="true" status="spec/done">identity rule: this ⇒ "cap:foo" virtual literal asserted</ROW-ENC-PROVIDES-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-OBSOLETES fact="true" status="spec/done">`obsoletes X = "&lt;2.0"`</ROW-ENC-OBSOLETES></td>
-          <td><fact status="spec/done">`RULE_RPM_OBSOLETES`: ¬this ∨ ¬X&lt;2</fact></td>
+          <td><ROW-ENC-OBSOLETES-LIBSOLV-RULE fact="true" status="spec/done">`RULE_RPM_OBSOLETES`: ¬this ∨ ¬X&lt;2</ROW-ENC-OBSOLETES-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-CONFLICTS fact="true" status="spec/done">`conflicts X`</ROW-ENC-CONFLICTS></td>
-          <td><fact status="spec/done">`RULE_PKG_CONFLICTS`: ¬this ∨ ¬X</fact></td>
+          <td><ROW-ENC-CONFLICTS-LIBSOLV-RULE fact="true" status="spec/done">`RULE_PKG_CONFLICTS`: ¬this ∨ ¬X</ROW-ENC-CONFLICTS-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-RECOMMENDS fact="true" status="spec/done">`recommends X`</ROW-ENC-RECOMMENDS></td>
-          <td><fact status="spec/done">`RULE_RECOMMENDS` (weak): solver tries to include X but skip on conflict</fact></td>
+          <td><ROW-ENC-RECOMMENDS-LIBSOLV-RULE fact="true" status="spec/done">`RULE_RECOMMENDS` (weak): solver tries to include X but skip on conflict</ROW-ENC-RECOMMENDS-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-SUGGESTS fact="true" status="spec/done">`suggests X`</ROW-ENC-SUGGESTS></td>
-          <td><fact status="spec/done">`RULE_SUGGESTS` (informational only)</fact></td>
+          <td><ROW-ENC-SUGGESTS-LIBSOLV-RULE fact="true" status="spec/done">`RULE_SUGGESTS` (informational only)</ROW-ENC-SUGGESTS-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-SUPPLEMENTS fact="true" status="spec/done">`supplements cap:foo`</ROW-ENC-SUPPLEMENTS></td>
-          <td><fact status="spec/done">`RULE_SUPPLEMENTS`: if cap:foo activated by some other package, prefer this</fact></td>
+          <td><ROW-ENC-SUPPLEMENTS-LIBSOLV-RULE fact="true" status="spec/done">`RULE_SUPPLEMENTS`: if cap:foo activated by some other package, prefer this</ROW-ENC-SUPPLEMENTS-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-ENHANCES fact="true" status="spec/done">`enhances cap:foo`</ROW-ENC-ENHANCES></td>
-          <td><fact status="spec/done">`RULE_ENHANCES` (informational)</fact></td>
+          <td><ROW-ENC-ENHANCES-LIBSOLV-RULE fact="true" status="spec/done">`RULE_ENHANCES` (informational)</ROW-ENC-ENHANCES-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-EXCLUSIVE fact="true" status="spec/done">`__exclusive [[A, B]]`</ROW-ENC-EXCLUSIVE></td>
-          <td><fact status="spec/done">`RULE_PKG_CONFLICTS` × pairs: ¬A ∨ ¬B</fact></td>
+          <td><ROW-ENC-EXCLUSIVE-LIBSOLV-RULE fact="true" status="spec/done">`RULE_PKG_CONFLICTS` × pairs: ¬A ∨ ¬B</ROW-ENC-EXCLUSIVE-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-FEATURE-DEP fact="true" status="spec/done">feature `f = ["dep:X"]`</ROW-ENC-FEATURE-DEP></td>
-          <td><fact status="spec/done">activating f ⇒ requires X (conditional on f literal)</fact></td>
+          <td><ROW-ENC-FEATURE-DEP-LIBSOLV-RULE fact="true" status="spec/done">activating f ⇒ requires X (conditional on f literal)</ROW-ENC-FEATURE-DEP-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-WEAK-FEATURE fact="true" status="spec/done">feature `f = ["X?/g"]`</ROW-ENC-WEAK-FEATURE></td>
-          <td><fact status="spec/done">weak: activating f ∧ X-already-in-graph ⇒ X has feature g</fact></td>
+          <td><ROW-ENC-WEAK-FEATURE-LIBSOLV-RULE fact="true" status="spec/done">weak: activating f ∧ X-already-in-graph ⇒ X has feature g</ROW-ENC-WEAK-FEATURE-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-SUBSKILL-PRESENT fact="true" status="spec/done">subskill activation by `if_present`</ROW-ENC-SUBSKILL-PRESENT></td>
-          <td><fact status="spec/done">post-SAT pass: scan resolved graph, set subskill literals based on present capabilities (no SAT involvement; pure projection)</fact></td>
+          <td><ROW-ENC-SUBSKILL-PRESENT-LIBSOLV-RULE fact="true" status="spec/done">post-SAT pass: scan resolved graph, set subskill literals based on present capabilities (no SAT involvement; pure projection)</ROW-ENC-SUBSKILL-PRESENT-LIBSOLV-RULE></td>
         </tr>
         <tr>
           <td><ROW-ENC-SUBSKILL-PROVIDES fact="true" status="spec/done">subskill activation by `if_provides`</ROW-ENC-SUBSKILL-PROVIDES></td>
-          <td><fact status="spec/done">same as `if_present`; interface tags are queried in the same scan</fact></td>
+          <td><ROW-ENC-SUBSKILL-PROVIDES-LIBSOLV-RULE fact="true" status="spec/done">same as `if_present`; interface tags are queried in the same scan</ROW-ENC-SUBSKILL-PROVIDES-LIBSOLV-RULE></td>
         </tr>
       </table>
       <p><dnf5-same-encoding fact="true" status="spec/done">This is the same encoding `dnf5` uses for RPM weak-deps; we just reuse the `RULE_*` constants from libsolv's public `solv/solver.h`.</dnf5-same-encoding></p>

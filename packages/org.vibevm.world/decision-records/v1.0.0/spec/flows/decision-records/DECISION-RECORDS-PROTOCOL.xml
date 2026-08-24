@@ -61,19 +61,19 @@ immunity honest — without it the decision hardens into a sacred cow
       </tr>
       <tr>
         <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
-        <td><fact status="impl/done">The chosen value or approach. One line.</fact></td>
+        <td><ROW-FIELD-DECISION-REQUIREMENT fact="true" status="impl/done">The chosen value or approach. One line.</ROW-FIELD-DECISION-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
-        <td><fact status="impl/done">The observation that forced the choice — concrete, measured, cited. Name the data: log path, sample size, benchmark, incident, upstream constraint.</fact></td>
+        <td><ROW-FIELD-WHY-REQUIREMENT fact="true" status="impl/done">The observation that forced the choice — concrete, measured, cited. Name the data: log path, sample size, benchmark, incident, upstream constraint.</ROW-FIELD-WHY-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
-        <td><fact status="impl/done">One line per alternative, each carrying the reason it lost. A loser without a reason invites the evaluation to be re-run.</fact></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT fact="true" status="impl/done">One line per alternative, each carrying the reason it lost. A loser without a reason invites the evaluation to be re-run.</ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
-        <td><fact status="impl/done">A measurable trigger: metric + threshold + where it is observed. "Later" is not a trigger.</fact></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT fact="true" status="impl/done">A measurable trigger: metric + threshold + where it is observed. "Later" is not a trigger.</ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT></td>
       </tr>
     </table>
     <p><why-three-of-the-four-fields-exist fact="true" status="spec/done">Three of the four fields exist so the argument is *never re-had*:
@@ -96,19 +96,19 @@ deliberately departs from classic ADR practice:</departure-from-classic-adr-lead
       </tr>
       <tr>
         <td><ROW-ADR-SILO fact="true" status="spec/done">`adr/0007-use-blake3.md` — a separate silo</ROW-ADR-SILO></td>
-        <td><fact status="spec/done">The record sits inside the governing spec section</fact></td>
+        <td><ROW-ADR-SILO-THIS-PROTOCOL fact="true" status="spec/done">The record sits inside the governing spec section</ROW-ADR-SILO-THIS-PROTOCOL></td>
       </tr>
       <tr>
         <td><ROW-ADR-IMMUTABLE fact="true" status="spec/done">Immutable, append-only; changes chain via "superseded by ADR-0042"</ROW-ADR-IMMUTABLE></td>
-        <td><fact status="spec/done">The section is edited in place; a dated changelog line notes the change; git holds the history</fact></td>
+        <td><ROW-ADR-IMMUTABLE-THIS-PROTOCOL fact="true" status="spec/done">The section is edited in place; a dated changelog line notes the change; git holds the history</ROW-ADR-IMMUTABLE-THIS-PROTOCOL></td>
       </tr>
       <tr>
         <td><ROW-ADR-MUST-BE-SOUGHT fact="true" status="spec/done">The reader must know the ADR exists and go find it</ROW-ADR-MUST-BE-SOUGHT></td>
-        <td><fact status="spec/done">The record rides along with every read of the section</fact></td>
+        <td><ROW-ADR-MUST-BE-SOUGHT-THIS-PROTOCOL fact="true" status="spec/done">The record rides along with every read of the section</ROW-ADR-MUST-BE-SOUGHT-THIS-PROTOCOL></td>
       </tr>
       <tr>
         <td><ROW-ADR-NUMBERED-BY-TIME fact="true" status="spec/done">Numbered by time of decision</ROW-ADR-NUMBERED-BY-TIME></td>
-        <td><fact status="spec/done">Anchored by the thing decided</fact></td>
+        <td><ROW-ADR-NUMBERED-BY-TIME-THIS-PROTOCOL fact="true" status="spec/done">Anchored by the thing decided</ROW-ADR-NUMBERED-BY-TIME-THIS-PROTOCOL></td>
       </tr>
     </table>
     <p><the-reason-is-the-reader fact="true" status="spec/done">The reason is the reader.</the-reason-is-the-reader></p>
@@ -142,23 +142,23 @@ re-open:</WRITE-A-RECORD-FOR-ANY-REOPENABLE-CHOICE></p>
       </tr>
       <tr>
         <td><ROW-OCCASION-LIBRARY-PICK fact="true" status="impl/done">Library / dependency pick</ROW-OCCASION-LIBRARY-PICK></td>
-        <td><fact status="impl/done">blake3 over SHA-256; one HTTP client over another</fact></td>
+        <td><ROW-OCCASION-LIBRARY-PICK-EXAMPLE fact="true" status="impl/done">blake3 over SHA-256; one HTTP client over another</ROW-OCCASION-LIBRARY-PICK-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-OCCASION-CONSTANT fact="true" status="impl/done">Constant with consequences</ROW-OCCASION-CONSTANT></td>
-        <td><fact status="impl/done">timeouts, retry counts, buffer sizes, thresholds</fact></td>
+        <td><ROW-OCCASION-CONSTANT-EXAMPLE fact="true" status="impl/done">timeouts, retry counts, buffer sizes, thresholds</ROW-OCCASION-CONSTANT-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-OCCASION-PROTOCOL-SHAPE fact="true" status="impl/done">Protocol / format shape</ROW-OCCASION-PROTOCOL-SHAPE></td>
-        <td><fact status="impl/done">wire format, schema, identity scheme, directory layout</fact></td>
+        <td><ROW-OCCASION-PROTOCOL-SHAPE-EXAMPLE fact="true" status="impl/done">wire format, schema, identity scheme, directory layout</ROW-OCCASION-PROTOCOL-SHAPE-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-OCCASION-REJECTED-APPROACH fact="true" status="impl/done">Rejected approach</ROW-OCCASION-REJECTED-APPROACH></td>
-        <td><fact status="impl/done">a road not taken that someone will propose again</fact></td>
+        <td><ROW-OCCASION-REJECTED-APPROACH-EXAMPLE fact="true" status="impl/done">a road not taken that someone will propose again</ROW-OCCASION-REJECTED-APPROACH-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-OCCASION-PROCESS-RULE fact="true" status="impl/done">Process rule</ROW-OCCASION-PROCESS-RULE></td>
-        <td><fact status="impl/done">a review gate, a commit convention, a naming law</fact></td>
+        <td><ROW-OCCASION-PROCESS-RULE-EXAMPLE fact="true" status="impl/done">a review gate, a commit convention, a naming law</ROW-OCCASION-PROCESS-RULE-EXAMPLE></td>
       </tr>
     </table>
     <p><DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE fact="true" status="impl/done">Do **not** write records for facts with no plausible alternative, or

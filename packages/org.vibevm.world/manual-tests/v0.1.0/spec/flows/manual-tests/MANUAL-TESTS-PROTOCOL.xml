@@ -28,23 +28,23 @@ world.</that-substitution-is-the-refactor-loop-and-the-blind-spot></p>
       </tr>
       <tr>
         <td><ROW-SURFACE-AUTHENTICATION fact="true" status="spec/done">Authentication</ROW-SURFACE-AUTHENTICATION></td>
-        <td><fact status="spec/done">An in-process fake or a skipped check</fact></td>
-        <td><fact status="spec/done">Real SSH keys, OAuth flows, API tokens against a real endpoint</fact></td>
+        <td><ROW-SURFACE-AUTHENTICATION-WHAT-THE-AUTOMATED-TIER fact="true" status="spec/done">An in-process fake or a skipped check</ROW-SURFACE-AUTHENTICATION-WHAT-THE-AUTOMATED-TIER></td>
+        <td><ROW-SURFACE-AUTHENTICATION-WHAT-ONLY-THE-REAL-WORLD fact="true" status="spec/done">Real SSH keys, OAuth flows, API tokens against a real endpoint</ROW-SURFACE-AUTHENTICATION-WHAT-ONLY-THE-REAL-WORLD></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-PER-USER-STATE fact="true" status="spec/done">Per-user state</ROW-SURFACE-PER-USER-STATE></td>
-        <td><fact status="spec/done">A throwaway temp directory</fact></td>
-        <td><fact status="spec/done">The actual on-disk layout the tool creates under the user's home</fact></td>
+        <td><ROW-SURFACE-PER-USER-STATE-WHAT-THE-AUTOMATED-TIER fact="true" status="spec/done">A throwaway temp directory</ROW-SURFACE-PER-USER-STATE-WHAT-THE-AUTOMATED-TIER></td>
+        <td><ROW-SURFACE-PER-USER-STATE-WHAT-ONLY-THE-REAL-WORLD fact="true" status="spec/done">The actual on-disk layout the tool creates under the user's home</ROW-SURFACE-PER-USER-STATE-WHAT-ONLY-THE-REAL-WORLD></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-ARTIFACTS-CONSUMERS-READ fact="true" status="spec/done">Artifacts consumers read</ROW-SURFACE-ARTIFACTS-CONSUMERS-READ></td>
-        <td><fact status="spec/done">An in-memory value</fact></td>
-        <td><fact status="spec/done">A lockfile (or export, or manifest) byte-for-byte as a downstream consumer receives it</fact></td>
+        <td><ROW-SURFACE-ARTIFACTS-CONSUMERS-READ-WHAT-THE-AUTOMATED-TIER fact="true" status="spec/done">An in-memory value</ROW-SURFACE-ARTIFACTS-CONSUMERS-READ-WHAT-THE-AUTOMATED-TIER></td>
+        <td><ROW-SURFACE-ARTIFACTS-CONSUMERS-READ-WHAT-ONLY-THE-REAL-WORLD fact="true" status="spec/done">A lockfile (or export, or manifest) byte-for-byte as a downstream consumer receives it</ROW-SURFACE-ARTIFACTS-CONSUMERS-READ-WHAT-ONLY-THE-REAL-WORLD></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-HUMAN-INTENT fact="true" status="spec/done">Human intent</ROW-SURFACE-HUMAN-INTENT></td>
-        <td><fact status="spec/done">An `assert_eq!` on a string</fact></td>
-        <td><fact status="spec/done">A person reading the output and confirming it says what they meant</fact></td>
+        <td><ROW-SURFACE-HUMAN-INTENT-WHAT-THE-AUTOMATED-TIER fact="true" status="spec/done">An `assert_eq!` on a string</ROW-SURFACE-HUMAN-INTENT-WHAT-THE-AUTOMATED-TIER></td>
+        <td><ROW-SURFACE-HUMAN-INTENT-WHAT-ONLY-THE-REAL-WORLD fact="true" status="spec/done">A person reading the output and confirming it says what they meant</ROW-SURFACE-HUMAN-INTENT-WHAT-ONLY-THE-REAL-WORLD></td>
       </tr>
     </table>
     <p><THE-MANUAL-TIER-IS-THAT-LAST-MILE fact="true" status="impl/done">The manual tier is that last mile.</THE-MANUAL-TIER-IS-THAT-LAST-MILE></p>
@@ -87,15 +87,15 @@ matches its Expected or one does not and you know precisely which.</OPEN-IT-FOLL
       </tr>
       <tr>
         <td><ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE fact="true" status="impl/done">**Before tagging any milestone**</ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE></td>
-        <td><fact status="impl/done">The tag claims the shipped features work end to end. Walk every manual test the index marks required for those features first.</fact></td>
+        <td><ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE-WHY-IT-FIRES-THE-TIER fact="true" status="impl/done">The tag claims the shipped features work end to end. Walk every manual test the index marks required for those features first.</ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE-WHY-IT-FIRES-THE-TIER></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE fact="true" status="impl/done">**After a change to an integration surface**</ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE></td>
-        <td><fact status="impl/done">Auth, per-user layout, consumer-facing artifacts, network I/O — run the relevant walkthroughs *even when the automated suite stays green*. Green fakes do not prove a changed real surface.</fact></td>
+        <td><ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE-WHY-IT-FIRES-THE-TIER fact="true" status="impl/done">Auth, per-user layout, consumer-facing artifacts, network I/O — run the relevant walkthroughs *even when the automated suite stays green*. Green fakes do not prove a changed real surface.</ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE-WHY-IT-FIRES-THE-TIER></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG fact="true" status="impl/done">**When a user files an integration bug**</ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG></td>
-        <td><fact status="impl/done">Capture their steps as a new manual test. It becomes both the reproducer that confirms the fix and the guard against regression.</fact></td>
+        <td><ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG-WHY-IT-FIRES-THE-TIER fact="true" status="impl/done">Capture their steps as a new manual test. It becomes both the reproducer that confirms the fix and the guard against regression.</ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG-WHY-IT-FIRES-THE-TIER></td>
       </tr>
     </table>
   </when>

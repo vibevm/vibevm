@@ -79,28 +79,28 @@
         </tr>
         <tr>
           <td><EDGE-CODE-SPEC fact="true" status="spec/done">code → spec</EDGE-CODE-SPEC></td>
-          <td><fact status="spec/done">`implements` `verifies` `documents` `deviates` `informs`</fact></td>
-          <td><fact status="spec/done">exist — code defers to the spec as authority</fact></td>
+          <td><EDGE-CODE-SPEC-VERB-S fact="true" status="spec/done">`implements` `verifies` `documents` `deviates` `informs`</EDGE-CODE-SPEC-VERB-S></td>
+          <td><EDGE-CODE-SPEC-MEANING fact="true" status="spec/done">exist — code defers to the spec as authority</EDGE-CODE-SPEC-MEANING></td>
         </tr>
         <tr>
           <td><EDGE-SPEC-SPEC fact="true" status="spec/done">spec → spec</EDGE-SPEC-SPEC></td>
-          <td><fact status="spec/done">`references` `refines` `supersedes`</fact></td>
-          <td><fact status="spec/done">a prose citation as a tracked edge (the D3 gap, PROP-031 §3.3)</fact></td>
+          <td><EDGE-SPEC-SPEC-VERB-S fact="true" status="spec/done">`references` `refines` `supersedes`</EDGE-SPEC-SPEC-VERB-S></td>
+          <td><EDGE-SPEC-SPEC-MEANING fact="true" status="spec/done">a prose citation as a tracked edge (the D3 gap, PROP-031 §3.3)</EDGE-SPEC-SPEC-MEANING></td>
         </tr>
         <tr>
           <td><EDGE-SPEC-CODE fact="true" status="spec/done">**spec → code**</EDGE-SPEC-CODE></td>
-          <td><fact status="spec/done">**`defined-by` / `canonical`**</fact></td>
-          <td><fact status="spec/done">**the normative description of this concept is the code at `code://…`** — the authority *inversion*</fact></td>
+          <td><EDGE-SPEC-CODE-VERB-S fact="true" status="spec/done">**`defined-by` / `canonical`**</EDGE-SPEC-CODE-VERB-S></td>
+          <td><EDGE-SPEC-CODE-MEANING fact="true" status="spec/done">**the normative description of this concept is the code at `code://…`** — the authority *inversion*</EDGE-SPEC-CODE-MEANING></td>
         </tr>
         <tr>
           <td><EDGE-DOC-CODE fact="true" status="spec/done">doc → code</EDGE-DOC-CODE></td>
-          <td><fact status="spec/done">`exemplifies`</fact></td>
-          <td><fact status="spec/done">the canonical example / reference usage is here</fact></td>
+          <td><EDGE-DOC-CODE-VERB-S fact="true" status="spec/done">`exemplifies`</EDGE-DOC-CODE-VERB-S></td>
+          <td><EDGE-DOC-CODE-MEANING fact="true" status="spec/done">the canonical example / reference usage is here</EDGE-DOC-CODE-MEANING></td>
         </tr>
         <tr>
           <td><EDGE-CODE-CODE fact="true" status="spec/done">code → code</EDGE-CODE-CODE></td>
-          <td><fact status="spec/done">`uses` `see-also`</fact></td>
-          <td><fact status="spec/done">a cross-item reference (rustdoc intra-doc links, generalised across packages)</fact></td>
+          <td><EDGE-CODE-CODE-VERB-S fact="true" status="spec/done">`uses` `see-also`</EDGE-CODE-CODE-VERB-S></td>
+          <td><EDGE-CODE-CODE-MEANING fact="true" status="spec/done">a cross-item reference (rustdoc intra-doc links, generalised across packages)</EDGE-CODE-CODE-MEANING></td>
         </tr>
       </table>
       <facts ordered="false">
@@ -199,28 +199,28 @@
       </tr>
       <tr>
         <td><PA-LSP fact="true" status="spec/done">**LSP** (Language Server Protocol)</PA-LSP></td>
-        <td><fact status="spec/done">n/a (protocol)</fact></td>
-        <td><fact status="spec/done">The architecture: one model, a query surface, a mutation surface, many clients. This PROP is "LSP for spec + code + packages, agent-first."</fact></td>
+        <td><PA-LSP-LICENSE-VERIFY fact="true" status="spec/done">n/a (protocol)</PA-LSP-LICENSE-VERIFY></td>
+        <td><PA-LSP-ROLE-HERE fact="true" status="spec/done">The architecture: one model, a query surface, a mutation surface, many clients. This PROP is "LSP for spec + code + packages, agent-first."</PA-LSP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-SCIP fact="true" status="spec/done">**SCIP / LSIF** (Sourcegraph)</PA-SCIP></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">**The code-node prior art.** A serialised, committed graph of code symbols + references for navigation without a live server — precisely `specmap.json` for code. They solved the stable-symbol *moniker* problem (§7).</fact></td>
+        <td><PA-SCIP-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</PA-SCIP-LICENSE-VERIFY></td>
+        <td><PA-SCIP-ROLE-HERE fact="true" status="spec/done">**The code-node prior art.** A serialised, committed graph of code symbols + references for navigation without a live server — precisely `specmap.json` for code. They solved the stable-symbol *moniker* problem (§7).</PA-SCIP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-RUSTDOC fact="true" status="spec/done">rustdoc intra-doc links</PA-RUSTDOC></td>
-        <td><fact status="spec/done">n/a (rustc)</fact></td>
-        <td><fact status="spec/done">Path-based, compiler-checked in-code references — the `code→code`, integrity-checked precedent.</fact></td>
+        <td><PA-RUSTDOC-LICENSE-VERIFY fact="true" status="spec/done">n/a (rustc)</PA-RUSTDOC-LICENSE-VERIFY></td>
+        <td><PA-RUSTDOC-ROLE-HERE fact="true" status="spec/done">Path-based, compiler-checked in-code references — the `code→code`, integrity-checked precedent.</PA-RUSTDOC-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-SPHINX fact="true" status="spec/done">Sphinx domains + `:ref:`</PA-SPHINX></td>
-        <td><fact status="spec/done">BSD-2</fact></td>
-        <td><fact status="spec/done">Prose→object references resolved and checked at build — the `doc→code` precedent.</fact></td>
+        <td><PA-SPHINX-LICENSE-VERIFY fact="true" status="spec/done">BSD-2</PA-SPHINX-LICENSE-VERIFY></td>
+        <td><PA-SPHINX-ROLE-HERE fact="true" status="spec/done">Prose→object references resolved and checked at build — the `doc→code` precedent.</PA-SPHINX-ROLE-HERE></td>
       </tr>
       <tr>
         <td><PA-OPENREWRITE fact="true" status="spec/done">OpenRewrite (via PROP-031)</PA-OPENREWRITE></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">Typed, gated operations over a lossless model — the mutation half.</fact></td>
+        <td><PA-OPENREWRITE-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</PA-OPENREWRITE-LICENSE-VERIFY></td>
+        <td><PA-OPENREWRITE-ROLE-HERE fact="true" status="spec/done">Typed, gated operations over a lossless model — the mutation half.</PA-OPENREWRITE-ROLE-HERE></td>
       </tr>
     </table>
     <p><DIFFERENTIATORS fact="true" status="spec/done">**Differentiators.**</DIFFERENTIATORS></p>

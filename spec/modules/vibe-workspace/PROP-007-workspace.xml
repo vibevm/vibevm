@@ -46,23 +46,23 @@ members = [
         </tr>
         <tr>
           <td><ROW-SECTION-PACKAGE fact="true" status="impl/done">`[package]`</ROW-SECTION-PACKAGE></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">The node is a publishable artifact (`kind`, `name`, `group`, `version`, …).</fact></td>
+          <td><ROW-SECTION-PACKAGE-PRESENCE fact="true" status="impl/done">optional</ROW-SECTION-PACKAGE-PRESENCE></td>
+          <td><ROW-SECTION-PACKAGE-MEANING fact="true" status="impl/done">The node is a publishable artifact (`kind`, `name`, `group`, `version`, …).</ROW-SECTION-PACKAGE-MEANING></td>
         </tr>
         <tr>
           <td><ROW-SECTION-PROJECT fact="true" status="impl/done">`[project]`</ROW-SECTION-PROJECT></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">The node is a non-publishable consumer/root.</fact></td>
+          <td><ROW-SECTION-PROJECT-PRESENCE fact="true" status="impl/done">optional</ROW-SECTION-PROJECT-PRESENCE></td>
+          <td><ROW-SECTION-PROJECT-MEANING fact="true" status="impl/done">The node is a non-publishable consumer/root.</ROW-SECTION-PROJECT-MEANING></td>
         </tr>
         <tr>
           <td><ROW-SECTION-WORKSPACE fact="true" status="impl/done">`[workspace]`</ROW-SECTION-WORKSPACE></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">The node coordinates members (§2.1).</fact></td>
+          <td><ROW-SECTION-WORKSPACE-PRESENCE fact="true" status="impl/done">optional</ROW-SECTION-WORKSPACE-PRESENCE></td>
+          <td><ROW-SECTION-WORKSPACE-MEANING fact="true" status="impl/done">The node coordinates members (§2.1).</ROW-SECTION-WORKSPACE-MEANING></td>
         </tr>
         <tr>
           <td><ROW-SECTION-CONSUMER fact="true" status="impl/done">`[requires]`, `[[registry]]`, `[active]`, `[llm]`</ROW-SECTION-CONSUMER></td>
-          <td><fact status="impl/done">optional</fact></td>
-          <td><fact status="impl/done">Consumer-side configuration.</fact></td>
+          <td><ROW-SECTION-CONSUMER-PRESENCE fact="true" status="impl/done">optional</ROW-SECTION-CONSUMER-PRESENCE></td>
+          <td><ROW-SECTION-CONSUMER-MEANING fact="true" status="impl/done">Consumer-side configuration.</ROW-SECTION-CONSUMER-MEANING></td>
         </tr>
       </table>
       <facts ordered="false">
@@ -171,28 +171,28 @@ generated_at = "2026-…"</fence>
         </tr>
         <tr>
           <td><ROW-SIGNAL-README fact="true" status="impl/done">README banner as the first block (vibevm already generates such banners — `build_redirect_readme` for stubs)</ROW-SIGNAL-README></td>
-          <td><fact status="impl/done">seen immediately on opening the repo</fact></td>
-          <td><fact status="impl/done">free</fact></td>
+          <td><ROW-SIGNAL-README-VISIBILITY fact="true" status="impl/done">seen immediately on opening the repo</ROW-SIGNAL-README-VISIBILITY></td>
+          <td><ROW-SIGNAL-README-COST fact="true" status="impl/done">free</ROW-SIGNAL-README-COST></td>
         </tr>
         <tr>
           <td><ROW-SIGNAL-DESCRIPTION fact="true" status="impl/done">repo `description` = "Generated copy of `&lt;pkgref&gt;` — contribute at `&lt;upstream&gt;`"</ROW-SIGNAL-DESCRIPTION></td>
-          <td><fact status="impl/done">visible in the repo header</fact></td>
-          <td><fact status="impl/done">one API call at create</fact></td>
+          <td><ROW-SIGNAL-DESCRIPTION-VISIBILITY fact="true" status="impl/done">visible in the repo header</ROW-SIGNAL-DESCRIPTION-VISIBILITY></td>
+          <td><ROW-SIGNAL-DESCRIPTION-COST fact="true" status="impl/done">one API call at create</ROW-SIGNAL-DESCRIPTION-COST></td>
         </tr>
         <tr>
           <td><ROW-SIGNAL-ISSUES fact="true" status="spec/done">Issues disabled (`has_issues = false`)</ROW-SIGNAL-ISSUES></td>
-          <td><fact status="spec/done">Issues tab disappears</fact></td>
-          <td><fact status="spec/done">one API call</fact></td>
+          <td><ROW-SIGNAL-ISSUES-VISIBILITY fact="true" status="spec/done">Issues tab disappears</ROW-SIGNAL-ISSUES-VISIBILITY></td>
+          <td><ROW-SIGNAL-ISSUES-COST fact="true" status="spec/done">one API call</ROW-SIGNAL-ISSUES-COST></td>
         </tr>
         <tr>
           <td><ROW-SIGNAL-PR-TEMPLATE fact="true" status="impl/done">`.github/PULL_REQUEST_TEMPLATE.md` with a STOP notice</ROW-SIGNAL-PR-TEMPLATE></td>
-          <td><fact status="impl/done">fires at PR-creation time</fact></td>
-          <td><fact status="impl/done">free</fact></td>
+          <td><ROW-SIGNAL-PR-TEMPLATE-VISIBILITY fact="true" status="impl/done">fires at PR-creation time</ROW-SIGNAL-PR-TEMPLATE-VISIBILITY></td>
+          <td><ROW-SIGNAL-PR-TEMPLATE-COST fact="true" status="impl/done">free</ROW-SIGNAL-PR-TEMPLATE-COST></td>
         </tr>
         <tr>
           <td><ROW-SIGNAL-ARCHIVE fact="true" status="spec/done">`archived = true` (`--archive`)</ROW-SIGNAL-ARCHIVE></td>
-          <td><fact status="spec/done">yellow "Public archive" banner, PR/issues/push all blocked</fact></td>
-          <td><fact status="spec/done">re-publish needs unarchive→push→archive; vibevm drives that cycle</fact></td>
+          <td><ROW-SIGNAL-ARCHIVE-VISIBILITY fact="true" status="spec/done">yellow "Public archive" banner, PR/issues/push all blocked</ROW-SIGNAL-ARCHIVE-VISIBILITY></td>
+          <td><ROW-SIGNAL-ARCHIVE-COST fact="true" status="spec/done">re-publish needs unarchive→push→archive; vibevm drives that cycle</ROW-SIGNAL-ARCHIVE-COST></td>
         </tr>
       </table>
       <p><PUBLISHED-REPOS-TOGGLE fact="true" status="spec/done">A `[workspace]`-level setting `published_repos = "read-only" | "open"` (default `"read-only"` for workspace members) lets an operator opt into the inverse model where the split repo *is* the canonical contribution target.</PUBLISHED-REPOS-TOGGLE></p>
@@ -226,23 +226,23 @@ generated_at = "2026-…"</fence>
       </tr>
       <tr>
         <td><ROW-VS-WHAT fact="true" status="impl/done">What it is</ROW-VS-WHAT></td>
-        <td><fact status="impl/done">A separate package</fact></td>
-        <td><fact status="impl/done">A sub-document *inside* one package</fact></td>
+        <td><ROW-VS-WHAT-WORKSPACE-MEMBER-PROP-00 fact="true" status="impl/done">A separate package</ROW-VS-WHAT-WORKSPACE-MEMBER-PROP-00></td>
+        <td><ROW-VS-WHAT-SUBSKILL-PROP-003-2-5-VI fact="true" status="impl/done">A sub-document *inside* one package</ROW-VS-WHAT-SUBSKILL-PROP-003-2-5-VI></td>
       </tr>
       <tr>
         <td><ROW-VS-VERSIONING fact="true" status="impl/done">Versioning</ROW-VS-VERSIONING></td>
-        <td><fact status="impl/done">Its own `version`; published independently</fact></td>
-        <td><fact status="impl/done">Versioned together with its parent package</fact></td>
+        <td><ROW-VS-VERSIONING-WORKSPACE-MEMBER-PROP-00 fact="true" status="impl/done">Its own `version`; published independently</ROW-VS-VERSIONING-WORKSPACE-MEMBER-PROP-00></td>
+        <td><ROW-VS-VERSIONING-SUBSKILL-PROP-003-2-5-VI fact="true" status="impl/done">Versioned together with its parent package</ROW-VS-VERSIONING-SUBSKILL-PROP-003-2-5-VI></td>
       </tr>
       <tr>
         <td><ROW-VS-PUBLICATION fact="true" status="impl/done">Publication</ROW-VS-PUBLICATION></td>
-        <td><fact status="impl/done">Becomes its own repository (§2.8)</fact></td>
-        <td><fact status="impl/done">Never published separately</fact></td>
+        <td><ROW-VS-PUBLICATION-WORKSPACE-MEMBER-PROP-00 fact="true" status="impl/done">Becomes its own repository (§2.8)</ROW-VS-PUBLICATION-WORKSPACE-MEMBER-PROP-00></td>
+        <td><ROW-VS-PUBLICATION-SUBSKILL-PROP-003-2-5-VI fact="true" status="impl/done">Never published separately</ROW-VS-PUBLICATION-SUBSKILL-PROP-003-2-5-VI></td>
       </tr>
       <tr>
         <td><ROW-VS-IDENTITY fact="true" status="impl/done">Identity</ROW-VS-IDENTITY></td>
-        <td><fact status="impl/done">Own `(group, name, version, content_hash)`</fact></td>
-        <td><fact status="impl/done">No independent identity</fact></td>
+        <td><ROW-VS-IDENTITY-WORKSPACE-MEMBER-PROP-00 fact="true" status="impl/done">Own `(group, name, version, content_hash)`</ROW-VS-IDENTITY-WORKSPACE-MEMBER-PROP-00></td>
+        <td><ROW-VS-IDENTITY-SUBSKILL-PROP-003-2-5-VI fact="true" status="impl/done">No independent identity</ROW-VS-IDENTITY-SUBSKILL-PROP-003-2-5-VI></td>
       </tr>
     </table>
     <p><MEMBER-VS-SUBSKILL fact="true" status="impl/done">A workspace member is a package. A subskill is content granularity within a package. PROP-007 does not touch the subskill design.</MEMBER-VS-SUBSKILL></p>

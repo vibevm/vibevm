@@ -56,23 +56,23 @@ sequence, many doors — the alternative is N slowly diverging copies.</one-boot
       </tr>
       <tr>
         <td><ROW-PROP-FEAT-HOLDS fact="true" status="impl/done">Holds</ROW-PROP-FEAT-HOLDS></td>
-        <td><fact status="impl/done">standing decisions, contracts, protocol rules</fact></td>
-        <td><fact status="impl/done">one feature slice: scope, plan, acceptance criteria</fact></td>
+        <td><ROW-PROP-FEAT-HOLDS-PROP fact="true" status="impl/done">standing decisions, contracts, protocol rules</ROW-PROP-FEAT-HOLDS-PROP></td>
+        <td><ROW-PROP-FEAT-HOLDS-FEAT fact="true" status="impl/done">one feature slice: scope, plan, acceptance criteria</ROW-PROP-FEAT-HOLDS-FEAT></td>
       </tr>
       <tr>
         <td><ROW-PROP-FEAT-LIFETIME fact="true" status="impl/done">Lifetime</ROW-PROP-FEAT-LIFETIME></td>
-        <td><fact status="impl/done">in force until superseded — never deleted</fact></td>
-        <td><fact status="impl/done">completes and freezes when the slice ships</fact></td>
+        <td><ROW-PROP-FEAT-LIFETIME-PROP fact="true" status="impl/done">in force until superseded — never deleted</ROW-PROP-FEAT-LIFETIME-PROP></td>
+        <td><ROW-PROP-FEAT-LIFETIME-FEAT fact="true" status="impl/done">completes and freezes when the slice ships</ROW-PROP-FEAT-LIFETIME-FEAT></td>
       </tr>
       <tr>
         <td><ROW-PROP-FEAT-CHANGES fact="true" status="impl/done">Changes</ROW-PROP-FEAT-CHANGES></td>
-        <td><fact status="impl/done">rarely; every semantic change is a changelog line</fact></td>
-        <td><fact status="impl/done">freely while active; frozen afterwards</fact></td>
+        <td><ROW-PROP-FEAT-CHANGES-PROP fact="true" status="impl/done">rarely; every semantic change is a changelog line</ROW-PROP-FEAT-CHANGES-PROP></td>
+        <td><ROW-PROP-FEAT-CHANGES-FEAT fact="true" status="impl/done">freely while active; frozen afterwards</ROW-PROP-FEAT-CHANGES-FEAT></td>
       </tr>
       <tr>
         <td><ROW-PROP-FEAT-CITED-BY fact="true" status="impl/done">Cited by</ROW-PROP-FEAT-CITED-BY></td>
-        <td><fact status="impl/done">code markers, commits, other specs — long-lived anchors</fact></td>
-        <td><fact status="impl/done">the WAL and the commits of its own campaign</fact></td>
+        <td><ROW-PROP-FEAT-CITED-BY-PROP fact="true" status="impl/done">code markers, commits, other specs — long-lived anchors</ROW-PROP-FEAT-CITED-BY-PROP></td>
+        <td><ROW-PROP-FEAT-CITED-BY-FEAT fact="true" status="impl/done">the WAL and the commits of its own campaign</ROW-PROP-FEAT-CITED-BY-FEAT></td>
       </tr>
     </table>
     <p><PROP-IS-THE-LAW-FEAT-IS-A-PROJECT-UNDER-IT fact="true" status="impl/done">PROP is the law; FEAT is a project under that law.</PROP-IS-THE-LAW-FEAT-IS-A-PROJECT-UNDER-IT></p>
@@ -92,35 +92,35 @@ the number is part of the URI, and URIs are forever
       </tr>
       <tr>
         <td><ROW-HOME-ARCHITECTURE fact="true" status="impl/done">Architecture, stack, cross-module decision</ROW-HOME-ARCHITECTURE></td>
-        <td><fact status="impl/done">`spec/common/PROP-*`</fact></td>
+        <td><ROW-HOME-ARCHITECTURE-HOME fact="true" status="impl/done">`spec/common/PROP-*`</ROW-HOME-ARCHITECTURE-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-MODULE-CONTRACT fact="true" status="impl/done">One module's contract or invariant</ROW-HOME-MODULE-CONTRACT></td>
-        <td><fact status="impl/done">`spec/modules/&lt;m&gt;/PROP-*`</fact></td>
+        <td><ROW-HOME-MODULE-CONTRACT-HOME fact="true" status="impl/done">`spec/modules/&lt;m&gt;/PROP-*`</ROW-HOME-MODULE-CONTRACT-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-FEATURE-SCOPE fact="true" status="impl/done">A feature's scope and acceptance criteria</ROW-HOME-FEATURE-SCOPE></td>
-        <td><fact status="impl/done">`spec/modules/&lt;m&gt;/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`)</fact></td>
+        <td><ROW-HOME-FEATURE-SCOPE-HOME fact="true" status="impl/done">`spec/modules/&lt;m&gt;/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`)</ROW-HOME-FEATURE-SCOPE-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-NEXT-SESSION-STEP fact="true" status="impl/done">What the next session must do first</ROW-HOME-NEXT-SESSION-STEP></td>
-        <td><fact status="impl/done">`spec/WAL.xml`</fact></td>
+        <td><ROW-HOME-NEXT-SESSION-STEP-HOME fact="true" status="impl/done">`spec/WAL.xml`</ROW-HOME-NEXT-SESSION-STEP-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-SPEC-PROTOCOL fact="true" status="impl/done">How specs are updated, conflict rules</ROW-HOME-SPEC-PROTOCOL></td>
-        <td><fact status="impl/done">protocol docs at the spec root</fact></td>
+        <td><ROW-HOME-SPEC-PROTOCOL-HOME fact="true" status="impl/done">protocol docs at the spec root</ROW-HOME-SPEC-PROTOCOL-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-BOOT-MINIMUM fact="true" status="impl/done">The session-boot minimum</ROW-HOME-BOOT-MINIMUM></td>
-        <td><fact status="impl/done">boot entry file (≤ 500 tokens)</fact></td>
+        <td><ROW-HOME-BOOT-MINIMUM-HOME fact="true" status="impl/done">boot entry file (≤ 500 tokens)</ROW-HOME-BOOT-MINIMUM-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-IMPLEMENTATION-DETAIL fact="true" status="impl/done">Implementation detail (*how*)</ROW-HOME-IMPLEMENTATION-DETAIL></td>
-        <td><fact status="impl/done">code and doc comments — never the spec</fact></td>
+        <td><ROW-HOME-IMPLEMENTATION-DETAIL-HOME fact="true" status="impl/done">code and doc comments — never the spec</ROW-HOME-IMPLEMENTATION-DETAIL-HOME></td>
       </tr>
       <tr>
         <td><ROW-HOME-HUMAN-ONLY-NOTES fact="true" status="impl/done">Copy-paste snippets, human-only reminders</ROW-HOME-HUMAN-ONLY-NOTES></td>
-        <td><fact status="impl/done">`.human/`</fact></td>
+        <td><ROW-HOME-HUMAN-ONLY-NOTES-HOME fact="true" status="impl/done">`.human/`</ROW-HOME-HUMAN-ONLY-NOTES-HOME></td>
       </tr>
     </table>
     <p><CHOOSING-BETWEEN-THE-TWO-HOMES fact="true" status="impl/done">**Choosing between the two homes.** The row above names two

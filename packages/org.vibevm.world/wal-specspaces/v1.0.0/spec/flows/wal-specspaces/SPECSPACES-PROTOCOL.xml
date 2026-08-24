@@ -101,13 +101,13 @@ specspace name.</PHRASES-GAIN-AN-OPTIONAL-SPECSPACE-NAME></p>
       </tr>
       <tr>
         <td><ROW-RESUME-INTO-SPECSPACE fact="true" status="impl/done">resume into specspace</ROW-RESUME-INTO-SPECSPACE></td>
-        <td><fact status="impl/done">`RESUME SESSION &lt;name&gt;`, `RESTORE CONTEXT &lt;name&gt;`</fact></td>
-        <td><fact status="impl/done">`ВОССТАНОВИ СЕССИЮ &lt;name&gt;`, `ПРОДОЛЖАЕМ &lt;name&gt;`</fact></td>
+        <td><ROW-RESUME-INTO-SPECSPACE-ENGLISH fact="true" status="impl/done">`RESUME SESSION &lt;name&gt;`, `RESTORE CONTEXT &lt;name&gt;`</ROW-RESUME-INTO-SPECSPACE-ENGLISH></td>
+        <td><ROW-RESUME-INTO-SPECSPACE-RUSSIAN fact="true" status="impl/done">`ВОССТАНОВИ СЕССИЮ &lt;name&gt;`, `ПРОДОЛЖАЕМ &lt;name&gt;`</ROW-RESUME-INTO-SPECSPACE-RUSSIAN></td>
       </tr>
       <tr>
         <td><ROW-WIND-DOWN-SPECSPACE fact="true" status="impl/done">wind down specspace</ROW-WIND-DOWN-SPECSPACE></td>
-        <td><fact status="impl/done">`END SESSION &lt;name&gt;`, `WRAP UP &lt;name&gt;`</fact></td>
-        <td><fact status="impl/done">`ЗАВЕРШИ СЕССИЮ &lt;name&gt;`, `ФИКСИРУЕМ &lt;name&gt;`</fact></td>
+        <td><ROW-WIND-DOWN-SPECSPACE-ENGLISH fact="true" status="impl/done">`END SESSION &lt;name&gt;`, `WRAP UP &lt;name&gt;`</ROW-WIND-DOWN-SPECSPACE-ENGLISH></td>
+        <td><ROW-WIND-DOWN-SPECSPACE-RUSSIAN fact="true" status="impl/done">`ЗАВЕРШИ СЕССИЮ &lt;name&gt;`, `ФИКСИРУЕМ &lt;name&gt;`</ROW-WIND-DOWN-SPECSPACE-RUSSIAN></td>
       </tr>
     </table>
     <p><THE-NAME-IS-OPTIONAL fact="true" status="impl/done">The name is optional; [target resolution](#resolve) decides what a

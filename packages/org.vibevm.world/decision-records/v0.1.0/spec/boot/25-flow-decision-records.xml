@@ -19,19 +19,19 @@ gets a **four-field record at the spec anchor that governs the value**:</ANY-REO
       </tr>
       <tr>
         <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
-        <td><fact status="impl/done">The chosen value or approach. One line.</fact></td>
+        <td><ROW-FIELD-DECISION-REQUIREMENT fact="true" status="impl/done">The chosen value or approach. One line.</ROW-FIELD-DECISION-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
-        <td><fact status="impl/done">Concrete and cited: a measurement, a constraint, an incident — with data.</fact></td>
+        <td><ROW-FIELD-WHY-REQUIREMENT fact="true" status="impl/done">Concrete and cited: a measurement, a constraint, an incident — with data.</ROW-FIELD-WHY-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
-        <td><fact status="impl/done">One line per alternative, each carrying its rejection reason.</fact></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT fact="true" status="impl/done">One line per alternative, each carrying its rejection reason.</ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
-        <td><fact status="impl/done">A measurable trigger: metric + threshold + where it is observed.</fact></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT fact="true" status="impl/done">A measurable trigger: metric + threshold + where it is observed.</ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT></td>
       </tr>
     </table>
     <p><NO-SEPARATE-ADR-DIRECTORY fact="true" status="impl/done">There is no separate ADR directory and no immutable numbered log.</NO-SEPARATE-ADR-DIRECTORY></p>

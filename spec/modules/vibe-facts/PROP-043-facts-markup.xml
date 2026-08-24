@@ -123,38 +123,38 @@ documents — the frontend duality of PROP-035 §5):</STATUS-ELEMENT></p>
         </tr>
         <tr>
           <td><ROW-ATTR-STAGE fact="true" status="impl/done">`stage`</ROW-ATTR-STAGE></td>
-          <td><fact status="impl/done">yes</fact></td>
-          <td><fact status="impl/done">`idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown`</fact></td>
+          <td><ROW-ATTR-STAGE-REQUIRED fact="true" status="impl/done">yes</ROW-ATTR-STAGE-REQUIRED></td>
+          <td><ROW-ATTR-STAGE-VALUES fact="true" status="impl/done">`idea` · `spec` · `impl` · `test` · `doc` · `freeze` · `unknown`</ROW-ATTR-STAGE-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-STATE fact="true" status="impl/done">`state`</ROW-ATTR-STATE></td>
-          <td><fact status="impl/done">yes</fact></td>
-          <td><fact status="impl/done">`plan` · `work` · `done` · `hold` · `void`</fact></td>
+          <td><ROW-ATTR-STATE-REQUIRED fact="true" status="impl/done">yes</ROW-ATTR-STATE-REQUIRED></td>
+          <td><ROW-ATTR-STATE-VALUES fact="true" status="impl/done">`plan` · `work` · `done` · `hold` · `void`</ROW-ATTR-STATE-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-ACTION fact="true" status="impl/done">`action`</ROW-ATTR-ACTION></td>
-          <td><fact status="impl/done">no</fact></td>
-          <td><fact status="impl/done">`continue` · `drift` · `rework` · `remove`</fact></td>
+          <td><ROW-ATTR-ACTION-REQUIRED fact="true" status="impl/done">no</ROW-ATTR-ACTION-REQUIRED></td>
+          <td><ROW-ATTR-ACTION-VALUES fact="true" status="impl/done">`continue` · `drift` · `rework` · `remove`</ROW-ATTR-ACTION-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-ACTIONSTAGE fact="true" status="impl/done">`actionstage`</ROW-ATTR-ACTIONSTAGE></td>
-          <td><fact status="impl/done">no</fact></td>
-          <td><fact status="impl/done">any `stage` value; absent ⇒ the action targets `stage`</fact></td>
+          <td><ROW-ATTR-ACTIONSTAGE-REQUIRED fact="true" status="impl/done">no</ROW-ATTR-ACTIONSTAGE-REQUIRED></td>
+          <td><ROW-ATTR-ACTIONSTAGE-VALUES fact="true" status="impl/done">any `stage` value; absent ⇒ the action targets `stage`</ROW-ATTR-ACTIONSTAGE-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-AUDIENCE fact="true" status="impl/done">`audience`</ROW-ATTR-AUDIENCE></td>
-          <td><fact status="impl/done">no</fact></td>
-          <td><fact status="impl/done">CSV of `user` · `author` · `dev`; absent ⇒ `dev`</fact></td>
+          <td><ROW-ATTR-AUDIENCE-REQUIRED fact="true" status="impl/done">no</ROW-ATTR-AUDIENCE-REQUIRED></td>
+          <td><ROW-ATTR-AUDIENCE-VALUES fact="true" status="impl/done">CSV of `user` · `author` · `dev`; absent ⇒ `dev`</ROW-ATTR-AUDIENCE-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-COMMENT fact="true" status="impl/done">`comment`</ROW-ATTR-COMMENT></td>
-          <td><fact status="impl/done">no</fact></td>
-          <td><fact status="impl/done">free text</fact></td>
+          <td><ROW-ATTR-COMMENT-REQUIRED fact="true" status="impl/done">no</ROW-ATTR-COMMENT-REQUIRED></td>
+          <td><ROW-ATTR-COMMENT-VALUES fact="true" status="impl/done">free text</ROW-ATTR-COMMENT-VALUES></td>
         </tr>
         <tr>
           <td><ROW-ATTR-REF fact="true" status="impl/done">`ref`</ROW-ATTR-REF></td>
-          <td><fact status="impl/done">no</fact></td>
-          <td><fact status="impl/done">`spec://…` URI, path, or task id (e.g. `DRIFT-012`)</fact></td>
+          <td><ROW-ATTR-REF-REQUIRED fact="true" status="impl/done">no</ROW-ATTR-REF-REQUIRED></td>
+          <td><ROW-ATTR-REF-VALUES fact="true" status="impl/done">`spec://…` URI, path, or task id (e.g. `DRIFT-012`)</ROW-ATTR-REF-VALUES></td>
         </tr>
       </table>
       <facts ordered="false">

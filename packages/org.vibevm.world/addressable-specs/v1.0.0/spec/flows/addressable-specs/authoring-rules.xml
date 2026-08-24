@@ -56,23 +56,23 @@ everything without such a verb is explanation, not obligation.</CONTRACT-STATEME
       </tr>
       <tr>
         <td><ROW-KIND-DECISION fact="true" status="impl/done">decision</ROW-KIND-DECISION></td>
-        <td><fact status="impl/done">a choice plus its rationale (*why*)</fact></td>
-        <td><fact status="impl/done">the choice binds; the rationale does not</fact></td>
+        <td><ROW-KIND-DECISION-CARRIES fact="true" status="impl/done">a choice plus its rationale (*why*)</ROW-KIND-DECISION-CARRIES></td>
+        <td><ROW-KIND-DECISION-BINDS fact="true" status="impl/done">the choice binds; the rationale does not</ROW-KIND-DECISION-BINDS></td>
       </tr>
       <tr>
         <td><ROW-KIND-CONTRACT fact="true" status="impl/done">contract</ROW-KIND-CONTRACT></td>
-        <td><fact status="impl/done">a normative requirement (MUST / SHOULD / MAY)</fact></td>
-        <td><fact status="impl/done">yes</fact></td>
+        <td><ROW-KIND-CONTRACT-CARRIES fact="true" status="impl/done">a normative requirement (MUST / SHOULD / MAY)</ROW-KIND-CONTRACT-CARRIES></td>
+        <td><ROW-KIND-CONTRACT-BINDS fact="true" status="impl/done">yes</ROW-KIND-CONTRACT-BINDS></td>
       </tr>
       <tr>
         <td><ROW-KIND-DESIGN fact="true" status="impl/done">design</ROW-KIND-DESIGN></td>
-        <td><fact status="impl/done">the shape of a solution (*how*, provisional)</fact></td>
-        <td><fact status="impl/done">no</fact></td>
+        <td><ROW-KIND-DESIGN-CARRIES fact="true" status="impl/done">the shape of a solution (*how*, provisional)</ROW-KIND-DESIGN-CARRIES></td>
+        <td><ROW-KIND-DESIGN-BINDS fact="true" status="impl/done">no</ROW-KIND-DESIGN-BINDS></td>
       </tr>
       <tr>
         <td><ROW-KIND-GUIDE fact="true" status="impl/done">guide</ROW-KIND-GUIDE></td>
-        <td><fact status="impl/done">usage documentation</fact></td>
-        <td><fact status="impl/done">no</fact></td>
+        <td><ROW-KIND-GUIDE-CARRIES fact="true" status="impl/done">usage documentation</ROW-KIND-GUIDE-CARRIES></td>
+        <td><ROW-KIND-GUIDE-BINDS fact="true" status="impl/done">no</ROW-KIND-GUIDE-BINDS></td>
       </tr>
     </table>
     <p><MARK-THE-KIND-WHERE-AMBIGUITY-IS-POSSIBLE fact="true" status="impl/done">Mark the kind where ambiguity is possible — a one-line note under the
@@ -142,18 +142,18 @@ tax multiplied by the number of sessions the project will ever run.</control-pla
       </tr>
       <tr>
         <td><ROW-BUDGET-BOOT-FILE fact="true" status="impl/done">Boot file, authored (always loaded)</ROW-BUDGET-BOOT-FILE></td>
-        <td><fact status="impl/done">≤ 500 tokens</fact></td>
-        <td><fact status="impl/done">cut; move detail into flow docs and cite</fact></td>
+        <td><ROW-BUDGET-BOOT-FILE-BUDGET fact="true" status="impl/done">≤ 500 tokens</ROW-BUDGET-BOOT-FILE-BUDGET></td>
+        <td><ROW-BUDGET-BOOT-FILE-WHEN-OVER fact="true" status="impl/done">cut; move detail into flow docs and cite</ROW-BUDGET-BOOT-FILE-WHEN-OVER></td>
       </tr>
       <tr>
         <td><ROW-BUDGET-WAL fact="true" status="impl/done">WAL / continuation state</ROW-BUDGET-WAL></td>
-        <td><fact status="impl/done">≤ 3000 tokens</fact></td>
-        <td><fact status="impl/done">collapse completed items to one line each</fact></td>
+        <td><ROW-BUDGET-WAL-BUDGET fact="true" status="impl/done">≤ 3000 tokens</ROW-BUDGET-WAL-BUDGET></td>
+        <td><ROW-BUDGET-WAL-WHEN-OVER fact="true" status="impl/done">collapse completed items to one line each</ROW-BUDGET-WAL-WHEN-OVER></td>
       </tr>
       <tr>
         <td><ROW-BUDGET-MODULE-SPEC fact="true" status="impl/done">One module spec document</ROW-BUDGET-MODULE-SPEC></td>
-        <td><fact status="impl/done">≤ 5000 tokens</fact></td>
-        <td><fact status="impl/done">split into submodules</fact></td>
+        <td><ROW-BUDGET-MODULE-SPEC-BUDGET fact="true" status="impl/done">≤ 5000 tokens</ROW-BUDGET-MODULE-SPEC-BUDGET></td>
+        <td><ROW-BUDGET-MODULE-SPEC-WHEN-OVER fact="true" status="impl/done">split into submodules</ROW-BUDGET-MODULE-SPEC-WHEN-OVER></td>
       </tr>
     </table>
     <p><BUDGETS-GOVERN-AUTHORED-DOCUMENTS-ONLY fact="true" status="impl/done">Every budget above governs an

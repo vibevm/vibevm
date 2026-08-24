@@ -32,19 +32,19 @@ have pushed in a single-host project:</not-after-every-commit></p>
       </tr>
       <tr>
         <td><ROW-MOMENT-FINISHED-A-FEATURE-SLICE fact="true" status="impl/done">Finished a feature slice</ROW-MOMENT-FINISHED-A-FEATURE-SLICE></td>
-        <td><fact status="impl/done">Fan out</fact></td>
+        <td><ROW-MOMENT-FINISHED-A-FEATURE-SLICE-ACTION fact="true" status="impl/done">Fan out</ROW-MOMENT-FINISHED-A-FEATURE-SLICE-ACTION></td>
       </tr>
       <tr>
         <td><ROW-MOMENT-CUT-A-RELEASE fact="true" status="impl/done">Cut a release / tag</ROW-MOMENT-CUT-A-RELEASE></td>
-        <td><fact status="impl/done">Fan out (tags travel with `main`)</fact></td>
+        <td><ROW-MOMENT-CUT-A-RELEASE-ACTION fact="true" status="impl/done">Fan out (tags travel with `main`)</ROW-MOMENT-CUT-A-RELEASE-ACTION></td>
       </tr>
       <tr>
         <td><ROW-MOMENT-END-OF-A-WORK-SESSION fact="true" status="impl/done">End of a work session</ROW-MOMENT-END-OF-A-WORK-SESSION></td>
-        <td><fact status="impl/done">Fan out as the wind-down step</fact></td>
+        <td><ROW-MOMENT-END-OF-A-WORK-SESSION-ACTION fact="true" status="impl/done">Fan out as the wind-down step</ROW-MOMENT-END-OF-A-WORK-SESSION-ACTION></td>
       </tr>
       <tr>
         <td><ROW-MOMENT-BEFORE-STEPPING-AWAY fact="true" status="impl/done">Before stepping away for a while</ROW-MOMENT-BEFORE-STEPPING-AWAY></td>
-        <td><fact status="impl/done">`--check`, then fan out if behind</fact></td>
+        <td><ROW-MOMENT-BEFORE-STEPPING-AWAY-ACTION fact="true" status="impl/done">`--check`, then fan out if behind</ROW-MOMENT-BEFORE-STEPPING-AWAY-ACTION></td>
       </tr>
     </table>
     <fence lang="sh"># ... a session's worth of commits on mainline ...

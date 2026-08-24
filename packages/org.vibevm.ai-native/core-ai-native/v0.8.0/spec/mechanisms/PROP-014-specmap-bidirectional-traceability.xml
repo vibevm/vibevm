@@ -94,23 +94,23 @@ spec://&lt;package&gt;/&lt;doc-path&gt;#&lt;anchor&gt;~r&lt;N&gt;       — a un
         </tr>
         <tr>
           <td><ROW-KIND-PROP fact="true" status="impl/done">`prop`</ROW-KIND-PROP></td>
-          <td><fact status="impl/done">a decision + rationale ("why")</fact></td>
-          <td><fact status="impl/done">`decides`, referenced by REQs — *Specified, not built: `decides` is not a verb this system can emit. The `Verb` enum in `specmark-grammar` is `Implements · Verifies · Documents · Deviates · Informs`, and its own doctest states the verb set is closed (`Verb::parse("fulfills") == None`); `decides` returns zero hits across every crate. The `prop` kind itself parses fine (`mdspec.rs:78`) — it is the edge verb that has no producer, so a decision can be a node and never the tail of the edge this cell names.* @status:spec/done</fact></td>
+          <td><ROW-KIND-PROP-CARRIES fact="true" status="impl/done">a decision + rationale ("why")</ROW-KIND-PROP-CARRIES></td>
+          <td><ROW-KIND-PROP-TYPICAL-EDGES fact="true" status="impl/done">`decides`, referenced by REQs — *Specified, not built: `decides` is not a verb this system can emit. The `Verb` enum in `specmark-grammar` is `Implements · Verifies · Documents · Deviates · Informs`, and its own doctest states the verb set is closed (`Verb::parse("fulfills") == None`); `decides` returns zero hits across every crate. The `prop` kind itself parses fine (`mdspec.rs:78`) — it is the edge verb that has no producer, so a decision can be a node and never the tail of the edge this cell names.* @status:spec/done</ROW-KIND-PROP-TYPICAL-EDGES></td>
         </tr>
         <tr>
           <td><ROW-KIND-REQ fact="true" status="impl/done">`req`</ROW-KIND-REQ></td>
-          <td><fact status="impl/done">a normative contract (RFC-2119 MUST/SHOULD/MAY)</fact></td>
-          <td><fact status="impl/done">`implements`, `verifies`</fact></td>
+          <td><ROW-KIND-REQ-CARRIES fact="true" status="impl/done">a normative contract (RFC-2119 MUST/SHOULD/MAY)</ROW-KIND-REQ-CARRIES></td>
+          <td><ROW-KIND-REQ-TYPICAL-EDGES fact="true" status="impl/done">`implements`, `verifies`</ROW-KIND-REQ-TYPICAL-EDGES></td>
         </tr>
         <tr>
           <td><ROW-KIND-DESIGN fact="true" status="impl/done">`design`</ROW-KIND-DESIGN></td>
-          <td><fact status="impl/done">shape of a solution ("how", non-binding)</fact></td>
-          <td><fact status="impl/done">`informs`</fact></td>
+          <td><ROW-KIND-DESIGN-CARRIES fact="true" status="impl/done">shape of a solution ("how", non-binding)</ROW-KIND-DESIGN-CARRIES></td>
+          <td><ROW-KIND-DESIGN-TYPICAL-EDGES fact="true" status="impl/done">`informs`</ROW-KIND-DESIGN-TYPICAL-EDGES></td>
         </tr>
         <tr>
           <td><ROW-KIND-GUIDE fact="true" status="impl/done">`guide`</ROW-KIND-GUIDE></td>
-          <td><fact status="impl/done">usage documentation</fact></td>
-          <td><fact status="impl/done">`documents`</fact></td>
+          <td><ROW-KIND-GUIDE-CARRIES fact="true" status="impl/done">usage documentation</ROW-KIND-GUIDE-CARRIES></td>
+          <td><ROW-KIND-GUIDE-TYPICAL-EDGES fact="true" status="impl/done">`documents`</ROW-KIND-GUIDE-TYPICAL-EDGES></td>
         </tr>
       </table>
       <p><unit-declares-normativity-with-a-kind-line fact="true" status="impl/done">A unit declares normativity with a one-line marker directly under its heading:</unit-declares-normativity-with-a-kind-line></p>
@@ -349,43 +349,43 @@ crates/vibe-resolver and the proposals file.</fence>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-OPENFASTTRACE fact="true" status="spec/done">OpenFastTrace</ROW-PRIOR-ART-OPENFASTTRACE></td>
-        <td><fact status="spec/done">GPL-3.0</fact></td>
-        <td><fact status="spec/done">**Study only.** Borrowed *ideas*: artifact-type chains (req→dsn→impl→utest), `~rev` semantics, coverage states. No code, no linkage.</fact></td>
+        <td><ROW-PRIOR-ART-OPENFASTTRACE-LICENSE-VERIFY fact="true" status="spec/done">GPL-3.0</ROW-PRIOR-ART-OPENFASTTRACE-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-OPENFASTTRACE-ROLE-HERE fact="true" status="spec/done">**Study only.** Borrowed *ideas*: artifact-type chains (req→dsn→impl→utest), `~rev` semantics, coverage states. No code, no linkage.</ROW-PRIOR-ART-OPENFASTTRACE-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-STRICTDOC fact="true" status="spec/done">strictdoc</ROW-PRIOR-ART-STRICTDOC></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">Friendly. Grammar/UI patterns for requirement documents.</fact></td>
+        <td><ROW-PRIOR-ART-STRICTDOC-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</ROW-PRIOR-ART-STRICTDOC-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-STRICTDOC-ROLE-HERE fact="true" status="spec/done">Friendly. Grammar/UI patterns for requirement documents.</ROW-PRIOR-ART-STRICTDOC-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-DOORSTOP fact="true" status="spec/done">Doorstop</ROW-PRIOR-ART-DOORSTOP></td>
-        <td><fact status="spec/done">LGPL-3.0</fact></td>
-        <td><fact status="spec/done">Wrapper-zone per policy if ever executed; borrowed *idea*: reviewed-hash stamps (our two-tier revisions).</fact></td>
+        <td><ROW-PRIOR-ART-DOORSTOP-LICENSE-VERIFY fact="true" status="spec/done">LGPL-3.0</ROW-PRIOR-ART-DOORSTOP-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-DOORSTOP-ROLE-HERE fact="true" status="spec/done">Wrapper-zone per policy if ever executed; borrowed *idea*: reviewed-hash stamps (our two-tier revisions).</ROW-PRIOR-ART-DOORSTOP-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-SPHINX-NEEDS fact="true" status="spec/done">Sphinx-needs</ROW-PRIOR-ART-SPHINX-NEEDS></td>
-        <td><fact status="spec/done">MIT</fact></td>
-        <td><fact status="spec/done">Friendly. Typed needs/links, filter queries.</fact></td>
+        <td><ROW-PRIOR-ART-SPHINX-NEEDS-LICENSE-VERIFY fact="true" status="spec/done">MIT</ROW-PRIOR-ART-SPHINX-NEEDS-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-SPHINX-NEEDS-ROLE-HERE fact="true" status="spec/done">Friendly. Typed needs/links, filter queries.</ROW-PRIOR-ART-SPHINX-NEEDS-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-DO-178C fact="true" status="spec/done">DO-178C / DOORS culture</ROW-PRIOR-ART-DO-178C></td>
-        <td><fact status="spec/done">n/a (standards)</fact></td>
-        <td><fact status="spec/done">The cautionary tale §1.1 is built on: traceability that is audited but not load-bearing dies.</fact></td>
+        <td><ROW-PRIOR-ART-DO-178C-LICENSE-VERIFY fact="true" status="spec/done">n/a (standards)</ROW-PRIOR-ART-DO-178C-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-DO-178C-ROLE-HERE fact="true" status="spec/done">The cautionary tale §1.1 is built on: traceability that is audited but not load-bearing dies.</ROW-PRIOR-ART-DO-178C-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-SOURCE-MAPS fact="true" status="spec/done">JS source maps / DWARF</ROW-PRIOR-ART-SOURCE-MAPS></td>
-        <td><fact status="spec/done">n/a</fact></td>
-        <td><fact status="spec/done">The analogy and its precise failure point (§1.1).</fact></td>
+        <td><ROW-PRIOR-ART-SOURCE-MAPS-LICENSE-VERIFY fact="true" status="spec/done">n/a</ROW-PRIOR-ART-SOURCE-MAPS-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-SOURCE-MAPS-ROLE-HERE fact="true" status="spec/done">The analogy and its precise failure point (§1.1).</ROW-PRIOR-ART-SOURCE-MAPS-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-SYN-TREE-SITTER fact="true" status="spec/done">syn / tree-sitter *(`syn` is the live scanner dependency — `Cargo.toml:44`; tree-sitter is in no manifest in this repository.)*</ROW-PRIOR-ART-SYN-TREE-SITTER></td>
-        <td><fact status="spec/done">MIT/Apache-2.0; MIT</fact></td>
-        <td><fact status="spec/done">Implementation dependencies for the scanner.</fact></td>
+        <td><ROW-PRIOR-ART-SYN-TREE-SITTER-LICENSE-VERIFY fact="true" status="spec/done">MIT/Apache-2.0; MIT</ROW-PRIOR-ART-SYN-TREE-SITTER-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-SYN-TREE-SITTER-ROLE-HERE fact="true" status="spec/done">Implementation dependencies for the scanner.</ROW-PRIOR-ART-SYN-TREE-SITTER-ROLE-HERE></td>
       </tr>
       <tr>
         <td><ROW-PRIOR-ART-SIGSTORE fact="true" status="spec/done">sigstore</ROW-PRIOR-ART-SIGSTORE></td>
-        <td><fact status="spec/done">Apache-2.0</fact></td>
-        <td><fact status="spec/done">Default candidate for §2.8.4 signing.</fact></td>
+        <td><ROW-PRIOR-ART-SIGSTORE-LICENSE-VERIFY fact="true" status="spec/done">Apache-2.0</ROW-PRIOR-ART-SIGSTORE-LICENSE-VERIFY></td>
+        <td><ROW-PRIOR-ART-SIGSTORE-ROLE-HERE fact="true" status="spec/done">Default candidate for §2.8.4 signing.</ROW-PRIOR-ART-SIGSTORE-ROLE-HERE></td>
       </tr>
     </table>
     <p><differentiators-lead fact="true" status="impl/done">**Differentiators vs. classical requirements traceability:**</differentiators-lead></p>

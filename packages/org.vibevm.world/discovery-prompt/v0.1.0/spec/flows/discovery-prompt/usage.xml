@@ -74,58 +74,58 @@ send a long first message to an LLM.</WORKS-IN-CHAT-PRODUCTS-AND-AGENT-CLIS></p>
       </tr>
       <tr>
         <td><ROW-PIECE-PRIMARY-HYPOTHESIS fact="true" status="impl/done">`PrimaryHypothesis`</ROW-PIECE-PRIMARY-HYPOTHESIS></td>
-        <td><fact status="impl/done">grammar field</fact></td>
-        <td><fact status="impl/done">The main response, with an explicit 0.0–1.0 confidence estimate.</fact></td>
+        <td><ROW-PIECE-PRIMARY-HYPOTHESIS-KIND fact="true" status="impl/done">grammar field</ROW-PIECE-PRIMARY-HYPOTHESIS-KIND></td>
+        <td><ROW-PIECE-PRIMARY-HYPOTHESIS-EFFECT fact="true" status="impl/done">The main response, with an explicit 0.0–1.0 confidence estimate.</ROW-PIECE-PRIMARY-HYPOTHESIS-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-ALTERNATIVE-INTERPRETATIONS fact="true" status="impl/done">`AlternativeInterpretations`</ROW-PIECE-ALTERNATIVE-INTERPRETATIONS></td>
-        <td><fact status="impl/done">grammar field</fact></td>
-        <td><fact status="impl/done">Two or three genuinely different readings of the problem, every turn.</fact></td>
+        <td><ROW-PIECE-ALTERNATIVE-INTERPRETATIONS-KIND fact="true" status="impl/done">grammar field</ROW-PIECE-ALTERNATIVE-INTERPRETATIONS-KIND></td>
+        <td><ROW-PIECE-ALTERNATIVE-INTERPRETATIONS-EFFECT fact="true" status="impl/done">Two or three genuinely different readings of the problem, every turn.</ROW-PIECE-ALTERNATIVE-INTERPRETATIONS-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-META-REFLECTION fact="true" status="impl/done">`MetaReflection`</ROW-PIECE-META-REFLECTION></td>
-        <td><fact status="impl/done">grammar field</fact></td>
-        <td><fact status="impl/done">A note on the computational approach ("Am I pattern-matching or reasoning?") plus conversation dynamics and forward directions.</fact></td>
+        <td><ROW-PIECE-META-REFLECTION-KIND fact="true" status="impl/done">grammar field</ROW-PIECE-META-REFLECTION-KIND></td>
+        <td><ROW-PIECE-META-REFLECTION-EFFECT fact="true" status="impl/done">A note on the computational approach ("Am I pattern-matching or reasoning?") plus conversation dynamics and forward directions.</ROW-PIECE-META-REFLECTION-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-ADVERSARIAL-AMPLIFICATION fact="true" status="impl/done">ADVERSARIAL AMPLIFICATION</ROW-PIECE-ADVERSARIAL-AMPLIFICATION></td>
-        <td><fact status="impl/done">standing rule</fact></td>
-        <td><fact status="impl/done">At least one substantive self-objection before finalizing, from a different level of analysis; a missing objection is itself a diagnostic (see below).</fact></td>
+        <td><ROW-PIECE-ADVERSARIAL-AMPLIFICATION-KIND fact="true" status="impl/done">standing rule</ROW-PIECE-ADVERSARIAL-AMPLIFICATION-KIND></td>
+        <td><ROW-PIECE-ADVERSARIAL-AMPLIFICATION-EFFECT fact="true" status="impl/done">At least one substantive self-objection before finalizing, from a different level of analysis; a missing objection is itself a diagnostic (see below).</ROW-PIECE-ADVERSARIAL-AMPLIFICATION-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-VARIABLES fact="true" status="impl/done">`&lt;VARIABLES&gt;`</ROW-PIECE-VARIABLES></td>
-        <td><fact status="impl/done">macro block</fact></td>
-        <td><fact status="impl/done">Names the target model; macro-replaced through the `MAIN` and `EXTENSION` blocks.</fact></td>
+        <td><ROW-PIECE-VARIABLES-KIND fact="true" status="impl/done">macro block</ROW-PIECE-VARIABLES-KIND></td>
+        <td><ROW-PIECE-VARIABLES-EFFECT fact="true" status="impl/done">Names the target model; macro-replaced through the `MAIN` and `EXTENSION` blocks.</ROW-PIECE-VARIABLES-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-EXTENSION-USER-INFO fact="true" status="impl/done">`&lt;EXTENSION_USER_INFO&gt;`</ROW-PIECE-EXTENSION-USER-INFO></td>
-        <td><fact status="impl/done">extension</fact></td>
-        <td><fact status="impl/done">Who the human is — background, stack, current focus. The model calibrates depth against it. Always on.</fact></td>
+        <td><ROW-PIECE-EXTENSION-USER-INFO-KIND fact="true" status="impl/done">extension</ROW-PIECE-EXTENSION-USER-INFO-KIND></td>
+        <td><ROW-PIECE-EXTENSION-USER-INFO-EFFECT fact="true" status="impl/done">Who the human is — background, stack, current focus. The model calibrates depth against it. Always on.</ROW-PIECE-EXTENSION-USER-INFO-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE fact="true" status="impl/done">`&lt;EXTENSION_PREFERRED_LANGUAGE&gt;`</ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE></td>
-        <td><fact status="impl/done">extension</fact></td>
-        <td><fact status="impl/done">Mirror the language of the last prompt, natural and programming alike; translate protocol terms into established equivalents, not calques.</fact></td>
+        <td><ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE-KIND fact="true" status="impl/done">extension</ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE-KIND></td>
+        <td><ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE-EFFECT fact="true" status="impl/done">Mirror the language of the last prompt, natural and programming alike; translate protocol terms into established equivalents, not calques.</ROW-PIECE-EXTENSION-PREFERRED-LANGUAGE-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-EXTENSION-SUPERTHINK fact="true" status="impl/done">`&lt;EXTENSION_SUPERTHINK&gt;`</ROW-PIECE-EXTENSION-SUPERTHINK></td>
-        <td><fact status="impl/done">extension</fact></td>
-        <td><fact status="impl/done">`#superthink` — maximum-effort thinking for one prompt. Off unless the hashtag appears.</fact></td>
+        <td><ROW-PIECE-EXTENSION-SUPERTHINK-KIND fact="true" status="impl/done">extension</ROW-PIECE-EXTENSION-SUPERTHINK-KIND></td>
+        <td><ROW-PIECE-EXTENSION-SUPERTHINK-EFFECT fact="true" status="impl/done">`#superthink` — maximum-effort thinking for one prompt. Off unless the hashtag appears.</ROW-PIECE-EXTENSION-SUPERTHINK-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES fact="true" status="impl/done">`&lt;EXTENSION_OPEN_SOURCE_LICENSES&gt;`</ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES></td>
-        <td><fact status="impl/done">extension</fact></td>
-        <td><fact status="impl/done">Licensing policy for recommendations: permissive-first, viral licenses flagged and given workarounds.</fact></td>
+        <td><ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES-KIND fact="true" status="impl/done">extension</ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES-KIND></td>
+        <td><ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES-EFFECT fact="true" status="impl/done">Licensing policy for recommendations: permissive-first, viral licenses flagged and given workarounds.</ROW-PIECE-EXTENSION-OPEN-SOURCE-LICENSES-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-EXTENSION-CRITICALITY fact="true" status="impl/done">`&lt;EXTENSION_CRITICALITY&gt;`</ROW-PIECE-EXTENSION-CRITICALITY></td>
-        <td><fact status="impl/done">extension</fact></td>
-        <td><fact status="impl/done">The intensity machinery: `#hot` / `#cold` / `#reboil` knobs, an always-on annealing triage, and the anti-costume test.</fact></td>
+        <td><ROW-PIECE-EXTENSION-CRITICALITY-KIND fact="true" status="impl/done">extension</ROW-PIECE-EXTENSION-CRITICALITY-KIND></td>
+        <td><ROW-PIECE-EXTENSION-CRITICALITY-EFFECT fact="true" status="impl/done">The intensity machinery: `#hot` / `#cold` / `#reboil` knobs, an always-on annealing triage, and the anti-costume test.</ROW-PIECE-EXTENSION-CRITICALITY-EFFECT></td>
       </tr>
       <tr>
         <td><ROW-PIECE-LICENSE fact="true" status="impl/done">`&lt;LICENSE&gt;`</ROW-PIECE-LICENSE></td>
-        <td><fact status="impl/done">terms</fact></td>
-        <td><fact status="impl/done">UPL-1.0. Removable when you use the prompt privately; **not** removable when you distribute the text.</fact></td>
+        <td><ROW-PIECE-LICENSE-KIND fact="true" status="impl/done">terms</ROW-PIECE-LICENSE-KIND></td>
+        <td><ROW-PIECE-LICENSE-EFFECT fact="true" status="impl/done">UPL-1.0. Removable when you use the prompt privately; **not** removable when you distribute the text.</ROW-PIECE-LICENSE-EFFECT></td>
       </tr>
     </table>
   </pieces>

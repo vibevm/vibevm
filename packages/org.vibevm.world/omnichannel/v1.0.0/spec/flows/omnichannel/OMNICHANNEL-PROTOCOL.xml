@@ -37,23 +37,23 @@ campaign plans, source mirrors.</IT-IS-INSTALLED-BY-CHOICE></p>
       </tr>
       <tr>
         <td><ROW-CLASS-LIBRARY fact="true" status="impl/done">**library**</ROW-CLASS-LIBRARY></td>
-        <td><fact status="impl/done">—</fact></td>
-        <td><fact status="impl/done">not a surface; what the others sit on. Mandatory once there is more than one surface</fact></td>
+        <td><ROW-CLASS-LIBRARY-SURFACES fact="true" status="impl/done">—</ROW-CLASS-LIBRARY-SURFACES></td>
+        <td><ROW-CLASS-LIBRARY-WHAT-THE-CLASS-SHARES fact="true" status="impl/done">not a surface; what the others sit on. Mandatory once there is more than one surface</ROW-CLASS-LIBRARY-WHAT-THE-CLASS-SHARES></td>
       </tr>
       <tr>
         <td><ROW-CLASS-LOCAL fact="true" status="impl/done">**local, synchronous**</ROW-CLASS-LOCAL></td>
-        <td><fact status="impl/done">CLI · TUI · GUI</fact></td>
-        <td><fact status="impl/done">rendering one dataset into different views for a human present at the machine</fact></td>
+        <td><ROW-CLASS-LOCAL-SURFACES fact="true" status="impl/done">CLI · TUI · GUI</ROW-CLASS-LOCAL-SURFACES></td>
+        <td><ROW-CLASS-LOCAL-WHAT-THE-CLASS-SHARES fact="true" status="impl/done">rendering one dataset into different views for a human present at the machine</ROW-CLASS-LOCAL-WHAT-THE-CLASS-SHARES></td>
       </tr>
       <tr>
         <td><ROW-CLASS-AGENT fact="true" status="impl/done">**agent-facing**</ROW-CLASS-AGENT></td>
-        <td><fact status="impl/done">MCP · LSP · IDE extension</fact></td>
-        <td><fact status="impl/done">tool description, schema, and what an agent can discover without being told</fact></td>
+        <td><ROW-CLASS-AGENT-SURFACES fact="true" status="impl/done">MCP · LSP · IDE extension</ROW-CLASS-AGENT-SURFACES></td>
+        <td><ROW-CLASS-AGENT-WHAT-THE-CLASS-SHARES fact="true" status="impl/done">tool description, schema, and what an agent can discover without being told</ROW-CLASS-AGENT-WHAT-THE-CLASS-SHARES></td>
       </tr>
       <tr>
         <td><ROW-CLASS-NETWORKED fact="true" status="impl/done">**networked**</ROW-CLASS-NETWORKED></td>
-        <td><fact status="impl/done">REST · GraphQL · Queue</fact></td>
-        <td><fact status="impl/done">contract versioning and compatibility with clients you do not deploy</fact></td>
+        <td><ROW-CLASS-NETWORKED-SURFACES fact="true" status="impl/done">REST · GraphQL · Queue</ROW-CLASS-NETWORKED-SURFACES></td>
+        <td><ROW-CLASS-NETWORKED-WHAT-THE-CLASS-SHARES fact="true" status="impl/done">contract versioning and compatibility with clients you do not deploy</ROW-CLASS-NETWORKED-WHAT-THE-CLASS-SHARES></td>
       </tr>
     </table>
     <p><THE-CLASS-IS-THE-USEFUL-UNIT fact="true" status="impl/done">The class, not the individual surface, is the useful unit: it decides

@@ -40,18 +40,18 @@ deltas-not-decrees law
       </tr>
       <tr>
         <td><ROW-VERDICT-ACCEPT fact="true" status="impl/done">**Accept**</ROW-VERDICT-ACCEPT></td>
-        <td><fact status="impl/done">We will do this</fact></td>
-        <td><fact status="impl/done">Becomes a recorded decision (below)</fact></td>
+        <td><ROW-VERDICT-ACCEPT-WHAT-IT-MEANS fact="true" status="impl/done">We will do this</ROW-VERDICT-ACCEPT-WHAT-IT-MEANS></td>
+        <td><ROW-VERDICT-ACCEPT-WHERE-IT-GOES fact="true" status="impl/done">Becomes a recorded decision (below)</ROW-VERDICT-ACCEPT-WHERE-IT-GOES></td>
       </tr>
       <tr>
         <td><ROW-VERDICT-REJECT fact="true" status="impl/done">**Reject**</ROW-VERDICT-REJECT></td>
-        <td><fact status="impl/done">We will not do this</fact></td>
-        <td><fact status="impl/done">Stays in the study with a reason (below)</fact></td>
+        <td><ROW-VERDICT-REJECT-WHAT-IT-MEANS fact="true" status="impl/done">We will not do this</ROW-VERDICT-REJECT-WHAT-IT-MEANS></td>
+        <td><ROW-VERDICT-REJECT-WHERE-IT-GOES fact="true" status="impl/done">Stays in the study with a reason (below)</ROW-VERDICT-REJECT-WHERE-IT-GOES></td>
       </tr>
       <tr>
         <td><ROW-VERDICT-DEFER fact="true" status="impl/done">**Defer**</ROW-VERDICT-DEFER></td>
-        <td><fact status="impl/done">Not now, revisit later</fact></td>
-        <td><fact status="impl/done">Stays as a delta, marked *deferred*, with a revisit trigger</fact></td>
+        <td><ROW-VERDICT-DEFER-WHAT-IT-MEANS fact="true" status="impl/done">Not now, revisit later</ROW-VERDICT-DEFER-WHAT-IT-MEANS></td>
+        <td><ROW-VERDICT-DEFER-WHERE-IT-GOES fact="true" status="impl/done">Stays as a delta, marked *deferred*, with a revisit trigger</ROW-VERDICT-DEFER-WHERE-IT-GOES></td>
       </tr>
     </table>
     <p><A-DELTA-WITH-NO-VERDICT-IS-NOT-DONE-BEING-REVIEWED fact="true" status="impl/done">A delta with no verdict is not done being reviewed.</A-DELTA-WITH-NO-VERDICT-IS-NOT-DONE-BEING-REVIEWED></p>

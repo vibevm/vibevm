@@ -123,23 +123,23 @@ already exist. Nothing is added to the wire format.</n-no-new-fields></p>
       </tr>
       <tr>
         <td><n-symbol fact="true" status="spec/done">`symbol`</n-symbol></td>
-        <td><fact status="spec/done">the invocation path — `vibe install`, `vibe registry redirect`</fact></td>
+        <td><n-symbol-VALUE fact="true" status="spec/done">the invocation path — `vibe install`, `vibe registry redirect`</n-symbol-VALUE></td>
       </tr>
       <tr>
         <td><n-kind fact="true" status="spec/done">`item_kind`</n-kind></td>
-        <td><fact status="spec/done">`"command"` — a new value of an open field (`##m-kind-is-an-open-string`)</fact></td>
+        <td><n-kind-VALUE fact="true" status="spec/done">`"command"` — a new value of an open field (`##m-kind-is-an-open-string`)</n-kind-VALUE></td>
       </tr>
       <tr>
         <td><n-crate fact="true" status="spec/done">`crate_name`</n-crate></td>
-        <td><fact status="spec/done">the crate declaring the enum</fact></td>
+        <td><n-crate-VALUE fact="true" status="spec/done">the crate declaring the enum</n-crate-VALUE></td>
       </tr>
       <tr>
         <td><n-span fact="true" status="spec/done">`file` / `line` / `end_line`</n-span></td>
-        <td><fact status="spec/done">the variant's span, same attribute-inclusive convention as every other item</fact></td>
+        <td><n-span-VALUE fact="true" status="spec/done">the variant's span, same attribute-inclusive convention as every other item</n-span-VALUE></td>
       </tr>
       <tr>
         <td><n-fingerprint fact="true" status="spec/done">`fingerprint`</n-fingerprint></td>
-        <td><fact status="spec/done">the variant's token stream, `tok1:&lt;sha256&gt;` — so «the command's declaration changed, re-check what it links to» works, which is (а)'s purpose applied to a new node</fact></td>
+        <td><n-fingerprint-VALUE fact="true" status="spec/done">the variant's token stream, `tok1:&lt;sha256&gt;` — so «the command's declaration changed, re-check what it links to» works, which is (а)'s purpose applied to a new node</n-fingerprint-VALUE></td>
       </tr>
     </table>
     <p><n-symbol-is-what-a-human-types fact="true" status="spec/done">**The symbol is the invocation path and not the

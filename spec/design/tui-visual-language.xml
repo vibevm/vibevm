@@ -48,63 +48,63 @@ current state:</glyph-lead></p>
       </tr>
       <tr>
         <td><ROW-GLYPH-TREE fact="true" status="doc/done">Tree connectors</ROW-GLYPH-TREE></td>
-        <td><fact status="doc/done">`│ ├ └ ─` (✓ Unicode)</fact></td>
-        <td><fact status="doc/done">`│ ├ └ ─`</fact></td>
-        <td><fact status="doc/done">`| -`</fact></td>
+        <td><ROW-GLYPH-TREE-TODAY fact="true" status="doc/done">`│ ├ └ ─` (✓ Unicode)</ROW-GLYPH-TREE-TODAY></td>
+        <td><ROW-GLYPH-TREE-TIER-3-TARGET fact="true" status="doc/done">`│ ├ └ ─`</ROW-GLYPH-TREE-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-TREE-TIER-0-ASCII fact="true" status="doc/done">`| -`</ROW-GLYPH-TREE-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-FOLD fact="true" status="doc/done">Fold indicator</ROW-GLYPH-FOLD></td>
-        <td><fact status="doc/done">`+` / `-` (ASCII ✗)</fact></td>
-        <td><fact status="doc/done">`▾` / `▸` (or `▼`/`▶`)</fact></td>
-        <td><fact status="doc/done">`+` / `-`</fact></td>
+        <td><ROW-GLYPH-FOLD-TODAY fact="true" status="doc/done">`+` / `-` (ASCII ✗)</ROW-GLYPH-FOLD-TODAY></td>
+        <td><ROW-GLYPH-FOLD-TIER-3-TARGET fact="true" status="doc/done">`▾` / `▸` (or `▼`/`▶`)</ROW-GLYPH-FOLD-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-FOLD-TIER-0-ASCII fact="true" status="doc/done">`+` / `-`</ROW-GLYPH-FOLD-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-DAG fact="true" status="doc/done">DAG re-occurrence</ROW-GLYPH-DAG></td>
-        <td><fact status="doc/done">`(*)` (ASCII ✗)</fact></td>
-        <td><fact status="doc/done">`↩` (or `⊙`/`◆`)</fact></td>
-        <td><fact status="doc/done">`*`</fact></td>
+        <td><ROW-GLYPH-DAG-TODAY fact="true" status="doc/done">`(*)` (ASCII ✗)</ROW-GLYPH-DAG-TODAY></td>
+        <td><ROW-GLYPH-DAG-TIER-3-TARGET fact="true" status="doc/done">`↩` (or `⊙`/`◆`)</ROW-GLYPH-DAG-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-DAG-TIER-0-ASCII fact="true" status="doc/done">`*`</ROW-GLYPH-DAG-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-FLAGS fact="true" status="doc/done">Flags on / off</ROW-GLYPH-FLAGS></td>
-        <td><fact status="doc/done">`x` / `.` (ASCII ✗)</fact></td>
-        <td><fact status="doc/done">`●` / `○` (or `✓`/`·`)</fact></td>
-        <td><fact status="doc/done">`x` / `.`</fact></td>
+        <td><ROW-GLYPH-FLAGS-TODAY fact="true" status="doc/done">`x` / `.` (ASCII ✗)</ROW-GLYPH-FLAGS-TODAY></td>
+        <td><ROW-GLYPH-FLAGS-TIER-3-TARGET fact="true" status="doc/done">`●` / `○` (or `✓`/`·`)</ROW-GLYPH-FLAGS-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-FLAGS-TIER-0-ASCII fact="true" status="doc/done">`x` / `.`</ROW-GLYPH-FLAGS-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-ROUNDED fact="true" status="doc/done">Rounded frame</ROW-GLYPH-ROUNDED></td>
-        <td><fact status="doc/done">`╭ ╮ ╰ ╯` (✓ already)</fact></td>
-        <td><fact status="doc/done">`╭ ╮ ╰ ╯`</fact></td>
-        <td><fact status="doc/done">`+ - |`</fact></td>
+        <td><ROW-GLYPH-ROUNDED-TODAY fact="true" status="doc/done">`╭ ╮ ╰ ╯` (✓ already)</ROW-GLYPH-ROUNDED-TODAY></td>
+        <td><ROW-GLYPH-ROUNDED-TIER-3-TARGET fact="true" status="doc/done">`╭ ╮ ╰ ╯`</ROW-GLYPH-ROUNDED-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-ROUNDED-TIER-0-ASCII fact="true" status="doc/done">`+ - |`</ROW-GLYPH-ROUNDED-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-SQUARE fact="true" status="doc/done">Square frame</ROW-GLYPH-SQUARE></td>
-        <td><fact status="doc/done">—</fact></td>
-        <td><fact status="doc/done">`┌ ┐ └ ┘`</fact></td>
-        <td><fact status="doc/done">`+ - |`</fact></td>
+        <td><ROW-GLYPH-SQUARE-TODAY fact="true" status="doc/done">—</ROW-GLYPH-SQUARE-TODAY></td>
+        <td><ROW-GLYPH-SQUARE-TIER-3-TARGET fact="true" status="doc/done">`┌ ┐ └ ┘`</ROW-GLYPH-SQUARE-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-SQUARE-TIER-0-ASCII fact="true" status="doc/done">`+ - |`</ROW-GLYPH-SQUARE-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-CLOSE fact="true" status="doc/done">Close affordance</ROW-GLYPH-CLOSE></td>
-        <td><fact status="doc/done">(none)</fact></td>
-        <td><fact status="doc/done">`✕` (or `✖`)</fact></td>
-        <td><fact status="doc/done">`x`</fact></td>
+        <td><ROW-GLYPH-CLOSE-TODAY fact="true" status="doc/done">(none)</ROW-GLYPH-CLOSE-TODAY></td>
+        <td><ROW-GLYPH-CLOSE-TIER-3-TARGET fact="true" status="doc/done">`✕` (or `✖`)</ROW-GLYPH-CLOSE-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-CLOSE-TIER-0-ASCII fact="true" status="doc/done">`x`</ROW-GLYPH-CLOSE-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-SEPARATOR fact="true" status="doc/done">Separator / rule</ROW-GLYPH-SEPARATOR></td>
-        <td><fact status="doc/done">`—`</fact></td>
-        <td><fact status="doc/done">`─` / `╌`</fact></td>
-        <td><fact status="doc/done">`-`</fact></td>
+        <td><ROW-GLYPH-SEPARATOR-TODAY fact="true" status="doc/done">`—`</ROW-GLYPH-SEPARATOR-TODAY></td>
+        <td><ROW-GLYPH-SEPARATOR-TIER-3-TARGET fact="true" status="doc/done">`─` / `╌`</ROW-GLYPH-SEPARATOR-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-SEPARATOR-TIER-0-ASCII fact="true" status="doc/done">`-`</ROW-GLYPH-SEPARATOR-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-BAR fact="true" status="doc/done">Bar / indicator</ROW-GLYPH-BAR></td>
-        <td><fact status="doc/done">(none)</fact></td>
-        <td><fact status="doc/done">`▁ ▂ ▃ ▄ ▅ ▆ ▇ █` / braille `⠁ … ⣿`</fact></td>
-        <td><fact status="doc/done">`#`</fact></td>
+        <td><ROW-GLYPH-BAR-TODAY fact="true" status="doc/done">(none)</ROW-GLYPH-BAR-TODAY></td>
+        <td><ROW-GLYPH-BAR-TIER-3-TARGET fact="true" status="doc/done">`▁ ▂ ▃ ▄ ▅ ▆ ▇ █` / braille `⠁ … ⣿`</ROW-GLYPH-BAR-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-BAR-TIER-0-ASCII fact="true" status="doc/done">`#`</ROW-GLYPH-BAR-TIER-0-ASCII></td>
       </tr>
       <tr>
         <td><ROW-GLYPH-SCROLL fact="true" status="doc/done">Scroll marker</ROW-GLYPH-SCROLL></td>
-        <td><fact status="doc/done">(none)</fact></td>
-        <td><fact status="doc/done">`▲` / `▼`</fact></td>
-        <td><fact status="doc/done">`^` / `v`</fact></td>
+        <td><ROW-GLYPH-SCROLL-TODAY fact="true" status="doc/done">(none)</ROW-GLYPH-SCROLL-TODAY></td>
+        <td><ROW-GLYPH-SCROLL-TIER-3-TARGET fact="true" status="doc/done">`▲` / `▼`</ROW-GLYPH-SCROLL-TIER-3-TARGET></td>
+        <td><ROW-GLYPH-SCROLL-TIER-0-ASCII fact="true" status="doc/done">`^` / `v`</ROW-GLYPH-SCROLL-TIER-0-ASCII></td>
       </tr>
     </table>
     <p><NO-ASCII-PRIMARY fact="true" status="doc/done">**Rule (normative in PROP-037 §2.2 `#glyph-vocabulary`):** in the primary UI (Tier ≥ 1) there are no
@@ -152,78 +152,78 @@ set; everything a component can ask for):</palette-definition></p>
       </tr>
       <tr>
         <td><ROW-PAL-ROSE-PINE fact="true" status="doc/done">**Rosé Pine**</ROW-PAL-ROSE-PINE></td>
-        <td><fact status="doc/done">dark (cosmic violet)</fact></td>
-        <td><fact status="doc/done">`#191724`</fact></td>
-        <td><fact status="doc/done">`#1f1d2e`</fact></td>
-        <td><fact status="doc/done">`#26233a`</fact></td>
-        <td><fact status="doc/done">`#6e6a86`</fact></td>
-        <td><fact status="doc/done">`#908caa`</fact></td>
-        <td><fact status="doc/done">`#e0def4`</fact></td>
-        <td><fact status="doc/done">`#c4a7e7`</fact></td>
-        <td><fact status="doc/done">`#eb6f92`</fact></td>
-        <td><fact status="doc/done">`#f6c177`</fact></td>
-        <td><fact status="doc/done">`#9ccfd8`</fact></td>
-        <td><fact status="doc/done">`#ebbcba`</fact></td>
+        <td><ROW-PAL-ROSE-PINE-TONE fact="true" status="doc/done">dark (cosmic violet)</ROW-PAL-ROSE-PINE-TONE></td>
+        <td><ROW-PAL-ROSE-PINE-BASE fact="true" status="doc/done">`#191724`</ROW-PAL-ROSE-PINE-BASE></td>
+        <td><ROW-PAL-ROSE-PINE-SURFACE0 fact="true" status="doc/done">`#1f1d2e`</ROW-PAL-ROSE-PINE-SURFACE0></td>
+        <td><ROW-PAL-ROSE-PINE-SURFACE1 fact="true" status="doc/done">`#26233a`</ROW-PAL-ROSE-PINE-SURFACE1></td>
+        <td><ROW-PAL-ROSE-PINE-MUTED fact="true" status="doc/done">`#6e6a86`</ROW-PAL-ROSE-PINE-MUTED></td>
+        <td><ROW-PAL-ROSE-PINE-SUBTEXT fact="true" status="doc/done">`#908caa`</ROW-PAL-ROSE-PINE-SUBTEXT></td>
+        <td><ROW-PAL-ROSE-PINE-TEXT fact="true" status="doc/done">`#e0def4`</ROW-PAL-ROSE-PINE-TEXT></td>
+        <td><ROW-PAL-ROSE-PINE-ACCENT fact="true" status="doc/done">`#c4a7e7`</ROW-PAL-ROSE-PINE-ACCENT></td>
+        <td><ROW-PAL-ROSE-PINE-LOVE fact="true" status="doc/done">`#eb6f92`</ROW-PAL-ROSE-PINE-LOVE></td>
+        <td><ROW-PAL-ROSE-PINE-GOLD fact="true" status="doc/done">`#f6c177`</ROW-PAL-ROSE-PINE-GOLD></td>
+        <td><ROW-PAL-ROSE-PINE-FOAM fact="true" status="doc/done">`#9ccfd8`</ROW-PAL-ROSE-PINE-FOAM></td>
+        <td><ROW-PAL-ROSE-PINE-ROSE fact="true" status="doc/done">`#ebbcba`</ROW-PAL-ROSE-PINE-ROSE></td>
       </tr>
       <tr>
         <td><ROW-PAL-MOCHA fact="true" status="doc/done">**Catppuccin Mocha**</ROW-PAL-MOCHA></td>
-        <td><fact status="doc/done">dark</fact></td>
-        <td><fact status="doc/done">`#1e1e2e`</fact></td>
-        <td><fact status="doc/done">`#313244`</fact></td>
-        <td><fact status="doc/done">`#45475a`</fact></td>
-        <td><fact status="doc/done">`#6c7086`</fact></td>
-        <td><fact status="doc/done">`#a6adc8`</fact></td>
-        <td><fact status="doc/done">`#cdd6f4`</fact></td>
-        <td><fact status="doc/done">`#cba6f7`</fact></td>
-        <td><fact status="doc/done">`#f38ba8`</fact></td>
-        <td><fact status="doc/done">`#f9e2af`</fact></td>
-        <td><fact status="doc/done">`#94e2d5`</fact></td>
-        <td><fact status="doc/done">`#f5c2e7`</fact></td>
+        <td><ROW-PAL-MOCHA-TONE fact="true" status="doc/done">dark</ROW-PAL-MOCHA-TONE></td>
+        <td><ROW-PAL-MOCHA-BASE fact="true" status="doc/done">`#1e1e2e`</ROW-PAL-MOCHA-BASE></td>
+        <td><ROW-PAL-MOCHA-SURFACE0 fact="true" status="doc/done">`#313244`</ROW-PAL-MOCHA-SURFACE0></td>
+        <td><ROW-PAL-MOCHA-SURFACE1 fact="true" status="doc/done">`#45475a`</ROW-PAL-MOCHA-SURFACE1></td>
+        <td><ROW-PAL-MOCHA-MUTED fact="true" status="doc/done">`#6c7086`</ROW-PAL-MOCHA-MUTED></td>
+        <td><ROW-PAL-MOCHA-SUBTEXT fact="true" status="doc/done">`#a6adc8`</ROW-PAL-MOCHA-SUBTEXT></td>
+        <td><ROW-PAL-MOCHA-TEXT fact="true" status="doc/done">`#cdd6f4`</ROW-PAL-MOCHA-TEXT></td>
+        <td><ROW-PAL-MOCHA-ACCENT fact="true" status="doc/done">`#cba6f7`</ROW-PAL-MOCHA-ACCENT></td>
+        <td><ROW-PAL-MOCHA-LOVE fact="true" status="doc/done">`#f38ba8`</ROW-PAL-MOCHA-LOVE></td>
+        <td><ROW-PAL-MOCHA-GOLD fact="true" status="doc/done">`#f9e2af`</ROW-PAL-MOCHA-GOLD></td>
+        <td><ROW-PAL-MOCHA-FOAM fact="true" status="doc/done">`#94e2d5`</ROW-PAL-MOCHA-FOAM></td>
+        <td><ROW-PAL-MOCHA-ROSE fact="true" status="doc/done">`#f5c2e7`</ROW-PAL-MOCHA-ROSE></td>
       </tr>
       <tr>
         <td><ROW-PAL-MACCHIATO fact="true" status="doc/done">**Catppuccin Macchiato**</ROW-PAL-MACCHIATO></td>
-        <td><fact status="doc/done">dark</fact></td>
-        <td><fact status="doc/done">`#24273a`</fact></td>
-        <td><fact status="doc/done">`#363a4f`</fact></td>
-        <td><fact status="doc/done">`#494d64`</fact></td>
-        <td><fact status="doc/done">`#6e738d`</fact></td>
-        <td><fact status="doc/done">`#a5adcb`</fact></td>
-        <td><fact status="doc/done">`#cad3f5`</fact></td>
-        <td><fact status="doc/done">`#c6a0f6`</fact></td>
-        <td><fact status="doc/done">`#ed8796`</fact></td>
-        <td><fact status="doc/done">`#eed49f`</fact></td>
-        <td><fact status="doc/done">`#8bd5ca`</fact></td>
-        <td><fact status="doc/done">`#f5bde6`</fact></td>
+        <td><ROW-PAL-MACCHIATO-TONE fact="true" status="doc/done">dark</ROW-PAL-MACCHIATO-TONE></td>
+        <td><ROW-PAL-MACCHIATO-BASE fact="true" status="doc/done">`#24273a`</ROW-PAL-MACCHIATO-BASE></td>
+        <td><ROW-PAL-MACCHIATO-SURFACE0 fact="true" status="doc/done">`#363a4f`</ROW-PAL-MACCHIATO-SURFACE0></td>
+        <td><ROW-PAL-MACCHIATO-SURFACE1 fact="true" status="doc/done">`#494d64`</ROW-PAL-MACCHIATO-SURFACE1></td>
+        <td><ROW-PAL-MACCHIATO-MUTED fact="true" status="doc/done">`#6e738d`</ROW-PAL-MACCHIATO-MUTED></td>
+        <td><ROW-PAL-MACCHIATO-SUBTEXT fact="true" status="doc/done">`#a5adcb`</ROW-PAL-MACCHIATO-SUBTEXT></td>
+        <td><ROW-PAL-MACCHIATO-TEXT fact="true" status="doc/done">`#cad3f5`</ROW-PAL-MACCHIATO-TEXT></td>
+        <td><ROW-PAL-MACCHIATO-ACCENT fact="true" status="doc/done">`#c6a0f6`</ROW-PAL-MACCHIATO-ACCENT></td>
+        <td><ROW-PAL-MACCHIATO-LOVE fact="true" status="doc/done">`#ed8796`</ROW-PAL-MACCHIATO-LOVE></td>
+        <td><ROW-PAL-MACCHIATO-GOLD fact="true" status="doc/done">`#eed49f`</ROW-PAL-MACCHIATO-GOLD></td>
+        <td><ROW-PAL-MACCHIATO-FOAM fact="true" status="doc/done">`#8bd5ca`</ROW-PAL-MACCHIATO-FOAM></td>
+        <td><ROW-PAL-MACCHIATO-ROSE fact="true" status="doc/done">`#f5bde6`</ROW-PAL-MACCHIATO-ROSE></td>
       </tr>
       <tr>
         <td><ROW-PAL-FRAPPE fact="true" status="doc/done">**Catppuccin Frappé**</ROW-PAL-FRAPPE></td>
-        <td><fact status="doc/done">dark</fact></td>
-        <td><fact status="doc/done">`#303446`</fact></td>
-        <td><fact status="doc/done">`#414559`</fact></td>
-        <td><fact status="doc/done">`#51576d`</fact></td>
-        <td><fact status="doc/done">`#737994`</fact></td>
-        <td><fact status="doc/done">`#a5adce`</fact></td>
-        <td><fact status="doc/done">`#c6d0f5`</fact></td>
-        <td><fact status="doc/done">`#ca9ee6`</fact></td>
-        <td><fact status="doc/done">`#e78284`</fact></td>
-        <td><fact status="doc/done">`#e5c890`</fact></td>
-        <td><fact status="doc/done">`#81c8be`</fact></td>
-        <td><fact status="doc/done">`#f4b8e4`</fact></td>
+        <td><ROW-PAL-FRAPPE-TONE fact="true" status="doc/done">dark</ROW-PAL-FRAPPE-TONE></td>
+        <td><ROW-PAL-FRAPPE-BASE fact="true" status="doc/done">`#303446`</ROW-PAL-FRAPPE-BASE></td>
+        <td><ROW-PAL-FRAPPE-SURFACE0 fact="true" status="doc/done">`#414559`</ROW-PAL-FRAPPE-SURFACE0></td>
+        <td><ROW-PAL-FRAPPE-SURFACE1 fact="true" status="doc/done">`#51576d`</ROW-PAL-FRAPPE-SURFACE1></td>
+        <td><ROW-PAL-FRAPPE-MUTED fact="true" status="doc/done">`#737994`</ROW-PAL-FRAPPE-MUTED></td>
+        <td><ROW-PAL-FRAPPE-SUBTEXT fact="true" status="doc/done">`#a5adce`</ROW-PAL-FRAPPE-SUBTEXT></td>
+        <td><ROW-PAL-FRAPPE-TEXT fact="true" status="doc/done">`#c6d0f5`</ROW-PAL-FRAPPE-TEXT></td>
+        <td><ROW-PAL-FRAPPE-ACCENT fact="true" status="doc/done">`#ca9ee6`</ROW-PAL-FRAPPE-ACCENT></td>
+        <td><ROW-PAL-FRAPPE-LOVE fact="true" status="doc/done">`#e78284`</ROW-PAL-FRAPPE-LOVE></td>
+        <td><ROW-PAL-FRAPPE-GOLD fact="true" status="doc/done">`#e5c890`</ROW-PAL-FRAPPE-GOLD></td>
+        <td><ROW-PAL-FRAPPE-FOAM fact="true" status="doc/done">`#81c8be`</ROW-PAL-FRAPPE-FOAM></td>
+        <td><ROW-PAL-FRAPPE-ROSE fact="true" status="doc/done">`#f4b8e4`</ROW-PAL-FRAPPE-ROSE></td>
       </tr>
       <tr>
         <td><ROW-PAL-LATTE fact="true" status="doc/done">**Catppuccin Latte**</ROW-PAL-LATTE></td>
-        <td><fact status="doc/done">**light**</fact></td>
-        <td><fact status="doc/done">`#eff1f5`</fact></td>
-        <td><fact status="doc/done">`#ccd0da`</fact></td>
-        <td><fact status="doc/done">`#bcc0cc`</fact></td>
-        <td><fact status="doc/done">`#9ca0b0`</fact></td>
-        <td><fact status="doc/done">`#6c6f85`</fact></td>
-        <td><fact status="doc/done">`#4c4f69`</fact></td>
-        <td><fact status="doc/done">`#8839ef`</fact></td>
-        <td><fact status="doc/done">`#d20f39`</fact></td>
-        <td><fact status="doc/done">`#df8e1d`</fact></td>
-        <td><fact status="doc/done">`#179299`</fact></td>
-        <td><fact status="doc/done">`#ea76cb`</fact></td>
+        <td><ROW-PAL-LATTE-TONE fact="true" status="doc/done">**light**</ROW-PAL-LATTE-TONE></td>
+        <td><ROW-PAL-LATTE-BASE fact="true" status="doc/done">`#eff1f5`</ROW-PAL-LATTE-BASE></td>
+        <td><ROW-PAL-LATTE-SURFACE0 fact="true" status="doc/done">`#ccd0da`</ROW-PAL-LATTE-SURFACE0></td>
+        <td><ROW-PAL-LATTE-SURFACE1 fact="true" status="doc/done">`#bcc0cc`</ROW-PAL-LATTE-SURFACE1></td>
+        <td><ROW-PAL-LATTE-MUTED fact="true" status="doc/done">`#9ca0b0`</ROW-PAL-LATTE-MUTED></td>
+        <td><ROW-PAL-LATTE-SUBTEXT fact="true" status="doc/done">`#6c6f85`</ROW-PAL-LATTE-SUBTEXT></td>
+        <td><ROW-PAL-LATTE-TEXT fact="true" status="doc/done">`#4c4f69`</ROW-PAL-LATTE-TEXT></td>
+        <td><ROW-PAL-LATTE-ACCENT fact="true" status="doc/done">`#8839ef`</ROW-PAL-LATTE-ACCENT></td>
+        <td><ROW-PAL-LATTE-LOVE fact="true" status="doc/done">`#d20f39`</ROW-PAL-LATTE-LOVE></td>
+        <td><ROW-PAL-LATTE-GOLD fact="true" status="doc/done">`#df8e1d`</ROW-PAL-LATTE-GOLD></td>
+        <td><ROW-PAL-LATTE-FOAM fact="true" status="doc/done">`#179299`</ROW-PAL-LATTE-FOAM></td>
+        <td><ROW-PAL-LATTE-ROSE fact="true" status="doc/done">`#ea76cb`</ROW-PAL-LATTE-ROSE></td>
       </tr>
     </table>
     <facts ordered="false">
@@ -255,31 +255,31 @@ L1/L2/L3 and is overridable at the CLI/env.</palette-is-setting></p>
       </tr>
       <tr>
         <td><ROW-TIER-3 fact="true" status="doc/done">**3**</ROW-TIER-3></td>
-        <td><fact status="doc/done">`$COLORTERM` ∈ {`truecolor`,`24bit`}</fact></td>
-        <td><fact status="doc/done">full 24-bit RGB</fact></td>
-        <td><fact status="doc/done">rounded `╭╮╰╯`</fact></td>
-        <td><fact status="doc/done">braille / blocks</fact></td>
+        <td><ROW-TIER-3-CONDITION fact="true" status="doc/done">`$COLORTERM` ∈ {`truecolor`,`24bit`}</ROW-TIER-3-CONDITION></td>
+        <td><ROW-TIER-3-PALETTE fact="true" status="doc/done">full 24-bit RGB</ROW-TIER-3-PALETTE></td>
+        <td><ROW-TIER-3-FRAMES fact="true" status="doc/done">rounded `╭╮╰╯`</ROW-TIER-3-FRAMES></td>
+        <td><ROW-TIER-3-INDICATORS fact="true" status="doc/done">braille / blocks</ROW-TIER-3-INDICATORS></td>
       </tr>
       <tr>
         <td><ROW-TIER-2 fact="true" status="doc/done">**2**</ROW-TIER-2></td>
-        <td><fact status="doc/done">256-colour (`$TERM` contains `256`)</fact></td>
-        <td><fact status="doc/done">palette quantised to the 6×6×6 cube</fact></td>
-        <td><fact status="doc/done">rounded</fact></td>
-        <td><fact status="doc/done">blocks (8)</fact></td>
+        <td><ROW-TIER-2-CONDITION fact="true" status="doc/done">256-colour (`$TERM` contains `256`)</ROW-TIER-2-CONDITION></td>
+        <td><ROW-TIER-2-PALETTE fact="true" status="doc/done">palette quantised to the 6×6×6 cube</ROW-TIER-2-PALETTE></td>
+        <td><ROW-TIER-2-FRAMES fact="true" status="doc/done">rounded</ROW-TIER-2-FRAMES></td>
+        <td><ROW-TIER-2-INDICATORS fact="true" status="doc/done">blocks (8)</ROW-TIER-2-INDICATORS></td>
       </tr>
       <tr>
         <td><ROW-TIER-1 fact="true" status="doc/done">**1**</ROW-TIER-1></td>
-        <td><fact status="doc/done">16-colour ANSI</fact></td>
-        <td><fact status="doc/done">ANSI role mapping</fact></td>
-        <td><fact status="doc/done">rounded (if supported) / square `┌┐└┘`</fact></td>
-        <td><fact status="doc/done">blocks (8)</fact></td>
+        <td><ROW-TIER-1-CONDITION fact="true" status="doc/done">16-colour ANSI</ROW-TIER-1-CONDITION></td>
+        <td><ROW-TIER-1-PALETTE fact="true" status="doc/done">ANSI role mapping</ROW-TIER-1-PALETTE></td>
+        <td><ROW-TIER-1-FRAMES fact="true" status="doc/done">rounded (if supported) / square `┌┐└┘`</ROW-TIER-1-FRAMES></td>
+        <td><ROW-TIER-1-INDICATORS fact="true" status="doc/done">blocks (8)</ROW-TIER-1-INDICATORS></td>
       </tr>
       <tr>
         <td><ROW-TIER-0 fact="true" status="doc/done">**0**</ROW-TIER-0></td>
-        <td><fact status="doc/done">explicitly dumb (`TERM=linux` / `dumb`)</fact></td>
-        <td><fact status="doc/done">ANSI mono</fact></td>
-        <td><fact status="doc/done">ASCII `+-\|`</fact></td>
-        <td><fact status="doc/done">`#`</fact></td>
+        <td><ROW-TIER-0-CONDITION fact="true" status="doc/done">explicitly dumb (`TERM=linux` / `dumb`)</ROW-TIER-0-CONDITION></td>
+        <td><ROW-TIER-0-PALETTE fact="true" status="doc/done">ANSI mono</ROW-TIER-0-PALETTE></td>
+        <td><ROW-TIER-0-FRAMES fact="true" status="doc/done">ASCII `+-\|`</ROW-TIER-0-FRAMES></td>
+        <td><ROW-TIER-0-INDICATORS fact="true" status="doc/done">`#`</ROW-TIER-0-INDICATORS></td>
       </tr>
     </table>
     <p><TIER-DETECTION fact="true" status="doc/done">**Detection (normative in PROP-037 §2.2 `#rendering-tiers`):** a **pure function** over the
