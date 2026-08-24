@@ -967,90 +967,99 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 169,
+      "line": 174,
       "symbol": "vibe agentic",
-      "end_line": 174,
+      "end_line": 179,
       "fingerprint": "tok1:38d2c7c84dbc9027225d4def9f39afe3748240181c35a687610f0482adf04d8e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 146,
+      "line": 151,
       "symbol": "vibe aiui",
-      "end_line": 150,
+      "end_line": 155,
       "fingerprint": "tok1:55e1694e709d4faadda95473101940a572d1d6169ceb282b3d53349b7c70303a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 268,
+      "line": 273,
       "symbol": "vibe bin",
-      "end_line": 275,
+      "end_line": 280,
       "fingerprint": "tok1:fa28839d0a2d9eb3130cab2ea9b2eeda91b18d37bd59b58be3537b394d89a27f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 234,
+      "line": 239,
       "symbol": "vibe cache",
-      "end_line": 242,
+      "end_line": 247,
       "fingerprint": "tok1:6a35c24edfa5b22c29374adab93625e3ea8ff7ed571b18a3f8f4b9207329b57b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 194,
+      "line": 199,
       "symbol": "vibe check",
-      "end_line": 195,
+      "end_line": 200,
       "fingerprint": "tok1:38fcbbc45c7ad30c975d15d0086afc07aa2e4fca1dfdf72c62f969ca46df6118"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 176,
+      "line": 125,
+      "symbol": "vibe clean",
+      "end_line": 128,
+      "fingerprint": "tok1:f338374e4c8c6efbd051dad1770622c568432ef46de0c7b69e347cff8f9c8beb"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli.rs",
+      "item_kind": "command",
+      "line": 181,
       "symbol": "vibe command",
-      "end_line": 182,
+      "end_line": 187,
       "fingerprint": "tok1:ef53bda5ded39eceee051d99ca027cdb39dced3df83fea0808f23940514540d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 277,
+      "line": 282,
       "symbol": "vibe explain",
-      "end_line": 284,
+      "end_line": 289,
       "fingerprint": "tok1:58c34bfb60261b47d8861f07462898d5ae5c28a9d44f2ae4624b8ed1a0bfe1f7"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 197,
+      "line": 202,
       "symbol": "vibe facts",
-      "end_line": 198,
+      "end_line": 203,
       "fingerprint": "tok1:d7dd96f48f6f2689d1d7d87f56e3424ef5f2b265c027a14946dbe1d337f92213"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 157,
+      "line": 162,
       "symbol": "vibe frame",
-      "end_line": 160,
+      "end_line": 165,
       "fingerprint": "tok1:4985ceaa5272c36e1c73077f882fc30a4aec1244e308099d8257582bec0f79a8"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 208,
+      "line": 213,
       "symbol": "vibe friends",
-      "end_line": 212,
+      "end_line": 217,
       "fingerprint": "tok1:655f25b8fc752269ccab00637c8a5cfe5797e8321bfe2ac6cc626c64419f9073"
     },
     {
@@ -1084,216 +1093,216 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 139,
+      "line": 144,
       "symbol": "vibe mcp",
-      "end_line": 144,
+      "end_line": 149,
       "fingerprint": "tok1:f37a9c7d50509325b588f478574f851ff11d7bdafae86f5d4cef35c487b4cb73"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 125,
+      "line": 130,
       "symbol": "vibe outdated",
-      "end_line": 129,
+      "end_line": 134,
       "fingerprint": "tok1:d1073beb727d86daaab1588ec6deaaf7fc97e4a3df0fdb2548587e350480885a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 217,
+      "line": 222,
       "symbol": "vibe prefs",
-      "end_line": 221,
+      "end_line": 226,
       "fingerprint": "tok1:c37b655b66cbc0af9ccfdabf5d84ba9d067cbea39dd9d1c89b5e4a77f79d4009"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 338,
+      "line": 343,
       "symbol": "vibe progress",
-      "end_line": 341,
+      "end_line": 346,
       "fingerprint": "tok1:0343b59ebde2d3646b75f27f0c451ee131c5f3f4a2415b9d79ab4ef092fca9c0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 286,
+      "line": 291,
       "symbol": "vibe query",
-      "end_line": 295,
+      "end_line": 300,
       "fingerprint": "tok1:36680144f94d98e3b9a8bd38c89c746ee621dbdfadb21422f0ff7bffe4c1e069"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 205,
+      "line": 210,
       "symbol": "vibe refactor",
-      "end_line": 206,
+      "end_line": 211,
       "fingerprint": "tok1:c3af138c24767234b956446b0d4e040f1941d8052390ceaf2883c8f1618c5d83"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 231,
+      "line": 236,
       "symbol": "vibe registry",
-      "end_line": 232,
+      "end_line": 237,
       "fingerprint": "tok1:510e526eda2f3774a369c2ecad541147e0de8643662891a8c9e2dd3af384f70e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 195,
       "symbol": "vibe reinstall",
-      "end_line": 192,
+      "end_line": 197,
       "fingerprint": "tok1:6e67dfc6071d8f65b58e5ff6a848695dc0f1da97f80ed1c92bf8f1f409d0f755"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 131,
+      "line": 136,
       "symbol": "vibe search",
-      "end_line": 137,
+      "end_line": 142,
       "fingerprint": "tok1:b47b591a719431fd92337bfb669e9141237a1180367223d594d4c2e9aa549524"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 297,
+      "line": 302,
       "symbol": "vibe select",
-      "end_line": 308,
+      "end_line": 313,
       "fingerprint": "tok1:16e391d4035c196770cac77470dedaa7ff004a71e0a48dc88ecc3b5aeccda1b1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 250,
+      "line": 255,
       "symbol": "vibe self",
-      "end_line": 256,
+      "end_line": 261,
       "fingerprint": "tok1:3587ac93f410662938dfdb2e5a411a952a847f14338cd21bc4aaff4b1b1cdd23"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 214,
+      "line": 219,
       "symbol": "vibe show",
-      "end_line": 215,
+      "end_line": 220,
       "fingerprint": "tok1:12c7f4b09b59503b8a56b9c4b3965d3f73e0e62f78a2df10a7b4425c94c89cf5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 162,
+      "line": 167,
       "symbol": "vibe skill",
-      "end_line": 167,
+      "end_line": 172,
       "fingerprint": "tok1:0f2269b52a3046796d5ce3c6c1633b17564ae4fa4b4a5f91d478e0f5404476ee"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 310,
+      "line": 315,
       "symbol": "vibe specmap",
-      "end_line": 318,
+      "end_line": 323,
       "fingerprint": "tok1:95fe1742b042d98c18fa9ddca05706d6b6a8129fb78a25ee827349929b9ba012"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 152,
+      "line": 157,
       "symbol": "vibe term",
-      "end_line": 155,
+      "end_line": 160,
       "fingerprint": "tok1:6de072333697fa577d56d6b6437e4be14b04ef83495a35d0db8c1a234077b846"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 258,
+      "line": 263,
       "symbol": "vibe tools",
-      "end_line": 266,
+      "end_line": 271,
       "fingerprint": "tok1:160baa5bced8144814d419728f9e456b1d4c9648edb498bb5b94cfcce812b2e0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 320,
+      "line": 325,
       "symbol": "vibe trace",
-      "end_line": 329,
+      "end_line": 334,
       "fingerprint": "tok1:f3b1c393c3e385763d9a81c5ad9f9f19d6c16d2a1a2c0bbdad8db90494f7af9a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 223,
+      "line": 228,
       "symbol": "vibe tree",
-      "end_line": 229,
+      "end_line": 234,
       "fingerprint": "tok1:8027f7f6f7878e12ba2eb4bfdc137ac5c46f0d31af6015ecbd40d91d439a5f12"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 184,
+      "line": 189,
       "symbol": "vibe uninstall",
-      "end_line": 185,
+      "end_line": 190,
       "fingerprint": "tok1:e7544f7fabc8952fa2a094e32d923d60121a134be5aca63306fdadd16b5a585f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 187,
+      "line": 192,
       "symbol": "vibe update",
-      "end_line": 188,
+      "end_line": 193,
       "fingerprint": "tok1:14a6b49ed5a4cc88ad74c7c738b1db06604785819538b588a78d124d9b87f362"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 331,
+      "line": 336,
       "symbol": "vibe vars",
-      "end_line": 336,
+      "end_line": 341,
       "fingerprint": "tok1:af6c5c4b0395cb84cb619b17b19d77a249e673553a62f01587ef9cf48dd847ae"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 343,
+      "line": 348,
       "symbol": "vibe version",
-      "end_line": 344,
+      "end_line": 349,
       "fingerprint": "tok1:33315f272409a4c8ad6648ba9671fc4df16e2b163ceb37e3c58d6b44af2f16f1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 200,
+      "line": 205,
       "symbol": "vibe why",
-      "end_line": 203,
+      "end_line": 208,
       "fingerprint": "tok1:9b76974e8b4a3d3129ff66bc15a3164b1a6f812b631c52e440b5914ef53cf71e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 244,
+      "line": 249,
       "symbol": "vibe workspace",
-      "end_line": 248,
+      "end_line": 253,
       "fingerprint": "tok1:ac2163fa0ecd131bbca2d73185a0d8cbf06ae47e50276d68a969ea05ac6ee8ac"
     },
     {
@@ -2114,6 +2123,15 @@
       "symbol": "vibe_cli::commands::check",
       "end_line": 5,
       "fingerprint": "tok1:74041e9f00501aca4df9bad93fd58560936dd5e05c6eb003d85c2d605943379f"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/clean.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::clean",
+      "end_line": 12,
+      "fingerprint": "tok1:4aac987a52da8ccf1e7261c3cd46b3a5d89210fcc54c77ff64cde3dda017768a"
     },
     {
       "crate_name": "vibe-cli",
@@ -4603,9 +4621,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 292,
+      "line": 295,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 417,
+      "end_line": 420,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -4616,6 +4634,60 @@
       "symbol": "vibe_cli::registry",
       "end_line": 16,
       "fingerprint": "tok1:7d47bc90a462cc9793877ec30d49282bb6d8935f98e7a6887fb61b750edfb911"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 128,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::a_bare_install_over_zero_dependencies_is_a_noop",
+      "end_line": 139,
+      "fingerprint": "tok1:3abed167746e7102bb6241283636edc83ea48d8c19bbefd16a5119f933c0abf6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::an_explicit_pkgref_install_keeps_the_rest_of_the_world",
+      "end_line": 94,
+      "fingerprint": "tok1:bf9e77e72ddd51b49902a715d004c7b68876986524ec27811670c85f362d884e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 96,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::an_offline_pkgref_install_keeps_the_rest_of_the_world",
+      "end_line": 124,
+      "fingerprint": "tok1:9e7532d9909fd7669301332f5bcd454c482839f85aadc36d8a8f924c9e3cb5ed"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 199,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_rebuilds_the_whole_world",
+      "end_line": 225,
+      "fingerprint": "tok1:3ab93fbea04f6bbef2be773245de07f1c9ebe157141dab67f92f34c27d2326fe"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 227,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_with_a_pkgref_refreshes_the_named_and_keeps_the_world",
+      "end_line": 254,
+      "fingerprint": "tok1:6adaaad83cb7d35a4f3e42e59059351b112fe8b7ec2c22386c6dbb56fbcb3aa2"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "item_kind": "fn",
+      "line": 152,
+      "symbol": "vibe_cli::tests::cli_clean_and_world::clean_removes_the_derived_state_and_keeps_the_authored_surface",
+      "end_line": 197,
+      "fingerprint": "tok1:775cb2daaf7f94e26ac3607efe9058d8e003f74cb037c55c6f76be878db64994"
     },
     {
       "crate_name": "vibe-cli",
@@ -4666,27 +4738,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 1046,
+      "line": 1047,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit",
-      "end_line": 1099,
+      "end_line": 1100,
       "fingerprint": "tok1:e8d58bb505017a1517cabfbe51fcefe198138f6a68dddd0fe166c4cd7c693ea4"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 939,
+      "line": 940,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
-      "end_line": 1044,
+      "end_line": 1045,
       "fingerprint": "tok1:b539d1220a80f9818964f9aa0302b6bf71d6bb10d916904d19eacae6beb19df0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 1110,
+      "line": 1111,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
-      "end_line": 1182,
+      "end_line": 1183,
       "fingerprint": "tok1:599c67946d24380b50cec68a5ba6d18a073a3c14c8da7fae1e554ba0ce91c6fd"
     },
     {
@@ -11633,6 +11705,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/clean.rs",
+      "from_symbol": "vibe_cli::commands::clean",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/explain.rs",
       "from_symbol": "vibe_cli::commands::explain",
       "line": 8,
@@ -13888,7 +13968,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 370,
+      "line": 373,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -13901,6 +13981,54 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::a_bare_install_over_zero_dependencies_is_a_noop",
+      "line": 131,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EMPTY-REQUIRES-IS-A-NO-OP",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::an_explicit_pkgref_install_keeps_the_rest_of_the_world",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EXPLICIT-PKGREF-FULL-SOLVE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::an_offline_pkgref_install_keeps_the_rest_of_the_world",
+      "line": 100,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EXPLICIT-PKGREF-FULL-SOLVE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_rebuilds_the_whole_world",
+      "line": 202,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::clean_install_with_a_pkgref_refreshes_the_named_and_keeps_the_world",
+      "line": 230,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-PKGREF-SEMANTICS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
+      "from_symbol": "vibe_cli::tests::cli_clean_and_world::clean_removes_the_derived_state_and_keeps_the_authored_surface",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/tests/cli_default_path.rs",
@@ -13961,7 +14089,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit",
-      "line": 1047,
+      "line": 1048,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -13970,7 +14098,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
-      "line": 940,
+      "line": 941,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -13979,7 +14107,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
-      "line": 1116,
+      "line": 1117,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -70298,7 +70426,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dcd3f899b3a7faaf07038c1cc49284e3c4798c16e0b109707c5264dc6b32ca70",
+      "content_hash": "sha256:0efa4ca2c1b5ecf0e05b895e8bd433761431663e0e567d63fbaba06faf2ba30a",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "PROP-011: Incremental install — skip resolution when fresh, materialise only the diff",
@@ -70433,7 +70561,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:b6bb2a166d05a1115afa3a5f3ba809945f57ed07ccce8c146cba3852331d7ad0",
+      "content_hash": "sha256:b51c7351ad0d011b508535cf3ed9fd0ac90bd4cdf7cb72253819ab49ebe1150d",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2. Decisions",
@@ -70487,7 +70615,7 @@
     },
     {
       "anchor": "skip-resolution",
-      "content_hash": "sha256:1f4cc984e6f8bb5dc0782a06c740a7447a55828602457c35fe6a0100b767e930",
+      "content_hash": "sha256:820f5f9b3c71ba2b70a68f19018e259f1bebce110cac54445b3b527a708de4e3",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2.2 Skip resolution when the lockfile is fresh",
@@ -70585,12 +70713,30 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FIELD"
     },
     {
+      "anchor": "EXPLICIT-PKGREF-FULL-SOLVE",
+      "content_hash": "sha256:56d5bf0b6928bf1c971efe8652652e0da9174741a1c2be58c816ee307363b6c4",
+      "doc_path": "modules/vibe-workspace/PROP-011",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
+      "heading": "**`vibe install <pkgref>` builds the FULL resolution (bug ruling, 2026-08-24).** An explicit-pkgref install solves over the union of every node's `[requires]` PLUS the named packages — the named ones re-resolved fresh, every untouched root held to its locked pin (§5.3) — never over the named packages alone. The apply phase treats any resolution as the whole world (its prune drops every slot outside it — correct for a full resolution, catastrophic for a partial one): `vibe install X --offline` used to erase every other slot and rewrite the lock to X's closure. A partial solve MUST never reach apply. @status:impl/plan",
+      "line": 53,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EXPLICIT-PKGREF-FULL-SOLVE"
+    },
+    {
+      "anchor": "EMPTY-REQUIRES-IS-A-NO-OP",
+      "content_hash": "sha256:0fa68fa69465018044126a96fe8fdea83be2aa9fc57683e01532b824ac0efaf5",
+      "doc_path": "modules/vibe-workspace/PROP-011",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
+      "heading": "**Zero dependencies is a normal state (bug ruling, 2026-08-24).** A bare `vibe install` over a project whose `[requires]` union is empty is NOT an error — it is a fresh project. The run regenerates the boot artifacts of the empty world (the authored snippets alone) and exits 0; the old `NothingToInstall` refusal made `vibe init → vibe install` fail out of the box. @status:impl/plan",
+      "line": 54,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EMPTY-REQUIRES-IS-A-NO-OP"
+    },
+    {
       "anchor": "materialise-diff",
       "content_hash": "sha256:f83b0f2e90a18d8ed52451fb36ed52bd1d7075ab4786b657c34bce7818267da1",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2.3 Materialise only the diff",
-      "line": 53,
+      "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff"
     },
     {
@@ -70599,7 +70745,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Decision.** The materialisation step skips any `vibedeps/` slot that already exists on disk for the resolved `(kind, name, version)`. @status:impl/done",
-      "line": 54,
+      "line": 58,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SLOT-SKIP"
     },
     {
@@ -70608,7 +70754,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Versions are immutable (PROP-002), so a slot present for the exact resolved version is correct content; the `remove_dir_all` + full recursive copy is pure waste. @status:impl/done",
-      "line": 56,
+      "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#IMMUTABLE-PREMISE"
     },
     {
@@ -70617,7 +70763,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Only **new** slots and **version-bumped** slots are materialised; slot pruning (PROP-009 FU4 — dropping orphaned slots) is unchanged. @status:impl/done",
-      "line": 57,
+      "line": 61,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#DIFF-ONLY"
     },
     {
@@ -70626,7 +70772,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "For a `vibe install` that changed one subtree, this turns a re-copy of the whole dependency corpus into a copy of just the handful of slots that actually moved. @status:impl/done",
-      "line": 58,
+      "line": 62,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#one-subtree-win"
     },
     {
@@ -70635,7 +70781,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The skip trusts slot-presence-for-a-version as a proxy for correctness — by default it does not re-hash the slot. @status:impl/done",
-      "line": 61,
+      "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#TRUST-PRESENCE"
     },
     {
@@ -70644,7 +70790,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "That is deliberate: hashing every slot on every install would defeat the optimisation, and the integrity escape hatch already exists (`vibe reinstall --force`, §2.5, re-fetches and re-copies unconditionally). @status:impl/done",
-      "line": 62,
+      "line": 66,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#trust-presence-why"
     },
     {
@@ -70653,7 +70799,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Whether the fast path additionally verifies a slot's `content_hash` before trusting it is a **configurable strategy** — the `slot_integrity` setting, `trust-presence` by default (§5.2). @status:impl/done",
-      "line": 63,
+      "line": 67,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SLOT-INTEGRITY-SETTING"
     },
     {
@@ -70662,7 +70808,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2.4 Boot regeneration stays whole-tree — and why that is fine",
-      "line": 66,
+      "line": 70,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#boot-regen"
     },
     {
@@ -70671,7 +70817,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Decision.** Boot-artifact regeneration (`regenerate_boot` over every node) is **kept whole-tree**. It is not the expensive part, and scoping it is low-value: @status:impl/done",
-      "line": 67,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#BOOT-WHOLE-TREE"
     },
     {
@@ -70680,7 +70826,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "It is cheap: per node, an in-memory topological sort plus writing `INDEX.md` (a small TOML), the redirects (~1 KB each), and `STATIC.md` only when the node has static dependencies. The cost is `O(nodes)` small operations, not the corpus-sized I/O of materialisation. @status:impl/done",
-      "line": 69,
+      "line": 73,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#boot-cheap"
     },
     {
@@ -70689,7 +70835,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "It does not churn git: git tracks content, so regenerating a byte-identical `INDEX.md` produces no diff. @status:impl/done",
-      "line": 70,
+      "line": 74,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#boot-git-quiet"
     },
     {
@@ -70698,7 +70844,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Whole-tree regeneration is **self-healing**: a boot artifact left stale by an earlier bug is silently corrected on the next install. A scoped regeneration would preserve such staleness. @status:impl/done",
-      "line": 71,
+      "line": 75,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#boot-self-healing"
     },
     {
@@ -70707,7 +70853,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Scoping boot regeneration to the affected set — a changed node plus its ancestors, the shape PROP-009 §2.10 already specifies for `vibe reinstall` — is *possible* but **out of scope by owner decision**: it is the cheap phase, and effort belongs on §2.2 and §2.3. @status:impl/done",
-      "line": 74,
+      "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SCOPING-OUT-OF-SCOPE"
     },
     {
@@ -70716,7 +70862,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "It is recorded here only so the option is not lost: should a workspace ever grow large enough that `O(nodes)` small writes genuinely matter, §2.10's node-plus-ancestors shape is the ready answer. It is not a deliverable of this PROP. @status:spec/done",
-      "line": 75,
+      "line": 79,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#scoping-option-recorded"
     },
     {
@@ -70725,7 +70871,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2.5 Bypasses — no new flag",
-      "line": 78,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#force"
     },
     {
@@ -70734,7 +70880,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Decision.** PROP-011 adds **no force flag to `vibe install`**. The two skips (§2.2, §2.3) each already have an explicit, named bypass: @status:impl/done",
-      "line": 79,
+      "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-NEW-FLAG"
     },
     {
@@ -70743,7 +70889,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "to re-resolve even though `[requires]` is unchanged — `vibe update` (re-resolves and may pick newer versions; PROP-009 §2.7 / FU3); @status:impl/done",
-      "line": 81,
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#BYPASS-UPDATE"
     },
     {
@@ -70752,7 +70898,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "to re-materialise even though the slots are present — `vibe reinstall --force` (re-fetches from source and overwrites `vibedeps/`; PROP-009 §2.10). @status:impl/done",
-      "line": 82,
+      "line": 86,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#BYPASS-REINSTALL"
     },
     {
@@ -70761,7 +70907,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The skips are safe precisely *because* these bypasses exist. @status:impl/done",
-      "line": 85,
+      "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#BYPASSES-MAKE-SAFE"
     },
     {
@@ -70770,16 +70916,16 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Keeping them as the bypass — rather than adding `vibe install --force` — avoids a redundant flag and keeps each command's job distinct. @status:impl/done",
-      "line": 86,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#no-redundant-flag"
     },
     {
       "anchor": "local-mutable-source",
-      "content_hash": "sha256:b46785c25f74122a425656beb8359411bcec35568b6e6ce8270c39cd0b579950",
+      "content_hash": "sha256:678bbbaa7bd9566bead6b42988d87d5068efa6582c3cbc6468ec4c0dbd2b7dd1",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "2.6 In-workspace `file://` sources are mutable",
-      "line": 89,
+      "line": 93,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#local-mutable-source"
     },
     {
@@ -70788,7 +70934,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Decision.** §2.2 and §2.3 both rest on **version immutability** — a locked version is correct content, so its resolution can be skipped (§2.2) and its present slot trusted (§2.3). @status:impl/done",
-      "line": 90,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#IMMUTABILITY-PREMISE"
     },
     {
@@ -70797,7 +70943,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "That premise holds for a published registry version (PROP-002) and for a content-addressed git ref. @status:impl/done",
-      "line": 92,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#premise-holds"
     },
     {
@@ -70806,7 +70952,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "It is **false for a package resolved from a `file://` source *inside the workspace*** — the in-repo self-hosting registry (`packages/`, `--registry packages`) the author edits in place while *authoring* a package: the source is a working tree whose content changes with no version or `[requires]` edit, exactly like a `path`- or `git`-source dependency (which §2.2 already excludes from the fast path). @status:impl/done",
-      "line": 93,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#IN-WORKSPACE-MUTABLE"
     },
     {
@@ -70815,7 +70961,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "An **external** local registry or mirror — a `file://` path *outside* the workspace — is a static dependency source, not an edited working tree, so it stays immutable and keeps the fast path. @status:impl/done",
-      "line": 94,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#EXTERNAL-FILE-IMMUTABLE"
     },
     {
@@ -70824,7 +70970,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "So an *in-workspace* `file://`-sourced registry dependency is treated as **mutable**: @status:impl/done",
-      "line": 96,
+      "line": 100,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#mutable-treatment-lead"
     },
     {
@@ -70833,16 +70979,16 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Freshness (§2.2):** it can never be proven fresh cheaply, so the freshness check reports `Stale` for it and the depsolver re-runs — re-reading the source and re-hashing it. This mirrors the existing `path`/`git` handling: the check is \"conservative by construction\", so a mutable source yields `Stale` and `vibe install` falls back to a full resolution (always correct, and for a local source merely a no-network walk). @status:impl/done",
-      "line": 98,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#MUTABLE-FRESHNESS"
     },
     {
       "anchor": "MUTABLE-MATERIALISATION",
-      "content_hash": "sha256:26396265f7598725402584e679c46be1c66cf68c5caf719d83f9039fba1c5473",
+      "content_hash": "sha256:28d1821ef066c944d1f118b3fb612ecd46dd1244090732fae4028a7193e95226",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
-      "heading": "**Materialisation (§2.3):** its `vibedeps/` slot is **never presence-trusted** — slot-present-for-a-version is not a proxy for correctness when the source is mutable, so the slot is re-materialised (re-copied) on every install regardless of `slot_integrity`. The §2.3 fast path keeps trusting presence for immutable sources (remote registries *and* external local registries). @status:impl/done",
-      "line": 99,
+      "heading": "**Materialisation (§2.3):** its `vibedeps/` slot is **never presence-trusted** — slot-present-for-a-version is not a proxy for correctness when the source is mutable, so the slot is re-materialised (re-copied) on every install regardless of `slot_integrity`. The §2.3 fast path keeps trusting presence for immutable sources (remote registries *and* external local registries). **Regression note (2026-08-24, downgraded to impl/work):** the live detection failed to classify a `[[registry]]` `file:///` URL whose path lies INSIDE the workspace as in-workspace-mutable — the machine cache and the slots both served stale bytes for an unbumped version (the normal-format flip did not reach the slots until the cache was deleted by hand). The predicate must canonicalise both paths and cover file-URL registries, and the machine cache must never be the source of truth for a mutable source. @status:impl/work",
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#MUTABLE-MATERIALISATION"
     },
     {
@@ -70851,7 +70997,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Scope — in-workspace `file://` only, and not the giants.** Confined to `file://` sources *under the workspace root* (the self-hosting registry), which are **non-reproducible by nature** (a working directory, like a `path` dependency) and are actively edited — so honouring the edit concedes no reproducibility the source did not already concede. @status:impl/done",
-      "line": 102,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SCOPE-IN-WORKSPACE-ONLY"
     },
     {
@@ -70860,7 +71006,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The discriminator is `is_in_workspace_file_source`: the lockfile's `source_url` has a `file://` prefix **and** its decoded path lies under the (canonicalised, `\\\\?\\`-free) workspace root (the path test is component-wise and case-insensitive on Windows; a `git+file://` local *git* repo is content-addressed and does not match the `file://` prefix). @status:impl/done",
-      "line": 103,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#DISCRIMINATOR"
     },
     {
@@ -70869,7 +71015,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "It explicitly **excludes `in-place` (PROP-022) packages** (`materialization.is_in_place()`): re-hashing or re-copying a giant working tree on every install is precisely the cost `in-place` materialisation exists to avoid, so an `in-place` package keeps the §2.2/§2.3 fast path and is refreshed only through its dedicated incremental path (`vibe update <pkg>`, the `git fetch` of PROP-022). @status:impl/done",
-      "line": 104,
+      "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#IN-PLACE-EXCLUDED"
     },
     {
@@ -70878,7 +71024,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The choice is source-and-path-based, **not** mtime-based (§6 rejects mtime — file mtimes do not survive `git clone`). @status:impl/done",
-      "line": 105,
+      "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NOT-MTIME"
     },
     {
@@ -70887,7 +71033,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**No new flag (consistent with §2.5).** This is automatic and source-aware — the author edits the in-repo source and runs `vibe install`; nothing to remember, and neither `vibe update` nor `reinstall --force` is needed for the local-authoring loop, while those bypasses remain for the immutable case. @status:impl/done",
-      "line": 107,
+      "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#AUTOMATIC-NO-FLAG"
     },
     {
@@ -70896,7 +71042,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "3. Command and crate surface",
-      "line": 110,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#surface"
     },
     {
@@ -70905,7 +71051,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "`vibe-workspace` — the freshness check feeding `apply_resolution`; `vibedeps::materialise` (or its caller) gains the slot-present skip; the install orchestration learns the resolution-skip path. @status:impl/done",
-      "line": 112,
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SURF-WORKSPACE"
     },
     {
@@ -70914,7 +71060,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "`vibe-cli` — `vibe install` wires the freshness check ahead of the depsolver; its report distinguishes \"unchanged — nothing re-resolved\" from a real apply. @status:impl/done",
-      "line": 113,
+      "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SURF-CLI"
     },
     {
@@ -70923,7 +71069,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "`vibe.lock` — unchanged; the lockfile *is* the freshness baseline (§5.1), so no schema bump and no new field. @status:impl/done",
-      "line": 114,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SURF-LOCK-UNCHANGED"
     },
     {
@@ -70932,7 +71078,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "vibevm user configuration — a new `[install] slot_integrity` key (`trust-presence` default, or `verify`) selects the §2.3 materialise-skip strategy (§5.2). Set once, persists across runs. @status:impl/done",
-      "line": 115,
+      "line": 119,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SURF-CONFIG"
     },
     {
@@ -70941,7 +71087,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "No change to `vibe update` or `vibe reinstall` beyond their role as the §2.5 bypasses. @status:impl/done",
-      "line": 116,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#SURF-NO-OTHER-CHANGES"
     },
     {
@@ -70950,7 +71096,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "4. Migration",
-      "line": 119,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#migration"
     },
     {
@@ -70959,7 +71105,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "None. PROP-011 is purely an optimisation of an existing, correct operation — the output of `vibe install` is unchanged for any input where `[requires]` actually changed, and for an unchanged input the output is what `vibe.lock` already pinned. @status:impl/done",
-      "line": 121,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#NO-MIGRATION"
     },
     {
@@ -70968,7 +71114,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The one observable change is intentional and improving: `vibe install` stops drifting versions within a constraint (§2.2). @status:impl/done",
-      "line": 122,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTENTIONAL-CHANGE"
     },
     {
@@ -70977,7 +71123,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Existing lockfiles are read as-is; a freshness-input digest, if added, is an optional `meta` field absent lockfiles simply force one resolution. @status:impl/done",
-      "line": 123,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#LOCKFILES-AS-IS"
     },
     {
@@ -70986,7 +71132,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "5. Resolved questions",
-      "line": 126,
+      "line": 130,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#open"
     },
     {
@@ -70995,7 +71141,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The three questions opened in draft 2 were resolved in an owner design session on 2026-05-22 (draft 3). @status:impl/done",
-      "line": 127,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#resolved-lead"
     },
     {
@@ -71004,7 +71150,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**The freshness oracle — `cargo`'s model.** No digest field is added to `vibe.lock`; the lockfile *is* the baseline. @status:impl/done",
-      "line": 129,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#RES-FRESHNESS-ORACLE"
     },
     {
@@ -71013,7 +71159,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The freshness check is a **satisfiability test**, the shape `cargo` uses: re-read every node's `[requires]`, and the lock is fresh iff every declared dependency has a `[[package]]` entry whose pinned version satisfies the current constraint. @status:impl/done",
-      "line": 130,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#ORACLE-SAT-TEST"
     },
     {
@@ -71022,7 +71168,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The declared root set must equal `meta.root_dependencies`; every locked package must have its `vibedeps/` slot materialised. @status:impl/done",
-      "line": 131,
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#ORACLE-ROOT-SET"
     },
     {
@@ -71031,7 +71177,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Transitive packages are trusted — they were resolved from roots, and an unchanged root set cannot have produced a different transitive closure (a transitive `[requires]` lives inside a `vibedeps/` slot, immutable once materialised). @status:impl/done",
-      "line": 132,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#ORACLE-TRANSITIVE-TRUST"
     },
     {
@@ -71040,7 +71186,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "*Implementation scope:* the check covers registry-resolved roots; a node carrying a git-/path-source dependency, a capability requirement, or an unresolved `version.var` is conservatively reported stale (never wrongly fresh), so the fast path serves the common case — a workspace of registry packages. @status:impl/done",
-      "line": 133,
+      "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#ORACLE-SCOPE"
     },
     {
@@ -71049,7 +71195,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "The check reads only the resolved versions the lock already records — no schema bump, no new field; the per-package `content_hash` keeps gating fetched content at fetch time, unchanged. It is content-based, never mtime-based (§6). @status:impl/done",
-      "line": 134,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#ORACLE-CONTENT-BASED"
     },
     {
@@ -71058,7 +71204,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Slot integrity on the fast path — a configurable strategy.** The §2.3 materialise-skip is governed by a **`slot_integrity` setting** in the vibevm user configuration, chosen once and persisted. @status:impl/done",
-      "line": 135,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#RES-SLOT-INTEGRITY"
     },
     {
@@ -71067,7 +71213,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Two values: `trust-presence` (the **default** — skip a slot already present for the resolved version) and `verify` (a present slot is accepted only after its `content_hash` checks out against the resolution; a diverged slot is re-materialised with a warning naming the package and both hashes). @status:impl/done",
-      "line": 136,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-VALUES"
     },
     {
@@ -71076,7 +71222,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "`verify` without a verifier at the seam — `vibe reinstall --force` and `vibe update`, whose whole point is the unconditional rewrite — remains the always-re-copy discipline; an `Unverifiable` slot (no recorded hash, or unreadable) falls back to the same. @status:impl/done",
-      "line": 137,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-VERIFY"
     },
     {
@@ -71085,7 +71231,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "*Implementation note, historical and closed:* the `content_hash` spot-check was deferred at v1 because `compute_content_hash` lived only in `vibe-registry`, which `vibe-workspace` does not depend on. **Built 2026-08-21-eve (the P011V landing, commit 75c2d538):** the dependency knot was cut by a seam, not a move — `vibe-workspace` exposes the `SlotVerifier` trait and `vibe-install` (which does depend on `vibe-registry`) supplies `RegistrySlotVerifier`, dispatching by the pin's own recipe label; the sentinel test proves a verified slot is not copied. This note stands as the record of why the seam exists. @status:impl/done",
-      "line": 138,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-SPOT-CHECK-DEFERRED"
     },
     {
@@ -71094,7 +71240,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "A project-level override is a possible later extension; neither is v1 scope. @status:spec/done",
-      "line": 139,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#INTEGRITY-LATER-EXTENSION"
     },
     {
@@ -71103,7 +71249,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Re-resolution holds the lock — minimum churn.** When `[requires]` has changed, `vibe install` re-resolves, but pins every registry-resolved root the lock still satisfies to its exact locked version, so only the changed dependency and its subtree move — an untouched dependency never drifts. @status:impl/done",
-      "line": 140,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#RES-HOLD-LOCK"
     },
     {
@@ -71112,7 +71258,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "A held pin that conflicts with the change is detected as a depsolver error and falls back to a full, free re-resolve. @status:impl/done",
-      "line": 141,
+      "line": 145,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HOLD-CONFLICT-FALLBACK"
     },
     {
@@ -71121,7 +71267,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "*Implementation finding:* the design assumed reuse of FU3's `vibe update <pkgref>` scoped resolution, but FU3 is **correctness-relaxed** — it splices a re-resolved subtree into the held lock without unifying them, which `vibe update` accepts as an operator-scoped action but `vibe install`'s unified contract (one version per package, §6) cannot. @status:impl/done",
-      "line": 142,
+      "line": 146,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#FU3-FINDING"
     },
     {
@@ -71130,7 +71276,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Pinning via constraint-tightening holds the lock correctly with the current `NaiveDepSolver`; it does *not* skip the registry walk for an unchanged subtree. Walk-skipping needs the depsolver's pin-preference machinery (PROP-003 §2.1) and is deferred with the SAT solver. @status:spec/done",
-      "line": 143,
+      "line": 147,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#WALK-SKIP-DEFERRED"
     },
     {
@@ -71139,7 +71285,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Closed in draft 2: scoped boot regeneration — boot regeneration stays whole-tree (§2.4), the cheap phase is not optimised. @status:spec/done",
-      "line": 145,
+      "line": 149,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#draft2-closed"
     },
     {
@@ -71148,7 +71294,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "6. Rejected / deferred alternatives",
-      "line": 147,
+      "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#rejected"
     },
     {
@@ -71157,7 +71303,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Subset the resolution per member.** Rejected — resolution must be unified (one version per package; the diamond problem, PROP-007 §2.4). PROP-011 skips resolution when it is provably unneeded; it never resolves a subtree in isolation. @status:spec/done",
-      "line": 149,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#REJ-SUBSET-RESOLUTION"
     },
     {
@@ -71166,7 +71312,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**mtime-based freshness.** Rejected — file mtimes are not preserved across `git clone` / `git checkout`, so an mtime oracle would mis-fire constantly. The freshness check is content-based (§5.1). @status:spec/done",
-      "line": 150,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#REJ-MTIME"
     },
     {
@@ -71175,7 +71321,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Scope or otherwise optimise boot regeneration.** Out of scope by owner decision (§2.4) — boot regeneration is cheap, self-healing, and produces no git churn; effort goes to §2.2 and §2.3, the phases that are genuinely expensive. @status:spec/done",
-      "line": 151,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#REJ-BOOT-SCOPE"
     },
     {
@@ -71184,7 +71330,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**A `vibe install --force` flag.** Rejected — `vibe update` and `vibe reinstall --force` are already the bypasses (§2.5); a third spelling would be redundant. @status:spec/done",
-      "line": 152,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#REJ-FORCE-FLAG"
     },
     {
@@ -71193,7 +71339,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "7. Phase plan",
-      "line": 155,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#phases"
     },
     {
@@ -71202,7 +71348,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Skip resolution when fresh** — the content-based freshness check; `vibe install` skips the depsolver on an unchanged `[requires]`, becoming lockfile-respecting. The largest win and the observable-contract change. @status:impl/done",
-      "line": 157,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-1-FRESHNESS"
     },
     {
@@ -71211,7 +71357,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Materialise only the diff** — the slot-present skip in the materialisation step, with the `slot_integrity` user-config setting selecting `trust-presence` (default) or `verify-hash` (§5.2). @status:impl/done",
-      "line": 158,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-2-DIFF"
     },
     {
@@ -71220,7 +71366,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Minimum-churn re-resolution** — a changed `[requires]` re-resolves, but holds the locked version of every untouched registry root (§5.3); a held-pin conflict falls back to a full re-resolve. Skipping the registry walk for unchanged subtrees is deferred to the SAT solver (PROP-003). @status:impl/done",
-      "line": 159,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-3-MIN-CHURN"
     },
     {
@@ -71229,7 +71375,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**Docs + `VIBEVM-SPEC.md`** — the §9.1 edit (install respects the lock) under owner sanction; a `docs/` note. @status:impl/done",
-      "line": 160,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#PHASE-4-DOCS"
     },
     {
@@ -71238,7 +71384,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "Boot-regeneration scoping (§2.4) is out of scope by owner decision — not a phase. @status:spec/done",
-      "line": 162,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#phases-note"
     },
     {
@@ -71247,7 +71393,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "8. Version history",
-      "line": 164,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#history"
     },
     {
@@ -71256,7 +71402,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**2026-05-21 — draft 1.** Requirements captured in an owner discussion on incremental install: the resolution / application split (§2.1), skipping the depsolver when `vibe.lock` is fresh — which also makes `vibe install` lockfile-respecting (§2.2), materialising only changed `vibedeps/` slots (§2.3), and the deliberate decision to leave boot regeneration whole-tree because it is the cheap phase (§2.4). @status:spec/done",
-      "line": 166,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HISTORY-DRAFT-1"
     },
     {
@@ -71265,7 +71411,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**2026-05-21 — draft 2.** Owner review: the §2.4 decision — boot regeneration stays whole-tree, the cheap phase is not optimised — confirmed and made firm; the corresponding draft-1 open question is closed. The PROP stands on its two substantive wins, §2.2 (skip resolution when fresh) and §2.3 (materialise only the diff). Three §5 open questions — the freshness oracle, slot integrity, incremental re-resolution — remain for a follow-up owner design session. Not yet implementation-ready. @status:spec/done",
-      "line": 167,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HISTORY-DRAFT-2"
     },
     {
@@ -71274,7 +71420,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**2026-05-22 — draft 3.** The three §5 open questions resolved in an owner design session. The freshness oracle is `cargo`'s satisfiability model — the lockfile is the baseline, no new field (§5.1). Slot integrity on the fast path is a `slot_integrity` vibevm user-config setting, `trust-presence` by default (§5.2). A changed `[requires]` re-resolves incrementally, full re-resolve as fallback (§5.3). Implementation-ready. @status:spec/done",
-      "line": 168,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HISTORY-DRAFT-3"
     },
     {
@@ -71283,7 +71429,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**2026-06-27 — refinement (owner-directed).** In-workspace `file://` sources recognised as mutable (§2.6): a registry dependency resolved from the in-repo self-hosting registry (`--registry packages`, a `file://` path *under the workspace root*, the package-authoring shape) is a working tree, so it is excluded from both the §2.2 freshness fast path (always re-resolved, like `path`/`git`) and the §2.3 presence-trust (its slot is always re-materialised). Scoped to *in-workspace* `file://` — an external local registry or mirror (`file://` outside the workspace) keeps the fast path — and excluding `in-place` (PROP-022) giants, which refresh through `vibe update`. Closes the silent-staleness wart where editing the in-repo `packages/` source in place left `vibedeps/` stale with no signal. @status:spec/done",
-      "line": 169,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HISTORY-REFINEMENT"
     },
     {
@@ -71292,7 +71438,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "heading": "**2026-05-22 — shipped.** Implemented across the four §7 phases: the freshness check (`vibe-workspace::freshness`), the materialise-diff skip and the `slot_integrity` user-config setting, and minimum-churn re-resolution via pin-holding. Two findings were reconciled back into this PROP (Sync-from-Code). FU3's scoped resolution is correctness-relaxed and cannot serve `vibe install`'s unified contract, so Phase 3 holds pins via constraint-tightening and the registry-walk skip is deferred to PROP-003's SAT solver (§5.3). `slot_integrity = verify` re-materialises rather than hash-comparing — the cheaper `content_hash` spot-check waits on `compute_content_hash` being lowered out of `vibe-registry` (§5.2). The `VIBEVM-SPEC.md` §9.1 edit landed under the owner sanction granted this session (§6). @status:spec/done",
-      "line": 170,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HISTORY-SHIPPED"
     },
     {
@@ -77022,6 +77168,150 @@
       "heading": "**2026-07-15 — IMPLEMENTED.** All five phases of the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md) landed on `main` (`d487d4e`…`381095e`), floor green throughout. In `vibe-workspace`: the per-unit recursive compiler (`boot::hybrid` — `resolve_zone` / `topo_zone`), soft hoisting (`hybrid::hoist`) with `#use` markers and shared-by hints, the `static-hard` opt-out on `LinkType`, Merkle fingerprints (`hybrid::fingerprint`) driving the emit-side dirty-subgraph skip (§2.8), and the `verify_boot_graph` integrity check (§3). Emission lives in `install/bootgen` + `bootgen/hybrid_emit`. 178 tests, specmap 0 orphans. Deferred (plan §15): broad conversion of real packages (DEF-3), a `proptest` fuzz sweep (DEF-5), and the `vibe check` CLI wiring (DEF-6). Today's tree is byte-stable — `static` reaches the lane only through the root's `static-transitive` edge, so nothing is per-unit-emitted yet. @status:spec/done",
       "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HISTORY-IMPLEMENTED"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:d26a236e819218fff92b1d95c83c3287e8146147f1775b79261c3088aef279ba",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "PROP-053: `vibe clean` and Maven-style verb chaining",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root"
+    },
+    {
+      "anchor": "related",
+      "content_hash": "sha256:f0cc4034b7e5f7e5c9950eb5e6d4c5e126fbf4db264bf7d63a4cc9c2c1541cf5",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**Related:** [PROP-009](PROP-009-loading-model.xml) (the install orchestration), [PROP-011](PROP-011-incremental-install.xml) (skip-when-fresh, the materialise diff, and the 2026-08-24 bug rulings `##EXPLICIT-PKGREF-FULL-SOLVE` / `##EMPTY-REQUIRES-IS-A-NO-OP` this verb composes with), [PROP-010](../vibe-registry/PROP-010-local-package-cache.xml) (the machine cache clean must NOT touch). @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#related"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:db26078bd3dbcc49948521ea43cfb2226fa759e8d71123b373a405ab0ba107e9",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "1. The owner's mandate",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#mandate"
+    },
+    {
+      "anchor": "CLEAN-MANDATE-VERBATIM",
+      "content_hash": "sha256:fb565421794c2184656655b92cd80b6d2b989bcf6d1216e7658c4fb264cf8772",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "The owner's words (2026-08-24), verbatim: «Для чистки нужно сделать отдельную команду vibe clean, аналог mvn clean. Она очистит vibedeps. Способ использования командной строки стоит переделать на способ похожий на Maven. Чтобы можно было сказать \"vibe clean install\", и вот тогда он вначале удалит всё, и потом перегенерирует вообще весь vibedeps. Если сделать vibe clean install org.vibevm.ai-native/rust-ai-native --offline, он должен вначале очистить всю папку, потом установить всё, потом обновить только тот пакет, что попросили.» And the refinement: «Суть команды clean в том, что я хочу, чтобы она работала похоже на Maven, но чтобы учитывалась специфика нашей работы с промтами.» @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "semantics",
+      "content_hash": "sha256:f09fa466d95a6d05a8a105b10a5be66ed7bed3bc7de1d69afbb8504fbe896670",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "2. What clean removes — and what it must never touch",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#semantics"
+    },
+    {
+      "anchor": "CLEAN-REMOVES-DERIVED",
+      "content_hash": "sha256:5b2ace6dd934738cf3438afa7226b7525846d5084bcb29d2f21fc6a75860178a",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**`vibe clean` removes exactly the derived prompt state** of the workspace it runs in: (a) the dependency world — the whole `vibevm/vibedeps/` root of the workspace; (b) the generated boot artifacts — `vibevm/vibespecs/boot/STATIC.*`, `INDEX.md` and `INLINE.*`, each carrying the generated-by-vibe marker. That is the mvn-clean analogue: what an install writes, clean deletes. @status:impl/plan",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"
+    },
+    {
+      "anchor": "CLEAN-KEEPS-AUTHORED",
+      "content_hash": "sha256:92bad523b386e729828c36761c7663ddcffd99e9c572897682053840ba446e06",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**Never touched — the authored surface:** every authored file under `vibevm/vibespecs/` (the boot snippets `00-*`/`90-*` included — vibe never writes them), `vibevm/vibefacts/`, the instruction files (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`, their `<vibevm>` blocks included — an install rewrites the block in place, so clean has nothing to reclaim there), and every project file outside the derived set. This is the prompt-work specificity of the mandate: our `target/` equivalent holds materialised PROMPTS, and the boundary between authored prompt and derived copy is the layout itself. @status:impl/plan",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-AUTHORED"
+    },
+    {
+      "anchor": "CLEAN-KEEPS-THE-LOCK",
+      "content_hash": "sha256:14f60fe10b9d057cca1b084d11177e56fe0c741e7f61a81c71d62b731176dc14",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**Never touched — `vibe.lock`.** The lock is the recorded resolution, not derived state: keeping it is what makes `vibe clean install --offline` reproduce the exact world from the machine cache with zero network — the mvn analogy is `target/` vs the dependency resolution, and the lock sits on the resolution side. @status:impl/plan",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-LOCK"
+    },
+    {
+      "anchor": "CLEAN-KEEPS-THE-CACHE",
+      "content_hash": "sha256:038faf73c35bef475d8ca43fa8f5d9d599bd317b724e3bcf7fc61b26bb5ccac8",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**Never touched — the machine cache** (`~/.vibe/cache`, PROP-010). It is our `~/.m2`: clean is per-workspace, the cache is per-machine, and the offline reinstall path depends on it. Cache hygiene has its own verbs (`vibe cache …`). @status:impl/plan",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-KEEPS-THE-CACHE"
+    },
+    {
+      "anchor": "CLEAN-REPORTS",
+      "content_hash": "sha256:54182d9cf915df79376bd17aab26891ca2fbb269aa50ecec4e27da2e348f463d",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**The run reports what left:** the slot count removed and each generated artifact deleted, one line each — never a silent sweep. A clean over an already-clean tree reports «nothing to clean» and exits 0. @status:impl/plan",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REPORTS"
+    },
+    {
+      "anchor": "CLEAN-NEEDS-A-PROJECT",
+      "content_hash": "sha256:ea0e7a0a89a9d0125433df8a7cb6a47a49e17e743aa2f4796188917892fa19ad",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "Clean refuses to run outside a vibe project (no `vibe.toml` at or above the cwd) — a guard against sweeping an unrelated directory. @status:impl/plan",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-NEEDS-A-PROJECT"
+    },
+    {
+      "anchor": "chaining",
+      "content_hash": "sha256:d647c4bf570058e85debd4771e716340469d3fbf76ad934fce6d5351fb0a93a0",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "3. Verb chaining — the Maven phase line",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#chaining"
+    },
+    {
+      "anchor": "CHAIN-GRAMMAR",
+      "content_hash": "sha256:7542ca456efeee0d8f4e2574181ed58f166c2dabb43d805a58cc733687af223c",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**`vibe clean install [<pkgref>…] [flags]`** is the phase chain: run `clean` first, then the install line exactly as if `vibe install …` had been typed. Flags after the chain (`--offline`, `--assume-yes`, …) belong to the install phase; `clean` itself takes none. `vibe clean` alone runs just the clean. @status:impl/plan",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-GRAMMAR"
+    },
+    {
+      "anchor": "CHAIN-PKGREF-SEMANTICS",
+      "content_hash": "sha256:62d824228f54d6cf10c3293ec276f66517ed111ac77e243643bcd7fbfbfa4bc3",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "**With a pkgref, the chain is clean → install-everything → refresh-the-named:** after the wipe, the full world reinstalls from the lock/manifest (PROP-011 §2.2 semantics — held pins, no drift), and then the named packages alone are re-resolved fresh against their declared constraints (the scoped `vibe update` semantics for an installed package; plain addition for a new one — both through PROP-011 `##EXPLICIT-PKGREF-FULL-SOLVE`, so the world never shrinks to the named closure). @status:impl/plan",
+      "line": 22,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-PKGREF-SEMANTICS"
+    },
+    {
+      "anchor": "CHAIN-STOPS-ON-RED",
+      "content_hash": "sha256:861394a9ef9b0706cc475a7486eff93b0d01c463bd781df2590ed313c1e80851",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "A failing phase stops the chain: `clean install` with a failing install leaves the tree cleaned and the failure reported — never a half-rolled-back mix. @status:impl/plan",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-STOPS-ON-RED"
+    },
+    {
+      "anchor": "CHAIN-ONLY-INSTALL",
+      "content_hash": "sha256:0479ffb65d4e62975383fb3661dfed215ab61c648736b87308484eb8ef742059",
+      "doc_path": "modules/vibe-workspace/PROP-053",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "heading": "The only chain this PROP ships is `clean install`. A general phase grammar (`clean update`, `clean check`, …) is future work and must not be improvised ad hoc — each pairing needs its own semantics ruling. @status:impl/plan",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CHAIN-ONLY-INSTALL"
     },
     {
       "anchor": "root",

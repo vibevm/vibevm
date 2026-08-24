@@ -122,6 +122,11 @@ pub enum Command {
     /// Install one or more packages into the current project.
     Install(InstallArgs),
 
+    /// Remove the derived prompt state — dependency slots and generated
+    /// boot artifacts — keeping every authored file, the lock, and the
+    /// machine cache (PROP-053). Chain `vibe clean install …` to rebuild.
+    Clean(CleanArgs),
+
     /// Show installed packages whose registry-side latest version is
     /// newer than what the lockfile currently pins. Read-only — does
     /// not touch the lockfile or fetch package content. Per

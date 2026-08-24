@@ -30,6 +30,7 @@ pub mod aiui;
 pub mod bin;
 pub mod cache;
 pub mod check;
+pub mod clean;
 pub mod explain;
 pub mod facts;
 pub(crate) mod facts_check;

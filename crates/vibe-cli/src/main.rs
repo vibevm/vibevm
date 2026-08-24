@@ -108,6 +108,9 @@ fn main() -> ExitCode {
         Command::Install(args) => {
             commands::install::run(&ctx, args, discover_embedded_root(), cli.offline)
         }
+        Command::Clean(args) => {
+            commands::clean::run(&ctx, args, discover_embedded_root(), cli.offline)
+        }
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {
             // The composition root reads the search command's
