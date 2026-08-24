@@ -21,7 +21,7 @@ tsc's own engine, agreement by construction).</SERVED-OVER-MCP-AS-ONE-STDIO-BINA
   </facts>
   <p><server-brief-pointer fact="true" status="impl/done">The brief (tool inventory, the tool↔CLI parity map, the session and
 capture semantics):
-[`spec/tools/discipline-mcp-typescript.md`](spec/tools/discipline-mcp-typescript.md).</server-brief-pointer></p>
+[`spec/tools/discipline-mcp-typescript.xml`](spec/tools/discipline-mcp-typescript.xml).</server-brief-pointer></p>
   <p><PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT fact="true" status="impl/done">Prerequisite (inherited from the stack): node ≥ 22.6 and the project's
 own `typescript` devDependency — absent tools hard-fail with the
 install recipe, through MCP as on the CLI.</PREREQUISITE-NODE-AND-THE-PROJECTS-OWN-TYPESCRIPT></p>

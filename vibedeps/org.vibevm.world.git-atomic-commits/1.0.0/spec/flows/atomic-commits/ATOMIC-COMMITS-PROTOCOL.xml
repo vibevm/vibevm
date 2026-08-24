@@ -94,7 +94,7 @@ intent or is mere prose is the reader's call.</THE-TEST-IS-MECHANICAL-THE-WORD-A
   boundaries — the atomic unit is the idea, not the file.</CASE-CROSS-MODULE-CHANGE>
     </facts>
     <p><sibling-document-pointers fact="true" status="impl/done">Mechanical procedure for producing the split:
-[`splitting-large-changes.md`](splitting-large-changes.md).</sibling-document-pointers></p>
+[`splitting-large-changes.xml`](splitting-large-changes.xml).</sibling-document-pointers></p>
   </splitting>
   <batching title="When to batch">
     <p><SOMETIMES-THREE-COUPLED-CHANGES-FORM-ONE-IDEA fact="true" status="impl/done">Sometimes three tightly coupled changes form one idea.</SOMETIMES-THREE-COUPLED-CHANGES-FORM-ONE-IDEA></p>

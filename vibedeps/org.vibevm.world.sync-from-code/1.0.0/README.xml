@@ -21,17 +21,17 @@ code back — correctly by the spec-wins rule, wrong in outcome.</in-both-cases-
 flow is the sanctioned way to close that gap.</THE-FLOW-IS-THE-SANCTIONED-WAY-TO-CLOSE-THAT-GAP></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/sync-from-code/SYNC-PROTOCOL.md` — full protocol: what
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/sync-from-code/SYNC-PROTOCOL.xml` — full protocol: what
   Sync-from-Code is, when to run it, what the draft spec diff must
   contain (value + reason + revisit trigger), and what it explicitly
   does not do.</CONTENT-THE-FULL-PROTOCOL>
-    <CONTENT-THE-DECISION-TABLE fact="true" status="impl/done">`spec/flows/sync-from-code/when-to-apply.md` — decision table:
+    <CONTENT-THE-DECISION-TABLE fact="true" status="impl/done">`spec/flows/sync-from-code/when-to-apply.xml` — decision table:
   *should I run it right now?*, including the cases where you should
   **not** (temporary hacks, mechanical changes, unnamed reasons).</CONTENT-THE-DECISION-TABLE>
-    <CONTENT-THE-REVIEW-CHECKLIST fact="true" status="impl/done">`spec/flows/sync-from-code/review-workflow.md` — human-side checklist
+    <CONTENT-THE-REVIEW-CHECKLIST fact="true" status="impl/done">`spec/flows/sync-from-code/review-workflow.xml` — human-side checklist
   for the approval step: six checks that catch bad syncs before they
   land.</CONTENT-THE-REVIEW-CHECKLIST>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/20-flow-sync-from-code.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/20-flow-sync-from-code.xml` — boot snippet loaded at
   session start, pointing the agent at the protocol.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">
@@ -41,7 +41,7 @@ flow is the sanctioned way to close that gap.</THE-FLOW-IS-THE-SANCTIONED-WAY-TO
     <fence lang="bash">vibe uninstall flow:sync-from-code</fence>
     <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
 snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
-    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files (`00-core.xml`, `90-user.xml`, `WAL.md`) are
 never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">

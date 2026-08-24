@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:059c5e0b7cfb818e76a7eabc95bd8e7076f35969565280fd6272f6c9e4abf11c"
+source_hash = "sha256:ad75d3052b718258dff03e4d88744f2b85f381e5a45aaee01509640f05893b75"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:966e65b3c6b2d1c0703ada0eb22c2ab88510ea24cc21b816e97949b0ebbe6662"
+derived_hash = "sha256:c4fa63c574eedfe78b2da4bd2138f790254f8f95e3c94519a45bd20a52e01af3"
 
 [[file]]
 source = "Cargo.lock"
@@ -545,6 +545,11 @@ output = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
 disposition = "copied"
 
 [[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+disposition = "copied"
+
+[[file]]
 source = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 output = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 disposition = "copied"
@@ -572,6 +577,41 @@ disposition = "copied"
 [[file]]
 source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
 output = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
 disposition = "copied"
 
 [[file]]
@@ -605,9 +645,9 @@ output = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
 disposition = "copied"
 
 [[file]]
-source = "spec/tools/discipline-mcp-rust.md"
+source = "spec/tools/discipline-mcp-rust.xml"
 output = "spec/tools/discipline-mcp-rust.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "specmap.toml"

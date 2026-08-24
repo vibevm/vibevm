@@ -6,13 +6,13 @@
   <p><two-files-carry-it-lead fact="true" status="impl/done">Two files
 carry it:</two-files-carry-it-lead></p>
   <facts ordered="false">
-    <FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">`spec/WAL.md` — the living checkpoint. **Canonical.**</FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT>
+    <FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">`spec/WAL.xml` — the living checkpoint. **Canonical.**</FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT>
     <FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT fact="true" status="impl/done">`CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
   supersedes it wherever they diverge.</FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT>
   </facts>
   <session-start title="At the start of every session">
     <facts ordered="true">
-      <READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE fact="true" status="impl/done">Read `spec/WAL.md` **before** doing anything else. The `wal-status`
+      <READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE fact="true" status="impl/done">Read `spec/WAL.xml` **before** doing anything else. The `wal-status`
    skill, where installed, is the fast form of this read.</READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE>
       <VERIFY-THE-UPDATED-LINE-IS-CURRENT fact="true" status="impl/done">Verify the `_Updated:` line is current. If it is older than 24
    hours, ask the user to confirm state before acting on anything the
@@ -34,7 +34,7 @@ carry it:</two-files-carry-it-lead></p>
   </during>
   <session-end title="At the end of every session">
     <facts ordered="true">
-      <REWRITE-THE-WAL-NEVER-APPEND-TO-IT fact="true" status="impl/done">Rewrite `spec/WAL.md` per the protocol in
+      <REWRITE-THE-WAL-NEVER-APPEND-TO-IT fact="true" status="impl/done">Rewrite `spec/WAL.xml` per the protocol in
    @spec://org.vibevm.world/wal/flows/wal/session-end-hook#root.
    Rewrite, not append — the WAL must reflect the **current** state,
    not the history. History lives in `git log` and in milestone commit
@@ -58,7 +58,7 @@ carry it:</two-files-carry-it-lead></p>
     <facts ordered="false">
       <FLOW-OWNS-ONLY-ITS-OWN-FILES fact="true" status="impl/done">This flow owns only the protocol files under `spec/flows/wal/`, the
   `wal-status` skill, and this boot snippet.</FLOW-OWNS-ONLY-ITS-OWN-FILES>
-      <WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE fact="true" status="impl/done">`spec/WAL.md` and `CONTINUE.md` are **project state**, not package
+      <WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE fact="true" status="impl/done">`spec/WAL.xml` and `CONTINUE.md` are **project state**, not package
   state — the package never creates, deletes, or overwrites them as
   part of install or uninstall.</WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE>
     </facts>

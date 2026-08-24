@@ -33,6 +33,7 @@ repository = "https://gitverse.ru/vibevm/vibevm"
 homepage = "https://gitverse.ru/vibevm/vibevm"
 
 [workspace.dependencies]
+quick-xml = "0.41.0"
 # Internal crates — path-only (not published; consumed in-tree). The four
 # neutral engine crates under crates/vendor/ are byte-identical vendored
 # copies of flow:org.vibevm.ai-native/core-ai-native's authored source (`cargo xtask

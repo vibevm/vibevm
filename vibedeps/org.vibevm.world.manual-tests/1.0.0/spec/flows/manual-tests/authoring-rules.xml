@@ -5,9 +5,9 @@
   <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The four rules every manual test must
 satisfy, each with a short worked fragment.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The rationale for the tier
-lives in [`MANUAL-TESTS-PROTOCOL.md`](MANUAL-TESTS-PROTOCOL.md); the
+lives in [`MANUAL-TESTS-PROTOCOL.xml`](MANUAL-TESTS-PROTOCOL.xml); the
 copy-ready skeleton that bakes these rules in lives in
-[`test-template.md`](test-template.md).</sibling-document-pointers></p>
+[`test-template.xml`](test-template.xml).</sibling-document-pointers></p>
   <p><A-WALKTHROUGH-THAT-BREAKS-ANY-OF-THESE-IS-A-BUG-IN-THE-TEST fact="true" status="impl/done">A walkthrough that breaks any of these is a bug in the test, not a
 property of the product it exercises.</A-WALKTHROUGH-THAT-BREAKS-ANY-OF-THESE-IS-A-BUG-IN-THE-TEST></p>
   <clean-slate title="Rule 1 — Clean slate is mandatory">

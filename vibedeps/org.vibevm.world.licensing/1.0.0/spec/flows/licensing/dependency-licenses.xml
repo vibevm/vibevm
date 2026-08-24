@@ -85,7 +85,7 @@ nowhere.</KEEP-THE-TWO-CONVERSATIONS-SEPARATE></p>
   nothing. Nor is there a listing to re-run: no `deny.toml`, no `about.toml`,
   no SBOM or SPDX manifest anywhere in the perimeter, and a lockfile that
   records no licence field. The adopter must therefore author the line itself;
-  `audit-checklist.md` is explicitly «a starting set, not a closed one», which
+  `audit-checklist.xml` is explicitly «a starting set, not a closed one», which
   is where it would go.*</RE-AUDIT-ON-A-SCHEDULE>
       <POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST fact="true" status="impl/done">**Point the product's carve-out at the generated list**, never a
   hand-maintained copy — the hand copy drifts, the generated one

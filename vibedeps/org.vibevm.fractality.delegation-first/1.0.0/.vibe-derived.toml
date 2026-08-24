@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:cf987cf05ed46476fbbbbdfde972589e2ddd42cb24124c11338a68531924cefc"
+source_hash = "sha256:1e422a7f579acb2b2db89299642b99ea45d3223daae31084531095674e935a52"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:62cc37ee38ee1b10f74a4d4251293bc194735664fe18c47e3b1f1158946c8390"
+derived_hash = "sha256:4d343700902bfd7e943bf8e2511aa4fb6da6be4be2e95c4b37d207ed6359f2d4"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,14 +15,14 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/76-flow-delegation-first.md"
+source = "spec/boot/76-flow-delegation-first.xml"
 output = "spec/boot/76-flow-delegation-first.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md"
+source = "spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml"
 output = "spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

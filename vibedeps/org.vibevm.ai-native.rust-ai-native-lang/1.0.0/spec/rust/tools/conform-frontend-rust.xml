@@ -59,6 +59,6 @@
   </honesty>
   <boundaries title="6. What this document does NOT cover">
     <p><THE-RULES-THEMSELVES-LIVE-IN-THE-ENGINE-SPEC fact="true" status="impl/done">The rules' semantics live in `ENGINE-CONFORM`, one definition for all three languages; this document covers only what the RUST side reads, emits and configures.</THE-RULES-THEMSELVES-LIVE-IN-THE-ENGINE-SPEC></p>
-    <p><THE-GUIDE-IS-THE-AUDIENCE-DOCUMENT fact="true" status="impl/done">`GUIDE-AI-NATIVE-RUST.md` is the author-facing document — how to write code that passes; this one is the surface: what the tool reads and what it accepts.</THE-GUIDE-IS-THE-AUDIENCE-DOCUMENT></p>
+    <p><THE-GUIDE-IS-THE-AUDIENCE-DOCUMENT fact="true" status="impl/done">`GUIDE-AI-NATIVE-RUST.xml` is the author-facing document — how to write code that passes; this one is the surface: what the tool reads and what it accepts.</THE-GUIDE-IS-THE-AUDIENCE-DOCUMENT></p>
   </boundaries>
 </spec>

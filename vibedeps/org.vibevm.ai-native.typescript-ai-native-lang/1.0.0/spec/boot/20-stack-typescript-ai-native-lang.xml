@@ -4,11 +4,11 @@
   <status stage="impl" state="done"/>
   <p><TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE fact="true" status="impl/done">TypeScript code in this
 project follows the AI-Native TypeScript guide
-(`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` in this package).</TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE></p>
+(`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` in this package).</TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE></p>
   <p><READ-THE-GUIDE-FOR-STRUCTURE fact="true" status="impl/done">Read the
 guide when authoring or reviewing structure; per-edit work needs only
 the card whose trigger fires.</READ-THE-GUIDE-FOR-STRUCTURE></p>
-  <p><CARD-REGISTRY-FOR-TYPESCRIPT fact="true" status="impl/done">Card registry for TypeScript: `spec/cards/INDEX.md` in this package (trigger →
+  <p><CARD-REGISTRY-FOR-TYPESCRIPT fact="true" status="impl/done">Card registry for TypeScript: `spec/cards/INDEX.xml` in this package (trigger →
 card; the nine executable scaffolds A–I in their TypeScript shape).</CARD-REGISTRY-FOR-TYPESCRIPT></p>
   <p><STACK-SHIPS-ITS-OWN-CARDS-PROJECTION fact="true" status="impl/done">This
 stack ships its own `spec/cards/` projection — the weak-reader runtime surface

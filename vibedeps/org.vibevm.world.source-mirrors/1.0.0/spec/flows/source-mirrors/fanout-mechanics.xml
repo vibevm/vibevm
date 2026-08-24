@@ -10,8 +10,8 @@ check**, bringing an accepted web merge **home**, why deletions and
 rewrites **do not propagate**, a **reference implementation**, and how
 to pin the never-`--force` invariant as a **test**.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The model this
-serves is in [`SOURCE-MIRRORS-PROTOCOL.md`](SOURCE-MIRRORS-PROTOCOL.md);
-the daily rhythm in [`daily-loop.md`](daily-loop.md).</sibling-document-pointers></p>
+serves is in [`SOURCE-MIRRORS-PROTOCOL.xml`](SOURCE-MIRRORS-PROTOCOL.xml);
+the daily rhythm in [`daily-loop.xml`](daily-loop.xml).</sibling-document-pointers></p>
   <manifest title="The committed target manifest">
     <p><THE-HOST-SET-LIVES-IN-A-SMALL-COMMITTED-FILE fact="true" status="impl/done">The set of hosts lives in a small **committed** file at the repo root —
 TOML or YAML, whatever the project already reads.</THE-HOST-SET-LIVES-IN-A-SMALL-COMMITTED-FILE></p>
@@ -112,7 +112,7 @@ that host.</A-NON-FAST-FORWARD-MEANS-THE-HOST-CARRIES-A-MAIN-YOU-LACK></p>
 silently clobber.</A-DIVERGED-TARGET-IS-A-SIGNAL-TO-INVESTIGATE></quote>
     <p><RECONCILIATION-IS-DELIBERATE-AND-MANUAL fact="true" status="impl/done">Reconciliation is deliberate and manual: fetch the host, inspect the
 divergent commits, merge what is wanted **into mainline**, then re-fan
-([`daily-loop.md` §drift](daily-loop.md#drift)).</RECONCILIATION-IS-DELIBERATE-AND-MANUAL></p>
+([`daily-loop.xml` §drift](daily-loop.xml#drift)).</RECONCILIATION-IS-DELIBERATE-AND-MANUAL></p>
   </fail-loud>
   <drift-check title="The read-only drift check">
     <p><a-check-mode-answers-is-everyone-level fact="true" status="impl/done">A `--check` mode answers "is everyone level?" without pushing anything:</a-check-mode-answers-is-everyone-level></p>
@@ -227,7 +227,7 @@ you cannot run is a rule you cannot trust.</THE-INVARIANT-IS-RUNNABLE-CAPITAL></
   Never forces, and hardened past this document's ask into a unit test —
   `push_args` is a pure function and `push_args_never_force`
   (`mirror.rs:426-440`) asserts no `--force`, `-f` or `+`-refspec for four ref
-  shapes, which `spec/common/PROP-016-source-mirrors.md:64` calls «runnable
+  shapes, which `spec/common/PROP-016-source-mirrors.xml:64` calls «runnable
   capital, not prose». «Reconcile by hand, then re-fan» is the failure message
   itself (`mirror.rs:315-319`). What is only half built is «names the
   divergence» in the sense `##RESPONSE-ABORT-THAT-TARGET` defines it: the

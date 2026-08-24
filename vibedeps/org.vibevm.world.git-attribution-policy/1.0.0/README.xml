@@ -12,7 +12,7 @@ reliable provenance trail.</agents-self-attribute-and-an-undecided-project-drift
   <p><PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED fact="true" status="spec/done">This package makes the choice explicit
 and enforced. *Explicit ships; enforced does not. `vibe.toml` declares one
 `[boot_snippet]` and no executable, so an install writes the snippet and three
-documents; the enforcement is `enforcement-checklist.md`'s pre-push scan — a
+documents; the enforcement is `enforcement-checklist.xml`'s pre-push scan — a
 fenced shell snippet each project must wire for itself — beside
 tool-configuration advice and a periodic-audit line. Searched the whole
 consuming tree (`packages/`, `vibedeps/`, `crates/`, `xtask/`, `tools/`,
@@ -36,17 +36,17 @@ choice where law, employer, or upstream projects require disclosure.</DISCLOSURE
   <p><VERIFY-BOTH-BEFORE-ADOPTING-THE-DEFAULT fact="true" status="impl/done">Verify both before adopting the default; the protocol tells you how.</VERIFY-BOTH-BEFORE-ADOPTING-THE-DEFAULT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-POLICY fact="true" status="impl/done">`spec/flows/attribution-policy/ATTRIBUTION-POLICY.md` — the full
+    <CONTENT-THE-FULL-POLICY fact="true" status="impl/done">`spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml` — the full
   policy: what attribution governs, the concealment posture and its
   honest rationale, the single-place law, how to instruct an agent,
   and the slip drill.</CONTENT-THE-FULL-POLICY>
-    <CONTENT-THE-DISCLOSURE-ALTERNATIVE fact="true" status="impl/done">`spec/flows/attribution-policy/disclosure-alternative.md` — the
+    <CONTENT-THE-DISCLOSURE-ALTERNATIVE fact="true" status="impl/done">`spec/flows/attribution-policy/disclosure-alternative.xml` — the
   open posture: when it is mandatory, when it is the better fit,
   what it costs, and how to switch postures forward-only.</CONTENT-THE-DISCLOSURE-ALTERNATIVE>
-    <CONTENT-THE-ENFORCEMENT-CHECKLIST fact="true" status="impl/done">`spec/flows/attribution-policy/enforcement-checklist.md` — the
+    <CONTENT-THE-ENFORCEMENT-CHECKLIST fact="true" status="impl/done">`spec/flows/attribution-policy/enforcement-checklist.xml` — the
   eight leak surfaces, a pre-push scan, tool configuration, and the
   periodic audit line.</CONTENT-THE-ENFORCEMENT-CHECKLIST>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/55-flow-attribution-policy.xml` — boot snippet loaded at
   session start: the rule, the honest reason, the scope carve-outs,
   and the never-do list. Under the single-place law, this snippet is
   the one place in a consuming project where the topic lives.</CONTENT-THE-BOOT-SNIPPET>

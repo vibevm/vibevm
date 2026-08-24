@@ -4,7 +4,7 @@
   <status stage="doc" state="done" audience="user"/>
   <p><PACKAGE-INSTALLS-THE-WAL-PROTOCOL fact="true" status="impl/done">A `flow` package that installs the WAL protocol into a project.</PACKAGE-INSTALLS-THE-WAL-PROTOCOL></p>
   <p><WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS fact="true" status="impl/done">The WAL
-(Write-Ahead Log) is a short checkpoint file (`spec/WAL.md`) that
+(Write-Ahead Log) is a short checkpoint file (`spec/WAL.xml`) that
 bridges sessions: a coding agent has no memory between invocations, so
 the WAL is the only structured record of "where we are" that survives
 session restarts.</WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS></p>
@@ -18,19 +18,19 @@ convention document, marked OPTIONAL but preferred; the deference this
 package expects has not landed in one of its releases yet.</DISCIPLINE-DEFERS-TO-THIS-PACKAGE-FROM-ITS-NEXT-RELEASE></p>
   <p><package-contents-lead fact="true" status="impl/done">The package ships five pieces of content plus a skill:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/wal/WAL-PROTOCOL.md` — full protocol: the two files,
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/wal/WAL-PROTOCOL.xml` — full protocol: the two files,
   what a WAL is and isn't, required sections, agent-grade precision,
   update triggers, freshness, size budget, the conflict rule, the
   acceptance test, and a re-derivation prompt.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-SESSION-END-HOOK fact="true" status="impl/done">`spec/flows/wal/session-end-hook.md` — the wind-down: the
+    <CONTENT-THE-SESSION-END-HOOK fact="true" status="impl/done">`spec/flows/wal/session-end-hook.xml` — the wind-down: the
   step-by-step session-end procedure and the trigger phrases that
   invoke it explicitly.</CONTENT-THE-SESSION-END-HOOK>
-    <CONTENT-THE-MORNING-ROUTINE fact="true" status="impl/done">`spec/flows/wal/morning-routine.md` — the human counterpart: a
+    <CONTENT-THE-MORNING-ROUTINE fact="true" status="impl/done">`spec/flows/wal/morning-routine.xml` — the human counterpart: a
   five-minute ritual at the start of each day that keeps the agent's
   read of the state synchronised with your head.</CONTENT-THE-MORNING-ROUTINE>
-    <CONTENT-THE-COLD-RESUME-CONTRACT fact="true" status="impl/done">`spec/flows/wal/cold-resume.md` — the `CONTINUE.md` contract and
+    <CONTENT-THE-COLD-RESUME-CONTRACT fact="true" status="impl/done">`spec/flows/wal/cold-resume.xml` — the `CONTINUE.md` contract and
   the wind-down / resume session commands.</CONTENT-THE-COLD-RESUME-CONTRACT>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/10-flow-wal.md` — boot snippet read by agents at session
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/10-flow-wal.xml` — boot snippet read by agents at session
   start, pointing them at the protocol and the WAL itself.</CONTENT-THE-BOOT-SNIPPET>
     <CONTENT-THE-WAL-STATUS-SKILL fact="true" status="impl/done">`spec/skills/wal-status/` — an installable agent skill: the
   ten-line orientation read of the WAL, staleness warning first.</CONTENT-THE-WAL-STATUS-SKILL>
@@ -41,14 +41,14 @@ package expects has not landed in one of its releases yet.</DISCIPLINE-DEFERS-TO
   <uninstall title="Uninstall">
     <fence lang="bash">vibe uninstall flow:wal</fence>
     <p><UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
-snippet and the skill, but NEVER touches `spec/WAL.md` or `CONTINUE.md`
+snippet and the skill, but NEVER touches `spec/WAL.xml` or `CONTINUE.md`
 (project state, not package state) or user-owned boot files
-(`00-core.md`, `90-user.md`).</UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE></p>
+(`00-core.xml`, `90-user.xml`).</UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE></p>
   </uninstall>
   <changelog title="What changed in 0.2.0">
     <facts ordered="false">
       <CHANGE-THE-TWO-FILE-MODEL fact="true" status="impl/done">**The two-file model**, absorbed from the AI-Native Discipline's WAL
-  convention: `spec/WAL.md` is the canonical living checkpoint;
+  convention: `spec/WAL.xml` is the canonical living checkpoint;
   `CONTINUE.md` at the repository root is the cold-resume snapshot it
   supersedes.</CHANGE-THE-TWO-FILE-MODEL>
       <CHANGE-SESSION-COMMANDS fact="true" status="impl/done">**Session commands.** The wind-down (`END SESSION`, `WRAP UP`,

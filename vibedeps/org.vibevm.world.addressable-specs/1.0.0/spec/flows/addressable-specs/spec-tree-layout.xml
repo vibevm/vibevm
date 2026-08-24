@@ -8,7 +8,7 @@ table for where each kind of fact lives, and the `.human/` private
 buffer with its physical-invisibility rule.</scope-of-this-document></p>
   <p><protocol-document-pointer fact="true" status="impl/done">The addressing scheme the
 layout serves is defined in
-[`ADDRESSABLE-SPECS-PROTOCOL.md`](ADDRESSABLE-SPECS-PROTOCOL.md).</protocol-document-pointer></p>
+[`ADDRESSABLE-SPECS-PROTOCOL.xml`](ADDRESSABLE-SPECS-PROTOCOL.xml).</protocol-document-pointer></p>
   <tree title="The reference tree">
     <fence>project/
 ├── spec/                      # the IPC buffer (shared state)
@@ -16,11 +16,11 @@ layout serves is defined in
 │   ├── WAL.md                 # continuation state between sessions
 │   ├── SPEC-PROTOCOL.md       # how specs are updated (conflict rules)
 │   ├── common/
-│   │   ├── PROP-000.md        # foundational decisions
+│   │   ├── PROP-000.xml        # foundational decisions
 │   │   └── structure.md       # module map
 │   └── modules/
 │       ├── payments/
-│       │   ├── PROP-001.md    # standing decisions for this module
+│       │   ├── PROP-001.xml    # standing decisions for this module
 │       │   └── FEAT-001.md    # one feature slice
 │       └── client/
 ├── src/                       # artifacts — generated, verifiable, re-creatable
@@ -82,7 +82,7 @@ the FEAT cites it — the slice document never becomes the permanent
 home of a permanent rule.</A-LASTING-DECISION-MOVES-UP-INTO-A-PROP></p>
     <p><NUMBER-PER-MODULE-AND-NEVER-RENUMBER fact="true" status="impl/done">Number per module (`PROP-001`, `FEAT-003`, …) and never renumber:
 the number is part of the URI, and URIs are forever
-([authoring rules §anchor-stability](authoring-rules.md#anchor-stability)).</NUMBER-PER-MODULE-AND-NEVER-RENUMBER></p>
+([authoring rules §anchor-stability](authoring-rules.xml#anchor-stability)).</NUMBER-PER-MODULE-AND-NEVER-RENUMBER></p>
   </prop-vs-feat>
   <what-goes-where title="What goes where">
     <table>
@@ -104,7 +104,7 @@ the number is part of the URI, and URIs are forever
       </tr>
       <tr>
         <td><ROW-HOME-NEXT-SESSION-STEP fact="true" status="impl/done">What the next session must do first</ROW-HOME-NEXT-SESSION-STEP></td>
-        <td><fact status="impl/done">`spec/WAL.md`</fact></td>
+        <td><fact status="impl/done">`spec/WAL.xml`</fact></td>
       </tr>
       <tr>
         <td><ROW-HOME-SPEC-PROTOCOL fact="true" status="impl/done">How specs are updated, conflict rules</ROW-HOME-SPEC-PROTOCOL></td>
@@ -208,7 +208,7 @@ docstrings, and heads.</decisions-arrive-scattered></p>
     <fence>Inventory every Markdown file in this repository that states a
 decision, requirement, or plan. For each: current path, what kind
 of fact it holds (per the what-goes-where table in
-spec/flows/addressable-specs/spec-tree-layout.md), its proposed
+spec/flows/addressable-specs/spec-tree-layout.xml), its proposed
 home in the spec tree, and which headings need {#anchor}s.
 Output a migration table. Move nothing yet.</fence>
     <p><MIGRATE-IN-SMALL-REVIEWABLE-STEPS fact="true" status="impl/done">Review the table, then migrate in small, reviewable steps — the tree

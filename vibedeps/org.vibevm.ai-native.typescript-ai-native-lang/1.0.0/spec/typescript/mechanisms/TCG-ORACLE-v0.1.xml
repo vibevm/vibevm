@@ -5,9 +5,9 @@
   <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-TS-PLAN v0.1 (Phase 1),
 implemented by its Phases 2–3.**</status-line></p>
   <p><companion-documents fact="true" status="impl/done">The component brief is
-[`tools/vibe-agentic-tcg-ts.md`](../tools/vibe-agentic-tcg-ts.md); the
+[`tools/vibe-agentic-tcg-ts.xml`](../tools/vibe-agentic-tcg-ts.xml); the
 message grammar both hops speak is
-[`TCG-PROTOCOL-v0.1`](TCG-PROTOCOL-v0.1.md).</companion-documents></p>
+[`TCG-PROTOCOL-v0.1`](TCG-PROTOCOL-v0.1.xml).</companion-documents></p>
   <p><DOCUMENT-OWNS-THE-ORACLE-PROCESS fact="true" status="impl/done">This document owns the
 oracle PROCESS: lifecycle, host semantics, overlays, degradation, and
 the latency posture.</DOCUMENT-OWNS-THE-ORACLE-PROCESS></p>

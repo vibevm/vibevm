@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:4327ef83d934c35dfb9e363f5b2e0c7d38f083f29ad935ae4fec4bce1827d466"
+source_hash = "sha256:9d81f97aff1b6f1eb8190f4d9008b2688dc98d803cd92e92bf0a990802c42a9c"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:4b26ae12b80d42a2203bd86b6e4cf97d459e8dd4473eb56da2de87132b04f3f3"
+derived_hash = "sha256:2334b1c25b7cb4d731195fe536e853adfe7cf62bc9b033ac1ce140711f341c01"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/55-flow-attribution-policy.md"
+source = "spec/boot/55-flow-attribution-policy.xml"
 output = "spec/boot/55-flow-attribution-policy.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
+source = "spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml"
 output = "spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/attribution-policy/disclosure-alternative.md"
+source = "spec/flows/attribution-policy/disclosure-alternative.xml"
 output = "spec/flows/attribution-policy/disclosure-alternative.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/attribution-policy/enforcement-checklist.md"
+source = "spec/flows/attribution-policy/enforcement-checklist.xml"
 output = "spec/flows/attribution-policy/enforcement-checklist.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

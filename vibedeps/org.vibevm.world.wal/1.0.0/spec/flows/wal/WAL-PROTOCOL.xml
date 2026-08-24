@@ -7,17 +7,17 @@ which files carry the discipline, what belongs in the WAL, how big it
 may get, when it must be updated, and who wins when it disagrees with
 the rest of the system.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The rituals around it live in the siblings:
-[`session-end-hook.md`](session-end-hook.md), [`morning-routine.md`](morning-routine.md), [`cold-resume.md`](cold-resume.md).</sibling-document-pointers></p>
+[`session-end-hook.xml`](session-end-hook.xml), [`morning-routine.xml`](morning-routine.xml), [`cold-resume.xml`](cold-resume.xml).</sibling-document-pointers></p>
   <files title="The two files">
     <p><two-files-lead fact="true" status="impl/done">Session-durable state lives in two repository files:</two-files-lead></p>
     <facts ordered="false">
-      <FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">**`spec/WAL.md` — the living checkpoint.** The *current* state:
+      <FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT fact="true" status="impl/done">**`spec/WAL.xml` — the living checkpoint.** The *current* state:
   phase, constraints, done, open, next. Rewritten at every session end.
   **Canonical:** where it and any snapshot disagree, the WAL wins.</FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT>
       <FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT fact="true" status="impl/done">**`CONTINUE.md` (repository root) — the cold-resume snapshot.**
   Written at session end for whoever picks up cold — another machine, a
   teammate, a long gap. Richer than the WAL, strictly subordinate.
-  Contract: [`cold-resume.md`](cold-resume.md).</FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT>
+  Contract: [`cold-resume.xml`](cold-resume.xml).</FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT>
     </facts>
     <p><RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION fact="true" status="impl/done">One invariant governs both: **resumption state lives in the repository,
 never in a session.**</RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION></p>
@@ -59,7 +59,7 @@ file alone exists for session continuity.</THIS-FILE-ALONE-EXISTS-FOR-SESSION-CO
     </facts>
   </not>
   <sections title="Required sections">
-    <p><required-sections-lead fact="true" status="impl/done">A well-formed `spec/WAL.md` has:</required-sections-lead></p>
+    <p><required-sections-lead fact="true" status="impl/done">A well-formed `spec/WAL.xml` has:</required-sections-lead></p>
     <facts ordered="true">
       <SECTION-UPDATED-LINE fact="true" status="impl/done">**`_Updated: &lt;ISO 8601 UTC&gt;_`** — the very first line after the
    title, always and without exception. An outdated WAL is worse than
@@ -108,7 +108,7 @@ unattended demand every constraint explicit and spec-anchored.</MORE-AUTONOMY-DE
     <facts ordered="false">
       <TRIGGER-END-OF-EVERY-SESSION fact="true" status="impl/done">**At the end of every session.** Non-negotiable; a session that ends
   without updating the WAL has partially broken the next session.
-  Procedure: [`session-end-hook.md`](session-end-hook.md).</TRIGGER-END-OF-EVERY-SESSION>
+  Procedure: [`session-end-hook.xml`](session-end-hook.xml).</TRIGGER-END-OF-EVERY-SESSION>
       <TRIGGER-BEFORE-ANY-DESTRUCTIVE-OPERATION fact="true" status="impl/done">**Before any destructive operation.** A big refactor, a `git reset`,
   a migration — checkpoint first; a failure then restarts known-good.</TRIGGER-BEFORE-ANY-DESTRUCTIVE-OPERATION>
       <TRIGGER-WHEN-SWITCHING-CONTEXT-MID-SESSION fact="true" status="impl/done">**When switching context mid-session.** Pivoting from FEAT-007 to
@@ -195,9 +195,9 @@ keeps re-deriving its own state has received the signal to adopt.</RE-DERIVING-S
     <p><COPY-THE-TASK-NOT-THE-IMPLEMENTATION fact="true" status="impl/done">Copy the task, not the implementation.</COPY-THE-TASK-NOT-THE-IMPLEMENTATION></p>
     <p><re-derive-prompt-lead fact="true" status="impl/done">Hand your agent this prompt and
 review its drafts:</re-derive-prompt-lead></p>
-    <fence lang="text">Read this flow's documents (your project installed them — typically `vibedeps/flow-wal/&lt;version&gt;/spec/flows/wal/`, check `vibe.lock`) WAL-PROTOCOL.md end to end, then adapt the WAL
+    <fence lang="text">Read this flow's documents (your project installed them — typically `vibedeps/flow-wal/&lt;version&gt;/spec/flows/wal/`, check `vibe.lock`) WAL-PROTOCOL.xml end to end, then adapt the WAL
 discipline to this repository:
-1. Draft spec/WAL.md with the required sections and a fresh
+1. Draft spec/WAL.xml with the required sections and a fresh
    _Updated: line, filled from the actual tree, not from guesses.
 2. Propose this project's wind-down and resume trigger phrases, with
    native-language twins if the team is bilingual.
@@ -209,7 +209,7 @@ Show all four as proposals. Apply nothing until I approve.</fence>
   </re-derive>
   <summary title="Summary">
     <facts ordered="false">
-      <SUM-TWO-FILES fact="true" status="impl/done">Two files: `spec/WAL.md` — living checkpoint, canonical;
+      <SUM-TWO-FILES fact="true" status="impl/done">Two files: `spec/WAL.xml` — living checkpoint, canonical;
   `CONTINUE.md` — cold-resume snapshot, subordinate.</SUM-TWO-FILES>
       <SUM-WHITEBOARD-NOT-JOURNAL fact="true" status="impl/done">A whiteboard, not a journal: rewrite at session end, never append;
   date line first; older than 24 hours → verify before trusting.</SUM-WHITEBOARD-NOT-JOURNAL>

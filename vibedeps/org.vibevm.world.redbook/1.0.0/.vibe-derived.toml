@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:ba71ad722a2707be7b8c4e9a7b6d4cc6640a056dd22a4c6ef782ad49d77e2e47"
+source_hash = "sha256:cda93322322f695cfe9895e1eab86fc620d511f9a477bf91f96d5cb7c0f8713d"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:eb766e13d730a12aabc241fd3938c68e74d8cd21be90d3194b7d31f5ad3dfe58"
+derived_hash = "sha256:61df57e3d6f8d0459ebc203c4af9babed785ae7fca0258ada1f53069b04786d9"
 
 [[file]]
 source = "LICENSE.md"
@@ -20,34 +20,34 @@ output = "spec/book/README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/book/ru/chapter-1-two-process-model.md"
+source = "spec/book/ru/chapter-1-two-process-model.xml"
 output = "spec/book/ru/chapter-1-two-process-model.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/book/ru/chapter-2-shared-state-and-files.md"
+source = "spec/book/ru/chapter-2-shared-state-and-files.xml"
 output = "spec/book/ru/chapter-2-shared-state-and-files.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/book/ru/chapter-3-memory-individual.md"
+source = "spec/book/ru/chapter-3-memory-individual.xml"
 output = "spec/book/ru/chapter-3-memory-individual.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/03-flow-redbook.md"
+source = "spec/boot/03-flow-redbook.xml"
 output = "spec/boot/03-flow-redbook.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/03a-member-wal.md"
+source = "spec/boot/03a-member-wal.xml"
 output = "spec/boot/03a-member-wal.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/03b-member-wal-specspaces.md"
+source = "spec/boot/03b-member-wal-specspaces.xml"
 output = "spec/boot/03b-member-wal-specspaces.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

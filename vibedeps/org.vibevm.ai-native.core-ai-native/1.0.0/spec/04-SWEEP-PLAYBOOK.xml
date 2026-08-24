@@ -4,14 +4,14 @@
   <status stage="spec" state="done"/>
   <p><status-line fact="true" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral**</status-line></p>
   <p><SWEEP-IS-THE-RECURRING-COUNTERPART fact="true" status="impl/done">*The recurring counterpart of the
-[Raid Playbook](03-RAID-PLAYBOOK.md).*</SWEEP-IS-THE-RECURRING-COUNTERPART></p>
+[Raid Playbook](03-RAID-PLAYBOOK.xml).*</SWEEP-IS-THE-RECURRING-COUNTERPART></p>
   <p><RAID-IS-A-SCHEDULED-CAMPAIGN fact="true" status="impl/done">*A raid is a scheduled campaign — scoped,
 planned, finite.*</RAID-IS-A-SCHEDULED-CAMPAIGN></p>
   <p><SWEEP-IS-THE-STANDING-RUN fact="true" status="impl/done">*The **sweep** is the standing run that, executed
 daily (or several times a day on an active tree), keeps a codebase inside the
 Discipline instead of letting it drift back out between campaigns.*</SWEEP-IS-THE-STANDING-RUN></p>
   <p><TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR fact="true" status="impl/done">*Terraforming brings a tree into the
-Discipline ([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md)); raids move it
+Discipline ([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml)); raids move it
 in planned steps; the sweep holds the ground in between.*</TERRAFORM-RAID-SWEEP-DIVISION-OF-LABOUR></p>
   <p><STACKS-SHIP-TOOLS-THIS-DOCUMENT-IS-METHOD fact="true" status="impl/done">*Each language stack
 ships the concrete tools and idioms (the Rust stack:
@@ -74,10 +74,10 @@ never by memory:</canonical-moves-lead></p>
     <facts ordered="false">
       <DRIFT-DEBT-REGISTRY fact="true" status="impl/done">**Debt registry:** run the tripwire tool; re-disposition
   any touched-and-open entry
-  ([BROWNFIELD §3](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md#registries)).
+  ([BROWNFIELD §3](mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml#registries)).
   New deficiencies found while sweeping are *filed* there, not left as prose.</DRIFT-DEBT-REGISTRY>
       <DRIFT-DOC-CODE fact="true" status="impl/done">**Doc/code drift:** state checkpoints vs reality (see
-  [WAL convention](06-WAL-CONVENTION.md) — freshness rule); architecture
+  [WAL convention](06-WAL-CONVENTION.xml) — freshness rule); architecture
   docs vs the real layout; roadmap self-staleness. A stale doc that governs
   code is filed as `stale-doc` debt.</DRIFT-DOC-CODE>
       <DRIFT-MARKER-CENSUS fact="true" status="impl/done">**Marker census:** every TODO/FIXME/REVIEW/HACK is a
@@ -99,8 +99,8 @@ checker.</TIER-3-DEEP-JUDGMENT></p>
 concrete list (typed seams, cell isolation and oracles, uniformity,
 contract-first ordering, lying prose, closed-vocabulary naming).</TIER-3-CONCRETE-LIST-LIVES-IN-THE-STACK></p>
     <p><TIER-3-MAY-LAUNCH-A-RAID fact="true" status="impl/done">Tier 3 may also launch a full
-[raid](03-RAID-PLAYBOOK.md) when a Tier-1 backlog grows campaign-sized —
-plan it per the [Campaign Form](05-CAMPAIGN-FORM.md).</TIER-3-MAY-LAUNCH-A-RAID></p>
+[raid](03-RAID-PLAYBOOK.xml) when a Tier-1 backlog grows campaign-sized —
+plan it per the [Campaign Form](05-CAMPAIGN-FORM.xml).</TIER-3-MAY-LAUNCH-A-RAID></p>
   </tiers>
   <collector title="2. The collector contract">
     <p><collector-is-the-sweeps-instrument fact="true" status="impl/done">The health collector is the sweep's
@@ -167,7 +167,7 @@ topic-grouped commits (one logical unit each), citing the sweep item that drove
 them.</SWEEP-LANDS-TOPIC-GROUPED-COMMITS></p>
     <p><REFRESH-THE-HEALTH-SNAPSHOT fact="true" status="impl/done">Refresh the committed health snapshot in the same
 run — its diff records the trend.</REFRESH-THE-HEALTH-SNAPSHOT></p>
-    <p><resume-pointer-lead fact="true" status="impl/done">**Resume pointer** (see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</resume-pointer-lead></p>
+    <p><resume-pointer-lead fact="true" status="impl/done">**Resume pointer** (see [06-WAL-CONVENTION](06-WAL-CONVENTION.xml)):</resume-pointer-lead></p>
     <facts ordered="false">
       <SWEEP-RESUME-WITH-A-WAL fact="true" status="impl/done">*With a WAL (recommended):* bump the WAL's standing line at any sweep that
   moves a milestone (a gate widened, a backlog unit cleared); the health

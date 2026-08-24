@@ -20,15 +20,15 @@ session into structured co-inquiry.</PACKAGE-SHIPS-THE-DISCOVERY-PROMPT></p>
 not failure.</STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships the artifact plus two pieces of guidance:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROMPT-VERBATIM fact="true" status="impl/done">`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` — the prompt
+    <CONTENT-THE-PROMPT-VERBATIM fact="true" status="impl/done">`spec/flows/discovery-prompt/DISCOVERY-PROMPT.xml` — the prompt
   itself, **verbatim**. Fill its `&lt;VARIABLES&gt;` block, paste it as
   the first message of a fresh session, and the session re-frames.</CONTENT-THE-PROMPT-VERBATIM>
-    <CONTENT-THE-USAGE-GUIDE fact="true" status="impl/done">`spec/flows/discovery-prompt/usage.md` — when the grammar's
+    <CONTENT-THE-USAGE-GUIDE fact="true" status="impl/done">`spec/flows/discovery-prompt/usage.xml` — when the grammar's
   overhead pays off (and when it does not), a piece-by-piece map of
   the structure, how to read the output, the intensity knobs, the
   failure modes, and a re-derive prompt for adapting the artifact to
   your own domain.</CONTENT-THE-USAGE-GUIDE>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/50-flow-discovery-prompt.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/50-flow-discovery-prompt.xml` — boot snippet loaded at
   session start: deploy the artifact on request, never mix its
   grammar into coding sessions uninvited.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
@@ -49,7 +49,7 @@ through live research sessions.</prompt-authored-in-the-origin-project></p>
 shipped file is a byte-for-byte copy, self-describing down to its
 own license block.</PACKAGED-UNMODIFIED-BYTE-FOR-BYTE></p>
     <p><ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE fact="true" status="impl/done">Adaptation happens on your copy — via the
-re-derive prompt in `usage.md` — never on the shipped file.</ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE></p>
+re-derive prompt in `usage.xml` — never on the shipped file.</ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE></p>
   </provenance>
   <composition title="Composition">
     <facts ordered="false">

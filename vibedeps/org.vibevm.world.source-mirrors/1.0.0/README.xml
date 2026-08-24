@@ -22,18 +22,18 @@ managing it:</this-flow-dissolves-the-failure-mode></p>
 resolution.</the-cost-is-paid-once-in-the-model></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml` — the problem
   (multi-homing without multi-master), the model (single-writer
   mainline; hosts as replicas; contributions in via any inbox), what it
   buys, what it costs, and a re-derive prompt.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-FANOUT-MECHANICS fact="true" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.md` — the committed
+    <CONTENT-THE-FANOUT-MECHANICS fact="true" status="impl/done">`spec/flows/source-mirrors/fanout-mechanics.xml` — the committed
   credential-free manifest, the fetch/verify/push/report procedure,
   fail-loud semantics, the read-only drift check, bringing a web merge
   home, and a ~15-line reference script with the never-`--force`
   invariant pinned by a test.</CONTENT-THE-FANOUT-MECHANICS>
-    <CONTENT-THE-DAILY-LOOP fact="true" status="impl/done">`spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
+    <CONTENT-THE-DAILY-LOOP fact="true" status="impl/done">`spec/flows/source-mirrors/daily-loop.xml` — the maintainer's day,
   handling reported drift, onboarding a host, offboarding a host.</CONTENT-THE-DAILY-LOOP>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/62-flow-source-mirrors.xml` — boot snippet: the core rule
   and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

@@ -5,7 +5,7 @@
   <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-TS-PLAN v0.1 (Phase 1),
 implemented by its Phases 2–4.**</status-line></p>
   <p><companion-document fact="true" status="impl/done">The process model is
-[`TCG-ORACLE-v0.1`](TCG-ORACLE-v0.1.md).</companion-document></p>
+[`TCG-ORACLE-v0.1`](TCG-ORACLE-v0.1.xml).</companion-document></p>
   <p><DOCUMENT-OWNS-THE-MESSAGE-GRAMMAR fact="true" status="impl/done">This document owns the MESSAGE
 GRAMMAR: framing, envelopes, every operation's request/response shape,
 the enrichment fields the Rust middle layer adds, and the error

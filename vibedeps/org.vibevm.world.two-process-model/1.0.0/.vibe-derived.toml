@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:c117e5d01b5ec1947f45234f92b39cd8dfbe8918859ad4fbfa7ba5c8f2e47168"
+source_hash = "sha256:38158bc43a485b1a92ccab61860b725a2d69812077bbd723ec83dcae45cfe27f"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:03c5ac7e5b6eaeb5587ad40c281ed7106ebb354c8fd309daea3e98f10c653a76"
+derived_hash = "sha256:ba99d45db214065742631bdb39f7eb497401bb5dc3ef79908e219b327c3ebfb9"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/05-flow-two-process-model.md"
+source = "spec/boot/05-flow-two-process-model.xml"
 output = "spec/boot/05-flow-two-process-model.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/two-process-model/TWO-PROCESS-MODEL.md"
+source = "spec/flows/two-process-model/TWO-PROCESS-MODEL.xml"
 output = "spec/flows/two-process-model/TWO-PROCESS-MODEL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/two-process-model/cognitive-load-split.md"
+source = "spec/flows/two-process-model/cognitive-load-split.xml"
 output = "spec/flows/two-process-model/cognitive-load-split.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/two-process-model/files-as-ipc.md"
+source = "spec/flows/two-process-model/files-as-ipc.xml"
 output = "spec/flows/two-process-model/files-as-ipc.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

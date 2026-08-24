@@ -7,8 +7,8 @@
 section skeleton* of a campaign plan — the one document that lets a
 large change be planned once and executed cold.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">Phase mechanics:
-[`phase-gates.md`](phase-gates.md); the record half:
-[`execution-ledger.md`](execution-ledger.md).</sibling-document-pointers></p>
+[`phase-gates.xml`](phase-gates.xml); the record half:
+[`execution-ledger.xml`](execution-ledger.xml).</sibling-document-pointers></p>
   <what title="What a campaign is">
     <p><A-CAMPAIGN-IS-A-MULTI-COMMIT-CHANGE-TOO-BIG-FOR-ONE-SESSION fact="true" status="impl/done">A campaign is a multi-commit change too big for one session: a
 package-family rename, a debt drain across the whole codebase, a new
@@ -103,7 +103,7 @@ into the status area:</at-close-a-block-is-prepended-lead></p>
         <RECORD-THE-COMMIT-RANGE fact="true" status="impl/done">commit range,</RECORD-THE-COMMIT-RANGE>
         <RECORD-THE-PER-PHASE-DELTAS fact="true" status="impl/done">per-phase deltas,</RECORD-THE-PER-PHASE-DELTAS>
         <RECORD-WHICH-PREDICTIONS-HELD fact="true" status="impl/done">which
-  predictions held ([`execution-ledger.md` §execution-record](execution-ledger.md#execution-record)).</RECORD-WHICH-PREDICTIONS-HELD>
+  predictions held ([`execution-ledger.xml` §execution-record](execution-ledger.xml#execution-record)).</RECORD-WHICH-PREDICTIONS-HELD>
       </facts>
     </s2-execution-record>
     <s3-mandate title="3 — The mandate">
@@ -161,7 +161,7 @@ the report — "P3 — fewer than 10 test expectations break across all
 later phase carries numbered steps, its own exit criterion, its own
 prediction, and its planned commit set with subjects spelled in
 advance.</PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS></p>
-      <p><phase-anatomy-pointer fact="true" status="impl/done">Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md).</phase-anatomy-pointer></p>
+      <p><phase-anatomy-pointer fact="true" status="impl/done">Full anatomy and gate rules: [`phase-gates.xml`](phase-gates.xml).</phase-anatomy-pointer></p>
       <p><A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM fact="true" status="impl/done">**A plan references feature documents; it does not restate them.**
 Where a campaign executes work that has its own feature documents,
 the plan's phases and batches name those documents and stop there.
@@ -211,19 +211,19 @@ test ! -d src/legacy_cache              # the drained module is gone
       <p><REVIEW-POINTS-GO-OPEN-THEN-RESOLVED fact="true" status="impl/done">Decisions only the owner can make, escalated as numbered points:
 `OPEN` with options and the executor's recommendation, later
 annotated `RESOLVED` with the ruling verbatim
-([`phase-gates.md` §review-points](phase-gates.md#review-points)).</REVIEW-POINTS-GO-OPEN-THEN-RESOLVED></p>
+([`phase-gates.xml` §review-points](phase-gates.xml#review-points)).</REVIEW-POINTS-GO-OPEN-THEN-RESOLVED></p>
     </s13-review-points>
     <s14-ledger title="14 — Execution ledger">
       <p><THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS fact="true" status="impl/done">Filled by the executing session: per-phase commit maps binding hashes
 to the planned subjects, with what each commit confirmed or falsified
-([`execution-ledger.md`](execution-ledger.md)).</THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS></p>
+([`execution-ledger.xml`](execution-ledger.xml)).</THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS></p>
     </s14-ledger>
     <s15-deferrals title="15 — Deferrals ledger">
       <p><EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION fact="true" status="impl/done">Everything the campaign chose not to do, named, one line each, with
 an owner and a disposition.</EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION></p>
       <p><NOTHING-EVAPORATES fact="true" status="impl/done">Nothing evaporates: leftover work is in a
 commit or in this ledger
-([`execution-ledger.md` §deferrals](execution-ledger.md#deferrals)).</NOTHING-EVAPORATES></p>
+([`execution-ledger.xml` §deferrals](execution-ledger.xml#deferrals)).</NOTHING-EVAPORATES></p>
     </s15-deferrals>
   </skeleton>
   <lineage title="The lineage law">
@@ -231,7 +231,7 @@ commit or in this ledger
 mandate**: the owner commissions the follow-up by pointing at it, and
 the new plan's opening table maps each deferral to a closing phase.</A-CLOSED-CAMPAIGNS-DEFERRALS-BECOME-THE-NEXT-MANDATE></p>
     <p><CAMPAIGNS-FORM-A-CHAIN fact="true" status="impl/done">Campaigns form a chain — no work item is lost between links, and no
-campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)).</CAMPAIGNS-FORM-A-CHAIN></p>
+campaign starts blank ([`execution-ledger.xml` §lineage](execution-ledger.xml#lineage)).</CAMPAIGNS-FORM-A-CHAIN></p>
   </lineage>
   <temporary title="A plan is a temporary artifact">
     <p><A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED fact="true" status="impl/done">A campaign plan is **temporary by design**. When it has been
@@ -264,7 +264,7 @@ One law, two homes, one pointer.</THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS
   </temporary>
   <re-derive title="Re-derive for your project">
     <p><re-derive-lead fact="true" status="impl/done">Run this prompt once to adapt the format to a concrete project:</re-derive-lead></p>
-    <fence>Read CAMPAIGN-PLAN-FORMAT.md, phase-gates.md, and execution-ledger.md.
+    <fence>Read CAMPAIGN-PLAN-FORMAT.xml, phase-gates.xml, and execution-ledger.xml.
 Adapt the campaign-plan format to this project:
 1. Name the gate panel: the exact commands that define this project's
    green floor, and how long a full run takes.

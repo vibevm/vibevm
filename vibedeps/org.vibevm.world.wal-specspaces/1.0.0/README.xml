@@ -19,11 +19,11 @@ it targets the `default` specspace declared in `SPECSPACES.md` if one
 is set, and otherwise the host project itself.</A-BARE-PHRASE-NEVER-WANDERS-INTO-A-SPECSPACE></p>
   <p><package-contents-lead fact="true" status="impl/done">What ships:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/11-flow-wal-specspaces.md` — the boot snippet: how a
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/11-flow-wal-specspaces.xml` — the boot snippet: how a
   session recognises specspace phrases, which project a bare phrase
   targets, and what it loads (and pointedly does not load) for a
   specspace session.</CONTENT-THE-BOOT-SNIPPET>
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` — the full
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml` — the full
   protocol: the registry format (with the optional default), target
   resolution, the scoped grammar, the five laws (boot scoping, state
   locality, one focus, host rules survive, package state stays out),

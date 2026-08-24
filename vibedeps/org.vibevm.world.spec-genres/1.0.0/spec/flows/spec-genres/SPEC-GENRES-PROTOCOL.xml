@@ -184,9 +184,9 @@ question it already settled.</why-an-unlinked-doc-costs></p>
    story, it is two documents — split it along the binding line.</PLACE-DO-NOT-BLEND>
     </facts>
     <p><sibling-document-pointers fact="true" status="impl/done">The decision table for common situations lives in
-[`when-to-write-what.md`](when-to-write-what.md); the contract/lore
+[`when-to-write-what.xml`](when-to-write-what.xml); the contract/lore
 split, with the fork-by-fork record shape, lives in
-[`design-docs.md`](design-docs.md).</sibling-document-pointers></p>
+[`design-docs.xml`](design-docs.xml).</sibling-document-pointers></p>
   </placing>
   <re-derive title="Re-derive for your project">
     <p><DO-NOT-ADOPT-THIS-TABLE-VERBATIM fact="true" status="impl/done">Do not adopt this table verbatim — your project already has genres,

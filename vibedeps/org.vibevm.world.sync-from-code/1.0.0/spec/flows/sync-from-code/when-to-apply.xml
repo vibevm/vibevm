@@ -102,7 +102,7 @@ Does the relevant spec section already exist?    ─ no ─→ draft spec normal
 Can you name the reason in one sentence?         ─ no ─→ recover or revert
    │ yes
    ▼
-Run Sync-from-Code (SYNC-PROTOCOL.md).</fence>
+Run Sync-from-Code (SYNC-PROTOCOL.xml).</fence>
   </flowchart>
   <boundaries title="Boundary with other flows">
     <facts ordered="false">

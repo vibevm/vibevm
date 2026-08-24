@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:760c7b1e93c2b1d99c3f41fcd05a9ae0e86454243fb2a544c7145a99a9a78d11"
+source_hash = "sha256:e69ab635c33bc313676fb3299009d735b86bdde5733e749df979245f839e9cb1"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:33feab82fcd5f8f9c3f4b24a2f96f7daf82d1179c9dd8cd39a5891c19e3dd0b0"
+derived_hash = "sha256:c932029c5884329c33e88f8a2e8aa04fad396a4cb5a2f7ae1ed9a2dc6704007f"
 
 [[file]]
 source = "LICENSE"
@@ -15,29 +15,29 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/20-flow-sync-from-code.md"
+source = "spec/boot/20-flow-sync-from-code.xml"
 output = "spec/boot/20-flow-sync-from-code.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/20a-wal-binding.md"
+source = "spec/boot/20a-wal-binding.xml"
 output = "spec/boot/20a-wal-binding.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/sync-from-code/SYNC-PROTOCOL.md"
+source = "spec/flows/sync-from-code/SYNC-PROTOCOL.xml"
 output = "spec/flows/sync-from-code/SYNC-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/sync-from-code/review-workflow.md"
+source = "spec/flows/sync-from-code/review-workflow.xml"
 output = "spec/flows/sync-from-code/review-workflow.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/sync-from-code/when-to-apply.md"
+source = "spec/flows/sync-from-code/when-to-apply.xml"
 output = "spec/flows/sync-from-code/when-to-apply.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

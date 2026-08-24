@@ -6,11 +6,11 @@ execution by default; keep the expensive boss for judgment and review.*
 The posture layer — the *why* and the *always* — above the sibling
 `delegation-rules` flow, which is the decidable *how*.</p>
   <list ordered="false">
-    <item>[`spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md`](spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md)
+    <item>[`spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml`](spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml)
   — the directive: the scarce-resource thesis, delegate-by-default, the
   capable-worker mandate, the never-delegate set, and the two
   obligations — review, and surfacing the delegation analysis out loud.</item>
-    <item>[`spec/boot/76-flow-delegation-first.md`](spec/boot/76-flow-delegation-first.md)
+    <item>[`spec/boot/76-flow-delegation-first.xml`](spec/boot/76-flow-delegation-first.xml)
   — the boot snippet a consuming boss loads at session start.</item>
   </list>
   <p>Fractality-opinionated by design: it lives in the `org.vibevm.fractality`

@@ -7,7 +7,7 @@ research document, then a clause-by-clause commentary on each
 section, then one short worked fragment.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The laws these clauses
 enforce live in
-[`COMPARATIVE-RESEARCH-PROTOCOL.md`](COMPARATIVE-RESEARCH-PROTOCOL.md);
+[`COMPARATIVE-RESEARCH-PROTOCOL.xml`](COMPARATIVE-RESEARCH-PROTOCOL.xml);
 this file is the shape you fill.</sibling-document-pointers></p>
   <skeleton title="The skeleton">
     <p><COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER fact="true" status="impl/done">Copy this whole block into a new research document and fill each
@@ -128,7 +128,7 @@ table against what changed:
   *some* decision its competitor did not.</CLAUSE-SECTIONS-THREE-AND-FOUR>
       <CLAUSE-SECTION-FIVE-DELTAS fact="true" status="impl/done">**§5 deltas.** Numbered, prioritized, homed. The number is what the
   downstream pipeline cites when a delta is accepted or rejected
-  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</CLAUSE-SECTION-FIVE-DELTAS>
+  ([`from-research-to-roadmap.xml`](from-research-to-roadmap.xml)).</CLAUSE-SECTION-FIVE-DELTAS>
       <CLAUSE-SECTION-SIX-OPEN-QUESTIONS fact="true" status="impl/done">**§6 open questions.** What the sources did not answer. Honest gaps
   in the study itself, and the first questions to ask on refresh.</CLAUSE-SECTION-SIX-OPEN-QUESTIONS>
       <CLAUSE-SECTION-SEVEN-RE-FETCH-LIST fact="true" status="impl/done">**§7 re-fetch list.** The refresh recipe: which URLs in what order,

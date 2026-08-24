@@ -3,7 +3,7 @@
   <title id="root">Session-end hook — the wind-down</title>
   <status stage="spec" state="done"/>
   <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The procedure every session ends with:
-confirm a good stopping state, rewrite `spec/WAL.md`, overwrite
+confirm a good stopping state, rewrite `spec/WAL.xml`, overwrite
 `CONTINUE.md`, report.</scope-of-this-document></p>
   <p><also-defines-the-trigger-phrases fact="true" status="impl/done">It also defines the trigger phrases that invoke
 the full wind-down explicitly.</also-defines-the-trigger-phrases></p>
@@ -39,13 +39,13 @@ loss-of-context cheap.</RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT></p>
     <p><SAY-SO-RATHER-THAN-PAPER-OVER-A-BROKEN-STATE fact="true" status="impl/done">If any of these fails, say so explicitly at the end of the session — do
 not silently paper over a broken state in the WAL.</SAY-SO-RATHER-THAN-PAPER-OVER-A-BROKEN-STATE></p>
   </stopping-state>
-  <rewrite title="2. Rewrite `spec/WAL.md`">
+  <rewrite title="2. Rewrite `spec/WAL.xml`">
     <p><WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG fact="true" status="impl/done">The WAL is a checkpoint, not an append-only log.</WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG></p>
     <p><REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND fact="true" status="impl/done">**Rewrite** the file —
 don't patch it, don't append to it.</REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND></p>
     <p><an-append-only-wal-rots fact="true" status="spec/done">An append-only WAL rots into an
 archive nobody reads; the rewritten file always describes *now*.</an-append-only-wal-rots></p>
-    <p><structure-lead fact="true" status="impl/done">Structure (from [`WAL-PROTOCOL.md`](WAL-PROTOCOL.md#sections)):</structure-lead></p>
+    <p><structure-lead fact="true" status="impl/done">Structure (from [`WAL-PROTOCOL.xml`](WAL-PROTOCOL.xml#sections)):</structure-lead></p>
     <fence># WAL — Project Continuation State
 _Updated: &lt;ISO 8601 UTC — right now&gt;_
 
@@ -88,7 +88,7 @@ append; staleness compounds.</NEVER-APPEND-STALENESS-COMPOUNDS></p>
 stands, blocker and unblocking action, next-steps recipe, non-obvious
 findings, repository map, standing decisions, recent commits,
 quick-start commands) are specified in
-[`cold-resume.md`](cold-resume.md#contract).</required-contents-pointer></p>
+[`cold-resume.xml`](cold-resume.xml#contract).</required-contents-pointer></p>
   </continue>
   <propose title="5. Commit — propose by default">
     <p><SURFACE-THE-CONTENT-AS-DRAFTS fact="true" status="impl/done">Surface the proposed WAL and `CONTINUE.md` content to the user as

@@ -5,9 +5,9 @@
   <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-RUST-PLAN v0.1 (Phase 1),
 implemented by its Phases 3–4.**</status-line></p>
   <p><companion-documents fact="true" status="impl/done">The component brief is
-[`tools/vibe-agentic-tcg-rust.md`](../tools/vibe-agentic-tcg-rust.md);
+[`tools/vibe-agentic-tcg-rust.xml`](../tools/vibe-agentic-tcg-rust.xml);
 the message grammar is
-[`TCG-PROTOCOL-RUST-v0.1`](TCG-PROTOCOL-RUST-v0.1.md).</companion-documents></p>
+[`TCG-PROTOCOL-RUST-v0.1`](TCG-PROTOCOL-RUST-v0.1.xml).</companion-documents></p>
   <p><DOCUMENT-OWNS-THE-ORACLE-PROCESS fact="true" status="impl/done">This document
 owns the oracle PROCESS: resolution, LSP lifecycle, configuration,
 overlays, quiescence, the approximation posture, and latency.</DOCUMENT-OWNS-THE-ORACLE-PROCESS></p>
@@ -40,7 +40,7 @@ beside `position_encoding`, `pull_diagnostics` and `quiescent`. The path half
 does not: the path IS resolved — `resolve_rust_analyzer`
 (`crates/rust-ai-native-tcg-bridge/src/lib.rs:146`) returns it — but it is never
 put into the result, and `ra_path` occurs in this package only as the shape
-`TCG-PROTOCOL-RUST-v0.1.md#OP-INIT` promises, never as a field the code emits.*</RESOLVED-PATH-AND-VERSION-LAND-IN-INIT></p>
+`TCG-PROTOCOL-RUST-v0.1.xml#OP-INIT` promises, never as a field the code emits.*</RESOLVED-PATH-AND-VERSION-LAND-IN-INIT></p>
   </resolution>
   <session title="2. LSP session and capabilities">
     <p><kind-line-session fact="true" status="impl/done">`req r2`</kind-line-session></p>

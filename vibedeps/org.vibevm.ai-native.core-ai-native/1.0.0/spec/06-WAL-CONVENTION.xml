@@ -8,8 +8,8 @@
 convention makes session boundaries cheap by keeping the project's living
 state in two repository files.*</CONVENTION-KEEPS-STATE-IN-TWO-FILES></p>
   <p><WAL-IS-OPTIONAL fact="true" status="impl/done">*It is **optional**: every Discipline procedure
-that touches it ([Sweep §4](04-SWEEP-PLAYBOOK.md#output),
-[Campaign Form §4](05-CAMPAIGN-FORM.md#resume), the shipped terraform/sweep
+that touches it ([Sweep §4](04-SWEEP-PLAYBOOK.xml#output),
+[Campaign Form §4](05-CAMPAIGN-FORM.xml#resume), the shipped terraform/sweep
 skills) carries an explicit without-WAL branch.*</WAL-IS-OPTIONAL></p>
   <p><WAL-IS-PREFERRED fact="true" status="impl/done">*It is **preferred** because the alternative — resumption
 state scattered across commit messages and
@@ -17,7 +17,7 @@ plan-status lines — degrades as a project grows.*</WAL-IS-PREFERRED></p>
   <p><ADOPT-WHEN-MORE-THAN-ONE-SESSION fact="true" status="impl/done">*Adopt it when more than one
 session (or more than one operator) will ever touch the tree.*</ADOPT-WHEN-MORE-THAN-ONE-SESSION></p>
   <files title="1. The two files">
-    <p><WAL-FILE-DESCRIBES-THE-CURRENT-STATE fact="true" status="impl/done">**`spec/WAL.md` — the living checkpoint.** Describes the *current* state:
+    <p><WAL-FILE-DESCRIBES-THE-CURRENT-STATE fact="true" status="impl/done">**`spec/WAL.xml` — the living checkpoint.** Describes the *current* state:
 a dated standing line (what landed, gate-panel state, what's next, known
 issues), plus a per-session section for the active campaign.</WAL-FILE-DESCRIBES-THE-CURRENT-STATE></p>
     <p><two-hard-rules-lead fact="true" status="impl/done">Two hard rules:</two-hard-rules-lead></p>
@@ -55,8 +55,8 @@ checks it weekly regardless.</FRESHNESS-ENFORCEMENT-IS-ADVISORY></p>
   read CONTINUE.md, verify empirically, **report and wait** — a recorded
   "next step" is the candidate, not an authorisation; the owner steers.</BOUNDARY-SESSION-RESUME>
       <BOUNDARY-MID-WORK-CHECKPOINTS fact="true" status="impl/done">**Mid-work checkpoints:** campaigns bump the WAL at phase boundaries
-  ([Campaign Form §3–4](05-CAMPAIGN-FORM.md#gates)); sweeps bump it at
-  milestone moves ([Sweep §4](04-SWEEP-PLAYBOOK.md#output)).</BOUNDARY-MID-WORK-CHECKPOINTS>
+  ([Campaign Form §3–4](05-CAMPAIGN-FORM.xml#gates)); sweeps bump it at
+  milestone moves ([Sweep §4](04-SWEEP-PLAYBOOK.xml#output)).</BOUNDARY-MID-WORK-CHECKPOINTS>
     </facts>
   </boundaries>
   <without title="4. Without a WAL">

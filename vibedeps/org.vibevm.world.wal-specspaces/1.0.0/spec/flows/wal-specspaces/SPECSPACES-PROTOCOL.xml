@@ -54,7 +54,7 @@ specspace:</AN-OPTIONAL-DEFAULT-LINE-THEN-ONE-ROW-PER-SPECSPACE></p>
       <FIELD-ROOT fact="true" status="impl/done">**root** — the specspace root, relative to the host root. The
   specspace's `CLAUDE.md` (or equivalent boot contract) lives here.</FIELD-ROOT>
       <FIELD-WAL-AND-CONTINUE fact="true" status="impl/done">**wal**, **continue** — paths relative to root. Defaults are
-  `spec/WAL.md` and `CONTINUE.md` per the wal flow; a specspace
+  `spec/WAL.xml` and `CONTINUE.md` per the wal flow; a specspace
   without a spec tree at its root may keep both flat at the root, as
   the example does. The registry entry is the truth.</FIELD-WAL-AND-CONTINUE>
       <FIELD-STATUS fact="true" status="impl/done">**status** — one line, refreshed at every specspace wind-down:
@@ -160,7 +160,7 @@ the host WAL **only** if host files changed too.</WIND-DOWN-A-SPECSPACE></p>
   </lifecycle>
   <re-derive title="Re-derive for your project">
     <p><run-this-prompt-once-lead fact="true" status="impl/done">Run this prompt once to adapt the protocol to a concrete host:</run-this-prompt-once-lead></p>
-    <fence>Read SPECSPACES-PROTOCOL.md. Adapt it to this repository:
+    <fence>Read SPECSPACES-PROTOCOL.xml. Adapt it to this repository:
 1. Create SPECSPACES.md at the host root (empty table if no
    specspaces exist yet). Add a `default:` line only if a bare
    session phrase should target a specspace instead of the host.

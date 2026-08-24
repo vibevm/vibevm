@@ -6,8 +6,8 @@
 audit run, start to finish, plus the exact shape of an `AUDIT.md`
 section and a worked example on an invented generic project.</scope-of-this-document></p>
   <p><companion-document-pointers fact="true" status="impl/done">The
-categories you walk in step 2: [`audit-checklist.md`](audit-checklist.md);
-the rationale: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</companion-document-pointers></p>
+categories you walk in step 2: [`audit-checklist.xml`](audit-checklist.xml);
+the rationale: [`HEALTH-AUDIT-PROTOCOL.xml`](HEALTH-AUDIT-PROTOCOL.xml).</companion-document-pointers></p>
   <p><A-RUN-MUST-FINISH-THE-INVENTORY fact="true" status="impl/done">A run must finish the **inventory**.</A-RUN-MUST-FINISH-THE-INVENTORY></p>
   <p><A-RUN-NEED-NOT-FINISH-EVERY-FIX fact="true" status="impl/done">It need not finish every *fix* —
 fixing is the work the inventory schedules.</A-RUN-NEED-NOT-FINISH-EVERY-FIX></p>
@@ -19,7 +19,7 @@ fixing is the work the inventory schedules.</A-RUN-NEED-NOT-FINISH-EVERY-FIX></p
     </facts>
     <facts ordered="true">
       <STEP-WALK-THE-CHECKLIST-BREADTH-FIRST fact="true" status="impl/done">**Walk the checklist breadth-first.** Go category by category
-   through [`audit-checklist.md`](audit-checklist.md) — A, then B, then
+   through [`audit-checklist.xml`](audit-checklist.xml) — A, then B, then
    C, then D, then any project-specific rows. Run each mechanical aid;
    where there is no aid (A3 especially), read with judgment. Breadth
    first: touch every category once before going deep on any one.</STEP-WALK-THE-CHECKLIST-BREADTH-FIRST>

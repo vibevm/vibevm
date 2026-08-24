@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:421768c1ab53a3f0658622dd2e834fb1330a0a525d8a4c4f38147fc66c0e40ed"
+source_hash = "sha256:ed7628275c647386ac460cba756a413cb79777c2d2fa7af274c2319cbb4ea410"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:4f28d6689a044656a5ee4c7dcf87448f13b2c0fda577f94783789a044bb70714"
+derived_hash = "sha256:9ce18e166f5443ae3df69bec57e3f7a19cb13450d321c306274abea2560e3251"
 
 [[file]]
 source = "LICENSE"
@@ -15,19 +15,19 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/30-flow-atomic-commits.md"
+source = "spec/boot/30-flow-atomic-commits.xml"
 output = "spec/boot/30-flow-atomic-commits.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+source = "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
 output = "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/atomic-commits/splitting-large-changes.md"
+source = "spec/flows/atomic-commits/splitting-large-changes.xml"
 output = "spec/flows/atomic-commits/splitting-large-changes.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

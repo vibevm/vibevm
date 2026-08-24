@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title>GUIDE — Java + GraalVM Native Image under the Discipline, v0.1 (overlay)</title>
-  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md`. Composes with the Spring overlay (Boot AOT) and with Jakarta-family runtimes built for ahead-of-time CDI; only named sections are rewired.</p>
+  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.xml`. Composes with the Spring overlay (Boot AOT) and with Jakarta-family runtimes built for ahead-of-time CDI; only named sections are rewired.</p>
   <p>Framing note. Native Image is the profile where the Discipline's anti-magic rules stop being style and become **physics**: the closed-world assumption means reflection, dynamic proxies, JNI, resources, and serialization exist only if *declared at build time* — everything reachable is statically known, which is axiom A3 enforced by a compiler instead of a review. The trunk already banned runtime magic in cells; this overlay collects the dividend: a trunk-conformant core needs **zero reachability metadata of its own**, and every line of metadata the *boundary* needs becomes visible, versioned, and countable. The price is paid in toolchain honesty: build minutes, library compatibility vetting, and a debugging story different from the JVM's.</p>
   <p>**Scope honesty.** CLIs, serverless/short-lived workloads, and services where startup latency and footprint dominate. JIT-on-JVM remains the right target for peak-throughput long-running services unless measured otherwise; this overlay never pretends the trade is free.</p>
   <baseline title="§0 additions — baseline">

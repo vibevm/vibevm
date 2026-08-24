@@ -73,8 +73,8 @@ of this flow runs a bilingual Russian/English set.</A-PROJECT-MAY-ADD-NATIVE-LAN
     <p><required-behaviour-lead fact="true" status="impl/done">Required behaviour, in order:</required-behaviour-lead></p>
     <facts ordered="true">
       <STEP-OVERWRITE-CONTINUE fact="true" status="impl/done">**Overwrite `CONTINUE.md`** wholesale, per the contract above.</STEP-OVERWRITE-CONTINUE>
-      <STEP-REWRITE-THE-WAL fact="true" status="impl/done">**Rewrite `spec/WAL.md`** per
-   [`session-end-hook.md`](session-end-hook.md): fresh date line,
+      <STEP-REWRITE-THE-WAL fact="true" status="impl/done">**Rewrite `spec/WAL.xml`** per
+   [`session-end-hook.xml`](session-end-hook.xml): fresh date line,
    current phase, constraints, next step.</STEP-REWRITE-THE-WAL>
       <STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS fact="true" status="impl/done">**Commit in topic-grouped commits.** The snapshot and the WAL
    update are checkpoint commits; a code or config change landed by
@@ -99,7 +99,7 @@ recognise the intent).</RESUME-TRIGGER-PHRASES></p>
 nothing else**:</THE-JOB-IS-TO-RESTORE-CONTEXT-AND-REPORT></p>
     <facts ordered="true">
       <RESUME-STEP-RUN-THE-BOOT-SEQUENCE fact="true" status="impl/done">Run the project's boot sequence (whatever its agent instructions
-   define), then read `CONTINUE.md` and `spec/WAL.md`.</RESUME-STEP-RUN-THE-BOOT-SEQUENCE>
+   define), then read `CONTINUE.md` and `spec/WAL.xml`.</RESUME-STEP-RUN-THE-BOOT-SEQUENCE>
       <RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY fact="true" status="impl/done">Verify the repository state empirically: current branch, sync with
    the remote, working-tree status, recent commits. Never take the
    snapshot's word for what the tree looks like.</RESUME-STEP-VERIFY-THE-REPOSITORY-EMPIRICALLY>
@@ -125,7 +125,7 @@ executing, when the owner wanted a report.</the-misfire-that-produced-the-rule><
 explicit ever since.</boundary-explicit-ever-since></p>
   </not-authorisation>
   <precedence title="Precedence">
-    <p><WAL-IS-CANONICAL-CONTINUE-IS-A-SNAPSHOT fact="true" status="impl/done">`spec/WAL.md` is canonical; `CONTINUE.md` is a snapshot of the moment
+    <p><WAL-IS-CANONICAL-CONTINUE-IS-A-SNAPSHOT fact="true" status="impl/done">`spec/WAL.xml` is canonical; `CONTINUE.md` is a snapshot of the moment
 the last wind-down ran.</WAL-IS-CANONICAL-CONTINUE-IS-A-SNAPSHOT></p>
     <p><ON-DISAGREEMENT-TRUST-THE-WAL-AND-FLAG-IT fact="true" status="impl/done">When they disagree — and they will, whenever a
 session updates the WAL without a full wind-down — trust the WAL and

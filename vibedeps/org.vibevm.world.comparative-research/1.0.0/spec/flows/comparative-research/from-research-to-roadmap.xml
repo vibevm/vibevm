@@ -9,7 +9,7 @@ declined, when a study goes stale and how it is refreshed, and the
 single honesty rule that keeps the whole genre from decaying into
 advocacy.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The genre laws are in
-[`COMPARATIVE-RESEARCH-PROTOCOL.md`](COMPARATIVE-RESEARCH-PROTOCOL.md);
+[`COMPARATIVE-RESEARCH-PROTOCOL.xml`](COMPARATIVE-RESEARCH-PROTOCOL.xml);
 this is the pipeline that runs downstream of them.</sibling-document-pointers></p>
   <pipeline title="The pipeline">
     <p><A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE fact="true" status="impl/done">A research document ends in a table of numbered deltas.</A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE></p>
@@ -27,7 +27,7 @@ owner review  ──►  accepted  ──►  recorded decision + revisit trigge
     <p><NOTHING-ON-THE-ACCEPTED-BRANCH-HAPPENS-IN-THE-STUDY fact="true" status="impl/done">Nothing on the
 accepted branch happens inside the research document — that is the
 deltas-not-decrees law
-([protocol §law-deltas](COMPARATIVE-RESEARCH-PROTOCOL.md#law-deltas)).</NOTHING-ON-THE-ACCEPTED-BRANCH-HAPPENS-IN-THE-STUDY></p>
+([protocol §law-deltas](COMPARATIVE-RESEARCH-PROTOCOL.xml#law-deltas)).</NOTHING-ON-THE-ACCEPTED-BRANCH-HAPPENS-IN-THE-STUDY></p>
   </pipeline>
   <review title="Owner review">
     <p><DELTAS-DO-NOT-RATIFY-OR-AUTO-SCHEDULE-THEMSELVES fact="true" status="impl/done">The deltas do not ratify themselves and they do not auto-schedule.</DELTAS-DO-NOT-RATIFY-OR-AUTO-SCHEDULE-THEMSELVES></p>
@@ -149,7 +149,7 @@ written without a re-fetch list cannot be refreshed — only redone.</A-STUDY-WI
     <quote><THE-HONESTY-RULE fact="true" status="spec/done">A study that only finds gaps where we trail is marketing for the
 competitor. A study that only finds where we lead is marketing for
 us. Neither is intelligence.</THE-HONESTY-RULE></quote>
-    <p><THE-TWO-WAY-LAW-IS-NOT-A-FORMATTING-CONVENTION fact="true" status="impl/done">The two-way law ([protocol §law-two-way](COMPARATIVE-RESEARCH-PROTOCOL.md#law-two-way))
+    <p><THE-TWO-WAY-LAW-IS-NOT-A-FORMATTING-CONVENTION fact="true" status="impl/done">The two-way law ([protocol §law-two-way](COMPARATIVE-RESEARCH-PROTOCOL.xml#law-two-way))
 is not a formatting convention — it is the difference between a
 document you can act on and a document that flatters a foregone
 conclusion.</THE-TWO-WAY-LAW-IS-NOT-A-FORMATTING-CONVENTION></p>

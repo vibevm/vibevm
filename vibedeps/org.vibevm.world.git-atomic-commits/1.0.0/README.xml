@@ -16,15 +16,15 @@ eight files is not verifiable in one pass.</in-a-human-ai-team-they-are-load-bea
   <p><package-contents-lead fact="true" status="impl/done">This package ships the **atomicity** discipline (the message **format** is the separate
 `flow:git-conventional-commits` package):</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml` — full
   protocol: what an atomic commit is, why it matters more in a
   human-AI team than elsewhere, when to split, when to batch, and the
   rule that pushed history is frozen.</CONTENT-THE-FULL-PROTOCOL>
-    <CONTENT-THE-SPLITTING-PROCEDURE fact="true" status="impl/done">`spec/flows/atomic-commits/splitting-large-changes.md` — mechanical
+    <CONTENT-THE-SPLITTING-PROCEDURE fact="true" status="impl/done">`spec/flows/atomic-commits/splitting-large-changes.xml` — mechanical
   procedure for turning a messy working tree into a sequence of
   atomic commits using `git add -p`, including a prompt for
   delegating the split to the agent.</CONTENT-THE-SPLITTING-PROCEDURE>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/30-flow-atomic-commits.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/30-flow-atomic-commits.xml` — boot snippet loaded at
   session start, pointing the agent at the protocol and the never-do
   list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
@@ -35,7 +35,7 @@ eight files is not verifiable in one pass.</in-a-human-ai-team-they-are-load-bea
     <fence lang="bash">vibe uninstall flow:git-atomic-commits</fence>
     <p><UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE fact="true" status="impl/done">Uninstalling removes every file the package wrote, including the boot
 snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
-    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
+    <p><USER-OWNED-FILES-ARE-NEVER-TOUCHED fact="true" status="impl/done">User-owned files (`00-core.xml`, `90-user.xml`, `WAL.md`) are
 never touched.</USER-OWNED-FILES-ARE-NEVER-TOUCHED></p>
   </uninstall>
   <composition title="Composition">

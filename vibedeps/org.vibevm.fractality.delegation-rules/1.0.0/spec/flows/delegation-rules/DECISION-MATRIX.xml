@@ -147,7 +147,7 @@ D6).</p>
 resolve through the run's profile (D6), so the same policy governs GLM
 today and any future backend. Per-model behavior — strengths, budget
 defaults, tariff rules, blind spots — lives in the
-[playbooks](playbooks/), one card per model, `_template.md` for new
+[playbooks](playbooks/), one card per model, `_template.xml` for new
 ones. Tariff hygiene is mechanism, not advice (D12): workers get web
 tools denied by profile; documents are fetched once, locally.</p>
   </routing>

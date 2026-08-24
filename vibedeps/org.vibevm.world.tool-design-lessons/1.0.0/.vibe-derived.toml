@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:fbf2b8cd4cb0a279019c3e6cdd203f3430230ef64a1f9bd32c1fe542511372e9"
+source_hash = "sha256:ecff6220ba736ad06c1384e02171e9a995378612083e20076e88aed3c447a547"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:a3f8211480296018c5057cd1b7d60d8bdb4aa4270ce537c94cf413f69f2363c5"
+derived_hash = "sha256:a178bf683f1778fbb5ecc48a8d3793b495c9b7c9a275f48ef618324b0e5dbcad"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/70-flow-tool-design-lessons.md"
+source = "spec/boot/70-flow-tool-design-lessons.xml"
 output = "spec/boot/70-flow-tool-design-lessons.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md"
+source = "spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml"
 output = "spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/tool-design-lessons/packaging-lessons.md"
+source = "spec/flows/tool-design-lessons/packaging-lessons.xml"
 output = "spec/flows/tool-design-lessons/packaging-lessons.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/tool-design-lessons/self-updating-tools.md"
+source = "spec/flows/tool-design-lessons/self-updating-tools.xml"
 output = "spec/flows/tool-design-lessons/self-updating-tools.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

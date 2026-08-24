@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:fe012b5269ba2e974fad7c31a5c1c09a4ff9dd55eb4e54af69bc042433655c47"
+source_hash = "sha256:3ec1d580ad8f1b213176ad9860367bf73df54d8af17da8f79ed528c123c1aef8"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:4ea53288d46d82d2cb31a36abbdce45d8446638145c892ff319cc1b4ce1f6908"
+derived_hash = "sha256:e602a7b3ac2184e088db5bee0a26d9a47305b426c106510e8e21de5dfa90c7a4"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/40-flow-campaign-plans.md"
+source = "spec/boot/40-flow-campaign-plans.xml"
 output = "spec/boot/40-flow-campaign-plans.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md"
+source = "spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
 output = "spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/campaign-plans/execution-ledger.md"
+source = "spec/flows/campaign-plans/execution-ledger.xml"
 output = "spec/flows/campaign-plans/execution-ledger.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/campaign-plans/phase-gates.md"
+source = "spec/flows/campaign-plans/phase-gates.xml"
 output = "spec/flows/campaign-plans/phase-gates.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

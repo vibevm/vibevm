@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:331021f2cd95034f3c2dd813646e838f118396e9b62c1b71eb1a84e470154c41"
+source_hash = "sha256:b7fc8f43ae5f0ebca5dfaabd95f7e1440a51e01fc8a74eb4b43b7425da3f2251"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:e56131e772216d52683da3162d062ffb1663d5a7199e5b41c314f15c0d89eb3c"
+derived_hash = "sha256:d50d733e8c35b475ca2834b6724d1a4d11cbd59a60e0bdecb92f7285abc5dc48"
 
 [[file]]
 source = "Cargo.lock"
@@ -290,6 +290,11 @@ output = "crates/core-ai-native-specmap/src/mdspec/tests.rs"
 disposition = "copied"
 
 [[file]]
+source = "crates/core-ai-native-specmap/src/mdspec/walk.rs"
+output = "crates/core-ai-native-specmap/src/mdspec/walk.rs"
+disposition = "copied"
+
+[[file]]
 source = "crates/core-ai-native-specmap/src/mdspec.rs"
 output = "crates/core-ai-native-specmap/src/mdspec.rs"
 disposition = "copied"
@@ -317,6 +322,41 @@ disposition = "copied"
 [[file]]
 source = "crates/core-ai-native-specmap/src/tripwire.rs"
 output = "crates/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/blocks.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/blocks.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/doc.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/doc.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/facts.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/mdout.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/mdout.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/tests.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec.rs"
 disposition = "copied"
 
 [[file]]
@@ -360,134 +400,134 @@ output = "schemas/specmap.jtd.json"
 disposition = "copied"
 
 [[file]]
-source = "spec/00-MANIFESTO.md"
+source = "spec/00-MANIFESTO.xml"
 output = "spec/00-MANIFESTO.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/01-PATTERN-CARD-FORMAT.md"
+source = "spec/01-PATTERN-CARD-FORMAT.xml"
 output = "spec/01-PATTERN-CARD-FORMAT.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/02-EXECUTABLE-SCAFFOLDS.md"
+source = "spec/02-EXECUTABLE-SCAFFOLDS.xml"
 output = "spec/02-EXECUTABLE-SCAFFOLDS.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/03-RAID-PLAYBOOK.md"
+source = "spec/03-RAID-PLAYBOOK.xml"
 output = "spec/03-RAID-PLAYBOOK.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/04-SWEEP-PLAYBOOK.md"
+source = "spec/04-SWEEP-PLAYBOOK.xml"
 output = "spec/04-SWEEP-PLAYBOOK.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/05-CAMPAIGN-FORM.md"
+source = "spec/05-CAMPAIGN-FORM.xml"
 output = "spec/05-CAMPAIGN-FORM.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/06-WAL-CONVENTION.md"
+source = "spec/06-WAL-CONVENTION.xml"
 output = "spec/06-WAL-CONVENTION.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/appendix/ATLAS.md"
+source = "spec/appendix/ATLAS.xml"
 output = "spec/appendix/ATLAS.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/appendix/CONTRADICTION-MAP.md"
+source = "spec/appendix/CONTRADICTION-MAP.xml"
 output = "spec/appendix/CONTRADICTION-MAP.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/10-flow-core-ai-native.md"
+source = "spec/boot/10-flow-core-ai-native.xml"
 output = "spec/boot/10-flow-core-ai-native.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md"
+source = "spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md"
+source = "spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md"
+source = "spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-GO-v0.1.md"
+source = "spec/legacy-projections/GUIDE-GO-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-GO-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md"
+source = "spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md"
+source = "spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md"
+source = "spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-JAVA-v0.1.md"
+source = "spec/legacy-projections/GUIDE-JAVA-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-JAVA-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-KOTLIN-v0.1.md"
+source = "spec/legacy-projections/GUIDE-KOTLIN-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-KOTLIN-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-PYTHON-v0.1.md"
+source = "spec/legacy-projections/GUIDE-PYTHON-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-PYTHON-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md"
+source = "spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.xml"
 output = "spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md"
+source = "spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml"
 output = "spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+source = "spec/mechanisms/ENGINE-CONFORM-v0.1.xml"
 output = "spec/mechanisms/ENGINE-CONFORM-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/mechanisms/LEDGER-INTENT-v0.1.md"
+source = "spec/mechanisms/LEDGER-INTENT-v0.1.xml"
 output = "spec/mechanisms/LEDGER-INTENT-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/mechanisms/MCP-CORE-v0.1.md"
+source = "spec/mechanisms/MCP-CORE-v0.1.xml"
 output = "spec/mechanisms/MCP-CORE-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+source = "spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml"
 output = "spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "specmap.toml"

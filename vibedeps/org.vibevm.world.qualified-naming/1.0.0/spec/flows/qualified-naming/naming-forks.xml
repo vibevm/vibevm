@@ -7,7 +7,7 @@ each with its options, the choice this practice recommends, and the
 reasoning — so a future designer need not re-litigate settled ground.</scope-of-this-document></p>
   <p><four-forks fact="true" status="impl/done">Four forks: flat versus grouped, enforce versus recommend, where short
 names live, and rename as alias versus new identity.</four-forks></p>
-  <p><protocol-document-pointer fact="true" status="impl/done">The laws these forks produce are in [`QUALIFIED-NAMING-PROTOCOL.md`](QUALIFIED-NAMING-PROTOCOL.md).</protocol-document-pointer></p>
+  <p><protocol-document-pointer fact="true" status="impl/done">The laws these forks produce are in [`QUALIFIED-NAMING-PROTOCOL.xml`](QUALIFIED-NAMING-PROTOCOL.xml).</protocol-document-pointer></p>
   <flat-vs-grouped title="Fork 1 — flat versus grouped">
     <p><fork-1-question fact="true" status="spec/done">The root fork: is an artifact addressed by a bare `name` unique across
 the whole registry, or by a `group`-qualified coordinate?</fork-1-question></p>

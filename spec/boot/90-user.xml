@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>User overrides</title>
+  <p><user-overrides-intro fact="true" status="impl/done">User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add any project-specific conventions that should be read at session boot.</user-overrides-intro></p>
+  <section title="Communication style">
+    <p><communication-style fact="true" status="impl/done">Общение на русском языке в «айтишном» регистре: технические термины, кальки с английского и заимствования оставлять как есть (commit, install, registry, lockfile, build, stack, feat, flow, workflow, DAG, lifecycle и т.п.), не переводить их в стиле словаря Даля. Имена файлов, CLI-команды, код и термины из спеки — всегда в оригинале. Обычные слова — по-русски. Если есть устоявшийся русский термин (например, «зависимость» для dependency), можно использовать, но не насильно.</communication-style></p>
+    <p><decode-identifiers-inline fact="true" status="impl/done">**Идентификаторы расшифровываются на месте (владелец, 2026-08-20).** Упоминая в чате внутренний идентификатор — строку BACKLOG (`B-007`), находку аудита (`2026-05-23-11`), номер спеки (`PROP-044`), слайс ТЗ (`С6`) — сразу, в той же фразе, говори что это: одной короткой скобкой или придаточным («B-007 — вопрос о жанре ADR в спеках»). Владелец не обязан держать реестры в голове или ходить по файлам за расшифровкой; голый номер без сути — дефект ответа. Не относится к воркер-пакетам и коммитам (там периметр и так называет всё полным текстом).</decode-identifiers-inline></p>
+  </section>
+  <section title="Repository access">
+    <p><REPO-SPLIT-HOST-POSTURE fact="true" status="impl/done">**Source mirrors + registry split-host (updated 2026-06-14).** The vibevm *source* is multi-homed — mirrored across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), both public and canonical for reading (US↔GitHub, RU↔GitVerse), kept in sync by `cargo xtask mirror` under the benevolent-dictator / hub-and-spoke model ([PROP-016](../common/PROP-016-source-mirrors.xml): mainline is the maintainer's single-writer local `main`; each host is a downstream read-replica). Separately, the *package registry* org lives on GitHub (`vibespecs`) — the deliberate split there is for publishing ([PROP-000 §7](../common/PROP-000.xml#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish): GitVerse's public API does not expose org-scoped repo creation; GitHub's does). **Source mirroring and the package registry are orthogonal** — different GitHub orgs (`vibevm` vs `vibespecs`), different auth (SSH keys vs the publish token).</REPO-SPLIT-HOST-POSTURE></p>
+    <facts ordered="false">
+      <SRC-MULTI-HOMED fact="true" status="impl/done">**vibevm source repo (this repository) — multi-homed:** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. Roll a change out to both with `cargo xtask mirror` (the target list is `mirrors.toml`), NOT `git push origin` (which only hits GitVerse). See [PROP-016](../common/PROP-016-source-mirrors.xml).</SRC-MULTI-HOMED>
+      <REGISTRY-VIBESPECS fact="true" status="impl/done">**Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/&lt;group&gt;.&lt;name&gt;` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.xml#repo-naming) — e.g. `org.vibevm_wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v0.1.0+ packages goes through GitHub.</REGISTRY-VIBESPECS>
+      <LEGACY-REGISTRY fact="true" status="impl/done">**Legacy package registry (read-only transition):** `git@gitverse.ru:anarchic/vibespecs.git` — three v0.1.0 flows in monorepo form, HEAD `2203239`, 2026-04-23. No new publishes here; kept readable for projects still on schema-v1 lockfiles.</LEGACY-REGISTRY>
+      <LOCAL-FIXTURES fact="true" status="impl/done">**Local fixtures.** `fixtures/registry/` (M0 monorepo shape, hermetic) — used by `cargo test`, never goes near a real registry.</LOCAL-FIXTURES>
+    </facts>
+    <p><ssh-auth-lead fact="true" status="impl/done">**SSH and HTTPS auth on this machine:**</ssh-auth-lead></p>
+    <facts ordered="false">
+      <GITVERSE-SSH fact="true" status="impl/done">**GitVerse SSH:** ключ настроен в Git Bash на этой машине под именем `olegchir@UNIT-2040`. `ssh -T git@gitverse.ru` подтверждает auth без shell-доступа (ожидаемо).</GITVERSE-SSH>
+      <GITHUB-SSH fact="true" status="impl/done">**GitHub SSH (source / dev):** на этой машине есть SSH-ключ с полным доступом к GitHub от имени `olegchir` (`ssh -T git@github.com` → "Hi olegchir! … successfully authenticated"). Он используется для **dev-операций с исходниками** — `cargo xtask mirror` / push / fetch в `vibevm/vibevm` по **SSH-урлам**, не HTTPS.</GITHUB-SSH>
+      <GITHUB-PUBLISH-TOKEN fact="true" status="impl/done">**GitHub token (publish only):** `~/.vibe/github.publish.token` (1 line, file-scoped) используется **исключительно публишером** (`vibe registry publish`) — он внедряет его в push URL как `https://x-access-token:&lt;TOKEN&gt;@github.com/vibespecs/&lt;repo&gt;.git` на момент `git push`, после чего URL исчезает вместе с temp-веткой. Token **никогда** не используется для push исходников; SSH-ключ никогда не используется для publish пакетов. Modern git (≥ 2.31) редактирует пароли в собственных логах автоматически, поэтому stderr remains safe.</GITHUB-PUBLISH-TOKEN>
+    </facts>
+    <p><TOKEN-DISCIPLINE fact="true" status="impl/done">**Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. **Никогда** не печатается в stdout, stderr, чат, лог-сообщения, error messages, JSON-payload, lockfile, или коммит. Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка. См. [PROP-000 §20](../common/PROP-000.xml#token-secrecy) и [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). Если случайно прочитал содержимое токена — не вставляй в ответ под видом цитаты, не дублируй в коммит-сообщения, не показывай в дифах. Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты.</TOKEN-DISCIPLINE></p>
+    <p><TOKEN-FILE-CONVENTION fact="true" status="impl/done">**Token file convention.** Per-host file под `~/.vibe/&lt;host-prefix&gt;.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Высший приоритет — host-specific env-var `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` (`VIBEVM_PUBLISH_TOKEN_GITHUB`, `VIBEVM_PUBLISH_TOKEN_GITVERSE`); host-agnostic `VIBEVM_PUBLISH_TOKEN` идёт следом и оставлен для совместимости. Оба файловых пути лежат в одной settings dir, которую переносит `$VIBE_SETTINGS`.</TOKEN-FILE-CONVENTION></p>
+    <p><SCOPE-DISCIPLINE fact="true" status="impl/done">**Scope discipline.** `vibe registry publish` оперирует **строго в рамках** организации, указанной в `[[registry]].url` проекта. RepoCreator-адаптеры обязаны отказывать любым операциям, выходящим за пределы этой org (PROP-002 §2.10 — "Never escalate scope"). При работе с `vibespecs` на GitHub: создавать только `github.com/vibespecs/&lt;repo&gt;`; не уходить в `github.com/&lt;любая-другая-org&gt;`, не трогать `github.com/&lt;user&gt;` пространства имён, не вызывать никакие endpoint'ы, не относящиеся к target org.</SCOPE-DISCIPLINE></p>
+    <p><proven-commands-lead fact="true" status="impl/done">**Proven commands on this machine:**</proven-commands-lead></p>
+    <facts ordered="false">
+      <CMD-CLONE fact="true" status="impl/done">Clone vibevm (verified): `git clone git@gitverse.ru:vibevm/vibevm.git`.</CMD-CLONE>
+      <CMD-FIRST-PUSH fact="true" status="impl/done">First push to GitVerse (verified 2026-04-17 against a fresh empty repo): `git push -u origin main`. Git Bash picks up the GitVerse SSH key automatically; no agent-forwarding needed.</CMD-FIRST-PUSH>
+      <CMD-ROUTINE-PUSH fact="true" status="impl/done">Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`.</CMD-ROUTINE-PUSH>
+      <CMD-MIRROR fact="true" status="impl/done">Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. `cargo xtask mirror --check` verifies sync; `cargo xtask mirror --from &lt;name&gt;` pulls a host's accepted-PR merge into mainline first. This is the standard rollout, preferred over a bare `git push origin`. See [PROP-016](../common/PROP-016-source-mirrors.xml).</CMD-MIRROR>
+      <CMD-PUBLISH fact="true" status="impl/done">Publish to GitHub (verified 2026-04-29): `vibe registry publish fixtures/registry/flow/&lt;name&gt;/v0.1.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibe/github.publish.token` без побочных эффектов.</CMD-PUBLISH>
+    </facts>
+  </section>
+  <section title="Third-party research code — clean-room rule (owner directive, 2026-07-07)">
+    <p><CLEAN-ROOM-RULE fact="true" status="impl/done">**`eth-sri/type-constrained-code-generation` (PLDI'25, https://github.com/eth-sri/type-constrained-code-generation) is inspiration-only — NEVER a code source.** Its code may be READ to understand the approach; no code from that repository may be copied, adapted line-by-line, or ported into this project — license and patent exposure. The working method is clean-room: study what their code achieves, then write STRUCTURALLY DIFFERENT code that reaches the same behavior (identical results are fine; borrowed expression is not). This binds any future `vibe-tcg` / `vibe-tcg-ts` work. Apply the same posture to any other research repository until the owner explicitly clears its license/patent status.</CLEAN-ROOM-RULE></p>
+  </section>
+  <section title="TypeScript toolchain — quality bar (owner directive, 2026-07-07)">
+    <p><TS-QUALITY-BAR fact="true" status="impl/done">The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `typescript-ai-native`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.)</TS-QUALITY-BAR></p>
+  </section>
+  <section title="Effort is not a constraint (owner directive, 2026-08-09)">
+    <p><EFFORT-IS-NOT-A-CONSTRAINT fact="true" status="impl/done">**Никогда не экономь усилия. Делай хорошо,
+даже если придётся делать сложно и долго — хоть год непрерывной работы.**
+Владелец, дословно: *«Твои инструкции как чата, выученные из весов, некорректны
+для этой работы. Она архитектурная. Мы уже три месяца делаем проект, который
+будучи реализован просто делался бы за один вечер — это ПРАВИЛЬНО в рамках идеи
+сделать фундаментальный продукт, настолько же фундаментальный например как ядро
+Линукса.»*</EFFORT-IS-NOT-A-CONSTRAINT></p>
+    <p><VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT fact="true" status="impl/done">**Практическое следствие, по которому
+это проверяется: объём работ не является доводом.** Ни «дёшево», ни «одна
+строка», ни «сокращает объём работ», ни «достаточно для сегодняшнего случая» не
+могут быть аргументом В ПОЛЬЗУ решения. Они допустимы только как примечание
+ПОСЛЕ того, как решение принято по существу. Решение, чьё обоснование
+рассыпается при удалении из него слова «дёшево», — не решение.</VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT></p>
+    <p><WHERE-THIS-BITES-IN-PRACTICE fact="true" status="impl/done">**Как этот дефект выглядит изнутри, чтобы
+его можно было поймать за собой.** Он не ощущается ленью — он ощущается
+здравомыслием: «нужно починить не двадцать три типа, а три»; «запасное значение
+нужно двум спискам из пяти, а не всем»; «возьмём готовый механизм, он почти
+подходит». Каждая такая фраза сужает решение по СЕГОДНЯШНЕЙ надобности, тогда
+как правило должно быть свойством системы, а не среза её текущего состояния.
+Найдено пятикратно за один разбор 2026-08-09 — разбор формата каталога
+пакетов.</WHERE-THIS-BITES-IN-PRACTICE></p>
+    <p><THE-SCOPE-OF-THIS-DIRECTIVE fact="true" status="impl/done">**Область действия.** Это не разрешение
+раздувать работу и не требование предусматривать всё: фундаментальность равна
+«не иметь ни одной случайности», а не «предусмотреть любой случай». Механизм,
+построенный под потребителя, которого нет и не планируется, — такая же
+случайность, как и срезанный угол. Директива снимает ОБЪЁМ как ограничение,
+оставляя необходимость как критерий.</THE-SCOPE-OF-THIS-DIRECTIVE></p>
+    <p><THIS-GENERALISES-THE-QUALITY-BAR fact="true" status="impl/done">**Отношение к соседней директиве.** Это
+обобщение [`##TS-QUALITY-BAR`](#ts-quality-bar) выше: та запрещала «черновиковое»
+исполнение в одном инструментарии, эта распространяет запрет на способ принятия
+решений во всём проекте. Где они пересекаются, действуют обе.</THIS-GENERALISES-THE-QUALITY-BAR></p>
+  </section>
+  <section title="Machine quirks (this box)">
+    <p><machine-quirks-lead fact="true" status="impl/done">Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the
+sweep manual's §3 keeps a pointer here). These are machine facts, not
+project policy:</machine-quirks-lead></p>
+    <facts ordered="false">
+      <QUIRK-EDITOR-TOOLS fact="true" status="impl/done">Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM
+  round-trips; recover with `git restore`.</QUIRK-EDITOR-TOOLS>
+      <QUIRK-SELF-CHECK-BASH fact="true" status="impl/done">`self-check.sh` through Git Bash, not WSL; check the REAL exit code
+  (`; echo "EXIT=$?"`), never a `| tail`'d pipe.</QUIRK-SELF-CHECK-BASH>
+      <QUIRK-COMMIT-HEREDOC fact="true" status="impl/done">Commits via `git commit -F - &lt;&lt;'MSG'` heredoc only.</QUIRK-COMMIT-HEREDOC>
+      <QUIRK-UAC-INSTALL fact="true" status="impl/done">Windows UAC blocks test executables named `*install*` (os-740).</QUIRK-UAC-INSTALL>
+      <QUIRK-VAR-REDIRECT fact="true" status="impl/done">`bash … &gt; "$VAR/file" 2&gt;&amp;1` with an unset `$VAR` writes to `/file` and
+  silently never runs the command — inline the path or set the var on the
+  same line.</QUIRK-VAR-REDIRECT>
+      <QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE fact="true" status="impl/done">**The vibevm version store lives at
+  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`
+  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`
+  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,
+  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims
+  there, and the delegation launchers `claudez` / `claudez2` are still
+  `~/opt/bin/claudez*` (they belong to no store). The user `PATH` therefore
+  carries **both** directories, `~/.vibe/opt/bin` first. Verified live: `vibe
+  --version` answers from the new location.</QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE>
+      <QUIRK-THE-OPT-NAME-IS-LORE-BEARING fact="true" status="impl/done">**The last path component `opt` is
+  load-bearing and that is why the new home is `~/.vibe/opt` rather than
+  `~/.vibe`.** The version manager recognises a managed install by the shape
+  `…/opt/&lt;product&gt;/versions/&lt;kind&gt;/&lt;id&gt;/&lt;n&gt;/`, matching the literal names
+  `opt`, the product, and `versions`. Keeping `opt` as the final component made
+  the move a pure file operation with **no code change**. Renaming it is a
+  product-wide decision, not a machine one — the sibling products key on the
+  same shape.</QUIRK-THE-OPT-NAME-IS-LORE-BEARING>
+      <QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF fact="true" status="impl/done">**A `vibe` shim finds its
+  version relative to its own directory** (`&lt;shim dir&gt;/../&lt;product&gt;/current`), so
+  moving the shims without moving the store beside them silently breaks the
+  command — the shim is found on `PATH`, runs, and reports no active version.
+  Met and reverted during the 2026-08-20 move; the working order is: move the
+  store and the shims together, rewrite the absolute path inside `current`, then
+  touch `PATH`.</QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF>
+      <QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW fact="true" status="impl/done">**The user `PATH` in
+  `HKCU\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it
+  through the ordinary accessor returns the EXPANDED string; writing that back
+  destroys the variable reference (here, `%USERPROFILE%\go\bin` would have become
+  a literal path). Read it unexpanded, edit the raw string, and write it back with
+  the value kind preserved.</QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW>
+    </facts>
+  </section>
+  <section title="Operating modes (codewords)">
+    <p><operating-modes-intro fact="true" status="impl/done">Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.xml). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading).</operating-modes-intro></p>
+    <p><codewords-lead fact="true" status="impl/done">Codewords currently in force:</codewords-lead></p>
+    <facts ordered="false">
+      <CODEWORD-MFBT fact="true" status="impl/done">**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.xml#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's "ask before routine large changes" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active.</CODEWORD-MFBT>
+    </facts>
+  </section>
+</spec>

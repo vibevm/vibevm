@@ -4,7 +4,7 @@
   <status stage="spec" state="done"/>
   <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** A worked reference codeword, specified in
 the five-part shape from
-[`OPERATING-MODES-PROTOCOL.md`](OPERATING-MODES-PROTOCOL.md#shape).</scope-of-this-document></p>
+[`OPERATING-MODES-PROTOCOL.xml`](OPERATING-MODES-PROTOCOL.xml#shape).</scope-of-this-document></p>
   <p><THIS-IS-THE-CANONICAL-PRE-AUTHORISED-HEADS-DOWN-POSTURE fact="true" status="impl/done">It
 is the canonical example of a pre-authorised heads-down execution
 posture — adopt it, adapt it, or read it as the template for writing
@@ -71,7 +71,7 @@ later".</TEST-ALONGSIDE-CADENCE-BECOMES-MANDATORY></p>
       <SURVIVES-SECRETS-LICENCE-AND-OUTPUT-CONVENTIONS fact="true" status="impl/done">Secrets hygiene, licence constraints, output conventions — all in
   force.</SURVIVES-SECRETS-LICENCE-AND-OUTPUT-CONVENTIONS>
       <SURVIVES-THE-RED-LINES fact="true" status="impl/done">**The red lines** (see
-  [`OPERATING-MODES-PROTOCOL.md` §red-lines](OPERATING-MODES-PROTOCOL.md#red-lines)):
+  [`OPERATING-MODES-PROTOCOL.xml` §red-lines](OPERATING-MODES-PROTOCOL.xml#red-lines)):
   rewriting published history, force-pushing, large binary blobs,
   CI/signing/secrets changes, and anything whose reversal costs work
   STILL require explicit owner confirmation. The codeword removes the

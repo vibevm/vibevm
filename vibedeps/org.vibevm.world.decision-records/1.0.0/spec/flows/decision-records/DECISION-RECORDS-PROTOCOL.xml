@@ -8,8 +8,8 @@ in a human-AI team, the four fields every record carries, *where*
 records live (at the governing spec anchor, not in an ADR silo),
 *when* to write one, and the two section patterns for larger
 documents.</scope-of-this-document></p>
-  <p><companion-document-pointers fact="true" status="impl/done">Copy-ready template: [`record-template.md`](record-template.md);
-trigger design: [`revisit-triggers.md`](revisit-triggers.md).</companion-document-pointers></p>
+  <p><companion-document-pointers fact="true" status="impl/done">Copy-ready template: [`record-template.xml`](record-template.xml);
+trigger design: [`revisit-triggers.xml`](revisit-triggers.xml).</companion-document-pointers></p>
   <facts-vs-decisions title="Facts versus decisions">
     <p><BLAKE3-LINE-IS-A-FACT fact="true" status="spec/done">"We hash with blake3" is a **fact**.</BLAKE3-LINE-IS-A-FACT></p>
     <p><a-fact-is-recovered-with-one-grep fact="true" status="spec/done">Any reader — human or agent —
@@ -50,7 +50,7 @@ proposal to "optimise" the timeout is answered by the record in one
 read, not an hour of archaeology.</RECORD-IS-IMMUNITY-FROM-RE-LITIGATION></p>
     <p><TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST fact="true" status="spec/done">The trigger field keeps the
 immunity honest — without it the decision hardens into a sacred cow
-([`revisit-triggers.md` §sacred-cows](revisit-triggers.md#sacred-cows)).</TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST></p>
+([`revisit-triggers.xml` §sacred-cows](revisit-triggers.xml#sacred-cows)).</TRIGGER-FIELD-KEEPS-THE-IMMUNITY-HONEST></p>
   </why>
   <four-fields title="The four-field record">
     <p><EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS fact="true" status="impl/done">Every record carries exactly four fields:</EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS></p>
@@ -80,7 +80,7 @@ immunity honest — without it the decision hardens into a sacred cow
 the why answers "is this arbitrary?", the rejections "did you
 consider X?", the trigger "is it time to reconsider?".</why-three-of-the-four-fields-exist></p>
     <p><template-and-examples-pointer fact="true" status="impl/done">Copy-ready
-shape and worked examples: [`record-template.md`](record-template.md).</template-and-examples-pointer></p>
+shape and worked examples: [`record-template.xml`](record-template.xml).</template-and-examples-pointer></p>
   </four-fields>
   <placement title="Where records live">
     <p><RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR fact="true" status="impl/done">**At the spec anchor that governs the value.**</RECORDS-LIVE-AT-THE-GOVERNING-ANCHOR></p>
@@ -126,7 +126,7 @@ preserve reasoning technically and lose it practically.</SILOS-PRESERVE-TECHNICA
       <CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD fact="true" status="impl/done">**The spec section IS the record.** No second artefact to sync.</CONSEQUENCE-SPEC-SECTION-IS-THE-RECORD>
       <CONSEQUENCE-EVOLUTION-IS-AN-EDIT fact="true" status="impl/done">**Evolution is an edit.** Rewrite the record in place, add a dated
   changelog line; the old text is one `git log -p` away. Procedure:
-  [`revisit-triggers.md` §when-fired](revisit-triggers.md#when-fired).</CONSEQUENCE-EVOLUTION-IS-AN-EDIT>
+  [`revisit-triggers.xml` §when-fired](revisit-triggers.xml#when-fired).</CONSEQUENCE-EVOLUTION-IS-AN-EDIT>
       <CONSEQUENCE-RECORDS-ARE-CITABLE fact="true" status="impl/done">**Records are citable.** Give every record's heading an explicit
   anchor — `spec://&lt;project&gt;/&lt;doc&gt;#&lt;anchor&gt;` or any stable
   path-plus-anchor form — so comments and commits can point at it.</CONSEQUENCE-RECORDS-ARE-CITABLE>

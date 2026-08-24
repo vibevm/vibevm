@@ -9,7 +9,7 @@
 this line waits, explicitly and indefinitely, on local-LLM plumbing.*</status-line></p>
   <p><AGENTIC-DELIVERY-SHIPS-FIRST fact="true" status="impl/done">*The
 AGENTIC delivery of the same value shipped FIRST: see the full-parity
-sibling brief [`vibe-agentic-tcg-ts.md`](vibe-agentic-tcg-ts.md)
+sibling brief [`vibe-agentic-tcg-ts.xml`](vibe-agentic-tcg-ts.xml)
 (AGENTIC-TCG-TS-PLAN v0.1) — a consultation oracle over MCP/CLI, whose
 language-service core is the SAME oracle a future logit-masker will query.*</AGENTIC-DELIVERY-SHIPS-FIRST></p>
   <p><NOTHING-BUILT-THERE-IS-THROWN-AWAY fact="true" status="spec/done">*Nothing built there is thrown away here.*</NOTHING-BUILT-THERE-IS-THROWN-AWAY></p>

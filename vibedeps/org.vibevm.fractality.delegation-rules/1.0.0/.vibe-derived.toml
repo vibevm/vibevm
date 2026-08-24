@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:561401426e5192d0d72012efc8d5ce1d0a84949473fd92ec8c54efb94742485b"
+source_hash = "sha256:1f61d758fabc0e811a7c1e01e575bbef725c4e44733cb0905ac1a491fee8ebfe"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:188568fe4b6d7163bdeb6dbc6e5d7bab3b9f4c05c5566e93d9b206927bc16978"
+derived_hash = "sha256:26f9f0f47322af611a507ed3e3a2bd001e4e0ce2b6d6a9a840d5f6bd959fa2ac"
 
 [[file]]
 source = "AGENTS.md"
@@ -30,9 +30,9 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/77-flow-delegation-rules.md"
+source = "spec/boot/77-flow-delegation-rules.xml"
 output = "spec/boot/77-flow-delegation-rules.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/boot/INDEX.md"
@@ -40,24 +40,24 @@ output = "spec/boot/INDEX.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/flows/delegation-rules/DECISION-MATRIX.md"
+source = "spec/flows/delegation-rules/DECISION-MATRIX.xml"
 output = "spec/flows/delegation-rules/DECISION-MATRIX.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/delegation-rules/playbooks/_template.md"
+source = "spec/flows/delegation-rules/playbooks/_template.xml"
 output = "spec/flows/delegation-rules/playbooks/_template.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/delegation-rules/playbooks/glm-5-turbo.md"
+source = "spec/flows/delegation-rules/playbooks/glm-5-turbo.xml"
 output = "spec/flows/delegation-rules/playbooks/glm-5-turbo.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/delegation-rules/playbooks/glm-5.2.md"
+source = "spec/flows/delegation-rules/playbooks/glm-5.2.xml"
 output = "spec/flows/delegation-rules/playbooks/glm-5.2.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/flows/delegation-rules/routing-policy.toml"

@@ -17,21 +17,21 @@ costs the agent hundreds of tokens of guessing; "you are violating
 difference, made into a standing contract.</PACKAGE-IS-THAT-DIFFERENCE-AS-A-STANDING-CONTRACT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md` —
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml` —
   full protocol: why addressability is IPC requirement #1, the URI
   scheme and anchor grammar, reverse-DNS module names, the
   single-source and placement rules, the bidirectional graph that
   `Implements:` markers and `Test:` lines create, and a re-derive
   prompt for adapting the practice to a concrete project.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-AUTHORING-RULES fact="true" status="impl/done">`spec/flows/addressable-specs/authoring-rules.md` — how to write
+    <CONTENT-THE-AUTHORING-RULES fact="true" status="impl/done">`spec/flows/addressable-specs/authoring-rules.xml` — how to write
   units that stay addressable: one unit = one decision, normativity
   marked with RFC-2119 verbs, deviations recorded honestly, size
   budgets, changelog lines, and the rule that anchors are immutable
   once cited.</CONTENT-THE-AUTHORING-RULES>
-    <CONTENT-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">`spec/flows/addressable-specs/spec-tree-layout.md` — the reference
+    <CONTENT-THE-SPEC-TREE-LAYOUT fact="true" status="impl/done">`spec/flows/addressable-specs/spec-tree-layout.xml` — the reference
   tree: PROP vs FEAT, the what-goes-where decision table, and the
   `.human/` private buffer enforced by ignore-file invisibility.</CONTENT-THE-SPEC-TREE-LAYOUT>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/15-flow-addressable-specs.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/15-flow-addressable-specs.xml` — boot snippet loaded at
   session start: the correction contract, the single-source and
   placement rules, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>

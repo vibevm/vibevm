@@ -10,8 +10,8 @@ tool, a config diff), and *what "bad" looks like*.</scope-of-this-document></p>
 **living** — the closing section is the law for extending it.</THE-CHECKLIST-IS-LIVING></p>
   <p><companion-document-pointers fact="true" status="impl/done">The
 run procedure that consumes this list:
-[`running-an-audit.md`](running-an-audit.md); the rationale for the
-whole practice: [`HEALTH-AUDIT-PROTOCOL.md`](HEALTH-AUDIT-PROTOCOL.md).</companion-document-pointers></p>
+[`running-an-audit.xml`](running-an-audit.xml); the rationale for the
+whole practice: [`HEALTH-AUDIT-PROTOCOL.xml`](HEALTH-AUDIT-PROTOCOL.xml).</companion-document-pointers></p>
   <p><TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT fact="true" status="impl/done">Translate every "aid" into your stack's equivalent:</TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT></p>
   <facts ordered="false">
     <AID-THE-COVERAGE-TOOL fact="true" status="impl/done">"the coverage

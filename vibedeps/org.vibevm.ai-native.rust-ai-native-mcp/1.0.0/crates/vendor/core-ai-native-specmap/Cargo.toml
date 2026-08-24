@@ -23,6 +23,7 @@ sha2.workspace = true
 walkdir.workspace = true
 glob.workspace = true
 anyhow.workspace = true
+quick-xml.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

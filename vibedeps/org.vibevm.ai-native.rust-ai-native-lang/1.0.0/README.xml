@@ -28,7 +28,7 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-M
     carry rust-analyzer (`rustup component add rust-analyzer`).
     Honesty: rust-analyzer is not rustc — the oracle shortens the
     distance to green; `rust-ai-native floor` stays the truth.</SHIPS-RUST-AI-NATIVE-TCG>
-      <SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.md`,
+      <SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.xml`,
   `spec/cards/` — the nine scaffolds in their Rust shape, Band-3 ops
   blocks for weak readers).</SHIPS-GUIDE-AND-CARDS>
       <SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):

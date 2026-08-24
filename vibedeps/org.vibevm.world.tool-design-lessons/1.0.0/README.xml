@@ -17,21 +17,21 @@ fourteen laws with the failures that earned them and three maxims that
 sit above them.</IT-IS-A-LESSONS-CATALOG-NOT-A-PROTOCOL></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-CATALOG-INDEX fact="true" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md` — the catalog:
+    <CONTENT-THE-CATALOG-INDEX fact="true" status="impl/done">`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml` — the catalog:
   what the lessons are, the index table (lesson id → one-line law →
   where it lives), the three cross-cutting maxims, the meta-lesson
   (record the *why*, not just the *what*), and a re-derive prompt for
   adapting the laws to your own platform.</CONTENT-THE-CATALOG-INDEX>
-    <CONTENT-THE-SELF-UPDATING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.md` — lessons
+    <CONTENT-THE-SELF-UPDATING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/self-updating-tools.xml` — lessons
   S1–S7: live-pointer activation, immutable instance directories, cheap
   identity, sources by reference, durable-environment edits, one
   runnable required-tools table, and safe removal / garbage collection.</CONTENT-THE-SELF-UPDATING-LESSONS>
-    <CONTENT-THE-PACKAGING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.md` — lessons P1–P7:
+    <CONTENT-THE-PACKAGING-LESSONS fact="true" status="impl/done">`spec/flows/tool-design-lessons/packaging-lessons.xml` — lessons P1–P7:
   a package is a project, ship runtime not prose, identity is the
   source, build output goes elsewhere, vendor the bootstrap, spike
   before the irreversible move, and build the general mechanism on real
   demand.</CONTENT-THE-PACKAGING-LESSONS>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/70-flow-tool-design-lessons.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/70-flow-tool-design-lessons.xml` — boot snippet loaded at
   session start: when to read a lesson first, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

@@ -191,15 +191,15 @@ Watch out: do NOT touch match_by_hash() — it's tested and stable</fence>
 ├── specs/                     # IPC-буфер (shared state)
 │   ├── BOOT.md                # BIOS — точка входа AI
 │   ├── WAL.md                 # Continuation state
-│   ├── WAL-PROTOCOL.md        # Как работать с WAL (алгоритмический)
+│   ├── WAL-PROTOCOL.xml        # Как работать с WAL (алгоритмический)
 │   ├── SPEC-PROTOCOL.md       # Как обновлять спеки (протокол конфликтов)
 │   ├── common/
 │   │   ├── main.md            # Архитектура, стек, решения
 │   │   ├── structure.md       # Карта модулей
-│   │   └── PROP-000.md        # Фундаментальные решения
+│   │   └── PROP-000.xml        # Фундаментальные решения
 │   └── modules/
 │       ├── oproto/            # Модуль OPROTO
-│       │   ├── PROP-001.md    # Базовый протокол
+│       │   ├── PROP-001.xml    # Базовый протокол
 │       │   └── FEAT-001.md    # Подключение к edge-серверу
 │       ├── edge/              # Модуль edge-сервера
 │       └── client/            # Модуль десктопного клиента

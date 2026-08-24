@@ -6,11 +6,11 @@
 stance · component shape · staged ambition · licensing · risk register ·
 summary).*</status-line></p>
   <p><COMMISSIONED-AS-THE-AGENTIC-DELIVERY fact="true" status="impl/done">*Commissioned 2026-07-07 as the AGENTIC delivery of the tcg line —
-the sibling of `typescript-ai-native-tcg.md` (token-level, VERY-FAR-future) — and
+the sibling of `typescript-ai-native-tcg.xml` (token-level, VERY-FAR-future) — and
 implemented by AGENTIC-TCG-TS-PLAN v0.1.*</COMMISSIONED-AS-THE-AGENTIC-DELIVERY></p>
   <p><companion-documents fact="true" status="impl/done">*Mechanism specs:
-[`TCG-ORACLE-v0.1`](../mechanisms/TCG-ORACLE-v0.1.md),
-[`TCG-PROTOCOL-v0.1`](../mechanisms/TCG-PROTOCOL-v0.1.md); the product-side
+[`TCG-ORACLE-v0.1`](../mechanisms/TCG-ORACLE-v0.1.xml),
+[`TCG-PROTOCOL-v0.1`](../mechanisms/TCG-PROTOCOL-v0.1.xml); the product-side
 MCP seam is vibevm's PROP-026.*</companion-documents></p>
   <problem title="1. What problem it solves">
     <p><TCD-MASKS-LOGITS-INSIDE-THE-SAMPLER fact="true" status="spec/done">True type-constrained decoding masks logits inside the sampler.</TCD-MASKS-LOGITS-INSIDE-THE-SAMPLER></p>
@@ -155,7 +155,7 @@ the layer below cannot:</three-processes-lead></p>
       <LICENSING-NODE-NDJSON-AND-OUR-ENGINES fact="true" status="spec/done">node, NDJSON, our own engines: in-house or std.</LICENSING-NODE-NDJSON-AND-OUR-ENGINES>
       <LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY fact="true" status="impl/done">The PLDI'25 reproduction package: **not a dependency, not a reference,
   not opened** for the agentic line (inspiration-only rule,
-  `spec/boot/90-user.md`). No third-party grammar/CFG tooling is needed
+  `spec/boot/90-user.xml`). No third-party grammar/CFG tooling is needed
   at all in agentic mode.</LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY>
       <LICENSING-NET-NOTHING-VIRAL fact="true" status="impl/done">Net: nothing viral anywhere near the critical path.</LICENSING-NET-NOTHING-VIRAL>
     </facts>

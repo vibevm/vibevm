@@ -109,7 +109,7 @@ pretending otherwise causes more harm than the staleness itself.</STALENESS-IS-T
     <p><IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT fact="true" status="impl/done">What it is never allowed to do is quietly diverge from the contract
 and then get cited as current — that is the exact failure the
 precedence law
-([`SPEC-GENRES-PROTOCOL.md#precedence`](SPEC-GENRES-PROTOCOL.md#precedence))
+([`SPEC-GENRES-PROTOCOL.xml#precedence`](SPEC-GENRES-PROTOCOL.xml#precedence))
 exists to prevent.</IT-MAY-NEVER-DIVERGE-AND-BE-CITED-AS-CURRENT></p>
   </staleness>
   <summary title="Summary">

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:b5af9daa01ec5a7f351c4079be3d3d3c131d36e3bccb2fe672648fdeeafec9a2"
+source_hash = "sha256:122377e279131cab995d56735821fed44311773ff82caa872e8c562044aa3491"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:017ffb0a4a145a9108869b01ce32caa9a57dce44c4b27102e0345de22e3af38a"
+derived_hash = "sha256:c3d0eb969f5bc2937f4e8045d5caacfe25704f455633eb9c40074620bffa1948"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/45-flow-operating-modes.md"
+source = "spec/boot/45-flow-operating-modes.xml"
 output = "spec/boot/45-flow-operating-modes.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md"
+source = "spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
 output = "spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/operating-modes/mfbt-mode.md"
+source = "spec/flows/operating-modes/mfbt-mode.xml"
 output = "spec/flows/operating-modes/mfbt-mode.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/operating-modes/writing-a-codeword.md"
+source = "spec/flows/operating-modes/writing-a-codeword.xml"
 output = "spec/flows/operating-modes/writing-a-codeword.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

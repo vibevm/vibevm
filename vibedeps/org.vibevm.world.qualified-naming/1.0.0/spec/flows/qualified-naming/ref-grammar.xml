@@ -7,7 +7,7 @@ reference, the table of legal forms and where each is legal, worked
 examples with invented groups, the rule for what persisted state
 stores, and the shape a collision error must take.</scope-of-this-document></p>
   <p><protocol-document-pointer fact="true" status="impl/done">The *why* behind
-these choices lives in [`QUALIFIED-NAMING-PROTOCOL.md`](QUALIFIED-NAMING-PROTOCOL.md);
+these choices lives in [`QUALIFIED-NAMING-PROTOCOL.xml`](QUALIFIED-NAMING-PROTOCOL.xml);
 this file is the mechanics.</protocol-document-pointer></p>
   <grammar title="The grammar">
     <p><a-reference-has-up-to-four-parts fact="true" status="impl/done">A **reference** (the thing a manifest lists or a human types) has up to

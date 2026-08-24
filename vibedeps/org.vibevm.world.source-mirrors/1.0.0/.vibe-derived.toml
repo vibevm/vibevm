@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:d4c8a527ad9c14e17ee15f5f6b788a09914ddcc6731f6f57581d1c387cddd080"
+source_hash = "sha256:6a65d20331cab046e183b2edc1db7128f05536da6f02fe818c1bd5606c1d0607"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:80e90ed401b0f278a3e1039488d03078e0b73397a0eb171f090b1c4782d47032"
+derived_hash = "sha256:430ca65b2077ecf90ff602a4235e19d825171fcc2e3cda58ca09235619a49fa4"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/62-flow-source-mirrors.md"
+source = "spec/boot/62-flow-source-mirrors.xml"
 output = "spec/boot/62-flow-source-mirrors.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md"
+source = "spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
 output = "spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/source-mirrors/daily-loop.md"
+source = "spec/flows/source-mirrors/daily-loop.xml"
 output = "spec/flows/source-mirrors/daily-loop.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/source-mirrors/fanout-mechanics.md"
+source = "spec/flows/source-mirrors/fanout-mechanics.xml"
 output = "spec/flows/source-mirrors/fanout-mechanics.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:126e1cb3c2b3767458be9265d5d7bbb38d9293760840a0e3b2f6a2eb73493003"
+source_hash = "sha256:7c0860103547186a1d80168e021862c2d15b8a573fa132775c173860db43f929"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:82fa5fcf14007626d0f93477cdfb928609acc691d0367fe4340d255bf65bec9e"
+derived_hash = "sha256:fe44c902c861e092190c49d71dda5f71aa657cbeaa084fa2746049f0069693c2"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/65-flow-managed-blocks.md"
+source = "spec/boot/65-flow-managed-blocks.xml"
 output = "spec/boot/65-flow-managed-blocks.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md"
+source = "spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
 output = "spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/managed-blocks/adoption-guide.md"
+source = "spec/flows/managed-blocks/adoption-guide.xml"
 output = "spec/flows/managed-blocks/adoption-guide.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/managed-blocks/rejected-designs.md"
+source = "spec/flows/managed-blocks/rejected-designs.xml"
 output = "spec/flows/managed-blocks/rejected-designs.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

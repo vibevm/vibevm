@@ -22,21 +22,21 @@ real study quotes the subject verbatim with dates, measures it in
 numbered, prioritized, homed proposals a human can weigh.</A-REAL-STUDY-QUOTES-MEASURES-AND-PROPOSES></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-GENRE-LAW fact="true" status="impl/done">`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`
+    <CONTENT-THE-GENRE-LAW fact="true" status="impl/done">`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml`
   — the genre law: what a comparative study is, why it exists, the
   five laws (self-containedness, quote-first, two-way gaps,
   deltas-not-decrees, the re-fetch list), when to write one, and a
   re-derive prompt.</CONTENT-THE-GENRE-LAW>
-    <CONTENT-THE-RESEARCH-TEMPLATE fact="true" status="impl/done">`spec/flows/comparative-research/research-template.md` — a
+    <CONTENT-THE-RESEARCH-TEMPLATE fact="true" status="impl/done">`spec/flows/comparative-research/research-template.xml` — a
   copy-ready skeleton (purpose, source table, reading shape, the
   subject in its own words, inventory, trail, lead, numbered deltas,
   open questions, re-fetch list), clause-by-clause commentary, and a
   short worked fragment.</CONTENT-THE-RESEARCH-TEMPLATE>
-    <CONTENT-THE-ROADMAP-PIPELINE fact="true" status="impl/done">`spec/flows/comparative-research/from-research-to-roadmap.md` — the
+    <CONTENT-THE-ROADMAP-PIPELINE fact="true" status="impl/done">`spec/flows/comparative-research/from-research-to-roadmap.xml` — the
   downstream pipeline: delta → owner review → accepted deltas become
   recorded decisions, rejected deltas stay archived with their
   reason, plus refresh discipline and the honesty rule.</CONTENT-THE-ROADMAP-PIPELINE>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/52-flow-comparative-research.md` — boot snippet: the
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/52-flow-comparative-research.xml` — boot snippet: the
   genre exists, reach for the template on request, hold the laws.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

@@ -33,20 +33,20 @@ structurally.</groups-fix-all-three-structurally></p>
   <p><THIS-PACKAGE-IS-THAT-FIX-AS-A-STANDING-CONTRACT fact="true" status="impl/done">This package is that fix, made into a standing contract.</THIS-PACKAGE-IS-THAT-FIX-AS-A-STANDING-CONTRACT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md` — the full
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml` — the full
   protocol: why flat names fail, the mandatory group, the identity
   tuple, rename-is-new-identity, short-names-at-the-boundary-only,
   collision versus conflict, and a re-derive prompt for adapting the
   practice to a concrete ecosystem.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-REF-GRAMMAR fact="true" status="impl/done">`spec/flows/qualified-naming/ref-grammar.md` — the reference grammar
+    <CONTENT-THE-REF-GRAMMAR fact="true" status="impl/done">`spec/flows/qualified-naming/ref-grammar.xml` — the reference grammar
   in EBNF-ish form, the forms table with where-legal per form, worked
   examples with invented groups, the qualified-only storage rule, and
   the shape a collision error must take.</CONTENT-THE-REF-GRAMMAR>
-    <CONTENT-THE-NAMING-FORKS fact="true" status="impl/done">`spec/flows/qualified-naming/naming-forks.md` — the design lore
+    <CONTENT-THE-NAMING-FORKS fact="true" status="impl/done">`spec/flows/qualified-naming/naming-forks.xml` — the design lore
   condensed: flat vs grouped (the Cargo-vs-Maven precedent), enforce vs
   recommend, where short names live, and rename as alias vs new
   identity — each fork resolved, with reasons.</CONTENT-THE-NAMING-FORKS>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/67-flow-qualified-naming.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/67-flow-qualified-naming.xml` — boot snippet loaded at
   session start: when the practice applies, the laws in one breath, and
   the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
@@ -64,7 +64,7 @@ snippet.</UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE></p>
       <COMPOSES-TOOL-DESIGN-LESSONS fact="true" status="spec/done">`flow:tool-design-lessons` — the sibling practice for the authors who
   *publish into* a namespace; this package designs the namespace they
   publish into. Together they cover both sides of the registry boundary.</COMPOSES-TOOL-DESIGN-LESSONS>
-      <COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — each fork in `naming-forks.md` is a decision
+      <COMPOSES-DECISION-RECORDS fact="true" status="spec/done">`flow:decision-records` — each fork in `naming-forks.xml` is a decision
   a future maintainer will re-open; resolve it for *your* ecosystem and
   record it with a why and a revisit trigger, so the namespace's shape
   is not re-litigated.</COMPOSES-DECISION-RECORDS>

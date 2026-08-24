@@ -6,12 +6,12 @@
 stance · component shape · staged ambition · licensing · risk register ·
 summary).*</status-line></p>
   <p><COMMISSIONED-AS-THE-RUST-TWIN fact="true" status="impl/done">*Commissioned 2026-07-07 as the Rust twin of the agentic tcg
-line — the sibling of `rust-ai-native-tcg.md` (token-level, VERY-FAR-future)
-and of the TS stack's `vibe-agentic-tcg-ts.md` — and implemented by
+line — the sibling of `rust-ai-native-tcg.xml` (token-level, VERY-FAR-future)
+and of the TS stack's `vibe-agentic-tcg-ts.xml` — and implemented by
 AGENTIC-TCG-RUST-PLAN v0.1.*</COMMISSIONED-AS-THE-RUST-TWIN></p>
   <p><companion-documents fact="true" status="impl/done">*Mechanism specs:
-[`TCG-ORACLE-RUST-v0.1`](../mechanisms/TCG-ORACLE-RUST-v0.1.md),
-[`TCG-PROTOCOL-RUST-v0.1`](../mechanisms/TCG-PROTOCOL-RUST-v0.1.md); the
+[`TCG-ORACLE-RUST-v0.1`](../mechanisms/TCG-ORACLE-RUST-v0.1.xml),
+[`TCG-PROTOCOL-RUST-v0.1`](../mechanisms/TCG-PROTOCOL-RUST-v0.1.xml); the
 product-side MCP seam is vibevm's PROP-026 (the `language` parameter was
 cut for exactly this arrival: a new value, not new tools).*</companion-documents></p>
   <problem title="1. What problem it solves">
@@ -151,7 +151,7 @@ enrichment happens inside the relay:</three-processes-lead></p>
   LSP child — richer scope/brand answers, custom traversals — at the
   cost of pinning our r-a version. Re-enters planning only by the
   owner's word; recorded in vibevm ROADMAP.md's Far backlog.</STAGE-D-RA-AP-EMBEDDING>
-      <STAGE-E-TOKEN-LEVEL-TCG fact="true" status="spec/done">**Stage E — token-level TCG** (`rust-ai-native-tcg.md`, VERY-FAR-future):
+      <STAGE-E-TOKEN-LEVEL-TCG fact="true" status="spec/done">**Stage E — token-level TCG** (`rust-ai-native-tcg.xml`, VERY-FAR-future):
   the same oracle answers a logit-masker inside a decode loop when
   `vibe-llm` exists. Nothing here is thrown away; the consumer of the
   answers changes.</STAGE-E-TOKEN-LEVEL-TCG>
@@ -166,7 +166,7 @@ enrichment happens inside the relay:</three-processes-lead></p>
   core-ai-native copies).</LICENSING-CONFORM-ENGINES>
       <LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY fact="true" status="impl/done">The PLDI'25 reproduction package: **not a dependency, not opened**
   for the agentic line (the standing clean-room rule,
-  `spec/boot/90-user.md`); this campaign's concept sources are our own
+  `spec/boot/90-user.xml`); this campaign's concept sources are our own
   briefs, the LSP spec, and rust-analyzer's public documentation.</LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY>
       <LICENSING-NET-NOTHING-VIRAL fact="true" status="impl/done">Net: nothing viral anywhere near the critical path.</LICENSING-NET-NOTHING-VIRAL>
     </facts>

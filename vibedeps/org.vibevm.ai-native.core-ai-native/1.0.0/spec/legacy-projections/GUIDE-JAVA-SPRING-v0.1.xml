@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title>GUIDE — Java + Spring under the Discipline, v0.1 (overlay)</title>
-  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md` (the trunk). Only the sections named here are rewired; everything else — carrier, naming, errors-as-sealed-results, suppression policy, risk rows — is inherited. Composition: combines with the GraalVM overlay (Spring Boot AOT); never with the Jakarta overlay (one container per target).</p>
+  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.xml` (the trunk). Only the sections named here are rewired; everything else — carrier, naming, errors-as-sealed-results, suppression policy, risk rows — is inherited. Composition: combines with the GraalVM overlay (Spring Boot AOT); never with the Jakarta overlay (one container per target).</p>
   <p>Framing note. Spring is the place where the Discipline's oldest ban — *no DI containers* — meets the ecosystem where DI containers won. The overlay does not pretend Spring away and does not surrender to it; it resolves by **ring placement**: Spring is legalized as *machinery of the composition root and the boundary*, and nowhere else. The trunk's second language (runtime assembly via reflection and proxies) gets a territory with a border, and the border is enforced by ArchUnit, not by hope. The slogan of this overlay: **framework-free core** — a cell compiled without Spring on the classpath is the test that it belongs to the first language.</p>
   <p>**Scope honesty.** Spring Boot 3.x-era applications. Legacy XML/Spring 4-5 codebases enter through the brownfield protocol as adopted code, not through this overlay.</p>
   <baseline title="§0 additions — baseline">

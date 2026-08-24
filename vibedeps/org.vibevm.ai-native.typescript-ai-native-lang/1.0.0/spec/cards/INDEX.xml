@@ -2,7 +2,7 @@
 <spec xmlns="https://vibevm.org/spec/1">
   <title>Card Registry — INDEX (TypeScript projection)</title>
   <p>**Discipline v0.2 · BETA · T2 · TypeScript**</p>
-  <p>*The navigable registry of the TypeScript projection's cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract for a `.ts` edit. These are the TypeScript shape of the nine language-neutral scaffold patterns catalogued in the core `02-EXECUTABLE-SCAFFOLDS.md`; this stack ships its own `cards/` so the weak-reader runtime surface for TypeScript is a TypeScript Band-3 block, never the Rust core's (`GUIDE-AI-NATIVE-TYPESCRIPT.md` §13). Generated/maintained as a derived index (A2/R-030); hand edits are a defect.*</p>
+  <p>*The navigable registry of the TypeScript projection's cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract for a `.ts` edit. These are the TypeScript shape of the nine language-neutral scaffold patterns catalogued in the core `02-EXECUTABLE-SCAFFOLDS.xml`; this stack ships its own `cards/` so the weak-reader runtime surface for TypeScript is a TypeScript Band-3 block, never the Rust core's (`GUIDE-AI-NATIVE-TYPESCRIPT.xml` §13). Generated/maintained as a derived index (A2/R-030); hand edits are a defect.*</p>
   <section title="Scaffold cards (the nine executable-scaffold patterns)">
     <table>
       <tr>

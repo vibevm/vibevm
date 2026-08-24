@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:85ed2b2e72c474e7c0221995e07ff0e1cf30a2a1ffec8a94c7bf18c3ebfcc556"
+source_hash = "sha256:7a790cd6cd2487e3611354b8b162892a278e2e07387d4c45d4e453396c31666f"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:c80a2358b61d085785fb07371bb0d65858b45bb9c744fe2aa95aade43b299750"
+derived_hash = "sha256:8d3714c89f216ff94eb636edbb9123225e1bc30b1318bbb2ec2bf675cd43b811"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/57-flow-secrets-hygiene.md"
+source = "spec/boot/57-flow-secrets-hygiene.xml"
 output = "spec/boot/57-flow-secrets-hygiene.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md"
+source = "spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
 output = "spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/secrets-hygiene/scope-discipline.md"
+source = "spec/flows/secrets-hygiene/scope-discipline.xml"
 output = "spec/flows/secrets-hygiene/scope-discipline.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/secrets-hygiene/third-party-code-consent.md"
+source = "spec/flows/secrets-hygiene/third-party-code-consent.xml"
 output = "spec/flows/secrets-hygiene/third-party-code-consent.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

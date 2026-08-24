@@ -22,18 +22,18 @@ cognitive load.</both-default-metaphors-collapse-the-same-way></p>
 session instructions plus three reference documents.</PACKAGE-INSTALLS-THE-ALTERNATIVE-AS-STANDING-INSTRUCTIONS></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-MODEL fact="true" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
+    <CONTENT-THE-MODEL fact="true" status="impl/done">`spec/flows/two-process-model/TWO-PROCESS-MODEL.xml` — the model:
   why the common metaphors fail, the complementary strengths table,
   the productive cycle, and the one assignment that never moves
   (the human owns coherence).</CONTENT-THE-MODEL>
-    <CONTENT-THE-COGNITIVE-LOAD-SPLIT fact="true" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.md` — the
+    <CONTENT-THE-COGNITIVE-LOAD-SPLIT fact="true" status="impl/done">`spec/flows/two-process-model/cognitive-load-split.xml` — the
   operational responsibility table: human-only work, AI-only work,
   shared work split by nature; and the four consequences of the
   AI's zero cross-session memory.</CONTENT-THE-COGNITIVE-LOAD-SPLIT>
-    <CONTENT-FILES-AS-IPC fact="true" status="impl/done">`spec/flows/two-process-model/files-as-ipc.md` — the reframe of
+    <CONTENT-FILES-AS-IPC fact="true" status="impl/done">`spec/flows/two-process-model/files-as-ipc.xml` — the reframe of
   spec files from "documentation" to the inter-process channel:
   three planes, their budgets, and the four IPC requirements.</CONTENT-FILES-AS-IPC>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/05-flow-two-process-model.xml` — boot snippet loaded at
   session start: the architecture in brief and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

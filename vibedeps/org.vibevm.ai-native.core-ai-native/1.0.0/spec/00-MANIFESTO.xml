@@ -68,7 +68,7 @@
     <p><second-decisive-result fact="true" status="spec/done">The second decisive result: weak agents given a *written* distillation of a strong agent's strategy barely improved; given an *executable* helper library carrying the same strategy, they leapt (Sonnet 4.6 on Brainfuck: 12→12 with text, 12→64 with runnable helpers).</second-decisive-result></p>
     <p><mechanism-cannot-build-the-code fact="true" status="spec/done">The mechanism: mid-tier models do not lack the idea; they cannot build the reusable code to carry it out.</mechanism-cannot-build-the-code></p>
     <p><EXPLANATION-MUST-BE-RUNNABLE-CAPITAL fact="true" status="impl/done">Therefore: **explanation capital must be runnable capital.**</EXPLANATION-MUST-BE-RUNNABLE-CAPITAL></p>
-    <p><META-LAYER-SHIPS-SCAFFOLDS fact="true" status="impl/done">The meta-layer ships *executable scaffolds* — generators, typed builders, runnable contracts, differential oracles, compiled examples, local simulators (the nine classes; see `02-EXECUTABLE-SCAFFOLDS.md`).</META-LAYER-SHIPS-SCAFFOLDS></p>
+    <p><META-LAYER-SHIPS-SCAFFOLDS fact="true" status="impl/done">The meta-layer ships *executable scaffolds* — generators, typed builders, runnable contracts, differential oracles, compiled examples, local simulators (the nine classes; see `02-EXECUTABLE-SCAFFOLDS.xml`).</META-LAYER-SHIPS-SCAFFOLDS></p>
     <p><PROSE-IS-A-WISH fact="true" status="impl/done">Prose that *could* be a checker, a doctest, or a typed API is a WISH until it becomes one.</PROSE-IS-A-WISH></p>
     <p><spec-weaker-than-shipped-macro fact="true" status="spec/done">A spec that says "use the registry pattern" is weaker than one that ships the registry macro plus a working example.</spec-weaker-than-shipped-macro></p>
     <p><boundary-result-is-generation fact="true" status="spec/done">**The honest boundary on this:** that result is about *generation* against an unfamiliar target.</boundary-result-is-generation></p>
@@ -78,13 +78,13 @@
   <delivery title="6. Delivery: the discipline is not &quot;know N rules&quot;">
     <p><owner-worry-is-correct fact="true" status="spec/done">The owner's central worry is correct: a weak model cannot apply forty rules at once, in the right order.</owner-worry-is-correct></p>
     <p><RULES-NEVER-ALL-ACTIVE-AT-ONCE fact="true" status="impl/done">The resolution is that **rules are never all active at once.**</RULES-NEVER-ALL-ACTIVE-AT-ONCE></p>
-    <p><CARD-CARRIES-FOUR-PARTS fact="true" status="impl/done">Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.md`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost).</CARD-CARRIES-FOUR-PARTS></p>
+    <p><CARD-CARRIES-FOUR-PARTS fact="true" status="impl/done">Each rule/pattern is a *card* (`01-PATTERN-CARD-FORMAT.xml`) carrying a **Trigger** (when to switch on), a short **Routine** (≤7 steps), a **Checker** (machine verification), and a **Budget** (attention cost).</CARD-CARRIES-FOUR-PARTS></p>
     <p><HARNESS-DELIVERS-LAZY-PUSH fact="true" status="spec/done">The harness delivers only the cards whose triggers fire, as a small activation-matched set (lazy-push). *Specified, not built at card grain: no harness reads a card. Lazy-push itself is real one level up — `vibe` implements `DeliveryMode::LazyPush` for **subskills**, matching an agent's task description against a subskill `description`, with `vibe check` enforcing that a lazy-push unit carries one and warning on activation overlap between siblings. Nothing applies that machinery to cards: no reader of `card-ops`, of a card `trigger`, or of `cards/INDEX.md` exists in any language anywhere in the repository. Card delivery today is a boot instruction a session follows by hand, not an activation match the harness computes.*</HARNESS-DELIVERS-LAZY-PUSH></p>
     <p><triggers-escalate-lead fact="true" status="impl/done">Triggers escalate by cost:</triggers-escalate-lead></p>
     <facts ordered="true">
       <TRIGGER-INLINE fact="true" status="impl/done">**Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate.</TRIGGER-INLINE>
       <TRIGGER-GATE fact="true" status="impl/done">**Gate (merge-time)** — heavier checks (oracles, proofs) that need not run per keystroke.</TRIGGER-GATE>
-      <TRIGGER-RAID fact="true" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.md`).</TRIGGER-RAID>
+      <TRIGGER-RAID fact="true" status="impl/done">**Raid (scheduled)** — swept periodically across a layer when per-edit triggers cannot keep up (`03-RAID-PLAYBOOK.xml`).</TRIGGER-RAID>
       <TRIGGER-REVIEW fact="true" status="impl/done">**Review (human/strong-agent)** — needs judgment a weak reader lacks.</TRIGGER-REVIEW>
     </facts>
     <p><grounded-in-agentbench fact="true" status="spec/done">This is grounded in the AGENTbench result (Feb 2026): bloated context *hurts* weak agents; minimal, sufficient context helps.</grounded-in-agentbench></p>
@@ -105,20 +105,20 @@
   <package-map title="8. The package map">
     <p><guiding-layer-lead fact="true" status="impl/done">**Guiding layer (T1, language-independent):**</guiding-layer-lead></p>
     <facts ordered="false">
-      <MAP-MANIFESTO fact="true" status="impl/done">`00-MANIFESTO.md` — this document.</MAP-MANIFESTO>
-      <MAP-PATTERN-CARD-FORMAT fact="true" status="impl/done">`01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).</MAP-PATTERN-CARD-FORMAT>
-      <MAP-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.</MAP-EXECUTABLE-SCAFFOLDS>
-      <MAP-RAID-PLAYBOOK fact="true" status="impl/done">`03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).</MAP-RAID-PLAYBOOK>
-      <MAP-SWEEP-PLAYBOOK fact="true" status="impl/done">`04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.</MAP-SWEEP-PLAYBOOK>
-      <MAP-CAMPAIGN-FORM fact="true" status="impl/done">`05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</MAP-CAMPAIGN-FORM>
-      <MAP-WAL-CONVENTION fact="true" status="impl/done">`06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</MAP-WAL-CONVENTION>
+      <MAP-MANIFESTO fact="true" status="impl/done">`00-MANIFESTO.xml` — this document.</MAP-MANIFESTO>
+      <MAP-PATTERN-CARD-FORMAT fact="true" status="impl/done">`01-PATTERN-CARD-FORMAT.xml` — the format every pattern is written in (GoF × JEP × operational layer).</MAP-PATTERN-CARD-FORMAT>
+      <MAP-EXECUTABLE-SCAFFOLDS fact="true" status="impl/done">`02-EXECUTABLE-SCAFFOLDS.xml` — the nine scaffold classes; the runnable-capital catalog.</MAP-EXECUTABLE-SCAFFOLDS>
+      <MAP-RAID-PLAYBOOK fact="true" status="impl/done">`03-RAID-PLAYBOOK.xml` — layered, scheduled refactoring campaigns (raids).</MAP-RAID-PLAYBOOK>
+      <MAP-SWEEP-PLAYBOOK fact="true" status="impl/done">`04-SWEEP-PLAYBOOK.xml` — the standing sweep that holds a tree inside the Discipline between campaigns.</MAP-SWEEP-PLAYBOOK>
+      <MAP-CAMPAIGN-FORM fact="true" status="impl/done">`05-CAMPAIGN-FORM.xml` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.</MAP-CAMPAIGN-FORM>
+      <MAP-WAL-CONVENTION fact="true" status="impl/done">`06-WAL-CONVENTION.xml` — session-durable project state (optional but preferred).</MAP-WAL-CONVENTION>
     </facts>
     <p><mechanisms-lead fact="true" status="impl/done">**Mechanisms (T1, language-independent; implemented per-stack):**</mechanisms-lead></p>
     <facts ordered="false">
-      <MAP-ENGINE-CONFORM fact="true" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</MAP-ENGINE-CONFORM>
-      <MAP-PROP-014-SPECMAP fact="true" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.</MAP-PROP-014-SPECMAP>
-      <MAP-BROWNFIELD-PROTOCOL fact="true" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</MAP-BROWNFIELD-PROTOCOL>
-      <MAP-LEDGER-INTENT fact="true" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.</MAP-LEDGER-INTENT>
+      <MAP-ENGINE-CONFORM fact="true" status="impl/done">`mechanisms/ENGINE-CONFORM-v0.1.xml` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.</MAP-ENGINE-CONFORM>
+      <MAP-PROP-014-SPECMAP fact="true" status="impl/done">`mechanisms/PROP-014-specmap-bidirectional-traceability.xml` — spec↔code traceability: anchors, revisions, tags, the index.</MAP-PROP-014-SPECMAP>
+      <MAP-BROWNFIELD-PROTOCOL fact="true" status="impl/done">`mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.</MAP-BROWNFIELD-PROTOCOL>
+      <MAP-LEDGER-INTENT fact="true" status="impl/done">`mechanisms/LEDGER-INTENT-v0.1.xml` — the intent ledger: facts vs interpretations, epoch-keyed cache.</MAP-LEDGER-INTENT>
     </facts>
     <p><SPEC-UNIT-URI-FORM fact="true" status="impl/done">Spec-unit URIs for this package read `spec://org.vibevm.ai-native/core-ai-native/&lt;docpath&gt;#&lt;anchor&gt;` (e.g. `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).</SPEC-UNIT-URI-FORM></p>
     <p><language-projections-lead fact="true" status="impl/done">**Language projections (T2):**</language-projections-lead></p>
@@ -133,12 +133,12 @@
     <p><cards-lead fact="true" status="impl/done">**Cards (the patterns) — shipped per-language by each stack:**</cards-lead></p>
     <facts ordered="false">
       <MAP-CARDS-INDEX fact="true" status="impl/done">`cards/INDEX.md` — registry, axes, trigger modes (one per language stack).</MAP-CARDS-INDEX>
-      <MAP-CARDS-SCAFFOLDS fact="true" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</MAP-CARDS-SCAFFOLDS>
+      <MAP-CARDS-SCAFFOLDS fact="true" status="impl/done">`cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.xml`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.xml`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.</MAP-CARDS-SCAFFOLDS>
     </facts>
     <p><appendix-lead fact="true" status="impl/done">**Appendix (synthesis provenance):**</appendix-lead></p>
     <facts ordered="false">
-      <MAP-CONTRADICTION-MAP fact="true" status="impl/done">`appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.</MAP-CONTRADICTION-MAP>
-      <MAP-ATLAS fact="true" status="impl/done">`appendix/ATLAS.md` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</MAP-ATLAS>
+      <MAP-CONTRADICTION-MAP fact="true" status="impl/done">`appendix/CONTRADICTION-MAP.xml` — where sources and hypotheses conflict, and the resolutions.</MAP-CONTRADICTION-MAP>
+      <MAP-ATLAS fact="true" status="impl/done">`appendix/ATLAS.xml` — the findings ledger rendered for humans (generated from `findings.jsonl`). *Correction: the ledger is real and is the appendix itself — 87 `#FINDING-*` records, whose ids the cards cite and resolve against. The generator is not: no `findings.jsonl` is tracked anywhere in this repository, in any package, or in any consumer, so ATLAS is authored directly rather than rendered from a source. Read the parenthetical as the intended pipeline, not as the current one (F-088).*</MAP-ATLAS>
     </facts>
     <p><ADOPTION-PLAN-LIVES-OUTSIDE fact="true" status="impl/done">The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot.</ADOPTION-PLAN-LIVES-OUTSIDE></p>
   </package-map>

@@ -9,7 +9,7 @@ recorded, the size budgets, when to split a document, changelog
 lines, and the anchor-stability contract.</scope-of-this-document></p>
   <p><protocol-document-pointer fact="true" status="impl/done">The addressing scheme
 itself is defined in
-[`ADDRESSABLE-SPECS-PROTOCOL.md`](ADDRESSABLE-SPECS-PROTOCOL.md).</protocol-document-pointer></p>
+[`ADDRESSABLE-SPECS-PROTOCOL.xml`](ADDRESSABLE-SPECS-PROTOCOL.xml).</protocol-document-pointer></p>
   <unit title="The unit of meaning">
     <p><A-SPEC-UNIT-IS-A-HEADING-SPAN fact="true" status="impl/done">A **spec unit** is the span from an anchored heading to the next
 heading of the same or higher level.</A-SPEC-UNIT-IS-A-HEADING-SPAN></p>
@@ -113,7 +113,7 @@ it and stop pretending it binds.</UNNAMEABLE-TEST-MEANS-DESIGN-NOT-CONTRACT></p>
     <p><RECORD-THE-TEST-NAME-IN-THE-UNIT fact="true" status="impl/done">Record the test name in the unit
 once it exists (`Test: …`); that line is half of the bidirectional
 graph described in the
-[protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.md#graph) — and where the
+[protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.xml#graph) — and where the
 project mechanizes that graph, the same half is authored as a tag on the
 test and rendered back at the unit instead, per that section.</RECORD-THE-TEST-NAME-IN-THE-UNIT></p>
   </testable>

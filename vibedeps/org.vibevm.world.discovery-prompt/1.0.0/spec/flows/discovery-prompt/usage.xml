@@ -7,7 +7,7 @@ prompt is, *when* deploying it pays off, *how* to deploy it, what each
 structural piece does, how to read the output it produces, and how to
 adapt it to your own domain.</scope-of-this-document></p>
   <p><ARTIFACT-SITS-NEXT-TO-THIS-FILE-AND-IS-READ-ONLY fact="true" status="impl/done">The artifact itself sits next to this
-file as [`DISCOVERY-PROMPT.md`](DISCOVERY-PROMPT.md), copied verbatim
+file as [`DISCOVERY-PROMPT.xml`](DISCOVERY-PROMPT.xml), copied verbatim
 from its origin — treat it as read-only.</ARTIFACT-SITS-NEXT-TO-THIS-FILE-AND-IS-READ-ONLY></p>
   <what title="What it is">
     <p><PROMPT-IS-A-DISTRIBUTABLE-USER-LEVEL-PROMPT fact="true" status="impl/done">The DISCOVERY prompt is a **distributable user-level prompt**: a full
@@ -51,7 +51,7 @@ and the confidence number tracks something genuinely unresolved.</STRUCTURE-PAYS
   </when>
   <deploy title="How to deploy">
     <facts ordered="true">
-      <STEP-COPY-THE-FULL-TEXT fact="true" status="impl/done">Copy the full text of [`DISCOVERY-PROMPT.md`](DISCOVERY-PROMPT.md).</STEP-COPY-THE-FULL-TEXT>
+      <STEP-COPY-THE-FULL-TEXT fact="true" status="impl/done">Copy the full text of [`DISCOVERY-PROMPT.xml`](DISCOVERY-PROMPT.xml).</STEP-COPY-THE-FULL-TEXT>
       <STEP-FILL-VARIABLES-AND-USER-INFO fact="true" status="impl/done">Fill the `&lt;VARIABLES&gt;` block (which model you are talking to) and
    rewrite `&lt;EXTENSION_USER_INFO&gt;` so it describes *you*, not the
    original author — [§Re-derive](#re-derive) below automates this.</STEP-FILL-VARIABLES-AND-USER-INFO>
@@ -210,7 +210,7 @@ configuration; `&lt;MAIN&gt;` and `&lt;EXTENSION_CRITICALITY&gt;` are mechanism.
 re-derive prompt below draws the same line at its step 4.</ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED></p>
     <p><re-derive-prompt-lead fact="true" status="impl/done">Hand your assistant this prompt to produce a
 personalized copy:</re-derive-prompt-lead></p>
-    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-discovery-prompt/&lt;version&gt;/spec/flows/discovery-prompt/`, check `vibe.lock`) DISCOVERY-PROMPT.md in full. Produce
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-discovery-prompt/&lt;version&gt;/spec/flows/discovery-prompt/`, check `vibe.lock`) DISCOVERY-PROMPT.xml in full. Produce
 an adapted copy for me — do not edit the original file.
 1. In &lt;VARIABLES&gt;, set LLM to the model I actually talk to.
 2. Rewrite &lt;EXTENSION_USER_INFO&gt; for me: name, background, current

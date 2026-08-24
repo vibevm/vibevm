@@ -25,20 +25,20 @@ log: the governing spec section IS the record, evolution is an edit
 plus a changelog line, and history lives in git.</NO-ADR-DIRECTORY-NO-NUMBERED-LOG></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md` — full
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml` — full
   protocol: facts versus decisions, why the asymmetry is load-bearing
   in a human-AI team, the four-field record, placement at the
   governing anchor (contrasted with classic ADR), when to write a
   record, the rejected-alternatives and invariants section patterns,
   and a re-derive prompt for adapting the practice to any project.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-RECORD-TEMPLATE fact="true" status="impl/done">`spec/flows/decision-records/record-template.md` — the copy-ready
+    <CONTENT-THE-RECORD-TEMPLATE fact="true" status="impl/done">`spec/flows/decision-records/record-template.xml` — the copy-ready
   template, two fully worked examples (a timeout constant, a library
   choice), and the anti-pattern table.</CONTENT-THE-RECORD-TEMPLATE>
-    <CONTENT-THE-REVISIT-TRIGGERS fact="true" status="impl/done">`spec/flows/decision-records/revisit-triggers.md` — trigger anatomy
+    <CONTENT-THE-REVISIT-TRIGGERS fact="true" status="impl/done">`spec/flows/decision-records/revisit-triggers.xml` — trigger anatomy
   (metric + threshold + observation point), good/bad trigger table,
   the periodic sweep that actually fires triggers, and the reopening
   procedure.</CONTENT-THE-REVISIT-TRIGGERS>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/25-flow-decision-records.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/25-flow-decision-records.xml` — boot snippet loaded at
   session start: the core rule, the in-session recording duty, and
   the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>

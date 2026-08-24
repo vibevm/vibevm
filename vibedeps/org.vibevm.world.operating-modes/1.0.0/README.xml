@@ -18,15 +18,15 @@ work the owner has already thought through and approved.</THE-DEFAULT-POSTURE-PR
 that overhead without removing the guardrails that matter.</A-CODEWORD-REMOVES-THE-OVERHEAD-NOT-THE-GUARDRAILS></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md` — what a
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml` — what a
   mode is, the five-part codeword shape, and the red-lines law that
   no codeword can erode.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-MFBT-MODE fact="true" status="impl/done">`spec/flows/operating-modes/mfbt-mode.md` — a worked reference
+    <CONTENT-THE-MFBT-MODE fact="true" status="impl/done">`spec/flows/operating-modes/mfbt-mode.xml` — a worked reference
   codeword, «move fast and break things»: pre-authorised heads-down
   execution, fully specified in the five-part shape.</CONTENT-THE-MFBT-MODE>
-    <CONTENT-WRITING-A-CODEWORD fact="true" status="impl/done">`spec/flows/operating-modes/writing-a-codeword.md` — the procedure
+    <CONTENT-WRITING-A-CODEWORD fact="true" status="impl/done">`spec/flows/operating-modes/writing-a-codeword.xml` — the procedure
   for adding a new mode to a project's catalogue, with anti-patterns.</CONTENT-WRITING-A-CODEWORD>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/45-flow-operating-modes.md` — boot snippet: the default
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/45-flow-operating-modes.xml` — boot snippet: the default
   posture, how codewords fire, the red-lines law, and the never-do
   list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>

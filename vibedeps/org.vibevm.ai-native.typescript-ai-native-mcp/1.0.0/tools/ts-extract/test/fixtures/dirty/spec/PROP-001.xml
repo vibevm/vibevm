@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-001 — the fixture spec</title>
+  <req-parse title="Parse">
+    <p>`req r1`</p>
+    <p>It MUST parse.</p>
+  </req-parse>
+  <cell-greet title="The greet cell">
+    <p>`req r1`</p>
+    <p>It MUST greet.</p>
+  </cell-greet>
+</spec>

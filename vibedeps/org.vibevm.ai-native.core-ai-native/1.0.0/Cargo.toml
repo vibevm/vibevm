@@ -44,6 +44,11 @@ glob = "0.3"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
+# The XML reader of the spec-source dialect (PROP-045 §2): quick-xml's event
+# reader walks the closed vocabulary. Pinned to the same 0.41.0 the host
+# workspace pins its pivot crate to, so the two XML frontends build against
+# one parser. MIT.
+quick-xml = "0.41.0"
 
 # Dev / test
 tempfile = "3"

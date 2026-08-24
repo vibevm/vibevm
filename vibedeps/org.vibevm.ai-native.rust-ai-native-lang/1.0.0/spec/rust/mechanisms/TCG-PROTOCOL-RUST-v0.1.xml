@@ -5,7 +5,7 @@
   <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-RUST-PLAN v0.1 (Phase 1),
 implemented by its Phases 3–4.**</status-line></p>
   <p><companion-document fact="true" status="impl/done">The process model is
-[`TCG-ORACLE-RUST-v0.1`](TCG-ORACLE-RUST-v0.1.md).</companion-document></p>
+[`TCG-ORACLE-RUST-v0.1`](TCG-ORACLE-RUST-v0.1.xml).</companion-document></p>
   <p><DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR fact="true" status="impl/done">This document owns
 the OUTER hop's message grammar — host (vibe-tcg / one-shot CLI) ⇄
 `rust-ai-native-tcg serve` — and the mapping of each operation onto the INNER

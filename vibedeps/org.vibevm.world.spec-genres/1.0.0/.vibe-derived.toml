@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:01b46a369ae8eb47bc6615a367ed1b2994528c136960d14fe76e80c8c5280b70"
+source_hash = "sha256:1bdaeec244e917b1292708c5bee4b981b3ec6dfd7d647c24f91e31dc17f1f04c"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:fe09b60114533c7a4522b21479d062a4bed4612f3afa12d856b519833ded2bd6"
+derived_hash = "sha256:d0e1a51e29786af29122e0b6d60454357136a037f4367fb714544a1f425181a6"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/17-flow-spec-genres.md"
+source = "spec/boot/17-flow-spec-genres.xml"
 output = "spec/boot/17-flow-spec-genres.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+source = "spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
 output = "spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/spec-genres/design-docs.md"
+source = "spec/flows/spec-genres/design-docs.xml"
 output = "spec/flows/spec-genres/design-docs.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/spec-genres/when-to-write-what.md"
+source = "spec/flows/spec-genres/when-to-write-what.xml"
 output = "spec/flows/spec-genres/when-to-write-what.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

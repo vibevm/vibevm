@@ -3,7 +3,7 @@
   <title id="root">The Campaign Form — plans, baselines, and the paper trail</title>
   <status stage="spec" state="done"/>
   <p><status-line fact="true" status="impl/done">**Discipline v0.2 · status: BETA · T1 · language-neutral**</status-line></p>
-  <p><RAID-PLAYBOOK-GIVES-THE-IN-FLIGHT-SKELETON fact="true" status="impl/done">*The [Raid Playbook](03-RAID-PLAYBOOK.md) §1 gives the in-flight skeleton of
+  <p><RAID-PLAYBOOK-GIVES-THE-IN-FLIGHT-SKELETON fact="true" status="impl/done">*The [Raid Playbook](03-RAID-PLAYBOOK.xml) §1 gives the in-flight skeleton of
 a campaign (scope &amp; freeze → card set &amp; order → phases → batches &amp;
 checkpoints → differential safety → exit criteria).*</RAID-PLAYBOOK-GIVES-THE-IN-FLIGHT-SKELETON></p>
   <p><THIS-DOCUMENT-IS-THE-PAPER-TRAIL fact="true" status="impl/done">*This document is the
@@ -12,7 +12,7 @@ planned cold, executed by someone (or some session) other than its author,
 paused at any phase boundary, and audited afterwards.*</THIS-DOCUMENT-IS-THE-PAPER-TRAIL></p>
   <p><greenfield-terraform-proved-this-machinery fact="true" status="spec/done">*The original
 greenfield terraform proved this machinery; brownfield adoption
-([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.md)) and every relocation
+([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml)) and every relocation
 or drain campaign since reuse it.*</greenfield-terraform-proved-this-machinery></p>
   <p><historical-instances-live-in-the-pilot-tree fact="true" status="impl/done">*Historical instances live in the pilot
 project's tree; this is the distilled form.*</historical-instances-live-in-the-pilot-tree></p>
@@ -93,7 +93,7 @@ no memory of its authoring.</PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD></p>
   commit). The git log is the authoritative per-item record; the LOG
   narrates, the commits *are* the history.</GATE-EACH-PHASE-LANDS-ITS-OWN-COMMITS>
       <GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE fact="true" status="impl/done">**Behavior changes carry their differential oracle**
-  ([Raid Playbook](03-RAID-PLAYBOOK.md) §1.5): a campaign cannot move
+  ([Raid Playbook](03-RAID-PLAYBOOK.xml) §1.5): a campaign cannot move
   behavior silently. Where the campaign's point is byte-stability (a
   relocation, a rename), the byte-compare IS the oracle — state it in the
   phase's acceptance.</GATE-BEHAVIOR-CHANGES-CARRY-THEIR-ORACLE>
@@ -105,7 +105,7 @@ no memory of its authoring.</PLAN-IS-WRITTEN-TO-BE-EXECUTED-COLD></p>
   </gates>
   <resume title="4. Resumability">
     <p><campaign-survives-stopping-lead fact="true" status="impl/done">A campaign must survive its executor stopping at any phase boundary
-(see [06-WAL-CONVENTION](06-WAL-CONVENTION.md)):</campaign-survives-stopping-lead></p>
+(see [06-WAL-CONVENTION](06-WAL-CONVENTION.xml)):</campaign-survives-stopping-lead></p>
     <facts ordered="false">
       <CAMPAIGN-RESUME-WITH-A-WAL fact="true" status="impl/done">*With a WAL (recommended):* the campaign updates the WAL's standing line at
   every phase boundary (phase landed, floor state, next phase); a session

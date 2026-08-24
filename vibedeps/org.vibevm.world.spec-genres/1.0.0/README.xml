@@ -28,18 +28,18 @@ carries from its origin, and you can rename it for your project; the
 taxonomy is what matters, not the labels.</CONVENTION-NAMES-MODULE-CONTRACTS-PROP-FEAT></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md` — the taxonomy:
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml` — the taxonomy:
   why genres exist, the full genre table (charter, mutability,
   reader, authority), the precedence law, the two-way linking law,
   and a re-derive prompt for adapting the map to any project.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-DESIGN-DOCS-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/design-docs.md` — the contract/lore split
+    <CONTENT-THE-DESIGN-DOCS-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/design-docs.xml` — the contract/lore split
   in practice: what spills out of a contract, what never leaves, the
   fork-by-fork record skeleton, the orthogonal-decomposition lesson,
   and how a design doc grows stale honestly.</CONTENT-THE-DESIGN-DOCS-GUIDE>
-    <CONTENT-THE-ROUTING-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/when-to-write-what.md` — the routing table
+    <CONTENT-THE-ROUTING-GUIDE fact="true" status="impl/done">`spec/flows/spec-genres/when-to-write-what.xml` — the routing table
   (situation → genre), the misfiling-smells table, and one worked
   example of the linking law with both ends wired.</CONTENT-THE-ROUTING-GUIDE>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/17-flow-spec-genres.md` — boot snippet: the genre map,
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/17-flow-spec-genres.xml` — boot snippet: the genre map,
   the name-the-genre-first rule, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

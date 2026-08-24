@@ -13,7 +13,7 @@ than inline manifest strings, *why* secrets never enter a hook's
 environment, and *how* the residual risk is recorded as a deliberate
 stance.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">It sits alongside the four laws in
-[`SECRETS-HYGIENE-PROTOCOL.md`](SECRETS-HYGIENE-PROTOCOL.md).</sibling-document-pointers></p>
+[`SECRETS-HYGIENE-PROTOCOL.xml`](SECRETS-HYGIENE-PROTOCOL.xml).</sibling-document-pointers></p>
   <third-party title="Install-time code is third-party code">
     <p><INSTALLING-EXECUTES-CODE-YOU-DID-NOT-WRITE fact="true" status="spec/done">When a package declares a script that runs at install or build time,
 installing that package **executes code you did not write**, with your

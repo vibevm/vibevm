@@ -18,20 +18,20 @@ person — can execute with no memory of the planning conversation.</PACKAGE-INS
   </facts>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PLAN-FORMAT fact="true" status="impl/done">`spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
+    <CONTENT-THE-PLAN-FORMAT fact="true" status="impl/done">`spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml` — what a
   campaign is, the five artifact roles (PLAN / BASELINE /
   PREDICTIONS / LOG / REPORT), and the canonical fifteen-section
   plan skeleton, each section with a spec and most with a worked
   mini example.</CONTENT-THE-PLAN-FORMAT>
-    <CONTENT-THE-PHASE-GATES fact="true" status="impl/done">`spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
+    <CONTENT-THE-PHASE-GATES fact="true" status="impl/done">`spec/flows/campaign-plans/phase-gates.xml` — Phase 0 spike
   discipline (no commits; a red spike rewrites the affected decision
   before anything lands), phase anatomy, the safe-stop law,
   resumability, review points, discovered-necessary work.</CONTENT-THE-PHASE-GATES>
-    <CONTENT-THE-EXECUTION-LEDGER fact="true" status="impl/done">`spec/flows/campaign-plans/execution-ledger.md` — the record half:
+    <CONTENT-THE-EXECUTION-LEDGER fact="true" status="impl/done">`spec/flows/campaign-plans/execution-ledger.xml` — the record half:
   status-line lifecycle, the prepended execution record, per-phase
   commit maps, honesty rules, the closing report, the deferrals
   ledger and the lineage law.</CONTENT-THE-EXECUTION-LEDGER>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/40-flow-campaign-plans.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/40-flow-campaign-plans.xml` — boot snippet loaded at
   session start: when to propose a campaign, the phase-boundary
   checklist, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>

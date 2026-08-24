@@ -10,7 +10,7 @@ a warning, how *trust ordering* between sources keeps a lower-trust
 answer from overriding a higher-trust one, and *why* these rules live
 globally rather than per-module.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">It is the companion to the four laws
-in [`SECRETS-HYGIENE-PROTOCOL.md`](SECRETS-HYGIENE-PROTOCOL.md).</sibling-document-pointers></p>
+in [`SECRETS-HYGIENE-PROTOCOL.xml`](SECRETS-HYGIENE-PROTOCOL.xml).</sibling-document-pointers></p>
   <never-escalate title="The never-escalate law">
     <p><AN-INTEGRATION-IS-BOUND-TO-ITS-GRANTED-SCOPE fact="true" status="impl/done">An integration that operates on behalf of a credential is bound to
 the **scope that credential was granted for**, and must refuse to

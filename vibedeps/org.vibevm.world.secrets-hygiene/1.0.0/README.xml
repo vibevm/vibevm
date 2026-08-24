@@ -22,20 +22,20 @@ than promised — plus scope discipline for integrations and a consent
 gate for install-time code.</FOUR-LAWS-PLUS-SCOPE-DISCIPLINE-AND-A-CONSENT-GATE></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships three pieces of content plus a boot snippet:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md` — the full
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml` — the full
   protocol: the surface-secret definition, the four laws, the
   agent-era additions (recorded sessions, one-echo-is-a-leak, the
   accidental-read drill), the blast-radius rationale, and the
   suspected-leak drill (rotate first, investigate second).</CONTENT-THE-FULL-PROTOCOL>
-    <CONTENT-THE-SCOPE-DISCIPLINE fact="true" status="impl/done">`spec/flows/secrets-hygiene/scope-discipline.md` — the
+    <CONTENT-THE-SCOPE-DISCIPLINE fact="true" status="impl/done">`spec/flows/secrets-hygiene/scope-discipline.xml` — the
   never-escalate law for integrations: explicit prefix checks,
   escalation as an error rather than a warning, and trust ordering so
   a low-trust source cannot override a trusted answer.</CONTENT-THE-SCOPE-DISCIPLINE>
-    <CONTENT-THE-THIRD-PARTY-CODE-CONSENT fact="true" status="impl/done">`spec/flows/secrets-hygiene/third-party-code-consent.md` — the
+    <CONTENT-THE-THIRD-PARTY-CODE-CONSENT fact="true" status="impl/done">`spec/flows/secrets-hygiene/third-party-code-consent.xml` — the
   consent gate for install/build hooks: allow-list plus first-run
   consent, CI aborts rather than runs unseen, hooks as versioned files
   not inline strings, and secrets kept out of hook environments.</CONTENT-THE-THIRD-PARTY-CODE-CONSENT>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/57-flow-secrets-hygiene.md` — boot snippet loaded at
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/57-flow-secrets-hygiene.xml` — boot snippet loaded at
   session start: the standing rules and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

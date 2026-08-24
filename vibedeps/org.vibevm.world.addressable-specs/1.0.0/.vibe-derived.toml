@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:387661face6ffc96b31342995828f91a65c87b90d8252dc614a4e2f3068e40ff"
+source_hash = "sha256:50574a380ca3dd041c6a4b09c38e328652fe3fd5c9b58579631b14b0ac775e54"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:08ba94483e4e42c24b7f4224acacfc31523644311f8b4f9f06be2be45a6160b1"
+derived_hash = "sha256:43a941ad076f361eadad246d834b96abf3aec329f5b600dfa98fb6bd2759b58a"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/15-flow-addressable-specs.md"
+source = "spec/boot/15-flow-addressable-specs.xml"
 output = "spec/boot/15-flow-addressable-specs.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+source = "spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
 output = "spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/addressable-specs/authoring-rules.md"
+source = "spec/flows/addressable-specs/authoring-rules.xml"
 output = "spec/flows/addressable-specs/authoring-rules.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/addressable-specs/spec-tree-layout.md"
+source = "spec/flows/addressable-specs/spec-tree-layout.xml"
 output = "spec/flows/addressable-specs/spec-tree-layout.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

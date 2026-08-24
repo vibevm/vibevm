@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:dc8d4a94d0a1693bd8af2d373eea84b93e300d7a6d2ffccef49e4be2cf8ed88a"
+source_hash = "sha256:27b1a6be5aaade54d0d2062127541bf68ba29649edd4f8ef954733dc93b93ffc"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:e8c5204e585cc5a94bccc6d3ba43d41b23e0f255bb542872598ad91764ce9742"
+derived_hash = "sha256:ad5f33bc5991f9e8f1626235ed17af75cb09d664bb9b9de3afcee3e45e1d44a8"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,29 +15,29 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/35-flow-conflict-protocol.md"
+source = "spec/boot/35-flow-conflict-protocol.xml"
 output = "spec/boot/35-flow-conflict-protocol.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/35a-wal-binding.md"
+source = "spec/boot/35a-wal-binding.xml"
 output = "spec/boot/35a-wal-binding.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md"
+source = "spec/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
 output = "spec/flows/conflict-protocol/CONFLICT-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/conflict-protocol/failure-modes.md"
+source = "spec/flows/conflict-protocol/failure-modes.xml"
 output = "spec/flows/conflict-protocol/failure-modes.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/conflict-protocol/uncertainty-protocol.md"
+source = "spec/flows/conflict-protocol/uncertainty-protocol.xml"
 output = "spec/flows/conflict-protocol/uncertainty-protocol.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

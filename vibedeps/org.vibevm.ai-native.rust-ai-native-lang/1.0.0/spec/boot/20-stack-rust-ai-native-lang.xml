@@ -3,11 +3,11 @@
   <title id="root">AI-Native Rust (Discipline v0.2) — boot snippet</title>
   <status stage="impl" state="done"/>
   <p><RUST-CODE-FOLLOWS-THE-RUST-GUIDE fact="true" status="impl/done">Rust code in this project follows the AI-Native Rust guide
-(`spec/rust/GUIDE-AI-NATIVE-RUST.md` in this package).</RUST-CODE-FOLLOWS-THE-RUST-GUIDE></p>
+(`spec/rust/GUIDE-AI-NATIVE-RUST.xml` in this package).</RUST-CODE-FOLLOWS-THE-RUST-GUIDE></p>
   <p><READ-THE-GUIDE-FOR-STRUCTURE fact="true" status="impl/done">Read the guide when
 authoring or reviewing structure; per-edit work needs only the card
 whose trigger fires.</READ-THE-GUIDE-FOR-STRUCTURE></p>
-  <p><CARD-REGISTRY-FOR-RUST fact="true" status="impl/done">Card registry for Rust: `spec/cards/INDEX.md` in this package (trigger → card;
+  <p><CARD-REGISTRY-FOR-RUST fact="true" status="impl/done">Card registry for Rust: `spec/cards/INDEX.xml` in this package (trigger → card;
 the nine executable scaffolds A–I in their Rust shape).</CARD-REGISTRY-FOR-RUST></p>
   <p><STACK-SHIPS-ITS-OWN-CARDS-PROJECTION fact="true" status="impl/done">This stack ships
 its own `spec/cards/` projection — the weak-reader runtime surface for a `.rs`

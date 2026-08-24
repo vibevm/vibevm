@@ -19,7 +19,7 @@ persistent rust-analyzer session).</SERVED-OVER-MCP-AS-ONE-STDIO-BINARY></p>
   workspace with cargo alone and wire the binary by hand.</SERVE-NEEDS-NO-VIBE-IN-THE-RUNTIME-PATH>
   </facts>
   <p><server-brief-pointer fact="true" status="impl/done">The brief (tool inventory, the tool↔CLI parity map, the session and
-capture semantics): [`spec/tools/discipline-mcp-rust.md`](spec/tools/discipline-mcp-rust.md).</server-brief-pointer></p>
+capture semantics): [`spec/tools/discipline-mcp-rust.xml`](spec/tools/discipline-mcp-rust.xml).</server-brief-pointer></p>
   <p><PREREQUISITE-THE-RUST-ANALYZER-COMPONENT fact="true" status="impl/done">Prerequisite (inherited from the stack): `rustup component add
 rust-analyzer`.</PREREQUISITE-THE-RUST-ANALYZER-COMPONENT></p>
 </spec>

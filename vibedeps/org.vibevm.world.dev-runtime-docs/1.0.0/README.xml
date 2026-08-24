@@ -10,10 +10,10 @@ toolchain, prerequisites, environment, paths, or bootstrap steps.</PACKAGE-INSTA
 never separable from the change that necessitates it.</THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml` — the obligation, why it is
   pinned in the project's foundational conventions, the contributor-vs-runtime audience
   split, and how to keep the docs honest.</CONTENT-THE-FULL-PROTOCOL>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/58-flow-dev-runtime-docs.xml` — the boot snippet loaded at session start: the
   rule and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">

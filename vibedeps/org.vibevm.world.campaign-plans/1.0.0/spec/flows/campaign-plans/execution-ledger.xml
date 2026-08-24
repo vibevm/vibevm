@@ -7,8 +7,8 @@ campaign: flipping the status line, the execution-record block, the
 per-phase commit maps, the honesty rules, the closing report, and the
 deferrals ledger that seeds the next campaign.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The authoring half:
-[`CAMPAIGN-PLAN-FORMAT.md`](CAMPAIGN-PLAN-FORMAT.md); phase
-mechanics: [`phase-gates.md`](phase-gates.md).</sibling-document-pointers></p>
+[`CAMPAIGN-PLAN-FORMAT.xml`](CAMPAIGN-PLAN-FORMAT.xml); phase
+mechanics: [`phase-gates.xml`](phase-gates.xml).</sibling-document-pointers></p>
   <why title="Why the record half exists">
     <p><THE-PLAN-SAYS-WHAT-SHOULD-HAPPEN-THE-LEDGER-WHAT-DID fact="true" status="impl/done">The plan says what should happen; the ledger says what did.</THE-PLAN-SAYS-WHAT-SHOULD-HAPPEN-THE-LEDGER-WHAT-DID></p>
     <p><COMMITS-ALONE-CANNOT-CARRY-THE-COMPARISON fact="true" status="impl/done">Commits
@@ -107,7 +107,7 @@ commits: the fixture change deserved its own revert point").</DRIFTED-SUBJECTS-A
   list.</HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS>
       <HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS fact="true" status="impl/done">**Discovered work appears with its commits.** An entry that was not
   in the plan says so explicitly — the
-  [`phase-gates.md` §discovered-work](phase-gates.md#discovered-work)
+  [`phase-gates.xml` §discovered-work](phase-gates.xml#discovered-work)
   rule, enforced at write time.</HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS>
     </facts>
   </honesty>

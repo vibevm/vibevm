@@ -50,7 +50,7 @@
   "tripwires": ["touch:crates/vibe-registry/src/git_backend/**", "rev:spec://…#req-…"],
   "sunset": "evidence window 60d — re-disposition at next audit" }</fence>
     <p><REGISTRY-INTENT-JSON fact="true" status="impl/done">**`intent.json`** (+ `INTENT.md`) — the aspiration inventory, harvested from WAL "Next"/"Known issues", `TASKS.md`, ROADMAP open milestones, `&lt;!-- REVIEW --&gt;` markers, TODO/FIXME:</REGISTRY-INTENT-JSON></p>
-    <fence lang="json">{ "id": "INT-0031", "source": "spec/WAL.md#next 2026-05-23",
+    <fence lang="json">{ "id": "INT-0031", "source": "spec/WAL.xml#next 2026-05-23",
   "text": "first full PROP-013 audit run", "links": ["spec://org.vibevm.core/vibevm/common/PROP-013"],
   "state": "open" }                           // open | done | rescoped | rejected</fence>
     <p><TRIPWIRES-ARE-CHEAP-AND-MECHANICAL fact="true" status="impl/done">Tripwires are cheap and mechanical: a check that warns when a change touches a debt's watched paths or revs a watched unit — debt resurfaces exactly when it becomes relevant, instead of rotting in a file nobody reopens.</TRIPWIRES-ARE-CHEAP-AND-MECHANICAL></p>

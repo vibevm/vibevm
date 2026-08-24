@@ -13,10 +13,10 @@ differently cannot be adjudicated: nothing says which is wrong. The
 library is that third place.</TWO-SURFACES-THAT-DISAGREE-CANNOT-BE-ADJUDICATED></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md` — the rule, the surface
+    <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml` — the rule, the surface
   vocabulary and its three classes, what "thin" means per class, how a
   project declares its floor, and why the coverage table must be derived.</CONTENT-THE-PROTOCOL>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/68-flow-omnichannel.md` — the boot snippet read at session
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/68-flow-omnichannel.xml` — the boot snippet read at session
   start: the rule, the vocabulary, the obligations and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <not title="What it is not">

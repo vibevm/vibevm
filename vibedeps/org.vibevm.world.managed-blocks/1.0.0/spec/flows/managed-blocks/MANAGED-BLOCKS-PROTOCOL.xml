@@ -140,7 +140,7 @@ blocks is canonical, never deletes a stray marker, never auto-repairs.</A-MALFOR
     <p><IT-ABORTS-NAMES-THE-DEFECT-AND-WAITS fact="true" status="impl/done">It aborts the whole operation, names the file and the exact defect,
 and waits.</IT-ABORTS-NAMES-THE-DEFECT-AND-WAITS></p>
     <p><auto-repair-rationale-pointer fact="true" status="spec/done">The rationale is in
-[`rejected-designs.md`](rejected-designs.md#auto-repair): auto-repair
+[`rejected-designs.xml`](rejected-designs.xml#auto-repair): auto-repair
 destroys the evidence a human needs and may destroy user content
 that drifted into the wrong side of a marker.</auto-repair-rationale-pointer></p>
   </state-machine>

@@ -7,7 +7,7 @@ condition rots into a sacred cow, what a measurable trigger is made
 of, good and bad trigger shapes, the periodic sweep that actually
 fires triggers, and the procedure when one fires.</scope-of-this-document></p>
   <p><record-shape-pointer fact="true" status="impl/done">The record shape
-itself lives in [`record-template.md`](record-template.md).</record-shape-pointer></p>
+itself lives in [`record-template.xml`](record-template.xml).</record-shape-pointer></p>
   <sacred-cows title="Why decisions rot without triggers">
     <p><EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA fact="true" status="spec/done">Every decision is correct *relative to data*: 600 s is right while
 15 % of users sit behind slow corporate VPNs.</EVERY-DECISION-IS-CORRECT-RELATIVE-TO-DATA></p>

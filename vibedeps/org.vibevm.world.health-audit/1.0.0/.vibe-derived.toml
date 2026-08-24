@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:ab915857e385caf8c9702305bcb5b93bd77d3b954a8f0a2169f68264f5085445"
+source_hash = "sha256:9165f43ce2afd560c756d1ae5e77ade8dbe7ee12526cd5f29b4b94f71384299a"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:2af856526eee41f6af88240dd4b4b216e9c7f47839be7c58b7907ccbd91d368f"
+derived_hash = "sha256:0eacc82ec6ab20fbadf4e0941ee16d7003486bb096e3657ac48fb08b63c53d36"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,29 +15,29 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/42-flow-health-audit.md"
+source = "spec/boot/42-flow-health-audit.xml"
 output = "spec/boot/42-flow-health-audit.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/boot/42a-wal-binding.md"
+source = "spec/boot/42a-wal-binding.xml"
 output = "spec/boot/42a-wal-binding.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+source = "spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
 output = "spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/health-audit/audit-checklist.md"
+source = "spec/flows/health-audit/audit-checklist.xml"
 output = "spec/flows/health-audit/audit-checklist.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/health-audit/running-an-audit.md"
+source = "spec/flows/health-audit/running-an-audit.xml"
 output = "spec/flows/health-audit/running-an-audit.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/skills/health-audit/SKILL.md"

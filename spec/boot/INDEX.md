@@ -13,7 +13,11 @@ schema = 1
 static = "spec/boot/STATIC.xml"
 
 [[entry]]
-path = "spec/boot/00-core.md"
+path = "spec/boot/00-core.xml"
+kind = "static"
+
+[[entry]]
+path = "spec/boot/90-user.xml"
 kind = "static"
 
 [[entry]]
@@ -38,8 +42,4 @@ kind = "static"
 
 [[entry]]
 path = "vibedeps/org.vibevm.world.omnichannel/1.0.0/spec/boot/68-flow-omnichannel.xml"
-kind = "static"
-
-[[entry]]
-path = "spec/boot/90-user.md"
 kind = "static"

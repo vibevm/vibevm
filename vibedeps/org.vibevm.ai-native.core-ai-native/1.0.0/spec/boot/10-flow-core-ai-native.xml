@@ -5,11 +5,11 @@
   <p><FOLLOWS-DISCIPLINE fact="true" status="impl/done">This project follows the AI-Native Code Discipline.</FOLLOWS-DISCIPLINE></p>
   <p><corpus-lives-here-lead fact="true" status="impl/done">The language-neutral corpus lives in this package:</corpus-lives-here-lead></p>
   <facts ordered="false">
-    <CORPUS-GUIDING-LAYER fact="true" status="impl/done">the guiding layer (`spec/00-MANIFESTO.md`,
-  `spec/01-PATTERN-CARD-FORMAT.md`, `spec/02-EXECUTABLE-SCAFFOLDS.md`),</CORPUS-GUIDING-LAYER>
-    <CORPUS-OPERATING-PLAYBOOKS fact="true" status="impl/done">the operating playbooks (`spec/03-RAID-PLAYBOOK.md`
-  campaigns, `spec/04-SWEEP-PLAYBOOK.md` the standing sweep, `spec/05-CAMPAIGN-FORM.md`
-  the campaign paper trail, `spec/06-WAL-CONVENTION.md` session-durable state —
+    <CORPUS-GUIDING-LAYER fact="true" status="impl/done">the guiding layer (`spec/00-MANIFESTO.xml`,
+  `spec/01-PATTERN-CARD-FORMAT.xml`, `spec/02-EXECUTABLE-SCAFFOLDS.xml`),</CORPUS-GUIDING-LAYER>
+    <CORPUS-OPERATING-PLAYBOOKS fact="true" status="impl/done">the operating playbooks (`spec/03-RAID-PLAYBOOK.xml`
+  campaigns, `spec/04-SWEEP-PLAYBOOK.xml` the standing sweep, `spec/05-CAMPAIGN-FORM.xml`
+  the campaign paper trail, `spec/06-WAL-CONVENTION.xml` session-durable state —
   optional but preferred),</CORPUS-OPERATING-PLAYBOOKS>
     <CORPUS-MECHANISM-SPECS fact="true" status="impl/done">the mechanism specs under `spec/mechanisms/`
   (ENGINE-CONFORM, PROP-014 specmap, BROWNFIELD-PROTOCOL, LEDGER-INTENT — the
@@ -35,7 +35,7 @@ own delivery rule is minimal sufficiency:</DO-NOT-READ-ALL-AT-BOOT></p>
   </facts>
   <p><CARD-REGISTRY fact="true" status="impl/done">Card registry: the active language stack's `spec/cards/INDEX.md` (trigger →
 card; the nine executable scaffolds A–I in their per-language shape).</CARD-REGISTRY></p>
-  <p><CROSS-CUTTING-SWEEPS fact="true" status="impl/done">Cross-cutting sweeps follow `03-RAID-PLAYBOOK.md`.</CROSS-CUTTING-SWEEPS></p>
+  <p><CROSS-CUTTING-SWEEPS fact="true" status="impl/done">Cross-cutting sweeps follow `03-RAID-PLAYBOOK.xml`.</CROSS-CUTTING-SWEEPS></p>
   <p><RULE-WITH-NO-CHECKER-IS-WISH fact="true" status="impl/done">A rule with no checker is a WISH; a deviation with no reason is a
 defect (`#[spec(deviates, reason)]`).</RULE-WITH-NO-CHECKER-IS-WISH></p>
 </spec>

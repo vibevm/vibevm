@@ -4,7 +4,9 @@
 //!
 //! - [`mdspec`] parses `spec/**/*.md` into anchored units with kind /
 //!   revision / status lines and content hashes (PROP-014 §2.1–2.2,
-//!   GUIDE-SPEC-AUTHORING §1–4).
+//!   GUIDE-SPEC-AUTHORING §1–4); [`xmlspec`] is its dialect-XML twin — the
+//!   same units out of `.xml` sources, with native positions and one shared
+//!   address space either serialisation mints into.
 //! - [`rscan`] walks the workspace sources with `syn` and extracts
 //!   `#[spec]` / `#[verifies]` / `specmark::scope!` tags as edges
 //!   (PROP-014 §2.3) — attributes are read as AST, never expanded.
@@ -43,6 +45,7 @@ pub mod rscan;
 pub mod scanner;
 pub mod testgate;
 pub mod tripwire;
+pub mod xmlspec;
 
 /// `sha256:<hex>` over the given text with line endings normalised to
 /// LF — the same content-hash format the lockfile uses, so hashes read

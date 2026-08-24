@@ -7,8 +7,8 @@ is, *why* it is the first engineering requirement on a spec tree
 shared between a human and a coding agent, the `spec://` URI scheme
 and its anchor grammar, the single-source and placement rules that
 follow, and the dependency graph addressable specs create for free.</scope-of-this-document></p>
-  <p><sibling-document-pointers fact="true" status="impl/done">How to write the units is in [`authoring-rules.md`](authoring-rules.md);
-where the files live is in [`spec-tree-layout.md`](spec-tree-layout.md).</sibling-document-pointers></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">How to write the units is in [`authoring-rules.xml`](authoring-rules.xml);
+where the files live is in [`spec-tree-layout.xml`](spec-tree-layout.xml).</sibling-document-pointers></p>
   <ipc title="Specs are IPC, not documentation">
     <p><HUMAN-AND-AGENT-ARE-TWO-PROCESSES-SHARING-ONE-REPOSITORY fact="true" status="spec/done">A human and a coding agent are two processes sharing one repository.</HUMAN-AND-AGENT-ARE-TWO-PROCESSES-SHARING-ONE-REPOSITORY></p>
     <p><THE-SPEC-TREE-IS-THE-ONLY-CHANNEL fact="true" status="spec/done">Between them there is no hallway conversation, no memory that

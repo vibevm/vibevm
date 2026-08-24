@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:a51aa38e20aeb9b5b89bc685110a5e025f50b3d182081b31cfb1eda0559e74f5"
+source_hash = "sha256:af5cf499f0dc853434bc276071e5abecfcfa110a24431f3b73e0c6b3b066417b"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:3158d94da2a4a814f4c2b54871722bb9ce4b8b37967c5379a719d3fbf4c9e26b"
+derived_hash = "sha256:185b725ddea7fee341edc7d54c1af3a50b98078e794f112a385b60bd419b47df"
 
 [[file]]
 source = "LICENSE"
@@ -15,14 +15,14 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/32-flow-autonomy.md"
+source = "spec/boot/32-flow-autonomy.xml"
 output = "spec/boot/32-flow-autonomy.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/autonomy/AUTONOMY-PROTOCOL.md"
+source = "spec/flows/autonomy/AUTONOMY-PROTOCOL.xml"
 output = "spec/flows/autonomy/AUTONOMY-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

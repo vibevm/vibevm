@@ -16,21 +16,21 @@ milestone is never declared done on an un-audited base.</A-MILESTONE-IS-NEVER-DE
   <ships title="What ships">
     <p><package-contents-lead fact="true" status="impl/done">This package ships three flow documents, a skill, and a boot snippet:</package-contents-lead></p>
     <facts ordered="false">
-      <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md` — what the audit
+      <CONTENT-THE-PROTOCOL fact="true" status="impl/done">`spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml` — what the audit
   is and is not, the four blind spots, `AUDIT.md` as the durable home,
   dispositions and carry-forward, the living-checklist law, the
   "why not" section, and a re-derive prompt.</CONTENT-THE-PROTOCOL>
-      <CONTENT-THE-AUDIT-CHECKLIST fact="true" status="impl/done">`spec/flows/health-audit/audit-checklist.md` — the categories walked
+      <CONTENT-THE-AUDIT-CHECKLIST fact="true" status="impl/done">`spec/flows/health-audit/audit-checklist.xml` — the categories walked
   each run (A test integrity, B rot outside the gate, C drift, D debt),
   every sub-item with what to look for, a mechanical aid, and what
   "bad" looks like.</CONTENT-THE-AUDIT-CHECKLIST>
-      <CONTENT-RUNNING-AN-AUDIT fact="true" status="impl/done">`spec/flows/health-audit/running-an-audit.md` — the seven-step run,
+      <CONTENT-RUNNING-AN-AUDIT fact="true" status="impl/done">`spec/flows/health-audit/running-an-audit.xml` — the seven-step run,
   the `AUDIT.md` section format, and a worked example on an invented
   generic project.</CONTENT-RUNNING-AN-AUDIT>
       <CONTENT-THE-SKILL fact="true" status="impl/done">`spec/skills/health-audit/SKILL.md` — the `health-audit` skill: an
   agent walks the checklist and drafts the `AUDIT.md` section for
   approval.</CONTENT-THE-SKILL>
-      <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/42-flow-health-audit.md` — boot snippet loaded at session
+      <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/42-flow-health-audit.xml` — boot snippet loaded at session
   start: the one-line law, the cadence, and the never-do list.</CONTENT-THE-BOOT-SNIPPET>
     </facts>
   </ships>

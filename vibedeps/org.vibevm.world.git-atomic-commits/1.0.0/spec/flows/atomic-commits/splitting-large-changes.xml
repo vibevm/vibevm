@@ -149,7 +149,7 @@ actually pays off.</that-is-where-the-division-of-labour-pays-off></p>
       <PREPUSH-ONLY-NOW-PUSH fact="true" status="impl/done">Only now push.</PREPUSH-ONLY-NOW-PUSH>
     </facts>
     <p><PUSHED-HISTORY-IS-FROZEN fact="true" status="impl/done">Pushed history is frozen (see
-[`ATOMIC-COMMITS-PROTOCOL.md` §pushed](ATOMIC-COMMITS-PROTOCOL.md#pushed)).</PUSHED-HISTORY-IS-FROZEN></p>
+[`ATOMIC-COMMITS-PROTOCOL.xml` §pushed](ATOMIC-COMMITS-PROTOCOL.xml#pushed)).</PUSHED-HISTORY-IS-FROZEN></p>
     <p><A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT fact="true" status="impl/done">Fixing a mistake after the push means a new `fix`/`revert` commit,
 not a force-push.</A-MISTAKE-AFTER-THE-PUSH-MEANS-A-NEW-COMMIT></p>
   </prepush>

@@ -8,8 +8,8 @@ enough, *where* its findings live and why that home is not the
 volatile checkpoint, *how* findings are dispositioned and carried
 forward, and the law that keeps the checklist alive.</scope-of-this-document></p>
   <p><companion-document-pointers fact="true" status="impl/done">The categories
-themselves: [`audit-checklist.md`](audit-checklist.md); the run
-procedure: [`running-an-audit.md`](running-an-audit.md).</companion-document-pointers></p>
+themselves: [`audit-checklist.xml`](audit-checklist.xml); the run
+procedure: [`running-an-audit.xml`](running-an-audit.xml).</companion-document-pointers></p>
   <gate-vs-audit title="The gate versus the audit">
     <p><EVERY-SERIOUS-PROJECT-HAS-A-GATE fact="true" status="spec/done">Every serious project has a **gate**: some automated per-commit check
 — a test suite, a linter, a CI pipeline, or all three — that must be
@@ -80,7 +80,7 @@ group per blind spot:</AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT></p>
   (deferred items, aging markers, escape hatches, stale dependencies).</GROUP-D-DEBT>
     </facts>
     <p><checklist-pointer-and-the-list-is-not-fixed fact="true" status="impl/done">Every sub-item, its mechanical aid, and what "bad" looks like lives in
-[`audit-checklist.md`](audit-checklist.md); the list is not fixed
+[`audit-checklist.xml`](audit-checklist.xml); the list is not fixed
 (see [§living](#living)).</checklist-pointer-and-the-list-is-not-fixed></p>
   </categories>
   <audit-md title="`AUDIT.md` is the durable home">

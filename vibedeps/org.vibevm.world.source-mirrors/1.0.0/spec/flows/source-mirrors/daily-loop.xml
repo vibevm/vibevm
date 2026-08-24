@@ -8,8 +8,8 @@ natural checkpoints), *handling reported drift* (investigate, reconcile
 into mainline, re-fan — never clobber), *onboarding a host*, and
 *offboarding a host*.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The model behind it is in
-[`SOURCE-MIRRORS-PROTOCOL.md`](SOURCE-MIRRORS-PROTOCOL.md); the machinery
-in [`fanout-mechanics.md`](fanout-mechanics.md).</sibling-document-pointers></p>
+[`SOURCE-MIRRORS-PROTOCOL.xml`](SOURCE-MIRRORS-PROTOCOL.xml); the machinery
+in [`fanout-mechanics.xml`](fanout-mechanics.xml).</sibling-document-pointers></p>
   <loop title="The loop in one line">
     <quote><THE-LOOP-IN-ONE-LINE fact="true" status="impl/done">A change arrives somewhere → you review and accept it there → you
 bring it into local `main` → you fan out → it is everywhere.</THE-LOOP-IN-ONE-LINE></quote>
@@ -67,7 +67,7 @@ accepted it:</a-contribution-reaches-mainline-one-of-two-ways></p>
     <fence lang="sh">  git fetch &lt;that-host-url&gt; main
   git merge --ff-only FETCH_HEAD
   project-mirror</fence>
-    <p><bring-home-pointer fact="true" status="impl/done">See [`fanout-mechanics.md` §bring-home](fanout-mechanics.md#bring-home).</bring-home-pointer></p>
+    <p><bring-home-pointer fact="true" status="impl/done">See [`fanout-mechanics.xml` §bring-home](fanout-mechanics.xml#bring-home).</bring-home-pointer></p>
     <facts ordered="false">
       <ROUTE-YOU-INTEGRATE-LOCALLY fact="true" status="impl/done">**You integrate locally** — a fork branch, or an emailed patch. On
   `main` with a clean tree:</ROUTE-YOU-INTEGRATE-LOCALLY>

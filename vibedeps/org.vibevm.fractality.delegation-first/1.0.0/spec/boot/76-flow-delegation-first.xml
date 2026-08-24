@@ -8,7 +8,7 @@ first question is *"can this be delegated?"*. Keep the boss for
 architecture, planning, judgment, and **review**; hand a worker the
 token-heavy execution as a coarse, well-specified one-shot.</p>
   <p>Full directive:
-[`spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md`](../flows/delegation-first/DELEGATION-FIRST-PROTOCOL.md).
+[`spec/flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml`](../flows/delegation-first/DELEGATION-FIRST-PROTOCOL.xml).
 The decidable calculus it sits above — *delegate when verification is
 cheaper than generation* — is the delegation-rules flow.</p>
   <obligations title="Two standing obligations">

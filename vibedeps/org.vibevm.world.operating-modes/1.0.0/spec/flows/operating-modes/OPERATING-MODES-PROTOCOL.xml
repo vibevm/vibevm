@@ -9,7 +9,7 @@ unambiguous and safe, and the one law every mode obeys — the red
 lines that no codeword can erode.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The catalogue of a project's actual
 codewords lives at the end; this collection ships one worked mode,
-[`mfbt-mode.md`](mfbt-mode.md).</sibling-document-pointers></p>
+[`mfbt-mode.xml`](mfbt-mode.xml).</sibling-document-pointers></p>
   <what title="What a mode is">
     <p><a-session-has-a-default-operating-posture-lead fact="true" status="impl/done">A session has a **default operating posture**:</a-session-has-a-default-operating-posture-lead></p>
     <facts ordered="false">
@@ -127,7 +127,7 @@ recognise a spoken codeword only if it is catalogued, and propose
 adding any new one through the five-part shape before acting on it.</SHIP-RECOGNISE-AND-PROPOSE-THROUGH-THE-FIVE-PART-SHAPE></p>
     <p><one-worked-mode-lead fact="true" status="impl/done">This collection ships one worked mode as a reference:</one-worked-mode-lead></p>
     <facts ordered="false">
-      <CATALOGUE-MFBT-MODE fact="true" status="impl/done">[`mfbt-mode.md`](mfbt-mode.md) — «move fast and break things»:
+      <CATALOGUE-MFBT-MODE fact="true" status="impl/done">[`mfbt-mode.xml`](mfbt-mode.xml) — «move fast and break things»:
   pre-authorised heads-down execution.</CATALOGUE-MFBT-MODE>
     </facts>
   </catalogue>

@@ -36,6 +36,7 @@ repository = "https://gitverse.ru/vibevm/vibevm"
 homepage = "https://gitverse.ru/vibevm/vibevm"
 
 [workspace.dependencies]
+quick-xml = "0.41.0"
 # Internal crates — path-only; every one below is a vendored
 # write-through (see the workspace header).
 conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }

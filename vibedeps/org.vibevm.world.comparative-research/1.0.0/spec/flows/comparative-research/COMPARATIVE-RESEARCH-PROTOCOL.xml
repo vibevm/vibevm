@@ -7,8 +7,8 @@ research document* is, why the genre exists, the five laws every
 such document obeys, when to write one, and how the study connects
 to the roadmap without ever ratifying itself.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">Copy-ready skeleton:
-[`research-template.md`](research-template.md); the downstream
-pipeline: [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</sibling-document-pointers></p>
+[`research-template.xml`](research-template.xml); the downstream
+pipeline: [`from-research-to-roadmap.xml`](from-research-to-roadmap.xml).</sibling-document-pointers></p>
   <what title="What the genre is">
     <p><A-RESEARCH-DOCUMENT-IS-A-SELF-CONTAINED-STUDY-OF-ONE-SYSTEM fact="true" status="impl/done">A comparative research document is a **self-contained, evergreen
 study of one external system** — a competitor, a predecessor, an
@@ -119,7 +119,7 @@ has skipped the review where a human weighs the proposal against
 everything else competing for the same effort.</a-self-ratifying-study-skips-the-review></p>
       <p><LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE fact="true" status="impl/done">Keep the two acts
 separate: the study argues, the owner decides
-([`from-research-to-roadmap.md`](from-research-to-roadmap.md)).</LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE></p>
+([`from-research-to-roadmap.xml`](from-research-to-roadmap.xml)).</LAW-FOUR-KEEP-THE-TWO-ACTS-SEPARATE></p>
     </law-deltas>
     <law-refetch title="Law 5 — The re-fetch list">
       <p><LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST fact="true" status="impl/done">The document closes with **every source URL, its access date, and
@@ -203,7 +203,7 @@ let the agent produce the study your project actually needs:</re-derive-lead></p
       <SUM-WHEN-TO-WRITE-ONE fact="true" status="impl/done">Write one before building in an occupied space, when a competitor
   alarms, or when "why not do what X does" keeps recurring.</SUM-WHEN-TO-WRITE-ONE>
       <SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES fact="true" status="impl/done">The study proposes; the owner decides. See
-  [`from-research-to-roadmap.md`](from-research-to-roadmap.md).</SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES>
+  [`from-research-to-roadmap.xml`](from-research-to-roadmap.xml).</SUM-THE-STUDY-PROPOSES-THE-OWNER-DECIDES>
     </facts>
   </summary>
 </spec>

@@ -8,8 +8,8 @@ that dissolves it (a single-writer mainline with every host as a
 downstream read-replica), *what the model buys*, *what it costs*, and
 *how to re-derive* the practice for your own project.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The mechanics of
-the fan-out live in [`fanout-mechanics.md`](fanout-mechanics.md); the
-maintainer's day-to-day loop in [`daily-loop.md`](daily-loop.md).</sibling-document-pointers></p>
+the fan-out live in [`fanout-mechanics.xml`](fanout-mechanics.xml); the
+maintainer's day-to-day loop in [`daily-loop.xml`](daily-loop.xml).</sibling-document-pointers></p>
   <problem title="The problem">
     <p><SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS fact="true" status="spec/done">Suppose the same project must live on two git hosts at once — call
 them **host A** and **host B**.</SUPPOSE-THE-PROJECT-MUST-LIVE-ON-TWO-HOSTS></p>
@@ -110,7 +110,7 @@ UIs are merely nicer inboxes than a mailing list.</this-is-exactly-the-kernels-w
   history. Adding a host is one manifest entry.</BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST>
       <BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL fact="true" status="impl/done">**The invariant is runnable capital.** "Never `--force`" is not a
   prose promise — it is pinned by a test over the push command
-  ([`fanout-mechanics.md` §never-force-test](fanout-mechanics.md#never-force-test)).</BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL>
+  ([`fanout-mechanics.xml` §never-force-test](fanout-mechanics.xml#never-force-test)).</BUYS-THE-INVARIANT-IS-RUNNABLE-CAPITAL>
     </facts>
   </buys>
   <costs title="What the model costs">

@@ -68,7 +68,7 @@ it, and now two things need reconciling instead of one.</waiting-even-a-day-is-h
   scratch, then reconcile. Sync-from-Code updates existing spec entries,
   it does not bootstrap them.</SKIP-CODE-THE-SPEC-DOES-NOT-MENTION>
     </facts>
-    <p><sibling-document-pointers fact="true" status="impl/done">Edge case: see [`when-to-apply.md`](when-to-apply.md) for the full
+    <p><sibling-document-pointers fact="true" status="impl/done">Edge case: see [`when-to-apply.xml`](when-to-apply.xml) for the full
 decision table.</sibling-document-pointers></p>
   </trigger>
   <procedure title="Procedure">
@@ -135,7 +135,7 @@ carries the new value, the reason, and the revisit trigger.</fence>
 mistake) or redraft the sync proposal (the agent framed the intent
 incorrectly).</ON-REJECT-REVERT-THE-CODE-OR-REDRAFT-THE-PROPOSAL></p>
       <p><NEVER-SILENTLY-ACCEPT-A-REJECTED-SYNC fact="true" status="impl/done">Never silently accept a rejected sync.</NEVER-SILENTLY-ACCEPT-A-REJECTED-SYNC></p>
-      <p><review-checklist-pointer fact="true" status="impl/done">The full human-side checklist lives in [`review-workflow.md`](review-workflow.md).</review-checklist-pointer></p>
+      <p><review-checklist-pointer fact="true" status="impl/done">The full human-side checklist lives in [`review-workflow.xml`](review-workflow.xml).</review-checklist-pointer></p>
     </step-approve>
   </procedure>
   <non-goals title="What Sync-from-Code does not do">

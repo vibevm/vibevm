@@ -10,14 +10,11 @@
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units");
 
-use std::path::Path;
-
 use crate::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning};
 use specmark_grammar::is_valid_anchor;
-use walkdir::WalkDir;
 
-use crate::config::{Config, SectionGrain};
-use crate::{content_hash, fwd};
+use crate::config::SectionGrain;
+use crate::content_hash;
 
 /// Pure line-classification primitives (heading / fence / list-item /
 /// `##<ID>` fact-anchor detection) — the syntactic helper layer this pass
@@ -31,18 +28,28 @@ use lines::{fact_anchor_at, fence_mask, heading_level, list_item_content, parse_
 /// patterns. A child module for the file-length budget, like `lines`.
 mod excludes;
 
+/// The tree walks (`scan_spec_tree` / `scan_external_units`) — the seam
+/// where the two serialisations' readers meet. A child module for the
+/// file-length budget, like `lines` and `excludes`; re-exported so the
+/// crate's callers (and the index builder) keep their paths.
+mod walk;
+pub use walk::{scan_external_units, scan_spec_tree};
+
 /// Parsed kind line: `` `<kind> r<N>[ <status>]` `` + optional same-line prose.
-struct KindLine {
-    kind: SpecUnitKind,
-    revision: u32,
-    status: Option<SpecUnitStatus>,
-    disputes: Option<String>,
+/// `pub(crate)` — the XML reader (`xmlspec`) applies the SAME grammar to a
+/// leading `<p>`'s first line, so the two frontends cannot fork on what a
+/// kind declaration is.
+pub(crate) struct KindLine {
+    pub(crate) kind: SpecUnitKind,
+    pub(crate) revision: u32,
+    pub(crate) status: Option<SpecUnitStatus>,
+    pub(crate) disputes: Option<String>,
 }
 
 /// Parse the backticked declaration if the line starts with one.
 /// `Ok(None)` — the line is not a kind line at all; `Err` — it looks
 /// like one but is malformed (warned, not fatal).
-fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
+pub(crate) fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
     let trimmed = line.trim_start();
     let Some(rest) = trimmed.strip_prefix('`') else {
         return Ok(None);
@@ -107,8 +114,9 @@ fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
 
 /// The `duplicate-anchor` warning, shared by heading anchors and `##<ID>`
 /// fact anchors — one id per document, whichever grain mints it first
-/// (PROP-014 §2.1, one address space per document).
-fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {
+/// (PROP-014 §2.1, one address space per document). `pub(crate)` — the XML
+/// reader mints into the SAME namespace and must warn with the same words.
+pub(crate) fn duplicate_anchor_warning(anchor: &str, file: &str, line: u32) -> Warning {
     Warning {
         code: "duplicate-anchor".to_string(),
         message: format!(
@@ -202,8 +210,10 @@ fn segment_block_facts(
 /// The canonical citation path used inside `spec://` URIs — the house
 /// style every existing citation in the repo already uses (CLAUDE.md:
 /// `spec://org.vibevm.core/vibevm/common/PROP-000#commits`): relative to `spec/`, the
-/// `.md` extension stripped, and a filename carrying a document id
-/// truncated to it (`modules/vibe-resolver/PROP-003-dep-evolution.md`
+/// serialisation extension (`.md` or `.xml` — a document's address does
+/// not depend on which form it is written in) stripped, and a filename
+/// carrying a document id truncated to it
+/// (`modules/vibe-resolver/PROP-003-dep-evolution.md`
 /// → `modules/vibe-resolver/PROP-003`). Files without a document id
 /// keep their full stem (`boot/00-core`, `WAL`).
 pub fn canonical_doc_path(file: &str) -> String {
@@ -212,7 +222,10 @@ pub fn canonical_doc_path(file: &str) -> String {
         Some((d, n)) => (Some(d), n),
         None => (None, rel),
     };
-    let stem = name.strip_suffix(".md").unwrap_or(name);
+    let stem = name
+        .strip_suffix(".md")
+        .or_else(|| name.strip_suffix(".xml"))
+        .unwrap_or(name);
     let mut parts = stem.split('-');
     let id = match (parts.next(), parts.next()) {
         (Some(kind @ ("PROP" | "FEAT")), Some(num))
@@ -406,135 +419,6 @@ fn parse_units_with(
         i += 1;
     }
     (units, warnings)
-}
-
-/// Walk each `<spec_root>/**/*.md` under the repo root, then the explicit
-/// [`Config::root_spec_docs`]. Deterministic order. [`Config::spec_exclude`]
-/// is applied to **both** halves — a match leaves the inventory before it is
-/// parsed — by the same law the progress gate applies its `exclude` after its
-/// includes. A pattern that matched nothing, or that is not a valid glob,
-/// speaks up through its own warning (see [`SpecExcludes`]).
-pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>) {
-    let mut units = Vec::new();
-    let mut warnings = Vec::new();
-    let (mut excludes, bad_globs) = excludes::SpecExcludes::compile(&cfg.spec_exclude);
-    // Bad globs are discovered before any walk, so they lead the warnings.
-    warnings.extend(bad_globs);
-    for spec_root_rel in &cfg.spec_roots {
-        let spec_root = root.join(spec_root_rel);
-        for entry in WalkDir::new(&spec_root)
-            .sort_by_file_name()
-            .into_iter()
-            .filter_map(Result::ok)
-        {
-            if !entry.file_type().is_file() {
-                continue;
-            }
-            let path = entry.path();
-            if path.extension().and_then(|e| e.to_str()) != Some("md") {
-                continue;
-            }
-            let rel = path.strip_prefix(root).unwrap_or(path);
-            let file_rel = fwd(rel);
-            // `file_rel` is the exact string the SpecUnit would carry as
-            // `file`; matching it (not the OS path) is what the exclude key
-            // pays for — the printed path and the matched path are one.
-            if excludes.matches(&file_rel) {
-                continue;
-            }
-            match std::fs::read_to_string(path) {
-                Ok(text) => {
-                    let (mut u, mut w) = parse_units_with(
-                        &file_rel,
-                        &text,
-                        &cfg.namespace,
-                        cfg.max_section_lines,
-                        cfg.section_grain,
-                    );
-                    units.append(&mut u);
-                    warnings.append(&mut w);
-                }
-                Err(e) => warnings.push(Warning {
-                    code: "unreadable-file".to_string(),
-                    message: format!("could not read: {e}"),
-                    file: file_rel,
-                    line: 0,
-                }),
-            }
-        }
-    }
-    for name in &cfg.root_spec_docs {
-        let path = root.join(name);
-        if !path.exists() {
-            continue;
-        }
-        // The exclude applies to this half too: `name` is the exact string a
-        // SpecUnit minted from a root doc carries as `file`, so it is what the
-        // pattern is tested against — uniformly with the spec-roots half.
-        if excludes.matches(name) {
-            continue;
-        }
-        match std::fs::read_to_string(&path) {
-            Ok(text) => {
-                let (mut u, mut w) = parse_units(name, &text, &cfg.namespace);
-                units.append(&mut u);
-                warnings.append(&mut w);
-            }
-            Err(e) => warnings.push(Warning {
-                code: "unreadable-file".to_string(),
-                message: format!("could not read: {e}"),
-                file: name.clone(),
-                line: 0,
-            }),
-        }
-    }
-    // Stale patterns can only be known once both halves have walked, so they
-    // trail the warnings.
-    warnings.extend(excludes.stale_warnings());
-    (units, warnings)
-}
-
-/// Scan each [`Config::external_specs`] tree — an installed package's spec
-/// directory — and mint its units under that package's namespace. These
-/// units participate in **resolution only** (dangling suppression, suspect
-/// revisions, queries); the caller never serialises them into the project's
-/// own index, and their parse warnings are the package's business, not this
-/// project's, so they are dropped. A missing root is reported to stderr and
-/// skipped (the package may simply not be installed yet), never a failure.
-pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
-    let mut units = Vec::new();
-    for ext in &cfg.external_specs {
-        let base = root.join(&ext.root);
-        if !base.is_dir() {
-            eprintln!(
-                "specmap: external spec root `{}` (namespace `{}`) not found — \
-                 skipped; install the package to resolve its units",
-                ext.root, ext.namespace
-            );
-            continue;
-        }
-        for entry in WalkDir::new(&base)
-            .sort_by_file_name()
-            .into_iter()
-            .filter_map(Result::ok)
-        {
-            if !entry.file_type().is_file() {
-                continue;
-            }
-            let path = entry.path();
-            if path.extension().and_then(|e| e.to_str()) != Some("md") {
-                continue;
-            }
-            // Doc-paths are minted relative to the external tree itself, so
-            // `<ext.root>/mechanisms/X.md` reads `spec://<ns>/mechanisms/X#…`.
-            let rel = path.strip_prefix(&base).unwrap_or(path);
-            if let Ok(text) = std::fs::read_to_string(path) {
-                let (mut u, _w) = parse_units(&fwd(rel), &text, &ext.namespace);
-                units.append(&mut u);
-            }
-        }
-    }
-    units
 }
 
 #[cfg(test)]

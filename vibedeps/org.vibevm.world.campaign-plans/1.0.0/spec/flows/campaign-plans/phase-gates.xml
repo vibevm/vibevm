@@ -7,8 +7,8 @@ phases are cut, gated, and resumed: the Phase 0 spike discipline, the
 anatomy of an executable phase, the safe-stop law, review points, and
 the rule for discovered-necessary work.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The surrounding plan format:
-[`CAMPAIGN-PLAN-FORMAT.md`](CAMPAIGN-PLAN-FORMAT.md); the record
-half: [`execution-ledger.md`](execution-ledger.md).</sibling-document-pointers></p>
+[`CAMPAIGN-PLAN-FORMAT.xml`](CAMPAIGN-PLAN-FORMAT.xml); the record
+half: [`execution-ledger.xml`](execution-ledger.xml).</sibling-document-pointers></p>
   <phase-zero title="Phase 0 — spikes and probes, no commits">
     <p><EVERY-CAMPAIGN-OPENS-WITH-A-PHASE-THAT-PRODUCES-NO-COMMITS fact="true" status="impl/done">Every campaign opens with a phase that produces **no commits**.</EVERY-CAMPAIGN-OPENS-WITH-A-PHASE-THAT-PRODUCES-NO-COMMITS></p>
     <p><phase-zeros-job-lead fact="true" status="impl/done">Its job

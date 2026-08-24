@@ -33,7 +33,7 @@ everyone read a new file).</SIDECAR-TRADES-A-SOLVED-PROBLEM-FOR-AN-UNSOLVED-ONE>
     <p><A-SIDECAR-IS-RIGHT-FOR-LARGE-PAYLOADS-AS-A-COMPLEMENT fact="true" status="impl/done">A sidecar *is* the right answer for large payloads — but as a
 complement to the block, not a replacement.</A-SIDECAR-IS-RIGHT-FOR-LARGE-PAYLOADS-AS-A-COMPLEMENT></p>
     <p><adoption-guide-pointer fact="true" status="impl/done">See
-[`adoption-guide.md`](adoption-guide.md#what-belongs) on keeping the
+[`adoption-guide.xml`](adoption-guide.xml#what-belongs) on keeping the
 block small and pointing it at tool-owned files.</adoption-guide-pointer></p>
   </sidecar>
   <model-detection title="Model-based or heuristic block detection">
@@ -109,7 +109,7 @@ them for editable.</RESERVE-WHOLE-FILE-OWNERSHIP-AND-MARK-IT-LOUDLY></p>
   </whole-file>
   <drill title="The malformed-state drill">
     <p><ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT fact="true" status="impl/done">When classification (see
-[`MANAGED-BLOCKS-PROTOCOL.md`](MANAGED-BLOCKS-PROTOCOL.md#state-machine))
+[`MANAGED-BLOCKS-PROTOCOL.xml`](MANAGED-BLOCKS-PROTOCOL.xml#state-machine))
 returns *malformed*, the tool aborts the whole operation and prints a
 report with three parts.</ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT></p>
     <p><NOTHING-IS-WRITTEN fact="true" status="impl/done">Nothing is written.</NOTHING-IS-WRITTEN></p>

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:fb01b6d78218eafa8d34c11686fda6b026ef54f861d4d68a06de2fdb9d08b6a4"
+source_hash = "sha256:6ce623f26ccd35a762ac763b2f8156f84f488ad898a0eccb820612f0f1afbc2e"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:de5207bff7192bfadfcbc2e46c6f204adcf1a1cfcfffa83c36670ed5a52850a9"
+derived_hash = "sha256:975e317ff22574dc6e7bee26fd6a5caee39a0cf5971ff3e45312546a0c0688d8"
 
 [[file]]
 source = "LICENSE"
@@ -15,14 +15,14 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/58-flow-dev-runtime-docs.md"
+source = "spec/boot/58-flow-dev-runtime-docs.xml"
 output = "spec/boot/58-flow-dev-runtime-docs.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md"
+source = "spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"
 output = "spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

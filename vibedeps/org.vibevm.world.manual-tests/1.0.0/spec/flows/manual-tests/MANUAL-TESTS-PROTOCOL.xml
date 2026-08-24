@@ -7,8 +7,8 @@ second, human-run test tier alongside its automated suite, *what* a
 manual test is and is not, *when* to run one, *who* runs it, and the
 directory convention that keeps the tier discoverable.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The four rules
-each test must satisfy live in [`authoring-rules.md`](authoring-rules.md);
-the copy-ready skeleton lives in [`test-template.md`](test-template.md).</sibling-document-pointers></p>
+each test must satisfy live in [`authoring-rules.xml`](authoring-rules.xml);
+the copy-ready skeleton lives in [`test-template.xml`](test-template.xml).</sibling-document-pointers></p>
   <why-second-tier title="Why a second tier exists">
     <p><the-automated-suite-is-hermetic-because-it-lies-about-the-world fact="true" status="spec/done">The automated suite is fast and hermetic *because it lies about the
 world*.</the-automated-suite-is-hermetic-because-it-lies-about-the-world></p>

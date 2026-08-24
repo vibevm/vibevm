@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:faf47405bff3d183c7afa460610c444c31c4c74bb8ed2b30505ecd556fe7800a"
+source_hash = "sha256:a9277fa70d1b0af834854dccc46c37f0647dd45b5744f0a986f73cf4356f2750"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:e42d821a2debf8cd2b369ba332abe2184dd7ab29897079b1a0f3760b129d981e"
+derived_hash = "sha256:318baea4e49b706d0efc5d549ea9d88733fc219803754ec7c8c69545880c5307"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/25-flow-decision-records.md"
+source = "spec/boot/25-flow-decision-records.xml"
 output = "spec/boot/25-flow-decision-records.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+source = "spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
 output = "spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/decision-records/record-template.md"
+source = "spec/flows/decision-records/record-template.xml"
 output = "spec/flows/decision-records/record-template.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/decision-records/revisit-triggers.md"
+source = "spec/flows/decision-records/revisit-triggers.xml"
 output = "spec/flows/decision-records/revisit-triggers.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

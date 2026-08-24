@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:b4f5da50b288b95882be9ef805294d640839aaf17d243b468c2c129ea6417aea"
+source_hash = "sha256:df8686ed1f9a5511b3db0822a94cbb540f8407d7dfeef9725ee6c0c34779dbe8"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:5dee2578ad3e505f517f4063b7c1c81fe4a36bdfd1570895898db43fcc4c2f3e"
+derived_hash = "sha256:c6d6d061338cddecab0b9a3f53246e92c5cc999a83f4271d79543476d6ceb032"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/60-flow-licensing.md"
+source = "spec/boot/60-flow-licensing.xml"
 output = "spec/boot/60-flow-licensing.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/licensing/LICENSING-PROTOCOL.md"
+source = "spec/flows/licensing/LICENSING-PROTOCOL.xml"
 output = "spec/flows/licensing/LICENSING-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/licensing/dependency-licenses.md"
+source = "spec/flows/licensing/dependency-licenses.xml"
 output = "spec/flows/licensing/dependency-licenses.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/licensing/eula-template.md"
+source = "spec/flows/licensing/eula-template.xml"
 output = "spec/flows/licensing/eula-template.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/skills/draft-eula/SKILL.md"

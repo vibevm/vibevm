@@ -6,8 +6,8 @@
 a clause-by-clause account of what each section must carry, and one
 short worked example.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The reasoning behind the tier lives in
-[`MANUAL-TESTS-PROTOCOL.md`](MANUAL-TESTS-PROTOCOL.md); the rules the
-skeleton bakes in live in [`authoring-rules.md`](authoring-rules.md).</sibling-document-pointers></p>
+[`MANUAL-TESTS-PROTOCOL.xml`](MANUAL-TESTS-PROTOCOL.xml); the rules the
+skeleton bakes in live in [`authoring-rules.xml`](authoring-rules.xml).</sibling-document-pointers></p>
   <skeleton title="The skeleton">
     <p><COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER fact="true" status="impl/done">Copy this into `manual-tests/&lt;milestone&gt;-&lt;slug&gt;.md` and fill each
 placeholder.</COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER></p>

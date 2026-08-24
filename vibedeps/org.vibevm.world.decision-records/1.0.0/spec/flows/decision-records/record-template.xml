@@ -7,8 +7,8 @@ record, what each of the four fields must contain, two fully worked
 examples, and the anti-pattern table.</scope-of-this-document></p>
   <p><companion-document-pointers fact="true" status="impl/done">The reasoning behind the
 practice lives in
-[`DECISION-RECORDS-PROTOCOL.md`](DECISION-RECORDS-PROTOCOL.md);
-trigger design in [`revisit-triggers.md`](revisit-triggers.md).</companion-document-pointers></p>
+[`DECISION-RECORDS-PROTOCOL.xml`](DECISION-RECORDS-PROTOCOL.xml);
+trigger design in [`revisit-triggers.xml`](revisit-triggers.xml).</companion-document-pointers></p>
   <template title="The template">
     <p><PASTE-UNDER-THE-GOVERNING-SPEC-HEADING fact="true" status="impl/done">Paste under the spec heading that governs the value.</PASTE-UNDER-THE-GOVERNING-SPEC-HEADING></p>
     <p><GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR fact="true" status="impl/done">Give that
@@ -128,7 +128,7 @@ can check from the upstream repository today.</note-the-trigger-shape></p>
     <p><either-condition-fires-unprompted fact="true" status="spec/done">Either can be answered
 yes-or-no by a stranger without the project instrumenting anything —
 though neither fires itself: what fires a trigger is a re-read
-([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)).</either-condition-fires-unprompted></p>
+([`revisit-triggers.xml` §periodic-sweep](revisit-triggers.xml#periodic-sweep)).</either-condition-fires-unprompted></p>
   </example-library>
   <anti-patterns title="Anti-patterns">
     <table>

@@ -22,14 +22,14 @@ per-language cards, the guides — ships in each language stack
 `rust-ai-native`, the Rust GUIDE and cards).</RUNNABLE-HALF-IN-STACKS></p>
   <reading-order title="Reading order (human reviewer / strong author)">
     <facts ordered="true">
-      <READ-MANIFESTO fact="true" status="impl/done">`spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here.</READ-MANIFESTO>
-      <READ-PATTERN-CARD-FORMAT fact="true" status="impl/done">`spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in.</READ-PATTERN-CARD-FORMAT>
-      <READ-SCAFFOLDS fact="true" status="impl/done">`spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes.</READ-SCAFFOLDS>
+      <READ-MANIFESTO fact="true" status="impl/done">`spec/00-MANIFESTO.xml` — mission, axioms, the central law, §8 the package map. Start here.</READ-MANIFESTO>
+      <READ-PATTERN-CARD-FORMAT fact="true" status="impl/done">`spec/01-PATTERN-CARD-FORMAT.xml` — the format every pattern card is written in.</READ-PATTERN-CARD-FORMAT>
+      <READ-SCAFFOLDS fact="true" status="impl/done">`spec/02-EXECUTABLE-SCAFFOLDS.xml` — the nine runnable-capital classes.</READ-SCAFFOLDS>
       <READ-STACK-GUIDE fact="true" status="impl/done">The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack).</READ-STACK-GUIDE>
-      <READ-PLAYBOOKS fact="true" status="impl/done">`spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep.</READ-PLAYBOOKS>
-      <READ-WAL-CONVENTION fact="true" status="impl/done">`spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).</READ-WAL-CONVENTION>
+      <READ-PLAYBOOKS fact="true" status="impl/done">`spec/03-RAID-PLAYBOOK.xml` + `spec/04-SWEEP-PLAYBOOK.xml` + `spec/05-CAMPAIGN-FORM.xml` — campaigns and the standing sweep.</READ-PLAYBOOKS>
+      <READ-WAL-CONVENTION fact="true" status="impl/done">`spec/06-WAL-CONVENTION.xml` — session-durable project state (optional but preferred).</READ-WAL-CONVENTION>
       <READ-MECHANISMS fact="true" status="impl/done">`spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT, MCP-CORE: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite.</READ-MECHANISMS>
-      <READ-APPENDIX fact="true" status="impl/done">`spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger).</READ-APPENDIX>
+      <READ-APPENDIX fact="true" status="impl/done">`spec/appendix/` — `CONTRADICTION-MAP.xml` (synthesis provenance) and `ATLAS.xml` (findings ledger).</READ-APPENDIX>
     </facts>
   </reading-order>
   <load-bearing-results title="The two load-bearing results behind everything">
@@ -55,7 +55,7 @@ per-language cards, the guides — ships in each language stack
     <p><open-question-transfer fact="true" status="spec/done">The central open question — does the
 executable-scaffold advantage transfer from *generation* to *modification* —
 is unproven and is the pilot's job (see
-`spec/appendix/CONTRADICTION-MAP.md` C-7).</open-question-transfer></p>
+`spec/appendix/CONTRADICTION-MAP.xml` C-7).</open-question-transfer></p>
     <p><names-failure-modes fact="true" status="spec/done">A discipline that names its failure modes is more
 trustworthy than one that hides them.</names-failure-modes></p>
   </status-and-honesty>

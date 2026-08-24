@@ -4,6 +4,7 @@
 //! inline form.
 
 use super::*;
+use crate::config::Config;
 
 const DOC: &str = "spec/test/DOC.md";
 const NS: &str = "project";

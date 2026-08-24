@@ -10,8 +10,8 @@ names may live only at the human boundary, and why a *collision* and a
   <p><written-for-ecosystem-designers fact="true" status="impl/done">It is written for **ecosystem
 designers** — anyone minting the namespace for packages, plugins,
 extensions, or artifacts.</written-for-ecosystem-designers></p>
-  <p><sibling-document-pointers fact="true" status="impl/done">Reference grammar: [`ref-grammar.md`](ref-grammar.md);
-the fork-by-fork rationale: [`naming-forks.md`](naming-forks.md).</sibling-document-pointers></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">Reference grammar: [`ref-grammar.xml`](ref-grammar.xml);
+the fork-by-fork rationale: [`naming-forks.xml`](naming-forks.xml).</sibling-document-pointers></p>
   <problem title="The problem: flat names">
     <p><A-FLAT-NAMESPACE-ADDRESSES-BY-A-SINGLE-BARE-NAME fact="true" status="spec/done">A flat namespace is one where an artifact is addressed by a single
 bare `name`, unique across the whole registry.</A-FLAT-NAMESPACE-ADDRESSES-BY-A-SINGLE-BARE-NAME></p>
@@ -100,7 +100,7 @@ identity tuple changed, so the identity changed.</THIS-FOLLOWS-FROM-LAW-2-NOT-FR
   old coordinate mean something new.</RENAME-NO-COORDINATE-IS-EVER-REUSED>
     </facts>
     <p><the-alias-table-alternative-is-examined-in-naming-forks fact="true" status="impl/done">The rejected alternative — an alias table mapping the old name to the
-new — is examined in [`naming-forks.md` §rename](naming-forks.md#rename).</the-alias-table-alternative-is-examined-in-naming-forks></p>
+new — is examined in [`naming-forks.xml` §rename](naming-forks.xml#rename).</the-alias-table-alternative-is-examined-in-naming-forks></p>
     <p><AN-ALIAS-RE-INTRODUCES-THE-AMBIGUITY-THE-GROUP-REMOVED fact="true" status="spec/done">It loses because an alias re-introduces exactly the ambiguity the group
 removed: now two coordinates name one artifact, and every reader must
 know the mapping to trust what they read.</AN-ALIAS-RE-INTRODUCES-THE-AMBIGUITY-THE-GROUP-REMOVED></p>
@@ -162,7 +162,7 @@ line, `serde = "1"` in the manifest.</the-cargo-npm-pattern-is-the-same-instinct
   no trace of why; a recorded qualified name is self-documenting.</NO-INTERACTIVE-PICK-ON-A-COLLISION>
     </facts>
     <p><error-shape-detail-pointer fact="true" status="impl/done">Error-shape detail — what a good collision message must contain — is in
-[`ref-grammar.md` §errors](ref-grammar.md#errors).</error-shape-detail-pointer></p>
+[`ref-grammar.xml` §errors](ref-grammar.xml#errors).</error-shape-detail-pointer></p>
   </collision>
   <re-derive title="Re-derive for your project">
     <p><re-derive-lead fact="true" status="impl/done">Do not copy this document's example groups — copy the *task*, and let

@@ -169,7 +169,7 @@ pub fn is_valid_fact_id(id: &str) -> bool {
 /// assert_eq!(uri.doc_path, "vibevm/modules/vibe-registry/PROP-002");
 /// assert_eq!(uri.anchor, "mirror");
 /// // A normative fact is addressable in the same one space.
-/// let f = parse_spec_uri("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FACT-ID-GRAMMAR").unwrap();
+/// let f = parse_spec_uri("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ID-GRAMMAR").unwrap();
 /// assert_eq!(f.anchor, "FACT-ID-GRAMMAR");
 /// // A missing `#anchor` fragment is rejected.
 /// assert!(parse_spec_uri("spec://org.vibevm.core/vibevm/x").is_err());

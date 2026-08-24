@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:436c4b0445c7712b890e46464f5d8a98a02a3b147505a0c4b7b17aa244aa767c"
+source_hash = "sha256:763b268983a5e6ce4c359f0f11855ca240d256bfd001e70fcdce6801995a47fa"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:82fd48c9fd7b883a043745680f4fb6d18aa1ccc56b4bae8a2eb44897958f6713"
+derived_hash = "sha256:001332bc2746dd6d6b5dc54ffe353b7b03c841fa849a2f29307c2f7b7925bab0"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/44-flow-manual-tests.md"
+source = "spec/boot/44-flow-manual-tests.xml"
 output = "spec/boot/44-flow-manual-tests.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md"
+source = "spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
 output = "spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/manual-tests/authoring-rules.md"
+source = "spec/flows/manual-tests/authoring-rules.xml"
 output = "spec/flows/manual-tests/authoring-rules.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/manual-tests/test-template.md"
+source = "spec/flows/manual-tests/test-template.xml"
 output = "spec/flows/manual-tests/test-template.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

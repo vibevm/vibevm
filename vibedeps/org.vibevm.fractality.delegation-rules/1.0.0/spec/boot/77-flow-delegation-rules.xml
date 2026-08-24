@@ -8,7 +8,7 @@ is one law plus a decidable procedure:</p>
 yourself, score the task on four axes — error cost, context
 transferability, verifiability, size — and run the verdict procedure
 in
-[`spec/flows/delegation-rules/DECISION-MATRIX.md`](../flows/delegation-rules/DECISION-MATRIX.md).
+[`spec/flows/delegation-rules/DECISION-MATRIX.xml`](../flows/delegation-rules/DECISION-MATRIX.xml).
 A task that survives the three KEEP-gates is delegated: small ×
 mechanical → the `small` model slot; everything else delegable → the
 `big` slot, as a coarse one-shot. Per-model behavior (budgets, task

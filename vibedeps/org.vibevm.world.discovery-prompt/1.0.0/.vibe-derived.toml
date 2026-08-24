@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:ba368b1fa3eec2f5dca1a552684fe7ca1e1ec0317e98f1ccf338c7b2fdf073ec"
+source_hash = "sha256:86f0ce52f20d1ec31d3c647f58361a795787c51edc7b32010afff19c43dad9f7"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:824587c257a32894336d9dc3158135a68cf19d4be805bfa5d95cb03e340827cf"
+derived_hash = "sha256:a9673873251ff14eb1ff850c8fdf8abb8299644d4314f4fc0f324590bdd9fbe4"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,19 +15,19 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/50-flow-discovery-prompt.md"
+source = "spec/boot/50-flow-discovery-prompt.xml"
 output = "spec/boot/50-flow-discovery-prompt.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/discovery-prompt/DISCOVERY-PROMPT.md"
+source = "spec/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
 output = "spec/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/discovery-prompt/usage.md"
+source = "spec/flows/discovery-prompt/usage.xml"
 output = "spec/flows/discovery-prompt/usage.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

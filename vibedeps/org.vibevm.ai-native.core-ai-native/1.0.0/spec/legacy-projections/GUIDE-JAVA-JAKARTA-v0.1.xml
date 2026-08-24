@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title>GUIDE — Java + Jakarta EE / MicroProfile under the Discipline, v0.1 (overlay)</title>
-  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.md`. Composes with the GraalVM overlay via build-time-CDI runtimes; never with the Spring overlay (one container per target). Only named sections rewired.</p>
+  <p>**Status.** Beta; overlay on `GUIDE-JAVA-v0.1.xml`. Composes with the GraalVM overlay via build-time-CDI runtimes; never with the Spring overlay (one container per target). Only named sections rewired.</p>
   <p>Framing note. Jakarta EE is the one platform in the whole study whose own architecture *is* the Discipline's triple: **specifications** (the Jakarta/MicroProfile documents) ↔ **implementations** (vendors) ↔ **conformance suites** (the TCKs). A platform that certifies implementations against a spec with an executable test kit has already conceded every philosophical point this Discipline argues; the overlay's job is merely to keep application code as honest as the platform's governance. Practically it is the Spring overlay's sibling: CDI is the container, the resolution is the same **framework-free core with ring placement** — so this guide states only the deltas.</p>
   <p>**Scope honesty.** MicroProfile-era services on certified runtimes (Open Liberty, Quarkus, Helidon, Payara, WildFly). Classic monolithic EE estates enter via the brownfield protocol as adopted code.</p>
   <baseline title="§0 additions — baseline">

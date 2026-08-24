@@ -14,7 +14,7 @@ test was flaky yesterday.</WITHOUT-THE-MORNING-READ-THE-WAL-ROTS></p>
   <read title="Read before coding">
     <p><before-coding-lead fact="true" status="impl/done">Before opening any code, before starting any agent session:</before-coding-lead></p>
     <facts ordered="true">
-      <STEP-OPEN-THE-WAL fact="true" status="impl/done">Open `spec/WAL.md`.</STEP-OPEN-THE-WAL>
+      <STEP-OPEN-THE-WAL fact="true" status="impl/done">Open `spec/WAL.xml`.</STEP-OPEN-THE-WAL>
       <STEP-READ-IT-END-TO-END fact="true" status="impl/done">Read it end to end.</STEP-READ-IT-END-TO-END>
       <STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER fact="true" status="impl/done">Compare what it says against what you remember.</STEP-COMPARE-AGAINST-WHAT-YOU-REMEMBER>
     </facts>
@@ -35,13 +35,13 @@ WAL.)</top-of-the-conflict-hierarchy></p>
     <p><the-daily-read-has-a-fast-form fact="true" status="impl/done">The daily read has a fast form.</the-daily-read-has-a-fast-form></p>
     <p><FLOW-SHIPS-A-WAL-STATUS-SKILL fact="true" status="impl/done">This flow ships a `wal-status` skill:
 install it into your agent and ask for a WAL status at session start.</FLOW-SHIPS-A-WAL-STATUS-SKILL></p>
-    <p><SKILL-ANSWERS-IN-AT-MOST-TEN-LINES fact="true" status="impl/done">It reads `spec/WAL.md` end to end and answers in at most ten lines —
+    <p><SKILL-ANSWERS-IN-AT-MOST-TEN-LINES fact="true" status="impl/done">It reads `spec/WAL.xml` end to end and answers in at most ten lines —
 one line of phase and status, up to three attention bullets, one line
 of next step — warning first when the WAL is older than 24 hours.</SKILL-ANSWERS-IN-AT-MOST-TEN-LINES></p>
     <p><equivalent-prompt-lead fact="true" status="impl/done">For an agent without skill support, paste the equivalent prompt into
 your project's agent instructions:</equivalent-prompt-lead></p>
     <fence lang="markdown">## /wal-status
-Read spec/WAL.md end to end. Emit in ≤ 10 lines:
+Read spec/WAL.xml end to end. Emit in ≤ 10 lines:
 - one line: current phase and status
 - up to three bullets: what needs attention (blockers, risks)
 - one line: next priority step
@@ -56,9 +56,9 @@ replace looking at dashboards.</THE-SKIM-DOES-NOT-REPLACE-THE-WEEKLY-RE-READ></p
 repository that is not yours?</cold-start-situations></p>
     <p><READ-CONTINUE-FIRST-THEN-THE-WAL fact="true" status="impl/done">Read `CONTINUE.md` at the repository
 root first — it carries the tour, the commands, the map — then
-`spec/WAL.md`, which is canonical wherever the two diverge.</READ-CONTINUE-FIRST-THEN-THE-WAL></p>
+`spec/WAL.xml`, which is canonical wherever the two diverge.</READ-CONTINUE-FIRST-THEN-THE-WAL></p>
     <p><cold-resume-contract-pointer fact="true" status="impl/done">The full
-contract is [`cold-resume.md`](cold-resume.md).</cold-resume-contract-pointer></p>
+contract is [`cold-resume.xml`](cold-resume.xml).</cold-resume-contract-pointer></p>
   </cold>
   <weekly title="Weekly re-read">
     <p><RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY fact="true" status="impl/done">Once a week, re-read the key spec documents end-to-end. Watch for:</RE-READ-KEY-SPEC-DOCUMENTS-WEEKLY></p>

@@ -30,7 +30,7 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-M
     oracle adds no new dependency. The floor stays the truth; the oracle
     exists so the floor stays green on the first try.</SHIPS-TYPESCRIPT-AI-NATIVE-TCG>
       <SHIPS-GUIDE-AND-CARDS fact="true" status="impl/done">**The TypeScript guide and cards**
-  (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`, `spec/cards/` — the
+  (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml`, `spec/cards/` — the
   nine scaffolds A–I in their TypeScript shape, Band-3 ops blocks for
   weak readers).</SHIPS-GUIDE-AND-CARDS>
       <SHIPS-TWO-AGENT-SKILLS fact="true" status="impl/done">**Two agent skills** (`vibe skill install` projects them):
@@ -43,8 +43,8 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.</NEUTRAL-M
   long-lived language-service oracle behind `typescript-ai-native-tcg`.
   Both resolve the CONSUMER project's `typescript` at runtime.</SHIPS-TWO-NODE-SIDE-TOOLS>
       <SHIPS-MECHANISM-SPECS fact="true" status="impl/done">**The TypeScript mechanism specs and tool briefs** —
-  `spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` and
-  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`.</SHIPS-MECHANISM-SPECS>
+  `spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml` and
+  `TCG-PROTOCOL-v0.1.xml`, plus `spec/typescript/tools/`.</SHIPS-MECHANISM-SPECS>
       <NEUTRAL-ENGINES-RIDE-ALONG-VENDORED fact="true" status="impl/done">**The neutral engines ride along as vendored copies**
   (`crates/vendor/core-ai-native-{conform,specmap,specmark,specmark-grammar}`),
   so the slot is its own Cargo workspace and builds standalone.</NEUTRAL-ENGINES-RIDE-ALONG-VENDORED>

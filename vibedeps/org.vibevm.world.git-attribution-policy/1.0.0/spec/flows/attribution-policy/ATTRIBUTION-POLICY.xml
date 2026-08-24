@@ -9,7 +9,7 @@ concealment posture (this package's default) consists of, and *how*
 to run it honestly.</scope-of-this-document></p>
   <p><sibling-document-pointers fact="true" status="impl/done">The open-disclosure posture is a first-class
 alternative and has its own document,
-[`disclosure-alternative.md`](disclosure-alternative.md).</sibling-document-pointers></p>
+[`disclosure-alternative.xml`](disclosure-alternative.xml).</sibling-document-pointers></p>
   <what title="What this governs">
     <p><ATTRIBUTION-MEANS-AUTHORSHIP-MARKS-IN-REPOSITORY-SURFACES fact="true" status="impl/done">Attribution here means **authorship marks in repository surfaces**:
 commit messages and trailers (`Co-Authored-By`, `Signed-off-by`),
@@ -118,7 +118,7 @@ the repository where this topic is discussed.</fence>
   Removing a trailer from a pushed commit means rewriting published
   history — an owner-level decision with real costs to everyone
   downstream. Default: leave the slipped mark in history, fix the
-  leak (see [`enforcement-checklist.md`](enforcement-checklist.md)),
+  leak (see [`enforcement-checklist.xml`](enforcement-checklist.xml)),
   and let the owner decide whether the one mark warrants a rewrite.</SLIP-PUSHED>
     </facts>
   </slips>

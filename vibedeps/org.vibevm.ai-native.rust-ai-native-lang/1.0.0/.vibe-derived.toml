@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:14cd3ad2452e4c689021dc5cba807d96feb1d7f60649e1d65fb0b8c6d4deb735"
+source_hash = "sha256:2ce51b75c308b2855ad37636a91da3b583005fb9a6499958774a5ab6becc111f"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:f3c07e21bfb33b638c244435f2d75183a9f4b2294b2b6ebb18cb1e0fa469ddc2"
+derived_hash = "sha256:766587263751ec36db907956705c8f91f17bfa5dbc8e3b4bc1a6a08288a78d5e"
 
 [[file]]
 source = "Cargo.lock"
@@ -485,6 +485,11 @@ output = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
 disposition = "copied"
 
 [[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+disposition = "copied"
+
+[[file]]
 source = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 output = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 disposition = "copied"
@@ -512,6 +517,41 @@ disposition = "copied"
 [[file]]
 source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
 output = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
 disposition = "copied"
 
 [[file]]
@@ -545,104 +585,104 @@ output = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
 disposition = "copied"
 
 [[file]]
-source = "spec/boot/20-stack-rust-ai-native-lang.md"
+source = "spec/boot/20-stack-rust-ai-native-lang.xml"
 output = "spec/boot/20-stack-rust-ai-native-lang.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/INDEX.md"
+source = "spec/cards/INDEX.xml"
 output = "spec/cards/INDEX.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/rule-closed-vocabulary-naming.md"
+source = "spec/cards/rule-closed-vocabulary-naming.xml"
 output = "spec/cards/rule-closed-vocabulary-naming.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/rule-declared-test-matrices.md"
+source = "spec/cards/rule-declared-test-matrices.xml"
 output = "spec/cards/rule-declared-test-matrices.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/rule-position-is-a-resource.md"
+source = "spec/cards/rule-position-is-a-resource.xml"
 output = "spec/cards/rule-position-is-a-resource.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-a-generators.md"
+source = "spec/cards/scaffold-a-generators.xml"
 output = "spec/cards/scaffold-a-generators.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-b-typed-builders.md"
+source = "spec/cards/scaffold-b-typed-builders.xml"
 output = "spec/cards/scaffold-b-typed-builders.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-c-runnable-contracts.md"
+source = "spec/cards/scaffold-c-runnable-contracts.xml"
 output = "spec/cards/scaffold-c-runnable-contracts.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-d-differential-oracle.md"
+source = "spec/cards/scaffold-d-differential-oracle.xml"
 output = "spec/cards/scaffold-d-differential-oracle.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-e-fast-loop.md"
+source = "spec/cards/scaffold-e-fast-loop.xml"
 output = "spec/cards/scaffold-e-fast-loop.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-f-structured-diagnostics.md"
+source = "spec/cards/scaffold-f-structured-diagnostics.xml"
 output = "spec/cards/scaffold-f-structured-diagnostics.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-g-doctests.md"
+source = "spec/cards/scaffold-g-doctests.xml"
 output = "spec/cards/scaffold-g-doctests.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-h-simulators.md"
+source = "spec/cards/scaffold-h-simulators.xml"
 output = "spec/cards/scaffold-h-simulators.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-i-codemods.md"
+source = "spec/cards/scaffold-i-codemods.xml"
 output = "spec/cards/scaffold-i-codemods.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/GUIDE-AI-NATIVE-RUST.md"
+source = "spec/rust/GUIDE-AI-NATIVE-RUST.xml"
 output = "spec/rust/GUIDE-AI-NATIVE-RUST.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+source = "spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml"
 output = "spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+source = "spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml"
 output = "spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/tools/conform-frontend-rust.md"
+source = "spec/rust/tools/conform-frontend-rust.xml"
 output = "spec/rust/tools/conform-frontend-rust.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/tools/rust-ai-native-tcg.md"
+source = "spec/rust/tools/rust-ai-native-tcg.xml"
 output = "spec/rust/tools/rust-ai-native-tcg.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/rust/tools/vibe-agentic-tcg-rust.md"
+source = "spec/rust/tools/vibe-agentic-tcg-rust.xml"
 output = "spec/rust/tools/vibe-agentic-tcg-rust.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/skills/rust-ai-native-sweep/SKILL.md"

@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:697167052fb3b5706a3d1202c7cefb1f82768afd7075d8ea46aa8f6df3c2cd50"
+source_hash = "sha256:84a721260ec26ed2ffd1c636536f6f056b55cb9224b38d74ad2db5e0d277e139"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:f617a7b6845720e9595bafeef63cbe9b935db4630aceab6e28faa4819f80516c"
+derived_hash = "sha256:1113dfc3f2a5632ae5b040a2cdd7ed0e5a5734cc3188e68321385cc9a29236ee"
 
 [[file]]
 source = "LICENSE.md"
@@ -15,24 +15,24 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/52-flow-comparative-research.md"
+source = "spec/boot/52-flow-comparative-research.xml"
 output = "spec/boot/52-flow-comparative-research.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md"
+source = "spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
 output = "spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/comparative-research/from-research-to-roadmap.md"
+source = "spec/flows/comparative-research/from-research-to-roadmap.xml"
 output = "spec/flows/comparative-research/from-research-to-roadmap.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/comparative-research/research-template.md"
+source = "spec/flows/comparative-research/research-template.xml"
 output = "spec/flows/comparative-research/research-template.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

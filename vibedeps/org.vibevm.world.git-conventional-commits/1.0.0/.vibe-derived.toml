@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:da9a22e59a5e8b2444f7d1dd17e75d4cb33039d30aecccf4619126d4e4be1453"
+source_hash = "sha256:ceb04c60d2cea4dce8976a62928b3716edffe4442cc43319886de8847ff33df7"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:71a3820ad97fe77cb4ffe7c4b1a549cff76f5069728944e690bb3d74b85661a6"
+derived_hash = "sha256:46cbcd6b23ec3b8c134fb326e03a8648bd24a4643af027b0cda59a8f2482483b"
 
 [[file]]
 source = "LICENSE"
@@ -15,14 +15,14 @@ output = "README.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/boot/31-flow-conventional-commits.md"
+source = "spec/boot/31-flow-conventional-commits.xml"
 output = "spec/boot/31-flow-conventional-commits.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/flows/conventional-commits/conventional-commits.md"
+source = "spec/flows/conventional-commits/conventional-commits.xml"
 output = "spec/flows/conventional-commits/conventional-commits.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "vibe.toml"

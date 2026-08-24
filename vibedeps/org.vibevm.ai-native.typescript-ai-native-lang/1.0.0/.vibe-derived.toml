@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:6876e6b7f85d6a379dec7f257c98468cced63612742250fc646c174b536d9291"
+source_hash = "sha256:c1fe3f921f42d208f9016eab16ca45332dce5dbd693188cadd24e6da489f0997"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:1ddf17cdac8959dc0de801830dea30cf9a7b75fe92aabd5a5f5aa537e5612abf"
+derived_hash = "sha256:8314343954a9ce8f255f1c0870a54969e8027f25bd92f745754c142850d22300"
 
 [[file]]
 source = "Cargo.lock"
@@ -440,6 +440,11 @@ output = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
 disposition = "copied"
 
 [[file]]
+source = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+output = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
+disposition = "copied"
+
+[[file]]
 source = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 output = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
 disposition = "copied"
@@ -467,6 +472,41 @@ disposition = "copied"
 [[file]]
 source = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
 output = "crates/vendor/core-ai-native-specmap/src/tripwire.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/blocks.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/doc.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/facts.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/mdout.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec.rs"
 disposition = "copied"
 
 [[file]]
@@ -500,59 +540,59 @@ output = "crates/vendor/core-ai-native-specmark-grammar/src/lib.rs"
 disposition = "copied"
 
 [[file]]
-source = "spec/boot/20-stack-typescript-ai-native-lang.md"
+source = "spec/boot/20-stack-typescript-ai-native-lang.xml"
 output = "spec/boot/20-stack-typescript-ai-native-lang.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/INDEX.md"
+source = "spec/cards/INDEX.xml"
 output = "spec/cards/INDEX.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-a-generators.md"
+source = "spec/cards/scaffold-a-generators.xml"
 output = "spec/cards/scaffold-a-generators.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-b-typed-builders.md"
+source = "spec/cards/scaffold-b-typed-builders.xml"
 output = "spec/cards/scaffold-b-typed-builders.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-c-runnable-contracts.md"
+source = "spec/cards/scaffold-c-runnable-contracts.xml"
 output = "spec/cards/scaffold-c-runnable-contracts.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-d-differential-oracle.md"
+source = "spec/cards/scaffold-d-differential-oracle.xml"
 output = "spec/cards/scaffold-d-differential-oracle.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-e-fast-loop.md"
+source = "spec/cards/scaffold-e-fast-loop.xml"
 output = "spec/cards/scaffold-e-fast-loop.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-f-structured-diagnostics.md"
+source = "spec/cards/scaffold-f-structured-diagnostics.xml"
 output = "spec/cards/scaffold-f-structured-diagnostics.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-g-doctests.md"
+source = "spec/cards/scaffold-g-doctests.xml"
 output = "spec/cards/scaffold-g-doctests.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-h-simulators.md"
+source = "spec/cards/scaffold-h-simulators.xml"
 output = "spec/cards/scaffold-h-simulators.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/cards/scaffold-i-codemods.md"
+source = "spec/cards/scaffold-i-codemods.xml"
 output = "spec/cards/scaffold-i-codemods.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "spec/skills/typescript-ai-native-sweep/SKILL.md"
@@ -565,34 +605,34 @@ output = "spec/skills/typescript-ai-native-terraform/SKILL.xml"
 disposition = "converted"
 
 [[file]]
-source = "spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md"
+source = "spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml"
 output = "spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/typescript/mechanisms/TCG-ORACLE-v0.1.md"
+source = "spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml"
 output = "spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md"
+source = "spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml"
 output = "spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/typescript/tools/conform-frontend-typescript.md"
+source = "spec/typescript/tools/conform-frontend-typescript.xml"
 output = "spec/typescript/tools/conform-frontend-typescript.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/typescript/tools/typescript-ai-native-tcg.md"
+source = "spec/typescript/tools/typescript-ai-native-tcg.xml"
 output = "spec/typescript/tools/typescript-ai-native-tcg.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
-source = "spec/typescript/tools/vibe-agentic-tcg-ts.md"
+source = "spec/typescript/tools/vibe-agentic-tcg-ts.xml"
 output = "spec/typescript/tools/vibe-agentic-tcg-ts.xml"
-disposition = "converted"
+disposition = "copied"
 
 [[file]]
 source = "tools/eslint-plugin-ai-native/package-lock.json"
@@ -650,8 +690,8 @@ output = "tools/ts-extract/test/fixtures/clean/conform.toml"
 disposition = "copied"
 
 [[file]]
-source = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.md"
-output = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.md"
+source = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.xml"
+output = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.xml"
 disposition = "copied"
 
 [[file]]
@@ -695,8 +735,8 @@ output = "tools/ts-extract/test/fixtures/dirty/conform.toml"
 disposition = "copied"
 
 [[file]]
-source = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.md"
-output = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.md"
+source = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.xml"
+output = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.xml"
 disposition = "copied"
 
 [[file]]

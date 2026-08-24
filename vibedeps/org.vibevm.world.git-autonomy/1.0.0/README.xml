@@ -11,9 +11,9 @@ suspended, not even by a heads-down "move fast" posture: a mode may remove the "
 with routine work?" handshake, never the "may I cross an irreversible threshold?" one.</THE-RED-LINE-SET-IS-NEVER-SUSPENDED></p>
   <p><package-contents-lead fact="true" status="impl/done">This package ships:</package-contents-lead></p>
   <facts ordered="false">
-    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
+    <CONTENT-THE-FULL-PROTOCOL fact="true" status="impl/done">`spec/flows/autonomy/AUTONOMY-PROTOCOL.xml` — the routine-vs-red-line line, why the red lines
   survive every mode, and how to re-derive your own red-line set.</CONTENT-THE-FULL-PROTOCOL>
-    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start.</CONTENT-THE-BOOT-SNIPPET>
+    <CONTENT-THE-BOOT-SNIPPET fact="true" status="impl/done">`spec/boot/32-flow-autonomy.xml` — the boot snippet loaded at session start.</CONTENT-THE-BOOT-SNIPPET>
   </facts>
   <install title="Install">
     <fence lang="bash">vibe install flow:git-autonomy</fence>
