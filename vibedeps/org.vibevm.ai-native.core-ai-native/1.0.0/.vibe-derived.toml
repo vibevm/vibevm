@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:b7fc8f43ae5f0ebca5dfaabd95f7e1440a51e01fc8a74eb4b43b7425da3f2251"
+source_hash = "sha256:7c9d3aa3ab4a2fad15a0b6b036aa20c76095f62e9b8bbe4920e49168fc03ddb6"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:d50d733e8c35b475ca2834b6724d1a4d11cbd59a60e0bdecb92f7285abc5dc48"
+derived_hash = "sha256:5bff1f14286baf8909b0fb776d4a4ae815e0ef074661404afa87fcf5c77d4991"
 
 [[file]]
 source = "Cargo.lock"
@@ -347,6 +347,11 @@ disposition = "copied"
 [[file]]
 source = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
 output = "crates/core-ai-native-specmap/src/xmlspec/reader.rs"
+disposition = "copied"
+
+[[file]]
+source = "crates/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+output = "crates/core-ai-native-specmap/src/xmlspec/td_tests.rs"
 disposition = "copied"
 
 [[file]]

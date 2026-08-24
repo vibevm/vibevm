@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:c1fe3f921f42d208f9016eab16ca45332dce5dbd693188cadd24e6da489f0997"
+source_hash = "sha256:5b405fc42f6e30d86c587f64cb0e5167743b79aade985e36d15c5af15c1bc07d"
 output_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:8314343954a9ce8f255f1c0870a54969e8027f25bd92f745754c142850d22300"
+derived_hash = "sha256:b5bcb7c431752ea5eea38bd9ab5674f481447f4fc711187c013fdf05f260d58a"
 
 [[file]]
 source = "Cargo.lock"
@@ -500,6 +500,11 @@ output = "crates/vendor/core-ai-native-specmap/src/xmlspec/reader.rs"
 disposition = "copied"
 
 [[file]]
+source = "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+output = "crates/vendor/core-ai-native-specmap/src/xmlspec/td_tests.rs"
+disposition = "copied"
+
+[[file]]
 source = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
 output = "crates/vendor/core-ai-native-specmap/src/xmlspec/tests.rs"
 disposition = "copied"
@@ -690,8 +695,8 @@ output = "tools/ts-extract/test/fixtures/clean/conform.toml"
 disposition = "copied"
 
 [[file]]
-source = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.xml"
-output = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.xml"
+source = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.md"
+output = "tools/ts-extract/test/fixtures/clean/spec/PROP-001.md"
 disposition = "copied"
 
 [[file]]
@@ -735,8 +740,8 @@ output = "tools/ts-extract/test/fixtures/dirty/conform.toml"
 disposition = "copied"
 
 [[file]]
-source = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.xml"
-output = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.xml"
+source = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.md"
+output = "tools/ts-extract/test/fixtures/dirty/spec/PROP-001.md"
 disposition = "copied"
 
 [[file]]
