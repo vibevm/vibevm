@@ -31,75 +31,75 @@ pins the list; the descriptions in `tools/list` restate each row):</parity-map-l
       </tr>
       <tr>
         <td><ROW-INIT fact="true" status="impl/done">`init`</ROW-INIT></td>
-        <td><fact status="impl/done">`rust-ai-native init [--namespace] [--force]`</fact></td>
+        <td><ROW-INIT-CLI fact="true" status="impl/done">`rust-ai-native init [--namespace] [--force]`</ROW-INIT-CLI></td>
       </tr>
       <tr>
         <td><ROW-FLOOR fact="true" status="impl/done">`floor`</ROW-FLOOR></td>
-        <td><fact status="impl/done">`rust-ai-native floor [--keep-going] [--fast-loop]`</fact></td>
+        <td><ROW-FLOOR-CLI fact="true" status="impl/done">`rust-ai-native floor [--keep-going] [--fast-loop]`</ROW-FLOOR-CLI></td>
       </tr>
       <tr>
         <td><ROW-CONFORM-CHECK fact="true" status="impl/done">`conform_check`</ROW-CONFORM-CHECK></td>
-        <td><fact status="impl/done">`rust-ai-native-conform check [--scope] [--baseline]`</fact></td>
+        <td><ROW-CONFORM-CHECK-CLI fact="true" status="impl/done">`rust-ai-native-conform check [--scope] [--baseline]`</ROW-CONFORM-CHECK-CLI></td>
       </tr>
       <tr>
         <td><ROW-CONFORM-FREEZE fact="true" status="impl/done">`conform_freeze`</ROW-CONFORM-FREEZE></td>
-        <td><fact status="impl/done">`rust-ai-native-conform freeze [--baseline]`</fact></td>
+        <td><ROW-CONFORM-FREEZE-CLI fact="true" status="impl/done">`rust-ai-native-conform freeze [--baseline]`</ROW-CONFORM-FREEZE-CLI></td>
       </tr>
       <tr>
         <td><ROW-SPECMAP-CHECK fact="true" status="impl/done">`specmap_check`</ROW-SPECMAP-CHECK></td>
-        <td><fact status="impl/done">`rust-ai-native-specmap --check`</fact></td>
+        <td><ROW-SPECMAP-CHECK-CLI fact="true" status="impl/done">`rust-ai-native-specmap --check`</ROW-SPECMAP-CHECK-CLI></td>
       </tr>
       <tr>
         <td><ROW-SPECMAP-WRITE fact="true" status="impl/done">`specmap_write`</ROW-SPECMAP-WRITE></td>
-        <td><fact status="impl/done">`rust-ai-native-specmap`</fact></td>
+        <td><ROW-SPECMAP-WRITE-CLI fact="true" status="impl/done">`rust-ai-native-specmap`</ROW-SPECMAP-WRITE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TRACE-EXPLAIN fact="true" status="impl/done">`trace_explain`</ROW-TRACE-EXPLAIN></td>
-        <td><fact status="impl/done">`rust-ai-native trace &lt;target&gt; [--json] [--prose]`</fact></td>
+        <td><ROW-TRACE-EXPLAIN-CLI fact="true" status="impl/done">`rust-ai-native trace &lt;target&gt; [--json] [--prose]`</ROW-TRACE-EXPLAIN-CLI></td>
       </tr>
       <tr>
         <td><ROW-TEST-GATE fact="true" status="impl/done">`test_gate`</ROW-TEST-GATE></td>
-        <td><fact status="impl/done">`rust-ai-native test-gate [--baseline]`</fact></td>
+        <td><ROW-TEST-GATE-CLI fact="true" status="impl/done">`rust-ai-native test-gate [--baseline]`</ROW-TEST-GATE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TRIPWIRE fact="true" status="impl/done">`tripwire`</ROW-TRIPWIRE></td>
-        <td><fact status="impl/done">`rust-ai-native tripwire [--base] [--debt]`</fact></td>
+        <td><ROW-TRIPWIRE-CLI fact="true" status="impl/done">`rust-ai-native tripwire [--base] [--debt]`</ROW-TRIPWIRE-CLI></td>
       </tr>
       <tr>
         <td><ROW-HEALTH fact="true" status="impl/done">`health`</ROW-HEALTH></td>
-        <td><fact status="impl/done">`rust-ai-native health [--out]`</fact></td>
+        <td><ROW-HEALTH-CLI fact="true" status="impl/done">`rust-ai-native health [--out]`</ROW-HEALTH-CLI></td>
       </tr>
       <tr>
         <td><ROW-FAST-LOOP fact="true" status="impl/done">`fast_loop`</ROW-FAST-LOOP></td>
-        <td><fact status="impl/done">`rust-ai-native fast-loop [--cell] [--budget-secs] [--enforce-budget]`</fact></td>
+        <td><ROW-FAST-LOOP-CLI fact="true" status="impl/done">`rust-ai-native fast-loop [--cell] [--budget-secs] [--enforce-budget]`</ROW-FAST-LOOP-CLI></td>
       </tr>
       <tr>
         <td><ROW-CODEMOD-ADD-CELL fact="true" status="impl/done">`codemod_add_cell`</ROW-CODEMOD-ADD-CELL></td>
-        <td><fact status="impl/done">`rust-ai-native codemod add-cell &lt;crate&gt; &lt;cell&gt; &lt;seam&gt; &lt;variant&gt; &lt;spec-uri&gt;`</fact></td>
+        <td><ROW-CODEMOD-ADD-CELL-CLI fact="true" status="impl/done">`rust-ai-native codemod add-cell &lt;crate&gt; &lt;cell&gt; &lt;seam&gt; &lt;variant&gt; &lt;spec-uri&gt;`</ROW-CODEMOD-ADD-CELL-CLI></td>
       </tr>
       <tr>
         <td><ROW-LEDGER-RENDER fact="true" status="impl/done">`ledger_render`</ROW-LEDGER-RENDER></td>
-        <td><fact status="impl/done">`rust-ai-native ledger render [--check]`</fact></td>
+        <td><ROW-LEDGER-RENDER-CLI fact="true" status="impl/done">`rust-ai-native ledger render [--check]`</ROW-LEDGER-RENDER-CLI></td>
       </tr>
       <tr>
         <td><ROW-TCG-VALIDATE fact="true" status="impl/done">`tcg_validate`</ROW-TCG-VALIDATE></td>
-        <td><fact status="impl/done">`rust-ai-native-tcg validate &lt;file&gt; [--content-from]`</fact></td>
+        <td><ROW-TCG-VALIDATE-CLI fact="true" status="impl/done">`rust-ai-native-tcg validate &lt;file&gt; [--content-from]`</ROW-TCG-VALIDATE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TCG-SCOPE fact="true" status="impl/done">`tcg_scope`</ROW-TCG-SCOPE></td>
-        <td><fact status="impl/done">`rust-ai-native-tcg scope &lt;file&gt; [--position]`</fact></td>
+        <td><ROW-TCG-SCOPE-CLI fact="true" status="impl/done">`rust-ai-native-tcg scope &lt;file&gt; [--position]`</ROW-TCG-SCOPE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TCG-COMPLETE fact="true" status="impl/done">`tcg_complete`</ROW-TCG-COMPLETE></td>
-        <td><fact status="impl/done">`rust-ai-native-tcg complete &lt;file&gt; --position [--prefix] [--max]`</fact></td>
+        <td><ROW-TCG-COMPLETE-CLI fact="true" status="impl/done">`rust-ai-native-tcg complete &lt;file&gt; --position [--prefix] [--max]`</ROW-TCG-COMPLETE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TCG-TYPE fact="true" status="impl/done">`tcg_type`</ROW-TCG-TYPE></td>
-        <td><fact status="impl/done">`rust-ai-native-tcg type &lt;file&gt; --position`</fact></td>
+        <td><ROW-TCG-TYPE-CLI fact="true" status="impl/done">`rust-ai-native-tcg type &lt;file&gt; --position`</ROW-TCG-TYPE-CLI></td>
       </tr>
       <tr>
         <td><ROW-TCG-BENCH fact="true" status="impl/done">`tcg_bench`</ROW-TCG-BENCH></td>
-        <td><fact status="impl/done">`rust-ai-native-tcg bench --corpus --report`</fact></td>
+        <td><ROW-TCG-BENCH-CLI fact="true" status="impl/done">`rust-ai-native-tcg bench --corpus --report`</ROW-TCG-BENCH-CLI></td>
       </tr>
     </table>
     <p><THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY fact="true" status="impl/done">`rust-ai-native-specmap --gate` (the package-self-trace form) stays CLI-only: its

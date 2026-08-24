@@ -45,18 +45,18 @@ Way 2:  "You are violating
       </tr>
       <tr>
         <td><ROW-AGENT-MUST fact="true" status="spec/done">Agent must</ROW-AGENT-MUST></td>
-        <td><fact status="spec/done">guess what "verification" maps to here, guess what "wrong" means, form a hypothesis, attempt a fix</fact></td>
-        <td><fact status="spec/done">open the file, jump to the anchor, read the value, compare, fix</fact></td>
+        <td><ROW-AGENT-MUST-WAY-1-PARAPHRASE fact="true" status="spec/done">guess what "verification" maps to here, guess what "wrong" means, form a hypothesis, attempt a fix</ROW-AGENT-MUST-WAY-1-PARAPHRASE></td>
+        <td><ROW-AGENT-MUST-WAY-2-URI-CITATION fact="true" status="spec/done">open the file, jump to the anchor, read the value, compare, fix</ROW-AGENT-MUST-WAY-2-URI-CITATION></td>
       </tr>
       <tr>
         <td><ROW-TOKEN-COST fact="true" status="spec/done">Token cost</ROW-TOKEN-COST></td>
-        <td><fact status="spec/done">hundreds, spent on search and hypothesis</fact></td>
-        <td><fact status="spec/done">about twenty</fact></td>
+        <td><ROW-TOKEN-COST-WAY-1-PARAPHRASE fact="true" status="spec/done">hundreds, spent on search and hypothesis</ROW-TOKEN-COST-WAY-1-PARAPHRASE></td>
+        <td><ROW-TOKEN-COST-WAY-2-URI-CITATION fact="true" status="spec/done">about twenty</ROW-TOKEN-COST-WAY-2-URI-CITATION></td>
       </tr>
       <tr>
         <td><ROW-RESULT fact="true" status="spec/done">Result</ROW-RESULT></td>
-        <td><fact status="spec/done">may not match what the human meant</fact></td>
-        <td><fact status="spec/done">exact hit</fact></td>
+        <td><ROW-RESULT-WAY-1-PARAPHRASE fact="true" status="spec/done">may not match what the human meant</ROW-RESULT-WAY-1-PARAPHRASE></td>
+        <td><ROW-RESULT-WAY-2-URI-CITATION fact="true" status="spec/done">exact hit</ROW-RESULT-WAY-2-URI-CITATION></td>
       </tr>
     </table>
     <p><the-difference-is-an-order-of-magnitude fact="true" status="spec/done">The difference is an order of magnitude, paid on *every* correction,
@@ -79,38 +79,38 @@ missing parameter, a violated invariant — the URI wins every time.</FOR-POINT-
       </tr>
       <tr>
         <td><ROW-SEGMENT-GROUP-NAME fact="true" status="impl/done">`&lt;group&gt;/&lt;name&gt;`</ROW-SEGMENT-GROUP-NAME></td>
-        <td><fact status="impl/done">the package coordinate: reverse-DNS group, then package name, joined by `/` (never `.`) — the root project included, addressed by its own declared coordinate</fact></td>
-        <td><fact status="impl/done">`org.vibevm.world/wal`</fact></td>
+        <td><ROW-SEGMENT-GROUP-NAME-MEANING fact="true" status="impl/done">the package coordinate: reverse-DNS group, then package name, joined by `/` (never `.`) — the root project included, addressed by its own declared coordinate</ROW-SEGMENT-GROUP-NAME-MEANING></td>
+        <td><ROW-SEGMENT-GROUP-NAME-EXAMPLE fact="true" status="impl/done">`org.vibevm.world/wal`</ROW-SEGMENT-GROUP-NAME-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-VERSION fact="true" status="impl/done">`[@&lt;version&gt;]`</ROW-SEGMENT-VERSION></td>
-        <td><fact status="impl/done">**optional — a feature, never an obligation** (owner-ruled 2026-08-04): absent, the address resolves against the **freshest installed version** (semver-newest); explicit, it picks its exact slot, including a non-newest one</fact></td>
-        <td><fact status="impl/done">`@0.8.0`</fact></td>
+        <td><ROW-SEGMENT-VERSION-MEANING fact="true" status="impl/done">**optional — a feature, never an obligation** (owner-ruled 2026-08-04): absent, the address resolves against the **freshest installed version** (semver-newest); explicit, it picks its exact slot, including a non-newest one</ROW-SEGMENT-VERSION-MEANING></td>
+        <td><ROW-SEGMENT-VERSION-EXAMPLE fact="true" status="impl/done">`@0.8.0`</ROW-SEGMENT-VERSION-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-MODULE fact="true" status="impl/done">`&lt;module&gt;`</ROW-SEGMENT-MODULE></td>
-        <td><fact status="impl/done">inside `&lt;doc-path&gt;`: the spec module — a directory under `spec/modules/`, or `common`</fact></td>
-        <td><fact status="impl/done">`modules/vibe-registry`</fact></td>
+        <td><ROW-SEGMENT-MODULE-MEANING fact="true" status="impl/done">inside `&lt;doc-path&gt;`: the spec module — a directory under `spec/modules/`, or `common`</ROW-SEGMENT-MODULE-MEANING></td>
+        <td><ROW-SEGMENT-MODULE-EXAMPLE fact="true" status="impl/done">`modules/vibe-registry`</ROW-SEGMENT-MODULE-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-DOC fact="true" status="impl/done">`&lt;doc&gt;`</ROW-SEGMENT-DOC></td>
-        <td><fact status="impl/done">inside `&lt;doc-path&gt;`: the document name, extension dropped</fact></td>
-        <td><fact status="impl/done">`PROP-001`</fact></td>
+        <td><ROW-SEGMENT-DOC-MEANING fact="true" status="impl/done">inside `&lt;doc-path&gt;`: the document name, extension dropped</ROW-SEGMENT-DOC-MEANING></td>
+        <td><ROW-SEGMENT-DOC-EXAMPLE fact="true" status="impl/done">`PROP-001`</ROW-SEGMENT-DOC-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-SECTION fact="true" status="impl/done">`&lt;section&gt;`</ROW-SEGMENT-SECTION></td>
-        <td><fact status="impl/done">the `{#anchor}` of a heading in that document</fact></td>
-        <td><fact status="impl/done">`verification`</fact></td>
+        <td><ROW-SEGMENT-SECTION-MEANING fact="true" status="impl/done">the `{#anchor}` of a heading in that document</ROW-SEGMENT-SECTION-MEANING></td>
+        <td><ROW-SEGMENT-SECTION-EXAMPLE fact="true" status="impl/done">`verification`</ROW-SEGMENT-SECTION-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-SUB fact="true" status="impl/done">`.&lt;sub&gt;`</ROW-SEGMENT-SUB></td>
-        <td><fact status="impl/done">dotted hierarchy inside the anchor namespace</fact></td>
-        <td><fact status="impl/done">`verification.timeout`</fact></td>
+        <td><ROW-SEGMENT-SUB-MEANING fact="true" status="impl/done">dotted hierarchy inside the anchor namespace</ROW-SEGMENT-SUB-MEANING></td>
+        <td><ROW-SEGMENT-SUB-EXAMPLE fact="true" status="impl/done">`verification.timeout`</ROW-SEGMENT-SUB-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-SEGMENT-REVISION-PIN fact="true" status="impl/done">`[~r&lt;N&gt;]`</ROW-SEGMENT-REVISION-PIN></td>
-        <td><fact status="impl/done">pins a **spec-unit revision** for drift detection — never a package version (the `@` half owns that)</fact></td>
-        <td><fact status="impl/done">`#verification~r2`</fact></td>
+        <td><ROW-SEGMENT-REVISION-PIN-MEANING fact="true" status="impl/done">pins a **spec-unit revision** for drift detection — never a package version (the `@` half owns that)</ROW-SEGMENT-REVISION-PIN-MEANING></td>
+        <td><ROW-SEGMENT-REVISION-PIN-EXAMPLE fact="true" status="impl/done">`#verification~r2`</ROW-SEGMENT-REVISION-PIN-EXAMPLE></td>
       </tr>
     </table>
     <p><why-a-uri-and-not-a-bespoke-notation fact="true" status="spec/done">Why a URI and not a bespoke notation?</why-a-uri-and-not-a-bespoke-notation></p>

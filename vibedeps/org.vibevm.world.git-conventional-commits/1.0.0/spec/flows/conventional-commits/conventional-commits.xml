@@ -28,47 +28,47 @@ and scope convention each commit must carry.</this-document-is-the-shape-body-an
         </tr>
         <tr>
           <td><ROW-TYPE-FEAT fact="true" status="impl/done">`feat`</ROW-TYPE-FEAT></td>
-          <td><fact status="impl/done">New user-visible functionality.</fact></td>
+          <td><ROW-TYPE-FEAT-WHEN-TO-USE fact="true" status="impl/done">New user-visible functionality.</ROW-TYPE-FEAT-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-FIX fact="true" status="impl/done">`fix`</ROW-TYPE-FIX></td>
-          <td><fact status="impl/done">Bug fix. Name what broke and what it now does.</fact></td>
+          <td><ROW-TYPE-FIX-WHEN-TO-USE fact="true" status="impl/done">Bug fix. Name what broke and what it now does.</ROW-TYPE-FIX-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-CHORE fact="true" status="impl/done">`chore`</ROW-TYPE-CHORE></td>
-          <td><fact status="impl/done">Housekeeping with no behaviour change.</fact></td>
+          <td><ROW-TYPE-CHORE-WHEN-TO-USE fact="true" status="impl/done">Housekeeping with no behaviour change.</ROW-TYPE-CHORE-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-DOCS fact="true" status="impl/done">`docs`</ROW-TYPE-DOCS></td>
-          <td><fact status="impl/done">Documentation, including spec updates.</fact></td>
+          <td><ROW-TYPE-DOCS-WHEN-TO-USE fact="true" status="impl/done">Documentation, including spec updates.</ROW-TYPE-DOCS-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-BUILD fact="true" status="impl/done">`build`</ROW-TYPE-BUILD></td>
-          <td><fact status="impl/done">Build system, external dependency, toolchain pin.</fact></td>
+          <td><ROW-TYPE-BUILD-WHEN-TO-USE fact="true" status="impl/done">Build system, external dependency, toolchain pin.</ROW-TYPE-BUILD-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-TEST fact="true" status="impl/done">`test`</ROW-TYPE-TEST></td>
-          <td><fact status="impl/done">Add or fix tests; no production-code change.</fact></td>
+          <td><ROW-TYPE-TEST-WHEN-TO-USE fact="true" status="impl/done">Add or fix tests; no production-code change.</ROW-TYPE-TEST-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-REFACTOR fact="true" status="impl/done">`refactor`</ROW-TYPE-REFACTOR></td>
-          <td><fact status="impl/done">Internal restructuring; no behaviour change.</fact></td>
+          <td><ROW-TYPE-REFACTOR-WHEN-TO-USE fact="true" status="impl/done">Internal restructuring; no behaviour change.</ROW-TYPE-REFACTOR-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-PERF fact="true" status="impl/done">`perf`</ROW-TYPE-PERF></td>
-          <td><fact status="impl/done">Performance improvement.</fact></td>
+          <td><ROW-TYPE-PERF-WHEN-TO-USE fact="true" status="impl/done">Performance improvement.</ROW-TYPE-PERF-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-STYLE fact="true" status="impl/done">`style`</ROW-TYPE-STYLE></td>
-          <td><fact status="impl/done">Formatting / whitespace; no semantic change.</fact></td>
+          <td><ROW-TYPE-STYLE-WHEN-TO-USE fact="true" status="impl/done">Formatting / whitespace; no semantic change.</ROW-TYPE-STYLE-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-CI fact="true" status="impl/done">`ci`</ROW-TYPE-CI></td>
-          <td><fact status="impl/done">CI or pipeline configuration.</fact></td>
+          <td><ROW-TYPE-CI-WHEN-TO-USE fact="true" status="impl/done">CI or pipeline configuration.</ROW-TYPE-CI-WHEN-TO-USE></td>
         </tr>
         <tr>
           <td><ROW-TYPE-REVERT fact="true" status="impl/done">`revert`</ROW-TYPE-REVERT></td>
-          <td><fact status="impl/done">Revert a previous commit; reference the reverted SHA in the body.</fact></td>
+          <td><ROW-TYPE-REVERT-WHEN-TO-USE fact="true" status="impl/done">Revert a previous commit; reference the reverted SHA in the body.</ROW-TYPE-REVERT-WHEN-TO-USE></td>
         </tr>
       </table>
       <p><USE-EXACTLY-ONE-TYPE fact="true" status="impl/done">Use exactly one.</USE-EXACTLY-ONE-TYPE></p>
@@ -186,33 +186,33 @@ carries the new value, the reason, and the revisit trigger.</fence>
       </tr>
       <tr>
         <td><ROW-ANTI-UPDATES fact="true" status="impl/done">`updates`</ROW-ANTI-UPDATES></td>
-        <td><fact status="impl/done">No type, no scope, no *why*.</fact></td>
-        <td><fact status="impl/done">`docs(spec): add freshness TTL rationale`</fact></td>
+        <td><ROW-ANTI-UPDATES-WHY-IT-FAILS fact="true" status="impl/done">No type, no scope, no *why*.</ROW-ANTI-UPDATES-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-UPDATES-FIX fact="true" status="impl/done">`docs(spec): add freshness TTL rationale`</ROW-ANTI-UPDATES-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-WIP fact="true" status="impl/done">`wip`</ROW-ANTI-WIP></td>
-        <td><fact status="impl/done">Not a finished thought.</fact></td>
-        <td><fact status="impl/done">Squash into the next real commit.</fact></td>
+        <td><ROW-ANTI-WIP-WHY-IT-FAILS fact="true" status="impl/done">Not a finished thought.</ROW-ANTI-WIP-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-WIP-FIX fact="true" status="impl/done">Squash into the next real commit.</ROW-ANTI-WIP-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-FIXED-BUG fact="true" status="impl/done">`fixed bug`</ROW-ANTI-FIXED-BUG></td>
-        <td><fact status="impl/done">Nothing learned from the log.</fact></td>
-        <td><fact status="impl/done">Name the bug and what drove the fix.</fact></td>
+        <td><ROW-ANTI-FIXED-BUG-WHY-IT-FAILS fact="true" status="impl/done">Nothing learned from the log.</ROW-ANTI-FIXED-BUG-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-FIXED-BUG-FIX fact="true" status="impl/done">Name the bug and what drove the fix.</ROW-ANTI-FIXED-BUG-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-THREE-IDEAS fact="true" status="impl/done">`feat: add foo, bar, and baz`</ROW-ANTI-THREE-IDEAS></td>
-        <td><fact status="impl/done">Three ideas, one commit.</fact></td>
-        <td><fact status="impl/done">Split.</fact></td>
+        <td><ROW-ANTI-THREE-IDEAS-WHY-IT-FAILS fact="true" status="impl/done">Three ideas, one commit.</ROW-ANTI-THREE-IDEAS-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-THREE-IDEAS-FIX fact="true" status="impl/done">Split.</ROW-ANTI-THREE-IDEAS-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-HUGE-REFACTOR fact="true" status="impl/done">`feat(core): huge refactor`</ROW-ANTI-HUGE-REFACTOR></td>
-        <td><fact status="impl/done">Behaviour change rolled into refactor.</fact></td>
-        <td><fact status="impl/done">Two commits: refactor first, feature second.</fact></td>
+        <td><ROW-ANTI-HUGE-REFACTOR-WHY-IT-FAILS fact="true" status="impl/done">Behaviour change rolled into refactor.</ROW-ANTI-HUGE-REFACTOR-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-HUGE-REFACTOR-FIX fact="true" status="impl/done">Two commits: refactor first, feature second.</ROW-ANTI-HUGE-REFACTOR-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-CAPITALISED-VAGUE fact="true" status="impl/done">`Fix: handle edge case`</ROW-ANTI-CAPITALISED-VAGUE></td>
-        <td><fact status="impl/done">Capitalised, vague, no scope.</fact></td>
-        <td><fact status="impl/done">`fix(verify): handle empty sender_id`</fact></td>
+        <td><ROW-ANTI-CAPITALISED-VAGUE-WHY-IT-FAILS fact="true" status="impl/done">Capitalised, vague, no scope.</ROW-ANTI-CAPITALISED-VAGUE-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-CAPITALISED-VAGUE-FIX fact="true" status="impl/done">`fix(verify): handle empty sender_id`</ROW-ANTI-CAPITALISED-VAGUE-FIX></td>
       </tr>
     </table>
   </antipatterns>

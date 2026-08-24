@@ -39,23 +39,23 @@ first rung that answers.</CLIMB-IN-ORDER-AND-STOP-AT-THE-FIRST-RUNG-THAT-ANSWERS
       </tr>
       <tr>
         <td><ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION fact="true" status="spec/done">1</ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION></td>
-        <td><fact status="spec/done">Re-read the relevant spec section — in full, not the one line you remember.</fact></td>
-        <td><fact status="spec/done">The answer, two paragraphs away or phrased under a different heading. Most "silence" is a narrow first read.</fact></td>
+        <td><ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION-ACTION fact="true" status="spec/done">Re-read the relevant spec section — in full, not the one line you remember.</ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION-ACTION></td>
+        <td><ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION-WHAT-IT-TYPICALLY-FINDS fact="true" status="spec/done">The answer, two paragraphs away or phrased under a different heading. Most "silence" is a narrow first read.</ROW-LADDER-STEP-1-RE-READ-THE-SPEC-SECTION-WHAT-IT-TYPICALLY-FINDS></td>
       </tr>
       <tr>
         <td><ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL fact="true" status="spec/done">2</ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL></td>
-        <td><fact status="spec/done">Re-read the relevant reference material — the book chapter, design note, ADR, or RFC the spec section grew out of.</fact></td>
-        <td><fact status="spec/done">Intent. The spec records decisions; the reference records *why*, and intent often settles what the decision text left open.</fact></td>
+        <td><ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL-ACTION fact="true" status="spec/done">Re-read the relevant reference material — the book chapter, design note, ADR, or RFC the spec section grew out of.</ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL-ACTION></td>
+        <td><ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL-WHAT-IT-TYPICALLY-FINDS fact="true" status="spec/done">Intent. The spec records decisions; the reference records *why*, and intent often settles what the decision text left open.</ROW-LADDER-STEP-2-RE-READ-THE-REFERENCE-MATERIAL-WHAT-IT-TYPICALLY-FINDS></td>
       </tr>
       <tr>
         <td><ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG fact="true" status="spec/done">3</ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG></td>
-        <td><fact status="spec/done">Look at the closest analog — the nearest similar feature in this project, or the project's named reference implementations.</fact></td>
-        <td><fact status="spec/done">A precedent. Consistency with an existing pattern is itself a decision the project already made.</fact></td>
+        <td><ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG-ACTION fact="true" status="spec/done">Look at the closest analog — the nearest similar feature in this project, or the project's named reference implementations.</ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG-ACTION></td>
+        <td><ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG-WHAT-IT-TYPICALLY-FINDS fact="true" status="spec/done">A precedent. Consistency with an existing pattern is itself a decision the project already made.</ROW-LADDER-STEP-3-LOOK-AT-THE-CLOSEST-ANALOG-WHAT-IT-TYPICALLY-FINDS></td>
       </tr>
       <tr>
         <td><ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW fact="true" status="spec/done">4</ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW></td>
-        <td><fact status="spec/done">Pick the **conservative interpretation**, mark it with a REVIEW, proceed, and flag it in the end-of-session report.</fact></td>
-        <td><fact status="spec/done">Forward progress with a visible, reversible decision instead of a stall or an invention.</fact></td>
+        <td><ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW-ACTION fact="true" status="spec/done">Pick the **conservative interpretation**, mark it with a REVIEW, proceed, and flag it in the end-of-session report.</ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW-ACTION></td>
+        <td><ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW-WHAT-IT-TYPICALLY-FINDS fact="true" status="spec/done">Forward progress with a visible, reversible decision instead of a stall or an invention.</ROW-LADDER-STEP-4-CONSERVATIVE-DEFAULT-PLUS-REVIEW-WHAT-IT-TYPICALLY-FINDS></td>
       </tr>
     </table>
     <p><STEP-4-IN-FULL-THE-MARKER-CARRIES-THE-QUESTION-AND-THE-REASON fact="true" status="impl/done">Step 4 in full: the marker carries the question and the reason —</STEP-4-IN-FULL-THE-MARKER-CARRIES-THE-QUESTION-AND-THE-REASON></p>
@@ -83,28 +83,28 @@ that minimizes it.</PICK-THE-ANSWER-THAT-MINIMIZES-IT></p>
       </tr>
       <tr>
         <td><ROW-PREFER-NO-NEW-PUBLIC-SURFACE fact="true" status="spec/done">No new public surface</ROW-PREFER-NO-NEW-PUBLIC-SURFACE></td>
-        <td><fact status="spec/done">A new exported function, flag, endpoint, or format</fact></td>
-        <td><fact status="spec/done">Additions can wait a day; a published surface someone may already depend on is the most expensive thing in software to retract.</fact></td>
+        <td><ROW-PREFER-NO-NEW-PUBLIC-SURFACE-OVER fact="true" status="spec/done">A new exported function, flag, endpoint, or format</ROW-PREFER-NO-NEW-PUBLIC-SURFACE-OVER></td>
+        <td><ROW-PREFER-NO-NEW-PUBLIC-SURFACE-BECAUSE fact="true" status="spec/done">Additions can wait a day; a published surface someone may already depend on is the most expensive thing in software to retract.</ROW-PREFER-NO-NEW-PUBLIC-SURFACE-BECAUSE></td>
       </tr>
       <tr>
         <td><ROW-PREFER-FAILING-LOUDLY fact="true" status="spec/done">Failing loudly</ROW-PREFER-FAILING-LOUDLY></td>
-        <td><fact status="spec/done">Guessing silently</fact></td>
-        <td><fact status="spec/done">An explicit error is diagnosed in seconds; a plausible wrong guess is found in production.</fact></td>
+        <td><ROW-PREFER-FAILING-LOUDLY-OVER fact="true" status="spec/done">Guessing silently</ROW-PREFER-FAILING-LOUDLY-OVER></td>
+        <td><ROW-PREFER-FAILING-LOUDLY-BECAUSE fact="true" status="spec/done">An explicit error is diagnosed in seconds; a plausible wrong guess is found in production.</ROW-PREFER-FAILING-LOUDLY-BECAUSE></td>
       </tr>
       <tr>
         <td><ROW-PREFER-THE-NARROWER-BEHAVIOR fact="true" status="spec/done">The narrower behavior</ROW-PREFER-THE-NARROWER-BEHAVIOR></td>
-        <td><fact status="spec/done">The broader one</fact></td>
-        <td><fact status="spec/done">Narrow can widen tomorrow without breaking anyone; broad, once observed, cannot narrow.</fact></td>
+        <td><ROW-PREFER-THE-NARROWER-BEHAVIOR-OVER fact="true" status="spec/done">The broader one</ROW-PREFER-THE-NARROWER-BEHAVIOR-OVER></td>
+        <td><ROW-PREFER-THE-NARROWER-BEHAVIOR-BECAUSE fact="true" status="spec/done">Narrow can widen tomorrow without breaking anyone; broad, once observed, cannot narrow.</ROW-PREFER-THE-NARROWER-BEHAVIOR-BECAUSE></td>
       </tr>
       <tr>
         <td><ROW-PREFER-EXISTING-PROJECT-CONVENTION fact="true" status="spec/done">Existing project convention</ROW-PREFER-EXISTING-PROJECT-CONVENTION></td>
-        <td><fact status="spec/done">External best practice</fact></td>
-        <td><fact status="spec/done">The convention is a recorded project decision; the fashion is not. Overruling it is the human's call.</fact></td>
+        <td><ROW-PREFER-EXISTING-PROJECT-CONVENTION-OVER fact="true" status="spec/done">External best practice</ROW-PREFER-EXISTING-PROJECT-CONVENTION-OVER></td>
+        <td><ROW-PREFER-EXISTING-PROJECT-CONVENTION-BECAUSE fact="true" status="spec/done">The convention is a recorded project decision; the fashion is not. Overruling it is the human's call.</ROW-PREFER-EXISTING-PROJECT-CONVENTION-BECAUSE></td>
       </tr>
       <tr>
         <td><ROW-PREFER-NO-NEW-DEPENDENCY fact="true" status="spec/done">No new dependency</ROW-PREFER-NO-NEW-DEPENDENCY></td>
-        <td><fact status="spec/done">Adding one</fact></td>
-        <td><fact status="spec/done">A dependency is a permanent tax, and its removal is a migration.</fact></td>
+        <td><ROW-PREFER-NO-NEW-DEPENDENCY-OVER fact="true" status="spec/done">Adding one</ROW-PREFER-NO-NEW-DEPENDENCY-OVER></td>
+        <td><ROW-PREFER-NO-NEW-DEPENDENCY-BECAUSE fact="true" status="spec/done">A dependency is a permanent tax, and its removal is a migration.</ROW-PREFER-NO-NEW-DEPENDENCY-BECAUSE></td>
       </tr>
     </table>
     <p><REFUSE-TO-INVENT-PUBLIC-SURFACE-WHEN-IN-DOUBT fact="true" status="impl/done">The first row deserves emphasis: when in doubt, **refuse to invent

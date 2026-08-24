@@ -19,21 +19,21 @@ occasionally so the detection signals stay loaded.</READ-IT-WHEN-SOMETHING-FEELS
     </tr>
     <tr>
       <td><ROW-FAILURE-SILENT-SPEC-EDIT fact="true" status="impl/done">1</ROW-FAILURE-SILENT-SPEC-EDIT></td>
-      <td><fact status="impl/done">Spec changed without a REVIEW</fact></td>
-      <td><fact status="impl/done">A normative value differs in the diff; no marker, no report line</fact></td>
-      <td><fact status="impl/done">Revert the spec file; keep the code</fact></td>
+      <td><ROW-FAILURE-SILENT-SPEC-EDIT-FAILURE fact="true" status="impl/done">Spec changed without a REVIEW</ROW-FAILURE-SILENT-SPEC-EDIT-FAILURE></td>
+      <td><ROW-FAILURE-SILENT-SPEC-EDIT-DETECTION-SIGNAL fact="true" status="impl/done">A normative value differs in the diff; no marker, no report line</ROW-FAILURE-SILENT-SPEC-EDIT-DETECTION-SIGNAL></td>
+      <td><ROW-FAILURE-SILENT-SPEC-EDIT-FIRST-MOVE fact="true" status="impl/done">Revert the spec file; keep the code</ROW-FAILURE-SILENT-SPEC-EDIT-FIRST-MOVE></td>
     </tr>
     <tr>
       <td><ROW-FAILURE-STALE-STATE-FILE fact="true" status="impl/done">2</ROW-FAILURE-STALE-STATE-FILE></td>
-      <td><fact status="impl/done">Stale state file after a crash</fact></td>
-      <td><fact status="impl/done">The session died before the end-of-session rewrite; the state file promises work git does not show</fact></td>
-      <td><fact status="impl/done">Reconstruct from `git log` / `git diff` *before* any new session</fact></td>
+      <td><ROW-FAILURE-STALE-STATE-FILE-FAILURE fact="true" status="impl/done">Stale state file after a crash</ROW-FAILURE-STALE-STATE-FILE-FAILURE></td>
+      <td><ROW-FAILURE-STALE-STATE-FILE-DETECTION-SIGNAL fact="true" status="impl/done">The session died before the end-of-session rewrite; the state file promises work git does not show</ROW-FAILURE-STALE-STATE-FILE-DETECTION-SIGNAL></td>
+      <td><ROW-FAILURE-STALE-STATE-FILE-FIRST-MOVE fact="true" status="impl/done">Reconstruct from `git log` / `git diff` *before* any new session</ROW-FAILURE-STALE-STATE-FILE-FIRST-MOVE></td>
     </tr>
     <tr>
       <td><ROW-FAILURE-SELF-CONTRADICTING-SPEC fact="true" status="impl/done">3</ROW-FAILURE-SELF-CONTRADICTING-SPEC></td>
-      <td><fact status="impl/done">Spec contradicts itself</fact></td>
-      <td><fact status="impl/done">Two sections answer one question differently</fact></td>
-      <td><fact status="impl/done">Full re-read; the human picks the winner; fix every echo</fact></td>
+      <td><ROW-FAILURE-SELF-CONTRADICTING-SPEC-FAILURE fact="true" status="impl/done">Spec contradicts itself</ROW-FAILURE-SELF-CONTRADICTING-SPEC-FAILURE></td>
+      <td><ROW-FAILURE-SELF-CONTRADICTING-SPEC-DETECTION-SIGNAL fact="true" status="impl/done">Two sections answer one question differently</ROW-FAILURE-SELF-CONTRADICTING-SPEC-DETECTION-SIGNAL></td>
+      <td><ROW-FAILURE-SELF-CONTRADICTING-SPEC-FIRST-MOVE fact="true" status="impl/done">Full re-read; the human picks the winner; fix every echo</ROW-FAILURE-SELF-CONTRADICTING-SPEC-FIRST-MOVE></td>
     </tr>
   </table>
   <silent-spec-edit title="Failure 1 — the spec changed without a REVIEW">

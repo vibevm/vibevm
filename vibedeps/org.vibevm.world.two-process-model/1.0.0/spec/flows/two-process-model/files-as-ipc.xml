@@ -51,21 +51,21 @@ readings, one identity.</A-SPEC-IS-A-BOUNDARY-OBJECT></quote>
       </tr>
       <tr>
         <td><ROW-PLANE-CONTROL fact="true" status="impl/done">**Control**</ROW-PLANE-CONTROL></td>
-        <td><fact status="impl/done">the boot file (entry instructions), the checkpoint/WAL file, the specs</fact></td>
-        <td><fact status="impl/done">mostly human → AI</fact></td>
-        <td><fact status="impl/done">loaded every session, so every token is a recurring tax: boot ≤ ~500 tokens, checkpoint ≤ ~3000, one module spec ≤ ~5000 — split when over</fact></td>
+        <td><ROW-PLANE-CONTROL-CONTENTS fact="true" status="impl/done">the boot file (entry instructions), the checkpoint/WAL file, the specs</ROW-PLANE-CONTROL-CONTENTS></td>
+        <td><ROW-PLANE-CONTROL-DIRECTION fact="true" status="impl/done">mostly human → AI</ROW-PLANE-CONTROL-DIRECTION></td>
+        <td><ROW-PLANE-CONTROL-BUDGET-AND-RULES fact="true" status="impl/done">loaded every session, so every token is a recurring tax: boot ≤ ~500 tokens, checkpoint ≤ ~3000, one module spec ≤ ~5000 — split when over</ROW-PLANE-CONTROL-BUDGET-AND-RULES></td>
       </tr>
       <tr>
         <td><ROW-PLANE-DATA fact="true" status="impl/done">**Data**</ROW-PLANE-DATA></td>
-        <td><fact status="impl/done">code, tests, spec updates proposed by the AI</fact></td>
-        <td><fact status="impl/done">AI → human, verifiable</fact></td>
-        <td><fact status="impl/done">artifacts are *regenerable*: losing code is an inconvenience, losing a spec is a catastrophe. The spec is the source; the code is the binary. Nobody mourns a binary at recompile</fact></td>
+        <td><ROW-PLANE-DATA-CONTENTS fact="true" status="impl/done">code, tests, spec updates proposed by the AI</ROW-PLANE-DATA-CONTENTS></td>
+        <td><ROW-PLANE-DATA-DIRECTION fact="true" status="impl/done">AI → human, verifiable</ROW-PLANE-DATA-DIRECTION></td>
+        <td><ROW-PLANE-DATA-BUDGET-AND-RULES fact="true" status="impl/done">artifacts are *regenerable*: losing code is an inconvenience, losing a spec is a catastrophe. The spec is the source; the code is the binary. Nobody mourns a binary at recompile</ROW-PLANE-DATA-BUDGET-AND-RULES></td>
       </tr>
       <tr>
         <td><ROW-PLANE-SIGNALS fact="true" status="impl/done">**Signals**</ROW-PLANE-SIGNALS></td>
-        <td><fact status="impl/done">git diff, REVIEW markers, changelog lines, broken tests, the end-of-session report</fact></td>
-        <td><fact status="impl/done">both ways</fact></td>
-        <td><fact status="impl/done">every signal is minimal: a diff, not the file; one marker line with a reason; one changelog line. Bandwidth is human attention</fact></td>
+        <td><ROW-PLANE-SIGNALS-CONTENTS fact="true" status="impl/done">git diff, REVIEW markers, changelog lines, broken tests, the end-of-session report</ROW-PLANE-SIGNALS-CONTENTS></td>
+        <td><ROW-PLANE-SIGNALS-DIRECTION fact="true" status="impl/done">both ways</ROW-PLANE-SIGNALS-DIRECTION></td>
+        <td><ROW-PLANE-SIGNALS-BUDGET-AND-RULES fact="true" status="impl/done">every signal is minimal: a diff, not the file; one marker line with a reason; one changelog line. Bandwidth is human attention</ROW-PLANE-SIGNALS-BUDGET-AND-RULES></td>
       </tr>
     </table>
     <p><the-report-is-not-a-status-memo fact="true" status="impl/done">The end-of-session report deserves one emphasis: it is not a status
@@ -87,23 +87,23 @@ requirement is delivered by its own flow in this collection:</each-requirement-h
       </tr>
       <tr>
         <td><ROW-REQ-ADDRESSABILITY fact="true" status="impl/done">**Addressability**</ROW-REQ-ADDRESSABILITY></td>
-        <td><fact status="impl/done">every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation</fact></td>
-        <td><fact status="impl/done">flow:addressable-specs</fact></td>
+        <td><ROW-REQ-ADDRESSABILITY-WHAT-IT-DEMANDS fact="true" status="impl/done">every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation</ROW-REQ-ADDRESSABILITY-WHAT-IT-DEMANDS></td>
+        <td><ROW-REQ-ADDRESSABILITY-DELIVERED-BY fact="true" status="impl/done">flow:addressable-specs</ROW-REQ-ADDRESSABILITY-DELIVERED-BY></td>
       </tr>
       <tr>
         <td><ROW-REQ-ATOMICITY fact="true" status="impl/done">**Atomicity**</ROW-REQ-ATOMICITY></td>
-        <td><fact status="impl/done">every update to the shared state is one logical step, visible and verifiable in one diff</fact></td>
-        <td><fact status="impl/done">flow:git-atomic-commits</fact></td>
+        <td><ROW-REQ-ATOMICITY-WHAT-IT-DEMANDS fact="true" status="impl/done">every update to the shared state is one logical step, visible and verifiable in one diff</ROW-REQ-ATOMICITY-WHAT-IT-DEMANDS></td>
+        <td><ROW-REQ-ATOMICITY-DELIVERED-BY fact="true" status="impl/done">flow:git-atomic-commits</ROW-REQ-ATOMICITY-DELIVERED-BY></td>
       </tr>
       <tr>
         <td><ROW-REQ-CONFLICT-PROTOCOL fact="true" status="impl/done">**Conflict protocol**</ROW-REQ-CONFLICT-PROTOCOL></td>
-        <td><fact status="impl/done">two writers *will* contradict each other; explicit priorities and a loud escalation path resolve it without a race</fact></td>
-        <td><fact status="impl/done">flow:conflict-protocol (and flow:sync-from-code for the sanctioned reverse flow)</fact></td>
+        <td><ROW-REQ-CONFLICT-PROTOCOL-WHAT-IT-DEMANDS fact="true" status="impl/done">two writers *will* contradict each other; explicit priorities and a loud escalation path resolve it without a race</ROW-REQ-CONFLICT-PROTOCOL-WHAT-IT-DEMANDS></td>
+        <td><ROW-REQ-CONFLICT-PROTOCOL-DELIVERED-BY fact="true" status="impl/done">flow:conflict-protocol (and flow:sync-from-code for the sanctioned reverse flow)</ROW-REQ-CONFLICT-PROTOCOL-DELIVERED-BY></td>
       </tr>
       <tr>
         <td><ROW-REQ-VISIBILITY fact="true" status="impl/done">**Visibility**</ROW-REQ-VISIBILITY></td>
-        <td><fact status="impl/done">a change one process made must be *seen* by the other: session-start reads are cache invalidation, the morning routine re-syncs the human, the diff is the notification</fact></td>
-        <td><fact status="impl/done">flow:wal</fact></td>
+        <td><ROW-REQ-VISIBILITY-WHAT-IT-DEMANDS fact="true" status="impl/done">a change one process made must be *seen* by the other: session-start reads are cache invalidation, the morning routine re-syncs the human, the diff is the notification</ROW-REQ-VISIBILITY-WHAT-IT-DEMANDS></td>
+        <td><ROW-REQ-VISIBILITY-DELIVERED-BY fact="true" status="impl/done">flow:wal</ROW-REQ-VISIBILITY-DELIVERED-BY></td>
       </tr>
     </table>
   </requirements>

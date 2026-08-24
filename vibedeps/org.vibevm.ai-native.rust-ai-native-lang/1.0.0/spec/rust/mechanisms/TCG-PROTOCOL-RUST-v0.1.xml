@@ -139,28 +139,28 @@ renames against the TS table (§1):</five-error-kinds-lead></p>
       </tr>
       <tr>
         <td><ROW-ERROR-RUST-ANALYZER-MISSING fact="true" status="impl/done">`rust-analyzer-missing`</ROW-ERROR-RUST-ANALYZER-MISSING></td>
-        <td><fact status="impl/done">no analyzer resolvable (ORACLE-RUST §1)</fact></td>
-        <td><fact status="impl/done">`rustup component add rust-analyzer`</fact></td>
+        <td><ROW-ERROR-RUST-ANALYZER-MISSING-MEANING fact="true" status="impl/done">no analyzer resolvable (ORACLE-RUST §1)</ROW-ERROR-RUST-ANALYZER-MISSING-MEANING></td>
+        <td><ROW-ERROR-RUST-ANALYZER-MISSING-RECIPE-CARRIED fact="true" status="impl/done">`rustup component add rust-analyzer`</ROW-ERROR-RUST-ANALYZER-MISSING-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-WORKSPACE-UNLOADABLE fact="true" status="impl/done">`workspace-unloadable`</ROW-ERROR-WORKSPACE-UNLOADABLE></td>
-        <td><fact status="impl/done">the project failed to load (no Cargo.toml, cargo metadata failed)</fact></td>
-        <td><fact status="impl/done">check `cargo metadata` standalone</fact></td>
+        <td><ROW-ERROR-WORKSPACE-UNLOADABLE-MEANING fact="true" status="impl/done">the project failed to load (no Cargo.toml, cargo metadata failed)</ROW-ERROR-WORKSPACE-UNLOADABLE-MEANING></td>
+        <td><ROW-ERROR-WORKSPACE-UNLOADABLE-RECIPE-CARRIED fact="true" status="impl/done">check `cargo metadata` standalone</ROW-ERROR-WORKSPACE-UNLOADABLE-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-ORACLE-CRASHED fact="true" status="impl/done">`oracle-crashed`</ROW-ERROR-ORACLE-CRASHED></td>
-        <td><fact status="impl/done">child died / stream closed mid-session</fact></td>
-        <td><fact status="impl/done">respawn guidance; the host registry retries once</fact></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-MEANING fact="true" status="impl/done">child died / stream closed mid-session</ROW-ERROR-ORACLE-CRASHED-MEANING></td>
+        <td><ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED fact="true" status="impl/done">respawn guidance; the host registry retries once</ROW-ERROR-ORACLE-CRASHED-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-PROTOCOL fact="true" status="impl/done">`protocol`</ROW-ERROR-PROTOCOL></td>
-        <td><fact status="impl/done">unparseable frame, proto mismatch, unknown op</fact></td>
-        <td><fact status="impl/done">version note; unknown-op errors list the known ops</fact></td>
+        <td><ROW-ERROR-PROTOCOL-MEANING fact="true" status="impl/done">unparseable frame, proto mismatch, unknown op</ROW-ERROR-PROTOCOL-MEANING></td>
+        <td><ROW-ERROR-PROTOCOL-RECIPE-CARRIED fact="true" status="impl/done">version note; unknown-op errors list the known ops</ROW-ERROR-PROTOCOL-RECIPE-CARRIED></td>
       </tr>
       <tr>
         <td><ROW-ERROR-TIMEOUT fact="true" status="impl/done">`timeout`</ROW-ERROR-TIMEOUT></td>
-        <td><fact status="impl/done">no response within the caller's budget</fact></td>
-        <td><fact status="impl/done">the op and the budget, for tuning</fact></td>
+        <td><ROW-ERROR-TIMEOUT-MEANING fact="true" status="impl/done">no response within the caller's budget</ROW-ERROR-TIMEOUT-MEANING></td>
+        <td><ROW-ERROR-TIMEOUT-RECIPE-CARRIED fact="true" status="impl/done">the op and the budget, for tuning</ROW-ERROR-TIMEOUT-RECIPE-CARRIED></td>
       </tr>
     </table>
     <p><PRODUCT-LINK-LAYER-SPECIAL-CASES-ONLY-ORACLE-CRASHED fact="true" status="spec/done">The product's link layer special-cases only `oracle-crashed`

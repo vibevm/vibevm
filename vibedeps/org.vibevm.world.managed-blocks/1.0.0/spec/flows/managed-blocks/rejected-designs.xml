@@ -120,15 +120,15 @@ report with three parts.</ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-R
       </tr>
       <tr>
         <td><ROW-REPORT-WHAT-I-FOUND fact="true" status="impl/done">**What I found**</ROW-REPORT-WHAT-I-FOUND></td>
-        <td><fact status="impl/done">The file path and the exact defect, with line numbers: "two `&lt;toolname&gt;` opening markers, at lines 12 and 40."</fact></td>
+        <td><ROW-REPORT-WHAT-I-FOUND-CONTENT fact="true" status="impl/done">The file path and the exact defect, with line numbers: "two `&lt;toolname&gt;` opening markers, at lines 12 and 40."</ROW-REPORT-WHAT-I-FOUND-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-REPORT-WHAT-I-EXPECTED fact="true" status="impl/done">**What I expected**</ROW-REPORT-WHAT-I-EXPECTED></td>
-        <td><fact status="impl/done">The well-formed shape: "either zero markers, or exactly one `&lt;toolname&gt;` … `&lt;/toolname&gt;` pair in order."</fact></td>
+        <td><ROW-REPORT-WHAT-I-EXPECTED-CONTENT fact="true" status="impl/done">The well-formed shape: "either zero markers, or exactly one `&lt;toolname&gt;` … `&lt;/toolname&gt;` pair in order."</ROW-REPORT-WHAT-I-EXPECTED-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-REPORT-HOW-TO-UNBLOCK fact="true" status="impl/done">**How to unblock**</ROW-REPORT-HOW-TO-UNBLOCK></td>
-        <td><fact status="impl/done">The precise human action: "keep the block you want, delete the other opening marker and its closing marker, then re-run."</fact></td>
+        <td><ROW-REPORT-HOW-TO-UNBLOCK-CONTENT fact="true" status="impl/done">The precise human action: "keep the block you want, delete the other opening marker and its closing marker, then re-run."</ROW-REPORT-HOW-TO-UNBLOCK-CONTENT></td>
       </tr>
     </table>
     <p><a-worked-message fact="true" status="impl/done">A worked message:</a-worked-message></p>

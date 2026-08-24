@@ -19,43 +19,43 @@ for *missing* marks instead of present ones).</written-for-concealment-flipped-f
       </tr>
       <tr>
         <td><ROW-SURFACE-COMMIT-MESSAGE-BODIES fact="true" status="spec/done">Commit message bodies</ROW-SURFACE-COMMIT-MESSAGE-BODIES></td>
-        <td><fact status="spec/done">"generated with…", tool ads, model names</fact></td>
-        <td><fact status="spec/done">pre-push scan (below)</fact></td>
+        <td><ROW-SURFACE-COMMIT-MESSAGE-BODIES-WHAT-LEAKS-THERE fact="true" status="spec/done">"generated with…", tool ads, model names</ROW-SURFACE-COMMIT-MESSAGE-BODIES-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-COMMIT-MESSAGE-BODIES-CHECK fact="true" status="spec/done">pre-push scan (below)</ROW-SURFACE-COMMIT-MESSAGE-BODIES-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-COMMIT-TRAILERS fact="true" status="spec/done">Commit trailers</ROW-SURFACE-COMMIT-TRAILERS></td>
-        <td><fact status="spec/done">`Co-Authored-By`, `Signed-off-by: &lt;model&gt;`</fact></td>
-        <td><fact status="spec/done">pre-push scan (below)</fact></td>
+        <td><ROW-SURFACE-COMMIT-TRAILERS-WHAT-LEAKS-THERE fact="true" status="spec/done">`Co-Authored-By`, `Signed-off-by: &lt;model&gt;`</ROW-SURFACE-COMMIT-TRAILERS-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-COMMIT-TRAILERS-CHECK fact="true" status="spec/done">pre-push scan (below)</ROW-SURFACE-COMMIT-TRAILERS-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-BRANCH-AND-TAG-NAMES fact="true" status="spec/done">Branch / tag names</ROW-SURFACE-BRANCH-AND-TAG-NAMES></td>
-        <td><fact status="spec/done">agent-generated branch names carrying tool names</fact></td>
-        <td><fact status="spec/done">`git branch -a` eyeball at review; naming convention in the boot file</fact></td>
+        <td><ROW-SURFACE-BRANCH-AND-TAG-NAMES-WHAT-LEAKS-THERE fact="true" status="spec/done">agent-generated branch names carrying tool names</ROW-SURFACE-BRANCH-AND-TAG-NAMES-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-BRANCH-AND-TAG-NAMES-CHECK fact="true" status="spec/done">`git branch -a` eyeball at review; naming convention in the boot file</ROW-SURFACE-BRANCH-AND-TAG-NAMES-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-CODE-COMMENTS fact="true" status="spec/done">Code comments</ROW-SURFACE-CODE-COMMENTS></td>
-        <td><fact status="spec/done">"AI-generated", model names in TODO/FIXME</fact></td>
-        <td><fact status="spec/done">repo-wide grep, periodically</fact></td>
+        <td><ROW-SURFACE-CODE-COMMENTS-WHAT-LEAKS-THERE fact="true" status="spec/done">"AI-generated", model names in TODO/FIXME</ROW-SURFACE-CODE-COMMENTS-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-CODE-COMMENTS-CHECK fact="true" status="spec/done">repo-wide grep, periodically</ROW-SURFACE-CODE-COMMENTS-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-README-DOCS-RELEASE-NOTES fact="true" status="spec/done">README / docs / release notes</ROW-SURFACE-README-DOCS-RELEASE-NOTES></td>
-        <td><fact status="spec/done">boilerplate credit lines</fact></td>
-        <td><fact status="spec/done">part of release checklist</fact></td>
+        <td><ROW-SURFACE-README-DOCS-RELEASE-NOTES-WHAT-LEAKS-THERE fact="true" status="spec/done">boilerplate credit lines</ROW-SURFACE-README-DOCS-RELEASE-NOTES-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-README-DOCS-RELEASE-NOTES-CHECK fact="true" status="spec/done">part of release checklist</ROW-SURFACE-README-DOCS-RELEASE-NOTES-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS fact="true" status="spec/done">PR titles and descriptions</ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS></td>
-        <td><fact status="spec/done">tool-inserted footers</fact></td>
-        <td><fact status="spec/done">PR template with an explicit placeholder to overwrite</fact></td>
+        <td><ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS-WHAT-LEAKS-THERE fact="true" status="spec/done">tool-inserted footers</ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS-CHECK fact="true" status="spec/done">PR template with an explicit placeholder to overwrite</ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-CI-CONFIGURATION fact="true" status="spec/done">CI configuration</ROW-SURFACE-CI-CONFIGURATION></td>
-        <td><fact status="spec/done">marketplace actions inserting attribution steps</fact></td>
-        <td><fact status="spec/done">review any new CI step's output once</fact></td>
+        <td><ROW-SURFACE-CI-CONFIGURATION-WHAT-LEAKS-THERE fact="true" status="spec/done">marketplace actions inserting attribution steps</ROW-SURFACE-CI-CONFIGURATION-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-CI-CONFIGURATION-CHECK fact="true" status="spec/done">review any new CI step's output once</ROW-SURFACE-CI-CONFIGURATION-CHECK></td>
       </tr>
       <tr>
         <td><ROW-SURFACE-GENERATED-FILE-HEADERS fact="true" status="spec/done">Generated-file headers</ROW-SURFACE-GENERATED-FILE-HEADERS></td>
-        <td><fact status="spec/done">scaffolding tools stamping their names</fact></td>
-        <td><fact status="spec/done">check scaffold output the first time a generator is adopted</fact></td>
+        <td><ROW-SURFACE-GENERATED-FILE-HEADERS-WHAT-LEAKS-THERE fact="true" status="spec/done">scaffolding tools stamping their names</ROW-SURFACE-GENERATED-FILE-HEADERS-WHAT-LEAKS-THERE></td>
+        <td><ROW-SURFACE-GENERATED-FILE-HEADERS-CHECK fact="true" status="spec/done">check scaffold output the first time a generator is adopted</ROW-SURFACE-GENERATED-FILE-HEADERS-CHECK></td>
       </tr>
     </table>
   </surfaces>

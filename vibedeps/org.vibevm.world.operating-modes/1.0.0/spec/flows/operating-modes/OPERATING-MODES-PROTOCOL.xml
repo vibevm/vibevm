@@ -57,23 +57,23 @@ five parts, so none is ambiguous and each states its own limits:</every-codeword
       </tr>
       <tr>
         <td><ROW-PART-TRIGGER-PHRASE fact="true" status="impl/done">**1. Trigger phrase**</ROW-PART-TRIGGER-PHRASE></td>
-        <td><fact status="impl/done">the words (and recognisable variants) that activate it; case-insensitive; matched by intent</fact></td>
+        <td><ROW-PART-TRIGGER-PHRASE-WHAT-IT-FIXES fact="true" status="impl/done">the words (and recognisable variants) that activate it; case-insensitive; matched by intent</ROW-PART-TRIGGER-PHRASE-WHAT-IT-FIXES></td>
       </tr>
       <tr>
         <td><ROW-PART-AUTHORITATIVE-DESCRIPTION fact="true" status="impl/done">**2. Authoritative description**</ROW-PART-AUTHORITATIVE-DESCRIPTION></td>
-        <td><fact status="impl/done">the owner's own framing of what the mode is for, recorded verbatim</fact></td>
+        <td><ROW-PART-AUTHORITATIVE-DESCRIPTION-WHAT-IT-FIXES fact="true" status="impl/done">the owner's own framing of what the mode is for, recorded verbatim</ROW-PART-AUTHORITATIVE-DESCRIPTION-WHAT-IT-FIXES></td>
       </tr>
       <tr>
         <td><ROW-PART-OPERATIVE-INTERPRETATION fact="true" status="impl/done">**3. Operative interpretation**</ROW-PART-OPERATIVE-INTERPRETATION></td>
-        <td><fact status="impl/done">a numbered list of concrete behavioural rules the agent follows while it is active</fact></td>
+        <td><ROW-PART-OPERATIVE-INTERPRETATION-WHAT-IT-FIXES fact="true" status="impl/done">a numbered list of concrete behavioural rules the agent follows while it is active</ROW-PART-OPERATIVE-INTERPRETATION-WHAT-IT-FIXES></td>
       </tr>
       <tr>
         <td><ROW-PART-CHANGES-AND-DOES-NOT-CHANGE fact="true" status="impl/done">**4. Changes / does NOT change**</ROW-PART-CHANGES-AND-DOES-NOT-CHANGE></td>
-        <td><fact status="impl/done">what confirmation behaviour it relaxes, and an explicit restatement that the red lines survive it</fact></td>
+        <td><ROW-PART-CHANGES-AND-DOES-NOT-CHANGE-WHAT-IT-FIXES fact="true" status="impl/done">what confirmation behaviour it relaxes, and an explicit restatement that the red lines survive it</ROW-PART-CHANGES-AND-DOES-NOT-CHANGE-WHAT-IT-FIXES></td>
       </tr>
       <tr>
         <td><ROW-PART-LIFECYCLE-AND-CADENCE fact="true" status="impl/done">**5. Lifecycle + cadence**</ROW-PART-LIFECYCLE-AND-CADENCE></td>
-        <td><fact status="impl/done">activation, persistence within a session, non-persistence across sessions, the abort words, and the reporting cadence</fact></td>
+        <td><ROW-PART-LIFECYCLE-AND-CADENCE-WHAT-IT-FIXES fact="true" status="impl/done">activation, persistence within a session, non-persistence across sessions, the abort words, and the reporting cadence</ROW-PART-LIFECYCLE-AND-CADENCE-WHAT-IT-FIXES></td>
       </tr>
     </table>
     <p><A-PHRASE-MISSING-A-PART-IS-A-PROPOSAL-NOT-A-CODEWORD fact="true" status="impl/done">A phrase that does not carry all five parts is not yet a codeword —

@@ -37,23 +37,23 @@ substitutes for the audit.</THE-TWO-ARE-COMPLEMENTS-AND-MORE-GATE-NEVER-SUBSTITU
       </tr>
       <tr>
         <td><ROW-BLIND-UNCOVERED-CODE fact="true" status="spec/done">1</ROW-BLIND-UNCOVERED-CODE></td>
-        <td><fact status="spec/done">**Uncovered code**</fact></td>
-        <td><fact status="spec/done">A path no test exercises can break with the gate fully green.</fact></td>
+        <td><ROW-BLIND-UNCOVERED-CODE-BLIND-SPOT fact="true" status="spec/done">**Uncovered code**</ROW-BLIND-UNCOVERED-CODE-BLIND-SPOT></td>
+        <td><ROW-BLIND-UNCOVERED-CODE-WHY-THE-GATE-MISSES-IT fact="true" status="spec/done">A path no test exercises can break with the gate fully green.</ROW-BLIND-UNCOVERED-CODE-WHY-THE-GATE-MISSES-IT></td>
       </tr>
       <tr>
         <td><ROW-BLIND-CODE-OUTSIDE-THE-GATE fact="true" status="spec/done">2</ROW-BLIND-CODE-OUTSIDE-THE-GATE></td>
-        <td><fact status="spec/done">**Code outside the gate**</fact></td>
-        <td><fact status="spec/done">Anything the test command does not reach — a separate workspace, an unparsed fixture, a manual-test recipe — rots silently.</fact></td>
+        <td><ROW-BLIND-CODE-OUTSIDE-THE-GATE-BLIND-SPOT fact="true" status="spec/done">**Code outside the gate**</ROW-BLIND-CODE-OUTSIDE-THE-GATE-BLIND-SPOT></td>
+        <td><ROW-BLIND-CODE-OUTSIDE-THE-GATE-WHY-THE-GATE-MISSES-IT fact="true" status="spec/done">Anything the test command does not reach — a separate workspace, an unparsed fixture, a manual-test recipe — rots silently.</ROW-BLIND-CODE-OUTSIDE-THE-GATE-WHY-THE-GATE-MISSES-IT></td>
       </tr>
       <tr>
         <td><ROW-BLIND-DRIFT fact="true" status="spec/done">3</ROW-BLIND-DRIFT></td>
-        <td><fact status="spec/done">**Drift**</fact></td>
-        <td><fact status="spec/done">Docs, spec, the checkpoint, and external state fall out of step with the code without any test failing.</fact></td>
+        <td><ROW-BLIND-DRIFT-BLIND-SPOT fact="true" status="spec/done">**Drift**</ROW-BLIND-DRIFT-BLIND-SPOT></td>
+        <td><ROW-BLIND-DRIFT-WHY-THE-GATE-MISSES-IT fact="true" status="spec/done">Docs, spec, the checkpoint, and external state fall out of step with the code without any test failing.</ROW-BLIND-DRIFT-WHY-THE-GATE-MISSES-IT></td>
       </tr>
       <tr>
         <td><ROW-BLIND-SLOW-DEBT fact="true" status="spec/done">4</ROW-BLIND-SLOW-DEBT></td>
-        <td><fact status="spec/done">**Slow debt**</fact></td>
-        <td><fact status="spec/done">Escape hatches, aging `TODO`s, deferred items, quarantined tests — each individually invisible, collectively corrosive.</fact></td>
+        <td><ROW-BLIND-SLOW-DEBT-BLIND-SPOT fact="true" status="spec/done">**Slow debt**</ROW-BLIND-SLOW-DEBT-BLIND-SPOT></td>
+        <td><ROW-BLIND-SLOW-DEBT-WHY-THE-GATE-MISSES-IT fact="true" status="spec/done">Escape hatches, aging `TODO`s, deferred items, quarantined tests — each individually invisible, collectively corrosive.</ROW-BLIND-SLOW-DEBT-WHY-THE-GATE-MISSES-IT></td>
       </tr>
     </table>
     <p><none-of-these-is-hypothetical fact="true" status="spec/done">None of these is hypothetical.</none-of-these-is-hypothetical></p>
@@ -114,23 +114,23 @@ points at the active subset.</THE-CHECKPOINT-IS-RECONCILED-BUT-THE-INVENTORY-IS-
       </tr>
       <tr>
         <td><ROW-FIELD-ID fact="true" status="impl/done">**ID**</ROW-FIELD-ID></td>
-        <td><fact status="impl/done">`&lt;run-date&gt;-NN` — unique within the run, stable across carry-forward.</fact></td>
+        <td><ROW-FIELD-ID-CONTENT fact="true" status="impl/done">`&lt;run-date&gt;-NN` — unique within the run, stable across carry-forward.</ROW-FIELD-ID-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-CATEGORY fact="true" status="impl/done">**Category**</ROW-FIELD-CATEGORY></td>
-        <td><fact status="impl/done">The checklist row it came from (`A1` … `D4`, or a project-specific code).</fact></td>
+        <td><ROW-FIELD-CATEGORY-CONTENT fact="true" status="impl/done">The checklist row it came from (`A1` … `D4`, or a project-specific code).</ROW-FIELD-CATEGORY-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-LOCATOR fact="true" status="impl/done">**Locator**</ROW-FIELD-LOCATOR></td>
-        <td><fact status="impl/done">A one-line description with enough of a file/module pointer to act on.</fact></td>
+        <td><ROW-FIELD-LOCATOR-CONTENT fact="true" status="impl/done">A one-line description with enough of a file/module pointer to act on.</ROW-FIELD-LOCATOR-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-SEVERITY fact="true" status="impl/done">**Severity**</ROW-FIELD-SEVERITY></td>
-        <td><fact status="impl/done">`P1` / `P2` / `P3` (below).</fact></td>
+        <td><ROW-FIELD-SEVERITY-CONTENT fact="true" status="impl/done">`P1` / `P2` / `P3` (below).</ROW-FIELD-SEVERITY-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-FIELD-DISPOSITION fact="true" status="impl/done">**Disposition**</ROW-FIELD-DISPOSITION></td>
-        <td><fact status="impl/done">`fixed` / `filed` / `accepted` / `open` (next section).</fact></td>
+        <td><ROW-FIELD-DISPOSITION-CONTENT fact="true" status="impl/done">`fixed` / `filed` / `accepted` / `open` (next section).</ROW-FIELD-DISPOSITION-CONTENT></td>
       </tr>
     </table>
     <p><SEVERITY-IS-THE-COST-OF-LEAVING-IT fact="true" status="impl/done">Severity is the cost of leaving it:</SEVERITY-IS-THE-COST-OF-LEAVING-IT></p>
@@ -155,19 +155,19 @@ silent:</NOTHING-IS-LEFT-SILENT></p>
       </tr>
       <tr>
         <td><ROW-DISP-FIXED fact="true" status="impl/done">**fixed**</ROW-DISP-FIXED></td>
-        <td><fact status="impl/done">Resolved inside the run. Small findings are fixed on the spot; the fix is a normal commit and the finding records its hash.</fact></td>
+        <td><ROW-DISP-FIXED-MEANING fact="true" status="impl/done">Resolved inside the run. Small findings are fixed on the spot; the fix is a normal commit and the finding records its hash.</ROW-DISP-FIXED-MEANING></td>
       </tr>
       <tr>
         <td><ROW-DISP-FILED fact="true" status="impl/done">**filed**</ROW-DISP-FILED></td>
-        <td><fact status="impl/done">Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed.</fact></td>
+        <td><ROW-DISP-FILED-MEANING fact="true" status="impl/done">Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed.</ROW-DISP-FILED-MEANING></td>
       </tr>
       <tr>
         <td><ROW-DISP-ACCEPTED fact="true" status="impl/done">**accepted**</ROW-DISP-ACCEPTED></td>
-        <td><fact status="impl/done">A deliberate decision *not* to act, recorded with its reason. Re-judged next run. This is a decision record: it carries a why and a revisit trigger.</fact></td>
+        <td><ROW-DISP-ACCEPTED-MEANING fact="true" status="impl/done">A deliberate decision *not* to act, recorded with its reason. Re-judged next run. This is a decision record: it carries a why and a revisit trigger.</ROW-DISP-ACCEPTED-MEANING></td>
       </tr>
       <tr>
         <td><ROW-DISP-OPEN fact="true" status="impl/done">**open**</ROW-DISP-OPEN></td>
-        <td><fact status="impl/done">Not yet dispositioned.</fact></td>
+        <td><ROW-DISP-OPEN-MEANING fact="true" status="impl/done">Not yet dispositioned.</ROW-DISP-OPEN-MEANING></td>
       </tr>
     </table>
     <p><AN-OPEN-OR-UNLANDED-FILED-FINDING-CARRIES-FORWARD fact="true" status="impl/done">An `open` finding — or a `filed` one whose work has not landed —

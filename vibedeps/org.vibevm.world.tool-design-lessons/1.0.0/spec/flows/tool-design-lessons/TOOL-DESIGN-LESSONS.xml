@@ -33,73 +33,73 @@ the mechanics that prove them were written against one platform.</THE-VOCABULARY
       </tr>
       <tr>
         <td><ROW-LESSON-S1 fact="true" status="impl/done">S1</ROW-LESSON-S1></td>
-        <td><fact status="impl/done">The active version is a live pointer file read per launch, plus the running binary's own path; env is advisory.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#live-pointer`](self-updating-tools.xml#live-pointer)</fact></td>
+        <td><ROW-LESSON-S1-THE-LAW-ONE-LINE fact="true" status="impl/done">The active version is a live pointer file read per launch, plus the running binary's own path; env is advisory.</ROW-LESSON-S1-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S1-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#live-pointer`](self-updating-tools.xml#live-pointer)</ROW-LESSON-S1-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S2 fact="true" status="impl/done">S2</ROW-LESSON-S2></td>
-        <td><fact status="impl/done">The unit of install and switch is a whole immutable instance directory; activation is a pointer flip.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#immutable-instances`](self-updating-tools.xml#immutable-instances)</fact></td>
+        <td><ROW-LESSON-S2-THE-LAW-ONE-LINE fact="true" status="impl/done">The unit of install and switch is a whole immutable instance directory; activation is a pointer flip.</ROW-LESSON-S2-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S2-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#immutable-instances`](self-updating-tools.xml#immutable-instances)</ROW-LESSON-S2-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S3 fact="true" status="impl/done">S3</ROW-LESSON-S3></td>
-        <td><fact status="impl/done">Never content-hash a large payload for identity; use a monotonic counter and cheap change detection.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#cheap-identity`](self-updating-tools.xml#cheap-identity)</fact></td>
+        <td><ROW-LESSON-S3-THE-LAW-ONE-LINE fact="true" status="impl/done">Never content-hash a large payload for identity; use a monotonic counter and cheap change detection.</ROW-LESSON-S3-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S3-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#cheap-identity`](self-updating-tools.xml#cheap-identity)</ROW-LESSON-S3-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S4 fact="true" status="impl/done">S4</ROW-LESSON-S4></td>
-        <td><fact status="impl/done">Hold sources by reference; never bulk-copy them into the tool's own storage.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#sources-by-reference`](self-updating-tools.xml#sources-by-reference)</fact></td>
+        <td><ROW-LESSON-S4-THE-LAW-ONE-LINE fact="true" status="impl/done">Hold sources by reference; never bulk-copy them into the tool's own storage.</ROW-LESSON-S4-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S4-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#sources-by-reference`](self-updating-tools.xml#sources-by-reference)</ROW-LESSON-S4-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S5 fact="true" status="impl/done">S5</ROW-LESSON-S5></td>
-        <td><fact status="impl/done">Edit durable environment state idempotently, additively, with consent — behind a seam tests can stub.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#durable-env-edits`](self-updating-tools.xml#durable-env-edits)</fact></td>
+        <td><ROW-LESSON-S5-THE-LAW-ONE-LINE fact="true" status="impl/done">Edit durable environment state idempotently, additively, with consent — behind a seam tests can stub.</ROW-LESSON-S5-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S5-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#durable-env-edits`](self-updating-tools.xml#durable-env-edits)</ROW-LESSON-S5-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S6 fact="true" status="impl/done">S6</ROW-LESSON-S6></td>
-        <td><fact status="impl/done">Keep required tools in one table the doctor reads and a test asserts.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#runnable-knowledge`](self-updating-tools.xml#runnable-knowledge)</fact></td>
+        <td><ROW-LESSON-S6-THE-LAW-ONE-LINE fact="true" status="impl/done">Keep required tools in one table the doctor reads and a test asserts.</ROW-LESSON-S6-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S6-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#runnable-knowledge`](self-updating-tools.xml#runnable-knowledge)</ROW-LESSON-S6-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-S7 fact="true" status="impl/done">S7</ROW-LESSON-S7></td>
-        <td><fact status="impl/done">Removal protects the active and the running instance; a full wipe needs an explicit flag and a reconfirm.</fact></td>
-        <td><fact status="impl/done">[`self-updating-tools.xml#safe-removal`](self-updating-tools.xml#safe-removal)</fact></td>
+        <td><ROW-LESSON-S7-THE-LAW-ONE-LINE fact="true" status="impl/done">Removal protects the active and the running instance; a full wipe needs an explicit flag and a reconfirm.</ROW-LESSON-S7-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-S7-LIVES-IN fact="true" status="impl/done">[`self-updating-tools.xml#safe-removal`](self-updating-tools.xml#safe-removal)</ROW-LESSON-S7-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P1 fact="true" status="impl/done">P1</ROW-LESSON-P1></td>
-        <td><fact status="impl/done">A package is a project — the same layout, no package-only convention to learn.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#package-is-project`](packaging-lessons.xml#package-is-project)</fact></td>
+        <td><ROW-LESSON-P1-THE-LAW-ONE-LINE fact="true" status="impl/done">A package is a project — the same layout, no package-only convention to learn.</ROW-LESSON-P1-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P1-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#package-is-project`](packaging-lessons.xml#package-is-project)</ROW-LESSON-P1-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P2 fact="true" status="impl/done">P2</ROW-LESSON-P2></td>
-        <td><fact status="impl/done">Ship the runtime, not a description of it.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#ship-runtime`](packaging-lessons.xml#ship-runtime)</fact></td>
+        <td><ROW-LESSON-P2-THE-LAW-ONE-LINE fact="true" status="impl/done">Ship the runtime, not a description of it.</ROW-LESSON-P2-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P2-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#ship-runtime`](packaging-lessons.xml#ship-runtime)</ROW-LESSON-P2-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P3 fact="true" status="impl/done">P3</ROW-LESSON-P3></td>
-        <td><fact status="impl/done">Identity is the source; exclude build artifacts by denylist, never a per-file allow-list.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#identity-is-source`](packaging-lessons.xml#identity-is-source)</fact></td>
+        <td><ROW-LESSON-P3-THE-LAW-ONE-LINE fact="true" status="impl/done">Identity is the source; exclude build artifacts by denylist, never a per-file allow-list.</ROW-LESSON-P3-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P3-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#identity-is-source`](packaging-lessons.xml#identity-is-source)</ROW-LESSON-P3-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P4 fact="true" status="impl/done">P4</ROW-LESSON-P4></td>
-        <td><fact status="impl/done">Build output goes to a gitignored location, never the committed tree or the identity hash.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#build-output-elsewhere`](packaging-lessons.xml#build-output-elsewhere)</fact></td>
+        <td><ROW-LESSON-P4-THE-LAW-ONE-LINE fact="true" status="impl/done">Build output goes to a gitignored location, never the committed tree or the identity hash.</ROW-LESSON-P4-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P4-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#build-output-elsewhere`](packaging-lessons.xml#build-output-elsewhere)</ROW-LESSON-P4-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P5 fact="true" status="impl/done">P5</ROW-LESSON-P5></td>
-        <td><fact status="impl/done">Vendor and commit the bootstrap toolchain beside the code that needs it.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#vendor-bootstrap`](packaging-lessons.xml#vendor-bootstrap)</fact></td>
+        <td><ROW-LESSON-P5-THE-LAW-ONE-LINE fact="true" status="impl/done">Vendor and commit the bootstrap toolchain beside the code that needs it.</ROW-LESSON-P5-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P5-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#vendor-bootstrap`](packaging-lessons.xml#vendor-bootstrap)</ROW-LESSON-P5-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P6 fact="true" status="impl/done">P6</ROW-LESSON-P6></td>
-        <td><fact status="impl/done">Spike the risky topology on the target platform before the irreversible move; keep an evidence-chosen fallback.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#spike-first`](packaging-lessons.xml#spike-first)</fact></td>
+        <td><ROW-LESSON-P6-THE-LAW-ONE-LINE fact="true" status="impl/done">Spike the risky topology on the target platform before the irreversible move; keep an evidence-chosen fallback.</ROW-LESSON-P6-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P6-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#spike-first`](packaging-lessons.xml#spike-first)</ROW-LESSON-P6-LIVES-IN></td>
       </tr>
       <tr>
         <td><ROW-LESSON-P7 fact="true" status="impl/done">P7</ROW-LESSON-P7></td>
-        <td><fact status="impl/done">Extract the general mechanism when the second consumer arrives, not before.</fact></td>
-        <td><fact status="impl/done">[`packaging-lessons.xml#build-on-demand`](packaging-lessons.xml#build-on-demand)</fact></td>
+        <td><ROW-LESSON-P7-THE-LAW-ONE-LINE fact="true" status="impl/done">Extract the general mechanism when the second consumer arrives, not before.</ROW-LESSON-P7-THE-LAW-ONE-LINE></td>
+        <td><ROW-LESSON-P7-LIVES-IN fact="true" status="impl/done">[`packaging-lessons.xml#build-on-demand`](packaging-lessons.xml#build-on-demand)</ROW-LESSON-P7-LIVES-IN></td>
       </tr>
     </table>
   </index>

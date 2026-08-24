@@ -78,15 +78,15 @@ mainline, then fanning out.</ACCEPTING-ONE-MEANS-BRINGING-ITS-COMMITS-INTO-MAINL
         </tr>
         <tr>
           <td><ROW-SURFACE-WEB-PR-UI fact="true" status="impl/done">A host's web PR UI</ROW-SURFACE-WEB-PR-UI></td>
-          <td><fact status="impl/done">**Inbox** and review surface</fact></td>
+          <td><ROW-SURFACE-WEB-PR-UI-ROLE fact="true" status="impl/done">**Inbox** and review surface</ROW-SURFACE-WEB-PR-UI-ROLE></td>
         </tr>
         <tr>
           <td><ROW-SURFACE-LOCAL-MAIN fact="true" status="impl/done">The maintainer's local `main`</ROW-SURFACE-LOCAL-MAIN></td>
-          <td><fact status="impl/done">**Merge authority**</fact></td>
+          <td><ROW-SURFACE-LOCAL-MAIN-ROLE fact="true" status="impl/done">**Merge authority**</ROW-SURFACE-LOCAL-MAIN-ROLE></td>
         </tr>
         <tr>
           <td><ROW-SURFACE-HOST-AFTER-FAN-OUT fact="true" status="impl/done">Every host after fan-out</ROW-SURFACE-HOST-AFTER-FAN-OUT></td>
-          <td><fact status="impl/done">**Read-replica** of that authority</fact></td>
+          <td><ROW-SURFACE-HOST-AFTER-FAN-OUT-ROLE fact="true" status="impl/done">**Read-replica** of that authority</ROW-SURFACE-HOST-AFTER-FAN-OUT-ROLE></td>
         </tr>
       </table>
       <p><THE-WEB-PR-UIS-ARE-INBOXES-NOT-THE-MERGE-AUTHORITY fact="true" status="impl/done">The web PR UIs are *inboxes and review surfaces, not the merge
@@ -127,23 +127,23 @@ whole cost.</there-is-no-parallel-write-path></p>
       </tr>
       <tr>
         <td><ROW-COST-CONCURRENT-WRITES fact="true" status="spec/done">Concurrent writes</ROW-COST-CONCURRENT-WRITES></td>
-        <td><fact status="spec/done">Allowed, and they race</fact></td>
-        <td><fact status="spec/done">Serialized through one tree</fact></td>
+        <td><ROW-COST-CONCURRENT-WRITES-MULTI-MASTER fact="true" status="spec/done">Allowed, and they race</ROW-COST-CONCURRENT-WRITES-MULTI-MASTER></td>
+        <td><ROW-COST-CONCURRENT-WRITES-SINGLE-WRITER-MAINLINE fact="true" status="spec/done">Serialized through one tree</ROW-COST-CONCURRENT-WRITES-SINGLE-WRITER-MAINLINE></td>
       </tr>
       <tr>
         <td><ROW-COST-DIVERGENCE fact="true" status="spec/done">Divergence</ROW-COST-DIVERGENCE></td>
-        <td><fact status="spec/done">Possible; must be reconciled</fact></td>
-        <td><fact status="spec/done">Impossible by construction</fact></td>
+        <td><ROW-COST-DIVERGENCE-MULTI-MASTER fact="true" status="spec/done">Possible; must be reconciled</ROW-COST-DIVERGENCE-MULTI-MASTER></td>
+        <td><ROW-COST-DIVERGENCE-SINGLE-WRITER-MAINLINE fact="true" status="spec/done">Impossible by construction</ROW-COST-DIVERGENCE-SINGLE-WRITER-MAINLINE></td>
       </tr>
       <tr>
         <td><ROW-COST-MERGE-THROUGHPUT fact="true" status="spec/done">Merge throughput</ROW-COST-MERGE-THROUGHPUT></td>
-        <td><fact status="spec/done">Many writers</fact></td>
-        <td><fact status="spec/done">One writer (the bottleneck)</fact></td>
+        <td><ROW-COST-MERGE-THROUGHPUT-MULTI-MASTER fact="true" status="spec/done">Many writers</ROW-COST-MERGE-THROUGHPUT-MULTI-MASTER></td>
+        <td><ROW-COST-MERGE-THROUGHPUT-SINGLE-WRITER-MAINLINE fact="true" status="spec/done">One writer (the bottleneck)</ROW-COST-MERGE-THROUGHPUT-SINGLE-WRITER-MAINLINE></td>
       </tr>
       <tr>
         <td><ROW-COST-FAILURE-SURFACE fact="true" status="spec/done">Failure surface</ROW-COST-FAILURE-SURFACE></td>
-        <td><fact status="spec/done">Reconcile published history</fact></td>
-        <td><fact status="spec/done">A loud abort before any harm</fact></td>
+        <td><ROW-COST-FAILURE-SURFACE-MULTI-MASTER fact="true" status="spec/done">Reconcile published history</ROW-COST-FAILURE-SURFACE-MULTI-MASTER></td>
+        <td><ROW-COST-FAILURE-SURFACE-SINGLE-WRITER-MAINLINE fact="true" status="spec/done">A loud abort before any harm</ROW-COST-FAILURE-SURFACE-SINGLE-WRITER-MAINLINE></td>
       </tr>
     </table>
     <p><for-a-small-team-the-trade-is-strongly-positive fact="true" status="spec/done">For a **small-team or single-maintainer project**, the trade is

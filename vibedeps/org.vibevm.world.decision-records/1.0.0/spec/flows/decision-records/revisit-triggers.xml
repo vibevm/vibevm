@@ -42,18 +42,18 @@ becomes a sacred cow; a decision with one stays alive.</NO-CONDITION-MEANS-A-SAC
       </tr>
       <tr>
         <td><ROW-PART-METRIC fact="true" status="impl/done">**Metric**</ROW-PART-METRIC></td>
-        <td><fact status="impl/done">What signal is watched?</fact></td>
-        <td><fact status="impl/done">p99 delivery latency</fact></td>
+        <td><ROW-PART-METRIC-QUESTION-IT-ANSWERS fact="true" status="impl/done">What signal is watched?</ROW-PART-METRIC-QUESTION-IT-ANSWERS></td>
+        <td><ROW-PART-METRIC-EXAMPLE fact="true" status="impl/done">p99 delivery latency</ROW-PART-METRIC-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-PART-THRESHOLD fact="true" status="impl/done">**Threshold**</ROW-PART-THRESHOLD></td>
-        <td><fact status="impl/done">What value crossing counts?</fact></td>
-        <td><fact status="impl/done">below 100 s</fact></td>
+        <td><ROW-PART-THRESHOLD-QUESTION-IT-ANSWERS fact="true" status="impl/done">What value crossing counts?</ROW-PART-THRESHOLD-QUESTION-IT-ANSWERS></td>
+        <td><ROW-PART-THRESHOLD-EXAMPLE fact="true" status="impl/done">below 100 s</ROW-PART-THRESHOLD-EXAMPLE></td>
       </tr>
       <tr>
         <td><ROW-PART-OBSERVATION-POINT fact="true" status="impl/done">**Observation point**</ROW-PART-OBSERVATION-POINT></td>
-        <td><fact status="impl/done">Where would one look?</fact></td>
-        <td><fact status="impl/done">the network monitoring dashboard</fact></td>
+        <td><ROW-PART-OBSERVATION-POINT-QUESTION-IT-ANSWERS fact="true" status="impl/done">Where would one look?</ROW-PART-OBSERVATION-POINT-QUESTION-IT-ANSWERS></td>
+        <td><ROW-PART-OBSERVATION-POINT-EXAMPLE fact="true" status="impl/done">the network monitoring dashboard</ROW-PART-OBSERVATION-POINT-EXAMPLE></td>
       </tr>
     </table>
     <p><ALL-THREE-OR-IT-IS-NOT-A-TRIGGER fact="true" status="impl/done">All three, or it is not a trigger.</ALL-THREE-OR-IT-IS-NOT-A-TRIGGER></p>
@@ -81,43 +81,43 @@ below reports these explicitly.</sweep-reports-unobservable-triggers></p>
       </tr>
       <tr>
         <td><ROW-TRIGGER-P99-LATENCY fact="true" status="impl/done">"p99 delivery latency drops below 100 s, per the monitoring dashboard"</ROW-TRIGGER-P99-LATENCY></td>
-        <td><fact status="impl/done">Good</fact></td>
-        <td><fact status="impl/done">Metric, threshold, observation point.</fact></td>
+        <td><ROW-TRIGGER-P99-LATENCY-VERDICT fact="true" status="impl/done">Good</ROW-TRIGGER-P99-LATENCY-VERDICT></td>
+        <td><ROW-TRIGGER-P99-LATENCY-WHY fact="true" status="impl/done">Metric, threshold, observation point.</ROW-TRIGGER-P99-LATENCY-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-HOT-PATH-CPU fact="true" status="impl/done">"hot-path CPU exceeds 80 % in the weekly perf run"</ROW-TRIGGER-HOT-PATH-CPU></td>
-        <td><fact status="impl/done">Good</fact></td>
-        <td><fact status="impl/done">Fires from a run that already happens.</fact></td>
+        <td><ROW-TRIGGER-HOT-PATH-CPU-VERDICT fact="true" status="impl/done">Good</ROW-TRIGGER-HOT-PATH-CPU-VERDICT></td>
+        <td><ROW-TRIGGER-HOT-PATH-CPU-WHY fact="true" status="impl/done">Fires from a run that already happens.</ROW-TRIGGER-HOT-PATH-CPU-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-UPSTREAM-SILENT fact="true" status="impl/done">"upstream ships no release for 24 months"</ROW-TRIGGER-UPSTREAM-SILENT></td>
-        <td><fact status="impl/done">Good</fact></td>
-        <td><fact status="impl/done">Event; checkable from the repository today.</fact></td>
+        <td><ROW-TRIGGER-UPSTREAM-SILENT-VERDICT fact="true" status="impl/done">Good</ROW-TRIGGER-UPSTREAM-SILENT-VERDICT></td>
+        <td><ROW-TRIGGER-UPSTREAM-SILENT-WHY fact="true" status="impl/done">Event; checkable from the repository today.</ROW-TRIGGER-UPSTREAM-SILENT-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-COMPLIANCE-MANDATE fact="true" status="impl/done">"a compliance mandate requires a NIST-approved hash"</ROW-TRIGGER-COMPLIANCE-MANDATE></td>
-        <td><fact status="impl/done">Good</fact></td>
-        <td><fact status="impl/done">Unambiguous external event.</fact></td>
+        <td><ROW-TRIGGER-COMPLIANCE-MANDATE-VERDICT fact="true" status="impl/done">Good</ROW-TRIGGER-COMPLIANCE-MANDATE-VERDICT></td>
+        <td><ROW-TRIGGER-COMPLIANCE-MANDATE-WHY fact="true" status="impl/done">Unambiguous external event.</ROW-TRIGGER-COMPLIANCE-MANDATE-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-WHEN-IT-BREAKS fact="true" status="impl/done">"when it breaks"</ROW-TRIGGER-WHEN-IT-BREAKS></td>
-        <td><fact status="impl/done">Bad</fact></td>
-        <td><fact status="impl/done">Breakage is undefined and arrives too late to be a review.</fact></td>
+        <td><ROW-TRIGGER-WHEN-IT-BREAKS-VERDICT fact="true" status="impl/done">Bad</ROW-TRIGGER-WHEN-IT-BREAKS-VERDICT></td>
+        <td><ROW-TRIGGER-WHEN-IT-BREAKS-WHY fact="true" status="impl/done">Breakage is undefined and arrives too late to be a review.</ROW-TRIGGER-WHEN-IT-BREAKS-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-LATER fact="true" status="impl/done">"later" / "at some point"</ROW-TRIGGER-LATER></td>
-        <td><fact status="impl/done">Bad</fact></td>
-        <td><fact status="impl/done">Never fires. This is "revisit: never" in costume.</fact></td>
+        <td><ROW-TRIGGER-LATER-VERDICT fact="true" status="impl/done">Bad</ROW-TRIGGER-LATER-VERDICT></td>
+        <td><ROW-TRIGGER-LATER-WHY fact="true" status="impl/done">Never fires. This is "revisit: never" in costume.</ROW-TRIGGER-LATER-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-WHEN-WE-REFACTOR fact="true" status="impl/done">"when we refactor"</ROW-TRIGGER-WHEN-WE-REFACTOR></td>
-        <td><fact status="impl/done">Bad</fact></td>
-        <td><fact status="impl/done">Names an unrelated activity, not a signal about *this* decision.</fact></td>
+        <td><ROW-TRIGGER-WHEN-WE-REFACTOR-VERDICT fact="true" status="impl/done">Bad</ROW-TRIGGER-WHEN-WE-REFACTOR-VERDICT></td>
+        <td><ROW-TRIGGER-WHEN-WE-REFACTOR-WHY fact="true" status="impl/done">Names an unrelated activity, not a signal about *this* decision.</ROW-TRIGGER-WHEN-WE-REFACTOR-WHY></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM fact="true" status="impl/done">"if it becomes a problem"</ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM></td>
-        <td><fact status="impl/done">Bad</fact></td>
-        <td><fact status="impl/done">No metric, no threshold, no observer — pure vibes.</fact></td>
+        <td><ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM-VERDICT fact="true" status="impl/done">Bad</ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM-VERDICT></td>
+        <td><ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM-WHY fact="true" status="impl/done">No metric, no threshold, no observer — pure vibes.</ROW-TRIGGER-IF-IT-BECOMES-A-PROBLEM-WHY></td>
       </tr>
     </table>
     <p><THE-MECHANICAL-TEST fact="true" status="impl/done">The mechanical test: *"when it breaks" is not a trigger; a trigger

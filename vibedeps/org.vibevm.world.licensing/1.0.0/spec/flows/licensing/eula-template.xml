@@ -83,19 +83,19 @@ redistribution.</fence>
       </tr>
       <tr>
         <td><ROW-WANT-PERMISSIVE-FROM-THE-START fact="true" status="impl/done">Permissive from the start</ROW-WANT-PERMISSIVE-FROM-THE-START></td>
-        <td><fact status="impl/done">discard this template; use the target licence's official text and set the manifest field to its SPDX id</fact></td>
+        <td><ROW-WANT-PERMISSIVE-FROM-THE-START-CHANGE fact="true" status="impl/done">discard this template; use the target licence's official text and set the manifest field to its SPDX id</ROW-WANT-PERMISSIVE-FROM-THE-START-CHANGE></td>
       </tr>
       <tr>
         <td><ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED fact="true" status="impl/done">Reserved with no opening planned</ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED></td>
-        <td><fact status="impl/done">drop the relicense-intent clause — but only if that is genuinely the intent</fact></td>
+        <td><ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED-CHANGE fact="true" status="impl/done">drop the relicense-intent clause — but only if that is genuinely the intent</ROW-WANT-RESERVED-WITH-NO-OPENING-PLANNED-CHANGE></td>
       </tr>
       <tr>
         <td><ROW-WANT-INTERNAL-USE-ALLOWED fact="true" status="impl/done">Allow internal/organizational use</ROW-WANT-INTERNAL-USE-ALLOWED></td>
-        <td><fact status="impl/done">add an explicit internal-use grant to the interim list</fact></td>
+        <td><ROW-WANT-INTERNAL-USE-ALLOWED-CHANGE fact="true" status="impl/done">add an explicit internal-use grant to the interim list</ROW-WANT-INTERNAL-USE-ALLOWED-CHANGE></td>
       </tr>
       <tr>
         <td><ROW-WANT-A-DIFFERENT-TARGET-LICENCE fact="true" status="impl/done">A different target licence</ROW-WANT-A-DIFFERENT-TARGET-LICENCE></td>
-        <td><fact status="impl/done">name it in the relicense clause and keep the file's own text ready to swap in at relicense time</fact></td>
+        <td><ROW-WANT-A-DIFFERENT-TARGET-LICENCE-CHANGE fact="true" status="impl/done">name it in the relicense clause and keep the file's own text ready to swap in at relicense time</ROW-WANT-A-DIFFERENT-TARGET-LICENCE-CHANGE></td>
       </tr>
     </table>
   </adapting>

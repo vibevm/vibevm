@@ -58,19 +58,19 @@ unit carrying four elements:</a-phase-carries-four-elements-lead></p>
       </tr>
       <tr>
         <td><ROW-ELEMENT-NUMBERED-STEPS fact="true" status="impl/done">**Numbered steps**</ROW-ELEMENT-NUMBERED-STEPS></td>
-        <td><fact status="impl/done">the recipe: commands, paths, exact edits, in order</fact></td>
+        <td><ROW-ELEMENT-NUMBERED-STEPS-CONTENT fact="true" status="impl/done">the recipe: commands, paths, exact edits, in order</ROW-ELEMENT-NUMBERED-STEPS-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-ELEMENT-EXIT-ACCEPTANCE fact="true" status="impl/done">**Exit / acceptance**</ROW-ELEMENT-EXIT-ACCEPTANCE></td>
-        <td><fact status="impl/done">the criterion that closes the phase, checkable by command</fact></td>
+        <td><ROW-ELEMENT-EXIT-ACCEPTANCE-CONTENT fact="true" status="impl/done">the criterion that closes the phase, checkable by command</ROW-ELEMENT-EXIT-ACCEPTANCE-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-ELEMENT-PREDICTION fact="true" status="impl/done">**Prediction**</ROW-ELEMENT-PREDICTION></td>
-        <td><fact status="impl/done">the phase's own falsifiable expectation</fact></td>
+        <td><ROW-ELEMENT-PREDICTION-CONTENT fact="true" status="impl/done">the phase's own falsifiable expectation</ROW-ELEMENT-PREDICTION-CONTENT></td>
       </tr>
       <tr>
         <td><ROW-ELEMENT-COMMIT-SET fact="true" status="impl/done">**Commit set**</ROW-ELEMENT-COMMIT-SET></td>
-        <td><fact status="impl/done">the planned commits, subjects spelled in advance</fact></td>
+        <td><ROW-ELEMENT-COMMIT-SET-CONTENT fact="true" status="impl/done">the planned commits, subjects spelled in advance</ROW-ELEMENT-COMMIT-SET-CONTENT></td>
       </tr>
     </table>
     <p><worked-phase-lead fact="true" status="spec/done">A worked phase, condensed from a real campaign:</worked-phase-lead></p>

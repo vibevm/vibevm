@@ -37,23 +37,23 @@ upstream constraint and version&gt;.
       </tr>
       <tr>
         <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
-        <td><fact status="impl/done">A reader can act on it without asking anyone.</fact></td>
-        <td><fact status="impl/done">It hedges ("probably", "for now") without a trigger.</fact></td>
+        <td><ROW-FIELD-DECISION-PASSES-WHEN fact="true" status="impl/done">A reader can act on it without asking anyone.</ROW-FIELD-DECISION-PASSES-WHEN></td>
+        <td><ROW-FIELD-DECISION-FAILS-WHEN fact="true" status="impl/done">It hedges ("probably", "for now") without a trigger.</ROW-FIELD-DECISION-FAILS-WHEN></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
-        <td><fact status="impl/done">It cites data someone could check: a log, a count, a benchmark, a version.</fact></td>
-        <td><fact status="impl/done">It appeals to taste ("cleaner") or restates the decision.</fact></td>
+        <td><ROW-FIELD-WHY-PASSES-WHEN fact="true" status="impl/done">It cites data someone could check: a log, a count, a benchmark, a version.</ROW-FIELD-WHY-PASSES-WHEN></td>
+        <td><ROW-FIELD-WHY-FAILS-WHEN fact="true" status="impl/done">It appeals to taste ("cleaner") or restates the decision.</ROW-FIELD-WHY-FAILS-WHEN></td>
       </tr>
       <tr>
         <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
-        <td><fact status="impl/done">Each line names the loser *and* the reason it lost.</fact></td>
-        <td><fact status="impl/done">It lists losers without reasons — or lists nothing.</fact></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED-PASSES-WHEN fact="true" status="impl/done">Each line names the loser *and* the reason it lost.</ROW-FIELD-CONSIDERED-AND-REJECTED-PASSES-WHEN></td>
+        <td><ROW-FIELD-CONSIDERED-AND-REJECTED-FAILS-WHEN fact="true" status="impl/done">It lists losers without reasons — or lists nothing.</ROW-FIELD-CONSIDERED-AND-REJECTED-FAILS-WHEN></td>
       </tr>
       <tr>
         <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
-        <td><fact status="impl/done">Metric + threshold + observation point; a stranger can answer "has it fired?".</fact></td>
-        <td><fact status="impl/done">"Later", "when it breaks", "when we refactor".</fact></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT-PASSES-WHEN fact="true" status="impl/done">Metric + threshold + observation point; a stranger can answer "has it fired?".</ROW-FIELD-WHEN-TO-REVISIT-PASSES-WHEN></td>
+        <td><ROW-FIELD-WHEN-TO-REVISIT-FAILS-WHEN fact="true" status="impl/done">"Later", "when it breaks", "when we refactor".</ROW-FIELD-WHEN-TO-REVISIT-FAILS-WHEN></td>
       </tr>
     </table>
   </fields>
@@ -140,39 +140,39 @@ though neither fires itself: what fires a trigger is a re-read
       </tr>
       <tr>
         <td><ROW-ANTI-TAUTOLOGY fact="true" status="impl/done">Tautology</ROW-ANTI-TAUTOLOGY></td>
-        <td><fact status="impl/done">"600 s, because that is our timeout."</fact></td>
-        <td><fact status="impl/done">We do X because we do X — restates the decision, zero information.</fact></td>
-        <td><fact status="impl/done">Name the observation that forced the value.</fact></td>
+        <td><ROW-ANTI-TAUTOLOGY-EXAMPLE fact="true" status="impl/done">"600 s, because that is our timeout."</ROW-ANTI-TAUTOLOGY-EXAMPLE></td>
+        <td><ROW-ANTI-TAUTOLOGY-WHY-IT-FAILS fact="true" status="impl/done">We do X because we do X — restates the decision, zero information.</ROW-ANTI-TAUTOLOGY-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-TAUTOLOGY-FIX fact="true" status="impl/done">Name the observation that forced the value.</ROW-ANTI-TAUTOLOGY-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-UNFALSIFIABLE-WHY fact="true" status="impl/done">Unfalsifiable why</ROW-ANTI-UNFALSIFIABLE-WHY></td>
-        <td><fact status="impl/done">"blake3 felt cleaner." / "because it is better."</fact></td>
-        <td><fact status="impl/done">Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything.</fact></td>
-        <td><fact status="impl/done">Cite a measurement, constraint, or incident.</fact></td>
+        <td><ROW-ANTI-UNFALSIFIABLE-WHY-EXAMPLE fact="true" status="impl/done">"blake3 felt cleaner." / "because it is better."</ROW-ANTI-UNFALSIFIABLE-WHY-EXAMPLE></td>
+        <td><ROW-ANTI-UNFALSIFIABLE-WHY-WHY-IT-FAILS fact="true" status="impl/done">Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything.</ROW-ANTI-UNFALSIFIABLE-WHY-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-UNFALSIFIABLE-WHY-FIX fact="true" status="impl/done">Cite a measurement, constraint, or incident.</ROW-ANTI-UNFALSIFIABLE-WHY-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-REJECTIONS-WITHOUT-REASONS fact="true" status="impl/done">Rejections without reasons</ROW-ANTI-REJECTIONS-WITHOUT-REASONS></td>
-        <td><fact status="impl/done">"Considered: adaptive timeout, 300 s + retry."</fact></td>
-        <td><fact status="impl/done">The evaluation gets re-run; the bare list answers nothing.</fact></td>
-        <td><fact status="impl/done">One line per loser, each with the reason it lost.</fact></td>
+        <td><ROW-ANTI-REJECTIONS-WITHOUT-REASONS-EXAMPLE fact="true" status="impl/done">"Considered: adaptive timeout, 300 s + retry."</ROW-ANTI-REJECTIONS-WITHOUT-REASONS-EXAMPLE></td>
+        <td><ROW-ANTI-REJECTIONS-WITHOUT-REASONS-WHY-IT-FAILS fact="true" status="impl/done">The evaluation gets re-run; the bare list answers nothing.</ROW-ANTI-REJECTIONS-WITHOUT-REASONS-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-REJECTIONS-WITHOUT-REASONS-FIX fact="true" status="impl/done">One line per loser, each with the reason it lost.</ROW-ANTI-REJECTIONS-WITHOUT-REASONS-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-REVISIT-LATER fact="true" status="impl/done">"Revisit: later"</ROW-ANTI-REVISIT-LATER></td>
-        <td><fact status="impl/done">"Revisit when needed."</fact></td>
-        <td><fact status="impl/done">Never fires; the record hardens into a sacred cow.</fact></td>
-        <td><fact status="impl/done">Metric + threshold + observation point.</fact></td>
+        <td><ROW-ANTI-REVISIT-LATER-EXAMPLE fact="true" status="impl/done">"Revisit when needed."</ROW-ANTI-REVISIT-LATER-EXAMPLE></td>
+        <td><ROW-ANTI-REVISIT-LATER-WHY-IT-FAILS fact="true" status="impl/done">Never fires; the record hardens into a sacred cow.</ROW-ANTI-REVISIT-LATER-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-REVISIT-LATER-FIX fact="true" status="impl/done">Metric + threshold + observation point.</ROW-ANTI-REVISIT-LATER-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-WHY-IN-THE-COMMIT-ONLY fact="true" status="impl/done">Why lives in the commit only</ROW-ANTI-WHY-IN-THE-COMMIT-ONLY></td>
-        <td><fact status="impl/done">Reasoning in the commit body; spec carries the bare value.</fact></td>
-        <td><fact status="impl/done">Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`.</fact></td>
-        <td><fact status="impl/done">The spec carries the why; the commit cites the anchor.</fact></td>
+        <td><ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-EXAMPLE fact="true" status="impl/done">Reasoning in the commit body; spec carries the bare value.</ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-EXAMPLE></td>
+        <td><ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-WHY-IT-FAILS fact="true" status="impl/done">Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`.</ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-FIX fact="true" status="impl/done">The spec carries the why; the commit cites the anchor.</ROW-ANTI-WHY-IN-THE-COMMIT-ONLY-FIX></td>
       </tr>
       <tr>
         <td><ROW-ANTI-BACKFILLED-MEMORY fact="true" status="impl/done">Backfilled memory</ROW-ANTI-BACKFILLED-MEMORY></td>
-        <td><fact status="impl/done">Writing the why a week later, from recollection.</fact></td>
-        <td><fact status="impl/done">Reconstructed reasoning is fiction with confidence; the data is gone.</fact></td>
-        <td><fact status="impl/done">Record in the session that decides — or mark the why TODO(owner).</fact></td>
+        <td><ROW-ANTI-BACKFILLED-MEMORY-EXAMPLE fact="true" status="impl/done">Writing the why a week later, from recollection.</ROW-ANTI-BACKFILLED-MEMORY-EXAMPLE></td>
+        <td><ROW-ANTI-BACKFILLED-MEMORY-WHY-IT-FAILS fact="true" status="impl/done">Reconstructed reasoning is fiction with confidence; the data is gone.</ROW-ANTI-BACKFILLED-MEMORY-WHY-IT-FAILS></td>
+        <td><ROW-ANTI-BACKFILLED-MEMORY-FIX fact="true" status="impl/done">Record in the session that decides — or mark the why TODO(owner).</ROW-ANTI-BACKFILLED-MEMORY-FIX></td>
       </tr>
     </table>
   </anti-patterns>

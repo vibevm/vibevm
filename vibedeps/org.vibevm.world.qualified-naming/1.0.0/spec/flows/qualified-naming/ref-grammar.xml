@@ -45,28 +45,28 @@ not collide with your version syntax and never overload one.</PICK-THREE-THAT-DO
       </tr>
       <tr>
         <td><ROW-FORM-BARE-NAME fact="true" status="impl/done">**bare name**</ROW-FORM-BARE-NAME></td>
-        <td><fact status="impl/done">`wal`</fact></td>
-        <td><fact status="impl/done">CLI input only — resolved once via the index</fact></td>
+        <td><ROW-FORM-BARE-NAME-EXAMPLE fact="true" status="impl/done">`wal`</ROW-FORM-BARE-NAME-EXAMPLE></td>
+        <td><ROW-FORM-BARE-NAME-WHERE-LEGAL fact="true" status="impl/done">CLI input only — resolved once via the index</ROW-FORM-BARE-NAME-WHERE-LEGAL></td>
       </tr>
       <tr>
         <td><ROW-FORM-KIND-AND-NAME fact="true" status="impl/done">**kind + name**</ROW-FORM-KIND-AND-NAME></td>
-        <td><fact status="impl/done">`flow:wal`</fact></td>
-        <td><fact status="impl/done">CLI input only — kind is validated after resolution</fact></td>
+        <td><ROW-FORM-KIND-AND-NAME-EXAMPLE fact="true" status="impl/done">`flow:wal`</ROW-FORM-KIND-AND-NAME-EXAMPLE></td>
+        <td><ROW-FORM-KIND-AND-NAME-WHERE-LEGAL fact="true" status="impl/done">CLI input only — kind is validated after resolution</ROW-FORM-KIND-AND-NAME-WHERE-LEGAL></td>
       </tr>
       <tr>
         <td><ROW-FORM-GROUP-QUALIFIED fact="true" status="impl/done">**group-qualified**</ROW-FORM-GROUP-QUALIFIED></td>
-        <td><fact status="impl/done">`org.vibevm.world/wal`</fact></td>
-        <td><fact status="impl/done">**anywhere** — CLI, manifests, lockfiles</fact></td>
+        <td><ROW-FORM-GROUP-QUALIFIED-EXAMPLE fact="true" status="impl/done">`org.vibevm.world/wal`</ROW-FORM-GROUP-QUALIFIED-EXAMPLE></td>
+        <td><ROW-FORM-GROUP-QUALIFIED-WHERE-LEGAL fact="true" status="impl/done">**anywhere** — CLI, manifests, lockfiles</ROW-FORM-GROUP-QUALIFIED-WHERE-LEGAL></td>
       </tr>
       <tr>
         <td><ROW-FORM-KIND-AND-GROUP-QUALIFIED fact="true" status="impl/done">**kind + group-qualified**</ROW-FORM-KIND-AND-GROUP-QUALIFIED></td>
-        <td><fact status="impl/done">`flow:org.vibevm.world/wal`</fact></td>
-        <td><fact status="impl/done">anywhere — the fully explicit form</fact></td>
+        <td><ROW-FORM-KIND-AND-GROUP-QUALIFIED-EXAMPLE fact="true" status="impl/done">`flow:org.vibevm.world/wal`</ROW-FORM-KIND-AND-GROUP-QUALIFIED-EXAMPLE></td>
+        <td><ROW-FORM-KIND-AND-GROUP-QUALIFIED-WHERE-LEGAL fact="true" status="impl/done">anywhere — the fully explicit form</ROW-FORM-KIND-AND-GROUP-QUALIFIED-WHERE-LEGAL></td>
       </tr>
       <tr>
         <td><ROW-FORM-VERSIONED fact="true" status="impl/done">**versioned**</ROW-FORM-VERSIONED></td>
-        <td><fact status="impl/done">`org.vibevm.world/wal@0.6.0`</fact></td>
-        <td><fact status="impl/done">anywhere a specific release is meant</fact></td>
+        <td><ROW-FORM-VERSIONED-EXAMPLE fact="true" status="impl/done">`org.vibevm.world/wal@0.6.0`</ROW-FORM-VERSIONED-EXAMPLE></td>
+        <td><ROW-FORM-VERSIONED-WHERE-LEGAL fact="true" status="impl/done">anywhere a specific release is meant</ROW-FORM-VERSIONED-WHERE-LEGAL></td>
       </tr>
     </table>
     <p><two-rules-govern-the-table fact="true" status="impl/done">Two rules govern the table:</two-rules-govern-the-table></p>
@@ -91,23 +91,23 @@ verb.</DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN></p>
       </tr>
       <tr>
         <td><ROW-DOC-INSTALL fact="true" status="impl/done">an **install** command</ROW-DOC-INSTALL></td>
-        <td><fact status="impl/done">**qualified**</fact></td>
-        <td><fact status="impl/done">works unconditionally; a short name needs a configured registry index, which the reader may not have</fact></td>
+        <td><ROW-DOC-INSTALL-FORM fact="true" status="impl/done">**qualified**</ROW-DOC-INSTALL-FORM></td>
+        <td><ROW-DOC-INSTALL-WHY fact="true" status="impl/done">works unconditionally; a short name needs a configured registry index, which the reader may not have</ROW-DOC-INSTALL-WHY></td>
       </tr>
       <tr>
         <td><ROW-DOC-UNINSTALL-UPDATE fact="true" status="impl/done">an **uninstall / update** command</ROW-DOC-UNINSTALL-UPDATE></td>
-        <td><fact status="impl/done">**short**</fact></td>
-        <td><fact status="impl/done">resolves from the lockfile alone — no network, no index — and it is what a person actually types</fact></td>
+        <td><ROW-DOC-UNINSTALL-UPDATE-FORM fact="true" status="impl/done">**short**</ROW-DOC-UNINSTALL-UPDATE-FORM></td>
+        <td><ROW-DOC-UNINSTALL-UPDATE-WHY fact="true" status="impl/done">resolves from the lockfile alone — no network, no index — and it is what a person actually types</ROW-DOC-UNINSTALL-UPDATE-WHY></td>
       </tr>
       <tr>
         <td><ROW-DOC-FILE-CONTENTS fact="true" status="impl/done">**file contents** (manifest, lockfile, JSON samples)</ROW-DOC-FILE-CONTENTS></td>
-        <td><fact status="impl/done">**qualified**</fact></td>
-        <td><fact status="impl/done">the only form ever stored there, per [§storage](#storage)</fact></td>
+        <td><ROW-DOC-FILE-CONTENTS-FORM fact="true" status="impl/done">**qualified**</ROW-DOC-FILE-CONTENTS-FORM></td>
+        <td><ROW-DOC-FILE-CONTENTS-WHY fact="true" status="impl/done">the only form ever stored there, per [§storage](#storage)</ROW-DOC-FILE-CONTENTS-WHY></td>
       </tr>
       <tr>
         <td><ROW-DOC-PROSE fact="true" status="impl/done">**prose**</ROW-DOC-PROSE></td>
-        <td><fact status="impl/done">author's discretion</fact></td>
-        <td><fact status="impl/done">nothing is executed</fact></td>
+        <td><ROW-DOC-PROSE-FORM fact="true" status="impl/done">author's discretion</ROW-DOC-PROSE-FORM></td>
+        <td><ROW-DOC-PROSE-WHY fact="true" status="impl/done">nothing is executed</ROW-DOC-PROSE-WHY></td>
       </tr>
     </table>
     <p><THE-ASYMMETRY-IS-THE-POINT fact="true" status="impl/done">**The asymmetry is the point, and it is not

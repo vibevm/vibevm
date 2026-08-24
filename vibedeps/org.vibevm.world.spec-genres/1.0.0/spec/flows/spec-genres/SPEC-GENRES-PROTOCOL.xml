@@ -44,52 +44,52 @@ wins on conflict).</EACH-GENRE-HAS-CHARTER-MUTABILITY-READER-AND-AUTHORITY></p>
       </tr>
       <tr>
         <td><ROW-GENRE-BOOT-FILES fact="true" status="impl/done">**Boot files**</ROW-GENRE-BOOT-FILES></td>
-        <td><fact status="impl/done">Standing instructions loaded at session start; small and stable</fact></td>
-        <td><fact status="impl/done">Rare, deliberate edits</fact></td>
-        <td><fact status="impl/done">Every session, first</fact></td>
-        <td><fact status="impl/done">Binding</fact></td>
+        <td><ROW-GENRE-BOOT-FILES-CHARTER fact="true" status="impl/done">Standing instructions loaded at session start; small and stable</ROW-GENRE-BOOT-FILES-CHARTER></td>
+        <td><ROW-GENRE-BOOT-FILES-MUTABILITY fact="true" status="impl/done">Rare, deliberate edits</ROW-GENRE-BOOT-FILES-MUTABILITY></td>
+        <td><ROW-GENRE-BOOT-FILES-READER fact="true" status="impl/done">Every session, first</ROW-GENRE-BOOT-FILES-READER></td>
+        <td><ROW-GENRE-BOOT-FILES-AUTHORITY fact="true" status="impl/done">Binding</ROW-GENRE-BOOT-FILES-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">**Foundational decisions**</ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
-        <td><fact status="impl/done">Choices that cross every module (identity, versioning, licensing)</fact></td>
-        <td><fact status="impl/done">Amended by decision record</fact></td>
-        <td><fact status="impl/done">Everyone</fact></td>
-        <td><fact status="impl/done">Binding</fact></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-CHARTER fact="true" status="impl/done">Choices that cross every module (identity, versioning, licensing)</ROW-GENRE-FOUNDATIONAL-DECISIONS-CHARTER></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-MUTABILITY fact="true" status="impl/done">Amended by decision record</ROW-GENRE-FOUNDATIONAL-DECISIONS-MUTABILITY></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-READER fact="true" status="impl/done">Everyone</ROW-GENRE-FOUNDATIONAL-DECISIONS-READER></td>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-AUTHORITY fact="true" status="impl/done">Binding</ROW-GENRE-FOUNDATIONAL-DECISIONS-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">**Module contracts**</ROW-GENRE-MODULE-CONTRACTS></td>
-        <td><fact status="impl/done">What one module does — its behaviour, constraints, invariants (this convention: PROP / FEAT)</fact></td>
-        <td><fact status="impl/done">Edit + changelog line</fact></td>
-        <td><fact status="impl/done">Implementers</fact></td>
-        <td><fact status="impl/done">Binding</fact></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-CHARTER fact="true" status="impl/done">What one module does — its behaviour, constraints, invariants (this convention: PROP / FEAT)</ROW-GENRE-MODULE-CONTRACTS-CHARTER></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-MUTABILITY fact="true" status="impl/done">Edit + changelog line</ROW-GENRE-MODULE-CONTRACTS-MUTABILITY></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-READER fact="true" status="impl/done">Implementers</ROW-GENRE-MODULE-CONTRACTS-READER></td>
+        <td><ROW-GENRE-MODULE-CONTRACTS-AUTHORITY fact="true" status="impl/done">Binding</ROW-GENRE-MODULE-CONTRACTS-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">**Design docs**</ROW-GENRE-DESIGN-DOCS></td>
-        <td><fact status="impl/done">Why we chose what we chose — the narrative lore behind a contract</fact></td>
-        <td><fact status="impl/done">Rewritten freely; corrected on contract conflict</fact></td>
-        <td><fact status="impl/done">Anyone tracing intent</fact></td>
-        <td><fact status="impl/done">Non-binding</fact></td>
+        <td><ROW-GENRE-DESIGN-DOCS-CHARTER fact="true" status="impl/done">Why we chose what we chose — the narrative lore behind a contract</ROW-GENRE-DESIGN-DOCS-CHARTER></td>
+        <td><ROW-GENRE-DESIGN-DOCS-MUTABILITY fact="true" status="impl/done">Rewritten freely; corrected on contract conflict</ROW-GENRE-DESIGN-DOCS-MUTABILITY></td>
+        <td><ROW-GENRE-DESIGN-DOCS-READER fact="true" status="impl/done">Anyone tracing intent</ROW-GENRE-DESIGN-DOCS-READER></td>
+        <td><ROW-GENRE-DESIGN-DOCS-AUTHORITY fact="true" status="impl/done">Non-binding</ROW-GENRE-DESIGN-DOCS-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">**Research docs**</ROW-GENRE-RESEARCH-DOCS></td>
-        <td><fact status="impl/done">What *other* projects/systems did — external studies, prior art</fact></td>
-        <td><fact status="impl/done">Superseded by newer study</fact></td>
-        <td><fact status="impl/done">Anyone surveying the field</fact></td>
-        <td><fact status="impl/done">Non-binding</fact></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-CHARTER fact="true" status="impl/done">What *other* projects/systems did — external studies, prior art</ROW-GENRE-RESEARCH-DOCS-CHARTER></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-MUTABILITY fact="true" status="impl/done">Superseded by newer study</ROW-GENRE-RESEARCH-DOCS-MUTABILITY></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-READER fact="true" status="impl/done">Anyone surveying the field</ROW-GENRE-RESEARCH-DOCS-READER></td>
+        <td><ROW-GENRE-RESEARCH-DOCS-AUTHORITY fact="true" status="impl/done">Non-binding</ROW-GENRE-RESEARCH-DOCS-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">**Campaign plans**</ROW-GENRE-CAMPAIGN-PLANS></td>
-        <td><fact status="impl/done">The phases and gates of one multi-session change</fact></td>
-        <td><fact status="impl/done">Ticked as executed; archived when done</fact></td>
-        <td><fact status="impl/done">The crew running it</fact></td>
-        <td><fact status="impl/done">Non-binding (execution, not truth)</fact></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-CHARTER fact="true" status="impl/done">The phases and gates of one multi-session change</ROW-GENRE-CAMPAIGN-PLANS-CHARTER></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-MUTABILITY fact="true" status="impl/done">Ticked as executed; archived when done</ROW-GENRE-CAMPAIGN-PLANS-MUTABILITY></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-READER fact="true" status="impl/done">The crew running it</ROW-GENRE-CAMPAIGN-PLANS-READER></td>
+        <td><ROW-GENRE-CAMPAIGN-PLANS-AUTHORITY fact="true" status="impl/done">Non-binding (execution, not truth)</ROW-GENRE-CAMPAIGN-PLANS-AUTHORITY></td>
       </tr>
       <tr>
         <td><ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">**The checkpoint**</ROW-GENRE-THE-CHECKPOINT></td>
-        <td><fact status="impl/done">Where work stands *right now* — branch, blocker, next step</fact></td>
-        <td><fact status="impl/done">Overwritten every session</fact></td>
-        <td><fact status="impl/done">The next session, first</fact></td>
-        <td><fact status="impl/done">State, not truth</fact></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-CHARTER fact="true" status="impl/done">Where work stands *right now* — branch, blocker, next step</ROW-GENRE-THE-CHECKPOINT-CHARTER></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-MUTABILITY fact="true" status="impl/done">Overwritten every session</ROW-GENRE-THE-CHECKPOINT-MUTABILITY></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-READER fact="true" status="impl/done">The next session, first</ROW-GENRE-THE-CHECKPOINT-READER></td>
+        <td><ROW-GENRE-THE-CHECKPOINT-AUTHORITY fact="true" status="impl/done">State, not truth</ROW-GENRE-THE-CHECKPOINT-AUTHORITY></td>
       </tr>
     </table>
     <p><two-axes-separate-the-genres fact="true" status="impl/done">Two axes separate the binding genres from the rest.</two-axes-separate-the-genres></p>

@@ -28474,7 +28474,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ea8e043c2fa1fc8c42302566f8bc8ad5fa0ec7a71eba79c91ec96c38ba4a7cda",
+      "content_hash": "sha256:7956eb0df416411057668e4f8146cd13c343dce44edc38ef866614effc796366",
       "doc_path": "common/PROP-029",
       "file": "spec/common/PROP-029-fully-qualified-addresses.xml",
       "heading": "PROP-029 — Fully-qualified addresses and mechanical refactoring",
@@ -28492,7 +28492,7 @@
     },
     {
       "anchor": "decision",
-      "content_hash": "sha256:7e4313070a2a36ba1ab44c6cc23581fba4f6adaef0ed12e9f13c1c33d8e01d2d",
+      "content_hash": "sha256:d60f2e96f946f72a32e70ec26c7004f9195761880dfecbd6141f9c0c1c4ec72e",
       "doc_path": "common/PROP-029",
       "file": "spec/common/PROP-029-fully-qualified-addresses.xml",
       "heading": "1. Every address is fully qualified",
@@ -28744,7 +28744,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5c707bc4bb2472ecc95b91ed2cba26ef31ce745db448aeb33043c13611523f9a",
+      "content_hash": "sha256:1e3327628c57f4c1f658f527f02d293394e7e696fed8b50694d55352793d29ae",
       "doc_path": "common/PROP-031",
       "file": "spec/common/PROP-031-algorithmic-refactoring.xml",
       "heading": "PROP-031 — Algorithmic refactoring: the codemod engine and the write-side of the model",
@@ -28861,7 +28861,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:a8fd34037af58a0d6956485d47dcdb1ba58884d579dc36570efa85c35426405f",
+      "content_hash": "sha256:ad24695c639e47ef9364a647b179901a3e376890cd1c216caebf9c9162497f77",
       "doc_path": "common/PROP-031",
       "file": "spec/common/PROP-031-algorithmic-refactoring.xml",
       "heading": "2. Decisions",
@@ -29061,7 +29061,7 @@
     },
     {
       "anchor": "three-tier",
-      "content_hash": "sha256:c34b9fa4f4ccf111cf0fc2f09513670773ee6d9443d8ce028aae0a7e93ac1cd9",
+      "content_hash": "sha256:f0587b32fd9e4198be78683fcaa59713baf4e4f80587c1e83c9417f4e41264a2",
       "doc_path": "common/PROP-031",
       "file": "spec/common/PROP-031-algorithmic-refactoring.xml",
       "heading": "2.4 The three-tier stack",
@@ -29301,7 +29301,7 @@
     },
     {
       "anchor": "prior-art",
-      "content_hash": "sha256:116158dd41e5484659d6677ebb16cdf158e7cc8a22818f93116285251feb9eeb",
+      "content_hash": "sha256:54ca0f28136cffaaea4bb07cad6c0319f6c1b7776d47e5856636b45d5f0cd41b",
       "doc_path": "common/PROP-031",
       "file": "spec/common/PROP-031-algorithmic-refactoring.xml",
       "heading": "5. Prior art & license posture",
@@ -29445,7 +29445,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5fecc35317145338dc8a7b8400595005ad7191587e0634b96fb0f92404d510f1",
+      "content_hash": "sha256:d9e0cfa0ddbc9794c6f97cb2dcfaf9ccde0af76d1aa24a1aa2f45e5941b7dcee",
       "doc_path": "common/PROP-032",
       "file": "spec/common/PROP-032-project-model-ide-substrate.xml",
       "heading": "PROP-032 — The project model as a universal typed graph; the agent-first IDE substrate",
@@ -29571,7 +29571,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:55d7668df0cbbeeb18278b58e72f9a75204a76db63610cfa66766e48d01259ab",
+      "content_hash": "sha256:208bdca35f6ecdf49a92bbe0a34867394bae80d87e0746022c6a3042dd8d10c6",
       "doc_path": "common/PROP-032",
       "file": "spec/common/PROP-032-project-model-ide-substrate.xml",
       "heading": "2. Decisions",
@@ -29823,7 +29823,7 @@
     },
     {
       "anchor": "edges",
-      "content_hash": "sha256:d6d3159f2b4fdc3f248e39ef28bd8a2ff2a599c5648f387119059b223ca14d74",
+      "content_hash": "sha256:ee82f53c1b471037ba7eaaf7e0c3354f2ed4a0adc4549514b677b0953cdd1a23",
       "doc_path": "common/PROP-032",
       "file": "spec/common/PROP-032-project-model-ide-substrate.xml",
       "heading": "2.4 Edges are typed by authority direction",
@@ -30312,7 +30312,7 @@
     },
     {
       "anchor": "prior-art",
-      "content_hash": "sha256:26831567c7469a0fd8d3aaf7b8551013322cb00b2f763a0bdabf61875e93adb5",
+      "content_hash": "sha256:035ffdbdeba35917f9bcca3d686b1051a1eb99fe87a413a7412cd1dfb56fbae2",
       "doc_path": "common/PROP-032",
       "file": "spec/common/PROP-032-project-model-ide-substrate.xml",
       "heading": "6. Prior art & license posture",
@@ -30465,7 +30465,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dafb9a04fa5d55e85bce0f121ea72f688d8bc364d864835c6adf01c66dd0f569",
+      "content_hash": "sha256:fce86b56189bf8c0b41f32375b25d8c914d66a04400417dc29dcca35d2fe3dfa",
       "doc_path": "common/PROP-033",
       "file": "spec/common/PROP-033-refactoring-registry.xml",
       "heading": "PROP-033 — The refactoring registry: package-contributed, discovered, precompiled operations",
@@ -30564,7 +30564,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:4671f8780a7ea2f337a8f45894294276e283a87009cea9732172ceb720a5206b",
+      "content_hash": "sha256:2b9f9e377acd1d4d6618c3d34cc110e4bbc0d15a67f198c1dbb6a21cb9d0f28d",
       "doc_path": "common/PROP-033",
       "file": "spec/common/PROP-033-refactoring-registry.xml",
       "heading": "2. Decisions",
@@ -30721,7 +30721,7 @@
     },
     {
       "anchor": "kinds",
-      "content_hash": "sha256:514690db000e5651c49bb9c9cea716b309025765334c599fbcb1a1ed4f8420d2",
+      "content_hash": "sha256:8d2381e15abd178bfdc12a001c3c0e38a7cbe296490e3e9f91a0da1f2f0b41e0",
       "doc_path": "common/PROP-033",
       "file": "spec/common/PROP-033-refactoring-registry.xml",
       "heading": "2.4 Three kinds, one gated interface",
@@ -31006,7 +31006,7 @@
     },
     {
       "anchor": "prior-art",
-      "content_hash": "sha256:4a702bed6f3a9a3584c2f0faffe8355ec49e0cf63ab3cfe80692cac5f0fbea3d",
+      "content_hash": "sha256:752d11aea2d2cc7dc4189d3113bf1028fa548d40c676a5d74e4453d2731ac254",
       "doc_path": "common/PROP-033",
       "file": "spec/common/PROP-033-refactoring-registry.xml",
       "heading": "6. Prior art & license posture",
@@ -32734,7 +32734,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:16bdee7e01c8d3744b5312ba1cac9b96c15037951dd67252c220cdc2f1e2b6e5",
+      "content_hash": "sha256:80d31875ee2d8aeae3d2bf8964cf7f917cb017d29285bf46e3c64935713385ab",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.xml",
       "heading": "PROP-050: Dependency visibility — access, friendship, and the friend closure",
@@ -32797,7 +32797,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:5734d54dc47f3d385624bd7cc6affacec2517938a01c1f883aa962c7f9f55e43",
+      "content_hash": "sha256:dc528857e85addf44501bdb9dba23bed6bbc7185068ef68b2f2b1d48e2e11b4f",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.xml",
       "heading": "2. The model",
@@ -32887,7 +32887,7 @@
     },
     {
       "anchor": "friendship",
-      "content_hash": "sha256:730599e7de4362796d4dee95456a126724ec005456b958f418aedab64958a8d3",
+      "content_hash": "sha256:3f900a56811bf6d10fbecc63986d9023a44fce418fbc73d85b62c93c2d443751",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.xml",
       "heading": "2.3 Friendship — consumer-declared, two grant forms",
@@ -33445,7 +33445,7 @@
     },
     {
       "anchor": "prior-art",
-      "content_hash": "sha256:7a840abdd5013d51c4a40c706985272e7921513e5c447503e744d5bb47c5f33f",
+      "content_hash": "sha256:77113af5571c0c30abfd65fd91d53bd1289ecf4cf8149b97daa29f4f1fedc3a5",
       "doc_path": "common/PROP-050",
       "file": "spec/common/PROP-050-dependency-visibility.xml",
       "heading": "5. Prior art — what the neighbours teach",
@@ -34147,7 +34147,7 @@
     },
     {
       "anchor": "owed-a-record",
-      "content_hash": "sha256:c4066f6d1f128a8adf2fe6676332dff606d4cdc1c94268e16f10820793a65075",
+      "content_hash": "sha256:e20dd3ca2b36427957f35f4bfbd66cab67eb35a7f2caacb453a5391a5f0d004b",
       "doc_path": "design/README",
       "file": "spec/design/README.md",
       "heading": "Which decisions are owed a record",
@@ -34453,7 +34453,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7d7e8647197ceb1a95db65ba1f17e22b1e0dac35fbfae3d3d523fbc05551ce9f",
+      "content_hash": "sha256:a6cc1bf8e7785ed91b4af6bf1f6b1b08173ba86dde8264f33716f76d48dc394d",
       "doc_path": "design/action-system",
       "file": "spec/design/action-system.xml",
       "heading": "The vibevm Action System — design & architecture",
@@ -34561,7 +34561,7 @@
     },
     {
       "anchor": "crate",
-      "content_hash": "sha256:3e567a3cbae2aab5ffb22e2746ea3ec2b1dbf92559037e4a77dcd6a535d2ae15",
+      "content_hash": "sha256:0126de05014b9c78d5b35c656a427cb5d82fa3b565d705f8a0e3b21e2a3cf263",
       "doc_path": "design/action-system",
       "file": "spec/design/action-system.xml",
       "heading": "2. Crate & module architecture",
@@ -35425,7 +35425,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:323365b1578614a14f1983a745d402ddd5850be2f011fbac982f128be780831c",
+      "content_hash": "sha256:039680a39583befd5bd00d6c9f6ec8a4807260a590aa3e1dfc464256715e267d",
       "doc_path": "design/command-nodes",
       "file": "spec/design/command-nodes.xml",
       "heading": "Command nodes in the map — B-019(б)",
@@ -35605,7 +35605,7 @@
     },
     {
       "anchor": "node",
-      "content_hash": "sha256:dba2e5e3567661aa22531f8d60f7763bf51c91158219b4ecebea4f62c94a1ffa",
+      "content_hash": "sha256:06b66f2330ea53e1a41584529247a05d12e65f23498f348a05a8f26dd52735ea",
       "doc_path": "design/command-nodes",
       "file": "spec/design/command-nodes.xml",
       "heading": "3. What a command node carries",
@@ -39799,7 +39799,7 @@
     },
     {
       "anchor": "glyph-vocabulary",
-      "content_hash": "sha256:cdc5f1e2b6fe553d06d255b57da306e1171bec0726d513a9ffd3a49f5716ccf1",
+      "content_hash": "sha256:74bc70e2b78e3a439dd46e5c5516e8610add8d559b5d4244e09e3eacde4b829f",
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.xml",
       "heading": "2. Glyph vocabulary",
@@ -39826,7 +39826,7 @@
     },
     {
       "anchor": "palette-tokens",
-      "content_hash": "sha256:cb453f664f868387de4968e067706dd0ec3e19ede397a5b5248f303f6dace99a",
+      "content_hash": "sha256:7e972575ef98ecfcb99fb1f0de6498caa74c7addec9cd5431674b7cf31aec54f",
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.xml",
       "heading": "3. Palette system",
@@ -40042,7 +40042,7 @@
     },
     {
       "anchor": "rendering-tiers",
-      "content_hash": "sha256:acf476e5270d9a270395844bc293078c07248f3fde3251eded85c58eda6abb00",
+      "content_hash": "sha256:2da84e9b3c977c192c979de40037006d5d0d9b2c8fb3327ccdde4717747d8530",
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.xml",
       "heading": "4. Rendering tiers + degradation",
@@ -43975,7 +43975,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a4d47ea520def6879c2125bd4a06f3b5eb544ee25e2db626f081b4e587b43b75",
+      "content_hash": "sha256:feb86a69bdf64835468c0eebb984c22ea44a1a21ec6eac12bd9931bc617a2d0f",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.xml",
       "heading": "PROP-037: `vibe tree` — the interactive TUI application",
@@ -45433,7 +45433,7 @@
     },
     {
       "anchor": "action-system",
-      "content_hash": "sha256:85a4b070db5d80f5f641d08bf1b1a2fc60cf4949c746a77cabe94b9ea3a0ac7a",
+      "content_hash": "sha256:e4dcb053cd355ddc9ff4fd7410fbdb67e3ea754a23491cf4240581736046fea0",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.xml",
       "heading": "13. Built on the action system (`vibe-actions`, PROP-039)",
@@ -45523,7 +45523,7 @@
     },
     {
       "anchor": "action-catalogue",
-      "content_hash": "sha256:aa3e025a86db5c2f9599325a038cd638204ea5edf215c4a8e7bfa6ce0ef06f0c",
+      "content_hash": "sha256:302605b3273603fa7d572e1976424d61fa4dbf3801f0286e6c64d40d4bda3797",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.xml",
       "heading": "13.5 The action catalogue",
@@ -46189,7 +46189,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:505425aaaafad9029a2c0c07796fd123d967bcf9fba598cb493b79c8f51dd7a7",
+      "content_hash": "sha256:0df94bf0120adae0510f4c04ec6358576b1fe30f7f69fc5a85597881d1ce6d55",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "spec/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "PROP-043 — The facts markup: the inline status grammar and its IR",
@@ -46360,7 +46360,7 @@
     },
     {
       "anchor": "markup",
-      "content_hash": "sha256:ec9f66549ffeb907ce61421638be647302ee29eff4a83022c9d6e3299761346f",
+      "content_hash": "sha256:282cac51dcddc642177624c285712ac2ed807511ac63759e7e8747a3d1311ef4",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "spec/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3. The markup language",
@@ -46450,7 +46450,7 @@
     },
     {
       "anchor": "attributes",
-      "content_hash": "sha256:ec652770f85e47b1ccd60eb43047b3aef2a08daa72b8f8b3867a9ad22b8a8e46",
+      "content_hash": "sha256:d3a99cceb3da9f0b0b3465486ad75455efa4d96607e8509d16f4706ee39254d9",
       "doc_path": "modules/vibe-facts/PROP-043",
       "file": "spec/modules/vibe-facts/PROP-043-facts-markup.xml",
       "heading": "3.2 Attributes",
@@ -47341,7 +47341,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f6403f3c3058cea2e2504f35e34fe9dd700879a6a4079c74a067a16444a8a238",
+      "content_hash": "sha256:0183e0b7bb8408e60988a7bc9dcd176b89587e90bb4f23c477fcddeb2955d29d",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -47503,7 +47503,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:821a197970ca8bbb9fc3df27bd005870c5bba1a6a617f4c9c79602d06f18c312",
+      "content_hash": "sha256:1719d8992cb5d2b0d807aa47fd529ae4153c07e7c3782cabd15851d57ee4679e",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "2. Decisions",
@@ -48936,7 +48936,7 @@
     },
     {
       "anchor": "cli",
-      "content_hash": "sha256:60ee6cae958afa602e432426f661535dfd1fa0e1c80c5431fb1c2399a40769c0",
+      "content_hash": "sha256:8b1c6fc879587e286a7b32f62518eff411f2c1aaef70a681d8aeda2a5c7ddf91",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.xml",
       "heading": "2.11 CLI surface",
@@ -52846,7 +52846,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:40d6f8d9ceb5132988cf5380c14b5750419651b27e35d0fe8a8c7cb9cd3d204e",
+      "content_hash": "sha256:3f3c215ae174266c2a337a41a3b02bcd1cd35f68aff0c8296dab154326c91cdc",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.xml",
       "heading": "PROP-027 — `mcp` packages: the agent-server kind and its delivery",
@@ -52918,7 +52918,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:09126f2900eee4f12d2c64b7be87dabefe29b412ee076c9a23e2e753bc48a9c4",
+      "content_hash": "sha256:d249eb10c2fa5fc2add963f290fa978172fce98f3bf84cb9c1ed6a6eea0b29aa",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.xml",
       "heading": "2. Decisions",
@@ -53290,7 +53290,7 @@
     },
     {
       "anchor": "composition",
-      "content_hash": "sha256:98a606727b6f1a32a03c283157f428065be4d1a6b381f541fdbf87f0c8f4d28e",
+      "content_hash": "sha256:060ffe2f6e124afd1c440dcd362e2134611fa71e18b9885f716a4d8e5e5a6d4e",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.xml",
       "heading": "2.7 Composition: an mcp package is a full package",
@@ -53400,7 +53400,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bb797b6506b5aa44f7e9f4096d5d6f2516193c91a959117bc8b1249bd6e77602",
+      "content_hash": "sha256:68fe20f8e8fae0d02ced4013096810dd0f1c36508fdda1995359ae381c7c42ae",
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.xml",
       "heading": "Progress Control — руководство владельца",
@@ -56154,7 +56154,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:9d7da1e4843e6a712a5118e9401b8cac5665095eadb977922d95e28059fac694",
+      "content_hash": "sha256:13d0c9b8cef3857d132698e1c54420d36e9782efa631bd4a8a24a69d2cb94594",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -56316,7 +56316,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:e0270f3ebfb88e64c2fbca20870fbf60647f02647a1832f3d1c71203f2c92dac",
+      "content_hash": "sha256:72e6364cfc71b73d3b9c9be2d3f16dbc1c9674423b6023be6a390ecfc1c25f5d",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2. Decisions",
@@ -56473,7 +56473,7 @@
     },
     {
       "anchor": "registry-auth",
-      "content_hash": "sha256:655f7737993abf240314954118a372ffe93fb352b1a183e182eab0e0ce814171",
+      "content_hash": "sha256:81e800344cbf9c6d4221f091a025ef252f2a64327dc0dfb2df3d4ca7792bdfba",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.2.1 Per-registry authentication",
@@ -56964,7 +56964,7 @@
     },
     {
       "anchor": "git-source",
-      "content_hash": "sha256:69dbf1cc080e9bd81c083e40a4ecd5fa8119da84963ae1c2e4cf4b5a16789c5f",
+      "content_hash": "sha256:393833cf4abf1e850f885bbf7115b3f5ab056160be1a25b9e3ff24ad4126356d",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.4.1 Git-source declarations: `[requires.packages]` table-form",
@@ -57227,7 +57227,7 @@
     },
     {
       "anchor": "redirect",
-      "content_hash": "sha256:e065884f5c3da241493cdb5c6ce7550b4ad1381c2bbae520742387b94a9589b2",
+      "content_hash": "sha256:7bec285192924ca74a02d0f034455a21245dc0947110729c52e433f16b6cd30e",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.4.2 Registry redirect: delegating package content to an external repo",
@@ -58939,7 +58939,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:494d6b870aaa49f196f0af00172fe62fbf4ec98288e72a215c2c9fb52dab6ab0",
+      "content_hash": "sha256:ba1da5031db78998f9b275aad8b91f1bfa610273ee34951fec4a0ea7e92c99c7",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.xml",
       "heading": "PROP-008: Qualified package naming — groups, short aliases, collision detection",
@@ -59083,7 +59083,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:452f1a2962324f42547168570896e4c7ecf5f68f1a6c9ebcd496102deb0ab89c",
+      "content_hash": "sha256:5e64b1bbdbfd4a6fb9853db1428fe8ecb01d435965006d89dfe0b938c2051665",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.xml",
       "heading": "2. Decisions",
@@ -59287,7 +59287,7 @@
     },
     {
       "anchor": "pkgref",
-      "content_hash": "sha256:8aa7a2b95ae8e66d60a524d04154c4e5cd8b4d5f24e25a4e59e48aa4ccf86350",
+      "content_hash": "sha256:6768780b6a5d12576617f1601be41685908f83640e463ca53882e47dba23ba62",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.xml",
       "heading": "2.4 pkgref grammar",
@@ -59996,7 +59996,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c8e2f2b1bf7e209fbedad8c97c692c0bc35d5661c1f401ebd6b2a03020c5e8bf",
+      "content_hash": "sha256:05cf578afb8b4acc00e29f94653473048c973271728ca6cb28a4df7c5fc92432",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.xml",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -60149,7 +60149,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:69a06896c64076006e68f363ea1a7d41159a290d0784734984a4dac036a7d48f",
+      "content_hash": "sha256:55b26ad58541ee794d6386d20fd794d2deb89c65ffd93c94215197b866e6b202",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.xml",
       "heading": "2. Decisions",
@@ -60482,7 +60482,7 @@
     },
     {
       "anchor": "resolution",
-      "content_hash": "sha256:75c2512eba03823ece329a6fb132d6741bc662fc2cbe6d23665fce220b210bd8",
+      "content_hash": "sha256:205beffa6ba7fd6a2087f0647b25d0f6d1d8539120172d9a12e6809ad63db8e4",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.xml",
       "heading": "2.6 Offline resolution",
@@ -63324,7 +63324,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:16960eda29a8f13e0f88d8199ef63e72bffcefb8a5295ed095f79c4822f6321c",
+      "content_hash": "sha256:4e8be182f5fe69dc0bb3cad9e3dd0cd1b87121158d13b383d6e69ca99849a802",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2. Decisions",
@@ -64522,7 +64522,7 @@
     },
     {
       "anchor": "i18n",
-      "content_hash": "sha256:e667c5bbb986fb32e66baf4b0a1afd1c5fc4984b2374e7f2bb9191a5cc61b03f",
+      "content_hash": "sha256:78eae19f4c896fa2e2c4e46dd05cfea8b653d75fc34fcc3aebabaf38684037d7",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7 Internationalization (i18n) — multi-language package content",
@@ -64540,7 +64540,7 @@
     },
     {
       "anchor": "i18n-naming",
-      "content_hash": "sha256:f514f706658e27d819e609adfdae40b559e9d39672e96e4345cc4c122bebc73d",
+      "content_hash": "sha256:a7bd9981aa1910c1359b80ee327e8dd35bc9497c079de0c16a3446ba9cf4614e",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.1 File naming — the chosen pattern",
@@ -65116,7 +65116,7 @@
     },
     {
       "anchor": "algorithm",
-      "content_hash": "sha256:fcd92f4f6c5215977d04736002176c4a4bc6db0253d9a0c03d37bef038bf5f77",
+      "content_hash": "sha256:dfa1f6fa6557db9f023efc136fd81bcc188516be9a32f05cea3129322bbfc1f2",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3. SAT solver algorithm details",
@@ -65125,7 +65125,7 @@
     },
     {
       "anchor": "rule-encoding",
-      "content_hash": "sha256:0f5225c219e775ec2119eda1ab8e126e956de7e5fd42e3167799ab7edd30798f",
+      "content_hash": "sha256:00e3b239d3977caeda30895af88f40fba0c96442e511a86131f0e9421ab8ca1d",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3.1 Rule encoding — vibevm concepts → libsolv rules",
@@ -65917,7 +65917,7 @@
     },
     {
       "anchor": "prop-017",
-      "content_hash": "sha256:5f1a5586dd8780a8a50cf63d2f9b229f2881b4e70ff32554febe0ed6fb4c8a11",
+      "content_hash": "sha256:d005b61a604a4849ae3b278827ced7048934588c096568c164532ed7e1359aad",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.xml",
       "heading": "PROP-017 — Resolvo as the production resolver",
@@ -66277,7 +66277,7 @@
     },
     {
       "anchor": "encoding",
-      "content_hash": "sha256:ac43b917ad466f6afb27ae1c50252654ecd9c7fbfd37387e0b5c8cc82306e56c",
+      "content_hash": "sha256:6f588859e74027a3ba6e908420780ccd6754e3e5ee061a8b7637166ef67a0afc",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.xml",
       "heading": "3. Vocabulary → resolvo encoding",
@@ -66637,7 +66637,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4c274b5f88d23494667ea01545fee513abac3b8c1e4144a657103849983ec191",
+      "content_hash": "sha256:af40da0c99c95dd71d379aa347f41ed786271a7f1c911239714436d2dbe9eb96",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.xml",
       "heading": "PROP-040: the vibevm settings system — application/user preferences (`vibe-settings`)",
@@ -66808,7 +66808,7 @@
     },
     {
       "anchor": "locations",
-      "content_hash": "sha256:dbf7f8d2dc9cef714b2a3d59cebd8740422c1f01b1072e8fa4a4bfadb2b9123a",
+      "content_hash": "sha256:2962912ea76a8a064fdc646a3ff08c26d6aecce28252ad1fcf495797a3a3dcd9",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.xml",
       "heading": "3. File locations + roles",
@@ -67825,7 +67825,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bd4f4a352bbaa2f3710bce5ef2c31cec6298bffe6fe90ab5ce9468f63127a3de",
+      "content_hash": "sha256:bfcec5565f7f78909b81e2db02c39ba5ec9eeca29ab2b0629d0b3ec22ea129c3",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "PROP-007: Workspace — multi-package projects, recursive nesting, selective publish",
@@ -67951,7 +67951,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:15587c5f697b715fb0b085ddd0c011cf9a0c7d9fffbf0f01eb0b78fd72df853e",
+      "content_hash": "sha256:4bda1b8f3c3978ba5c0ac966361f8fc39b49e3cfc6d231d5894a7ddb138011e4",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "2. Decisions",
@@ -68016,7 +68016,7 @@
     },
     {
       "anchor": "unified-manifest",
-      "content_hash": "sha256:58dd5a75abf0441f3fe83604482a5910f0abc46c5824943fb1bb320308675d31",
+      "content_hash": "sha256:2f7f18949671afc612b320ca4efffd868fc5480afed5ebce7ccdfe66bd6c653c",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "2.2 Unified manifest — one `vibe.toml`",
@@ -68406,7 +68406,7 @@
     },
     {
       "anchor": "published-repos",
-      "content_hash": "sha256:cd898b01324c4cb1c2c8ff6a26560e117923e238545611fdff0077253f921211",
+      "content_hash": "sha256:6b3e4c15fa2077e128def237ac9468c955a740dfbe2a9c29be40263ede2868cc",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "2.8 Published package repositories",
@@ -68583,7 +68583,7 @@
     },
     {
       "anchor": "vs-subskills",
-      "content_hash": "sha256:5929a557c2ab8f717ccea30990a56a53160bb10c2ee8295668ae6fd50a72c594",
+      "content_hash": "sha256:544143d71355926eedb4cc7cde75aaa0bcf0af7a16e7f00d085bf8331e51632f",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "4. Workspace members vs subskills",
@@ -76104,7 +76104,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:b542003dae94e1a4cf4ba964ddeda9c3ab6b8f043abde884170314798351b4c0",
+      "content_hash": "sha256:af9defce697eb1e203bc02490618df3d2b35ced60b44ab1e5aff88737057e374",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "PROP-038: Hybrid boot linking — per-package compilation units with soft/hard static edges",
@@ -76221,7 +76221,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:527e7077265a040f05b1fe6cf48915efff002317c6848afe649864e8fff96052",
+      "content_hash": "sha256:119531d15bb112b8e5c72765bd2cf0127f5efa2e17d13b7b6af573445a7124a3",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "2. Decisions",
@@ -76275,7 +76275,7 @@
     },
     {
       "anchor": "edge-recursion",
-      "content_hash": "sha256:60b8e6a6b5417ca00ec462943d163759f74c5b9c40b0b5cde5716d499b37b80d",
+      "content_hash": "sha256:eaa46bce7dc335603bcf97c5305f631e6f9b90417e5fd51e19018c66a4e59303",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "2.2 The edge is the linker instruction; compilation is recursive and dynamic-bounded",

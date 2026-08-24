@@ -92,15 +92,15 @@ gap analysis is not analysis — it is advocacy:</one-directional-gap-analysis-i
         </tr>
         <tr>
           <td><ROW-ONE-DIRECTIONAL-TRAIL-ONLY fact="true" status="spec/done">Only finds where you trail</ROW-ONE-DIRECTIONAL-TRAIL-ONLY></td>
-          <td><fact status="spec/done">Marketing for the competitor</fact></td>
+          <td><ROW-ONE-DIRECTIONAL-TRAIL-ONLY-WHAT-IT-ACTUALLY-IS fact="true" status="spec/done">Marketing for the competitor</ROW-ONE-DIRECTIONAL-TRAIL-ONLY-WHAT-IT-ACTUALLY-IS></td>
         </tr>
         <tr>
           <td><ROW-ONE-DIRECTIONAL-LEAD-ONLY fact="true" status="spec/done">Only finds where you lead</ROW-ONE-DIRECTIONAL-LEAD-ONLY></td>
-          <td><fact status="spec/done">Marketing for yourself</fact></td>
+          <td><ROW-ONE-DIRECTIONAL-LEAD-ONLY-WHAT-IT-ACTUALLY-IS fact="true" status="spec/done">Marketing for yourself</ROW-ONE-DIRECTIONAL-LEAD-ONLY-WHAT-IT-ACTUALLY-IS></td>
         </tr>
         <tr>
           <td><ROW-FINDS-BOTH-ARGUED-EQUALLY fact="true" status="spec/done">Finds both, argued equally</ROW-FINDS-BOTH-ARGUED-EQUALLY></td>
-          <td><fact status="spec/done">Intelligence you can act on</fact></td>
+          <td><ROW-FINDS-BOTH-ARGUED-EQUALLY-WHAT-IT-ACTUALLY-IS fact="true" status="spec/done">Intelligence you can act on</ROW-FINDS-BOTH-ARGUED-EQUALLY-WHAT-IT-ACTUALLY-IS></td>
         </tr>
       </table>
       <p><WHERE-YOU-LEAD-DESERVES-THE-SAME-RIGOR fact="true" status="impl/done">Where you lead deserves the same rigor as where you trail: name the
@@ -148,15 +148,15 @@ when:</not-every-glance-warrants-a-full-study></p>
       </tr>
       <tr>
         <td><ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE fact="true" status="spec/done">Before building in a space others occupy</ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE></td>
-        <td><fact status="spec/done">Cheaper to learn their dead ends than to re-walk them</fact></td>
+        <td><ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE-WHY-IT-WARRANTS-THE-FULL fact="true" status="spec/done">Cheaper to learn their dead ends than to re-walk them</ROW-TRIGGER-BEFORE-BUILDING-IN-AN-OCCUPIED-SPACE-WHY-IT-WARRANTS-THE-FULL></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING fact="true" status="spec/done">A competitor ships something alarming</ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING></td>
-        <td><fact status="spec/done">An emotional reaction needs a structured study to become a decision</fact></td>
+        <td><ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING-WHY-IT-WARRANTS-THE-FULL fact="true" status="spec/done">An emotional reaction needs a structured study to become a decision</ROW-TRIGGER-A-COMPETITOR-SHIPS-SOMETHING-ALARMING-WHY-IT-WARRANTS-THE-FULL></td>
       </tr>
       <tr>
         <td><ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION fact="true" status="spec/done">"Why don't we just do what X does?" recurs</ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION></td>
-        <td><fact status="spec/done">A recurring question deserves a durable, citable answer, not a repeated verbal one</fact></td>
+        <td><ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION-WHY-IT-WARRANTS-THE-FULL fact="true" status="spec/done">A recurring question deserves a durable, citable answer, not a repeated verbal one</ROW-TRIGGER-A-RECURRING-WHY-NOT-QUESTION-WHY-IT-WARRANTS-THE-FULL></td>
       </tr>
     </table>
     <p><a-one-off-lookup-does-not-warrant-a-study fact="true" status="impl/done">For a one-off factual lookup — "does X support Windows?" — a study is

@@ -41,18 +41,18 @@ audience = "region-2"</fence>
       </tr>
       <tr>
         <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR fact="true" status="spec/done">Shared with every contributor</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR></td>
-        <td><fact status="spec/done">No — lives in one `.git/config`</fact></td>
-        <td><fact status="spec/done">Yes — checked into the tree</fact></td>
+        <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-LOCAL-REMOTE fact="true" status="spec/done">No — lives in one `.git/config`</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-LOCAL-REMOTE></td>
+        <td><ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — checked into the tree</ROW-REQ-SHARED-WITH-EVERY-CONTRIBUTOR-COMMITTED-MANIFEST></td>
       </tr>
       <tr>
         <td><ROW-REQ-VERIFIABLE-IN-CI fact="true" status="spec/done">Verifiable in CI / a sweep</ROW-REQ-VERIFIABLE-IN-CI></td>
-        <td><fact status="spec/done">No — not visible to CI</fact></td>
-        <td><fact status="spec/done">Yes — a file CI can read</fact></td>
+        <td><ROW-REQ-VERIFIABLE-IN-CI-LOCAL-REMOTE fact="true" status="spec/done">No — not visible to CI</ROW-REQ-VERIFIABLE-IN-CI-LOCAL-REMOTE></td>
+        <td><ROW-REQ-VERIFIABLE-IN-CI-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — a file CI can read</ROW-REQ-VERIFIABLE-IN-CI-COMMITTED-MANIFEST></td>
       </tr>
       <tr>
         <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES fact="true" status="spec/done">Reviewed when a host changes</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES></td>
-        <td><fact status="spec/done">No — silent edit</fact></td>
-        <td><fact status="spec/done">Yes — shows up in a diff</fact></td>
+        <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-LOCAL-REMOTE fact="true" status="spec/done">No — silent edit</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-LOCAL-REMOTE></td>
+        <td><ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-COMMITTED-MANIFEST fact="true" status="spec/done">Yes — shows up in a diff</ROW-REQ-REVIEWED-WHEN-A-HOST-CHANGES-COMMITTED-MANIFEST></td>
       </tr>
     </table>
     <p><THE-MANIFEST-CARRIES-NO-CREDENTIALS fact="true" status="impl/done">The manifest carries **no credentials.**</THE-MANIFEST-CARRIES-NO-CREDENTIALS></p>
@@ -146,13 +146,13 @@ from becomes a no-op on the next fan-out; every other host catches up.</THE-HOST
       </tr>
       <tr>
         <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH fact="true" status="spec/done">Delete a branch</ROW-NO-PROPAGATE-DELETE-A-BRANCH></td>
-        <td><fact status="spec/done">**No**</fact></td>
-        <td><fact status="spec/done">An accidental deletion must not cascade to every host</fact></td>
+        <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH-PROPAGATES fact="true" status="spec/done">**No**</ROW-NO-PROPAGATE-DELETE-A-BRANCH-PROPAGATES></td>
+        <td><ROW-NO-PROPAGATE-DELETE-A-BRANCH-WHY fact="true" status="spec/done">An accidental deletion must not cascade to every host</ROW-NO-PROPAGATE-DELETE-A-BRANCH-WHY></td>
       </tr>
       <tr>
         <td><ROW-NO-PROPAGATE-REWRITE-HISTORY fact="true" status="spec/done">Rewrite / force-push history</ROW-NO-PROPAGATE-REWRITE-HISTORY></td>
-        <td><fact status="spec/done">**No**</fact></td>
-        <td><fact status="spec/done">The fan-out is fast-forward-only; a rewrite is a divergence, and divergences fail loud</fact></td>
+        <td><ROW-NO-PROPAGATE-REWRITE-HISTORY-PROPAGATES fact="true" status="spec/done">**No**</ROW-NO-PROPAGATE-REWRITE-HISTORY-PROPAGATES></td>
+        <td><ROW-NO-PROPAGATE-REWRITE-HISTORY-WHY fact="true" status="spec/done">The fan-out is fast-forward-only; a rewrite is a divergence, and divergences fail loud</ROW-NO-PROPAGATE-REWRITE-HISTORY-WHY></td>
       </tr>
     </table>
     <p><DELETING-A-BRANCH-EVERYWHERE-IS-A-PER-HOST-ACT fact="true" status="impl/done">Deleting a branch everywhere is a deliberate, per-host act.</DELETING-A-BRANCH-EVERYWHERE-IS-A-PER-HOST-ACT></p>
