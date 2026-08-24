@@ -1,76 +1,82 @@
-# CONTINUE — холодный резюм (чекпойнт 2026-08-24, ночь)
+# CONTINUE — холодный резюм (чекпойнт 2026-08-25, дизайн-день)
 
 > WAL (`vibevm/vibespecs/WAL.xml`) — канонический живой статус; при
 > расхождении он главнее этого снапшота.
 
-## TL;DR — день из четырёх посаженных волн (все на зеркалах)
+## TL;DR — день одной большой спеки
 
-1. **Переезд vibevm/** (PROP-052) — 4 корня хоста + spec 86 пакетов +
-   флип `USE_NEW_LAYOUT` + свип; specmap-паритет 0 unresolved,
-   clean-room `init→install→check`, агентская проба маршрутизации PASS.
-   `ecb0a5de … 4edb5f2c`.
-2. **Normal-флип** — все 42 живых слота vibepacks в `format = "normal"`;
-   компилятор дозрел до XML-мира (PROP-035, четыре поправки): seed
-   стрипает `.xml`; multi-doc closure — doc-slug вне контракт-домов
-   (`boot/`, `contract/`); qualify узнал ячеечные (K6.5) и цитатные
-   факты; вложенные ноды поглощаются (READ-ONCE); **`@spec` — агентское
-   ребро, вклеивает только `#use`** (реализованный
-   ##OPEN-CLOSURE-EXPLOSION: лейн 250 KB → 2.5 MB → обратно к
-   снипетному размеру). `b56c604b / b82b7423 / db4a36e8`.
-3. **Install-фиксы + vibe clean** (PROP-011 три рулинга; PROP-053
-   новый): `vibe install <pkg> [--offline]` больше не сносит мир
-   (полная резолюция: named свежо + прочие на пинах); ноль зависимостей
-   — штатный no-op (`vibe init && vibe install` из коробки);
-   same-version дрейф local-источника лечится hash-guard'ом write-once
-   кэша (`insert_current_at`, все 5 фетч-путей). **`vibe clean`** —
-   mvn-clean со спецификой промптов: derived-only (vibedeps +
-   generated STATIC/INDEX/INLINE по маркеру); лок, авторское и машинный
-   кэш неприкосновенны; цепочка **`vibe clean install [pkgref]`** =
-   wipe → мир из лока → refresh названных. Шесть e2e-тестов.
-   `1cfdec31 / eb9103ab`.
-4. **Bootstrap-генераторы трёх стеков** (находка владельца из
-   consumer-воркспейса contentdevtools): `… init` писал
-   `spec_roots = ["spec"]` и ходил по `vibedeps/<slot>/<ver>/spec`.
-   Rust-фикс портирован из consumer-репликации (их 9cc8161) в канон;
-   тот же жанр закрыт в typescript и go (+ regression-ассерты);
-   fresh-project e2e всех трёх стеков свипнуты; mcp-пакеты — через
-   sync-engines. Перематериализация стала боевой проверкой hash-guard:
-   слоты подхватили фикс без бампа версии. `f4fbee14`.
+Владелец заказал «огромную творческую задачу»: Maven-аналог лайфсайкла +
+Babel/LLVM/Webpack-аналог расширений компилятора, спроектированные как одна
+синергичная машина. Итог дня — два посаженных документа:
 
-Панель all green после каждой волны. Дерево чисто, зеркала синхронны.
+1. **`vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml`** —
+   дизайн-закон (`a11d881f`), статус spec/plan (ждёт владельческого слова на
+   стройку). Внутри: девятифазный default-лайфсайкл
+   (validate→install→generate→build→test→create→verify→package→deploy) +
+   clean; обобщение цепочки PROP-053 (`vibe [clean] <phase>`); одна машина
+   расширений (`[[extension]]`: point/handler/config, семейства
+   `phase:`/`slot:`/`compile:`); пять видов хендлеров (builtin/script/
+   binary/native/agent); двухъярусный компилятор — staged-трансформы
+   (4 позиции) и **pass tier** (полный IR за флагом `compiler_internals`,
+   пять уровней source→document→closure→lane→emitted, пассы
+   transform/lowering/frontend/backend, verifier между пассами);
+   **installation-is-consent** (консентов нет — вместо них observability:
+   реестр `vibe extensions`, трассировка `-print-after-all`-жанра, lane
+   analyzer под PROP-048); C-ABI/VST-провод нативов (+prebuilt
+   closed-source); ревизия инкрементальной материализации (слот-рекорд
+   `.vibe-slot.toml` + дифф вместо wipe — сегодняшний баг: install убивает
+   слотовые `target/`). §14 Reference (точные схемы) и §15 Glossary — для
+   младших моделей-исполнителей.
+2. **`campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`** —
+   входное ТЗ мультиагентной коробки (`dbd7a772`): восемь волн R1–R8,
+   каждый шаг кончается демонстрируемым состоянием (блок «Демо»),
+   red-proof-тесты, непереговорные правила, карты кода, мины,
+   SPEC-DEBT-протокол (исполнитель статусы спек не двигает).
 
-## Ключевые уроки дня (они же в WAL constraints)
+## Четыре владельческих рулинга дня (все дословно в §1 спеки)
 
-- `@spec` не вклеивается компилятором — только `#use` (иначе лейн ×10).
-- Кэш write-once + hash-guard: не возвращать голый `insert_at` в фетчи;
-  дрейф той-же-версии для local-источников — норма, guard его ловит.
-- Панель на занятом боксе — `CARGO_BUILD_JOBS=4` (полный параллелизм
-  линкеров ловит 0xc0000142 даже одной панелью).
-- Пакетные воркспейсы форматируются СВОИМ `cargo fmt` (хостовый их не
-  видит); синк-таргеты (mcp и vendor) не правятся руками — только
-  авторская копия + `cargo xtask sync-engines`.
-- Фрозен-слоты (v0.6–v0.8) — история: не чинятся под новые раскладки.
-- WAL-проза: строка-продолжение факта не должна начинаться с `+ ` —
-  MD-проекция читает её list-item'ом (anchored-when-marked ловит).
+1. Мандат-эпик (лайфсайкл+расширения, синергия, натив через dylib,
+   инкрементальность — «супер важный кусок»).
+2. Полный IR-доступ плагинам (LLVM-жанр), флаг в vibe.toml, рефакторинг
+   переходов IR в композируемые пассы.
+3. Никаких консентов — установка пакета и есть консент; вместо гейтов —
+   полная observability. Плюс VST-вопрос → prebuilt closed-source форма.
+4. Фазовая линейка утверждена («окей»); план — инкрементальный.
 
-## Кандидаты следующей сессии (владельческие развилки — не стартовать самому)
+## Состояние посадки
 
-1. **Релиз 1.0.0**: инспекция по `RELEASE-INSPECTION-CHECKLIST.md` →
-   новый PAT → С6-публикация → тег (TASKS.md / TZ-RELEASE §10).
-2. **B-107**: наблюдать ли пакетный XML-корпус фактов (3 мёртвых
-   exclude в facts.toml; корпус 98 файлов — .md-остаток). Плюс прежние
-   B-103/B-105.
-3. Добить статусы `impl/plan → impl/done` в PROP-053 и PROP-011-рулингах
-   (код и тесты зелёные — чисто доковая правка).
-4. TS fresh-e2e на этом боксе красен из-за отсутствующих
-   `tools/*/node_modules` (`npm install` в ts-extract / ts-oracle
-   лечит; панель этот класс штатно скипает).
+- Коммиты: `a11d881f` (спека+specmap), `dbd7a772` (ТЗ) — поверх `af68fa85`.
+- Панель: полный прогон **all green 54/54 EXIT=0** был на утренней версии
+  спеки; вечерние правки — только доки (XML/MD/specmap.json), код не
+  трогался; финальную панель владелец санкционировал считать зелёной
+  (слово в чате, 2026-08-25), фоновый прогон мог не дожить до конца сессии.
+- specmap: 6702 юнита, 0 unresolved, 0 suspects, 21 стоячий warning.
+- Судейского долга нет (XML-спеки вне 98-файлового md-корпуса — B-107).
+
+## Уроки дня
+
+- **`vibe progress scan --campaign` — ПИШУЩИЙ верб**: перепроецирует
+  run/-стейт и прунит out-of-scope записи С ВЕРДИКТАМИ (чуть не унесло 377k
+  строк кэша кампании; откатано). Замер долга — только `judging-debt.py`.
+- Дизайн-сверка с кодом окупилась трижды: PROP-025 уже собирает в слот
+  (прецедент in-slot build), PROP-020 нёс отложенный general-lifecycle,
+  footprint материализации уже возвращается и «ждал» записи.
+
+## Кандидаты следующей сессии (владельческие)
+
+1. **Передача ТЗ мультиагентной коробке** — вход:
+   `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (читает
+   PROP-054 целиком первым). Права коробки на коммит/пуш — слово владельца.
+2. Прежние: релиз 1.0.0 за PAT (С6); B-107 (XML-корпус фактов);
+   `impl/plan → done` в PROP-053/PROP-011-рулингах; `npm install` в
+   tools/ts-extract+ts-oracle для TS fresh-e2e.
+3. Открытые развилки спеки (§13): бюджет create-токенов; первые
+   deploy-цели.
 
 ## Быстрый старт
 
 ```sh
-git log --oneline -12                    # четыре волны дня сверху
-CARGO_BUILD_JOBS=4 bash tools/self-check.sh   # нарратит [N/54], heartbeat 30s
-./target/debug/vibe.exe clean install --path . --assume-yes   # новый глагол
-cargo xtask specmap && cargo xtask sync-engines               # оба нарратят
+git log --oneline -6                          # dbd7a772, a11d881f сверху
+CARGO_BUILD_JOBS=4 bash tools/self-check.sh   # панель, вердикт по хвосту
+cargo xtask specmap && cargo xtask mirror     # карта и раскатка
 ```
