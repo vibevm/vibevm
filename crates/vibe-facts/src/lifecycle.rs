@@ -21,7 +21,7 @@ pub struct OrphanReport {
 pub fn package_file_path(project_root: &Path, package: &str) -> PathBuf {
     let safe_name = package.replace(['/', '\\'], ".");
     project_root
-        .join("vibefacts")
+        .join(vibe_core::layout::current_vibefacts_root())
         .join(format!("{safe_name}.toml"))
 }
 
@@ -67,6 +67,6 @@ pub fn remove_package_file(project_root: &Path, package: &str) -> Result<bool, R
         path: path.clone(),
         source,
     })?;
-    remove_empty_home(&project_root.join("vibefacts"))?;
+    remove_empty_home(&project_root.join(vibe_core::layout::current_vibefacts_root()))?;
     Ok(true)
 }

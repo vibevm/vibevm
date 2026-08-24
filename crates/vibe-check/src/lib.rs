@@ -17,10 +17,11 @@
 //!    less than `wal_max_age_hours` (default 24); older → warning.
 //! 6. [`CheckId::WalWellformed`] — WAL has the canonical sections
 //!    (Current Phase, Constraints, Done, Next, Issues).
-//! 7. [`CheckId::BootDirectory`] — `spec/boot/` exists and holds only
-//!    markdown files. PROP-009 retired the `NN-` filename prefix; the
-//!    directory holds authored boot files and `vibe`-generated
-//!    `INDEX.md` / `STATIC.md` artifacts, none numerically prefixed.
+//! 7. [`CheckId::BootDirectory`] — the boot directory
+//!    (`current_boot_dir()`) exists and holds only markdown files.
+//!    PROP-009 retired the `NN-` filename prefix; the directory holds
+//!    authored boot files and `vibe`-generated `INDEX.md` /
+//!    `STATIC.md` artifacts, none numerically prefixed.
 //!    [`CheckId::RedirectBlock`] checks the `<vibevm>` block of each
 //!    agent instruction file is well-formed (PROP-012).
 //! 8. [`CheckId::LockfileFiles`] — every package in `vibe.lock` has a
@@ -218,7 +219,7 @@ impl Severity {
 /// let finding = Finding {
 ///     check: CheckId::ReviewAging,
 ///     severity: Severity::Warning,
-///     path: Some(PathBuf::from("spec/notes/old-review.md")),
+///     path: Some(PathBuf::from("notes/old-review.md")),
 ///     line: Some(1),
 ///     message: "REVIEW marker dated 2026-04-01 is 33 days old".to_string(),
 /// };
@@ -250,7 +251,7 @@ pub struct Finding {
 ///     severity: Severity::Error,
 ///     path: None,
 ///     line: None,
-///     message: "spec/boot/ is missing".to_string(),
+///     message: "the boot directory is missing".to_string(),
 /// });
 /// assert!(report.has_errors());
 /// assert_eq!(report.count(Severity::Error), 1);
@@ -471,69 +472,11 @@ pub(crate) fn unix_now_utc() -> u64 {
 }
 
 /// Shared fixtures for the per-cell unit tests: a frozen clock and a
-/// minimal clean project tree.
+/// minimal clean project tree — out-of-line since the R2C layout slice
+/// (the `lib.rs` length budget; same pattern as the per-cell `tests`
+/// modules).
 #[cfg(test)]
-pub(crate) mod test_support {
-    use std::fs;
-    use std::path::Path;
-    use std::time::SystemTime;
-
-    use crate::CheckOptions;
-
-    pub(crate) fn fixed_now() -> u64 {
-        // 2026-05-04T12:00:00Z — well after the various dated test
-        // markers, so age math is positive.
-        vibe_core::timestamp::parse_unix_utc("2026-05-04T12:00:00Z").unwrap()
-    }
-
-    pub(crate) fn opts() -> CheckOptions {
-        CheckOptions {
-            now_unix_utc: Some(fixed_now()),
-            ..Default::default()
-        }
-    }
-
-    pub(crate) fn write_minimal_project(root: &Path) {
-        // vibe.toml with default registry.
-        fs::write(
-            root.join("vibe.toml"),
-            r#"[project]
-name = "demo"
-version = "0.0.1"
-
-[[registry]]
-name = "vibespecs"
-url = "https://example/vibespecs"
-"#,
-        )
-        .unwrap();
-        fs::create_dir_all(root.join("spec/boot")).unwrap();
-        fs::write(root.join("spec/boot/00-core.md"), "# core\n").unwrap();
-        fs::write(root.join("spec/boot/90-user.md"), "# user\n").unwrap();
-        // WAL with all required sections.
-        let wal = root.join("spec/WAL.md");
-        fs::write(
-            &wal,
-            "# WAL\n\n## Current phase\n\n## Constraints\n\n## Done\n\n## Next\n\n## Known issues\n",
-        )
-        .unwrap();
-        // Pin the WAL mtime to 1h before `fixed_now()` so the freshness
-        // check sees a deterministic positive age regardless of where
-        // the host's wall-clock sits when the test runs. Otherwise
-        // `clean_minimal_project_has_no_findings` flakes whenever real
-        // wall-time crosses past `fixed_now()` (a fresh-write mtime
-        // ahead of `now` surfaces as the "WAL mtime is in the future"
-        // info finding).
-        let one_hour_before_fixed_now = SystemTime::UNIX_EPOCH
-            + std::time::Duration::from_secs(fixed_now().saturating_sub(3600));
-        fs::OpenOptions::new()
-            .write(true)
-            .open(&wal)
-            .unwrap()
-            .set_modified(one_hour_before_fixed_now)
-            .unwrap();
-    }
-}
+pub(crate) mod test_support;
 
 #[cfg(test)]
 mod tests {

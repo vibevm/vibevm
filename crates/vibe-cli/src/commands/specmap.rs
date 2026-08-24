@@ -273,14 +273,16 @@ mod tests {
             std::fs::write(
                 root.join(Config::REL_PATH),
                 format!(
-                    "namespace = \"{ns}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n"
+                    "namespace = \"{ns}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"{}\"]\n",
+                    vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
                 ),
             )
             .unwrap();
         }
-        std::fs::create_dir_all(root.join("spec")).unwrap();
+        let specs_root = root.join(vibe_core::layout::current_specs_root());
+        std::fs::create_dir_all(&specs_root).unwrap();
         std::fs::write(
-            root.join("spec/D.md"),
+            specs_root.join("D.md"),
             "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
         )
         .unwrap();

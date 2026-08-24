@@ -42,8 +42,14 @@ impl Check for LockfileFilesCheck {
 
         // 1. Every locked package has its `vibedeps/` slot on disk.
         let mut expected: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+        // The live dependency-slot root, `/`-separated so the slot strings
+        // stay comparable with the walk below (and byte-identical to the
+        // pre-relayout spelling on the legacy layout).
+        let deps_root = vibe_core::layout::current_vibedeps_root()
+            .to_string_lossy()
+            .replace('\\', "/");
         for pkg in &lockfile.packages {
-            let slot = format!("vibedeps/{}.{}/{}", pkg.group, pkg.name, pkg.version);
+            let slot = format!("{deps_root}/{}.{}/{}", pkg.group, pkg.name, pkg.version);
             if !project_root.join(&slot).is_dir() {
                 report.err(
                     CheckId::LockfileFiles,
@@ -61,7 +67,7 @@ impl Check for LockfileFilesCheck {
 
         // 2. No `vibedeps/` slot absent from the lockfile — `vibe install`
         //    prunes a slot a version bump or a dropped dependency orphans.
-        let vibedeps = project_root.join("vibedeps");
+        let vibedeps = project_root.join(vibe_core::layout::current_vibedeps_root());
         if vibedeps.is_dir() {
             for kind_name in read_subdirs(&vibedeps) {
                 for version in read_subdirs(&kind_name) {
@@ -132,6 +138,7 @@ mod tests {
     use std::fs;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, Severity, check_project};
@@ -179,7 +186,13 @@ files_written = []
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 6\n",
         )
         .unwrap();
-        fs::create_dir_all(project.path().join("vibedeps/org.vibevm.ghost/1.0.0")).unwrap();
+        fs::create_dir_all(
+            project
+                .path()
+                .join(layout::current_vibedeps_root())
+                .join("org.vibevm.ghost/1.0.0"),
+        )
+        .unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report

@@ -25,9 +25,9 @@ use crate::cli::{ProgressBaselineArgs, ProgressRescanArgs};
 /// verification pass writes them: `verified_at` plus `verdicts{anchor →
 /// {v, ev[]}}` in the per-file `campaign` map (PROP-043 §7.1).
 ///
-/// `spec/a.md` disagrees with itself on purpose — one drifting item among
-/// three confirmed facts — so the unit's rolled-up verdict has something
-/// to be worst-of.
+/// The `a.md` fixture disagrees with itself on purpose — one drifting
+/// item among three confirmed facts — so the unit's rolled-up verdict has
+/// something to be worst-of.
 fn seeded(root: &Path, ctx: &crate::output::Context) -> Result<()> {
     incremental_fixture(root)?;
     scan(ctx, &args(root, false))?;
@@ -42,12 +42,14 @@ fn seeded(root: &Path, ctx: &crate::output::Context) -> Result<()> {
             record.campaign.insert("verdicts".into(), verdicts);
         }
     };
+    // An evidence ref into another spec document, on the live layout.
+    let module_x_ev = format!("{}#a", spec_rel("modules/x.md"));
     seed(
         &mut c,
-        "spec/a.md",
+        &spec_rel("a.md"),
         serde_json::json!({
             "a1": {"v": "confirmed", "ev": ["crates/vibe-core/src/x.rs:1"]},
-            "a2": {"v": "drift", "ev": ["spec/modules/x.md#a"]},
+            "a2": {"v": "drift", "ev": [module_x_ev]},
             "a3": {"v": "confirmed", "ev": []},
             "a4": {"v": "confirmed", "ev": []},
             "_elements": {"v": "confirmed", "ev": []},
@@ -55,7 +57,7 @@ fn seeded(root: &Path, ctx: &crate::output::Context) -> Result<()> {
     );
     seed(
         &mut c,
-        "spec/b.md",
+        &spec_rel("b.md"),
         serde_json::json!({
             "b1": {"v": "confirmed", "ev": []},
             "b2": {"v": "confirmed", "ev": []},
@@ -107,7 +109,10 @@ fn the_baseline_round_trips_to_carried_forward() {
     // The projection first: the addresses and the rolled-up verdicts.
     assert_eq!(base.campaign_id, "progress-test");
     assert_eq!(base.units.len(), 2, "one unit per fixture file");
-    let alpha = base.units.get("spec/a.md#alpha").expect("alpha");
+    let alpha = base
+        .units
+        .get(&format!("{}#alpha", spec_rel("a.md")))
+        .expect("alpha");
     assert_eq!(
         alpha.verdict, "drift",
         "one drifting item among three confirmed facts wins the unit"
@@ -124,7 +129,7 @@ fn the_baseline_round_trips_to_carried_forward() {
     );
     assert_eq!(
         base.units
-            .get("spec/b.md#beta")
+            .get(&format!("{}#beta", spec_rel("b.md")))
             .and_then(|u| u.marker.as_deref()),
         Some("spec/plan"),
         "b.md's section marker beats the fallback"
@@ -171,9 +176,9 @@ fn an_edited_unit_is_the_only_row_that_moves() {
     baseline_cmd(&ctx, &baseline_args(root)).expect("write the baseline");
     let base = Baseline::load(&baseline_path(root)).expect("load");
 
-    let before = std::fs::read_to_string(root.join("spec/a.md")).expect("read a");
+    let before = std::fs::read_to_string(root.join(spec_rel("a.md"))).expect("read a");
     std::fs::write(
-        root.join("spec/a.md"),
+        root.join(spec_rel("a.md")),
         before.replace("The first claim.", "The first claim, reworded."),
     )
     .expect("edit a");
@@ -185,12 +190,18 @@ fn an_edited_unit_is_the_only_row_that_moves() {
             .map(|r| r.class.clone())
             .unwrap_or_else(|| panic!("no row for {addr}"))
     };
-    assert_eq!(class("spec/a.md#alpha"), RescanClass::Changed);
-    assert_eq!(class("spec/b.md#beta"), RescanClass::CarriedForward);
+    assert_eq!(
+        class(&format!("{}#alpha", spec_rel("a.md"))),
+        RescanClass::Changed
+    );
+    assert_eq!(
+        class(&format!("{}#beta", spec_rel("b.md"))),
+        RescanClass::CarriedForward
+    );
 
     // Reverted, the row goes back to carrying forward — the suspicion was
     // about the text, not about the run.
-    std::fs::write(root.join("spec/a.md"), &before).expect("revert a");
+    std::fs::write(root.join(spec_rel("a.md")), &before).expect("revert a");
     let rows = classify(root, &base);
     assert!(rows.iter().all(|r| r.class == RescanClass::CarriedForward));
 }
@@ -231,7 +242,7 @@ fn a_second_run_writes_nothing() {
     let cache_path = root.join("campaigns/progress-test/run/cache.json");
     let mut c = cache::Cache::load(&cache_path).expect("load cache");
     c.files
-        .get_mut("spec/b.md")
+        .get_mut(&spec_rel("b.md"))
         .expect("record")
         .campaign
         .insert(

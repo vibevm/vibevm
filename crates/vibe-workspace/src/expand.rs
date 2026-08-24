@@ -40,7 +40,7 @@ pub(crate) fn expand(
             let manifest_path = member_dir.join(Manifest::FILENAME);
             if !manifest_path.is_file() {
                 // A glob may legitimately sweep up non-package directories
-                // (`packages/.git`, build output) — skip those. An explicit
+                // (registry metadata, build output) — skip those. An explicit
                 // path that names a directory with no manifest is an error.
                 if is_glob {
                     continue;

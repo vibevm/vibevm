@@ -19,9 +19,9 @@ pub(super) fn coord() -> SelfCoordinate {
 }
 
 #[cfg(test)]
-pub(super) fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
+pub(super) fn entry(path: impl Into<String>, link: LinkType, origin: &str) -> BootEntry {
     BootEntry {
-        path: path.to_string(),
+        path: path.into(),
         band: BootBand::Dependency,
         link,
         when: None,
@@ -36,9 +36,14 @@ pub(super) fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
 /// A `BootEntry` with an explicit link and `when` — for exercising the
 /// `INDEX.md` rendering of conditional entries directly.
 #[cfg(test)]
-fn entry_when(path: &str, link: LinkType, when: Option<WhenCondition>, origin: &str) -> BootEntry {
+fn entry_when(
+    path: impl Into<String>,
+    link: LinkType,
+    when: Option<WhenCondition>,
+    origin: &str,
+) -> BootEntry {
     BootEntry {
-        path: path.to_string(),
+        path: path.into(),
         band: BootBand::Dependency,
         link,
         when,
@@ -58,9 +63,9 @@ pub(super) fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
 /// A `normal`-format `static` entry — the renderer compiles its `#use` /
 /// `#source` closure rather than concatenating the file (PROP-035 §8).
 #[cfg(test)]
-pub(super) fn entry_normal(path: &str, origin: &str) -> BootEntry {
+pub(super) fn entry_normal(path: impl Into<String>, origin: &str) -> BootEntry {
     BootEntry {
-        path: path.to_string(),
+        path: path.into(),
         band: BootBand::Dependency,
         link: LinkType::Static,
         when: None,
@@ -72,14 +77,15 @@ pub(super) fn entry_normal(path: &str, origin: &str) -> BootEntry {
     }
 }
 
-/// Write the `greeter` normal-package fixture into `ws`'s `vibedeps/` slot and
+/// Write the `greeter` normal-package fixture into `ws`'s dependency slot and
 /// return the contract's workspace-relative path — a runnable reference model
 /// (scaffold H) of a `normal` package: a contract that `#source`s an impl and
 /// `#use`s a prelude, plus an `unused` section reachable by neither directive
 /// (so the compile must tree-shake it away, PROP-035 §7.2).
 #[cfg(test)]
 fn write_greeter_fixture(ws: &Path) -> String {
-    let base = ws.join("vibedeps/com.example.hello.greeter/1.0.0/spec");
+    let slot = crate::layout_paths::vibedeps("com.example.hello.greeter/1.0.0");
+    let base = ws.join(crate::layout_paths::slot_specs_path(&slot, ""));
     let write = |rel: &str, body: &str| {
         let p = base.join(rel);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -101,7 +107,7 @@ fn write_greeter_fixture(ws: &Path) -> String {
         "contract/unused.md",
         "# Unused {#root}\n\nUNUSED_SHOULD_NOT_APPEAR\n",
     );
-    "vibedeps/com.example.hello.greeter/1.0.0/spec/contract/greeting.md".to_string()
+    crate::layout_paths::slot_specs(slot, "contract/greeting.md")
 }
 
 #[test]
@@ -117,10 +123,14 @@ fn render_index_of_empty_boot_is_just_the_schema() {
 fn render_index_carries_static_and_dynamic_entries_in_order() {
     let b = boot(vec![
         // Unconditional → read directly (kind "static").
-        entry("spec/boot/00-core.md", LinkType::Dynamic, "."),
+        entry(
+            crate::layout_paths::boot("00-core.md"),
+            LinkType::Dynamic,
+            ".",
+        ),
         // Conditional (a `when`) → gated INCLUDE (kind "dynamic").
         entry_when(
-            "vibedeps/org.vibevm.rust/2.1.0/boot/rust.md",
+            crate::layout_paths::vibedeps("org.vibevm.rust/2.1.0/boot/rust.md"),
             LinkType::Dynamic,
             Some(WhenCondition::Os(TargetOs::Linux)),
             "stack:rust",
@@ -132,9 +142,10 @@ fn render_index_carries_static_and_dynamic_entries_in_order() {
     let parsed: toml::Value = toml::from_str(&text).unwrap();
     let entries = parsed.get("entry").unwrap().as_array().unwrap();
     assert_eq!(entries.len(), 2);
+    let own_boot = crate::layout_paths::boot("00-core.md");
     assert_eq!(
         entries[0].get("path").unwrap().as_str(),
-        Some("spec/boot/00-core.md")
+        Some(own_boot.as_str())
     );
     assert_eq!(entries[0].get("kind").unwrap().as_str(), Some("static"));
     assert_eq!(entries[1].get("kind").unwrap().as_str(), Some("dynamic"));
@@ -143,7 +154,11 @@ fn render_index_carries_static_and_dynamic_entries_in_order() {
 #[test]
 fn render_index_inline_pointer_present_only_with_static_entries() {
     let without = render_index(
-        &boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]),
+        &boot(vec![entry(
+            crate::layout_paths::boot("00-core.md"),
+            LinkType::Dynamic,
+            ".",
+        )]),
         None,
     )
     .unwrap();
@@ -151,7 +166,7 @@ fn render_index_inline_pointer_present_only_with_static_entries() {
 
     let with = render_index(
         &boot(vec![entry(
-            "vibedeps/org.vibevm.crit/1.0.0/boot.md",
+            crate::layout_paths::vibedeps("org.vibevm.crit/1.0.0/boot.md"),
             LinkType::Static,
             "flow:crit",
         )]),
@@ -159,16 +174,17 @@ fn render_index_inline_pointer_present_only_with_static_entries() {
     )
     .unwrap();
     let parsed: toml::Value = toml::from_str(&with).unwrap();
+    let static_lane = crate::layout_paths::boot("STATIC.md");
     assert_eq!(
         parsed.get("static").unwrap().as_str(),
-        Some("spec/boot/STATIC.md")
+        Some(static_lane.as_str())
     );
 }
 
 #[test]
 fn render_index_emits_when_on_a_dynamic_entry() {
     let b = boot(vec![entry_when(
-        "vibedeps/org.vibevm.windows/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.windows/1.0.0/boot.md"),
         LinkType::Dynamic,
         Some(WhenCondition::Os(TargetOs::Windows)),
         "stack:windows",
@@ -187,7 +203,7 @@ fn render_index_unconditional_entry_is_kind_static() {
     // A dynamically-linked entry with no `when` is read directly — kind
     // "static", and no `when` key.
     let b = boot(vec![entry_when(
-        "vibedeps/org.vibevm.rust/2.1.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.rust/2.1.0/boot.md"),
         LinkType::Dynamic,
         None,
         "stack:rust",
@@ -207,37 +223,48 @@ fn render_index_excludes_static_lane_entries() {
     // the dynamic entry is indexed.
     let b = boot(vec![
         entry(
-            "vibedeps/org.vibevm.crit/1.0.0/boot.md",
+            crate::layout_paths::vibedeps("org.vibevm.crit/1.0.0/boot.md"),
             LinkType::Static,
             "flow:crit",
         ),
-        entry("spec/boot/00-core.md", LinkType::Dynamic, "."),
+        entry(
+            crate::layout_paths::boot("00-core.md"),
+            LinkType::Dynamic,
+            ".",
+        ),
     ]);
     let parsed: toml::Value = toml::from_str(&render_index(&b, None).unwrap()).unwrap();
     let entries = parsed.get("entry").unwrap().as_array().unwrap();
     assert_eq!(entries.len(), 1);
+    let own_boot = crate::layout_paths::boot("00-core.md");
     assert_eq!(
         entries[0].get("path").unwrap().as_str(),
-        Some("spec/boot/00-core.md")
+        Some(own_boot.as_str())
     );
 }
 
 #[test]
 fn render_static_is_none_without_static_entries() {
     let ws = TempDir::new().unwrap();
-    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
+    let b = boot(vec![entry(
+        crate::layout_paths::boot("00-core.md"),
+        LinkType::Dynamic,
+        ".",
+    )]);
     assert!(render_static(&b, ws.path(), &coord()).unwrap().is_none());
 }
 
 #[test]
 fn render_static_concatenates_contributions_verbatim() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
+    let crit = ws.path().join(crate::layout_paths::vibedeps(
+        "org.vibevm.crit/1.0.0/boot.md",
+    ));
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# Critical discipline\n\nAlways do the thing.").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.crit/1.0.0/boot.md"),
         LinkType::Static,
         "flow:crit",
     )]);
@@ -253,19 +280,23 @@ fn render_static_expands_an_embed_directive() {
     // The payoff (PROP-035 §8): a #embed in a static contribution is
     // expanded when STATIC.md is compiled.
     let ws = TempDir::new().unwrap();
-    let contrib = ws.path().join("vibedeps/org.vibevm.x/1.0.0/boot.md");
+    let contrib = ws
+        .path()
+        .join(crate::layout_paths::vibedeps("org.vibevm.x/1.0.0/boot.md"));
     fs::create_dir_all(contrib.parent().unwrap()).unwrap();
     fs::write(
         &contrib,
         "# X {#root}\n#embed spec://org.vibevm.core/vibevm/common/TARGET#root",
     )
     .unwrap();
-    let target = ws.path().join("spec/common/TARGET.md");
+    let target = ws
+        .path()
+        .join(crate::layout_paths::specs_path("common/TARGET.md"));
     fs::create_dir_all(target.parent().unwrap()).unwrap();
     fs::write(&target, "# Target {#root}\nEMBEDDED CONTENT").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/org.vibevm.x/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.x/1.0.0/boot.md"),
         LinkType::Static,
         "flow:x",
     )]);
@@ -279,11 +310,13 @@ fn render_static_without_directives_is_left_verbatim() {
     // The guard: a directive-free lane is not touched by the compiler, so
     // vibevm's own boot stays byte-identical until it adopts the format.
     let ws = TempDir::new().unwrap();
-    let contrib = ws.path().join("vibedeps/org.vibevm.y/1.0.0/boot.md");
+    let contrib = ws
+        .path()
+        .join(crate::layout_paths::vibedeps("org.vibevm.y/1.0.0/boot.md"));
     fs::create_dir_all(contrib.parent().unwrap()).unwrap();
     fs::write(&contrib, "# Y\n\nplain boot content, no directives.").unwrap();
     let b = boot(vec![entry(
-        "vibedeps/org.vibevm.y/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.y/1.0.0/boot.md"),
         LinkType::Static,
         "flow:y",
     )]);
@@ -394,7 +427,7 @@ fn render_static_normal_differs_from_simple_on_the_same_file() {
 fn render_static_errors_on_a_missing_contribution() {
     let ws = TempDir::new().unwrap();
     let b = boot(vec![entry(
-        "vibedeps/org.vibevm.gone/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.gone/1.0.0/boot.md"),
         LinkType::Static,
         "flow:gone",
     )]);
@@ -410,8 +443,9 @@ fn render_static_errors_on_a_missing_contribution() {
 /// syntax; the generic `<fact id>` form keeps its own reader pins in
 /// vibe-specdoc.
 fn write_xml_snippet(ws: &Path) -> String {
-    let rel = "vibedeps/org.example.lib/1.0.0/spec/boot/snippet.xml";
-    let abs = ws.join(rel);
+    let slot = crate::layout_paths::vibedeps("org.example.lib/1.0.0");
+    let rel = crate::layout_paths::slot_specs(&slot, "boot/snippet.xml");
+    let abs = ws.join(&rel);
     fs::create_dir_all(abs.parent().unwrap()).unwrap();
     fs::write(
         &abs,
@@ -419,7 +453,7 @@ fn write_xml_snippet(ws: &Path) -> String {
          <p><BOOT-RULE fact=\"true\" status=\"impl/done\">xml-authored rule</BOOT-RULE></p>\n</spec>\n",
     )
     .unwrap();
-    rel.to_string()
+    rel
 }
 
 /// The static splice of an XML snippet is its canonical MD projection —
@@ -441,7 +475,10 @@ fn render_static_projects_an_xml_snippet_deterministically() {
     // The provenance comment names the materialised (.xml) path.
     assert!(first.contains(&rel), "{first}");
     // And the MD lane header still leads — the artifact stays STATIC.md.
-    assert!(first.starts_with("<!-- spec/boot/STATIC.md"), "{first}");
+    assert!(
+        first.starts_with(&format!("<!-- {}", crate::layout_paths::boot("STATIC.md"))),
+        "{first}"
+    );
 }
 
 /// The INDEX lane carries the entry path as materialised — the `.xml`
@@ -458,11 +495,14 @@ fn render_index_names_the_materialised_xml_path() {
 #[test]
 fn target_format_selects_index_pointer_and_preserves_markdown_bytes() {
     let ws = TempDir::new().unwrap();
-    let rel = "vibedeps/org.example.lib/1.0.0/spec/boot/rules.md";
-    let abs = ws.path().join(rel);
+    let rel = crate::layout_paths::slot_specs(
+        crate::layout_paths::vibedeps("org.example.lib/1.0.0"),
+        "boot/rules.md",
+    );
+    let abs = ws.path().join(&rel);
     fs::create_dir_all(abs.parent().unwrap()).unwrap();
     fs::write(&abs, "# Rules {#root}\n\n@fact:ONE one @status:impl/done\n").unwrap();
-    let b = boot(vec![entry(rel, LinkType::Static, "org.example/lib")]);
+    let b = boot(vec![entry(&rel, LinkType::Static, "org.example/lib")]);
 
     let legacy = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
     let markdown = render_static_with_spec_format(&b, ws.path(), &coord(), SpecFormat::Markdown)
@@ -471,7 +511,10 @@ fn target_format_selects_index_pointer_and_preserves_markdown_bytes() {
     assert_eq!(legacy, markdown, "Markdown target bytes must not move");
 
     let index = render_index_with_spec_format(&b, None, SpecFormat::Xml).unwrap();
-    assert!(index.contains("static = \"spec/boot/STATIC.xml\""));
+    assert!(index.contains(&format!(
+        "static = \"{}\"",
+        crate::layout_paths::boot("STATIC.xml")
+    )));
 }
 
 #[test]
@@ -479,7 +522,10 @@ fn xml_target_crosses_the_pivot_once_per_contribution() {
     let ws = TempDir::new().unwrap();
     let mut entries = Vec::new();
     for (name, fact) in [("one", "ONE"), ("two", "TWO")] {
-        let rel = format!("vibedeps/org.example.{name}/1.0.0/spec/boot/rules.md");
+        let rel = crate::layout_paths::slot_specs(
+            crate::layout_paths::vibedeps(format!("org.example.{name}/1.0.0")),
+            "boot/rules.md",
+        );
         let abs = ws.path().join(&rel);
         fs::create_dir_all(abs.parent().unwrap()).unwrap();
         fs::write(
@@ -496,7 +542,10 @@ fn xml_target_crosses_the_pivot_once_per_contribution() {
     let xml = render_static_with_spec_format(&boot(entries), ws.path(), &coord(), SpecFormat::Xml)
         .unwrap()
         .unwrap();
-    assert!(xml.starts_with("<!-- spec/boot/STATIC.xml"), "{xml}");
+    assert!(
+        xml.starts_with(&format!("<!-- {}", crate::layout_paths::boot("STATIC.xml"))),
+        "{xml}"
+    );
     assert_eq!(xml.matches("<spec ").count(), 2, "{xml}");
     assert_eq!(xml.matches("<!-- vibe:static ").count(), 2, "{xml}");
 }

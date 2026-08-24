@@ -8,18 +8,24 @@ use super::*;
 #[test]
 fn an_xml_spec_counts_the_same_units_as_its_md_projection() {
     let xml_root = tempfile::tempdir().expect("tempdir");
-    std::fs::create_dir_all(xml_root.path().join("spec")).expect("mkdir");
-    std::fs::write(xml_root.path().join("spec/doc.xml"), XML_SPEC).expect("write xml");
+    std::fs::create_dir_all(
+        xml_root
+            .path()
+            .join(vibe_core::layout::current_specs_root()),
+    )
+    .expect("mkdir");
+    std::fs::write(xml_root.path().join(spec_rel("doc.xml")), XML_SPEC).expect("write xml");
     std::fs::write(xml_root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
 
     // The hand-pinned MD twin is also the canonical projection itself.
     let md_root = tempfile::tempdir().expect("tempdir");
-    std::fs::create_dir_all(md_root.path().join("spec")).expect("mkdir");
+    std::fs::create_dir_all(md_root.path().join(vibe_core::layout::current_specs_root()))
+        .expect("mkdir");
     let (projection, kind) =
-        vibe_specdoc::load_spec_text(&xml_root.path().join("spec/doc.xml")).expect("project");
+        vibe_specdoc::load_spec_text(&xml_root.path().join(spec_rel("doc.xml"))).expect("project");
     assert_eq!(kind, vibe_specdoc::SourceKind::XmlProjected);
     assert_eq!(projection, MD_SPEC);
-    std::fs::write(md_root.path().join("spec/doc.md"), MD_SPEC).expect("write md");
+    std::fs::write(md_root.path().join(spec_rel("doc.md")), MD_SPEC).expect("write md");
     std::fs::write(md_root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
 
     let xml = ground(&args(xml_root.path(), false)).expect("ground xml");
@@ -35,15 +41,16 @@ fn an_xml_spec_counts_the_same_units_as_its_md_projection() {
     assert_eq!(xml.docs[0].markers.len(), 3);
     // And the source is marked: its diagnostics are projection-relative.
     assert_eq!(xml.xml_sources.len(), 1);
-    assert!(xml.xml_sources.contains("spec/doc.xml"));
+    assert!(xml.xml_sources.contains(&spec_rel("doc.xml")));
     assert!(md.xml_sources.is_empty());
 }
 
 #[test]
 fn named_xml_facts_are_addressable_and_stable_across_two_scans() {
     let root = tempfile::tempdir().expect("tempdir");
-    std::fs::create_dir_all(root.path().join("spec")).expect("mkdir");
-    std::fs::write(root.path().join("spec/doc.xml"), XML_SPEC).expect("write xml");
+    std::fs::create_dir_all(root.path().join(vibe_core::layout::current_specs_root()))
+        .expect("mkdir");
+    std::fs::write(root.path().join(spec_rel("doc.xml")), XML_SPEC).expect("write xml");
     std::fs::write(root.path().join("progress.toml"), xml_fixture_config()).expect("write cfg");
     let ctx = Context::from_flags(true, false, None, false);
 
@@ -86,8 +93,12 @@ fn named_xml_facts_are_addressable_and_stable_across_two_scans() {
 #[test]
 fn scan_report_marks_xml_source_with_projection_header() {
     assert_eq!(
-        projection_header("spec/doc.xml"),
-        format!("spec/doc.xml: {}", vibe_specdoc::PROJECTION_NOTICE)
+        projection_header(&spec_rel("doc.xml")),
+        format!(
+            "{}: {}",
+            spec_rel("doc.xml"),
+            vibe_specdoc::PROJECTION_NOTICE
+        )
     );
 }
 
@@ -97,10 +108,10 @@ fn scan_report_marks_xml_source_with_projection_header() {
 fn a_document_in_both_forms_is_a_loud_collision() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    std::fs::create_dir_all(root.join("spec")).expect("mkdir");
-    std::fs::write(root.join("spec/one.md"), "# One {#one}\n").expect("write md");
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).expect("mkdir");
+    std::fs::write(root.join(spec_rel("one.md")), "# One {#one}\n").expect("write md");
     std::fs::write(
-        root.join("spec/one.xml"),
+        root.join(spec_rel("one.xml")),
         "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
     )
     .expect("write xml");
@@ -110,8 +121,8 @@ fn a_document_in_both_forms_is_a_loud_collision() {
         Err(e) => e,
     };
     let text = format!("{err:#}");
-    assert!(text.contains("spec/one.md"), "{text}");
-    assert!(text.contains("spec/one.xml"), "{text}");
+    assert!(text.contains(&spec_rel("one.md")), "{text}");
+    assert!(text.contains(&spec_rel("one.xml")), "{text}");
     assert!(text.contains("one document, one form"), "{text}");
 }
 
@@ -160,9 +171,11 @@ const MD_SPEC: &str = "# Doc {#doc}\n\n\
 
 /// The `progress.toml` observing both serialisations (the glob crate has no
 /// brace alternation, so the pair is spelled out — the same pairing
-/// [`scope::DEFAULT_INCLUDES`] ships).
+/// [`scope::DEFAULT_INCLUDES`] ships). The globs sit under the live
+/// specs root, so the R4 layout flip carries them.
 fn xml_fixture_config() -> String {
+    let prefix = specs_prefix();
     format!(
-        "include = [\"spec/**/*.md\", \"spec/**/*.xml\"]\n\n[progress]\ncache_dir = \"{FIXTURE_CACHE_DIR}\"\n"
+        "include = [\"{prefix}/**/*.md\", \"{prefix}/**/*.xml\"]\n\n[progress]\ncache_dir = \"{FIXTURE_CACHE_DIR}\"\n"
     )
 }

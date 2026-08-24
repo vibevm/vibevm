@@ -31,7 +31,7 @@ impl Registry {
     /// Load every TOML source under `<project_root>/vibefacts/`.
     /// An absent directory is the valid empty registry.
     pub fn load(project_root: &Path) -> Result<Self, RegistryError> {
-        let home = project_root.join("vibefacts");
+        let home = project_root.join(vibe_core::layout::current_vibefacts_root());
         if !home.exists() {
             return Ok(Self::default());
         }
@@ -108,7 +108,7 @@ impl Registry {
     pub fn upsert(&mut self, project_root: &Path, entry: FactEntry) -> Result<(), RegistryError> {
         entry.validate()?;
         let target = project_root
-            .join("vibefacts")
+            .join(vibe_core::layout::current_vibefacts_root())
             .join(entry.registry_file_name()?);
         if let Some(previous) = self.sources.get(&entry.address)
             && previous != &target
@@ -158,7 +158,7 @@ impl Registry {
         }
         self.entries.remove(address);
         self.sources.remove(address);
-        remove_empty_home(&project_root.join("vibefacts"))?;
+        remove_empty_home(&project_root.join(vibe_core::layout::current_vibefacts_root()))?;
         Ok(true)
     }
 }

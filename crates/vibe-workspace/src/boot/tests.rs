@@ -9,12 +9,21 @@ use specmark::verifies;
 use vibe_core::manifest::{PackageFormat, TargetOs};
 
 #[cfg(test)]
-fn authored(path: &str, category: Option<BootCategory>) -> AuthoredBoot {
+fn authored(path: impl Into<String>, category: Option<BootCategory>) -> AuthoredBoot {
     AuthoredBoot {
-        path: path.to_string(),
+        path: path.into(),
         category,
         origin: ".".to_string(),
     }
+}
+
+#[cfg(test)]
+fn member_boot(member: &str, file: &str) -> String {
+    crate::path_to_slash(
+        &crate::layout_paths::packages_path(member)
+            .join(vibe_core::layout::current_boot_dir())
+            .join(file),
+    )
 }
 
 /// The canonical first-party `Group` for tests.
@@ -30,7 +39,8 @@ fn dep(name: &str, has_boot: bool, requires: &[&str]) -> DependencyBoot {
         kind: PackageKind::Flow,
         group: org(),
         name: name.to_string(),
-        boot_path: has_boot.then(|| format!("vibedeps/org.vibevm.{name}/1.0.0/boot.md")),
+        boot_path: has_boot
+            .then(|| crate::layout_paths::vibedeps(format!("org.vibevm.{name}/1.0.0/boot.md"))),
         fragments: Vec::new(),
         category: None,
         declared_link: None,
@@ -74,7 +84,7 @@ fn dependency_format_reaches_its_boot_entry() {
     let mut d = dep("greeter", true, &[]);
     d.format = PackageFormat::Normal;
     d.suggested_link = Some(LinkType::Static);
-    let own = vec![authored("spec/boot/notes.md", None)];
+    let own = vec![authored(crate::layout_paths::boot("notes.md"), None)];
     let boot = compute(&own, &[], &[d], None);
 
     let dep_entry = boot
@@ -88,7 +98,7 @@ fn dependency_format_reaches_its_boot_entry() {
     let own_entry = boot
         .entries
         .iter()
-        .find(|e| e.path == "spec/boot/notes.md")
+        .find(|e| e.path == crate::layout_paths::boot("notes.md"))
         .expect("the node's own boot contributes an entry");
     assert_eq!(
         own_entry.format,
@@ -100,9 +110,15 @@ fn dependency_format_reaches_its_boot_entry() {
 #[test]
 fn own_boot_bands_by_category() {
     let own = vec![
-        authored("spec/boot/00-core.md", Some(BootCategory::Foundation)),
-        authored("spec/boot/notes.md", None),
-        authored("spec/boot/90-user.md", Some(BootCategory::UserOverride)),
+        authored(
+            crate::layout_paths::boot("00-core.md"),
+            Some(BootCategory::Foundation),
+        ),
+        authored(crate::layout_paths::boot("notes.md"), None),
+        authored(
+            crate::layout_paths::boot("90-user.md"),
+            Some(BootCategory::UserOverride),
+        ),
     ];
     let boot = compute(&own, &[], &[], None);
     let bands: Vec<BootBand> = boot.entries.iter().map(|e| e.band).collect();
@@ -122,27 +138,42 @@ fn own_boot_bands_by_category() {
 fn declared_order_survives_even_when_input_is_shuffled() {
     // Override declared before foundation — the engine re-bands it.
     let own = vec![
-        authored("spec/boot/90-user.md", Some(BootCategory::UserOverride)),
-        authored("spec/boot/00-core.md", Some(BootCategory::Foundation)),
+        authored(
+            crate::layout_paths::boot("90-user.md"),
+            Some(BootCategory::UserOverride),
+        ),
+        authored(
+            crate::layout_paths::boot("00-core.md"),
+            Some(BootCategory::Foundation),
+        ),
     ];
     let boot = compute(&own, &[], &[], None);
-    assert_eq!(boot.entries[0].path, "spec/boot/00-core.md");
-    assert_eq!(boot.entries[1].path, "spec/boot/90-user.md");
+    assert_eq!(
+        boot.entries[0].path,
+        crate::layout_paths::boot("00-core.md")
+    );
+    assert_eq!(
+        boot.entries[1].path,
+        crate::layout_paths::boot("90-user.md")
+    );
 }
 
 #[test]
 fn inherited_foundation_precedes_own_foundation() {
     let inherited = vec![authored(
-        "spec/boot/00-core.md",
+        crate::layout_paths::boot("00-core.md"),
         Some(BootCategory::Foundation),
     )];
     let own = vec![authored(
-        "packages/x/spec/boot/00-core.md",
+        member_boot("x", "00-core.md"),
         Some(BootCategory::Foundation),
     )];
     let boot = compute(&own, &inherited, &[], None);
-    assert_eq!(boot.entries[0].path, "spec/boot/00-core.md");
-    assert_eq!(boot.entries[1].path, "packages/x/spec/boot/00-core.md");
+    assert_eq!(
+        boot.entries[0].path,
+        crate::layout_paths::boot("00-core.md")
+    );
+    assert_eq!(boot.entries[1].path, member_boot("x", "00-core.md"));
 }
 
 #[test]
@@ -248,13 +279,13 @@ fn inline_and_dynamic_entries_split_by_link() {
 #[test]
 fn full_composition_orders_all_four_bands() {
     let inherited = vec![authored(
-        "spec/boot/00-core.md",
+        crate::layout_paths::boot("00-core.md"),
         Some(BootCategory::Foundation),
     )];
     let own = vec![
-        authored("packages/x/spec/boot/intro.md", None),
+        authored(member_boot("x", "intro.md"), None),
         authored(
-            "packages/x/spec/boot/90-user.md",
+            member_boot("x", "90-user.md"),
             Some(BootCategory::UserOverride),
         ),
     ];
@@ -313,10 +344,10 @@ fn authored_boot_never_carries_a_when() {
     // `when` is a property of a dependency's `[boot_snippet]`; a node's
     // own and inherited authored boot are unconditional.
     let inherited = vec![authored(
-        "spec/boot/00-core.md",
+        crate::layout_paths::boot("00-core.md"),
         Some(BootCategory::Foundation),
     )];
-    let own = vec![authored("spec/boot/notes.md", None)];
+    let own = vec![authored(crate::layout_paths::boot("notes.md"), None)];
     let boot = compute(&own, &inherited, &[], None);
     assert!(boot.entries.iter().all(|e| e.when.is_none()));
 }

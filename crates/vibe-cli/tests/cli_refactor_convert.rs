@@ -1,3 +1,5 @@
+mod common;
+
 use std::fs;
 use std::path::Path;
 use std::process::{Command, Output};
@@ -158,7 +160,7 @@ fn dry_run_classifies_mixed_corpus_without_writes_and_exits_zero() {
 #[test]
 fn recursive_walk_never_converts_vibedeps() {
     let temp = tempfile::tempdir().expect("tempdir");
-    let deps = temp.path().join("vibedeps").join("slot");
+    let deps = temp.path().join(common::deps_root()).join("slot");
     fs::create_dir_all(&deps).expect("create vibedeps corpus");
     let source = deps.join("dependency.md");
     fs::write(&source, CANONICAL_MD).expect("write dependency source");
@@ -360,7 +362,7 @@ fn package_src_converts_spec_homes_only_and_skips_vibedeps() {
     let spec = temp.path().join("spec");
     fs::create_dir(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
-    let dependency = temp.path().join("vibedeps").join("slot");
+    let dependency = temp.path().join(common::deps_root()).join("slot");
     fs::create_dir_all(&dependency).expect("create dependency slot");
     fs::write(dependency.join("dependency.md"), CANONICAL_MD).expect("write dependency");
 
@@ -533,5 +535,8 @@ fn spec_src_refuses_a_package_without_spec_directory() {
     assert!(!output.status.success());
     assert!(text(&output.stdout).contains("refused"));
     let stderr = text(&output.stderr);
-    assert!(stderr.contains("spec/"), "{stderr}");
+    assert!(
+        stderr.contains(&format!("{}/", common::specs_str())),
+        "{stderr}"
+    );
 }

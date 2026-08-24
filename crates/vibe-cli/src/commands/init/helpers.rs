@@ -131,7 +131,13 @@ pub(super) fn report(
     ));
     println!();
     println!("Next:");
-    println!("  • edit spec/boot/00-core.md and spec/common/ as your project takes shape");
+    println!(
+        "  • edit {boot_core} and {specs_common} as your project takes shape",
+        boot_core =
+            vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join("00-core.md")),
+        specs_common =
+            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("common")),
+    );
     println!("  • install packages with `vibe install <kind>:<name>` (e.g. flow:wal)");
     Ok(())
 }
@@ -151,8 +157,16 @@ pub(super) fn boot_00_core_template(project_name: &str) -> String {
 
 pub(super) const ROOT_GITIGNORE_TEMPLATE: &str = include_str!("../../../templates/root-gitignore");
 pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Result<Vec<Outcome>> {
-    const ARTIFACTS: [&str; 4] = ["spec/boot/INDEX.md", "CLAUDE.md", "AGENTS.md", "GEMINI.md"];
-    let preexisting: Vec<bool> = ARTIFACTS.iter().map(|f| path.join(f).exists()).collect();
+    // The generated boot manifest plus the three root launcher docs —
+    // every path the init step announces, with the manifest routed
+    // through the layout module so the R4 flip moves it for free.
+    let artifacts: [std::path::PathBuf; 4] = [
+        vibe_core::layout::current_boot_index(),
+        std::path::PathBuf::from("CLAUDE.md"),
+        std::path::PathBuf::from("AGENTS.md"),
+        std::path::PathBuf::from("GEMINI.md"),
+    ];
+    let preexisting: Vec<bool> = artifacts.iter().map(|f| path.join(f).exists()).collect();
 
     let workspace = vibe_workspace::Workspace::load(path)
         .with_context(|| "loading the new project to generate its boot artifacts")?;
@@ -161,15 +175,16 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
     vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, SpecFormat::Mixed)
         .with_context(|| "generating the boot artifacts")?;
 
-    let mut outcomes = Vec::with_capacity(ARTIFACTS.len());
-    for (artifact, &existed) in ARTIFACTS.iter().zip(&preexisting) {
+    let mut outcomes = Vec::with_capacity(artifacts.len());
+    for (artifact, &existed) in artifacts.iter().zip(&preexisting) {
+        let rel = display_pathbuf(artifact);
         if existed {
-            ctx.skipped(artifact, "regenerated");
+            ctx.skipped(&rel, "regenerated");
         } else {
-            ctx.created(artifact);
+            ctx.created(&rel);
         }
         outcomes.push(Outcome {
-            path: (*artifact).to_string(),
+            path: rel.clone(),
             action: if existed {
                 Action::Kept
             } else {

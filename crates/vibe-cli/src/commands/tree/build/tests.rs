@@ -156,16 +156,18 @@ fn static_precedence_declared_then_suggested_then_default() {
 fn in_place_directives_collect_from_an_xml_boot_source() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    std::fs::create_dir_all(root.join("spec/boot")).expect("mkdir");
+    let dyn_boot = vibe_core::layout::current_boot_dir().join("dyn.xml");
+    let dyn_rel = vibe_core::machine_json_path(&dyn_boot);
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_boot_dir())).expect("mkdir");
     std::fs::write(
-        root.join("spec/boot/dyn.xml"),
+        root.join(&dyn_boot),
         "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
          <p>#use spec://org.example/lib/boot</p>\n</spec>\n",
     )
     .expect("write xml");
-    let specs = collect_in_place(root, &["spec/boot/dyn.xml".to_string()]);
+    let specs = collect_in_place(root, std::slice::from_ref(&dyn_rel));
     assert_eq!(specs.len(), 1, "{specs:?}");
-    assert_eq!(specs[0].file, "spec/boot/dyn.xml");
+    assert_eq!(specs[0].file, dyn_rel);
     assert_eq!(specs[0].carrier, Carrier::Use);
     assert_eq!(specs[0].address.to_string(), "spec://org.example/lib/boot");
 }
@@ -226,7 +228,7 @@ fn plain_render_carries_the_provenance_suffix() {
             static_md: None,
             index_md: IndexLane {
                 present: false,
-                path: "spec/boot/INDEX.md".to_string(),
+                path: vibe_core::machine_json_path(&vibe_core::layout::current_boot_index()),
                 static_pointer: None,
                 entries: Vec::new(),
             },

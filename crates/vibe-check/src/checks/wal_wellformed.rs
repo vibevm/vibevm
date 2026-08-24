@@ -23,10 +23,11 @@ pub(crate) enum WalResolution {
     Pair { md: PathBuf, xml: PathBuf },
 }
 
-/// Resolve `spec/WAL.{md,xml}` for `project_root`.
+/// Resolve the WAL (`current_wal_md()` / `current_wal_xml()`) for
+/// `project_root`.
 pub(crate) fn resolve_wal(project_root: &Path) -> WalResolution {
-    let md = PathBuf::from("spec/WAL.md");
-    let xml = PathBuf::from("spec/WAL.xml");
+    let md = vibe_core::layout::current_wal_md();
+    let xml = vibe_core::layout::current_wal_xml();
     match (
         project_root.join(&md).is_file(),
         project_root.join(&xml).is_file(),
@@ -132,6 +133,7 @@ mod tests {
     use std::fs;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, check_project};
@@ -141,7 +143,7 @@ mod tests {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         fs::write(
-            project.path().join("spec/WAL.md"),
+            project.path().join(layout::current_wal_md()),
             "# WAL\n\n## Current phase\n\n(no other sections)\n",
         )
         .unwrap();
@@ -172,7 +174,7 @@ mod tests {
         write_minimal_project(project.path());
         // Remove the WAL that `write_minimal_project` writes — we
         // want the no-WAL state.
-        let wal = project.path().join("spec/WAL.md");
+        let wal = project.path().join(layout::current_wal_md());
         if wal.exists() {
             fs::remove_file(&wal).unwrap();
         }
@@ -191,13 +193,13 @@ mod tests {
     fn an_xml_wal_is_checked_through_its_projection() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let wal = project.path().join("spec/WAL.md");
+        let wal = project.path().join(layout::current_wal_md());
         if wal.exists() {
             fs::remove_file(&wal).unwrap();
         }
         let md = "# WAL {#root}\n\n## Current phase {#phase}\n\n(no other sections)\n";
         let xml = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown(md).unwrap());
-        fs::write(project.path().join("spec/WAL.xml"), xml).unwrap();
+        fs::write(project.path().join(layout::current_wal_xml()), xml).unwrap();
         let report = check_project(project.path(), &opts());
         let missing: Vec<&str> = report
             .findings
@@ -219,9 +221,9 @@ mod tests {
     fn a_wal_pair_is_a_loud_split_brain() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::write(project.path().join("spec/WAL.md"), "# WAL\n").unwrap();
+        fs::write(project.path().join(layout::current_wal_md()), "# WAL\n").unwrap();
         let xml = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown("# WAL {#root}\n").unwrap());
-        fs::write(project.path().join("spec/WAL.xml"), xml).unwrap();
+        fs::write(project.path().join(layout::current_wal_xml()), xml).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report.findings.iter().any(|f| {
@@ -238,7 +240,7 @@ mod tests {
         write_minimal_project(project.path());
         // The real project's WAL uses `## Constraints (do not violate without discussion)`.
         fs::write(
-            project.path().join("spec/WAL.md"),
+            project.path().join(layout::current_wal_md()),
             "# WAL\n\n## Current phase\n\n## Constraints (do not violate without discussion)\n\n## Done\n\n## Next\n\n## Known issues\n",
         )
         .unwrap();

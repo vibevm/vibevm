@@ -79,8 +79,16 @@ struct AuthoredSnippet {
 type ConceptDictionary = BTreeMap<String, BTreeSet<String>>;
 
 fn concept_dictionary(project_root: &Path) -> ConceptDictionary {
-    let authored = manifest_paths(&project_root.join("packages"), 4, true);
-    let installed = manifest_paths(&project_root.join("vibedeps"), 3, false);
+    let authored = manifest_paths(
+        &project_root.join(vibe_core::layout::current_packages_root()),
+        4,
+        true,
+    );
+    let installed = manifest_paths(
+        &project_root.join(vibe_core::layout::current_vibedeps_root()),
+        3,
+        false,
+    );
     let mut dictionary = ConceptDictionary::new();
     for path in authored.into_iter().chain(installed) {
         let Ok(manifest) = Manifest::read(&path) else {
@@ -104,7 +112,11 @@ fn authored_snippets(project_root: &Path) -> Vec<AuthoredSnippet> {
     // superseded slots are frozen history, never the shipped snippet
     // (PROP-049 §4 — the gate guards what a consumer can install today).
     let mut newest: BTreeMap<String, (semver::Version, AuthoredSnippet)> = BTreeMap::new();
-    for path in manifest_paths(&project_root.join("packages"), 4, true) {
+    for path in manifest_paths(
+        &project_root.join(vibe_core::layout::current_packages_root()),
+        4,
+        true,
+    ) {
         let Some(root) = path.parent().map(Path::to_path_buf) else {
             continue;
         };

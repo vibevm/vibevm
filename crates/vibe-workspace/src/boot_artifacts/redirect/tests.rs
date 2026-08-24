@@ -19,9 +19,9 @@ fn coord() -> SelfCoordinate {
 }
 
 #[cfg(test)]
-fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
+fn entry(path: impl Into<String>, link: LinkType, origin: &str) -> BootEntry {
     BootEntry {
-        path: path.to_string(),
+        path: path.into(),
         band: BootBand::Dependency,
         link,
         when: None,
@@ -42,25 +42,36 @@ fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
 fn render_redirect_points_at_the_boot_files() {
     let r = render_redirect();
     assert!(r.contains("do not edit"));
-    assert!(r.contains("spec/boot/STATIC.md"));
-    assert!(r.contains("spec/boot/INDEX.md"));
+    assert!(r.contains(&crate::layout_paths::boot("STATIC.md")));
+    assert!(r.contains(&crate::layout_paths::boot("INDEX.md")));
     assert_eq!(
         r,
         render_redirect_with_spec_format(SpecFormat::Markdown),
         "the Markdown redirect bytes remain unchanged"
     );
-    assert!(render_redirect_with_spec_format(SpecFormat::Xml).contains("spec/boot/STATIC.xml"));
+    assert!(
+        render_redirect_with_spec_format(SpecFormat::Xml)
+            .contains(&crate::layout_paths::boot("STATIC.xml"))
+    );
 }
 
 #[test]
 fn write_boot_artifacts_writes_index_and_redirects() {
     let ws = TempDir::new().unwrap();
-    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
+    let b = boot(vec![entry(
+        crate::layout_paths::boot("00-core.md"),
+        LinkType::Dynamic,
+        ".",
+    )]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &b).unwrap();
 
     assert!(written.index.is_file());
     assert!(written.static_lane.is_none());
-    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
+    assert!(
+        !ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .exists()
+    );
     assert_eq!(written.redirects.len(), 3);
     for name in REDIRECT_FILES {
         assert!(ws.path().join(name).is_file(), "{name} must be written");
@@ -70,47 +81,69 @@ fn write_boot_artifacts_writes_index_and_redirects() {
 #[test]
 fn write_boot_artifacts_writes_inline_when_present() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
+    let crit = ws.path().join(crate::layout_paths::vibedeps(
+        "org.vibevm.crit/1.0.0/boot.md",
+    ));
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# discipline").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.crit/1.0.0/boot.md"),
         LinkType::Static,
         "flow:crit",
     )]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &b).unwrap();
     assert!(written.static_lane.is_some());
-    assert!(ws.path().join("spec/boot/STATIC.md").is_file());
+    assert!(
+        ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .is_file()
+    );
 }
 
 #[test]
 fn write_boot_artifacts_removes_a_stale_inline() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
+    let crit = ws.path().join(crate::layout_paths::vibedeps(
+        "org.vibevm.crit/1.0.0/boot.md",
+    ));
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# discipline").unwrap();
 
     // First generation has an static contribution.
     let with_inline = boot(vec![entry(
-        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
+        crate::layout_paths::vibedeps("org.vibevm.crit/1.0.0/boot.md"),
         LinkType::Static,
         "flow:crit",
     )]);
     write_boot_artifacts(ws.path(), ws.path(), &coord(), &with_inline).unwrap();
-    assert!(ws.path().join("spec/boot/STATIC.md").exists());
+    assert!(
+        ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .exists()
+    );
 
     // A later generation has none — the stale STATIC.md must go.
-    let without = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
+    let without = boot(vec![entry(
+        crate::layout_paths::boot("00-core.md"),
+        LinkType::Dynamic,
+        ".",
+    )]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &without).unwrap();
     assert!(written.static_lane.is_none());
-    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
+    assert!(
+        !ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .exists()
+    );
 }
 
 #[test]
 fn switching_markdown_to_xml_removes_the_owned_stale_name() {
     let ws = TempDir::new().unwrap();
-    let source = ws.path().join("vibedeps/org.example.rules/1.0.0/rules.md");
+    let source = ws.path().join(crate::layout_paths::vibedeps(
+        "org.example.rules/1.0.0/rules.md",
+    ));
     fs::create_dir_all(source.parent().unwrap()).unwrap();
     fs::write(
         &source,
@@ -118,21 +151,33 @@ fn switching_markdown_to_xml_removes_the_owned_stale_name() {
     )
     .unwrap();
     let b = boot(vec![entry(
-        "vibedeps/org.example.rules/1.0.0/rules.md",
+        crate::layout_paths::vibedeps("org.example.rules/1.0.0/rules.md"),
         LinkType::Static,
         "org.example/rules",
     )]);
 
     write_boot_artifacts_with_spec_format(ws.path(), ws.path(), &coord(), &b, SpecFormat::Markdown)
         .unwrap();
-    assert!(ws.path().join("spec/boot/STATIC.md").is_file());
+    assert!(
+        ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .is_file()
+    );
 
     write_boot_artifacts_with_spec_format(ws.path(), ws.path(), &coord(), &b, SpecFormat::Xml)
         .unwrap();
-    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
-    assert!(ws.path().join("spec/boot/STATIC.xml").is_file());
+    assert!(
+        !ws.path()
+            .join(crate::layout_paths::boot("STATIC.md"))
+            .exists()
+    );
+    assert!(
+        ws.path()
+            .join(crate::layout_paths::boot("STATIC.xml"))
+            .is_file()
+    );
     let redirect = fs::read_to_string(ws.path().join("AGENTS.md")).unwrap();
-    assert!(redirect.contains("spec/boot/STATIC.xml"));
+    assert!(redirect.contains(&crate::layout_paths::boot("STATIC.xml")));
 }
 
 // ----- the managed <vibevm> block (PROP-012) -----
@@ -210,7 +255,7 @@ fn write_managed_block_creates_a_missing_file() {
     let content = fs::read_to_string(&path).unwrap();
     assert!(content.starts_with("<vibevm>\n"));
     assert!(content.trim_end().ends_with("</vibevm>"));
-    assert!(content.contains("spec/boot/INDEX.md"));
+    assert!(content.contains(&crate::layout_paths::boot("INDEX.md")));
 }
 
 #[test]

@@ -124,7 +124,7 @@ mod tests {
         write_minimal_project(project.path());
         let pkg = project
             .path()
-            .join("packages")
+            .join(vibe_core::layout::current_packages_root())
             .join("flow")
             .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
@@ -166,7 +166,7 @@ delivery = "lazy-push"
         write_minimal_project(project.path());
         let pkg = project
             .path()
-            .join("packages")
+            .join(vibe_core::layout::current_packages_root())
             .join("flow")
             .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
@@ -182,14 +182,22 @@ version = "0.1.0"
         .unwrap();
         let sub = pkg.join("subskills/stack/rust");
         fs::create_dir_all(&sub).unwrap();
+        // The declared file names the specs root through the layout seam
+        // (PROP-052 L2); it deliberately does not exist on disk.
+        let declared = vibe_core::layout::current_specs_root()
+            .join("missing.md")
+            .to_string_lossy()
+            .replace('\\', "/");
         fs::write(
             sub.join("vibe-subskill.toml"),
-            r#"[subskill]
+            format!(
+                r#"[subskill]
 path = "stack/rust"
 
 [content]
-files_written = ["spec/missing.md"]
-"#,
+files_written = ["{declared}"]
+"#
+            ),
         )
         .unwrap();
         let report = check_project(project.path(), &opts());
@@ -208,7 +216,7 @@ files_written = ["spec/missing.md"]
         write_minimal_project(project.path());
         let pkg = project
             .path()
-            .join("packages")
+            .join(vibe_core::layout::current_packages_root())
             .join("flow")
             .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();

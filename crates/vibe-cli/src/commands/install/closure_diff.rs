@@ -22,11 +22,18 @@ use crate::output;
 /// lane-cost delta half of PROP-050 ##VERIFY-LOCK-DIFF. A lane that does
 /// not exist at sample time is `None`, so an `.md` → `.xml` format flip
 /// renders as both lanes moving.
-pub const WATCHED_LANES: &[&str] = &[
-    "spec/boot/INDEX.md",
-    "spec/boot/STATIC.md",
-    "spec/boot/STATIC.xml",
-];
+///
+/// The lane names route through the layout module (PROP-052 L2), so the
+/// R4 flip moves every watched lane in one edit. Order is fixed:
+/// manifest, Markdown static, XML static.
+pub fn watched_lanes() -> [String; 3] {
+    let lane = |path: std::path::PathBuf| vibe_core::machine_json_path(&path);
+    [
+        lane(vibe_core::layout::current_boot_index()),
+        lane(vibe_core::layout::current_boot_static_md()),
+        lane(vibe_core::layout::current_boot_static_xml()),
+    ]
+}
 
 /// The closure diff between two lockfile snapshots plus two lane-size
 /// samples. Members are compared by `(group, name)` identity; a version
@@ -63,7 +70,7 @@ impl ClosureDiff {
 /// Compute the closure diff between the pre-apply lock and the freshly
 /// written one, with the lane-size samples taken before and after the
 /// apply. Deterministic: member rows sort by their rendered text, lane
-/// rows keep [`WATCHED_LANES`] order.
+/// rows keep [`watched_lanes`] order.
 pub fn closure_diff(
     old: &Lockfile,
     new: &Lockfile,
@@ -103,7 +110,7 @@ pub fn closure_diff(
     changed.sort();
     removed.sort();
 
-    // Lane samples come from lane_sizes() over the same WATCHED_LANES
+    // Lane samples come from lane_sizes() over the same watched_lanes()
     // order, so a plain zip pairs before with after; only a size move
     // (including absent <-> present) keeps its row.
     let lane_bytes: Vec<(String, Option<u64>, Option<u64>)> = lanes_before
@@ -149,17 +156,17 @@ pub fn render(diff: &ClosureDiff) -> Vec<String> {
     lines
 }
 
-/// Sample the byte sizes of [`WATCHED_LANES`] under `root`; a missing file
+/// Sample the byte sizes of [`watched_lanes`] under `root`; a missing file
 /// is `None`. Called before and after an apply to feed the lane-cost half
 /// of the closure diff.
 pub fn lane_sizes(root: &Path) -> Vec<(String, Option<u64>)> {
-    WATCHED_LANES
+    watched_lanes()
         .iter()
         .map(|lane| {
             let size = std::fs::metadata(root.join(lane))
                 .ok()
                 .map(|metadata| metadata.len());
-            ((*lane).to_string(), size)
+            (lane.clone(), size)
         })
         .collect()
 }
@@ -294,6 +301,13 @@ mod tests {
             .collect()
     }
 
+    /// The watched lanes as owned `(lane, size)` samples — the test-side
+    /// spelling of [`watched_lanes`], so every fixture below rides the R4
+    /// layout flip without an edit.
+    fn lane_samples(sizes: [Option<u64>; 3]) -> Vec<(String, Option<u64>)> {
+        watched_lanes().into_iter().zip(sizes).collect()
+    }
+
     #[test]
     fn added_member_carries_its_admitting_rule() {
         let old = lockfile(vec![locked("org.x", "wal", "1.0.0", None)]);
@@ -344,7 +358,7 @@ mod tests {
     #[test]
     fn empty_diff_is_one_quiet_line() {
         let old = lockfile(vec![locked("org.x", "wal", "1.0.0", None)]);
-        let same_lanes = lanes(&[("spec/boot/INDEX.md", Some(120))]);
+        let same_lanes = lane_samples([Some(120), None, None]);
         let diff = closure_diff(&old, &old, &same_lanes, &same_lanes);
         assert!(diff.is_empty());
         assert_eq!(
@@ -356,31 +370,24 @@ mod tests {
     #[test]
     fn lane_rows_render_only_on_change() {
         let lock = lockfile(vec![locked("org.x", "wal", "1.0.0", None)]);
-        let before = lanes(&[
-            ("spec/boot/INDEX.md", Some(120)),
-            ("spec/boot/STATIC.md", None),
-            ("spec/boot/STATIC.xml", Some(248429)),
-        ]);
-        let after = lanes(&[
-            ("spec/boot/INDEX.md", Some(120)),
-            ("spec/boot/STATIC.md", Some(412)),
-            ("spec/boot/STATIC.xml", Some(249001)),
-        ]);
+        let before = lane_samples([Some(120), None, Some(248429)]);
+        let after = lane_samples([Some(120), Some(412), Some(249001)]);
         let diff = closure_diff(&lock, &lock, &before, &after);
         let lines = render(&diff);
-        // The unchanged INDEX.md row stays silent; moves render with `B`,
+        let lanes = watched_lanes();
+        // The unchanged manifest row stays silent; moves render with `B`,
         // and an absent lane reads `absent`.
         assert_eq!(
             lines,
             [
-                "lane spec/boot/STATIC.md: absent -> 412 B".to_string(),
-                "lane spec/boot/STATIC.xml: 248429 -> 249001 B".to_string(),
+                format!("lane {}: absent -> 412 B", lanes[1]),
+                format!("lane {}: 248429 -> 249001 B", lanes[2]),
             ],
             "{lines:?}"
         );
         // Both samples absent — the lane never existed, nothing to report.
-        let before = lanes(&[("spec/boot/STATIC.md", None)]);
-        let after = lanes(&[("spec/boot/STATIC.md", None)]);
+        let before = vec![(lanes[1].clone(), None)];
+        let after = vec![(lanes[1].clone(), None)];
         assert!(
             closure_diff(&lock, &lock, &before, &after)
                 .lane_bytes
@@ -398,14 +405,17 @@ mod tests {
                 .all(|(_, size)| size.is_none())
         );
 
-        std::fs::create_dir_all(tmp.path().join("spec/boot")).expect("mkdir");
-        std::fs::write(tmp.path().join("spec/boot/INDEX.md"), "x".repeat(7)).expect("write");
+        let index_lane = vibe_core::layout::current_boot_index();
+        if let Some(parent) = index_lane.parent() {
+            std::fs::create_dir_all(tmp.path().join(parent)).expect("mkdir");
+        }
+        std::fs::write(tmp.path().join(&index_lane), "x".repeat(7)).expect("write");
         let sizes = lane_sizes(tmp.path());
-        assert_eq!(sizes.len(), WATCHED_LANES.len());
+        assert_eq!(sizes.len(), watched_lanes().len());
         let index = sizes
             .iter()
-            .find(|(lane, _)| lane == "spec/boot/INDEX.md")
-            .expect("INDEX.md is watched");
+            .find(|(lane, _)| *lane == watched_lanes()[0])
+            .expect("the boot manifest is watched");
         assert_eq!(index.1, Some(7));
     }
 }

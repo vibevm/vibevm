@@ -128,7 +128,11 @@ version = "0.0.1"
     )
     .unwrap();
     fs::create_dir_all(pkg_dir.path().join("spec")).unwrap();
-    fs::write(pkg_dir.path().join("spec/PROTOCOL.md"), "hello\n").unwrap();
+    fs::write(
+        pkg_dir.path().join(common::spec_rel("PROTOCOL.md")),
+        "hello\n",
+    )
+    .unwrap();
 
     // Build a bare origin we can push to. `file:///<abs>` is a real
     // git URL — the same pipeline that would handle SSH/HTTPS handles
@@ -301,9 +305,15 @@ version = "0.0.1"
 #[test]
 fn workspace_publish_dry_run_reports_plan() {
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
-    write_member_pkg(project.path(), "packages/b", "b", "feat", "");
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
+    write_member_pkg(project.path(), &common::pack_rel("b"), "b", "feat", "");
 
     let out = vibe()
         .args(["workspace", "publish", "--dry-run", "--path"])
@@ -338,10 +348,16 @@ fn workspace_publish_dry_run_reports_plan() {
 )]
 fn workspace_publish_dry_run_json_envelope() {
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
     // b is publish = false — must land in `skipped`, not `published`.
-    write_member_pkg(project.path(), "packages/b", "b", "feat", "false");
+    write_member_pkg(project.path(), &common::pack_rel("b"), "b", "feat", "false");
 
     let out = vibe()
         .args(["workspace", "publish", "--dry-run", "--json", "--path"])
@@ -357,11 +373,11 @@ fn workspace_publish_dry_run_json_envelope() {
     let published = payload["published"].as_array().expect("published array");
     assert_eq!(published.len(), 1, "only org.vibevm/a publishes");
     assert_eq!(published[0]["pkgref"], "org.vibevm/a");
-    assert_eq!(published[0]["rel_path"], "packages/a");
+    assert_eq!(published[0]["rel_path"], common::pack_rel("a"));
     assert_eq!(published[0]["tag"], "v0.1.0");
     let skipped = payload["skipped"].as_array().expect("skipped array");
     assert_eq!(skipped.len(), 1, "org.vibevm/b is skipped");
-    assert_eq!(skipped[0]["rel_path"], "packages/b");
+    assert_eq!(skipped[0]["rel_path"], common::pack_rel("b"));
     assert!(
         skipped[0]["reason"]
             .as_str()
@@ -380,12 +396,18 @@ fn workspace_publish_dry_run_json_envelope() {
 fn workspace_publish_dry_run_topological_order() {
     // b depends on a via a path-dep — a must publish first.
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
     // b's manifest carries a path-dep on ../a.
-    fs::create_dir_all(project.path().join("packages/b")).unwrap();
+    fs::create_dir_all(project.path().join(common::pack_rel("b"))).unwrap();
     fs::write(
-        project.path().join("packages/b/vibe.toml"),
+        project.path().join(common::pack_rel("b/vibe.toml")),
         "[package]\ngroup = \"org.vibevm\"\nname = \"b\"\nkind = \"feat\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/a\" = { path = \"../a\", version = \"^0.1\" }\n",
     )
@@ -412,9 +434,15 @@ fn workspace_publish_dry_run_topological_order() {
 )]
 fn workspace_publish_member_filter_narrows() {
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
-    write_member_pkg(project.path(), "packages/b", "b", "feat", "");
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
+    write_member_pkg(project.path(), &common::pack_rel("b"), "b", "feat", "");
 
     let out = vibe()
         .args([
@@ -423,7 +451,7 @@ fn workspace_publish_member_filter_narrows() {
             "--dry-run",
             "--json",
             "--member",
-            "packages/b",
+            &common::pack_rel("b"),
             "--path",
         ])
         .arg(project.path())
@@ -439,8 +467,8 @@ fn workspace_publish_member_filter_narrows() {
 #[test]
 fn workspace_publish_member_filter_rejects_unknown_node() {
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
+    write_workspace_root(project.path(), &[common::pack_rel("a").as_str()]);
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
 
     let out = vibe()
         .args([
@@ -448,7 +476,7 @@ fn workspace_publish_member_filter_rejects_unknown_node() {
             "publish",
             "--dry-run",
             "--member",
-            "packages/ghost",
+            &common::pack_rel("ghost"),
             "--path",
         ])
         .arg(project.path())
@@ -464,17 +492,23 @@ fn workspace_publish_member_filter_rejects_unknown_node() {
 fn workspace_publish_detects_dependency_cycle() {
     // a depends on b, b depends on a — a hard error, no publish.
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    fs::create_dir_all(project.path().join("packages/a")).unwrap();
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    fs::create_dir_all(project.path().join(common::pack_rel("a"))).unwrap();
     fs::write(
-        project.path().join("packages/a/vibe.toml"),
+        project.path().join(common::pack_rel("a/vibe.toml")),
         "[package]\ngroup = \"org.vibevm\"\nname = \"a\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/b\" = { path = \"../b\", version = \"^0.1\" }\n",
     )
     .unwrap();
-    fs::create_dir_all(project.path().join("packages/b")).unwrap();
+    fs::create_dir_all(project.path().join(common::pack_rel("b"))).unwrap();
     fs::write(
-        project.path().join("packages/b/vibe.toml"),
+        project.path().join(common::pack_rel("b/vibe.toml")),
         "[package]\ngroup = \"org.vibevm\"\nname = \"b\"\nkind = \"feat\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/a\" = { path = \"../a\", version = \"^0.1\" }\n",
     )
@@ -502,11 +536,14 @@ fn workspace_publish_errors_without_registry() {
     let project = tempfile::tempdir().unwrap();
     fs::write(
         project.path().join("vibe.toml"),
-        "[project]\nname = \"mono\"\nversion = \"0.0.1\"\n\n\
-         [workspace]\nmembers = [\"packages/a\"]\n",
+        format!(
+            "[project]\nname = \"mono\"\nversion = \"0.0.1\"\n\n\
+             [workspace]\nmembers = [\"{}\"]\n",
+            common::pack_rel("a")
+        ),
     )
     .unwrap();
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
 
     let out = vibe()
         .args(["workspace", "publish", "--dry-run", "--path"])
@@ -530,9 +567,15 @@ fn workspace_publish_all_internal_is_a_clean_noop() {
     // Every member publish = false — entirely-local workspace, a
     // first-class PROP-007 §2.7 extreme. Succeeds, publishes nothing.
     let project = tempfile::tempdir().unwrap();
-    write_workspace_root(project.path(), &["packages/a", "packages/b"]);
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "false");
-    write_member_pkg(project.path(), "packages/b", "b", "feat", "false");
+    write_workspace_root(
+        project.path(),
+        &[
+            common::pack_rel("a").as_str(),
+            common::pack_rel("b").as_str(),
+        ],
+    );
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "false");
+    write_member_pkg(project.path(), &common::pack_rel("b"), "b", "feat", "false");
 
     let out = vibe()
         .args(["workspace", "publish", "--dry-run", "--json", "--path"])
@@ -557,12 +600,15 @@ fn workspace_publish_root_package_is_included() {
     let project = tempfile::tempdir().unwrap();
     fs::write(
         project.path().join("vibe.toml"),
-        "[package]\ngroup = \"org.vibevm\"\nname = \"umbrella\"\nkind = \"stack\"\nversion = \"0.1.0\"\n\n\
-         [workspace]\nmembers = [\"packages/a\"]\n\n\
-         [[registry]]\nname = \"vibespecs\"\nurl = \"https://github.com/vibespecs\"\n",
+        format!(
+            "[package]\ngroup = \"org.vibevm\"\nname = \"umbrella\"\nkind = \"stack\"\nversion = \"0.1.0\"\n\n\
+             [workspace]\nmembers = [\"{}\"]\n\n\
+             [[registry]]\nname = \"vibespecs\"\nurl = \"https://github.com/vibespecs\"\n",
+            common::pack_rel("a")
+        ),
     )
     .unwrap();
-    write_member_pkg(project.path(), "packages/a", "a", "flow", "");
+    write_member_pkg(project.path(), &common::pack_rel("a"), "a", "flow", "");
 
     let out = vibe()
         .args(["workspace", "publish", "--dry-run", "--json", "--path"])

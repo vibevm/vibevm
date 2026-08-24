@@ -22,6 +22,11 @@ pub(super) fn c4_gate(
     expect_total: Option<usize>,
     r: &mut Report,
 ) {
+    // `packages/` / `spec/` are layout-root literals (the gate log
+    // prints repo-relative paths); xtask carries no vibe-core edge, so
+    // they stay duplicated here with their single home in
+    // `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4 relayout
+    // sweep re-points both prefixes with the physical move.
     let rows: Vec<&str> = gate
         .lines()
         .filter(|l| l.starts_with("packages/") || l.starts_with("spec/"))
@@ -90,6 +95,8 @@ pub(super) fn c5_error_classes(gate: &str, files: &[String], r: &mut Report) {
     let fset: BTreeSet<&String> = files.iter().collect();
     let mut classes: BTreeMap<String, usize> = BTreeMap::new();
     for line in gate.lines() {
+        // Same layout-root prefixes as `c4_gate` above (PROP-052 L2;
+        // single home `crates/vibe-core/src/layout.rs`).
         if !(line.starts_with("packages/") || line.starts_with("spec/")) {
             continue;
         }
@@ -132,6 +139,9 @@ mod tests {
 
     #[test]
     fn the_gate_predictions_are_compared_exactly() {
+        // `packages/…` mirrors the gate-log prefixes the filter above
+        // reads — test data, not a product path; the single home of the
+        // layout names is `crates/vibe-core/src/layout.rs` (PROP-052 L2).
         let gate = "packages/x/a.md:1: Error [unmarked] Para unit carries no marker\n\
                     packages/x/b.md:2: Error [unmarked] Para unit carries no marker\n";
         let files = vec!["packages/x/a.md".to_string()];

@@ -184,23 +184,25 @@ fn create_project(
 
     let mut outcomes = Vec::<helpers::Outcome>::new();
 
-    // 1. spec/ directory tree.
+    // 1. The specs directory tree — rooted at the live layout's specs
+    //    root, so the R4 flip relocates the whole scaffold in one move.
+    let specs_root = path.join(vibe_core::layout::current_specs_root());
     for sub in ["boot", "flows", "feats", "stacks", "common", "modules"] {
-        ensure_dir(&path.join("spec").join(sub))?;
+        ensure_dir(&specs_root.join(sub))?;
     }
 
     // 2. User-owned boot snippets.
     outcomes.push(ensure_file(
         ctx,
         &path,
-        &path.join("spec/boot/00-core.md"),
+        &path.join(vibe_core::layout::current_boot_dir().join("00-core.md")),
         &boot_00_core_template(&fields.name),
         "boot: project foundation",
     )?);
     outcomes.push(ensure_file(
         ctx,
         &path,
-        &path.join("spec/boot/90-user.md"),
+        &path.join(vibe_core::layout::current_boot_dir().join("90-user.md")),
         BOOT_90_USER_TEMPLATE,
         "boot: user overrides",
     )?);

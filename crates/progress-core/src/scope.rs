@@ -10,6 +10,16 @@ use std::path::{Path, PathBuf};
 
 /// The always-applied exclusions — even under explicit includes. Matched
 /// against **path components**, so each entry names a directory.
+///
+/// Layout note (PROP-052): `vibedeps` is matched as a *component name*,
+/// and the component keeps its name under the new layout too (only its
+/// parent changes: root `vibedeps/` → `vibevm/vibedeps/`), so this entry
+/// excludes the dependency slots under either shape. progress-core is
+/// standalone by law (PROP-043 §2 — no vibe-* dependencies), so it cannot
+/// route through `vibe_core::layout` (`crates/vibe-core/src/layout.rs`,
+/// the one home of the root names, PROP-052 L2); this name is the
+/// sanctioned duplication and is verified against that module by R6's
+/// grep panel.
 pub const DEFAULT_EXCLUDES: [&str; 8] = [
     "vibedeps",
     ".vibe",
@@ -40,6 +50,14 @@ pub const DEFAULT_EXCLUDE_FILES: [&str; 1] = ["LICENSE.md"];
 /// took. One logical document in BOTH forms is not a scope question — the
 /// consumer's pair-collision check rejects it loudly; the globs themselves
 /// stay blind so an explicit project config inherits the same pairing.
+///
+/// Layout note (PROP-052): these globs spell the ROOT names of the live
+/// directory layout (`spec/`, `packages/` today; `vibevm/vibespecs/`,
+/// `vibevm/vibepacks/` after the R4 flip). progress-core is standalone
+/// by law (PROP-043 §2 — no vibe-* dependencies), so it cannot route
+/// through `vibe_core::layout` (`crates/vibe-core/src/layout.rs`, the
+/// one home of the root names, PROP-052 L2); these four entries are the
+/// sanctioned duplication, and they flip BY HAND with RELAYOUT-PLAN R4.
 pub const DEFAULT_INCLUDES: [&str; 4] = [
     "spec/**/*.md",
     "spec/**/*.xml",
@@ -245,6 +263,14 @@ pub fn rel_str(rel: &Path) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // Layout note (PROP-052): these scaffolds pin the glob semantics on
+    // the LEGACY tree (`spec/`, `packages/`) that `DEFAULT_INCLUDES`
+    // names today. They are this test module's own fixtures (the L2
+    // "tests' own scaffolds" exemption), and they flip together with
+    // `DEFAULT_INCLUDES` — by hand, at RELAYOUT-PLAN R4 — because
+    // progress-core is standalone by law (PROP-043 §2) and cannot import
+    // `vibe_core::layout` (`crates/vibe-core/src/layout.rs`).
 
     #[test]
     fn default_includes_observe_both_serialisations() {

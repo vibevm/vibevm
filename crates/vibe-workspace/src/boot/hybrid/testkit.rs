@@ -49,7 +49,9 @@ pub(crate) fn unit(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput
     (
         id(name),
         UnitInput {
-            own_boot_path: Some(format!("vibedeps/org.vibevm.{name}/1.0.0/boot.md")),
+            own_boot_path: Some(crate::layout_paths::vibedeps(format!(
+                "org.vibevm.{name}/1.0.0/boot.md"
+            ))),
             fragments: Vec::new(),
             origin: format!("org.vibevm/{name}"),
             when: None,

@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use vibe_core::Group;
+use vibe_core::layout;
 use vibe_core::manifest::SpecFormat;
 use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
 use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
@@ -73,7 +74,7 @@ pub struct DerivedManifest {
 ///
 /// `Mixed` delegates to the existing byte-for-byte materialiser and writes no
 /// metadata. `Markdown` and `Xml` transform only spec-genre documents: any
-/// `.md`/`.xml` below `spec/`, plus the package-root `README.md`/`README.xml`.
+/// `.md`/`.xml` below the live specs root, plus the package-root README pair.
 /// Files already in the target format and every non-spec file copy verbatim.
 /// An opposite-format candidate that the pivot rejects also copies verbatim
 /// and is recorded as `copied`, preserving install availability honestly.
@@ -94,7 +95,7 @@ pub fn materialise_with_spec_format(
     let package = format!("{group}/{name}");
     let registry =
         Registry::load(workspace_root).map_err(|error| WorkspaceError::SpecMaterialization {
-            path: workspace_root.join("vibefacts"),
+            path: workspace_root.join(layout::current_vibefacts_root()),
             reason: format!("package adoption registry cannot be loaded: {error}"),
         })?;
     let overlay = registry.package_overlay(&package);
@@ -217,7 +218,9 @@ pub fn current_overlay_hash_for_slot(slot: &Path) -> Option<String> {
     if vibedeps_dir.file_name()?.to_str()? != super::VIBEDEPS_DIR {
         return None;
     }
-    let workspace_root = vibedeps_dir.parent()?;
+    let workspace_root = vibedeps_dir
+        .ancestors()
+        .nth(layout::current_vibedeps_root().components().count())?;
     let package_key = package_dir.file_name()?.to_str()?;
     overlay_file_hash(workspace_root, package_key)
 }
@@ -403,10 +406,7 @@ fn is_spec_document(rel: &Path) -> bool {
     if !matches!(extension, Some("md" | "xml")) {
         return false;
     }
-    let under_spec = rel
-        .components()
-        .next()
-        .is_some_and(|component| component.as_os_str() == "spec");
+    let under_spec = rel.starts_with(layout::current_specs_root());
     let root_readme = rel
         .parent()
         .is_some_and(|parent| parent.as_os_str().is_empty())
@@ -422,10 +422,9 @@ pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
     let Ok(rel) = path.strip_prefix(root) else {
         return false;
     };
-    let slash = path_to_slash(rel);
-    slash == "spec/boot/STATIC.md"
-        || slash == "spec/boot/STATIC.xml"
-        || slash == "spec/boot/INDEX.md"
+    rel == layout::current_boot_static_md()
+        || rel == layout::current_boot_static_xml()
+        || rel == layout::current_boot_index()
 }
 
 fn collect_hash_files(
@@ -442,7 +441,7 @@ fn collect_hash_files(
             continue;
         }
         // Slot-internal GENERATED boot artifacts are outside the derived
-        // identity: bootgen writes a child `spec/boot/STATIC.*` / `INDEX.md`
+        // identity: bootgen writes a child generated STATIC / INDEX lane
         // into a dependency slot AFTER materialisation, and by
         // the boot-lane law those artifacts are Markdown regardless of
         // spec_format — hashing them would stale every transformed slot

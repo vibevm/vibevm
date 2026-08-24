@@ -45,6 +45,8 @@
 //! materialisation paths without burning a real package name in the
 //! canonical `vibespecs` orgs.
 
+mod common;
+
 use std::fs;
 use std::path::Path;
 
@@ -54,7 +56,7 @@ const TEST_REGISTRY_GITHUB_NAME: &str = "vibespecstest1";
 const TEST_REGISTRY_GITHUB_URL: &str = "https://github.com/vibespecstest1";
 const TEST_REGISTRY_GITVERSE_NAME: &str = "vibespecstest3";
 /// SSH form for GitVerse: the live test reaches it via the local
-/// `gitverse.ru` SSH key (`spec/boot/90-user.md` covers the
+/// `gitverse.ru` SSH key (the user boot snippet covers the
 /// preflight). HTTPS against GitVerse repos demands credentials
 /// even for public reads — the canonical `vibespecs` org happens to
 /// be publicly readable over HTTPS too, but new test orgs cannot
@@ -141,7 +143,7 @@ fn install_github_smoke_alone() {
     assert!(
         project
             .path()
-            .join("spec/flows/vibevm-github-smoke/PROTOCOL.md")
+            .join(common::spec_rel("flows/vibevm-github-smoke/PROTOCOL.md"))
             .is_file(),
         "PROTOCOL.md must be materialised"
     );
@@ -187,7 +189,9 @@ fn install_gitverse_smoke_alone() {
     assert!(
         project
             .path()
-            .join("spec/flows/vibevm-direct-push-smoke/PROTOCOL.md")
+            .join(common::spec_rel(
+                "flows/vibevm-direct-push-smoke/PROTOCOL.md"
+            ))
             .is_file(),
         "PROTOCOL.md must be materialised"
     );

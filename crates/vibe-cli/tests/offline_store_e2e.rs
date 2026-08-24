@@ -84,7 +84,11 @@ fn offline_install_resolves_from_the_store_with_zero_registries() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                "vibe.toml"
+            ))
             .is_file(),
         "the offline run must materialise vibedeps from the store"
     );
@@ -200,7 +204,11 @@ fn a_version_deleted_from_the_registry_still_installs_from_the_store() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                "vibe.toml"
+            ))
             .is_file(),
         "the re-install must materialise the store's copy"
     );

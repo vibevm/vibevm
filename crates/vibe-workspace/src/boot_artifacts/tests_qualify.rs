@@ -13,13 +13,14 @@ use super::tests::{boot, coord, entry, entry_normal};
 
 // ----- B-011 (W3): qualify-on-splice, preamble, tombstone, @!X, R3, R4 -----
 
-/// Write a `simple` boot file into a fresh `vibedeps/<slot>/<ver>/boot.md`.
+/// Write a `simple` boot file into a fresh dependency slot.
 #[cfg(test)]
 fn write_simple_boot(ws: &Path, slot: &str, body: &str) -> String {
-    let p = ws.join(format!("vibedeps/{slot}/1.0.0/boot.md"));
+    let rel = crate::layout_paths::vibedeps(format!("{slot}/1.0.0/boot.md"));
+    let p = ws.join(&rel);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(&p, body).unwrap();
-    format!("vibedeps/{slot}/1.0.0/boot.md")
+    rel
 }
 
 #[test]
@@ -110,7 +111,8 @@ fn render_static_omits_the_tombstone_when_no_label_was_renamed() {
 /// forbids `@!` in a `simple` contribution).
 #[cfg(test)]
 fn write_aliaser_fixture(ws: &Path) -> String {
-    let base = ws.join("vibedeps/com.example.hello.aliaser/1.0.0/spec");
+    let slot = crate::layout_paths::vibedeps("com.example.hello.aliaser/1.0.0");
+    let base = ws.join(crate::layout_paths::slot_specs_path(&slot, ""));
     let write = |rel: &str, body: &str| {
         let p = base.join(rel);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -123,7 +125,7 @@ fn write_aliaser_fixture(ws: &Path) -> String {
          Sees @!pre here.\n",
     );
     write("contract/prelude.md", "# Prelude {#root}\n\nPRELUDE_BODY\n");
-    "vibedeps/com.example.hello.aliaser/1.0.0/spec/contract/greeting.md".to_string()
+    crate::layout_paths::slot_specs(slot, "contract/greeting.md")
 }
 
 #[test]
@@ -200,7 +202,9 @@ fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
     // `org-x--aaa--root` is queried for the short `root` — the resolver's miss
     // error lists the heir.
     let ws = TempDir::new().unwrap();
-    let doc = ws.path().join("spec/common/TARGET.md");
+    let doc = ws
+        .path()
+        .join(crate::layout_paths::specs_path("common/TARGET.md"));
     fs::create_dir_all(doc.parent().unwrap()).unwrap();
     fs::write(
         &doc,
@@ -222,13 +226,14 @@ fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
 /// `com.example.host/host` references the dep package's `##THE-RULE` via a
 /// short link; without per-node qualify the dep's labels would be
 /// mis-attributed to the host's origin. Each package lives in its own
-/// `vibedeps/<slot>/1.0.0/spec/…` slot, matched by the `-<name>` suffix the
+/// dependency slot, matched by the `-<name>` suffix the
 /// resolver keys on (identity `com.example.host/host` → slot `com.example.host.host`; `com.example.dep/dep` → slot
 /// `com.example.dep.dep`). Returns the host contract's workspace-relative path.
 #[cfg(test)]
 fn write_cross_pkg_fixture(ws: &Path) -> String {
     let write = |slot: &str, rel: &str, body: &str| {
-        let p = ws.join(format!("vibedeps/{slot}/1.0.0/spec/{rel}"));
+        let slot = crate::layout_paths::vibedeps(format!("{slot}/1.0.0"));
+        let p = ws.join(crate::layout_paths::slot_specs_path(slot, rel));
         fs::create_dir_all(p.parent().unwrap()).unwrap();
         fs::write(&p, body).unwrap();
     };
@@ -245,7 +250,10 @@ fn write_cross_pkg_fixture(ws: &Path) -> String {
         "contract/dep.md",
         "# Dep {#root}\n##THE-RULE the rule\nDEP_BODY\n",
     );
-    "vibedeps/com.example.host.host/1.0.0/spec/contract/host.md".to_string()
+    crate::layout_paths::slot_specs(
+        crate::layout_paths::vibedeps("com.example.host.host/1.0.0"),
+        "contract/host.md",
+    )
 }
 
 #[test]

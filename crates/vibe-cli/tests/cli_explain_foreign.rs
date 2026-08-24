@@ -19,7 +19,7 @@ use std::fs;
 /// the `specmap.toml` so the package is installed but opts out of
 /// traceability (the no-map case).
 fn slot(root: &std::path::Path, with_map: bool) -> std::path::PathBuf {
-    let slot = root.join("vibedeps/org.demo.demo/0.1.0");
+    let slot = root.join(common::slot_dir("org.demo.demo", "0.1.0"));
     fs::create_dir_all(slot.join("crates/x/src")).unwrap();
     fs::create_dir_all(slot.join("spec")).unwrap();
     fs::write(
@@ -35,7 +35,7 @@ fn slot(root: &std::path::Path, with_map: bool) -> std::path::PathBuf {
         .unwrap();
     }
     fs::write(
-        slot.join("spec/D.md"),
+        slot.join(common::spec_rel("D.md")),
         "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
     )
     .unwrap();
@@ -100,7 +100,11 @@ fn the_projects_own_address_builds_fresh_alongside_a_carried_map() {
     .unwrap();
     fs::create_dir_all(root.join("crates/p/src")).unwrap();
     fs::create_dir_all(root.join("spec")).unwrap();
-    fs::write(root.join("spec/P.md"), "## own {#req-o}\n`req r1`\n").unwrap();
+    fs::write(
+        root.join(common::spec_rel("P.md")),
+        "## own {#req-o}\n`req r1`\n",
+    )
+    .unwrap();
     fs::write(
         root.join("crates/p/src/lib.rs"),
         "#[verifies(\"spec://proj/P#req-o\")]\nfn t() {}\n",

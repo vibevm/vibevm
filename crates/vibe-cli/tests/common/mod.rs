@@ -29,9 +29,121 @@ pub use vibe_test_support::{UserScratch, vibe};
 /// hermetic fixture registry the non-`wal` e2e tests run against.
 /// Layout is the monorepo shape (`<group>/<name>/v<ver>/…`). The `wal`
 /// tests instead dogfood the real `org.vibevm.world/wal` package from
-/// `packages/` — see [`real_wal_dir`] / [`make_wal_dir_registry`].
+/// the repo's packages root — see [`real_wal_dir`] /
+/// [`make_wal_dir_registry`].
 pub fn fixture_registry() -> PathBuf {
     workspace_root().join("fixtures").join("registry")
+}
+
+// ---- Layout helpers (PROP-052 L2) ---------------------------------------
+//
+// Every scaffold path these test binaries write or assert on routes
+// through `vibe_core::layout`, so the R4 flip (one `USE_NEW_LAYOUT`
+// edit) carries the whole integration suite without touching it.
+
+/// The live specs root as a `PathBuf` (`spec/` today).
+pub fn specs_root() -> PathBuf {
+    vibe_core::layout::current_specs_root()
+}
+
+/// The live packages root as a `PathBuf` (`packages/` today).
+pub fn packages_root() -> PathBuf {
+    vibe_core::layout::current_packages_root()
+}
+
+/// The live dependency-slot root as a `PathBuf` (`vibedeps/` today).
+pub fn deps_root() -> PathBuf {
+    vibe_core::layout::current_vibedeps_root()
+}
+
+/// The live boot-lane directory as a `PathBuf` (`spec/boot/` today).
+pub fn boot_dir() -> PathBuf {
+    vibe_core::layout::current_boot_dir()
+}
+
+/// The live boot manifest, forward-slashed (`spec/boot/INDEX.md` today).
+pub fn index_rel() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
+}
+
+/// The live Markdown WAL path as a `PathBuf` (`spec/WAL.md` today).
+pub fn wal_md() -> PathBuf {
+    vibe_core::layout::current_wal_md()
+}
+
+/// The live facts root as a `PathBuf` (`vibefacts/` today).
+pub fn facts_root() -> PathBuf {
+    vibe_core::layout::current_vibefacts_root()
+}
+
+/// One file under the live facts root, forward-slashed
+/// (`vibefacts/<tail>` today).
+pub fn facts_rel(tail: &str) -> String {
+    vibe_core::machine_json_path(&facts_root().join(tail))
+}
+
+/// The generated static lane, Markdown spelling, forward-slashed
+/// (`spec/boot/STATIC.md` today).
+pub fn static_md_rel() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_boot_static_md())
+}
+
+/// The generated static lane, XML spelling, forward-slashed
+/// (`spec/boot/STATIC.xml` today).
+pub fn static_xml_rel() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_boot_static_xml())
+}
+
+/// The live specs root as a forward-slashed string (`spec` today) —
+/// for include-globs and other `format!`-built fixture bodies.
+pub fn specs_str() -> String {
+    vibe_core::machine_json_path(&specs_root())
+}
+
+/// The live boot lane as a forward-slashed string (`spec/boot` today).
+pub fn boot_str() -> String {
+    vibe_core::machine_json_path(&boot_dir())
+}
+
+/// One project-relative path under the live specs root,
+/// forward-slashed (`spec/<tail>` today).
+pub fn spec_rel(tail: &str) -> String {
+    vibe_core::machine_json_path(&specs_root().join(tail))
+}
+
+/// One boot-lane file, forward-slashed (`spec/boot/<file>` today).
+pub fn boot_rel(file: &str) -> String {
+    vibe_core::machine_json_path(&boot_dir().join(file))
+}
+
+/// One project-relative path under the live packages root,
+/// forward-slashed (`packages/<tail>` today).
+pub fn pack_rel(tail: &str) -> String {
+    vibe_core::machine_json_path(&packages_root().join(tail))
+}
+
+/// A materialised slot directory, forward-slashed
+/// (`vibedeps/<slot>/<version>` today).
+pub fn slot_dir(slot: &str, version: &str) -> String {
+    vibe_core::machine_json_path(&deps_root().join(slot).join(version))
+}
+
+/// A file inside a materialised slot, forward-slashed
+/// (`vibedeps/<slot>/<version>/<tail>` today).
+pub fn slot_rel(slot: &str, version: &str, tail: impl AsRef<str>) -> String {
+    vibe_core::machine_json_path(&deps_root().join(slot).join(version).join(tail.as_ref()))
+}
+
+/// A package's boot-lane file inside its materialised slot,
+/// forward-slashed (`vibedeps/<slot>/<version>/spec/boot/<file>` today).
+pub fn slot_boot_rel(slot: &str, version: &str, file: &str) -> String {
+    vibe_core::machine_json_path(
+        &deps_root()
+            .join(slot)
+            .join(version)
+            .join(boot_dir())
+            .join(file),
+    )
 }
 
 /// The vibevm workspace root: two `parent()`s up from this crate's
@@ -48,8 +160,12 @@ pub fn workspace_root() -> PathBuf {
 
 /// The real `org.vibevm.world/wal@0.2.0` package as it ships in this
 /// repo — the tree the `wal` e2e tests dogfood rather than a fixture.
+/// Routed through the layout module so the R4 flip keeps the dogfood
+/// pointing at the moved tree.
 fn real_wal_dir() -> PathBuf {
-    workspace_root().join("packages/org.vibevm.world/wal/v0.2.0")
+    workspace_root()
+        .join(packages_root())
+        .join("org.vibevm.world/wal/v0.2.0")
 }
 
 /// Build a directory registry under `<root>/wal-registry/` carrying the

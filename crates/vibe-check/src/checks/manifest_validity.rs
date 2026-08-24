@@ -75,7 +75,7 @@ mod tests {
     fn missing_vibe_toml_is_an_error() {
         let project = tempdir().unwrap();
         // No vibe.toml.
-        fs::create_dir_all(project.path().join("spec/boot")).unwrap();
+        fs::create_dir_all(project.path().join(vibe_core::layout::current_boot_dir())).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report

@@ -17,7 +17,7 @@ use crate::hooks::HookReport;
 /// `CachedPackage`.
 #[derive(Debug, Clone)]
 pub struct ResolvedDep {
-    /// The package's `kind` — metadata; used only for its `vibedeps/` slot
+    /// The package's `kind` — metadata; used only for its dependency slot
     /// directory name, never for identity (PROP-008 §2.3).
     pub kind: PackageKind,
     /// Reverse-FQDN group — with `name`, the `(group, name)` identity.
@@ -42,7 +42,7 @@ pub struct ResolvedDep {
     /// `true` iff the package came from a mutable local `file://` source — an
     /// in-repo / local-directory registry (`--registry <path>`, the
     /// package-authoring shape). Such a source is a working tree the author
-    /// edits in place, so its `vibedeps/` slot is **never** presence-trusted by
+    /// edits in place, so its dependency slot is **never** presence-trusted by
     /// the PROP-011 §2.3 fast path: it is re-materialised every install
     /// (PROP-011 §2.6). `false` for immutable remote-registry sources and for
     /// boot-only re-derivations from disk. `in-place` (PROP-022) packages take
@@ -138,11 +138,11 @@ pub trait SlotVerifier {
 /// What [`apply_resolution`] did — for the caller to report.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
-    /// `vibedeps/` slot paths freshly materialised this run — a new or
+    /// Dependency-slot paths freshly materialised this run — a new or
     /// version-bumped dependency whose content was copied, or a present
     /// slot whose `verify` spot-check diverged and was overwritten.
     pub materialised: Vec<String>,
-    /// `vibedeps/` slot paths skipped — already present for the resolved
+    /// Dependency-slot paths skipped — already present for the resolved
     /// version, trusted and not re-copied (PROP-011 §2.3). Under
     /// `trust-presence` (the default) that trust is presence alone; under
     /// `verify` a slot lands here only after its `content_hash` checked
@@ -154,7 +154,7 @@ pub struct InstallOutcome {
     /// re-materialised; these lines are the record of why. Empty under
     /// `trust-presence` and on a clean `verify` pass.
     pub integrity_warnings: Vec<String>,
-    /// `vibedeps/` slot paths pruned — present before, absent from this
+    /// Dependency-slot paths pruned — present before, absent from this
     /// resolution (a version bump, or a dropped dependency).
     pub pruned: Vec<String>,
     /// `rel_path` of every node whose boot artifacts were regenerated.

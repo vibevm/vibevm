@@ -108,7 +108,7 @@ mod tests {
         write_minimal_project(project.path());
         let pkg = project
             .path()
-            .join("packages")
+            .join(vibe_core::layout::current_packages_root())
             .join("flow")
             .join("test-pkg");
         fs::create_dir_all(pkg.join("boot")).unwrap();
@@ -152,7 +152,7 @@ category = "flow"
         write_minimal_project(project.path());
         let pkg = project
             .path()
-            .join("packages")
+            .join(vibe_core::layout::current_packages_root())
             .join("flow")
             .join("test-pkg");
         fs::create_dir_all(pkg.join("boot")).unwrap();

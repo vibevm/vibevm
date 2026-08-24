@@ -178,7 +178,10 @@ mod tests {
     fn matching_local_source_emits_no_finding() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let src = project.path().join("packages/flow-wal");
+        let src = project
+            .path()
+            .join(vibe_core::layout::current_packages_root())
+            .join("flow-wal");
         fs::create_dir_all(&src).unwrap();
         fs::write(src.join("vibe.toml"), "[package]\nname = \"wal\"\n").unwrap();
         // Seed the recorded hash with the source's real hash → no drift.
@@ -200,7 +203,10 @@ mod tests {
     fn drifted_local_source_warns_once() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let src = project.path().join("packages/flow-wal");
+        let src = project
+            .path()
+            .join(vibe_core::layout::current_packages_root())
+            .join("flow-wal");
         fs::create_dir_all(&src).unwrap();
         fs::write(src.join("vibe.toml"), "[package]\nname = \"wal\"\n").unwrap();
         // A content_hash the source does NOT produce — drift.
@@ -223,7 +229,10 @@ mod tests {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         // Point at a directory that does not exist on disk.
-        let gone = project.path().join("packages/flow-wal");
+        let gone = project
+            .path()
+            .join(vibe_core::layout::current_packages_root())
+            .join("flow-wal");
         write_local_lock(project.path(), &file_url_of(&gone), "sha256:deadbeef");
 
         let report = check_project(project.path(), &opts());
@@ -243,7 +252,10 @@ mod tests {
     fn non_local_source_kind_is_skipped() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let src = project.path().join("packages/flow-wal");
+        let src = project
+            .path()
+            .join(vibe_core::layout::current_packages_root())
+            .join("flow-wal");
         fs::create_dir_all(&src).unwrap();
         fs::write(src.join("vibe.toml"), "[package]\nname = \"wal\"\n").unwrap();
         // An `embedded` entry pointing at a source whose hash differs from the

@@ -30,8 +30,8 @@ fn make_dir_registry(root: &Path) -> PathBuf {
     let registry = root.join("registry");
     let parent = registry.join("org.example").join("parent").join("v0.1.0");
     let child = registry.join("org.example").join("child").join("v0.1.0");
-    fs::create_dir_all(parent.join("spec/flows/parent")).unwrap();
-    fs::create_dir_all(child.join("spec/flows/child")).unwrap();
+    fs::create_dir_all(parent.join(common::spec_rel("flows/parent"))).unwrap();
+    fs::create_dir_all(child.join(common::spec_rel("flows/child"))).unwrap();
     fs::write(
         parent.join("vibe.toml"),
         "[package]\n\
@@ -43,7 +43,11 @@ fn make_dir_registry(root: &Path) -> PathBuf {
          \"org.example/child\" = \"^0.1.0\"\n",
     )
     .unwrap();
-    fs::write(parent.join("spec/flows/parent/P.md"), "# parent\n").unwrap();
+    fs::write(
+        parent.join(common::spec_rel("flows/parent/P.md")),
+        "# parent\n",
+    )
+    .unwrap();
     fs::write(
         child.join("vibe.toml"),
         "[package]\n\
@@ -53,7 +57,11 @@ fn make_dir_registry(root: &Path) -> PathBuf {
          version = \"0.1.0\"\n",
     )
     .unwrap();
-    fs::write(child.join("spec/flows/child/C.md"), "# child\n").unwrap();
+    fs::write(
+        child.join(common::spec_rel("flows/child/C.md")),
+        "# child\n",
+    )
+    .unwrap();
     registry
 }
 
@@ -197,7 +205,7 @@ fn cache_add_projectless_fills_store_with_closure_and_touches_no_project() {
     // appeared, no lockfile, no vibedeps/.
     assert!(!bare.path().join("vibe.toml").exists());
     assert!(!bare.path().join("vibe.lock").exists());
-    assert!(!bare.path().join("vibedeps").exists());
+    assert!(!bare.path().join(common::deps_root()).exists());
 
     // Write-once: a second add reports AlreadyPresent and does not
     // rewrite the entries — a marker planted inside the entry survives.
@@ -280,7 +288,7 @@ fn cache_add_in_project_uses_project_registries_and_changes_nothing() {
         "a pre-warm must not touch the project manifest"
     );
     assert!(!project.path().join("vibe.lock").exists());
-    assert!(!project.path().join("vibedeps").exists());
+    assert!(!project.path().join(common::deps_root()).exists());
 }
 
 /// A projectless `add` with no user-level registry configured refuses

@@ -33,7 +33,10 @@ use std::path::{Path, PathBuf};
 
 use crate::address::{Authority, SpecAddress};
 
-use super::{FileResolver, ResolveError, read_dir_or_empty, resolve_doc, version_order};
+use super::{
+    FileResolver, ResolveError, read_dir_or_empty, resolve_doc, specs_root_under, version_order,
+    vibedeps_root_under,
+};
 
 /// Is `addr` a pattern — a `spec://` address whose package **name** carries a
 /// glob `*`? Only the name may carry a pattern (law 1); a `*` anywhere else is
@@ -81,7 +84,7 @@ impl FileResolver {
         // boundary), and keep the package name where it matches the pattern.
         // The group is not consulted (РТ-2): slots are matched by name, and
         // matching stays group-blind even now that the directory carries one.
-        let vibedeps = self.ws_root.join("vibedeps");
+        let vibedeps = vibedeps_root_under(&self.ws_root);
         let mut matched: Vec<(String, PathBuf)> = Vec::new();
         for entry in read_dir_or_empty(&vibedeps) {
             let slot_dir = entry.path();
@@ -171,7 +174,7 @@ fn name_matches(pattern: &str, name: &str) -> bool {
     pi == pat.len()
 }
 
-/// The `spec/` root of the freshest installed version under `slot_dir`, or
+/// The specs root of the freshest installed version under `slot_dir`, or
 /// `None` when the slot holds no version directory. Reuses
 /// `version_order::newest` (B-028) so there is one version rule, not two. A
 /// directory whose name does not start with a digit is not a version candidate.
@@ -190,7 +193,7 @@ fn freshest_spec_root(slot_dir: &Path) -> Option<PathBuf> {
         })
         .collect();
     let newest = version_order::newest(candidates.iter().map(String::as_str))?;
-    Some(slot_dir.join(newest).join("spec"))
+    Some(specs_root_under(&slot_dir.join(newest)))
 }
 
 /// Build the canonical concrete address for a matched package and round-trip it
@@ -235,10 +238,13 @@ mod tests {
 
     /// Build a vibedeps slot `<group>.<name>` holding the given versions, each
     /// with `spec/contract/API.md` — the document every G-test resolves.
+    /// The scaffolds route through the resolver's own root probes (fresh
+    /// tempdirs fall back to the legacy names; PROP-052's flip moves these
+    /// fixtures with the product).
     fn make_plugin(ws: &Path, group: &str, name: &str, versions: &[&str]) {
-        let slot = ws.join("vibedeps").join(format!("{group}.{name}"));
+        let slot = vibedeps_root_under(ws).join(format!("{group}.{name}"));
         for v in versions {
-            let dir = slot.join(v).join("spec").join("contract");
+            let dir = specs_root_under(&slot.join(v)).join("contract");
             fs::create_dir_all(&dir).unwrap();
             fs::write(dir.join("API.md"), "# API\n").unwrap();
         }
@@ -247,8 +253,7 @@ mod tests {
     /// A slot with a version directory but NO document — installed yet not a
     /// member of a set whose address names `contract/API`.
     fn make_slot_no_doc(ws: &Path, group: &str, name: &str, version: &str) {
-        let dir = ws
-            .join("vibedeps")
+        let dir = vibedeps_root_under(ws)
             .join(format!("{group}.{name}"))
             .join(version);
         fs::create_dir_all(&dir).unwrap();
@@ -357,7 +362,11 @@ mod tests {
         let got = r.expand_pattern(&pat).unwrap();
         assert_eq!(got.len(), 1);
         let file = r.resolve_file(&got[0]).unwrap();
-        assert!(file.ends_with("2.0.0/spec/contract/API.md"), "{file:?}");
+        let expected_tail = format!(
+            "2.0.0/{}/contract/API.md",
+            crate::resolver::LEGACY_SPECS_ROOT
+        );
+        assert!(file.ends_with(expected_tail), "{file:?}");
     }
 
     #[test]

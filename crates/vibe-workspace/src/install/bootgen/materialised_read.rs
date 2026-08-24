@@ -3,11 +3,11 @@
 
 use super::*;
 
-/// Reconstruct the resolution by reading every `vibedeps/` slot's manifest.
+/// Reconstruct the resolution by reading every dependency slot's manifest.
 /// A slot whose `vibe.toml` is missing or carries no `[package]` table is
 /// skipped — it is not a materialised package.
 pub(super) fn read_materialised(workspace_root: &Path) -> Result<Vec<ResolvedDep>, WorkspaceError> {
-    let vibedeps_dir = workspace_root.join(vibedeps::VIBEDEPS_DIR);
+    let vibedeps_dir = workspace_root.join(vibe_core::layout::current_vibedeps_root());
     if !vibedeps_dir.is_dir() {
         return Ok(Vec::new());
     }

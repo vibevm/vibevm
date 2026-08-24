@@ -67,6 +67,7 @@ mod tests {
 
     use tempfile::tempdir;
 
+    use vibe_core::layout;
     use vibe_core::manifest::Manifest;
 
     use super::ManifestEpochCheck;
@@ -79,6 +80,16 @@ mod tests {
         let mut report = CheckReport::default();
         ManifestEpochCheck.run(project, &opts(), &mut report);
         report.findings
+    }
+
+    /// A fixture path under the authored packages root, `/`-separated —
+    /// routed through the layout seam (PROP-052 L2) so the scaffold and
+    /// the asserted finding path name whichever layout is live.
+    fn pkg_rel(rel: &str) -> String {
+        layout::current_packages_root()
+            .join(rel)
+            .to_string_lossy()
+            .replace('\\', "/")
     }
 
     /// Write a `vibe.toml` carrying a `[package]` table at the given package
@@ -106,7 +117,7 @@ mod tests {
         write_minimal_project(project.path());
         write_package_manifest(
             project.path(),
-            "packages/org.demo/x/v0.1.0",
+            &pkg_rel("org.demo/x/v0.1.0"),
             "[package]\ngroup = \"org.demo\"\nname = \"x\"\nkind = \"tool\"\nversion = \"0.1.0\"\n",
         );
         let findings = cell_findings(project.path());
@@ -124,7 +135,7 @@ mod tests {
         // forward slashes (stable across platforms).
         assert_eq!(
             f.path.as_deref().and_then(|p| p.to_str()),
-            Some("packages/org.demo/x/v0.1.0/vibe.toml"),
+            Some(pkg_rel("org.demo/x/v0.1.0/vibe.toml").as_str()),
             "got: {:?}",
             f.path
         );
@@ -136,7 +147,7 @@ mod tests {
         write_minimal_project(project.path());
         write_package_manifest(
             project.path(),
-            "packages/org.demo/x/v0.1.0",
+            &pkg_rel("org.demo/x/v0.1.0"),
             "[package]\ngroup = \"org.demo\"\nname = \"x\"\nkind = \"tool\"\nversion = \"0.1.0\"\nepoch = 1\n",
         );
         assert!(
@@ -151,7 +162,7 @@ mod tests {
         write_minimal_project(project.path());
         write_package_manifest(
             project.path(),
-            "packages/org.demo/x/v0.1.0",
+            &pkg_rel("org.demo/x/v0.1.0"),
             "this is = not = toml",
         );
         assert!(

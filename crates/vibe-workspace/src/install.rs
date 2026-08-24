@@ -4,7 +4,7 @@
 //! [`apply_resolution`] takes a discovered [`Workspace`] and a resolved,
 //! fetched dependency set, and:
 //!
-//! 1. materialises each resolved package into its `vibedeps/` slot
+//! 1. materialises each resolved package into its dependency slot
 //!    ([`crate::vibedeps`]);
 //! 2. computes every node's effective boot ([`crate::boot`]) and writes
 //!    its boot artifacts ([`crate::boot_artifacts`]).
@@ -28,7 +28,7 @@ use crate::hooks::{
     HookContext, HookError, HookPhase, HookPolicy, HookReport, HookRunner, InterpreterProbe,
     Platform, SystemHookRunner, SystemProbe, run_package_hook,
 };
-use crate::{Workspace, WorkspaceError, vibedeps};
+use crate::{Workspace, WorkspaceError, layout_paths, vibedeps};
 
 mod hooks_run;
 pub mod model;
@@ -55,7 +55,7 @@ pub use bootgen::{
 /// Materialise a resolution into the workspace and regenerate every node's
 /// boot artifacts (PROP-009 §2.7).
 ///
-/// Materialisation is workspace-wide — one `vibedeps/` slot per resolved
+/// Materialisation is workspace-wide — one dependency slot per resolved
 /// package at the absolute root. Boot artifacts are computed per node: the
 /// root from the whole resolution, a member from its own `[requires]`
 /// closure, with the absolute root's foundation boot inherited downward.
@@ -129,7 +129,7 @@ pub fn apply_resolution_with_spec_format(
     //    (PROP-012 §2.4).
     validate_redirect_blocks(workspace)?;
 
-    // 1. Materialise the resolution into `vibedeps/`. PROP-011 §2.3 — a
+    // 1. Materialise the resolution into dependency slots. PROP-011 §2.3 — a
     //    slot already present for the resolved (immutable) version is
     //    trusted and skipped; only a new or version-bumped dependency
     //    pays the recursive copy. Under `SlotIntegrity::Verify` that
@@ -154,7 +154,7 @@ pub fn apply_resolution_with_spec_format(
         },
     )?;
 
-    // 2. Prune any `vibedeps/` slot no longer in the resolution — a
+    // 2. Prune any dependency slot no longer in the resolution — a
     //    version bump or a dropped dependency must leave no orphan. Both
     //    the freshly-materialised and the skipped slots belong to the
     //    current resolution and are kept.
@@ -220,7 +220,7 @@ fn materialise_resolution(
     )
 }
 
-/// Materialise a resolution into `vibedeps/` and run each freshly-populated
+/// Materialise a resolution into dependency slots and run each freshly-populated
 /// slot's `pre-install` hook (PROP-009 §2.7, PROP-020 §2.1). The interpreter
 /// `probe` and process `runner` are seams so the hook paths — run, skip, and
 /// the pre-install-failure rollback — are unit-tested without spawning
@@ -421,7 +421,7 @@ fn materialise_resolution_with_spec_format(
 }
 
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
-/// — into `vibedeps/` and run each freshly-materialised slot's `pre-install`
+/// — into dependency slots and run each freshly-materialised slot's `pre-install`
 /// hook (PROP-020 §2.1), the same placement + hook flow [`apply_resolution`]
 /// performs (copy / hardlink / in-place move + rollback), but
 /// **without** pruning unrelated slots or regenerating boot. A scoped update
@@ -504,15 +504,15 @@ fn is_in_place(dep: &ResolvedDep) -> bool {
         .is_some_and(|p| p.materialization.is_in_place())
 }
 
-/// Remove every `vibedeps/` slot whose path is not in `kept`, returning
+/// Remove every dependency slot whose path is not in `kept`, returning
 /// the removed slot paths (sorted). A `<kind>-<name>` directory left with
-/// no surviving version is removed too, so `vibedeps/` holds exactly the
+/// no surviving version is removed too, so the dependency tree holds exactly the
 /// current resolution and no empty husks.
 fn prune_stale_slots(
     workspace_root: &Path,
     kept: &[String],
 ) -> Result<Vec<String>, WorkspaceError> {
-    let vibedeps_dir = workspace_root.join(vibedeps::VIBEDEPS_DIR);
+    let vibedeps_dir = workspace_root.join(vibe_core::layout::current_vibedeps_root());
     if !vibedeps_dir.is_dir() {
         return Ok(Vec::new());
     }
@@ -540,7 +540,7 @@ fn prune_stale_slots(
                 continue;
             }
             let ver = version.file_name().to_string_lossy().into_owned();
-            let rel = format!("{}/{kn}/{ver}", vibedeps::VIBEDEPS_DIR);
+            let rel = layout_paths::vibedeps(format!("{kn}/{ver}"));
             if keep.contains(rel.as_str()) {
                 any_kept = true;
             } else {

@@ -17,7 +17,7 @@
 //! removed one leaves the root sets unequal; a tightened constraint leaves
 //! the locked version outside it. Transitive packages are trusted: an
 //! unchanged root set cannot have produced a different transitive closure
-//! (a transitive `[requires]` lives inside a `vibedeps/` slot, immutable
+//! (a transitive `[requires]` lives inside a dependency slot, immutable
 //! once materialised).
 //!
 //! ## Conservative by construction
@@ -63,7 +63,7 @@ impl Freshness {
 
 /// Decide whether `lockfile` is a fresh resolution of `workspace` — the
 /// PROP-011 §2.2 freshness check. Pure over the in-memory inputs plus
-/// `vibedeps/` slot presence on disk; runs no depsolver and no network.
+/// dependency-slot presence on disk; runs no depsolver and no network.
 pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
     // The declared registry root set, unioned across every node. Built
     // only once every node has been proven free of the source kinds the
@@ -127,8 +127,8 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
                 ));
             }
             // A dependency resolved from a local `file://` source *inside the
-            // workspace* — the in-repo self-hosting registry (`packages/`,
-            // `--registry packages`) the author edits in place — points at a
+            // workspace* — the in-repo self-hosting registry the author edits
+            // in place — points at a
             // MUTABLE working tree: its content changes with no version or
             // `[requires]` edit, so the satisfiability test above cannot prove
             // the lock fresh. Treat it like a `path`/`git` source (above):
@@ -166,15 +166,18 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
         );
     }
 
-    // Every locked package must be materialised in `vibedeps/` — the fast
+    // Every locked package must be materialised in the dependency tree — the fast
     // path applies the lock without fetching, so missing content cannot
-    // be tolerated. A fresh clone with a committed `vibedeps/` satisfies
+    // be tolerated. A fresh clone with a committed dependency tree satisfies
     // this; a gitignored or hand-deleted slot does not.
     for p in &lockfile.packages {
         if !vibedeps::is_materialised(&workspace.root, &p.group, p.name.as_str(), &p.version) {
             return stale(format!(
-                "`{}/{}@{}` has no materialised vibedeps/ slot",
-                p.group, p.name, p.version
+                "`{}/{}@{}` has no materialised {}/ slot",
+                p.group,
+                p.name,
+                p.version,
+                crate::layout_paths::vibedeps("")
             ));
         }
     }
@@ -307,7 +310,7 @@ mod tests {
         toml::from_str(&text).unwrap()
     }
 
-    /// Create an empty `vibedeps/` slot directory so `is_materialised`
+    /// Create an empty dependency-slot directory so `is_materialised`
     /// reports the package as present.
     fn materialise_slot(ws: &Workspace, name: &str, version: &str) {
         let group = vibe_core::Group::parse("org.vibevm").unwrap();
@@ -456,7 +459,7 @@ mod tests {
         // pick up any source edit (§2.6).
         let (_t, ws) =
             workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
-        let src = file_url_under(&ws.root, "packages/wal");
+        let src = file_url_under(&ws.root, &crate::layout_paths::packages("wal"));
         let lf = lockfile(
             &["org.vibevm/wal"],
             &local_pkg("flow", "wal", "0.3.2", &src),
@@ -495,7 +498,7 @@ mod tests {
         // it is not mutable — isolating the §2.6 exclusion.
         let (_t, ws) =
             workspace_with_requires("[requires.packages]\n\"org.vibevm/giant\" = \"^1.0\"\n");
-        let src = file_url_under(&ws.root, "packages/giant");
+        let src = file_url_under(&ws.root, &crate::layout_paths::packages("giant"));
         let lf = lockfile(
             &["org.vibevm/giant"],
             &local_in_place_pkg("feat", "giant", "1.0.0", &src),

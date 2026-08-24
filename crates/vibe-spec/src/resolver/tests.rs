@@ -16,7 +16,7 @@ fn t1_self_coordinate_resolves_to_the_authored_spec_tree() {
     // Т1: `spec://<self_group>/<self_name>/…` resolves under ws_root/spec,
     // ahead of any vibedeps/ slot lookup (B-031 — the self-match is first).
     let ws = tempfile::TempDir::new().unwrap();
-    let doc = ws.path().join("spec/common/TARGET.md");
+    let doc = specs_root_under(ws.path()).join("common").join("TARGET.md");
     fs::create_dir_all(doc.parent().unwrap()).unwrap();
     fs::write(&doc, "# Target\n").unwrap();
     let r = FileResolver::new(ws.path(), host_coord());
@@ -63,9 +63,9 @@ fn t4_a_non_self_package_resolves_to_its_vibedeps_slot() {
     // Т4: a package coordinate that is NOT the self coordinate falls through
     // to the vibedeps/ slot lookup, unchanged from before B-031.
     let ws = tempfile::TempDir::new().unwrap();
-    let doc = ws
-        .path()
-        .join("vibedeps/org.vibevm.demo.demo/1.0.0/spec/contract/API.md");
+    let doc = specs_root_under(&vibedeps_root_under(ws.path()).join("org.vibevm.demo.demo/1.0.0"))
+        .join("contract")
+        .join("API.md");
     fs::create_dir_all(doc.parent().unwrap()).unwrap();
     fs::write(&doc, "# API\n").unwrap();
     let r = FileResolver::new(ws.path(), host_coord());
@@ -156,7 +156,7 @@ fn an_xml_document_resolves_under_the_same_address() {
     // The plain-stem branch: `spec/common/DEP` finds `DEP.xml` when no
     // `DEP.md` sits beside it — the address never names the form.
     let ws = tempfile::TempDir::new().unwrap();
-    let dir = ws.path().join("spec/common");
+    let dir = specs_root_under(ws.path()).join("common");
     fs::create_dir_all(&dir).unwrap();
     fs::write(dir.join("DEP.xml"), "<spec/>").unwrap();
     let r = FileResolver::new(ws.path(), host_coord());
@@ -170,7 +170,7 @@ fn an_id_stem_resolves_its_xml_slug_form() {
     // The `PROP-NNN` truncation inverts over the XML form too:
     // `PROP-045` finds `PROP-045-xml-spec-sources.xml`.
     let ws = tempfile::TempDir::new().unwrap();
-    let dir = ws.path().join("spec/common");
+    let dir = specs_root_under(ws.path()).join("common");
     fs::create_dir_all(&dir).unwrap();
     fs::write(dir.join("PROP-045-xml-spec-sources.xml"), "<spec/>").unwrap();
     let r = FileResolver::new(ws.path(), host_coord());
@@ -184,7 +184,7 @@ fn a_document_in_both_forms_is_a_loud_pair_collision() {
     // `DEP.md` + `DEP.xml` beside each other: one logical document in
     // two forms — the resolver reports both paths and refuses to guess.
     let ws = tempfile::TempDir::new().unwrap();
-    let dir = ws.path().join("spec/common");
+    let dir = specs_root_under(ws.path()).join("common");
     fs::create_dir_all(&dir).unwrap();
     fs::write(dir.join("DEP.md"), "# Dep\n").unwrap();
     fs::write(dir.join("DEP.xml"), "<spec/>").unwrap();
@@ -207,9 +207,9 @@ fn a_document_in_both_forms_is_a_loud_pair_collision() {
 /// versions, each with `spec/API.md` (the doc every F-test resolves).
 /// Returns the slot path so a caller may add non-version neighbours.
 fn make_versions(ws: &Path, group: &str, name: &str, versions: &[&str]) -> PathBuf {
-    let slot = ws.join("vibedeps").join(format!("{group}.{name}"));
+    let slot = vibedeps_root_under(ws).join(format!("{group}.{name}"));
     for v in versions {
-        let dir = slot.join(v).join("spec");
+        let dir = specs_root_under(&slot.join(v));
         fs::create_dir_all(&dir).unwrap();
         fs::write(dir.join("API.md"), "# API\n").unwrap();
     }
@@ -224,7 +224,10 @@ fn f1_a_single_installed_version_is_taken() {
     let r = FileResolver::new(ws.path(), host_coord());
     let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
     let file = r.resolve_file(&addr).unwrap();
-    assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    assert!(
+        file.ends_with(format!("1.0.0/{}/API.md", LEGACY_SPECS_ROOT)),
+        "{file:?}"
+    );
 }
 
 #[test]
@@ -236,7 +239,10 @@ fn f2_two_versions_compare_numerically_not_lexicographically() {
     let r = FileResolver::new(ws.path(), host_coord());
     let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
     let file = r.resolve_file(&addr).unwrap();
-    assert!(file.ends_with("0.10.0/spec/API.md"), "{file:?}");
+    assert!(
+        file.ends_with(format!("0.10.0/{}/API.md", LEGACY_SPECS_ROOT)),
+        "{file:?}"
+    );
 }
 
 #[test]
@@ -247,7 +253,10 @@ fn f3_a_release_beats_its_pre_release() {
     let r = FileResolver::new(ws.path(), host_coord());
     let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
     let file = r.resolve_file(&addr).unwrap();
-    assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    assert!(
+        file.ends_with(format!("1.0.0/{}/API.md", LEGACY_SPECS_ROOT)),
+        "{file:?}"
+    );
 }
 
 #[test]
@@ -259,7 +268,10 @@ fn f4_an_explicit_version_pins_even_the_non_newest() {
     let r = FileResolver::new(ws.path(), host_coord());
     let addr = SpecAddress::parse("spec://org.demo/widget@1.0.0/API").unwrap();
     let file = r.resolve_file(&addr).unwrap();
-    assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    assert!(
+        file.ends_with(format!("1.0.0/{}/API.md", LEGACY_SPECS_ROOT)),
+        "{file:?}"
+    );
 }
 
 #[test]
@@ -287,7 +299,10 @@ fn f6_more_segments_at_equal_prefix_is_newer() {
     let r = FileResolver::new(ws.path(), host_coord());
     let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
     let file = r.resolve_file(&addr).unwrap();
-    assert!(file.ends_with("1.2.1/spec/API.md"), "{file:?}");
+    assert!(
+        file.ends_with(format!("1.2.1/{}/API.md", LEGACY_SPECS_ROOT)),
+        "{file:?}"
+    );
 }
 
 #[test]

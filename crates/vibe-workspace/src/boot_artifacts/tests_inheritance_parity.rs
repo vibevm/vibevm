@@ -64,11 +64,14 @@ fn xml_twin(md: &str) -> String {
     xml
 }
 
-/// Write a snippet under `vibedeps/<slot>/1.0.0/spec/boot/snippet.<ext>` in
+/// Write a snippet under a dependency slot's boot lane in
 /// the given form (an `Xml` write is the twin of `md`) and return the
 /// workspace-relative path actually written.
 fn write_parity_snippet(ws: &Path, slot: &str, md: &str, form: Form) -> String {
-    let rel = format!("vibedeps/{slot}/1.0.0/spec/boot/snippet.{}", form.ext());
+    let rel = crate::layout_paths::slot_specs(
+        crate::layout_paths::vibedeps(format!("{slot}/1.0.0")),
+        format!("boot/snippet.{}", form.ext()),
+    );
     let p = ws.join(&rel);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     let text = match form {
@@ -131,9 +134,9 @@ fn insert(
 /// per-unit `STATIC.md`, the form `node_dependency_boot` produces for a
 /// package reached over a `static-transitive` edge that statically links a
 /// child.
-fn entry_sub(static_md: &str, origin: &str) -> BootEntry {
+fn entry_sub(static_md: impl Into<String>, origin: &str) -> BootEntry {
     BootEntry {
-        path: static_md.to_string(),
+        path: static_md.into(),
         band: BootBand::Dependency,
         link: LinkType::Static,
         when: None,
@@ -183,7 +186,10 @@ fn a_static_transitive_zone_over_an_xml_snippet_dedups_and_renders_deterministic
     // individually (the closure walk's pull) — the covered-zone shape.
     let mut eff = boot(vec![
         entry_sub(
-            "vibedeps/org.demo.r/1.0.0/spec/boot/STATIC.md",
+            crate::layout_paths::slot_specs(
+                crate::layout_paths::vibedeps("org.demo.r/1.0.0"),
+                "boot/STATIC.md",
+            ),
             &pkgref("r"),
         ),
         entry(&c_md, LinkType::Static, &pkgref("c")),
@@ -210,7 +216,7 @@ fn a_static_transitive_zone_over_an_xml_snippet_dedups_and_renders_deterministic
     assert!(first.contains("the c rule"), "{first}");
     assert!(!first.contains("<spec"), "no raw XML in the lane: {first}");
     assert!(
-        first.starts_with("<!-- spec/boot/STATIC.md"),
+        first.starts_with(&format!("<!-- {}", crate::layout_paths::boot("STATIC.md"))),
         "the artifact stays STATIC.md:\n{first}"
     );
 }
@@ -268,7 +274,10 @@ fn desubstitution_over_a_mixed_md_xml_lane_matches_the_pure_md_twin() {
         insert(&mut table, "m2", Some(&m2), vec![]);
         let mut eff = boot(vec![
             entry_sub(
-                "vibedeps/org.demo.agg/1.0.0/spec/boot/STATIC.md",
+                crate::layout_paths::slot_specs(
+                    crate::layout_paths::vibedeps("org.demo.agg/1.0.0"),
+                    "boot/STATIC.md",
+                ),
                 &pkgref("agg"),
             ),
             entry(&m1, LinkType::Static, &pkgref("m1")),

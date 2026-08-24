@@ -1,6 +1,6 @@
 //! Workspace discovery and the multi-package member model.
 //!
-//! Spec: [PROP-007](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
+//! Spec: `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root`.
 //!
 //! A vibevm **workspace** is a tree of nodes — each a directory carrying one
 //! `vibe.toml` — coordinated by a `[workspace]` table. The node that owns the
@@ -48,6 +48,7 @@ pub mod tools;
 pub mod vibedeps;
 
 mod expand;
+mod layout_paths;
 
 pub use publish::{
     OriginInfo, PublishNode, Selection, SkippedNode, StagedNode, select_publishable_nodes,
@@ -65,11 +66,11 @@ pub use publish::{
 /// use vibe_workspace::WorkspaceError;
 ///
 /// let err = WorkspaceError::NestingCycle {
-///     path: "packages/a".to_string(),
+///     path: "members/a".to_string(),
 /// };
 /// assert_eq!(
 ///     err.to_string(),
-///     "workspace nesting cycle: `packages/a` is reached more than once \
+///     "workspace nesting cycle: `members/a` is reached more than once \
 ///      (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
 ///      fix: remove the members entry that re-lists an ancestor workspace)",
 /// );
@@ -197,15 +198,16 @@ pub enum WorkspaceError {
         reason: String,
     },
 
-    /// The generated `spec/boot/INDEX.md` TOML manifest failed to
+    /// The generated boot INDEX TOML manifest failed to
     /// serialise. Structurally unreachable with today's fixed manifest
     /// shape; routed as an error so a future shape change degrades to a
     /// diagnosis instead of a panic.
     #[error(
-        "rendering spec/boot/INDEX.md failed: {reason} \
+        "rendering {index} failed: {reason} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts; \
          fix: the IndexManifest shape no longer serialises as TOML — restore \
-         a serialisable shape)"
+         a serialisable shape)",
+        index = crate::layout_paths::boot(vibe_core::layout::INDEX_MD)
     )]
     IndexRender { reason: String },
 
@@ -213,8 +215,9 @@ pub enum WorkspaceError {
     /// directive in an inline contribution could not be resolved. The
     /// contribution is malformed; `reason` names the offending address.
     #[error(
-        "compiling spec/boot/INLINE.md failed: {reason} \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)"
+        "compiling {inline} failed: {reason} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)",
+        inline = crate::layout_paths::boot("INLINE.md")
     )]
     InlineCompile { reason: String },
 
@@ -276,12 +279,12 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 ///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
 /// ).unwrap();
 /// let member = WorkspaceMember {
-///     rel_path: "packages/flow-wal".into(),
+///     rel_path: "members/flow-wal".into(),
 ///     manifest,
 ///     depth: 0,
 ///     parent: None,
 /// };
-/// assert_eq!(member.rel_path, "packages/flow-wal");
+/// assert_eq!(member.rel_path, "members/flow-wal");
 /// assert_eq!(member.manifest.require_package().unwrap().name, "wal");
 /// ```
 #[derive(Debug, Clone)]
@@ -438,15 +441,14 @@ impl Workspace {
         self.root.join("vibe.lock")
     }
 
-    /// The absolute path of the `vibedeps/` materialisation tree
+    /// The absolute path of the dependency materialisation tree
     /// (PROP-009 §2.1) — always at the workspace root.
     pub fn vibedeps_root(&self) -> PathBuf {
-        self.root.join(vibedeps::VIBEDEPS_DIR)
+        self.root.join(vibe_core::layout::current_vibedeps_root())
     }
 
     /// The absolute slot path for a resolved package within this
-    /// workspace's `vibedeps/` tree:
-    /// `<root>/vibedeps/<group>.<name>/<version>`.
+    /// workspace's dependency tree.
     pub fn vibedeps_slot(
         &self,
         group: &vibe_core::Group,

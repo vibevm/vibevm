@@ -17,8 +17,8 @@ fn facts_crud_filters_and_spec_to_registry_sync() {
         "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
     )
     .expect("manifest");
-    fs::create_dir_all(project.path().join("spec/common")).expect("spec dir");
-    let spec = project.path().join("spec/common/RULE.md");
+    fs::create_dir_all(project.path().join(common::spec_rel("common"))).expect("spec dir");
+    let spec = project.path().join(common::spec_rel("common/RULE.md"));
     let spec_bytes = "# Rule {#root}\n\n@fact:RULE The rule. @status:impl/done\n";
     fs::write(&spec, spec_bytes).expect("spec");
 
@@ -71,7 +71,7 @@ fn facts_crud_filters_and_spec_to_registry_sync() {
     assert!(
         project
             .path()
-            .join("vibefacts/org.external.flow.toml")
+            .join(common::facts_rel("org.external.flow.toml"))
             .is_file()
     );
     user.vibe()
@@ -82,7 +82,7 @@ fn facts_crud_filters_and_spec_to_registry_sync() {
     assert!(
         !project
             .path()
-            .join("vibefacts/org.external.flow.toml")
+            .join(common::facts_rel("org.external.flow.toml"))
             .exists()
     );
 
@@ -129,13 +129,15 @@ fn facts_clean_names_orphans_preserves_spec_and_honours_dry_run() {
         "[meta]\ngenerated_by = \"test\"\ngenerated_at = \"2026-08-22T00:00:00Z\"\nschema_version = 6\n",
     )
     .expect("empty lockfile");
-    fs::create_dir_all(project.path().join("vibefacts")).expect("facts home");
+    fs::create_dir_all(project.path().join(common::facts_root())).expect("facts home");
     fs::write(
-        project.path().join("vibefacts/spec.toml"),
+        project.path().join(common::facts_rel("spec.toml")),
         "schema = 1\n\n[[fact]]\naddress = \"spec://org.consumer/demo/common/RULE#HOST\"\norigin = \"spec\"\nstatus = \"impl/done\"\n",
     )
     .expect("spec facts");
-    let orphan = project.path().join("vibefacts/org.vanished.pkg.toml");
+    let orphan = project
+        .path()
+        .join(common::facts_rel("org.vanished.pkg.toml"));
     fs::write(
         &orphan,
         "schema = 1\n\n[[fact]]\naddress = \"spec://org.vanished/pkg/RULE#ONE\"\norigin = \"package\"\npackage = \"org.vanished/pkg\"\nstatus = \"impl/done\"\n",
@@ -161,11 +163,16 @@ fn facts_clean_names_orphans_preserves_spec_and_honours_dry_run() {
         .expect("clean dry-run");
     assert!(dry_run.status.success());
     let stdout = String::from_utf8_lossy(&dry_run.stdout);
-    assert!(stdout.contains("vibefacts/org.vanished.pkg.toml"));
+    assert!(stdout.contains(&common::facts_rel("org.vanished.pkg.toml")));
     assert!(stdout.contains("1 entries"));
     assert!(stdout.contains("removed=0 kept=1 orphaned=1"));
     assert!(orphan.is_file());
-    assert!(project.path().join("vibefacts/spec.toml").is_file());
+    assert!(
+        project
+            .path()
+            .join(common::facts_rel("spec.toml"))
+            .is_file()
+    );
 
     let clean = user
         .vibe()
@@ -175,10 +182,15 @@ fn facts_clean_names_orphans_preserves_spec_and_honours_dry_run() {
         .expect("clean");
     assert!(clean.status.success());
     let stdout = String::from_utf8_lossy(&clean.stdout);
-    assert!(stdout.contains("vibefacts/org.vanished.pkg.toml"));
+    assert!(stdout.contains(&common::facts_rel("org.vanished.pkg.toml")));
     assert!(stdout.contains("removed=1 kept=0"));
     assert!(!orphan.exists());
-    assert!(project.path().join("vibefacts/spec.toml").is_file());
+    assert!(
+        project
+            .path()
+            .join(common::facts_rel("spec.toml"))
+            .is_file()
+    );
 }
 
 #[test]
@@ -198,7 +210,7 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
     )
     .expect("package manifest");
     fs::write(
-        package.join("spec/RULE.md"),
+        package.join(common::spec_rel("RULE.md")),
         "# Rules\n\n@fact:FIRST First. <status stage=\"spec\" state=\"work\" comment=\"author extra\"/>\n\n@fact:SECOND Second. @status:impl/done\n",
     )
     .expect("package spec");
@@ -225,14 +237,17 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
         .assert()
         .success();
 
-    let slot = project.path().join("vibedeps/org.example.facts-pkg/1.0.0");
-    let materialised = fs::read_to_string(slot.join("spec/RULE.md")).expect("slot spec");
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.example.facts-pkg", "1.0.0"));
+    let materialised =
+        fs::read_to_string(slot.join(common::spec_rel("RULE.md"))).expect("slot spec");
     assert!(materialised.contains("stage=\"impl\" state=\"done\" comment=\"author extra\""));
     let manifest = vibe_workspace::vibedeps::read_derived_manifest(&slot).expect("manifest");
     assert!(manifest.overlay_hash.is_some());
-    fs::create_dir_all(slot.join("spec/boot")).expect("generated boot dir");
+    fs::create_dir_all(slot.join(common::spec_rel("boot"))).expect("generated boot dir");
     fs::write(
-        slot.join("spec/boot/STATIC.xml"),
+        slot.join(common::spec_rel("boot/STATIC.xml")),
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?><spec xmlns=\"https://vibevm.org/spec/1\"><p><fact id=\"GENERATED\" status=\"impl/done\">projection only</fact></p></spec>",
     )
     .expect("generated XML lane");
@@ -250,8 +265,12 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
     );
     let stdout = String::from_utf8_lossy(&adopt.stdout);
     assert!(stdout.contains("added=1 kept=1"), "{stdout}");
-    let facts = fs::read_to_string(project.path().join("vibefacts/org.example.facts-pkg.toml"))
-        .expect("package facts");
+    let facts = fs::read_to_string(
+        project
+            .path()
+            .join(common::facts_rel("org.example.facts-pkg.toml")),
+    )
+    .expect("package facts");
     assert!(facts.contains(first));
     assert!(facts.contains(second));
     assert!(!facts.contains("GENERATED"));
@@ -273,7 +292,8 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
         .args(["facts", "rm", first])
         .assert()
         .success();
-    let restored = fs::read_to_string(slot.join("spec/RULE.md")).expect("restored slot spec");
+    let restored =
+        fs::read_to_string(slot.join(common::spec_rel("RULE.md"))).expect("restored slot spec");
     assert!(restored.contains("stage=\"spec\" state=\"work\" comment=\"author extra\""));
 
     user.vibe()
@@ -301,7 +321,7 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
     assert!(
         project
             .path()
-            .join("vibefacts/org.example.facts-pkg.toml")
+            .join(common::facts_rel("org.example.facts-pkg.toml"))
             .is_file()
     );
 }
@@ -309,10 +329,13 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
 const MARKUP_LINT_MOVED_NOTE: &str = "note: the markup lint moved — prefer 'vibe facts check'";
 
 fn markup_fixture(root: &std::path::Path, body: &str) {
-    fs::create_dir_all(root.join("spec")).expect("spec dir");
-    fs::write(root.join("spec/RULE.md"), body).expect("spec");
-    fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-        .expect("progress config");
+    fs::create_dir_all(root.join(common::specs_root())).expect("spec dir");
+    fs::write(root.join(common::spec_rel("RULE.md")), body).expect("spec");
+    fs::write(
+        root.join("progress.toml"),
+        format!("include = [\"{}/**/*.md\"]\n", common::specs_str()),
+    )
+    .expect("progress config");
 }
 
 fn assert_check_spellings_match(

@@ -19,15 +19,16 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#p
 
 use std::path::{Path, PathBuf};
 
-/// `<project_root>/packages/`, if that directory exists. `None` otherwise
-/// (the project has no in-tree packages and the feature is inert for it).
+/// The project's live packages root (`vibe_core::layout`), if that
+/// directory exists. `None` otherwise (the project has no in-tree
+/// packages and the feature is inert for it).
 ///
 /// `project_root` is the directory carrying the project's `vibe.toml` — the
 /// caller resolves it via [`super::resolve_project_root`].
 ///
 /// [`super::resolve_project_root`]: super::resolve_project_root
 pub(crate) fn project_packages_root(project_root: &Path) -> Option<PathBuf> {
-    let packages = project_root.join("packages");
+    let packages = project_root.join(vibe_core::layout::current_packages_root());
     packages.is_dir().then_some(packages)
 }
 
@@ -38,10 +39,10 @@ mod tests {
     #[test]
     fn packages_dir_present_resolves_to_it() {
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::create_dir(tmp.path().join("packages")).unwrap();
+        std::fs::create_dir(tmp.path().join(vibe_core::layout::current_packages_root())).unwrap();
         assert_eq!(
             project_packages_root(tmp.path()),
-            Some(tmp.path().join("packages"))
+            Some(tmp.path().join(vibe_core::layout::current_packages_root()))
         );
     }
 
@@ -53,10 +54,14 @@ mod tests {
 
     #[test]
     fn a_packages_file_not_a_dir_is_none() {
-        // `is_dir()` not `exists()` — a stray `packages` file does not
+        // `is_dir()` not `exists()` — a stray packages-root file does not
         // masquerade as a registry root.
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::write(tmp.path().join("packages"), "not a dir").unwrap();
+        std::fs::write(
+            tmp.path().join(vibe_core::layout::current_packages_root()),
+            "not a dir",
+        )
+        .unwrap();
         assert_eq!(project_packages_root(tmp.path()), None);
     }
 }

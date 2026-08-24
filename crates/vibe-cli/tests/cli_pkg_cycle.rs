@@ -23,11 +23,11 @@ fn full_install_cycle() {
     // PROP-009 loading model: `vibe install` materialises a resolved
     // package's published tree verbatim into a `vibedeps/<kind>-<name>/
     // <version>/` slot at the workspace root, then generates the boot
-    // artifacts (`spec/boot/INDEX.md`, the `CLAUDE.md` redirect).
+    // artifacts (the generated boot manifest, the `CLAUDE.md` redirect).
     // `vibe uninstall` removes the slot and regenerates boot. There are
-    // no longer any mirrored `spec/flows/<kind>/<name>/*` files in the
+    // no longer any mirrored package files in the
     // project tree, and no `NN-` boot snippet placed directly in
-    // `spec/boot/`.
+    // the project's boot lane.
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
@@ -51,44 +51,55 @@ fn full_install_cycle() {
     // LICENSE, not asserted here). Spec sources live in either PROP-045
     // serialisation (the corpus flipped to XML sources on 2026-08-24),
     // so the guard is CONTENT presence, not the spelling.
-    let slot = project.path().join("vibedeps/org.vibevm.world.wal/0.2.0");
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.world.wal", "0.2.0"));
     assert!(
         slot.join("vibe.toml").is_file(),
-        "expected `vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml` after install"
+        "expected `{}` after install",
+        common::slot_rel("org.vibevm.world.wal", "0.2.0", "vibe.toml")
     );
     for rel in [
-        "README.md",
-        "spec/boot/10-flow-wal.md",
-        "spec/flows/wal/WAL-PROTOCOL.md",
-        "spec/flows/wal/session-end-hook.md",
-        "spec/flows/wal/morning-routine.md",
+        "README.md".to_string(),
+        common::spec_rel("boot/10-flow-wal.md"),
+        common::spec_rel("flows/wal/WAL-PROTOCOL.md"),
+        common::spec_rel("flows/wal/session-end-hook.md"),
+        common::spec_rel("flows/wal/morning-routine.md"),
     ] {
         let xml = rel.replace(".md", ".xml");
+        let slot_dir = common::slot_dir("org.vibevm.world.wal", "0.2.0");
         assert!(
-            slot.join(rel).is_file() || slot.join(&xml).is_file(),
-            "expected `vibedeps/org.vibevm.world.wal/0.2.0/{rel}` (either serialisation) after install"
+            slot.join(&rel).is_file() || slot.join(&xml).is_file(),
+            "expected `{slot_dir}/{rel}` (either serialisation) after install"
         );
     }
     // The OLD mirror paths must NOT exist any more.
     assert!(
         !project
             .path()
-            .join("spec/flows/wal/WAL-PROTOCOL.md")
+            .join(common::spec_rel("flows/wal/WAL-PROTOCOL.md"))
             .exists(),
         "the legacy [writes] mirror layout is retired — no project-tree mirror"
     );
     assert!(
-        !project.path().join("spec/boot/10-flow-wal.md").exists(),
+        !project
+            .path()
+            .join(common::spec_rel("boot/10-flow-wal.md"))
+            .exists(),
         "the NN- boot-snippet placement is retired"
     );
 
     // User-owned file survived untouched.
-    let core_before = fs::read_to_string(project.path().join("spec/boot/00-core.md")).unwrap();
+    let core_before =
+        fs::read_to_string(project.path().join(common::spec_rel("boot/00-core.md"))).unwrap();
 
     // The generated boot manifest exists and is a `schema = 1` TOML
     // document listing the node's own foundation boot.
-    let index_path = project.path().join("spec/boot/INDEX.md");
-    assert!(index_path.is_file(), "spec/boot/INDEX.md must be generated");
+    let index_path = project.path().join(common::index_rel());
+    assert!(
+        index_path.is_file(),
+        "the generated boot manifest must exist"
+    );
     let index = fs::read_to_string(&index_path).unwrap();
     let index_toml: toml::Value = toml::from_str(&index).expect("INDEX.md is TOML");
     assert_eq!(
@@ -96,21 +107,31 @@ fn full_install_cycle() {
         Some(1)
     );
     assert!(
-        index.contains("spec/boot/00-core.md"),
+        index.contains(&common::boot_rel("00-core.md")),
         "INDEX.md must name the node's own foundation boot:\n{index}"
     );
     // Regression guard: a CLI `vibe install <pkgref>` must compose the
     // freshly-installed package's boot into INDEX.md — the manifest
     // `[requires]` is merged before the boot artifacts are regenerated.
     assert!(
-        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
-            || index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
+        index.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.md"
+        )) || index.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.xml"
+        )),
         "INDEX.md must name the installed dependency's boot snippet:\n{index}"
     );
     // The fixtures declare no `link = "static"` dependency, so there is
     // no STATIC.md.
     assert!(
-        !project.path().join("spec/boot/STATIC.md").exists(),
+        !project
+            .path()
+            .join(common::spec_rel("boot/STATIC.md"))
+            .exists(),
         "STATIC.md is only generated for static-linked dependencies"
     );
     // The redirect files are generated thin pointers at the boot
@@ -118,7 +139,7 @@ fn full_install_cycle() {
     for redirect in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
         let body = fs::read_to_string(project.path().join(redirect)).unwrap();
         assert!(
-            body.contains("Generated by vibe") && body.contains("spec/boot/INDEX.md"),
+            body.contains("Generated by vibe") && body.contains(&common::index_rel()),
             "{redirect} must be a generated redirect pointing at the boot artifacts"
         );
     }
@@ -185,7 +206,8 @@ fn full_install_cycle() {
     assert!(index_path.is_file(), "INDEX.md is regenerated on uninstall");
 
     // User-owned file still intact.
-    let core_after = fs::read_to_string(project.path().join("spec/boot/00-core.md")).unwrap();
+    let core_after =
+        fs::read_to_string(project.path().join(common::spec_rel("boot/00-core.md"))).unwrap();
     assert_eq!(core_before, core_after);
 
     // Lockfile entry removed.
@@ -244,9 +266,13 @@ fn install_second_install_is_idempotent() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                "vibe.toml"
+            ))
             .is_file(),
-        "vibedeps/ slot must survive a re-install"
+        "the deps-root slot must survive a re-install"
     );
     let lock: vibe_core::manifest::Lockfile =
         toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
@@ -306,7 +332,7 @@ fn install_skips_a_present_slot_on_re_install() {
     assert_eq!(skipped.len(), 1, "the present slot must be skipped");
     assert_eq!(
         skipped[0].as_str().unwrap(),
-        "vibedeps/org.vibevm.world.wal/0.2.0"
+        common::slot_dir("org.vibevm.world.wal", "0.2.0")
     );
     assert!(
         report["materialised"].as_array().unwrap().is_empty(),
@@ -354,7 +380,7 @@ fn install_reports_json() {
     assert_eq!(materialised.len(), 1);
     assert_eq!(
         materialised[0].as_str().unwrap(),
-        "vibedeps/org.vibevm.world.wal/0.2.0"
+        common::slot_dir("org.vibevm.world.wal", "0.2.0")
     );
     assert_eq!(last["nodes_regenerated"].as_array().unwrap().len(), 1);
 }
@@ -685,11 +711,19 @@ fn install_from_manifest_uses_requires() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                common::spec_rel("flows/wal/WAL-PROTOCOL.md")
+            ))
             .is_file()
             || project
                 .path()
-                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .join(common::slot_rel(
+                    "org.vibevm.world.wal",
+                    "0.2.0",
+                    common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
+                ))
                 .is_file(),
         "the package tree is materialised verbatim into vibedeps/"
     );
@@ -708,10 +742,17 @@ fn install_from_manifest_uses_requires() {
     // project node — `INDEX.md` names its boot file inside the
     // `vibedeps/` slot, in the dependency band (between the node's own
     // foundation and user-override boot).
-    let index = fs::read_to_string(project.path().join("spec/boot/INDEX.md")).unwrap();
+    let index = fs::read_to_string(project.path().join(common::index_rel())).unwrap();
     assert!(
-        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
-            || index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
+        index.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.md"
+        )) || index.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.xml"
+        )),
         "INDEX.md must name the dependency's boot file under its slot:\n{index}"
     );
 }
@@ -792,7 +833,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
 
 // NOTE: `install_boot_snippet_conflict_exits_with_code_three` was
 // deleted with the PROP-009 switch-over. The old model placed each
-// package's boot snippet directly in the project's `spec/boot/` under
+// package's boot snippet directly in the project's boot lane under
 // an author-chosen `NN-` numeric prefix, so two packages sharing a
 // prefix collided. The loading model retires the `NN-` prefix entirely:
 // a dependency's boot lives inside its own `vibedeps/<slot>/` tree and
@@ -974,18 +1015,30 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                common::spec_rel("flows/wal/WAL-PROTOCOL.md")
+            ))
             .is_file()
             || project
                 .path()
-                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .join(common::slot_rel(
+                    "org.vibevm.world.wal",
+                    "0.2.0",
+                    common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
+                ))
                 .is_file(),
         "git-source install must materialise the package tree into vibedeps/"
     );
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                "vibe.toml"
+            ))
             .is_file()
     );
 }
@@ -1119,7 +1172,11 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                "vibe.toml"
+            ))
             .is_file()
     );
 }
@@ -1178,7 +1235,7 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     assert!(
         !project
             .path()
-            .join("spec/flows/wal/WAL-PROTOCOL.md")
+            .join(common::spec_rel("flows/wal/WAL-PROTOCOL.md"))
             .exists()
     );
 }

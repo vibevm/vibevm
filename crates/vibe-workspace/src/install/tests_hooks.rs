@@ -96,10 +96,10 @@ fn pre_install_hook_runs_for_an_allowed_group() {
         &FakeRunner(0),
     )
     .unwrap();
-    assert_eq!(out.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(out.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert_eq!(out.hook_reports.len(), 1);
     assert_eq!(out.hook_reports[0].status, "ran");
-    assert!(ws.path().join("vibedeps/org.vibevm.wal/0.3.0").is_dir());
+    assert!(ws.path().join(deps_rel("org.vibevm.wal/0.3.0")).is_dir());
 }
 
 #[test]
@@ -123,7 +123,7 @@ fn pre_install_failure_rolls_back_the_slot() {
     .unwrap_err();
     assert!(matches!(err, WorkspaceError::Hook(_)), "{err}");
     assert!(
-        !ws.path().join("vibedeps/org.vibevm.wal/0.3.0").exists(),
+        !ws.path().join(deps_rel("org.vibevm.wal/0.3.0")).exists(),
         "a failed pre-install must roll the slot back"
     );
 }
@@ -151,7 +151,7 @@ fn untrusted_group_skips_the_hook_without_running_it() {
     .unwrap();
     assert_eq!(out.hook_reports[0].status, "skipped-needs-consent");
     assert!(
-        ws.path().join("vibedeps/org.vibevm.wal/0.3.0").is_dir(),
+        ws.path().join(deps_rel("org.vibevm.wal/0.3.0")).is_dir(),
         "a skipped hook is not a failure — the slot survives"
     );
 }
@@ -265,7 +265,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/giant\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     // A fetched in-place clone: the manifest declares in-place, plus a `.git`
     // (the live working tree) and a boot snippet.
@@ -301,28 +301,31 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
     .unwrap();
 
     // Placed in the UNVERSIONED slot, with `.git` preserved; no versioned slot.
-    let slot = ws_dir.path().join("vibedeps/org.vibevm.giant");
+    let slot = ws_dir.path().join(deps_rel("org.vibevm.giant"));
     assert!(slot.join(".git/HEAD").is_file());
     assert!(slot.join("boot/giant.md").is_file());
     assert!(
         !ws_dir
             .path()
-            .join("vibedeps/org.vibevm.giant/1.0.0")
+            .join(deps_rel("org.vibevm.giant/1.0.0"))
             .exists()
     );
-    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.giant"]);
+    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.giant")]);
 
     // The clone source was moved, not copied.
     assert!(!clone.path().join("vibe.toml").exists());
 
     // `.gitignore` lists the slot — in-place is not vendored (§2.7).
     let gi = fs::read_to_string(ws_dir.path().join(".gitignore")).unwrap();
-    assert!(gi.contains("vibedeps/org.vibevm.giant/"), "{gi}");
+    assert!(
+        gi.contains(&format!("{}/", deps_rel("org.vibevm.giant"))),
+        "{gi}"
+    );
 
     // INDEX.md references the UNVERSIONED boot path.
-    let index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+    let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
     assert!(
-        index.contains("vibedeps/org.vibevm.giant/boot/giant.md"),
+        index.contains(&deps_rel("org.vibevm.giant/boot/giant.md")),
         "{index}"
     );
     assert!(!index.contains("feat-giant/1.0.0"), "{index}");
@@ -343,7 +346,7 @@ fn prune_leaves_an_in_place_slot_untouched() {
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     // Pre-place an in-place slot by hand.
     let clone = TempDir::new().unwrap();
     write(clone.path(), ".git/HEAD", "ref: refs/heads/main\n");
@@ -420,7 +423,7 @@ fn pre_install_hook_runs_in_an_in_place_slot() {
         &FakeRunner(0),
     )
     .unwrap();
-    assert_eq!(out.materialised, vec!["vibedeps/org.vibevm.giant"]);
+    assert_eq!(out.materialised, vec![deps_rel("org.vibevm.giant")]);
     assert_eq!(out.hook_reports.len(), 1);
     assert_eq!(out.hook_reports[0].status, "ran");
     // The hook ran against the unversioned in-place slot, which exists.
@@ -494,7 +497,7 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
         None,
     )
     .unwrap();
-    assert_eq!(out.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(out.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     // The unrelated slot survives — subtree materialisation never prunes.
     assert!(vibedeps::is_materialised(
         ws.path(),
@@ -558,7 +561,7 @@ fn already_placed_in_place_slot_runs_hook_without_moving() {
         &FakeRunner(0),
     )
     .unwrap();
-    assert_eq!(out.materialised, vec!["vibedeps/org.vibevm.giant"]);
+    assert_eq!(out.materialised, vec![deps_rel("org.vibevm.giant")]);
     assert_eq!(out.hook_reports[0].status, "ran");
     // The slot was NOT moved/cleared — its sentinel survives.
     assert!(

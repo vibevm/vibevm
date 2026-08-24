@@ -64,7 +64,9 @@ fn arb_table() -> impl Strategy<Value = (HashMap<UnitId, UnitInput>, HashMap<Uni
                 table.insert(
                     uid(i),
                     UnitInput {
-                        own_boot_path: Some(format!("vibedeps/u{i}/1.0.0/boot.md")),
+                        own_boot_path: Some(crate::layout_paths::vibedeps(format!(
+                            "u{i}/1.0.0/boot.md"
+                        ))),
                         fragments: Vec::new(),
                         origin: format!("org.vibevm/u{i}"),
                         when: None,

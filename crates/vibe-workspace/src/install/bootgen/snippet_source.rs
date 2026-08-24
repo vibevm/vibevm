@@ -62,36 +62,44 @@ mod tests {
     #[test]
     fn snippet_source_resolves_logically_against_the_slot() {
         let ws = tempfile::tempdir().expect("tempdir");
-        let slot = "vibedeps/flow-lib/1.0.0";
-        let boot_dir = ws.path().join(slot).join("spec/boot");
+        let slot = crate::layout_paths::vibedeps("flow-lib/1.0.0");
+        let boot_source = crate::layout_paths::boot("snippet.md");
+        let boot_dir = ws
+            .path()
+            .join(&slot)
+            .join(vibe_core::layout::current_boot_dir());
         fs::create_dir_all(&boot_dir).expect("mkdir");
 
         // Neither form: the literal stands (and a later read names it).
         assert_eq!(
-            resolve_snippet_source(ws.path(), slot, Path::new("spec/boot/snippet.md")),
-            format!("{slot}/spec/boot/snippet.md")
+            resolve_snippet_source(ws.path(), &slot, Path::new(&boot_source)),
+            crate::path_to_slash(&Path::new(&slot).join(&boot_source))
         );
 
         // Materialised as XML (S3 flipped the extension): the .md literal
         // resolves to the .xml that exists.
         fs::write(boot_dir.join("snippet.xml"), "<spec/>").expect("write");
         assert_eq!(
-            resolve_snippet_source(ws.path(), slot, Path::new("spec/boot/snippet.md")),
-            format!("{slot}/spec/boot/snippet.xml")
+            resolve_snippet_source(ws.path(), &slot, Path::new(&boot_source)),
+            crate::layout_paths::slot_specs(&slot, "boot/snippet.xml")
         );
         // And the symmetric case: an .xml literal over a slot materialised
         // as MD (a second stem — the first now holds its literal .xml).
         fs::write(boot_dir.join("other.md"), "# o\n").expect("write");
         assert_eq!(
-            resolve_snippet_source(ws.path(), slot, Path::new("spec/boot/other.xml")),
-            format!("{slot}/spec/boot/other.md")
+            resolve_snippet_source(
+                ws.path(),
+                &slot,
+                Path::new(&crate::layout_paths::boot("other.xml")),
+            ),
+            crate::layout_paths::slot_specs(&slot, "boot/other.md")
         );
 
         // The literal wins once it exists again (mixed slot edge).
         fs::write(boot_dir.join("snippet.md"), "# s\n").expect("write");
         assert_eq!(
-            resolve_snippet_source(ws.path(), slot, Path::new("spec/boot/snippet.md")),
-            format!("{slot}/spec/boot/snippet.md")
+            resolve_snippet_source(ws.path(), &slot, Path::new(&boot_source)),
+            crate::path_to_slash(&Path::new(&slot).join(&boot_source))
         );
     }
 }

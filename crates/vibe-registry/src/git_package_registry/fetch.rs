@@ -508,6 +508,9 @@ fn commit_content_hash(commit: &str) -> String {
 #[cfg(test)]
 #[path = "fetch/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "fetch/tests_in_place.rs"]
+mod tests_in_place;
 
 #[cfg(test)]
 #[path = "fetch/store_gate_tests.rs"]

@@ -1,10 +1,11 @@
-//! Check 7 — `spec/boot/` exists and holds only spec-source files
-//! (Markdown or dialect XML, PROP-045 ##LOADER-LAW). PROP-009 retired the
-//! `NN-` filename prefix; the directory holds authored boot files and
-//! `vibe`-generated `INDEX.md` / `STATIC.*` artifacts, none numerically
-//! prefixed. An `.xml` boot file must parse as the dialect (a foreign
-//! construct is a loud error, never a silent skip), and `X.md` + `X.xml`
-//! beside each other are one document in two forms — an error naming both
+//! Check 7 — the boot directory (`current_boot_dir()`, PROP-052 L2)
+//! exists and holds only spec-source files (Markdown or dialect XML,
+//! PROP-045 ##LOADER-LAW). PROP-009 retired the `NN-` filename prefix;
+//! the directory holds authored boot files and `vibe`-generated
+//! `INDEX.md` / `STATIC.*` artifacts, none numerically prefixed. An
+//! `.xml` boot file must parse as the dialect (a foreign construct is a
+//! loud error, never a silent skip), and `X.md` + `X.xml` beside each
+//! other are one document in two forms — an error naming both
 //! (##TARGET-MIXED).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
@@ -27,19 +28,25 @@ impl Check for BootDirectoryCheck {
     }
 
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
-        let boot_rel = PathBuf::from("spec/boot");
+        let boot_rel = vibe_core::layout::current_boot_dir();
+        // Message-facing label with `/` separators (a joined PathBuf
+        // renders `\` on Windows; the finding text has always been
+        // forward-slashed).
+        let boot_label = boot_rel.to_string_lossy().replace('\\', "/");
         let boot = project_root.join(&boot_rel);
         if !boot.is_dir() {
             // Empty / fresh project — `vibe init` creates it. If the
             // project's vibe.toml exists but boot/ doesn't, that's a
             // structural error.
             if project_root.join(Manifest::FILENAME).exists() {
-                report.err(
-                    CheckId::BootDirectory,
-                    Some(boot_rel),
-                    None,
-                    "spec/boot/ is missing — every project owns this directory; run `vibe init` if it disappeared.",
+                // The message names the project-relative boot dir (the
+                // seam's name, so the R4 flip re-labels it for free) —
+                // computed before `boot_rel` moves into the finding.
+                let message = format!(
+                    "{boot_label}/ is missing — every project owns this directory; run `vibe \
+                     init` if it disappeared."
                 );
+                report.err(CheckId::BootDirectory, Some(boot_rel), None, message);
             }
             return;
         }
@@ -85,7 +92,7 @@ impl Check for BootDirectoryCheck {
                     CheckId::BootDirectory,
                     Some(boot_rel.join(&name)),
                     None,
-                    format!("non-spec-source file `{name}` in spec/boot/"),
+                    format!("non-spec-source file `{name}` in {boot_label}/"),
                 );
                 continue;
             }
@@ -126,9 +133,9 @@ impl Check for BootDirectoryCheck {
 #[cfg(test)]
 mod tests {
     use std::fs;
-    use std::path::Path;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, Severity, check_project};
@@ -139,9 +146,24 @@ mod tests {
         // / STATIC.md and any author-named boot file are all valid.
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::write(project.path().join("spec/boot/INDEX.md"), "schema = 1\n").unwrap();
-        fs::write(project.path().join("spec/boot/STATIC.md"), "# inline\n").unwrap();
-        fs::write(project.path().join("spec/boot/rules.md"), "# rules\n").unwrap();
+        fs::write(
+            project.path().join(layout::current_boot_index()),
+            "schema = 1\n",
+        )
+        .unwrap();
+        fs::write(
+            project.path().join(layout::current_boot_static_md()),
+            "# inline\n",
+        )
+        .unwrap();
+        fs::write(
+            project
+                .path()
+                .join(layout::current_boot_dir())
+                .join("rules.md"),
+            "# rules\n",
+        )
+        .unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             !report
@@ -159,7 +181,7 @@ mod tests {
             let project = tempdir().unwrap();
             write_minimal_project(project.path());
             fs::write(
-                project.path().join("spec/boot").join(name),
+                project.path().join(layout::current_boot_dir()).join(name),
                 "generated stream\n",
             )
             .unwrap();
@@ -175,8 +197,16 @@ mod tests {
 
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::write(project.path().join("spec/boot/STATIC.md"), "generated\n").unwrap();
-        fs::write(project.path().join("spec/boot/STATIC.xml"), "generated\n").unwrap();
+        fs::write(
+            project.path().join(layout::current_boot_static_md()),
+            "generated\n",
+        )
+        .unwrap();
+        fs::write(
+            project.path().join(layout::current_boot_static_xml()),
+            "generated\n",
+        )
+        .unwrap();
         let report = check_project(project.path(), &opts());
         assert!(report.findings.iter().any(|f| {
             f.check == CheckId::BootDirectory
@@ -190,14 +220,21 @@ mod tests {
     fn boot_dir_non_markdown_file_is_a_warning() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::write(project.path().join("spec/boot/notes.txt"), "x").unwrap();
+        fs::write(
+            project
+                .path()
+                .join(layout::current_boot_dir())
+                .join("notes.txt"),
+            "x",
+        )
+        .unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report
                 .findings
                 .iter()
                 .any(|f| f.check == CheckId::BootDirectory && f.severity == Severity::Warning),
-            "a non-spec-source file in spec/boot/ must warn; got: {:?}",
+            "a non-spec-source file in the boot directory must warn; got: {:?}",
             report.findings
         );
     }
@@ -210,7 +247,9 @@ mod tests {
         let good = tempdir().unwrap();
         write_minimal_project(good.path());
         fs::write(
-            good.path().join("spec/boot/rules.xml"),
+            good.path()
+                .join(layout::current_boot_dir())
+                .join("rules.xml"),
             "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
              <p><fact id=\"BOOT\" status=\"impl/done\">one rule</fact></p>\n</spec>",
         )
@@ -228,7 +267,9 @@ mod tests {
         let bad = tempdir().unwrap();
         write_minimal_project(bad.path());
         fs::write(
-            bad.path().join("spec/boot/rules.xml"),
+            bad.path()
+                .join(layout::current_boot_dir())
+                .join("rules.xml"),
             "<spec><bogus>x</bogus></spec>",
         )
         .unwrap();
@@ -246,14 +287,15 @@ mod tests {
     }
 
     /// One document, one form (PROP-045 ##TARGET-MIXED): `X.md` + `X.xml`
-    /// in spec/boot is a loud error naming both files.
+    /// in the boot directory is a loud error naming both files.
     #[test]
     fn boot_dir_pair_collision_is_an_error() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::write(project.path().join("spec/boot/dup.md"), "# dup\n").unwrap();
+        let boot = project.path().join(layout::current_boot_dir());
+        fs::write(boot.join("dup.md"), "# dup\n").unwrap();
         fs::write(
-            project.path().join("spec/boot/dup.xml"),
+            boot.join("dup.xml"),
             "<spec xmlns=\"https://vibevm.org/spec/1\"/>",
         )
         .unwrap();
@@ -263,7 +305,10 @@ mod tests {
             .iter()
             .find(|f| f.check == CheckId::BootDirectory && f.severity == Severity::Error)
             .expect("the pair must be an error");
-        assert_eq!(hit.path.as_deref(), Some(Path::new("spec/boot/dup.md")));
+        assert_eq!(
+            hit.path.as_deref(),
+            Some(layout::current_boot_dir().join("dup.md").as_path())
+        );
         assert!(hit.message.contains("dup.md"), "{}", hit.message);
         assert!(hit.message.contains("dup.xml"), "{}", hit.message);
         assert!(hit.message.contains("one document, one form"));

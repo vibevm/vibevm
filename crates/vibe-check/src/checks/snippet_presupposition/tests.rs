@@ -13,6 +13,16 @@ use tempfile::tempdir;
 use super::SnippetPresuppositionCheck;
 use crate::{Check, CheckId, CheckOptions, CheckReport, Severity};
 
+/// A fixture path under the authored packages root, `/`-separated —
+/// routed through the layout seam (PROP-052 L2) so the scaffold names
+/// whichever layout is live.
+fn pkg(rel: &str) -> String {
+    vibe_core::layout::current_packages_root()
+        .join(rel)
+        .to_string_lossy()
+        .replace('\\', "/")
+}
+
 fn write(root: &Path, rel: &str, body: &str) {
     let path = root.join(rel);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -22,7 +32,7 @@ fn write(root: &Path, rel: &str, body: &str) {
 fn write_owner(root: &Path, name: &str) {
     write(
         root,
-        &format!("packages/org.example/{name}/v1.0.0/vibe.toml"),
+        &pkg(&format!("org.example/{name}/v1.0.0/vibe.toml")),
         &format!(
             r#"[package]
 group = "org.example"
@@ -38,7 +48,7 @@ concepts = ["WAL"]
     );
     write(
         root,
-        &format!("packages/org.example/{name}/v1.0.0/boot/main.md"),
+        &pkg(&format!("org.example/{name}/v1.0.0/boot/main.md")),
         &format!("# {}\n\nThe WAL discipline.\n", name.to_uppercase()),
     );
 }
@@ -58,7 +68,7 @@ fn write_consumer(root: &Path, fragment: bool, guarded: bool, body: &str) {
     };
     write(
         root,
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         &format!(
             r#"[package]
 group = "org.example"
@@ -73,11 +83,11 @@ source = "boot/main.md"
     );
     write(
         root,
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         if fragment { "# P\n" } else { body },
     );
     if fragment {
-        write(root, "packages/org.example/p/v1.0.0/boot/foreign.md", body);
+        write(root, &pkg("org.example/p/v1.0.0/boot/foreign.md"), body);
     }
 }
 
@@ -127,7 +137,7 @@ fn a_declared_dependency_on_the_owner_makes_the_mention_lawful() {
     write_owner(project.path(), "d");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -143,7 +153,7 @@ source = "boot/main.md"
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "The WAL is canonical here too.\n",
     );
     assert!(run(project.path()).findings.is_empty());
@@ -158,7 +168,7 @@ fn own_concept_declaration_makes_the_homonym_lawful() {
     write_owner(project.path(), "d");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -172,7 +182,7 @@ concepts = ["WAL"]
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "Our WAL is a different discipline.\n",
     );
     assert!(run(project.path()).findings.is_empty());
@@ -208,7 +218,7 @@ fn a_dependency_on_one_of_two_owners_silences_the_warning() {
     write_owner(project.path(), "e");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -224,7 +234,7 @@ source = "boot/main.md"
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "The WAL is canonical here too.\n",
     );
     assert!(run(project.path()).findings.is_empty());
@@ -239,7 +249,7 @@ fn a_private_edge_on_the_owner_no_longer_exempts() {
     write_owner(project.path(), "d");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -255,7 +265,7 @@ source = "boot/main.md"
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "The WAL is canonical here too.\n",
     );
     let report = run(project.path());
@@ -270,7 +280,7 @@ fn a_friends_only_edge_on_the_owner_exempts() {
     write_owner(project.path(), "d");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -286,7 +296,7 @@ source = "boot/main.md"
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "The WAL is canonical here too.\n",
     );
     assert!(run(project.path()).findings.is_empty());
@@ -300,7 +310,7 @@ fn own_ignore_list_mutes_the_named_concept() {
     write_owner(project.path(), "d");
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/vibe.toml",
+        &pkg("org.example/p/v1.0.0/vibe.toml"),
         r#"[package]
 group = "org.example"
 name = "p"
@@ -316,7 +326,7 @@ ignore-concept-warnings = ["WAL"]
     );
     write(
         project.path(),
-        "packages/org.example/p/v1.0.0/boot/main.md",
+        &pkg("org.example/p/v1.0.0/boot/main.md"),
         "The WAL is canonical here too.\n",
     );
     assert!(run(project.path()).findings.is_empty());

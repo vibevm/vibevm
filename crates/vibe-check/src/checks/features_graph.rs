@@ -67,7 +67,10 @@ mod tests {
 
     fn write_pkg_with_features(project: &Path, features_section: &str) {
         write_minimal_project(project);
-        let pkg = project.join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .join(vibe_core::layout::current_packages_root())
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),

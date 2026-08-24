@@ -134,19 +134,21 @@ fn default_path_installs_via_global_registry() {
     assert_eq!(entry.source_ref.as_deref(), Some("v0.2.0"));
     assert!(!entry.overridden);
 
-    // The materialised `vibedeps/` slot — the real
+    // The materialised deps-root slot — the real
     // `org.vibevm.world/wal@0.2.0` tree the registry was seeded from.
-    let slot = project.path().join("vibedeps/org.vibevm.world.wal/0.2.0");
+    let slot_dir = common::slot_dir("org.vibevm.world.wal", "0.2.0");
+    let slot = project.path().join(&slot_dir);
     assert!(
         slot.join("vibe.toml").is_file(),
-        "expected vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml after install"
+        "expected {}/vibe.toml after install",
+        slot_dir
     );
     // The guard is that the package CONTENT materialised, not its spelling:
     // the seeded package's README is a spec source in either PROP-045
     // serialisation (the corpus flipped to XML sources on 2026-08-24).
     assert!(
         slot.join("README.md").is_file() || slot.join("README.xml").is_file(),
-        "expected vibedeps/org.vibevm.world.wal/0.2.0/README.{{md,xml}} after install"
+        "expected {slot_dir}/README.{{md,xml}} after install"
     );
 
     // Cache: exactly one registry bucket. This is the assertion that is

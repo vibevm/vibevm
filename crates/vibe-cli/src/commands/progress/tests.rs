@@ -36,6 +36,19 @@ fn fixture_config(include: &str) -> String {
     format!("include = [\"{include}\"]\n\n[progress]\ncache_dir = \"{FIXTURE_CACHE_DIR}\"\n")
 }
 
+/// The fixture specs root as a forward-slashed string — the prefix every
+/// fixture path, glob and cache key in this family builds on. Routed
+/// through the layout module (PROP-052 L2) so the R4 flip carries the
+/// whole family without an edit.
+fn specs_prefix() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+}
+
+/// One fixture file's project-relative path under the specs root.
+fn spec_rel(name: &str) -> String {
+    format!("{}/{}", specs_prefix(), name)
+}
+
 /// The fixture campaign's payload bucket — `<cache_dir>/<campaign id>`,
 /// the leaf `sidecar::resolve_dir` builds.
 fn sidecar_dir(root: &Path) -> PathBuf {
@@ -108,9 +121,10 @@ fn refresh_state_derives_phase_from_journal() {
 fn refresh_state_prunes_records_that_leave_scope() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
-    std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
-    std::fs::write(root.join("spec/b.md"), "@impl b\n").expect("write b");
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root()))
+        .expect("mkdir spec");
+    std::fs::write(root.join(spec_rel("a.md")), "@impl a\n").expect("write a");
+    std::fs::write(root.join(spec_rel("b.md")), "@impl b\n").expect("write b");
     let campaign = root.join("campaigns").join("progress-test");
     std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
 
@@ -121,15 +135,21 @@ fn refresh_state_prunes_records_that_leave_scope() {
     };
 
     // Wide scope: both files observed and cached.
-    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md"))
-        .expect("write wide cfg");
+    std::fs::write(
+        root.join("progress.toml"),
+        fixture_config(&format!("{}/**/*.md", specs_prefix())),
+    )
+    .expect("write wide cfg");
     let mut g = ground(&common).expect("ground wide");
     assert_eq!(g.docs.len(), 2, "both files in scope");
     refresh_state(&mut g).expect("refresh wide");
 
     // Narrow scope: only a.md observed.
-    std::fs::write(root.join("progress.toml"), fixture_config("spec/a.md"))
-        .expect("write narrow cfg");
+    std::fs::write(
+        root.join("progress.toml"),
+        fixture_config(&spec_rel("a.md")),
+    )
+    .expect("write narrow cfg");
     let mut g = ground(&common).expect("ground narrow");
     assert_eq!(g.docs.len(), 1, "only a.md in scope");
     refresh_state(&mut g).expect("refresh narrow");
@@ -144,7 +164,7 @@ fn refresh_state_prunes_records_that_leave_scope() {
         .iter()
         .map(|f| f["path"].as_str().expect("path str"))
         .collect();
-    assert_eq!(paths, vec!["spec/a.md"], "corpus.json == observed set");
+    assert_eq!(paths, vec![spec_rel("a.md")], "corpus.json == observed set");
 }
 
 /// The automation seam end to end (DRIFT-008 §4.4): the subcommand
@@ -154,9 +174,14 @@ fn refresh_state_prunes_records_that_leave_scope() {
 fn progress_gate_cli_records() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let root = tmp.path();
-    std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
-    std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
-    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md")).expect("write cfg");
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root()))
+        .expect("mkdir spec");
+    std::fs::write(root.join(spec_rel("a.md")), "@impl a\n").expect("write a");
+    std::fs::write(
+        root.join("progress.toml"),
+        fixture_config(&format!("{}/**/*.md", specs_prefix())),
+    )
+    .expect("write cfg");
     let campaign = root.join("campaigns").join("progress-test");
     std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
@@ -205,9 +230,9 @@ fn progress_gate_cli_records() {
 /// Propagates instead of panicking — the decision to fail the run belongs
 /// to the `#[test]` that called it, not to a helper.
 fn incremental_fixture(root: &Path) -> std::io::Result<()> {
-    std::fs::create_dir_all(root.join("spec"))?;
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root()))?;
     std::fs::write(
-        root.join("spec/a.md"),
+        root.join(spec_rel("a.md")),
         "<status stage=\"impl\" state=\"work\"/>\n\n\
          # Alpha {#alpha}\n\n\
          ##a1 The first claim. @test/plan\n\n\
@@ -218,7 +243,7 @@ fn incremental_fixture(root: &Path) -> std::io::Result<()> {
          action=\"drift\">a fragment</status> in it.\n",
     )?;
     std::fs::write(
-        root.join("spec/b.md"),
+        root.join(spec_rel("b.md")),
         "# Beta {#beta}\n\n\
          <status stage=\"spec\" state=\"plan\"/>\n\n\
          ##b1 A paragraph under the section marker. @spec/work\n\n\
@@ -226,7 +251,10 @@ fn incremental_fixture(root: &Path) -> std::io::Result<()> {
          | --- | --- |\n\
          | ##b2 cell one @impl/done | ##b3 cell two @impl/work |\n",
     )?;
-    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md"))?;
+    std::fs::write(
+        root.join("progress.toml"),
+        fixture_config(&format!("{}/**/*.md", specs_prefix())),
+    )?;
     std::fs::create_dir_all(root.join("campaigns/progress-test/run"))
 }
 
@@ -328,7 +356,7 @@ fn warm_and_cold_agree() {
     .expect("warm report");
     assert_eq!(warm_report, cold_report, "report output");
     assert!(
-        warm_report.contains("spec/a.md"),
+        warm_report.contains(&spec_rel("a.md")),
         "a report worth comparing"
     );
 }
@@ -402,17 +430,17 @@ fn edited_file_is_reparsed() {
     let before = cache::Cache::load(&cache_path).expect("load cache");
 
     // One new marked item in a.md; b.md is untouched.
-    let text = std::fs::read_to_string(root.join("spec/a.md")).expect("read a");
+    let text = std::fs::read_to_string(root.join(spec_rel("a.md"))).expect("read a");
     std::fs::write(
-        root.join("spec/a.md"),
+        root.join(spec_rel("a.md")),
         format!("{text}\n##a5 A newly added claim. @freeze/done\n"),
     )
     .expect("edit a");
     scan(&ctx, &args(root, false)).expect("rescan");
     let after = cache::Cache::load(&cache_path).expect("reload cache");
 
-    let a_before = &before.files["spec/a.md"];
-    let a_after = &after.files["spec/a.md"];
+    let a_before = &before.files[spec_rel("a.md").as_str()];
+    let a_after = &after.files[spec_rel("a.md").as_str()];
     assert_ne!(
         a_before.content_hash, a_after.content_hash,
         "the edited file's hash moved"
@@ -423,7 +451,7 @@ fn edited_file_is_reparsed() {
         "the new marker is in the record, so the file was re-parsed"
     );
     assert!(
-        payload_for(root, "spec/a.md")
+        payload_for(root, &spec_rel("a.md"))
             .expect("sidecar payload for the edited file")
             .markers
             .iter()
@@ -431,8 +459,8 @@ fn edited_file_is_reparsed() {
         "the new marker is in the sidecar payload too"
     );
     assert_eq!(
-        serde_json::to_string(&before.files["spec/b.md"]).expect("before b"),
-        serde_json::to_string(&after.files["spec/b.md"]).expect("after b"),
+        serde_json::to_string(&before.files[spec_rel("b.md").as_str()]).expect("before b"),
+        serde_json::to_string(&after.files[spec_rel("b.md").as_str()]).expect("after b"),
         "the untouched file's record did not move a byte"
     );
 }
@@ -454,7 +482,7 @@ fn campaign_map_survives_incremental() {
     let verdicts = serde_json::json!({"alpha": {"v": "confirmed", "ev": ["by hand"]}});
     let mut c = cache::Cache::load(&cache_path).expect("load");
     c.files
-        .get_mut("spec/a.md")
+        .get_mut(&spec_rel("a.md"))
         .expect("record")
         .campaign
         .insert("verdicts".into(), verdicts.clone());
@@ -465,7 +493,9 @@ fn campaign_map_survives_incremental() {
 
     let back = cache::Cache::load(&cache_path).expect("reload");
     assert_eq!(
-        back.files["spec/a.md"].campaign.get("verdicts"),
+        back.files[spec_rel("a.md").as_str()]
+            .campaign
+            .get("verdicts"),
         Some(&verdicts),
         "the verdict map rode through both warm runs"
     );
@@ -486,7 +516,7 @@ fn no_cache_flag_forces_full_parse() {
     let ctx = crate::output::Context::from_flags(true, false, None, true);
 
     scan(&ctx, &args(root, false)).expect("cold scan");
-    let mut poisoned = payload_for(root, "spec/a.md").expect("payload to poison");
+    let mut poisoned = payload_for(root, &spec_rel("a.md")).expect("payload to poison");
     let truthful = poisoned.markers.len();
     assert!(truthful > 1, "a.md has markers to lose");
     poisoned.markers.truncate(1);
@@ -514,7 +544,7 @@ fn no_cache_flag_forces_full_parse() {
     // `--no-cache` run is a full run, not a read-only one.
     scan(&ctx, &args(root, true)).expect("no-cache scan");
     assert_eq!(
-        payload_for(root, "spec/a.md")
+        payload_for(root, &spec_rel("a.md"))
             .expect("payload rewritten")
             .markers
             .len(),
@@ -542,7 +572,7 @@ fn verdicts_never_leave_cache_json() {
     // over it — the run that would carry it anywhere it should not go.
     let mut c = cache::Cache::load(&cache_path).expect("load");
     c.files
-        .get_mut("spec/a.md")
+        .get_mut(&spec_rel("a.md"))
         .expect("record")
         .campaign
         .insert("verdicts".into(), serde_json::json!({"alpha": "confirmed"}));
@@ -554,7 +584,7 @@ fn verdicts_never_leave_cache_json() {
 
     let store = std::fs::read_to_string(sidecar_dir(root).join(sidecar::PAYLOAD_FILE))
         .expect("the sidecar was written");
-    assert!(store.contains("spec/a.md"), "a store worth searching");
+    assert!(store.contains(&spec_rel("a.md")), "a store worth searching");
     assert!(!store.contains("campaign"), "no campaign key reaches it");
     assert!(!store.contains("confirmed"), "and no verdict rides along");
 }

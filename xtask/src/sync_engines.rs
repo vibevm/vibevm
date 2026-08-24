@@ -75,6 +75,11 @@ const MANIFEST: &str = "sync-engines.toml";
 ///
 /// A family name, deliberately not a version: a version literal here is
 /// exactly the rot this denominator exists to catch.
+///
+/// The `packages/` prefix is a layout-root literal kept here because
+/// xtask carries no vibe-core edge; the single home of the root names
+/// is `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4 relayout
+/// sweep retires this duplication.
 const FAMILY_ROOT: &str = "packages/org.vibevm.ai-native";
 
 /// Directories the enumeration below never descends into. Build output
@@ -82,6 +87,11 @@ const FAMILY_ROOT: &str = "packages/org.vibevm.ai-native";
 /// `vibedeps/` and `.vibe/cache/` hold RESOLVED dependency copies that a
 /// resolver writes and rewrites, so they are never an authored sync
 /// target and must not count against the denominator.
+///
+/// `vibedeps` is the deps-slot dir name (a layout name; single home
+/// `crates/vibe-core/src/layout.rs`, PROP-052 L2 — matched by SEGMENT
+/// here, and the R4 move keeps the final segment, so the filter
+/// survives the flip unchanged).
 const SCAN_DENY: [&str; 5] = ["target", ".git", "node_modules", ".vibe", "vibedeps"];
 
 /// Every directory under [`FAMILY_ROOT`] that holds vendored engine

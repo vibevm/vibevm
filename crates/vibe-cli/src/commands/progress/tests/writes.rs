@@ -118,9 +118,9 @@ fn edited_file_forces_the_write() {
     settled(root, &ctx).expect("a settled fixture campaign");
     let before = mtimes(root);
 
-    let text = std::fs::read_to_string(root.join("spec/a.md")).expect("read a");
+    let text = std::fs::read_to_string(root.join(spec_rel("a.md"))).expect("read a");
     std::fs::write(
-        root.join("spec/a.md"),
+        root.join(spec_rel("a.md")),
         format!("{text}\n##a5 A newly added claim. @freeze/done\n"),
     )
     .expect("edit a");
@@ -177,7 +177,7 @@ fn verdict_change_always_writes() {
     // A verdict arrives the way the campaign writes them.
     let mut c = cache::Cache::load(&cache_path).expect("load");
     c.files
-        .get_mut("spec/a.md")
+        .get_mut(&spec_rel("a.md"))
         .expect("record")
         .campaign
         .insert("verdicts".into(), serde_json::json!({"alpha": "confirmed"}));
@@ -214,7 +214,7 @@ fn verdict_change_always_writes() {
     );
     assert!(read_state(root, "corpus.json").contains("confirmed"));
     assert!(
-        cache::Cache::load(&cache_path).expect("reload").files["spec/a.md"]
+        cache::Cache::load(&cache_path).expect("reload").files[spec_rel("a.md").as_str()]
             .campaign
             .contains_key("verdicts"),
         "the verdict survived the run that skipped the write"
@@ -222,8 +222,11 @@ fn verdict_change_always_writes() {
 
     // Now the record leaves the observed scope: the maps genuinely differ,
     // so the file must move even though nothing in the tree was edited.
-    std::fs::write(root.join("progress.toml"), fixture_config("spec/b.md"))
-        .expect("narrow the scope");
+    std::fs::write(
+        root.join("progress.toml"),
+        fixture_config(&spec_rel("b.md")),
+    )
+    .expect("narrow the scope");
     let mut g = ground(&args(root, false)).expect("ground narrow");
     let refreshed = refresh_state(&mut g).expect("refresh narrow");
     assert_eq!(refreshed.writes.get("cache.json"), Some(&true));

@@ -11,7 +11,7 @@ use std::fs;
 use tempfile::TempDir;
 
 #[cfg(test)]
-fn write(dir: &Path, rel: &str, body: &str) {
+fn write(dir: &Path, rel: impl AsRef<Path>, body: &str) {
     let path = dir.join(rel);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, body).unwrap();
@@ -41,6 +41,16 @@ fn workspace_root(name: &str, members: &[&str]) -> String {
     )
 }
 
+#[cfg(test)]
+fn package_workspace_root(name: &str, members: &[&str]) -> String {
+    let members = members
+        .iter()
+        .map(crate::layout_paths::packages)
+        .collect::<Vec<_>>();
+    let refs = members.iter().map(String::as_str).collect::<Vec<_>>();
+    workspace_root(name, &refs)
+}
+
 #[test]
 fn standalone_project_is_its_own_root() {
     let tmp = TempDir::new().unwrap();
@@ -57,16 +67,16 @@ fn explicit_members_load() {
     write(
         tmp.path(),
         "vibe.toml",
-        &workspace_root("mono", &["packages/flow-wal", "packages/feat-auth"]),
+        &package_workspace_root("mono", &["flow-wal", "feat-auth"]),
     );
     write(
         tmp.path(),
-        "packages/flow-wal/vibe.toml",
+        crate::layout_paths::packages_path("flow-wal/vibe.toml"),
         &package("wal", "flow"),
     );
     write(
         tmp.path(),
-        "packages/feat-auth/vibe.toml",
+        crate::layout_paths::packages_path("feat-auth/vibe.toml"),
         &package("auth", "feat"),
     );
 
@@ -74,11 +84,17 @@ fn explicit_members_load() {
     assert!(!ws.is_standalone());
     assert_eq!(ws.members.len(), 2);
     // Sorted by rel_path: feat-auth before flow-wal.
-    assert_eq!(ws.members[0].rel_path, "packages/feat-auth");
-    assert_eq!(ws.members[1].rel_path, "packages/flow-wal");
+    assert_eq!(
+        ws.members[0].rel_path,
+        crate::layout_paths::packages("feat-auth")
+    );
+    assert_eq!(
+        ws.members[1].rel_path,
+        crate::layout_paths::packages("flow-wal")
+    );
     assert_eq!(ws.members[0].depth, 0);
     assert_eq!(
-        ws.member_by_rel_path("packages/flow-wal")
+        ws.member_by_rel_path(&crate::layout_paths::packages("flow-wal"))
             .unwrap()
             .manifest
             .require_package()
@@ -94,27 +110,41 @@ fn glob_members_expand_and_skip_non_packages() {
     write(
         tmp.path(),
         "vibe.toml",
-        &workspace_root("mono", &["packages/*"]),
+        &package_workspace_root("mono", &["*"]),
     );
     write(
         tmp.path(),
-        "packages/flow-a/vibe.toml",
+        crate::layout_paths::packages_path("flow-a/vibe.toml"),
         &package("a", "flow"),
     );
     write(
         tmp.path(),
-        "packages/flow-b/vibe.toml",
+        crate::layout_paths::packages_path("flow-b/vibe.toml"),
         &package("b", "flow"),
     );
-    // A directory under packages/ with no manifest — a glob match must
+    // A directory under the package root with no manifest — a glob match must
     // silently skip it.
-    fs::create_dir_all(tmp.path().join("packages/scratch")).unwrap();
-    write(tmp.path(), "packages/scratch/notes.txt", "ignore me");
+    fs::create_dir_all(
+        tmp.path()
+            .join(crate::layout_paths::packages_path("scratch")),
+    )
+    .unwrap();
+    write(
+        tmp.path(),
+        crate::layout_paths::packages_path("scratch/notes.txt"),
+        "ignore me",
+    );
 
     let ws = Workspace::load(tmp.path()).unwrap();
     assert_eq!(ws.members.len(), 2);
-    assert_eq!(ws.members[0].rel_path, "packages/flow-a");
-    assert_eq!(ws.members[1].rel_path, "packages/flow-b");
+    assert_eq!(
+        ws.members[0].rel_path,
+        crate::layout_paths::packages("flow-a")
+    );
+    assert_eq!(
+        ws.members[1].rel_path,
+        crate::layout_paths::packages("flow-b")
+    );
 }
 
 #[test]
@@ -201,7 +231,7 @@ fn missing_explicit_member_errors() {
     write(
         tmp.path(),
         "vibe.toml",
-        &workspace_root("mono", &["packages/ghost"]),
+        &package_workspace_root("mono", &["ghost"]),
     );
     let err = Workspace::load(tmp.path()).unwrap_err();
     assert!(

@@ -562,7 +562,7 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
 
 /// Load the workspace lockfile, or an empty one when none exists yet.
 /// `vibe reinstall` does not require a lockfile — without one it simply
-/// regenerates the boot artifacts from the authored `spec/boot/` tree.
+/// regenerates the boot artifacts from the authored boot-lane tree.
 fn load_lockfile(root: &Path) -> Result<Lockfile> {
     let path = root.join(Lockfile::FILENAME);
     if path.exists() {

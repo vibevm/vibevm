@@ -53,7 +53,7 @@ pub(super) fn run_dep_hook(
 /// install layer calls this from its apply phase, once each package is
 /// durable. A `post-install` non-zero exit is reported, not fatal (the
 /// package is already installed); a missing interpreter is still a hard error
-/// (PROP-020 §2.2). `materialised_slots` are the `vibedeps/` slot rel paths
+/// (PROP-020 §2.2). `materialised_slots` are the dependency-slot rel paths
 /// [`apply_resolution`] reported as freshly written — only those run, so a
 /// trusted-and-skipped slot (PROP-011 §2.3) does not re-run its hook.
 pub fn run_post_install_hooks(

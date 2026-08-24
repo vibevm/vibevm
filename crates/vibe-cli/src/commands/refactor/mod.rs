@@ -190,12 +190,16 @@ fn run_convert_spec_src(ctx: &output::Context, args: ConvertSpecSrcArgs) -> Resu
 }
 
 /// The owner's perimeter ruling (2026-08-24): a package conversion covers
-/// the package's SPEC HOMES — `spec/` and a nested `packages/` — never
-/// the whole tree («переводить спецификации из директории спецификаций,
-/// а не все подряд файлы»). House-specific root working docs (one
-/// project's WAL/checkpoint family) are NOT presumed: the verb serves
+/// the package's SPEC HOMES — the live specs root and a nested packages
+/// root — never the whole tree («переводить спецификации из директории
+/// спецификаций, а не все подряд файлы»). House-specific root working docs
+/// (one project's WAL/checkpoint family) are NOT presumed: the verb serves
 /// every project, and such names may mean anything elsewhere — a house
 /// converts its own extras with explicit `convert-source` paths.
+///
+/// The home names come from the layout module in `current_*` form
+/// (PROP-052 L5): after the R4 flip the homes are the new-layout roots,
+/// and the old roots stop being spec homes with no edit here.
 fn resolve_package_targets(path: PathBuf) -> Vec<ConversionTarget> {
     let root = match super::resolve_project_root(&path) {
         Ok(root) => root,
@@ -207,16 +211,20 @@ fn resolve_package_targets(path: PathBuf) -> Vec<ConversionTarget> {
         }
     };
     let mut targets = Vec::new();
-    for dir in ["spec", "packages"] {
-        let home = root.join(dir);
+    for home in [
+        root.join(vibe_core::layout::current_specs_root()),
+        root.join(vibe_core::layout::current_packages_root()),
+    ] {
         if home.is_dir() {
             targets.push(ConversionTarget::Path(home));
         }
     }
     if targets.is_empty() {
+        let specs = vibe_core::machine_json_path(&vibe_core::layout::current_specs_root());
+        let packs = vibe_core::machine_json_path(&vibe_core::layout::current_packages_root());
         targets.push(ConversionTarget::Refused {
             path: root,
-            reason: "package has no spec homes (`spec/` or `packages/`)".to_string(),
+            reason: format!("package has no spec homes (`{specs}/` or `{packs}/`)"),
         });
     }
     targets

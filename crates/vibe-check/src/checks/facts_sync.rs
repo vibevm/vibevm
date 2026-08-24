@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#laws");
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use specmark::cell;
 use vibe_facts::{Registry, sync};
@@ -19,7 +19,7 @@ impl Check for FactsSyncCheck {
     }
 
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
-        let home = project_root.join("vibefacts");
+        let home = project_root.join(vibe_core::layout::current_vibefacts_root());
         if !home.exists() {
             return;
         }
@@ -28,7 +28,7 @@ impl Check for FactsSyncCheck {
             Err(error) => {
                 report.err(
                     CheckId::FactsSync,
-                    Some(PathBuf::from("vibefacts")),
+                    Some(vibe_core::layout::current_vibefacts_root()),
                     None,
                     format!("invalid adoption-facts registry: {error}"),
                 );
@@ -40,7 +40,7 @@ impl Check for FactsSyncCheck {
             Err(error) => {
                 report.err(
                     CheckId::FactsSync,
-                    Some(PathBuf::from("vibefacts")),
+                    Some(vibe_core::layout::current_vibefacts_root()),
                     None,
                     format!("could not compare adoption facts with spec markers: {error}"),
                 );
@@ -65,6 +65,7 @@ mod tests {
     use std::fs;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use crate::test_support::opts;
     use crate::{Check, CheckId, CheckReport};
@@ -78,15 +79,28 @@ mod tests {
             "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
         )
         .expect("manifest");
-        fs::create_dir_all(project.path().join("spec/common")).expect("spec dir");
+        fs::create_dir_all(
+            project
+                .path()
+                .join(layout::current_specs_root())
+                .join("common"),
+        )
+        .expect("spec dir");
         fs::write(
-            project.path().join("spec/common/RULE.md"),
+            project
+                .path()
+                .join(layout::current_specs_root())
+                .join("common/RULE.md"),
             "# Rule {#root}\n\n@fact:RULE The rule. @status:impl/done\n",
         )
         .expect("spec");
-        fs::create_dir_all(project.path().join("vibefacts")).expect("facts dir");
+        fs::create_dir_all(project.path().join(layout::current_vibefacts_root()))
+            .expect("facts dir");
         fs::write(
-            project.path().join("vibefacts/spec.toml"),
+            project
+                .path()
+                .join(layout::current_vibefacts_root())
+                .join("spec.toml"),
             format!(
                 "schema = 1\n\n[[fact]]\naddress = \
                  \"spec://org.example/demo/common/RULE#RULE\"\norigin = \"spec\"\nstatus = \

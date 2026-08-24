@@ -36,9 +36,9 @@ fn make_dir_registry(root: &Path) -> PathBuf {
     let parent_v2 = registry.join("org.example").join("parent").join("v0.2.0");
     let child = registry.join("org.example").join("child").join("v0.1.0");
     for dir in [&parent_v1, &parent_v2] {
-        fs::create_dir_all(dir.join("spec/flows/parent")).unwrap();
+        fs::create_dir_all(dir.join(common::spec_rel("flows/parent"))).unwrap();
     }
-    fs::create_dir_all(child.join("spec/flows/child")).unwrap();
+    fs::create_dir_all(child.join(common::spec_rel("flows/child"))).unwrap();
 
     fs::write(
         parent_v1.join("vibe.toml"),
@@ -53,7 +53,11 @@ fn make_dir_registry(root: &Path) -> PathBuf {
     .unwrap();
     // Version-stamped payload: after a repair the entry must carry the
     // v0.1.0 marker again — NOT v0.2.0's.
-    fs::write(parent_v1.join("spec/flows/parent/P.md"), "parent v0.1.0\n").unwrap();
+    fs::write(
+        parent_v1.join(common::spec_rel("flows/parent/P.md")),
+        "parent v0.1.0\n",
+    )
+    .unwrap();
 
     fs::write(
         parent_v2.join("vibe.toml"),
@@ -64,7 +68,11 @@ fn make_dir_registry(root: &Path) -> PathBuf {
          version = \"0.2.0\"\n",
     )
     .unwrap();
-    fs::write(parent_v2.join("spec/flows/parent/P.md"), "parent v0.2.0\n").unwrap();
+    fs::write(
+        parent_v2.join(common::spec_rel("flows/parent/P.md")),
+        "parent v0.2.0\n",
+    )
+    .unwrap();
 
     fs::write(
         child.join("vibe.toml"),
@@ -75,7 +83,11 @@ fn make_dir_registry(root: &Path) -> PathBuf {
          version = \"0.1.0\"\n",
     )
     .unwrap();
-    fs::write(child.join("spec/flows/child/C.md"), "# child\n").unwrap();
+    fs::write(
+        child.join(common::spec_rel("flows/child/C.md")),
+        "# child\n",
+    )
+    .unwrap();
     registry
 }
 
@@ -155,7 +167,7 @@ fn check_names_tampered_entry_and_exits_nonzero() {
     prewarm(&user, bare.path());
     let entry = store_dir(&user).join("org.example/parent/v0.1.0");
     fs::write(
-        entry.join("spec/flows/parent/P.md"),
+        entry.join(common::spec_rel("flows/parent/P.md")),
         "parent v0.1.0\nTAMPERED\n",
     )
     .unwrap();
@@ -202,7 +214,7 @@ fn repair_refetches_tampered_entry_at_the_same_version() {
     let store = store_dir(&user);
     let entry = store.join("org.example/parent/v0.1.0");
     fs::write(
-        entry.join("spec/flows/parent/P.md"),
+        entry.join(common::spec_rel("flows/parent/P.md")),
         "parent v0.1.0\nTAMPERED\n",
     )
     .unwrap();
@@ -228,7 +240,7 @@ fn repair_refetches_tampered_entry_at_the_same_version() {
 
     // The entry is the ORIGINAL v0.1.0 again — not v0.2.0's payload.
     assert_eq!(
-        fs::read_to_string(entry.join("spec/flows/parent/P.md")).unwrap(),
+        fs::read_to_string(entry.join(common::spec_rel("flows/parent/P.md"))).unwrap(),
         "parent v0.1.0\n",
         "repair restores the recorded version's bytes"
     );

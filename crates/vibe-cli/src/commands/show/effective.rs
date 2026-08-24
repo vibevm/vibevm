@@ -68,6 +68,18 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     };
 
     let mut sections: Vec<EffectiveSection> = Vec::new();
+    // Layout-relative string prefixes, computed once: everything this
+    // collector emits is relative to the live layout's specs root
+    // (PROP-052 L2 — the names come from the layout module).
+    let boot_dir = project_root.join(vibe_core::layout::current_boot_dir());
+    let boot_prefix = format!(
+        "{}/",
+        machine_json_path(&vibe_core::layout::current_boot_dir())
+    );
+    let specs_prefix = format!(
+        "{}/",
+        machine_json_path(&vibe_core::layout::current_specs_root())
+    );
 
     // 1. Boot dir — sorted by NN- prefix. Each file gets a
     // user-or-package origin: the lockfile's `boot_snippet` field
@@ -75,7 +87,6 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     // claimed by any lockfile entry (00-core / 90-user / hand-edited)
     // surface as `user`. Both spec serialisations load (PROP-045
     // ##LOADER-LAW) — an `.xml` boot file renders as its projection.
-    let boot_dir = project_root.join("spec/boot");
     if boot_dir.is_dir() {
         boot_artifacts::resolve_static_path(project_root)
             .context("resolving the generated STATIC tape")?;
@@ -95,7 +106,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                 continue;
             };
             let filename = filename.to_string_lossy().into_owned();
-            let rel = format!("spec/boot/{filename}");
+            let rel = format!("{boot_prefix}{filename}");
             let origin = boot_origin(&filename, lockfile.as_ref());
             let spec_uri = format!("spec://project/boot/{filename}");
             let body = load_boot_entry(&path)?;
@@ -109,13 +120,13 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     }
 
     // 2. WAL — always one section, distinct origin.
-    let wal = project_root.join("spec/WAL.md");
+    let wal = project_root.join(vibe_core::layout::current_wal_md());
     if wal.is_file() {
         let body =
             fs::read_to_string(&wal).with_context(|| format!("reading `{}`", wal.display()))?;
         sections.push(EffectiveSection {
             spec_uri: "spec://project/WAL".to_string(),
-            path: "spec/WAL.md".to_string(),
+            path: machine_json_path(&vibe_core::layout::current_wal_md()),
             origin: "wal".to_string(),
             body,
         });
@@ -137,7 +148,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             paths.sort();
             for rel in paths {
                 let rel_str = machine_json_path(&rel);
-                if rel_str.starts_with("spec/boot/") {
+                if rel_str.starts_with(&boot_prefix) {
                     // Already emitted under step 1.
                     continue;
                 }
@@ -152,7 +163,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                         spec_uri: format!(
                             "{}/{}",
                             pkg_uri_root,
-                            rel_str.trim_start_matches("spec/")
+                            rel_str.trim_start_matches(&specs_prefix)
                         ),
                         path: rel_str.clone(),
                         origin: format!(
@@ -164,7 +175,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     continue;
                 }
                 let body = load_spec(&abs)?;
-                let suffix = rel_str.trim_start_matches("spec/");
+                let suffix = rel_str.trim_start_matches(&specs_prefix);
                 sections.push(EffectiveSection {
                     spec_uri: format!("{pkg_uri_root}/{suffix}"),
                     path: rel_str,
@@ -203,8 +214,9 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     }
     if sections.is_empty() {
         ctx.summary(&format!(
-            "vibe show effective: nothing to materialise — `{}` has no spec/boot files, no WAL, and an empty lockfile",
-            project_root.display()
+            "vibe show effective: nothing to materialise — `{}` has no {} files, no WAL, and an empty lockfile",
+            project_root.display(),
+            machine_json_path(&vibe_core::layout::current_boot_dir())
         ));
         return Ok(());
     }
@@ -299,7 +311,7 @@ mod tests {
         ] {
             let tmp = tempfile::tempdir().unwrap();
             let root = tmp.path();
-            std::fs::create_dir_all(root.join("spec/boot")).unwrap();
+            std::fs::create_dir_all(root.join(vibe_core::layout::current_boot_dir())).unwrap();
             std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
             let tape = "<!-- vibe:static one -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>one</p></spec>\n\n\
                         <!-- vibe:static two -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>two</p></spec>\n";
@@ -323,10 +335,12 @@ mod tests {
     fn an_xml_boot_file_lands_as_its_projection() {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec/boot")).unwrap();
+        std::fs::create_dir_all(root.join(vibe_core::layout::current_boot_dir())).unwrap();
         std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
+        let rules = vibe_core::layout::current_boot_dir().join("rules.xml");
+        let rules_rel = machine_json_path(&rules);
         std::fs::write(
-            root.join("spec/boot/rules.xml"),
+            root.join(&rules),
             "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
              <p><fact id=\"ONLY\" status=\"impl/done\">one rule</fact></p>\n</spec>\n",
         )
@@ -334,7 +348,7 @@ mod tests {
         let sections = collect_sections(root).expect("collect");
         let boot = sections
             .iter()
-            .find(|s| s.path == "spec/boot/rules.xml")
+            .find(|s| s.path == rules_rel)
             .expect("the xml boot file is a section");
         assert_eq!(boot.origin, "user");
         assert!(boot.body.contains("@fact:ONLY"), "{}", boot.body);

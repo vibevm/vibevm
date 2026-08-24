@@ -156,7 +156,7 @@ impl FileResolver {
                 group,
                 name,
                 version: None,
-            } if self.is_self(group, name) => Ok(self.ws_root.join("spec")),
+            } if self.is_self(group, name) => Ok(specs_root_under(&self.ws_root)),
             Authority::Package {
                 group,
                 name,
@@ -170,9 +170,10 @@ impl FileResolver {
                 group,
                 name,
                 version,
-            } => Ok(self
-                .package_slot(group, name, version.as_deref())?
-                .join("spec")),
+            } => Ok({
+                let slot = self.package_slot(group, name, version.as_deref())?;
+                specs_root_under(&slot)
+            }),
             Authority::Host(h) => Err(ResolveError::LegacyHostAuthority {
                 given: h.clone(),
                 hint: self.legacy_host_hint(h),
@@ -219,10 +220,7 @@ impl FileResolver {
         name: &str,
         version: Option<&str>,
     ) -> Result<PathBuf, ResolveError> {
-        let slot_dir = self
-            .ws_root
-            .join("vibedeps")
-            .join(format!("{group}.{name}"));
+        let slot_dir = vibedeps_root_under(&self.ws_root).join(format!("{group}.{name}"));
         if !slot_dir.is_dir() {
             return Err(ResolveError::PackageSlotNotFound(name.to_string()));
         }
@@ -346,6 +344,47 @@ fn id_file_matches(path: &Path, id: &str) -> bool {
             .is_some_and(|rest| rest.starts_with('-'))
 }
 
+// --- The PROP-052 relayout seam — the one sanctioned duplication --------
+//
+// vibe-spec cannot depend on vibe-core (no new dependencies; and the
+// core's layout module — `crates/vibe-core/src/layout.rs` — is the ONE
+// home of the root names, PROP-052 L2). These four names are the single
+// sanctioned duplication outside that module: the forward half
+// (`canonical_doc_path`) strips both specs-root prefixes, and the
+// reverse half (the disk walk below) probes the new root first and
+// falls back to the legacy one — so behaviour on the legacy tree
+// (today's) is byte-identical, and the R4 flip needs no edit here.
+pub(crate) const NEW_SPECS_ROOT: &str = "vibevm/vibespecs";
+pub(crate) const LEGACY_SPECS_ROOT: &str = "spec";
+pub(crate) const NEW_VIBEDEPS_ROOT: &str = "vibevm/vibedeps";
+pub(crate) const LEGACY_VIBEDEPS_ROOT: &str = "vibedeps";
+
+/// The specs root of whichever layout is live under `base`: the new
+/// `vibevm/vibespecs` when it exists on disk, else the legacy `spec`
+/// (the fallback also names the legacy root in `DocNotFound` errors on
+/// a tree that carries neither — the pre-relayout message, byte for
+/// byte).
+pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
+    let new = base.join(NEW_SPECS_ROOT);
+    if new.is_dir() {
+        new
+    } else {
+        base.join(LEGACY_SPECS_ROOT)
+    }
+}
+
+/// The dependency-slot root of whichever layout is live under `base`:
+/// `vibevm/vibedeps` when it exists, else the legacy `vibedeps`
+/// (same probe discipline as [`specs_root_under`]).
+pub(crate) fn vibedeps_root_under(base: &Path) -> PathBuf {
+    let new = base.join(NEW_VIBEDEPS_ROOT);
+    if new.is_dir() {
+        new
+    } else {
+        base.join(LEGACY_VIBEDEPS_ROOT)
+    }
+}
+
 /// The forward half of this router's law: a spec file's canonical
 /// citation doc-path — relative to the specs root, the serialisation
 /// extension stripped, and a `PROP-NNN` / `FEAT-NNN` descriptive-slug
@@ -363,8 +402,8 @@ fn id_file_matches(path: &Path, id: &str) -> bool {
 /// `crates/vibe-core/src/layout.rs`, PROP-052 L2).
 pub fn canonical_doc_path(file_rel: &str) -> String {
     let rel = file_rel
-        .strip_prefix("vibevm/vibespecs/")
-        .or_else(|| file_rel.strip_prefix("spec/"))
+        .strip_prefix(&format!("{NEW_SPECS_ROOT}/"))
+        .or_else(|| file_rel.strip_prefix(&format!("{LEGACY_SPECS_ROOT}/")))
         .unwrap_or(file_rel);
     let (dir, name) = match rel.rsplit_once('/') {
         Some((d, n)) => (Some(d), n),
@@ -422,20 +461,15 @@ mod tests;
 /// relayout slice touches exactly this one file.
 #[cfg(test)]
 mod canonical_doc_path_layout_tests {
-    use super::canonical_doc_path;
-
-    /// The two specs-root prefixes, as string literals. vibe-spec cannot
-    /// depend on vibe-core, where `layout.rs` names the roots once
-    /// (PROP-052 L2) — this is a test's own scaffold duplication, not a
-    /// product literal; the single home is `crates/vibe-core/src/layout.rs`.
-    const NEW_SPECS_PREFIX: &str = "vibevm/vibespecs/";
-    const OLD_SPECS_PREFIX: &str = "spec/";
+    use super::{LEGACY_SPECS_ROOT, NEW_SPECS_ROOT, canonical_doc_path};
 
     #[test]
     fn one_doc_path_for_both_layouts() {
         // The PROP-052 ##ADDRESSES-SURVIVE-THE-MOVE proof: the same
         // document reached under either physical prefix canonicalises
-        // to the identical citation doc-path.
+        // to the identical citation doc-path. The prefixes are built
+        // from the module's sanctioned duplication pair — no fresh
+        // literals here.
         for doc in [
             "common/PROP-000.xml",
             "common/PROP-000.md",
@@ -445,8 +479,8 @@ mod canonical_doc_path_layout_tests {
             "boot/00-core.md",
             "WAL.xml",
         ] {
-            let new = format!("{NEW_SPECS_PREFIX}{doc}");
-            let old = format!("{OLD_SPECS_PREFIX}{doc}");
+            let new = format!("{NEW_SPECS_ROOT}/{doc}");
+            let old = format!("{LEGACY_SPECS_ROOT}/{doc}");
             assert_eq!(
                 canonical_doc_path(&new),
                 canonical_doc_path(&old),

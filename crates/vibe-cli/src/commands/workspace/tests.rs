@@ -36,6 +36,18 @@ fn package(name: &str, kind: &str) -> String {
     )
 }
 
+/// A fixture package path under the live packages root, forward-slashed
+/// (PROP-052 L2 — the root name comes from the layout module, so the
+/// R4 flip carries these fixtures).
+#[cfg(test)]
+fn pkg_rel(tail: &str) -> String {
+    format!(
+        "{}/{}",
+        vibe_core::machine_json_path(&vibe_core::layout::current_packages_root()),
+        tail
+    )
+}
+
 fn origin_info() -> OriginInfo {
     OriginInfo {
         upstream: "https://github.com/you/monorepo".to_string(),
@@ -176,13 +188,13 @@ fn publish_loop_publishes_every_node_in_order() {
         return;
     }
     let src = tempfile::tempdir().unwrap();
-    write(src.path(), "packages/a/vibe.toml", &package("a", "flow"));
-    write(src.path(), "packages/b/vibe.toml", &package("b", "feat"));
+    write(src.path(), &pkg_rel("a/vibe.toml"), &package("a", "flow"));
+    write(src.path(), &pkg_rel("b/vibe.toml"), &package("b", "feat"));
     let bare_root = tempfile::tempdir().unwrap();
     let creator = MockCreator::new(bare_root.path().to_path_buf());
     let inputs = vec![
-        input(src.path(), "packages/a", "flow", "a"),
-        input(src.path(), "packages/b", "feat", "b"),
+        input(src.path(), &pkg_rel("a"), "flow", "a"),
+        input(src.path(), &pkg_rel("b"), "feat", "b"),
     ];
     let plan = plan(bare_root.path(), false);
     let mut seen: Vec<String> = Vec::new();
@@ -206,17 +218,17 @@ fn publish_loop_stops_on_first_failure_and_reports_partial_progress() {
         return;
     }
     let src = tempfile::tempdir().unwrap();
-    write(src.path(), "packages/a/vibe.toml", &package("a", "flow"));
-    write(src.path(), "packages/b/vibe.toml", &package("b", "feat"));
-    write(src.path(), "packages/c/vibe.toml", &package("c", "tool"));
+    write(src.path(), &pkg_rel("a/vibe.toml"), &package("a", "flow"));
+    write(src.path(), &pkg_rel("b/vibe.toml"), &package("b", "feat"));
+    write(src.path(), &pkg_rel("c/vibe.toml"), &package("c", "tool"));
     let bare_root = tempfile::tempdir().unwrap();
     // The middle node (feat-b) fails. a publishes, b fails, c is
     // never reached.
     let creator = MockCreator::failing_on(bare_root.path().to_path_buf(), "feat-b");
     let inputs = vec![
-        input(src.path(), "packages/a", "flow", "a"),
-        input(src.path(), "packages/b", "feat", "b"),
-        input(src.path(), "packages/c", "tool", "c"),
+        input(src.path(), &pkg_rel("a"), "flow", "a"),
+        input(src.path(), &pkg_rel("b"), "feat", "b"),
+        input(src.path(), &pkg_rel("c"), "tool", "c"),
     ];
     let plan = plan(bare_root.path(), false);
     let failure = publish_loop(Some(&creator), &inputs, &plan, &mut |_, _| {})
@@ -241,12 +253,12 @@ fn publish_loop_dry_run_makes_no_network_calls() {
     // No creator at all — the dry-run path must synthesise the
     // outcome from the staged manifest without touching the network.
     let src = tempfile::tempdir().unwrap();
-    write(src.path(), "packages/a/vibe.toml", &package("a", "flow"));
-    write(src.path(), "packages/b/vibe.toml", &package("b", "stack"));
+    write(src.path(), &pkg_rel("a/vibe.toml"), &package("a", "flow"));
+    write(src.path(), &pkg_rel("b/vibe.toml"), &package("b", "stack"));
     let bare_root = tempfile::tempdir().unwrap();
     let inputs = vec![
-        input(src.path(), "packages/a", "flow", "a"),
-        input(src.path(), "packages/b", "stack", "b"),
+        input(src.path(), &pkg_rel("a"), "flow", "a"),
+        input(src.path(), &pkg_rel("b"), "stack", "b"),
     ];
     let plan = plan(bare_root.path(), true);
     let published = publish_loop(None, &inputs, &plan, &mut |_, _| {})
@@ -268,13 +280,18 @@ fn publish_loop_staged_copy_carries_origin_and_banner() {
     // Exercise the staging side of the loop through dry-run and
     // confirm the staged content is correct by staging directly.
     let src = tempfile::tempdir().unwrap();
-    write(src.path(), "packages/a/vibe.toml", &package("a", "flow"));
-    write(src.path(), "packages/a/README.md", "# upstream readme\n");
-    let staged = stage_node(&src.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
+    write(src.path(), &pkg_rel("a/vibe.toml"), &package("a", "flow"));
+    write(src.path(), &pkg_rel("a/README.md"), "# upstream readme\n");
+    let staged = stage_node(
+        &src.path().join(pkg_rel("a")),
+        &pkg_rel("a"),
+        &origin_info(),
+    )
+    .unwrap();
     // [origin] present and correct.
     let manifest = Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
     let origin = manifest.origin.as_ref().expect("[origin] present");
-    assert_eq!(origin.path, "packages/a");
+    assert_eq!(origin.path, pkg_rel("a"));
     assert_eq!(origin.upstream, "https://github.com/you/monorepo");
     // README banner prepended.
     let readme = fs::read_to_string(staged.staging.path().join("README.md")).unwrap();

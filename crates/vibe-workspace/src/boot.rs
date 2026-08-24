@@ -70,7 +70,7 @@ pub enum BootBand {
 }
 
 /// One authored boot file belonging to a node — a file the node's author
-/// wrote in its `spec/boot/`. The engine receives these already
+/// wrote in its boot lane. The engine receives these already
 /// discovered; it never scans disk.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AuthoredBoot {
@@ -87,17 +87,17 @@ pub struct AuthoredBoot {
 
 /// One resolved dependency contributing boot, as the engine sees it. The
 /// caller builds this from the unified resolution and the materialised
-/// `vibedeps/` slot.
+/// dependency slot.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DependencyBoot {
-    /// The dependency's `kind` — metadata; used only for its `vibedeps/`
+    /// The dependency's `kind` — metadata; used only for its dependency
     /// slot directory name, never for identity (PROP-008 §2.3).
     pub kind: PackageKind,
     /// Reverse-FQDN group — with `name`, the `(group, name)` identity.
     pub group: Group,
     pub name: String,
     /// Workspace-root-relative path of the dependency's boot file inside
-    /// its `vibedeps/` slot — `None` when the package ships no boot
+    /// its dependency slot — `None` when the package ships no boot
     /// snippet. A boot-less dependency still takes part in the
     /// topological order; it simply contributes no entry.
     pub boot_path: Option<String>,

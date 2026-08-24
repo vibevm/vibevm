@@ -256,6 +256,13 @@ mod tests {
 
     #[test]
     fn a_pair_collides_and_the_message_names_both_paths() {
+        // The `spec/…` operands below name no directory on disk — this
+        // collision probe is pure string data (the sibling `a/X.md`,
+        // `b/X.xml` pair below the fold proves the names are arbitrary).
+        // vibe-specdoc carries no vibe-core edge, so where a specs-root
+        // literal would be a product hardcode it stays a sanctioned
+        // duplication with its single home in
+        // `crates/vibe-core/src/layout.rs` (PROP-052 L2).
         let cols = pair_collisions_in([
             "spec/one.md",
             "spec/one.xml",

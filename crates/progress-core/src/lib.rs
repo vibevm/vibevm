@@ -56,6 +56,11 @@ use std::path::Path;
 /// `cache.json` and hands the same documents to
 /// [`sidecar::Payloads::store`].
 ///
+/// (Layout note, PROP-052: the example's `spec/` scaffold names the
+/// legacy specs root that [`scope::DEFAULT_INCLUDES`] observes today —
+/// see the duplication note on that constant; this crate is standalone
+/// by law and cannot import `vibe_core::layout`.)
+///
 /// ```
 /// use progress_core::{cache::Cache, scope::ScopeConfig, sidecar::Payloads, scan_tree};
 ///

@@ -31,6 +31,13 @@ const KINDS: &[&str] = &["flow", "feat", "stack", "tool", "mcp", "lang"];
 /// substring: this repository's own namespace is `org.vibevm`, so a
 /// `contains(".vibe")` filter would delete every package it is meant to find.
 /// That mistake was made by hand on 2026-07-27 and is recorded in the WAL.
+///
+/// The `packages` / `vibedeps` literals are layout-root names kept here
+/// because xtask carries no vibe-core edge; the single home of the root
+/// names is `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4
+/// relayout sweep retires this duplication (`vibedeps` is matched by
+/// SEGMENT and the move keeps the final segment, so that filter
+/// survives the flip unchanged).
 pub(super) fn declared_names(root: &Path) -> BTreeSet<String> {
     let mut out = BTreeSet::new();
     let mut stack = vec![root.join("packages")];
@@ -182,6 +189,9 @@ mod tests {
     use super::*;
 
     fn scratch(body: &str) -> (tempfile::TempDir, Vec<String>) {
+        // The `packages` dir mirrors the walk root of `declared_names`
+        // above — a test scaffold, with the layout name's single home in
+        // `crates/vibe-core/src/layout.rs` (PROP-052 L2).
         let d = tempfile::tempdir().unwrap();
         let pkg = d
             .path()
@@ -199,6 +209,7 @@ mod tests {
             .join("packages")
             .join("org.vibevm.world")
             .join("git-atomic-commits");
+        // (same `packages` scaffold as above — see the note there)
         std::fs::create_dir_all(&other).unwrap();
         std::fs::write(
             other.join("vibe.toml"),

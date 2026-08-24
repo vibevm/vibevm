@@ -132,7 +132,10 @@ fn discover_argument(
     if path_has_vibedeps(path) {
         discovered.insert(
             path.to_path_buf(),
-            Discovered::Refused("vibedeps is never converted".to_string()),
+            Discovered::Refused(format!(
+                "{} is never converted",
+                vibe_core::layout::VIBEDEPS_DIR
+            )),
         );
         return Ok(());
     }
@@ -230,7 +233,10 @@ fn should_skip_directory(path: &Path) -> bool {
     let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
         return false;
     };
-    name == "target" || name == "vibedeps" || name.starts_with('.')
+    // The deps-root dir name is spelled once in the layout module
+    // (PROP-052 L2); the name survives the move unchanged, so a
+    // component-wise skip keeps working under either layout.
+    name == "target" || name == vibe_core::layout::VIBEDEPS_DIR || name.starts_with('.')
 }
 
 fn is_foreign_directory(path: &Path) -> bool {
@@ -241,7 +247,7 @@ fn is_foreign_directory(path: &Path) -> bool {
 
 fn path_has_vibedeps(path: &Path) -> bool {
     path.components()
-        .any(|component| component.as_os_str() == "vibedeps")
+        .any(|component| component.as_os_str() == vibe_core::layout::VIBEDEPS_DIR)
 }
 
 fn path_has_node_modules(path: &Path) -> bool {

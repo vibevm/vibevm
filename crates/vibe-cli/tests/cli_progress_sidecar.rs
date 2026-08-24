@@ -25,7 +25,7 @@ use common::UserScratch;
 fn fixture(root: &Path) {
     std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
     std::fs::write(
-        root.join("spec/a.md"),
+        root.join(common::spec_rel("a.md")),
         "<status stage=\"impl\" state=\"work\"/>\n\n\
          # Alpha {#alpha}\n\n\
          ##a1 The first claim. @test/plan\n\n\
@@ -34,14 +34,17 @@ fn fixture(root: &Path) {
     )
     .expect("write a");
     std::fs::write(
-        root.join("spec/b.md"),
+        root.join(common::spec_rel("b.md")),
         "# Beta {#beta}\n\n\
          <status stage=\"spec\" state=\"plan\"/>\n\n\
          ##b1 A paragraph under the section marker. @spec/work\n",
     )
     .expect("write b");
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-        .expect("write cfg");
+    std::fs::write(
+        root.join("progress.toml"),
+        format!("include = [\"{}/**/*.md\"]\n", common::specs_str()),
+    )
+    .expect("write cfg");
     std::fs::create_dir_all(root.join("campaigns/progress-test/run")).expect("mkdir campaign");
 }
 

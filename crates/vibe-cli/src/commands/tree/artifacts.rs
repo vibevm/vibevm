@@ -139,8 +139,12 @@ pub struct IndexParse {
 
 /// Read the generated `INDEX.md` TOML into its ordered entry list.
 pub fn read_index(text: &str) -> Result<IndexParse> {
-    let toml: IndexToml =
-        toml::from_str(text).context("parsing the generated spec/boot/INDEX.md manifest")?;
+    let toml: IndexToml = toml::from_str(text).with_context(|| {
+        format!(
+            "parsing the generated {} manifest",
+            vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
+        )
+    })?;
     let entries = toml
         .entries
         .into_iter()
@@ -163,14 +167,17 @@ pub fn read_index(text: &str) -> Result<IndexParse> {
 }
 
 /// Map a boot-file path to the `(group, name)` of the package that owns it,
-/// or `None` for a host-authored path. A materialised slot path is
-/// `vibedeps/<group>.<name>/<version>/…`; the second component encodes the
-/// package identity.
+/// or `None` for a host-authored path. A materialised slot path lives under
+/// the live layout's deps root (`<deps root>/<group>.<name>/<version>/…`);
+/// the second component encodes the package identity.
 pub fn slot_package(path: &str) -> Option<(String, String)> {
-    let rest = path
-        .strip_prefix("vibedeps/")
-        .or_else(|| path.strip_prefix("vibedeps\\"))?;
-    let slot = rest.split(['/', '\\']).next()?;
+    // Component-wise strip, so both separator spellings work and the R4
+    // flip's two-component root matches in one comparison.
+    let rest = std::path::Path::new(path)
+        .strip_prefix(vibe_core::layout::current_vibedeps_root())
+        .ok()?;
+    let rest = rest.to_string_lossy().replace('\\', "/");
+    let slot = rest.split('/').next()?;
     // The slot is identity-keyed, `<group>.<name>` (PROP-022 §2.1): the name
     // is a single dot-free LDH label, so the last dot is always the boundary.
     let (group, name) = slot.rsplit_once('.')?;
@@ -181,27 +188,57 @@ pub fn slot_package(path: &str) -> Option<(String, String)> {
 mod tests {
     use super::*;
 
+    /// A materialised slot file on the live layout:
+    /// `<deps root>/<slot>/<version>/<tail>`. Built from the layout
+    /// module so every fixture here rides the R4 flip unchanged.
+    fn slot_file(slot: &str, version: &str, tail: impl AsRef<std::path::Path>) -> String {
+        vibe_core::machine_json_path(
+            &vibe_core::layout::current_vibedeps_root()
+                .join(slot)
+                .join(version)
+                .join(tail.as_ref()),
+        )
+    }
+
+    /// A package's boot-lane file inside its slot — the tail a
+    /// materialised boot snippet carries.
+    fn slot_boot(slot: &str, version: &str, file: &str) -> String {
+        slot_file(
+            slot,
+            version,
+            vibe_core::layout::current_specs_root()
+                .join(vibe_core::layout::BOOT_DIR)
+                .join(file),
+        )
+    }
+
+    /// A host boot-lane file on the live layout.
+    fn host_boot(file: &str) -> String {
+        vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join(file))
+    }
+
     #[test]
     fn decompiles_two_contributions_with_bodies() {
-        let text = "\
+        let one = slot_boot("org.vibevm.world.addressable-specs", "0.1.0", "15.md");
+        let two = slot_boot("org.vibevm.world.redbook", "0.2.0", "03.md");
+        let text = format!(
+            "\
 <!-- header -->
 
-<!-- vibe:static org.vibevm.world/addressable-specs \u{2014} vibedeps/org.vibevm.world.addressable-specs/0.1.0/spec/boot/15.md -->
+<!-- vibe:static org.vibevm.world/addressable-specs \u{2014} {one} -->
 
 # Addressable Specs
 
 body line
-<!-- vibe:static org.vibevm.world/redbook \u{2014} vibedeps/org.vibevm.world.redbook/0.2.0/spec/boot/03.md -->
+<!-- vibe:static org.vibevm.world/redbook \u{2014} {two} -->
 
 # Redbook
-";
-        let c = decompile_static(text);
+"
+        );
+        let c = decompile_static(&text);
         assert_eq!(c.len(), 2);
         assert_eq!(c[0].origin, "org.vibevm.world/addressable-specs");
-        assert_eq!(
-            c[0].source_path,
-            "vibedeps/org.vibevm.world.addressable-specs/0.1.0/spec/boot/15.md"
-        );
+        assert_eq!(c[0].source_path, one);
         assert_eq!(c[0].order, 0);
         assert_eq!(c[1].origin, "org.vibevm.world/redbook");
         assert_eq!(c[1].order, 1);
@@ -213,11 +250,11 @@ body line
 
     #[test]
     fn a_host_rel_path_origin_is_kept_verbatim() {
-        let text =
-            "<!-- vibe:static spec/boot/00-core.md \u{2014} spec/boot/00-core.md -->\nbody\n";
-        let c = decompile_static(text);
+        let core = host_boot("00-core.md");
+        let text = format!("<!-- vibe:static {core} \u{2014} {core} -->\nbody\n");
+        let c = decompile_static(&text);
         assert_eq!(c.len(), 1);
-        assert_eq!(c[0].origin, "spec/boot/00-core.md");
+        assert_eq!(c[0].origin, core);
     }
 
     #[test]
@@ -229,14 +266,17 @@ body line
 
     #[test]
     fn attributes_a_nested_embed_span() {
-        let text = "\
-<!-- vibe:static org.vibevm.world/x \u{2014} vibedeps/org.vibevm.world.x/0.1.0/b.md -->
+        let spec = slot_file("org.vibevm.world.x", "0.1.0", "b.md");
+        let text = format!(
+            "\
+<!-- vibe:static org.vibevm.world/x \u{2014} {spec} -->
 
 <!-- embed: spec://org.vibevm.core/vibevm/a/b#c -->
 inner
 <!-- /embed: spec://org.vibevm.core/vibevm/a/b#c -->
-";
-        let c = decompile_static(text);
+"
+        );
+        let c = decompile_static(&text);
         assert_eq!(c.len(), 1);
         assert_eq!(c[0].embeds.len(), 1);
         assert_eq!(
@@ -248,24 +288,27 @@ inner
 
     #[test]
     fn reads_index_entries_in_order() {
-        let text = "\
+        let static_lane =
+            vibe_core::machine_json_path(&vibe_core::layout::current_boot_static_md());
+        let core = host_boot("00-core.md");
+        let dyn_entry = slot_boot("org.vibevm.ai-native.rust-ai-native-lang", "0.7.0", "20.md");
+        let text = format!(
+            "\
 schema = 1
-static = \"spec/boot/STATIC.md\"
+static = \"{static_lane}\"
 
 [[entry]]
-path = \"spec/boot/00-core.md\"
+path = \"{core}\"
 kind = \"static\"
 
 [[entry]]
-path = \"vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.7.0/spec/boot/20.md\"
+path = \"{dyn_entry}\"
 kind = \"dynamic\"
 when = \"os:linux\"
-";
-        let parsed = read_index(text).unwrap();
-        assert_eq!(
-            parsed.static_pointer.as_deref(),
-            Some("spec/boot/STATIC.md")
+"
         );
+        let parsed = read_index(&text).unwrap();
+        assert_eq!(parsed.static_pointer.as_deref(), Some(static_lane.as_str()));
         assert_eq!(parsed.entries.len(), 2);
         assert_eq!(parsed.entries[0].order, 0);
         assert_eq!(parsed.entries[0].kind, IndexKind::Static);
@@ -276,17 +319,21 @@ when = \"os:linux\"
     #[test]
     fn maps_a_slot_path_to_its_package() {
         assert_eq!(
-            slot_package("vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.7.0/spec/boot/20.md"),
+            slot_package(&slot_boot(
+                "org.vibevm.ai-native.rust-ai-native-lang",
+                "0.7.0",
+                "20.md"
+            )),
             Some((
                 "org.vibevm.ai-native".to_string(),
                 "rust-ai-native-lang".to_string()
             ))
         );
         assert_eq!(
-            slot_package("vibedeps/org.vibevm.world.redbook/0.2.0/spec/boot/03.md"),
+            slot_package(&slot_boot("org.vibevm.world.redbook", "0.2.0", "03.md")),
             Some(("org.vibevm.world".to_string(), "redbook".to_string()))
         );
         // A host-authored path maps to no package.
-        assert_eq!(slot_package("spec/boot/00-core.md"), None);
+        assert_eq!(slot_package(&host_boot("00-core.md")), None);
     }
 }

@@ -65,10 +65,10 @@ category = "flow"
     // ends up in the cache (`"v1 A\r\n"`).
     fs::write(src.join(".gitattributes"), "* text=auto eol=lf\n").unwrap();
     fs::write(src.join("vibe.toml"), manifest_v1).unwrap();
-    fs::create_dir_all(src.join("spec/flows/wal")).unwrap();
+    fs::create_dir_all(src.join(common::spec_rel("flows/wal"))).unwrap();
     fs::create_dir_all(src.join("boot")).unwrap();
-    fs::write(src.join("spec/flows/wal/A.md"), "v1 A\n").unwrap();
-    fs::write(src.join("spec/flows/wal/B.md"), "v1 B\n").unwrap();
+    fs::write(src.join(common::spec_rel("flows/wal/A.md")), "v1 A\n").unwrap();
+    fs::write(src.join(common::spec_rel("flows/wal/B.md")), "v1 B\n").unwrap();
     fs::write(src.join("boot/10-flow-wal.md"), "v1 boot\n").unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
@@ -86,9 +86,13 @@ source = "boot/10-flow-wal.md"
 category = "flow"
 "#;
     fs::write(src.join("vibe.toml"), manifest_v2).unwrap();
-    fs::write(src.join("spec/flows/wal/A.md"), "v2 A — changed!\n").unwrap();
-    fs::write(src.join("spec/flows/wal/C.md"), "v2 C\n").unwrap();
-    fs::remove_file(src.join("spec/flows/wal/B.md")).unwrap();
+    fs::write(
+        src.join(common::spec_rel("flows/wal/A.md")),
+        "v2 A — changed!\n",
+    )
+    .unwrap();
+    fs::write(src.join(common::spec_rel("flows/wal/C.md")), "v2 C\n").unwrap();
+    fs::remove_file(src.join(common::spec_rel("flows/wal/B.md"))).unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "org.vibevm/wal@0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
@@ -152,7 +156,11 @@ fn update_bumps_to_new_version_and_remateralises() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.wal/0.1.0/spec/flows/wal/B.md")
+            .join(common::slot_rel(
+                "org.vibevm.wal",
+                "0.1.0",
+                common::spec_rel("flows/wal/B.md")
+            ))
             .is_file(),
         "the v0.1.0 tree (with B.md) is materialised into its slot"
     );
@@ -191,17 +199,19 @@ fn update_bumps_to_new_version_and_remateralises() {
     // empty under the loading model.
     assert!(entry.files_written.is_empty());
 
-    let slot = project.path().join("vibedeps/org.vibevm.wal/0.2.0");
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.wal", "0.2.0"));
     assert_eq!(
-        fs::read_to_string(slot.join("spec/flows/wal/A.md")).unwrap(),
+        fs::read_to_string(slot.join(common::spec_rel("flows/wal/A.md"))).unwrap(),
         "v2 A — changed!\n"
     );
     assert!(
-        !slot.join("spec/flows/wal/B.md").exists(),
+        !slot.join(common::spec_rel("flows/wal/B.md")).exists(),
         "B.md was removed in v0.2.0 — the verbatim slot does not carry it"
     );
     assert_eq!(
-        fs::read_to_string(slot.join("spec/flows/wal/C.md")).unwrap(),
+        fs::read_to_string(slot.join(common::spec_rel("flows/wal/C.md"))).unwrap(),
         "v2 C\n"
     );
 }
@@ -257,7 +267,7 @@ fn show_effective_includes_wal_when_present() {
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
     fs::write(
-        project.path().join("spec/WAL.md"),
+        project.path().join(common::wal_md()),
         "# WAL\n\n## current phase\n\nTest checkpoint.\n",
     )
     .unwrap();
@@ -288,7 +298,7 @@ fn show_effective_includes_wal_when_present() {
 // fields — to the package that contributed them. The loading model
 // records neither: `files_written` is always empty and there is no
 // `boot_snippet` filename (the footprint is the `vibedeps/` slot, and
-// boot composition is driven by `spec/boot/INDEX.md`). There is no
+// boot composition is driven by the generated boot manifest). There is no
 // per-package file attribution for `show effective` to surface. The
 // boot-file provenance basics are still covered by
 // `show_effective_emits_boot_files_with_provenance` and
@@ -672,7 +682,7 @@ fn check_clean_project_exits_zero_with_no_findings() {
 
 // NOTE: `check_boot_prefix_collision_exits_nonzero` was deleted with
 // the PROP-009 switch-over. The old model placed every boot snippet
-// directly in the project's `spec/boot/` under an author-chosen `NN-`
+// directly in the project's boot lane under an author-chosen `NN-`
 // numeric prefix, so `vibe check` linted for two files sharing a
 // prefix. The loading model retires the `NN-` prefix: boot ordering is
 // computed by the engine from each contribution's `BootCategory` band,
@@ -762,13 +772,13 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.wal/0.1.0/vibe.toml")
+            .join(common::slot_rel("org.vibevm.wal", "0.1.0", "vibe.toml"))
             .is_file()
     );
     assert!(
         !project
             .path()
-            .join("vibedeps/org.vibevm.wal/0.2.0")
+            .join(common::slot_dir("org.vibevm.wal", "0.2.0"))
             .exists(),
         "the excluded v0.2.0 must not be materialised"
     );
@@ -957,7 +967,8 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
 
 /// Build a self-contained local fixture registry that ships a flow
 /// package with `[features]` + subskills + describes for feature-aware
-/// install testing. Layout:
+/// install testing. Layout (`<specs>` = the live layout's specs root,
+/// named once in `vibe_core::layout`):
 ///
 /// ```text
 /// registry/org.vibevm/feat-pkg/v0.1.0/
@@ -966,26 +977,34 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
 /// │                          [features].with-rust = ["subskill:stack/rust"]
 /// │                          [package].describes = "pkg:cargo/sqlx@0.8.0"
 /// ├── boot/10-feat-pkg.md
-/// ├── spec/feats/feat-pkg/CORE.md
+/// ├── <specs>/feats/feat-pkg/CORE.md
 /// └── subskills/
 ///     ├── stack/rust/
 ///     │   ├── vibe-subskill.toml   activation.if_present = ["stack:rust"]
 ///     │   │                        delivery = "eager"
-///     │   │                        content.files_written = ["spec/feats/feat-pkg/RUST.md"]
-///     │   └── spec/feats/feat-pkg/RUST.md
+///     │   │                        content.files_written = ["<specs>/feats/feat-pkg/RUST.md"]
+///     │   └── <specs>/feats/feat-pkg/RUST.md
 ///     └── doc/extra/
 ///         ├── vibe-subskill.toml   activation.if_files = ["**/Cargo.toml"]
 ///         │                        delivery = "eager"
-///         │                        content.files_written = ["spec/feats/feat-pkg/EXTRA.md"]
-///         └── spec/feats/feat-pkg/EXTRA.md
+///         │                        content.files_written = ["<specs>/feats/feat-pkg/EXTRA.md"]
+///         └── <specs>/feats/feat-pkg/EXTRA.md
 /// ```
 fn make_features_fixture_registry(root: &Path) -> PathBuf {
     let registry = root.join("registry");
     let pkg = registry.join("org.vibevm").join("feat-pkg").join("v0.1.0");
-    fs::create_dir_all(pkg.join("spec/feats/feat-pkg")).unwrap();
+    fs::create_dir_all(pkg.join(common::spec_rel("feats/feat-pkg"))).unwrap();
     fs::create_dir_all(pkg.join("boot")).unwrap();
-    fs::create_dir_all(pkg.join("subskills/stack/rust/spec/feats/feat-pkg")).unwrap();
-    fs::create_dir_all(pkg.join("subskills/doc/extra/spec/feats/feat-pkg")).unwrap();
+    fs::create_dir_all(
+        pkg.join("subskills/stack/rust")
+            .join(common::spec_rel("feats/feat-pkg")),
+    )
+    .unwrap();
+    fs::create_dir_all(
+        pkg.join("subskills/doc/extra")
+            .join(common::spec_rel("feats/feat-pkg")),
+    )
+    .unwrap();
 
     fs::write(
         pkg.join("vibe.toml"),
@@ -1007,12 +1026,17 @@ with-rust = ["subskill:stack/rust"]
 "#,
     )
     .unwrap();
-    fs::write(pkg.join("spec/feats/feat-pkg/CORE.md"), "# CORE protocol").unwrap();
+    fs::write(
+        pkg.join(common::spec_rel("feats/feat-pkg/CORE.md")),
+        "# CORE protocol",
+    )
+    .unwrap();
     fs::write(pkg.join("boot/10-feat-pkg.md"), "# boot snippet").unwrap();
 
     fs::write(
         pkg.join("subskills/stack/rust/vibe-subskill.toml"),
-        r#"[subskill]
+        format!(
+            r#"[subskill]
 path = "stack/rust"
 delivery = "eager"
 
@@ -1020,19 +1044,23 @@ delivery = "eager"
 if_present = ["stack:rust"]
 
 [content]
-files_written = ["spec/feats/feat-pkg/RUST.md"]
+files_written = ["{}"]
 "#,
+            common::spec_rel("feats/feat-pkg/RUST.md")
+        ),
     )
     .unwrap();
     fs::write(
-        pkg.join("subskills/stack/rust/spec/feats/feat-pkg/RUST.md"),
+        pkg.join("subskills/stack/rust")
+            .join(common::spec_rel("feats/feat-pkg/RUST.md")),
         "# Rust-specific guidance",
     )
     .unwrap();
 
     fs::write(
         pkg.join("subskills/doc/extra/vibe-subskill.toml"),
-        r#"[subskill]
+        format!(
+            r#"[subskill]
 path = "doc/extra"
 delivery = "eager"
 
@@ -1040,12 +1068,15 @@ delivery = "eager"
 if_files = ["**/Cargo.toml"]
 
 [content]
-files_written = ["spec/feats/feat-pkg/EXTRA.md"]
+files_written = ["{}"]
 "#,
+            common::spec_rel("feats/feat-pkg/EXTRA.md")
+        ),
     )
     .unwrap();
     fs::write(
-        pkg.join("subskills/doc/extra/spec/feats/feat-pkg/EXTRA.md"),
+        pkg.join("subskills/doc/extra")
+            .join(common::spec_rel("feats/feat-pkg/EXTRA.md")),
         "# extra context",
     )
     .unwrap();
@@ -1084,9 +1115,12 @@ fn install_with_features_records_active_features_in_lockfile() {
         .success();
 
     // The package tree is materialised verbatim into its slot.
-    let slot = project.path().join("vibedeps/org.vibevm.feat-pkg/0.1.0");
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.feat-pkg", "0.1.0"));
     assert!(
-        slot.join("spec/feats/feat-pkg/CORE.md").is_file(),
+        slot.join(common::spec_rel("feats/feat-pkg/CORE.md"))
+            .is_file(),
         "the package tree is materialised verbatim into vibedeps/"
     );
     assert!(slot.join("vibe.toml").is_file());
@@ -1144,7 +1178,11 @@ fn install_no_default_features_drops_default_feature_from_lockfile() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.feat-pkg/0.1.0/spec/feats/feat-pkg/CORE.md")
+            .join(common::slot_rel(
+                "org.vibevm.feat-pkg",
+                "0.1.0",
+                common::spec_rel("feats/feat-pkg/CORE.md")
+            ))
             .is_file()
     );
     let lock: vibe_core::manifest::Lockfile =
@@ -1745,11 +1783,19 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join(common::slot_rel(
+                "org.vibevm.world.wal",
+                "0.2.0",
+                common::spec_rel("flows/wal/WAL-PROTOCOL.md")
+            ))
             .is_file()
             || project
                 .path()
-                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .join(common::slot_rel(
+                    "org.vibevm.world.wal",
+                    "0.2.0",
+                    common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
+                ))
                 .is_file()
     );
 }
@@ -2767,17 +2813,17 @@ fn omnibus_install_exercises_every_prop003_surface() {
     // and i18n sidecars all ride along as plain files.
     let alpha_slot = project
         .path()
-        .join("vibedeps/org.vibevm.integration-alpha/0.1.0");
+        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
     assert!(alpha_slot.join("vibe.toml").is_file());
     assert!(
         alpha_slot
-            .join("spec/flows/integration-alpha/PROTOCOL.md")
+            .join(common::spec_rel("flows/integration-alpha/PROTOCOL.md"))
             .is_file(),
         "alpha's base content lands in its slot"
     );
     assert!(
         alpha_slot
-            .join("spec/flows/integration-alpha/PROTOCOL.ru.md")
+            .join(common::spec_rel("flows/integration-alpha/PROTOCOL.ru.md"))
             .is_file(),
         "the Russian i18n sidecar rides along verbatim in the slot"
     );
@@ -2796,37 +2842,45 @@ fn omnibus_install_exercises_every_prop003_surface() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.integration-beta/0.1.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.integration-beta",
+                "0.1.0",
+                "vibe.toml"
+            ))
             .is_file(),
         "the conditionally-pulled beta is materialised into its own slot"
     );
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.integration-rust/0.1.0/vibe.toml")
+            .join(common::slot_rel(
+                "org.vibevm.integration-rust",
+                "0.1.0",
+                "vibe.toml"
+            ))
             .is_file()
     );
 
     // The OLD mirror layout — package files copied into the project's
-    // own `spec/` tree, boot snippet placed at `spec/boot/NN-*.md` — is
+    // own specs tree, boot snippet placed in the boot lane — is
     // retired.
     assert!(
         !project
             .path()
-            .join("spec/flows/integration-alpha/PROTOCOL.md")
+            .join(common::spec_rel("flows/integration-alpha/PROTOCOL.md"))
             .exists(),
         "the legacy [writes] mirror layout is retired"
     );
     assert!(
         !project
             .path()
-            .join("spec/boot/40-flow-integration-alpha.md")
+            .join(common::spec_rel("boot/40-flow-integration-alpha.md"))
             .exists(),
         "the NN- boot-snippet placement is retired"
     );
 
     // The generated boot manifest exists for the project node.
-    assert!(project.path().join("spec/boot/INDEX.md").is_file());
+    assert!(project.path().join(common::index_rel()).is_file());
 }
 
 // NOTE: `omnibus_install_with_cargo_toml_activates_if_files_subskill`
@@ -3058,7 +3112,10 @@ version = "{version}"
 [target."context(stack:rust-cli)".dependencies]
 packages = { "org.vibevm/rust-helper" = "^0.1" }
 "#,
-        &[("spec/flows/dispatcher/CORE.md", "# dispatcher core")],
+        &[(
+            common::spec_rel("flows/dispatcher/CORE.md").as_str(),
+            "# dispatcher core",
+        )],
     );
     make_pkg(
         root,
@@ -3067,7 +3124,10 @@ packages = { "org.vibevm/rust-helper" = "^0.1" }
         "rust-helper",
         "0.1.0",
         "",
-        &[("spec/flows/rust-helper/HINT.md", "# rust hint")],
+        &[(
+            common::spec_rel("flows/rust-helper/HINT.md").as_str(),
+            "# rust hint",
+        )],
     );
     make_pkg(
         root,
@@ -3076,7 +3136,10 @@ packages = { "org.vibevm/rust-helper" = "^0.1" }
         "rust-cli",
         "0.1.0",
         "",
-        &[("spec/stacks/rust-cli/STACK.md", "# rust-cli stack")],
+        &[(
+            common::spec_rel("stacks/rust-cli/STACK.md").as_str(),
+            "# rust-cli stack",
+        )],
     );
 
     let abs_org = org
@@ -3218,7 +3281,10 @@ version = "{version}"
         "rust-cli",
         "0.1.0",
         "",
-        &[("spec/stacks/rust-cli/STACK.md", "# rust-cli")],
+        &[(
+            common::spec_rel("stacks/rust-cli/STACK.md").as_str(),
+            "# rust-cli",
+        )],
     );
     make_pkg(
         root,
@@ -3230,7 +3296,10 @@ version = "{version}"
 [target."context(stack:rust-cli)".dependencies]
 packages = { "org.vibevm/cascade-mid" = "^0.1" }
 "#,
-        &[("spec/flows/cascade-root/CORE.md", "# root")],
+        &[(
+            common::spec_rel("flows/cascade-root/CORE.md").as_str(),
+            "# root",
+        )],
     );
     make_pkg(
         root,
@@ -3242,7 +3311,10 @@ packages = { "org.vibevm/cascade-mid" = "^0.1" }
 [target."context(flow:cascade-root)".dependencies]
 packages = { "org.vibevm/cascade-leaf" = "^0.1" }
 "#,
-        &[("spec/flows/cascade-mid/MID.md", "# mid")],
+        &[(
+            common::spec_rel("flows/cascade-mid/MID.md").as_str(),
+            "# mid",
+        )],
     );
     make_pkg(
         root,
@@ -3251,7 +3323,10 @@ packages = { "org.vibevm/cascade-leaf" = "^0.1" }
         "cascade-leaf",
         "0.1.0",
         "",
-        &[("spec/flows/cascade-leaf/LEAF.md", "# leaf")],
+        &[(
+            common::spec_rel("flows/cascade-leaf/LEAF.md").as_str(),
+            "# leaf",
+        )],
     );
 
     let abs_org = org
@@ -3369,7 +3444,7 @@ fn make_two_version_per_package_registry(root: &Path) -> (PathBuf, String) {
     let org = root.join("org");
     fs::create_dir_all(&org).unwrap();
     let src = root.join("src-flow-test-multi");
-    fs::create_dir_all(src.join("spec/flows/test-multi")).unwrap();
+    fs::create_dir_all(src.join(common::spec_rel("flows/test-multi"))).unwrap();
     run_git(&src, &["init", "--initial-branch=main"]);
     run_git(&src, &["config", "user.email", "t@example.com"]);
     run_git(&src, &["config", "user.name", "Test"]);
@@ -3383,7 +3458,11 @@ version = "0.1.0"
 "#,
     )
     .unwrap();
-    fs::write(src.join("spec/flows/test-multi/PROTOCOL.md"), "# v0.1.0").unwrap();
+    fs::write(
+        src.join(common::spec_rel("flows/test-multi/PROTOCOL.md")),
+        "# v0.1.0",
+    )
+    .unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "v0.1.0"]);
     run_git(&src, &["tag", "v0.1.0"]);
@@ -3399,7 +3478,11 @@ version = "0.2.0"
 "#,
     )
     .unwrap();
-    fs::write(src.join("spec/flows/test-multi/PROTOCOL.md"), "# v0.2.0").unwrap();
+    fs::write(
+        src.join(common::spec_rel("flows/test-multi/PROTOCOL.md")),
+        "# v0.2.0",
+    )
+    .unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "v0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
@@ -3797,7 +3880,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
 
     // Delete the generated boot artifacts — simulate a botched edit or a
     // wrong previous generation pass.
-    let index = project.path().join("spec/boot/INDEX.md");
+    let index = project.path().join(common::index_rel());
     let claude = project.path().join("CLAUDE.md");
     fs::remove_file(&index).unwrap();
     fs::remove_file(&claude).unwrap();
@@ -3819,8 +3902,15 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
     assert!(
-        index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
-            || index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
+        index_body.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.md"
+        )) || index_body.contains(&common::slot_boot_rel(
+            "org.vibevm.world.wal",
+            "0.2.0",
+            "10-flow-wal.xml"
+        )),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
     );
 }
@@ -3829,13 +3919,13 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
 fn reinstall_succeeds_on_a_project_with_no_dependencies() {
     // `vibe reinstall` of a project that has only authored boot and no
     // installed packages regenerates its boot artifacts from the
-    // `spec/boot/` tree — an absent or empty `vibe.lock` is not an error.
+    // boot-lane tree — an absent or empty `vibe.lock` is not an error.
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
     // Remove any boot artifacts a prior step produced, so the assertion
     // below proves `vibe reinstall` regenerated them.
-    let index = project.path().join("spec/boot/INDEX.md");
+    let index = project.path().join(common::index_rel());
     let claude = project.path().join("CLAUDE.md");
     let _ = fs::remove_file(&index);
     let _ = fs::remove_file(&claude);
@@ -3875,7 +3965,13 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
         .success();
 
     // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
-    fs::remove_dir_all(project.path().join("vibedeps/org.vibevm.world.wal")).unwrap();
+    fs::remove_dir_all(
+        project
+            .path()
+            .join(common::deps_root())
+            .join("org.vibevm.world.wal"),
+    )
+    .unwrap();
 
     user.vibe()
         .arg("reinstall")
@@ -3956,9 +4052,11 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
 
     // Corrupt a content file inside the materialised `vibedeps/` slot —
     // whichever PROP-045 serialisation the package ships.
-    let slot_proto = project
-        .path()
-        .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal");
+    let slot_proto = project.path().join(common::slot_rel(
+        "org.vibevm.world.wal",
+        "0.2.0",
+        common::spec_rel("flows/wal"),
+    ));
     let corrupted = if slot_proto.join("WAL-PROTOCOL.md").is_file() {
         slot_proto.join("WAL-PROTOCOL.md")
     } else {
@@ -3987,7 +4085,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
         "the corrupted file must be overwritten by the fresh fetch: {restored}"
     );
     // The boot artifacts are intact, and the version did not move.
-    assert!(project.path().join("spec/boot/INDEX.md").is_file());
+    assert!(project.path().join(common::index_rel()).is_file());
     let lock: vibe_core::manifest::Lockfile =
         toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);

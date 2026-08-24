@@ -431,7 +431,7 @@ fn collect_slot_specs(root: &Path, dir: &Path, out: &mut Vec<SlotSpecInput>) -> 
             if is_spec_document(&source)
                 && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Mixed)
                 && source != boot_artifacts::static_path(vibe_core::manifest::SpecFormat::Xml)
-                && source != "spec/boot/INDEX.md"
+                && source != vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
             {
                 out.push(SlotSpecInput {
                     source,
@@ -449,7 +449,11 @@ fn is_spec_document(rel: &str) -> bool {
         path.extension().and_then(|ext| ext.to_str()),
         Some("md" | "xml")
     );
-    spec_extension && (rel.starts_with("spec/") || matches!(rel, "README.md" | "README.xml"))
+    let under_specs_root = rel.starts_with(&format!(
+        "{}/",
+        vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+    ));
+    spec_extension && (under_specs_root || matches!(rel, "README.md" | "README.xml"))
 }
 
 fn sync_command(root: &Path, write: bool) -> Result<()> {

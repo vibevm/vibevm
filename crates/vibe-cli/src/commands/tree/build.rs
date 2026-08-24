@@ -47,14 +47,12 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     let static_path = boot_artifacts::resolve_static_path(root)?;
     let static_text = static_path.as_deref().and_then(read_opt);
     let static_wire = static_path.as_ref().map(|path| {
-        format!(
-            "spec/boot/{}",
-            path.file_name()
-                .expect("the static resolver returns a file path")
-                .to_string_lossy()
-        )
+        // The resolver hands back a file path; a bare root would carry no
+        // file name — fall back to the path's own tail rather than assume.
+        let name = path.file_name().unwrap_or(path.as_os_str());
+        vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join(name))
     });
-    let index_text = read_opt(&root.join("spec/boot/INDEX.md"));
+    let index_text = read_opt(&root.join(vibe_core::layout::current_boot_index()));
     let static_contribs = static_text
         .as_deref()
         .map(artifacts::decompile_static)
@@ -151,7 +149,7 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     // every `INDEX.md` entry path. Deduped, project-relative.
     let mut boot_file_set: BTreeSet<String> = HOST_BOOT_FILES
         .iter()
-        .map(|n| format!("spec/boot/{n}"))
+        .map(|n| vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join(n)))
         .collect();
     boot_file_set.extend(static_contribs.iter().map(|c| c.source_path.clone()));
     boot_file_set.extend(index.entries.iter().map(|e| e.path.clone()));
@@ -170,7 +168,7 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
             }),
         index_md: IndexLane {
             present: index_text.is_some(),
-            path: "spec/boot/INDEX.md".to_string(),
+            path: vibe_core::machine_json_path(&vibe_core::layout::current_boot_index()),
             static_pointer: index.static_pointer,
             entries: index.entries,
         },
@@ -377,7 +375,7 @@ fn static_transitive_closure(
 /// slot manifest — best-effort, `None` when the slot or field is absent.
 fn slot_suggested_link(root: &Path, p: &LockedPackage) -> Option<LinkType> {
     let slot = root
-        .join("vibedeps")
+        .join(vibe_core::layout::current_vibedeps_root())
         .join(format!("{}-{}", p.kind.as_str(), p.name))
         .join(p.version.to_string())
         .join(Manifest::FILENAME);

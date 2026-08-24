@@ -32,7 +32,7 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let (parent, _p) = dep_with_requires(
         "parent",
@@ -58,14 +58,14 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     let parent_static = fs::read_to_string(
         ws_dir
             .path()
-            .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+            .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/STATIC.md")),
     )
     .unwrap();
     assert!(parent_static.contains("# parent boot"), "{parent_static}");
     assert!(parent_static.contains("# child boot"), "{parent_static}");
 
     // The root does NOT compile the zone in — root→parent is dynamic.
-    let root_static = ws_dir.path().join("spec/boot/STATIC.md");
+    let root_static = ws_dir.path().join(boot_rel("STATIC.md"));
     assert!(
         !root_static.exists()
             || !fs::read_to_string(&root_static)
@@ -78,19 +78,22 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     assert!(
         !ws_dir
             .path()
-            .join("vibedeps/org.vibevm.child/1.0.0/spec/boot/STATIC.md")
+            .join(deps_slot_specs("org.vibevm.child/1.0.0", "boot/STATIC.md"))
             .exists()
     );
 
     // Root's INDEX points at parent's STATIC.md (the whole zone), not the
     // raw snippet — so loading parent pulls child with it.
-    let root_index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+    let root_index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
     assert!(
-        root_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+        root_index.contains(&deps_slot_specs(
+            "org.vibevm.parent/1.0.0",
+            "boot/STATIC.md"
+        )),
         "{root_index}"
     );
     assert!(
-        !root_index.contains("vibedeps/org.vibevm.parent/1.0.0/boot/parent.md"),
+        !root_index.contains(&deps_rel("org.vibevm.parent/1.0.0/boot/parent.md")),
         "the raw snippet must not be the INDEX target: {root_index}"
     );
 }
@@ -107,7 +110,7 @@ fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/a\" = \"^1.0\"\n\"org.vibevm/e\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let static_child = "[boot_snippet]\nsource = \"boot/{n}.md\"\n\n[requires.packages]\n\
          \"org.vibevm/shared\" = { version = \"^1.0\", link = \"static\" }\n";
@@ -140,7 +143,7 @@ fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
 
     // The shared text is hoisted to the global root STATIC.md — exactly once,
     // with a shared-by hint naming the consumers.
-    let root_static = fs::read_to_string(ws_dir.path().join("spec/boot/STATIC.md")).unwrap();
+    let root_static = fs::read_to_string(ws_dir.path().join(boot_rel("STATIC.md"))).unwrap();
     assert_eq!(
         root_static.matches("# shared discipline").count(),
         1,
@@ -155,7 +158,7 @@ fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
     let a_static = fs::read_to_string(
         ws_dir
             .path()
-            .join("vibedeps/org.vibevm.a/1.0.0/spec/boot/STATIC.md"),
+            .join(deps_slot_specs("org.vibevm.a/1.0.0", "boot/STATIC.md")),
     )
     .unwrap();
     assert!(a_static.contains("# a boot"), "{a_static}");
@@ -181,7 +184,7 @@ fn an_unchanged_reinstall_skips_a_package_via_its_fingerprint() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (parent, _p) = dep_with_requires(
         "parent",
         "1.0.0",
@@ -210,7 +213,7 @@ fn an_unchanged_reinstall_skips_a_package_via_its_fingerprint() {
 
     let parent_index = ws_dir
         .path()
-        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/INDEX.md");
+        .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/INDEX.md"));
     let index_text = fs::read_to_string(&parent_index).unwrap();
     assert!(
         index_text.contains("# vibe:fp "),
@@ -248,7 +251,7 @@ fn a_changed_static_child_forces_the_parent_to_regenerate() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let parent_toml = "[boot_snippet]\nsource = \"boot/parent.md\"\n\n\
          [requires.packages]\n\"org.vibevm/child\" = { version = \"^1.0\", link = \"static\" }\n";
@@ -275,7 +278,7 @@ fn a_changed_static_child_forces_the_parent_to_regenerate() {
     apply_resolution(&ws, &[parent, child_v1], SlotIntegrity::TrustPresence, None).unwrap();
     let parent_static_path = ws_dir
         .path()
-        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md");
+        .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/STATIC.md"));
     assert!(
         fs::read_to_string(&parent_static_path)
             .unwrap()
@@ -325,7 +328,7 @@ fn switching_a_child_from_dynamic_to_static_regenerates_the_parent() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let parent_of = |child_link: &str| {
         dep_with_requires(
@@ -351,7 +354,7 @@ fn switching_a_child_from_dynamic_to_static_regenerates_the_parent() {
     };
     let parent_static_path = ws_dir
         .path()
-        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md");
+        .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/STATIC.md"));
 
     // Child dynamic — the parent has no static child, so no STATIC.md.
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -387,7 +390,7 @@ fn verify_boot_graph_detects_a_stale_artifact() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (parent, _p) = dep_with_requires(
         "parent",
         "1.0.0",
@@ -418,7 +421,7 @@ fn verify_boot_graph_detects_a_stale_artifact() {
     // Corrupt the parent's recorded fingerprint — verify must flag it stale.
     let parent_index = ws_dir
         .path()
-        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/INDEX.md");
+        .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/INDEX.md"));
     let text = fs::read_to_string(&parent_index).unwrap();
     let stored = super::super::boot_artifacts::read_fingerprint(&text).unwrap();
     fs::write(&parent_index, text.replace(&stored, "deadbeef")).unwrap();
@@ -448,7 +451,7 @@ fn the_dynamic_static_case_follows_the_target_format() {
             "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
              [requires.packages]\n\"org.vibevm/parent\" = \"^1.0\"\n",
         );
-        write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+        write(ws_dir.path(), boot_rel("00-core.md"), "# core");
         let (parent, _p) = dep_with_requires(
             "parent",
             "1.0.0",
@@ -478,25 +481,31 @@ fn the_dynamic_static_case_follows_the_target_format() {
         let parent_static = fs::read_to_string(
             ws_dir
                 .path()
-                .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot")
+                .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot"))
                 .join(crate::boot_artifacts::static_file(spec_format)),
         )
         .unwrap();
-        let root_index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+        let root_index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
         (parent_static, root_index)
     };
 
     let (md_static, md_index) = run(SpecFormat::Markdown);
     let (xml_static, xml_index) = run(SpecFormat::Xml);
     assert!(
-        xml_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.xml"),
+        xml_index.contains(&deps_slot_specs(
+            "org.vibevm.parent/1.0.0",
+            "boot/STATIC.xml"
+        )),
         "the XML target must reach the per-unit XML lane: {xml_index}"
     );
     assert!(md_static.contains("Parent body."), "{md_static}");
     assert!(md_static.contains("Child body."), "{md_static}");
     assert_eq!(xml_static.matches("<spec ").count(), 2, "{xml_static}");
     assert!(
-        md_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
+        md_index.contains(&deps_slot_specs(
+            "org.vibevm.parent/1.0.0",
+            "boot/STATIC.md"
+        )),
         "{md_index}"
     );
 }

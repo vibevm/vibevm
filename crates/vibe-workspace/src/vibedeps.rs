@@ -1,15 +1,15 @@
-//! The `vibedeps/` materialisation tree — PROP-009 §2.1.
+//! The dependency materialisation tree — PROP-009 §2.1.
 //!
 //! `vibe install` writes every resolved dependency into a tree rooted at the
 //! absolute workspace root, one slot per package:
 //!
 //! ```text
-//! <workspace-root>/vibedeps/<group>.<name>/<version>/
+//! <workspace-root>/<live-dependency-root>/<group>.<name>/<version>/
 //! ```
 //!
 //! The slot holds the package's published tree **verbatim**. Unified
 //! resolution (PROP-007 §2.4) guarantees one version per package, so a
-//! single slot serves the whole workspace. `vibedeps/` is committed to the
+//! single slot serves the whole workspace. The materialisation tree is committed to the
 //! repository — a fresh clone is bootable with no `vibe install`, and the
 //! dependency corpus stays visible and diffable.
 //!
@@ -17,18 +17,17 @@
 //! additive: it never retires the legacy `[writes]` mirror layout
 //! (`VIBEVM-SPEC.md` §13.1). That retirement is the `vibe install`
 //! switch-over — a later PROP-009 phase — and removing the mirror path
-//! before `vibe install` is rebuilt on `vibedeps/` would break the build.
+//! before `vibe install` is rebuilt on dependency slots would break the build.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees");
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use vibe_core::Group;
+use vibe_core::{Group, layout};
 
-use crate::WorkspaceError;
+use crate::{WorkspaceError, layout_paths};
 
-#[path = "vibedeps/derived.rs"]
 mod derived;
 
 pub use derived::{
@@ -37,17 +36,17 @@ pub use derived::{
     read_derived_manifest,
 };
 
-/// Directory name of the materialisation tree, at the workspace root.
-pub const VIBEDEPS_DIR: &str = "vibedeps";
+/// Directory name of the materialisation tree's final component.
+pub use vibe_core::layout::VIBEDEPS_DIR;
 
 /// The slot path for one resolved package, relative to the workspace root
-/// and forward-slashed: `vibedeps/<group>.<name>/<version>`.
+/// and forward-slashed under the live dependency root.
 ///
 /// Root-relative and forward-slashed so it is portable across machines —
 /// the same property [`WorkspaceMember::rel_path`](crate::WorkspaceMember)
 /// carries.
 pub fn slot_rel_path(group: &Group, name: &str, version: &semver::Version) -> String {
-    format!("{VIBEDEPS_DIR}/{group}.{name}/{version}")
+    layout_paths::vibedeps(format!("{group}.{name}/{version}"))
 }
 
 /// The absolute on-disk slot path — `workspace_root` joined with
@@ -58,7 +57,7 @@ pub fn slot_abs_path(
     name: &str,
     version: &semver::Version,
 ) -> PathBuf {
-    let mut p = workspace_root.join(VIBEDEPS_DIR);
+    let mut p = workspace_root.join(layout::current_vibedeps_root());
     p.push(format!("{group}.{name}"));
     p.push(version.to_string());
     p
@@ -74,9 +73,9 @@ pub fn is_materialised(
     slot_abs_path(workspace_root, group, name, version).is_dir()
 }
 
-/// Materialise a resolved package into its `vibedeps/` slot — copy the
+/// Materialise a resolved package into its dependency slot — copy the
 /// package's published content tree (`content_src`) verbatim into
-/// `vibedeps/<group>.<name>/<version>/`.
+/// live dependency-root path.
 ///
 /// **Idempotent.** An existing slot is cleared first, so re-materialising
 /// the same package yields a byte-identical slot and stale files from an
@@ -155,7 +154,7 @@ pub fn materialise_with(
     Ok(written)
 }
 
-/// Remove a package's `vibedeps/` slot, if it exists. Returns `true` when a
+/// Remove a package's dependency slot, if it exists. Returns `true` when a
 /// slot was present and deleted, `false` when there was nothing to remove.
 pub fn remove_slot(
     workspace_root: &Path,
@@ -174,24 +173,24 @@ pub fn remove_slot(
 // --- in-place materialization (PROP-022 §2.4) ---------------------------
 //
 // An `in-place` package is placed as a project-local git working tree in an
-// **unversioned** slot — `vibedeps/<group>.<name>/` with no `/<version>/` —
+// **unversioned** slot under the live dependency root with no `/<version>/` —
 // keeping its `.git` so git manages it in place. The slot is moved into
 // position from a fetched clone (no per-file `copy`) and `.gitignore`d
 // (not vendored, §2.7).
 
 /// The unversioned slot path for an `in-place` package, relative to the
-/// workspace root and forward-slashed: `vibedeps/<group>.<name>` (PROP-022
+/// workspace root and forward-slashed under the live dependency root (PROP-022
 /// §2.4 — one working clone whose version is the current git ref, so the
 /// path carries no `/<version>/`).
 pub fn in_place_slot_rel_path(group: &Group, name: &str) -> String {
-    format!("{VIBEDEPS_DIR}/{group}.{name}")
+    layout_paths::vibedeps(format!("{group}.{name}"))
 }
 
 /// The absolute on-disk path of an `in-place` slot — `workspace_root` joined
 /// with [`in_place_slot_rel_path`]. In-memory only; never persisted.
 pub fn in_place_slot_abs_path(workspace_root: &Path, group: &Group, name: &str) -> PathBuf {
     workspace_root
-        .join(VIBEDEPS_DIR)
+        .join(layout::current_vibedeps_root())
         .join(format!("{group}.{name}"))
 }
 
@@ -383,5 +382,4 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 }
 
 #[cfg(test)]
-#[path = "vibedeps/tests.rs"]
 mod tests;

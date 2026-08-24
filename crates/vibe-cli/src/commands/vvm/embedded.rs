@@ -13,15 +13,16 @@ use super::model::{InstallRecord, Origin};
 use super::store::{StoreError, VersionStore};
 
 /// The embedded-registry root an install record implies, if any (PROP-030
-/// §2): an `external`-origin install whose `source_path` still holds a
-/// `packages/` directory. A `managed` / `binary` origin, a missing
-/// `source_path`, or an absent `packages/` all mean "no embedded registry"
-/// — the caller then falls back to the declared registries (§8).
+/// §2): an `external`-origin install whose `source_path` still holds the
+/// live layout's packages root. A `managed` / `binary` origin, a missing
+/// `source_path`, or an absent packages root all mean "no embedded
+/// registry" — the caller then falls back to the declared registries (§8).
 pub(crate) fn embedded_root_for(record: &InstallRecord) -> Option<PathBuf> {
     if record.origin != Origin::External {
         return None;
     }
-    let packages = Path::new(record.source_path.as_ref()?).join("packages");
+    let packages =
+        Path::new(record.source_path.as_ref()?).join(vibe_core::layout::current_packages_root());
     packages.is_dir().then_some(packages)
 }
 
@@ -66,9 +67,10 @@ mod tests {
     #[test]
     fn external_with_packages_dir_resolves_to_it() {
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::create_dir(tmp.path().join("packages")).unwrap();
+        let packages = tmp.path().join(vibe_core::layout::current_packages_root());
+        std::fs::create_dir(&packages).unwrap();
         let rec = external_record(Some(tmp.path().to_str().unwrap()));
-        assert_eq!(embedded_root_for(&rec), Some(tmp.path().join("packages")));
+        assert_eq!(embedded_root_for(&rec), Some(packages));
     }
 
     #[test]
@@ -85,10 +87,10 @@ mod tests {
 
     #[test]
     fn a_managed_origin_never_has_an_embedded_registry() {
-        // Even with a real `packages/` on disk, only `external` installs
+        // Even with a real packages root on disk, only `external` installs
         // carry an embedded registry (PROP-030 §2).
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::create_dir(tmp.path().join("packages")).unwrap();
+        std::fs::create_dir(tmp.path().join(vibe_core::layout::current_packages_root())).unwrap();
         let mut rec = external_record(Some(tmp.path().to_str().unwrap()));
         rec.origin = Origin::Managed;
         assert_eq!(embedded_root_for(&rec), None);

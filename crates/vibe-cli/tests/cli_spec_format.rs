@@ -117,7 +117,7 @@ fn assert_target(
     };
     assert!(project.join(selected).is_file(), "missing {selected}");
     assert!(!project.join(other).exists(), "orphaned {other}");
-    let index = fs::read_to_string(project.join("spec/boot/INDEX.md")).unwrap();
+    let index = fs::read_to_string(project.join(common::index_rel())).unwrap();
     assert!(
         index.contains(&format!("static = \"{selected}\"")),
         "{index}"
@@ -201,7 +201,8 @@ fn assert_slots(
                 version: VERSION.into(),
             },
         );
-        let md = fs::read_to_string(xmlpkg.join("spec/flows/xmlpkg/XMLPKG.md")).unwrap();
+        let md =
+            fs::read_to_string(xmlpkg.join(common::spec_rel("flows/xmlpkg/XMLPKG.md"))).unwrap();
         assert!(md.contains("## Nested XML section {#xmlpkg-nested}"));
     }
 }
@@ -282,7 +283,7 @@ fn generated(rel: &Path) -> bool {
     let path = rel.to_string_lossy().replace('\\', "/");
     path == boot_artifacts::static_path(SpecFormat::Markdown)
         || path == boot_artifacts::static_path(SpecFormat::Xml)
-        || path == "spec/boot/INDEX.md"
+        || path == common::index_rel()
         || path == DERIVED_MANIFEST_FILENAME
 }
 
@@ -338,9 +339,9 @@ fn write_manifest(project: &Path, registry: &Path, format: SpecFormat) {
 }
 
 fn write_project_specs(project: &Path) {
-    fs::create_dir_all(project.join("spec/modules/demo")).unwrap();
+    fs::create_dir_all(project.join(common::spec_rel("modules/demo"))).unwrap();
     fs::write(
-        project.join("spec/modules/demo/DETAIL.md"),
+        project.join(common::spec_rel("modules/demo/DETAIL.md")),
         "# Detail {#detail}\n\n@fact:DETAIL Project Markdown. @status:impl/done\n",
     )
     .unwrap();
@@ -359,7 +360,7 @@ fn build_registry(root: &Path) -> PolygonRegistry {
 
 fn polygon_sources(root: &Path) -> BTreeMap<Coordinate, PathBuf> {
     let redbook = workspace_root()
-        .join("packages")
+        .join(common::packages_root())
         .join(REDBOOK_GROUP)
         .join(REDBOOK_NAME)
         .join(format!("v{VERSION}"));
@@ -401,7 +402,7 @@ fn collect_closure(source: &Path, sources: &mut BTreeMap<Coordinate, PathBuf>) {
             .trim()
             .trim_start_matches(['=', '^', '~', ' ']);
         let dependency = workspace_root()
-            .join("packages")
+            .join(common::packages_root())
             .join(group)
             .join(name)
             .join(format!("v{version}"));
@@ -446,24 +447,25 @@ fn publish(root: &Path, coordinate: &Coordinate, source: &Path) {
 }
 
 fn write_xml_package(source: &Path) {
-    fs::create_dir_all(source.join("spec/boot")).unwrap();
-    fs::create_dir_all(source.join("spec/flows/xmlpkg")).unwrap();
+    fs::create_dir_all(source.join(common::spec_rel("boot"))).unwrap();
+    fs::create_dir_all(source.join(common::spec_rel("flows/xmlpkg"))).unwrap();
     fs::write(source.join(".gitattributes"), "* -text\n").unwrap();
     fs::write(
         source.join("vibe.toml"),
         format!(
             "[package]\ngroup = \"{XML_GROUP}\"\nname = \"{XML_NAME}\"\nkind = \"flow\"\nversion = \"{VERSION}\"\nepoch = 1\n\n\
-             [boot_snippet]\nsource = \"spec/boot/10-flow-xmlpkg.xml\"\ncategory = \"flow\"\nlink = \"dynamic\"\n"
+             [boot_snippet]\nsource = \"{}/10-flow-xmlpkg.xml\"\ncategory = \"flow\"\nlink = \"dynamic\"\n",
+            common::boot_str()
         ),
     )
     .unwrap();
     fs::write(
-        source.join("spec/boot/10-flow-xmlpkg.xml"),
+        source.join(common::spec_rel("boot/10-flow-xmlpkg.xml")),
         xml_from_markdown("# XML boot {#xml-boot}\n\n@fact:XML-BOOT XML boot. @status:impl/done\n"),
     )
     .unwrap();
     fs::write(
-        source.join("spec/flows/xmlpkg/XMLPKG.xml"),
+        source.join(common::spec_rel("flows/xmlpkg/XMLPKG.xml")),
         xml_from_markdown(
             "# XML package {#xmlpkg}\n\n## Nested XML section {#xmlpkg-nested}\n\n@fact:XML XML. @status:spec/done\n",
         ),
@@ -474,7 +476,7 @@ fn write_xml_package(source: &Path) {
 fn xml_from_markdown(markdown: &str) -> String {
     let source = tempfile::tempdir().unwrap();
     fs::create_dir_all(source.path().join("spec")).unwrap();
-    fs::write(source.path().join("spec/input.md"), markdown).unwrap();
+    fs::write(source.path().join(common::spec_rel("input.md")), markdown).unwrap();
     let output = tempfile::tempdir().unwrap();
     let coordinate = Coordinate {
         group: XML_GROUP.into(),
@@ -492,5 +494,6 @@ fn xml_from_markdown(markdown: &str) -> String {
         "sha256:test-source",
     )
     .unwrap();
-    fs::read_to_string(slot(output.path(), &coordinate).join("spec/input.xml")).unwrap()
+    fs::read_to_string(slot(output.path(), &coordinate).join(common::spec_rel("input.xml")))
+        .unwrap()
 }

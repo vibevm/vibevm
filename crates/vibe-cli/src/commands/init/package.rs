@@ -64,7 +64,9 @@ pub(super) fn create_group_in_project(
     group: &str,
 ) -> Result<()> {
     let path = canonical_no_unc(project_path)?;
-    let group_dir = path.join("packages").join(group);
+    let group_dir = path
+        .join(vibe_core::layout::current_packages_root())
+        .join(group);
     ensure_dir(&group_dir)?;
     ctx.created(&display_pathbuf(
         group_dir.strip_prefix(&path).unwrap_or(&group_dir),
@@ -109,7 +111,7 @@ fn create_package_dirs_from_fields(
     let kind = "tool";
     let version = &fields.version;
     let pkg_dir = project_root
-        .join("packages")
+        .join(vibe_core::layout::current_packages_root())
         .join(group)
         .join(name)
         .join(format!("v{version}"));
@@ -138,11 +140,14 @@ fn create_package_dirs_from_fields(
             let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
             format!("authors = [{}]\n", quoted.join(", "))
         };
+        let boot_source = display_pathbuf(
+            &vibe_core::layout::current_boot_dir().join(format!("10-tool-{name}.md")),
+        );
         let manifest_text = format!(
             "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
              version = \"{version}\"\nepoch = 1\n{authors_line}\
              license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
-             [boot_snippet]\nsource = \"spec/boot/10-tool-{name}.md\"\ncategory = \"tool\"\nlink = \"{link}\"\n",
+             [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"tool\"\nlink = \"{link}\"\n",
             license = fields.license,
             description = fields.description,
             format = fields.format,
@@ -156,8 +161,8 @@ fn create_package_dirs_from_fields(
         });
     }
 
-    // spec/boot/.
-    let boot_dir = pkg_dir.join("spec").join("boot");
+    // The package's boot lane, on the live layout.
+    let boot_dir = pkg_dir.join(vibe_core::layout::current_boot_dir());
     ensure_dir(&boot_dir)?;
     let boot_file = boot_dir.join(format!("10-tool-{name}.md"));
     let boot_rel = display_pathbuf(boot_file.strip_prefix(project_root).unwrap_or(&boot_file));

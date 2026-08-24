@@ -10,12 +10,12 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::Group;
 use vibe_core::manifest::{LinkType, SpecFormat};
+use vibe_core::{Group, layout};
 
 use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
-use crate::{WorkspaceError, boot_artifacts, vibedeps};
+use crate::{WorkspaceError, boot_artifacts, path_to_slash, vibedeps};
 
 use super::super::{ResolvedDep, io_err};
 
@@ -100,7 +100,7 @@ pub(super) fn build_unit_table(
         .collect()
 }
 
-/// The `vibedeps/` slot path (workspace-root-relative, forward-slashed) for a
+/// The dependency-slot path (workspace-root-relative, forward-slashed) for a
 /// resolved dependency — its versioned slot, or its unversioned in-place slot
 /// (PROP-022 §2.4).
 fn slot_rel_path(dep: &ResolvedDep) -> String {
@@ -161,7 +161,7 @@ pub(super) fn emit_package_units(
     // <!-- REVIEW: DRIFT-029 asked for this write to be suppressed, so a
     // materialised slot would carry no compiled boot artifacts. PROP-038 §2.1
     // `##UNIT-PER-PACKAGE` decides the opposite — "Every package materialised
-    // under `vibedeps/` carries its **own** boot artifacts" — so the task
+    // under the dependency root carries its **own** boot artifacts" — so the task
     // stopped for an owner ruling rather than contradict the spec. Two facts
     // for whoever rules: `with_static` is computed above independently of this
     // write, so suppressing only the write leaves `bootgen.rs:305` pointing at
@@ -182,7 +182,7 @@ pub(super) fn emit_package_units(
             shared,
             spec_format,
         );
-        let boot_dir = workspace_root.join(slot).join("spec").join("boot");
+        let boot_dir = workspace_root.join(slot).join(layout::current_boot_dir());
         let fp = fingerprints.get(id).map(String::as_str).unwrap_or("");
         emit_effective(
             &boot_dir,
@@ -314,9 +314,10 @@ fn dynamic_target_path(
 ) -> Option<String> {
     if with_static.contains(target) {
         slots.get(target).map(|slot| {
-            format!(
-                "{slot}/spec/boot/{}",
-                boot_artifacts::static_file(spec_format)
+            path_to_slash(
+                &Path::new(slot)
+                    .join(layout::current_boot_dir())
+                    .join(boot_artifacts::static_file(spec_format)),
             )
         })
     } else {
@@ -326,7 +327,7 @@ fn dynamic_target_path(
 
 /// Write a unit's `INDEX.md` (always) and `STATIC.md` (when the zone has
 /// static content) into `boot_dir`. Unlike [`boot_artifacts::write_boot_artifacts`]
-/// this writes **no** redirect blocks — a `vibedeps/` package slot is not an
+/// this writes **no** redirect blocks — a dependency package slot is not an
 /// agent entry point, so it carries no `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`.
 fn emit_effective(
     boot_dir: &Path,
@@ -473,7 +474,7 @@ pub(super) fn verify_fingerprints(
             continue; // no per-unit STATIC.md is expected for this unit
         }
         let Some(slot) = slots.get(id) else { continue };
-        let index = workspace_root.join(slot).join("spec/boot/INDEX.md");
+        let index = workspace_root.join(slot).join(layout::current_boot_index());
         let stored = fs::read_to_string(&index)
             .ok()
             .and_then(|t| boot_artifacts::read_fingerprint(&t));

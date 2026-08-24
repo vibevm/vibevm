@@ -215,7 +215,9 @@ mod tests {
                 origin: LoadOrigin::Declared,
                 in_static_md: true,
                 in_index_md: false,
-                boot_path: Some("spec/boot/widget.md".to_string()),
+                boot_path: Some(vibe_core::machine_json_path(
+                    &vibe_core::layout::current_boot_dir().join("widget.md"),
+                )),
             },
             condition: Condition {
                 present: true,

@@ -84,11 +84,11 @@ impl FixtureWorld {
     }
 
     fn index(&self) -> String {
-        self.read("spec/boot/INDEX.md")
+        self.read(&common::index_rel())
     }
 
     fn static_lane(&self) -> String {
-        ["spec/boot/STATIC.md", "spec/boot/STATIC.xml"]
+        [common::static_md_rel(), common::static_xml_rel()]
             .iter()
             .filter_map(|path| fs::read_to_string(self.project.join(path)).ok())
             .collect::<Vec<_>>()
@@ -97,7 +97,7 @@ impl FixtureWorld {
 
     fn slot(&self, group: &str, name: &str) -> PathBuf {
         self.project
-            .join("vibedeps")
+            .join(common::deps_root())
             .join(format!("{group}.{name}"))
             .join(VERSION)
     }
@@ -105,7 +105,8 @@ impl FixtureWorld {
     fn slot_boot(&self, group: &str, name: &str) -> String {
         fs::read_to_string(
             self.slot(group, name)
-                .join(format!("spec/boot/10-flow-{name}.md")),
+                .join(common::boot_dir())
+                .join(format!("10-flow-{name}.md")),
         )
         .expect("read materialised boot snippet")
     }
@@ -453,7 +454,7 @@ fn write_package(registry: &Path, group: &str, package: &PackageSpec<'_>) {
         .join(group)
         .join(package.name)
         .join(format!("v{VERSION}"));
-    let boot_dir = source.join("spec/boot");
+    let boot_dir = source.join(common::spec_rel("boot"));
     fs::create_dir_all(&boot_dir).expect("create package boot directory");
     fs::write(
         source.join("vibe.toml"),
@@ -464,11 +465,14 @@ fn write_package(registry: &Path, group: &str, package: &PackageSpec<'_>) {
              kind = \"flow\"\n\
              version = \"{VERSION}\"\n\n\
              [boot_snippet]\n\
-             source = \"spec/boot/10-flow-{}.md\"\n\
+             source = \"{}/10-flow-{}.md\"\n\
              category = \"flow\"\n\
              link = \"dynamic\"\n\
              {}",
-            package.name, package.name, package.manifest_tail
+            package.name,
+            common::boot_str(),
+            package.name,
+            package.manifest_tail
         ),
     )
     .expect("write package manifest");

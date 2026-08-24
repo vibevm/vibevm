@@ -121,7 +121,8 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
-    ///     slot: std::path::PathBuf::from("vibedeps/org.vibevm.typescript-ai-native-lang/0.4.0"),
+    ///     slot: vibe_core::layout::current_vibedeps_root()
+    ///         .join("org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
     /// assert!(bin.release_artifact().to_string_lossy().contains("release"));
     /// ```
@@ -161,7 +162,8 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
-    ///     slot: std::path::PathBuf::from("vibedeps/org.vibevm.typescript-ai-native-lang/0.4.0"),
+    ///     slot: vibe_core::layout::current_vibedeps_root()
+    ///         .join("org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
     /// // No build on disk at this synthetic slot → falls back to release.
     /// let artifact = bin.artifact();
@@ -374,7 +376,7 @@ files_written = []
         std::fs::write(dir.path().join("vibe.lock"), LOCK).expect("vibe.lock");
         let slot = dir
             .path()
-            .join("vibedeps")
+            .join(vibe_core::layout::current_vibedeps_root())
             .join("org.vibevm.typescript-ai-native-lang")
             .join("0.4.0");
         std::fs::create_dir_all(&slot).expect("slot");

@@ -21,6 +21,8 @@
 //!   gated    — `INDEX.md` entry carrying `when = "os:…"`     → dynamic / when-forced
 //!   orphan   — in neither boot lane                          → none / none
 
+mod common;
+
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -41,34 +43,50 @@ version = "0.1.0"
 
 /// Effective static lane. The separator is space + U+2014 em-dash + space
 /// (`artifacts::MARKER_SEP`); each marker's origin is the package `group/name`.
-const STATIC_MD: &str = "\
-<!-- vibe:static org.vibevm/crit \u{2014} vibedeps/org.vibevm.crit/1.0.0/boot.md -->
+/// The slot paths are built on the live layout, so the R4 flip carries
+/// the fixture whole.
+fn static_md() -> String {
+    format!(
+        "\
+<!-- vibe:static org.vibevm/crit \u{2014} {crit} -->
 
 # crit boot body
 
-<!-- vibe:static org.vibevm/umbrella \u{2014} vibedeps/org.vibevm.umbrella/1.0.0/boot.md -->
+<!-- vibe:static org.vibevm/umbrella \u{2014} {umbrella} -->
 
 # umbrella boot body
 
-<!-- vibe:static org.vibevm/member \u{2014} vibedeps/org.vibevm.member/1.0.0/boot.md -->
+<!-- vibe:static org.vibevm/member \u{2014} {member} -->
 
 # member boot body
-";
+",
+        crit = common::slot_rel("org.vibevm.crit", "1.0.0", "boot.md"),
+        umbrella = common::slot_rel("org.vibevm.umbrella", "1.0.0", "boot.md"),
+        member = common::slot_rel("org.vibevm.member", "1.0.0", "boot.md"),
+    )
+}
 
 /// Effective dynamic lane. `dyn` is plain; `gated` carries a `when` gate, which
 /// classification must let win over the (absent) declaration → `when-forced`.
-const INDEX_MD: &str = r#"schema = 1
-static = "spec/boot/STATIC.md"
+fn index_md() -> String {
+    format!(
+        r#"schema = 1
+static = "{static}"
 
 [[entry]]
-path = "vibedeps/org.vibevm.dyn/1.0.0/boot.md"
+path = "{dyn}"
 kind = "dynamic"
 
 [[entry]]
-path = "vibedeps/org.vibevm.gated/1.0.0/boot.md"
+path = "{gated}"
 kind = "dynamic"
 when = "os:linux"
-"#;
+"#,
+        static = common::static_md_rel(),
+        dyn = common::slot_rel("org.vibevm.dyn", "1.0.0", "boot.md"),
+        gated = common::slot_rel("org.vibevm.gated", "1.0.0", "boot.md"),
+    )
+}
 
 /// Build the lockfile text. The schema version is injected from `vibe-core` so
 /// this fixture survives a lockfile-schema bump (the reader rejects any other
@@ -143,11 +161,11 @@ content_hash = "sha256:fffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
 /// Materialise the six-file fixture project under `root`.
 fn write_fixture(root: &Path) {
-    std::fs::create_dir_all(root.join("spec/boot")).expect("mk spec/boot");
+    std::fs::create_dir_all(root.join(common::boot_dir())).expect("mk the boot lane");
     std::fs::write(root.join("vibe.toml"), MANIFEST).expect("write vibe.toml");
     std::fs::write(root.join("vibe.lock"), lockfile()).expect("write vibe.lock");
-    std::fs::write(root.join("spec/boot/STATIC.md"), STATIC_MD).expect("write STATIC.md");
-    std::fs::write(root.join("spec/boot/INDEX.md"), INDEX_MD).expect("write INDEX.md");
+    std::fs::write(root.join(common::static_md_rel()), static_md()).expect("write STATIC.md");
+    std::fs::write(root.join(common::index_rel()), index_md()).expect("write INDEX.md");
 }
 
 /// Run `vibe tree --json --path <root>` and parse stdout.

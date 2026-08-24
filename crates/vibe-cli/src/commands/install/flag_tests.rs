@@ -214,23 +214,16 @@ fn prefer_local_conflicts_with_no_prefer_local() {
 )]
 fn project_local_packages_activate_resolver_without_vibe_embedded() {
     let project_root = tempfile::tempdir().unwrap();
-    // A real packages/ tree the discovery helper recognises. Needs at
+    // A real packages tree the discovery helper recognises. Needs at
     // least one valid package so opening the LocalRegistry is cheap, but
     // the resolver itself does not read it here — only its presence
     // flips the construction path from the bail to the Embedded variant.
-    std::fs::create_dir_all(
-        project_root
-            .path()
-            .join("packages")
-            .join("org.vibevm")
-            .join("wal")
-            .join("v0.1.0"),
-    )
-    .unwrap();
+    let pkg_root = project_root
+        .path()
+        .join(vibe_core::layout::current_packages_root());
+    std::fs::create_dir_all(pkg_root.join("org.vibevm").join("wal").join("v0.1.0")).unwrap();
     std::fs::write(
-        project_root
-            .path()
-            .join("packages")
+        pkg_root
             .join("org.vibevm")
             .join("wal")
             .join("v0.1.0")

@@ -67,7 +67,7 @@ pub struct OriginInfo {
 ///    shape (PROP-009 §2.11) — see [`regenerate_published_boot`].
 ///
 /// `node_rel_path` is the node's path relative to the workspace root —
-/// `"."` for the root, `"packages/flow-wal"` for a member. It is recorded
+/// `"."` for the root, or a live package-root path for a member. It is recorded
 /// verbatim as `[origin].path` (a leading `./` is stripped so the marker
 /// reads cleanly).
 ///
@@ -163,7 +163,7 @@ pub fn stage_node(
 
     // Step 5 — regenerate the boot artifacts for the published shape
     // (PROP-009 §2.11). The dev tree's `INDEX.md` points at the
-    // workspace `vibedeps/` slots, absent from a standalone published
+    // workspace dependency slots, absent from a standalone published
     // copy; regenerate from the staged node's own authored boot.
     regenerate_published_boot(staging_path, &manifest)?;
 
@@ -178,14 +178,14 @@ pub fn stage_node(
 ///
 /// In the development workspace a node's generated `INDEX.md` references
 /// the dependency content materialised under the workspace-root
-/// `vibedeps/` tree. A standalone published copy carries no such tree —
+/// dependency tree. A standalone published copy carries no such tree —
 /// publishing the dev tree's artifacts verbatim would leave every
 /// dependency entry dangling for an external consumer.
 ///
 /// The published copy is regenerated as a standalone node: its own
 /// authored boot only, with no inherited foundation and no materialised
 /// dependencies. A consumer that installs the published package
-/// re-materialises the dependency content into *its own* `vibedeps/` and
+/// re-materialises the dependency content into *its own* dependency tree and
 /// regenerates *its own* boot on `vibe install`; the published copy just
 /// needs artifacts that name only the files it actually ships.
 fn regenerate_published_boot(node_dir: &Path, manifest: &Manifest) -> Result<()> {

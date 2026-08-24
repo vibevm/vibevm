@@ -80,6 +80,7 @@ mod tests {
     use std::time::SystemTime;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use crate::test_support::write_minimal_project;
     use crate::{CheckId, CheckOptions, Severity, check_project, unix_now_utc};
@@ -91,7 +92,7 @@ mod tests {
         // Set WAL mtime to ~48h ago.
         let two_days = std::time::Duration::from_secs(48 * 3600);
         let two_days_ago = SystemTime::now() - two_days;
-        let wal = project.path().join("spec/WAL.md");
+        let wal = project.path().join(layout::current_wal_md());
         // `set_modified` is on filetime::set_file_mtime; std doesn't
         // provide it directly. Use a helper via fs::File +
         // set_modified on a fresh stamp via filetime crate? Not

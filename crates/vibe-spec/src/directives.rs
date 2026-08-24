@@ -279,9 +279,10 @@ fn directive_prefix(line: &str) -> Option<(DirectiveKind, &str)> {
     None
 }
 
-/// R5 (B-011, design §6.1 layer 1): the compiled `spec/boot/STATIC.md` lane is a
-/// generated cache, not a citation target — source-of-truth is the package
-/// source under `vibedeps/`. An address whose document path names it (`boot/STATIC`
+/// R5 (B-011, design §6.1 layer 1): the compiled static boot lane
+/// (`boot/STATIC.md`, doc-path form) is a generated cache, not a citation
+/// target — source-of-truth is the package source under the dependency
+/// slots. An address whose document path names it (`boot/STATIC`
 /// or `…/boot/STATIC`) is rejected with a PROP-035 §11
 /// `##COMPILED-LANE-IS-NOT-A-CITATION-TARGET` citation. The path-boundary check
 /// (`== "boot/STATIC"` or `.ends_with("/boot/STATIC")`) avoids matching an

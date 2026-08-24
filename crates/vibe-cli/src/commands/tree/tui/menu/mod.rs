@@ -381,7 +381,7 @@ pub(super) mod test_support {
                 static_md: None,
                 index_md: IndexLane {
                     present: false,
-                    path: "spec/boot/INDEX.md".to_string(),
+                    path: vibe_core::machine_json_path(&vibe_core::layout::current_boot_index()),
                     static_pointer: None,
                     entries: Vec::new(),
                 },

@@ -23,6 +23,11 @@ use walkdir::WalkDir;
 /// The authored specmap engine package: both the `specmap` schema and the
 /// generated types live inside `core-ai-native` (vendored stack copies catch
 /// up at release events, never from here).
+///
+/// The `packages/` prefix is a layout-root literal kept here because
+/// xtask carries no vibe-core edge; the single home of the root names
+/// is `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4 relayout
+/// sweep retires this duplication.
 const SPECMAP_ENGINE_SLOT: &str = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0";
 
 /// The engine package's own `schemas/` — the second schema home the

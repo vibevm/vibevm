@@ -9,10 +9,25 @@ use tempfile::TempDir;
 use vibe_core::{Group, PackageKind};
 
 #[cfg(test)]
-pub(super) fn write(dir: &Path, rel: &str, body: &str) {
+pub(super) fn write(dir: &Path, rel: impl AsRef<Path>, body: &str) {
     let p = dir.join(rel);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(p, body).unwrap();
+}
+
+#[cfg(test)]
+pub(super) fn boot_rel(tail: impl AsRef<Path>) -> String {
+    crate::layout_paths::boot(tail)
+}
+
+#[cfg(test)]
+pub(super) fn deps_rel(tail: impl AsRef<Path>) -> String {
+    crate::layout_paths::vibedeps(tail)
+}
+
+#[cfg(test)]
+pub(super) fn deps_slot_specs(slot_tail: impl AsRef<Path>, specs_tail: impl AsRef<Path>) -> String {
+    crate::layout_paths::slot_specs(deps_rel(slot_tail), specs_tail)
 }
 
 #[cfg(test)]

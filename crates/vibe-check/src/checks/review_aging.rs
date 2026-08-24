@@ -31,7 +31,7 @@ impl Check for ReviewAgingCheck {
     fn run(&self, project_root: &Path, opts: &CheckOptions, report: &mut CheckReport) {
         let now_unix = opts.now_unix_utc.unwrap_or_else(crate::unix_now_utc);
         let max_age_days = opts.review_max_age_days;
-        let spec_dir = project_root.join("spec");
+        let spec_dir = project_root.join(vibe_core::layout::current_specs_root());
         if !spec_dir.is_dir() {
             return;
         }
@@ -181,9 +181,9 @@ fn parse_iso_date(s: &str) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use std::fs;
-    use std::path::Path;
 
     use tempfile::tempdir;
+    use vibe_core::layout;
 
     use super::parse_iso_date;
     use crate::test_support::{opts, write_minimal_project};
@@ -193,17 +193,21 @@ mod tests {
     fn review_marker_older_than_threshold_warns() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::create_dir_all(project.path().join("spec/notes")).unwrap();
+        let notes = project
+            .path()
+            .join(layout::current_specs_root())
+            .join("notes");
+        fs::create_dir_all(&notes).unwrap();
         // Date 2026-04-01 — about 33 days before fixed_now (2026-05-04).
         // Default threshold is 14d, so it should fire.
         fs::write(
-            project.path().join("spec/notes/old-review.md"),
+            notes.join("old-review.md"),
             "<!-- REVIEW: 2026-04-01 fix this later -->\n",
         )
         .unwrap();
         // A fresh marker should NOT fire.
         fs::write(
-            project.path().join("spec/notes/new-review.md"),
+            notes.join("new-review.md"),
             "<!-- REVIEW: 2026-05-03 just yesterday -->\n",
         )
         .unwrap();
@@ -217,7 +221,9 @@ mod tests {
         assert!(aging[0].message.contains("2026-04-01"));
         assert_eq!(
             aging[0].path.as_deref().unwrap(),
-            Path::new("spec/notes/old-review.md")
+            layout::current_specs_root()
+                .join("notes/old-review.md")
+                .as_path()
         );
         assert_eq!(aging[0].line, Some(1));
     }
@@ -229,9 +235,13 @@ mod tests {
         // markers — they shouldn't trip the linter.
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::create_dir_all(project.path().join("spec/notes")).unwrap();
+        let notes = project
+            .path()
+            .join(layout::current_specs_root())
+            .join("notes");
+        fs::create_dir_all(&notes).unwrap();
         fs::write(
-            project.path().join("spec/notes/docs.md"),
+            notes.join("docs.md"),
             "Add a `<!-- REVIEW: ... -->` marker.\n\
              Or `<!-- REVIEW: … -->`.\n\
              Or `<!-- REVIEW: free-form prose -->`.\n",
@@ -257,9 +267,13 @@ mod tests {
         // a warning so they can fix it.
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::create_dir_all(project.path().join("spec/notes")).unwrap();
+        let notes = project
+            .path()
+            .join(layout::current_specs_root())
+            .join("notes");
+        fs::create_dir_all(&notes).unwrap();
         fs::write(
-            project.path().join("spec/notes/typo.md"),
+            notes.join("typo.md"),
             "<!-- REVIEW: 2026-13-01 invalid month -->\n",
         )
         .unwrap();
@@ -281,9 +295,13 @@ mod tests {
     fn review_marker_in_an_xml_spec_ages_like_the_md_form() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        fs::create_dir_all(project.path().join("spec/notes")).unwrap();
+        let notes = project
+            .path()
+            .join(layout::current_specs_root())
+            .join("notes");
+        fs::create_dir_all(&notes).unwrap();
         fs::write(
-            project.path().join("spec/notes/old-review.xml"),
+            notes.join("old-review.xml"),
             "<spec xmlns=\"https://vibevm.org/spec/1\">\n  \
              <!-- REVIEW: 2026-04-01 revisit after the wave -->\n  \
              <p><fact id=\"X\" status=\"impl/done\">body</fact></p>\n</spec>\n",
@@ -298,7 +316,9 @@ mod tests {
         assert_eq!(aging.len(), 1, "got: {:?}", report.findings);
         assert_eq!(
             aging[0].path.as_deref().unwrap(),
-            Path::new("spec/notes/old-review.xml")
+            layout::current_specs_root()
+                .join("notes/old-review.xml")
+                .as_path()
         );
         assert_eq!(aging[0].line, Some(2), "source-relative, not projected");
     }

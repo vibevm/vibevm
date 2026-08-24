@@ -103,29 +103,45 @@ impl EvidenceProvider for SpecmapEvidence {
 mod tests {
     use super::*;
 
-    const FIXTURE: &str = r#"{
+    /// A spec file's project-relative path on the live layout — the
+    /// fixture index's `file` values and the joined addresses below
+    /// build on it, so the R4 flip carries the whole cell.
+    fn spec_rel(name: &str) -> String {
+        format!(
+            "{}/{}",
+            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root()),
+            name
+        )
+    }
+
+    fn fixture() -> String {
+        let d = spec_rel("d.md");
+        format!(
+            r#"{{
       "code_items": [],
       "edges": [
-        {"file": "crates/a/src/lib.rs", "from_symbol": "a", "line": 10,
-         "provenance": "authored", "uri": "spec://p/D#one", "verb": "implements"},
-        {"file": "crates/a/src/other.rs", "from_symbol": "a::other", "line": 20,
-         "provenance": "authored", "uri": "spec://p/D#one", "verb": "implements"},
-        {"file": "crates/a/tests/t.rs", "from_symbol": "t", "line": 30,
-         "provenance": "authored", "uri": "spec://p/D#one", "verb": "verifies"},
-        {"file": "crates/a/src/lib.rs", "from_symbol": "a", "line": 40,
+        {{"file": "crates/a/src/lib.rs", "from_symbol": "a", "line": 10,
+         "provenance": "authored", "uri": "spec://p/D#one", "verb": "implements"}},
+        {{"file": "crates/a/src/other.rs", "from_symbol": "a::other", "line": 20,
+         "provenance": "authored", "uri": "spec://p/D#one", "verb": "implements"}},
+        {{"file": "crates/a/tests/t.rs", "from_symbol": "t", "line": 30,
+         "provenance": "authored", "uri": "spec://p/D#one", "verb": "verifies"}},
+        {{"file": "crates/a/src/lib.rs", "from_symbol": "a", "line": 40,
          "provenance": "authored", "uri": "spec://p/D#one", "verb": "deviates",
-         "reason": "not counted"}
+         "reason": "not counted"}}
       ],
       "schema": 2,
       "spec_units": [
-        {"anchor": "one", "content_hash": "sha256:aa", "doc_path": "D",
-         "file": "spec/d.md", "heading": "One", "line": 5, "uri": "spec://p/D#one"},
-        {"anchor": "two", "content_hash": "sha256:bb", "doc_path": "D",
-         "file": "spec/d.md", "heading": "Two", "line": 9, "uri": "spec://p/D#two"}
+        {{"anchor": "one", "content_hash": "sha256:aa", "doc_path": "D",
+         "file": "{d}", "heading": "One", "line": 5, "uri": "spec://p/D#one"}},
+        {{"anchor": "two", "content_hash": "sha256:bb", "doc_path": "D",
+         "file": "{d}", "heading": "Two", "line": 9, "uri": "spec://p/D#two"}}
       ],
       "suspects": [],
       "warnings": []
-    }"#;
+    }}"#
+        )
+    }
 
     fn loaded(dir: &Path, body: &str) -> Result<Option<SpecmapEvidence>> {
         std::fs::write(dir.join(INDEX_REL_PATH), body).expect("write index");
@@ -135,7 +151,7 @@ mod tests {
     #[test]
     fn specmap_evidence_counts_edges() {
         let tmp = tempfile::tempdir().expect("tempdir");
-        let ev = loaded(tmp.path(), FIXTURE)
+        let ev = loaded(tmp.path(), &fixture())
             .expect("load")
             .expect("index present");
 
@@ -158,7 +174,7 @@ mod tests {
         // The same unit reached by the progress address form, via the
         // index's own file ↔ uri table.
         assert_eq!(
-            ev.evidence_for("spec/d.md#one")
+            ev.evidence_for(&format!("{}#one", spec_rel("d.md")))
                 .expect("joined address")
                 .implements,
             2
@@ -171,7 +187,10 @@ mod tests {
         // An address the index never heard of has no answer at all —
         // "no data" and "zero edges" are different claims.
         assert!(ev.evidence_for("spec://p/D#missing").is_none());
-        assert!(ev.evidence_for("spec/nowhere.md#x").is_none());
+        assert!(
+            ev.evidence_for(&format!("{}#x", spec_rel("nowhere.md")))
+                .is_none()
+        );
     }
 
     /// A missing index is silence; a corrupt one is a loud failure naming

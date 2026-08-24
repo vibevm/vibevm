@@ -58,7 +58,7 @@ pub(crate) fn scan_local_packages(project_root: &Path) -> Vec<(PathBuf, String)>
     if project_root.join(Manifest::FILENAME).is_file() {
         out.push((project_root.to_path_buf(), "project root".to_string()));
     }
-    let packages_dir = project_root.join("packages");
+    let packages_dir = project_root.join(vibe_core::layout::current_packages_root());
     if packages_dir.is_dir() {
         for entry in walkdir::WalkDir::new(&packages_dir)
             .max_depth(4)

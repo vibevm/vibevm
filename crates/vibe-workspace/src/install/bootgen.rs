@@ -7,12 +7,12 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::Group;
 use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
+use vibe_core::{Group, layout};
 
 use crate::boot::hybrid::{UnitId, UnitInput, fingerprint, hoist, resolve_zone};
 use crate::boot::{self, AuthoredBoot, BootEntry, DependencyBoot, EffectiveBoot, NodeBootInputs};
-use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
+use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_slash, vibedeps};
 
 use super::{ResolvedDep, io_err};
 
@@ -56,7 +56,7 @@ pub fn regenerate_boot_from_with_spec_format(
 ) -> Result<Vec<String>, WorkspaceError> {
     // The workspace root's self coordinate (B-031): `<group>/<name>` from its
     // `[project]` table — what a `spec://` address names to reach the authored
-    // `spec/` tree. Always the root's coordinate (self = workspace root),
+    // specs tree. Always the root's coordinate (self = workspace root),
     // threaded into every artifact write. A root with no `[project]` (or no
     // `group`) declares none.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
@@ -271,7 +271,7 @@ fn present(snapshot: &[BootEntry], origin: &str) -> bool {
     })
 }
 
-/// Regenerate from materialised `vibedeps/`, without resolving or copying.
+/// Regenerate from materialised dependency slots, without resolving or copying.
 pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceError> {
     regenerate_boot_with_spec_format(workspace, SpecFormat::Mixed)
 }
@@ -290,7 +290,7 @@ pub fn regenerate_boot_with_spec_format(
 
 /// Verify the per-unit boot artifacts are current (PROP-038 §3) — the integrity
 /// half of `vibe check`, reconstructing the resolution from the materialised
-/// `vibedeps/` tree. Returns the stale units: a package that statically links a
+/// dependency tree. Returns the stale units: a package that statically links a
 /// child but whose on-disk fingerprint is missing or mismatched, i.e. one the
 /// dirty-subgraph should have regenerated. An empty result means the boot graph
 /// is consistent.
@@ -315,7 +315,7 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
 }
 
 /// Discover a node's own authored boot files — every spec source in its
-/// `spec/boot/` (`.md` or dialect `.xml`, PROP-045 ##LOADER-LAW), minus
+/// live boot lane (`.md` or dialect `.xml`, PROP-045 ##LOADER-LAW), minus
 /// the generated `STATIC.md` / `INDEX.md`. The user-owned `00-core.md` /
 /// `90-user.md` are `Foundation` / `UserOverride` by name convention; any
 /// other authored file is mid-band (`None`).
@@ -329,7 +329,7 @@ pub(crate) fn node_own_boot(
     node_dir: &Path,
     node_rel: &str,
 ) -> Result<Vec<AuthoredBoot>, WorkspaceError> {
-    let boot_dir = node_dir.join("spec").join("boot");
+    let boot_dir = node_dir.join(layout::current_boot_dir());
     if !boot_dir.is_dir() {
         return Ok(Vec::new());
     }
@@ -358,9 +358,13 @@ pub(crate) fn node_own_boot(
             _ => None,
         };
         let rel_path = if node_rel == "." {
-            format!("spec/boot/{name}")
+            layout_paths::boot(&name)
         } else {
-            format!("{node_rel}/spec/boot/{name}")
+            path_to_slash(
+                &Path::new(node_rel)
+                    .join(layout::current_boot_dir())
+                    .join(&name),
+            )
         };
         spec_paths.push(path.clone());
         files.push(AuthoredBoot {
@@ -460,9 +464,10 @@ fn node_dependency_boot(
             let (boot_path, when, fragments, unit_substituted) =
                 if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
                     (
-                        Some(format!(
-                            "{slot}/spec/boot/{}",
-                            boot_artifacts::static_file(spec_format)
+                        Some(path_to_slash(
+                            &Path::new(&slot)
+                                .join(layout::current_boot_dir())
+                                .join(boot_artifacts::static_file(spec_format)),
                         )),
                         main.as_ref()
                             .and_then(|contribution| contribution.when.clone()),
@@ -550,12 +555,11 @@ pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), Work
 mod tests {
     use super::*;
 
-    /// PROP-045 ##LOADER-LAW: authored boot discovery accepts BOTH spec
-    /// serialisations (and still skips non-spec strays).
+    /// Authored boot discovery accepts both spec serialisations and skips strays.
     #[test]
     fn authored_discovery_finds_the_xml_form() {
         let dir = tempfile::tempdir().expect("tempdir");
-        let boot = dir.path().join("spec/boot");
+        let boot = dir.path().join(layout::current_boot_dir());
         fs::create_dir_all(&boot).expect("mkdir");
         fs::write(boot.join("00-core.md"), "# core\n").expect("write");
         fs::write(
@@ -566,15 +570,20 @@ mod tests {
         fs::write(boot.join("notes.txt"), "x").expect("write");
         let own = node_own_boot(dir.path(), ".").expect("discover");
         let paths: Vec<&str> = own.iter().map(|b| b.path.as_str()).collect();
-        assert_eq!(paths, vec!["spec/boot/00-core.md", "spec/boot/extra.xml"]);
+        assert_eq!(
+            paths,
+            vec![
+                layout_paths::boot("00-core.md"),
+                layout_paths::boot("extra.xml")
+            ]
+        );
     }
 
-    /// One document, one form (##TARGET-MIXED): `X.md` + `X.xml` in one
-    /// boot dir stops discovery loudly, naming both files.
+    /// A duplicate Markdown/XML stem stops discovery and names both files.
     #[test]
     fn authored_discovery_rejects_a_document_in_both_forms() {
         let dir = tempfile::tempdir().expect("tempdir");
-        let boot = dir.path().join("spec/boot");
+        let boot = dir.path().join(layout::current_boot_dir());
         fs::create_dir_all(&boot).expect("mkdir");
         fs::write(boot.join("dup.md"), "# d\n").expect("write");
         fs::write(

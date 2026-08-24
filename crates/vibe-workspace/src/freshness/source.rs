@@ -6,8 +6,8 @@ use std::path::Path;
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#skip-resolution");
 
 /// `true` iff `source_url` is a local `file://` path located *inside*
-/// `workspace_root` — the in-repo self-hosting registry (`packages/`,
-/// `--registry packages`), which the author edits in place. This is the
+/// `workspace_root` — the in-repo self-hosting registry, which the author
+/// edits in place. This is the
 /// PROP-011 §2.6 mutable case. An *external* local registry or mirror (a
 /// `file://` path outside the workspace — a test fixture, a published local
 /// mirror) stays immutable and keeps the §2.2/§2.3 fast path; a `git+file://`
@@ -17,7 +17,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#
 /// The test is component-wise (separator-agnostic) and case-insensitive on
 /// Windows. `workspace_root` is already canonicalised and `\\?\`-free
 /// (`Workspace::load`); the source path is decoded from the URL *without*
-/// canonicalisation, so a self-hosting `packages/` directly under the root is
+/// canonicalisation, so a self-hosting registry directly under the root is
 /// detected reliably, while an exotic symlinked source that escapes detection
 /// merely falls back to the immutable fast path (always safe).
 ///
@@ -25,7 +25,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#
 /// use std::path::Path;
 /// use vibe_workspace::freshness::is_in_workspace_file_source as under;
 /// let root = Path::new("/home/me/proj");
-/// assert!(under("file:///home/me/proj/packages/x", root)); // self-hosting
+/// assert!(under("file:///home/me/proj/registry/x", root)); // self-hosting
 /// assert!(!under("file:///tmp/fixture/x", root));          // external local
 /// assert!(!under("https://example/x", root));              // remote
 /// assert!(!under("git+file:///home/me/proj/x", root));     // git source

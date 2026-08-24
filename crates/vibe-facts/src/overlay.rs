@@ -61,7 +61,7 @@ impl Registry {
 /// derived-manifest wire where no package overlay has no field at all.
 pub fn overlay_file_hash(project_root: &Path, package: &str) -> Option<String> {
     let path = project_root
-        .join("vibefacts")
+        .join(vibe_core::layout::current_vibefacts_root())
         .join(format!("{}.toml", package.replace('/', ".")));
     let bytes = fs::read(path).ok()?;
     let digest = Sha256::digest(bytes);

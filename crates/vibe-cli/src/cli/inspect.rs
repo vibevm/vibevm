@@ -18,7 +18,7 @@ pub struct ShowArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum ShowSubcommand {
-    /// Print the effective spec — every spec/boot file plus every
+    /// Print the effective spec — every boot-lane file plus every
     /// installed package's `files_written`, concatenated with
     /// `spec://` provenance headers in stable order.
     Effective(ShowEffectiveArgs),

@@ -64,14 +64,32 @@ fn xml_twin(md: &str) -> String {
     xml
 }
 
-/// A workspace with the authored entry at `spec/boot/00-entry.md` plus each
-/// dependency at its extension-less workspace-relative path in the given
-/// form (the helper appends `.md` / `.xml`). An `Xml` dependency is written
-/// as the twin of its MD text, so two lanes built over the same `(rel, md)`
-/// list differ ONLY in which serialisation each dependency ships in.
+/// A fixture rel under the legacy specs root, `/`-separated (PROP-052: the
+/// layout names live once in `crates/vibe-core/src/layout.rs`; this test
+/// scaffold routes through the crate's sanctioned pair).
+fn under_specs(rel: &str) -> String {
+    format!("{}/{}", crate::resolver::LEGACY_SPECS_ROOT, rel)
+}
+
+/// A fixture rel inside a materialised dependency slot:
+/// `vibedeps/<identity>/<version>/spec/<rel>` (same sanctioned pair).
+fn in_slot(identity: &str, version: &str, rel: &str) -> String {
+    format!(
+        "{}/{identity}/{version}/{}/{rel}",
+        crate::resolver::LEGACY_VIBEDEPS_ROOT,
+        crate::resolver::LEGACY_SPECS_ROOT
+    )
+}
+
+/// A workspace with the authored entry at the boot lane's `00-entry.md`
+/// plus each dependency at its extension-less workspace-relative path in
+/// the given form (the helper appends `.md` / `.xml`). An `Xml`
+/// dependency is written as the twin of its MD text, so two lanes built
+/// over the same `(rel, md)` list differ ONLY in which serialisation
+/// each dependency ships in.
 fn parity_ws(entry: &str, deps: &[(&str, &str, Form)]) -> tempfile::TempDir {
     let ws = tempfile::TempDir::new().unwrap();
-    let boot = ws.path().join("spec/boot");
+    let boot = crate::resolver::specs_root_under(ws.path()).join("boot");
     std::fs::create_dir_all(&boot).unwrap();
     std::fs::write(boot.join("00-entry.md"), entry).unwrap();
     for (rel, md, form) in deps {
@@ -123,8 +141,14 @@ fn alias_binding_and_at_bang_reference_compile_identically_over_an_xml_dependenc
         "#use spec://org.vibevm.core/vibevm/common/DEP#laws as dep\n\n",
         "Sees @!dep here.\n"
     );
-    let md_ws = parity_ws(ENTRY, &[("spec/common/DEP", MD_DEP_TWIN, Form::Md)]);
-    let xml_ws = parity_ws(ENTRY, &[("spec/common/DEP", MD_DEP_TWIN, Form::Xml)]);
+    let md_ws = parity_ws(
+        ENTRY,
+        &[(under_specs("common/DEP").as_str(), MD_DEP_TWIN, Form::Md)],
+    );
+    let xml_ws = parity_ws(
+        ENTRY,
+        &[(under_specs("common/DEP").as_str(), MD_DEP_TWIN, Form::Xml)],
+    );
     let (md_lane, md_renames) = compile_entry_qualified(&md_ws);
     let (xml_lane, xml_renames) = compile_entry_qualified(&xml_ws);
     assert_eq!(
@@ -179,15 +203,15 @@ fn an_alias_declared_inside_the_dependency_compiles_identically_in_xml() {
     let md_ws = parity_ws(
         ENTRY,
         &[
-            ("spec/common/DEP", DEP, Form::Md),
-            ("spec/common/SUB", SUB, Form::Md),
+            (under_specs("common/DEP").as_str(), DEP, Form::Md),
+            (under_specs("common/SUB").as_str(), SUB, Form::Md),
         ],
     );
     let xml_ws = parity_ws(
         ENTRY,
         &[
-            ("spec/common/DEP", DEP, Form::Xml),
-            ("spec/common/SUB", SUB, Form::Md),
+            (under_specs("common/DEP").as_str(), DEP, Form::Xml),
+            (under_specs("common/SUB").as_str(), SUB, Form::Md),
         ],
     );
     let (md_lane, md_renames) = compile_entry_qualified(&md_ws);
@@ -256,8 +280,8 @@ fn two_same_short_anchors_splice_qualified_apart_identically_over_md_xml_and_mix
         let ws = parity_ws(
             ENTRY,
             &[
-                ("vibedeps/org.a.pkg/1.0.0/spec/doc", LAWS_A, a),
-                ("vibedeps/org.b.qty/1.0.0/spec/doc", LAWS_B, b),
+                (in_slot("org.a.pkg", "1.0.0", "doc").as_str(), LAWS_A, a),
+                (in_slot("org.b.qty", "1.0.0", "doc").as_str(), LAWS_B, b),
             ],
         );
         compile_entry_qualified(&ws)
@@ -303,8 +327,14 @@ fn a_fact_grain_use_through_an_alias_compiles_identically_over_an_xml_dependency
         "#use spec://org.vibevm.core/vibevm/common/DEP#FACT-ONE as dep\n\n",
         "See @!dep.\n"
     );
-    let md_ws = parity_ws(ENTRY, &[("spec/common/DEP", MD_DEP_TWIN, Form::Md)]);
-    let xml_ws = parity_ws(ENTRY, &[("spec/common/DEP", MD_DEP_TWIN, Form::Xml)]);
+    let md_ws = parity_ws(
+        ENTRY,
+        &[(under_specs("common/DEP").as_str(), MD_DEP_TWIN, Form::Md)],
+    );
+    let xml_ws = parity_ws(
+        ENTRY,
+        &[(under_specs("common/DEP").as_str(), MD_DEP_TWIN, Form::Xml)],
+    );
     let (md_lane, md_renames) = compile_entry_qualified(&md_ws);
     let (xml_lane, xml_renames) = compile_entry_qualified(&xml_ws);
     assert_eq!(
@@ -357,15 +387,12 @@ const ENTRY_MD: &str =
 /// A workspace carrying the entry plus the dependency in `form`.
 fn entry_ws(form: &str, dep_text: &str) -> tempfile::TempDir {
     let ws = tempfile::TempDir::new().unwrap();
-    let boot = ws.path().join("spec/boot");
+    let specs = crate::resolver::specs_root_under(ws.path());
+    let boot = specs.join("boot");
     std::fs::create_dir_all(&boot).unwrap();
-    std::fs::create_dir_all(ws.path().join("spec/common")).unwrap();
+    std::fs::create_dir_all(specs.join("common")).unwrap();
     std::fs::write(boot.join("00-entry.md"), ENTRY_MD).unwrap();
-    std::fs::write(
-        ws.path().join("spec/common").join(format!("DEP.{form}")),
-        dep_text,
-    )
-    .unwrap();
+    std::fs::write(specs.join("common").join(format!("DEP.{form}")), dep_text).unwrap();
     ws
 }
 
@@ -431,11 +458,12 @@ fn a_fact_grain_use_into_an_xml_dependency_resolves() {
 #use spec://org.vibevm.core/vibevm/common/DEP#FACT-ONE
 ";
     let ws = tempfile::TempDir::new().unwrap();
-    let boot = ws.path().join("spec/boot");
+    let specs = crate::resolver::specs_root_under(ws.path());
+    let boot = specs.join("boot");
     std::fs::create_dir_all(&boot).unwrap();
-    std::fs::create_dir_all(ws.path().join("spec/common")).unwrap();
+    std::fs::create_dir_all(specs.join("common")).unwrap();
     std::fs::write(boot.join("00-entry.md"), FACT_ENTRY).unwrap();
-    std::fs::write(ws.path().join("spec/common/DEP.xml"), XML_DEP).unwrap();
+    std::fs::write(specs.join("common").join("DEP.xml"), XML_DEP).unwrap();
     let out = compile_entry(&ws);
     assert!(
         out.contains("the fact body"),

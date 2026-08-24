@@ -63,6 +63,9 @@ fn list_json_and_query_package_return_identical_files_written_paths() {
     assert_eq!(cli_files, mcp_files, "CLI and MCP path forms diverged");
     assert_eq!(
         cli_files,
-        &json!(["spec/flows/wal/PROTOCOL.md", "spec/boot/10-flow-wal.md"])
+        &json!([
+            common::spec_rel("flows/wal/PROTOCOL.md"),
+            common::boot_rel("10-flow-wal.md")
+        ])
     );
 }

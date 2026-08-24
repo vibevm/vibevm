@@ -1,6 +1,6 @@
 //! Selective publish of a workspace's self-publishing members.
 //!
-//! Spec: [PROP-007 §2.7–§2.9](../../../spec/modules/vibe-workspace/PROP-007-workspace.md#selective-publish).
+//! Spec: `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish`.
 //!
 //! `vibe workspace publish` walks the publishable nodes of a workspace in
 //! dependency-first order and publishes each as its own repository, reusing
@@ -21,7 +21,7 @@
 //!   into the staged `vibe.toml`, prepend the "generated copy" README banner,
 //!   write `.github/PULL_REQUEST_TEMPLATE.md`, and regenerate the boot
 //!   artifacts for the published shape (PROP-009 §2.11) so they never
-//!   dangle on the dev tree's workspace `vibedeps/` slots.
+//!   dangle on the dev tree's workspace dependency slots.
 //!
 //! Token discipline is not a concern of this module — no token, push URL, or
 //! credential ever reaches it. That machinery is `vibe-publish`'s, reused

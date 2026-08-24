@@ -50,9 +50,11 @@ version = "{version}"
 "#
     );
     fs::write(src.join("vibe.toml"), manifest).unwrap();
-    fs::create_dir_all(src.join(format!("spec/{pkg_kind}s/{pkg_name}"))).unwrap();
+    fs::create_dir_all(src.join(common::spec_rel(&format!("{pkg_kind}s/{pkg_name}")))).unwrap();
     fs::write(
-        src.join(format!("spec/{pkg_kind}s/{pkg_name}/MANIFEST.md")),
+        src.join(common::spec_rel(&format!(
+            "{pkg_kind}s/{pkg_name}/MANIFEST.md"
+        ))),
         format!("# {pkg_kind}:{pkg_name}@{version}\nReached via redirect.\n"),
     )
     .unwrap();
@@ -169,9 +171,11 @@ fn install_via_redirect_pass_through_tag() {
     // Content from the TARGET was materialised verbatim into the
     // package's `vibedeps/` slot — keyed by the resolved `(kind, name,
     // version)`, regardless of the redirect indirection.
-    let materialised = project
-        .path()
-        .join("vibedeps/org.vibevm.internal/0.1.0/spec/flows/internal/MANIFEST.md");
+    let materialised = project.path().join(common::slot_rel(
+        "org.vibevm.internal",
+        "0.1.0",
+        common::spec_rel("flows/internal/MANIFEST.md"),
+    ));
     assert!(
         materialised.is_file(),
         "expected target's content at {}",

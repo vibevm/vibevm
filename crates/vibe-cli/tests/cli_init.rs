@@ -34,29 +34,30 @@ fn init_creates_expected_layout() {
         .success();
 
     for rel in [
-        "CLAUDE.md",
-        "AGENTS.md",
-        "GEMINI.md",
-        "spec/boot/00-core.md",
-        "spec/boot/90-user.md",
-        "spec/boot/INDEX.md",
-        "vibe.toml",
-        "vibe.lock",
-        ".vibe/.gitignore",
-        ".gitignore",
+        "CLAUDE.md".to_string(),
+        "AGENTS.md".to_string(),
+        "GEMINI.md".to_string(),
+        common::boot_rel("00-core.md"),
+        common::boot_rel("90-user.md"),
+        common::index_rel(),
+        "vibe.toml".to_string(),
+        "vibe.lock".to_string(),
+        ".vibe/.gitignore".to_string(),
+        ".gitignore".to_string(),
     ] {
         assert!(
-            path.join(rel).exists(),
+            path.join(&rel).exists(),
             "expected `{rel}` to exist after init"
         );
     }
-    // `spec/WAL.md` is NOT created by default — WAL discipline is a
+    // The WAL file is NOT created by default — WAL discipline is a
     // project convention, not part of the package manager's contract.
     // Operators who want the WAL protocol install it explicitly via
     // `vibe install org.vibevm/wal` or write the file themselves.
+    let wal_rel = vibe_core::machine_json_path(&vibe_core::layout::current_wal_md());
     assert!(
-        !path.join("spec/WAL.md").exists(),
-        "spec/WAL.md must NOT be created by default; it's a project convention, not part of the package manager"
+        !path.join(&wal_rel).exists(),
+        "`{wal_rel}` must NOT be created by default; it's a project convention, not part of the package manager"
     );
 
     // CLAUDE.md / AGENTS.md / GEMINI.md each carry vibevm's managed
@@ -70,7 +71,7 @@ fn init_creates_expected_layout() {
         claude.contains("<vibevm>") && claude.contains("</vibevm>"),
         "CLAUDE.md must carry the managed <vibevm> block: {claude}"
     );
-    assert!(claude.contains("spec/boot/INDEX.md"));
+    assert!(claude.contains(&common::index_rel()));
 
     // vibe.toml should parse as a valid Manifest.
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
@@ -109,7 +110,7 @@ fn init_is_idempotent() {
 
     // Mark boot/00-core.md with a user edit, then re-init.
     let user_marker = "# EDITED BY USER\n";
-    let core_path = path.join("spec/boot/00-core.md");
+    let core_path = path.join(common::spec_rel("boot/00-core.md"));
     fs::write(&core_path, user_marker).unwrap();
 
     user.vibe()
@@ -188,12 +189,11 @@ fn init_json_output_parses() {
     let v: serde_json::Value = serde_json::from_str(&stdout).expect("stdout must be valid JSON");
     assert_eq!(v["ok"], true);
     assert_eq!(v["command"], "init");
-    // 10 files created by default: spec/boot/00-core.md,
-    // spec/boot/90-user.md (2 boot snippets), vibe.toml, vibe.lock
-    // (manifest + lockfile), .vibe/.gitignore, .gitignore (root), and
-    // the 4 generated boot artifacts — spec/boot/INDEX.md plus the
-    // managed `<vibevm>` block in CLAUDE.md / AGENTS.md / GEMINI.md
-    // (PROP-009 / PROP-012). spec/WAL.md is NOT created — it's a
+    // 10 files created by default: the two boot snippets, vibe.toml,
+    // vibe.lock (manifest + lockfile), .vibe/.gitignore, .gitignore
+    // (root), and the 4 generated boot artifacts — the boot manifest
+    // plus the managed `<vibevm>` block in CLAUDE.md / AGENTS.md /
+    // GEMINI.md (PROP-009 / PROP-012). The WAL is NOT created — it's a
     // project convention.
     assert_eq!(v["created"], 10);
     assert_eq!(v["kept"], 0);

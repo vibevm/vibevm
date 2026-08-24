@@ -138,7 +138,7 @@ fn load_spec_snapshot(
     needed: &BTreeSet<String>,
 ) -> Result<BTreeMap<String, SpecFact>, RegistryError> {
     let package = host_package(project_root)?;
-    let spec_root = project_root.join("spec");
+    let spec_root = project_root.join(vibe_core::layout::current_specs_root());
     let mut files = Vec::new();
     collect_markdown(&spec_root, &mut files)?;
     files.sort();

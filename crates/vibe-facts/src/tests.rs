@@ -6,6 +6,7 @@ use std::collections::BTreeSet;
 use std::fs;
 
 use tempfile::tempdir;
+use vibe_core::layout;
 
 use crate::store::{read_file, write_file};
 use crate::sync;
@@ -16,6 +17,16 @@ use crate::{
 
 fn status(value: &str) -> FactStatus {
     FactStatus::parse(value).expect("test status")
+}
+
+/// A fixture path under the facts home, `/`-separated — routed through
+/// the layout seam (PROP-052 L2) so the scaffold names whichever layout
+/// is live.
+fn facts_rel(rel: &str) -> String {
+    layout::current_vibefacts_root()
+        .join(rel)
+        .to_string_lossy()
+        .replace('\\', "/")
 }
 
 fn package_fact(address: &str, value: &str) -> FactEntry {
@@ -31,7 +42,7 @@ fn package_fact(address: &str, value: &str) -> FactEntry {
 #[test]
 fn store_round_trip_and_emit_order_are_deterministic() {
     let temp = tempdir().expect("tempdir");
-    let path = temp.path().join("vibefacts/org.example.pkg.toml");
+    let path = temp.path().join(facts_rel("org.example.pkg.toml"));
     let z = package_fact("spec://org.example/pkg/flows/z#Z", "impl/done");
     let a = package_fact("spec://org.example/pkg/flows/a#A", "spec/work");
 
@@ -95,8 +106,16 @@ fn sync_detects_and_reconciles_host_status_without_touching_spec() {
         "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
     )
     .expect("manifest");
-    fs::create_dir_all(temp.path().join("spec/common")).expect("spec dir");
-    let spec = temp.path().join("spec/common/RULE.md");
+    fs::create_dir_all(
+        temp.path()
+            .join(layout::current_specs_root())
+            .join("common"),
+    )
+    .expect("spec dir");
+    let spec = temp
+        .path()
+        .join(layout::current_specs_root())
+        .join("common/RULE.md");
     let spec_bytes = "# Rule {#root}\n\n@fact:RULE It is implemented. @status:impl/done\n";
     fs::write(&spec, spec_bytes).expect("spec");
 
@@ -141,9 +160,16 @@ fn sync_addresses_use_the_canonical_slug_truncated_doc_path() {
         "[project]\ngroup = \"org.example\"\nname = \"demo\"\nversion = \"0.1.0\"\n",
     )
     .expect("manifest");
-    fs::create_dir_all(temp.path().join("spec/common")).expect("spec dir");
+    fs::create_dir_all(
+        temp.path()
+            .join(layout::current_specs_root())
+            .join("common"),
+    )
+    .expect("spec dir");
     fs::write(
-        temp.path().join("spec/common/PROP-099-descriptive-slug.md"),
+        temp.path()
+            .join(layout::current_specs_root())
+            .join("common/PROP-099-descriptive-slug.md"),
         "# Slugged {#root}\n\n@fact:LAW The law. @status:impl/done\n",
     )
     .expect("spec");
@@ -196,7 +222,7 @@ fn package_overlay_filters_statuses_and_hashes_exact_file_bytes() {
 
     let first = crate::overlay_file_hash(temp.path(), "org.example/pkg").expect("hash");
     fs::write(
-        temp.path().join("vibefacts/org.example.pkg.toml"),
+        temp.path().join(facts_rel("org.example.pkg.toml")),
         "schema = 1\n",
     )
     .expect("replace bytes");
@@ -246,7 +272,7 @@ fn lifecycle_reports_only_uninstalled_package_files_and_prunes_empty_home() {
     );
     assert!(remove_package_file(temp.path(), "org.example/pkg").expect("remove"));
     assert!(!remove_package_file(temp.path(), "org.example/pkg").expect("absent"));
-    assert!(temp.path().join("vibefacts/spec.toml").is_file());
+    assert!(temp.path().join(facts_rel("spec.toml")).is_file());
 
     let package_only = tempdir().expect("package-only tempdir");
     let mut registry = Registry::default();
@@ -259,7 +285,12 @@ fn lifecycle_reports_only_uninstalled_package_files_and_prunes_empty_home() {
     assert!(
         remove_package_file(package_only.path(), "org.example/pkg").expect("remove package-only")
     );
-    assert!(!package_only.path().join("vibefacts").exists());
+    assert!(
+        !package_only
+            .path()
+            .join(layout::current_vibefacts_root())
+            .exists()
+    );
 }
 
 #[test]

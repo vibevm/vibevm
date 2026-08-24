@@ -1,9 +1,4 @@
-//! Unit tests for [`super`], out-of-line per the file-length budget.
-//! Included via `#[cfg(test)] #[path] mod tests;`, so the module-tree
-//! position — and therefore `use super::*` — is unchanged from the
-//! inline form. Non-`#[test]` helpers carry `#[cfg(test)]` so
-//! file-grain scanners (the conform frontend) scope their `unwrap`s
-//! as test code.
+//! Install orchestration unit tests.
 
 use super::test_helpers::*;
 use super::*;
@@ -19,7 +14,7 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let (dep, _pkg) = dep_with_boot(
         "wal",
@@ -38,26 +33,26 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
     )
     .unwrap();
 
-    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert_eq!(outcome.nodes_regenerated, vec!["."]);
     // The package tree is materialised verbatim into its slot.
     assert!(
         ws_dir
             .path()
-            .join("vibedeps/org.vibevm.wal/0.3.0/boot/10-flow-wal.md")
+            .join(deps_rel("org.vibevm.wal/0.3.0/boot/10-flow-wal.md"))
             .is_file()
     );
     assert!(
         ws_dir
             .path()
-            .join("vibedeps/org.vibevm.wal/0.3.0/vibe.toml")
+            .join(deps_rel("org.vibevm.wal/0.3.0/vibe.toml"))
             .is_file()
     );
     // INDEX.md names the node's own foundation boot and the dependency.
-    let index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
-    assert!(index.contains("spec/boot/00-core.md"), "{index}");
+    let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
+    assert!(index.contains(&boot_rel("00-core.md")), "{index}");
     assert!(
-        index.contains("vibedeps/org.vibevm.wal/0.3.0/boot/10-flow-wal.md"),
+        index.contains(&deps_rel("org.vibevm.wal/0.3.0/boot/10-flow-wal.md")),
         "{index}"
     );
     // The redirect lands at the node root.
@@ -72,12 +67,12 @@ fn apply_resolution_with_no_dependencies_still_writes_index() {
         "vibe.toml",
         "[project]\nname = \"solo\"\nversion = \"0.1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let ws = Workspace::load(ws_dir.path()).unwrap();
     let outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence, None).unwrap();
     assert!(outcome.materialised.is_empty());
     assert_eq!(outcome.nodes_regenerated, vec!["."]);
-    assert!(ws_dir.path().join("spec/boot/INDEX.md").is_file());
+    assert!(ws_dir.path().join(boot_rel("INDEX.md")).is_file());
 }
 
 #[test]
@@ -89,7 +84,7 @@ fn apply_resolution_inline_dependency_produces_inline_md() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/crit\" = { version = \"^1.0\", link = \"static\" }\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let (dep, _pkg) = dep_with_boot(
         "crit",
@@ -108,9 +103,8 @@ fn apply_resolution_inline_dependency_produces_inline_md() {
     )
     .unwrap();
 
-    // The consumer declared `link = "inline"`, so the dependency's
-    // boot is concatenated into INLINE.md.
-    let inline = fs::read_to_string(ws_dir.path().join("spec/boot/STATIC.md")).unwrap();
+    // The consumer's static link concatenates the dependency boot.
+    let inline = fs::read_to_string(ws_dir.path().join(boot_rel("STATIC.md"))).unwrap();
     assert!(inline.contains("# critical discipline"), "{inline}");
 }
 
@@ -123,7 +117,7 @@ fn apply_resolution_renders_when_from_a_boot_snippet() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/win\" = \"^1.0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let (dep, _pkg) = dep_with_boot(
         "win",
@@ -142,12 +136,10 @@ fn apply_resolution_renders_when_from_a_boot_snippet() {
     )
     .unwrap();
 
-    // The `[boot_snippet].when` rides into INDEX.md, and the entry is
-    // dynamic — a condition forces the dynamic INCLUDE form even with
-    // no `link` declared anywhere.
-    let index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+    // A condition forces the dynamic INCLUDE form without an explicit link.
+    let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
     assert!(
-        index.contains("vibedeps/org.vibevm.win/1.0.0/boot/win.md"),
+        index.contains(&deps_rel("org.vibevm.win/1.0.0/boot/win.md")),
         "{index}"
     );
     assert!(index.contains("kind = \"dynamic\""), "{index}");
@@ -165,7 +157,7 @@ fn apply_resolution_skips_a_dependency_outside_the_node_requires() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
 
     let (wal, _w) = dep_with_boot(
         "wal",
@@ -185,16 +177,16 @@ fn apply_resolution_skips_a_dependency_outside_the_node_requires() {
     let ws = Workspace::load(ws_dir.path()).unwrap();
     apply_resolution(&ws, &[wal, extra], SlotIntegrity::TrustPresence, None).unwrap();
 
-    let index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
+    let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
     assert!(
-        index.contains("vibedeps/org.vibevm.wal/0.3.0/boot/wal.md"),
+        index.contains(&deps_rel("org.vibevm.wal/0.3.0/boot/wal.md")),
         "{index}"
     );
     // `flow:extra` is materialised but not in the boot index.
     assert!(
         ws_dir
             .path()
-            .join("vibedeps/org.vibevm.extra/0.1.0/boot/extra.md")
+            .join(deps_rel("org.vibevm.extra/0.1.0/boot/extra.md"))
             .is_file()
     );
     assert!(!index.contains("flow-extra"), "{index}");
@@ -209,7 +201,7 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let ws = Workspace::load(ws_dir.path()).unwrap();
 
     let (wal_v1, _v1) = dep_with_boot(
@@ -226,7 +218,12 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         None,
     )
     .unwrap();
-    assert!(ws_dir.path().join("vibedeps/org.vibevm.wal/0.1.0").is_dir());
+    assert!(
+        ws_dir
+            .path()
+            .join(deps_rel("org.vibevm.wal/0.1.0"))
+            .is_dir()
+    );
 
     // Re-apply with wal bumped to 0.2.0 — the 0.1.0 slot is now stale.
     let (wal_v2, _v2) = dep_with_boot(
@@ -243,12 +240,20 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         None,
     )
     .unwrap();
-    assert!(ws_dir.path().join("vibedeps/org.vibevm.wal/0.2.0").is_dir());
     assert!(
-        !ws_dir.path().join("vibedeps/org.vibevm.wal/0.1.0").exists(),
+        ws_dir
+            .path()
+            .join(deps_rel("org.vibevm.wal/0.2.0"))
+            .is_dir()
+    );
+    assert!(
+        !ws_dir
+            .path()
+            .join(deps_rel("org.vibevm.wal/0.1.0"))
+            .exists(),
         "the stale 0.1.0 slot must be pruned"
     );
-    assert_eq!(outcome.pruned, vec!["vibedeps/org.vibevm.wal/0.1.0"]);
+    assert_eq!(outcome.pruned, vec![deps_rel("org.vibevm.wal/0.1.0")]);
 }
 
 // --- PROP-011 §2.3 — materialise only the diff -----------------------
@@ -262,7 +267,7 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (dep, _pkg) = dep_with_boot(
         "wal",
         "0.3.0",
@@ -280,14 +285,16 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         None,
     )
     .unwrap();
-    assert_eq!(first.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(first.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(first.skipped.is_empty());
 
     // A sentinel inside the slot — a file the source never had. If
     // the second apply re-copies the slot, `materialise` clears it
     // first and the sentinel vanishes; if it skips, the sentinel
     // survives. It is the proof the skip actually skipped.
-    let sentinel = ws_dir.path().join("vibedeps/org.vibevm.wal/0.3.0/SENTINEL");
+    let sentinel = ws_dir
+        .path()
+        .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
     fs::write(&sentinel, "untouched").unwrap();
 
     let second = apply_resolution(
@@ -301,7 +308,7 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         second.materialised.is_empty(),
         "a present slot must not be re-copied"
     );
-    assert_eq!(second.skipped, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(second.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(
         sentinel.is_file(),
         "TrustPresence must leave the slot untouched"
@@ -317,7 +324,7 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (dep, _pkg) = dep_with_boot(
         "wal",
         "0.3.0",
@@ -328,14 +335,16 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
     let ws = Workspace::load(ws_dir.path()).unwrap();
 
     apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify, None).unwrap();
-    let sentinel = ws_dir.path().join("vibedeps/org.vibevm.wal/0.3.0/SENTINEL");
+    let sentinel = ws_dir
+        .path()
+        .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
     fs::write(&sentinel, "doomed").unwrap();
 
     // Second apply under Verify — the present slot is re-materialised,
     // so the sentinel is cleared along with it.
     let second =
         apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify, None).unwrap();
-    assert_eq!(second.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(second.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(second.skipped.is_empty(), "Verify must re-copy, never skip");
     assert!(!sentinel.exists(), "Verify must re-materialise the slot");
 }
@@ -344,7 +353,7 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
 fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() {
     // A `source_mutable` (local `file://`) dependency is never presence-trusted
     // (PROP-011 §2.6): even under the default TrustPresence its present slot is
-    // re-copied, so an in-place source edit lands in `vibedeps/`.
+    // re-copied, so an in-place source edit lands in the dependency slot.
     let ws_dir = TempDir::new().unwrap();
     write(
         ws_dir.path(),
@@ -352,7 +361,7 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (mut dep, _pkg) = dep_with_boot(
         "wal",
         "0.3.0",
@@ -370,7 +379,9 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
         None,
     )
     .unwrap();
-    let sentinel = ws_dir.path().join("vibedeps/org.vibevm.wal/0.3.0/SENTINEL");
+    let sentinel = ws_dir
+        .path()
+        .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
     fs::write(&sentinel, "doomed").unwrap();
 
     // Second apply — TrustPresence would normally skip a present slot, but the
@@ -382,7 +393,7 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
         None,
     )
     .unwrap();
-    assert_eq!(second.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(second.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(
         second.skipped.is_empty(),
         "a mutable file:// source must not be presence-trusted (§2.6)"
@@ -436,7 +447,7 @@ fn verified_slot_fixture() -> (Workspace, ResolvedDep, TempDir, TempDir, PathBuf
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
          [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
-    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let (dep, pkg) = dep_with_boot(
         "wal",
         "0.3.0",
@@ -452,7 +463,9 @@ fn verified_slot_fixture() -> (Workspace, ResolvedDep, TempDir, TempDir, PathBuf
         None,
     )
     .unwrap();
-    let sentinel = ws_dir.path().join("vibedeps/org.vibevm.wal/0.3.0/SENTINEL");
+    let sentinel = ws_dir
+        .path()
+        .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
     fs::write(&sentinel, "probe").unwrap();
     (ws, dep, ws_dir, pkg, sentinel)
 }
@@ -474,7 +487,7 @@ fn verify_accepts_a_hash_matching_slot_without_copying() {
         outcome.materialised.is_empty(),
         "a hash-matching slot must NOT be re-copied under verify"
     );
-    assert_eq!(outcome.skipped, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.integrity_warnings.is_empty());
     assert!(
         sentinel.is_file(),
@@ -498,7 +511,7 @@ fn verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes() {
         None,
     )
     .unwrap();
-    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.skipped.is_empty(), "a diverged slot is not trusted");
     assert!(
         !sentinel.exists(),
@@ -534,7 +547,7 @@ fn verify_falls_back_to_recopying_an_unverifiable_slot_silently() {
         None,
     )
     .unwrap();
-    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.skipped.is_empty());
     assert!(
         outcome.integrity_warnings.is_empty(),
@@ -557,7 +570,7 @@ fn trust_presence_never_consults_the_slot_verifier() {
         None,
     )
     .unwrap();
-    assert_eq!(outcome.skipped, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.materialised.is_empty());
     assert!(sentinel.is_file());
 }
@@ -578,7 +591,7 @@ fn verify_still_never_trusts_a_mutable_file_source_slot() {
         None,
     )
     .unwrap();
-    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.skipped.is_empty());
     assert!(!sentinel.exists());
 }

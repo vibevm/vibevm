@@ -329,10 +329,12 @@ mod tests {
         "@fact:FACT-ONE the fact body @status:impl/done\n\n"
     );
 
-    /// A workspace whose authored `spec/` holds the dependency in `form`.
+    /// A workspace whose authored specs root holds the dependency in `form`
+    /// (the scaffold routes through the resolver's root probe — a fresh
+    /// tempdir falls back to the legacy name, PROP-052).
     fn dep_ws(form: &str, text: &str) -> tempfile::TempDir {
         let ws = tempfile::tempdir().unwrap();
-        let dir = ws.path().join("spec/common");
+        let dir = crate::resolver::specs_root_under(ws.path()).join("common");
         fs::create_dir_all(&dir).unwrap();
         fs::write(dir.join(format!("DEP.{form}")), text).unwrap();
         ws
