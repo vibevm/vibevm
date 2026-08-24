@@ -423,4 +423,6 @@ impl Minter<'_> {
 }
 
 #[cfg(test)]
+mod td_tests;
+#[cfg(test)]
 mod tests;

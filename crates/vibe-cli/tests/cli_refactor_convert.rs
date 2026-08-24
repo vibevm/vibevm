@@ -346,10 +346,17 @@ fn refactor_help_lists_the_conversion_family_and_visible_alias() {
 }
 
 #[test]
-fn package_src_converts_the_whole_package_but_skips_vibedeps() {
+fn package_src_converts_spec_homes_only_and_skips_vibedeps() {
     let temp = tempfile::tempdir().expect("tempdir");
     fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    // Root files OUTSIDE the spec homes stay untouched — the perimeter is
+    // the spec directories plus the root spec-genre family, never the
+    // whole tree (owner ruling 2026-08-24).
     fs::write(temp.path().join("README.md"), CANONICAL_MD).expect("write readme");
+    fs::write(temp.path().join("notes.md"), CANONICAL_MD).expect("write stray doc");
+    // A root WAL.md is a HOUSE convention, not a universal spec home —
+    // the generic package verb must leave it alone (owner correction).
+    fs::write(temp.path().join("WAL.md"), CANONICAL_MD).expect("write house working doc");
     let spec = temp.path().join("spec");
     fs::create_dir(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
@@ -368,10 +375,14 @@ fn package_src_converts_the_whole_package_but_skips_vibedeps() {
     ]);
 
     assert!(output.status.success(), "stderr: {}", text(&output.stderr));
-    assert!(temp.path().join("README.xml").is_file());
-    assert!(!temp.path().join("README.md").exists());
     assert!(spec.join("inside.xml").is_file());
     assert!(!spec.join("inside.md").exists());
+    assert!(temp.path().join("WAL.md").is_file());
+    assert!(!temp.path().join("WAL.xml").exists());
+    assert!(temp.path().join("README.md").is_file());
+    assert!(!temp.path().join("README.xml").exists());
+    assert!(temp.path().join("notes.md").is_file());
+    assert!(!temp.path().join("notes.xml").exists());
     assert!(dependency.join("dependency.md").is_file());
     assert!(!dependency.join("dependency.xml").exists());
 }

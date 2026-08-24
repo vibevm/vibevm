@@ -1740,12 +1740,17 @@ fn install_unattended_skips_confirm_like_assume_yes() {
         .success();
 
     // The install ran to completion without a confirm prompt — the
-    // package tree is materialised into its `vibedeps/` slot.
+    // package tree is materialised into its `vibedeps/` slot (either
+    // PROP-045 serialisation satisfies).
     assert!(
         project
             .path()
             .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file()
+            || project
+                .path()
+                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .is_file()
     );
 }
 
@@ -3814,7 +3819,8 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
     assert!(
-        index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
+            || index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
     );
 }
@@ -3948,13 +3954,19 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
         .assert()
         .success();
 
-    // Corrupt a content file inside the materialised `vibedeps/` slot.
-    let corrupted = project
+    // Corrupt a content file inside the materialised `vibedeps/` slot —
+    // whichever PROP-045 serialisation the package ships.
+    let slot_proto = project
         .path()
-        .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
+        .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal");
+    let corrupted = if slot_proto.join("WAL-PROTOCOL.md").is_file() {
+        slot_proto.join("WAL-PROTOCOL.md")
+    } else {
+        slot_proto.join("WAL-PROTOCOL.xml")
+    };
     assert!(
         corrupted.is_file(),
-        "org.vibevm.world/wal ships WAL-PROTOCOL.md"
+        "org.vibevm.world/wal ships WAL-PROTOCOL in either serialisation"
     );
     fs::write(&corrupted, "CORRUPTED — hand-edited garbage").unwrap();
 

@@ -205,8 +205,14 @@ mod tests {
             .filter(|f| f.check == CheckId::WalWellformed)
             .map(|f| f.message.as_str())
             .collect();
-        assert!(missing.iter().any(|m| m.contains("constraints")), "{missing:?}");
-        assert!(missing.iter().any(|m| m.contains("known issues")), "{missing:?}");
+        assert!(
+            missing.iter().any(|m| m.contains("constraints")),
+            "{missing:?}"
+        );
+        assert!(
+            missing.iter().any(|m| m.contains("known issues")),
+            "{missing:?}"
+        );
     }
 
     #[test]

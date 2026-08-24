@@ -255,7 +255,13 @@ fn is_harness_contract(path: &Path) -> bool {
         .is_some_and(|name| {
             matches!(
                 name,
-                "CLAUDE.md" | "AGENTS.md" | "GEMINI.md" | "MEMORY.md" | "SKILL.md"
+                "CLAUDE.md"
+                    | "AGENTS.md"
+                    | "GEMINI.md"
+                    | "MEMORY.md"
+                    | "SKILL.md"
+                    | "README.md"
+                    | "LICENSE.md"
             )
         })
 }

@@ -323,7 +323,7 @@ fn unit(p: &mut Parser, tag: &str, was_empty: bool, in_cell: bool) -> Result<XUn
         }
     }
     let text = text.trim().to_string();
-    if tag == "td" && (text.contains('|') || text.contains('\n')) {
+    if tag == "td" && (pipe_outside_code_spans(&text) || text.contains('\n')) {
         return Err(Violation::at(
             p.poss[p.i.saturating_sub(1)],
             "a <td> cannot hold `|` or a newline — the Markdown table form cannot express it",
@@ -482,4 +482,46 @@ pub(super) fn status_from_attrs(
         comment: attr(attrs, "comment").map(str::to_string),
         r#ref: attr(attrs, "ref").map(str::to_string),
     })
+}
+
+/// A `|` makes a `<td>` unexpressible in the Markdown table form only when
+/// it sits OUTSIDE an inline-code span: the shared Markdown scanner masks
+/// code spans (backtick-run matching — a run closes on the next run of the
+/// SAME length) before splitting a row into cells, so a masked pipe never
+/// splits a cell. Mirror of the host pivot's K2.6 rule; kept semantically
+/// identical to progress-core's `blank_inline_code`.
+fn pipe_outside_code_spans(text: &str) -> bool {
+    let bytes = text.as_bytes();
+    let mut runs: Vec<(usize, usize)> = Vec::new();
+    let mut i = 0usize;
+    while i < bytes.len() {
+        if bytes[i] != b'`' {
+            i += 1;
+            continue;
+        }
+        let start = i;
+        while i < bytes.len() && bytes[i] == b'`' {
+            i += 1;
+        }
+        runs.push((start, i - start));
+    }
+    let mut masked = vec![false; bytes.len()];
+    let mut r = 0usize;
+    while r < runs.len() {
+        let (open, len) = runs[r];
+        match runs[r + 1..].iter().position(|&(_, l)| l == len) {
+            Some(rel) => {
+                let close = r + 1 + rel;
+                for slot in &mut masked[open + len..runs[close].0] {
+                    *slot = true;
+                }
+                r = close + 1;
+            }
+            None => r += 1,
+        }
+    }
+    bytes
+        .iter()
+        .enumerate()
+        .any(|(i, &b)| b == b'|' && !masked[i])
 }

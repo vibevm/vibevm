@@ -458,7 +458,12 @@ fn markdown_format_converts_xml_and_copies_a_rejected_candidate_verbatim() {
 }
 
 #[test]
-fn redbook_materialises_as_eight_xml_specs_and_two_verbatim_files() {
+fn redbook_materialises_fully_xml_with_md_readmes_converted() {
+    // The live redbook flipped to XML sources (2026-08-24): six spec
+    // sources are dialect XML already (copy-through under the xml
+    // target), the two reserved-name READMEs stayed Markdown by the
+    // owner's ruling (converted at materialisation), and LICENSE.md +
+    // vibe.toml ride verbatim as before.
     let ws = TempDir::new().unwrap();
     let source = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../packages/org.vibevm.world/redbook/v1.0.0");
@@ -491,8 +496,8 @@ fn redbook_materialises_as_eight_xml_specs_and_two_verbatim_files() {
         .iter()
         .filter(|file| file.disposition == DerivedFileDisposition::Copied)
         .count();
-    assert_eq!(converted, 8);
-    assert_eq!(copied, 2);
+    assert_eq!(converted, 2);
+    assert_eq!(copied, 8);
     assert!(slot.join("README.xml").is_file());
     assert!(slot.join("spec/boot/03-flow-redbook.xml").is_file());
     assert!(

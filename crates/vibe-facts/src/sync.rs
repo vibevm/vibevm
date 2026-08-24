@@ -156,10 +156,15 @@ fn load_spec_snapshot(
         if !needed.contains(&vibe_spec::canonical_doc_path(&relative_text)) {
             continue;
         }
-        let text = fs::read_to_string(&file).map_err(|source| RegistryError::Io {
-            path: file.clone(),
-            source,
-        })?;
+        // A spec source in either PROP-045 serialisation: `.md` verbatim,
+        // `.xml` as its canonical Markdown projection — the scan below is
+        // form-blind and addresses stay extensionless.
+        let (text, _kind) =
+            vibe_specdoc::load_spec_text(&file).map_err(|error| RegistryError::SpecParse {
+                path: relative.to_path_buf(),
+                line: 0,
+                message: error.message,
+            })?;
         let doc = parse_document(&relative_text, &text);
         if let Some(issue) = doc
             .issues
@@ -233,7 +238,7 @@ fn collect_markdown(root: &Path, files: &mut Vec<PathBuf>) -> Result<(), Registr
         let path = entry.path();
         if path.is_dir() {
             collect_markdown(&path, files)?;
-        } else if path.extension().is_some_and(|extension| extension == "md") {
+        } else if vibe_specdoc::is_spec_source(&path) {
             files.push(path);
         }
     }

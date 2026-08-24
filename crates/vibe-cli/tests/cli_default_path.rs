@@ -141,9 +141,12 @@ fn default_path_installs_via_global_registry() {
         slot.join("vibe.toml").is_file(),
         "expected vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml after install"
     );
+    // The guard is that the package CONTENT materialised, not its spelling:
+    // the seeded package's README is a spec source in either PROP-045
+    // serialisation (the corpus flipped to XML sources on 2026-08-24).
     assert!(
-        slot.join("README.md").is_file(),
-        "expected vibedeps/org.vibevm.world.wal/0.2.0/README.md after install"
+        slot.join("README.md").is_file() || slot.join("README.xml").is_file(),
+        "expected vibedeps/org.vibevm.world.wal/0.2.0/README.{{md,xml}} after install"
     );
 
     // Cache: exactly one registry bucket. This is the assertion that is

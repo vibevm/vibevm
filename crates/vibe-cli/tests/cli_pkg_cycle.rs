@@ -45,23 +45,28 @@ fn full_install_cycle() {
         .assert()
         .success();
 
-    // The package's whole published tree is materialised verbatim into
-    // its `vibedeps/` slot — the real org.vibevm.world/wal v0.2.0 ships
-    // `vibe.toml`, `README.md`, `spec/boot/10-flow-wal.md`, and
-    // `spec/flows/wal/*.md` files (plus a skill and LICENSE, not asserted
-    // here).
+    // The package's whole published tree is materialised into its
+    // `vibedeps/` slot — the real org.vibevm.world/wal v0.2.0 ships
+    // `vibe.toml`, a README and the `spec/` tree (plus a skill and
+    // LICENSE, not asserted here). Spec sources live in either PROP-045
+    // serialisation (the corpus flipped to XML sources on 2026-08-24),
+    // so the guard is CONTENT presence, not the spelling.
     let slot = project.path().join("vibedeps/org.vibevm.world.wal/0.2.0");
+    assert!(
+        slot.join("vibe.toml").is_file(),
+        "expected `vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml` after install"
+    );
     for rel in [
-        "vibe.toml",
         "README.md",
         "spec/boot/10-flow-wal.md",
         "spec/flows/wal/WAL-PROTOCOL.md",
         "spec/flows/wal/session-end-hook.md",
         "spec/flows/wal/morning-routine.md",
     ] {
+        let xml = rel.replace(".md", ".xml");
         assert!(
-            slot.join(rel).is_file(),
-            "expected `vibedeps/org.vibevm.world.wal/0.2.0/{rel}` after install"
+            slot.join(rel).is_file() || slot.join(&xml).is_file(),
+            "expected `vibedeps/org.vibevm.world.wal/0.2.0/{rel}` (either serialisation) after install"
         );
     }
     // The OLD mirror paths must NOT exist any more.
@@ -98,7 +103,8 @@ fn full_install_cycle() {
     // freshly-installed package's boot into INDEX.md — the manifest
     // `[requires]` is merged before the boot artifacts are regenerated.
     assert!(
-        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
+            || index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
         "INDEX.md must name the installed dependency's boot snippet:\n{index}"
     );
     // The fixtures declare no `link = "static"` dependency, so there is
@@ -674,12 +680,17 @@ fn install_from_manifest_uses_requires() {
         .success();
 
     // Package materialised into its `vibedeps/` slot, lockfile
-    // populated, manifest declaration intact.
+    // populated, manifest declaration intact. Either spec serialisation
+    // satisfies the guard (the corpus flipped to XML sources).
     assert!(
         project
             .path()
             .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
-            .is_file(),
+            .is_file()
+            || project
+                .path()
+                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .is_file(),
         "the package tree is materialised verbatim into vibedeps/"
     );
     let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
@@ -699,7 +710,8 @@ fn install_from_manifest_uses_requires() {
     // foundation and user-override boot).
     let index = fs::read_to_string(project.path().join("spec/boot/INDEX.md")).unwrap();
     assert!(
-        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md")
+            || index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.xml"),
         "INDEX.md must name the dependency's boot file under its slot:\n{index}"
     );
 }
@@ -958,12 +970,16 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
 
     // Package tree materialised into its `vibedeps/` slot — a
     // git-source install lands in `vibedeps/` exactly like a
-    // registry-resolved one.
+    // registry-resolved one. Either spec serialisation satisfies.
     assert!(
         project
             .path()
             .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
-            .is_file(),
+            .is_file()
+            || project
+                .path()
+                .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.xml")
+                .is_file(),
         "git-source install must materialise the package tree into vibedeps/"
     );
     assert!(

@@ -175,7 +175,7 @@ fn run_convert_package_src(ctx: &output::Context, args: ConvertPackageSrcArgs) -
     let targets = args
         .package_roots
         .into_iter()
-        .map(resolve_package_target)
+        .flat_map(resolve_package_targets)
         .collect();
     run_conversion(ctx, targets, conversion, "convert-package-src")
 }
@@ -189,14 +189,37 @@ fn run_convert_spec_src(ctx: &output::Context, args: ConvertSpecSrcArgs) -> Resu
     run_conversion(ctx, vec![target], conversion, "convert-spec-src")
 }
 
-fn resolve_package_target(path: PathBuf) -> ConversionTarget {
-    match super::resolve_project_root(&path) {
-        Ok(root) => ConversionTarget::Path(root),
-        Err(error) => ConversionTarget::Refused {
-            path,
-            reason: format!("{error:#}"),
-        },
+/// The owner's perimeter ruling (2026-08-24): a package conversion covers
+/// the package's SPEC HOMES — `spec/` and a nested `packages/` — never
+/// the whole tree («переводить спецификации из директории спецификаций,
+/// а не все подряд файлы»). House-specific root working docs (one
+/// project's WAL/checkpoint family) are NOT presumed: the verb serves
+/// every project, and such names may mean anything elsewhere — a house
+/// converts its own extras with explicit `convert-source` paths.
+fn resolve_package_targets(path: PathBuf) -> Vec<ConversionTarget> {
+    let root = match super::resolve_project_root(&path) {
+        Ok(root) => root,
+        Err(error) => {
+            return vec![ConversionTarget::Refused {
+                path,
+                reason: format!("{error:#}"),
+            }];
+        }
+    };
+    let mut targets = Vec::new();
+    for dir in ["spec", "packages"] {
+        let home = root.join(dir);
+        if home.is_dir() {
+            targets.push(ConversionTarget::Path(home));
+        }
     }
+    if targets.is_empty() {
+        targets.push(ConversionTarget::Refused {
+            path: root,
+            reason: "package has no spec homes (`spec/` or `packages/`)".to_string(),
+        });
+    }
+    targets
 }
 
 fn resolve_spec_target(path: PathBuf) -> ConversionTarget {
