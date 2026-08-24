@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>rlmresearch — drafted plan (2026-07-10 22:15)</title>
+  <p>**Plan:** `fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml`
+— Campaign 3 · Stage A: the RLM research. **NOT EXECUTING** — RP-R1
+(owner review) is OPEN per the owner's order «Не исполняй план,
+вначале дай посмотреть на него». Stage B (the Campaign 3
+implementation plan) is this stage's exit deliverable, authored
+from the synthesis.</p>
+  <section title="Checklist">
+    <list ordered="false">
+      <item>[x] Ф0 — plan drafted, dashboard landed, specmap re-minted</item>
+      <item>[ ] **RP-R1 — owner reviews the plan (BLOCKS EVERYTHING BELOW)**</item>
+      <item>[ ] Ф1 — Wave 1 (deep research, background) + Wave 2 (plain web
+      search, independent — executed before reading W1 output)</item>
+      <item>raw outputs → `refs/study/rlm-waves/` (gitignored)</item>
+      <item>[ ] Ф2 — Wave 3 merge → 5 repos / 5 papers / 5 articles</item>
+      <item>`spec/refs/notes/rlm-source-selection.md` (verdicts +
+        runners-up + provenance + overlap metric)</item>
+      <item>INVENTORY rows with license verdicts (BEFORE study)</item>
+      <item>RP-R2 — 5/5/5 table shown to owner; swaps applied</item>
+      <item>[ ] Ф3 — intake: clones @pins → `refs/src/`, PDFs →
+      `refs/papers/`, snapshots → `refs/articles/` (new dir)</item>
+      <item>[ ] Ф4 — study: T1 anchor (Zhang RLM: paper+repo+blog →
+      `rlm-study.xml`, boss-only) → T2 papers/repos → T3 articles
+      (GLM surveys allowed, boss authors every note)</item>
+      <item>[ ] Ф5 — `RLM-SYNTHESIS.xml` (RD-deltas, two-way gaps, re-fetch
+      list) → **draft `FRACTALITY-RLM-PLAN-v0.1.xml` (Stage B)** →
+      close (prediction verdicts, WAL, completed-plan dashboard)</item>
+      <item>RP-R3 — Stage B execution = separate owner word</item>
+    </list>
+  </section>
+  <section title="Key decisions taken while planning">
+    <list ordered="false">
+      <item>**New plan, not an edit** — no Campaign 3 plan exists (verified:
+  `spec/plans/` holds two closed plans); "improve C3 with our
+  ideas" = author Stage B from the synthesis (D-R1).</item>
+      <item>Waves 1 and 2 are **independent by construction**; overlap is a
+  measured prediction, not an accident (D-R2, P-R2).</item>
+      <item>"Most important" is defined: mechanism relevance → idea density
+  for the fabric → influence → recency; articles must include a
+  counterpoint (D-R3).</item>
+      <item>Clean-room pipeline is law: INVENTORY row + license verdict
+  before deep study; downloads gitignored; notes are decisions,
+  never code shapes; methods free, expression never (D-R4, owner
+  verbatim in plan §1/§4).</item>
+      <item>Tiered study: T1 boss-deep (the anchor), T2 medium, T3 survey;
+  GLM does first-pass surveys under live observation, the boss
+  authors all notes (D-R5).</item>
+      <item>One project = one note (paper+code+blog together, D-R7).</item>
+    </list>
+  </section>
+  <section title="Risks / problems / uncertainties (mandatory section)">
+    <list ordered="false">
+      <item>Deep-research harness cost/availability — fallback: manual
+  fan-out recorded as deviation.</item>
+      <item>Link rot &amp; paywalls — snapshot at first touch; abstract-level
+  study flagged honestly.</item>
+      <item>License surprises in top-5 repos — harmless by construction
+  (inspiration-only class regardless; no code adopted from any
+  source).</item>
+      <item>Volume blowout (15 sources) — tiers absorb it; floor is "every
+  source has a recorded verdict", never zero-note adoption.</item>
+      <item>arXiv id for S4 (2512.24601) — verify at Ф3, correct INVENTORY
+  if drifted.</item>
+      <item>Glob tool unreliable on this tree (observed twice today) —
+  recipes use PowerShell/git listings.</item>
+      <item>Delegate cwd law — two strikes on record; every launch pins cwd.</item>
+    </list>
+  </section>
+</spec>

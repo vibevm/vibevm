@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-015 — MCP server and agent integration</title>
+  <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED; retroactive spec home for vibe-mcp and the vibe mcp family"/>
+  <p><milestone-line fact="true" status="impl/done">**Milestone:** M1.7 ([`ROADMAP.md`](../../../ROADMAP.md)). The server slice
+shipped first; the agent-integration surface (`vibe mcp install` /
+`status` / `upgrade` / `uninstall`) followed.</milestone-line></p>
+  <p><status-line fact="true" status="impl/done">**Status:** IMPLEMENTED — this PROP is the retroactive spec home the
+CONVERT-PLAN v0.1 §7 endgame opened for the `vibe-mcp` crate and the
+`vibe mcp` command family. Units typed at REQ grain; the code carries the
+matching `scope!` / `#[spec(implements)]` edges.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-004 §5 / §6](../../common/PROP-004-tessl-research.md)
+(the comparative research that motivated treating agent context as a
+managed, distributable artefact), [PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.xml#identity)
+(`content_hash` identity the `query_package` tool surfaces),
+[PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.xml) (the subskill
+delivery modes the `read_subskill` / `materialise_subskill` tools read),
+[`VIBEVM-SPEC.md` §5](../../../VIBEVM-SPEC.md) (the product's AI-integration
+scope), and [PROP-023](../vibe-registry/PROP-023-bridge-packages.xml) (the
+bridge-packages design that added the [#skill-include](#skill-include) req on
+2026-06-24 — additive; §2.6 `#skill` is unchanged).</related></p>
+  <motivation title="1. Motivation">
+    <p><close-the-loop fact="true" status="impl/done">vibevm installs spec-and-discipline packages into a project; the consuming
+agent then has to *find and read* what landed. Two integration surfaces
+close that loop:</close-the-loop></p>
+    <facts ordered="true">
+      <SURFACE-SERVER fact="true" status="impl/done">A **Model Context Protocol server** (`vibe mcp serve`) that exposes the
+   project's lockfile-derived state to any MCP-speaking agent as callable
+   tools — so the agent queries package identity and pulls subskill content
+   on demand instead of guessing from the file tree.</SURFACE-SERVER>
+      <SURFACE-INSTALL fact="true" status="impl/done">An **agent-integration command family** (`vibe mcp install` and friends)
+   that wires that server into each agent's own configuration and writes a
+   per-agent skill manifest, so an operator runs one command instead of
+   hand-editing five different config files.</SURFACE-INSTALL>
+    </facts>
+    <facts ordered="false">
+      <PRODUCT-SCOPE fact="true" status="impl/done">Both are product scope (`VIBEVM-SPEC.md` §5).</PRODUCT-SCOPE>
+      <READ-MOSTLY fact="true" status="impl/done">Neither changes wire
+  formats, the lockfile schema, or install behaviour — they are read-mostly
+  surfaces over state the rest of vibevm already owns.</READ-MOSTLY>
+    </facts>
+  </motivation>
+  <decisions title="2. Decisions">
+    <server title="2.1 The server: JSON-RPC 2.0 over stdio">
+      <p><req-server fact="true" status="impl/done">`req r1`</req-server></p>
+      <p><SERVER-TRANSPORT-AGNOSTIC fact="true" status="impl/done">**Decision.** `vibe-mcp` is a transport-agnostic MCP server.</SERVER-TRANSPORT-AGNOSTIC></p>
+      <facts ordered="false">
+        <SERVER-JSONRPC fact="true" status="impl/done">It speaks
+  JSON-RPC 2.0 over line-delimited stdin/stdout (the MCP stdio form),
+  handling the `initialize` handshake, `tools/list`, `tools/call`, and
+  `ping`.</SERVER-JSONRPC>
+        <SERVER-HANDSHAKE-IDENTITY fact="true" status="impl/done">The protocol version is a one-line `const` (`PROTOCOL_VERSION`);
+  the server name/version surface in the handshake.</SERVER-HANDSHAKE-IDENTITY>
+        <SERVER-TRANSPORT-TRAIT fact="true" status="impl/done">Transport is a trait (`Transport`) — production uses `StdioTransport`,
+  tests inject `MemoryTransport` for deterministic round-trips.</SERVER-TRANSPORT-TRAIT>
+        <SERVER-FRESH-LOCKFILE fact="true" status="impl/done">Each `tools/call` reloads the project lockfile fresh, so a concurrent
+  `vibe install` surfaces on the next call without a server restart.</SERVER-FRESH-LOCKFILE>
+        <SERVER-MISSING-LOCK fact="true" status="impl/done">A missing `vibe.lock` is an empty lockfile, not an error — the agent
+  sees empty state through the normal tool response.</SERVER-MISSING-LOCK>
+      </facts>
+    </server>
+    <tools title="2.2 The tool surface: one seam, three tools">
+      <p><req-tools fact="true" status="impl/done">`req r1`</req-tools></p>
+      <p><TOOL-SEAM fact="true" status="impl/done">**Decision.** Every tool implements one seam (`McpTool`): it `describe`s
+itself (name, human description, JSON-Schema input shape) and `run`s
+against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
+      <facts ordered="false">
+        <TOOL-REGISTRATION fact="true" status="impl/done">Tools
+  register at one point; the dispatcher routes by registered name and does
+  not know a tool's identity beyond it.</TOOL-REGISTRATION>
+        <TOOL-CELL-BOUNDARY fact="true" status="impl/done">The seam is the cell boundary — a
+  new tool is a new cell, not an edit to the dispatcher.</TOOL-CELL-BOUNDARY>
+      </facts>
+      <p><TOOLS-IO-CONVENTION fact="true" status="impl/done">The shipped tools (all group-qualified `&lt;group&gt;/&lt;name&gt;` pkgrefs in;
+structured JSON + a text rendering out):</TOOLS-IO-CONVENTION></p>
+      <facts ordered="false">
+        <TOOL-QUERY-PACKAGE fact="true" status="impl/done">**`query_package`** — the full lockfile entry for an installed package
+  (kind, version, `content_hash`, registry, source, `files_written`,
+  features, active subskills, `describes` PURL, language). Read-only.</TOOL-QUERY-PACKAGE>
+        <TOOL-READ-SUBSKILL fact="true" status="impl/done">**`read_subskill`** — the concatenated content of an active subskill's
+  files. `eager` / `lazy-push` subskills read from the project tree;
+  `lazy-pull` subskills read from the package cache (PROP-003 §2.5.0), so
+  the agent gets bytes regardless of delivery mode. Read-only.</TOOL-READ-SUBSKILL>
+        <TOOL-MATERIALISE-SUBSKILL fact="true" status="impl/done">**`materialise_subskill`** — copy a `lazy-pull` subskill's content into
+  the project tree. No-op for `eager` / `lazy-push` (already on disk);
+  refuses to overwrite without `force`. The one writing tool.</TOOL-MATERIALISE-SUBSKILL>
+      </facts>
+      <p><TOOL-FAILURE-RENDERING fact="true" status="impl/done">A tool failure renders as `isError: true` in the result payload (a
+tool-level failure), distinct from a transport-level JSON-RPC error.</TOOL-FAILURE-RENDERING></p>
+      <map-query title="2.2.1 Searching the map — the set-returning twin of `explain`">
+        <p><MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION fact="true" status="impl/done">**`query` finds nodes; `explain`
+looks at one.** Until 2026-08-06 the map could only be asked about a target
+already known by name, so *«which of these exist?»* was unanswerable — not in
+the host, not in any language stack, not in the engine. `query` is that
+question, and the two are deliberately separate verbs rather than one verb with
+a mode: a point lookup and a set filter render differently, cap differently, and
+fail differently.</MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION></p>
+        <p><MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT fact="true" status="impl/done">**The filter level is a permanent
+level, not a first version to be replaced** *(owner ruling, 2026-08-06)*. An
+agent accustomed to grep reaches for filters; a query language demands a form it
+will not build without need. So the filters must work on their own and must
+never become a degenerate case of a grammar — in the library they are their own
+entry point, so a broken parser could not take them down with it.</MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT></p>
+        <p><MAP-QUERY-THREE-FILTERS-AND-A-CEILING fact="true" status="impl/done">**Three filters, combined with AND,
+under a hard ceiling:** exact spec address, substring of a code symbol, element
+kind. None is required; those given narrow. The ceiling is not a convenience and
+cannot be removed — the answer is read by an agent with a bounded context, and
+an unbounded one is useless rather than generous. When it truncates it says so,
+with the total, in both renderings.</MAP-QUERY-THREE-FILTERS-AND-A-CEILING></p>
+        <p><MAP-QUERY-RESULTS-ARE-NODES fact="true" status="impl/done">**Results are nodes, never edges.** «Find me an
+edge» is not a question anyone asks; «find me what has, or lacks, an edge of this
+kind» is — so edges are a filter dimension for the query level above, and the
+result set stays spec units and code items.</MAP-QUERY-RESULTS-ARE-NODES></p>
+        <p><MAP-QUERY-A-HIT-CARRIES-ITS-SOURCE fact="true" status="spec/plan">**Every hit records where it came
+from**, because a second producer is already designed: the code-quality engine's
+findings join these results **at query time**, by the owner's ruling that two
+engines must not merge their data. Nothing of that engine is built here; the
+result shape simply does not close the door — a discriminated field rather than a
+closed variant set, so a third source adds a value instead of breaking every
+reader.</MAP-QUERY-A-HIT-CARRIES-ITS-SOURCE></p>
+        <p><MAP-QUERY-IS-ONE-CAPABILITY-WITH-TWO-SURFACES fact="true" status="impl/done">**One library, two thin
+surfaces**, per the omnichannel floor: the filtering lives in the host's trace
+crate, `vibe query` renders it for a person and the `query` tool renders it for
+an agent, and both call the same function. The MCP tool's description says when
+to reach for it instead of `explain` — that description is the surface's own,
+which is exactly what the agent-facing class owns and all it owns.</MAP-QUERY-IS-ONE-CAPABILITY-WITH-TWO-SURFACES></p>
+        <p><MAP-QUERY-THE-KIND-VOCABULARY-IS-MEASURED-NOT-INVENTED fact="true" status="impl/done">**`kind` filters over
+a measured vocabulary.** The committed map carries nine code kinds, and a spec
+unit answers on its own kind rather than borrowing the code one; the two
+vocabularies are disjoint, so one filter serves both without ambiguity. **Caveat
+worth carrying:** every spec unit in this tree is legacy-unmarked, so a spec kind
+matches nothing here today. The path is open and exercised only by fixtures —
+stated because a filter that silently returns nothing is indistinguishable from
+one that is broken.</MAP-QUERY-THE-KIND-VOCABULARY-IS-MEASURED-NOT-INVENTED></p>
+        <p><MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN fact="true" status="impl/done">The map is built fresh in memory per
+call, never read from the committed artefact — the same posture `explain` takes,
+for the same reason: a query answers for the tree as it is.</MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN></p>
+        <p><MAP-QUERY-THE-LANGUAGE-LEVEL-IS-NOT-BUILT fact="true" status="impl/done">**The query language is designed
+and not built.** Its shape is the filters plus graph traversal — depth, and
+«has no edge of kind X», which is what answers *«which rules does nothing
+verify»* — and it introduces a grammar that will need versioning. It stands on
+this level rather than replacing it. **SUPERSEDED 2026-08-06 — it is built; the
+contract is §2.2.2 below.**</MAP-QUERY-THE-LANGUAGE-LEVEL-IS-NOT-BUILT></p>
+      </map-query>
+      <map-select title="2.2.2 The query language — traversal on top of the filters">
+        <p><SELECT-IS-A-THIRD-VERB-NOT-A-MODE fact="true" status="impl/done">**`select` is a third verb, for the same
+reason `query` and `explain` are two.** `explain` looks at one target, `query`
+filters a set, and `select` walks the graph from a set. Three questions, three
+caps, three failure modes — a mode flag on one verb would make the result type
+depend on the argument, and every consumer would carry three readers.</SELECT-IS-A-THIRD-VERB-NOT-A-MODE></p>
+        <p><SELECT-STANDS-ON-THE-FILTER-LEVEL-AND-CANNOT-TAKE-IT-DOWN fact="true" status="impl/done">**It stands on
+the filter level and cannot take it down with it.** The three filter predicates
+are the ones §2.2.1 ships, reached rather than redefined; the parser lives in its
+own module behind its own entry point, so a broken grammar leaves `query`
+answering. That separation is the owner's ruling in
+`##MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT` made structural instead of promised.</SELECT-STANDS-ON-THE-FILTER-LEVEL-AND-CANNOT-TAKE-IT-DOWN></p>
+        <p><SELECT-SEVEN-PREDICATES-JOINED-BY-AND fact="true" status="impl/done">**Seven predicates, whitespace
+separated, joined by AND, and no operators at all:** `uri:`, `symbol:`, `kind:`
+(the filter level's own), `scope:` (prefix of a spec address), `has:` / `lacks:`
+(an edge verb), `depth:` (0..3). No disjunction, no parentheses, no precedence —
+each of those is a permanent versioning liability, and a predicate can be added
+without renumbering a language that has no operator layer to renumber.</SELECT-SEVEN-PREDICATES-JOINED-BY-AND></p>
+        <p><SELECT-SCOPE-EXISTS-BECAUSE-A-MEASUREMENT-PUT-IT-THERE fact="true" status="impl/done">**`scope:` is in the
+set because the level's own canonical question is unanswerable without it.**
+Measured before the build: 5 742 of 5 825 spec units carry no `verifies` edge,
+and nothing that shipped could narrow that — `kind` is carried by **0** units in
+this tree and `uri` is exact, so composing the negative predicate with the filter
+level yields 5 742 or 1. A document prefix brings 67 of the corpus's 72 documents
+inside the ceiling; the five that do not are named in the design record rather
+than left to be rediscovered.</SELECT-SCOPE-EXISTS-BECAUSE-A-MEASUREMENT-PUT-IT-THERE></p>
+        <p><SELECT-HAS-AND-LACKS-READ-THE-EDGE-FROM-THE-NODES-SIDE fact="true" status="impl/done">**`has:` and
+`lacks:` select seeds, and «touches» reads from each family's own side** —
+incoming for a spec unit, outgoing for a code item. On a directed bipartite
+graph that is the only reading under which one predicate serves both families,
+and applying them after the walk instead would answer a question nobody asked.</SELECT-HAS-AND-LACKS-READ-THE-EDGE-FROM-THE-NODES-SIDE></p>
+        <p><SELECT-DEPTH-EXPANDS-AND-ZERO-IS-THE-IDENTITY fact="true" status="impl/done">**`depth:N` expands the seed
+set along edges, undirected, and the seeds stay in the answer.** `depth:0` is the
+default and the identity, so a query without it is exactly the seed selection —
+which is what keeps this level a strict superset of the one below rather than a
+different thing wearing its name. Every hit carries the hop count it was reached
+at, so a caller can tell what it asked for from what the walk brought with it.</SELECT-DEPTH-EXPANDS-AND-ZERO-IS-THE-IDENTITY></p>
+        <p><SELECT-THE-BOUND-IS-CHOSEN-AGAINST-A-MEASUREMENT-NOT-A-FEELING fact="true" status="impl/done">**The depth
+bound is 3, and the number came from the graph.** Exhaustively over all 1 205
+edge-bearing nodes, 71.7 % reach more at depth 2 than at depth 1 and only 5.9 %
+reach more at depth 3; the largest connected component is 44 nodes. So depth is a
+precision control on this map rather than a safety one — and the result ceiling
+stays hard regardless, because it protects against a future map, not this one.</SELECT-THE-BOUND-IS-CHOSEN-AGAINST-A-MEASUREMENT-NOT-A-FEELING></p>
+        <p><SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR fact="true" status="impl/done">**An unknown predicate, an unknown
+verb, a repeated predicate, an out-of-range depth or an empty query is an ERROR
+that names the offending token and lists what was expected** — never a silently
+ignored clause. Same law as the markup's typed fences, for the same reason: a
+grammar that ignores what it does not understand promises everything and checks
+nothing, and whoever trusted the promise is the one who finds out. An empty query
+is refused rather than read as «everything», because that answer already exists
+one verb away.</SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR></p>
+        <p><SELECT-THE-GRAMMAR-VERSION-TRAVELS-IN-THE-ANSWER fact="true" status="impl/done">**The grammar carries a
+version and reports it in every answer rather than demanding it in every query.**
+A query string stays free of ceremony; the structured answer states the version
+it was parsed under, so a consumer that cares can branch and one that does not is
+unaffected. Requiring a prefix would tax every caller forever to buy nothing
+until the first breaking change.</SELECT-THE-GRAMMAR-VERSION-TRAVELS-IN-THE-ANSWER></p>
+        <p><SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT fact="true" status="impl/done">The rejected shapes, the
+measurements above with their commands, and the correction of a sampled reading
+that was wrong about depth are in
+[`spec/design/map-query-language.xml`](../../design/map-query-language.xml) — the
+lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT></p>
+      </map-select>
+    </tools>
+    <errors title="2.3 Tool and server errors cite their REQ">
+      <p><req-errors fact="true" status="impl/done">`req r1`</req-errors></p>
+      <facts ordered="false">
+        <ERROR-LAYERS fact="true" status="impl/done">**Decision.** `ToolError` and `ServerError` are the crate's two error
+  layers.</ERROR-LAYERS>
+        <ERROR-CITES-REQ fact="true" status="impl/done">Each variant's Display text carries the violated `spec://` unit
+  and a fix surface (the Class-F product-error grammar), so a failing tool
+  call is navigable back to this PROP without source access.</ERROR-CITES-REQ>
+      </facts>
+    </errors>
+    <agent-detection title="2.4 Agent detection">
+      <p><req-agent-detection fact="true" status="impl/done">`req r1`</req-agent-detection></p>
+      <p><AGENT-SET fact="true" status="impl/done">**Decision.** The integration surface supports a fixed set of MCP-capable
+coding agents (Claude Code, Claude Code Desktop, Cursor, OpenCode, Codex).</AGENT-SET></p>
+      <facts ordered="false">
+        <AGENT-PRESENCE fact="true" status="impl/done">An agent is *present* in a project when its project-level markers exist
+  (e.g. `.claude` / `CLAUDE.md`, `.cursor` / `.cursorrules`) or its
+  user-level host config directory exists.</AGENT-PRESENCE>
+        <AGENT-DETECTION-DEFAULT fact="true" status="impl/done">Detection drives the default
+  target set for `vibe mcp install`; the operator can always override with
+  an explicit agent filter.</AGENT-DETECTION-DEFAULT>
+      </facts>
+    </agent-detection>
+    <agent-config title="2.5 Per-agent configuration">
+      <p><req-agent-config fact="true" status="impl/done">`req r2`</req-agent-config></p>
+      <p><CONFIG-SHAPE-DECL fact="true" status="impl/done">**Decision.** Each agent declares its config shape, and the writer is
+agent-aware but format-generic:</CONFIG-SHAPE-DECL></p>
+      <facts ordered="false">
+        <CONFIG-FORMAT fact="true" status="impl/done">**Format** — JSON or TOML per agent (Codex is TOML-only).</CONFIG-FORMAT>
+        <CONFIG-SECTION-KEY fact="true" status="impl/done">**Section key** — the agent's MCP-servers table name (`mcpServers`,
+  `mcp`, `mcp_servers`).</CONFIG-SECTION-KEY>
+        <CONFIG-SCOPE fact="true" status="impl/done">**Scope** — project (`.&lt;agent&gt;/…` in the repo) and/or user (the host
+  config dir). Some agents are user-only (Claude Code Desktop, Codex).</CONFIG-SCOPE>
+        <CONFIG-PATH fact="true" status="impl/done">**Config path** — resolved per (agent, scope), cross-platform. The
+  path must be the file the agent actually reads for MCP *discovery*,
+  not merely a settings file it happens to own. For Claude Code that is
+  `&lt;project&gt;/.mcp.json` (project) and the top-level `mcpServers` of
+  `~/.claude.json` (user) — **never `settings.json`**, which only
+  *gates* `.mcp.json` servers (`enabledMcpjsonServers`) and does not
+  define them.</CONFIG-PATH>
+        <CONFIG-MERGE fact="true" status="impl/done">**Merge discipline** — installing upserts vibevm's one entry under the
+  section key and **preserves every foreign key, and their order**: the
+  JSON writer round-trips order-preserving (`serde_json/preserve_order`),
+  so a merge into a large `~/.claude.json` appends rather than
+  re-alphabetising the operator's whole file. Uninstalling strips only
+  vibevm's entry and leaves the rest. The operator's other MCP servers
+  and unrelated config survive every operation.</CONFIG-MERGE>
+      </facts>
+      <facts ordered="false">
+        <CONFIG-SCOPE-INDEPENDENT fact="true" status="impl/done">The vibevm entry is **scope-independent**: `vibe mcp serve` with no
+  `--path`, resolving its project root from the launcher's CWD (an MCP
+  client sets CWD to the project directory for a project-scope server),
+  so one shape serves every scope and a committed `.mcp.json` stays
+  portable.</CONFIG-SCOPE-INDEPENDENT>
+        <CONFIG-WINDOWS-SHIM fact="true" status="impl/done">On Windows the launcher is wrapped as `cmd /c vibe …` because
+  `vibe` is a `vibe.cmd` shim that an MCP client's bare process-spawn
+  cannot exec directly.</CONFIG-WINDOWS-SHIM>
+      </facts>
+    </agent-config>
+    <skill title="2.6 Skill materialisation">
+      <p><req-skill fact="true" status="impl/done">`req r1`</req-skill></p>
+      <p><SKILL-MANIFEST fact="true" status="impl/done">**Decision.** For agents that support a skill manifest (Claude Code,
+OpenCode, Codex — not the JSON-config-only Cursor / Claude Code Desktop),
+`vibe mcp install` also writes a `SKILL.md` describing how to use vibevm
+through the MCP tools.</SKILL-MANIFEST></p>
+      <facts ordered="false">
+        <SKILL-BODY-DATA fact="true" status="impl/done">The skill body is **data, not code** — a vendored
+  template (`include_str!`) rendered into each agent's skill directory
+  (`.&lt;agent&gt;/skills/vibevm/SKILL.md`).</SKILL-BODY-DATA>
+        <SKILL-IDEMPOTENT fact="true" status="impl/done">Writing is idempotent: identical
+  content is left untouched (`unchanged`); a divergent file is updated.</SKILL-IDEMPOTENT>
+      </facts>
+    </skill>
+    <lifecycle title="2.7 The integration lifecycle">
+      <p><req-lifecycle fact="true" status="impl/done">`req r1`</req-lifecycle></p>
+      <p><LIFECYCLE-MATRIX fact="true" status="impl/done">**Decision.** The agent-integration command family is a coherent
+lifecycle over the (agent × scope) matrix, every verb idempotent and
+every mutating verb offering `--dry-run` and a confirmation:</LIFECYCLE-MATRIX></p>
+      <facts ordered="false">
+        <VERB-INSTALL fact="true" status="impl/done">**`install`** — detect (or accept a filter), preview, confirm, write
+  MCP entries and skills.</VERB-INSTALL>
+        <VERB-STATUS fact="true" status="impl/done">**`status`** — read-only: what would install / upgrade / uninstall do.</VERB-STATUS>
+        <VERB-UPGRADE fact="true" status="impl/done">**`upgrade`** — refresh stale MCP blocks and `SKILL.md` files in place.</VERB-UPGRADE>
+        <VERB-UNINSTALL fact="true" status="impl/done">**`uninstall`** — strip vibevm's MCP entries and skill files, preserving
+  foreign config.</VERB-UNINSTALL>
+      </facts>
+      <p><LIFECYCLE-REPORTS fact="true" status="impl/done">Per-(agent, scope) outcomes are reported as structured records
+(`AgentInstallReport` / `SkillInstallReport`) the CLI renders or emits as
+JSON.</LIFECYCLE-REPORTS></p>
+    </lifecycle>
+    <skill-include title="2.8 Selective skill projection">
+      <p><req-skill-include fact="true" status="impl/done">`req r1`</req-skill-include></p>
+      <p><INCLUDE-DECL fact="true" status="impl/done">**Decision.** `SkillDecl` gains an optional `include` — a list of glob
+patterns relative to the skill's `path`.</INCLUDE-DECL></p>
+      <facts ordered="false">
+        <INCLUDE-SELECTIVE fact="true" status="impl/done">When present, only matching files are
+  projected into the agent's skill directory, preserving their relative
+  structure; when absent or empty, the whole `path` tree is projected — the
+  existing §2.6 behaviour, unchanged.</INCLUDE-SELECTIVE>
+        <INCLUDE-COMPOSES fact="true" status="impl/done">Selection composes with the
+  already-working nested `path`: a skill can point at a subdirectory **and** pick
+  specific files out of it.</INCLUDE-COMPOSES>
+        <INCLUDE-BRIDGE-USE fact="true" status="impl/done">This is available to any skill but is load-bearing for bridge packages
+  ([PROP-023](../vibe-registry/PROP-023-bridge-packages.xml)): a bridged upstream
+  tree is full of unrelated files, and the maintainer projects just the
+  `SKILL.md` and whatever it references without vendoring the noise.</INCLUDE-BRIDGE-USE>
+        <INCLUDE-DETERMINISTIC fact="true" status="impl/done">Glob
+  matching is deterministic; a pattern that matches nothing is a
+  declared-but-empty selection (surfaced, not a silent no-op).</INCLUDE-DETERMINISTIC>
+      </facts>
+      <fence lang="toml">[[skill]]
+name = "vim"
+path = "upstream/skills/vim"
+include = ["SKILL.md", "references/**/*.md"]   # omit → whole tree (§2.6)</fence>
+    </skill-include>
+  </decisions>
+  <out-of-scope title="3. Out of scope">
+    <facts ordered="false">
+      <OOS-NO-WIRE-CHANGES fact="true" status="spec/done">**No new wire formats or lockfile changes.** The server reads the
+  existing lockfile schema; the tools surface existing fields.</OOS-NO-WIRE-CHANGES>
+      <OOS-AGENT-SEMANTICS fact="true" status="spec/done">**No agent-specific behaviour beyond config shape.** The integration
+  knows each agent's *file format and paths*, not its runtime semantics.</OOS-AGENT-SEMANTICS>
+      <OOS-HTTP-SSE fact="true" status="spec/done">**HTTP / SSE transports.** Stdio is the shipped transport; the
+  `Transport` trait leaves room without committing to more today.</OOS-HTTP-SSE>
+      <OOS-LLM-TOOLS fact="true" status="spec/done">**LLM-provider tools.** PROP-003 §F virtual-capability emission waits on
+  a real `vibe-llm` (`VIBEVM-SPEC.md` §10.4).</OOS-LLM-TOOLS>
+    </facts>
+  </out-of-scope>
+  <acceptance title="4. Acceptance">
+    <facts ordered="false">
+      <ACC-SERVER-ROUNDTRIP fact="true" status="impl/done">The server answers `initialize` / `tools/list` / `tools/call` over a
+  `MemoryTransport` round-trip; each tool has a behavioural oracle.</ACC-SERVER-ROUNDTRIP>
+      <ACC-TOOL-CONTRACTS fact="true" status="impl/done">`query_package` / `read_subskill` / `materialise_subskill` each behave
+  per §2.2 against a lockfile fixture (found / not-found / invalid-pkgref;
+  the delivery-mode split; the force / no-overwrite contract).</ACC-TOOL-CONTRACTS>
+      <ACC-INSTALL-LIFECYCLE fact="true" status="impl/done">`vibe mcp install` writes the expected entry under each agent's section
+  key, preserves foreign keys, and is idempotent; `uninstall` is its
+  inverse; `status` writes nothing.</ACC-INSTALL-LIFECYCLE>
+    </facts>
+  </acceptance>
+</spec>

@@ -1,7 +1,7 @@
 # AUDIT.md — project health inventory
 
 The recurring defect / rot / drift inventory defined by
-[PROP-013](spec/common/PROP-013-periodic-health-audit.md). Each audit
+[PROP-013](spec/common/PROP-013-periodic-health-audit.xml). Each audit
 run appends a dated section; findings carry forward until they are
 dispositioned. This file is committed to git — its history is the
 project's health trend.
@@ -189,7 +189,7 @@ paragraph containing the clause *«pkgref grammar with optional kind validated
 (KindMismatch)»* — an assertion that the mechanism shipped.
 
 **In the same campaign run, the same claim was judged `drift` — four times.**
-The package-side twins in `qualified-naming`'s `ref-grammar.md`
+The package-side twins in `qualified-naming`'s `ref-grammar.xml`
 (`##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH`,
 `##THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES`, `##ROW-FORM-KIND-AND-NAME`,
 `##SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE`) each carry `drift`, and one
@@ -320,7 +320,7 @@ convert as the ruling intends, when their own text moves.
 ### 2026-08-06-02 · A2/B2 · P2 · fixed 2026-08-06 (same day it was met)
 
 **The freshness instrument every session is told to run reports a clean zero
-over a cache that is behind the tree.** `spec/WAL.md` opens with «every number
+over a cache that is behind the tree.** `spec/WAL.xml` opens with «every number
 below is reproduced by commands; run them rather than quoting this file» and
 names three, one of which is `tasks/text-stability.py`. Its report is what a
 session reads to learn whether any judged fact needs re-judging.
@@ -353,7 +353,7 @@ bytes, with the verdict count it is hiding, and says in one sentence that
 everything below compares two fields inside the cache. Exit code stays 0 — it is
 a measuring instrument, not a gate, and turning it into one would be the wrong
 cure. **Verified on the live state at landing:** the warning names
-`PROP-008-qualified-naming.md`, 92 verdicts, «edited since the last scan».
+`PROP-008-qualified-naming.xml`, 92 verdicts, «edited since the last scan».
 
 **The mirror fan-out reported an unreachable host as a diverged one.** Every
 failed push, whatever its cause, produced one summary: «a non-fast-forward
@@ -534,7 +534,7 @@ this contract stays prose-first.** The gate was never the obstacle.
 ### 2026-05-23-10 · C1 · P3 · closed 2026-08-06 — the rule is written; the sweep is refused
 
 **Closed by writing the policy, not by replacing the examples.** The owner's
-ruling of 2026-08-06 now lives in `qualified-naming`'s `ref-grammar.md`
+ruling of 2026-08-06 now lives in `qualified-naming`'s `ref-grammar.xml`
 §documentation-policy: **install** examples show the qualified form (a short
 name needs a configured registry index the reader may not have), **uninstall
 / update** examples show the short form (it resolves from the lockfile alone

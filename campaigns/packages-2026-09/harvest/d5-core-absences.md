@@ -48,7 +48,7 @@ single reason its golden-transcript demotions were wrong.
 `##REPORT-PUBLISHES-THE-EXIT-NUMBERS`,
 `##EVERYTHING-PLANNED-LANDS-OR-IS-LET-GO`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
 **Perimeter searched:** the standing perimeter above, for each of
 `golden` · `transcript` · `characterization` · `capture.sh` · `conflicts_with` ·
 `disputed-spec` · `heuristic` · `burn-down` · `half-life` · `shrinkage` ·
@@ -110,8 +110,8 @@ On `##STATUS-DISPUTED`, every clause has a producer:
 ```console
 $ python -c "...debt.json..."   # kind == disputed-spec
 DBT-0012  conflicts_with: [PROP-002…:63, PROP-008…:80-91]  + evidence quotes
-DBT-0013  conflicts_with: [00-core.md:40, 90-user.md:11-15] + evidence quotes
-DBT-0014  conflicts_with: [90-user.md:14, PROP-008…:80-91,147]
+DBT-0013  conflicts_with: [00-core.xml:40, 90-user.xml:11-15] + evidence quotes
+DBT-0014  conflicts_with: [90-user.xml:14, PROP-008…:80-91,147]
 DBT-0015  conflicts_with: [PROP-003…:703, PROP-003…:769]
 DBT-0016  …
 ```
@@ -141,9 +141,9 @@ Only the close-quota is genuinely absent:
 
 ```console
 $ grep -rni "flatline|close-quota|close_quota|entrench" <standing perimeter>
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2003  (a citation)
-vibedeps/flow-core-ai-native/0.8.0/…/BROWNFIELD-PROTOCOL-v0.1.md:11,90
-vibedeps/flow-delegation-rules/0.1.0/…/BROWNFIELD-PROTOCOL-v0.1.md:11,90
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2003  (a citation)
+vibedeps/flow-core-ai-native/0.8.0/…/BROWNFIELD-PROTOCOL-v0.1.xml:11,90
+vibedeps/flow-delegation-rules/0.1.0/…/BROWNFIELD-PROTOCOL-v0.1.xml:11,90
 ```
 
 Every hit is this sentence or a vendored copy of it. No flatline comparison, no
@@ -190,7 +190,7 @@ host perimeter before it moves.
 `##QUERY-CLASSIFY-LEGACY-UNIT`, `##FAILURE-CACHE-POISONING`. Confirmed,
 unedited: `##QUERY-PROPOSE-LINKS`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`
 **Perimeter searched:** the standing perimeter, for `prompt_rev` · `model_id` ·
 `legacy_unit` · `classify.legacy` · `propose.links` · `proposals` ·
 `specmap-proposals` · `warm copy` · `sccache` · `action-cache` · `draft input` ·
@@ -243,7 +243,7 @@ The other five are genuinely absent, and the searches are flat:
 
 ```console
 $ grep -rni "legacy_unit|legacy-unit|classify\.legacy" <standing perimeter>
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1960   (cites it as unbuilt)
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1960   (cites it as unbuilt)
 packages/…/core-ai-native/v0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md:18,48
 packages/…/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md:38,78
 …/.vibe/cache/… and …/vibedeps/… (vendored copies of the same two lines)
@@ -318,11 +318,11 @@ than grepped.
 
 ```console
 $ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 spec/mechanisms/
-BROWNFIELD-PROTOCOL-v0.1.md
-ENGINE-CONFORM-v0.1.md
-LEDGER-INTENT-v0.1.md
-MCP-CORE-v0.1.md
-PROP-014-specmap-bidirectional-traceability.md
+BROWNFIELD-PROTOCOL-v0.1.xml
+ENGINE-CONFORM-v0.1.xml
+LEDGER-INTENT-v0.1.xml
+MCP-CORE-v0.1.xml
+PROP-014-specmap-bidirectional-traceability.xml
 
 $ grep -n "READ-MECHANISMS" README.md
 34:7. ##READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap),
@@ -354,7 +354,7 @@ typed `missing-support` for a reason the verdict states well — a roster wrong 
 one is how a reader concludes a mechanism does not exist — but the repair is
 addition, not retraction.
 
-**New obligations noticed:** `MCP-CORE-v0.1.md` carries a file-level
+**New obligations noticed:** `MCP-CORE-v0.1.xml` carries a file-level
 `<status stage="spec" state="done"/>` while its own `##status-line` says
 SHIPPED with a crate in the workspace. Those two disagree; the file header says
 spec, the body says implemented. Outside my twelve, not touched, recorded.
@@ -365,12 +365,12 @@ spec, the body says implemented. Outside my twelve, not touched, recorded.
 
 **Outcome:** MIXED — 2 CORRECTED (it exists elsewhere), 1 **BLOCKED** on a
 standing owner ruling
-**Anchors:** 2 touched of 3 total. Corrected: `00-MANIFESTO.md#MAP-ATLAS`,
-`01-PATTERN-CARD-FORMAT.md#FIELD-EVIDENCE-AND-TRANSFER-STRENGTH`. **Not
+**Anchors:** 2 touched of 3 total. Corrected: `00-MANIFESTO.xml#MAP-ATLAS`,
+`01-PATTERN-CARD-FORMAT.xml#FIELD-EVIDENCE-AND-TRANSFER-STRENGTH`. **Not
 touched, escalated:** `spec/appendix/ATLAS.md#status-line`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml`,
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`
 **Perimeter searched:** the standing perimeter **plus** the normally-excluded
 `.vibe/cache/**` and every `*.jsonl` on disk regardless of extension filter,
 because the claim is about a *file that should exist* and a build-artefact
@@ -475,7 +475,7 @@ whether v0.7.0 is still a supported read.
 `##BALANCE-IS-EXPLICIT-THROUGH-ESCALATION-TIERS`, `##ROW-TIER-T-LEX`,
 `##ROW-TIER-T-SEM`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml`
 **Perimeter searched:** the standing perimeter, over `*.rs` · `*.toml` ·
 `*.json` · `*.go` · `*.ts`, for `Tier` · `tier` · `T-lex` · `T-syn` · `T-sem` ·
 `t_lex` · `t_sem` · `ripgrep` · `tree-sitter` · `tree_sitter` · `libclang` ·
@@ -553,7 +553,7 @@ it and I left it alone; it is the most misleading paragraph left in the file.
 `##ROW-FRONTEND-CPP`, `##ROW-FRONTEND-GO`,
 `##LINTERS-ARE-CITED-NOT-REIMPLEMENTED`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml`
 **Perimeter searched:** the F-183 perimeter above (shared — same document, same
 vocabulary), **plus** `R-021` · `R-020` · `R-002` · `forbidden-idiom` ·
 `naming-vs-manifest` over every crate; the rule roster read in full rather than
@@ -646,7 +646,7 @@ class as the rows I did touch.
 marker kept: `##FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK`. Confirmed, unedited:
 `##LLM-AS-PROPOSER`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
 **Perimeter searched:** the standing perimeter for `specmap-proposals` ·
 `proposals` · `EdgeProvenance` · `specmap_query` · `specmap_explain` ·
 `specmap_source` · `metamodel` · `decides` · `deviates` · `edges_per` ·
@@ -755,8 +755,8 @@ by my clause and is `@spec/done` already — no action, recorded for traceabilit
 Confirmed, unedited: `##BAND-3-ON-TRIGGER`
 (`spec/boot/10-flow-core-ai-native.md`).
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml`,
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`
 **Perimeter searched:** the verdict's own perimeter was already wide
 (`crates/`, `xtask/`, `packages/`, `spec/`, `schemas/` over `.rs .ts .go .py
 .js`), so I widened it rather than repeated it: the **whole tree**, adding
@@ -835,7 +835,7 @@ is live in the boot of the repository judging it would be the same error as
 F-268.
 
 **New obligations noticed — one is a real defect I did not fix.** The corpus is
-**24 `card-ops` blocks, not 27**: `scaffold-d-differential-oracle.md` in **all
+**24 `card-ops` blocks, not 27**: `scaffold-d-differential-oracle.xml` in **all
 three stacks** carries no `card-ops` fence at all, authoring Band 3 as anchored
 prose (`##TRIGGER`, `##MODE`, `##routine-lead`, `##ROUTINE-*`) instead. The card
 that does this is the one whose own line 7 reads *"Demonstrates all three bands,
@@ -853,7 +853,7 @@ edit scope. Recorded, not fixed.
 **Anchors:** 3 touched of 3 total: `##EVERY-PATTERN-IS-A-CARD`,
 `##FORMAT-CHANGES-ARE-RATIFIED`, `##EMPTY-OPERATIONAL-FIELDS-ARE-A-DEFECT`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`
 **Perimeter searched:** the standing perimeter for `R-030` · `ratif*` ·
 `CHANGELOG` · `rule-` and `antipattern-` card filenames, plus a **directory
 listing** of all three stacks' `cards/` (not a grep — an absent file cannot be
@@ -864,7 +864,7 @@ grepped for), plus the host's own `CHANGELOG.md` read for scope, plus the
 
 ```console
 $ ls -1 packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/
-INDEX.md  scaffold-a-generators.md … scaffold-i-codemods.md      (9 + index)
+INDEX.md  scaffold-a-generators.xml … scaffold-i-codemods.xml      (9 + index)
 
 $ sed -n '36,44p' …/cards/INDEX.md
 ## Pending cards (named, not yet authored — pilot will prioritize)
@@ -924,7 +924,7 @@ both anchors were already `@spec/done`.**
 **Anchors:** 1 touched of 2 total. Corrected: `##BOUNDARY-SURFACE-IS-CURRENT`.
 Confirmed, unedited: `##BOUNDARY-MEASUREMENT-DEFERRED`.
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml`
 **Perimeter searched:** the standing perimeter for `R-050` · `sunset` ·
 `prediction` · `PREDICTIONS`, **plus** `terraform/adopt-v0.3/` read in full and
 `discipline/registry/debt.json` inspected field by field — the two host

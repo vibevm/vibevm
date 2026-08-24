@@ -1,0 +1,1886 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree</title>
+  <status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A, B, L and C closed; Phase D (stitching) opened by the owner 2026-07-25, wave d1 landed"/>
+  <p>**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked) · Phase L CLOSED 2026-07-25 (terraforms/research/neworder/discipline relocated to root `legacy-spec/`) · Phase C CLOSED 2026-07-25 (4 944/4 944 markers judged; 93.0 % confirmed) · Phase D OPEN — waves d1 + d2 landed 2026-07-25 (302 of 311 drift rows closed; the tree measures 99.7 % confirmed; 42 of 55 findings resolved) · next: the two escalations (F-046 wire-or-demote, F-035 user-owned boot file), then Phase E · vibevm-specific · first consumer of PROP-043 (Progress Control)**</p>
+  <p>Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.xml).
+Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.xml).
+Task formats: [templates/](../modules/vibe-progress/templates/impl-task.xml).</p>
+  <mandate title="0. Mandate (owner&apos;s words, 2026-07-24, recorded verbatim)">
+    <list ordered="false">
+      <item>«актуализировать ВСЕ спецификации … Это чудовищная огромная работа. Именно
+  поэтому я и готовлю scaffold для нее, чтобы не сбиться в ходе обхода
+  настолько большого количества документов. Нам нужно разметить корпус
+  фактов, которые дальше нужно будет проверять.» Work may take **a month**;
+  that is accepted; quality over speed.</item>
+      <item>Paragraph-level exhaustiveness is **the point**, not an option: «это
+  in-verbatim контроль того, что мы прошли всё, каждую строчку. LLM очень
+  любит упрощать … нужен алгоритмический надсмотрщик».</item>
+      <item>**No fractality for this campaign.** «Я хочу чтобы Fable сделала максимум
+  высокоуровневых задач (анализ и разметку спецификации и тп)» — outputs:
+  (a) a corpus of coding tasks for **Opus**, (b) a corpus of spec-improvement
+  tasks executed by **whatever model the budget allows** (Fable if it
+  stretches, Opus otherwise). This deliberately overrides the standing
+  delegation-first default for the duration of the campaign — owner decision;
+  do not "optimize" it back.</item>
+      <item>Stitching is **non-linear**: reworking B may reopen A and vice versa —
+  plan it as a multi-pass fixpoint, not a single sweep.</item>
+      <item>Crash-safety: any session may die (budget, power); the next session must
+  resume from **one obvious file** with at most one step lost.</item>
+      <item>Repeatability: re-runs at ~monthly cadence must cost O(delta), not
+  O(corpus).</item>
+      <item>Wave 1 = the host `spec/` tree only; `packages/` waves later; the
+  fractality specspace excluded until the owner says otherwise.</item>
+    </list>
+  </mandate>
+  <baseline title="1. Baseline (verified at authoring time, 2026-07-24)">
+    <list ordered="false">
+      <item>Host `spec/`: **91 md files, 26 699 lines**. Authored packages (no
+  vendored copies): world 154 + ai-native 140 files (~30k lines) — wave 2;
+  fractality 700 files — out of scope.</item>
+      <item>Free-form `**Status:**` lines to convert mechanically: **~55**.</item>
+      <item>specmap: index live; **34 gated orphans** in `vibe-spec` (pre-existing).</item>
+      <item>Progress Control: does not exist yet — no crate, no `vibe progress`, no
+  `campaigns/` zone, no dashboard. `&lt;status` appears nowhere in the tree
+  except PROP-043's own dogfood markers.</item>
+      <item>Existing inline grammars that must not collide: `@spec://` (~17 uses),
+  `#use`/`#embed`/`#source`, `&lt;!-- REVIEW: --&gt;`.</item>
+    </list>
+  </baseline>
+  <executors title="2. Executors and the budget law">
+    <table>
+      <tr>
+        <td>Role</td>
+        <td>Who</td>
+        <td>What</td>
+      </tr>
+      <tr>
+        <td>Boss / high-level</td>
+        <td>**Fable**</td>
+        <td>markup passes, verification judgment, stitching, task authoring, ALL review</td>
+      </tr>
+      <tr>
+        <td>Coder</td>
+        <td>**Opus**</td>
+        <td>IMPL tasks (DRIFT-NNN) exactly as written; stop-rule on ambiguity</td>
+      </tr>
+      <tr>
+        <td>Spec editor</td>
+        <td>**budget-dependent**</td>
+        <td>SPEC tasks (SPEC-NNN): Fable if budget allows, else Opus; Fable reviews regardless</td>
+      </tr>
+    </table>
+    <p>Rules 1–4 of the repository bind every executor. Worker output is never
+credited; commits are human-authored surface; non-routine red lines stop for
+the owner no matter who is executing.</p>
+  </executors>
+  <layout title="3. Campaign zone layout">
+    <fence>campaigns/progress-2026-08/        # id fixed at Phase A close
+  baseline.json                    # inter-campaign contract (PROP-043 §7.3)
+  deferrals.md                     # open tails at close-out; next run drains it
+  harvest/                         # doc cards (templates/harvest-card.md)
+  tasks/                           # DRIFT-NNN.md / SPEC-NNN.md + INDEX.md
+  run/                             # EPHEMERAL: journal.jsonl · state/*.json · RESUME.md · mirror/</fence>
+    <p>Excluded from markup scope, packaging, and registries (PROP-043 §7.4).
+Committed at batch boundaries — journal in the same commit as the edits it
+describes; fan-out via `cargo xtask mirror` at phase checkpoints. `run/` of a
+closed campaign may be archived or deleted; the other four entries persist.</p>
+  </layout>
+  <resume title="4. Resume protocol (crash-safety law)">
+    <list ordered="true">
+      <item>**Step = unit of atomicity**: mark-file · verify-unit · close-obligation ·
+   execute-task. Journal writes `step-start` (intent, actor) before work and
+   `step-done` (result ref) after; JSONL, append-only, torn tail discarded.</item>
+      <item>**Recovery rule:** step closed in journal ⇒ its edits stand; step open ⇒
+   `git restore` its files and redo the step. Steps are idempotent by
+   construction. Maximum loss on any crash = one step.</item>
+      <item>**`RESUME.md` is generated** (`vibe progress resume`) after every
+   step-done: where we are · unresolved steps with literal recovery commands ·
+   next steps · phase rules pointer · dashboard command. Every session of
+   this campaign **starts by reading it** and ends by closing (not starting)
+   a step.</item>
+      <item>**Claims and staleness:** journal actors (`fable`, `opus:DRIFT-012`);
+   an in-progress task with no journal events past the threshold is returned
+   to `queued` as stale by `resume`.</item>
+      <item>git = second echelon: batch commits make the worst disk-loss cost one
+   batch, never the campaign.</item>
+    </list>
+  </resume>
+  <safe-stop title="4.5 Safe stop — where wave 1 could halt losing nothing (recorded retrospectively)">
+    <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ANY-PHASE-BOUNDARY-IS-A-SAFE-STOP` asks every plan to
+say where it can be put down, and this plan said it nowhere. Written after the
+campaign closed, so it is a record of where the stops actually were — not a
+promise made in advance.*</p>
+    <p>**This campaign ran on a finer grain than the law asks for.** The flow's unit is
+the phase boundary; §4's unit is the **step** — mark-file, verify-unit,
+close-obligation, execute-task — with `step-start` journalled before the work
+and `step-done` after, so the maximum loss on any crash is one step. That is
+strictly stronger, and it is why no session of this campaign ever needed the
+phase-level guarantee to recover. Both grains held; both are stated here because
+a stranger reading only §4 would think the campaign could be stopped anywhere,
+and a stranger reading only the flow would think it could be stopped only six
+times.</p>
+    <p>**What a stop at each boundary would have left, so «losing nothing» is a
+statement and not a slogan:**</p>
+    <table>
+      <tr>
+        <td>Stopped after</td>
+        <td>The tree holds</td>
+        <td>What is owed</td>
+      </tr>
+      <tr>
+        <td>**A**</td>
+        <td>the `progress-core` crate, the `vibe progress` adapter, an empty campaign zone, the dashboard, and 46 pilot markers</td>
+        <td>nothing — the spec corpus is untouched</td>
+      </tr>
+      <tr>
+        <td>**B**</td>
+        <td>markers only, over 58 files / 4 880 facts / 4 944 markers, `check --exhaustive` at 0</td>
+        <td>nothing — Phase B makes **no semantic edits** by its own law, and the legacy `**Status:**` lines were kept rather than deleted, so the pass is purely additive</td>
+      </tr>
+      <tr>
+        <td>**L**</td>
+        <td>the four legacy directories relocated to root `legacy-spec/`, every gate-binding inbound reference repointed</td>
+        <td>nothing — two of the four had zero corpus inbound to begin with</td>
+      </tr>
+      <tr>
+        <td>**C**</td>
+        <td>verdicts in the cache: 4 944 / 4 944 markers judged, 4 455 units at **93.0 %**</td>
+        <td>nothing — Phase C edits no document; a verdict lives in the cache, never in the markup</td>
+      </tr>
+      <tr>
+        <td>**D**</td>
+        <td>302 of 311 drift rows closed; the tree at **99.7 %**</td>
+        <td>nine ledger rows, each named</td>
+      </tr>
+      <tr>
+        <td>**E**</td>
+        <td>the task queue drained: **4 486 confirmed / 1 drift / 3 unverifiable of 4 490 — 99.9 %**</td>
+        <td>one drift row that cannot close in this repository, and it is in `deferrals.md` with the reason</td>
+      </tr>
+    </table>
+    <p>**The one boundary where the floor was not green, recorded rather than
+smoothed.** The Phase C close `self-check` went **red** on
+`cli_pkg_cycle::install_from_git_registry`. Root-caused and proven in-session: a
+`~/.vibe/registry.toml` had appeared on the machine that day, and the test
+isolates `VIBE_REGISTRY_CACHE` but **not the settings chokepoint**, so the
+global registries merged into the "hermetic" resolver and minted a second cache
+bucket; with `VIBE_SETTINGS` pointed at an empty directory the same test passes.
+The campaign's own gate (`progress check`) stayed **0** and the phase's commits
+were docs-only and unrelated. Ledgered as **F-055** and fixed in Phase E — after
+which *«the floor ends the phase green with no `VIBE_SETTINGS` override»*, F-055
+genuinely fixed rather than worked around.
+`##A-PHASE-THAT-LEAVES-THE-FLOOR-RED-IS-STILL-OPEN` is the rule this brushes,
+and the only reading under which C could close is the one the ledger states: the
+red was outside the phase's own diff, and it was proven so rather than assumed.</p>
+    <p>**Two things that are NOT safe stops**, both learned at cost:</p>
+    <list ordered="false">
+      <item>**A batch whose files are written and whose journal step is still open.** §4's
+  recovery rule is not advisory — step open ⇒ `git restore` its files and redo
+  the step. Steps are idempotent by construction precisely so this is cheap.</item>
+      <item>**Delegated work committed on a filled-in task journal rather than on the
+  completion notification.** Executors write the ledger as they go, so
+  committing on it captures an intermediate state; doing so once left the tree
+  conform-red for twenty minutes. Now a WAL Constraint, together with its
+  sibling: **a gate never seen to go red is not known to work.**</item>
+    </list>
+  </safe-stop>
+  <phases title="5. Phases">
+    <p>Each phase: entry condition → steps → exit gate (+ prediction, per the
+campaign-plan discipline). Every session inside any phase obeys §4.</p>
+    <phase-zero title="Phase 0 — what stood before Phase A (recorded retrospectively)">
+      <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##PHASE-ZERO-PRODUCES-NO-COMMITS-AND-LATER-PHASES-CARRY-FOUR-ELEMENTS`
+asks every campaign to open with a phase that produces no commits, and this
+plan had none. **No Phase 0 ran.** This section records what stood before Phase
+A, what did Phase 0's job under another name, and what a real Phase 0 would
+have caught earlier — written after the fact and labelled as such, not
+back-dated into the planning prose.*</p>
+      <p>**The tree before Phase A** (§1's own baseline, verified 2026-07-24, restated
+here because a Phase 0 is where a reader looks for it): Progress Control did
+not exist — no `progress-core` crate, no `vibe progress` adapter, no
+`campaigns/` zone, no dashboard — and `&lt;status` appeared nowhere in the tree
+except PROP-043's own dogfood markers. Host `spec/`: **91 `.md` files, 26 699
+lines**. Free-form `**Status:**` lines to convert: **~55**. specmap: index live,
+**34 gated orphans** in `vibe-spec`, pre-existing. Three inline grammars the new
+markup had to avoid colliding with: `@spec://` (~17 uses), `#use` / `#embed` /
+`#source`, and `&lt;!-- REVIEW: --&gt;`.</p>
+      <p>**What did Phase 0's job.** Phase A step 5 — the pilot — is a Phase 0 wearing a
+scaffolding phase's clothes, and it behaved exactly as the law asks: three
+documents of different genres hand-marked, **46/46 paragraphs**, one real drift
+caught (`spec/design/README`'s index was incomplete), and one placement
+ambiguity found (a document with no preamble under its H1) that **amended
+PROP-043 §3.8 in place, before Phase B committed a single marker** — the
+`##RULE-PHASE-ZERO-GATES-EVERYTHING-AFTER` shape, executed under a different
+name. It landed in `ac97f26c`. One finding arrived outside every prediction: a
+live power cut during the phase exposed a missing fsync-before-rename in
+`write_atomic`, fixed with a tolerant cache load plus tests.</p>
+      <p>**What a Phase 0 would have re-measured, and did not.** Both of §1's headline
+numbers were wrong, and both were corrected only *after* Phase B had opened —
+`##PHASE-ZERO-RE-MEASURE-THE-NUMBERS` is the rule they miss:</p>
+      <table>
+        <tr>
+          <td>§1 said</td>
+          <td>`scan` / B0 measured</td>
+          <td>why</td>
+        </tr>
+        <tr>
+          <td>91 files</td>
+          <td>**97**</td>
+          <td>six progress-control documents were authored after the baseline froze</td>
+        </tr>
+        <tr>
+          <td>~55 status lines</td>
+          <td>**73**</td>
+          <td>the estimate missed the `**status:` and `**Status.**` variants</td>
+        </tr>
+      </table>
+      <p>Neither cost anything, because both moved in the harmless direction. The scope
+itself then moved twice more on owner rulings — `8901cd05` dropped
+terraforms/research/neworder, `1c48019a` dropped spec/discipline — so the
+observed corpus ran **97 → 94 → 59 → 58** and the plan's own §1 denominator was
+never the one the campaign executed against. *A baseline that is not re-measured
+at the phase boundary is a number the report will have to apologise for.* Wave
+2 inherited the lesson and re-measured its own §1 at Phase A step 1, where three
+of its figures fell.</p>
+    </phase-zero>
+    <phase-a title="Phase A — Scaffold">
+      <p>*Entry:* this plan + PROP-043 exist. *Steps:*</p>
+      <list ordered="true">
+        <item>Owner ratifies PROP-043 (or amends; amendments land before code).</item>
+        <item>Build the core crate + `vibe progress` adapter: scan / check
+   (`--exhaustive`) / report (views, audiences) / mirror / weave
+   (`--digest`, `--max-tokens`) / rescan / resume. Fixtures include the
+   foreign-grammar non-collision corpus.</item>
+        <item>Create `campaigns/progress-2026-08/` skeleton + journal/state schemas.</item>
+        <item>Dashboard: `tools/progress-dashboard/serve.mjs` — zero-dependency
+   `node:http`, one vanilla page, poll `run/state/`, read-only. Screens:
+   Resume · Overview · Corpus · Stitching · Tasks.</item>
+        <item>Pilot: hand-mark 2–3 documents of different genres (one PROP, one
+   terraform plan, one design doc); run the full loop scan→check→report→
+   mirror→weave on the pilot.</item>
+      </list>
+      <p>*Exit gate:* `self-check` green with the new crate; `check --exhaustive`
+correct on pilot (0 unmarked); dashboard renders pilot state; RESUME.md
+generates. *Prediction:* the pilot exposes ≤ a handful of grammar/placement
+ambiguities — they amend PROP-043 §3 before Phase B, after which the grammar
+holds for the whole wave without further amendment.</p>
+    </phase-a>
+    <phase-b title="Phase B — Markup (facts pass)">
+      <p>*Entry:* A closed. *Executor:* Fable. *Steps:*</p>
+      <list ordered="false">
+        <item>B0: mechanical conversion of ~55 `**Status:**` lines into document
+  markers (script-assisted, reviewed as one diff).</item>
+        <item>B1…Bn: file batches (~8–12 files each). Per file: paragraph-exhaustive
+  markers; sense-preserving re-splits of under-granular paragraphs; missing
+  `{#anchor}`s added; `audience` where obvious; cross-doc findings recorded
+  into the ledger **in passing** (first stitching input is free).</item>
+        <item>Semantic edits are FORBIDDEN in this phase — a semantic problem found
+  becomes a ledger finding, not an edit.</item>
+      </list>
+      <p>*Exit gate:* `check --exhaustive` green over the whole wave-1 scope; mirror
+populated; batch diffs contain markers/splits/anchors only. *Prediction:*
+91 files ≈ 9–12 batches; the unmarked counter is what catches skipped
+paragraphs, not reviewer attention (expect ≥1 real catch).</p>
+    </phase-b>
+    <phase-l title="Phase L — Legacy relocation (owner amendment, 2026-07-25)">
+      <p>*Entry:* B closed. *Ordering law:* L completes **before Phase C opens** —
+verification must cover the relocated facts (owner: «Это нужно сделать до
+фазы верификации, чтобы верификация проверила еще и эти перенесенные
+факты»). *Executor:* Fable (inventory, fact moves, markup); Opus only for
+mechanical bulk the §2 calculus clears. *Mandate (owner, 2026-07-25,
+verbatim):* «После фазы разметки я хочу добавить еще одну фазу: чистка
+terraforms/neworder/discipline/research. Я хочу в итоге убрать их из
+дерева spec и переместить в новую директорию в корне: legacy-spec. Но для
+этого нужно, чтобы на них перестали ссылаться.» Steps, in the owner's
+order:</p>
+      <list ordered="false">
+        <item>L1 — reference inventory: every reference into `spec/terraforms/**`,
+  `spec/research/**`, `spec/neworder/**`, `spec/discipline/**` from (a)
+  the living corpus (`common/` `design/` `modules/` `manual-tests/`
+  `boot/`) and (b) code — specmark scopes / `#[spec(...)]` / `spec://`
+  URIs in crates, doctests included. Cross-references *between* the four
+  legacy dirs don't count — they relocate together.</item>
+        <item>L2 — fact discovery: for each reference, identify the fact(s) the
+  referrer actually cites at the target.</item>
+        <item>L3 — fact relocation: move those facts into the main corpus
+  (`common/design/modules/manual-tests`). Creating new specs is allowed
+  where no natural home exists (owner grant, 2026-07-25: «Если при
+  переносе фактов из устаревших директорий … придется создать какие-то
+  новые спецификации - создавай, это не проблема»).</item>
+        <item>L4 — markup: every relocated fact gets fact-grain markup (`##anchor` +
+  marker) at its new home; new files enter `progress.toml` scope;
+  referrers repoint to the new anchors.</item>
+        <item>L5 — relocation: when zero live references remain, `git mv` the four
+  directories to `legacy-spec/` at the repo root.</item>
+      </list>
+      <p>Note *(superseded the same day — see the LOG)*: the original amendment
+kept `spec/discipline/README.md` in the Phase B markup scope. The
+owner's second 2026-07-25 ruling overrode that: **discipline is out of
+the analysed corpus entirely** («теперь Дисциплина — это часть пакетов
+ai-native»); `progress.toml` dropped its glob, and the directory awaits
+Phase L's reference inventory + relocation like the other three.</p>
+      <p>*Exit gate:* grep-verified zero references from the living corpus and
+crates into the four directories; `check --exhaustive` green over the
+(possibly grown) scope; floor green — specmap included, repointed scopes
+must resolve. *Review point (RESOLVED, owner, 2026-07-25):* this plan
+file **stays in `spec/terraforms/` for now** — «Я передумал. План этой
+кампании пока переносить не нужно. Я хочу чтобы у нас остался правильный
+набор спецификаций и других инструкций, чтобы мы могли делать
+периодические проверки каждый месяц» — the §6 monthly recurrence needs
+the plan and its instruction set in place. **L5 therefore excludes this
+plan file** from the `spec/terraforms/` move; its eventual home is a
+future owner call, no earlier than campaign close-out.</p>
+    </phase-l>
+    <phase-c title="Phase C — Verification (evidence pass)">
+      <p>*Entry:* B **and L** closed (owner amendment 2026-07-25; per-cluster
+start allowed once a cluster's files are marked and untouched by L). *Executor:* Fable + machine evidence. *Steps:* every marker gets a
+verdict in the cache — `confirmed` / `drift` / `unverifiable`:</p>
+      <list ordered="false">
+        <item>machine first: specmap join (implements/verifies), targeted greps, CLI
+  `--help` snapshots, manifest checks, test presence;</item>
+        <item>Fable judgment where machines are silent; verdict without an evidence ref
+  is rejected by `check` (honesty is enforced: not found ⇒ `unverifiable`,
+  never "probably done");</item>
+        <item>verification runs (`command → real output`) are saved as doc fixtures;
+  harvest cards written while knowledge is hot.</item>
+      </list>
+      <p>*Exit gate:* 100 % of markers carry verdicts; the X/Y/Z summary is recorded
+in the LOG — the first measured actuality level of the spec tree.
+*Prediction:* drift concentrates in DRAFT/proposed PROPs and terraform plans
+whose `**Status:**` promised more than the tree delivers; IMPLEMENTED-marked
+units mostly confirm.</p>
+    </phase-c>
+    <phase-d title="Phase D — Stitching (fixpoint over the ledger)">
+      <p>*Entry:* C verdicts exist for the cluster. *Executor:* per §2 budget law.
+*Mechanics:*</p>
+      <list ordered="false">
+        <item>Obligation types: `contradiction` · `duplication` · `missing-support` ·
+  `terminology` · `relocation` · `reality-mismatch`.</item>
+        <item>**Waves:** wave N = SPEC tasks over all docs with open incoming
+  obligations; closures may open new obligations → wave N+1. Convergence =
+  empty ledger; a wave with zero new findings = converged (loop-until-dry).</item>
+        <item>**Escalation rule:** a doc pair whose open-obligation count fails to fall
+  for two consecutive waves is a conceptual conflict → owner decision;
+  iteration on that pair stops.</item>
+        <item>Clusters: registry (001/002/008/010/021/023/030) · workspace/boot
+  (007/009/011/012/020/022/025/034/035/038) · resolver (003/017) · cli/tui
+  (036/037/039/040/041/042) · common/plans/design/research.</item>
+        <item>`reality-mismatch` resolves via the sync-from-code flow (owner approves
+  spec diffs); `remove` verdicts execute here (delete or demote to
+  idea-archive).</item>
+      </list>
+      <p>*Exit gate:* ledger empty (or every survivor is an owner-ruled deferral);
+markers of all touched units updated. *Prediction:* obligations per wave
+fall roughly geometrically; ≤3 waves for wave-1 scope; ≤2 owner
+escalations.</p>
+    </phase-d>
+    <phase-e title="Phase E — Coding (drift-correction by tasks)">
+      <p>*Entry:* per IMPL task — **unit stability**: every anchor the task cites has
+no open obligation and no `unknown` marker (clusters release independently;
+Opus never codes against a moving spec). *Steps:*</p>
+      <list ordered="false">
+        <item>Fable authors DRIFT-NNN tasks from `drift`+`continue` verdicts, priority:
+  user-facing broken promises → internal mechanics → polish.</item>
+        <item>Opus executes exactly per template (stop-rule on any ambiguity); Fable
+  reviews against §6-acceptance verbatim; markers updated on completion
+  (`impl/work → impl/done → test/plan`…); specmap tags on new code shrink
+  the orphan count.</item>
+        <item>`rework` items: feature-flag disable decision (cargo feature vs runtime
+  gate) is recorded as a decision record at this phase's start, then
+  executed per item.</item>
+      </list>
+      <p>*Exit gate:* task queue drained or explicitly deferred; floor green;
+`report --view todo` matches the deferrals file exactly. *Prediction:* ≥80 %
+of DRIFT tasks land without a `returned` round-trip — the template carries
+enough context; `returned` clusters indicate spec gaps, feeding D-waves.</p>
+    </phase-e>
+    <phase-f title="Phase F — Plans and fold">
+      <quote>**DEFERRED TO WAVE 2 — owner ruling, 2026-07-26.** Close-out measured all
+three of this phase's views and found them empty: `freeze/plan` +
+`freeze/work` **0**, `action="rework"` **0**, `stage="idea"` **0**,
+`state="hold"` **1**. Phase B recorded what every fact *is* and was never
+asked to decide what should *happen* to it, so the plans below are
+projections of judgments the campaign never made. Building them from the
+findings ledger instead was offered and declined; running a judgment-marking
+pass first was offered and folded into wave 2, where it can cover the
+`packages/` corpus in the same sweep. See §11's gap list for the measurement.</quote>
+      <p>Three owner plans generated from views: **release/productization**
+(freeze-candidates → showable), **improvement** (rework + disabled),
+**global idea ledger** (idea/hold). Marker density folds: agreeing sections
+collapse to unit markers (lossless, `check`-verified). `vibe progress check`
+enters the standing gate panel. *Exit:* owner accepts the three plans.</p>
+    </phase-f>
+    <phase-g title="Phase G — Documentation">
+      <quote>**DEFERRED TO WAVE 2 — owner ruling, 2026-07-26.** This phase's stated input
+does not exist: `campaigns/progress-2026-08/harvest/` is empty and
+`docdebt.json` carries zero cards, because Phase C skipped the step that
+would have written them ("verification runs saved as doc fixtures; harvest
+cards written while knowledge is hot") and its exit gate did not check for
+them. Writing the two trees from freshly captured runs was offered and
+declined as this session's tail; narrowing to the User Guide alone was
+offered and declined. Both trees, and the harvest pass they depend on, move
+to wave 2 — where the Package Author Guide meets the `packages/` corpus it
+is actually about.</quote>
+      <p>Two trees written **from proven behavior** (harvest cards + captured runs),
+never from spec prose: **User Guide** (audience=user) and **Package Author
+Guide** (audience=author). Chapters release as their features stabilize
+(pipeline with E, not a barrier). Each page carries `documents:
+spec://…#anchor` metadata → doc-coverage becomes a ratchet. Owner reads for
+register and truth. *Exit:* every `--view doc` row is either published or
+explicitly deferred; doc-coverage ratchet armed.</p>
+    </phase-g>
+    <closeout title="Close-out">
+      <p>`baseline.json` written; open tails → `deferrals.md`; REPORT section below
+filled against every prediction; `run/` archived; WAL updated; version tag
+proposed to the owner.</p>
+    </closeout>
+  </phases>
+  <recurrence title="6. Recurrence (the monthly re-run)">
+    <p>`vibe progress rescan --baseline &lt;prev&gt;/baseline.json` → new / suspect /
+carried-forward lists → mini-B on new+changed → re-verify suspect (+ random
+control of carried-forward) → mini-D on new findings → tasks → new baseline.
+Cost O(delta). Between runs, the maintenance discipline (PROP-043 §10) and a
+health-audit category ("markers vs reality") keep the delta small. This plan
+is the standing playbook for those runs; each run appends its own LOG entry
+and rewrites `baseline.json`.</p>
+  </recurrence>
+  <dashboard title="7. Dashboard contract">
+    <p>Reads `run/state/*.json` only (never Markdown, never computes). Zero npm
+dependencies. Screens: **Resume** (open steps red, next steps, freshness
+plaque), **Overview** (phase lane, counters), **Corpus** (tree colored by
+rollup, five views + audience filter), **Stitching** (ledger table +
+open-obligations-per-wave chart; non-falling pairs highlighted as
+escalations), **Tasks** (both queues, statuses, claim owners). Localhost,
+read-only, no auth.</p>
+  </dashboard>
+  <predictions title="8. Predictions (falsifiable, campaign-wide)">
+    <list ordered="true">
+      <item>Wave-1 full weave fits ≤2 shards of a 1M window (digest fits trivially).</item>
+      <item>The exhaustive counter catches ≥1 genuinely skipped paragraph that
+   review alone would have missed.</item>
+      <item>≥60 % of `**Status:** IMPLEMENTED/SHIPPED` claims confirm without drift;
+   ≤10 % of all units end `unverifiable`.</item>
+      <item>Stitching converges in ≤3 waves with ≤2 owner escalations.</item>
+      <item>≥80 % of DRIFT tasks land without a returned round-trip.</item>
+      <item>The month budget holds: A ≈ days, B ≈ 1–1.5 weeks, C ≈ 1 week, D ≈ 3–5
+   days, E ≈ open-ended by queue, F+G ≈ 1 week overlapping E.</item>
+    </list>
+  </predictions>
+  <non-goals title="8.5 Non-goals (named retrospectively)">
+    <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##NON-GOALS-ARE-NAMED-SO-THEY-STAY-VISIBLE` asks a plan
+to name what it deliberately does not do, and this plan named it nowhere. Every
+line below was a real boundary the campaign held — most of them owner rulings
+recorded in §9 — but none was written down as a non-goal at authoring time, and
+the two that ended up costing something (the judgment axis, the doc trees) are
+exactly the two that were never named. Reason and disposition on each, per
+`##EVERY-NON-GOAL-CARRIES-A-REASON-AND-A-DISPOSITION`.*</p>
+    <list ordered="false">
+      <item>**Does NOT extend to `packages/**`.** *Reason:* one corpus at a time; the
+  method had to be proven before it was scaled. *Disposition:* **wave 2**,
+  [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml).</item>
+      <item>**Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
+  specspace, own boot contract, own WAL; the mandate excluded it in as many
+  words («the fractality specspace excluded until the owner says otherwise»).
+  *Disposition:* held by the owner. *(Recorded 2026-07-31, because it turned out
+  to matter: that specspace is a **second adopter** of several flows this
+  programme measures, and a perimeter blind to it reads adoption as absence.)*</item>
+      <item>**Does NOT mark or verify the relocated legacy directories.** *Reason:* Phase
+  L moved terraforms / research / neworder / discipline to root `legacy-spec/`
+  as historical records, not living contracts. *Disposition:* rejected outright
+  — and reinforced by the owner's ruling of 2026-07-31 that `legacy-spec/**` is
+  not evidence of practice in either direction.</item>
+      <item>**Does NOT mark generated artifacts.** `spec/boot/STATIC.xml`,
+  `spec/boot/INDEX.md` and `spec/WAL.xml` in session form. *Reason:* markup
+  written into a generated file dies at the next `vibe install` or wind-down.
+  *Disposition:* rejected; owner rulings 2026-07-24. The *authored* boot
+  snippets (`00-core`, `90-user`) stay observed via `spec/boot/[0-9]*.md`.</item>
+      <item>**Does NOT edit `spec/boot/90-user.xml`.** *Reason:* user-owned;
+  `00-core`'s `NOTOUCH-90-USER` forbids it to every session. *Disposition:*
+  deferred **to the owner, not to a campaign** — F-063's half was handed over in
+  full rather than edited, and closed 2026-07-26 when the owner lifted the bar.</item>
+      <item>**Does NOT decide what should *happen* to a fact.** Phase B marked what 4 917
+  facts **are**; nothing in any phase asked what should be **done** about them.
+  *Reason:* none was given at authoring time — this is the non-goal the campaign
+  held without ever choosing it, which is why §5-F's three views came out empty
+  (`freeze/plan` 0, `action="rework"` 0, `stage="idea"` 0). *Disposition:*
+  deferred to wave 2 as amendment **A3(i)**, the judgment-marking pass.</item>
+      <item>**Does NOT write the two documentation trees.** User Guide and Package Author
+  Guide. *Reason:* Phase G's definition demands harvest cards and captured runs
+  as input, and Phase C skipped the step that produces them. *Disposition:*
+  deferred to wave 2 as amendment **A3(ii)** — the Package Author Guide in
+  particular, since `packages/` is the corpus it documents.</item>
+      <item>**Does NOT use fractality.** *Reason:* the owner's decision, verbatim in §0,
+  deliberately overriding the standing delegation-first default for this
+  campaign's duration — «Я хочу чтобы Fable сделала максимум высокоуровневых
+  задач». *Disposition:* held by the owner; do not "optimize" it back.</item>
+    </list>
+  </non-goals>
+  <risks title="8.6 Risks and fallbacks (recorded retrospectively)">
+    <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EVERY-RISK-CARRIES-A-DETECTION-SIGNAL-AND-A-PLAN-B`
+asks every plan to name its risks with a detection signal and a plan B, and
+this plan named none. **A risk register written after the campaign is a list of
+what happened, not of what was feared**, and it is labelled as such: each row
+below fired, and each says what detected it — including the four whose honest
+answer is «nothing detected it; the next phase tripped over it». The
+`fired-and-undetected` column is the useful part of a retrospective register,
+because it is the part wave 2 turned into amendments.*</p>
+    <list ordered="false">
+      <item>**R1 — a verdict whose evidence is another spec document.** *Fired:* F-063.
+  Five token-precedence anchors in PROP-002 were sealed `confirmed` on the
+  evidence «token loader 3-source order matches 90-user boot facts» — another
+  spec file, carrying the identical error, in a security-relevant place.
+  *Detection that existed:* **none.** Phase C's exit gate checked only that
+  every marker carried a verdict, never what the verdict rested on. *Fallback
+  taken:* wave 2's amendment **A2** — every verdict names which source class it
+  rests on, and one resting on the package's own artifacts alone is counted as
+  self-referential rather than as independent confirmation.</item>
+      <item>**R2 — the campaign's own corrections introduce drift.** *Fired:* F-065.
+  Phase D authored a `Shipped:` line claiming a `Baseline::store` that had never
+  been built, and the verification pass then confirmed the row on it.
+  *Detection that existed:* **none** — nothing predicted that stitching could
+  add false claims. *Fallback taken:* wave 2's **prediction 6**, which makes
+  «zero new false claims, zero of them confirmed» falsifiable, with wave 1's
+  answer on record as 1 and 1.</item>
+      <item>**R3 — a phase whose exit gate does not check its own steps.** *Fired:* Phase
+  C listed «harvest cards written while knowledge is hot» among its steps and
+  gated only on «100 % of markers carry verdicts». The step was skipped, it cost
+  nothing at the time, and Phase G arrived to consume an empty directory.
+  *Detection:* the downstream phase, three days late. *Fallback taken:* wave 2's
+  amendment **A1** — every exit gate enumerates that phase's own steps.</item>
+      <item>**R4 — a prediction no step forces you to run.** *Fired:* prediction 1. No
+  step of the plan required a `weave`, so the claim sat untested for the whole
+  campaign and was measured at close-out purely to fill the report row. *Plan B
+  taken:* wave 2's amendment **A5** — every prediction names the step that tests
+  it, or says outright that it is scored at close-out on purpose.</item>
+      <item>**R5 — a state projection nothing refreshes drifts silently.** *Fired:*
+  `tasks.json` sat 18 tasks stale and the dashboard read five tasks for a week;
+  `findings.json` survived only because it was maintained by hand all campaign.
+  *Detection:* none — a projection nothing refreshes and nothing checks has no
+  signal by construction. *Fallback:* the numbers of record are the ones a
+  command prints, never the ones a projection holds.</item>
+      <item>**R6 — a gate never seen to go red is not known to work.** *Fired:* twice,
+  favourably — two executors ran positive controls before trusting a green
+  result, and were right to. *Fallback:* now a standing WAL Constraint.</item>
+      <item>**R7 — session death, budget exhaustion, power loss mid-corpus.** *The one
+  risk this plan did carry a fallback for*, in §4, and it held: journal
+  `step-start` / `step-done`, torn tail discarded, maximum loss one step.
+  *Fired:* a **live power cut during Phase A**, which additionally exposed a
+  missing fsync-before-rename in `write_atomic` — fixed with a tolerant cache
+  load plus tests. *Verdict:* the crash-safety law is the one part of this plan
+  that was written in advance and needed no amendment.</item>
+      <item>**R8 — an un-isolated test reaches real user state.** *Fired:* F-057, filed as
+  a stray cache directory and found to be a credential-precedence leg —
+  `vibe search` resolves a GitHub token through four legs and the fourth is a
+  file in the settings directory the test could not reach, so an un-isolated run
+  attached the real publish token to its outbound request. *Detection:*
+  accidental, on the third pass — F-055, F-056 and F-057 were **one forgotten
+  discipline caught three times by accident**. *Measured, not inferred:* against
+  a loopback listener recording header names and lengths only, **47 bytes of
+  `Authorization` before the fix, none after**; exactly one test reaches that
+  path and it points `api_base` at 127.0.0.1, so the investigation closed with
+  no rotation needed. *Fallback taken:* DRIFT-020 converts the discipline into a
+  gate.</item>
+    </list>
+  </risks>
+  <log title="9. LOG (execution ledger — append per batch/wave/phase)">
+    <list ordered="false">
+      <item>**2026-07-24 · Phase A CLOSED, exit gate green in full.** Commits
+  `9446a2c` `b1276c3` `edd487b` (document package) · `8b18152` (core +
+  adapter) · `38855c0` (campaign zone + dashboard) · `ac97f26` (pilot +
+  ratification + §3.8 amendment) · `9a69b6f` (WAL). PROP-043 RATIFIED
+  in session. Pilot: 3 genres, 46/46 paragraphs marked, one real drift
+  caught (design/README index was incomplete — fixed). Predictions:
+  "pilot exposes placement ambiguities" CONFIRMED (the preamble-less-H1
+  amendment); bonus finding outside any prediction — a live power cut
+  exposed missing fsync-before-rename in `write_atomic`; fixed with
+  tolerant cache load + tests. Floor (`self-check`) green;
+  `progress-core` gated in conform.</item>
+      <item>**2026-07-24 · B0 default ruled (Fable, owner-visible in session):**
+  the converted `**Status:**` lines are NOT deleted — the document
+  marker is ADDED and the legacy line stays (its dates and prose are
+  history; deduplication is Phase D material). Phase B makes no
+  semantic edits, per its own law.</item>
+      <item>**2026-07-24 · Phase B OPENED; B0 landed.** `progress.toml` (wave-1
+  scope `spec/**/*.md`) committed as the campaign's first journal step
+  (`8d5ccc8`); scan on the narrowed scope: 97 files (§1 counted 91 —
+  the six newcomers are the progress-control documents authored after
+  the baseline froze), 3 684 paragraphs, 46 pre-marked by the pilot.
+  B0 converted **73** legacy status lines (not ~55 — the §1 estimate
+  missed the `**status:` / `**Status.**` variants) into document
+  markers as one reviewed diff: 73 files, +73 marker lines, 0
+  deletions (the B0 ruling above held — legacy lines stay). `check`
+  clean; markers 68 → 141. First stitching input recorded in passing:
+  **12 ledger findings** (F-001…F-012, `run/state/findings.json`) —
+  status lines contradicted by executed plans or shipped crates
+  (SELF-SUFFICIENCY / SETTINGS-HOME / CONVERT / CULTURAL-EXTRACTION
+  plans; the PROP-019/024/030/036/037/040 family; two missing
+  superseded notices: TREE-TUI v0.1, PROP-026).</item>
+      <item>**Scope question for the owner (found in B0, parked):**
+  `spec/boot/STATIC.xml` and `spec/boot/INDEX.md` are *generated by
+  vibe* («do not edit») yet sit inside the wave-1 scope
+  `spec/**/*.md`. Markup written into them dies on the next
+  `vibe install` regeneration. Options: exclude generated boot
+  artifacts from `progress.toml`, or carry their markers in the
+  generators. Until ruled, B1 batches skip both files — which keeps
+  `check --exhaustive` red on them, so the Phase B exit gate needs
+  this ruling.</item>
+      <item>**2026-07-24 · B1 (spec/common, paragraph grammar) landed — then the
+  grain changed.** All 12 `spec/common` files marked
+  paragraph-exhaustively (389 paragraphs; PROP-000 got its document
+  marker + the missing `{#invariants}` anchor; open-questions sections
+  marked `spec/work`), `check` clean, commit `91274c8`. Mid-batch a
+  real power cut killed the session; §4 recovery worked as designed —
+  journal showed one open step (`b1-prop-000`), rescan verified its
+  edits clean, the step closed without redo. In passing: PROP-000 §3
+  still describes the pre-2026-07-12 proprietary-EULA posture
+  (F-014-to-be), PROP-018's MVP is implemented while its line says
+  proposed (F-013-to-be), and the cache does not prune records that
+  fall out of scope after `progress.toml` narrowing — corpus.json
+  carries 497 entries vs 97 observed, dashboard counters inflated
+  (DRIFT-001-to-be).</item>
+      <item>**2026-07-24 · FACT-GRAIN DIRECTIVE (owner, in session, verbatim):**
+  «Каждый элемент такого списка по сути является самостоятельным
+  фактом, и его тоже нужно размечать. В том числе, inline факты
+  перечисленные внутри текста … Я хочу чтобы ты для всех текстов
+  сделала полное деконструирование всех фактов, имеющихся в системе,
+  совершенно всех текстов. … если какой-то абзац можно переписать в
+  виде нумерованного или ненумерованного списка фактов и каждому из
+  них поставить в соответствие разметку статуса — нужно сделать это. В
+  идеале почти все тексты превращаются в какие-то списки … Это
+  означает ЗНАЧИТЕЛЬНОЕ УСЛОЖНЕНИЕ кода Системы, инструкций Системы и
+  рост количества фактов … Уже проиндексированное и размеченное нужно
+  переиндексировать и переразметить». Clarifications the same session:
+  list-item markers go at the item's start or end, `@` or XML notation
+  both; **table cells are marked the same way**. Ratified into
+  PROP-043 as the fact amendment (§3.8 items 4–6, §3.9, §8) — the
+  campaign granularity drops from paragraph to **fact**; deconstruction
+  of multi-fact prose into lists is now part of the markup pass
+  (sense-preserving, wording-preserving; semantic edits still
+  forbidden); everything already marked (pilot + B0 doc markers + B1
+  common) is re-marked under the fact grammar.</item>
+      <item>**2026-07-24 · Fact-anchor addenda (owner, same session):** (1)
+  list-item markers sit at the item's start or end, `@` or XML notation
+  both; (2) «таблицы тоже нужно в ячейках размечать аналогичным
+  способом» — table body cells are units, marked in-cell; (3) list
+  items get hashtag addressing — «Элементам списков стоит придумать
+  адресацию с помощью хэштегов … формат типа `1. #RULE-001 Текст
+  правила @status:freeze/done`», refined to **`##RULE-001`** (double hash) «чтобы
+  их отличать» from the `#use`-family directives; (4) «каждый абзац,
+  каждый элемент списка … который имеет статус, нужно разметить с
+  помощью якоря» — the anchored-when-marked law: a marked unit without
+  a `##&lt;ID&gt;` anchor is a `check` error. All four ratified into
+  PROP-043 §3.8 / §8.</item>
+      <item>**2026-07-24 · Fact-grain scanner LANDED; fact grammar re-piloted.**
+  PROP-043 amendment ratified and committed (`cd2688f`); the scanner
+  (`b67fa97`): list items at every nesting level, lead lines, table
+  body cells as countable units, `##&lt;ID&gt;` fact anchors in one id space
+  with heading anchors, duplicate detection, the anchored-when-marked
+  error; 31 tests green, cache schema 2 (the rebuild also flushed the
+  400 out-of-scope records — DRIFT-001 still files the general prune
+  defect for Opus, `910d545`). Scale shift measured: wave-1 = 3 684
+  paragraphs → **8 219 facts**; `check` currently carries **435
+  expected MissingAnchor** errors on the pre-amendment markup (pilot +
+  B1 common) — they burn down as files are re-marked. Re-pilot
+  (`6714876`): PROP-029 deconstructed 9 paragraphs → 30 anchored
+  facts, 0 unmarked, 0 issues — the demo the owner reviewed in
+  session. Ledger: F-013 (PROP-018 MVP implemented vs proposed),
+  F-014 (PROP-000 §3 license text predates the 2026-07-12 UPL-1.0
+  relicense).</item>
+      <item>**RESOLVED review point (owner, 2026-07-24) — anchor naming
+  convention:** the re-pilot mixed `##UPPER-SLUG` for normative facts
+  (ADDR-LAW, RULE-style) with `##kebab` for service units
+  (status-line, carriers-lead). Keep both registers, or fix one?
+  **Ruling: both registers stay** — UPPER = normative fact, kebab =
+  service unit; the register itself carries the normativity signal.
+  Recorded as a decision at PROP-043 §3.8.</item>
+      <item>**RESOLVED review point (owner, 2026-07-24) — generated files in
+  scope:** `spec/boot/STATIC.xml` + `INDEX.md` are vibe-generated
+  («do not edit») yet inside the wave-1 globs; markup written there
+  dies on regeneration. Exclude them from `progress.toml`, or carry
+  their markers in the generators? **Ruling: exclude from scope.**
+  §4 of PROP-043 is include-only by design, so the exclusion is
+  expressed by include enumeration (`spec/boot/[0-9]*.md` admits the
+  authored snippets, skips the generated pair); cache rebuilt from
+  scratch (the DRIFT-001 no-prune defect makes a stale-record purge
+  otherwise impossible). Scope: 97 → **95 files**, 8 219 → **7 872
+  facts**. This also closes the B0-parked scope question above.</item>
+      <item>**2026-07-24 · B1f LANDED — spec/common is fact-grain clean; the two
+  review points RESOLVED (above).** The scanner-handover step was closed
+  retroactively (`b67fa97` verified committed; RESUME had prescribed a
+  redo of finished work). All 11 remaining `spec/common` files re-marked
+  under the fact grammar: **386 paragraph-grain units → 979 anchored
+  facts** (batch commits `83bed35` / `4aed13f` / `d639bcf`; the batch-1
+  message overstates its own counts — 109 units → 296 facts is the true
+  figure, corrected here, history left unrewritten). Cluster total:
+  **1 009 facts, 0 unmarked, 0 issues** — cluster MissingAnchor 386 → 0;
+  the wave's residue is 40 expected errors in the two pilot files
+  (SHRINK-PLAN 28, design/README 12), owned by their B2+ batches.
+  Grammar traps found and recorded: blockquote units cannot carry
+  `##` anchors (ledgered **F-015**; two units re-formed — a bold
+  paragraph, a fenced template); a wrapped prose line whose continuation
+  opens with `+ ` parses as a phantom list item (two fixed in PROP-019).
+  Tasks queued for Opus: **DRIFT-002** (`parse.rs` 809 lines &gt; 600
+  budget — the standing floor is RED on this single new conform finding
+  until it lands; the B1f batch commits were made against that known,
+  ledgered red) and **DRIFT-003** (`campaign.json` phase hardcoded
+  `"A"`, dashboard/RESUME render a stale phase). Prediction check in
+  passing: the §5-B "unmarked counter catches what review misses"
+  prediction keeps confirming — the counter caught both phantom-item
+  wraps instantly.</item>
+      <item>**2026-07-24 · DRIFT-002 executed and landed — the floor is green
+  again.** First DRIFT task through the full loop: Opus executed the
+  parse.rs split exactly per the task file (six `parse/` modules, max
+  261 lines; motion, not rewrite), Fable reviewed and accepted (spot-diff
+  verbatim, differential oracle — corpus identical modulo timestamp, 31
+  tests green, conform 0 new, `self-check` all green with the real exit
+  code). One accepted deviation: per-file `//!` module docs, the crate's
+  own convention. B2 opened in parallel the same evening: templates +
+  modules README + PROP-042/025 marked (F-016 structural index drift,
+  F-017 code-ahead-of-spec `vibe aiui scrollbar`). The §5-E prediction
+  ("≥80 % of DRIFT tasks land without a returned round-trip") starts
+  1/1.</item>
+      <item>**2026-07-24 · DRIFT-003 landed — the phase lane is honest; B2 runs
+  through batch 5.** Second DRIFT task through the loop, again no
+  returned round-trip (§5-E prediction 2/2): the phase is now an
+  append-only journal event (`{"kind":"phase","value":"B"}`, last
+  wins, absent ⇒ "A"), derived by the adapter — never compiled in,
+  never parsed from Markdown; `read_journal` distinguishes a torn
+  tail (incomplete JSON, stops) from an unknown kind (complete JSON,
+  skipped) with both laws test-pinned; the live journal is
+  backfilled and `campaign.json`/RESUME render **B**. B2 batches
+  3–5 in parallel: PROP-026 (superseded-in-topology arc split
+  impl/done vs spec/done per fact), PROP-021/023 (bridge pair),
+  PROP-020/022 (F-018: hooks ship while the line says proposed),
+  PROP-041 (owner-minted per-REQ `{#anchor}`s reused verbatim as
+  `##` ids — one name, two notations; two heading-vs-REQ same-name
+  collisions surfaced by the shared id space, F-019 for the stale
+  DRAFT line). Ledger: 19 findings. B2 stands at 12/35 files.</item>
+      <item>**RESOLVED review point (owner, 2026-07-24, in session) — the WAL
+  and the boot files:** «spec/WAL.xml не должен участвовать в проверке,
+  это генерирующиеся артефакты; также проверь про файлы внутри
+  spec/boot». **Ruling applied: `spec/WAL.xml` is out of scope** — the
+  checkpoint is rewritten wholesale at every session end, so markup
+  cannot live in it (the same mortality argument as the generated
+  boot pair). The boot check reported back: `STATIC.md`/`INDEX.md`
+  are generated and were already excluded by the morning ruling;
+  `00-core.xml`/`90-user.xml` are **authored, user-owned, never
+  written by vibe** (PROP-000 invariant 3) — they stay observed.
+  Scope: 95 → **94 files**; the `spec/*.md` include is gone (WAL was
+  its only match), so a future top-level spec doc must be added to
+  `progress.toml` explicitly.</item>
+      <item>**2026-07-24 · Owner directive — the coder-tier engine version.** The
+  §2 coder tier ("Opus") runs on the owner-designated engine
+  `claude-opus-5` from the next session on. Verified: the id is live
+  (one-shot CLI probe answered); the session-alias default resolves to
+  the previous engine, so two pins are installed — the machine-local
+  subagent-model env pin (`.claude/settings.local.json`, blanket) and
+  the committed selective agent type (`.claude/agents/opus5.md`) —
+  both effective from the next session (agent-type registration and
+  settings-env injection are session-start events; verified
+  empirically mid-session). Tasks DRIFT-002…005 of this date executed
+  on the session-alias engine before the directive; all passed review
+  with no returned round-trip.</item>
+      <item>**2026-07-24 · DRIFT-005 landed — F-022 closed end to end; the DRIFT
+  loop stands 5/5 no-return.** The owner's fact-links commission is
+  complete across all three layers: contract (PROP-014 §2.1 + PROP-035
+  §5/§7.3 with the reviewed heading-repeat precision), engine
+  (DRIFT-004, core v0.8.0 mdspec fact units — all language families
+  inherit through the shared engine at their next minting), and host
+  compiler (DRIFT-005, vibe-spec: `NodeKind::Fact` IR leaves, per-fact
+  override under `:add`, `CompileError::DuplicateId` merged-view gate,
+  fact-addressed `#embed`). Code can now cite
+  `spec://…#&lt;FACT-ID&gt;` per statement, and the §6 evidence join gains
+  the campaign grain for Phase C. Session-end: the coder-tier engine
+  pin (claude-opus-5) binds from the next session.</item>
+      <item>**2026-07-25 · B2 modules sweep — 18 files in batches 8–18; B2 at
+  32/35.** PROP-015/034/027/036/030/011/012/010/040/038/008/001/009/
+  017/043/035/037/007 marked at fact grain (commits
+  `b27336ae`…`1e7dff01`), ~1 540 units → ~1 770 anchored facts; every
+  file 0 unmarked / 0 issues. Grammar precedents set: the
+  Decision-paragraph idiom, `##req-*`/`##design-*` lines, `##self-uri`,
+  checkbox anchors before `[x]`, `@impl/plan` for unexecuted phase
+  plans, superseded-arc spec/done-vs-impl/done, em-dash cells count.
+  Ledger +7: F-023 (dangling PROP-043 launcher ref) and the
+  stale-header family F-024…F-029 — one Phase C/D sweep fixes all.
+  GitVerse SSH down all session (verified clean ancestor via HTTPS;
+  plain re-fan on recovery, never `--force`); GitHub carries everything.</item>
+      <item>**RESOLVED scope ruling (owner, 2026-07-25, in session):** «я хочу
+  исключить из проверки spec/terraforms, spec/research, spec/neworder.
+  Это те вещи, которые мы делали в качестве рефакторингов и
+  исследований давным-давно». **Ruling applied:** the three subtrees
+  leave the include enumeration in `progress.toml` — long-executed
+  plans and studies are historical records, not living contracts.
+  Scope: 94 → **59 files**, 8 589 → **4 889 facts**; the SHRINK-PLAN
+  pilot (28 expected errors) leaves with terraforms, so the expected
+  `check` residue drops to **12** (design/README, burns at its
+  re-mark). The DRIFT-001 cache prune dropped the out-of-scope records
+  cleanly. The campaign plan itself is now out of scope — its LOG stays
+  the process record, unmarked.</item>
+      <item>**Next step:** finish the B2 tail — PROP-005 → PROP-003 → PROP-002
+  (modules to 35/35), then `spec/design` (incl. the README re-mark
+  burning the last 12 expected errors), `spec/boot` authored pair
+  (additive markers only — user-owned files, zero re-forming),
+  `spec/manual-tests` MT-01/02/03, `spec/discipline/README`. Journal
+  step per file; batch commits ~1–3 files; then the Phase B exit gate
+  (`check --exhaustive` clean over the 59-file scope) and the §4
+  boundary ritual.</item>
+      <item>**2026-07-25 · B2 batch 20 — PROP-003 marked; third superseded-arc
+  split.** 310 units → 313 anchored facts, 0/0 (`d596c631`). The libsolv
+  engine sections (§2.2/§2.3/§3.x, phase A, migration step 1) record
+  history at spec/done — the SUPERSEDED-by-PROP-017 blockquote re-formed
+  verbatim per F-015; the dependency vocabulary is impl/done **verified
+  against the shipped crates** (features.rs incl. weak `?/` and exclusive
+  groups, activation.rs — `if_os` impl/work per its recorded deviates,
+  conditional.rs + fixpoint, manifest/i18n.rs, the four vibe-check
+  entries, lockfile meta/package fields). Unshipped details stay
+  spec/done: `pin_preferences` (recorded deviates), `VIBE_LANGUAGE`,
+  dotted-key translations, `--all-languages`, `vibe review`, `outdated
+  --upstream`, the LLM emission engine (`vibe-llm` pending); Phase F
+  impl/plan. req-line fact ids dodge the owner-minted `req-*` heading
+  anchors via `-req`/`-design` suffixes. Ledger +2: F-030 (stale
+  design-proposal status line — F-024 family), F-031 (internal r2
+  leftovers: §2.8 fence r1 syntax, §4.3 → §2.5.4 misref, §2.7.5/§2.9
+  examples vs shipped `language_chain`/schema-v5 shape).</item>
+      <item>**2026-07-25 · Owner amendment — Phase L (legacy relocation) inserted
+  between B and C.** Directive quoted verbatim in the §5 Phase L section;
+  the four dirs `spec/terraforms` `spec/research` `spec/neworder`
+  `spec/discipline` leave the spec tree for root `legacy-spec/` once
+  nothing references them: L1 reference inventory (living corpus + code —
+  specmark, doctests) → L2 fact discovery → L3 fact relocation into
+  `common/design/modules/manual-tests` (new specs allowed — owner grant
+  same day) → L4 fact-grain markup at the new homes (+`progress.toml`
+  scope grows) → L5 `git mv` to `legacy-spec/`. Ordering law: before
+  Phase C, so verification covers the relocated facts. Phase C entry
+  updated to "B and L closed". **Review point (OPEN):** the campaign plan
+  itself lives in `spec/terraforms/` — relocate mid-campaign or at
+  close-out? Owner call before L5.</item>
+    </list>
+    <list ordered="false">
+      <item>**RESOLVED scope ruling (owner, 2026-07-25, second in session):**
+  «spec/discipline нужно исключить из анализируемого корпуса, потому что
+  теперь Дисциплина - это часть пакетов ai-native, а саму spec/discipline
+  после определения и портирования ссылок - перенести в legacy-spec.
+  Сейчас она всё ещё в основном корпусе». **Ruling applied:**
+  `spec/discipline/**` leaves the `progress.toml` include enumeration —
+  the Discipline's living home is the ai-native packages
+  (`core-ai-native` + the language stacks), so the host copy is a
+  historical record like terraforms/research/neworder. Scope: 59 → **58
+  files**; discipline/README's 16 facts leave the corpus; the B2 tail is
+  now boot pair + manual-tests only. The Phase L §5 note that kept
+  discipline/README in the B scope is superseded (corrected in place);
+  Phase L's four-directory relocation list is unchanged — discipline
+  still relocates to `legacy-spec/` after L1's reference inventory and
+  L3's fact porting.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · PHASE B CLOSED — the corpus is fully marked; exit gate
+  green in full.** **Gate:** `progress check --exhaustive` clean over the
+  final scope (58 files, 4 880 facts, 4 944 markers, 0 errors, 0
+  warnings); floor `bash tools/self-check.sh` → `all green`, real exit
+  code 0. **Final scope after the two 2026-07-25 rulings:** 58 files /
+  4 880 facts (94→59 terraforms/research/neworder; 59→58 discipline).
+  **The B2 tail (batches 20–26, this session):** PROP-003 — 313 facts,
+  the third superseded-arc split, vocabulary verified against the
+  shipped crates (`d596c631`); PROP-002 — 359 facts, modules close
+  35/35 (`9328becb`); design/README re-mark burns the last 12 expected
+  errors — the gate reads **0** for the first time in the campaign
+  (`cb6e55b0`); loading-and-boot-model + action-system (`d1a09275`);
+  workspace-and-qualified-naming + tui-visual-language — design 6/6
+  (`91fde06c`); the authored boot pair, additive-only honoured
+  line-for-line (`ae10dca2`); manual-tests MT-01/02/03 — genre
+  precedent: step items and their Expected paragraphs are separate
+  units, pending sign-offs honestly `impl/work` (`7d9dd964`).
+  Interleaved the same session: the Phase L owner amendment
+  (`c0147947`) and the discipline scope ruling (`1c48019a`). **Ledger
+  at close: 35 findings** (F-030…F-034 new — two stale-header rows,
+  PROP-003's internal r2 drift, the lore "forthcoming" family).
+  **Predictions (§8) at the boundary:** P2 (the counter catches what
+  review misses) CONFIRMED repeatedly — this session it caught the
+  PROP-003 weak-deps continuation and the workspace-naming §7 intro;
+  P5 (DRIFT no-return) holds at 5/5; P6 for B CONFIRMED with room —
+  the markup pass ran 2026-07-24→25, two days against the 1–1.5-week
+  budget — **while the §5-B batch-count guess (9–12) was falsified by
+  the mid-phase fact-grain amendment** (~30 batches at the finer
+  grain; the grain change, not slippage); P1/P3/P4 stay open for C/D.
+  **Phase lane:** the journal-derived phase stays B until the owner
+  opens the next; per the 2026-07-25 amendment the next phase is
+  **L (legacy relocation)**, then C. **Awaiting the owner's call to
+  open Phase L.**</item>
+    </list>
+    <list ordered="false">
+      <item>**RESOLVED review point + the B→L handoff (owner, 2026-07-25, closing
+  the session).** The plan-file question is settled: the first instinct
+  («Сам план кампании тоже перенеси в legacy-spec») was reversed in the
+  same message — «Я передумал. План этой кампании пока переносить не
+  нужно. Я хочу чтобы у нас остался правильный набор спецификаций и
+  других инструкций, чтобы мы могли делать периодические проверки
+  каждый месяц». **Ruling applied:** the campaign plan stays in
+  `spec/terraforms/`; L5's move excludes it (the §5 Phase L review point
+  is rewritten RESOLVED in place); its eventual relocation is a future
+  owner call, no earlier than close-out — the §6 monthly recurrence
+  keeps consuming it in place. And the handoff: «Перенеси все эти
+  активности в следующую сессию и напиши как мне ее продолжить» —
+  **Phase L execution moves wholesale to the next session**; this
+  session ends at the closed-B boundary; `CONTINUE.md` carries the
+  cold-resume recipe and the recommended opening phrase by which the
+  owner opens Phase L explicitly (the phase event lands in the journal
+  only then, per the DRIFT-003 phase lane).</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · PHASE L EXECUTED AND CLOSED — the legacy dirs are out
+  of the spec tree.** Opened on the owner's recorded phrase (journal
+  phase event `L` + `l1-inventory`). **L1 (inventory):** gate-binding
+  set = 26 sites in 13 corpus files + 1 crates doc comment
+  (`outdated.rs`); `spec/neworder` and `spec/discipline` had **zero**
+  corpus inbound; out-of-gate referrers classified into live docs
+  (ROADMAP, docs/), historical reports (terraform/), campaign zone,
+  and an explicit leave-list (packages vendored comments, neworder2
+  baselines, AUDIT quote, closed debt-ledger row DBT-0016,
+  VIBEVM-SPEC — no real refs). **L2 (fact discovery) verdict: every
+  cited fact was already corpus-resident** — the RP1
+  rejected-alternative at design/action-system.xml §4 D1, the ten
+  design decisions, the DO1–DO18/Δ1–Δ16 sets restated in place, the
+  settings deltas named inline, the campaign histories in PROP-038 §6
+  / PROP-027 / PROP-036 — so **L3 ported nothing and the owner's
+  new-spec grant went unused**; every citation dissolved into
+  archive-provenance form instead (the honest inverse of the plan's
+  port-then-repoint expectation, recorded here as the L2→L3 finding).
+  **L4 (repoints):** four batch commits `83346e78` `f8f347d8`
+  `9514e8fb` `1ec6a27c` — 26 sites incl. both `spec://org.vibevm.core/vibevm/research`
+  URI retirements, plus **four word-level sites the path greps could
+  not see** (PROP-031 status-line, PROP-037 plan pointer, PROP-040
+  delta-mapping, PROP-041 `spec.research` §3.7): the literal-backtick
+  and dotted forms needed a lookbehind/word sweep — a reusable lesson
+  for the §6 recurrence. Scope stayed 58 files (no new files → no
+  `progress.toml` growth). **L5 (relocation):** `70f3cbdd` — 35 files
+  `git mv`'d (terraforms 25, research 8, neworder 1, discipline 1) to
+  root `legacy-spec/`, the campaign plan carve-out honoured; live
+  out-of-gate pointers followed in the same commit (ROADMAP 15
+  occurrences, docs/ 8, terraform 2 links, findings.json 11 paths,
+  discipline.lock recipe, progress.toml comment); historical prose,
+  quoted URIs, the closed debt row, and the pre-broken PLAYBOOK link
+  stayed verbatim — records are not rewritten. `f311f429` regenerated
+  the stale host specmap (absorbed B-phase drift + the move; ratchet
+  37 gated orphans within allowance, 0 suspects). **Exit gate:** the
+  reference greps read zero into the four dirs from corpus + crates
+  (plan carve-out aside); `check --exhaustive` clean (58 files, 4 880
+  facts, 0 errors); floor `self-check` all green, real exit 0.
+  **Phase C (verification) awaits the owner's opening call** per the
+  resume-boundary law.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · PHASE C OPENED — the verify loop is live; the boot pair
+  and manual-tests carry verdicts.** Mechanics fixed for the whole phase
+  (PROP-043 §7.1/§7.5): verdicts live in the cache's per-file `campaign`
+  map — `{verify_batch, verified_at, processed_hash, verdicts{anchor →
+  {v, ev[]}}, summary}` — never in markup; `scan` preserves the maps
+  (verified live) and projects them into `corpus.json` for the
+  dashboard. Verdict semantics by stage: `impl/done` ⇒ presence
+  evidence; `spec/done` ⇒ absence (shipped-but-still-marked-spec is the
+  stale-header drift); `doc/done` ⇒ no contradiction with the contract;
+  dated historical records confirm unless falsified; present-state
+  claims blocked by the GitVerse outage go `unverifiable`, never
+  "probably fine". Per-file coverage is assert-gated (extractor anchors
+  == cache `marker_count` == verdict keys). **c0-boot** (`bb337e90`):
+  64 facts — 61 confirmed / 1 drift / 2 unverifiable; the drift is real
+  (LAYER-CODE names a nonexistent root `tests/` → F-035, user-owned
+  file so the wording fix is the owner's). **c1-manual-tests:** 67
+  facts — 61 / 6 / 0; MT-01's EXP-2/6/7/8/9 describe the pre-revision
+  TUI keymap (shipped: F1…F6 menus, Shift+arrows tabs, Esc+confirm
+  quit) → F-037 re-author; MT-02's footer quote omits F4 and says
+  q-quit, its "once a picker lands" is superseded by the F4 settings
+  menu → F-038; and the sweep caught a code-side stale clap help on
+  `--plain` contradicting the shipped console-TUI default → F-036
+  (Phase E DRIFT candidate). MT-03 verified clean 16/16. **Running
+  tally: 131 / 4 944 markers judged — 122 confirmed / 7 drift / 2
+  unverifiable; findings 38.** Machine-evidence base mapped: specmap
+  carries 626 edges into `spec/modules` units and 111 into
+  `spec/common` (section grain; facts inherit their section's edges),
+  so the module cluster is the evidence-rich grind; design (6 files) →
+  common → modules is the queued order.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c2-design — the design cluster verified; the drift
+  is the aged-tense family.** 306 units judged (300 fact anchors + 6
+  status-element bundles; coverage law recorded in the cache maps:
+  verdicts key on fact anchors, table cell-markers inherit their row,
+  `&lt;status&gt;` elements judged as `_elements`): **291 confirmed / 15
+  drift / 0 unverifiable**. The drift map: loading-and-boot-model 8 —
+  the lore's three inclusion types `inline/static/dynamic` (default
+  `static`) against the shipped `link = "static" | "dynamic"` (default
+  `dynamic`), plus "forthcoming" ×2 and the §6 `static|static` typo →
+  **F-039**; action-system 4 — the F-034 forthcoming family, sharpened
+  by `aiui.rs` actually shipping `list_actions` + `invoke` against the
+  doc's "Not built now"; workspace-naming 1 — the M1.18-vs-M1.19
+  milestone shift → **F-040**; tui-visual-language 2 — the "current
+  ASCII scaffolding" present-tense and "When §2.2 carries" against
+  five existing anchors → **F-041**. Hard confirmations: the
+  `detect_tier` signature matches the lore literally, `PAD_X/PAD_Y/
+  GUTTER` exact, palette hexes byte-equal in `rose_pine.rs`/
+  `catppuccin.rs`, exit code 7 = `AMBIGUOUS_PACKAGE`, the §2 module
+  table maps 1:1 onto `crates/vibe-actions/src`, and the two-way
+  design↔PROP backlinks hold 4/4 (structural-loader parked by its own
+  `spec/hold`). **Running tally: 437 units judged — 413 confirmed /
+  22 drift / 2 unverifiable; findings 41.** Next: `spec/common` →
+  `spec/modules` (the specmap-evidence-rich grind).</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c3a-common-small — five common PROPs verified; one
+  roster drift.** PROP-006 (frozen pointer), PROP-013 (audit
+  instance), PROP-016 (source mirrors), PROP-028 (families), PROP-029
+  (FQ addresses): **150 units — 149 confirmed / 1 drift / 0
+  unverifiable.** The drift is PROP-028's family roster aged against
+  the tree: `core-ai-native` ships v0.8.0 (the fact says 0.7.0), the
+  **go-ai-native family is in force** (aggregator v0.1.0 + `-lang` +
+  `-mcp`) but absent from §2.2/§2.3, and aggregators carry a
+  `LICENSE.md` from the UPL relicense wave against the "vibe.toml +
+  README and nothing else" letter → **F-042** (one roster refresh
+  fixes all three). Prime confirmations: `cargo xtask mirror` ran
+  three times in-session (the tracking-ref refresh of
+  HIST-TRACKING-REFS observed live in its output),
+  `push_args_never_force` exists at `xtask/src/mirror.rs:426`,
+  `mirrors.toml` matches the §2 block verbatim, every §open question
+  across the five files verified genuinely open, and PROP-029's three
+  carriers match the generated INDEX/STATIC forms character-for-
+  character. **Running tally: 587 units — 562 confirmed / 23 drift /
+  2 unverifiable; findings 42.** Remaining: the common big seven
+  (PROP-000, 018, 019, 024, 031, 032, 033 — 868 markers; specmap-rich
+  on 018/019) → the modules cluster (3 300 markers).</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c3b — PROP-000 verified: the foundation aged in six
+  spots (the densest drift file of the phase).** 162 units — **149
+  confirmed / 12 drift / 1 unverifiable**, all twelve drifts one
+  family row **F-043**: §3 still records the proprietary EULA though
+  its own revisit trigger fired (UPL-1.0 relicense 2026-07-12, MT-05);
+  §4 lists the retired `vibe-package.toml`; §6 records pre-qualified
+  identity and **four** kinds while the same file's INV-VOCABULARY
+  correctly lists five (internal r2-leftover-class inconsistency); §7
+  calls GitVerse "the source-of-truth" against PROP-016's no-primary
+  model and pins `KindName` against the Fqdn default; §14's
+  WAL-names-the-runs practice lapsed; §18 claims LLM-reviewed semantic
+  conflicts whose LLM lane is pending. Hard confirms: all seven §2
+  crates exist, the §15 prune of PROP-001 was **executed** (its
+  ARG-PRUNED cites §15 back), schemas/ + vibe-wire/generated
+  committed, resolvo pinned, both guides exist. The unverifiable is
+  the GitVerse-network-bound legacy-registry claim (same verdict as
+  c0's twin).</item>
+      <item>**2026-07-25 · c3c — PROP-018 + PROP-019 confirm wholesale on
+  implementation evidence.** 322 units — **320 confirmed / 2 drift**,
+  both drifts the same shape and both already ledgered in Phase B: a
+  proposed-era status line over a fully shipped system (**F-013**
+  agentic modes, **F-005** vvm). Beneath the headers the content
+  carries the densest machine evidence of the phase: the agentic
+  relay/skill/affinity/transports/explain sections hold 23 implements
+  / 8 verifies into `vibe-mcp`/`vibe-cli` (the `vibe agentic` +
+  `vibe command` verbs run live in this very session), and the vvm's
+  twelve sections map 1:1 onto `commands/vvm/` exactly as §3 placed
+  them (37 implements / 38 verifies; `relocate` alone carries seven).
+  Far-backlog sections verified genuinely unbuilt. **Running tally:
+  1 071 units — 1 031 confirmed / 37 drift / 3 unverifiable; findings
+  43.** Remaining in common: c3d = PROP-024 / 031 / 032 / 033 (384
+  markers), then the modules cluster (3 300).</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c3d — the common tail verified; `spec/common` is
+  CLOSED 12/12.** PROP-024 / 031 / 032 / 033: **327 units — 322
+  confirmed / 5 drift / 0 unverifiable.** All five drifts are
+  PROP-024's: the F-006 proposed-era header (ledgered in B) plus a new
+  family row **F-044** — the §2.6 deferral **fired**: the TypeScript
+  pilot shipped, so the deferred engine split executed and
+  `core-ai-native` now *authors* the neutral engines
+  (conform/specmap/specmark/mcp cores, vendored byte-identically per
+  PROP-028), making CORE-STAYS-PROMPT-ONLY and OOS-TS-CHECKER false as
+  present-state; the related line also cites the vanished
+  `vibedeps/flow-core-ai-native/0.6.0` slot. The §2.4 consumption
+  topology confirmed **verbatim** (root `Cargo.toml`
+  `exclude = ["packages", "vibedeps"]`; self-check drives the vendored
+  engines by `--manifest-path` exactly as BINARY-RUN-FORM specifies).
+  The three design proposals (031/032/033) verified **honest end to
+  end**: every "schedules no implementation" claim grep-verified
+  (no `move-unit`/`rename-address` in the stack, no `code://` nodes,
+  no `[[refactoring]]` manifest table, no `vibe refactor` CLI), and
+  PROP-032's decided-in-place q5 record carries its owner date.
+  **Running tally: 1 398 units — 1 353 confirmed / 42 drift / 3
+  unverifiable; findings 44. Verified clusters: boot ✓ manual-tests ✓
+  design ✓ common ✓ (23 of 58 files). Remaining: the modules cluster
+  (35 files, 3 300 markers — the specmap-richest).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4a — the modules cluster opens on the campaign's own
+  contract; the tool that runs this phase verifies itself.** vibe-progress
+  family: PROP-043 + OWNER-GUIDE + templates ×3 — **250 units (245 anchors</item>
+      <item>5 element bundles): 236 confirmed / 14 drift / 0 unverifiable.**
+  PROP-043's ten drifts split two ways. **F-045** — the file's own status
+  aged behind the campaign it governs: the status-line still says
+  "implementation underway (Phase A)" and holds *(provisional)* sections
+  that no longer exist (grep = 1, the sentence itself), while the phase
+  lane reads C and §5 is fully shipped (19 implements edges; all seven
+  subcommands + every documented flag verified live this session).
+  **F-046** — a marker-vs-implementation parity family in *both*
+  directions: impl/done over unshipped fragments (EvidenceProvider wired
+  nowhere outside the core — the adapter imports everything but
+  `evidence`; 0 fact units/edges in host specmap.json — the consumed
+  stack engine v0.7.0 predates the fact amendment, PROP-014 v0.8.0 §2.1
+  exists authored-side awaiting the re-mint; CMD-CHECK's "lossless
+  folds" matches zero code; campaign.json carries no `gates` field; the
+  report has no evidence column; `Cache::is_current` is dead outside its
+  own tests — every run re-parses the tree), and spec/done under shipped
+  code (§7.3: `BaselineUnit` matches the record field-for-field, rescan
+  live with hash-suspect + marker-diverged; named-crates and the control
+  sample honestly missing). OWNER-GUIDE's four drifts are all one F-020
+  refresh sweep (4-of-6 placements, the preamble-less amendment missed
+  twice, FOUR-SURVIVORS omits `tasks/`). The templates confirm wholesale:
+  impl-task exercised 5/5 (DRIFT-005 checked field-for-field), spec-task
+  correctly awaits Phase D, harvest-card consistent with its empty
+  `harvest/`. Method note for the batch map: coverage now reads from
+  `progress mirror`'s ParsedDoc (authoritative fence-aware parse) — the
+  raw-grep extractor over-counts code-span shorthands. **Running tally:
+  1 648 / 4 944 — 1 589 confirmed / 56 drift / 3 unverifiable; findings
+  46 (next free F-047).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4b — the registry core verified; the evidence-richest
+  file confirms at 98 %.** PROP-002 (360 markers, 110 specmap edges) +
+  PROP-001 (93): **379 units — 371 confirmed / 8 drift / 0
+  unverifiable.** The headline confirmation: **RESOLVO-PRIMARY holds on
+  live evidence** — `ResolvoDepSolver` is the shipped production
+  default (`registry.rs unwrap_or("resolvo")`, resolvo_engine = "the
+  production DepSolver cell"), and the §2.8 fallback-seam story
+  (naive + sat as selectable cells behind `DepSolver`) is exactly what
+  shipped. That same check exposed **F-047 (code-side)**: the two
+  `#[spec(deviates)]` reasons in `naive.rs`/`sat.rs` still claim "no
+  ResolvoSolver exists in tree" / "adopting resolvo stays an owner
+  decision" — they aged behind the very adoption they awaited. The
+  spec-side drift splits into two touch-up families: **F-048**
+  (PROP-002 precision: `--trust-mirror` promised twice and shipped
+  nowhere — only `--trust-redirect` exists; `vibe list --overrides`
+  promised twice and absent; the git-source ref errors ship as
+  reason-strings, not the named `MissingRef`/`ConflictingRefs`;
+  `source_kind` grew `path`/`embedded` in PROP-007/030; the cache-slot
+  example still shows the kind-name era against the live
+  `packages/&lt;group&gt;.&lt;name&gt;/clone`) and **F-049** (PROP-001: no crate
+  README behind `mechanics-in-readme`; `NO-OFFLINE-YET` aged behind the
+  shipped `--offline`; the git-binary parking-lot entry resolved by the
+  shipped `VIBE_GIT_BINARY` whose comment cites §6 back). Everything
+  else confirms on dense machine evidence: the redirect subsystem
+  wholesale (12 implements / 8 verifies, three CLI verbs, hop-limit
+  guard, `--trust-redirect` at cli/registry.rs:226), the auth-silencing
+  matrix (`apply_common_env` + regime-aware force_silence + 3
+  tests_pure verifies), `merge_effective` / `url_is_local` /
+  `registry_config_path` live under their exact spec names, the
+  `enabled` filter at the R-001 construction point, the mirror
+  fall-through loop, token redaction tests under the exact names the
+  spec cites, and the lockfile schema chain v2→v3→v4→v5 documented
+  end-to-end across PROP-002 → PROP-007 → PROP-008 (live lock:
+  schema 5). **Running tally: 2 027 / 4 944 — 1 960 confirmed / 64
+  drift / 3 unverifiable; findings 49 (next free F-050).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4c — the resolver pair verified; one c4b verdict
+  corrected.** PROP-003 (314 markers) + PROP-017 (106): **372 units —
+  359 confirmed / 13 drift / 0 unverifiable.** PROP-017 verifies almost
+  wholesale on the c4b code evidence (architecture item-for-item:
+  `SemverVersionSet` literal to the spec, NowOrNever sync adapter,
+  shared output builder, dominance oracle, capability closure
+  pre-scan); its only drift is the known **F-027** status-line
+  ("implementation in progress" + an impl/*work* document marker over
+  its own §6 "the port is COMPLETE"). PROP-003's eleven split three
+  ways: **F-030** (the design-proposal status line over a shipped
+  vocabulary), four **F-031** rows landing exactly as the B-phase
+  ledgered them (the r1 `__exclusive` fence, the §4.3→§2.5.4 misref,
+  and the `language_chain`-vs-`language`+`language_fallback` trio —
+  lockfile.rs:130 is one merged field), and a new **F-050**: the
+  solver-era tail *outside* the §2.2 supersede marker — §2.1 still
+  promises "SatDepSolver becomes the default" with a `[meta].solver`
+  selection key and a `naive|sat` CLI (shipped: `naive|sat|resolvo`,
+  default resolvo, no meta.solver field), §2.11/§6 still record a
+  sat-default flip, and `vibe update --features` was promised but
+  never wired. The same evidence trail **corrected c4b**:
+  PROP-002's SOLVER-IDENTITY-FIELD had confirmed on a section default,
+  but the live lock has no `solver` field and PROP-017 §8 says so —
+  verdict amended to drift, F-048 extended (f), and F-047 extended
+  with a third stale deviates (lib.rs:288-296 still claims
+  "SatDepSolver is not in tree" while sat.rs ships). Subskills
+  confirmed with a live wink: this session's own MCP toolbox carries
+  `read_subskill` / `materialise_subskill` — the M1.7 lazy-delivery
+  surface §2.5 designed. **Running tally: 2 399 / 4 944 — 2 318
+  confirmed / 78 drift / 3 unverifiable; findings 50 (next free
+  F-051).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4d1 — the workspace big three verified; the loading
+  model is the session itself.** PROP-007 + PROP-009 + PROP-035 (386
+  markers): **360 units — 351 confirmed / 9 drift / 0 unverifiable —
+  and zero new findings**: every drift row lands on ledger entries the
+  B-phase already minted. PROP-007's four are all **F-029** — the
+  status/milestone lines, §9.3's deferral record, and the document
+  marker still call workspace-aware `vibe install` "the remaining
+  piece" while M1.18 shipped it (`Workspace::discover` live at
+  plan.rs:101 and apply.rs:114). PROP-009's three: the **F-026** DRAFT
+  header pair, plus `SURF-SHOW-EFFECTIVE` caught shipped-but-spec/done
+  (`vibe show effective` exists in its simple concatenation form; the
+  §2.8 engine projection honestly stays v1.5). PROP-035's two are the
+  **F-028** DESIGN-provisional pair over a §17 that records the
+  compiler shipping three times (vibe-spec 07-15, the link-type rename
+  07-16, normal+static AOT 07-20). The confirmations needed no
+  reconstruction — the model under test booted this very session:
+  STATIC.md read first, the TOML INDEX.md with its `[[entry]]` grammar,
+  committed `vibedeps/`, `when = "os:*"` in the renderer, BootCategory
+  ordering with the conflict errors deleted, `vibe reinstall` citing
+  §2.10 from its own `--help`, and the vibe-spec pipeline (doctree
+  fact leaves, `:add`/`:replace` with per-fact override and the
+  merged-view DuplicateId gate, embed cycle guards, `PackageFormat`
+  simple-by-default) exactly where §5–§13 put it. **Running tally:
+  2 759 / 4 944 — 2 669 confirmed / 87 drift / 3 unverifiable;
+  findings 50 (next free F-051).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4d2 — the workspace tail closes; the honesty law meets
+  its densest case.** PROP-011/012/038/034/020/022/025 (482 markers):
+  **474 units — 393 confirmed / 81 drift / 0 unverifiable.** The
+  headline is the pair everyone saw coming: **PROP-020 (41 drift) and
+  PROP-022 (37 drift) are whole shipped systems under "proposed"
+  headers** — `hooks.rs` implements the entire install-hooks contract
+  (phases, Git-Bash-first Windows selection, `DEFAULT_ALLOWED_GROUPS`
+  with org.vibevm, the non-interactive refuse, the env contract, both
+  test seams) and the materialization system ships wholesale (the
+  `Materialization` enum with doctests, hardlink/in-place through
+  vibe-install, submodule snapshot-embedding, the destructive guard) —
+  while the B-phase, marking wording-faithfully, left the text's own
+  spec/done in place. Each file is ONE F-018 re-mark sweep (note
+  extended), the same shape as PROP-000's F-043 twelve. Against that:
+  **PROP-011, PROP-012 and PROP-025 verify clean — 227/227 confirmed**,
+  the campaign's first zero-drift files, all three honestly-marked
+  shipped contracts (the freshness oracle, the `&lt;vibevm&gt;` block engine
+  whose canonical text lives in this repo's own CLAUDE.md, and the
+  `vibe bin` family whose help text matches §4 verbatim). PROP-038
+  adds two F-024 rows (the §2.7 open-note its own §5 resolves, and
+  `fuzz.rs` shipping the very DEF-5 its history still defers);
+  PROP-034 takes a new **F-051** for a DRAFT status line the file's
+  own rename-note already outgrew. **Running tally: 3 233 / 4 944 —
+  3 062 confirmed / 168 drift / 3 unverifiable; findings 51 (next
+  free F-052).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4e — the cli/actions cluster verified; Spec 2 is the
+  reality, DRAFT is the costume.** PROP-037 + PROP-036 + PROP-042 +
+  PROP-039 (327 markers): **300 units — 290 confirmed / 10 drift / 0
+  unverifiable.** One new family, **F-052**: all three contract headers
+  still read "DRAFT — requirements" while their plans executed
+  (PACKAGE-TREE, TREE-TUI v0.2, and the `vibe-actions` crate whose
+  first consumer — the Spec-2 TUI — is the shipped `vibe tree`);
+  PROP-036's §2.11 sketch keys (`q` quit, `n` order, `x`/`t`/`TAB`
+  modes, `F` fold-all) are superseded by Spec 2's F-key scheme exactly
+  as the c1 manual-test sweep found from the other side (F-037/F-038);
+  and PROP-039's AIUI rows ("designed-for; **not built now**") aged
+  behind their own delivery — `vibe aiui state` prints the §11.2
+  ModelView and cites the section in its `--help`. F-023 lands as
+  judged (the §2.13 launcher misref into Progress-Control's PROP-043).
+  **PROP-042 verifies clean 58/58 — the fourth zero-drift file**: an
+  ACTIVE header over all seven `aiui` verbs live verb-for-verb, the
+  `vibe term` launcher, and the icon-swap OSC. The evidence base was
+  half-built already: c2's byte-equal palettes / `detect_tier` /
+  spacing constants and c1's shipped-keymap findings carried §2.2 and
+  §5 wholesale. **Running tally: 3 533 / 4 944 — 3 352 confirmed /
+  178 drift / 3 unverifiable; findings 52 (next free F-053). Remaining:
+  c4f only** — vibe-mcp ×3, vibe-index PROP-005, vibe-settings ×2, and
+  the vibe-registry rest (008/010/030/021/023/README), 957 markers.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4f1 — the registry rest; the campaign's densest drift
+  file falls.** PROP-008/010/021/023/030 + the modules README (372
+  markers): **364 units — 233 confirmed / 131 drift / 0 unverifiable.**
+  The headline: **PROP-030 takes 63 drift rows in one new family
+  (F-053)** — the embedded registry ships wholesale under a bare
+  "proposed (2026-07-13)" status line, while the WAL's own standing
+  constraints cite its §5 CI-off gate split and §3.3 project-local
+  rules as living law, all five flags sit in `install --help`, R-001
+  pins its sanctioned constructor, and this very machine resolves
+  redbook/rust-ai-native through it daily. **F-018 now covers the full
+  four-spec bridge family**: PROP-021 (24 drift — recurse clone/update
+  and snapshot embedding live in the backend) and PROP-023 (35 drift —
+  `[package].bridge` parses with its doctest) join PROP-020/022; four
+  headers, four re-mark sweeps, one family. The honest side held:
+  PROP-008 verifies 91/92 (IMPLEMENTED M1.18+M1.19, live from the
+  qualified refs in this repo's lock to exit code 7), PROP-010 91/93
+  (a genuine DRAFT the ROADMAP's M1.20 row corroborates — its only
+  drift is a motivation pair that still claims "no --offline exists",
+  F-054 with PROP-008's un-reconciled milestone line), and the modules
+  README lands its ledgered F-016 six rows exactly as the B-phase
+  wrote them. **Running tally: 3 897 / 4 944 — 3 585 confirmed / 309
+  drift / 3 unverifiable; findings 54 (next free F-055). Remaining:
+  c4f2 (vibe-mcp ×3 + vibe-settings ×2, 306 markers) and c4f3
+  (vibe-index PROP-005, 279).**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4f2 — mcp + settings; the cleanest batch of the
+  phase.** PROP-015/026/027 + PROP-040/041 (306 markers): **279 units —
+  277 confirmed / 2 drift / 0 unverifiable.** Three zero-drift files in
+  a row: PROP-015 (65/65 — `vibe mcp serve/install/status` live, and
+  the judging session is itself an MCP consumer of the judged server),
+  PROP-026 (47/47 — the superseded-in-topology arc holds exactly as
+  the B2 markup split it: the tcg grammar normative through the
+  family MCP servers, the standalone topology gone with wave 6), and
+  PROP-027 (58/58 — the `mcp` kind and the sovereign per-family
+  servers are this machine's installed reality). The two drift rows
+  are the settings pair's ledgered headers: **F-010** (PROP-040's
+  DRAFT over a `crates/vibe-settings` whose CLI cites "§8" in its own
+  help) and **F-019** (PROP-041's DRAFT over the prefs TUI that
+  PROP-037's F4 opens by name). **Running tally: 4 176 / 4 944 —
+  3 862 confirmed / 311 drift / 3 unverifiable; findings 54. Remaining:
+  c4f3 — vibe-index PROP-005 (279 markers), the last file of the
+  phase.**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · c4f3 + PHASE C EXIT GATE — the corpus is measured.**
+  PROP-005 (279 markers, 91 edges) closes the phase **all-confirmed —
+  the eighth zero-drift file**: an "implemented; folded into the
+  workspace" header verified against the living crate, the
+  group-native M1.19 index shape (`workspace_origin` in both the §2.6
+  schema and the shipped JTD), `vibe search`/`outdated` surfaces, and
+  the M2.10 smoke. **The exit gate is green in full: 58/58 files carry
+  campaign maps; 4 944 / 4 944 markers carry verdicts** (anchors +
+  row-inherited cells + document elements). **Phase C final tally:
+  4 455 units judged — 4 141 confirmed / 311 drift / 3 unverifiable =
+  93.0 % / 7.0 % / 0.07 % — the first measured actuality level of the
+  spec tree.** Findings stand at 54 (F-001…F-054; F-045…F-054 minted
+  and F-018/F-024/F-047/F-048 extended by this phase's modules
+  cluster). **The §5-C prediction confirms, mirrored:** drift indeed
+  concentrates around Status lines — but in the *inverse* polarity:
+  headers promised **less** than the tree delivers (the
+  shipped-under-proposed families: PROP-030's 63 rows, the bridge
+  four's 137, PROP-000's F-043 six), while honestly-updated
+  IMPLEMENTED files confirm nearly wholesale (eight zero-drift files:
+  PROP-011/012/025/042/015/026/027/005). The three unverifiable stay
+  network-bound (the GitVerse legacy-registry claims). The drift
+  ledger is sweep-shaped for Phase D: ~15 family rows cover ~80 % of
+  the 311 rows. **Phase C is complete; the phase lane stays C — Phase
+  D opens only on the owner's call, per the §5 entry law.**</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · post-gate floor note — one red, root-caused, ledgered
+  (F-055).** The phase-close `self-check` run went red on
+  `cli_pkg_cycle::install_from_git_registry` ("expected one registry
+  cache bucket"). Root-caused and **proven** in-session: a
+  `~/.vibe/registry.toml` appeared on this machine today (15:37,
+  vibespecs + vibespecs-gitverse), and the test isolates
+  `VIBE_REGISTRY_CACHE` but **not the settings chokepoint**, so the
+  global registries merge into the "hermetic" resolver and mint a
+  second cache bucket. With `VIBE_SETTINGS` pointed at an empty dir
+  the same test passes. The campaign's commits are docs-only and
+  unrelated; the campaign's own gate (`progress check`) stays 0.
+  Ledgered as **F-055** (Phase E: the e2e harness pins
+  `VIBE_SETTINGS` to a tempdir — the never-touch-real-user-state law,
+  applied inbound). Findings close the phase at **55**.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · PHASE D OPENED (owner call) · wave d1 — the
+  shipped-under-proposed families fall in one sweep.** The owner opened
+  stitching («Открываю Phase D»); the `phase` event `D` is in the journal
+  and the lane re-derives from it. Wave 1 took the two biggest families —
+  **F-053** (PROP-030, 63 rows) and **F-018** (the bridge four
+  PROP-020/021/022/023, 137 rows) — plus **F-043** (PROP-000, 12 rows):
+  **212 of 311 drift rows closed in one wave (68 %)**. Every row was a
+  `reality-mismatch`, so the whole wave ran through **sync-from-code**:
+  the diffs were drafted, surfaced to the owner, and applied only on his
+  approval («Правь и продолжай дальше»), which also settled the licence
+  question in the owner's own words — «Лицензия теперь UPL, на самом
+  деле». Mechanics: the 191 pure re-marks were **scripted off the C-phase
+  verdict map** (`@spec/done → @impl/done` on exactly the anchors judged
+  `drift`, dry-run first, `progress check` after) — no model touched them;
+  the 9 prose units (5 status lines, 4 document elements) and PROP-000's
+  13 facts were authored by hand. The five new status lines cite the
+  shipped surface rather than asserting it: `HooksDecl` + `hooks.rs`
+  runner + apply wiring; the `Materialization` enum with its doctests and
+  the destructive guard; `--recurse-submodules` + snapshot embedding +
+  `resolved_commit`; `[package].bridge` with its doctest and the three
+  composed mechanisms; the R-001 sanctioned constructor site with §4's
+  knobs in `install --help`. What did **not** move is the honest half:
+  in all five files the surviving `spec/done` rows are exactly
+  `related` / motivation / `REJ-*` / `OOS-*` / the `D1–D5` decision
+  records — facts that never become `impl`. PROP-000 took twelve authored
+  fixes (UPL-1.0 with an explicit repository scope; `vibe-package.toml`
+  retired; qualified identity and the fifth kind `mcp`; uniqueness by
+  `(group, name)`; the multi-homed PROP-016 posture replacing
+  "GitVerse = source of truth"; fqdn repo naming) **plus a verdict
+  correction** in the c4b→c4c pattern: `LICENSE-REVISIT` was swept up in
+  c3b's file-level confirm although its trigger had fired on 2026-07-12 —
+  re-issued per the decision-records flow with two fresh conditions. One
+  paired edit landed outside the corpus: `spec/WAL.xml` regained the
+  outstanding-manual-runs line (MT-02, MT-03) that `MT-WAL-NAMES`
+  requires, which is what made that fact true again rather than merely
+  reworded. **Ledger: 4 353 confirmed / 99 drift / 3 unverifiable = the
+  tree measures 97.7 % true, up from 93.0 % at the Phase C gate.
+  Findings resolved: F-007, F-014, F-018, F-043, F-053 (6 of 55 closed;
+  49 open).** `progress check` 0 throughout. Next: wave d2 over the
+  mid-size families (F-052, F-046, F-050/F-031/F-030, F-039/F-033,
+  F-016, F-032/F-048).</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25 · wave d2 (a…f) — the ledger empties to nine rows, and the
+  spec tree measures 99.7 % true.** Six sub-batches, 85 rows, 30 files.
+  **d2a — the stale-header family (22 rows, 13 files):** every
+  "DRAFT — requirements" over a shipped crate rewritten to the shipped
+  truth *with the surface cited* (PROP-036/037/039/040/041/034/017/035/
+  009/007/008/018/019). Where a header pair contradicted itself —
+  PROP-007/008/009 each carrying "design proposal, not
+  implementation-locked" one line above a status recording shipped
+  milestones — the milestone line moved. Two facts were re-based rather
+  than softened: PROP-039's "AIUI not built now" non-goal (built:
+  `aiui.rs` + `vibe aiui state`) and PROP-007 §9.3's deferral (resolved
+  by PROP-009 §2.7 + M1.18 Phase 5). PROP-036 §2.11 was fixed **by
+  deletion**: it restated the keymap PROP-037 owns, so the keys are gone
+  and the section cites the contract — the single-source law is what
+  makes that the fix. Its §2.13 launcher misref (F-023) repointed to the
+  `vibevm-term` products repo, where the launchers actually went.
+  **d2b — design-doc tense (15 rows, 4 files):** lore corrected to the
+  contract per spec-genres. The vocabulary drift was handled
+  *deliberately differently*: the loading-model record is a dated
+  2026-05-21 capture, so rewriting it into today's names would destroy
+  the record of what was decided — it keeps its own words and gains a
+  rename note plus a per-row shipped-name gloss. The literal
+  `"static" | "static" | "dynamic"` typo is just a typo, and is fixed.
+  **d2c — PROP-003's solver tail (11 rows):** corrected clause by clause
+  rather than by widening the §2.2 supersede block, so a reader landing
+  on any single anchor gets the truth without hunting for a marker
+  elsewhere; `[meta].solver` was never wired at all, and PROP-017 §8
+  plus the live lockfile confirm it. **d2d — index, registry, families,
+  owner guide (29 rows, 8 files):** the module index had stopped in May,
+  so five module directories and every PROP after 012 were invisible —
+  26 rows added, each carrying the status Phase C verified. **Four
+  promised-absent surfaces now say so** (`--trust-mirror`,
+  `vibe list --overrides`, lockfile `[meta].solver`,
+  `vibe update --features`): re-marked `spec/done` and named as unbuilt
+  at the point of the claim. Three moved the other way (PROP-001's
+  `VIBE_GIT_BINARY` parking-lot entry, PROP-038's two open notes) and
+  PROP-024 recorded the §2.6 deferral that *fired* — the TypeScript
+  pilot was the second language, and core-ai-native now authors the
+  neutral engines. **d2e — MT-01/MT-02 re-authored (6 rows):** the tests
+  walked a human through `n`/`x`/`t`/`Tab`/`q`, none of which exist; the
+  steps now match the shipped F-key surface. The **run status did not
+  move** — an agent may pre-run, only a person signs off, so MT-02 and
+  MT-03 stay unsigned and `spec/WAL.xml` now names them (the paired fix
+  that made `MT-WAL-NAMES` true). **d2f — PROP-043's own status (2
+  rows).** *Method:* the wave minted **31 new anchors** (a supersession
+  pointer, a rename note, 26 index rows, 3 guide placements), each
+  sealed with its own verdict so the every-marker-carries-a-verdict
+  invariant survives Phase D. **Ledger: 4 474 confirmed / 9 drift / 3
+  unverifiable — 99.7 % true, from 93.0 % at the Phase C gate. Findings
+  42 of 55 resolved.** `progress check` 0 throughout; the floor is red
+  at exactly one test, the environmental F-055 recorded at the Phase C
+  close (proven unrelated: `VIBE_SETTINGS` pointed at an empty dir turns
+  it green). **The nine survivors are both escalations:** F-046's eight
+  PROP-043 parity rows (the owner picks wire-or-demote per item) and
+  F-035's single row in `spec/boot/00-core.xml`, a user-owned file the
+  boot contract says may only be marked additively.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25/26 · d2g, d2h, and the parity row that needed no ruling —
+  PHASE D CLOSED at seven rows.** Both escalations the d2 wave handed the
+  owner resolved without widening anything. **F-046's `BASELINE-RECORD`**
+  turned out not to be a wire-or-demote question at all: `baseline.rs`'s
+  `BaselineUnit` carries §7.3's fields one for one, with load/store and the
+  `rescan` CLI live — shipped under a spec marker, the pattern this phase
+  had been closing all day, so it closed the same way and the owner's list
+  shrank by one before he had to read it (`0064fd4a`). **F-035's single row
+  in `spec/boot/00-core.xml`** moved under the owner's explicit ruling, which
+  is the only way that file may be touched: `LAYER-CODE` named a root
+  `tests/` directory that has never existed, and now names each crate's own.
+  **d2g/d2h took the archive** (`f6c17f92`): six findings pointed into
+  `legacy-spec/`, and the tempting answer was to close them as out of scope —
+  nothing in the living corpus cites the archive normatively, so its stale
+  lines mislead no build. The owner ruled otherwise and the reason holds up:
+  a cold reader who lands in the archive directly reads "PLANNED · not
+  started" on a campaign that finished weeks ago, or opens TREE-TUI-PLAN
+  v0.1 with no hint that v0.2 superseded and executed it. Four plans now say
+  EXECUTED and one SUPERSEDED, each carrying **ARCHIVE — do not execute**
+  and each keeping its original line verbatim, so the record of what it once
+  claimed survives. PROP-026 took the same treatment on the live side — its
+  document marker had recorded the wave-6 supersession since the markup
+  pass, but the prose still named `vibe-tcg`, a crate deleted whole; the
+  status line now says so and points at the PROP-027 family servers that
+  carry the grammar. **Ledger at the Phase D exit: 4 476 confirmed / 7 drift
+  / 3 unverifiable — 99.8 % true, from 93.0 % at the Phase C gate. Phase D
+  closed 304 of the 311 rows it opened with.** The seven survivors were all
+  one shape — *the spec promises a behaviour the code has not built* — which
+  is Phase E's material by construction rather than anything stitching could
+  honestly fix. `progress check` 0 throughout.</item>
+    </list>
+    <list ordered="false">
+      <item>**2026-07-25/26 · PHASE E — the queue drained, and the last drift rows
+  close by being built.** Tasks DRIFT-006…022 opened; **fourteen executed**
+  (006–014, 016–019, 021), **DRIFT-015 superseded** before it ran, and two
+  (DRIFT-020, DRIFT-022) stood queued at the phase's close — 022 on an owner
+  letter, 020 on a go. Landed: the specmap evidence join with its report
+  column; the lossless-fold check at warning severity (`EXPLICIT-BEATS`
+  blesses a divergence a document cannot distinguish from a lying fold); the
+  gate panel in `campaign.json`, which the campaign then dogfooded on
+  itself; baseline invalidation's two missing rules; blockquote fact
+  anchors; the incremental parse path; the `--plain` and resolver-doc
+  corrections; two `#[spec(deviates)]` reasons that turned out never to have
+  been deviations; the cache split; the no-op-write skip; and the removal of
+  the legacy `~/.vibevm` read leg. **Ledger: 4 486 confirmed / 1 drift / 3
+  unverifiable of 4 490 — 99.9 % true. Findings 61 of 64 resolved.** The one
+  surviving drift row (`FACT-GRAIN-EVIDENCE`) cannot close in this
+  repository at all: it waits on `rust-ai-native-lang` v0.8.0 re-vendoring
+  the fact-aware specmap engine, which is wave 2's Phase A2. Four new
+  anchors were minted (PROP-042's four `--view` verbs), each sealed with its
+  own verdict.</item>
+    </list>
+    <p>*What is worth keeping from this phase is not the count.* **Four
+  executors volunteered evidence against their own work.** Two successive
+  measurements each corrected the previous one's headline — DRIFT-010's
+  ×1.44–2.06 speed-up was a *debug* profile, and in release the parse is
+  10.3 ms against 7.5 ms of payload serde; DRIFT-017 then corrected *that*,
+  because the writes were ~14 % of a warm run rather than the bulk, since
+  comparing requires serialising and only write+fsync are saved. The next
+  performance lever is the serialisation, not the IO. Two others refused to
+  absorb adjacent fixes they had found and filed them instead. **The one
+  that mattered most went the other way entirely:** F-057 was filed as a
+  stray cache directory and turned out to be a credential-precedence leg —
+  `vibe search` resolves a GitHub token through four legs and the fourth is
+  a file in the settings dir the test could not reach, so an un-isolated run
+  attached the real publish token to its outbound request. Measured, not
+  inferred, against a loopback listener recording header *names and lengths
+  only*: 47 bytes of `Authorization` before the fix, none after. The
+  investigation closed with no rotation needed — exactly one test reaches
+  that path and it points `api_base` at 127.0.0.1. **F-055, F-056 and F-057
+  were one forgotten discipline caught three times by accident**, which is
+  what DRIFT-020 exists to convert into a gate. Two lessons cost real time
+  and are now Constraints in the WAL: **a gate never seen to go red is not
+  known to work** (two executors ran positive controls before trusting a
+  green result), and **delegated work is committed on the completion
+  notification, never on a filled-in task journal** — executors write §9 as
+  they go, and committing on it captured an intermediate state and left the
+  tree conform-red for twenty minutes. **The floor ends the phase green with
+  no `VIBE_SETTINGS` override** — F-055 genuinely fixed rather than worked
+  around, verified again at this session's open.</p>
+    <commit-map title="9.1 Commit map — hashes bound to phases (recorded retrospectively)">
+      <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##EACH-EXECUTED-PHASE-GETS-A-LEDGER-SECTION` and
+`##THE-LEDGER-BINDS-HASHES-TO-THE-PLANNED-SUBJECTS` ask each executed phase for
+a commit map, and this plan carried none — the §9 LOG above records what
+happened, richly, and never binds it to hashes. **The flow also says the map is
+written at the boundary, not reconstructed at close
+(`##THE-MAP-IS-WRITTEN-AT-THE-BOUNDARY-NOT-AT-CLOSE`), and this one was
+reconstructed.** That is a real weakness of this table and the reason it is
+per-phase rather than per-commit: reconstruction can bind a hash to a phase
+honestly, and cannot recover what each individual commit confirmed at the
+moment it landed. The confirm/falsify column below is therefore per phase, cited
+to the LOG entry that recorded it while it was fresh.*</p>
+      <p>**Deviation from `##ONE-ENTRY-PER-COMMIT`, stated rather than silent:** 139
+commits is past the grain where one entry per commit informs anyone. Each phase
+gets its range, its count, its landmark commits and its verdict; `git log` over
+the perimeter below gives the rest.</p>
+      <p>**Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:</p>
+      <p>git log --reverse --format='%h %ad %s' --date=short -- \
+      campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml</p>
+      <p>**139 commits**, `b1276c39` (plan authored, 2026-07-24) → `f5248dae`
+(2026-07-29). The zone catches the work commits as well as the bookkeeping ones
+because §3 rides the journal in the same commit as the edits it describes; the
+four Phase A commits that predate the zone are named individually below.</p>
+      <p>**Campaign commit range:** `b1276c39` … `56cccca8` (close, 2026-07-26), plus one
+post-close amendment, `f5248dae`.</p>
+      <cm-a title="Phase A — EXECUTED 2026-07-24; 8 commits">
+        <p>`9446a2cb` introduce progress-control markup contract (PROP-043) · `b1276c39`
+author the spec-actualization campaign plan v0.1 · `edd487ba` WAL checkpoint,
+scaffold phase begins · `8b181522` progress-core crate + the `vibe progress`
+adapter · `38855c00` campaign zone + the read-only dashboard · `ac97f26c` pilot
+markup of three genres + PROP-043 ratification and pilot amendments ·
+`9a69b6f6` WAL checkpoint, scaffold closed · `60100f87` ledger Phase A close-out</p>
+        <list ordered="false">
+          <item>the B0 conversion ruling.</item>
+        </list>
+        <p>*Confirmed:* the §5-A prediction — the pilot exposed placement ambiguities and
+they amended PROP-043 §3.8 before Phase B, exactly as predicted. *Found outside
+every prediction:* a live power cut exposed a missing fsync-before-rename in
+`write_atomic`. *Range in perimeter:* `b1276c39`..`60100f87` = 4 (the other four
+predate the campaign zone).</p>
+      </cm-a>
+      <cm-b title="Phase B — EXECUTED 2026-07-24/25; 60 commits">
+        <p>`60100f87`..`a1bb2111`. Opens `8d5ccc82` (the wave-1 scope config, the
+campaign's first journal step); closes `a1bb2111` (boundary — exit gate green,
+corpus fully marked). Landmarks: `2c98a1e6` B0, the 73-line status conversion ·
+`91274c89` B1, paragraph-exhaustive markup of `spec/common` · `6714876e` the
+fact-grain re-pilot · `508bbdb9` DRIFT-004, fact anchors become addressable spec
+units · `5c89839b` DRIFT-005, fact inheritance end to end · `7d9dd964` B2 batch
+26, the corpus is fully marked. Two scope rulings landed inside the phase:
+`8901cd05` and `1c48019a`. One owner amendment was recorded here and executed
+later: `c0147947`, Phase L.</p>
+        <p>*Confirmed:* the exhaustive counter caught genuinely skipped paragraphs review
+alone would have missed — the wrapped prose line whose continuation opens `+ `
+parses as a phantom list item, caught twice in PROP-019 instantly. *Falsified in
+place:* §1's ~55 status lines (73 actual) and 91 files (97 scanned). *Gate at
+the boundary:* `check --exhaustive` clean over 58 files / 4 880 facts / 4 944
+markers, 0 errors 0 warnings; `self-check` all green, real exit 0.</p>
+      </cm-b>
+      <cm-l title="Phase L — EXECUTED 2026-07-25; 7 commits">
+        <p>`a1bb2111`..`15c5bb30`. `62406fe0` resolves the plan-file review point (the plan
+stays put) · `83346e78` `f8f347d8` `9514e8fb` `1ec6a27c` batches 1–4 ·
+`70f3cbdd` the legacy dirs leave the spec tree · `15c5bb30` closed.</p>
+        <p>*Confirmed:* the L2 verdict — every cited fact was already corpus-resident, so
+the relocation cost the corpus nothing. `spec/neworder` and `spec/discipline`
+had **zero** corpus inbound.</p>
+      </cm-l>
+      <cm-c title="Phase C — EXECUTED 2026-07-25; 18 commits">
+        <p>`15c5bb30`..`242085d4`. Opens `bb337e90`; batches `5c5e1058` c1 · `3570cf2b` c2
+· `f2beeff4` c3a · `49d67c39` c3b · `3d237c7d` c3c · `f82582f7` LOG · `9baa7fa6`
+c3d · `baffe617` c4a · `09327502` c4b · `7392fbdd` c4c · `c325d333` c4d1 ·
+`dcfa6301` c4d2 · `74025dd9` c4e · `727f6840` c4f1 · `5aa5ba86` c4f2; closes
+`ddf7c0ca` (c4f3 + exit gate). `242085d4` records the post-gate red floor and
+its root cause (F-055).</p>
+        <p>*Confirmed, mirrored:* the §5-C prediction — drift does concentrate around
+Status lines, but in the **inverse** polarity, headers promising *less* than the
+tree delivers. *Measured:* **4 455 units judged — 4 141 confirmed / 311 drift /
+3 unverifiable = 93.0 % / 7.0 % / 0.07 %**, the first measured actuality level
+of the spec tree; 58/58 files carry campaign maps, 4 944 / 4 944 markers carry
+verdicts. *Silently skipped, and it cost Phase G:* the harvest-card step.</p>
+      </cm-c>
+      <cm-d title="Phase D — EXECUTED 2026-07-25/26; 4 commits">
+        <p>`242085d4`..`f6c17f92`. `a1847b0d` opens (wave d1 — 212 of 311 rows in one
+sweep) · `3a6370bc` wave d2, the ledger empties to nine · `0064fd4a` the parity
+row that needed no ruling · `f6c17f92` d2g/d2h.</p>
+        <p>*Confirmed:* prediction 4 — convergence in **two** waves against a ≤3 bound, and
+exactly two owner escalations against a ≤2 bound. *Falsified by the next phase:*
+this phase authored the `Shipped:` line for a `Baseline::store` that had never
+been built (F-065). *Mechanics worth the record:* 191 of the wave-d1 rows were
+scripted off the C-phase verdict map, dry-run first — no model touched them.</p>
+      </cm-d>
+      <cm-e title="Phase E and close-out — EXECUTED 2026-07-25/26; 45 commits">
+        <p>`f6c17f92`..`56cccca8`. **E and the close-out interleave and are not separable
+in the chain** — both ran on 2026-07-26 in the same sessions, and saying so is
+more honest than drawing a cut. Phase E opens `2ef9d854`; DRIFT-006…022 were
+opened, fourteen executed, DRIFT-015 superseded before it ran, DRIFT-020 and
+-022 left queued. Close-out landmarks: `cc3109ef` the ledger regains the entries
+D and E never wrote · `bfdbd7f5` F-065, nothing can write the baseline the
+recurrence reads · `9f7459bd` `deferrals.md` · `fa74b775` the six predictions
+scored · `eae60b3d` F and G deferred with the measurement that says why ·
+`db7186ef` the baseline gains a writer · `d3482dd7` `baseline.json` ·
+`1ea4815c` F-063 closes · `56cccca8` WAL session-end. One commit here belongs to
+the *next* campaign: `07a38e1a`, the fact-grain specmap engine — wave 2's Phase
+A step 2, which is what closes wave 1's single surviving drift row.</p>
+        <p>*Measured at close:* **4 486 confirmed / 1 drift / 3 unverifiable of 4 490 —
+99.9 %**; findings 61 of 64 resolved. *Verdicts:* predictions 1–5 CONFIRMED,
+prediction 6 FALSIFIED in the favourable direction — a month of plan executed in
+three days, and the honest reading is that the estimate measured human-paced
+reading while the work was delegated batch execution.</p>
+      </cm-e>
+      <cm-post title="After close — 1 commit">
+        <p>`f5248dae` (2026-07-29) — `docs(terraforms): the plans running this campaign
+were the ones breaking its rule`. The previous `flow:campaign-plans` form to
+land under an owner ruling: §12's literal quick-start block. This section is the
+second such landing, and the ledger records both so the pattern is visible
+rather than incidental.</p>
+      </cm-post>
+    </commit-map>
+  </log>
+  <deferrals title="10. Deferrals">
+    <p>*(empty — drained into `campaigns/&lt;id&gt;/deferrals.md` at close-out)*</p>
+  </deferrals>
+  <report title="11. REPORT (filled at close-out against §8)">
+    <p>_Filled 2026-07-26. Scored against §8 as written, not as one would like it to
+read. Where a prediction is scored against a number the campaign itself moved,
+the number used is the one from **before** the phase that moved it — otherwise
+the campaign grades its own homework._</p>
+    <p>**1. Wave-1 full weave fits ≤2 shards of a 1M window (digest fits trivially).**
+— **CONFIRMED, with room to spare — but only because close-out went and
+measured it.** `progress weave --max-tokens 1000000` over the 58-file wave-1
+corpus emits **1 shard, 1 138 441 bytes** (≈ 300 k tokens at prose-markdown
+density — roughly a third of the window, so the sharder never had to split).
+`weave --digest` is **200 454 bytes**, ≈ 6 % of a 1M window: "trivially" is
+right.</p>
+    <p>The prediction is confirmed and the process around it is not. **No LOG entry
+records a `weave` run at any point in wave 1** — Phase B worked from per-file
+mirrors instead, so nothing in the plan's own steps ever exercised the
+command, and the number above was produced at close-out purely to fill this
+row. *A prediction that no step of the plan forces you to run is one you will
+reach the end of the campaign without having tested.* Wave 2 should either
+wire the prediction to a step or drop it.</p>
+    <p>**2. The exhaustive counter catches ≥1 genuinely skipped paragraph that review
+alone would have missed.** — **CONFIRMED, more than once.** The sharpest case
+is a grammar trap no reader would have seen: a wrapped prose line whose
+continuation opens with `+ ` parses as a phantom list item, and the counter
+caught both occurrences in PROP-019 instantly. The pilot produced a second,
+independent catch — `spec/design/README`'s index was incomplete, found by the
+count rather than by reading it. The B-phase LOG scored this prediction in
+passing at the time, which is the only reason it is cleanly citable now.</p>
+    <p>**3. ≥60 % of `IMPLEMENTED/SHIPPED` claims confirm without drift; ≤10 % of all
+units end `unverifiable`.** — **CONFIRMED, both clauses, with wide margin.**
+Scored at the **Phase C exit gate**, before any stitching: **93.0 % confirmed**,
+311 drift rows of the 4 455 facts then counted (7.0 %), **3 unverifiable =
+0.07 %** against a 10 % ceiling. (The corpus reached 4 490 only later, as
+Phase D and Phase E minted anchors for facts the tree had gained.) The post-stitch figure of 99.9 % is *not* the answer to this
+prediction — stitching corrected the drift, it did not verify it away, and
+quoting it here would be circular.</p>
+    <p>**4. Stitching converges in ≤3 waves with ≤2 owner escalations.** —
+**CONFIRMED; comfortable on waves, exactly at the bound on escalations.** Two
+waves, not three: **d1** and **d2**, the latter run in eight sub-batches
+(a–h). Exactly **two escalations**, both genuine and both resolved — F-046's
+PROP-043 parity rows (wire-or-demote, per item) and F-035's single row in
+`spec/boot/00-core.xml`, a user-owned file. One row that had been sitting in
+the escalation pile turned out not to need a ruling at all
+(`BASELINE-RECORD`), which is worth reading as a warning rather than a win:
+it was returned to the owner's desk because nobody had checked the code, and
+when someone did, the answer was already there. It was also — see prediction 6's
+note and F-065 — checked wrongly.</p>
+    <p>**5. ≥80 % of DRIFT tasks land without a `returned` round-trip.** —
+**CONFIRMED at 100 %.** Of the twenty-two DRIFT tasks authored in wave 1, none
+was ever set to `returned`. DRIFT-015 is the one non-landing, and it was
+**superseded** before it ran rather than returned — the conform finding it
+targeted had been resolved another way. The margin is large enough to be worth
+distrusting slightly: the template is genuinely carrying enough context, but
+four executors also *volunteered* adjacent findings rather than returning, so
+some of what a `returned` status would have measured shows up in the findings
+ledger instead (F-057, F-061, F-063, F-064 all arrived this way).</p>
+    <p>**6. The month budget holds.** — **FALSIFIED, in the favourable direction, and
+only partly scoreable.** Predicted: A ≈ days, B ≈ 1–1.5 weeks, C ≈ 1 week,
+D ≈ 3–5 days. Actual: **A on 2026-07-24, B on 07-24/25, C on 07-25, D on
+07-25/26, E on 07-25/26** — a month of plan executed in **three days**, roughly
+an order of magnitude fast. The honest reading is not "we beat the estimate":
+the estimate was built on human-paced reading and the work was done by
+delegated batch execution, so it was measuring the wrong quantity from the
+start. **The "F+G ≈ 1 week overlapping E" clause is permanently unscoreable
+for wave 1**: both phases were deferred to wave 2 by owner ruling on
+2026-07-26, and not for want of time — close-out measured their inputs and
+found them absent (F's three views are empty; G's harvest directory was never
+written). A phase that cannot start because an earlier phase skipped a step is
+not evidence about a schedule.</p>
+    <report-gaps title="What the predictions did not cover, and should next time">
+      <list ordered="false">
+        <item>**Nothing predicted the campaign's own corrections would introduce drift.**
+  F-065 is the case: Phase D authored a `Shipped:` line claiming a
+  `Baseline::store` that has never existed, and the verification pass then
+  confirmed the row on it. A wave-2 prediction should name this directly —
+  *stitching introduces ≥0 new false claims* is a falsifiable statement, and
+  wave 1's answer to it is **1**.</item>
+        <item>**Verification cross-checked document against document at least once.** The
+  five token-precedence anchors in PROP-002 were sealed `confirmed` on the
+  evidence "token loader 3-source order matches 90-user boot facts" — another
+  spec file, carrying the identical error. That is how F-063 survived Phase C
+  with a green verdict. Evidence that cites only spec prose is not evidence;
+  wave 2 should gate on evidence strings resolving to code.</item>
+        <item>**Three state projections are seeded and never refreshed** (`findings.json`,
+  `tasks.json`, `docdebt.json`). `findings.json` was maintained by hand all
+  campaign; `tasks.json` was not, and sat 18 tasks stale until close-out. A
+  projection nothing refreshes and nothing checks will drift silently — the
+  dashboard read five tasks for a week.</item>
+        <item>**Phase F's three views are empty, because Phase B was a description pass
+  and Phase F projects from judgments.** Measured over the whole wave-1
+  corpus (4 917 facts): `freeze/plan` and `freeze/work` — **0**, so there are
+  no freeze *candidates* at all (the 9 real `freeze/done` rows are one
+  already-frozen contract, PROP-006). `stage="idea"` — **0**.
+  `action="rework"` — **0**. `state="hold"` — one inline row. The markup
+  faithfully records what each fact **is** (`impl/done`, `spec/done`,
+  `doc/done` are 4 816 of the 4 917) and never what should **happen next**,
+  because no phase ever asked anyone to decide that. §5-F's three owner plans
+  — release/productization from freeze-candidates, improvement from
+  rework + disabled, a global idea ledger from idea/hold — are therefore
+  projections of judgments the campaign never made. The forward-looking
+  knowledge wave 1 did produce went somewhere else entirely: the 66-row
+  findings ledger and `deferrals.md`. *A view is only as rich as the pass
+  that fed it; marking what exists is not the same act as deciding what to
+  do about it, and a plan that conflates them gets empty views at the end.*</item>
+        <item>**Phase C silently skipped one of its own steps, and Phase G pays for it.**
+  §5-C's step list ends "verification runs (`command → real output`) are saved
+  as doc fixtures; harvest cards written while knowledge is hot." Neither
+  happened: `campaigns/progress-2026-08/harvest/` is **empty** and
+  `docdebt.json` carries **zero cards**. Phase C's *exit gate* only checks that
+  every marker carries a verdict, so the omission cost nothing at the time and
+  was invisible until Phase G came to consume it. Phase G's definition — "two
+  trees written **from proven behaviour** (harvest cards + captured runs),
+  never from spec prose" — therefore has no input, and must either capture the
+  runs afresh or admit it is writing from something else. *A phase whose exit
+  gate does not check its own steps will skip the ones nothing downstream
+  fails on — until something downstream does.*</item>
+      </list>
+    </report-gaps>
+  </report>
+  <quick-start title="12. Quick-start for the executing session">
+    <p>*Added 2026-07-29 by owner ruling: `flow:campaign-plans`'
+`##COLD-A-LITERAL-QUICK-START-BLOCK` requires it and this plan had none. Wave 1
+is closed out, so this block is a **verification** quick-start — how a cold
+session re-measures what the campaign claims, rather than how it resumes it.*</p>
+    <fence lang="sh">cargo run -q -p vibe-cli --bin vibe -- progress report --json --campaign campaigns/progress-2026-08 | head -40
+python -c "import json;d=json.load(open('campaigns/progress-2026-08/run/state/findings.json',encoding='utf-8'));print(len(d['findings']),'findings,',sum(1 for f in d['findings'] if f['status']!='resolved'),'unresolved')"
+bash tools/self-check.sh; echo "EXIT=$?"       # the gate panel — 0</fence>
+    <p>The campaign's own claims live in §11 REPORT, scored against §8's predictions;
+§9's LOG read **from the end** is what actually happened, batch by batch. Wave 2
+— the packages, the sibling corpus — is
+[`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml),
+and its own quick-start is that plan's §10.</p>
+  </quick-start>
+  <acceptance title="13. Whole-campaign acceptance (recorded retrospectively)">
+    <p>*Added 2026-07-31 under the owner's bring-into-line ruling:
+`flow:campaign-plans`' `##ACCEPTANCE-IS-A-RUNNABLE-SCRIPT-ASSERTING-THE-END-STATE`
+asks every campaign for a runnable script asserting its end state, run on a
+green floor at close and cited by the report, and this plan had none — §11's
+REPORT scored the predictions without one. The script below was written after
+the fact and **its numbers were re-measured at HEAD `fffcb494` on 2026-07-31**,
+not copied from the close-out. Where the two differ, both are shown: a closed
+campaign whose end state has since improved should say so rather than freeze a
+figure.*</p>
+  </acceptance>
+  <section title="1 — the gate panel. Not re-run in the pass that authored this block;">
+  </section>
+  <section title="it is a multi-minute build gate and running it is the executing">
+  </section>
+  <section title="session&apos;s job, not the drafter&apos;s.">
+    <p>bash tools/self-check.sh; echo "EXIT=$?"                    # 0</p>
+  </section>
+  <section title="2 — every observed paragraph carries a marker">
+    <p>./target/debug/vibe.exe progress check --exhaustive \
+      --campaign campaigns/progress-2026-08                     # clean, 0 warnings</p>
+  </section>
+  <section title="→ progress check: clean (260 files, 0 warning(s))   EXIT=0">
+  </section>
+  <section title="NOTE: the check covers the whole progress.toml scope, not just this">
+  </section>
+  <section title="campaign&apos;s 58 files — --campaign selects the state zone, not the">
+  </section>
+  <section title="perimeter. Wave 2 shares this gate by design and it must stay at 0.">
+  </section>
+  <section title="3 — the host corpus&apos;s measured actuality: the campaign&apos;s headline">
+    <p>python campaigns/packages-2026-09/tasks/summary.py | grep '^  host'</p>
+  </section>
+  <section title="→ host (58 files)  confi 4496  drift 0  unver 3  total 4499  99.9 %">
+  </section>
+  <section title="4 — nothing evaporated: every leftover is a commit or a named deferral">
+    <p>grep -c '^- ' campaigns/progress-2026-08/deferrals.md       # 13, each owned</p>
+  </section>
+  <section title="5 — the recurrence artifact exists, so the next run costs O(delta)">
+    <p>test -s campaigns/progress-2026-08/baseline.json; echo "EXIT=$?"   # 0</p>
+    <p>**What the acceptance shows, and the one thing it cannot.**</p>
+    <list ordered="false">
+      <item>**The end state is better than the close recorded.** At close-out
+  (2026-07-26) the ledger read **4 486 confirmed / 1 drift / 3 unverifiable of
+  4 490 — 99.9 %**. Today it reads **4 496 / 0 / 3 of 4 499 — 99.9 %**. The
+  single surviving drift row, `FACT-GRAIN-EVIDENCE`, closed exactly where
+  `deferrals.md` said it would and nowhere else: wave 2's Phase A step 2,
+  commit `07a38e1a`. The denominator moved by nine as later work minted anchors
+  in host files. *A deferral that closes where its own reasoning said it would
+  is the strongest evidence the deferrals ledger is doing its job.*</item>
+      <item>**Three units stay `unverifiable` and always will here.** They are
+  network-bound GitVerse legacy-registry claims; `unverifiable` was chosen over
+  "probably fine" and the choice is the point.</item>
+      <item>**What this script cannot assert is the mandate.** The owner asked to
+  *actualize all the specifications*; the script proves the corpus is marked,
+  judged and drift-free, and proves nothing about whether the resulting
+  documents are **useful**. §11's `{#report-gaps}` is where that gap is stated:
+  the campaign marked what 4 917 facts *are* and never what should *happen* to
+  them, so every forward-looking view came out empty. **An acceptance script
+  that passes on an empty view is telling you the view was not part of the
+  contract.**</item>
+      <item>**Step 3 is served by a tool that lives in the next campaign's zone.** Wave 1
+  shipped no summary tool; the number above is printed by
+  `campaigns/packages-2026-09/tasks/summary.py`, which reads the shared verdict
+  cache. That is a finding, not a convenience: a closed campaign whose headline
+  can only be reproduced by its successor's tooling is one re-run away from
+  being unmeasurable.</item>
+    </list>
+  </section>
+</spec>

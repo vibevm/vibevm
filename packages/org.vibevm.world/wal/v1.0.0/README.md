@@ -5,7 +5,7 @@
 @fact:PACKAGE-INSTALLS-THE-WAL-PROTOCOL A `flow` package that installs the WAL protocol into a project. @status:impl/done
 
 @fact:WAL-IS-A-SHORT-CHECKPOINT-FILE-THAT-BRIDGES-SESSIONS The WAL
-(Write-Ahead Log) is a short checkpoint file (`spec/WAL.md`) that
+(Write-Ahead Log) is a short checkpoint file (`spec/WAL.xml`) that
 bridges sessions: a coding agent has no memory between invocations, so
 the WAL is the only structured record of "where we are" that survives
 session restarts. @status:impl/done
@@ -23,19 +23,19 @@ package expects has not landed in one of its releases yet. @status:spec/done
 
 @fact:package-contents-lead The package ships five pieces of content plus a skill: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/wal/WAL-PROTOCOL.md` — full protocol: the two files,
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/wal/WAL-PROTOCOL.xml` — full protocol: the two files,
   what a WAL is and isn't, required sections, agent-grade precision,
   update triggers, freshness, size budget, the conflict rule, the
   acceptance test, and a re-derivation prompt. @status:impl/done
-- @fact:CONTENT-THE-SESSION-END-HOOK `spec/flows/wal/session-end-hook.md` — the wind-down: the
+- @fact:CONTENT-THE-SESSION-END-HOOK `spec/flows/wal/session-end-hook.xml` — the wind-down: the
   step-by-step session-end procedure and the trigger phrases that
   invoke it explicitly. @status:impl/done
-- @fact:CONTENT-THE-MORNING-ROUTINE `spec/flows/wal/morning-routine.md` — the human counterpart: a
+- @fact:CONTENT-THE-MORNING-ROUTINE `spec/flows/wal/morning-routine.xml` — the human counterpart: a
   five-minute ritual at the start of each day that keeps the agent's
   read of the state synchronised with your head. @status:impl/done
-- @fact:CONTENT-THE-COLD-RESUME-CONTRACT `spec/flows/wal/cold-resume.md` — the `CONTINUE.md` contract and
+- @fact:CONTENT-THE-COLD-RESUME-CONTRACT `spec/flows/wal/cold-resume.xml` — the `CONTINUE.md` contract and
   the wind-down / resume session commands. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/10-flow-wal.md` — boot snippet read by agents at session
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/10-flow-wal.xml` — boot snippet read by agents at session
   start, pointing them at the protocol and the WAL itself. @status:impl/done
 - @fact:CONTENT-THE-WAL-STATUS-SKILL `spec/skills/wal-status/` — an installable agent skill: the
   ten-line orientation read of the WAL, staleness warning first. @status:impl/done
@@ -53,14 +53,14 @@ vibe uninstall flow:wal
 ```
 
 @fact:UNINSTALL-REMOVES-PACKAGE-FILES-BUT-NEVER-PROJECT-STATE Uninstalling removes every file the package wrote, including the boot
-snippet and the skill, but NEVER touches `spec/WAL.md` or `CONTINUE.md`
+snippet and the skill, but NEVER touches `spec/WAL.xml` or `CONTINUE.md`
 (project state, not package state) or user-owned boot files
-(`00-core.md`, `90-user.md`). @status:impl/done
+(`00-core.xml`, `90-user.xml`). @status:impl/done
 
 ## What changed in 0.2.0 {#changelog}
 
 - @fact:CHANGE-THE-TWO-FILE-MODEL **The two-file model**, absorbed from the AI-Native Discipline's WAL
-  convention: `spec/WAL.md` is the canonical living checkpoint;
+  convention: `spec/WAL.xml` is the canonical living checkpoint;
   `CONTINUE.md` at the repository root is the cold-resume snapshot it
   supersedes. @status:impl/done
 - @fact:CHANGE-SESSION-COMMANDS **Session commands.** The wind-down (`END SESSION`, `WRAP UP`,
@@ -110,3 +110,4 @@ agent product. @status:impl/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

@@ -52,7 +52,7 @@ code span; a marker *outside* one, at the end of the paragraph, is exactly what
 Both reproduced 2026-07-26 by running the gate, not by reading. **Do not
 re-discover; do reproduce before fixing, so you can watch each go green.**
 
-**F-083.** In `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md`
+**F-083.** In `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.xml`
 §3, four `- [ ]` items were marked in the canonical shape:
 
 ```
@@ -130,7 +130,7 @@ bash tools/self-check.sh ; echo "EXIT=$?"
 Read the floor's **real** exit code; never judge it from a piped `tail`.
 
 Then restore the four task-list anchors in
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.xml`
 §3 exactly as §3 above quotes them (`##CHECKLIST-RUNS-OR-CHECKS`,
 `##CHECKLIST-CARRIES-COGNITION`, `##CHECKLIST-FAST-ENOUGH`,
 `##CHECKLIST-CANNOT-SILENTLY-LIE`), and run:
@@ -145,7 +145,7 @@ cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign ca
 - `--exhaustive` → **zero** hits in
   `core-ai-native/v0.8.0/spec/0[1-6]-*` (there are zero today only because the
   four are unmarked; they must now be marked *and* silent);
-- move `01-PATTERN-CARD-FORMAT.md`'s `##band-three-fields-lead` marker back to
+- move `01-PATTERN-CARD-FORMAT.xml`'s `##band-three-fields-lead` marker back to
   the **last** position and confirm `--exhaustive` still reports nothing —
   then leave it in whichever position you verified, and say which in §9.
 
@@ -202,10 +202,10 @@ getting its own branch.
 parser:
 
 ```
-02-EXECUTABLE-SCAFFOLDS.md:63: Error [MissingAnchor] marked unit has no `##<ID>` fact anchor (anchored-when-marked, PROP-043 §3.8)
-02-EXECUTABLE-SCAFFOLDS.md:64: …  :65: …  :66: …
+02-EXECUTABLE-SCAFFOLDS.xml:63: Error [MissingAnchor] marked unit has no `##<ID>` fact anchor (anchored-when-marked, PROP-043 §3.8)
+02-EXECUTABLE-SCAFFOLDS.xml:64: …  :65: …  :66: …
 error: progress check: 4 error(s), 0 warning(s)
-01-PATTERN-CARD-FORMAT.md:41: Error [unmarked] Para unit carries no marker (--exhaustive)
+01-PATTERN-CARD-FORMAT.xml:41: Error [unmarked] Para unit carries no marker (--exhaustive)
 ```
 
 Both cleared, each by its own change, with nothing else in the corpus moving.

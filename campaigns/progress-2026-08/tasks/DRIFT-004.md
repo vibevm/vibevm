@@ -45,7 +45,7 @@ while the heading kebab-only law stays untouched.
 > fact-vs-heading) is an extraction warning. Heading anchors keep the
 > kebab-only law; the wider id grammar applies to `##` ids only.
 > — PROP-014 §2.1 (fact amendment, 2026-07-24),
-> `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md`
+> `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
 
 > Fact units carry no `kind:` line (§2.2 typing stays a heading-unit
 > discipline); their normativity signal is the id register. Edges cite

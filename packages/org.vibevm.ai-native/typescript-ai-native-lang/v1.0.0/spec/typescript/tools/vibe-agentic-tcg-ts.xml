@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool Spec: `vibe-agentic-tcg-ts` — the Agentic Type Oracle for TypeScript</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="impl/done">*Status: component brief at FULL seven-section parity (problem · design
+stance · component shape · staged ambition · licensing · risk register ·
+summary).*</status-line></p>
+  <p><COMMISSIONED-AS-THE-AGENTIC-DELIVERY fact="true" status="impl/done">*Commissioned 2026-07-07 as the AGENTIC delivery of the tcg line —
+the sibling of `typescript-ai-native-tcg.xml` (token-level, VERY-FAR-future) — and
+implemented by AGENTIC-TCG-TS-PLAN v0.1.*</COMMISSIONED-AS-THE-AGENTIC-DELIVERY></p>
+  <p><companion-documents fact="true" status="impl/done">*Mechanism specs:
+[`TCG-ORACLE-v0.1`](../mechanisms/TCG-ORACLE-v0.1.xml),
+[`TCG-PROTOCOL-v0.1`](../mechanisms/TCG-PROTOCOL-v0.1.xml); the product-side
+MCP seam is vibevm's PROP-026.*</companion-documents></p>
+  <problem title="1. What problem it solves">
+    <p><TCD-MASKS-LOGITS-INSIDE-THE-SAMPLER fact="true" status="spec/done">True type-constrained decoding masks logits inside the sampler.</TCD-MASKS-LOGITS-INSIDE-THE-SAMPLER></p>
+    <p><HOSTED-AGENTS-NEVER-EXPOSE-LOGITS fact="true" status="spec/done">A hosted
+coding agent (Claude Code, opencode, Codex over their APIs) never exposes
+logits — the harness receives sampled text.</HOSTED-AGENTS-NEVER-EXPOSE-LOGITS></p>
+    <p><THE-GUARANTEE-IS-UNREACHABLE-IN-AGENTIC-MODE fact="true" status="spec/done">So the by-construction
+guarantee is unreachable in agentic mode, and waiting for it (a local
+inference substrate; `vibe-llm` is an M0 stub) parks ALL of the tcg
+line's value indefinitely.</THE-GUARANTEE-IS-UNREACHABLE-IN-AGENTIC-MODE></p>
+    <p><decompose-what-the-mask-buys-lead fact="true" status="spec/done">Decompose what the mask actually buys, and most of it is not the mask:</decompose-what-the-mask-buys-lead></p>
+    <facts ordered="true">
+      <VALUE-GUARANTEE fact="true" status="spec/done">**Guarantee** — a type-invalid continuation cannot be emitted. Decode-
+   loop-only. NOT deliverable agentically; stays with the token-level
+   sibling.</VALUE-GUARANTEE>
+      <VALUE-INFORMATION fact="true" status="impl/done">**Information** — "what is in scope here, with what type; does this
+   fragment type-check; what continuations are type-valid at this
+   position." Pure data. Deliverable TODAY as tool responses.</VALUE-INFORMATION>
+      <VALUE-FEEDBACK-LATENCY fact="true" status="impl/done">**Feedback latency** — a mask rejects instantly; an agent today learns
+   about a type error via write-file → full floor → parse stderr → retry.
+   An incremental in-memory validate answers in ~20 ms (Phase-0 spike
+   fact on ts-demo) without touching disk.</VALUE-FEEDBACK-LATENCY>
+      <VALUE-DISCIPLINE-AT-GENERATION-TIME fact="true" status="impl/done">**Discipline at generation time** — the §8 unsafe-set bans, branding
+   at seams (§4), boundary validation (§2), enforced while writing rather
+   than post-hoc. Deliverable as enriched answers driven by the SAME
+   conform engine the gate runs.</VALUE-DISCIPLINE-AT-GENERATION-TIME>
+    </facts>
+    <p><AGENTIC-TCG-SHIPS-VALUES-TWO-THROUGH-FOUR fact="true" status="impl/done">`vibe-agentic-tcg-ts` ships 2–4: a long-lived language-service oracle the
+agent CONSULTS, instead of a mask the sampler OBEYS.</AGENTIC-TCG-SHIPS-VALUES-TWO-THROUGH-FOUR></p>
+    <p><GUARANTEE-STAYS-WITH-THE-FLOOR fact="true" status="impl/done">The guarantee (1)
+stays where it already lives — the floor.</GUARANTEE-STAYS-WITH-THE-FLOOR></p>
+    <p><ORACLE-MAKES-RED-FLOOR-ITERATIONS-RARE fact="true" status="impl/done">The oracle's job is to make
+red floor iterations rare; the floor's job is unchanged: to be the truth.</ORACLE-MAKES-RED-FLOOR-ITERATIONS-RARE></p>
+  </problem>
+  <design-stance title="2. Design stance (consequences of what we know)">
+    <facts ordered="false">
+      <STANCE-STAND-ON-THE-REAL-COMPILER fact="true" status="impl/done">**Stand on the real compiler, not a model of it.** The oracle is an
+  incremental `LanguageService` over the CONSUMER's own `typescript`
+  install (the same one `tsc --noEmit` uses, resolved the same way
+  ts-extract does), with tsconfig read exactly as tsc reads it
+  (`getParsedCommandLineOfConfigFile`). No bespoke type engine, no
+  subset: whatever the project's compiler accepts/rejects is the oracle's
+  answer. This is the structural opposite of the PLDI'25 artifact (a
+  hand-built incremental type system for a TS subset, integrated into a
+  decoder) — which is also why the clean-room rule is satisfied
+  trivially: their code is not needed and not read.</STANCE-STAND-ON-THE-REAL-COMPILER>
+      <STANCE-OVERLAYS-NEVER-DISK fact="true" status="impl/done">**Overlays, never disk.** Validation of a HYPOTHETICAL file state —
+  the edit the agent is about to make — happens against in-memory
+  overlays with versioned snapshots. The agent checks before it writes;
+  the write happens once, already-typed.</STANCE-OVERLAYS-NEVER-DISK>
+      <STANCE-ONE-EXTRACTION-TWO-CONSUMERS fact="true" status="impl/done">**One extraction, two consumers.** The oracle's `validate` returns the
+  compiler's diagnostics AND the per-file conform facts/markers (the same
+  §8/§9 fact classes ts-extract emits), so the Rust layer can run the
+  REAL conform rules over the fragment and merge discipline findings into
+  the same response. The agent sees "does it compile" and "does it
+  conform" in one roundtrip.</STANCE-ONE-EXTRACTION-TWO-CONSUMERS>
+      <STANCE-POLICY-INTERPRETATION-LIVES-IN-RUST fact="true" status="impl/done">**Policy interpretation lives in Rust, once.** The node side emits
+  facts only. `conform.toml` reading, rule assembly, baseline awareness,
+  advice strings — all in the `typescript-ai-native-tcg` middle layer, through the
+  same `conform_core::check` the gate calls. Two engines cannot drift
+  when there is one engine.</STANCE-POLICY-INTERPRETATION-LIVES-IN-RUST>
+      <STANCE-DUAL-TRANSPORT fact="true" status="impl/done">**Dual transport, agent's choice** (the PROP-018 §2.8 idiom): a
+  persistent `serve` loop for MCP hosts, and one-shot CLI forms
+  (`vibe bin exec typescript-ai-native-tcg -- validate …`) for agents without MCP
+  or for scripts. Same protocol shape on both.</STANCE-DUAL-TRANSPORT>
+      <STANCE-CAPABILITY-ROUTING-IS-FREE fact="true" status="impl/done">**Capability routing is free here.** DR1-015's over-constraint risk
+  (hard constraints distort strong models) does not transfer: a tool you
+  may ignore does not distort. Strong agents will consult the oracle
+  less; weak agents more; the battery measures the weak population
+  (gpt-oss-20b) because that is where the lift is claimed.</STANCE-CAPABILITY-ROUTING-IS-FREE>
+    </facts>
+  </design-stance>
+  <component-shape title="3. Component shape (how it fits vibevm)">
+    <p><three-processes-lead fact="true" status="impl/done">Three processes, two thin NDJSON hops, each layer doing the one thing
+the layer below cannot:</three-processes-lead></p>
+    <fence>agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type)──▶ typescript-ai-native-mcp serve
+   │                                                    (this family's own
+   │                                                     MCP server — PROP-027;
+   │                                                     language compat guard)
+   └─or one-shot─▶ vibe bin exec typescript-ai-native-tcg -- &lt;op&gt; ──▶ typescript-ai-native-tcg
+                                                        (discipline
+                                                         enrichment: conform
+                                                         rules, baseline
+                                                         flags, advice,
+                                                         cell/seam context)
+                                                            │ NDJSON duplex
+                                                            ▼
+                                                        node oracle.ts
+                                                        (LanguageService +
+                                                         overlays, consumer
+                                                         typescript)</fence>
+    <facts ordered="false">
+      <COMPONENT-THE-ORACLE fact="true" status="impl/done">**The oracle** (`tools/ts-oracle/oracle.ts`, this package): self-
+  contained erasable-only TypeScript, embedded into the Rust binary via
+  `include_str!` and materialised content-addressed — the ts-extract
+  delivery, reused. Ops: `init`, `validate`, `scope`, `complete`,
+  `type`, `update`, `shutdown` (TCG-PROTOCOL-v0.1).</COMPONENT-THE-ORACLE>
+      <COMPONENT-THE-BRIDGE fact="true" status="impl/done">**The bridge** (`crates/typescript-ai-native-tcg-bridge`): persistent child client —
+  correlation ids, timeouts, kill-on-drop, five-way typed error taxonomy,
+  replay-tested without node.</COMPONENT-THE-BRIDGE>
+      <COMPONENT-THE-CLI fact="true" status="impl/done">**The CLI** (`crates/typescript-ai-native-tcg`, bin **`typescript-ai-native-tcg`**,
+  the package's 4th `[[binary]]`): `serve` (the enriching relay an MCP
+  host drives) + one-shot ops + `bench` (the battery's latency/agreement
+  harness).</COMPONENT-THE-CLI>
+      <COMPONENT-THE-PRODUCT-SEAM fact="true" status="impl/done">**The product seam** (vibevm, PROP-027; PROP-026 §2 keeps the
+  grammar normative): the same four `tcg_*` tools, served by this family's own
+  standalone MCP package `mcp:org.vibevm.ai-native/typescript-ai-native-mcp` with
+  `language` as a validated compat parameter (a mismatch refuses with the recipe
+  naming the right server). The `vibe-tcg` registry crate and the vibe-mcp
+  `tcg_*` adapters this row described were deleted whole
+  (PROP-026 ##TCG-CRATE-DELETED) — **the owner's portability amendment was
+  cashed**, not deferred: `typescript-ai-native-mcp` depends on `mcp-core` and
+  has zero vibe-mcp imports.</COMPONENT-THE-PRODUCT-SEAM>
+      <COMPONENT-DETERMINISM-AND-AUDITABILITY fact="true" status="impl/done">**Determinism and auditability:** given (project state, overlay set,
+  policy), every answer is deterministic; enriched findings cite
+  `spec://` REQs Class-F style; nothing here samples anything.</COMPONENT-DETERMINISM-AND-AUDITABILITY>
+    </facts>
+  </component-shape>
+  <staged-ambition title="4. Staged ambition">
+    <facts ordered="false">
+      <STAGE-A-CONSULTATION-ORACLE fact="true" status="impl/done">**Stage A — the consultation oracle (THIS brief, shipped by the plan):**
+  validate/scope/complete/type over overlays, discipline-enriched,
+  MCP + one-shot delivery, measured by the two-arm battery.</STAGE-A-CONSULTATION-ORACLE>
+      <STAGE-B-RICHER-DISCIPLINE-ADVICE fact="true" status="spec/done">**Stage B — richer discipline advice:** brand-constructor suggestions,
+  seam-aware "what should cross here", completions ranked/filtered by
+  policy (the `unsafe` flag hardening into ordering). Data the Stage-A
+  protocol already carries fields for.</STAGE-B-RICHER-DISCIPLINE-ADVICE>
+      <STAGE-C-THE-RUST-TWIN-AGENTICALLY fact="true" status="spec/done">**Stage C — the Rust twin agentically** (`rust-ai-native-tcg` over rust-analyzer,
+  a separate commissioning): the language parameter and PROP-026 are cut
+  to admit it without new surface.</STAGE-C-THE-RUST-TWIN-AGENTICALLY>
+      <STAGE-D-TOKEN-LEVEL-TCG fact="true" status="spec/done">**Stage D — token-level TCG (the sibling brief, VERY-FAR-future,
+  owner-dispositioned 2026-07-07):** when `vibe-llm` exists, the SAME
+  oracle answers a logit-masker's completability queries inside the
+  decode loop. Nothing in Stages A–C is thrown away; the consumer of the
+  answers changes. The clean-room rule re-binds there.</STAGE-D-TOKEN-LEVEL-TCG>
+    </facts>
+  </staged-ambition>
+  <licensing title="5. Licensing posture">
+    <facts ordered="false">
+      <LICENSING-TS-COMPILER-API-AND-LANGUAGE-SERVICE fact="true" status="spec/done">TypeScript Compiler API / LanguageService: Apache-2.0 — clean, and the
+  consumer brings their own install (we link nothing).</LICENSING-TS-COMPILER-API-AND-LANGUAGE-SERVICE>
+      <LICENSING-NODE-NDJSON-AND-OUR-ENGINES fact="true" status="spec/done">node, NDJSON, our own engines: in-house or std.</LICENSING-NODE-NDJSON-AND-OUR-ENGINES>
+      <LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY fact="true" status="impl/done">The PLDI'25 reproduction package: **not a dependency, not a reference,
+  not opened** for the agentic line (inspiration-only rule,
+  `spec/boot/90-user.xml`). No third-party grammar/CFG tooling is needed
+  at all in agentic mode.</LICENSING-PLDI-PACKAGE-IS-NOT-A-DEPENDENCY>
+      <LICENSING-NET-NOTHING-VIRAL fact="true" status="impl/done">Net: nothing viral anywhere near the critical path.</LICENSING-NET-NOTHING-VIRAL>
+    </facts>
+  </licensing>
+  <risk-register title="6. The honest risk register">
+    <facts ordered="false">
+      <RISK-NO-GUARANTEE-BY-CONSTRUCTION fact="true" status="spec/done">**No guarantee by construction.** The agent may ignore the oracle.
+  Mitigation is structural: the floor stays the gate; the oracle only
+  shortens the distance to green. The battery measures whether it DOES
+  (control vs with-tools arms; if the delta is noise, that is a finding
+  against Stage B investment, recorded, not hidden).</RISK-NO-GUARANTEE-BY-CONSTRUCTION>
+      <RISK-LATENCY-UNDER-SCALE fact="true" status="spec/done">**Latency under scale.** The Phase-0 spike says 22 ms warm validate on
+  a demo-sized tree; large consumer trees are unmeasured. The ladder:
+  per-file semantic diagnostics only → background pre-warm on init →
+  posted targets move WITH a recorded reason. Never a silent miss.</RISK-LATENCY-UNDER-SCALE>
+      <RISK-LS-VS-TSC-DIVERGENCE fact="true" status="spec/done">**LS-vs-tsc divergence.** Same engine underneath but options are
+  assembled differently; the differential corpus (validate-vs-tsc on
+  seeded errors) is the standing detector, and config is read via the
+  same API tsc uses from the start.</RISK-LS-VS-TSC-DIVERGENCE>
+      <RISK-WINDOWS-CHILD-LIFECYCLE fact="true" status="impl/done">**Windows child lifecycle.** Junction/verbatim/PATH quirks are known
+  house lessons; kill-on-drop + shutdown op + no-zombie assertions are
+  Phase-0-proven and re-asserted in the hermetic test.</RISK-WINDOWS-CHILD-LIFECYCLE>
+      <RISK-STRONG-MODEL-INDIFFERENCE fact="true" status="spec/done">**Strong-model indifference.** Plausible (DR1-015 inverted); the
+  battery deliberately measures the weak population where the claim
+  lives. A strong-agent arm is a later, optional measurement.</RISK-STRONG-MODEL-INDIFFERENCE>
+      <RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY fact="true" status="impl/done">**Scope creep toward an LSP relay.** The surface is the four queries +
+  lifecycle, full stop; rename/code-actions/references are named
+  non-goals (PROP-026 carries the line).</RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY>
+    </facts>
+  </risk-register>
+  <summary title="7. One-line summary">
+    <p><ONE-LINE-SUMMARY fact="true" status="impl/done">`vibe-agentic-tcg-ts` gives a coding agent the type oracle's INFORMATION
+at millisecond latency — real-compiler validation of unwritten edits,
+in-scope symbols, type-valid continuations, and discipline findings from
+the same engine as the gate — delivered as consultation tools over MCP
+and one-shot CLI, so weak agents stop paying the red-floor retry tax
+today, while the token-level mask (the only thing this is NOT) waits for
+an inference substrate on its own very-far-future track.</ONE-LINE-SUMMARY></p>
+  </summary>
+</spec>

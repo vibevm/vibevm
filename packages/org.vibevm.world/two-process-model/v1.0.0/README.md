@@ -26,18 +26,18 @@ session instructions plus three reference documents. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-MODEL `spec/flows/two-process-model/TWO-PROCESS-MODEL.md` — the model:
+- @fact:CONTENT-THE-MODEL `spec/flows/two-process-model/TWO-PROCESS-MODEL.xml` — the model:
   why the common metaphors fail, the complementary strengths table,
   the productive cycle, and the one assignment that never moves
   (the human owns coherence). @status:impl/done
-- @fact:CONTENT-THE-COGNITIVE-LOAD-SPLIT `spec/flows/two-process-model/cognitive-load-split.md` — the
+- @fact:CONTENT-THE-COGNITIVE-LOAD-SPLIT `spec/flows/two-process-model/cognitive-load-split.xml` — the
   operational responsibility table: human-only work, AI-only work,
   shared work split by nature; and the four consequences of the
   AI's zero cross-session memory. @status:impl/done
-- @fact:CONTENT-FILES-AS-IPC `spec/flows/two-process-model/files-as-ipc.md` — the reframe of
+- @fact:CONTENT-FILES-AS-IPC `spec/flows/two-process-model/files-as-ipc.xml` — the reframe of
   spec files from "documentation" to the inter-process channel:
   three planes, their budgets, and the four IPC requirements. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/05-flow-two-process-model.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/05-flow-two-process-model.xml` — boot snippet loaded at
   session start: the architecture in brief and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -85,3 +85,4 @@ collection takes the general spirit of the process from it. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

@@ -6,12 +6,12 @@ assignment is [`tasks/PHASE-C-BATCHES.json`](tasks/PHASE-C-BATCHES.json), genera
 from `run/mirror/`; this document is the reasoning around it._
 
 Governing contract:
-[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-c](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-c),
-with §3.1 [#world-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#world-verdicts)
-and §3.2 [#ai-native-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#ai-native-verdicts).
+[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-c](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#phase-c),
+with §3.1 [#world-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#world-verdicts)
+and §3.2 [#ai-native-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#ai-native-verdicts).
 Mechanics are wave 1's and are not re-invented: PROP-043
-[§7.1](../../spec/modules/vibe-progress/PROP-043-progress-markup.md#cache) /
-[§7.5](../../spec/modules/vibe-progress/PROP-043-progress-markup.md#erasure).
+[§7.1](../../spec/modules/vibe-progress/PROP-043-progress-markup.xml#cache) /
+[§7.5](../../spec/modules/vibe-progress/PROP-043-progress-markup.xml#erasure).
 
 ## 1. What the phase actually owes {#size}
 
@@ -62,11 +62,11 @@ The host is 4 440 of 4 441 — Phase C inherits three small debts, not a cluster
 - one unjudged anchor, `CACHE-TALLY-COMPUTED` in PROP-043, added by wave 1's own
   close-out after the file had been judged;
 - five files whose `processed_hash` no longer matches their `content_hash` —
-  `spec/boot/00-core.md`, `MT-02-vibe-tree-tui.md`, `PROP-026-tcg-tool-family.md`,
-  `PROP-043-progress-markup.md`, `PROP-003-dep-evolution.md`;
+  `spec/boot/00-core.xml`, `MT-02-vibe-tree-tui.xml`, `PROP-026-tcg-tool-family.xml`,
+  `PROP-043-progress-markup.xml`, `PROP-003-dep-evolution.xml`;
 - five orphan verdict keys naming anchors that no longer exist — `authority-line`
-  and `status-line` in both `loading-and-boot-model.md` and
-  `workspace-and-qualified-naming.md`, and `related` in `tui-visual-language.md` —
+  and `status-line` in both `loading-and-boot-model.xml` and
+  `workspace-and-qualified-naming.xml`, and `related` in `tui-visual-language.xml` —
   left by Phase D/E re-authoring.
 
 The host's cache arithmetic closes exactly on those three debts, which is the
@@ -121,7 +121,7 @@ rather than its absence.
 ### 2.3 `vibedeps/` stands in for §3.1's third source {#source-three}
 
 **Decision.** «The installed reality» is read from `vibedeps/<slot>/` on disk plus
-the generated `spec/boot/STATIC.md` and `spec/boot/INDEX.md`, **not** from the
+the generated `spec/boot/STATIC.xml` and `spec/boot/INDEX.md`, **not** from the
 lockfile's `files_written`.
 
 **Why:** the field §3.1 names is empty for every package that exists here.

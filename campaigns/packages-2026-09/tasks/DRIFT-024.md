@@ -19,7 +19,7 @@ classes of file that must never carry markup are no longer observed.
 > registries — always.
 > — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#campaign-zone`
 
-Findings realised: **F-070** (33 `LICENSE.md`, 264 paragraphs of verbatim
+Findings realised: **F-070** (33 `LICENSE.xml`, 264 paragraphs of verbatim
 UPL text) and **F-071** (three `spec/cards/INDEX.md`, each declaring itself a
 derived index whose *"hand edits are a defect"*).
 
@@ -33,12 +33,12 @@ Measured 2026-07-26 — do not re-discover, but contradict me if a number is wro
   match (`:95-100`) — so it can express a directory name, and it can express a
   bare filename only by accident, since a basename is also a component.
 - **`check --exhaustive` reports 8 992 unmarked paragraphs.** 264 of them are
-  in 33 `LICENSE.md` files — the same UPL-1.0 text once per package version
+  in 33 `LICENSE.xml` files — the same UPL-1.0 text once per package version
   slot.
 - The three `spec/cards/INDEX.md` (rust v0.7.0, typescript v0.6.0, go v0.1.0)
   say of themselves: *"Generated/maintained as a derived index (A2/R-030);
   hand edits are a defect."* Markup written there dies at the next
-  regeneration — the exact reason wave 1 kept `spec/boot/STATIC.md` and
+  regeneration — the exact reason wave 1 kept `spec/boot/STATIC.xml` and
   `INDEX.md` out of scope.
 - `progress.toml` **cannot express either exclusion today**: PROP-043 §4 is
   include-only by design, and no include glob can say "everything under
@@ -53,10 +53,10 @@ Measured 2026-07-26 — do not re-discover, but contradict me if a number is wro
 **Two mechanisms, because the two classes are genuinely different. The split
 is decided — do not collapse them into one.**
 
-### 4.1 `LICENSE.md` — project-neutral, so it goes in code {#license}
+### 4.1 `LICENSE.xml` — project-neutral, so it goes in code {#license}
 
 Add a **file-level** default exclusion (a new `DEFAULT_EXCLUDE_FILES`, matched
-against the **basename only**) containing exactly `LICENSE.md`. Always-on, like
+against the **basename only**) containing exactly `LICENSE.xml`. Always-on, like
 `DEFAULT_EXCLUDES`, and applied even under an explicit include.
 
 Justify it in the code comment on the same footing as the existing entries: a
@@ -115,7 +115,7 @@ cargo run -q -p vibe-cli --bin vibe -- progress scan --campaign campaigns/packag
 cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign campaigns/packages-2026-09
 ```
 
-- Observed file count falls **344 → 308**: 33 `LICENSE.md` + 3 derived indexes.
+- Observed file count falls **344 → 308**: 33 `LICENSE.xml` + 3 derived indexes.
   Report the number you actually get; if it is not 308, say so rather than
   adjusting anything to reach it.
 - `--exhaustive` unmarked count falls by **at least the 264** the licence files
@@ -163,7 +163,7 @@ Budget signal: past ~4 files, stop and return.
 
 - **Measured, before → after:** observed files **344 → 308**, the predicted
   33 + 3 and no other movement: 36 records left the campaign cache, 0 entered,
-  and the 36 are exactly 33 `LICENSE.md` + 3 `spec/cards/INDEX.md`.
+  and the 36 are exactly 33 `LICENSE.xml` + 3 `spec/cards/INDEX.md`.
   `--exhaustive` unmarked **8 992 → 8 463**, a fall of 529 — the 264 the
   licences contributed (§6's floor) plus 265 from the three derived indexes,
   measured separately by scanning copies of them in a scratch tree. Markers
@@ -175,7 +175,7 @@ Budget signal: past ~4 files, stop and return.
   all stayed. Across the three stacks 27 card files remain observed. The
   narrowness is also unit-tested rather than only observed: the fixture in
   `scope.rs` keeps a sibling card and a `spec/LICENSE-NOTES.md` while dropping
-  `INDEX.md` and `LICENSE.md`.
+  `INDEX.md` and `LICENSE.xml`.
 
 - Worth knowing for the next widening: the exclusion `packages/**/spec/cards/INDEX.md`
   is *today* indistinguishable in effect from `**/INDEX.md`, because no other
@@ -217,7 +217,7 @@ Budget signal: past ~4 files, stop and return.
   > - @fact:DEFAULT-EXCLUDES **Default excludes** (applied always, even under
   >   explicit includes): by path component — `vibedeps/`, `.vibe/`, `refs/`,
   >   `fixtures/`, `campaigns/`, `target/`, `node_modules/`, `**/vendor/`;
-  >   and by file name — `LICENSE.md`. @status:impl/done
+  >   and by file name — `LICENSE.xml`. @status:impl/done
 
   If the reviewer prefers to keep `##DEFAULT-EXCLUDES` verbatim, the file-name
   rule wants its own anchor (`##DEFAULT-EXCLUDE-FILES`) rather than going

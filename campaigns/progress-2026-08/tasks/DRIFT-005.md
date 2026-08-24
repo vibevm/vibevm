@@ -35,7 +35,7 @@ a build error, and the resolver/`#embed` address fact units.
 > namespace. The resolver (§6) resolves a fact address like any node;
 > `#embed` of a fact splices exactly its unit …; `#use` of a fact address
 > pulls the top-level anchored ancestor of its **enclosing section**.
-> — `spec/modules/vibe-workspace/PROP-035-spec-compiler.md` §5 (fact amendment)
+> — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` §5 (fact amendment)
 
 > 1. **Section fate by default.** Facts ride their section …
 > 2. **Per-fact override.** Within a merged `:add` section, a source fact

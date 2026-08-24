@@ -20,7 +20,7 @@ it. The long horizon — dedicated servers federating agents across machines —
 is deliberately designed-for but not built yet; think of the years when the
 Linux kernel and the GNU userland were young.
 
-Design commitments (full text: [`spec/PROP-001-foundation.md`](spec/PROP-001-foundation.md)):
+Design commitments (full text: [`spec/PROP-001-foundation.xml`](spec/PROP-001-foundation.xml)):
 
 - **Process-level provider isolation**, not proxying: a worker is a separate
   Claude Code process whose environment is constructed from scratch — it
@@ -30,15 +30,16 @@ Design commitments (full text: [`spec/PROP-001-foundation.md`](spec/PROP-001-fou
 - **Agent-neutral core:** Claude Code is the first worker backend and the
   first boss harness, not a hard dependency of the model.
 - **Clean-room** with respect to every studied reference
-  ([`spec/refs/INVENTORY.md`](spec/refs/INVENTORY.md)).
+  ([`spec/refs/INVENTORY.xml`](spec/refs/INVENTORY.xml)).
 - **Fair use:** one interactive boss session on a consumer subscription;
   swarm load goes to the provider the swarm's owner pays for. No
   subscription multiplexing, no rate evasion.
 
 Status: **pre-alpha, pre-code.** The IGNITION campaign plan
-([`spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md))
+([`spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml`](spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml))
 is the authoritative roadmap: spikes → mission-control core → delegate-out →
 collect-back → swarm → delegation policy → boss integration. Campaign 2
 (initiative system) and Campaign 3 (RLM protocol) follow it.
 
 License: UPL-1.0.
+

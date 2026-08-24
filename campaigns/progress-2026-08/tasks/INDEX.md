@@ -60,5 +60,5 @@ executor.
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:
-`spec/modules/vibe-progress/templates/impl-task.md` /
+`spec/modules/vibe-progress/templates/impl-task.xml` /
 `templates/spec-task.md`. Statuses mirror into `run/state/tasks.json`.

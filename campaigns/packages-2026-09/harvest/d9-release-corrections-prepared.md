@@ -54,8 +54,8 @@ a figure carried rather than re-measured is a figure that decays.
   here. **F-132 is covered by the same d8b F-189 draft.** Two riders travel with
   the F-189 diff and are the owner's to fold in or split: the **three
   `##three-processes-lead` ASCII diagrams** carrying the same retired topology
-  with no anchor and no verdict (`vibe-agentic-tcg-rust.md:104-107`,
-  `vibe-agentic-tcg-go.md:100-102`, `vibe-agentic-tcg-ts.md:100-101`) — a diff
+  with no anchor and no verdict (`vibe-agentic-tcg-rust.xml:104-107`,
+  `vibe-agentic-tcg-go.xml:100-102`, `vibe-agentic-tcg-ts.xml:100-101`) — a diff
   that repairs the rows and leaves the diagrams ships two topologies per
   document; and the d8b requirement that the Go anchor's **recorded reason** be
   replaced before the diff is shown.
@@ -79,7 +79,7 @@ more. **6 anchors · 6 one-segment prefixes · no design choice owed.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '5,17p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md
+$ sed -n '5,17p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.xml
 ```
 
 ```
@@ -91,7 +91,7 @@ $ sed -n '5,17p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boo
 ```
 
 ```console
-$ sed -n '5,13p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md
+$ sed -n '5,13p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.xml
 ```
 
 ```
@@ -103,7 +103,7 @@ $ sed -n '5,13p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/b
 ```
 
 ```console
-$ sed -n '5,14p' packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md
+$ sed -n '5,14p' packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.xml
 ```
 
 ```
@@ -153,7 +153,7 @@ the Go correction is judged on the package lane alone, which is where it is
 decided anyway.
 
 **The compiled lane is not involved, and this is what separates F-153 from the
-address family.** The snippet body is *not* inlined into `spec/boot/STATIC.md` —
+address family.** The snippet body is *not* inlined into `spec/boot/STATIC.xml` —
 the host names the file by full slot path and the reader opens it in the slot:
 
 ```console
@@ -210,7 +210,7 @@ card; the nine executable scaffolds A–I in their TypeScript shape). @impl/done
 A `spec://` qualified address would also resolve —
 `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` is PROP-029's own
 worked example for exactly this package
-(`spec/common/PROP-029-fully-qualified-addresses.md:22`, `##CARRIER-SPEC-URI`) —
+(`spec/common/PROP-029-fully-qualified-addresses.xml:22`, `##CARRIER-SPEC-URI`) —
 and it resolves from *anywhere*, not just the two roots above. It is **not**
 offered as an option because the phase has already ruled this shape twice and
 the repaired text is live at HEAD:
@@ -260,11 +260,11 @@ the package all three stacks depend on, naming five bare paths and one bare
 
 ```
  7  ##corpus-lives-here-lead The language-neutral corpus lives in this package: @impl/done
- 9  - ##CORPUS-GUIDING-LAYER the guiding layer (`00-MANIFESTO.md`,
-10    `01-PATTERN-CARD-FORMAT.md`, `02-EXECUTABLE-SCAFFOLDS.md`), @impl/done
-11  - ##CORPUS-OPERATING-PLAYBOOKS the operating playbooks (`03-RAID-PLAYBOOK.md`
-12    campaigns, `04-SWEEP-PLAYBOOK.md` the standing sweep, `05-CAMPAIGN-FORM.md`
-13    the campaign paper trail, `06-WAL-CONVENTION.md` session-durable state —
+ 9  - ##CORPUS-GUIDING-LAYER the guiding layer (`00-MANIFESTO.xml`,
+10    `01-PATTERN-CARD-FORMAT.xml`, `02-EXECUTABLE-SCAFFOLDS.xml`), @impl/done
+11  - ##CORPUS-OPERATING-PLAYBOOKS the operating playbooks (`03-RAID-PLAYBOOK.xml`
+12    campaigns, `04-SWEEP-PLAYBOOK.xml` the standing sweep, `05-CAMPAIGN-FORM.xml`
+13    the campaign paper trail, `06-WAL-CONVENTION.xml` session-durable state —
 14    optional but preferred), @impl/done
 15  - ##CORPUS-MECHANISM-SPECS the mechanism specs under `mechanisms/`
 16    (ENGINE-CONFORM, PROP-014 specmap, BROWNFIELD-PROTOCOL, LEDGER-INTENT — the
@@ -278,8 +278,8 @@ Every one of those lives under `spec/`:
 
 ```console
 $ ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/
-00-MANIFESTO.md  01-PATTERN-CARD-FORMAT.md  02-EXECUTABLE-SCAFFOLDS.md
-03-RAID-PLAYBOOK.md  04-SWEEP-PLAYBOOK.md  05-CAMPAIGN-FORM.md  06-WAL-CONVENTION.md
+00-MANIFESTO.xml  01-PATTERN-CARD-FORMAT.xml  02-EXECUTABLE-SCAFFOLDS.xml
+03-RAID-PLAYBOOK.xml  04-SWEEP-PLAYBOOK.xml  05-CAMPAIGN-FORM.xml  06-WAL-CONVENTION.xml
 appendix  boot  legacy-projections  mechanisms
 ```
 
@@ -309,7 +309,7 @@ names differ in every position but `root_files`. **2 anchors.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '57,62p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md
+$ sed -n '57,62p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml
 ```
 
 ```
@@ -322,7 +322,7 @@ $ sed -n '57,62p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go
 ```
 
 ```console
-$ sed -n '69,75p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md
+$ sed -n '69,75p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml
 ```
 
 ```
@@ -411,7 +411,7 @@ returned, `{root}` ignored.** And the two halves are **opposite defects**, which
 is why the correction touches both sides of the arrow:
 
 - the two **undocumented** keys are *sanctioned* — `##PARITY-ADDITIVE-ONLY-EVOLUTION`
-  (`TCG-PROTOCOL-GO-v0.1.md:30-32`, same clause at the Rust document's `:30-31`)
+  (`TCG-PROTOCOL-GO-v0.1.xml:30-32`, same clause at the Rust document's `:30-31`)
   says «new response fields — non-breaking». Documentation lag on a permitted
   change;
 - the three **documented-and-never-produced** keys are the contract breach: a
@@ -462,7 +462,7 @@ shape in Rust's own strings, and `quiescent`/`ra_version` are **not** Go's
 crate edits plus their tests, in Phase E's lane, not Phase D's
 ([§3.3](../PHASE-D-BATCH-PLAN.md#demote): «Phase D does not write the
 mechanism»). Benefit: all three stacks then answer `init` the same way, which
-`##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` (`TCG-PROTOCOL-GO-v0.1.md:34-39`)
+`##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` (`TCG-PROTOCOL-GO-v0.1.xml:34-39`)
 already assumes — and the TypeScript twin **already ships the shape**, so this is
 a build gap rather than an over-specified contract.
 
@@ -628,7 +628,7 @@ owner should rule on it rather than inherit it silently.** `d8a` suggested
 appending «see `spec://org.vibevm.core/vibevm/common/PROP-031#beachhead`». Two problems, both
 measured:
 
-1. **That anchor does not exist.** `grep -n "{#beachhead}" spec/common/PROP-031-algorithmic-refactoring.md`
+1. **That anchor does not exist.** `grep -n "{#beachhead}" spec/common/PROP-031-algorithmic-refactoring.xml`
    → no match; the section is `## 1. Problem statement {#problem}` and the
    sentences are `##BEACHHEAD-SCAFFOLD-I` / `##BEACHHEAD-LIMITS` at `:21-22`.
    Shipping it would mint a *new* dangling pointer inside the diff that closes a
@@ -646,7 +646,7 @@ measured:
    `##BEACHHEAD-LIMITS` id) and accept the first live host pointer in an
    `ai-native` card; or leave the sentence self-contained as drafted above. The
    host side of the relationship is unaffected either way —
-   `spec/common/PROP-031-algorithmic-refactoring.md:21-22` already cites this
+   `spec/common/PROP-031-algorithmic-refactoring.xml:21-22` already cites this
    card and already writes the correction («today it is one operation
    (`add-cell` scaffolding only)»), which is the strongest evidence the sentence
    reads as a fact claim.
@@ -726,10 +726,10 @@ repair is the same word in each.
 
 ```console
 $ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/*.md
-SPEC-GENRES-PROTOCOL.md   design-docs.md   when-to-write-what.md            → 3
+SPEC-GENRES-PROTOCOL.xml   design-docs.xml   when-to-write-what.xml            → 3
 
 $ ls packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/*.md
-TOOL-DESIGN-LESSONS.md    packaging-lessons.md    self-updating-tools.md    → 3
+TOOL-DESIGN-LESSONS.xml    packaging-lessons.xml    self-updating-tools.xml    → 3
 
 $ grep -c '^- ##CONTENT-' …/spec-genres/v0.1.0/README.md …/tool-design-lessons/v0.1.0/README.md
 spec-genres:4    tool-design-lessons:4
@@ -780,7 +780,7 @@ one-anchor `prose-edit` row:
 
 ```console
 $ python -c "…run/state/obligations.json… F-186"
- anchors: ['packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#EVIDENCE-AND-TRANSFER-STRENGTH']
+ anchors: ['packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.xml#EVIDENCE-AND-TRANSFER-STRENGTH']
  route: prose-edit   status: open   wave: 1
 ```
 
@@ -791,16 +791,16 @@ still rides the publication.
 ### Current text at HEAD
 
 ```console
-$ sed -n '33p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md
+$ sed -n '33p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.xml
 ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DL1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @spec/done
 ```
 
 ### The measurement
 
 ```console
-$ grep -c "DL1-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md
+$ grep -c "DL1-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml
 0
-$ grep -n "DR1-015" …/ATLAS.md
+$ grep -n "DR1-015" …/ATLAS.xml
 181:- ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones
 ```
 
@@ -903,7 +903,7 @@ $ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
 …/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
 ```
 
-with the full rule at `conventional-commits.md:74-77` (`##INCLUDE-WHY-THIS-CHANGE-WAS-MADE`).
+with the full rule at `conventional-commits.xml:74-77` (`##INCLUDE-WHY-THIS-CHANGE-WAS-MADE`).
 
 **`git-atomic-commits` carries no citation rule, and disclaims the class in its
 own snippet:**
@@ -919,7 +919,7 @@ $ grep -rn "spec://" packages/org.vibevm.world/git-atomic-commits/
 draws the line the composition row erases:
 
 ```console
-$ sed -n '21,26p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md
+$ sed -n '21,26p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml
 21  ## Message format {#message-format}
 23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
 24  `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
@@ -947,7 +947,7 @@ Neither figure is «716», which was a **line** count mis-read as a commit count
 a sibling world package was routed §3.6(a) and closed as F-253 in wave 3:
 
 ```console
-$ sed -n '144,148p' packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md
+$ sed -n '144,148p' packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.xml
 - ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline: one sync,
   one commit, one logical idea. The message *format* — Conventional
   Commits, with `docs(spec)` as the type a sync commit carries — is
@@ -1203,7 +1203,7 @@ EXISTS  …/rust-ai-native-lang/v0.7.0/README.md
 MISSING …/typescript-ai-native-lang/v0.6.0/README.md
 
 $ ls -a packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ | grep -v '^target$'
-.  ..  Cargo.lock  Cargo.toml  LICENSE.md  crates  spec  tools  vibe.toml
+.  ..  Cargo.lock  Cargo.toml  LICENSE.xml  crates  spec  tools  vibe.toml
 ```
 
 **The sentence's first target does not exist**, and the second does
@@ -1297,7 +1297,7 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @impl/done
   Both resolve the CONSUMER project's `typescript` at runtime. @impl/done
 - ##SHIPS-MECHANISM-SPECS **The TypeScript mechanism specs and tool briefs** —
   `spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` and
-  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`. @impl/done
+  `TCG-PROTOCOL-v0.1.xml`, plus `spec/typescript/tools/`. @impl/done
 - ##NEUTRAL-ENGINES-RIDE-ALONG-VENDORED **The neutral engines ride along as vendored copies**
   (`crates/vendor/core-ai-native-{conform,specmap,specmark,specmark-grammar}`),
   so the slot is its own Cargo workspace and builds standalone. @impl/done
@@ -1395,7 +1395,7 @@ convicts three `##COMPONENT-THE-PRODUCT-SEAM` rows for. It is judged
 
 ```console
 $ python -c "…run/state/obligations.json…"  WIRE-5-GENERATION-TIME-ORACLE -> []
-$ python -c "…run/cache.json…"              …GUIDE-AI-NATIVE-TYPESCRIPT.md | WIRE-5-GENERATION-TIME-ORACLE -> confirmed
+$ python -c "…run/cache.json…"              …GUIDE-AI-NATIVE-TYPESCRIPT.xml | WIRE-5-GENERATION-TIME-ORACLE -> confirmed
 ```
 
 Recorded so a README written under option (a) does not copy it, and so the owner
@@ -1414,7 +1414,7 @@ row's»:
 
 | anchor | its own recorded reason | belongs to |
 |---|---|---|
-| `#IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE` | the row's `reason`: «self-defeating by construction … it sits inside `spec/boot/STATIC.md` … so it IS read every session» | **this item** |
+| `#IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE` | the row's `reason`: «self-defeating by construction … it sits inside `spec/boot/STATIC.xml` … so it IS read every session» | **this item** |
 | `#fork-by-fork-rationale-pointer` | `reasons[0]`: «DRIFT, third of three. **The target exists** and carries four forks … the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings» | **the address family** — [§A.1](../PHASE-D-RELEASE-QUEUE.md#addresses-scope) counts F-245 as «1 of 2» on a repaired link; its diff is `tasks/address-repair.py`, **out of scope here** |
 
 So: **1 anchor drafted · 1 anchor already covered by the address transformation ·
@@ -1423,7 +1423,7 @@ a real design choice on the one drafted.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '9,10p' packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md
+$ sed -n '9,10p' packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.xml
 ##IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime
 rule: read it once while shaping identifiers, not on every session. @impl/done
 ```
@@ -1436,7 +1436,7 @@ File-level `<status stage="impl" state="done"/>` at `:3`; anchor `@impl/done`.
 full.**
 
 ```console
-$ sed -n '1001,1008p' spec/boot/STATIC.md
+$ sed -n '1001,1008p' spec/boot/STATIC.xml
 1001  <!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->
 1003  # Flow: Qualified Naming {#root}
 1005  This project ships the **qualified-naming** practice for *ecosystem
@@ -1445,7 +1445,7 @@ $ sed -n '1001,1008p' spec/boot/STATIC.md
 1008  rule: read it once while shaping identifiers, not on every session.
 ```
 
-`CLAUDE.md`'s generated boot block instructs every session: «`spec/boot/STATIC.md`
+`CLAUDE.md`'s generated boot block instructs every session: «`spec/boot/STATIC.xml`
 — … The static (priority) lane: **read it first and in full**.»
 
 **(ii) The manifest declares no condition, and the field it would use is named
@@ -1528,15 +1528,15 @@ instrument:
 ```console
 $ python -c "…run/cache.json… qualified-naming"
 README.md | IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE      -> confirmed
-   ev: spec/boot/STATIC.md  `grep -n 'design-time' spec/boot/STATIC.md` returns nothing
+   ev: spec/boot/STATIC.xml  `grep -n 'design-time' spec/boot/STATIC.xml` returns nothing
        - the sentence is not in the compiled lane at all
    ev: packages/…/vibe.toml  [boot_snippet] source = "spec/boot/67-flow-qualified-naming.md"
        - the README is not the source of the boot snippet
-67-flow-qualified-naming.md | IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE -> drift
-67-flow-qualified-naming.md | fork-by-fork-rationale-pointer                -> drift
+67-flow-qualified-naming.xml | IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE -> drift
+67-flow-qualified-naming.xml | fork-by-fork-rationale-pointer                -> drift
 ```
 
-Re-run at HEAD: `grep -n "design-time" spec/boot/STATIC.md` → no output (exit 1).
+Re-run at HEAD: `grep -n "design-time" spec/boot/STATIC.xml` → no output (exit 1).
 
 **So «ruled the same way» means the same TEST was applied — «does this sentence
 reach the lane the reader is told to read first and in full?» — and it produced
@@ -1635,10 +1635,10 @@ an identifier is minted, not every edit that uses one"».
   Prose-edit route — **applied and closed this session.**
 
 **The riders' boundary, checked before touching anything.** The two
-`gated_packages` siblings split by route: `conform-frontend-go.md`'s two
+`gated_packages` siblings split by route: `conform-frontend-go.xml`'s two
 anchors belong to **open F-185 on `sync-from-code`** — its diff is the owner's
-queue's, NOT touched here. `GUIDE-AI-NATIVE-GO.md:626 ##SWEEP-FLIP-ONLY-AFTER-DRAIN`
-and the F-186 TypeScript twin (`scaffold-i-codemods.md:33`, `DL1-015`) are
+queue's, NOT touched here. `GUIDE-AI-NATIVE-GO.xml:626 ##SWEEP-FLIP-ONLY-AFTER-DRAIN`
+and the F-186 TypeScript twin (`scaffold-i-codemods.xml:33`, `DL1-015`) are
 **false confirms with no obligation** — treated verdict-first: re-judged
 `drift` with measured reasons, minted by the registry, then closed under their
 own obligations in the same session, so the repair passes through the
@@ -1649,10 +1649,10 @@ measurement instead of around it.
 | # | item | anchors | diff size | design choice owed |
 |---|---|---|---|---|
 | 1 | [**F-153**](#f-153) | 6 — `#*-CODE-FOLLOWS-THE-*-GUIDE` ×3 · `#CARD-REGISTRY-FOR-*` ×3, in the go/rust/ts `20-stack-*-ai-native-lang.md` | 6 lines, one `spec/` prefix each; 3 files | **no** — the queue and the D4 precedent both fix the shape |
-| 2 | [**F-211**](#f-211) | 2 — `#OP-INIT` in `TCG-PROTOCOL-GO-v0.1.md` + `TCG-PROTOCOL-RUST-v0.1.md` | 2 bullets rewritten (~7 lines each); 2 files; **not interchangeable** | **no** per the queue's ask — route (a) *build* named as the owner's override |
-| 3 | [**F-188**](#f-188) | 3 — `#MOTIVATION` in the go/rust/ts `scaffold-i-codemods.md` | 3 single lines, 3 different edits; 3 files | **yes, small** — whether the rust line cites PROP-031 (its `#beachhead` anchor does not exist; it would be the first live host pointer in an `ai-native` card) |
+| 2 | [**F-211**](#f-211) | 2 — `#OP-INIT` in `TCG-PROTOCOL-GO-v0.1.xml` + `TCG-PROTOCOL-RUST-v0.1.xml` | 2 bullets rewritten (~7 lines each); 2 files; **not interchangeable** | **no** per the queue's ask — route (a) *build* named as the owner's override |
+| 3 | [**F-188**](#f-188) | 3 — `#MOTIVATION` in the go/rust/ts `scaffold-i-codemods.xml` | 3 single lines, 3 different edits; 3 files | **yes, small** — whether the rust line cites PROP-031 (its `#beachhead` anchor does not exist; it would be the first live host pointer in an `ai-native` card) |
 | 4 | [**F-251**](#f-251) | 2 — `#package-contents-lead` in the spec-genres + tool-design-lessons READMEs | one word each; 2 files | **no** |
-| 5 | [**F-186**](#f-186) | 1 — `#EVIDENCE-AND-TRANSFER-STRENGTH`, rust `scaffold-i-codemods.md:33` | **one character**; 1 file | **no** — but the ts twin carries the same typo, is `confirmed`, and needs re-judging before it can take the same fix |
+| 5 | [**F-186**](#f-186) | 1 — `#EVIDENCE-AND-TRANSFER-STRENGTH`, rust `scaffold-i-codemods.xml:33` | **one character**; 1 file | **no** — but the ts twin carries the same typo, is `confirmed`, and needs re-judging before it can take the same fix |
 | 6 | [**F-219**](#f-219) | 1 — `#COMPOSES-ATOMIC-COMMITS`, addressable-specs `README.md:64-65` | one composition row; 3 drafted shapes (2-line / 5-line / 2 rows) | **yes** — re-point vs name-both vs add-a-sibling-row (the third needs `vibe progress mirror` first) |
 | 7 | [**F-212**](#f-212) | 1 — `#RATCHET-CENSUS-REGRESSIONS`, `go-ai-native-sweep/SKILL.md:79-83` | one 5-line step → ~11 lines; 1 file | **no** — but 2 sibling sentences keep `gated_packages`, one of them `confirmed` |
 | 8 | [**F-115**](#f-115) | 1 — `#AGG-FRONT-DOOR`, typescript-ai-native `README.md:22-24` | **(a)** new ~90-line README, ~18 new anchors · **(b)** 3 words | **yes** — write the missing file vs repoint at the GUIDE |

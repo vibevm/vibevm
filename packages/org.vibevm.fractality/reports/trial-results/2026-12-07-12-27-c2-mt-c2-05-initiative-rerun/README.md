@@ -20,7 +20,7 @@ All six ended clean (`boss_exit=0`, 8–17 min each — the bosses finished the
 menu, they did not time out). Workers spawned:
 
 | arm | run 1 | run 2 | run 3 | delegated E |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | A′ (a) | 0 | 2 ({1,3}) | 0 | 2/18 = 11.1% |
 | B′ (b) | 0 | 0 | 0 | 0/18 = 0% |
 
@@ -63,3 +63,4 @@ The result validates Campaign 3's pivot to the RLM approach.
 
 Canonical verdicts: MT-C2-05 "Recorded runs". Raw evidence (bus facts +
 gzipped transcripts) sits per-run beside this file.
+

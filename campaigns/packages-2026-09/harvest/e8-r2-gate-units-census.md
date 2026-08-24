@@ -31,8 +31,8 @@ no gated/exempt list and no tree invariant. FlagSites (R-001) is a
 Rust-shaped rule (it keys on `Fact::Ctor`, `facts.rs:48`, emitted only by
 the Rust frontend at `rust-ai-native-conform-frontend/src/lib.rs:365`);
 neither the TS nor the Go driver mounts it, the Go guide promises it
-anyway (`GUIDE-AI-NATIVE-GO.md:366`), and the TS guide records its absence
-as `→ B-039` (`GUIDE-AI-NATIVE-TYPESCRIPT.md:175`).
+anyway (`GUIDE-AI-NATIVE-GO.xml:366`), and the TS guide records its absence
+as `→ B-039` (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:175`).
 
 ---
 
@@ -306,28 +306,28 @@ contains two cells (`cells/greeting`, `cells/farewell`) and one core module
 guide states this on the record: the runtime-flag tier is "*Specified, not
 built: no registry object exists. `research/ts-demo/src` is two cells and
 one core module … with no registry, no dispatch table and no flag*"
-(`GUIDE-AI-NATIVE-TYPESCRIPT.md:173`), and the typed-registry anchor is
+(`GUIDE-AI-NATIVE-TYPESCRIPT.xml:173`), and the typed-registry anchor is
 "*Specified, not built (→ B-039) … The nearest built thing is adjacent
 rather than this: the vendored conform engine exports a `FlagSites` rule …
 that would police WHERE flags become cells … but it is Rust-shaped
 (`gated_crate`, a `registry.rs` path) … and it is constructed only in the
 engine's own `rules/tests.rs`, never on a check path this stack runs*"
-(`GUIDE-AI-NATIVE-TYPESCRIPT.md:175`).
+(`GUIDE-AI-NATIVE-TYPESCRIPT.xml:175`).
 
 **Does the Go guide promise the same rule — yes; does the Go frontend
 mount it — no.** The Go guide carries the R-001 binding:
 `##R-001-BINDING-FLAG-AT-THE-SEAM` — "R-001 binding — flag at the seam,
-never in the veins:" (`GUIDE-AI-NATIVE-GO.md:366`), with the code comment
+never in the veins:" (`GUIDE-AI-NATIVE-GO.xml:366`), with the code comment
 "// internal/registry — the only flag reader and the only package permitted
-to import cell packages." (`GUIDE-AI-NATIVE-GO.md:369-370`), and the cells
+to import cell packages." (`GUIDE-AI-NATIVE-GO.xml:369-370`), and the cells
 section: "**`internal/registry` is the only package that imports cell
-packages** (§6)." (`GUIDE-AI-NATIVE-GO.md:174`). The Go demo instantiates
+packages** (§6)." (`GUIDE-AI-NATIVE-GO.xml:174`). The Go demo instantiates
 it: `research/go-demo/internal/registry/registry.go:1-3` opens "Package
 registry is the composition root's selector: the ONLY package that imports
 cell packages, and the only flag reader (R-001 …)". The Go config even
 reserves the field — `GoConfig::registry_pkg` (`config.rs:125`) — but its
 doc says it "carries no rule", and `go-ai-native init` merely *writes* it
-into `[go]` (`GUIDE-AI-NATIVE-GO.md:580-581`). The Go driver's `build_rules`
+into `[go]` (`GUIDE-AI-NATIVE-GO.xml:580-581`). The Go driver's `build_rules`
 (`go-ai-native-conform/src/lib.rs:51-63`) pushes only `GoUnsafeInDomain`,
 `GoCellIsolation`, and `FileLength` — **no FlagSites, no registry rule**.
 And `GoCellIsolation` deliberately does *not* enforce sole-importer status:
@@ -371,7 +371,7 @@ cannot drift — `rust …/lib.rs:41-52`, `go …/lib.rs:40-50`,
 - `file-length` (`FileLength`, `:59`) — per-file line budget.
 
 (The Go guide itself documents its three-rule roster:
-`GUIDE-AI-NATIVE-GO.md:192`, "the Go gate registers exactly three rules —
+`GUIDE-AI-NATIVE-GO.xml:192`, "the Go gate registers exactly three rules —
 `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength`". It cites
 `lib.rs:53-60`; the live range is `lib.rs:51-63`.)
 
@@ -380,7 +380,7 @@ cannot drift — `rust …/lib.rs:41-52`, `go …/lib.rs:40-50`,
 ## Q6 — Guide promises about flags, verbatim
 
 **TypeScript — the two packet anchors and their surrounding registry
-clauses** (`GUIDE-AI-NATIVE-TYPESCRIPT.md`, §7 "Registry, flags & the
+clauses** (`GUIDE-AI-NATIVE-TYPESCRIPT.xml`, §7 "Registry, flags & the
 composition root", `:161`):
 
 > `:163` `##SAME-RULE-AS-RUST-SHARPENED-BY-ERASURE` The Rust guide forbids `if flag` in domain logic; the same rule holds in TypeScript, and the erasure boundary (§2) sharpens it.
@@ -395,7 +395,7 @@ composition root", `:161`):
 >
 > `:177` `##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` *Rule:* flags are read at the composition root and dispatched through a typed registry; `if (flag)` in a domain cell, or reading config outside the root, requires `deviates` + reason.
 
-**Rust — the registry & flags section** (`GUIDE-AI-NATIVE-RUST.md`, §5
+**Rust — the registry & flags section** (`GUIDE-AI-NATIVE-RUST.xml`, §5
 "Registry & flags", `:83`):
 
 > `:85` `##FLAGS-READ-ONCE-AT-THE-COMPOSITION-ROOT` *(From GUIDE-RUST-v0.1, retained.)* Flags read once at the composition root; a registry selects cells; **no `if flag` in domain logic** (R-001).
@@ -415,7 +415,7 @@ has no `registry_file` (and no `registry_gated_crate`); the TS and Go demos
 carry no Rust-side keys at all. So `registry_file` is set only in the host
 policy.
 
-**Go — the registry & flags section** (`GUIDE-AI-NATIVE-GO.md`, §6
+**Go — the registry & flags section** (`GUIDE-AI-NATIVE-GO.xml`, §6
 "Registry, flags & the composition root", `:362`):
 
 > `:364` `##kind-line-registry` `req r1` *(≈ Rust §5, TS §7)*
@@ -430,7 +430,7 @@ policy.
 `registry_pkg = "internal/registry"` (`research/go-demo/conform.toml:17`),
 alongside `cells_dir = "internal/cells"` (`:15`) and
 `seams_pkg = "internal/seams"` (`:16`); `go-ai-native init` writes all
-three from `go.mod` topology (`GUIDE-AI-NATIVE-GO.md:580-581`). The field
+three from `go.mod` topology (`GUIDE-AI-NATIVE-GO.xml:580-581`). The field
 is documented as carrying **no rule** (`config.rs:122-125`), and indeed no
 Go rule consumes it.
 
@@ -459,7 +459,7 @@ Go rule consumes it.
    `[go]`/`[typescript]` `roots` is silently green (Q3).
 4. **The roster asymmetry is recorded in the guides themselves.** The TS
    guide flags the missing registry as `→ B-039`
-   (`GUIDE-AI-NATIVE-TYPESCRIPT.md:175`) and the runtime-flag tier as
+   (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:175`) and the runtime-flag tier as
    "described, never instantiated" (`:173`); the Go guide documents its
-   own three-rule roster (`GUIDE-AI-NATIVE-GO.md:192`) while still
+   own three-rule roster (`GUIDE-AI-NATIVE-GO.xml:192`) while still
    promising R-001 at the seam (`:366`).

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Addressable Specs Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *what* addressability
+is, *why* it is the first engineering requirement on a spec tree
+shared between a human and a coding agent, the `spec://` URI scheme
+and its anchor grammar, the single-source and placement rules that
+follow, and the dependency graph addressable specs create for free.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">How to write the units is in [`authoring-rules.xml`](authoring-rules.xml);
+where the files live is in [`spec-tree-layout.xml`](spec-tree-layout.xml).</sibling-document-pointers></p>
+  <ipc title="Specs are IPC, not documentation">
+    <p><HUMAN-AND-AGENT-ARE-TWO-PROCESSES-SHARING-ONE-REPOSITORY fact="true" status="spec/done">A human and a coding agent are two processes sharing one repository.</HUMAN-AND-AGENT-ARE-TWO-PROCESSES-SHARING-ONE-REPOSITORY></p>
+    <p><THE-SPEC-TREE-IS-THE-ONLY-CHANNEL fact="true" status="spec/done">Between them there is no hallway conversation, no memory that
+survives the session — the spec tree is the *only* channel through
+which intent crosses the process boundary.</THE-SPEC-TREE-IS-THE-ONLY-CHANNEL></p>
+    <p><documentation-is-optional fact="true" status="spec/done">Documentation is
+optional; projects limp along without it.</documentation-is-optional></p>
+    <p><AN-IPC-CHANNEL-IS-NOT-OPTIONAL fact="true" status="spec/done">An IPC channel is not
+optional: when it breaks, the system stops.</AN-IPC-CHANNEL-IS-NOT-OPTIONAL></p>
+    <p><ADDRESSABILITY-IS-THE-FIRST-REQUIREMENT fact="true" status="impl/done">Treating spec files as
+IPC imposes engineering requirements documentation never had, and
+the first of them — ahead of atomicity, ahead of conflict rules — is
+**addressability**: every element in every file must be precisely
+pointable.</ADDRESSABILITY-IS-THE-FIRST-REQUIREMENT></p>
+  </ipc>
+  <why title="Why addressability is requirement #1">
+    <p><THE-HUMANS-ROLE-IS-COHERENCE-MANAGEMENT fact="true" status="spec/done">The human's role in the two-process system is coherence management:
+notice that the agent deviated from the spec, and correct it.</THE-HUMANS-ROLE-IS-COHERENCE-MANAGEMENT></p>
+    <p><the-human-knows-instantly fact="true" status="spec/done">The
+human knows *instantly* what is violated.</the-human-knows-instantly></p>
+    <p><THE-BOTTLENECK-IS-TELLING-THE-MACHINE fact="true" status="spec/done">The bottleneck is telling
+the machine — feedback latency is where working days go to die.</THE-BOTTLENECK-IS-TELLING-THE-MACHINE></p>
+    <p><two-ways-lead fact="true" status="impl/done">Two ways to deliver the same correction:</two-ways-lead></p>
+    <fence>Way 1:  "You did the verification wrong."
+
+Way 2:  "You are violating
+         spec://com.example.shop/PROP-001#verification.timeout —
+         the timeout must be 600 s, and you wrote 300 s."</fence>
+    <table>
+      <tr>
+        <td/>
+        <td>Way 1 — paraphrase</td>
+        <td>Way 2 — URI citation</td>
+      </tr>
+      <tr>
+        <td><ROW-AGENT-MUST fact="true" status="spec/done">Agent must</ROW-AGENT-MUST></td>
+        <td><fact status="spec/done">guess what "verification" maps to here, guess what "wrong" means, form a hypothesis, attempt a fix</fact></td>
+        <td><fact status="spec/done">open the file, jump to the anchor, read the value, compare, fix</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TOKEN-COST fact="true" status="spec/done">Token cost</ROW-TOKEN-COST></td>
+        <td><fact status="spec/done">hundreds, spent on search and hypothesis</fact></td>
+        <td><fact status="spec/done">about twenty</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-RESULT fact="true" status="spec/done">Result</ROW-RESULT></td>
+        <td><fact status="spec/done">may not match what the human meant</fact></td>
+        <td><fact status="spec/done">exact hit</fact></td>
+      </tr>
+    </table>
+    <p><the-difference-is-an-order-of-magnitude fact="true" status="spec/done">The difference is an order of magnitude, paid on *every* correction,
+several times per session — in metered tokens and in minutes of a
+short human day.</the-difference-is-an-order-of-magnitude></p>
+    <p><PARAPHRASE-KEEPS-A-NICHE fact="true" status="impl/done">Paraphrase keeps a niche: a sweeping refactor or a
+philosophical re-orientation rightly starts from "re-read the whole
+spec and rethink".</PARAPHRASE-KEEPS-A-NICHE></p>
+    <p><FOR-POINT-CORRECTIONS-THE-URI-WINS fact="true" status="impl/done">For point corrections — a wrong constant, a
+missing parameter, a violated invariant — the URI wins every time.</FOR-POINT-CORRECTIONS-THE-URI-WINS></p>
+  </why>
+  <uri-scheme title="The URI scheme">
+    <fence>spec://&lt;group&gt;/&lt;name&gt;[@&lt;version&gt;]/&lt;doc-path&gt;#&lt;section&gt;[.&lt;sub&gt;…][~r&lt;N&gt;]</fence>
+    <p><URI-SCHEME-IS-THE-FULL-GRAMMAR fact="true" status="impl/done">This is the **whole** grammar — the section stopped publishing a subset of what implementations resolve (2026-08-04, closing the split the vibevm host measured): the authority is a package coordinate, the version and the revision pin are optional extensions, and a project's root is a package like any other (no host exception exists).</URI-SCHEME-IS-THE-FULL-GRAMMAR></p>
+    <table>
+      <tr>
+        <td>Segment</td>
+        <td>Meaning</td>
+        <td>Example</td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-GROUP-NAME fact="true" status="impl/done">`&lt;group&gt;/&lt;name&gt;`</ROW-SEGMENT-GROUP-NAME></td>
+        <td><fact status="impl/done">the package coordinate: reverse-DNS group, then package name, joined by `/` (never `.`) — the root project included, addressed by its own declared coordinate</fact></td>
+        <td><fact status="impl/done">`org.vibevm.world/wal`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-VERSION fact="true" status="impl/done">`[@&lt;version&gt;]`</ROW-SEGMENT-VERSION></td>
+        <td><fact status="impl/done">**optional — a feature, never an obligation** (owner-ruled 2026-08-04): absent, the address resolves against the **freshest installed version** (semver-newest); explicit, it picks its exact slot, including a non-newest one</fact></td>
+        <td><fact status="impl/done">`@0.8.0`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-MODULE fact="true" status="impl/done">`&lt;module&gt;`</ROW-SEGMENT-MODULE></td>
+        <td><fact status="impl/done">inside `&lt;doc-path&gt;`: the spec module — a directory under `spec/modules/`, or `common`</fact></td>
+        <td><fact status="impl/done">`modules/vibe-registry`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-DOC fact="true" status="impl/done">`&lt;doc&gt;`</ROW-SEGMENT-DOC></td>
+        <td><fact status="impl/done">inside `&lt;doc-path&gt;`: the document name, extension dropped</fact></td>
+        <td><fact status="impl/done">`PROP-001`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-SECTION fact="true" status="impl/done">`&lt;section&gt;`</ROW-SEGMENT-SECTION></td>
+        <td><fact status="impl/done">the `{#anchor}` of a heading in that document</fact></td>
+        <td><fact status="impl/done">`verification`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-SUB fact="true" status="impl/done">`.&lt;sub&gt;`</ROW-SEGMENT-SUB></td>
+        <td><fact status="impl/done">dotted hierarchy inside the anchor namespace</fact></td>
+        <td><fact status="impl/done">`verification.timeout`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SEGMENT-REVISION-PIN fact="true" status="impl/done">`[~r&lt;N&gt;]`</ROW-SEGMENT-REVISION-PIN></td>
+        <td><fact status="impl/done">pins a **spec-unit revision** for drift detection — never a package version (the `@` half owns that)</fact></td>
+        <td><fact status="impl/done">`#verification~r2`</fact></td>
+      </tr>
+    </table>
+    <p><why-a-uri-and-not-a-bespoke-notation fact="true" status="spec/done">Why a URI and not a bespoke notation?</why-a-uri-and-not-a-bespoke-notation></p>
+    <p><the-model-already-knows-the-uri-shape fact="true" status="spec/done">Because the model already
+knows, from billions of URLs and RFCs in its training data, that
+`something://path/to/thing#anchor` points at a specific resource.</the-model-already-knows-the-uri-shape></p>
+    <p><THE-SCHEME-EXPLOITS-SEMANTICS-THE-AGENT-CARRIES fact="true" status="spec/done">Nothing has to be taught — the scheme exploits semantics the agent
+already carries.</THE-SCHEME-EXPLOITS-SEMANTICS-THE-AGENT-CARRIES></p>
+  </uri-scheme>
+  <anchors title="Anchors">
+    <p><ANCHORS-ARE-EXPLICIT-HEADING-IDS fact="true" status="impl/done">Inside a document, addressability is implemented with explicit
+heading anchors — `{#id}` — a standard extended-Markdown syntax:</ANCHORS-ARE-EXPLICIT-HEADING-IDS></p>
+    <fence lang="markdown"># PROP-001: Payments protocol {#root}
+
+## 5. Verification flow {#verification}
+
+### 5.3 Timeout {#verification.timeout}
+Unverified payments older than 600 seconds get status TIMEOUT.</fence>
+    <p><the-third-heading-citation fact="true" status="impl/done">That third heading is cited as
+`spec://com.example.shop/PROP-001#verification.timeout`.</the-third-heading-citation></p>
+    <p><RENDERERS-TURN-THE-ANCHOR-INTO-A-LINK-TARGET fact="true" status="spec/done">GitHub,
+GitLab, and most Markdown renderers turn `{#id}` into a link target,
+so the same URI that steers the agent is clickable for the human in
+the web Git UI.</RENDERERS-TURN-THE-ANCHOR-INTO-A-LINK-TARGET></p>
+    <p><one-address-two-consumers fact="true" status="impl/done">One address, two consumers.</one-address-two-consumers></p>
+    <p><THE-DOT-IS-HIERARCHY fact="true" status="impl/done">The dot in `verification.timeout` is hierarchy: section `timeout`
+inside section `verification`.</THE-DOT-IS-HIERARCHY></p>
+    <p><DOTS-NAMESPACE-THE-ANCHORS fact="true" status="impl/done">Dots namespace the anchors —
+`#verification.timeout` and `#connection.timeout` coexist in one
+document without collision.</DOTS-NAMESPACE-THE-ANCHORS></p>
+  </anchors>
+  <modules title="Module names: reverse DNS">
+    <p><MODULE-NAMES-USE-REVERSE-DNS fact="true" status="impl/done">When specs may ever leave the project — shared across repositories,
+published, or merely grep'd from a monorepo — module names use
+reverse-DNS notation: `com.example.shop`, dots again available for
+submodules (`com.example.shop.payments`).</MODULE-NAMES-USE-REVERSE-DNS></p>
+    <p><the-convention-is-java-package-naming fact="true" status="spec/done">The convention is Java
+package naming, introduced by Sun in the mid-1990s and fixed in the
+Java Language Specification: global uniqueness for free, piggybacked
+on a uniqueness system that already exists — domain names, written
+backwards.</the-convention-is-java-package-naming></p>
+    <p><there-is-a-chat-shortcut fact="true" status="impl/done">There is a chat shortcut: tell the agent "we are working inside
+module `com.example.shop`; resolve spec URIs relative to that base".</there-is-a-chat-shortcut></p>
+    <p><the-shortcut-costs-a-lookup fact="true" status="spec/done">It works, but it makes the model run a lookup akin to C++
+argument-dependent lookup on every resolution.</the-shortcut-costs-a-lookup></p>
+    <p><IN-SPEC-FILES-WRITE-THE-FULL-ADDRESS fact="true" status="impl/done">Acceptable typed once
+in a chat; inside spec files, re-read dozens of times per session,
+write the full address.</IN-SPEC-FILES-WRITE-THE-FULL-ADDRESS></p>
+    <p><PACKAGE-MODULE-AUTHORITY-IS-THE-FULL-COORDINATE fact="true" status="impl/done">**For a package, the module authority MUST be the package's full
+coordinate `&lt;group&gt;/&lt;name&gt;`** — the name is the first path segment,
+`/`-joined exactly as in a pkgref (e.g.
+`org.vibevm.ai-native/rust-ai-native-lang`), never a bare
+`rust-ai-native-lang`.</PACKAGE-MODULE-AUTHORITY-IS-THE-FULL-COORDINATE></p>
+    <p><THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC fact="true" status="impl/done">Where the surface allows it
+(`spec://` authority, pkgref), `/` is the joiner — in neither the group
+(`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so the boundary splits
+deterministically with no grammar to consult. The dot is not thereby
+forbidden in general: the name alphabet `[a-z0-9-]` already excludes it,
+so a dot-free name makes the last dot the boundary just as deterministically
+— the old prohibition (groups are themselves dotted) was refuted by these
+same alphabets, not only by external ruling.</THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC></p>
+    <p><A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE fact="true" status="impl/done">The requirement on a
+joiner is not "not a dot" but that the coordinate admit a **deterministic
+inverse parse**, and exactly two things satisfy it. Either the separator lies
+outside both alphabets (`/` here, and `_` here) — then the split needs no
+grammar at all; or the grammar guarantees that one half cannot contain the
+separator, and then the *outermost* occurrence on that half's side is the
+boundary: a separator-free second half is split at the last occurrence, a
+separator-free first half at the first. An ecosystem whose grammar guarantees
+neither half must take the first route.</A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE></p>
+    <p><A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES fact="true" status="impl/done">Flat surfaces — repository
+names, artifact names — commonly forbid `/` outright, so a blanket
+dot-prohibition forces those surfaces onto a joiner their own domain rules
+contradict, where a both-LDH `&lt;group&gt;.&lt;name&gt;` is itself a valid reversed
+FQDN. vibevm moved its flat carrier onto the dot by owner ruling 2026-08-13
+(`PROP-029` `##CARRIER-REPO-SWAP`, `##joiner-why`); `_` stays legal wherever
+the name grammar gives no guarantee.</A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES></p>
+    <p><THE-FULL-COORDINATE-IS-MECHANICALLY-REFACTORABLE fact="true" status="impl/done">A
+bare authority resolves only with ambient context (which package am I
+in?); the full coordinate is a
+self-contained global symbol, which is what makes every `spec://`
+citation *mechanically* refactorable — an algorithm rewrites all
+occurrences on a rename, no resolver and no model in the loop.</THE-FULL-COORDINATE-IS-MECHANICALLY-REFACTORABLE></p>
+    <p><this-is-the-addressing-half-of-prop-029 fact="true" status="impl/done">This is
+the addressing half of vibevm's PROP-029 (fully-qualified addresses and
+mechanical refactoring).</this-is-the-addressing-half-of-prop-029></p>
+  </modules>
+  <single-source title="Single source of truth">
+    <p><EVERY-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR fact="true" status="impl/done">Every fact has exactly one authoritative anchor.</EVERY-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR></p>
+    <p><copying-a-value-is-a-time-bomb fact="true" status="spec/done">Citing the anchor
+is free; copying its value into a second file is a time bomb: one
+copy gets edited, the other does not, and a later session finds
+600 s in one file and 300 s in the other with no way to know which
+binds.</copying-a-value-is-a-time-bomb></p>
+    <p><it-fixes-the-wrong-copy fact="true" status="spec/done">It "fixes" the wrong copy — or worse, the code.</it-fixes-the-wrong-copy></p>
+    <p><one-bug-becomes-three fact="true" status="spec/done">One bug
+becomes three, and untangling them means replaying weeks of git
+history.</one-bug-becomes-three></p>
+    <p><DUPLICATION-IS-NOT-REDUNDANCY fact="true" status="spec/done">Duplication is not redundancy — redundancy implies a
+reconciliation mechanism, and copies have none.</DUPLICATION-IS-NOT-REDUNDANCY></p>
+    <p><A-NORMATIVE-VALUE-LIVES-AT-EXACTLY-ONE-ANCHOR fact="true" status="impl/done">The rule: a normative value lives at exactly one anchor.</A-NORMATIVE-VALUE-LIVES-AT-EXACTLY-ONE-ANCHOR></p>
+    <p><EVERY-OTHER-DOCUMENT-CITES-THE-URI fact="true" status="impl/done">Every other
+document cites the URI and lets the reader — human or model —
+resolve it.</EVERY-OTHER-DOCUMENT-CITES-THE-URI></p>
+    <p><A-RESTATEMENT-NAMES-ITS-ANCHOR fact="true" status="impl/done">If prose flow demands restating the value, the
+restatement names its anchor in the same sentence, marking which
+copy is the echo.</A-RESTATEMENT-NAMES-ITS-ANCHOR></p>
+  </single-source>
+  <disposable-targets title="Never cite something built to disappear">
+    <p><A-PLAN-ROW-IS-NOT-AN-ADDRESS fact="true" status="impl/done">A plan, a backlog row, a campaign document — anything a project
+creates in order to finish and delete — is **not an address**. Cite the
+specification element the work established, never the row that
+commissioned it.</A-PLAN-ROW-IS-NOT-AN-ADDRESS></p>
+    <p><WHY-A-DISPOSABLE-TARGET-IS-WORSE-THAN-A-MISSING-ONE fact="true" status="spec/done">This is stricter than it sounds, and the reason is that the
+failure is silent. A citation to a deleted anchor at least breaks
+loudly. A citation to a plan row that still exists keeps resolving —
+to a row describing work as it was *imagined*, long after the work
+shipped and changed shape. The reader finds a plausible, dated, wrong
+answer and has no signal that it is wrong.</WHY-A-DISPOSABLE-TARGET-IS-WORSE-THAN-A-MISSING-ONE></p>
+    <p><ON-CLOSURE-CONTENT-MOVES-INTO-THE-SPECS fact="true" status="impl/done">**On closure, significant content moves into the
+specifications**, and every statement pointing at the closed item is
+re-pointed at the spec element that now carries the fact. Where the
+item established no contract — it was a finding, not a rule — the
+citation becomes plain text and the row number survives only as
+history.</ON-CLOSURE-CONTENT-MOVES-INTO-THE-SPECS></p>
+    <p><REBUILDING-THE-CITATIONS-IS-PART-OF-CLOSING fact="true" status="impl/done">**Rebuilding the citations is part of closing, not tidying
+afterwards.** An item is closed when no tail remains: content moved,
+statements re-pointed, and the moved content judged in the same pass
+that moved it. Deferring that step is how a project accumulates
+addresses that outlive their targets.</REBUILDING-THE-CITATIONS-IS-PART-OF-CLOSING></p>
+    <p><THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS fact="true" status="impl/done">The other half of this rule — that a plan is a temporary
+artifact and what its tombstones are for — belongs to the campaign-plans
+flow, at
+`spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#temporary`.
+One law, two homes, one pointer: this half is about addressing, that
+half is about a plan's life.</THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS></p>
+  </disposable-targets>
+  <placement title="Placement: Lost in the Middle">
+    <p><MODELS-ATTEND-TO-THE-BEGINNING-AND-THE-END fact="true" status="spec/done">An empirical result, not a style preference: language models attend
+most reliably to the beginning and the end of a long context; facts
+placed in the middle lose retrieval accuracy, with drops of up to
+thirty percent measured ("Lost in the Middle", Liu et al., arXiv
+preprint 2023; TACL 2024).</MODELS-ATTEND-TO-THE-BEGINNING-AND-THE-END></p>
+    <p><a-spec-document-is-context fact="true" status="spec/done">A spec document is context; the same
+U-curve applies.</a-spec-document-is-context></p>
+    <p><INVARIANTS-GO-AT-THE-OPENING-OR-THE-END fact="true" status="impl/done">Constraints, acceptance criteria, and unbreakable
+invariants therefore go in the opening paragraphs or a final
+"Invariants" section — never buried mid-document.</INVARIANTS-GO-AT-THE-OPENING-OR-THE-END></p>
+    <p><A-MID-FILE-INVARIANT-WAS-NOT-READ fact="true" status="spec/done">A mid-file
+invariant is an invariant the agent statistically did not read.</A-MID-FILE-INVARIANT-WAS-NOT-READ></p>
+  </placement>
+  <graph title="The graph consequence">
+    <p><ADDRESSABLE-SPECS-GIVE-A-DEPENDENCY-GRAPH-FOR-FREE fact="true" status="impl/done">Addressable specs give the project a dependency graph for free.</ADDRESSABLE-SPECS-GIVE-A-DEPENDENCY-GRAPH-FOR-FREE></p>
+    <p><CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT fact="true" status="impl/done">Code
+marks what it implements; the spec records what verifies it: *(the two
+forms below are the plain-text ones, and they are what needs no tooling.
+Where a project mechanizes the graph, both records are commonly authored
+on the **code** side instead — the implements edge as a language-native
+tag on the item, and the verification edge as the same kind of tag on
+the **test** rather than as a `Test:` line in the document — and the
+spec-side answer, "what verifies this unit", is then rendered from the
+graph rather than maintained by hand. Either form yields the same
+bidirectional edge; only the authoring side moves.)*</CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT></p>
+    <fence>// Implements: spec://com.example.shop/PROP-001#verification.timeout</fence>
+    <fence lang="markdown">### 5.3 Timeout {#verification.timeout}
+Test: payments_core::tests::timeout_marks_old_messages</fence>
+    <p><THESE-ARE-BIDIRECTIONAL-EDGES fact="true" status="impl/done">These are bidirectional edges: when one side changes, the other must
+be re-checked.</THESE-ARE-BIDIRECTIONAL-EDGES></p>
+    <p><NO-TOOLING-IS-REQUIRED-TO-BENEFIT fact="true" status="impl/done">No tooling is required to benefit — a plain
+`grep -rn "PROP-001#verification.timeout"` answers "which code
+implements this unit", the `Test:` line answers "which test verifies
+it", and a failing test carries the address of the violated unit. Where
+the graph is mechanized, the same two questions are answered by the
+rendered view over the code-side tags instead (§[graph](#graph)).</NO-TOOLING-IS-REQUIRED-TO-BENEFIT></p>
+    <p><the-graph-pays-off-from-the-first-marker fact="true" status="impl/done">Tools can mechanize the check later; the graph is useful the day
+the first marker lands.</the-graph-pays-off-from-the-first-marker></p>
+  </graph>
+  <re-derive title="Re-derive for your project">
+    <p><COPY-THE-PROMPT-TASK-NOT-THE-IMPLEMENTATION fact="true" status="impl/done">Do not transplant these documents as dogma — copy the prompt-task,
+not the prompt-implementation.</COPY-THE-PROMPT-TASK-NOT-THE-IMPLEMENTATION></p>
+    <p><re-derive-prompt-lead fact="true" status="impl/done">Paste this and review the plan:</re-derive-prompt-lead></p>
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-addressable-specs/&lt;version&gt;/spec/flows/addressable-specs/`, check `vibe.lock`) in this repository — all three
+documents. Adapt the addressable-specs practice to this concrete
+project:
+1. Propose the URI scheme instance: module names (reverse-DNS if
+   these specs could ever be shared), document naming, anchor style.
+2. Sweep the existing spec/docs tree: list every heading that states
+   a decision, constraint, or contract but carries no {#anchor}.
+3. List every invariant buried mid-file; propose moving each to the
+   top of its document or into a final "Invariants" section.
+4. Find normative values duplicated across files; for each, name the
+   one authoritative anchor and the copies to replace with citations.
+5. Output all of it as a migration plan (file, anchor, action) and
+   stop. Do not edit anything until I approve.</fence>
+  </re-derive>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-SPECS-ARE-THE-IPC-CHANNEL fact="true" status="impl/done">Spec files are the IPC channel between human and agent;
+  addressability is that channel's first requirement.</SUM-SPECS-ARE-THE-IPC-CHANNEL>
+      <SUM-URI-CORRECTION-COSTS-TWENTY-TOKENS fact="true" status="spec/done">Correction by URI costs ~20 tokens and hits exactly; by
+  paraphrase, hundreds — and it may miss.</SUM-URI-CORRECTION-COSTS-TWENTY-TOKENS>
+      <SUM-THE-URI-SCHEME fact="true" status="impl/done">`spec://&lt;module&gt;/&lt;doc&gt;#&lt;section&gt;[.&lt;sub&gt;]`; anchors are `{#id}`,
+  dots are hierarchy, modules reverse-DNS when specs can be shared.</SUM-THE-URI-SCHEME>
+      <SUM-ONE-FACT-ONE-ANCHOR fact="true" status="impl/done">One fact, one anchor. Copies diverge silently; cite instead.</SUM-ONE-FACT-ONE-ANCHOR>
+      <SUM-INVARIANTS-AT-THE-EDGES fact="true" status="impl/done">Invariants live at the start or end of a file — the middle is
+  where models stop reading.</SUM-INVARIANTS-AT-THE-EDGES>
+      <SUM-THE-BIDIRECTIONAL-GRAPH fact="true" status="impl/done">`Implements:` markers plus `Test:` lines form a
+  bidirectional graph that pays off with zero tooling — and where the graph is
+  mechanized, the same two edges are authored as code-side tags and the
+  spec-side view is rendered (§[graph](#graph)).</SUM-THE-BIDIRECTIONAL-GRAPH>
+    </facts>
+  </summary>
+</spec>

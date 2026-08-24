@@ -13,7 +13,7 @@ the reference shape.
 ## Scope {#scope}
 
 **19 files, ~411 facts** — the whole live slot except what the excludes already
-drop (`LICENSE.md` by file name; `spec/cards/INDEX.md` as a derived index).
+drop (`LICENSE.xml` by file name; `spec/cards/INDEX.md` as a derived index).
 Nothing here is a superseded slot, a legacy projection, or a book.
 
 **Out of scope and not yours:** anything under `crates/` — including
@@ -31,7 +31,7 @@ language stack, so three things change:
   but claims about **Go the language** («gofmt ended formatting debates») are
   outside-world facts and ruling 10 sends them to `@spec/done`.
 - @fact:B5-CARDS-ARE-A-GENRE `spec/cards/*.md` are **pattern cards** in the format
-  `01-PATTERN-CARD-FORMAT.md` defines — Band 1 identity, Band 2 justification,
+  `01-PATTERN-CARD-FORMAT.xml` defines — Band 1 identity, Band 2 justification,
   Band 3 a fenced `card-ops` block. **The Band-3 fence is code and carries no
   markers** (`##FENCE-AWARE`); its `trigger:` / `routine:` / `checker:` lines
   are inside it and are not units.

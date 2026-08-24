@@ -76,8 +76,8 @@ coefficients span 1.068–1.153 and the band has now held twice running (B13
 if it disagrees with 237, say so with the measurement.
 
 @fact:B15-CELL-DENSITY **One file is 67 % table cells** —
-`conventional-commits.md`, 40 cells of 60 units, the densest in the campaign so
-far. Sixteen of the seventeen files have no table at all, so `SPECSPACES-PROTOCOL.md`
+`conventional-commits.xml`, 40 cells of 60 units, the densest in the campaign so
+far. Sixteen of the seventeen files have no table at all, so `SPECSPACES-PROTOCOL.xml`
 (6 cells) and that one file carry every cell in the batch.
 
 ## The three predictions {#predictions}
@@ -104,7 +104,7 @@ counted 2026-07-28:
 | `git-autonomy/README.md` | 2 | the **H1 title**, `vibe install` |
 | `git-practices/README.md` | 2 | both member entries, written bare rather than `flow:`-prefixed |
 | `git-conventional-commits/boot/31-…` | 1 | prose |
-| `git-atomic-commits/…/splitting-large-changes.md` | 1 | prose |
+| `git-atomic-commits/…/splitting-large-changes.xml` | 1 | prose |
 
 @fact:B15-F097-FOUR-BROKEN-COMMANDS **Four of those are command lines a consumer cannot run** — three
 `vibe install`, one `vibe uninstall`. The live names are `flow:git-atomic-commits`,
@@ -155,13 +155,13 @@ smallest and the most self-contradictory in the batch.
 **this is the largest anchor debt of any batch so far**. Counted outside fenced
 blocks: `git-atomic-commits/README` 6, `git-atomic-commits/boot/30-…` 5,
 `git-conventional-commits/README` 4, `git-conventional-commits/boot/31-…` 4,
-`conventional-commits.md` 5, `git-autonomy/README` 4, `dev-runtime-docs/README` 5,
+`conventional-commits.xml` 5, `git-autonomy/README` 4, `dev-runtime-docs/README` 5,
 `dev-runtime-docs/boot/58-…` 2, `git-practices/README` 3,
 `wal-specspaces/README` 1. **The other seven files are fully anchored.**
 
 @fact:B15-ANCHOR-SPACE Watch `##FACT-ID-GRAMMAR`: heading anchors and fact ids share **one
 case-sensitive address space**, so do not mint `{#atomicity}` beside an
-`##ATOMICITY` fact. `conventional-commits.md` already has 12 heading anchors and
+`##ATOMICITY` fact. `conventional-commits.xml` already has 12 heading anchors and
 owes 5 more — read the existing ones before minting.
 
 ## What this batch is likely to surface {#expect}
@@ -171,7 +171,7 @@ flow points at the atomicity flow and back, and the umbrella points at both.
 **Ruling 37 decides each entry on its own predicate**, so expect a visible mix of
 `@impl` and `@spec` inside single lists. That is correct, not uneven.
 
-@fact:B15-EXPECT-PROSE-HEAVY-PROTOCOLS `ATOMIC-COMMITS-PROTOCOL.md` and `splitting-large-changes.md` carry 46
+@fact:B15-EXPECT-PROSE-HEAVY-PROTOCOLS `ATOMIC-COMMITS-PROTOCOL.xml` and `splitting-large-changes.xml` carry 46
 and 37 terminators over 22 and 21 paragraphs — the two most prose-dense files in
 the batch and where most of the deconstruction work is. Ruling 4 (sibling
 paragraphs where the facts are not parallel) did 81 of B14's 88 splits.

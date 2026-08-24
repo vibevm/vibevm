@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Sync-from-Code — the WAL binding</title>
+  <p><SYNC-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the durable session state
+of this flow's rules is `spec/WAL.xml`: the top-down river reads
+head → WAL → spec → code, and a temporary hack is recorded in the WAL.</SYNC-WAL-BINDING></p>
+</spec>

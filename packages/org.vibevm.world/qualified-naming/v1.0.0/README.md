@@ -38,20 +38,20 @@ structurally. @status:spec/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md` — the full
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml` — the full
   protocol: why flat names fail, the mandatory group, the identity
   tuple, rename-is-new-identity, short-names-at-the-boundary-only,
   collision versus conflict, and a re-derive prompt for adapting the
   practice to a concrete ecosystem. @status:impl/done
-- @fact:CONTENT-THE-REF-GRAMMAR `spec/flows/qualified-naming/ref-grammar.md` — the reference grammar
+- @fact:CONTENT-THE-REF-GRAMMAR `spec/flows/qualified-naming/ref-grammar.xml` — the reference grammar
   in EBNF-ish form, the forms table with where-legal per form, worked
   examples with invented groups, the qualified-only storage rule, and
   the shape a collision error must take. @status:impl/done
-- @fact:CONTENT-THE-NAMING-FORKS `spec/flows/qualified-naming/naming-forks.md` — the design lore
+- @fact:CONTENT-THE-NAMING-FORKS `spec/flows/qualified-naming/naming-forks.xml` — the design lore
   condensed: flat vs grouped (the Cargo-vs-Maven precedent), enforce vs
   recommend, where short names live, and rename as alias vs new
   identity — each fork resolved, with reasons. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/67-flow-qualified-naming.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/67-flow-qualified-naming.xml` — boot snippet loaded at
   session start: when the practice applies, the laws in one breath, and
   the never-do list. @status:impl/done
 
@@ -77,7 +77,7 @@ snippet. @status:impl/done
 - @fact:COMPOSES-TOOL-DESIGN-LESSONS `flow:tool-design-lessons` — the sibling practice for the authors who
   *publish into* a namespace; this package designs the namespace they
   publish into. Together they cover both sides of the registry boundary. @status:spec/done
-- @fact:COMPOSES-DECISION-RECORDS `flow:decision-records` — each fork in `naming-forks.md` is a decision
+- @fact:COMPOSES-DECISION-RECORDS `flow:decision-records` — each fork in `naming-forks.xml` is a decision
   a future maintainer will re-open; resolve it for *your* ecosystem and
   record it with a why and a revisit trigger, so the namespace's shape
   is not re-litigated. @status:spec/done
@@ -107,3 +107,4 @@ component depends on — so it is the one worth getting right first. @status:spe
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

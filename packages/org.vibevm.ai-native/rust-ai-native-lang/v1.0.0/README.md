@@ -15,13 +15,13 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @status:im
 - @fact:SHIPS-FOUR-BINARIES **Four binaries** (this package's own Cargo workspace, `crates/`;
   crate names carry the `-rust` suffix per the GUIDE §2 language-suffix
   rule): @status:impl/done
-  - @fact:SHIPS-RUST-AI-NATIVE-UMBRELLA `rust-ai-native` — the umbrella tool: `init` (bootstrap policies +
+- @fact:SHIPS-RUST-AI-NATIVE-UMBRELLA `rust-ai-native` — the umbrella tool: `init` (bootstrap policies +
     registries), `floor` (the portable verification floor), `conform`,
     `specmap`, `trace`, `test-gate`, `tripwire`, `health`, `fast-loop`,
     `codemod`. @status:impl/done
-  - @fact:SHIPS-RUST-AI-NATIVE-CONFORM `rust-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM). @status:impl/done
-  - @fact:SHIPS-RUST-AI-NATIVE-SPECMAP `rust-ai-native-specmap` — the traceability engine alone (PROP-014). @status:impl/done
-  - @fact:SHIPS-RUST-AI-NATIVE-TCG `rust-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-RUST /
+- @fact:SHIPS-RUST-AI-NATIVE-CONFORM `rust-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM). @status:impl/done
+- @fact:SHIPS-RUST-AI-NATIVE-SPECMAP `rust-ai-native-specmap` — the traceability engine alone (PROP-014). @status:impl/done
+- @fact:SHIPS-RUST-AI-NATIVE-TCG `rust-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-RUST /
     TCG-PROTOCOL-RUST): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own rust-analyzer over
@@ -30,7 +30,7 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @status:im
     carry rust-analyzer (`rustup component add rust-analyzer`).
     Honesty: rust-analyzer is not rustc — the oracle shortens the
     distance to green; `rust-ai-native floor` stays the truth. @status:impl/done
-- @fact:SHIPS-GUIDE-AND-CARDS **The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.md`,
+- @fact:SHIPS-GUIDE-AND-CARDS **The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.xml`,
   `spec/cards/` — the nine scaffolds in their Rust shape, Band-3 ops
   blocks for weak readers). @status:impl/done
 - @fact:SHIPS-TWO-AGENT-SKILLS **Two agent skills** (`vibe skill install` projects them):
@@ -90,3 +90,4 @@ expand-as-you-conform rhythm — is GUIDE §13; the sweep idioms are GUIDE
 
 @fact:POLICIES-STAY-WITH-THE-CONSUMER-PROJECT The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
 this package ships engines, never policy (PROP-024 §2.2). @status:impl/done
+

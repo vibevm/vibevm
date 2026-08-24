@@ -334,7 +334,7 @@ full at the head; and each brief read **from `## 3. Component shape` through
 
 ```
 $ grep -n "SUPERSEDED-TOPOLOGY\|TOOLS-NEW-HOME\|ENUM-BET-REREAD\|LANGUAGE-COMPAT-PARAM\|TCG-CRATE-DELETED\|RETIRED-SECTIONS-KEPT" \
-    spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md
+    spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml
 27:- ##SUPERSEDED-TOPOLOGY **SUPERSEDED IN TOPOLOGY, 2026-07-07 …
 33:- ##TOOLS-NEW-HOME The tools now ship in the per-language
 37:- ##ENUM-BET-REREAD The §2 enum-value bet re-reads as «a new language is a new mcp package
@@ -435,7 +435,7 @@ against a Go package convicts it of a consumer's silence.
    is no lockfile `language`-dispatch to a slot artifact for `"go"`, `"rust"` or
    `"typescript"`.
 2. **«No new PROP» is falsified by a PROP that exists and that this very package
-   cites.** `spec/modules/vibe-mcp/PROP-027-mcp-packages.md` is exactly the new
+   cites.** `spec/modules/vibe-mcp/PROP-027-mcp-packages.xml` is exactly the new
    PROP the retirement created, and the Go stack's **own boot snippet** names it:
    `spec/boot/20-stack-go-ai-native-lang.md:60` «`mcp:org.vibevm.ai-native/go-ai-native-mcp`
    — **PROP-027**». Package-own evidence, no host observable involved.
@@ -992,7 +992,7 @@ description names the terraform skill as its counterpart.
 package's own card:*
 
 ```
-$ sed -n '85,87p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md
+$ sed -n '85,87p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml
 - ##CONSEQUENCE-GOLDENS-ENSHRINE-CURRENT-BEHAVIOR (−) Characterization goldens enshrine current behavior including bugs — pair with a
   spec edge marking intentional vs incidental; goldens must fail loudly, never
   auto-update (the `-update` flag never runs in CI). @spec/done
@@ -1106,9 +1106,9 @@ Named here so a later pass does not read it as a surviving `vibe-tcg`.
 | **F-187** | `##PROCEDURES-AS-AGENT-SKILLS` — `spec/boot/20-stack-…:80` | go | **FALLS** |
 | **F-187** | `##PROCEDURES-AS-AGENT-SKILLS` — `spec/boot/20-stack-…:64` | rust | **FALLS** |
 | **F-187** | `##PROCEDURES-AS-AGENT-SKILLS` — `spec/boot/20-stack-…:91` | typescript | **FALLS** |
-| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-go.md:127` | go | **STANDS-RESTATED** |
-| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-rust.md:132` | rust | **STANDS** |
-| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-ts.md:130` | typescript | **STANDS** |
+| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-go.xml:127` | go | **STANDS-RESTATED** |
+| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-rust.xml:132` | rust | **STANDS** |
+| **F-189** | `##COMPONENT-THE-PRODUCT-SEAM` — `vibe-agentic-tcg-ts.xml:130` | typescript | **STANDS** |
 | **F-190** | `##CHECK-THE-PRINTED-POLICY-LINES` — `go-ai-native-sweep/SKILL.md:47` | go | **STANDS-RESTATED** |
 | **F-190** | `##CHECK-THE-PRINTED-POLICY-ORIGIN-LINES` — `rust-ai-native-sweep/SKILL.md:46` | rust | **STANDS-RESTATED** |
 | **F-190** | `##CHECK-THE-PRINTED-POLICY-LINES` — `typescript-ai-native-sweep/SKILL.md:48` | typescript | **STANDS-RESTATED** |

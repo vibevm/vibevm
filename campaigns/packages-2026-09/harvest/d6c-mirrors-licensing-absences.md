@@ -41,9 +41,9 @@ ours. Its whole yield for this batch is at the foot of this file.
 
 **Why that perimeter and not the package.** Both packages are *tool-neutral*
 flows: they specify a discipline, and this host repository is the project that
-adopted it — `spec/common/PROP-016-source-mirrors.md:8` names the
+adopted it — `spec/common/PROP-016-source-mirrors.xml:8` names the
 `source-mirrors` flow as its own general model and thins itself to «what is
-specific to vibevm», and `spec/boot/STATIC.md:802-852` carries the licensing
+specific to vibevm», and `spec/boot/STATIC.xml:802-852` carries the licensing
 snippet verbatim into every session's boot. A mechanism in this family has four
 layers — SPEC in the package, ENGINE in a host crate, DRIVER in a CLI, and
 DEPLOYMENT in the consuming project. A fact can be true at any one and invisible
@@ -51,7 +51,7 @@ at the other three.
 
 **A fifth place a `world` flow's mechanism can live, and it decided two of this
 batch's nine verdicts: the package's own reference implementation.**
-`fanout-mechanics.md` ships fifteen lines of `sh` (lines 166-193 as this pass
+`fanout-mechanics.xml` ships fifteen lines of `sh` (lines 166-193 as this pass
 found them; 178-205 after the two demotions below lengthened the file). When a
 prescription is falsified only by the host's port and the package's own script
 keeps it, the absence is the consumer's and §3.6 route (b) applies; when the
@@ -67,7 +67,7 @@ yields. That distinction splits F-204 down the middle.
 `##SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD`. **Not touched, recommended
 route (b):** `##INVARIANT-THE-ANCESTRY-GATE`.
 **Files touched:**
-`packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md`
+`packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.xml`
 **Perimeter searched:** the standing perimeter, for the *thing* rather than the
 verdict's string — `merge-base` · `is-ancestor` · `ls-remote` · `rev-list`
 (a commit range has to be computed by something), plus a **filename** sweep for
@@ -83,10 +83,10 @@ mirror` was **not executed** — it pushes to real remotes.
 ```console
 $ rg -n 'merge-base|is-ancestor' <standing perimeter>
 packages/…/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:181
-vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.md:151
+vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.xml:151
 packages/org.vibevm.fractality/…/vibedeps/flow-source-mirrors/…:151      (vendored)
 packages/org.vibevm.fractality/…/.vibe/cache/…/source-mirrors/…:151      (cached)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3143             (a citation)
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143             (a citation)
 campaigns/packages-2026-09/…/ev-W6b.json, batch-W6b-3.json, baseline.json (this campaign's own evidence)
 ```
 
@@ -132,7 +132,7 @@ Reading it settles all three anchors:
   ask: `push_args` is a pure function (`xtask/src/mirror.rs:262-268`) and
   `push_args_never_force` (`:426-440`) asserts no `--force`, `-f` or
   `+`-prefixed refspec for four ref shapes.
-  `spec/common/PROP-016-source-mirrors.md:64` books that as «runnable capital,
+  `spec/common/PROP-016-source-mirrors.xml:64` books that as «runnable capital,
   not prose» — this document's own §never-force-test wording.
 
 **The find that splits the obligation, and it is the package's own script.**
@@ -148,7 +148,7 @@ clauses have opposite falsifiers:
 | ancestry gate before every push | **implements it** (`:192-193`) | absent | **(b)** |
 | «the commits it has that mainline lacks» | **does not implement it** (`:194`) | absent | **(a)** |
 
-*Line-number convention for this entry: every `fanout-mechanics.md` number in
+*Line-number convention for this entry: every `fanout-mechanics.xml` number in
 the console transcripts above is **pre-edit**, because the searches preceded
 the demotions. Numbers quoted in prose and in the table are **post-edit** — the
 script now sits at `:178-205`, its `ls-remote` at `:192`, its
@@ -259,7 +259,7 @@ not. There is no demotion available here and none was made.
 unchanged — it reproduces:
 
 ```console
-$ rg -n -i "revisit|parallel|integrator" spec/common/PROP-016-source-mirrors.md
+$ rg -n -i "revisit|parallel|integrator" spec/common/PROP-016-source-mirrors.xml
 (exit 1 — no match)
 ```
 
@@ -267,7 +267,7 @@ Then the same file, searched for the **thing** instead of the spelling:
 
 ```console
 $ rg -n -i "deferred until|until needed|worth opening if|when a host must" \
-      spec/common/PROP-016-source-mirrors.md
+      spec/common/PROP-016-source-mirrors.xml
 72:1. ##open-server-side **Server-side mirroring.** When a host must originate writes
    outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add
    one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse,
@@ -278,7 +278,7 @@ $ rg -n -i "deferred until|until needed|worth opening if|when a host must" \
 ```
 
 **Why that is the trigger and not merely an adjacent open question — the flow
-says so itself, in the body this summary summarises.** `SOURCE-MIRRORS-PROTOCOL.md`
+says so itself, in the body this summary summarises.** `SOURCE-MIRRORS-PROTOCOL.xml`
 §costs (l. 126-157) defines both the condition and the remedy:
 
 ```console
@@ -308,32 +308,32 @@ flow's own remedy sentence and its trigger sentence are one bullet apart.
 
 **The practice, for the record, is the host's default and its form is compiled
 into the boot lane.** The `decision-records` flow's four-field record reaches
-every session at `spec/boot/STATIC.md:255` — *«**When to revisit** | A
+every session at `spec/boot/STATIC.xml:255` — *«**When to revisit** | A
 measurable trigger: metric + threshold + where it is observed»* — and
 `:299-300` forbids *«a decision with a missing reason or a missing revisit
 trigger — that is a fact with decoration, not a record»*. The host writes them
 under several spellings, none of which a single-word grep of one file could
-reach: `spec/common/PROP-000.md:23` (`##LANG-REVISIT`), `:57`
+reach: `spec/common/PROP-000.xml:23` (`##LANG-REVISIT`), `:57`
 (`##LICENSE-REVISIT`, whose previous trigger is recorded as **fired** on
-2026-07-12 and spent), `spec/modules/vibe-registry/PROP-001-git-backend.md:113-121`,
-`spec/modules/vibe-cli/PROP-036-package-tree.md:95`,
-`spec/modules/vibe-progress/PROP-043-progress-markup.md:98,141,255`.
+2026-07-12 and spent), `spec/modules/vibe-registry/PROP-001-git-backend.xml:113-121`,
+`spec/modules/vibe-cli/PROP-036-package-tree.xml:95`,
+`spec/modules/vibe-progress/PROP-043-progress-markup.xml:98,141,255`.
 
 **On the verdict's second clause — «the *acceptable and cheaper than the
 alternative* evaluation is absent from every host document searched, so the
 summary asserts a judgement the host never made».** Two corrections. The
 judgement is the **flow's**, made for a genre («for small-team projects»), not a
 report of a host judgement — its body carries it at
-`SOURCE-MIRRORS-PROTOCOL.md:145-148`, `##for-a-small-team-the-trade-is-strongly-positive`,
+`SOURCE-MIRRORS-PROTOCOL.xml:145-148`, `##for-a-small-team-the-trade-is-strongly-positive`,
 already `@spec/done`. And the host did record the comparison, in the place a
-decision record lives: `spec/common/PROP-016-source-mirrors.md:78`
+decision record lives: `spec/common/PROP-016-source-mirrors.xml:78`
 (`##HIST-AUTHORED`, «2026-06-14 — authored, in force»), which closes
 *«Supersedes the interim multi-push-remote and the abandoned
 bidirectional-multi-master sketch»* — naming the two alternatives this model
 was chosen over.
 
 **Which layer has it, if any:** **host deployment** — the trigger is at
-`spec/common/PROP-016-source-mirrors.md:72`, in the consuming project, because
+`spec/common/PROP-016-source-mirrors.xml:72`, in the consuming project, because
 recording it is what complying with this fact means. That is §3.7's structure
 exactly: a search confined to `packages/` cannot see a trigger whose whole
 purpose is to be written down by the adopter.
@@ -343,9 +343,9 @@ been impossible in form (already `@spec/done`) and false in substance (the
 adopter kept the norm, in the flow's own prescribed words).
 
 **New obligations noticed:** `##RECORD-THAT-AS-A-REVISIT-TRIGGER`
-(`SOURCE-MIRRORS-PROTOCOL.md:157`, `@impl/done`, **not in my anchor list**) is
+(`SOURCE-MIRRORS-PROTOCOL.xml:157`, `@impl/done`, **not in my anchor list**) is
 the body rule this summary restates, and it is confirmed by the same host
-artefact — whatever was concluded about it needs `spec/common/PROP-016-source-mirrors.md:72`
+artefact — whatever was concluded about it needs `spec/common/PROP-016-source-mirrors.xml:72`
 in the perimeter before it moves. Same for
 `##when-a-project-outgrows-one-integrator-this-is-the-wrong-tool` (l. 153-156),
 already `@spec/done`.
@@ -354,7 +354,7 @@ already `@spec/done`.
 `##SUM-WHAT-IT-COSTS` → **confirmed** — the cost is factually this host's
 situation, the flow makes the acceptability judgement for its own genre, and
 the revisit trigger the verdict called absent is recorded at
-`spec/common/PROP-016-source-mirrors.md:72` in the flow's own prescribed
+`spec/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
 «one-directional server-side mirroring» form; the marker is already `@spec/done`.
 
 ---
@@ -394,7 +394,7 @@ $ sed -n '1,4p' packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eul
 name: draft-eula
 description: Draft or review a project's license posture — the placeholder EULA with
   relicense intent, the permissive-only dependency check, and the third-party carve-out.
-  Use when setting up a new project's LICENSE.md or auditing an existing one.
+  Use when setting up a new project's LICENSE.xml or auditing an existing one.
   Guidance, not legal advice.
 ---
 
@@ -461,7 +461,7 @@ That is a host deployment posture, uniform and visible, and it says nothing
 about whether the `licensing` package's sentence is true.
 
 `draft-eula` appears nowhere outside the package, its vendored and cached
-copies, the compiled boot lane (`spec/boot/STATIC.md:837`) and this campaign's
+copies, the compiled boot lane (`spec/boot/STATIC.xml:837`) and this campaign's
 own records — the verdict's negative reproduces exactly; it is the *reading* of
 that negative that does not survive.
 
@@ -497,7 +497,7 @@ blanket permissiveness claims with no listing behind either:
 $ sed -n '106p' Cargo.toml
 # Third-party (all permissive licenses — PROP-000 §3)
 
-$ sed -n '42,44p' LICENSE.md
+$ sed -n '42,44p' LICENSE.xml
 vibevm links against third-party Rust crates distributed under permissive
 licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by
 this license and continue to govern their respective code (see `cargo metadata` …
@@ -525,16 +525,16 @@ $ rg -n -i 'licen' tools/*.sh tools/*.ps1
 ```
 
 The two careful checks the verdict credits are real and I confirmed them:
-`spec/modules/vibe-resolver/PROP-003-dep-evolution.md:92` classifies libsolv
+`spec/modules/vibe-resolver/PROP-003-dep-evolution.xml:92` classifies libsolv
 only after naming its actual licence files, and
-`spec/modules/vibe-registry/PROP-001-git-backend.md:95-98` reasons about GPL-v2
+`spec/modules/vibe-registry/PROP-001-git-backend.xml:95-98` reasons about GPL-v2
 `git` and libgit2's Linking Exception rather than asserting. So the practice is
 kept where it is load-bearing and broken where it is blanket.
 
 **I also checked the one artefact the brief flagged as a possible false
 negative, and it is not one.** `CLAUDE.md:127-137` carries a live «License
 state» ledger — but it records **our own shipped surface**'s relicensing to
-UPL-1.0 (MT-05 firings, the host `LICENSE.md` on 2026-07-12, which `"EULA"`
+UPL-1.0 (MT-05 firings, the host `LICENSE.xml` on 2026-07-12, which `"EULA"`
 strings are off-limits). It is a record about the product's licence, not about
 third-party dependency licences, and the dogfood spec it cites
 (`…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`) relicenses
@@ -556,13 +556,13 @@ yield to a consumer that simply does not comply»*; softening a `Never` rule
 because the consumer broke it twice is precisely the *профанация* the mandate
 exists to prevent, and it would be the campaign endorsing an unchecked blanket
 claim about sixty crates. The host obligation is stated rather than hidden:
-either produce a listing behind `Cargo.toml:106` and `LICENSE.md:42-43`, or
+either produce a listing behind `Cargo.toml:106` and `LICENSE.xml:42-43`, or
 narrow both to what was actually checked. **Recommendation only. I recorded no
 routing and wrote no verdict.**
 
 **New obligations noticed:** the two host claims are load-bearing beyond this
-package — `LICENSE.md:42-43` is a statement in the product's licence file, read
-by anyone who receives the product, and `LICENSE.md:44` points readers at
+package — `LICENSE.xml:42-43` is a statement in the product's licence file, read
+by anyone who receives the product, and `LICENSE.xml:44` points readers at
 `cargo metadata` as «the authoritative list» while `cargo metadata --offline`
 cannot run here and `Cargo.lock` carries no licence field at all
 (`grep -c 'license' Cargo.lock` = 0). That is a host-side accuracy question
@@ -576,7 +576,7 @@ other package skills here. The residual is reachability, which is the address
 family's shape and the owner's ruling, not a demotion.
 `##NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING` → **drift stands,
 route (b)** — a prohibition the consumer broke at `Cargo.toml:106` and
-`LICENSE.md:42-43`; no mechanism is missing from the package, so the package
+`LICENSE.xml:42-43`; no mechanism is missing from the package, so the package
 must not move.
 
 ---
@@ -587,13 +587,13 @@ must not move.
 **Anchors:** 2 touched of 2: `##RE-AUDIT-ON-A-SCHEDULE`,
 `##SUM-AUTOMATE-AND-RE-AUDIT`.
 **Files touched:**
-`packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md`
+`packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.xml`
 **Perimeter searched:** the standing perimeter, and deliberately **widened past
 the verdict's own** in three directions it did not go. The verdict searched
 `vibedeps/flow-health-audit/`; I searched the **canonical package** at
 `packages/org.vibevm.world/health-audit/v0.1.0/` as well, because a vendored
 copy can lag its source. It searched `AUDIT.md`; I also searched the host's
-audit *contract* (`spec/common/PROP-013-periodic-health-audit.md`), the
+audit *contract* (`spec/common/PROP-013-periodic-health-audit.xml`), the
 `manual-tests/` recipes, `tools/self-check.sh`'s gate chain, and
 `cargo xtask health`'s section list, because «a periodic audit line» could be a
 recipe or a collector section rather than a markdown bullet. And it searched
@@ -612,7 +612,7 @@ $ rg -n -i 'licen|copyleft|GPL|permissive|SPDX' \
       packages/org.vibevm.world/health-audit/v0.1.0/spec/
 (no output)
 
-$ sed -n '187,196p' packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md
+$ sed -n '187,196p' packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.xml
 ### D4 · Dependency staleness {#d4}
 
 - ##D4-LOOK-FOR **Look for.** Outdated dependencies and open security advisories.
@@ -626,7 +626,7 @@ One dependency category, and it is versions and CVEs. The host's own audit
 contract says the same thing in one line:
 
 ```console
-$ sed -n '51p' spec/common/PROP-013-periodic-health-audit.md
+$ sed -n '51p' spec/common/PROP-013-periodic-health-audit.xml
 - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`;
   `cargo audit` / `cargo outdated`. @spec/done
 ```
@@ -685,7 +685,7 @@ states — built, declined-on-the-record, absent — rather than one.
 **Which layer has it, if any:** **nowhere**, at all four layers, for the
 scheduled licence re-audit and for the listing it would re-run. The one clause
 that is built — «point the carve-out at the generated list» — is **host
-deployment**: `LICENSE.md:44` sends readers to `cargo metadata` rather than to
+deployment**: `LICENSE.xml:44` sends readers to `cargo metadata` rather than to
 a hand-maintained copy.
 
 **I checked the artefact the brief flagged, and it does not close this.**
@@ -700,7 +700,7 @@ between versions. Different subject; it cannot satisfy the fact.
 gain a clause; both markers move `@impl/done` → `@spec/done`. Neither is
 flattened. `##RE-AUDIT-ON-A-SCHEDULE`'s clause names the sibling's actual
 content (D4, staleness and advisories), says there is no listing to re-run, and
-points the adopter at where the line would go — `audit-checklist.md` is
+points the adopter at where the line would go — `audit-checklist.xml` is
 explicitly «a starting set, not a closed one», so this is a gap the adopter
 fills rather than a contradiction. `##SUM-AUTOMATE-AND-RE-AUDIT`'s clause
 separates the three clauses it bundles. Marker census on the file confirms
@@ -708,7 +708,7 @@ exactly two moved: lines carrying `@impl/done` 24 → 22, lines carrying
 `@spec/done` 6 → 8.
 
 **New obligations noticed.** (1) `##AUTOMATE-THE-LISTING`
-(`dependency-licenses.md:57-60`, `@impl/done`, **not in my anchor list**) is the
+(`dependency-licenses.xml:57-60`, `@impl/done`, **not in my anchor list**) is the
 body rule whose summary half I have just annotated, and it closes on *«A rule
 with no checker is a wish»* — self-descriptive here, since no checker exists;
 whatever was concluded about it needs `discipline/registry/intent.json:421-436`
@@ -724,7 +724,7 @@ sibling in the same shipped collection whose checklist has no licence line at
 any grain, verified in the canonical package as well as the vendored copy; the
 prescription stands and the clause says who does not yet carry it.
 `##SUM-AUTOMATE-AND-RE-AUDIT` → **demoted, now confirmed** — one clause built
-(`LICENSE.md:44`), one declined on the record (INT-0030 rescoped under a
+(`LICENSE.xml:44`), one declined on the record (INT-0030 rescoped under a
 standing no-CI owner decision, which is a marked exception and not drift), one
 built by nothing; the clause names all three so no reader reads a decision as a
 failure.
@@ -739,7 +739,7 @@ failure.
 **Perimeter searched:** the same widened perimeter as F-238 — the standing
 perimeter, plus the **canonical** `packages/org.vibevm.world/health-audit/v0.1.0/`
 rather than only its `vibedeps/` copy, the host's audit contract
-`spec/common/PROP-013-periodic-health-audit.md`, the host's audit *record*
+`spec/common/PROP-013-periodic-health-audit.xml`, the host's audit *record*
 `AUDIT.md`, `manual-tests/`, `tools/self-check.sh`, `cargo xtask health`'s
 section list, and seven names of dependency-licence tooling. Terms: `licen` ·
 `copyleft` · `GPL` · `permissive` · `SPDX`. The evidence is the same body of
@@ -768,7 +768,7 @@ $ find packages/org.vibevm.world/health-audit -name '*.md'
 ```
 
 Five documents, none of which mentions a licence. Its single dependency
-category is `##D4-LOOK-FOR` / `##D4-AID` at `audit-checklist.md:187-196` —
+category is `##D4-LOOK-FOR` / `##D4-AID` at `audit-checklist.xml:187-196` —
 outdated versions and open security advisories. The host that adopted both
 flows has never run such a line either (`AUDIT.md`, 458 lines, three dated
 runs, zero licence hits), and there is no listing for a line to re-run (no

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-033 — The refactoring registry: package-contributed, discovered, precompiled operations</title>
+  <status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal v0.1, drafted for review; open to challenge until ratified; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="spec/done">**Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; open to challenge until ratified. It schedules no implementation of its own; it is the *packaging, discovery, and dispatch* layer over the operations of [PROP-031](spec://org.vibevm.core/vibevm/common/PROP-031#root) and the discovery surface of [PROP-032](spec://org.vibevm.core/vibevm/common/PROP-032#agent-first).</status-line></p>
+  <p><companions fact="true" status="spec/done">**Companions.** [PROP-031 — algorithmic refactoring](spec://org.vibevm.core/vibevm/common/PROP-031#algebra) (the operations this registry catalogs) · [PROP-032 — the project model &amp; agent-first substrate](spec://org.vibevm.core/vibevm/common/PROP-032#agent-first) (the registry is its discovery surface; its §2.8 three-tier packaging is where the registry lives) · PROP-009 (the loading model — `spec/boot/INDEX.md` is the generated-manifest precedent) · PROP-025 (binary delivery — `vibe bin exec`, the dispatch mechanism) · PROP-027 (mcp packages — `.mcp.json` is the second generated-manifest precedent) · PROP-029 (fully-qualified addresses — id namespacing) · PROP-018 (skills — the `[[skill]]` declaration idiom).</companions></p>
+  <problem title="1. Problem statement">
+    <facts ordered="false">
+      <PROBLEM-EXTENSIBLE fact="true" status="spec/done">`prop r1` — Refactorings must be **extensible by package install**: installing `rust-ai-native` should add its refactorings; a future `llm-refactorings` package should add LLM-only or hybrid ones; a base vibevm project should have none until it installs the substrate.</PROBLEM-EXTENSIBLE>
+      <PROBLEM-CENTRAL-ENTITY fact="true" status="spec/done">That requires a **central entity that knows which refactorings exist** in *this* project.</PROBLEM-CENTRAL-ENTITY>
+      <PROBLEM-PRECOMPILED fact="true" status="spec/done">It must be **discovered once and cached** — precompiled from the installed set — not re-scanned on every invocation.</PROBLEM-PRECOMPILED>
+    </facts>
+    <facts ordered="false">
+      <MECH-PROVEN fact="true" status="spec/done">The mechanism already exists in vibevm and is proven three times over.</MECH-PROVEN>
+      <MECH-DECLARE-COMPOSE fact="true" status="spec/done">A package declares a capability as a repeated TOML table in its `vibe.toml` — `[[binary]]`, `[[skill]]`, `[boot_snippet]` — and `vibe install` **discovers** those declarations across the lockfile-resolved set and **composes a cached, generated artifact**: `spec/boot/INDEX.md` (boot, PROP-009), `.mcp.json` (MCP servers, PROP-027), the binary dispatch table (PROP-025), the projected skills (PROP-018).</MECH-DECLARE-COMPOSE>
+      <MECH-SAME-SHAPE fact="true" status="spec/done">*"Install a package, gain its bins/skills/boot"* already works exactly the way this PROP wants *"install a package, gain its refactorings"* to work.</MECH-SAME-SHAPE>
+      <CAPABILITY-LAW fact="true" status="spec/done">**A refactoring is simply another declared capability.** This PROP applies the existing pattern to a new table, `[[refactoring]]`.</CAPABILITY-LAW>
+    </facts>
+  </problem>
+  <decisions title="2. Decisions">
+    <declaration title="2.1 Refactorings are a declared package capability">
+      <p><DECL-LAW fact="true" status="spec/done">`req r1` — A package contributes refactorings with a `[[refactoring]]` table in its `vibe.toml`, alongside the existing `[[binary]]` / `[[skill]]` / `[boot_snippet]`:</DECL-LAW></p>
+      <fence lang="toml">[[refactoring]]
+id         = "rename-address"          # namespaced by the provider's group (PROP-029)
+kind       = "algorithmic"             # algorithmic | llm | hybrid
+title      = "Rename a spec:// or code:// address"
+applies_to = ["spec-node", "code-node"]    # node kinds / addresses it operates on
+provider   = "rust-ai-native-specmap"  # for algorithmic/hybrid: which [[binary]] implements it (PROP-025)
+invoke     = "rename-address {from} {to}"  # subcommand template
+params     = "spec/refactorings/rename-address.params.toml"  # typed parameter schema
+gate       = "specmap-check"           # the mandatory post-check (PROP-031 §2.3)
+dry_run    = true
+
+[[refactoring]]
+id     = "modernize-idiom"
+kind   = "llm"
+prompt = "spec/refactorings/modernize-idiom.prompt.md"   # the instruction template the agent fills
+gate   = "cargo test"                  # even an LLM refactor is done only when the gate is green</fence>
+      <p><DECL-FIELDS fact="true" status="spec/done">The fields are the *contract surface*: what the operation is (`id`, `title`, `kind`), where it applies (`applies_to`), how edits are produced (`provider` + `invoke`, or `prompt`, or both), its typed inputs (`params`), and — non-optional — its `gate`.</DECL-FIELDS></p>
+    </declaration>
+    <registry title="2.2 The registry is a generated, cached manifest">
+      <facts ordered="false">
+        <REG-COMPOSED fact="true" status="spec/done">`req r1` — `vibe install` composes every `[[refactoring]]` across the lockfile-resolved packages into a **generated, cached manifest** — the "precompiled catalog" (`.vibe/refactorings.toml`, or a committed manifest in the `INDEX.md` mould). This is the central entity that knows what exists.</REG-COMPOSED>
+        <REG-MIRRORS-PRECEDENT fact="true" status="spec/done">It mirrors `spec/boot/INDEX.md` (PROP-009) and `.mcp.json` (PROP-027): derived from the installed set, regenerated on install, **invalidated on any lockfile change** (content-hash keyed, like vibe's other caches).</REG-MIRRORS-PRECEDENT>
+        <REG-NO-RESCAN fact="true" status="spec/done">Nothing rediscovers on a bare `vibe refactor` invocation.</REG-NO-RESCAN>
+      </facts>
+    </registry>
+    <precompile title="2.3 Precompile is a frozen dispatch table">
+      <p><PRECOMPILE-LAW fact="true" status="spec/done">`req r1` — "Precompile" is concrete work done once at install, not a re-scan:</PRECOMPILE-LAW></p>
+      <facts ordered="true">
+        <PC-RESOLVE fact="true" status="spec/done">**Resolve** each refactoring's provider binary path through the lockfile (PROP-025) and freeze it into a dispatch entry.</PC-RESOLVE>
+        <PC-VALIDATE fact="true" status="spec/done">**Validate** the `params` schema so a malformed contribution fails at install, not at use.</PC-VALIDATE>
+        <PC-COLLISIONS fact="true" status="spec/done">**Detect id collisions** across packages (ids are namespaced, §2.5) — two packages claiming the same id is an install-time error.</PC-COLLISIONS>
+        <PC-APPLICABILITY fact="true" status="spec/done">**Record applicability** (`applies_to`, language) so a client can filter *"what applies here"* without loading every provider.</PC-APPLICABILITY>
+        <PC-WRITE fact="true" status="spec/done">**Write** the frozen table to the cache.</PC-WRITE>
+      </facts>
+      <facts ordered="false">
+        <RUNTIME-LOOKUP fact="true" status="spec/done">Runtime is a table lookup → invoke.</RUNTIME-LOOKUP>
+        <PC-STABLE-UNTIL-LOCKFILE fact="true" status="spec/done">The precompiled table is the "compiled capabilities" the discovery never has to rebuild until the lockfile moves.</PC-STABLE-UNTIL-LOCKFILE>
+      </facts>
+    </precompile>
+    <kinds title="2.4 Three kinds, one gated interface">
+      <p><KINDS-ONE-SHAPE fact="true" status="spec/done">`req r1` — Every refactoring, whatever its kind, is the same shape: **`(params) → proposed edits → gate → commit-or-rollback`** (PROP-031 §2.3). Only the *edit production* differs, and the registry entry declares which:</KINDS-ONE-SHAPE></p>
+      <table>
+        <tr>
+          <td>kind</td>
+          <td>edits produced by</td>
+          <td>dispatch</td>
+        </tr>
+        <tr>
+          <td><KIND-ALGORITHMIC fact="true" status="spec/done">`algorithmic`</KIND-ALGORITHMIC></td>
+          <td><fact status="spec/done">a deterministic engine</fact></td>
+          <td><fact status="spec/done">`vibe bin exec &lt;provider&gt; -- &lt;invoke&gt;` (PROP-025)</fact></td>
+        </tr>
+        <tr>
+          <td><KIND-LLM fact="true" status="spec/done">`llm`</KIND-LLM></td>
+          <td><fact status="spec/done">an agent filling a `prompt` template</fact></td>
+          <td><fact status="spec/done">hand the agent the prompt + context; it proposes edits</fact></td>
+        </tr>
+        <tr>
+          <td><KIND-HYBRID fact="true" status="spec/done">`hybrid`</KIND-HYBRID></td>
+          <td><fact status="spec/done">both — mechanical transform + an agent for the judgment part</fact></td>
+          <td><fact status="spec/done">the provider orchestrates the callback</fact></td>
+        </tr>
+      </table>
+      <facts ordered="false">
+        <UNIFORM-CLIENT fact="true" status="spec/done">The uniform contract (typed params, dry-run, **atomic + gated**) means a client — CLI or agent — treats all three identically.</UNIFORM-CLIENT>
+        <GATE-TRUST fact="true" status="spec/done">The `gate` is what makes even an LLM refactor trustworthy (it is *done* only when the model re-checks clean, PROP-031 §2.3).</GATE-TRUST>
+        <LLM-BOUNDARY-PACKAGED fact="true" status="spec/done">This is the LLM boundary (PROP-031 §2.2) made a first-class, packaged, gated operation rather than free-form editing.</LLM-BOUNDARY-PACKAGED>
+      </facts>
+    </kinds>
+    <namespacing title="2.5 Ids are namespaced by the providing package">
+      <facts ordered="false">
+        <NS-LAW fact="true" status="spec/done">`prop r1` — A refactoring id is namespaced by its provider's group (PROP-029): `org.vibevm.world/specmark:rename-address`, `org.vibevm.ai-native/rust-ai-native:extract-cell`, `org.acme/refactors:my-thing`.</NS-LAW>
+        <NS-SHORT-IDS fact="true" status="spec/done">Short ids resolve when unambiguous (the short-name mechanism); collisions are caught at precompile (§2.3).</NS-SHORT-IDS>
+        <NS-WHY fact="true" status="spec/done">Namespacing is what lets independent packages contribute freely without central coordination.</NS-WHY>
+      </facts>
+    </namespacing>
+    <surfaces title="2.6 The center is the library and the spec; CLI and MCP are thin surfaces">
+      <facts ordered="false">
+        <CENTER-LIBRARY fact="true" status="spec/done">`req r1` — The registry is, first, a **Rust library API and a specification** — the data layer agents and tools work against directly (the PROP-014 rule: fully useful without an LLM).</CENTER-LIBRARY>
+        <CLI-THIN fact="true" status="spec/done">`vibe refactor list [--applies-to &lt;node&gt;]` and `vibe refactor &lt;id&gt; &lt;params&gt; [--dry-run]` are a **thin core dispatcher** over the registry.</CLI-THIN>
+        <MCP-AGENT-FIRST fact="true" status="spec/done">The MCP tools `refactoring_list` / `refactoring_describe` / `refactoring_apply` are the **agent-first surface** (PROP-032 §2.6) — the agent asks *"what refactorings exist here"* and emits a typed `apply`.</MCP-AGENT-FIRST>
+        <CLI-NOT-CENTER fact="true" status="spec/done">The CLI is not the center: an agent drives the library/registry through MCP, and a human uses `vibe refactor` as one surface among several (library → CLI → MCP → GUI, PROP-032 §2.6).</CLI-NOT-CENTER>
+      </facts>
+    </surfaces>
+  </decisions>
+  <tiers title="3. Where the registry sits — the three-tier product model">
+    <p><TIER-PLACEMENT fact="true" status="spec/done">`prop r1` — The registry lives in the **SDD-substrate tier** of the product model ratified in [PROP-032 §2.8](spec://org.vibevm.core/vibevm/common/PROP-032#packaging):</TIER-PLACEMENT></p>
+    <facts ordered="true">
+      <TIER-BASE fact="true" status="spec/done">**Base vibevm** — no refactorings; `vibe refactor list` is empty.</TIER-BASE>
+      <TIER-SDD fact="true" status="spec/done">**+ the SDD substrate** (specmark + specmap) — contributes the algorithmic core (`rename-address`, `move-unit`, `retarget-edge`) **and the registry itself**.</TIER-SDD>
+      <TIER-AI-NATIVE fact="true" status="spec/done">**+ ai-native** (`rust-ai-native`, …) — contributes discipline refactorings (`extract-cell`, …) into the same registry.</TIER-AI-NATIVE>
+    </facts>
+    <p><TIER-COMPOSITION fact="true" status="spec/done">The registry **composes across whatever tiers are installed**, so the available refactoring set grows monotonically with the installed packages — the exact "install a package, extend the refactorings" behaviour, delivered by the same install-time composition that already grows bins/skills/boot.</TIER-COMPOSITION></p>
+  </tiers>
+  <anticipation title="4. Build-in-anticipation">
+    <p><ANTICIPATION-LAW fact="true" status="spec/done">`req r1` — Before the engine ships, keep the design refactoring-registry-ready:</ANTICIPATION-LAW></p>
+    <facts ordered="true">
+      <ANT-BORN-DECLARED fact="true" status="spec/done">author the first operations (PROP-031's `rename-address`, `move-unit`) **as `[[refactoring]]` declarations from birth**, not bespoke subcommands, so the registry has real entries to compose;</ANT-BORN-DECLARED>
+      <ANT-GENERATED fact="true" status="spec/done">keep the registry a **generated artifact** in the `INDEX.md` mould (derived, cached, lockfile-invalidated), never a hand-maintained list;</ANT-GENERATED>
+      <ANT-NAMESPACED fact="true" status="spec/done">namespace every id (§2.5) from the first entry, so no un-namespaced id has to be migrated later.</ANT-NAMESPACED>
+    </facts>
+  </anticipation>
+  <rejected title="5. Rejected alternatives">
+    <facts ordered="true">
+      <REJ-RESCAN fact="true" status="spec/done">**Rediscover on every invocation.** Slow and non-deterministic across a session; the precompiled cache (§2.3) is the fix, exactly as INDEX.md/.mcp.json are computed once at install.</REJ-RESCAN>
+      <REJ-HARDCODED fact="true" status="spec/done">**A hardcoded refactoring list in the CLI.** Not extensible by package install — the whole point. Refactorings must be *contributed*, not compiled in.</REJ-HARDCODED>
+      <REJ-CLI-CENTER fact="true" status="spec/done">**CLI as the center.** Agents need the library and the spec as the data layer (§2.6); a CLI-first design strands the agent-first primary consumer.</REJ-CLI-CENTER>
+      <REJ-OUTSIDE-LOCKFILE fact="true" status="spec/done">**A registry outside the lockfile** (a separate discovery config). Two sources of truth; the lockfile already *is* the installed-set authority, so the registry is derived from it, like every other composed artifact.</REJ-OUTSIDE-LOCKFILE>
+      <REJ-PROBING fact="true" status="spec/done">**One registry entry per binary subcommand, discovered by probing binaries.** Probing is slow and unvalidated; a declared `[[refactoring]]` table is fast, checked at install, and lets a package expose *some* subcommands as refactorings and not others.</REJ-PROBING>
+    </facts>
+  </rejected>
+  <prior-art title="6. Prior art &amp; license posture">
+    <p><prior-art-lead fact="true" status="spec/done">Ideas are free; code is not (PROP-000 §3). Roles explicit.</prior-art-lead></p>
+    <table>
+      <tr>
+        <td>System</td>
+        <td>License (verify)</td>
+        <td>Role here</td>
+      </tr>
+      <tr>
+        <td><PA-VSCODE fact="true" status="spec/done">**VS Code `contributes.commands`**</PA-VSCODE></td>
+        <td><fact status="spec/done">MIT</fact></td>
+        <td><fact status="spec/done">**The closest model.** Extensions declare commands in their manifest; the host discovers and registers them into one command registry. This PROP is the same, applied to refactorings, composed at install.</fact></td>
+      </tr>
+      <tr>
+        <td><PA-LSP fact="true" status="spec/done">LSP code actions / `executeCommand`</PA-LSP></td>
+        <td><fact status="spec/done">n/a (protocol)</fact></td>
+        <td><fact status="spec/done">Dynamic "what actions apply here" advertisement — the `applies_to` filter surface.</fact></td>
+      </tr>
+      <tr>
+        <td><PA-OPENREWRITE fact="true" status="spec/done">OpenRewrite recipe registry</PA-OPENREWRITE></td>
+        <td><fact status="spec/done">Apache-2.0</fact></td>
+        <td><fact status="spec/done">Recipes discovered from the classpath, listed and composed — a typed, gated operation catalog.</fact></td>
+      </tr>
+      <tr>
+        <td><PA-CARGO fact="true" status="spec/done">cargo custom subcommands</PA-CARGO></td>
+        <td><fact status="spec/done">n/a (cargo)</fact></td>
+        <td><fact status="spec/done">`cargo-&lt;x&gt;` on PATH extends the CLI by discovery — extensibility, but without a manifest or a precompiled cache (the gap this PROP closes).</fact></td>
+      </tr>
+    </table>
+    <p><DIFFERENTIATORS fact="true" status="spec/done">**Differentiators.**</DIFFERENTIATORS></p>
+    <facts ordered="true">
+      <DIFF-COMPOSED fact="true" status="spec/done">refactorings are **composed at install into a cached manifest** (the vibevm INDEX.md/.mcp.json pattern), not probed at runtime;</DIFF-COMPOSED>
+      <DIFF-THREE-KINDS fact="true" status="spec/done">the catalog spans **three implementation kinds** (algorithmic / llm / hybrid) under one gated contract;</DIFF-THREE-KINDS>
+      <DIFF-AGENT-CONSUMER fact="true" status="spec/done">the primary consumer is an **agent** querying the registry over MCP;</DIFF-AGENT-CONSUMER>
+      <DIFF-NAMESPACED fact="true" status="spec/done">ids are **namespaced** so independent packages contribute without collision.</DIFF-NAMESPACED>
+    </facts>
+  </prior-art>
+  <open title="7. Open questions">
+    <status stage="spec" state="work" comment="B1 2026-07-24: four questions open; ratification pending"/>
+    <facts ordered="true">
+      <open-manifest-vs-cache fact="true" status="spec/work">**Committed manifest vs `.vibe` cache.** INDEX.md is committed (it is human-visible boot state); the refactoring catalog may be pure cache (`.vibe/refactorings.toml`, gitignored) since it is fully derived from the lockfile. Lean: cache, regenerated on install, like `.mcp.json`.</open-manifest-vs-cache>
+      <open-param-schema fact="true" status="spec/work">**Param schema language.** JTD (as the wire types already use) vs a TOML schema vs inline. Lean: reuse the JTD codegen pipeline for uniformity.</open-param-schema>
+      <open-llm-prompt-shipping fact="true" status="spec/work">**How LLM refactorings ship their prompt + verification.** A `prompt` file plus a `gate`; but the prompt is *instructions-shaped prose delivered into an agent* — the PROP-014 §2.8.4 prompt-injection concern applies, so LLM-refactoring packages may need the same signed-content posture.</open-llm-prompt-shipping>
+      <open-unified-capability fact="true" status="spec/work">**The latent unified capability-contribution abstraction.** `[[binary]]`, `[[skill]]`, `[boot_snippet]`, `[[refactoring]]` are four instances of one pattern. A unified `[[capability]]` model is possible but premature; follow the proven per-capability idiom until a fifth instance justifies the generalisation.</open-unified-capability>
+    </facts>
+    <facts ordered="false">
+      <ratification-note fact="true" status="spec/done">*This PROP is a design proposal. Ratification happens through PR review against PROP-031 and PROP-032.*</ratification-note>
+      <first-step fact="true" status="spec/done">*Its first concrete step is authoring PROP-031's `rename-address` as a `[[refactoring]]` declaration in the SDD-substrate package.*</first-step>
+      <unexercised-removed fact="true" status="spec/done">*Any mechanism specified here that is not exercised by the second contributed refactoring is removed from the spec rather than carried as aspirational documentation (the PROP-014 §335 discipline, inherited).*</unexercised-removed>
+    </facts>
+  </open>
+</spec>

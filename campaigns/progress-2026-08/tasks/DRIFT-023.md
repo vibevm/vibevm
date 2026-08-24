@@ -60,7 +60,7 @@ for you (§4.1). Do not redesign it.** The campaign's knowledge is
 - `rescan` walks `doc.units` and addresses them `unit_addr(doc, i)` →
   `path#<unit-anchor>` or `path#L<line>` (`baseline.rs:212-218`). There are
   **920 units** across the 58 observed files.
-- Example: `PROP-002-decentralized-registry.md` — 35 units, 359 facts,
+- Example: `PROP-002-decentralized-registry.xml` — 35 units, 359 facts,
   288 verdicts.
 
 ## 4. Required behavior {#behavior}
@@ -253,7 +253,7 @@ Budget signal: past ~6 files, stop and return.
   --control-rate 0` on the unchanged tree:
 
   > 0 new, 1 changed (suspect), 919 carried-forward, 0 control-sample
-  > Changed spec/boot/00-core.md#L1  [crate `vibe-cli` moved after the verdict]
+  > Changed spec/boot/00-core.xml#L1  [crate `vibe-cli` moved after the verdict]
 
   `marker_diverged` is **false on all 920 rows**. The one non-carried row is
   not a writer/reader disagreement: `crate_moved` is only ever set on the

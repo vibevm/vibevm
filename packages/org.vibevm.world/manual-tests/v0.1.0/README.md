@@ -23,21 +23,21 @@ complements the automated suite; it never replaces it. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md` — full protocol:
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml` — full protocol:
   why a second tier exists and the surfaces it covers, what a manual
   test is and is not, the three triggers for running one, human
   sign-off versus agent pre-run, the directory convention, and a
   re-derive prompt for adapting the tier to any project. @status:impl/done
-- @fact:CONTENT-THE-AUTHORING-RULES `spec/flows/manual-tests/authoring-rules.md` — the four rules with
+- @fact:CONTENT-THE-AUTHORING-RULES `spec/flows/manual-tests/authoring-rules.xml` — the four rules with
   worked fragments: clean slate (scratch project plus an env redirect
   of the tool's per-user state), self-contained walkthrough (command
   block plus Expected paragraph per step), platform coverage
   (POSIX-compatible, primary-platform-first with portable notes), and
   exit discipline (one-command teardown plus a what-to-collect list). @status:impl/done
-- @fact:CONTENT-THE-TEST-TEMPLATE `spec/flows/manual-tests/test-template.md` — the copy-ready
+- @fact:CONTENT-THE-TEST-TEMPLATE `spec/flows/manual-tests/test-template.xml` — the copy-ready
   skeleton, a clause-by-clause account of each section, and a short
   worked example (a generic CLI's first-run smoke test). @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/44-flow-manual-tests.md` — boot snippet loaded at session
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/44-flow-manual-tests.xml` — boot snippet loaded at session
   start: when to propose a manual test, the pre-run/sign-off split,
   and the never-do list. @status:impl/done
 
@@ -88,3 +88,4 @@ let a human do it (*AI-native development*, ships in Russian inside
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

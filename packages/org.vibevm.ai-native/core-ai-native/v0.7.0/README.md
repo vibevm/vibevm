@@ -14,14 +14,14 @@ per-language cards, the guides — ships in each language stack
 
 ## Reading order (human reviewer / strong author)
 
-1. `spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here.
-2. `spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in.
-3. `spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes.
+1. `spec/00-MANIFESTO.xml` — mission, axioms, the central law, §8 the package map. Start here.
+2. `spec/01-PATTERN-CARD-FORMAT.xml` — the format every pattern card is written in.
+3. `spec/02-EXECUTABLE-SCAFFOLDS.xml` — the nine runnable-capital classes.
 4. The active language stack's GUIDE (e.g. `rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack).
-5. `spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep.
-6. `spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).
+5. `spec/03-RAID-PLAYBOOK.xml` + `spec/04-SWEEP-PLAYBOOK.xml` + `spec/05-CAMPAIGN-FORM.xml` — campaigns and the standing sweep.
+6. `spec/06-WAL-CONVENTION.xml` — session-durable project state (optional but preferred).
 7. `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite.
-8. `spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger).
+8. `spec/appendix/` — `CONTRADICTION-MAP.xml` (synthesis provenance) and `ATLAS.xml` (findings ledger).
 
 ## The two load-bearing results behind everything
 
@@ -40,5 +40,6 @@ BETA. Maturity is tagged throughout: [E-strong] (benchmark-backed), [E-mid]
 (adjacent evidence), [E-hyp] (first-principles, pilot-gated). The central
 open question — does the executable-scaffold advantage transfer from
 *generation* to *modification* — is unproven and is the pilot's job (see
-`spec/appendix/CONTRADICTION-MAP.md` C-7). A discipline that names its
+`spec/appendix/CONTRADICTION-MAP.xml` C-7). A discipline that names its
 failure modes is more trustworthy than one that hides them.
+

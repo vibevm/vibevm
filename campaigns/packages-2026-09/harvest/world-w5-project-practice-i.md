@@ -7,8 +7,8 @@ W5 is the batch where **source 2 is at its most literal anywhere in `world`**.
 All four flows describe practices the host performs and leaves artefacts for:
 
 - **`operating-modes`** — the host keeps a codeword catalogue in its own contract
-  tree (`spec/common/PROP-006-operating-modes.md`) and surfaces it at boot from
-  `spec/boot/90-user.md`. One codeword is in force and its invocations are in the
+  tree (`spec/common/PROP-006-operating-modes.xml`) and surfaces it at boot from
+  `spec/boot/90-user.xml`. One codeword is in force and its invocations are in the
   commit record.
 - **`health-audit`** — the host keeps `AUDIT.md` at the root, 24 363 bytes, three
   dated runs. The flow's cadence rule is checkable against the gap since the last.
@@ -45,7 +45,7 @@ source 1 is clean.
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py | grep -E 'operating-modes|health-audit|manual-tests|secrets-hygiene'
   org.vibevm.world/operating-modes  [INSTALLED SOURCED WORDS-DIFFER]
     installed: vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md
-    source   : packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md
+    source   : packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.xml
 ```
 
 **Three of the four are clean** — `health-audit`, `manual-tests` and
@@ -58,7 +58,7 @@ INSTALLED, SOURCED and word-identical to what the host boots.
 $ python - <<'PY'   # word-stream diff, package source vs the compiled host lane
   only in package: ['recognise', 'a', 'codeword', 'by', 'intent', 'not', 'exact', 'wording']
   only in host   : []
-$ grep -nE '^\s*-?\s*##[A-Za-z][A-Za-z0-9_.:-]*\s*$' packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md
+$ grep -nE '^\s*-?\s*##[A-Za-z][A-Za-z0-9_.:-]*\s*$' packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.xml
 30:##RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING
 ```
 
@@ -117,13 +117,13 @@ while a claim about `spec/manual-tests/` is not. Read which one the fact makes.
 ### operating-modes — the catalogue exists and is a pointer {#s2-modes}
 
 ```console
-$ sed -n '5p;13p' spec/common/PROP-006-operating-modes.md
+$ sed -n '5p;13p' spec/common/PROP-006-operating-modes.xml
 ##status-line **Status:** accepted 2026-05-06; the framework and its codewords were extracted to the `operating-modes` flow 2026-07-14 (reached via the redbook dependency). This entry is now a thin pointer.
-##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.md`](../boot/90-user.md). @freeze/done
+##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.xml`](../boot/90-user.md). @freeze/done
 ```
 
 The host's own PROP was **extracted into this flow on 2026-07-14** and reduced to a
-pointer that cites the flow by qualified `spec://` URI. `spec/boot/90-user.md`
+pointer that cites the flow by qualified `spec://` URI. `spec/boot/90-user.xml`
 carries the catalogue at boot with one codeword in force —
 «move fast and break things» — and restates the red-lines law verbatim.
 
@@ -184,7 +184,7 @@ M1.17-workspace-publish-smoke.md   M1.5-gate-multi-package-smoke.md
 M1.5-gate-v2-per-package-smoke.md  M1.6-mirror-vendor-smoke.md
 M2.10-index-smoke.md   README.md
 $ ls spec/manual-tests/
-MT-01-vibe-tree.md   MT-02-vibe-tree-tui.md   MT-03-vibe-prefs-tui.md
+MT-01-vibe-tree.xml   MT-02-vibe-tree-tui.xml   MT-03-vibe-prefs-tui.xml
 $ grep -n 'MT-05' CLAUDE.md | head -1
 131:  2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
 ```
@@ -219,7 +219,7 @@ rows, one occurrence of «required». And the `MT-NN` home has no index at all.
 
 The host also records outstanding runs outside the tier, in its checkpoint —
 MT-02 and MT-03 await owner sign-off. **Cite the durable side of that fact**
-(`spec/manual-tests/MT-02-vibe-tree-tui.md` and `MT-03-vibe-prefs-tui.md`
+(`spec/manual-tests/MT-02-vibe-tree-tui.xml` and `MT-03-vibe-prefs-tui.xml`
 themselves), never the checkpoint.
 
 `grep -rn 'Expected' spec/manual-tests/*.md | wc -l` returns **10** — the flow's
@@ -273,15 +273,15 @@ names.
 The host's written contract on the same surface:
 
 ```console
-$ grep -cE 'publish.token|VIBEVM_PUBLISH_TOKEN' spec/common/PROP-000.md spec/boot/90-user.md
-spec/common/PROP-000.md:2
-spec/boot/90-user.md:5
+$ grep -cE 'publish.token|VIBEVM_PUBLISH_TOKEN' spec/common/PROP-000.xml spec/boot/90-user.xml
+spec/common/PROP-000.xml:2
+spec/boot/90-user.xml:5
 ```
 
-`spec/boot/90-user.md` carries `##TOKEN-DISCIPLINE`, `##TOKEN-FILE-CONVENTION` and
+`spec/boot/90-user.xml` carries `##TOKEN-DISCIPLINE`, `##TOKEN-FILE-CONVENTION` and
 `##SCOPE-DISCIPLINE` — the host restating this flow's laws in its own vocabulary,
 including the sanctioned at-rest location, the env-var precedence, and the
-scope-escalation refusal. `spec/common/PROP-000.md` §20 is the governing anchor.
+scope-escalation refusal. `spec/common/PROP-000.xml` §20 is the governing anchor.
 **Both are durable citation targets; prefer them.**
 
 ## The twenty-one files and their anchor counts {#files}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">AI-Native Go (Discipline v0.2) — boot snippet</title>
+  <status stage="impl" state="done"/>
+  <p><GO-CODE-FOLLOWS-THE-GO-GUIDE fact="true" status="impl/done">Go code in this project follows the AI-Native Go guide
+(`spec/go/GUIDE-AI-NATIVE-GO.xml` in this package).</GO-CODE-FOLLOWS-THE-GO-GUIDE></p>
+  <p><READ-THE-GUIDE-FOR-STRUCTURE fact="true" status="impl/done">Read the guide when
+authoring or reviewing structure; per-edit work needs only the card
+whose trigger fires.</READ-THE-GUIDE-FOR-STRUCTURE></p>
+  <p><CARD-REGISTRY-FOR-GO fact="true" status="impl/done">Card registry for Go: `spec/cards/INDEX.xml` in this package (trigger → card;
+the nine executable scaffolds A–I in their Go shape).</CARD-REGISTRY-FOR-GO></p>
+  <p><STACK-SHIPS-ITS-OWN-CARDS-PROJECTION fact="true" status="impl/done">This stack ships
+its own `spec/cards/` projection — the weak-reader runtime surface for a
+`.go` edit is a Go card's Band-3 ops block, never another language's.</STACK-SHIPS-ITS-OWN-CARDS-PROJECTION></p>
+  <p><standing-rules-lead fact="true" status="impl/done">Standing rules at the surface level:</standing-rules-lead></p>
+  <facts ordered="false">
+    <RULE-ORDINARY-IDIOMATIC-GO-SURFACE fact="true" status="impl/done">Ordinary idiomatic Go at the token level — no invented dialect; the
+  language's own prescriptions (gofmt, one idiom culture, errors as
+  values) are taken whole. Strictness lives in the envelope: closed
+  error sets at seams, loud interface conformance, owned goroutines,
+  `//spec:` metadata, per-cell fast verification
+  (`go test ./internal/cells/&lt;cell&gt;/ -race`, &lt; ~60s).</RULE-ORDINARY-IDIOMATIC-GO-SURFACE>
+    <RULE-CELLS fact="true" status="impl/done">Cells: one cell = one package under `internal/cells/&lt;name&gt;` with a
+  `New(...)` constructor as the surface; cells import seams + core
+  only, never sibling cells. `init()`, blank imports, and package-level
+  mutable state are banned in cells; capabilities (clock, env, net,
+  fs, randomness) are injected as narrow consumer-side interfaces.
+  Every cell carries `var _ Seam = (*Impl)(nil)`.</RULE-CELLS>
+    <RULE-CLOSED-SEAM-ERROR-SETS fact="true" status="impl/done">Each seam owns a closed, enumerated error set (`Code + Spec + Err`,
+  `errors.As`-consumed); error messages cite the violated `spec://`
+  REQ and a fix surface. Expected failures are never panics; panic is
+  the invariant-violation channel only. Exhaustive handling of closed
+  const-enum sets is carried by the `exhaustive` linter — the one rule
+  a linter carries entirely, named honestly.</RULE-CLOSED-SEAM-ERROR-SETS>
+    <RULE-OWNED-GOROUTINES fact="true" status="impl/done">Every goroutine has an owner (errgroup / WaitGroup + context); naked
+  `go` with cell-outliving lifetime is banned; `go test -race` gates
+  any package that starts one.</RULE-OWNED-GOROUTINES>
+    <RULE-EXAMPLE-PER-SEAM fact="true" status="impl/done">Every public seam carries one `Example` function (compiled AND run;
+  `// Output:` diffed). Replacing a non-trivial cell requires a
+  differential fuzz oracle with a committed seed corpus.</RULE-EXAMPLE-PER-SEAM>
+    <RULE-UNIFORMITY-IS-LOAD-BEARING fact="true" status="impl/done">Uniformity is load-bearing: one idiom per operation; exceptions are
+  marked (`//spec:deviates … reason`), or they propagate as false
+  training signal.</RULE-UNIFORMITY-IS-LOAD-BEARING>
+  </facts>
+  <p><shipped-toolchain-lead fact="true" status="impl/done">The shipped toolchain (this stack materialises it; no dev tree needed):</shipped-toolchain-lead></p>
+  <facts ordered="false">
+    <TOOLCHAIN-GO-AI-NATIVE-UMBRELLA fact="true" status="impl/done">`go-ai-native` — `init` (bootstrap policies + registries), `floor`
+  (gofmt→vet→test→staticcheck+exhaustive→conform→specmap→test-gate, one
+  exit code), `health` (the sweep's fact collector), `test-gate`
+  (xfail-strict over `go test -json`) / `tripwire` / `trace` /
+  `fast-loop` / `codemod`;</TOOLCHAIN-GO-AI-NATIVE-UMBRELLA>
+    <TOOLCHAIN-NARROW-ENGINES fact="true" status="impl/done">plus the narrow `go-ai-native-conform` and
+  `go-ai-native-specmap` engines,</TOOLCHAIN-NARROW-ENGINES>
+    <TOOLCHAIN-AGENTIC-TYPE-ORACLE fact="true" status="impl/done">and the agentic type oracle
+  `go-ai-native-tcg` (also served over MCP by
+  `mcp:org.vibevm.ai-native/go-ai-native-mcp` — PROP-027; persistent
+  enriching `serve` relay + one-shot `validate`/`scope`/`complete`/
+  `type`/`bench`: check an edit against in-memory overlays BEFORE
+  writing it, answered by the CONSUMER's own gopls with the SAME conform
+  rules as the gate — GUIDE §13, §14 move 5; prerequisites go ≥ 1.24 +
+  `go install golang.org/x/tools/gopls@latest`; honesty: gopls stands on
+  go/types, the reference implementation of the spec — tighter than
+  rust-analyzer↔rustc, still not the compiler; the floor stays the
+  truth).</TOOLCHAIN-AGENTIC-TYPE-ORACLE>
+  </facts>
+  <p><RUN-VIBE-NATIVELY-FROM-PATH-OR-IN-PLACE fact="true" status="impl/done">Run vibe-natively (`vibe bin exec go-ai-native -- &lt;args&gt;` —
+PROP-025 lockfile dispatch; `vibe bin build` pre-builds), from PATH
+(`cargo install --path vibedeps/&lt;stack-slot&gt;/crates/go-ai-native-cli`),
+or in place via `cargo run --manifest-path
+vibedeps/&lt;stack-slot&gt;/Cargo.toml -p go-ai-native-cli --bin
+go-ai-native -- &lt;args&gt;`.</RUN-VIBE-NATIVELY-FROM-PATH-OR-IN-PLACE></p>
+  <p><wiring-and-sweep-pointers fact="true" status="impl/done">Wiring recipe: GUIDE §14; sweep idioms:
+GUIDE §15.</wiring-and-sweep-pointers></p>
+  <p><PROCEDURES-AS-AGENT-SKILLS fact="true" status="impl/done">Procedures as agent skills: `/go-ai-native-sweep`
+(recurring), `/go-ai-native-terraform` (brownfield adoption) —
+`vibe skill install` projects them.</PROCEDURES-AS-AGENT-SKILLS></p>
+</spec>

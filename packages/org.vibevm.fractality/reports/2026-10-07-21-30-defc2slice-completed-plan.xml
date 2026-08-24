@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>DEF-C2 slice — COMPLETED plan dashboard</title>
+  <p>_2026-07-10 21:30. Plan identifier: `defc2slice` (closes the
+`…21-11-defc2slice-started-plan.md` stage). Narrative:
+[`2026-10-07-21-30-defc2slice-report.xml`](2026-10-07-21-30-defc2slice-report.xml);
+source of truth: the campaign plan's §15 + D5 (rewritten in place) +
+MT-C2-05._</p>
+  <section title="Final checklist">
+    <list ordered="false">
+      <item>[x] Owner rulings (`7a49159`): MT-C2-01…04 signed · RP2 ON ·
+      RP3 settings.local.json</item>
+      <item>[x] **DEF-C2-2a** — runner toolchain passthrough (rustup homes +
+      ProgramFiles family); repro-verified both layers
+      (`cargo test --no-run`: link-fail → link-clean)</item>
+      <item>[x] **DEF-C2-3** — cold-start board (no zero counters; route verb
+      first); 3 engine tests + live smoke on both surfaces</item>
+      <item>[x] **DEF-C2-1** — mid-work nudge: engine fn + PostToolUse
+      additionalContext + `midwork_nudges` knob + D5 rewrite;
+      staged smoke (fires at 7, cooldown at 8, switches silent);
+      P4 re-bench P95 50 ms</item>
+      <item>[x] **DEF-C2-2b (thin)** — the cold board is the credibility
+      slice MC can prove today; acceptance-backed full form stays
+      in §15</item>
+      <item>[x] **DEF-C2-4** — MT-C2-05 pre-registered (A′/B′ arms, PR1–PR3,
+      fatigue facts); **RP5 OPEN — unfired**</item>
+      <item>[x] floor green (159 tests + the new ones, conform 0, specmap
+      clean)</item>
+      <item>[x] commits grouped by meaning + slice report + this dashboard</item>
+      <item>[x] wind-down follows (WAL / CONTINUE / WORKSPACES + mirrors)</item>
+    </list>
+  </section>
+  <section title="Open at close">
+    <list ordered="false">
+      <item>**RP5** — authorization for MT-C2-05's paid arms (count/boss/
+  timing) — the next session's first decision if the owner wants
+  the re-run.</item>
+      <item>DEF-C2-2b-full — acceptance-schema work, next campaign.</item>
+    </list>
+  </section>
+</spec>

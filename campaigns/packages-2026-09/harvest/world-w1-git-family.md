@@ -32,7 +32,7 @@ what the snippet says it says* — is per-anchor and stays the reviewer's.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py
-boot-lane join over 31 contribution(s) in spec/boot/STATIC.md
+boot-lane join over 31 contribution(s) in spec/boot/STATIC.xml
   org.vibevm.world/git-atomic-commits  [INSTALLED NO-SOURCE]
     installed: vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md
   org.vibevm.world/git-autonomy  [INSTALLED NO-SOURCE]
@@ -56,10 +56,10 @@ declines to compare words.
 
 **Each of the four member flows appears TWICE in the host's boot lane** — once
 directly and once compiled in through the `git-practices` umbrella, whose installed
-tree carries a generated `spec/boot/STATIC.md` holding all four. That is **F-078**,
+tree carries a generated `spec/boot/STATIC.xml` holding all four. That is **F-078**,
 reproduced mechanically here rather than read: `atomic-commits`,
 `conventional-commits`, `autonomy` and `attribution-policy` are each read twice at
-every session boot, and `# Flow: Attribution Policy` sits at `spec/boot/STATIC.md`
+every session boot, and `# Flow: Attribution Policy` sits at `spec/boot/STATIC.xml`
 lines **423 and 617**.
 
 **One of the five resolves cleanly and four do not, and the split is worth

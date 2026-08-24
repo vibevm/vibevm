@@ -55,12 +55,12 @@ Two perimeter rules bind every figure in this file:
 1. [`BACKLOG.md` #b-007](../../../BACKLOG.md#b-007) in full — the question, the
    measurements, «what it unblocks».
 2. `packages/org.vibevm.world/decision-records/v0.1.0/spec/` in full: the boot
-   snippet [`25-flow-decision-records.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md),
-   [`DECISION-RECORDS-PROTOCOL.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md),
-   [`record-template.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md),
-   [`revisit-triggers.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md).
+   snippet [`25-flow-decision-records.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml),
+   [`DECISION-RECORDS-PROTOCOL.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml),
+   [`record-template.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml),
+   [`revisit-triggers.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml).
 3. The genre map: `spec-genres`'
-   [`SPEC-GENRES-PROTOCOL.md#genres`](../../../packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md)
+   [`SPEC-GENRES-PROTOCOL.xml#genres`](../../../packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml)
    and the host's instance, [`spec/design/README.md`](../../../spec/design/README.md)
    `##genre-table-lead`.
 4. The living practice: the `fractality` specspace's own decision blocks; this
@@ -126,13 +126,13 @@ python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
 
 | the 14 «complete records» | what the document actually is |
 |---|---|
-| `…/vibedeps/flow-decision-records/0.1.0/…/record-template.md` `#template` | the copy-ready template — the *shape*, with angle-bracket placeholders |
+| `…/vibedeps/flow-decision-records/0.1.0/…/record-template.xml` `#template` | the copy-ready template — the *shape*, with angle-bracket placeholders |
 | the same file `#fields` | the field table: «passes when / fails when» |
 | the same file `#example-timeout` | **the flow's own worked example** — a fictional 600 s VPN timeout |
 | the same file `#example-library` | **the flow's other worked example** — blake3 over SHA-256 |
-| `…/flow-decision-records/…/DECISION-RECORDS-PROTOCOL.md` `#four-fields` | the four-field definition table |
+| `…/flow-decision-records/…/DECISION-RECORDS-PROTOCOL.xml` `#four-fields` | the four-field definition table |
 | `…/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md` `#core-rule` | the boot snippet's copy of the same table |
-| `…/vibedeps/flow-comparative-research/0.1.0/…/from-research-to-roadmap.md` `#accepted` | a different flow's worked example |
+| `…/vibedeps/flow-comparative-research/0.1.0/…/from-research-to-roadmap.xml` `#accepted` | a different flow's worked example |
 
 Seven documents — **counted twice**, because two packages under
 `packages/org.vibevm.fractality/` each vendor the same flows
@@ -142,12 +142,12 @@ Seven documents — **counted twice**, because two packages under
 **Verified as vendored copies, not independent writing.** `diff` against the
 canonical package reports the vendored copies differ *only* by the Phase B
 progress markup (`<status>` elements and `##anchor` labels) that has never been
-published — the prose is the flow's. The vendored `record-template.md` still
+published — the prose is the flow's. The vendored `record-template.xml` still
 carries `**Decision:** 600 seconds.` at line 51 and `**Decision:** blake3 for
 every content hash.` at line 98.
 
 ```bash
-diff packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md \
+diff packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml \
      packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md
 ```
 
@@ -162,7 +162,7 @@ grep -rn "When to revisit\|Revisit when" packages/org.vibevm.fractality \
 ```
 
 Seven are `D-R1`…`D-R7` in
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md`
+`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml`
 §4; two are in `spec/refs/notes/rlm-runners-up-t3.md`. The dialect, verbatim
 (`D-R1`, lines 111–120):
 
@@ -193,21 +193,21 @@ owner's protocol.
 
 **The same shape contaminates one more published figure.** Of the census's
 «all of `spec/` **157 → 7**», one of the seven is
-`spec/boot/STATIC.md#core-rule` — the *same* boot-snippet table, compiled into
+`spec/boot/STATIC.xml#core-rule` — the *same* boot-snippet table, compiled into
 the host's static lane. Two more are in
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, this campaign's own
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, this campaign's own
 plan. **Four of the seven are host PROP/FEAT records; three are the
 specification of the practice, or the campaign writing about it.**
 
 ```bash
 python <scratchpad>/adr-census.py spec | awk -F'\t' '$5==1&&$6==1&&$7==1 {print $1":"$2"  #"$4}'
-# spec/boot/STATIC.md:252  #core-rule                    <- the flow's own table
-# spec/modules/vibe-cli/PROP-036-package-tree.md:88  #effective-load
-# spec/modules/vibe-progress/PROP-043-progress-markup.md:91  #element
-# spec/modules/vibe-progress/PROP-043-progress-markup.md:134  #stages
-# spec/modules/vibe-progress/PROP-043-progress-markup.md:243  #placement
-# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:93  #world-verdicts   <- this campaign
-# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:121  #ai-native-verdicts
+# spec/boot/STATIC.xml:252  #core-rule                    <- the flow's own table
+# spec/modules/vibe-cli/PROP-036-package-tree.xml:88  #effective-load
+# spec/modules/vibe-progress/PROP-043-progress-markup.xml:91  #element
+# spec/modules/vibe-progress/PROP-043-progress-markup.xml:134  #stages
+# spec/modules/vibe-progress/PROP-043-progress-markup.xml:243  #placement
+# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:93  #world-verdicts   <- this campaign
+# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:121  #ai-native-verdicts
 ```
 
 ### What this does to the question {#zero-consequence}
@@ -323,7 +323,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### R · `PROP-001` §2.5 `#freshness` — a measured threshold {#ex-ttl}
 
-`spec/modules/vibe-registry/PROP-001-git-backend.md:225,231`:
+`spec/modules/vibe-registry/PROP-001-git-backend.xml:225,231`:
 
 > @fact:FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked
 > against `meta.toml.last_pulled_at`. …
@@ -348,7 +348,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### R · `PROP-002` §2.8 `#solver` — a library pick with the record already written in prose {#ex-solver}
 
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.md:538,544,546`:
+`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:538,544,546`:
 
 > @fact:RESOLVO-PRIMARY **Decision.** The primary depsolver is the
 > [`resolvo`](https://crates.io/crates/resolvo) crate (pure Rust,
@@ -377,7 +377,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### R · `PROP-012` §2.2 `#markers` — a protocol shape with a named, declined alternative {#ex-markers}
 
-`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:58,60,61`:
+`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:58,60,61`:
 
 > @fact:BARE-TAGS **Decision.** The block is delimited by the literal **bare tags**
 > `<vibevm>` and `</vibevm>` …
@@ -400,7 +400,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-008` §2.2 `#identity` — definitional {#ex-identity}
 
-`spec/modules/vibe-registry/PROP-008-qualified-naming.md:59,63`:
+`spec/modules/vibe-registry/PROP-008-qualified-naming.xml:59,63`:
 
 > @fact:IDENTITY-TUPLE **Decision.** Package identity becomes
 > `(group, name, version, content_hash)`. `kind` **leaves the identity tuple**.
@@ -427,7 +427,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-000` §5 `#layout` — a pointer, not a decision {#ex-layout}
 
-`spec/common/PROP-000.md:77`:
+`spec/common/PROP-000.xml:77`:
 
 > - @fact:LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2.
 
@@ -439,7 +439,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-009` §2.9 `#uniform` — downstream of PROP-007 {#ex-uniform}
 
-`spec/modules/vibe-workspace/PROP-009-loading-model.md:148`:
+`spec/modules/vibe-workspace/PROP-009-loading-model.xml:148`:
 
 > @fact:UNIFORM-MODEL **Decision.** The loading model is uniform: a single-package
 > project is a degenerate (zero-member) workspace. `Workspace::discover` already
@@ -454,14 +454,14 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 ### Two calibration cases the corpus already settled for us {#ex-calibration}
 
 - **The host has already written a «not reopenable» verdict, in the flow's own
-  field.** `spec/common/PROP-000.md:23` — `@fact:LANG-REVISIT **When to revisit:**
+  field.** `spec/common/PROP-000.xml:23` — `@fact:LANG-REVISIT **When to revisit:**
   Never, in the scope of v1. If Rust proves inadequate for a future milestone,
   open a new PROP superseding this one.` By `##ROW-TRIGGER-LATER` that is a bad
   trigger; by §1 it is an **honest N1 classification wearing the trigger
   field**. Any option the owner picks should let a section say this without it
   reading as a defect.
 - **The host has already reopened a record correctly, unprompted.**
-  `spec/modules/vibe-index/PROP-005-package-index.md:820,822` —
+  `spec/modules/vibe-index/PROP-005-package-index.xml:820,822` —
   `##WORKSPACE-MEMBER **Decision (revised 2026-05-22).**` followed by
   `@fact:fold-in-why **Why this reverses the original standalone-workspace
   decision.** … It rotted silently against the M1.17 / M1.18 manifest-schema
@@ -498,7 +498,7 @@ python <scratchpad>/adr-census.py spec/common spec/modules \
   exactly** at 4, 7 and 14. The label offset is one row in each direction, so it
   is an instrument difference, not a disagreement: the most likely cause on the
   host side is the single `**Decision (revised 2026-05-22).**` variant at
-  `PROP-005-package-index.md:820` or a section carrying two Decision lines that
+  `PROP-005-package-index.xml:820` or a section carrying two Decision lines that
   the earlier pass counted once. **It changes no conclusion at this resolution**
   — the figures that carry the argument are the complete-record counts, and
   those are identical. Recorded so the next reader does not re-derive it.
@@ -627,14 +627,14 @@ PROP/FEAT that owns the decision, as a separate `spec/decisions/` genre, or as
 the four-field block the `decision-records` flow already prescribes»*.
 
 **The middle one is not open.** The flow is installed in this project (its boot
-snippet compiles into `spec/boot/STATIC.md`), and it forbids the silo in four
+snippet compiles into `spec/boot/STATIC.xml`), and it forbids the silo in four
 places:
 
-- `25-flow-decision-records.md:27` @fact:NO-SEPARATE-ADR-DIRECTORY — *«There is no
+- `25-flow-decision-records.xml:27` @fact:NO-SEPARATE-ADR-DIRECTORY — *«There is no
   separate ADR directory and no immutable numbered log.»* Line 29,
   @fact:GOVERNING-SPEC-SECTION-IS-THE-RECORD — *«The spec section that governs the
   value IS the record.»*
-- `DECISION-RECORDS-PROTOCOL.md` @fact:CONSEQUENCE-NO-ADR-DIRECTORY — *«No `adr/`
+- `DECISION-RECORDS-PROTOCOL.xml` @fact:CONSEQUENCE-NO-ADR-DIRECTORY — *«No `adr/`
   directory. The spec tree is the only home.»*
 - the same file's `#placement` table, ##ROW-ADR-SILO, which types
   `adr/0007-use-blake3.md` as the **classic** practice this protocol departs
@@ -662,7 +662,7 @@ therefore two live options, not three.
 ### 4.2 The recommended shape is already the host's house style {#house-style}
 
 **All four complete host records use one convention, and it is consistent
-4 for 4.** From `PROP-043-progress-markup.md:91-99` verbatim:
+4 for 4.** From `PROP-043-progress-markup.xml:91-99` verbatim:
 
 > @fact:DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.**
 >
@@ -695,7 +695,7 @@ has a house style, used four times, and it satisfies the flow's
 anchor.**
 
 **Two spellings are live and one should be pinned.** `PROP-043` writes
-`**Revisit when:**` three times; `PROP-036-package-tree.md:95` writes
+`**Revisit when:**` three times; `PROP-036-package-tree.xml:95` writes
 `**When to revisit:**`, which is the flow's own label
 (`##ROW-FIELD-WHEN-TO-REVISIT`). Both are already accepted by the census
 instrument, so nothing is mis-measured — but a corpus with two spellings for one
@@ -739,7 +739,7 @@ own map does not carry an ADR row today»*. **On reading the map, that is
 correct and deliberate: the map already places decision records as a
 *mutability*, not a genre.**
 
-`SPEC-GENRES-PROTOCOL.md#genres`, verbatim:
+`SPEC-GENRES-PROTOCOL.xml#genres`, verbatim:
 
 | Genre | Charter | Mutability | Reader | Authority |
 |---|---|---|---|---|
@@ -806,16 +806,16 @@ is `route: host`:**
 
 | obligation | anchors | what the host is measured against |
 |---|---:|---|
-| **F-197** | 3 | `25-flow-decision-records.md` — `#ANY-REOPENABLE-CHOICE-GETS-A-RECORD`, `#ASK-RATHER-THAN-INVENT-DATA`, `#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER` |
-| **F-198** | 3 | `DECISION-RECORDS-PROTOCOL.md` — `#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS`, `#ROW-FIELD-WHEN-TO-REVISIT`, `#SUM-FOUR-FIELDS-ALWAYS` |
+| **F-197** | 3 | `25-flow-decision-records.xml` — `#ANY-REOPENABLE-CHOICE-GETS-A-RECORD`, `#ASK-RATHER-THAN-INVENT-DATA`, `#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER` |
+| **F-198** | 3 | `DECISION-RECORDS-PROTOCOL.xml` — `#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS`, `#ROW-FIELD-WHEN-TO-REVISIT`, `#SUM-FOUR-FIELDS-ALWAYS` |
 | **F-224** | 2 | the `When to revisit` field definition, in the snippet and the template |
-| **F-225** | 1 | `record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER` |
+| **F-225** | 1 | `record-template.xml#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER` |
 | **F-299** | 1 | `decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR` |
 | **F-233** | 2 | `#COMPOSES-DECISION-RECORDS` in **`git-attribution-policy`** and **`source-mirrors`** — two *other* packages whose composition claim the host also fails |
 
 **One thing no option closes, named so nothing is credited with it.** F-224 also
 carries a **package-side self-falsifier**, recorded in `routing.json` and not yet
-worked: `record-template.md:45` defines the trigger as *«metric + threshold +
+worked: `record-template.xml:45` defines the trigger as *«metric + threshold +
 observation point»* while its own `#example-library`, twelve lines below, ships a
 pure event trigger as the correct model. `PHASE-D-HOST-OBLIGATIONS.md#weight`
 lists it among the three that are *«a one-line host fix rather than a ruling»* —

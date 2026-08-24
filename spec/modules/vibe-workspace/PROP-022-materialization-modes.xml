@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-022 — Materialization modes</title>
+  <status stage="impl" state="done" comment="C 2026-07-25: the Materialization system ships (enum + doctests + install machinery + destructive guard); motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
+session; verified against the tree 2026-07-25 by the spec-actualization
+campaign). The `Materialization` enum ships with `Copy` as the default (wire `copy`; named `Snapshot`/`snapshot` until the 2026-08-13 terminology ruling),
+`InPlace` beside it and a doctested `is_in_place` (`vibe-core` `package.rs`); the
+hardlink / in-place machinery runs through `vibe-install` (`plan.rs` /
+`fetched.rs` / `apply.rs`, the `materialise_in_place` seam); submodule
+snapshot-embedding lands in `git_package_registry/fetch.rs`; and the destructive
+guard sits in `commands/uninstall.rs`. One of four orthogonal specs from the
+bridge-packages design (siblings:
+[PROP-020](PROP-020-install-hooks.xml) install hooks,
+[PROP-021](../vibe-registry/PROP-021-submodule-sources.xml) submodule sources,
+[PROP-023](../vibe-registry/PROP-023-bridge-packages.xml) bridge packages).
+Materialization mode is a property of *any* package; a huge git package wants
+`in-place` with no bridge in sight.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-009](PROP-009-loading-model.xml) (the materialise step into
+`vibedeps/`), [PROP-007](PROP-007-workspace.xml) (`vibedeps/` layout),
+[PROP-010](../vibe-registry/PROP-010-local-package-cache.xml) (the live-git
+cache + `.git`-stripped content tree the copy modes draw from),
+[PROP-019 §2.15](../../common/PROP-019-version-manager.xml#instances) (the VVM
+`placer` diff-copy/hardlink — direct prior art for `hardlink`),
+[PROP-019 §2.16](../../common/PROP-019-version-manager.xml#provenance) (VVM
+"sources by reference" — prior art for `in-place`),
+[PROP-020 §2.1](PROP-020-install-hooks.xml#phases) (hook-edit reset rides on the
+mode).</related></p>
+  <motivation title="1. Motivation">
+    <problem title="1.1 The problem — one materialisation policy does not fit every package">
+      <facts ordered="false">
+        <today-single-policy fact="true" status="impl/done">Today every package is materialised the same way: clone into the live-git
+  cache, strip `.git` into a content tree, then **full recursive copy** of that tree
+  into the `vibedeps/&lt;group&gt;.&lt;name&gt;/&lt;version&gt;/` slot (identity-keyed — owner ruling 2026-08-13; the slot carried `&lt;kind&gt;-&lt;name&gt;` before that ruling, which collided same-named packages of different groups and moved a package on a kind change).</today-single-policy>
+        <snapshot-right-for-ordinary fact="true" status="impl/done">This is right for ordinary
+  packages and gives the lockfile a stable `content_hash` and a committable,
+  offline-reproducible vendored slot.</snapshot-right-for-ordinary>
+      </facts>
+      <p><two-scales-lead fact="true" status="spec/done">It fails at two different scales of "big":</two-scales-lead></p>
+      <facts ordered="true">
+        <BIG-IN-BYTES fact="true" status="spec/done">**Big in bytes** — a package with a few large binary assets pays a full byte
+   copy per install/update of data that did not change.</BIG-IN-BYTES>
+        <BIG-IN-FILE-COUNT fact="true" status="spec/done">**Big in file count** — a package with *millions* of small files (think the
+   Chromium source tree) is killed not by bytes but by **per-file syscalls**:
+   copying — or even hardlinking — five million files takes hours, barely
+   faster than re-fetching over the network. The full-tree walk (`content_hash`
+   reads every file too) is itself the cost.</BIG-IN-FILE-COUNT>
+      </facts>
+      <p><FIX-DECLARED-MODE fact="true" status="impl/done">The fix is to make materialisation a **declared mode** on the package, and to
+borrow the two cost-avoidance primitives VVM already proved
+([PROP-019 §2.15/§2.16](../../common/PROP-019-version-manager.xml#instances)).</FIX-DECLARED-MODE></p>
+    </problem>
+  </motivation>
+  <decisions title="2. Decisions">
+    <modes title="2.1 Three modes, declared in the descriptor">
+      <p><req-modes fact="true" status="impl/done">`req r1`</req-modes></p>
+      <p><MODE-FIELD fact="true" status="impl/done">`[package].materialization` selects how the package lands on disk:</MODE-FIELD></p>
+      <fence lang="toml">[package]
+materialization = "copy"       # default | "hardlink" | "in-place"</fence>
+      <facts ordered="false">
+        <SNAPSHOT-DEFAULT fact="true" status="impl/done">`copy` is the default and the only mode an ordinary package needs. (It was named `snapshot` until the owner's 2026-08-13 terminology ruling reserved that word for the unfrozen version — PROP-044 §2b; the legacy spelling is refused with the rename recipe, never aliased.)</SNAPSHOT-DEFAULT>
+        <MODE-IN-DESCRIPTOR fact="true" status="impl/done">The
+  mode is published in the descriptor so a consumer sees, before installing, how
+  a package will be placed.</MODE-IN-DESCRIPTOR>
+      </facts>
+    </modes>
+    <snapshot title="2.2 `copy` — the vendored full copy (default)">
+      <p><req-snapshot fact="true" status="impl/done">`req r1`</req-snapshot></p>
+      <facts ordered="false">
+        <SNAPSHOT-PIPELINE fact="true" status="impl/done">The status quo: live-git cache → `.git`-stripped content tree → full
+  recursive copy into the slot.</SNAPSHOT-PIPELINE>
+        <STRIP-EXTENDED fact="true" status="impl/done">[PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.xml#shippable-tree)
+  extends the `.git` strip to build output (`.vibe/`, `target/`, `node_modules/`,
+  `.vibeignore` globs) for code-bearing packages, so such a package vendors its
+  source, never its build artifacts.</STRIP-EXTENDED>
+        <SLOT-SELF-CONTAINED fact="true" status="impl/done">The slot is a self-contained tree, identified by
+  `content_hash` (§2.5), vendored into the project's git (§2.7).</SLOT-SELF-CONTAINED>
+        <SUBMODULE-EMBEDDED fact="true" status="impl/done">Submodule
+  content is embedded into the copied tree
+  ([PROP-021 §2.3](../vibe-registry/PROP-021-submodule-sources.xml#snapshot-embedding)).</SUBMODULE-EMBEDDED>
+        <HOOK-RESET-REMATERIALISE fact="true" status="impl/done">A hook's edits are reset on update by re-materialising the slot from cache
+  (network-free).</HOOK-RESET-REMATERIALISE>
+      </facts>
+    </snapshot>
+    <hardlink title="2.3 `hardlink` — per-file hardlink, copy on change">
+      <p><req-hardlink fact="true" status="impl/done">`req r1`</req-hardlink></p>
+      <facts ordered="false">
+        <HARDLINK-MODE fact="true" status="impl/done">For packages **big in bytes but modest in file count**. Instead of copying
+  file bytes, materialise hardlinks each file from the cached content tree into the
+  slot; on update, only changed files are re-linked, the rest are left — the VVM
+  `placer` algorithm ([PROP-019 §2.15](../../common/PROP-019-version-manager.xml#instances)):
+  a per-file manifest of `(rel, size, mtime, hash-for-small-files)`, large files
+  compared by `(size, mtime)` only (never read).</HARDLINK-MODE>
+        <HARDLINK-FALLBACK fact="true" status="impl/done">A hardlink that fails
+  (cross-volume / unsupported filesystem) falls back to copy.</HARDLINK-FALLBACK>
+        <HARDLINK-CONTRACT fact="true" status="impl/done">The slot still presents a **full tree** (the contract is unchanged from
+  `snapshot`); identity stays `content_hash`, computed cheaply via the manifest
+  for large files.</HARDLINK-CONTRACT>
+        <HARDLINK-NOT-GIANT fact="true" status="impl/done">This mode does **not** help the file-count case — the per-file
+  syscall remains — so it is not the giant-repo answer (§2.4 is).</HARDLINK-NOT-GIANT>
+      </facts>
+    </hardlink>
+    <in-place title="2.4 `in-place` — git-native, project-local, no copy">
+      <p><req-in-place fact="true" status="impl/done">`req r1`</req-in-place></p>
+      <p><IN-PLACE-LEAD fact="true" status="impl/done">For packages **big in file count** (and incidentally bytes), where even one
+full tree walk is unacceptable. vibevm never walks the tree:</IN-PLACE-LEAD></p>
+      <facts ordered="false">
+        <IP-CLONE-DIRECT fact="true" status="impl/done">**`git clone --recurse-submodules` lands directly in the slot**, bypassing
+  both the cache clone and the snapshot copy — **one** physical copy on the
+  machine, not three (decisive when disk cannot hold several copies of a giant).</IP-CLONE-DIRECT>
+        <IP-GIT-MANAGES fact="true" status="impl/done">**git manages it in place**: update is `git fetch` + checkout (incremental,
+  touches only changed objects/files); a hook's edits are reset with
+  `git clean -dfx` in the slot.</IP-GIT-MANAGES>
+        <IP-PROJECT-LOCAL fact="true" status="impl/done">**Project-local, never shared.** Each project gets its own clone in its own
+  `vibedeps/`; there is deliberately no cross-project sharing, which removes
+  the concurrent-mutation problem a shared global clone would create.</IP-PROJECT-LOCAL>
+        <IP-UNVERSIONED-PATH fact="true" status="impl/done">**The slot path is not version-qualified.** An `in-place` slot is
+  `vibedeps/&lt;group&gt;.&lt;name&gt;/` (no `/&lt;version&gt;/`): one working clone whose version
+  is the current git ref. Versioning the path would mean two on-disk copies of
+  the giant — the opposite of the goal.</IP-UNVERSIONED-PATH>
+        <IP-REQUIRES-GIT fact="true" status="impl/done">**Requires a git source.** Incremental update and `git clean` reset both need
+  git; a non-git source has no `in-place` story (§4).</IP-REQUIRES-GIT>
+      </facts>
+    </in-place>
+    <identity title="2.5 Identity follows the mode">
+      <p><req-identity fact="true" status="impl/done">`req r1`</req-identity></p>
+      <facts ordered="false">
+        <ID-COPY-MODES fact="true" status="impl/done">**`copy` / `hardlink`** — `content_hash` over the slot tree (the existing
+  identity), `hardlink` computing it cheaply via the diff manifest.</ID-COPY-MODES>
+        <ID-IN-PLACE fact="true" status="impl/done">**`in-place`** — **`resolved_commit`**, not `content_hash`. The slot is a
+  mutable git working tree (hooks edit it), so a content hash is neither stable
+  nor affordable to compute; the git commit *is* the identity, known in O(1).
+  The lockfile already records `resolved_commit`, so no new field is needed.</ID-IN-PLACE>
+      </facts>
+    </identity>
+    <destructive-guard title="2.6 Destructive operations on an `in-place` slot need confirmation">
+      <p><req-destructive fact="true" status="impl/done">`req r1`</req-destructive></p>
+      <facts ordered="false">
+        <DESTRUCTIVE-CONFIRM fact="true" status="impl/done">An `in-place` slot may be a multi-hour download. Any **destructive** operation
+  on it — `uninstall`, `reinstall --force`, a version switch that requires a
+  re-clone, or slot removal — must be confirmed: interactively a `y/n`, and in a
+  non-interactive run it requires an explicit flag (`--force`) or it **aborts**
+  rather than silently deleting an expensive resource.</DESTRUCTIVE-CONFIRM>
+        <HOOKS-EXEMPT fact="true" status="impl/done">**Hooks and their reset
+  (`git clean -dfx`) are exempt** — they are routine and trusted (the hook author
+  is assumed competent, [PROP-020](PROP-020-install-hooks.xml)).</HOOKS-EXEMPT>
+        <GUARD-PURPOSE fact="true" status="impl/done">The guard
+  protects against accidental loss, not against the package's own lifecycle.</GUARD-PURPOSE>
+      </facts>
+    </destructive-guard>
+    <vendoring title="2.7 Vendoring differs by mode">
+      <p><req-vendoring fact="true" status="impl/done">`req r1`</req-vendoring></p>
+      <facts ordered="false">
+        <VENDORED-COPY-MODES fact="true" status="impl/done">**`copy` / `hardlink`** are vendored — the slot is committed into the
+  project's git and is offline-reproducible from it (a `hardlink` slot's bytes
+  are materialised into git on `git add` like any file); a `copy` slot trivially so.</VENDORED-COPY-MODES>
+        <IN-PLACE-NOT-VENDORED fact="true" status="impl/done">**`in-place`** is **not** vendored — the slot (a nested `.git` plus possibly
+  millions of files) is `.gitignore`d in the project; restoration is a re-clone
+  at the lockfile's `resolved_commit`. The honest trade: `in-place` packages
+  need the network to restore, where `snapshot` packages do not.</IN-PLACE-NOT-VENDORED>
+      </facts>
+    </vendoring>
+  </decisions>
+  <rejected title="3. Rejected alternatives">
+    <facts ordered="false">
+      <REJ-HASH-IN-PLACE fact="true" status="spec/done">**Content-hashing an `in-place` package** — rejected for the same reason VVM
+  rejected hashing distributions ([PROP-019 §9.2](../../common/PROP-019-version-manager.xml#rationale-no-hash)):
+  hashing millions of files / gigabytes per operation is prohibitive, and the
+  tree is mutable anyway. Identity is the commit (§2.5).</REJ-HASH-IN-PLACE>
+      <REJ-SHARED-GLOBAL-CLONE fact="true" status="spec/done">**A shared global `in-place` clone** (like the registry cache) — rejected:
+  two projects mutating one giant working tree via hooks would collide;
+  project-local clones make the problem disappear (§2.4).</REJ-SHARED-GLOBAL-CLONE>
+      <REJ-HARDLINK-FOR-GIANTS fact="true" status="spec/done">**Hardlink as the giant-repo answer** — rejected: per-file syscalls still
+  cost hours at millions of files; only `in-place` (no per-file work) solves
+  the file-count axis (§2.4).</REJ-HARDLINK-FOR-GIANTS>
+      <REJ-REFLINK fact="true" status="spec/done">**reflink / CoW placement** — deferred (§4): not portable; hardlink is the
+  portable byte-sharing primitive, matching VVM's choice.</REJ-REFLINK>
+    </facts>
+  </rejected>
+  <out-of-scope title="4. Out of scope">
+    <facts ordered="false">
+      <OOS-REFLINK fact="true" status="spec/done">**reflink / CoW** placement where the filesystem supports it — far-backlog,
+  as in [PROP-019 §6](../../common/PROP-019-version-manager.xml#far-backlog).</OOS-REFLINK>
+      <OOS-NON-GIT-IN-PLACE fact="true" status="spec/done">**`in-place` for a non-git source** — needs git for incremental update and
+  `git clean` reset; a binary/path source has no `in-place` mode.</OOS-NON-GIT-IN-PLACE>
+      <OOS-CACHE-GC fact="true" status="spec/done">**Automatic cache garbage collection** for the live-git cache — owned by
+  [PROP-010](../vibe-registry/PROP-010-local-package-cache.xml).</OOS-CACHE-GC>
+    </facts>
+  </out-of-scope>
+  <acceptance title="5. Acceptance">
+    <facts ordered="false">
+      <ACC-FIELD-PARSES fact="true" status="impl/done">`[package].materialization` parses to `copy` (default) / `hardlink` /
+  `in-place`; an unknown value is a manifest error, and the legacy `snapshot`
+  is refused with the rename recipe.</ACC-FIELD-PARSES>
+      <ACC-MODE-BEHAVIORS fact="true" status="impl/done">`copy` behaves exactly as today; `hardlink` shares unchanged files by
+  link with copy fallback and presents a full tree; `in-place` clones once into
+  an unversioned, `.gitignore`d slot managed by git.</ACC-MODE-BEHAVIORS>
+      <ACC-IN-PLACE-IDENTITY fact="true" status="impl/done">`in-place` identity is `resolved_commit`; no full-tree hash is computed.</ACC-IN-PLACE-IDENTITY>
+      <ACC-DESTRUCTIVE-GUARD fact="true" status="impl/done">A destructive op on an `in-place` slot confirms interactively / requires
+  `--force` non-interactively; hooks and `git clean` are exempt.</ACC-DESTRUCTIVE-GUARD>
+      <ACC-FLOOR-GREEN fact="true" status="impl/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
+    </facts>
+  </acceptance>
+</spec>

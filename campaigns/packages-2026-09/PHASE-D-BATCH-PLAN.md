@@ -7,12 +7,12 @@ view is [`OBLIGATIONS.md`](OBLIGATIONS.md). This document is the reasoning
 around them._
 
 Governing contract:
-[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-d](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d),
+[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-d](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#phase-d),
 which says *«same obligation types, same loop-until-dry waves, same escalation
 rule»* and points at wave 1's mechanics:
-[spec://org.vibevm.core/vibevm/terraforms/spec-actualization#phase-d](../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d).
+[spec://org.vibevm.core/vibevm/terraforms/spec-actualization#phase-d](../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml#phase-d).
 The SPEC-task shape is
-[`spec/modules/vibe-progress/templates/spec-task.md`](../../spec/modules/vibe-progress/templates/spec-task.md)
+[`spec/modules/vibe-progress/templates/spec-task.xml`](../../spec/modules/vibe-progress/templates/spec-task.xml)
 and is not restated here.
 
 **Every number in this document came from a command.** Reproduce the whole
@@ -259,7 +259,7 @@ the LOG stops minting ids in prose — a Phase F or close-out job.
 shipped package says one thing and the host does another, *which side changes?*
 Get it wrong in the easy direction and Phase D quietly rewrites the discipline to
 describe a lax consumer — which is, in the owner's own word, the *профанация*
-[§0](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#mandate)
+[§0](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#mandate)
 exists to prevent. The mandate's acceptance criterion is that «the discipline can
 be shown to hold itself to its own rule», so the default runs the other way.
 
@@ -541,7 +541,7 @@ What is delegated and what is not:
   the boss reads the diff and decides.
 - **Every brief cites durable files only** — `CLAUDE.md`, `spec/boot/**`,
   `spec/common/**`, `spec/modules/**`, `crates/` — and **never `CONTINUE.md` or
-  `spec/WAL.md`**, which every wind-down rewrites wholesale. Phase C ran the
+  `spec/WAL.xml`**, which every wind-down rewrites wholesale. Phase C ran the
   controlled experiment: the one batch written before that rule carries 116 dead
   refs today; every batch written under it verifies clean.
 - **Every brief names the exact output paths and says to flush one file at a

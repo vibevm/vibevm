@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-021 — Submodule sources</title>
+  <status stage="impl" state="done" comment="C 2026-07-25: submodule sources ship (recurse clone/update + snapshot embedding + in-place native); motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
+session; verified against the tree 2026-07-25 by the spec-actualization
+campaign). The git backend clones with `--recurse-submodules` and runs
+`submodule update --init --recursive`, snapshot embedding lands in
+`git_package_registry/fetch.rs`, the in-place native form rides the PROP-022
+machinery, and `resolved_commit` carries lockfile reproducibility. One of four
+orthogonal specs from the bridge-packages design (siblings:
+[PROP-020](../vibe-workspace/PROP-020-install-hooks.xml) install hooks,
+[PROP-022](../vibe-workspace/PROP-022-materialization-modes.xml) materialization
+modes, [PROP-023](PROP-023-bridge-packages.xml) bridge packages). Submodules
+serve any package that wants to embed another repository — not only bridges.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-001](PROP-001-git-backend.xml) (the git backend whose clone
+gains `--recurse-submodules`), [PROP-002](PROP-002-decentralized-registry.xml)
+(one git repo = one package — a submodule is *not* a second package),
+[PROP-010](PROP-010-local-package-cache.xml) (the live-git cache the submodule
+is fetched into), [PROP-022 §2](../vibe-workspace/PROP-022-materialization-modes.xml)
+(how submodule content reaches the slot differs by mode),
+[PROP-003](../vibe-resolver/PROP-003-dep-evolution.xml) (the dependency grammar
+the future dependency-declared form would extend).</related></p>
+  <motivation title="1. Motivation">
+    <problem title="1.1 The problem — embedded repos do not come along">
+      <facts ordered="false">
+        <two-embed-ways fact="true" status="spec/done">A package may want to carry another repository inside it. Git offers two ways:
+  a **submodule** (a reference — `.gitmodules` + a pinned gitlink commit) or a
+  **vendored copy** ("git in git" — the foreign tree committed into the package).</two-embed-ways>
+        <vendored-works fact="true" status="spec/done">The vendored case already works: it is just files in the package tree.</vendored-works>
+        <submodule-broken fact="true" status="impl/done">The submodule case does **not** — vibevm's clone is a bare
+  `git clone --branch &lt;ref&gt;` ([PROP-001](PROP-001-git-backend.xml)) with no
+  `--recurse-submodules`, and the `.git`-stripping materialise copies the empty
+  submodule stub. The referenced content silently never arrives.</submodule-broken>
+      </facts>
+      <facts ordered="false">
+        <forcing-case-bridges fact="true" status="spec/done">The forcing case is bridge packages ([PROP-023](PROP-023-bridge-packages.xml)),
+  where a maintainer submodules the upstream repo they steward.</forcing-case-bridges>
+        <mechanism-general fact="true" status="spec/done">But the mechanism
+  is general: any package may legitimately embed a pinned dependency repo.</mechanism-general>
+      </facts>
+    </problem>
+    <what title="1.2 What this is — submodule as a first-class embedded source">
+      <p><WHAT-VVM-DOES fact="true" status="impl/done">vibevm fetches a package's submodules when it fetches the package, updates them
+when it updates the package, and makes the submodule content available wherever
+the package is materialised — embedded into the snapshot for the
+copy-based modes, or living natively for `in-place`
+([PROP-022](../vibe-workspace/PROP-022-materialization-modes.xml)).</WHAT-VVM-DOES></p>
+    </what>
+  </motivation>
+  <decisions title="2. Decisions">
+    <fetch title="2.1 Fetch and update recurse into submodules">
+      <p><req-fetch fact="true" status="impl/done">`req r1`</req-fetch></p>
+      <p><RECURSE-LEAD fact="true" status="impl/done">The git backend's bootstrap and update recurse:</RECURSE-LEAD></p>
+      <facts ordered="false">
+        <BOOTSTRAP-RECURSE fact="true" status="impl/done">**Bootstrap** — `git clone --recurse-submodules --branch &lt;ref&gt; -- &lt;url&gt;
+  &lt;dest&gt;`. The clone lands in the live-git cache
+  ([PROP-010](PROP-010-local-package-cache.xml)) with submodule working trees
+  populated.</BOOTSTRAP-RECURSE>
+        <UPDATE-RECURSE fact="true" status="impl/done">**Update** — after the existing `fetch --prune --tags` + `reset --hard
+  &lt;ref&gt;`, run `git submodule update --init --recursive` so the gitlink commits
+  the new superproject ref points at are checked out. (A removed submodule is
+  pruned by the reset; a moved one re-inits.)</UPDATE-RECURSE>
+      </facts>
+      <p><APPLIES-BOTH-CLONES fact="true" status="impl/done">This applies identically to the registry cache clone and to an `in-place`
+slot clone ([PROP-022 §2.4](../vibe-workspace/PROP-022-materialization-modes.xml#in-place)).</APPLIES-BOTH-CLONES></p>
+    </fetch>
+    <source-abstraction title="2.2 Submodule is an abstract embedded source — git now, dependency later">
+      <p><req-source-abstraction fact="true" status="impl/done">`req r1`</req-source-abstraction></p>
+      <p><EMBEDDED-SOURCE-MODEL fact="true" status="impl/done">A submodule is modelled as an **embedded source**: content that lives at a
+subpath of the package and is resolved from elsewhere. There are two
+declaration forms:</EMBEDDED-SOURCE-MODEL></p>
+      <facts ordered="false">
+        <FORM-GIT-NATIVE fact="true" status="impl/done">**git-native** (`.gitmodules`) — the only form **implemented now**. vibevm
+  reads no `.gitmodules` itself; git does, via §2.1.</FORM-GIT-NATIVE>
+        <FORM-DEPENDENCY-DECLARED fact="true" status="spec/done">**dependency-declared** (future) — a package's manifest names an embedded
+  source in its dependency section, so a submodule can be expressed even for a
+  package whose own distribution is not a live git checkout (e.g. a future
+  binary package). This form is **specified as the extension point and
+  stubbed**, not built (§4) — the abstraction exists so the git path is not a
+  one-off.</FORM-DEPENDENCY-DECLARED>
+      </facts>
+      <p><NOT-A-PACKAGE fact="true" status="impl/done">Either way, the embedded repo is **not** a second vibevm package: it is git
+content, never entered into the dependency resolver
+([PROP-002](PROP-002-decentralized-registry.xml): one git repo = one package;
+the submodule is part of *this* package's content, not a node).</NOT-A-PACKAGE></p>
+    </source-abstraction>
+    <snapshot-embedding title="2.3 Snapshot materialisation embeds the submodule content">
+      <p><req-snapshot-embedding fact="true" status="impl/done">`req r1`</req-snapshot-embedding></p>
+      <p><MODE-DEPENDENT fact="true" status="impl/done">How submodule content reaches the slot depends on the materialization mode
+([PROP-022](../vibe-workspace/PROP-022-materialization-modes.xml)):</MODE-DEPENDENT></p>
+      <facts ordered="false">
+        <EMBED-SNAPSHOT fact="true" status="impl/done">**`snapshot` / `hardlink`** — the submodule's checked-out working tree is
+  copied into the slot as ordinary files; nested `.git` directories and gitlink
+  pointers are stripped (the same exclusion the top-level `.git` already gets).
+  The submodule content is thus **vendored into the snapshot** and participates
+  in the package `content_hash`.</EMBED-SNAPSHOT>
+        <EMBED-IN-PLACE fact="true" status="impl/done">**`in-place`** — nothing is copied; the submodule lives natively inside the
+  slot's own git checkout, managed by git (§2.1).</EMBED-IN-PLACE>
+      </facts>
+    </snapshot-embedding>
+    <lock title="2.4 The lockfile pins submodule state via the superproject commit">
+      <p><req-lock fact="true" status="impl/done">`req r1`</req-lock></p>
+      <facts ordered="false">
+        <LOCK-VIA-SUPERPROJECT fact="true" status="impl/done">Reproducibility rides on the package's `resolved_commit` already recorded in
+  the lockfile: a superproject commit fixes the exact gitlink commit of every
+  submodule, so a re-clone at `resolved_commit` with `--recurse-submodules`
+  reconstructs byte-identical submodule content. No new lockfile field is
+  required for the git-native form.</LOCK-VIA-SUPERPROJECT>
+        <future-per-sub-pins fact="true" status="spec/done">Explicit per-submodule pins are a possible
+  future refinement, tied to the dependency-declared form of §2.2.</future-per-sub-pins>
+      </facts>
+    </lock>
+  </decisions>
+  <rejected title="3. Rejected alternatives">
+    <facts ordered="false">
+      <REJ-RESOLVE-AS-PACKAGE fact="true" status="spec/done">**Resolving a submodule as a vibevm package** through the depsolver —
+  rejected: it is git content under one package, not a registry node; treating
+  it as a node would double-count identity and break PROP-002's one-repo /
+  one-package rule.</REJ-RESOLVE-AS-PACKAGE>
+      <REJ-SHALLOW-DEFAULT fact="true" status="spec/done">**Shallow submodule clones (`--depth 1`) by default** — rejected as the
+  default: a shallow submodule can miss the exact gitlink commit and fail
+  checkout; depth control is a possible opt-in, not the baseline.</REJ-SHALLOW-DEFAULT>
+      <REJ-PARSE-GITMODULES fact="true" status="spec/done">**vibevm parsing `.gitmodules` itself** — rejected: git already resolves
+  submodules correctly across auth and nesting; reimplementing it would be a
+  fragile re-do of solved work.</REJ-PARSE-GITMODULES>
+    </facts>
+  </rejected>
+  <out-of-scope title="4. Out of scope">
+    <facts ordered="false">
+      <OOS-DEPENDENCY-FORM fact="true" status="spec/done">**The dependency-declared submodule form** (§2.2) — specified as the
+  extension point, not implemented. It waits on a real consumer (binary /
+  non-git packages), per the owner's "spec the abstraction, build only the git
+  path" direction.</OOS-DEPENDENCY-FORM>
+      <OOS-NON-GIT-SOURCES fact="true" status="spec/done">**Submodules under non-git package sources** — a path- or future
+  binary-source package has no git context to recurse; embedded sources there
+  await the dependency-declared form.</OOS-NON-GIT-SOURCES>
+      <OOS-RECURSIVE-RESOLUTION fact="true" status="spec/done">**Recursive vibevm resolution inside a submodule** — a submodule's own
+  `vibe.toml`, if any, is not honoured; the submodule is opaque content.</OOS-RECURSIVE-RESOLUTION>
+    </facts>
+  </out-of-scope>
+  <acceptance title="5. Acceptance">
+    <facts ordered="false">
+      <ACC-CLONE-POPULATED fact="true" status="impl/done">A package whose repo declares a submodule is cloned with its submodule
+  working tree populated; `update` re-checks-out submodule content for the new
+  superproject ref.</ACC-CLONE-POPULATED>
+      <ACC-SNAPSHOT-FILES fact="true" status="impl/done">Under `snapshot`/`hardlink`, submodule content appears in the slot as plain
+  files with no nested `.git`; it contributes to `content_hash`.</ACC-SNAPSHOT-FILES>
+      <ACC-IN-PLACE-NATIVE fact="true" status="impl/done">Under `in-place`, the submodule lives natively in the slot's git checkout.</ACC-IN-PLACE-NATIVE>
+      <ACC-LOCK-REPRODUCES fact="true" status="impl/done">Re-cloning at the lockfile's `resolved_commit` reconstructs identical
+  submodule content with no extra lockfile field.</ACC-LOCK-REPRODUCES>
+      <ACC-VENDORED-UNCHANGED fact="true" status="impl/done">A vendored ("git in git") package needs none of this — it is plain files and
+  installs unchanged.</ACC-VENDORED-UNCHANGED>
+      <ACC-FLOOR-GREEN fact="true" status="impl/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
+    </facts>
+  </acceptance>
+</spec>

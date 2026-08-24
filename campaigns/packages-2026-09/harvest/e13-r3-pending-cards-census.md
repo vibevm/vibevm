@@ -12,7 +12,7 @@ language package. "Not found" is stated as an explicit fact with a count.
 
 ### Card schema (mandatory sections / fields)
 
-Source: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md`.
+Source: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`.
 A card has three bands; every field below is a load-bearing section. The
 authoring stub is `:65-94`.
 
@@ -54,7 +54,7 @@ and `<doc>` ∈ {`guide`, `cards/<card-name>`}. Examples:
 
 ### The seven pending cards (verbatim, format doc)
 
-`01-PATTERN-CARD-FORMAT.md:7` names seven cards "listed by name under 'Pending
+`01-PATTERN-CARD-FORMAT.xml:7` names seven cards "listed by name under 'Pending
 cards (named, not yet authored)' in every stack's index":
 
 1. `rule-closed-vocabulary-naming`
@@ -145,7 +145,7 @@ Four live rules and the URI each emits:
   (`structure.rs:218`) → file exists, but `#ops` does **not**: that card authors
   Band 3 as anchored prose (`##TRIGGER` `:65`, `##MODE` `:67`, `##ROUTINE-*` `:70-76`)
   with **no** ` ```card-ops ` fence (grep `card-ops` in that file → 0). This is the
-  divergence `01-PATTERN-CARD-FORMAT.md:41` already annotates.
+  divergence `01-PATTERN-CARD-FORMAT.xml:41` already annotates.
 
 Net: URIs are citations, not machine-resolved references; the conform engine never
 verifies that a cited card or anchor exists.
@@ -159,12 +159,12 @@ verifies that a cited card or anchor exists.
 - `BACKLOG.md:888,892,893,898` — B-038 entry (R-060 = "тест-матрицы объявляются
   данными, никогда полный перебор 2^n").
 - `crates/vibe-cli/src/registry.rs:65` — `/// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.`
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:127`
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:127`
   — `##DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL *(R-060, retained.)* Declared test matrices, never \`2^n\`.`
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:233`
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233`
   — `##MATRIX-IS-AUTHORED-DATA … (R-060, projected).` (also `##TEST-MATRICES-ARE-DECLARED`
   and `##MATRIX-TOOLING` at `:231` region).
-- `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2669,4436`; `TOOLING-MAP.md:41`;
+- `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2669,4436`; `TOOLING-MAP.md:41`;
   `CONTINUE.md:57`; campaign harvest docs (`campaigns/packages-2026-09/harvest/d7d-stacks-sync-reverify.md:1135-1157,2307,2350`, `…/PHASE-D-HOST-OBLIGATIONS.md:317`).
 
 ### Card and checker absent (confirmed by grep)
@@ -176,11 +176,11 @@ verifies that a cited card or anchor exists.
 ### Rule intent (the subject the checker operates on)
 
 R-060 = "declared test matrices, never `2^n`." Per-stack expression:
-- Rust `GUIDE-AI-NATIVE-RUST.md:127` — "Declared test matrices, never `2^n`."
-- TS `GUIDE-AI-NATIVE-TYPESCRIPT.md:231-233` — "Declared test matrices, never an
+- Rust `GUIDE-AI-NATIVE-RUST.xml:127` — "Declared test matrices, never `2^n`."
+- TS `GUIDE-AI-NATIVE-TYPESCRIPT.xml:231-233` — "Declared test matrices, never an
   implicit `2^n`"; tooling `test.each`/`it.each` over "a named, bounded case table
   (`as const`)", `fast-check` for behavioral surfaces.
-- Go `GUIDE-AI-NATIVE-GO.md:496-504` — `##TABLE-DRIVEN-TESTS-ARE-THE-DECLARED-MATRIX`
+- Go `GUIDE-AI-NATIVE-GO.xml:496-504` — `##TABLE-DRIVEN-TESTS-ARE-THE-DECLARED-MATRIX`
   "a named, bounded case slice with `t.Run` subtests, never an implicit `2^n`"
   (note: the Go guide states the rule but does **not** cite the id `R-060`).
 
@@ -234,14 +234,14 @@ A checker today would find **0** violations in this corpus; the rule is preventi
 - `core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55` — `##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing`.
 - All three stack indices: `rust-ai-native-lang/…/cards/INDEX.md:37`,
   `go-ai-native-lang/…/cards/INDEX.md:80`, `typescript-ai-native-lang/…/cards/INDEX.md:53`.
-- All three guides: `rust …/GUIDE-AI-NATIVE-RUST.md:57`, `go …/GUIDE-AI-NATIVE-GO.md:213`,
-  `ts …/GUIDE-AI-NATIVE-TYPESCRIPT.md:125` — each `##NAMES-ARE-TOKEN-PROGRAMS (R3-004, R-020)`.
+- All three guides: `rust …/GUIDE-AI-NATIVE-RUST.xml:57`, `go …/GUIDE-AI-NATIVE-GO.xml:213`,
+  `ts …/GUIDE-AI-NATIVE-TYPESCRIPT.xml:125` — each `##NAMES-ARE-TOKEN-PROGRAMS (R3-004, R-020)`.
 - `BACKLOG.md:892,898`; campaign docs.
 
 `R-020` is paired with R3-004 in every guide citation ("R3-004, R-020"). The ATLAS
-record for R3-004 (`ATLAS.md:55-56`) carries `_… refines:R-020_`, i.e. R-020 is
+record for R3-004 (`ATLAS.xml:55-56`) carries `_… refines:R-020_`, i.e. R-020 is
 referenced as the finding R3-004 refines. A standalone `##FINDING-R-020` / `**R-020**`
-ATLAS record: `grep "R-020" ATLAS.md` → only the `:56` `refines:R-020` tail; **no R-020 record**.
+ATLAS record: `grep "R-020" ATLAS.xml` → only the `:56` `refines:R-020` tail; **no R-020 record**.
 
 ### Closed vocabulary of structural naming tokens — as DATA
 
@@ -267,17 +267,17 @@ none is a naming/shadow/synonym rule. A rule that inspects names: **0**.
 ### a) Go — the live `{Variant}{Seam}` specimen
 
 **Cell definition.** A Go cell is a package directory under `cells_dir`
-(`GUIDE-AI-NATIVE-GO.md:170` `##CELL-IS-A-PACKAGE-UNDER-INTERNAL-CELLS`;
+(`GUIDE-AI-NATIVE-GO.xml:170` `##CELL-IS-A-PACKAGE-UNDER-INTERNAL-CELLS`;
 `go-ai-native-cli/src/codemod.rs:92-98`, `fast_loop.rs:49-56`). The cell *manifest*
 is a `//spec:cell seam=… variant=… replaces=… flag=…` directive, plus the
 loud-conformance assertion `var _ seams.<Seam> = (*<Impl>)(nil)` extracted as
 `Seam`/`Impl` facts (`tools/go-extract/extract.go:68-70, 504-524`).
 
-**Naming rule (quoted).** `GUIDE-AI-NATIVE-GO.md:213-217` `##NAMES-ARE-TOKEN-PROGRAMS`:
+**Naming rule (quoted).** `GUIDE-AI-NATIVE-GO.xml:213-217` `##NAMES-ARE-TOKEN-PROGRAMS`:
 "Canonical cell type name is computed from the manifest: `{Variant}{Seam}` →
 `BatchPlanner`; the package is the lower-case variant (`batchplanner`)." The
 template cell shown is `//spec:cell seam=Planner variant=batch replaces=naive flag=planner`
-/ `package batchplanner` (`GUIDE-AI-NATIVE-GO.md:199-201`).
+/ `package batchplanner` (`GUIDE-AI-NATIVE-GO.xml:199-201`).
 
 **Actual Go cell names (full list, with paths):**
 - `research/go-demo/internal/cells/batchplanner/doc.go:8` `//spec:cell seam=Planner variant=batch replaces=naive flag=planner`;
@@ -305,14 +305,14 @@ So the computed name `{Variant}{Seam}` is **practiced but not machine-verified**
 ### b) Rust — free naming; manifest data present but unused for the name
 
 **Cell definition.** A Rust cell is a type carrying the `#[cell(seam = "…", variant = "…" [, replaces = "…"] [, flag = "…" )]`
-attribute — `GUIDE-AI-NATIVE-RUST.md:51` `##CELL-CARRIES-A-CELL-MANIFEST-ATTRIBUTE`;
+attribute — `GUIDE-AI-NATIVE-RUST.xml:51` `##CELL-CARRIES-A-CELL-MANIFEST-ATTRIBUTE`;
 attribute grammar `core-ai-native-specmark-grammar/src/lib.rs:449` (v0.8.0), which
 **requires** `seam` and `variant` (`:517` "requires `seam`", `:522` "requires `variant`").
 The `CellIsolation` rule (R-002) identifies a cell by exactly this signal:
 `rules/mod.rs:96-113` `cell_types()` collects items whose `attrs` contain `cell(`;
 `rules/structure.rs:98, 102` filters files that declare such a type.
 
-**Naming rule (quoted).** `GUIDE-AI-NATIVE-RUST.md:57` `##NAMES-ARE-TOKEN-PROGRAMS`:
+**Naming rule (quoted).** `GUIDE-AI-NATIVE-RUST.xml:57` `##NAMES-ARE-TOKEN-PROGRAMS`:
 "Canonical cell name is **computed** from the manifest (`{Variant}{Seam}`) … no
 shadowing, no synonym pairs. Structural tokens come from a closed vocabulary."
 
@@ -348,12 +348,12 @@ cells the data source is **absent**.
 ### c) TypeScript — directory-is-the-cell; free function names
 
 A TS cell is "a module (file) or a small directory with a single public entry
-(`index.ts` as the seam)" — `GUIDE-AI-NATIVE-TYPESCRIPT.md` §3 `##CELL-GRANULARITY`
+(`index.ts` as the seam)" — `GUIDE-AI-NATIVE-TYPESCRIPT.xml` §3 `##CELL-GRANULARITY`
 (cell dir under `src/cells/<name>`). No `#[cell]`-equivalent manifest attribute
 exists. Actual names: fixture
 `typescript-ai-native-lang/v0.6.0/tools/ts-extract/test/fixtures/clean/src/cells/greet/index.ts:2`
 `export function greet(…)`, `…/cells/parse/index.ts:5` `export function parseAndGreet(…)`.
-The TS naming rule (`GUIDE-AI-NATIVE-TYPESCRIPT.md:125`) states closed-vocabulary +
+The TS naming rule (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:125`) states closed-vocabulary +
 one-referent but does **not** mention `{Variant}{Seam}` computed names.
 
 ### d) Cost of each fork variant — facts only, no choice
@@ -395,15 +395,15 @@ concrete files/names that would have to change so `type == {Pascal(variant)}{Pas
 **What ATLAS is.** `core-ai-native/v0.8.0/spec/appendix/ATLAS.md:1` — "Atlas —
 Findings Ledger (human view)". It is a GENERATED human view of research findings
 (`:5` "GENERATED from findings.jsonl (A2: derived, do not hand-edit)"); totals
-`ATLAS.md:7` — "Total records: 98 · unique (non-duplicate): 87 · passes: DR-1, DR-2,
+`ATLAS.xml:7` — "Total records: 98 · unique (non-duplicate): 87 · passes: DR-1, DR-2,
 blind-control, R3, R2c, seeds". Organized by research axis A–H
 (`:9` "By axis: A=10, B=8, C=9, D=10, E=8, F=4, G=8, H=30").
 
 **Structure of one record.** Each is a `##FINDING-<ID>` bullet: ID + title, then a
 `_evidence-class · strength · status/refines_` trailing tag, then prose. Three sample rows:
-- `ATLAS.md:35` `##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item _theory · med · new_`
-- `ATLAS.md:55` `##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing _theory · high · refines:R-020_`
-- `ATLAS.md:111` `##FINDING-R3-008 **R3-008** — Misuse-resistant API shape converts probable hallucinations into compile errors`
+- `ATLAS.xml:35` `##FINDING-R3-002 **R3-002** — Contract-first ordering: intent before body within every item _theory · med · new_`
+- `ATLAS.xml:55` `##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing _theory · high · refines:R-020_`
+- `ATLAS.xml:111` `##FINDING-R3-008 **R3-008** — Misuse-resistant API shape converts probable hallucinations into compile errors`
 
 **Rule id assignment — two series, one registered, one not:**
 - `R3-0NN` (first-principles research rules): **registered in ATLAS.** All of
@@ -417,10 +417,10 @@ blind-control, R3, R2c, seeds". Organized by research axis A–H
   are shipped as code rules (`rules/structure.rs:35` `"R-001"`, `:91` `"R-002"`); the rest
   are prose citations. There is no separate rule-id registry file
   (`grep -rln "rule registry|RULE-REGISTRY|id registry"` → only prose mentions in
-  `ENGINE-CONFORM-v0.1.md` and a legacy-projection guide, not a registry).
+  `ENGINE-CONFORM-v0.1.xml` and a legacy-projection guide, not a registry).
 
 **Reservation needed for the new checker?** No new id is required:
-- R3-004 (closed-vocabulary-naming) already has its ATLAS record (`ATLAS.md:55`).
+- R3-004 (closed-vocabulary-naming) already has its ATLAS record (`ATLAS.xml:55`).
 - R-060 (test-matrices) is already the max cited id (no ATLAS entry, because the
   R-series keeps none; a finding entry for it would be net-new with no R-series precedent).
 Registry fact: **R3-series registry exists (ATLAS); R-0NN-series registry does not.**

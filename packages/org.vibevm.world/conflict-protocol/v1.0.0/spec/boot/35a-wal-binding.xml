@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Conflict protocol — the WAL binding</title>
+  <p><CONFLICT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile state
+file of the priority ladder is `spec/WAL.xml`; the full ladder reads
+Human &gt; Spec &gt; Tests &gt; Code &gt; WAL.</CONFLICT-WAL-BINDING></p>
+</spec>

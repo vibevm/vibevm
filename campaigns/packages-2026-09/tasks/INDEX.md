@@ -53,7 +53,7 @@ and a re-vendor into three family members — such a finding is not closed by an
 edit, it is closed by a published version.
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching) task files live beside
-this index. Formats: `spec/modules/vibe-progress/templates/impl-task.md` /
+this index. Formats: `spec/modules/vibe-progress/templates/impl-task.xml` /
 `templates/spec-task.md`. Statuses mirror into `run/state/tasks.json` — and
 wave 1 learned that nothing refreshes that file automatically, so it drifts
 unless a session updates both. It sat 18 tasks stale for a week.

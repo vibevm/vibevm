@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>The AI-Native Pattern Card Format</title>
+  <p>**Discipline v0.2 · status: BETA · T1 · supersedes part of GUIDE-SPEC-AUTHORING-v0.1**</p>
+  <p>*Every pattern, scaffold, rule, and anti-pattern in the Discipline is authored as a card in this shape. The format is a synthesis of three parents: the GoF design-pattern template (teaches WHEN to apply), the OpenJDK JEP template (teaches WHAT COUNTS AS DONE and at what cost), and a third operational layer with no precedent in either — because both predate AI readers.*</p>
+  <section title="0. Why three parents">
+    <list ordered="false">
+      <item>**GoF → recognition &amp; navigation.** Its load-bearing sections for us are *Applicability* (how to RECOGNIZE the situation from the code) and *Related Patterns* (where to go if this feels wrong).</item>
+      <item>**JEP → accountability &amp; tradeoffs.** Its load-bearing sections are *Goals/Non-Goals* (scope discipline — the most-violated boundary in AI work), *Risks &amp; Assumptions*, *Alternatives*.</item>
+      <item>**Operational layer → execution.** GoF and JEP assume a human applying judgment once, at design time, with unlimited attention. We know three things they did not: the card is a **runtime trigger**, **raid fuel**, and will be read by a **weak model that cannot hold all cards at once**. So we add *Trigger, Routine, Checker, Raid-role, Budget* — and we make that layer **machine-extractable**, so the harness can deliver just the operational extract to a weak reader (the §6 minimal-sufficiency rule of the Manifesto).</item>
+    </list>
+  </section>
+  <section title="1. The three bands">
+    <p>Bands 1–2 are prose for the strong author and the human reviewer (full card = authoring/review artifact). Band 3 is a machine-extractable block; the harness ships **only Band 3** to a weak reader at runtime once a trigger fires.</p>
+    <section title="BAND 1 — Identity &amp; Recognition *(GoF)*">
+      <list ordered="false">
+        <item>**Card ID &amp; Name** — stable slug = a `spec://` anchor (A1).</item>
+        <item>**Classification** — two axes (like GoF purpose×scope): *layer* ∈ {A language-shape, B names, C meta, D context, E verification, F spec-binding, G empirics, H weak-reader}; *mechanism* ∈ {scaffold class A–I, rule, anti-pattern}.</item>
+        <item>**Intent** — 1–2 sentences, problem in most general form.</item>
+        <item>**Also Known As** — synonyms, so a model trained on different terms still resolves the card.</item>
+        <item>**Applicability / Recognition** — THE central section: how a reader RECOGNIZES the situation from the code (the smell, the syntactic signature, the metric threshold), written to seed a detector.</item>
+      </list>
+    </section>
+    <section title="BAND 2 — Justification &amp; Tradeoffs *(GoF + JEP)*">
+      <list ordered="false">
+        <item>**Motivation** — a concrete scenario of the pain and the fix.</item>
+        <item>**Structure &amp; Participants** — the code shape and the roles.</item>
+        <item>**Collaborations** — interaction with other cards and the toolchain at runtime.</item>
+        <item>**Goals / Non-Goals** *(JEP)* — explicit scope; what this card does NOT do (prevents weak-agent over-application).</item>
+        <item>**Consequences** — benefits AND costs; what you can now vary independently.</item>
+        <item>**Alternatives** *(JEP)* — other solutions and when each is actually better.</item>
+        <item>**Risks &amp; Assumptions** *(JEP)* — what makes it wrong; model/harness assumptions; the **sunset condition** (R-050).</item>
+        <item>**Evidence &amp; Transfer-strength** — backing `findings.jsonl` IDs, evidence class, and the honest tag [E-strong]/[E-mid]/[E-hyp]. Keeps cards falsifiable.</item>
+      </list>
+    </section>
+    <section title="BAND 3 — Operation *(no GoF/JEP precedent; machine-extractable)*">
+      <p>Authored as a fenced ` ```card-ops ` block of `key: value` fields so the harness can parse and deliver it without the prose. Fields:</p>
+      <list ordered="false">
+        <item>**trigger** — the precise, ideally machine-detectable condition: `WHEN &lt;signal&gt; THEN apply`.</item>
+        <item>**mode** — `inline | gate | raid | review` (where the trigger lives).</item>
+        <item>**routine** — ordered steps, target ≤7, each verifiable.</item>
+        <item>**checker** — the machine verification (conform tier / clippy lint / test), OR `WISH` if none yet (A5: a checkerless card is explicitly a WISH).</item>
+        <item>**raid_role** — `layer=&lt;phase&gt;`, `order=after:&lt;cards&gt;`, `batch=&lt;cell|crate|seam&gt;` (how it joins a sweep).</item>
+        <item>**budget** — active-rule cost + first-signal latency (feeds lazy-push: when NOT to load this card).</item>
+      </list>
+    </section>
+  </section>
+  <section title="2. The minimal-sufficiency contract (delivery)">
+    <p>A weak reader at runtime receives the **Band-3 ops block only** (≈10 lines), selected by trigger match, capped to a small active set. Bands 1–2 are consumed by the strong author when *writing* the card and by a human when *reviewing* it. This split is mandatory: shipping whole cards to a weak swarm reproduces the AGENTbench bloat failure the discipline forbids. If a card's Routine still overloads the weakest readers, it is either split finer or replaced by a Class-I codemod (the card becomes "invoke this checked operation" rather than "follow these steps").</p>
+  </section>
+  <section title="3. Governance">
+    <list ordered="false">
+      <item>The format is a T1 artifact; changes are versioned and ratified, never silent (R-030).</item>
+      <item>A card is BETA until its checker exists and its evidence IDs are non-empty; beta cards are revised on pilot evidence only.</item>
+      <item>Cards carry sunset conditions; when a Risk's "would render unnecessary" clause triggers, the card retires with its checker (R-050).</item>
+      <item>Empty operational fields are a defect: a card with no trigger and no checker is prose, and prose is what AGENTbench penalized — complete it or mark it WISH.</item>
+    </list>
+  </section>
+  <section title="4. Authoring stub (copy-paste)">
+    <fence># CARD: &lt;slug&gt; — &lt;Name&gt;
+## Band 1 — Identity &amp; Recognition
+Classification: layer=&lt;A-H&gt;, mechanism=&lt;scaffold A-I | rule | anti-pattern&gt;
+Intent: &lt;1-2 sentences&gt;
+Also Known As: &lt;synonyms&gt;
+Applicability / Recognition: &lt;smell / signature / threshold; detector seed&gt;
+## Band 2 — Justification &amp; Tradeoffs
+Motivation: &lt;concrete scenario&gt;
+Structure &amp; Participants: &lt;code shape + roles&gt;
+Collaborations: &lt;other cards / toolchain&gt;
+Goals / Non-Goals: &lt;in scope / explicitly out&gt;
+Consequences: &lt;benefits + costs + what varies independently&gt;
+Alternatives: &lt;other solutions; when each is better&gt;
+Risks &amp; Assumptions: &lt;what makes it wrong; assumptions; SUNSET condition&gt;
+Evidence &amp; Transfer-strength: &lt;finding IDs · evidence class · [E-strong|E-mid|E-hyp]&gt;
+## Band 3 — Operation
+```card-ops
+trigger: WHEN &lt;signal&gt; THEN apply
+mode: &lt;inline|gate|raid|review&gt;
+routine:
+  1. &lt;step&gt;
+  ...(&lt;=7)
+checker: &lt;conform tier | clippy lint | test&gt;   # or: WISH
+raid_role: layer=&lt;phase&gt;; order=after:&lt;cards&gt;; batch=&lt;cell|crate|seam&gt;
+budget: active_rules=&lt;n&gt;; first_signal=&lt;latency&gt;</fence>
+    <fence/>
+  </section>
+</spec>

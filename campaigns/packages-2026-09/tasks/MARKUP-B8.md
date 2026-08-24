@@ -48,15 +48,15 @@ is a measurement this campaign does not have yet** — report it plainly.
 | `discovery-prompt/…/README.md` | 11 |
 | `discovery-prompt/…/spec/boot/50-flow-discovery-prompt.md` | 6 |
 
-@fact:B8-DISCOVERY-PROMPT-IS-EXCLUDED **`DISCOVERY-PROMPT.md` is NOT yours** — owner ruling F-096, 2026-07-27.
+@fact:B8-DISCOVERY-PROMPT-IS-EXCLUDED **`DISCOVERY-PROMPT.xml` is NOT yours** — owner ruling F-096, 2026-07-27.
 It left the corpus as a **prompt payload, not a claim**: `confirmed` has no
 meaning applied to a line addressed to another model. Do not mark it, do not
 open it to «check consistency», do not report drift in it.
 
-@fact:B8-CITATIONS-INTO-IT-ARE-FINE **`usage.md` cites the excluded file throughout, and that is correct.**
+@fact:B8-CITATIONS-INTO-IT-ARE-FINE **`usage.xml` cites the excluded file throughout, and that is correct.**
 An exclusion is about *measurement*, not about links — a document in the corpus
 may cite a document outside it. A broken-looking cross-reference into
-`DISCOVERY-PROMPT.md` is **not** a finding on those grounds alone.
+`DISCOVERY-PROMPT.xml` is **not** a finding on those grounds alone.
 
 ## The three predictions {#predictions}
 
@@ -76,7 +76,7 @@ campaign's most repeated defect.
 
 ## Two things this batch is likely to surface {#expect}
 
-@fact:B8-EXPECT-TEMPLATE-GENRE `record-template.md` is a **template with worked examples** — a genre
+@fact:B8-EXPECT-TEMPLATE-GENRE `record-template.xml` is a **template with worked examples** — a genre
 the campaign has not marked before. A filled-in example inside a template is not
 obviously a fact about this project; it may be closer to the F-096 shape than to
 a contract. **Mark it and report the discomfort** rather than deciding: do not

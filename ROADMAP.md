@@ -11,7 +11,7 @@
 > around decentralized per-package repos, `[[registry]]` array +
 > `[[mirror]]` + `[[override]]` in `vibe.toml`, content-addressed
 > identity, transitive depsolver (`resolvo`), and a `vibe registry
-> publish` maintainer utility. Design lock: [PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+> publish` maintainer utility. Design lock: [PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 >
 > **Host migration (2026-04-29).** The `vibespecs` registry
 > organization moved from GitVerse to GitHub
@@ -24,8 +24,8 @@
 > host that fully supports the org-scoped POST. Token path rotates
 > to `~/.vibe/<host>.publish.token` (per-host); legacy
 > `~/.vibe/git.publish.token` is the fallback. See
-> [PROP-000 §7](spec/common/PROP-000.md#registry) and
-> [PROP-002 §2.10](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
+> [PROP-000 §7](spec/common/PROP-000.xml#registry) and
+> [PROP-002 §2.10](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish).
 >
 > M1.5-gate docs landed (commands + authoring + glossary +
 > CHANGELOG). M1.2 / M1.3 / M1.4 open. M1.6 queued (polished
@@ -36,7 +36,7 @@
 > M1.2 / M1.3 / M1.4 SHIPPED v0; M1.6 Phase B v0 SHIPPED. Both
 > live smokes (M1.5-gate-v2, M1.6-mirror-vendor) walked end-to-end
 > pass. Schema v3 design proposal in
-> [PROP-003](spec/modules/vibe-resolver/PROP-003-dep-evolution.md)
+> [PROP-003](spec/modules/vibe-resolver/PROP-003-dep-evolution.xml)
 > covers SAT solver via libsolv, cargo-style features, vibevm-native
 > subskills, BCP-47 i18n. New milestones M1.7–M1.11 and M2.7–M2.10
 > derive from
@@ -68,7 +68,7 @@ discipline is what the whole project is about.
 uninstalls packages from a local-directory registry, updates the
 lockfile, and respects user-owned files. The package model works
 end-to-end: hand-written `flow:wal@0.1.0` installs cleanly, uninstalls
-cleanly, and user edits in `00-core.md` / `90-user.md` survive both
+cleanly, and user edits in `00-core.xml` / `90-user.xml` survive both
 sides of the cycle.
 
 **Shipped commands.**
@@ -114,7 +114,7 @@ M1 feature ships against a realistic remote from day one.
 
 **Shipped — code, publish, live smoke.** All items below landed;
 design decisions pinned in
-[PROP-001](spec/modules/vibe-registry/PROP-001-git-backend.md);
+[PROP-001](spec/modules/vibe-registry/PROP-001-git-backend.xml);
 procedure for the live validation lives in
 [`manual-tests/M1.1-git-registry-smoke.md`](manual-tests/M1.1-git-registry-smoke.md).
 
@@ -170,7 +170,7 @@ architecture at scale — same failure mode that ties Nix to GitHub.
 Before anyone downstream pins anything to the v1 shape, it is
 cheapest to redesign once, properly.
 
-**Scope.** Full design lock in [PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.md) (supersedes PROP-001 §2.3 / §2.4 / §2.6). Phase A of that PROP is this slice's shippable surface:
+**Scope.** Full design lock in [PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml) (supersedes PROP-001 §2.3 / §2.4 / §2.6). Phase A of that PROP is this slice's shippable surface:
 
 - **Decentralized registry** — each package is its own git repository under a hosting organization (`vibespecs/flow-wal`, `vibespecs/flow-sync-from-code`, …). Versions are git tags. Repo-naming convention is a property of the registry, not the CLI.
 - **Multi-registry schema** — `vibe.toml` carries `[[registry]]` as an array (priority-ordered), with `[[mirror]]` and `[[override]]` entries. Even with one registry in practice today, the schema and code path support the full shape from day one.
@@ -487,11 +487,11 @@ hash/source/ref lines in the lockfile).
 
 ### M1.15 — Git-source dependencies (whole-repo-as-package) ✅ SHIPPED (2026-05-10)
 
-**Thesis.** Cargo / npm / Poetry / Bundler / Go modules all let you declare a dependency as "this whole git repository is the package" — `[dependencies] foo = { git = "..." }`, `"foo": "git+https://...#tag"`, `gem 'foo', git: '...'`. vibevm's existing `[[override]]` mechanism technically does this, but it is semantically a *patch* (replace a registry-resolved pkg with a fork) — not a *first-class declaration*. The use cases for first-class git-source are different: a single private/internal package without a multi-package `[[registry]]` org behind it, an active fork that **is** the source (not a patch on top), or a cross-organisation pull. Spec contract per [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+**Thesis.** Cargo / npm / Poetry / Bundler / Go modules all let you declare a dependency as "this whole git repository is the package" — `[dependencies] foo = { git = "..." }`, `"foo": "git+https://...#tag"`, `gem 'foo', git: '...'`. vibevm's existing `[[override]]` mechanism technically does this, but it is semantically a *patch* (replace a registry-resolved pkg with a fork) — not a *first-class declaration*. The use cases for first-class git-source are different: a single private/internal package without a multi-package `[[registry]]` org behind it, an active fork that **is** the source (not a patch on top), or a cross-organisation pull. Spec contract per [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#git-source).
 
 **Scope.**
 
-- Spec — PROP-002 §2.4.1 ([git-source declarations](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source)) + `VIBEVM-SPEC.md` §7.5 update (table-form `[requires.packages]` example with git-source). Done.
+- Spec — PROP-002 §2.4.1 ([git-source declarations](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#git-source)) + `VIBEVM-SPEC.md` §7.5 update (table-form `[requires.packages]` example with git-source). Done.
 - Schema — `Requires.packages` becomes `BTreeMap<PackageRef, PackageDep>` instead of `Vec<PackageRef>`. New `PackageDep` enum: `Constraint(VersionSpec)` (registry-resolved) | `Git { url, ref_kind: GitRef, version: Option<VersionSpec>, auth, token_env }`. Custom `Deserialize` accepts both legacy array-of-strings form and modern table form; on round-trip writes table form.
 - Wire grammar — exactly one of `tag` / `rev` / `branch` required for git-source; zero or two+ rejected at parse time. `version` optional (verification only). `auth` defaults to `"none"`; per-source explicit (no host-match against `[[registry]]`).
 - Resolver — `MultiRegistryResolver` learns to short-circuit on a git-source declaration the same way it does for `[[override]]`. Resolution order: override > git-source > registry-walk. Transitives of a git-source package resolve through the consuming project's `[[registry]]` (existing override path).
@@ -509,11 +509,11 @@ hash/source/ref lines in the lockfile).
 
 ### M1.16 — Registry redirect (delegated package via stub repo) ✅ SHIPPED (2026-05-10)
 
-**Thesis.** A registry org's stub repo for a package may carry a marker file pointing at an external git repo where the package actually lives, instead of carrying the package content itself. Use case: an org owner wants the package to live in their namespace (so consumers find it via the standard `[[registry]]` walk without knowing about the external author) but offload hosting / PRs / permissions to a different team. Spec contract per [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect).
+**Thesis.** A registry org's stub repo for a package may carry a marker file pointing at an external git repo where the package actually lives, instead of carrying the package content itself. Use case: an org owner wants the package to live in their namespace (so consumers find it via the standard `[[registry]]` walk without knowing about the external author) but offload hosting / PRs / permissions to a different team. Spec contract per [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#redirect).
 
 **Scope.**
 
-- Spec — PROP-002 §2.4.2 ([registry redirect](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect)) + `VIBEVM-SPEC.md` §7 update with marker-file shape. Done.
+- Spec — PROP-002 §2.4.2 ([registry redirect](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#redirect)) + `VIBEVM-SPEC.md` §7 update with marker-file shape. Done.
 - Marker file — new `vibe-redirect.toml` schema in `vibe-core` (parallel to `vibe-package.toml`). Required `target_url`; optional `ref_policy = pass-through-tag | pinned`, `pinned_ref` (required if pinned), `auth` / `token_env` (target-side, mirrors PROP-002 §2.2.1), `description`.
 - Registry resolver — `GitPackageRegistry::fetch_dep_manifest` falls through to `vibe-redirect.toml` when `vibe-package.toml` is absent. New `RegistryError::AmbiguousStub` (both files present). Hop limit = 1 — if the target is itself a stub, raise `RedirectChainNotAllowed`. Apply `[redirect].auth` (independent of stub auth) when fetching the target.
 - Tag visibility — `list_versions(stub_url)` returns stub tags (not target tags). Org owner gates which versions enter their namespace.
@@ -535,7 +535,7 @@ hash/source/ref lines in the lockfile).
 
 ### M1.17 — Workspace (multi-package projects) — 🚧 Phases 1–5 shipped (2026-05-21)
 
-**Thesis.** Bring vibevm in line with cargo `[workspace]` / Maven multi-module: a project decomposes into modules, each published independently — or not at all — with the whole structure declared in one manifest. Design lock: [PROP-007](spec/modules/vibe-workspace/PROP-007-workspace.md).
+**Thesis.** Bring vibevm in line with cargo `[workspace]` / Maven multi-module: a project decomposes into modules, each published independently — or not at all — with the whole structure declared in one manifest. Design lock: [PROP-007](spec/modules/vibe-workspace/PROP-007-workspace.xml).
 
 **Shipped (2026-05-21)** — the workspace data model and tooling, in six phases:
 
@@ -558,7 +558,7 @@ computed loading model: two physically separate trees — authored
 *computed* from the unified resolution and projected into generated
 `INLINE.md` / `INDEX.md` artifacts. Answers PROP-007 §6 question 3 and
 subsumes the workspace-aware `vibe install` left open by M1.17. Design
-lock: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md).
+lock: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.xml).
 
 **Shipped (2026-05-22), phases 1–7.** Phases 1–6 — the schema (`link`
 types, boot `category`, retired `[writes]` and `NN-` prefix), the
@@ -568,7 +568,7 @@ types, boot `category`, retired `[writes]` and `NN-` prefix), the
 published-copy boot regeneration in `vibe workspace publish`. Phase 7 —
 the vibevm self-migration, the `VIBEVM-SPEC.md` consistency pass (owner
 sanction granted), the `docs/` sweep, and
-[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)
+[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml)
 (the managed `<vibevm>` redirect block) folded in. The dynamic-entry
 `when` gate — an OS condition (`when = "os:<name>"`) on a
 `[boot_snippet]` — landed 2026-05-22, closing the PROP-009 §2.3 contract
@@ -581,7 +581,7 @@ shares the computed-view engine and rides with the M1.5 milestone.
 
 ### M1.19 — Qualified package naming (PROP-008) — ✅ SHIPPED (2026-05-22)
 
-**Thesis.** Replace the flat `<kind>:<name>` namespace with reverse-FQDN `group` qualification (Maven `groupId` shape), keeping short names as CLI sugar. Design lock: [PROP-008](spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+**Thesis.** Replace the flat `<kind>:<name>` namespace with reverse-FQDN `group` qualification (Maven `groupId` shape), keeping short names as CLI sugar. Design lock: [PROP-008](spec/modules/vibe-registry/PROP-008-qualified-naming.xml).
 
 **Shipped (2026-05-22) — the whole milestone, under MFBT.**
 
@@ -596,7 +596,7 @@ shares the computed-view engine and rides with the M1.5 milestone.
 
 **Owner-only follow-up.** The live `vibespecs` repo renames to the `fqdn` shape are outward work and gate nothing in-repo — every hermetic test is self-contained and green.
 
-**Order.** Needs the short-name-resolution machinery from [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md) (the index), which is implemented. Sequence: M1.17 → M1.18 → PROP-005 → M1.19.
+**Order.** Needs the short-name-resolution machinery from [PROP-005](spec/modules/vibe-index/PROP-005-package-index.xml) (the index), which is implemented. Sequence: M1.17 → M1.18 → PROP-005 → M1.19.
 
 ### M1.20 — Local package cache (PROP-010) — DRAFT design
 
@@ -605,7 +605,7 @@ machine-global, accretive package store with an offline mode — so a
 new workspace member or an entirely new project resolves and
 materialises its dependencies from the cache with no network, reusing
 whatever earlier, unrelated projects pulled. Design lock:
-[PROP-010](spec/modules/vibe-registry/PROP-010-local-package-cache.md).
+[PROP-010](spec/modules/vibe-registry/PROP-010-local-package-cache.xml).
 
 **Scope (DRAFT — five §5 open questions pending an owner design
 session).** The cache keyed by PROP-008 qualified package identity, so
@@ -626,7 +626,7 @@ re-materialise only the `vibedeps/` slots that actually changed, so
 `vibe install` on a large workspace stops paying whole-tree cost.
 Boot-artifact regeneration deliberately stays whole-tree: it is the
 cheap phase. Design lock:
-[PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.md).
+[PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.xml).
 
 **Shipped (2026-05-22), four phases.** A cargo-style lockfile-freshness
 check (`vibe-workspace::freshness`) that lets a bare `vibe install`
@@ -648,7 +648,7 @@ machinery (PROP-003 §2.1) and rides with the SAT solver.
 instructions, other tools' content, and vibevm's own four rules.
 vibevm now owns only a `<vibevm>`-delimited block and leaves the rest
 to its co-tenants. Design lock:
-[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md).
+[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml).
 
 **Shipped.** A machine-locatable `<vibevm>` … `</vibevm>` block;
 exactly one per file, a hard stop on a malformed file; absent →
@@ -696,8 +696,8 @@ native diagnostics are silent; the corpus asserts the asymmetry so it
 flips red when r-a catches up), and the honest fidelity posture
 throughout: rust-analyzer is NOT rustc, the oracle approximates, the
 floor stays the truth. Briefs:
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
-(shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.xml`
+(shipped line) and `rust-ai-native-tcg.xml` (token-level, VERY-FAR-FUTURE);
 mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
 The `ra_ap_*` embedding is the Far backlog's first entry. No agent
 battery here — delivery experiments are backlogged with
@@ -719,7 +719,7 @@ enrichment through the same conform engine as the gate), the portable
 (PROP-026; liftable into a standalone MCP server per the owner's
 portability amendment), and the automated two-arm opencode battery
 (gpt-oss-20b (free)) in research/tcg-bench. Component brief:
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.xml`;
 mechanisms: TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1 (same tree). Token-level
 TCG for TypeScript is re-dispositioned VERY-FAR-FUTURE in its own brief;
 M1.23 below keeps the Rust token-level line as was.
@@ -733,7 +733,7 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.xml`
 (the tool brief, renamed vibe-tcg → vibe-tcg-rust → rust-ai-native-tcg
 across the D13 suffix policy and its PROP-028 §2.4 supersession — the bare name belongs to the
 generic product crate; M1.25's agentic twin is this milestone's
@@ -909,7 +909,7 @@ Source: [PROP-004 §5.2](legacy-spec/research/PROP-004-tessl-comparative-researc
 
 **Thesis.** PROP-003 r2 already lands the three delivery modes (eager / lazy-push / lazy-pull) in the manifest schema and the lockfile from day one — so they don't require a v3-to-v4 lockfile migration later. What M2.8 covers is the **runtime side**: making lazy-push and lazy-pull actually do something, by plumbing them through `vibe-mcp` (M1.7) so the agent sees content at the right moment.
 
-Source: [PROP-003 §2.5.0](spec/modules/vibe-resolver/PROP-003-dep-evolution.md#delivery-modes), [PROP-004 §5.4](legacy-spec/research/PROP-004-tessl-comparative-research.md#three-modes).
+Source: [PROP-003 §2.5.0](spec/modules/vibe-resolver/PROP-003-dep-evolution.xml#delivery-modes), [PROP-004 §5.4](legacy-spec/research/PROP-004-tessl-comparative-research.md#three-modes).
 
 **Scope.**
 
@@ -939,7 +939,7 @@ Source: [PROP-004 §5.5](legacy-spec/research/PROP-004-tessl-comparative-researc
 
 **Thesis.** With ~3 packages today, `vibe install` is fine; with 100+ it won't be. Tessl ships `tessl search` as a registry-side feature; vibevm's decentralised model needs an index to make search tractable at scale.
 
-Source: [PROP-004 §5.12](legacy-spec/research/PROP-004-tessl-comparative-research.md#search), [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md).
+Source: [PROP-004 §5.12](legacy-spec/research/PROP-004-tessl-comparative-research.md#search), [PROP-005](spec/modules/vibe-index/PROP-005-package-index.xml).
 
 **Shipped.**
 
@@ -947,7 +947,7 @@ Source: [PROP-004 §5.12](legacy-spec/research/PROP-004-tessl-comparative-resear
 - `vibe search --purl <purl>` answers "which packages describe this upstream library?" via the index's `by-purl` lane.
 - Results cached in `~/.vibe/search-cache/`.
 
-The index that makes this tractable is [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md), implemented alongside — the `vibe-index` server + CLI in `crates/vibe-index/`, and the consumer-side `IndexClient` fast path in `vibe-registry`.
+The index that makes this tractable is [PROP-005](spec/modules/vibe-index/PROP-005-package-index.xml), implemented alongside — the `vibe-index` server + CLI in `crates/vibe-index/`, and the consumer-side `IndexClient` fast path in `vibe-registry`.
 
 ---
 
@@ -978,7 +978,7 @@ M2 decisions keep these futures open rather than foreclosing them.
   ("sub-package of X", from PROP-007's `[origin]` marker). A separate
   optional layer over the index — PROP-005 §2.10 already reserves the
   hook (`vibe-index serve`, CORS-open read endpoints). Recorded in
-  [PROP-008 §2.9](spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+  [PROP-008 §2.9](spec/modules/vibe-registry/PROP-008-qualified-naming.xml).
 
 ### M3.1 — Security review threat model (research-only)
 
@@ -1058,9 +1058,9 @@ Nothing active. Historical:
 
 - **Per milestone:** walk the acceptance checklist in §16 of the
   spec. If any item fails, fix before claiming completion. Tag the
-  release (`v0.1.0-m0`, `v0.1.0-m1`, etc.) and update `spec/WAL.md`
+  release (`v0.1.0-m0`, `v0.1.0-m1`, etc.) and update `spec/WAL.xml`
   to reflect the new "Current phase."
-- **Per session:** read `CLAUDE.md`, then `spec/WAL.md`, then the
+- **Per session:** read `CLAUDE.md`, then `spec/WAL.xml`, then the
   relevant PROP/FEAT for the task at hand. Update the WAL at session
   end. Commit in grouped units per `CLAUDE.md` Rule 3.
 - **Per week:** re-read the spec sections relevant to the active

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Session-end hook — the wind-down</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The procedure every session ends with:
+confirm a good stopping state, rewrite `spec/WAL.xml`, overwrite
+`CONTINUE.md`, report.</scope-of-this-document></p>
+  <p><also-defines-the-trigger-phrases fact="true" status="impl/done">It also defines the trigger phrases that invoke
+the full wind-down explicitly.</also-defines-the-trigger-phrases></p>
+  <p><THE-HOOK-TAKES-UNDER-TWO-MINUTES fact="true" status="impl/done">For a well-scoped session the whole hook
+takes under two minutes; if it takes longer, the session did too much.</THE-HOOK-TAKES-UNDER-TWO-MINUTES></p>
+  <when title="When the hook fires">
+    <p><two-ways-in-lead fact="true" status="impl/done">Two ways in:</two-ways-in-lead></p>
+    <facts ordered="false">
+      <HOOK-FIRES-IMPLICITLY fact="true" status="impl/done">**Implicitly.** Every session that touched project state ends with at
+  least steps 1–3. A session that ends without updating the WAL has
+  partially broken the next session's context.</HOOK-FIRES-IMPLICITLY>
+      <HOOK-FIRES-EXPLICITLY fact="true" status="impl/done">**Explicitly.** The user issues a wind-down phrase. Ship defaults:
+  `END SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`. Recognise the
+  intent, not the exact wording — `FINISH SESSION` or `WRAP UP SESSION`
+  must fire too. A project may add native-language twins in its agent
+  instructions; the origin project of this flow runs a bilingual
+  Russian/English set.</HOOK-FIRES-EXPLICITLY>
+    </facts>
+    <p><AN-EXPLICIT-WIND-DOWN-MEANS-A-FRESH-CONTEXT-FOLLOWS fact="true" status="impl/done">An explicit wind-down means the user is about to close the conversation
+and may continue from a fresh context — a new session, another machine,
+a different agent.</AN-EXPLICIT-WIND-DOWN-MEANS-A-FRESH-CONTEXT-FOLLOWS></p>
+    <p><RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT fact="true" status="impl/done">Run the full hook, steps 1–6, and treat it as a hard
+contract, not a courtesy: its purpose is to make session-boundary
+loss-of-context cheap.</RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT></p>
+  </when>
+  <stopping-state title="1. Confirm the work is in a good stopping state">
+    <facts ordered="false">
+      <STOPPING-STATE-TESTS-STILL-PASS fact="true" status="impl/done">Tests that were passing are still passing.</STOPPING-STATE-TESTS-STILL-PASS>
+      <STOPPING-STATE-GENERATED-FILES-EXIST fact="true" status="impl/done">Files that were supposed to be generated exist.</STOPPING-STATE-GENERATED-FILES-EXIST>
+      <STOPPING-STATE-NO-HALF-APPLIED-REFACTORS fact="true" status="impl/done">No half-applied refactors are left sitting in the working tree unless
+  the user explicitly chose to pause mid-flight.</STOPPING-STATE-NO-HALF-APPLIED-REFACTORS>
+    </facts>
+    <p><SAY-SO-RATHER-THAN-PAPER-OVER-A-BROKEN-STATE fact="true" status="impl/done">If any of these fails, say so explicitly at the end of the session — do
+not silently paper over a broken state in the WAL.</SAY-SO-RATHER-THAN-PAPER-OVER-A-BROKEN-STATE></p>
+  </stopping-state>
+  <rewrite title="2. Rewrite `spec/WAL.xml`">
+    <p><WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG fact="true" status="impl/done">The WAL is a checkpoint, not an append-only log.</WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG></p>
+    <p><REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND fact="true" status="impl/done">**Rewrite** the file —
+don't patch it, don't append to it.</REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND></p>
+    <p><an-append-only-wal-rots fact="true" status="spec/done">An append-only WAL rots into an
+archive nobody reads; the rewritten file always describes *now*.</an-append-only-wal-rots></p>
+    <p><structure-lead fact="true" status="impl/done">Structure (from [`WAL-PROTOCOL.xml`](WAL-PROTOCOL.xml#sections)):</structure-lead></p>
+    <fence># WAL — Project Continuation State
+_Updated: &lt;ISO 8601 UTC — right now&gt;_
+
+## Current phase
+&lt;what the project is actually doing at this moment&gt;
+
+## Constraints (do not violate without discussion)
+- &lt;short line with a brief *why*, citing spec anchors where possible&gt;
+
+## Done
+- [x] &lt;one-line collapsed summary of completed things&gt;
+
+## In progress
+- &lt;what is partially done, with enough context to resume&gt;
+
+## Next
+&lt;single next action&gt;
+
+## Known issues
+- &lt;open problem we chose not to address right now&gt;
+
+## Session context
+&lt;what to open / run / avoid at the start of next session&gt;</fence>
+  </rewrite>
+  <collapse title="3. Collapse aggressively">
+    <facts ordered="false">
+      <COLLAPSE-DONE-TO-ONE-LINE-EACH fact="true" status="impl/done">A long "Done" section with implementation notes is a bug. Collapse
+  each completed unit into a single line; the details live in commits.</COLLAPSE-DONE-TO-ONE-LINE-EACH>
+      <MOVE-BALLOONED-MATERIAL-INTO-A-SPEC fact="true" status="impl/done">Anything that ballooned into multiple paragraphs probably belongs in
+  a spec, not in the WAL. Move it out, leave a short pointer.</MOVE-BALLOONED-MATERIAL-INTO-A-SPEC>
+    </facts>
+  </collapse>
+  <continue title="4. Overwrite `CONTINUE.md`">
+    <p><OVERWRITE-CONTINUE-WHOLESALE-ON-A-WIND-DOWN fact="true" status="impl/done">On an explicit wind-down — and at any session end that precedes a
+machine switch or a long gap — overwrite `CONTINUE.md` at the
+repository root, wholesale, with the cold-resume snapshot.</OVERWRITE-CONTINUE-WHOLESALE-ON-A-WIND-DOWN></p>
+    <p><NEVER-APPEND-STALENESS-COMPOUNDS fact="true" status="impl/done">Never
+append; staleness compounds.</NEVER-APPEND-STALENESS-COMPOUNDS></p>
+    <p><required-contents-pointer fact="true" status="impl/done">The required contents (TL;DR, where work
+stands, blocker and unblocking action, next-steps recipe, non-obvious
+findings, repository map, standing decisions, recent commits,
+quick-start commands) are specified in
+[`cold-resume.xml`](cold-resume.xml#contract).</required-contents-pointer></p>
+  </continue>
+  <propose title="5. Commit — propose by default">
+    <p><SURFACE-THE-CONTENT-AS-DRAFTS fact="true" status="impl/done">Surface the proposed WAL and `CONTINUE.md` content to the user as
+*drafts*, plus any milestone commit.</SURFACE-THE-CONTENT-AS-DRAFTS></p>
+    <p><DO-NOT-COMMIT-AUTOMATICALLY fact="true" status="impl/done">Do not commit automatically —
+unless the project's standing instructions grant that autonomy, which
+many projects do for routine checkpoint commits.</DO-NOT-COMMIT-AUTOMATICALLY></p>
+    <p><where-autonomy-is-granted-lead fact="true" status="impl/done">Where autonomy is
+granted:</where-autonomy-is-granted-lead></p>
+    <facts ordered="false">
+      <GROUP-COMMITS-BY-TOPIC fact="true" status="impl/done">group commits by topic, never by time of edit: the WAL update and
+  the snapshot are checkpoint commits, separate from code commits;</GROUP-COMMITS-BY-TOPIC>
+      <PUSH-ONLY-UNDER-SANCTION fact="true" status="impl/done">push only if the project's autonomy rules sanction pushing; when in
+  doubt, stop at the commit and say so.</PUSH-ONLY-UNDER-SANCTION>
+    </facts>
+  </propose>
+  <report title="6. Report">
+    <p><end-of-session-report-lead fact="true" status="impl/done">Emit a short end-of-session report in the chat:</end-of-session-report-lead></p>
+    <facts ordered="false">
+      <REPORT-WHAT-CHANGED fact="true" status="impl/done">What changed (in specs, code, tests).</REPORT-WHAT-CHANGED>
+      <REPORT-DECISIONS-AND-WHY fact="true" status="impl/done">What decisions were made this session and why.</REPORT-DECISIONS-AND-WHY>
+      <REPORT-OPEN-REVIEW-MARKERS fact="true" status="impl/done">Any open REVIEW markers the user should look at.</REPORT-OPEN-REVIEW-MARKERS>
+      <REPORT-KNOWN-ISSUES-DISCOVERED fact="true" status="impl/done">Any Known Issue that was discovered.</REPORT-KNOWN-ISSUES-DISCOVERED>
+    </facts>
+    <p><EXTEND-THE-REPORT-INTO-A-WIND-DOWN-TLDR fact="true" status="impl/done">On an explicit wind-down, extend the report into a TL;DR of what the
+wind-down did: which files were written or updated, which commits were
+created, push status, and what the next session should pick up first.</EXTEND-THE-REPORT-INTO-A-WIND-DOWN-TLDR></p>
+    <p><one-screen-but-verifiable fact="true" status="impl/done">Short enough to scan on one screen; detailed enough that the user can
+verify nothing was missed without opening the files.</one-screen-but-verifiable></p>
+    <p><THE-REPORT-IS-FOR-THE-HUMAN fact="true" status="impl/done">The report is for the human's quick scan.</THE-REPORT-IS-FOR-THE-HUMAN></p>
+    <p><THE-WAL-IS-FOR-THE-NEXT-SESSIONS-AGENT fact="true" status="impl/done">The WAL is for the next
+session's agent.</THE-WAL-IS-FOR-THE-NEXT-SESSIONS-AGENT></p>
+    <p><they-serve-different-readers fact="true" status="impl/done">They serve different readers.</they-serve-different-readers></p>
+  </report>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-APPEND-TO-THE-WAL fact="true" status="impl/done">Never append to the WAL. Rewrite it; the previous version lives in
+  git history.</NEVER-APPEND-TO-THE-WAL>
+      <NEVER-PAPER-OVER-A-BROKEN-STOPPING-STATE fact="true" status="impl/done">Never paper over a broken stopping state — a red test suite recorded
+  as green poisons every following session.</NEVER-PAPER-OVER-A-BROKEN-STOPPING-STATE>
+      <NEVER-LEAVE-THE-UPDATED-LINE-UNTOUCHED fact="true" status="impl/done">Never leave the `_Updated:` line untouched while editing the rest.</NEVER-LEAVE-THE-UPDATED-LINE-UNTOUCHED>
+      <NEVER-PUSH-ON-A-WIND-DOWN-WITHOUT-SANCTION fact="true" status="impl/done">Never push on a wind-down unless the project's standing rules
+  sanction it.</NEVER-PUSH-ON-A-WIND-DOWN-WITHOUT-SANCTION>
+      <NEVER-SKIP-THE-CONTINUE-OVERWRITE fact="true" status="impl/done">Never skip the `CONTINUE.md` overwrite on an explicit wind-down —
+  that is the half of the contract the cold reader depends on.</NEVER-SKIP-THE-CONTINUE-OVERWRITE>
+    </facts>
+  </never>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-WHEN-THE-HOOK-RUNS fact="true" status="impl/done">The hook runs at every session end; a wind-down phrase (`END
+  SESSION`, `WRAP UP`, `CHECKPOINT AND CLOSE`, project twins) invokes
+  it in full.</SUM-WHEN-THE-HOOK-RUNS>
+      <SUM-THE-STEPS-IN-ORDER fact="true" status="impl/done">Confirm the stopping state honestly; rewrite the WAL; collapse
+  history out of it; overwrite `CONTINUE.md`; report.</SUM-THE-STEPS-IN-ORDER>
+      <SUM-PROPOSE-DRAFTS-BY-DEFAULT fact="true" status="impl/done">Propose drafts by default; commit and push only under standing
+  autonomy, in topic-grouped commits.</SUM-PROPOSE-DRAFTS-BY-DEFAULT>
+      <SUM-UNDER-TWO-MINUTES fact="true" status="impl/done">Under two minutes for a well-scoped session.</SUM-UNDER-TWO-MINUTES>
+    </facts>
+  </summary>
+</spec>

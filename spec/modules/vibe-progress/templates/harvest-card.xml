@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">HARVEST — &lt;feature, reader-facing name&gt;</title>
+  <status stage="spec" state="done" comment="B2 2026-07-24: template in force since Phase A (campaign writes cards from it); fact grain from birth"/>
+  <facts ordered="false">
+    <CARD-ONE-PROMISE fact="true" status="spec/done">One card = one promise worth telling a reader about.</CARD-ONE-PROMISE>
+    <CARD-WRITTEN-HOT fact="true" status="spec/done">Written in the minute the knowledge is hot (verification or fix just
+  done); polished later, in the documentation stage — never now.</CARD-WRITTEN-HOT>
+  </facts>
+  <facts ordered="false">
+    <FIELD-UNIT fact="true" status="spec/done">**Unit:** `spec://…#anchor`</FIELD-UNIT>
+    <FIELD-AUDIENCE fact="true" status="spec/done">**Audience:** user | author (CSV allowed)</FIELD-AUDIENCE>
+    <FIELD-PROMISE fact="true" status="spec/done">**Promise (reader's register, one sentence):** what the reader can do,
+  not what the system must. E.g. "You can pin a dependency to a local
+  checkout with one manifest line."</FIELD-PROMISE>
+    <FIELD-PROVEN-EXAMPLE fact="true" status="spec/done">**Proven example:** command + real output, captured from the verification
+  run (this is the doc fixture — it was actually executed):</FIELD-PROVEN-EXAMPLE>
+  </facts>
+  <fence>  $ vibe &lt;…&gt;
+  &lt;real output&gt;</fence>
+  <facts ordered="false">
+    <FIELD-GOTCHAS fact="true" status="spec/done">**Gotchas / edge cases:** what surprised us; what the reader will trip on.</FIELD-GOTCHAS>
+    <FIELD-STABILITY fact="true" status="spec/done">**Stability:** freeze-candidate | still-moving (`still-moving` cards wait;
+  a chapter is written only from stable cards).</FIELD-STABILITY>
+    <FIELD-VERDICT-REF fact="true" status="spec/done">**Source verdict ref:** &lt;cache/baseline pointer&gt;</FIELD-VERDICT-REF>
+  </facts>
+</spec>

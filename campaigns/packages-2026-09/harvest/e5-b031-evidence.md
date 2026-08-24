@@ -107,29 +107,29 @@ top files `grep -ro $E --include='*.json' 'spec://org.vibevm.core/vibevm' … | 
 
 ## 2. Host exceptions in the contracts — verbatim
 
-### PROP-029 — `spec/common/PROP-029-fully-qualified-addresses.md`
+### PROP-029 — `spec/common/PROP-029-fully-qualified-addresses.xml`
 
-`##SCOPE-HOST` (the host exception), `spec/common/PROP-029-fully-qualified-addresses.md:43`:
+`##SCOPE-HOST` (the host exception), `spec/common/PROP-029-fully-qualified-addresses.xml:43`:
 
 > `- ##SCOPE-HOST The **host vibevm project's own** specs keep the project authority \`spec://org.vibevm.core/vibevm/…\` — the root project is not a package with a group; §1 binds packages. @spec/done`
 
 Sibling scope rules in the same §4: `:44 ##SCOPE-FIXTURES` (test fixtures
 `spec://demo/…`, `spec://com.example.shop/…` are out of scope) and `:45 ##SCOPE-GROUP-CHANGE`.
 
-`grep -ni host spec/common/PROP-029-fully-qualified-addresses.md` → the word
+`grep -ni host spec/common/PROP-029-fully-qualified-addresses.xml` → the word
 "host" appears on **exactly one line**, `:43`. So SCOPE-HOST is the sole host
 carve-out in PROP-029.
 
-`grep -n vibevm spec/common/PROP-029-fully-qualified-addresses.md` → lines
+`grep -n vibevm spec/common/PROP-029-fully-qualified-addresses.xml` → lines
 `:5, :17, :21, :22, :23, :31, :43, :49, :50`. Of these, only `:43` is a
 host-scope exception; the rest use `vibevm` as the project name in prose or as
 package carrier *examples* (`stack:org.vibevm.ai-native/rust-ai-native-lang`
 at `:21`, `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` at
 `:22`) — i.e. the `org.vibevm.*` *group*, not the host spec namespace.
 
-### PROP-035 — `spec/modules/vibe-workspace/PROP-035-spec-compiler.md`
+### PROP-035 — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml`
 
-`##UNIFIED-GRAMMAR`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:94-103`:
+`##UNIFIED-GRAMMAR`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:94-103`:
 
 > `##UNIFIED-GRAMMAR **Unified grammar** (reconciled with the pkgref grammar of PROP-008): @impl/done`
 >
@@ -140,15 +140,15 @@ at `:21`, `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` at
 > `- ##URI-TREE-PATH \`#<anchor>.<sub>…\` is a **tree path** into the document IR (§5). @impl/done` (`:102`)
 > `- ##URI-REVISION-PIN \`~r<N>\` pins a spec-unit revision (PROP-014), not a package version. @spec/done` (`:103`)
 
-`##ROUTER-DOC-ID`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:107`:
+`##ROUTER-DOC-ID`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:107`:
 
 > `- ##ROUTER-DOC-ID **Doc-id truncation** — \`PROP-NNN\` / \`FEAT-NNN\` in a URI resolve to \`PROP-NNN-<slug>.md\`; other docs use the full stem. (This is \`canonical_doc_path\` in the specmap engine, reused, not reinvented.) @impl/done`
 
-`grep -ni host spec/modules/vibe-workspace/PROP-035-spec-compiler.md` → **no
+`grep -ni host spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` → **no
 matches**. PROP-035 contains no host-special-case language at all; §6's grammar
 is written uniformly as `spec://<group>/<name>/…` with no carve-out for the host.
 
-`grep -n vibevm spec/modules/vibe-workspace/PROP-035-spec-compiler.md` → lines
+`grep -n vibevm spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` → lines
 `:8, :23, :247, :265, :267, :285, :287`. None is a host-scope exception; all are
 prose ("Loading vibevm itself", `:23`; "every project, package, and library
 vibevm manages", `:247`; "Convert vibevm itself last", `:267`; "aligning vibevm
@@ -309,7 +309,7 @@ Only `PROP-NNN` and `FEAT-NNN` truncate (test at `:190`: `assert!(!is_id_stem("D
 Actual file stems on disk, `ls -1 spec/common/*.md spec/modules/*/*.md | sed -E 's#.*/##; s#\.md$##'` → 44 stems
 (`PROP-000`, `PROP-001-git-backend`, … `PROP-043-progress-markup`, plus
 `OWNER-GUIDE`). Every PROP doc on disk has the full `PROP-NNN-<slug>` form
-(except `PROP-000` which is bare `PROP-000.md`).
+(except `PROP-000` which is bare `PROP-000.xml`).
 
 Doc-ids cited under `spec://org.vibevm.core/vibevm/(common|modules)/…` in `spec/` + `campaigns/`
 (no `run/`). Extraction:
@@ -357,7 +357,7 @@ authorities (dotted first segment) whose doc-id is a bare `PROP-NNN`/`FEAT-NNN`.
 
 All 190 are in the prose perimeter (`spec/`, `campaigns/`, `packages/`); **0** in
 `crates/`. The 165 real ones cite the specmap doc, e.g.
-`spec/common/PROP-031-algorithmic-refactoring.md:45  [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary)`.
+`spec/common/PROP-031-algorithmic-refactoring.xml:45  [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary)`.
 The 25 `PROP-001` are demo/illustrative authorities (`com.example.shop`,
 `com.olegchir.telegram.oproto`).
 

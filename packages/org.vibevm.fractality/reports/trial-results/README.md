@@ -50,7 +50,7 @@ raw evidence.
 ## Current groups
 
 | group | campaign | pre-reg | headline |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `2026-10-07-14-40-c2-f6-initiative` | C2 Ф6 | MT-C2-01 / -04 | arm A 16.7%, arm B 0% (hooks falsified; F23/F24/F25) |
 | `2026-12-07-05-49-c3-f6-gated` | C3 Ф6 | MT-C3-01 | gated 44.4% vs 16.7% naive (~2.7×); ran end to end |
 
@@ -67,3 +67,4 @@ cd ../.. && git add reports/trial-results && git commit -m "test(fractality): pr
 ```
 
 A run is not "done" until its evidence is committed.
+

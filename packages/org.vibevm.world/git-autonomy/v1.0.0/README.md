@@ -13,9 +13,9 @@ with routine work?" handshake, never the "may I cross an irreversible threshold?
 
 @fact:package-contents-lead This package ships: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/autonomy/AUTONOMY-PROTOCOL.md` — the routine-vs-red-line line, why the red lines
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/autonomy/AUTONOMY-PROTOCOL.xml` — the routine-vs-red-line line, why the red lines
   survive every mode, and how to re-derive your own red-line set. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/32-flow-autonomy.md` — the boot snippet loaded at session start. @status:impl/done
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/32-flow-autonomy.xml` — the boot snippet loaded at session start. @status:impl/done
 
 ## Install {#install}
 
@@ -30,3 +30,4 @@ vibe install flow:git-autonomy
 ## License {#license}
 
 @fact:license-line UPL-1.0 — see `LICENSE`. @status:impl/done
+

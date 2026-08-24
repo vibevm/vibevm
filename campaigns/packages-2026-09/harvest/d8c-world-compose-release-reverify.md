@@ -46,7 +46,7 @@ direction), `**/target/**`, `.git/**`, `**/node_modules/**`,
 separately.
 
 **Evidence source classes**, tagged on every evidence line per
-[§3.1](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#world-verdicts):
+[§3.1](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#world-verdicts):
 **[1]** the package's own shipped artifacts · **[2]** the host's observed
 conformance · **[3]** the installed reality (`vibe.lock`, `vibedeps/`,
 `files_written`).
@@ -147,8 +147,8 @@ $ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
 …/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
 ```
 
-The verdict's `31-flow-conventional-commits.md:24` citation is **exact**. The
-full rule is at `conventional-commits.md:74-77` [1]:
+The verdict's `31-flow-conventional-commits.xml:24` citation is **exact**. The
+full rule is at `conventional-commits.xml:74-77` [1]:
 
 ```
 - ##INCLUDE-WHY-THIS-CHANGE-WAS-MADE **Why this change was made.** Link to the spec section, issue,
@@ -176,7 +176,7 @@ draws the line the composition row erases:
 ```
 
 **Correction owed to the reason, (a):** the verdict cites this at
-`30-flow-atomic-commits.md:22`. At HEAD, `:22` is a **blank line**; the section
+`30-flow-atomic-commits.xml:22`. At HEAD, `:22` is a **blank line**; the section
 head is `:21` and the line-drawing sentence is `##CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY`
 at **`:26`**. (In the installed copy [3] the same sentence sits at
 `vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md:19` — the
@@ -277,7 +277,7 @@ absence* argument, and that is what is re-verified below.
 `legacy-spec/`**:
 
 ```
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:67
+packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.xml:67
 legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374        ← EXCLUDED perimeter
 legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298            ← EXCLUDED perimeter
 vibe.lock:293
@@ -290,7 +290,7 @@ failure mode: *«Wave 6 and wave 7 both leaned on archived-versus-live ratios
 drawn from it.»* **The reason is built entirely on such a ratio** («4 archived
 plans … 0 live … 3 in the archive»). Strip the archive column and the argument
 has no numerator. Of the two admissible refs, `vibe.lock:293` **supports** the
-sentence (the flow is installed and pinned), and `phase-gates.md:67` is the
+sentence (the flow is installed and pinned), and `phase-gates.xml:67` is the
 package's own spec **also supporting** it [1]:
 
 ```
@@ -340,9 +340,9 @@ campaigns/packages-2026-09/baseline.json                                   ← c
 campaigns/packages-2026-09/harvest/d2-campaign-plans-research-repairs.md   ← campaign prose ABOUT the finding
 campaigns/packages-2026-09/harvest/d6a-plans-research-absences.md          ← campaign prose ABOUT the finding
 campaigns/packages-2026-09/tasks/evidence/…  (6 files)                     ← campaign records
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md   ← INSTANCE
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md       ← the spec itself
-packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md
+packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml   ← INSTANCE
+packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.xml       ← the spec itself
+packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.xml
 ```
 
 **Nine of the twelve hits are this campaign's own footprint**
@@ -350,7 +350,7 @@ packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-p
 opened and confirmed to be prose about the finding, not instances. **One is a
 live instance**, and it settles all three clauses.
 
-*Clause 1 — «subjects are spelled in the plan».* `FRACTALITY-IGNITION-PLAN-v0.1.md:894-896` [2]:
+*Clause 1 — «subjects are spelled in the plan».* `FRACTALITY-IGNITION-PLAN-v0.1.xml:894-896` [2]:
 
 ```
 894: *Commits:* `feat(fractality): cargo workspace + core model` ·
@@ -368,11 +368,11 @@ stands»). Not re-litigated.
 ledgers [2]:
 
 ```console
-$ grep -c "^### Phase .* — EXECUTED .*; commit map" …/FRACTALITY-IGNITION-PLAN-v0.1.md
+$ grep -c "^### Phase .* — EXECUTED .*; commit map" …/FRACTALITY-IGNITION-PLAN-v0.1.xml
 8
-$ grep -c "^- \*\*Ф[0-9]* — EXECUTED .*Commit map:\*\*" …/FRACTALITY-INITIATIVE-PLAN-v0.1.md
+$ grep -c "^- \*\*Ф[0-9]* — EXECUTED .*Commit map:\*\*" …/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
 5
-$ sed -n '225,227p' …/FRACTALITY-RLM-PLAN-v0.1.md
+$ sed -n '225,227p' …/FRACTALITY-RLM-PLAN-v0.1.xml
 ## 9. Ledger {#ledger}
 
 Commit map (Stage B execution, Campaign 3):
@@ -383,7 +383,7 @@ could establish. Planned at `:894`, ledgered at `:1163`, and the commit exists
 in this repository's history:
 
 ```console
-$ sed -n '1163p' …/FRACTALITY-IGNITION-PLAN-v0.1.md
+$ sed -n '1163p' …/FRACTALITY-IGNITION-PLAN-v0.1.xml
 - `bd1e65d` feat(fractality): cargo workspace + core model.
 
 $ git log -1 --format="%h %s" bd1e65d
@@ -430,14 +430,14 @@ neither Constraints, nor anchors, nor resumed sessions.
 
 ### The WAL measurements, re-run at HEAD [2]
 
-`spec/WAL.md` is measured here as a **host artefact** (source 2 — the host's
+`spec/WAL.xml` is measured here as a **host artefact** (source 2 — the host's
 observed conformance), never quoted for campaign numbers.
 
 ```console
-$ grep -c "spec://" spec/WAL.md
+$ grep -c "spec://" spec/WAL.xml
 2
 
-$ grep -n "spec://" spec/WAL.md
+$ grep -n "spec://" spec/WAL.xml
 65:links take `@spec://` where they are pointers and `#embed` where the target
 337:cannot be cited. `spec://` occurs zero times in this file, in every revision
 ```
@@ -475,7 +475,7 @@ And the two that cite anything cite **section numbers, not anchors** [2]:
 replace. **So the honest figure is 2 of 28 by any notation and 0 of 28 by
 anchor** — the direction of the verdict is right and its arithmetic is stale, the
 WAL having been rewritten at three wind-downs since (`git log --oneline -5 --
-spec/WAL.md`).
+spec/WAL.xml`).
 
 ### Anchor 1 — `addressable-specs/v0.1.0/README.md#COMPOSES-WAL` → **ROUTE-OUT-CANDIDATE (§3.6(b))**
 
@@ -521,7 +521,7 @@ all** [1]:
 Measuring the `Next` section for anchor citations tests a rule that does not
 exist. The section the rule actually binds is `##SECTION-IN-PROGRESS` (`:92`,
 «Cite spec anchors (`spec://…`)»), and the host fails **that** one too — its
-`## In progress` (`spec/WAL.md:199-226`) names campaign files and paths
+`## In progress` (`spec/WAL.xml:199-226`) names campaign files and paths
 (`harvest/world-w6-project-practice-ii.md`, `tasks/batch-progress.py`,
 `ev-W5a…d`) and cites no anchor [2]. So the finding survives on the correct
 section; the reason cites the wrong one.
@@ -537,7 +537,7 @@ naming it. Editing `addressable-specs` here would be the *профанация* 
 rewriting the discipline to describe a lax consumer.
 
 **Which consumer, and what it owes.** The consumer is **this host repository**,
-and the obligation is on `spec/WAL.md`, not on the package:
+and the obligation is on `spec/WAL.xml`, not on the package:
 
 1. `## Constraints — do not violate` — bring the 28 entries under
    `flow:wal` `##SECTION-CONSTRAINTS`: each carries a *why* citing a spec anchor
@@ -546,7 +546,7 @@ and the obligation is on `spec/WAL.md`, not on the package:
 2. `## In progress` — bring it under `##SECTION-IN-PROGRESS`: «Cite spec anchors
    (`spec://…`)». It currently cites campaign file paths only.
 3. **The prerequisite the host already recorded against itself**
-   (`spec/WAL.md:335-337`, this campaign's own note): *«all 8 [headings] here
+   (`spec/WAL.xml:335-337`, this campaign's own note): *«all 8 [headings] here
    carry no anchor, so the Constraints section above cannot be cited»* — the WAL
    is not addressable, so a constraint entry cannot even be pointed at. That is
    the same defect one level up and belongs in the same host task.
@@ -577,22 +577,22 @@ ground is a HOST-INTERNAL contradiction, not a falsification of this sentence.**
 
 The recorded reason argues: *«`CLAUDE.md`'s END SESSION command, step 4,
 prescribes «Push to `origin/main`» — the bare named-remote push that
-`spec/boot/90-user.md:35` and `PROP-016:59` BOTH name as not the standard
+`spec/boot/90-user.xml:35` and `PROP-016:59` BOTH name as not the standard
 rollout.»* Every fact in that sentence is true, and it acquits the package. Read
 the two documents it names [2]:
 
 ```
-spec/boot/90-user.md:35
+spec/boot/90-user.xml:35
 - ##CMD-MIRROR Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14:
   `cargo xtask mirror` … This is the standard rollout, preferred over a bare `git push origin`.
 
-spec/common/PROP-016-source-mirrors.md:59
+spec/common/PROP-016-source-mirrors.xml:59
 - ##CMD-MIRROR `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target,
   fast-forward-only, never `--force` … This — not `git push origin` — is the standard rollout.
 ```
 
 **Both host documents agree with the package.** The only document out of step is
-`CLAUDE.md:191`. So the disagreement is *`CLAUDE.md` against `spec/boot/90-user.md`
+`CLAUDE.md:191`. So the disagreement is *`CLAUDE.md` against `spec/boot/90-user.xml`
 and `PROP-016`* — a host-internal contradiction between three host documents —
 and the package's sentence sits on the side that two of the three take. This is
 [`##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE`](../PHASE-D-BATCH-PLAN.md#delegation-lessons)
@@ -601,7 +601,7 @@ SESSION step 4, not `source-mirrors`' README. The package's own spec states the
 same rule [1]:
 
 ```
-daily-loop.md:42
+daily-loop.xml:42
 | ##ROW-MOMENT-END-OF-A-WORK-SESSION End of a work session @impl/done | Fan out as the wind-down step @impl/done |
 ```
 
@@ -615,7 +615,7 @@ rollout. That is a host obligation for the boss, on a file
 this is the only surviving ground.**
 
 ```console
-$ grep -niE "fanned out|fan out|fan-out|xtask mirror" spec/WAL.md
+$ grep -niE "fanned out|fan out|fan-out|xtask mirror" spec/WAL.xml
 (no output)
 ```
 
@@ -655,7 +655,7 @@ $ grep -rni "mirror\|fan.out" packages/org.vibevm.world/wal/v0.2.0/
 (no output)
 ```
 
-`flow:wal` — the flow that owns `spec/WAL.md`'s section grammar (`:76-98`,
+`flow:wal` — the flow that owns `spec/WAL.xml`'s section grammar (`:76-98`,
 eight numbered sections) — **never mentions mirrors or fan-out at all**. So
 `source-mirrors` prescribes content for a document whose own protocol has no slot
 for it, and no consumer has ever produced it. That is *not* the addressable-specs
@@ -666,20 +666,20 @@ instance.
 
 > DRIFT on the WAL-entry half only, and on different evidence than first
 > recorded. The «fan-out is a natural session wind-down step» half is **sound**:
-> the package's own `daily-loop.md:42` states it, and the host's
-> `spec/boot/90-user.md:35` and `spec/common/PROP-016-source-mirrors.md:59` both
+> the package's own `daily-loop.xml:42` states it, and the host's
+> `spec/boot/90-user.xml:35` and `spec/common/PROP-016-source-mirrors.xml:59` both
 > name `cargo xtask mirror` the standard rollout, «preferred over a bare
 > `git push origin`». The document that disagrees is `CLAUDE.md:191`, which
 > contradicts those two host documents — a host defect, not this sentence's. What
 > does not hold is the second half: no WAL entry notes «fanned out at
 > <checkpoint>». `grep -niE "fanned out|fan out|fan-out|xtask mirror"
-> spec/WAL.md` → 0 at `HEAD = f2b11b0a`, and over the standing perimeter every
+> spec/WAL.xml` → 0 at `HEAD = f2b11b0a`, and over the standing perimeter every
 > «fanned out» hit outside this README and its two vendored copies is the
 > delegation sense of the word (`terraform/adopt-v0.3/LOG.md:542`,
 > `fractality/spec/PROP-001-foundation.md:70`, `MT-C3-01:124`,
 > `reports/…f6-trial.md:34`, `xtask/src/mirror.rs:8`). And `flow:wal` specifies
 > no such entry: `grep -rni "mirror\|fan.out"` over `wal/v0.2.0/` returns nothing,
-> so its eight-section grammar (`WAL-PROTOCOL.md:76-98`) has no slot for it. The
+> so its eight-section grammar (`WAL-PROTOCOL.xml:76-98`) has no slot for it. The
 > claim is prescribed on one side, unsupported on the other, and unexercised.
 
 **The which-side call, stated rather than taken.** The queue says F-220 «needs
@@ -689,7 +689,7 @@ ruling turns on one reading:
 - **(a)** if «the WAL entry notes …» is *a described practice stated as fact*,
   it is route (a) — the package's own statement, over-claiming a convention no
   protocol carries. The repair is one clause: drop the WAL-entry half, or soften
-  it to what `daily-loop.md` actually supports.
+  it to what `daily-loop.xml` actually supports.
 - **(b)** if it is read as a *prescription* — which the `@spec/done` marker
   supports, and which §6.1 protects («an unexercised capability is not a false
   capability») — it is a sound-but-unexercised rule and the package does not
@@ -759,14 +759,14 @@ fact **practises the four-field form**, and the search missed all of it [2]:
 
 ```console
 $ grep -rl -i "when to revisit" spec/common/*.md spec/modules/*/*.md
-spec/common/PROP-000.md                            (##LANG-REVISIT:23, ##LICENSE-REVISIT:57)
-spec/modules/vibe-cli/PROP-036-package-tree.md     (##decision-artifacts-revisit:95)
-spec/modules/vibe-registry/PROP-001-git-backend.md (##revisit-lead:113)
+spec/common/PROP-000.xml                            (##LANG-REVISIT:23, ##LICENSE-REVISIT:57)
+spec/modules/vibe-cli/PROP-036-package-tree.xml     (##decision-artifacts-revisit:95)
+spec/modules/vibe-registry/PROP-001-git-backend.xml (##revisit-lead:113)
 ```
 
 The clause of that reason that **is** load-bearing and **is** correct is the last
 one: «PROP-000 §12 records the posture as a pointer with no trigger». Verified —
-`awk 'NR>=157 && NR<=168' spec/common/PROP-000.md | grep -ciE "revisit|considered and rejected"` → **0**.
+`awk 'NR>=157 && NR<=168' spec/common/PROP-000.xml | grep -ciE "revisit|considered and rejected"` → **0**.
 
 ### Anchor 1 — `git-attribution-policy/v0.1.0/README.md#COMPOSES-DECISION-RECORDS` → **ROUTE-OUT-CANDIDATE (§3.6(b))**
 
@@ -781,17 +781,17 @@ one: «PROP-000 §12 records the posture as a pointer with no trigger». Verifie
 what makes it a rule and not a report [1]:
 
 ```
-ATTRIBUTION-POLICY.md:160-161
+ATTRIBUTION-POLICY.xml:160-161
   choice. Record the choice as a decision with a revisit trigger tied
   to regulation changes. Show me the draft; do not apply until I approve.
 
-disclosure-alternative.md:82-84
+disclosure-alternative.xml:82-84
   1. ##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE The owner edits the single policy place (the boot snippet) to the
      new posture, with a dated decision record and a revisit trigger
      (see `flow:decision-records`). @impl/done
 ```
 
-**Worth flagging for B-004:** `ATTRIBUTION-POLICY.md:160` sits **inside the
+**Worth flagging for B-004:** `ATTRIBUTION-POLICY.xml:160` sits **inside the
 fenced re-derive block** (`:151-163`) and therefore carries no anchor — the same
 unaddressable-instruction surface [`B-004`](../../BACKLOG.md#b-004) files. The
 only *addressable* statement of the rule is `##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE`,
@@ -813,11 +813,11 @@ campaigns/packages-2026-09/baseline.json                      ← campaign recor
 campaigns/packages-2026-09/tasks/evidence/batch-W1c.json      ← campaign record
 campaigns/packages-2026-09/tasks/evidence/ev-W1c.json         ← campaign record
 packages/org.vibevm.world/git-attribution-policy/…  (4 files) ← the package itself
-spec/boot/STATIC.md                                           ← the COMPILED copy of that package's snippet
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md       ← campaign prose ABOUT the finding
+spec/boot/STATIC.xml                                           ← the COMPILED copy of that package's snippet
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml       ← campaign prose ABOUT the finding
 ```
 
-**Every hit was opened.** `spec/boot/STATIC.md:445-446` and `:639-640` are the
+**Every hit was opened.** `spec/boot/STATIC.xml:445-446` and `:639-640` are the
 package's own boot snippet compiled into the host's lane [3] («*such regulation
 and violates no present law; the owner chooses the posture proactively…*») — the
 package speaking, not a host record. Four are this campaign's own footprint. **No
@@ -833,12 +833,12 @@ $ grep -rn -i "regulation" packages/org.vibevm.fractality/ --include=*.md | grep
 shape:
 
 ```
-spec/boot/00-core.md:21
+spec/boot/00-core.xml:21
 1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits,
    branches, comments, or any artefact as machine-authored. The rule itself (and its copy in
    PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done
 
-spec/common/PROP-000.md:161
+spec/common/PROP-000.xml:161
 - ##GP-ATTRIBUTION human-authored **attribution** —
   `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done
 ```
@@ -868,7 +868,7 @@ $ grep -n "attribution-policy@\|decision-records@" packages/org.vibevm.fractalit
 
 Both this host and the `fractality` specspace install both flows; neither records
 the posture. **The host owes** a four-field record at the anchor that governs the
-posture — `spec/boot/00-core.md` `##RULE-ATTRIBUTION` or `PROP-000` §12
+posture — `spec/boot/00-core.xml` `##RULE-ATTRIBUTION` or `PROP-000` §12
 `##GP-ATTRIBUTION` — carrying the *why* (present law imposes none; the owner
 chooses proactively so future regulation finds no hook), the rejected alternative
 (the disclosure posture, which the package already documents in full), and a
@@ -904,7 +904,7 @@ own wording. Read `PROP-016:78` against the four fields [2]:
 |---|---|
 | **Decision** | ✔ «the source becomes multi-homed …» |
 | **Why** | ~ «owner-requested» (`##status-line:5`); the substantive why is delegated to the flow (`##model-pointer:8`), not carried here |
-| **Considered and rejected** | ~ two alternatives **named** («the interim multi-push-remote», «the abandoned bidirectional-multi-master sketch») but **without rejection reasons**, which `record-template.md` requires |
+| **Considered and rejected** | ~ two alternatives **named** («the interim multi-push-remote», «the abandoned bidirectional-multi-master sketch») but **without rejection reasons**, which `record-template.xml` requires |
 | **When to revisit** | ✘ **absent** |
 
 **So it is three-quarters of a record, and the quarter it is missing is the
@@ -913,10 +913,10 @@ recorded decisions» — it says «**each with a revisit trigger**» and then qu
 one. The verdict's own command reproduces exactly at HEAD [2]:
 
 ```console
-$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.md
+$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.xml
 (no output; rc=1)
 
-$ wc -l < spec/common/PROP-016-source-mirrors.md
+$ wc -l < spec/common/PROP-016-source-mirrors.xml
 80
 ```
 
@@ -1002,13 +1002,13 @@ $ ls spec/
 WAL.md  boot  common  design  manual-tests  modules  terraforms
 
 $ ls packages/org.vibevm.fractality/fractality/v0.1.0/spec/
-PROP-001-foundation.md  VISION-RECURSIVE-FABRIC.md  boot  examples
+PROP-001-foundation.xml  VISION-RECURSIVE-FABRIC.xml  boot  examples
 manual-tests  plans  refs  skills
 ```
 
 Neither the host nor the `fractality` adopter has a `spec/flows/`. It resolves
 inside the package [1] (`ls …/licensing/v0.1.0/spec/flows/licensing/` →
-`LICENSING-PROTOCOL.md dependency-licenses.md eula-template.md`) and inside the
+`LICENSING-PROTOCOL.xml dependency-licenses.xml eula-template.xml`) and inside the
 install slot [3] (`vibedeps/flow-licensing/0.1.0/spec/flows/licensing/`), and
 nowhere a consuming session stands. **The verdict's underlying observation is
 correct.** So is its aside that the campaign's `\.\./flows/` family scan cannot
@@ -1143,7 +1143,7 @@ B-004's scope question.**
 **Recorded, not used — the «prompt was never run here» half.** The registry
 reason concedes it («expected rather than damning — this host is the extraction
 SOURCE»), and the concession is right: the host's licensing posture predates the
-package (`spec/common/PROP-000.md` §3 `##LICENSE-REVISIT:57` records the
+package (`spec/common/PROP-000.xml` §3 `##LICENSE-REVISIT:57` records the
 relicensing trigger as fired and spent on 2026-07-12). Ask (2) of the fenced
 prompt — «list any current dependencies that violate it» — is the one output no
 host artefact could show, and its absence is not evidence about either anchor.
@@ -1182,13 +1182,13 @@ and the content documents are over-counted by one.
 
 ```console
 $ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/*.md
-SPEC-GENRES-PROTOCOL.md   design-docs.md   when-to-write-what.md          (3)
+SPEC-GENRES-PROTOCOL.xml   design-docs.xml   when-to-write-what.xml          (3)
 
 $ find packages/org.vibevm.world/spec-genres -type f | wc -l
 7
 ```
 
-Seven files: `LICENSE.md`, `README.md`, `vibe.toml`, `spec/boot/17-flow-spec-genres.md`,
+Seven files: `LICENSE.xml`, `README.md`, `vibe.toml`, `spec/boot/17-flow-spec-genres.md`,
 and **three** documents under `spec/flows/spec-genres/`. Three pieces of content
 plus a boot snippet.
 
@@ -1209,7 +1209,7 @@ Identical shape, identical defect [1]:
 
 ```console
 $ ls packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/*.md
-TOOL-DESIGN-LESSONS.md   packaging-lessons.md   self-updating-tools.md     (3)
+TOOL-DESIGN-LESSONS.xml   packaging-lessons.xml   self-updating-tools.xml     (3)
 
 $ find packages/org.vibevm.world/tool-design-lessons -type f | wc -l
 7
@@ -1301,12 +1301,12 @@ bump and a re-vendor; the edit needs no ruling.
 |---|---|---|---|
 | **F-219** | `addressable-specs/README#COMPOSES-ATOMIC-COMMITS` | **STANDS-RESTATED** — misattribution real; count re-measured 579 commits / 732 lines at `f2b11b0a` (the recorded «716 commits» is a line count); `sync-from-code`'s identical defect already closed as F-253, route (a) | [1] [2] [3] |
 | **F-219** | `campaign-plans/README#COMPOSES-ATOMIC-COMMITS` | **FALLS** — different sentence, no attribution claim; its own reason is a legacy-spec archived-vs-live ratio the owner voided; all three clauses live in the `fractality` adopter (8 phases with subjects spelled in advance, 3 ledgers, 58 hashes bound, sampled bindings verified against `git log`) | [1] [2] [3] |
-| **F-220** | `addressable-specs/README#COMPOSES-WAL` | **ROUTE-OUT-CANDIDATE (§3.6(b))** — rule specified on both sides (`WAL-PROTOCOL.md:83`, `:92`); host WAL has 0 anchors in 28 constraint entries and 0 `spec://` citations; verdict measured `##SECTION-NEXT`, which carries no citation rule | [1] [2] [3] |
-| **F-220** | `source-mirrors/README#COMPOSES-WAL` | **STANDS-RESTATED** — half (i) acquitted: `90-user.md:35` and `PROP-016:59` both back the package, `CLAUDE.md:191` is the odd one out (host-internal contradiction); half (ii) survives — no WAL entry anywhere notes «fanned out at <checkpoint>» and `flow:wal` never mentions mirrors | [1] [2] [3] |
+| **F-220** | `addressable-specs/README#COMPOSES-WAL` | **ROUTE-OUT-CANDIDATE (§3.6(b))** — rule specified on both sides (`WAL-PROTOCOL.xml:83`, `:92`); host WAL has 0 anchors in 28 constraint entries and 0 `spec://` citations; verdict measured `##SECTION-NEXT`, which carries no citation rule | [1] [2] [3] |
+| **F-220** | `source-mirrors/README#COMPOSES-WAL` | **STANDS-RESTATED** — half (i) acquitted: `90-user.xml:35` and `PROP-016:59` both back the package, `CLAUDE.md:191` is the odd one out (host-internal contradiction); half (ii) survives — no WAL entry anywhere notes «fanned out at <checkpoint>» and `flow:wal` never mentions mirrors | [1] [2] [3] |
 | **F-233** | `git-attribution-policy/README#COMPOSES-DECISION-RECORDS` | **ROUTE-OUT-CANDIDATE (§3.6(b))** — the four-field form is the composed flow's own contract; the verdict searched for an ADR directory the flow forbids and missed the host's live four-field records; the load-bearing clause (PROP-000 §12 is a pointer, 0 fields) holds; **two** consumers install both flows, not one | [1] [2] [3] |
 | **F-233** | `source-mirrors/README#COMPOSES-DECISION-RECORDS` | **ROUTE-OUT-CANDIDATE (§3.6(b))** — `PROP-016 ##HIST-AUTHORED` is 3 of 4 fields and the missing one is exactly what the sentence claims; `revisit\|parallel\|integrator` → 0 over 80 lines; 3 of 43 host spec docs carry the field at all | [1] [2] [3] |
-| **F-240** | `licensing/…/LICENSING-PROTOCOL.md#re-derive-prompt-lead` | **FALLS** — the lead says only «Paste this to your agent in a fresh session» and names no path; `##COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION` two lines above forbids the verbatim reading that convicts it | [1] [2] [3] |
-| **F-240** | `spec-genres/…/SPEC-GENRES-PROTOCOL.md#re-derive-prompt-lead` | **FALLS** — the lead says only «Have the agent surface them and map yours onto this frame» and names no path; the defect is the fenced body's, which carries no anchor (B-004) | [1] [2] [3] |
+| **F-240** | `licensing/…/LICENSING-PROTOCOL.xml#re-derive-prompt-lead` | **FALLS** — the lead says only «Paste this to your agent in a fresh session» and names no path; `##COPY-THE-PROMPT-TASK-NOT-THE-PROMPT-IMPLEMENTATION` two lines above forbids the verbatim reading that convicts it | [1] [2] [3] |
+| **F-240** | `spec-genres/…/SPEC-GENRES-PROTOCOL.xml#re-derive-prompt-lead` | **FALLS** — the lead says only «Have the agent surface them and map yours onto this frame» and names no path; the defect is the fenced body's, which carries no anchor (B-004) | [1] [2] [3] |
 | **F-251** | `spec-genres/README#package-contents-lead` | **STANDS** — «four … plus a boot snippet» is five; 4 bullets follow and the 4th IS the snippet; 3 flow docs, 7 files; 14 of 16 strict siblings say «three» and all 14 are correct against their own trees | [1] |
 | **F-251** | `tool-design-lessons/README#package-contents-lead` | **STANDS** — identical sentence, identical defect; 3 flow docs, 7 files | [1] |
 
@@ -1346,11 +1346,11 @@ crates/vibe-check/src/checks/redirect_block.rs
 crates/vibe-workspace/src/boot_artifacts.rs
 crates/vibe-workspace/src/boot_artifacts/tests.rs
 crates/vibe-workspace/src/lib.rs
-packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md
+packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml
 ```
 
 **One of the six files is a file this batch cites** —
-`ATOMIC-COMMITS-PROTOCOL.md`, under F-219. The diff touches
+`ATOMIC-COMMITS-PROTOCOL.xml`, under F-219. The diff touches
 `##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO` (`:93-98`) and `##SUM-THE-NO-ALSO-TEST`
 (`:219`); **neither line carries a `spec://` URI**, and F-219's citation of that
 file (`:78`, the decision-records pointer, one of the package's three `spec://`

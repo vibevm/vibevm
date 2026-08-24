@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-026 — the tcg tool family (the agentic type oracle's product seam)</title>
+  <status stage="impl" state="done" comment="B0 2026-07-24: proposed and implemented 2026-07-07 (TCG-TS plan phase 4); per MCP-SOVEREIGNTY wave 6 superseded in topology, grammar kept normative; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status: proposed 2026-07-07 with AGENTIC-TCG-TS-PLAN v0.1 (owner-
+accepted the same day, with the §3 portability amendment); implemented
+by its Phase 4. History: 2026-07-07 (same day, AGENTIC-TCG-RUST-PLAN
+v0.1) — the §2 promise cashed: `language: "rust"` lands as an enum
+value dispatching to the rust stack's `rust-ai-native-tcg` relay; no new tools,
+no schema shape change. **Superseded in topology** (MCP-SOVEREIGNTY wave 6):
+the standalone `vibe-tcg` crate was deleted whole and the tool grammar below
+stays **normative**, now served by the per-family MCP servers of
+[PROP-027](PROP-027-mcp-packages.xml).** Module: `vibe-mcp`
+(adapter) + `vibe-workspace` (binary resolution); the `vibe-tcg` crate this
+contract was written against no longer exists.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-015](PROP-015-mcp-integration.xml) (the MCP server
+this family is first mounted on), [PROP-018](../../common/PROP-018-agentic-standalone-modes.xml)
+(these tools are ALGORITHMIC — the `query_package` path; no affinity, no
+relay, no `Intent`), [PROP-025](../vibe-workspace/PROP-025-binary-delivery.xml)
+(the slot-dispatch model the registry reuses), and the package-side
+mechanism specs `TCG-ORACLE-v0.1` / `TCG-PROTOCOL-v0.1` in
+`stack:org.vibevm.ai-native/typescript-ai-native-lang` plus `TCG-ORACLE-RUST-v0.1` /
+`TCG-PROTOCOL-RUST-v0.1` in `stack:org.vibevm.ai-native/rust-ai-native-lang` (the
+oracles ship THERE; vibevm ships only this thin product seam).</related></p>
+  <facts ordered="false">
+    <SUPERSEDED-TOPOLOGY fact="true" status="impl/done">**SUPERSEDED IN TOPOLOGY, 2026-07-07 (MCP-SOVEREIGNTY-PLAN v0.1, the
+  owner's `mcp`-kind resolution):** the tool GRAMMAR this PROP defines —
+  the four ops, their params, the answer shapes, the no-prompt rule —
+  is unchanged and remains normative; the TOPOLOGY half (one multiplexed
+  product server, `language` as the dispatch parameter, the `vibe-tcg`
+  registry crate) is retired.</SUPERSEDED-TOPOLOGY>
+    <TOOLS-NEW-HOME fact="true" status="impl/done">The tools now ship in the per-language
+  `mcp`-kind packages ([PROP-027](PROP-027-mcp-packages.xml):
+  `mcp:org.vibevm.ai-native/rust-ai-native-mcp`, `…/typescript-ai-native-mcp`), each
+  serving its own language over the vendored `mcp-core` transport.</TOOLS-NEW-HOME>
+    <ENUM-BET-REREAD fact="true" status="impl/done">The §2 enum-value bet re-reads as «a new language is a new mcp package
+  shipping the SAME tool grammar».</ENUM-BET-REREAD>
+    <LANGUAGE-COMPAT-PARAM fact="true" status="impl/done">`language` survives as a validated
+  compatibility parameter (a mismatch refuses with the recipe naming the
+  right server).</LANGUAGE-COMPAT-PARAM>
+    <TCG-CRATE-DELETED fact="true" status="impl/done">`vibe-tcg` and the vibe-mcp `tcg_*` adapters are
+  DELETED.</TCG-CRATE-DELETED>
+    <RETIRED-SECTIONS-KEPT fact="true" status="spec/done">§3–§5 below describe the retired topology and stay as the
+  design record.</RETIRED-SECTIONS-KEPT>
+  </facts>
+  <problem title="1. Problem">
+    <p><req-problem fact="true" status="impl/done">`req r1`</req-problem></p>
+    <facts ordered="false">
+      <oracle-degraded-path fact="true" status="impl/done">The typescript-ai-native stack ships a type oracle (`typescript-ai-native-tcg
+  serve`) that answers validate/scope/complete/type queries over in-memory
+  overlays at millisecond latency. An agent can already reach it the
+  degraded way (`vibe bin exec typescript-ai-native-tcg -- &lt;op&gt; …`, one cold spawn
+  per question).</oracle-degraded-path>
+      <warm-path-missing fact="true" status="impl/done">What is missing is the WARM path: a persistent oracle
+  per language behind the agent's MCP session, so consultation costs
+  milliseconds, not process startups.</warm-path-missing>
+      <PRODUCT-SURFACE-BOUNDARY fact="true" status="impl/done">That is product surface — lockfile
+  resolution, slot dispatch, child lifecycle, consent — and it must not
+  leak into either the package (which knows nothing of MCP) or vibe-mcp's
+  core (which stays a generic JSON-RPC tool host).</PRODUCT-SURFACE-BOUNDARY>
+    </facts>
+  </problem>
+  <tools title="2. The four tools">
+    <p><req-tools fact="true" status="impl/done">`req r3`</req-tools></p>
+    <p><FOUR-TOOLS fact="true" status="impl/done">`tcg_validate`, `tcg_scope`, `tcg_complete`, `tcg_type` — thin schema
+adapters over the TCG-PROTOCOL ops of the same names, each with:</FOUR-TOOLS></p>
+    <facts ordered="false">
+      <PARAM-LANGUAGE fact="true" status="impl/done">`language` (required; accepts `"typescript"` and — since the Rust
+  twin landed, exactly as this clause promised — `"rust"`; any other
+  value is a ToolError NAMING the supported set, so the next language
+  adds an enum value, not new tools);</PARAM-LANGUAGE>
+      <PARAMS-PASSTHROUGH fact="true" status="impl/done">the op's own params per TCG-PROTOCOL §2 (`file`, `position`,
+  `content`, …), passed through verbatim.</PARAMS-PASSTHROUGH>
+    </facts>
+    <facts ordered="false">
+      <ENRICHED-RESPONSES fact="true" status="impl/done">Responses return the ENRICHED protocol result (TCG-PROTOCOL §3) as
+  `structuredContent`, plus a compact human text rendering (findings
+  first).</ENRICHED-RESPONSES>
+      <NO-AFFINITY fact="true" status="impl/done">These tools are deterministic queries — per PROP-018 §2.3 they
+  carry NO affinity machinery and never park intents.</NO-AFFINITY>
+    </facts>
+  </tools>
+  <portability title="3. The portable family crate — the owner amendment">
+    <p><req-portability fact="true" status="spec/done">`req r3`</req-portability></p>
+    <p><tcg-crate-home fact="true" status="spec/done">The family lives in a dedicated product crate **`vibe-tcg`**, NOT
+inside vibe-mcp:</tcg-crate-home></p>
+    <facts ordered="false">
+      <TCG-CRATE-CONTENTS fact="true" status="spec/done">`vibe-tcg` defines the tool descriptors/JSON schemas, the run logic,
+  the `OracleRegistry` (§4), and a NARROW host abstraction —
+  `trait TcgHost` exposing the project root and the no-prompt consent
+  policy (§5). Dependencies: `vibe-core`, `vibe-workspace`, serde.
+  **Zero vibe-mcp imports, by construction.**</TCG-CRATE-CONTENTS>
+      <MCP-ADAPTER-CELL fact="true" status="spec/done">vibe-mcp mounts it through one thin adapter cell: newtype wrappers
+  implementing `McpTool` by delegation, mapping `vibe-tcg`'s typed
+  errors into `ToolError`. The adapter is the ONLY place the two crates
+  meet.</MCP-ADAPTER-CELL>
+      <EXTRACTION-CONSEQUENCE fact="true" status="spec/done">Consequence (the amendment's point): extracting a STANDALONE tcg MCP
+  server later is one new binary crate — a JSON-RPC loop (vibe-mcp's
+  `Server&lt;T: Transport&gt;` is already transport-generic) mounting the
+  same `vibe-tcg` tools — with zero changes inside the family. That
+  extraction is a named follow-up, not a redesign.</EXTRACTION-CONSEQUENCE>
+    </facts>
+  </portability>
+  <registry title="4. The oracle registry and child lifecycle">
+    <p><req-registry fact="true" status="spec/done">`req r5`</req-registry></p>
+    <p><ORACLE-REGISTRY fact="true" status="spec/done">`OracleRegistry`: interior-mutable (the MCP tool seam hands out shared
+refs), lazily populated per language on first use, dropped with the
+host session:</ORACLE-REGISTRY></p>
+    <facts ordered="true">
+      <REG-RESOLVE fact="true" status="spec/done">resolve the CURRENT project's lockfile → the stack slot that
+   declares the language's oracle binary (`typescript-ai-native-tcg` for
+   TypeScript, `rust-ai-native-tcg` for Rust; the per-language table also
+   carries the requires-line and one-shot recipes so every refusal
+   names ITS language's fix surface, not another's) — the PROP-025
+   `[[binary]]` walk, through the SHARED `vibe-workspace`
+   binary-resolution cell (extracted from vibe-cli by the TS campaign
+   so CLI and registry cannot drift);</REG-RESOLVE>
+      <REG-SPAWN fact="true" status="spec/done">artifact present → spawn `&lt;artifact&gt; serve --root &lt;project&gt;` with
+   piped stdio and hold the handle across calls; artifact absent →
+   build per §5;</REG-SPAWN>
+      <REG-RESPAWN fact="true" status="spec/done">a dead child (`oracle-crashed`) → ONE transparent respawn attempt,
+   then a recipe-carrying ToolError;</REG-RESPAWN>
+      <REG-KILL-ON-DROP fact="true" status="spec/done">registry drop kills every child (kill-on-drop; the no-zombie
+   property is test-asserted).</REG-KILL-ON-DROP>
+    </facts>
+    <p><FAILURES-ARE-RECIPES fact="true" status="spec/done">Failure surfaces are recipes, not dead ends: stack not installed → the
+`[requires]` line + `vibe install`; language unsupported → the
+supported set; node missing / typescript unresolvable → the
+TCG-PROTOCOL §4 recipes passed through.</FAILURES-ARE-RECIPES></p>
+  </registry>
+  <consent title="5. Consent: the no-prompt rule">
+    <p><req-consent fact="true" status="impl/done">`req r5`</req-consent></p>
+    <facts ordered="false">
+      <NO-PROMPT-RULE fact="true" status="impl/done">Building a slot binary executes package build scripts (PROP-025 §3).
+  An MCP server must NEVER prompt.</NO-PROMPT-RULE>
+      <CONSENT-SPLIT fact="true" status="impl/done">So: `org.vibevm`-group slots build
+  on demand silently (the standing allow-list); any OTHER group is
+  refused with the exact recipe (`vibe bin build &lt;name&gt; --assume-yes`)
+  for the human to run in a terminal, where consent can actually be
+  given.</CONSENT-SPLIT>
+      <NO-NEW-RECORDS fact="true" status="spec/done">The registry records nothing PROP-025 does not already record.</NO-NEW-RECORDS>
+    </facts>
+  </consent>
+  <non-goals title="6. Non-goals">
+    <p><req-non-goals fact="true" status="spec/done">`req r6`</req-non-goals></p>
+    <facts ordered="false">
+      <NG-NO-LSP fact="true" status="spec/done">No LSP relay (rename/code-actions/references are out; the surface is
+  the four queries + lifecycle, full stop).</NG-NO-LSP>
+      <NG-NO-REASONING fact="true" status="spec/done">No reasoning ops, no PROP-018 relay involvement.</NG-NO-REASONING>
+      <NG-NO-PER-CALL-SPAWN fact="true" status="spec/done">No per-call child spawn (that is what `vibe bin exec` is for).</NG-NO-PER-CALL-SPAWN>
+      <NG-NO-AUTODETECT fact="true" status="spec/done">No language autodetection — the agent says what it is editing.</NG-NO-AUTODETECT>
+      <NG-TOKEN-TCG-FUTURE fact="true" status="spec/done">Token-level TCG is the package brief's
+  very-far-future sibling and touches this PROP only as a future
+  consumer of the same oracle.</NG-TOKEN-TCG-FUTURE>
+    </facts>
+  </non-goals>
+  <acceptance title="7. Acceptance">
+    <p><req-acceptance fact="true" status="spec/done">`req r7`</req-acceptance></p>
+    <facts ordered="false">
+      <ACC-TOOLS-LIST fact="true" status="spec/done">`tools/list` on a project with the TS stack installed carries the
+  four tools; `tcg_validate` on a demo file returns diagnostics +
+  `conform_findings` + `advice` in `structuredContent`.</ACC-TOOLS-LIST>
+      <ACC-RECIPES fact="true" status="spec/done">The same call on a project WITHOUT the stack returns the
+  not-installed recipe naming THAT language's requires line;
+  an unsupported `language` (e.g. `"go"`) returns the supported-set
+  error listing both shipped languages.</ACC-RECIPES>
+      <ACC-RESPAWN fact="true" status="spec/done">A killed oracle child is respawned once, transparently; a second
+  failure surfaces `oracle-crashed` with its recipe; no node process
+  survives the server.</ACC-RESPAWN>
+      <ACC-NO-MCP-DEP fact="true" status="spec/done">`vibe-tcg` compiles with no vibe-mcp dependency (the portability
+  amendment, mechanically checkable in its Cargo.toml).</ACC-NO-MCP-DEP>
+      <ACC-SHARED-CELL fact="true" status="spec/done">vibe-cli's `bin` commands and the registry resolve binaries through
+  the same `vibe-workspace` cell (one implementation, two consumers).</ACC-SHARED-CELL>
+    </facts>
+  </acceptance>
+</spec>

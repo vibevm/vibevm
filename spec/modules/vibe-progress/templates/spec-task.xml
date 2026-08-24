@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">SPEC-NNN — &lt;one-line goal: which documents converge on what&gt;</title>
+  <status stage="spec" state="done" comment="B2 2026-07-24: template in force since Phase A; the task&apos;s own document marker is the fenced example below"/>
+  <fence>&lt;status stage="spec" state="plan" ref="SPEC-NNN"/&gt;</fence>
+  <p><status-legend fact="true" status="spec/done">**Status:** queued | in-progress | review | done | returned</status-legend></p>
+  <p><EXECUTOR-SPLIT fact="true" status="spec/done">**Executor:** Fable when budget allows, otherwise Opus. **Reviewer:** Fable
+always (normative text is judgment territory).</EXECUTOR-SPLIT></p>
+  <p><wave-field fact="true" status="spec/done">**Wave:** &lt;stitching wave number&gt;</wave-field></p>
+  <goal title="1. Goal">
+    <p><goal-format fact="true" status="spec/done">One sentence: which incoming obligations this task closes.</goal-format></p>
+  </goal>
+  <obligations title="2. Incoming obligations">
+    <p><obligations-source fact="true" status="spec/done">From the findings ledger, verbatim rows:</obligations-source></p>
+    <fence>| id | from | to | type |
+|---|---|---|---|
+| F-NNN | `spec://…#anchor` | `spec://…#anchor` | contradiction | duplication | missing-support | terminology | relocation | reality-mismatch |</fence>
+  </obligations>
+  <rules title="3. Rules of engagement">
+    <facts ordered="false">
+      <RULE-GENRE-FIRST fact="true" status="spec/done">**Genre first:** name the genre of every document touched; contract wins
+  over lore; normative language never enters design docs.</RULE-GENRE-FIRST>
+      <RULE-ANCHORS-IMMUTABLE fact="true" status="spec/done">**Anchors are immutable:** a relocated unit leaves a tombstone
+  (`&lt;!-- RETIRED: superseded by #new-anchor --&gt;`); never rename or reuse.</RULE-ANCHORS-IMMUTABLE>
+      <RULE-SINGLE-SOURCE fact="true" status="spec/done">**Single source:** a duplicated norm survives in exactly one anchor; the
+  other side becomes a citation.</RULE-SINGLE-SOURCE>
+      <RULE-REALITY-MISMATCH-FLOW fact="true" status="spec/done">**`reality-mismatch` closes via the sync-from-code flow** — draft the spec
+  diff, surface for owner approval, never apply silently.</RULE-REALITY-MISMATCH-FLOW>
+      <RULE-NO-SILENT-REPAIRS fact="true" status="spec/done">**No silent repairs beyond scope:** discover a problem in a unit not named
+  in §2 → record a NEW obligation in the ledger; do not fix it here. Sprawl
+  of work is forbidden; sprawl of records is mandatory.</RULE-NO-SILENT-REPAIRS>
+      <RULE-UPDATE-MARKERS fact="true" status="spec/done">Update the `&lt;status&gt;` markers of every touched unit in the same edit.</RULE-UPDATE-MARKERS>
+    </facts>
+  </rules>
+  <acceptance title="4. Acceptance">
+    <facts ordered="false">
+      <ACC-CHECK-GREEN fact="true" status="spec/done">`vibe progress check` green on all touched files.</ACC-CHECK-GREEN>
+      <ACC-OBLIGATIONS-RESOLVED fact="true" status="spec/done">Every §2 obligation status = resolved in the ledger, with the resolving
+  edit referenced.</ACC-OBLIGATIONS-RESOLVED>
+      <ACC-NO-NEW-CONTRADICTION fact="true" status="spec/done">No NEW contradiction against the neighbour documents listed here: &lt;list&gt;.</ACC-NO-NEW-CONTRADICTION>
+      <ACC-MARKERS-COMMITS fact="true" status="spec/done">Markers updated; commit(s) atomic, conventional, no AI attribution.</ACC-MARKERS-COMMITS>
+    </facts>
+  </acceptance>
+  <stop title="5. Stop rule">
+    <p><STOP-TWO-WAVES fact="true" status="spec/done">A conflict that resists two waves (the counter for this doc pair did not
+fall) is conceptual, not editorial: STOP, set `returned`, escalate to the
+owner with both readings stated fairly.</STOP-TWO-WAVES></p>
+  </stop>
+  <log title="6. Log">
+    <p><log-format fact="true" status="spec/done">claimed &lt;ts&gt; · notes · resolved obligations · done &lt;ts&gt;</log-format></p>
+  </log>
+</spec>

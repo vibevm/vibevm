@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">From research to roadmap</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines what happens to a
+comparative research document *after* it is written: how a numbered
+delta becomes a decision, what becomes of the deltas that are
+declined, when a study goes stale and how it is refreshed, and the
+single honesty rule that keeps the whole genre from decaying into
+advocacy.</scope-of-this-document></p>
+  <p><sibling-document-pointers fact="true" status="impl/done">The genre laws are in
+[`COMPARATIVE-RESEARCH-PROTOCOL.xml`](COMPARATIVE-RESEARCH-PROTOCOL.xml);
+this is the pipeline that runs downstream of them.</sibling-document-pointers></p>
+  <pipeline title="The pipeline">
+    <p><A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE fact="true" status="impl/done">A research document ends in a table of numbered deltas.</A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE></p>
+    <p><each-delta-travels-one-path-lead fact="true" status="impl/done">Each delta
+travels one path:</each-delta-travels-one-path-lead></p>
+    <fence>delta (proposed in the study)
+      │
+      ▼
+owner review  ──►  accepted  ──►  recorded decision + revisit trigger
+      │                            (leaves the study; lands in the spec)
+      ▼
+   rejected  ──►  stays in the study, with its rejection reason
+                  (the study is the archive of roads not taken)</fence>
+    <p><THE-STUDY-PROPOSES-THE-OWNER-DECIDES fact="true" status="impl/done">The study **proposes**; the owner **decides**.</THE-STUDY-PROPOSES-THE-OWNER-DECIDES></p>
+    <p><NOTHING-ON-THE-ACCEPTED-BRANCH-HAPPENS-IN-THE-STUDY fact="true" status="impl/done">Nothing on the
+accepted branch happens inside the research document — that is the
+deltas-not-decrees law
+([protocol §law-deltas](COMPARATIVE-RESEARCH-PROTOCOL.xml#law-deltas)).</NOTHING-ON-THE-ACCEPTED-BRANCH-HAPPENS-IN-THE-STUDY></p>
+  </pipeline>
+  <review title="Owner review">
+    <p><DELTAS-DO-NOT-RATIFY-OR-AUTO-SCHEDULE-THEMSELVES fact="true" status="impl/done">The deltas do not ratify themselves and they do not auto-schedule.</DELTAS-DO-NOT-RATIFY-OR-AUTO-SCHEDULE-THEMSELVES></p>
+    <p><a-human-decides-one-of-lead fact="true" status="impl/done">A human reads the numbered table and, per delta, decides one of:</a-human-decides-one-of-lead></p>
+    <table>
+      <tr>
+        <td>Verdict</td>
+        <td>What it means</td>
+        <td>Where it goes</td>
+      </tr>
+      <tr>
+        <td><ROW-VERDICT-ACCEPT fact="true" status="impl/done">**Accept**</ROW-VERDICT-ACCEPT></td>
+        <td><fact status="impl/done">We will do this</fact></td>
+        <td><fact status="impl/done">Becomes a recorded decision (below)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-VERDICT-REJECT fact="true" status="impl/done">**Reject**</ROW-VERDICT-REJECT></td>
+        <td><fact status="impl/done">We will not do this</fact></td>
+        <td><fact status="impl/done">Stays in the study with a reason (below)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-VERDICT-DEFER fact="true" status="impl/done">**Defer**</ROW-VERDICT-DEFER></td>
+        <td><fact status="impl/done">Not now, revisit later</fact></td>
+        <td><fact status="impl/done">Stays as a delta, marked *deferred*, with a revisit trigger</fact></td>
+      </tr>
+    </table>
+    <p><A-DELTA-WITH-NO-VERDICT-IS-NOT-DONE-BEING-REVIEWED fact="true" status="impl/done">A delta with no verdict is not done being reviewed.</A-DELTA-WITH-NO-VERDICT-IS-NOT-DONE-BEING-REVIEWED></p>
+    <p><the-value-of-the-numbering fact="true" status="impl/done">The value of the
+numbering is exactly this: the owner can say "accept D1, reject D4,
+defer D7" and every party knows precisely which proposal is meant.</the-value-of-the-numbering></p>
+  </review>
+  <accepted title="Accepted deltas become decisions">
+    <p><AN-ACCEPTED-DELTA-LANDS-AS-A-RECORDED-DECISION fact="true" status="impl/done">An accepted delta does not just get "implemented" — it lands as a
+**recorded decision with a revisit trigger**, at the spec anchor the
+delta named as its target home.</AN-ACCEPTED-DELTA-LANDS-AS-A-RECORDED-DECISION></p>
+    <p><this-is-decision-records-doing-its-job fact="true" status="impl/done">This is `flow:decision-records`
+doing its job: the delta's argument (why match the competitor here)
+becomes the record's *Why*, and the delta's number and the study's
+title become the citation.</this-is-decision-records-doing-its-job></p>
+    <p><a-recorded-decision-carries-lead fact="true" status="impl/done">A recorded decision born from an accepted delta carries:</a-recorded-decision-carries-lead></p>
+    <facts ordered="false">
+      <RECORD-FIELD-DECISION fact="true" status="impl/done">**Decision** — the capability we will build, one line.</RECORD-FIELD-DECISION>
+      <RECORD-FIELD-WHY fact="true" status="impl/done">**Why** — the gap the study found, cited back to the quoted
+  evidence in the research doc (the verbatim quote is the data).</RECORD-FIELD-WHY>
+      <RECORD-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected** — including "do nothing", if the study
+  weighed it.</RECORD-FIELD-CONSIDERED-AND-REJECTED>
+      <RECORD-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit** — a trigger, because a competitive gap can
+  close from either side: they might drop the feature, or the space
+  might move.</RECORD-FIELD-WHEN-TO-REVISIT>
+    </facts>
+    <p><THE-STUDY-NOTES-THE-ACCEPTANCE-AND-POINTS-AT-THE-ANCHOR fact="true" status="impl/done">The research document then notes, at the delta, that it was accepted
+and points at the decision's anchor.</THE-STUDY-NOTES-THE-ACCEPTANCE-AND-POINTS-AT-THE-ANCHOR></p>
+    <p><THE-DELTA-IS-HISTORY-IN-THE-STUDY-AND-LIVE-IN-THE-SPEC fact="true" status="impl/done">The delta is now *history* in
+the study and *live* in the spec.</THE-DELTA-IS-HISTORY-IN-THE-STUDY-AND-LIVE-IN-THE-SPEC></p>
+  </accepted>
+  <rejected title="Rejected deltas stay in the study">
+    <p><A-REJECTED-DELTA-IS-NOT-DELETED fact="true" status="impl/done">A rejected delta is **not deleted**.</A-REJECTED-DELTA-IS-NOT-DELETED></p>
+    <p><it-stays-annotated-with-the-reason-lead fact="true" status="impl/done">It stays in the research
+document, annotated with the reason it lost:</it-stays-annotated-with-the-reason-lead></p>
+    <fence lang="markdown">### D4 — Background auto-update daemon
+Maps to §3.4. **Priority:** LOW.
+**Verdict: REJECTED (2026-07-05).** For a tool whose value is an
+audit trail, silent background updates are the wrong default; every
+install should be deliberated. Revisit only if users ask for it.</fence>
+    <p><this-is-deliberate fact="true" status="impl/done">This is deliberate.</this-is-deliberate></p>
+    <p><THE-DOCUMENT-IS-ALSO-THE-ARCHIVE-OF-ROADS-NOT-TAKEN fact="true" status="impl/done">The research document is **also the archive of
+roads not taken**.</THE-DOCUMENT-IS-ALSO-THE-ARCHIVE-OF-ROADS-NOT-TAKEN></p>
+    <p><a-rejected-delta-answers-the-question-before-it-is-re-asked fact="true" status="impl/done">A rejected delta left in place answers the
+question before it is re-asked: the next person who says "why don't
+we just add auto-update like they have" reads D4 and gets the reason
+in one read instead of re-running the analysis.</a-rejected-delta-answers-the-question-before-it-is-re-asked></p>
+    <p><deleting-the-delta-deletes-the-immunity fact="true" status="spec/done">Delete the rejected
+delta and you delete the immunity; the question comes back every
+quarter.</deleting-the-delta-deletes-the-immunity></p>
+    <p><THE-REJECTION-REASON-MUST-CITE-SOMETHING fact="true" status="impl/done">The rejection reason is subject to the same standard as a decision's
+*Why*: cite something.</THE-REJECTION-REASON-MUST-CITE-SOMETHING></p>
+    <p><a-cited-rejection-closes-the-question fact="true" status="spec/done">"Rejected because it's bad" invites the delta
+to be re-proposed; "rejected because it contradicts the audit-trail
+invariant" closes it.</a-cited-rejection-closes-the-question></p>
+  </rejected>
+  <refresh title="Refresh discipline">
+    <p><A-STUDY-IS-A-DATED-SNAPSHOT fact="true" status="impl/done">A comparative study is a **dated snapshot**, and the subject keeps
+shipping.</A-STUDY-IS-A-DATED-SNAPSHOT></p>
+    <p><the-staleness-rule-is-mechanical-lead fact="true" status="impl/done">The staleness rule is mechanical:</the-staleness-rule-is-mechanical-lead></p>
+    <quote><A-STUDY-OLDER-THAN-THE-LAST-MAJOR-RELEASE-IS-STALE-FLAGGED fact="true" status="impl/done">A study **older than its subject's last major release** is
+stale-flagged.</A-STUDY-OLDER-THAN-THE-LAST-MAJOR-RELEASE-IS-STALE-FLAGGED></quote>
+    <p><when-a-study-is-stale-flagged-lead fact="true" status="impl/done">When a study is stale-flagged:</when-a-study-is-stale-flagged-lead></p>
+    <facts ordered="true">
+      <STALE-REFRESH-VIA-THE-RE-FETCH-LIST fact="true" status="impl/done">**Refresh via the re-fetch list**, not by rewriting. Walk the URLs
+   in the study's re-fetch section, re-capture the quotes, record the
+   new access dates and the new subject version.</STALE-REFRESH-VIA-THE-RE-FETCH-LIST>
+      <STALE-APPEND-DONT-OVERWRITE fact="true" status="impl/done">**Append, don't overwrite.** Add a dated refresh block noting what
+   changed materially since the last capture. Keep the old capture as
+   a historical baseline — the point of an evergreen doc is that the
+   old snapshot still has value.</STALE-APPEND-DONT-OVERWRITE>
+      <STALE-RE-AUDIT-THE-DELTA-TABLE fact="true" status="impl/done">**Re-audit the delta table.** Every delta gets re-checked against
+   the new reality:</STALE-RE-AUDIT-THE-DELTA-TABLE>
+      <RE-AUDIT-A-GAP-THE-SUBJECT-WIDENED fact="true" status="impl/done">A trailing gap the subject *widened* → the delta's priority may
+     rise.</RE-AUDIT-A-GAP-THE-SUBJECT-WIDENED>
+      <RE-AUDIT-A-GAP-THE-SUBJECT-CLOSED fact="true" status="impl/done">A gap the subject *closed on their side* (dropped the feature) →
+     the delta may become moot; mark it so.</RE-AUDIT-A-GAP-THE-SUBJECT-CLOSED>
+      <RE-AUDIT-A-GAP-WE-CLOSED fact="true" status="impl/done">A gap *we* closed (shipped the capability) → the delta is done;
+     point it at the shipped decision.</RE-AUDIT-A-GAP-WE-CLOSED>
+      <RE-AUDIT-A-WHOLLY-NEW-CAPABILITY fact="true" status="impl/done">A wholly new capability → a new delta.</RE-AUDIT-A-WHOLLY-NEW-CAPABILITY>
+    </facts>
+    <p><refreshing-is-cheaper-because-laws-one-and-five-did-their-work fact="true" status="impl/done">Refreshing is cheaper than re-studying precisely because Law 1 and
+Law 5 did their work:</refreshing-is-cheaper-because-laws-one-and-five-did-their-work></p>
+    <facts ordered="false">
+      <REFRESH-CHEAP-QUOTES-ARE-ALREADY-DATED fact="true" status="impl/done">the quotes are already dated,</REFRESH-CHEAP-QUOTES-ARE-ALREADY-DATED>
+      <REFRESH-CHEAP-URLS-ARE-ALREADY-LISTED fact="true" status="impl/done">the URLs are
+  already listed,</REFRESH-CHEAP-URLS-ARE-ALREADY-LISTED>
+      <REFRESH-CHEAP-THE-VERSION-NUMBER-IS-ON-RECORD fact="true" status="impl/done">and the previous version number is on record.</REFRESH-CHEAP-THE-VERSION-NUMBER-IS-ON-RECORD>
+    </facts>
+    <p><A-STUDY-WITHOUT-A-RE-FETCH-LIST-CANNOT-BE-REFRESHED fact="true" status="impl/done">A study
+written without a re-fetch list cannot be refreshed — only redone.</A-STUDY-WITHOUT-A-RE-FETCH-LIST-CANNOT-BE-REFRESHED></p>
+  </refresh>
+  <honesty title="The honesty rule">
+    <p><one-rule-governs-the-whole-genre-lead fact="true" status="impl/done">One rule governs the whole genre, and it is worth stating alone:</one-rule-governs-the-whole-genre-lead></p>
+    <quote><THE-HONESTY-RULE fact="true" status="spec/done">A study that only finds gaps where we trail is marketing for the
+competitor. A study that only finds where we lead is marketing for
+us. Neither is intelligence.</THE-HONESTY-RULE></quote>
+    <p><THE-TWO-WAY-LAW-IS-NOT-A-FORMATTING-CONVENTION fact="true" status="impl/done">The two-way law ([protocol §law-two-way](COMPARATIVE-RESEARCH-PROTOCOL.xml#law-two-way))
+is not a formatting convention — it is the difference between a
+document you can act on and a document that flatters a foregone
+conclusion.</THE-TWO-WAY-LAW-IS-NOT-A-FORMATTING-CONVENTION></p>
+    <p><trail-only-studies-talk-teams-into-copying fact="true" status="spec/done">Trail-only studies talk teams into copying features they
+do not need.</trail-only-studies-talk-teams-into-copying></p>
+    <p><lead-only-studies-talk-teams-out-of-a-real-threat fact="true" status="spec/done">Lead-only studies talk teams out of taking a real
+threat seriously.</lead-only-studies-talk-teams-out-of-a-real-threat></p>
+    <p><both-feel-like-analysis-while-producing-the-opposite fact="true" status="spec/done">Both feel like analysis while producing the
+opposite.</both-feel-like-analysis-while-producing-the-opposite></p>
+    <p><THE-TEST-AT-REVIEW-TIME fact="true" status="impl/done">The test at review time: **read §3 and §4 side by side.**</THE-TEST-AT-REVIEW-TIME></p>
+    <p><a-lopsided-study-is-advocacy fact="true" status="spec/done">If one is
+three pages and the other is three lines, the study is advocacy
+wearing the genre's clothes.</a-lopsided-study-is-advocacy></p>
+    <p><SEND-IT-BACK fact="true" status="impl/done">Send it back.</SEND-IT-BACK></p>
+    <p><no-two-teams-make-all-the-same-decisions fact="true" status="spec/done">A real study of a real
+competitor finds meaningful gaps in both directions, because no two
+teams make all the same decisions — where they diverged is exactly
+what the study exists to surface.</no-two-teams-make-all-the-same-decisions></p>
+  </honesty>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-THE-STUDY-PROPOSES-THE-OWNER-REVIEWS fact="true" status="impl/done">The study proposes numbered deltas; the owner reviews each and
+  accepts, rejects, or defers it.</SUM-THE-STUDY-PROPOSES-THE-OWNER-REVIEWS>
+      <SUM-AN-ACCEPTED-DELTA-BECOMES-A-DECISION fact="true" status="impl/done">An accepted delta becomes a recorded decision with a revisit
+  trigger at its target anchor — `flow:decision-records` does the
+  landing; the study points at the anchor.</SUM-AN-ACCEPTED-DELTA-BECOMES-A-DECISION>
+      <SUM-A-REJECTED-DELTA-STAYS-WITH-ITS-REASON fact="true" status="impl/done">A rejected delta stays in the study with its cited reason; the
+  document is the archive of roads not taken.</SUM-A-REJECTED-DELTA-STAYS-WITH-ITS-REASON>
+      <SUM-A-STALE-STUDY-IS-REFRESHED-AND-RE-AUDITED fact="true" status="impl/done">A study older than its subject's last major release is
+  stale-flagged, refreshed via the re-fetch list (append, don't
+  overwrite), and its delta table re-audited.</SUM-A-STALE-STUDY-IS-REFRESHED-AND-RE-AUDITED>
+      <SUM-THE-HONESTY-RULE fact="true" status="impl/done">The honesty rule: trail-only is marketing for them, lead-only is
+  marketing for us. Read §3 and §4 side by side — if they are not
+  both substantial, send the study back.</SUM-THE-HONESTY-RULE>
+    </facts>
+  </summary>
+</spec>

@@ -27,9 +27,9 @@ source-1 join over 154 file(s) under packages/org.vibevm.world
 
   MISSING FILE: 2
 
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md
+  MISSING FILE    packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md
+  MISSING FILE    packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
 EXIT=1
 ```

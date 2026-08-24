@@ -5,7 +5,7 @@ command printed above it._
 
 W6's four flows govern four host artefacts that exist on disk and can be opened:
 
-- **`licensing`** — `LICENSE.md`, the workspace manifest, nineteen crate manifests.
+- **`licensing`** — `LICENSE.xml`, the workspace manifest, nineteen crate manifests.
 - **`source-mirrors`** — `mirrors.toml` and `cargo xtask mirror`, which this
   repository runs as its standard rollout. The flow describes a procedure the host
   executes, not one it aspires to.
@@ -54,8 +54,8 @@ vibedeps/flow-dev-runtime-docs/0.1.0/vibe.toml
 $ find packages/org.vibevm.world/dev-runtime-docs -type f
 packages/org.vibevm.world/dev-runtime-docs/v0.1.0/LICENSE
 packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md
+packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.xml
+packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml
 packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml
 ```
 
@@ -68,7 +68,7 @@ gained afterwards.
 
 **So this is a fact about the install, not about the rule**, and it belongs to
 whichever fact asserts a path or an install layout — not to the rule facts. Note
-also that this package ships `LICENSE` where its siblings ship `LICENSE.md`.
+also that this package ships `LICENSE` where its siblings ship `LICENSE.xml`.
 
 ### The sibling-pointer family {#dangling}
 
@@ -87,12 +87,12 @@ pointer sits under.
 ### licensing — one posture, one exception, and no automated gate {#s2-licensing}
 
 ```console
-$ head -3 LICENSE.md
+$ head -3 LICENSE.xml
 Copyright (c) 2026 Oleg Chirukhin
 
 The Universal Permissive License (UPL), Version 1.0
 $ grep -nE '^license' Cargo.toml
-55:license-file = "LICENSE.md"
+55:license-file = "LICENSE.xml"
 $ grep -hoE '^license(-file)?[^=]*=.*' crates/*/Cargo.toml xtask/Cargo.toml | sort | uniq -c
      18 license-file.workspace = true
 $ for f in crates/*/Cargo.toml xtask/Cargo.toml; do grep -qE '^license(-file)?\s*(\.workspace)?\s*=' "$f" || echo "NO LICENSE FIELD: $f"; done
@@ -167,8 +167,8 @@ mirror: all push targets synced.
 ```
 
 Two targets, both fast-forward, no `--force`. The host's own boot snippet
-(`spec/boot/90-user.md`, `##CMD-MIRROR` and `##SRC-MULTI-HOMED`) prescribes
-`cargo xtask mirror` over a bare `git push origin`, and `spec/common/PROP-016-source-mirrors.md`
+(`spec/boot/90-user.xml`, `##CMD-MIRROR` and `##SRC-MULTI-HOMED`) prescribes
+`cargo xtask mirror` over a bare `git push origin`, and `spec/common/PROP-016-source-mirrors.xml`
 is the governing host contract. **All three are durable citation targets.**
 
 Check separately rather than together: the fan-out mechanics, the daily loop, the
@@ -189,15 +189,15 @@ $ find . -name 'FEAT-*.md' -not -path './vibedeps/*' -not -path '*/.vibe/*'
 
 **Forty-two PROP documents and not one FEAT document anywhere in the repository.**
 The genre map's «Module contracts (here: PROP / FEAT)» names both, and the tooling
-supports both — `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:107` says
+supports both — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:107` says
 «`PROP-NNN` / `FEAT-NNN` in a URI resolve to `PROP-NNN-<slug>.md`», so the resolver
 was built for a genre the tree never used.
 
 The rest of the map has instances to check against: boot files (`spec/boot/`),
-foundational decisions (`spec/common/PROP-000.md`), module contracts
+foundational decisions (`spec/common/PROP-000.xml`), module contracts
 (`spec/modules/**`), **design docs** (`spec/design/` — 6 files), research docs
 (`legacy-spec/research/`, an archive), campaign plans (`spec/terraforms/`), and the
-checkpoint (`spec/WAL.md`). The flow's two-way-link law — «a contract section that
+checkpoint (`spec/WAL.xml`). The flow's two-way-link law — «a contract section that
 has lore links to it; the lore names the section it explains» — is checkable in
 both directions across `spec/design/` and `spec/modules/`.
 

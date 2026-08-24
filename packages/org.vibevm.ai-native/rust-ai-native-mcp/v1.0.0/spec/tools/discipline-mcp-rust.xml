@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">rust-ai-native-mcp — the server brief</title>
+  <status stage="spec" state="done"/>
+  <p><SERVED-OVER-MCP-AS-ONE-STDIO-BINARY fact="true" status="impl/done">**What it is.** The AI-Native Rust discipline served over MCP: one
+stdio binary, eighteen tools, launched by an agent host straight from
+this package's slot.</SERVED-OVER-MCP-AS-ONE-STDIO-BINARY></p>
+  <p><SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE fact="true" status="impl/done">Serving needs no vibe anywhere on the machine
+(PROP-027 §2.6 in the consuming repo; the live chain scrubs PATH to
+prove it).</SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE></p>
+  <p><TRANSPORT-IS-THE-VENDORED-MCP-CORE fact="true" status="impl/done">Transport: the vendored `mcp-core` (line-delimited JSON-RPC
+2.0, protocol `2024-11-05` — MCP-CORE-v0.1).</TRANSPORT-IS-THE-VENDORED-MCP-CORE></p>
+  <p><THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL fact="true" status="impl/done">**One engine, one truth.** The tools call the SAME lib fns the CLIs
+call, and the `=X.Y.Z` pin on `stack:org.vibevm.ai-native/rust-ai-native-lang` holds
+this package's vendored copies and the consumer's installed stack to
+one resolved version set.</THE-TOOLS-CALL-THE-SAME-LIB-FNS-THE-CLIS-CALL></p>
+  <p><TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT fact="true" status="impl/done">Tool-level failure (a red gate, a refusing
+oracle) is an `isError` RESULT carrying the report; protocol errors are
+reserved for the transport grammar.</TOOL-LEVEL-FAILURE-IS-AN-ISERROR-RESULT></p>
+  <p><REPORTS-CARRY-THE-RUNS-ENTIRE-STORY fact="true" status="impl/done">**Reports are whole.** Every discipline tool runs inside the
+`mcp-core::capture` guard, so the agent's report carries the run's
+entire story — the runner's own words AND its child processes (cargo,
+rustfmt, clippy, nextest).</REPORTS-CARRY-THE-RUNS-ENTIRE-STORY></p>
+  <parity-map title="The parity map">
+    <p><parity-map-lead fact="true" status="impl/done">Tool ↔ the CLI invocation it is parity-locked to (the enumeration test
+pins the list; the descriptions in `tools/list` restate each row):</parity-map-lead></p>
+    <table>
+      <tr>
+        <td>Tool</td>
+        <td>CLI</td>
+      </tr>
+      <tr>
+        <td><ROW-INIT fact="true" status="impl/done">`init`</ROW-INIT></td>
+        <td><fact status="impl/done">`rust-ai-native init [--namespace] [--force]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FLOOR fact="true" status="impl/done">`floor`</ROW-FLOOR></td>
+        <td><fact status="impl/done">`rust-ai-native floor [--keep-going] [--fast-loop]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CONFORM-CHECK fact="true" status="impl/done">`conform_check`</ROW-CONFORM-CHECK></td>
+        <td><fact status="impl/done">`rust-ai-native-conform check [--scope] [--baseline]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CONFORM-FREEZE fact="true" status="impl/done">`conform_freeze`</ROW-CONFORM-FREEZE></td>
+        <td><fact status="impl/done">`rust-ai-native-conform freeze [--baseline]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SPECMAP-CHECK fact="true" status="impl/done">`specmap_check`</ROW-SPECMAP-CHECK></td>
+        <td><fact status="impl/done">`rust-ai-native-specmap --check`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SPECMAP-WRITE fact="true" status="impl/done">`specmap_write`</ROW-SPECMAP-WRITE></td>
+        <td><fact status="impl/done">`rust-ai-native-specmap`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TRACE-EXPLAIN fact="true" status="impl/done">`trace_explain`</ROW-TRACE-EXPLAIN></td>
+        <td><fact status="impl/done">`rust-ai-native trace &lt;target&gt; [--json] [--prose]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TEST-GATE fact="true" status="impl/done">`test_gate`</ROW-TEST-GATE></td>
+        <td><fact status="impl/done">`rust-ai-native test-gate [--baseline]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TRIPWIRE fact="true" status="impl/done">`tripwire`</ROW-TRIPWIRE></td>
+        <td><fact status="impl/done">`rust-ai-native tripwire [--base] [--debt]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-HEALTH fact="true" status="impl/done">`health`</ROW-HEALTH></td>
+        <td><fact status="impl/done">`rust-ai-native health [--out]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FAST-LOOP fact="true" status="impl/done">`fast_loop`</ROW-FAST-LOOP></td>
+        <td><fact status="impl/done">`rust-ai-native fast-loop [--cell] [--budget-secs] [--enforce-budget]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CODEMOD-ADD-CELL fact="true" status="impl/done">`codemod_add_cell`</ROW-CODEMOD-ADD-CELL></td>
+        <td><fact status="impl/done">`rust-ai-native codemod add-cell &lt;crate&gt; &lt;cell&gt; &lt;seam&gt; &lt;variant&gt; &lt;spec-uri&gt;`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LEDGER-RENDER fact="true" status="impl/done">`ledger_render`</ROW-LEDGER-RENDER></td>
+        <td><fact status="impl/done">`rust-ai-native ledger render [--check]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TCG-VALIDATE fact="true" status="impl/done">`tcg_validate`</ROW-TCG-VALIDATE></td>
+        <td><fact status="impl/done">`rust-ai-native-tcg validate &lt;file&gt; [--content-from]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TCG-SCOPE fact="true" status="impl/done">`tcg_scope`</ROW-TCG-SCOPE></td>
+        <td><fact status="impl/done">`rust-ai-native-tcg scope &lt;file&gt; [--position]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TCG-COMPLETE fact="true" status="impl/done">`tcg_complete`</ROW-TCG-COMPLETE></td>
+        <td><fact status="impl/done">`rust-ai-native-tcg complete &lt;file&gt; --position [--prefix] [--max]`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TCG-TYPE fact="true" status="impl/done">`tcg_type`</ROW-TCG-TYPE></td>
+        <td><fact status="impl/done">`rust-ai-native-tcg type &lt;file&gt; --position`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TCG-BENCH fact="true" status="impl/done">`tcg_bench`</ROW-TCG-BENCH></td>
+        <td><fact status="impl/done">`rust-ai-native-tcg bench --corpus --report`</fact></td>
+      </tr>
+    </table>
+    <p><THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY fact="true" status="impl/done">`rust-ai-native-specmap --gate` (the package-self-trace form) stays CLI-only: its
+audience is package gates, not agents.</THE-SPECMAP-GATE-FORM-STAYS-CLI-ONLY></p>
+  </parity-map>
+  <discipline-tools title="The discipline half">
+    <p><THIRTEEN-THIN-ADAPTERS-OVER-THE-LIB-FNS fact="true" status="impl/done">Thirteen thin adapters over `rust_ai_native_cli` / `rust_ai_native_conform`
+/ `rust_ai_native_specmap` lib fns.</THIRTEEN-THIN-ADAPTERS-OVER-THE-LIB-FNS></p>
+    <p><EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY fact="true" status="impl/done">Every schema carries the optional
+`language` property; a non-`rust` value refuses with the recipe naming
+that language's own server — never another language's fix surface
+(PROP-026 §2 continuity).</EVERY-SCHEMA-CARRIES-THE-OPTIONAL-LANGUAGE-PROPERTY></p>
+    <p><HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS fact="true" status="impl/done">Heavy tools (`floor`, `test_gate`,
+`fast_loop`, `tcg_bench`) say «expect minutes» in their descriptions;
+nothing prompts — `force`-class decisions are explicit parameters.</HEAVY-TOOLS-SAY-EXPECT-MINUTES-AND-NOTHING-PROMPTS></p>
+  </discipline-tools>
+  <tcg-tools title="The tcg half">
+    <p><ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS fact="true" status="impl/done">The four oracle ops + the bench harness over ONE persistent
+rust-analyzer session shared by all five tools: lazy-spawned on first
+use, respawned ONCE per op on a crashed session (the serve relay's
+posture, server-local now).</ONE-PERSISTENT-ORACLE-SESSION-SHARED-BY-FIVE-TOOLS></p>
+    <p><ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE fact="true" status="impl/done">Enrichment goes through
+`rust_ai_native_tcg::enrich_validate` — the gate's own rules over the gate's
+own frontend — and the policy (conform.toml + frozen ratchet) reloads
+per call, so a mid-session freeze is honoured immediately.</ENRICHMENT-GOES-THROUGH-ENRICH-VALIDATE></p>
+    <p><TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT fact="true" status="impl/done">`tcg_validate`'s `isError` mirrors the one-shot exit contract: an
+error-grade diagnostic OR a non-baselined finding.</TCG-VALIDATE-ISERROR-MIRRORS-THE-ONE-SHOT-EXIT-CONTRACT></p>
+    <p><THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED fact="true" status="impl/done">The NDJSON serve
+relay (`rust-ai-native-tcg serve`, TCG-PROTOCOL-RUST-v0.1) remains shipped in the
+stack as the non-MCP embedding form.</THE-NDJSON-SERVE-RELAY-REMAINS-SHIPPED></p>
+  </tcg-tools>
+</spec>

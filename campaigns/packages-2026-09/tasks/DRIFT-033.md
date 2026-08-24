@@ -39,7 +39,7 @@ re-discover.**
 **F-075.** A verdict entry carries exactly `{"v": <verdict>, "ev": [<refs>]}` —
 **no timestamp**. Recency lives one level up, per file:
 `{processed_hash, summary, verdicts, verified_at, verify_batch}`. So one date
-covers every verdict in a file — `spec/boot/00-core.md` has **33** verdicts
+covers every verdict in a file — `spec/boot/00-core.xml` has **33** verdicts
 under a single `verified_at`. `processed_hash` is the field that would make
 staleness checkable, and per F-067 it is written **only by a real verify batch**,
 never by a hand `seal`. This campaign hand-seals across hundreds of files.
@@ -157,8 +157,8 @@ implementation in the crate and `seal` already calls it; the spec says so too
 (`##CMD-SEAL`, PROP-043 §5). Measured, not read:
 
 ```
-$ vibe progress seal --campaign <scratch copy> spec/boot/00-core.md
-progress seal: `spec/boot/00-core.md` — vouching for 33 verdict(s) against the text on disk
+$ vibe progress seal --campaign <scratch copy> spec/boot/00-core.xml
+progress seal: `spec/boot/00-core.xml` — vouching for 33 verdict(s) against the text on disk
   78d18746e702 → 27697df5871b
   sealed at 2026-07-26T14:45:23Z
 
@@ -166,12 +166,12 @@ progress seal: `spec/boot/00-core.md` — vouching for 33 verdict(s) against the
 processed_hash 78d18746e702bfbb…6d3a312f    processed_hash 27697df5871b…fee9c511
 verified_at    2026-07-26T10:23:56Z         verified_at    2026-07-26T14:45:23Z
 
-$ sha256sum spec/boot/00-core.md
+$ sha256sum spec/boot/00-core.xml
 27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511
 ```
 
 The seal recorded the file's own sha256 — the digest a batch records. Run
-against a **copy** of the campaign zone, not the live one: `spec/boot/00-core.md`
+against a **copy** of the campaign zone, not the live one: `spec/boot/00-core.xml`
 has moved since it was judged, so sealing it here would stamp a fresh
 `verified_at` on verdicts nobody re-derived, which is the forgery §5 exists to
 prevent. What F-075 lacked was a test, and that is commit 1: one asserting the
@@ -190,9 +190,9 @@ remembered.
 
 `counters` is not the same case, on two independent grounds, both in `spec/**`:
 
-- `spec/modules/vibe-progress/PROP-043-progress-markup.md:478` —
+- `spec/modules/vibe-progress/PROP-043-progress-markup.xml:478` —
   `##STATE-FILES` names `counters` as a field **of `campaign.json`**, `@impl/done`.
-- `spec/modules/vibe-progress/PROP-043-progress-markup.md:482-483` —
+- `spec/modules/vibe-progress/PROP-043-progress-markup.xml:482-483` —
   `##DASHBOARD-READS-ONLY`: "The dashboard reads **only** these; **it computes
   nothing**". So "compute on read" is closed to the one consumer that reads it:
   `tools/progress-dashboard/index.html:106` (`const c = camp.counters ?? {};`),

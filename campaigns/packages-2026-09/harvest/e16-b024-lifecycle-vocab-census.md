@@ -47,9 +47,9 @@ Engine: `…/core-ai-native-specmap/src/` (`mdspec.rs`, `index.rs`,
 
 **Parser and schema agree exactly — there is no parser-vs-schema divergence to
 report.** `retired` is **not in the code on any of the three layers**. It
-appears only as *specification prose*: `BROWNFIELD-PROTOCOL-v0.1.md:94`
+appears only as *specification prose*: `BROWNFIELD-PROTOCOL-v0.1.xml:94`
 (“`req r2 disputed(#other-anchor)` · retired (tombstone)”) and
-`PROP-014-specmap-bidirectional-traceability.md:199` (“`retired` a tombstone”).
+`PROP-014-specmap-bidirectional-traceability.xml:199` (“`retired` a tombstone”).
 `PROP-014:199` itself labels the entire lifecycle-status feature
 **“specified, not built.”** The backlog’s `retired` is an aspiration that was
 never implemented — see §“Discrepancies with the backlog.”
@@ -110,7 +110,7 @@ treating `##<id>` lines as untyped facts (`mdspec.rs:281-293` sets
 `kind/status/revision = None`). So the `` `req rN` `` tokens the corpus does
 write never reach the specmap `kind`/`status` fields. (A handful of standalone
 `` `req r1` `` lines exist under headings in the ai-native package’s own specs,
-e.g. `MCP-CORE-v0.1.md`, `PROP-014` — all `req rN` with no status word, and not
+e.g. `MCP-CORE-v0.1.xml`, `PROP-014` — all `req rN` with no status word, and not
 in the host scan.)
 
 ---
@@ -146,9 +146,9 @@ of stage**.
   units; a document whose every unit is `void` is itself `void` (no special
   case written down). Pinned by property tests `model.rs:346-412` and
   `rollup.rs:343-364`.
-- **Live carrier:** `PROP-029-fully-qualified-addresses.md:43` (`##SCOPE-HOST`,
+- **Live carrier:** `PROP-029-fully-qualified-addresses.xml:43` (`##SCOPE-HOST`,
   retired 2026-08-04 by B-031) carries both `<status stage="spec" state="void">`
-  and `@spec/void` — the unambiguous tombstone. (`spec/boot/00-core.md:32` and
+  and `@spec/void` — the unambiguous tombstone. (`spec/boot/00-core.xml:32` and
   `PROP-043:327` only *describe* the syntax.)
 
 ### 3. Corpus frequency (perimeter: `spec/**`, `packages/**` excl.
@@ -248,7 +248,7 @@ it would have to carry the rollup *and* flag the mix.
   *counterpart anchor*, so the pairing would still need a new mechanism.
 - **(c) drop `disputed` entirely.** Cost: removes the only address for the
   brownfield principle “contradiction is data” (`BROWNFIELD-PROTOCOL` B3,
-  `v0.8.0/…/BROWNFIELD-PROTOCOL-v0.1.md:17`) and the adjudication workflow
+  `v0.8.0/…/BROWNFIELD-PROTOCOL-v0.1.xml:17`) and the adjudication workflow
   (supersede / scope-split / stay-open, `:98`). Evidence: 0 live carriers (§3.4.1)
   mean nothing breaks today; what breaks is the *future* workflow the moment a
   real conflict appears.
@@ -265,7 +265,7 @@ the first real disputed unit. *(Decision is the owner’s.)*
 
 1. **`retired` is specified, not built.** The backlog/brownfield prose lists
    `retired (tombstone)` as a specmap unit status
-   (`BROWNFIELD-PROTOCOL-v0.1.md:94`; `PROP-014:199`). The **code disagrees on
+   (`BROWNFIELD-PROTOCOL-v0.1.xml:94`; `PROP-014:199`). The **code disagrees on
    all three layers**: absent from the parser (`mdspec.rs:98-115`), the schema
    enum (`specmap.jtd.json:67-72`), and the generated enum
    (`mod.rs:140-146`). `PROP-014:199` self-documents the whole feature as
@@ -283,7 +283,7 @@ the first real disputed unit. *(Decision is the owner’s.)*
 
 - **Frequency instrument.** Counts are a regex mirror of the parser grammar
   (`element.rs:212-256`), not the parser itself. Backtick/quoted *prose
-  mentions* of the syntax (e.g. `00-core.md:32` defining `@spec/void`,
+  mentions* of the syntax (e.g. `00-core.xml:32` defining `@spec/void`,
   `PROP-043:327`) are counted as markers, which slightly **over-counts rare
   values** (notably `void`); the dominant buckets (`impl/done`, `spec/done`,
   …) are unaffected. The `void` basket is therefore “≈4, 1 unambiguous live

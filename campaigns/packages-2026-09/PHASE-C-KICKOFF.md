@@ -29,10 +29,10 @@ Phase B закрыта: progress check --exhaustive выходит 0 по все
 
 Перед началом прочитай, в этом порядке:
   1. campaigns/packages-2026-09/PHASE-C-KICKOFF.md  — этот файл целиком
-  2. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
+  2. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
      (#world-verdicts, #ai-native-verdicts, #phase-c) — правила вердиктов
      и выходной гейт из пяти пунктов
-  3. spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md — запись Phase C
+  3. spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml — запись Phase C
      волны 1 (2026-07-25): механика вердиктов, семантика по стадиям,
      и чем она закрылась (4 944 маркера, 93.0 % confirmed)
 
@@ -112,7 +112,7 @@ Five clauses, and clause (iii) is the one wave 1 skipped:
 | id | what |
 |---|---|
 | **F-114** | `redbook`'s edition contract falsified by its own manifest — a release decision, not an edit |
-| **F-087 / F-088** | commit bodies naming a model; `ATLAS.md` declaring a generator tracked nowhere |
+| **F-087 / F-088** | commit bodies naming a model; `ATLAS.xml` declaring a generator tracked nowhere |
 | **F-078** | boot-lane duplication; DRIFT-035 written and deliberately not dispatched |
 | PROP-043 §2 | the spec names what a unit **is** and never what structure **is** — two DRIFTs have moved that boundary in code |
 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>fuguresearch — completed plan (2026-07-11 12:20)</title>
+  <p>**Plan:** `fractality/v0.1.0/spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml`
+— Campaign 3 · Stage A2: the Sakana Fugu research. **CLOSED.**
+Launched at birth («Напиши план и выполни»), executed through one
+owner-ordered deviation (token pause → W1 deep-research abandoned;
+scope narrowed to the downloaded corpus, repos delegated to GLM,
+papers boss-read).</p>
+  <section title="Checklist — final">
+    <list ordered="false">
+      <item>[x] Ф0 plan (`1852fb6`)</item>
+      <item>[x] Ф1 W2 12/12 (raws in `refs/study/fugu-waves/`); W1 fired
+      then stopped in the token pause — **abandoned (deviation)**</item>
+      <item>[x] Ф2–Ф3 intake: tech report v2 + TRINITY v3 + Conductor v5
+      (pdftotext), 4 Sakana snapshots, OpenFugu @`7ad7ccf`
+      (Apache-2.0), official repo README-only (**no license**);
+      INVENTORY S27–S30 (`c9bfdf1`)</item>
+      <item>[x] Ф4 study: `fugu-study.xml` (T1), `trinity-study.xml`,
+      `conductor-study.xml`, `openfugu-study.xml`; GLM survey +
+      boss spot-checks verbatim</item>
+      <item>[x] Ф5 `FUGU-SYNTHESIS.xml` — FD-1…16, two-way gaps</item>
+      <item>[x] Ф6 `FUGU-FRACTALITY-MAPPING.xml` + Stage B draft revised:
+      **`route` verdict (D-C3-1), `context_from` access-lists
+      (D-C3-2), isolation-by-default + chosen merge profile +
+      collapse probe (D-C3-5/9), new D-C3-10 routing-policy-data**</item>
+      <item>[x] Ф7 close: P-F1 ✓, P-F2 not evaluated, P-F3 ✓, P-F4 ✓</item>
+    </list>
+  </section>
+  <section title="The headline">
+    <p>Fugu is the fractality thesis, shipped and benchmark-leading:
+orchestrating a heterogeneous frontier pool beats every
+constituent (10/11 benchmarks, SWE-Bench Pro 73.7 vs Opus 4.8's
+69.2) — while lacking exactly our planes: runtime budgets/cost
+accounting (turn caps only, w_cost=0), routing transparency
+(proprietary, unsteerable), escalation-to-human (absent), durable
+artifacts. Its one loss (MRCRv2 long-context) argues FOR Stage
+B's descent core: conducting and descent are complementary axes.
+Named mechanisms adopted: orchestration collapse → isolation by
+default; access lists → `context_from`; verifier-accept
+completion + cold-verifier suppression; availability masking;
+soft-label routing tables from measured outcomes.</p>
+  </section>
+  <section title="Open decisions (unchanged)">
+    <p>**RP-C3-1** — commission Stage B (scope A/B/C, now revised);
+**RP5** — MT-C2-05 re-run. Both owner's word.</p>
+  </section>
+  <section title="Risks / problems / uncertainties at close">
+    <list ordered="false">
+      <item>P-F2 (wave-overlap) unmeasured — single-modality risk for this
+  stage accepted by owner order; the W2 record is the audit trail.</item>
+      <item>Fugu benchmarks are Sakana-reported, unreproduced — treated as
+  mechanism evidence, not absolute numbers, throughout.</item>
+      <item>Official repo has no license — kept at README distance; the
+  squat org (Sakana-AI-labs) flagged and excluded.</item>
+      <item>GLM delegate behaved this time (first-output alarm armed, fired
+  ALIVE); the stall lesson stays standing practice.</item>
+    </list>
+  </section>
+</spec>

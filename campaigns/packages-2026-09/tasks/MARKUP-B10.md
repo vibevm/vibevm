@@ -87,7 +87,7 @@ here that contradicts them.
 `flow:atomic-commits` — checked. If you meet a dead `flow:` reference it is a
 **new** finding and should be reported as one.
 
-@fact:B10-EXPECT-CHECKLIST-GENRE `audit-checklist.md` is a **checklist** and `rejected-designs.md` is a
+@fact:B10-EXPECT-CHECKLIST-GENRE `audit-checklist.xml` is a **checklist** and `rejected-designs.xml` is a
 **catalogue of things deliberately not built** — two shapes the campaign has not
 marked before. A rejected design is a decision record's «considered and
 rejected» field at document scale: ruling 10 sends rationale to `@spec/done`,

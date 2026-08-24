@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Health Audit Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *what* the periodic
+health audit is and is not, *why* a green per-commit gate is not
+enough, *where* its findings live and why that home is not the
+volatile checkpoint, *how* findings are dispositioned and carried
+forward, and the law that keeps the checklist alive.</scope-of-this-document></p>
+  <p><companion-document-pointers fact="true" status="impl/done">The categories
+themselves: [`audit-checklist.xml`](audit-checklist.xml); the run
+procedure: [`running-an-audit.xml`](running-an-audit.xml).</companion-document-pointers></p>
+  <gate-vs-audit title="The gate versus the audit">
+    <p><EVERY-SERIOUS-PROJECT-HAS-A-GATE fact="true" status="spec/done">Every serious project has a **gate**: some automated per-commit check
+— a test suite, a linter, a CI pipeline, or all three — that must be
+green before a commit lands.</EVERY-SERIOUS-PROJECT-HAS-A-GATE></p>
+    <p><THE-GATE-IS-A-MECHANICAL-REGRESSION-DETECTOR fact="true" status="spec/done">The gate is a fast, mechanical
+**regression detector**: it proves, on every commit, that *covered*
+code still behaves.</THE-GATE-IS-A-MECHANICAL-REGRESSION-DETECTOR></p>
+    <p><THE-GATE-IS-INDISPENSABLE-AND-BLIND-TO-FOUR-THINGS fact="true" status="spec/done">It is indispensable, and it is blind by
+construction to four things.</THE-GATE-IS-INDISPENSABLE-AND-BLIND-TO-FOUR-THINGS></p>
+    <p><THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK fact="true" status="impl/done">The audit is a different kind of check — a deliberate, periodic,
+breadth-first sweep, run with human or agent **judgment**, that
+inventories what the gate cannot see and records the result durably.</THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK></p>
+    <p><THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS fact="true" status="impl/done">**Where the gate answers *"did this commit regress covered code?"*,
+the audit answers *"what is wrong, rotting, or drifting that no commit
+will ever flag?"*.**</THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS></p>
+    <p><THE-TWO-ARE-COMPLEMENTS-AND-MORE-GATE-NEVER-SUBSTITUTES fact="true" status="impl/done">The two are complements; adding more gate never
+substitutes for the audit.</THE-TWO-ARE-COMPLEMENTS-AND-MORE-GATE-NEVER-SUBSTITUTES></p>
+  </gate-vs-audit>
+  <blind-spots title="The four blind spots">
+    <table>
+      <tr>
+        <td>#</td>
+        <td>Blind spot</td>
+        <td>Why the gate misses it</td>
+      </tr>
+      <tr>
+        <td><ROW-BLIND-UNCOVERED-CODE fact="true" status="spec/done">1</ROW-BLIND-UNCOVERED-CODE></td>
+        <td><fact status="spec/done">**Uncovered code**</fact></td>
+        <td><fact status="spec/done">A path no test exercises can break with the gate fully green.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-BLIND-CODE-OUTSIDE-THE-GATE fact="true" status="spec/done">2</ROW-BLIND-CODE-OUTSIDE-THE-GATE></td>
+        <td><fact status="spec/done">**Code outside the gate**</fact></td>
+        <td><fact status="spec/done">Anything the test command does not reach — a separate workspace, an unparsed fixture, a manual-test recipe — rots silently.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-BLIND-DRIFT fact="true" status="spec/done">3</ROW-BLIND-DRIFT></td>
+        <td><fact status="spec/done">**Drift**</fact></td>
+        <td><fact status="spec/done">Docs, spec, the checkpoint, and external state fall out of step with the code without any test failing.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-BLIND-SLOW-DEBT fact="true" status="spec/done">4</ROW-BLIND-SLOW-DEBT></td>
+        <td><fact status="spec/done">**Slow debt**</fact></td>
+        <td><fact status="spec/done">Escape hatches, aging `TODO`s, deferred items, quarantined tests — each individually invisible, collectively corrosive.</fact></td>
+      </tr>
+    </table>
+    <p><none-of-these-is-hypothetical fact="true" status="spec/done">None of these is hypothetical.</none-of-these-is-hypothetical></p>
+    <p><the-canonical-failure-is-the-broken-initializer fact="true" status="spec/done">The canonical failure is a milestone
+that shipped green — every commit passing, hundreds of tests passing —
+while the project's own initializer scaffolded *broken* projects and a
+test asserted the broken output *as correct*.</the-canonical-failure-is-the-broken-initializer></p>
+    <p><ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER fact="true" status="spec/done">The gate cannot catch a
+test that encodes the wrong answer; a reader judging the assertion
+against the intent can — and so can a live end-to-end run of the real
+thing, which is what caught the initializer defect above.</ONLY-A-READER-CATCHES-A-TEST-THAT-ENCODES-THE-WRONG-ANSWER></p>
+    <p><not-more-gate-but-a-different-activity fact="true" status="spec/done">Not more gate — a different activity.</not-more-gate-but-a-different-activity></p>
+  </blind-spots>
+  <categories title="What the audit inventories">
+    <p><AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT fact="true" status="impl/done">An audit run walks a category checklist breadth-first — one category
+group per blind spot:</AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT></p>
+    <facts ordered="false">
+      <GROUP-A-TEST-INTEGRITY fact="true" status="impl/done">**A** test integrity (coverage gaps, quarantined
+  tests, tests that encode the wrong behavior),</GROUP-A-TEST-INTEGRITY>
+      <GROUP-B-ROT-OUTSIDE-THE-GATE fact="true" status="impl/done">**B** rot outside the
+  gate,</GROUP-B-ROT-OUTSIDE-THE-GATE>
+      <GROUP-C-DRIFT fact="true" status="impl/done">**C** drift (docs, specs, checkpoint, external state),</GROUP-C-DRIFT>
+      <GROUP-D-DEBT fact="true" status="impl/done">**D** debt
+  (deferred items, aging markers, escape hatches, stale dependencies).</GROUP-D-DEBT>
+    </facts>
+    <p><checklist-pointer-and-the-list-is-not-fixed fact="true" status="impl/done">Every sub-item, its mechanical aid, and what "bad" looks like lives in
+[`audit-checklist.xml`](audit-checklist.xml); the list is not fixed
+(see [§living](#living)).</checklist-pointer-and-the-list-is-not-fixed></p>
+  </categories>
+  <audit-md title="`AUDIT.md` is the durable home">
+    <p><EACH-RUN-RECORDS-ITS-FINDINGS-IN-AUDIT-MD fact="true" status="impl/done">Each run records its findings in **`AUDIT.md`** at the repository root:
+a curated, **append-only chronicle**, one dated section per run — the
+shape of a `CHANGELOG.md`.</EACH-RUN-RECORDS-ITS-FINDINGS-IN-AUDIT-MD></p>
+    <p><AUDIT-MD-IS-COMMITTED-TO-GIT fact="true" status="impl/done">**`AUDIT.md` is committed to git.**</AUDIT-MD-IS-COMMITTED-TO-GIT></p>
+    <p><ITS-HISTORY-IS-THE-PROJECTS-HEALTH-TREND fact="true" status="impl/done">**Its
+history *is* the project's health trend.**</ITS-HISTORY-IS-THE-PROJECTS-HEALTH-TREND></p>
+    <p><A-READER-CAN-DIFF-TWO-RUNS-AND-SEE-THE-TREND fact="true" status="impl/done">A reader can diff two runs
+and see whether open P1s are climbing or falling, whether a finding has
+recurred untouched for three runs, whether the gate is absorbing
+categories over time.</A-READER-CAN-DIFF-TWO-RUNS-AND-SEE-THE-TREND></p>
+    <p><THE-DURABLE-HOME-IS-NOT-THE-CHECKPOINT-FILE fact="true" status="impl/done">The durable home is deliberately **not** the checkpoint file (the WAL,
+`CONTINUE.md`, or whatever living state file the project keeps).</THE-DURABLE-HOME-IS-NOT-THE-CHECKPOINT-FILE></p>
+    <p><a-volatile-file-erases-a-finding-tracked-only-there fact="true" status="spec/done">That
+file is *volatile* — rewritten every session to reflect the current
+state, not the history — so a finding tracked only there is erased at
+the next refresh and its trend is lost.</a-volatile-file-erases-a-finding-tracked-only-there></p>
+    <p><THE-CHECKPOINT-IS-RECONCILED-BUT-THE-INVENTORY-IS-THE-SOURCE fact="true" status="impl/done">The checkpoint's "known issues"
+section is *reconciled against* `AUDIT.md` at the end of a run, but the
+append-only inventory is the source of truth; the checkpoint merely
+points at the active subset.</THE-CHECKPOINT-IS-RECONCILED-BUT-THE-INVENTORY-IS-THE-SOURCE></p>
+  </audit-md>
+  <finding title="The finding record">
+    <p><EVERY-FINDING-CARRIES-FIVE-FIELDS fact="true" status="impl/done">Every finding carries five fields:</EVERY-FINDING-CARRIES-FIVE-FIELDS></p>
+    <table>
+      <tr>
+        <td>Field</td>
+        <td>Content</td>
+      </tr>
+      <tr>
+        <td><ROW-FIELD-ID fact="true" status="impl/done">**ID**</ROW-FIELD-ID></td>
+        <td><fact status="impl/done">`&lt;run-date&gt;-NN` — unique within the run, stable across carry-forward.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FIELD-CATEGORY fact="true" status="impl/done">**Category**</ROW-FIELD-CATEGORY></td>
+        <td><fact status="impl/done">The checklist row it came from (`A1` … `D4`, or a project-specific code).</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FIELD-LOCATOR fact="true" status="impl/done">**Locator**</ROW-FIELD-LOCATOR></td>
+        <td><fact status="impl/done">A one-line description with enough of a file/module pointer to act on.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FIELD-SEVERITY fact="true" status="impl/done">**Severity**</ROW-FIELD-SEVERITY></td>
+        <td><fact status="impl/done">`P1` / `P2` / `P3` (below).</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-FIELD-DISPOSITION fact="true" status="impl/done">**Disposition**</ROW-FIELD-DISPOSITION></td>
+        <td><fact status="impl/done">`fixed` / `filed` / `accepted` / `open` (next section).</fact></td>
+      </tr>
+    </table>
+    <p><SEVERITY-IS-THE-COST-OF-LEAVING-IT fact="true" status="impl/done">Severity is the cost of leaving it:</SEVERITY-IS-THE-COST-OF-LEAVING-IT></p>
+    <facts ordered="false">
+      <SEVERITY-P1-BLOCKER fact="true" status="impl/done">**P1 — blocker.** A correctness gap, or a defect that can ship wrong
+  behavior. Must be resolved before the next milestone is declared
+  shipped.</SEVERITY-P1-BLOCKER>
+      <SEVERITY-P2-DEBT fact="true" status="impl/done">**P2 — debt.** Real and scheduled — fixed in a dedicated pass, or
+  opportunistically when the area is next touched.</SEVERITY-P2-DEBT>
+      <SEVERITY-P3-NOTE fact="true" status="impl/done">**P3 — note.** Low cost of leaving; recorded so the next run
+  re-judges it rather than re-discovering it.</SEVERITY-P3-NOTE>
+    </facts>
+  </finding>
+  <disposition title="Disposition and carry-forward">
+    <p><EVERY-FINDING-IS-DISPOSITIONED-BEFORE-THE-RUN-CLOSES fact="true" status="impl/done">Every finding is dispositioned before the run closes.</EVERY-FINDING-IS-DISPOSITIONED-BEFORE-THE-RUN-CLOSES></p>
+    <p><NOTHING-IS-LEFT-SILENT fact="true" status="impl/done">Nothing is left
+silent:</NOTHING-IS-LEFT-SILENT></p>
+    <table>
+      <tr>
+        <td>Disposition</td>
+        <td>Meaning</td>
+      </tr>
+      <tr>
+        <td><ROW-DISP-FIXED fact="true" status="impl/done">**fixed**</ROW-DISP-FIXED></td>
+        <td><fact status="impl/done">Resolved inside the run. Small findings are fixed on the spot; the fix is a normal commit and the finding records its hash.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-DISP-FILED fact="true" status="impl/done">**filed**</ROW-DISP-FILED></td>
+        <td><fact status="impl/done">Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-DISP-ACCEPTED fact="true" status="impl/done">**accepted**</ROW-DISP-ACCEPTED></td>
+        <td><fact status="impl/done">A deliberate decision *not* to act, recorded with its reason. Re-judged next run. This is a decision record: it carries a why and a revisit trigger.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-DISP-OPEN fact="true" status="impl/done">**open**</ROW-DISP-OPEN></td>
+        <td><fact status="impl/done">Not yet dispositioned.</fact></td>
+      </tr>
+    </table>
+    <p><AN-OPEN-OR-UNLANDED-FILED-FINDING-CARRIES-FORWARD fact="true" status="impl/done">An `open` finding — or a `filed` one whose work has not landed —
+**carries forward**: the next run re-lists it and re-judges its
+severity.</AN-OPEN-OR-UNLANDED-FILED-FINDING-CARRIES-FORWARD></p>
+    <p><A-FINDING-THAT-RECURS-WITHOUT-PROGRESS-IS-ITSELF-A-SIGNAL fact="true" status="impl/done">This is the whole point of a durable inventory: **a finding
+that recurs across runs without progress is itself a signal.**</A-FINDING-THAT-RECURS-WITHOUT-PROGRESS-IS-ITSELF-A-SIGNAL></p>
+    <p><A-P2-RIDING-THREE-AUDITS-IS-REALLY-A-P1-OR-AN-ACCEPTANCE fact="true" status="impl/done">A P2
+that has ridden three consecutive audits untouched is really a P1
+nobody will schedule, or should be honestly *accepted* rather than
+perpetually *open*.</A-P2-RIDING-THREE-AUDITS-IS-REALLY-A-P1-OR-AN-ACCEPTANCE></p>
+  </disposition>
+  <living title="The checklist is living">
+    <p><THE-CHECKLIST-IS-NOT-FROZEN fact="true" status="impl/done">The checklist is not frozen.</THE-CHECKLIST-IS-NOT-FROZEN></p>
+    <p><TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN fact="true" status="impl/done">Two forces reshape it over time, each when its own
+condition holds:</TWO-FORCES-RESHAPE-THE-CHECKLIST-EVERY-RUN></p>
+    <facts ordered="false">
+      <FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY fact="true" status="impl/done">**A new defect class becomes a permanent category.** When a run
+  discovers a kind of rot the checklist did not name, that kind is
+  added as a standing row — so the same gap is never re-missed. The
+  broken-initializer defect above is exactly what turns "the untested
+  default path" into a permanent coverage line.</FORCE-A-NEW-DEFECT-CLASS-BECOMES-A-PERMANENT-CATEGORY>
+      <FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE fact="true" status="impl/done">**A mechanisable category migrates into the gate.** When a category
+  can be checked by a script, it *should* — over time it moves out of
+  the manual audit into the linter, the test suite, or CI, becoming an
+  automatic per-commit guard. The audit is the judgment-heavy
+  *superset*; the gate is the automated *subset* it keeps feeding. The
+  long-run goal: each run finds *fewer* things the gate could have
+  caught and *more* that genuinely need judgment.</FORCE-A-MECHANISABLE-CATEGORY-MIGRATES-INTO-THE-GATE>
+    </facts>
+    <p><one-corollary-deserves-its-own-line fact="true" status="impl/done">One corollary deserves its own line.</one-corollary-deserves-its-own-line></p>
+    <p><ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION fact="true" status="impl/done">**A project that has adopted a
+rule framework should add a category measuring how deep the adoption
+actually goes, not just that it exists.**</ADD-A-CATEGORY-MEASURING-DEPTH-OF-ADOPTION></p>
+    <p><adopted-is-true-at-the-surface-first fact="true" status="spec/done">"Adopted" is true at the
+surface long before it is true in depth; a row that audits *depth of
+adoption* — how many modules actually carry the convention, not merely
+that it is documented — is the kind of category a real project grows
+into.</adopted-is-true-at-the-surface-first></p>
+    <p><THE-CHECKLIST-IS-YOURS-TO-EXTEND fact="true" status="impl/done">The checklist is yours to extend; these are starting categories.</THE-CHECKLIST-IS-YOURS-TO-EXTEND></p>
+  </living>
+  <cadence title="Cadence">
+    <p><AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR fact="true" status="impl/done">The audit is **owner-triggered**, with a recommended floor of **once
+per milestone** — run as part of, or immediately after, a milestone
+close-out, so **a milestone is never declared done on an un-audited
+base**.</AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR></p>
+    <p><OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED fact="true" status="impl/done">The owner re-runs it at will between milestones; no calendar
+cron is fixed.</OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED></p>
+    <p><A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX fact="true" status="impl/done">A run need not finish every *fix* — it must finish the
+*inventory*.</A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX></p>
+    <p><fixing-is-the-work-the-inventory-schedules fact="true" status="impl/done">Fixing is the work the inventory schedules.</fixing-is-the-work-the-inventory-schedules></p>
+  </cadence>
+  <why-not title="Why not the simpler options">
+    <p><three-rejected-shapes-lead fact="true" status="spec/done">Three simpler shapes were considered and rejected:</three-rejected-shapes-lead></p>
+    <facts ordered="false">
+      <REJECTED-A-ONE-TIME-HARDENING-PASS fact="true" status="spec/done">**A one-time hardening pass instead of a recurring process** —
+  rejected: a one-shot pass decays the day after it lands and rot
+  resumes. The value is the *recurrence* and the *trend record*, not
+  the single cleanup.</REJECTED-A-ONE-TIME-HARDENING-PASS>
+      <REJECTED-RELY-ON-THE-GATE-ALONE fact="true" status="spec/done">**Rely on the gate alone** — rejected: the gate is a regression
+  detector, structurally blind to uncovered code, out-of-gate trees,
+  and drift. More gate is good but never sufficient; the
+  broken-initializer defect passed the gate on every commit.</REJECTED-RELY-ON-THE-GATE-ALONE>
+      <REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT fact="true" status="spec/done">**Track findings only in the checkpoint file** — rejected: the
+  checkpoint is volatile, rewritten each session. A durable,
+  append-only history is what lets the project see whether it trends
+  healthier or worse. Hence a separate `AUDIT.md`.</REJECTED-TRACK-FINDINGS-ONLY-IN-THE-CHECKPOINT>
+    </facts>
+    <p><FULL-AUTOMATION-IS-DEFERRED-NOT-REJECTED fact="true" status="spec/done">Full automation is *deferred, not rejected*: the audit's value is
+breadth *plus judgment* — "this test encodes a bug" is not mechanically
+detectable — so it grows category by category (§living), never
+replacing the process.</FULL-AUTOMATION-IS-DEFERRED-NOT-REJECTED></p>
+  </why-not>
+  <re-derive title="Re-derive for your project">
+    <p><COPY-THE-TASK-NOT-THE-CATEGORY-LETTERS fact="true" status="impl/done">Do not copy the category letters verbatim — copy the *task*, and let
+the agent re-derive the checklist this project actually needs:</COPY-THE-TASK-NOT-THE-CATEGORY-LETTERS></p>
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-health-audit/&lt;version&gt;/spec/flows/health-audit/`, check `vibe.lock`) in full, then adapt the audit to this
+project:
+1. Name this project's per-commit gate exactly — the commands that
+   must be green before a commit lands (tests, linter, CI jobs).
+2. For each of the four blind spots (uncovered code, out-of-gate
+   trees, drift, slow debt), list what specifically escapes THIS
+   gate: which trees the test command misses, which docs/specs drift,
+   which markers and escape hatches accumulate here.
+3. Turn each into a concrete checklist row with a mechanical aid — the
+   grep pattern, the coverage tool, the CI-config diff that surfaces
+   it in this repo.
+4. Add one row measuring depth-of-adoption for any convention this
+   project claims to follow (not just that it is documented).
+5. Draft the AUDIT.md skeleton (one dated section, the five finding
+   fields) and show it to me. Create nothing until I approve.</fence>
+  </re-derive>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS fact="true" status="impl/done">The gate is a per-commit regression detector; the audit is a
+  periodic judgment sweep over what the gate cannot see. Complements,
+  not substitutes.</SUM-GATE-AND-AUDIT-ARE-COMPLEMENTS>
+      <SUM-FOUR-BLIND-SPOTS fact="true" status="spec/done">Four blind spots: uncovered code, out-of-gate trees, drift, slow
+  debt — each individually invisible, collectively corrosive.</SUM-FOUR-BLIND-SPOTS>
+      <SUM-FINDINGS-LIVE-IN-AUDIT-MD fact="true" status="impl/done">Findings live in `AUDIT.md`: append-only, dated, committed to git —
+  its history is the project's health trend, not the volatile
+  checkpoint. Five fields per finding; four dispositions; unresolved
+  findings carry forward, and one that recurs without progress is
+  itself a signal.</SUM-FINDINGS-LIVE-IN-AUDIT-MD>
+      <SUM-THE-CHECKLIST-IS-LIVING fact="true" status="impl/done">The checklist is living: new defect classes join it, mechanisable
+  ones migrate into the gate.</SUM-THE-CHECKLIST-IS-LIVING>
+      <SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE fact="true" status="impl/done">Owner-triggered, floor once per milestone. A milestone is never
+  declared done on an un-audited base.</SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE>
+    </facts>
+  </summary>
+</spec>

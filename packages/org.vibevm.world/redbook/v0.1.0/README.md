@@ -23,7 +23,7 @@ a new umbrella version with refreshed pins.
 ## Members (edition 0.1.0) {#members}
 
 | Flow | One line |
-|---|---|
+| --- | --- |
 | `two-process-model` @0.1.0 | The foundation: human and AI as coprocessors; the human owns coherence; files are the only shared memory. |
 | `wal` @0.2.0 | The checkpoint file (WAL) and cold-resume snapshot; session wind-down and resume rituals; the `wal-status` skill. |
 | `sync-from-code` @0.1.0 | The sanctioned reverse path: reconcile the spec when code changed first, with human approval. |
@@ -82,3 +82,4 @@ removed by uninstalling them individually.
 
 UPL-1.0. See `LICENSE.md`. The book text under `spec/book/` is the
 author's manuscript and ships under the same terms.
+

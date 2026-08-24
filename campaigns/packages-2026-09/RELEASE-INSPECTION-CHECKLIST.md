@@ -13,7 +13,7 @@
       `dbc34fddc1081ed19389867f66477d2f5616d51fb473e633e70cbab7264061b9`.
 - [ ] Состав: `vibe.exe` (static CRT — импорты без VCRUNTIME/MSVCP,
       проверено настоящим dumpbin), `install.ps1`, `uninstall.ps1`,
-      `README-INSTALL.md`, `LICENSE.md`, `ALPHA-NOTES.md`,
+      `README-INSTALL.md`, `LICENSE.xml`, `ALPHA-NOTES.md`,
       `SHA256SUMS.txt` (первая строка честно говорит «corruption check
       only, not authenticity» — подписи пакетов B-015 паркованы).
 - [ ] Авторские исходники скриптов + рецепт сборки:

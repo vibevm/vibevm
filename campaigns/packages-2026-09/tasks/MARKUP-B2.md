@@ -40,7 +40,7 @@ is what code tags actually cite. Three consequences:
   grammar and case-sensitivity. Mark what is there now; do not be surprised that
   it disagrees with older statements elsewhere in the corpus — that disagreement
   is a **finding**, not something to fix.
-- @fact:B2-ATLAS-IS-A-LEDGER **`ATLAS.md` is a findings ledger, not a contract.** Its entries are
+- @fact:B2-ATLAS-IS-A-LEDGER **`ATLAS.xml` is a findings ledger, not a contract.** Its entries are
   dated research results with evidence classes (`_benchmark · high · refines:H4_`).
   Treat each entry as one fact, keep its evidence tag inside the unit, and
   expect `@spec/done` to dominate — these are claims about the outside world,

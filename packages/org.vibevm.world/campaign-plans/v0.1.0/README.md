@@ -7,8 +7,7 @@ into a project: any multi-commit change too big for one session is
 planned as a single document that a fresh session — or a different
 person — can execute with no memory of the planning conversation. @status:impl/done
 
-- @fact:FEATURE-FROZEN-BASELINE-ARITHMETIC
-  Frozen baseline arithmetic, @status:impl/done
+- @fact:FEATURE-FROZEN-BASELINE-ARITHMETIC Frozen baseline arithmetic, @status:impl/done
 - @fact:FEATURE-FALSIFIABLE-PREDICTIONS falsifiable predictions, @status:impl/done
 - @fact:FEATURE-PHASES-GATED-ON-THE-GREEN-FLOOR phases gated on
   the project's green floor, @status:impl/done
@@ -19,20 +18,20 @@ person — can execute with no memory of the planning conversation. @status:impl
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PLAN-FORMAT `spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` — what a
+- @fact:CONTENT-THE-PLAN-FORMAT `spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml` — what a
   campaign is, the five artifact roles (PLAN / BASELINE /
   PREDICTIONS / LOG / REPORT), and the canonical fifteen-section
   plan skeleton, each section with a spec and most with a worked
   mini example. @status:impl/done
-- @fact:CONTENT-THE-PHASE-GATES `spec/flows/campaign-plans/phase-gates.md` — Phase 0 spike
+- @fact:CONTENT-THE-PHASE-GATES `spec/flows/campaign-plans/phase-gates.xml` — Phase 0 spike
   discipline (no commits; a red spike rewrites the affected decision
   before anything lands), phase anatomy, the safe-stop law,
   resumability, review points, discovered-necessary work. @status:impl/done
-- @fact:CONTENT-THE-EXECUTION-LEDGER `spec/flows/campaign-plans/execution-ledger.md` — the record half:
+- @fact:CONTENT-THE-EXECUTION-LEDGER `spec/flows/campaign-plans/execution-ledger.xml` — the record half:
   status-line lifecycle, the prepended execution record, per-phase
   commit maps, honesty rules, the closing report, the deferrals
   ledger and the lineage law. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/40-flow-campaign-plans.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/40-flow-campaign-plans.xml` — boot snippet loaded at
   session start: when to propose a campaign, the phase-boundary
   checklist, and the never-do list. @status:impl/done
 
@@ -97,3 +96,4 @@ in Russian inside `flow:redbook` at `spec/book/ru/`). @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [LICENSE.md](LICENSE.md). @status:impl/done
+

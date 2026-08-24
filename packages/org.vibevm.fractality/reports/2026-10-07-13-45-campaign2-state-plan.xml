@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Campaign 2 — initiative system · STATE (живой трекер)</title>
+  <p>_План-идентификатор: **campaign2**. Обновлён: 2026-07-10 14:05
+(пауза сессии — см.
+[paused-план](2026-10-07-14-05-campaign2-paused-plan.xml)).
+Источник истины — план (§14 ledger) и WAL; этот файл — дашборд +
+быстрый трекер «где мы». Обновляется между статусными документами._</p>
+  <section title="Прогресс">
+    <list ordered="false">
+      <item>[x] **Ф0 — спайки** — 2026-07-10 11:59 · P2 подтверждён 4/4 · F20
+      (statusline ≠ headless), F21 (`duration_ms`), F22 (спавн 6 мс)</item>
+      <item>[x] **Ф1 — sessions** — `1c9757b` · сессии+атрибуция+I1-пин ·
+      7 интеграционных тестов (делегат GLM-5.2)</item>
+      <item>[x] **Ф2 — scoreboard** — `6f5788a`+`6d8397e` · движок (строго
+      факты) · `scoreboard`/`--line` · квота-роллап (хвост IGNITION
+      закрыт)</item>
+      <item>[x] **Ф3 — CC-адаптер** — `4e2c71c` · hook/statusline/harness/fetch
+      · закон доступности · MT-C2-02</item>
+      <item>[x] **Ф4 — инициатива вживую** — `2b24288` · наджи (порог 7 /
+      кулдаун 300 с) · stop-алерт с ack · matrix.toml+`route`
+      (голдены 10/10, P5 ✅) · MT-C2-03 (надж-половина пре-ран green)</item>
+      <item>[x] **Ф5 — answer-rules slice** — `337ea86` · авто-ответы по
+      правилам профиля · провенанс auto_rule · 2 bus-честных теста</item>
+      <item>[x] **Ф6 (подготовка)** — пре-регистрация трайла: staging + меню +
+      `run-arm.sh` + MT-C2-01/-04 (скоринг заморожен) · snippet 75
+      v2 + skill v2 · **RP1 РАЗРЕШЁН** (GLM-босс, 3+3, потолок 8)</item>
+      <item>[ ] **Ф6 (исполнение) ← СЛЕДУЮЩИЙ ШАГ:** прогнать армы
+      (`run-arm.sh a 1..3`, `b 1..3`), отскорить по MT-C2-01,
+      записать Recorded runs</item>
+      <item>[ ] **Ф7 — закрытие**</item>
+    </list>
+  </section>
+  <section title="Панель качества (последняя граница — Ф5)">
+    <p>floor **all green**: conform 0 (7/7 gated) · specmap 18 units / 63
+items / 63 edges / 0 orphans · test-gate xfail-strict · ~155 тестов.</p>
+  </section>
+  <section title="Скорборд делегирования сессии">
+    <p>delegated 5 / delivered 5: barkain-survey (5.2) · cc-docs выжимка
+(5.2) · session-тесты MC (5.2) · fetch.rs (turbo) · route-срез (5.2;
+один перезапуск: мой незапиненный cwd — протокол наблюдения поймал).
+Kept с причинами: дизайн швов, политика наджей, ownership-семантика,
+эксперимент-дизайн трайла, все ревью.</p>
+  </section>
+  <section title="Открытые вопросы к владельцу">
+    <list ordered="true">
+      <item>~~RP1~~ — **разрешён** (GLM-босс; 3+3, потолок 8).</item>
+      <item>RP2 — PostToolUse-счётчик: ON по умолчанию (рекомендовано) или OFF.</item>
+      <item>RP3 — цель установки: `settings.local.json` (рекомендовано) или
+   `--project`.</item>
+    </list>
+  </section>
+  <section title="Замечено по пути (не блокирует)">
+    <list ordered="false">
+      <item>Хуки говорят с demon-бинарём → смоуки после правок ядра требуют
+  `cargo build --workspace` (родня F15; вписано в MT-C2-03).</item>
+      <item>`session ls` без пагинации; сессии не жнутся по TTL (вечно-open при
+  краше харнесса) — стратегический хвост.</item>
+      <item>Debug-след хуков отсутствует по закону доступности — нужен opt-in
+  `FRACTALITY_HOOK_DEBUG` (хвост Ф6).</item>
+    </list>
+  </section>
+</spec>

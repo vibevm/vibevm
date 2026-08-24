@@ -308,13 +308,13 @@ mention it).
 
 - `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:82` — "add the crate to conform.toml's `gated_crates`" (mirrors at the `vibedeps/.../stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:69`, and the fractality specspace copies).
 - `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:79` — "flip a crate into `gated_crates`" (mirrors at `:59`).
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:169` — gated_crates / `[[exempt]]` / "every-crate-gated-or-exempt invariant enforced on every check"; `:181` — gated_crates / `gated_pub_doctest` flip-only-after-drain (mirrors at `:107,:119`).
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:110` — names `registry_pkg`, `gated_crates`.
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:626` — "a package enters `gated_crates` only at zero findings (the key is the shared neutral engine's — one spelling across the language stacks today)".
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:169` — gated_crates / `[[exempt]]` / "every-crate-gated-or-exempt invariant enforced on every check"; `:181` — gated_crates / `gated_pub_doctest` flip-only-after-drain (mirrors at `:107,:119`).
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.xml:110` — names `registry_pkg`, `gated_crates`.
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:626` — "a package enters `gated_crates` only at zero findings (the key is the shared neutral engine's — one spelling across the language stacks today)".
 - `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:89` — "flip a package into `gated_crates`".
 - `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:62` — `[go].floor_disable` spelling.
 - `BACKLOG.md:769` (B029-LOCATOR), `BACKLOG.md:838` (B034-LOCATOR) — the items this census feeds.
-- Historical / evidence references (campaigns + terraforms): `campaigns/packages-2026-09/harvest/d1-go-ai-native-lang-repairs.md:461-512,945`; `…/d7d-stacks-sync-reverify.md:1636-1682`; `…/d8a-stacks-package-own-release-reverify.md:1089-1345`; `…/d9-release-corrections-prepared.md:1073-1162`; `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2706,2777,4275`; `legacy-spec/terraforms/{TRACEABILITY-RELOCATION-PLAN-v0.1.md:248, SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:44,87, SELF-SUFFICIENCY-PLAN-v0.1.md:319,408,536,583, DISCIPLINE-SWEEP-v0.2.md:42}`.
+- Historical / evidence references (campaigns + terraforms): `campaigns/packages-2026-09/harvest/d1-go-ai-native-lang-repairs.md:461-512,945`; `…/d7d-stacks-sync-reverify.md:1636-1682`; `…/d8a-stacks-package-own-release-reverify.md:1089-1345`; `…/d9-release-corrections-prepared.md:1073-1162`; `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2706,2777,4275`; `legacy-spec/terraforms/{TRACEABILITY-RELOCATION-PLAN-v0.1.md:248, SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:44,87, SELF-SUFFICIENCY-PLAN-v0.1.md:319,408,536,583, DISCIPLINE-SWEEP-v0.2.md:42}`.
 
 ### What breaks on a `gated_crates` rename
 
@@ -326,7 +326,7 @@ mention it).
 3. **Operator-facing docs read wrong**: the rust `terraform`/`sweep` skills
    instruct operators to edit `gated_crates`; the Rust GUIDE documents the
    invariant under that name; the Go GUIDE already pins it as "one spelling
-   across stacks" (`GUIDE-AI-NATIVE-GO.md:626`).
+   across stacks" (`GUIDE-AI-NATIVE-GO.xml:626`).
 4. **No code breakage** beyond the mechanical struct-field rename in
    `config.rs` + the `build_rules`/`health`/`init` references — the field has no
    serde alias today (Q7), so there is no graceful transition path in place.
@@ -335,7 +335,7 @@ The Go side already carries a recorded terminology tension: the config key is
 the Rust-flavoured `gated_crates` even in the Go stack, and the Go error string
 says "duplicate **crate** name" (`config.rs:272`) — see
 `campaigns/.../d1-go-ai-native-lang-repairs.md:494,945` and
-`GUIDE-AI-NATIVE-GO.md:626`. B-029 is precisely the reconciliation of this.
+`GUIDE-AI-NATIVE-GO.xml:626`. B-029 is precisely the reconciliation of this.
 
 ---
 

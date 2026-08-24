@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Atomic Commits</title>
+  <status stage="impl" state="done"/>
+  <p><THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE fact="true" status="impl/done">This project uses the **atomic commits** discipline as its Git
+contract.</THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE></p>
+  <p><ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY fact="true" status="impl/done">One commit carries exactly one idea, and the commit message
+explains *why*.</ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY></p>
+  <core-rule title="Core rule">
+    <p><ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE fact="true" status="impl/done">**One commit = one logical change**, not one file changed.</ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE></p>
+    <p><A-MIXED-SESSION-IS-THREE-COMMITS fact="true" status="impl/done">A session that produces (a) a typo fix, (b) a refactor, and (c) a
+schema update is **three** commits, not one.</A-MIXED-SESSION-IS-THREE-COMMITS></p>
+    <p><A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT fact="true" status="impl/done">A feature that touches
+fifteen files for one coherent reason is **one** commit, not fifteen.</A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT></p>
+  </core-rule>
+  <message-format title="Message format">
+    <p><COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW fact="true" status="impl/done">Commit messages follow the **git-conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`.</COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW></p>
+    <p><CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY fact="true" status="impl/done">Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea).</CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY></p>
+    <p><THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER fact="true" status="impl/done">The
+two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
+Commits and a violation of the atomic rule.</THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER></p>
+  </message-format>
+  <session-end title="Session end">
+    <p><before-closing-a-session-lead fact="true" status="impl/done">Before closing a session:</before-closing-a-session-lead></p>
+    <facts ordered="true">
+      <STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE fact="true" status="impl/done">Run `git status` and `git diff HEAD`. Name every change by intent.</STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE>
+      <STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS fact="true" status="impl/done">Group changes into atomic commits — one commit per intent, not per
+   file.</STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS>
+      <STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY fact="true" status="impl/done">Stage and commit each group separately with a well-formed message.</STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY>
+      <STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS fact="true" status="impl/done">Do not amend or force-push commits that are already pushed; create a
+   new commit instead, unless the human explicitly approves history
+   rewriting.</STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS>
+    </facts>
+    <p><splitting-procedure-pointer fact="true" status="impl/done">Procedure for splitting a messy working tree:
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root.</splitting-procedure-pointer></p>
+  </session-end>
+  <why-human-ai-teams title="Why this matters in a human-AI team">
+    <facts ordered="false">
+      <WHY-DIFF-AS-VERIFICATION fact="true" status="spec/done">**Diff as verification.** Humans verify code by reading diffs. A
+  diff that mixes three concerns is not verifiable in one pass.</WHY-DIFF-AS-VERIFICATION>
+      <WHY-ROLLBACK-PRECISION fact="true" status="impl/done">**Rollback precision.** `git revert &lt;sha&gt;` must undo the wrong
+  thing without also undoing two correct things.</WHY-ROLLBACK-PRECISION>
+      <WHY-COMMIT-LOG-AS-DECISION-RECORD fact="true" status="impl/done">**Commit log as decision record.** The message is the only place
+  where *why* survives after the WAL and spec prose decay.</WHY-COMMIT-LOG-AS-DECISION-RECORD>
+    </facts>
+    <p><full-protocol-pointer fact="true" status="impl/done">Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root.</full-protocol-pointer></p>
+  </why-human-ai-teams>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX fact="true" status="impl/done">Never mix refactor + feature + docs + bugfix in one commit.</NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX>
+      <NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — the diff does
+  that. Write *why*.</NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED>
+      <NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL fact="true" status="impl/done">Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`.</NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL>
+    </facts>
+  </never>
+</spec>

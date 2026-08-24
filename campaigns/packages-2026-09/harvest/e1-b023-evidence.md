@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-03
 **HEAD:** `779b3aaa docs(campaign): коэффициент параллельности — до 5 на запускалку, 10 всего`
-**Subject path:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md`
+**Subject path:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml`
 **Genre:** evidence only. Every in-tree claim carries `file:line`; every
 absence claim names its perimeter and search terms; every model-knowledge
 line is marked «model knowledge — verify at build time». **No verdicts, no
@@ -31,7 +31,7 @@ treated as evidence: `campaigns/**`, `refs/**`.
 
 ### What the spec promises
 
-The §2 frontend table (`ENGINE-CONFORM-v0.1.md:44-49`) draws the trait as:
+The §2 frontend table (`ENGINE-CONFORM-v0.1.xml:44-49`) draws the trait as:
 
 ```rust
 trait Frontend {
@@ -42,7 +42,7 @@ trait Frontend {
 ```
 
 and the fact store's cache key is named at `##KEY-IS-FILE-HASH-PLUS-FRONTEND-VERSION`
-(`ENGINE-CONFORM-v0.1.md:81`): *"(file content-hash, frontend id+version)"*.
+(`ENGINE-CONFORM-v0.1.xml:81`): *"(file content-hash, frontend id+version)"*.
 The tier vocabulary `##TIER-VOCABULARY` is at `:59`.
 
 ### What a frontend must implement — the real `Frontend` trait
@@ -152,7 +152,7 @@ property `for_typescript`'s doc relies on at `store.rs:62-63`.
 ## Q2 — the Rust T-syn precedent (in-process, `syn`-based)
 
 This is the in-process precedent the spec names at `##ROW-TIER-T-SYN`
-(`ENGINE-CONFORM-v0.1.md:31`) (*«the `syn` half is real and running
+(`ENGINE-CONFORM-v0.1.xml:31`) (*«the `syn` half is real and running
 (`rust-ai-native-conform-frontend`, whose own module doc calls itself "the
 Rust T-syn frontend")»*) — and the shape RustPython would imitate.
 
@@ -209,7 +209,7 @@ The extraction is a `syn::visit::Visit` walk (`lib.rs:14` `use syn::visit::Visit
 
 ### What the precedent is, as a shape
 
-A single in-process file: a zero-sized `Frontend` impl whose `extract` parses one file's text with a real parser, walks the AST with a `Visit`-style visitor, pushes `Fact`s (opened with `FileMetrics`, scoped by test/deviation depth counters), returns them sorted by line, and tolerates unparseable input as an empty vec. Identity in the cache is `(id, version)`; nothing else crosses a process boundary. **No `warm`, no sidecar, no node/python child process.** This is the shape the spec's `##ROW-FRONTEND-PYTHON` T-syn cell (`ENGINE-CONFORM-v0.1.md:57`, *«RustPython parser (MIT) in-process»*) names, and the shape RustPython would slot into directly.
+A single in-process file: a zero-sized `Frontend` impl whose `extract` parses one file's text with a real parser, walks the AST with a `Visit`-style visitor, pushes `Fact`s (opened with `FileMetrics`, scoped by test/deviation depth counters), returns them sorted by line, and tolerates unparseable input as an empty vec. Identity in the cache is `(id, version)`; nothing else crosses a process boundary. **No `warm`, no sidecar, no node/python child process.** This is the shape the spec's `##ROW-FRONTEND-PYTHON` T-syn cell (`ENGINE-CONFORM-v0.1.xml:57`, *«RustPython parser (MIT) in-process»*) names, and the shape RustPython would slot into directly.
 
 
 ---
@@ -217,7 +217,7 @@ A single in-process file: a zero-sized `Frontend` impl whose `extract` parses on
 ## Q3 — the TS semantic sidecar precedent (`ts-extract`)
 
 This is the deep-semantic frontend the spec's `##ROW-FRONTEND-TS-JS`
-T-sem cell names (`ENGINE-CONFORM-v0.1.md:55`: *«TypeScript compiler API
+T-sem cell names (`ENGINE-CONFORM-v0.1.xml:55`: *«TypeScript compiler API
 via a Node **sidecar process**»*). The packet asks for the wire protocol,
 the facts, the size, the tests, the runtime prerequisite, and the
 sidecar-generic vs TS-specific split.
@@ -248,7 +248,7 @@ process for every cache-missed file and parks the lowered facts in memory;
 - `:184` stdout parsed by `parse_ndjson`.
 
 **node → Rust format** (NDJSON, one record per source file):
-- `extract.ts:534` `process.stdout.write(JSON.stringify(record) + "\n")` — newline-delimited JSON, one `FileRecord` per line. This is exactly the spec's `##SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO` (`ENGINE-CONFORM-v0.1.md:61`: *«newline-delimited JSON over stdio, versioned; sidecars emit Facts, nothing else»*).
+- `extract.ts:534` `process.stdout.write(JSON.stringify(record) + "\n")` — newline-delimited JSON, one `FileRecord` per line. This is exactly the spec's `##SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO` (`ENGINE-CONFORM-v0.1.xml:61`: *«newline-delimited JSON over stdio, versioned; sidecars emit Facts, nothing else»*).
 - `FileRecord` shape (bridge `src/lib.rs:103-111`; mirrored `extract.ts:98-105`): `{ protocol: u64, file: String, in_test: bool, degraded: bool, facts: Vec<RawFact>, markers: Vec<RawMarker> }`.
 - `RawFact` enum (bridge `src/lib.rs:68-90`, `#[serde(tag = "fact", rename_all = "snake_case")]`): `TsUnsafe { kind, line, reason }`, `Import { to_path, line }`, `Item { kind, symbol, line, is_exported, has_doc_example }`, `FileMetrics { lines }`.
 - `RawMarker` (bridge `src/lib.rs:93-100`): the §9 JSDoc spec tags (`@implements`/…), separate from conform facts.
@@ -270,7 +270,7 @@ The bridge lowers these into the engine model via `conform_facts` (`bridge/src/l
 - `TsTscFrontend` (`frontend/src/lib.rs:25-29`) holds `warmed: Mutex<HashMap<String, Vec<Fact>>>`.
 - `Frontend::warm` (`frontend/src/lib.rs:99-101`) → `warm_batch(Some(pending))` (`:51-73`): **one node run for the whole pending set**, lowered facts parked in the map by file. Extraction failure prints to stderr and yields an empty per-file set — the gate keeps running (B5).
 - `Frontend::extract` (`frontend/src/lib.rs:102-120`): serves from the map; if a file was never warmed (defensive path), it runs a single-file batch (`:114`).
-- `probe` (`frontend/src/lib.rs:78-87`): runs the extractor with `Some(&[])` so drivers fail **hard** with the taxonomy's message before a gate run silently yields zero facts — this is the mechanism behind the spec's `##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY` (`ENGINE-CONFORM-v0.1.md:63`), cited at `typescript-ai-native-conform/src/lib.rs:66-70`.
+- `probe` (`frontend/src/lib.rs:78-87`): runs the extractor with `Some(&[])` so drivers fail **hard** with the taxonomy's message before a gate run silently yields zero facts — this is the mechanism behind the spec's `##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY` (`ENGINE-CONFORM-v0.1.xml:63`), cited at `typescript-ai-native-conform/src/lib.rs:66-70`.
 - `id() = "ts-tsc"`, `version() = "1"` (`frontend/src/lib.rs:91-98`).
 
 ### Fixtures / tests
@@ -402,7 +402,7 @@ T-syn suffices.
 `grep -rnE 'fn id(&self)'` over `core-ai-native-conform/src/rules/*.rs`
 returns **15** `Rule` impls (re-exports at `rules/mod.rs:21-25`). The
 engine-conform spec annotation `##RULE-RECORD-DECLARES-ITS-TIER`
-(`ENGINE-CONFORM-v0.1.md:24`) says *«All fifteen shipped rules»* — that
+(`ENGINE-CONFORM-v0.1.xml:24`) says *«All fifteen shipped rules»* — that
 count is now accurate. **The F-146 prior measurement
 (`d7a-core-sync-reverify.md:340`) said «thirteen ids»; that is stale — the
 roster grew by two (the re-count finds `ambient-env` at `budget.rs:331` and
@@ -474,7 +474,7 @@ a TS project runs read three fact variants — `TsUnsafe`, `Import`,
   - `non_null` — the `!` operator (`ts.isNonNullExpression`, `extract.ts:365-372`);
   - `ts_ignore` / `ts_expect_error` — comment-trivia matches (`extract.ts:438-483`, a `createScanner` walk over comments).
 
-**What the extractor actually calls on the `typescript` module** (the `TsModule` interface at `extract.ts:170-210` and its uses): `createSourceFile`, `forEachChild`, `createScanner`, `getJSDocTags`, `getTextOfJSDocComment`, and the `is*` predicate predicates. **Absent from that interface and from every call site:** `createProgram`, `getPreEmitFileEmitOutput`, `getTypeChecker`, `getSymbolAtLocation`, and any checker/symbol-resolution surface. `grep -nE 'createProgram|getTypeChecker|getSymbolAtLocation|Checker|Program'` over `tools/ts-extract/extract.ts` returns **zero** matches. So the shipped TS frontend — labelled T-sem by the spec's `##ROW-FRONTEND-TS-JS` (`ENGINE-CONFORM-v0.1.md:55`, *«TypeScript compiler API»*) — exercises the Compiler API's **parser** half (`createSourceFile`/`createScanner`), not its type-checker half.
+**What the extractor actually calls on the `typescript` module** (the `TsModule` interface at `extract.ts:170-210` and its uses): `createSourceFile`, `forEachChild`, `createScanner`, `getJSDocTags`, `getTextOfJSDocComment`, and the `is*` predicate predicates. **Absent from that interface and from every call site:** `createProgram`, `getPreEmitFileEmitOutput`, `getTypeChecker`, `getSymbolAtLocation`, and any checker/symbol-resolution surface. `grep -nE 'createProgram|getTypeChecker|getSymbolAtLocation|Checker|Program'` over `tools/ts-extract/extract.ts` returns **zero** matches. So the shipped TS frontend — labelled T-sem by the spec's `##ROW-FRONTEND-TS-JS` (`ENGINE-CONFORM-v0.1.xml:55`, *«TypeScript compiler API»*) — exercises the Compiler API's **parser** half (`createSourceFile`/`createScanner`), not its type-checker half.
 
 Consequence for the inventory (stated as fact, not as a sufficiency verdict): every fact field the three TS-gate rules read is produced by a parse-tree / lexical / trivia test in `extract.ts`; none of those productions invokes the type checker. The `as_cross` fact in particular is named "cross-type" but is produced by a purely syntactic `as`-that-isn't-`as-const` test (`extract.ts:350-364`) — the extractor does not, and cannot with the surface it uses, determine whether a cast actually crosses types.
 
@@ -503,7 +503,7 @@ perimeter (host root + each package workspace + `research/rust-demo`):
 `research/rust-demo/Cargo.lock`.
 
 Terms run: `tree[ -]?sitter`, `tree_sitter`, `\bswc\b`, `rustpython`, `\bruff\b`
-(over `*.toml`/`*.lock`); and `name = "(tree-sitter|tree_sitter|swc|rustpython|ruff)"` over the lock files. **Result: zero matches** — in the perimeter manifests, and even in `vibedeps/` (the broader un-excluded search for `tree.sitter|rustpython|swc` over every `Cargo.lock` returns nothing). This confirms and extends the spec's own annotation `##ROW-TIER-T-SYN` (`ENGINE-CONFORM-v0.1.md:31`: *«`tree-sitter` / `tree_sitter` return no hit in any crate or manifest»*) to **all four** candidates.
+(over `*.toml`/`*.lock`); and `name = "(tree-sitter|tree_sitter|swc|rustpython|ruff)"` over the lock files. **Result: zero matches** — in the perimeter manifests, and even in `vibedeps/` (the broader un-excluded search for `tree.sitter|rustpython|swc` over every `Cargo.lock` returns nothing). This confirms and extends the spec's own annotation `##ROW-TIER-T-SYN` (`ENGINE-CONFORM-v0.1.xml:31`: *«`tree-sitter` / `tree_sitter` return no hit in any crate or manifest»*) to **all four** candidates.
 
 **What IS present as a language-runtime dependency** — exactly one, and it is not one of the four:
 - `tools/ts-extract/package.json:9-11` — `"devDependencies": { "typescript": "^6.0.0" }`. This is the TS T-sem sidecar's runtime prerequisite (Q3); it is **not** a Cargo dependency (the conform engine never links it) — `grep 'typescript =' --include='Cargo.toml'` over `packages/ crates/` returns nothing. It is resolved by the node sidecar from the consumer project at run time (`extract.ts:143-162`).
@@ -512,7 +512,7 @@ So: bringing any of the four candidates in is a **new dependency edge** for the 
 
 ### Model knowledge — crate names and licence families
 
-Marked per the packet. **No version numbers are asserted** (the packet forbids invented versions); licence **family** only, per the licensing flow's permissive-only rule. The spec's own license-posture column (`ENGINE-CONFORM-v0.1.md:51-57`) labels each row "clean" — these are the underlying facts.
+Marked per the packet. **No version numbers are asserted** (the packet forbids invented versions); licence **family** only, per the licensing flow's permissive-only rule. The spec's own license-posture column (`ENGINE-CONFORM-v0.1.xml:51-57`) labels each row "clean" — these are the underlying facts.
 
 **tree-sitter (+ TS/JS grammars)** — *the universal T-syn backend the spec names at `:31` (`tree-sitter (MIT) universal`) and `:55` (`tree-sitter / SWC (Apache-2.0)`):*
 - «model knowledge — verify at build time» core Rust binding crate: `tree-sitter` (MIT) — the library is C with Rust bindings generated by `tree-sitter generate`; consumed in Rust via the `tree-sitter` crate.
@@ -545,7 +545,7 @@ Marked per the packet. **No version numbers are asserted** (the packet forbids i
 - the rule roster re-count (**15** at this HEAD; F-146's "thirteen" is stale), the TS driver's 3-rule assembly, and the per-rule fact inventory — read from all five rule-family files + the TS gate driver;
 - the in-tree dependency absence (zero hits for all four candidates across 11 perimeter `Cargo.lock` files + all `Cargo.toml`/`package.json`).
 
-**Carried as pointers, re-verified:** the spec's `##ROW-*` / `##TIER-VOCABULARY` / `##SIDECAR-…` anchors (`ENGINE-CONFORM-v0.1.md`) were read in full and re-quoted; F-146 (`d7a-core-sync-reverify.md:922`) is cited only as the prior measurement whose "thirteen ids" tally is corrected here.
+**Carried as pointers, re-verified:** the spec's `##ROW-*` / `##TIER-VOCABULARY` / `##SIDECAR-…` anchors (`ENGINE-CONFORM-v0.1.xml`) were read in full and re-quoted; F-146 (`d7a-core-sync-reverify.md:922`) is cited only as the prior measurement whose "thirteen ids" tally is corrected here.
 
 **Model-knowledge lines** (crate names, grammar coverage, licence families, runtime prerequisites not verifiable from the tree) are each marked «model knowledge — verify at build time»; no version numbers are asserted.
 

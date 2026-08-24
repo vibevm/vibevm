@@ -262,7 +262,7 @@ Key properties of the precedent, all stated in the file:
 - **Component match, not substring** — it matches a whole directory name
   anywhere in the path (`scope.rs:234-238` asserts `vibedeps`,
   `campaigns`, `vendor` drop under arbitrary nesting).
-- A sibling file-name rule, `DEFAULT_EXCLUDE_FILES = ["LICENSE.md"]`
+- A sibling file-name rule, `DEFAULT_EXCLUDE_FILES = ["LICENSE.xml"]`
   (`scope.rs:35`), is matched against the file name alone
   (`scope.rs:167-172`).
 

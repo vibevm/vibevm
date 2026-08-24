@@ -14,7 +14,7 @@ reliable provenance trail. @status:spec/done
 @fact:PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED This package makes the choice explicit
 and enforced. *Explicit ships; enforced does not. `vibe.toml` declares one
 `[boot_snippet]` and no executable, so an install writes the snippet and three
-documents; the enforcement is `enforcement-checklist.md`'s pre-push scan — a
+documents; the enforcement is `enforcement-checklist.xml`'s pre-push scan — a
 fenced shell snippet each project must wire for itself — beside
 tool-configuration advice and a periodic-audit line. Searched the whole
 consuming tree (`packages/`, `vibedeps/`, `crates/`, `xtask/`, `tools/`,
@@ -43,17 +43,17 @@ choice where law, employer, or upstream projects require disclosure. @status:spe
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-POLICY `spec/flows/attribution-policy/ATTRIBUTION-POLICY.md` — the full
+- @fact:CONTENT-THE-FULL-POLICY `spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml` — the full
   policy: what attribution governs, the concealment posture and its
   honest rationale, the single-place law, how to instruct an agent,
   and the slip drill. @status:impl/done
-- @fact:CONTENT-THE-DISCLOSURE-ALTERNATIVE `spec/flows/attribution-policy/disclosure-alternative.md` — the
+- @fact:CONTENT-THE-DISCLOSURE-ALTERNATIVE `spec/flows/attribution-policy/disclosure-alternative.xml` — the
   open posture: when it is mandatory, when it is the better fit,
   what it costs, and how to switch postures forward-only. @status:impl/done
-- @fact:CONTENT-THE-ENFORCEMENT-CHECKLIST `spec/flows/attribution-policy/enforcement-checklist.md` — the
+- @fact:CONTENT-THE-ENFORCEMENT-CHECKLIST `spec/flows/attribution-policy/enforcement-checklist.xml` — the
   eight leak surfaces, a pre-push scan, tool configuration, and the
   periodic audit line. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.xml` — boot snippet loaded at
   session start: the rule, the honest reason, the scope carve-outs,
   and the never-do list. Under the single-place law, this snippet is
   the one place in a consuming project where the topic lives. @status:impl/done
@@ -99,3 +99,4 @@ tell the model the true reason. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

@@ -67,7 +67,7 @@ regex for — **not a sentence count**.
 
 @fact:B16-CELL-SHARE **This batch is 63 % table cells, and no previous batch exceeded 48 %.**
 The three MCP briefs are ~85 % cells each and carry **no list items at all**;
-`redbook/README.md` is 42 cells of 57. Only `03-flow-redbook.md` (23 items, 0
+`redbook/README.md` is 42 cells of 57. Only `03-flow-redbook.xml` (23 items, 0
 cells) looks like the batches before it.
 
 @fact:B16-PREDICTION **Predicted: 285–293 units** (`1.07–1.15 × 94 + 39 + 146`). **The band is
@@ -136,7 +136,7 @@ mechanically.
 @fact:B16-ANCHORS-OWED Counted outside fenced blocks: **one each** in the five READMEs that have
 no `{#root}` (`rust-ai-native-mcp`, `typescript-ai-native-mcp`,
 `go-ai-native-mcp`, `typescript-ai-native`, `go-ai-native`), **one** in
-`redbook/README.md`, and **two** in `redbook/…/03-flow-redbook.md`. The three
+`redbook/README.md`, and **two** in `redbook/…/03-flow-redbook.xml`. The three
 `discipline-mcp-*.md` files are fully anchored at 4/4 each.
 
 @fact:B16-ANCHOR-SPACE Watch `##FACT-ID-GRAMMAR`: heading anchors and fact ids share one

@@ -1,7 +1,7 @@
 # G3-B056-REGISTRY — evidence rows for the B-056 fact registry
 
-**Perimeter read.** Design: `spec/design/multiple-sources-and-plugins.md` (66 lines),
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md` §7.3 (lines 145–172).
+**Perimeter read.** Design: `spec/design/multiple-sources-and-plugins.xml` (66 lines),
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` §7.3 (lines 145–172).
 Crate `crates/vibe-spec/src/`, read in full: `pipeline/fold.rs` (261),
 `pipeline.rs` (401), `gate.rs` (146), `merge.rs` (510), `use_graph.rs` (590),
 `resolver.rs` (549), `resolver/glob.rs` (475), `embed.rs` (1–90, the
@@ -121,7 +121,7 @@ the others are listed in the impl/note as one-liners (Decision B).
 
 ## sequence-lead
 - **claim** — The heading line of the §7.3 block: «Several sources, and the plugin form (B-056, owner-ruled 2026-08-04, built 2026-08-05)».
-- **impl** — `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:164` — `##sequence-lead **Several sources, and the plugin form** *(B-056, owner-ruled 2026-08-04, built 2026-08-05)*:`. This is a spec-prose heading; there is no code site in `crates/vibe-spec/src/**` that "implements" a heading string.
+- **impl** — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:164` — `##sequence-lead **Several sources, and the plugin form** *(B-056, owner-ruled 2026-08-04, built 2026-08-05)*:`. This is a spec-prose heading; there is no code site in `crates/vibe-spec/src/**` that "implements" a heading string.
 - **test** — НЕТ
 - **quote** — `##sequence-lead **Several sources, and the plugin form** *(B-056, owner-ruled 2026-08-04, built 2026-08-05)*:`
 - **match** — NO-CODE

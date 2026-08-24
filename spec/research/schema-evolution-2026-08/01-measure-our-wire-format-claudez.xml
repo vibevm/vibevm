@@ -1,0 +1,1568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>WIRE-CENSUS — каталог пакетов vibevm (формат «на проводе»)</title>
+  <p>Замер, а не правка. Цель — исчерпывающий и точный список того, что сегодня
+выходит на провод в опубликованном каталоге пакетов (`repomd.json`,
+`primary.jsonl`, `by-name/*.json`, `by-cap/*.jsonl`, `by-purl/*.jsonl`) и в
+живых HTTP-ответах сервера индекса. Никаких рекомендаций.</p>
+  <p>**Периметр** (считано по нему): `crates/vibe-index/src/types/**`,
+`crates/vibe-index/src/index/**`, `crates/vibe-index/src/server/**`,
+`schemas/**`, `crates/vibe-registry/src/index_client/**`.</p>
+  <p>**Ключевые числа (итог, подробности ниже):**</p>
+  <table>
+    <tr>
+      <td>#</td>
+      <td>Метрика</td>
+      <td>Значение</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Публичных сериализуемых типов в периметре</td>
+      <td>**23** (18 каталог-файловых: 17 структур + `RepomdFileEntry`; +5 закрытых словарей-enum) + внешний `Group` из `vibe-core` на проводе</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Полей всего</td>
+      <td>**86** (82 именованных поля структур + 4 поля в вариантах `RepomdFileEntry`)</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Полей-коллекций, у которых «пусто» СЕЙЧАС неотличимо от «нет поля»</td>
+      <td>**14** (подтверждено; см. 3.2)</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Объединений без тега на проводе</td>
+      <td>**1** (`RepomdFileEntry`; второго нет)</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Мест, где каталог перечитывается и переписывается</td>
+      <td>**6** call-сайтов `write_to` поверх существующего каталога (3 CLI + 3 серверных обработчика) + `init` пишет с нуля</td>
+    </tr>
+  </table>
+  <section title="3.1 Таблица типов">
+    <p>Обозначения: «DUF» = `deny_unknown_fields` стоит. «полей» — число полей (для
+enum-вариантов — сумма полей по вариантам). Внешний `Group` приведён отдельно.</p>
+    <section title="Каталог-файловые типы (сериализуются в опубликованные файлы)">
+      <table>
+        <tr>
+          <td>Тип (`файл:строка`)</td>
+          <td>Роль (какой файл/часть каталога)</td>
+          <td>DUF</td>
+          <td>полей</td>
+          <td>`skip_serializing_if`</td>
+          <td>`rename`/`rename_all`</td>
+          <td>`default`</td>
+        </tr>
+        <tr>
+          <td>`Repomd` `types/repomd.rs:20`</td>
+          <td>`repomd.json` — манифест индекса</td>
+          <td>✅</td>
+          <td>9</td>
+          <td>нет (на контейнере)</td>
+          <td>нет</td>
+          <td>нет</td>
+        </tr>
+        <tr>
+          <td>`RepomdFileEntry` `types/repomd.rs:43`</td>
+          <td>значения карты `Repomd.files` (файл/директория)</td>
+          <td>❌ (`untagged`)</td>
+          <td>4 (2+2)</td>
+          <td>нет</td>
+          <td>нет (варианты без переимен.)</td>
+          <td>нет</td>
+        </tr>
+        <tr>
+          <td>`VersionEntry` `types/entry/mod.rs:43`</td>
+          <td>одна строка `primary.jsonl`; элемент `versions[]`</td>
+          <td>✅</td>
+          <td>30</td>
+          <td>13 полей (см. 3.2)</td>
+          <td>нет</td>
+          <td>на 13 полях</td>
+        </tr>
+        <tr>
+          <td>`PackageEntry` `types/entry/aggregate.rs:26`</td>
+          <td>элемент `NameEntry.packages[]`</td>
+          <td>✅</td>
+          <td>5</td>
+          <td>`latest_stable`</td>
+          <td>нет</td>
+          <td>`latest_stable`</td>
+        </tr>
+        <tr>
+          <td>`NameEntry` `types/entry/aggregate.rs:69`</td>
+          <td>`by-name/&lt;name&gt;.json`</td>
+          <td>✅</td>
+          <td>3</td>
+          <td>нет</td>
+          <td>нет</td>
+          <td>нет</td>
+        </tr>
+        <tr>
+          <td>`WorkspaceOriginEntry` `types/entry/content.rs:19`</td>
+          <td>`VersionEntry.workspace_origin`</td>
+          <td>✅</td>
+          <td>5</td>
+          <td>`commit`</td>
+          <td>нет</td>
+          <td>`commit`</td>
+        </tr>
+        <tr>
+          <td>`FeaturesEntry` `types/entry/content.rs:38`</td>
+          <td>`VersionEntry.features`</td>
+          <td>✅</td>
+          <td>2</td>
+          <td>`features`, `exclusive`</td>
+          <td>нет</td>
+          <td>оба поля</td>
+        </tr>
+        <tr>
+          <td>`SubskillEntry` `types/entry/content.rs:61`</td>
+          <td>элемент `VersionEntry.subskills[]`</td>
+          <td>✅</td>
+          <td>5</td>
+          <td>`describes`,`description`,`channels`</td>
+          <td>нет</td>
+          <td>те же 3</td>
+        </tr>
+        <tr>
+          <td>`I18nEntry` `types/entry/content.rs:74`</td>
+          <td>`VersionEntry.i18n`</td>
+          <td>✅</td>
+          <td>2</td>
+          <td>`available`,`default`</td>
+          <td>нет</td>
+          <td>оба</td>
+        </tr>
+        <tr>
+          <td>`BootSnippetEntry` `types/entry/content.rs:93`</td>
+          <td>`VersionEntry.boot_snippet`</td>
+          <td>✅</td>
+          <td>2</td>
+          <td>`category`</td>
+          <td>нет</td>
+          <td>`category`</td>
+        </tr>
+        <tr>
+          <td>`CompatibilityEntry` `types/entry/relations.rs:15`</td>
+          <td>`VersionEntry.compatibility`</td>
+          <td>✅</td>
+          <td>2</td>
+          <td>оба поля</td>
+          <td>нет</td>
+          <td>оба</td>
+        </tr>
+        <tr>
+          <td>`ProvidesEntry` `types/entry/relations.rs:30`</td>
+          <td>`VersionEntry.provides`</td>
+          <td>✅</td>
+          <td>1</td>
+          <td>`capabilities`</td>
+          <td>нет</td>
+          <td>да</td>
+        </tr>
+        <tr>
+          <td>`RequiresEntry` `types/entry/relations.rs:43`</td>
+          <td>`VersionEntry.requires`</td>
+          <td>✅</td>
+          <td>2</td>
+          <td>оба</td>
+          <td>нет</td>
+          <td>оба</td>
+        </tr>
+        <tr>
+          <td>`RequiresAnyEntry` `types/entry/relations.rs:58`</td>
+          <td>элемент `VersionEntry.requires_any[]`</td>
+          <td>✅</td>
+          <td>1</td>
+          <td>нет</td>
+          <td>нет</td>
+          <td>нет</td>
+        </tr>
+        <tr>
+          <td>`ObsoletesEntry` `types/entry/relations.rs:64`</td>
+          <td>`VersionEntry.obsoletes`</td>
+          <td>✅</td>
+          <td>1</td>
+          <td>`packages`</td>
+          <td>нет</td>
+          <td>да</td>
+        </tr>
+        <tr>
+          <td>`ConflictsEntry` `types/entry/relations.rs:77`</td>
+          <td>`VersionEntry.conflicts`</td>
+          <td>✅</td>
+          <td>1</td>
+          <td>`packages`</td>
+          <td>нет</td>
+          <td>да</td>
+        </tr>
+        <tr>
+          <td>`CapabilityRow` `index/inverted.rs:66`</td>
+          <td>строка `by-cap/&lt;slug&gt;.jsonl`</td>
+          <td>❌</td>
+          <td>5</td>
+          <td>нет</td>
+          <td>нет</td>
+          <td>нет</td>
+        </tr>
+        <tr>
+          <td>`PurlRow` `index/inverted.rs:75`</td>
+          <td>строка `by-purl/&lt;slug&gt;.jsonl`</td>
+          <td>❌</td>
+          <td>6</td>
+          <td>нет</td>
+          <td>нет</td>
+          <td>нет</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Закрытые словари (fieldless enum, используются как типы полей внутри записей)">
+      <table>
+        <tr>
+          <td>Тип (`файл:строка`)</td>
+          <td>Где используется</td>
+          <td>`rename_all`</td>
+          <td>число значений</td>
+        </tr>
+        <tr>
+          <td>`PackageKind` `types/kinds.rs:21`</td>
+          <td>`VersionEntry.kind`, `CompatibilityEntry.requires_kinds[]`, inverted-ряды, HTTP</td>
+          <td>`lowercase`</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>`NamingConvention` `types/kinds.rs:88`</td>
+          <td>`Repomd.naming`</td>
+          <td>варианты `rename` поимённо</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>`DeliveryMode` `types/entry/content.rs:53`</td>
+          <td>`SubskillEntry.delivery`</td>
+          <td>`kebab-case`</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>`DirectoryTag` `types/repomd.rs:75`</td>
+          <td>`RepomdFileEntry::Directory.kind`</td>
+          <td>`lowercase`</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>`BindingSite` `index/inverted.rs:89`</td>
+          <td>`PurlRow.binding_site`</td>
+          <td>`kebab-case`</td>
+          <td>2</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Внешний тип на проводе">
+      <table>
+        <tr>
+          <td>Тип</td>
+          <td>Где</td>
+          <td>Сериализация</td>
+        </tr>
+        <tr>
+          <td>`Group` (`vibe-core/src/package_ref.rs:41`, реэкспорт в `types/mod.rs:28`)</td>
+          <td>`VersionEntry.group`, `PackageEntry.group`, inverted-ряды, HTTP</td>
+          <td>newtype поверх `String`, `#[serde(try_from = "String", into = "String")]` → на проводе **обычная JSON-строка** с валидацией при чтении (отклоняет заглавные, пустые сегменты, недопустимые символы)</td>
+        </tr>
+      </table>
+      <p>**Поправка к «около 18»:** 18 — это в точности число каталог-файловых типов,
+если считать 17 структур плюс единственное объединение `RepomdFileEntry`.
+Дерево добавляет ещё 5 закрытых словарей-enum (типы полей) и внешний `Group`.
+Итого различных публичных сериализуемых типов, которых касается провод каталога:
+**23 в периметре + 1 внешний**. Считал прямым обходом `types/**` +
+`index/inverted.rs` + реэкспортов `types/mod.rs`.</p>
+    </section>
+    <section title="Прочие типы «на проводе», но НЕ каталог-файловые (для полноты)">
+      <p>Это ответные конверты живого HTTP-API сервера индекса (`crates/vibe-index/src/server/routes/**`).
+Они `#[derive(Serialize)]` (на стороне сервера — только запись), в файлы каталога
+не пишутся, и даны здесь отдельным списком, чтобы не смешивать с записями каталога:</p>
+      <list ordered="false">
+        <item>`packages.rs`: `ListResponse`, `PackageRow`, `SearchResponse`, `SearchHit`
+  (серверный), `PackageVersionsResponse`, `UpsertResponse`, `DeleteResponse`.
+  Маршрут `/v1/packages/{group}/{name}/{version}` отдаёт сам `VersionEntry`
+  целиком — т.е. каталог-запись попадает в HTTP-ответ один-в-один.</item>
+        <item>`purls.rs`: `Response`, `Hit` (`binding_site` тут — `&amp;'static str`, не enum).</item>
+        <item>`capabilities.rs`: `Response`, `Hit`.</item>
+      </list>
+      <p>Клиент `crates/vibe-registry/src/index_client/wire.rs` читает это своими
+**толерантными** view-структурами: `NameEntryView`/`PackageEntryView`/`VersionEntryView`
+(для `by-name/*.json`), `SearchResults`/`SearchHit` (клиентский),
+`PurlLookupResults`/`PurlLookupHit`, `BindingSite` (клиентский). См. 3.7.</p>
+    </section>
+  </section>
+  <section title="3.2 Таблица полей">
+    <p>Категория: **СКАЛЯР** (строка/число/bool/версия/Group/закрытый словарь),
+**СПИСОК** (`Vec`), **СЛОВАРЬ** (`BTreeMap`), **ВЛОЖЕННЫЙ** (другая каталог-структура
+как поле), **ОБЪЕДИНЕНИЕ** (значение `RepomdFileEntry`).</p>
+    <p>«обяз.?» — обязательно ли поле на проводе: **всегда** (нет `default`/`skip`/`Option`)
+/ **может отсутствовать**.</p>
+    <p>«различимы пусто и нет поля?» — ключевой столбец:</p>
+    <list ordered="false">
+      <item>**ДА** — пустое/нулевое значение сериализуется и отличается от отсутствия поля;</item>
+      <item>**НЕТ** — пустое значение опускается (`skip_serializing_if = …::is_empty` / `is_none`),
+  поэтому на проводе «пусто» и «нет поля» неразличимы;</item>
+      <item>**всегда** — поле не может отсутствовать (состояния «нет поля» не существует).</item>
+    </list>
+    <section title="`Repomd` (`types/repomd.rs:20`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>Repomd.schema_version</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.registry</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.registry_url</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.naming</td>
+          <td>`NamingConvention`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.generated_at</td>
+          <td>`DateTime&lt;Utc&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.generator</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.package_count</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.version_count</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Repomd.files</td>
+          <td>`BTreeMap&lt;String, RepomdFileEntry&gt;`</td>
+          <td>СЛОВАРЬ</td>
+          <td>всегда</td>
+          <td>нет `skip`</td>
+          <td>всегда (даже пустая карта сериализуется как `{}`)</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`RepomdFileEntry` (`types/repomd.rs:43`, `#[serde(untagged)]`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>Directory.kind</td>
+          <td>`DirectoryTag`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда*</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>Directory.entries</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда*</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>File.size</td>
+          <td>`u64`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда*</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>File.sha256</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда*</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+      <p>\* Внутри выбранного варианта поля обязательны. Само значение —
+**ОБЪЕДИНЕНИЕ**: на проводе ровно один из двух наборов ключей (см. 3.3).</p>
+    </section>
+    <section title="`VersionEntry` (`types/entry/mod.rs:43`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.schema_version</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.kind</td>
+          <td>`PackageKind`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.group</td>
+          <td>`Group`</td>
+          <td>СКАЛЯР (строка)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.name</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.version</td>
+          <td>`Version`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.content_hash</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.source_url</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.source_ref</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.resolved_commit</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip Option::is_none`</td>
+          <td>ДА (None→нет поля; Some("")→`""`)</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.registry</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.workspace_origin</td>
+          <td>`Option&lt;WorkspaceOriginEntry&gt;`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`Option` + `skip Option::is_none`</td>
+          <td>ДА (None→нет поля; Some(пустая структура)→объект)</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.license</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.authors</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.description</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.homepage</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.keywords</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.describes</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.compatibility</td>
+          <td>`CompatibilityEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip CompatibilityEntry::is_empty`</td>
+          <td>**НЕТ** (пустая структура == нет поля)</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.provides</td>
+          <td>`ProvidesEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip ProvidesEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.requires</td>
+          <td>`RequiresEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip RequiresEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.requires_any</td>
+          <td>`Vec&lt;RequiresAnyEntry&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.obsoletes</td>
+          <td>`ObsoletesEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip ObsoletesEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.conflicts</td>
+          <td>`ConflictsEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip ConflictsEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.features</td>
+          <td>`FeaturesEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip FeaturesEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.subskills</td>
+          <td>`Vec&lt;SubskillEntry&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.i18n</td>
+          <td>`I18nEntry`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`default` + `skip I18nEntry::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.boot_snippet</td>
+          <td>`Option&lt;BootSnippetEntry&gt;`</td>
+          <td>ВЛОЖЕННЫЙ</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.files_count</td>
+          <td>`u32`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.indexed_at</td>
+          <td>`DateTime&lt;Utc&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>VersionEntry.indexed_by</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`PackageEntry` (`types/entry/aggregate.rs:26`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>PackageEntry.group</td>
+          <td>`Group`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PackageEntry.name</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PackageEntry.indexed_at</td>
+          <td>`DateTime&lt;Utc&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PackageEntry.latest_stable</td>
+          <td>`Option&lt;Version&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>PackageEntry.versions</td>
+          <td>`Vec&lt;VersionEntry&gt;`</td>
+          <td>СПИСОК</td>
+          <td>всегда</td>
+          <td>нет `skip`</td>
+          <td>всегда (даже `[]` пишется; «нет поля» невозможно)</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`NameEntry` (`types/entry/aggregate.rs:69`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>NameEntry.name</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>NameEntry.indexed_at</td>
+          <td>`DateTime&lt;Utc&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>NameEntry.packages</td>
+          <td>`Vec&lt;PackageEntry&gt;`</td>
+          <td>СПИСОК</td>
+          <td>всегда</td>
+          <td>нет `skip`</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`WorkspaceOriginEntry` (`types/entry/content.rs:19`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>WorkspaceOriginEntry.upstream</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>WorkspaceOriginEntry.path</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>WorkspaceOriginEntry.commit</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>WorkspaceOriginEntry.generated_by</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>WorkspaceOriginEntry.generated_at</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`FeaturesEntry` (`types/entry/content.rs:38`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>FeaturesEntry.features</td>
+          <td>`BTreeMap&lt;String, Vec&lt;String&gt;&gt;`</td>
+          <td>СЛОВАРЬ</td>
+          <td>может</td>
+          <td>`default` + `skip BTreeMap::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>FeaturesEntry.exclusive</td>
+          <td>`BTreeMap&lt;String, Vec&lt;String&gt;&gt;`</td>
+          <td>СЛОВАРЬ</td>
+          <td>может</td>
+          <td>`default` + `skip BTreeMap::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`SubskillEntry` (`types/entry/content.rs:61`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>SubskillEntry.path</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>SubskillEntry.delivery</td>
+          <td>`DeliveryMode`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>SubskillEntry.describes</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>SubskillEntry.description</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>SubskillEntry.channels</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`I18nEntry` (`types/entry/content.rs:74`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>I18nEntry.available</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>I18nEntry.default</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`BootSnippetEntry` (`types/entry/content.rs:93`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>BootSnippetEntry.source</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>BootSnippetEntry.category</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`CompatibilityEntry` (`types/entry/relations.rs:15`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>CompatibilityEntry.min_vibe_version</td>
+          <td>`Option&lt;String&gt;`</td>
+          <td>СКАЛЯР</td>
+          <td>может</td>
+          <td>`Option` + `skip is_none`</td>
+          <td>ДА</td>
+        </tr>
+        <tr>
+          <td>CompatibilityEntry.requires_kinds</td>
+          <td>`Vec&lt;PackageKind&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`ProvidesEntry` (`types/entry/relations.rs:30`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>ProvidesEntry.capabilities</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`RequiresEntry` (`types/entry/relations.rs:43`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>RequiresEntry.packages</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+        <tr>
+          <td>RequiresEntry.capabilities</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`RequiresAnyEntry` (`types/entry/relations.rs:58`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>RequiresAnyEntry.one_of</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>всегда</td>
+          <td>нет `skip` (но вся запись живёт в `requires_any[]`, который опускается если пуст)</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`ObsoletesEntry` (`types/entry/relations.rs:64`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>ObsoletesEntry.packages</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`ConflictsEntry` (`types/entry/relations.rs:77`)">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>ConflictsEntry.packages</td>
+          <td>`Vec&lt;String&gt;`</td>
+          <td>СПИСОК</td>
+          <td>может</td>
+          <td>`skip Vec::is_empty`</td>
+          <td>**НЕТ**</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`CapabilityRow` (`index/inverted.rs:66`) — нет `deny_unknown_fields`">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>CapabilityRow.kind</td>
+          <td>`PackageKind`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>CapabilityRow.group</td>
+          <td>`Group`</td>
+          <td>СКАЛЯР (строка)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>CapabilityRow.name</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>CapabilityRow.version</td>
+          <td>`Version`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>CapabilityRow.capability</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="`PurlRow` (`index/inverted.rs:75`) — нет `deny_unknown_fields`">
+      <table>
+        <tr>
+          <td>тип.поле</td>
+          <td>Rust-тип</td>
+          <td>кат.</td>
+          <td>обяз.?</td>
+          <td>почему может отсутствовать</td>
+          <td>различимы?</td>
+        </tr>
+        <tr>
+          <td>PurlRow.kind</td>
+          <td>`PackageKind`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PurlRow.group</td>
+          <td>`Group`</td>
+          <td>СКАЛЯР (строка)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PurlRow.name</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PurlRow.version</td>
+          <td>`Version`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PurlRow.purl</td>
+          <td>`String`</td>
+          <td>СКАЛЯР</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+        <tr>
+          <td>PurlRow.binding_site</td>
+          <td>`BindingSite`</td>
+          <td>СКАЛЯР (закр. словарь)</td>
+          <td>всегда</td>
+          <td>—</td>
+          <td>всегда</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Сводка по коллекциям (3.2, итог)">
+      <p>Всего **18 полей-коллекций** (СПИСОК `Vec` или СЛОВАРЬ `BTreeMap`) среди
+каталог-типов. Из них у **14** пустое значение СЕЙЧАС неотличимо от
+отсутствующего (`skip_serializing_if = …::is_empty` опускает пустоту; на
+проводе невозможно отличить `[]`/`{}` от «ключа нет»):</p>
+      <list ordered="true">
+        <item>`VersionEntry.authors` — `Vec&lt;String&gt;`</item>
+        <item>`VersionEntry.keywords` — `Vec&lt;String&gt;`</item>
+        <item>`VersionEntry.requires_any` — `Vec&lt;RequiresAnyEntry&gt;`</item>
+        <item>`VersionEntry.subskills` — `Vec&lt;SubskillEntry&gt;`</item>
+        <item>`FeaturesEntry.features` — `BTreeMap&lt;String, Vec&lt;String&gt;&gt;`</item>
+        <item>`FeaturesEntry.exclusive` — `BTreeMap&lt;String, Vec&lt;String&gt;&gt;`</item>
+        <item>`SubskillEntry.channels` — `Vec&lt;String&gt;`</item>
+        <item>`I18nEntry.available` — `Vec&lt;String&gt;`</item>
+        <item>`CompatibilityEntry.requires_kinds` — `Vec&lt;PackageKind&gt;`</item>
+        <item>`ProvidesEntry.capabilities` — `Vec&lt;String&gt;`</item>
+        <item>`RequiresEntry.packages` — `Vec&lt;String&gt;`</item>
+        <item>`RequiresEntry.capabilities` — `Vec&lt;String&gt;`</item>
+        <item>`ObsoletesEntry.packages` — `Vec&lt;String&gt;`</item>
+        <item>`ConflictsEntry.packages` — `Vec&lt;String&gt;`</item>
+      </list>
+      <p>Остальные 4 коллекции всегда присутствуют (нет `skip`), поэтому «пусто» и
+«нет поля» для них различимы тривиально (состояния «нет поля» просто нет):
+`PackageEntry.versions`, `NameEntry.packages`, `RequiresAnyEntry.one_of`,
+`Repomd.files`.</p>
+      <p>**Перепроверка числа «14» из пакета:** подтверждено в точности. Считал так:
+прошёл grep-ом все `skip_serializing_if = "…::is_empty"` по `types/entry/**`
+и `types/repomd.rs`, отфильтровал поля, чей Rust-тип — `Vec` или `BTreeMap`.
+Получилось ровно 14. Дополнительно отмечу: **7 вложенных структур-полей**
+(`VersionEntry.compatibility/provides/requires/obsoletes/conflicts/features/i18n`)
+имеют ту же самую неразличимость через собственные `is_empty()`-методы — это
+ВЛОЖЕННЫЕ, не коллекции, но семантически та же потеря различия «пусто/нет».</p>
+    </section>
+  </section>
+  <section title="3.3 Объединения (варианты формы)">
+    <p>Полный обход serde-атрибутов периметра (grep `untagged|tag =|flatten` по
+`crates/vibe-index/src` и `crates/vibe-registry/src/index_client`) даёт
+**ровно одно** объединение на проводе:</p>
+    <section title="`RepomdFileEntry` (`types/repomd.rs:43`) — `#[serde(untagged)]`">
+      <fence lang="rust">#[serde(untagged)]
+pub enum RepomdFileEntry {
+    Directory { kind: DirectoryTag, entries: u32 },
+    File { size: u64, sha256: String },
+}</fence>
+      <list ordered="false">
+        <item>**Как читатель отличает варианты СЕГОДНЯ:** это `untagged` enum —
+  внешнего поля-тега на уровне объекта нет. serde перебирает варианты в порядке
+  объявления и пробует десериализовать каждый. Вариант `Directory` объявлен
+  первым.</item>
+        <item>**Поле-тег:** явного тега на контейнере нет, **но** внутри варианта `Directory`
+  есть поле `kind: DirectoryTag` со значением всегда `"directory"` — оно
+  самодокументирует директорию (см. тест `directory_serialises_with_kind_tag`,
+  `repomd.rs:119`).</item>
+        <item>**Наборы ключей вариантов:**</item>
+        <item>`Directory` → `{ "kind", "entries" }`</item>
+        <item>`File` → `{ "size", "sha256" }`</item>
+        <item>**Пересекаются ли наборы ключей:** **НЕТ.** `{kind, entries} ∩ {size, sha256} = ∅`.
+  Поэтому разбор **однозначен**: объект с `size`/`sha256` не совпадёт с
+  `Directory` (нет `kind`/`entries`) и уйдёт в `File`; объект с
+  `kind`/`entries` совпадёт с `Directory`. Поле `kind` здесь — запасная
+  страховка поверх уже непересекающихся ключей.</item>
+      </list>
+      <p>Замечание о робастности: т.к. enum `untagged` и **без** `deny_unknown_fields`,
+лишний ключ в файловой записи (напр. `{"size":..,"sha256":"..","x":1}`) всё
+ровно сматчится с `File`. А вот неизвестное значение `kind` (не `"directory"`)
+в записи директории завалит вариант `Directory`, затем не сматчится с `File`
+(нет `size`/`sha256`) → **ошибка разбора**.</p>
+      <p>**Второго объединения нет.** Известный кандидат был единственным. Никаких
+других `untagged`/`tag =`/ручных `impl Deserialize` в периметре не обнаружено
+(`flatten` встречается только в `crates/vibe-index/src/lockfile.rs:22,37` —
+это парсинг `vibe.lock`, к каталогу отношения не имеет). Если бы второе
+объединение существовало, оно было бы главной находкой; его нет.</p>
+    </section>
+  </section>
+  <section title="3.4 Закрытые словари на проводе (fieldless enum)">
+    <p>Все закрытые словари — это `enum` без полей с производным `Serialize`/`Deserialize`.
+Поведение при **неизвестном значении** для всех одно и то же: производный
+`Deserialize` для fieldless enum без `#[serde(other)]` даёт **ошибку разбора**
+(`unknown variant`), запасного варианта нет. Никакого `#[serde(other)]` в дереве
+нет (grep подтвердил).</p>
+    <table>
+      <tr>
+        <td>Словарь (`файл:строка`)</td>
+        <td>Значения на проводе (дословно)</td>
+        <td>Сериализация</td>
+        <td>Что делает читатель с неизвестным значением</td>
+        <td>Вторые копии списка в дереве</td>
+      </tr>
+      <tr>
+        <td>`PackageKind` `types/kinds.rs:21`</td>
+        <td>`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`</td>
+        <td>`rename_all = "lowercase"` → строки (см. `as_str`, `kinds.rs:37`)</td>
+        <td>**ошибка разбора** (derived Deserialize, unknown variant). `FromStr` тоже ошибается (`kinds.rs:76`)</td>
+        <td>ДА: (1) преднамеренный дубликат в `vibe-core` (kinds.rs:1-5, parity-тест); (2) внутри файла список повторён в `as_str` match, `all()` (`:48`), `from_str` match **и в строке сообщения об ошибке** `:77`</td>
+      </tr>
+      <tr>
+        <td>`NamingConvention` `types/kinds.rs:88`</td>
+        <td>`fqdn`, `kind-name`, `name`, `kind/name`</td>
+        <td>поимённый `#[serde(rename = …)]` на каждом варианте</td>
+        <td>**ошибка разбора**</td>
+        <td>ДА: зеркалирует `vibe-core::manifest::NamingConvention` (kinds.rs:84-86); те же строки дублированы в `as_str` (`:114`) и в `value(name=…)`</td>
+      </tr>
+      <tr>
+        <td>`DeliveryMode` `types/entry/content.rs:53`</td>
+        <td>`eager`, `lazy-push`, `lazy-pull`</td>
+        <td>`rename_all = "kebab-case"` → строки</td>
+        <td>**ошибка разбора**</td>
+        <td>вторая копия не найдена (зеркалирует `vibe-core`, но локально не дублируется)</td>
+      </tr>
+      <tr>
+        <td>`DirectoryTag` `types/repomd.rs:75`</td>
+        <td>`directory`</td>
+        <td>`rename_all = "lowercase"`</td>
+        <td>**ошибка разбора**, но т.к. живёт внутри `untagged` `RepomdFileEntry`, неизвестный `kind` заваливает `Directory`, затем не матчит `File` → в итоге **ошибка разбора всего значения**</td>
+        <td>вторая копия не найдена</td>
+      </tr>
+      <tr>
+        <td>`BindingSite` `index/inverted.rs:89`</td>
+        <td>`package`, `subskill`</td>
+        <td>`rename_all = "kebab-case"` (одиночные слова → как lowercase)</td>
+        <td>**ошибка разбора**</td>
+        <td>**ДА — отдельная находка:** тот же словарь существует **вторым типом** в клиенте `crates/vibe-registry/src/index_client/wire.rs:94` (`rename_all = "lowercase"`). Сегодня значения совпадают (`"package"`/`"subskill"`), но это два независимых Rust-типа в двух crate'ах — точка потенциального расхождения</td>
+      </tr>
+    </table>
+  </section>
+  <section title="3.5 Версия формата">
+    <list ordered="false">
+      <item>**Где объявлена:**</item>
+      <item>`Repomd::SCHEMA_VERSION: u32 = 1` (`types/repomd.rs:38`); поле `Repomd.schema_version` пишется в `repomd.json`.</item>
+      <item>`VersionEntry::SCHEMA_VERSION: u32 = 1` (`types/entry/mod.rs:124`); поле `VersionEntry.schema_version` пишется в каждую строку `primary.jsonl`.</item>
+      <item>Дубль в памяти: `Index SCHEMA_VERSION = 1` (`index/memory.rs:28`), поле `Index.schema_version`.</item>
+      <item>**Значение:** `1` (везде).</item>
+      <item>**Ветвится ли по этому значению хоть что-нибудь:** **НЕТ.** Поле только
+  присваивается, сериализуется, читается обратно и хранится. grep по `crates`
+  показывает: `Index::load_from` кладёт `schema_version: manifest.schema_version`
+  в память без проверки (`memory.rs:273`); `cli/dump.rs:57` печатает
+  `"schema_version": index.schema_version`. **Ни одного сравнения** (`==`/`!=`/`match`)
+  для версий `Repomd`/`VersionEntry` в каталоге нет.</item>
+      <item>**Контраст:** `vibe.lock` имеет свою, отдельную версию (`CURRENT_SCHEMA_VERSION`,
+  `vibe-core/src/manifest/lockfile.rs:430` — `if lockfile.meta.schema_version !=
+  CURRENT_SCHEMA_VERSION`), и там по ней **ветвятся/отвергают**. Но это `vibe.lock`
+  (TOML, схема 5), а не каталог индекса. Свои `schema_version` есть также у
+  побочных файлов (`Checkpoint` `index/checkpoint.rs:21`, сканер-кэш
+  `scanner/org_cache.rs:50`) — это не опубликованный каталог.</item>
+      <item>**Вывод:** версия каталога сегодня — **ярлык, а не переключатель**. Любое
+  значение (в т.ч. неизвестное) молча принимается при чтении.</item>
+    </list>
+  </section>
+  <section title="3.6 Кругооборот — читается ли каталог, чтобы переписать его">
+    <p>`Index::write_to` (`index/memory.rs:161`) **всегда перегенерирует все файлы
+каталога из типизированной in-memory модели** (`by_pkgref: BTreeMap&lt;PkgKey,
+PackageEntry&gt;`), а НЕ из сырого прочитанного JSON. Источник in-memory модели
+разнится по пути:</p>
+    <table>
+      <tr>
+        <td>Путь</td>
+        <td>Читает существующий каталог?</td>
+        <td>Откуда берутся данные для записи</td>
+      </tr>
+      <tr>
+        <td>`vibe-index init` (`cli/init.rs:48`)</td>
+        <td>нет</td>
+        <td>пустой `Index::new`, запись с нуля</td>
+      </tr>
+      <tr>
+        <td>`vibe-index add` (`cli/add.rs:51,122`)</td>
+        <td>**ДА** (`Index::load_from`)</td>
+        <td>существующие записи — из **прочитанного с диска** каталога; одна новая запись — из источника (`vibe.toml`); затем `upsert` + `write_to`</td>
+      </tr>
+      <tr>
+        <td>`vibe-index remove` (`cli/remove.rs:35,57`)</td>
+        <td>**ДА** (`Index::load_from`)</td>
+        <td>все записи — из **прочитанного с диска** каталога; `write_to` перегенерирует</td>
+      </tr>
+      <tr>
+        <td>`vibe-index reindex` / `rescan-org` (`cli/reindex.rs:218,281`)</td>
+        <td>**ДА** (грузит `existing` минимум ради `registry`/`naming`)</td>
+        <td>**incremental**: неизменённые записи берёт из `existing.iter_versions()` (т.е. из прочитанного каталога, `:250`), изменённые — из сканирования источника; **full**: собирает заново из сканирования; оба режима — `write_to`</td>
+      </tr>
+      <tr>
+        <td>сервер: `POST /v1/packages` upsert (`server/routes/packages.rs:256`)</td>
+        <td>**ДА** (косвенно)</td>
+        <td>`Index` загружен с диска один раз на старте (`cli/serve.rs:77` `load_from`), мутация в памяти, `write_to` перегенерирует весь каталог</td>
+      </tr>
+      <tr>
+        <td>сервер: `DELETE …/{version}` (`packages.rs:304`)</td>
+        <td>**ДА** (косвенно)</td>
+        <td>та же in-memory модель со старта → `write_to`</td>
+      </tr>
+      <tr>
+        <td>сервер: `DELETE …/{group}/{name}` (`packages.rs:333`)</td>
+        <td>**ДА** (косвенно)</td>
+        <td>та же in-memory модель со старта → `write_to`</td>
+      </tr>
+    </table>
+    <p>**Точный ответ на вопрос 3.6:** каталог в нескольких путях **перечитывается с
+диска и переписывается** (`add`, `remove`, incremental-`reindex`, а также
+серверные upsert/delete поверх стартовой загрузки). При этом `write_to`
+**всегда** собирает файлы из типизированной памяти; сырой JSON сквозь не
+прокачивается. Следствие для решения о смене формата:</p>
+    <list ordered="false">
+      <item>Поля, которых наш код не знает, **не выживают** при перезаписи — они
+  отсутствуют в типизированных структурах и просто не запишутся обратно.</item>
+      <item>Сильнее того: поскольку у **каждой** каталог-записи стоит
+  `deny_unknown_fields` (см. 3.7), неизвестное поле не даст каталог
+  **прочитать** вообще — `load_from` упадёт с ошибкой разбора ещё до того, как
+  дойдёт до перезаписи. Исключение — inverted-ряды `CapabilityRow`/`PurlRow`,
+  у которых `deny_unknown_fields` нет (но они и не перечитываются для
+  перезаписи нигде — их всегда перегенерируют из `VersionEntry`).</item>
+      <item>Полностью **с нуля** каталог собирают только `init` и `reindex` в режиме full
+  (и то поля ограничены тем, что умеют типы).</item>
+    </list>
+    <p>Итого call-сайтов `write_to`, переписывающих уже существующий каталог: **6**
+(`add`, `remove`, `reindex/rescan`, серверные `upsert`, `delete_version`,
+`delete_package`), плюс `init` пишет с нуля.</p>
+  </section>
+  <section title="3.7 Строгость на чтении">
+    <p>Места десериализации записей каталога (`serde_json::from_*` над каталог-типами):</p>
+    <table>
+      <tr>
+        <td>Место</td>
+        <td>Тип</td>
+        <td>`deny_unknown_fields`?</td>
+        <td>Лишнее поле → ошибка?</td>
+      </tr>
+      <tr>
+        <td>`index/primary.rs:92` (`parse`, `serde_json::from_str` по строке)</td>
+        <td>`VersionEntry`</td>
+        <td>✅ (entry/mod.rs:38)</td>
+        <td>**ДА, ошибка разбора** (`Error::Malformed`)</td>
+      </tr>
+      <tr>
+        <td>`index/by_name.rs:67` (`parse`, `from_slice`)</td>
+        <td>`NameEntry` → `PackageEntry` → `VersionEntry`</td>
+        <td>✅ все три</td>
+        <td>**ДА**</td>
+      </tr>
+      <tr>
+        <td>`index/by_name.rs:94` (внутри `read_all`)</td>
+        <td>`NameEntry`</td>
+        <td>✅</td>
+        <td>**ДА**</td>
+      </tr>
+      <tr>
+        <td>`index/repomd.rs:38` (`read`, `from_slice`)</td>
+        <td>`Repomd`</td>
+        <td>✅ (repomd.rs:15)</td>
+        <td>**ДА**</td>
+      </tr>
+      <tr>
+        <td>`index/memory.rs:263-264` (`load_from` → `repomd::read` + `by_name::read_all`)</td>
+        <td>`Repomd`, `NameEntry`</td>
+        <td>✅</td>
+        <td>**ДА** (через подчинённые функции)</td>
+      </tr>
+      <tr>
+        <td>`index/inverted.rs`</td>
+        <td>чтения `CapabilityRow`/`PurlRow` **нет** (только запись + подсчёт)</td>
+        <td>DUF отсутствует</td>
+        <td>н/д (никто не парсит)</td>
+      </tr>
+      <tr>
+        <td>`server/routes/packages.rs:232` (тело `POST`)</td>
+        <td>`VersionEntry` (axum `Json`)</td>
+        <td>✅</td>
+        <td>**ДА** → HTTP 400</td>
+      </tr>
+      <tr>
+        <td>`server/routes/index_files.rs`</td>
+        <td>**сырые байты файлов отдаются как есть** (`serve_file`)</td>
+        <td>—</td>
+        <td>сервер сам не десериализует; строгость — на стороне читателя</td>
+      </tr>
+    </table>
+    <p>**Итог по записям каталога:** все типизированные чтения **строгие** — запись с
+лишним незнакомым полем падает с ошибкой разбора. Сырые файлы сервер отдаёт
+байт-в-байт, не разбирая.</p>
+    <section title="Клиент `crates/vibe-registry/src/index_client/**` — строг или терпим?">
+      <p>**Терпим.** Клиент намеренно использует **отдельные** «view»-структуры с
+у́зким набором полей, `#[serde(default)]` и **без** `deny_unknown_fields`:</p>
+      <list ordered="false">
+        <item>`NameEntryView` (`wire.rs:18`) читает только `packages[]`; у `PackageEntryView`
+  (`wire.rs:24`) — `group` + `versions[]`; у `VersionEntryView` (`wire.rs:31`) —
+  только `version`. Комментарий прямым текстом (`wire.rs:14-16`): *«Only the
+  fields the resolver's version selector needs are read; the rest of the
+  on-disk shape is tolerated.»*</item>
+        <item>`SearchResults`/`SearchHit` (`wire.rs:45,56`): *«Extra fields on the wire
+  (today: `command`) are tolerated silently»* (`wire.rs:37-39`); тест
+  `search_results_decode_minimal_envelope` (`wire.rs:115`) пропускает лишний
+  ключ `command`.</item>
+        <item>`PurlLookupResults`/`PurlLookupHit` — те же `#[serde(default)]`, без DUF.</item>
+      </list>
+      <p>Это наш собственный внешний потребитель, и его поведение — **образец того, что
+сделает чужой читатель**: он увидит только те поля, которые знает, а всё
+прочее (включая будущие новые поля) тихо проигнорирует. Следствие: добавить
+поле в запись не сломает такого читателя; убрать/переименовать известное ему
+поле — сломает.</p>
+    </section>
+  </section>
+  <section title="3.8 Схемы">
+    <p>**Описывает ли хоть одна схема в дереве типы каталога индекса?** — **НЕТ.**</p>
+    <p>Формат каталога сегодня задан **только** Rust-структурами с `serde` в
+`crates/vibe-index/src/types/**` (и `index/inverted.rs`). Никакого
+`*.jtd.json`/`*.schema.json` для `VersionEntry`, `Repomd`, `NameEntry`,
+`CapabilityRow`, `PurlRow` и т.п. в дереве нет.</p>
+    <p>Присутствующие в дереве `schemas/*.jtd.json` (JSON Type Definition) описывают
+**совсем другой провод** — JSON-отчёты CLI-команд, генерируемые в
+`crates/vibe-wire/src/generated/*`:</p>
+    <table>
+      <tr>
+        <td>Файл</td>
+        <td>Что описывает</td>
+      </tr>
+      <tr>
+        <td>`schemas/init_report.jtd.json`</td>
+        <td>отчёт `vibe init --json`</td>
+      </tr>
+      <tr>
+        <td>`schemas/install_plan.jtd.json`</td>
+        <td>план установки (`vibe install --json`)</td>
+      </tr>
+      <tr>
+        <td>`schemas/install_report.jtd.json`</td>
+        <td>отчёт об установке</td>
+      </tr>
+      <tr>
+        <td>`schemas/list_report.jtd.json`</td>
+        <td>отчёт `vibe list --json`</td>
+      </tr>
+      <tr>
+        <td>`schemas/registry_publish_report.jtd.json`</td>
+        <td>отчёт `vibe registry publish --json`</td>
+      </tr>
+      <tr>
+        <td>`schemas/registry_sync_report.jtd.json`</td>
+        <td>отчёт `vibe registry sync --json` (metadescription прямо указывает source of truth → `crates/vibe-wire/src/generated/registry_sync_report.rs`)</td>
+      </tr>
+      <tr>
+        <td>`schemas/uninstall_report.jtd.json`</td>
+        <td>отчёт об удалении</td>
+      </tr>
+    </table>
+    <p>Отдельно: существует `crates/vibe-cli/resources/package-tree.schema.v1.json` —
+но это схема **`vibe load --json`** (дерево пакетов проекта, `schema_version: 1`,
+`const`), к каталогу индекса отношения не имеет (упомянут здесь, чтобы не
+оставлять сомнений: это тоже не каталог).</p>
+    <p>**Вывод:** каталог индекса — единственная крупная часть провода vibevm, у
+которой **нет** машинной схемы; его «контракт» существует только как код.</p>
+  </section>
+</spec>

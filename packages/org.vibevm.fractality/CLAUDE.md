@@ -19,11 +19,11 @@ depend on it. The repository is only its incubator.
    commit made here: human-authored surface, Conventional Commits, commits
    grouped by meaning, autonomy on routine work only.
 2. This file, end to end.
-3. `WAL.md` (this directory) — the living project state. Canonical.
-4. `CONTINUE.md` (this directory) — the cold-resume snapshot; the WAL wins
+3. `WAL.xml` (this directory) — the living project state. Canonical.
+4. `CONTINUE.xml` (this directory) — the cold-resume snapshot; the WAL wins
    wherever they diverge.
 5. The active plan the WAL names. Today:
-   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md).
+   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml).
 6. The generated practice lane (owner directive, 2026-07-09): the
    `<vibevm>` boot block in
    [`fractality/v0.1.0/CLAUDE.md`](fractality/v0.1.0/CLAUDE.md) —
@@ -33,7 +33,7 @@ depend on it. The repository is only its incubator.
    `vibedeps/`. They bind every session here the same way the flows bind
    any vibevm consumer project.
 
-Do **not** load the host's `spec/boot/`, `spec/WAL.md`, or host specs, and do
+Do **not** load the host's `spec/boot/`, `spec/WAL.xml`, or host specs, and do
 not scan the host tree — every host fact this project needs is recorded in
 the plan's §5 (current-state facts) or here. If a task genuinely crosses into
 the host project, say so before touching host files.
@@ -60,7 +60,7 @@ noise.
   here — package management, boot assembly, skills, the discipline stack all
   route through vibe wherever vibe covers the job.
 - **Deferrable wishes** — features, ergonomics, non-blocking bugs — go to
-  [`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md) at this specspace root, one
+  [`VIBEVM-BACKLOG.xml`](VIBEVM-BACKLOG.xml) at this specspace root, one
   dated entry each: what, why, where it bit us.
 - **Urgent large bugs** — anything that blocks fractality work or corrupts
   state — are fixed in the host immediately, in the same session; host-side
@@ -109,7 +109,7 @@ Until the backlog items land, this is the working recipe:
 
 Each workaround above corresponds to a backlog entry with a
 **non-destructive verification recipe**
-([`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md) §"Verification plan"). When a
+([`VIBEVM-BACKLOG.xml`](VIBEVM-BACKLOG.xml) §"Verification plan"). When a
 fix lands: run its block, flip this recipe section to the clean form,
 delete the backlog entry.
 
@@ -156,7 +156,7 @@ delete the backlog entry.
   only and never echoes them; tests use fakes. One accidental echo is a leak
   (sessions are screen-recorded).
 - **Clean-room law:** every reference source in
-  [`fractality/v0.1.0/spec/refs/INVENTORY.md`](fractality/v0.1.0/spec/refs/INVENTORY.md)
+  [`fractality/v0.1.0/spec/refs/INVENTORY.xml`](fractality/v0.1.0/spec/refs/INVENTORY.xml)
   is inspiration-only. Study → write a study note (what it achieves, which
   decisions we take) → implement from the note. Never port lines, never
   adapt code file-by-file. This binds the whole specspace.
@@ -310,7 +310,7 @@ default model points at a local LM Studio that is usually down). Give
 self-contained one-shot tasks with explicit output paths; run from the
 narrowest useful cwd; never hand over secrets; never give host-repo
 write scope without a branch/worktree and boss review. Every delegation
-is field data for Phase 5's playbooks — record surprises in `WAL.md`.
+is field data for Phase 5's playbooks — record surprises in `WAL.xml`.
 
 ## Phase reports (owner directive, 2026-07-10)
 
@@ -371,7 +371,7 @@ from the directive (recorded in full in git; the essentials):
 
 Anything we decided, for a stated reason, not to do — a deferred
 task, an unfired protocol, dropped scope, a parked idea — is filed
-in [`plans/postponed.md`](plans/postponed.md): one index line there,
+in [`plans/postponed.xml`](plans/postponed.xml): one index line there,
 plus a **self-contained markdown document per item** under
 `plans/postponed/` (stable `PP-NNN` id in the filename). File the
 entry **in the same session the postponement is decided**, and
@@ -452,9 +452,9 @@ measurement campaign.
 
 ## End of session
 
-Rewrite `WAL.md` to the current state (checkpoint, not journal). On a
+Rewrite `WAL.xml` to the current state (checkpoint, not journal). On a
 wind-down phrase naming this specspace (`заверши сессию fractality` /
-`END SESSION fractality`): also overwrite `CONTINUE.md` wholesale and refresh
+`END SESSION fractality`): also overwrite `CONTINUE.xml` wholesale and refresh
 the fractality status line in the host `SPECSPACES.md`. Commit per host
 rules; push via `cargo xtask mirror` from the host root (routine per Rule 4).
 Resume (`восстанови сессию fractality`) is report-then-wait: restore, verify

@@ -15,14 +15,14 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @status:im
 - @fact:SHIPS-FOUR-BINARIES **Four binaries** (this package's own Cargo workspace, `crates/`,
   declared as `[[binary]]` in `vibe.toml` for PROP-025 lockfile
   dispatch): @status:impl/done
-  - @fact:SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA `typescript-ai-native` — the umbrella tool: `init` (bootstrap
+- @fact:SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA `typescript-ai-native` — the umbrella tool: `init` (bootstrap
     policies + registries), `floor` (the portable verification floor —
     prettier → tsc → tests → eslint → conform → specmap → test-gate, one
     exit code), `conform`, `specmap`, `trace`, `test-gate`, `tripwire`,
     `health`, `fast-loop`, `codemod`. @status:impl/done
-  - @fact:SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM `typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM). @status:impl/done
-  - @fact:SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP `typescript-ai-native-specmap` — the traceability engine alone (PROP-014). @status:impl/done
-  - @fact:SHIPS-TYPESCRIPT-AI-NATIVE-TCG `typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
+- @fact:SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM `typescript-ai-native-conform` — the conformance gate alone (ENGINE-CONFORM). @status:impl/done
+- @fact:SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP `typescript-ai-native-specmap` — the traceability engine alone (PROP-014). @status:impl/done
+- @fact:SHIPS-TYPESCRIPT-AI-NATIVE-TCG `typescript-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-v0.1 /
     TCG-PROTOCOL-v0.1): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own `typescript` install over
@@ -32,7 +32,7 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @status:im
     oracle adds no new dependency. The floor stays the truth; the oracle
     exists so the floor stays green on the first try. @status:impl/done
 - @fact:SHIPS-GUIDE-AND-CARDS **The TypeScript guide and cards**
-  (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`, `spec/cards/` — the
+  (`spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml`, `spec/cards/` — the
   nine scaffolds A–I in their TypeScript shape, Band-3 ops blocks for
   weak readers). @status:impl/done
 - @fact:SHIPS-TWO-AGENT-SKILLS **Two agent skills** (`vibe skill install` projects them):
@@ -45,8 +45,8 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @status:im
   long-lived language-service oracle behind `typescript-ai-native-tcg`.
   Both resolve the CONSUMER project's `typescript` at runtime. @status:impl/done
 - @fact:SHIPS-MECHANISM-SPECS **The TypeScript mechanism specs and tool briefs** —
-  `spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` and
-  `TCG-PROTOCOL-v0.1.md`, plus `spec/typescript/tools/`. @status:impl/done
+  `spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml` and
+  `TCG-PROTOCOL-v0.1.xml`, plus `spec/typescript/tools/`. @status:impl/done
 - @fact:NEUTRAL-ENGINES-RIDE-ALONG-VENDORED **The neutral engines ride along as vendored copies**
   (`crates/vendor/core-ai-native-{conform,specmap,specmark,specmark-grammar}`),
   so the slot is its own Cargo workspace and builds standalone. @status:impl/done
@@ -96,3 +96,4 @@ the generation-time oracle — is GUIDE §15; the sweep idioms are GUIDE
 
 @fact:POLICIES-STAY-WITH-THE-CONSUMER-PROJECT The policies (`conform.toml`, `specmap.toml`) stay with YOUR project:
 this package ships engines, never policy (PROP-024 §2.2). @status:impl/done
+

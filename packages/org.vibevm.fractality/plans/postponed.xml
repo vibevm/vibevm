@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Postponed work — the registry</title>
+  <p>Work we decided, for a stated reason, not to do (yet): deferred
+tasks, unfired protocols, dropped scope, parked ideas. This file is
+the index — one line per item. The item itself is a **self-contained
+markdown document** in [`postponed/`](postponed/), written so a cold
+session can plan from it alone: the full task, why it was postponed,
+what unblocks it, first steps when unblocked, canonical pointers.</p>
+  <p>Law (workspace [`CLAUDE.md`](../CLAUDE.md) §Postponed-work registry):
+file the entry in the same session the postponement is decided; keep
+the registry current-state, not a journal (picked up → flip status;
+done → prune the entry, git keeps history; superseded → name by
+what). This is an owner-facing dashboard — on any divergence the
+spec tree (plan deferral ledgers, MT files, WAL) wins.</p>
+  <table>
+    <tr>
+      <td>id</td>
+      <td>title</td>
+      <td>filed</td>
+      <td>status</td>
+      <td>unblock</td>
+    </tr>
+    <tr>
+      <td>[PP-001](postponed/PP-001-rule-rp5-fire-mt-c2-05-rerun.xml)</td>
+      <td>Rule RP5 — authorize and fire the MT-C2-05 re-run</td>
+      <td>2026-07-10</td>
+      <td>**DONE 2026-07-12** — fired (3+3 GLM) + scored. REPLICATES Ф6: A′ = 11.1% ≈ old A (within noise), B′ = 0% = old B; PR1 falsified (noise), PR2 not-confirmed (F23 `-p` re-fire), PR3 falsified. Initiative hooks don't move a cold `-p` boss; the RLM gate (44.4%) does — validates the C3 pivot. Open lever: move the nudge to a PostToolUse path</td>
+      <td>drained (F23 `-p`-nudge follow-up noted in MT-C2-05)</td>
+    </tr>
+    <tr>
+      <td>[PP-002](postponed/PP-002-def-c2-2b-worker-credibility.xml)</td>
+      <td>DEF-C2-2b-full — acceptance-backed worker credibility on the boss surface</td>
+      <td>2026-07-10</td>
+      <td>**DONE 2026-07-12** — the credibility QUERY (`core::worker_credibility` → `CredibilityFact`, D7-factual, dated) + the SURFACE: `render_board` now shows "workers self-verify here: acceptance N/N green, last proven &lt;age&gt; (profile X)" on the cold board (SessionStart hook) and `fractality scoreboard`, only when a real completed-green acceptance backs it. The F24 keep-reason answered on the surface the boss reads. Optional follow-up: the mid-work nudge could cite it too</td>
+      <td>drained</td>
+    </tr>
+    <tr>
+      <td>[PP-003](postponed/PP-003-option-c-advisor-slice.xml)</td>
+      <td>Option C — the advisor slice (V4)</td>
+      <td>2026-07-11</td>
+      <td>**DONE 2026-07-12 (Stage C executed)** — core (`advice` + RD-10 bar) + `advise` verb + ladder-as-routing-data + help/hurt trial MT-C3-02 fired&amp;scored + the uncertainty-trigger protocol (ADVISOR-PLAN §6). Trial finding: null mechanism — a weak caller won't consult from a preamble; the consult must be DRIVEN (§6 delivery options). Re-run follow-ups: mandated/forced consult, pin task-1 name, a 3rd tier for the full RD-10 inversion</td>
+      <td>drained (re-run to measure thresholds when commissioned)</td>
+    </tr>
+    <tr>
+      <td>[PP-004](postponed/PP-004-next-trial-improvements.xml)</td>
+      <td>Next-trial improvements (worker caps, schema+Silo menu tasks, `decisions` verb)</td>
+      <td>2026-07-12</td>
+      <td>**DONE 2026-07-12** — all four items landed + the gated re-run fired &amp; scored (MT-C3-03: P-C3-a CONFIRMED as a hard count, P-C3-b SUPPORTED, P-C3-d CONFIRMED). Re-fire follow-up → **PP-005 FU-3**</td>
+      <td>drained</td>
+    </tr>
+    <tr>
+      <td>[PP-005](postponed/PP-005-trial-followups.xml)</td>
+      <td>The three trial follow-ups — FU-1 advisor forced-consult re-run (MT-C3-02), FU-2 PP-001 PostToolUse nudge (MT-C2-05), FU-3 PP-004 clean-N=3 re-fire (MT-C3-03)</td>
+      <td>2026-07-12</td>
+      <td>POSTPONED — each is a re-run of a frozen protocol with one small change; none blocks anything (the five-task goal is done, the machinery is floor-green)</td>
+      <td>owner commissions any of the three (paid GLM runs)</td>
+    </tr>
+  </table>
+</spec>

@@ -1,4 +1,4 @@
-# G4 — B-040 design evidence: `spec/design/typed-seams.md` against the built tree
+# G4 — B-040 design evidence: `spec/design/typed-seams.xml` against the built tree
 
 Measurement only. The verdict on each fact is the boss's to write; every block
 below carries the placeholder token in that field, never a judgement. `match`
@@ -6,16 +6,16 @@ is the worker's read of how the claim sits against the tree today: `SUPPORTS`
 · `PARTIAL` (one-phrase why) · `CONTRADICTS` · `NO-CODE` (a decision /
 order-of-work claim, not a code line).
 
-**Perimeter read.** Read in full: `spec/design/typed-seams.md` (90 lines), the census
+**Perimeter read.** Read in full: `spec/design/typed-seams.xml` (90 lines), the census
 `campaigns/packages-2026-09/harvest/g1-b040-seams-census.md` (332 lines),
 `BACKLOG.md` (B-040 at :1038, B-061 at :111), `crates/vibe-publish/src/{creator,github,gitverse,direct_git,orchestrator}.rs`,
 `crates/vibe-publish/tests/repo_creator_oracle.rs`, `crates/vibe-core/src/{content_hash,package_ref,capability_ref}.rs`,
 `crates/vibe-actions/src/action.rs`, `crates/vibe-settings/src/events/mod.rs`,
 `crates/progress-core/Cargo.toml`, `crates/progress-core/src/{cache,doc,seal,parse/mod,baseline/project,baseline/project/tests}.rs`,
 `crates/vibe-cli/src/commands/workspace/tests.rs`, `sync-engines.toml`,
-`spec/boot/90-user.md` (SCOPE-DISCIPLINE), `spec/modules/vibe-registry/PROP-002-…md`,
+`spec/boot/90-user.xml` (SCOPE-DISCIPLINE), `spec/modules/vibe-registry/PROP-002-…md`,
 `spec/modules/vibe-progress/PROP-043-…md`, and the GUIDE
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md`.
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml`.
 ~1700 lines read across sources.
 
 Re-measured this session (`crates/*/src` + `xtask/src`, census perimeter):
@@ -44,11 +44,11 @@ site; that is recorded as `PARTIAL`, never `CONTRADICTS` (per packet).
   (PROPs and backlog rulings win where they disagree).
 - **evidence.** `BACKLOG.md:1038` (`### B-040 — рефакторинг-обзор собственных
   швов … {#b-040}`); census at `campaigns/packages-2026-09/harvest/g1-b040-seams-census.md:1`;
-  the companion statement itself at `spec/design/typed-seams.md:5`; GUIDE
+  the companion statement itself at `spec/design/typed-seams.xml:5`; GUIDE
   section `- ##ln **B — Typed builders / typestate** (`scaffold-b-typed-builders`)`
-  in `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md`.
+  in `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml`.
 - **match.** SUPPORTS
-- **note.** `GUIDE-AI-NATIVE-RUST.md` is **not** at the repo root (no host-root
+- **note.** `GUIDE-AI-NATIVE-RUST.xml` is **not** at the repo root (no host-root
   copy); it lives in the rust-ai-native-lang package tree (and a vendored copy
   under `vibedeps/stack-rust-ai-native-lang/`). The anchor is the lowercase id
   `scaffold-b-typed-builders` inside the `##ln **B — …**` heading.
@@ -86,7 +86,7 @@ site; that is recorded as `PARTIAL`, never `CONTRADICTS` (per packet).
 - **claim.** An idiom's absence is a question, not a verdict; `PhantomData: 0`
   is a defect only where a wrong call is representable today; the design hunts
   calls that can be made wrongly rather than scheduling the five idioms.
-- **evidence.** The fact itself at `spec/design/typed-seams.md:11`; the
+- **evidence.** The fact itself at `spec/design/typed-seams.xml:11`; the
   method shapes the whole doc — §2–§7 each examine one specific wrong-call
   site, not one idiom. `PhantomData` = 0 confirmed (see basis-census).
 - **match.** NO-CODE — a methodological statement about how to read a count,
@@ -102,7 +102,7 @@ site; that is recorded as `PARTIAL`, never `CONTRADICTS` (per packet).
   on a caller/implementor in prose with nothing checking it?"; that question
   crosses the five categories and found four sites, one security-relevant and
   invisible in every census count.
-- **evidence.** The fact at `spec/design/typed-seams.md:13`; the four sites
+- **evidence.** The fact at `spec/design/typed-seams.xml:13`; the four sites
   map to §2 scope (`creator.rs`), §3 digest (`progress-core`), §4 wire
   (`vibe-core` identity newtypes), §5 builder (`action.rs`). The
   security-relevant one is scope — PROP-002 §2.10 "Never escalate scope"
@@ -139,7 +139,7 @@ site; that is recorded as `PARTIAL`, never `CONTRADICTS` (per packet).
   §2.10 bind the publisher to its declared org; an impl that forgets the call
   compiles, passes review as "looks like the others", and escalates scope on
   its first real run.
-- **evidence.** `spec/boot/90-user.md:28` (`##SCOPE-DISCIPLINE` … "Never
+- **evidence.** `spec/boot/90-user.xml:28` (`##SCOPE-DISCIPLINE` … "Never
   escalate scope"); `spec/modules/vibe-registry/PROP-002-…md:611`
   (`##PUBLISH-NEVER-RULES` "Never escalate scope … adapters MUST refuse …").
 - **match.** PARTIAL — both binding rules are present verbatim, but the
@@ -655,9 +655,9 @@ site; that is recorded as `PARTIAL`, never `CONTRADICTS` (per packet).
   is right about builders and typestate and does not fit a workspace-internal
   trait surface.
 - **evidence.** The decision is recorded in §7 of the design
-  (`spec/design/typed-seams.md:71-81`); the GUIDE scaffold-B section is
+  (`spec/design/typed-seams.xml:71-81`); the GUIDE scaffold-B section is
   `scaffold-b-typed-builders` in
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md`.
+  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml`.
 - **match.** NO-CODE — a recording/decision fact; its subject is documentation
   (the §7 decision and the GUIDE re-judgment), not a code line.
 - **note.** NO-CODE: the claim is that a *decision* was recorded (not deferred

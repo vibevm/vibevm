@@ -19,16 +19,16 @@ produced it, per
 
 **HEAD advanced to `f1abad16` while this batch ran, and every figure holds.**
 One commit — `docs(wal): the WAL pays its own addressability debt and catches up
-to волна 9` — touching **one file, `spec/WAL.md`**, which this batch does not
+to волна 9` — touching **one file, `spec/WAL.xml`**, which this batch does not
 measure, quote, or edit:
 
 ```bash
 git log --oneline 96b5b55f..HEAD          # 1 commit
-git diff --name-only 96b5b55f..HEAD -- spec/   # spec/WAL.md — and nothing else
+git diff --name-only 96b5b55f..HEAD -- spec/   # spec/WAL.xml — and nothing else
 grep -rn '\*\*Decision' spec/common --include='*.md' | wc -l   # 35, re-verified at f1abad16
 ```
 
-The census re-measures **35**, and none of `spec/common/PROP-000.md`,
+The census re-measures **35**, and none of `spec/common/PROP-000.xml`,
 `PROP-018-*.md`, `PROP-024-*.md`, `spec/design/README.md`, the six `spec/modules`
 files quoted in [§1.3](#examples-verified), or the `decision-records` package
 moved. **Every line number, quotation and count below is valid at both
@@ -49,10 +49,10 @@ is its execution half.
 
 **What was read to write this**, in order: `d10-adr-genre-proposal.md` in full
 (including its [§0](d10-adr-genre-proposal.md#zero) premise-withdrawal); the
-installed flow in full — [`25-flow-decision-records.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md),
-[`DECISION-RECORDS-PROTOCOL.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md),
-[`revisit-triggers.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md),
-[`record-template.md`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md);
+installed flow in full — [`25-flow-decision-records.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml),
+[`DECISION-RECORDS-PROTOCOL.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml),
+[`revisit-triggers.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml),
+[`record-template.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml);
 the genre map, flow-side and host-side; and **all three `spec/common` files that
 carry a `Decision` label, end to end** (PROP-000, PROP-018, PROP-024 — 1091
 lines).
@@ -96,9 +96,9 @@ grep -rc '\*\*Decision' spec/common --include='*.md' -r           # per file, be
 
 | file | Decision labels |
 |---|---:|
-| `spec/common/PROP-000.md` | 18 |
-| `spec/common/PROP-018-agentic-standalone-modes.md` | 11 |
-| `spec/common/PROP-024-code-bearing-packages.md` | 6 |
+| `spec/common/PROP-000.xml` | 18 |
+| `spec/common/PROP-018-agentic-standalone-modes.xml` | 11 |
+| `spec/common/PROP-024-code-bearing-packages.xml` | 6 |
 | the other nine files in `spec/common/` (PROP-006, -013, -016, -019, -028, -029, -031, -032, -033) | **0** |
 | **total** | **35** |
 
@@ -228,7 +228,7 @@ Four reasons, and the fourth is the one that answers the obvious objection.
    document's own subject.
 4. **It does not need to create normativity, because the rule is already
    binding.** `##ANY-REOPENABLE-CHOICE-GETS-A-RECORD` is compiled into the
-   host's **static boot lane** — `spec/boot/STATIC.md:311`, from
+   host's **static boot lane** — `spec/boot/STATIC.xml:311`, from
    `vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md`
    (the provenance comment is at `STATIC.md:294`) — so it is read at the start
    of every session in this repository. The host text does not *make* the
@@ -238,13 +238,13 @@ Four reasons, and the fourth is the one that answers the obvious objection.
    genre table itself, which is the host's instance of an installed flow's map.
 
 ```bash
-grep -n 'ANY-REOPENABLE-CHOICE-GETS-A-RECORD' spec/boot/STATIC.md   # 311
-grep -n 'vibe:static org.vibevm.world/decision-records' spec/boot/STATIC.md  # 294
+grep -n 'ANY-REOPENABLE-CHOICE-GETS-A-RECORD' spec/boot/STATIC.xml   # 311
+grep -n 'vibe:static org.vibevm.world/decision-records' spec/boot/STATIC.xml  # 294
 ```
 
 **The alternative home, if the owner rejects reason 4.** If the criterion should
 bind *in its own right* rather than as a localisation, its home is a **new
-`spec/common/PROP-000.md` section** — `##ROW-COMMON` is the only
+`spec/common/PROP-000.xml` section** — `##ROW-COMMON` is the only
 `Normative? yes` home for a rule crossing every module, and PROP-000 §12
 `#commits` already houses a process-discipline pointer of exactly this shape
 (the `git-practices` family). The cost is real and should be stated: PROP-000
@@ -275,7 +275,7 @@ file.
 record — Decision · Why · Considered and rejected · When to revisit — for **any
 choice a future reader could plausibly re-open**
 (`spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#when`,
-read at every session boot from `spec/boot/STATIC.md`). *Plausibly* is the word
+read at every session boot from `spec/boot/STATIC.xml`). *Plausibly* is the word
 two reviewers disagree on, so vibevm decides it with three questions. **A
 section is owed a record iff all three can be answered; «I cannot name it» is a
 No.** @doc/done
@@ -364,14 +364,14 @@ quotes two of them.
 
 | d10 §2 example | file:line at `96b5b55f` | holds? |
 |---|---|---|
-| `##FRESHNESS-TTL` / `##ttl-why` | `PROP-001-git-backend.md:225,231` | ✔ — **but see the emphasis note** |
-| `##RESOLVO-PRIMARY` / `##NOT-PUBGRUB` / `##LIBSOLV-FALLBACK-SLOT` | `PROP-002-decentralized-registry.md:538,544,546` | ✔ verbatim |
-| `##BARE-TAGS` / `##bare-tags-why` / `##cosmetic-cost` | `PROP-012-managed-redirect-block.md:58,60,61` | ✔ — **emphasis note** |
-| `##IDENTITY-TUPLE` / `##GROUP-CHANGE-NEW-PACKAGE` | `PROP-008-qualified-naming.md:59,63` | ✔ verbatim |
-| `##LAYOUT-PER-SPEC` | `PROP-000.md:77` | ✔ verbatim |
-| `##UNIFORM-MODEL` | `PROP-009-loading-model.md:148` | ✔ verbatim |
-| calibration: `##WORKSPACE-MEMBER` / `##fold-in-why` | `PROP-005-package-index.md:820,822` | ✔ verbatim |
-| house style: `##DECISION-ELEMENT-NAME` + three fields | `PROP-043-progress-markup.md:91,93,96,98` | ✔ verbatim |
+| `##FRESHNESS-TTL` / `##ttl-why` | `PROP-001-git-backend.xml:225,231` | ✔ — **but see the emphasis note** |
+| `##RESOLVO-PRIMARY` / `##NOT-PUBGRUB` / `##LIBSOLV-FALLBACK-SLOT` | `PROP-002-decentralized-registry.xml:538,544,546` | ✔ verbatim |
+| `##BARE-TAGS` / `##bare-tags-why` / `##cosmetic-cost` | `PROP-012-managed-redirect-block.xml:58,60,61` | ✔ — **emphasis note** |
+| `##IDENTITY-TUPLE` / `##GROUP-CHANGE-NEW-PACKAGE` | `PROP-008-qualified-naming.xml:59,63` | ✔ verbatim |
+| `##LAYOUT-PER-SPEC` | `PROP-000.xml:77` | ✔ verbatim |
+| `##UNIFORM-MODEL` | `PROP-009-loading-model.xml:148` | ✔ verbatim |
+| calibration: `##WORKSPACE-MEMBER` / `##fold-in-why` | `PROP-005-package-index.xml:820,822` | ✔ verbatim |
+| house style: `##DECISION-ELEMENT-NAME` + three fields | `PROP-043-progress-markup.xml:91,93,96,98` | ✔ verbatim |
 
 @fact:EMPHASIS-IS-ADDED-IN-D10 **Emphasis note — d10 bolds two phrases the source
 does not.** d10 §2 renders `##ttl-why` as *«**Revisit once real usage
@@ -464,7 +464,7 @@ this document is what it repairs.
 ### 2.5 NOTE — the flow's own map row is a package edit, not a host edit {#package-note}
 
 **Not drafted here, deliberately.** The general taxonomy —
-`packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:43-47`,
+`packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml:43-47`,
 whose `##ROW-GENRE-FOUNDATIONAL-DECISIONS` and `##ROW-GENRE-MODULE-CONTRACTS`
 rows carry the `Mutability` column the host's instance drops — is **package
 surface**. Any change to it is a package edit and rides the **release route**,
@@ -479,7 +479,7 @@ Two consequences the boss should carry into the closure pass:
   prohibition the new row publishes. The twelve anchors of d10 §5.0 close on
   route (b) — the host does the thing — with no package edit anywhere.
 - **d10 §5.0's one package-side item stays open and is untouched by this
-  ruling**: **F-224**'s self-falsifier, where `record-template.md:45` defines
+  ruling**: **F-224**'s self-falsifier, where `record-template.xml:45` defines
   the trigger as *«metric + threshold + observation point»* while its own
   `#example-library` twelve lines below ships a pure event trigger as the
   correct model. That is a `self` obligation on the package and is independent
@@ -547,13 +547,13 @@ definitions and change without asking us. Q2 — a dependency's licence; a crate
 to be published. Q3 — named below. **The best-equipped section in
 `spec/common`: three of the four fields are already written and labelled.**
 
-**Current text** (`spec/common/PROP-000.md:47-57`, elided in the middle):
+**Current text** (`spec/common/PROP-000.xml:47-57`, elided in the middle):
 
 > - @fact:LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive
 >   License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The
 >   project's first phase shipped under a placeholder proprietary EULA; that
 >   phase is over. @status:impl/done
-> - @fact:NO-CRATES-IO Crates in this workspace set `license-file = "LICENSE.md"`
+> - @fact:NO-CRATES-IO Crates in this workspace set `license-file = "LICENSE.xml"`
 >   and `publish = false` … @status:spec/done
 >
 > - @fact:LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed
@@ -576,7 +576,7 @@ to be published. Q3 — named below. **The best-equipped section in
 (`##LICENSE-REVISIT`). Missing: Considered and rejected — one unit.**
 
 **Insert** — as the last bullet of the why group, after `##LICENSE-SPEC-DEFERS`
-(`PROP-000.md:51`):
+(`PROP-000.xml:51`):
 
 ```markdown
 - ##license-rejected **Considered and rejected:** the placeholder **proprietary EULA** of the project's first phase — superseded 2026-07-12, *"that phase is over"* (`##LICENSE-EULA`); **per-package licensing** across the shipped surface — rejected because a consumer of any part of vibevm would then face per-package archaeology instead of one permissive licence (`##LICENSE-OWNER-CALL`); **any copyleft licence** (GPL / AGPL / LGPL) — never in contention, for the same reason it is forbidden in dependencies: it would force the whole product to relicense, *"which is exactly what UPL-1.0 exists to prevent"* (`##COPYLEFT-FORBIDDEN`, `##PROPRIETARY-TIGHTENS`). @spec/done
@@ -611,7 +611,7 @@ criterion asks for. Q2 — the frozen spec names the target release. Q3 — a
 named alternative, explicitly deferred with its extension point documented ⇒
 `##R3-LIVE-ALTERNATIVE`.
 
-**Current text** (`spec/common/PROP-000.md:124-128`):
+**Current text** (`spec/common/PROP-000.xml:124-128`):
 
 > - @fact:GRAPH-BUILTIN-NODES **Decision:** Built-in nodes only in v1 (content-only
 >   plugin contribution model per `VIBEVM-SPEC.md` §5.4). @status:spec/done
@@ -620,7 +620,7 @@ named alternative, explicitly deferred with its extension point documented ⇒
 
 **Fields present: Decision only. Missing: all three.**
 
-**Insert** — three bullets after `##TYPED-VALUES` (`PROP-000.md:126`), before
+**Insert** — three bullets after `##TYPED-VALUES` (`PROP-000.xml:126`), before
 the `##WORKFLOWS-QUERIES` paragraph:
 
 ```markdown
@@ -639,7 +639,7 @@ honest and the weaker.
 - **(a) Release-scoped, from the spec's own deferral.** *«The v1.5 milestone
   opens — `VIBEVM-SPEC.md` §5.4 names it as the target for the extension
   point.»* Metric: the milestone. Threshold: v1.5 declared. Observation point:
-  the milestone list in `spec/WAL.md`. **Fires on a schedule the project already
+  the milestone list in `spec/WAL.xml`. **Fires on a schedule the project already
   keeps** — but it is a calendar, not a signal about the decision.
 - **(b) Demand-scoped.** *«A published package needs a graph node the built-in
   set does not provide — observed as a `[hooks].post-install` doing work a node
@@ -661,7 +661,7 @@ collects.*
 exception, so its scope is bounded. Q2 — the manifest schema in `vibe-core`.
 Q3 — the declined `target =` field is named on the very next line.
 
-**Current text** (`spec/common/PROP-000.md:170-181`, elided):
+**Current text** (`spec/common/PROP-000.xml:170-181`, elided):
 
 > - @fact:MIRROR-LAYOUT **Decision:** vibevm packages use a **mirror layout**. Every
 >   entry in a package's `writes.files` is simultaneously (a) the path of the
@@ -687,7 +687,7 @@ Q3 — the declined `target =` field is named on the very next line.
 Considered and rejected (the loser is written at `##NO-TARGET-FIELD`, unlabelled)
 and Revisit.**
 
-**Insert** — two bullets after `##MIRROR-WHY-READABLE` (`PROP-000.md:178`):
+**Insert** — two bullets after `##MIRROR-WHY-READABLE` (`PROP-000.xml:178`):
 
 ```markdown
 - ##mirror-rejected **Considered and rejected:** a **per-entry `target = "…"` field** in `writes.files` — rejected because `writes.files` would stop being the single source of truth for *"where does this file go?"* (`##NO-TARGET-FIELD`), reviving the authoring-drift bug `##MIRROR-WHY-DRIFT` names and costing the package directory its at-a-glance readability (`##MIRROR-WHY-READABLE`). `[boot_snippet].source` is the **one retained exception**, not a rejection: its target is the fixed `spec/boot/<filename>` (`##BOOT-SNIPPET-EXCEPTION`). @spec/done
@@ -715,7 +715,7 @@ ships tens to hundreds of dependencies and remains fast and capable»* is an
 external, checkable claim. Q2 — the release binary and the build clock. Q3 —
 the footprint-rejection policy, with two recorded consequences.
 
-**Current text** (`spec/common/PROP-000.md:208-224`, elided):
+**Current text** (`spec/common/PROP-000.xml:208-224`, elided):
 
 > - @fact:DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive
 >   dep weight are NOT decision factors when selecting third-party libraries. @status:spec/done
@@ -744,7 +744,7 @@ the footprint-rejection policy, with two recorded consequences.
 and rejected (written unlabelled across `##READMISSIBLE` / `##PROP-001-PRUNE` /
 the `##REJECT-*` list) and Revisit.**
 
-**Insert** — two bullets after `##PROP-001-PRUNE` (`PROP-000.md:224`), closing
+**Insert** — two bullets after `##PROP-001-PRUNE` (`PROP-000.xml:224`), closing
 the section:
 
 ```markdown
@@ -773,7 +773,7 @@ upstream artefacts that change without asking us. Q2 — the upstream repository
 and the pin in `tools/jtd-codegen/`. Q3 — named with its reason, one line
 below the Decision.
 
-**Current text** (`spec/common/PROP-000.md:230-239`, elided):
+**Current text** (`spec/common/PROP-000.xml:230-239`, elided):
 
 > - @fact:JTD-SSOT **Decision:** JSON Type Definition (RFC 8927) schemas are the
 >   single source of truth for every client/server and machine-to-machine
@@ -793,7 +793,7 @@ below the Decision.
 **Fields present: Decision ✔ · Why ✔ (`##JTD-WHY-SKEW`). Missing: Considered
 and rejected (written unlabelled at `##JTD-OVER-JSONSCHEMA`) and Revisit.**
 
-**Insert** — two bullets after `##JTD-OVER-JSONSCHEMA` (`PROP-000.md:235`):
+**Insert** — two bullets after `##JTD-OVER-JSONSCHEMA` (`PROP-000.xml:235`):
 
 ```markdown
 - ##jtd-rejected **Considered and rejected:** **JSON Schema / OpenAPI alone** — rejected: JTD is *"deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches"* (`##JTD-OVER-JSONSCHEMA`); **a hand-written client against each server contract** — rejected: that duplication is *"a classic source of version-skew bugs"* which codegen eliminates categorically (`##JTD-WHY-SKEW`, `##NO-DUPLICATION`). The boundary in the other direction is not a rejection: human-edited manifests stay TOML via `serde` — *"JTD is for wire, not for configs humans hand-edit"* (`##JTD-OUT-OF-SCOPE`). @spec/done
@@ -821,7 +821,7 @@ agents' invocation conventions, not by us. Q2 — the reach-detection path, and
 not from a measurement, which is a weaker why than the other eleven carry.
 **This is the one section the owner can strike to reach eleven records.**
 
-**Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:99-111`,
+**Current text** (`spec/common/PROP-018-agentic-standalone-modes.xml:99-111`,
 elided):
 
 > - @fact:MODE-INFERRED **Decision.** Mode is not a global flag the user sets; it is
@@ -869,7 +869,7 @@ reopened once, half of it went the other way, and the reversal is recorded in
 place with a date and an owner resolution.** Nothing else in `spec/common`
 carries that evidence.
 
-**Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:156-170`,
+**Current text** (`spec/common/PROP-018-agentic-standalone-modes.xml:156-170`,
 elided), plus its loser from §5 (`:372`):
 
 > - @fact:SKILL-SECTION-NOT-KIND **Decision.** A package declares which of its files
@@ -927,7 +927,7 @@ shows what condition moved an artefact class from «section» to «kind».
 an explicit deferral. Q2 — the mailbox file itself. Q3 — the declined
 alternative is named in a lead-in with **two** numbered reasons.
 
-**Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:227-255`,
+**Current text** (`spec/common/PROP-018-agentic-standalone-modes.xml:227-255`,
 elided):
 
 > - @fact:RELAY-PARKS **Decision.** When a reasoning operation runs under the relay
@@ -979,7 +979,7 @@ build-output directory names from four external toolchains. Q2 — the project
 source produces an identical hash regardless of build state»*. Q3 — two losers,
 both already written with reasons, in §4.
 
-**Current text** (`spec/common/PROP-024-code-bearing-packages.md:116-143`,
+**Current text** (`spec/common/PROP-024-code-bearing-packages.xml:116-143`,
 elided):
 
 > @fact:SHIPPABLE-TREE-DEF **Decision.** A package's **shippable tree** is its
@@ -1032,7 +1032,7 @@ The loser is named, reasoned, **retained as a live fallback**, and given an
 evidentiary rule for its revival. Q1 — Cargo's own constraint plus Windows path
 handling. Q2 — a spike this project already ran. Q3 — `##REJ-CONSUMER-MEMBERS`.
 
-**Current text** (`spec/common/PROP-024-code-bearing-packages.md:175-211`,
+**Current text** (`spec/common/PROP-024-code-bearing-packages.xml:175-211`,
 elided):
 
 > - @fact:OWN-WORKSPACE **Decision.** A code-bearing package carries its **own**
@@ -1088,7 +1088,7 @@ observation point** — the one thing `##SPIKE-FALLBACK` leaves unsaid.
 committed slot's own weight, measurable today. Q3 — one rejected and one
 deferred alternative, both in §4.
 
-**Current text** (`spec/common/PROP-024-code-bearing-packages.md:217-230`,
+**Current text** (`spec/common/PROP-024-code-bearing-packages.xml:217-230`,
 elided):
 
 > - @fact:SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline
@@ -1151,7 +1151,7 @@ the host's one correct reopening. **This is its `spec/common` counterpart, and
 d10 did not name it.** Per `#OUTCOME-REAFFIRMED` — *«a fired trigger is
 spent»* — what this record needs is not a first trigger but a **fresh** one.
 
-**Current text** (`spec/common/PROP-024-code-bearing-packages.md:236-259`,
+**Current text** (`spec/common/PROP-024-code-bearing-packages.xml:236-259`,
 elided), plus the §7 history line (`:338`):
 
 > @fact:PLACEMENT-LAW **Decision.** The discipline's tools are code and obey the
@@ -1212,7 +1212,7 @@ section»*, and this is the sharpest instance in `spec/common`.
 **`PROP-000` §7 `#registry`.** The section's `Decision` label is `##REG-M0`
 (*«M0: local-directory registry only»*), classified **N3** at row 7 — a
 milestone-scope statement, superseded in place by `##REG-M1`. But the section
-also carries this, unlabelled (`PROP-000.md:108-113`):
+also carries this, unlabelled (`PROP-000.xml:108-113`):
 
 > @fact:SPLIT-HOST-POSTURE **Source repositories — split-host posture.** The vibevm
 > project and the package registry live on **separate hosts** by deliberate

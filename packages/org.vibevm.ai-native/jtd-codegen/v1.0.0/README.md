@@ -82,3 +82,4 @@ first consumer (the vibevm host) runs it as `cargo xtask codegen` /
 `cargo xtask check-codegen`, preferring the project-local binary and
 falling back to PATH; its task preflights the binary and errors
 actionably, pointing at this recipe, when both are missing. @status:impl/done
+

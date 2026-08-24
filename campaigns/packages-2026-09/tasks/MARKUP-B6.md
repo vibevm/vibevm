@@ -32,7 +32,7 @@ at B5's measured ×1.6 the batch finishes near **540 units**. Per file:
 | `spec/boot/20-stack-typescript-ai-native-lang.md` | 13 |
 | `spec/cards/scaffold-{a,b,c,e,f,g,h,i}` — 3 each | 24 |
 
-Already out by the excludes and **not yours**: `LICENSE.md` (file name),
+Already out by the excludes and **not yours**: `LICENSE.xml` (file name),
 `spec/cards/INDEX.md` (derived index), `tools/ts-extract/test/fixtures/**`
 (always-on `fixtures` exclusion).
 
@@ -89,7 +89,7 @@ paragraph per bold-lead label, each with an UPPER anchor named for its label
 (`##CLASSIFICATION`, `##INTENT`, `##ALSO-KNOWN-AS`, …). That is ruling 4 plus
 rulings 20/22, already adjudicated on this exact text — follow it.
 
-@fact:B6-CARD-D-IS-ALREADY-EXPANDED `scaffold-d-differential-oracle.md` is the
+@fact:B6-CARD-D-IS-ALREADY-EXPANDED `scaffold-d-differential-oracle.xml` is the
 package's declared *reference instance* and the author already wrote it in the
 expanded form — hence 48 units against the others' 3. It needs anchors and
 markers, **not** re-splitting into a shape it is already in.

@@ -5,3 +5,4 @@ It is a small internal utility: no dependencies, no I/O — parsing,
 rendering, filtering, and counting only.
 
 Run the suite with `cargo test`.
+

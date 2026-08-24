@@ -173,7 +173,7 @@ File: `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-e
 ### The guide promise — verbatim search
 
 The literal phrase **"the E union cites spec:// REQs" is not in the guide**
-(it is the parity table's paraphrase — `campaigns/packages-2026-09/harvest/e10-b035-parity-pass.md` row 1, attributed to "census Q6"). The governing clauses in `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` are:
+(it is the parity table's paraphrase — `campaigns/packages-2026-09/harvest/e10-b035-parity-pass.md` row 1, attributed to "census Q6"). The governing clauses in `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` are:
 
 - `:152` `##FAILURE-IS-A-VALUE-ON-THE-CONTRACT-SURFACE` — "…a discriminated union `Result<T, E> = { ok: true; value: T } | { ok: false; error: E }` …, with `E` a discriminated union of named error variants carrying `spec://` REQ references."
 - `:154` `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED` (neighbour clause).

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>PROP-050 W7 — измерения посадки видимости (##VERIFY-MEASURE)</title>
+  <quote>Замеры стройки, 2026-08-23. Хост: `org.vibevm.core/vibevm`, 37 пакетов в lock.
+«До» = main до W7-меток (машинерия W1–W6 уже посажена, дефолты public/false);
+«после» = после осознанного сужения (private-метки fractality-группы) и переустановки.</quote>
+  <section title="Хост-мир (потребительский корень этого репозитория)">
+    <table>
+      <tr>
+        <td>метрика</td>
+        <td>до</td>
+        <td>после</td>
+        <td>дельта</td>
+      </tr>
+      <tr>
+        <td>членов в `vibe.lock`</td>
+        <td>37</td>
+        <td>37</td>
+        <td>0 — у хоста все дисциплины свои, прямыми рёбрами</td>
+      </tr>
+      <tr>
+        <td>`spec/boot/STATIC.xml`, байт</td>
+        <td>248 429</td>
+        <td>248 429</td>
+        <td>**byte-identical**</td>
+      </tr>
+      <tr>
+        <td>`spec/boot/INDEX.md`, байт</td>
+        <td>1 512</td>
+        <td>1 512</td>
+        <td>topo-пересортировка 3 строк, состав не менялся</td>
+      </tr>
+      <tr>
+        <td>provenance в lock</td>
+        <td>— (v5, полей не было)</td>
+        <td>7 × `root-edge`, 30 × `public-chain`</td>
+        <td>схема v6</td>
+      </tr>
+      <tr>
+        <td>время `vibe install` (свежий бинарь, тёплый store)</td>
+        <td>~секунды</td>
+        <td>~секунды</td>
+        <td>без деградации от проекции+итерации</td>
+      </tr>
+    </table>
+    <p>Ключевой совместимостный факт: переустановка хоста на новой машинерии
+(strict-чтение, public-дефолт) воспроизвела ленты **байт-в-байт** — ровно
+обещание ##DEFAULT-PUBLIC-RATIONALE / ##migration-flag-day-scope.</p>
+  </section>
+  <section title="W7-сужение: private-метки">
+    <p>Помечено `access = "private"` (v1.0.0-слоты; замороженные v0.x не тронуты):</p>
+    <list ordered="false">
+      <item>`delegation-first` → redbook, rust-ai-native (delegation-rules ОСТАВЛЕН public — директива тянет свой калькулюс);</item>
+      <item>`delegation-rules` → redbook, rust-ai-native;</item>
+      <item>`fractality` → redbook, rust-ai-native, wal-specspaces.</item>
+    </list>
+    <p>Обоснование — ##REEXPORT-USAGE-NORM: это фоновые дисциплины автора пакета
+(его dev-мир), не субстанция для потребителя; сниппеты самодостаточны
+(пресуппозиционный гейт зелёный без этих рёбер).</p>
+    <p>Эффект в хост-lock: `dependencies` пакета delegation-first сжался с
+3 рёбер до 1 (`delegation-rules`), delegation-rules — до 0: lock-контракт
+теперь честно отражает просачивающуюся поверхность, не dev-мир.</p>
+  </section>
+  <section title="Расчётный эффект для стороннего потребителя">
+    <p>Проект, тянущий ТОЛЬКО `flow:org.vibevm.fractality/delegation-first`:</p>
+    <table>
+      <tr>
+        <td/>
+        <td>до</td>
+        <td>после</td>
+      </tr>
+      <tr>
+        <td>членов E(R)</td>
+        <td>~32 (redbook-паровоз: 21 член + git-practices 4 + wal-specspaces + rust-стек 3 + core)</td>
+        <td>**2** (delegation-first + delegation-rules)</td>
+      </tr>
+      <tr>
+        <td>смысл</td>
+        <td>WAL-класс утечки: «один edge тянет мир»</td>
+        <td>директива + её калькулюс</td>
+      </tr>
+    </table>
+    <p>Проверено сквозными голденами жанра (`cli_visibility_lanes.rs`:
+private-ребро не доезжает до lock/vibedeps/INDEX/STATIC; ромбы и
+friends-цепи — по своим сценариям).</p>
+  </section>
+  <section title="Наблюдаемость на живом мире (пост-W5a)">
+    <list ordered="false">
+      <item>`vibe why org.vibevm.world/git-atomic-commits` → `present: public-chain via
+  org.vibevm.core/vibevm -&gt; org.vibevm.world/redbook -&gt;
+  org.vibevm.world/git-practices -&gt; org.vibevm.world/git-atomic-commits`;</item>
+      <item>`vibe why org.vibevm.world/wal` → `present: root-edge`;</item>
+      <item>`vibe friends org.vibevm.world/redbook` → `open… actual friends: none…
+  in root closure: no` (у хоста грантов нет — дефолт `friend = false`).</item>
+    </list>
+  </section>
+  <section title="Снапшот-пин">
+    <p>Состав хост-лент пинится живыми тестами (redbook-roundtrip корпус,
+vibedeps-материализация, lane-голдены W3/W6 на герметичных мирах);
+одноразовый лендинг-дифф W7 отревьюен вручную: изъятий из хост-лент нет,
+изменения — только lock-контракты и topo-порядок INDEX.</p>
+  </section>
+</spec>

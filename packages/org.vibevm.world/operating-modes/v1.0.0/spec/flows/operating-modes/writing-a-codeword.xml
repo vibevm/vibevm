@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Writing a codeword</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** The procedure for adding a new operating
+mode to a project's catalogue: how to take a posture the owner keeps
+describing informally and turn it into a catalogued codeword that is
+unambiguous, safe, and recognised the same way every time.</scope-of-this-document></p>
+  <when title="When a new codeword is warranted">
+    <p><WRITE-ONE-WHEN-THE-ASKING-ITSELF-HAS-BECOME-OVERHEAD fact="true" status="impl/done">Write one when the owner **repeatedly** asks for the same non-default
+posture — and the asking itself has become overhead. Signs:</WRITE-ONE-WHEN-THE-ASKING-ITSELF-HAS-BECOME-OVERHEAD></p>
+    <facts ordered="false">
+      <SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE fact="true" status="spec/done">The owner keeps re-explaining the same working style ("just push
+  through, don't check with me on each step").</SIGN-THE-OWNER-KEEPS-RE-EXPLAINING-THE-SAME-STYLE>
+      <SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING fact="true" status="spec/done">The agent keeps mis-calibrating because the posture was implicit.</SIGN-THE-AGENT-KEEPS-MIS-CALIBRATING>
+      <SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING fact="true" status="spec/done">A recognisable phrase is already emerging in how the owner asks.</SIGN-A-RECOGNISABLE-PHRASE-IS-ALREADY-EMERGING>
+    </facts>
+    <p><ONE-OFF-REQUESTS-DO-NOT-NEED-A-CODEWORD fact="true" status="impl/done">One-off requests do not need a codeword.</ONE-OFF-REQUESTS-DO-NOT-NEED-A-CODEWORD></p>
+    <p><A-CODEWORD-IS-FOR-A-POSTURE-WORTH-NAMING-BECAUSE-IT-RECURS fact="true" status="impl/done">A codeword is for a posture
+worth naming because it recurs.</A-CODEWORD-IS-FOR-A-POSTURE-WORTH-NAMING-BECAUSE-IT-RECURS></p>
+  </when>
+  <procedure title="The procedure">
+    <step-name title="1. Name the posture and the trigger">
+      <p><PICK-THE-TRIGGER-FROM-HOW-THE-OWNER-ALREADY-SPEAKS fact="true" status="impl/done">Pick the trigger phrase from how the owner already speaks.</PICK-THE-TRIGGER-FROM-HOW-THE-OWNER-ALREADY-SPEAKS></p>
+      <p><RECORD-THE-RECOGNISABLE-VARIANTS fact="true" status="impl/done">Record the
+recognisable variants.</RECORD-THE-RECOGNISABLE-VARIANTS></p>
+      <p><CASE-INSENSITIVE-AND-MATCHED-BY-INTENT fact="true" status="impl/done">Case-insensitive, matched by intent — the
+agent recognises the meaning, not a literal string.</CASE-INSENSITIVE-AND-MATCHED-BY-INTENT></p>
+    </step-name>
+    <step-describe title="2. Record the description verbatim">
+      <p><CAPTURE-THE-OWNERS-OWN-FRAMING-IN-THEIR-WORDS-DATED fact="true" status="impl/done">Capture the owner's own framing of what the mode is for, in their
+words, dated.</CAPTURE-THE-OWNERS-OWN-FRAMING-IN-THEIR-WORDS-DATED></p>
+      <p><THE-DESCRIPTION-IS-THE-AUTHORISATION fact="true" status="impl/done">This is part 2 of the five-part shape and it is
+load-bearing: the description *is* the authorisation, so a paraphrase
+would be a different authorisation.</THE-DESCRIPTION-IS-THE-AUTHORISATION></p>
+      <p><DO-NOT-TIDY-THE-DESCRIPTION-INTO-YOUR-OWN-PROSE fact="true" status="impl/done">Do not tidy it into your own
+prose.</DO-NOT-TIDY-THE-DESCRIPTION-INTO-YOUR-OWN-PROSE></p>
+    </step-describe>
+    <step-rules title="3. Derive the operative rules">
+      <p><TRANSLATE-THE-DESCRIPTION-INTO-A-NUMBERED-LIST-OF-BEHAVIOURS fact="true" status="impl/done">Translate the description into a numbered list of concrete behaviours
+the agent follows while the mode is active.</TRANSLATE-THE-DESCRIPTION-INTO-A-NUMBERED-LIST-OF-BEHAVIOURS></p>
+      <p><EACH-RULE-IS-TESTABLE-BY-THE-AGENT-ITSELF fact="true" status="impl/done">Each rule is testable in
+the sense that the agent can tell whether it is obeying it.</EACH-RULE-IS-TESTABLE-BY-THE-AGENT-ITSELF></p>
+      <p><vague-rules-are-useless-specific-ones-are-the-value fact="true" status="spec/done">Vague rules ("be thorough") are useless; specific ones ("each phase
+lands with green tests before the next begins") are the whole value.</vague-rules-are-useless-specific-ones-are-the-value></p>
+    </step-rules>
+    <step-limits title="4. State changes and non-changes — restate the red lines">
+      <p><write-explicitly-lead fact="true" status="impl/done">Write, explicitly:</write-explicitly-lead></p>
+      <facts ordered="false">
+        <STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES fact="true" status="impl/done">**what confirmation behaviour the mode relaxes** (almost always:
+  the routine-work handshake), and</STATE-WHAT-CONFIRMATION-BEHAVIOUR-THE-MODE-RELAXES>
+        <STATE-THAT-THE-RED-LINES-SURVIVE-IT fact="true" status="impl/done">**that the red lines survive it** — reproduce the project's
+  red-line list here, do not merely reference it. The restatement is
+  deliberate friction: a mode whose author had to re-type the red
+  lines is a mode whose author confirmed the mode respects them.</STATE-THAT-THE-RED-LINES-SURVIVE-IT>
+      </facts>
+      <p><A-MODE-THAT-WOULD-RELAX-A-RED-LINE-IS-MALFORMED fact="true" status="impl/done">A proposed mode that would relax a red line is malformed.</A-MODE-THAT-WOULD-RELAX-A-RED-LINE-IS-MALFORMED></p>
+      <p><DO-NOT-CATALOGUE-IT-TELL-THE-OWNER-WHY fact="true" status="impl/done">Do not
+catalogue it; tell the owner why.</DO-NOT-CATALOGUE-IT-TELL-THE-OWNER-WHY></p>
+    </step-limits>
+    <step-lifecycle title="5. Fix the lifecycle and cadence">
+      <p><SPECIFY-ACTIVATION-PERSISTENCE-ABORTS-AND-CADENCE fact="true" status="impl/done">Specify activation scope, persistence within a session, non-
+persistence across sessions, the abort signals (owner-side and
+agent-side), and the reporting cadence (status, not requests).</SPECIFY-ACTIVATION-PERSISTENCE-ABORTS-AND-CADENCE></p>
+      <p><MODES-DEFAULT-TO-NOT-CROSSING-A-SESSION-BOUNDARY fact="true" status="impl/done">Modes
+default to *not* crossing a session boundary; say so explicitly.</MODES-DEFAULT-TO-NOT-CROSSING-A-SESSION-BOUNDARY></p>
+    </step-lifecycle>
+    <step-catalogue title="6. Catalogue it">
+      <p><ADD-THE-MODE-TO-THE-CATALOGUE-AND-NOTE-IT-IN-THE-BOOT-FILE fact="true" status="impl/done">Add the mode to the project's operating-modes document and, if the
+project loads a boot file, note its existence there so a fresh
+session recognises the trigger.</ADD-THE-MODE-TO-THE-CATALOGUE-AND-NOTE-IT-IN-THE-BOOT-FILE></p>
+      <p><AN-UNCATALOGUED-PHRASE-IS-A-PROPOSAL fact="true" status="impl/done">Until it is catalogued, the phrase is
+a proposal and the agent does not act on it.</AN-UNCATALOGUED-PHRASE-IS-A-PROPOSAL></p>
+    </step-catalogue>
+  </procedure>
+  <composing title="Composing modes">
+    <p><MODES-CAN-COMBINE-WHEN-IT-MAKES-SENSE fact="true" status="impl/done">Modes can combine when it makes sense — "wrap up + move fast" runs a
+finish-up phase at accelerated cadence.</MODES-CAN-COMBINE-WHEN-IT-MAKES-SENSE></p>
+    <p><COMPOSITION-NEVER-SUMS-RELAXATIONS-PAST-THE-RED-LINES fact="true" status="impl/done">Composition never sums the
+relaxations past the red lines: two modes together still cannot waive
+an irreversible-threshold handshake.</COMPOSITION-NEVER-SUMS-RELAXATIONS-PAST-THE-RED-LINES></p>
+    <p><WHEN-IN-DOUBT-THE-STRICTER-POSTURE-WINS fact="true" status="impl/done">When in doubt about a
+combination, treat the stricter posture as winning.</WHEN-IN-DOUBT-THE-STRICTER-POSTURE-WINS></p>
+  </composing>
+  <anti-patterns title="Anti-patterns">
+    <table>
+      <tr>
+        <td>Smell</td>
+        <td>Why it fails</td>
+        <td>Fix</td>
+      </tr>
+      <tr>
+        <td><ROW-SMELL-NO-VERBATIM-DESCRIPTION fact="true" status="spec/done">A codeword with no verbatim description</ROW-SMELL-NO-VERBATIM-DESCRIPTION></td>
+        <td><fact status="spec/done">the authorisation is the agent's paraphrase, not the owner's intent</fact></td>
+        <td><fact status="spec/done">record the owner's words</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SMELL-BE-CAREFUL-MODE fact="true" status="spec/done">"be careful mode" as a codeword</ROW-SMELL-BE-CAREFUL-MODE></td>
+        <td><fact status="spec/done">the default posture is already careful; a mode *relaxes*, it does not re-assert the default</fact></td>
+        <td><fact status="spec/done">drop it; the default covers it</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SMELL-NO-RED-LINES-LISTED fact="true" status="spec/done">A mode that lists no red lines</ROW-SMELL-NO-RED-LINES-LISTED></td>
+        <td><fact status="spec/done">nothing confirms it respects them</fact></td>
+        <td><fact status="spec/done">restate the full list in part 4</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING fact="true" status="spec/done">A phrase acted on before cataloguing</ROW-SMELL-ACTED-ON-BEFORE-CATALOGUING></td>
+        <td><fact status="spec/done">non-repeatable, unauditable behaviour</fact></td>
+        <td><fact status="spec/done">catalogue first, act second</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE fact="true" status="spec/done">A mode that persists across sessions silently</ROW-SMELL-SILENT-CROSS-SESSION-PERSISTENCE></td>
+        <td><fact status="spec/done">a later session inherits a posture nobody re-authorised</fact></td>
+        <td><fact status="spec/done">make non-persistence explicit</fact></td>
+      </tr>
+    </table>
+  </anti-patterns>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD fact="true" status="impl/done">Write a codeword when a non-default posture recurs enough that
+  asking for it is itself overhead.</SUM-WRITE-A-CODEWORD-WHEN-ASKING-IS-ITSELF-OVERHEAD>
+      <SUM-THE-TWO-NON-NEGOTIABLE-PARTS fact="true" status="impl/done">Follow the six steps; the verbatim description and the restated red
+  lines are the two non-negotiable parts.</SUM-THE-TWO-NON-NEGOTIABLE-PARTS>
+      <SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE fact="true" status="impl/done">A mode relaxes confirmation behaviour only; it never touches a red
+  line, alone or composed.</SUM-A-MODE-NEVER-TOUCHES-A-RED-LINE>
+      <SUM-CATALOGUE-BEFORE-ACTING fact="true" status="impl/done">Catalogue before acting — an uncatalogued phrase is a proposal, not
+  a mode.</SUM-CATALOGUE-BEFORE-ACTING>
+    </facts>
+  </summary>
+</spec>

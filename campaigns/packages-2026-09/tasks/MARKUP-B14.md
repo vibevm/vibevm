@@ -20,8 +20,8 @@ two landed precedents — **read the precedent, do not invent**:
 | this file | its genre | read this, already marked |
 |---|---|---|
 | `licensing/…/spec/skills/draft-eula/SKILL.md` | agent skill | `wal/…/spec/skills/wal-status/SKILL.md` (B9), `health-audit/…/spec/skills/health-audit/SKILL.md` (B10) |
-| `licensing/…/eula-template.md` | copy-ready template | `comparative-research/…/research-template.md` (B13), `decision-records/…/record-template.md` (B8) |
-| `manual-tests/…/test-template.md` | copy-ready template | the same two |
+| `licensing/…/eula-template.xml` | copy-ready template | `comparative-research/…/research-template.xml` (B13), `decision-records/…/record-template.xml` (B8) |
+| `manual-tests/…/test-template.xml` | copy-ready template | the same two |
 
 @fact:B14-SKILL-DOC-MARKER **Both marked `SKILL.md` siblings carry
 `<status stage="impl" state="done"/>` on the line after the frontmatter**, then
@@ -38,9 +38,9 @@ absent (ruling 8).
 ## Scope {#scope}
 
 **16 files, 327 units** — measured 2026-07-28 from a live
-`check --exhaustive --no-cache` run, *after* the F-102 fix. `LICENSE.md` is out
+`check --exhaustive --no-cache` run, *after* the F-102 fix. `LICENSE.xml` is out
 of corpus in both packages that ship one (F-070, verbatim third-party text);
-`eula-template.md` is **in** corpus and is ours.
+`eula-template.xml` is **in** corpus and is ours.
 
 | file | units | cells | items | paras | terminators |
 |---|---|---|---|---|---|
@@ -86,8 +86,8 @@ the rule is still under-specified, and that is worth more than the batch total.
 @fact:B14-PROSE-SHARE **This batch is proportionally more prose than B13**: 197 of its 327
 pre-state units (60 %) are items or cells already at fact grain and cannot
 deconstruct, against B13's 66 %. Cells are only 14 % here (B13: 22 %), and they
-sit in four files — `MANUAL-TESTS-PROTOCOL.md` 18, `dependency-licenses.md` 12,
-`LICENSING-PROTOCOL.md` 9, `eula-template.md` 8. **The other twelve files have
+sit in four files — `MANUAL-TESTS-PROTOCOL.xml` 18, `dependency-licenses.xml` 12,
+`LICENSING-PROTOCOL.xml` 9, `eula-template.xml` 8. **The other twelve files have
 no table at all.**
 
 ## The three predictions {#predictions}
@@ -115,7 +115,7 @@ vanished from the count.
 @fact:B14-F102-NOTHING-TO-DO **Nothing is asked of you here; the count in the table above is already
 post-fix.** It is written down because the two files still *look* like they
 contain markable prose inside their skeletons, and they do not:
-`test-template.md` owes **14** units and `authoring-rules.md` **20**, all of
+`test-template.xml` owes **14** units and `authoring-rules.xml` **20**, all of
 them outside the quoted blocks. **If you find yourself about to put an anchor or
 a marker inside a four-backtick block, stop and report it** — a marker inside a
 fence is not read as one, and the file is a skeleton consumers copy verbatim.
@@ -123,7 +123,7 @@ fence is not read as one, and the file is a skeleton consumers copy verbatim.
 ## F-097 reaches three files, and the install lines here are live {#f097}
 
 @fact:B14-F097-FIVE-REFS Five references to dead package names, all in this batch's three
-packages: `sync-from-code/README.md` lines 53 and 58, `when-to-apply.md` lines
+packages: `sync-from-code/README.md` lines 53 and 58, `when-to-apply.xml` lines
 114 and 116 (`flow:atomic-commits`, renamed to `flow:git-atomic-commits`), and
 `licensing/README.md` line 68 (`flow:attribution-policy` →
 `flow:git-attribution-policy`).
@@ -152,25 +152,25 @@ heading anchors and fact ids share one case-sensitive address space, so do not
 mint `{#composition}` beside a `##COMPOSITION` fact.
 
 ⚠️ @fact:B14-ANCHOR-COUNT-TRAP **A naive `grep` reads 32 owed, not 16.** It counts
-`#` headings inside the templates' fenced skeletons — `test-template.md` alone
+`#` headings inside the templates' fenced skeletons — `test-template.xml` alone
 has 17 heading-shaped lines of which 12 are quoted. **Count outside fences.**
 
 ## What this batch is likely to surface {#expect}
 
-@fact:B14-EXPECT-LICENCE-TEXT `licensing` is about licence text and ships two kinds of it. `LICENSE.md`
+@fact:B14-EXPECT-LICENCE-TEXT `licensing` is about licence text and ships two kinds of it. `LICENSE.xml`
 is verbatim third-party text and **out of corpus** (F-070) — do not open it as
-work. `eula-template.md` is **ours and in corpus**; its skeleton sits in a fenced
+work. `eula-template.xml` is **ours and in corpus**; its skeleton sits in a fenced
 block and costs the markup nothing, so its 20 units are the commentary, the
 adapting table and the summary around it.
 
 @fact:B14-EXPECT-TABLE-STAGES Four files carry tables, and two of them mix our posture with
-outside-world claims — the licence allow/deny table in `dependency-licenses.md`
+outside-world claims — the licence allow/deny table in `dependency-licenses.xml`
 most of all. **Ruling 16** puts one uniform stage per row; **ruling 23** sends a
 mixed row to `@spec/done`. Prefer the list form only where the source already
 uses one; turning a table into a list is not a sense-preserving split.
 
-@fact:B14-EXPECT-PROCEDURES `sync-from-code`'s `review-workflow.md` and `when-to-apply.md` are
-procedure documents, and `manual-tests`' `authoring-rules.md` is four numbered
+@fact:B14-EXPECT-PROCEDURES `sync-from-code`'s `review-workflow.xml` and `when-to-apply.xml` are
+procedure documents, and `manual-tests`' `authoring-rules.xml` is four numbered
 rules. **Ruling 26** is the discriminator: a scheduled, unexecuted procedure step
 is `@spec/done`; a timeless rule in force is `@impl/done`, even when its checker
 ships elsewhere (ruling 10).

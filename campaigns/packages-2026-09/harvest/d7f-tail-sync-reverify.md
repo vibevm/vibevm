@@ -88,10 +88,10 @@ named `file:line` before being judged.
 
 **Outcome:** SURVIVES — ROUTE (b), 4/4 · **one recorded number moved; one description checked out as accurate**
 **Anchors:** 4 of 4, by name:
-`42-flow-health-audit.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR` — route (b) (definition at that file's **line 21**)
-`42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE` — route (b) (**line 24**)
-`42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE` — route (b) (**line 44**)
-`42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE` — route (b) (**line 57**)
+`42-flow-health-audit.xml#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR` — route (b) (definition at that file's **line 21**)
+`42-flow-health-audit.xml#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE` — route (b) (**line 24**)
+`42-flow-health-audit.xml#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE` — route (b) (**line 44**)
+`42-flow-health-audit.xml#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE` — route (b) (**line 57**)
 All four verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter, **specifically including
 `packages/org.vibevm.fractality/fractality/v0.1.0/`** — which turns out to be a
@@ -173,7 +173,7 @@ consumer projection step, and it fails for six skills, not one.* The snippet
 says the skill «reads the category checklist, walks it against the repository,
 and drafts the `AUDIT.md` section for your approval». Read against
 `packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md`
-that is **exact**: step 1 reads `audit-checklist.md` and `running-an-audit.md`
+that is **exact**: step 1 reads `audit-checklist.xml` and `running-an-audit.xml`
 in full (`SKILL.md:21-23`), step 4 walks the checklist breadth-first against the
 repository (`SKILL.md:28-33`), the Output section produces a draft `AUDIT.md`
 section (`SKILL.md:41-42`), and the Do-not section forbids committing before the
@@ -212,7 +212,7 @@ vibevm                                                (5)                       
 `vibe skill install` for the rust and typescript stacks and for nothing else.
 `vibe.lock:307` records `files_written = []` for this package, which is correct:
 projection is a separate command (`##CMD-SKILL-INSTALL`,
-`spec/common/PROP-018-agentic-standalone-modes.md:212`), not an install effect.
+`spec/common/PROP-018-agentic-standalone-modes.xml:212`), not an install effect.
 So the instruction does fail when followed here — and it fails for the same
 reason five sibling instructions would.
 
@@ -220,7 +220,7 @@ reason five sibling instructions would.
 `AGENTS.md`, `GEMINI.md`, `DEV-GUIDE.md`, `RUNTIME-GUIDE.md`, `README.md` and
 `spec/**` for a recorded decision not to project skills; the only hits are
 PROP-018's specification of the command itself
-(`PROP-018-agentic-standalone-modes.md:203-217`). An unmarked omission, which
+(`PROP-018-agentic-standalone-modes.xml:203-217`). An unmarked omission, which
 Phase C's own ruling calls drift on the consumer's side — not a package defect.
 
 **Why all four are route (b), decided by reading the sentences rather than the
@@ -268,9 +268,9 @@ closes all six. (3) The `fractality` specspace boots this flow and keeps no
 
 **Outcome:** MIXED — 1/3 FALSE, 2/3 SURVIVE — ROUTE (b)
 **Anchors:** 3 of 3, by name:
-`third-party-code-consent.md#GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY` — **SURVIVES — ROUTE (b)** (definition at that file's **line 41**)
-`third-party-code-consent.md#GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT` — **SURVIVES — ROUTE (b)** (**line 46**)
-`third-party-code-consent.md#the-prompt-points-at-a-real-path` — **FALSE** (**line 108**)
+`third-party-code-consent.xml#GATE-ALLOW-LISTED-PUBLISHERS-RUN-SILENTLY` — **SURVIVES — ROUTE (b)** (definition at that file's **line 41**)
+`third-party-code-consent.xml#GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT` — **SURVIVES — ROUTE (b)** (**line 46**)
+`third-party-code-consent.xml#the-prompt-points-at-a-real-path` — **FALSE** (**line 108**)
 All three verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter, and deliberately **off the
 verdict's string** for the second half: a configurable hook-trust list can ship
@@ -421,7 +421,7 @@ identical rule at the identical strength and is equally unbuilt, at `@impl/done`
 on both:
 
 ```console
-$ sed -n '123,131p' spec/modules/vibe-workspace/PROP-020-install-hooks.md
+$ sed -n '123,131p' spec/modules/vibe-workspace/PROP-020-install-hooks.xml
 - ##ALLOW-LIST **Allow-listed groups run silently.** A config key (global
   `~/.vibe/config.toml` `[hooks].allowed_groups`, with a project-level
   override) lists trusted package groups. … @impl/done
@@ -467,7 +467,7 @@ hook-declaring package in that group — a granularity neither document states.
 
 **Outcome:** SURVIVES — ROUTE (b) · the verdict understates the gap by one adapter and misses the host-internal contradiction underneath it
 **Anchors:** 1 of 1, by name:
-`scope-discipline.md#the-check-runs-on-every-action-lead` — **SURVIVES — ROUTE (b)** (definition at that file's **line 61**, a lead-in to the four-bullet list at lines 63-66 — a real definition, not a citation)
+`scope-discipline.xml#the-check-runs-on-every-action-lead` — **SURVIVES — ROUTE (b)** (definition at that file's **line 61**, a lead-in to the four-bullet list at lines 63-66 — a real definition, not a citation)
 **Perimeter searched:** the standing perimeter, narrowed to the surface that can
 carry the guard and then widened inside it: **every** `RepoCreator` method on
 **both** shipped adapters (`github.rs`, `gitverse.rs`) plus the trait's default
@@ -627,13 +627,13 @@ constructed before the first guarded call; nothing enforces that ordering.
 
 **Outcome:** SURVIVES — ROUTE (b), 2/2 · with a **FALSE PREMISE inside the second anchor's reasoning**, naming a defect nobody has filed
 **Anchors:** 2 of 2, by name:
-`LICENSING-PROTOCOL.md#THESE-MUST-NEVER-DISAGREE` — **SURVIVES — ROUTE (b)** (definition at that file's **line 112**)
-`LICENSING-PROTOCOL.md#SUM-KEEP-EVERY-STATEMENT-IN-SYNC` — **SURVIVES — ROUTE (b)**, and its verdict's manifest-half reasoning is false (**line 169**)
+`LICENSING-PROTOCOL.xml#THESE-MUST-NEVER-DISAGREE` — **SURVIVES — ROUTE (b)** (definition at that file's **line 112**)
+`LICENSING-PROTOCOL.xml#SUM-KEEP-EVERY-STATEMENT-IN-SYNC` — **SURVIVES — ROUTE (b)**, and its verdict's manifest-half reasoning is false (**line 169**)
 Both verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter for `EULA` · `UPL-1.0` ·
 `license` · `license-file`, over `*.md` and **every** `Cargo.toml` and
 `vibe.toml` in the tree — and then, because the verdict's defence of the
-manifest half is a *universal* claim («all … point at `LICENSE.md` … cannot
+manifest half is a *universal* claim («all … point at `LICENSE.xml` … cannot
 fail»), the workspace member list was enumerated and **each member checked for
 the presence of a licence declaration**, which a grep for the string can never
 do. A universal claim is falsified by a manifest that says nothing, and nothing
@@ -643,11 +643,11 @@ is not a string.
 reproduces verbatim:**
 
 ```console
-$ sed -n '3p' LICENSE.md
+$ sed -n '3p' LICENSE.xml
 The Universal Permissive License (UPL), Version 1.0
 
 $ grep -n -i "EULA" README.md
-164:vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md)
+164:vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.xml`](LICENSE.xml)
     for the moment; the eventual target is UPL 1.0. …
 ```
 
@@ -691,14 +691,14 @@ direction that *narrows* a finding rather than widening it.)
 entry.** `##SUM-KEEP-EVERY-STATEMENT-IN-SYNC`'s verdict rests half its case on:
 
 > «The manifest half is in sync BY CONSTRUCTION and cannot fail: all 18
-> declaring manifests point at `LICENSE.md` via `license-file` rather than
+> declaring manifests point at `LICENSE.xml` via `license-file` rather than
 > naming a licence, so they move when the file moves.»
 
 The 18 reproduce — but 18 is not the population:
 
 ```console
 $ grep -rn "^license" --include='Cargo.toml' Cargo.toml crates/ xtask/ tools/
-Cargo.toml:55:license-file = "LICENSE.md"
+Cargo.toml:55:license-file = "LICENSE.xml"
 crates/progress-core/Cargo.toml:7:license-file.workspace = true
 …  (17 more crates, all identical)
 xtask/Cargo.toml:7:license-file.workspace = true
@@ -711,7 +711,7 @@ NO LICENCE: crates/vibe-index/Cargo.toml
 **`crates/vibe-index` is a workspace member** (`Cargo.toml:15`, and again in
 `default-members` at `:29`) and its manifest declares **no licence at all** —
 neither `license` nor `license-file`, so it does not inherit
-`[workspace.package] license-file = "LICENSE.md"` (`Cargo.toml:55`) either.
+`[workspace.package] license-file = "LICENSE.xml"` (`Cargo.toml:55`) either.
 Read its header: `crates/vibe-index/Cargo.toml:1-13` carries `name`, `version`,
 `edition`, `rust-version`, `authors`, `publish`, `description`, `homepage`,
 `repository`, `keywords`, `categories`, `default-run` — and no licence line.
@@ -719,7 +719,7 @@ Read its header: `crates/vibe-index/Cargo.toml:1-13` carries `name`, `version`,
 So the manifest half is **19 members, 18 declaring, one silent**, and the
 «cannot fail by construction» argument fails on the one member that opted out
 of the construction. `publish = false` is why no `cargo` command has ever
-complained. The anchor's own words are «Keep `LICENSE.md` and **every** manifest
+complained. The anchor's own words are «Keep `LICENSE.xml` and **every** manifest
 `license` field in sync» — a manifest with no field is not in sync, it is
 absent, and this is a smaller and much cheaper host defect than the README one
 that nobody has filed.
@@ -727,7 +727,7 @@ that nobody has filed.
 **Why both anchors are route (b).** `##THESE-MUST-NEVER-DISAGREE` (line 112) is
 three words long and is a **prohibition**: «These must never disagree.» Its
 neighbours make the register unambiguous — `##A-PRODUCT-STATES-ITS-LICENCE-IN-MORE-THAN-ONE-PLACE`
-(line 108) lists the places («the `LICENSE.md` file, the manifest `license`
+(line 108) lists the places («the `LICENSE.xml` file, the manifest `license`
 field, **sometimes a README badge**»), and
 `##a-disagreement-is-a-contradiction-compliance-tooling-will-flag` (line 117)
 says a disagreement is «a contradiction a consumer's compliance tooling will
@@ -735,7 +735,7 @@ flag — and rightly distrust». `##SUM-KEEP-EVERY-STATEMENT-IN-SYNC` (line 169)
 opens with the imperative «**Keep** …».
 
 The contradiction the verdict measured is entirely **host-internal**:
-`README.md:164` against `LICENSE.md:3`, two host files. The package's sentence
+`README.md:164` against `LICENSE.xml:3`, two host files. The package's sentence
 is the rule that names it, and the rule is right — this is the same shape as
 F-330's `##AN-UNGUARDED-CODE-PATH-IS-A-BUG`, a package confirmed *by* the
 consumer failure it classifies. `licensing` is a prompt-only `world` flow that
@@ -748,9 +748,9 @@ wrong is legally visible.
 **Proposed correction (NOT APPLIED):** none for either anchor — correct as
 written. For the record, the host-side text a repair would use is the one line
 already true everywhere else: `README.md:164`'s clause «vibevm itself ships
-under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the
+under the proprietary EULA placeholder in [`LICENSE.xml`](LICENSE.xml) for the
 moment; the eventual target is UPL 1.0» → «vibevm itself ships under the
-[Universal Permissive License 1.0](LICENSE.md) (relicensed 2026-07-12)». That
+[Universal Permissive License 1.0](LICENSE.xml) (relicensed 2026-07-12)». That
 is a **host** edit, outside this worker's scope and not applied.
 
 **Recommendation per anchor:**
@@ -760,7 +760,7 @@ verdict's «manifest half cannot fail» reasoning should not be carried forward,
 because it already has.
 
 **Host obligations this opens (recorded, not acted on).** (1) `README.md:164`
-contradicts `LICENSE.md:3`, unmarked, 19 days on — the one statement of the
+contradicts `LICENSE.xml:3`, unmarked, 19 days on — the one statement of the
 three that never caught up. (2) `crates/vibe-index/Cargo.toml` declares no
 licence at all while its 18 sibling members inherit `license-file` from
 `[workspace.package]`; a one-line addition, and the only reason it is invisible
@@ -772,8 +772,8 @@ is `publish = false`.
 
 **Outcome:** MIXED — 1/2 **FALSE PREMISE, DIFFERENT DEFECT**, 1/2 SURVIVES — ROUTE (b)
 **Anchors:** 2 of 2, by name:
-`LICENSING-PROTOCOL.md#A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL` — **FALSE PREMISE, DIFFERENT DEFECT** (definition at that file's **line 56**)
-`LICENSING-PROTOCOL.md#A-CHANGE-TO-ONE-IS-A-CHANGE-TO-ALL-IN-A-SINGLE-COMMIT` — **SURVIVES — ROUTE (b)** (**line 114**)
+`LICENSING-PROTOCOL.xml#A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL` — **FALSE PREMISE, DIFFERENT DEFECT** (definition at that file's **line 56**)
+`LICENSING-PROTOCOL.xml#A-CHANGE-TO-ONE-IS-A-CHANGE-TO-ALL-IN-A-SINGLE-COMMIT` — **SURVIVES — ROUTE (b)** (**line 114**)
 Both verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter, and then **the projection
 mechanism itself**, because the verdict's whole case is a claim about what a
@@ -880,7 +880,7 @@ $ for f in $(find packages/org.vibevm.* -path '*/spec/skills/*' -name SKILL.md \
   typescript-…-terraform  :12  `vibedeps/flow-core-ai-native/<version>/spec/mechanisms/`
   fractality-delegate          (cites neither)
   health-audit            :14  `spec/flows/health-audit/`          :21  `spec/flows/health-audit/audit-checklist.md`
-  draft-eula              :25  `spec/flows/licensing/eula-template.md`  :34  `…/dependency-licenses.md`
+  draft-eula              :25  `spec/flows/licensing/eula-template.md`  :34  `…/dependency-licenses.xml`
   wal-status              :11  `spec/flows/wal/morning-routine.md` :16  `spec/flows/wal/WAL-PROTOCOL.md`
 ```
 
@@ -890,16 +890,16 @@ package-root-relative form that resolves from nowhere.** The correct form is
 already in this repository, written six times, in the same shipped surface. So
 this is one address-family defect with three members, on `SKILL.md` files —
 kin to F-136 / F-145 and to `BACKLOG.md` B-004 — and not a defect of
-`LICENSING-PROTOCOL.md:56`.
+`LICENSING-PROTOCOL.xml:56`.
 
 **The second anchor: the git facts reproduce, and the sentence is a rule.**
 
 ```console
 $ git show --stat --format='%h %ad %s' --date=short 5086c5b5
 5086c5b5 2026-07-12 chore(license): relicense vibevm to UPL-1.0
- LICENSE.md | 65 ++++++---   1 file changed, 44 insertions(+), 21 deletions(-)
+ LICENSE.xml | 65 ++++++---   1 file changed, 44 insertions(+), 21 deletions(-)
 
-$ git log -S'UPL-1.0' --format='%h %ad %s' --date=short -- spec/common/PROP-000.md
+$ git log -S'UPL-1.0' --format='%h %ad %s' --date=short -- spec/common/PROP-000.xml
 71d8383b 2026-07-25 docs(spec): Phase D d1b — the foundation catches up with reality
 bf311a39 2026-04-17 docs(spec): bootstrap self-hosted vibevm spec tree per §14.1
 
@@ -923,7 +923,7 @@ and the package ships no product README or manifest of its own for the sentence
 to be false about.
 
 **Proposed correction (NOT APPLIED):** none for either anchor. The text a repair
-would touch is `SKILL.md`, not `LICENSING-PROTOCOL.md`, and it is the same
+would touch is `SKILL.md`, not `LICENSING-PROTOCOL.xml`, and it is the same
 edit in three packages — for the record, `draft-eula/SKILL.md:25`'s «fill the
 skeleton in `spec/flows/licensing/eula-template.md`» would become an address of
 the form the six stack skills already use. **Not applied, and it is a different
@@ -953,8 +953,8 @@ caught up — the same host obligation F-236 opens.
 
 **Outcome:** MIXED — 2/2 SURVIVE — ROUTE (b), but one on **FALSE-PREMISE evidence replaced by an instance the verdict did not find**
 **Anchors:** 2 of 2, by name:
-`58-flow-dev-runtime-docs.md#NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED` — **SURVIVES — ROUTE (b)** (definition at that file's **line 15**)
-`58-flow-dev-runtime-docs.md#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN` — **SURVIVES — ROUTE (b)**, on **different evidence**; the verdict's own two exhibits are instances of the *sibling* rule (**line 23**)
+`58-flow-dev-runtime-docs.xml#NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED` — **SURVIVES — ROUTE (b)** (definition at that file's **line 15**)
+`58-flow-dev-runtime-docs.xml#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN` — **SURVIVES — ROUTE (b)**, on **different evidence**; the verdict's own two exhibits are instances of the *sibling* rule (**line 23**)
 Both verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter, plus a full re-measurement of
 every figure the two verdicts assert, plus — because «an abandoned toolchain» is
@@ -1231,7 +1231,7 @@ sentence at `README.md:119-120` is:
 The verdict ruled its second half contradicted by the host's written contract:
 
 ```console
-$ sed -n '530p' spec/modules/vibe-registry/PROP-002-decentralized-registry.md
+$ sed -n '530p' spec/modules/vibe-registry/PROP-002-decentralized-registry.xml
 - ##LF-ROOT-DEPENDENCIES … `vibe uninstall` of a root drops the entry from both
   files; `vibe uninstall` of a pure transitive is rejected with an explanation. @impl/done
 ```
@@ -1295,7 +1295,7 @@ integration test expects a pure transitive to uninstall cleanly, and the
 sentence describes what the tool does.
 
 **Host obligations this opens (recorded, not acted on).** (1)
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.md:530`
+`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:530`
 `##LF-ROOT-DEPENDENCIES` is `@impl/done` over «`vibe uninstall` of a pure
 transitive is rejected with an explanation», and no code rejects anything; the
 same claim is repeated in a doc comment at
@@ -1344,7 +1344,7 @@ defect is the package's own.
 measurement the verdict took was correct; the anchor it attached that
 measurement to was wrong.
 
-1. **`third-party-code-consent.md#the-prompt-points-at-a-real-path`** (F-203) —
+1. **`third-party-code-consent.xml#the-prompt-points-at-a-real-path`** (F-203) —
    the sentence is a **modal capability** claim: «The consent prompt *can* point
    at a real path.» The capability is built and spec-marked
    (`crates/vibe-workspace/src/hooks.rs:323-353`, `select_invocation` under
@@ -1355,7 +1355,7 @@ measurement to was wrong.
    sentence, `##GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT` (line 46), which
    carries its own drift verdict in the same obligation. One defect, filed twice.
 
-2. **`LICENSING-PROTOCOL.md#A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL`**
+2. **`LICENSING-PROTOCOL.xml#A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL`**
    (F-239) — «ships with» is **delivery**, and the skeleton is delivered: same
    package, same install slot, enumerated in the package's own contents roster.
    All three roster anchors are `confirmed`, and
@@ -1386,7 +1386,7 @@ measurement to was wrong.
 Recorded separately because the boss's action differs: the **record** needs
 correcting, not the verdict reversing.
 
-- **`58-flow-dev-runtime-docs.md#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN`**
+- **`58-flow-dev-runtime-docs.xml#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN`**
   (F-227). Both exhibits — «three invariants versus ten» and «81 tests green
   versus 2 075» — are *staleness and incompleteness*, which is the **sibling
   rule's** failure; the three invariants the guide names are all still run and
@@ -1396,7 +1396,7 @@ correcting, not the verdict reversing.
   workspace indexes** — a directory emptied on 2026-07-22 by `7e46d841` when the
   terminal products moved to `vibevm-term`, untracked by git, and not a Cargo
   workspace member. `tools/self-check.sh:406-410` records the extraction.
-- **`LICENSING-PROTOCOL.md#SUM-KEEP-EVERY-STATEMENT-IN-SYNC`** (F-236). Its
+- **`LICENSING-PROTOCOL.xml#SUM-KEEP-EVERY-STATEMENT-IN-SYNC`** (F-236). Its
   verdict rests half its case on «the manifest half is in sync BY CONSTRUCTION
   and cannot fail». It already has: the workspace is **19 members**, 18 declare
   `license-file.workspace = true`, and **`crates/vibe-index/Cargo.toml` declares
@@ -1417,7 +1417,7 @@ correcting, not the verdict reversing.
 | self-check invariants vs the guide (F-227) | 10 vs 3 | **10 vs 3** | exact |
 | skill homes (F-097) | 5 / 4 / 4, none `health-audit` | **5 / 4 / 4, none** | exact |
 | `DEFAULT_ALLOWED_GROUPS` (F-203) | `["org.vibevm"]`, no config key | **identical** | exact |
-| `LICENSE.md:3` vs `README.md:164` (F-236) | UPL-1.0 vs «proprietary EULA placeholder» | **unchanged, 19 days on** | exact |
+| `LICENSE.xml:3` vs `README.md:164` (F-236) | UPL-1.0 vs «proprietary EULA placeholder» | **unchanged, 19 days on** | exact |
 
 **The two figures that moved are age, not error** — both of the genre wave 6
 named: a count over a live window that decays within the week unless it names
@@ -1447,7 +1447,7 @@ text, and one holds flows the current edition does not contain.
 
 ### The consistency corollary fired three times, and twice it argued for FALSE
 
-- **F-330** — six of the seven anchors in `scope-discipline.md`'s section are
+- **F-330** — six of the seven anchors in `scope-discipline.xml`'s section are
   `confirmed`, and **two say in their own verdict text that the `push_url`
   failure was deliberately filed onto the drifting row**
   (`##GUARDED-ACTION-MODIFY`: «carried as drift at the every-action row rather
@@ -1477,7 +1477,7 @@ text, and one holds flows the current edition does not contain.
    statements also disagree about whether the guard already runs everywhere
    (`registry/publish.rs:125-126` «every method call» vs `creator.rs:154-155`
    «`repo_exists` / `create_repo`»).
-3. **`spec/modules/vibe-registry/PROP-002-decentralized-registry.md:530` is
+3. **`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:530` is
    `@impl/done` over a refusal no code performs** (F-114), repeated as a doc
    comment at `crates/vibe-core/src/manifest/lockfile.rs:120`. If it were built,
    **18 of `redbook`'s 22 members become uninstallable in this repository** — a

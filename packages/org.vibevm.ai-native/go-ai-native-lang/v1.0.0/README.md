@@ -17,19 +17,19 @@ the neutral engine). @status:impl/done
 
 - @fact:SHIPS-FOUR-BINARIES **Four binaries** (this package's own Cargo workspace, `crates/`;
   names carry the `go-ai-native` family prefix per PROP-028 §2.4): @status:impl/done
-  - @fact:SHIPS-GO-AI-NATIVE-UMBRELLA `go-ai-native` — the umbrella tool: `init` (bootstrap policies +
+- @fact:SHIPS-GO-AI-NATIVE-UMBRELLA `go-ai-native` — the umbrella tool: `init` (bootstrap policies +
     registries), `floor` (the seven-step verification floor: gofmt →
     vet → tests → staticcheck+exhaustive → conform → specmap →
     test-gate), `conform`, `specmap`, `trace`, `test-gate` (xfail-strict
     over `go test -json`), `tripwire`, `health` (with the package-grain
     Example-coverage join), `fast-loop`, `codemod add-cell`. @status:impl/done
-  - @fact:SHIPS-GO-AI-NATIVE-CONFORM `go-ai-native-conform` — the structural gate alone: the go-extract
+- @fact:SHIPS-GO-AI-NATIVE-CONFORM `go-ai-native-conform` — the structural gate alone: the go-extract
     facts through the language-neutral engine (cell isolation, the
     §2/§5/§7 ban census with deviation testimony, file budget). @status:impl/done
-  - @fact:SHIPS-GO-AI-NATIVE-SPECMAP `go-ai-native-specmap` — the traceability engine alone (PROP-014):
+- @fact:SHIPS-GO-AI-NATIVE-SPECMAP `go-ai-native-specmap` — the traceability engine alone (PROP-014):
     `//spec:` directives → the committed index + the package-grain
     orphan ratchet. @status:impl/done
-  - @fact:SHIPS-GO-AI-NATIVE-TCG `go-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-GO /
+- @fact:SHIPS-GO-AI-NATIVE-TCG `go-ai-native-tcg` — the agentic type oracle (TCG-ORACLE-GO /
     TCG-PROTOCOL-GO): a persistent enriching `serve` relay for MCP
     hosts plus one-shot `validate` / `scope` / `complete` / `type` /
     `bench`, answered by the CONSUMER's own gopls over in-memory
@@ -43,7 +43,7 @@ the neutral engine). @status:impl/done
   go/parser + go/ast, zero third-party imports — embedded in the
   bridge, materialised content-addressed with a go.mod cut-off so a
   consumer's `./...` never compiles it as project code. @status:impl/done
-- @fact:SHIPS-GUIDE-AND-CARDS **The Go guide and cards** (`spec/go/GUIDE-AI-NATIVE-GO.md`,
+- @fact:SHIPS-GUIDE-AND-CARDS **The Go guide and cards** (`spec/go/GUIDE-AI-NATIVE-GO.xml`,
   `spec/cards/` — the nine scaffolds in their Go shape, Band-3 ops
   blocks for weak readers). @status:impl/done
 - @fact:SHIPS-TWO-AGENT-SKILLS **Two agent skills** (`vibe skill install` projects them):
@@ -56,14 +56,14 @@ the neutral engine). @status:impl/done
 (normative homes: GUIDE §1 baseline, GUIDE §14 wiring, TCG-ORACLE-GO §1): @status:impl/done
 
 | Tool | Role | License | Required? | Resolution / recipe |
-|---|---|---|---|---|
-| @fact:ROW-TOOL-GO **go ≥ 1.24** (gofmt ships with it) @status:spec/done | floor steps gofmt/vet/tests/test-gate; `go run` for go-extract; bench @status:spec/done | BSD-3 @status:spec/done | **MUST** — absence is a recipe-carrying failure, never a skip @status:spec/done | PATH, or env `GO_AI_NATIVE_GO` pointing at the binary @status:spec/done |
-| @fact:ROW-TOOL-GOPLS **gopls** @status:spec/done | the agentic tcg oracle (validate/scope/complete/type over overlays) @status:spec/done | BSD-3 @status:spec/done | **MUST** for the tcg surface @status:spec/done | env `GO_AI_NATIVE_GOPLS` → PATH → `GOBIN` → `GOPATH/bin`; `go install golang.org/x/tools/gopls@latest` @status:spec/done |
-| @fact:ROW-TOOL-STATICCHECK **staticcheck** @status:spec/done | correctness evidence provider (floor step `staticcheck`) @status:spec/done | MIT @status:spec/done | policy-gated — disable with a reason in `[go].floor_disable`; the disablement prints every run @status:spec/done | `go install honnef.co/go/tools/cmd/staticcheck@latest` @status:spec/done |
-| @fact:ROW-TOOL-EXHAUSTIVE **exhaustive** @status:spec/done | THE carrier of closed-set switch exhaustiveness (Go has no sum types — GUIDE §5) @status:spec/done | BSD-2 @status:spec/done | policy-gated, same step @status:spec/done | `go install github.com/nishanths/exhaustive/cmd/exhaustive@latest` — note: v0.12.0 does not compile under go ≥ 1.26 (its pinned x/tools); build from master with a bumped x/tools until a release lands @status:spec/done |
-| @fact:ROW-TOOL-GOVULNCHECK **govulncheck** @status:spec/done | supply-chain scan @status:spec/done | BSD-3 @status:spec/done | CI-posture only (network-touching — never a floor step) @status:spec/done | `go install golang.org/x/vuln/cmd/govulncheck@latest` @status:spec/done |
-| @fact:ROW-TOOL-GIT **git** @status:spec/done | tripwire's change-set collection @status:spec/done | GPLv2 (tool, spawned) @status:spec/done | needed by `tripwire` only @status:spec/done | any PATH git @status:spec/done |
-| @fact:ROW-TOOL-CARGO **cargo / Rust toolchain** @status:spec/done | building the stack's own binaries from the slot @status:spec/done | MIT/Apache-2.0 @status:spec/done | build-time only (a vibevm code-bearing-package property, not a Go one) @status:spec/done | rustup @status:spec/done |
+| --- | --- | --- | --- | --- |
+| @fact:ROW-TOOL-GO **go ≥ 1.24** (gofmt ships with it) @status:spec/done |  floor steps gofmt/vet/tests/test-gate; `go run` for go-extract; bench @status:spec/done |  BSD-3 @status:spec/done |  **MUST** — absence is a recipe-carrying failure, never a skip @status:spec/done |  PATH, or env `GO_AI_NATIVE_GO` pointing at the binary @status:spec/done |
+| @fact:ROW-TOOL-GOPLS **gopls** @status:spec/done |  the agentic tcg oracle (validate/scope/complete/type over overlays) @status:spec/done |  BSD-3 @status:spec/done |  **MUST** for the tcg surface @status:spec/done |  env `GO_AI_NATIVE_GOPLS` → PATH → `GOBIN` → `GOPATH/bin`; `go install golang.org/x/tools/gopls@latest` @status:spec/done |
+| @fact:ROW-TOOL-STATICCHECK **staticcheck** @status:spec/done |  correctness evidence provider (floor step `staticcheck`) @status:spec/done |  MIT @status:spec/done |  policy-gated — disable with a reason in `[go].floor_disable`; the disablement prints every run @status:spec/done |  `go install honnef.co/go/tools/cmd/staticcheck@latest` @status:spec/done |
+| @fact:ROW-TOOL-EXHAUSTIVE **exhaustive** @status:spec/done |  THE carrier of closed-set switch exhaustiveness (Go has no sum types — GUIDE §5) @status:spec/done |  BSD-2 @status:spec/done |  policy-gated, same step @status:spec/done |  `go install github.com/nishanths/exhaustive/cmd/exhaustive@latest` — note: v0.12.0 does not compile under go ≥ 1.26 (its pinned x/tools); build from master with a bumped x/tools until a release lands @status:spec/done |
+| @fact:ROW-TOOL-GOVULNCHECK **govulncheck** @status:spec/done |  supply-chain scan @status:spec/done |  BSD-3 @status:spec/done |  CI-posture only (network-touching — never a floor step) @status:spec/done |  `go install golang.org/x/vuln/cmd/govulncheck@latest` @status:spec/done |
+| @fact:ROW-TOOL-GIT **git** @status:spec/done |  tripwire's change-set collection @status:spec/done |  GPLv2 (tool, spawned) @status:spec/done |  needed by `tripwire` only @status:spec/done |  any PATH git @status:spec/done |
+| @fact:ROW-TOOL-CARGO **cargo / Rust toolchain** @status:spec/done |  building the stack's own binaries from the slot @status:spec/done |  MIT/Apache-2.0 @status:spec/done |  build-time only (a vibevm code-bearing-package property, not a Go one) @status:spec/done |  rustup @status:spec/done |
 
 @fact:deliberately-absent-lead **Deliberately absent:** @status:impl/done
 
@@ -121,3 +121,4 @@ with YOUR project: this package ships engines, never policy. @status:impl/done
 
 @fact:WORKED-PILOT-IS-RESEARCH-GO-DEMO The worked pilot lives in the vibevm dev tree at `research/go-demo` — a
 miniature reconciler with the whole chain green. @status:impl/done
+

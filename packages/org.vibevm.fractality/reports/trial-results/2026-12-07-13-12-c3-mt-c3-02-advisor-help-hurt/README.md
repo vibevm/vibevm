@@ -55,3 +55,4 @@ glm-5.2 advising glm-5-turbo; the full RD-10 inversion needs a third tier).
 
 Canonical verdicts: MT-C3-02 "Recorded runs". Raw evidence sits per-run
 beside this file.
+

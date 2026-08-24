@@ -24,11 +24,11 @@ is set, and otherwise the host project itself. @status:impl/done
 
 @fact:package-contents-lead What ships: @status:impl/done
 
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/11-flow-wal-specspaces.md` — the boot snippet: how a
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/11-flow-wal-specspaces.xml` — the boot snippet: how a
   session recognises specspace phrases, which project a bare phrase
   targets, and what it loads (and pointedly does not load) for a
   specspace session. @status:impl/done
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` — the full
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml` — the full
   protocol: the registry format (with the optional default), target
   resolution, the scoped grammar, the five laws (boot scoping, state
   locality, one focus, host rules survive, package state stays out),
@@ -38,3 +38,4 @@ is set, and otherwise the host project itself. @status:impl/done
 two-file model rather than redefining it. @status:impl/done
 
 @fact:license-line License: UPL-1.0. @status:impl/done
+

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Managed Blocks Protocol</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file defines *how* a tool writes
+into a file it does not own: the co-tenant law that bounds it to one
+delimited region, the marker design that makes that region findable
+by a deterministic scan, the well-formedness state machine that
+classifies a file before any mutation, the three verbs the tool is
+allowed (create / update / remove), and how two tools cohabit one
+file without ever colliding.</scope-of-this-document></p>
+  <problem title="The problem: a tool clobbering a shared file">
+    <p><MANY-TOOLS-WRITE-INTO-FILES-THEY-DO-NOT-SOLELY-OWN fact="true" status="spec/done">Many tools need to write into a file they did not create and do not
+solely own.</MANY-TOOLS-WRITE-INTO-FILES-THEY-DO-NOT-SOLELY-OWN></p>
+    <p><example-a-shell-installer-appends-to-bashrc fact="true" status="spec/done">A shell installer appends to `~/.bashrc`.</example-a-shell-installer-appends-to-bashrc></p>
+    <p><example-an-agent-framework-wants-a-line-in-claude-md fact="true" status="spec/done">An agent
+framework wants a line in `CLAUDE.md`.</example-an-agent-framework-wants-a-line-in-claude-md></p>
+    <p><example-a-deploy-tool-edits-an-ssh-config fact="true" status="spec/done">A deploy tool edits an
+`ssh_config`.</example-a-deploy-tool-edits-an-ssh-config></p>
+    <p><example-a-linter-drops-config-into-package-json fact="true" status="spec/done">A linter drops config into a shared `package.json`.</example-a-linter-drops-config-into-package-json></p>
+    <p><EACH-OF-THESE-FILES-ALREADY-CARRIES-OTHER-CONTENT fact="true" status="spec/done">Each of these files already carries content from other parties — the
+user by hand, and often one or more *other* tools.</EACH-OF-THESE-FILES-ALREADY-CARRIES-OTHER-CONTENT></p>
+    <p><THE-NAIVE-IMPLEMENTATION-IS-A-WHOLE-FILE-REWRITE fact="true" status="spec/done">The naive implementation is a whole-file rewrite: read a template,
+fill it in, `write()` the file.</THE-NAIVE-IMPLEMENTATION-IS-A-WHOLE-FILE-REWRITE></p>
+    <p><IT-IS-EASY-AND-IT-IS-A-DATA-LOSS-EVENT fact="true" status="spec/done">It is easy, and it is a **data-loss
+event**.</IT-IS-EASY-AND-IT-IS-A-DATA-LOSS-EVENT></p>
+    <p><THE-FIRST-INSTALL-DESTROYS-EVERY-OTHER-TENANTS-BYTES fact="true" status="spec/done">The first install into any project with a non-trivial host
+file silently destroys every byte the user and every other tool put
+there — and it destroys precisely the file a person is most likely
+to have invested in by hand.</THE-FIRST-INSTALL-DESTROYS-EVERY-OTHER-TENANTS-BYTES></p>
+    <p><the-discipline-is-old-and-universal fact="true" status="spec/done">The discipline that avoids this is old and universal: `ssh`,
+shell-rc installers, and countless config tools already use it.</the-discipline-is-old-and-universal></p>
+    <p><THE-TOOL-OWNS-ONE-DELIMITED-MACHINE-FINDABLE-REGION fact="true" status="impl/done">The
+tool owns one small, clearly delimited, machine-findable region and
+never touches a byte outside it.</THE-TOOL-OWNS-ONE-DELIMITED-MACHINE-FINDABLE-REGION></p>
+    <p><the-host-file-stops-being-the-tools-file fact="true" status="impl/done">The host file stops being "the
+tool's file."</the-host-file-stops-being-the-tools-file></p>
+    <p><IT-BECOMES-A-SHARED-FILE-WITH-THE-TOOLS-BLOCK-IN-IT fact="true" status="impl/done">It becomes **a shared file with the tool's block in
+it**.</IT-BECOMES-A-SHARED-FILE-WITH-THE-TOOLS-BLOCK-IN-IT></p>
+  </problem>
+  <co-tenant title="The co-tenant law">
+    <quote><THE-CO-TENANT-LAW fact="true" status="impl/done">Own exactly one delimited block. Never touch a byte outside it.</THE-CO-TENANT-LAW></quote>
+    <p><A-GOOD-CO-TENANT-WRITES-INTO-ITS-OWN-PEN fact="true" status="impl/done">A good co-tenant writes into its own pen and leaves the rest of the
+file to whoever else shares it. Stated operationally:</A-GOOD-CO-TENANT-WRITES-INTO-ITS-OWN-PEN></p>
+    <facts ordered="false">
+      <TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS fact="true" status="impl/done">The tool reads and rewrites only the content **between** its own
+  opening and closing markers.</TOOL-REWRITES-ONLY-BETWEEN-ITS-OWN-MARKERS>
+      <EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM fact="true" status="impl/done">Every byte outside that block is another tenant's property,
+  **preserved verbatim** across every operation the tool performs —
+  install, update, uninstall, reconfigure.</EVERY-BYTE-OUTSIDE-THE-BLOCK-IS-PRESERVED-VERBATIM>
+      <THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT fact="true" status="impl/done">The tool assumes it is **never the only tenant**. Even in an empty
+  project today, a human or a second tool may share the file
+  tomorrow.</THE-TOOL-ASSUMES-IT-IS-NEVER-THE-ONLY-TENANT>
+    </facts>
+    <p><the-same-rule-a-c-include-obeys fact="true" status="spec/done">This is the same rule a C `#include` obeys: pulling in a dependency
+must never modify the including file's own authored content.</the-same-rule-a-c-include-obeys></p>
+  </co-tenant>
+  <markers title="Marker design">
+    <p><THE-BLOCK-IS-BOUNDED-BY-AN-OPENING-AND-A-CLOSING-MARKER fact="true" status="impl/done">The block is bounded by an opening marker and a closing marker, each
+alone on its own line.</THE-BLOCK-IS-BOUNDED-BY-AN-OPENING-AND-A-CLOSING-MARKER></p>
+    <p><FOUR-PROPERTIES-ARE-NON-NEGOTIABLE fact="true" status="impl/done">Four properties are non-negotiable.</FOUR-PROPERTIES-ARE-NON-NEGOTIABLE></p>
+    <table>
+      <tr>
+        <td>Property</td>
+        <td>Requirement</td>
+      </tr>
+      <tr>
+        <td><ROW-MARKER-UNIQUE fact="true" status="impl/done">**Unique**</ROW-MARKER-UNIQUE></td>
+        <td><fact status="impl/done">The marker string must not plausibly occur in host content. Namespace it with the tool's name — `# &gt;&gt;&gt; toolname &gt;&gt;&gt;`, `&lt;toolname&gt;`, `# BEGIN toolname`. A generic `# BEGIN` will collide.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-MARKER-GREPPABLE fact="true" status="impl/done">**Greppable**</ROW-MARKER-GREPPABLE></td>
+        <td><fact status="impl/done">Locatable by a plain line-anchored text scan — no format parser, no model. See the next section on why.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-MARKER-PAIRED fact="true" status="impl/done">**Paired**</ROW-MARKER-PAIRED></td>
+        <td><fact status="impl/done">A distinct open and close, so a byte scan yields an unambiguous region, not a single sentinel whose end must be guessed.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-MARKER-SELF-DOCUMENTING fact="true" status="impl/done">**Self-documenting**</ROW-MARKER-SELF-DOCUMENTING></td>
+        <td><fact status="impl/done">The first line *inside* the block carries a do-not-edit notice, so a human reading the host file learns the region is managed without consulting docs.</fact></td>
+      </tr>
+    </table>
+    <p><a-worked-block-using-bare-tags fact="true" status="impl/done">A worked block, using bare tags (chosen here because the primary
+reader is an LLM, to which a tag reads unambiguously):</a-worked-block-using-bare-tags></p>
+    <fence>&lt;toolname&gt;
+&lt;!-- Generated by toolname — do not edit inside this block;
+     it is rewritten on `toolname sync`. --&gt;
+... the managed body ...
+&lt;/toolname&gt;</fence>
+    <p><COMMENT-STYLE-MARKERS-SUIT-AN-RC-FILE-OR-SSH-CONFIG fact="true" status="impl/done">Comment-style markers suit an rc file or ssh config equally well:</COMMENT-STYLE-MARKERS-SUIT-AN-RC-FILE-OR-SSH-CONFIG></p>
+    <fence># &gt;&gt;&gt; toolname managed block &gt;&gt;&gt;
+# Do not edit between these markers; regenerated by `toolname apply`.
+export PATH="$PATH:/opt/toolname/bin"
+# &lt;&lt;&lt; toolname managed block &lt;&lt;&lt;</fence>
+    <marker-version title="Version the marker format itself">
+      <p><THE-MARKER-SYNTAX-IS-A-WIRE-FORMAT fact="true" status="impl/done">The marker syntax is a wire format between your tool's past and
+future selves.</THE-MARKER-SYNTAX-IS-A-WIRE-FORMAT></p>
+      <p><old-blocks-in-the-wild-still-carry-the-old-markers fact="true" status="spec/done">If you ever need to change it, old blocks in the wild
+still carry the old markers.</old-blocks-in-the-wild-still-carry-the-old-markers></p>
+      <p><CARRY-A-VERSION-TOKEN-IN-THE-OPENING-MARKER fact="true" status="impl/done">Carry a small version token in the
+opening marker (`&lt;toolname v=1&gt;`) or in the notice line, so a future
+release can recognise and migrate a v1 block instead of appending a
+duplicate v2 one beside it.</CARRY-A-VERSION-TOKEN-IN-THE-OPENING-MARKER></p>
+      <p><DECIDE-THE-VERSION-BEFORE-THE-FIRST-RELEASE fact="true" status="impl/done">Decide this before the first release —
+retrofitting a version onto an unversioned marker means one painful
+generation of heuristics.</DECIDE-THE-VERSION-BEFORE-THE-FIRST-RELEASE></p>
+    </marker-version>
+  </markers>
+  <state-machine title="Well-formedness: absent, present, malformed">
+    <p><THE-TOOL-CLASSIFIES-THE-HOST-FILE-BEFORE-WRITING fact="true" status="impl/done">Before writing, the tool classifies the host file by counting its
+own markers.</THE-TOOL-CLASSIFIES-THE-HOST-FILE-BEFORE-WRITING></p>
+    <p><THERE-ARE-EXACTLY-THREE-STATES fact="true" status="impl/done">There are exactly three states.</THERE-ARE-EXACTLY-THREE-STATES></p>
+    <table>
+      <tr>
+        <td>State</td>
+        <td>Marker count</td>
+        <td>Allowed action</td>
+      </tr>
+      <tr>
+        <td><ROW-STATE-ABSENT fact="true" status="impl/done">**Absent**</ROW-STATE-ABSENT></td>
+        <td><fact status="impl/done">Zero markers</fact></td>
+        <td><fact status="impl/done">Create: append a fresh block (§verbs).</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-STATE-PRESENT fact="true" status="impl/done">**Present**</ROW-STATE-PRESENT></td>
+        <td><fact status="impl/done">Exactly one opener, then exactly one closer, in order</fact></td>
+        <td><fact status="impl/done">Update or remove the body between them.</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-STATE-MALFORMED fact="true" status="impl/done">**Malformed**</ROW-STATE-MALFORMED></td>
+        <td><fact status="impl/done">Anything else — two+ of either marker, an opener with no closer, a closer with no opener, or a closer before its opener</fact></td>
+        <td><fact status="impl/done">**Hard stop.** Change nothing; report.</fact></td>
+      </tr>
+    </table>
+    <p><MALFORMED-IS-THE-LOAD-BEARING-STATE fact="true" status="impl/done">Malformed is the load-bearing state.</MALFORMED-IS-THE-LOAD-BEARING-STATE></p>
+    <p><A-MALFORMED-BLOCK-IS-ALWAYS-A-HUMANS-CALL fact="true" status="impl/done">A malformed managed block is
+**always a human's call**: the tool never guesses which of two
+blocks is canonical, never deletes a stray marker, never auto-repairs.</A-MALFORMED-BLOCK-IS-ALWAYS-A-HUMANS-CALL></p>
+    <p><IT-ABORTS-NAMES-THE-DEFECT-AND-WAITS fact="true" status="impl/done">It aborts the whole operation, names the file and the exact defect,
+and waits.</IT-ABORTS-NAMES-THE-DEFECT-AND-WAITS></p>
+    <p><auto-repair-rationale-pointer fact="true" status="spec/done">The rationale is in
+[`rejected-designs.xml`](rejected-designs.xml#auto-repair): auto-repair
+destroys the evidence a human needs and may destroy user content
+that drifted into the wrong side of a marker.</auto-repair-rationale-pointer></p>
+  </state-machine>
+  <verbs title="The three verbs">
+    <p><EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS fact="true" status="impl/done">Everything the tool does to the block is one of three operations.</EVERYTHING-THE-TOOL-DOES-IS-ONE-OF-THREE-OPERATIONS></p>
+    <facts ordered="false">
+      <VERB-CREATE fact="true" status="impl/done">**Create** — the file is *absent* of a block. Append the block at
+  the **end of the file**, preceded by one blank line of separation.
+  If the file itself does not exist, create it containing only the
+  block. End-of-file is the humble default: the tool does not claim
+  the attention-priority top of a shared file.</VERB-CREATE>
+      <VERB-UPDATE fact="true" status="impl/done">**Update** — the file is *present*. Replace the content between the
+  markers with freshly generated content. The markers themselves,
+  and every byte outside them, are untouched. If the new body is
+  byte-identical to the old, write nothing (§no-op).</VERB-UPDATE>
+      <VERB-REMOVE fact="true" status="impl/done">**Remove** — the file is *present* and the tool is uninstalling.
+  Delete the block **and its separation** — the blank line the create
+  step added — leaving the surrounding content byte-identical to what
+  it was before the block ever existed. A remove that leaves a
+  dangling blank line is a remove with a bug.</VERB-REMOVE>
+    </facts>
+    <placement title="Placement belongs to the user">
+      <p><THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE fact="true" status="impl/done">The tool decides the block's position **exactly once** — at create,
+appended to the end.</THE-TOOL-DECIDES-THE-POSITION-EXACTLY-ONCE></p>
+      <p><FROM-THEN-ON-THE-POSITION-IS-THE-USERS fact="true" status="impl/done">From then on the position is the **user's**.</FROM-THEN-ON-THE-POSITION-IS-THE-USERS></p>
+      <p><UPDATE-NEVER-RELOCATES-THE-MARKERS fact="true" status="impl/done">Update rewrites the body and never relocates the markers; if the user
+moved the block to the top of the file, the tool splices it in place,
+wherever they put it.</UPDATE-NEVER-RELOCATES-THE-MARKERS></p>
+      <p><honouring-position-lets-the-user-tune-the-weight fact="true" status="spec/done">Honouring that lets the user tune how strongly
+the block weighs: at the top of an instruction file it reads as a
+first, system-prompt-like instruction; at the bottom it is a sidecar.</honouring-position-lets-the-user-tune-the-weight></p>
+      <p><THE-TOOL-SUPPLIES-A-DEFAULT-AND-NEVER-OVERRIDES-THE-CHOICE fact="true" status="impl/done">The tool supplies a polite default and never overrides the choice.</THE-TOOL-SUPPLIES-A-DEFAULT-AND-NEVER-OVERRIDES-THE-CHOICE></p>
+    </placement>
+  </verbs>
+  <plan-time title="Classify at plan time, not mid-write">
+    <p><CLASSIFY-BEFORE-ANY-MUTATION-BEGINS fact="true" status="impl/done">Run the absent / present / malformed classification **before** any
+mutation begins — in a planning pass that touches nothing.</CLASSIFY-BEFORE-ANY-MUTATION-BEGINS></p>
+    <p><a-half-applied-change-has-no-clean-state-to-return-to fact="true" status="spec/done">A tool
+that discovers a malformed block halfway through a multi-file write
+has already half-applied its change: some files rewritten, one
+unwritable, no clean state to return to.</a-half-applied-change-has-no-clean-state-to-return-to></p>
+    <p><CLASSIFYING-UP-FRONT-FAILS-FAST-AND-CLEAN fact="true" status="impl/done">Classifying every target
+file up front means a malformed block fails the operation **fast and
+clean** — nothing is touched until every file is known to be
+writable.</CLASSIFYING-UP-FRONT-FAILS-FAST-AND-CLEAN></p>
+    <p><THE-MUTATION-PHASE-SHOULD-NEVER-DISCOVER-A-SURPRISE fact="true" status="impl/done">The mutation phase should never discover a surprise.</THE-MUTATION-PHASE-SHOULD-NEVER-DISCOVER-A-SURPRISE></p>
+  </plan-time>
+  <no-op title="The byte-identical no-op">
+    <p><DO-NOT-REWRITE-WHEN-THE-BODY-IS-BYTE-IDENTICAL fact="true" status="impl/done">If the freshly generated body equals the existing body, **do not
+rewrite the file**.</DO-NOT-REWRITE-WHEN-THE-BODY-IS-BYTE-IDENTICAL></p>
+    <p><an-unconditional-write-churns-mtime-and-produces-a-no-op-diff fact="true" status="spec/done">An unconditional write churns the file's mtime
+and, worse, produces a no-op diff in version control that a reviewer
+must read to confirm it changes nothing.</an-unconditional-write-churns-mtime-and-produces-a-no-op-diff></p>
+    <p><an-ignored-diff-is-where-a-real-change-hides fact="true" status="spec/done">A tool that writes on every
+invocation trains its users to ignore its diffs — and an ignored diff
+is where a real change hides.</an-ignored-diff-is-where-a-real-change-hides></p>
+    <p><COMPARE-THEN-WRITE-ONLY-ON-A-DIFFERENCE fact="true" status="impl/done">Compare, then write only on a
+difference.</COMPARE-THEN-WRITE-ONLY-ON-A-DIFFERENCE></p>
+  </no-op>
+  <cohabitation title="Multi-tool cohabitation">
+    <p><THE-LAW-SCALES-BECAUSE-EACH-TOOL-SCANS-FOR-ITS-OWN-MARKERS fact="true" status="impl/done">The law scales to any number of tools because each tool scans only
+for **its own** markers.</THE-LAW-SCALES-BECAUSE-EACH-TOOL-SCANS-FOR-ITS-OWN-MARKERS></p>
+    <p><two-tools-two-blocks-one-file fact="true" status="impl/done">Two tools, two blocks, one file:</two-tools-two-blocks-one-file></p>
+    <fence># Hand-written by the user — untouched by both tools.
+alias gs='git status'
+
+&lt;toolA&gt;
+&lt;!-- managed by toolA --&gt;
+source /opt/toolA/env.sh
+&lt;/toolA&gt;
+
+# &gt;&gt;&gt; toolB &gt;&gt;&gt;
+# managed by toolB
+export TOOLB_HOME=/opt/toolB
+# &lt;&lt;&lt; toolB &lt;&lt;&lt;</fence>
+    <p><example-tool-a-finds-one-ordered-pair fact="true" status="impl/done">Tool A counts `&lt;toolA&gt;` / `&lt;/toolA&gt;` and finds exactly one ordered
+pair: *present*, splice its body.</example-tool-a-finds-one-ordered-pair></p>
+    <p><example-tool-b-markers-are-ordinary-host-content-to-tool-a fact="true" status="impl/done">Tool B's markers are, to tool A,
+ordinary host content — outside its block, therefore preserved
+verbatim.</example-tool-b-markers-are-ordinary-host-content-to-tool-a></p>
+    <p><example-tool-b-sees-the-mirror-image fact="true" status="impl/done">Tool B sees the mirror image.</example-tool-b-sees-the-mirror-image></p>
+    <p><NEITHER-TOOL-NEEDS-TO-KNOW-THE-OTHER-EXISTS fact="true" status="impl/done">Neither tool needs to know
+the other exists; the unique-marker requirement (§markers) is exactly
+what makes that independence hold.</NEITHER-TOOL-NEEDS-TO-KNOW-THE-OTHER-EXISTS></p>
+    <p><THE-USERS-HAND-WRITTEN-CONTENT-SURVIVES-BOTH-TOOLS fact="true" status="impl/done">The user's hand-written alias is
+outside both blocks and survives every operation of both tools.</THE-USERS-HAND-WRITTEN-CONTENT-SURVIVES-BOTH-TOOLS></p>
+    <p><MARKER-UNIQUENESS-PREVENTS-SILENT-MUTUAL-CORRUPTION fact="true" status="impl/done">The failure this prevents is the reason marker uniqueness is not
+optional: if both tools used a generic `# BEGIN` / `# END`, each would
+match the other's block, and the second tool to run would splice its
+body into the first tool's region — silent mutual corruption.</MARKER-UNIQUENESS-PREVENTS-SILENT-MUTUAL-CORRUPTION></p>
+  </cohabitation>
+  <re-derive title="Re-derive for your project">
+    <p><this-document-states-the-practice-tool-neutrally fact="true" status="impl/done">This document states the practice tool-neutrally.</this-document-states-the-practice-tool-neutrally></p>
+    <p><ADAPT-IT-BY-HANDING-YOUR-AGENT-THE-TASK fact="true" status="impl/done">Adapt it by handing
+your agent the task, not a copied template:</ADAPT-IT-BY-HANDING-YOUR-AGENT-THE-TASK></p>
+    <fence>Read this flow's documents (your project installed them — typically `vibedeps/flow-managed-blocks/&lt;version&gt;/spec/flows/managed-blocks/`, check `vibe.lock`) end to end. Then design the managed
+block for THIS tool:
+1. Name the host files we write into and who else writes to each
+   (the user by hand? other tools?).
+2. Choose a unique, greppable, namespaced marker pair per file type,
+   and write the exact byte-scan that locates them (no parser, no
+   model). Include a version token in the opening marker.
+3. Draft the do-not-edit notice that sits as the first line inside
+   the block.
+4. Restate the absent / present / malformed table in our terms, and
+   write the exact hard-stop message for malformed.
+5. Specify the three verbs, including that remove deletes the block
+   AND its separation, and the byte-identical no-op.
+Show me the design before writing any code.</fence>
+  </re-derive>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT fact="true" status="spec/done">A whole-file rewrite of a shared file is a data-loss event. Own one
+  delimited block; never touch a byte outside it.</SUM-A-WHOLE-FILE-REWRITE-IS-A-DATA-LOSS-EVENT>
+      <SUM-MARKER-PROPERTIES-AND-VERSIONING fact="true" status="impl/done">Markers must be unique, greppable, paired, and carry an internal
+  do-not-edit notice. Version the marker format from day one.</SUM-MARKER-PROPERTIES-AND-VERSIONING>
+      <SUM-THREE-STATES fact="true" status="impl/done">Three states: absent → create at end of file; present → update or
+  remove the body; malformed → hard stop, human decides.</SUM-THREE-STATES>
+      <SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING fact="true" status="impl/done">Remove deletes the block *and* its separation, restoring the file
+  byte-for-byte. Never rewrite when the result is byte-identical.</SUM-REMOVE-RESTORES-THE-FILE-AND-NO-OP-WRITES-NOTHING>
+      <SUM-CLASSIFY-AT-PLAN-TIME fact="true" status="impl/done">Classify at plan time so mutation never discovers a surprise.</SUM-CLASSIFY-AT-PLAN-TIME>
+      <SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE fact="true" status="impl/done">Two tools cohabit because each scans only for its own markers —
+  which is why the markers must be unique.</SUM-TWO-TOOLS-COHABIT-BECAUSE-MARKERS-ARE-UNIQUE>
+    </facts>
+  </summary>
+</spec>

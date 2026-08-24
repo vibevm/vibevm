@@ -34,11 +34,11 @@ wrong-shaped markup costs more than reviewing 183 twice.
   `spec/03-RAID-PLAYBOOK.md`, `spec/04-SWEEP-PLAYBOOK.md`,
   `spec/05-CAMPAIGN-FORM.md`, `spec/06-WAL-CONVENTION.md` — 506 lines.
 
-`LICENSE.md` is **not** in the corpus (verbatim third-party text, F-070).
+`LICENSE.xml` is **not** in the corpus (verbatim third-party text, F-070).
 
 ## The grammar, compiled in {#grammar}
 
-Governing contract: [PROP-043 §3](../../../spec/modules/vibe-progress/PROP-043-progress-markup.md#markup).
+Governing contract: [PROP-043 §3](../../../spec/modules/vibe-progress/PROP-043-progress-markup.xml#markup).
 Everything below is quoted from it; where this file and PROP-043 disagree,
 PROP-043 wins and the disagreement is a finding.
 
@@ -338,9 +338,9 @@ justification in its own report that did not survive being checked.
     passes.** A colon introducing the lead's *contrast*, *reason* or *definition*
     does not split.
     **The control that decides it, and it is internal to the corpus:** the same
-    three facts appear in `25-flow-decision-records.md` as a semicolon triple
+    three facts appear in `25-flow-decision-records.xml` as a semicolon triple
     with no colon, where rulings 3 and 22 unambiguously keep them whole, and in
-    `DECISION-RECORDS-PROTOCOL.md` behind a colon. Reading that colon as
+    `DECISION-RECORDS-PROTOCOL.xml` behind a colon. Reading that colon as
     enumerating would split one and not the other **for a punctuation difference
     between two files saying the same thing**. Reading it as explanatory puts
     both at the same grain. That is the strongest evidence this campaign has
@@ -357,7 +357,7 @@ justification in its own report that did not survive being checked.
     different kinds of thing, and forcing one stage would make one of them
     wrong. Register is UPPER either way (ruling 9, package-map entries).
 38. **A flow's `spec/flows/**` documents take `spec/done`, and `audience` stays
-    absent on all of them** — including a consumer-facing `usage.md`. Rulings 7,
+    absent on all of them** — including a consumer-facing `usage.xml`. Rulings 7,
     21 and 25 named README, boot snippet, normative document and appendix but
     not this genre. The precedent is uniform across the 74 already-marked
     package files: every file under `spec/` that is not a boot snippet or a
@@ -469,7 +469,7 @@ ruling would need.
     `operating-modes` against `decision-records` and `health-audit`. *(B13's
     brief said «three batches to two», counting batches and omitting three B9
     packages; the correction strengthens the ruling rather than reversing it.)*
-    **Known cost, accepted:** `secrets-hygiene/…/scope-discipline.md` calls
+    **Known cost, accepted:** `secrets-hygiene/…/scope-discipline.xml` calls
     itself «the **companion** to the four laws» in the author's own words, so
     its id now contradicts its sentence. Uniform ids beat locally apt ones —
     the id is an address, not a description.
@@ -489,10 +489,10 @@ ruling would need.
     35 was locked at B8, **69 lead-then-manufactured-list sites have landed**
     across the marked corpus, and they routinely carry leads that name no set —
     «When the channel degrades, the symptoms are always the same:»
-    (`two-process-model/…/files-as-ipc.md`), «Emit a short end-of-session report
-    in the chat:» (`wal/…/session-end-hook.md`), «The repair is never
+    (`two-process-model/…/files-as-ipc.xml`), «Emit a short end-of-session report
+    in the chat:» (`wal/…/session-end-hook.xml`), «The repair is never
     mysterious:» (same file), «Concretely:»
-    (`spec-genres/…/SPEC-GENRES-PROTOCOL.md`). Reading 35 literally enough to
+    (`spec-genres/…/SPEC-GENRES-PROTOCOL.xml`). Reading 35 literally enough to
     keep those whole would contradict the majority of the corpus it governs.
     *B14 met the question twice and flagged rather than settled it; the count is
     what decided it, not the argument.*
@@ -526,7 +526,7 @@ ruling would need.
     **The control is internal and same-file, which is the strongest kind this
     campaign recognises.** `wal/…/spec/flows/wal/session-end-hook.md` keeps
     «**Scope of this document.** The procedure every session ends with: confirm a
-    good stopping state, rewrite `spec/WAL.md`, overwrite `CONTINUE.md`, report.»
+    good stopping state, rewrite `spec/WAL.xml`, overwrite `CONTINUE.md`, report.»
     whole at four comma-separated steps behind a colon (line 5) — and splits
     «Emit a short end-of-session report in the chat:» into four bullets 120 lines
     later. One file, one author, one batch, opposite calls, and the difference is

@@ -39,27 +39,27 @@ Where a verdict re-verified but lands on route (b), the entry is
 ## F-137 — «the only persistent memory» contradicts the package's own two-file model
 
 **Outcome:** EDITED (1 of 11 anchors) · OUT-OF-ROUTE (10 of 11 anchors)
-**Files touched:** `packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md`
+**Files touched:** `packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.xml`
 
 **Re-verification.** Every measurement in the eleven reasons re-verified today,
 and the file has grown since the verdict was written:
 
 ```
-$ wc -lwc spec/WAL.md
-  344  3296 22006 spec/WAL.md          (verdict measured 299 / 2 914 / 18 972)
+$ wc -lwc spec/WAL.xml
+  344  3296 22006 spec/WAL.xml          (verdict measured 299 / 2 914 / 18 972)
 
-$ sed -n '1,4p' spec/WAL.md
+$ sed -n '1,4p' spec/WAL.xml
 # WAL — Project Continuation State
 
 _Updated: 2026-07-29 (**PHASE C IS CLOSED — 6 847 / 6 847 anchors, zero owed, all
 seven world batches complete and the exit gate discharged**)_
 
-$ for c in $(git log -n 14 --format=%h -- spec/WAL.md); do git show "$c:spec/WAL.md" | sed -n '3p'; done
+$ for c in $(git log -n 14 --format=%h -- spec/WAL.xml); do git show "$c:spec/WAL.xml" | sed -n '3p'; done
   → 14 of 14 carry a bare calendar date (`_Updated: 2026-07-29 (…`), 0 carry an
-    ISO-8601 timestamp. The protocol's own worked example at WAL-PROTOCOL.md:179
+    ISO-8601 timestamp. The protocol's own worked example at WAL-PROTOCOL.xml:179
     is `_Updated: 2026-04-16T18:23:00Z_`.
 
-$ grep -n '^## ' spec/WAL.md
+$ grep -n '^## ' spec/WAL.xml
 14:## Current phase        →  lines 14-79 = 66 lines, against «one or two lines»
 80:## Constraints — do not violate
 183:## Done (collapsed — see `git log`)
@@ -68,9 +68,9 @@ $ grep -n '^## ' spec/WAL.md
 255:## Known issues
 307:## Session context
 
-$ sed -n '80,182p' spec/WAL.md | grep -cE '^- '                      → 28
-$ sed -n '80,182p' spec/WAL.md | grep -E '^- ' | grep -cE 'spec://|#[0-9]+'  → 0
-$ grep -n 'spec://' spec/WAL.md
+$ sed -n '80,182p' spec/WAL.xml | grep -cE '^- '                      → 28
+$ sed -n '80,182p' spec/WAL.xml | grep -E '^- ' | grep -cE 'spec://|#[0-9]+'  → 0
+$ grep -n 'spec://' spec/WAL.xml
 341:cannot be cited. `spec://` occurs zero times in this file, in every revision
   → the file's single `spec://` occurrence is the WAL *narrating this very
     finding*, not a citation. Zero constraints cite a spec anchor or an issue.
@@ -83,7 +83,7 @@ harder than when they were written.
 the eleven whose falsifier sits **inside the package**.
 `FOR-THE-AGENT-IT-IS-THE-ONLY-PERSISTENT-MEMORY` claimed the WAL is *«the only
 persistent memory»* — which the same document contradicts two sections earlier:
-`FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT` (WAL-PROTOCOL.md:20-23)
+`FILE-CONTINUE-IS-THE-SUBORDINATE-COLD-RESUME-SNAPSHOT` (WAL-PROTOCOL.xml:20-23)
 specifies `CONTINUE.md` as a second session-durable repository file, and
 `RESUMPTION-STATE-LIVES-IN-THE-REPOSITORY-NEVER-IN-A-SESSION` (:25) makes the
 repository the medium. The sentence is a survival of the one-file model that
@@ -119,7 +119,7 @@ package's product. **The obligation therefore cannot close on this edit** — te
 anchors need a host-side obligation (or a §3.6(c) written exception), not a
 package edit.
 
-**New obligations noticed:** the host's `spec/WAL.md:341` now contains prose
+**New obligations noticed:** the host's `spec/WAL.xml:341` now contains prose
 *about* the campaign's own finding that `spec://` never appears in it. A durable
 artefact narrating its own audit verdict is a new kind of self-reference; worth
 a look but outside these eighteen. Not touched.
@@ -137,7 +137,7 @@ than the verdict's:
 
 ```
 $ git log --since=2026-06-01 --date=short --format=%ad | sort -u | wc -l          → 38
-$ git log --since=2026-06-01 --date=short --format=%ad -- spec/WAL.md | sort -u | wc -l → 29
+$ git log --since=2026-06-01 --date=short --format=%ad -- spec/WAL.xml | sort -u | wc -l → 29
 $ comm -23 <(all days) <(WAL days)
 2026-06-18  2026-06-19  2026-06-20  2026-06-26  2026-07-06
 2026-07-10  2026-07-11  2026-07-18  2026-07-21
@@ -146,7 +146,7 @@ $ comm -23 <(all days) <(WAL days)
 ```
 
 ```
-$ for the 18 most recent commits touching spec/WAL.md, compare line 3 pairwise
+$ for the 18 most recent commits touching spec/WAL.xml, compare line 3 pairwise
 consecutive pairs compared: 17 ; pairs with byte-identical _Updated: line: 6
   (fac57627, bdc52412, 0c586c44, cf6c7927, 6a026de1, 95937de5)
 ```
@@ -162,8 +162,8 @@ route.
 Confirmed against the compiled host lane:
 
 ```
-$ grep -n 'Read `spec/WAL.md` \*\*before\*\*' spec/boot/STATIC.md   → 1382
-$ wc -l spec/boot/STATIC.md                                          → 1584
+$ grep -n 'Read `spec/WAL.xml` \*\*before\*\*' spec/boot/STATIC.xml   → 1382
+$ wc -l spec/boot/STATIC.xml                                          → 1584
 ```
 
 **What changed and why — nothing, and this is the §3.6(b) case in its purest
@@ -186,7 +186,7 @@ is owed on all five.
 
 **One caveat the boss should carry into the host obligation.**
 `SUM-THE-STEPS-IN-ORDER`'s verdict is only *half* a host finding — it also says
-*«All three divergences trace to the package's own cold-resume.md §wind-down»*.
+*«All three divergences trace to the package's own cold-resume.xml §wind-down»*.
 That half is an internal package contradiction and it is the whole of F-349;
 see that entry. Closing F-165 host-side without closing F-349 package-side would
 leave the host obeying one half of the package and failing the other.
@@ -208,18 +208,18 @@ $ ls packages/org.vibevm.ai-native/core-ai-native/
 v0.7.0
 v0.8.0
 
-$ ls -la packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md
+$ ls -la packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.xml
 -rw-r--r-- 1 olegc 197121 5350 Jul 26 15:56 …/v0.8.0/spec/06-WAL-CONVENTION.md
 
 $ grep -nE 'flow:wal|org\.vibevm\.world/wal|defer' \
-    packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md
+    packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.xml
 NO MATCH — zero occurrences
 
 $ sed -n '5p' …/v0.8.0/spec/06-WAL-CONVENTION.md
 ##status-line **Discipline v0.2 · status: BETA · T1 · language-neutral · OPTIONAL but preferred**
 
 $ git log --diff-filter=A -1 --date=short --format='%h %ad %s' -- \
-    packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md
+    packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.xml
 bfb72da7 2026-07-17 feat(ai-native): core-ai-native 0.8.0 — Go support in the neutral engine
 ```
 
@@ -230,9 +230,9 @@ by inspection.
 
 ```
 $ ls packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/
-chapter-1-two-process-model.md
-chapter-2-shared-state-and-files.md
-chapter-3-memory-individual.md
+chapter-1-two-process-model.xml
+chapter-2-shared-state-and-files.xml
+chapter-3-memory-individual.xml
 
 $ head -4 of each → # Глава первая.<br>Два процесса, одна задача
                     # Глава вторая.<br>Shared state: файлы как IPC
@@ -255,11 +255,11 @@ $ grep -rnE 'org\.vibevm\.world/wal|flow:wal|flow:org\.vibevm\.world/wal' \
 
 37 hits, and **not one of them cites this package as the host's WAL authority.**
 They are: `ROADMAP.md` and `spec/modules/**` using `flow:wal` as the worked
-package-manager *example* / e2e fixture (`spec/common/PROP-000.md:92-94,105,173`,
+package-manager *example* / e2e fixture (`spec/common/PROP-000.xml:92-94,105,173`,
 `spec/modules/vibe-registry/PROP-002…:69,199,219`,
 `spec/modules/vibe-index/PROP-005…:19,308`,
-`spec/design/workspace-and-qualified-naming.md:62,76,81,82`); `vibe.lock:62`
-and `spec/boot/STATIC.md:1369` recording that it is *installed and compiled in*;
+`spec/design/workspace-and-qualified-naming.xml:62,76,81,82`); `vibe.lock:62`
+and `spec/boot/STATIC.xml:1369` recording that it is *installed and compiled in*;
 and `CLAUDE.md:141` / `SPECSPACES.md:5-6` naming the **different** package
 `flow:org.vibevm.world/wal-specspaces`. Installation is not citation of
 authority, and no host document names a WAL authority at all.
@@ -289,7 +289,7 @@ true.
   OUT-OF-ROUTE.** Its falsifier is *another package refusing to cede* —
   `core-ai-native` stating the same two-file model, the same canonicity rule and
   the same supersession while naming this package nowhere, with **both installed
-  and booted** (`vibe.lock:62`; `spec/boot/STATIC.md:1369`). Making that
+  and booted** (`vibe.lock:62`; `spec/boot/STATIC.xml:1369`). Making that
   sentence true means editing `core-ai-native` and re-vendoring it, which is a
   cross-package fix and therefore [§4.5](../PHASE-D-BATCH-PLAN.md#release)'s
   release event — owner, before publication. The alternative, deleting this
@@ -299,8 +299,8 @@ true.
   a prose edit can do here.
 
 **New obligations noticed:** the host boots **two** complete WAL conventions —
-`spec/boot/STATIC.md:1369` compiles this package's snippet, and `core-ai-native`
-lists `06-WAL-CONVENTION.md` among its playbooks. That is a live `duplication`
+`spec/boot/STATIC.xml:1369` compiles this package's snippet, and `core-ai-native`
+lists `06-WAL-CONVENTION.xml` among its playbooks. That is a live `duplication`
 against the host's own boot lane, distinct from this obligation's README claim.
 Recorded, not fixed.
 
@@ -316,24 +316,24 @@ Recorded, not fixed.
 ```
 $ sed -n '3p' CLAUDE.md
 Every session in this repository begins by reading this file, then every file in
-`spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT
+`spec/boot/` in filename order, then `spec/WAL.xml`, then any relevant PROP/FEAT
 documents under `spec/common/` and `spec/modules/` for the task at hand. Only
 after that, start work.
 
 $ grep -n 'Run the full boot sequence' CLAUDE.md
 205:1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files →
-    `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically…
+    `spec/WAL.xml`), read `CONTINUE.md`, and verify repository state empirically…
 ```
 
 **The reason holds, but for a narrower cause than it states — recorded per the
 brief's third outcome.** The verdict indicts `CLAUDE.md:3` *and* `:205`. Only
 `:205` actually bears: `READ-CONTINUE-FIRST-THEN-THE-WAL` is scoped to **cold
 starts** — the section head is *«Coming back after a machine switch or a long
-gap, or arriving at a repository that is not yours?»* (morning-routine.md:70-73)
+gap, or arriving at a repository that is not yours?»* (morning-routine.xml:70-73)
 — and `CLAUDE.md:3` is the *ordinary* boot order, not a cold start, so its
 silence about `CONTINUE.md` is out of the rule's scope rather than contrary to
 it. `CLAUDE.md:205`, the `RESUME SESSION` command, **is** the host's cold-start
-path, and it does reverse the order: boot sequence ending at `spec/WAL.md`,
+path, and it does reverse the order: boot sequence ending at `spec/WAL.xml`,
 `CONTINUE.md` after. One host document contradicts the flow, not two.
 
 **Perimeter searched.** The claim above is about scope, not an absence, but I
@@ -346,7 +346,7 @@ CLAUDE.md:141, :144   specspace boot scoping (a specspace's own CONTINUE.md)
 CLAUDE.md:178, :190   the wind-down (writes it)
 CLAUDE.md:194         the wind-down's rationale
 CLAUDE.md:205, :206, :207   the resume command
-$ grep -c 'CONTINUE' spec/boot/STATIC.md   → 4   (this package's own snippet)
+$ grep -c 'CONTINUE' spec/boot/STATIC.xml   → 4   (this package's own snippet)
 ```
 
 The only host cold-start entry point is `CLAUDE.md`'s resume command at :205,
@@ -358,16 +358,16 @@ verdict's «two host documents» is really one, twice-mirrored.
 prescription with a stated reason one section above it:
 `THE-COLD-READER-NEEDS-THE-TOUR` — *«where things are, what commands run, what
 was decided and why — before the one-page checkpoint means anything»*
-(cold-resume.md:21-23). Reversing it in the package so the host's order passes
+(cold-resume.xml:21-23). Reversing it in the package so the host's order passes
 would sell the cold reader the checkpoint before the map, which is the exact
 failure the rule exists to prevent. Route (b): the rule is sound and the host
 should keep it. `SUM-COLD-START-ORDER` carries the same verdict and likewise
 does not move.
 
 **The package is internally consistent here**, which is worth stating because
-F-349 shows it is not everywhere: `cold-resume.md`'s
+F-349 shows it is not everywhere: `cold-resume.xml`'s
 `RESUME-STEP-RUN-THE-BOOT-SEQUENCE` (:118-119) also orders *«then read
-`CONTINUE.md` and `spec/WAL.md`»* — same order, no rival list. The disagreement
+`CONTINUE.md` and `spec/WAL.xml`»* — same order, no rival list. The disagreement
 is host-side only.
 
 **New obligations noticed:** a host obligation is owed on `CLAUDE.md:205` — the
@@ -439,25 +439,25 @@ wind-down-discipline obligation F-165 already owes, extended to `CONTINUE.md`.
 **Re-verification.** This one is settled entirely inside the package, by reading
 the two lists against each other. I read both files in full:
 
-`session-end-hook.md` — six numbered sections, and the anchor under judgement
+`session-end-hook.xml` — six numbered sections, and the anchor under judgement
 (`RUN-THE-FULL-HOOK-AS-A-HARD-CONTRACT`, :33-35) orders *«the full hook, steps
 1–6»*:
 
 ```
 :37  ## 1. Confirm the work is in a good stopping state
-:47  ## 2. Rewrite `spec/WAL.md`
+:47  ## 2. Rewrite `spec/WAL.xml`
 :85  ## 3. Collapse aggressively
 :92  ## 4. Overwrite `CONTINUE.md`
 :107 ## 5. Commit — propose by default
 :124 ## 6. Report
 ```
 
-`cold-resume.md` §wind-down — five numbered steps under
+`cold-resume.xml` §wind-down — five numbered steps under
 `required-behaviour-lead` (:87), *«Required behaviour, in order»*:
 
 ```
 :89  1. STEP-OVERWRITE-CONTINUE            Overwrite `CONTINUE.md`
-:90  2. STEP-REWRITE-THE-WAL               Rewrite `spec/WAL.md`
+:90  2. STEP-REWRITE-THE-WAL               Rewrite `spec/WAL.xml`
 :93  3. STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS
 :96  4. STEP-PUSH-ONLY-IF-AUTONOMY-SANCTIONS-IT
 :99  5. STEP-EMIT-A-CHAT-TLDR
@@ -466,23 +466,23 @@ the two lists against each other. I read both files in full:
 The verdict is confirmed and is more than a count mismatch: **the WAL/`CONTINUE`
 order is literally reversed between the two**, the stopping-state confirmation
 and the collapse step have no counterpart in the five, and
-`WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK` (cold-resume.md:76) asserts the two
+`WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK` (cold-resume.xml:76) asserts the two
 are the same procedure. A consumer reading the package end to end is told two
 different things.
 
 **Which side is wrong, decided from the package's own text.** The hook states
 WAL-before-`CONTINUE` in **three** places — `scope-of-this-document` (:5-7,
-*«confirm a good stopping state, rewrite `spec/WAL.md`, overwrite
+*«confirm a good stopping state, rewrite `spec/WAL.xml`, overwrite
 `CONTINUE.md`, report»*), the numbered sections above, and
-`SUM-THE-STEPS-IN-ORDER` (:164-165). `cold-resume.md` states
+`SUM-THE-STEPS-IN-ORDER` (:164-165). `cold-resume.xml` states
 `CONTINUE`-before-WAL in **two** — the §wind-down list and `SUM-WIND-DOWN-SHAPE`
 (:179-180). The hook is also the document whose declared subject *is* the
-procedure, where `cold-resume.md`'s declared subject is *«the second file of the
+procedure, where `cold-resume.xml`'s declared subject is *«the second file of the
 discipline: `CONTINUE.md`»* (:5-9). **So the hook is authoritative and
-`cold-resume.md` §wind-down is the deviating restatement.**
+`cold-resume.xml` §wind-down is the deviating restatement.**
 
 **Why nothing moved.** The repair that closes this obligation lands on
-`cold-resume.md`'s §wind-down step list — anchors `STEP-OVERWRITE-CONTINUE`,
+`cold-resume.xml`'s §wind-down step list — anchors `STEP-OVERWRITE-CONTINUE`,
 `STEP-REWRITE-THE-WAL` and the `required-behaviour-lead` around them. **None of
 those five anchors is in my eighteen** (F-257, the only other obligation on that
 file, holds `WAL-IS-WRITTEN-FOR-THE-SAME-PROJECT-RHYTHM` and
@@ -497,7 +497,7 @@ rules (`NEVER-PAPER-OVER-A-BROKEN-STOPPING-STATE`,
 forbidden direction in the sharpest form it takes in this batch.
 
 **The recommendation, for the boss to act on or reject.** Bring
-`cold-resume.md` §wind-down into the hook's order and completeness — reordering
+`cold-resume.xml` §wind-down into the hook's order and completeness — reordering
 the five existing `STEP-*` anchors, not renaming them, and adding the two beats
 the hook has — or, cheaper and equally honest, have `required-behaviour-lead`
 stop presenting itself as the complete ordering and defer to the hook for the
@@ -505,7 +505,7 @@ procedure, enumerating only what is specific to the *explicit* form. Either is a
 prose edit on the `prose-edit` route; both need a decision I was not given the
 anchors to make.
 
-**New obligations noticed:** `SUM-WIND-DOWN-SHAPE` (cold-resume.md:179-180)
+**New obligations noticed:** `SUM-WIND-DOWN-SHAPE` (cold-resume.xml:179-180)
 carries the same reversed order and is not in any of my eighteen. Whichever way
 the above is settled, that summary moves with it or it becomes a third writer for
 the same ordering. Recorded, not fixed.
@@ -522,17 +522,17 @@ the same ordering. Recorded, not fixed.
 ```
 $ sed -n '3p' CLAUDE.md
 Every session in this repository begins by reading this file, then every file in
-`spec/boot/` in filename order, then `spec/WAL.md`, …
+`spec/boot/` in filename order, then `spec/WAL.xml`, …
 
-$ sed -n '9,13p' spec/boot/00-core.md
+$ sed -n '9,13p' spec/boot/00-core.xml
 ##boot-sequence-lead Every session starts here. In order:
 1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end …
-2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log).
+2. ##BOOT-STEP-WAL Read `spec/WAL.xml` — current project state (checkpoint, not log).
 3. ##BOOT-STEP-PROPS Read the relevant PROP/FEAT …
 4. ##BOOT-STEP-START-WORK Only then start work.
 
-$ grep -n 'Read `spec/WAL.md` \*\*before\*\*' spec/boot/STATIC.md   → 1382
-$ wc -l spec/boot/STATIC.md                                          → 1584
+$ grep -n 'Read `spec/WAL.xml` \*\*before\*\*' spec/boot/STATIC.xml   → 1382
+$ wc -l spec/boot/STATIC.xml                                          → 1584
 ```
 
 Confirmed in both independent host files, and the compiled position is confirmed
@@ -550,7 +550,7 @@ The verdict reads *«before doing anything else»* strictly — as *before readi
 anything else* — and on that reading the instruction is unsatisfiable **by
 construction**, because a boot snippet is only ever delivered as part of a boot
 lane; no compiled snippet can be read before the lane that carries it. On the
-looser reading — *before doing any work*, which is how `spec/boot/00-core.md`'s
+looser reading — *before doing any work*, which is how `spec/boot/00-core.xml`'s
 own step 4 phrases the same idea (*«Only then start work»*) — the host complies
 and there is no drift at all. The fact sits under the heading `## At the start of
 every session`, which supports the looser reading. **I did not edit on that
@@ -568,7 +568,7 @@ plus a package-side wording question that belongs to the owner.
 
 **Outcome:** EDITED (2 of 9 anchors) · OUT-OF-ROUTE (7 of 9 anchors)
 **Files touched:**
-`packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`
+`packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml`
 
 **Re-verification.** The artefact's shape first, since seven of the nine verdicts
 rest on it:
@@ -600,7 +600,7 @@ The two **edited** anchors were verified separately, and both are settled by the
 host's own durable record rather than by any absence:
 
 ```
-$ sed -n '20,22p' spec/common/PROP-013-periodic-health-audit.md
+$ sed -n '20,22p' spec/common/PROP-013-periodic-health-audit.xml
 - ##M119-TEST-ASSERTED-BROKEN … a `cli_init` test even *asserted the broken
   value as correct*, staying green the whole time.
 - ##M119-CAUGHT-BY-SMOKE It was caught only by a live smoke run during the
@@ -732,14 +732,14 @@ Every verdict against them is *«this host's three runs did not do it»*. Demoti
 delete the flow's central distinction — the audit owes breadth where the gate
 owes depth — and demoting `STEP-WALK-THE-CHECKLIST-BREADTH-FIRST` would delete
 the step the whole document is built around
-(`SUM-THE-SEVEN-STEPS`, running-an-audit.md:149-151). Route (b) throughout.
+(`SUM-THE-SEVEN-STEPS`, running-an-audit.xml:149-151). Route (b) throughout.
 
 **The one worth the boss's second look is
 `EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS`,** because the
 verdict itself concedes the fields survive in both forms and that *«nothing in
 PROP-013 prescribes either shape»*. It still does not move: the table form is not
 decoration, it is what
-`A-READER-CAN-DIFF-TWO-RUNS-AND-SEE-THE-TREND` (HEALTH-AUDIT-PROTOCOL.md:89-92)
+`A-READER-CAN-DIFF-TWO-RUNS-AND-SEE-THE-TREND` (HEALTH-AUDIT-PROTOCOL.xml:89-92)
 depends on — 25 multi-paragraph headings do not diff into a trend the way 25 rows
 do. If the boss judges the form incidental, this is the one anchor in F-164 that
 could take a route-(a) reading; I did not take it, because relaxing a form that
@@ -757,12 +757,12 @@ verdicts at once.
 
 **Outcome:** EDITED (1 of 2 anchors) · OUT-OF-ROUTE (1 of 2 anchors)
 **Files touched:**
-`packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md`
+`packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.xml`
 
 **Re-verification.** Which of the three runs applied which growth rule:
 
 ```
-$ grep -n 'HIST-CATEGORY-E' spec/common/PROP-013-periodic-health-audit.md
+$ grep -n 'HIST-CATEGORY-E' spec/common/PROP-013-periodic-health-audit.xml
 77: **2026-06-12 — category E (discipline depth) added** by that day's
     owner-requested full sweep — the first post-adoption depth audit.
 
@@ -899,7 +899,7 @@ Confirmed, unchanged in substance from the verdict.
 is the package's headline `never`, stated in the README (`:17-18`), in the
 protocol's `AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR`, in its
 summary, and adopted by the host itself at
-`spec/common/PROP-013-periodic-health-audit.md:63` (`##CADENCE-FLOOR`, *«a vibevm
+`spec/common/PROP-013-periodic-health-audit.xml:63` (`##CADENCE-FLOOR`, *«a vibevm
 milestone is never declared done on an un-audited base»*, `@spec/done`). **The
 host wrote the rule down, kept it in its own spec, and then shipped two
 milestones against it.** That is the cleanest §3.6(b) case in the batch: the rule
@@ -977,7 +977,7 @@ running the skill** — *«Walk the checklist breadth-first … Run each mechani
 aid»* — and both failing legs are host facts: no host run walked breadth-first
 (the same measurement ruled at four other anchors in this package), and two of
 the four aids have no host implementation. Crucially, **the flow already handles
-a consumer that lacks an aid**: `audit-checklist.md`'s
+a consumer that lacks an aid**: `audit-checklist.xml`'s
 `TRANSLATE-EVERY-AID-INTO-YOUR-STACKS-EQUIVALENT` (:18-23) says *«"the coverage
 tool" is whatever your language ships»*, and `D4-AID` names the generic
 `cargo outdated` / `cargo audit` family. A consumer that has installed neither is
@@ -990,7 +990,7 @@ standing checklist rows — two adopted rows with no means of being checked here
 which is why nothing has ever been filed under D4. (b) `health-audit`'s own
 `README.md:81-83`, `NO-AMOUNT-OF-GATE-CATCHES-A-TEST-THAT-GUARDS-A-BUG` —
 *«only a periodic judgment sweep does»* — carries the **identical overstatement**
-I repaired under F-141 in `HEALTH-AUDIT-PROTOCOL.md`, and is falsified by the same
+I repaired under F-141 in `HEALTH-AUDIT-PROTOCOL.xml`, and is falsified by the same
 evidence (`PROP-013 ##M119-CAUGHT-BY-SMOKE`: it was caught by a live smoke run).
 It is in this package but in **no** obligation of mine, so per the brief it is
 recorded and not touched. If the boss wants the pair consistent, that README line
@@ -1075,7 +1075,7 @@ convention partially:
 
 Not one of these is a claim about the world that turned out false; each is a rule
 the consumer keeps loosely. And the host **adopted every one of them in writing**
-— `spec/common/PROP-000.md:187` (`##MT-LOCATION`, the root directory and the
+— `spec/common/PROP-000.xml:187` (`##MT-LOCATION`, the root directory and the
 index), `:188` (`##MT-FLOW-POINTER`, citing this flow by `spec://` URI as the
 tier's definition), and `manual-tests/README.md:74` sharpening
 `KEEP-EACH-FILE-TO-ONE-SCENARIO` into a numeric ~300-line limit it then exceeds
@@ -1085,7 +1085,7 @@ and drifted from it; that is §3.6(b) with the host's signature on it.
 **New obligations noticed:** two host-side, both outside these eighteen.
 (a) `manual-tests/README.md` is missing the `M2.10-index-smoke.md` row while
 line 89 of the same file instructs *«Add a row to this table when you add a
-test»* — a one-row host fix. (b) `spec/common/PROP-000.md` `##MT-LOCATION`
+test»* — a one-row host fix. (b) `spec/common/PROP-000.xml` `##MT-LOCATION`
 records only the root home, so the eleven tests' second home at
 `spec/manual-tests/` sits outside the decision that governs the tier. Both
 recorded, neither fixed.
@@ -1101,12 +1101,12 @@ recorded, neither fixed.
 
 ```
 $ grep -n 'settings-mutation-note' spec/manual-tests/MT-0*.md
-MT-02-vibe-tree-tui.md:14  ##settings-mutation-note Unlike MT-01, this TUI **writes
+MT-02-vibe-tree-tui.xml:14  ##settings-mutation-note Unlike MT-01, this TUI **writes
   user settings** (`~/.vibe/` via the vibe-settings system, Шаг 2) …
-MT-03-vibe-prefs-tui.md:12  ##settings-mutation-note This TUI writes user settings
+MT-03-vibe-prefs-tui.xml:12  ##settings-mutation-note This TUI writes user settings
   (`~/.vibe/`, the vibe-settings system) — palette/ …
 
-$ grep -nE '^#{2,3} ' spec/manual-tests/MT-02-vibe-tree-tui.md spec/manual-tests/MT-03-vibe-prefs-tui.md
+$ grep -nE '^#{2,3} ' spec/manual-tests/MT-02-vibe-tree-tui.xml spec/manual-tests/MT-03-vibe-prefs-tui.xml
 MT-02: 19 ## Preconditions · 27 ## Steps · 82 ## Pass · 88 ## Sign-off
 MT-03: 15 ## Preconditions · 21 ## Steps · 65 ## Pass · 72 ## Sign-off
    → neither has a Setup or a Teardown section.
@@ -1125,7 +1125,7 @@ asserts the real directory stayed absent (`ls ~/.vibe/registries … || echo "no
 **The host contradicts itself, and the contradiction is host-side.**
 
 ```
-$ grep -n 'MT-ISOLATION' spec/common/PROP-000.md
+$ grep -n 'MT-ISOLATION' spec/common/PROP-000.xml
 193:- ##MT-ISOLATION **vibevm's bindings.** Every test isolates state with `mktemp -d`
     … the user's real `~/.vibe/` is never touched by a run. @spec/done
 ```
@@ -1137,7 +1137,7 @@ two host artefacts. **Nothing in it falsifies the package.**
 
 **What changed and why — nothing.**
 `NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE` is the flow's hardest `never`,
-and `authoring-rules.md` Rule 1 carries its reason:
+and `authoring-rules.xml` Rule 1 carries its reason:
 `A-TEST-THAT-MUTATES-REAL-USER-STATE-IS-A-BUG-IN-THE-TEST` — *«even if every step
 passes — because the next contributor's run inherits that mutation and the
 walkthrough is no longer reproducible»* — with the remedy stated one fact later:
@@ -1158,7 +1158,7 @@ policy choice rather than a note»*, which «may a TUI test write real user pref
 plainly is. Flagged for the owner rather than decided here.
 
 **New obligations noticed:** a host `contradiction` between
-`spec/common/PROP-000.md` `##MT-ISOLATION` and
+`spec/common/PROP-000.xml` `##MT-ISOLATION` and
 `spec/manual-tests/MT-02`/`MT-03`'s `##settings-mutation-note` — two host records
 asserting opposite things about the same eleven tests. Not one of these eighteen.
 Recorded, not fixed.
@@ -1182,9 +1182,9 @@ manual-tests/M1.16-redirect-smoke.md              8
 manual-tests/M1.17-workspace-publish-smoke.md     7
 manual-tests/M1.15-git-source-smoke.md            5
 manual-tests/M2.10-index-smoke.md                 0
-spec/manual-tests/MT-01-vibe-tree.md             10
-spec/manual-tests/MT-02-vibe-tree-tui.md          0
-spec/manual-tests/MT-03-vibe-prefs-tui.md         0
+spec/manual-tests/MT-01-vibe-tree.xml             10
+spec/manual-tests/MT-02-vibe-tree-tui.xml          0
+spec/manual-tests/MT-03-vibe-prefs-tui.xml         0
 ```
 
 **Every one of the eleven counts matches the verdict's list exactly.** Three of
@@ -1194,7 +1194,7 @@ eleven tests score zero, and all three substitute an aggregate section —
 **What changed and why — nothing.**
 `NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH` is a `Never` carrying its own
 reason inline — *«A command with no stated outcome cannot pass or fail; it is not
-a test step»* — restated in `authoring-rules.md` at
+a test step»* — restated in `authoring-rules.xml` at
 `A-COMMAND-WITH-NO-EXPECTED-IS-NOT-A-TEST-STEP` and
 `if-you-cannot-articulate-the-outcome-you-do-not-know-what-it-proves`, and adopted
 by the host at `manual-tests/README.md:62` (*«and an "Expected" subsection
@@ -1240,11 +1240,11 @@ Every hit is one of four things, and **none is a walkthrough filed as defective*
    consume*, not about any walkthrough's authoring. Exactly the «unrelated
    fixture finding» the verdict named.
 2. **Tests being written or run** — `TASKS.md:57`, `ROADMAP.md:119, 275, 358`.
-3. **The convention being specified** — `spec/common/PROP-000.md:187-202`.
+3. **The convention being specified** — `spec/common/PROP-000.xml:187-202`.
 4. **A pointer in `CLAUDE.md:137`** to fractality's own MT-05.
 
 And one finding the wider perimeter turned up that sharpens the verdict:
-`spec/common/PROP-000.md:202` `##MT-WAL-NAMES` records that *«MT-02 and MT-03
+`spec/common/PROP-000.xml:202` `##MT-WAL-NAMES` records that *«MT-02 and MT-03
 have been awaiting owner sign-off since the TUI work landed»* — so the host tracks
 these two tests as **pending**, never as **defective**. The absence is confirmed
 on a much wider perimeter than the verdict used, and its cause is now named.
@@ -1273,7 +1273,7 @@ Recorded, not fixed.
 **Outcome:** OUT-OF-ROUTE (1 of 1 anchor)
 **Files touched:** «none»
 
-**Re-verification.** The fact, in full (`test-template.md:181-182`):
+**Re-verification.** The fact, in full (`test-template.xml:181-182`):
 
 > `##SUM-WHAT-EACH-SECTION-DOES` Purpose justifies the tier; Preconditions gate
 > the run; Setup isolates it; every Step carries an Expected.
@@ -1289,7 +1289,7 @@ and F-149's two. Its fourth clause is `NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PA
 compressed into five words, so it moves if and only if that `Never` moves, and
 F-318 rules that it does not. Dropping «every Step carries an Expected» from the
 summary would leave the template describing a document shape its own
-`authoring-rules.md` Rule 2 forbids.
+`authoring-rules.xml` Rule 2 forbids.
 
 **A note on scope, since the fact is a summary of the template's sections.** The
 template's own `SUM-FIXED-SECTION-ORDER` (`:179-180`) prescribes *«Title, Purpose,
@@ -1299,7 +1299,7 @@ MT-03 use Preconditions / Steps / Pass / Sign-off — so the host diverges on th
 of my eighteen and I did not touch it, but the boss should know the same three
 tests falsify it, so a host obligation opened for F-320 will want to cover both.
 
-**New obligations noticed:** `test-template.md#SUM-FIXED-SECTION-ORDER` is
+**New obligations noticed:** `test-template.xml#SUM-FIXED-SECTION-ORDER` is
 falsified by the same three tests and carries no obligation in the registry.
 Recorded, not fixed.
 
@@ -1344,9 +1344,9 @@ Four files, all inside the three assigned package directories:
 
 ```
 packages/org.vibevm.world/wal/v0.2.0/README.md                                   +4 -3
-packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md              +2 -2
-packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md  +5 -3
-packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md        +1 -1
+packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.xml              +2 -2
+packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml  +5 -3
+packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.xml        +1 -1
 ```
 
 No file under `manual-tests/` was touched. Verified before hand-off:
@@ -1355,8 +1355,8 @@ No file under `manual-tests/` was touched. Verified before hand-off:
 $ for f in <the four>; do compare `git show HEAD:$f` anchor set to working tree; done
 IDENTICAL anchor set (27 ids)  wal/v0.2.0/README.md
 IDENTICAL anchor set (60 ids)  wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md
-IDENTICAL anchor set (71 ids)  health-audit/…/HEALTH-AUDIT-PROTOCOL.md
-IDENTICAL anchor set (65 ids)  health-audit/…/audit-checklist.md
+IDENTICAL anchor set (71 ids)  health-audit/…/HEALTH-AUDIT-PROTOCOL.xml
+IDENTICAL anchor set (65 ids)  health-audit/…/audit-checklist.xml
 
 $ git diff -- <the two packages> | grep '^+' | grep -E '\]\(\.\./'
 none — clean          (no relative cross-package link added)
@@ -1380,11 +1380,11 @@ or rename any `##ANCHOR` fact id», and both are flagged rather than acted on:
 ## What the boss has to decide {#decisions}
 
 1. **F-349 is a real package defect I was not given the anchors to fix.** The
-   `wal` package ships two rival wind-down orderings — `session-end-hook.md`'s six
-   steps (WAL before `CONTINUE.md`, three times over) against `cold-resume.md`
+   `wal` package ships two rival wind-down orderings — `session-end-hook.xml`'s six
+   steps (WAL before `CONTINUE.md`, three times over) against `cold-resume.xml`
    §wind-down's five (`CONTINUE.md` first), while
    `WIND-DOWN-IS-THE-EXPLICIT-FORM-OF-THE-HOOK` asserts they are the same
-   procedure. The repair lands on `cold-resume.md`'s `STEP-*` anchors, none of
+   procedure. The repair lands on `cold-resume.xml`'s `STEP-*` anchors, none of
    which is in these eighteen. This is the single highest-value item in the batch:
    it is route (a), it is `prose-edit`, and F-165's host obligation is unsound
    until it is settled.
@@ -1392,16 +1392,16 @@ or rename any `##ANCHOR` fact id», and both are flagged rather than acted on:
    `PACKAGE-IS-THE-CANONICAL-HOME-OF-THE-WAL-CONVENTION` true means editing
    `core-ai-native` and re-vendoring — §4.5, owner before publication. The host
    currently boots **both** conventions (`vibe.lock:62`,
-   `spec/boot/STATIC.md:1369`).
+   `spec/boot/STATIC.xml:1369`).
 3. **F-317 is the batch's §3.6(c) candidate.** MT-02 and MT-03 carry written,
    marked exceptions to the flow's hardest `never` — but
-   `spec/common/PROP-000.md` `##MT-ISOLATION` asserts the opposite, so the
+   `spec/common/PROP-000.xml` `##MT-ISOLATION` asserts the opposite, so the
    «exception» is contradicted by the governing spec. The plan reserves (c) for
    the owner where the exception is a policy choice; «may a TUI test write real
    user prefs» is one.
 4. **F-352 turns on a reading, not a measurement.** Strictly, *«read the WAL
    before doing anything else»* is unsatisfiable for any compiled boot snippet;
-   loosely — the reading `spec/boot/00-core.md`'s own step 4 uses — the host
+   loosely — the reading `spec/boot/00-core.xml`'s own step 4 uses — the host
    complies and the anchor is a `RE-JUDGE: confirmed`.
 
 ## Host obligations this batch owes {#host}

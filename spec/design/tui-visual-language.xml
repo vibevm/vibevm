@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Design doc: the `vibe tree` TUI visual language (lore for PROP-037 §2.2)</title>
+  <status stage="doc" state="done" comment="B0 2026-07-24: FULL 2026-07-16; lore for PROP-037 S2.2, PROP-037 wins on conflict"/>
+  <p><status-line fact="true" status="doc/done">_Status: **FULL** (2026-07-16, TREE-TUI-PLAN v0.2 Phase 1). This is **lore** — the
+aesthetics, the why, the tables the eye reads. The **normative** surface (the REQs the code is
+traceable to) lives in [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.xml#theme); this document
+expands it. When the two disagree, PROP-037 wins._</status-line></p>
+  <p><genre-line fact="true" status="doc/done">**Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.xml#theme).</genre-line></p>
+  <p><related fact="true" status="doc/done">**Related:** [the action-system design](action-system.xml); the settings meta-plan
+(archived: `legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`) — the active palette + tier are a user setting.</related></p>
+  <p><OWNER-VISION fact="true" status="doc/done">**Owner vision (2026-07-16):** the TUI must look **deliberately beautiful**, not like ASCII
+scaffolding. Unicode box-drawing with rounded corners (`╭╮╰╯`); truecolor with a **formal,
+data-driven palette system** (five palettes; the current Rosé Pine "cosmic violet" preserved
+exactly); braille/block glyphs for indicators; **symbols only** for the primary UI (SSH/tmux
+portable — no Sixel/Kitty), but `ratatui-image`-ready; a graceful degradation strategy
+truecolor→256→16 / rounded→unicode→ASCII; windows and modals that read as **windows**, not as a
+"frame dropped on the worst terminal."</OWNER-VISION></p>
+  <section title="1. Principles (the aesthetics)">
+    <facts ordered="false">
+      <PRIN-SYMBOLIC-PRECISION fact="true" status="doc/done">**Symbolic precision.** Every glyph is chosen, not defaulted. Box-drawing, braille, and block
+  elements carry the meaning; ASCII (`+ - * # x .`) is reserved for the **last** tier of degradation,
+  never the primary look.</PRIN-SYMBOLIC-PRECISION>
+      <PRIN-TRUECOLOR-FIRST fact="true" status="doc/done">**Truecolor first.** 24-bit RGB is the primary tier; colour is expressed through **semantic role
+  tokens** resolved by a swappable `Palette`, never a raw `Color` at a call site.</PRIN-TRUECOLOR-FIRST>
+      <PRIN-PORTABILITY fact="true" status="doc/done">**Portability.** The primary UI is glyphs + colour roles. It works through SSH, `tmux`, a Linux
+  VT, and a truecolor terminal — degraded but never broken.</PRIN-PORTABILITY>
+      <PRIN-GRACEFUL-DEGRADATION fact="true" status="doc/done">**Graceful degradation.** A worse terminal gets a recognisably simpler look, not a broken one. One
+  `Theme` value is the single source of truth, **projected** onto the detected tier.</PRIN-GRACEFUL-DEGRADATION>
+      <PRIN-WINDOWS-ARE-WINDOWS fact="true" status="doc/done">**Windows are windows.** A modal reads as a solid panel floating over the terminal (filled
+  background + rounded frame + padding + optional shadow) — never as "an error box on the worst
+  terminal."</PRIN-WINDOWS-ARE-WINDOWS>
+      <PRIN-ONE-CSS fact="true" status="doc/done">**One CSS.** A restyle touches only the theme; no component logic, no control flow. The `Theme`
+  is the "CSS" of the TUI (PROP-037 §1.4, §2.2).</PRIN-ONE-CSS>
+    </facts>
+  </section>
+  <glyph-vocabulary title="2. Glyph vocabulary">
+    <p><glyph-lead fact="true" status="doc/done">Every glyph is a constant on the `Theme`, never a hardcoded string at a call site. The table below
+is the **2026-07-16 capture**: the ASCII scaffolding of the day → the target vocabulary. The targets
+shipped (`theme/glyphs.rs`, the TUI goldens, MT-02), so read the "Today" column as history, not as
+current state:</glyph-lead></p>
+    <table>
+      <tr>
+        <td>Purpose</td>
+        <td>Today</td>
+        <td>Tier 3 target</td>
+        <td>Tier 0 (ASCII)</td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-TREE fact="true" status="doc/done">Tree connectors</ROW-GLYPH-TREE></td>
+        <td><fact status="doc/done">`│ ├ └ ─` (✓ Unicode)</fact></td>
+        <td><fact status="doc/done">`│ ├ └ ─`</fact></td>
+        <td><fact status="doc/done">`| -`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-FOLD fact="true" status="doc/done">Fold indicator</ROW-GLYPH-FOLD></td>
+        <td><fact status="doc/done">`+` / `-` (ASCII ✗)</fact></td>
+        <td><fact status="doc/done">`▾` / `▸` (or `▼`/`▶`)</fact></td>
+        <td><fact status="doc/done">`+` / `-`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-DAG fact="true" status="doc/done">DAG re-occurrence</ROW-GLYPH-DAG></td>
+        <td><fact status="doc/done">`(*)` (ASCII ✗)</fact></td>
+        <td><fact status="doc/done">`↩` (or `⊙`/`◆`)</fact></td>
+        <td><fact status="doc/done">`*`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-FLAGS fact="true" status="doc/done">Flags on / off</ROW-GLYPH-FLAGS></td>
+        <td><fact status="doc/done">`x` / `.` (ASCII ✗)</fact></td>
+        <td><fact status="doc/done">`●` / `○` (or `✓`/`·`)</fact></td>
+        <td><fact status="doc/done">`x` / `.`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-ROUNDED fact="true" status="doc/done">Rounded frame</ROW-GLYPH-ROUNDED></td>
+        <td><fact status="doc/done">`╭ ╮ ╰ ╯` (✓ already)</fact></td>
+        <td><fact status="doc/done">`╭ ╮ ╰ ╯`</fact></td>
+        <td><fact status="doc/done">`+ - |`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-SQUARE fact="true" status="doc/done">Square frame</ROW-GLYPH-SQUARE></td>
+        <td><fact status="doc/done">—</fact></td>
+        <td><fact status="doc/done">`┌ ┐ └ ┘`</fact></td>
+        <td><fact status="doc/done">`+ - |`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-CLOSE fact="true" status="doc/done">Close affordance</ROW-GLYPH-CLOSE></td>
+        <td><fact status="doc/done">(none)</fact></td>
+        <td><fact status="doc/done">`✕` (or `✖`)</fact></td>
+        <td><fact status="doc/done">`x`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-SEPARATOR fact="true" status="doc/done">Separator / rule</ROW-GLYPH-SEPARATOR></td>
+        <td><fact status="doc/done">`—`</fact></td>
+        <td><fact status="doc/done">`─` / `╌`</fact></td>
+        <td><fact status="doc/done">`-`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-BAR fact="true" status="doc/done">Bar / indicator</ROW-GLYPH-BAR></td>
+        <td><fact status="doc/done">(none)</fact></td>
+        <td><fact status="doc/done">`▁ ▂ ▃ ▄ ▅ ▆ ▇ █` / braille `⠁ … ⣿`</fact></td>
+        <td><fact status="doc/done">`#`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GLYPH-SCROLL fact="true" status="doc/done">Scroll marker</ROW-GLYPH-SCROLL></td>
+        <td><fact status="doc/done">(none)</fact></td>
+        <td><fact status="doc/done">`▲` / `▼`</fact></td>
+        <td><fact status="doc/done">`^` / `v`</fact></td>
+      </tr>
+    </table>
+    <p><NO-ASCII-PRIMARY fact="true" status="doc/done">**Rule (normative in PROP-037 §2.2 `#glyph-vocabulary`):** in the primary UI (Tier ≥ 1) there are no
+`+`/`-`/`*`/`#`/`x`/`.` used as *semantic* glyphs. ASCII lives only behind the Tier 0 fallback. Menu
+checked/unchecked already uses `◉`/`○` (kept); copy status uses `✓`/`✗` (kept).</NO-ASCII-PRIMARY></p>
+  </glyph-vocabulary>
+  <palette-tokens title="3. Palette system">
+    <p><palette-definition fact="true" status="doc/done">A `Palette` is a data-driven mapping from **semantic role tokens** → `Color`. The roles (the full
+set; everything a component can ask for):</palette-definition></p>
+    <p><palette-roles-list fact="true" status="doc/done">`base` · `surface0` · `surface1` · `muted` · `subtext` · `text` · `accent` · `love` · `gold` ·
+`foam` · `rose` · `selection` · `border` · `paper` · `button_on` · `button_off`.</palette-roles-list></p>
+    <p><role-semantics-lead fact="true" status="doc/done">The role semantics:</role-semantics-lead></p>
+    <facts ordered="false">
+      <ROLE-BASE fact="true" status="doc/done">`base` — the terminal/window ground. The main tree keeps the user's terminal background (so a
+  themed terminal shows through); modals paint a solid `base` panel.</ROLE-BASE>
+      <ROLE-SURFACES fact="true" status="doc/done">`surface0` / `surface1` — raised surfaces (status bar chrome / a subtle fill, an off-flag).</ROLE-SURFACES>
+      <ROLE-MUTED fact="true" status="doc/done">`muted` — borders, disabled text, "why disabled" reasons.</ROLE-MUTED>
+      <ROLE-SUBTEXT fact="true" status="doc/done">`subtext` — secondary foreground (footer descriptions, header values).</ROLE-SUBTEXT>
+      <ROLE-TEXT fact="true" status="doc/done">`text` — primary foreground.</ROLE-TEXT>
+      <ROLE-ACCENT fact="true" status="doc/done">`accent` — the brand: selection highlight, titles, the active key label, the cosmic violet.</ROLE-ACCENT>
+      <ROLE-TONAL-ACCENTS fact="true" status="doc/done">`love` / `gold` / `foam` / `rose` — the four tonal accents (warnings / badges &amp; highlights /
+  static-load &amp; links / secondary badges).</ROLE-TONAL-ACCENTS>
+      <ROLE-SELECTION fact="true" status="doc/done">`selection` — the highlighted row (composed: `accent` ground + `base` text).</ROLE-SELECTION>
+      <ROLE-BORDER fact="true" status="doc/done">`border` — the window/frame stroke (usually `muted`).</ROLE-BORDER>
+      <ROLE-PAPER fact="true" status="doc/done">`paper` — the detail-card panel, distinct from the tree beneath (a "paper card": light panel, dark
+  text on dark themes; inverted on light themes).</ROLE-PAPER>
+      <ROLE-BUTTONS fact="true" status="doc/done">`button_on` / `button_off` — a focused vs unfocused button.</ROLE-BUTTONS>
+    </facts>
+    <p><five-palettes-lead fact="true" status="doc/done">**Five built-in palettes** (the full set — a worked example of mass theming):</five-palettes-lead></p>
+    <table>
+      <tr>
+        <td>Palette</td>
+        <td>Tone</td>
+        <td>`base`</td>
+        <td>`surface0`</td>
+        <td>`surface1`</td>
+        <td>`muted`</td>
+        <td>`subtext`</td>
+        <td>`text`</td>
+        <td>`accent`</td>
+        <td>`love`</td>
+        <td>`gold`</td>
+        <td>`foam`</td>
+        <td>`rose`</td>
+      </tr>
+      <tr>
+        <td><ROW-PAL-ROSE-PINE fact="true" status="doc/done">**Rosé Pine**</ROW-PAL-ROSE-PINE></td>
+        <td><fact status="doc/done">dark (cosmic violet)</fact></td>
+        <td><fact status="doc/done">`#191724`</fact></td>
+        <td><fact status="doc/done">`#1f1d2e`</fact></td>
+        <td><fact status="doc/done">`#26233a`</fact></td>
+        <td><fact status="doc/done">`#6e6a86`</fact></td>
+        <td><fact status="doc/done">`#908caa`</fact></td>
+        <td><fact status="doc/done">`#e0def4`</fact></td>
+        <td><fact status="doc/done">`#c4a7e7`</fact></td>
+        <td><fact status="doc/done">`#eb6f92`</fact></td>
+        <td><fact status="doc/done">`#f6c177`</fact></td>
+        <td><fact status="doc/done">`#9ccfd8`</fact></td>
+        <td><fact status="doc/done">`#ebbcba`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PAL-MOCHA fact="true" status="doc/done">**Catppuccin Mocha**</ROW-PAL-MOCHA></td>
+        <td><fact status="doc/done">dark</fact></td>
+        <td><fact status="doc/done">`#1e1e2e`</fact></td>
+        <td><fact status="doc/done">`#313244`</fact></td>
+        <td><fact status="doc/done">`#45475a`</fact></td>
+        <td><fact status="doc/done">`#6c7086`</fact></td>
+        <td><fact status="doc/done">`#a6adc8`</fact></td>
+        <td><fact status="doc/done">`#cdd6f4`</fact></td>
+        <td><fact status="doc/done">`#cba6f7`</fact></td>
+        <td><fact status="doc/done">`#f38ba8`</fact></td>
+        <td><fact status="doc/done">`#f9e2af`</fact></td>
+        <td><fact status="doc/done">`#94e2d5`</fact></td>
+        <td><fact status="doc/done">`#f5c2e7`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PAL-MACCHIATO fact="true" status="doc/done">**Catppuccin Macchiato**</ROW-PAL-MACCHIATO></td>
+        <td><fact status="doc/done">dark</fact></td>
+        <td><fact status="doc/done">`#24273a`</fact></td>
+        <td><fact status="doc/done">`#363a4f`</fact></td>
+        <td><fact status="doc/done">`#494d64`</fact></td>
+        <td><fact status="doc/done">`#6e738d`</fact></td>
+        <td><fact status="doc/done">`#a5adcb`</fact></td>
+        <td><fact status="doc/done">`#cad3f5`</fact></td>
+        <td><fact status="doc/done">`#c6a0f6`</fact></td>
+        <td><fact status="doc/done">`#ed8796`</fact></td>
+        <td><fact status="doc/done">`#eed49f`</fact></td>
+        <td><fact status="doc/done">`#8bd5ca`</fact></td>
+        <td><fact status="doc/done">`#f5bde6`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PAL-FRAPPE fact="true" status="doc/done">**Catppuccin Frappé**</ROW-PAL-FRAPPE></td>
+        <td><fact status="doc/done">dark</fact></td>
+        <td><fact status="doc/done">`#303446`</fact></td>
+        <td><fact status="doc/done">`#414559`</fact></td>
+        <td><fact status="doc/done">`#51576d`</fact></td>
+        <td><fact status="doc/done">`#737994`</fact></td>
+        <td><fact status="doc/done">`#a5adce`</fact></td>
+        <td><fact status="doc/done">`#c6d0f5`</fact></td>
+        <td><fact status="doc/done">`#ca9ee6`</fact></td>
+        <td><fact status="doc/done">`#e78284`</fact></td>
+        <td><fact status="doc/done">`#e5c890`</fact></td>
+        <td><fact status="doc/done">`#81c8be`</fact></td>
+        <td><fact status="doc/done">`#f4b8e4`</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PAL-LATTE fact="true" status="doc/done">**Catppuccin Latte**</ROW-PAL-LATTE></td>
+        <td><fact status="doc/done">**light**</fact></td>
+        <td><fact status="doc/done">`#eff1f5`</fact></td>
+        <td><fact status="doc/done">`#ccd0da`</fact></td>
+        <td><fact status="doc/done">`#bcc0cc`</fact></td>
+        <td><fact status="doc/done">`#9ca0b0`</fact></td>
+        <td><fact status="doc/done">`#6c6f85`</fact></td>
+        <td><fact status="doc/done">`#4c4f69`</fact></td>
+        <td><fact status="doc/done">`#8839ef`</fact></td>
+        <td><fact status="doc/done">`#d20f39`</fact></td>
+        <td><fact status="doc/done">`#df8e1d`</fact></td>
+        <td><fact status="doc/done">`#179299`</fact></td>
+        <td><fact status="doc/done">`#ea76cb`</fact></td>
+      </tr>
+    </table>
+    <facts ordered="false">
+      <ROSE-PINE-LOCKED fact="true" status="doc/done">**Rosé Pine is canonical-locked**: the eleven `Color::Rgb` values already in
+  `crates/vibe-cli/src/commands/tree/tui/theme.rs` become the Rosé Pine `Palette` cell **unchanged**
+  (R8). A snapshot test pins them.</ROSE-PINE-LOCKED>
+      <CATPPUCCIN-MAPPING fact="true" status="doc/done">**Catppuccin** values are the canonical Catppuccin palette (the four flavours; Latte is the light
+  one). Mapping: `accent`←mauve, `love`←red, `gold`←yellow, `foam`←teal, `rose`←pink, `muted`←overlay0,
+  `subtext`←subtext0.</CATPPUCCIN-MAPPING>
+      <LIGHT-DARK-AWARENESS fact="true" status="doc/done">**Light/dark-awareness:** Latte is the light reference. A `Palette` carries an `is_light: bool`
+  flag; the `paper` role and the `selection` composition invert against it (a light theme's "paper"
+  card is a *dark* inset, a dark text on a light ground, etc.). The derived roles:</LIGHT-DARK-AWARENESS>
+      <DERIVED-SELECTION fact="true" status="doc/done">`selection` = `accent` ground + `base` text (bold) — high-contrast on every palette.</DERIVED-SELECTION>
+      <DERIVED-BORDER fact="true" status="doc/done">`border` = `muted`.</DERIVED-BORDER>
+      <DERIVED-PAPER fact="true" status="doc/done">`paper` = `surface0` (raised, distinct from the tree ground); the detail-card text stays `text`.</DERIVED-PAPER>
+      <DERIVED-BUTTONS fact="true" status="doc/done">`button_on` = `accent` (focused), `button_off` = `surface1`.</DERIVED-BUTTONS>
+    </facts>
+    <p><palette-is-setting fact="true" status="doc/done">The active palette is a `Model` field; through the settings system (Шаг 2) it persists across
+L1/L2/L3 and is overridable at the CLI/env.</palette-is-setting></p>
+  </palette-tokens>
+  <rendering-tiers title="4. Rendering tiers + degradation">
+    <table>
+      <tr>
+        <td>Tier</td>
+        <td>Condition</td>
+        <td>Palette</td>
+        <td>Frames</td>
+        <td>Indicators</td>
+      </tr>
+      <tr>
+        <td><ROW-TIER-3 fact="true" status="doc/done">**3**</ROW-TIER-3></td>
+        <td><fact status="doc/done">`$COLORTERM` ∈ {`truecolor`,`24bit`}</fact></td>
+        <td><fact status="doc/done">full 24-bit RGB</fact></td>
+        <td><fact status="doc/done">rounded `╭╮╰╯`</fact></td>
+        <td><fact status="doc/done">braille / blocks</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TIER-2 fact="true" status="doc/done">**2**</ROW-TIER-2></td>
+        <td><fact status="doc/done">256-colour (`$TERM` contains `256`)</fact></td>
+        <td><fact status="doc/done">palette quantised to the 6×6×6 cube</fact></td>
+        <td><fact status="doc/done">rounded</fact></td>
+        <td><fact status="doc/done">blocks (8)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TIER-1 fact="true" status="doc/done">**1**</ROW-TIER-1></td>
+        <td><fact status="doc/done">16-colour ANSI</fact></td>
+        <td><fact status="doc/done">ANSI role mapping</fact></td>
+        <td><fact status="doc/done">rounded (if supported) / square `┌┐└┘`</fact></td>
+        <td><fact status="doc/done">blocks (8)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-TIER-0 fact="true" status="doc/done">**0**</ROW-TIER-0></td>
+        <td><fact status="doc/done">explicitly dumb (`TERM=linux` / `dumb`)</fact></td>
+        <td><fact status="doc/done">ANSI mono</fact></td>
+        <td><fact status="doc/done">ASCII `+-\|`</fact></td>
+        <td><fact status="doc/done">`#`</fact></td>
+      </tr>
+    </table>
+    <p><TIER-DETECTION fact="true" status="doc/done">**Detection (normative in PROP-037 §2.2 `#rendering-tiers`):** a **pure function** over the
+environment — `detect_tier(colorterm: Option&lt;&amp;str&gt;, term: Option&lt;&amp;str&gt;) -&gt; Tier`. `crossterm` exposes
+no colour-count API, so detection is env-driven (`$COLORTERM` first, then `$TERM`); the TUI reads the
+env once, at launch, in a sanctioned spot, and feeds the values in. The **default is Tier 3** — a
+modern terminal is assumed truecolour even when it does not advertise the capability via env
+(notably on Windows); the lower tiers are the **fallback** (the degradation path), reached only when
+the environment explicitly advertises a lower capability (a 256-colour `TERM`, or an explicitly dumb
+`TERM=linux`/`dumb`). The detected tier is overridable through the settings system.</TIER-DETECTION></p>
+    <p><DEGRADATION-PROJECTION fact="true" status="doc/done">**Degradation = projection.** A `Theme` is built for Tier 3 (the full palette + rounded + braille),
+then **projected** onto the detected tier: a 256-colour terminal gets each role quantised to the
+nearest 6×6×6 cube colour; a 16-colour terminal gets the role mapped to one of the eight ANSI colours;
+Tier 0 falls back to ASCII frames and `#` indicators. One source of truth (`Theme`), many projections.</DEGRADATION-PROJECTION></p>
+  </rendering-tiers>
+  <window-aesthetics title="5. Window / modal aesthetics">
+    <p><window-composition-lead fact="true" status="doc/done">A window is not a fallback. The composition (the `ui::Window` component, PROP-037 §2.3):</window-composition-lead></p>
+    <facts ordered="false">
+      <WIN-SOLID-PANEL fact="true" status="doc/done">a **solid panel** background (filled `base`), floating over the terminal;</WIN-SOLID-PANEL>
+      <WIN-ROUNDED-FRAME fact="true" status="doc/done">a **rounded frame** (`╭╮╰╯` at Tier ≥ 2; the frame stroke is `border` = `muted`);</WIN-ROUNDED-FRAME>
+      <WIN-TITLE-CHIP fact="true" status="doc/done">a **title chip** — the window title rendered as a badge in the `accent` colour, not bare text;</WIN-TITLE-CHIP>
+      <WIN-PADDING-SHADOW fact="true" status="doc/done">**padding** inside the frame; an optional **shadow** (a low-alpha `▓`/`▒` band, or a 1-char offset)
+  so the panel reads as raised;</WIN-PADDING-SHADOW>
+      <WIN-CLOSE-AFFORDANCE fact="true" status="doc/done">a `[✕]` **close affordance** in the top-right.</WIN-CLOSE-AFFORDANCE>
+    </facts>
+    <p><WINDOW-AT-TIER-1 fact="true" status="doc/done">Even at Tier 1 the window reads as a window — the rounded/square frame + filled panel + title chip
+carry the "floating panel" reading without truecolor. The depth-2 modal stack (copy-settings →
+file-path, PROP-037 §6, §10.5) draws each lower layer as a dimmed backdrop; the top window is the
+only one that takes input.</WINDOW-AT-TIER-1></p>
+  </window-aesthetics>
+  <spacing-rhythm title="6. Spacing &amp; rhythm">
+    <p><spacing-vocabulary-lead fact="true" status="doc/done">A beautiful window is mostly **empty space used well**. The complaint that turns a "window" back
+into "an error box on the worst terminal" is content jammed into a corner: a message flush against
+the frame, a row of hints spilling off the left edge with no centre. The fix is a spacing
+vocabulary held in three constants, so a re-space is one edit (the normative surface is
+[PROP-037 §2.2.5](../modules/vibe-cli/PROP-037-tree-tui.xml#spacing)):</spacing-vocabulary-lead></p>
+    <facts ordered="false">
+      <SPACE-INTERIOR-PADDING fact="true" status="doc/done">**Interior padding (`PAD_X` = 2, `PAD_Y` = 1).** Every window frame holds its content off the
+  border — two cells left and right, one row top and bottom. The body of a dialog floats: a blank
+  row under the title chip, a blank row above the base, clear margins at the sides. This is what
+  makes a `╭╮╰╯` frame read as a *raised panel* and not a box drawn around text. `ui::inner_pad` is
+  the one helper; a dialog sizes its window to leave room for the padding, then lays its content
+  into `inner_pad(inner)`.</SPACE-INTERIOR-PADDING>
+      <SPACE-GROUP-GUTTER fact="true" status="doc/done">**Group gutter (`GUTTER` = 1).** A radio option inside a `Group` frame is inset one cell off the
+  stroke, and its selection highlight bar is inset with it — so the `●`/`○` mark and the accent bar
+  sit *inside* the group, never welded to its border. Nested frames (a window, then a group inside
+  it) each keep their own breathing room, so the eye separates the levels.</SPACE-GROUP-GUTTER>
+      <SPACE-RHYTHM-CENTRING fact="true" status="doc/done">**Rhythm &amp; centring.** Structure is read from separation: framed groups get a blank row between
+  them; an inline run of hints gets a `•` separator with a space each side; and a row of controls
+  is **centred in its area**. A left-jammed row reads as debug output — a website footer that slid
+  to the left margin. The footer is the worked example: **two centred rows**, the F-keys above and
+  the navigation below, each centred under the screen with `•`-separated rhythm.</SPACE-RHYTHM-CENTRING>
+    </facts>
+    <p><AIR-RULE fact="true" status="doc/done">The rule in one line: **content floats inside the frame with air on every side, and multi-element
+rows are centred.** Air is not wasted space — it is the difference between a UI and a dump.</AIR-RULE></p>
+  </spacing-rhythm>
+  <image-ready title="7. ratatui-image readiness">
+    <p><IMAGE-READINESS fact="true" status="doc/done">The primary UI is glyphs (portable). But the structure is **ready** for `ratatui-image` (future
+package-preview images, a designed info-card image): placeholder slots and reserved image areas in
+the layout, behind a capability flag. Sixel/Kitty are **not** for the primary UI — only an optional
+image raster when the terminal advertises support. Reserved, not built (PROP-037 §12 non-goal).</IMAGE-READINESS></p>
+  </image-ready>
+  <section title="8. What becomes normative in PROP-037 §2.2">
+    <p><normative-pointer fact="true" status="doc/done">§2.2 carries the anchors — all five exist: `#palette-tokens` (the role set + the five canonical palettes),
+`#glyph-vocabulary` (the replacement table + the "no ASCII in the primary UI" rule),
+`#rendering-tiers` (the tier table + the pure `detect_tier` + the projection law), `#window-aesthetics`
+(the window composition + "a window is not a fallback"), `#spacing` (interior padding, the group
+gutter, and centred rhythm). This lore explains *why*; the contract carries the *values* the code
+traces to.</normative-pointer></p>
+  </section>
+</spec>

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-07-12
 - **Pre-registration:** MT-05 —
-  [`../../../fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`](../../../fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md)
+  [`../../../fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.xml`](../../../fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.xml)
 - **Run:** `01KXBEHEYJCQ1RNJ5657Q31HVA` — worktree mode against the host repo,
   profile `glm` / slot `small`, exit 0, **$0.388743**, ~42 s.
 - **Task:** replace the host root `LICENSE.md` (the "EULA placeholder") with the
@@ -27,11 +27,12 @@ The run reported `acceptance: 0/2 ok`, but that was **spurious**:
 runner — every word was treated as a filename (`FINDSTR: Cannot open to/the/…`,
 see `acceptance.log` + `pod.log`). The deliverable was correct; the boss-side
 `diff` + `grep` was the real gate. Filed as
-[`../../../plans/external/E-BUG-001.md`](../../../plans/external/E-BUG-001.md).
+[`../../../plans/external/E-BUG-001.xml`](../../../plans/external/E-BUG-001.xml).
 
 ## Files
 
 - `license.diff` — the delivered change (old EULA placeholder → UPL-1.0).
 - `acceptance.log`, `pod.log` — the E-BUG-001 evidence.
-- `packet.toml`, `status.json`, `usage.json`, `worker-result.md`,
+- `packet.toml`, `status.json`, `usage.json`, `worker-result.xml`,
   `worker-stdout.jsonl.gz` — the run record and transcript.
+

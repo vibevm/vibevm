@@ -23,15 +23,15 @@ refers to that canonical v0.8.0 tree.
 
 ### The three `##POSITION-IS-A-RESOURCE` clauses
 
-**Rust** — `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:59` (one line):
+**Rust** — `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:59` (one line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): safety-critical invariants live at file top or bottom, never the diluted middle. Prefer more, smaller, single-purpose files at equal token mass. A conform check warns on files over a length threshold **and on invariant-bearing comments in the middle third.** `@impl/done`
 
-**TypeScript** — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:128` (one line):
+**TypeScript** — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:128` (one line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): module-level invariants and the public surface live at the top; prefer more, smaller, single-purpose modules over long files at equal token mass. A conform check warns on files over a length threshold **and on invariant-bearing comments in the diluted middle third** (for `.ts` that structural gate runs through the `typescript-ai-native-conform-frontend` crate — `typescript/tools/conform-frontend-typescript.md` — feeding the same language-neutral engine the Rust stack ships…). `@impl/done`
 
-**Go** — `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:232-236` (multi-line):
+**Go** — `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:232-236` (multi-line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): package-level invariants live in the package doc block (`doc.go`) or at file top; safety-critical facts never sit in a file's diluted middle third. Prefer more, smaller, single-purpose files at equal token mass — Go packages are natively multi-file, so splitting costs nothing (§15). A conform check warns on files over the length budget. `@impl/done`
 

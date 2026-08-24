@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool Design Lessons</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file is the catalog index: *what* this
+package is, *which* lessons it carries and where each one lives, the
+three cross-cutting maxims that sit above the individual lessons, and
+the meta-lesson that keeps a catalog like this from decaying.</scope-of-this-document></p>
+  <p><the-lessons-live-in-two-sibling-documents fact="true" status="impl/done">The
+lessons themselves live in two sibling documents; this one is the map.</the-lessons-live-in-two-sibling-documents></p>
+  <what title="What this catalog is">
+    <p><THESE-ARE-PAID-FOR-LESSONS fact="true" status="spec/done">These are paid-for lessons from building a tool that manages its own
+versions and the package ecosystem around it.</THESE-ARE-PAID-FOR-LESSONS></p>
+    <p><EACH-LESSON-IS-A-SCAR fact="true" status="spec/done">Each is a scar: a design
+that seemed reasonable, shipped, and taught its cost.</EACH-LESSON-IS-A-SCAR></p>
+    <p><A-LESSON-IS-CONTEXT-THE-LAW-AND-WHY fact="true" status="impl/done">A lesson is not a
+tutorial — it is **context + the law + why**, self-contained, so you
+can read the one that governs the decision in front of you and skip the
+rest.</A-LESSON-IS-CONTEXT-THE-LAW-AND-WHY></p>
+    <p><THE-AUDIENCE-IS-TOOL-AUTHORS fact="true" status="impl/done">The audience is tool authors: anyone building a self-updating CLI, an
+installer, a version manager, or a package system.</THE-AUDIENCE-IS-TOOL-AUTHORS></p>
+    <p><THE-VOCABULARY-IS-GENERIC-ON-PURPOSE fact="true" status="impl/done">The vocabulary is generic
+on purpose — "the tool", "the active version", "the instance
+directory", "the package" — because the laws are portable even though
+the mechanics that prove them were written against one platform.</THE-VOCABULARY-IS-GENERIC-ON-PURPOSE></p>
+  </what>
+  <index title="Index">
+    <table>
+      <tr>
+        <td>ID</td>
+        <td>The law (one line)</td>
+        <td>Lives in</td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S1 fact="true" status="impl/done">S1</ROW-LESSON-S1></td>
+        <td><fact status="impl/done">The active version is a live pointer file read per launch, plus the running binary's own path; env is advisory.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#live-pointer`](self-updating-tools.xml#live-pointer)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S2 fact="true" status="impl/done">S2</ROW-LESSON-S2></td>
+        <td><fact status="impl/done">The unit of install and switch is a whole immutable instance directory; activation is a pointer flip.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#immutable-instances`](self-updating-tools.xml#immutable-instances)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S3 fact="true" status="impl/done">S3</ROW-LESSON-S3></td>
+        <td><fact status="impl/done">Never content-hash a large payload for identity; use a monotonic counter and cheap change detection.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#cheap-identity`](self-updating-tools.xml#cheap-identity)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S4 fact="true" status="impl/done">S4</ROW-LESSON-S4></td>
+        <td><fact status="impl/done">Hold sources by reference; never bulk-copy them into the tool's own storage.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#sources-by-reference`](self-updating-tools.xml#sources-by-reference)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S5 fact="true" status="impl/done">S5</ROW-LESSON-S5></td>
+        <td><fact status="impl/done">Edit durable environment state idempotently, additively, with consent — behind a seam tests can stub.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#durable-env-edits`](self-updating-tools.xml#durable-env-edits)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S6 fact="true" status="impl/done">S6</ROW-LESSON-S6></td>
+        <td><fact status="impl/done">Keep required tools in one table the doctor reads and a test asserts.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#runnable-knowledge`](self-updating-tools.xml#runnable-knowledge)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-S7 fact="true" status="impl/done">S7</ROW-LESSON-S7></td>
+        <td><fact status="impl/done">Removal protects the active and the running instance; a full wipe needs an explicit flag and a reconfirm.</fact></td>
+        <td><fact status="impl/done">[`self-updating-tools.xml#safe-removal`](self-updating-tools.xml#safe-removal)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P1 fact="true" status="impl/done">P1</ROW-LESSON-P1></td>
+        <td><fact status="impl/done">A package is a project — the same layout, no package-only convention to learn.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#package-is-project`](packaging-lessons.xml#package-is-project)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P2 fact="true" status="impl/done">P2</ROW-LESSON-P2></td>
+        <td><fact status="impl/done">Ship the runtime, not a description of it.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#ship-runtime`](packaging-lessons.xml#ship-runtime)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P3 fact="true" status="impl/done">P3</ROW-LESSON-P3></td>
+        <td><fact status="impl/done">Identity is the source; exclude build artifacts by denylist, never a per-file allow-list.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#identity-is-source`](packaging-lessons.xml#identity-is-source)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P4 fact="true" status="impl/done">P4</ROW-LESSON-P4></td>
+        <td><fact status="impl/done">Build output goes to a gitignored location, never the committed tree or the identity hash.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#build-output-elsewhere`](packaging-lessons.xml#build-output-elsewhere)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P5 fact="true" status="impl/done">P5</ROW-LESSON-P5></td>
+        <td><fact status="impl/done">Vendor and commit the bootstrap toolchain beside the code that needs it.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#vendor-bootstrap`](packaging-lessons.xml#vendor-bootstrap)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P6 fact="true" status="impl/done">P6</ROW-LESSON-P6></td>
+        <td><fact status="impl/done">Spike the risky topology on the target platform before the irreversible move; keep an evidence-chosen fallback.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#spike-first`](packaging-lessons.xml#spike-first)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-LESSON-P7 fact="true" status="impl/done">P7</ROW-LESSON-P7></td>
+        <td><fact status="impl/done">Extract the general mechanism when the second consumer arrives, not before.</fact></td>
+        <td><fact status="impl/done">[`packaging-lessons.xml#build-on-demand`](packaging-lessons.xml#build-on-demand)</fact></td>
+      </tr>
+    </table>
+  </index>
+  <maxims title="Cross-cutting maxims">
+    <p><three-design-principles-run-under-the-lessons fact="true" status="impl/done">Three design principles run under most of the lessons above.</three-design-principles-run-under-the-lessons></p>
+    <p><the-maxims-are-about-how-a-tool-should-be-shaped fact="true" status="spec/done">They are
+not about self-update or packaging specifically; they are about how a
+tool that both reasons and acts should be shaped.</the-maxims-are-about-how-a-tool-should-be-shaped></p>
+    <maxim-split title="Split by strength, not as a workaround">
+      <p><LET-THE-KNOWLEDGE-HOLDER-AUTHOR-AND-THE-CONTEXT-HOLDER-EXECUTE fact="true" status="impl/done">When one component holds durable domain knowledge and another holds the
+live context, let the first **author** the instruction and the second
+**execute** it.</LET-THE-KNOWLEDGE-HOLDER-AUTHOR-AND-THE-CONTEXT-HOLDER-EXECUTE></p>
+      <p><a-composed-instruction-is-more-trustworthy-than-an-improvised-one fact="true" status="spec/done">A domain tool carries stable, algorithmic knowledge of
+its own rules, so an instruction it composes is more trustworthy than
+one improvised from scratch; the executor with the live context is the
+better hand to carry it out.</a-composed-instruction-is-more-trustworthy-than-an-improvised-one></p>
+      <p><THE-DIVISION-IS-BY-STRENGTH-NOT-A-WORKAROUND fact="true" status="spec/done">The division is by strength, not a
+workaround for a missing feature — which is why it survives once the
+missing feature arrives.</THE-DIVISION-IS-BY-STRENGTH-NOT-A-WORKAROUND></p>
+    </maxim-split>
+    <maxim-transports title="One operation, thin transports">
+      <p><DEFINE-THE-OPERATION-ONCE-AND-EXPOSE-IT-THROUGH-THIN-ADAPTERS fact="true" status="impl/done">Define a reasoning or acting operation **once**, as a transport-agnostic
+core, and expose it through thin adapters — a one-shot command line, a
+persistent server, an in-process call.</DEFINE-THE-OPERATION-ONCE-AND-EXPOSE-IT-THROUGH-THIN-ADAPTERS></p>
+      <p><AN-ADAPTER-ONLY-MARSHALS-AND-THE-CORE-NEVER-KNOWS-ITS-CALLER fact="true" status="impl/done">Each adapter only marshals input
+and output; the core never knows which one called it.</AN-ADAPTER-ONLY-MARSHALS-AND-THE-CORE-NEVER-KNOWS-ITS-CALLER></p>
+      <p><a-new-transport-costs-an-adapter-not-a-re-implementation fact="true" status="spec/done">The payoff is
+that a new transport (or a new caller) costs an adapter, not a
+re-implementation, and the operation's behaviour cannot drift between
+the ways it is reached.</a-new-transport-costs-an-adapter-not-a-re-implementation></p>
+    </maxim-transports>
+    <maxim-fail-loud title="Fail loud, never degrade silently">
+      <p><A-MISSING-REQUIRED-CAPABILITY-IS-AN-ERROR fact="true" status="impl/done">A missing required capability is an error, not a reason to quietly do
+less.</A-MISSING-REQUIRED-CAPABILITY-IS-AN-ERROR></p>
+      <p><STOP-WITH-A-MESSAGE-NAMING-WHAT-IS-MISSING fact="true" status="impl/done">If an operation needs a backend, a toolchain, or a permission it
+does not have, it stops with a message that names exactly what is
+missing and how to supply it.</STOP-WITH-A-MESSAGE-NAMING-WHAT-IS-MISSING></p>
+      <p><silent-degradation-trains-users-to-mistrust-success fact="true" status="spec/done">Silent degradation trains users to
+mistrust success, because they can no longer tell a real result from a
+downgraded one.</silent-degradation-trains-users-to-mistrust-success></p>
+    </maxim-fail-loud>
+  </maxims>
+  <meta-lesson title="The meta-lesson — record the why">
+    <p><EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT fact="true" status="impl/done">Every lesson here records not just the law but the failure that taught
+it, "so a cold reader sees *why*, not just *what*."</EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT></p>
+    <p><THAT-IS-THE-META-LESSON-AND-IT-IS-LOAD-BEARING fact="true" status="impl/done">That is the meta-lesson, and it is load-bearing.</THAT-IS-THE-META-LESSON-AND-IT-IS-LOAD-BEARING></p>
+    <p><a-decision-only-document-decays-into-cargo-cult fact="true" status="spec/done">A design document that states only
+the decision — "the unit of install is a directory" — decays into
+cargo-cult: the next author obeys the shape without the reason, cannot
+tell when the reason has expired, and either ossifies a stale rule or
+discards a live one by accident.</a-decision-only-document-decays-into-cargo-cult></p>
+    <p><THE-REASON-IS-WHAT-LETS-A-FUTURE-READER-RE-DECIDE fact="true" status="spec/done">The reason is the only part that lets
+a future reader re-decide.</THE-REASON-IS-WHAT-LETS-A-FUTURE-READER-RE-DECIDE></p>
+    <p><RECORD-THE-CONSTRAINT-THAT-FORCED-THE-CHOICE fact="true" status="impl/done">Record the constraint that forced the
+choice, and the choice becomes revisable instead of sacred.</RECORD-THE-CONSTRAINT-THAT-FORCED-THE-CHOICE></p>
+  </meta-lesson>
+  <re-derive title="Re-derive for your project">
+    <p><THE-LAWS-ARE-PORTABLE-THE-MECHANICS-ARE-YOURS fact="true" status="impl/done">The laws are portable; the mechanics are yours to re-derive from your
+own platform's constraints.</THE-LAWS-ARE-PORTABLE-THE-MECHANICS-ARE-YOURS></p>
+    <p><re-derive-lead fact="true" status="impl/done">Hand this to an agent, or walk it yourself,
+before writing code:</re-derive-lead></p>
+    <fence>You are designing a self-updating tool or a package format for
+&lt;project&gt; on &lt;target platform&gt;. Before writing code, answer each
+question and record the answer, with its reason, as a decision record:
+1. Unit of install and switch: a single file, or a whole directory?
+   What is in use while it runs, and how do you avoid overwriting it?
+2. Active-version truth: an environment variable, or a file read each
+   launch? Which one switches without a console reload?
+3. Identity: the source, or the build output? What must it never
+   include, and do you exclude by denylist or by allow-list?
+4. Host requirements: where is the build's tool list written so a
+   doctor can check it and a test can assert it?
+5. Durable machine edits: which state, and how is the edit idempotent,
+   additive, consented, and testable off the real box?
+Answer from your platform's edges, not from this catalog's examples.</fence>
+  </re-derive>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-THE-CATALOG-IS-FOURTEEN-SCARS fact="true" status="impl/done">The catalog is fourteen scars: S1–S7 on self-updating tools, P1–P7
+  on packaging. Read the one that governs your decision.</SUM-THE-CATALOG-IS-FOURTEEN-SCARS>
+      <SUM-THREE-MAXIMS-SIT-ABOVE-THEM fact="true" status="impl/done">Three maxims sit above them: split by strength, one operation behind
+  thin transports, fail loud instead of degrading.</SUM-THREE-MAXIMS-SIT-ABOVE-THEM>
+      <SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT fact="true" status="impl/done">Every lesson records the failure that taught it — a decision without
+  its reason decays into cargo-cult.</SUM-EVERY-LESSON-RECORDS-THE-FAILURE-THAT-TAUGHT-IT>
+      <SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM fact="true" status="impl/done">Re-derive the mechanics for your platform; the laws port, the
+  implementation does not.</SUM-RE-DERIVE-THE-MECHANICS-FOR-YOUR-PLATFORM>
+    </facts>
+  </summary>
+</spec>

@@ -12,10 +12,10 @@ _STATUS: ГОТОВО К РУЧНОЙ ИНСПЕКЦИИ ВЛАДЕЛЬЦА — 
 Поправка рамки кампании — слайс С0 этого ТЗ.
 
 **Контракты, которые это ТЗ исполняет, а не переписывает:**
-[PROP-044](../../spec/common/PROP-044-change-native-formats.md) (форматы,
-эпохи, публичный переключатель), [PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.md)
-(индекс), [PROP-002](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md)
-(реестр/публикация), [PROP-010](../../spec/modules/vibe-registry/PROP-010-local-package-cache.md)
+[PROP-044](../../spec/common/PROP-044-change-native-formats.xml) (форматы,
+эпохи, публичный переключатель), [PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.xml)
+(индекс), [PROP-002](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.xml)
+(реестр/публикация), [PROP-010](../../spec/modules/vibe-registry/PROP-010-local-package-cache.xml)
 (склад). Рулинги владельца записываются в эти спеки слайсами, которые их
 строят, — суд тем же заходом.
 
@@ -201,7 +201,7 @@ spec/код) → стейдж → полная панель `bash tools/self-che
 1. Перекличка Ⓜ-фактов §1 командами (панель, scan/mirror/debt,
    `git status`, `mirror --check` — читать строки, не хвост: B-090).
 2. Поправка рамки кампании в
-   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`: (а) фаза T
+   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`: (а) фаза T
    отменена — цитата §0.7 дословно, спеки PHASE-T-* остаются авторским
    материалом будущей кампании; (б) выход кампании = релиз 1.0.0 по этому
    ТЗ; (в) G расщеплена по D10. Файл в судимом корпусе — суд тем же

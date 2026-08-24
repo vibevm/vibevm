@@ -65,7 +65,7 @@ $ sed -n '778,800p' legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md
 - **`vibe trace` as a product command** (the xtask note) …
 - **typescript-ai-native symmetry** …
 - **Owner-court**: copying the machine-quirks list into
-  `spec/boot/90-user.md` (owner-owned file).
+  `spec/boot/90-user.xml` (owner-owned file).
 ```
 
 Six bullets, not seven — `legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:782-793`.
@@ -132,7 +132,7 @@ prevent, so the package does not move:
   rule that the ledger must be enough is not repaired by naming more homes.
   Route (b), and worth the owner's eye: the live plan does at least name the
   zone from its own §10 quick-start
-  (`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3303-3307`).
+  (`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3303-3307`).
 - `A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED` — **route (c), not (b).**
   The host does the opposite *deliberately and in writing*: `BACKLOG.md:24`
   records that «`ZONE-LIFETIMES` says `run/` is throwaway after close-out»,
@@ -148,7 +148,7 @@ prevent, so the package does not move:
    `STATUS-BLOCK-THE-LIFECYCLE-STATE`). Recorded in full under F-144.
 2. **The package's execution-record example diverges from its source and I
    deliberately did not touch it.** The fenced block at
-   `execution-ledger.md:58-65` says «Two predictions falsified … the other four
+   `execution-ledger.xml:58-65` says «Two predictions falsified … the other four
    held»; its source
    `legacy-spec/terraforms/SHRINK-PLAN-v0.1.md:7` says «Three predictions
    falsified» and then enumerates two («…the stale-trio premise…, the ≥1/3
@@ -212,7 +212,7 @@ legacy-spec/terraforms/TREE-TUI-PLAN-v0.1.md:185:git log --oneline -1           
   (+ 6 hits in campaigns/packages-2026-09/harvest/, not quick-start blocks)
 ```
 
-`CAMPAIGN-PLAN-FORMAT.md:207` prescribes
+`CAMPAIGN-PLAN-FORMAT.xml:207` prescribes
 `git log --oneline -3        # tree must match the status line`. Four archived
 plans run it with the comment «matches the status line» and two more with the
 Russian «сверить status line». The practice is not absent; it is the
@@ -229,7 +229,7 @@ The Phase-C grep reached the first, second and fourth and **not the third**.
 perimeter is repaired — that the archive annotates with SUPERSEDED / CLOSED /
 BACKLOGGED, and that the two live plans say RATIFIED and AUTHORED … IN FLIGHT
 — is host non-compliance with a sound three-state prescription, and the
-document already admits annotation at `CAMPAIGN-PLAN-FORMAT.md:78-79`
+document already admits annotation at `CAMPAIGN-PLAN-FORMAT.xml:78-79`
 («Owner review may annotate the state»). Route (b).
 
 The remaining six anchors are the same shape and do not move:
@@ -249,12 +249,12 @@ does not stop requiring a section because the current campaign skipped it.
 **New obligations noticed:**
 
 4. **Host task — the two live plans are missing four required §skeleton
-   elements.** `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` and
-   `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md` carry no «written
+   elements.** `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` and
+   `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml` carry no «written
    against tree», no cold-executable flag, no exit-state count and no Non-goals
-   section, all of which `CAMPAIGN-PLAN-FORMAT.md` §1/§4/§10 require and the
+   section, all of which `CAMPAIGN-PLAN-FORMAT.xml` §1/§4/§10 require and the
    archive supplies. This is the same shape as the owner ruling already
-   recorded at `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3299`
+   recorded at `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3299`
    for the quick-start block — «the rule is sound, and this plan had none» —
    and should be resolved the same way.
 5. **Two Phase-C verdicts in this obligation are measurably false and were
@@ -287,8 +287,8 @@ legacy-spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md:132:### Phase 0 — 
   (+ legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:501 «## 5. Wave 0 — spikes (no commits; gates for everything after)»)
 
 $ for f in spec/terraforms/*.md; do echo -n "$f : "; grep -c 'Phase 0' "$f"; done
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md : 1
-spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md : 0
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml : 1
+spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml : 0
 ```
 
 Two things follow, and they point opposite ways. **Nine** archived plans open
@@ -315,7 +315,7 @@ required elements; the two `SUM-` anchors restate the first two. Every verdict
 in this obligation reduces to «the live campaigns do not do this», which is
 §3.6 route (b) exactly: the package does not move, the compliance work is the
 host's. The host has already accepted that reasoning once for a sibling anchor
-— `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3299-3301` records
+— `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3299-3301` records
 the owner ruling «the rule is sound, and this plan had none» and fixed the
 *plan*.
 
@@ -335,16 +335,16 @@ both live plans**» and «`grep -rniE 'quick.start' campaigns/packages-2026-09/*
 is 0 as well».
 
 ```
-$ for f in spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md; do echo -n "$f : "; grep -ci 'quick.start' "$f"; done
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md : 6
-spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md : 4
+$ for f in spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml; do echo -n "$f : "; grep -ci 'quick.start' "$f"; done
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml : 6
+spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml : 4
 ```
 
 Six and four, not zero. Both live plans carry the section under its canonical
 title, and the wave-2 one says in its own words why:
 
 ```
-$ sed -n '3297,3310p' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
+$ sed -n '3297,3310p' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 ## 10. Quick-start for the executing session {#quick-start}
 
 *Added 2026-07-29 by owner ruling: `flow:campaign-plans`'
@@ -372,9 +372,9 @@ said 7, again a `legacy-spec/research/` miss).
 re-judgement. The other two do not move:
 `PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER` and
 `BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY` are the boot snippet's restatements of
-the `phase-gates.md` and `execution-ledger.md` laws ruled route (b) under
+the `phase-gates.xml` and `execution-ledger.xml` laws ruled route (b) under
 F-155 and F-133, and the same file carries `##NEVER-COMMIT-DURING-PHASE-ZERO`
-at `40-flow-campaign-plans.md:76` — a *Never* rule. Softening a Never because
+at `40-flow-campaign-plans.xml:76` — a *Never* rule. Softening a Never because
 two campaigns skipped Phase 0 is the failure mode §3.6 names outright.
 
 **New obligations noticed:** the same owner-ruling treatment that fixed the
@@ -393,7 +393,7 @@ recorded under F-155.
 carries this package's snippet verbatim, both rules included:
 
 ```
-$ sed -n '103,126p' spec/boot/STATIC.md
+$ sed -n '103,126p' spec/boot/STATIC.xml
 ## At every phase boundary {#boundary}
 
 1. Run the full gate panel; the floor must be green.
@@ -412,8 +412,8 @@ $ sed -n '103,126p' spec/boot/STATIC.md
 ```
 
 `BOUNDARY-REFRESH-THE-STATUS-LINE` — the host agrees with the rule (it is
-`spec/boot/STATIC.md:108-109`) and is simply out of compliance: the wave-2
-plan's line at `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:5`
+`spec/boot/STATIC.xml:108-109`) and is simply out of compliance: the wave-2
+plan's line at `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:5`
 says PHASE A OPEN while its LOG at `:1780` records PHASE C OPENED. A rule the
 consumer has adopted and then not executed is the definition of route (b).
 
@@ -454,7 +454,7 @@ is plainly a policy choice — it turns on zone disposability.
    reason but without marking it as an exception to `flow:campaign-plans`.
    Marking it converts a silent gap into a recorded choice and lets the anchor
    re-judge confirmed. Owner ruling required.
-7. **`spec/boot/STATIC.md` carries the `../flows/campaign-plans/…` relative
+7. **`spec/boot/STATIC.xml` carries the `../flows/campaign-plans/…` relative
    links** at `:98-101` — the compiled-lane defect the plan's
    [§4.5](../PHASE-D-BATCH-PLAN.md#release) already tracks as the F-134/F-142
    family. Noted, not touched.
@@ -470,7 +470,7 @@ is plainly a policy choice — it turns on zone disposability.
 the live campaign, and they do not agree.
 
 ```
-$ sed -n '1,5p' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
+$ sed -n '1,5p' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}
 
 <status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open"/>
@@ -487,7 +487,7 @@ _Generated 2026-07-28T06:05:24Z — do not edit; regenerate with `vibe progress 
 
 The `<status …/>` element's `comment` restates the lifecycle («Phase A open»),
 so it is a second carrier and not merely markup; `run/RESUME.md:5` is a third
-and says Phase C. `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:3` does
+and says Phase C. `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:3` does
 the same («plan in execution: A, B, L and C closed; Phase D … opened»), so the
 pattern holds across both live plans, not just one.
 
@@ -547,12 +547,12 @@ $ grep -n -A3 'core-ai-native' vibe.lock | head
 111:source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/core-ai-native/v0.8.0"
 
 $ for f in .../core-ai-native/*/spec/05-CAMPAIGN-FORM.md vibedeps/flow-core-ai-native/*/spec/05-CAMPAIGN-FORM.md; do …; done
-packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/05-CAMPAIGN-FORM.md : 100 lines | campaign-plans=0 defer=0 supersed=1
-packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md : 117 lines | campaign-plans=0 defer=0 supersed=1
+packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/05-CAMPAIGN-FORM.xml : 100 lines | campaign-plans=0 defer=0 supersed=1
+packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.xml : 117 lines | campaign-plans=0 defer=0 supersed=1
 vibedeps/flow-core-ai-native/0.8.0/spec/05-CAMPAIGN-FORM.md                  : 100 lines | campaign-plans=0 defer=0 supersed=1
 ```
 
-The single `supersed` hit is `…/05-CAMPAIGN-FORM.md:36`, «the rule that the
+The single `supersed` hit is `…/05-CAMPAIGN-FORM.xml:36`, «the rule that the
 project's living state supersedes» — about the WAL, not about this package.
 
 **Perimeter searched:** **both** authored version slots
@@ -630,20 +630,20 @@ WITHOUT fenced example: [2, 5, 7, 8, 9, 10, 13, 14, 15] -> 9
 anchors `{#s1-status}` … `{#s15-deferrals}`.
 
 Of the nine without a fence, four carry a worked example inline in prose —
-§5 the stale-trio (`CAMPAIGN-PLAN-FORMAT.md:136-141`), §7 «P3 — fewer than 10
+§5 the stale-trio (`CAMPAIGN-PLAN-FORMAT.xml:136-141`), §7 «P3 — fewer than 10
 test expectations break…» (`:166-167`), §9 «flaky network: re-probe…»
 (`:182-184`), §10 «does NOT extend the gate to the two remaining modules…»
 (`:194-196`). **Five carry no example of any kind: §2, §8, §13, §14, §15.**
 
 **This differs from the verdict, which said four.** The verdict listed §15
 among the seven fenced sections; §15 (`:236-244`) has no fence and no inline
-example — two bullets and a pointer to `execution-ledger.md §deferrals`, where
+example — two bullets and a pointer to `execution-ledger.xml §deferrals`, where
 the worked deferral example actually lives. So the true tally is **ten of
 fifteen**, not eleven. The verdict's conclusion — that «each» is false — holds;
 its arithmetic did not.
 
 **Perimeter searched:** the whole of
-`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`
+`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml`
 (284 lines), every `### N — ` section and every fenced block, plus a read of
 each of the nine unfenced sections for inline examples.
 
@@ -661,7 +661,7 @@ one, which is the defect this whole campaign exists to drain.
     record, §8 Phases, §13 Review points, §14 Execution ledger, §15 Deferrals
     ledger. Four of them are legitimately pointers to sibling documents that do
     carry the example; §15 is the odd one, since it duplicates the deferrals
-    spec that `execution-ledger.md:151-169` already worked. Not a defect I was
+    spec that `execution-ledger.xml:151-169` already worked. Not a defect I was
     asked to repair, and adding examples would change the document rather than
     correct it — recorded for whoever decides whether the README's promise or
     the document should move.
@@ -742,7 +742,7 @@ split two ways and neither way is mine:
 **New obligations noticed:**
 
 11. **`LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST` contradicts
-    `from-research-to-roadmap.md`'s `A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE`
+    `from-research-to-roadmap.xml`'s `A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE`
     and the template's own §-order.** Two of them cannot both be last. Repaired
     on the roadmap side under F-156 below; recording it here because the
     obligation registry has these on two different rows and a reader of either
@@ -759,15 +759,15 @@ split two ways and neither way is mine:
 itself three ways, inside three files that ship together.
 
 ```
-$ sed -n '18p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md
+$ sed -n '18p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.xml
 ##A-RESEARCH-DOCUMENT-ENDS-IN-A-DELTA-TABLE A research document ends in a table of numbered deltas. @impl/done
 
-$ sed -n '139,141p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
+$ sed -n '139,141p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml
 ##LAW-FIVE-THE-DOCUMENT-CLOSES-WITH-THE-RE-FETCH-LIST The document closes with **every source URL, its access date, and
 the subject's version at capture** — the exact list needed to refresh
 the study later. @impl/done
 
-$ sed -n '44,46p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md
+$ sed -n '44,46p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.xml
 **Reading shape.** §1 the subject in its own words · §2 capability
 inventory · §3 where we trail · §4 where we lead · §5 numbered
 deltas · §6 open questions · §7 re-fetch list.
@@ -814,7 +814,7 @@ make the discipline describe the lapse.
 12. **The revisit-trigger gap is a host obligation spanning two flows.**
     `flow:decision-records` defines «When to revisit — a trigger: metric +
     threshold + where it is observed»
-    (`packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78`),
+    (`packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml:78`),
     this flow requires it on every accepted delta, and zero landings carry one.
     The nearest instance, fractality's INVENTORY S8 «too young to adopt now»,
     names no trigger.
@@ -864,7 +864,7 @@ gap on the *consumer's* side of a rule that is right.
 three archived studies), the fractality notes directory
 (`packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/`, 22 files)
 and its `spec/refs/INVENTORY.md`, `ROADMAP.md`, `spec/**`, `campaigns/**`,
-`spec/boot/STATIC.md` (the host's compiled copy of this snippet, at :149 and
+`spec/boot/STATIC.xml` (the host's compiled copy of this snippet, at :149 and
 :171). Globs `*.md` throughout.
 
 **What changed and why:** nothing. Every verdict here reduces to «the corpus
@@ -891,7 +891,7 @@ which it is for the quoting half.
 demonstrated at all: the fragment has no re-fetch section.**» It has one.
 
 ```
-$ sed -n '186,191p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md
+$ sed -n '186,191p' packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.xml
 ## 7. Re-fetch list
 - quarry.example/docs/remote — the remote-cache pitch quoted in §2.1 —
   accessed 2026-07-01.
@@ -911,8 +911,8 @@ carries `MINIATURE-LAW-FIVE` as **confirmed**, with this note in its evidence:
 ```
 $ python -c "…run/cache.json… → verdicts.MINIATURE-LAW-FIVE"
 v  -> confirmed
-ev -> [ '…/research-template.md:189  - ##MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the',
-        '…/research-template.md:181  ## 7. Re-fetch list',
+ev -> [ '…/research-template.xml:189  - ##MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the',
+        '…/research-template.xml:181  ## 7. Re-fetch list',
         "CLOSED F-297 (Phase D, wave 1, route a). The worked fragment was introduced as obeying
          all five laws and obeyed four: Law 5 asks for a closing re-fetch list with the subject's
          version at capture, and the fragment stopped at 5. Repaired on the STRONGER side - the
@@ -926,7 +926,7 @@ measured on the caption (`the-fragment-obeys-all-five-laws-lead`) where F-297
 measured it on the bullet (`MINIATURE-LAW-FIVE`). The caption is now true and
 should re-judge confirmed.
 
-**Perimeter searched:** the whole of `research-template.md` (211 lines, the
+**Perimeter searched:** the whole of `research-template.xml` (211 lines, the
 skeleton at :22-110 and the worked fragment at :151-191), and
 `campaigns/packages-2026-09/run/cache.json` +
 `campaigns/packages-2026-09/run/state/corpus.json` for every recorded verdict
@@ -964,7 +964,7 @@ disposition.
 directive with its rationale quoted verbatim, in two places.
 
 ```
-$ grep -n -A3 'CLEAN-ROOM-RULE' spec/boot/90-user.md
+$ grep -n -A3 'CLEAN-ROOM-RULE' spec/boot/90-user.xml
 38:## Third-party research code — clean-room rule (owner directive, 2026-07-07)
 40:##CLEAN-ROOM-RULE **`eth-sri/type-constrained-code-generation` … is inspiration-only —
    NEVER a code source.** … no code from that repository may be copied, adapted line-by-line,
@@ -973,7 +973,7 @@ $ grep -n -A3 'CLEAN-ROOM-RULE' spec/boot/90-user.md
    behavior (identical results are fine; borrowed expression is not). … Apply the same posture to
    any other research repository until the owner explicitly clears its license/patent status.
 
-$ sed -n '160,174p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md
+$ sed -n '160,174p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml
 The owner's clean-room order, operative verbatim: «мы именно вычленяем и
 понимаем идеи, мы не должны копировать код. … нужно понять его
 смысл и реализовать Clean Room Implementation. … копирование кода
@@ -987,10 +987,10 @@ The measurable consequence the verdict cites is real: **0 blockquote lines
 across the 22 files** of the fractality notes directory, against 27 in the
 archived Tessl study.
 
-**Perimeter searched:** `spec/boot/90-user.md` (the user-owned boot file, whole
+**Perimeter searched:** `spec/boot/90-user.xml` (the user-owned boot file, whole
 file), `packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/` (the
 research plans, D-R4 through D-R7),
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md` (the
+`packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.xml` (the
 clean-room register), and the notes directory
 `…/spec/refs/notes/` (22 `.md` files) for blockquote lines.
 
@@ -1014,9 +1014,9 @@ subjects would close this anchor without weakening the law for anyone.
 **New obligations noticed:**
 
 16. **The clean-room exception is unwritten *as an exception to this flow*.**
-    `spec/boot/90-user.md:38-40` states the directive but never names
+    `spec/boot/90-user.xml:38-40` states the directive but never names
     `flow:comparative-research` or which of its laws it overrides; the flow's
-    boot snippet is compiled into the same lane at `spec/boot/STATIC.md:149`
+    boot snippet is compiled into the same lane at `spec/boot/STATIC.xml:149`
     and states the opposite. A cold session boots both and is given no rule for
     which wins. That is the host-side record §3.6 (c) requires and it does not
     exist yet.
@@ -1032,14 +1032,14 @@ subjects would close this anchor without weakening the law for anyone.
 `##critiquing-a-paraphrase-is-critiquing-a-straw-man` —
 «Critiquing a paraphrase is critiquing a straw man: the paraphrase is already
 your reading, and a reader cannot check your judgement against a summary you
-wrote» (`COMPARATIVE-RESEARCH-PROTOCOL.md:90-93`). The host's corpus does
+wrote» (`COMPARATIVE-RESEARCH-PROTOCOL.xml:90-93`). The host's corpus does
 exactly the shape this sentence calls a straw man, and says so in its own text:
 
 ```
 $ sed -n '15p' legacy-spec/research/action-systems-vscode-idea.md
 …Everything here is in our words; short verbatim snippets (`file:line`) ground claims,
 
-$ sed -n '4,6p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.md
+$ sed -n '4,6p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/INVENTORY.xml
 Clones and downloads live under the host `/refs/` tree, which is gitignored
 wholesale — nothing third-party is ever committed. The host clean-room
 [rule] … take*, never its text or code shapes.

@@ -177,8 +177,17 @@ node-семейство); MSIX-алиаса в WindowsApps нет — ранне
 (встроенный движок, `…WindowsApps\OpenAI.Codex_…\app\resources\codex.exe`,
 родитель — ChatGPT.exe) — kill-по-имени `codex*` попадает в НЕГО, а не
 в node-раннера, и клиент умирает; вот механика «GUI падает каждый раз».
-Правильный kill моего раннера = PID node-процесса с маркером пакета в
-cmdline, точечно. Закрыто сильнее опции (владелец, 2026-08-24, «поменяй в codexrunner
+Правильный kill моего раннера = PID-точечный по маркеру. **Измеренная
+форма семейства (2026-08-24, живой K26-раннер):** npm-CLI разворачивается
+в `sh.exe → node.exe → codex.exe` (npm-пакет несёт СОБСТВЕННЫЙ
+`codex.exe` — ТО ЖЕ имя образа, что у движка GUI: kill-по-имени фатален
+навсегда, независимо от MSIX-эры), это семейство ОТЦЕПЛЕНО от дерева
+харнесс-задачи (родительская цепочка sh обрывается — TaskStop его не
+достаёт в принципе, что заодно объясняет
+`#fact-a-killed-task-does-not-kill-the-worker-and-the-survivor-writes-late`),
+и все три процесса несут маркер пакета в cmdline. Порядок kill:
+`codex.exe`-PID первым, затем node/sh, если задержались, — каждый по
+своему PID. Закрыто сильнее опции (владелец, 2026-08-24, «поменяй в codexrunner
 кодекс на коммандлайновый… проверь что он уже лежит в PATH»): оба
 лаунчера (bash + ps1) теперь резолвят codex через PATH с явным
 СТРАЖЕМ — резолюция в `*WindowsApps*` (MSIX) отвергается с рецептом,
@@ -1248,7 +1257,7 @@ describes.
 **A worktree is a full checkout, so it carries `CLAUDE.md`, and the worker obeys
 its boot contract before it reads a word of the packet (2026-08-16, measured on
 both lanes):** each worker's opening `PROGRESS` line named the boot lane —
-`spec/boot/STATIC.md` (2186 lines), `INDEX.md` and its eight files, `spec/WAL.md`
+`spec/boot/STATIC.xml` (2186 lines), `INDEX.md` and its eight files, `spec/WAL.xml`
 — and only then turned to the task. Nothing failed because of it: both packets
 were accepted on the first pass. But the reading is not free, and it is the
 PACKET's omission, not the worker's diligence: a packet built under

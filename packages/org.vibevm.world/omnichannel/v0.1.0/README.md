@@ -16,10 +16,10 @@ library is that third place. @status:impl/done
 
 @fact:package-contents-lead This package ships: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md` — the rule, the surface
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml` — the rule, the surface
   vocabulary and its three classes, what "thin" means per class, how a
   project declares its floor, and why the coverage table must be derived. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/68-flow-omnichannel.md` — the boot snippet read at session
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/68-flow-omnichannel.xml` — the boot snippet read at session
   start: the rule, the vocabulary, the obligations and the never-do list. @status:impl/done
 
 ## What it is not {#not}
@@ -38,3 +38,4 @@ than a debt. @status:impl/done
 @fact:DELETE-THE-SURFACE-ON-PAPER Delete the surface on paper. If anything but presentation and
 transport is lost, the split is wrong — the capability had leaked into the
 surface. @status:impl/done
+

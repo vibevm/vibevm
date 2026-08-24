@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>fuguresearch — started plan (2026-07-11 01:10)</title>
+  <p>**Plan:** `fractality/v0.1.0/spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml`
+— Campaign 3 · Stage A2: the Sakana Fugu research. Launched at
+birth per the owner's «Напиши план и выполни» (no execution gate).
+Method inherited from the RLM research plan (waves, clean-room
+intake, tiered study, synthesis form); deviations: four owner-named
+anchors, no fixed 5/5/5, and a second analysis deliverable — the
+Fugu↔fractality mapping with Stage B draft amendments.</p>
+  <section title="Checklist">
+    <list ordered="false">
+      <item>[x] Ф0 — plan landed, execution immediate</item>
+      <item>[ ] Ф1 — W1 deep research (background) + W2 12 frozen queries
+      (before reading W1); raws → `refs/study/fugu-waves/`</item>
+      <item>[ ] Ф2 — merge: anchors + adopted extras + runners-up;
+      INVENTORY rows with license verdicts BEFORE study</item>
+      <item>[ ] Ф3 — intake: site snapshot, PDFs, repos @pins, snapshots</item>
+      <item>[ ] Ф4 — study: T1 Fugu (page+tech report) → T2 TRINITY / L2O /
+      extras → T3 grouped; GLM surveys under live observation
+      (first-output timeout armed — Stage A lesson)</item>
+      <item>[ ] Ф5 — `FUGU-SYNTHESIS.xml` (FD-deltas)</item>
+      <item>[ ] Ф6 — `FUGU-FRACTALITY-MAPPING.xml` (× RD-deltas / VISION /
+      D-C3) + Stage B draft amendments</item>
+      <item>[ ] Ф7 — close: P-F1…P-F4 verdicts, ledger, completed dashboard</item>
+    </list>
+  </section>
+  <section title="Risks / problems / uncertainties">
+    <list ordered="false">
+      <item>The topic is narrow and fresh (anchor arXiv id is June 2026) —
+  candidate pool may be thin (P-F1's falsifier is a real branch).</item>
+      <item>sakana.ai may be JS-heavy for snapshots — fallback: WebFetch
+  extraction recorded as the study copy, marked as such.</item>
+      <item>Delegate stall risk carried from Stage A: first-output timeout
+  on every GLM launch this time, not only mid-run silence.</item>
+      <item>Mapping discipline: changes to the Stage B draft must cite
+  FD-deltas — no vibes-only edits to a plan the owner will
+  commission.</item>
+    </list>
+  </section>
+</spec>

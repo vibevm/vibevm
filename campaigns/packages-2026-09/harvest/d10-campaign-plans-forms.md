@@ -24,14 +24,14 @@ flow being softened.
 
 Twelve blocks follow: six forms × two plans.
 
-- [`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`](../../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md)
+- [`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml)
   — wave 1, **CLOSED** 2026-07-26. Its six forms are **honest retrospect**,
   written at close-out on 2026-07-31 under the owner's bring-into-line ruling.
   Not one of them pretends to have been written in advance, and each says so in
   its own opening line. A retrospective risk register is a list of what
   happened; a retrospective Phase 0 is a statement of what stood before Phase A
   *and* of the fact that no Phase 0 ran.
-- [`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md)
+- [`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml)
   — wave 2, **LIVE**, Phase D near its exit. Its Phase 0 and the closed half of
   its commit map are retrospective; its safe stop, risks, non-goals and
   whole-campaign acceptance are **real going forward** and bind the sessions
@@ -44,9 +44,9 @@ both plans carry none**, and the blocks below therefore carry `{#slug}` heading
 anchors only — which is what "match the file exactly" resolves to here:
 
 ```sh
-grep -c '^##[A-Za-z]' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md      # 0
-grep -c '^##[A-Za-z]' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md  # 0
-grep -o '@\(spec\|impl\|doc\)/[a-z]*' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md | sort | uniq -c
+grep -c '^##[A-Za-z]' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml      # 0
+grep -c '^##[A-Za-z]' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml  # 0
+grep -o '@\(spec\|impl\|doc\)/[a-z]*' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort | uniq -c
 #   13 @impl/done   ·   5 @spec/done   — every one of them inside prose ABOUT
 #   another document's markers, never marking a fact of this plan's own
 ```
@@ -174,9 +174,9 @@ verification step.
 
 ---
 
-# SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md — wave 1, CLOSED {#w1}
+# SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml — wave 1, CLOSED {#w1}
 
-**File:** `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`, 1 437 lines at
+**File:** `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 1 437 lines at
 HEAD `fffcb494` (`wc -l`). Sections today: §0 mandate (13) · §1 baseline (39) ·
 §2 executors (52) · §3 layout (64) · §4 resume (80) · §5 phases (99, with A 104,
 B 127, L 145, C 196, D 216, E 241, F 262, G 280, Close-out 301) · §6 recurrence
@@ -368,7 +368,7 @@ exactly the two that were never named. Reason and disposition on each, per
 
 - **Does NOT extend to `packages/**`.** *Reason:* one corpus at a time; the
   method had to be proven before it was scaled. *Disposition:* **wave 2**,
-  [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md).
+  [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml).
 - **Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
   specspace, own boot contract, own WAL; the mandate excluded it in as many
   words («the fractality specspace excluded until the owner says otherwise»).
@@ -380,12 +380,12 @@ exactly the two that were never named. Reason and disposition on each, per
   as historical records, not living contracts. *Disposition:* rejected outright
   — and reinforced by the owner's ruling of 2026-07-31 that `legacy-spec/**` is
   not evidence of practice in either direction.
-- **Does NOT mark generated artifacts.** `spec/boot/STATIC.md`,
-  `spec/boot/INDEX.md` and `spec/WAL.md` in session form. *Reason:* markup
+- **Does NOT mark generated artifacts.** `spec/boot/STATIC.xml`,
+  `spec/boot/INDEX.md` and `spec/WAL.xml` in session form. *Reason:* markup
   written into a generated file dies at the next `vibe install` or wind-down.
   *Disposition:* rejected; owner rulings 2026-07-24. The *authored* boot
   snippets (`00-core`, `90-user`) stay observed via `spec/boot/[0-9]*.md`.
-- **Does NOT edit `spec/boot/90-user.md`.** *Reason:* user-owned;
+- **Does NOT edit `spec/boot/90-user.xml`.** *Reason:* user-owned;
   `00-core`'s `NOTOUCH-90-USER` forbids it to every session. *Disposition:*
   deferred **to the owner, not to a campaign** — F-063's half was handed over in
   full rather than edited, and closed 2026-07-26 when the owner lifted the bar.
@@ -525,7 +525,7 @@ the perimeter below gives the rest.
 **Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
 
     git log --reverse --format='%h %ad %s' --date=short -- \
-      campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md
+      campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
 
 **139 commits**, `b1276c39` (plan authored, 2026-07-24) → `f5248dae`
 (2026-07-29). The zone catches the work commits as well as the bookkeeping ones
@@ -642,7 +642,7 @@ rather than incidental.
 over the perimeter above, at HEAD `fffcb494`:
 
 ```sh
-P='campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md'
+P='campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml'
 git rev-list --count b1276c39^..60100f87 -- $P   #  4   Phase A (in perimeter)
 git rev-list --count 60100f87..a1bb2111  -- $P   # 60   Phase B
 git rev-list --count a1bb2111..15c5bb30  -- $P   #  7   Phase L
@@ -746,9 +746,9 @@ the block says so rather than implying a green floor nobody observed.
 
 ---
 
-# PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md — wave 2, LIVE {#w2}
+# PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml — wave 2, LIVE {#w2}
 
-**File:** `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, 3 788 lines
+**File:** `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 3 788 lines
 at HEAD `fffcb494` (`wc -l`). Sections today: §0 mandate (15) · §1 baseline (34)
 · §2 executors (71) · §3 decisions (85, with 3.1 at 91, 3.2 at 119, 3.3 at 136)
 · §4 campaign zone (147) · §4.5 amendments (163) · §5 phases (218, with A 220,
@@ -823,7 +823,7 @@ owner's: whether the `-lang` slots should eventually be re-minted so a v0.7.0
 slot stops carrying 0.8.0 engines.
 
 **The corpus kept moving after Phase B opened**, which a Phase 0 would also have
-settled: **344 → 308** (DRIFT-024 removed 33 `LICENSE.md` by a file-name default
+settled: **344 → 308** (DRIFT-024 removed 33 `LICENSE.xml` by a file-name default
 and three derived `cards/INDEX.md` indexes) **→ 259 at Phase C's gate**, as the
 superseded version slots, the legacy language projections, the book and the
 discovery prompt each left on their own owner ruling and their own reason. Every
@@ -920,7 +920,7 @@ listed with the instance rather than as a caution:
 - **A wind-down that rewrites the files a finished batch cites.** *Fired
   2026-07-28:* W2's four evidence tables were verified clean at 3 unresolvable
   and re-read **65** at the next session's open — `CONTINUE.md` was overwritten
-  wholesale and `spec/WAL.md`'s `_Updated:` line rewritten *after* the tables
+  wholesale and `spec/WAL.xml`'s `_Updated:` line rewritten *after* the tables
   were returned and committed. Not one of the 62 was a fiction, and nobody was
   left who could re-anchor them. **The durable-citation rule exists for exactly
   this**, and the controlled experiment is on record: the one batch written
@@ -1000,7 +1000,7 @@ judgment axis, the doc trees) are exactly the two that cost it a phase.*
   line of a prompt addressed to another model. *Disposition:* owner rulings
   F-091 («исключи spec/book/**»), F-080 («legacy-projections — это замороженная
   история») and F-096. **The line this draws:** every document that makes a
-  claim *about* the artifact stays observed — README, boot snippet, `usage.md`;
+  claim *about* the artifact stays observed — README, boot snippet, `usage.xml`;
   only the payload leaves, and it leaves because it asserts nothing this project
   could be wrong about.
 - **Does NOT soften a package to close an obligation.** *Reason:* it is the one
@@ -1145,7 +1145,7 @@ command gives the rest.
 **Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
 
     git log --reverse --format='%h %ad %s' --date=short -- \
-      campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
+      campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 
 **336 commits**, `3aa8295e` (plan authored, 2026-07-25) → `fffcb494`
 (2026-07-31), the campaign still open. Over the same span the repository as a
@@ -1248,7 +1248,7 @@ recorded finding.*
 over the perimeter above, at HEAD `fffcb494`:
 
 ```sh
-P='campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md'
+P='campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml'
 git rev-list --count 3aa8295e^..6ad264da -- $P   #   3   plan authoring + ratification
 git rev-list --count 6ad264da..fc731127  -- $P   # 124   Phase A + Phase B
 git rev-list --count fc731127..ef40a1ce  -- $P   # 146   Phase C

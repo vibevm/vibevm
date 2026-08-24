@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The Omnichannel Protocol</title>
+  <status stage="impl" state="done"/>
+  <p><self-uri fact="true" status="spec/done">`spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL`</self-uri></p>
+  <p><PROTOCOL-STATEMENT fact="true" status="impl/done">A capability lives in a library. Every way a user or an agent reaches
+it — command line, TUI, MCP server, HTTP API — is a **surface**: thin,
+replaceable, and never the place the capability is defined.</PROTOCOL-STATEMENT></p>
+  <why title="Why this is a discipline and not a preference">
+    <p><THE-SECOND-SURFACE-IS-WHERE-IT-HURTS fact="true" status="spec/done">The cost never appears when the first surface is written. It appears
+when the second one is, because the logic is already inside the first —
+so the second either reimplements it or reaches into a place that was
+never meant to be an interface.</THE-SECOND-SURFACE-IS-WHERE-IT-HURTS></p>
+    <p><TWO-SURFACES-THAT-DIVERGE-ARE-INDISTINGUISHABLE-FROM-A-BUG fact="true" status="spec/done">Two surfaces of one capability that answer differently are
+indistinguishable from a bug, and nobody can say which one is wrong
+without a third place to appeal to. That third place is the library.</TWO-SURFACES-THAT-DIVERGE-ARE-INDISTINGUISHABLE-FROM-A-BUG></p>
+    <p><THE-DIVERGENCE-IS-SMALL-AND-SILENT fact="true" status="spec/done">The divergence is usually small enough to survive review — a path
+separator, a rounding, a default — which is exactly why it needs a
+structural answer rather than care.</THE-DIVERGENCE-IS-SMALL-AND-SILENT></p>
+  </why>
+  <placement title="Where this belongs, and where it does not">
+    <p><THIS-IS-ABOUT-DELIVERY-NOT-ABOUT-CODE-STYLE fact="true" status="impl/done">This flow is about **how a capability reaches its user**. It is not a
+code-style rule and it is not part of any language discipline: a project
+writing no AI-native code at all still has surfaces and still pays for
+letting them diverge.</THIS-IS-ABOUT-DELIVERY-NOT-ABOUT-CODE-STYLE></p>
+    <p><IT-IS-INSTALLED-BY-CHOICE fact="true" status="impl/done">It is installed by a project that wants it, like every other
+cross-cutting practice in this group — git practices, addressable specs,
+campaign plans, source mirrors.</IT-IS-INSTALLED-BY-CHOICE></p>
+  </placement>
+  <vocabulary title="The vocabulary">
+    <p><ONE-LIST-SO-EVERY-PROJECT-MEANS-THE-SAME-THING fact="true" status="impl/done">One list, so that two projects mean the same thing by the same word:</ONE-LIST-SO-EVERY-PROJECT-MEANS-THE-SAME-THING></p>
+    <table>
+      <tr>
+        <td>class</td>
+        <td>surfaces</td>
+        <td>what the class shares</td>
+      </tr>
+      <tr>
+        <td><ROW-CLASS-LIBRARY fact="true" status="impl/done">**library**</ROW-CLASS-LIBRARY></td>
+        <td><fact status="impl/done">—</fact></td>
+        <td><fact status="impl/done">not a surface; what the others sit on. Mandatory once there is more than one surface</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CLASS-LOCAL fact="true" status="impl/done">**local, synchronous**</ROW-CLASS-LOCAL></td>
+        <td><fact status="impl/done">CLI · TUI · GUI</fact></td>
+        <td><fact status="impl/done">rendering one dataset into different views for a human present at the machine</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CLASS-AGENT fact="true" status="impl/done">**agent-facing**</ROW-CLASS-AGENT></td>
+        <td><fact status="impl/done">MCP · LSP · IDE extension</fact></td>
+        <td><fact status="impl/done">tool description, schema, and what an agent can discover without being told</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-CLASS-NETWORKED fact="true" status="impl/done">**networked**</ROW-CLASS-NETWORKED></td>
+        <td><fact status="impl/done">REST · GraphQL · Queue</fact></td>
+        <td><fact status="impl/done">contract versioning and compatibility with clients you do not deploy</fact></td>
+      </tr>
+    </table>
+    <p><THE-CLASS-IS-THE-USEFUL-UNIT fact="true" status="impl/done">The class, not the individual surface, is the useful unit: it decides
+what repeats and therefore what belongs in the library versus what each
+surface legitimately does for itself.</THE-CLASS-IS-THE-USEFUL-UNIT></p>
+  </vocabulary>
+  <thinness title="What &quot;thin&quot; means, per class">
+    <p><THIN-IS-DEFINED-PER-CLASS-NOT-GLOBALLY fact="true" status="impl/done">"Thin" cannot be one rule, because the classes fail differently:</THIN-IS-DEFINED-PER-CLASS-NOT-GLOBALLY></p>
+    <facts ordered="false">
+      <THIN-LOCAL fact="true" status="impl/done">**local** — the surface may own presentation entirely: column
+  widths, colour, paging, progress. It may not own a decision. If removing
+  the surface would lose a rule about *what is true*, the rule is in the
+  wrong place.</THIN-LOCAL>
+      <THIN-AGENT fact="true" status="impl/done">**agent-facing** — the surface owns its description and schema, and
+  those are part of the surface, not of the library: an MCP tool's prose is
+  written for a reader the library never sees. It owns nothing else.</THIN-AGENT>
+      <THIN-NETWORKED fact="true" status="impl/done">**networked** — the surface owns its wire contract and its version
+  policy. It may translate; it may not compute.</THIN-NETWORKED>
+    </facts>
+    <p><THE-TEST-IS-DELETION-OF-THE-SURFACE fact="true" status="impl/done">The test that settles arguments: **delete the surface on paper.** If
+anything but presentation and transport is lost, the split is wrong.</THE-TEST-IS-DELETION-OF-THE-SURFACE></p>
+  </thinness>
+  <declaration title="Declaring a floor">
+    <p><A-PROJECT-DECLARES-WHICH-SURFACES-IT-OWES fact="true" status="impl/done">A project declares which surfaces it owes. The declaration is the
+whole point: without it, "should this have an MCP tool?" is answered per
+capability, by whoever is writing it, differently each time.</A-PROJECT-DECLARES-WHICH-SURFACES-IT-OWES></p>
+    <p><AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT fact="true" status="impl/done">**An undeclared surface is not a debt.** A project with no LSP has
+not failed to build one; it has not chosen to. This is what keeps the
+vocabulary from reading as a checklist of things everyone owes.</AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT></p>
+    <p><A-NEW-CAPABILITY-IS-BORN-WITH-THE-DECLARED-SET fact="true" status="impl/done">A new capability ships with every declared surface, or with a
+recorded reason why one sufficed — recorded where the capability is
+specified, not in a plan.</A-NEW-CAPABILITY-IS-BORN-WITH-THE-DECLARED-SET></p>
+  </declaration>
+  <derived title="The coverage table is derived">
+    <p><A-HAND-KEPT-COVERAGE-TABLE-ROTS fact="true" status="impl/done">A table listing which capability has which surface must not be
+hand-maintained. It is a restated fact, and a restated fact diverges from
+what it restates — reliably, and without announcing it.</A-HAND-KEPT-COVERAGE-TABLE-ROTS></p>
+    <p><THE-VOCABULARY-IS-MACHINE-READABLE-SO-THE-TABLE-CAN-BE-A-QUERY fact="true" status="spec/plan">Therefore the vocabulary is machine-readable, and the table is a
+**query** over what the project already knows: its command surface, its
+registered agent tools, its routes. Deriving it is a separate build; being
+able to derive it is a property of this vocabulary.</THE-VOCABULARY-IS-MACHINE-READABLE-SO-THE-TABLE-CAN-BE-A-QUERY></p>
+  </derived>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE fact="true" status="impl/done">Never define a capability inside a surface.</NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE>
+      <NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE fact="true" status="impl/done">Never treat one surface as the reference the others are ported
+  from — the library is the reference, or there is none.</NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE>
+      <NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY fact="true" status="impl/done">Never let two surfaces answer one question differently; when they
+  do, the fix belongs in the library, not in whichever surface was
+  reported.</NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY>
+      <NEVER-HAND-MAINTAIN-THE-TABLE fact="true" status="impl/done">Never hand-maintain the coverage table.</NEVER-HAND-MAINTAIN-THE-TABLE>
+      <NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST fact="true" status="impl/done">Never read the vocabulary as a list of surfaces every project owes.
+  It is a naming scheme; the floor is the project's own declaration.</NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST>
+    </facts>
+  </never>
+</spec>

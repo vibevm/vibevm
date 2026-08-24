@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-032 — The project model as a universal typed graph; the agent-first IDE substrate</title>
+  <status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal v0.1, drafted for review; open to challenge until ratified; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="spec/done">**Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; every decision below is open to challenge until ratified. This PROP names a *model and a direction*; it schedules no implementation of its own. It is the umbrella under which [PROP-014](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (traceability) and [PROP-031](spec://org.vibevm.core/vibevm/common/PROP-031#root) (refactoring) become **consumers of one model**, and it fixes the one foundational extension both need: **code as a first-class addressable node.**</status-line></p>
+  <p><companions fact="true" status="spec/done">**Companions.** [PROP-014 — specmap bidirectional traceability](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (the code↔spec *projection* of this model; its `#edges`, `#queries`, `#runtime` are generalised here) · [PROP-031 — algorithmic refactoring](spec://org.vibevm.core/vibevm/common/PROP-031#root) (the *mutations* over this model) · [PROP-003 — dependency evolution](spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003) §2.5.3 and [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary) (the LLM boundary this PROP makes the primary interface) · [PROP-000 §3](spec://org.vibevm.core/vibevm/common/PROP-000#license) (permissive-only dependencies) · prior art: LSP, SCIP/LSIF, rustdoc intra-doc links, Sphinx domains (§6).</companions></p>
+  <problem title="1. Problem statement — the reframe">
+    <facts ordered="false">
+      <ASYMMETRY-CLAIM fact="true" status="spec/done">`prop r1` — specmap (PROP-014) gives us a real, deterministic, committed graph of the project — but it is **asymmetric by construction**.</ASYMMETRY-CLAIM>
+      <EDGE-HARDCODED fact="true" status="spec/done">Its `Edge` type is hard-coded `(code item) --verb--&gt; (spec unit)`: a code symbol is always the source, a spec unit always the target, across exactly five verbs (`implements`, `verifies`, `documents`, `deviates`, `informs`).</EDGE-HARDCODED>
+    </facts>
+    <p><consequences-lead fact="true" status="spec/done">Consequences we keep hitting:</consequences-lead></p>
+    <facts ordered="false">
+      <NO-CODE-ADDRESS fact="true" status="spec/done">**Code has no stable address.** A `CodeItem` carries a symbol-path, file, and line — all *derived* and *volatile* — but no minted, refactor-stable address. Code can be *pointed from*, never *pointed at*.</NO-CODE-ADDRESS>
+      <ONE-DIRECTION-ONLY fact="true" status="spec/done">**Only one of four directions exists.** Prose specs cannot cite each other as tracked edges (spec→spec); a spec or a doc cannot point *at* code as the authority (spec→code) — even though sometimes **the code is the best, most precise description** (an algorithm, a wire schema, a canonical example); code cannot reference code across the package boundary as a tracked link (code→code).</ONE-DIRECTION-ONLY>
+    </facts>
+    <facts ordered="false">
+      <AMBITION fact="true" status="spec/done">And the ambition is larger than traceability. We want **navigation** (go-to-definition, find-references, impact), **refactoring** (PROP-031), and eventually **surfaces** — a library API, a command line, and one day a graphical view — *all agent-first*.</AMBITION>
+      <LANGUAGE-SERVER-FRAME fact="true" status="spec/done">That is not a traceability index; that is a **language server for the whole project model**: one graph, a query surface, a mutation surface, driven primarily by an agent.</LANGUAGE-SERVER-FRAME>
+    </facts>
+    <facts ordered="false">
+      <MODEL-NAMED fact="true" status="spec/done">This PROP names that model — a **symmetric typed graph over addressable nodes** — and the substrate built on it.</MODEL-NAMED>
+      <CONSUMERS-INSTANTIATE fact="true" status="spec/done">PROP-014 and PROP-031 do not compete with it; they instantiate it.</CONSUMERS-INSTANTIATE>
+      <SYMMETRY-FIRST fact="true" status="spec/done">The model must be symmetric first, or none of navigation, refactoring, or surfaces can be complete, because every one of those is inherently bidirectional.</SYMMETRY-FIRST>
+    </facts>
+  </problem>
+  <decisions title="2. Decisions">
+    <graph title="2.1 The project model is a typed, directed graph over addressable nodes">
+      <facts ordered="false">
+        <GRAPH-DEF fact="true" status="spec/done">`prop r1` — The canonical model of the project is a **typed, directed property graph**: **nodes** are anything with a stable address (spec units today; code items, packages, boot entries as the model grows); **edges** are typed and directed and may connect **any node kind to any node kind**.</GRAPH-DEF>
+        <PROJECTION-NOT-DEFINITION fact="true" status="spec/done">specmap's `code→spec` edges are **one projection** of this graph, not its definition.</PROJECTION-NOT-DEFINITION>
+        <GRAPH-SSOT fact="true" status="spec/done">The graph is the single source of truth for navigation and refactoring; everything else (the index file, the queries, the operations, the surfaces) is a view or an action over it.</GRAPH-SSOT>
+      </facts>
+    </graph>
+    <addressing title="2.2 Every node carries a stable, minted, location-independent address">
+      <facts ordered="false">
+        <ADDRESS-MINTED-LAW fact="true" status="spec/done">`req r1` — A node's **address of record is minted and travels with the artifact**; its *location* (line number, symbol-path, doc-path, file) is **derived decoration, never the address**.</ADDRESS-MINTED-LAW>
+        <FRAGILITY-LESSON fact="true" status="spec/done">This is the property that lets the graph survive refactoring — the lesson [PROP-014 §5.2](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#rejected) learned when it rejected line/range anchors as "maximally fragile," here promoted to a model-wide invariant:</FRAGILITY-LESSON>
+      </facts>
+      <facts ordered="false">
+        <ADDR-SPEC-NODE fact="true" status="spec/done">**spec node** → `spec://&lt;ns&gt;/&lt;doc-path&gt;#&lt;anchor&gt;`; the `{#anchor}` is minted and immutable, travels via edit-in-place.</ADDR-SPEC-NODE>
+        <ADDR-CODE-NODE fact="true" status="spec/done">**code node** → `code://&lt;ns&gt;/&lt;id&gt;`; the `&lt;id&gt;` is minted and travels **on an attribute on the item** (§2.3).</ADDR-CODE-NODE>
+        <ADDR-PACKAGE-NODE fact="true" status="spec/done">**package node** → the FQID (PROP-029).</ADDR-PACKAGE-NODE>
+      </facts>
+      <facts ordered="false">
+        <ADDRESS-SURVIVES-RENAME fact="true" status="spec/done">Because the address is minted, **renaming or moving the artifact does not change its address** — the address moves *with* it.</ADDRESS-SURVIVES-RENAME>
+        <LOCATION-DERIVED fact="true" status="spec/done">Location-based addressing is inverted: the symbol-path and line are computed *from* the item at index time, for human navigation, and are free to churn.</LOCATION-DERIVED>
+      </facts>
+    </addressing>
+    <code-node title="2.3 Code is a first-class node (`code://`), not only a source">
+      <facts ordered="false">
+        <CODE-NODE-EXTENSION fact="true" status="spec/done">`req r1` — The concrete extension this PROP exists to fix.</CODE-NODE-EXTENSION>
+        <CODE-ADDR-FORM fact="true" status="spec/done">A code item becomes an **addressable node** under `code://&lt;namespace&gt;/&lt;id&gt;`, where `&lt;id&gt;` is a minted, immutable, kebab-case identifier **carried by a per-language marker on the item** — the `specmark` projection pattern PROP-014 §2.9 already uses (a Rust attribute `#[addr("resolver-fixpoint")]` or a field on `#[spec]`; JSDoc/decorator for the other stacks).</CODE-ADDR-FORM>
+        <CODE-LOCATION-DERIVED fact="true" status="spec/done">The item's symbol-path, file, and line are **derived decoration**, exactly as a spec unit's `line` is.</CODE-LOCATION-DERIVED>
+      </facts>
+      <p><code-rules-lead fact="true" status="spec/done">Two rules keep it honest:</code-rules-lead></p>
+      <facts ordered="false">
+        <MINT-SPARINGLY fact="true" status="spec/done">**Mint sparingly.** A `code://` address is minted **only where the code is meant to be pointed at** — a canonical algorithm, a wire schema, a reference example — not on every function. Most code stays addressed only *derivedly* (by symbol-path in the index, which is enough for find-references). Ceremony is proportional to authority.</MINT-SPARINGLY>
+        <ID-IS-ADDRESS fact="true" status="spec/done">**The id is the address, the name is not.** Because the id lives on the attribute, `rename-symbol` / `move-item` (PROP-031) **do not break `code://` links** — the same robustness that makes `#[spec]` survive refactors. This is the whole reason to mint rather than address by symbol-path.</ID-IS-ADDRESS>
+      </facts>
+      <facts ordered="false">
+        <MARKER-ON-ITEM fact="true" status="spec/done">**Where the marker lives — on the item, never external.** The address is carried by whatever metadata construct is *idiomatic and scannable* in each language, attached to the item itself, because an address that does not travel with the artifact reintroduces exactly the fragility [PROP-014 §5.1](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#rejected) rejected (a sidecar map rots on every refactor).</MARKER-ON-ITEM>
+        <CARRIER-PER-LANGUAGE fact="true" status="spec/done">The neutral grammar is the address; the carrier is per-language (PROP-014 §2.9): a **structured attribute** where the language has one (Rust `#[spec(addr = "…")]`, Java/Kotlin annotation, Python decorator), a **structured doc-comment tag** where it does not (TypeScript/JS `/** @addr code://… */`, matching the `@spec` JSDoc choice), and a **comment-directive** for languages with neither (Go `//spec:addr …`, cf. `//go:generate`).</CARRIER-PER-LANGUAGE>
+        <CARRIER-CONSTRAINTS fact="true" status="spec/done">Three constraints bind every carrier:</CARRIER-CONSTRAINTS>
+        <CC-ON-ITEM fact="true" status="spec/done">**on the item** — travels on refactor;</CC-ON-ITEM>
+        <CC-SCANNABLE fact="true" status="spec/done">**scannable without execution** — read as AST/text, as `#[spec]` is today;</CC-SCANNABLE>
+        <CC-STRUCTURED fact="true" status="spec/done">**structured, not free prose** — a defined grammar the scanner parses, never a human sentence.</CC-STRUCTURED>
+        <ADDR-FACET-RECOMMENDATION fact="true" status="spec/done">**Recommendation:** make `addr` a **facet of the existing `specmark` marker**, not a new construct — one code-marker family then carries both a node's *identity* (`addr`) and its *outgoing edges* (the verbs), the whole code-side of the graph in one place.</ADDR-FACET-RECOMMENDATION>
+      </facts>
+      <p><ASYMMETRY-REMOVED fact="true" status="spec/done">This single change **removes the asymmetry of §1**: code can now be a *target*, so spec→code, doc→code, and code→code edges become expressible — and the graph is symmetric.</ASYMMETRY-REMOVED></p>
+    </code-node>
+    <edges title="2.4 Edges are typed by authority direction">
+      <p><EDGE-AUTHORITY-LAW fact="true" status="spec/done">`prop r1` — An edge's **verb carries which end is the source of truth**, which is what makes the graph queryable and honest. Generalising [PROP-014 §2.4](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#edges) from five code→spec verbs to a directional set:</EDGE-AUTHORITY-LAW></p>
+      <table>
+        <tr>
+          <td>From → To</td>
+          <td>Verb(s)</td>
+          <td>Meaning</td>
+        </tr>
+        <tr>
+          <td><EDGE-CODE-SPEC fact="true" status="spec/done">code → spec</EDGE-CODE-SPEC></td>
+          <td><fact status="spec/done">`implements` `verifies` `documents` `deviates` `informs`</fact></td>
+          <td><fact status="spec/done">exist — code defers to the spec as authority</fact></td>
+        </tr>
+        <tr>
+          <td><EDGE-SPEC-SPEC fact="true" status="spec/done">spec → spec</EDGE-SPEC-SPEC></td>
+          <td><fact status="spec/done">`references` `refines` `supersedes`</fact></td>
+          <td><fact status="spec/done">a prose citation as a tracked edge (the D3 gap, PROP-031 §3.3)</fact></td>
+        </tr>
+        <tr>
+          <td><EDGE-SPEC-CODE fact="true" status="spec/done">**spec → code**</EDGE-SPEC-CODE></td>
+          <td><fact status="spec/done">**`defined-by` / `canonical`**</fact></td>
+          <td><fact status="spec/done">**the normative description of this concept is the code at `code://…`** — the authority *inversion*</fact></td>
+        </tr>
+        <tr>
+          <td><EDGE-DOC-CODE fact="true" status="spec/done">doc → code</EDGE-DOC-CODE></td>
+          <td><fact status="spec/done">`exemplifies`</fact></td>
+          <td><fact status="spec/done">the canonical example / reference usage is here</fact></td>
+        </tr>
+        <tr>
+          <td><EDGE-CODE-CODE fact="true" status="spec/done">code → code</EDGE-CODE-CODE></td>
+          <td><fact status="spec/done">`uses` `see-also`</fact></td>
+          <td><fact status="spec/done">a cross-item reference (rustdoc intra-doc links, generalised across packages)</fact></td>
+        </tr>
+      </table>
+      <facts ordered="false">
+        <INVERSION-RARE fact="true" status="spec/done">`canonical` / `defined-by` is a **marked, deliberate, rare inversion** — the peer of `deviates`. It says "this concept's normative content genuinely *is* the code; do not restate it in prose."</INVERSION-RARE>
+        <NO-SHADOW-CODE fact="true" status="spec/done">It is **not** a licence for shadow-code: [PROP-014 §3.1.6](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) ("spec states *what* and *why*, never *how*; a spec that mirrors code is drift fuel") still governs the default.</NO-SHADOW-CODE>
+        <INVERSION-MARKED fact="true" status="spec/done">The inversion is the exception you *mark*, exactly as a deviation is.</INVERSION-MARKED>
+      </facts>
+    </edges>
+    <operations title="2.5 Three operations over one model: query, mutate, render">
+      <p><THREE-OPERATIONS fact="true" status="spec/done">`prop r1` — The substrate exposes exactly three operation families over the graph, and "the IDE" is nothing more than these three:</THREE-OPERATIONS></p>
+      <facts ordered="false">
+        <OP-QUERY fact="true" status="spec/done">**Query — navigation.** *Go-to-definition* = follow an edge to its target; *find-references* = the reverse edges into a node; *impact* = the transitive closure. specmap already ships these as `explain` / coverage / impact ([PROP-014 §2.6](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#queries)); symmetry (§2.3) is what makes them work in *both* directions.</OP-QUERY>
+        <OP-MUTATE fact="true" status="spec/done">**Mutate — refactoring.** The typed, atomic, gated operations of PROP-031 (`rename-address`, `move-unit`, `rename-symbol`, …), now spanning `spec://` **and** `code://` addresses.</OP-MUTATE>
+        <OP-RENDER fact="true" status="spec/done">**Render — explanation.** The deterministic subgraph plus its optional prose rendering (PROP-014 §2.6); the data layer is always available without an LLM.</OP-RENDER>
+      </facts>
+    </operations>
+    <agent-first title="2.6 Agent-first: the primary client emits typed commands; surfaces are progressive">
+      <facts ordered="false">
+        <AGENT-PRIMARY fact="true" status="spec/done">`req r1` — The **primary consumer of the substrate is an agent**, not a human at a keyboard.</AGENT-PRIMARY>
+        <TYPED-COMMANDS fact="true" status="spec/done">An agent drives navigation and refactoring by **emitting typed query/mutation commands** — the LLM boundary of [PROP-031 §2.2](spec://org.vibevm.core/vibevm/common/PROP-031#llm-boundary) and PROP-014 §2.7: *the model proposes a typed command; the deterministic engine executes and gates it.*</TYPED-COMMANDS>
+        <TRANSPORT-MCP fact="true" status="spec/done">The transport is MCP ([PROP-014 §2.8](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#runtime), already shipping `specmap_query` / `specmap_explain`).</TRANSPORT-MCP>
+      </facts>
+      <facts ordered="false">
+        <IDE-HEADLESS fact="true" status="spec/done">The consequence reorders the usual notion of "IDE": **the IDE is a headless model-plus-operations server; the GUI is the last, optional client, not the IDE itself.**</IDE-HEADLESS>
+        <SURFACES-PROGRESSIVE fact="true" status="spec/done">Surfaces are progressive projections of the *same* command set:</SURFACES-PROGRESSIVE>
+      </facts>
+      <fence>library API  →  command line  →  MCP / agent  →  (last, optional) graphical view
+   (exists)       (exists)        (embryo §2.8)        (future, human-facing)</fence>
+      <facts ordered="false">
+        <GUI-FIRST-INVERTS fact="true" status="spec/done">Building GUI-first would invert the dependency — a graphical shell over an incomplete, asymmetric model.</GUI-FIRST-INVERTS>
+        <MODEL-IS-PRODUCT fact="true" status="spec/done">The model and the operations are the product; every surface is a client.</MODEL-IS-PRODUCT>
+      </facts>
+    </agent-first>
+    <free title="2.7 Integrity and refactoring fall out of the model, not bespoke code">
+      <p><FREE-PROPERTIES fact="true" status="spec/done">`req r1` — Because everything is one graph with minted addresses, the hard properties are **free**:</FREE-PROPERTIES></p>
+      <facts ordered="false">
+        <FREE-DANGLING fact="true" status="spec/done">a link to an address that resolves to no node is a **dangling** edge (the existing gate);</FREE-DANGLING>
+        <FREE-DUPLICATE fact="true" status="spec/done">a duplicate minted id is a **duplicate-address** warning (the existing `duplicate-anchor` machinery);</FREE-DUPLICATE>
+        <FREE-RENAME fact="true" status="spec/done">a rename is a **`rename-address`** operation (PROP-031);</FREE-RENAME>
+        <FREE-SUSPECT fact="true" status="spec/done">a stale pin is a **suspect** (PROP-014 §2.2).</FREE-SUSPECT>
+      </facts>
+      <p><SYMMETRY-CHEAP fact="true" status="spec/done">This is the reason symmetry is *cheap once the node model generalises*: no new subsystem, only more node kinds and edge directions in the graph that already computes all of this.</SYMMETRY-CHEAP></p>
+    </free>
+    <packaging title="2.8 The substrate is a discipline-neutral, independently-installable tier">
+      <p><SUBSTRATE-NEUTRAL fact="true" status="spec/done">`req r1` — The substrate (specmark + specmap-core + the refactoring operations and their registry, [PROP-033](spec://org.vibevm.core/vibevm/common/PROP-033#root)) is packaged **independently of the ai-native discipline** and delivered as its own installable tier, so vibevm serves a spectrum of users through a **three-tier product model**:</SUBSTRATE-NEUTRAL></p>
+      <facts ordered="true">
+        <TIER-BASE fact="true" status="spec/done">**Base vibevm** — the package manager itself (resolve / install / lockfile / boot; working with `vibe.toml` projects; loading spec collections). No traceability, no refactoring, no discipline. The "just load a collection of specs" user lives here.</TIER-BASE>
+        <TIER-SDD fact="true" status="spec/done">**+ the SDD substrate** (a package under `org.vibevm.world`, not `ai-native`) — installs specmark + specmap + the refactoring registry: the `spec://` / `code://` model, integrity checking, navigation, and the algorithmic refactoring core. Proper spec-driven development, **without** the strict discipline.</TIER-SDD>
+        <TIER-AI-NATIVE fact="true" status="spec/done">**+ the ai-native discipline** (`rust-ai-native`, …) — the strict opt-in: conform, cards, cells, the nine scaffolds. It **depends on** tier 2, contributing its own refactorings to the registry; it never owns the substrate.</TIER-AI-NATIVE>
+      </facts>
+      <facts ordered="false">
+        <DEP-INVERSION fact="true" status="spec/done">The dependency runs `ai-native → SDD substrate → base vibevm` — a **dependency inversion** from today, where `rust-ai-native` owns specmap.</DEP-INVERSION>
+        <LEGACY-TIERS fact="true" status="spec/done">A legacy tree that cannot adopt the discipline still gets tiers 1–2.</LEGACY-TIERS>
+        <REOPENS-RELOCATION fact="true" status="spec/done">This re-opens what the Traceability-Relocation plan §1 deferred, for the stronger reason of *product surface* (not cross-language DRY).</REOPENS-RELOCATION>
+        <TIER-CENTER fact="true" status="spec/done">The **center of each tier is its Rust library + its spec**, so agents work with it directly (§2.6); the CLI (`vibe refactor …`) and MCP are thin surfaces, never the center.</TIER-CENTER>
+      </facts>
+    </packaging>
+  </decisions>
+  <layering title="3. Layering — what this owns, versus PROP-014 and PROP-031">
+    <p><layering-lead fact="true" status="spec/done">`prop r1` — To avoid duplication (the one real overlap risk), the boundary is explicit:</layering-lead></p>
+    <facts ordered="false">
+      <OWNS-032 fact="true" status="spec/done">**PROP-032 (this) owns the *model shape and the vision*:** the universal typed graph (§2.1), the addressing invariant (§2.2), the code node (§2.3), the directional edge set (§2.4), the three operation families (§2.5), and the agent-first substrate (§2.6). It specifies *what the model is*, not *how edges are extracted or gated*.</OWNS-032>
+      <OWNS-014 fact="true" status="spec/done">**PROP-014 owns the *traceability instantiation and mechanics*:** the `#[spec]`/`scope!` grammar, extraction (`rscan`/`mdspec`), revisions/suspects, the committed `specmap.json`, and the gate. It is the **code↔spec projection** of this model — the first and canonical one — and it **grows** (per this PROP) a `code://` node kind and the spec→spec / spec→code directions. It is not superseded; it is generalised (§7 open question 5).</OWNS-014>
+      <OWNS-031 fact="true" status="spec/done">**PROP-031 owns the *mutations*:** the typed refactoring operations over the model, gated by re-checking it.</OWNS-031>
+    </facts>
+    <facts ordered="false">
+      <NO-OWN-MECHANICS fact="true" status="spec/done">PROP-032 introduces **no extraction or gate mechanics of its own**; it names the model those mechanics populate and the extensions they must grow to cover.</NO-OWN-MECHANICS>
+      <ENGINE-HOME fact="true" status="spec/done">The engine still lives in `core-ai-native`; the host PROPs (031, 032) drive it, exactly as PROP-031 already does.</ENGINE-HOME>
+    </facts>
+  </layering>
+  <anticipation title="4. Build-in-anticipation">
+    <p><ANTICIPATION-EXTENDS fact="true" status="spec/done">`req r1` — Extends PROP-031 §3 with the model-level disciplines, in force from ratification:</ANTICIPATION-EXTENDS></p>
+    <facts ordered="true">
+      <ANT-ADDRESS-ALL-KINDS fact="true" status="spec/done">**Address every node kind; never location-address.** Generalises PROP-031 §3.1 to code and packages: the address of record is always the minted id/anchor/FQID, never a line or a symbol-path. Author nothing that can only be reached by location.</ANT-ADDRESS-ALL-KINDS>
+      <ANT-MINT-DELIBERATE fact="true" status="spec/done">**Mint `code://` addresses sparingly and deliberately** — only where code is the canonical description (§2.3). Over-minting is noise; under-minting leaves authoritative code unpointable.</ANT-MINT-DELIBERATE>
+      <ANT-EDGE-V3-ONCE fact="true" status="spec/done">**Generalise `Edge` from `code→spec` to `node→node` deliberately** (a schema v3 step, §7), not piecemeal — the byte-stable `specmap.json` must migrate once, cleanly.</ANT-EDGE-V3-ONCE>
+      <ANT-MODEL-NOT-GUI fact="true" status="spec/done">**Build the model and the operations, not the GUI.** The substrate is complete when navigation + refactoring run agent-first over a symmetric, gated graph. A graphical surface is a later, separate, human-facing decision.</ANT-MODEL-NOT-GUI>
+    </facts>
+  </anticipation>
+  <rejected title="5. Rejected alternatives">
+    <facts ordered="true">
+      <REJ-LOCATION-ADDRESS fact="true" status="spec/done">**Address code by location (line or symbol-path).** Fragile — exactly what refactoring changes (PROP-014 §5.2). Retained only as *derived* index decoration, never the address.</REJ-LOCATION-ADDRESS>
+      <REJ-BESPOKE-LINK fact="true" status="spec/done">**A bespoke "spec→code link type."** Special-cases what should be symmetric. The universal move is a code *node* (§2.3); then spec→code is an edge like any other, and doc→code / code→code come for free. A one-off link type would need a second one for every new direction.</REJ-BESPOKE-LINK>
+      <REJ-GUI-FIRST fact="true" status="spec/done">**A GUI-first IDE.** Inverts the dependency — a shell over an incomplete model. The model + operations are the IDE; the GUI is the last client (§2.6).</REJ-GUI-FIRST>
+      <REJ-SEPARATE-NAV fact="true" status="spec/done">**A separate code-navigation tool (a standalone SCIP/LSIF server) beside specmap.** Two graphs, two truths, two things to keep in sync. The code node lives in the *same* graph, so navigation and traceability compose (find every REQ *and* every doc that points at a function, in one query).</REJ-SEPARATE-NAV>
+      <REJ-COMPUTED-INVERSE fact="true" status="spec/done">**Keep the graph `code→spec` only, with a computed inverse.** The inverse answers "what implements this REQ" but cannot represent an *authored* spec→code or spec→spec edge, cannot gate a prose citation, and cannot be refactored — the whole point of §1.</REJ-COMPUTED-INVERSE>
+    </facts>
+  </rejected>
+  <prior-art title="6. Prior art &amp; license posture">
+    <p><prior-art-lead fact="true" status="spec/done">Conventions and ideas are free; code is not (PROP-000 §3). License fields re-verified before any code-level reuse.</prior-art-lead></p>
+    <table>
+      <tr>
+        <td>System</td>
+        <td>License (verify)</td>
+        <td>Role here</td>
+      </tr>
+      <tr>
+        <td><PA-LSP fact="true" status="spec/done">**LSP** (Language Server Protocol)</PA-LSP></td>
+        <td><fact status="spec/done">n/a (protocol)</fact></td>
+        <td><fact status="spec/done">The architecture: one model, a query surface, a mutation surface, many clients. This PROP is "LSP for spec + code + packages, agent-first."</fact></td>
+      </tr>
+      <tr>
+        <td><PA-SCIP fact="true" status="spec/done">**SCIP / LSIF** (Sourcegraph)</PA-SCIP></td>
+        <td><fact status="spec/done">Apache-2.0</fact></td>
+        <td><fact status="spec/done">**The code-node prior art.** A serialised, committed graph of code symbols + references for navigation without a live server — precisely `specmap.json` for code. They solved the stable-symbol *moniker* problem (§7).</fact></td>
+      </tr>
+      <tr>
+        <td><PA-RUSTDOC fact="true" status="spec/done">rustdoc intra-doc links</PA-RUSTDOC></td>
+        <td><fact status="spec/done">n/a (rustc)</fact></td>
+        <td><fact status="spec/done">Path-based, compiler-checked in-code references — the `code→code`, integrity-checked precedent.</fact></td>
+      </tr>
+      <tr>
+        <td><PA-SPHINX fact="true" status="spec/done">Sphinx domains + `:ref:`</PA-SPHINX></td>
+        <td><fact status="spec/done">BSD-2</fact></td>
+        <td><fact status="spec/done">Prose→object references resolved and checked at build — the `doc→code` precedent.</fact></td>
+      </tr>
+      <tr>
+        <td><PA-OPENREWRITE fact="true" status="spec/done">OpenRewrite (via PROP-031)</PA-OPENREWRITE></td>
+        <td><fact status="spec/done">Apache-2.0</fact></td>
+        <td><fact status="spec/done">Typed, gated operations over a lossless model — the mutation half.</fact></td>
+      </tr>
+    </table>
+    <p><DIFFERENTIATORS fact="true" status="spec/done">**Differentiators.**</DIFFERENTIATORS></p>
+    <facts ordered="true">
+      <DIFF-ONE-GRAPH fact="true" status="spec/done">spec, code, and packages live in **one** graph, so traceability and navigation compose;</DIFF-ONE-GRAPH>
+      <DIFF-AUTHORITY-TYPED fact="true" status="spec/done">edges are **typed by authority direction**, so the graph states who is the source of truth;</DIFF-AUTHORITY-TYPED>
+      <DIFF-AGENT-CLIENT fact="true" status="spec/done">the primary client is an **agent** emitting typed commands, with GUI as the last surface, not the first;</DIFF-AGENT-CLIENT>
+      <DIFF-GATED fact="true" status="spec/done">every relation is **gated** by the discipline's own invariant, not merely "compiles."</DIFF-GATED>
+    </facts>
+  </prior-art>
+  <open title="7. Open questions">
+    <status stage="spec" state="work" comment="B1 2026-07-24: five questions open (q5 decided in place 2026-07-13); ratification pending"/>
+    <facts ordered="true">
+      <open-code-id-scheme fact="true" status="spec/work">**The `code://` id scheme.** A free-minted slug (`resolver-fixpoint`) maximises rename-stability but adds a namespace to manage; a **structured moniker** (SCIP-style: package + descriptor path) needs no minting but moves under refactor. Lean: **free-minted for authoritative nodes** (stability is the point), structured monikers as the *derived* address for everything else.</open-code-id-scheme>
+      <open-node-kinds fact="true" status="spec/work">**How many node kinds.** Packages (FQID) and boot entries (INDEX id) are the obvious next nodes (the product tier of PROP-031). Config? Manifests? Grow by demonstrated need, not speculation.</open-node-kinds>
+      <open-schema-v3 fact="true" status="spec/work">**Schema v3 migration.** Generalising `Edge` from `code→spec` (`from_symbol` + `uri`) to `node→node` (two typed addresses) is a `specmap.json` schema change; plan the byte-stable migration (the `check-codegen` idiom, PROP-014 §2.5).</open-schema-v3>
+      <open-reverse-edges fact="true" status="spec/work">**Reverse-edge storage vs computation.** Find-references can be computed by inverting the edge set (as today) or materialised; decide when the graph grows enough that inversion cost matters.</open-reverse-edges>
+      <decided-prop-014-grows fact="true" status="spec/done">**PROP-014's identity. Decided (owner, 2026-07-13): it grows *in place*.** PROP-014 keeps its title ("specmap: bidirectional traceability") and gains the `code://` node kind + the new edge directions (spec→spec, spec→code); PROP-032 references it as the canonical first projection, not a replacement. No re-scope, no rename — the extension lands as new sections in PROP-014 and new node/edge kinds in its engine.</decided-prop-014-grows>
+      <open-gui-when fact="true" status="spec/work">**When (and whether) a GUI, and by whom.** Explicitly deferred (§2.6, §4.4). The substrate must be complete and agent-first first; a graphical client is a separate, later, human-facing decision.</open-gui-when>
+    </facts>
+    <facts ordered="false">
+      <ratification-note fact="true" status="spec/done">*This PROP is a design proposal. Ratification happens through PR review against this document, PROP-014, and PROP-031.*</ratification-note>
+      <first-step fact="true" status="spec/done">*It commits to no implementation of its own; its first concrete step is the `code://` node (§2.3), sequenced by the SPECMAP Unit-Mobility Plan and PROP-031's operation roadmap.*</first-step>
+      <unexercised-removed fact="true" status="spec/done">*Any mechanism specified here that is not exercised by the second shipped node kind or edge direction is removed from the spec rather than carried as aspirational documentation (the PROP-014 §335 discipline, inherited).*</unexercised-removed>
+    </facts>
+  </open>
+</spec>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">DRIFT-NNN — &lt;one-line goal: which promise becomes true&gt;</title>
+  <status stage="spec" state="done" comment="B2 2026-07-24: template in force since Phase A (DRIFT-001..003 written from it); the task&apos;s own document marker is the fenced example below"/>
+  <fence>&lt;status stage="impl" state="plan" ref="DRIFT-NNN"/&gt;</fence>
+  <p><status-legend fact="true" status="spec/done">**Status:** queued | in-progress | review | done | returned</status-legend></p>
+  <p><EXECUTOR-SPLIT fact="true" status="spec/done">**Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.</EXECUTOR-SPLIT></p>
+  <p><cluster-field fact="true" status="spec/done">**Cluster:** &lt;registry | workspace | resolver | cli | common&gt;</cluster-field></p>
+  <p><UNIT-STABILITY fact="true" status="spec/done">**Unit-stability check (release precondition):** every anchor cited in §2 has
+no open obligation in the findings ledger and no `unknown` marker.</UNIT-STABILITY></p>
+  <goal title="1. Goal">
+    <p><goal-format fact="true" status="spec/done">One sentence. What promise, made where, becomes true.</goal-format></p>
+  </goal>
+  <contract title="2. Contract">
+    <p><CONTRACT-VERBATIM fact="true" status="spec/done">Verbatim quotes of the governing spec units — never paraphrase:</CONTRACT-VERBATIM></p>
+    <fence>&gt; &lt;quoted unit text&gt;
+&gt; — `spec://org.vibevm.core/vibevm/…#anchor`</fence>
+    <facts ordered="false">
+      <CONTRACT-LIST-ALL fact="true" status="spec/done">List every anchor this task realises.</CONTRACT-LIST-ALL>
+      <PREMATURE-RETURN fact="true" status="spec/done">If units disagree, the task is premature — return it to stitching.</PREMATURE-RETURN>
+    </facts>
+  </contract>
+  <current title="3. Current state">
+    <p><current-evidence fact="true" status="spec/done">From campaign verification evidence (do not re-discover):</current-evidence></p>
+    <facts ordered="false">
+      <cs-what-exists fact="true" status="spec/done">`crates/&lt;…&gt;/src/&lt;file&gt;.rs:&lt;line&gt;` — what exists;</cs-what-exists>
+      <cs-what-missing fact="true" status="spec/done">what is missing / broken, with the verification verdict refs.</cs-what-missing>
+    </facts>
+  </current>
+  <behavior title="4. Required behavior">
+    <p><BEHAVIOR-EXHAUSTIVE fact="true" status="spec/done">Step by step, exhaustively — inputs, outputs, error paths, edge cases. Spell
+out everything the spec left implied; nothing here may require judgment:</BEHAVIOR-EXHAUSTIVE></p>
+    <fence>1. …
+2. …</fence>
+    <p><behavior-edges fact="true" status="spec/done">Edge cases: … Error paths (exact error types/codes): …</behavior-edges></p>
+  </behavior>
+  <boundaries title="5. Boundaries">
+    <facts ordered="false">
+      <bd-not-touch fact="true" status="spec/done">Files/subsystems NOT to touch: …</bd-not-touch>
+      <bd-construction-sites fact="true" status="spec/done">Sanctioned construction sites to respect (e.g. conform R-001): …</bd-construction-sites>
+      <BD-NEVER-EDIT-SPEC fact="true" status="spec/done">Never edit spec text or golden tests. Spec doubts → §8, not improvisation.</BD-NEVER-EDIT-SPEC>
+    </facts>
+  </boundaries>
+  <acceptance title="6. Acceptance">
+    <p><ACCEPTANCE-EXECUTABLE fact="true" status="spec/done">Executable, complete — the review runs exactly this:</ACCEPTANCE-EXECUTABLE></p>
+    <fence lang="bash">cargo test -p &lt;crate&gt; &lt;filter&gt;        # new tests listed below must pass
+bash tools/self-check.sh              # floor stays green</fence>
+    <facts ordered="false">
+      <acc-new-tests fact="true" status="spec/done">New tests to write: `&lt;test_name&gt;` asserts &lt;what&gt;; …</acc-new-tests>
+      <acc-cli-scenario fact="true" status="spec/done">CLI scenario (when applicable): `vibe &lt;…&gt;` → expected output verbatim.</acc-cli-scenario>
+      <ACC-DISCIPLINE fact="true" status="spec/done">Discipline: `#[spec(implements = "spec://…#anchor")]` on new items (closes
+  the specmap orphan), `cargo fmt --all`, clippy clean, atomic commits per
+  the repo rules, no AI attribution anywhere.</ACC-DISCIPLINE>
+      <ACC-UPDATE-MARKERS fact="true" status="spec/done">On completion update the unit markers: `impl/work → impl/done` (+ next
+  marker per plan, typically `test/plan`), same commit discipline.</ACC-UPDATE-MARKERS>
+    </facts>
+  </acceptance>
+  <analogies title="7. Analogies">
+    <p><analogies-format fact="true" status="spec/done">"Do it like X": `crates/&lt;…&gt;` — the closest existing shape to imitate.</analogies-format></p>
+  </analogies>
+  <stop title="8. Stop rule">
+    <facts ordered="false">
+      <STOP-RULE fact="true" status="spec/done">If the spec is silent or ambiguous on a point you need: STOP, mark
+  `&lt;!-- REVIEW: &lt;question&gt; --&gt;` at the code point, record the question in the
+  task file under this section, set status `returned`. Do not invent semantics.</STOP-RULE>
+      <BUDGET-SIGNAL fact="true" status="spec/done">Budget signal: if the change grows past &lt;N&gt; files / &lt;M&gt; lines, stop and
+  return with findings — the task was mis-scoped.</BUDGET-SIGNAL>
+    </facts>
+  </stop>
+  <log title="9. Log">
+    <p><log-format fact="true" status="spec/done">Appended by executor/reviewer: claimed &lt;ts&gt;, returned/review notes, done &lt;ts&gt;.</log-format></p>
+  </log>
+</spec>

@@ -95,7 +95,7 @@ Read them with `harvest/d7a-core-sync-reverify.md` open at the obligation id.
 |---|---|---|
 | the front door says «prompt content only» | `core-ai-native` | over five crates and 10 072 lines of the package's own Rust. One sentence, no dependency on A |
 | `##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY` says «the full history» unqualified | `source-mirrors/daily-loop.md` | `refs = ["main","tags"]` is the flow's own example twice, and 13 local branches are on no host. One approval covers the same clause in three places |
-| `##SWEEP-FLIP-ONLY-AFTER-DRAIN` (`GUIDE-AI-NATIVE-GO.md:626`) says a package enters `gated_packages` | `go-ai-native-lang`, rides `F-166` | a two-word swap (`gated_packages` → `gated_crates`): the key exists in three documents and zero code; the shipped key is the shared top-level `gated_crates` (vendor `config.rs:44`). A wave-8/D9 false confirm re-judged `drift` verdict-first (2026-07-31) and clustered here; its SKILL and card siblings are already corrected, so this is the last of the three go-package copies — `conform-frontend-go.md`'s copy belongs to `F-185` in group B |
+| `##SWEEP-FLIP-ONLY-AFTER-DRAIN` (`GUIDE-AI-NATIVE-GO.xml:626`) says a package enters `gated_packages` | `go-ai-native-lang`, rides `F-166` | a two-word swap (`gated_packages` → `gated_crates`): the key exists in three documents and zero code; the shipped key is the shared top-level `gated_crates` (vendor `config.rs:44`). A wave-8/D9 false confirm re-judged `drift` verdict-first (2026-07-31) and clustered here; its SKILL and card siblings are already corrected, so this is the last of the three go-package copies — `conform-frontend-go.xml`'s copy belongs to `F-185` in group B |
 
 ---
 

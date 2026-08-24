@@ -39,8 +39,8 @@ picked up. The authoritative statement of each is
   *This line stood in the present tense for a day after the fix shipped, and two
   task files inherited the stale claim from it — which is the case for
   re-measuring a ledger entry before quoting it, not merely re-reading it.*
-- **Two files need re-verifying first**: `MT-02-vibe-tree-tui.md` and
-  `PROP-026-tcg-tool-family.md` carry wave-1 verdicts formed against text
+- **Two files need re-verifying first**: `MT-02-vibe-tree-tui.xml` and
+  `PROP-026-tcg-tool-family.xml` carry wave-1 verdicts formed against text
   Phase D changed afterwards.
 
 ## Named by the change-native formats plan, moved here so they survive it {#change-native}
@@ -62,7 +62,7 @@ plan to act on it.
   external consumers, and there are none yet. *Trigger:* the owner's
   declaration that the first public presentation has happened — the same single
   line that flips `public = true` in `formats/EPOCHS.toml`
-  ([PROP-044 `##THE-PUBLIC-SWITCH`](../../spec/common/PROP-044-change-native-formats.md#risks)).
+  ([PROP-044 `##THE-PUBLIC-SWITCH`](../../spec/common/PROP-044-change-native-formats.xml#risks)).
   Nothing technical may infer it.
 - **The lockfile's own change-native mechanics** *(Б.6, and decision D9 is its
   contract)*. `vibe.lock` should be valid only for the exact (epoch, generator

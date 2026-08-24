@@ -38,8 +38,8 @@ Measured 2026-07-26 — contradict me if a number is wrong:
   the work just done.
 - **A second bug, found by migrating the zones:** `content_hash` is refreshed
   only by a `scan`, so between scans the detector compares one cached value
-  with another and **cannot see the disk at all**. `00-core.md` and
-  `90-user.md` read as fresh minutes after being edited; only a rescan moved
+  with another and **cannot see the disk at all**. `00-core.xml` and
+  `90-user.xml` read as fresh minutes after being edited; only a rescan moved
   the count from 3 stale files to 5.
 - The live zone is `campaigns/packages-2026-09/` (F-073); wave 1's is archival.
 
@@ -106,10 +106,10 @@ bash tools/self-check.sh
 cargo run -q -p vibe-cli --bin vibe -- progress baseline --campaign campaigns/packages-2026-09
 ```
 
-- **Before:** `progress baseline` names **5** stale files (`00-core.md`,
-  `90-user.md`, `MT-02-vibe-tree-tui.md`, `PROP-026-tcg-tool-family.md`,
-  `PROP-043-progress-markup.md`). Report the list you actually get.
-- Seal `spec/boot/00-core.md` and `spec/boot/90-user.md` — both were edited
+- **Before:** `progress baseline` names **5** stale files (`00-core.xml`,
+  `90-user.xml`, `MT-02-vibe-tree-tui.xml`, `PROP-026-tcg-tool-family.xml`,
+  `PROP-043-progress-markup.xml`). Report the list you actually get.
+- Seal `spec/boot/00-core.xml` and `spec/boot/90-user.xml` — both were edited
   today and their markers all carry verdicts. **After: 3 stale files.** The
   other three must still be named: MT-02 and PROP-026 were edited by Phase D
   and nobody re-verified them, and PROP-043 had 4 of ~300 anchors re-derived.

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">TCG-ORACLE v0.1 — the TypeScript oracle process model</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with AGENTIC-TCG-TS-PLAN v0.1 (Phase 1),
+implemented by its Phases 2–3.**</status-line></p>
+  <p><companion-documents fact="true" status="impl/done">The component brief is
+[`tools/vibe-agentic-tcg-ts.xml`](../tools/vibe-agentic-tcg-ts.xml); the
+message grammar both hops speak is
+[`TCG-PROTOCOL-v0.1`](TCG-PROTOCOL-v0.1.xml).</companion-documents></p>
+  <p><DOCUMENT-OWNS-THE-ORACLE-PROCESS fact="true" status="impl/done">This document owns the
+oracle PROCESS: lifecycle, host semantics, overlays, degradation, and
+the latency posture.</DOCUMENT-OWNS-THE-ORACLE-PROCESS></p>
+  <delivery title="1. The process and its delivery">
+    <p><kind-line-delivery fact="true" status="impl/done">`req r1`</kind-line-delivery></p>
+    <p><ORACLE-IS-ONE-SELF-CONTAINED-SOURCE fact="true" status="impl/done">The oracle is ONE self-contained erasable-syntax-only TypeScript source,
+`tools/ts-oracle/oracle.ts`, run directly by the consumer's node
+(&gt;= 22.6, strip-types) — no build step, no runtime npm dependency of its
+own.</ORACLE-IS-ONE-SELF-CONTAINED-SOURCE></p>
+    <p><DELIVERY-EMBEDDED-AND-CONTENT-ADDRESSED fact="true" status="impl/done">It is delivered EMBEDDED in the Rust bridge crate
+(`include_str!`) and materialised content-addressed to
+`&lt;project&gt;/target/tcg/ts-oracle/oracle-&lt;hash16&gt;.ts` before spawn — the
+proven ts-extract delivery, so a consumer needs nothing beyond what the
+tsc floor step already requires.</DELIVERY-EMBEDDED-AND-CONTENT-ADDRESSED></p>
+    <p><SOURCE-STAYS-IMPORT-FREE-OF-SIBLING-TOOL-FILES fact="true" status="impl/done">Because exactly one file is
+materialised, the source MUST stay import-free of sibling tool files;
+the ~120 lines of per-file fact/marker logic shared with
+`ts-extract/extract.ts` are consciously duplicated, pointered both ways,
+and held behaviourally aligned by a fact-parity package test (same
+fixture in → same facts out, modulo record framing).</SOURCE-STAYS-IMPORT-FREE-OF-SIBLING-TOOL-FILES></p>
+  </delivery>
+  <compiler title="2. The consumer&apos;s compiler, exactly as tsc sees it">
+    <p><kind-line-compiler fact="true" status="impl/done">`req r2`</kind-line-compiler></p>
+    <p><TYPESCRIPT-RESOLVED-FROM-THE-CONSUMER-ROOT fact="true" status="impl/done">`typescript` is resolved from the CONSUMER's project root
+(`createRequire(&lt;root&gt;/package.json).resolve("typescript")`, dynamic
+import) — never bundled.</TYPESCRIPT-RESOLVED-FROM-THE-CONSUMER-ROOT></p>
+    <p><RESOLUTION-FAILURE-IS-A-RECIPE-CARRYING-ERROR fact="true" status="impl/done">Resolution failure is a hard, recipe-carrying protocol error
+(`typescript-unresolvable`; the recipe names
+`npm install -D typescript`), never a silent skip.</RESOLUTION-FAILURE-IS-A-RECIPE-CARRYING-ERROR></p>
+    <p><CONFIG-READ-THROUGH-THE-SAME-PATH-TSC-USES fact="true" status="impl/done">The project
+configuration is read through `ts.getParsedCommandLineOfConfigFile` —
+the SAME path tsc uses — so option assembly cannot drift from the floor
+step; the config file is `&lt;root&gt;/tsconfig.json` unless `init` names
+another.</CONFIG-READ-THROUGH-THE-SAME-PATH-TSC-USES></p>
+    <p><CONFIG-DIAGNOSTICS-DEGRADE fact="true" status="impl/done">Config diagnostics degrade per §5, they do not crash.</CONFIG-DIAGNOSTICS-DEGRADE></p>
+  </compiler>
+  <host title="3. The language-service host and overlays">
+    <p><kind-line-host fact="true" status="impl/done">`req r3`</kind-line-host></p>
+    <p><host-and-overlay-map-lead fact="true" status="impl/done">The oracle holds one `LanguageService` per `init` root, over a host
+whose script set is (parsed config file names ∪ overlay names) and whose
+snapshots come from an in-memory overlay map
+`path → { content, version }` with disk fallthrough:</host-and-overlay-map-lead></p>
+    <facts ordered="false">
+      <OVERLAY-UPDATE-SETS-AND-CLEARS fact="true" status="impl/done">`update {file, content}` sets/replaces an overlay and bumps its
+  version; `update {file, content: null}` clears it (disk state shows
+  through again). Overlay paths are normalised to forward slashes;
+  matching is case-preserving with case-insensitive comparison on
+  Windows.</OVERLAY-UPDATE-SETS-AND-CLEARS>
+      <INLINE-CONTENT-IS-A-ONE-SHOT-OVERLAY fact="true" status="impl/done">Every query op (`validate`, `scope`, `complete`, `type`) accepts an
+  optional inline `content`, which acts as a one-shot overlay for the
+  duration of that query (set, query, restore) so single-question
+  callers need no update/clear dance.</INLINE-CONTENT-IS-A-ONE-SHOT-OVERLAY>
+      <OVERLAID-FILE-NEED-NOT-EXIST-ON-DISK fact="true" status="impl/done">An overlaid file need not exist on disk — a hypothetical new module
+  participates in the program like any other root file.</OVERLAID-FILE-NEED-NOT-EXIST-ON-DISK>
+      <SERVICE-IS-INCREMENTAL-BY-CONSTRUCTION fact="true" status="impl/done">The service is INCREMENTAL by construction: versions only move when
+  content moves, so the checker re-uses everything unchanged. The
+  Phase-0 spike facts on a demo-sized tree: ~0.4 s first program build,
+  ~22 ms warm re-validate, ~31 ms completions, ~21 ms quick info.</SERVICE-IS-INCREMENTAL-BY-CONSTRUCTION>
+    </facts>
+  </host>
+  <queries title="4. Query semantics">
+    <p><kind-line-queries fact="true" status="impl/done">`req r4`</kind-line-queries></p>
+    <facts ordered="false">
+      <QUERY-VALIDATE fact="true" status="impl/done">`validate` returns the target file's syntactic + semantic diagnostics
+  (code, category, message, line, character) — file-grain, never
+  whole-program sweeps — PLUS the per-file conform facts and §9 spec
+  markers extracted from the same content, so the Rust layer can run
+  discipline rules without a second parse.</QUERY-VALIDATE>
+      <QUERY-SCOPE fact="true" status="impl/done">`scope` returns the in-scope symbols at a position (or the file's
+  top level): name, kind, and type text; plus the file's cell and seam
+  context and the branded types exported at reachable seams. Brand
+  detection in v0.1 is a SYNTACTIC heuristic (exported type aliases
+  whose declaration matches the intersection-brand shape) and every
+  such answer carries `heuristic: true` — the honest label is part of
+  the contract.</QUERY-SCOPE>
+      <QUERY-COMPLETE fact="true" status="impl/done">`complete` returns the language service's completions at a position,
+  each entry carrying name, kind, and type text, with an `unsafe` flag
+  on entries whose insertion would introduce a §8-banned form.</QUERY-COMPLETE>
+      <QUERY-TYPE fact="true" status="impl/done">`type` returns quick info (display string + documentation) at a
+  position.</QUERY-TYPE>
+    </facts>
+  </queries>
+  <degradation title="5. Degradation, never crashes (B5 extended)">
+    <p><kind-line-degradation fact="true" status="impl/done">`req r5`</kind-line-degradation></p>
+    <p><B5-RULE-EXTENDS-TO-THE-ORACLE fact="true" status="impl/done">The extractor's B5 rule extends to the oracle: no input may kill the
+process or poison the session.</B5-RULE-EXTENDS-TO-THE-ORACLE></p>
+    <facts ordered="false">
+      <DEGRADE-UNPARSEABLE-OVERLAY-CONTENT fact="true" status="impl/done">Unparseable overlay content → the op answers with the syntactic
+  diagnostics it could get and `degraded: true` where facts are absent;
+  the service survives.</DEGRADE-UNPARSEABLE-OVERLAY-CONTENT>
+      <DEGRADE-UNKNOWN-OP fact="true" status="impl/done">An op the oracle does not know → a protocol error naming the known op
+  set (forward compatibility for older embedded oracles under newer
+  bridges).</DEGRADE-UNKNOWN-OP>
+      <DEGRADE-INTERNAL-EXCEPTION fact="true" status="impl/done">An internal exception inside one op → an `{ok: false}` response for
+  that op with the message, and the loop continues; the bridge decides
+  whether to respawn.</DEGRADE-INTERNAL-EXCEPTION>
+      <SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT fact="true" status="impl/done">`shutdown` is the only sanctioned exit; EOF on stdin is treated as
+  shutdown (the parent died — exit 0, leave nothing behind).</SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT>
+    </facts>
+  </degradation>
+  <lifecycle title="6. Process lifecycle and Windows discipline">
+    <p><kind-line-lifecycle fact="true" status="impl/done">`req r6`</kind-line-lifecycle></p>
+    <p><ORACLE-IS-A-LONG-LIVED-CHILD fact="true" status="impl/done">The oracle is a LONG-LIVED child: spawned once per (root, session) by
+the bridge, answering until `shutdown`/EOF.</ORACLE-IS-A-LONG-LIVED-CHILD></p>
+    <p><STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY fact="true" status="impl/done">stdout carries protocol
+frames ONLY; all human-facing logging goes to stderr (one line per op:
+op, duration ms) so a `serve` session is debuggable without corrupting
+the stream.</STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY></p>
+    <p><RUST-SIDE-OWNS-TERMINATION fact="true" status="impl/done">The Rust side owns termination: kill-on-drop plus an
+explicit `shutdown` on graceful paths, and the no-zombie property is
+asserted by test (the Phase-0 spike proved spawn/roundtrip/kill with no
+surviving pid on this box).</RUST-SIDE-OWNS-TERMINATION></p>
+    <p><NODE-IS-RESOLVED-FROM-PATH-BY-THE-BRIDGE fact="true" status="impl/done">Node is resolved from PATH by the spawning
+bridge exactly as the extract bridge does; a missing node is the
+bridge's `node-missing` error with its recipe, not an oracle concern.</NODE-IS-RESOLVED-FROM-PATH-BY-THE-BRIDGE></p>
+  </lifecycle>
+  <latency title="7. Latency posture">
+    <p><kind-line-latency fact="true" status="impl/done">`req r7`</kind-line-latency></p>
+    <p><TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED fact="true" status="impl/done">Targets are POSTED and MEASURED, never CI-gated (timing gates on shared
+boxes generate flakes, not signal):</TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED></p>
+    <facts ordered="false">
+      <TARGET-WARM-VALIDATE-AND-COMPLETE fact="true" status="impl/done">warm `validate` p50 &lt; 150 ms —
+  measured and met (19.32 ms on the committed battery,
+  `research/tcg-bench/reports/bench-2026-07-07-baseline.json`) — and
+  `complete` p50 &lt; 200 ms on demo-class trees, posted, not yet measured:
+  the bench harness times `validate` only
+  (`crates/typescript-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms`); the measurement corpus is
+  deliberately far-future work (`BACKLOG.md` B-042),</TARGET-WARM-VALIDATE-AND-COMPLETE>
+      <TARGET-COLD-INIT fact="true" status="impl/done">cold init &lt; 5 s.</TARGET-COLD-INIT>
+    </facts>
+    <p><BENCH-HARNESS-RECORDS-DISTRIBUTIONS fact="true" status="impl/done">The battery's bench harness records the distributions per run; a target
+that moves, moves in a committed REPORT with a reason.</BENCH-HARNESS-RECORDS-DISTRIBUTIONS></p>
+    <p><CORRECTNESS-IS-CI-GATED fact="true" status="impl/done">Correctness
+(the differential validate-vs-tsc corpus, completions goldens) IS
+CI-gated — the split is deliberate: gate what cannot flake, record what
+can.</CORRECTNESS-IS-CI-GATED></p>
+  </latency>
+</spec>

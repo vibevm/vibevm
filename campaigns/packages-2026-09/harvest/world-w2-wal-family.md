@@ -5,7 +5,7 @@ command printed above it._
 
 W2 is the batch where §3.1's source 2 is at its strongest anywhere in `world`: these
 four flows specify the session ritual this repository actually runs, and the
-artifacts they name — `spec/WAL.md`, `CONTINUE.md`, `SPECSPACES.md`, the session
+artifacts they name — `spec/WAL.xml`, `CONTINUE.md`, `SPECSPACES.md`, the session
 commands — are all in the host and all in daily use. A claim here is rarely
 unverifiable; it is right or it is drift.
 
@@ -46,7 +46,7 @@ Two of the four are on the join's problem list and two are not — `wal` and
 
   | package | host, installed and compiled |
   |---|---|
-  | `spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}` | `spec/boot/STATIC.md:1321  ## The architecture` |
+  | `spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}` | `spec/boot/STATIC.xml:1321  ## The architecture` |
   | `:30  ## Standing consequences {#consequences}` | `STATIC.md:1336  ## Standing consequences` |
   | `:48  ## Never {#never}` | `STATIC.md:1354  ## Never` |
 
@@ -85,9 +85,9 @@ none of them is it — the same shape C6 found for the two Go skills.
 The consuming project is this repository, and it runs all four rituals.
 
 ```console
-$ test -f spec/WAL.md && test -f CONTINUE.md && test -f SPECSPACES.md ; echo present
+$ test -f spec/WAL.xml && test -f CONTINUE.md && test -f SPECSPACES.md ; echo present
 present
-$ grep -m1 '^_Updated' spec/WAL.md
+$ grep -m1 '^_Updated' spec/WAL.xml
 _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1
 $ grep -n '^default:' SPECSPACES.md
 18:default: host
@@ -101,7 +101,7 @@ repository restores the host and not the one registered specspace.
 **Two rituals worth measuring per fact rather than here**, because they are the
 substance of the wal and sync-from-code flows respectively: whether the host's
 session-end sequence matches the protocol's step list (`CLAUDE.md`'s
-`ЗАВЕРШИ СЕССИЮ` section against `session-end-hook.md` and `cold-resume.md`), and
+`ЗАВЕРШИ СЕССИЮ` section against `session-end-hook.xml` and `cold-resume.xml`), and
 whether any spec edit in this repository's history followed the sync-from-code
 path — propose the diff, do not apply, commit as `docs(spec): sync …`. The scope
 histogram gives the second one a starting point: `docs(spec)` runs 82 of the last

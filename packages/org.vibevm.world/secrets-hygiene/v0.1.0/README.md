@@ -27,20 +27,20 @@ gate for install-time code. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md` — the full
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml` — the full
   protocol: the surface-secret definition, the four laws, the
   agent-era additions (recorded sessions, one-echo-is-a-leak, the
   accidental-read drill), the blast-radius rationale, and the
   suspected-leak drill (rotate first, investigate second). @status:impl/done
-- @fact:CONTENT-THE-SCOPE-DISCIPLINE `spec/flows/secrets-hygiene/scope-discipline.md` — the
+- @fact:CONTENT-THE-SCOPE-DISCIPLINE `spec/flows/secrets-hygiene/scope-discipline.xml` — the
   never-escalate law for integrations: explicit prefix checks,
   escalation as an error rather than a warning, and trust ordering so
   a low-trust source cannot override a trusted answer. @status:impl/done
-- @fact:CONTENT-THE-THIRD-PARTY-CODE-CONSENT `spec/flows/secrets-hygiene/third-party-code-consent.md` — the
+- @fact:CONTENT-THE-THIRD-PARTY-CODE-CONSENT `spec/flows/secrets-hygiene/third-party-code-consent.xml` — the
   consent gate for install/build hooks: allow-list plus first-run
   consent, CI aborts rather than runs unseen, hooks as versioned files
   not inline strings, and secrets kept out of hook environments. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/57-flow-secrets-hygiene.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/57-flow-secrets-hygiene.xml` — boot snippet loaded at
   session start: the standing rules and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -95,3 +95,4 @@ which ships in Russian inside `flow:redbook` at `spec/book/ru/`. @status:spec/do
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

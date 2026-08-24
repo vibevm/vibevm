@@ -1,6 +1,6 @@
 # CONTINUE — холодный резюм (чекпойнт 2026-08-23, перед компактификацией)
 
-> WAL (`spec/WAL.md`) — канонический ЖИВОЙ статус и главнее этого снапшота,
+> WAL (`spec/WAL.xml`) — канонический ЖИВОЙ статус и главнее этого снапшота,
 > если они разойдутся.
 
 ## TL;DR
@@ -22,10 +22,10 @@ PROP-050 в статусе BUILT, финальная панель `all green`, �
 
 ## Что построено сегодня (карта для холодного читателя)
 
-**Закон:** `spec/common/PROP-050-dependency-visibility.md` (BUILT; все десять
+**Закон:** `spec/common/PROP-050-dependency-visibility.xml` (BUILT; все десять
 владельческих развилок F1–F10 отрулены; единственный неотрулённый скетч —
 `##CONCEPT-GATE-DIRECTION`). **Хроника стройки с приёмкой построчно:**
-`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.md`. **Prior-art и замеры:**
+`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.xml`. **Prior-art и замеры:**
 `spec/research/dependency-visibility-2026-08/` (3 отчёта воркеров + 04-measurements).
 
 Модель одним абзацем: на ребре — `access` (public-дефолт / private =

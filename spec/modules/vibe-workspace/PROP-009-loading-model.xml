@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-009: Loading model — computed boot composition and the effective spec</title>
+  <status stage="impl" state="done" action="continue" comment="C 2026-07-25: M1.18 phases 1-7 shipped 2026-05-22 and this session booted on them; phase 8&apos;s engine-backed projection is v1.5 scope"/>
+  <p><milestone-line fact="true" status="impl/done">**Milestone:** `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)) — **shipped**, implementation-locked.</milestone-line></p>
+  <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22, and every session of this repository boots on them (`STATIC.md` first, then the TOML `INDEX.md` with its `[[entry]]` grammar). The dynamic-entry `when` gate (OS-scoped) shipped 2026-05-22 — see §8. Phase 8's **engine-backed** effective-spec projection stays v1.5 scope; the plain `vibe show effective` concatenation is live.</status-line></p>
+  <p><VISIBILITY-LAYER-ABOVE fact="true" status="impl/done">**Visibility sits above this model (2026-08-23, PROP-050 §3):** the whole loading pipeline — the `link` axis of §2.4, the boot closure, the lanes — now operates on the consumer root's **effective set E(R)** computed by the visibility layer (access / friendship / exclusions / overrides). A package outside `E(R)` is not resolved, not locked, not materialised and appears in no lane; the `link` axis decides only *how* an effective member loads, never *whether* it arrives.</VISIBILITY-LAYER-ABOVE></p>
+  <p><related fact="true" status="spec/done">**Related:** [`VIBEVM-SPEC.md` §4.2 / §4.6 / §6 / §13.1](../../../VIBEVM-SPEC.md); [PROP-007](PROP-007-workspace.xml) (workspace — PROP-009 answers its [§6 question 3](PROP-007-workspace.xml#open)); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.xml) (subskills, delivery modes, the `[activation]` vocabulary); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.xml) (identity, registry).</related></p>
+  <p><design-rationale fact="true" status="spec/done">**Design rationale:** [`spec/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml) — the *why*, the static/dynamic-linking metaphor, the fork-by-fork record. Non-normative; this PROP is the contract.</design-rationale></p>
+  <p><OWNER-SANCTION fact="true" status="impl/done">**Owner sanction:** PROP-009 reshapes the owner-frozen `VIBEVM-SPEC.md` (§6 boot model, §4.2 layout, §4.6 effective spec, §13.1 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it was **granted 2026-05-22** — for a full consistency pass, not only those four sections — and landed in Phase 7. See §5 item 8.</OWNER-SANCTION></p>
+  <motivation title="1. Motivation">
+    <p><open-question-origin fact="true" status="impl/done">PROP-007 shipped the workspace data model but left [§6 question 3](PROP-007-workspace.xml#open) open: when a dependency is resolved for member M, into which member's `spec/` does its content land?</open-question-origin></p>
+    <facts ordered="false">
+      <not-a-directory-choice fact="true" status="impl/done">The question is not a directory choice. vibevm's boot model (`VIBEVM-SPEC.md` §6) — a flat `spec/boot/NN-*.md` directory, one sequence, one entry point — holds for exactly one project shape: a single project with a single entry point.</not-a-directory-choice>
+      <workspace-shape fact="true" status="impl/done">A workspace has N nodes, N entry points (a developer opens an agent inside any member — PROP-007's "the user works in a sub-project and doesn't notice it is part of something bigger"), N boot sequences, and one shared dependency set under unified resolution. The flat model cannot be stretched over this.</workspace-shape>
+    </facts>
+    <facts ordered="false">
+      <MODEL-REPLACED fact="true" status="impl/done">PROP-009 replaces the loading model.</MODEL-REPLACED>
+      <INCLUDE-RULE fact="true" status="impl/done">The owner's hard constraint: **installing a dependency must never modify any node's authored spec** — the C++ rule that you do not paste a header's text into your `#include`.</INCLUDE-RULE>
+      <linker-frame fact="true" status="impl/done">The owner's frame for the replacement is static vs dynamic linking. The linker metaphor and the fork-by-fork record are in the [design document](../../design/loading-and-boot-model.xml).</linker-frame>
+    </facts>
+  </motivation>
+  <decisions title="2. Decisions">
+    <two-trees title="2.1 Two trees — authored spec and materialised dependencies">
+      <p><TWO-TREES fact="true" status="impl/done">**Decision.** A node's authored `spec/` and its materialised dependencies live in physically separate trees. `vibe install` **never writes into any node's authored `spec/`**.</TWO-TREES></p>
+      <facts ordered="false">
+        <TREE-AUTHORED fact="true" status="impl/done">Authored `spec/` — written only by the node's author. Unchanged definition.</TREE-AUTHORED>
+        <TREE-VIBEDEPS fact="true" status="impl/done">Materialised dependencies — a `vibedeps/` tree at the **absolute workspace root** (PROP-007 §2.3), written only by `vibe`. One slot per resolved package, `vibedeps/&lt;group&gt;.&lt;name&gt;/&lt;version&gt;/` (identity-keyed, PROP-022 §2.1 — owner ruling 2026-08-13), holding the package's published tree verbatim ([PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.xml#shippable-tree) re-scopes "published" to the **shippable tree** — source minus build output — for code-bearing packages). A package's prompt content lives under its own `spec/`, so a boot snippet materialises at `vibedeps/&lt;slot&gt;/spec/boot/&lt;file&gt;` (PROP-024 §2.1). Unified resolution (PROP-007 §2.4) guarantees one version per package, so one slot serves the whole workspace.</TREE-VIBEDEPS>
+        <VIBEDEPS-COMMITTED fact="true" status="impl/done">`vibedeps/` is **committed** to the repository. A fresh clone is immediately bootable with no `vibe install`; the dependency corpus is visible and diffable; this matches the spec-driven principle that the committed spec corpus is the product.</VIBEDEPS-COMMITTED>
+      </facts>
+      <facts ordered="false">
+        <MIRROR-RETIRED fact="true" status="impl/done">**Consequence — the mirror layout is retired.** `VIBEVM-SPEC.md` §13.1's mirror layout (a package's `[writes]` entry is both source and target path) worked only because a dependency landed at one fixed path in every project.</MIRROR-RETIRED>
+        <WRITES-RETIRED-WHY fact="true" status="impl/done">A materialised package is now its own verbatim subtree under `vibedeps/&lt;slot&gt;/`; a package's internal cross-references must become package-relative or `spec://` URIs. `[writes]` is retired (§2.6): a materialised package *is* its own subtree, and a per-file write list has nothing left to declare.</WRITES-RETIRED-WHY>
+      </facts>
+    </two-trees>
+    <effective-boot title="2.2 The effective boot sequence">
+      <p><EFFECTIVE-BOOT fact="true" status="impl/done">**Decision.** Every node has an **effective boot sequence**, computed by `vibe` from the unified resolution:</EFFECTIVE-BOOT></p>
+      <fence>inherited foundation (from ancestors) + the node's own authored boot
+  + the boot of the node's transitive dependencies + user overrides</fence>
+      <facts ordered="false">
+        <FOUNDATION-DOWN fact="true" status="impl/done">**Inherited foundation** flows down: a member inherits the project-wide foundation boot of its ancestors up to the absolute root (conventions, the four rules, technology choices).</FOUNDATION-DOWN>
+        <DEPS-UP fact="true" status="impl/done">**Dependency boot** flows up: a node's sequence includes the boot of everything it transitively requires.</DEPS-UP>
+        <MATRYOSHKA-SCOPES fact="true" status="impl/done">A node that is itself a workspace aggregates its members' sequences — the root's effective boot is the union of the whole tree; a leaf member's is its own subtree only. The hierarchy scopes cost: a session opened in a small member boots small.</MATRYOSHKA-SCOPES>
+        <COMPUTED-NOT-COPIED fact="true" status="impl/done">The sequence is **computed per node directly from the resolution graph**, never copied physically between levels (copying drifts; computation does not).</COMPUTED-NOT-COPIED>
+      </facts>
+    </effective-boot>
+    <artifacts title="2.3 Generated boot artifacts">
+      <p><ARTIFACTS-PAIR fact="true" status="impl/done">**Decision.** For every entry-point node, `vibe install` generates two artifacts under the node's `spec/boot/`:</ARTIFACTS-PAIR></p>
+      <facts ordered="false">
+        <ARTIFACT-STATIC-MD fact="true" status="spec/work">**`STATIC.md`** — the **anchor-qualified** concatenation, in priority order, of every `static`-typed (§2.4) contribution in the node's effective boot: each contribution's content is carried whole, with its label definitions (heading anchors, fact ids) and intra-contribution label links rewritten to the origin-qualified form `&lt;origin-slug&gt;--&lt;original&gt;` (PROP-035 §8's qualify phase, B-011 — owner-approved 2026-08-04), so the compiled file's label namespace is collision-free by construction. Read first. Generated only when the node has `static` contributions.</ARTIFACT-STATIC-MD>
+        <STATIC-EMITS-ONCE-EACH fact="true" status="spec/work">**The lane emits each package's text once (B-006, owner-approved 2026-08-04).** A static entry that would embed a compiled unit artifact (a dependency that statically links children, PROP-038 §2.1) is **de-substituted** when every boot-bearing member of its static zone (itself excluded) is already present as an individual static entry of the same lane: a package with its own boot snippet reverts to that snippet — its own text still enters, once; a snippetless aggregator leaves a **generated provenance stub** — one marker comment naming the origin and stating the zone is emitted member-by-member, never a `#use` directive (which would route a mandatory read back into the unit artifact carrying the very duplicate) and never a second copy of the text. An entry with **any** zone member not individually present keeps its unit-artifact substitution whole — the rule removes proven duplicates only and never drops coverage. The decision is a pure function of the lane's entry set and the unit zones — independent of how many consumers pull the package, through which mix of `static` / `static-transitive` / `static-hard` edges, and in what order: the closure walk already emits one entry per package identity, and the single-version invariant (PROP-038 §2.6) makes every copy of a member byte-identical, so covered-zone de-substitution can never lose text. **The stated residual:** under *partial* coverage a member both individually present and embedded in the kept unit artifact is carried twice — accepted deliberately, because the composition layer only chooses paths and never rewrites a unit artifact's content; deduplicating a widely-shared member *inside* unit artifacts is the hoisting plane's job (PROP-038 §2.4–2.5 — a hoisted member's text is replaced by a `#use` marker in every unit that shares it), and the undercounting hoist trigger is recorded at PROP-038's DRIFT-030 review stop, not here.</STATIC-EMITS-ONCE-EACH>
+        <STATIC-OPENS-WITH-RESOLUTION-PREAMBLE fact="true" status="spec/work">**`STATIC.md` opens with the resolution preamble and the tombstone table** (PROP-035 §11, B-011): the label convention, alias semantics, the lookup rule, and every renamed short name with its qualified heirs — placed first because the first lines of the first file read are the one position an agent re-reads every session and after compaction (the owner's priority-placement addition, 2026-08-04).</STATIC-OPENS-WITH-RESOLUTION-PREAMBLE>
+        <COMPILED-LANE-IS-NOT-A-CITATION-TARGET fact="true" status="spec/work">**A generated `STATIC.md` is not a citation target** — authored text never cites `spec://…/boot/STATIC#…`; the lane is compiler output, and source-of-truth is the package source under `vibedeps/` (PROP-035 §11's lint, B-011 §6.1).</COMPILED-LANE-IS-NOT-A-CITATION-TARGET>
+        <ARTIFACT-INDEX-MD fact="true" status="impl/done">**`INDEX.md`** — a generated **TOML manifest** of the rest of the sequence: a `schema` version, a `static` pointer (the path of `STATIC.md`, when one exists), and an ordered list of `[[entry]]` tables. Each entry carries `path`, `kind` (`"static"` — a resolved file the agent reads directly; `"dynamic"` — an INCLUDE the agent resolves at boot, §2.4), and, for dynamic entries, `when` (the activation condition, §2.4). The manifest is flat and machine-precise — `vibe` performed the graph walk once at generation time; the agent parses one TOML document and reads the listed files, with no recursion, discovery, or cycle-detection.</ARTIFACT-INDEX-MD>
+      </facts>
+      <fence lang="toml"># spec/boot/INDEX.md — generated by vibe, do not edit.
+schema = 1
+static = "spec/boot/STATIC.xml"
+
+[[entry]]
+path = "spec/boot/00-core.xml"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/org.vibevm.windows/2.1.0/boot/windows.md"
+kind = "dynamic"
+when = "os:windows"</fence>
+      <facts ordered="false">
+        <ARTIFACTS-GENERATED fact="true" status="impl/done">Both artifacts are generated, git-tracked, and marked "generated — do not edit".</ARTIFACTS-GENERATED>
+        <ARTIFACTS-CARRY-NO-TOKEN-BUDGET fact="true" status="impl/done">**A generated boot artifact carries no token budget** (owner ruling, 2026-07-29). The size budgets of the `addressable-specs` flow govern **authored** documents, where a page over budget is a page nobody re-reads and the remedy is to split it. `STATIC.md` — the project-wide one and every per-node one — is compiler output: it is not read by a human, not edited, and not splittable, because its size is the sum of what the resolution graph says the session must have. Compiling a document *into* the lane is therefore a legitimate answer to a dangling pointer, and «the lane grew» is not an objection to it. What remains measurable, and is the honest cost, is the **session's** context, which the `dynamic` lane exists to keep off the critical path (§2.4).</ARTIFACTS-CARRY-NO-TOKEN-BUDGET>
+        <AUTHORED-ALONGSIDE fact="true" status="impl/done">Authored boot files (the user-owned snippets, the node's own authored boot) continue to live alongside as ordinary files; `INDEX.md` references them in computed order.</AUTHORED-ALONGSIDE>
+      </facts>
+      <facts ordered="false">
+        <SESSION-START-ORDER fact="true" status="impl/done">**Session-start order:** the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect → `spec/boot/STATIC.xml` (if present) → `spec/boot/INDEX.md` and the entries it names, in order.</SESSION-START-ORDER>
+        <PURE-FILE-READING fact="true" status="impl/done">Boot remains **pure file-reading** — the redirect never becomes "run `vibe`", preserving the zero-dependency cross-agent property of `VIBEVM-SPEC.md` §6.1.</PURE-FILE-READING>
+      </facts>
+      <p><REDIRECT-MANAGED-BLOCK fact="true" status="impl/done">**The redirect is a managed block (PROP-012).** The `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect is not a whole generated file. [PROP-012](PROP-012-managed-redirect-block.xml) refines it: vibevm owns only a delimited `&lt;vibevm&gt;` block inside each shared instruction file and preserves every byte outside it — the file is a co-tenant surface, not vibevm's property.</REDIRECT-MANAGED-BLOCK></p>
+    </artifacts>
+    <inclusion-types title="2.4 Inclusion types — `static`, `dynamic`">
+      <p><INCLUSION-TYPES fact="true" status="impl/done">**Decision.** Each dependency declares an **inclusion type**, set by the consumer in its `vibe.toml` on the `[requires.packages]` entry:</INCLUSION-TYPES></p>
+      <fence lang="toml">[requires.packages]
+"flow:wal"        = { version = "^0.3", link = "dynamic" }   # default
+"flow:discipline" = { version = "^1.0", link = "static" }    # emergency priority lane
+"stack:rust"      = { version = "^2.0", link = "dynamic" }   # conditional / context-gated</fence>
+      <facts ordered="false">
+        <LINK-DYNAMIC fact="true" status="impl/done">`link = "dynamic"` — **the default.** `vibe` resolves the contribution to a concrete path in `INDEX.md`; the agent reads it dynamically, on demand. An optional `when` condition gates the read: with a `when` it is a **conditional** INCLUDE (loaded only when the condition holds) — mechanically the subskill `lazy-pull` delivery mode; without one it is read unconditionally. The `when` draws on the subskill `[activation]` probe vocabulary (PROP-003 §2.5) — one probe grammar across both mechanisms. **v1 implements the `os:` probe end-to-end** — `when = "os:windows"` matches the session's operating system (`windows` / `macos` / `linux`); the remaining probes are reserved until PROP-003's activation engine is built.</LINK-DYNAMIC>
+        <LINK-STATIC fact="true" status="impl/done">`link = "static"` — the contribution's boot text is compiled into `STATIC.md` ahead of time (whole, anchor-qualified — §2.3). Read first, one read, maximum attention weight. The **emergency priority lane** — for top-level skills and critical disciplines whose priority must be guaranteed by position, not by trusting agent-side resolution. Used sparingly; it duplicates the text on disk.</LINK-STATIC>
+      </facts>
+      <p><LINKING-SPECTRUM fact="true" status="impl/done">The two types are the two ends of the static/dynamic-linking spectrum: `static` is compiled in ahead of time (the `STATIC.md` lane), `dynamic` is loaded by reference on demand (the `INDEX.md` lane), and the old third type is gone — a conditional load is just a `dynamic` entry carrying a `when`.</LINKING-SPECTRUM></p>
+      <p><SUGGESTED-DEFAULT fact="true" status="impl/done">A package MAY declare a suggested default inclusion type in its own `[boot_snippet]`; the consumer's declaration always wins. Absent both, the type is `dynamic`.</SUGGESTED-DEFAULT></p>
+      <p><WHEN-FORCES-DYNAMIC fact="true" status="impl/done">A `[boot_snippet]` that declares a `when` condition (§2.6) stays a conditional `dynamic` entry, irrespective of `link`: a condition cannot be honoured by the ahead-of-time `static` lane, so a `when` forces the gated INDEX form. It is a correctness constraint, not a preference — OS-specific content must never reach a session on the wrong OS.</WHEN-FORCES-DYNAMIC></p>
+    </inclusion-types>
+    <ordering title="2.5 Ordering by category — the `NN-` prefix is retired">
+      <p><NN-RETIRED fact="true" status="impl/done">**Decision.** `vibe` owns the order of entries in the generated artifacts. The author-chosen two-digit `NN-` prefix (`VIBEVM-SPEC.md` §6.2) is **retired** — it cannot survive a workspace's combined namespace, and §6.5 already admits it provisional.</NN-RETIRED></p>
+      <facts ordered="false">
+        <CATEGORY-NOT-NUMBER fact="true" status="impl/done">A package declares a **category** for its boot snippet, not a number. The categories preserve the intent of the old range bands: `foundation`, `flow`, `stack`, `user-override`.</CATEGORY-NOT-NUMBER>
+        <CATEGORY-ORDER fact="true" status="impl/done">Within the computed sequence the order is: `foundation` → the node's own → dependency boot (topologically — a dependency before its dependents) → `user-override`. `static` contributions are concatenated into `STATIC.md` in the same relative order.</CATEGORY-ORDER>
+        <NO-PREFIX-COLLISIONS fact="true" status="impl/done">Prefix collisions — the failure mode of `VIBEVM-SPEC.md` §6.3 — become impossible by construction; `BootSnippetConflict` / `BootSnippetNumericConflict` (`vibe-install`) are removed.</NO-PREFIX-COLLISIONS>
+        <RESERVED-NAMES fact="true" status="impl/done">The user-owned files keep their reserved names (`00-core.xml`, `90-user.xml`) by convention; `vibe` places them at the foundation / override ends.</RESERVED-NAMES>
+      </facts>
+    </ordering>
+    <schema title="2.6 Manifest schema changes">
+      <p><schema-decision-lead fact="true" status="impl/done">**Decision.**</schema-decision-lead></p>
+      <facts ordered="false">
+        <SCHEMA-LINK-FIELD fact="true" status="impl/done">`[requires.packages]` inline-table entries accept an optional `link` field (§2.4): `"static" | "dynamic"`, default `dynamic`. Valid on registry-, path-, and git-source dependencies.</SCHEMA-LINK-FIELD>
+        <SCHEMA-BOOT-SNIPPET fact="true" status="impl/done">`[boot_snippet]` (package-role) drops the `filename` field (the `NN-` target name) and gains `category` (§2.5); `source` — the path to the boot file inside the package — is retained. It may carry an optional suggested `link` default, and an optional **`when`** activation condition — the declaration site for §2.3's dynamic-entry `when`, closing the gap Phase 4 flagged. For v1 the only `when` is an operating-system match, the wire string `"os:&lt;name&gt;"` with `&lt;name&gt;` one of `windows` / `macos` / `linux`; a snippet carrying a `when` is `dynamic` (§2.4). The package author owns this declaration: whether a boot snippet is OS-specific is the author's knowledge, not the consumer's.</SCHEMA-BOOT-SNIPPET>
+        <SCHEMA-WRITES-REMOVED fact="true" status="impl/done">`[writes]` (package-role) is **removed** (§2.1, §2.7) — a package's materialised footprint is its verbatim tree under its `vibedeps/` slot; a per-file write list has nothing left to declare.</SCHEMA-WRITES-REMOVED>
+        <SCHEMA-BOOT-TABLE fact="true" status="impl/done">A minimal project-level `[boot]` table carries workspace-wide loading settings — for v1, only a default `link` override. Room to grow; nothing more is added now.</SCHEMA-BOOT-TABLE>
+        <SCHEMA-LOCK-BUMP fact="true" status="impl/done">A `vibe.lock` schema bump may be required to record materialisation slots and inclusion types — assessed in Phase 1.</SCHEMA-LOCK-BUMP>
+      </facts>
+    </schema>
+    <install title="2.7 Workspace-aware `vibe install` / `vibe build`">
+      <p><WORKSPACE-AWARE fact="true" status="impl/done">**Decision.** `vibe install` and `vibe build` discover the workspace and operate on it as a whole — the piece PROP-007 §6 q3 deferred, now subsumed.</WORKSPACE-AWARE></p>
+      <facts ordered="false">
+        <INSTALL-UNIFIED fact="true" status="impl/done">Run anywhere inside a workspace, `vibe install` calls `Workspace::discover`, runs **one unified resolution** across every member's `[requires]`, materialises each resolved package once into `vibedeps/` (§2.1), and regenerates the boot artifacts (§2.3) for every entry-point node. One `vibe.lock` at the absolute root (PROP-007 §2.4).</INSTALL-UNIFIED>
+        <PLAN-UNIT fact="true" status="impl/done">The plan / confirm / apply contract holds, but the plan's unit is **the set of packages to materialise plus the boot artifacts to regenerate**, not a per-file write list — `[writes]` is retired (§2.6).</PLAN-UNIT>
+        <SCOPE-FLAG fact="true" status="impl/done">`-p &lt;member&gt;` scopes resolution *reporting* to one member; the materialisation and the single root lockfile are always workspace-wide — unified resolution admits no per-member subset.</SCOPE-FLAG>
+        <DEGENERATE-PATH fact="true" status="impl/done">A standalone single-package project is a degenerate workspace and follows the identical path (§2.9).</DEGENERATE-PATH>
+      </facts>
+    </install>
+    <engine title="2.8 The computed-view engine — boot and the effective spec">
+      <p><ENGINE-TWO-PROJECTIONS fact="true" status="impl/done">**Decision.** The boot artifacts (§2.3) and the **effective spec** (`VIBEVM-SPEC.md` §4.6 — the merged corpus consumed by `vibe build` and `vibe show effective`) are two projections of one **computed-view engine**: workspace walk (`Workspace::discover`) + unified resolution + two-tree layering (§2.1, §2.2).</ENGINE-TWO-PROJECTIONS></p>
+      <facts ordered="false">
+        <VIEW-BOOT fact="true" status="impl/done">The **boot view** projects the boot-category content into the ordered `STATIC.md` / `INDEX.md` (§2.3).</VIEW-BOOT>
+        <VIEW-EFFECTIVE-SPEC fact="true" status="spec/done">The **effective-spec view** projects the full layered corpus — authored `spec/` plus materialised `vibedeps/` — into the effective spec.</VIEW-EFFECTIVE-SPEC>
+        <BOTH-DETERMINISTIC fact="true" status="impl/done">Both are deterministic and regenerated by `vibe install`.</BOTH-DETERMINISTIC>
+      </facts>
+      <p><V15-SCOPE fact="true" status="spec/done">The effective-spec view's detailed shape is **v1.5 scope** (it feeds `vibe build`). PROP-009 fixes only that it shares the engine, so it is not built as a later retrofit.</V15-SCOPE></p>
+    </engine>
+    <uniform title="2.9 Uniform model — every project is a workspace">
+      <p><UNIFORM-MODEL fact="true" status="impl/done">**Decision.** The loading model is uniform: a single-package project is a degenerate (zero-member) workspace. `Workspace::discover` already degenerates cleanly (PROP-007 §2.3).</UNIFORM-MODEL></p>
+      <p><ONE-CODE-PATH fact="true" status="impl/done">There is one loading model, one set of artifacts, one code path.</ONE-CODE-PATH></p>
+      <facts ordered="false">
+        <EVERYONE-MIGRATES fact="true" status="impl/done">Every existing project migrates (§4). vibevm is pre-release; M1.17's no-legacy hard break is the precedent.</EVERYONE-MIGRATES>
+        <SELF-MIGRATION fact="true" status="impl/done">The vibevm repository, itself a vibevm project, migrates too — `spec/boot/00-core.xml` and `90-user.xml` stay user-owned authored boot; the generated `STATIC.md` / `INDEX.md` join them.</SELF-MIGRATION>
+      </facts>
+    </uniform>
+    <regen title="2.10 Regeneration — `vibe reinstall`">
+      <p><REINSTALL fact="true" status="impl/done">**Decision.** `vibe reinstall [&lt;path&gt;] [--force]` reinstalls and regenerates the materialised state.</REINSTALL></p>
+      <facts ordered="false">
+        <REINSTALL-ANCESTORS fact="true" status="impl/done">It targets any node in the workspace. Reinstalling a node regenerates that node **and every ancestor up to the absolute root** — the matryoshka (§2.2) means an ancestor's aggregated artifacts depend on the node's. `vibe reinstall` run at the root regenerates the whole tree.</REINSTALL-ANCESTORS>
+        <REINSTALL-NO-FORCE fact="true" status="impl/done">Without `--force` it recomputes the materialisation and the boot artifacts from the existing `vibe.lock` and the local cache — no fresh resolution.</REINSTALL-NO-FORCE>
+        <REINSTALL-FORCE fact="true" status="impl/done">`--force` re-fetches the file content of the whole targeted subtree from the source repositories, overwriting the current `vibedeps/` files and bypassing the cache. The escape hatch for a corrupted, hand-edited, or wrongly-generated subtree.</REINSTALL-FORCE>
+      </facts>
+      <p><reinstall-purpose fact="true" status="impl/done">It exists for when the materialised state is believed stale or a previous generation pass was wrong.</reinstall-purpose></p>
+    </regen>
+    <publish title="2.11 Published-copy regeneration">
+      <p><PUBLISH-REGEN fact="true" status="impl/done">**Decision.** `vibe workspace publish` (PROP-007 §2.7) regenerates the boot artifacts of each staged copy for the **published shape** — where dependencies are registry-resolved and version-pinned, not path-sourced.</PUBLISH-REGEN></p>
+      <p><publish-dangling-why fact="true" status="impl/done">This consumes PROP-007 §2.5's dual-form `{ path, version }`: the local `vibedeps/` slots and path entries become registry references in the published copy's artifacts. Publishing the development tree's own path-resolved artifacts would dangle for an external consumer.</publish-dangling-why></p>
+    </publish>
+  </decisions>
+  <surface title="3. Command and crate surface">
+    <facts ordered="false">
+      <SURF-INSTALL-BUILD fact="true" status="impl/done">`vibe install` / `vibe build` — workspace-aware (§2.7).</SURF-INSTALL-BUILD>
+      <SURF-REINSTALL fact="true" status="impl/done">`vibe reinstall` — regeneration (§2.10).</SURF-REINSTALL>
+      <SURF-PUBLISH fact="true" status="impl/done">`vibe workspace publish` — gains published-shape artifact regeneration (§2.11).</SURF-PUBLISH>
+      <SURF-SHOW-EFFECTIVE fact="true" status="impl/done">`vibe show effective` — **ships** in its simple concatenation form (every `spec/boot` file plus every installed package's `files_written`, joined with `spec://` provenance headers, per its own `--help`); the §2.8 engine-backed projection stays v1.5 scope.</SURF-SHOW-EFFECTIVE>
+      <SURF-ENGINE-CRATE fact="true" status="impl/done">The computed-view engine lands either as a new crate (`vibe-boot` / `vibe-view`) or inside `vibe-workspace` (which already owns discovery and the `[workspace.versions]` finalize pass) — decided at implementation time.</SURF-ENGINE-CRATE>
+    </facts>
+  </surface>
+  <migration title="4. Migration">
+    <facts ordered="false">
+      <MIGRATION-ONCE fact="true" status="impl/done">Every existing project migrates once (§2.9). On the first `vibe install` after the upgrade, `vibe` rewrites the project: dependency content moves out of the authored `spec/` into `vibedeps/`; `NN-` boot files become categorised authored boot or generated artifacts; `STATIC.md` / `INDEX.md` are generated; the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect is rewritten.</MIGRATION-ONCE>
+      <NO-SHIM fact="true" status="impl/done">There is no compatibility shim — a pre-PROP-009 layout is migrated, not supported in place.</NO-SHIM>
+      <vibevm-migrated fact="true" status="impl/done">The vibevm repository is migrated as part of the milestone.</vibevm-migrated>
+    </facts>
+  </migration>
+  <open title="5. Resolved questions">
+    <p><resolved-lead fact="true" status="impl/done">The eight questions opened in draft 1 were resolved in an owner session on 2026-05-21.</resolved-lead></p>
+    <facts ordered="true">
+      <RES-VIBEDEPS fact="true" status="impl/done">**`vibedeps/` directory** — the materialised-dependency tree (§2.1); slot layout `vibedeps/&lt;group&gt;.&lt;name&gt;/&lt;version&gt;/`.</RES-VIBEDEPS>
+      <RES-REINSTALL fact="true" status="impl/done">**`vibe reinstall`** — the regeneration command (§2.10), replacing the working name `vibe boot`; it regenerates a node and every ancestor to the root, and `--force` re-fetches a subtree from source.</RES-REINSTALL>
+      <RES-INDEX-TOML fact="true" status="impl/done">**`INDEX.md` is a TOML manifest** — `schema` / `static` / `[[entry]]` (§2.3); machine-precise over an LLM-native list.</RES-INDEX-TOML>
+      <RES-WRITES-RETIRED fact="true" status="impl/done">**`[writes]` is retired** (§2.6) — a package's footprint is its verbatim tree under its `vibedeps/` slot.</RES-WRITES-RETIRED>
+      <RES-ACTIVATION-VOCAB fact="true" status="impl/done">**Dynamic conditions reuse the subskill `[activation]` vocabulary** verbatim (§2.4; PROP-003 §2.5) — one probe grammar, no parallel one.</RES-ACTIVATION-VOCAB>
+      <RES-BOOT-TABLE fact="true" status="impl/done">**A minimal `[boot]` table** (§2.6) — for v1 it carries only a workspace-wide default `link`.</RES-BOOT-TABLE>
+      <RES-V15-VIEW fact="true" status="spec/done">**The effective-spec view stays v1.5 scope** (§2.8) — PROP-009 fixes only that it shares the computed-view engine.</RES-V15-VIEW>
+    </facts>
+    <p><deferred-lead fact="true" status="spec/done">**Deferred:**</deferred-lead></p>
+    <facts ordered="true">
+      <RES-SPEC-SANCTION fact="true" status="impl/done">`VIBEVM-SPEC.md` edits — **resolved 2026-05-22.** The owner granted the sanction for a full consistency pass (not only §6 / §4.2 / §4.6 / §13.1); it landed in Phase 7.</RES-SPEC-SANCTION>
+    </facts>
+  </open>
+  <rejected title="6. Rejected / deferred alternatives">
+    <facts ordered="false">
+      <REJ-BUBBLE-UP fact="true" status="spec/done">**Bubble every dependency's boot into the root `spec/boot/`.** Rejected — it is the "merge dependency specs into the authored spec" the owner ruled out, and it makes one flat namespace for the whole workspace.</REJ-BUBBLE-UP>
+      <REJ-RUN-VIBE fact="true" status="spec/done">**Boot by running `vibe` at session start.** Rejected — it would always be fresh, but it breaks the zero-dependency cross-agent property (`VIBEVM-SPEC.md` §6.1) and adds a process exec to every session. Boot stays pure file-reading (§2.3).</REJ-RUN-VIBE>
+      <REJ-PHYSICAL-COPY fact="true" status="spec/done">**Copy boot snippets physically leaf-to-root (the literal matryoshka).** Rejected in favour of computing each level directly from the resolution graph (§2.2) — physical copying drifts between levels.</REJ-PHYSICAL-COPY>
+      <REJ-GITIGNORED-CACHE fact="true" status="spec/done">**A gitignored dependency cache.** Rejected — a committed `vibedeps/` keeps a fresh clone bootable and the corpus reviewable.</REJ-GITIGNORED-CACHE>
+    </facts>
+  </rejected>
+  <phases title="7. Phase plan">
+    <p><phases-lead fact="true" status="impl/done">Targets M1.18. PROP-008 (qualified naming) shifts to M1.19. **Phases 1–7 shipped 2026-05-22**; phase 8 is v1.5 scope.</phases-lead></p>
+    <facts ordered="true">
+      <PHASE-1-SCHEMA fact="true" status="impl/done">**Schema** — the `link` field, `[boot_snippet]` `category`, retire the `NN-` filename and the `[writes]` section; `vibe.lock` bump if needed. `vibe-core`.</PHASE-1-SCHEMA>
+      <PHASE-2-MATERIALISATION fact="true" status="impl/done">**Materialisation tree** — the `vibedeps/` layout, materialise packages verbatim; retire the mirror layout.</PHASE-2-MATERIALISATION>
+      <PHASE-3-ENGINE fact="true" status="impl/done">**Computed-view engine** — per-node effective boot computation from the unified resolution.</PHASE-3-ENGINE>
+      <PHASE-4-ARTIFACTS fact="true" status="impl/done">**Artifact generation** — `STATIC.md` / the TOML `INDEX.md`; the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect.</PHASE-4-ARTIFACTS>
+      <PHASE-5-WORKSPACE-AWARE fact="true" status="impl/done">**Workspace-aware `vibe install` / `vibe build`** — discover, unified resolve, materialise, regenerate (§2.7).</PHASE-5-WORKSPACE-AWARE>
+      <PHASE-6-REINSTALL fact="true" status="impl/done">**`vibe reinstall` regeneration** (§2.10) and **published-copy regeneration** in `vibe workspace publish` (§2.11).</PHASE-6-REINSTALL>
+      <PHASE-7-MIGRATION fact="true" status="impl/done">**Migration + docs** — existing-project migration, the vibevm self-migration, `VIBEVM-SPEC.md` edits (under owner sanction — §5 item 8), `ROADMAP.md` / `CHANGELOG.md`, the `docs/` sweep.</PHASE-7-MIGRATION>
+      <PHASE-8-EFFECTIVE-SPEC fact="true" status="impl/plan">**Effective-spec view** — shares the engine; the detailed shape is v1.5 scope (§2.8).</PHASE-8-EFFECTIVE-SPEC>
+    </facts>
+  </phases>
+  <history title="8. Version history">
+    <facts ordered="false">
+      <HISTORY-DRAFT-1 fact="true" status="spec/done">**2026-05-21 — draft 1.** Requirements captured in an owner design session: the loading-model redesign answering PROP-007 §6 question 3, the static/dynamic-linking spine, the four-fork resolution. Rationale recorded in [`spec/design/loading-and-boot-model.xml`](../../design/loading-and-boot-model.xml).</HISTORY-DRAFT-1>
+      <HISTORY-DRAFT-2 fact="true" status="spec/done">**2026-05-21 — draft 2.** The eight §5 open questions resolved in a follow-up owner session: `vibedeps/`, `vibe reinstall`, the TOML `INDEX.md`, `[writes]` retired, dynamic conditions reusing the subskill `[activation]` vocabulary, a minimal `[boot]` table, the effective-spec view kept v1.5-scoped. The `VIBEVM-SPEC.md` sanction (§5 item 8) is the one item carried to Phase 7. Ready for M1.18 implementation.</HISTORY-DRAFT-2>
+      <HISTORY-PHASE-7 fact="true" status="spec/done">**2026-05-22 — Phase 7 shipped.** The migration-and-docs phase landed in M1.18: the vibevm self-migration, the `VIBEVM-SPEC.md` consistency pass (owner sanction granted — §5 item 8), and [PROP-012](PROP-012-managed-redirect-block.xml), which refines §2.3's redirect into a managed `&lt;vibevm&gt;` block. Phases 1–7 are shipped; phase 8 (the effective-spec view) remains v1.5 scope.</HISTORY-PHASE-7>
+      <HISTORY-WHEN-SITE fact="true" status="spec/done">**2026-05-22 — the `when` declaration site.** §2.3's dynamic-entry `when` is pinned to `[boot_snippet].when` (§2.6), closing the contract gap Phase 4 flagged — §2.3 showed `when` but no field declared it. v1 scope is deliberately small: the only condition is an operating-system match (`when = "os:&lt;name&gt;"`), shipped end-to-end through the `vibe-core` schema, the computed-view engine, and the `INDEX.md` renderer. A `[boot_snippet]` carrying a `when` is `dynamic` irrespective of `link` (§2.4). The OS probe is also reserved as `if_os` in the subskill `[activation]` vocabulary (PROP-003 §2.5.2), so the two mechanisms share one grammar. The wider probe set follows when PROP-003's activation engine is built.</HISTORY-WHEN-SITE>
+      <HISTORY-B011-QUALIFIED fact="true" status="spec/work">**2026-08-04 — the static lane becomes anchor-qualified (B-011, owner-approved).** §2.3's `##ARTIFACT-STATIC-MD` changes from «verbatim concatenation» to «anchor-qualified concatenation» (labels rewritten under the contribution's origin slug — PROP-035 §8's new qualify phase), the lane opens with the resolution preamble + tombstone table, and a generated lane stops being a legal citation target. Motivation: 59 `duplicate-anchor` warnings over the compiled lane (`{#root}` ×26) and the strip-safety design; the full rationale and fork record: [`spec/design/deterministic-loading-aliasing.xml`](../../design/deterministic-loading-aliasing.xml). Landed the same day (five worker slices; the host lane regenerated 59 → 0), retiring the §2.3 annotated interim.</HISTORY-B011-QUALIFIED>
+      <HISTORY-B006-ONCE-EACH fact="true" status="spec/work">**2026-08-04 — the lane emits once each (B-006, owner-approved: A1·B1·C1).** §2.3 gains `##STATIC-EMITS-ONCE-EACH`: a static entry embedding a compiled unit artifact is elided to a provenance stub when its whole static zone is already present member-by-member — the compose-time dedup that removes the aggregator double-emission (the git-practices family carried twice, 323 nested lines, 164 double-qualified labels) without touching the unit artifacts, hoisting, or coverage in a dynamic-member topology. Rationale, forks and the measured traps of the alternatives: [`spec/design/lane-composition-dedup.xml`](../../design/lane-composition-dedup.xml); the linker-side twin sentence: PROP-038 §2.1; the per-node-qualify rider: PROP-035 §8.</HISTORY-B006-ONCE-EACH>
+    </facts>
+  </history>
+</spec>

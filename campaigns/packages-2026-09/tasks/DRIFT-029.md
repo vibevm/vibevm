@@ -49,7 +49,7 @@ Measured 2026-07-26, immediately after `vibe update --all` on a clean tree.
   `# vibe:fp <hash>` fingerprint line.
 - By elimination (source clean + cache clean + slot populated), **vibe wrote
   those two files during materialisation**.
-- The host's `spec/boot/STATIC.md` grew by **194 lines, 0 deletions**, and now
+- The host's `spec/boot/STATIC.xml` grew by **194 lines, 0 deletions**, and now
   carries each of the four git-\* snippets **twice**:
   - first copy, from the members' own snippets — lines 363, 421, 486, 514;
   - second copy, under
@@ -86,7 +86,7 @@ count and the write are worth reconciling before changing anything.
    on an already-updated tree changes nothing.
 ```
 
-Edge cases: a package that genuinely **ships** `spec/boot/STATIC.md` from
+Edge cases: a package that genuinely **ships** `spec/boot/STATIC.xml` from
 source (i.e. the file is present in the source package directory) must keep
 contributing it exactly as before — the fix distinguishes *generated here* from
 *shipped by the package*, not "has a STATIC.md". `delegation-rules` is the live
@@ -102,7 +102,7 @@ Error paths: none new. This removes a write; it introduces no failure mode.
 - **Do not touch** `packages/**`. In particular, do not "fix" this by adding a
   `spec/boot/` to `git-practices` or by editing its manifest — the package is
   content-minimal by design and that is correct.
-- **Do not hand-edit** `spec/boot/STATIC.md` or `spec/boot/INDEX.md`. They are
+- **Do not hand-edit** `spec/boot/STATIC.xml` or `spec/boot/INDEX.md`. They are
   generated; the fix is upstream of them and is verified by regenerating.
 - **Do not touch** `campaigns/**` except §9 of this file.
 - Never edit golden tests to make them pass.
@@ -125,8 +125,8 @@ git status --short
 ```
 
 - `vibedeps/flow-git-practices/0.1.0/spec/` **does not exist**.
-- `grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.md` → **1** (it is 2 today).
-- `grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.md` → **0**.
+- `grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml` → **1** (it is 2 today).
+- `grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.xml` → **0**.
 - `vibedeps/flow-delegation-rules/0.1.0/spec/boot/INDEX.md` **still exists** —
   the shipped-from-source case is untouched.
 - A second identical `update --all` run leaves `git status` unchanged
@@ -174,10 +174,10 @@ child other than itself.
 
 **The stop.** §8's first bullet fires verbatim. PROP-038 §2.1 carries the
 spec unit `##UNIT-PER-PACKAGE`
-(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:33`, `@impl/done`):
+(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:33`, `@impl/done`):
 
 > **Decision.** Every package materialised under `vibedeps/` carries its
-> **own** boot artifacts — `vibedeps/<slot>/spec/boot/STATIC.md` … and
+> **own** boot artifacts — `vibedeps/<slot>/spec/boot/STATIC.xml` … and
 > `.../INDEX.md` … not only entry-point workspace nodes.
 
 `##UNITS-CHANGES-009` (line 35) restates it as amending PROP-009 §2.3, and
@@ -224,7 +224,7 @@ skip. §4's "Error paths: none new. This removes a write; it introduces no
 failure mode" does not hold.
 
 **Where the duplication actually enters — the question for the owner.** The
-host-side double copy is real and reproduced (`spec/boot/STATIC.md`: members at
+host-side double copy is real and reproduced (`spec/boot/STATIC.xml`: members at
 363/421/486/514 from the root's own forced-inline closure, the aggregator's
 compiled lane at 551 carrying the same four at 557/615/680/708). It enters
 through the **hoist counter**, not through per-unit emission.

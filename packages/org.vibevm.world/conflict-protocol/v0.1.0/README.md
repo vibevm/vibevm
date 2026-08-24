@@ -29,21 +29,21 @@ dead last. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md` — the full
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/conflict-protocol/CONFLICT-PROTOCOL.xml` — the full
   protocol: why conflicts are normal, the hierarchy and what each
   relation means operationally, the four-step REVIEW-marker protocol,
   the marker lifecycle, and a worked example of what one silent
   change costs (one bug becoming three, plus two weeks of git
   archaeology). @status:impl/done
-- @fact:CONTENT-THE-UNCERTAINTY-PROTOCOL `spec/flows/conflict-protocol/uncertainty-protocol.md` — the
+- @fact:CONTENT-THE-UNCERTAINTY-PROTOCOL `spec/flows/conflict-protocol/uncertainty-protocol.xml` — the
   spec-is-silent path: re-read the spec, re-read the reference, check
   the closest analog, then conservative default + REVIEW + report;
   what "conservative" means (cheapest to reverse), and when to stop
   and ask instead. @status:impl/done
-- @fact:CONTENT-THE-FAILURE-MODES `spec/flows/conflict-protocol/failure-modes.md` — three named
+- @fact:CONTENT-THE-FAILURE-MODES `spec/flows/conflict-protocol/failure-modes.xml` — three named
   failures with recovery drills: the silent spec edit, the stale
   state file after a crash, and the self-contradicting spec. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/35-flow-conflict-protocol.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/35-flow-conflict-protocol.xml` — boot snippet loaded at
   session start: the hierarchy one-liner, the REVIEW contract, the
   uncertainty ladder, and the never-do list. @status:impl/done
 
@@ -95,3 +95,4 @@ modes come from chapter 2. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

@@ -11,5 +11,6 @@ the machine (PROP-027 §2.6). @status:impl/done
 
 > @fact:campaign-in-flight-note Campaign in flight: built end-to-end per
 > GO-AI-NATIVE-PLAN v0.1, the campaign plan, which is authored outside
-> this package; the server brief is `spec/tools/discipline-mcp-go.md`.
+> this package; the server brief is `spec/tools/discipline-mcp-go.xml`.
 > This README is finalized at campaign close. @status:spec/done
+

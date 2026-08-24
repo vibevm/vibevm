@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Campaign 2 — initiative system · STARTED PLAN</title>
+  <p>_План-идентификатор: **campaign2**. Запущен 2026-07-10 ~11:53
+(коммит `47412ad`); драфт и запуск совпали в одной сессии (владелец:
+«Начинай Campaign 2» → «Goal set: сделать Campaign 2»), поэтому
+отдельного `-drafted-plan.md` нет. Источник истины — 
+`fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml`
+(+ WAL); этот файл — дашборд для владельца. Текущее состояние — в
+[state-плане](2026-10-07-13-45-campaign2-state-plan.xml)._</p>
+  <section title="Схема плана (как запущен)">
+    <list ordered="false">
+      <item>[ ] **Ф0 — спайки** (без коммитов): probe хуков CC · statusline-док
+      · скелет трайла · шов атрибуции · ownership settings</item>
+      <item>[ ] **Ф1 — sessions**: SessionRecord + sessions.jsonl + идемпотентный
+      begin · атрибуция ранов (`FRACTALITY_BOSS_SESSION`) · CLI
+      `session …` · I1-пин</item>
+      <item>[ ] **Ф2 — scoreboard**: крейт `fractality-initiative` (чистый
+      движок) · `scoreboard`/`--line` · месячный квота-роллап в `stats`</item>
+      <item>[ ] **Ф3 — CC-адаптер**: `hook &lt;event&gt;` (закон доступности) ·
+      `statusline` · `harness install|status|remove` (ownership по
+      командной строке) · `fetch` (ремонт D12)</item>
+      <item>[ ] **Ф4 — инициатива вживую**: политика наджей (порог+кулдаун) ·
+      question push (stop-алерт с ack) · routing-as-data
+      (matrix.toml + `route`, голдены 10/10)</item>
+      <item>[ ] **Ф5 — answer-rules** (тонкий срез D18-layer-2): авто-ответы
+      по паттернам профиля</item>
+      <item>[ ] **Ф6 — трайл + boss surface v2**: два холодных арма (без/с
+      инициативой) · снипет 75 v2 + скилл v2 · MT-записи · **платные
+      раны гейтятся RP1 (владелец)**</item>
+      <item>[ ] **Ф7 — закрытие**: §2 record · §14 ledgers · отчёты · WAL/
+      CONTINUE / WORKSPACES</item>
+    </list>
+  </section>
+  <section title="Ключевые решения при составлении">
+    <list ordered="false">
+      <item>**Скорборд вместо принуждения** (мандат владельца): ничего не
+  блокируем; видимые победы + контекстные наджи по порогу.</item>
+      <item>**MC — единственный склад фактов (I3)**; политика — в клиентском
+  движке; харнесс-специфика — в одном тонком адаптере (I4).</item>
+      <item>**Атрибуция сессии** через `CLAUDE_ENV_FILE` → `FRACTALITY_BOSS_SESSION`
+  (механизм подтверждён спайком); воркерам переменная не достаётся (I1).</item>
+      <item>**Строго факты на скорборде (D7)** — никаких выдуманных «сэкономлено».</item>
+      <item>**Трайл пре-регистрируется** (меню, критерии P1/P3) ДО платных ранов.</item>
+    </list>
+  </section>
+  <section title="Риски, проблемы, неопределённости (обязательный раздел)">
+    <list ordered="false">
+      <item>**R1: дрейф хук-API Клода** между версиями — адаптер толерантен к
+  незнакомым полям; пробы пришпилены к 2.1.202.</item>
+      <item>**R4: валидность трайла** (малое N, контаминация) — критерии
+  пре-регистрированы; авторская сессия армы не гоняет; N решает
+  владелец (RP1 — ОТКРЫТ).</item>
+      <item>**R5: цена exe-спавна на каждый tool-call** — измерено 6 мс, но
+  формальный P4-замер с MC — на Ф4/Ф6.</item>
+      <item>**Неопределённость: statusline в headless не работает (F20)** —
+  трайл меряется без ambient-канала; это честно слабее полной
+  инсталляции.</item>
+      <item>**RP2/RP3 открыты**: default-режим PostToolUse-счётчика; цель
+  установки настроек (local vs project).</item>
+      <item>P7 (бюджет коммитов ≤ 26) — на IGNITION горело; следим по ledger'у.</item>
+    </list>
+  </section>
+</spec>

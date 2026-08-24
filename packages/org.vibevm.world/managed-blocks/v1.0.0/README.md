@@ -25,21 +25,21 @@ Own exactly one delimited block; never touch a byte outside it.
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md` — the full
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml` — the full
   protocol: the co-tenant law, marker design (unique, greppable,
   paired, self-documenting, versioned), the absent / present /
   malformed state machine, the three verbs (create / update / remove),
   plan-time classification, the byte-identical no-op, and multi-tool
   cohabitation. @status:impl/done
-- @fact:CONTENT-THE-REJECTED-DESIGNS `spec/flows/managed-blocks/rejected-designs.md` — four designs that
+- @fact:CONTENT-THE-REJECTED-DESIGNS `spec/flows/managed-blocks/rejected-designs.xml` — four designs that
   look reasonable and are wrong (sidecar, model-based detection,
   auto-repair, whole-file ownership), each with its full why, plus the
   malformed-state hard-stop drill. @status:impl/done
-- @fact:CONTENT-THE-ADOPTION-GUIDE `spec/flows/managed-blocks/adoption-guide.md` — migrating an
+- @fact:CONTENT-THE-ADOPTION-GUIDE `spec/flows/managed-blocks/adoption-guide.xml` — migrating an
   overwriting tool onto a block, a fixture table that pins the state
   machine, and what belongs inside the block versus a tool-owned file
   it points at. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/65-flow-managed-blocks.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/65-flow-managed-blocks.xml` — boot snippet loaded at
   session start: the one-line law, when to read the protocol, and the
   never-do list. @status:impl/done
 
@@ -93,3 +93,4 @@ book *AI-native development*, which ships in Russian inside
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

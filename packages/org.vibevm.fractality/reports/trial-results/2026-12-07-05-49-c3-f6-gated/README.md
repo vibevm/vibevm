@@ -1,7 +1,7 @@
 # C3 Ф6 — the RLM gated-boss trial (MT-C3-01)
 
 _Fired 2026-12-07 (Campaign 3 Ф6, D-C3-9). Three paid GLM-5.2 cold-boss runs
-over `mini_logfmt` + the RLM preamble (`preamble-g.md`), driving the Stage-B
+over `mini_logfmt` + the RLM preamble (`preamble-g.xml`), driving the Stage-B
 need-gate + descent + escalation + acceptance machinery. Pre-registration:
 MT-C3-01._
 
@@ -28,6 +28,8 @@ naive baseline (16.7%), plus predictions P-C3-a..d.
 The inconclusive predictions + the caps drive **PP-004 → MT-C3-03** (the
 gated re-run: raised caps, a schema task, a Silo task, the `decisions` verb).
 Canonical verdicts: the MT-C3-01 "Recorded runs" section and
-`reports/2026-12-07-06-44-campaign3-f6-trial.md`. The raw evidence (bus facts
-+ gzipped transcripts + the decision/escalation journals) sits per-run beside
+`reports/2026-12-07-06-44-campaign3-f6-trial.xml`. The raw evidence (bus facts
+
+- gzipped transcripts + the decision/escalation journals) sits per-run beside
 this file.
+

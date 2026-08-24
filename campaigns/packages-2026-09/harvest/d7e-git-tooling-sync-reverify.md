@@ -19,7 +19,7 @@ that writes was run.
 2026-07-29** — *"fix(campaign): the last two boss-closable obligations, and
 neither one moved a package"*. Wave 6's record was taken at `e118b76f`; the
 window has moved since, and every figure below names the HEAD it was taken at
-because [§7's wave-6 entry](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#log)
+because [§7's wave-6 entry](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#log)
 records that a 400-commit figure over this history decays within the week.
 
 **And it decayed inside this run — the strongest available evidence for that
@@ -48,7 +48,7 @@ minus  **/target/**  .git/**  **/node_modules/**  campaigns/*/run/**
 CI files have already misled one search in this family.
 
 **Two host facts taken as established, not re-derived.** (1) The boot compiler
-emits four `git-*` snippets **twice** into `spec/boot/STATIC.md` — 31 static
+emits four `git-*` snippets **twice** into `spec/boot/STATIC.xml` — 31 static
 contributions from 27 distinct sources, because the family is reached both
 directly and through the `git-practices` umbrella; filed as `BACKLOG.md` B-006.
 A fact falsified *by that duplication alone* is a host build defect under
@@ -72,7 +72,7 @@ Obligations: F-309 · F-308 · F-344 · F-157 · F-199 · F-087 · F-232.
 roster — the package's own `README.md` and `vibe.toml`, the install slot
 `vibedeps/flow-git-practices/0.1.0/`, `vibe.lock`, the
 `packages/org.vibevm.world/git-*` directory listing, and
-`spec/common/PROP-000.md` §12. Widened to `packages/org.vibevm.fractality/**`:
+`spec/common/PROP-000.xml` §12. Widened to `packages/org.vibevm.fractality/**`:
 the second project installs no `flow-git-practices`, so it cannot settle this
 one either way.
 **The verdict's own command, re-run:** the verdict quotes none; it cites
@@ -114,7 +114,7 @@ The package's **own manifest** pins four —
 ```
 
 `vibe.lock:293-296` resolves all four under this package's `deps`, and
-`spec/common/PROP-000.md:159-164` lists all four as current members with
+`spec/common/PROP-000.xml:159-164` lists all four as current members with
 `spec://` pointers (`##GP-ATTRIBUTION`, `##GP-CONVENTIONAL`, `##GP-ATOMICITY`,
 `##GP-AUTONOMY`), none of them marked pending.
 
@@ -160,7 +160,7 @@ itself).
 
 **Outcome:** SURVIVES — ROUTE (b), with **both recorded figures superseded**
 **Anchors:** 1 of 1 — `##HEADER-TARGET-LENGTH-AND-HARD-LIMIT`
-(`packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md:17-20`)
+(`packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.xml:17-20`)
 → **SURVIVES — ROUTE (b)**
 **Perimeter searched:** for the **measurement**, this repository's own history,
 read-only. For the **enforcement** half, the standing perimeter **including
@@ -238,7 +238,7 @@ reason. It asserts no count, claims no checker, and describes nothing that
 exists. What the verdict measured is **the consumer breaking a limit the package
 correctly states** — [§3.6](../PHASE-D-BATCH-PLAN.md#which-side) route (b).
 Relaxing 60/72 to match a repository whose median subject is 69 is the
-*профанация* [§0](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#mandate)
+*профанация* [§0](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#mandate)
 exists to prevent — and the rule's stated reason (web UIs truncate) is a fact
 about Git hosting, not about this repository's habits.
 
@@ -260,13 +260,13 @@ longest 119, at `9f79acf1`, 2026-07-29.
 
 **Outcome:** FALSE
 **Anchors:** 1 of 1 — `##P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE`
-(`packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md:99-101`)
+(`packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.xml:99-101`)
 → **FALSE**
 **Perimeter searched:** the standing perimeter over `*.rs` for `vibeignore` ·
 `SHIPPABLE_EXCLUDES` · `read_to_string.*ignore` · `ignore.*globs` ·
 `parse_ignore` · `IgnoreFile`, plus the whole P3 section read rather than
 grepped — the question "which claim does this sentence make?" is answered by
-reading, not by absence — plus `spec/common/PROP-024-code-bearing-packages.md`
+reading, not by absence — plus `spec/common/PROP-024-code-bearing-packages.xml`
 §2.2 and §5 for the sibling claim the verdict imported.
 **The verdict's own command, re-run:** the verdict quotes none; its single
 evidence line is `content_hash.rs:28`, re-read verbatim below.
@@ -280,7 +280,7 @@ crates/vibe-index/src/content_hash.rs:28:const SHIPPABLE_EXCLUDES: &[&str] = &["
 crates/vibe-registry/src/shippable.rs:18:const SHIPPABLE_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];
 ```
 
-The sentence under judgement, at `packaging-lessons.md:99-101`:
+The sentence under judgement, at `packaging-lessons.xml:99-101`:
 
 > `##P3-MECHANICS-A-SHORT-DENYLIST-NAMES-WHAT-WAS-NEVER-SOURCE` **Mechanics.** A
 > short denylist **names** what was **never** source — VCS internals, caches,
@@ -305,7 +305,7 @@ the verdict itself concedes for the first four ("the main claim exact").
 clause.** The verdict reads the trailing phrase as *"plus whatever globs that
 file lists"*, then correctly observes that nothing reads globs out of it. But
 that is `PROP-024`'s wording, not this package's —
-`spec/common/PROP-024-code-bearing-packages.md:123`:
+`spec/common/PROP-024-code-bearing-packages.xml:123`:
 
 > `##VIBEIGNORE-EXTENDS` plus **any glob listed in** an optional `.vibeignore` at
 > the package root. **@status:spec/done**
@@ -319,7 +319,7 @@ attached to a host anchor. It is not a claim this package makes.
 
 **The document's own next-but-one sentence rules the verdict's reading out.**
 `##P3-MECHANICS-THE-DENYLIST-INTRODUCES-NO-CHOICE`, four lines later at
-`packaging-lessons.md:113-114`:
+`packaging-lessons.xml:113-114`:
 
 > The denylist only formalises "what was never source"; it **introduces no
 > choice**.
@@ -381,7 +381,7 @@ outcome this route wants: no spec diff, no owner approval.
 | `##SUM-S5-DURABLE-ENV-EDITS` | `:291-292` | **SURVIVES — ROUTE (b)** |
 
 All six in
-`packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md`.
+`packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.xml`.
 
 **Perimeter searched:** the standing perimeter over `*.rs` for `rust-toolchain` ·
 `toolchain.toml` · `SHIPPABLE` · `confirm(` · `assume_yes` · `IsTerminal` ·
@@ -390,7 +390,7 @@ consent question to `crates/vibe-cli/src/commands/vvm/**` (the module these
 lessons were extracted from) and read in full rather than grepped. Widened to
 `packages/org.vibevm.fractality/**` for `rust-toolchain`: its hits are the
 vendored `rust-ai-native-*` doc comments, not a second implementation of this
-tool. Plus `rust-toolchain.toml`, `Cargo.toml`, and `spec/common/PROP-019-version-manager.md`
+tool. Plus `rust-toolchain.toml`, `Cargo.toml`, and `spec/common/PROP-019-version-manager.xml`
 §2.6 and §7.
 **The verdict's own command, re-run:** one verdict quotes one, and **it
 reproduces exactly**:
@@ -521,7 +521,7 @@ that path.
   default"*).
 
 None asserts that this tool complies. And the law is **the host's own**, twice
-over: `spec/common/PROP-019-version-manager.md:215-226` lists the identical five
+over: `spec/common/PROP-019-version-manager.xml:215-226` lists the identical five
 rules in the same order, `##RULE-CONSENT` among them. A package whose rule the
 consumer breaks on one path does not get quieter about the rule —
 [§3.6](../PHASE-D-BATCH-PLAN.md#which-side) route (b).
@@ -676,9 +676,9 @@ below on a stated basis.
 **All eight cited restatements reproduce, verbatim, at their cited lines.**
 
 ```console
-spec/boot/00-core.md:21        ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits…
-spec/common/PROP-000.md:161    ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/…`
-spec/common/PROP-000.md:323    ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the…
+spec/boot/00-core.xml:21        ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits…
+spec/common/PROP-000.xml:161    ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/…`
+spec/common/PROP-000.xml:323    ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the…
 CLAUDE.md:5                    The repository's commit-and-push discipline — human-authored **attribution** (never mark any part…
 AGENTS.md:5                    (identical to CLAUDE.md:5)
 GEMINI.md:5                    (identical to CLAUDE.md:5)
@@ -687,7 +687,7 @@ README.md:158                  … the four non-negotiable rules (attribution, C
 ```
 
 Read one by one they split two ways: **six restate the substance of the rule**
-(`00-core.md:21`, `PROP-000:323`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md:5`,
+(`00-core.xml:21`, `PROP-000:323`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md:5`,
 `opus5.md:15`) and **two are pointers** naming the topic without stating the
 rule (`PROP-000:161`, which is a bare `spec://` address; `README.md:158`, which
 names "attribution" in a list of four rules and links to `CLAUDE.md`). The
@@ -718,7 +718,7 @@ own tree:
 verdict's 88/50. The two are not comparable term-for-term and I do not claim the
 verdict's number was wrong — I claim it is **unreproducible as stated**, because
 it names no term set and no exclusion list. The heaviest single file is
-`spec/boot/STATIC.md` at **24 lines**, which is the compiled lane carrying the
+`spec/boot/STATIC.xml` at **24 lines**, which is the compiled lane carrying the
 snippet twice.
 
 **One large slice of the `packages/` count is a different word entirely, and
@@ -736,7 +736,7 @@ counts those as policy restatements is counting a different population.
 $ (attribution-sense restatements, second project, install slots and the
    delegation-attribution sense excluded)
 packages/org.vibevm.fractality/CLAUDE.md:19            "human-authored surface, Conventional Commits, commits"
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md:588
+packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.xml:588
                                                        "AI-attribution trailer (host Rule 1 — absolute)."
 $ grep -niE "machine-authored|human-authored|attribution" \
     packages/org.vibevm.fractality/fractality/v0.1.0/CLAUDE.md
@@ -775,7 +775,7 @@ to describe a consumer with eight copies is the *профанация* the manda
 to prevent.
 
 **One half of the breach is not the host's discipline at all.** Two of the eight
-"places" are `spec/boot/STATIC.md:421` and `:615` — **the same snippet, compiled
+"places" are `spec/boot/STATIC.xml:421` and `:615` — **the same snippet, compiled
 twice**, because the family is reached both directly and through the
 `git-practices` umbrella. That is `BACKLOG.md` **B-006**, a boot-compiler defect;
 no amount of host discipline can stop a generated file carrying the block twice.
@@ -797,7 +797,7 @@ should separate B-006's two compiled copies from the six the host authored.
 
 **Outcome:** MIXED — 3/3: **2 FALSE · 1 SURVIVES — ROUTE (b)**
 **Anchors:** 3 of 3, all in
-`packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md`:
+`packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.xml`:
 
 | anchor | line | outcome |
 |---|---|---|
@@ -823,19 +823,19 @@ re-checked at `b61eb191`, unchanged.
 The sentence, at `:8-11`:
 
 > This is the project's chosen default posture; the alternative (open
-> disclosure) is documented in this flow's `disclosure-alternative.md` and **a
+> disclosure) is documented in this flow's `disclosure-alternative.xml` and **a
 > project may adopt it instead by editing this snippet**.
 
 The verdict answers: *"the escape hatch the fact names is **not available to a
 consumer**… in this host the only copy of the snippet is inside
-`spec/boot/STATIC.md`, whose line 1 reads 'generated by vibe, do not edit'"*.
+`spec/boot/STATIC.xml`, whose line 1 reads 'generated by vibe, do not edit'"*.
 That is true **of the host** and the verdict generalises it to "a consumer".
 **This repository has two consumers, and in the second one the snippet is a
 plain editable file that boot reads directly.**
 
 ```console
 $ ls packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/
-75-tool-fractality.md   INDEX.md
+75-tool-fractality.xml   INDEX.md
                         ← no STATIC.md: there is no compiled lane at all
 
 $ grep -n "^static" packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md
@@ -847,14 +847,14 @@ path = "vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-pol
 kind = "static"
 ```
 
-Against the host, whose `INDEX.md:11` carries `static = "spec/boot/STATIC.md"`
+Against the host, whose `INDEX.md:11` carries `static = "spec/boot/STATIC.xml"`
 and lists the attribution snippet **not at all** as an entry — it is inlined
 into the generated file instead.
 
 **The two consumers run different boot models, and the sentence is true in one
 of them.** `kind = "static"` means, in the manifest's own words at
 `INDEX.md:5`, *"read the file directly"*. In the second project the file the
-session reads at boot **is** `55-flow-attribution-policy.md`, on disk, editable,
+session reads at boot **is** `55-flow-attribution-policy.xml`, on disk, editable,
 with no "do not edit" banner and no compile step between the edit and the next
 session. Editing it is precisely the operation the sentence names.
 
@@ -864,7 +864,7 @@ to each other, and the package source differs only by Phase B's markup
 
 ```console
 $ md5sum <package source> <host vibedeps> <second project's vibedeps>
-3797915bef501f286b41e80ea6d19c0a  packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md
+3797915bef501f286b41e80ea6d19c0a  packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.xml
 140701ca74459b9f16e2c431c4971e7e  vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md
 140701ca74459b9f16e2c431c4971e7e  packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md
 ```
@@ -938,7 +938,7 @@ authorship.** 132 of 2 202 commits match a tool name, and the matches are in
 bodies, not subjects. Sampled at the top of that list, every one is a path or a
 product fact — `.claude/skills/`, `.agents/skills/` and `.opencode/skills/`
 (install destinations); `CLAUDE.md:191`, `CLAUDE.local.md`,
-`spec/boot/STATIC.md` (filenames); *"what that record publishes per model —
+`spec/boot/STATIC.xml` (filenames); *"what that record publishes per model —
 Sonnet 4.6 and GPT-5.4-mini"* (a product feature). **None attributes authorship**
 — which wave 6 established for the sibling `##NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP`
 and which is the same evidence.
@@ -967,15 +967,15 @@ breaks it six times over (§F-199 above). The wording has already drifted in one
 of the copies, exactly as a single-place law predicts — verified at HEAD:
 
 ```console
-$ grep -nE "^#{2,3} 12" spec/common/PROP-000.md
+$ grep -nE "^#{2,3} 12" spec/common/PROP-000.xml
 157:## 12. Commit and push discipline {#commits}
-$ grep -n "12\.1" spec/common/PROP-000.md
+$ grep -n "12\.1" spec/common/PROP-000.xml
    (no output — PROP-000 has no §12.1)
-$ grep -n "PROP-000 §12" spec/boot/00-core.md
+$ grep -n "PROP-000 §12" spec/boot/00-core.xml
 21:… The rule itself (and its copy in PROP-000 §12.1) is the only place …
 ```
 
-`spec/boot/00-core.md:21` cites a section that does not exist — a copy citing a
+`spec/boot/00-core.xml:21` cites a section that does not exist — a copy citing a
 copy that was renumbered. That is the drift the law exists to prevent, present
 and unrepaired, and it is entirely host-side. Wave 6 recorded the same dangling
 reference; **it is still dangling at `b61eb191`.**
@@ -990,7 +990,7 @@ consumer breaks does not get quieter about the rule.
 `##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET` → **re-judge confirmed**;
 `##NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS` → **re-judge
 confirmed**; `##NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE` → **drift stands, route
-(b)**, with the dangling `PROP-000 §12.1` at `spec/boot/00-core.md:21` named in
+(b)**, with the dangling `PROP-000 §12.1` at `spec/boot/00-core.xml:21` named in
 the host obligation as a concrete, one-line repair.
 
 ---
@@ -1000,7 +1000,7 @@ the host obligation as a concrete, one-line repair.
 **Outcome:** MIXED — 2/2: **1 FALSE PREMISE, DIFFERENT DEFECT · 1 SURVIVES —
 ROUTE (b)**
 **Anchors:** 2 of 2, both in
-`packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md`:
+`packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.xml`:
 
 | anchor | line | outcome |
 |---|---|---|
@@ -1023,7 +1023,7 @@ vibedeps/flow-decision-records                                          ← inst
 $ ls -d packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-decision-records
 …/vibedeps/flow-decision-records                                        ← installed, second project
 
-$ grep -n "When to revisit" spec/common/PROP-000.md
+$ grep -n "When to revisit" spec/common/PROP-000.xml
 23:  ##LANG-REVISIT   … Never, in the scope of v1 …          ← the LANGUAGE choice
 57:  ##LICENSE-REVISIT … fired on 2026-07-12 and is spent …  ← the LICENCE choice
 
@@ -1122,7 +1122,7 @@ unapplied.
 **The single most expensive finding: §3.7's mirror image fired again, on this
 family.** `##THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET` was judged
 false because *"the escape hatch is not available to a consumer"* — measured
-against the host's compiled `spec/boot/STATIC.md` and its "do not edit" banner.
+against the host's compiled `spec/boot/STATIC.xml` and its "do not edit" banner.
 **The second consumer has no compiled lane at all**: its
 `spec/boot/INDEX.md` carries no `static =` key and names
 `vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md`
@@ -1167,7 +1167,7 @@ adding one. That is worth knowing before Phase E is asked to close it.
 
 **What the host is owed, if these route out.** The single-place law against six
 authored restatements plus B-006's compiled duplicate, and the dangling
-`PROP-000 §12.1` at `spec/boot/00-core.md:21` — still dangling at `b61eb191`,
+`PROP-000 §12.1` at `spec/boot/00-core.xml:21` — still dangling at `b61eb191`,
 and a one-line fix (F-199, F-087, F-232). Consent on `vibe self use`'s durable
 environment write, and the diff-printing clause unmet on **both** durable-env
 paths (F-157). The subject-length breach at its **re-measured** size (F-308).

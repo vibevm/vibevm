@@ -21,15 +21,15 @@ not failure. @status:impl/done
 
 @fact:package-contents-lead This package ships the artifact plus two pieces of guidance: @status:impl/done
 
-- @fact:CONTENT-THE-PROMPT-VERBATIM `spec/flows/discovery-prompt/DISCOVERY-PROMPT.md` — the prompt
+- @fact:CONTENT-THE-PROMPT-VERBATIM `spec/flows/discovery-prompt/DISCOVERY-PROMPT.xml` — the prompt
   itself, **verbatim**. Fill its `<VARIABLES>` block, paste it as
   the first message of a fresh session, and the session re-frames. @status:impl/done
-- @fact:CONTENT-THE-USAGE-GUIDE `spec/flows/discovery-prompt/usage.md` — when the grammar's
+- @fact:CONTENT-THE-USAGE-GUIDE `spec/flows/discovery-prompt/usage.xml` — when the grammar's
   overhead pays off (and when it does not), a piece-by-piece map of
   the structure, how to read the output, the intensity knobs, the
   failure modes, and a re-derive prompt for adapting the artifact to
   your own domain. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/50-flow-discovery-prompt.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/50-flow-discovery-prompt.xml` — boot snippet loaded at
   session start: deploy the artifact on request, never mix its
   grammar into coding sessions uninvited. @status:impl/done
 
@@ -61,7 +61,7 @@ shipped file is a byte-for-byte copy, self-describing down to its
 own license block. @status:spec/done
 
 @fact:ADAPT-YOUR-COPY-NEVER-THE-SHIPPED-FILE Adaptation happens on your copy — via the
-re-derive prompt in `usage.md` — never on the shipped file. @status:impl/done
+re-derive prompt in `usage.xml` — never on the shipped file. @status:impl/done
 
 ## Composition {#composition}
 
@@ -80,3 +80,4 @@ re-derive prompt in `usage.md` — never on the shipped file. @status:impl/done
 @fact:ARTIFACT-CARRIES-ITS-OWN-LICENSE-BLOCK The artifact carries its own `<LICENSE>` block (removable
 in private use, not in redistribution); the package license matches
 it. @status:impl/done
+

@@ -25,7 +25,7 @@ The three structured-diagnostics channels the guides promise, and their state:
 
 ### Rust — vehicle named: "custom clippy lints"
 
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:72`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:72`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -42,7 +42,7 @@ census below shows the channel is in fact unbuilt (Q3).
 
 ### TypeScript — vehicle named: "Custom @typescript-eslint rules"
 
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:141`
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:141`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -57,7 +57,7 @@ token is `<uri>` here (a full URI), whereas the Rust guide writes `REQ-X`.
 
 ### Go — NO vehicle named; "custom checks" only
 
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:284`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:284`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -69,12 +69,12 @@ token is `<uri>` here (a full URI), whereas the Rust guide writes `REQ-X`.
 **Vehicle (verbatim):** "custom checks emit the same grammar" — the Go guide
 names **no** vehicle. It does not say `go vet`-analyzer, `staticcheck`, a
 `golang.org/x/tools/go/analysis` `Analyzer`, or any other concrete carrier. The
-Go §0 thesis (`GUIDE-AI-NATIVE-GO.md:87-90`) states the Discipline "carries
+Go §0 thesis (`GUIDE-AI-NATIVE-GO.xml:87-90`) states the Discipline "carries
 proportionally more weight in **linter-borne rules**", and §1
-(`GUIDE-AI-NATIVE-GO.md:133-138`) names the *stock* evidence tier (`go vet` MUST;
+(`GUIDE-AI-NATIVE-GO.xml:133-138`) names the *stock* evidence tier (`go vet` MUST;
 `staticcheck` MUST; `exhaustive`; `golangci-lint` GPL-3.0, banned) — but the
 custom-lint channel's carrier is left unspecified. The Go §5 seam-error example
-(`GUIDE-AI-NATIVE-GO.md:331-333`) renders only a **partial** grammar
+(`GUIDE-AI-NATIVE-GO.xml:331-333`) renders only a **partial** grammar
 (`fmt.Sprintf("plan: %v: violates REQ %s", e.Code, e.Spec)`) with no `fix surface`
 half; §5:338 says the fix-surface is appended "at the boundary rendering".
 
@@ -88,7 +88,7 @@ sites, by reading the content:
    (doc grammar), `…/mod.rs:54` (the `format!` string), `…/mod.rs:66-73` (the
    `matches_req_grammar` acceptor). This is the single source of truth; see Q2.
 2. **The roster entry.**
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:115-116`
+   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml:115-116`
    (`##FINDING-R3-011` — "Tool output is agent food: structured, requirement-citing
    diagnostics"). The superseded `core-ai-native/v0.7.0/spec/appendix/ATLAS.md`
    carries the same id; `core-ai-native/v0.7.0/…/rules/mod.rs` carries the older
@@ -210,7 +210,7 @@ citing `spec/discipline/README.md` for the URI convention).
 **Absence of any custom-Rust-lint machinery (whole tree minus `vibedeps/`):**
 - `dylint` — **0** in `.rs` and **0** in `.toml`. The 11 non-vendored mentions are
   all prose/state: `BACKLOG.md` (B-037 itself), `CONTINUE.md`, `TOOLING-MAP.md`,
-  `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, and campaign
+  `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, and campaign
   baseline/run-state/evidence JSON. No `[dependencies] dylint*` anywhere.
 - `declare_lint!` / `declare_tool_lint!` — **0** in source (the only string hit is
   inside the prior census `campaigns/.../harvest/d7d-stacks-sync-reverify.md:98`,
@@ -245,7 +245,7 @@ terraform doc, and the demo's package files).
 has `devDependencies` of **only** `typescript ^6.0.0` (no `eslint`, no
 `typescript-eslint`). Same for `tools/ts-oracle/package.json`. So the discipline
 ships no eslint config and no custom plugin; the consumer brings their own per
-the guide's WIRE-3 (`GUIDE-AI-NATIVE-TYPESCRIPT.md:284` — "`npm install -D
+the guide's WIRE-3 (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:284` — "`npm install -D
 typescript prettier eslint typescript-eslint`").
 
 **How the TS floor lints.** The floor step dictionary
@@ -281,7 +281,7 @@ exact commands:
   `/fixtures/` — `floor.rs:254-260`).
 - **vet** — `floor.rs:133-141`: `go vet ./...` (unscoped `./...`).
 - **tests** — `floor.rs:145-153`: `go test ./...` (unscoped `./...`; note the
-  guide §1 `GUIDE-AI-NATIVE-GO.md:139-140` calls `go test -race` the MUST config
+  guide §1 `GUIDE-AI-NATIVE-GO.xml:139-140` calls `go test -race` the MUST config
   for goroutine packages, but the floor step runs plain `go test ./...`).
 - **staticcheck** — `floor.rs:157-180`: runs **both** `staticcheck ./...` and
   `exhaustive ./...` (`github.com/nishanths/exhaustive`), each a single binary on
@@ -300,7 +300,7 @@ exact commands:
   evidence/corpus/cache/baseline JSON.
 - `staticcheck.conf` — **0 files** (`find … -name staticcheck.conf`).
 - `golangci-lint` — **0 usage**. 13 non-vendored mentions, all documentary: the
-  guide ban `GUIDE-AI-NATIVE-GO.md:137` and `go-ai-native-lang/v0.1.0/README.md:70`
+  guide ban `GUIDE-AI-NATIVE-GO.xml:137` and `go-ai-native-lang/v0.1.0/README.md:70`
   ("GPL-3.0 — banned by the licensing flow"), the legacy plan
   `legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:96`, and campaign JSON.
 
@@ -503,7 +503,7 @@ For each: what must appear in the tree, what external dependencies are required
   the analyzer framework; **not** a current dependency anywhere — 0 in source).
   staticcheck itself is built on this framework.
 - **Runtime/toolchain:** Go ≥ 1.24 (already the floor's go requirement,
-  `GUIDE-AI-NATIVE-GO.md:127`); the consumer runs `go install`.
+  `GUIDE-AI-NATIVE-GO.xml:127`); the consumer runs `go install`.
 - **Already exists:** the floor already runs `staticcheck ./...` +
   `exhaustive ./...` as single-binary analyzers via `go install`
   (`go-ai-native-cli/src/floor.rs:157-180`) — the **distribution + invocation

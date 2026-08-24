@@ -8,7 +8,7 @@ verdicts) and `packages/org.vibevm.world/qualified-naming/v0.1.0/` (1 obligation
 [§5.1](../PHASE-D-BATCH-PLAN.md#stop) sends to the owner **on every spec diff**._
 
 _This batch is a **re-verification pass, not an edit pass**. Nothing was edited.
-The whole point of the pass is [§7's wave-5 note](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#log):
+The whole point of the pass is [§7's wave-5 note](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#log):
 **a re-judge that edits nothing produces no spec diff and therefore needs no
 owner approval — only an edit would.** So every entry below ends in one of four
 recommendations and in a **proposed** correction where one is owed, written out
@@ -42,7 +42,7 @@ minus  **/target/**  .git/**  **/node_modules/**  campaigns/*/run/**  legacy-spe
 `refs/**` is searched but reported **separately** — third-party study corpus, not
 our shipped surface. Where a count is reported it is **measured at HEAD
 `9f79acf1`** and the command is given, because
-[§7's wave-6 entry](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#log)
+[§7's wave-6 entry](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml#log)
 records two figures that decayed inside a week.
 
 **The four adopters this perimeter contains**, because two of them are the ones
@@ -134,22 +134,22 @@ documents in five different real projects** in this tree:
 ```console
 $ find . -name 'PROP-001*' -not -path './.git/*' -not -path '*/target/*' \
     -not -path '*/vibedeps/*' -not -path '*/.vibe/*' -not -path './refs/*' | grep -v fixtures
-./packages/org.vibevm.fractality/fractality/v0.1.0/spec/PROP-001-foundation.md
+./packages/org.vibevm.fractality/fractality/v0.1.0/spec/PROP-001-foundation.xml
 ./research/go-demo/spec/PROP-001-reconciler.md
 ./research/rust-demo/spec/PROP-001.md
 ./research/ts-demo/spec/PROP-001.md
-./spec/modules/vibe-registry/PROP-001-git-backend.md
+./spec/modules/vibe-registry/PROP-001-git-backend.xml
 ```
 
-— plus eight `PROP-001.md` test fixtures under the Go and TypeScript stacks'
+— plus eight `PROP-001.xml` test fixtures under the Go and TypeScript stacks'
 `*-extract/test/fixtures/`, and `PROP-042` in both
-`spec/modules/vibe-cli/PROP-042-aiui-observation.md` and
+`spec/modules/vibe-cli/PROP-042-aiui-observation.xml` and
 `crates/vibe-spec/tests/fixtures/ws/spec/modules/demo/PROP-042-example-thing.md`.
 
 So the numbering space in this repository is **per authority** — each project
 that adopted the discipline mints its own `PROP-001` — which is what «number per
 module» means the moment `<module>` is the URI's authority segment
-(`ADDRESSABLE-SPECS-PROTOCOL.md:148`
+(`ADDRESSABLE-SPECS-PROTOCOL.xml:148`
 `##PACKAGE-MODULE-AUTHORITY-IS-THE-FULL-COORDINATE`). The host is one authority
 covering ten module directories, so **inside** it numbering does not restart per
 directory — and the verdict's own word for that is «**stricter** than the rule».
@@ -171,7 +171,7 @@ The anchor: *«Do not write "never read `.human/`" in the boot file — that lin
 itself costs tokens forever and invites the very attention it forbids.»*
 
 The verdict: *«the host writes exactly the forbidden line, in exactly the
-forbidden place. `spec/boot/00-core.md:26-28` is a section headed "Files you MUST
+forbidden place. `spec/boot/00-core.xml:26-28` is a section headed "Files you MUST
 NOT touch without explicit instruction", naming `refs/book/` — a never-read line
 in the boot file… The host also has the physical form available (`.gitignore`
 carries `/refs/`)».*
@@ -179,9 +179,9 @@ carries `/refs/`)».*
 Three measurements, each refuting a different part of it.
 
 **(i) `refs/book/` is not a never-read line — the same boot file tells the
-session to read it.** `spec/boot/00-core.md:26` reads *«@fact:NOTOUCH-REFS-BOOK
+session to read it.** `spec/boot/00-core.xml:26` reads *«@fact:NOTOUCH-REFS-BOOK
 `refs/book/` — the user's book, read-only reference material.»* Eight lines
-later, at `spec/boot/00-core.md:34`, comes the heading **`## Reading layers (per
+later, at `spec/boot/00-core.xml:34`, comes the heading **`## Reading layers (per
 book, refs/book/)`**, and the boot contract derives its whole two-process reading
 model from that material. A do-not-**write** line about a directory the same
 contract instructs the agent to **read** is the exact opposite of the line this
@@ -197,7 +197,7 @@ $ find . -maxdepth 4 -name '.human' -not -path './.git/*'
 
 **(iii) «The host also has the physical form available» is wrong.** The physical
 form this anchor names is the *agent* ignore mechanism —
-`spec-tree-layout.md:117` `##LIST-THE-BUFFER-IN-THE-IGNORE-MECHANISM`,
+`spec-tree-layout.xml:117` `##LIST-THE-BUFFER-IN-THE-IGNORE-MECHANISM`,
 *«`.claudeignore`, `.aiexclude`, `.cursorignore` — whatever the harness
 supports»*. The host has **none** of them:
 
@@ -221,7 +221,7 @@ The row names a home nobody has ever created.
 But this is a **normative routing row, not a description**, and §3.6 routes it to
 (b): the consumer files feature slices as campaign plans instead, under a
 **sibling flow shipped in the same group** —
-`flow:org.vibevm.world/campaign-plans`, whose `CAMPAIGN-PLAN-FORMAT.md` defines
+`flow:org.vibevm.world/campaign-plans`, whose `CAMPAIGN-PLAN-FORMAT.xml` defines
 exactly the fields this row routes to a FEAT (*«one feature slice: scope, plan,
 acceptance criteria»* against the plan format's scope, phases and §12
 whole-campaign acceptance). The package is not the wrong side; two flows offer
@@ -257,7 +257,7 @@ The divergence is real. A host address reads
 `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline`
 (`crates/progress-core/src/baseline.rs:14`), so the module **directory** is
 present but one segment right of where the mapping puts it; the **doc** segment is
-a path rather than a name; and the file it names is `PROP-043-progress-markup.md`
+a path rather than a name; and the file it names is `PROP-043-progress-markup.xml`
 — the descriptive tail dropped as well as the extension.
 `crates/vibe-spec/src/resolver.rs:112-147` inverts that truncation with a
 `read_dir` per resolution.
@@ -265,15 +265,15 @@ a path rather than a name; and the file it names is `PROP-043-progress-markup.md
 **What the verdicts did not look at is that every one of those divergences is
 specified in writing on the host side, before the fact:**
 
-- `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:95` `##UNIFIED-GRAMMAR`
+- `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:95` `##UNIFIED-GRAMMAR`
   — *«`spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]`»*,
   reconciled with PROP-008 by name;
-- `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID`
+- `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:105` `##ROUTER-DOC-ID`
   — *«**Doc-id truncation** — `PROP-NNN` / `FEAT-NNN` in a URI resolve to
   `PROP-NNN-<slug>.md`; other docs use the full stem.»* The exact behaviour
   `##SEGMENT-DOC-IS-THE-FILE-NAME` is judged against, written as a requirement on
   the router and marked `@impl/done`;
-- `spec/common/PROP-029-fully-qualified-addresses.md:44` `##SCOPE-HOST` — *«The
+- `spec/common/PROP-029-fully-qualified-addresses.xml:44` `##SCOPE-HOST` — *«The
   **host vibevm project's own** specs keep the project authority
   `spec://org.vibevm.core/vibevm/…` — the root project is not a package with a group; §1 binds
   packages.»* A scoped exception, dated and owner-ratified;
@@ -283,9 +283,9 @@ specified in writing on the host side, before the fact:**
   rule that tells the two apart.
 
 And the host reaches that exception **through this package's own rule**:
-`spec-tree-layout.md:146` `##REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED` says *«short
+`spec-tree-layout.xml:146` `##REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED` says *«short
 local names are fine when they provably cannot [be shared]»*, and PROP-029's
-`##status-line` (`spec/common/PROP-029-fully-qualified-addresses.md:5`) cites the
+`##status-line` (`spec/common/PROP-029-fully-qualified-addresses.xml:5`) cites the
 addressable-specs `#modules` unit **by address** as the authority it applies. This
 is a consumer that adopted the flow, named it, and recorded where it scopes out —
 §3.6(c)'s «a marked exception is not drift», not §3.6(a)'s «the package's
@@ -303,7 +303,7 @@ stems (`crates/vibe-spec/src/resolver.rs:120`, gated on `is_id_stem`) and falls
 through to a plain `base_spec.join(format!("{doc_path}.md"))` for everything else
 (`:137`). Of **63** `.md` files under `spec/`, **42** are id-stem documents and
 **21 resolve with zero index**; of the 42, exactly one
-(`spec/common/PROP-000.md`) already has a bare stem.
+(`spec/common/PROP-000.xml`) already has a bare stem.
 
 **Which layer has it:** the ENGINE and DRIVER (`crates/vibe-spec/`), specified at
 the host's own SPEC layer (PROP-035, PROP-029) — never in the package, whose own
@@ -337,7 +337,7 @@ practice has already chosen, and dropping the archive column strengthens rather
 than weakens that: 8 to 0 among documents anyone is still writing. That is a
 `duplication` across a package boundary and therefore §4.5 — a release event, not
 an edit. (2) **Ten `spec://core-ai-native/…` citations in host lanes use
-a bare authority**, which `ADDRESSABLE-SPECS-PROTOCOL.md:148`
+a bare authority**, which `ADDRESSABLE-SPECS-PROTOCOL.xml:148`
 `##PACKAGE-MODULE-AUTHORITY-IS-THE-FULL-COORDINATE` forbids in a MUST (*«never a
 bare `rust-ai-native-lang`»*) and PROP-029 `##ADDR-LAW` binds — including
 `crates/vibe-cli/src/commands/trace.rs:9`'s `specmark::scope!`. Host
@@ -355,9 +355,9 @@ instructs the session to read, and the host has no agent-ignore file at all.
 `PHASE-D-HOST-OBLIGATIONS.md`; the correction above is prepared and must not land
 before the two-flows question is answered.
 `##SEGMENT-MODULE-IS-THE-DIRECTORY` → **re-judge confirmed under §3.6(c)**, naming
-`spec/common/PROP-029-fully-qualified-addresses.md:44` `##SCOPE-HOST`.
+`spec/common/PROP-029-fully-qualified-addresses.xml:44` `##SCOPE-HOST`.
 `##SEGMENT-DOC-IS-THE-FILE-NAME` → **re-judge confirmed under §3.6(c)**, naming
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID`.
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:105` `##ROUTER-DOC-ID`.
 `##KEEP-THE-MAPPING-ONE-TO-ONE` → **re-judge confirmed**; the anchor predicted the
 cost, the host paid it knowingly and specified it, and 21 of 63 host spec docs
 still resolve with zero index.
@@ -393,7 +393,7 @@ question:**
 $ grep -rn '^Test:' spec/ ; echo "rc=$?"
 rc=1
 $ grep -rn '## Changelog' spec/
-spec/common/PROP-029-fully-qualified-addresses.md:47:## Changelog {#changelog}
+spec/common/PROP-029-fully-qualified-addresses.xml:47:## Changelog {#changelog}
 ```
 
 Zero `Test:` lines, one `## Changelog` — exactly as recorded. Widened, `^Test:`
@@ -428,10 +428,10 @@ $ grep -rhoE '^- ##(HISTORY|CHANGELOG)[A-Za-z0-9_-]* \[?\*?\*?[0-9]{4}-[0-9]{2}-
 That is the only difference the verdict's grep could see.
 
 The entries are the prescribed form, not a git dump —
-`spec/modules/vibe-registry/PROP-008-qualified-naming.md:218`:
+`spec/modules/vibe-registry/PROP-008-qualified-naming.xml:218`:
 
 ```console
-$ sed -n '218p' spec/modules/vibe-registry/PROP-008-qualified-naming.md | cut -c1-240
+$ sed -n '218p' spec/modules/vibe-registry/PROP-008-qualified-naming.xml | cut -c1-240
 - ##HISTORY-PHASES-5-6-8 **2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection …
 ```
 
@@ -439,13 +439,13 @@ One dated line, the change, the reason — against the anchor's own example
 `- [2026-02-17] §verification.timeout: 300 s → 600 s — VPN users do not fit in
 300 s.` Same shape, same granularity, and each entry carries its own anchor and
 `@spec/done` marker, which the anchor's example does not even ask for.
-`spec/modules/vibe-workspace/PROP-009-loading-model.md:236` `##HISTORY-DRAFT-2`
+`spec/modules/vibe-workspace/PROP-009-loading-model.xml:236` `##HISTORY-DRAFT-2`
 and `:238` `##HISTORY-WHEN-SITE` are the worked cases — a semantic change per
 line, each naming the section it moved and why.
 
 **The one thing genuinely worth saying about the naming**, and it is a note rather
 than a defect: the heading the host chose is *«Version history»*, and this same
-document's `##THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY` (`authoring-rules.md:171`)
+document's `##THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY` (`authoring-rules.xml:171`)
 warns *«The changelog is a signal, not history — history lives in git»*. Read
 against the content, the host writes signals under the word the flow reserves for
 the thing it is not. That is a naming observation about the consumer, not a
@@ -476,11 +476,11 @@ inside the live perimeter.** The old document keeps a unit *at the old address*
 whose whole content is a pointer to the new one:
 
 ```console
-$ sed -n '20p' spec/common/PROP-029-fully-qualified-addresses.md | cut -c1-260
+$ sed -n '20p' spec/common/PROP-029-fully-qualified-addresses.xml | cut -c1-260
 ##joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted `<group>.<name>` would hide it), is the addressable-specs `#modules` unit.
 ```
 
-plus `spec/common/PROP-029-fully-qualified-addresses.md:5` `##status-line`, which
+plus `spec/common/PROP-029-fully-qualified-addresses.xml:5` `##status-line`, which
 gives the new address in full —
 `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`
 — and `:50` `##CHANGELOG-EXTRACTED`, the dated line recording the move and what
@@ -537,11 +537,11 @@ the more expensive route the verdict itself names.
 The absence measures true: **zero `Test:` lines** in any adopter. But the fact
 does not stand alone — it cites its own governing unit: *«that line is half of the
 bidirectional graph described in the [protocol §graph]»*
-(`authoring-rules.md:100-103`). **Wave 6 amended precisely that unit**, and the
+(`authoring-rules.xml:100-103`). **Wave 6 amended precisely that unit**, and the
 amendment describes the host's practice:
 
 ```console
-$ git show 24c0629e -- packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md | tail -14
+$ git show 24c0629e -- packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml | tail -14
  ##CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT Code
 -marks what it implements; the spec records what verifies it: @impl/done
 +marks what it implements; the spec records what verifies it: *(the two
@@ -581,7 +581,7 @@ therefore drift»* — does not survive: the package's own §graph now says that
 authoring side is optional where the graph is mechanized, and these two anchors
 are the ones that did **not** receive the amendment. The `Implements:` half is in
 the same position: `grep -rn '// Implements: spec://'` over the live tree finds it
-**only** in this package's own example (`ADDRESSABLE-SPECS-PROTOCOL.md:233`), in
+**only** in this package's own example (`ADDRESSABLE-SPECS-PROTOCOL.xml:233`), in
 the redbook's Russian prose, and in `sync-from-code`'s rule about it — never as a
 marker in host code, because 404 `specmark::scope!` tags carry it instead.
 
@@ -589,10 +589,10 @@ marker in host code, because 404 `specmark::scope!` tags carry it instead.
 Consistency propagated an error in wave 5; here **an amendment failed to
 propagate**. One unit of `{#graph}` now carries the both-authoring-sides
 qualification and three of its neighbours do not:
-`authoring-rules.md:100` `##RECORD-THE-TEST-NAME-IN-THE-UNIT` (an unconditional
-instruction), `authoring-rules.md:217` `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST`
+`authoring-rules.xml:100` `##RECORD-THE-TEST-NAME-IN-THE-UNIT` (an unconditional
+instruction), `authoring-rules.xml:217` `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST`
 (*«the unit names it»*), and — outside this obligation, so recorded rather than
-recommended — `ADDRESSABLE-SPECS-PROTOCOL.md:244`
+recommended — `ADDRESSABLE-SPECS-PROTOCOL.xml:244`
 `##NO-TOOLING-IS-REQUIRED-TO-BENEFIT` (*«the `Test:` line answers "which test
 verifies it"»*).
 
@@ -609,16 +609,16 @@ release notes only, not instances of ours. Nothing bears on this obligation.
 **Proposed correction (NOT APPLIED).** None for the changelog and tombstone
 three — the facts are correct as written. For the two graph anchors the
 correction is to carry the wave-6 amendment across, in the smallest form that
-makes each true without weakening it. `authoring-rules.md:100-103`:
+makes each true without weakening it. `authoring-rules.xml:100-103`:
 
 > @fact:RECORD-THE-TEST-NAME-IN-THE-UNIT Record the test name in the unit
 > once it exists (`Test: …`); that line is half of the bidirectional
 > graph described in the
-> [protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.md#graph) — and where the
+> [protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.xml#graph) — and where the
 > project mechanizes that graph, the same half is authored as a tag on the
 > test and rendered back at the unit instead, per that section. @status:impl/done
 
-and `authoring-rules.md:217`:
+and `authoring-rules.xml:217`:
 
 > - @fact:SUM-EVERY-CONTRACT-IMPLIES-A-TEST Every contract implies a test; the unit
 >   names it, by a `Test:` line or by a rendered edge where the graph is
@@ -633,7 +633,7 @@ or the propagation gap simply moves.
 `specmap.json` are all one defect and it belongs to the flow whose subject is that
 an address must resolve: `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#report`,
 `#seal` (×3) and `#weave` resolve to nothing, because
-`spec/modules/vibe-progress/PROP-043-progress-markup.md:390`, `:398` and `:419`
+`spec/modules/vibe-progress/PROP-043-progress-markup.xml:390`, `:398` and `:419`
 write `{#report}` / `{#weave}` / `{#seal}` on **list-item** lines rather than on
 headings, and the doctree registers heading anchors only. Five committed code
 edges into three non-existent units — a host defect, cheap to fix, not booked
@@ -678,8 +678,8 @@ divergence is the §3.6(c) exception already recorded at PROP-029 `##SCOPE-HOST`
 (PROP-035 `##ROUTER-DOC-ID`), same recommendation.
 **Perimeter searched:** the standing perimeter, for `spec://<authority>/`
 citation census, `{#anchor}` heading definitions in host `spec/` with and without
-the generated `spec/boot/STATIC.md`, and the `specmap.json` edge census. Plus a
-full read of `ADDRESSABLE-SPECS-PROTOCOL.md` §`{#modules}` — which is what the
+the generated `spec/boot/STATIC.xml`, and the `specmap.json` edge census. Plus a
+full read of `ADDRESSABLE-SPECS-PROTOCOL.xml` §`{#modules}` — which is what the
 verdicts on the two rows did not do. `refs/**` reported separately.
 
 **The verdicts' own numbers, re-measured at HEAD `9f79acf1`:**
@@ -721,11 +721,11 @@ stated has no place for the host's own `spec://org.vibevm.core/vibevm/…` names
 It has exactly that place, and the summary's own wording is the place. The clause
 is **conditional** — *reverse-DNS **when** specs can be shared* — and its full
 form, in the sibling document, states the other branch outright:
-`spec-tree-layout.md:146` `##REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED` — *«Use
+`spec-tree-layout.xml:146` `##REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED` — *«Use
 reverse-DNS module directory names when the specs could ever be shared beyond this
 repository; **short local names are fine when they provably cannot**.»* The host's
 own specs are the root project's, never published as a package, and the host
-recorded exactly that at `spec/common/PROP-029-fully-qualified-addresses.md:44`
+recorded exactly that at `spec/common/PROP-029-fully-qualified-addresses.xml:44`
 `##SCOPE-HOST`: *«The **host vibevm project's own** specs keep the project
 authority `spec://org.vibevm.core/vibevm/…` — the root project is not a package with a group; §1
 binds packages.»* `vibevm` in the `<module>` position **is** the scheme as stated,
@@ -751,7 +751,7 @@ Russian prose, and `sync-from-code`'s rule about it), and `Test:` lines appear
 zero times.
 
 But this summary summarises `##CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT`,
-and **wave 6 amended that unit — at `ADDRESSABLE-SPECS-PROTOCOL.md:221`, 65 lines
+and **wave 6 amended that unit — at `ADDRESSABLE-SPECS-PROTOCOL.xml:221`, 65 lines
 above this summary at `:286`, in the same file, in commit `24c0629e`** — to say
 that where a project mechanizes the graph *«both records are commonly authored on
 the **code** side instead … and the spec-side answer … is then rendered from the
@@ -770,7 +770,7 @@ this is its twin — a correction that did not.
 ### `##ROW-SEGMENT-MODULE` — SURVIVES, but «the third form the row also omits» is defined 68 lines below the row
 
 The row: *«`<module>` | spec module — a directory under `spec/modules/`, or
-`common` | `com.example.shop`»* (`ADDRESSABLE-SPECS-PROTOCOL.md:80`).
+`common` | `com.example.shop`»* (`ADDRESSABLE-SPECS-PROTOCOL.xml:80`).
 
 The verdict's two claims split cleanly.
 
@@ -782,7 +782,7 @@ segment right of where the row places it —
 scheme; the host runs PROP-035's three-part one. That is a genuine mismatch, and
 it is the same one F-147's four addressing anchors carry, with the same recorded
 exception behind it — `##SCOPE-HOST` for the authority and
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:95` `##UNIFIED-GRAMMAR` for
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:95` `##UNIFIED-GRAMMAR` for
 the shape, both `@impl/done`, both older than the verdict.
 
 **The second is false.** *«Packages use the third form the row also omits,
@@ -790,7 +790,7 @@ the shape, both `@impl/done`, both older than the verdict.
 lines below the row, in the section the row's own scheme depends on:
 
 ```console
-$ sed -n '148,152p' packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md
+$ sed -n '148,152p' packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml
 ##PACKAGE-MODULE-AUTHORITY-IS-THE-FULL-COORDINATE **For a package, the module authority MUST be the package's full
 coordinate `<group>/<name>`** — the name is the first path segment,
 `/`-joined exactly as in a pkgref (e.g.
@@ -800,7 +800,7 @@ coordinate `<group>/<name>`** — the name is the first path segment,
 
 A MUST, with the exact form, the exact joiner rule
 (`##THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC`, `:154`), and the exact worked
-example the 91 measured package citations use. `spec/common/PROP-029-fully-qualified-addresses.md:5`
+example the 91 measured package citations use. `spec/common/PROP-029-fully-qualified-addresses.xml:5`
 cites that unit **by address** as the definition it is applying. So the third form
 is not a gap in this package's coverage; it is a gap in one summary row's
 compression, and that is a materially smaller finding than «the row omits the form
@@ -809,12 +809,12 @@ the consumer uses».
 ### `##ROW-SEGMENT-DOC` — SURVIVES under the recorded exception
 
 The row: *«`<doc>` | document name, extension dropped | `PROP-001`»*
-(`ADDRESSABLE-SPECS-PROTOCOL.md:81`). The host's doc segment is a **path**
+(`ADDRESSABLE-SPECS-PROTOCOL.xml:81`). The host's doc segment is a **path**
 (`modules/vibe-progress/PROP-043`) and its files carry a descriptive tail
-(`PROP-043-progress-markup.md`) that is dropped along with the extension. The
+(`PROP-043-progress-markup.xml`) that is dropped along with the extension. The
 verdict reproduces at `crates/vibe-spec/src/resolver.rs:112-147`, and the
 divergence is specified on the host side at
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID` —
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:105` `##ROUTER-DOC-ID` —
 *«**Doc-id truncation** — `PROP-NNN` / `FEAT-NNN` in a URI resolve to
 `PROP-NNN-<slug>.md`; other docs use the full stem.»* — and again in the
 implementation's own doc at `crates/vibe-spec/src/address.rs:21-23`. Same
@@ -828,18 +828,18 @@ the divergence lives entirely in the consumer's own written superset.
 
 **`refs/**`, reported separately — and here it is not third-party.**
 `grep -rn 'spec://' refs/` returns **19** hits and every one is in `refs/book/`,
-the owner's own book (`spec/boot/00-core.md:26` names it read-only reference
+the owner's own book (`spec/boot/00-core.xml:26` names it read-only reference
 material). It presents the identical two-segment scheme —
 `refs/book/chapter-1-two-process-model.md:195` and
-`chapter-2-shared-state-and-files.md:63`, both
+`chapter-2-shared-state-and-files.xml:63`, both
 `spec://<модуль>/<документ>#<секция>[.<подсекция>]` — and the identical
-`// Implements:` + `Test:` pair at `chapter-2-shared-state-and-files.md:92`.
+`// Implements:` + `Test:` pair at `chapter-2-shared-state-and-files.xml:92`.
 So the two rows and the graph summary are a faithful projection of the source they
 were extracted from; the divergence measured here is entirely the consumer's own
 later superset, and none of it reaches the book. Reported, not counted.
 
 **Proposed correction (NOT APPLIED).** For `##SUM-THE-BIDIRECTIONAL-GRAPH`, carry
-the wave-6 amendment across — `ADDRESSABLE-SPECS-PROTOCOL.md:286-287`:
+the wave-6 amendment across — `ADDRESSABLE-SPECS-PROTOCOL.xml:286-287`:
 
 > - @fact:SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a
 >   bidirectional graph that pays off with zero tooling — and where the graph is
@@ -848,7 +848,7 @@ the wave-6 amendment across — `ADDRESSABLE-SPECS-PROTOCOL.md:286-287`:
 
 For `##ROW-SEGMENT-MODULE`, *if* the owner routes it to the package, the minimal
 true form of the Meaning cell is one that points at the unit already carrying the
-rest — `ADDRESSABLE-SPECS-PROTOCOL.md:80`:
+rest — `ADDRESSABLE-SPECS-PROTOCOL.xml:80`:
 
 > | @fact:ROW-SEGMENT-MODULE `<module>` @status:impl/done | spec module — a directory under `spec/modules/`, or `common`; for a package, its full coordinate `<group>/<name>` (§[modules](#modules)) @status:impl/done | `com.example.shop` @status:impl/done |
 
@@ -872,17 +872,17 @@ package's version of the scheme in two chapters.
 
 **Recommendation per anchor:**
 `##ROW-SEGMENT-MODULE` → **re-judge confirmed under §3.6(c)**, naming
-`spec/common/PROP-029-fully-qualified-addresses.md:44` `##SCOPE-HOST` — the same
+`spec/common/PROP-029-fully-qualified-addresses.xml:44` `##SCOPE-HOST` — the same
 disposition as F-147's `##SEGMENT-MODULE-IS-THE-DIRECTORY`, which is the same
 statement in the sibling document; if the owner rules the exception a note rather
 than a policy choice, both fall back to route (b) together and the prepared
 correction moves with all four siblings.
 `##ROW-SEGMENT-DOC` → **re-judge confirmed under §3.6(c)**, naming
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID` —
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:105` `##ROUTER-DOC-ID` —
 same disposition as F-147's `##SEGMENT-DOC-IS-THE-FILE-NAME`.
 `##SUM-THE-URI-SCHEME` → **re-judge confirmed**; the module clause is a
 conditional and the host is inside its second branch, which
-`spec-tree-layout.md:146` states outright.
+`spec-tree-layout.xml:146` states outright.
 `##SUM-THE-BIDIRECTIONAL-GRAPH` → **drift stands, correction prepared**; the
 graph census reproduces to the digit, and the unit this summarises was amended 65
 lines above it in wave 6 without the summary following.
@@ -906,7 +906,7 @@ c=collections.Counter(re.search(r'anchor `\{#(.+?)\}`',w['message']).group(1) fo
 for k,v in c.most_common(): print(f'  {{#{k}}}: {v} warnings -> {v+1} definitions')
 print('distinct anchor names duplicated:', len(c))
 PY
-total: 59 | files: {'spec/boot/STATIC.md'}
+total: 59 | files: {'spec/boot/STATIC.xml'}
   {#root}: 25 warnings -> 26 definitions
   {#never}: 16 warnings -> 17 definitions
   {#when}: 8 warnings -> 9 definitions
@@ -922,7 +922,7 @@ distinct anchor names duplicated: 11
 ```
 
 **What reproduces exactly:** 59 `duplicate-anchor` warnings; all 59 in
-`spec/boot/STATIC.md`; the file compiled from package snippets; **27 distinct
+`spec/boot/STATIC.xml`; the file compiled from package snippets; **27 distinct
 packages** contributing (31 `<!-- vibe:static … -->` contributions, some packages
 sending two).
 
@@ -935,7 +935,7 @@ two boilerplate section titles, it is every short section name the flow corpus
 uses in common.
 
 **And the address is real, not hypothetical.** The committed index mints
-**98 spec units** for `spec/boot/STATIC.md`, `spec://org.vibevm.core/vibevm/boot/STATIC#root`
+**98 spec units** for `spec/boot/STATIC.xml`, `spec://org.vibevm.core/vibevm/boot/STATIC#root`
 among them, so `#root` is a live minted address naming twenty-six different
 documents' roots. Zero code edges point into any of them today, so the ambiguity
 is **latent, not currently mis-resolving** — worth saying plainly, because it is
@@ -966,7 +966,7 @@ own snippet, because the snippet is not wrong.
 `##NEVER-DUPLICATE-A-NORMATIVE-VALUE` → **SURVIVES — ROUTE (b)**, and the second
 half of its evidence is stronger than recorded.
 **Perimeter searched:** the standing perimeter, for `duplicate-anchor` in
-`specmap.json`, `{#…}` heading definitions in `spec/boot/STATIC.md`,
+`specmap.json`, `{#…}` heading definitions in `spec/boot/STATIC.xml`,
 `<!-- vibe:static` contributions, and a byte comparison of the three harness entry
 files. Plus a read of `crates/vibe-check/src/checks/redirect_block.rs` to
 establish whether a reconciliation mechanism exists. `refs/**` reported
@@ -974,13 +974,13 @@ separately.
 **The verdict's own command, re-run:** the verdict quotes none; it cites
 `specmap.json`'s warning stream, re-measured in full above — **59, unchanged**.
 
-**`##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR`** (`15-flow-addressable-specs.md:31`).
+**`##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR`** (`15-flow-addressable-specs.xml:31`).
 The rule is broken in the compiled lane and the host's own shipped detector says
 so. Nothing in the measurement points at the package: the snippet states the rule
 in one place, under one anchor, and its own `{#root}` is unique in its own file.
 Route (b) — the rule is sound, the consumer's compiler does not keep it.
 
-**`##NEVER-DUPLICATE-A-NORMATIVE-VALUE`** (`15-flow-addressable-specs.md:63`) is
+**`##NEVER-DUPLICATE-A-NORMATIVE-VALUE`** (`15-flow-addressable-specs.xml:63`) is
 falsified twice, and the second is worth restating exactly because it is the
 cleaner instance:
 
@@ -1060,7 +1060,7 @@ $ grep -rnE 'exactly one authoritative anchor|One fact, one anchor|exactly one a
 Five statements of one rule (the sixth is the distinct anchor-identity rule),
 across three documents, **and not one of them names another's anchor** — which is
 what this package's own `##A-RESTATEMENT-NAMES-ITS-ANCHOR`
-(`ADDRESSABLE-SPECS-PROTOCOL.md:195`) requires of a legitimate restatement:
+(`ADDRESSABLE-SPECS-PROTOCOL.xml:195`) requires of a legitimate restatement:
 *«If prose flow demands restating the value, the restatement names its anchor in
 the same sentence, marking which copy is the echo.»* This is **not raised as a new
 drift** — a flow that ships a boot snippet, a protocol and a summary restates its
@@ -1087,13 +1087,13 @@ and inherits the disposition, which is what its verdict already says.
 the standing perimeter for an actual temporal reuse.
 **The verdict's own command, re-run:** none quoted; the 59 re-measured above.
 
-The anchor, in full (`authoring-rules.md:188-190`): *«Never reuse an anchor for a
+The anchor, in full (`authoring-rules.xml:188-190`): *«Never reuse an anchor for a
 different meaning. **An address that once meant one thing and now means another**
 is worse than a dead link.»*
 
 Read it against what was measured. The failure this fact names is **temporal**: an
 address that *once* meant X and *now* means Y, so an old citation silently
-resolves to new content. What `specmap` reports in `spec/boot/STATIC.md` is
+resolves to new content. What `specmap` reports in `spec/boot/STATIC.xml` is
 **simultaneous**: twenty-six documents' roots colliding in one generated file at
 one instant. No anchor in that file ever meant something else and was
 repurposed — each snippet's `{#root}` has meant its own document's root since it
@@ -1112,10 +1112,10 @@ not fit, and the host obligation it would generate is the same one.
 anchor in the live perimeter carries evidence of having been repurposed. The
 PROP-014 relocation kept every anchor — checkable without the archive, since the
 shipped unit still carries them:
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:80`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml:80`
 carries the law itself on the shipped side (*«Anchors are immutable once published
 and never reused»*), and no `spec://org.vibevm.core/vibevm/discipline/…` address survives anywhere
-in `crates/`, `xtask/`, `spec/` or `packages/` to be silently re-pointed. The host's `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44`
+in `crates/`, `xtask/`, `spec/` or `packages/` to be silently re-pointed. The host's `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml:44`
 `##RETIRED-SECTIONS-KEPT` is the practice working: §3–§5 describe a retired
 topology and **stay** rather than having their anchors recycled.
 
@@ -1162,8 +1162,8 @@ PROP-008 §2.4 / §2.6 / §2.7. `refs/**` reported separately.
 ```console
 $ grep -rn 'KindMismatch' --include='*.rs' --include='*.md' . | grep -v '/target/' | grep -v '/\.vibe/' | grep -v campaigns/
 ./crates/vibe-core/src/package_ref.rs:428:    /// one; it is validated against the resolved manifest (a `KindMismatch`)
-./spec/design/workspace-and-qualified-naming.md:81:- ##fork-kind-prefix-optional …a present prefix is checked (`KindMismatch` on mismatch)…
-./spec/modules/vibe-registry/PROP-008-qualified-naming.md:97:- ##KIND-VALIDATION …mismatch is a `KindMismatch` error…
+./spec/design/workspace-and-qualified-naming.xml:81:- ##fork-kind-prefix-optional …a present prefix is checked (`KindMismatch` on mismatch)…
+./spec/modules/vibe-registry/PROP-008-qualified-naming.xml:97:- ##KIND-VALIDATION …mismatch is a `KindMismatch` error…
 ```
 
 **Exactly the three recorded hits, and none is code** — a doc comment, a design
@@ -1271,25 +1271,25 @@ the host does not keep it, and the repair is a host change of a few lines —
 
 ### `##the-single-storage-rule-stated-once` — SURVIVES; the count is eight, and the package's own governing rule is the one to judge it by
 
-The anchor (`ref-grammar.md:108`): *«The single storage rule, stated once so it
+The anchor (`ref-grammar.xml:108`): *«The single storage rule, stated once so it
 cannot drift:»*, introducing the `##PERSISTED-STATE-IS-QUALIFIED-ONLY` blockquote.
 The verdict counts six statements across the package. Measured at HEAD there are
 **eight**:
 
 | # | where | form |
 |---|---|---|
-| 1 | `ref-grammar.md:110` `##PERSISTED-STATE-IS-QUALIFIED-ONLY` | the blockquote this anchor introduces |
-| 2 | `ref-grammar.md:59` `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` | normative, **and it points at §storage** |
-| 3 | `ref-grammar.md:184` `##SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY` | summary |
-| 4 | `QUALIFIED-NAMING-PROTOCOL.md:131` `##SHORT-NAMES-ARE-NEVER-STORED` | normative |
-| 5 | `QUALIFIED-NAMING-PROTOCOL.md:205` `##SUM-SHORT-NAMES-LIVE-ONLY-AT-THE-BOUNDARY` | summary |
+| 1 | `ref-grammar.xml:110` `##PERSISTED-STATE-IS-QUALIFIED-ONLY` | the blockquote this anchor introduces |
+| 2 | `ref-grammar.xml:59` `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` | normative, **and it points at §storage** |
+| 3 | `ref-grammar.xml:184` `##SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY` | summary |
+| 4 | `QUALIFIED-NAMING-PROTOCOL.xml:131` `##SHORT-NAMES-ARE-NEVER-STORED` | normative |
+| 5 | `QUALIFIED-NAMING-PROTOCOL.xml:205` `##SUM-SHORT-NAMES-LIVE-ONLY-AT-THE-BOUNDARY` | summary |
 | 6 | `spec/boot/67-flow-qualified-naming.md:41` `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE` | boot-lane Never |
 | 7 | `README.md:11` `##LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY` | law bullet |
-| 8 | `naming-forks.md:112` `##A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH` | *«Because persisted state is qualified-only…»* |
+| 8 | `naming-forks.xml:112` `##A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH` | *«Because persisted state is qualified-only…»* |
 
 **Only #2 names the anchor it echoes**, and it names the *section* (`[§storage](#storage)`)
 rather than the fact — which is what this package's sibling flow requires of a
-legitimate restatement: `ADDRESSABLE-SPECS-PROTOCOL.md:195`
+legitimate restatement: `ADDRESSABLE-SPECS-PROTOCOL.xml:195`
 `##A-RESTATEMENT-NAMES-ITS-ANCHOR`, *«the restatement names its anchor in the same
 sentence, marking which copy is the echo»*.
 
@@ -1316,7 +1316,7 @@ study corpus bears on this obligation.
 consumer should keep and want no edit. The fourth,
 `##the-single-storage-rule-stated-once`, is the only self-falsifying sentence in
 this batch — the count it asserts is about its own package and is wrong there. The
-minimal true form, `ref-grammar.md:108`:
+minimal true form, `ref-grammar.xml:108`:
 
 > @fact:the-single-storage-rule-stated-once The single storage rule, stated here as the
 > anchor every restatement echoes: @status:impl/done
@@ -1392,8 +1392,8 @@ whether these are policy choices or notes.**
 `##SEGMENT-MODULE-IS-THE-DIRECTORY` · `##SEGMENT-DOC-IS-THE-FILE-NAME` ·
 `##SUM-NAMES-ARE-THE-URI-SEGMENTS` · `##ROW-SEGMENT-MODULE` · `##ROW-SEGMENT-DOC`
 — all five falsified only by the host's `spec://` superset, which is written down
-before the fact at `spec/common/PROP-029-fully-qualified-addresses.md:44`
-`##SCOPE-HOST` and `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:95`/`:105`
+before the fact at `spec/common/PROP-029-fully-qualified-addresses.xml:44`
+`##SCOPE-HOST` and `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:95`/`:105`
 `##UNIFIED-GRAMMAR` / `##ROUTER-DOC-ID`. If the owner rules them notes rather than
 policy, all five fall to route (b) **together** — they are one statement written
 in two documents of one package, and a ruling that splits them mints a
@@ -1434,9 +1434,9 @@ were reachable from where the verdict already stood.
    address inside `spec/` alone.
 2. **Reading the rest of the document — 3 verdicts.** *«The third form the row
    omits»* is defined 68 lines below the row, in a MUST
-   (`ADDRESSABLE-SPECS-PROTOCOL.md:148`). *«The scheme has no place for
+   (`ADDRESSABLE-SPECS-PROTOCOL.xml:148`). *«The scheme has no place for
    `spec://org.vibevm.core/vibevm/…`»* is refuted by the summary's own conditional and by
-   `spec-tree-layout.md:146`. *«A never-read line in the boot file»* is a
+   `spec-tree-layout.xml:146`. *«A never-read line in the boot file»* is a
    do-not-**write** line eight lines above the section that tells the session to
    read that very directory.
 3. **Checking whether the correction already landed — 3 verdicts.** Wave 6 amended
@@ -1446,7 +1446,7 @@ were reachable from where the verdict already stood.
    lines below it in the same file.
 4. **Reading the anchor's own sentence — 1 verdict.** `##NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING`
    names a **temporal** failure (*«once meant one thing and now means another»*);
-   `spec/boot/STATIC.md`'s 59 warnings are a **simultaneous** collision the
+   `spec/boot/STATIC.xml`'s 59 warnings are a **simultaneous** collision the
    compiler manufactures. Right measurement, wrong rule — the measurement belongs
    to F-217/F-218, where it is already open.
 
@@ -1454,7 +1454,7 @@ were reachable from where the verdict already stood.
 
 | figure | as recorded | at HEAD `9f79acf1` | verdict |
 |---|---:|---:|---|
-| `duplicate-anchor` warnings, all in `spec/boot/STATIC.md` | 59 | **59** | holds |
+| `duplicate-anchor` warnings, all in `spec/boot/STATIC.xml` | 59 | **59** | holds |
 | specmap edges: implements / verifies / deviates / units | 677 / 223 / 12 / 5 266 | **identical** | holds |
 | `spec://org.vibevm.core/vibevm/…` host citations | 1 384 | **1 385** | holds (+1) |
 | `find spec -name 'FEAT-*'` | 0 | **0** | holds |
@@ -1500,11 +1500,11 @@ new:
    `redirect/mod.rs:124`. Separable from (3): even if the rejection is ruled
    correct, the citation is wrong.
 5. **Ten `spec://core-ai-native/…` citations use a bare authority**, forbidden by
-   `ADDRESSABLE-SPECS-PROTOCOL.md:148`'s MUST and PROP-029 `##ADDR-LAW` — including
+   `ADDRESSABLE-SPECS-PROTOCOL.xml:148`'s MUST and PROP-029 `##ADDR-LAW` — including
    `crates/vibe-cli/src/commands/trace.rs:9`.
 6. **Five committed code edges resolve to nothing.** PROP-043's `{#report}`,
    `{#seal}` and `{#weave}` are written on list-item lines
-   (`spec/modules/vibe-progress/PROP-043-progress-markup.md:390`, `:398`, `:419`),
+   (`spec/modules/vibe-progress/PROP-043-progress-markup.xml:390`, `:398`, `:419`),
    which the doctree does not register — five `dangling-edge` warnings in
    `specmap.json`, in the discipline whose subject is that an address resolves.
 

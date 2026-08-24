@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-023 — Bridge packages</title>
+  <status stage="impl" state="done" comment="C 2026-07-25: [package].bridge parses in vibe-core and all three composed mechanisms ship; motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
+session; verified against the tree 2026-07-25 by the spec-actualization
+campaign). The umbrella's own addition — `[package].bridge`, defaulting to
+false — parses in `vibe-core` with a doctest, and the three mechanisms it
+composes all ship: [PROP-020](../vibe-workspace/PROP-020-install-hooks.xml)
+install hooks, [PROP-021](PROP-021-submodule-sources.xml) submodule sources,
+[PROP-022](../vibe-workspace/PROP-022-materialization-modes.xml) materialization
+modes — so every composition law recorded here describes live machinery. It
+still adds little of its own: a flag and a packaging convention. Each mechanism
+stands alone; bridges are where they line up.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-002](PROP-002-decentralized-registry.xml) (a bridge is an
+ordinary package + identity), [PROP-008](PROP-008-qualified-naming.xml) (the
+maintainer's group, distinct from the upstream author),
+[PROP-015 §2.6](../vibe-mcp/PROP-015-mcp-integration.xml#skill) +
+[PROP-015 #skill-include](../vibe-mcp/PROP-015-mcp-integration.xml#skill-include)
+(projecting a skill out of the bridged subtree, selectively),
+[PROP-000 §16](../../common/PROP-000.xml) (the installable kinds a bridge
+still belongs to).</related></p>
+  <motivation title="1. Motivation">
+    <problem title="1.1 The problem — good work that nobody packaged">
+      <facts ordered="false">
+        <unpackaged-work fact="true" status="spec/done">People publish skills and projects to GitHub / GitVerse without ever making a
+  vibevm package — out of disinterest, or because their repo's layout has nothing
+  to do with vibevm conventions.</unpackaged-work>
+        <unreachable fact="true" status="spec/done">That work is then unreachable through
+  `vibe install`, and the original author has no incentive to change.</unreachable>
+      </facts>
+      <facts ordered="false">
+        <BRIDGE-DEF fact="true" status="impl/done">A **bridge package** closes the gap without the author's involvement: a
+  *maintainer* volunteers to steward someone else's repository and publishes an
+  ordinary vibevm package that **wraps** it.</BRIDGE-DEF>
+        <BRIDGE-MEANS fact="true" status="impl/done">The bridge brings the foreign repo
+  in by one of git's two means and, where needed, runs hooks to shape it into
+  something vibevm can consume.</BRIDGE-MEANS>
+      </facts>
+    </problem>
+    <what title="1.2 What this is — a thin convention over three mechanisms">
+      <p><thin-convention fact="true" status="impl/done">A bridge is not a new kind of package or a new subsystem. It is:</thin-convention></p>
+      <facts ordered="false">
+        <conv-ordinary-package fact="true" status="impl/done">an ordinary package (still one of `flow` / `feat` / `stack` / `tool`),</conv-ordinary-package>
+        <conv-embedded-content fact="true" status="impl/done">carrying the foreign repo as **vendored** content or a **submodule**
+  ([PROP-021](PROP-021-submodule-sources.xml)),</conv-embedded-content>
+        <conv-hooks fact="true" status="impl/done">optionally **prepared** by install hooks ([PROP-020](../vibe-workspace/PROP-020-install-hooks.xml)),</conv-hooks>
+        <conv-in-place fact="true" status="impl/done">optionally **materialised** as `in-place` when the upstream is a giant
+  ([PROP-022](../vibe-workspace/PROP-022-materialization-modes.xml)),</conv-in-place>
+        <conv-skill-projection fact="true" status="impl/done">with any skill projected selectively from the bridged subtree
+  ([PROP-015 #skill-include](../vibe-mcp/PROP-015-mcp-integration.xml#skill-include)).</conv-skill-projection>
+      </facts>
+      <p><plus-flag fact="true" status="impl/done">…plus one flag that says "this is a bridge."</plus-flag></p>
+    </what>
+  </motivation>
+  <decisions title="2. Decisions">
+    <flag title="2.1 A bridge is marked by a flag, not a kind">
+      <p><req-flag fact="true" status="impl/done">`req r1`</req-flag></p>
+      <facts ordered="false">
+        <BRIDGE-FLAG fact="true" status="impl/done">`[package].bridge = true` marks a package as a bridge.</BRIDGE-FLAG>
+        <FLAG-NOT-KIND fact="true" status="impl/done">It does **not** change
+  the package's `kind` (a bridged skill is still a `feat`/`tool` as appropriate)
+  or its identity.</FLAG-NOT-KIND>
+        <FLAG-JOBS fact="true" status="impl/done">The flag is metadata with two jobs: it documents that the
+  package's substantive content is *foreign* (stewarded, not authored, by the
+  maintainer), and it is the hook the registry/UI uses to surface provenance
+  (§2.4).</FLAG-JOBS>
+        <FLAG-DEFAULT fact="true" status="impl/done">Default `false`; the overwhelming majority of packages are not bridges.</FLAG-DEFAULT>
+      </facts>
+    </flag>
+    <classes title="2.2 Two classes — vendored and submodule-backed">
+      <p><req-classes fact="true" status="impl/done">`req r1`</req-classes></p>
+      <p><TWO-CLASSES fact="true" status="impl/done">A bridge embeds the upstream repo one of two ways:</TWO-CLASSES></p>
+      <facts ordered="false">
+        <CLASS-VENDORED fact="true" status="impl/done">**Vendored ("git in git")** — the maintainer copied the upstream tree into
+  the package and committed it. This needs **none** of PROP-021/022 machinery:
+  it is plain files in a `snapshot` package. A vendored bridge is therefore the
+  cheapest case — the flag (§2.1) plus, if the layout needs shaping, hooks.</CLASS-VENDORED>
+        <CLASS-SUBMODULE fact="true" status="impl/done">**Submodule-backed** — the package references the upstream via a git
+  submodule ([PROP-021](PROP-021-submodule-sources.xml)), fetched on install and
+  updated on update, so the bridge tracks upstream without re-vendoring.</CLASS-SUBMODULE>
+      </facts>
+      <p><CLASS-TRADEOFF fact="true" status="spec/done">The maintainer chooses per trade-off: vendored is self-contained and frozen;
+submodule-backed stays current but depends on upstream remaining reachable.</CLASS-TRADEOFF></p>
+    </classes>
+    <composition title="2.3 Composition — every mechanism is optional">
+      <p><req-composition fact="true" status="impl/done">`req r1`</req-composition></p>
+      <p><COMPOSE-OPTIONAL fact="true" status="impl/done">A bridge is the point where the three orthogonal mechanisms compose, but it
+mandates none of them:</COMPOSE-OPTIONAL></p>
+      <facts ordered="false">
+        <OPT-NO-HOOKS fact="true" status="impl/done">a bridge **without hooks** is valid (the upstream layout already fits);</OPT-NO-HOOKS>
+        <OPT-NO-SUBMODULE fact="true" status="impl/done">a bridge **without a submodule** is valid (vendored);</OPT-NO-SUBMODULE>
+        <OPT-NO-IN-PLACE fact="true" status="impl/done">a bridge **without `in-place`** is the norm (`in-place` is only for giant
+  upstreams).</OPT-NO-IN-PLACE>
+      </facts>
+      <facts ordered="false">
+        <CANONICAL-FULL-CASE fact="true" status="impl/done">The canonical full case — submodule-backed + `pre-install` hook to shape the
+  tree + selective skill projection — is the union of the four specs, but each
+  piece is independently usable outside any bridge.</CANONICAL-FULL-CASE>
+        <FOUR-SPECS-WHY fact="true" status="spec/done">This is why they are four
+  specs and four test sets, not one (the owner's orthogonality requirement).</FOUR-SPECS-WHY>
+      </facts>
+    </composition>
+    <maintainer-model title="2.4 The maintainer model">
+      <p><req-maintainer fact="true" status="impl/done">`req r1`</req-maintainer></p>
+      <facts ordered="false">
+        <MAINTAINER-VS-AUTHOR fact="true" status="impl/done">The bridge's **maintainer** is distinct from the upstream **author**.</MAINTAINER-VS-AUTHOR>
+        <GROUP-PROVENANCE fact="true" status="impl/done">The
+  package's `group` ([PROP-008](PROP-008-qualified-naming.xml)) is the
+  maintainer's namespace; the upstream is recorded as provenance (its repository
+  URL, and — where applicable — the `describes` PURL the descriptor already
+  supports, [PROP-015 §0](../vibe-mcp/PROP-015-mcp-integration.xml)).</GROUP-PROVENANCE>
+        <PROVENANCE-VISIBLE fact="true" status="impl/done">A consumer
+  can therefore always see *who stewards this* and *what it wraps*.</PROVENANCE-VISIBLE>
+        <SKILL-VIA-INCLUDE fact="true" status="impl/done">A skill that
+  lives inside the bridged subtree is projected through the normal skill
+  machinery, using the `include` selector
+  ([PROP-015 #skill-include](../vibe-mcp/PROP-015-mcp-integration.xml#skill-include))
+  to pick the relevant files out of an upstream tree full of unrelated content.</SKILL-VIA-INCLUDE>
+      </facts>
+    </maintainer-model>
+  </decisions>
+  <rejected title="3. Rejected alternatives">
+    <facts ordered="false">
+      <REJ-BRIDGE-KIND fact="true" status="spec/done">**A `bridge` package kind** (a kind of its own beside the §4.1 register) —
+  rejected: the kinds describe *what the package is for*; "bridge"
+  describes *where its content came from*. They are orthogonal axes, so bridge
+  is a flag, not a kind. (The reasoning survives the register later growing
+  `mcp` — that kind, too, says what a package is FOR.)</REJ-BRIDGE-KIND>
+      <REJ-AUTO-IMPORT fact="true" status="spec/done">**Auto-importing a foreign repo with no maintainer** — rejected: someone must
+  take responsibility for shaping, updating, and vouching for the wrapped code;
+  an unowned auto-bridge has no one to fix it when upstream moves or breaks.</REJ-AUTO-IMPORT>
+    </facts>
+  </rejected>
+  <out-of-scope title="4. Out of scope">
+    <facts ordered="false">
+      <OOS-AUTO-CONVERSION fact="true" status="spec/done">**Automatic conversion of foreign layouts** into vibevm conventions — bridges
+  shape upstream with explicit, maintainer-written hooks, not inferred magic.</OOS-AUTO-CONVERSION>
+      <OOS-SECURITY-SCAN fact="true" status="spec/done">**Security scanning of wrapped third-party code** — the LLM "antivirus" is
+  the same far-backlog item as for hooks
+  ([PROP-020 §4](../vibe-workspace/PROP-020-install-hooks.xml#out-of-scope)); a
+  bridge's trust posture is its maintainer plus the hook allow-list/consent
+  gate, an explicitly accepted risk for now.</OOS-SECURITY-SCAN>
+      <OOS-LICENSE-TRACKING fact="true" status="spec/done">**License / legal provenance tracking** of wrapped upstreams — beyond the
+  recorded URL/PURL, no compliance machinery is specified here.</OOS-LICENSE-TRACKING>
+    </facts>
+  </out-of-scope>
+  <acceptance title="5. Acceptance">
+    <facts ordered="false">
+      <ACC-FLAG-PARSES fact="true" status="impl/done">`[package].bridge` parses as a boolean, defaults `false`, and does not alter
+  `kind` or identity.</ACC-FLAG-PARSES>
+      <ACC-VENDORED-PLAIN fact="true" status="impl/done">A vendored bridge installs as a plain `snapshot` package (flag + optional
+  hooks), with no submodule/materialization machinery engaged.</ACC-VENDORED-PLAIN>
+      <ACC-SUBMODULE-FULL fact="true" status="impl/done">A submodule-backed bridge fetches upstream ([PROP-021](PROP-021-submodule-sources.xml)),
+  runs declared hooks ([PROP-020](../vibe-workspace/PROP-020-install-hooks.xml)),
+  and projects its skill via the `include` selector.</ACC-SUBMODULE-FULL>
+      <ACC-PROVENANCE fact="true" status="impl/done">Provenance (maintainer group + upstream URL/PURL) is recoverable for a bridge
+  package.</ACC-PROVENANCE>
+      <ACC-FLOOR-GREEN fact="true" status="spec/done">Full `self-check.sh` green; conform 0/0/0; specmap clean.</ACC-FLOOR-GREEN>
+    </facts>
+  </acceptance>
+</spec>

@@ -53,13 +53,13 @@ grep* — is what produced the extra twelve.
   history (§3.3); it left the corpus rather than being marked, and it is not
   edited either.
 - **5 sites that are the directory or document name**, per §trap.
-- **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` — 7 sites.** That
+- **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — 7 sites.** That
   is the finding's own text; the dead names there are the record of what was
   wrong.
 
 ## The one judgement call {#judgement}
 
-`conventional-commits.md`'s heading `## Interaction with the atomic-commits
+`conventional-commits.xml`'s heading `## Interaction with the atomic-commits
 rule` names a **rule**, not obviously an installable. Changed anyway: the rule
 has no name other than the package's, and the sibling line two files over says
 «the separate `git-atomic-commits` flow». **Surfaced to the owner before the

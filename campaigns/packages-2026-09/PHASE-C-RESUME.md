@@ -46,7 +46,7 @@ individually; every `located` row takes a class default on machine-verified refs
 Two late batches broke that:
 
 - `tasks/evidence/ev-C45-go.json` — **60 `partial` rows** sorted by FILE
-  (`TCG-ORACLE-GO-v0.1.md` → unverifiable, everything else → confirmed);
+  (`TCG-ORACLE-GO-v0.1.xml` → unverifiable, everything else → confirmed);
 - `tasks/evidence/ev-C45-rust.json` — **78 `partial` rows** sorted by one
   two-branch rule.
 
@@ -192,7 +192,7 @@ a card, guide or tool spec; 63 are cited nowhere else.**
   1. campaigns/packages-2026-09/PHASE-C-RESUME.md   — этот файл целиком
   2. campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md — особенно §2.1 (поле src),
      §4.5 (закон периметра) и §5 (как цитируется harvest)
-  3. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md §3.1, §3.2, §5
+  3. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
      — правила вердиктов и выходной гейт из пяти пунктов; плюс §9 LOG с конца,
      там записи этой фазы
 
@@ -235,7 +235,7 @@ load-and-merge; verified_at и processed_hash пишет только `vibe prog
 ТОКЕНЫ НЕ ЭКОНОМЬ. Не ужимайся, не сокращай чтение таблиц, не классифицируй
 строки пачкой ради экономии — именно так возник долг из 138 строк выше. Если
 контекст подходит к концу: остановись, сохрани состояние (CONTINUE.md +
-spec/WAL.md + запись в §9 LOG кампании), напиши новый промт для продолжения по
+spec/WAL.xml + запись в §9 LOG кампании), напиши новый промт для продолжения по
 образцу этого файла, зафиксируй и раскатай — и скажи об этом прямо.
 ```
 

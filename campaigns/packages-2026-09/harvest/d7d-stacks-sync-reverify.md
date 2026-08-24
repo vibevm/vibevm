@@ -145,9 +145,9 @@ this is the batch's one family where consistency propagated a TRUE premise:
 
 | stack | anchor | posted | measured by |
 |---|---|---|---|
-| rust | `TCG-ORACLE-RUST-v0.1.md:249` `##TARGET-WARM-COMPLETE` | `complete` p50 < 300 ms, `@impl/done` | **nothing** (this obligation) |
-| go | `TCG-ORACLE-GO-v0.1.md:243` `##TARGET-COMPLETE` | `complete` p50 < 300 ms, `@impl/done` | **nothing** (F-167, below) |
-| typescript | `TCG-ORACLE-v0.1.md:153` `##TARGET-WARM-VALIDATE-AND-COMPLETE` | warm `validate` p50 < 150 ms **and** `complete` p50 < 200 ms, `@impl/done` | validate only (F-284, below) |
+| rust | `TCG-ORACLE-RUST-v0.1.xml:249` `##TARGET-WARM-COMPLETE` | `complete` p50 < 300 ms, `@impl/done` | **nothing** (this obligation) |
+| go | `TCG-ORACLE-GO-v0.1.xml:243` `##TARGET-COMPLETE` | `complete` p50 < 300 ms, `@impl/done` | **nothing** (F-167, below) |
+| typescript | `TCG-ORACLE-v0.1.xml:153` `##TARGET-WARM-VALIDATE-AND-COMPLETE` | warm `validate` p50 < 150 ms **and** `complete` p50 < 200 ms, `@impl/done` | validate only (F-284, below) |
 
 **What the measurement shows.** The word `complete` occurs **zero times** in all
 three bench harnesses:
@@ -202,7 +202,7 @@ for a real op**, not a target on a phantom verb.
 **Proposed correction (NOT APPLIED)** — one shape, three copies; the
 `@impl/done` marker is the false part rather than the number:
 
-- rust `TCG-ORACLE-RUST-v0.1.md:249` →
+- rust `TCG-ORACLE-RUST-v0.1.xml:249` →
 
   ```
   - ##TARGET-WARM-COMPLETE `complete` p50 < 300 ms — posted, not yet
@@ -210,10 +210,10 @@ for a real op**, not a target on a phantom verb.
     (`crates/rust-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
     `validate_p50_ms`, `validate_p95_ms` and no `complete` field). @spec/done
   ```
-- go `TCG-ORACLE-GO-v0.1.md:243-244` → the same clause naming
+- go `TCG-ORACLE-GO-v0.1.xml:243-244` → the same clause naming
   `crates/go-ai-native-tcg/src/bench.rs`, which records per-case `warm_ms` and
   no percentile at all.
-- typescript `TCG-ORACLE-v0.1.md:153-154` → **split the clause; do not demote
+- typescript `TCG-ORACLE-v0.1.xml:153-154` → **split the clause; do not demote
   the whole anchor.** The `validate` half is measured and met
   (`validate_p50_ms: 19.32` against a posted `< 150 ms`); only the `complete`
   half is uninstrumented. Suggested: keep the `validate` clause `@impl/done`
@@ -230,7 +230,7 @@ the same perimeter miss D5 caught on the Go twin (F-160, catch *(e)*): the
 warning is one document over, in the sibling brief, inside this very package.
 
 ```
-$ sed -n '190,195p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md
+$ sed -n '190,195p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.xml
 - ##RISK-COLD-INIT-ON-LARGE-WORKSPACES **Cold init on large workspaces.** 14.7 s cache-cold on a MINIMAL
   crate on this box (sysroot indexing dominates; 2.5 s warm). On big
   consumer trees the first answer may exceed the product's 60 s
@@ -241,7 +241,7 @@ $ sed -n '190,195p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spe
 
 Large-workspace consumers **are** warned, at the spec layer, in a shipped
 document of the same package — and the 60 s figure does **not** live only in
-`legacy-spec/`; it is at `vibe-agentic-tcg-rust.md:192`. The eager-init half the
+`legacy-spec/`; it is at `vibe-agentic-tcg-rust.xml:192`. The eager-init half the
 verdict already conceded is real (`crates/rust-ai-native-tcg/src/serve.rs:220-223`:
 comment «The relay owns the session: boot the analyzer up front so the host's
 FIRST frame can be validate/scope/…», then `RustOracle::spawn(&root, QUIESCENCE_BUDGET)`).
@@ -257,16 +257,16 @@ $ grep -rn "QUIESCENCE_BUDGET" packages/org.vibevm.ai-native/rust-ai-native-lang
 
 **45 s shipped** (`lib.rs:33`, used by `spawn_oracle` at `lib.rs:381` and by
 `serve` at `serve.rs:223`), **< 15 s posted** one anchor down
-(`##TARGET-COLD-INIT-TO-QUIESCENT`, `TCG-ORACLE-RUST-v0.1.md:250`), **60 s
+(`##TARGET-COLD-INIT-TO-QUIESCENT`, `TCG-ORACLE-RUST-v0.1.xml:250`), **60 s
 asserted here**. Three numbers, one product — exactly the conflict D5 recorded
 for Go, whose shipped constant is `READINESS_BUDGET = 45 s`
 (`go-ai-native-tcg/src/lib.rs:32`). The only other `60` in the Rust stack's code
 is a test's own spawn budget (`rust-ai-native-tcg-bridge/tests/live_oracle.rs:44`,
 `Duration::from_secs(60)`), a test parameter and not a product ceiling.
 
-**Per stack:** rust → the warning exists (`vibe-agentic-tcg-rust.md:190-195`),
+**Per stack:** rust → the warning exists (`vibe-agentic-tcg-rust.xml:190-195`),
 the number is unsupported · go → identical sentence, **already demoted by D5's
-F-160**, whose clause at `TCG-ORACLE-GO-v0.1.md:260-269` names all three figures
+F-160**, whose clause at `TCG-ORACLE-GO-v0.1.xml:260-269` names all three figures
 · typescript → **no twin**;
 `grep -rn "LARGE-WORKSPACE\|large.workspace\|first.request\|ceiling" packages/…/typescript-ai-native-lang/v0.6.0/spec/`
 returns one unrelated hit (`typescript-ai-native-sweep/SKILL.md:18`, «the floor
@@ -310,9 +310,9 @@ files (`rust-ai-native-tcg-bridge/src/client/tests.rs:1`, `src/oracle/tests.rs:1
 were read and both say what it says.
 
 **Per stack:** rust → SURVIVES (this obligation) · go → SURVIVES, same sentence,
-`TCG-PROTOCOL-GO-v0.1.md:158` (F-210, below) · typescript →
+`TCG-PROTOCOL-GO-v0.1.xml:158` (F-210, below) · typescript →
 **the same defect, judged `confirmed` at Phase C** —
-`TCG-PROTOCOL-v0.1.md:151 ##REPLAY-GOLDENS-PIN-BOTH-SIDES`, not in this batch
+`TCG-PROTOCOL-v0.1.xml:151 ##REPLAY-GOLDENS-PIN-BOTH-SIDES`, not in this batch
 and not touched. Recorded below.
 
 **What the measurement shows.**
@@ -334,7 +334,7 @@ ts    …/src/transport.rs:312   /// A no-node double: scripted responses per op
 *The outer hop has no goldens in any of the three, and the check is a call-graph
 one rather than a name search.* The outer hop is defined by the document itself
 as `host ⇄ <stack>-ai-native-tcg serve`
-(`TCG-PROTOCOL-GO-v0.1.md:12-16 ##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR`), NDJSON
+(`TCG-PROTOCOL-GO-v0.1.xml:12-16 ##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR`), NDJSON
 duplex with `{proto, id, op, params}` frames. Its entry point is `run_serve`
 (`rust-ai-native-tcg/src/serve.rs:215`, `go-ai-native-tcg/src/serve.rs:227`), and
 **nothing but `main.rs` calls it**:
@@ -381,7 +381,7 @@ the next pass does not re-discover it and mistake it for the golden.
 
 **Proposed correction (NOT APPLIED):** keep the inner-hop clause verbatim, and
 say the outer half honestly. Suggested for
-`TCG-PROTOCOL-RUST-v0.1.md#REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS`:
+`TCG-PROTOCOL-RUST-v0.1.xml#REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS`:
 
 ```
 ##REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS Recorded LSP
@@ -392,7 +392,7 @@ drives `run_serve` over recorded frames; `crates/rust-ai-native-tcg`
 carries `tests/finding_parity.rs` and unit tests only. @spec/done
 ```
 
-Go's copy (`TCG-PROTOCOL-GO-v0.1.md:158`) takes the identical clause with
+Go's copy (`TCG-PROTOCOL-GO-v0.1.xml:158`) takes the identical clause with
 `gopls` for `r-a` and `go-ai-native-tcg-bridge/src/client/tests.rs` for the
 inner-hop citation. **The TypeScript copy is not this obligation's to change**
 and is recorded as a new obligation below.
@@ -437,10 +437,10 @@ correction under F-210; the TypeScript copy needs a re-judgement, not an edit).
 `ReplacementHasOracle` and `cell-has-oracle` / `CellHasOracle` over `*.rs` and
 `*.toml`; the three stacks' `crates/*-ai-native-conform/src/lib.rs` `build_rules`
 functions read in full; the three `spec/cards/INDEX.md` rows for this card; the
-three sibling `scaffold-d-differential-oracle.md` cards.
+three sibling `scaffold-d-differential-oracle.xml` cards.
 
 **The verdict's own command, re-run:** the verdict quotes none. Its three cited
-lines (`scaffold-d-differential-oracle.md:78`, `INDEX.md:13`, `structure.rs:175`)
+lines (`scaffold-d-differential-oracle.xml:78`, `INDEX.md:13`, `structure.rs:175`)
 were read and all three say what it says.
 
 **Per stack:** rust → **SURVIVES** · go → **correct as written** · typescript →
@@ -511,8 +511,8 @@ replacement-time checker `replacement-has-oracle` is specified and not yet
 implemented — see the ##CHECKER row.* @impl/done
 ```
 
-`go-…/scaffold-d-differential-oracle.md:12` → **none — correct as written.**
-`typescript-…/scaffold-d-differential-oracle.md:11` → **none — correct as
+`go-…/scaffold-d-differential-oracle.xml:12` → **none — correct as written.**
+`typescript-…/scaffold-d-differential-oracle.xml:11` → **none — correct as
 written** on the fact this obligation is about.
 
 **Recommendation per anchor:** `##card-is-beta` (rust) → **drift stands,
@@ -555,10 +555,10 @@ $ find . -name "specmap.jtd.json" -not -path "./target/*" -not -path "./.git/*"
 ./schemas/specmap.jtd.json
 
 $ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/
-Cargo.lock  Cargo.toml  LICENSE.md  README.md  crates  spec  specmap.toml  target  vibe.toml
+Cargo.lock  Cargo.toml  LICENSE.xml  README.md  crates  spec  specmap.toml  target  vibe.toml
 
 $ ls vibedeps/stack-rust-ai-native-lang/0.7.0/
-Cargo.lock  Cargo.toml  LICENSE.md  README.md  crates  spec  specmap.toml  vibe.toml
+Cargo.lock  Cargo.toml  LICENSE.xml  README.md  crates  spec  specmap.toml  vibe.toml
 ```
 
 One copy in the whole tree, at the **host root** — no `schemas/` directory in the
@@ -641,12 +641,12 @@ and agentic briefs.
 
 | stack · document | anchor | verdict at HEAD |
 |---|---|---|
-| rust · `TCG-ORACLE-RUST-v0.1.md:202` | `##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY` | drift → **already demoted by D5's F-192** |
-| rust · `vibe-agentic-tcg-rust.md:203` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | drift — **this obligation** |
-| go · `TCG-ORACLE-GO-v0.1.md:221` | `##GRACEFUL-EXIT-IS-THE-LSP-DANCE` | drift — **F-167, below** |
-| go · `vibe-agentic-tcg-go.md:200-202` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | **`confirmed`** |
-| typescript · `vibe-agentic-tcg-ts.md:184-186` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | **`confirmed`** |
-| typescript · `TCG-ORACLE-v0.1.md:138` | `##SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT` | **`confirmed`** |
+| rust · `TCG-ORACLE-RUST-v0.1.xml:202` | `##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY` | drift → **already demoted by D5's F-192** |
+| rust · `vibe-agentic-tcg-rust.xml:203` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | drift — **this obligation** |
+| go · `TCG-ORACLE-GO-v0.1.xml:221` | `##GRACEFUL-EXIT-IS-THE-LSP-DANCE` | drift — **F-167, below** |
+| go · `vibe-agentic-tcg-go.xml:200-202` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | **`confirmed`** |
+| typescript · `vibe-agentic-tcg-ts.xml:184-186` | `##RISK-WINDOWS-CHILD-LIFECYCLE` | **`confirmed`** |
+| typescript · `TCG-ORACLE-v0.1.xml:138` | `##SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT` | **`confirmed`** |
 
 All six name «no-zombie assertions» among the house lessons that *apply*, and
 three of them were confirmed on the same facts that made the other three drift.
@@ -704,7 +704,7 @@ a tcg oracle child**:
 **Proposed correction (NOT APPLIED):** the fix is one word-group in a
 four-element list, and it should land in the **same diff across all six copies**
 or none, since three of them currently read `confirmed`. Suggested for
-`vibe-agentic-tcg-rust.md:203-205`:
+`vibe-agentic-tcg-rust.xml:203-205`:
 
 ```
 - ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies
@@ -738,11 +738,11 @@ one question.
 (`##FINDING-DR1-014` / `##DR1-014`) and as a citation, over `*.md`; the full
 `##FINDING-DR1-*` roster of `core-ai-native/v0.8.0/spec/appendix/ATLAS.md`;
 `R2C-005` and `DR2-012`; the three stacks' token-level tool briefs
-(`rust-ai-native-tcg.md`, `go-ai-native-tcg.md`, `typescript-ai-native-tcg.md`);
+(`rust-ai-native-tcg.xml`, `go-ai-native-tcg.xml`, `typescript-ai-native-tcg.xml`);
 the package's `vibe.toml` `[[binary]]` table and `crates/rust-ai-native-tcg/src/main.rs`.
 
 **The verdict's own command, re-run:** the verdict quotes none. It cites
-`ATLAS.md:105`, `:107` and `:184`; all were read and all three resolve.
+`ATLAS.xml:105`, `:107` and `:184`; all were read and all three resolve.
 
 ### Anchor 1 — `##DERIVED-FROM-THE-EVIDENCE` → SURVIVES
 
@@ -757,7 +757,7 @@ $ grep -o "##FINDING-DR1-[0-9]*" .../core-ai-native/v0.8.0/spec/appendix/ATLAS.m
 
 (`DR1-013` at `:45`, `DR1-015` at `:181` — the file is not in numeric order, so
 «the roster steps 013 → 015» is only true of the id space, not of the lines.)
-The two ids beside it resolve: `##FINDING-DR2-012` at `ATLAS.md:105` and
+The two ids beside it resolve: `##FINDING-DR2-012` at `ATLAS.xml:105` and
 `##FINDING-R2C-005` at `:107`.
 
 `DR1-014` exists nowhere as an anchor:
@@ -768,13 +768,13 @@ $ grep -rn "##FINDING-DR1-014\|##DR1-014" --include=*.md packages vibedeps crate
 ```
 
 and survives as a citation in exactly two live documents plus campaign
-bookkeeping: this brief (`:11`), the TypeScript guide (`GUIDE-AI-NATIVE-TYPESCRIPT.md:39`),
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2583`, and cached copies
+bookkeeping: this brief (`:11`), the TypeScript guide (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:39`),
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`, and cached copies
 under `research/rust-demo/.vibe/cache/` and
 `packages/org.vibevm.fractality/*/.vibe/cache/` (superseded slots, per §3.3).
 
 **Per stack — and the TypeScript copy is already fixed, which is the whole
-recommendation here.** `GUIDE-AI-NATIVE-TYPESCRIPT.md:39
+recommendation here.** `GUIDE-AI-NATIVE-TYPESCRIPT.xml:39
 ##ADVANTAGE-1-TCD-EXISTS-FOR-TYPESCRIPT` carries D5's F-168 clause verbatim:
 «*One of those two evidence ids does not resolve: `R2C-005` is authored
 (`##FINDING-R2C-005` in the core ATLAS), `DR1-014` is not — the roster runs
@@ -784,7 +784,7 @@ reference.*» The Rust brief is the second of the two documents and has not had
 it. There is no Go copy.
 
 **Proposed correction (NOT APPLIED)** — mirror the TypeScript clause exactly, so
-the family carries one wording. For `rust-ai-native-tcg.md:11`, append to the
+the family carries one wording. For `rust-ai-native-tcg.xml:11`, append to the
 existing sentence:
 
 ```
@@ -890,7 +890,7 @@ which is a Rust project that adopted this discipline — it carries its own
 
 ```
 $ ls packages/org.vibevm.fractality/fractality/v0.1.0/
-AGENTS.md  CLAUDE.md  Cargo.lock  Cargo.toml  GEMINI.md  LICENSE.md  README.md
+AGENTS.md  CLAUDE.md  Cargo.lock  Cargo.toml  GEMINI.md  LICENSE.xml  README.md
 conform-baseline.json  conform.toml  crates  …  specmap.toml  discipline/registry
 ```
 
@@ -898,7 +898,7 @@ conform-baseline.json  conform.toml  crates  …  specmap.toml  discipline/regis
 formality: it is what makes the five survivals safe to act on.
 
 **The verdict's own commands, re-run:** the verdicts quote none; they cite
-`ATLAS.md:55`, `cards/INDEX.md:37`, `codemod.rs:14`, `budget.rs:143/146`,
+`ATLAS.xml:55`, `cards/INDEX.md:37`, `codemod.rs:14`, `budget.rs:143/146`,
 `conform.toml:36`, `rules/mod.rs:50`, `rust-ai-native-conform/src/lib.rs:137`,
 `diagnostics.rs:44`, `specmark-grammar/src/lib.rs:53`, `registry.rs:63`. All were
 read.
@@ -925,7 +925,7 @@ as a *pending* card (`rust-…/spec/cards/INDEX.md:28`: «candidate future card
 names all seven pending rule cards).
 
 **Per stack — and this is the batch's clearest trap.**
-- **go `GUIDE-AI-NATIVE-GO.md:213-214`** makes the *identical* claim
+- **go `GUIDE-AI-NATIVE-GO.xml:213-214`** makes the *identical* claim
   («Canonical cell type name is computed from the manifest: `{Variant}{Seam}` →
   `BatchPlanner`») — **and the Go consumer instantiates it**:
   ```
@@ -935,7 +935,7 @@ names all seven pending rule cards).
   ```
   `{Batch}{Planner}` and `{Naive}{Planner}`, literally, in the discipline's own
   Go demonstration. The anchor is judged **`confirmed`** and correctly so.
-- **typescript `GUIDE-AI-NATIVE-TYPESCRIPT.md:125`** **drops the `{Variant}{Seam}`
+- **typescript `GUIDE-AI-NATIVE-TYPESCRIPT.xml:125`** **drops the `{Variant}{Seam}`
   clause entirely** — it says only «one name = one referent across the contract
   surface; no shadowing, no synonym pairs; structural tokens from a closed
   vocabulary». Not vulnerable to this defect at all; judged `confirmed`.
@@ -957,7 +957,7 @@ artefacts). Suggested for `:57`:
   them — `rule-closed-vocabulary-naming` is a pending card.* @impl/done
 ```
 
-`go-…/GUIDE-AI-NATIVE-GO.md:213` → **none — correct as written, with an instance.**
+`go-…/GUIDE-AI-NATIVE-GO.xml:213` → **none — correct as written, with an instance.**
 `typescript-…:125` → **none — the clause is not there.**
 
 ### 2. `##POSITION-IS-A-RESOURCE` (`:59`) → SURVIVES, **rust + typescript**
@@ -1139,7 +1139,7 @@ $ grep -rn "R-060" --include=*.md --include=*.rs packages spec crates research c
   | grep -v "/target/" | grep -v "\.vibe/cache" | grep -v vibedeps
 .../rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:127   *(R-060, retained.)*
 .../typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:231   (R-060, projected)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2385   … R-021 and R-060 … cited by name whose cards are unauthored
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2385   … R-021 and R-060 … cited by name whose cards are unauthored
 crates/vibe-cli/src/registry.rs:63   /// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.
 ```
 
@@ -1424,7 +1424,7 @@ $ find .../go-ai-native-lang/v0.1.0 -not -path "*/target/*" \( -iname "*corpus*"
 
 The document's own §8 confirms it from the other side: where the Rust mechanism
 carries five `##SPIKE-*` anchors with measured numbers
-(`TCG-ORACLE-RUST-v0.1.md:238-244`: «init handshake ~10 ms», «init-to-quiescent
+(`TCG-ORACLE-RUST-v0.1.xml:238-244`: «init handshake ~10 ms», «init-to-quiescent
 14.7 s cache-COLD … 2.5 s warm», «completion ~19 ms at 118 entries»), the Go
 document carries **no spike section at all** — it jumps from
 `##TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED` (`:236`) straight to
@@ -1488,7 +1488,7 @@ edited family-wide.** Rust's §1 is three steps —
 `##RESOLUTION-HARD-FAILURE` (`:34`) — and `resolve_rust_analyzer`
 (`rust-ai-native-tcg-bridge/src/lib.rs:137-158`) does precisely that, in that
 order, **with no env override**. TypeScript has no ordered list at all, only
-`##RESOLUTION-FAILURE-IS-A-RECIPE-CARRYING-ERROR` (`TCG-ORACLE-v0.1.md:47`).
+`##RESOLUTION-FAILURE-IS-A-RECIPE-CARRYING-ERROR` (`TCG-ORACLE-v0.1.xml:47`).
 
 **Proposed correction (NOT APPLIED):** Go only, an insertion rather than a
 rewrite — fold the override into step 1's text, or mint a step 0 mirroring the
@@ -1720,10 +1720,10 @@ $ grep -rn "OracleRegistry\|oracle_registry" --include=*.rs --include=*.go --inc
 
 Zero source files of any language, in any package. The crate was retired with the
 whole multiplexed-product topology —
-`spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md` `##TOPOLOGY-RETIRED` and
+`spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` `##TOPOLOGY-RETIRED` and
 `##TCG-CRATE-DELETED` (`:42`) — and D5's F-214 recorded the same for the Rust
 twin, whose demotion clause is live at
-`TCG-PROTOCOL-RUST-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS`.
+`TCG-PROTOCOL-RUST-v0.1.xml#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS`.
 
 **Per stack, and one difference that must reach whoever writes the diff.** The Go
 sentence says «drives **all three** relays» where Rust says «drives **BOTH**
@@ -2121,7 +2121,7 @@ consuming document does not move; a host/other-package obligation is recorded.
 
 **Proposed correction (NOT APPLIED):** none in this package. The obligation
 belongs on `core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28` and
-`…/ATLAS.md:105`, which must agree on one figure before any projection is edited.
+`…/ATLAS.xml:105`, which must agree on one figure before any projection is edited.
 
 **Recommendation:** → **drift stands, route (b)** — record a `core-ai-native`
 obligation; do not edit this package.
@@ -2131,7 +2131,7 @@ obligation; do not edit this package.
 Purely package-internal, and settled by reading the two documents:
 
 ```
-$ grep -n "##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT" .../GUIDE-AI-NATIVE-TYPESCRIPT.md
+$ grep -n "##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT" .../GUIDE-AI-NATIVE-TYPESCRIPT.xml
 274:… (two arms, weak model, mechanical verification — see the sibling brief §6) …
 
 $ grep -n "^## " .../spec/typescript/tools/vibe-agentic-tcg-ts.md
@@ -2277,10 +2277,10 @@ campaign has now paid for three times.
 | `GUIDE-AI-NATIVE-RUST#POSITION-IS-A-RESOURCE` | rust (+ ts, unjudged) | **go** — claims only the length half |
 | `GUIDE-AI-NATIVE-RUST#SCAFFOLD-B-TYPED-BUILDERS` | **rust only** | go — a different, correct claim about defined types |
 | `GUIDE-AI-NATIVE-RUST#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS` | rust (+ ts, unjudged) | **go** — names no custom linter |
-| `scaffold-d-differential-oracle.md#card-is-beta` | **rust only** | go, typescript — neither gate mounts `cell-has-oracle` |
-| `TCG-ORACLE-GO-v0.1.md#RESOLUTION-GOPLS-ON-PATH` | **go only** | rust — its §1 matches its resolver exactly; ts has no list |
-| `rust-ai-native-tcg.md#DERIVED-FROM-THE-EVIDENCE` | **rust only** | typescript — already carries D5's F-168 dead-id clause |
-| `rust-ai-native-tcg.md#RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL` | **rust only** | go, typescript — both briefs say «DELIBERATELY HELD AT STUB DEPTH» |
+| `scaffold-d-differential-oracle.xml#card-is-beta` | **rust only** | go, typescript — neither gate mounts `cell-has-oracle` |
+| `TCG-ORACLE-GO-v0.1.xml#RESOLUTION-GOPLS-ON-PATH` | **go only** | rust — its §1 matches its resolver exactly; ts has no list |
+| `rust-ai-native-tcg.xml#DERIVED-FROM-THE-EVIDENCE` | **rust only** | typescript — already carries D5's F-168 dead-id clause |
+| `rust-ai-native-tcg.xml#RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL` | **rust only** | go, typescript — both briefs say «DELIBERATELY HELD AT STUB DEPTH» |
 
 **Six of the eight are Rust-only and one is Go-only** — so the release queue's
 «a Go-specific truth stated family-wide» is the *minority* shape in this batch.
@@ -2298,7 +2298,7 @@ the family shipping two answers:
 
 | the fact | drift (this batch) | judged otherwise |
 |---|---|---|
-| replay goldens pin the OUTER hop | rust `TCG-PROTOCOL-RUST#REPLAY-GOLDENS-…`, go `TCG-PROTOCOL-GO#…` | ts `TCG-PROTOCOL-v0.1.md:151 ##REPLAY-GOLDENS-PIN-BOTH-SIDES` → **`confirmed`** |
+| replay goldens pin the OUTER hop | rust `TCG-PROTOCOL-RUST#REPLAY-GOLDENS-…`, go `TCG-PROTOCOL-GO#…` | ts `TCG-PROTOCOL-v0.1.xml:151 ##REPLAY-GOLDENS-PIN-BOTH-SIDES` → **`confirmed`** |
 | the no-zombie property is asserted | rust `vibe-agentic-tcg-rust#RISK-WINDOWS-CHILD-LIFECYCLE`, go `TCG-ORACLE-GO#GRACEFUL-EXIT-…` (+ rust `TCG-ORACLE-RUST#…`, demoted in D5) | go `vibe-agentic-tcg-go#RISK-WINDOWS-CHILD-LIFECYCLE`, ts `vibe-agentic-tcg-ts#…`, ts `TCG-ORACLE-v0.1#SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT` → **all three `confirmed`** |
 | overlay versions never reset | go `TCG-ORACLE-GO#OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET` | rust `TCG-ORACLE-RUST:118 ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT` → **`confirmed`**, same code |
 | the floor gloss | go `vibe-agentic-tcg-go#FLOOR-REMAINS-THE-TRUTH` | rust `vibe-agentic-tcg-rust:48` → **`confirmed`**, and further off (`cargo check` is not a step) |

@@ -37,7 +37,7 @@ ours.
 
 **Why that perimeter and not the package.** `managed-blocks` is a
 *tool-neutral* flow: it specifies a discipline, and this host repository is the
-project that adopted it (`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:11`
+project that adopted it (`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:11`
 names the flow as its own discipline line). A mechanism in this family has four
 layers — SPEC in the package, ENGINE in `crates/vibe-workspace`, DRIVER in
 `crates/vibe-cli`, DEPLOYMENT in the consuming project. A fact can be true at
@@ -264,7 +264,7 @@ once the perimeter includes the adopter. `##SUM-REMOVE-RESTORES-THE-FILE-AND-NO-
    hard-stopping — a second, separate non-compliance, with `##ROW-STATE-MALFORMED`,
    in a crate no verdict in this obligation searched.
 2. **The Phase C close-out states the falsified premise as a finding.**
-   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3144` reads *«Verbs
+   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144` reads *«Verbs
    are specified and never built — managed-blocks' `remove`, qualified-naming's
    `KindMismatch`, each costing five to six sentences downstream.»* That is the
    §3.7 **corollary case** — a claim restated at phase-summary level from the
@@ -370,7 +370,7 @@ branch that preserves every byte. Pinned by
 
 More: the anchor's own operational bullet in the same section blesses precisely
 that discharge — `##CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS`
-(`adoption-guide.md:57-61`) says *«Take the append path, **or** stop and ask,
+(`adoption-guide.xml:57-61`) says *«Take the append path, **or** stop and ask,
 depending on how destructive a wrong guess would be. **When in doubt,
 append**»*. The host takes the arm the guide recommends. The verdict's closing
 sentence — *«an unprompted rewrite of a file the tool does not own is exactly
@@ -503,7 +503,7 @@ whole, the third short by one element), `##a-worked-message` (route (b)).
 surface because this obligation is about the **quality of an output**, not the
 existence of a mechanism — so an absence claim here has to be checked against
 every producer, every renderer and every pin. Read in full rather than grepped:
-the drill itself (`rejected-designs.md:147-184`, including the three-part table
+the drill itself (`rejected-designs.xml:147-184`, including the three-part table
 and the three properties, which is the §d the verdict cites), both message
 producers (`crates/vibe-workspace/src/lib.rs:229-239`,
 `crates/vibe-check/src/checks/redirect_block.rs:30-82`), both classifiers
@@ -556,7 +556,7 @@ one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` and {closes}
 **file path** ✓, the **exact defect with counts** ✓, the **expected shape** ✓
 (carried inside the reason — *«expected exactly one … pair»*), the **unblocking
 action** ✓ — and **line numbers ✗**, which `##ROW-REPORT-WHAT-I-FOUND`
-(`rejected-designs.md:158`) states as the precision and `##DRILL-IT-IS-SPECIFIC`
+(`rejected-designs.xml:158`) states as the precision and `##DRILL-IT-IS-SPECIFIC`
 (`:180-181`) makes the definition of *specific*. Neither anchor is in this
 obligation.
 
@@ -676,7 +676,7 @@ recommendations; I recorded no routing.**
    is decided about precision, a golden or a snapshot is what stops it drifting
    again — and `discipline/golden/` has no malformed flow to add it to.
 3. **Two anchors outside this obligation carry the root.**
-   `##ROW-REPORT-WHAT-I-FOUND` (`rejected-designs.md:158`) and
+   `##ROW-REPORT-WHAT-I-FOUND` (`rejected-designs.xml:158`) and
    `##DRILL-IT-IS-SPECIFIC` (`:180-181`) are where line numbers are actually
    prescribed; the verdict for `##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES` names
    the first as its root. They should be judged with these two, not separately.
@@ -724,7 +724,7 @@ perimeter; it was defeated by re-running its own command.
 
 **Two things need a decision that is not mine.**
 
-1. **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3144`** states the
+1. **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144`** states the
    falsified premise as a Phase C finding — *«Verbs are specified and never
    built — managed-blocks' `remove`, qualified-naming's `KindMismatch`»*. The
    first half is now falsified. **The second half was written from the same

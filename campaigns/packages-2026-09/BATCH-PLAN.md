@@ -11,7 +11,7 @@ counted two superseded slots that nothing resolves to._
 Phase B close.
 
 *This headline read 202 / 260 until 2026-07-28, contradicting its own
-decomposition table four screens down — which has recorded `DISCOVERY-PROMPT.md`
+decomposition table four screens down — which has recorded `DISCOVERY-PROMPT.xml`
 leaving the corpus (F-096, owner ruling 2026-07-27) since the day it left. The
 "confirmed by `progress scan`" was true when written and nothing recomputed it.
 **The plan is a derived document too**, which is the same lesson the batch table
@@ -176,7 +176,7 @@ text and what counts as a paragraph all move the number. So:
   asserted.
 
 **The controlled experiment, which is why this is a mechanism and not another
-curve fit.** `self-updating-tools.md` and `packaging-lessons.md` are the same
+curve fit.** `self-updating-tools.xml` and `packaging-lessons.xml` are the same
 author, the same package, the same four-field lesson genre, and *identical*
 pre-composition: 29 paragraphs, 7 items, 0 cells each. They produced **×2.45 and
 ×1.93** — a 27 % spread with paragraph density, package and genre all held
@@ -231,12 +231,12 @@ worth more than the number:
 | what came out | files | facts | why |
 |---|---|---|---|
 | `vibedeps/`, `.vibe/cache`, `refs`, `fixtures` | 970 | — | machine-copied; ~71 % of all markdown under `packages/` |
-| `LICENSE.md` × 33 (F-070) | 33 | 264 | verbatim third-party text |
+| `LICENSE.xml` × 33 (F-070) | 33 | 264 | verbatim third-party text |
 | three derived indexes (F-071) | 3 | 265 | "hand edits are a defect", their own words |
 | `core-ai-native/v0.7.0`, `redbook/v0.1.0` | 33 | 1 908 | superseded slots — frozen history |
 | `spec/legacy-projections/` (F-080) | 11 | ~729 | frozen history — owner ruling 2026-07-26 |
 | `spec/book/**` (F-091) | 4 | 383 | reference depth, not a contract — owner ruling 2026-07-26 |
-| `DISCOVERY-PROMPT.md` (F-096) | 1 | 169 | a prompt payload, not a claim — owner ruling 2026-07-27 |
+| `DISCOVERY-PROMPT.xml` (F-096) | 1 | 169 | a prompt payload, not a claim — owner ruling 2026-07-27 |
 
 **Every one of these was found by asking what the corpus is made of, not by
 estimating how big it is.** The first two rounds were prompted by the owner
@@ -317,13 +317,13 @@ Two rules that are easy to lose mid-batch:
   version is not bumped on every change** — the source text is edited in place
   and `vibe update` re-materialises consumers.
 - **F-082 — OPEN, owner's call, and it recurs across the whole wave.** Marking a
-  package's **boot snippet** grew `10-flow-core-ai-native.md` from 29 to 44
+  package's **boot snippet** grew `10-flow-core-ai-native.xml` from 29 to 44
   lines, +52 %. That file is installed into every *consuming project's* boot
   lane and read at every session start, and its own
   `##DO-NOT-READ-ALL-AT-BOOT` rule is minimal sufficiency — so our campaign's
   markup rides into every consumer's context window permanently. Roughly thirty
-  packages ship one. The host's own authored boot snippets (`00-core.md`,
-  `90-user.md`) *are* marked and in the corpus, which is the precedent pointing
+  packages ship one. The host's own authored boot snippets (`00-core.xml`,
+  `90-user.xml`) *are* marked and in the corpus, which is the precedent pointing
   the other way; the difference is that those are read by host sessions only.
   **Marking proceeds meanwhile** — B1a's snippet is marked and the cost is
   measured rather than assumed, which is what makes the ruling decidable.

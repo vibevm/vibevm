@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Public Registry API</title>
+  <section title="Table of Contents">
+    <list ordered="false">
+      <item>[Objects](#objects)</item>
+      <item>[Registry](#registry)</item>
+      <item>[Package](#package)</item>
+      <item>[Version](#version)</item>
+      <item>[Filtering](#filtering)</item>
+      <item>[Errors](#errors)</item>
+      <item>[Endpoints](#endpoints)</item>
+      <item>[Meta Endpoints](#meta-endpoints)</item>
+      <item>[`GET·/`](#get)</item>
+      <item>[`GET·/-/all`](#get-all)</item>
+      <item>[`GET·/-/`]</item>
+      <item>[Package Endpoints](#package-endpoints)</item>
+      <item>[`GET·/{package}`](#getpackage)</item>
+      <item>[`GET·/{package}/{version}`](#getpackageversion)</item>
+      <item>[`GET·/-/v1/search`](#get-v1search)</item>
+    </list>
+  </section>
+  <section title="Objects">
+    <section title="Registry">
+      <list ordered="false">
+        <item>`db_name`: "registry"</item>
+        <item>`doc_count`: 376841,</item>
+        <item>`doc_del_count`: 354,</item>
+        <item>`update_seq`: 2889325,</item>
+        <item>`purge_seq`: 0,</item>
+        <item>`compact_running`: false,</item>
+        <item>`disk_size`: 2098360443,</item>
+        <item>`data_size`: 1485346312,</item>
+        <item>`instance_start_time`: "1471680653634734",</item>
+        <item>`disk_format_version`: 6,</item>
+        <item>`committed_update_seq`: 2889325</item>
+      </list>
+    </section>
+    <section title="Package">
+      <list ordered="false">
+        <item>`_id`: the package name</item>
+        <item>`_rev`: latest revision id</item>
+        <item>`name`: the package name</item>
+        <item>`description`: description from the `package.json`</item>
+        <item>`dist-tags`: an object with at least one key, `latest`, representing dist-tags</item>
+        <item>`versions`: a List of all [Version](#version) objects for the Package</item>
+        <item>`time`: an object containing a `created` and `modified` time stamp</item>
+        <item>`author`: object with `name`, `email`, and or `url` of author as listed in `package.json`</item>
+        <item>`repository`: object with `type` and `url` of package repository as listed in `package.json`</item>
+        <item>`_attachments`: http://docs.couchdb.org/en/2.0.0/intro/api.html#attachments</item>
+        <item>`readme`: full text of the `latest` version's `README`</item>
+      </list>
+    </section>
+    <section title="Version">
+      <list ordered="false">
+        <item>`name`: package name,</item>
+        <item>`version`: version number</item>
+        <item>`homepage`: homepage listed in the `package.json`</item>
+        <item>`repository`: object with `type` and `url` of package repository as listed in `package.json`</item>
+        <item>`dependencies`: object with dependencies and versions as listed in `package.json`</item>
+        <item>`devDependencies`: object with devDependencies and versions as listed in `package.json`</item>
+        <item>`scripts`: object with scripts as listed in `package.json`</item>
+        <item>`author`: object with `name`, `email`, and or `url` of author as listed in `package.json`</item>
+        <item>`license`: as listed in `package.json`</item>
+        <item>`readme`: full text of `README` file as pointed to in `package.json`</item>
+        <item>`readmeFilename`: name of `README` file</item>
+        <item>`_id`: `&lt;name&gt;@&lt;version&gt;`</item>
+        <item>`description`: description as listed in `package.json`</item>
+        <item>`dist`: and object containing a `shasum` and `tarball` url, usually in the form of `https://registry.npmjs.org/&lt;name&gt;/-/&lt;name&gt;-&lt;version&gt;.tgz`</item>
+        <item>`_npmVersion`: version of npm the package@version was published with</item>
+        <item>`_npmUser`: an object containing the `name` and `email` of the npm user who published the package@version</item>
+        <item>`maintainers`: and array of objects containing `author` objects as listed in `package.json`</item>
+        <item>`directories`:???</item>
+      </list>
+    </section>
+  </section>
+  <section title="Filtering">
+  </section>
+  <section title="Errors">
+  </section>
+  <section title="Endpoints">
+    <section title="Meta Endpoints">
+      <section title="`GET·/`">
+        <table>
+          <tr>
+            <td>Name</td>
+            <td>Value</td>
+            <td>Kind</td>
+            <td>Required?</td>
+            <td>Notes</td>
+          </tr>
+        </table>
+        <fence>{
+  "db_name": "registry",
+  "doc_count": 399172,
+  "doc_del_count": 354,
+  "update_seq": 3351374,
+  "purge_seq": 0,
+  "compact_running": false,
+  "disk_size": 2118398075,
+  "data_size": 1600835750,
+  "instance_start_time": "1475135224217333",
+  "disk_format_version": 6,
+  "committed_update_seq": 3351374
+}</fence>
+      </section>
+    </section>
+    <section title="Package Endpoints">
+      <section title="`GET·/{package}`">
+        <table>
+          <tr>
+            <td>Name</td>
+            <td>Value</td>
+            <td>Kind</td>
+            <td>Required?</td>
+            <td>Notes</td>
+          </tr>
+          <tr>
+            <td>package</td>
+            <td>String</td>
+            <td>**Path**</td>
+            <td>✅</td>
+            <td>the name of the package</td>
+          </tr>
+        </table>
+        <p>This endpoint responds with the package metadata document, sometimes informally called a "packument" or "doc.json". The format of the response is described in detail in the [package metadata documentation](responses/package-metadata.md).</p>
+      </section>
+      <section title="`GET·/{package}/{version}`">
+        <table>
+          <tr>
+            <td>Name</td>
+            <td>Value</td>
+            <td>Kind</td>
+            <td>Required?</td>
+            <td>Notes</td>
+          </tr>
+          <tr>
+            <td>package</td>
+            <td>String</td>
+            <td>**Path**</td>
+            <td>✅</td>
+            <td>the name of the package</td>
+          </tr>
+          <tr>
+            <td>version</td>
+            <td>String</td>
+            <td>**Path**</td>
+            <td>✅</td>
+            <td>a version number or `latest`</td>
+          </tr>
+        </table>
+      </section>
+      <section title="`GET·/-/v1/search`">
+        <table>
+          <tr>
+            <td>Name</td>
+            <td>Value</td>
+            <td>Kind</td>
+            <td>Required?</td>
+            <td>Notes</td>
+          </tr>
+          <tr>
+            <td>text</td>
+            <td>String</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>full-text search to apply</td>
+          </tr>
+          <tr>
+            <td>size</td>
+            <td>integer</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>how many results should be returned (default 20, max 250)</td>
+          </tr>
+          <tr>
+            <td>from</td>
+            <td>integer</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>offset to return results from</td>
+          </tr>
+          <tr>
+            <td>quality</td>
+            <td>float</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>how much of an effect should quality have on search results</td>
+          </tr>
+          <tr>
+            <td>popularity</td>
+            <td>float</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>how much of an effect should popularity have on search results</td>
+          </tr>
+          <tr>
+            <td>maintenance</td>
+            <td>float</td>
+            <td>**Query**</td>
+            <td>❌</td>
+            <td>how much of an effect should maintenance have on search results</td>
+          </tr>
+        </table>
+        <p>_Note: the values of `quality`, `popularity`, and `maintenance` are normalized into a unit-vector provide values between `0 - 1` for each to modify weightings, e.g., to return
+ results based solely on `quality`, set `quality=1.0`, `maintenance=0.0`, `popularity=0.0`._</p>
+        <p>**response format:**</p>
+        <fence lang="json">{
+  "objects": [
+    {
+      "package": {
+        "name": "yargs",
+        "version": "6.6.0",
+        "description": "yargs the modern, pirate-themed, successor to optimist.",
+        "keywords": [
+          "argument",
+          "args",
+          "option",
+          "parser",
+          "parsing",
+          "cli",
+          "command"
+        ],
+        "date": "2016-12-30T16:53:16.023Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/yargs",
+          "homepage": "http://yargs.js.org/",
+          "repository": "https://github.com/yargs/yargs",
+          "bugs": "https://github.com/yargs/yargs/issues"
+        },
+        "publisher": {
+          "username": "bcoe",
+          "email": "ben@npmjs.com"
+        },
+        "maintainers": [
+          {
+            "username": "bcoe",
+            "email": "ben@npmjs.com"
+          },
+          {
+            "username": "chevex",
+            "email": "alex.ford@codetunnel.com"
+          },
+          {
+            "username": "nexdrew",
+            "email": "andrew@npmjs.com"
+          },
+          {
+            "username": "nylen",
+            "email": "jnylen@gmail.com"
+          }
+        ]
+      },
+      "score": {
+        "final": 0.9237841281241451,
+        "detail": {
+          "quality": 0.9270640902288084,
+          "popularity": 0.8484861649808381,
+          "maintenance": 0.9962706951777409
+        }
+      },
+      "searchScore": 100000.914
+    }
+  ],
+  "total": 1,
+  "time": "Wed Jan 25 2017 19:23:35 GMT+0000 (UTC)"
+}</fence>
+        <p>**special search qualifiers:**</p>
+        <p>Special search qualifiers can be provided in the full-text query:</p>
+        <list ordered="false">
+          <item>`author:bcoe`: Show/filter results in which `bcoe` is the author</item>
+          <item>`maintainer:bcoe`: Show/filter results in which `bcoe` is qualifier as a maintainer</item>
+          <item>`scope:foo`: Show/filter results published under the `@foo` scope</item>
+          <item>`keywords:batman`: Show/filter results that have `batman` in the keywords</item>
+          <item>separating multiple keywords with</item>
+          <item>`,` acts like a logical `OR`</item>
+          <item>`+` acts like a logical `AND`</item>
+          <item>`,-` can be used to exclude keywords</item>
+          <item>`not:unstable`: Exclude packages whose version is `&lt; 1.0.0`</item>
+          <item>`not:insecure`: Exclude packages that are insecure or have vulnerable dependencies (based on the [nsp](https://nodesecurity.io/) registry)</item>
+          <item>`is:unstable`: Show/filter packages whose version is `&lt; 1.0.0`</item>
+          <item>`is:insecure`: Show/filter packages that are insecure or have vulnerable dependencies (based on the [nsp](https://nodesecurity.io/) registry)</item>
+          <item>`boost-exact:false`: Do not boost exact matches, defaults to `true`</item>
+        </list>
+      </section>
+    </section>
+  </section>
+</spec>

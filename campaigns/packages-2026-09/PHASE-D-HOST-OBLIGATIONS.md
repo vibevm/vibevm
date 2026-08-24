@@ -106,7 +106,7 @@ and it is therefore one ruling, not twenty-nine.
 >
 > *One trap, recorded because it nearly landed in this table.* A naive count
 > shows one host-live hit for every form. Every one of them is inside
-> `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` — this campaign's own plan — and
+> `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — this campaign's own plan — and
 > matches only because the §7 LOG entry written the day before **quotes these
 > words in prose**. They are not sections. The host-live column is 0, and the
 > campaign nearly measured its own footprint as evidence about its subject.
@@ -118,7 +118,7 @@ rulings are about what the host will actually keep doing, not about wording.
 **Three carry a defect the routing record already names, and each is a
 one-line host fix rather than a ruling:**
 
-- `PROP-035`'s `##related` has no return leg to `spec/design/structural-loader.md`,
+- `PROP-035`'s `##related` has no return leg to `spec/design/structural-loader.xml`,
   which names it three times (from F-335).
 - The `revisit-triggers` field definition and its own example library disagree
   about whether an event trigger is a legal trigger (from F-224) — and that one
@@ -222,7 +222,7 @@ forbids stayed off the table.
 
 **Answer (2) — a deliberate exception, recorded (F-230, first anchor):** the
 attribution posture is enforced procedurally, not mechanically — the exception
-lives at `spec/common/PROP-000.md` `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and
+lives at `spec/common/PROP-000.xml` `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and
 the anchor re-judged `confirmed` with the exception named. **The row's second
 anchor carried a different defect** (the posture restated in ~ten places, two
 copies drifted, a dead «PROP-000 §12.1» pointer) — closing it on this ruling
@@ -249,7 +249,7 @@ language; his format refinement of the same day applied and binding forward:
 precision never lost**). **No package moved**; where the doc and the engine
 disagreed, the engine grows to the doc.
 
-**F-185 (`conform-frontend-go.md`, three anchors) — routed to builds, row
+**F-185 (`conform-frontend-go.xml`, three anchors) — routed to builds, row
 `deferred`:** instead of softening the doc to the shipped engine, the three
 promises become recorded builds — the dedicated seam-error rule → `BACKLOG.md`
 **B-033**, the config-surface enrichment → **B-029** (`##B029-CONFIG-SURFACE`),
@@ -271,7 +271,7 @@ the debt drains together with them. Owner: *«Сделать как будет �
 
 **F-218 (both anchors) — `deferred` onto B-011, raised to highest priority:**
 the 59-collision measurement is the boot compiler's flattening
-(`{#root}` ×26 in the compiled `spec/boot/STATIC.md`), both anchors were routed
+(`{#root}` ×26 in the compiled `spec/boot/STATIC.xml`), both anchors were routed
 out at the wave-2 review, and the fix is B-011's aliasing/renaming design —
 today enriched with the owner's directions (labels renamed so every reference
 stays valid document-wide; the dynamic-loading case of libraries carrying their
@@ -386,11 +386,11 @@ executed; the third became an investigation.** *(Q2, F-178 — «(1) запис�
 B-045 + применить однострочный фикс»):* **B-045** filed (kind-validation
 build with the reserved `TYPE_MISMATCH=4` exit, short-name acceptance for
 `uninstall`/`update` over the lockfile-first resolver, the four mis-cited
-§2.4 call sites), the `ref-grammar.md:108` self-description now reads
+§2.4 call sites), the `ref-grammar.xml:108` self-description now reads
 «stated here as the anchor every restatement echoes» (D36 confirmed), the
 resolver anchor routed onto B-045 — **F-178 `deferred`, owed 0.**
 *(Q3, F-199 — answer (1)):* the host records the **boot-surface marked
-exception** at `spec/common/PROP-000.md` `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
+exception** at `spec/common/PROP-000.xml` `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
 — 00-core's Rule 1, the CLAUDE/AGENTS/GEMINI triple (0c-gated) and
 `.claude/agents/` carry the four-rules digest by design («правила обязаны
 доезжать до каждого агента на старте»); §12 stays the authoritative

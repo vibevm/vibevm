@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-01
 **HEAD:** `ed0abbab docs(campaign): волна 10 closes the D13 seal tail in the LOG`
-**Subject:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md` (read in full)
+**Subject:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
 **Owner directive:** B-012 — «провести исследование, можно ли реализовать». This document is **evidence only**: facts with `file:line`, no verdicts, no build/skip recommendation. The recommendation stays with the boss.
 
 **Default search perimeter** (used for every absence claim below unless a section widens it):
@@ -349,7 +349,7 @@ What the repository *does* have, and what it is not:
 - A scheme decision first (`#OPEN-SIGNING-SCHEME`), which determines everything downstream: key custody, trust roots, revocation, offline verification, and whether CI can sign.
 - **What** is signed is also undecided in a load-bearing way. §2.8.4(a) says *"the shipped index and fragments"*; but the artefact that actually travels is a whole package tree already identified by `content_hash` (`crates/vibe-core/src/content_hash.rs:34`, computed at `crates/vibe-index/src/content_hash.rs:40`). Signing the existing tree hash is a smaller change with wider effect; signing the index alone requires A1 first and leaves everything else unsigned.
 - Surfaces: `crates/vibe-publish/` (produce), `crates/vibe-registry/` + `crates/vibe-install/` (verify at fetch — the natural point is beside `fetch_with_expected_hash`, `fetch.rs:274`), `crates/vibe-core/` (a signature type and probably a lockfile field, i.e. a **lockfile schema change**), plus a new dependency outside the current tree (nothing crypto beyond `sha2` is vendored).
-- Rule 4 note: this is CI / signing / secrets territory — non-routine by `spec/boot/00-core.md:24` and `spec/boot/STATIC.md:619`, `:849`, `:1195-1196`. It stops for the owner before it is started, delegated or not.
+- Rule 4 note: this is CI / signing / secrets territory — non-routine by `spec/boot/00-core.xml:24` and `spec/boot/STATIC.xml:619`, `:849`, `:1195-1196`. It stops for the owner before it is started, delegated or not.
 
 **(b) Framing — small in code, a policy decision in substance.**
 

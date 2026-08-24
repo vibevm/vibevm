@@ -163,7 +163,7 @@ listed them; shipped nothing. Also established: duplicate detection lives in
 `doctree.rs:70`'s map **is** the resolution index — so any future fold would
 have to be a second parallel key set, never the lookup key. Recorded that
 **zero** case-folding calls exist anywhere in the relevant tree, and that 69
-byte-exact duplicate anchors sit inside the generated `spec/boot/STATIC.md`
+byte-exact duplicate anchors sit inside the generated `spec/boot/STATIC.xml`
 (the F-078 duplication seen by another instrument).
 
 **The stop was correct and the reviewer's argument was the thing that was

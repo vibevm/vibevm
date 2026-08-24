@@ -22,3 +22,4 @@ without the MCP server. @status:impl/done
 @fact:AGG-FRONT-DOOR The consumer front door — wiring, floor, sweep — is
 documented in the `-lang` package's README and
 `spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`. @status:impl/done
+

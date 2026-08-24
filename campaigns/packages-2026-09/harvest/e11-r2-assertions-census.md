@@ -42,23 +42,23 @@ In the Go consumer demo (`research/go-demo`):
 
 The guide's own canonical example (the `— MUST` form):
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:201` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:201` —
   `var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud — MUST`
 
 Reinforced in the package boot and scaffold cards (prose, same idiom):
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:32` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.xml:32` —
   "Every cell carries `var _ Seam = (*Impl)(nil)`."
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:76` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.xml:76` —
   "The loud-conformance assertion (`var _ Seam = (*Impl)(nil)`, guide §2) rides card".
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md:21` and `:44` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.xml:21` and `:44` —
   "Conformance assertion (`var _ Seam = (*Impl)(nil)` — structural typing made loud, guide §2)" / "Add the loud-conformance assertion `var _ Seam = (*Impl)(nil)` beside the impl."
 
 ### What the Go guide verbatim promises about the assertion and the gate
 
 The load-bearing promise (and its honest self-annotation) is one block:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:191-192` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:191-192` —
   `##CONFORMANCE-IS-MADE-LOUD`: "Conformance is made loud — every cell
   carries the compile-time assertion, and conform checks its presence
   (T-syn)" — then, in the same row: "*Specified, not built (→ B-030): the
@@ -71,20 +71,20 @@ So the guide PROMISES "conform checks its presence (T-syn)" and
 simultaneously annotates that promise as not-yet-built (pointing at
 B-030). The motivating gap is stated one section up:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:97-98` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:97-98` —
   `##GAP-CONFORMANCE-IS-SILENT`: "Interface conformance is silent.
   Structural satisfaction means a cell can drift off its seam without a
   compile error naming the seam. Conformance is made loud (§2)."
 
 And the envelope row names the property at the top of the guide:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:27-28` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:27-28` —
   `##ENVELOPE-LOUD-CONFORMANCE`: "loud interface conformance".
 
 The codemod that scaffolds a new cell emits the assertion as part of its
 checked skeleton:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:302-303` —
+- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:302-303` —
   "`go-ai-native codemod add-cell` emits a cell skeleton (package,
   conformance assertion, directive tags, registry arm, Example stub) as
   ONE checked operation."
@@ -206,20 +206,20 @@ adding a variant bumps the frontend version and retires old cache slots
 
 ### What the Rust guide promises about registration / assertion / seams
 
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:51` —
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:51` —
   `##ONE-CELL-ONE-REGISTRATION-POINT`: "One cell, one registration point.
   Cells import seams + core only, never sibling cells (R-002)."
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:53` —
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:53` —
   `##OWNERSHIP-ALIGNS-WITH-FILE-BOUNDARIES`: "one cell = one file-set
   with a single registration point."
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:68` —
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:68` —
   `##SCAFFOLD-B-TYPED-BUILDERS`: "seam protocols are encoded in types,
   not docstrings; the wrong call fails `cargo check`, not a runtime
   assert (R3-008; 94% of compile errors are type-level)."
   This is the Rust answer to "conformance is made loud": the compiler is
   the assertion — a cell type that does not satisfy its seam trait fails
   `cargo check` at the use site.
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:69` —
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:69` —
   `##SCAFFOLD-C-RUNNABLE-CONTRACTS`: "every load-bearing invariant is
   witnessed by a runnable assertion or proof where it is relied upon."
 
@@ -294,32 +294,32 @@ idiom exists in the host tree exactly once and is unrelated to cells.
 
 The TS "conformance made loud" is a suite of mechanisms, not one idiom:
 
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:130` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:130` —
   `##STRUCTURAL-TYPING-TRAP`: "TypeScript must recover [nominal safety]
   manually through branding … identifiers and other meaning-bearing
   primitives crossing a seam are branded
   (`type UserId = string & { readonly __brand: 'UserId' }`, or a
   branding helper) so the wrong same-shaped value fails `tsc`."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:137` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:137` —
   `##SCAFFOLD-B-TYPED-SURFACES`: "Branded types for nominal safety …
   `satisfies` for exhaustiveness; sealed unions … seam protocols are
   encoded in types, not docstrings (R3-008)."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:154` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:154` —
   `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED`: "Exhaustiveness over `E` is
   enforced by a `satisfies never` / `assertNever` check in the default
   branch."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:175` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:175` —
   `##FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE`: the registry is "a
   branded or `as const` table, not stringly-typed ambient lookup" —
   built (B-039), demo at `research/ts-demo/src/main.ts`.
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:233` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233` —
   `##TYPE-LEVEL-TESTING-IS-TYPESCRIPT-UNIQUE`: "TypeScript can assert
   type relationships at compile time".
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:235` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:235` —
   `##TYPE-LEVEL-TEST-TOOLING`: "`expectTypeOf<X>().toEqualTypeOf<Y>()`
   (vitest), `tsd`'s `expectType`, and `@ts-expect-error` as a negative
   assertion".
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:237` —
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:237` —
   `##RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS`: "public
   generic/branded/union surfaces carry type-level tests asserting their
   key relationships; these run in the Class E loop (a type-level test
@@ -343,7 +343,7 @@ There is no fact for a branded type, a `satisfies` check, or a
 type-level test.
 
 The TS gate DOC is honest in a way the Go doc was not: a grep of
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md`
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.xml`
 for `conformance`/`assert`/`brand`/`satisfies`/`type-level` returns only
 `:25` (bans-as-facts) and `:73`
 (`##NATIVE-TYPE-TOOLING-IS-REAL-TODAY`: "the native type tooling (the

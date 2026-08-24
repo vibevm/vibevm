@@ -40,7 +40,7 @@ what the owner actually has to decide, which is not the same as by package.
 **Decided already** (owner, 2026-07-29): the links take `@spec://` where they are
 pointers and `#embed` where the target belongs in the lane; a generated boot
 artifact carries no token budget
-([PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`](../../spec/modules/vibe-workspace/PROP-009-loading-model.md#artifacts)),
+([PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`](../../spec/modules/vibe-workspace/PROP-009-loading-model.xml#artifacts)),
 so `#embed` is not constrained by lane size. PROP-035 §10's link tables are
 **not** a precondition — `BACKLOG.md` B-001.
 
@@ -74,7 +74,7 @@ depending only on which lane you read it in:
 |---|---:|---:|
 | `packages/**` — where the text is authored | 70 | **0** |
 | `vibedeps/**` — the installed slots | 142 | 21 |
-| `spec/boot/STATIC.md` — where a session reads it | 75 | **75** |
+| `spec/boot/STATIC.xml` — where a session reads it | 75 | **75** |
 
 `spec/flows/` does not exist in this host (`ls spec/` → `WAL.md boot common
 design manual-tests modules terraforms`). The boot compiler concatenates snippet
@@ -85,7 +85,7 @@ moved, and an `@spec://` address can. That is why the owner's ruling puts the
 repair in the packages and not in the compiler — and it is also why the repair
 **cannot be verified by editing a package**.
 
-- @fact:A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.md` is
+- @fact:A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.xml` is
   generated from `vibedeps/` — its own provenance comments say so
   (`<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/… -->`).
   So a package edit reaches the lane only through a version bump and
@@ -133,7 +133,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   model:», «Full rationale:», «Grammar and forms:», «Responsibility table:»,
   «read …». Every one deliberately withholds the target's content. The emitted
   form copies the house form already live in the host's own spec
-  (`spec/common/PROP-000.md:161-164`, `PROP-016:8`):
+  (`spec/common/PROP-000.xml:161-164`, `PROP-016:8`):
   `spec://<group>/<name>/<doc-path>#<anchor>`, no `.md`, always an anchor.
 - @fact:A1-F240-IS-SCOPED-AT-TWO-AND-THE-DEFECT-IS-IN-SEVENTEEN **`F-240`'s scope is wrong, and this is the one thing here that
   changes what the owner should approve.** The root-relative variant — a
@@ -160,7 +160,7 @@ family-wide edit would break two working sentences to fix one.
 
 | id | n | stacks | what fails |
 |---|---:|---|---|
-| `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` — **wave 8: all six STAND**. Noticed unjudged twins: `##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION` in all three snippets and core's own `10-flow-core-ai-native.md:9-18,38` carry the same defect with no verdict |
+| `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` — **wave 8: all six STAND**. Noticed unjudged twins: `##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION` in all three snippets and core's own `10-flow-core-ai-native.xml:9-18,38` carry the same defect with no verdict |
 | ~~`F-115`~~ | 3 | the three umbrella packages | **wave 8: go and rust FELL — falsified by the failing verdicts' own evidence lists** (both `-lang` READMEs exist and were cited by path and line 1). The TypeScript half is real — `typescript-ai-native-lang` is the only one of the 42 shipped versions with no `README.md`, never in git history — and its closure is a **build** (write the README) or a repoint. Single-package now; left the route |
 | ~~`F-186`~~ | 3 | go, rust `-lang` | **wave 8: the premise was false about the corpus's own register** — the ATLAS files **four** records under `refines:H4` (:54,:62,:68,:76; one carries the card's gloss verbatim); the H-series is the ledger's *axis field* (30+ refs), never a heading — the string was searched where the thing is a field. go+rust `scaffold-g` FELL; the survivor is `scaffold-i`'s typo'd id `DL1-015` → `DR1-015`, single-package, left the route. **New finding for the owner: H1–H6 is cited ~49× corpus-wide and defined nowhere; the owner is `core-ai-native/v0.8.0/spec/appendix/`** |
 | ~~`F-187`~~ | 3 | go, rust, typescript `-lang` | ~~the two **Go** skills are not installed~~ — **VOID, see §B.1**, and **wave 8 confirms the strike on the package bench: all three FELL** — each package ships the skills its snippet names (`spec/skills/` + `vibe.toml`), and for Rust the host installed them too. Resolved |
@@ -253,7 +253,7 @@ is a factual correction whose only owner gate is publication.**
 | id | n | packages | what fails |
 |---|---:|---|---|
 | ~~`F-219`~~ | 2 | addressable-specs, campaign-plans | **wave 8: the campaign-plans half FELL** — its sentence claims subjects-in-plan / one-idea / ledger-binds-hashes, makes no `spec://`-citation claim (the row's reason was the sibling anchor's), and the live `fractality` adopter keeps the form (8 phases, 3 ledgers, 58 hashes bound); its prior ground was a `legacy-spec/` ratio, voided §3.7. The addressable-specs half **stands restated**: the misattribution is real (`git-atomic-commits`' own boot :22 delegates format to `git-conventional-commits`) — single-package now, left the route. *And the restated «716» was a **unit error**: a LINE count read as a commit count (self-refuting, since a commit count cannot fall from 716 to 579). At HEAD `45cd30b0`: **581 of 2 216 commits**; the command is `git log --grep="spec://" --oneline \| wc -l`* |
-| `F-220` | 2 | addressable-specs, source-mirrors | **wave 8:** the addressable-specs half **ROUTED OUT §3.6(b)** (`routing.json`, wave 8): the composition is sound on both sides and the one consumer fails it — the host WAL's 28 constraint entries carry 0 anchors (and the prior reason's «Next cites paths» tested a section `flow:wal` puts no rule on; the bound section is In-progress, which the host also fails). The source-mirrors half **stands restated on different evidence**: its «wind-down = fan-out» half is *supported* by two host documents (`90-user.md:35`, `PROP-016:59`) against `CLAUDE.md:191` — a host defect, filed **B-009** — and only the «WAL entry notes "fanned out at <checkpoint>"» half drifts (0 hits in any WAL, and `flow:wal`'s eight-section grammar has no slot for it). The which-side (a)/(b) ruling below is still owed for that half |
+| `F-220` | 2 | addressable-specs, source-mirrors | **wave 8:** the addressable-specs half **ROUTED OUT §3.6(b)** (`routing.json`, wave 8): the composition is sound on both sides and the one consumer fails it — the host WAL's 28 constraint entries carry 0 anchors (and the prior reason's «Next cites paths» tested a section `flow:wal` puts no rule on; the bound section is In-progress, which the host also fails). The source-mirrors half **stands restated on different evidence**: its «wind-down = fan-out» half is *supported* by two host documents (`90-user.xml:35`, `PROP-016:59`) against `CLAUDE.md:191` — a host defect, filed **B-009** — and only the «WAL entry notes "fanned out at <checkpoint>"» half drifts (0 hits in any WAL, and `flow:wal`'s eight-section grammar has no slot for it). The which-side (a)/(b) ruling below is still owed for that half |
 | ~~`F-233`~~ | 2 | git-attribution-policy, source-mirrors | **wave 8: both ROUTED OUT §3.6(b)** (`routing.json`, wave 8): the four-field record is the composed flow's own contract, the host does not carry these two choices in it (PROP-016's `##HIST-AUTHORED` is dated with alternatives but has no revisit trigger; the attribution posture has no record at all) — and the prior verdicts' leading search hunted a `spec/decisions/` directory that `##NO-SEPARATE-ADR-DIRECTORY` forbids. Folds into the decision-records host ruling in `PHASE-D-HOST-OBLIGATIONS.md`; the packages do not move |
 
 ~~`F-219` is a pure attribution fix. `F-220` and `F-233` are **§3.6 route (b)

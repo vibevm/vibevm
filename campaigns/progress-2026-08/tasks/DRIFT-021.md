@@ -199,7 +199,7 @@ Budget signal: past ~5 files, stop and return.
   is pre-existing drift in the other direction — the list **under**-describes
   the code, and did so before this task. For the sync-from-code flow,
   `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING` —
-  `spec/modules/vibe-registry/PROP-002-decentralized-registry.md:590-594`,
+  `spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:590-594`,
   verbatim:
 
   > @fact:PUB-TOKEN-LOADING **Token loading.** The publish token loader (`crate::token::load_token(host)`) iterates these sources in order, returning the first non-empty value: @status:impl/done
@@ -213,7 +213,7 @@ Budget signal: past ~5 files, stop and return.
   (`token.rs`, `read_host_env_token`), which outranks `##TOK-ENV-VAR`. So
   `##TOK-ENV-VAR` is no longer first. Before this task the gap was three
   legs; it is now one. Same defect, same anchor family, in
-  `spec/boot/90-user.md:26`, verbatim:
+  `spec/boot/90-user.xml:26`, verbatim:
 
   > @fact:TOKEN-FILE-CONVENTION **Token file convention.** Per-host file под `~/.vibe/<host-prefix>.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Env-var `VIBEVM_PUBLISH_TOKEN` — высший приоритет, для CI. @status:impl/done
 

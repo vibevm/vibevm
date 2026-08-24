@@ -40,3 +40,4 @@ vibe install flow:git-practices
 ## License {#license}
 
 @fact:license-line UPL-1.0 — see `LICENSE`. @status:impl/done
+

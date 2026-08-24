@@ -24,7 +24,7 @@ outside the repository, keyed by branch, where its size costs nothing.
 
 > **Cache campaign maps are load-bearing.** `run/cache.json` carries the
 > C-phase verdicts; mutate it by load-and-merge only.
-> — `spec/WAL.md`, Constraints
+> — `spec/WAL.xml`, Constraints
 
 The erasure law and the load-bearing law are both about `cache.json`, and
 they pull in opposite directions because two different things live in one

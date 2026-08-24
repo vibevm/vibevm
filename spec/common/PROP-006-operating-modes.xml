@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-006: Operating modes — codeword-triggered work postures</title>
+  <status stage="freeze" state="done" comment="pilot markup 2026-07-24: extracted to the operating-modes flow; this entry is a live thin pointer; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="freeze/done">**Status:** accepted 2026-05-06; the framework and its codewords were extracted to the `operating-modes` flow 2026-07-14 (reached via the redbook dependency). This entry is now a thin pointer.
+**Related:** [`CLAUDE.md`](../../CLAUDE.md) (the four rules + session-end codeword), [PROP-000](PROP-000.xml) (foundation).</status-line></p>
+  <p><modes-extracted fact="true" status="freeze/done">vibevm's codeword-triggered operating postures — the safety-first default, why a codeword is an explicit opt-in into an alternate posture for a work cycle, the activation lifecycle and reporting cadence, and the shape for writing a new codeword — are the **operating-modes** flow:</modes-extracted></p>
+  <facts ordered="false">
+    <flow-framework fact="true" status="freeze/done">Framework: `spec://org.vibevm.world/operating-modes/flows/operating-modes/OPERATING-MODES-PROTOCOL#root`</flow-framework>
+    <flow-writing-codeword fact="true" status="freeze/done">Writing a new codeword: `spec://org.vibevm.world/operating-modes/flows/operating-modes/writing-a-codeword#root`</flow-writing-codeword>
+  </facts>
+  <p><CATALOGUE-AT-BOOT fact="true" status="freeze/done">The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.xml`](../boot/90-user.xml).</CATALOGUE-AT-BOOT></p>
+  <mfbt title="«move fast and break things»">
+    <status stage="freeze" state="done" comment="codeword content lives in mfbt-mode; pointer verified against the flow 2026-07-24"/>
+    <p><mfbt-pointer fact="true" status="freeze/done">The pre-authorised heads-down execution codeword — aim at the maximum version of the deliverable, phase the work into testable iterations, begin without asking, drive to completion without confirmation handshakes, and spend whatever time / tokens / reasoning depth it takes (the owner's verbatim description is recorded in the flow) — is the operating-modes flow's `spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root`.</mfbt-pointer></p>
+    <facts ordered="false">
+      <MFBT-SUSPENDS fact="true" status="freeze/done">It suspends **only** Rule 4's "ask before routine large changes".</MFBT-SUSPENDS>
+      <MFBT-RULES-SURVIVE fact="true" status="freeze/done">The four non-negotiable rules survive unchanged.</MFBT-RULES-SURVIVE>
+      <MFBT-RED-LINES fact="true" status="freeze/done">Rule 4's non-routine red lines — rewriting published history, `git push --force` / `--force-with-lease`, large binary blobs, CI / signing / secrets changes, anything whose reversal would cost work — STILL require explicit owner confirmation even when the codeword is active.</MFBT-RED-LINES>
+    </facts>
+  </mfbt>
+</spec>

@@ -37,7 +37,7 @@ JTD-схемам, вне продуктового дерева (обе схем�
 2. **Опциональный скаляр приходит как `Option<Box<T>>` — то есть с ТРЕТЬИМ
    состоянием на оси, которую контракт объявил двухсоставной.** Ф1.4 решением
    Р1 отвергла `Option<bool>` для `frozen`/`yanked` именно поэтому
-   (PROP-044 [`##TERMS-SNAPSHOT-FROZEN-CHANNEL`](../../spec/common/PROP-044-change-native-formats.md#laws)
+   (PROP-044 [`##TERMS-SNAPSHOT-FROZEN-CHANNEL`](../../spec/common/PROP-044-change-native-formats.xml#laws)
    — «одна булева ось без третьего состояния»). Генератор возвращает это
    состояние сам. Значит у Ф4.2 есть **пятое** преобразование, которого
    Приложение А.5 не называет: свернуть `Option<Box<скаляр>>` в
@@ -316,7 +316,7 @@ help: consider boxing the large fields or introducing indirection in some other
 ## 4b. Четвёртая проба: G9 нарушен УЖЕ, и JTD его починить не может
 
 Закон G9 (PROP-044 §8
-[`##AGENT-GATES`](../../spec/common/PROP-044-change-native-formats.md#agents)):
+[`##AGENT-GATES`](../../spec/common/PROP-044-change-native-formats.xml#agents)):
 «a vocabulary exists in exactly one schema; both wire sides, Rust types, docs
 and prose lists are generated from it». Ф4.1 пишет `entry.jtd.json`, где нужен
 `package_kind`. Вопрос: где ему жить, чтобы копия была одна.
@@ -349,7 +349,7 @@ express … is emitted by our own generator layer»): восьмой механ�
 *(ii)* На висячей ссылке jtd-codegen **паникует**, а не отказывает
 диагностикой — то есть у нашей ошибки формы сегодня нет ни сообщения, ни
 рецепта, только stack trace. Это прямо противоречит
-[`##AGENT-MESSAGES`](../../spec/common/PROP-044-change-native-formats.md#agents)
+[`##AGENT-MESSAGES`](../../spec/common/PROP-044-change-native-formats.xml#agents)
 («a gate's message is the only documentation that is reliably read»), и валидацию
 ссылок наш слой обязан делать САМ, до спавна бинаря.
 

@@ -29,21 +29,21 @@ numbered, prioritized, homed proposals a human can weigh. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-GENRE-LAW `spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`
+- @fact:CONTENT-THE-GENRE-LAW `spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml`
   — the genre law: what a comparative study is, why it exists, the
   five laws (self-containedness, quote-first, two-way gaps,
   deltas-not-decrees, the re-fetch list), when to write one, and a
   re-derive prompt. @status:impl/done
-- @fact:CONTENT-THE-RESEARCH-TEMPLATE `spec/flows/comparative-research/research-template.md` — a
+- @fact:CONTENT-THE-RESEARCH-TEMPLATE `spec/flows/comparative-research/research-template.xml` — a
   copy-ready skeleton (purpose, source table, reading shape, the
   subject in its own words, inventory, trail, lead, numbered deltas,
   open questions, re-fetch list), clause-by-clause commentary, and a
   short worked fragment. @status:impl/done
-- @fact:CONTENT-THE-ROADMAP-PIPELINE `spec/flows/comparative-research/from-research-to-roadmap.md` — the
+- @fact:CONTENT-THE-ROADMAP-PIPELINE `spec/flows/comparative-research/from-research-to-roadmap.xml` — the
   downstream pipeline: delta → owner review → accepted deltas become
   recorded decisions, rejected deltas stay archived with their
   reason, plus refresh discipline and the honesty rule. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/52-flow-comparative-research.md` — boot snippet: the
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/52-flow-comparative-research.xml` — boot snippet: the
   genre exists, reach for the template on request, hold the laws. @status:impl/done
 
 ## Install {#install}
@@ -92,3 +92,4 @@ competitor you have studied — in both directions — is intelligence. @status:
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

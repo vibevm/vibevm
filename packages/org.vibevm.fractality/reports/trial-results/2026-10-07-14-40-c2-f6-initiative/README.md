@@ -28,5 +28,6 @@ menu's eligible work, versus a bare snippet-only boss.
 The DEF-C2 slice repaired F23/F24/F25; **MT-C2-05 (PP-001)** re-runs the
 repaired surface (armed 2026-07-12, RP5 resolved) to answer the question this
 trial could not. Canonical verdicts + the F-mechanics: the MT-C2-01/-04/-05
-docs and `reports/2026-10-07-16-33-campaign2-f6-trial.md`. The raw evidence
+docs and `reports/2026-10-07-16-33-campaign2-f6-trial.xml`. The raw evidence
 (bus facts + gzipped transcripts) sits per-run beside this file.
+

@@ -1,7 +1,7 @@
 # TASKS — vibevm, active work
 
 Live checklist for the current work-slice. Each item is a logical commit
-(Conventional Commits per [PROP-000 §12.2](spec/common/PROP-000.md#conventional-commits);
+(Conventional Commits per [PROP-000 §12.2](spec/common/PROP-000.xml#conventional-commits);
 grouped by meaning per §12.3).
 
 **Status key:** `[ ]` queued · `[~]` in progress · `[x]` done.
@@ -105,11 +105,11 @@ decision). **Read the anchors, not this list, for the reasoning** — this
 section is only the order the commits come in.
 
 The rulings live at: the store's shape and the three absences in
-[`PROP-010 §2.6–§2.7`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#resolution);
+[`PROP-010 §2.6–§2.7`](spec/modules/vibe-registry/PROP-010-local-package-cache.xml#resolution);
 withdrawal's three operations and the rename collapse in
-[`PROP-005 §2.11`](spec/modules/vibe-index/PROP-005-package-index.md#cli);
+[`PROP-005 §2.11`](spec/modules/vibe-index/PROP-005-package-index.xml#cli);
 the journal's append-only reach in
-[`PROP-044 §3`](spec/common/PROP-044-change-native-formats.md#truth).
+[`PROP-044 §3`](spec/common/PROP-044-change-native-formats.xml#truth).
 
 **One mine governs the first three items and is the reason they are ordered
 this way:** tombstones enter the index only when a catalog is READ from disk —
@@ -123,7 +123,7 @@ with nothing going red. **The producer must be a fact, never a field write.**
       writes) is now **`B-091`**, anchor and all eleven facts; the closed row
       (contract-document inheritance) keeps `B-056`. Three live pointers
       retargeted — this file's `B-078` cross-reference,
-      [`PROP-005 §2.12`](spec/modules/vibe-index/PROP-005-package-index.md#types),
+      [`PROP-005 §2.12`](spec/modules/vibe-index/PROP-005-package-index.xml#types),
       and `crates/vibe-index/src/types/mod.rs`'s docblock.
       **Which row moved was decided by counting, not by taste:** 24 authored
       files name `B-056`, eighteen of them the closed row (seven sites in
@@ -186,8 +186,8 @@ with nothing going red. **The producer must be a fact, never a field write.**
         §9 named the limit (the substring catches Latin spelling only), and a
         boss-side sweep for «переименов» found 40 files of which the only live
         contract/lore hits (`PROP-044:29`,
-        `spec/design/deterministic-loading-aliasing.md:25`,
-        `spec/design/host-as-package.md:49`) are all about something else.
+        `spec/design/deterministic-loading-aliasing.xml:25`,
+        `spec/design/host-as-package.xml:49`) are all about something else.
       - *(owner fork, blocks nothing)* two prose enumerations name the fact
         kinds with the plain word «rename» — `PROP-044:146` and
         `crates/vibe-index/docs/operator-handbook.md:22`. Both stay true after
@@ -310,7 +310,7 @@ with nothing going red. **The producer must be a fact, never a field write.**
             temp sibling swapped only on success; wipe-on-hash-mismatch died
             the same way. Four oracles proved red on the pre-change code.
       - *(the three questions in
-        [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
+        [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.xml#open)
         — staleness signalling, eviction, scaffolding UX — stay open and block
         none of the five.)*
 - [x] *(owner fork — **ruled 2026-08-20: nothing to build**)* **what a full
@@ -333,7 +333,7 @@ with nothing going red. **The producer must be a fact, never a field write.**
 The slice in flight is the **change-native build** —
 [`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md),
 building the ratified contract
-[`PROP-044`](spec/common/PROP-044-change-native-formats.md). **Read the ТЗ, not
+[`PROP-044`](spec/common/PROP-044-change-native-formats.xml). **Read the ТЗ, not
 this section, to know what to do next** — it carries the phases, the decisions
 with their rejected options, and the corrections each landing paid for.
 
@@ -529,7 +529,7 @@ already built.
       carry a verdict stamped five hours *before* the text it describes was
       written.
 - [x] `docs(design)` + `chore(specmap)`: **[B-019](б) has a design** —
-      [`command-nodes.md`](spec/design/command-nodes.md). Two measurements cut
+      [`command-nodes.xml`](spec/design/command-nodes.xml). Two measurements cut
       the price: the map's item kind is an open string with nothing matching on
       it, and `explain` has no closed set of target kinds at all, so a node
       whose symbol is the invocation path answers through existing machinery.
@@ -572,7 +572,7 @@ already built.
 The session turned into a long owner conversation that **replaced the course**.
 Everything decided in it — eighteen work items, their order, their reasoning and
 the three places the boss was wrong — lives in
-[`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md`](spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md).
+[`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.xml`](spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.xml).
 **Read that file, not this section, to know what to do next.** Order fixed by the
 owner: **Б (hygiene) → В (taxonomy) → А (index)**.
 
@@ -594,7 +594,7 @@ owner: **Б (hygiene) → В (taxonomy) → А (index)**.
 the plan-closure rule) before everything else, because the rest of Б applies it.
 
 Not in the programme and still standing: B-019(б) slices 2 and 3 — nesting and
-the `explain` acceptance, per [`command-nodes.md`](spec/design/command-nodes.md)
+the `explain` acceptance, per [`command-nodes.xml`](spec/design/command-nodes.xml)
 `#cut`. **Slice 2's number is deliberately unmeasured**; do not take the census's
 68, which is the host CLI's subcommand total and not a map figure — slice 1's
 history is exactly why.
@@ -654,7 +654,7 @@ verdicts to **19 that had actually moved**.
 ### B-056 — multiple inheritance of contract documents, and the plugin form
 
 Four owner rulings closed the SHAPE on 2026-08-04. The build design is
-authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design/multiple-sources-and-plugins.md).
+authored and judged: [`spec/design/multiple-sources-and-plugins.xml`](spec/design/multiple-sources-and-plugins.xml).
 **This is the next build.** Four landings, each standing alone:
 
 - [x] `docs(design)`: the build design over the four rulings — measured basis,
@@ -687,7 +687,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
 ### Registry debt this slice created — CLOSED 2026-08-05
 
 - [x] `chore(campaign)`: **19 verdicts over two files** — 10 re-judged in
-      [the B-056 design](spec/design/multiple-sources-and-plugins.md) and 9
+      [the B-056 design](spec/design/multiple-sources-and-plugins.xml) and 9
       judged fresh (2 design corrections, 7 in PROP-035 §7.3). Both sealed;
       `text-stability.py` reports 0 stale, 0 owed.
       **The debt statement was wrong twice, and both corrections are the
@@ -724,7 +724,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       designation clause had none. A sentence carrying two independent claims
       needs a ref per claim.
 - [x] `docs(design)`: **the B-040 build design**
-      ([`spec/design/typed-seams.md`](spec/design/typed-seams.md)), shaped by
+      ([`spec/design/typed-seams.xml`](spec/design/typed-seams.xml)), shaped by
       a question that crosses the census's five categories — where does the
       tree state an obligation on a caller or an implementor, in prose, with
       nothing checking it. Two of its own claims were refuted while writing
@@ -775,7 +775,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       whole. Both corrected against the tree. Five stale statements in
       `BACKLOG.md` in one day is the measurement B-062 (closed by `ff2079e1`)
       needed and lacked when it was filed.
-- [x] `chore(campaign)`: `typed-seams.md`'s **35 facts judged and sealed** —
+- [x] `chore(campaign)`: `typed-seams.xml`'s **35 facts judged and sealed** —
       against built landings, which is what the deferral was for, and it paid.
       Gathered evidence came back 21 SUPPORTS / 11 PARTIAL / 3 NO-CODE, and
       the eleven were three different things: five describe the pre-landing
@@ -795,13 +795,13 @@ the four waves are closed and the floor is green (bare panel, tail read).
 The third now has a number instead of a guess: **273 files, 267 `done`, 6
 `work`.** The six, classified rather than lumped:
 
-- **Three designs of closed waves** — `map-format-change.md` (волна В),
-  `new-rule-classes.md` (волна Б батч 3), `seam-error-and-assertion-parity.md`
+- **Three designs of closed waves** — `map-format-change.xml` (волна В),
+  `new-rule-classes.xml` (волна Б батч 3), `seam-error-and-assertion-parity.xml`
   (волна Б батч 2). Their builds landed; the document state did not move with
   them. Same class as B-010's `open`, one level up.
-- **Two manual tests** — `MT-02-vibe-tree-tui.md`, `MT-03-vibe-prefs-tui.md`,
+- **Two manual tests** — `MT-02-vibe-tree-tui.xml`, `MT-03-vibe-prefs-tui.xml`,
   `impl/work` because a manual test is unrun until someone runs it.
-- **One draft spec** — `PROP-010-local-package-cache.md`, whose own status says
+- **One draft spec** — `PROP-010-local-package-cache.xml`, whose own status says
   «the S5 open questions need an owner design session».
 
 - [ ] *(owner ruling)* Whether the three closed-wave designs move to
@@ -811,7 +811,7 @@ The third now has a number instead of a guess: **273 files, 267 `done`, 6
       wave and «done» for its design are not obviously the same claim, and
       волны Б and В still carry the map's `@doc/work` while the WAL calls them
       closed. That disagreement is itself the thing to rule on.
-- [ ] `chore(campaign)`: **31 facts in `typed-seams.md` await first judging.**
+- [ ] `chore(campaign)`: **31 facts in `typed-seams.xml` await first judging.**
       Deliberately not self-judged in the authoring session — B-056's design
       was, and this slice had to correct one of those verdicts. Judging them
       against the built landings is the stronger reading, so they wait for the
@@ -833,7 +833,7 @@ decentralized-registry refactor** (spring 2026): per-package repos,
 multi-registry / mirror / override schemas, lockfile v2, the resolver crate,
 the publish tool, the live three-package migration to GitHub. That slice
 finished; its checklist is in `git log`, its contract in
-[PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+[PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 
 Two lines never got ticked, and both were **resolved by evolution rather than
 by the commit they named** — recorded here so the absence is not read as debt:

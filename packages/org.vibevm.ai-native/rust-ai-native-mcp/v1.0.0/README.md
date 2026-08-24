@@ -19,7 +19,8 @@ persistent rust-analyzer session). @status:impl/done
   workspace with cargo alone and wire the binary by hand. @status:impl/done
 
 @fact:server-brief-pointer The brief (tool inventory, the tool↔CLI parity map, the session and
-capture semantics): [`spec/tools/discipline-mcp-rust.md`](spec/tools/discipline-mcp-rust.md). @status:impl/done
+capture semantics): [`spec/tools/discipline-mcp-rust.xml`](spec/tools/discipline-mcp-rust.xml). @status:impl/done
 
 @fact:PREREQUISITE-THE-RUST-ANALYZER-COMPONENT Prerequisite (inherited from the stack): `rustup component add
 rust-analyzer`. @status:impl/done
+

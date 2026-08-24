@@ -3,11 +3,11 @@
 **Жанр:** план кампании (временный документ; по мере исполнения содержимое
 переезжает в спеки, посадка фазы сворачивает её секцию в могильник — §M в
 конце). **Контракты, которые этот план строит:**
-[`PROP-002 §2.10`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish)
-(двухъярусный publish) и [`§2.13`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lifecycle)
-(жизненный цикл), [`PROP-005 §2.18`](../../spec/modules/vibe-index/PROP-005-package-index.md#channels)
-(каналы), [`PROP-008 §2.10`](../../spec/modules/vibe-registry/PROP-008-qualified-naming.md#trust)
-(доверие), [`PROP-029`](../../spec/common/PROP-029-fully-qualified-addresses.md)
+[`PROP-002 §2.10`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish)
+(двухъярусный publish) и [`§2.13`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#lifecycle)
+(жизненный цикл), [`PROP-005 §2.18`](../../spec/modules/vibe-index/PROP-005-package-index.xml#channels)
+(каналы), [`PROP-008 §2.10`](../../spec/modules/vibe-registry/PROP-008-qualified-naming.xml#trust)
+(доверие), [`PROP-029`](../../spec/common/PROP-029-fully-qualified-addresses.xml)
 (носители координаты) — читать ЦЕЛИКОМ до первого шага своей секции.
 **Статус:** записан 2026-08-13 той же сессией, что приняла рулинги; сложность
 и файлы сверены по дереву в момент написания.
@@ -118,7 +118,7 @@ PROP-008 §2.10), и обновления начинают работать на
 `Repository not found` и на приватный репозиторий, невидимый кредам, — тем же
 ответом, что и на несуществующий. Значит текст вопроса яруса 2 из S1.3
 («does not exist — create it?») в этом случае ЛЖЁТ, а закон 1 PROP-044
-([`##LAW-NO-LYING`](../../spec/common/PROP-044-change-native-formats.md#laws))
+([`##LAW-NO-LYING`](../../spec/common/PROP-044-change-native-formats.xml#laws))
 запрещает ровно ту форму отказа, где неверный ответ выглядит верным. Четыре
 следствия; исполнитель их НЕ переоткрывает.
 
@@ -139,7 +139,7 @@ PROP-008 §2.10), и обновления начинают работать на
    Отказ создания с «already exists» (GitHub 422 и родня) доказывает то, чего
    зонд увидеть не смог: репозиторий ЕСТЬ. Диспетчер тогда **переезжает на ярус
    1** (Update) и даёт говорить пушу — это и есть
-   [`##RIGHTS-CHECKED-AT-THE-ACTION`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish):
+   [`##RIGHTS-CHECKED-AT-THE-ACTION`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish):
    права проявляются в точке действия, а не в предварительном вопросе. Вывод
    честно называет случившееся («репозиторий существовал, но зонду не был
    виден; публикую как обновление»). *Отвергнуто:* печатать сырой ответ хоста
@@ -482,9 +482,9 @@ identity-отказов называет ровно эту команду и п�
    `sarif_sha256` сходится → «получено `<at>`»; *(iii)* SARIF есть, сайдкара
    нет или хэш не сходится → «получено не позже `<mtime SARIF>` (прогон не
    наблюдался)». Третье состояние — честная деградация: закон
-   [`##FORBID-SILENCE`](../../spec/common/PROP-044-change-native-formats.md#laws)
+   [`##FORBID-SILENCE`](../../spec/common/PROP-044-change-native-formats.xml#laws)
    запрещает уронить ответ, закон
-   [`##LAW-NO-LYING`](../../spec/common/PROP-044-change-native-formats.md#laws)
+   [`##LAW-NO-LYING`](../../spec/common/PROP-044-change-native-formats.xml#laws)
    запрещает выдать *(iii)* за *(ii)*. *Отвергнуто:* сводить *(iii)* к *(i)*
    («не измерено» при лежащем на диске отчёте — выброс данных, которые есть).
 3. **Сайдкар — формат, и он входит в реестр форматов.** PROP-044 §6.5: любая

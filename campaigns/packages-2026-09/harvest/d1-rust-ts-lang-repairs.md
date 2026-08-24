@@ -90,24 +90,24 @@ so as a specification rather than as a fact.
 
 **Twin in another stack:** all three have twins in `go-ai-native-lang`, **not
 touched** —
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:46`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:46`
 (`#INIT-RESULT-CARRIES-PATH-AND-VERSION`, the same sentence verbatim), `:203`
 (no-zombie, shorter wording), `:210` (gopls stderr chatter, same shape). The
 Phase C reasons say the Go twin fails identically in two of the three cases.
 There is no typescript twin for anchors 1 and 3; the typescript no-zombie
 sentence
-(`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md:138-140`)
+(`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`)
 is worded differently and carries **no obligation** in the registry — see the
 next block.
 
 **New obligations noticed:**
 
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md:138-140`
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`
   makes the same no-zombie claim for the TS stack (*«no surviving pid on this
   box»*, `@impl/done`) and carries no obligation row. If it fails the same way
   the rust and go ones do, Phase C missed it. Not checked here — outside my
   eight, and not fixed.
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md:57`
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml:57`
   (`#OP-INIT`) still advertises `ra_path` in the wire schema. That is **F-211**
   (`release` route, spans rust + go) and is already owned; recorded here only
   so the boss can see the two must land consistently — F-192's demotion and
@@ -161,9 +161,9 @@ demotion does not apply and the evidence falsifies only the justification.
 
 **Twin in another stack:** the sentence has near-twins in **both** siblings, and
 **neither is a defect, so neither was touched**.
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:12`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml:12`
 and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:11`
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml:11`
 carry the same sentence, but their registry rows agree with it — go's
 `spec/cards/INDEX.md:19` reads *«specified (pilot: `research/go-demo` fuzz
 differential)»* and typescript's `spec/cards/INDEX.md:13` reads *«specified
@@ -279,7 +279,7 @@ still says `PIN-BOTH-HOPS` and was deliberately **not** renamed; renaming it
 would change the file's addressable set for no gain in truth.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml:158`
 (`#REPLAY-GOLDENS-PIN-BOTH-HOPS`) is the same sentence under a shorter id, and
 the Phase C reason says *«The Go twin fails identically»*. **Not touched** —
 another worker owns that package. No typescript twin
@@ -331,10 +331,10 @@ the Windows child lifecycle needs a no-zombie assertion, and now says the
 package owes one.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:192`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.xml:192`
 carries the same list (*«kill-on-drop + shutdown op + no-zombie assertions»*)
 and **was not touched**. The typescript sibling
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:185`
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.xml:185`
 also carries it; it is **not in my eight and carries no obligation row**, so it
 was left alone — flagged below rather than fixed, because fixing it would mean
 judging the TS stack's own no-zombie evidence, which no verdict has done.
@@ -433,10 +433,10 @@ DR2-012. And the figure is a **corpus-wide convention**, not a local slip —
 sites:
 
 ```
-core-ai-native            v0.7.0 CONTRADICTION-MAP.md:21,:24 · v0.8.0 :28,:31
+core-ai-native            v0.7.0 CONTRADICTION-MAP.xml:21,:24 · v0.8.0 :28,:31
 go-ai-native-lang         spec/go/tools/go-ai-native-tcg.md:31
 rust-ai-native-lang       spec/rust/tools/rust-ai-native-tcg.md:11,:65,:78
-typescript-ai-native-lang GUIDE-AI-NATIVE-TYPESCRIPT.md:39,:258,:270
+typescript-ai-native-lang GUIDE-AI-NATIVE-TYPESCRIPT.xml:39,:258,:270
                           spec/typescript/tools/typescript-ai-native-tcg.md:38,:104
 ```
 
@@ -484,14 +484,14 @@ exactly why it was left alone.
 **New obligations noticed:**
 
 1. **`core-ai-native` contradicts itself on the PLDI'25 figure.**
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31`
-   says 74.8 %; `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:106`
+   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml:28,31`
+   says 74.8 %; `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml:106`
    says 75.3 % / 70.2 % for the same finding DR2-012, and ATLAS is the derived,
    do-not-hand-edit appendix. Eleven downstream sites across four packages quote
    the 74.8 %. No obligation row covers the pair. This is a release-event-shaped
    family (§4.5) and it is **not fixed here**.
 2. **`#TSCONFIG-BEYOND-STRICT` was confirmed on evidence that covers half of
-   it.** `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:89`
+   it.** `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:89`
    names four mandatory beyond-strict flags; the package's only `tsconfig.json`
    (`tools/ts-oracle/test/fixtures/proj/tsconfig.json`) and the host demo
    (`research/ts-demo/tsconfig.json`) each set two of the four —
@@ -503,7 +503,7 @@ exactly why it was left alone.
    nowhere** in the package — `grep -rn "two-arm\|two arms\|arm A\|arm B" spec/`
    returns three lines, all uses, no definition. A candidate `missing-support`
    on
-   `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`.
+   `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.xml`.
    Recorded, not fixed.
 
 ## F-282 — the sunset condition named a binary that was renamed two versions ago
@@ -516,7 +516,7 @@ markdown and TOML.
 
 ```
 $ grep -rn "vibe-tcg-ts" packages/ --include=*.md --include=*.toml
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md:60:- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) …
+packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml:60:- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) …
 ```
 
 One hit, and it is the fact under judgement. Inside the v0.6.0 slot the same
@@ -539,10 +539,10 @@ rather than `missing-support`, and no code was written.
 
 **Twin in another stack:** both siblings carry the same risk row and **neither
 needed touching**.
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md:101`
+`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml:101`
 names **no** binary at all (*«if generation-time tooling plus contracts ever
 make …»*) and Phase C recorded it `confirmed`;
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:58`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.xml:58`
 names `vibe-tcg`, which is still a live name — it is the host-side product-seam
 crate (`spec/typescript/tools/vibe-agentic-tcg-ts.md:130`, *«the `vibe-tcg`
 crate — tool schemas, registry, slot dispatch»*) — and Phase C recorded that one
@@ -610,12 +610,12 @@ target measured rather than merely posted.
 
 **Twin in another stack:** the target exists in all three, split differently,
 and **neither sibling was touched**.
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md:233`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:233`
 carries the complete half under its own id `#TARGET-WARM-COMPLETE` (`complete`
 p50 < 300 ms) — that anchor is **F-215**, an open obligation assigned outside my
 eight, and although it sits in one of my two packages I left it alone rather
 than collide with its owner. The Go sibling
-(`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:238,242`)
+(`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:238,242`)
 posts a `validate` target and a cold-init target and **no `complete` target at
 all**, so it has nothing corresponding to repair.
 
@@ -654,13 +654,13 @@ renamed**, so no `vibe progress mirror` is owed before `merge-verdicts.py`
 | file | anchors edited |
 |---|---|
 | `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md` | `SHIPS-SPECMARK-PROC-MACRO` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md` | `card-is-beta` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md` | `RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`, `GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY`, `STDOUT-CARRIES-LSP-FRAMES-ONLY` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md` | `REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md` | `RISK-WINDOWS-CHILD-LIFECYCLE` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md` | `RISK-SUNSET` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` | `TSCONFIG-DEFECT-CATCHERS`, `NO-IF-FLAG-IN-DOMAIN-CELLS`, `RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED`, `AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` | `TARGET-WARM-VALIDATE-AND-COMPLETE` |
+| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.xml` | `card-is-beta` |
+| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml` | `RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`, `GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY`, `STDOUT-CARRIES-LSP-FRAMES-ONLY` |
+| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml` | `REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS` |
+| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.xml` | `RISK-WINDOWS-CHILD-LIFECYCLE` |
+| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml` | `RISK-SUNSET` |
+| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` | `TSCONFIG-DEFECT-CATCHERS`, `NO-IF-FLAG-IN-DOMAIN-CELLS`, `RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED`, `AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` |
+| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml` | `TARGET-WARM-VALIDATE-AND-COMPLETE` |
 
 Nothing outside these two package slots was modified. No `git` command was run.
 

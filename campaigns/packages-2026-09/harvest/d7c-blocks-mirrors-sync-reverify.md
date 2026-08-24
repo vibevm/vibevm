@@ -69,7 +69,7 @@ both of which decide verdicts below:
   more partial ones in the host (`crates/vibe-check/src/checks/redirect_block.rs`,
   `crates/vibe-cli/src/commands/vvm/env.rs`).
 - **The package's own reference implementation.** `source-mirrors` ships
-  **fifteen lines of `sh`** inside `fanout-mechanics.md` (`:178-205`) that run
+  **fifteen lines of `sh`** inside `fanout-mechanics.xml` (`:178-205`) that run
   `git ls-remote` then `git merge-base --is-ancestor`. That script *is* an
   implementation. A description in this package may be true of it and false of
   the host's Rust port at `xtask/src/mirror.rs`, or the reverse — so every
@@ -129,7 +129,7 @@ for, in the other medium.
 **The verdicts' own commands, re-run.** Three of the nine quote one.
 
 ```console
-$ grep -nE '^### ' adoption-guide.md          # ##THE-MIGRATION-HAS-THREE-MOVING-PARTS
+$ grep -nE '^### ' adoption-guide.xml          # ##THE-MIGRATION-HAS-THREE-MOVING-PARTS
 21:### Detect the legacy shape {#detect}
 46:### One-time, consent-gated conversion {#conversion}
 63:### The changelog note {#changelog}
@@ -187,7 +187,7 @@ conversion at `:413-417`, the changelog note at `CHANGELOG.md:55`.
 the verdict grants three: exact string, convert once, append-and-preserve
 otherwise. The fourth — *consent-gated* — is the falsified root above. The
 guide's own adjacent bullet blesses the arm the host takes:
-`##CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS` (`adoption-guide.md:57-61`)
+`##CONVERSION-IF-THE-FILE-HAS-DRIFTED-DO-NOT-GUESS` (`adoption-guide.xml:57-61`)
 says "Take the append path, **or** stop and ask … When in doubt, append".
 
 **`##both-kinds-of-user-need-to-know` — FALSE, and the verdict searched for a
@@ -197,7 +197,7 @@ nothing there; at HEAD the command returns 7 hits, all in unrelated milestones.
 But that audience is not addressed by a file containing the word *script* — it is
 addressed by the release notes stating that the behaviour changed. The flow's own
 prescribed sentence is `##SAY-SO-IN-THE-RELEASE-NOTES-IN-ONE-PLAIN-SENTENCE`
-(`adoption-guide.md:68-71`), and it has exactly two clauses in exactly this
+(`adoption-guide.xml:68-71`), and it has exactly two clauses in exactly this
 order: "toolname now writes into a delimited block **instead of replacing the
 whole file**; **your own edits outside the block are preserved** from this
 release on."
@@ -215,7 +215,7 @@ automated around is named and declared gone, in the release notes, in one plain
 sentence. Clause two is the hand-editor's reassurance, and it names *other tools*
 explicitly. `CHANGELOG.md:57` then records the one-time migration with the
 preservation guarantee, and
-`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:148`
+`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:148`
 (`##SELF-MIGRATION-APPEND`) says the same in the spec. The anchor is already
 `@spec/done` and needs no change.
 
@@ -375,7 +375,7 @@ measurement: it is the fourth unpinned row, not the third.
 surface**, because this obligation is about the quality of an output and an
 absence claim about an output has to be checked against every producer, every
 renderer and every pin. Read end to end rather than grepped: the drill itself
-(`rejected-designs.md:147-184`, the three-part table and the three properties);
+(`rejected-designs.xml:147-184`, the three-part table and the three properties);
 both host producers (`crates/vibe-workspace/src/lib.rs:229-239`,
 `crates/vibe-check/src/checks/redirect_block.rs:30-82`); both host classifiers
 (`crates/vibe-workspace/src/boot_artifacts.rs:326-366`, `redirect_block.rs:55-82`);
@@ -396,7 +396,7 @@ line ranges, and every range was re-read at HEAD `9f79acf1` and holds.
 **What the measurement shows.**
 
 **The five report elements, across all three implementations in the perimeter.**
-The drill's table (`rejected-designs.md:156-160`) and its worked message
+The drill's table (`rejected-designs.xml:156-160`) and its worked message
 (`:162-174`) between them ask for six things. Measured:
 
 | element the drill asks for | `vibe install` / `reinstall` / `update` | `vibe check` | fractality `harness` |
@@ -569,7 +569,7 @@ first is now a two-argument fix, not a two-line one.**
 **Perimeter searched:** the standing perimeter, and for this obligation the
 perimeter question is *which implementation* rather than *which directory* —
 `source-mirrors` ships its own reference implementation, so every fact was read
-against both it (`fanout-mechanics.md:178-205`) and the host's port
+against both it (`fanout-mechanics.xml:178-205`) and the host's port
 (`xtask/src/mirror.rs`, read line by line, **not executed**). Plus, for the
 revisit trigger, the verdict's own command re-run on its own file and then the
 **thing** rather than the spelling — `deferred until` · `until needed` ·
@@ -580,7 +580,7 @@ four verdicts rest on, at HEAD `9f79acf1`.
 **The verdicts' own commands, re-run.**
 
 ```console
-$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.md
+$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.xml
 (exit 1 — no match)
 ```
 
@@ -605,13 +605,13 @@ statement about the moment after a fan-out, not a property of the model.
 **What the measurement shows, anchor by anchor.**
 
 **`##RECORD-THAT-AS-A-REVISIT-TRIGGER` — FALSE, and its own summary already says
-so.** The fact (`SOURCE-MIRRORS-PROTOCOL.md:157`) is one sentence following one
+so.** The fact (`SOURCE-MIRRORS-PROTOCOL.xml:157`) is one sentence following one
 sentence: `##when-a-project-outgrows-one-integrator-this-is-the-wrong-tool`
 (`:151-155`) states the condition and the remedy — *"add one-directional
 server-side mirroring or move to a shared-forge workflow"* — and `:157` says
 "Record that as a revisit trigger, not a someday-maybe." The host recorded
 exactly that, in the flow's own words, at
-`spec/common/PROP-016-source-mirrors.md:72`:
+`spec/common/PROP-016-source-mirrors.xml:72`:
 
 > 1. @fact:open-server-side **Server-side mirroring.** When a host must originate
 > writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host),
@@ -658,17 +658,17 @@ clause that follows the comma.
 **And the *rule* the two verdicts were really measuring is elsewhere, is already
 routed, and is already the owner's.** *"This is the only way history reaches a
 host: not `git push host-a`, not a click in a web UI — the fan-out"* is
-`fanout-mechanics.md:83-84`, and the boot-lane form of it,
-`62-flow-source-mirrors.md#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`, was routed out
+`fanout-mechanics.xml:83-84`, and the boot-lane form of it,
+`62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`, was routed out
 under §3.6(b) in wave 6 as *"a policy fork stated and not decided"* — the host
-forbids `git push origin` at `spec/boot/90-user.md:13` and prescribes it at
+forbids `git push origin` at `spec/boot/90-user.xml:13` and prescribes it at
 `:34`, and `CLAUDE.md:191` makes it step 4 of the END SESSION contract. Both
 lines verified at HEAD. That is one obligation, already before the owner; these
 two anchors do not add a second.
 
 **`##BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS` — FALSE PREMISE, and the real
 defect is a different one.** The fact is three clauses
-(`SOURCE-MIRRORS-PROTOCOL.md:116-118`):
+(`SOURCE-MIRRORS-PROTOCOL.xml:116-118`):
 
 > **Any host can vanish without data loss.** Every host holds the full history;
 > mainline holds it too. A host going dark, getting blocked, or deleting the repo
@@ -686,10 +686,10 @@ is the property it does promise.
 
 **The different defect, stated precisely so the boss can rule on it.** The middle
 clause says "Every host holds the full history" without qualification, while the
-flow's own manifest — its example at `fanout-mechanics.md:32,39` and its
-onboarding entry at `daily-loop.md:142` — declares `refs = ["main", "tags"]` and
+flow's own manifest — its example at `fanout-mechanics.xml:32,39` and its
+onboarding entry at `daily-loop.xml:142` — declares `refs = ["main", "tags"]` and
 comments it `# what to mirror`. So *the full history* means, in this document's
-own usage, the full history of the declared refs; `daily-loop.md:147-148`
+own usage, the full history of the declared refs; `daily-loop.xml:147-148`
 (`##ONBOARD-STEP-FIRST-FAN-OUT`, "The new host receives the full history") uses
 it that way three lines under a `refs = ["main", "tags"]` block, and that anchor
 is **confirmed**. The usage is internally consistent; what it is not is
@@ -713,12 +713,12 @@ the path into mainline, and there is one writer over 2 202 commits.
 `##THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH` → **re-judge confirmed** —
 "and diverge" is the claim, and no divergence exists.
 `##RECORD-THAT-AS-A-REVISIT-TRIGGER` → **re-judge confirmed** — the trigger is at
-`spec/common/PROP-016-source-mirrors.md:72` in the flow's own prescribed
+`spec/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
 "one-directional server-side mirroring" wording; its own summary was re-judged
 confirmed on that artefact in wave 6.
 
 **Noticed, outside this obligation.** `##EACH-HOST-IS-CANONICAL-FOR-READING-AND-A-REPLICA-FOR-WRITING`
-(`SOURCE-MIRRORS-PROTOCOL.md:74-75`) is judged **confirmed** today, and its own
+(`SOURCE-MIRRORS-PROTOCOL.xml:74-75`) is judged **confirmed** today, and its own
 reason records the identical 130-push measurement — *"the 'nobody writes a target
 directly' half is the sentence the host wrote and then did not keep"*. The same
 fact therefore confirms one anchor and drifts four. Whichever way the boss rules,
@@ -756,7 +756,7 @@ author, and `.github/` is absent.
 **The exclusivity pair — `##EITHER-WAY-THE-CHANGE-LANDS-IN-MAINLINE-FIRST` and
 `##SUM-A-CHANGE-LANDS-IN-MAINLINE-FIRST` — FALSE, because the corpus has already
 judged this exact sentence.** The rule both restate is
-`fanout-mechanics.md:83-84`:
+`fanout-mechanics.xml:83-84`:
 
 > @fact:THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST This is the *only* way
 > history reaches a host: not `git push host-a`, not a click in a web UI — the
@@ -767,7 +767,7 @@ measurement in its own words: *"The host contradicts the exclusivity in writing
 and in practice, while asserting it in three other places — a genuine internal
 split, so I report all four documents."* So the primary statement of the rule was
 ruled a host split reported against the host; the two restatements of it in
-`daily-loop.md` were ruled drift against the package. Both cannot stand, and the
+`daily-loop.xml` were ruled drift against the package. Both cannot stand, and the
 anchor with authority over the rule is the one that states it.
 
 Three further measurements, each independently sufficient:
@@ -777,7 +777,7 @@ Three further measurements, each independently sufficient:
    `verify` / `fan_out`, and every failure short-circuits with `?`, so no fan-out
    can precede the bring-home.
 2. **"Either way" means the two routes in §integrate**, and both of them end in
-   the fan-out — `##ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI` (`daily-loop.md:65-72`)
+   the fan-out — `##ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI` (`daily-loop.xml:65-72`)
    and `##ROUTE-YOU-INTEGRATE-LOCALLY` (`:73-79`), each closing its shell block
    with `project-mirror`. A wind-down `git push origin main` integrates no
    contribution and is neither route. `##ROUTE-YOU-MERGED-IT-VIA-A-HOSTS-WEB-UI`
@@ -790,9 +790,9 @@ Three further measurements, each independently sufficient:
    exercised is not drift.
 
 **And the host non-compliance these verdicts really found is already before the
-owner.** `62-flow-source-mirrors.md#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST` was
+owner.** `62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST` was
 routed out under §3.6(b) in wave 6 as *"a policy fork stated and not decided"* —
-`spec/boot/90-user.md:13` forbids `git push origin` (*"Roll a change out to both
+`spec/boot/90-user.xml:13` forbids `git push origin` (*"Roll a change out to both
 with `cargo xtask mirror` … NOT `git push origin` (which only hits GitVerse)"*),
 `:34` prescribes it as routine, and `CLAUDE.md:191` makes it step 4 of the END
 SESSION contract. All three lines verified at HEAD. **Route (b) is the defensible
@@ -801,7 +801,7 @@ wrong is a spec diff softening the exclusivity, because that is the sentence the
 owner has still to rule on.
 
 **`##NOTHING-IS-LOST-EITHER-WAY` — FALSE PREMISE, and the neighbours on both
-sides are already confirmed.** The fact is `daily-loop.md:164-165`, the last
+sides are already confirmed.** The fact is `daily-loop.xml:164-165`, the last
 sentence of **§offboard**, and "either way" refers to the two options in the step
 immediately above it: *"Optionally archive the host copy — leave it read-only as
 a historical mirror, or delete the repo on that host"* (`:161-162`). The claim is
@@ -822,7 +822,7 @@ makes the mirrored set a per-target declaration.
 
 **`##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY` — SURVIVES. This is the one clause in
 thirty verdicts where a spec diff would improve the document.** The fact
-(`daily-loop.md:184-185`) is:
+(`daily-loop.xml:184-185`) is:
 
 > - @fact:SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history, so
 >   the set grows and shrinks without data loss. @status:impl/done
@@ -846,8 +846,8 @@ $ git tag | wc -l
 ```
 
 And the ref set is not a host deviation — it is **the flow's own example, twice**:
-`fanout-mechanics.md:32` and `:39` both read `refs = ["main", "tags"]  # what to
-mirror`, and `daily-loop.md:142`, inside `##ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY`,
+`fanout-mechanics.xml:32` and `:39` both read `refs = ["main", "tags"]  # what to
+mirror`, and `daily-loop.xml:142`, inside `##ONBOARD-STEP-ADD-ONE-MANIFEST-ENTRY`,
 prescribes the same block for a new host. `##ONBOARD-STEP-FIRST-FAN-OUT` then
 says "The new host receives **the full history**" five lines below that block, so
 the document's own usage of the phrase already means *the history of the declared
@@ -857,7 +857,7 @@ branches can take the summary for a backup guarantee it never makes.
 This is route (a): the package's own sentence is imprecise about the package's
 own mechanism, and no consumer behaviour is in question. **Two words fix it.**
 
-**Proposed correction (NOT APPLIED)** — `daily-loop.md:184-185`, replace:
+**Proposed correction (NOT APPLIED)** — `daily-loop.xml:184-185`, replace:
 
 ```markdown
 - ##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history, so
@@ -876,8 +876,8 @@ with:
 Two notes on the shape of that diff, both for the owner rather than for me:
 it **adds** a sentence rather than weakening one, so it is not a §3.6 softening;
 and if it lands, `##BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS`
-(`SOURCE-MIRRORS-PROTOCOL.md:116-118`) and `##NOTHING-IS-LOST-EITHER-WAY`
-(`daily-loop.md:164-165`) carry the same unqualified phrase and would want the
+(`SOURCE-MIRRORS-PROTOCOL.xml:116-118`) and `##NOTHING-IS-LOST-EITHER-WAY`
+(`daily-loop.xml:164-165`) carry the same unqualified phrase and would want the
 same treatment, which makes it **one owner-approved diff over one clause in three
 places**, not three.
 
@@ -912,7 +912,7 @@ a `sync-from-code` obligation.
 **Perimeter searched:** the standing perimeter, and here the decisive question is
 **which of the two implementations the fact describes**, because this package
 ships one of them. Both were read line by line: the package's fifteen-line `sh`
-reference implementation (`fanout-mechanics.md:178-205`) and the host's Rust port
+reference implementation (`fanout-mechanics.xml:178-205`) and the host's Rust port
 (`xtask/src/mirror.rs`, 506 lines, **read, never executed** — `cargo xtask mirror`
 pushes to real remotes). Then the tree-wide question an absent port cannot be
 grepped for: is there a *third* fan-out anywhere? Searched by mechanism —
@@ -935,13 +935,13 @@ obligation:
 ```console
 $ grep -rn "merge-base\|is-ancestor" --include=*.rs --include=*.sh --include=*.ps1 \
       --include=*.py --include=*.md --include=*.toml <standing perimeter>
-packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:193
-vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.md:151                      (the installed copy)
+packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.xml:193
+vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.xml:151                      (the installed copy)
 vibedeps/flow-delegation-rules/0.1.0/vibedeps/flow-source-mirrors/…:151           (transitively vendored)
 packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-source-mirrors/…:151         (the second project's copy)
 packages/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/…/source-mirrors/…:151         (its resolver cache, ×2)
 packages/org.vibevm.fractality/delegation-rules/v0.1.0/…/flow-source-mirrors/…:151          (×2)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3143,3494                 (citations of this finding)
+spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143,3494                 (citations of this finding)
 campaigns/packages-2026-09/harvest/d6c-mirrors-licensing-absences.md              (wave 6's own record)
 ```
 
@@ -952,7 +952,7 @@ only one, and `rev-list` appears nowhere in the workspace.
 **What the measurement shows.**
 
 **The package's own reference script runs all four steps, verbatim.** At HEAD,
-`fanout-mechanics.md`:
+`fanout-mechanics.xml`:
 
 | step (`:71-77`) | the reference script | the host's port |
 |---|---|---|
@@ -995,7 +995,7 @@ grammar says so.** The sentence (`:209-210`) is *"The two invariants to preserve
 **when you port it**"* — a norm addressed to a porter, not a report about any
 port. Its two children split: `##INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH`
 (`:214`) is **confirmed** and the host strengthened it into a unit test that
-`spec/common/PROP-016-source-mirrors.md:64` calls «runnable capital, not prose»;
+`spec/common/PROP-016-source-mirrors.xml:64` calls «runnable capital, not prose»;
 `##INVARIANT-THE-ANCESTRY-GATE` (`:212`) is **routed out under (b)**. A parent
 whose children are one confirmed and one routed is not a package defect.
 
@@ -1079,7 +1079,7 @@ inference drawn from it.**
 **What the measurement shows.**
 
 **`##ROW-STATE-PRESENT` — FALSE, and the summary of its own table is already
-confirmed on the identical clause.** The row (`MANAGED-BLOCKS-PROTOCOL.md:135`)
+confirmed on the identical clause.** The row (`MANAGED-BLOCKS-PROTOCOL.xml:135`)
 is:
 
 > | @fact:ROW-STATE-PRESENT **Present** | Exactly one opener, then exactly one closer,
@@ -1102,7 +1102,7 @@ very table** says the same sentence and is **confirmed**:
 
 > - @fact:SUM-THREE-STATES Three states: absent → create at end of file; **present →
 >   update or remove the body**; malformed → hard stop, human decides. @status:impl/done
-> — `MANAGED-BLOCKS-PROTOCOL.md:294-295`, re-judged confirmed in wave 6 with
+> — `MANAGED-BLOCKS-PROTOCOL.xml:294-295`, re-judged confirmed in wave 6 with
 > *"every clause has a carrier once the perimeter includes the adopter"*.
 
 A body row and its summary cannot disagree about the same clause, and the
@@ -1209,12 +1209,12 @@ and in several `refs/src/bazel/…` Java files. No file under `refs/` carries a
 
 | id | package · document | outcome | anchors |
 |---|---|---|---:|
-| **F-143** | `managed-blocks` · `adoption-guide.md` | 5 FALSE · 4 route (b) | 9 |
-| **F-148** | `managed-blocks` · `rejected-designs.md` | 7 route (b) (1 false premise inside) | 7 |
-| **F-179** | `source-mirrors` · `SOURCE-MIRRORS-PROTOCOL.md` | 3 FALSE · 1 false premise, different defect | 4 |
-| **F-180** | `source-mirrors` · `daily-loop.md` | 2 FALSE · 1 false premise · **1 SURVIVES, correction prepared** | 4 |
-| **F-181** | `source-mirrors` · `fanout-mechanics.md` | 4 route (b) | 4 |
-| **F-242** | `managed-blocks` · `MANAGED-BLOCKS-PROTOCOL.md` | 2 FALSE | 2 |
+| **F-143** | `managed-blocks` · `adoption-guide.xml` | 5 FALSE · 4 route (b) | 9 |
+| **F-148** | `managed-blocks` · `rejected-designs.xml` | 7 route (b) (1 false premise inside) | 7 |
+| **F-179** | `source-mirrors` · `SOURCE-MIRRORS-PROTOCOL.xml` | 3 FALSE · 1 false premise, different defect | 4 |
+| **F-180** | `source-mirrors` · `daily-loop.xml` | 2 FALSE · 1 false premise · **1 SURVIVES, correction prepared** | 4 |
+| **F-181** | `source-mirrors` · `fanout-mechanics.xml` | 4 route (b) | 4 |
+| **F-242** | `managed-blocks` · `MANAGED-BLOCKS-PROTOCOL.xml` | 2 FALSE | 2 |
 | **total** | | **12 FALSE · 2 false premise · 15 route (b) · 1 survives** | **30** |
 
 *(The arithmetic, since this record's whole thesis is that a count must be
@@ -1293,12 +1293,12 @@ without it, all four F-181 anchors read as a mechanism nobody built.
 ### The one thing the boss has to take to the owner, and it is one clause
 
 Exactly one anchor in thirty needs a spec diff: `##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY`
-(`daily-loop.md:184-185`) states *"Every host holds the full history"* without
+(`daily-loop.xml:184-185`) states *"Every host holds the full history"* without
 the qualifier the flow's own manifest makes necessary — `refs = ["main", "tags"]`
 is the flow's **own example**, twice, and thirteen local branches sit on no host
 at HEAD. The proposed replacement is written out in the F-180 entry, **not
 applied**. Two consequences worth deciding together with it: the same unqualified
-phrase appears at `SOURCE-MIRRORS-PROTOCOL.md:117` and `daily-loop.md:164-165`,
+phrase appears at `SOURCE-MIRRORS-PROTOCOL.xml:117` and `daily-loop.xml:164-165`,
 so one approval covers one clause in three places; and the anchor is
 `@impl/done`, so the diff does not move a marker.
 

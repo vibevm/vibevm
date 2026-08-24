@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Research B — The mechanics of schema evolution in serialization formats</title>
+  <p>**Access date for every source below: 2026-08-09.** (All fetches performed 2026-08-09.)</p>
+  <section title="Method and fidelity marking">
+    <p>Two extraction paths were used, and they do not have the same fidelity. Every quote is marked:</p>
+    <list ordered="false">
+      <item>**[RAW]** — I downloaded the primary document (RFC `.txt`, spec `.md`, PDF via `pdftotext`, GitHub REST API JSON) and read the bytes myself. These quotes are character-exact.</item>
+      <item>**[WF]** — the quote was returned by a page-fetch-and-extract layer that renders HTML to markdown and runs a small model over it. The model was instructed to return verbatim text and these read as verbatim, but **whitespace, ellipses, and markdown emphasis may have been normalised, and a short quote could in principle have been lightly reflowed.** Treat [WF] quotes as high-confidence-but-spot-checkable. Where a claim is load-bearing, prefer the [RAW] version, and I have re-derived several key claims in [RAW] form for exactly this reason.</item>
+    </list>
+    <p>Anything I could not find is written as **NOT FOUND** with the searches performed. There are eleven such gaps and they are real gaps, not padding.</p>
+  </section>
+  <section title="§1 Per-subject findings">
+    <section title="1.1 Protocol Buffers (proto2 / proto3 / editions)">
+      <section title="Q1 — Tagged vs untagged unions">
+        <p>**Answer: no untagged unions. Protobuf's only union is `oneof`, and its variant is identified by the field number on the wire, never by which fields are present.**</p>
+        <p>Protobuf has no construct where the reader infers the variant from the shape of the payload. A `oneof` is encoded as ordinary fields with ordinary tags; the runtime records which tag arrived last. The evolution rules confirm the union is tag-identified, because moving a *pre-existing* field into a `oneof` is unsafe (its tag is already in flight and old readers do not know it participates in a discriminated group):</p>
+        <quote>"Moving fields into an existing `oneof` is not safe." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Changing a single explicit presence field or extension into a member of a **new** `oneof` is safe." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Changing a `oneof` which contains only one field to an explicit presence field is safe." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>The known evolution hazard of `oneof` is that its "unset" state is **indistinguishable from "set to a variant I do not know"**, because the unknown variant's tag lands in the unknown-field set rather than in the oneof:</p>
+        <quote>"If checking the value of a oneof returns `None`/`NOT_SET`, it could mean that the oneof has not been set or it has been set to a field in a different version of the oneof." [WF] — https://yokota.blog/2021/08/26/understanding-protobuf-compatibility/</quote>
+        <quote>"removing a field from a oneof is considered a backward incompatible change. Likewise, adding a field to a oneof is considered a forward incompatible change" [WF] — https://yokota.blog/2021/08/26/understanding-protobuf-compatibility/</quote>
+        <p>**Stated rationale for not having untagged unions: NOT FOUND.** Searched protobuf.dev proto3/proto2/editions guides, dos-donts, and the editions design docs. Protobuf never had untagged unions to reject, so no rejection rationale exists. The nearest thing to a rationale is Cap'n Proto's and JTD's, in §1.4 and §1.5.</p>
+      </section>
+      <section title="Q2 — Absent vs empty vs null for collections">
+        <p>**Answer: NO. proto3 cannot distinguish an empty repeated field from an absent one, and this was never fixed — the 3.15 presence restoration covers singular scalars only, not `repeated` or `map`.**</p>
+        <quote>"When serializing, fields with _implicit presence_ are not serialized if they contain their default value." [WF] — https://protobuf.dev/programming-guides/field_presence/</quote>
+        <p>The JSON mapping makes the collapse explicit and names the empty-list case directly:</p>
+        <quote>"If the field doesn't support field presence and has the default value (for example any empty repeated field) serializers should omit it from the output." [WF] — https://protobuf.dev/programming-guides/json/</quote>
+        <p>The presence document is candid that the collapsed state is genuinely three-ways ambiguous under implicit presence:</p>
+        <quote>"The default value may mean: the field was explicitly set to its default value, which is valid in the application-specific domain of values; the field was notionally 'cleared' by setting its default; or the field was never set." [WF] — https://protobuf.dev/programming-guides/field_presence/</quote>
+        <p>There is a JSON-only escape hatch: JSON has `null`, which the wire format does not, and the presence doc flags the mismatch:</p>
+        <quote>"JSON may include fields that are 'not present,' unlike the _implicit presence_ discipline for other formats: JSON defines a `null` value, which may be used to represent a _defined but not-present field_." [WF] — https://protobuf.dev/programming-guides/field_presence/</quote>
+        <p>But ProtoJSON deliberately throws that information away on parse — `null` is normalised to "unset":</p>
+        <quote>"Parsers accept `null` as a legal value for any field" where "The field should remain unset, as though it was not present in the input at all." [WF] — https://protobuf.dev/programming-guides/json/</quote>
+        <p>**Was it ever changed?** Yes for singular scalars (see §3, Reversal R2). No for repeated/map — those remain no-presence in all of proto2, proto3, and editions. The `optional` label cannot be applied to a repeated field.</p>
+      </section>
+      <section title="Q3 — Closed vocabularies (enums)">
+        <p>**Answer: proto3 and editions use OPEN enums; proto2 used CLOSED. The switch was made specifically because closed enums misbehave.** This is the second-clearest reversal in the whole corpus (see §3, R4).</p>
+        <quote>"Open enums will parse the value `2` and store it directly in the field. Accessor will report the field as being _set_ and will return something that represents `2`." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <quote>"Closed enums will parse the value `2` and store it in the message's unknown field set. Accessors will report the field as being _unset_ and will return the enum's default value." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <quote>"Prior to the introduction of `syntax = \"proto3\"` all enums were _closed_." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <p>The rationale sentence — this is the money quote:</p>
+        <quote>"Proto3 and editions use _open_ enums specifically because of the unexpected behavior that _closed_ enums cause." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <p>**The documented incident class** (closed enums silently reorder repeated fields):</p>
+        <quote>"When a `repeated Enum` field is parsed, all unknown values will be placed in the unknown field set. When it is serialized those unknown values will be written again, _but not in their original place in the list_." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <quote>"A wire format containing the values `[0, 2, 1, 2]` for field 1 will parse so that the repeated field contains `[0, 1]` and the value `[2, 2]` will end up stored as an unknown field. After reserializing the message, the wire format will correspond to `[0, 1, 2, 2]`." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <quote>"Maps with _closed_ enums for their value will place entire entries (key and value) in the unknown fields whenever the value is unknown." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+        <p>**Second documented incident — closed enums interact catastrophically with `required`:**</p>
+        <quote>"A second issue with required fields appears when someone adds a value to an enum. In this case, the unrecognized enum value is treated as if it were missing, which also causes the required value check to fail." [WF] — https://protobuf.dev/programming-guides/proto2/</quote>
+        <p>**The UNSPECIFIED/UNKNOWN sentinel convention:**</p>
+        <quote>"In proto3, the first value defined in an enum definition **must** have the value zero and should have the name `ENUM_TYPE_NAME_UNSPECIFIED` or `ENUM_TYPE_NAME_UNKNOWN`." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Enums should include a default `FOO_UNSPECIFIED` value as the first value in the declaration." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <quote>"the first declared enum value should be a default `FOO_UNSPECIFIED` value and should use tag 0." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <p>Editions makes the open/closed choice a per-file/per-type *feature* rather than a syntax-wide law:</p>
+        <quote>"In edition 2023, the first value defined in an enum definition **must** have the value zero and should have the name `ENUM_TYPE_NAME_UNSPECIFIED` or `ENUM_TYPE_NAME_UNKNOWN`." [WF] — https://protobuf.dev/programming-guides/editions/</quote>
+        <quote>"If an enum type has been migrated from proto2 using `option features.enum_type = CLOSED;` there is no restriction on the first value in the enum." [WF] — https://protobuf.dev/programming-guides/editions/</quote>
+        <p>And **adding enum values is a wire-safe change**:</p>
+        <quote>"Adding additional values to an enum is safe." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+      </section>
+      <section title="Q4 — Strictness (reject vs ignore unknown fields)">
+        <p>**Answer: protobuf is asymmetric BY ENCODING, not by role — the binary codec is tolerant-and-preserving, the JSON codec is strict-and-lossy. This is the single most important finding for a JSON-in-a-repo format.**</p>
+        <p>Binary:</p>
+        <quote>"Proto3 messages preserve unknown fields and include them during parsing and in the serialized output, which matches proto2 behavior." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>JSON — the opposite default:</p>
+        <quote>"The protobuf JSON parser should reject unknown fields by default but may provide an option to ignore unknown fields in parsing." [WF] — https://protobuf.dev/programming-guides/json/</quote>
+        <p>So the same schema, encoded in the two blessed encodings, gives you opposite unknown-field policies. Protobuf's own advice is to prefer binary precisely to keep the tolerant behaviour:</p>
+        <quote>"Use binary; avoid using text formats for data exchange." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>**"Be liberal in what you accept" and its modern critique.** Protobuf does not cite Postel. The authoritative modern critique is IETF RFC 9413 (*Maintaining Robust Protocols*):</p>
+        <quote>"Be strict when sending and tolerant when receiving. Implementations must follow specifications precisely when sending to the network, and tolerate faulty input from the network." [WF, §2] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+        <quote>"An implementation that reacts to variations in the manner recommended in the robustness principle enters a pathological feedback cycle. Over time: Implementations progressively add logic to constrain how data is transmitted or to permit variations in what is received." [WF, §4.1] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+        <quote>"A flaw can become entrenched as a de facto standard. Any implementation of the protocol is required to replicate the aberrant behavior, or it is not interoperable." [WF, §4.1] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+        <quote>"If non-compliance is tolerated by existing implementations, non-compliant implementations can be deployed successfully. Newer implementations then have a strong incentive to tolerate any existing non-compliance in order to be successfully deployed." [WF, §4.2] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+        <quote>"Choosing to generate fatal errors for unspecified conditions instead of attempting error recovery can ensure that faults receive attention." [WF, §5.1] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+        <p>**Crucial distinction the RFC forces you to make** (and which the naive reading of "tolerant reader" blurs): tolerating *unknown extension points that the spec declared extensible* is not the same as tolerating *malformed or non-conformant data*. Protobuf's unknown-field preservation is the former. RFC 9413 attacks the latter.</p>
+      </section>
+      <section title="Q5 — Version semantics">
+        <p>**Answer: protobuf has NO schema version in the data. Evolution is entirely field-level. Editions version the LANGUAGE, not the message.**</p>
+        <p>There is no version number anywhere on the wire, no schema id, no `$schema`. Compatibility is a property of each field's tag/type/label history, which is why the entire evolution surface is a list of per-field rules ("Updating A Message Type"). The `edition = "2024"` marker is a compiler directive about which language defaults apply to a `.proto` file; it never appears in a serialized message.</p>
+        <quote>"The last radical change to Protobuf (`syntax = \"proto3\";`) split the ecosystem." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/design/editions/what-are-protobuf-editions.md</quote>
+        <quote>"Protobuf Editions replace the proto2 and proto3 designations" [WF] — https://protobuf.dev/news/2023-06-29/</quote>
+        <quote>"Instead of the hardcoded behaviors in older versions, editions will represent a collection of 'features'" [WF] — https://protobuf.dev/news/2023-06-29/</quote>
+        <p>**Why field-level rather than versioned:** NOT FOUND as an explicit design statement. Inferable from the Cap'n Proto FAQ's message-bus story (§1.6 / §3 R1): a version-gated format requires every intermediary to know the version, which is exactly the coupling protobuf's design avoids. But I found no protobuf document that says this in so many words.</p>
+      </section>
+      <section title="Q6 — Field identity">
+        <p>**Answer: numeric tags are the identity. Names are decoration in binary and identity in JSON — a split that matters enormously for a JSON-at-rest format.**</p>
+        <quote>"Never re-use a tag number. It messes up deserialization. Even if you think no one is using the field, don't re-use a tag number." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <quote>"When you delete a field that's no longer used, reserve its tag number so that no one accidentally re-uses it in the future." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <quote>"Changing field numbers for any existing field is not safe." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>**What breaks when the policy is violated** — this list is the best "consequences" enumeration in the whole corpus, because it names data-corruption and PII leakage, not just parse errors:</p>
+        <quote>"Reusing a field number makes decoding wire-format messages ambiguous." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Encoding a field using one definition and then decoding that same field with a different definition can lead to: Developer time lost to debugging; A parse/merge error (best case scenario); Leaked PII/SPII; Data corruption" [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"If you [update] a message type by entirely deleting a field, or commenting it out, future developers can reuse the field number when making their own updates to the type. This can cause severe issues" [WF] — https://protobuf.dev/programming-guides/proto2/</quote>
+        <p>**`reserved` has two halves with different force:**</p>
+        <quote>"If you [update] a message type by entirely deleting a field...you **must** [reserve the deleted field number]." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Reserved field names affect only the protoc compiler behavior and not runtime behavior." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>That last sentence is the key asymmetry: reserving a **number** protects the *data*; reserving a **name** protects only the *build*. In a JSON format where names are the identity, only the weaker half exists on the wire — reserving a name is your only tool and it has no runtime force at all unless you build one.</p>
+        <p>The name-fragility of ProtoJSON is stated directly in the ecosystem literature:</p>
+        <quote>"ProtoJSON format does not support unknown fields, and it puts field and enum value names into encoded messages which makes it much harder to change those names later." [WF] — via https://protobuf.dev/programming-guides/json/ discussion, surfaced in search; see also §6 re-fetch note</quote>
+        <p>Other identity-adjacent don'ts:</p>
+        <quote>"Almost never change the type of a field; it'll mess up deserialization, same as re-using a tag number." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <quote>"Almost never change the default value of a proto field. This causes version skew between clients and servers." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+        <quote>"Although it won't cause crashes, you'll lose data." (on repeated→scalar) [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+      </section>
+      <section title="Q7 — Round-trip preservation of unknown fields">
+        <p>**Answer: binary preserves (since 3.5, after a removal-and-restoration — see §3 R1); JSON does not; and several innocent-looking operations silently destroy preservation even in binary.**</p>
+        <quote>"Proto3 messages preserve unknown fields and include them during parsing and in the serialized output, which matches proto2 behavior." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Some actions can cause unknown fields to be lost. For example, if you do one of the following, unknown fields are lost: Serialize a proto to JSON. Iterate over all of the fields in a message to populate a new message." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <quote>"Use message-oriented APIs, such as `CopyFrom()` and `MergeFrom()`, to copy data rather than copying field-by-field" [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+        <p>**What concretely goes wrong when a reader drops what it did not understand.** The protobuf issue #272 thread (2015-04-07 → closed 2017-12-11, 69 comments) is the best corpus of real failure modes anywhere in this research. All of the following are [RAW], extracted from the GitHub REST API:</p>
+        <p>The proxy / intermediary case, stated with a diagram by `stevvooe`, 2016-11-18:</p>
+        <quote>"Producer and Consumer could be updated with new fields, while intermediate can remain on the same version. If intermediate is a proxy of sorts, then this is important." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The silent-data-loss-is-indistinguishable-from-default case, `matthewrj`, 2016-08-31 — **this is the sharpest statement of the harm in the entire thread**:</p>
+        <quote>"We have the same use case where A sends data to B which reads some fields and forwards the message to C. We don't want to have to constantly update B when the schema changes even though it doesn't read any of the new fields. The current behaviour is quite dangerous since C can't tell if one of the new fields was set to the default value or if B is just out of date and lost data." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The cryptographic-signature case, `chmod007`, 2016-10-05:</p>
+        <quote>"Include a signature in the same protobuf as the payload to be signed. To verify the signature, I deserialize, extract and remove the signature, reserialize and verify the signature. This breaks if the signed message contains any new fields unknown to the process verifying the signature." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The stream-processing case, `Kaiserchen`, 2016-08-24:</p>
+        <quote>"This allows the stream processor to continue working even when upstream schema changes happen, we do not need to redeploy our stream processing application, and the new fields end up in the output for free." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <quote>"To add some drama: I think loosing the unknown fields will force us to move to avro" [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The deploy-ordering / topological-sort case, `Xorlev`, 2016-11-18:</p>
+        <quote>"Depending on any cycles in data flows, there may be no topological order that produces valid schema updates without doing a 2-step deploy: 1) upgrade proto schema, redeploy all the (many) things that might rely on it 2) update producer to fill in field, deploy producer. Pray all the systems were updated." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The org-coupling case, `fducat`, 2016-12-12:</p>
+        <quote>"The interest of using unknown fields is simply development efficiency by removing team dependencies. Usually one or two BE in the row are interested in the change. Forcing all 12 to update the version in coordination is what we cannot afford." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+        <p>The silent-deletion objection, `jeremyong`, 2016-03-14:</p>
+        <quote>"I have a lot of concerns about silently deleting data upon deserialization, to the point that even though we have internally been using proto3 for several months, I am considering changing things back to proto2." [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+      </section>
+      <section title="Q8 — Compatibility taxonomy">
+        <p>**Answer: protobuf does NOT use backward/forward vocabulary. It uses a three-tier wire-safety taxonomy instead.** This is a genuine and under-appreciated finding: the backward/forward vocabulary people attribute to protobuf actually comes from Avro-and-Kafka-land.</p>
+        <p>Protobuf's own tiers, from "Updating A Message Type" [all WF, https://protobuf.dev/programming-guides/proto3/]:</p>
+        <list ordered="false">
+          <item>**Binary wire-unsafe**: "Changing field numbers for any existing field is not safe." / "Moving fields into an existing `oneof` is not safe."</item>
+          <item>**Binary wire-safe**: "Adding new fields is safe." / "Removing fields is safe." / "Adding additional values to an enum is safe."</item>
+          <item>**Binary wire-compatible (conditionally safe)**: "`int32`, `uint32`, `int64`, `uint64`, and `bool` are all compatible." / "For `string`, `bytes`, and message fields, singular is compatible with `repeated`."</item>
+        </list>
+        <p>Note that "safe" here is *symmetric* — protobuf's model is that the same change is fine in both directions, because unknown fields are preserved and missing fields default. The backward/forward split only becomes necessary once you have a format (like Avro or like a strict JSON reader) where the two directions genuinely differ. **Protobuf's taxonomy is bidirectional-by-construction; Avro's is not.** See §4.</p>
+        <p>The proto2 rule list adds many more conditional compatibilities [WF, https://protobuf.dev/programming-guides/proto2/]: "Integer type conversions (int32↔int64, etc.)", "sint32/sint64 compatibility with each other only", "string/bytes compatibility with valid UTF-8", "Embedded messages compatible with bytes", "fixed32↔sfixed32, fixed64↔sfixed64", "Singular↔repeated for string/bytes/message fields", "enum↔int32/uint32/int64/uint64", "map↔repeated message field conversions".</p>
+      </section>
+    </section>
+    <section title="1.2 Apache Avro">
+      <section title="Q1 — Tagged vs untagged unions">
+        <p>**Answer: no untagged unions. Avro unions are tagged by branch INDEX in binary and by TYPE NAME in JSON.** The JSON encoding is the interesting one for our purposes, because Avro faced exactly the "JSON union" problem and chose explicit tagging.</p>
+        <p>Binary:</p>
+        <quote>"A union is encoded by first writing an `int` value indicating the zero-based position within the union of the schema of its value. The value is then encoded per the indicated schema within the union." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>JSON — **the explicit tagging decision**:</p>
+        <quote>"if its type is _null_, then it is encoded as a JSON _null_; otherwise it is encoded as a JSON object with one name/value pair whose name is the type's name and whose value is the recursively encoded value." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>So `{"int": 5}` rather than `5`. Avro's own reason: the JSON encoding still cannot be read without the schema, and the wrapper is what keeps it unambiguous:</p>
+        <quote>"The original schema is still required to correctly process JSON-encoded data" because the encoding cannot distinguish between semantically similar types like int versus long. [WF] — https://avro.apache.org/docs/1.12.0/specification/</quote>
+        <p>Note the branch-index dependency: because binary unions are indexed positionally, **reordering union branches is a data-corrupting change**, exactly as reordering FlatBuffers union variants is. JSON's name-tagging removes that hazard — a rare case where the JSON encoding is *more* evolvable than the binary one.</p>
+      </section>
+      <section title="Q2 — Absent vs empty vs null for collections">
+        <p>**Answer: YES, cleanly, and this is Avro's structural advantage over protobuf. `[]` is an empty array; absence is expressed by `["null", {"type":"array",...}]` and encoded as a distinct union branch.** Avro has a real `null` type, so empty/null/absent are three different encodable states.</p>
+        <p>The mechanism that makes "absent" meaningful across versions is that defaults live **in the schema**, not in the code:</p>
+        <quote>"A default value for this field, only used when reading instances that lack the field for schema evolution purposes. The presence of a default value does not make the field optional at encoding time. Avro encodes a field even if its value is equal to its default." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>That last sentence is important and frequently misread: **Avro always writes the field.** There is no "omit if default" optimisation, so there is no ambiguity of the protobuf implicit-presence kind. The default is purely a *reader-side* mechanism for fields the writer's schema never had.</p>
+      </section>
+      <section title="Q3 — Closed vocabularies (enums)">
+        <p>**Answer: Avro enums were CLOSED and hard-fail, which was a five-year known-bad; a reader-side `default` was added in 1.9.0 to soften it — and it then didn't work for years.** This is a reversal-shaped story (§3, R5).</p>
+        <p>The base rule:</p>
+        <quote>"if the writer's symbol is not present in the reader's enum and the reader has a default value, then that value is used, otherwise an error is signalled." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <quote>"A default value for this enumeration, used during resolution when the reader encounters a symbol from the writer that isn't defined in the reader's schema (optional). The value provided here must be a JSON string that's a member of the symbols array." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>**The actual discussion (AVRO-1340, reported Jim Donofrio 25/May/13, resolved 02/May/18, fix version 1.9.0):**</p>
+        <quote>"if the writer's symbol is not present in the reader's enum, then an error is signalled" [WF, quoting the pre-fix spec] — https://issues.apache.org/jira/browse/AVRO-1340</quote>
+        <quote>"makes it difficult to use enum's because you can never add a enum value and keep old reader's compatible" [WF] — https://issues.apache.org/jira/browse/AVRO-1340</quote>
+        <p>**Five years from report to fix.** And then AVRO-3313 (affects 1.9.0, 1.9.1, 1.9.2, 1.10.0, 1.10.1, 1.10.2, 1.11.0) reported the fix did not actually work:</p>
+        <quote>Writer schema (v2) enum `["A","B","C"]` default "A"; reader schema (v1) enum `["A","B"]` default "A"; expected the reader to deserialize unknown "C" as "A"; actual: `org.apache.avro.AvroTypeException: No match for C` [WF, paraphrase of the reproduction] — https://issues.apache.org/jira/browse/AVRO-3313</quote>
+        <quote>Resolved: **Not A Bug** (27/Sep/23) [WF] — https://issues.apache.org/jira/browse/AVRO-3313</quote>
+        <p>The "Not A Bug" resolution is itself a finding: the enum default applies during *schema resolution* (reader schema explicitly supplied and differing from writer's), not to a naive single-schema decode, and users repeatedly hit the difference. **Practical takeaway: a reader-side fallback that only fires in an explicitly-two-schema code path will be missed by most users.**</p>
+        <p>Secondary/practitioner guidance found: add symbol defaults *pre-emptively* because older Avro versions tolerate-and-ignore them, so they become useful once everyone upgrades. [WF] — surfaced via https://medium.com/expedia-group-tech/safety-considerations-when-using-enums-in-avro-schemas-82e18baaa081 (secondary source, flagged as such).</p>
+      </section>
+      <section title="Q4 — Strictness">
+        <p>**Answer: reader ignores writer's extra fields; reader's extra fields must have defaults or it is a hard error.** Avro is tolerant in one direction and *strict* in the other, and it is the strict direction that bites.</p>
+        <quote>"if the writer's record contains a field with a name not present in the reader's record, the writer's value for that field is ignored." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <quote>"if the reader's record schema has a field that contains a default value, and writer's schema does not have a field with the same name, then the reader should use the default value from its field." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <quote>"if the reader's record schema has a field with no default value, and writer's schema does not have a field with the same name, an error is signalled." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>Note the word **"ignored"** in the first rule — not "preserved". See Q7.</p>
+      </section>
+      <section title="Q5 — Version semantics">
+        <p>**Answer: no version number; Avro versions by carrying the WRITER'S SCHEMA WITH THE DATA. This is the most important structural idea in Avro and the one that transfers best to files-at-rest.**</p>
+        <quote>"a reader of Avro data, whether from an RPC or a file, can always parse that data because the original schema must be provided along with the data" [WF] — https://avro.apache.org/docs/1.12.0/specification/</quote>
+        <quote>"Binary encoded Avro data does not include type information or field names." [WF] — https://avro.apache.org/docs/1.12.0/specification/</quote>
+        <p>Evolution is then a *pairwise function of two schemas*, not a linear version ladder. There is no "version 3"; there is only "resolve writer-S1 against reader-S2". That means compatibility is a relation, not an ordering — a point §4 develops.</p>
+      </section>
+      <section title="Q6 — Field identity">
+        <p>**Answer: NAMES, not numbers — the opposite of protobuf/Thrift/Cap'n Proto/FlatBuffers. Renaming is therefore a breaking change, softened by `aliases`.**</p>
+        <quote>"if the writer's record contains a field with a name not present in the reader's record, the writer's value for that field is ignored" [WF] — https://avro.apache.org/docs/1.11.1/specification/ (field matching is by name)</quote>
+        <quote>"Named types and fields may have aliases. An implementation may optionally use aliases to map a writer's schema to the reader's. This facilitates both schema evolution as well as processing disparate datasets." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>Note **"An implementation MAY optionally use aliases"** — alias support is not guaranteed. That is a materially weaker guarantee than protobuf's `reserved`, which is enforced by the compiler.</p>
+        <p>There is no `reserved` mechanism in Avro. **Avro `reserved` equivalent: NOT FOUND** — searched the 1.11.1 and 1.12.0 specifications; Avro has no construct for retiring a name so it cannot be reused with different semantics. Name reuse with a changed type is caught only if the reader happens to resolve against the old writer's schema and the types fail to match.</p>
+        <p>Practitioner-level rules found (secondary sources, flagged): you cannot rename a field (use aliases); you cannot change a field's data type (add a new field); "A non-union type may be changed to a union that contains only the original type, or vice-versa"; "If you do not provide a default value for a field, you cannot delete that field from your schema." [WF] — https://docs.oracle.com/cd/E26161_02/html/GettingStartedGuide/schemaevolution.html</p>
+      </section>
+      <section title="Q7 — Round-trip preservation of unknown fields">
+        <p>**Answer: NO. Avro DROPS unknown fields — "ignored" is the spec's word — and this is the concrete reason people cited protobuf's unknown-field preservation as the reason to prefer protobuf over Avro (and, in issue #272, the reverse).**</p>
+        <quote>"if the writer's record contains a field with a name not present in the reader's record, the writer's value for that field is ignored." [WF] — https://avro.apache.org/docs/1.11.1/specification/</quote>
+        <p>Avro's mitigation is different in kind: because the writer's schema travels with the data (object container files), a reader that resolves against the *writer's* schema loses nothing — but any reader that projects onto its own reader schema and re-writes has performed a lossy transformation. **Avro trades "the reader can preserve what it doesn't understand" for "the data can always be re-read later with full fidelity, given the original file."** For files-at-rest that trade is arguably better; for read-modify-write pipelines it is worse.</p>
+      </section>
+      <section title="Q8 — Compatibility taxonomy">
+        <p>**Avro's own spec defines NO backward/forward taxonomy — NOT FOUND in the specification.** Searched the 1.11.1 and 1.12.0 specs; they define *schema resolution* rules only. The backward/forward/full vocabulary that everyone attributes to Avro is Confluent Schema Registry's, layered on top. See §1.7 and §4.</p>
+      </section>
+    </section>
+    <section title="1.3 Apache Thrift">
+      <section title="Q1 — Tagged vs untagged unions">
+        <p>**Answer: no untagged unions.** Thrift's `union` is a struct in which at most one field is set, and every field carries a numeric field id in its wire header, so the variant is identified by id. NOT FOUND: an authoritative Apache Thrift statement specifically about `union` semantics — https://thrift.apache.org/docs/types returned "Unions are not mentioned in this content" and https://thrift.apache.org/docs/idl documents field ids and requiredness but I did not obtain a union section. Searched thrift.apache.org/docs/idl, /docs/types, and the 2007 whitepaper.</p>
+      </section>
+      <section title="Q2 — Absent vs empty vs null for collections">
+        <p>**Answer: YES for scalars via the generated `__isset` struct; for collections it depends on requiredness. The `__isset` design is Thrift's explicit-presence mechanism and predates protobuf's rediscovery of the same idea.**</p>
+        <p>[RAW] from the 2007 Facebook whitepaper, §5:</p>
+        <quote>"Essentially, the inner isset object of each Thrift struct contains a boolean value for each field which denotes whether or not that field is present in the struct. When a reader receives a struct, it should check for a field being set before operating directly on it." [RAW] — https://thrift.apache.org/static/files/thrift-20070401.pdf</quote>
+        <p>The three requiredness levels [WF] — https://thrift.apache.org/docs/idl:</p>
+        <quote>"Required fields are always written and are expected to be set." / "Required fields are always read and are expected to be contained in the input stream."
+"Optional fields are only written when they are set" / "Optional fields may, or may not be part of the input stream."
+(default/implicit) "In theory, the fields are always written. There are some exceptions to that rule." / "Like optional, the field may, or may not be part of the input stream."</quote>
+        <quote>"Default requiredness is a good starting point. The desired behaviour is a mix of optional and required." [WF] — https://thrift.apache.org/docs/idl</quote>
+      </section>
+      <section title="Q3 — Closed vocabularies (enums)">
+        <p>**Answer: Thrift enums are i32 on the wire; behaviour on unknown values is implementation-dependent and NOT specified authoritatively.** NOT FOUND in thrift.apache.org/docs/types (explicitly returned NOT FOUND) or /docs/idl.</p>
+        <p>The best statement I found is secondary, from *Thrift: The Missing Guide* (Diwaker Gupta), §1.3 [RAW, extracted from the PDF]:</p>
+        <quote>"a field with an enum type can only have one of a specified set of constants as its value (if you try to provide a different value, the parser will treat it like an unknown field)" [RAW] — https://diwakergupta.github.io/thrift-missing-guide/thrift.pdf</quote>
+        <quote>"Enumerator constants MUST be in the range of postive 32-bit integers." [RAW, `postive` sic] — https://diwakergupta.github.io/thrift-missing-guide/thrift.pdf</quote>
+        <p>Practitioner reports confirm the hazard: adding enum values can break jobs running an older Thrift schema. [WF] — surfaced via https://cwiki.apache.org/confluence/display/FLINK/FLIP-237:+Thrift+Format+Support (secondary).</p>
+      </section>
+      <section title="Q4 — Strictness">
+        <p>**Answer: tolerant reader by design, stated in 2007 and unchanged.** [RAW] from the whitepaper §5.3 "Case Analysis" — this is the four-case table the question asks about:</p>
+        <quote>"1. Added field, old client, new server. In this case, the old client does not send the new field. The new server recognizes that the field is not set, and implements default behavior for out-of-date requests." [RAW]</quote>
+        <quote>"2. Removed field, old client, new server. In this case, the old client sends the removed field. The new server simply ignores it." [RAW]</quote>
+        <quote>"3. Added field, new client, old server. The new client sends a field that the old server does not recognize. The old server simply ignores it and processes as normal." [RAW]</quote>
+        <quote>"4. Removed field, new client, old server. This is the most dangerous case, as the old server is unlikely to have suitable default behavior implemented for the missing field. It is recommended that in this situation the new server be rolled out prior to the new clients." [RAW]</quote>
+        <p>— all https://thrift.apache.org/static/files/thrift-20070401.pdf</p>
+        <p>Case 4 is Thrift's own naming of the **forward-compatibility hazard** and its own prescription of an **upgrade ordering** — thirteen years before Confluent's tables said the same thing. Note it is a *deployment-order* remedy, not a format remedy.</p>
+      </section>
+      <section title="Q5 — Version semantics">
+        <p>**Answer: no schema version in the data; and Thrift explicitly separates protocol-level versioning from IDL-level versioning.** [RAW], whitepaper §5.4:</p>
+        <quote>"The TProtocol abstractions are also designed to give protocol implementations the freedom to version themselves in whatever manner they see fit. Specifically, any protocol implementation is free to send whatever it likes in the writeMessageBegin() call. It is entirely up to the implementor how to handle versioning at the protocol level. The key point is that protocol encoding changes are safely isolated from interface definition version changes." [RAW] — https://thrift.apache.org/static/files/thrift-20070401.pdf</quote>
+        <p>**This two-layer split is a genuinely transferable idea**: version the *envelope/encoding* explicitly and let the *content* evolve by field rules. See §5.</p>
+      </section>
+      <section title="Q6 — Field identity">
+        <p>**Answer: numeric field identifiers, and the whitepaper already recommends always writing them explicitly.** [RAW], §5.1:</p>
+        <quote>"Versioning in Thrift is implemented via field identifiers. The field header for every member of a struct in Thrift is encoded with a unique field identifier. The combination of this field identifier and its type specifier is used to uniquely identify the field. The Thrift definition language supports automatic assignment of field identifiers, but it is good programming practice to always explicitly specify field identifiers." [RAW] — https://thrift.apache.org/static/files/thrift-20070401.pdf</quote>
+        <p>Note **"The combination of this field identifier and its type specifier"** — Thrift's identity is (id, type), so changing a field's type is a distinct field, not a redefinition. That is a subtly different (and arguably safer) identity model than protobuf's id-alone.</p>
+        <p>**Thrift `reserved` mechanism: NOT FOUND.** Searched thrift.apache.org/docs/idl and the whitepaper. Thrift has no reserved-id construct; the discipline is purely conventional.</p>
+      </section>
+      <section title="Q7 — Round-trip preservation of unknown fields">
+        <p>**Answer: NO — unknown fields are skipped, not retained. Authoritative statement NOT FOUND, but the whitepaper's "simply ignores it" wording (cases 2 and 3 above) plus the absence of any unknown-field-set API in generated code is dispositive in practice.** Searched thrift.apache.org/docs/idl, /docs/types, the whitepaper, and the Missing Guide. There is no `UnknownFieldSet` analogue in Thrift's generated code model.</p>
+      </section>
+      <section title="Q8 — Compatibility taxonomy">
+        <p>**Answer: no named taxonomy; the four-case analysis in §5.3 IS Thrift's taxonomy.** Thrift does not use the words backward/forward. NOT FOUND: any published Facebook retrospective on the required/optional decision. Searched for "Thrift retrospective", "Facebook Thrift lessons", "required fields harmful Thrift". The closest published critique is Thrift's own IDL documentation, which is unusually blunt for official docs:</p>
+        <quote>"Because of this behaviour, required fields drastically limit the options with regard to soft versioning." [WF] — https://thrift.apache.org/docs/idl</quote>
+        <quote>"Because they must be present on read, the fields cannot be deprecated." [WF] — https://thrift.apache.org/docs/idl</quote>
+        <quote>"If a required field would be removed (or changed to optional), the data are no longer compatible between versions." [WF] — https://thrift.apache.org/docs/idl</quote>
+        <p>**This is Thrift's own retrospective on `required`, in its official docs, reaching the same conclusion protobuf reached — without ever removing the keyword.** See §3, R1.</p>
+      </section>
+    </section>
+    <section title="1.4 JSON Typedef (RFC 8927)">
+      <p>All quotes in this subsection are [RAW] — extracted from https://www.rfc-editor.org/rfc/rfc8927.txt, downloaded and read directly.</p>
+      <section title="Q1 — Tagged vs untagged unions">
+        <p>**Answer: JTD has ONLY tagged unions. Untagged unions are absent by design, and the RFC gives the rationale twice — once positively (code generation) and once negatively (ambiguity).**</p>
+        <p>The positive rationale, §1:</p>
+        <quote>"JTD's niche is to focus on enabling code generation from schemas; to this end, JTD's expressiveness is intentionally limited to be no more powerful than what can be expressed in the type systems of mainstream programming languages." [RAW]</quote>
+        <quote>"Enable code generation from JTD schemas.  JTD schemas are meant to be easy to convert into data structures idiomatic to mainstream programming languages." [RAW]</quote>
+        <quote>"JTD is intentionally designed as a rather minimal schema language.  Thus, although JTD can describe some categories of JSON, it is not able to describe its own structure... By keeping the expressiveness of the schema language minimal, JTD makes code generation and standardized error indicators easier to implement." [RAW]</quote>
+        <quote>"A \"discriminator\" form of JSON objects, corresponding to a discriminated (or \"tagged\") union.  The \"discriminator\" form of JSON objects is akin to a C++ \"std::variant\"." [RAW]</quote>
+        <quote>"JTD's feature set is designed to represent common patterns in JSON-using applications, while still having a clear correspondence to programming languages in widespread use." [RAW]</quote>
+        <quote>"The principle of clear correspondence to common programming languages is why JTD does not support, for example, a data type for integers up to 2**53-1." [RAW]</quote>
+        <p>**The negative rationale — §2.2.8 is an entire section devoted to making tags unambiguous by construction. This is the most directly applicable text in the whole research corpus for a JSON-in-a-repo format:**</p>
+        <quote>"To prevent ambiguous or unsatisfiable constraints on the \"discriminator\" property of a tagged union, an additional constraint on schemas of the \"discriminator\" form exists." [RAW]</quote>
+        <quote>"*  For each member _P_ of _S_ whose name equals \"properties\" or \"optionalProperties\", _P_'s value, which must be an object, MUST NOT contain any members whose name equals _D_'s value." [RAW]</quote>
+        <quote>"JTD handles such possible ambiguity by disallowing, at the syntactic level, the possibility of contradictory specifications of discriminator \"tags\".  Discriminator \"tags\" cannot be redefined in other parts of the schema." [RAW]</quote>
+        <quote>"JTD handles such possible ambiguity by disallowing, at the syntactic level, the possibility of contradictory specifications of whether an instance described by a schema of the \"discriminator\" form may be null.  The schemas in a discriminator \"mapping\" cannot have \"nullable\" set to \"true\"; only the discriminator itself can use \"nullable\" in this way." [RAW]</quote>
+        <p>Note the repeated phrase **"disallowing, at the syntactic level"** — JTD's method is to make the ambiguous schema *unwritable*, not to define a resolution rule for it. Contrast OpenAPI's discriminator (§1.6), which is a *hint* layered over a validation model that would work without it.</p>
+        <p>Confirmation that JTD refuses type-unions generally, from the Ajv implementation docs:</p>
+        <quote>"Unlike JSON Schema, JTD does not allow defining values that can take one of several types, but they can be defined as `nullable`." [WF] — https://ajv.js.org/json-type-definition.html</quote>
+      </section>
+      <section title="Q2 — Absent vs empty vs null for collections">
+        <p>**Answer: YES — JTD distinguishes all three cleanly, and it is the only format here that does so with three distinct, orthogonal, first-class mechanisms.**</p>
+        <list ordered="false">
+          <item>**absent**: put the member in `optionalProperties` rather than `properties`. §3.3.6: "For every member name in _P_, a member of the same name in the instance must exist." [RAW] — i.e. `properties` members are mandatory-present.</item>
+          <item>**null**: `nullable: true`. §3.3.3 (via [WF]): "If the schema has a member named 'nullable' whose value is the boolean 'true', and the instance is the JSON primitive value 'null', then the schema accepts the instance." — https://www.rfc-editor.org/rfc/rfc8927.html</item>
+          <item>**empty**: the `elements` form matching `[]`.</item>
+        </list>
+        <p>And a sharp asymmetry worth copying: `nullable: false` is inert.</p>
+        <quote>"it is not the case that putting a 'false' value for 'nullable' will ever override a 'nullable' member." [WF] — https://www.rfc-editor.org/rfc/rfc8927.html</quote>
+      </section>
+      <section title="Q3 — Closed vocabularies (enums)">
+        <p>**Answer: CLOSED and hard-rejecting. There is no open-enum, no sentinel convention, no fallback.**</p>
+        <quote>"For a schema of the \"enum\" form to be correct, the value of the member named \"enum\" must be a nonempty array of strings, and that array must not contain duplicate values." [WF, §2.2.4] — https://www.rfc-editor.org/rfc/rfc8927.html</quote>
+        <p>Validating a value not in the list produces an error with `schemaPath` pointing to `/enum` — unknown values are rejected. [WF, §3.3.4] — https://www.rfc-editor.org/rfc/rfc8927.html</p>
+        <p>**JTD provides no enum-evolution story at all.** This is a real limitation for a long-lived at-rest format and JTD does not pretend otherwise.</p>
+      </section>
+      <section title="Q4 — Strictness">
+        <p>**Answer: STRICT BY DEFAULT — unknown members are rejected unless the schema opts in. JTD is the anti-Postel design point in this corpus, and unusually, the RFC acknowledges the disagreement explicitly rather than asserting a winner.**</p>
+        <quote>"Some users may expect that {\"a\": \"foo\", \"b\": \"bar\"} satisfies the schema in Figure 2.  Others may disagree, as \"b\" is not one of the properties described in the schema." [RAW, §3.1]</quote>
+        <quote>"Evaluation of a schema does not allow additional properties by default, but this can be overridden by having the schema include a member named \"additionalProperties\", where that member has a value of \"true\"." [RAW, §3.1]</quote>
+        <quote>"briefly, the schema { \"properties\": { \"a\": { \"type\": \"string\" }}} rejects { \"a\": \"foo\", \"b\": \"bar\" }" [RAW, §3.1]</quote>
+        <p>**The one deliberate hole in the strictness — the "discriminator tag exemption"** [RAW, §3.3.6]:</p>
+        <quote>"If the \"discriminator tag exemption\" is in effect on _I_ (see Section 3.3.8), then ignore _I_." [RAW]</quote>
+        <p>That is: the tag property itself is exempted from the variant schema's "no additional properties" rule, because the variant schema doesn't declare the tag (it's declared once, on the union). A small but instructive piece of engineering — the strictness rule and the tagging rule would otherwise collide, and JTD carved the exemption at exactly one point rather than loosening either rule.</p>
+        <p>Confirmation from the implementation side:</p>
+        <quote>"Unlike JSON Schema, all properties defined in `properties` schema member are required, the data instance must be JSON object (without using additional `type` keyword) and by default additional properties are not allowed (with the exception of discriminator tag)." [WF] — https://ajv.js.org/json-type-definition.html</quote>
+      </section>
+      <section title="Q5 — Version semantics">
+        <p>**Answer: NONE. JTD has no versioning mechanism whatsoever, and no evolution rules. The only extension point is inert metadata.**</p>
+        <quote>"Users MAY add metadata members to JTD schemas to convey information that is not pertinent to validation." [WF, §2.3] — https://www.rfc-editor.org/rfc/rfc8927.html</quote>
+        <quote>"Users SHOULD NOT expect metadata members to be understood by other parties. As a result, if consistent validation with other parties is a requirement, users MUST NOT use metadata members to affect how schema validation...works." [WF, §2.3] — https://www.rfc-editor.org/rfc/rfc8927.html</quote>
+        <p>**JTD schema-evolution rules: NOT FOUND — because there are none.** Searched the full RFC text for "evolution", "compatib", "version". The RFC is a validation spec, not an evolution spec. This is a genuine and important gap: **JTD gives you a rigorous way to say what a document looks like today and no way at all to say how it may change.**</p>
+        <p>The RFC is also unusually honest about its own status:</p>
+        <quote>"This document does not have IETF consensus and is presented here to facilitate experimentation with the concept of JTD.  The purpose of the experiment is to gain experience with JTD and to possibly revise this work accordingly." [RAW, §1]</quote>
+      </section>
+      <section title="Q6 — Field identity">
+        <p>**Answer: names only. No numeric tags, no reserved mechanism, no aliases.** JTD is a validation language over JSON, and JSON member names are the only identity available. NOT FOUND: any reuse policy. Searched the full RFC.</p>
+      </section>
+      <section title="Q7 — Round-trip preservation">
+        <p>**Answer: N/A for the validator; NEGATIVE for the code generators, which is the point.** JTD does not define a codec, so it neither preserves nor drops. But its raison d'être is code generation into `struct`s, and generated structs by construction drop what is not declared. `additionalProperties: true` permits unknown members to *pass validation*; it does not create a place to *store* them.</p>
+        <p>**Explicit statement about round-trip preservation in JTD: NOT FOUND.** Searched RFC 8927 in full and the Ajv JTD docs.</p>
+      </section>
+      <section title="Q8 — Compatibility taxonomy">
+        <p>**NOT FOUND — JTD defines none.** Searched RFC 8927 in full.</p>
+      </section>
+      <section title="Author&apos;s design writing (requested, partial gap)">
+        <p>**Ulysse Carion's own blog post articulating JTD's design goals vs JSON Schema: NOT FOUND.** Searched: "Ulysse Carion JSON Type Definition design why not JSON Schema blog rationale discriminator"; "jsontypedef JSON Type Definition Carion blog tagged unions why no untagged union design goal code generation"; and direct fetches of https://jsontypedef.com/ and https://jsontypedef.com/docs/. **Note: `jsontypedef.com` is no longer under the author's control — the domain now serves unrelated casino-affiliate content.** The canonical design rationale surviving in a citable, stable form is RFC 8927 §1 and Appendix A ("Rationale for Omitted Features", §A.1 on 64-bit numbers, §A.2 on non-root definitions) plus the `github.com/jsontypedef` org. **If this rationale matters to the decision, RFC 8927 Appendix A is the artifact to cite, not the website.**</p>
+      </section>
+    </section>
+    <section title="1.5 Cap&apos;n Proto and FlatBuffers">
+      <section title="Cap&apos;n Proto">
+        <p>**Q1 — unions:** explicitly tagged, with a stored discriminant.</p>
+        <quote>"A union is two or more fields of a struct which are stored in the same location. Only one of these fields can be set at a time, and a separate tag is maintained to track which one is currently set." [WF] — https://capnproto.org/language.html</quote>
+        <p>**Q2 — absent/empty/null:** Cap'n Proto deliberately has **no optional** and no presence.</p>
+        <quote>"Cap'n Proto has no notion of 'optional' fields." [RAW] — https://capnproto.org/faq.html</quote>
+        <quote>"A primitive field always takes space on the wire whether you set it or not (although default-valued fields will be compressed away if you enable packing).  Such a field can be made semantically optional by placing it in a union with a Void field" [RAW] — https://capnproto.org/faq.html</quote>
+        <quote>"A better approach may be to give the field a bogus default value and interpret that value to mean 'not present'." [RAW] — https://capnproto.org/faq.html</quote>
+        <quote>"Pointer fields are a bit different.  They start out 'null', and you can check for nullness using the hasFoo() accessor.  You could use a null pointer to mean 'not present'.  Note, though, that calling getFoo() on a null pointer returns the default value, which is indistinguishable from a legitimate value, so checking hasFoo() is in fact the only way to detect nullness." [RAW] — https://capnproto.org/faq.html</quote>
+        <p>**Q3 — enums:** new enumerants may be added at the end.</p>
+        <quote>"New fields, enumerants, and methods may be added to structs, enums, and interfaces, respectively, as long as each new member's number is larger than all previous members." [WF] — https://capnproto.org/language.html</quote>
+        <p>**Q4/Q7 — strictness and unknown-field retention:** Cap'n Proto **retains** unknown fields, and its author flagged proto3's removal of the same as a mistake at the time:</p>
+        <quote>Feature matrix "Unknown field retention" — Cap'n Proto: **"yes"**; Protobuf: **"removed in proto3"**; SBE: **"no"**; FlatBuffers: **"no"**. [WF] — https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html</quote>
+        <quote>"Apparently, version 3 of Protocol Buffers, aka 'proto3', removes this feature. I honestly don't know what they're thinking." [WF] — https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html</quote>
+        <quote>"This feature has been absolutely essential in many of Google's internal systems." [WF] — https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html</quote>
+        <p>**Q5 — version semantics:** none; ordinal-based field-level rules only.</p>
+        <p>**Q6 — field identity:** ordinals (`@N`) and type IDs. The allowed/forbidden list [WF] — https://capnproto.org/language.html:</p>
+        <quote>Allowed: "New types, constants, and aliases can be added anywhere, since they obviously don't affect the encoding of any existing type." / "New parameters may be added to a method. The new parameters must be added to the end of the parameter list and must have default values." / "Members can be re-arranged in the source code, so long as their numbers stay the same." / "Any symbolic name can be changed, as long as the type ID / ordinal numbers stay the same." / "Type definitions can be moved to different scopes, as long as the type ID is declared explicitly." / "A field can be moved into a group or a union, as long as the group/union and all other fields within it are new."</quote>
+        <quote>Forbidden: "You cannot change a field, method, or enumerant's number" / "change a field or method parameter's type or default value" / "You cannot change a type's ID" / "move an existing field into or out of an existing union, nor can you form a new union containing more than one existing field."</quote>
+        <p>**Q8 — taxonomy:** none named.</p>
+        <p>**The explicit comparison to protobuf's mistakes** (this is the requested item, and it is the single most vivid passage found in this entire research effort — all [RAW], https://capnproto.org/faq.html):</p>
+        <quote>"You don't.  You may find this surprising, but the 'required' keyword in Protocol Buffers turned out to be a horrible mistake." [RAW]</quote>
+        <quote>"The problem with this is, validation is sometimes more subtle than that.  Sometimes, different applications – or different parts of the same application, or different versions of the same application – place different requirements on the same protocol.  An application may want to pass around partially-complete messages internally.  A particular field that used to be required might become optional.  A new use case might call for almost exactly the same message type, minus one field, at which point it may make more sense to reuse the type than to define a new one." [RAW]</quote>
+        <quote>"A field declared required, unfortunately, is required everywhere.  The validation is baked into the parser, and there's nothing you can do about it.  Nothing, that is, except change the field from 'required' to 'optional'.  But that's where the real problems start." [RAW]</quote>
+        <quote>"Imagine a production environment in which two servers, Alice and Bob, exchange messages through a message bus infrastructure running on a big corporate network.  The message bus parses each message just to examine the envelope and decide how to route it, without paying attention to any other content.  Often, messages from various applications are batched together and then split up again downstream." [RAW]</quote>
+        <quote>"Now, at some point, Alice's developers decide that one of the fields in a deeply-nested message commonly sent to Bob has become obsolete.  To clean things up, they decide to remove it, so they change the field from 'required' to 'optional'.  The developers aren't idiots, so they realize that Bob needs to be updated as well.  They make the changes to Bob, and just to be thorough they run an integration test with Alice and Bob running in a test environment.  The test environment is always running the latest build of the message bus, but that's irrelevant anyway because the message bus doesn't actually care about message contents; it only does routing.  Protocols are modified all the time without updating the message bus." [RAW]</quote>
+        <quote>"Satisfied with their testing, the devs push a new version of Alice to prod.  Immediately, everything breaks.  And by 'everything' I don't just mean Alice and Bob.  Completely unrelated servers are getting strange errors or failing to receive messages.  The whole data center has ground to a halt and the sysadmins are running around with their hair on fire." [RAW]</quote>
+        <quote>"What happened?  Well, the message bus running in prod was still an older build from before the protocol change.  And even though the message bus doesn't care about message content, it does need to parse every message just to read the envelope.  And the protobuf parser checks the entire message for missing required fields.  So when Alice stopped sending that newly-optional field, the whole message failed to parse, envelope and all.  And to make matters worse, any other messages that happened to be in the same batch also failed to parse, causing errors in seemingly-unrelated systems that share the bus." [RAW]</quote>
+        <quote>"Things like this have actually happened.  At Google.  Many times." [RAW]</quote>
+        <quote>"The right answer is for applications to do validation as-needed in application-level code.  If you want to detect when a client fails to set a particular field, give the field an invalid default value and then check for that value on the server.  Low-level infrastructure that doesn't care about message content should not validate it at all." [RAW]</quote>
+        <quote>"Oh, and also, Cap'n Proto doesn't have any parsing step during which to check for required fields.  :)" [RAW]</quote>
+        <p>**The generalisable law in that story: validation baked into the PARSER propagates failure to every party that must parse, including parties that do not care about the content.** For a JSON-file format read by third-party tools, the analogue is exact: a strict schema validator wired into the *load* path of a generic tool turns every schema addition into a breakage of tools that never looked at the new field.</p>
+      </section>
+      <section title="FlatBuffers">
+        <p>**Q1 — unions:** tagged, with a discriminant, and the discriminant is positional.</p>
+        <quote>"New union variants must be appended at the end to prevent discriminant mismatches. Adding variants mid-union causes 'CodeV1' and 'CodeV2' to misinterpret values. Using explicit discriminant values (e.g., `A = 1`) allows middle insertion safely by overriding positional assignment." [WF] — https://flatbuffers.dev/evolution/</quote>
+        <p>**Q2 — absent/empty:** tables encode presence via the vtable; a field not written is absent and reads as its default. Structs cannot omit anything:</p>
+        <quote>"structs... are required (so no defaults either), and fields may not be added or be deprecated." [WF] — https://flatbuffers.dev/schema/</quote>
+        <quote>"Fields do not have to appear in the wire representation, and you can choose to omit fields when constructing an object. You have the flexibility to add fields without fear of bloating your data." [WF] — https://flatbuffers.dev/schema/</quote>
+        <p>**Q3 — enums:** append-only, and FlatBuffers explicitly pushes unknown-value handling to the application:</p>
+        <quote>"Typically, enum values should only ever be added, never removed (there is no deprecation for enums). This requires code to handle forwards compatibility itself, by handling unknown enum values." [WF] — https://flatbuffers.dev/schema/</quote>
+        <p>**Q4/Q7 — strictness / unknown-field retention:** unknown fields are skipped and **NOT retained** ("no" in Cap'n Proto's matrix above). Confirmed by the absence of any unknown-field API in FlatBuffers' model.</p>
+        <p>**Q5 — version semantics:** none.</p>
+        <p>**Q6 — field identity:** slot order, or explicit `id`:</p>
+        <quote>"New fields MUST be added to the end of the table definition." [WF] — https://flatbuffers.dev/evolution/</quote>
+        <quote>"You MUST not remove a field from the schema, even if you don't use it anymore." [WF] — https://flatbuffers.dev/evolution/</quote>
+        <quote>"do not generate accessors for this field anymore, code should stop using this data. Old data may still contain this field, but it won't be accessible anymore by newer code." (the `deprecated` attribute) [WF] — https://flatbuffers.dev/schema/</quote>
+        <quote>"If you use this attribute, you must use it on ALL fields of this table, and the numbers must be a contiguous range from 0 onwards... When a new field is added to the schema it must use the next available ID." (the `id` attribute) [WF] — https://flatbuffers.dev/schema/</quote>
+        <quote>"You can ignore this rule if you use the `id` attribute on all the fields of a table." [WF] — https://flatbuffers.dev/evolution/</quote>
+        <p>Renaming is safe because names are not serialized:</p>
+        <quote>"Renaming tables and fields is generally permissible since names aren't serialized." [WF] — https://flatbuffers.dev/evolution/</quote>
+        <p>**Q8 — taxonomy:** none named.</p>
+        <p>**Explicit comparison to protobuf's mistakes: NOT FOUND** in FlatBuffers' own docs. The FlatBuffers schema page "contains no explicit Protocol Buffers comparison regarding evolution rules" [WF]. The comparison exists only from the outside (Cap'n Proto's 2014 matrix, above).</p>
+        <p>**FlatBuffers' `deprecated` is the cleanest `reserved` analogue in the corpus:** it keeps the slot occupied forever *and* removes the accessor, so the compiler enforces "you cannot use this and you cannot reuse this" in one attribute. Protobuf's `reserved` does the second half only; nobody else does either half well.</p>
+      </section>
+    </section>
+    <section title="1.6 JSON Schema / OpenAPI `discriminator`">
+      <p>All OpenAPI quotes are [RAW] — extracted from the spec markdown at https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/versions/3.0.3.md.</p>
+      <section title="Q1 — Tagged vs untagged unions">
+        <p>**Answer: JSON Schema's `oneOf`/`anyOf` ARE untagged unions — matching is by full structural validation. OpenAPI's `discriminator` bolts a tag on top, but only as an optimisation hint, not as the semantics.** This is the crucial architectural difference from JTD and the reason the OpenAPI discriminator is a persistent source of trouble.</p>
+        <quote>"When request bodies or response payloads may be one of a number of different schemas, a `discriminator` object can be used to aid in serialization, deserialization, and validation.  The discriminator is a specific object in a schema which is used to inform the consumer of the specification of an alternative schema based on the value associated with it." [RAW]</quote>
+        <quote>"The discriminator object is legal only when using one of the composite keywords `oneOf`, `anyOf`, `allOf`." [RAW]</quote>
+        <p>**The "hint" sentence — this is the single most consequential sentence in the OpenAPI discriminator design:**</p>
+        <quote>"which means the payload _MUST_, by validation, match exactly one of the schemas described by `Cat`, `Dog`, or `Lizard`.  In this case, a discriminator MAY act as a \"hint\" to shortcut validation and selection of the matching schema which may be a costly operation, depending on the complexity of the schema." [RAW]</quote>
+        <p>Because the discriminator is a *hint* over an underlying structural `oneOf`, two tools can legitimately disagree: one dispatches on the tag, the other validates all branches. Where the two disagree — a payload whose tag says `Dog` but whose shape matches `Cat` — behaviour is unspecified.</p>
+        <p>The required-ness of the tag property, and the exclusion of inline schemas:</p>
+        <quote>"When used, the `discriminator` will be the name of the property that decides which schema definition validates the structure of the model.  As such, the `discriminator` field MUST be a required field." [RAW]</quote>
+        <quote>"As such, inline schema definitions, which do not have a given id, *cannot* be used in polymorphism." [RAW]</quote>
+        <quote>"When using the discriminator, _inline_ schemas will not be considered." [RAW]</quote>
+        <quote>"propertyName | `string` | **REQUIRED**. The name of the property in the payload that will hold the discriminator value." [RAW]</quote>
+        <quote>"mapping | Map[`string`, `string`] | An object to hold mappings between payload values and schema names or references." [RAW]</quote>
+        <p>**Unknown tag value:**</p>
+        <quote>"If the discriminator _value_ does not match an implicit or explicit mapping, no schema can be determined and validation SHOULD fail. Mapping keys MUST be string values, but tooling MAY convert response values to strings for comparison." [RAW]</quote>
+        <p>Note **SHOULD**, not MUST, and **"tooling MAY convert response values to strings"** — two more places where conforming tools may diverge.</p>
+        <quote>"When used in conjunction with the `anyOf` construct, the use of the discriminator can avoid ambiguity where multiple schemas may satisfy a single payload." [RAW]</quote>
+        <quote>"In both the `oneOf` and `anyOf` use cases, all possible schemas MUST be listed explicitly.  To avoid redundancy, the discriminator MAY be added to a parent schema definition, and all schemas comprising the parent schema in an `allOf` construct may be used as an alternate schema." [RAW]</quote>
+        <p>**"all possible schemas MUST be listed explicitly"** is a closed-world requirement: an OpenAPI union cannot be open for extension by a third party. Compare JTD (also closed) and protobuf `oneof` (also closed). **No format in this corpus supports an extensible/open union.** That is itself a finding.</p>
+      </section>
+      <section title="Q2 — Absent vs empty vs null">
+        <p>**Answer: YES — JSON Schema distinguishes all three (`required` for presence, `type: "null"` for null, `[]` for empty), but OpenAPI 3.0 famously did NOT have `type: null` and used a bespoke `nullable: true` instead; 3.1 realigned with JSON Schema.** NOT FOUND: an authoritative verbatim quote on the 3.0→3.1 `nullable` change — I did not fetch a 3.1 section covering it (the 3.1 HTML fetch truncated before reaching the relevant sections). Flagging as a gap.</p>
+      </section>
+      <section title="Q3 — Closed vocabularies">
+        <p>JSON Schema `enum` is closed and rejecting, like JTD. NOT FOUND: a verbatim JSON Schema statement on enum evolution, which does not exist because JSON Schema has no evolution model.</p>
+      </section>
+      <section title="Q4 — Strictness">
+        <p>**Answer: JSON Schema is TOLERANT by default — the opposite of JTD — and the mechanism for tightening it is famously broken under composition.**</p>
+        <quote>"By default any additional properties are allowed." [WF] — https://json-schema.org/understanding-json-schema/reference/object</quote>
+        <quote>"`additionalProperties` only recognizes properties declared in the same subschema as itself. So, `additionalProperties` can restrict you from 'extending' a schema using combining keywords such as allOf." [WF] — https://json-schema.org/understanding-json-schema/reference/object</quote>
+        <quote>"Because `additionalProperties` only recognizes properties declared in the same subschema, it considers anything other than 'street_address', 'city', and 'state' to be additional. Combining the schemas with allOf doesn't change that." [WF] — https://json-schema.org/understanding-json-schema/reference/object</quote>
+        <quote>`unevaluatedProperties` is "similar to `additionalProperties` except that it can recognize properties declared in subschemas." [WF] — https://json-schema.org/understanding-json-schema/reference/object</quote>
+        <p>**This is a design reversal of a sort (§3, R7): `additionalProperties` proved unusable in the presence of `allOf`, and rather than change its semantics, JSON Schema added a second, differently-scoped keyword alongside it.**</p>
+      </section>
+      <section title="Q5 — Version semantics">
+        <p>JSON Schema versions the *schema language* via `$schema`, not the *document*. Documents carry no version. NOT FOUND: any JSON Schema statement on document/instance evolution — none exists; JSON Schema is explicitly a validation vocabulary.</p>
+      </section>
+      <section title="Q6 — Field identity">
+        <p>Names only. No reserved mechanism, no aliases, no reuse policy. NOT FOUND.</p>
+      </section>
+      <section title="Q7 — Round-trip preservation">
+        <p>N/A (validator, not codec). With `additionalProperties` unconstrained (the default), unknown members validate; whether they survive depends entirely on the consuming code, which is exactly the ambiguity JTD closed.</p>
+      </section>
+      <section title="Q8 — Compatibility taxonomy">
+        <p>NOT FOUND in JSON Schema / OpenAPI. Supplied externally by Confluent (§1.7).</p>
+      </section>
+      <section title="Known problems (requested)">
+        <p>Beyond the "hint" ambiguity and the `additionalProperties`/`allOf` scoping failure above, the practitioner literature documents: the spec's ambiguity requiring trial-and-error to produce correct schemas; the interaction requiring both `type` and `required` to be present; code-generator divergence on `propertyName` handling in `oneOf` with `mapping`; and the redundancy argument — a `oneOf` over variants with distinct `required` sets already discriminates, making the keyword unnecessary in many cases. [WF, secondary sources] — https://github.com/OAI/OpenAPI-Specification/issues/2376 ; https://bump.sh/blog/the-discriminator-in-openapi-is-generally-redundant-and-confusing/ ; https://github.com/OpenAPITools/openapi-generator/issues/20954</p>
+      </section>
+    </section>
+    <section title="1.7 Kafka / Confluent Schema Registry compatibility modes">
+      <quote>"The Confluent Schema Registry default compatibility type is `BACKWARD`." [WF] — https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html</quote>
+      <quote>Backward: "consumers using the new schema can read data produced with the last schema" [WF]
+Forward: "data produced with a new schema can be read by consumers using the last schema" [WF]
+Full: "Schemas are both backward and forward compatible." [WF]</quote>
+      <p>Per-mode [WF, same URL]:</p>
+      <table>
+        <tr>
+          <td>Type</td>
+          <td>Changes allowed</td>
+          <td>Checked against</td>
+          <td>Upgrade first</td>
+        </tr>
+        <tr>
+          <td>BACKWARD (default)</td>
+          <td>"add optional fields, remove fields"</td>
+          <td>last version</td>
+          <td>"upgrade all consumers before you start producing new events"</td>
+        </tr>
+        <tr>
+          <td>BACKWARD_TRANSITIVE</td>
+          <td>same</td>
+          <td>"all previously registered schemas"</td>
+          <td>consumers</td>
+        </tr>
+        <tr>
+          <td>FORWARD</td>
+          <td>"remove optional fields, add fields"</td>
+          <td>last version</td>
+          <td>"first upgrade all producers to using the new schema...then upgrade the consumers"</td>
+        </tr>
+        <tr>
+          <td>FORWARD_TRANSITIVE</td>
+          <td>same</td>
+          <td>"all registered schemas"</td>
+          <td>producers</td>
+        </tr>
+        <tr>
+          <td>FULL</td>
+          <td>"both backward and forward compatible (add/remove optional fields only)"</td>
+          <td>last version</td>
+          <td>"you can upgrade the producers and consumers independently"</td>
+        </tr>
+        <tr>
+          <td>FULL_TRANSITIVE</td>
+          <td>same</td>
+          <td>all previous</td>
+          <td>independent</td>
+        </tr>
+        <tr>
+          <td>NONE</td>
+          <td>—</td>
+          <td>—</td>
+          <td>"schema compatibility checks are disabled"</td>
+        </tr>
+      </table>
+      <p>**The TRANSITIVE distinction is the item most worth stealing.** Non-transitive modes check only against the immediately preceding version. That means a chain V1→V2→V3 can be pairwise-compatible at every step and yet V1 and V3 be mutually unreadable. For a repository format where old files persist indefinitely — which is exactly the data-at-rest case — **non-transitive compatibility is nearly worthless and TRANSITIVE is the only meaningful setting.** This is arguably the single most transferable operational lesson in §1.7.</p>
+    </section>
+  </section>
+  <section title="§2 Cross-subject table">
+    <p>Legend: **✓** yes / **✗** no / **~** partial or conditional / **NF** not found.</p>
+    <table>
+      <tr>
+        <td/>
+        <td>**Protobuf (proto3/editions)**</td>
+        <td>**Avro**</td>
+        <td>**Thrift**</td>
+        <td>**JSON Typedef (RFC 8927)**</td>
+        <td>**Cap'n Proto**</td>
+        <td>**FlatBuffers**</td>
+        <td>**JSON Schema / OpenAPI**</td>
+        <td>**Confluent SR**</td>
+      </tr>
+      <tr>
+        <td>**Q1 Untagged unions allowed?**</td>
+        <td>✗ — `oneof`, tagged by field number. Unknown variant is indistinguishable from unset. Rationale for excluding untagged: **NF**</td>
+        <td>✗ — tagged by branch **index** (binary) / **type name** (JSON). Reordering branches corrupts binary</td>
+        <td>✗ — `union` is a struct; variant = field id. Union spec text: **NF**</td>
+        <td>✗ — `discriminator` only. Rationale: code-gen parity with `std::variant`; ambiguity forbidden "at the syntactic level"</td>
+        <td>✗ — union has "a separate tag ... to track which one is currently set"</td>
+        <td>✗ — tagged; discriminant is **positional**, so variants must be appended</td>
+        <td>**✓ — `oneOf`/`anyOf` ARE untagged (structural match).** `discriminator` is only a "hint"</td>
+        <td>n/a</td>
+      </tr>
+      <tr>
+        <td>**Q2 Empty vs absent for collections?**</td>
+        <td>✗ **cannot distinguish.** Empty repeated == absent; "any empty repeated field" omitted from JSON. Never fixed (3.15 covers singular scalars only)</td>
+        <td>✓ via `["null", array]` union; and Avro **always writes** the field ("encodes a field even if its value is equal to its default")</td>
+        <td>~ via `__isset` per field (1: `optional` vs default requiredness)</td>
+        <td>✓ **all three, orthogonally**: `optionalProperties` (absent), `nullable` (null), `elements` (empty)</td>
+        <td>✗ — "no notion of 'optional' fields"; pointer nullness via `hasFoo()` only</td>
+        <td>~ table fields absent via vtable; **struct** fields "are required (so no defaults either)"</td>
+        <td>✓ (`required` / `type:null` / `[]`); OAS 3.0 used bespoke `nullable`, 3.1 realigned — quote **NF**</td>
+        <td>n/a</td>
+      </tr>
+      <tr>
+        <td>**Q3 Enum unknown value**</td>
+        <td>**OPEN** (proto3/editions): value stored, field reports *set*. **CLOSED** (proto2): goes to unknown-field set, field reports *unset*. Switched "specifically because of the unexpected behavior that _closed_ enums cause". `_UNSPECIFIED = 0` mandatory</td>
+        <td>**CLOSED, hard error** unless reader declares `default` (added 1.9.0, AVRO-1340, **5 yrs** report→fix); AVRO-3313 says default didn't work → "Not A Bug"</td>
+        <td>i32 on wire; official behaviour **NF**. Secondary: "the parser will treat it like an unknown field"</td>
+        <td>**CLOSED, rejects.** No sentinel, no fallback, **no evolution story at all**</td>
+        <td>append-only enumerants ("number larger than all previous members")</td>
+        <td>append-only; "This requires code to handle forwards compatibility itself, by handling unknown enum values"</td>
+        <td>closed, rejects. No evolution model</td>
+        <td>enum evolution is what BACKWARD/FORWARD modes gate</td>
+      </tr>
+      <tr>
+        <td>**Q4 Strict or tolerant?**</td>
+        <td>**Split by encoding.** Binary: tolerant + preserving. **JSON: "should reject unknown fields by default"**</td>
+        <td>tolerant to writer's extras ("ignored"); **strict** on reader fields lacking defaults ("an error is signalled")</td>
+        <td>tolerant — "the old server simply ignores it and processes as normal"</td>
+        <td>**STRICT by default** — "does not allow additional properties by default"; opt-in via `additionalProperties: true`; one carve-out: the "discriminator tag exemption"</td>
+        <td>tolerant (bounds-check, no parse step)</td>
+        <td>tolerant (skip)</td>
+        <td>**TOLERANT by default** — "By default any additional properties are allowed"; tightening it broken under `allOf` → `unevaluatedProperties` added</td>
+        <td>policy layer, not a codec</td>
+      </tr>
+      <tr>
+        <td>**Q5 Version semantics**</td>
+        <td>**No version in data.** Pure field-level. `edition="2024"` versions the *language*</td>
+        <td>**No version — carries the WRITER'S SCHEMA with the data.** Evolution is a *pairwise relation*, not a ladder</td>
+        <td>**No version in data**; explicit two-layer split: "protocol encoding changes are safely isolated from interface definition version changes"</td>
+        <td>**NONE — no versioning, no evolution rules.** Only inert `metadata`</td>
+        <td>none; ordinals only</td>
+        <td>none</td>
+        <td>`$schema` versions the *language*, not the document</td>
+        <td>**versions the schema registry-side**, with a compatibility mode attached to a subject</td>
+      </tr>
+      <tr>
+        <td>**Q6 Field identity**</td>
+        <td>**numeric tag.** Never reuse; `reserved` numbers **must** be used. **"Reserved field names affect only the protoc compiler behavior and not runtime behavior"**</td>
+        <td>**NAME** (+ optional `aliases`; "An implementation **may** optionally use aliases"). **No `reserved` — NF**</td>
+        <td>**(field id, type)** pair. "good programming practice to always explicitly specify field identifiers". No `reserved` — **NF**</td>
+        <td>name only. No reserved/alias/reuse policy — **NF**</td>
+        <td>ordinal `@N` + type ID. Names freely changeable "as long as the type ID / ordinal numbers stay the same"</td>
+        <td>slot order or explicit `id`; **`deprecated`** keeps the slot AND kills the accessor — best `reserved` in the corpus</td>
+        <td>name only; no reserved — **NF**</td>
+        <td>n/a</td>
+      </tr>
+      <tr>
+        <td>**Q7 Unknown-field round-trip**</td>
+        <td>**✓ binary since 3.5** (removed in early proto3, restored). **✗ JSON.** Also lost by field-by-field copying</td>
+        <td>**✗ — "the writer's value for that field is ignored"**. Mitigated instead by shipping the writer's schema with the file</td>
+        <td>**✗** (skipped). Authoritative statement **NF**</td>
+        <td>n/a (validator). Generated structs drop by construction. **NF**</td>
+        <td>**✓** — "unknown field retention: yes"</td>
+        <td>**✗** — "unknown field retention: no"</td>
+        <td>n/a; survival depends entirely on consuming code</td>
+        <td>n/a</td>
+      </tr>
+      <tr>
+        <td>**Q8 Compatibility taxonomy**</td>
+        <td>**No backward/forward vocabulary.** Three tiers: wire-**unsafe** / wire-**safe** / wire-**compatible**. Symmetric by construction</td>
+        <td>**NF in the spec** — resolution rules only. The b/f vocabulary is Confluent's, not Avro's</td>
+        <td>**NF** — the §5.3 four-case analysis *is* the taxonomy, incl. an upgrade-ordering prescription</td>
+        <td>**NF — none**</td>
+        <td>none named</td>
+        <td>none named</td>
+        <td>**NF**</td>
+        <td>**the canonical taxonomy**: BACKWARD / FORWARD / FULL × TRANSITIVE, + NONE</td>
+      </tr>
+    </table>
+  </section>
+  <section title="§3 The reversals">
+    <p>Ranked by how instructive they are.</p>
+    <section title="R1 — `required`: kept, regretted, removed, and then *re-admitted under a different name*">
+      <p>**The decision:** proto2 and Thrift both shipped a `required` keyword enforced by the parser.</p>
+      <p>**The reversal:** proto3 removed it entirely. Protobuf's own best-practices doc:</p>
+      <quote>"Never add a required field, instead add `// required` to document the API contract." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+      <p>**The stated reason** — note that it is a reason about *time*, not about correctness:</p>
+      <quote>"You never know how long a message type is going to last and whether someone will be forced to fill in your required field with an empty string or zero in four years when it's no longer logically required but the proto still says it is." [WF] — https://protobuf.dev/best-practices/dos-donts/</quote>
+      <p>Proto2's own guide, which cannot remove the keyword, instead brands it:</p>
+      <quote>"\"Required Is Forever\" As mentioned earlier **`required` must not be used for new fields**. Semantics for required fields should be implemented at the application layer instead." [WF] — https://protobuf.dev/programming-guides/proto2/</quote>
+      <quote>"It is nearly impossible to safely change a field from `required` to `optional`. If there is any chance that a stale reader exists, it will consider messages without this field to be incomplete and may reject or drop them." [WF] — https://protobuf.dev/programming-guides/proto2/</quote>
+      <quote>"A second issue with required fields appears when someone adds a value to an enum. In this case, the unrecognized enum value is treated as if it were missing, which also causes the required value check to fail." [WF] — https://protobuf.dev/programming-guides/proto2/</quote>
+      <p>**The mechanism of harm, in full** — the Cap'n Proto FAQ's message-bus story, quoted at length in §1.5, ending:</p>
+      <quote>"Things like this have actually happened.  At Google.  Many times." [RAW] — https://capnproto.org/faq.html</quote>
+      <quote>"the 'required' keyword in Protocol Buffers turned out to be a horrible mistake." [RAW] — https://capnproto.org/faq.html</quote>
+      <p>**The prescription:**</p>
+      <quote>"The right answer is for applications to do validation as-needed in application-level code. ... Low-level infrastructure that doesn't care about message content should not validate it at all." [RAW] — https://capnproto.org/faq.html</quote>
+      <p>**The same shape, independently, in Thrift** — which never removed the keyword but documents it as a trap:</p>
+      <quote>"Because of this behaviour, required fields drastically limit the options with regard to soft versioning." / "Because they must be present on read, the fields cannot be deprecated." / "If a required field would be removed (or changed to optional), the data are no longer compatible between versions." [WF] — https://thrift.apache.org/docs/idl</quote>
+      <p>**The re-admission (the part most people miss):** editions did not restore `required`, but it had to model proto2's existing `required` fields, and it did so as a *named legacy feature* — an explicit quarantine rather than a deletion:</p>
+      <quote>"Proto2 `required` fields that have been migrated to editions will also use the `field_presence` feature, but set to `LEGACY_REQUIRED`." [WF] — https://protobuf.dev/programming-guides/editions/</quote>
+      <p>And the editions design doc names `required` as unfinished business twelve years on:</p>
+      <quote>"We still have `required` and `group`, `packed` is not everywhere, and string accessors in C++ still return `const std::string&amp;`." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/design/editions/what-are-protobuf-editions.md</quote>
+    </section>
+    <section title="R2 — Field presence: removed in proto3, restored in 3.15">
+      <p>**The decision:** proto3 removed explicit presence for singular scalars — no `optional`, no `has_` methods, default-valued fields not serialized. The intended benefit was simpler, struct-like APIs.</p>
+      <p>**The failed workaround:** Google shipped `google.protobuf.Int32Value` and friends — boxed wrapper messages — as the presence substitute.</p>
+      <quote>"Users have pointed to both efficiency and usability issues with the wrapper types." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/implementing_proto3_presence.md</quote>
+      <p>**The reversal, with its stated cause:**</p>
+      <quote>"Presence tracking was added to proto3 in response to user feedback, both from inside Google and from open-source users." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/implementing_proto3_presence.md</quote>
+      <quote>"Presence in proto3 uses exactly the same syntax and semantics as in proto2." [WF] — same</quote>
+      <p>**Timeline:** experimental behind `--experimental_allow_proto3_optional` from v3.12.0; default from v3.15.0.</p>
+      <quote>"Optional fields for proto3 are enabled by default, and no longer require the --experimental_allow_proto3_optional flag." [WF] — https://github.com/protocolbuffers/protobuf/releases/tag/v3.15.0</quote>
+      <quote>"Presence tracking for proto3 messages is enabled by default [since v3.15.0] release, formerly up until [v3.12.0] the `--experimental_allow_proto3_optional` flag was required." [WF] — https://protobuf.dev/programming-guides/field_presence/</quote>
+      <p>**The implementation is itself a lesson in reversing safely** — rather than change descriptor semantics (which old tooling would misread), they encoded presence in a construct old tooling already handled correctly:</p>
+      <quote>"Every proto3 optional field is placed into a one-field `oneof`. We call this a 'synthetic' oneof, as it was not present in the source `.proto` file." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/implementing_proto3_presence.md</quote>
+      <quote>"existing proto3 reflection-based algorithms should correctly preserve presence for proto3 optional fields with no code changes." [WF] — same</quote>
+      <p>**The final position is a full inversion of proto3's original stance:**</p>
+      <quote>"We recommend always adding the `optional` label for proto3 basic types. This provides a smoother path to editions, which uses explicit presence by default." [WF] — https://protobuf.dev/programming-guides/field_presence/</quote>
+      <quote>"`optional` is recommended over _implicit_ fields for maximum compatibility with protobuf editions and proto2." [WF] — https://protobuf.dev/programming-guides/proto3/</quote>
+      <p>**Elapsed: proto3 GA 2016 → default-on 3.15 (Feb 2021). Roughly five years.** And the reversal is *incomplete*: repeated and map fields still have no presence, so §1.1/Q2's empty-vs-absent collapse is permanent.</p>
+    </section>
+    <section title="R3 — Unknown-field preservation: removed in proto3, restored in 3.5 — the archetype">
+      <p>**The decision:** early proto3 discarded unknown fields at parse time. Contemporaneous external reaction (2014-06-17):</p>
+      <quote>"Apparently, version 3 of Protocol Buffers, aka 'proto3', removes this feature. I honestly don't know what they're thinking." / "This feature has been absolutely essential in many of Google's internal systems." [WF] — https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html</quote>
+      <p>**The reversal took 2.5 years of public argument.** Full timeline from issue #272 (opened 2015-04-07 by `joshuarubin`, closed 2017-12-11), all [RAW] from the GitHub API — https://github.com/protocolbuffers/protobuf/issues/272:</p>
+      <list ordered="false">
+        <item>**2015-04-07** — the ask: *"I know that unknown fields have been removed from proto3, but I am trying to get an explanation about why this change was made and if there is any way to replicate that behavior in proto3."*</item>
+        <item>**2016-04-20**, maintainer `liujisi`: *"The proto3 spec doesn't forbid preserving unknown fields. Instead, it allows implementation to choose whether to preserve unknowns. The current C++/Java chose to drop the unknowns though. We are currently looking the issue and will keep this thread posted."*</item>
+        <item>**2016-06-12**, maintainer `xfxyjwf` — **the evidence-gathering that failed to confirm the internal rationale:** *"Some updates: we tried to gather data to prove \"unknown fields are essential for Google systems\", but the result is not so convincing (the experiment is done in a Google sub-system, not the whole of Google)."* … *"could you describe your use case in more details and explain why unknown fields is required (e.g., can the same use case be supported using some other proto3 features)? We need to prove unknown fields are needed in some common use cases in order to add it back."*</item>
+        <item>**2016-11-29**, `liujisi` — **the original stated rationale, finally, 19 months in:** *"The original motivation is to let the language implementation decide whether to preserve unknown fields, i.e. the spec does not require that implementation must preserve unknowns. This simplifies implementations and enables struct-like API. There's nothing wrong with preserving unknowns."*</item>
+        <item>**2016-11-30**, `jeremyong` — the documentation had said something stronger than the maintainer now claimed: *"If I'm not mistaken, that's simply not consistent with what the documentation has said which explicitly states \"removal of unknown fields\" as a \"feature\" of the proto 3 spec."*</item>
+        <item>**2017-03-13**, `liujisi`: *"We are planning to bring unknown fields back in proto3. Please take a look on the doc about the general plan"* (Google Doc; **not publicly fetchable — see §6**)</item>
+        <item>**2017-09-14**, `liujisi` — the staged rollout: *"The plan would be only to provide APIs for explicitly drop unknowns, for those who depend on the behavior. The default is only for testing only. In 3.5 we will flip the default."*</item>
+        <item>**2017-12-11**, `liujisi`, closing: *"All languages will be fixed in 3.5.x releases."*</item>
+        <item>**2018-07-17**, `acozzette`: *"Good catch, I'll update that documentation to say that unknown fields are now preserved for proto3 messages as of version 3.5."*</item>
+      </list>
+      <p>**The release note** [WF] — https://github.com/protocolbuffers/protobuf/releases/tag/v3.5.0:</p>
+      <quote>"Unknown fields are now preserved in proto3 for most of the language implementations for proto3 by default."
+C++: "Proto3 messages are now preserving unknown fields by default. If you rely on unknowns fields being dropped. Please use DiscardUnknownFields() explicitly."
+Java: "...please use the DiscardUnknownFieldsParser API."
+Python: "Use `message.DiscardUnknownFields()` to drop unknown fields."
+Ruby: "Unknown fields are now preserved by default."</quote>
+      <p>**The reversal broke people in the other direction too** — `kditrj2d`, 2019-03-18 [RAW]:</p>
+      <quote>"I've just upgraded a C# application that uses protobuffers from version 3.4.0 to 3.6.1.  The application relies on unknown fields not being preserved.  Now by default they ARE preserved and I've seen a significant and unacceptable increase in memory consumption.  (The ratio of known to unknown fields is about 1:5.)" [RAW] — https://github.com/protocolbuffers/protobuf/issues/272</quote>
+      <p>**Lessons, stated plainly:**</p>
+      <list ordered="true">
+        <item>The feature was removed to *simplify implementations and enable struct-like APIs* — a producer-side/implementer-side convenience.</item>
+        <item>Nobody could articulate the removal rationale for **19 months**, and when it came it was weaker than the documentation's framing had been.</item>
+        <item>The internal evidence gathered to justify keeping it removed was *"not so convincing"* — i.e. the data did not settle it; **accumulated external use-case testimony did.**</item>
+        <item>Restoring a *default* is itself a breaking change in the opposite direction. The 3.5 rollout was staged (3.4: APIs only, default unchanged; 3.5: flip default) precisely because of this.</item>
+      </list>
+    </section>
+    <section title="R4 — Enums: closed (proto2) → open (proto3/editions), with the reason stated">
+      <p>Covered in §1.1/Q3. The one-line reason:</p>
+      <quote>"Proto3 and editions use _open_ enums specifically because of the unexpected behavior that _closed_ enums cause." [WF] — https://protobuf.dev/programming-guides/enum/</quote>
+      <p>**This one is notable as the reversal that went the OTHER way from R2/R3 and stuck.** Proto3 changed enum semantics and *did not have to change back*; editions preserves the choice as a per-type feature (`features.enum_type = CLOSED`) purely for proto2 migration. The failure mode it fixed — silent reordering of repeated enum fields, and unknown enum values tripping `required` checks — was concrete and demonstrable, unlike the presence/unknown-field removals, whose justification was implementer convenience.</p>
+    </section>
+    <section title="R5 — Avro enums: hard-fail → reader-declared default (5 years), which then didn&apos;t work (5 more)">
+      <p>Covered in §1.2/Q3. Reported 25/May/13 (AVRO-1340), resolved 02/May/18, shipped 1.9.0. Reported broken across seven releases (AVRO-3313), resolved **Not A Bug** 27/Sep/23.</p>
+      <quote>"makes it difficult to use enum's because you can never add a enum value and keep old reader's compatible" [WF] — https://issues.apache.org/jira/browse/AVRO-1340</quote>
+      <p>**Lesson: an evolution escape hatch that only fires in an explicitly-two-schema resolution path is one that most users will never reach.** Ten years elapsed between "adding an enum value breaks readers" being reported and the situation being considered settled — and it was settled by reclassification, not by a fix.</p>
+    </section>
+    <section title="R6 — Protobuf syntax versioning itself: proto2/proto3 → editions">
+      <p>The largest reversal of all: the very idea of versioning the language with a `syntax` keyword.</p>
+      <quote>"The last radical change to Protobuf (`syntax = \"proto3\";`) split the ecosystem." [WF] — https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/design/editions/what-are-protobuf-editions.md</quote>
+      <quote>"Protobuf is one of Google's oldest and most successful toolchain projects. However, it was designed before we learned and internalized this lesson, making modernization difficult and haphazard." [WF] — same</quote>
+      <quote>"Protobuf Editions replace the proto2 and proto3 designations" [WF] — https://protobuf.dev/news/2023-06-29/</quote>
+      <quote>"Instead of the hardcoded behaviors in older versions, editions will represent a collection of 'features'" [WF] — https://protobuf.dev/news/2023-06-29/</quote>
+      <p>**The lesson is directly about versioning strategy and is the most transferable single item in this document:** a coarse, global, mutually-exclusive version marker (`syntax = "proto2"` vs `"proto3"`) *forces every behavioural change to be bundled into a schism*, splits the ecosystem, and then cannot be undone without a third version. The replacement is **fine-grained, individually-defaulted, individually-overridable feature flags**, with a *date-named edition* that merely sets the defaults. Every proto3 decision that was later reversed (R2, R3, R4) had to be reversed *globally* because it was bundled into `syntax`.</p>
+    </section>
+    <section title="R7 — JSON Schema `additionalProperties` → `unevaluatedProperties`">
+      <p>A softer reversal: the keyword for "no extra members" turned out not to compose with `allOf`, which is JSON Schema's primary extension mechanism. The fix was an additional, differently-scoped keyword rather than a semantic change to the original.</p>
+      <quote>"`additionalProperties` only recognizes properties declared in the same subschema as itself. So, `additionalProperties` can restrict you from 'extending' a schema using combining keywords such as allOf." [WF] — https://json-schema.org/understanding-json-schema/reference/object</quote>
+      <quote>"Because `additionalProperties` only recognizes properties declared in the same subschema, it considers anything other than 'street_address', 'city', and 'state' to be additional. Combining the schemas with allOf doesn't change that." [WF] — same</quote>
+      <p>**Lesson: strictness keywords must be defined in terms of what the WHOLE schema evaluated, not what the LEXICALLY ENCLOSING subschema declared. Getting this scope wrong is not fixable in place once tools depend on it.**</p>
+    </section>
+    <section title="R8 — The robustness principle itself">
+      <p>The largest reversal in the field, and the one that reframes all the others. RFC 1122's "be liberal in what you accept" was IETF orthodoxy for thirty years; RFC 9413 (2023) is the IAB's retraction.</p>
+      <quote>"Be strict when sending and tolerant when receiving. Implementations must follow specifications precisely when sending to the network, and tolerate faulty input from the network." [WF, §2] — https://www.rfc-editor.org/rfc/rfc9413.html</quote>
+      <quote>"An implementation that reacts to variations in the manner recommended in the robustness principle enters a pathological feedback cycle." [WF, §4.1] — same</quote>
+      <quote>"A flaw can become entrenched as a de facto standard. Any implementation of the protocol is required to replicate the aberrant behavior, or it is not interoperable." [WF, §4.1] — same</quote>
+      <quote>"Choosing to generate fatal errors for unspecified conditions instead of attempting error recovery can ensure that faults receive attention." [WF, §5.1] — same</quote>
+      <p>**Critical reading — and this is where most citations of RFC 9413 go wrong.** RFC 9413 attacks tolerance of *non-conformant* input. It does **not** attack tolerance of *declared extension points*. Protobuf's unknown-field preservation, Avro's "ignore the writer's extra fields", and JTD's `additionalProperties: true` are all *specified* behaviours at *declared* extension points, and RFC 9413's remedy — §5's insistence on responsiveness and active exercise of extension points — is compatible with all of them. **The synthesis: be strict about the grammar, be tolerant at the extension points you declared, and exercise those extension points continuously so they do not ossify.**</p>
+    </section>
+  </section>
+  <section title="§4 The compatibility vocabulary">
+    <p>People get these backwards because the words describe *what the SCHEMA can read*, not *what direction data travels*. Two rules make it unconfusable:</p>
+    <quote>**Fix the reader. Ask what it can read.**
+- **BACKWARD compatible** = the **new reader** can read **old data**. (You can read *backwards in time*.)
+- **FORWARD compatible** = the **old reader** can read **new data**. (Old code can read data from the *future*.)</quote>
+    <p>The Confluent definitions, which are the canonical ones [WF] — https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html:</p>
+    <quote>Backward: "consumers using the new schema can read data produced with the last schema"
+Forward: "data produced with a new schema can be read by consumers using the last schema"
+Full: "Schemas are both backward and forward compatible."</quote>
+    <section title="Worked examples">
+      <p>Start from V1: `{"id": "x", "name": "n"}`.</p>
+      <p>**BACKWARD-compatible change — ADD an optional field.** V2 adds `"nickname"` (optional, defaulted).</p>
+      <list ordered="false">
+        <item>New reader (V2) reading old data (V1, no `nickname`) → works; `nickname` takes its default. **✓ backward.**</item>
+        <item>Old reader (V1) reading new data (V2, has `nickname`) → sees an unknown member. Works only if the old reader is tolerant. **Under a strict-reader regime this is NOT forward-compatible.**</item>
+        <item>Upgrade order: **consumers/readers first.** ("upgrade all consumers before you start producing new events")</item>
+      </list>
+      <p>**FORWARD-compatible change — REMOVE an optional field.** V2 deletes `"name"`.</p>
+      <list ordered="false">
+        <item>Old reader (V1) reading new data (V2, no `name`) → works if V1 treats `name` as optional with a default. **✓ forward.**</item>
+        <item>New reader (V2) reading old data (V1, has `name`) → sees an unknown member. Tolerant readers fine; strict readers break. **Not backward under strict reading.**</item>
+        <item>Upgrade order: **producers/writers first.** ("first upgrade all producers to using the new schema...then upgrade the consumers")</item>
+      </list>
+      <p>**FULL — both.** Only add-optional-with-default and remove-optional-with-default, and only if readers on both sides tolerate unknown members. "you can upgrade the producers and consumers independently".</p>
+      <p>**Note the symmetry that makes the whole thing click:** *adding* a field is backward-compatible-and-forward-hostile; *removing* a field is forward-compatible-and-backward-hostile. **Tolerant readers are exactly what converts each of those into FULL.** That is the entire mechanism by which unknown-field tolerance buys independent deployability — and it is why protobuf, whose readers are unconditionally tolerant in binary, does not need the backward/forward vocabulary at all and instead uses the symmetric wire-safe/wire-unsafe tiers (§1.1/Q8).</p>
+    </section>
+    <section title="TRANSITIVE">
+      <quote>BACKWARD_TRANSITIVE / FORWARD_TRANSITIVE / FULL_TRANSITIVE check against "all previously registered schemas"; the non-transitive variants check only the immediately preceding version. [WF] — same URL</quote>
+      <p>**Non-transitive compatibility does not compose.** V1→V2 compatible and V2→V3 compatible does not imply V1→V3 compatible. Classic counterexample: V2 adds field `x` with default; V3 removes `x`. Each step is BACKWARD-clean against its predecessor; V3's reader against V1's data is fine, but a V2 reader against V3 data, or any accumulated-history replay, is not guaranteed. **For data at rest — where V1 files never go away — only TRANSITIVE has meaning.**</p>
+    </section>
+    <section title="Terms that are NOT the same thing, and are routinely conflated">
+      <list ordered="false">
+        <item>**Wire compatibility** (protobuf) — can the bytes be parsed at all. Weaker than semantic compatibility: `int32`↔`int64` is wire-compatible but changes the value's meaning for large values.</item>
+        <item>**Schema compatibility** (Avro/Confluent) — will resolution succeed for a given (writer, reader) pair.</item>
+        <item>**Semantic compatibility** — does the result mean the same thing. **No format in this corpus checks this.** Protobuf explicitly warns about it: "Almost never change the default value of a proto field. This causes version skew between clients and servers." [WF] — https://protobuf.dev/best-practices/dos-donts/</item>
+        <item>**Deployment-order compatibility** — the "upgrade first" column. This is an *operational* property, not a format property. Thrift stated it in 2007 ("It is recommended that in this situation the new server be rolled out prior to the new clients" [RAW]) and Confluent codified it 2015+.</item>
+      </list>
+    </section>
+  </section>
+  <section title="§5 What applies to data-at-rest specifically">
+    <p>These formats are overwhelmingly RPC/streaming designs. The transfer is not uniform. Being explicit about the failures matters more than the successes.</p>
+    <section title="Transfers well">
+      <p>**1. Numeric-tag identity is the single strongest idea — and JSON cannot have it.** Every binary format here (protobuf, Thrift, Cap'n Proto, FlatBuffers) made field identity numeric and made names free to change. In a JSON file the name *is* the identity, so you inherit Avro's position — name-based identity, renaming is breaking — without Avro's saving grace (see #2). **Practical consequence: a JSON-in-a-repo format should treat key names as immutable-forever from first publication, and needs a `reserved`/`deprecated` register maintained by convention and tooling, because the format gives you nothing.** Note protobuf's own admission that even *its* reserved-names half is toothless at runtime ("Reserved field names affect only the protoc compiler behavior and not runtime behavior") — you would be building the enforcement that protobuf declined to build.</p>
+      <p>**2. Ship the schema (or a schema pointer) WITH the data — Avro's central idea, and it fits files better than it fits RPC.** *"a reader of Avro data ... can always parse that data because the original schema must be provided along with the data."* In RPC this is expensive per message, which is why Confluent invented the 5-byte schema-id prefix. **In a git repository it is nearly free**: the file can carry a `$schema`-style pointer or a version marker, and — uniquely for the repo case — *the schema's own history is in the same git history as the data*. This is a structural advantage over every format studied. Avro's model (writer's schema travels with the data, reader resolves against it) is the closest analogue and the one to copy.</p>
+      <p>**3. TRANSITIVE compatibility is the only meaningful setting.** Files written in 2019 are still sitting in the repo in 2026. Non-transitive checking, Confluent's *default*, is designed for a streaming world where old messages age out of retention. **That assumption is exactly false for a repository.** Adopt FULL_TRANSITIVE as the mental model even if nothing enforces it.</p>
+      <p>**4. Tagged unions only — and the tag must be unambiguous by construction.** Every format here rejects untagged unions except JSON Schema, and JSON Schema's `discriminator` is a *hint* over untagged semantics, which is precisely where its known problems come from. JTD's method — forbid the ambiguous schema *at the syntactic level* rather than defining a tie-break — is the right one, and it is cheap to adopt: one reserved tag key, present in every variant, never redefined by a variant.</p>
+      <p>**5. Open enums with a documented unknown-handling rule.** Protobuf switched *to* open enums and never switched back; the failure modes it fixed (silent reordering, interaction with required checks) are concrete. Avro spent ten years failing to retrofit the equivalent. **For a file format read by third-party tools you cannot upgrade, closed enums mean every vocabulary addition is a breaking change for every stale reader.** Decide the unknown-value rule up front — pass through / map to sentinel / reject — because retrofitting it is what AVRO-1340 and AVRO-3313 document as a decade of pain.</p>
+      <p>**6. The `required`-is-forever lesson transfers with full force, and arguably harder.** The Cap'n Proto message-bus story is about *validation baked into the parser propagating failure to parties that do not care about the content*. In a repo read by third-party tools this is worse than in RPC, because you cannot deploy a fix to the third-party tools at all. **Validation belongs in the application layer, downstream of parsing, and never in the load path of a generic tool.**</p>
+      <p>**7. Thrift's two-layer split — version the envelope, evolve the content.** *"protocol encoding changes are safely isolated from interface definition version changes."* For a file format: a small, explicit, coarse version marker for the *container/encoding* (which you will change rarely and can gate on), plus field-level compatibility rules for the *content* (which changes constantly and must never gate). Conflating these is exactly the `syntax = "proto3"` mistake (R6).</p>
+      <p>**8. R6's lesson about versioning strategy.** Do not create a global version marker whose value changes *behaviour* in bundles. Protobuf spent a decade unwinding it. If behaviour must be switchable, switch it per-field/per-type with individual defaults.</p>
+    </section>
+    <section title="Transfers partially, with a real caveat">
+      <p>**9. Unknown-field preservation.** The *motivation* transfers perfectly and is arguably stronger for files: the read-modify-write cycle (tool reads file → edits one field → writes file back) is *the* dominant access pattern for config-in-a-repo, and it is precisely the pattern that destroys unknown fields. `matthewrj`'s formulation is exactly the repo case: *"C can't tell if one of the new fields was set to the default value or if B is just out of date and lost data."* In a repo, "B lost data" shows up as a **spurious git diff that silently deletes keys** — visible in review, at least, which is more than the RPC case gets.</p>
+      <p>*The caveat:* the *mechanism* does not transfer for free. Protobuf preserves unknown fields because its generated code carries an `UnknownFieldSet` alongside the typed struct. A JSON consumer that deserializes into a typed struct — which is what every code generator, including JTD's, produces — **drops unknown keys by construction**, and you cannot make third-party tools carry an unknown-field bag. So: state the preservation *requirement* normatively for writers, provide a preserving reference implementation, and **design the format so that the damage from a non-preserving tool is visible** (i.e. it shows up as deleted keys in a diff) rather than silent.</p>
+      <p>**10. Strict-vs-tolerant.** RFC 9413's critique is real but it is aimed at tolerance of *malformed* input, not at *declared extension points*. The correct posture for a repo format: **strict about grammar and about the values of keys you own; tolerant at explicitly-declared extension points; and exercise the extension points continuously so they do not ossify.** JTD's default (reject unknown members unless `additionalProperties: true`) is the better *starting* default — because the opt-in is explicit and auditable — but the opt-in must actually be used for the extensible parts, and the preservation requirement (#9) must accompany it.</p>
+    </section>
+    <section title="Does NOT transfer — be honest about these">
+      <p>**11. "Just use binary."** Protobuf's answer to every JSON-fidelity problem is *"Use binary; avoid using text formats for data exchange."* That option does not exist here. **Every unknown-field, name-stability, and default-value problem protobuf solves by pointing at the binary encoding lands squarely on us.** Concretely, we inherit ProtoJSON's whole problem set: names embedded in the data, unknown fields not propagated, and a parser whose default is to *reject*.</p>
+      <p>**12. Deployment-ordering remedies.** Thrift's "roll out the new server before the new clients" and Confluent's whole "upgrade first" column assume you control the deployment of both sides. **With third-party tools reading files from a git repo, you control neither side and there is no ordering to prescribe.** Every FORWARD-compatibility problem that RPC solves by deploying producers first is, for us, unsolvable operationally and must be solved in the format. This makes forward compatibility (old tools reading new files) *structurally more important* for us than for any of the studied formats, and it is the one they all treat as the weaker requirement.</p>
+      <p>**13. Central schema registry with enforcement.** Confluent's compatibility modes are *enforced at registration time by a server that can reject your schema*. There is no such chokepoint for files in a repo — the "registry" is a code review at best, a merge at worst. **The taxonomy is valuable as vocabulary and as CI-check design; the enforcement model is not available.** (Partial mitigation unique to the repo case: CI *can* replay every historical version of the schema against the current one, which is a genuinely feasible TRANSITIVE check, and is more than most streaming shops manage.)</p>
+      <p>**14. Positional / index-based anything.** Avro's binary union branch index, FlatBuffers' positional union discriminants and slot ordering, Cap'n Proto's ordinals — all depend on a canonical field ordering that a JSON document does not have and should not acquire. **Do not build ordering-dependent semantics into a JSON format.** (Note Avro's own JSON encoding abandons the branch index for a type-name tag, for exactly this reason. Where Avro's binary and JSON encodings disagree, follow the JSON one.)</p>
+      <p>**15. Message-size and parse-cost trade-offs.** Cap'n Proto's zero-copy arena design, FlatBuffers' random access, protobuf's varints — all of these shaped evolution rules (e.g. Cap'n Proto's "you can't resize a list", its refusal of optional fields to avoid per-field overhead). **None of these pressures apply to files in a repo, and any rule justified by them should be discarded rather than copied.** In particular: Cap'n Proto's "give the field a bogus default value and interpret that value to mean 'not present'" is a wire-efficiency hack. In JSON, absence is free and unambiguous — use it, and do not invent sentinel values.</p>
+      <p>**16. `oneof`'s unknown-variant ambiguity is avoidable for us — do not inherit it.** Protobuf cannot distinguish "oneof unset" from "oneof set to a variant I don't know" because the unknown variant's tag goes to the unknown-field set. **A JSON tagged union does not have this problem**: the tag key is present and its value is a string the reader can see and report, even when unrecognised. This is a case where the JSON representation is *strictly better* than the binary one, and copying protobuf's `oneof` semantics wholesale would import a limitation that does not apply.</p>
+    </section>
+  </section>
+  <section title="§6 Re-fetch list">
+    <p>All fetched **2026-08-09**. Version/date column records what the document itself claims.</p>
+    <section title="Primary — read from raw source [RAW], character-exact">
+      <table>
+        <tr>
+          <td>URL</td>
+          <td>Doc version / date</td>
+          <td>Notes</td>
+        </tr>
+        <tr>
+          <td>https://www.rfc-editor.org/rfc/rfc8927.txt</td>
+          <td>RFC 8927, November 2020</td>
+          <td>2333 lines. §1 (goals), §2.2.8 (discriminator constraints), §3.1 (additionalProperties), §3.3.6 (properties), §3.3.8, Appendix A (omitted features)</td>
+        </tr>
+        <tr>
+          <td>https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/versions/3.0.3.md</td>
+          <td>OAS 3.0.3</td>
+          <td>3454 lines. Discriminator Object §4.7.25 at lines 2693–2790; composition/polymorphism note at 2350–2360</td>
+        </tr>
+        <tr>
+          <td>https://thrift.apache.org/static/files/thrift-20070401.pdf</td>
+          <td>Thrift whitepaper, 2007-04-01, Facebook</td>
+          <td>8 pages. §5 Versioning (5.1 field identifiers, 5.3 case analysis, 5.4 protocol versioning); `__isset` design</td>
+        </tr>
+        <tr>
+          <td>https://capnproto.org/faq.html</td>
+          <td>undated, current</td>
+          <td>"How do I make a field 'required'…" and "How do I make a field optional?" — the message-bus outage narrative in full</td>
+        </tr>
+        <tr>
+          <td>https://api.github.com/repos/protocolbuffers/protobuf/issues/272/comments</td>
+          <td>issue opened 2015-04-07, closed 2017-12-11, 69 comments</td>
+          <td>The unknown-fields reversal thread. Key comments: liujisi 2016-04-20, xfxyjwf 2016-06-12, liujisi 2016-11-29 / 2017-03-13 / 2017-09-14 / 2017-12-11, acozzette 2018-07-17</td>
+        </tr>
+        <tr>
+          <td>https://diwakergupta.github.io/thrift-missing-guide/thrift.pdf</td>
+          <td>*Thrift: The Missing Guide*, Diwaker Gupta, undated</td>
+          <td>**Secondary source.** §1.3 Enums</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Primary — fetched via HTML extraction [WF], spot-checkable">
+      <table>
+        <tr>
+          <td>URL</td>
+          <td>Doc version / date</td>
+          <td>Notes</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/proto3/</td>
+          <td>current</td>
+          <td>Updating A Message Type; reserved; unknown fields; optional; enums; JSON pointer</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/proto2/</td>
+          <td>current</td>
+          <td>"Required Is Forever"; required↔optional; required×enum interaction; full rule list</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/field_presence/</td>
+          <td>current</td>
+          <td>presence definitions; disciplines; 3.15/3.12 timeline; JSON/null discussion</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/enum/</td>
+          <td>current</td>
+          <td>open vs closed; the "specifically because of the unexpected behavior" rationale; repeated-enum reordering; maps</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/best-practices/dos-donts/</td>
+          <td>current</td>
+          <td>**note: NOT `/programming-guides/dos-donts/`, which 404s**</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/json/</td>
+          <td>current</td>
+          <td>ProtoJSON: default-value omission; null parsing; **"should reject unknown fields by default"**; enums</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/programming-guides/editions/</td>
+          <td>current</td>
+          <td>`field_presence`, `LEGACY_REQUIRED`, `enum_type = CLOSED`</td>
+        </tr>
+        <tr>
+          <td>https://protobuf.dev/news/2023-06-29/</td>
+          <td>2023-06-29</td>
+          <td>editions announcement</td>
+        </tr>
+        <tr>
+          <td>https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/design/editions/what-are-protobuf-editions.md</td>
+          <td>main branch</td>
+          <td>"split the ecosystem"; "We still have `required` and `group`"</td>
+        </tr>
+        <tr>
+          <td>https://raw.githubusercontent.com/protocolbuffers/protobuf/main/docs/implementing_proto3_presence.md</td>
+          <td>main branch</td>
+          <td>presence restoration rationale; synthetic oneof</td>
+        </tr>
+        <tr>
+          <td>https://github.com/protocolbuffers/protobuf/releases/tag/v3.5.0</td>
+          <td>v3.5.0, Nov 2017</td>
+          <td>unknown-field restoration, per language</td>
+        </tr>
+        <tr>
+          <td>https://github.com/protocolbuffers/protobuf/releases/tag/v3.15.0</td>
+          <td>v3.15.0, Feb 2021</td>
+          <td>proto3 optional default-on</td>
+        </tr>
+        <tr>
+          <td>https://avro.apache.org/docs/1.11.1/specification/</td>
+          <td>Avro 1.11.1</td>
+          <td>Schema Resolution; union binary+JSON encoding; field `default`; enum `default`; aliases</td>
+        </tr>
+        <tr>
+          <td>https://avro.apache.org/docs/1.12.0/specification/</td>
+          <td>Avro 1.12.0</td>
+          <td>"schema must be provided along with the data"; JSON encoding notes</td>
+        </tr>
+        <tr>
+          <td>https://issues.apache.org/jira/browse/AVRO-1340</td>
+          <td>reported 25/May/13, resolved 02/May/18, fix 1.9.0</td>
+          <td>enum default proposal</td>
+        </tr>
+        <tr>
+          <td>https://issues.apache.org/jira/browse/AVRO-3313</td>
+          <td>affects 1.9.0–1.11.0, resolved **Not A Bug** 27/Sep/23</td>
+          <td>enum default reportedly non-functional</td>
+        </tr>
+        <tr>
+          <td>https://thrift.apache.org/docs/idl</td>
+          <td>current</td>
+          <td>field id grammar; three requiredness levels; the required/soft-versioning critique</td>
+        </tr>
+        <tr>
+          <td>https://thrift.apache.org/docs/types</td>
+          <td>current</td>
+          <td>**returned NOT FOUND for enums and unions**</td>
+        </tr>
+        <tr>
+          <td>https://capnproto.org/language.html</td>
+          <td>current</td>
+          <td>Evolving Your Protocol: allowed/forbidden lists; union definition</td>
+        </tr>
+        <tr>
+          <td>https://capnproto.org/news/2014-06-17-capnproto-flatbuffers-sbe.html</td>
+          <td>2014-06-17</td>
+          <td>feature matrix incl. "Unknown field retention"; the proto3 remark</td>
+        </tr>
+        <tr>
+          <td>https://flatbuffers.dev/schema/</td>
+          <td>current</td>
+          <td>`id`, `deprecated`, struct limitations, enum forward-compat</td>
+        </tr>
+        <tr>
+          <td>https://flatbuffers.dev/evolution/</td>
+          <td>current</td>
+          <td>add-to-end, no-removal, union variant ordering, renaming</td>
+        </tr>
+        <tr>
+          <td>https://json-schema.org/understanding-json-schema/reference/object</td>
+          <td>current draft docs</td>
+          <td>additionalProperties default; the allOf scoping failure; unevaluatedProperties</td>
+        </tr>
+        <tr>
+          <td>https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html</td>
+          <td>current</td>
+          <td>the seven compatibility types; default BACKWARD; upgrade ordering</td>
+        </tr>
+        <tr>
+          <td>https://www.rfc-editor.org/rfc/rfc9413.html</td>
+          <td>RFC 9413, June 2023 (IAB)</td>
+          <td>robustness principle critique</td>
+        </tr>
+        <tr>
+          <td>https://yokota.blog/2021/08/26/understanding-protobuf-compatibility/</td>
+          <td>2021-08-26</td>
+          <td>**secondary.** oneof compatibility; the NOT_SET ambiguity</td>
+        </tr>
+        <tr>
+          <td>https://ajv.js.org/json-type-definition.html</td>
+          <td>current</td>
+          <td>**secondary.** JTD strictness; what JTD cannot express</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Not fetchable / dead — record these as unavailable">
+      <table>
+        <tr>
+          <td>URL</td>
+          <td>Status</td>
+        </tr>
+        <tr>
+          <td>`https://docs.google.com/document/d/1KMRX-G91Aa-Y2FkEaHeeviLRRNblgIahbsk4wA14gRk/edit`</td>
+          <td>**The protobuf unknown-fields restoration design doc**, linked by maintainer `liujisi` 2017-03-13 in issue #272. Not publicly fetchable. Its contents are known only through the quoted excerpt in `jbolla`'s 2017-09-13 comment: *"3.4 release (ETA: Q3 2017): Google protobuf implementation for each language will provide APIs to explicitly drop or preserve unknowns for proto3. A temporary flag will be introduced for the default parsing behavior - default to drop unknowns."* **This is the highest-value document I could not obtain.**</td>
+        </tr>
+        <tr>
+          <td>`https://jsontypedef.com/` , `https://jsontypedef.com/docs/` , `https://jsontypedef.com/docs/jtd-in-5-minutes/`</td>
+          <td>**Domain lost.** `/docs/*` 404s; the root now serves unrelated casino-affiliate content. JTD's authored documentation site no longer exists. Use RFC 8927 + `github.com/jsontypedef`.</td>
+        </tr>
+        <tr>
+          <td>`https://spec.openapis.org/oas/v3.1.0.html` , `https://spec.openapis.org/oas/v3.0.3.html`</td>
+          <td>Fetched but **truncated before the Discriminator Object section**. Use the GitHub raw markdown instead (listed above).</td>
+        </tr>
+        <tr>
+          <td>`https://protobuf.dev/programming-guides/dos-donts/`</td>
+          <td>404 — the correct path is `/best-practices/dos-donts/`.</td>
+        </tr>
+      </table>
+    </section>
+    <section title="Enumerated gaps (NOT FOUND), with searches performed">
+      <list ordered="true">
+        <item>**Protobuf's stated rationale for excluding untagged unions** — searched proto3/proto2/editions guides, dos-donts, editions design docs. None exists; protobuf never had them.</item>
+        <item>**Protobuf's stated rationale for field-level rather than version-level evolution** — searched the same set. Inferable, never stated.</item>
+        <item>**Apache Thrift's `union` semantics, authoritatively** — /docs/types explicitly returned no union content; /docs/idl covers field ids and requiredness only.</item>
+        <item>**Thrift enum unknown-value behaviour, authoritatively** — /docs/types returned NOT FOUND. Only the secondary *Missing Guide* quote.</item>
+        <item>**Thrift unknown-field preservation, authoritatively** — searched /docs/idl, /docs/types, whitepaper, Missing Guide. No `UnknownFieldSet` analogue exists; no explicit statement found.</item>
+        <item>**Thrift `reserved`-id mechanism** — searched /docs/idl and the whitepaper. Does not exist.</item>
+        <item>**A published Facebook retrospective on Thrift's required/optional design** — searched "Thrift retrospective", "Facebook Thrift lessons", "Thrift required fields harmful". The closest is Thrift's own IDL docs (quoted in §1.3/Q8 and §3 R1).</item>
+        <item>**Ulysse Carion's own blog/essay on JTD design goals vs JSON Schema** — four distinct searches (listed in §1.4). Site is dead; the surviving rationale is RFC 8927 §1 and Appendix A.</item>
+        <item>**Avro `reserved`/name-retirement mechanism** — searched 1.11.1 and 1.12.0 specs. Does not exist.</item>
+        <item>**Avro's own backward/forward compatibility taxonomy** — searched both specs. Does not exist; the vocabulary is Confluent's.</item>
+        <item>**OpenAPI 3.0 `nullable` → 3.1 `type: null` realignment, verbatim** — the 3.1 HTML fetch truncated before the relevant sections; not re-attempted via raw markdown.</item>
+        <item>**FlatBuffers' own explicit comparison to protobuf's mistakes** — the schema page "contains no explicit Protocol Buffers comparison"; the comparison exists only externally (Cap'n Proto 2014).</item>
+      </list>
+    </section>
+  </section>
+</spec>

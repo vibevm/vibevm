@@ -25,14 +25,14 @@ per-language cards, the guides — ships in each language stack
 
 ## Reading order (human reviewer / strong author) {#reading-order}
 
-1. @fact:READ-MANIFESTO `spec/00-MANIFESTO.md` — mission, axioms, the central law, §8 the package map. Start here. @status:impl/done
-2. @fact:READ-PATTERN-CARD-FORMAT `spec/01-PATTERN-CARD-FORMAT.md` — the format every pattern card is written in. @status:impl/done
-3. @fact:READ-SCAFFOLDS `spec/02-EXECUTABLE-SCAFFOLDS.md` — the nine runnable-capital classes. @status:impl/done
+1. @fact:READ-MANIFESTO `spec/00-MANIFESTO.xml` — mission, axioms, the central law, §8 the package map. Start here. @status:impl/done
+2. @fact:READ-PATTERN-CARD-FORMAT `spec/01-PATTERN-CARD-FORMAT.xml` — the format every pattern card is written in. @status:impl/done
+3. @fact:READ-SCAFFOLDS `spec/02-EXECUTABLE-SCAFFOLDS.xml` — the nine runnable-capital classes. @status:impl/done
 4. @fact:READ-STACK-GUIDE The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @status:impl/done
-5. @fact:READ-PLAYBOOKS `spec/03-RAID-PLAYBOOK.md` + `spec/04-SWEEP-PLAYBOOK.md` + `spec/05-CAMPAIGN-FORM.md` — campaigns and the standing sweep. @status:impl/done
-6. @fact:READ-WAL-CONVENTION `spec/06-WAL-CONVENTION.md` — session-durable project state (optional but preferred). @status:impl/done
+5. @fact:READ-PLAYBOOKS `spec/03-RAID-PLAYBOOK.xml` + `spec/04-SWEEP-PLAYBOOK.xml` + `spec/05-CAMPAIGN-FORM.xml` — campaigns and the standing sweep. @status:impl/done
+6. @fact:READ-WAL-CONVENTION `spec/06-WAL-CONVENTION.xml` — session-durable project state (optional but preferred). @status:impl/done
 7. @fact:READ-MECHANISMS `spec/mechanisms/` — ENGINE-CONFORM, PROP-014 (specmap), BROWNFIELD-PROTOCOL, LEDGER-INTENT, MCP-CORE: the normative mechanism specs; `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…` is what code tags cite. @status:impl/done
-8. @fact:READ-APPENDIX `spec/appendix/` — `CONTRADICTION-MAP.md` (synthesis provenance) and `ATLAS.md` (findings ledger). @status:impl/done
+8. @fact:READ-APPENDIX `spec/appendix/` — `CONTRADICTION-MAP.xml` (synthesis provenance) and `ATLAS.xml` (findings ledger). @status:impl/done
 
 ## The two load-bearing results behind everything {#load-bearing-results}
 
@@ -58,7 +58,8 @@ per-language cards, the guides — ships in each language stack
 @fact:open-question-transfer The central open question — does the
 executable-scaffold advantage transfer from *generation* to *modification* —
 is unproven and is the pilot's job (see
-`spec/appendix/CONTRADICTION-MAP.md` C-7). @status:spec/done
+`spec/appendix/CONTRADICTION-MAP.xml` C-7). @status:spec/done
 
 @fact:names-failure-modes A discipline that names its failure modes is more
 trustworthy than one that hides them. @status:spec/done
+

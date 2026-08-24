@@ -25,17 +25,17 @@ flow is the sanctioned way to close that gap. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/sync-from-code/SYNC-PROTOCOL.md` — full protocol: what
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/sync-from-code/SYNC-PROTOCOL.xml` — full protocol: what
   Sync-from-Code is, when to run it, what the draft spec diff must
   contain (value + reason + revisit trigger), and what it explicitly
   does not do. @status:impl/done
-- @fact:CONTENT-THE-DECISION-TABLE `spec/flows/sync-from-code/when-to-apply.md` — decision table:
+- @fact:CONTENT-THE-DECISION-TABLE `spec/flows/sync-from-code/when-to-apply.xml` — decision table:
   *should I run it right now?*, including the cases where you should
   **not** (temporary hacks, mechanical changes, unnamed reasons). @status:impl/done
-- @fact:CONTENT-THE-REVIEW-CHECKLIST `spec/flows/sync-from-code/review-workflow.md` — human-side checklist
+- @fact:CONTENT-THE-REVIEW-CHECKLIST `spec/flows/sync-from-code/review-workflow.xml` — human-side checklist
   for the approval step: six checks that catch bad syncs before they
   land. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/20-flow-sync-from-code.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/20-flow-sync-from-code.xml` — boot snippet loaded at
   session start, pointing the agent at the protocol. @status:impl/done
 
 ## Install {#install}
@@ -53,7 +53,7 @@ vibe uninstall flow:sync-from-code
 @fact:UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot
 snippet. @status:impl/done
 
-@fact:USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
+@fact:USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files (`00-core.xml`, `90-user.xml`, `WAL.md`) are
 never touched. @status:impl/done
 
 ## Composition {#composition}
@@ -78,3 +78,4 @@ spec stops being authoritative. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE` and the surrounding registry for distribution terms. @status:impl/done
+

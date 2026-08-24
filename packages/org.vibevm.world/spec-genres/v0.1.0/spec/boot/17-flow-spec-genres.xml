@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Spec Genres</title>
+  <status stage="impl" state="done"/>
+  <p><PROJECT-DOCUMENTS-ARE-GENRE-TYPED fact="true" status="impl/done">This project's documents are **genre-typed**.</PROJECT-DOCUMENTS-ARE-GENRE-TYPED></p>
+  <p><UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS fact="true" status="spec/done">One undifferentiated
+pile of markdown rots: contracts bloat with narrative, narrative
+gets treated as binding, and nobody knows what wins.</UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS></p>
+  <p><EVERY-DOCUMENT-BELONGS-TO-EXACTLY-ONE-GENRE fact="true" status="impl/done">Every document
+belongs to exactly one genre; the genre decides where it lives, how
+it may change, and what authority it carries.</EVERY-DOCUMENT-BELONGS-TO-EXACTLY-ONE-GENRE></p>
+  <genre-map title="The genre map">
+    <table>
+      <tr>
+        <td>Genre</td>
+        <td>Holds</td>
+        <td>Binding?</td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-BOOT-FILES fact="true" status="impl/done">Boot files</ROW-GENRE-BOOT-FILES></td>
+        <td><fact status="impl/done">Standing instructions read at session start</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">Foundational decisions</ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
+        <td><fact status="impl/done">Choices that cross every module</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">Module contracts</ROW-GENRE-MODULE-CONTRACTS></td>
+        <td><fact status="impl/done">What each module does (here: PROP / FEAT)</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">Design docs</ROW-GENRE-DESIGN-DOCS></td>
+        <td><fact status="impl/done">Why we chose what we chose — the lore</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">Research docs</ROW-GENRE-RESEARCH-DOCS></td>
+        <td><fact status="impl/done">What *other* projects did</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">Campaign plans</ROW-GENRE-CAMPAIGN-PLANS></td>
+        <td><fact status="impl/done">Phases and gates of one multi-session change</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">The checkpoint</ROW-GENRE-THE-CHECKPOINT></td>
+        <td><fact status="impl/done">Where work stands right now</fact></td>
+        <td><fact status="impl/done">state, not truth</fact></td>
+      </tr>
+    </table>
+    <p><full-charters-pointer fact="true" status="impl/done">Full charters, mutability rules, and conflict authority:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root.</full-charters-pointer></p>
+  </genre-map>
+  <core-rule title="Core rule">
+    <p><NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT fact="true" status="impl/done">**Before writing any project document, name its genre first.** Then:</NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT></p>
+    <facts ordered="true">
+      <CONTRACT-WINS-OVER-LORE fact="true" status="impl/done">**Contract wins over lore.** When a design document and the
+   contract it explains disagree, the contract wins and the design
+   document is corrected — lore never silently diverges.</CONTRACT-WINS-OVER-LORE>
+      <KEEP-THE-TWO-WAY-LINKS fact="true" status="impl/done">**Keep the two-way links.** A contract section that has lore
+   links to it; the lore names the section it explains. A cold
+   reader entering from either side finds the other.</KEEP-THE-TWO-WAY-LINKS>
+    </facts>
+    <p><routing-table-pointer fact="true" status="impl/done">Routing table for new material:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root.</routing-table-pointer></p>
+    <p><design-docs-pointer fact="true" status="impl/done">The contract/lore split in practice:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/design-docs#root.</design-docs-pointer></p>
+  </core-rule>
+  <why title="Why this matters in a human-AI team">
+    <p><AGENT-READS-THE-TREE-COLD-EVERY-SESSION fact="true" status="spec/done">The agent reads the tree cold every session.</AGENT-READS-THE-TREE-COLD-EVERY-SESSION></p>
+    <p><look-alike-prose-gets-implemented-or-softened fact="true" status="spec/done">If binding and
+non-binding prose look alike, it will implement a parked idea out of
+a design doc, or soften a contract because the narrative around it
+sounded tentative.</look-alike-prose-gets-implemented-or-softened></p>
+    <p><GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING fact="true" status="spec/done">Genre typing is what lets a cold reader assign
+authority to a sentence without asking anyone.</GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING></p>
+  </why>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC fact="true" status="impl/done">Never put normative language — "must", "shall", requirement
+  lists — in a design doc. Extract it to the contract; link back.</NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC>
+      <NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE fact="true" status="impl/done">Never resolve a contract-vs-lore conflict by editing the contract
+  to match the lore. The correction runs the other way.</NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE>
+      <NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE fact="true" status="impl/done">Never create a document without deciding its genre.</NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE>
+      <NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT fact="true" status="impl/done">Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start.</NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT>
+    </facts>
+  </never>
+</spec>

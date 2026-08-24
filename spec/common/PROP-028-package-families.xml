@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-028 — Package families: `&lt;family&gt;` / `-lang` / `-mcp`</title>
+  <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED 2026-07-07; the three families in force; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status:** IMPLEMENTED 2026-07-07 — owner-directed (the package-family
+rename). The three families in force ship under this convention: requiring one
+aggregator installs its whole family at a single resolved version set, and the
+served engines can never skew from the consumer's gates. Units typed at REQ
+grain.
+**Related:** [PROP-008 §2.2](../modules/vibe-registry/PROP-008-qualified-naming.xml)
+(a renamed package is a NEW identity — a family member is not an alias of the
+name it replaced), [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml)
+(the `mcp` kind and the exact-pin law the `-mcp` member obeys),
+[PROP-024](PROP-024-code-bearing-packages.xml) (code-bearing packages — every
+`-lang` / `-mcp` member is one), [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.xml)
+(boot loading — the aggregator carries no snippet; members' snippets reach
+`INDEX.md` through the transitive BFS closure of `[requires]`).</status-line></p>
+  <context title="1. Context">
+    <facts ordered="false">
+      <context-delivery-shape fact="true" status="impl/done">The AI-Native discipline reaches a consumer as several installable packages per
+  language: the language STACK (guide, cards, runnable toolchain), the MCP SERVER
+  that serves that toolchain over the wire (PROP-027), and — beneath both — the
+  language-neutral FLOW core the stack projects.</context-delivery-shape>
+      <context-before fact="true" status="impl/done">Before this convention a single name (`rust-ai-native`) meant the stack alone,
+  and the server borrowed an unrelated name (`discipline-rust`).</context-before>
+      <context-costs fact="true" status="impl/done">Two costs followed:</context-costs>
+      <context-cost-pinning fact="true" status="impl/done">a consumer who wanted "the Rust discipline, whole" had to know and hand-pin
+    three loosely-related packages;</context-cost-pinning>
+      <context-cost-name fact="true" status="impl/done">the server's name hid which stack it served (so the exact-pin law
+    of PROP-027 §2.3 read as an accident rather than a family tie).</context-cost-name>
+    </facts>
+  </context>
+  <decision title="2. Decision">
+    <roles title="2.1 Three roles, one family stem">
+      <p><req-roles fact="true" status="impl/done">`req r1`</req-roles></p>
+      <p><FAMILY-DEF fact="true" status="impl/done">A **package family** is a set of packages sharing a `&lt;family&gt;` stem and
+delivering one coherent capability across three roles:</FAMILY-DEF></p>
+      <facts ordered="false">
+        <ROLE-AGGREGATOR fact="true" status="impl/done">**`&lt;family&gt;`** — the *aggregator*. `kind = "stack"`, content-minimal: a
+  `vibe.toml` and a `README.md`, and nothing else — no code, no boot snippet,
+  no `specmap.toml` / `conform.toml`. Its whole job is to name the family's
+  members at one resolved version set through exact `=X.Y.Z` pins in
+  `[requires]`. Requiring the aggregator installs the family.</ROLE-AGGREGATOR>
+        <ROLE-LANG fact="true" status="impl/done">**`&lt;family&gt;-lang`** — the *language stack* (`kind = "stack"`, PROP-024): the
+  guide, the cards, the boot snippet, and the runnable toolchain. It requires
+  the flow foundation it projects.</ROLE-LANG>
+        <ROLE-MCP fact="true" status="impl/done">**`&lt;family&gt;-mcp`** — the *MCP server* (`kind = "mcp"`, PROP-027): that same
+  toolchain served over MCP. It exact-pins its `-lang` stack (PROP-027 §2.3)
+  and version-mirrors it, so one engine set answers both the CLI floor and the
+  agent's tools.</ROLE-MCP>
+      </facts>
+      <p><AGGREGATOR-PINS-DELIBERATE fact="true" status="impl/done">The aggregator's exact pins are deliberate, not kind-mandated: a stack may pin
+its dependencies however it likes, but a family is a *tested version set*, so
+the aggregator holds its members equal.</AGGREGATOR-PINS-DELIBERATE></p>
+    </roles>
+    <versioning title="2.2 The version line follows the name, and the family moves in unison">
+      <p><req-versioning fact="true" status="impl/done">`req r1`</req-versioning></p>
+      <facts ordered="false">
+        <VERSION-FOLLOWS-NAME fact="true" status="impl/done">A family member's version line is continuous with its NAME.</VERSION-FOLLOWS-NAME>
+        <RENAME-NEW-IDENTITY fact="true" status="impl/done">Per PROP-008 §2.2 a
+  renamed package is a new identity, so versions do not transfer across a rename:
+  when a name is minted it continues past the highest version that name previously
+  carried, and no `&lt;name&gt;@X.Y.Z` coordinate is ever reused for a different
+  artifact.</RENAME-NEW-IDENTITY>
+        <AGGREGATOR-ABOVE-HISTORY fact="true" status="impl/done">In particular an aggregator name that reuses a stem the old stack
+  used (e.g. `rust-ai-native`, once the 0.5.0 stack, now the aggregator) begins
+  its aggregator line ABOVE that history, never at or below it.</AGGREGATOR-ABOVE-HISTORY>
+      </facts>
+      <facts ordered="false">
+        <UNISON-LAW fact="true" status="impl/done">Within a family the members move in **unison**: a content change to any member
+  bumps EVERY member of that family to one shared version, and the aggregator's
+  version IS that family version.</UNISON-LAW>
+        <NO-MIXED-NUMBERS fact="true" status="impl/done">A family is a *tested set*, so its members never
+  carry mixed numbers — reading `rust-ai-native 0.7.0` tells you
+  `rust-ai-native-lang`, `rust-ai-native-mcp`, and the aggregator are all 0.7.0.</NO-MIXED-NUMBERS>
+        <MIRROR-PAIRWISE fact="true" status="impl/done">The `-mcp` member's version-mirroring of `-lang` (PROP-027 §2.3) is the pairwise
+  case of this whole-family law.</MIRROR-PAIRWISE>
+        <family-standings fact="true" status="impl/done">The families currently stand at: rust **0.7.0**, typescript
+  **0.6.0**, go **0.1.0** (the aggregator plus its `-lang` and `-mcp` members), and
+  the shared foundation core-ai-native **0.8.0** — a foundation is not in any one
+  family's unison, it bumps on its own content and every family widens its `^`
+  floor to meet it.</family-standings>
+      </facts>
+    </versioning>
+    <families title="2.3 The families in force">
+      <p><req-families fact="true" status="impl/done">`req r1`</req-families></p>
+      <facts ordered="false">
+        <FAM-CORE fact="true" status="impl/done">**`core-ai-native`** (flow) — the language-neutral discipline core. It stands
+  ALONE: it is the shared foundation every language family requires, not itself
+  an aggregator (there is nothing to aggregate beneath a foundation), so no
+  `core-ai-native-lang` / `-mcp` exist. Each `&lt;family&gt;-lang` requires it.</FAM-CORE>
+        <FAM-RUST fact="true" status="impl/done">**`rust-ai-native`** — aggregator over `rust-ai-native-lang` (the stack) and
+  `rust-ai-native-mcp` (the server).</FAM-RUST>
+        <FAM-TYPESCRIPT fact="true" status="impl/done">**`typescript-ai-native`** — aggregator over `typescript-ai-native-lang` and
+  `typescript-ai-native-mcp`.</FAM-TYPESCRIPT>
+      </facts>
+    </families>
+    <surface-naming title="2.4 Naming below the package: crates, binaries, skills, servers">
+      <p><req-surface-naming fact="true" status="impl/done">`req r1`</req-surface-naming></p>
+      <p><SURFACE-NAMING-LAW fact="true" status="impl/done">The family stem is language-FIRST and reaches every named surface a family
+ships, not only the package identities. Each crate, binary, agent skill, and
+MCP server carries the `&lt;family&gt;` prefix:</SURFACE-NAMING-LAW></p>
+      <facts ordered="false">
+        <NAME-UMBRELLA-BINARY fact="true" status="impl/done">**The umbrella binary is the family name.** A `-lang` stack's driver binary —
+  the tool a consumer puts on PATH — is named `&lt;family&gt;` itself
+  (`rust-ai-native`, `typescript-ai-native`): `init` / `floor` / `conform` /
+  `specmap` / `trace` / … all hang off it. Its crate is `&lt;family&gt;-cli`.</NAME-UMBRELLA-BINARY>
+        <NAME-ROLE-BINARIES fact="true" status="impl/done">**Every other binary and its crate share the `&lt;family&gt;-&lt;role&gt;` form.** The
+  standalone gates and the oracle: `&lt;family&gt;-conform`, `&lt;family&gt;-specmap`,
+  `&lt;family&gt;-tcg`; their crates match name-for-name, so
+  `cargo … -p &lt;family&gt;-conform --bin &lt;family&gt;-conform` and
+  `vibe bin exec &lt;family&gt;-conform` read the same token. Library-only crates
+  take the same law (`&lt;family&gt;-conform-frontend`, `&lt;family&gt;-tcg-bridge`,
+  `&lt;family&gt;-env-audit`).</NAME-ROLE-BINARIES>
+        <NAME-MCP-SURFACE fact="true" status="impl/done">**`&lt;family&gt;-mcp` is the family's MCP surface.** For a language family it is
+  the server package, its single authored crate, AND its binary — all three the
+  one name (maximal coherence: the package a consumer pins, the crate that
+  builds, and the artifact that serves are indistinguishable). Its
+  `[[mcp_server]].name` — the agent-visible key written into `.mcp.json` — is
+  the FAMILY name (`rust-ai-native`), so the tool namespace an agent sees is the
+  family, not an internal binary. For the flow foundation, `core-ai-native-mcp`
+  is the neutral MCP transport crate the servers vendor.</NAME-MCP-SURFACE>
+        <NAME-SKILLS fact="true" status="impl/done">**Skills carry the stem too**: `&lt;family&gt;-sweep`, `&lt;family&gt;-terraform`.</NAME-SKILLS>
+        <NAME-NEUTRAL-ENGINES fact="true" status="impl/done">**The neutral engine crates the core authors** take the CORE stem —
+  `core-ai-native-conform`, `core-ai-native-specmap`, `core-ai-native-specmark`,
+  `core-ai-native-specmark-grammar`, `core-ai-native-mcp` — because they belong
+  to no single language; each `-lang` / `-mcp` package vendors them
+  byte-identically (PROP-024; `cargo xtask sync-engines`).</NAME-NEUTRAL-ENGINES>
+      </facts>
+      <facts ordered="false">
+        <D13-SUPERSEDED fact="true" status="impl/done">**Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —
+  «every artifact with a cross-language analog ends in `-rust` / `-typescript`»,
+  recorded as the standing rule in GUIDE-AI-NATIVE-RUST §2 and referenced in
+  PROP-026 and the WAL history — is SUPERSEDED by this language-FIRST family
+  prefix.</D13-SUPERSEDED>
+        <D13-LANGUAGE-LEADS fact="true" status="impl/done">`conform-rust` becomes `rust-ai-native-conform`, not a suffixed
+  `conform-rust`; the language LEADS the name so every artifact of one family
+  sorts and reads together, and the aggregator name is the common prefix of its
+  whole surface.</D13-LANGUAGE-LEADS>
+        <D13-GOAL-PRESERVED fact="true" status="impl/done">The suffix scheme's goal (a cross-language pair differs
+  consistently, never sometimes) is preserved and strengthened — the whole name,
+  not just its tail, now carries the family.</D13-GOAL-PRESERVED>
+        <D13-NEUTRAL-OUTSIDE fact="true" status="impl/done">Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic
+  `vibe-*` crates, the `vibe-tcg` product cell.</D13-NEUTRAL-OUTSIDE>
+      </facts>
+    </surface-naming>
+  </decision>
+  <rejected title="3. Rejected alternatives">
+    <facts ordered="false">
+      <REJ-FEATURE-FLAGS fact="true" status="impl/done">**One package with feature flags** instead of a family: a package is a whole
+  project of ONE kind (PROP-024); a stack and an MCP server are different kinds
+  with different delivery machinery, and the flow core is language-neutral. One
+  package cannot be three kinds.</REJ-FEATURE-FLAGS>
+      <REJ-ALIAS-WITH-CONTENT fact="true" status="impl/done">**The aggregator ships the stack's content** (an alias that also carries
+  code): then `&lt;family&gt;` and `&lt;family&gt;-lang` would duplicate content and drift.
+  The aggregator is deliberately empty so there is exactly one home for each
+  artifact and the family is a pure naming/pinning layer.</REJ-ALIAS-WITH-CONTENT>
+      <REJ-CARET-PINS fact="true" status="impl/done">**Caret pins in the aggregator**: a caret would let members skew within a
+  single install, dissolving the "one engine, one truth" the `-mcp` exact pin
+  exists to guarantee.</REJ-CARET-PINS>
+    </facts>
+  </rejected>
+  <open title="4. Open questions">
+    <status stage="spec" state="work" comment="B1 2026-07-24: two questions still open, no owner ruling yet"/>
+    <facts ordered="true">
+      <open-family-app fact="true" status="spec/work">A future `&lt;family&gt;-app` role (the anticipated `app` kind, VIBEVM-SPEC §4.1)
+   would join the aggregator's `[requires]` under the same exact-pin rule.</open-family-app>
+      <open-member-opt-out fact="true" status="spec/work">Whether `vibe install &lt;family&gt;` should offer per-member opt-out (the mirror
+   of PROP-027 §4's multi-server question); v1 is all-or-nothing per family.</open-member-opt-out>
+    </facts>
+  </open>
+</spec>

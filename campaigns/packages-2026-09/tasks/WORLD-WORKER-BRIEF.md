@@ -28,13 +28,13 @@ says it says. This is the weakest source: the package agreeing with itself.
 
 **2 — the host's observed conformance.** This repository is a living consumer of
 every flow it installs. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`, `spec/boot/**`,
-`spec/WAL.md`, `CONTINUE.md`, `spec/common/PROP-*`, `spec/modules/**`, the
+`spec/WAL.xml`, `CONTINUE.md`, `spec/common/PROP-*`, `spec/modules/**`, the
 `campaigns/**` zones, `AUDIT.md`, `TASKS.md`, `BACKLOG.md`, the crates — and, for
 the git flows, **this repository's own `git log`**. If a flow promises a behaviour,
 the host either behaves that way or does not, and that is checkable.
 
 **3 — the installed reality.** What a consumer actually receives: `vibedeps/<slot>/`
-on disk, plus the generated `spec/boot/STATIC.md` and `spec/boot/INDEX.md`, which
+on disk, plus the generated `spec/boot/STATIC.xml` and `spec/boot/INDEX.md`, which
 are COMPILED from the installed packages and carry a provenance marker per
 contribution. (`files_written` in `vibe.lock` is `[]` for all 36 packages, so
 `vibedeps/` is the sanctioned substitute — batch plan §2.3.)

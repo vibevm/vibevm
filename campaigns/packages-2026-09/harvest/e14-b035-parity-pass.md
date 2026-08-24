@@ -59,7 +59,7 @@ recorded reason” (`TOOLING-MAP.md:107`).
 - **Bar 1 — recorded-reason (the literal milestone): REACHED.** Every weaker
   cell carries a recorded reason: row 6 (`registry_pkg` “carries no rule”),
   rows 8/12 (the named Go-floor residual), `{#b-050}` (Rust dylint + Go
-  `analysis.Analyzer`, recorded in `new-rule-classes.md` §3 + BACKLOG), and
+  `analysis.Analyzer`, recorded in `new-rule-classes.xml` §3 + BACKLOG), and
   now the B-025 Rust reason-text sub-gap (recorded in `finding.rs:74-83` + the
   build report + this table). No cell is weaker in silence; batch 4 added no
   silent gap. Being the wave’s final batch, the recorded-reason condition
@@ -120,11 +120,11 @@ rule, the Go floor, or any custom-lint vehicle.
   (`typescript-ai-native-lang/v0.6.0/tools/eslint-plugin-ai-native/`); Rust and
   Go did not — grep over `packages/org.vibevm.ai-native/**` for
   `dylint`/`declare_lint!`/`LateLintPass`/`analysis.Analyzer` returns matches
-  only in the three `GUIDE-AI-NATIVE-*.md` and `scaffold-f-structured-diagnostics.md`
+  only in the three `GUIDE-AI-NATIVE-*.md` and `scaffold-f-structured-diagnostics.xml`
   cards (promises), never in source. Per
   `##PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE` the bar rose to TS, so Rust and Go
   are the weaker cells, each with a recorded reason + named route
-  (`spec/design/new-rule-classes.md` §3, `BACKLOG.md {#b-050}`, P3). Recorded
+  (`spec/design/new-rule-classes.xml` §3, `BACKLOG.md {#b-050}`, P3). Recorded
   not silent.
 - **Rows 1–5, 7, 9–16 — hold at pass №1/№2/№3.** Unchanged this pass: the
   infrastructure rows (2–5), seam-error REQ-citation (1), conformance-assertion

@@ -24,15 +24,15 @@ that overhead without removing the guardrails that matter. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md` — what a
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml` — what a
   mode is, the five-part codeword shape, and the red-lines law that
   no codeword can erode. @status:impl/done
-- @fact:CONTENT-THE-MFBT-MODE `spec/flows/operating-modes/mfbt-mode.md` — a worked reference
+- @fact:CONTENT-THE-MFBT-MODE `spec/flows/operating-modes/mfbt-mode.xml` — a worked reference
   codeword, «move fast and break things»: pre-authorised heads-down
   execution, fully specified in the five-part shape. @status:impl/done
-- @fact:CONTENT-WRITING-A-CODEWORD `spec/flows/operating-modes/writing-a-codeword.md` — the procedure
+- @fact:CONTENT-WRITING-A-CODEWORD `spec/flows/operating-modes/writing-a-codeword.xml` — the procedure
   for adding a new mode to a project's catalogue, with anti-patterns. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/45-flow-operating-modes.md` — boot snippet: the default
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/45-flow-operating-modes.xml` — boot snippet: the default
   posture, how codewords fire, the red-lines law, and the never-do
   list. @status:impl/done
 
@@ -73,10 +73,10 @@ snippet. @status:impl/done
 @fact:extracted-from-the-origin-projects-law Extracted from the origin project's operating-modes law, which
 generalized its own session-end codeword into a family of postures. @status:spec/done
 
-@fact:collections-spirit-is-the-redbook
-The collection's spirit is the book *AI-native development*, shipped
+@fact:collections-spirit-is-the-redbook The collection's spirit is the book *AI-native development*, shipped
 in Russian inside `flow:redbook` at `spec/book/ru/`. @status:spec/done
 
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

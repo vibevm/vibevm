@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver</title>
+  <status stage="impl" state="done" comment="B2 2026-07-25: shipped registry contract (M1.1-revision + M1.6 + the M1.13/M1.14 auth/git-source/redirect slices); status line still says accepted-only and the Phase A acceptance boxes stay unchecked - F-032"/>
+  <p><milestone-line fact="true" status="impl/done">**Milestone:** M1.1-revision ([`ROADMAP.md`](../../../ROADMAP.md#m11-revision--decentralized-per-package-registry-active-started-2026-04-24)). Phase B lands in M1.6.</milestone-line></p>
+  <p><status-line fact="true" status="impl/done">**Status:** accepted 2026-04-24.</status-line></p>
+  <p><supersedes-line fact="true" status="impl/done">**Supersedes (partially):** [PROP-001](PROP-001-git-backend.xml) §2.3 (`Registry` trait), §2.4 (cache layout), §2.6 (lockfile `source_uri` format). PROP-001 §2.1 (shell-out-to-git), §2.2 (`GitBackend` trait), §2.5 (freshness TTL), §2.7 (Windows UX) remain authoritative.</supersedes-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [spec://org.vibevm.core/vibevm/common/PROP-000](../../common/PROP-000.xml) (especially §15 — dep weight, §16 — JTD, §17 — production architecture, §18 — complexity ≥ RPM), [`VIBEVM-SPEC.md` §7](../../../VIBEVM-SPEC.md) (manifest / lockfile schemas), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md) (registry).</related></p>
+  <motivation title="1. Motivation">
+    <p><m1-monorepo-state fact="true" status="impl/done">M1.1 shipped a monorepo-shaped registry: one git repository (`anarchic/vibespecs`) contained every package under `&lt;kind&gt;/&lt;name&gt;/v&lt;ver&gt;/` directories, `[registry]` in `vibe.toml` was a singleton URL, the lockfile recorded each package as `git+ssh://…#&lt;kind&gt;/&lt;name&gt;/v&lt;ver&gt;`. This was the cheapest shape to prove the end-to-end install loop worked.</m1-monorepo-state></p>
+    <p><wrong-shape-verdict fact="true" status="spec/done">It is the **wrong** shape for v1 shipping. The failure mode, named: Nix.</wrong-shape-verdict></p>
+    <p><nix-failure-pattern fact="true" status="spec/done">**Nix's failure pattern, precisely.** Nix's flake URL grammar hard-codes hosts (`github:owner/repo`, `gitlab:owner/repo`, `sourcehut:~owner/repo`); every new hosting platform is a `nix` core PR away. Nix's flake registry — the global namespace that maps `nixpkgs` to `github:NixOS/nixpkgs` — is itself hosted on GitHub. Every `flake.nix` in the ecosystem pins an absolute `github:` URL, so migrating `nixpkgs` to a different host would require rewriting every downstream `flake.nix` in the world. Mirror mechanisms (`nix registry add`) are redirects, not true indirection. Identity is URL-tied: `flake.lock` pins URL + rev, so even a transparent mirror causes lockfile churn. The 2022 Russian-maintainer GitHub freeze illustrated the blast radius — a hosting-platform policy decision rippled into the resolve path of the entire ecosystem.</nix-failure-pattern></p>
+    <p><nix-mistakes fact="true" status="spec/done">**Underlying mistakes:** URL scheme tied to host, central index on one host, lockfile identity = URL (not content), no indirection layer, no first-class mirror support, naming decentralization never considered.</nix-mistakes></p>
+    <p><shipped-shape-lead fact="true" status="impl/done">The shape vibevm ships instead:</shipped-shape-lead></p>
+    <facts ordered="false">
+      <SHAPE-OWN-REPO fact="true" status="impl/done">Each package is its **own** git repository — no monorepo. Per-package maintainer permissions are hosting-native (a package repo's owner controls access); no central merge queue.</SHAPE-OWN-REPO>
+      <SHAPE-REGISTRY-ARRAY fact="true" status="impl/done">`[[registry]]` is an **array**, priority-ordered. `[[mirror]]` is a first-class fallback layer, transparent to the lockfile. `[[override]]` bypasses the resolver for pins. Schema and code path support all three from day one.</SHAPE-REGISTRY-ARRAY>
+      <SHAPE-CONTENT-IDENTITY fact="true" status="impl/done">Package identity is `(kind, name, version, content_hash)`. `source_url` is informational. Switching mirrors, migrating between hosts, reconciling with a fork — none of these touch identity.</SHAPE-CONTENT-IDENTITY>
+      <SHAPE-PLAIN-GIT-URL fact="true" status="impl/done">URL syntax is **just git URL** — `git@host:…`, `ssh://`, `https://`, `file://`. No `github:` / `gitverse:` shorthands. New hosts "just work" as long as `git` speaks to them.</SHAPE-PLAIN-GIT-URL>
+    </facts>
+    <p><impl-phases-lead fact="true" status="impl/done">This PROP locks those decisions. Implementation lands in two phases:</impl-phases-lead></p>
+    <facts ordered="false">
+      <PHASE-A-SCOPE fact="true" status="impl/done">**Phase A (M1.1-revision):** single live `[[registry]]`, structures support multi; mirror / override parsing present, runtime limited to one registry without mirrors; publish utility shipped.</PHASE-A-SCOPE>
+      <PHASE-B-SCOPE fact="true" status="impl/done">**Phase B (M1.6):** real multi-registry exercised end-to-end, mirror fallback chain, `vibe vendor`, richer publish adapters.</PHASE-B-SCOPE>
+    </facts>
+  </motivation>
+  <decisions title="2. Decisions">
+    <identity title="2.1 Identity: content-addressed, URL-orthogonal">
+      <p><identity-req fact="true" status="impl/done">`req r1`</identity-req></p>
+      <p><IDENTITY-TUPLE fact="true" status="impl/done">**Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is a digest over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory, and **the value names the recipe that produced it** ([PROP-044 §4.7](../../common/PROP-044-change-native-formats.xml#machinery)): `sha256-tree/1:&lt;hex&gt;` is recipe 1, whose exclusion list, path normalisation and traversal order are carried as data in `formats/hash_recipes/1.toml`; the bare `sha256:&lt;hex&gt;` is recipe 0, the pre-recipe form, frozen verbatim in code — not configurable, because a frozen recipe that can be edited is not frozen — so that values written before recipes were named stay readable. Two hashes are comparable only **at the same recipe**; comparing across recipes answers a question nobody asked, and is never done silently. [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.xml#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity.</IDENTITY-TUPLE></p>
+      <p><IDENTITY-CONSEQUENCE fact="true" status="impl/done">**Consequence.** Fetching the same `(kind, name, version)` from two different URLs (canonical + mirror, original + fork, upstream + vendored copy) must produce the same `content_hash`. Mismatch is a fatal `IntegrityError`. The effect is:</IDENTITY-CONSEQUENCE></p>
+      <facts ordered="false">
+        <EFF-LOCKFILE-STABLE fact="true" status="impl/done">mirror-switching, host-migration, and vendoring never change the lockfile;</EFF-LOCKFILE-STABLE>
+        <EFF-MIRROR-SUBSTITUTION fact="true" status="impl/done">a compromised mirror cannot silently substitute content — the mismatch triggers hard fail before any write;</EFF-MIRROR-SUBSTITUTION>
+        <EFF-FORCE-PUSH-CAUGHT fact="true" status="impl/done">a force-pushed tag upstream is caught by the same machinery on the next install.</EFF-FORCE-PUSH-CAUGHT>
+      </facts>
+      <p><TRUST-MIRROR-HATCH fact="true" status="spec/done">Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): a `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated. **Specified, not shipped** — the CLI carries `--trust-redirect` (a different hatch, for redirect chains) and no mirror equivalent; an operator hitting mirror divergence today has no flag.</TRUST-MIRROR-HATCH></p>
+    </identity>
+    <registry-model title="2.2 Registry model: `[[registry]]` array, priority-ordered">
+      <p><registry-model-req fact="true" status="impl/done">`req r1`</registry-model-req></p>
+      <p><REGISTRY-ARRAY fact="true" status="impl/done">**Decision.** `vibe.toml` carries an array of registries:</REGISTRY-ARRAY></p>
+      <fence lang="toml">[[registry]]
+name   = "vibespecs"
+url    = "git@gitverse.ru:vibespecs"
+ref    = "main"                              # registry-level metadata ref (reserved; not used today)
+naming = "fqdn"</fence>
+      <facts ordered="false">
+        <REG-FIELD-NAME fact="true" status="impl/done">`name` — local alias, used in lockfile `registry` field and in `[[override]]` / `[[mirror]]` targeting.</REG-FIELD-NAME>
+        <REG-FIELD-URL fact="true" status="impl/done">`url` — **organization root URL**, not a package repo URL. A registry is a hosting-org; packages are children of it.</REG-FIELD-URL>
+        <REG-FIELD-REF fact="true" status="impl/done">`ref` — reserved for a future registry-level metadata branch (e.g. capability index, trust policy). Not consumed today.</REG-FIELD-REF>
+        <REG-FIELD-NAMING fact="true" status="impl/done">`naming` — convention for mapping a pkgref to a package repo name under this org. Values: `"fqdn"` (**default** — `org.vibevm.world/wal` → `&lt;org&gt;/org.vibevm.world.wal`; introduced and made the default by [PROP-008 §2.5](PROP-008-qualified-naming.xml#repo-naming), shipped M1.19 as a `_`-joined form and re-ruled to the dot join 2026-08-13), `"kind-name"` (legacy — `flow:wal` → `&lt;org&gt;/flow-wal`; the default this section originally declared, superseded by PROP-008), `"name"` (if name collisions are impossible in a given registry), `"kind/name"` (for hosts supporting nested repos). Other registries may ship with different conventions; the setting is per-registry, not global.</REG-FIELD-NAMING>
+      </facts>
+      <p><REGISTRY-WALK-ORDER fact="true" status="impl/done">Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer.</REGISTRY-WALK-ORDER></p>
+    </registry-model>
+    <registry-auth title="2.2.1 Per-registry authentication">
+      <p><registry-auth-req fact="true" status="impl/done">`req r1`</registry-auth-req></p>
+      <p><AUTH-REGIMES fact="true" status="impl/done">**Decision.** Each `[[registry]]` declares its authentication regime via an `auth` field. Four variants:</AUTH-REGIMES></p>
+      <fence lang="toml">[[registry]]
+name   = "vibespecs"
+url    = "https://github.com/vibespecs"
+auth   = "none"                                  # default; public read-only
+
+[[registry]]
+name      = "internal"
+url       = "https://gitlab.company.com/vibespecs"
+auth      = "token-env"
+token_env = "VIBEVM_REGISTRY_TOKEN_INTERNAL"     # optional override; default = derived from host
+
+[[registry]]
+name = "corporate-sso"
+url  = "https://corporate.example.com/vibespecs"
+auth = "credential-helper"                       # opt in to system git credential.helper / GCM
+
+[[registry]]
+name = "ssh-mirror"
+url  = "git@host.example.com:vibespecs"
+auth = "ssh"                                     # ssh-agent / keys; URL must be ssh-form</fence>
+      <table>
+        <tr>
+          <td>`auth` value</td>
+          <td>What vibevm does</td>
+          <td>When to use</td>
+        </tr>
+        <tr>
+          <td><ROW-AUTH-NONE fact="true" status="impl/done">`none` (default)</ROW-AUTH-NONE></td>
+          <td><fact status="impl/done">Read-only HTTPS or `file://`. **No** credentials are sent; `git ls-remote` / `clone` / `fetch` run with `credential.helper` and `core.askPass` reset to empty **unconditionally — regardless of TTY** (so GUI / GCM popups are never raised for a public registry). A public registry sends no credentials, so a 401 / 403 is not a login failure — it means "no public answer here": the resolver classifies the registry as absent and walks to the next entry, same fall-through as 404.</fact></td>
+          <td><fact status="impl/done">Public registries (the default for both `vibespecs` and `vibespecs-gitverse`).</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-AUTH-TOKEN-ENV fact="true" status="impl/done">`token-env`</ROW-AUTH-TOKEN-ENV></td>
+          <td><fact status="impl/done">Reads a personal access token from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` (or the explicit `token_env` override) and injects it into the URL as `https://x-access-token:&lt;TOKEN&gt;@&lt;host&gt;/...` for the duration of the git invocation. The token is never logged, never recorded in the lockfile, never appears in git's stderr (modern git redacts passwords). On 401 with the token set: hard error (the token is wrong / expired / scoped wrong). On token absent: hard error directing the operator at the env-var; resolver does not silently fall through.</fact></td>
+          <td><fact status="impl/done">Private organisation registries; CI; agent harnesses. Symmetric with the publish-side `VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` already specified in §2.10.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-AUTH-CREDENTIAL-HELPER fact="true" status="impl/done">`credential-helper`</ROW-AUTH-CREDENTIAL-HELPER></td>
+          <td><fact status="impl/done">The opt-in mode. Vibe leaves `credential.helper` / `core.askPass` untouched; the system git falls through to whatever is configured in `~/.gitconfig` (Git Credential Manager on Windows, `osxkeychain` on macOS, `libsecret` on Linux). GUI prompts may appear; that is the point. Only consulted when an interactive TTY is attached *and* `--unattended` is not set; in non-TTY / scripted runs this collapses to the same behaviour as `none` (helpers silenced, 401 → walk).</fact></td>
+          <td><fact status="impl/done">Operators with corporate SSO already wired through GCM and a working interactive workflow.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-AUTH-SSH fact="true" status="impl/done">`ssh`</ROW-AUTH-SSH></td>
+          <td><fact status="impl/done">URL must be ssh-form (`git@host:org`, `ssh://...`). Authentication is delegated to the system ssh-agent and keys. Vibe does not touch ssh config, does not ask for passphrases — if a passphrase prompt appears, that is the operator's ssh-agent decision.</fact></td>
+          <td><fact status="impl/done">The classic developer workflow on personal machines with ssh keys configured.</fact></td>
+        </tr>
+      </table>
+      <p><TOKEN-ENV-DEFAULTING fact="true" status="impl/done">**`token_env` defaulting.** When `auth = "token-env"` and `token_env` is omitted, the env-var name is derived from the registry's host: lowercase host, dots and hyphens to underscores, prefixed with `VIBEVM_REGISTRY_TOKEN_` and uppercased. For `https://gitlab.company.com/vibespecs` the default is `VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM`. Operators who want stable env-var names across host migrations set `token_env` explicitly; everyone else gets a working default.</TOKEN-ENV-DEFAULTING></p>
+      <p><TOKEN-NEVER-ON-DISK fact="true" status="impl/done">**Token never lands on disk via vibevm.** The token comes from the operator's environment. Vibe reads it, builds the credentialed URL in memory, hands it to the spawned git process, and discards. The lockfile's `source_url` field always carries the **canonical** URL (no embedded credentials) — symmetric with the `[[mirror]]` invariant in §2.3. Token discipline (PROP-000 §20) applies: the value is treated as surface-secret; it does not appear in any vibevm-emitted output. Modern git (≥2.31) auto-redacts passwords from its own stderr, so even on errors the token is not echoed.</TOKEN-NEVER-ON-DISK></p>
+      <p><SILENCING-BY-REGIME fact="true" status="impl/done">**Credential-silencing by regime.** Whether git's interactive credential mechanisms (terminal prompt + GCM + system `credential.helper` + `core.askPass`) are suppressed is decided by the registry's `auth` regime, **not** by the TTY alone:</SILENCING-BY-REGIME></p>
+      <facts ordered="false">
+        <SIL-NONE fact="true" status="impl/done">**`auth = none` — silenced unconditionally.** A public registry sends no credentials, so there is nothing for git to prompt *for*. Raising a GCM / askPass dialog on a public-registry 401 is never correct — the operator cannot make a missing or private repo public by logging in — so the helpers are reset to empty on every invocation, interactive or not. The 401 returns immediately and classifies as walk-to-next (§2.3.1). *(This is the fix for the interactive-terminal GCM popup: previously `none` left the helpers untouched on a TTY, so a missing public repo — GitHub / GitVerse answer 401, not 404, to hide private repos — turned into a blocking login dialog before the walk could even see the 401.)*</SIL-NONE>
+        <SIL-TOKEN-ENV fact="true" status="impl/done">**`auth = token-env` — silenced regardless (token wins).** The token is injected into the URL; leaving helpers live would only let git second-guess a supplied credential. A 401 with the token set is a real, actionable failure (wrong / expired / mis-scoped) and halts.</SIL-TOKEN-ENV>
+        <SIL-CREDENTIAL-HELPER fact="true" status="impl/done">**`auth = credential-helper` — TTY-aware, by design.** This is the *opt-in* interactive regime: on an interactive TTY without `--unattended` the helpers are left alone so GCM / keychain *can* pop up (that is the point); in non-TTY / `--unattended` / `VIBE_UNATTENDED` runs it collapses to the same silenced behaviour as `none`.</SIL-CREDENTIAL-HELPER>
+        <SIL-SSH fact="true" status="impl/done">**`auth = ssh`** — delegated to ssh-agent / system keys; vibe touches neither credential helpers nor ssh config.</SIL-SSH>
+      </facts>
+      <p><UNATTENDED-ADDS-ONLY fact="true" status="impl/done">The global `--unattended` flag / `VIBE_UNATTENDED` (and the `VIBEVM_GIT_SILENCE_HELPERS` override) still force silencing on for *every* regime — they only ever *add* silencing, never remove the unconditional silencing `none` now carries. The matrix:</UNATTENDED-ADDS-ONLY></p>
+      <table>
+        <tr>
+          <td>Mode</td>
+          <td>Interactive (TTY, no `--unattended`)</td>
+          <td>Non-interactive (no TTY OR `--unattended`)</td>
+        </tr>
+        <tr>
+          <td><ROW-MTX-NONE fact="true" status="impl/done">`auth = none`</ROW-MTX-NONE></td>
+          <td><fact status="impl/done">**Helpers silenced; 401 → walk**</fact></td>
+          <td><fact status="impl/done">Helpers silenced; 401 → walk</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MTX-TOKEN-ENV fact="true" status="impl/done">`auth = token-env`</ROW-MTX-TOKEN-ENV></td>
+          <td><fact status="impl/done">Token injected; helpers silenced regardless (token wins)</fact></td>
+          <td><fact status="impl/done">Token injected; helpers silenced</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MTX-CREDENTIAL-HELPER fact="true" status="impl/done">`auth = credential-helper`</ROW-MTX-CREDENTIAL-HELPER></td>
+          <td><fact status="impl/done">Helpers untouched; GCM / keychain may pop up</fact></td>
+          <td><fact status="impl/done">Helpers silenced; behaves like `none`</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MTX-SSH fact="true" status="impl/done">`auth = ssh`</ROW-MTX-SSH></td>
+          <td><fact status="impl/done">URL must be ssh-form; behaviour delegated to ssh-agent / system</fact></td>
+          <td><fact status="impl/done">Same</fact></td>
+        </tr>
+      </table>
+      <p><NONE-DEFAULT-SAFE fact="true" status="impl/done">This is what makes the `none` default safe everywhere — CI / opencode harnesses **and** an interactive `vibe install` at a real terminal — with no GUI popup for a public-registry 401. An operator who genuinely needs to authenticate against a host declares `auth = "credential-helper"` (or `token-env`) for that registry; the public default never prompts.</NONE-DEFAULT-SAFE></p>
+      <p><AUTH-MIGRATION fact="true" status="impl/done">**Migration.** Pre-this-decision `vibe.toml` files with no `auth` field on `[[registry]]` parse as `auth = "none"` (default), preserving every current behaviour for public registries. Operators who want token-based access add the field explicitly; nothing breaks for anyone else.</AUTH-MIGRATION></p>
+      <index-auth title="2.2.1.1 The same regime authenticates this registry&apos;s index">
+        <p><INDEX-AUTH-IS-NOT-A-SECOND-REGIME fact="true" status="impl/done">**One credential, not a second one**
+*(built 2026-08-06)*. A registry's index is that registry's index, so it is read
+with that registry's credentials — the very `auth` / `token_env` declared above,
+resolved by the same algorithm the git side uses. No new configuration key, no
+second token file, nothing for an operator to keep in sync.</INDEX-AUTH-IS-NOT-A-SECOND-REGIME></p>
+        <p><INDEX-AUTH-WHY-IT-MATTERED fact="true" status="impl/done">**What was broken, measured before the build.**
+The index client carried two fields and both were URLs; it sent no credential on
+any request, ever. So an index living in a private repository was not merely
+unpublishable — it was **unreadable**, and the read path is the one every
+`vibe install` of a short name walks.</INDEX-AUTH-WHY-IT-MATTERED></p>
+        <p><INDEX-AUTH-HEADER-NOT-URL fact="true" status="impl/done">**The token travels in a header, not in the
+URL.** The git side injects it into the URL because that is how git consumes a
+credential; HTTP has a proper place for one, and a token in a URL leaks into
+logs, proxies and referrers.</INDEX-AUTH-HEADER-NOT-URL></p>
+        <p><INDEX-AUTH-NEVER-OVER-PLAINTEXT fact="true" status="impl/done">**Never over `http://`** — the same rule,
+for the same reason, that already keeps the git side from injecting a token into
+a non-https URL. It is enforced **twice**: the access plan never forms a bearer
+for a plaintext base, and the attachment step re-checks the client's own base.
+The second gate is not redundancy for its own sake — the first can be sidestepped
+by a caller that builds a client directly, and a rule a caller can sidestep is a
+rule with no checker.</INDEX-AUTH-NEVER-OVER-PLAINTEXT></p>
+        <p><INDEX-AUTH-GIT-REGIMES-CANNOT-SERVE-HTTP fact="true" status="impl/done">**`ssh` and `credential-helper`
+carry no HTTP credential, and say so instead of failing silently.** Both
+authorise git transport: one delegates to ssh-agent, the other to a git
+subsystem, and neither can answer a plain `GET`. Under them the client sends
+nothing, and a 401 or 403 from the index surfaces an error naming the regime and
+the repair rather than a bare status.</INDEX-AUTH-GIT-REGIMES-CANNOT-SERVE-HTTP></p>
+        <p><INDEX-AUTH-A-REFUSED-PROBE-IS-NOT-A-MISSING-INDEX fact="true" status="impl/done">**The probe now tells
+«refused» from «absent», and this is the half a mechanical reading of «add
+authentication» would have missed.** Before, any non-200 meant `None`, and the
+resolver fell silently through to enumerating git — so a private index looked
+exactly like no index at all, and an operator who had configured everything
+correctly saw nothing wrong. A 401 or 403 on the probe is now a distinct outcome
+carrying regime-specific guidance, surfaced through the same unreachable-registry
+channel the search already reports. Everything else — 404, connect failure, 5xx —
+stays the silent fall-through it was.</INDEX-AUTH-A-REFUSED-PROBE-IS-NOT-A-MISSING-INDEX></p>
+        <p><INDEX-AUTH-THE-TOKEN-IS-STRUCTURALLY-UNPRINTABLE fact="true" status="impl/done">**The token cannot be
+printed by accident.** It is held in a type whose own debug rendering is the word
+redacted, with no display form and no public reader; the single private accessor
+sinks it straight into an HTTP header value. So every error, log line and derived
+debug rendering along the whole chain is safe by construction rather than by
+everyone remembering.</INDEX-AUTH-THE-TOKEN-IS-STRUCTURALLY-UNPRINTABLE></p>
+      </index-auth>
+    </registry-auth>
+    <global-config title="2.2.2 Machine-global registry config: `~/.vibe/registry.toml`">
+      <p><global-config-req fact="true" status="impl/done">`req r1`</global-config-req></p>
+      <p><GLOBAL-REGISTRY-FILE fact="true" status="impl/done">**Decision.** Registry settings may also live in a per-user file resolved through the settings chokepoint (`vibe_core::settings::registry_config_path` → `~/.vibe/registry.toml`, or `$VIBE_SETTINGS/registry.toml`). It carries the same `[[registry]]` / `[[mirror]]` / `[[override]]` sections as a project `vibe.toml` — **any** registry, not only local ones: a remote `https://` / `ssh://` / `git@` org (with `auth`) is merged and searched exactly like a `file://` / path repo. A common motivation is keeping **machine-local** registries (a `file://` checkout, a path repo) out of a team-shared `vibe.toml`, where a hard-coded local path would differ per teammate; but a whole extra remote registry can be added machine-wide the same way. (Locality matters only to `--offline`, §2.2.2.1.)</GLOBAL-REGISTRY-FILE></p>
+      <p><MERGE-PROJECT-FIRST fact="true" status="impl/done">**Merge — project first, dedupe by name.** The effective registry list is the project's `[[registry]]` entries followed by the global file's, with a `name` collision resolved in the **project's** favour (the project entry wins; the global one is dropped). Mirrors are concatenated (project first). Overrides are project-first, deduped by `pkgref` (project wins). The merge is a pure function (`vibe_core::merge_effective`), verified in isolation. A project's explicit declaration always outranks a machine default, so a shared `vibe.toml` stays authoritative for the team while each machine supplements it with its own local repositories.</MERGE-PROJECT-FIRST></p>
+      <offline-local title="2.2.2.1 `--offline` resolves local registries only">
+        <p><offline-local-req fact="true" status="impl/done">`req r1`</offline-local-req></p>
+        <p><OFFLINE-LOCAL-ONLY fact="true" status="impl/done">**Decision.** `--offline` narrows the effective set to **local** sources — `file://` and bare filesystem paths — and drops every **remote** one (`http(s)://`, `ssh://`, `git://`, scp `user@host:…`). A machine-local registry (project or global) still resolves offline, while a github/gitverse registry is simply absent — no network round-trip, no credential prompt. When the local-only set is empty and there is no embedded registry or explicit `--registry &lt;dir&gt;`, offline resolution fails with an actionable message rather than reaching the network. Locality is classified by URL scheme (`vibe_core::url_is_local`).</OFFLINE-LOCAL-ONLY></p>
+      </offline-local>
+    </global-config>
+    <enabled title="2.2.3 Disabling a registry: `enabled`">
+      <p><enabled-req fact="true" status="impl/done">`req r1`</enabled-req></p>
+      <p><ENABLED-FLAG fact="true" status="impl/done">**Decision.** Every `[[registry]]` carries an `enabled` flag, default `true`. Setting `enabled = false` switches a registry off **without deleting its entry** — it is skipped by **every** resolution path (`install` / `outdated` / `search` / `registry sync` / `vendor`), because the filter lives at the one resolver-construction point (`MultiRegistryResolver::from_manifest`): a disabled registry is never built, so nothing downstream can consult it. Re-enable by flipping the flag back; no re-add. The default `true` is skipped on serialize, so only an explicit `enabled = false` appears in a written `vibe.toml`. The flag applies uniformly to a project `vibe.toml` and the machine-global `~/.vibe/registry.toml`.</ENABLED-FLAG></p>
+    </enabled>
+    <mirror title="2.3 Mirror layer: transparent, integrity-verified">
+      <p><mirror-req fact="true" status="impl/done">`req r1`</mirror-req></p>
+      <p><MIRROR-LAYER fact="true" status="impl/done">**Decision.** `[[mirror]]` entries are parallel alternative URLs for a specific registry (or `*` for any). During fetch:</MIRROR-LAYER></p>
+      <facts ordered="true">
+        <MIR-PRIORITY-ORDER fact="true" status="impl/done">For the target registry, try mirrors in `priority` ascending order.</MIR-PRIORITY-ORDER>
+        <MIR-CANONICAL-FALLTHROUGH fact="true" status="impl/done">Fall through to the canonical `[[registry]].url` if all mirrors fail or return content whose hash disagrees with an existing lockfile pin.</MIR-CANONICAL-FALLTHROUGH>
+        <MIR-CANONICAL-IN-LOCKFILE fact="true" status="impl/done">The canonical URL is always recorded as the `source_url` in the lockfile when the fetch produces a new pin. Mirror URLs do not appear there.</MIR-CANONICAL-IN-LOCKFILE>
+      </facts>
+      <fence lang="toml">[[mirror]]
+of       = "vibespecs"      # or "*" to mirror any registry by default
+url      = "https://mirror.internal/vibespecs"
+priority = 1</fence>
+      <p><MIRROR-INTEGRITY-MANDATORY fact="true" status="impl/done">Mirror integrity verification is **mandatory**, not optional. A mirror whose `content_hash` for `(kind, name, version)` differs from the lockfile pin fails the install with an actionable error. This closes the supply-chain hole where a hijacked mirror could substitute content.</MIRROR-INTEGRITY-MANDATORY></p>
+      <p><mirror-staging fact="true" status="impl/done">Phase A: `[[mirror]]` parser and lockfile-canonical-URL invariant ship. Runtime fallback chain lands in Phase B, because we want to exercise it against a second *real* mirror, not just a constructed test fixture.</mirror-staging></p>
+      <failure-discriminator title="2.3.1 Failure-mode discriminator: registry-walk vs mirror-walk">
+        <p><failure-discriminator-req fact="true" status="impl/done">`req r1`</failure-discriminator-req></p>
+        <p><discriminator-motivation fact="true" status="spec/done">`[[registry]]` and `[[mirror]]` mean different things, and the resolver treats their failures differently. Confusing them produces either silent mis-config (treating typos in a primary URL as transient) or broken offline workflows (failing fast on a mirror that is supposed to absorb outages).</discriminator-motivation></p>
+        <facts ordered="false">
+          <REGISTRY-WALK-SEMANTICS fact="true" status="impl/done">A `[[registry]]` is a **distinct package source** — its own naming convention, its own publishing identity, its own trust scope. The priority-ordered registry walk falls through on **`UnknownPackage` only**: a registry that confidently answers "I don't have this package" is free to defer to the next one. Any other primary failure — connect-failure (DNS / TCP), auth-failure on a registry that explicitly requires authentication, server error, malformed manifest — halts the install with an actionable error. This is the same policy Cargo and npm apply to a registry that errors out: the operator wants to know about a typo or an outage, not paper over it with a different registry that may carry a different version.</REGISTRY-WALK-SEMANTICS>
+        </facts>
+        <facts ordered="false">
+          <AUTH-AWARE-401 fact="true" status="impl/done">**`auth`-aware 401 classification (§2.2.1).** On `auth = "none"` a 401 / 403 response is an `UnknownPackage` signal, not an auth-failure: the registry is declared public, anything that responds with "you cannot read this without credentials" is — from this consumer's standpoint — equivalent to "this package does not have a public answer here." The walk falls through to the next registry, exactly like a 404. This is what unblocks the common case where one host (GitVerse) returns 401 for a missing repo while another (GitHub) returns 404 — the resolver treats both uniformly. On `auth = "token-env"` or `"credential-helper"` a 401 is a real `AuthFailed` and halts: the registry was declared as authenticated, the credentials presented were rejected, this is information the operator must see.</AUTH-AWARE-401>
+          <MIRROR-WALK-SEMANTICS fact="true" status="impl/done">A `[[mirror]]` is an **availability copy of the same source** — same naming, same identity, same `content_hash`. The mirror walk falls through on **any availability failure** (`NetworkUnreachable`, `AuthFailed` on the mirror, server error, `content_hash` mismatch). `RepoNotFound` from a mirror bubbles up to the registry-walk layer (same policy as if the canonical primary had said `UnknownPackage`), because absence-of-package is a registry-level fact, not a mirror-level one.</MIRROR-WALK-SEMANTICS>
+        </facts>
+        <p><discriminator-why-split fact="true" status="spec/done">**Why split.** A single uniform "fall through on any failure" rule maximises resilience but loses the ability to detect a misconfigured primary. A single uniform "fail-fast on any failure" rule preserves diagnostics but breaks the offline / vendor-mirror story Phase B v0 explicitly enables (`vibe registry vendor` → wire as `file://` `[[mirror]]` → install while the network primary is down). Splitting failure semantics by entry kind keeps both properties intact.</discriminator-why-split></p>
+        <p><DISCRIMINATOR-UX fact="true" status="impl/done">**Operator UX.** When a primary `[[registry]]` connect-fails, the error message points the operator at `vibe registry list` (typo check) and the network (outage check). When a `[[mirror]]` fails, the resolver logs `tracing::debug!` and tries the next mirror; the operator learns about it only if every source disappears, in which case the most informative diagnostic — the primary's own error — is what surfaces.</DISCRIMINATOR-UX></p>
+        <p><DISCRIMINATOR-IMPL fact="true" status="impl/done">**Implementation.** The error classifier (`crates/vibe-registry/src/git_backend/shell.rs::classify_stderr_message`) maps git's free-form stderr into a typed `GitError` variant. `GitPackageRegistry`'s mirror walk pattern-matches on the variant (`NetworkUnreachable` / `AuthFailed` / `CommandFailed` / mirror-side `RepoNotFound`) and falls through; the canonical primary's `UnknownPackage` is what `MultiRegistryResolver` translates into a registry-walk fall-through. The split lives in code at the trait-method boundary, not in a single switch.</DISCRIMINATOR-IMPL></p>
+      </failure-discriminator>
+    </mirror>
+    <override title="2.4 Overrides: surgical pin of source location">
+      <p><override-req fact="true" status="impl/done">`req r1`</override-req></p>
+      <p><OVERRIDE-SHORT-CIRCUIT fact="true" status="impl/done">**Decision.** `[[override]]` bypasses the registry layer for a named pkgref:</OVERRIDE-SHORT-CIRCUIT></p>
+      <fence lang="toml">[[override]]
+pkgref     = "flow:wal"
+source_url = "git@mycompany:forks/wal"
+ref        = "my-fix-branch"                # tag, branch, or commit
+reason     = "awaiting upstream PR #42"     # surfaces in `vibe list --overrides`</fence>
+      <p><OVERRIDE-SEMANTICS fact="true" status="impl/done">The resolver short-circuits: it does not consult `[[registry]]` for this pkgref at all; it fetches directly from the given URL at the given ref. Content hash is still pinned in the lockfile and verified on each install — an override does not relax integrity. The lockfile records `overridden = true` on that entry. A `vibe list --overrides` flag is specified here and **not shipped** — the lockfile field is the only surface today.</OVERRIDE-SEMANTICS></p>
+      <p><override-analogues fact="true" status="spec/done">This is the vibevm analogue of Cargo's `[patch]` and Go's `replace`. Same shape, same use case: pinning a fork during an in-flight upstream PR, emergency hotfixes, internal forks of public packages.</override-analogues></p>
+    </override>
+    <git-source title="2.4.1 Git-source declarations: `[requires.packages]` table-form">
+      <p><git-source-req fact="true" status="impl/done">`req r1`</git-source-req></p>
+      <p><GIT-SOURCE-DECL fact="true" status="impl/done">**Decision.** A dependency may be declared as a first-class git-source in `[requires.packages]` — fetching the package from an arbitrary git repository instead of resolving it through `[[registry]]`. This is the vibevm analogue of Cargo's `[dependencies] foo = { git = "..." }`, npm's `"foo": "git+https://..."`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`, Go modules' baseline behaviour. The use cases are:</GIT-SOURCE-DECL></p>
+      <facts ordered="false">
+        <GS-USE-PRIVATE fact="true" status="spec/done">**Internal / private packages without a registry org.** A team has one private vibevm package they want to share across projects; standing up a multi-package `[[registry]]` org is overkill, and a single-repo declaration is the natural shape.</GS-USE-PRIVATE>
+        <GS-USE-FORK fact="true" status="spec/done">**Active development against a fork.** The fork is the canonical source while the upstream PR is in flight (overlap with `[[override]]` — see "Comparison with override" below).</GS-USE-FORK>
+        <GS-USE-CROSS-ORG fact="true" status="spec/done">**Cross-organisation pulls.** A project consumes a package whose author lives in a different git org than any registered registry.</GS-USE-CROSS-ORG>
+      </facts>
+      <p><GS-WIRE-FORM fact="true" status="impl/done">**Wire form.** `[requires.packages]` becomes a TOML table whose values are either a version-constraint **string** (registry-resolved, the M1.13 shape) or an inline-table (registry-resolved with options, or git-source). The legacy array-of-strings shape (`packages = ["flow:wal@^0.3"]`) parses transparently into table-form on read; on round-trip the manifest writes table-form.</GS-WIRE-FORM></p>
+      <fence lang="toml">[requires.packages]
+# Registry-resolved, simple constraint:
+"flow:wal"      = "^0.3"
+"feat:auth"     = "^0.5"
+
+# Registry-resolved, table-form (reserved for future options like features):
+"stack:rust-cli" = { version = "^0.2" }
+
+# Git-source, immutable tag:
+"flow:internal-helper" = { git = "git@gitlab.company.com:specs/internal-helper", tag = "v0.1.0" }
+
+# Git-source, immutable commit SHA:
+"flow:wal-fork" = { git = "https://github.com/me/flow-wal-fork", rev = "abc12345" }
+
+# Git-source, mutable branch (HEAD on every resolve):
+"flow:experimental" = { git = "https://github.com/me/flow-experimental", branch = "main" }
+
+# Git-source on a private host with explicit auth:
+"flow:internal-secret" = {
+  git       = "https://gitlab.company.com/specs/internal-secret",
+  tag       = "v1.0.0",
+  auth      = "token-env",
+  token_env = "VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM",
+}
+
+# Git-source with verification version constraint:
+"flow:checked" = {
+  git     = "https://github.com/me/flow-checked",
+  tag     = "v0.1.0",
+  version = "^0.1",
+}</fence>
+      <p><gs-grammar-lead fact="true" status="impl/done">The wire grammar for the inline-table values:</gs-grammar-lead></p>
+      <table>
+        <tr>
+          <td>Field</td>
+          <td>Required</td>
+          <td>Meaning</td>
+        </tr>
+        <tr>
+          <td><ROW-GS-VERSION fact="true" status="impl/done">`version`</ROW-GS-VERSION></td>
+          <td><fact status="impl/done">optional (registry) / optional (git)</fact></td>
+          <td><fact status="impl/done">Version constraint. Registry-resolved: identical semantics to the bare-string form. Git-source: **verification only** — after resolving the package version from the git ref, the constraint must be satisfied; otherwise the install fails with `VersionMismatch`.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-GIT fact="true" status="impl/done">`git`</ROW-GS-GIT></td>
+          <td><fact status="impl/done">required for git-source</fact></td>
+          <td><fact status="impl/done">Full git URL of the single-package repository. Same URL grammar as `[[registry]] url` and `[[override]] source_url` — `git@host:…`, `ssh://`, `https://`, `file://`. No host shorthands.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-TAG fact="true" status="impl/done">`tag`</ROW-GS-TAG></td>
+          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
+          <td><fact status="impl/done">Immutable tag. Resolved commit pinned in lockfile; force-pushed tag rewrite caught as `IntegrityError` per §2.1.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-REV fact="true" status="impl/done">`rev`</ROW-GS-REV></td>
+          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
+          <td><fact status="impl/done">Commit SHA (full or short, ≥ 7 chars). Most strict; lockfile records the same SHA.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-BRANCH fact="true" status="impl/done">`branch`</ROW-GS-BRANCH></td>
+          <td><fact status="impl/done">one of `tag`/`rev`/`branch` is required</fact></td>
+          <td><fact status="impl/done">Mutable branch. Lockfile records the resolved commit at install time; subsequent `vibe update` re-walks branch HEAD. **Mutable** — see "Mutability and `vibe update`" below.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-AUTH fact="true" status="impl/done">`auth`</ROW-GS-AUTH></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">Per-source auth regime. Same enum as `[[registry]] auth`: `"none" | "token-env" | "credential-helper" | "ssh"`. Default `"none"`.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-GS-TOKEN-ENV fact="true" status="impl/done">`token_env`</ROW-GS-TOKEN-ENV></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">Env-var name when `auth = "token-env"`. Default derived from URL host (same rule as `[[registry]]` per §2.2.1).</fact></td>
+        </tr>
+      </table>
+      <p><GS-EXACTLY-ONE-REF fact="true" status="impl/done">**Exactly one** of `tag` / `rev` / `branch` must be present in a git-source declaration. Zero is rejected at parse time with `MissingRef`. Two or more rejected with `ConflictingRefs`. There is no "default branch HEAD" fall-back — too magical for a security-sensitive surface; explicit &gt; implicit.</GS-EXACTLY-ONE-REF></p>
+      <p><GS-RESOLUTION-ORDER fact="true" status="impl/done">**Resolution order.** When the resolver looks up a pkgref, the source is decided in this order:</GS-RESOLUTION-ORDER></p>
+      <facts ordered="true">
+        <RES-ORDER-OVERRIDE fact="true" status="impl/done">**`[[override]]`** — if a matching override exists, it short-circuits everything (existing §2.4 semantics, unchanged).</RES-ORDER-OVERRIDE>
+        <RES-ORDER-GIT-SOURCE fact="true" status="impl/done">**Git-source declaration** in `[requires.packages]` — if the value carries a `git` field, the resolver fetches directly from that URL at the declared ref. `[[registry]]` is not consulted for this pkgref. Same content-hash discipline as override.</RES-ORDER-GIT-SOURCE>
+        <RES-ORDER-REGISTRY fact="true" status="impl/done">**Registry-resolved declaration** — bare string or `{ version = "..." }` table — falls through to the existing §2.2 priority-ordered registry walk.</RES-ORDER-REGISTRY>
+      </facts>
+      <p><res-order-rationale fact="true" status="spec/done">Override &gt; git-source-decl reflects the semantic "override is intentional patch on top of a declared dependency", same as Cargo's `[patch]` overriding `[dependencies] foo = { git = "..." }`.</res-order-rationale></p>
+      <p><GS-IDENTITY fact="true" status="impl/done">**Identity.** Identical content-hash discipline as registry-resolved (§2.1): identity is `(kind, name, version, content_hash)`; the URL is informational. Two projects that pull the same git-source from different mirrors and produce the same `content_hash` are bit-identical installs. Force-pushed tag rewrite caught as `IntegrityError`.</GS-IDENTITY></p>
+      <p><GS-IDENTITY-VERIFICATION fact="true" status="impl/done">The pkgref `&lt;kind&gt;:&lt;name&gt;` is read from the package's `vibe-package.toml` `[package]` section on the resolved git ref (same path as registry-resolved manifest fetch via `git archive`). The resolver verifies that the `(kind, name)` declared in `[requires.packages]` matches what the repo actually carries; mismatch = `PackageIdentityMismatch`. This means a malicious git-source cannot impersonate `flow:wal` if its `vibe-package.toml` declares it as `feat:auth`.</GS-IDENTITY-VERIFICATION></p>
+      <p><GS-MUTABILITY fact="true" status="impl/done">**Mutability and `vibe update`.** Tags and revs are immutable by definition; force-push is detected via content-hash. Branches are explicitly mutable: `vibe install` against a branch resolves to the current branch HEAD and pins that commit in the lockfile. `vibe update` re-walks each branch-declared git-source, and if HEAD has moved, re-resolves and re-locks. `vibe install` (no flag) **does not** chase a branch's HEAD on subsequent runs — the lockfile's `resolved_commit` is authoritative until `update` is called. This matches Cargo's behaviour (`cargo build` does not bump branch deps; `cargo update` does).</GS-MUTABILITY></p>
+      <p><GS-AUTH-EXPLICIT fact="true" status="impl/done">**Auth.** Per-source `auth` is **explicit, not host-derived**. The resolver does not look at `[[registry]] auth` for the same host and apply it transitively to a git-source pointing at that host — too magical, creates implicit ordering dependencies between sections of the manifest. If a project has multiple packages from the same private host, the operator can either:</GS-AUTH-EXPLICIT></p>
+      <facts ordered="false">
+        <GS-AUTH-VIA-REGISTRY fact="true" status="impl/done">declare them through `[[registry]]` with shared auth (the DRY way; recommended for ≥ 3 packages from one host), or</GS-AUTH-VIA-REGISTRY>
+        <GS-AUTH-PER-SOURCE fact="true" status="impl/done">declare each through `[requires.packages]` with explicit `auth` / `token_env` per source (verbose but transparent).</GS-AUTH-PER-SOURCE>
+      </facts>
+      <p><GS-TOKEN-DISCIPLINE fact="true" status="impl/done">The token-discipline contract from §2.2.1 (read once, in-memory, scrubbed from `.git/config` after bootstrap) applies identically to git-source.</GS-TOKEN-DISCIPLINE></p>
+      <p><GS-CACHE-SLOT fact="true" status="impl/done">**Cache layout.** Same as registry-resolved (§2.6), keyed by canonical URL hash. A git-source pointing at `https://github.com/me/flow-internal` lives at `~/.vibe/registries/&lt;sha256(canonical-url)&gt;/packages/&lt;group&gt;.&lt;name&gt;/clone/` — the qualified form since M1.19 (this line originally showed the earlier kind-name path `packages/flow-internal/clone/`). Multiple git-source declarations across different consumer projects pointing at the same URL share the same cache slot.</GS-CACHE-SLOT></p>
+      <p><GS-LOCKFILE-SOURCE-KIND fact="true" status="impl/done">**Lockfile schema.** A new `source_kind` field per `[[package]]` makes the resolution path explicit:</GS-LOCKFILE-SOURCE-KIND></p>
+      <fence lang="toml">[[package]]
+kind            = "flow"
+name            = "internal-helper"
+version         = "0.1.0"
+source_kind     = "git"                                                # NEW field; "registry" | "git" | "override"
+registry        = ""                                                   # empty for git / override
+source_url      = "git@gitlab.company.com:specs/internal-helper"
+source_ref      = "v0.1.0"                                             # tag / branch name / rev as declared
+resolved_commit = "abc123…def"
+content_hash    = "sha256:…"
+overridden      = false</fence>
+      <p><SOURCE-KIND-VALUES fact="true" status="impl/done">`source_kind` is `"registry"` for the M1.13 default, `"git"` for git-source declarations, `"override"` for `[[override]]`-resolved (existing `overridden = true` is preserved as redundant marker for back-compat). Lockfile schema bumps to v3; v2 lockfiles read transparently and migrate to v3 on next install (everything that was `overridden = true` becomes `source_kind = "override"`; everything else `"registry"`).</SOURCE-KIND-VALUES></p>
+      <p><GS-TRANSITIVES fact="true" status="impl/done">**Transitive dependencies.** A git-source package's own `[requires]` declarations are resolved through the consuming project's `[[registry]]` (same path as override-resolved, §2.4). A git-source package may itself declare git-source dependencies — they recursively resolve through the same path, with cycle detection inheriting the existing solver's protection. There is no "git-source registry" concept; the consumer project's manifest is the authoritative resolution surface for transitives.</GS-TRANSITIVES></p>
+      <p><gs-vs-override-lead fact="true" status="impl/done">**Comparison with `[[override]]`.** Both declare a git URL + ref for a pkgref. The difference is semantic:</gs-vs-override-lead></p>
+      <table>
+        <tr>
+          <td/>
+          <td>`[requires.packages]` git-source</td>
+          <td>`[[override]]`</td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-ROLE fact="true" status="impl/done">Role</ROW-CMP-ROLE></td>
+          <td><fact status="impl/done">Primary declaration</fact></td>
+          <td><fact status="impl/done">Patch on top of an existing declaration</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-PAIRS fact="true" status="impl/done">Pairs with</ROW-CMP-PAIRS></td>
+          <td><fact status="impl/done">A bare `[requires.packages]` entry? No — git-source IS the declaration</fact></td>
+          <td><fact status="impl/done">A `[requires.packages]` entry — override patches it</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-LOCKFILE fact="true" status="impl/done">Lockfile marker</ROW-CMP-LOCKFILE></td>
+          <td><fact status="impl/done">`source_kind = "git"`</fact></td>
+          <td><fact status="impl/done">`source_kind = "override"`, `overridden = true`</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-LIFETIME fact="true" status="impl/done">Typical lifetime</ROW-CMP-LIFETIME></td>
+          <td><fact status="impl/done">Long-lived (project's normal architecture)</fact></td>
+          <td><fact status="impl/done">Short-lived (awaiting upstream PR / hotfix)</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-LIST fact="true" status="spec/done">`vibe list --overrides` (specified, not shipped)</ROW-CMP-LIST></td>
+          <td><fact status="spec/done">Not surfaced (it is a normal dependency) @status:impl/done</fact></td>
+          <td><fact status="spec/done">Surfaced via the lockfile's `overridden` field @status:impl/done</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-CMP-REMOVAL fact="true" status="impl/done">Removal</ROW-CMP-REMOVAL></td>
+          <td><fact status="impl/done">`vibe uninstall &lt;pkgref&gt;` drops the entry</fact></td>
+          <td><fact status="impl/done">Drop the `[[override]]` block; the underlying dependency comes back</fact></td>
+        </tr>
+      </table>
+      <p><GS-AND-OVERRIDE-COMPOSE fact="true" status="impl/done">A project may use both: declare `flow:internal` through `[requires.packages]` git-source (the architecture), and override `flow:wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins.</GS-AND-OVERRIDE-COMPOSE></p>
+      <p><GS-ARRAY-MIGRATION fact="true" status="impl/done">**Migration: legacy array form parses as map form.** Existing manifests with `packages = ["flow:wal@^0.3", ...]` continue to parse — the deserializer accepts both shapes for a release window. `["flow:wal@^0.3"]` is canonically equivalent to `{ "flow:wal" = "^0.3" }`. On the next manifest write (any command that mutates `vibe.toml` — `vibe install`, `vibe uninstall`, `vibe registry add`), the array form is rewritten in map form. After that the array form is no longer present in the file. The parser keeps accepting the array form indefinitely — there is no version-fence; both shapes are equivalent forever, but only the map form is written.</GS-ARRAY-MIGRATION></p>
+      <p><GS-SLICE-SCOPE fact="true" status="impl/done">**Out of scope for this slice.** Multiple `git-source` entries against the same `(kind, name)` with different URLs (i.e. parallel forks of the same package): rejected as `DuplicateDeclaration`. There is no "first-priority" fallback chain for git-source — the operator picks one URL. If they need failover, that's `[[mirror]]` territory, which is registry-only by design (§2.3). `vibe registry test` does not currently probe git-source declarations; the diagnostic is registry-scoped because git-source has no fall-through walk to validate. May add a `vibe deps test` (or extend `registry test`) in a follow-up if operators ask.</GS-SLICE-SCOPE></p>
+    </git-source>
+    <redirect title="2.4.2 Registry redirect: delegating package content to an external repo">
+      <p><redirect-req fact="true" status="impl/done">`req r1`</redirect-req></p>
+      <p><REDIRECT-STUB fact="true" status="impl/done">**Decision.** A registry org may host a **stub repo** for a package — a normal `&lt;org&gt;/&lt;kind&gt;-&lt;name&gt;` repository whose content is **not** the package itself but a single file pointing at an external git repository where the package actually lives. The resolver, when fetching the package manifest, transparently follows the pointer; consumers `vibe install &lt;pkgref&gt;` see no difference from a direct registry-resolved package. The use case is **delegation**: an org owner wants the package to live in their namespace (so consumers find it via the org's `[[registry]]` walk without knowing about the external author) but offload the development, the PR queue, and the hosting platform's permission management to a different team or person who already has their own repo.</REDIRECT-STUB></p>
+      <p><redirect-analogues fact="true" status="spec/done">This is the vibevm analogue of Linux distro virtual packages with `Provides:` pointing at external SRPMs, DNS CNAME records, GitHub's repo-redirect feature, and Cargo's never-shipped `[workspace.metadata.redirect]` proposal. The closest direct analogue is **Bundler's `gem "foo", git: "..."` declared at the registry level rather than the consumer level** — and that is exactly what this is: registry-side declaration that "this package's content lives elsewhere".</redirect-analogues></p>
+      <p><REDIRECT-MARKER-FILE fact="true" status="impl/done">**Marker file.** A stub repo carries `vibe-redirect.toml` at its root **instead of** `vibe-package.toml`. Both files in the same repo at the same ref is rejected at parse as `AmbiguousStub`.</REDIRECT-MARKER-FILE></p>
+      <fence lang="toml"># vibe-redirect.toml at the root of &lt;org&gt;/&lt;kind&gt;-&lt;name&gt; stub repo
+
+[redirect]
+target_url = "git@gitlab.acme.example:flows/internal-helper"
+
+# Tag policy. Default "pass-through-tag" — covered by the absence of these
+# fields. Operator must declare `pinned_ref` if `ref_policy = "pinned"`.
+# ref_policy = "pinned"
+# pinned_ref = "v0.3.0"
+
+# Auth-hint for the consumer's resolver when fetching from `target_url`.
+# Same enum as [[registry]] auth (§2.2.1); same env-var conventions.
+# Default "none".
+# auth      = "token-env"
+# token_env = "VIBEVM_TARGET_TOKEN_GITLAB_ACME_EXAMPLE"
+
+# Optional human-readable note surfaced by `vibe show &lt;pkgref&gt;` and
+# `vibe registry list`. Useful for "contact: …", "delegated to …", etc.
+description = "Delegated to acme-corp; contact maintainers@acme.example"</fence>
+      <p><redirect-grammar-lead fact="true" status="impl/done">**Wire grammar:**</redirect-grammar-lead></p>
+      <table>
+        <tr>
+          <td>Field</td>
+          <td>Required</td>
+          <td>Meaning</td>
+        </tr>
+        <tr>
+          <td><ROW-RD-TARGET-URL fact="true" status="impl/done">`target_url`</ROW-RD-TARGET-URL></td>
+          <td><fact status="impl/done">required</fact></td>
+          <td><fact status="impl/done">Full git URL of the package's actual content repository. Same URL grammar as `[[registry]] url`.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-RD-REF-POLICY fact="true" status="impl/done">`ref_policy`</ROW-RD-REF-POLICY></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">`"pass-through-tag"` (default) or `"pinned"`.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-RD-PINNED-REF fact="true" status="impl/done">`pinned_ref`</ROW-RD-PINNED-REF></td>
+          <td><fact status="impl/done">required iff `ref_policy = "pinned"`</fact></td>
+          <td><fact status="impl/done">Tag, branch, or commit on `target_url` that ALL consumers resolve to, regardless of which version they ask for.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-RD-AUTH fact="true" status="impl/done">`auth`</ROW-RD-AUTH></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">Auth regime for `target_url`. Same enum as `[[registry]]` auth. Default `"none"`.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-RD-TOKEN-ENV fact="true" status="impl/done">`token_env`</ROW-RD-TOKEN-ENV></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">Env-var name when `auth = "token-env"`. Default derived from target host.</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-RD-DESCRIPTION fact="true" status="impl/done">`description`</ROW-RD-DESCRIPTION></td>
+          <td><fact status="impl/done">optional</fact></td>
+          <td><fact status="impl/done">Free-form text shown to operators.</fact></td>
+        </tr>
+      </table>
+      <p><REDIRECT-RESOLVER-FLOW fact="true" status="impl/done">**Resolver behaviour.** When fetching a package manifest at a ref `T` from a registry-level `&lt;stub_url&gt;`:</REDIRECT-RESOLVER-FLOW></p>
+      <facts ordered="true">
+        <RD-STEP-PROBE-PACKAGE fact="true" status="impl/done">Probe `git archive --remote=&lt;stub_url&gt; &lt;T&gt; vibe-package.toml`. If found — normal package, proceed as today (§2.5).</RD-STEP-PROBE-PACKAGE>
+        <RD-STEP-PROBE-REDIRECT fact="true" status="impl/done">If the file is missing, probe `vibe-redirect.toml` at the same ref. If found — this is a stub.</RD-STEP-PROBE-REDIRECT>
+        <RD-STEP-PARSE fact="true" status="impl/done">Parse the marker. Compute `target_ref`:</RD-STEP-PARSE>
+        <RD-REF-PASS-THROUGH fact="true" status="impl/done">`ref_policy = "pass-through-tag"` (default): `target_ref = T` (same tag name on target).</RD-REF-PASS-THROUGH>
+        <RD-REF-PINNED fact="true" status="impl/done">`ref_policy = "pinned"`: `target_ref = pinned_ref` (all stub tags collapse to this single target ref; `T` from step 1 is informational metadata only).</RD-REF-PINNED>
+        <RD-STEP-AUTH fact="true" status="impl/done">Apply `[redirect].auth` (or its host-derived default) to fetch from `target_url`.</RD-STEP-AUTH>
+        <RD-STEP-REENTER fact="true" status="impl/done">Re-enter the standard resolution path against `target_url` at `target_ref`. Fetch `vibe-package.toml`, compute content-hash over target content, fetch package files for install via the same `GitPackageRegistry` machinery used elsewhere.</RD-STEP-REENTER>
+        <RD-STEP-HOP-LIMIT fact="true" status="impl/done">**Hop limit: 1.** If `target_url`'s content-root is itself a stub (carries `vibe-redirect.toml`), reject with `RedirectChainNotAllowed`. There is no chain-following — stubs are flat indirection, not a redirect graph.</RD-STEP-HOP-LIMIT>
+      </facts>
+      <p><REDIRECT-TAG-VISIBILITY fact="true" status="impl/done">**Tag visibility.** `list_versions(stub_url)` returns the tags of the **stub** repo, not the target. The org owner controls which versions surface in their namespace by managing stub tags — which is exactly the gating mechanism a registry already has via `vibe registry publish`. Adding a new version to the namespace = `git tag v&lt;ver&gt; &amp;&amp; git push origin v&lt;ver&gt;` against the stub repo (or `vibe registry redirect-sync &lt;pkgref&gt;` if it auto-mirrors target tags — see "Sync helper" below). The stub itself need contain no actual code — only `vibe-redirect.toml`, optionally a `README.md` for humans browsing the repo.</REDIRECT-TAG-VISIBILITY></p>
+      <p><REDIRECT-VERSION-GATING fact="true" status="impl/done">The fact that stub-tags exist independently of target-tags is the key affordance: org owner certifies each version that enters their namespace. A target tag `v2.0.0` with a breaking change does NOT automatically appear in the org's namespace — the owner must `git tag v2.0.0 &amp;&amp; git push origin v2.0.0` against the stub repo. Pass-through happens during a single resolve, not during version listing.</REDIRECT-VERSION-GATING></p>
+      <p><REDIRECT-SYNC-HELPER fact="true" status="impl/done">**Sync helper (`vibe registry redirect-sync`).** Org owner can run `vibe registry redirect-sync &lt;pkgref&gt;` to copy target-side tags into the stub repo (with operator confirmation per tag, or `--all` for batch). This is opt-in convenience tooling; the stub repo is just a normal git repo and tags can equally be managed by hand or CI.</REDIRECT-SYNC-HELPER></p>
+      <p><REDIRECT-IDENTITY fact="true" status="impl/done">**Identity and content-hash.** Identity remains `(kind, name, version, content_hash)` per §2.1. The `content_hash` is computed over the **target's** content, not the stub's. The stub repo carries only `vibe-redirect.toml` and (optionally) human-readable companion files; nothing in the stub ships into the consumer project. A force-pushed target tag is detected exactly as it would be for a non-redirected package: hash mismatch on the next install raises `IntegrityError`.</REDIRECT-IDENTITY></p>
+      <p><redirect-trust-lead fact="true" status="impl/done">**Trust model.** The stub is mutable — its owner can change `target_url` at any commit. Defence is layered:</redirect-trust-lead></p>
+      <facts ordered="false">
+        <RD-TRUST-CONTENT-HASH fact="true" status="impl/done">**Content-hash in lockfile** catches a target switch on the next install. The consumer sees `IntegrityError` and can investigate before any write happens.</RD-TRUST-CONTENT-HASH>
+        <RD-TRUST-FLAG fact="true" status="impl/done">**`--trust-redirect`** flag (parallel to `--trust-mirror` from §2.1) lets an operator accept a deliberate target switch — e.g. when the external maintainer migrates their hosting from GitLab to Forgejo. Never silent; always operator-initiated.</RD-TRUST-FLAG>
+        <RD-TRUST-DESCRIPTION fact="true" status="impl/done">**Description field** lets the org owner publish contact / verification info for their delegate; consumers can manually verify out of band.</RD-TRUST-DESCRIPTION>
+        <RD-TRUST-SIGNED-FUTURE fact="true" status="spec/done">**Future: signed redirects** (out of scope; tracked under §7 open questions). For v0, plain text + content-hash is the contract.</RD-TRUST-SIGNED-FUTURE>
+      </facts>
+      <p><REDIRECT-LOCKFILE-FIELD fact="true" status="impl/done">**Lockfile shape.** A new `via_redirect` field per `[[package]]` records the stub URL when a redirect was followed. `null` (or absent) for non-redirected packages.</REDIRECT-LOCKFILE-FIELD></p>
+      <fence lang="toml">[[package]]
+kind            = "flow"
+name            = "internal-helper"
+version         = "0.3.0"
+source_kind     = "registry"                                     # registry-resolved (via stub)
+registry        = "vibespecs"                                    # which [[registry]] hosted the stub
+source_url      = "git@gitlab.acme.example:flows/internal-helper"  # target URL — actual content
+via_redirect    = "git@github.com:vibespecs/flow-internal-helper"  # NEW; stub URL that delegated
+source_ref      = "v0.3.0"                                       # target ref (= stub tag for pass-through, = pinned_ref for pinned)
+resolved_commit = "abc123…def"                                   # target commit
+content_hash    = "sha256:…"                                     # over target content
+overridden      = false</fence>
+      <p><VIA-REDIRECT-DIAGNOSTIC fact="true" status="impl/done">`via_redirect` is purely diagnostic / auditing — `vibe show &lt;pkgref&gt;` surfaces it; `vibe list --json` includes it; the resolver does not consult it on subsequent installs (lockfile is authoritative). Lockfile schema bumps to v3 (same bump as §2.4.1's `source_kind`); v2 lockfiles read transparently and migrate on next install with `via_redirect = null` for all entries.</VIA-REDIRECT-DIAGNOSTIC></p>
+      <p><REDIRECT-CACHE fact="true" status="impl/done">**Cache layout.** Both stub and target appear in the per-user registry cache (§2.6) as separate entries keyed by their canonical URL hash. Stub cache holds the `vibe-redirect.toml` parse result for freshness window TTL (1 hour, per §2.6); target cache holds the actual package content. Consequence: the redirect file is not re-fetched on every consume within the freshness window, but the target's manifest is consulted per resolution call as today.</REDIRECT-CACHE></p>
+      <p><REDIRECT-AUTH-LAYERS fact="true" status="impl/done">**Auth for the stub vs auth for the target.** Two independent layers:</REDIRECT-AUTH-LAYERS></p>
+      <facts ordered="false">
+        <RD-AUTH-STUB fact="true" status="impl/done">Stub auth = the registry's `[[registry]] auth` regime. The stub repo is a child of the registry org and inherits its auth. If the registry is `auth = "token-env"`, fetching the stub uses that token.</RD-AUTH-STUB>
+        <RD-AUTH-TARGET fact="true" status="impl/done">Target auth = the redirect's `[redirect].auth`. Independent. The stub may be in a public registry (`auth = "none"`) but point at a private target (`auth = "token-env"` against a different host).</RD-AUTH-TARGET>
+      </facts>
+      <p><REDIRECT-TOKEN-PLUMBING fact="true" status="impl/done">Tokens flow through the same M1.14 plumbing: read once at resolver-open time, kept in memory, scrubbed from `.git/config` after any clone. The `inject_token` / `set_remote_url` discipline applies identically to both URLs.</REDIRECT-TOKEN-PLUMBING></p>
+      <p><redirect-comparison-lead fact="true" status="impl/done">**Comparison with related mechanisms:**</redirect-comparison-lead></p>
+      <table>
+        <tr>
+          <td>Mechanism</td>
+          <td>Set by</td>
+          <td>Lifetime</td>
+          <td>Lockfile marker</td>
+          <td>Use case</td>
+        </tr>
+        <tr>
+          <td><ROW-MECH-DIRECT fact="true" status="impl/done">`[[registry]]` direct package</ROW-MECH-DIRECT></td>
+          <td><fact status="impl/done">Registry owner</fact></td>
+          <td><fact status="impl/done">Long</fact></td>
+          <td><fact status="impl/done">`source_kind = "registry"`, `via_redirect = null`</fact></td>
+          <td><fact status="impl/done">Standard ownership</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MECH-STUB fact="true" status="impl/done">`[[registry]]` stub (this section)</ROW-MECH-STUB></td>
+          <td><fact status="impl/done">Registry owner</fact></td>
+          <td><fact status="impl/done">Long</fact></td>
+          <td><fact status="impl/done">`source_kind = "registry"`, `via_redirect = &lt;stub_url&gt;`</fact></td>
+          <td><fact status="impl/done">Owner delegates content hosting to external party</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MECH-MIRROR fact="true" status="impl/done">`[[mirror]]`</ROW-MECH-MIRROR></td>
+          <td><fact status="impl/done">Consumer</fact></td>
+          <td><fact status="impl/done">Long</fact></td>
+          <td><fact status="impl/done">`source_kind = "registry"`; mirror URL not in lockfile</fact></td>
+          <td><fact status="impl/done">Operator-side fallback URL for the same content</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MECH-OVERRIDE fact="true" status="impl/done">`[[override]]`</ROW-MECH-OVERRIDE></td>
+          <td><fact status="impl/done">Consumer</fact></td>
+          <td><fact status="impl/done">Short</fact></td>
+          <td><fact status="impl/done">`source_kind = "override"`, `overridden = true`</fact></td>
+          <td><fact status="impl/done">Operator-side patch / fork pin</fact></td>
+        </tr>
+        <tr>
+          <td><ROW-MECH-GIT-SOURCE fact="true" status="impl/done">`[requires.packages]` git-source (§2.4.1)</ROW-MECH-GIT-SOURCE></td>
+          <td><fact status="impl/done">Consumer</fact></td>
+          <td><fact status="impl/done">Long</fact></td>
+          <td><fact status="impl/done">`source_kind = "git"`</fact></td>
+          <td><fact status="impl/done">Consumer declares package not in any registry</fact></td>
+        </tr>
+      </table>
+      <p><STUB-VS-MIRROR-AXIS fact="true" status="impl/done">The key distinction between **stub** and **mirror** is *who controls the indirection*. Mirror is consumer-side (the operator's `vibe.toml` says "if vibespecs is slow, try this URL for the same content"). Stub is org-side (the registry owner's stub repo says "for this specific package, the content lives over there"). Same wire-level effect (redirected fetch), inverse control axis.</STUB-VS-MIRROR-AXIS></p>
+      <p><REDIRECT-CLI fact="true" status="impl/done">**Publish helper (`vibe registry redirect`).** A new CLI command:</REDIRECT-CLI></p>
+      <fence>vibe registry redirect &lt;pkgref&gt; --to &lt;target-url&gt;
+                                [--ref-policy pass-through-tag|pinned]
+                                [--pinned-ref &lt;ref&gt;]
+                                [--auth &lt;none|token-env|credential-helper|ssh&gt;]
+                                [--token-env &lt;NAME&gt;]
+                                [--description "..."]
+                                [--registry &lt;name&gt;]              # default = primary</fence>
+      <p><REDIRECT-CLI-SEMANTICS fact="true" status="impl/done">Creates `&lt;org&gt;/&lt;kind&gt;-&lt;name&gt;` stub repo via the registry's `RepoCreator` (PROP-002 §2.10), commits a `vibe-redirect.toml`, pushes. Does not tag — operator runs `vibe registry redirect-sync &lt;pkgref&gt;` separately when ready to publish a version. Symmetric to `vibe registry publish` (which is the non-redirect path); the two commands are mutually exclusive on the same `&lt;pkgref&gt;` slot.</REDIRECT-CLI-SEMANTICS></p>
+      <p><REDIRECT-SLICE-SCOPE fact="true" status="spec/done">**Out of scope for this slice.** Redirect chains (stub → stub → real) — explicitly rejected at hop = 2. Signed redirect markers (cryptographic attestation that `target_url` is approved by org owner — `[redirect].signature = "..."` with org's pubkey). Auto-deprecation marker (a stub repo could carry `[redirect.deprecated] new_pkgref = "..."` to forward consumers to a renamed package — separate feature, separate PROP). `[[mirror]]` against a stub repo (mirror infrastructure pre-redirect) — undefined behaviour for v0; the resolver follows redirect first, mirror semantics apply to the target URL.</REDIRECT-SLICE-SCOPE></p>
+    </redirect>
+    <layout title="2.5 Per-package layout: flat, tag-based">
+      <p><layout-req fact="true" status="impl/done">`req r1`</layout-req></p>
+      <p><FLAT-LAYOUT fact="true" status="impl/done">**Decision.** A package repository contains the package content flat at the repository root:</FLAT-LAYOUT></p>
+      <fence>&lt;org&gt;/&lt;kind&gt;-&lt;name&gt;.git
+├── vibe-package.toml
+├── README.md
+├── boot/&lt;NN&gt;-&lt;kind&gt;-&lt;name&gt;.md    # optional
+├── spec/…                        # mirrored into consumer project
+└── …
+
+tags: v0.1.0, v0.2.0, v1.3.0-rc.1</fence>
+      <facts ordered="false">
+        <LAYOUT-TAG-VERSION fact="true" status="impl/done">Version = git tag with `v&lt;semver&gt;` prefix. Tag is immutable by convention.</LAYOUT-TAG-VERSION>
+        <LAYOUT-NO-SUBDIRS fact="true" status="impl/done">No versioned subdirectories inside the repo. A tagged checkout **is** the package content.</LAYOUT-NO-SUBDIRS>
+        <LAYOUT-TAG-INTEGRITY fact="true" status="impl/done">Integrity of the tag is verified per §2.1 on every install; a force-pushed tag rewrite is caught as `IntegrityError`.</LAYOUT-TAG-INTEGRITY>
+      </facts>
+      <p><layout-rationale fact="true" status="spec/done">**Rationale for flat, not versioned subdirs:** tag-based is the idiomatic "git-as-package-source" shape (Go modules, Swift PM, many others). Consumers can browse a tag on GitVerse / GitHub and see exactly the package content, not navigate to a subdirectory. Authoring is natural — `main` branch is dev, tag `v0.x` is release.</layout-rationale></p>
+    </layout>
+    <cache title="2.6 Cache layout: organized by canonical registry URL">
+      <p><cache-req fact="true" status="impl/done">`req r1`</cache-req></p>
+      <p><CACHE-CANONICAL-ROOT fact="true" status="impl/done">**Decision.** The per-user registry cache is rooted at the **canonical registry URL**, not the mirror URL — a transparent mirror does not invalidate the cache:</CACHE-CANONICAL-ROOT></p>
+      <fence>~/.vibe/registries/
+└── &lt;canonical-url-hash&gt;/
+    ├── meta.toml                 # { canonical_url, last_mirror_used?, last_synced_at }
+    └── packages/
+        └── &lt;group&gt;.&lt;name&gt;/
+            ├── clone/            # per-package git working tree — the
+            │                     # directory is keyed by identity (PROP-008),
+            │                     # never by the registry's URL-side repo name
+            └── meta.toml         # { source_url_last_used, last_synced_at, last_known_tags[] }</fence>
+      <facts ordered="false">
+        <CACHE-HASH-KEY fact="true" status="impl/done">`&lt;canonical-url-hash&gt;` = lowercase hex of the first 16 bytes of `sha256(normalize(canonical_registry_url))`. Normalization per PROP-001 §2.4 (lowercase, trailing `.git` and `/` stripped).</CACHE-HASH-KEY>
+        <CACHE-OUTER-META fact="true" status="impl/done">Outer `meta.toml` carries the full hash, the canonical URL, and — for diagnostic purposes — the URL of the last mirror that actually answered.</CACHE-OUTER-META>
+        <CACHE-INNER-META fact="true" status="impl/done">Inner `meta.toml` (per package clone) carries the exact `source_url` that fetched this package last, its freshness timestamp, and the last set of tags observed by `ls-remote`.</CACHE-INNER-META>
+        <CACHE-LAZY-FETCH fact="true" status="impl/done">Fetching is lazy per pkgref: a project that installs only `flow:wal` from an org of 50 packages clones exactly one of them.</CACHE-LAZY-FETCH>
+      </facts>
+      <p><CACHE-TTL fact="true" status="impl/done">Freshness TTL per package repo is 1 hour (PROP-001 §2.5 carries over). `VIBE_REGISTRY_CACHE` env override applies.</CACHE-TTL></p>
+    </cache>
+    <lockfile title="2.7 Lockfile schema v2">
+      <p><lockfile-req fact="true" status="impl/done">`req r1`</lockfile-req></p>
+      <p><LOCKFILE-V2 fact="true" status="impl/done">**Decision.** `vibe.lock` gains `schema_version = 2` and the following record shape per package:</LOCKFILE-V2></p>
+      <fence lang="toml">[meta]
+generated_by      = "vibe 0.2.0"
+generated_at      = "&lt;RFC-3339 UTC&gt;"
+schema_version    = 2
+solver            = "resolvo-&lt;ver&gt;"
+root_dependencies = ["flow:wal", "stack:rust-cli"]
+
+[[package]]
+kind            = "flow"
+name            = "wal"
+version         = "0.3.0"
+registry        = "vibespecs"                               # name from [[registry]]; "__override__" for override-resolved
+source_url      = "git@gitverse.ru:vibespecs/flow-wal.git"  # canonical URL of the registry entry, NOT the mirror URL
+source_ref      = "v0.3.0"
+resolved_commit = "abc123…def"
+content_hash    = "sha256:…"                                # identity per §2.1
+boot_snippet    = "10-flow-wal.xml"
+files_written   = [ … ]
+dependencies    = []                                        # resolved transitive deps, kind:name@=version
+overridden      = false</fence>
+      <facts ordered="false">
+        <LF-V1-MIGRATION fact="true" status="impl/done">`schema_version = 1` (monorepo-era) is accepted read-only and auto-migrated to v2 on the next `vibe install` / `vibe update`, with a user-visible notice.</LF-V1-MIGRATION>
+        <LF-ROOT-DEPENDENCIES fact="true" status="impl/done">`root_dependencies` is a **mirror of `vibe.toml` `[requires].packages`** — the lockfile keeps the user's declared roots inline so it remains a self-contained snapshot of the solve state (nothing inside `vibe.lock` requires reading `vibe.toml` to interpret). The source of truth for *what the user asked for* is the manifest's `[requires]` section; the lockfile carries a copy plus the resolved transitive closure. `vibe uninstall` of a root drops the entry from both files; `vibe uninstall` of a pure transitive is rejected with an explanation.</LF-ROOT-DEPENDENCIES>
+        <LF-REQUIRES-SEEDING fact="true" status="impl/done">A first-run migration path covers projects whose `vibe.toml` predates the `[requires]` section: when the manifest's `[requires]` is empty but the lockfile's `meta.root_dependencies` is non-empty, `vibe install` (no arguments) seeds `[requires].packages` from the lockfile snapshot before resolving. After that the manifest is authoritative.</LF-REQUIRES-SEEDING>
+        <LF-RESOLVED-DEPS fact="true" status="impl/done">`dependencies` field per package is **resolved** (exact version, not constraint) — the lockfile is the full resolved graph, not a constraint manifest.</LF-RESOLVED-DEPS>
+      </facts>
+    </lockfile>
+    <solver title="2.8 Depsolver: resolvo primary, DepSolver trait for fallback">
+      <p><solver-req fact="true" status="impl/done">`req r1`</solver-req></p>
+      <p><RESOLVO-PRIMARY fact="true" status="impl/done">**Decision.** The primary depsolver is the [`resolvo`](https://crates.io/crates/resolvo) crate (pure Rust, BSD-3-Clause-or-Apache-2.0, used by Pixi and Rattler at conda scale). Chosen for:</RESOLVO-PRIMARY></p>
+      <facts ordered="false">
+        <RSV-FEATURE-COMPLETE fact="true" status="impl/done">**Feature completeness for complexity ≥ RPM (PROP-000 §18):** virtual packages, disjunctions, obsoletes-driven upgrades, boolean-style constraints, custom constraint operators.</RSV-FEATURE-COMPLETE>
+        <RSV-RUST-NATIVE fact="true" status="impl/done">**Rust-native ergonomics.** Provider trait (`DependencyProvider` analog) maps cleanly onto our existing `Registry` / `MultiRegistryResolver` types; no FFI, no impedance mismatch, no C-toolchain dependency.</RSV-RUST-NATIVE>
+        <RSV-PRODUCTION-SCALE fact="true" status="impl/done">**Active upstream, production scale.** Pixi resolves over the conda ecosystem (hundreds of thousands of packages) in production; active development at prefix-dev.</RSV-PRODUCTION-SCALE>
+      </facts>
+      <p><NOT-PUBGRUB fact="true" status="impl/done">**Not** `pubgrub` — the algorithm does not handle virtual packages or disjunctions, undershoot relative to PROP-000 §18.</NOT-PUBGRUB></p>
+      <p><LIBSOLV-FALLBACK-SLOT fact="true" status="impl/done">**libsolv as explicit fallback.** A `DepSolver` trait in the new `vibe-resolver` crate mirrors the PROP-001 §2.2 `GitBackend` pattern: primary impl is `ResolvoSolver`; a future `LibsolvSolver` (FFI to C libsolv, BSD-3-Clause) drops in as a feature-gated alternative if resolvo ever hits a ceiling we can't raise. Swap cost: one impl block, one factory line. PROP-000 §15 (dep-weight not an argument) removes the size-based objection; PROP-000 §18 explicitly contemplates the switch if complexity demands.</LIBSOLV-FALLBACK-SLOT></p>
+      <p><SOLVER-IDENTITY-FIELD fact="true" status="spec/done">A `lockfile.meta.solver = "resolvo-&lt;ver&gt;"` field would record the solver identity so a lockfile produced by a different engine is distinguishable, and one produced by an older resolvo can be re-verified by the same version when integrity investigation matters. **Specified, not shipped:** the live `[meta]` block has no `solver` key, and [PROP-017 §8](../vibe-resolver/PROP-017-resolvo-resolver.xml) records the gap — adding it needs a lockfile schema bump.</SOLVER-IDENTITY-FIELD></p>
+    </solver>
+    <capability title="2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]`">
+      <p><capability-req fact="true" status="impl/done">`req r1`</capability-req></p>
+      <p><CAPABILITY-VOCABULARY fact="true" status="impl/done">**Decision.** The package manifest gains the full capability-based dependency vocabulary, pinned in [`VIBEVM-SPEC.md` §7.3](../../../VIBEVM-SPEC.md). Summary:</CAPABILITY-VOCABULARY></p>
+      <facts ordered="false">
+        <CAP-PROVIDES fact="true" status="impl/done">`[provides].capabilities = ["&lt;namespace&gt;:&lt;name&gt;[@&lt;semver&gt;]", …]` — abstract capabilities the package advertises.</CAP-PROVIDES>
+        <CAP-REQUIRES-PACKAGES fact="true" status="impl/done">`[requires].packages = ["kind:name@&lt;constraint&gt;", …]` — concrete pkgref requirements.</CAP-REQUIRES-PACKAGES>
+        <CAP-REQUIRES-CAPABILITIES fact="true" status="impl/done">`[requires].capabilities = ["&lt;namespace&gt;:&lt;name&gt;[@&lt;constraint&gt;]", …]` — satisfied by any package that provides that capability.</CAP-REQUIRES-CAPABILITIES>
+        <CAP-REQUIRES-ANY fact="true" status="impl/done">`[[requires_any]] one_of = [ pkgrefs… ]` — disjunction; exactly one must be satisfied. Repeatable table for multiple independent disjunctions.</CAP-REQUIRES-ANY>
+        <CAP-OBSOLETES fact="true" status="impl/done">`[obsoletes].packages = [ pkgrefs… ]` — the package supersedes these; the solver flags them for removal on upgrade.</CAP-OBSOLETES>
+        <CAP-CONFLICTS fact="true" status="impl/done">`[conflicts].packages = [ pkgrefs… ]` — mutually exclusive installs.</CAP-CONFLICTS>
+      </facts>
+      <p><LEGACY-COMPACT-MIGRATION fact="true" status="impl/done">**Legacy compact form** (`[dependencies] required = [...] conflicts = [...]`) remains parse-compatible — auto-migrated at read time to the new fields with a one-time deprecation warning. Three existing `vibe-package.toml`-s in the fixtures / live registry all declare empty `required` and `conflicts`, so no live data migration is forced.</LEGACY-COMPACT-MIGRATION></p>
+      <p><SOLVER-SEMANTIC fact="true" status="impl/done">Semantic: the solver computes a satisfying assignment over the declared constraints. Conflict-detection renders through resolvo's native conflict-explanation surface — produced as a human-readable chain of incompatibilities, not a stack trace.</SOLVER-SEMANTIC></p>
+    </capability>
+    <publish title="2.10 Publish utility: `vibe registry publish &lt;path&gt;`">
+      <p><publish-req fact="true" status="impl/done">`req r1`</publish-req></p>
+      <p><PUBLISH-UTILITY fact="true" status="impl/done">**Decision.** Ship a maintainer utility in v1. Scope: mechanical-only publish — **create repo, push contents, tag version**. Semantic review (LLM-backed safety analysis per `VIBEVM-SPEC.md` §8.5) remains v2+.</PUBLISH-UTILITY></p>
+      <p><publish-architecture-lead fact="true" status="impl/done">Architecture:</publish-architecture-lead></p>
+      <facts ordered="false">
+        <PUB-CRATE fact="true" status="impl/done">New crate `vibe-publish` in the workspace.</PUB-CRATE>
+        <PUB-REPO-CREATOR fact="true" status="impl/done">Core trait `RepoCreator` (host-specific operations) plus a Publisher orchestrator that drives the manifest read → repo presence/create → push → tag pipeline. Each supported host implements `RepoCreator` once; the rest is host-agnostic. The trait carries:</PUB-REPO-CREATOR>
+        <PUB-HOST-NAME fact="true" status="impl/done">`host_name(&amp;self) -&gt; &amp;str` — for error messages.</PUB-HOST-NAME>
+        <PUB-REPO-EXISTS fact="true" status="impl/done">`repo_exists(org, name) -&gt; Result&lt;bool&gt;` — distinguishes missing-token / missing-org / forbidden errors from a clean negative.</PUB-REPO-EXISTS>
+        <PUB-CREATE-REPO fact="true" status="impl/done">`create_repo(org, name, opts) -&gt; Result&lt;RepoInfo&gt;` — creates the repo in the org, returns metadata (HTML URL + clone URL).</PUB-CREATE-REPO>
+        <PUB-PUSH-URL fact="true" status="impl/done">`push_url(org, name) -&gt; String` — produces the URL `git push` should target. SSH-auth hosts return the bare SSH URL (e.g. `git@gitverse.ru:vibespecs/flow-wal.git`); HTTPS-token-auth hosts return the URL with credentials embedded for the duration of the push (e.g. `https://x-access-token:&lt;TOKEN&gt;@github.com/vibespecs/flow-wal.git`). Modern git (≥ 2.31) redacts URL passwords in its own log output to `***`.</PUB-PUSH-URL>
+      </facts>
+      <p><pub-impls-lead fact="true" status="impl/done">**Concrete impls.**</pub-impls-lead></p>
+      <facts ordered="false">
+        <PUB-GITVERSE-CREATOR fact="true" status="impl/done">**`GitVerseCreator`** (legacy, retained): hits `https://api.gitverse.ru` with `Authorization: Bearer &lt;T&gt;` and `Accept: application/vnd.gitverse.object+json;version=1`. **Operationally degraded** — `POST /orgs/{org}/repos` is documented as Gitea-canonical but is not exposed by the live host (verified 2026-04-26 by curl-probing); only `GET /repos/{owner}/{repo}` works for presence checks. Repo creation requires manual web-UI pre-create. The code path remains in tree so Gitea-shape forks of GitVerse, or any future GitVerse release that exposes the org-scoped POST, work transparently with no change.</PUB-GITVERSE-CREATOR>
+        <PUB-GITHUB-CREATOR fact="true" status="impl/done">**`GitHubCreator`** (primary as of 2026-04-29): hits `https://api.github.com` with `Authorization: Bearer &lt;T&gt;`, `Accept: application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`. Both endpoints work natively — `POST /orgs/{org}/repos` returns 201 with the full repo metadata, no manual pre-create needed. SSH push is preferred when the operator has a configured GitHub SSH key; otherwise the publisher embeds the token into the HTTPS clone URL via `x-access-token:&lt;TOKEN&gt;@github.com/...` for that one push. The token never leaves the running process: not echoed to stdout/stderr, not logged at any level, redacted in `Token::Display`/`Debug`, and modern git redacts URL passwords in its own diagnostics.</PUB-GITHUB-CREATOR>
+        <PUB-ADAPTERS-ADDITIVE fact="true" status="impl/done">Adapters for Gitea / Forgejo / GitLab are additive — one new `impl RepoCreator` per host, no consumer-side changes.</PUB-ADAPTERS-ADDITIVE>
+      </facts>
+      <p><PUB-ADAPTER-SELECTION fact="true" status="impl/done">**Adapter selection.** The CLI picks an adapter from the registry URL's host segment. `github.com` (or any subdomain) → `GitHubCreator`; `gitverse.ru` → `GitVerseCreator`; unknown hosts surface a clean error pointing at PROP-002 §2.10 rather than guessing a Gitea-compatible shape that may not match the host's actual API.</PUB-ADAPTER-SELECTION></p>
+      <p><PUB-TOKEN-LOADING fact="true" status="impl/done">**Token loading.** The publish token loader (`crate::token::load_token(host)` → `load_token_for_host`) iterates these sources in order, returning the first non-empty value:</PUB-TOKEN-LOADING></p>
+      <facts ordered="true">
+        <TOK-HOST-ENV-VAR fact="true" status="impl/done">`VIBEVM_PUBLISH_TOKEN_&lt;HOST&gt;` environment variable — host-specific, and the **highest-precedence source**. The suffix is the uppercased first label of the host (`VIBEVM_PUBLISH_TOKEN_GITHUB` for `github.com`, `VIBEVM_PUBLISH_TOKEN_GITVERSE` for `gitverse.ru`); non-alphanumerics fold to `_` so the name stays a valid POSIX identifier. Lets CI hold tokens for several hosts in the same environment without one host-agnostic variable clobbering them all.</TOK-HOST-ENV-VAR>
+        <TOK-ENV-VAR fact="true" status="impl/done">`VIBEVM_PUBLISH_TOKEN` environment variable — legacy host-agnostic form, kept so setups that already export it keep working without a rename. **Outranked by the host-specific variable above**; the host-specific form is preferred in new setups.</TOK-ENV-VAR>
+        <TOK-PER-HOST-FILE fact="true" status="impl/done">`&lt;settings-dir&gt;/&lt;host-prefix&gt;.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`).</TOK-PER-HOST-FILE>
+        <TOK-LEGACY-FALLBACK fact="true" status="impl/done">`&lt;settings-dir&gt;/git.publish.token` — legacy host-agnostic fallback.</TOK-LEGACY-FALLBACK>
+      </facts>
+      <p><TOK-SETTINGS-DIR fact="true" status="impl/done">Both file legs hang off the one settings dir — `~/.vibe`, or `$VIBE_SETTINGS` when it is set — so a single variable relocates every on-disk credential read together, and an isolated run cannot reach the operator's real token file. The pre-consolidation config dir supplied two further legs until 2026-07-26; those reads were removed precisely because `$VIBE_SETTINGS` deliberately did not relocate that directory.</TOK-SETTINGS-DIR></p>
+      <p><tok-files-rationale fact="true" status="spec/done">The per-host file lets the operator hold tokens for several hosts simultaneously without juggling env vars. The legacy fallback covers the GitVerse-only era and keeps existing setups working.</tok-files-rationale></p>
+      <p><TOKEN-SECRECY-INVARIANT fact="true" status="impl/done">**Token secrecy invariant.** The token is a surface secret. It is **never** displayed in CLI output, log lines, error messages, JSON event payloads, the lockfile, or any committed file. The only sanctioned paths through which the value crosses a process boundary are: (a) the GitHub / GitVerse `Authorization: Bearer …` HTTP header, sent over TLS to the hosting API; (b) the `x-access-token:&lt;TOKEN&gt;@…` embed in the URL passed to a single `git remote add` / `git push` invocation; (c) the in-memory `Token` struct, which redacts on `Display` and `Debug`. The CLI prints the *source* of the token (explicit / env-var / file path) but never the value. Implementations must verify token redaction in unit tests (cf. `vibe_publish::token::tests::debug_redacts_value`).</TOKEN-SECRECY-INVARIANT></p>
+      <p><PUB-ERROR-SURFACE fact="true" status="impl/done">**Error surface** (tuned for non-admin contributors — PROP-000 §18 acknowledges this will hit routinely):</PUB-ERROR-SURFACE></p>
+      <facts ordered="false">
+        <ERR-401-403 fact="true" status="impl/done">`401` / `403` from the API → `Publish refused: token lacks 'repo:create' permission in organization &lt;org&gt;. Contact an org owner or use a token with broader scope.`</ERR-401-403>
+        <ERR-PUSH-DENIED fact="true" status="impl/done">`git push` denied → `Publish refused: no push access to &lt;repo&gt;. Ask a maintainer of &lt;repo&gt; to grant you push access.`</ERR-PUSH-DENIED>
+        <ERR-TAG-EXISTS fact="true" status="impl/done">Tag already exists → `Publish refused: &lt;repo&gt; already has tag &lt;tag&gt;. Pick a new version — force-push is not automated.`</ERR-TAG-EXISTS>
+        <ERR-ORG-NETWORK fact="true" status="impl/done">Org does not exist / network unreachable → differentiated from auth errors so operators can tell a typo from a permissions issue.</ERR-ORG-NETWORK>
+        <ERR-UNSUPPORTED-HOST fact="true" status="impl/done">Unsupported host → `Publish refused: no RepoCreator adapter for host '&lt;host&gt;'. Add one in vibe-publish per PROP-002 §2.10.`</ERR-UNSUPPORTED-HOST>
+      </facts>
+      <p><PUBLISH-NEVER-RULES fact="true" status="impl/done">Never force-push. Never overwrite an existing tag. Never create a repo in a different org than the configured one unless `--org &lt;other&gt;` is passed explicitly. Never escalate scope: a publish run targets exactly the org named in the project's `[[registry]]` URL — adapters MUST refuse to create or modify anything outside that org.</PUBLISH-NEVER-RULES></p>
+      <p><TWO-TIER-PUBLISH fact="true" status="spec/plan">**Two-tier publish (owner ruling, 2026-08-13; not built — the ruling is recorded here, the build is its own slice).** The publisher branches on **repository existence, never on rights**; rights manifest themselves at the point of action:</TWO-TIER-PUBLISH></p>
+      <facts ordered="false">
+        <TIER-UPDATE fact="true" status="spec/plan">**Tier 1 — update (the ordinary author's flow).** The publisher composes the repository name deterministically from identity (`&lt;group&gt;.&lt;name&gt;`, the registry's `naming`), probes existence with `git ls-remote`, and — when the repository exists — pushes content + tag with **plain git credentials**: an SSH key suffices, no publish token and no org rights are needed. This is the `direct_git` path with the URL derived instead of hand-passed, and it is pure git — it works against hosts whose management API is absent or degraded (GitVerse updates work today under this tier; only creation stays manual there).</TIER-UPDATE>
+        <TIER-CREATE fact="true" status="spec/plan">**Tier 2 — creation (the moderator's flow).** No repository → in a TTY, an interactive confirmation («package `&lt;group&gt;.&lt;name&gt;` does not exist in `&lt;org&gt;` — create it?»); `--create` answers yes non-interactively; `--no-create` (and any non-TTY run without `--create`) refuses with a recipe naming both the flag and the moderator path. Creation itself is today's adapter flow: org API + publish token + the scope discipline above.</TIER-CREATE>
+        <RIGHTS-CHECKED-AT-THE-ACTION fact="true" status="spec/plan">**Rights are checked where they act.** Push rights are answered by the repository itself (`GET /repos/{org}/{repo}` `permissions.push` for a token, or simply by the push failing loudly for SSH); org-membership (`GET /user` + `GET /orgs/{org}/memberships/{username}`) is consulted only to sharpen the Tier-2 refusal text — never to branch the flow, because fine-grained repo-scoped tokens can push while showing no membership at all.</RIGHTS-CHECKED-AT-THE-ACTION>
+        <LEAST-PRIVILEGE-IS-THE-NORM fact="true" status="spec/plan">**Least privilege becomes the norm.** Authors hold write access to exactly their repositories (the moderator adds them as collaborators — the vouching act of [PROP-008 §2.10](PROP-008-qualified-naming.xml#trust)); org-wide creation rights stay with moderators. The overwhelming majority of publishes are updates and stop requiring organisational credentials at all.</LEAST-PRIVILEGE-IS-THE-NORM>
+      </facts>
+    </publish>
+    <jtd title="2.11 JTD + codegen for wire contracts">
+      <p><jtd-req fact="true" status="impl/done">`req r1`</jtd-req></p>
+      <p><JTD-WIRE-CONTRACTS fact="true" status="impl/done">**Decision.** Per [PROP-000 §16](../../common/PROP-000.xml#jtd), wire-format contracts — here, the GitVerse API request/response shapes, the `vibe --json` CLI output event schema, and future LLM provider wire shapes — are defined in JTD and codegen'd into Rust types via `jtd-codegen`.</JTD-WIRE-CONTRACTS></p>
+      <p><jtd-layout-lead fact="true" status="impl/done">Layout:</jtd-layout-lead></p>
+      <facts ordered="false">
+        <JTD-VENDORED-BINARY fact="true" status="impl/done">`tools/jtd-codegen/` — vendored `jtd-codegen` binary (gitignored; version pinned via README).</JTD-VENDORED-BINARY>
+        <JTD-SCHEMAS-DIR fact="true" status="impl/done">`schemas/` — `.jtd.json` files at repo root, committed. One file per contract.</JTD-SCHEMAS-DIR>
+        <JTD-WIRE-CRATE fact="true" status="impl/done">`crates/vibe-wire/` — new crate housing `schemas/` → Rust codegen output in `src/generated/`, re-exports curated for downstream crates (`vibe-publish`, future `vibe-llm`).</JTD-WIRE-CRATE>
+        <JTD-XTASK-CODEGEN fact="true" status="impl/done">`cargo xtask codegen` — regenerates every schema. CI runs it and fails on diff.</JTD-XTASK-CODEGEN>
+      </facts>
+      <p><JTD-NOT-FOR-CONFIGS fact="true" status="impl/done">Manifests (`vibe.toml`, `vibe.lock`, `vibe-package.toml`) stay TOML and serde-driven — JTD is for wire, not for human configs.</JTD-NOT-FOR-CONFIGS></p>
+    </jtd>
+    <perf title="2.12 Performance and resolver I/O strategy">
+      <p><perf-req fact="true" status="impl/done">`req r1`</perf-req></p>
+      <p><PROVIDER-ADAPTER fact="true" status="impl/done">**Decision.** The resolver is driven by a `DependencyProvider` adapter that sits on top of `MultiRegistryResolver` and exposes only what resolvo needs:</PROVIDER-ADAPTER></p>
+      <facts ordered="false">
+        <PERF-LIST-TAGS fact="true" status="impl/done">`list_versions(pkgref)` → backed by `ShellGit::list_tags(repo_url)` — a new method using `git ls-remote --tags &lt;url&gt;` to enumerate versions **without cloning**.</PERF-LIST-TAGS>
+        <PERF-FETCH-FILE fact="true" status="impl/done">`get_dependencies(pkgref, version)` → backed by `ShellGit::fetch_file_at_ref(repo_url, tag, "vibe-package.toml")` — a new method using `git archive` to pull a single file from a tag **without a working tree**.</PERF-FETCH-FILE>
+      </facts>
+      <p><PERF-IN-MEMORY-CACHE fact="true" status="impl/done">In-memory caching across one `vibe install` invocation: `(registry, kind, name) → Vec&lt;Version&gt;` and `(registry, kind, name, version) → Deps`. Same pkgref touched twice within a resolve pass hits memory, not network.</PERF-IN-MEMORY-CACHE></p>
+      <p><PERF-RAYON-FANOUT fact="true" status="spec/done">Parallel I/O via `rayon` scoped thread pool: N parallel `ls-remote` subprocess invocations when resolving a multi-dep top-level install. No tokio introduction — our runtime is synchronous, `git` subprocesses are blocking, and a thread pool for blocking-I/O fan-out is exactly rayon's sweet spot.</PERF-RAYON-FANOUT></p>
+      <p><PERF-CLONE-ONCE fact="true" status="impl/done">A full clone happens only once the solver has committed to installing a specific version. The pathological case (resolver evaluates 50 versions of a package, then picks one) clones once, not 50 times.</PERF-CLONE-ONCE></p>
+      <p><PERF-RESOLVE-CACHE-FUTURE fact="true" status="spec/done">Future (Phase B): resolved-graph cache keyed by `sha256((vibe.toml-registries) || all-requires || all-overrides)`. A second `vibe install` in the same project without any input change hits the cache, skipping resolve entirely. Listed here so the cache-key grammar is chosen once, not retrofitted.</PERF-RESOLVE-CACHE-FUTURE></p>
+    </perf>
+    <lifecycle title="2.13 Package lifecycle: removal, re-registration, and consent">
+      <p><lifecycle-req fact="true" status="spec/done">`req r2`</lifecycle-req></p>
+      <p><lifecycle-lead fact="true" status="spec/done">**Owner rulings, 2026-08-13.** A registry must be able to remove a package (legal takedowns included) and later admit a *different* package under the same freed name — nothing technically prevents it; what the machinery guarantees instead is that **the change is always visible**. The mechanics stand on PROP-044's registry facts journal (its ratification pending; these rulings are the registry-side letter):</lifecycle-lead></p>
+      <facts ordered="false">
+        <REMOVAL-IS-A-JOURNAL-ACT fact="true" status="spec/plan">**Removal is a journal act, not a file deletion.** Removing a package (or a whole group) appends a `Removed` event plus a name-level tombstone `{reason, superseded_by?}`; the catalog is then reprojected. Deleting only catalog files would not stick (a rebuild would restore them), and deleting only the source repository would leave a dangling entry — the event is what makes removal durable. The *content* may additionally be deleted outright (the legal case): the journal keeps the **fact** of removal, never the bytes.</REMOVAL-IS-A-JOURNAL-ACT>
+        <NAME-REUSE-IS-LEGAL-AND-VISIBLE fact="true" status="spec/plan">**A removed name is free, and its re-registration is a new lineage — visibly.** A later `Published` under a once-removed `(group, name)` is legal; the journal chain `Removed → Published` marks the lineage break, and resolvers surface it («имя перерегистрировано после удаления &lt;дата&gt; — новая линия») instead of treating the name as continuous. Never silence, never a quiet swap.</NAME-REUSE-IS-LEGAL-AND-VISIBLE>
+        <CONSENT-IS-PER-PACKAGE fact="true" status="spec/plan">**Every loud identity refusal names a one-command recovery, and consent is per-package.** A lockfile pin that no longer matches (new lineage, or a frozen coordinate served different bytes) refuses loudly and names the recovery: `vibe update &lt;group&gt;:&lt;name&gt; --accept-new` — accept the new lineage/bytes and re-pin. The fresh pin *is* the durable record of consent. There is deliberately **no blanket** `--force`-all: accepting one known break must not silently accept a second, unasked one; the refusal lists each package, and consent is given by name.</CONSENT-IS-PER-PACKAGE>
+        <FORCE-REPLACE-IS-A-DECLARED-ACT fact="true" status="spec/plan">**`--force-replace` is the declared-replacement act — the package-world analogue of a force-push, minus the history rewrite.** `vibe registry publish --force-replace --reason "…"` appends `ForceReplaced {group, name, version, old_hash, new_hash, reason}` and republishes the coordinate with different bytes. The journal is append-only and is never rewritten — the old observation stays; what changes is the content an address serves, and that change is loud, dated, and explained. Authorisation: the package's owner or a registry moderator (the legal-emergency path). Consumers pinned to the old bytes get the loud refusal above, with the recorded reason in its text, and recover by `--accept-new`. Every surface that shows the version shows the replacement marker (the same surface obligation as `frozen`). This is not an unfreeze: `frozen` stays one-way; the act *supersedes* frozen content by declaration, never silently.</FORCE-REPLACE-IS-A-DECLARED-ACT>
+      </facts>
+    </lifecycle>
+  </decisions>
+  <rejected title="3. Rejected alternatives">
+    <section title="3.1 libsolv as primary solver">
+      <p><REJ-LIBSOLV-PRIMARY fact="true" status="spec/done">Rejected for primary role — accepted as explicit fallback (§2.8). libsolv is battle-tested at RPM scale (DNF, zypper, SUSE) and its feature set is a superset of what we need. But its API is C-style Pool / Solvable / Transaction semantics, and modelling vibevm's pkgref / capability types in Solvable form is an ongoing impedance mismatch that would live in the codebase forever. `resolvo` is a generic Rust-native solver with the same feature coverage for our problem, so the Rust-native path wins on architectural consistency. The libsolv slot exists so we can switch if resolvo ever proves inadequate.</REJ-LIBSOLV-PRIMARY></p>
+    </section>
+    <section title="3.2 pubgrub as primary solver">
+      <p><REJ-PUBGRUB fact="true" status="spec/done">Rejected. PubGrub is an excellent algorithm (first-class error messages, used by `uv` and others), but it does not handle virtual packages or disjunctions — and PROP-000 §18 expects both from day one. PubGrub may still be used in the future for explanatory rendering of conflicts in CLI output if its incompatibility-chain format proves superior; not as the authoritative solver.</REJ-PUBGRUB></p>
+    </section>
+    <section title="3.3 Registry union (merge versions across all registries)">
+      <p><REJ-REGISTRY-UNION fact="true" status="spec/done">Rejected. In a multi-registry setup, unioning versions from all `[[registry]]` entries into one candidate list requires trusting all of them equally — a lower-trust registry could influence resolution when a higher-trust one already had a valid answer. Priority-ordered resolution (§2.2) gives operators clear control: the registry at array index 0 is always preferred, subsequent ones are fallbacks.</REJ-REGISTRY-UNION></p>
+    </section>
+    <section title="3.4 Per-registry identity (pkgref includes registry)">
+      <p><REJ-PER-REGISTRY-IDENTITY fact="true" status="spec/done">Rejected. Treating `vibespecs/flow:wal` and `corporate/flow:wal` as different identities makes mirror-switching impossible and forces every consumer's `vibe.toml` to pin a specific registry for every dep. Identity is package-level (kind, name, version, content_hash); the registry is a runtime resolution detail.</REJ-PER-REGISTRY-IDENTITY></p>
+    </section>
+    <section title="3.5 `github:` / `gitverse:` / `gitlab:` URL shorthands">
+      <p><REJ-URL-SHORTHANDS fact="true" status="spec/done">Rejected. This is **the** Nix failure mode (§1). Every host-specific shorthand in the URL grammar is an invitation to tie the ecosystem to that host. vibevm accepts any URL that `git` accepts — full stop. Operators type full URLs; the CLI does not do host-specific magic.</REJ-URL-SHORTHANDS></p>
+    </section>
+    <section title="3.6 Central `vibevm/index` registry of registries">
+      <p><REJ-CENTRAL-INDEX fact="true" status="spec/done">Rejected. A global index would reintroduce the Nix centralization problem one level up. Registries are peer-level; operators configure their own `[[registry]]` array per project. Discovery of "what registries exist" is out of CLI scope (it's a search-engine / documentation problem, not a package-manager problem).</REJ-CENTRAL-INDEX></p>
+    </section>
+    <section title="3.7 Optional / recommended / supplemental deps in v1">
+      <p><REJ-WEAK-DEPS-V1 fact="true" status="spec/done">Rejected for v1 (not rejected forever). `required` + `conflicts` + capabilities + disjunctions + obsoletes cover every concrete use case we've identified. `recommends` / `suggests` / `supplements` (RPM's weak-deps) can be added later as extensions to `[requires]` — the fields slot in without breaking the schema.</REJ-WEAK-DEPS-V1></p>
+    </section>
+    <section title="3.8 HTTPS-only hosted-registry API">
+      <p><REJ-HTTPS-ONLY fact="true" status="spec/done">Rejected for v1. Git-over-SSH is what works today on contributor machines with existing GitVerse keys; HTTPS with token auth is a Phase B / M2 add. The `GitBackend` abstraction makes this additive, not architectural.</REJ-HTTPS-ONLY></p>
+    </section>
+  </rejected>
+  <out-of-scope title="4. Out of scope for Phase A">
+    <facts ordered="false">
+      <OOS-REGISTRY-UX fact="true" status="spec/done">Polished multi-registry UX (`vibe registry add / list / remove / set-mirror` commands) — Phase B.</OOS-REGISTRY-UX>
+      <OOS-MULTI-LIVE fact="true" status="spec/done">Live multi-registry exercised end-to-end — Phase B.</OOS-MULTI-LIVE>
+      <OOS-MIRROR-CHAIN fact="true" status="spec/done">Real mirror fallback chain (code paths exist, tested with fixtures; live mirror comes in Phase B).</OOS-MIRROR-CHAIN>
+      <OOS-VENDOR fact="true" status="spec/done">`vibe vendor` — Phase B.</OOS-VENDOR>
+      <OOS-PUBLISH-ADAPTERS fact="true" status="spec/done">Publish adapters beyond GitVerse — added per adopter demand.</OOS-PUBLISH-ADAPTERS>
+      <OOS-SIGNED fact="true" status="spec/done">Signed / attested packages (sigstore-style) — M2 design, noted as architectural allowance here.</OOS-SIGNED>
+      <OOS-LLM-REVIEW fact="true" status="spec/done">LLM-backed publish review — v2 (already spec'd in `VIBEVM-SPEC.md` §8.5).</OOS-LLM-REVIEW>
+      <OOS-OFFLINE fact="true" status="spec/done">`--offline` install mode — M2 polish.</OOS-OFFLINE>
+    </facts>
+  </out-of-scope>
+  <acceptance title="5. Acceptance (Phase A)">
+    <p><acceptance-lead fact="true" status="impl/done">Phase A is code-complete when every item below is green:</acceptance-lead></p>
+    <facts ordered="false">
+      <ACC-SPEC-DOCS fact="true" status="impl/done">[ ] `VIBEVM-SPEC.md` §7.3 / §7.4 / §7.5 / §8.1 / §8.2 / §8.3 / §8.4 / §8.6 reflect the new design. PROP-001 carries its super-session marker. TASKS.md / ROADMAP / WAL updated.</ACC-SPEC-DOCS>
+      <ACC-JTD fact="true" status="impl/done">[ ] `jtd-codegen` vendored under `tools/`; `schemas/` seeded with at least the GitVerse publish-API contract and the `vibe --json` event shape; `cargo xtask codegen` regenerates; CI enforces zero drift.</ACC-JTD>
+      <ACC-CAPABILITY-PARSE fact="true" status="impl/done">[ ] `vibe-core` parses `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` into typed values; legacy compact form auto-migrates with a deprecation warning.</ACC-CAPABILITY-PARSE>
+      <ACC-REGISTRY-PARSE fact="true" status="impl/done">[ ] `vibe.toml` parser accepts `[[registry]]` array, `[[mirror]]`, `[[override]]`; singleton legacy `[registry]` auto-migrates.</ACC-REGISTRY-PARSE>
+      <ACC-LOCKFILE-V2 fact="true" status="impl/done">[ ] `vibe.lock` schema v2 written by fresh installs; v1 lockfiles read and migrated on next write.</ACC-LOCKFILE-V2>
+      <ACC-RESOLVER-CRATE fact="true" status="impl/done">[ ] `vibe-resolver` crate exists with `DepSolver` trait and `ResolvoSolver` impl; unit-tested against constructed dep graphs including a virtual-package and a disjunction case.</ACC-RESOLVER-CRATE>
+      <ACC-GIT-PACKAGE-REGISTRY fact="true" status="impl/done">[ ] `GitPackageRegistry` replaces `GitRegistry`; `MultiRegistryResolver` coordinates the array; `ShellGit::list_tags` and `ShellGit::fetch_file_at_ref` implemented.</ACC-GIT-PACKAGE-REGISTRY>
+      <ACC-CONTENT-HASH fact="true" status="impl/done">[ ] Content-hash integrity verified on every fetch; cross-source mismatch fails hard with actionable message.</ACC-CONTENT-HASH>
+      <ACC-TRANSITIVE-INSTALL fact="true" status="impl/done">[ ] `vibe install` runs transitive resolution; plan rendering shows the full subgraph with `(dep of flow:foo)` provenance tags; `--dry-run` surfaces the same.</ACC-TRANSITIVE-INSTALL>
+      <ACC-PUBLISH-CRATE fact="true" status="impl/done">[ ] `vibe-publish` crate with `RepoCreator` trait and `GitVerseCreator` impl; `vibe registry publish &lt;path&gt;` subcommand; non-admin error paths render per §2.10.</ACC-PUBLISH-CRATE>
+      <ACC-FIXTURES fact="true" status="impl/done">[ ] Local fixtures relocated from `packages/` to `fixtures/registry/` in per-package layout; `cli_e2e.rs` updated.</ACC-FIXTURES>
+      <ACC-DEMO-PACKAGES fact="true" status="impl/done">[ ] Three demo packages live in `vibespecs/flow-wal` / `vibespecs/flow-sync-from-code` / `vibespecs/flow-atomic-commits` via `vibe registry publish`, each tagged `v0.1.0`.</ACC-DEMO-PACKAGES>
+      <ACC-MANUAL-SMOKE fact="true" status="impl/done">[ ] `manual-tests/M1.5-gate-v2-per-package-smoke.md` written and passes against the live per-package registry.</ACC-MANUAL-SMOKE>
+      <ACC-WORKSPACE-GREEN fact="true" status="impl/done">[ ] `cargo test --workspace` green; `cargo clippy --workspace --all-targets -- -D warnings` clean.</ACC-WORKSPACE-GREEN>
+    </facts>
+  </acceptance>
+  <phase-b title="6. Phase B preview (M1.6)">
+    <p><phase-b-preview-lead fact="true" status="impl/done">Pinned here so Phase A does not accidentally foreclose any of these options:</phase-b-preview-lead></p>
+    <facts ordered="false">
+      <PBP-MULTI-LIVE fact="true" status="impl/done">Real multi-registry: a second live `[[registry]]` exercised end-to-end; priority ordering verified in smoke-test.</PBP-MULTI-LIVE>
+      <PBP-MIRROR-CHAIN fact="true" status="impl/done">Mirror fallback chain: the second-live-mirror URL and the integrity hard-fail both ship (the fallback loop in `git_package_registry/fetch.rs`, `fetch_with_expected_hash`, the M1.6 mirror-vendor smoke); the `--trust-mirror` escape hatch does not.</PBP-MIRROR-CHAIN>
+      <PBP-VENDOR fact="true" status="impl/done">`vibe vendor [--out &lt;dir&gt;]`: generates a local mirror directory, usable as `file://` `[[mirror]]`.</PBP-VENDOR>
+      <PBP-CLI-SURFACE fact="true" status="impl/done">CLI management surface: `vibe registry add / list / remove / set-mirror / status`.</PBP-CLI-SURFACE>
+      <PBP-PUBLISH-ADAPTERS fact="true" status="impl/done">Publish adapters: GitHub, Gitea, Forgejo on adopter demand — one new `RepoCreator` impl per host.</PBP-PUBLISH-ADAPTERS>
+      <PBP-RESOLVE-CACHE fact="true" status="spec/done">Resolved-graph cache: incremental resolve skipped when inputs unchanged.</PBP-RESOLVE-CACHE>
+      <PBP-ATTESTATION fact="true" status="spec/done">Supply-chain attestation: sigstore-style signing of tags; consumer verification on install. Architectural slot only in Phase B.</PBP-ATTESTATION>
+    </facts>
+  </phase-b>
+  <open title="7. Open questions">
+    <p><open-lead fact="true" status="spec/done">None blocking Phase A. Parking lot:</open-lead></p>
+    <facts ordered="false">
+      <OPEN-REGISTRY-META-REF fact="true" status="spec/work">**Registry-level metadata ref.** `[[registry]] ref = "main"` is reserved for a future capability index / trust policy branch at the org level. Design deferred until use case emerges (likely Phase B or M2).</OPEN-REGISTRY-META-REF>
+      <OPEN-CROSS-REGISTRY-CACHE fact="true" status="spec/work">**Cross-registry content-hash cache.** Today each `(registry, kind, name, version)` gets its own cache entry. If two registries mirror the same content (same content_hash), the second fetch does redundant work. Optimization — Phase B.</OPEN-CROSS-REGISTRY-CACHE>
+      <OPEN-NAMING-TEMPLATES fact="true" status="spec/work">**Registry-level naming beyond `fqdn` / `kind-name` / `name` / `kind/name`.** Real-world adopters may want custom mappings (e.g. `pkg-&lt;kind&gt;-&lt;name&gt;`). If that arises, `naming` becomes a template string. Not speculative engineering today — react to first real request.</OPEN-NAMING-TEMPLATES>
+      <OPEN-VERIFY-SOLVER fact="true" status="spec/work">**Solver-level lockfile verification.** The lockfile records `solver = "resolvo-&lt;ver&gt;"`. Should `vibe install --verify-solver` re-run resolution and assert the graph matches the lockfile? Useful audit tool. Phase B.</OPEN-VERIFY-SOLVER>
+      <OPEN-JTD-WINDOWS fact="true" status="spec/work">**JTD codegen ergonomics on Windows.** `jtd-codegen` is a Go binary; we vendor it project-local. Whether the experience is clean enough to not require PATH tinkering will be answered during the tooling commit.</OPEN-JTD-WINDOWS>
+    </facts>
+  </open>
+</spec>

@@ -2,9 +2,10 @@
 
 _Fired 2026-12-07 10:09–11:03 (Campaign 3, PP-004). Three paid GLM-5.2
 cold-boss runs, arm `g2`: the RLM gated arm over `mini_logfmt` + the extended
-menu (`preamble-g.md` + `menu.md` + `menu-g2-extra.md` — the frozen 8 tasks
+menu (`preamble-g.xml` + `menu.xml` + `menu-g2-extra.xml` — the frozen 8 tasks
 plus task 9 schema and task 10 Silo), with the raised caps (worker 80 / boss
-100) and the `decisions` journal collected. Pre-registration: MT-C3-03. Scored
+
+1. and the `decisions` journal collected. Pre-registration: MT-C3-03. Scored
 by `score-g2.py`._
 
 ## What this measured
@@ -18,7 +19,7 @@ the need-gate journal back.
 ## Runs
 
 | run | boss_exit | workers | delegated E | note |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 1 | 0 (clean) | 4 (all failed) | {1,3,4,9} = 4/7 | delegated the schema task; workers hit the staging linker / caps |
 | 2 | 124 (25-min wall) | 5 (3 completed, 2 running) | {1,3,4,9} = 4/7 | best collection; timed out mid-menu |
 | 3 | 1 (early) | 0 | ∅ = 0/7 | **technical failure** ~3.5 min in, no workers — drags the pool |
@@ -52,3 +53,4 @@ follow-ups: run 3's early failure (re-run for a clean N=3); a completed
 schema-worker to turn P-C3-b CONFIRMED (the worker turn cap / staging linker
 still bite). Canonical verdicts: MT-C3-03 "Recorded runs". Raw evidence (bus
 facts + decision journals + gzipped transcripts) sits per-run beside this file.
+

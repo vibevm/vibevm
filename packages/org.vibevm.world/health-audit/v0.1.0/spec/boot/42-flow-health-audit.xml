@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Health Audit</title>
+  <status stage="impl" state="done"/>
+  <p><PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT fact="true" status="impl/done">This project runs a **periodic health audit**: a recurring,
+judgment-heavy sweep over everything the per-commit gate cannot see,
+recorded as an append-only trend in `AUDIT.md`.</PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT></p>
+  <law title="The one-line law">
+    <p><THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE fact="true" status="impl/done">**The gate is the floor; the audit is what the gate cannot see.**</THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE></p>
+    <p><THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS fact="true" status="impl/done">Where the gate answers *"did this commit regress covered code?"*, the
+audit answers *"what is wrong, rotting, or drifting that no commit
+will ever flag?"*.</THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS></p>
+    <p><neither-replaces-the-other fact="true" status="impl/done">Neither replaces the other.</neither-replaces-the-other></p>
+  </law>
+  <when title="When it fires">
+    <p><AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR fact="true" status="impl/done">The audit is **owner-triggered**, with a floor of **at least once per
+milestone** — run as part of, or right after, a milestone close-out.</AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR></p>
+    <p><A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE fact="true" status="impl/done">A
+milestone is never declared done on an un-audited base.</A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE></p>
+    <p><OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED fact="true" status="impl/done">The owner
+re-runs it at will between milestones; no calendar cron is fixed.</OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED></p>
+  </when>
+  <produces title="What it produces">
+    <p><ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS fact="true" status="impl/done">One dated section in `AUDIT.md` per run, each finding carrying an ID,
+its category, a one-line locator, a severity (P1/P2/P3), and a
+disposition (fixed/filed/accepted/open).</ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS></p>
+    <p><AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND fact="true" status="impl/done">`AUDIT.md` is committed to
+git — its history *is* the project's health trend.</AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND></p>
+    <p><UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED fact="true" status="impl/done">Unresolved findings
+carry forward to the next run and get re-judged.</UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED></p>
+  </produces>
+  <run title="How to run one">
+    <p><USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE fact="true" status="impl/done">Use the **`health-audit`** skill: it reads the category checklist,
+walks it against the repository, and drafts the `AUDIT.md` section for
+your approval.</USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE></p>
+    <p><flow-document-pointers fact="true" status="impl/done">Full protocol:
+@spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root;
+the categories to walk:
+@spec://org.vibevm.world/health-audit/flows/health-audit/audit-checklist#root;
+the run procedure:
+@spec://org.vibevm.world/health-audit/flows/health-audit/running-an-audit#root.</flow-document-pointers></p>
+  </run>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE fact="true" status="impl/done">Never declare a milestone done on an un-audited base — the audit is
+  part of the close-out, not an optional extra.</NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE>
+      <NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION fact="true" status="impl/done">Never let a finding vanish without a disposition. Every finding is
+  fixed, filed, accepted, or open — silence is not an option.</NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION>
+      <NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT fact="true" status="impl/done">Never keep findings only in the volatile checkpoint file (the WAL /
+  CONTINUE). The durable home is `AUDIT.md`; the checkpoint is
+  reconciled *against* it, never a substitute for it.</NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT>
+      <NEVER-LET-THE-CHECKLIST-FOSSILIZE fact="true" status="impl/done">Never let the checklist fossilize. A new defect class a run
+  discovers becomes a permanent category, so the same gap is never
+  re-missed.</NEVER-LET-THE-CHECKLIST-FOSSILIZE>
+      <NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT fact="true" status="impl/done">Never mistake a green gate for a healthy project. The gate is blind
+  by construction to uncovered code, out-of-gate trees, drift, and
+  slow debt — each individually invisible, collectively corrosive.</NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT>
+    </facts>
+  </never>
+</spec>

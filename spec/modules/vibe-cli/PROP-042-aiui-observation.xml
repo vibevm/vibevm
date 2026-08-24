@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-042 — AIUI observation: the render plane &amp; the `vibe aiui` surface</title>
+  <status stage="spec" state="done" comment="B0 2026-07-24: ACTIVE v0.1, 2026-07-16; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="spec/done">**Status:** ACTIVE (v0.1, 2026-07-16). **Module:** `vibe-cli`.
+**Related:** PROP-037 (the `vibe tree` TUI it observes), PROP-039 §11.3 (the model
+plane / `vibe-actions::aiui`), PROP-036 (the tree model). The terminal products
+(vibeterm, vibeframe) and their contracts now live in the `vibevm-term` products
+repo — this PROP cites them as cross-repo contracts
+(`spec://vibeterm/*`, `spec://term-common/*`); the `vibe aiui` / `vibe term`
+CLI surface itself stays on the host.</status-line></p>
+  <facts ordered="false">
+    <PROP-SCOPE fact="true" status="spec/done">This contract governs the **render plane** — a terminal-free way to render the
+  `vibe tree` TUI to a symbolic snapshot so an agent (or a golden test) can *see*
+  the interface without a real terminal — and the `vibe aiui` CLI surface that
+  exposes it.</PROP-SCOPE>
+    <other-planes fact="true" status="spec/done">The terminal plane (vibeterm) and the model plane are governed
+  elsewhere (a vibeterm PROP in `vibevm-term` / PROP-039).</other-planes>
+  </facts>
+  <render-plane title="1. The render plane">
+    <facts ordered="false">
+      <HEADLESS-RENDER fact="true" status="impl/done">REQ. The TUI renders **headlessly**: given a built `PackageTree`, a terminal size
+  `cols×rows`, and an optional **key script** (§3), the surface drives the real
+  input + render path — `input::handle` for each scripted key, then `render::draw`
+  into an off-screen `ratatui::Buffer` — and returns that Buffer.</HEADLESS-RENDER>
+      <NO-TERMINAL fact="true" status="impl/done">No terminal, no alternate screen, no raw mode, no `rat-salsa` loop; the
+  entrypoint is a pure function of `(tree, size, script)`.</NO-TERMINAL>
+    </facts>
+    <facts ordered="false">
+      <RENDER-DETERMINISTIC fact="true" status="impl/done">REQ. The headless render is **deterministic**: it uses the built-in theme
+  defaults (the canonical Rosé Pine palette, Tier 3 — §PROP-037 §2.2) and never
+  loads user settings from disk, so the same `(tree, size, script)` always yields
+  the same Buffer.</RENDER-DETERMINISTIC>
+      <SNAPSHOT-PINNING fact="true" status="impl/done">Snapshot callers pin `tree` (a fixture), `size`, and `script`.</SNAPSHOT-PINNING>
+    </facts>
+    <facts ordered="false">
+      <SIDE-EFFECT-KEYS-REFUSED fact="true" status="impl/done">REQ. A scripted key that would **escape the process or mutate the world** is
+  refused, not executed: `F4` (spawns the settings subprocess) and `F6`/`Shift+F6`
+  (write the clipboard) are rejected by the key-script parser (§3).</SIDE-EFFECT-KEYS-REFUSED>
+      <OBSERVES-NOT-ACTS fact="true" status="impl/done">The render plane observes; it does not act outside the model.</OBSERVES-NOT-ACTS>
+    </facts>
+  </render-plane>
+  <snapshot-contract title="2. The snapshot contract">
+    <p><SNAPSHOT-FORMATS fact="true" status="impl/done">REQ. A rendered Buffer projects to one of two **snapshot formats**, the same
+schema every observation plane emits:</SNAPSHOT-FORMATS></p>
+    <facts ordered="false">
+      <FMT-TEXT fact="true" status="impl/done">**`text`** — the glyph grid: one line per row, each row the concatenation of
+  the cells' symbols with trailing whitespace trimmed. The golden-file form
+  (committed `.snap.txt`, re-rendered and diffed).</FMT-TEXT>
+      <FMT-CELLS fact="true" status="impl/done">**`cells`** — JSON: `{cols, rows, rows:[[run,…],…]}` where each **run** is
+  `{n, ch, fg?, bg?, mods?}` — `n` cells of glyph `ch` sharing a style, run-length
+  encoded per row; `fg`/`bg` are `#rrggbb` (or an ANSI role name), `mods` the set
+  of `bold`/`dim`/`italic`/`underlined`/`reversed` present. Enables style/colour
+  assertions (e.g. "the active group's border run is the accent colour").</FMT-CELLS>
+    </facts>
+    <facts ordered="false">
+      <FMT-LOSSLESS fact="true" status="impl/done">REQ. `text` is **lossless for layout** (every cell's glyph, in grid order) and
+  `cells` is **lossless for style**; neither invents content.</FMT-LOSSLESS>
+      <BLANK-TRIM fact="true" status="impl/done">A blank cell is a
+  space; the trim is per-row and right-only, so column alignment within a row is
+  preserved.</BLANK-TRIM>
+    </facts>
+  </snapshot-contract>
+  <key-script title="3. The key script">
+    <facts ordered="false">
+      <KEY-SCRIPT-GRAMMAR fact="true" status="impl/done">REQ. A **key script** is a space-separated list of key names driving the TUI
+  before the snapshot. The grammar: function keys `F1`–`F12`; navigation `Up`,
+  `Down`, `Left`, `Right`; `Enter`, `Esc`, `Tab`, `BackTab`, `Space`, `Backspace`;
+  a `Shift+` prefix on any of them (e.g. `Shift+Left`, `Shift+Tab` ≡ `BackTab`).
+  Names are case-insensitive.</KEY-SCRIPT-GRAMMAR>
+      <UNKNOWN-KEY-ERROR fact="true" status="impl/done">An unknown name, or a refused side-effecting key
+  (`F4`, `F6`; §1), is a hard error naming the offending token — never a silent
+  skip.</UNKNOWN-KEY-ERROR>
+    </facts>
+    <facts ordered="false">
+      <RENDER-PLANE-EVENTS fact="true" status="impl/done">REQ. The **render plane** (§1) turns each key name straight into a
+  `crossterm::event::Event` — terminal-free, no escape bytes.</RENDER-PLANE-EVENTS>
+      <TERMINAL-PLANE-ENCODING fact="true" status="impl/done">The **terminal
+  plane** (§4, `vibe aiui send`) must instead encode each name to the bytes the
+  hosted program's platform expects, and the encoding is **platform-specific**: on
+  Unix, the standard xterm VT sequences (SS3 `ESC O P`–`S` for F1–F4, CSI for the
+  rest); on **Windows**, **win32-input-mode** (`ESC [ Vk;Sc;Uc;Kd;Cs;Rc _` — a
+  key-down record then a key-up), the form a ConPTY translates into the console
+  `INPUT_RECORD`s a raw reader expects.</TERMINAL-PLANE-ENCODING>
+      <VT-UNRELIABLE-WINDOWS fact="true" status="impl/done">The raw VT form is **not** reliable on
+  Windows: conhost synthesises a key record from it for a cooked reader (a shell)
+  but not for a raw reader (a crossterm TUI such as `vibe tree`), so the keys are
+  silently dropped.</VT-UNRELIABLE-WINDOWS>
+      <SCRIPT-PLANE-IDENTICAL fact="true" status="impl/done">A caller therefore drives the same key script identically on
+  either plane; the encoding difference is the implementation's to hide.</SCRIPT-PLANE-IDENTICAL>
+    </facts>
+  </key-script>
+  <aiui-cli title="4. The `vibe aiui` surface">
+    <p><AIUI-FAMILY fact="true" status="impl/done">REQ. `vibe aiui` is the agent-facing command family. Its render-plane verb:</AIUI-FAMILY></p>
+    <fence>vibe aiui render [--path &lt;dir&gt;] [--size &lt;COLSxROWS&gt;] [--send "&lt;script&gt;"] [--format text|cells]</fence>
+    <facts ordered="false">
+      <RENDER-VERB-SEMANTICS fact="true" status="impl/done">builds the `vibe tree` model at `--path` (the same resolver `vibe tree` uses),
+  drives `--send` (§3) at `--size` (default `80x24`), and prints the `--format`
+  snapshot (§2, default `text`) to stdout.</RENDER-VERB-SEMANTICS>
+      <RENDER-READ-ONLY fact="true" status="impl/done">It is read-only and non-interactive:
+  it never enters the TUI, spawns a terminal, or touches user state.</RENDER-READ-ONLY>
+    </facts>
+    <p><TERMINAL-VERBS fact="true" status="impl/done">REQ. The **terminal-plane** verbs drive a live vibeterm control session:</TERMINAL-VERBS></p>
+    <fence>vibe aiui open     [--exec &lt;cmd&gt;] [--size &lt;COLSxROWS&gt;] [--timeout-ms &lt;n&gt;]
+vibe aiui send     &lt;key&gt;... [--text &lt;literal&gt;] [--session &lt;pid&gt;]
+vibe aiui snapshot [--session &lt;pid&gt;]
+vibe aiui wait     [--idle-ms &lt;n&gt;] [--timeout-ms &lt;n&gt;] [--session &lt;pid&gt;]
+vibe aiui close    [--session &lt;pid&gt;]
+vibe aiui inspect   &lt;expr&gt; [--session &lt;pid&gt;]
+vibe aiui pty-stop  [--session &lt;pid&gt;]
+vibe aiui pty-start [--session &lt;pid&gt;]
+vibe aiui scrollbar &lt;auto|on|off&gt; [--session &lt;pid&gt;]</fence>
+    <facts ordered="false">
+      <VERB-OPEN fact="true" status="impl/done">`open` launches a **windowless** vibeterm running `--exec` (default: the console
+  `vibe tree` over the current directory) with a control server, waits for its
+  discovery file, and prints the session id (the vibeterm pid).</VERB-OPEN>
+      <VERB-SEND fact="true" status="impl/done">`send` drives a key script (§3) and/or literal `--text`.</VERB-SEND>
+      <VERB-SNAPSHOT fact="true" status="impl/done">`snapshot` prints the live grid (§2).</VERB-SNAPSHOT>
+      <VERB-WAIT fact="true" status="impl/done">`wait` blocks until the hosted program has answered the last input **and** the
+  grid has settled (deterministic snapshots — never the pre-key screen).</VERB-WAIT>
+      <VERB-CLOSE fact="true" status="impl/done">`close` tears the session down.</VERB-CLOSE>
+      <VERB-INSPECT fact="true" status="impl/done">`inspect` evaluates a JavaScript expression in the live renderer page over
+  CDP and prints its return value as JSON — the agent reads the renderer's **real** runtime
+  state (the xterm grid's cols and cell metrics, the scrollbar box) instead of inferring it
+  from a snapshot. Requires a `--control` session.</VERB-INSPECT>
+      <VERB-PTY-STOP fact="true" status="impl/done">`pty-stop` stops the hosted program — the PTY child — **without** restarting
+  Electron: the renderer, the CDP endpoint and the discovery file all stay live, so the
+  program's binary is freed for a rebuild while the session survives.</VERB-PTY-STOP>
+      <VERB-PTY-START fact="true" status="impl/done">`pty-start` (re)spawns the hosted program at the current grid. Paired with
+  `pty-stop` around a rebuild it is the fast TUI-preview loop: the agent sees the change
+  without reconnecting CDP or relaunching Electron.</VERB-PTY-START>
+      <VERB-SCROLLBAR fact="true" status="impl/done">`scrollbar` sets the scrollbar policy live — `auto` (hidden for a
+  full-screen TUI, shown for a shell), `on` (always), `off` (never). The renderer refits the
+  grid; no Electron restart. Requires a `--control` session.</VERB-SCROLLBAR>
+      <SESSION-DEFAULT fact="true" status="impl/done">A verb defaults to the most recent session; `--session &lt;pid&gt;`
+  targets a specific one.</SESSION-DEFAULT>
+    </facts>
+    <p><MODEL-VERB fact="true" status="impl/done">REQ. The **model-plane** verb projects the TUI state — no rendering at all:</MODEL-VERB></p>
+    <fence>vibe aiui state [--path &lt;dir&gt;] [--send "&lt;script&gt;"]</fence>
+    <facts ordered="false">
+      <STATE-SEMANTICS fact="true" status="impl/done">builds the `vibe tree` model at `--path`, drives `--send` (§3), and prints a
+  serialisable `ModelView` (PROP-039 §11.2/§11.3) — display mode, ordering, the
+  active tab, the selection, the visible rows, and which modals are open.</STATE-SEMANTICS>
+      <STATE-READ-ONLY fact="true" status="impl/done">It is
+  read-only and non-interactive; it observes structured state an agent asserts on
+  (flow, focus, open menus), never pixels.</STATE-READ-ONLY>
+      <STATE-PURE fact="true" status="impl/done">The projection is a pure function of
+  the built `App` and carries no rendering types.</STATE-PURE>
+    </facts>
+    <facts ordered="false">
+      <CONTROL-LOOPBACK fact="true" status="impl/done">REQ. The control transport is **loopback-only and token-guarded**. A `--control`
+  vibeterm serves JSON over `http://127.0.0.1:&lt;ephemeral&gt;`.</CONTROL-LOOPBACK>
+      <DISCOVERY-FILES fact="true" status="impl/done">It writes a discovery
+  file `~/.vibe/aiui/&lt;pid&gt;.json` plus a `latest.json` pointer, each
+  `{ port, token, pid, startedAt }` at mode `0600`.</DISCOVERY-FILES>
+      <BEARER-TOKEN fact="true" status="impl/done">Every request carries the
+  bearer token; the socket binds `127.0.0.1` only.</BEARER-TOKEN>
+      <STALE-SESSION-GUARD fact="true" status="impl/done">`open` accepts a discovered
+  session only when its `startedAt` is at or after the spawn instant, so a stale
+  `latest.json` is never mistaken for the freshly-spawned one.</STALE-SESSION-GUARD>
+      <state-governance fact="true" status="spec/done">The model-plane `state` verb is governed by PROP-039 §11.2/§11.3; its `vibe tree`
+  projection is prototyped here per PROP-039 §13 (the TUI is the reference surface).</state-governance>
+    </facts>
+  </aiui-cli>
+  <vibe-term title="5. The `vibe term` launcher">
+    <facts ordered="false">
+      <TERM-LAUNCHER fact="true" status="impl/done">REQ. `vibe term` launches the **vibeterm** terminal app hosting an interactive
+  shell, so the terminal can be used and eyeball-debugged standalone.</TERM-LAUNCHER>
+      <SHELL-DETECTION fact="true" status="impl/done">The shell is
+  **detected**: on Windows, modern PowerShell 7+ (`pwsh`) is preferred over the
+  built-in Windows PowerShell 5.1 — resolved via the standard install locations
+  (`%ProgramFiles%\PowerShell\7\pwsh.exe`, `%LOCALAPPDATA%\…\WindowsApps\pwsh.exe`)
+  then `PATH`, falling back to `…\WindowsPowerShell\v1.0\powershell.exe`; on other
+  platforms `$SHELL`, falling back to `/bin/sh`.</SHELL-DETECTION>
+      <EXEC-OVERRIDE fact="true" status="impl/done">An explicit `--exec &lt;cmd&gt;`
+  overrides the detected shell.</EXEC-OVERRIDE>
+    </facts>
+    <p><APP-RESOLUTION fact="true" status="impl/done">REQ. The terminal app (`vibeterm` for `vibe term`, `vibeframe` for `vibe tree
+-t`) is located in three tiers in order:</APP-RESOLUTION></p>
+    <facts ordered="true">
+      <TIER-ENV fact="true" status="impl/done">an explicit `$VIBEVM_&lt;APP&gt;`
+   directory wins (`&lt;APP&gt;` is the uppercased app name — `VIBETERM` / `VIBEFRAME`,
+   an override a developer or a launcher sets);</TIER-ENV>
+      <TIER-PACKAGED-INSTANCE fact="true" status="impl/done">else an installed `vibe`
+   checks the packaged `&lt;app&gt;/` shipped inside its own instance dir, next to its
+   binary (the legacy, pre-extraction layout — kept for back-compat with instances
+   that still carry it);</TIER-PACKAGED-INSTANCE>
+      <TIER-PATH fact="true" status="impl/done">else a `PATH` lookup for the app-named packaged
+   binary (`vibeterm` / `vibeframe`) — the **extracted-product path**, how the
+   vibevm-term repo's `&lt;app&gt; self install` publishes the product. The directory the
+   binary sits in is treated as the packaged root.</TIER-PATH>
+    </facts>
+    <facts ordered="false">
+      <PACKAGED-VS-DEV fact="true" status="impl/done">The resolver distinguishes a
+  **packaged** dir (electron binary at its root, `resources/app/` inside — invoked
+  directly, no app-path arg) from a **dev** dir (Electron resolved via
+  `node_modules/electron/path.txt`, the app dir passed as a positional arg — only
+  reachable through `$VIBEVM_&lt;APP&gt;` now that the in-tree `apps/` source has moved
+  to vibevm-term).</PACKAGED-VS-DEV>
+      <RESOLUTION-FAILURE fact="true" status="impl/done">Resolution failure returns a typed error; `vibe term` /
+  `vibe frame` surface it to the user, while `vibe tree` falls back to running
+  the console TUI in place (§5.1).</RESOLUTION-FAILURE>
+    </facts>
+    <in-place-upgrade title="5.1 In-place upgrade &amp; the icon protocol">
+      <facts ordered="false">
+        <VIBETERM-ENV fact="true" status="impl/done">REQ. vibeterm sets `VIBETERM=1` in its PTY environment.</VIBETERM-ENV>
+        <IN-PLACE-UPGRADE fact="true" status="impl/done">A `vibe tree` launched
+  **inside** vibeterm (this env present) does not spawn a second window — it
+  upgrades the current terminal in place: the `-t` / vibeterm launch resolves to
+  the in-terminal console TUI here, so a plain shell becomes a "VibeTree terminal"
+  for the session (PROP-036 §2.13). Outside vibeterm, `-t` still opens the desktop
+  app.</IN-PLACE-UPGRADE>
+      </facts>
+      <facts ordered="false">
+        <ICON-SWAP fact="true" status="impl/done">REQ. While the tree is open in that upgrade, vibeterm's **window + taskbar icon**
+  is swapped to `vibetree`, reverting to the window's launch icon on exit. The swap
+  is in-band: `vibe tree` emits `OSC 7773 ; &lt;icon-name&gt; ST` (an empty name reverts);
+  the vibeterm renderer forwards the name to the main process, which calls
+  `win.setIcon`.</ICON-SWAP>
+        <ICON-PLATFORM-GAP fact="true" status="impl/done">**Windows + Linux only** — `setIcon` is a no-op on macOS (the app
+  owns its Dock icon there), the documented platform gap.</ICON-PLATFORM-GAP>
+        <OSC-DISCARDED fact="true" status="impl/done">In any non-vibeterm
+  terminal the OSC is an unknown sequence, harmlessly discarded.</OSC-DISCARDED>
+      </facts>
+    </in-place-upgrade>
+  </vibe-term>
+  <never title="6. Never">
+    <facts ordered="false">
+      <NEVER-USER-SETTINGS fact="true" status="impl/done">Never load user settings into a snapshot render — determinism dies and goldens
+  churn. Defaults only.</NEVER-USER-SETTINGS>
+      <NEVER-SIDE-EFFECT-KEYS fact="true" status="impl/done">Never execute a side-effecting key (`F4`/`F6`) in the render plane.</NEVER-SIDE-EFFECT-KEYS>
+      <NEVER-INVENT-CONTENT fact="true" status="impl/done">Never let a snapshot format invent or drop content — `text` is every glyph in
+  grid order; `cells` is every run with its true style.</NEVER-INVENT-CONTENT>
+      <NEVER-INTERACTIVE fact="true" status="impl/done">Never enter the interactive TUI from `vibe aiui` — it is headless by contract.</NEVER-INTERACTIVE>
+    </facts>
+  </never>
+</spec>

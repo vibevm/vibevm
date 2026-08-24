@@ -30,7 +30,7 @@ batch finishes near **530 units**.
 | `spec/boot/20-stack-rust-ai-native-lang.md` | 9 |
 | `spec/cards/scaffold-{a,b,c,e,f,g,h,i}` — 3 each | 24 |
 
-Already out by the excludes and **not yours**: `LICENSE.md` (file name),
+Already out by the excludes and **not yours**: `LICENSE.xml` (file name),
 `spec/cards/INDEX.md` (derived index). **Out of scope:** `crates/`, `tools/`,
 `target/`, `Cargo.*`, and every other package.
 
@@ -91,7 +91,7 @@ licence facts. Those are checkable against `vibe.toml` and the tree and may be
 **stale**. That is a finding, reported, never fixed.
 
 @fact:B7-EXPECT-HOST-ONLY-CITATION `spec/rust/tools/vibe-agentic-tcg-rust.md:156` cites
-`spec/boot/90-user.md` — a path that exists in the **host** repository and not
+`spec/boot/90-user.xml` — a path that exists in the **host** repository and not
 in the package a consumer installs. The TypeScript twin carries the identical
 citation and B6 reported it; **the go twin does not**. Confirm the shape here
 and report it. Mark stage and state and move on — whether a document may cite

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Campaign 3 · Stage B · Ф5 — Acceptance / PP-002 fold-in (FD-9) — phase report</title>
+  <p>_Written 2026-07-12 ~05:26. Owner-facing; plan §9 ledger is the commit map.
+Phase **COMPLETE** (2 slices)._</p>
+  <section title="TL;DR">
+    <p>Acceptance is now a first-class notion. A packet can declare itself an
+acceptance **verifier** (`output.verifier`) over the work in its
+`context_from`; mission-control refuses a **cold** verifier (one over an
+empty/workless tree) at the door, and a verifier's acceptance verdict is
+surfaced as a **verifier-accept** (ACCEPTED / REJECTED) over that work.
+Both halves of FD-9 landed:</p>
+    <table>
+      <tr>
+        <td>slice</td>
+        <td>what</td>
+        <td>commit</td>
+      </tr>
+      <tr>
+        <td>Ф5.1</td>
+        <td>`output.verifier` marker + cold-verifier suppression at admission</td>
+        <td>`85ac2a7`</td>
+      </tr>
+      <tr>
+        <td>Ф5.2</td>
+        <td>`RunRecord.verifier` denorm + verifier-accept verdict in `run`/`show`</td>
+        <td>`af977a4`</td>
+      </tr>
+    </table>
+    <p>Floor green (test-gate 213). Real `~/.fractality` untouched.</p>
+  </section>
+  <section title="What was done">
+    <list ordered="false">
+      <item>**The marker (Ф5.1).** `OutputSpec.verifier: bool` rides the packet next
+  to `merge`. A verifier reads only named results (RD-11: clean context by
+  design — the fold law already forbids parent/sibling transcripts), so
+  `context_from` IS the set of work under review.</item>
+      <item>**Cold-verifier suppression (Ф5.1).** `admission::check_verifier_has_work`
+  refuses (400) a verifier whose `context_from` names no run that produced
+  a result — no cold verification over an empty tree (§10.2). Applied in
+  `register_run` right after packet validation, unconditionally (a packet-
+  validity check, like `validate()`), so a cold verifier never lands in the
+  registry. Two integration tests: a verifier over a completed run with a
+  result is admitted; empty and resultless `context_from` are refused 400.</item>
+      <item>**Verifier-accept surfaced (Ф5.2).** `RunRecord.verifier` denormalizes
+  the packet flag so `ps`/`show` mark verifier runs without a packet read.
+  `verifier_verdict` renders the acceptance verdict as
+  `ACCEPTED (n/m checks passed)` / `REJECTED` / `inconclusive` / `pending`
+  in the `run` summary and the `show` detail — the verifier-accept signal,
+  distinct from a plain run's self-test acceptance line.</item>
+    </list>
+  </section>
+  <section title="Decisions taken">
+    <list ordered="true">
+      <item>**Cold-verifier check is unconditional (not spawn-gated).** It is a
+   packet-validity check (a verifier over nothing is a malformed request),
+   so it applies like `validate()`, not like the spawn-only admission
+   checks. This also keeps it testable with `spawn=false`.</item>
+      <item>**"Has work" = `context_from` names a run with a produced result**
+   (`collected.result_source != "none"`). Conservative and mechanical; a
+   terminal-but-resultless run does not count as work to verify.</item>
+      <item>**Verifier-accept is a READABLE verdict, not a hard completion gate.**
+   §10.8 conservative: the verifier's acceptance verdict is first-class on
+   its own record and rendered as ACCEPTED/REJECTED; it does not block the
+   tree's runs from going terminal. A hard gate that suspends tree
+   completion until acceptance would be intrusive and is not what v1 needs.</item>
+    </list>
+  </section>
+  <section title="What is left undone / висяки">
+    <list ordered="false">
+      <item>**No query "given a work run, find its verifier."** The verdict is
+  first-class on the verifier's record, but resolving *the tree → its
+  acceptance* needs either a `context_from` denorm on `RunRecord` or a
+  server-side scan. Deferred — an `on_acceptance`/tree-status surface is a
+  natural Phase-5 delegation-rules concern, not v1.</item>
+      <item>**Acceptance does not yet feed routing.** FD-5 names the journal's
+  acceptance data as the future soft-label training table; wiring
+  per-worker × task-class acceptance into the router is later work (the
+  D-C3-8 soft-label table is the seam).</item>
+      <item>**The verifier's own result is not re-verified.** As with the Ф3 retry,
+  one verifier verdict stands.</item>
+    </list>
+  </section>
+  <section title="Next">
+    <p>**Ф6 — trial (D-C3-9):** pre-register MT-C3-01 (committed FIRST — §10.7
+pre-reg-first is BINDING), then fire the budget-matched paid arms (RP-C3-2
+PRE-AUTHORIZED 2026-07-11; no second word needed once the pre-registration
+lands), score, and record fatigue + uncertainty facts. GLM cold boss; an
+orchestration-collapse probe. Then Ф7 (close) → PP-003 (Option C advisor).</p>
+  </section>
+</spec>

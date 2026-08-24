@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Spec authoring rules</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** How to write spec units that stay
+addressable and stay true: what a unit is, how normativity is
+marked, why norm and rationale live apart, how deviations are
+recorded, the size budgets, when to split a document, changelog
+lines, and the anchor-stability contract.</scope-of-this-document></p>
+  <p><protocol-document-pointer fact="true" status="impl/done">The addressing scheme
+itself is defined in
+[`ADDRESSABLE-SPECS-PROTOCOL.xml`](ADDRESSABLE-SPECS-PROTOCOL.xml).</protocol-document-pointer></p>
+  <unit title="The unit of meaning">
+    <p><A-SPEC-UNIT-IS-A-HEADING-SPAN fact="true" status="impl/done">A **spec unit** is the span from an anchored heading to the next
+heading of the same or higher level.</A-SPEC-UNIT-IS-A-HEADING-SPAN></p>
+    <p><ONE-UNIT-CARRIES-ONE-DECISION fact="true" status="impl/done">One unit carries **one
+decision**.</ONE-UNIT-CARRIES-ONE-DECISION></p>
+    <p><AND-ALSO-MEANS-TWO-UNITS fact="true" status="impl/done">If a unit needs "and also", it is two units.</AND-ALSO-MEANS-TWO-UNITS></p>
+    <p><A-UNIT-MUST-MAKE-SENSE-ALONE fact="true" status="impl/done">The unit is the page of the agent's working memory: it must make
+sense *alone* when pulled into a context window without its
+neighbours.</A-UNIT-MUST-MAKE-SENSE-ALONE></p>
+    <p><a-context-dependent-unit-is-not-addressable fact="true" status="impl/done">A unit that only works when the reader has just read the
+three sections above it is not addressable — its anchor points at a
+fragment, not a thought.</a-context-dependent-unit-is-not-addressable></p>
+    <p><SOFT-CEILING-ONE-PAGE-PER-UNIT fact="true" status="impl/done">Soft ceiling: a unit fits on a page, roughly 120 lines.</SOFT-CEILING-ONE-PAGE-PER-UNIT></p>
+    <p><longer-units-page-badly fact="true" status="spec/done">Longer units
+page badly and churn on every edit.</longer-units-page-badly></p>
+    <p><A-FENCE-CARRIES-NO-ANCHOR-AND-THAT-IS-DELIBERATE fact="true" status="impl/done">**Content inside a fenced
+block carries no anchor, and cannot be given one.** A fence is a payload — the
+reader copies it out, pastes it somewhere, runs it — so an anchor written
+inside would travel with the copy and corrupt what it is a copy of. Directives
+inside a fence are ignored for exactly the reason headings inside one are.</A-FENCE-CARRIES-NO-ANCHOR-AND-THAT-IS-DELIBERATE></p>
+    <p><AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION fact="true" status="spec/done">The consequence
+is the part authors underestimate: **a fence carrying an INSTRUCTION rather
+than an illustration is unverified by construction.** No instrument can test
+its claim, none can register that a fix landed, and whether any of it is ever
+checked depends on which nearby anchor a reader happens to pick up. And these
+are exactly the lines most likely to be *run*: quick-start blocks, copy-paste
+prompts, worked commands.</AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION></p>
+    <p><A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE fact="true" status="spec/done">So put every checkable claim
+**outside** the fence, in an anchored sentence next to it, and keep inside only
+what must be copied verbatim. A path, a version, a command name asserted inside
+a fence is a fact with no address and no reader — assert it in the prose that
+introduces the block, where it can be judged, and let the block demonstrate it.</A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE></p>
+  </unit>
+  <normativity title="Normativity is marked, not implied">
+    <p><A-READER-MUST-NEVER-GUESS-WHETHER-A-SENTENCE-BINDS fact="true" status="impl/done">A reader — human or model — must never guess whether a sentence
+binds.</A-READER-MUST-NEVER-GUESS-WHETHER-A-SENTENCE-BINDS></p>
+    <p><CONTRACT-STATEMENTS-USE-RFC-2119-VERBS fact="true" status="impl/done">Contract statements use RFC-2119 verbs (MUST / SHOULD / MAY);
+everything without such a verb is explanation, not obligation.</CONTRACT-STATEMENTS-USE-RFC-2119-VERBS></p>
+    <table>
+      <tr>
+        <td>Statement kind</td>
+        <td>Carries</td>
+        <td>Binds?</td>
+      </tr>
+      <tr>
+        <td><ROW-KIND-DECISION fact="true" status="impl/done">decision</ROW-KIND-DECISION></td>
+        <td><fact status="impl/done">a choice plus its rationale (*why*)</fact></td>
+        <td><fact status="impl/done">the choice binds; the rationale does not</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-KIND-CONTRACT fact="true" status="impl/done">contract</ROW-KIND-CONTRACT></td>
+        <td><fact status="impl/done">a normative requirement (MUST / SHOULD / MAY)</fact></td>
+        <td><fact status="impl/done">yes</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-KIND-DESIGN fact="true" status="impl/done">design</ROW-KIND-DESIGN></td>
+        <td><fact status="impl/done">the shape of a solution (*how*, provisional)</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-KIND-GUIDE fact="true" status="impl/done">guide</ROW-KIND-GUIDE></td>
+        <td><fact status="impl/done">usage documentation</fact></td>
+        <td><fact status="impl/done">no</fact></td>
+      </tr>
+    </table>
+    <p><MARK-THE-KIND-WHERE-AMBIGUITY-IS-POSSIBLE fact="true" status="impl/done">Mark the kind where ambiguity is possible — a one-line note under the
+heading is enough.</MARK-THE-KIND-WHERE-AMBIGUITY-IS-POSSIBLE></p>
+    <p><THE-CHEAPEST-FORM-IS-A-CONTRACT-ONLY-UNIT fact="true" status="impl/done">The cheapest form: put contracts in their own
+units and let the anchor name say so (`#verification.timeout`, not
+`#some-thoughts-on-timeouts`).</THE-CHEAPEST-FORM-IS-A-CONTRACT-ONLY-UNIT></p>
+  </normativity>
+  <norm-rationale title="Norm and rationale live apart">
+    <p><the-must-changes-rarely-the-why-does-not fact="true" status="impl/done">The MUST changes rarely; the *why* evolves freely.</the-must-changes-rarely-the-why-does-not></p>
+    <p><mixing-them-makes-every-edit-look-like-a-contract-change fact="true" status="spec/done">When both live in
+one paragraph, every rationale edit looks like a contract change, and
+every reader must re-verify code against a unit that did not actually
+move.</mixing-them-makes-every-edit-look-like-a-contract-change></p>
+    <p><KEEP-THE-CONTRACT-SENTENCE-TIGHT fact="true" status="impl/done">Keep the contract sentence tight and let the reasoning follow
+it in its own paragraph — or its own unit — so each can change
+without casting suspicion on the other.</KEEP-THE-CONTRACT-SENTENCE-TIGHT></p>
+  </norm-rationale>
+  <no-shadow-code title="The spec never restates *how*">
+    <p><THE-SPEC-STATES-WHAT-AND-WHY fact="true" status="impl/done">The spec states *what* and *why*.</THE-SPEC-STATES-WHAT-AND-WHY></p>
+    <p><IMPLEMENTATION-DETAIL-BELONGS-NEXT-TO-THE-CODE fact="true" status="impl/done">Implementation detail belongs next
+to the code — doc comments, module docs — where it cannot drift from
+the code it describes.</IMPLEMENTATION-DETAIL-BELONGS-NEXT-TO-THE-CODE></p>
+    <p><A-SPEC-THAT-MIRRORS-CODE-IS-SHADOW-CODE fact="true" status="impl/done">**A spec that mirrors code is shadow code and
+drift fuel**: two copies of the same *how*, one of which is compiled
+and one of which rots.</A-SPEC-THAT-MIRRORS-CODE-IS-SHADOW-CODE></p>
+    <p><THE-REFACTOR-TEST fact="true" status="impl/done">The test: if a refactor with identical behaviour would force a spec
+edit, the spec is standing too close to the code.</THE-REFACTOR-TEST></p>
+    <p><step-back-to-the-contract fact="true" status="impl/done">Step back to the
+contract.</step-back-to-the-contract></p>
+  </no-shadow-code>
+  <testable title="Write testably">
+    <p><A-CONTRACT-UNIT-IMPLIES-ITS-OWN-VERIFICATION fact="true" status="impl/done">A contract unit should imply its own verification.</A-CONTRACT-UNIT-IMPLIES-ITS-OWN-VERIFICATION></p>
+    <p><UNNAMEABLE-TEST-MEANS-DESIGN-NOT-CONTRACT fact="true" status="impl/done">If you cannot
+name the test that would verify the statement, it is design, not
+contract — either sharpen it until a test is imaginable, or demote
+it and stop pretending it binds.</UNNAMEABLE-TEST-MEANS-DESIGN-NOT-CONTRACT></p>
+    <p><RECORD-THE-TEST-NAME-IN-THE-UNIT fact="true" status="impl/done">Record the test name in the unit
+once it exists (`Test: …`); that line is half of the bidirectional
+graph described in the
+[protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.xml#graph) — and where the
+project mechanizes that graph, the same half is authored as a tag on the
+test and rendered back at the unit instead, per that section.</RECORD-THE-TEST-NAME-IN-THE-UNIT></p>
+  </testable>
+  <deviations title="Deviations are first-class">
+    <p><A-DEVIATION-IS-RECORDED-WHERE-IT-HAPPENS fact="true" status="impl/done">When reality intentionally differs from the spec, the deviation is
+recorded at the point where it happens, with the reason — in the
+code near the deviating item, citing the violated anchor:</A-DEVIATION-IS-RECORDED-WHERE-IT-HAPPENS></p>
+    <fence>// DEVIATES: spec://com.example.shop/PROP-001#verification.timeout
+// Reason: staging uses 60 s so the suite finishes under a minute;
+// production keeps the spec value. Revisit if staging flakes.</fence>
+    <p><A-RECORDED-DEVIATION-AWAITS-REVIEW fact="true" status="impl/done">A recorded deviation is a decision awaiting review.</A-RECORDED-DEVIATION-AWAITS-REVIEW></p>
+    <p><AN-UNDOCUMENTED-DEVIATION-IS-A-DEFECT fact="true" status="impl/done">An undocumented
+deviation discovered later is a defect — not because the code is
+wrong, but because the channel lied.</AN-UNDOCUMENTED-DEVIATION-IS-A-DEFECT></p>
+    <p><honest-deviations-keep-the-spec-authoritative fact="true" status="spec/done">Honest deviations are what keep
+the spec authoritative even while reality is ahead of it.</honest-deviations-keep-the-spec-authoritative></p>
+  </deviations>
+  <budgets title="Size budgets">
+    <p><control-plane-tokens-are-a-per-session-tax fact="true" status="spec/done">Control-plane files are read every session; every token in them is a
+tax multiplied by the number of sessions the project will ever run.</control-plane-tokens-are-a-per-session-tax></p>
+    <table>
+      <tr>
+        <td>File</td>
+        <td>Budget</td>
+        <td>When over</td>
+      </tr>
+      <tr>
+        <td><ROW-BUDGET-BOOT-FILE fact="true" status="impl/done">Boot file, authored (always loaded)</ROW-BUDGET-BOOT-FILE></td>
+        <td><fact status="impl/done">≤ 500 tokens</fact></td>
+        <td><fact status="impl/done">cut; move detail into flow docs and cite</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-BUDGET-WAL fact="true" status="impl/done">WAL / continuation state</ROW-BUDGET-WAL></td>
+        <td><fact status="impl/done">≤ 3000 tokens</fact></td>
+        <td><fact status="impl/done">collapse completed items to one line each</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-BUDGET-MODULE-SPEC fact="true" status="impl/done">One module spec document</ROW-BUDGET-MODULE-SPEC></td>
+        <td><fact status="impl/done">≤ 5000 tokens</fact></td>
+        <td><fact status="impl/done">split into submodules</fact></td>
+      </tr>
+    </table>
+    <p><BUDGETS-GOVERN-AUTHORED-DOCUMENTS-ONLY fact="true" status="impl/done">Every budget above governs an
+**authored** document. A **generated** artifact carries none — and the proof
+is in the last column: "cut", "collapse" and "split" are instructions to a
+writer, and a compiler's output has no writer to receive them. Its size is
+whatever the resolution graph says the session must have, so trimming it means
+changing what the project declared it needs, which is a different decision in a
+different file.</BUDGETS-GOVERN-AUTHORED-DOCUMENTS-ONLY></p>
+    <p><COMPILING-INTO-THE-LANE-IS-NOT-A-BUDGET-BREACH fact="true" status="impl/done">It follows that a project
+which *compiles* its boot lane out of installed sources is not in breach when
+that lane grows, and "the artifact is over budget" is not a finding against it.
+The cost that stays real is the **session's** context — a live measurement
+about one run, not a static rule about one file, and this table is not where it
+is settled.</COMPILING-INTO-THE-LANE-IS-NOT-A-BUDGET-BREACH></p>
+    <p><rule-of-thumb-500-tokens-is-a-page fact="true" status="impl/done">Rule of thumb: 500 tokens is roughly 375 English words — one page.</rule-of-thumb-500-tokens-is-a-page></p>
+    <p><THE-NUMBERS-ARE-BUDGETS-NOT-PHYSICS fact="true" status="impl/done">The numbers are budgets, not physics; the direction of the pressure
+is what matters.</THE-NUMBERS-ARE-BUDGETS-NOT-PHYSICS></p>
+    <p><A-SPEC-PAST-ITS-BUDGET-IS-TWO-SPECS fact="true" status="impl/done">A spec that keeps growing past its budget is not a
+big spec, it is two specs sharing a file.</A-SPEC-PAST-ITS-BUDGET-IS-TWO-SPECS></p>
+  </budgets>
+  <splitting title="When to split a document">
+    <p><split-triggers-lead fact="true" status="impl/done">Split when any of these fires:</split-triggers-lead></p>
+    <facts ordered="false">
+      <SPLIT-WHEN-OVER-BUDGET fact="true" status="impl/done">the document is over its size budget (§[budgets](#budgets));</SPLIT-WHEN-OVER-BUDGET>
+      <SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO fact="true" status="impl/done">a unit needs "and also" — that is two units, and often two homes;</SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO>
+      <SPLIT-WHEN-TWO-AUDIENCES-EMERGE fact="true" status="impl/done">two audiences have emerged (contract readers vs tutorial readers);</SPLIT-WHEN-TWO-AUDIENCES-EMERGE>
+      <SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE fact="true" status="impl/done">one section is cited from outside far more than the rest — promote
+  it to its own document so its URI shortens and its neighbours stop
+  riding along into every context window.</SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE>
+    </facts>
+    <p><SPLITTING-IS-CHEAP-IF-ANCHORS-SURVIVE fact="true" status="impl/done">Splitting is cheap precisely because citations point at anchors, not
+page numbers — provided the anchors survive the move
+(§[anchor-stability](#anchor-stability)).</SPLITTING-IS-CHEAP-IF-ANCHORS-SURVIVE></p>
+  </splitting>
+  <changelog title="Changelog lines">
+    <p><EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE fact="true" status="impl/done">Each semantic change to a document appends one dated line with the
+reason:</EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE></p>
+    <fence lang="markdown">## Changelog {#changelog}
+- [2026-02-17] §verification.timeout: 300 s → 600 s — VPN users
+  do not fit in 300 s.</fence>
+    <p><THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY fact="true" status="impl/done">The changelog is a signal, not history — history lives in git.</THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY></p>
+    <p><who-the-changelog-is-for fact="true" status="spec/done">The
+changelog exists for the reader who last saw this file a week ago
+and needs the delta in five seconds, without running a diff.</who-the-changelog-is-for></p>
+  </changelog>
+  <anchor-stability title="Anchor stability">
+    <p><ANCHORS-ARE-IMMUTABLE-ONCE-CITED fact="true" status="impl/done">**Anchors are immutable once cited.**</ANCHORS-ARE-IMMUTABLE-ONCE-CITED></p>
+    <p><A-CITED-ANCHOR-IS-A-PUBLIC-SYMBOL fact="true" status="impl/done">An anchor that appears in code
+markers, commit bodies, other specs, or the WAL is a public symbol;
+renaming it is a breaking change that silently snaps every citation
+— the exact failure addressability exists to prevent.</A-CITED-ANCHOR-IS-A-PUBLIC-SYMBOL></p>
+    <facts ordered="false">
+      <NEVER-RENAME-A-CITED-ANCHOR fact="true" status="impl/done">Never rename a cited anchor. If the heading text must change, the
+  `{#id}` stays.</NEVER-RENAME-A-CITED-ANCHOR>
+      <NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING fact="true" status="impl/done">Never reuse an anchor for a different meaning. An address that
+  once meant one thing and now means another is worse than a dead
+  link.</NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING>
+      <RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE fact="true" status="impl/done">Retire with a tombstone, do not delete:
+  `&lt;!-- RETIRED: superseded by {#new-anchor} --&gt;` under the old
+  heading location.</RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE>
+      <A-MOVED-UNIT-LEAVES-A-TOMBSTONE fact="true" status="impl/done">Moving a unit to another document leaves a tombstone at the old
+  address pointing to the new one.</A-MOVED-UNIT-LEAVES-A-TOMBSTONE>
+    </facts>
+    <p><delegate-the-audit-lead fact="true" status="impl/done">Delegate the audit — it is mechanical and the agent is good at it:</delegate-the-audit-lead></p>
+    <fence>Audit this repository for addressability:
+1. List every spec heading that states a decision, constraint, or
+   contract but carries no {#anchor}.
+2. List every normative value that appears in more than one file.
+3. List every spec:// citation (specs, code comments, commit log)
+   that no longer resolves to an existing anchor.
+Report as three tables: location, problem, suggested fix.
+Do not edit anything yet.</fence>
+  </anchor-stability>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-ONE-UNIT-ONE-DECISION fact="true" status="impl/done">One unit, one decision; a unit makes sense alone, on one page.</SUM-ONE-UNIT-ONE-DECISION>
+      <SUM-NORMATIVITY-IS-MARKED fact="true" status="impl/done">Normativity is marked with RFC-2119 verbs — nobody guesses what
+  binds.</SUM-NORMATIVITY-IS-MARKED>
+      <SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE fact="true" status="impl/done">Contract and rationale are separate; the spec never restates
+  *how*. A spec that mirrors code is shadow code.</SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE>
+      <SUM-EVERY-CONTRACT-IMPLIES-A-TEST fact="true" status="impl/done">Every contract implies a test; the unit
+  names it, by a `Test:` line or by a rendered edge where the graph is
+  mechanized.</SUM-EVERY-CONTRACT-IMPLIES-A-TEST>
+      <SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN fact="true" status="impl/done">Deviations are recorded where they happen, with reasons; the
+  undocumented one is the defect.</SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN>
+      <SUM-THE-SIZE-BUDGETS fact="true" status="impl/done">Budgets: boot ≤ 500 tokens, WAL ≤ 3000, module spec ≤ 5000 —
+  split when over.</SUM-THE-SIZE-BUDGETS>
+      <SUM-THE-CHANGELOG-LINE fact="true" status="impl/done">Changelog: one dated line per semantic change, with the reason.</SUM-THE-CHANGELOG-LINE>
+      <SUM-ANCHORS-ARE-IMMUTABLE fact="true" status="impl/done">Anchors are immutable once cited; retirement is a tombstone,
+  never a deletion or a silent rename.</SUM-ANCHORS-ARE-IMMUTABLE>
+    </facts>
+  </summary>
+</spec>

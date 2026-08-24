@@ -28,7 +28,7 @@ world batch so far (W1: 11, W2: 23). The mechanical half of source 1 is clean.
 ```console
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py
   (…none of the three W3 slots appears on the join's problem list…)
-$ grep -n 'vibe:static org.vibevm.world/\(addressable-specs\|decision-records\|conflict-protocol\)' spec/boot/STATIC.md
+$ grep -n 'vibe:static org.vibevm.world/\(addressable-specs\|decision-records\|conflict-protocol\)' spec/boot/STATIC.xml
 5:<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->
 174:<!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->
 235:<!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->
@@ -53,19 +53,19 @@ The consuming project uses all three at scale.
 ```console
 $ grep -c 'spec://' spec/common/*.md spec/modules/**/*.md   # summed
 117
-$ grep -rn 'REVIEW:' CLAUDE.md spec/boot/00-core.md spec/WAL.md | wc -l
+$ grep -rn 'REVIEW:' CLAUDE.md spec/boot/00-core.xml spec/WAL.xml | wc -l
 1
 ```
 
 **`spec://` URIs occur 117 times in the host's own contract tree**, so
 `addressable-specs`' citation grammar is in daily use — but note the counter-fact
-already measured in W2a: **`spec://` occurs 0 times in `spec/WAL.md`**, the one
+already measured in W2a: **`spec://` occurs 0 times in `spec/WAL.xml`**, the one
 file whose own flow requires spec anchors on every constraint. Both numbers matter
 and they point opposite ways.
 
 **The REVIEW-marker contract has almost no host instances.** One hit across
-`CLAUDE.md`, `spec/boot/00-core.md` and `spec/WAL.md`, and it is inside the
-uncertainty ladder that *prescribes* the marker (`00-core.md:60`) rather than a
+`CLAUDE.md`, `spec/boot/00-core.xml` and `spec/WAL.xml`, and it is inside the
+uncertainty ladder that *prescribes* the marker (`00-core.xml:60`) rather than a
 marker in use. `conflict-protocol`'s REVIEW contract is therefore installed,
 restated by the host, and — on this evidence — never exercised. Widen before
 concluding: the marker may live in `spec/common/`, `spec/modules/` or the crates.
@@ -77,13 +77,13 @@ record with a missing reason or a missing revisit trigger. Candidate sites: the
 `## 2. Three decisions taken at the opening` block of
 `campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md` (which does carry all four
 fields), the `Decision / Why / Considered and rejected / Revisit when` blocks in
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` §3, and the PROP
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` §3, and the PROP
 documents under `spec/common/`. **A already-recorded counter-instance:** W2c found
 that `two-process-model`'s own `RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE`
 delegates its revisit to this flow and supplies no measurable trigger.
 
 **The conflict hierarchy is installed verbatim and restated by the host in its own
-vocabulary** — `spec/boot/00-core.md:38-45` calls the reading layers «vibevm's
+vocabulary** — `spec/boot/00-core.xml:38-45` calls the reading layers «vibevm's
 instance» of the two-process model and orders Head > WAL > Spec > Code, which is a
 *different order* from `Human > Spec > Tests > Code > WAL`. That divergence is real
 and belongs to whichever fact asserts the ordering; do not smooth it over.

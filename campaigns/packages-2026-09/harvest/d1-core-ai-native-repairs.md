@@ -20,11 +20,11 @@ F-266 · F-267 · F-268.
 
 ```console
 $ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 spec/mechanisms/
-BROWNFIELD-PROTOCOL-v0.1.md
-ENGINE-CONFORM-v0.1.md
-LEDGER-INTENT-v0.1.md
-MCP-CORE-v0.1.md
-PROP-014-specmap-bidirectional-traceability.md
+BROWNFIELD-PROTOCOL-v0.1.xml
+ENGINE-CONFORM-v0.1.xml
+LEDGER-INTENT-v0.1.xml
+MCP-CORE-v0.1.xml
+PROP-014-specmap-bidirectional-traceability.xml
 
 $ grep -rn "MCP-CORE" --include=*.md .
 ./spec/mechanisms/MCP-CORE-v0.1.md:1:# MCP-CORE v0.1 — the neutral MCP server transport {#root}
@@ -32,7 +32,7 @@ $ grep -rn "MCP-CORE" --include=*.md .
 
 The perimeter of that second search is every `.md` file in the package, and it
 returns exactly one hit: the mechanism's own title line. Before the edit,
-`MCP-CORE-v0.1.md` was named by no other prose in the package at all — the
+`MCP-CORE-v0.1.xml` was named by no other prose in the package at all — the
 README was not merely incomplete, it was the only place a reader would have
 looked. The verdict's reason holds exactly as written.
 
@@ -112,7 +112,7 @@ claim.
 ## F-266 — the ATLAS reports 16 status-less records as `new`, overstating genuinely-new findings by sixteen
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml`
 **Re-verification:** counted every `_class · confidence · status_` line in the
 file and bucketed by the status token:
 
@@ -140,7 +140,7 @@ counts match both the eight section headings' parenthesised numbers and
 `##distribution-by-axis`. 46 + 15 + 5 + 5 + 16 = 87, so the old `new=31` was
 15 + 16.
 
-**What changed and why:** `ATLAS.md:14` now reads `refines=46, new=15,
+**What changed and why:** `ATLAS.xml:14` now reads `refines=46, new=15,
 contradicts=5, known=5, unclassified=16`, with a parenthetical naming the
 sixteen as the status-less `BLD-*` records in axis H. The total still sums to
 87, so the line stays consistent with `##totals-and-research-passes`. The
@@ -150,7 +150,7 @@ into a present one.
 
 **New obligations noticed:** two, both outside my eleven.
 
-1. **`ATLAS.md:5` `##status-line` claims a generator input that does not
+1. **`ATLAS.xml:5` `##status-line` claims a generator input that does not
    exist.** It reads *«GENERATED from findings.jsonl (A2: derived, do not
    hand-edit)»*. `find . -name "findings.jsonl" -not -path "./.git/*"` over the
    **entire repository working tree** returns nothing — not in the package, not
@@ -168,7 +168,7 @@ into a present one.
 ## F-267 — C-7 calls H6-uniformity unmeasured while the map's own index carries a measurement of it
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
 **Re-verification:**
 
 ```console
@@ -195,7 +195,7 @@ not the internal uniformity of a codebase, so the open question is **narrowed,
 not answered**. Deleting the open item would have been the wrong repair —
 it would trade a false absolute for a false closure.
 
-**What changed and why:** `CONTRADICTION-MAP.md:46` now opens «partly measured,
+**What changed and why:** `CONTRADICTION-MAP.xml:46` now opens «partly measured,
 not settled», names DR1-022 with its evidence class and effect size in the
 map's own `(benchmark, med)` style, says what that record actually measured,
 and scopes what is still open to a codebase's own internal uniformity. The
@@ -216,7 +216,7 @@ wants a new fact rather than an edit.
 ## F-259 — C-6 side B cites a `4–7/80` score that no record in the package carries
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
 **Re-verification:**
 
 ```console
@@ -253,7 +253,7 @@ agents and publishes per-model figures for Sonnet 4.6 (12→64) and GPT-5.4-mini
 position, not a wrong position.
 
 **What changed and why:** the unsourced `(4–7/80)` is gone from
-`CONTRADICTION-MAP.md:40`. In its place the side now carries an `Evidence:`
+`CONTRADICTION-MAP.xml:40`. In its place the side now carries an `Evidence:`
 clause in the same shape side A already uses (`Evidence: R2C-007 (…)`), naming
 R2C-008, giving the two figures that record does publish, and stating plainly
 that no Haiku score is on record. This also brings the entry into compliance
@@ -272,7 +272,7 @@ asserting the result twice more without a source.
 ## F-159 — LEDGER-INTENT describes an entry struct, a GC, a cost metric and a signed release slice, none of which exist
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`
 **Re-verification:** perimeter is every `.rs` file under `crates/` plus every
 `Cargo.toml` in the package.
 
@@ -341,7 +341,7 @@ but it reads as an enforced control and is not one.
 ## F-152 — six LEDGER-INTENT facts depend on machinery that does not exist: two query kinds, the index, the warm copy, the draft-input recompute, the poisoning predicate
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`
 **Re-verification:** same perimeter — every `.rs` under `crates/`.
 
 ```console
@@ -404,7 +404,7 @@ verify them.
 ## F-151 — six BROWNFIELD facts rest on machinery nothing implements: golden transcripts, conflict detection, the REPORT, the reconciliation check, the close quota
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
 **Re-verification:** two perimeters, because the reason names the Rust stack's
 CLI and that lives in a different package.
 
@@ -486,7 +486,7 @@ checks whether `debt.json` and `intent.json` have producers.
 ## F-268 — a phase gate is redefined to mean "snapshots unchanged" where nothing captures a snapshot
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
 **Re-verification:** the absence half is the same measurement as F-151 above —
 `transcript` and `snapshot` return **0** across this package's crates, no
 `*golden*` file exists under `packages/org.vibevm.ai-native/`, and no
@@ -523,7 +523,7 @@ document self-contradictory again.
 ## F-207 — PROP-014's edge model claims a Brownfield amendment that landed in prose and not in code, and a Phase-0 acceptance that is impossible by design
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md`
+**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
 **Re-verification:** perimeter is every `.rs` under the package's `crates/`.
 
 ```console
@@ -592,10 +592,10 @@ claim too and finds no computation. Outside my eleven, untouched, recorded.
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md`
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`,
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`,
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`,
+`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
 
 **Re-verification:** the three closing-rule anchors are settled by the work
 recorded under F-151, F-152, F-159 and F-207 above — each of those obligations
@@ -673,7 +673,7 @@ $ grep -n "unexercised\|not exercised\|aspiration" spec/mechanisms/ENGINE-CONFOR
     than carried as aspiration.* @impl/done
 ```
 
-`ENGINE-CONFORM-v0.1.md:109` carries the identical rule, still `@impl/done`, and
+`ENGINE-CONFORM-v0.1.xml:109` carries the identical rule, still `@impl/done`, and
 is **not** one of F-121's four anchors. It needs the identical treatment or the
 package will ship four honest closing rules and one that still claims to be
 enforced. I did not touch it. Related and smaller: the four rules name three
@@ -718,8 +718,8 @@ describes something that *is* built; 2 were already `@spec/done` and stayed.
 |---|---|
 | `README.md#READ-MECHANISMS` | roster completed; all five mechanism documents ship |
 | `README.md#PROMPT-CONTENT-ONLY` | now describes the package's actual contents |
-| `ATLAS.md#distribution-by-status-vs-prior-knowledge` | a count of the file, now the right count |
-| `CONTRADICTION-MAP.md#ENTRY-CARRIES-FOUR-PARTS` | scope corrected; the law now describes the document |
+| `ATLAS.xml#distribution-by-status-vs-prior-knowledge` | a count of the file, now the right count |
+| `CONTRADICTION-MAP.xml#ENTRY-CARRIES-FOUR-PARTS` | scope corrected; the law now describes the document |
 
 `ROW-CLASS-INTERPRETATIONS`'s fourth cell («**Yes** — hence the epoch in the
 key») also keeps `@impl/done`: the epoch genuinely is in the shipped key. The
@@ -730,4 +730,4 @@ other three cells of that row are `@spec/done`.
 reach beyond an obligation's own anchor and are flagged in their entries for the
 boss to accept or revert: the `## 6. Query kinds in v0.1` heading (F-152) and
 the four-instance closing-rule treatment being applied to three of five
-instances (F-121, with `ENGINE-CONFORM-v0.1.md:109` named and untouched).
+instances (F-121, with `ENGINE-CONFORM-v0.1.xml:109` named and untouched).

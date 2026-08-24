@@ -59,9 +59,9 @@ out to be **four** anchors, not two.)*
 
 **Outcome:** ROUTE-B CANDIDATE (both obligations, both anchors) — **no edit made**
 **Anchors:** 0 of 2 moved.
-`57-flow-secrets-hygiene.md#LAW-NEVER-PERSISTED` — not edited (defined at that
+`57-flow-secrets-hygiene.xml#LAW-NEVER-PERSISTED` — not edited (defined at that
 file's line 35, a real definition, not a citation).
-`SECRETS-HYGIENE-PROTOCOL.md#EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION` — not
+`SECRETS-HYGIENE-PROTOCOL.xml#EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION` — not
 edited (defined at that file's line 71).
 **Files touched:** `none`
 **Perimeter searched:** the standing perimeter above, **widened** past the
@@ -145,14 +145,14 @@ RUNTIME-GUIDE.md:53:**Token files are surface secrets** — set chmod 600 (POSIX
   your user (Windows), never commit, never paste into chat / logs / screenshots /
   video. `vibe` redacts the value at every level (CLI output, JSON event stream,
   error messages); the operator must extend the same discipline. See
-  [PROP-000 §20](spec/common/PROP-000.md#token-secrecy).
+  [PROP-000 §20](spec/common/PROP-000.xml#token-secrecy).
 DEV-GUIDE.md:47:- chmod 600 / Windows ACL-restricted to your user.
 ```
 
 `RUNTIME-GUIDE.md:53` states the rule in the right idiom for each platform and
 says outright that **«the operator must extend the same discipline»**. The
 consumer therefore *accepted* this rule; it did not reject it, and it did not
-route it to code. `spec/common/PROP-000.md:303`'s «chmod-protected» is the same
+route it to code. `spec/common/PROP-000.xml:303`'s «chmod-protected» is the same
 rule stated in the POSIX idiom only — a host-side wording defect on a
 Windows-primary box, not a package defect.
 
@@ -228,20 +228,20 @@ carries **two `confirmed` verdicts** alongside these two `drift` ones:
 
 ```console
 $ python - <<  # over campaigns/packages-2026-09/tasks/evidence/batch-W5d-2.json and -3.json
-57-flow-secrets-hygiene.md#LAW-NEVER-PERSISTED                             drift      (F-327)
-57-flow-secrets-hygiene.md#NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION   confirmed
-SECRETS-HYGIENE-PROTOCOL.md#EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION        drift      (F-328)
-SECRETS-HYGIENE-PROTOCOL.md#ROW-LAW-NEVER-PERSISTED                        confirmed
+57-flow-secrets-hygiene.xml#LAW-NEVER-PERSISTED                             drift      (F-327)
+57-flow-secrets-hygiene.xml#NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION   confirmed
+SECRETS-HYGIENE-PROTOCOL.xml#EXACTLY-ONE-SANCTIONED-AT-REST-LOCATION        drift      (F-328)
+SECRETS-HYGIENE-PROTOCOL.xml#ROW-LAW-NEVER-PERSISTED                        confirmed
 ```
 
-`##ROW-LAW-NEVER-PERSISTED` (`SECRETS-HYGIENE-PROTOCOL.md:42`) states *«Only one
+`##ROW-LAW-NEVER-PERSISTED` (`SECRETS-HYGIENE-PROTOCOL.xml:42`) states *«Only one
 sanctioned at-rest location: a per-user, permission-protected file (or an env var
 for CI)»* — verbatim the clause under dispute — and was ruled **confirmed** on a
 reason that names the problem and rules for the package anyway: *«The
 "permission-protected" qualifier is the unsupported part — no `set_permissions`
 call touches a token file anywhere in `crates/`»*. It already sits at
 `@spec/done`. `##NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION`
-(`57-flow-secrets-hygiene.md:71`) was likewise confirmed. **One clause, one body
+(`57-flow-secrets-hygiene.xml:71`) was likewise confirmed. **One clause, one body
 of evidence, four anchors, two opposite verdicts** — whatever the boss rules, it
 must be the same ruling for all four, and two of the four are already recorded
 the way this entry recommends.
@@ -267,7 +267,7 @@ tooling handles. That is a live exposure, not a documentation defect, and it
 belongs in front of the owner ahead of any verdict bookkeeping. The rule the
 package states is the rule that would have prevented it.
 
-**New obligations noticed:** (1) `spec/common/PROP-000.md:303`'s
+**New obligations noticed:** (1) `spec/common/PROP-000.xml:303`'s
 `##TS-NEVER-PERSISTED` says «per-user, chmod-protected» — a POSIX-only idiom for
 a property that on this platform is an ACL, while the consumer's own
 `RUNTIME-GUIDE.md:53` already states it correctly in both. A host-side
@@ -285,11 +285,11 @@ vibevm can do without owning the file.
 
 **Outcome:** CORRECTED (right about the fact, wrong about the mechanism — §3.3 demotion would have been false)
 **Anchors:** 1 of 1 touched.
-`ADDRESSABLE-SPECS-PROTOCOL.md#CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT`
+`ADDRESSABLE-SPECS-PROTOCOL.xml#CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT`
 — corrected, marker deliberately **kept** at `@impl/done`. Verified to be a real
 definition at that file's line 221, not a citation.
 **Files touched:**
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`
+`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml`
 **Perimeter searched:** the standing perimeter above, for `Implements: spec://`
 · `^Test:` · `^Tests:` · `^Verified-by:` · `^Verifies:` · `#[spec(` ·
 `#[verifies(` · `#[specmark::spec(` · `#[specmark::verifies(` · `specmark::scope!` ·
@@ -310,7 +310,7 @@ $ grep -rhoE "#\[(specmark::)?(verifies|spec)\(|specmark::scope!\(" crates xtask
       6 #[specmark::verifies(
 
 $ grep -rn "^ *Test: |^ *Tests: |^ *Verified-by:|^ *Verifies:" spec discipline terraform docs legacy-spec packages --include='*.md'
-packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:230:Test: payments_core::tests::timeout_marks_old_messages
+packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml:230:Test: payments_core::tests::timeout_marks_old_messages
 ```
 
 The `Test:` line the fact illustrates occurs **exactly once in the whole
@@ -322,7 +322,7 @@ for how the fact should read. `// Implements: spec://` does not occur "exactly
 ONCE" — it occurs several times, and **not once in a source file of any
 language**: every hit is prose *about* the practice (this document's own fence
 at line 225, `flow:redbook`'s chapter 2 which is this flow's source, and
-`flow:sync-from-code`'s `review-workflow.md:68`), plus vendored copies of those
+`flow:sync-from-code`'s `review-workflow.xml:68`), plus vendored copies of those
 under the fractality specspace's `vibedeps/` and `.vibe/cache/`. The comment
 form is a teaching notation, never a shipped marker.
 
@@ -448,7 +448,7 @@ recorded.
 ## F-288 — a prescription the consumer does not keep, and it proves it *can* keep it: the same trigger is checked and fires, for code
 
 **Outcome:** ROUTE-B CANDIDATE — **no edit made**
-**Anchors:** 0 of 1 moved. `authoring-rules.md#SPLIT-WHEN-OVER-BUDGET` — not
+**Anchors:** 0 of 1 moved. `authoring-rules.xml#SPLIT-WHEN-OVER-BUDGET` — not
 edited. Verified to be a real definition at that file's line 149 (a list item
 under `##split-triggers-lead`), not a citation.
 **Files touched:** `none`
@@ -466,17 +466,17 @@ sentence's own subject once, to ask whether this repository keeps the trigger
 $ python  # every spec/**/*.md sized (spec/boot excluded), words x 1.33 -> tokens
 spec/ documents measured (spec/boot excluded): 59
 over the 5000-token hard limit: 11
-  ~ 45611 tok   34294 words  spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
-  ~ 17321 tok   13024 words  spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md
-  ~ 14362 tok   10799 words  spec/modules/vibe-registry/PROP-002-decentralized-registry.md
-  ~ 14000 tok   10527 words  spec/modules/vibe-resolver/PROP-003-dep-evolution.md
-  ~ 11209 tok    8428 words  spec/modules/vibe-index/PROP-005-package-index.md
-  ~  6954 tok    5229 words  spec/modules/vibe-cli/PROP-037-tree-tui.md
-  ~  6947 tok    5224 words  spec/common/PROP-019-version-manager.md
-  ~  6784 tok    5101 words  spec/modules/vibe-workspace/PROP-035-spec-compiler.md
-  ~  6524 tok    4906 words  spec/modules/vibe-progress/PROP-043-progress-markup.md
-  ~  6047 tok    4547 words  spec/modules/vibe-workspace/PROP-007-workspace.md
-  ~  5403 tok    4063 words  spec/common/PROP-000.md
+  ~ 45611 tok   34294 words  spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+  ~ 17321 tok   13024 words  spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
+  ~ 14362 tok   10799 words  spec/modules/vibe-registry/PROP-002-decentralized-registry.xml
+  ~ 14000 tok   10527 words  spec/modules/vibe-resolver/PROP-003-dep-evolution.xml
+  ~ 11209 tok    8428 words  spec/modules/vibe-index/PROP-005-package-index.xml
+  ~  6954 tok    5229 words  spec/modules/vibe-cli/PROP-037-tree-tui.xml
+  ~  6947 tok    5224 words  spec/common/PROP-019-version-manager.xml
+  ~  6784 tok    5101 words  spec/modules/vibe-workspace/PROP-035-spec-compiler.xml
+  ~  6524 tok    4906 words  spec/modules/vibe-progress/PROP-043-progress-markup.xml
+  ~  6047 tok    4547 words  spec/modules/vibe-workspace/PROP-007-workspace.xml
+  ~  5403 tok    4063 words  spec/common/PROP-000.xml
 ```
 
 Eleven over the limit; drop the two campaign plans in `spec/terraforms/`, which
@@ -597,9 +597,9 @@ governing document. Recorded, not acted on; it is not this anchor's claim.
 **Outcome:** ROUTE-B CANDIDATE, with a PARTIAL character (1 of 2 halves fails) —
 **no edit made**, and a second, independent reason not to edit
 **Anchors:** 0 of 2 moved.
-`ref-grammar.md#THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES` — not edited
+`ref-grammar.xml#THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES` — not edited
 (real definition at that file's line 65).
-`ref-grammar.md#SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE` — not edited
+`ref-grammar.xml#SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE` — not edited
 (real definition at line 183).
 **Files touched:** `none`
 **Perimeter searched:** the standing perimeter above, and **deliberately not by
@@ -619,8 +619,8 @@ footing than the verdict had:**
 ```console
 $ grep -rn "KindMismatch" crates xtask tools spec packages vibedeps docs schemas fixtures *.md
 crates/vibe-core/src/package_ref.rs:428:   /// one; it is validated against the resolved manifest (a `KindMismatch`)
-spec/design/workspace-and-qualified-naming.md:81:  … a present prefix is checked (`KindMismatch` on mismatch) …
-spec/modules/vibe-registry/PROP-008-qualified-naming.md:97:  … the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error.
+spec/design/workspace-and-qualified-naming.xml:81:  … a present prefix is checked (`KindMismatch` on mismatch) …
+spec/modules/vibe-registry/PROP-008-qualified-naming.xml:97:  … the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error.
 ```
 
 Three hits, none of them code — as the sibling verdict found. The searches for
@@ -682,7 +682,7 @@ driver, no deployment, and the field it would read is parsed and never checked.
 **Host crates** for the never-disambiguates half, settled structurally rather
 than by a check (`package_ref.rs:499-506`, `short_name.rs:28-37`). **Host spec**
 for the claim restated and equally unbuilt (`PROP-008 ##KIND-VALIDATION`,
-`@impl/done`; `spec/design/workspace-and-qualified-naming.md:81`).
+`@impl/done`; `spec/design/workspace-and-qualified-naming.xml:81`).
 
 **Why this is route (b): the campaign's own wave-2–4 rule decides it.** The §7
 LOG entry for waves 2–4 states the test in one line — *«a package moves only
@@ -691,7 +691,7 @@ bullets, its own summary, its own example, or a shipped sibling in the same
 namespace»*. `qualified-naming` is a prompt-only `world` flow specifying a
 **reference grammar**; it ships no resolver, and its own tree contains nothing
 this sentence is false about. Its own worked example agrees with it
-(`ref-grammar.md:86-87`, *"`plugin` is checked against the manifest after
+(`ref-grammar.xml:86-87`, *"`plugin` is checked against the manifest after
 resolution"*), and its own summary agrees with it. What is false is the **host's
 implementation of the grammar**, which parses the prefix and skips the check —
 and which asserts the same unbuilt behaviour in its own `PROP-008
@@ -738,10 +738,10 @@ it is the summary restatement of the same claim and inherits its body's route by
 the same precedent its own verdict invokes.
 
 **New obligations noticed:** (1) The host obligation is **two documents, not
-one**: `spec/modules/vibe-registry/PROP-008-qualified-naming.md:97`
+one**: `spec/modules/vibe-registry/PROP-008-qualified-naming.xml:97`
 (`##KIND-VALIDATION`, `@impl/done`) specifies `resolved.kind == prefix` and a
 `KindMismatch` error that no code contains, and
-`spec/design/workspace-and-qualified-naming.md:81` records the owner's decision
+`spec/design/workspace-and-qualified-naming.xml:81` records the owner's decision
 that a present prefix *is* checked. Both are host-side and outside my edit
 scope; both are falsified by the same three searches above. (2) The build this
 implies is genuinely small — the prefix is already parsed onto
@@ -757,7 +757,7 @@ the boss's call rather than mine.
 
 **Outcome:** ROUTE-B CANDIDATE — **no edit made**
 **Anchors:** 0 of 1 moved.
-`packaging-lessons.md#P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT`
+`packaging-lessons.xml#P4-MECHANICS-THE-HOOK-DIRECTS-OUTPUT-OUTSIDE-THE-COMMITTED-SLOT`
 — not edited. Verified to be a real definition at that file's line 132.
 **Files touched:** `none`
 **Perimeter searched:** the standing perimeter above, all file types, for
@@ -773,9 +773,9 @@ verdict reached:**
 
 ```console
 $ grep -rn -E "VIBE_PROJECT_ROOT|PROJECT_ROOT" crates xtask tools spec packages vibedeps discipline terraform docs schemas fixtures manual-tests legacy-spec *.md *.toml *.json
-spec/common/PROP-024-code-bearing-packages.md:158:   that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment
-spec/common/PROP-024-code-bearing-packages.md:270:   **`VIBE_PROJECT_ROOT`** …
-spec/modules/vibe-workspace/PROP-020-install-hooks.md:108:  `VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
+spec/common/PROP-024-code-bearing-packages.xml:158:   that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment
+spec/common/PROP-024-code-bearing-packages.xml:270:   **`VIBE_PROJECT_ROOT`** …
+spec/modules/vibe-workspace/PROP-020-install-hooks.xml:108:  `VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
 specmap.json:22601:  "heading": "…**`VIBE_PROJECT_ROOT`**"   (the indexed copy of PROP-024:270)
 ```
 
@@ -813,7 +813,7 @@ environment, not the cwd. **Host spec** for the specification, twice.
 decides the route.** Both host statements are honest about not having shipped it:
 
 ```console
-$ sed -n '104,109p' spec/modules/vibe-workspace/PROP-020-install-hooks.md
+$ sed -n '104,109p' spec/modules/vibe-workspace/PROP-020-install-hooks.xml
 - ##HOOK-ENV The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
   `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,
   `VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.
@@ -821,7 +821,7 @@ $ sed -n '104,109p' spec/modules/vibe-workspace/PROP-020-install-hooks.md
   build hook can target a gitignored build dir *outside* the slot; **it lands with
   that work**.) @impl/done
 
-$ sed -n '154,161p' spec/common/PROP-024-code-bearing-packages.md
+$ sed -n '154,161p' spec/common/PROP-024-code-bearing-packages.xml
 - ##HOOK-BUILD A code-bearing tool package builds via a **`post-install` hook** …
   To let a hook address that location, the hook runner **gains** a `VIBE_PROJECT_ROOT`
   environment variable … — a small [PROP-020 §2.2](…) addition. @spec/done
@@ -848,7 +848,7 @@ retrospective and therefore describing what its author actually built — the
 document says in its own opening that it is not:
 
 ```console
-$ sed -n '14,16p' packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md
+$ sed -n '14,16p' packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.xml
 ##vocabulary-is-generic Vocabulary is generic — *the
 package*, *the consumer*, *the slot* — because the laws port even where
 the build system does not.
@@ -888,7 +888,7 @@ is: the mechanic this anchor describes has no consumer today.
 **Outcome:** ROUTE-B CANDIDATE — **no edit made**. One of the verdict's two
 claimed absences did not survive.
 **Anchors:** 0 of 1 moved.
-`self-updating-tools.md#S5-MECHANICS-CONSENT-AND-HONESTY` — not edited. Verified
+`self-updating-tools.xml#S5-MECHANICS-CONSENT-AND-HONESTY` — not edited. Verified
 to be a real definition at that file's line 188.
 **Files touched:** `none`
 **Perimeter searched:** the standing perimeter above, narrowed to the surface
@@ -1027,7 +1027,7 @@ there, and one call site skipped it. That is a bug in `run_use_cmd`, and the
 package is not where it gets fixed.
 
 The host says the same thing, at the same strength, and is equally unkept:
-`spec/common/PROP-019-version-manager.md:221` `##RULE-CONSENT` — *«consent +
+`spec/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` — *«consent +
 honesty (mutating edits need a confirm / `-y` / `self doctor --fix`, print the
 diff, and say the change reaches only new shells)»*, marked `@spec/done`.
 
@@ -1043,7 +1043,7 @@ line for the queue: `run_use_cmd` (`crates/vibe-cli/src/commands/vvm/mod.rs:311-
 writes the user's durable environment with no confirm and no `--yes`, while
 `confirm()` sits at `mod.rs:441` in the same file and four sibling paths use it;
 `VvmUseArgs` (`crates/vibe-cli/src/cli/vvm.rs:121-132`) would need a `yes` field.
-(2) `spec/common/PROP-019-version-manager.md:221` `##RULE-CONSENT` asserts the
+(2) `spec/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` asserts the
 same three clauses and is equally unkept on the same path — a host-side
 obligation on a *host* document, outside my edit scope, recorded. (3) The diff
 clause has an unusually cheap implementation available: both writers already
@@ -1115,14 +1115,14 @@ visible at directory grain — is stated in the entry.
 not own.**
 
 1. **F-327 + F-328 are two of four anchors on one clause**, and the other two are
-   already **`confirmed`**: `SECRETS-HYGIENE-PROTOCOL.md#ROW-LAW-NEVER-PERSISTED`
-   and `57-flow-secrets-hygiene.md#NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION`.
+   already **`confirmed`**: `SECRETS-HYGIENE-PROTOCOL.xml#ROW-LAW-NEVER-PERSISTED`
+   and `57-flow-secrets-hygiene.xml#NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION`.
    One clause, one body of evidence, four anchors, two opposite verdicts. The
    already-confirmed pair was confirmed on a reason that names the permission
    qualifier as unsupported and rules for the package anyway — i.e. two of the
    four are already recorded the way this batch recommends.
 2. **F-244 is half of a claim whose other half is F-178, on `sync-from-code` —
-   an owner route.** F-244 holds the headline (`ref-grammar.md:65`) and the
+   an owner route.** F-244 holds the headline (`ref-grammar.xml:65`) and the
    summary (`:183`); F-178 holds the body (`:67`, which F-244's own verdict names
    as its root) and the table row (`:52`). Demoting F-244 alone would author a
    self-contradiction two lines wide. §6.1's `##ROUTE-BEFORE-FALSIFIER` arriving
@@ -1157,7 +1157,7 @@ not own.**
    bug with an obvious fix.
 3. **Kind validation is specified in two host documents and built in neither**
    (F-244) — `PROP-008 ##KIND-VALIDATION` (`@impl/done`, so the *marker* is wrong
-   too) and `spec/design/workspace-and-qualified-naming.md:81`. The prefix is
+   too) and `spec/design/workspace-and-qualified-naming.xml:81`. The prefix is
    already parsed onto `PackageRef.kind` and survives `qualify()`, so the missing
    work is one comparison and one error variant.
 4. **Nine spec documents sit over the hard size budget with no checker**
@@ -1167,6 +1167,6 @@ not own.**
 5. **`VIBE_PROJECT_ROOT` needs a `HookContext` field before it can be a
    variable** (F-342) — neither PROP mentions that, and `build_env` cannot emit a
    value the context does not carry. Already scheduled host-side at `@spec/done`.
-6. **`PROP-000.md:303` says «chmod-protected»** on a Windows-primary box, where
+6. **`PROP-000.xml:303` says «chmod-protected»** on a Windows-primary box, where
    the consumer's own `RUNTIME-GUIDE.md:53` already states it correctly in both
    idioms. A one-word host wording fix.

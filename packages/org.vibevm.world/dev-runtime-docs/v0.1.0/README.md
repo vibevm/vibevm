@@ -13,10 +13,10 @@ never separable from the change that necessitates it. @status:impl/done
 
 @fact:package-contents-lead This package ships: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml` — the obligation, why it is
   pinned in the project's foundational conventions, the contributor-vs-runtime audience
   split, and how to keep the docs honest. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/58-flow-dev-runtime-docs.xml` — the boot snippet loaded at session start: the
   rule and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -42,3 +42,4 @@ same commit, pinned centrally so it is met during the boot-sequence read-order. 
 ## License {#license}
 
 @fact:license-line UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE`. @status:impl/done
+

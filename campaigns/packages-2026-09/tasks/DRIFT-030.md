@@ -66,7 +66,7 @@ Verified 2026-07-26 by DRIFT-029 before it stopped. **Do not re-discover.**
   `[boot_snippet]`, and `build_unit_table` resolves undeclared edges off the
   target's suggestion (`hybrid_emit.rs:57-63`), making `git-practices` the
   tree's only intermediate static edge.
-- Observable today: `spec/boot/STATIC.md` carries each of the four git-\*
+- Observable today: `spec/boot/STATIC.xml` carries each of the four git-\*
   snippets twice (first copy at lines 363/421/486/514; second, via the
   aggregator's compiled unit, at 557/615/680/708).
 
@@ -112,7 +112,7 @@ change which location is chosen, only who is counted as a consumer.
   that is a §8 stop — the reviewer lands every spec change in this campaign.
 - **Do not touch** `packages/**` or any package manifest. In particular, do not
   change `git-practices`' or any member's `link` to dodge the counter.
-- **Do not hand-edit** `spec/boot/STATIC.md` or `spec/boot/INDEX.md`; they are
+- **Do not hand-edit** `spec/boot/STATIC.xml` or `spec/boot/INDEX.md`; they are
   generated and the fix is verified by regenerating them.
 - **Do not touch** `campaigns/**` except §9 of this file.
 - Never edit a golden test to make it pass. `render_static_errors_on_a_missing_contribution`
@@ -132,8 +132,8 @@ Then, from a clean tree:
 
 ```bash
 cargo run -q -p vibe-cli --bin vibe -- update --all --assume-yes
-grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.md
-grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.md
+grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml
+grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.xml
 git status --short
 ```
 
@@ -215,7 +215,7 @@ so the file content is emitted once per entry.
 - *Baseline (today's code):* root copies of the member text = **2**, aggregator
   copies = **1**. Root markers: the member's own snippet, the aggregator's
   compiled `STATIC.md`, and the member again inside it. This reproduces the live
-  `spec/boot/STATIC.md` defect in a fixture.
+  `spec/boot/STATIC.xml` defect in a fixture.
 - *With §4 step 2's counter applied* (entry-point nodes counted as pullers,
   mirroring `node_dependency_boot`'s link resolution): root copies = **2**,
   aggregator copies = **0**. Root markers:
@@ -233,10 +233,10 @@ correctly degrades to the `#use` marker `##HOIST-MARKERS` / `##MARKER-USE`
 design, and `emit_package_units` / `zone_to_effective` need no change. But the
 duplicate simply migrates from *inside the aggregator's unit* to *the root's own
 lane*, where it now reads as two `vibe:static` blocks for the same file. §6's
-`grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.md` would still be **2**.
+`grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml` would still be **2**.
 
 **Why the collision is structural, not incidental.** PROP-038 `##HOIST-LCA`
-(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:72`) puts the hoist
+(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:72`) puts the hoist
 target at the least common ancestor *within a continuous static zone*, and
 `##HOIST-WITHIN-ZONE` (line 74) calls within-zone hoisting free and always done.
 vibevm's chain root → `redbook` → `git-practices` → member is unbroken static, so

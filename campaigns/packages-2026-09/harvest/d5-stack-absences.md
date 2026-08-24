@@ -78,7 +78,7 @@ $ rg -c "track_caller" -g '!target/**' .
 returns hits in exactly three classes: `refs/src/cargo/**` and
 `refs/src/warp/**` (third-party study sources — not ours), the guide's own line
 plus its vendored copies, and campaign bookkeeping
-(`campaigns/**`, `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2383`,
+(`campaigns/**`, `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2383`,
 which independently records `#[track_caller]` zero repo-wide). No `.rs` file
 under `packages/**`, `crates/**`, `xtask/**`, `tools/**` or the three
 `research/*-demo` consumers carries the attribute.
@@ -93,15 +93,15 @@ $ rg -n "##FINDING-R-0|##R-021|##RULE-R-021" -g '!target/**' -g '!refs/**' .
 The core ATLAS is the authored roster, and its id space does not contain R-021:
 
 ```
-$ rg -o "##FINDING-[A-Z0-9]+-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md | sort -u
+$ rg -o "##FINDING-[A-Z0-9]+-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml | sort -u
 BLD-  DR1-  DR2-  R2C-  R3-
 ```
 
-R-021 survives only as a citation — `ENGINE-CONFORM-v0.1.md:36`
+R-021 survives only as a citation — `ENGINE-CONFORM-v0.1.xml:36`
 (`##EXAMPLE-R-021-FORBIDDEN-IDIOM`, itself an *example* of a rule tier, not a
 rule) and a dozen `legacy-projections/GUIDE-*.md` mentions. The campaign's own
 governing spec already reached the same conclusion twice
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1896` — *"(R-021,
+(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1896` — *"(R-021,
 R-020) do not exist; R-002 does"* — and `:2385-2386`).
 
 **Which layer has it, if any:** *nowhere*, for all three — with two honest
@@ -139,15 +139,15 @@ that R-021 has no entry in the ATLAS roster and no forbidden-idiom scan ships.
 No code was written and no prescription was deleted.
 
 **New obligations noticed:**
-1. `GUIDE-AI-NATIVE-GO.md#CONTRACT-FIRST-ORDERING` (`:222`) and
-   `GUIDE-AI-NATIVE-TYPESCRIPT.md#CONTRACT-FIRST-ORDERING` (`:127`) are
+1. `GUIDE-AI-NATIVE-GO.xml#CONTRACT-FIRST-ORDERING` (`:222`) and
+   `GUIDE-AI-NATIVE-TYPESCRIPT.xml#CONTRACT-FIRST-ORDERING` (`:127`) are
    `@impl/done` on the same unauthored card as the Rust anchor just demoted.
    Parallel-corpus siblings of F-191, currently unjudged.
-2. `GUIDE-AI-NATIVE-GO.md:405` (`##…-BINDING-…`, the fan-in/fan-out ban) is
+2. `GUIDE-AI-NATIVE-GO.xml:405` (`##…-BINDING-…`, the fan-in/fan-out ban) is
    `@impl/done` on R-021, the rule this entry just showed does not exist.
    Third document to rest on R-021, as the governing spec predicted at
    `:2386`.
-3. `ENGINE-CONFORM-v0.1.md:36-38` in `core-ai-native/v0.8.0` marks
+3. `ENGINE-CONFORM-v0.1.xml:36-38` in `core-ai-native/v0.8.0` marks
    `##EXAMPLE-R-021-FORBIDDEN-IDIOM` and `##EXAMPLE-R-020-NAMING-VS-MANIFEST`
    `@impl/done`, citing two rule ids that the ATLAS roster does not carry.
    Not mine to edit (`core-ai-native` is another wave's package).
@@ -189,7 +189,7 @@ record: **the path is resolved, it is just never emitted.**
 `resolve_rust_analyzer` at `crates/rust-ai-native-tcg-bridge/src/lib.rs:146`
 returns a `PathBuf` (via `rustup which rust-analyzer`, then a PATH probe).
 `ra_path` as a *field name* occurs exactly once in the tree —
-`TCG-PROTOCOL-RUST-v0.1.md:57`, the `##OP-INIT` shape, which is spec, not code.
+`TCG-PROTOCOL-RUST-v0.1.xml:57`, the `##OP-INIT` shape, which is spec, not code.
 
 *(b) the no-zombie property — mechanism built, proof absent.* The dance and the
 backstop both ship:
@@ -245,22 +245,22 @@ spec-only fiction; all three are engine-layer facts described inaccurately.
 
 **Twin in another stack:**
 - `##RESOLVED-PATH-AND-VERSION-LAND-IN-INIT` ↔ Go's
-  `TCG-ORACLE-GO-v0.1.md#INIT-RESULT-CARRIES-PATH-AND-VERSION` (`:46`) — same
+  `TCG-ORACLE-GO-v0.1.xml#INIT-RESULT-CARRIES-PATH-AND-VERSION` (`:46`) — same
   sentence, same defect. It is mine and it carries its own verdict, as **F-160**
   in this same batch, so both are repaired here. No TypeScript twin
   (`typescript-…/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md` has no such
   anchor).
 - `##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY` ↔ Go's
-  `TCG-ORACLE-GO-v0.1.md#GRACEFUL-EXIT-IS-THE-LSP-DANCE` (`:201`) — **not
+  `TCG-ORACLE-GO-v0.1.xml#GRACEFUL-EXIT-IS-THE-LSP-DANCE` (`:201`) — **not
   touched**: the registry assigns it to **F-167, route `sync-from-code`**, which
   §1.2 routes through the owner. Another wave owns it.
 - `##STDOUT-CARRIES-LSP-FRAMES-ONLY` ↔ Go's identically-named anchor
-  (`TCG-ORACLE-GO-v0.1.md:209`) and TypeScript's
-  `##STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` (`TCG-ORACLE-v0.1.md:132`). Both are
+  (`TCG-ORACLE-GO-v0.1.xml:209`) and TypeScript's
+  `##STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` (`TCG-ORACLE-v0.1.xml:132`). Both are
   mine; **neither carries a verdict in any obligation**, so neither was touched,
   for the reason given under F-191. Recorded below.
 - The field name `ra_path` also lives in
-  `TCG-PROTOCOL-RUST-v0.1.md#OP-INIT`, which belongs to **F-211, route
+  `TCG-PROTOCOL-RUST-v0.1.xml#OP-INIT`, which belongs to **F-211, route
   `release`** — a publication, not this batch. Left alone.
 
 **What changed and why:** all three prescriptions kept verbatim; each gained a
@@ -274,8 +274,8 @@ lifecycle. (c) states that the outcome is genuinely true and only the
 described route to it is fictional. No code written, nothing deleted.
 
 **New obligations noticed:**
-1. `TCG-ORACLE-GO-v0.1.md#STDOUT-CARRIES-LSP-FRAMES-ONLY` (`:209`) and
-   `TCG-ORACLE-v0.1.md#STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` (`:132`, TypeScript)
+1. `TCG-ORACLE-GO-v0.1.xml#STDOUT-CARRIES-LSP-FRAMES-ONLY` (`:209`) and
+   `TCG-ORACLE-v0.1.xml#STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` (`:132`, TypeScript)
    make the same drained-by-the-reader claim over transports that also use
    `Stdio::null()` (see `ts-demo` vendored `transport.rs`). Unjudged.
 2. No test anywhere in the three stacks asserts a lifecycle property of the
@@ -298,7 +298,7 @@ for a `vibe-tcg` crate or binary declaration; a directory search
 `find . -type d -name "vibe-tcg*"`; `legacy-spec/terraforms/**`; the two sibling
 `mcp`-kind packages `rust-ai-native-mcp/v0.7.0` and
 `typescript-ai-native-mcp/v0.6.0` (which the four-layer rule says would hold the
-DRIVER); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md` in full; and a
+DRIVER); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` in full; and a
 fixture sweep `find packages/org.vibevm.ai-native -name "*.snap" -o -name "*golden*"`.
 
 **What the search found:**
@@ -310,7 +310,7 @@ $ rg -n "OracleRegistry|oracle_registry" -g '!target/**' -g '!refs/**' .
 legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:112 …      # historical plan
 legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:70 …            # historical plan
 legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:383 …            # historical plan
-spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:110 ##ORACLE-REGISTRY …
+spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml:110 ##ORACLE-REGISTRY …
 $ find . -path ./target -prune -o -type d -name "vibe-tcg*" -print
 (no output)
 ```
@@ -367,7 +367,7 @@ and the live-chain proof are in the `mcp`-kind package one layer over; the
 language-generic client that the sentences are written around was deleted at
 the product layer and not replaced.
 
-**Twin in another stack:** `TCG-PROTOCOL-GO-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS`
+**Twin in another stack:** `TCG-PROTOCOL-GO-v0.1.xml#ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS`
 (`:34`) — same sentence, same defect, and it is mine. **Not touched:** the
 registry assigns it to **F-210, route `sync-from-code`**, `reality-mismatch` —
 an owner-approved diff, not this batch. TypeScript's
@@ -474,21 +474,21 @@ the verdict did not name (recorded, not fixed)
 `C:\Users\olegc\git\v\vibevm\packages\org.vibevm.ai-native\rust-ai-native-lang\v0.7.0\spec\rust\tools\rust-ai-native-tcg.md`
 **Perimeter searched:** the standing perimeter, plus: the host crate roster
 `ls crates/`; every `Cargo.toml` in `crates/` and `packages/` for a
-`name = "vibe-tcg"` or a `[[bin]]` of that name; `spec/common/PROP-028-package-families.md`
-§2.4 in full (`:136-150`); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md`;
+`name = "vibe-tcg"` or a `[[bin]]` of that name; `spec/common/PROP-028-package-families.xml`
+§2.4 in full (`:136-150`); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml`;
 and the directory search from F-214 (`find . -type d -name "vibe-tcg*"` →
 nothing).
 
 **What the search found:** the sentence has three parts and they do not share a
 verdict.
 
-*The rename is done* — this file is `rust-ai-native-tcg.md`.
+*The rename is done* — this file is `rust-ai-native-tcg.xml`.
 
 *The policy chain resolves.* All three anchors it leans on are authored and
 `@impl/done` in the host:
 
 ```
-$ sed -n '136,150p' spec/common/PROP-028-package-families.md
+$ sed -n '136,150p' spec/common/PROP-028-package-families.xml
 - ##D13-SUPERSEDED  **Supersession of the `-rust` suffix policy (D13).** …
 - ##D13-LANGUAGE-LEADS `conform-rust` becomes `rust-ai-native-conform` …
 - ##D13-NEUTRAL-OUTSIDE Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic
@@ -539,9 +539,9 @@ the `vibe-*` stem for a language family. No code written, nothing deleted, and
 PROP-026/PROP-028 are cited by name in prose rather than by relative link.
 
 **New obligations noticed:**
-1. `spec/common/PROP-028-package-families.md#D13-NEUTRAL-OUTSIDE` (`:148`) is
+1. `spec/common/PROP-028-package-families.xml#D13-NEUTRAL-OUTSIDE` (`:148`) is
    `@impl/done` and names "the `vibe-tcg` product cell" as a current example of
-   a language-neutral artifact. `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md#TCG-CRATE-DELETED`
+   a language-neutral artifact. `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml#TCG-CRATE-DELETED`
    (`:42`) says that cell is DELETED. A host-side `contradiction` between two
    `spec/common` / `spec/modules` documents — outside my three packages and not
    touched.
@@ -651,7 +651,7 @@ any layer, though the capability itself is negotiated live in the engine
 the 60 s number exists at no layer at all.
 
 **Twin in another stack:** `##INIT-RESULT-CARRIES-PATH-AND-VERSION` ↔ Rust's
-`TCG-ORACLE-RUST-v0.1.md#RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`. **Both are
+`TCG-ORACLE-RUST-v0.1.xml#RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`. **Both are
 mine and I repaired both** — Rust under F-192 earlier in this file, Go here —
 with parallel clauses that each name their own `resolve_*` function, so the
 family does not end up half-fixed. The other four anchors are Go-specific: the
@@ -810,7 +810,7 @@ $ rg -n "DisallowUnknownFields" -g '!target/**' -g '!refs/**' -g '!campaigns/**'
 ```
 
 returns **no Go source at all** — only prose: this guide (`:152`), the core Go
-projection `GUIDE-GO-v0.1.md:19` with its vendored copies, and
+projection `GUIDE-GO-v0.1.xml:19` with its vendored copies, and
 `spec/skills/go-ai-native-terraform/SKILL.md:53`, which lists «loose boundary
 decoding (no `DisallowUnknownFields`)» as a *file-debt inventory item* the
 brownfield adoption records. No conform rule and no floor step inspects boundary
@@ -911,7 +911,7 @@ research/tcg-bench/reports/REPORT-2026-07-07-{control,rust-baseline,with-tools}.
 
 No `corpus-go`, no Go baseline, no Go report. Nothing has ever been run against
 `research/go-demo` — which, as F-160 records, is the same pair of missing
-artefacts that falsifies four anchors in `TCG-ORACLE-GO-v0.1.md`. One absence,
+artefacts that falsifies four anchors in `TCG-ORACLE-GO-v0.1.xml`. One absence,
 five anchors, two documents.
 
 **Which layer has it, if any:** *stack CLI* and the sibling *mcp* package hold
@@ -949,11 +949,11 @@ was written and nothing was deleted.
    this one. If Phase E builds anything here, building the Go corpus and taking
    one baseline on `research/go-demo` re-judges all five at once. Worth carrying
    as a single Phase E item rather than five.
-2. The file is named `vibe-agentic-tcg-go.md`, a `vibe-` bare name with a
+2. The file is named `vibe-agentic-tcg-go.xml`, a `vibe-` bare name with a
    language `-go` suffix — both halves of the naming policy that
    `##FAMILY-PREFIX-RULE` and PROP-028 §2.4 superseded, and the same policy whose
    stale referent F-278 records. Its Rust and TypeScript siblings carry the same
-   old shape (`vibe-agentic-tcg-rust.md`, `vibe-agentic-tcg-ts.md`). A
+   old shape (`vibe-agentic-tcg-rust.xml`, `vibe-agentic-tcg-ts.xml`). A
    three-package `relocation`/naming question, not touched, and a rename would be
    a release event under §4.5.
 
@@ -986,14 +986,14 @@ opening verdict named only the failure:
 $ rg -n "FINDING-DR1-013|FINDING-DR1-014|FINDING-DR1-015" .../core-ai-native/v0.8.0/spec/appendix/ATLAS.md
 45:- ##FINDING-DR1-013 **DR1-013** — Token Sugar: reversible token-efficient shorthand for code
 181:- ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones
-$ rg -n "FINDING-R2C-005" .../ATLAS.md
+$ rg -n "FINDING-R2C-005" .../ATLAS.xml
 107:- ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists
 ```
 
 The roster steps `DR1-013` → `DR1-015`. Repo-wide, `DR1-014` survives only in
 this guide, in the Rust tcg brief, and in campaign bookkeeping — never as an
 anchor. The host's own campaign spec had already measured this
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:2583`: *«`DR1-013` and
+(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`: *«`DR1-013` and
 `DR1-015` exist; `DR1-014` has no anchor»*).
 
 *(b) no bundler exists in the consumer.* The build-time tier needs one and there
@@ -1070,7 +1070,7 @@ flag-registry clause is the most carefully hedged of the four for the reason in
 (d). No code written, nothing deleted.
 
 **New obligations noticed:**
-1. `GUIDE-AI-NATIVE-RUST.md#FLAG-REGISTRY-IS-DATA-WITH-PROVENANCE` (`:91`) and
+1. `GUIDE-AI-NATIVE-RUST.xml#FLAG-REGISTRY-IS-DATA-WITH-PROVENANCE` (`:91`) and
    `#TWO-TIERS-OF-FLAGS` (`:89`) are `@impl/done` and are the exact Rust twins of
    two anchors demoted here, resting on the same unbuilt machinery. **Unjudged by
    any obligation** — the parallel corpus is now knowingly half-demoted, and this
@@ -1098,7 +1098,7 @@ already `@spec/done` and stays
 `rg -l "vibe-tcg-ts"`; the package's `vibe.toml` `[[binary]]` table; its
 `crates/` directory and the candidate crate's `Cargo.toml`; the stack's whole
 tool-brief directory `spec/typescript/tools/`; and the sibling
-`scaffold-d-differential-oracle.md` cards in the Rust and Go stacks.
+`scaffold-d-differential-oracle.xml` cards in the Rust and Go stacks.
 
 **What the search found:** the tool was **renamed, not removed** — the opposite
 shape to F-214/F-278's deleted `vibe-tcg`, and worth separating carefully.
@@ -1108,8 +1108,8 @@ The old name is gone from every live surface:
 ```
 $ rg -l "vibe-tcg-ts" -g '!target/**' .
 ./specmap.json                                    # host index
-./spec/boot/90-user.md                            # host boot snippet
-./spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md
+./spec/boot/90-user.xml                            # host boot snippet
+./spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 ./legacy-spec/terraforms/{AGENTIC-TCG-TS-PLAN,DEFERRALS-CLOSEOUT-PLAN}-v0.1.md   # historical plans
 ./packages/…/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md   # this card
 ./research/ts-demo/vibedeps/…, ./vibedeps/…       # vendored copies of this card
@@ -1180,8 +1180,8 @@ written, nothing deleted, no relative link added.
 1. `rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md#RISK-SUNSET`
    (`:58`) names `vibe-tcg`, a crate PROP-026 records as DELETED. Same sentence,
    worse defect, **no obligation covers it**. Mine, unjudged, untouched.
-2. `spec/boot/90-user.md` and the host's `specmap.json` still carry the
-   `vibe-tcg-ts` name. `90-user.md` is a boot snippet every session reads and is
+2. `spec/boot/90-user.xml` and the host's `specmap.json` still carry the
+   `vibe-tcg-ts` name. `90-user.xml` is a boot snippet every session reads and is
    owner-owned — host-side, explicitly not touched.
 3. Three sibling cards state one norm in three wordings, one of which (Go's) is
    name-free and therefore rename-proof. If the family ever converges these
@@ -1227,11 +1227,11 @@ quarter, would have been demoted wrongly on the opening verdicts alone.**
 | `TCG-PROTOCOL-GO#ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` | F-210 `sync-from-code` | owner route |
 | `GUIDE-AI-NATIVE-TYPESCRIPT#RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` | F-161 `sync-from-code` | owner route — sits two lines below an anchor I did edit |
 | `GUIDE-AI-NATIVE-GO#TWO-TIERS-NEVER-CONFUSED` | F-166 `sync-from-code` | owner route |
-| `GUIDE-AI-NATIVE-GO#FLOOR-REMAINS-THE-TRUTH`… `vibe-agentic-tcg-go.md#FLOOR-REMAINS-THE-TRUTH` | F-273 `sync-from-code` | owner route |
+| `GUIDE-AI-NATIVE-GO#FLOOR-REMAINS-THE-TRUTH`… `vibe-agentic-tcg-go.xml#FLOOR-REMAINS-THE-TRUTH` | F-273 `sync-from-code` | owner route |
 | `GUIDE-AI-NATIVE-RUST#FLAG-REGISTRY-IS-DATA-WITH-PROVENANCE`, `#TWO-TIERS-OF-FLAGS` | **no obligation** | twins of F-168, mine, unjudged |
 | `GUIDE-AI-NATIVE-{GO,TYPESCRIPT}#CONTRACT-FIRST-ORDERING` | **no obligation** | twins of F-191, mine, unjudged |
-| `scaffold-d-differential-oracle.md#RISK-SUNSET` (Rust) | **no obligation** | twin of F-282, mine, worse defect (`vibe-tcg` deleted) |
-| `TCG-ORACLE-GO#STDOUT-CARRIES-LSP-FRAMES-ONLY`, `TCG-ORACLE-v0.1.md#STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` | **no obligation** | twins of F-192, mine, unjudged |
+| `scaffold-d-differential-oracle.xml#RISK-SUNSET` (Rust) | **no obligation** | twin of F-282, mine, worse defect (`vibe-tcg` deleted) |
+| `TCG-ORACLE-GO#STDOUT-CARRIES-LSP-FRAMES-ONLY`, `TCG-ORACLE-v0.1.xml#STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` | **no obligation** | twins of F-192, mine, unjudged |
 | everything in `core-ai-native`, `spec/common/**`, `spec/modules/**` | another package / the host | outside my three directories |
 
 **The standing rule I applied to every unjudged twin:** §3.1 closes an obligation

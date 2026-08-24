@@ -17,9 +17,9 @@ this format; the two run together, and each is its own package so a project can 
 
 @fact:package-contents-lead This package ships: @status:impl/done
 
-- @fact:CONTENT-THE-FULL-FORMAT `spec/flows/conventional-commits/conventional-commits.md` — the full format: header shape,
+- @fact:CONTENT-THE-FULL-FORMAT `spec/flows/conventional-commits/conventional-commits.xml` — the full format: header shape,
   the allowed-type table, scope convention, body structure, worked examples, and anti-patterns. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/31-flow-conventional-commits.md` — the boot snippet loaded at session start. @status:impl/done
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/31-flow-conventional-commits.xml` — the boot snippet loaded at session start. @status:impl/done
 
 ## Install {#install}
 
@@ -35,3 +35,4 @@ vibe install flow:git-conventional-commits
 ## License {#license}
 
 @fact:license-line UPL-1.0 — see `LICENSE`. @status:impl/done
+

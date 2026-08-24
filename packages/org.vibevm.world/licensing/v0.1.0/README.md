@@ -19,19 +19,19 @@ licence. @status:spec/done
 @fact:package-contents-lead This package ships three pieces of content, a skill, and a boot
 snippet: @status:impl/done
 
-- @fact:CONTENT-THE-LICENSING-PROTOCOL `spec/flows/licensing/LICENSING-PROTOCOL.md` — the postures, the
+- @fact:CONTENT-THE-LICENSING-PROTOCOL `spec/flows/licensing/LICENSING-PROTOCOL.xml` — the postures, the
   placeholder EULA, the permissive-only dependency rule, the
   third-party carve-out, keeping statements in sync, and why
   relicensing is an owner decision. @status:impl/done
-- @fact:CONTENT-THE-EULA-TEMPLATE `spec/flows/licensing/eula-template.md` — a copy-ready
+- @fact:CONTENT-THE-EULA-TEMPLATE `spec/flows/licensing/eula-template.xml` — a copy-ready
   proprietary-with-relicense-intent skeleton with clause-by-clause
   commentary and an adaptation table. @status:impl/done
-- @fact:CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE `spec/flows/licensing/dependency-licenses.md` — the allow/deny
+- @fact:CONTENT-THE-DEPENDENCY-LICENCE-DISCIPLINE `spec/flows/licensing/dependency-licenses.xml` — the allow/deny
   table, the pre-adoption check over the full transitive graph, and
   the "weight is not a licence concern" rule. @status:impl/done
 - @fact:CONTENT-THE-DRAFT-EULA-SKILL `spec/skills/draft-eula/` — an installable skill that drafts or
   reviews the posture end to end. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/60-flow-licensing.md` — boot snippet: the two standing
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/60-flow-licensing.xml` — boot snippet: the two standing
   truths (one stated product licence; permissive-only deps) and the
   never-do list. @status:impl/done
 
@@ -87,7 +87,7 @@ origin project's placeholder named as its intended destination. @status:impl/don
   · `GPL` · `permissive` · `SPDX`. Nor is there a listing for such a line to
   re-run: no `deny.toml`, no `about.toml`, no SBOM. Until the line exists, this
   entry describes an intended composition rather than a running one; the body
-  rule is `spec/flows/licensing/dependency-licenses.md#RE-AUDIT-ON-A-SCHEDULE`,
+  rule is `spec/flows/licensing/dependency-licenses.xml#RE-AUDIT-ON-A-SCHEDULE`,
   demoted on the same evidence.* @status:spec/done
 - @fact:COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` — the two together define how the
   repository presents itself: who authored it, and under what terms
@@ -107,3 +107,4 @@ development*, shipped in Russian inside `flow:redbook` at
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool Spec (high-level): `go-ai-native-tcg` — Token-Level Type-Constrained Generation for Go</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="spec/done">*Status: vision / component brief — **DELIBERATELY HELD AT STUB DEPTH**, and
+**dispositioned VERY-FAR-FUTURE by the owner (2026-07-17, the GO-AI-NATIVE
+mandate: «TCG если реализовывать, то только agentic, для token level мы
+пока не готовы»)**: token-level (logit-mask) TCG requires an inference
+substrate vibevm does not have — `vibe-llm` is an M0 stub, and hosted
+agent APIs never expose logits — so this line waits, explicitly and
+indefinitely, on local-LLM plumbing.*</status-line></p>
+  <p><AGENTIC-DELIVERY-SHIPS-FIRST fact="true" status="impl/done">*The AGENTIC delivery of the same
+value ships FIRST and is this package's actual tcg surface: see the
+full-parity sibling brief [`vibe-agentic-tcg-go.xml`](vibe-agentic-tcg-go.xml),
+whose gopls oracle is the SAME oracle a future logit-masker would query.*</AGENTIC-DELIVERY-SHIPS-FIRST></p>
+  <p><NOTHING-BUILT-THERE-IS-THROWN-AWAY fact="true" status="spec/done">*Nothing built there is thrown away here.*</NOTHING-BUILT-THERE-IS-THROWN-AWAY></p>
+  <quote><PARITY-NOTE fact="true" status="impl/done">**Parity note.** The agentic sibling is at full seven-section parity;
+THIS file intentionally stops at the asymmetry, the layering, and the
+staged ambition — the same stub depth as the TS token-level brief. The
+deferred-to-parity sections (decode-loop design stance, the
+inference-substrate component shape, the full risk register, the
+soundness path) are authored when THIS line is commissioned, not
+before.</PARITY-NOTE></quote>
+  <asymmetry title="1. The asymmetry with the Rust and TS tools">
+    <p><TYPESCRIPT-TCD-KNOWLEDGE-EXISTS fact="true" status="spec/done">For TypeScript the type-constrained-decoding KNOWLEDGE exists (Mündler
+et al., PLDI'25: ~74.8% compile-error reduction on a TS subset — a
+generation-time result, clean-room-fenced).</TYPESCRIPT-TCD-KNOWLEDGE-EXISTS></p>
+    <p><RUST-HAS-NOTHING-AND-THE-HARDEST-TYPE-SYSTEM fact="true" status="spec/done">For Rust nothing exists and
+the type system is the hardest of the set (traits, lifetimes).</RUST-HAS-NOTHING-AND-THE-HARDEST-TYPE-SYSTEM></p>
+    <p><GO-SITS-AT-THE-EASY-END fact="true" status="spec/done">**Go
+sits at the easy end of the spectrum:** the type system is deliberately
+small — no higher-kinded machinery, no lifetimes, modest generics with
+explicit constraints — and `go/types` is a stable, public, documented
+stdlib API.</GO-SITS-AT-THE-EASY-END></p>
+    <p><LAYER-2-MASK-IS-MORE-TRACTABLE-FOR-GO fact="true" status="spec/done">A Layer-2 semantic mask (in-scope, type-valid
+continuations) is more tractable for Go than for either sibling.</LAYER-2-MASK-IS-MORE-TRACTABLE-FOR-GO></p>
+    <p><WHAT-GO-LACKS-IS-AN-INFERENCE-SUBSTRATE fact="true" status="spec/done">What
+Go lacks is the same thing everyone lacks: an inference substrate that
+exposes logits.</WHAT-GO-LACKS-IS-AN-INFERENCE-SUBSTRATE></p>
+    <p><THE-ABSENCE-IS-WHY-THIS-LINE-IS-VERY-FAR-FUTURE fact="true" status="spec/done">That absence, not the type theory, is why this line is
+very-far-future.</THE-ABSENCE-IS-WHY-THIS-LINE-IS-VERY-FAR-FUTURE></p>
+  </asymmetry>
+  <what-it-is title="2. What it is">
+    <p><service-masks-completions-lead fact="true" status="spec/done">A generation-time service that masks each completion to **type-valid,
+discipline-conformant** Go continuations:</service-masks-completions-lead></p>
+    <facts ordered="false">
+      <LAYER-1-SYNTACTIC fact="true" status="spec/done">**Layer 1 — syntactic:** a Go grammar mask (Go's grammar is famously
+  small; mature CFG tooling, permissively licensed).</LAYER-1-SYNTACTIC>
+      <LAYER-2-SEMANTIC fact="true" status="spec/done">**Layer 2 — semantic:** at each completion point, query the type
+  oracle for in-scope, type-valid continuations and mask to them. The
+  oracle EXISTS since the agentic campaign (the gopls bridge,
+  TCG-ORACLE-GO-v0.1); a `go/types`-backed completability answer is the
+  natural embedding when the decode loop demands per-token latency LSP
+  cannot give.</LAYER-2-SEMANTIC>
+      <LAYER-3-DISCIPLINE-PROFILES fact="true" status="spec/done">**Layer 3 — discipline profiles:** compile AI-Native Go rules into
+  masks — forbid sampling `init()` or an ambient default inside a cell
+  (§2/§7 of the guide), require a defined type where a bare primitive
+  crosses a seam (§4-B), forbid a `default:` arm on a closed-set switch
+  (§5). The guide's bans become generation-time masks. (The agentic
+  sibling already ships these as ADVICE; here they would harden into
+  masks.)</LAYER-3-DISCIPLINE-PROFILES>
+    </facts>
+  </what-it-is>
+  <staged-ambition title="3. Staged ambition">
+    <facts ordered="false">
+      <STAGE-0-PREREQUISITE fact="true" status="impl/done">**Stage 0 — prerequisite (DONE via the agentic campaign):** the gopls
+  oracle with overlays, protocol, latency posture.</STAGE-0-PREREQUISITE>
+      <STAGE-1-DECODE-LOOP-INTEGRATION fact="true" status="spec/done">**Stage 1 — decode-loop integration:** wire a completability oracle
+  into a local inference runtime (`vibe-llm`) — speculative span +
+  validate + backtrack first (IterGen-style), true prefix masks second.</STAGE-1-DECODE-LOOP-INTEGRATION>
+      <STAGE-2-COVERAGE fact="true" status="spec/done">**Stage 2 — coverage** toward fuller Go within the idiomatic band
+  (staying inside the central law).</STAGE-2-COVERAGE>
+      <STAGE-3-DISCIPLINE-PROFILES-AS-MASKS fact="true" status="spec/done">**Stage 3 — discipline profiles** as masks (Layer 3).</STAGE-3-DISCIPLINE-PROFILES-AS-MASKS>
+      <STAGE-4-CAPABILITY-ROUTING fact="true" status="spec/done">**Stage 4 — capability routing.** On for the weak swarm; optional/off
+  for strong authors (over-constraint can distort strong models —
+  DR1-015).</STAGE-4-CAPABILITY-ROUTING>
+    </facts>
+  </staged-ambition>
+  <licensing title="4. Licensing posture">
+    <facts ordered="false">
+      <LICENSING-GO-STDLIB fact="true" status="spec/done">go/types, go/parser: stdlib (BSD-3) — clean.</LICENSING-GO-STDLIB>
+      <LICENSING-CFG-GRAMMAR-TOOLING fact="true" status="spec/done">CFG/grammar tooling: permissive options exist; avoid GPL grammar
+  tooling.</LICENSING-CFG-GRAMMAR-TOOLING>
+      <LICENSING-NO-THIRD-PARTY-RESEARCH-CODE fact="true" status="spec/done">No third-party research code is needed: Go's masking layers would be
+  built on stdlib type-checking APIs; the PLDI'25 repository remains
+  clean-room-fenced as everywhere in this project.</LICENSING-NO-THIRD-PARTY-RESEARCH-CODE>
+    </facts>
+  </licensing>
+  <honest-note title="5. The honest note">
+    <p><SEMANTIC-MASK-IS-MORE-BUILDABLE-BUT-THE-QUESTION-IS-UNCHANGED fact="true" status="spec/done">Go's small type system makes the semantic mask MORE buildable than
+either sibling's — and the Discipline's open question is unchanged:
+type-constrained decoding is a *generation*-time technique; whether
+scaffolds help *modification* is still the pilot's job.</SEMANTIC-MASK-IS-MORE-BUILDABLE-BUT-THE-QUESTION-IS-UNCHANGED></p>
+    <p><WELL-TYPED-CODE-CAN-STILL-BE-WRONG fact="true" status="spec/done">Well-typed code
+can still be wrong: the tool pairs with Classes C/D (contracts,
+differential fuzz oracles) that check INTENT, not just types.</WELL-TYPED-CODE-CAN-STILL-BE-WRONG></p>
+    <p><DELIVERY-EXPERIMENTS-SHOULD-INFORM-STAGE-1 fact="true" status="spec/done">The
+agentic sibling's delivery experiments should inform whether Stage 1
+here is ever worth its cost — measured, not assumed.</DELIVERY-EXPERIMENTS-SHOULD-INFORM-STAGE-1></p>
+  </honest-note>
+</spec>

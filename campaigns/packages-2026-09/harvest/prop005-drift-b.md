@@ -2,7 +2,7 @@
 
 ## Метод
 
-Сегмент 464–1345 `spec/modules/vibe-index/PROP-005-package-index.md` прочитан целиком;
+Сегмент 464–1345 `spec/modules/vibe-index/PROP-005-package-index.xml` прочитан целиком;
 каждое утверждение о коде, файлах, числах и поведении сверялось с деревом чтением
 (`crates/vibe-index/**`, `schemas/`, `formats/`, `tools/self-check.sh`, оба `Cargo.toml`,
 выборочно `vibe-registry`/`vibe-publish`/`vibe-cli`) и грепом; маршруты посчитаны по
@@ -581,7 +581,7 @@ grep -in "post-receive\|hook\|cron\|\*/5" crates/vibe-index/docs/operator-handbo
   `seam_fakes.rs`, `server_writes.rs`, `server_e2e/unavailable.rs` и шесть
   `wire_parity_*.rs`;
 - в блоке есть, в дереве нет: **`LICENSE`** («EULA») — файла в крейте нет,
-  `Cargo.toml:7` — `license-file.workspace = true`, корневой `LICENSE.md:3` — «The
+  `Cargo.toml:7` — `license-file.workspace = true`, корневой `LICENSE.xml:3` — «The
   Universal Permissive License (UPL), Version 1.0»; **`fixtures/sample-org/`** и
   **`fixtures/golden-index/`** (см. №16); тесты **`cli_e2e.rs`**,
   **`persistence_atomic.rs`**, **`scan_clones.rs`** (их роль несут
@@ -748,21 +748,21 @@ grep -rn "Channel" crates/vibe-index/src/journal crates/vibe-index/src/index/inv
 ## Часть 2 — описан ли `unavailable` в `spec/**`
 
 Искомое (греп, без учёта регистра): `unavailable` → **15 вхождений в 9 файлах**:
-`spec/WAL.md` (2), `spec/common/PROP-044-change-native-formats.md` (1),
-`spec/modules/vibe-cli/PROP-037-tree-tui.md` (1),
-`spec/modules/vibe-registry/PROP-008-qualified-naming.md` (1), пять файлов
+`spec/WAL.xml` (2), `spec/common/PROP-044-change-native-formats.xml` (1),
+`spec/modules/vibe-cli/PROP-037-tree-tui.xml` (1),
+`spec/modules/vibe-registry/PROP-008-qualified-naming.xml` (1), пять файлов
 `spec/research/schema-evolution-2026-08/**` (9 суммарно, включая внешние
 первоисточники-кэши `cargo-index.txt`, `pep691.rst`).
 
 Контроль непустоты (§0.7), тем же инструментом по тому же дереву:
-`must_understand` → **7 вхождений в 2 файлах** (`PROP-005-package-index.md` — 4,
-`spec/WAL.md` — 3); `quarantine` (без регистра) → **15 вхождений в 5 файлах**
-(`PROP-044` — 3, `spec/design/change-native-formats-verdict.md` — 5, `WAL.md` — 5,
+`must_understand` → **7 вхождений в 2 файлах** (`PROP-005-package-index.xml` — 4,
+`spec/WAL.xml` — 3); `quarantine` (без регистра) → **15 вхождений в 5 файлах**
+(`PROP-044` — 3, `spec/design/change-native-formats-verdict.xml` — 5, `WAL.md` — 5,
 `PROP-013` — 1, research — 1). Инструмент жив; нулём результат не был, но контроли
 выполнены всё равно.
 
 Разбор 15 хитов по смыслу: **один** описывает сам концепт отказа —
-`spec/common/PROP-044-change-native-formats.md:265` (факт `M-MUST-UNDERSTAND`,
+`spec/common/PROP-044-change-native-formats.xml:265` (факт `M-MUST-UNDERSTAND`,
 `@status:spec/plan`):
 > the refusal surfaces at the point of use with a generated recipe ("unavailable
 > because X; run Y")
@@ -770,7 +770,7 @@ grep -rn "Channel" crates/vibe-index/src/journal crates/vibe-index/src/index/inv
 — план-статусная фраза с примерной формулировкой рецепта, без статуса, формы,
 энвелопа или полей. `PROP-008:126` использует слово в другом смысле («short names are
 unavailable» без индекса); PROP-037 — «действие недоступно в режиме TUI»; research-файлы
-— английская проза и внешние кэши. `spec/WAL.md:45` сам фиксирует прежний замер:
+— английская проза и внешние кэши. `spec/WAL.xml:45` сам фиксирует прежний замер:
 «Ответ `unavailable` не описан НИГДЕ в `spec/**`».
 
 **Вывод**: реализованный ответ — CLI-энвелоп с полем `unavailable: [Unavailable]`
@@ -780,9 +780,9 @@ unavailable» без индекса); PROP-037 — «действие недос
 `tests/cli_read/unavailable.rs`, `tests/server_e2e/unavailable.rs`) — не описан как
 контракт нигде в `spec/**`. Ближайший текст — план-статусное предложение в PROP-044
 §4.5; PROP-005, в чьих секциях §2.10/§2.11 эта поверхность живёт, слово не произносит
-ни разу (греп `unavailable` по `PROP-005-package-index.md` — 0; контроль: `must_understand`
+ни разу (греп `unavailable` по `PROP-005-package-index.xml` — 0; контроль: `must_understand`
 в том же файле — 4). Это молчание — класса `silent` применительно к §2.10/§2.11, и оно
-согласуется с прежним замером в `spec/WAL.md:45` (с той оговоркой, что «НИГДЕ» в
+согласуется с прежним замером в `spec/WAL.xml:45` (с той оговоркой, что «НИГДЕ» в
 буквальном смысле слова уже нет: одно концептуальное упоминание в PROP-044 существует).
 
 ## Контроли пустого вывода

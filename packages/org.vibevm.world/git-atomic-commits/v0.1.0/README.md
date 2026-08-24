@@ -20,15 +20,15 @@ eight files is not verifiable in one pass. @status:spec/done
 @fact:package-contents-lead This package ships the **atomicity** discipline (the message **format** is the separate
 `flow:git-conventional-commits` package): @status:impl/done
 
-- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml` — full
   protocol: what an atomic commit is, why it matters more in a
   human-AI team than elsewhere, when to split, when to batch, and the
   rule that pushed history is frozen. @status:impl/done
-- @fact:CONTENT-THE-SPLITTING-PROCEDURE `spec/flows/atomic-commits/splitting-large-changes.md` — mechanical
+- @fact:CONTENT-THE-SPLITTING-PROCEDURE `spec/flows/atomic-commits/splitting-large-changes.xml` — mechanical
   procedure for turning a messy working tree into a sequence of
   atomic commits using `git add -p`, including a prompt for
   delegating the split to the agent. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/30-flow-atomic-commits.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/30-flow-atomic-commits.xml` — boot snippet loaded at
   session start, pointing the agent at the protocol and the never-do
   list. @status:impl/done
 
@@ -47,7 +47,7 @@ vibe uninstall flow:git-atomic-commits
 @fact:UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot
 snippet. @status:impl/done
 
-@fact:USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files (`00-core.md`, `90-user.md`, `WAL.md`) are
+@fact:USER-OWNED-FILES-ARE-NEVER-TOUCHED User-owned files (`00-core.xml`, `90-user.xml`, `WAL.md`) are
 never touched. @status:impl/done
 
 ## Composition {#composition}
@@ -75,3 +75,4 @@ archive. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE` and the surrounding registry for distribution terms. @status:impl/done
+

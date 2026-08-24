@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-01
 **HEAD:** `ed0abbab docs(campaign): волна 10 closes the D13 seal tail in the LOG`
-**Subject spec:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md` (read in full)
+**Subject spec:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
 
 **Nature of this document.** Evidence only, for the owner's B-012 feasibility
 question ("can it be built"). No verdicts, no build/don't-build recommendation,
@@ -630,22 +630,22 @@ can be rejected or re-run:
 | leaf units (no anchored heading nested inside) | 946 | **3** |
 
 Longest under the literal rule:
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1 #root` — 4406 lines;
-`…:713 #log` — 3579; `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:1 #root`
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root` — 4406 lines;
+`…:713 #log` — 3579; `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root`
 — 1858; `VIBEVM-SPEC.md:1 #root` — 1588. The three leaf offenders are
-`spec/modules/vibe-progress/OWNER-GUIDE.md:1 #root` (176),
+`spec/modules/vibe-progress/OWNER-GUIDE.xml:1 #root` (176),
 `VIBEVM-SPEC.md:702 #manifest-schema-consumer-project-role` (129),
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.md:329 #redirect` (125).
+`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:329 #redirect` (125).
 
 **Freshness caveat on index-derived numbers** (measured while doing the above,
 recorded once and applying to every count in this document that comes from the
 committed artefact): for **599 of 5266** spec units the `line` recorded in
 `specmap.json` no longer lands on that unit's anchor in the working tree at HEAD
-— e.g. `spec/boot/00-core.md` records `LAYER-HEAD` at line 34 where the tree now
-has `##VOID-FOLLOW-HEIRS`; concentrated in `spec/common/PROP-000.md` (137),
-`spec/modules/vibe-progress/PROP-043-progress-markup.md` (112),
-`spec/common/PROP-018-agentic-standalone-modes.md` (92),
-`spec/modules/vibe-workspace/PROP-009-loading-model.md` (91). The **code** side
+— e.g. `spec/boot/00-core.xml` records `LAYER-HEAD` at line 34 where the tree now
+has `##VOID-FOLLOW-HEIRS`; concentrated in `spec/common/PROP-000.xml` (137),
+`spec/modules/vibe-progress/PROP-043-progress-markup.xml` (112),
+`spec/common/PROP-018-agentic-standalone-modes.xml` (92),
+`spec/modules/vibe-workspace/PROP-009-loading-model.xml` (91). The **code** side
 does not show this: 898 of 912 edges land on a line carrying `#[spec(`,
 `#[verifies(` or `scope!` (the 14 others are consistent with multi-line
 attributes). So the spec tree has moved since the index was last regenerated;

@@ -21,21 +21,21 @@ difference, made into a standing contract. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md` —
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml` —
   full protocol: why addressability is IPC requirement #1, the URI
   scheme and anchor grammar, reverse-DNS module names, the
   single-source and placement rules, the bidirectional graph that
   `Implements:` markers and `Test:` lines create, and a re-derive
   prompt for adapting the practice to a concrete project. @status:impl/done
-- @fact:CONTENT-THE-AUTHORING-RULES `spec/flows/addressable-specs/authoring-rules.md` — how to write
+- @fact:CONTENT-THE-AUTHORING-RULES `spec/flows/addressable-specs/authoring-rules.xml` — how to write
   units that stay addressable: one unit = one decision, normativity
   marked with RFC-2119 verbs, deviations recorded honestly, size
   budgets, changelog lines, and the rule that anchors are immutable
   once cited. @status:impl/done
-- @fact:CONTENT-THE-SPEC-TREE-LAYOUT `spec/flows/addressable-specs/spec-tree-layout.md` — the reference
+- @fact:CONTENT-THE-SPEC-TREE-LAYOUT `spec/flows/addressable-specs/spec-tree-layout.xml` — the reference
   tree: PROP vs FEAT, the what-goes-where decision table, and the
   `.human/` private buffer enforced by ignore-file invisibility. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/15-flow-addressable-specs.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/15-flow-addressable-specs.xml` — boot snippet loaded at
   session start: the correction contract, the single-source and
   placement rules, and the never-do list. @status:impl/done
 
@@ -91,3 +91,4 @@ machine — so make every fact in the project pointable in one URI. @status:spec
 ## License {#license}
 
 @fact:license-line UPL-1.0. See `LICENSE.md`. @status:impl/done
+

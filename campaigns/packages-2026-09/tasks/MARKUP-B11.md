@@ -17,7 +17,7 @@ would otherwise re-ask.
 @fact:B11-THREE-SIBLINGS B8 (`e654c86f`), B9 (`b1689359`) and B10 are all landed `world` batches
 of this shape. **Read the corresponding file in the nearest one before marking
 yours.** B10 is closest in genre — protocol documents plus a catalogue — and its
-`rejected-designs.md` is the reference for anything that reads as a record of
+`rejected-designs.xml` is the reference for anything that reads as a record of
 what was *not* built. `tool-design-lessons` is a strong candidate for that shape.
 
 @fact:B11-AGREEMENT-IS-SETTLED **Where two or more siblings agree, the case is settled** — follow it and

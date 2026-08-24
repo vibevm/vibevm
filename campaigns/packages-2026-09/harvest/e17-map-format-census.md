@@ -273,7 +273,7 @@ answered either by re-parsing its markdown (resolution only) or not at all. The
   (`mdspec.rs:445`) and for facts (`mdspec.rs:282`).
 - `doc_path` = `canonical_doc_path(file)` (`mdspec.rs:305`): relative to `spec/`
   (`mdspec.rs:306`), `.md` stripped (`:311`), and a filename carrying a document id
-  truncated to it (`PROP-003-dep-evolution.md` → `PROP-003`, `:312-321`); files
+  truncated to it (`PROP-003-dep-evolution.xml` → `PROP-003`, `:312-321`); files
   without an id keep their full stem.
 - `parse_units` (`mdspec.rs:336`) derives `doc_path` once and threads `namespace`
   through.

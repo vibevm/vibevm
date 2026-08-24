@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-036: `vibe tree` — the spec-tree analyzer</title>
+  <status stage="impl" state="done" comment="C 2026-07-25: PACKAGE-TREE-PLAN executed; the analyzer ships (tree --json against package-tree.schema.v1.json, -t live)"/>
+  <p><status-line fact="true" status="impl/done">**Status: IMPLEMENTED** (requirements authored 2026-07-15 at the owner's
+request; the PACKAGE-TREE-PLAN executed against them, verified against the tree
+2026-07-25 by the spec-actualization campaign — `vibe tree --json` validates
+against the shipped `package-tree.schema.v1.json` per its own `--help`, and `-t`
+is live). Governs the `vibe tree` command in `crates/vibe-cli`. Written in the
+post-rename link vocabulary (PROP-035): two link types, `static` and `dynamic`.</status-line></p>
+  <p><related fact="true" status="spec/done">**Related:** [PROP-009 §2.4](../vibe-workspace/PROP-009-loading-model.xml#inclusion-types)
+(the `static`/`dynamic` link types + `when`), [PROP-009 §2.3](../vibe-workspace/PROP-009-loading-model.xml#artifacts)
+(`STATIC.md` / `INDEX.md`), [PROP-034](../vibe-workspace/PROP-034-transitive-links-boot-graph.xml)
+(`static-transitive`), [PROP-035](../vibe-workspace/PROP-035-spec-compiler.xml)
+(`@spec` in-place uses, `STATIC.md` markers), [PROP-002 §lockfile](../vibe-registry/PROP-002-decentralized-registry.xml)
+(the resolved graph). Plan: [`PACKAGE-TREE-PLAN-v0.1`](../../../legacy-spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md).</related></p>
+  <p><non-goal-line fact="true" status="spec/done">**Non-goal (deferred):** the runtime "what the agent actually loaded" skill and a
+GUI client — a future `tool:org.vibevm.core/package-tree` (§7).</non-goal-line></p>
+  <motivation title="1. Motivation">
+    <facts ordered="false">
+      <boot-composition fact="true" status="spec/done">A project's boot is composed by `vibe` from a dependency closure (PROP-009):
+  some packages are compiled verbatim into `STATIC.md`, others are read by
+  reference from `INDEX.md`, some carry an OS `when`, and `static-transitive`
+  edges (PROP-034) silently promote whole subtrees.</boot-composition>
+      <visibility-gap fact="true" status="spec/done">Today a human cannot see this
+  at a glance — **what is connected, and how does it load?**</visibility-gap>
+      <TREE-ANSWER fact="true" status="spec/done">`vibe tree` answers
+  that algorithmically: it renders the resolved package tree annotated with the
+  *effective* load type and the flags that explain it, and emits the same data as
+  JSON for downstream tools.</TREE-ANSWER>
+    </facts>
+  </motivation>
+  <decisions title="2. Decisions">
+    <command title="2.1 The command">
+      <facts ordered="false">
+        <TREE-READ-ONLY fact="true" status="spec/done">`vibe tree` is a **read-only** analyzer over the current project. It mutates
+  nothing (REQ: never writes to the tree, manifests, lockfile, or artifacts).</TREE-READ-ONLY>
+        <TREE-INPUTS fact="true" status="spec/done">It
+  operates on the workspace discovered from `--path` (default `.`), reading the
+  committed `vibe.lock`, the node manifests, and the generated boot artifacts.</TREE-INPUTS>
+      </facts>
+      <p><output-surfaces-lead fact="true" status="spec/done">Three output surfaces:</output-surfaces-lead></p>
+      <facts ordered="false">
+        <OUT-TUI fact="true" status="spec/done">**interactive TUI** — the default on a tty (§2.11);</OUT-TUI>
+        <OUT-JSON fact="true" status="spec/done">**`--json`** — the machine surface (§2.7), the same data a GUI consumes;</OUT-JSON>
+        <OUT-PLAIN fact="true" status="spec/done">**plain** — a static ASCII tree when not on a tty, or under `--plain`.</OUT-PLAIN>
+      </facts>
+      <facts ordered="false">
+        <NO-TUI-UNDER-FLAGS fact="true" status="spec/done">`--json` and `--plain` never launch the TUI.</NO-TUI-UNDER-FLAGS>
+        <CLI-SURFACE fact="true" status="spec/done">The command is `Tree(TreeArgs)` in
+  the CLI surface; `--json`/`--quiet` are the global flags (never redeclared).</CLI-SURFACE>
+      </facts>
+    </command>
+    <columns title="2.2 Row semantics — the columns">
+      <p><ROW-PER-PACKAGE fact="true" status="spec/done">Each package is one row. Columns, left to right (REQ: this order):</ROW-PER-PACKAGE></p>
+      <facts ordered="true">
+        <COL-NAME fact="true" status="spec/done">**name** — the tree column: `group/name`, drawn with indentation + branch
+   glyphs + an expand/collapse indicator when the node has children.</COL-NAME>
+        <COL-LOAD fact="true" status="spec/done">**load** — the *effective* load type (§2.3): `static`, `dynamic`, or `none`.</COL-LOAD>
+        <COL-TRANSITIVE fact="true" status="spec/done">**T** (transitive) — a checkbox: the effective `static` was forced by a
+   `static-transitive` ancestor, not the package's own declaration (§2.4).</COL-TRANSITIVE>
+        <COL-CONDITION fact="true" status="spec/done">**C** (condition) — a checkbox: the boot entry carries a `when` (§2.5).</COL-CONDITION>
+        <COL-STATIC fact="true" status="spec/done">**S** (STATIC.md) — a checkbox: the package physically contributes a block to
+   `STATIC.md`.</COL-STATIC>
+      </facts>
+      <facts ordered="false">
+        <checkbox-cluster fact="true" status="spec/done">`T`, `C`, `S` are the "checkbox" cluster; `load` is a value column.</checkbox-cluster>
+        <DETAIL-ON-DEMAND fact="true" status="spec/done">Detail beyond
+  a checkbox (the full `when` text, the source path) is shown on demand (§2.11),
+  never crammed into the row.</DETAIL-ON-DEMAND>
+      </facts>
+    </columns>
+    <effective-load title="2.3 Effective load type">
+      <p><EFFECTIVE-FROM-ARTIFACTS fact="true" status="spec/done">The `load` value is the lane a package's boot snippet **actually lands in**, read
+from the committed artifacts (REQ):</EFFECTIVE-FROM-ARTIFACTS></p>
+      <facts ordered="false">
+        <LOAD-STATIC fact="true" status="spec/done">`static` — the package appears as a `&lt;!-- vibe:static {origin} … --&gt;`
+  contribution in `STATIC.md` (`origin = group/name`).</LOAD-STATIC>
+        <LOAD-DYNAMIC fact="true" status="spec/done">`dynamic` — the package's boot file appears as an `[[entry]]` in `INDEX.md`.</LOAD-DYNAMIC>
+        <LOAD-NONE fact="true" status="spec/done">`none` — the package ships no `[boot_snippet]`, so it contributes to neither
+  lane (e.g. a content-minimal family aggregator, PROP-028).</LOAD-NONE>
+      </facts>
+      <p><DECISION-ARTIFACTS-CANONICAL fact="true" status="spec/done">**Decision — read the effective type from the artifacts, not a fresh recompute.**</DECISION-ARTIFACTS-CANONICAL></p>
+      <facts ordered="false">
+        <decision-artifacts-why fact="true" status="spec/done">**Why:** the committed `STATIC.md` / `INDEX.md` are exactly what an agent
+  reads at boot; the tool's job is to show that reality ("what is actually
+  loaded"). A stale artifact is a fact the human needs, not one to hide.</decision-artifacts-why>
+        <decision-artifacts-rejected fact="true" status="spec/done">**Considered and rejected:** recomputing `EffectiveBoot` fresh every run —
+  shows what *should* be, masking drift the tool exists to reveal.</decision-artifacts-rejected>
+        <decision-artifacts-revisit fact="true" status="spec/done">**When to revisit:** if the artifacts stop being committed (generated
+  on-demand), the source of truth moves to the recompute; until then the
+  committed lane is canonical, cross-checked by §2.10.</decision-artifacts-revisit>
+      </facts>
+    </effective-load>
+    <transitive-flag title="2.4 The transitive flag">
+      <facts ordered="false">
+        <TRANSITIVE-FLAG-DEF fact="true" status="spec/done">`T` is set (REQ) iff the package's effective type is `static` **and** that
+  static-ness was inherited from an ancestor edge declared `static-transitive`
+  (PROP-034), rather than from the package's own consumer-declared `link`, its own
+  `[boot_snippet].link` suggestion, or a direct `static` edge.</TRANSITIVE-FLAG-DEF>
+        <TRANSITIVE-DECLARER fact="true" status="spec/done">The
+  `static-transitive` *declarer* itself carries `T = false` (its static-ness is its
+  own declaration); every member of its closure that is not otherwise static
+  carries `T = true`.</TRANSITIVE-DECLARER>
+      </facts>
+    </transitive-flag>
+    <condition-flag title="2.5 The condition flag">
+      <facts ordered="false">
+        <CONDITION-FLAG-DEF fact="true" status="spec/done">`C` is set (REQ) iff the package's boot entry carries a `when` condition
+  (PROP-009 §2.4; wire form `os:&lt;name&gt;`).</CONDITION-FLAG-DEF>
+        <WHEN-FORCES-DYNAMIC fact="true" status="spec/done">A `when` forces the entry `dynamic`
+  regardless of link (so `C = true` implies `load = dynamic`).</WHEN-FORCES-DYNAMIC>
+        <CONDITION-DETAIL-ONLY fact="true" status="spec/done">The full condition
+  text is surfaced only in the detail view (§2.11) and the JSON (§2.7), never in
+  the row.</CONDITION-DETAIL-ONLY>
+      </facts>
+    </condition-flag>
+    <static-size title="2.6 The STATIC.md size indicator">
+      <facts ordered="false">
+        <STATIC-SIZE-INDICATOR fact="true" status="spec/done">The status line shows the size of the statically-compiled lane: the byte count
+  and line count of `STATIC.md` (REQ).</STATIC-SIZE-INDICATOR>
+        <static-size-purpose fact="true" status="spec/done">This is the "how much am I loading verbatim
+  every session" budget the human watches.</static-size-purpose>
+      </facts>
+    </static-size>
+    <json title="2.7 JSON output">
+      <facts ordered="false">
+        <JSON-CONTRACT fact="true" status="spec/done">`vibe tree --json` emits one object, the same data model the TUI renders, valid
+  against the shipped schema (REQ: `schema_version = 1`).</JSON-CONTRACT>
+        <JSON-ENVELOPE fact="true" status="spec/done">The envelope follows the
+  CLI convention (`{"ok": true, "command": "tree", …}`).</JSON-ENVELOPE>
+        <JSON-MODEL fact="true" status="spec/done">The model carries: the
+  `project` context, the declared `roots`, the `packages` array (each with `load`
+  {`type`, `transitive`, `declared`, `origin`, `in_static_md`, `in_index_md`,
+  `boot_path`} and `condition`), the two boot lanes under `boot`
+  (`static_md`/`index_md`, with the lane sizes), the collected `in_place_specs`
+  (§2.9), and `diagnostics` (§2.10).</JSON-MODEL>
+        <JSON-NO-DISPLAY-STATE fact="true" status="spec/done">Display state (mode, ordering, tab, selection)
+  is TUI-only and is **not** in the JSON.</JSON-NO-DISPLAY-STATE>
+        <JSON-SCHEMA-HOME fact="true" status="spec/done">Schema home:
+  `crates/vibe-cli/resources/package-tree.schema.v1.json`.</JSON-SCHEMA-HOME>
+      </facts>
+    </json>
+    <static-decompile title="2.8 STATIC.md decompilation">
+      <facts ordered="false">
+        <STATIC-DECOMPILE fact="true" status="spec/done">`vibe tree` decompiles `STATIC.md` into its contributions (REQ): each
+  `&lt;!-- vibe:static {origin} — {path} --&gt;` marker opens a region running to the
+  next marker or EOF; the region yields `origin` (the source `group/name` or host
+  rel-path) and `path` (the workspace-relative source file).</STATIC-DECOMPILE>
+        <EMBED-SPANS fact="true" status="spec/done">Nested
+  `&lt;!-- embed: {addr} --&gt;` … `&lt;!-- /embed: {addr} --&gt;` pairs within a region are
+  attributed as embed spans.</EMBED-SPANS>
+        <DEDICATED-DECOMPILER fact="true" status="spec/done">This is a **dedicated** decompiler for the on-disk
+  `vibe:static` open-marker format — it is not `vibe_spec::decompile()`, which
+  parses the distinct `vibe:begin`/`vibe:end` compiler format and returns empty on
+  `STATIC.md`.</DEDICATED-DECOMPILER>
+      </facts>
+    </static-decompile>
+    <in-place-specs title="2.9 In-place `@spec` collection">
+      <facts ordered="false">
+        <INPLACE-COLLECTION fact="true" status="spec/done">`vibe tree` collects the in-place boot-lane spec markers (REQ): `@spec://` uses
+  and `#use` / `#embed` / `#source` directives, via the canonical fence-aware
+  `vibe_spec::Directives::parse`.</INPLACE-COLLECTION>
+        <BARE-SPEC-SKIPPED fact="true" status="spec/done">A bare `spec://` (no `@`) is discretionary and is
+  **not** collected.</BARE-SPEC-SKIPPED>
+        <inplace-oos fact="true" status="spec/done">(Out of scope: the `#[spec(...)]` code-traceability surface —
+  that is PROP-014.)</inplace-oos>
+      </facts>
+    </in-place-specs>
+    <diagnostics title="2.10 Diagnostics">
+      <p><DIAG-NON-FATAL fact="true" status="spec/done">`vibe tree` reports, non-fatally (REQ: never aborts rendering on these):</DIAG-NON-FATAL></p>
+      <facts ordered="false">
+        <DIAG-STALE-ARTIFACTS fact="true" status="spec/done">**stale-artifacts** — the committed lanes disagree with a fresh `EffectiveBoot`
+  recompute (the tree needs `vibe reinstall`).</DIAG-STALE-ARTIFACTS>
+        <DIAG-ROOT-DRIFT fact="true" status="spec/done">**root-drift** — `vibe.lock` `meta.root_dependencies` disagrees with the root
+  `vibe.toml` `[requires.packages]` (the lock is behind).</DIAG-ROOT-DRIFT>
+      </facts>
+      <p><DIAG-SHAPE fact="true" status="spec/done">Each diagnostic carries a severity, a stable code, a message, and an optional
+locator.</DIAG-SHAPE></p>
+    </diagnostics>
+    <tui title="2.11 The interactive TUI">
+      <p><TUI-DEFAULT fact="true" status="spec/done">On a tty (default), `vibe tree` is an interactive pseudographic browser (REQ).
+Contract:</TUI-DEFAULT></p>
+      <facts ordered="false">
+        <TUI-NAVIGATION fact="true" status="spec/done">**Navigation:** `↑`/`↓` move the selection (the table scrolls to keep it
+  visible; the selected row is highlighted); `←`/`→` pan horizontally when the
+  tree is wider than the viewport.</TUI-NAVIGATION>
+        <TUI-KEYMAP-SUPERSEDED fact="true" status="impl/done">**The key bindings sketched in this section are superseded.** This §2.11 is
+  the analyzer-era sketch; the shipped keymap is [PROP-037](PROP-037-tree-tui.xml)
+  Spec 2's F-key scheme, and it is normative there — this section names the
+  *capabilities*, never the keys.</TUI-KEYMAP-SUPERSEDED>
+        <TUI-FOLDING fact="true" status="impl/done">**Folding:** the selected node folds and unfolds (shipped as the
+  `fold.toggle` action, [PROP-037 §13.5](PROP-037-tree-tui.xml#actions)). The
+  whole-tree fold sketched here was **not carried into Spec 2 and does not
+  ship** — the action catalogue has `fold.toggle` only.</TUI-FOLDING>
+        <TUI-DETAIL fact="true" status="impl/done">**Detail:** `Enter` opens a modal showing the row's full detail vertically
+  (name, group, version, kind, load type, transitive + why, condition full text,
+  STATIC.md membership, source, content hash, dependencies, boot file);
+  `Esc` closes it. Quitting is `Esc` plus a confirm dialog
+  ([PROP-037 §7.4](PROP-037-tree-tui.xml)), not the bare `q` this sketch assumed.</TUI-DETAIL>
+        <TUI-ORDERING fact="true" status="impl/done">**Ordering** (shown in the status line): **topological** (the analysis
+  order, default) ↔ **alphabetical**. Chosen from the F2 sort menu
+  ([PROP-037 §7.2](PROP-037-tree-tui.xml), which replaces any bare mode-cycle key).</TUI-ORDERING>
+        <TUI-DISPLAY-MODES fact="true" status="impl/done">**Display mode:** (a) all-together tree; (b) two stacked
+  sub-tables `static dependencies` / `dynamic dependencies` (a header line each);
+  (c) two tabs `Static` / `Dynamic`, with a swappable static/dynamic priority in
+  (b) and (c). Modes are chosen from the F3 menu and tabs switch with
+  `Shift`+arrows ([PROP-037 §4.4 / §5.3](PROP-037-tree-tui.xml)).</TUI-DISPLAY-MODES>
+        <TUI-STATUS-LINE fact="true" status="spec/done">**Status line:** current ordering · current display mode · the `STATIC.md` size
+  indicator (§2.6).</TUI-STATUS-LINE>
+        <TUI-FALLBACK fact="true" status="spec/done">**Fallback:** non-tty and `--plain` render a static ASCII tree; `--json` the
+  JSON — neither enters interactive mode.</TUI-FALLBACK>
+      </facts>
+    </tui>
+    <dag title="2.12 The graph is a DAG">
+      <facts ordered="false">
+        <dag-diamonds fact="true" status="spec/done">The dependency graph has diamonds (a shared package reached by several parents).</dag-diamonds>
+        <DAG-RENDERING fact="true" status="spec/done">`vibe tree` renders each package under each parent, marks a re-occurrence with a
+  trailing `(*)` and does not re-expand it, and cycle-guards the walk on the
+  package's qualified `group/name` (REQ).</DAG-RENDERING>
+        <DAG-FLAT-COLLAPSE fact="true" status="spec/done">The flat display modes (§2.11) collapse
+  the DAG to one row per package.</DAG-FLAT-COLLAPSE>
+      </facts>
+    </dag>
+    <project-resolution title="2.13 Project resolution — VibeTree works from anywhere">
+      <p><project-needed fact="true" status="impl/done">`vibe tree` shows a project's tree, so it needs one — but a GUI launcher
+(`VibeTree.exe` / a Start-menu shortcut) or an arbitrary shell may sit
+outside any project. The launchers live in the `vibevm-term` products repo with
+vibeterm and vibeframe ([PROP-019 §STEP-VIBE-ONLY](../../common/PROP-019-version-manager.xml)),
+and are governed there — this host contract only specifies what `vibe tree` does
+when invoked from outside a project.</project-needed></p>
+      <p><RESOLUTION-ORDER fact="true" status="spec/done">Resolution order for the **human** surfaces (the TUI and
+`-t`; **not** `--json`, a scripting surface resolved strictly from `--path`)
+(REQ):</RESOLUTION-ORDER></p>
+      <facts ordered="true">
+        <RES-GIVEN-PATH fact="true" status="spec/done">**The given path** — `--path` (default: cwd, walked up for `vibe.toml`). On
+   success it is **recorded as the last project** (`vibe.tree.last-project`, an
+   L1 setting), so a later context-free launch reopens it. An explicit `--path`
+   that is not a project is a hard error — never silently redirected.</RES-GIVEN-PATH>
+        <RES-LAST-PROJECT fact="true" status="spec/done">**The remembered last project** — when the cwd is not a project and no
+   explicit `--path` was given, the recorded `last-project` opens (if it is still
+   a project).</RES-LAST-PROJECT>
+        <RES-FOLDER-PICKER fact="true" status="spec/done">**A folder picker** — a `-t` (VibeTree / GUI) launch with neither of the above
+   opens a native folder chooser; the pick is recorded as the last project.
+   Cancelling is a clean no-op (no error dialog), never a failure.</RES-FOLDER-PICKER>
+      </facts>
+      <p><console-fallback fact="true" status="spec/done">A console launch (no `-t`) with neither a cwd project nor a memory keeps the
+original `run vibe init` guidance.</console-fallback></p>
+    </project-resolution>
+  </decisions>
+  <data-sources title="3. Data sources">
+    <p><CANONICAL-PARSERS fact="true" status="spec/done">`vibe tree` joins, using the canonical parsers (REQ — no re-implemented format
+readers where a `vibe-*` crate already parses it):</CANONICAL-PARSERS></p>
+    <facts ordered="false">
+      <SRC-GRAPH fact="true" status="spec/done">**graph** — `vibe.lock` (`vibe_core::manifest::Lockfile`): roots from
+  `meta.root_dependencies`, edges from each `LockedPackage.dependencies`.</SRC-GRAPH>
+      <SRC-LINKS fact="true" status="spec/done">**links** — the node manifests (`vibe_core` `Requires`): consumer
+  `declared_link` + the target's `[boot_snippet]` suggested link + `when`.</SRC-LINKS>
+      <SRC-LANES fact="true" status="spec/done">**effective lanes + sizes** — the committed `spec/boot/STATIC.xml` +
+  `spec/boot/INDEX.md`.</SRC-LANES>
+      <SRC-CROSS-CHECK fact="true" status="spec/done">**cross-check** — `vibe_workspace` `EffectiveBoot` (for the stale-artifacts
+  diagnostic).</SRC-CROSS-CHECK>
+      <SRC-INPLACE fact="true" status="spec/done">**in-place specs** — `vibe_spec::Directives::parse`.</SRC-INPLACE>
+    </facts>
+  </data-sources>
+  <non-goals title="4. Non-goals">
+    <facts ordered="false">
+      <NG-RUNTIME-SKILL fact="true" status="spec/done">**The runtime skill / prompt** — inferring what the agent *actually* loaded at
+  runtime (the `loading spec://…` convention, `.vibe/` logging, multi-agency) is
+  deferred to `tool:org.vibevm.core/package-tree`.</NG-RUNTIME-SKILL>
+      <NG-GUI-CLIENT fact="true" status="spec/done">**A GUI client** — deferred to the same future package; the `--json` schema is
+  its contract.</NG-GUI-CLIENT>
+      <NG-SPEC-VALIDATION fact="true" status="spec/done">**Spec-graph validation** — `vibe tree` attributes and reports; it does not
+  validate `spec://` targets.</NG-SPEC-VALIDATION>
+      <NG-MUTATION fact="true" status="spec/done">**Mutation** — never; see §2.1.</NG-MUTATION>
+    </facts>
+  </non-goals>
+</spec>

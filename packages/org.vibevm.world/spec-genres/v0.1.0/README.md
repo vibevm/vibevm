@@ -31,18 +31,18 @@ taxonomy is what matters, not the labels. @status:spec/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md` — the taxonomy:
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml` — the taxonomy:
   why genres exist, the full genre table (charter, mutability,
   reader, authority), the precedence law, the two-way linking law,
   and a re-derive prompt for adapting the map to any project. @status:impl/done
-- @fact:CONTENT-THE-DESIGN-DOCS-GUIDE `spec/flows/spec-genres/design-docs.md` — the contract/lore split
+- @fact:CONTENT-THE-DESIGN-DOCS-GUIDE `spec/flows/spec-genres/design-docs.xml` — the contract/lore split
   in practice: what spills out of a contract, what never leaves, the
   fork-by-fork record skeleton, the orthogonal-decomposition lesson,
   and how a design doc grows stale honestly. @status:impl/done
-- @fact:CONTENT-THE-ROUTING-GUIDE `spec/flows/spec-genres/when-to-write-what.md` — the routing table
+- @fact:CONTENT-THE-ROUTING-GUIDE `spec/flows/spec-genres/when-to-write-what.xml` — the routing table
   (situation → genre), the misfiling-smells table, and one worked
   example of the linking law with both ends wired. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/17-flow-spec-genres.md` — boot snippet: the genre map,
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/17-flow-spec-genres.xml` — boot snippet: the genre map,
   the name-the-genre-first rule, and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -94,3 +94,4 @@ without asking anyone. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

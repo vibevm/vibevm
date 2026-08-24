@@ -40,7 +40,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-002 — budget-строка байндит сгенерированные артефакты наравне с авторскими
 - **asks** — уточнить строку `ROW-BUDGET-BOOT-FILE`: сгенерированный boot-артефакт не несёт токен-бюджета.
 - **status** — NOT-BUILT
-- **evidence** — `packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md:135`: `##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | …`. Строка даёт ОДИН бюджет на «Boot file», без различения авторский/сгенерированный — правка не внесена.
+- **evidence** — `packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.xml:135`: `##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | …`. Строка даёт ОДИН бюджет на «Boot file», без различения авторский/сгенерированный — правка не внесена.
 - **note** — это release-event правка спеки (диспозиция `open`, «ждёт release-batch»); измеримый факт — строка не различает.
 - **verdict** — PENDING
 
@@ -137,7 +137,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-029 — нейтральное/пер-языковое имя ключа гейта вместо растового
 - **asks** — нейтральный/пер-языковый ключ единиц гейта (старый `gated_crates` — alias совместимости).
 - **status** — BUILT
-- **evidence** — `…/core-ai-native-conform/src/config.rs:9-17` «The v2 surface (B-029 + B-034, design `gate-parity-config.md`)»: пер-языковые секции `[rust].gated`/`[go].gated`/`[typescript].gated` (RustConfig:206, GoConfig:274, TsConfig:339), единица = crate/package/cell; старые плоские ключи — громкие tombstone (`Option<Value>`, `config.rs:72-88`, `gated_crates:76`), `Config::load`+`tombstones::check` reject'ит их с подсказкой (`:430-437`). Ростеры читают `config.rust.gated` и т.д. (rust `lib.rs:69`).
+- **evidence** — `…/core-ai-native-conform/src/config.rs:9-17` «The v2 surface (B-029 + B-034, design `gate-parity-config.xml`)»: пер-языковые секции `[rust].gated`/`[go].gated`/`[typescript].gated` (RustConfig:206, GoConfig:274, TsConfig:339), единица = crate/package/cell; старые плоские ключи — громкие tombstone (`Option<Value>`, `config.rs:72-88`, `gated_crates:76`), `Config::load`+`tombstones::check` reject'ит их с подсказкой (`:430-437`). Ростеры читают `config.rust.gated` и т.д. (rust `lib.rs:69`).
 - **note** — диспозиция `planned` (с текстом «исполняется этой стройкой»), но дерево показывает v2-поверхность построенной.
 - **verdict** — PENDING
 
@@ -158,7 +158,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-035 — паритет-аудит стеков: TS/Go не слабее Rust или причина записана
 - **asks** — систематическое сравнение + достроить слабины или записать причиной + поднять принцип в спеку.
 - **status** — BUILT
-- **evidence** — принцип поднят в манифест: `…/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97` `##PARITY-ACROSS-PROJECTIONS` (`@impl/done`) и `:103` `##PARITY-GAP-IS-NEVER-SILENT` (`@spec/done`); три гайда цитируют (`GUIDE-AI-NATIVE-GO.md:311,313` и TS/RUST). Слабины закрыты: seam-error ×3 (`TsSeamErrorCitesReq`, `GoSeamErrorCitesReq`), `floor_disable` ×3 (B-049), conformance ×3, flag-sites ×3 (B-039).
+- **evidence** — принцип поднят в манифест: `…/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97` `##PARITY-ACROSS-PROJECTIONS` (`@impl/done`) и `:103` `##PARITY-GAP-IS-NEVER-SILENT` (`@spec/done`); три гайда цитируют (`GUIDE-AI-NATIVE-GO.xml:311,313` и TS/RUST). Слабины закрыты: seam-error ×3 (`TsSeamErrorCitesReq`, `GoSeamErrorCitesReq`), `floor_disable` ×3 (B-049), conformance ×3, flag-sites ×3 (B-039).
 - **note** — это аудит-принцип; остаток (Go-floor `./...`-residual, близнец B-048) записан причиной и маршрутом, не молчит — ровно то, чего требует `##PARITY-GAP-IS-NEVER-SILENT`. Диспозиция `planned` — норма по дереву поднята.
 - **verdict** — PENDING
 
@@ -179,7 +179,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-038 — pending-карточки обретают карточки и чекеры: R-060 и closed-vocabulary-naming
 - **asks** — R-060 карточка+чекер; rule-closed-vocabulary-naming (R3-004) карточка+чекер.
 - **status** — BUILT
-- **evidence** — карточки существуют: `…/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md` и `…/rule-closed-vocabulary-naming.md`. Чекер R-060 `DeclaredTestMatrices` (`rules/matrices.rs:78`, id `declared-test-matrices`) смонтирован во всех трёх ростерах (rust `lib.rs:97`, TS `:77`, Go `:93`). Чекер R3-004 (вычисляемые имена, fork #1) `CellNameIsComputed` (`rules/naming.rs:86`) смонтирован в rust (`lib.rs:78`) и Go (`:85`).
+- **evidence** — карточки существуют: `…/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md` и `…/rule-closed-vocabulary-naming.xml`. Чекер R-060 `DeclaredTestMatrices` (`rules/matrices.rs:78`, id `declared-test-matrices`) смонтирован во всех трёх ростерах (rust `lib.rs:97`, TS `:77`, Go `:93`). Чекер R3-004 (вычисляемые имена, fork #1) `CellNameIsComputed` (`rules/naming.rs:86`) смонтирован в rust (`lib.rs:78`) и Go (`:85`).
 - **note** — построены оба чекера, заявленные первыми. Оставшиеся три половины R3-004 (закрытый словарь / один референт / нет синонимов) — отдельная запись B-052. Диспозиция `planned` — чекеры по дереву построены.
 - **verdict** — PENDING
 
@@ -245,15 +245,15 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 - **verdict** — PENDING
 
 ## B-051 — у пилотного языка нет документа поверхности конформа
-- **asks** — авторить `conform-frontend-rust.md` по образцу Go/TS-близнецов.
+- **asks** — авторить `conform-frontend-rust.xml` по образцу Go/TS-близнецов.
 - **status** — NOT-BUILT
-- **evidence** — `glob **/conform-frontend-rust.md` → No files found. Go/TS-документы существуют (`go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md`, `typescript-…/spec/typescript/tools/conform-frontend-typescript.md`), растового близнеца в живом rust-стеке v0.7.0 нет.
+- **evidence** — `glob **/conform-frontend-rust.xml` → No files found. Go/TS-документы существуют (`go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md`, `typescript-…/spec/typescript/tools/conform-frontend-typescript.md`), растового близнеца в живом rust-стеке v0.7.0 нет.
 - **verdict** — PENDING
 
 ## B-052 — три непостроенные половины R3-004 (закрытый словарь, один референт, нет синонимов)
 - **asks** — словарь структурных токенов ДАННЫМИ; реестр имён контрактной поверхности; детектор синонимов/затенения.
 - **status** — NOT-BUILT
-- **evidence** — `rules/naming.rs:86` содержит ТОЛЬКО композицию (`CellNameIsComputed`, первая половина R3-004, `@impl/done`). Закрытого словаря токенов данными/константой в `naming.rs` нет; реестра имён контрактной поверхности нет (только `in_src`/`is_lib_root`); детектора синонимов/затенения нет. Карточка `rule-closed-vocabulary-naming.md` несёт раздел «specified, not built» для этих трёх.
+- **evidence** — `rules/naming.rs:86` содержит ТОЛЬКО композицию (`CellNameIsComputed`, первая половина R3-004, `@impl/done`). Закрытого словаря токенов данными/константой в `naming.rs` нет; реестра имён контрактной поверхности нет (только `in_src`/`is_lib_root`); детектора синонимов/затенения нет. Карточка `rule-closed-vocabulary-naming.xml` несёт раздел «specified, not built» для этих трёх.
 - **note** — построена 1 из 4 половин R3-004 (композиция, она же B-038); эти три — отдельной записью честно помечены `@spec/done` «specified, not built».
 - **verdict** — PENDING
 

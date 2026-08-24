@@ -182,8 +182,8 @@ flow's identity tuple, decomposed in one place and spelled out in the other.
 `group`, so the pair is the qualified form; the flow's prohibition is on storing a
 name that *cannot* be resolved to a group. Say which reading you applied.
 
-The host's own contract is `spec/modules/vibe-registry/PROP-008-qualified-naming.md`,
-and `spec/boot/90-user.md`'s `##REGISTRY-VIBESPECS` records the repo-naming
+The host's own contract is `spec/modules/vibe-registry/PROP-008-qualified-naming.xml`,
+and `spec/boot/90-user.xml`'s `##REGISTRY-VIBESPECS` records the repo-naming
 convention in force (`NamingConvention::Fqdn`, `org.vibevm_wal`, default since
 M1.19) with the legacy `flow-*` repos archived read-only. Both are durable
 citation targets. The collision-vs-conflict distinction, the rename-is-a-new-identity
@@ -255,7 +255,7 @@ tool-design-lessons (215)
   78  …/spec/flows/tool-design-lessons/self-updating-tools.md
 ```
 
-`self-updating-tools.md` at 78 anchors is the single densest file left in the
-phase, and `MANAGED-BLOCKS-PROTOCOL.md` at 74 is second. Both are one slice each.
+`self-updating-tools.xml` at 78 anchors is the single densest file left in the
+phase, and `MANAGED-BLOCKS-PROTOCOL.xml` at 74 is second. Both are one slice each.
 
 **Scope:** §3.1 sources 1, 2 and 3 for the three flows of batch W7.

@@ -243,10 +243,10 @@ sentence.
 
 **What the measurement shows:**
 
-**(1) `00-MANIFESTO.md#status-line` does not mention GUIDE-SPEC-AUTHORING at all.**
+**(1) `00-MANIFESTO.xml#status-line` does not mention GUIDE-SPEC-AUTHORING at all.**
 
 ```console
-$ sed -n '5p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md
+$ sed -n '5p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml
 ##status-line **Discipline v0.2 · status: BETA · supersedes DISCIPLINE-CHARTER-v0.1** @impl/done
 ```
 
@@ -322,13 +322,13 @@ $ sed -n '98,113p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/co
 `SpecUnitStatus { Disputed, Planned }` is the wire type
 (`crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138-144`); `ratified`
 is the default and therefore absent by design, and `retired` is a tombstone
-comment, specified at `PROP-014-specmap-bidirectional-traceability.md:80`
+comment, specified at `PROP-014-specmap-bidirectional-traceability.xml:80`
 (`##HEADING-ANCHOR-GRAMMAR-AND-IMMUTABILITY`, *«retiring a unit tombstones the
 anchor (`<!-- RETIRED: superseded by #new-anchor -->`)»*). The kind line itself
-is practised in the host's live specs — `spec/common/PROP-018-agentic-standalone-modes.md:115`,
-`:139`, `spec/common/PROP-019-version-manager.md:83`,
-`spec/modules/vibe-mcp/PROP-015-mcp-integration.md:125`,
-`spec/modules/vibe-resolver/PROP-003-dep-evolution.md:454` — and the module that
+is practised in the host's live specs — `spec/common/PROP-018-agentic-standalone-modes.xml:115`,
+`:139`, `spec/common/PROP-019-version-manager.xml:83`,
+`spec/modules/vibe-mcp/PROP-015-mcp-integration.xml:125`,
+`spec/modules/vibe-resolver/PROP-003-dep-evolution.xml:454` — and the module that
 parses it opens with a doc comment citing the amended document by name
 (`mdspec.rs:4-9`).
 
@@ -339,7 +339,7 @@ amendment's content is in the code.
 **`refs/**`, reported separately:** `grep -rn 'GUIDE-SPEC-AUTHORING' refs/` returns
 **2** hits, both inside one third-party transcript (`refs/ts/talk.json:31`, `:171`)
 which happens to discuss this very supersession — *«GUIDE-SPEC-AUTHORING-v0.1.md →
-заменён 01-PATTERN-CARD-FORMAT.md»*. It is study corpus, not an artefact of ours,
+заменён 01-PATTERN-CARD-FORMAT.xml»*. It is study corpus, not an artefact of ours,
 and is **not** counted in the evidence above; it is reported because it
 independently corroborates the disposition the terraform plan recorded.
 
@@ -348,10 +348,10 @@ written.
 
 *One thing the boss may want to route separately, and it is not this
 obligation's:* `##UNIT-STATUSES-ARE-KIND-LINE-GRAMMAR`
-(`BROWNFIELD-PROTOCOL-v0.1.md:94`) says *«see GUIDE-SPEC-AUTHORING amendment»* —
+(`BROWNFIELD-PROTOCOL-v0.1.xml:94`) says *«see GUIDE-SPEC-AUTHORING amendment»* —
 a **pointer** to a document that no longer resolves. That is a `relocation`-shaped
 defect in a different anchor, not in any of the three here, and the honest repair
-is re-pointing it at `01-PATTERN-CARD-FORMAT.md`. It is noted, not acted on.
+is re-pointing it at `01-PATTERN-CARD-FORMAT.xml`. It is noted, not acted on.
 
 **Re-read under the ruling:** outcome unchanged, **evidence re-grounded** under
 point 5. The `legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md` rows at `:23` and
@@ -454,9 +454,9 @@ sharpest, quoted:
 - `PROP-014-…md:242` — *«**Specified, not built — all three clauses.** (a)
   Nothing is signed: no signing or verification path exists in `vibe-publish`,
   `vibe-registry` …»*
-- `LEDGER-INTENT-v0.1.md:78` — *«**Specified, not built:** this query kind has
+- `LEDGER-INTENT-v0.1.xml:78` — *«**Specified, not built:** this query kind has
   never been run.»*
-- `BROWNFIELD-PROTOCOL-v0.1.md:132` — *«**Specified, not built:** nothing detects
+- `BROWNFIELD-PROTOCOL-v0.1.xml:132` — *«**Specified, not built:** nothing detects
   a flatline and nothing activates a quota»*
 
 **These annotations are this campaign's own Phase B/C markup**, which makes the
@@ -494,7 +494,7 @@ is worth the owner's read.
 
 **Proposed correction (NOT APPLIED):**
 
-*For `CONTRADICTION-MAP.md:11` — replace:*
+*For `CONTRADICTION-MAP.xml:11` — replace:*
 
 ```
 ##ENTRY-CARRIES-FOUR-PARTS *Each entry: the conflict, the evidence on each side, the resolution, and which discipline decision it drove.* @impl/done
@@ -658,7 +658,7 @@ $ sed -n '81,84p' terraform/REPORT.md
 
 §3.6(c) is explicit that a **marked** exception is not drift, and wave 6 applied
 that ruling to a CI clause in another package already
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:3488`). This is the
+(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3488`). This is the
 same shape, and the marking is seven weeks older than the verdict.
 
 **`refs/**`, reported separately:** `grep -rl 'conflicts_with' refs/` returns
@@ -668,7 +668,7 @@ unrelated sense of the identifier. Not an instance of ours and not counted above
 Recorded because a bare hit count here would look like a finding and is not.
 
 **Proposed correction (NOT APPLIED):** for `##EDGE-MODEL-EDGES` only. Replace the
-amendment sentence at `PROP-014-specmap-bidirectional-traceability.md:199` —
+amendment sentence at `PROP-014-specmap-bidirectional-traceability.xml:199` —
 
 ```
 *(Brownfield amendment:)* spec units additionally carry a lifecycle status (`ratified` | `planned` | `disputed` | `retired`), and a spec↔spec edge `conflicts_with` records detected contradictions; edges into `disputed` units are frozen — exempt from suspect-clearing — until adjudication. Coverage math reports `planned` scope separately and never penalizes it.
@@ -755,7 +755,7 @@ and it does not.
 
 **What the measurement shows, per anchor:**
 
-**`##ENTRY-CARRIES-ITS-PROVENANCE-FIELDS`** (`LEDGER-INTENT-v0.1.md:61`) — *«Each
+**`##ENTRY-CARRIES-ITS-PROVENANCE-FIELDS`** (`LEDGER-INTENT-v0.1.xml:61`) — *«Each
 entry carries `{producer, model_id?, prompt_rev?, inputs (hashes + spec URIs ~r),
 epoch, cost, created_at, confidence}`»*. There is no entry type. The store writes
 the render itself:
@@ -949,7 +949,7 @@ searching where it structurally cannot be.
 
 ### The two that are FALSE
 
-**`##DETERMINISM-TESTED-BY-RUN-TWICE-DIFF`** (`ENGINE-CONFORM-v0.1.md:96`) —
+**`##DETERMINISM-TESTED-BY-RUN-TWICE-DIFF`** (`ENGINE-CONFORM-v0.1.xml:96`) —
 *«Tested the way vibevm tests its resolver and codegen: run twice, diff.»* The
 verdict: *«the crate carries 30 tests and none of them runs anything twice: grep
 for twice / double-run / same_inputs over the crate returns 0. The claim that it
@@ -1250,7 +1250,7 @@ finding it reports (`#[allow(clippy::…)]` plus `eslint` as a floor step name a
 
 **What the measurement shows:**
 
-**`##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS`** (`ENGINE-CONFORM-v0.1.md:63`) —
+**`##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS`** (`ENGINE-CONFORM-v0.1.xml:63`) —
 *«clippy, eslint, ruff, clang-tidy run as-is; their output is ingested as facts
 via **SARIF**.»* Two clauses, and they are in opposite states — which the
 verdict's summary («the direction of the claim is the opposite of the direction
@@ -1299,7 +1299,7 @@ $ sed -n '20p' terraform/REPORT.md
 by its own admission:*
 
 ```console
-$ grep -ci 'specified, not built' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md
+$ grep -ci 'specified, not built' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml
 8
 ```
 

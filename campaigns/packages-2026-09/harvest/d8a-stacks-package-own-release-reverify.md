@@ -109,13 +109,13 @@ $ grep -n "GUIDE-AI-NATIVE\|cards/INDEX.md" \
     packages/org.vibevm.ai-native/{go-ai-native-lang/v0.1.0,rust-ai-native-lang/v0.7.0,typescript-ai-native-lang/v0.6.0}/spec/boot/20-stack-*.md
 ```
 
-- go `20-stack-go-ai-native-lang.md:5-6` —
+- go `20-stack-go-ai-native-lang.xml:5-6` —
   «@fact:GO-CODE-FOLLOWS-THE-GO-GUIDE Go code in this project follows the AI-Native Go guide
   (`go/GUIDE-AI-NATIVE-GO.md` **in this package**). @status:impl/done»
 - go `:12-13` — «@fact:CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` **in this package** (trigger → card; …). @status:impl/done»
-- rust `20-stack-rust-ai-native-lang.md:5-6` — «@fact:RUST-CODE-FOLLOWS-THE-RUST-GUIDE … (`rust/GUIDE-AI-NATIVE-RUST.md` **in this package**). @status:impl/done»
+- rust `20-stack-rust-ai-native-lang.xml:5-6` — «@fact:RUST-CODE-FOLLOWS-THE-RUST-GUIDE … (`rust/GUIDE-AI-NATIVE-RUST.md` **in this package**). @status:impl/done»
 - rust `:12-13` — «@fact:CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` **in this package** …»
-- typescript `20-stack-typescript-ai-native-lang.md:5-7` — «@fact:TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE … (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` **in this package**). @status:impl/done»
+- typescript `20-stack-typescript-ai-native-lang.xml:5-7` — «@fact:TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE … (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` **in this package**). @status:impl/done»
 - typescript `:13-14` — «@fact:CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` **in this package** …»
 
 All six are unchanged from the text the verdict quotes. **The original reason is
@@ -128,14 +128,14 @@ tested by existence, in the package lane and in the installed lane:
 
 ```
 $ find packages/org.vibevm.ai-native -name "GUIDE-AI-NATIVE-*.md" -not -path "*/target/*"
-packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md
+packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml
+packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
+packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml
 
 $ find packages/org.vibevm.ai-native -name "INDEX.md" -path "*cards*" -not -path "*/target/*"
-packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md
+packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.xml
+packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.xml
+packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.xml
 ```
 
 The six bare addresses, tested as literal paths from each package's root:
@@ -149,7 +149,7 @@ MISSING packages/…/typescript-ai-native-lang/v0.6.0/typescript/GUIDE-AI-NATIVE
 MISSING packages/…/typescript-ai-native-lang/v0.6.0/cards/INDEX.md
 ```
 
-Each package root holds `Cargo.lock Cargo.toml LICENSE.md README.md crates spec
+Each package root holds `Cargo.lock Cargo.toml LICENSE.xml README.md crates spec
 specmap.toml vibe.toml` (+`tools` for go and typescript, `target` for all three)
 — **no `rust/`, no `go/`, no `typescript/`, no `cards/`.**
 
@@ -188,7 +188,7 @@ fractality/…/INDEX.md:21:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/sp
 
 (`research/go-demo` has no `spec/boot/INDEX.md` at all, which is exactly §3.8's
 picture of the Go stack and is recorded, not used.) The snippet body is **not**
-inlined into `spec/boot/STATIC.md` —
+inlined into `spec/boot/STATIC.xml` —
 `grep -rn "GUIDE-AI-NATIVE\|cards/INDEX.md" spec/boot/` returns **no output** —
 so the reader really is reading the file in the slot. From that slot root:
 
@@ -274,11 +274,11 @@ returns nothing:
    `harvest/d1-go-ai-native-lang-repairs.md:942`, and still unrecorded.
 2. **`core-ai-native`'s own boot snippet** —
    `packages/…/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md:9-18,38`
-   says «The language-neutral corpus lives **in this package**: … (`00-MANIFESTO.md`,
-   `01-PATTERN-CARD-FORMAT.md`, `02-EXECUTABLE-SCAFFOLDS.md`) … the mechanism specs
+   says «The language-neutral corpus lives **in this package**: … (`00-MANIFESTO.xml`,
+   `01-PATTERN-CARD-FORMAT.xml`, `02-EXECUTABLE-SCAFFOLDS.xml`) … the mechanism specs
    under `mechanisms/` … and `appendix/`» and «Card registry: the active language
    stack's `cards/INDEX.md`». Every one of those lives under `spec/`
-   (`ls packages/…/core-ai-native/v0.8.0/spec/` → `00-MANIFESTO.md …
+   (`ls packages/…/core-ai-native/v0.8.0/spec/` → `00-MANIFESTO.xml …
    appendix boot legacy-projections mechanisms`). **Zero of that file's anchors
    appear in any obligation.** If F-153's six are repaired and these are not, the
    fix ships into a boot lane that still carries the same broken form one entry
@@ -362,7 +362,7 @@ of the aggregator's own tree and its own manifest:
 
 ```
 $ ls -a packages/org.vibevm.ai-native/go-ai-native/v0.1.0/
-.  ..  LICENSE.md  README.md  vibe.toml
+.  ..  LICENSE.xml  README.md  vibe.toml
 $ grep -c "boot_snippet\|\[\[binary\]\]" packages/org.vibevm.ai-native/go-ai-native/v0.1.0/vibe.toml
 0
 ```
@@ -382,7 +382,7 @@ in `## Running the tools` (`:55-63`) and in `## The lifecycle` (`:80`),
 `/rust-ai-native-sweep` (`:81`). Its second target resolves too
 (`spec/rust/GUIDE-AI-NATIVE-RUST.md`, 
 [F-153 above](#f-153--the-boot-snippets-bare-lang-and-cards-resolve-in-no-lane-in-any-of-the-three-stacks)).
-Aggregator tree identical: `LICENSE.md README.md vibe.toml`.
+Aggregator tree identical: `LICENSE.xml README.md vibe.toml`.
 
 ### The surviving anchor, and the absence measured properly
 
@@ -418,7 +418,7 @@ $ git log --oneline --all -- "packages/org.vibevm.ai-native/typescript-ai-native
 
 Nor does it appear in the installed lane:
 `ls vibedeps/stack-typescript-ai-native-lang/0.6.0/` → `Cargo.lock Cargo.toml
-LICENSE.md crates spec tools vibe.toml`. The same absence was hit independently
+LICENSE.xml crates spec tools vibe.toml`. The same absence was hit independently
 by [D7d's F-279 entry](d7d-stacks-sync-reverify.md) from the other direction.
 
 **And a pointer with no other reader.** The only live sentences naming a `-lang`
@@ -492,13 +492,13 @@ $ grep -oE "##FINDING-[A-Z0-9]+-[0-9]+" …/core-ai-native/v0.8.0/spec/appendix/
     | sed 's/-[0-9]*$//' | sort | uniq -c
      16 ##FINDING-BLD    23 ##FINDING-DR1    24 ##FINDING-DR2
       9 ##FINDING-R2C    15 ##FINDING-R3
-$ grep -c "##FINDING-" …/ATLAS.md
+$ grep -c "##FINDING-" …/ATLAS.xml
 87
 ```
 
 **16+23+24+9+15 = 87. The verdict's first clause is exactly right**, and the
 ATLAS's own header agrees: «Total records: 98 · unique (non-duplicate): **87**»
-(`ATLAS.md:7`). There is no `##FINDING-H4` anchor; the card never claimed there
+(`ATLAS.xml:7`). There is no `##FINDING-H4` anchor; the card never claimed there
 was one.
 
 ### The half that is false, and it is the verdict's whole basis
@@ -508,13 +508,13 @@ roster exists anywhere». **The ATLAS files four records under H4, in its own
 record schema:**
 
 ```
-$ grep -oE "(refines|contradicts):H[0-9]" …/ATLAS.md | sort | uniq -c
+$ grep -oE "(refines|contradicts):H[0-9]" …/ATLAS.xml | sort | uniq -c
       1 contradicts:H1    1 contradicts:H3    3 contradicts:H5
       1 refines:H1        8 refines:H2        5 refines:H3
       4 refines:H4        5 refines:H5        4 refines:H6
    (32 references in total)
 
-$ grep -nB1 "refines:H4" …/ATLAS.md | grep "##FINDING"
+$ grep -nB1 "refines:H4" …/ATLAS.xml | grep "##FINDING"
 53:- ##FINDING-DR2-021 **DR2-021** — Misleading identifiers survive even deobfuscation; poison persists
 61:- ##FINDING-DR1-017 **DR1-017** — Comments help LLM comprehension but indiscriminate comments add noise
 67:- ##FINDING-DR2-002 **DR2-002** — Incorrect docs hurt; missing docs don't (Macke & Doyle)
@@ -539,7 +539,7 @@ string*. The verdict searched for an **anchor** (`##FINDING-H4`) and read its
 absence as the absence of the register. The H-series does not live as an anchor;
 it lives as the ledger's **axis field**, which is why it appears 32 times and
 never once as a heading. The corpus's own prose uses exactly the phrasing this
-measurement produces: `CONTRADICTION-MAP.md:46` says «**The ATLAS files four
+measurement produces: `CONTRADICTION-MAP.xml:46` says «**The ATLAS files four
 records under H6**» — the same construction, for a sibling id, inside the package
 the verdict searched.
 
@@ -566,7 +566,7 @@ copies are correct as written.**
 
 **The H-roster is cited 32 times in the ATLAS, 5 times in the CONTRADICTION-MAP
 and 12 times across the three stacks' live documents — and no document states
-what H1–H6 each assert.** H1 and H5 are glossed only inside `CONTRADICTION-MAP.md`
+what H1–H6 each assert.** H1 and H5 are glossed only inside `CONTRADICTION-MAP.xml`
 C-1's heading and sides; H6 only inside `##C-7-OPEN-H6-UNIFORMITY`; H2, H3 and H4
 have no gloss outside the sentences that cite them.
 
@@ -621,7 +621,7 @@ ts   :33  … + R2C-006 (edit size drives failure) + DL1-015 (constraints lift w
 
 $ grep -c "DL1-" …/core-ai-native/v0.8.0/spec/appendix/ATLAS.md
 0
-$ sed -n '180,181p' …/ATLAS.md
+$ sed -n '180,181p' …/ATLAS.xml
 - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones
   _benchmark · med · refines:H3_ — … 'added value of constrained decoding increases as the model gets smaller.' …
 ```
@@ -630,31 +630,31 @@ The Go card writes **`DR1-015`**; Rust and TypeScript write **`DL1-015`**; the
 ATLAS carries `DR1-015` and no `DL1-` prefix at all; and the gloss the three cards
 share — «constraints lift weak models» — is `DR1-015`'s title almost verbatim.
 **One letter, and the third stack is the proof of what was meant.** The Go card's
-Evidence line is judged `confirmed`, its evidence list citing `ATLAS.md:181`
+Evidence line is judged `confirmed`, its evidence list citing `ATLAS.xml:181`
 directly — so the family already contains a resolved copy of this exact citation.
 
 **The TypeScript twin carries the same typo and is judged `confirmed`**
-(`typescript-…/scaffold-i-codemods.md:33`, `"v": "confirmed"`, evidence «located
+(`typescript-…/scaffold-i-codemods.xml:33`, `"v": "confirmed"`, evidence «located
 in the perimeter on the refs above» — with no ref above resolving `DL1-015`). It
 carries **no obligation**, so it cannot be re-judged against a change to the Rust
 card; the family would ship one repaired card and one identical broken one.
 
 **Proposed correction (NOT APPLIED):**
 
-- go `scaffold-g-doctests.md:33` → **none. Do not edit.**
-- rust `scaffold-g-doctests.md:33` → **none. Do not edit.**
-- rust `scaffold-i-codemods.md:33` → `DL1-015` → `DR1-015`, one letter, nothing
+- go `scaffold-g-doctests.xml:33` → **none. Do not edit.**
+- rust `scaffold-g-doctests.xml:33` → **none. Do not edit.**
+- rust `scaffold-i-codemods.xml:33` → `DL1-015` → `DR1-015`, one letter, nothing
   else in the line moves, marker stays `@spec/done`. **The TypeScript copy takes
   the identical fix and needs a re-judgement first.**
 
 **Corrected reason for the surviving anchor** (the obligation's headline reason
 must not travel with this diff):
 
-> `scaffold-i-codemods.md:33` cites `DL1-015`; the ATLAS carries no `DL1-` prefix
+> `scaffold-i-codemods.xml:33` cites `DL1-015`; the ATLAS carries no `DL1-` prefix
 > at all and the record whose title the card glosses is `DR1-015`
-> («Constrained decoding helps weak models most», `ATLAS.md:180-181`). The Go
+> («Constrained decoding helps weak models most», `ATLAS.xml:180-181`). The Go
 > copy of the same card already writes `DR1-015` and is `confirmed` against
-> `ATLAS.md:181`, so the intended referent is not in doubt. The TypeScript copy
+> `ATLAS.xml:181`, so the intended referent is not in doubt. The TypeScript copy
 > carries the same typo.
 
 **New obligation the boss should open** (not this batch's to write): **the
@@ -811,7 +811,7 @@ card that says the command exists.
 
 **The decisive corroboration is host-side and legitimate for Rust under §3.8 —
 this repository's own spec had to disclaim the sentence.**
-`spec/common/PROP-031-algorithmic-refactoring.md:21-22`:
+`spec/common/PROP-031-algorithmic-refactoring.xml:21-22`:
 
 ```
 - ##BEACHHEAD-SCAFFOLD-I The beachhead exists. The AI-Native discipline already ships
@@ -995,7 +995,7 @@ same restatement debt F-212's note anticipates, one obligation early.
 
 ### Reading further — the document's own evolution rule makes the defect asymmetric
 
-`##PARITY-ADDITIVE-ONLY-EVOLUTION` (`TCG-PROTOCOL-GO-v0.1.md:32-36`, and the same
+`##PARITY-ADDITIVE-ONLY-EVOLUTION` (`TCG-PROTOCOL-GO-v0.1.xml:32-36`, and the same
 clause in the Rust document's §1) states the contract's own change rule:
 
 > additive-only evolution within a proto (new optional params, **new response
@@ -1054,7 +1054,7 @@ demotion.
 **Route (a), build:** add the three fields to `init_result` in each relay and
 document `position_encoding` / `pull_diagnostics` — additive on both sides, no
 proto bump, and it makes all three stacks answer `init` the same way, which
-`##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` (`TCG-PROTOCOL-GO-v0.1.md:37-39`)
+`##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS` (`TCG-PROTOCOL-GO-v0.1.xml:37-39`)
 already assumes.
 
 **Route (b), demote the document to what ships** — go `:57-58`:
@@ -1072,7 +1072,7 @@ names differ in every position but `root_files`/`position_encoding`/`pull_diagno
 
 **Corrected reason for the Rust anchor:**
 
-> `TCG-PROTOCOL-RUST-v0.1.md:69` prints `init {root}` →
+> `TCG-PROTOCOL-RUST-v0.1.xml:69` prints `init {root}` →
 > `{ra_version, ra_path, toolchain, root_files, quiescent}`. The shipped op
 > ignores `params` entirely — the root is `run_serve`'s own canonicalized process
 > root (`serve.rs:215-218`, used at `:284`) — and `init_result` (`serve.rs:76-86`)
@@ -1224,9 +1224,9 @@ is STANDS-RESTATED rather than STANDS.
 
 ### Two more live sentences carry the same wrong name — one of them `confirmed`
 
-`##SWEEP-FLIP-ONLY-AFTER-DRAIN` (`GUIDE-AI-NATIVE-GO.md:626`, «a package enters
+`##SWEEP-FLIP-ONLY-AFTER-DRAIN` (`GUIDE-AI-NATIVE-GO.xml:626`, «a package enters
 `gated_packages` only at zero findings») is judged **`confirmed`**, and its
-evidence list *cites this very anchor* and `conform-frontend-go.md:110` as
+evidence list *cites this very anchor* and `conform-frontend-go.xml:110` as
 support:
 
 ```
@@ -1261,7 +1261,7 @@ longer says what it cited.
   ```
 
   and the same `gated_packages` → `gated_crates` fix is owed to
-  `GUIDE-AI-NATIVE-GO.md:626` and `conform-frontend-go.md:110`, which are **not in
+  `GUIDE-AI-NATIVE-GO.xml:626` and `conform-frontend-go.xml:110`, which are **not in
   this obligation** and need a re-judgement of the GUIDE's `confirmed` verdict
   first.
 
@@ -1325,11 +1325,11 @@ copy is wrong, or the reverse:
 | obligation | anchor | recommendation |
 |---|---|---|
 | **F-153** relocation | `go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#GO-CODE-FOLLOWS-THE-GO-GUIDE` | **STANDS** |
-| | `…/go-ai-native-lang/…/20-stack-go-ai-native-lang.md#CARD-REGISTRY-FOR-GO` | **STANDS** |
+| | `…/go-ai-native-lang/…/20-stack-go-ai-native-lang.xml#CARD-REGISTRY-FOR-GO` | **STANDS** |
 | | `rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#RUST-CODE-FOLLOWS-THE-RUST-GUIDE` | **STANDS** |
-| | `…/rust-ai-native-lang/…/20-stack-rust-ai-native-lang.md#CARD-REGISTRY-FOR-RUST` | **STANDS** |
+| | `…/rust-ai-native-lang/…/20-stack-rust-ai-native-lang.xml#CARD-REGISTRY-FOR-RUST` | **STANDS** |
 | | `typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE` | **STANDS** |
-| | `…/typescript-ai-native-lang/…/20-stack-typescript-ai-native-lang.md#CARD-REGISTRY-FOR-TYPESCRIPT` | **STANDS** |
+| | `…/typescript-ai-native-lang/…/20-stack-typescript-ai-native-lang.xml#CARD-REGISTRY-FOR-TYPESCRIPT` | **STANDS** |
 | **F-115** reality-mismatch | `go-ai-native/v0.1.0/README.md#AGG-FRONT-DOOR` | **FALLS** — the Go `-lang` README exists (8060 B) and is cited by the verdict's own ev[1] |
 | | `rust-ai-native/v0.7.0/README.md#AGG-FRONT-DOOR` | **FALLS** — both cited targets exist; verdict's own ev[1] and ev[2] |
 | | `typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR` | **STANDS** — reason restated; the closure is a **build** (write the README), not an edit |
@@ -1352,7 +1352,7 @@ copy is wrong, or the reverse:
    Owner: `core-ai-native/v0.8.0/spec/appendix/`. This is F-186's *real* defect
    and it is not the two cards'.
 2. **`##STACK-SHIPS-ITS-OWN-CARDS-PROJECTION` in all three boot snippets** and
-   **`core-ai-native`'s own boot snippet** (`10-flow-core-ai-native.md:9-18,38`)
+   **`core-ai-native`'s own boot snippet** (`10-flow-core-ai-native.xml:9-18,38`)
    carry F-153's exact defect and carry **no verdict**.
 3. **Five inconsistently-judged siblings**, tabled above — each needs a
    re-judgement in the same pass as its twin's diff, or the family ships two
@@ -1360,7 +1360,7 @@ copy is wrong, or the reverse:
 4. **`typescript-ai-native-lang/v0.6.0` is the only one of the repository's 42
    shipped package versions with no `README.md`**, and the file has never existed
    in git history.
-5. **`spec/common/PROP-031-algorithmic-refactoring.md:21` rests a host PROP's
+5. **`spec/common/PROP-031-algorithmic-refactoring.xml:21` rests a host PROP's
    «the beachhead exists» on the card's `rename-seam` command**, then corrects
    itself one line down (`##BEACHHEAD-LIMITS`). The card's repair and the PROP's
    citation should move together.

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Progress Control — руководство владельца</title>
+  <status stage="doc" state="done" action="drift" audience="dev" comment="владельческий гайд; жанр — guide, не контракт; fact grain 2026-07-24; S1 предшествует fact-поправке PROP-043 S3.8 items 4-6 — нет элементов списков, ячеек, ##-якорей (F-020)"/>
+  <facts ordered="false">
+    <guide-purpose fact="true" status="doc/done">Этот документ — для человека. Контракт системы — [PROP-043](../vibe-facts/PROP-043-facts-markup.xml) (грамматика) и [PROP-047](PROP-047-progress-campaigns.xml) (инструмент и кампании);
+  план кампании — [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](../../terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml).</guide-purpose>
+    <guide-scope fact="true" status="doc/done">Здесь — как этим пользоваться, что смотреть и какие решения ждут лично вас.</guide-scope>
+    <guide-language fact="true" status="doc/done">Язык — русский, потому что аудитория этого файла — владелец проекта.</guide-language>
+  </facts>
+  <section title="1. Как читать маркеры в спеках">
+    <p><marker-reading fact="true" status="doc/done">Маркер — XML-тег в тексте. Читается как «стадия/состояние [+ что делать]»:</marker-reading></p>
+    <fence>&lt;status stage="impl" state="work"/&gt;</fence>
+    <p><shorthand-examples fact="true" status="doc/done">— «реализация в процессе». То же самое сокращённо: `@impl` (state=work
+подразумевается). `@test/plan` — «тестирование запланировано».</shorthand-examples></p>
+    <p><vocab-lead fact="true" status="doc/done">Полный словарик:</vocab-lead></p>
+    <table>
+      <tr>
+        <td>stage</td>
+        <td>значит</td>
+      </tr>
+      <tr>
+        <td><ST-IDEA fact="true" status="doc/done">`idea`</ST-IDEA></td>
+        <td><fact status="doc/done">идея, ещё не специфицирована</fact></td>
+      </tr>
+      <tr>
+        <td><ST-SPEC fact="true" status="doc/done">`spec`</ST-SPEC></td>
+        <td><fact status="doc/done">пишем/написали спеку</fact></td>
+      </tr>
+      <tr>
+        <td><ST-IMPL fact="true" status="doc/done">`impl`</ST-IMPL></td>
+        <td><fact status="doc/done">реализуем/реализовано</fact></td>
+      </tr>
+      <tr>
+        <td><ST-TEST fact="true" status="doc/done">`test`</ST-TEST></td>
+        <td><fact status="doc/done">тестируем/протестировано</fact></td>
+      </tr>
+      <tr>
+        <td><ST-DOC fact="true" status="doc/done">`doc`</ST-DOC></td>
+        <td><fact status="doc/done">документируем/задокументировано</fact></td>
+      </tr>
+      <tr>
+        <td><ST-FREEZE fact="true" status="doc/done">`freeze`</ST-FREEZE></td>
+        <td><fact status="doc/done">замораживаем (plan → work → done = заморожено; разморозка = смена маркера назад)</fact></td>
+      </tr>
+      <tr>
+        <td><ST-UNKNOWN fact="true" status="doc/done">`unknown`</ST-UNKNOWN></td>
+        <td><fact status="doc/done">«смотрел и не понял» — явный запрос на триаж</fact></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td>state</td>
+        <td>значит</td>
+      </tr>
+      <tr>
+        <td><SS-PLAN fact="true" status="doc/done">`plan`</SS-PLAN></td>
+        <td><fact status="doc/done">собираемся</fact></td>
+      </tr>
+      <tr>
+        <td><SS-WORK fact="true" status="doc/done">`work`</SS-WORK></td>
+        <td><fact status="doc/done">делаем</fact></td>
+      </tr>
+      <tr>
+        <td><SS-DONE fact="true" status="doc/done">`done`</SS-DONE></td>
+        <td><fact status="doc/done">сделали (для этой стадии)</fact></td>
+      </tr>
+      <tr>
+        <td><SS-HOLD fact="true" status="doc/done">`hold`</SS-HOLD></td>
+        <td><fact status="doc/done">сознательно отложено</fact></td>
+      </tr>
+    </table>
+    <p><optional-fields-lead fact="true" status="doc/done">Необязательные поля:</optional-fields-lead></p>
+    <facts ordered="false">
+      <FIELD-ACTION fact="true" status="doc/done">`action` — вердикт «что делать»
+  (`continue` — доделать; `drift` — разъехалось с реальностью, свести;
+  `rework` — переделать; `remove` — убрать);</FIELD-ACTION>
+      <FIELD-ACTIONSTAGE fact="true" status="doc/done">`actionstage` — на какую стадию
+  действует action (`remove`+`actionstage="doc"` = «удалить документацию»);</FIELD-ACTIONSTAGE>
+      <FIELD-AUDIENCE fact="true" status="doc/done">`audience` — для кого это документировать (`user` — пользователь vibevm,
+  `author` — автор пакетов, `dev` — мы сами);</FIELD-AUDIENCE>
+      <FIELD-COMMENT-REF fact="true" status="doc/done">`comment`, `ref` (ссылка на
+  задачу DRIFT-NNN или spec://-анкер).</FIELD-COMMENT-REF>
+    </facts>
+    <p><placement-lead fact="true" status="doc/done">Куда можно ставить маркер — шесть гранулярностей (PROP-043 §3.8):</placement-lead></p>
+    <facts ordered="false">
+      <PLACE-DOCUMENT fact="true" status="doc/done">в преамбуле, до первого заголовка (весь документ). В файле без
+  преамбулы — а это стандартная форма в этом репозитории — маркер сразу после первого
+  заголовка и есть документный;</PLACE-DOCUMENT>
+      <PLACE-SECTION fact="true" status="doc/done">отдельной строкой сразу после заголовка (секция) — кроме первого
+  заголовка файла без преамбулы: там эта позиция занята документным маркером;</PLACE-SECTION>
+      <PLACE-PARAGRAPH fact="true" status="doc/done">первым или последним токеном внутри абзаца (абзац);</PLACE-PARAGRAPH>
+      <PLACE-LIST-ITEM fact="true" status="doc/done">последним токеном внутри элемента списка (элемент списка);</PLACE-LIST-ITEM>
+      <PLACE-TABLE-CELL fact="true" status="doc/done">внутри ячейки таблицы (ячейка);</PLACE-TABLE-CELL>
+      <PLACE-FRAGMENT fact="true" status="doc/done">парным тегом вокруг текста (фрагмент).</PLACE-FRAGMENT>
+      <PLACE-FACT-ANCHOR fact="true" status="doc/done">Любая из этих единиц может нести якорь факта `@fact:&lt;ID&gt;` в начале —
+  тогда она адресуема по `spec://…#&lt;ID&gt;`. Прежнее написание `##&lt;ID&gt;` значит ровно то
+  же и по-прежнему читается, но пишется теперь первое. Закон anchored-when-marked:
+  размеченный факт обязан быть заякорен;</PLACE-FACT-ANCHOR>
+      <STANDALONE-ERROR fact="true" status="doc/done">Одинокий маркер между
+  абзацами — ошибка, инструмент его отвергнет.</STANDALONE-ERROR>
+    </facts>
+  </section>
+  <section title="2. Ежедневные команды">
+    <p><DAILY-COMMANDS fact="true" status="doc/done">Команды ниже — **утверждение о том, что умеет
+инструмент сегодня**, а не пример: забор входит в тело этого факта, поэтому
+любая правка внутри него приводит факт к пересуду. Первая строка когда-то
+утверждала обратное тому, что есть на самом деле, и прожила так долго именно
+потому, что забор нельзя было осудить.</DAILY-COMMANDS></p>
+    <fence lang="bash" fact="DAILY-COMMANDS">vibe progress check --exhaustive   # валидация разметки; С 2026-08-06 стоит и в гейт-панели
+vibe progress report --md      # статус дерева таблицей
+vibe progress report --md --view todo        # что доделать
+vibe progress report --md --view qa          # что тестировать
+vibe progress report --md --view remove      # что удалить
+vibe progress report --md --view doc --audience user   # оглавление user-доки
+vibe progress weave --digest   # карта всего корпуса, влезает в контекст LLM</fence>
+    <facts ordered="false">
+      <HYGIENE-RULE fact="true" status="doc/done">Правило гигиены между кампаниями (одно): **правите юнит спеки — обновите его
+  маркер в том же коммите.**</HYGIENE-RULE>
+      <tool-guards fact="true" status="doc/done">Всё остальное караулит инструмент.</tool-guards>
+    </facts>
+  </section>
+  <section title="3. Кампания: запуск, наблюдение, ваша роль">
+    <facts ordered="false">
+      <campaign-home fact="true" status="doc/done">Кампания живёт в `campaigns/&lt;id&gt;/` (например `campaigns/progress-2026-08/`).</campaign-home>
+      <guide-side-pointer fact="true" status="doc/done">Все стадии, гейты и правила — в плане кампании; здесь — ваша сторона.</guide-side-pointer>
+    </facts>
+    <section title="3.1 Дашборд">
+      <fence lang="bash">node tools/progress-dashboard/serve.mjs    # затем открыть http://localhost:&lt;port&gt;</fence>
+      <facts ordered="false">
+        <DASH-RESUME fact="true" status="doc/done">Первый экран — Resume: что не завершено (красным), что дальше, свежесть
+  состояния (жёлтая плашка = state давно не обновлялся — загляните, жива ли
+  сессия).</DASH-RESUME>
+        <DASH-CORPUS fact="true" status="doc/done">Дальше: Корпус (дерево файлов цветом по статусу),</DASH-CORPUS>
+        <DASH-STITCHING fact="true" status="doc/done">Сшивка (график
+  открытых обязательств по волнам — линия обязана падать),</DASH-STITCHING>
+        <DASH-TASKS fact="true" status="doc/done">Задачи (чем занят
+  Opus, что застряло в review).</DASH-TASKS>
+        <DASH-READ-ONLY fact="true" status="doc/done">Дашборд read-only: он ничего не считает и
+  ничего не может испортить.</DASH-READ-ONLY>
+        <dash-terminology fact="true" status="doc/done">(Терминология: эта страница — «дашборд», не
+  «витрина»/«storefront» — те слова заняты витриной магазина vibevm.)</dash-terminology>
+      </facts>
+    </section>
+    <section title="3.2 Какие решения ждут лично вас (по стадиям кампании)">
+      <facts ordered="false">
+        <OWNER-A fact="true" status="doc/done">**A (scaffold):** ратифицировать PROP-043; подтвердить имя зоны
+  `campaigns/`; ничего больше.</OWNER-A>
+        <OWNER-B fact="true" status="doc/done">**B (разметка):** выборочно читать диффы батчей — маркеры и сплиты, смысл
+  текста меняться не должен. Сигнал тревоги: любой содержательный дифф.</OWNER-B>
+        <OWNER-C fact="true" status="doc/done">**C (верификация):** ничего решать не нужно; полезно поглядывать на
+  сводку X% confirmed / Y% drift — это первый измеренный уровень
+  актуальности ваших спеков.</OWNER-C>
+        <OWNER-D fact="true" status="doc/done">**D (сшивка):** к вам приходят только **эскалации** — пары документов, чей
+  конфликт не сходится две волны. Это концептуальные развилки: нужен ваш
+  вердикт, какая трактовка верна. Плюс все правки спек по мотивам
+  sync-from-code показываются вам ДО применения — как и всегда в этом
+  проекте.</OWNER-D>
+        <OWNER-E fact="true" status="doc/done">**E (кодирование):** приёмка спорных PR после ревью Fable; вердикты по
+  `remove`/`rework` спискам (удалять ли, отключать ли фичефлагом).</OWNER-E>
+        <OWNER-F fact="true" status="doc/done">**F (планы):** три плана (release / улучшения / идеи) приходят к вам на
+  утверждение приоритетов.</OWNER-F>
+        <OWNER-G fact="true" status="doc/done">**G (документация):** вычитка глав двух гайдов — регистр и правда. Все
+  примеры в доке уже реально исполнялись (это гарантия конвейера), ваша
+  проверка — «то ли это, что я хотел сказать людям».</OWNER-G>
+      </facts>
+    </section>
+    <section title="3.3 Если сессия оборвалась (бюджет, питание, что угодно)">
+      <p><crash-recovery fact="true" status="doc/done">Ничего не чините руками. Новая сессия (любая — Fable или Opus) начинает с:</crash-recovery></p>
+      <fence>прочитай campaigns/&lt;id&gt;/run/RESUME.md и продолжай по нему</fence>
+      <facts ordered="false">
+        <RESUME-CONTRACT fact="true" status="doc/done">RESUME.md сгенерирован журналом и говорит буквально: какой шаг не закрыт,
+  какие файлы откатить (`git restore …`), что делать следующим.</RESUME-CONTRACT>
+        <MAX-LOSS-ONE-STEP fact="true" status="doc/done">Максимальная
+  потеря при любом обрыве — один шаг (один файл разметки / один юнит
+  верификации / одна задача).</MAX-LOSS-ONE-STEP>
+      </facts>
+    </section>
+    <section title="3.4 Перезапуск через месяц (и далее регулярно)">
+      <fence lang="bash">vibe progress rescan --baseline campaigns/&lt;прошлая&gt;/baseline.json</fence>
+      <facts ordered="false">
+        <RESCAN-TRIAGE fact="true" status="doc/done">Инструмент сам разложит корпус на «новое / изменившееся (перепроверить) /
+  нетронутое (переносим вердикт)». Дальше — тот же цикл, но объёмом O(дельты):
+  дни, не месяц.</RESCAN-TRIAGE>
+        <FOUR-SURVIVORS fact="true" status="doc/done">Между кампаниями из зоны кампании хранятся только четыре вещи
+  (PROP-047 §5.4): `baseline.json` (ускоритель перепроверки), `deferrals.md` (открытые
+  хвосты), `harvest/` (сырьё для доки) и `tasks/` (корпус задач). Маркеры тоже
+  переживают кампанию, но они живут в спеках — это корпус, а не зона.</FOUR-SURVIVORS>
+        <ERASURE-SAFE fact="true" status="doc/done">Всё остальное можно
+  стирать в любой момент — знание не теряется.</ERASURE-SAFE>
+      </facts>
+    </section>
+  </section>
+  <section title="4. Аварийные случаи">
+    <facts ordered="false">
+      <EMERG-DISPUTED-MARKER fact="true" status="doc/done">**Маркер спорный / кажется неправдой** — правьте смело или ставьте
+  `unknown`: маркер — это state-слой (как WAL), а не нормативный текст;
+  ваша правка законна всегда.</EMERG-DISPUTED-MARKER>
+      <EMERG-TOOL-FALSE-POSITIVE fact="true" status="doc/done">**Инструмент ругается на легальный, по-вашему, случай** — это баг
+  инструмента или пробел PROP-047; фиксируйте как обычный баг, маркер
+  временно допустимо сопроводить `comment="check false-positive: …"`.</EMERG-TOOL-FALSE-POSITIVE>
+      <EMERG-DASHBOARD-WEIRD fact="true" status="doc/done">**Дашборд показывает странное** — он лишь проекция; истина в
+  `campaigns/&lt;id&gt;/run/state/*.json`, а выше неё — маркеры в спеках. Конфликт
+  решается перегенерацией (`vibe progress scan`), никогда правкой JSON.</EMERG-DASHBOARD-WEIRD>
+      <EMERG-ABANDON-SAFE fact="true" status="doc/done">**Хочется бросить кампанию посреди** — безопасно в любой момент: границы
+  батчей закоммичены, RESUME.md всегда говорит, где вы. Возврат через месяц
+  = п. 3.4.</EMERG-ABANDON-SAFE>
+    </facts>
+  </section>
+</spec>

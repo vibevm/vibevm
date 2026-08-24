@@ -5,12 +5,12 @@ independent projects, each with its own boot contract, WAL, and
 cold-resume file. Canon: `flow:org.vibevm.world/wal-specspaces`
 (installed; authored in `packages/org.vibevm.world/wal-specspaces/`).
 The scoped grammar and target resolution come from its boot snippet, compiled
-into the static lane `spec/boot/STATIC.md`, read at boot; this file is the registry.
+into the static lane `spec/boot/STATIC.xml`, read at boot; this file is the registry.
 
 `default:` sets what a **bare** session phrase (`RESUME SESSION` /
 `ВОССТАНОВИ СЕССИЮ` with no name) targets. `default: host` — the value
 here — means a bare phrase resumes or winds down the **host** project
-(this repository's own `spec/WAL.md` + `CONTINUE.md`), never a
+(this repository's own `spec/WAL.xml` + `CONTINUE.md`), never a
 specspace by accident. Target a specspace by naming it
 (`RESUME SESSION fractality`); an explicit name or directory always
 overrides this default.

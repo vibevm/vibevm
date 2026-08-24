@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-045: XML spec sources and materialisation targets</title>
+  <status stage="spec" state="work" comment="commissioned by the owner 2026-08-21 (mandate quoted in §1 verbatim); DRAFT skeleton authored the same sitting, ahead of the XML-MEASURE integration map — refinement points are named inline and close as the measure and the build land"/>
+  <mandate title="1. Mandate">
+    <p><MANDATE-VERBATIM fact="true" status="spec/done">The owner's mandate, verbatim (2026-08-21): «XML как
+источник спецификаций (вместо Markdown). Везде где пользователь использует
+Markdown можно использовать XML. … Можно смешивать XML и Markdown в одном
+проекте. При материализации, XML превращается либо в Markdown (с минимальной
+деградацией качества — использовать вложенные секции/заголовки, все что
+невыразимо в такой форме — не поддерживается), либо в XML рядом с Markdown,
+либо в XML. … Формат материализации — настройка пользователя. … Лоадеры
+должны корректно обрабатывать все три вида материализации: XML, Markdown,
+Mixed (XML + Markdown). … XML как целевой формат материализации должен быть
+целевым для разных видов исходников. Всё, даже Markdown, при материализации
+превращается в XML. … Markdown материализация все ещё должна поддерживаться,
+это важно. … мы целимся в то, что Mixed Input (XML + Markdown) должен
+нормально транслироваться в XML (не в mixed!), и это станет в будущем
+основным форматом материализации». Acceptance named in the same mandate: a
+small test project importing `org.vibevm.world/redbook`, exercised in all
+three materialisation modes (XML+MD→XML, XML+MD→Markdown, XML+MD→Mixed),
+all well-tested — «это большое изменение».</MANDATE-VERBATIM></p>
+    <p><FOUNDATION-ALREADY-RECORDED fact="true" status="spec/done">The direction was pre-recorded before the
+mandate: PROP-043 §8 `##PARSE-XML-GRAMMAR» holds that the markup element
+grammar is XML and that «a future XML storage frontend consumes the same
+attribute schema natively; the markup language does not change». This PROP
+builds that frontend and widens it from elements to whole documents.</FOUNDATION-ALREADY-RECORDED></p>
+  </mandate>
+  <shape title="2. The shape — one pivot, two frontends, two backends">
+    <p><PIVOT-MODEL fact="true" status="spec/work">**Decision (ADR-part).** There is ONE internal document
+model — the pivot — and every format is a frontend (parse into it) or a
+backend (emit from it). The pivot is the progress-markup semantic tree the
+tree already owns: document → nested sections (the heading hierarchy with
+anchors) → blocks (paragraph / list / table / fence / quote) → facts
+(anchored units with status and body spans), plus the `&lt;status&gt;` document
+element and fragment wrappers. Conversion between formats is always
+parse → pivot → emit; there is no direct MD↔XML text rewriting.
+Alternatives weighed: per-pair converters (N² growth, drift between pairs)
+and a lossless-CST pivot preserving all whitespace (cost without a
+consumer; the degradation law below makes semantic-level fidelity the
+contract). **Resolved by the XML-MEASURE map (2026-08-21): there is no
+single Markdown frontend to widen — FOUR independent families read
+different MD subsets today (progress-core's scanner, the vendored
+specmap engine's mdspec, the boot/tree directive readers, vibe-check's
+point scanners), with real dialect drift already between them (fence
+grammar run-matching vs prefix-toggling). The pivot is therefore a NEW
+shared crate — `vibe-specdoc` — owning the document IR and both
+frontends/backends; host consumers converge on it. The vendored specmap
+engine is engine-workspace territory (sync-engines law): its XML
+frontend is built in the AUTHORED engine workspace and写-throughs as its
+own slice (S4b), never patched in the vendored copy.*</PIVOT-MODEL></p>
+    <p><fact id="XML-DIALECT-IS-THE-MD-SUBSET" status="spec/work">**Decision (ADR-part).** The XML dialect
+is deliberately ISOMORPHIC to the Markdown-expressible structure — exactly
+the constructs the markup contract names, in XML syntax, and nothing more.
+A schema-foreign element or attribute is a loud parse error, never a
+silent skip (the same closed-vocabulary law the typed-fact grammar took).
+This is what makes the owner's degradation law hold by construction:
+XML→MD loses nothing semantic because the dialect cannot express what MD
+cannot; «всё невыразимое — не поддерживается» is enforced by the schema,
+not by a lossy converter.</fact></p>
+    <p><DIALECT-SKETCH fact="true" status="spec/work">The dialect, first cut (*построй и уточни: точные
+имена элементов/атрибутов финализируются с первым золотым корпусом*):</DIALECT-SKETCH></p>
+    <fence lang="xml">&lt;spec xmlns="https://vibevm.org/spec/1"&gt;
+  &lt;title&gt;PROP-NNN: …&lt;/title&gt;                      &lt;!-- the H1 --&gt;
+  &lt;status stage="spec" state="work" comment="…"/&gt; &lt;!-- the existing element, verbatim --&gt;
+  &lt;section id="anchor" title="2. The laws"&gt;       &lt;!-- Hn nesting = section nesting; {#x} = id --&gt;
+    &lt;p&gt;plain prose; inline Markdown conventions ride as literal text&lt;/p&gt;
+    &lt;p&gt;&lt;fact id="NAME" status="impl/done"&gt;the fact body, one unit&lt;/fact&gt;&lt;/p&gt;
+    &lt;list ordered="false"&gt;&lt;item&gt;&lt;fact id="N2" status="spec/done"&gt;…&lt;/fact&gt;&lt;/item&gt;&lt;/list&gt;
+    &lt;table&gt;&lt;tr&gt;&lt;td&gt;cells are countable units, as in MD&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+    &lt;fence lang="rust" fact="N3"&gt;code; fact= is the @fact/code binding&lt;/fence&gt;
+    &lt;quote&gt;blockquote unit&lt;/quote&gt;
+  &lt;/section&gt;
+&lt;/spec&gt;</fence>
+    <p><NAMED-SECTION-ELEMENTS fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+verbatim): «Гораздо логичней `&lt;three-bands title=\"…\"&gt;`. … Вся суть XML
+нотации в том, что у тебя названия тэгов несут названия сущностей, это
+упрощает работу нейросети».** A section serialises with its ANCHOR as the
+element name — `&lt;three-bands title="1. The three bands"&gt;` — because the
+dialect's first reader is an agent, and a tag that names its entity is
+self-describing where an endless `&lt;section&gt;` river is not. The generic
+form `&lt;section id="…" title="…"&gt;` remains in the dialect as the REQUIRED
+fallback for the two cases XML itself forbids or the grammar reserves: an
+anchor that is not a valid XML name (leading digit) and an anchor
+colliding with the structural vocabulary (`spec`,`title`,`status`,
+`section`,`p`,`fact`,`list`,`item`,`table`,`tr`,`td`,`fence`,`quote») —
+measured over the live corpus, that tail is 2 anchors of 1393; the
+emitter writes the named form everywhere else, the readers accept both.
+The converter recipe bumps (`specdoc/1` → `specdoc/2`), so every
+transformed slot re-materialises by the derived-manifest law rather than
+lingering in the old shape. The owner's next call arrived the same
+day — facts follow, see `##NAMED-FACT-ELEMENTS`. Landed: the emitter
+writes named sections everywhere the predicate allows (the live redbook
+README golden carries 7 named / 0 generic), both readers accept both
+forms, and the engine mirrors the predicate verbatim across the
+separability seam.</NAMED-SECTION-ELEMENTS></p>
+    <p><NAMED-FACT-ELEMENTS fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+verbatim): «сконвертируй и факты тоже. Предлагаю такой формат
+`&lt;fact-name fact="true" ...&gt;`. Таким образом кастомный XML-парсер всегда
+может найти соответствующие элементы».** A fact serialises with its ID
+as the element name, carrying the DISCRIMINATOR attribute —
+`&lt;THE-LAW fact="true" status="impl/done"&gt;body&lt;/THE-LAW&gt;` — so a reader
+that knows nothing of the vocabulary still finds every fact by one
+attribute test. The recognition law: an element IS a fact iff its name
+is `fact` (the generic form, which stays in the dialect) or it carries
+`fact="true"`. The named form is emitted whenever the id passes the
+same elementability predicate sections use (fact-id grammar already
+forbids leading digits, so the fallback tail is vocabulary collisions
+only); the typed-fact fence binding stays by id and does not change.
+The owner's second clause binds the scanners: the progress machinery
+must work when a fact's SOURCE — not a materialised copy — is authored
+XML; the host lane holds by construction (XML sources enter progress
+through the canonical MD projection) and is PINNED by explicit tests
+(an observed .xml source scans unit-for-unit equal to its MD twin),
+while the specmap engine's native reader learns the named form
+mirror-wise. The converter recipe bumps again (`specdoc/2` →
+`specdoc/3`); the host re-materialises once, after both shapes land.
+The owner's third clause (2026-08-22, same sitting) binds the boot
+lanes: «статические и динамические лоадеры должны хорошо работать с
+новым синтаксисом фактов» — pinned at the transition's landing by (a)
+the static-splice determinism test running over a NAMED-shape snippet
+whose projected facts survive into STATIC, (b) the vibe-spec
+normal-closure byte-equality test running over BOTH serialisations
+(generic and named) of one dependency, and (c) the polygon re-run at
+specdoc/3, whose control package auto-adopts the named shape through
+to_xml — INDEX targets, STATIC splice and every machine loader then
+exercise the final syntax end-to-end; the agent half of the dynamic
+router is §5a's measurement, deliberately run AFTER this transition so
+it measures the shape that ships. Landed: the recipe is `specdoc/3`,
+the host's 37 slots re-materialised once with named facts live (the
+redbook README golden pins 45), the recognition law holds in both
+readers with `fact="false"` a loud error, progress holds full
+ParsedDoc parity between an XML source and its hand-pinned MD twin
+across two scans, and pins (a)–(c) are in the tree — the splice
+snippet ships `&lt;BOOT-RULE fact="true"&gt;`, the normal closure compiles
+three lanes byte-equal, the polygon re-ran 3/3. A live lesson worth
+its line: XML reserves every case-insensitive `xml`-prefixed name, so
+`XMLBOOT` cannot be an element — the predicate refuses it and the
+generic form carries such ids.</NAMED-FACT-ELEMENTS></p>
+    <p><FACTS-GROUP-ELEMENT fact="true" status="impl/done">**Decision (ADR-part; owner ruling 2026-08-22,
+near-verbatim): «Не правильней ли не включать внутри list элементы item,
+а сразу ставить в тело list элементы типа `&lt;THE-LAW fact="true"...&gt;`? И
+вместо `&lt;list&gt;` использовать тэг `&lt;facts&gt;` — это новое слово для
+зарезервированного словарика… Если же список состоит из обычного текста
+(там могут даже иногда встречаться факты), то все элементы — это item и
+группировка — list, а факты в нём рендерятся как сейчас».** The law: a
+list whose every item is exactly one meaningful fact materialises as the
+vocabulary element `&lt;facts ordered="…"&gt;` with the fact elements (named
+or generic) directly in its body — no `&lt;item&gt;` wrappers; any other list
+(plain text, or mixed with occasional facts) keeps today's
+`&lt;list&gt;`/`&lt;item&gt;` shape with facts rendered inside items. `facts` joins
+the reserved vocabulary (an anchor named `facts` falls back to the
+generic form); `ordered` carries over exactly as on `&lt;list&gt;`; the model
+is unchanged — both shapes parse to the same `Block::List`, so the
+reader accepts BOTH forms (old materialisations in the wild stay
+readable) and a rewrite normalises the all-fact shape to `&lt;facts&gt;`.
+Loud errors guard the grouping: a non-fact child inside `&lt;facts&gt;`, bare
+text inside `&lt;facts&gt;`, an empty `&lt;facts&gt;`. Both readers — the pivot and
+the specmap engine's native one — learn the form mirror-wise; the
+converter recipe bumps `specdoc/3` → `specdoc/4` and the host
+re-materialises once. Landed: the writer branch, the `facts_block`
+parser (split into the pivot's own `xml_facts.rs` along the engine's
+seam) and the vocabulary word sit in both readers with the four loud
+errors pinned; the engine proves model-identity by content hash
+between the two shapes; the redbook README golden re-pins with two
+`&lt;facts&gt;` groups and the same 45 named facts; the host's 37 slots
+re-materialised at `specdoc/4`; and the §5a stand re-ran as the
+regression tool it was left as — polygons rebuilt on the new shape
+(121 files carry groups), the sensitive tier (`gpt-5.5`@`low`) swept
+9/9 with the negative control clean.</FACTS-GROUP-ELEMENT></p>
+    <p><INLINE-STAYS-MARKDOWN fact="true" status="spec/work">**Decision (ADR-part).** Inline content —
+emphasis, inline code, links, `##NAME` citations, `spec://` addresses —
+rides INSIDE text nodes as literal Markdown conventions, in both
+directions. The pivot does not model inline grammar. Why: the markup
+contract already treats inline code as opaque; round-tripping stays
+byte-stable at the text level; XML authorship needs no inline vocabulary;
+and every consumer that reads fact bodies today keeps reading the same
+strings. Alternative weighed — a full inline element vocabulary
+(`&lt;code&gt;`, `&lt;a&gt;`, `&lt;b&gt;`) — rejected as cost without a consumer and a
+fresh drift surface between two inline grammars.</INLINE-STAYS-MARKDOWN></p>
+    <p><fact id="XML-PARSER-DEPENDENCY" status="spec/work">**Decision (ADR-part): the XML machinery rides
+`quick-xml`, one new workspace dependency, pinned.** Measured 2026-08-21:
+the tree carries NO xml crate anywhere (Cargo.lock grep across quick-xml /
+roxmltree / xml-rs / xmlparser — zero hits), so the frontend/backend need
+one. Alternatives weighed: `roxmltree` (a clean read-only DOM — but this
+PROP needs an EMITTER as much as a parser, and roxmltree has no writer),
+`xml-rs` (both directions but dated and slow), hand-rolling (a parser for
+a security-adjacent input format is exactly what one does not hand-roll).
+`quick-xml` carries both an event reader and a Writer with correct
+escaping, is maintained and widely fuzzed, and its event model fits the
+pivot walk. The version is pinned at the S1 landing with the workspace's
+usual `workspace = true` discipline.</fact></p>
+    <p><fact id="XML-PARSER-DEPTH" status="spec/work">**The heavyweight question, answered on the record
+(owner's challenge, 2026-08-21 — the Java instinct «сразу брать мощный
+навороченный парсер»).** The Java-world case for a Xerces-class engine is
+the SOAP-era grammar surface: DTD, XSD, XInclude, catalogs. This dialect
+OUTLAWS that surface by construction — a closed ~13-element vocabulary
+where a foreign construct is a loud error, no DTD, no external entities —
+so a heavyweight would buy capability this contract forbids, while its
+Rust incarnation (libxml2 FFI bindings) would pay a C build dependency
+and libxml2's CVE record inside a security-adjacent input path. Three
+recorded consequences: **(a)** the XXE attack class dies by construction
+(quick-xml does not process DTD — here a feature); **(b)** validation is
+OUR closed-vocabulary walk with contract-citing errors, not a schema
+engine's; **(c)** conformance is proven on OUR documents — the golden
+corpus and round-trip property tests over redbook — not assumed from the
+parser's reputation. **Escape hatch, explicit:** the frontend is one
+module behind the pivot seam; if the reader shows conformance holes, it
+swaps to `roxmltree` (the ecosystem's conformance-strongest read-only
+DOM) while the quick-xml Writer stays — a bounded change that alters no
+consumer. quick-xml itself is the ecosystem's de-facto standard (the
+most-used XML crate on crates.io by a wide margin; calamine, the RSS
+stack and docx readers ride it), not a first-hit pick.</fact></p>
+  </shape>
+  <materialisation title="3. The materialisation setting and the three targets">
+    <p><SETTING fact="true" status="spec/work">**The setting and its home (revised by the measure —
+reproducibility rules).** The materialisation format is a REPRODUCIBLE
+project property, so its canonical home is the project manifest:
+`vibe.toml [project] spec_format = "mixed" | "markdown" | "xml"`, with
+the effective value recorded where derived state lives (the derived
+manifest below) so two machines materialise identically. The user-config
+family supplies only the operator DEFAULT for projects that do not pin
+one (`[install] spec_format`, beside `slot_integrity`), per the standing
+precedence CLI &gt; env &gt; project &gt; user &gt; built-in; vibe-settings is
+barred from this key by PROP-040's own boundary (app prefs never extend
+vibe.toml). **`mixed` is the built-in default** — for an all-MD world
+byte-for-byte today's behaviour; the flip of the default to XML is the
+owner's word, never silent.</SETTING></p>
+    <p><TARGET-MD fact="true" status="spec/work">**`markdown` target:** XML sources emit as Markdown through
+the pivot (nested sections → heading levels, facts → anchored units,
+fences/tables/quotes → their MD forms); MD sources copy verbatim. This
+target exists for tooling that cannot read XML or mixed trees — named in
+the mandate as load-bearing, and it stays supported for as long as this
+PROP stands.</TARGET-MD></p>
+    <p><TARGET-XML fact="true" status="spec/work">**`xml` target:** every source — including Markdown —
+emits as dialect XML through the pivot. Mixed input translating into
+CLEAN XML (never mixed output) is this target's acceptance bar, because
+it is the future primary.</TARGET-XML></p>
+    <p><TARGET-MIXED fact="true" status="spec/work">**`mixed` target:** copy-through; each file keeps its
+authored format.</TARGET-MIXED></p>
+    <p><STATIC-FOLLOWS-THE-TARGET fact="true" status="impl/done">**STATIC obeys the same materialisation
+rules as everything else (owner ruling 2026-08-22, chat, near-verbatim:
+«при рематериализации у нас STATIC.md в формате Markdown вне зависимости
+от того, какой формат материализации выбран, это плохо. На STATIC должны
+действовать те же правила, что и на всю остальную рематериализацию —
+должен появиться STATIC.xml»).** The generated static lane emits in the
+project's materialisation format: `STATIC.xml` under the `xml` target,
+`STATIC.md` under `markdown` (the `mixed` extension is the STATIC-format
+wave's open call — PROP-046 ##OPEN-MIXED-STATIC). This owner-revises the
+extension-stable-`STATIC.md` residue named at the inheritance-parity
+landing (##INHERITANCE-PARITY): what was lawful residue is now a defect
+to fix. The wave's perimeter, known in advance: the dynamic-STATIC
+target path in hybrid emit, the bootgen emitter, the generated CLAUDE.md
+boot block, INDEX raw-snippet targets, the parity twins that pin the
+`.md` name, and every by-name consumer of `spec/boot/STATIC.xml` (hooks,
+docs). Ordered by the owner as the next act after PROP-046's status
+waves. The compilate-form decision (recorded before the build): STATIC
+is and stays an AGENT-facing tape of contributions — under the `xml`
+target each contribution emits through the pivot's to_xml instead of
+the markdown projection, the `&lt;!-- vibe:static … --&gt;` provenance
+separators stay comments, and a single well-formed root is
+deliberately NOT promised (the compiled lane is not an input to the
+machine readers today, and wrapping thirty documents under one root
+would change anchor semantics for no consumer); the extension law is
+`xml → STATIC.xml`, `markdown → STATIC.md`, `mixed → STATIC.md` (the
+single canonical compilate for a per-file target, resolving PROP-046
+##OPEN-MIXED-STATIC); exactly one STATIC file may exist — both present
+is a loud generator error; consumers learn the name from the generated
+sources (the CLAUDE.md boot block, INDEX, the redirect) or by
+exactly-one existence, never by guessing. Landed (7d494f53 +
+40e67d56): the format module owns both names with the stray deleted on
+a switch (polygon-pinned across all three targets), contributions cross
+to_xml once post-qualification with the markdown path byte-identical,
+every chooser and generated-name exclusion selects through the module,
+exactly-one resolution replaced guessing in every machine reader (a
+new one — `show effective` — was found by the build itself and reads
+the lane as the tape it is), boot_directory fails loud on both names,
+and the host lane re-landed as STATIC.xml with 26 contributions.</STATIC-FOLLOWS-THE-TARGET></p>
+    <p><HASH-LAW fact="true" status="spec/work">**The hash law under transformation (ADR-part, upgraded by
+the measure).** Source identity is untouched: the lockfile
+`content_hash` and the machine store keep hashing the SOURCE form
+(PROP-010's verbatim store and collision law stand on source bytes). A
+transformed slot is a DERIVED artifact with its own recorded identity:
+materialisation under `markdown`/`xml` runs a VERSIONED deterministic
+converter and writes a **derived manifest** into the slot —
+`(source_hash, output_format, converter_recipe, derived_hash)` — where
+`derived_hash` is the standard content-hash recipe over the transformed
+tree. The P011V spot-check then stays MEANINGFUL for every format:
+`mixed` slots verify against the lock source hash as built; transformed
+slots verify against their derived manifest's `derived_hash`, and a
+missing/mismatched derived manifest (or a converter_recipe the binary no
+longer carries) is `Diverged` → honest re-materialise. The slot's
+freshness decision includes the output format: changing `spec_format`
+re-materialises even though `(kind, name, version)` did not move.
+Semantic equivalence of source and derivative is the converter's own
+proof through the shared IR (the golden corpus), never the hash's job.</HASH-LAW></p>
+    <p><BOOT-LANE-SCOPE fact="true" status="spec/work">**Boot-lane law under the setting (revised by the
+owner's scenario ruling, 2026-08-21).** Boot artifacts are generated
+projections; v1 keeps the COMPILED static artifact (`spec/boot/STATIC.xml`)
+Markdown regardless of `spec_format` — but both lanes must be fully ready
+for a transformed vibedeps tree: the static compiler consumes snippets in
+WHATEVER format the slots materialised (an XML-materialised snippet
+converts at splice time — pivot conversion, both directions), and the
+dynamic lane's entries point at the files as materialised — under
+`spec_format = "xml"` a dynamic INCLUDE target IS an `.xml` file, and
+`INDEX.md` carries that path honestly. The dynamic ROUTER is the reading
+agent itself (PROP-009: boot is pure file-reading; a dynamic entry is an
+INCLUDE resolved by the reader), which is why §5a measures agents, not
+code. A fully-XML compiled static artifact remains named follow-up work.</BOOT-LANE-SCOPE></p>
+    <p><SCENARIO-ZERO fact="true" status="spec/work">**The owner's named scenario — acceptance case №0
+(ruling 2026-08-21, verbatim: «все спеки в spec написаны в Markdown,
+внутренние пакеты в packages — в Markdown, а формат материализации —
+XML. Лоадеры и все остальное должны быть к этому готовы. и статические,
+и динамические, все»).** Sources are 100 % Markdown (the host `spec/`
+tree and every `packages/` member); `spec_format = "xml"`; after
+install/materialisation: every vibedeps spec file is dialect XML, the
+static lane compiles clean from those XML snippets, the dynamic lane's
+INCLUDE targets are `.xml` and resolve, and every reader — `vibe
+progress check`, specmap, `vibe check`, `vibe tree», the boot readers —
+is green over the result. This is the polygon's primary run; the three
+mixed-input runs of §5 ride beside it.</SCENARIO-ZERO></p>
+  </materialisation>
+  <loaders title="4. Loaders and scanners read all three">
+    <p><LOADER-LAW fact="true" status="spec/work">Every consumer of spec sources — the progress scanner and
+`vibe progress check», the specmap unit parser, `vibe check`, the tree/
+boot readers, mirror views — accepts `.md` and `.xml` spec files and a
+tree mixing both. XML goes through the XML frontend into the same pivot
+the MD frontend feeds, so every downstream mechanism (facts, verdicts,
+staleness hashes, unit counts, anchors, specmap units) works unchanged
+on either source. *Построй по замеру: точный список интеграционных точек
+(`*.md`-фильтры) даёт XML-MEASURE; каждая точка получает парную `.xml»
+ветку, ни одна — молча.*</LOADER-LAW></p>
+    <p><PROJECTION-READ fact="true" status="spec/work">**Decision (ADR-part): scanners read XML through its
+canonical Markdown projection — one dispatch layer above the parser, no
+dependency cycle.** `vibe-specdoc` depends on `progress-core` (its MD
+frontend is the adapter), so progress-core cannot itself call specdoc.
+The consumers dispatch instead: a `.xml` spec entering any scanner
+(progress, check, specmap-host, show) is first projected
+`from_xml → to_markdown` — deterministic and canonical by S1's emitter —
+and the projection feeds the existing MD machinery; units, facts,
+anchors, hashes and verdict staleness all work unchanged, and a source
+edit moves the projection exactly when it moves meaning. Alternatives
+weighed: a native XML unit-walker in every scanner (a fifth and sixth
+parser family — the disease the measure named), and inverting the crate
+dependency (progress-core consuming specdoc — a cycle). RECORDED
+DEGRADATION, honest: a diagnostic for an XML source cites
+projection-relative line numbers, and v1 marks such diagnostics with
+the projection notice rather than pretending; native source positions
+are follow-up work riding the specmap-engine slice (S4b).</PROJECTION-READ></p>
+    <p><ADDRESSING-UNCHANGED fact="true" status="spec/work">`spec://` addressing is format-blind: anchors
+are `id` attributes in XML and `{#…}`/first-token anchors in MD, minted
+into the same address space; a document's address does not change when
+its serialisation does.</ADDRESSING-UNCHANGED></p>
+  </loaders>
+  <polygon title="5. The redbook polygon — acceptance">
+    <p><POLYGON fact="true" status="spec/work">A dedicated test project imports `org.vibevm.world/redbook`
+(the largest real corpus of house-style markup) plus locally-authored
+XML and MD specs, and the suite drives all three targets end-to-end:
+**(a)** XML+MD → `xml`: every materialised spec file is dialect XML,
+goldens pinned, and the round-trip MD→XML→MD over redbook files is
+semantically stable (units, facts, anchors, statuses, tables, fences —
+counted equal; the degradation measure); **(b)** XML+MD → `markdown`:
+every file is MD, XML-authored sources render with nested headings per
+the degradation law; **(c)** XML+MD → `mixed`: byte-identical
+copy-through. In all three, the loaders prove themselves: `vibe progress
+check` clean, specmap builds, boot regenerates.</POLYGON></p>
+    <p><INHERITANCE-PARITY fact="true" status="impl/done">**The C++-inheritance machinery is
+format-blind — verified, not assumed (owner clause 2026-08-22,
+verbatim: «проверь что все механизмы "наследования как в C++" которые
+мы сделали для Markdown, точно так же работают и для XML, включая
+новый синтаксис секций и фактов. Если нет, это тоже нужно
+улучшить»).** The B-011 family — `#use spec://… as X` aliasing, `@!X`
+references, the qualified splice (rename-on-splice with every
+reference kept valid), hoist/elision stubs, de-substitution of covered
+units, rename tombstones, and the dynamic-STATIC case — must produce
+BYTE-IDENTICAL compiled closures whether a dependency is authored in
+Markdown or in dialect XML (generic and named shapes both). Pinned by
+a twin-test family in vibe-spec's pipeline: each mechanism runs over
+an MD twin and its to_xml serialisation, outputs compared
+byte-for-byte; mixed trees (one dep MD, one XML) ride the same pins.
+Gaps found by the twins are fixed in the machinery, never by relaxing
+the assert. Landed: eight twins (four in vibe-spec's pipeline — alias +
+`@!X`, an alias declared inside the projected node over a mixed tree,
+the three-way same-short-anchor splice, fact-grain through an alias —
+comparing lane AND rename map; four on the bootgen floor — the
+static-transitive zone, single-copy hoist, de-substitution over a mixed
+lane, and the dynamic-STATIC install case), every twin minting its XML
+at run time so the family always carries the live dialect form. Parity
+held out of the box at the compile floor: byte-identical, no machinery
+change. The twins NAMED the lawful residue at the install floor —
+`vibe:static` provenance comments cite the true source file (extension
+included) and INDEX raw-snippet paths carry the materialised extension,
+while the dynamic-STATIC target stays the generated, extension-stable
+`STATIC.md` — honest provenance, not a format leak.</INHERITANCE-PARITY></p>
+    <agent-routing title="5a. The dynamic-router measurement — external agents">
+      <p><AGENT-ROUTER-MEASURE fact="true" status="impl/done">**The hardest part, named by the owner
+(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The
+dynamic lane has no code router — the reading agent resolves dynamic
+INCLUDEs itself — so readiness for XML targets is an empirical property
+of live agent harnesses, not of this repository's code, and it is
+MEASURED, not assumed. The instrument is the worker lanes this project
+already runs: claudez (a Claude-family agent) and codexrunner (a
+GPT-family agent) are external agents by construction. Protocol: the
+polygon project (scenario №0 state — XML-materialised tree, honest
+`INDEX.md` with static and dynamic entries, at least one `when`-guarded
+conditional entry) plus a probe packet that orders a cold worker to
+perform the standard boot (read STATIC in full, then every INDEX entry,
+resolving dynamic INCLUDEs) and then answer control questions whose
+answers exist ONLY inside dynamically-included XML files (one per
+dynamic entry, plus one inside a `when`-inactive entry that must NOT be
+answered — the negative control). Scoring is by artifact: each answer
+cites the file it came from; the measure is answered/missed per lane,
+per agent family. The run is repeated over the `markdown» and `mixed»
+materialisations of the same tree as the baseline — the DELTA between
+XML and MD scores is the finding, not the absolute number. Results are
+recorded in the polygon's report and this section's facts flip to
+`impl/…` with the measured numbers cited. *Проверь при постройке: probe
+не должен подсказывать формат — пакет говорит «выполни бут по
+CLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the
+final dialect — named sections and facts, specdoc/3): **36/36 PASS,
+XML−MD delta = 0 everywhere.** The polygon (redbook closure + three
+`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`
+negative control) ran three materialisations × three lanes — codex
+gpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with
+a format-blind probe; every beacon answered with its exact
+materialised source path, and the inactive entry was correctly
+reported unreadable in all nine cells with zero beacon leakage.
+Report: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;
+the harness is a reusable regression stand (`setup.sh` + the weak-tier
+sweep as the sensitive detector).</AGENT-ROUTER-MEASURE></p>
+      <p><AGENT-ROUTER-MODEL-TIERS fact="true" status="impl/done">**Model tiers are a measurement dimension —
+the simpler models go first (owner's advice, verbatim, 2026-08-21: «при
+измерении воркеров через Codex я бы советовал попользоваться не моделью
+gpt-5.6-sol, а в первую очередь более простыми моделями, чтобы проверить
+насколько они вообще справляются с новыми режимами»).** A strong model
+masks format friction; the weak model is the sensitive instrument. The
+Codex-lane probes therefore run the SIMPLER available tiers first
+(`CODEXRUNNER_MODEL`/`CODEXRUNNER_EFFORT` are the launcher's overrides;
+the measurement slice enumerates which tiers the installed codex
+actually serves and records the list), with the pinned strong tier
+(gpt-5.6-sol) run last as the ceiling reference — the per-tier score
+table, not one number, is the deliverable. The symmetric extension on
+the Claude-family lane (a small slot exists there too) is the builder's
+own addition, applied with the same first-simple ordering unless the
+owner says otherwise. The lane DEFAULT for work tasks is untouched: this
+tiering is the measurement protocol's, not the launcher's. MEASURED
+(2026-08-22): the installed codex serves exactly two tiers — `gpt-5.5`
+and `gpt-5.6-sol` (`gpt-5.5-codex`, `gpt-5.1-codex-mini`,
+`codex-mini-latest` error on the ping; list recorded in the stand's
+`tiers.txt`); effort served as the second simplicity axis. The
+sensitive instrument went first per the owner's ordering — gpt-5.5@low,
+two full sweeps, 18/18 — and the ceiling gpt-5.6-sol@xhigh matched it
+9/9: the per-tier table shows NO tier gradient, i.e. the final
+dialect's format friction sits below even the cheap tier's noise
+floor. Claude-family symmetric run: claudez big 9/9.</AGENT-ROUTER-MODEL-TIERS></p>
+    </agent-routing>
+    <surfaced title="5b. Questions the build surfaced — dispositions">
+      <p><REVIEW-COMMENTS-LAW fact="true" status="impl/done">**REVIEW markers and comments (S4 finding,
+disposed).** The dialect legally SKIPS XML comments as layout and the
+pivot deliberately drops them, so a projection loses `&lt;!-- REVIEW: --&gt;`
+markers. The law therefore is: comment-consuming readers (review aging,
+managed-block scanners) read RAW SOURCE TEXT of both forms — the comment
+syntax is shared by MD and XML — and never the projection; S4 built
+review aging exactly so, with source-relative lines. A comment-carrying
+pivot was weighed and refused: comments are the one construct whose
+whole point is to be invisible to the document model.</REVIEW-COMMENTS-LAW></p>
+      <p><NORMAL-FORMAT-RESIDUE fact="true" status="spec/work">**The `normal` boot format over XML slots is
+named residue (S4 finding, open).** `compile_normal_entry` reads its
+closure through vibe-spec's own MD section source, which the projection
+cannot feed without touching that crate; `simple` snippets and authored
+boot files carry XML materialisation fully today. The residue rides the
+S4b family (the engine/vibe-spec lane), recorded here so scenario №0's
+polygon states honestly which snippet formats its packages use.</NORMAL-FORMAT-RESIDUE></p>
+      <p><BOOT-ORIGIN-LITERAL-MATCH fact="true" status="impl/done">**`show effective`'s boot-origin match is
+logical-document keyed (S4 finding, closed by S5).** The literal-name
+match silently degraded a transformed snippet's origin to `user»; the
+S5 landing keys the match on the logical stem (`10-flow-wal.xml` and
+`10-flow-wal.xml` are one contribution), pinned by the polygon's
+origin test — a snippet materialised into `.xml` reports its package.</BOOT-ORIGIN-LITERAL-MATCH></p>
+      <p><GENERATED-ARTIFACTS-OUTSIDE-DERIVED fact="true" status="impl/done">**Generated boot artifacts are
+outside the derived identity (S5 polygon finding, law).** Boot
+regeneration writes a child `spec/boot/STATIC.xml` / `INDEX.md` INTO a
+dependency slot after materialisation, and by `##BOOT-LANE-SCOPE` those
+projections are Markdown regardless of `spec_format` — so the derived
+hash excludes them (the same exclusion genre as the derived manifest
+itself) and the format-purity claim never counts them: a transformed
+slot's «no foreign-form spec files» is asserted over SOURCES, not over
+projections the machine regenerates at will. The polygon caught both
+failure shapes live before this law existed: a stale derived hash the
+moment boot regenerated, and a fake purity violation on the one slot
+whose snippet compiles to a child STATIC.</GENERATED-ARTIFACTS-OUTSIDE-DERIVED></p>
+    </surfaced>
+  </polygon>
+  <build-order title="6. Build order">
+    <p><SLICES fact="true" status="spec/work">S1 pivot + XML frontend/backend + golden round-trips over the
+redbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the
+setting + transforming materialisation + the hash law → S4 the scanner/
+checker/specmap/boot-compiler integration points (the measured `*.md`
+list; the static splice learns XML input, INDEX carries materialised
+paths) → S5 the redbook polygon E2E: scenario №0 first, then the three
+mixed-input targets → S5a the external-agent router measurement (§5a,
+claudez + codexrunner over the polygon) → S6 docs, ALPHA-NOTES, judging.
+Each slice lands with its own gates; the polygon plus the agent
+measurement are the wave's exit.</SLICES></p>
+  </build-order>
+</spec>

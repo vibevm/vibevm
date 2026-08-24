@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-025 — vibe-native binary delivery</title>
+  <status stage="impl" state="done" comment="B0 2026-07-24: v1 IMPLEMENTED SS2-5 (deferrals-closeout campaign); S6-S7 specified v2 surface; fact grain 2026-07-24"/>
+  <p><status-line fact="true" status="impl/done">**Status: v1 IMPLEMENTED (§§2–5; the deferrals-closeout campaign). §6–§7 are
+specified v2 surface.** Module: `vibe-workspace` / `vibe-install` / `vibe-cli`.</status-line></p>
+  <problem title="1. Problem">
+    <p><req-problem fact="true" status="impl/done">`req r1`</req-problem></p>
+    <facts ordered="false">
+      <packages-ship-tools fact="true" status="impl/done">Code-bearing packages (PROP-024) ship runnable tools — the discipline
+  stacks alone ship the umbrella + gate binaries (`rust-ai-native`,
+  `rust-ai-native-conform`, `rust-ai-native-specmap`, `typescript-ai-native`,
+  `typescript-ai-native-conform`, `typescript-ai-native-specmap`) — but
+  `vibe install` stops at materialising source
+  into `vibedeps/`.</packages-ship-tools>
+      <manual-path-step fact="true" status="impl/done">Getting from a slot to a tool on PATH is a manual,
+  documented step (`cargo install --path vibedeps/&lt;slot&gt;/crates/&lt;cli&gt;`,
+  GUIDE §13), repeated per machine and re-repeated per version bump: n
+  stacks × m tools of PATH management that vibe already knows how to do for
+  itself (PROP-019).</manual-path-step>
+      <BINARY-MUST fact="true" status="impl/done">MUST: a package declares its binaries; vibe builds and
+  dispatches them.</BINARY-MUST>
+    </facts>
+  </problem>
+  <manifest title="2. Manifest surface">
+    <p><req-manifest fact="true" status="impl/done">`req r1`</req-manifest></p>
+    <p><BINARY-TABLE fact="true" status="impl/done">A code-bearing package declares each shipped tool in its `vibe.toml`:</BINARY-TABLE></p>
+    <fence lang="toml">[[binary]]
+name = "rust-ai-native"             # the PATH-facing name (the family
+                                    # prefix keeps it collision-safe)
+crate = "crates/rust-ai-native-cli" # package-relative crate directory</fence>
+    <facts ordered="false">
+      <NAME-CONSTRAINTS fact="true" status="impl/done">Constraints: `name` MUST be unique within the package and SHOULD be
+  globally collision-safe (the family-prefix convention, PROP-028 §2.4).</NAME-CONSTRAINTS>
+      <CRATE-CONSTRAINT fact="true" status="impl/done">`crate` MUST name a directory inside the shippable tree carrying a
+  `[[bin]]`-bearing (or default-bin) Cargo package whose bin name equals
+  `name`.</CRATE-CONSTRAINT>
+      <LINTER-VALIDATES fact="true" status="impl/done">The linter (`vibe check`) validates both.</LINTER-VALIDATES>
+      <OPT-IN fact="true" status="impl/done">Absent `[[binary]]`
+  tables mean the package ships no tools — every field of this PROP is
+  opt-in.</OPT-IN>
+    </facts>
+  </manifest>
+  <build title="3. Install-time build">
+    <p><req-build fact="true" status="impl/done">`req r1`</req-build></p>
+    <facts ordered="false">
+      <BUILD-TIMING fact="true" status="impl/done">After materialising a slot whose manifest declares `[[binary]]` entries,
+  `vibe install` MAY build them (v1: on `vibe bin sync`, see §4 — the
+  install itself only RECORDS the declarations; an install-time
+  `--build-bins` opt-in flag is v2 surface).</BUILD-TIMING>
+      <BUILD-CONSENT fact="true" status="impl/done">Building executes the
+  package's build scripts and proc-macros — arbitrary code — so it is
+  consent-gated exactly like install hooks (PROP-020): the `org.vibevm`
+  group is allow-listed; any other group prompts (or requires
+  `--allow-hooks`-equivalent consent) before the first build of a
+  (package, version).</BUILD-CONSENT>
+    </facts>
+    <facts ordered="false">
+      <SLOT-RESIDENT fact="true" status="impl/done">Artifacts are **slot-resident**: `cargo build --release` runs with the
+  slot's own workspace manifest and lands in `vibedeps/&lt;slot&gt;/&lt;ver&gt;/target/`.</SLOT-RESIDENT>
+      <HASHES-STABLE fact="true" status="impl/done">Build output sits outside the shippable tree (PROP-024 §2.2), so content
+  hashes never move.</HASHES-STABLE>
+      <REFRESH-INVALIDATES fact="true" status="impl/done">A slot refresh (version bump, re-materialise)
+  naturally invalidates its binaries — staleness handling costs nothing.</REFRESH-INVALIDATES>
+    </facts>
+  </build>
+  <dispatch title="4. The `vibe bin` family and dispatch">
+    <p><req-dispatch fact="true" status="impl/done">`req r1`</req-dispatch></p>
+    <facts ordered="false">
+      <BIN-LIST fact="true" status="impl/done">`vibe bin list` — every `[[binary]]` declared by the project's
+  installed packages, with build state (built / not built) and the
+  artifact path.</BIN-LIST>
+      <BIN-BUILD fact="true" status="impl/done">`vibe bin build [&lt;name&gt;…]` — consent-gated release build of the named
+  tools (default: all declared), in their slots.</BIN-BUILD>
+      <BIN-PATH fact="true" status="impl/done">`vibe bin path &lt;name&gt;` — the artifact path (non-zero when not built);
+  scripts compose with it.</BIN-PATH>
+      <BIN-EXEC fact="true" status="impl/done">`vibe bin exec &lt;name&gt; [--] &lt;args…&gt;` — resolve `name` through the
+  CURRENT project's lockfile → its slot → the slot-resident artifact
+  (building it, with consent, if absent), then execute with the exit
+  code passed through. This is the rustup dispatch model: the project's
+  pinned version is what runs, always.</BIN-EXEC>
+    </facts>
+    <facts ordered="false">
+      <SHIMS-SPEC fact="true" status="spec/done">Shims (`vibe bin sync`) are v1.5 surface, specified here: a per-user bin
+  dir (reconciled with PROP-019's shim dir — one PATH entry, not two) of
+  dumb launchers, each `exec`-ing `vibe bin exec &lt;name&gt; -- %*` / `"$@"`
+  (Windows `.cmd` + POSIX sh pair; the `cmd /c` spawn lesson of PROP-015
+  applies).</SHIMS-SPEC>
+      <LAUNCHER-VERSION-FREE fact="true" status="spec/done">A launcher never encodes a version — dispatch stays per-CWD
+  through the lockfile walk, so two projects pinning different stack
+  versions get different binaries from the same PATH entry.</LAUNCHER-VERSION-FREE>
+    </facts>
+  </dispatch>
+  <staleness title="5. Staleness and offline honesty">
+    <p><req-staleness fact="true" status="impl/done">`req r1`</req-staleness></p>
+    <facts ordered="false">
+      <TRUST-CURRENT-SLOT fact="true" status="impl/done">The artifact is trusted iff it exists in the CURRENT slot (the slot
+  version is the unit of staleness — PROP-011 slot replacement removes the
+  `target/` with the slot).</TRUST-CURRENT-SLOT>
+      <WARM-NOOP fact="true" status="impl/done">`vibe bin build` on a warm artifact is a cargo
+  no-op (~seconds).</WARM-NOOP>
+      <OFFLINE-HONESTY fact="true" status="impl/done">Cargo needs crates.io for third-party deps unless the
+  local cargo cache is warm: offline boxes get the same honest failure
+  cargo gives, plus the hint that `cargo install --path &lt;slot&gt;/crates/…`
+  (the documented degraded path, which stays valid indefinitely) has the
+  same network shape — there is no offline shortcut to a first build.</OFFLINE-HONESTY>
+    </facts>
+  </staleness>
+  <cross-package title="6. Cross-package path dependencies (v2, specified only)">
+    <p><req-cross-package fact="true" status="spec/done">`req r1`</req-cross-package></p>
+    <facts ordered="false">
+      <CROSS-DEP-IMPOSSIBLE fact="true" status="impl/done">A stack crate cannot Cargo-`path`-dep on a core-ai-native crate across
+  slots: the authored layout (`packages/org.vibevm/&lt;name&gt;/v&lt;ver&gt;/`) and the
+  materialised layout (`vibedeps/&lt;group&gt;.&lt;name&gt;/&lt;ver&gt;/`) disagree on both
+  directory naming and version prefix, and each slot must stay a
+  self-buildable workspace (PROP-024 §2.4).</CROSS-DEP-IMPOSSIBLE>
+      <V1-VENDOR-SYNC fact="true" status="impl/done">v1 answers this with
+  vendor-sync (byte-identical copies under `crates/vendor/`, gated by
+  `sync-engines --check`).</V1-VENDOR-SYNC>
+      <V2-REWRITE-ALTERNATIVE fact="true" status="spec/done">The v2 alternative — vibe REWRITING declared
+  cross-package path-deps at materialise time (a `[binary.cross_paths]`
+  manifest table mapping dep names to `&lt;pkgref&gt;:&lt;crate-path&gt;`) — interacts
+  with shippable-tree hashing (the rewritten manifest must be excluded from
+  the hash exactly like build output, or identity breaks) and with
+  presence-trust.</V2-REWRITE-ALTERNATIVE>
+      <V2-TRADE-VISIBLE fact="true" status="spec/done">It lands only with its own campaign and only if
+  vendor-sync's duplication cost ever exceeds the rewrite machinery's
+  complexity cost. Recorded so the trade stays visible.</V2-TRADE-VISIBLE>
+    </facts>
+  </cross-package>
+  <gc title="7. Uninstall and GC (v2, specified only)">
+    <p><req-gc fact="true" status="spec/done">`req r1`</req-gc></p>
+    <facts ordered="false">
+      <UNINSTALL-REMOVES fact="true" status="impl/done">`vibe uninstall` of a package removes its slot and therefore its
+  artifacts (nothing else to clean in v1 — artifacts are slot-resident and
+  launchers are version-free).</UNINSTALL-REMOVES>
+      <V2-SHIM-GC fact="true" status="spec/done">v2 shim GC: `vibe bin sync` removes
+  launchers whose names no installed package declares.</V2-SHIM-GC>
+      <V2-VARS-ROW fact="true" status="spec/done">`vibe vars` learns
+  the bin-dir row when shims land.</V2-VARS-ROW>
+    </facts>
+  </gc>
+  <security title="8. Security posture">
+    <p><req-security fact="true" status="impl/done">`req r1`</req-security></p>
+    <facts ordered="false">
+      <CONSENT-MODEL fact="true" status="impl/done">An install-time / exec-time build runs third-party build scripts:
+  consent is per (group, package, version) with the PROP-020 recording
+  convention, `org.vibevm` allow-listed, `--assume-yes` honoured in
+  non-interactive runs.</CONSENT-MODEL>
+      <NO-PATH-HIJACK fact="true" status="impl/done">`vibe bin exec` never searches PATH for the tool it
+  dispatches (no hijack surface): resolution is lockfile → slot → artifact,
+  all project-local.</NO-PATH-HIJACK>
+      <SCOPE-UNCHANGED fact="true" status="impl/done">Scope discipline (PROP-002 §2.10) applies unchanged.</SCOPE-UNCHANGED>
+    </facts>
+  </security>
+  <v1-cut title="9. The v1 cut">
+    <p><req-v1-cut fact="true" status="impl/done">`req r1`</req-v1-cut></p>
+    <facts ordered="false">
+      <V1-IMPLEMENTED fact="true" status="impl/done">Implemented this campaign: §2 manifest parsing + linting, §3 slot
+  builds with consent, §4 `vibe bin list/build/path/exec`, §5 staleness by
+  slot-residency.</V1-IMPLEMENTED>
+      <V1-DEFERRED fact="true" status="impl/done">Deferred with names: §4 shims (`vibe bin sync` — lands
+  with a PROP-019 shim-dir reconciliation pass), §6 cross-package path
+  rewriting, §7 GC + `vibe vars` row.</V1-DEFERRED>
+    </facts>
+  </v1-cut>
+  <history title="History">
+    <facts ordered="false">
+      <HIST-AUTHORED fact="true" status="impl/done">2026-07-07 — authored and v1-implemented in the deferrals-closeout
+  campaign; supersedes the "future PROP" note the Self-Sufficiency
+  campaign's §10 recorded.</HIST-AUTHORED>
+    </facts>
+  </history>
+</spec>

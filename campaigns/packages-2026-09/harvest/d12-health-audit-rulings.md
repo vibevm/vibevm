@@ -19,7 +19,7 @@ git write. `git` was run read-only (`rev-parse`, `log`, `show`, `status`,
 **Measured at `HEAD = c3b3fe19`** (`feat(spec): the decision-record criterion
 lands where the genre lives, and spec/decisions/ is closed by name`, 2026-08-01).
 The batch opened at `96b5b55f` and **HEAD advanced twice while it ran** — first
-to `f1abad16` (`docs(wal): …`, `spec/WAL.md` only, 238+/332−) and then to
+to `f1abad16` (`docs(wal): …`, `spec/WAL.xml` only, 238+/332−) and then to
 `c3b3fe19` (`spec/design/README.md` only, +92). **Both touched files this batch
 reads**, so every figure was re-taken at each move; **all of them hold and two
 moved by the arithmetic of the moves themselves** (the commit gap 1702 → 1703).
@@ -41,7 +41,7 @@ Three perimeter rules bind every figure in this file:
 - **`refs/**`, `vibedeps/**` and `.vibe/cache/**` are broken out and excluded
   from every host-practice count.** They are third-party or regenerated dep
   copies; counting them measures the package, not the host.
-- **`spec/WAL.md` is measured as a host artefact and never quoted for campaign
+- **`spec/WAL.xml` is measured as a host artefact and never quoted for campaign
   numbers.** It appears below only as the checkpoint the flow's
   reconciliation rule names ([§3.4](#f-164-owes)).
 
@@ -50,20 +50,20 @@ Three perimeter rules bind every figure in this file:
 1. [`run/state/routing.json`](../run/state/routing.json) — every entry whose
    anchor path contains `/health-audit/`.
 2. The package in full at HEAD: [`README.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/README.md),
-   [`spec/boot/42-flow-health-audit.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md),
-   [`HEALTH-AUDIT-PROTOCOL.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md),
-   [`audit-checklist.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md),
-   [`running-an-audit.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md),
+   [`spec/boot/42-flow-health-audit.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.xml),
+   [`HEALTH-AUDIT-PROTOCOL.xml`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml),
+   [`audit-checklist.xml`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.xml),
+   [`running-an-audit.xml`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.xml),
    [`spec/skills/health-audit/SKILL.md`](../../../packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md),
    `vibe.toml`.
 3. [`run/cache.json`](../run/cache.json) — the verdict and evidence standing
    against each anchor, read with the instrument in §0.5.
 4. The host's practice surfaces the anchors judge: [`AUDIT.md`](../../../AUDIT.md)
-   in full, [`spec/common/PROP-013-periodic-health-audit.md`](../../../spec/common/PROP-013-periodic-health-audit.md)
+   in full, [`spec/common/PROP-013-periodic-health-audit.xml`](../../../spec/common/PROP-013-periodic-health-audit.xml)
    in full, [`tools/self-check.sh`](../../../tools/self-check.sh),
    `discipline/DEBT.md`, `discipline/registry/{debt,intent}.json`,
    `discipline/health/latest.json`, `ROADMAP.md`, `vibe.lock`,
-   `spec/boot/STATIC.md`, and the three agent skill homes.
+   `spec/boot/STATIC.xml`, and the three agent skill homes.
 5. [`PHASE-D-BATCH-PLAN.md` §3.6](../PHASE-D-BATCH-PLAN.md#which-side) and
    [§6.1](../PHASE-D-BATCH-PLAN.md#delegation-lessons);
    [`PHASE-D-HOST-OBLIGATIONS.md`](../PHASE-D-HOST-OBLIGATIONS.md) in full;
@@ -137,8 +137,8 @@ PY
 ```
 
 Per-file: `README.md` 19 confirmed / 1 drift · `spec/boot/42-…` 13 / 4 ·
-`HEALTH-AUDIT-PROTOCOL.md` 63 / 8 · `audit-checklist.md` 64 / 1 ·
-`running-an-audit.md` 25 / 5 · `SKILL.md` 12 / 2. **196 confirmed, 21 drift.**
+`HEALTH-AUDIT-PROTOCOL.xml` 63 / 8 · `audit-checklist.xml` 64 / 1 ·
+`running-an-audit.xml` 25 / 5 · `SKILL.md` 12 / 2. **196 confirmed, 21 drift.**
 
 The two survivors are different in kind and only one of them is a host
 obligation:
@@ -191,7 +191,7 @@ directory) … The files ARE reachable at
 not name»*.
 
 Two facts, one path shape, opposite verdicts. And the package already knows the
-right form: `HEALTH-AUDIT-PROTOCOL.md:233` writes the very same pointer
+right form: `HEALTH-AUDIT-PROTOCOL.xml:233` writes the very same pointer
 correctly — *«your project installed them — typically
 `vibedeps/flow-health-audit/<version>/spec/flows/health-audit/`, check
 `vibe.lock`»*. **That makes it a `self` falsifier and §3.6 route (a) — the
@@ -246,7 +246,7 @@ artefact — and the commands quoted in §0.1 reproduce its two aggregate number
 directly.
 
 **The two HEAD moves.** The batch opened at `96b5b55f`, passed through
-`f1abad16` (`spec/WAL.md`, 238+/332−) and closed at `c3b3fe19`
+`f1abad16` (`spec/WAL.xml`, 238+/332−) and closed at `c3b3fe19`
 (`spec/design/README.md`, +92). Both files are ones this batch reads — the WAL
 in [§3.4](#f-164-owes), `spec/design/` as part of the host's spec surface — so
 every figure was re-taken at the final HEAD:
@@ -254,7 +254,7 @@ every figure was re-taken at the final HEAD:
 ```bash
 git rev-parse --short HEAD                                         # c3b3fe19
 grep -cE '^## Audit run' AUDIT.md                                  # 3   (was 3)
-grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.md   # 0   (was 0)
+grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.xml   # 0   (was 0)
 git rev-list --count 3656f362..HEAD                                # 1703  (was 1702)
 python -c "import json,pathlib;r=json.loads(pathlib.Path('campaigns/packages-2026-09/run/state/routing.json').read_text(encoding='utf-8'));
 print(len([e for e in r['entries'] if '/health-audit/' in e['anchor']]))"   # 19  (was 19)
@@ -288,14 +288,14 @@ commit-anchored ranges only:**
 ## §1 — F-097 · the boot snippet {#f-097}
 
 _3 routed anchors, all in
-`packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md`.
+`packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.xml`.
 Routed wave 7 (2026-07-31). **This is the compiled boot lane** — the snippet is
-inlined into `spec/boot/STATIC.md:903–974`, so every host session reads all three
+inlined into `spec/boot/STATIC.xml:903–974`, so every host session reads all three
 of these sentences on boot. That is what makes F-097's genre «an instruction
 that fails when followed» rather than a document nobody opens._
 
 ```bash
-grep -n "vibe:static" spec/boot/STATIC.md | awk -F: '$1>900 && $1<1050'
+grep -n "vibe:static" spec/boot/STATIC.xml | awk -F: '$1>900 && $1<1050'
 # 903:<!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->
 # 975:<!-- vibe:static org.vibevm.world/licensing … -->     <- the next block; 903–974 is this flow's
 ```
@@ -497,7 +497,7 @@ grep -c "skill" vibe.lock                                # 0
 the sentence is in the compiled boot lane:
 
 ```bash
-grep -n "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE" spec/boot/STATIC.md
+grep -n "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE" spec/boot/STATIC.xml
 # 948:##USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: …
 ```
 
@@ -585,7 +585,7 @@ record's form.**_
 
 ### 2.1 `##THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK` — the definition, convicted on one of its five adjectives {#f-141-different}
 
-**The claim** (`HEALTH-AUDIT-PROTOCOL.md:28`, at HEAD):
+**The claim** (`HEALTH-AUDIT-PROTOCOL.xml:28`, at HEAD):
 
 > @fact:THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK The audit is a different kind of check — a deliberate, periodic,
 > breadth-first sweep, run with human or agent **judgment**, that
@@ -631,7 +631,7 @@ grep -nE '\*\*not\*\* (a fresh full sweep|the full)' AUDIT.md
 
 ### 2.2 `##AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT` — the walk, and the full costing for all eight of its anchors {#f-141-walk}
 
-**The claim** (`HEALTH-AUDIT-PROTOCOL.md:64`, at HEAD):
+**The claim** (`HEALTH-AUDIT-PROTOCOL.xml:64`, at HEAD):
 
 > @fact:AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT An audit run walks a category checklist breadth-first — one category
 > group per blind spot: @status:impl/done
@@ -680,7 +680,7 @@ its aids, and at HEAD **most of them already run**:
 | **E1–E4** (4) | `cargo xtask specmap --check`, `cargo xtask conform check`, `cargo xtask health` → `discipline/health/latest.json` | **live and gated** — `conform check` is step 5 of `tools/self-check.sh:291` |
 | **B1–B2** (2) | `tools/self-check.sh` step 0b — the denominator guard that asserts every live package workspace is one the floor builds | **live and gated** (`self-check.sh:148`) |
 | **C1–C2** (2) | `vibe check --path . --quiet` (self-check step 4); the campaign's own ref-resolution instruments | **live** |
-| **C3** (1) | read `spec/WAL.md` against `git log --oneline` | **free**, and already measured in [§3.4](#f-164-owes) |
+| **C3** (1) | read `spec/WAL.xml` against `git log --oneline` | **free**, and already measured in [§3.4](#f-164-owes) |
 | **A2, D1–D3** (4) | `grep` — run in this batch in under a minute: `#[ignore]` **2**, `#[allow` **87**, `TODO\|FIXME\|HACK\|XXX` **11**, over `crates/ xtask/` | **free** |
 | **A3** (1) | none — «pure judgment», the flow's own words, and the highest-value row | judgment |
 | **C4** (1) | live registry state vs the code's expectations | owner-court |
@@ -747,7 +747,7 @@ rescoped it to a window that then never opened** — because the cadence floor
   unblocks D4. A1's coverage row needs a deliberate choice
   (`cargo install cargo-llvm-cov`) or a standing exception — see the
   recommendation.
-- *The run:* the seven steps of `running-an-audit.md`, 17 rows, closing
+- *The run:* the seven steps of `running-an-audit.xml`, 17 rows, closing
   `INT-0001`. Most rows are transcription of instruments that already run.
 - *Carry-forward, which is the part nobody counts:* **12 findings are still
   `open` and 11 `filed`**, and every one must be re-listed and re-judged
@@ -823,7 +823,7 @@ three of four.
 
 ### 2.3 `##ROW-FIELD-ID` — the id format {#f-141-id}
 
-**The claim** (`HEALTH-AUDIT-PROTOCOL.md:114`, at HEAD):
+**The claim** (`HEALTH-AUDIT-PROTOCOL.xml:114`, at HEAD):
 
 > | @fact:ROW-FIELD-ID **ID** @status:impl/done | `<run-date>-NN` — unique within the run, stable across carry-forward. @status:impl/done |
 
@@ -883,7 +883,7 @@ picks by imitation of whichever section it read.
 
 ### 2.4 `##ROW-DISP-FILED` — where a filed finding went {#f-141-filed}
 
-**The claim** (`HEALTH-AUDIT-PROTOCOL.md:140`, at HEAD):
+**The claim** (`HEALTH-AUDIT-PROTOCOL.xml:140`, at HEAD):
 
 > | @fact:ROW-DISP-FILED **filed** @status:impl/done | Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed. @status:impl/done |
 
@@ -970,7 +970,7 @@ has never used.
 
 ### 2.5 `##AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR` and `##SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE` — the floor, twice more {#f-141-cadence}
 
-**The claims** (`HEALTH-AUDIT-PROTOCOL.md:192` and `:264`, at HEAD):
+**The claims** (`HEALTH-AUDIT-PROTOCOL.xml:192` and `:264`, at HEAD):
 
 > @fact:AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR The audit is **owner-triggered**, with a recommended floor of **once
 > per milestone** — run as part of, or immediately after, a milestone
@@ -1012,12 +1012,12 @@ adopts in the whole set._
 
 ### 3.1 `##A-RUN-MUST-FINISH-THE-INVENTORY` and `##STEP-WALK-THE-CHECKLIST-BREADTH-FIRST` — the walk, from the procedure's side {#f-164-walk}
 
-**The claims** (`running-an-audit.md:13` and `:24`, at HEAD):
+**The claims** (`running-an-audit.xml:13` and `:24`, at HEAD):
 
 > @fact:A-RUN-MUST-FINISH-THE-INVENTORY A run must finish the **inventory**. @status:impl/done
 
 > 2. @fact:STEP-WALK-THE-CHECKLIST-BREADTH-FIRST **Walk the checklist breadth-first.** Go category by category
->    through [`audit-checklist.md`](audit-checklist.md) — A, then B, then
+>    through [`audit-checklist.xml`](audit-checklist.xml) — A, then B, then
 >    C, then D, then any project-specific rows. Run each mechanical aid;
 >    where there is no aid (A3 especially), read with judgment. Breadth
 >    first: touch every category once before going deep on any one. @status:impl/done
@@ -1048,7 +1048,7 @@ work.
 
 ### 3.2 `##STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY` — the commit shape {#f-164-commit}
 
-**The claim** (`running-an-audit.md:54`, at HEAD):
+**The claim** (`running-an-audit.xml:54`, at HEAD):
 
 > 7. @fact:STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY **Commit.** Commit `AUDIT.md` as its own change — e.g.
 >    `docs(audit): <run-date> health audit` — and each in-run fix as its
@@ -1116,7 +1116,7 @@ practice, and one historical commit stays non-conforming forever.
 
 ### 3.3 `##EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS` — the row shape {#f-164-row}
 
-**The claim** (`running-an-audit.md:90`, at HEAD):
+**The claim** (`running-an-audit.xml:90`, at HEAD):
 
 > @fact:EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS Every finding is one table row carrying the five fields. @status:impl/done
 
@@ -1143,7 +1143,7 @@ host adopted the *record* and never adopted the *table*.
 **One observation worth the owner's eye before ruling.** The heading form is not
 laziness — it is what a finding like `2026-06-12-08` needs, which runs four
 lettered sub-findings across fourteen lines with file:line citations. That does
-not fit a table cell. The flow's own worked example (`running-an-audit.md:74-81`)
+not fit a table cell. The flow's own worked example (`running-an-audit.xml:74-81`)
 has one-line findings, and one-line findings fit a table. **The host's findings
 are a different size than the flow's example imagines**, and the form followed
 the content.
@@ -1188,7 +1188,7 @@ run picks by imitating whichever section it happens to read first.
 
 ### 3.4 `##OWES-A-COMPLETE-INVENTORY` — four sub-obligations, and the one that has silently decayed {#f-164-owes}
 
-**The claim** (`running-an-audit.md:140`, at HEAD):
+**The claim** (`running-an-audit.xml:140`, at HEAD):
 
 > - @fact:OWES-A-COMPLETE-INVENTORY **Owes:** a complete inventory. Every category walked, every finding
 >   recorded and dispositioned, every prior `open`/`filed` finding
@@ -1212,13 +1212,13 @@ seen.** The 2026-06-12 run *did* reconcile the checkpoint — that is finding
 `2026-06-12-12`, dispositioned `fixed`. At HEAD the reconciliation is gone:
 
 ```bash
-grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.md   # 0
-grep -n "^## Known issues" spec/WAL.md                              # 205
+grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.xml   # 0
+grep -n "^## Known issues" spec/WAL.xml                              # 205
 ```
 
 **The WAL's «Known issues» section cites zero audit finding ids and never
 mentions `AUDIT.md`.** It carries the campaign's `F-` and `B-` findings only.
-And this figure was re-taken *after* `f1abad16` rewrote `spec/WAL.md` wholesale
+And this figure was re-taken *after* `f1abad16` rewrote `spec/WAL.xml` wholesale
 (238+/332−) — so the checkpoint was rewritten on 2026-08-01 and the audit's 12
 `open` and 11 `filed` findings did not survive into it.
 
@@ -1237,11 +1237,11 @@ wrong about where to keep findings. What failed is the *reconciliation step*
 **(1) Adopt.** Sub-obligations 1 and 3 ride on claim 2's run —
 [§2.2](#f-141-walk-costed) — and cost nothing extra: a run that walks the
 checklist and carries forward *is* sub-obligations 1 and 3. Sub-obligation 4 is
-separable and cheap on its own: **one «known issues» bullet in `spec/WAL.md`
+separable and cheap on its own: **one «known issues» bullet in `spec/WAL.xml`
 pointing at `AUDIT.md`'s open subset**, in the shape the flow prescribes («the
 checkpoint merely points at the active subset»). *Derivable artefact:* a
 `##WAL-KI-AUDIT` bullet alongside the existing `##WAL-KI-OPEN` /
-`##WAL-KI-CLOSED-THIS-ARC` / `##WAL-KI-BACKLOG` trio at `spec/WAL.md:205-231`.
+`##WAL-KI-CLOSED-THIS-ARC` / `##WAL-KI-BACKLOG` trio at `spec/WAL.xml:205-231`.
 Because the WAL is rewritten each session, the durable form is the bullet's
 *place in the wind-down contract*, not its contents.
 
@@ -1261,7 +1261,7 @@ durable inventory tell the same story, so a session reading only the WAL is not
 misled about what is open.
 
 **(3) Defer.** The checkpoint and the inventory keep telling different stories.
-Concretely: a session that reads `spec/WAL.md` today sees the campaign's open
+Concretely: a session that reads `spec/WAL.xml` today sees the campaign's open
 findings and **none of the audit's 12 `open` items**, with no signal that an
 audit inventory exists at all.
 
@@ -1288,7 +1288,7 @@ wave 2 (2026-07-29)._
 
 ### 4.1 `##SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST` {#f-235-sum}
 
-**The claim** (`audit-checklist.md:224`, at HEAD):
+**The claim** (`audit-checklist.xml:224`, at HEAD):
 
 > - @fact:SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST Four groups: A test integrity, B rot outside the gate, C drift,
 >   D debt. Walk all four breadth-first. @status:impl/done
@@ -1331,7 +1331,7 @@ cost._
 
 ### 5.1 `##SEVERITY-P1-BLOCKER` {#f-310-p1}
 
-**The claim** (`HEALTH-AUDIT-PROTOCOL.md:122`, at HEAD):
+**The claim** (`HEALTH-AUDIT-PROTOCOL.xml:122`, at HEAD):
 
 > - @fact:SEVERITY-P1-BLOCKER **P1 — blocker.** A correctness gap, or a defect that can ship wrong
 >   behavior. Must be resolved before the next milestone is declared

@@ -17,12 +17,12 @@ practices in installable form.
 
 ## Contents {#contents}
 
-- `ru/chapter-1-two-process-model.md` — Два процесса, одна задача:
+- `ru/chapter-1-two-process-model.xml` — Два процесса, одна задача:
   the coprocessor model, the cognitive load split, shared memory.
-- `ru/chapter-2-shared-state-and-files.md` — Shared state: файлы как
+- `ru/chapter-2-shared-state-and-files.xml` — Shared state: файлы как
   IPC: addressability, atomicity, the conflict protocol, the WAL
   pattern.
-- `ru/chapter-3-memory-individual.md` — Архитектура памяти: the
+- `ru/chapter-3-memory-individual.xml` — Архитектура памяти: the
   memory hierarchy, decisions-not-facts, the working day.
 
 The chapters are reference depth, not standing instructions: open
@@ -32,3 +32,4 @@ member flows' boot snippets and protocol documents.
 Chapter texts are verbatim; internal references to material outside
 these chapters (e.g. the Safe Harbor note) resolve at the book's own
 public home, not inside this package.
+

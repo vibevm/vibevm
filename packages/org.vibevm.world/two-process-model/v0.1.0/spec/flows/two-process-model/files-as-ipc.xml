@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Files as IPC</title>
+  <status stage="spec" state="done"/>
+  <p><scope-of-this-document fact="true" status="impl/done">**Scope of this document.** This file reframes the project's text
+files — specs, the checkpoint file, the boot file — from
+"documentation" into what they actually are in a human-AI system:
+the **inter-process communication channel**.</scope-of-this-document></p>
+  <p><planes-budgets-and-requirements-pointer fact="true" status="impl/done">It defines the three
+planes of that channel, the budget each plane runs on, and the four
+requirements the channel must satisfy (each delivered by a sibling
+flow in this collection).</planes-budgets-and-requirements-pointer></p>
+  <wrong-word title="Documentation is the wrong word">
+    <p><traditional-documentation-is-optional fact="true" status="spec/done">Documentation, traditionally, is text written by people for people:
+written after the fact, updated irregularly, frequently stale — and
+*optional*.</traditional-documentation-is-optional></p>
+    <p><human-teams-survive-bad-docs-on-side-channels fact="true" status="spec/done">A project survives bad documentation, because human
+teams have side channels: Vasya walks over to Petya and asks why
+`new_handler.rs` exists, and the knowledge moves through the air.</human-teams-survive-bad-docs-on-side-channels></p>
+    <p><BETWEEN-THE-HUMAN-AND-THE-AI-THERE-IS-NO-AIR fact="true" status="spec/done">Between the human and the AI there is no air.</BETWEEN-THE-HUMAN-AND-THE-AI-THERE-IS-NO-AIR></p>
+    <p><no-hallway-no-archive-no-remembering fact="true" status="spec/done">No hallway, no chat
+archive the next session reads, no "remember what we discussed
+yesterday".</no-hallway-no-archive-no-remembering></p>
+    <p><THERE-ARE-ONLY-FILES fact="true" status="spec/done">**There are only files.**</THERE-ARE-ONLY-FILES></p>
+    <p><an-unwritten-reason-invites-a-third-handler fact="true" status="spec/done">If the file does not say that
+`new_handler.rs` exists because the old handler mishandles
+reconnection, the next session may "deduplicate" it — or write a
+third handler solving the same problem a third way.</an-unwritten-reason-invites-a-third-handler></p>
+    <p><THE-SPEC-TREE-IS-NOT-DOCUMENTATION fact="true" status="impl/done">So the spec tree is not documentation.</THE-SPEC-TREE-IS-NOT-DOCUMENTATION></p>
+    <p><THE-SPEC-TREE-IS-IPC fact="true" status="impl/done">It is **IPC** — the single
+channel through which two processes exchange state.</THE-SPEC-TREE-IS-IPC></p>
+    <p><A-BROKEN-CHANNEL-MAKES-THE-SYSTEM-STOP fact="true" status="impl/done">A broken channel
+(stale specs, an unupdated checkpoint, dead anchors) does not make
+the system worse; it makes the system stop.</A-BROKEN-CHANNEL-MAKES-THE-SYSTEM-STOP></p>
+    <quote><A-SPEC-IS-A-BOUNDARY-OBJECT fact="true" status="spec/done">Sociology has a precise term for artifacts that mediate between
+fundamentally different actors: a **boundary object** (Star &amp;
+Griesemer, 1989) — "plastic enough to adapt to the needs of the
+parties, robust enough to maintain a common identity". A spec is
+exactly that: the human reads it as *intent* ("I want 600 seconds,
+VPN users need the slack"), the AI reads the same lines as
+*instruction* (`const TIMEOUT: u64 = 600`). One file, two
+readings, one identity.</A-SPEC-IS-A-BOUNDARY-OBJECT></quote>
+  </wrong-word>
+  <planes title="The three planes">
+    <table>
+      <tr>
+        <td>Plane</td>
+        <td>Contents</td>
+        <td>Direction</td>
+        <td>Budget and rules</td>
+      </tr>
+      <tr>
+        <td><ROW-PLANE-CONTROL fact="true" status="impl/done">**Control**</ROW-PLANE-CONTROL></td>
+        <td><fact status="impl/done">the boot file (entry instructions), the checkpoint/WAL file, the specs</fact></td>
+        <td><fact status="impl/done">mostly human → AI</fact></td>
+        <td><fact status="impl/done">loaded every session, so every token is a recurring tax: boot ≤ ~500 tokens, checkpoint ≤ ~3000, one module spec ≤ ~5000 — split when over</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PLANE-DATA fact="true" status="impl/done">**Data**</ROW-PLANE-DATA></td>
+        <td><fact status="impl/done">code, tests, spec updates proposed by the AI</fact></td>
+        <td><fact status="impl/done">AI → human, verifiable</fact></td>
+        <td><fact status="impl/done">artifacts are *regenerable*: losing code is an inconvenience, losing a spec is a catastrophe. The spec is the source; the code is the binary. Nobody mourns a binary at recompile</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-PLANE-SIGNALS fact="true" status="impl/done">**Signals**</ROW-PLANE-SIGNALS></td>
+        <td><fact status="impl/done">git diff, REVIEW markers, changelog lines, broken tests, the end-of-session report</fact></td>
+        <td><fact status="impl/done">both ways</fact></td>
+        <td><fact status="impl/done">every signal is minimal: a diff, not the file; one marker line with a reason; one changelog line. Bandwidth is human attention</fact></td>
+      </tr>
+    </table>
+    <p><the-report-is-not-a-status-memo fact="true" status="impl/done">The end-of-session report deserves one emphasis: it is not a status
+memo for politeness.</the-report-is-not-a-status-memo></p>
+    <p><READ-THE-END-OF-SESSION-REPORT-EVERY-TIME fact="true" status="impl/done">It is structured input for the next decision
+cycle — read it with your eyes, every time.</READ-THE-END-OF-SESSION-REPORT-EVERY-TIME></p>
+  </planes>
+  <requirements title="The four requirements">
+    <p><any-ipc-mechanism-solves-the-same-four-problems fact="true" status="spec/done">Any IPC mechanism — pipes, sockets, shared memory — has to solve the
+same four problems.</any-ipc-mechanism-solves-the-same-four-problems></p>
+    <p><THE-FILE-CHANNEL-IS-NO-EXCEPTION fact="true" status="impl/done">The file channel is no exception.</THE-FILE-CHANNEL-IS-NO-EXCEPTION></p>
+    <p><each-requirement-has-its-own-flow fact="true" status="impl/done">Each
+requirement is delivered by its own flow in this collection:</each-requirement-has-its-own-flow></p>
+    <table>
+      <tr>
+        <td>Requirement</td>
+        <td>What it demands</td>
+        <td>Delivered by</td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-ADDRESSABILITY fact="true" status="impl/done">**Addressability**</ROW-REQ-ADDRESSABILITY></td>
+        <td><fact status="impl/done">every statement in every file is precisely citable, so a correction costs twenty tokens, not a re-derivation</fact></td>
+        <td><fact status="impl/done">flow:addressable-specs</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-ATOMICITY fact="true" status="impl/done">**Atomicity**</ROW-REQ-ATOMICITY></td>
+        <td><fact status="impl/done">every update to the shared state is one logical step, visible and verifiable in one diff</fact></td>
+        <td><fact status="impl/done">flow:git-atomic-commits</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-CONFLICT-PROTOCOL fact="true" status="impl/done">**Conflict protocol**</ROW-REQ-CONFLICT-PROTOCOL></td>
+        <td><fact status="impl/done">two writers *will* contradict each other; explicit priorities and a loud escalation path resolve it without a race</fact></td>
+        <td><fact status="impl/done">flow:conflict-protocol (and flow:sync-from-code for the sanctioned reverse flow)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-REQ-VISIBILITY fact="true" status="impl/done">**Visibility**</ROW-REQ-VISIBILITY></td>
+        <td><fact status="impl/done">a change one process made must be *seen* by the other: session-start reads are cache invalidation, the morning routine re-syncs the human, the diff is the notification</fact></td>
+        <td><fact status="impl/done">flow:wal</fact></td>
+      </tr>
+    </table>
+  </requirements>
+  <private-buffer title="The private buffer">
+    <p><NOT-EVERYTHING-BELONGS-ON-THE-CHANNEL fact="true" status="impl/done">Not everything belongs on the channel.</NOT-EVERYTHING-BELONGS-ON-THE-CHANNEL></p>
+    <p><PRIVATE-NOTES-LIVE-IN-A-DIRECTORY-EXCLUDED-FROM-THE-AGENTS-VIEW fact="true" status="impl/done">Notes the AI should never
+read — copy-paste snippets, personal reminders, drafts of
+corrections — live in a directory excluded from the agent's view
+(`.human/` or equivalent, plus the agent's ignore file).</PRIVATE-NOTES-LIVE-IN-A-DIRECTORY-EXCLUDED-FROM-THE-AGENTS-VIEW></p>
+    <p><physical-invisibility-beats-a-logical-prohibition fact="true" status="spec/done">Physical
+invisibility beats a logical prohibition for the same reason a
+firewall beats a "keep out" sign: the excluded file costs zero
+tokens and cannot be "helpfully" acted upon.</physical-invisibility-beats-a-logical-prohibition></p>
+  </private-buffer>
+  <failure-smell title="Failure smell">
+    <p><the-symptoms-of-a-degraded-channel-lead fact="true" status="spec/done">When the channel degrades, the symptoms are always the same:</the-symptoms-of-a-degraded-channel-lead></p>
+    <facts ordered="false">
+      <SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED fact="true" status="spec/done">the AI re-asks what was settled last week;</SYMPTOM-THE-AI-RE-ASKS-WHAT-WAS-SETTLED>
+      <SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES fact="true" status="spec/done">"fixes" undo deliberate choices;</SYMPTOM-FIXES-UNDO-DELIBERATE-CHOICES>
+      <SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES fact="true" status="spec/done">the human starts re-reading whole files instead of diffs.</SYMPTOM-THE-HUMAN-RE-READS-WHOLE-FILES>
+    </facts>
+    <p><TREAT-ANY-OF-THESE-AS-A-CHANNEL-OUTAGE fact="true" status="impl/done">Treat any of these as a channel outage — stop feature work and
+repair the files first.</TREAT-ANY-OF-THESE-AS-A-CHANNEL-OUTAGE></p>
+    <p><the-repair-is-never-mysterious-lead fact="true" status="spec/done">The repair is never mysterious:</the-repair-is-never-mysterious-lead></p>
+    <facts ordered="false">
+      <CAUSE-A-PLANE-IS-OVER-BUDGET fact="true" status="spec/done">some plane is over budget,</CAUSE-A-PLANE-IS-OVER-BUDGET>
+      <CAUSE-A-FACT-HAS-TWO-HOMES fact="true" status="spec/done">some fact has two homes,</CAUSE-A-FACT-HAS-TWO-HOMES>
+      <CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE fact="true" status="spec/done">or some change was never made visible.</CAUSE-A-CHANGE-WAS-NEVER-MADE-VISIBLE>
+    </facts>
+  </failure-smell>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL fact="true" status="impl/done">Spec files are not documentation; they are the only channel two
+  processes share. Optional is the one thing they are not.</SUM-SPEC-FILES-ARE-THE-ONLY-CHANNEL>
+      <SUM-THREE-PLANES fact="true" status="impl/done">Three planes: control (budgeted, loaded every session), data
+  (regenerable artifacts; spec is source, code is binary), signals
+  (minimal, attention-bounded).</SUM-THREE-PLANES>
+      <SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW fact="true" status="impl/done">Four requirements — addressability, atomicity, conflict rules,
+  visibility — each a sibling flow.</SUM-FOUR-REQUIREMENTS-EACH-A-SIBLING-FLOW>
+      <SUM-KEEP-A-PRIVATE-HUMAN-BUFFER fact="true" status="impl/done">Keep a private human buffer physically invisible to the agent.</SUM-KEEP-A-PRIVATE-HUMAN-BUFFER>
+      <SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL fact="true" status="impl/done">When the AI seems to forget or undo things, suspect the channel
+  before the model.</SUM-SUSPECT-THE-CHANNEL-BEFORE-THE-MODEL>
+    </facts>
+  </summary>
+</spec>

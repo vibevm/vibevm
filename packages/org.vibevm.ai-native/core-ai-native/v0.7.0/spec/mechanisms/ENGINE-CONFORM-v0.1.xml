@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>ENGINE — conform: the cross-language conformance engine, v0.1</title>
+  <p>**Status.** Design, beta. Implements the Charter's T3 decision: **our own engine, borrowed frontends.** Rationale (owner-decided): asking a compiler about its own language is one page of code; rebuilding name resolution over tree-sitter is weeks. The balance is made explicit through escalation tiers, not ad-hoc judgment.</p>
+  <p>**Derives from.** Charter A1 (findings carry explanation chains), A2 (extraction is cached, incremental), A3 (conformance is below the algorithmic floor — no LLM in the checking path), A5 (rules ship with checkers).</p>
+  <tiers title="1. Escalation tiers">
+    <p>Every rule record declares `tier` — the minimum analysis depth its check requires. The engine runs the cheapest adequate frontend; escalation is declared, never improvised.</p>
+    <table>
+      <tr>
+        <td>Tier</td>
+        <td>Capability</td>
+        <td>Backend</td>
+        <td>Cost</td>
+      </tr>
+      <tr>
+        <td>**T-lex**</td>
+        <td>textual invariants (forbidden tokens, file layout, license headers)</td>
+        <td>ripgrep-class scan (MIT/Unlicense)</td>
+        <td>~free</td>
+      </tr>
+      <tr>
+        <td>**T-syn**</td>
+        <td>structure: items, attributes, imports, spans, hashes</td>
+        <td>tree-sitter (MIT) universal; `syn` (MIT/Apache-2.0) for Rust precision</td>
+        <td>cheap, incremental</td>
+      </tr>
+      <tr>
+        <td>**T-sem**</td>
+        <td>types, name resolution, macro/template expansion, real import graphs</td>
+        <td>per-language compiler frontend (§2)</td>
+        <td>expensive; cached hard</td>
+      </tr>
+    </table>
+    <p>Rule examples: R-021 forbidden-idiom scan → T-lex/T-syn; R-002 import-graph isolation → T-syn (Rust) / T-sem (C++ where headers lie); R-020 naming-vs-manifest → T-syn + specmap index; type-flow rules (future) → T-sem.</p>
+  </tiers>
+  <frontends title="2. Frontends — borrowed, behind one trait">
+    <fence lang="rust">trait Frontend {
+    fn lang(&amp;self) -&gt; Lang;
+    fn tier(&amp;self) -&gt; Tier;
+    fn extract(&amp;self, files: &amp;[SourceFile]) -&gt; Result&lt;Vec&lt;Fact&gt;, FrontendError&gt;;
+}</fence>
+    <table>
+      <tr>
+        <td>Lang</td>
+        <td>T-syn</td>
+        <td>T-sem</td>
+        <td>License posture</td>
+      </tr>
+      <tr>
+        <td>Rust</td>
+        <td>`syn` in-process</td>
+        <td>rust-analyzer crates or `rustc_driver` (nightly caveat)</td>
+        <td>MIT/Apache-2.0 — clean</td>
+      </tr>
+      <tr>
+        <td>C++</td>
+        <td>tree-sitter-cpp</td>
+        <td>**libclang** via `clang-sys` — the one-page-AST path</td>
+        <td>Apache-2.0 w/ LLVM exception — clean</td>
+      </tr>
+      <tr>
+        <td>TS/JS</td>
+        <td>tree-sitter / SWC (Apache-2.0)</td>
+        <td>TypeScript compiler API via a Node **sidecar process**</td>
+        <td>Apache-2.0 — clean</td>
+      </tr>
+      <tr>
+        <td>Python</td>
+        <td>RustPython parser (MIT) in-process</td>
+        <td>CPython `ast`/`symtable` via sidecar</td>
+        <td>PSF / MIT — clean</td>
+      </tr>
+    </table>
+    <p>Sidecar protocol: newline-delimited JSON over stdio, versioned; sidecars emit Facts, nothing else. A frontend crash degrades that language's T-sem rules to `skipped (frontend unavailable)` — visible in the report, never silent.</p>
+    <p>**Foreign linters as evidence providers.** clippy, eslint, ruff, clang-tidy run as-is; their output is ingested as facts via **SARIF** (the OASIS static-analysis interchange format). We neither reimplement their checks nor fork them — we *cite* them: a Discipline rule may be `check: { tool: "clippy", id: "...", status: enforced }`, and conform's job is orchestration + the checks no generic linter can know (manifest-vs-name, specmap coverage, cell isolation).</p>
+  </frontends>
+  <section id="facts" title="3. The fact store">
+    <p>Language-neutral normalized facts; this is the ledger's "facts class" (LEDGER §3) instantiated:</p>
+    <fence lang="json">{ "fact": "item",   "lang": "rust", "path": "crates/vibe-resolver/src/naive.rs",
+  "kind": "struct", "symbol": "vibe_resolver::naive::NaiveDepSolver",
+  "span": [29, 41], "hash": "sha256:…", "attrs": ["spec(implements=…, r=2)"] }
+{ "fact": "import", "from": "vibe_resolver::naive", "to": "vibe_core::manifest" }
+{ "fact": "flag_read", "symbol": "…", "site": "crates/vibe-cli/src/registry.rs:88" }</fence>
+    <list ordered="false">
+      <item>**Key:** `(file content-hash, frontend id+version)`. Facts never rot semantically — re-extraction happens only when the file or the frontend changes. This is what makes conformance incremental: a 1-file diff re-extracts 1 file.</item>
+      <item>Store: content-addressed, local + CI-cache; never committed (derived data with a deterministic producer).</item>
+    </list>
+  </section>
+  <rules title="4. Rules as queries">
+    <p>v0.1: rules are Rust implementations of one trait — `fn check(&amp;self, facts: &amp;FactStore, specmap: &amp;Index) -&gt; Vec&lt;Finding&gt;` — compiled into the engine. A declarative query DSL (datalog-flavored) is deliberately deferred: we will know its right shape after ~30 real rules exist, not before (Open Question 2).</p>
+    <p>**Findings** carry the A1 chain: rule id → why (axiom trace) → span → involved facts → deviation status (a matching `deviates` record downgrades the finding to `deviation-acknowledged`). Output: SARIF (so IDEs and CI render findings for free) + the ratchet baseline file (`conform-baseline.json`): pre-existing findings are frozen per scope; new ones fail the gate; the baseline only shrinks.</p>
+  </rules>
+  <determinism title="5. Determinism and gates">
+    <p>Same inputs → byte-identical SARIF (stable ordering, no wall-clock). Tested the way vibevm tests its resolver and codegen: run twice, diff. Gate command: `conform check --baseline conform-baseline.json --scope crates/vibe-resolver` — exit code is the acceptance criterion the Playbook relies on; no human judgment in the loop (A3).</p>
+  </determinism>
+  <open title="6. Open questions">
+    <list ordered="true">
+      <item>rust-analyzer crates vs `rustc_driver` for Rust T-sem (stability vs fidelity) — decide when the first T-sem Rust rule actually lands; none of the Phase ≤4 checks need it.</item>
+      <item>Query DSL: shape and whether rules become data (loadable rule-packs) — after 30 in-tree rules.</item>
+      <item>Fact schema versioning across frontend upgrades — proposal: schema carries `v`, store segregates by version, mixed reads forbidden.</item>
+      <item>Performance envelope targets (full-workspace cold scan budget; warm incremental budget) — set from Phase 4 measurements.</item>
+    </list>
+    <p>*Any frontend or tier specified here that is not exercised by Playbook Phase 4 is removed from this document rather than carried as aspiration.*</p>
+  </open>
+</spec>

@@ -25,18 +25,18 @@ resolution. @status:spec/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md` — the problem
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml` — the problem
   (multi-homing without multi-master), the model (single-writer
   mainline; hosts as replicas; contributions in via any inbox), what it
   buys, what it costs, and a re-derive prompt. @status:impl/done
-- @fact:CONTENT-THE-FANOUT-MECHANICS `spec/flows/source-mirrors/fanout-mechanics.md` — the committed
+- @fact:CONTENT-THE-FANOUT-MECHANICS `spec/flows/source-mirrors/fanout-mechanics.xml` — the committed
   credential-free manifest, the fetch/verify/push/report procedure,
   fail-loud semantics, the read-only drift check, bringing a web merge
   home, and a ~15-line reference script with the never-`--force`
   invariant pinned by a test. @status:impl/done
-- @fact:CONTENT-THE-DAILY-LOOP `spec/flows/source-mirrors/daily-loop.md` — the maintainer's day,
+- @fact:CONTENT-THE-DAILY-LOOP `spec/flows/source-mirrors/daily-loop.xml` — the maintainer's day,
   handling reported drift, onboarding a host, offboarding a host. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/62-flow-source-mirrors.md` — boot snippet: the core rule
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/62-flow-source-mirrors.xml` — boot snippet: the core rule
   and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -94,3 +94,4 @@ construction, and prove the invariant with a test rather than a promise. @status
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+

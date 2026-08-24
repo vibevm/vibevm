@@ -20,3 +20,4 @@ server. @status:impl/done
 
 @fact:AGG-FRONT-DOOR The consumer front door — wiring, floor, sweep — is documented in
 the `-lang` package's README and `spec/rust/GUIDE-AI-NATIVE-RUST.md`. @status:impl/done
+

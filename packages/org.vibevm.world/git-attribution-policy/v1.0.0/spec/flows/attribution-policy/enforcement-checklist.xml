@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Enforcement checklist</title>
+  <status stage="spec" state="done"/>
+  <p><A-POLICY-WITH-NO-CHECKER-IS-A-WISH fact="true" status="spec/done">**Scope of this document.** A policy with no checker is a wish.</A-POLICY-WITH-NO-CHECKER-IS-A-WISH></p>
+  <p><scope-of-this-document fact="true" status="impl/done">This
+file is the per-surface checklist for the attribution policy, the
+mechanical checks that catch slips before they publish, and the
+drill for when one lands anyway.</scope-of-this-document></p>
+  <p><written-for-concealment-flipped-for-disclosure fact="true" status="impl/done">Written for the concealment posture;
+for disclosure, run the same checks with the polarity flipped (scan
+for *missing* marks instead of present ones).</written-for-concealment-flipped-for-disclosure></p>
+  <surfaces title="The surfaces">
+    <table>
+      <tr>
+        <td>Surface</td>
+        <td>What leaks there</td>
+        <td>Check</td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-COMMIT-MESSAGE-BODIES fact="true" status="spec/done">Commit message bodies</ROW-SURFACE-COMMIT-MESSAGE-BODIES></td>
+        <td><fact status="spec/done">"generated with…", tool ads, model names</fact></td>
+        <td><fact status="spec/done">pre-push scan (below)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-COMMIT-TRAILERS fact="true" status="spec/done">Commit trailers</ROW-SURFACE-COMMIT-TRAILERS></td>
+        <td><fact status="spec/done">`Co-Authored-By`, `Signed-off-by: &lt;model&gt;`</fact></td>
+        <td><fact status="spec/done">pre-push scan (below)</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-BRANCH-AND-TAG-NAMES fact="true" status="spec/done">Branch / tag names</ROW-SURFACE-BRANCH-AND-TAG-NAMES></td>
+        <td><fact status="spec/done">agent-generated branch names carrying tool names</fact></td>
+        <td><fact status="spec/done">`git branch -a` eyeball at review; naming convention in the boot file</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-CODE-COMMENTS fact="true" status="spec/done">Code comments</ROW-SURFACE-CODE-COMMENTS></td>
+        <td><fact status="spec/done">"AI-generated", model names in TODO/FIXME</fact></td>
+        <td><fact status="spec/done">repo-wide grep, periodically</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-README-DOCS-RELEASE-NOTES fact="true" status="spec/done">README / docs / release notes</ROW-SURFACE-README-DOCS-RELEASE-NOTES></td>
+        <td><fact status="spec/done">boilerplate credit lines</fact></td>
+        <td><fact status="spec/done">part of release checklist</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS fact="true" status="spec/done">PR titles and descriptions</ROW-SURFACE-PR-TITLES-AND-DESCRIPTIONS></td>
+        <td><fact status="spec/done">tool-inserted footers</fact></td>
+        <td><fact status="spec/done">PR template with an explicit placeholder to overwrite</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-CI-CONFIGURATION fact="true" status="spec/done">CI configuration</ROW-SURFACE-CI-CONFIGURATION></td>
+        <td><fact status="spec/done">marketplace actions inserting attribution steps</fact></td>
+        <td><fact status="spec/done">review any new CI step's output once</fact></td>
+      </tr>
+      <tr>
+        <td><ROW-SURFACE-GENERATED-FILE-HEADERS fact="true" status="spec/done">Generated-file headers</ROW-SURFACE-GENERATED-FILE-HEADERS></td>
+        <td><fact status="spec/done">scaffolding tools stamping their names</fact></td>
+        <td><fact status="spec/done">check scaffold output the first time a generator is adopted</fact></td>
+      </tr>
+    </table>
+  </surfaces>
+  <pre-push title="The pre-push scan">
+    <p><MESSAGES-AND-TRAILERS-ARE-MECHANICALLY-CHECKABLE fact="true" status="impl/done">The two highest-volume surfaces — messages and trailers — are
+mechanically checkable.</MESSAGES-AND-TRAILERS-ARE-MECHANICALLY-CHECKABLE></p>
+    <p><pre-push-scan-lead fact="true" status="impl/done">Run before every push (or wire as a
+`pre-push` hook):</pre-push-scan-lead></p>
+    <fence lang="sh"># Scan outgoing commits for attribution marks. Nonzero output = stop.
+git log --format='%H %B' @{u}..HEAD |
+  grep -inE 'co-authored-by|signed-off-by:.*(claude|gpt|gemini|copilot|llama|codex|model)|generated (with|by) [^ ]*(ai|llm|claude|gpt|copilot)' \
+  &amp;&amp; echo 'ATTRIBUTION MARK FOUND — fix before push' || true</fence>
+    <p><ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS fact="true" status="impl/done">Adapt the pattern list to the tools your team actually runs — the
+list above is a starting set, not an oracle.</ADAPT-THE-PATTERN-LIST-TO-YOUR-OWN-TOOLS></p>
+    <p><a-real-hook-beats-ten-generic-ones fact="true" status="spec/done">A hook that fires on
+your real tools' real phrasing is worth ten generic ones.</a-real-hook-beats-ten-generic-ones></p>
+    <p><the-scan-covers-all-co-authored-by-trailers fact="true" status="impl/done">Note the
+scan intentionally covers *all* `Co-Authored-By` trailers: under
+this policy human co-authors are rare enough to allowlist by hand,
+and a false positive costs seconds while a false negative publishes.</the-scan-covers-all-co-authored-by-trailers></p>
+  </pre-push>
+  <configure title="Tool configuration beats scanning">
+    <p><SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM fact="true" status="impl/done">Scanning catches slips; configuration prevents them.</SCANNING-CATCHES-SLIPS-CONFIGURATION-PREVENTS-THEM></p>
+    <p><most-agents-accept-standing-instructions fact="true" status="spec/done">Most coding
+agents accept standing instructions (a project rules file read at
+session start).</most-agents-accept-standing-instructions></p>
+    <p><PUT-THE-POLICY-IN-THE-AGENTS-STANDING-INSTRUCTIONS fact="true" status="impl/done">Put the policy there — this package's boot snippet
+is exactly that — and the agent stops *producing* the marks, which
+is cheaper than catching them.</PUT-THE-POLICY-IN-THE-AGENTS-STANDING-INSTRUCTIONS></p>
+    <p><SET-A-TOOLS-HARD-TRAILER-SETTING-ONCE fact="true" status="impl/done">Where a tool has a hard setting for
+commit trailers, set it once and note it in the project's setup doc.</SET-A-TOOLS-HARD-TRAILER-SETTING-ONCE></p>
+  </configure>
+  <audit title="The periodic audit line">
+    <p><SLOW-SURFACES-ARE-NOT-WORTH-A-PER-PUSH-SCAN fact="true" status="impl/done">Slow-accumulating surfaces (comments, docs, release notes) are not
+worth a per-push scan.</SLOW-SURFACES-ARE-NOT-WORTH-A-PER-PUSH-SCAN></p>
+    <p><periodic-audit-line-lead fact="true" status="impl/done">Put one line in the project's periodic audit
+checklist (if you run `flow:health-audit` or similar):</periodic-audit-line-lead></p>
+    <quote><THE-AUDIT-CHECKLIST-LINE fact="true" status="impl/done">Attribution: repo-wide grep for the pattern set; check surfaces
+added since last audit (new CI steps, new scaffolds, new doc
+generators).</THE-AUDIT-CHECKLIST-LINE></quote>
+  </audit>
+  <slip-drill title="When a slip lands">
+    <facts ordered="true">
+      <DRILL-CAUGHT-BEFORE-PUSH fact="true" status="impl/done">**Caught before push:** amend or rebase locally. No further
+   action; this is what the scan exists for.</DRILL-CAUGHT-BEFORE-PUSH>
+      <DRILL-CAUGHT-AFTER-PUSH fact="true" status="impl/done">**Caught after push:** do **not** rewrite published history on
+   reflex — the frozen-history rule (`flow:git-atomic-commits` §pushed)
+   wins by default. Record the slip, fix the *source* (the tool or
+   template that produced it), and surface to the owner: rewriting
+   one commit's metadata out of published history is the owner's
+   call, made knowing who has already pulled.</DRILL-CAUGHT-AFTER-PUSH>
+      <DRILL-EITHER-WAY fact="true" status="impl/done">**Either way:** if the same surface slips twice, the checklist —
+   not the person — is at fault. Add the missing check.</DRILL-EITHER-WAY>
+    </facts>
+  </slip-drill>
+  <summary title="Summary">
+    <facts ordered="false">
+      <SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL fact="true" status="impl/done">Eight surfaces; two of them (messages, trailers) get a mechanical
+  pre-push scan, the rest ride templates, tool configuration, and
+  the periodic audit.</SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL>
+      <SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP fact="true" status="impl/done">Configure tools not to produce marks; scan as the backstop.</SUM-CONFIGURE-FIRST-SCAN-AS-BACKSTOP>
+      <SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS fact="true" status="impl/done">Pre-push slips are amended freely; pushed slips default to
+  stand-and-fix-the-source, with history rewrite an owner-level
+  exception.</SUM-PRE-PUSH-SLIPS-VERSUS-PUSHED-SLIPS>
+      <SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE fact="true" status="impl/done">A surface that slips twice earns a new checklist line.</SUM-A-TWICE-SLIPPED-SURFACE-EARNS-A-LINE>
+    </facts>
+  </summary>
+</spec>

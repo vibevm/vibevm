@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The Campaign Form — plans, baselines, and the paper trail</title>
+  <p>**Discipline v0.2 · status: BETA · T1 · language-neutral**</p>
+  <p>*The [Raid Playbook](03-RAID-PLAYBOOK.xml) §1 gives the in-flight skeleton of
+a campaign (scope &amp; freeze → card set &amp; order → phases → batches &amp;
+checkpoints → differential safety → exit criteria). This document is the
+campaign's **paper trail**: the artifacts a campaign writes so it can be
+planned cold, executed by someone (or some session) other than its author,
+paused at any phase boundary, and audited afterwards. The original
+greenfield terraform proved this machinery; brownfield adoption
+([BROWNFIELD](mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml)) and every relocation
+or drain campaign since reuse it. Historical instances live in the pilot
+project's tree; this is the distilled form.*</p>
+  <artifacts title="1. The artifact set">
+    <table>
+      <tr>
+        <td>Artifact</td>
+        <td>Written</td>
+        <td>Purpose</td>
+      </tr>
+      <tr>
+        <td>**PLAN**</td>
+        <td>before work starts</td>
+        <td>the cold-executable recipe (see §2)</td>
+      </tr>
+      <tr>
+        <td>**BASELINE**</td>
+        <td>at phase −1 / campaign open</td>
+        <td>the frozen starting facts: gate panel state, inventory counts, the numbers phases are measured against</td>
+      </tr>
+      <tr>
+        <td>**PREDICTIONS**</td>
+        <td>at campaign open</td>
+        <td>falsifiable expectations — what each phase should change, stated *before* execution so the REPORT can honestly say "confirmed / falsified / surprised"</td>
+      </tr>
+      <tr>
+        <td>**LOG**</td>
+        <td>during execution</td>
+        <td>append-only running record: per-phase entries, deviations from plan, discovered-necessary work, dead ends kept for the record</td>
+      </tr>
+      <tr>
+        <td>**REPORT**</td>
+        <td>at campaign close</td>
+        <td>what the campaign taught: results vs PREDICTIONS, cards/rules that misfired, lessons that feed Discipline revision</td>
+      </tr>
+    </table>
+    <p>Small campaigns may fold BASELINE and PREDICTIONS into the PLAN's
+current-state section and the LOG into commit messages — but a campaign that
+skips the REPORT learns nothing durable, and a campaign without a written
+PLAN cannot be resumed by anyone but its author's context window.</p>
+  </artifacts>
+  <plan title="2. The plan shape">
+    <p>A campaign plan is written **to be executed cold** — by a fresh session with
+no memory of its authoring. The load-bearing sections:</p>
+    <list ordered="true">
+      <item>**Read-first / boot note** — what to read before this file (the project's
+   boot sequence), and the rule that the project's living state supersedes
+   the plan where they diverge.</item>
+      <item>**Why this exists** — the reframe: what debt or gap the campaign pays,
+   in one screen.</item>
+      <item>**Directives / decisions in force** — the owner's binding choices, so the
+   executor never re-litigates them.</item>
+      <item>**Current-state facts, verified** — with file:line pointers, gathered at
+   authoring time and marked "do not re-discover". Wrong facts here are the
+   most expensive class of plan bug: verify while writing.</item>
+      <item>**Target end-state** — the "what done looks like" tree/diagram.</item>
+      <item>**Design decisions** — each with its rationale and its rejected
+   alternative, so a surprise mid-execution can be resolved in the spirit of
+   the plan.</item>
+      <item>**Phases** — each with: goal, recipe (commands, paths), **its own
+   acceptance gate**, and **its own commit set**. A phase is a safe stop; a
+   failed phase rolls back without losing prior ones.</item>
+      <item>**Risks &amp; fallbacks** — named, each with its detection signal and its
+   plan-B.</item>
+      <item>**Quick-start** — the copy-paste block the executing session runs first
+   (floor verification, baseline capture).</item>
+      <item>**Whole-campaign acceptance** — the end-to-end scenario that defines
+    done, ideally frozen as a test.</item>
+    </list>
+  </plan>
+  <gates title="3. Phase-gate discipline">
+    <list ordered="false">
+      <item>**The floor is green at every phase boundary** — the project's full gate
+  panel, not just the parts the phase touched. A phase that leaves the floor
+  red is not done.</item>
+      <item>**Each phase lands its own topic-grouped commits** (one logical unit per
+  commit). The git log is the authoritative per-item record; the LOG
+  narrates, the commits *are* the history.</item>
+      <item>**Behavior changes carry their differential oracle**
+  ([Raid Playbook](03-RAID-PLAYBOOK.xml) §1.5): a campaign cannot move
+  behavior silently. Where the campaign's point is byte-stability (a
+  relocation, a rename), the byte-compare IS the oracle — state it in the
+  phase's acceptance.</item>
+      <item>**Discovered-necessary work is legal but recorded**: a mid-phase discovery
+  either enters the current phase explicitly (LOG entry + the phase's
+  commits) or is filed as debt/intent for later — never done silently
+  "while I was here".</item>
+    </list>
+  </gates>
+  <resume title="4. Resumability">
+    <p>A campaign must survive its executor stopping at any phase boundary
+(see [06-WAL-CONVENTION](06-WAL-CONVENTION.xml)):</p>
+    <list ordered="false">
+      <item>*With a WAL (recommended):* the campaign updates the WAL's standing line at
+  every phase boundary (phase landed, floor state, next phase); a session
+  resuming cold reads boot → WAL → the PLAN and continues at the recorded
+  phase.</item>
+      <item>*Without a WAL:* the PLAN carries a **status line at its top** ("status:
+  Phase N landed, floor green, next: Phase N+1") that the executor updates
+  as part of each phase's commit set, and the LOG's last entry is the resume
+  pointer. The rule is the same either way: **resumption state lives in the
+  repository, never in a session.**</item>
+    </list>
+  </resume>
+  <exit title="5. Exit">
+    <p>A campaign closes when its whole-campaign acceptance passes on a green
+floor. The closing motions: write the REPORT (results vs PREDICTIONS,
+lessons, candidate Discipline revisions), file every leftover as debt/intent
+with an id (the BROWNFIELD carry-over guarantee: nothing evaporates), update
+the resume pointer to "closed", and — where the project mirrors its history —
+leave publishing/mirroring as the owner's explicit call, not the campaign's
+last step.</p>
+  </exit>
+</spec>

@@ -21,21 +21,21 @@ milestone is never declared done on an un-audited base. @status:impl/done
 
 @fact:package-contents-lead This package ships three flow documents, a skill, and a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md` — what the audit
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml` — what the audit
   is and is not, the four blind spots, `AUDIT.md` as the durable home,
   dispositions and carry-forward, the living-checklist law, the
   "why not" section, and a re-derive prompt. @status:impl/done
-- @fact:CONTENT-THE-AUDIT-CHECKLIST `spec/flows/health-audit/audit-checklist.md` — the categories walked
+- @fact:CONTENT-THE-AUDIT-CHECKLIST `spec/flows/health-audit/audit-checklist.xml` — the categories walked
   each run (A test integrity, B rot outside the gate, C drift, D debt),
   every sub-item with what to look for, a mechanical aid, and what
   "bad" looks like. @status:impl/done
-- @fact:CONTENT-RUNNING-AN-AUDIT `spec/flows/health-audit/running-an-audit.md` — the seven-step run,
+- @fact:CONTENT-RUNNING-AN-AUDIT `spec/flows/health-audit/running-an-audit.xml` — the seven-step run,
   the `AUDIT.md` section format, and a worked example on an invented
   generic project. @status:impl/done
 - @fact:CONTENT-THE-SKILL `spec/skills/health-audit/SKILL.md` — the `health-audit` skill: an
   agent walks the checklist and drafts the `AUDIT.md` section for
   approval. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/42-flow-health-audit.md` — boot snippet loaded at session
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/42-flow-health-audit.xml` — boot snippet loaded at session
   start: the one-line law, the cadence, and the never-do list. @status:impl/done
 
 ## Install {#install}
@@ -90,3 +90,4 @@ agent judgment reads what the machine cannot. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [LICENSE.md](LICENSE.md). @status:impl/done
+

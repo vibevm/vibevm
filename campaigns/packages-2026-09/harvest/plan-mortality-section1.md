@@ -34,7 +34,7 @@
 
 | решение | класс | дом |
 |---|---|---|
-| D1 «одноразовые миры» | `both` | контракт — `PROP-044` `##TRUTH-KERNEL`, `##DERIVED-IS-DISPOSABLE`, `##ONE-ETERNAL-FILE`; отвергнутые архитектуры — `spec/design/change-native-formats-verdict.md#arch-b` (гербарий), `#arch-c` (вечная линия), `#arch-d` (формат как программа) |
+| D1 «одноразовые миры» | `both` | контракт — `PROP-044` `##TRUTH-KERNEL`, `##DERIVED-IS-DISPOSABLE`, `##ONE-ETERNAL-FILE`; отвергнутые архитектуры — `spec/design/change-native-formats-verdict.xml#arch-b` (гербарий), `#arch-c` (вечная линия), `#arch-d` (формат как программа) |
 | D2 тегированное объединение | `spec` | `PROP-005` `##REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED` (с причиной и ссылкой на записку перелома `formats/breaks/001.md`) |
 | D3 журнал вместо RMW | `spec` | `PROP-044` `##M-JOURNAL-NOT-RMW`; следствие для читателя — `PROP-005` `##FORWARD-COMPAT` |
 | D4 свой слой генерации | `spec` | `PROP-044` `##M-SCHEMA-DESCRIBES-FORM`, `##M-OPEN-ENUM-FROM-CLOSED` |
@@ -102,10 +102,10 @@ D11 несёт два разных утверждения, и они имели 
 | пункт | дом |
 |---|---|
 | 1. читать PROP-044 + план + `CLAUDE.md`; воркеры не запускают git | `CLAUDE.md`; `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md` |
-| 2. вендоренные копии и движки дисциплины не трогать | `spec/WAL.md` `##WAL-C-VENDORED` (стоячий констрейнт) |
-| 3. фаза кончается зелёной панелью; `specmap` в той же посадке | флоу `campaign-plans` `##EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP`; `spec/WAL.md` `##WAL-C-LANDING-ORDER` |
+| 2. вендоренные копии и движки дисциплины не трогать | `spec/WAL.xml` `##WAL-C-VENDORED` (стоячий констрейнт) |
+| 3. фаза кончается зелёной панелью; `specmap` в той же посадке | флоу `campaign-plans` `##EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP`; `spec/WAL.xml` `##WAL-C-LANDING-ORDER` |
 | 4. бюджет 600 строк после `cargo fmt` | не проза, а **чекер**: шаг `conform check` панели |
-| 5. атомарные Conventional Commits, явные пути, heredoc | флоу `git-atomic-commits` и `git-conventional-commits`; `spec/WAL.md` `##WAL-C-GIT` |
+| 5. атомарные Conventional Commits, явные пути, heredoc | флоу `git-atomic-commits` и `git-conventional-commits`; `spec/WAL.xml` `##WAL-C-GIT` |
 | 6. ошибки цитируют REQ; `unwrap`/`expect` запрещены | стек `rust-ai-native-lang` `##RULE-ERROR-ENUM-PER-LAYER` (и conform-гейт) |
 | 7. ничего не публикуется наружу; тесты герметичны | D13 (допубликационный режим) → `PROP-044` `##THE-PUBLIC-SWITCH` |
 | 8. тексты отказов генерируются из данных | `PROP-044` `##AGENT-MESSAGES`; реализация — `quarantine::recipe_for`, `PROP-005` `##THE-RECIPE-HAS-ONE-HOME` |

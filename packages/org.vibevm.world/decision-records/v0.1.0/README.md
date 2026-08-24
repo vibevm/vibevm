@@ -33,20 +33,20 @@ plus a changelog line, and history lives in git. @status:impl/done
 
 @fact:package-contents-lead This package ships three pieces of content plus a boot snippet: @status:impl/done
 
-- @fact:CONTENT-THE-PROTOCOL `spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md` — full
+- @fact:CONTENT-THE-PROTOCOL `spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml` — full
   protocol: facts versus decisions, why the asymmetry is load-bearing
   in a human-AI team, the four-field record, placement at the
   governing anchor (contrasted with classic ADR), when to write a
   record, the rejected-alternatives and invariants section patterns,
   and a re-derive prompt for adapting the practice to any project. @status:impl/done
-- @fact:CONTENT-THE-RECORD-TEMPLATE `spec/flows/decision-records/record-template.md` — the copy-ready
+- @fact:CONTENT-THE-RECORD-TEMPLATE `spec/flows/decision-records/record-template.xml` — the copy-ready
   template, two fully worked examples (a timeout constant, a library
   choice), and the anti-pattern table. @status:impl/done
-- @fact:CONTENT-THE-REVISIT-TRIGGERS `spec/flows/decision-records/revisit-triggers.md` — trigger anatomy
+- @fact:CONTENT-THE-REVISIT-TRIGGERS `spec/flows/decision-records/revisit-triggers.xml` — trigger anatomy
   (metric + threshold + observation point), good/bad trigger table,
   the periodic sweep that actually fires triggers, and the reopening
   procedure. @status:impl/done
-- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/25-flow-decision-records.md` — boot snippet loaded at
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/25-flow-decision-records.xml` — boot snippet loaded at
   session start: the core rule, the in-session recording duty, and
   the never-do list. @status:impl/done
 
@@ -99,3 +99,4 @@ only kind of memory it can ever have. @status:spec/done
 ## License {#license}
 
 @fact:license-line UPL-1.0. See [`LICENSE.md`](LICENSE.md). @status:impl/done
+
