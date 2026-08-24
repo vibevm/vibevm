@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-052: the vibevm/ root — the directory layout law</title>
-  <status stage="spec" state="done" comment="commissioned and ruled by the owner 2026-08-24 (mandate quoted verbatim in §1); build rides vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml under the session goal «переход на новую раскладку директорий проведен до конца в автоматическом режиме»"/>
+  <status stage="impl" state="done" comment="commissioned and ruled by the owner 2026-08-24 (mandate quoted verbatim in §1); BUILT the same day — the move landed as ecb0a5de (tree+flip+sweep) / 2f9b692c (world) with the panel all green; the executed build chronicle is vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml (ЗАВЕРШЁН); L1-L5 proven per ##RELAYOUT-PROOF"/>
   <mandate title="1. Mandate">
     <p><RELAYOUT-MANDATE-VERBATIM fact="true" status="spec/done">The owner's mandate, verbatim (2026-08-24):
 «Я обнаружил проблему: массовые клеши с реально существующими

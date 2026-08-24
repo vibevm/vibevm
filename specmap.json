@@ -34079,7 +34079,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7bca7c1a48bdfb4c15c7246d730c61b9232c8281b2ac1adebf52f3717b5608c1",
+      "content_hash": "sha256:3ee0f7703c3ee7bbb6f289f7cc0cdc096e0d05b29257501dd781cc8fd378cc71",
       "doc_path": "common/PROP-052",
       "file": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
       "heading": "PROP-052: the vibevm/ root — the directory layout law",
@@ -77719,7 +77719,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:edc70425fa8834901eb966918031688f2c1cfd60329af833cac839aafa4767dc",
+      "content_hash": "sha256:55970e080a71d9284221dde01cf1880b3773011d151cee637737ae8fbb7f7618",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "RELAYOUT — переезд на корень vibevm/ (PROP-052)",
@@ -77746,7 +77746,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:90a5ab5489ce04e7f1f84b742131f9de2faa91d711c8703e61900a161ede7189",
+      "content_hash": "sha256:ebfb9662836d2eb338280a2671ff03b632adf483f3b53c5203cd35036373b0bd",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "Нарезка R1-R7",
@@ -77773,46 +77773,46 @@
     },
     {
       "anchor": "R3-TEST-SWEEP",
-      "content_hash": "sha256:53a256beefdb6ccda79d862ad99c0a35b3ef7d5ffc3e61bc4eb9f67d0a76920e",
+      "content_hash": "sha256:132e4c29fca9e428f6ce4a44e889b28c1c419404c913f2b9f33dd47689ba7f57",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R3 — тестовый свип (воркеры).** Остаточные интеграционные\nтесты и фикстуры-скаффолды всех крейтов на новую раскладку;\nbyte-чувствительные голдены пакетных движков НЕ трогаются руками —\nих фикстурные ПРОЕКТЫ переезжают структурно, голдены\nперегенерируются штатными регенераторами с осознанным диффом. @status:impl/plan",
+      "heading": "**R3 — тестовый свип (воркеры).** Остаточные интеграционные\nтесты и фикстуры-скаффолды всех крейтов на новую раскладку;\nbyte-чувствительные голдены пакетных движков НЕ трогаются руками —\nих фикстурные ПРОЕКТЫ переезжают структурно, голдены\nперегенерируются штатными регенераторами с осознанным диффом. @status:impl/done",
       "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R3-TEST-SWEEP"
     },
     {
       "anchor": "R4-HOST-MOVE",
-      "content_hash": "sha256:89e43381e18a5a8db15f12811a6cf8cd6e74bf6245bb5e58fe524793339ac391",
+      "content_hash": "sha256:4a372f4499a16c96707a8f75204c549398488efda6e9ffb9d95cc5d5e2abce94",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R4 — физический переезд хоста (босс).** `git mv` четырёх\nкорней в `vibevm/`; текстовый свип спек/кампаний/корневых доков/\nхуков: пути `spec/`→`vibevm/vibespecs/`, `packages/`→\n`vibevm/vibepacks/`, `vibedeps/`→`vibevm/vibedeps/`, `vibefacts`→\n`vibevm/vibefacts` — УСЛОВНО по существованию цели (скрипт класса\nK3-свипа), generic-слова в прозе не трогаются; CLAUDE/AGENTS/GEMINI\nуказатели; specmap.toml корни; переустановка; спецспейс fractality —\nего контракт отдельной правкой. @status:impl/plan",
+      "heading": "**R4 — физический переезд хоста (босс).** `git mv` четырёх\nкорней в `vibevm/`; текстовый свип спек/кампаний/корневых доков/\nхуков: пути `spec/`→`vibevm/vibespecs/`, `packages/`→\n`vibevm/vibepacks/`, `vibedeps/`→`vibevm/vibedeps/`, `vibefacts`→\n`vibevm/vibefacts` — УСЛОВНО по существованию цели (скрипт класса\nK3-свипа), generic-слова в прозе не трогаются; CLAUDE/AGENTS/GEMINI\nуказатели; specmap.toml корни; переустановка; спецспейс fractality —\nего контракт отдельной правкой. @status:impl/done",
       "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R4-HOST-MOVE"
     },
     {
       "anchor": "R5-PACKAGES-MOVE",
-      "content_hash": "sha256:c0518814afa7647e835a872dd04f5360d20e0212a15e56c11e5ea46acd7e7e74",
+      "content_hash": "sha256:84531d0a088f6276a3fa21a8b32c6700680e5d7f3aaf2368f22f72bdfd83857a",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R5 — переезд пакетов (босс-скрипт + воркеры хвостов).**\n86 корней: `spec/`→`vibevm/vibespecs/` внутри каждого (+ их\nвнутренние ссылки); движковые воркспейсы внутри пакетов не\nпереезжают (crates/ — код, не спеки); рематериализация зеркалит\nновую раскладку в слоты. @status:impl/plan",
+      "heading": "**R5 — переезд пакетов (босс-скрипт + воркеры хвостов).**\n86 корней: `spec/`→`vibevm/vibespecs/` внутри каждого (+ их\nвнутренние ссылки); движковые воркспейсы внутри пакетов не\nпереезжают (crates/ — код, не спеки); рематериализация зеркалит\nновую раскладку в слоты. @status:impl/done",
       "line": 50,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R5-PACKAGES-MOVE"
     },
     {
       "anchor": "R6-GATES",
-      "content_hash": "sha256:8bfaff17da90e39119f2759cd1cd4b674c998b89d753598f242ceb7b277ebb0f",
+      "content_hash": "sha256:4ef6f51f2200cd5e8350196d46d85689c3dec7368a430ebc241e22f51fd7f9ec",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R6 — доказательство (босс).** Все проверки PROP-052\n##RELAYOUT-PROOF: панель, 0/0/0, specmap-паритет рёбер, двойная\nустановка без дрейфа, скрипт-резолюция INDEX-целей, ноль грепов\nстарых корней вне layout-модуля, clean-room смоук init→install→check,\nагентская проба маршрутизации по vibevm/vibespecs/boot. @status:impl/plan",
+      "heading": "**R6 — доказательство (босс).** Все проверки PROP-052\n##RELAYOUT-PROOF: панель, 0/0/0, specmap-паритет рёбер, двойная\nустановка без дрейфа, скрипт-резолюция INDEX-целей, ноль грепов\nстарых корней вне layout-модуля, clean-room смоук init→install→check,\nагентская проба маршрутизации по vibevm/vibespecs/boot. @status:impl/done",
       "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R6-GATES"
     },
     {
       "anchor": "R7-WINDDOWN",
-      "content_hash": "sha256:dfcacdf680f839df81e3099481e2561e696c07694d2d4a5408d025fb827f948c",
+      "content_hash": "sha256:f233e8ae7baacb7be0beb2dcd186c39e6a34860cf508b1a2d6f7cf58d1830668",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "vibevm/vibespecs/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R7 — финализация.** Статусы, BACKLOG-остатки, зеркала,\nWAL/CONTINUE-чекпойнт. @status:impl/plan",
+      "heading": "**R7 — финализация.** Статусы, BACKLOG-остатки, зеркала,\nWAL/CONTINUE-чекпойнт. @status:impl/done",
       "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R7-WINDDOWN"
     },
