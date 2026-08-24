@@ -33796,7 +33796,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7c048b24638f788e357063c0dab42044e8737fed7796a78671635f2e528ef8fd",
+      "content_hash": "sha256:e8a9b38ba1699a3cf4f137e76f045255da90f82f5d954c47bae73a51bb1dc889",
       "doc_path": "common/PROP-051",
       "file": "spec/common/PROP-051-refactor-umbrella.xml",
       "heading": "PROP-051: vibe refactor — the source-refactoring umbrella",
@@ -76923,7 +76923,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:daa156f0167b71d4458b4394b5c13946171d5a3ad1ffac920e61a9cd5bdb69c2",
+      "content_hash": "sha256:deb7cbaaaabf5091d349c25302135e6b7caddb16f93a6ae4ea80955995865804",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml",
       "heading": "CONVERT-SOURCE — стройка глагола и флип корпуса на XML",
@@ -76950,7 +76950,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:439f14a596c96614631547fb325f2099dab772d6d3cfbf1c91cb3ef95cd19cd8",
+      "content_hash": "sha256:e160661fefa7e0bebafb58c8f8ff24611c4fb14a0516cf47bf290e7f3efbcf4d",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml",
       "heading": "Нарезка",
@@ -77022,28 +77022,28 @@
     },
     {
       "anchor": "K65-CELL-ADDRESSABILITY",
-      "content_hash": "sha256:6ac56deb6d93565e897c864b5ce3770529d91b491e138a6c1c9fbcf03677b442",
+      "content_hash": "sha256:4b304e31bc34b453df1a9b8c26a97e73a6a1f584928aa448e8b0962e33d8c9c3",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml",
-      "heading": "**K6.5 —\nадресуемость ячеечных фактов (рулинг владельца 2026-08-24, дословно:\n«проблема не в том, что это атавизм. А в том, что у нас есть факт,\nкоторый невозможно адресовать и соответственно проверить его\nреализацию в исходнике!»).** Маркированный факт без адреса — дыра\nтрассируемости, не стиль. Волна: (1) все 604 безымянных ячеечных\nфакта корпуса получают id — схема `<ID-ряда>-<слаг-заголовка-колонки>`,\nименованная XML-форма уже поддержана обоими ридерами (PROP-045\n##NAMED-FACT-ELEMENTS; неэлементные id — generic `<fact id=…>`);\n(2) закон anchored-when-marked (PROP-043 §3.8) расширяется НА ЯЧЕЙКИ —\nмаркированная ячейка без id становится громким отказом строгого\nфронтенда (red-first), чтобы класс не возрождался; (3) цена: ~604\nновых судимых факта — судейский долг растёт, приоритет разбора — за\nвладельцем по стоячему правилу. Исполнение — после посадки K6. @status:impl/plan",
+      "heading": "**K6.5 —\nадресуемость ячеечных фактов (рулинг владельца 2026-08-24, дословно:\n«проблема не в том, что это атавизм. А в том, что у нас есть факт,\nкоторый невозможно адресовать и соответственно проверить его\nреализацию в исходнике!»).** Маркированный факт без адреса — дыра\nтрассируемости, не стиль. Волна: (1) все 604 безымянных ячеечных\nфакта корпуса получают id — схема `<ID-ряда>-<слаг-заголовка-колонки>`,\nименованная XML-форма уже поддержана обоими ридерами (PROP-045\n##NAMED-FACT-ELEMENTS; неэлементные id — generic `<fact id=…>`);\n(2) закон anchored-when-marked (PROP-043 §3.8) расширяется НА ЯЧЕЙКИ —\nмаркированная ячейка без id становится громким отказом строгого\nфронтенда (red-first), чтобы класс не возрождался; (3) цена: ~604\nновых судимых факта — судейский долг растёт, приоритет разбора — за\nвладельцем по стоячему правилу. Исполнение — после посадки K6. ПОСАЖЕНО 2026-08-24 (`82e6b335`+`7b9b7535`+`9995bb76`): 2170 имён (2049 xml воркером K65-CELLS, скрипт в архиве; 121 md-хвост боссом — четыре reserved-README, открытые новым линтом), оба фронтенда отказывают безымянной маркированной ячейке (red-first), голден 66, STATIC без единой безымянной, панель all green. @status:impl/done",
       "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K65-CELL-ADDRESSABILITY"
     },
     {
       "anchor": "K6-GATES",
-      "content_hash": "sha256:4a687126b590f058828e02fb87d6883fa6d2f86caccd900d5d884778853c4275",
+      "content_hash": "sha256:6f4765b8f5a50add8a0a0a16ea9aab55d4f7cc4b31b68185e44e0ee5f95e7835",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml",
-      "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap\nрегенерация (пути юнитов переезжают на `.xml`); судейский долг остаётся\n«no debt» (адресация format-blind — PROP-045 ##ADDRESSING-UNCHANGED);\nгрепом — ни одной живой ссылки на сконвертированный `.md`-путь;\nWAL-ожидания обновлены. @status:impl/plan",
+      "heading": "**K6 — гейты и свипы.** Полная панель по хвосту; specmap\nрегенерация (пути юнитов переезжают на `.xml`); судейский долг остаётся\n«no debt» (адресация format-blind — PROP-045 ##ADDRESSING-UNCHANGED);\nгрепом — ни одной живой ссылки на сконвертированный `.md`-путь;\nWAL-ожидания обновлены. @status:impl/done",
       "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K6-GATES"
     },
     {
       "anchor": "K7-WINDDOWN",
-      "content_hash": "sha256:9c87816533ba71c59b887c960b2a43e1e09495dc4be0a1057218294ac3209d98",
+      "content_hash": "sha256:93e2f4f266cabeb4415bda9dd713a3d70ef363dc630dabbbcb3a4a605b6d512e",
       "doc_path": "terraforms/CONVERT-SOURCE-APPLICATION-v0.1",
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml",
-      "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,\nэтот план закрывается приёмкой, остатки — в BACKLOG. @status:impl/plan",
+      "heading": "**K7 — финализация.** Статусы PROP-051 → impl/done,\nэтот план закрывается приёмкой, остатки — в BACKLOG. @status:impl/done",
       "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/CONVERT-SOURCE-APPLICATION-v0.1#K7-WINDDOWN"
     },
@@ -77634,7 +77634,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:10f6f51f67dc411e3a9948694d1333cb0c8abfe45ccd6728db4256b4a91c9fdc",
+      "content_hash": "sha256:3184e4842079262a6a000c504fb4ef7cd5f2a895cc1c2515f8d73fa70345c1c2",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "RELAYOUT — переезд на корень vibevm/ (PROP-052)",
@@ -77661,7 +77661,7 @@
     },
     {
       "anchor": "slices",
-      "content_hash": "sha256:7b9964da0e2d2f59e7a3fc6bb8f3431c78456eb18685c154450db5174dd75626",
+      "content_hash": "sha256:d572123ca6ff9fdd1eb137e7297de85b65322bf5d6dcda68acd860fa0a026cc6",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
       "heading": "Нарезка R1-R7",
@@ -77670,10 +77670,10 @@
     },
     {
       "anchor": "R1-LAYOUT-MODULE",
-      "content_hash": "sha256:69c9e1b9204ae8e1980a20585f9b0bb551bd7a8ff642adbc7bf78a64339647d1",
+      "content_hash": "sha256:059500586a8e25670ac8b4c5a57d70db9785023499d5c24b7181822bfa8af81e",
       "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
       "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
-      "heading": "**R1 — layout-модуль (воркер).** Один модуль в vibe-core:\nконстанты/функции четырёх корней + производные бут-пути; смена\n`canonical_doc_path`-слоя в vibe-spec на новый префикс с\nдоказательством L1 (адреса не движутся — юнит: старый и новый\nфизический путь канонизируются в один док-путь ЗАПРЕЩЁН — только\nновый существует, юнит держит сам маппинг); конформ-правило «строка\nкорня вне layout-модуля — находка» (red-first). Красная фаза до\nпереезда: модуль объявляет НОВЫЕ имена, продукт ещё на старых —\nпоэтому R1 и R2 садятся одним локальным актом на worktree воркеров,\nпанель — по завершению R4. @status:impl/plan",
+      "heading": "**R1 — layout-модуль (воркер).** Один модуль в vibe-core:\nконстанты/функции четырёх корней + производные бут-пути; смена\n`canonical_doc_path`-слоя в vibe-spec на новый префикс с\nдоказательством L1 (адреса не движутся — юнит: старый и новый\nфизический путь канонизируются в один док-путь ЗАПРЕЩЁН — только\nновый существует, юнит держит сам маппинг); конформ-правило «строка\nкорня вне layout-модуля — находка» (red-first). Красная фаза до\nпереезда: модуль объявляет НОВЫЕ имена, продукт ещё на старых —\nпоэтому R1 и R2 садятся одним локальным актом на worktree воркеров,\nпанель — по завершению R4. @status:impl/done",
       "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R1-LAYOUT-MODULE"
     },

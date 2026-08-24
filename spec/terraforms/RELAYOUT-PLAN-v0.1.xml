@@ -15,7 +15,7 @@ vibe-workspace (bootgen, материализация, INDEX/STATIC,
 CLAUDE-блок).</R0-INVENTORY></p>
   </inventory>
   <slices title="Нарезка R1-R7">
-    <p><R1-LAYOUT-MODULE fact="true" status="impl/plan">**R1 — layout-модуль (воркер).** Один модуль в vibe-core:
+    <p><R1-LAYOUT-MODULE fact="true" status="impl/done">**R1 — layout-модуль (воркер).** Один модуль в vibe-core:
 константы/функции четырёх корней + производные бут-пути; смена
 `canonical_doc_path`-слоя в vibe-spec на новый префикс с
 доказательством L1 (адреса не движутся — юнит: старый и новый

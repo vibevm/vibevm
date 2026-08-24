@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="root">PROP-051: vibe refactor — the source-refactoring umbrella</title>
-  <status stage="impl" state="work" comment="commissioned and ruled by the owner 2026-08-23/24 (mandate quoted in §1 verbatim); the verb family landed 2026-08-24 (K1 bf6a9bd9 + K1b 2609cfc3, panel all green both) — the application K2-K7 rides spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml"/>
+  <status stage="impl" state="done" comment="commissioned and ruled by the owner 2026-08-23/24 (mandate quoted in §1 verbatim); the verb family landed 2026-08-24 (K1 bf6a9bd9 + K1b 2609cfc3, panel all green both) — the application K2-K7 rides spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.xml"/>
   <mandate title="1. Mandate">
     <p><REFACTOR-MANDATE-VERBATIM fact="true" status="spec/done">The owner's mandate, verbatim (2026-08-23,
 chat, three clauses in one sitting): «я хочу все наши спецификации в
