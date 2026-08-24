@@ -225,12 +225,19 @@ fn fence_binding_must_be_adjacent() {
 }
 
 #[test]
-fn idless_fact_needs_the_cell_exemption() {
+fn an_idless_marked_fact_is_rejected_everywhere_even_in_a_cell() {
+    // The cell exemption is retired (K6.5): both a paragraph fact and a
+    // table-cell fact without an id refuse loudly.
     let err = from_xml(&format!(
         "<spec {NS_ATTR}>\n  <p><fact status=\"impl/done\">no id</fact></p>\n</spec>"
     ))
     .unwrap_err();
-    assert!(err.message.contains("cell exemption"), "{}", err);
+    assert!(err.message.contains("cell exemption is retired"), "{}", err);
+    let err = from_xml(&format!(
+        "<spec {NS_ATTR}>\n  <table><tr><td><fact status=\"impl/done\">no id</fact></td></tr></table>\n</spec>"
+    ))
+    .unwrap_err();
+    assert!(err.message.contains("cell exemption is retired"), "{}", err);
 }
 
 #[test]

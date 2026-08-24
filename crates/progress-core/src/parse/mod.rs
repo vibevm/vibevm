@@ -6,7 +6,7 @@
 //! list item, table body cell — a marker must be the unit's first or last
 //! token (the first token may follow the unit's `##<ID>` fact anchor); a
 //! paired `<status>…</status>` wraps a fragment and counts for the unit
-//! that carries it. A marked paragraph/item without a fact anchor is an
+//! that carries it. A marked countable unit without a fact anchor is an
 //! error (anchored-when-marked). Anything else is an issue, never a guess.
 //!
 //! The pipeline is split along its responsibility seams: run-matched

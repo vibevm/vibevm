@@ -370,9 +370,8 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
 }
 
 fn mk_fact(kind: FactKind, text: &str, source: &str, s: usize, e: usize, line: usize) -> Fact {
-    // Cells may carry an id too (first cell of a row ⇒ the row's address,
-    // any other cell ⇒ that cell's — §3.8 table addressing); only the
-    // anchored-when-marked obligation exempts cells.
+    // The first cell's id addresses the row; every other marked cell carries
+    // its own id under §3.8 table addressing.
     let (id, _) = take_fact_id(text, s, e);
     let body = source[s..e].to_string();
     Fact {

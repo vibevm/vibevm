@@ -9,15 +9,31 @@ use progress_core::model::{Granularity, MarkerForm, Stage, State};
 use progress_core::parse::parse_document;
 
 #[test]
-fn foreign_grammar_fixture_yields_zero_false_matches() {
+fn foreign_grammar_fixture_yields_only_the_expected_cell_anchor_errors() {
     let text = include_str!("fixtures/foreign-grammars.md");
     let doc = parse_document("fixtures/foreign-grammars.md", text);
 
-    for i in &doc.issues {
+    let missing_anchor_lines: Vec<_> = doc
+        .issues
+        .iter()
+        .filter(|issue| issue.code == IssueCode::MissingAnchor)
+        .map(|issue| issue.line)
+        .collect();
+    assert_eq!(
+        missing_anchor_lines,
+        [44, 45, 45],
+        "issues: {:#?}",
+        doc.issues
+    );
+    for i in doc
+        .issues
+        .iter()
+        .filter(|issue| issue.code != IssueCode::MissingAnchor)
+    {
         assert_ne!(
             i.severity,
             Severity::Error,
-            "fixture must be clean, got: {:?}",
+            "fixture must have no foreign-grammar false positive, got: {:?}",
             i
         );
     }

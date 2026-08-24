@@ -226,8 +226,9 @@ fn redbook_readme_golden_xml_is_pinned() {
     );
     assert_eq!(
         golden.matches(" fact=\"true\"").count(),
-        45,
-        "all 45 README fact anchors use the named form"
+        66,
+        "all 66 README fact anchors use the named form (45 + the 21 \
+         one-line cells named by the K6.5 addressability wave)"
     );
     // The golden is not just pinned — it re-reads, byte-idempotently.
     assert_eq!(to_xml(&from_xml(&golden).unwrap()), golden);
@@ -259,7 +260,11 @@ fn redbook_corpus_shape_is_counted() {
     // (4 + 2 + 18 + 34 → 2 + 1 + 9 + 17 fences), and every fact carrying
     // its status plus the two element-form document statuses and the
     // marked table cells.
-    assert_eq!(totals.facts, 84, "45 README + 39 boot-snippet fact anchors");
+    assert_eq!(
+        totals.facts, 105,
+        "66 README + 39 boot-snippet fact anchors (the K6.5 wave named \
+         the 21 one-line cells)"
+    );
     assert_eq!(
         totals.cells, 46,
         "23 table rows (11 + 12, headers included) × 2 cells"

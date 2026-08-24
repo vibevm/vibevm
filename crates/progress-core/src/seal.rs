@@ -166,15 +166,11 @@ pub fn seal(cache: &mut Cache, doc: &ParsedDoc, verified_at: &str) -> Seal {
 /// The markers a verdict map can speak about: every fact the marker scan
 /// marked that carries an `##<ID>` fact anchor, in document order.
 ///
-/// The two kinds of marker this leaves out are the two the map has no key
-/// for. A standalone document- or section-level marker sits in a block
-/// with no facts at all — campaigns file those under a per-file
-/// `_elements` bundle, which is why the baseline projection reports such
-/// keys as matching no anchor. And a marked table cell may carry no
-/// anchor of its own: it inherits its row's, which is why the
-/// anchored-when-marked law exempts cells (`parse::anchors`). Counting
-/// either would make every file in the corpus unsealable, and a refusal
-/// that refuses everything says nothing.
+/// A standalone document- or section-level marker sits in a block with no
+/// facts at all — campaigns file those under a per-file `_elements` bundle,
+/// which is why the baseline projection reports such keys as matching no
+/// anchor. Marked countable units, including table cells, are addressable by
+/// the anchored-when-marked law (`parse::anchors`).
 fn addressable(doc: &ParsedDoc) -> impl Iterator<Item = &str> {
     doc.blocks
         .iter()
@@ -398,12 +394,10 @@ mod tests {
         );
     }
 
-    /// The two markers a verdict map cannot key: the document-level
-    /// standalone and a marked table cell inheriting its row's anchor.
-    /// Neither may block a seal — a refusal that fires on every file in
-    /// the corpus is a refusal nobody can satisfy.
+    /// A standalone document marker has no fact key and does not block a
+    /// seal; every marked countable unit, including the cell, is addressable.
     #[test]
-    fn unaddressable_markers_do_not_block_a_seal() {
+    fn standalone_markers_do_not_block_a_seal() {
         let doc = parse_document(
             "a.md",
             "<status stage=\"impl\" state=\"work\"/>\n\n\

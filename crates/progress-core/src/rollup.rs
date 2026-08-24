@@ -104,7 +104,7 @@ pub struct FoldIssue {
     /// 1-based line of the section marker — where `check` reports.
     pub line: usize,
     /// The unit the fold would silence: its `##<ID>` fact anchor when it
-    /// has one, else `line <n>` (cells are anchor-exempt, §3.8).
+    /// has one, else `line <n>` (for an unmarked unit).
     pub unit: String,
     /// 1-based line of the losing unit's marker.
     pub unit_line: usize,

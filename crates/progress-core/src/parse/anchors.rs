@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
 use super::facts::qualified_fact_tokens;
-use crate::doc::{BlockKind, FactKind, Issue, IssueCode, ParsedDoc, Severity};
+use crate::doc::{BlockKind, Issue, IssueCode, ParsedDoc, Severity};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -14,7 +14,7 @@ struct Definition {
 }
 
 /// The anchored-when-marked law + one shared id namespace (PROP-043 §3.8):
-/// a marked paragraph/lead/item needs a `##<ID>`; every id — fact or
+/// every marked countable unit needs a `##<ID>`; every id — fact or
 /// heading anchor — is unique per document.
 pub(super) fn check_anchor_laws(doc: &mut ParsedDoc, text: &str) {
     let mut definitions = Vec::new();
@@ -97,7 +97,7 @@ pub(super) fn check_anchor_laws(doc: &mut ParsedDoc, text: &str) {
 
     for b in &doc.blocks {
         for f in &b.facts {
-            if f.marked && f.id.is_none() && !matches!(f.kind, FactKind::Cell) {
+            if f.marked && f.id.is_none() {
                 new_issues.push(Issue {
                     severity: Severity::Error,
                     line: f.line,
@@ -151,6 +151,26 @@ mod tests {
             "# H {#h}\n\n@fact:SAME definition\n\n@fact:OTHER see `##SAME`\n",
         );
         assert!(duplicates(&doc).is_empty(), "{:#?}", doc.issues);
+    }
+
+    #[test]
+    fn marked_table_cell_without_an_id_is_rejected() {
+        let doc = parse_document(
+            "x.md",
+            "# T {#t}\n\n\
+             | first | second |\n\
+             | --- | --- |\n\
+             | @fact:ROW x @status:impl/done | y @status:impl/done |\n",
+        );
+        let issues: Vec<_> = doc
+            .issues
+            .iter()
+            .filter(|issue| issue.code == IssueCode::MissingAnchor)
+            .collect();
+        assert_eq!(issues.len(), 1, "{:#?}", doc.issues);
+        assert_eq!(issues[0].severity, Severity::Error);
+        assert_eq!(issues[0].line, 5);
+        assert!(issues[0].message.contains("anchored-when-marked"));
     }
 
     #[test]

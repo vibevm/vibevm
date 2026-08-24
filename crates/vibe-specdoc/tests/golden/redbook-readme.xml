@@ -43,43 +43,43 @@ edition is a new umbrella version with refreshed pins.</MEMBERS-EVOLVE-BETWEEN-E
       </tr>
       <tr>
         <td><ROW-TWO-PROCESS-MODEL fact="true" status="impl/done">`two-process-model` @1.0.0</ROW-TWO-PROCESS-MODEL></td>
-        <td><fact status="impl/done">Human and AI as coprocessors; the human owns coherence; files are the only shared memory.</fact></td>
+        <td><ROW-TWO-PROCESS-MODEL-ONE-LINE fact="true" status="impl/done">Human and AI as coprocessors; the human owns coherence; files are the only shared memory.</ROW-TWO-PROCESS-MODEL-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-WAL fact="true" status="impl/done">`wal` @1.0.0</ROW-WAL></td>
-        <td><fact status="impl/done">The checkpoint file (WAL) and cold-resume snapshot; session wind-down and resume rituals; the `wal-status` skill.</fact></td>
+        <td><ROW-WAL-ONE-LINE fact="true" status="impl/done">The checkpoint file (WAL) and cold-resume snapshot; session wind-down and resume rituals; the `wal-status` skill.</ROW-WAL-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-SYNC-FROM-CODE fact="true" status="impl/done">`sync-from-code` @1.0.0</ROW-SYNC-FROM-CODE></td>
-        <td><fact status="impl/done">The sanctioned reverse path: reconcile the spec when code changed first, with human approval.</fact></td>
+        <td><ROW-SYNC-FROM-CODE-ONE-LINE fact="true" status="impl/done">The sanctioned reverse path: reconcile the spec when code changed first, with human approval.</ROW-SYNC-FROM-CODE-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-ATOMIC-COMMITS fact="true" status="impl/done">`git-atomic-commits` @1.0.0</ROW-ATOMIC-COMMITS></td>
-        <td><fact status="impl/done">One commit, one idea; Conventional Commits; pushed history is frozen.</fact></td>
+        <td><ROW-ATOMIC-COMMITS-ONE-LINE fact="true" status="impl/done">One commit, one idea; Conventional Commits; pushed history is frozen.</ROW-ATOMIC-COMMITS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-ADDRESSABLE-SPECS fact="true" status="impl/done">`addressable-specs` @1.0.0</ROW-ADDRESSABLE-SPECS></td>
-        <td><fact status="impl/done">`spec://` URIs, stable anchors, size budgets, and the spec tree layout.</fact></td>
+        <td><ROW-ADDRESSABLE-SPECS-ONE-LINE fact="true" status="impl/done">`spec://` URIs, stable anchors, size budgets, and the spec tree layout.</ROW-ADDRESSABLE-SPECS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-DECISION-RECORDS fact="true" status="impl/done">`decision-records` @1.0.0</ROW-DECISION-RECORDS></td>
-        <td><fact status="impl/done">Decisions, not facts: reason + rejected alternatives + revisit trigger, at the governing anchor.</fact></td>
+        <td><ROW-DECISION-RECORDS-ONE-LINE fact="true" status="impl/done">Decisions, not facts: reason + rejected alternatives + revisit trigger, at the governing anchor.</ROW-DECISION-RECORDS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-CONFLICT-PROTOCOL fact="true" status="impl/done">`conflict-protocol` @1.0.0</ROW-CONFLICT-PROTOCOL></td>
-        <td><fact status="impl/done">Human &gt; Spec &gt; Tests &gt; Code; REVIEW markers; the conservative-default path when the spec is silent.</fact></td>
+        <td><ROW-CONFLICT-PROTOCOL-ONE-LINE fact="true" status="impl/done">Human &gt; Spec &gt; Tests &gt; Code; REVIEW markers; the conservative-default path when the spec is silent.</ROW-CONFLICT-PROTOCOL-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-CAMPAIGN-PLANS fact="true" status="impl/done">`campaign-plans` @1.0.0</ROW-CAMPAIGN-PLANS></td>
-        <td><fact status="impl/done">Cold-executable campaign plans: phase gates, falsifiable predictions, execution and deferral ledgers.</fact></td>
+        <td><ROW-CAMPAIGN-PLANS-ONE-LINE fact="true" status="impl/done">Cold-executable campaign plans: phase gates, falsifiable predictions, execution and deferral ledgers.</ROW-CAMPAIGN-PLANS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-DISCOVERY-PROMPT fact="true" status="impl/done">`discovery-prompt` @1.0.0</ROW-DISCOVERY-PROMPT></td>
-        <td><fact status="impl/done">The DISCOVERY collaborative-research prompt, packaged verbatim with a usage guide.</fact></td>
+        <td><ROW-DISCOVERY-PROMPT-ONE-LINE fact="true" status="impl/done">The DISCOVERY collaborative-research prompt, packaged verbatim with a usage guide.</ROW-DISCOVERY-PROMPT-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-ATTRIBUTION-POLICY fact="true" status="impl/done">`git-attribution-policy` @1.0.0</ROW-ATTRIBUTION-POLICY></td>
-        <td><fact status="impl/done">A deliberate authorship posture: human-authored surface by default, disclosure documented as the alternative.</fact></td>
+        <td><ROW-ATTRIBUTION-POLICY-ONE-LINE fact="true" status="impl/done">A deliberate authorship posture: human-authored surface by default, disclosure documented as the alternative.</ROW-ATTRIBUTION-POLICY-ONE-LINE></td>
       </tr>
     </table>
     <p><project-practice-table-lead fact="true" status="impl/done">The project-practice wave:</project-practice-table-lead></p>
@@ -90,47 +90,47 @@ edition is a new umbrella version with refreshed pins.</MEMBERS-EVOLVE-BETWEEN-E
       </tr>
       <tr>
         <td><ROW-OPERATING-MODES fact="true" status="impl/done">`operating-modes` @1.0.0</ROW-OPERATING-MODES></td>
-        <td><fact status="impl/done">Codeword-triggered work postures; red lines that survive every mode.</fact></td>
+        <td><ROW-OPERATING-MODES-ONE-LINE fact="true" status="impl/done">Codeword-triggered work postures; red lines that survive every mode.</ROW-OPERATING-MODES-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-HEALTH-AUDIT fact="true" status="impl/done">`health-audit` @1.0.0</ROW-HEALTH-AUDIT></td>
-        <td><fact status="impl/done">The periodic judgment sweep over what the per-commit gate is blind to; a skill and an append-only trend.</fact></td>
+        <td><ROW-HEALTH-AUDIT-ONE-LINE fact="true" status="impl/done">The periodic judgment sweep over what the per-commit gate is blind to; a skill and an append-only trend.</ROW-HEALTH-AUDIT-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-MANUAL-TESTS fact="true" status="impl/done">`manual-tests` @1.0.0</ROW-MANUAL-TESTS></td>
-        <td><fact status="impl/done">Human-runnable walkthroughs for the integration surfaces automation cannot prove.</fact></td>
+        <td><ROW-MANUAL-TESTS-ONE-LINE fact="true" status="impl/done">Human-runnable walkthroughs for the integration surfaces automation cannot prove.</ROW-MANUAL-TESTS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-SECRETS-HYGIENE fact="true" status="impl/done">`secrets-hygiene` @1.0.0</ROW-SECRETS-HYGIENE></td>
-        <td><fact status="impl/done">Surface-secrets never printed or persisted; scope discipline; third-party-code consent.</fact></td>
+        <td><ROW-SECRETS-HYGIENE-ONE-LINE fact="true" status="impl/done">Surface-secrets never printed or persisted; scope discipline; third-party-code consent.</ROW-SECRETS-HYGIENE-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-LICENSING fact="true" status="impl/done">`licensing` @1.0.0</ROW-LICENSING></td>
-        <td><fact status="impl/done">A deliberate licence posture; permissive-only dependencies; the EULA-to-open path; a drafting skill.</fact></td>
+        <td><ROW-LICENSING-ONE-LINE fact="true" status="impl/done">A deliberate licence posture; permissive-only dependencies; the EULA-to-open path; a drafting skill.</ROW-LICENSING-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-SOURCE-MIRRORS fact="true" status="impl/done">`source-mirrors` @1.0.0</ROW-SOURCE-MIRRORS></td>
-        <td><fact status="impl/done">Single-writer multi-homing; manifest-driven fail-loud fast-forward-only fan-out.</fact></td>
+        <td><ROW-SOURCE-MIRRORS-ONE-LINE fact="true" status="impl/done">Single-writer multi-homing; manifest-driven fail-loud fast-forward-only fan-out.</ROW-SOURCE-MIRRORS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-SPEC-GENRES fact="true" status="impl/done">`spec-genres` @1.0.0</ROW-SPEC-GENRES></td>
-        <td><fact status="impl/done">Contract vs lore vs research vs plans — what goes where, who wins, two-way links.</fact></td>
+        <td><ROW-SPEC-GENRES-ONE-LINE fact="true" status="impl/done">Contract vs lore vs research vs plans — what goes where, who wins, two-way links.</ROW-SPEC-GENRES-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-COMPARATIVE-RESEARCH fact="true" status="impl/done">`comparative-research` @1.0.0</ROW-COMPARATIVE-RESEARCH></td>
-        <td><fact status="impl/done">Evergreen competitor studies with two-way gap analysis and numbered roadmap deltas.</fact></td>
+        <td><ROW-COMPARATIVE-RESEARCH-ONE-LINE fact="true" status="impl/done">Evergreen competitor studies with two-way gap analysis and numbered roadmap deltas.</ROW-COMPARATIVE-RESEARCH-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-MANAGED-BLOCKS fact="true" status="impl/done">`managed-blocks` @1.0.0</ROW-MANAGED-BLOCKS></td>
-        <td><fact status="impl/done">How a tool writes into files it does not own — one delimited block, deterministic scanning (for tool authors).</fact></td>
+        <td><ROW-MANAGED-BLOCKS-ONE-LINE fact="true" status="impl/done">How a tool writes into files it does not own — one delimited block, deterministic scanning (for tool authors).</ROW-MANAGED-BLOCKS-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-QUALIFIED-NAMING fact="true" status="impl/done">`qualified-naming` @1.0.0</ROW-QUALIFIED-NAMING></td>
-        <td><fact status="impl/done">Namespaces for package ecosystems: groups, identity tuples, collision vs conflict (for ecosystem designers).</fact></td>
+        <td><ROW-QUALIFIED-NAMING-ONE-LINE fact="true" status="impl/done">Namespaces for package ecosystems: groups, identity tuples, collision vs conflict (for ecosystem designers).</ROW-QUALIFIED-NAMING-ONE-LINE></td>
       </tr>
       <tr>
         <td><ROW-TOOL-DESIGN-LESSONS fact="true" status="impl/done">`tool-design-lessons` @1.0.0</ROW-TOOL-DESIGN-LESSONS></td>
-        <td><fact status="impl/done">Paid-for lessons for self-updating tools and package systems.</fact></td>
+        <td><ROW-TOOL-DESIGN-LESSONS-ONE-LINE fact="true" status="impl/done">Paid-for lessons for self-updating tools and package systems.</ROW-TOOL-DESIGN-LESSONS-ONE-LINE></td>
       </tr>
     </table>
   </members>

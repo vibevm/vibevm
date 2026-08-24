@@ -148,10 +148,15 @@ impl<'a> Parser<'a> {
                 .find(|(key, _)| key == "id")
                 .map(|(_, value)| value.clone())
         };
-        if id.is_none() && !in_cell {
+        // The cell exemption is retired (owner ruling 2026-08-24, the
+        // K6.5 addressability wave): a marked fact without an id cannot
+        // be cited, judged or bound to an implementation — anchored-when-
+        // marked now covers cells too, mirroring progress-core.
+        let _ = in_cell;
+        if id.is_none() {
             return Err(self.err(
                 at,
-                "a <fact> needs an `id` — only a table cell may be marked without one (the cell exemption)".into(),
+                "a <fact> needs an `id` — anchored-when-marked covers table cells too (PROP-043 §3.8; the cell exemption is retired)".into(),
             ));
         }
         let status = match attrs.iter().find(|(key, _)| key == "status") {
