@@ -1,80 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — чекпойнт 2026-08-24 (перед компактом; середина переезда раскладки)</title>
-  <status stage="impl" state="work" comment="XML-переход завершён и посажен; переезд vibevm/ физически выполнен, НЕ посажен — панель дожёвывает слои; дерево намеренно несёт незакоммиченный переезд"/>
+  <title id="root">WAL — чекпойнт 2026-08-24 (goal закрыт: XML-переход и переезд vibevm/ посажены)</title>
+  <status stage="impl" state="done" comment="обе половины goal-хука завершены и посажены; дерево чисто, панель all green, зеркала — после этого чекпойнта"/>
   <current-phase title="Current phase">
-    <p><WAL-PHASE fact="true" status="impl/work">Две задачи владельца под goal-хуком «переход на XML
-проведен до конца, после этого переход на новую раскладку директорий
-проведен до конца в автоматическом режиме»: половина 1 (XML) —
-ЗАВЕРШЕНА и посажена (PROP-051 BUILT, план CONVERT-SOURCE ЗАВЕРШЁН,
-2170 ячеечных имён K6.5, панели были all green, зеркала синхронны);
-половина 2 (PROP-052, корень `vibevm/`) — физический переезд ВЫПОЛНЕН
-на диске (4 корня хоста, spec внутри 86 пакетов, флип
-USE_NEW_LAYOUT=true, свип 497+26+8 файлов, 70 манифестов
-boot_snippet→vibevm/vibespecs/boot/*.xml, фикстурные пакеты L4),
-ПОСАДКИ НЕТ — R6-панель выгребает слои полусвипнутых скаффолдов.
-Канонический холодный резюм — `CONTINUE.md` (карта слоёв, доказанное,
-рецепт продолжения).</WAL-PHASE></p>
+    <p><WAL-PHASE fact="true" status="impl/done">Goal «переход на XML проведен до конца, после этого переход
+на новую раскладку директорий проведен до конца в автоматическом
+режиме» — ЗАКРЫТ ЦЕЛИКОМ 2026-08-24. Половина 1 (XML, PROP-051):
+корпус 871 файл в XML, глагольное семейство vibe refactor, K6.5 —
+2170 адресуемых ячеек; посажена ранее. Половина 2 (раскладка,
+PROP-052): четыре корня хоста в `vibevm/{vibespecs,vibepacks,
+vibedeps,vibefacts}`, спеки внутри 86 пакетов в `&lt;slot&gt;/vibevm/
+vibespecs`, флип USE_NEW_LAYOUT, свип кода/фикстур/доков/конфигов,
+перегенерированный мир — посажена коммитами ecb0a5de (переезд+свип) /
+2f9b692c (мир) / 3f0d743d (нарация sync-engines) / f2f5daeb
+(статусы: PROP-052 BUILT, план ЗАВЕРШЁН). Панель all green (54 шага);
+R6-доказательства: specmap 0 unresolved, clean-room init→install→check
+в новой раскладке, INDEX-резолюция 8/8, агентская проба маршрутизации
+PASS (нарративный слой CLAUDE/AGENTS/GEMINI/SPECSPACES вычищен).</WAL-PHASE></p>
   </current-phase>
   <constraints title="Constraints — do not violate">
-    <p><WAL-C-UNCOMMITTED-MOVE fact="true" status="impl/done">**Дерево несёт незакоммиченный переезд —
-это НАМЕРЕННО.** Не коммитить до зелёной панели; посадка — тремя
-топик-коммитами (переезд+свип / продуктовые починки / chore-мир+lock),
-затем статусы и зеркала. Не «откатывать» renames по недоразумению.</WAL-C-UNCOMMITTED-MOVE></p>
     <p><WAL-C-EPOCHS fact="true" status="impl/done">`formats/EPOCHS.toml` не трогать; `public` флипает
 только владелец.</WAL-C-EPOCHS></p>
     <p><WAL-C-ANCHORS fact="true" status="impl/done">Якорь с вердиктом не заменяют — надгробие с
-наследником; адреса `spec://` стабильны при любом переезде (PROP-052 L1
-доказан: specmap 0 unresolved на новой раскладке).</WAL-C-ANCHORS></p>
-    <p><WAL-C-PIPED-TAIL fact="true" status="impl/done">`cmd | tail; echo $?` печатает код tail —
-проверка только формой `( cmd > f ); echo EXIT=$?; tail f` (стоило
-одного замаскированного красного check в этой стройке).</WAL-C-PIPED-TAIL></p>
-    <p><WAL-C-HALF-SWEPT fact="true" status="impl/done">**Полусвипнутый скаффолд** (создание директории
-новое, запись старая → os error 3) лечится КОГЕРЕНТНОСТЬЮ фикстуры
-через `vibe_core::layout::current_*`; в крейтах без vibe-core —
-литерал НОВОЙ формы с комментом-ссылкой на layout.rs. `create_dir` не
-умеет вложенный корень — только `create_dir_all`.</WAL-C-HALF-SWEPT></p>
+наследником; адреса `spec://` стабильны при любом переезде (двух-
+префиксный canonical strip держит и старые материализованные слоты —
+компат-ветка пинится тестом vibe-spec compile.rs, не «дочищать»).</WAL-C-ANCHORS></p>
+    <p><WAL-C-FROZEN-SLOTS fact="true" status="impl/done">Суперсидед-слоты пакетов (v0.6.0, v0.7.0, v0.8.0…)
+— замороженная история: их код НЕ чинится под новую глубину подъёмов
+(панель гоняет только новейшие v1.0.0); синк-таргеты — write-through,
+правится только авторская копия, разносит `cargo xtask sync-engines`.</WAL-C-FROZEN-SLOTS></p>
+    <p><WAL-C-PIPED-TAIL fact="true" status="impl/done">`cmd | tail; echo $?` печатает код tail — проверка
+только формой `( cmd > f ); echo EXIT=$?; tail f`.</WAL-C-PIPED-TAIL></p>
     <p><WAL-C-BOX-CEILING fact="true" status="impl/done">Потолок бокса — ДВА холодных cargo-воркера
-(три = 0xc0000142-коллапс, волна убийств задач; выжившие дописывают —
-протокол в SUBAGENT-LAUNCHERS). Вотчеры — только инструментом Monitor
-(sleep-циклы фоновых Bash культятся).</WAL-C-BOX-CEILING></p>
-    <p><WAL-C-KILL-PID fact="true" status="impl/done">Убийство раннеров — только PID-точечно по маркеру
-пакета (движок GUI-клиента ChatGPT носит то же имя codex.exe); никаких
-kill-по-имени и `/T`. Страж MSIX-резолюции вшит в codexrunner.</WAL-C-KILL-PID></p>
+(три = 0xc0000142-коллапс). Вотчеры — только инструментом Monitor.
+Убийство раннеров — PID-точечно по маркеру пакета (GUI ChatGPT носит
+то же имя codex.exe).</WAL-C-BOX-CEILING></p>
     <p><WAL-C-WIN-LOCKS fact="true" status="impl/done">Windows-локи: user-mapped section (1224) на
-STATIC/INDEX — ретрай установки; свап generated-дерева — снести
-`generated.new-*` и перегнать; бэкслэш-строки питоном не заменяются —
-Edit-инструментом.</WAL-C-WIN-LOCKS></p>
+STATIC/INDEX и Access denied (5) на свапе generated-дерева — транзиент:
+снести `generated.new-*`, перегнать; бэкслэш-строки питоном не
+заменяются — Edit-инструментом.</WAL-C-WIN-LOCKS></p>
+    <p><WAL-C-CHECK-CODEGEN-INDEX fact="true" status="impl/done">`cargo xtask check-codegen` диффит worktree против
+ИНДЕКСА (`git diff --exit-code`): свежая регенерация генератов требует
+`git add` этих деревьев до зелени шага — add не нарушает порядок
+посадки (коммит остаётся после суда).</WAL-C-CHECK-CODEGEN-INDEX></p>
     <p><WAL-C-LANDING-ORDER fact="true" status="impl/done">Порядок посадки: дифф → `cargo fmt --all` →
 `cargo xtask specmap` → панель (вердикт по хвосту `all green`) → суд →
-коммит → `cargo xtask mirror`. Спека/план коммитятся ДО спавна
-читающего воркера; провизия worktree завершается `touch` пакета.</WAL-C-LANDING-ORDER></p>
+коммит → `cargo xtask mirror`.</WAL-C-LANDING-ORDER></p>
   </constraints>
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="impl/work">(1) Дожать панель (фоновая blwzg7ywa; слоевой метод из
-CONTINUE); шаги 7-10 панели (движковые воркспейсы пакетов) ещё не
-достигались. (2) Посадка тремя коммитами + статусы R4/R5 + зеркала.
-(3) Остаток R6-доказательств: clean-room смоук init→install→check,
-ноль-греп старых корней, скрипт-резолюция INDEX-целей, агентская проба
-маршрутизации по vibevm/vibespecs/boot. (4) R7: BACKLOG (research/
-rust-demo path-dep), обещанная владельцу нарация sync-engines,
-WAL/CONTINUE, зеркала — goal закрывается.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Кандидаты (владельческие, сессия не начинает сама): (1)
+инспекция релиза 1.0.0 по RELEASE-INSPECTION-CHECKLIST.md → PAT →
+С6-публикация → тег v1.0.0 (слайс в TASKS.md / TZ-RELEASE, блокер §10);
+(2) рулинги B-103/B-105 и новый B-107 (мёртвые exclude facts.toml:
+наблюдать ли пакетный XML-корпус); (3) снос отработанных worktrees
+`.wt/{K1-CONVERT,R1-LAYOUT,R2C-CHECKS,R2D-TAILS}` — сделан в этом же
+wind-down, остальные .wt/* чужих кампаний не тронуты.</WAL-NEXT></p>
   </next>
   <known-issues title="Known issues">
-    <p><WAL-ISSUES fact="true" status="impl/work">Панель красная на очередном слое (последний правленный:
-store_materialisation seed; проверить vibe-mcp tools_oracle,
-vibe-publish, engine-гейты). 2 softened-concept warnings — штатные
-(PROP-050 F7). B-106 — доисторическая гниль ссылок (116 файлов,
-запись в BACKLOG). Прежние очереди (37 stale, аудит 2026-08-06-01,
-релиз 1.0.0 за PAT владельца) — без изменений.</WAL-ISSUES></p>
+    <p><WAL-ISSUES fact="true" status="impl/work">2 softened-concept warnings панели — штатные (PROP-050
+F7). Шаг 53: 3 dead-exclude предупреждения facts.toml + корпус 98
+файлов (.md-остаток после XML-конверсии) — B-107, владельческая
+перекалибровка. B-106 — доисторическая гниль ссылок (116 файлов).
+Прежние очереди (37 stale-форматов, аудит 2026-08-06-01, релиз за PAT)
+— без изменений.</WAL-ISSUES></p>
   </known-issues>
   <done title="Done">
-    <p><WAL-DONE fact="true" status="impl/done">Сегодня: PROP-051 (глагольное семейство convert-source/
-package-src/spec-src, честность обратной переконвертацией) построен и
-применён — корпус 871 файл в XML; K6.5 — 2170 адресуемых ячеек + закон
-на оба фронтенда; PROP-052 закон+план; R0-R2 посажены (layout-модуль,
-миграция всех крейтов); R4/R5 физически выполнены; доказаны specmap-
-паритет, идемпотентность установки, живой vibe why. Воркеры: 8 посадок
-(codex+claudez), все архивированы с метами.</WAL-DONE></p>
+    <p><WAL-DONE fact="true" status="impl/done">2026-08-24: переезд vibevm/ доведён и посажен (4 коммита);
+панель all green; R6-доказательства сняты; нарация sync-engines
+по-сетно `[k/9]` (обещание владельцу); dead первый хоп `RESUME SESSION
+fractality` починен (SPECSPACES.md → WAL.xml/CONTINUE.xml); стейдж-
+семантика check-codegen пришпилена констрейнтом. Ранее в goal: PROP-051
+BUILT, корпус в XML, 2170 ячеек K6.5.</WAL-DONE></p>
   </done>
 </spec>
