@@ -145,6 +145,24 @@ pub fn run(
             crate::commands::init::current_timestamp_utc(),
         )
     };
+    // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, 2026-08-24): a bare install
+    // over a workspace whose `[requires]` union is empty is a fresh
+    // project, not an error — and it must not demand a registry either
+    // (`vibe init && vibe install` works out of the box). Regenerate the
+    // boot artifacts of the empty world and report the fresh shape.
+    if args.packages.is_empty()
+        && workspace.iter_nodes().all(|(_, node)| {
+            node.requires.packages.is_empty() && node.requires.git_packages.is_empty()
+        })
+        && lockfile_snapshot.meta.root_dependencies.is_empty()
+    {
+        ctx.heading("nothing declared — regenerating boot artifacts for the empty world");
+        let nodes =
+            vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
+                .context("regenerating boot artifacts for the empty world")?;
+        return report::emit_fresh_report(ctx, &nodes);
+    }
+
     // PROP-050 ##VERIFY-LOCK-DIFF — the lane-size half of the pre-apply
     // snapshot, taken beside the lock snapshot so one read point feeds
     // the whole diff. Sampled again after a successful apply below.
@@ -350,7 +368,7 @@ fn generated_by() -> String {
     format!("vibe {}", env!("CARGO_PKG_VERSION"))
 }
 
-fn resolve_project_root(path: &Path) -> Result<PathBuf> {
+pub(crate) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     let canonical = path
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;

@@ -276,12 +276,13 @@ impl MultiRegistryResolver {
         // insert write-once into the machine store; an already-present
         // entry is returned untouched, its manifest read back.
         let content_hash = compute_content_hash(&clone_dir)?;
-        let dest = store::insert_at(
+        let dest = store::insert_current_at(
             store_root,
             &clone_dir,
             group,
             name,
             &resolution.resolved.version,
+            &content_hash,
         )?
         .into_entry();
         let manifest_path = dest.join(Manifest::FILENAME);

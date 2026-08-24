@@ -183,19 +183,57 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
                 }
             }
         }
-        if all.is_empty() {
-            return Err(Error::NothingToInstall {
-                manifest_dir: project_root.display().to_string(),
-            });
-        }
         all
     } else {
-        request.roots.clone()
+        // ##EXPLICIT-PKGREF-FULL-SOLVE (PROP-011, the 2026-08-24 ruling):
+        // the named packages JOIN the full manifest union — never replace
+        // it. The apply phase treats any resolution as the whole world
+        // (its prune drops every slot outside it), so a partial solve
+        // must never reach apply: `vibe install X --offline` used to
+        // erase every other slot and rewrite the lock to X's closure.
+        // The named refs stay as written (re-resolved fresh); every
+        // untouched manifest root is held to its locked pin below.
+        let discovered = Workspace::discover(project_root)?;
+        let mut all: Vec<PackageRef> = request.roots.clone();
+        let mut seen: std::collections::HashSet<(Option<Group>, String)> = all
+            .iter()
+            .map(|p| (p.group.clone(), p.name.to_string()))
+            .collect();
+        let mut rest: Vec<PackageRef> = Vec::new();
+        for (_, node) in discovered.iter_nodes() {
+            for p in &node.requires.packages {
+                if seen.insert((p.group.clone(), p.name.to_string())) {
+                    rest.push(p.clone());
+                }
+            }
+            for g in &node.requires.git_packages {
+                if seen.insert((Some(g.group.clone()), g.name.clone())) {
+                    rest.push(PackageRef::new(
+                        g.kind,
+                        Some(g.group.clone()),
+                        g.name.clone(),
+                        VersionSpec::Latest,
+                    )?);
+                }
+            }
+        }
+        // §5.3 minimum churn: the untouched roots move nothing — each one
+        // the lock still satisfies is pinned to its locked version.
+        all.extend(vibe_workspace::freshness::hold_pins(&rest, &lockfile));
+        all
     };
 
+    // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
+    // dependencies is a fresh project, not an error — regenerate the boot
+    // artifacts of the empty world and report the fresh shape.
+    if roots.is_empty() {
+        return Ok(Plan::Fresh);
+    }
+
     // The root set the depsolver actually runs against. For an
-    // explicit-pkgref install it is `roots` verbatim; for a stale bare
-    // install PROP-011 §5.3 replaces it with the pin-held set below.
+    // explicit-pkgref install it is the named refs plus the pin-held
+    // remainder above; for a stale bare install PROP-011 §5.3 replaces it
+    // with the pin-held set below.
     let mut solve_roots = roots.clone();
 
     // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref

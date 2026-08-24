@@ -151,12 +151,13 @@ impl MultiRegistryResolver {
         // returned untouched and its manifest read back, so the
         // `CachedPackage` describes the bytes that will materialise.
         let content_hash = compute_content_hash(&clone_dir)?;
-        let dest = store::insert_at(
+        let dest = store::insert_current_at(
             store_root,
             &clone_dir,
             group,
             name,
             &resolution.resolved.version,
+            &content_hash,
         )?
         .into_entry();
 

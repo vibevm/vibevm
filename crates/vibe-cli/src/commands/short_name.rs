@@ -184,7 +184,8 @@ pub fn qualify_locked(pkgref: &PackageRef, lockfile: &Lockfile) -> Result<Packag
         [] => bail!(
             "the short name `{name}` is not installed — no package of that name is in \
              `vibe.lock`. This command acts only on installed packages; if it is installed \
-             under a group you did not name, give the qualified form `<group>/{name}`.",
+             under a group you did not name, give the qualified form `<group>/{name}`, and \
+             if it is new to this project, add it with `vibe install <group>/{name}`.",
             name = pkgref.name,
         ),
         // PROP-008 §2.7 — a short name matching two locked groups is a

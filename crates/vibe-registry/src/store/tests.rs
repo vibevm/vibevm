@@ -251,3 +251,50 @@ fn record_hash_writes_only_when_absent() {
     );
     assert!(!record_hash_at(&root, &g("org.example"), "wal", &v("0.1.0"), "sha256:xyz").unwrap());
 }
+
+/// PROP-011 §2.6 same-version content drift (the 2026-08-24 regression):
+/// an already-present entry whose recorded hash no longer matches the
+/// live source's hash is REFRESHED by `insert_current_at`; matching
+/// bytes keep the write-once fast path untouched.
+#[test]
+fn insert_current_refreshes_a_drifted_entry_and_keeps_a_matching_one() {
+    let root = tempfile::tempdir().unwrap();
+    let src = tempfile::tempdir().unwrap();
+    std::fs::write(src.path().join("vibe.toml"), "old bytes").unwrap();
+    let g = Group::parse("org.demo").unwrap();
+    let v: semver::Version = "1.0.0".parse().unwrap();
+
+    let h1 = crate::shippable::compute_content_hash(src.path()).unwrap();
+    let first = insert_current_at(root.path(), src.path(), &g, "pkg", &v, &h1).unwrap();
+    assert!(matches!(first, InsertOutcome::Inserted(_)), "{first:?}");
+
+    // Unchanged source → write-once holds.
+    let again = insert_current_at(root.path(), src.path(), &g, "pkg", &v, &h1).unwrap();
+    assert!(
+        matches!(again, InsertOutcome::AlreadyPresent(_)),
+        "{again:?}"
+    );
+
+    // The author edits the source in place — same version, new bytes.
+    std::fs::write(src.path().join("vibe.toml"), "new bytes — same version").unwrap();
+    let h2 = crate::shippable::compute_content_hash(src.path()).unwrap();
+    assert_ne!(h1, h2);
+    let refreshed = insert_current_at(root.path(), src.path(), &g, "pkg", &v, &h2).unwrap();
+    assert!(
+        matches!(refreshed, InsertOutcome::Inserted(_)),
+        "a drifted entry must refresh: {refreshed:?}"
+    );
+    let entry = entry_dir(root.path(), &g, "pkg", &v);
+    let body = std::fs::read_to_string(entry.join("vibe.toml")).unwrap();
+    assert!(
+        body.contains("new bytes"),
+        "the store serves the live source: {body}"
+    );
+    // The sidecar follows the refresh.
+    assert_eq!(
+        recorded_hash_at(root.path(), &g, "pkg", &v)
+            .unwrap()
+            .as_deref(),
+        Some(h2.as_str())
+    );
+}

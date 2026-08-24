@@ -758,10 +758,12 @@ fn install_from_manifest_uses_requires() {
 }
 
 /// `vibe install` with no arguments and no declared packages anywhere
-/// (manifest empty AND lockfile empty) is a clear error pointing at
-/// the two ways to declare an input list.
+/// (manifest empty AND lockfile empty) is a fresh project, not an error
+/// (PROP-011 ##EMPTY-REQUIRES-IS-A-NO-OP, the 2026-08-24 ruling): the run
+/// regenerates the empty world's boot artifacts and exits 0, so
+/// `vibe init && vibe install` works out of the box.
 #[test]
-fn install_no_args_no_manifest_no_lock_errors() {
+fn install_no_args_no_manifest_no_lock_is_a_fresh_noop() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
@@ -774,9 +776,8 @@ fn install_no_args_no_manifest_no_lock_errors() {
         .arg(fixture_registry())
         .arg("--assume-yes")
         .assert()
-        .failure()
-        .stderr(predicate::str::contains("no packages to install"))
-        .stderr(predicate::str::contains("[requires].packages"));
+        .success()
+        .stdout(predicate::str::contains("nothing declared"));
 }
 
 /// `vibe uninstall <pkgref>` removes the matching entry from

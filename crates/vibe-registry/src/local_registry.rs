@@ -194,12 +194,13 @@ impl LocalRegistry {
         store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
         let content_hash = compute_content_hash(&resolved.source_dir)?;
-        let cache_dir = store::insert_at(
+        let cache_dir = store::insert_current_at(
             store_root,
             &resolved.source_dir,
             &resolved.group,
             &resolved.name,
             &resolved.version,
+            &content_hash,
         )?
         .into_entry();
 

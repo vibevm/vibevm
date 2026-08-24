@@ -92,6 +92,9 @@ pub fn entry_dir(root: &Path, group: &Group, name: &str, version: &semver::Versi
         .join(format!("v{version}"))
 }
 
+mod refresh;
+pub(crate) use refresh::insert_current_at;
+
 // ---------------------------------------------------------------------------
 // The integrity sidecar (PROP-010 §2.7/§2.8, boss ruling 2026-08-20):
 // `vibe cache check` reports each entry "that no longer matches what
@@ -105,7 +108,12 @@ pub fn entry_dir(root: &Path, group: &Group, name: &str, version: &semver::Versi
 // ---------------------------------------------------------------------------
 
 /// The sidecar path for one entry — `<root>/<group>/<name>/v<version>.sha256`.
-fn sidecar_path(root: &Path, group: &Group, name: &str, version: &semver::Version) -> PathBuf {
+pub(crate) fn sidecar_path(
+    root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> PathBuf {
     root.join(group.as_str())
         .join(name)
         .join(format!("v{version}.sha256"))
