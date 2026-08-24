@@ -1,7 +1,7 @@
 //! `rust-ai-native init` — bootstrap a project's discipline surface: the
 //! two engine policies (`conform.toml`, `specmap.toml`), the BROWNFIELD §3
 //! registries under `discipline/registry/`, and the `[[external_specs]]`
-//! resolution entries discovered from the materialised `vibedeps/` slots —
+//! resolution entries discovered from the materialised `vibevm/vibedeps/` slots —
 //! so a fresh consumer reaches a runnable floor without reading the
 //! engines' source. Everything is generated from the tree's actual
 //! topology; nothing existing is ever overwritten without `--force`.
@@ -26,14 +26,15 @@ struct ExternalSpec {
     root: String,
 }
 
-/// Scan `vibedeps/<slot>/<version>/` for installed packages that carry a
-/// `spec/` tree, reading each slot's `vibe.toml` `[package]` `<group>/<name>`
+/// Scan `vibevm/vibedeps/<slot>/<version>/` for installed packages that carry a
+/// `vibevm/vibespecs/` tree, reading each slot's `vibe.toml` `[package]`
+/// `<group>/<name>`
 /// as its fully-qualified namespace (PROP-029: the same `/`-joined coordinate
 /// the pkgref carries, so the group↔name split is algorithmic). Deterministic
 /// order.
 fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
     let mut out = Vec::new();
-    let vibedeps = root.join("vibedeps");
+    let vibedeps = root.join("vibevm/vibedeps");
     let Ok(slots) = std::fs::read_dir(&vibedeps) else {
         return out;
     };
@@ -54,7 +55,7 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             .collect();
         version_dirs.sort();
         for vdir in version_dirs {
-            if !vdir.join("spec").is_dir() {
+            if !vdir.join("vibevm/vibespecs").is_dir() {
                 continue;
             }
             let Ok(manifest) = std::fs::read_to_string(vdir.join("vibe.toml")) else {
@@ -73,7 +74,7 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             else {
                 continue;
             };
-            let rel = vdir.join("spec");
+            let rel = vdir.join("vibevm/vibespecs");
             let rel = rel.strip_prefix(root).unwrap_or(&rel);
             out.push(ExternalSpec {
                 namespace: format!("{group}/{name}"),
@@ -199,21 +200,21 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
          namespace = \"{namespace}\"\n\
          \n\
          scan_roots = {scan_roots}\n\
-         spec_roots = [\"spec\"]\n\
+         spec_roots = [\"vibevm/vibespecs\"]\n\
          root_spec_docs = []\n\
          exempt = []\n\
          dispositioned = []\n"
     );
     if externals.is_empty() {
         specmap.push_str(
-            "\n# No installed packages with spec trees were found under vibedeps/.\n\
+            "\n# No installed packages with spec trees were found under vibevm/vibedeps/.\n\
              # After `vibe install`, re-run `rust-ai-native init --force` (or add\n\
              # [[external_specs]] entries by hand) so cross-package citations resolve.\n",
         );
     } else {
         specmap.push_str(
             "\n# Installed packages' spec trees, read for URI RESOLUTION only\n\
-             # (PROP-014 §7.1) — discovered from vibedeps/ at init time.\n",
+             # (PROP-014 §7.1) — discovered from vibevm/vibedeps/ at init time.\n",
         );
         for e in &externals {
             specmap.push_str(&format!(
@@ -279,9 +280,9 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
     eprintln!(
         "rust-ai-native init: done. Next steps:\n\
          \x20 1. wire your workspace Cargo.toml (GUIDE §13) — dep the tags AND exclude the slots:\n\
-         \x20    [workspace] exclude = [\"vibedeps\"]   # the packages are their own workspaces\n\
-         \x20    [workspace.dependencies] specmark = {{ path = \"vibedeps/<stack-slot>/crates/vendor/specmark\" }}\n\
-         \x20 2. write your first spec unit (spec/PROP-001.md with a {{#req-…}} anchor)\n\
+         \x20    [workspace] exclude = [\"vibevm/vibedeps\"]   # the packages are their own workspaces\n\
+         \x20    [workspace.dependencies] specmark = {{ package = \"core-ai-native-specmark\", path = \"vibevm/vibedeps/<stack-slot>/crates/vendor/core-ai-native-specmark\" }}\n\
+         \x20 2. write your first spec unit (vibevm/vibespecs/PROP-001.md with a {{#req-…}} anchor)\n\
          \x20    and tag the implementing module: specmark::scope!(\"spec://{namespace}/PROP-001#req-…\")\n\
          \x20 3. `rust-ai-native specmap` to mint the index, then `rust-ai-native floor`\n\
          \x20 4. adopt crate-by-crate: drain a crate, flip it into conform.toml's `gated`\n\
@@ -321,6 +322,10 @@ mod tests {
         let specmap = std::fs::read_to_string(root.join("specmap.toml")).unwrap();
         assert!(specmap.contains("namespace = \"demo\""));
         assert!(specmap.contains("scan_roots = [\".\"]"), "{specmap}");
+        assert!(
+            specmap.contains("spec_roots = [\"vibevm/vibespecs\"]"),
+            "{specmap}"
+        );
         // The single-crate exempt entry carries the DIRECTORY basename —
         // the name the scanner attributes files to — never the manifest's
         // `[package] name` (here deliberately different: "demo-app").
@@ -381,8 +386,8 @@ mod tests {
     fn external_specs_are_discovered_from_vibedeps() {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
-        let slot = root.join("vibedeps/flow-some-core/0.3.0");
-        std::fs::create_dir_all(slot.join("spec")).unwrap();
+        let slot = root.join("vibevm/vibedeps/flow-some-core/0.3.0");
+        std::fs::create_dir_all(slot.join("vibevm/vibespecs")).unwrap();
         std::fs::write(
             slot.join("vibe.toml"),
             "[package]\nname = \"some-core\"\ngroup = \"org.x\"\nkind = \"flow\"\nversion = \"0.3.0\"\n",
@@ -395,7 +400,7 @@ mod tests {
             "{specmap}"
         );
         assert!(
-            specmap.contains("root = \"vibedeps/flow-some-core/0.3.0/spec\""),
+            specmap.contains("root = \"vibevm/vibedeps/flow-some-core/0.3.0/vibevm/vibespecs\""),
             "{specmap}"
         );
         // And the engine parses what init wrote.

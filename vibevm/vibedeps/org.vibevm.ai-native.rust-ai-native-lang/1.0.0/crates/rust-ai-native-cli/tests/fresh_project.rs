@@ -42,18 +42,18 @@ pub fn hello() -> &'static str {
     );
     write(
         root,
-        "spec/PROP-001.md",
+        "vibevm/vibespecs/PROP-001.md",
         "# PROP-001 — the demo spec {#root}\n\n## Hello {#req-hello}\n`req r1`\n\nIt MUST greet.\n",
     );
     // A materialised package slot with a spec tree (what vibe install makes).
     write(
         root,
-        "vibedeps/flow-core-ai-native/0.3.0/vibe.toml",
+        "vibevm/vibedeps/flow-core-ai-native/0.3.0/vibe.toml",
         "[package]\nname = \"core-ai-native\"\ngroup = \"org.vibevm.ai-native\"\nkind = \"flow\"\nversion = \"0.3.0\"\n",
     );
     write(
         root,
-        "vibedeps/flow-core-ai-native/0.3.0/spec/mechanisms/ENGINE-X-v0.1.md",
+        "vibevm/vibedeps/flow-core-ai-native/0.3.0/vibevm/vibespecs/mechanisms/ENGINE-X-v0.1.md",
         "## Rules {#rules}\n`req r1`\n\nbody\n",
     );
     tmp
@@ -77,7 +77,7 @@ fn init_then_trace_resolves_and_the_gates_catch_violations() {
     let specmap_policy = std::fs::read_to_string(root.join("specmap.toml")).expect("policy");
     assert!(specmap_policy.contains("namespace = \"demo\""));
     assert!(
-        specmap_policy.contains("root = \"vibedeps/flow-core-ai-native/0.3.0/spec\""),
+        specmap_policy.contains("root = \"vibevm/vibedeps/flow-core-ai-native/0.3.0/vibevm/vibespecs\""),
         "{specmap_policy}"
     );
 

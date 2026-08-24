@@ -19,19 +19,19 @@ fn init_then_gates_catch_violations_and_the_tagged_tree_passes() {
     write(root, "go.mod", "module fresh\n\ngo 1.24\n");
     write(
         root,
-        "spec/PROP-001.md",
+        "vibevm/vibespecs/PROP-001.md",
         "# PROP-001 — the demo spec {#root}\n\n## Hello {#req-hello}\n`req r1`\n\nIt MUST greet.\n",
     );
     // A materialised package slot with a spec tree (what vibe install
     // makes) so init discovers [[external_specs]].
     write(
         root,
-        "vibedeps/flow-some-core/0.4.0/vibe.toml",
+        "vibevm/vibedeps/flow-some-core/0.4.0/vibe.toml",
         "[package]\nname = \"some-core\"\n",
     );
     write(
         root,
-        "vibedeps/flow-some-core/0.4.0/spec/mechanisms/ENGINE-X.md",
+        "vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs/mechanisms/ENGINE-X.md",
         "## Rules {#rules}\n`req r1`\n\nbody\n",
     );
     // One tagged export citing the local unit, one census site
@@ -74,7 +74,7 @@ fn init_then_gates_catch_violations_and_the_tagged_tree_passes() {
     .expect("init");
     let policy = std::fs::read_to_string(root.join("specmap.toml")).expect("policy");
     assert!(
-        policy.contains("root = \"vibedeps/flow-some-core/0.4.0/spec\""),
+        policy.contains("root = \"vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs\""),
         "{policy}"
     );
 

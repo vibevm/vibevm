@@ -22,12 +22,12 @@ struct ExternalSpec {
     root: String,
 }
 
-/// Installed packages' spec trees under `vibedeps/`, for
+/// Installed packages' spec trees under `vibevm/vibedeps/`, for
 /// `[[external_specs]]` resolution — same discovery walk as the Rust
-/// init (slot layout: `vibedeps/<slot>/<version>/{vibe.toml,spec/}`).
+/// init (slot layout: `vibevm/vibedeps/<slot>/<version>/{vibe.toml,vibevm/vibespecs/}`).
 fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
     let mut out = Vec::new();
-    let vibedeps = root.join("vibedeps");
+    let vibedeps = root.join("vibevm/vibedeps");
     let Ok(slots) = std::fs::read_dir(&vibedeps) else {
         return out;
     };
@@ -48,7 +48,7 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             .collect();
         version_dirs.sort();
         for vdir in version_dirs {
-            if !vdir.join("spec").is_dir() {
+            if !vdir.join("vibevm/vibespecs").is_dir() {
                 continue;
             }
             let Ok(manifest) = std::fs::read_to_string(vdir.join("vibe.toml")) else {
@@ -64,7 +64,7 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             else {
                 continue;
             };
-            let rel = vdir.join("spec");
+            let rel = vdir.join("vibevm/vibespecs");
             let rel = rel.strip_prefix(root).unwrap_or(&rel);
             out.push(ExternalSpec {
                 namespace: name.to_string(),
@@ -175,21 +175,21 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
          namespace = \"{namespace}\"\n\
          \n\
          scan_roots = [\"src\"]\n\
-         spec_roots = [\"spec\"]\n\
+         spec_roots = [\"vibevm/vibespecs\"]\n\
          root_spec_docs = []\n\
          exempt = []\n\
          dispositioned = []\n"
     );
     if externals.is_empty() {
         specmap.push_str(
-            "\n# No installed packages with spec trees were found under vibedeps/.\n\
+            "\n# No installed packages with spec trees were found under vibevm/vibedeps/.\n\
              # After `vibe install`, re-run `typescript-ai-native init --force` (or add\n\
              # [[external_specs]] entries by hand) so cross-package citations resolve.\n",
         );
     } else {
         specmap.push_str(
             "\n# Installed packages' spec trees, read for URI RESOLUTION only\n\
-             # (PROP-014 §7.1) — discovered from vibedeps/ at init time.\n",
+             # (PROP-014 §7.1) — discovered from vibevm/vibedeps/ at init time.\n",
         );
         for e in &externals {
             specmap.push_str(&format!(
@@ -246,7 +246,7 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
         "typescript-ai-native init: done. Next steps:\n\
          \x20 1. `npm install -D typescript prettier eslint typescript-eslint` — the floor's\n\
          \x20    toolchain (tsc also feeds the ts-tsc structural gate)\n\
-         \x20 2. write your first spec unit (spec/PROP-001.md with a {{#req-…}} anchor) and\n\
+         \x20 2. write your first spec unit (vibevm/vibespecs/PROP-001.md with a {{#req-…}} anchor) and\n\
          \x20    tag the implementing export: /** @implements spec://{namespace}/PROP-001#req-… */\n\
          \x20 3. `typescript-ai-native specmap` to mint the index, then `typescript-ai-native floor`\n\
          \x20 4. adopt cell by cell; the sweep skill walks the recurring routine\n\
@@ -264,9 +264,9 @@ mod tests {
         let tmp = tempfile::tempdir().expect("tempdir");
         let root = tmp.path();
         std::fs::create_dir_all(root.join("src/cells")).expect("cells");
-        std::fs::create_dir_all(root.join("vibedeps/flow-some-core/0.4.0/spec")).expect("slot");
+        std::fs::create_dir_all(root.join("vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs")).expect("slot");
         std::fs::write(
-            root.join("vibedeps/flow-some-core/0.4.0/vibe.toml"),
+            root.join("vibevm/vibedeps/flow-some-core/0.4.0/vibe.toml"),
             "[package]\nname = \"some-core\"\n",
         )
         .expect("slot manifest");
@@ -308,7 +308,11 @@ mod tests {
             .expect("present");
         assert_eq!(specmap.namespace, "demo");
         let policy = std::fs::read_to_string(root.join("specmap.toml")).expect("policy");
-        assert!(policy.contains("root = \"vibedeps/flow-some-core/0.4.0/spec\""));
+        assert!(policy.contains("root = \"vibevm/vibedeps/flow-some-core/0.4.0/vibevm/vibespecs\""));
+        assert!(
+            policy.contains("spec_roots = [\"vibevm/vibespecs\"]"),
+            "the generated policy names the live specs root: {policy}"
+        );
 
         // The registries parse through the engines that consume them.
         let baseline =
