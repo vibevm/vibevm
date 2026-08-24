@@ -1,70 +1,52 @@
-# CONTINUE — холодный резюм (чекпойнт 2026-08-24, вечер: goal закрыт, переезд посажен)
+# CONTINUE — холодный резюм (чекпойнт 2026-08-24, поздний вечер)
 
 > WAL (`vibevm/vibespecs/WAL.xml`) — канонический живой статус; при
 > расхождении он главнее этого снапшота.
 
-## TL;DR
+## TL;DR — день из трёх посаженных волн
 
-Goal-хук «переход на XML проведен до конца, после этого переход на новую
-раскладку директорий проведен до конца в автоматическом режиме» —
-**ЗАКРЫТ ЦЕЛИКОМ**. Обе половины посажены, дерево чисто, панель all green
-(54 шага), зеркала раскатаны этим wind-down'ом.
+1. **Переезд vibevm/** (PROP-052) — утро: 4 корня + 86 пакетов + флип +
+   свип; панель, clean-room, specmap-паритет; `ecb0a5de…4edb5f2c`.
+2. **Normal-флип** — все 42 живых слота vibepacks в `format = "normal"`;
+   компилятор дозрел до XML-мира: seed стрипает `.xml`, multi-doc
+   closure получает doc-slug (вне boot/ и contract/), qualify узнал
+   ячеечные (K6.5) и цитатные факты, вложенные ноды поглощаются
+   (READ-ONCE), `@spec` — агентское ребро (вклейка только `#use`;
+   реализованный ##OPEN-CLOSURE-EXPLOSION: 250 KB → 2.5 MB → обратно).
+   `b56c604b / b82b7423 / db4a36e8`.
+3. **Install-фиксы + vibe clean** — вечер:
+   - `vibe install <pkg> [--offline]` больше НЕ сносит мир (полная
+     резолюция: named свежо + остальное на пинах) — владельческая
+     репродукция закрыта e2e-тестами;
+   - ноль зависимостей — штатный no-op (`vibe init && vibe install` из
+     коробки);
+   - same-version дрейф local-источника: write-once кэш рефрешится по
+     хэшу (`insert_current_at`, все 5 фетч-путей);
+   - **`vibe clean`** (PROP-053): derived-only (vibedeps + generated
+     STATIC/INDEX/INLINE по маркеру); лок, авторское, машинный кэш —
+     неприкосновенны; цепочка **`vibe clean install [pkgref]`** =
+     wipe → мир из лока → refresh названных.
+   `1cfdec31 / eb9103ab`. Панель all green; specmap 0 unresolved.
 
-1. **XML-переход (PROP-051)** — корпус 871 файл в XML, `vibe refactor
-   convert-source / convert-package-src / convert-spec-src`, честность
-   обратной переконвертацией, K6.5 (2170 адресуемых ячеек).
-2. **Раскладка vibevm/ (PROP-052)** — четыре корня хоста →
-   `vibevm/{vibespecs,vibepacks,vibedeps,vibefacts}`; спеки каждого из 86
-   пакетов → `<slot>/vibevm/vibespecs`; `USE_NEW_LAYOUT=true` в
-   `crates/vibe-core/src/layout.rs` (единственный дом корневых имён);
-   свип кода/фикстур/доков/конфигов; мир перематериализован. Посадка:
-   `ecb0a5de` (переезд+свип) · `2f9b692c` (мир) · `3f0d743d` (нарация
-   sync-engines `[k/9]`) · `f2f5daeb` (статусы: PROP-052 BUILT, план
-   RELAYOUT ЗАВЕРШЁН) · этот wind-down (WAL/CONTINUE).
+## Ключевые уроки дня (они же в WAL constraints)
 
-## Доказанное (R6, не перепроверять зря)
+- `@spec` не вклеивается компилятором — только `#use` (иначе лейн ×10).
+- Кэш write-once + hash-guard: не возвращать голый `insert_at` в фетчи.
+- Панель на занятом боксе — `CARGO_BUILD_JOBS=4` (0xc0000142 ловится и
+  одной панелью на полном параллелизме линков).
+- Фрозен-слоты не чинятся; синк-таргеты не правятся руками.
 
-- Панель `bash tools/self-check.sh` — **all green**, 54 шага.
-- `cargo xtask specmap` — 6486 юнитов, **0 unresolved**, 0 suspects.
-- Clean-room: `vibe init → install (file:///-реестр) → check` целиком в
-  новой раскладке (свежий проект рождается с `vibevm/vibespecs`, слот
-  ложится в `vibevm/vibedeps`, лейн регенерится).
-- INDEX-резолюция бут-лейна: 8/8 целей существуют (включая
-  vibedeps-слоты с внутренней `vibevm/vibespecs`-раскладкой).
-- Агентская проба маршрутизации: холодный читатель по CLAUDE.md доходит
-  STATIC.xml → INDEX-цели → WAL.xml без угадывания — PASS; нарративный
-  слой (CLAUDE/AGENTS/GEMINI проза, SPECSPACES fractality-ряд) вычищен.
-- Идемпотентность установки: лок-дифф двойного прогона == `generated_at`.
+## Кандидаты следующей сессии (владельческие развилки)
 
-## Кандидаты следующей сессии (все — владельческие развилки)
-
-1. **Релиз 1.0.0**: инспекция по `RELEASE-INSPECTION-CHECKLIST.md` → новый
-   PAT → С6-публикация → тег v1.0.0 (`TASKS.md` слайс, TZ-RELEASE §10).
-2. **B-107** (новый): три exclude-рулинга `facts.toml` мертвы — пакетный
-   факт-корпус сжался до `.md`-остатка (98 файлов) после XML-конверсии;
-   решить: наблюдать ли пакетный XML-корпус (`**/*.xml` в include) или
-   удалить мёртвые паттерны. Плюс прежние B-103/B-105.
-3. B-106 (P3) — гниль 116 старых ссылок, отдельная волна.
-
-## Ловушки (переживают сессию — они же в WAL constraints)
-
-`cmd | tail` маскирует код выхода (форма `( cmd > f ); echo EXIT=$?`) ·
-потолок 2 холодных cargo-воркера · убийства раннеров PID-точечно ·
-Windows-локи на STATIC/INDEX и свапе generated-* — транзиент, снести
-`generated.new-*` и перегнать · `check-codegen` диффит против ИНДЕКСА —
-свежий генерат требует `git add` до зелени · фрозен-слоты пакетов не
-чинить, синк-таргеты не править руками (только авторскую копию + `cargo
-xtask sync-engines`) · суперсидед `spec/`-форма в старых слотах — компат,
-пинится тестом.
+1. Релиз 1.0.0: инспекция → PAT → С6 → тег (TASKS.md / TZ-RELEASE §10).
+2. B-107 (пакетный XML-корпус фактов), B-103/B-105.
+3. Добить статусы `impl/plan → impl/done` в PROP-053 / PROP-011-рулингах
+   (код зелёный, чисто доковая правка).
 
 ## Быстрый старт
 
 ```sh
-git log --oneline -8            # посадка переезда сверху
-bash tools/self-check.sh        # нарратит [N/54], heartbeat 30s
-cargo xtask specmap && cargo xtask sync-engines   # оба нарратят
+git log --oneline -10          # три волны дня сверху
+CARGO_BUILD_JOBS=4 bash tools/self-check.sh
+./target/debug/vibe.exe clean install --path . --assume-yes   # новый глагол
 ```
-
-Worktrees `.wt/{K1-CONVERT,R1-LAYOUT,R2C-CHECKS,R2D-TAILS}` снесены этим
-wind-down'ом (их диффы давно применены); остальные `.wt/*` — чужих
-кампаний, не трогать без их мандата.
