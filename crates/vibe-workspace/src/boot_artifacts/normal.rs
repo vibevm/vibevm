@@ -72,16 +72,22 @@ pub(super) fn compile_normal_entry(
 /// `origin` is the entry's `<group>/<name>` provenance (a hoisted entry may
 /// append a ` [shared by …]` suffix, dropped here); `path` is the
 /// workspace-relative path of the contract inside the package's dependency
-/// slot. The doc-path is the segment after the slot's live specs root minus the `.md`
-/// extension (`contract/greeting`); the seed carries no anchor, so it names the
-/// whole document (`DocTree` resolves an empty anchor to the root). Returns
-/// `None` when the origin or path is not the expected package shape.
+/// slot. The doc-path is the segment after the slot's live specs root minus
+/// the serialisation extension — `.md` or `.xml`, since a document's address
+/// does not change with its serialisation (PROP-045) — so
+/// `contract/greeting.md` and `boot/10-flow-wal.xml` both address
+/// extensionless. The seed carries no anchor, so it names the whole document
+/// (`DocTree` resolves an empty anchor to the root). Returns `None` when the
+/// origin or path is not the expected package shape.
 fn normal_seed(origin: &str, path: &str) -> Option<SpecAddress> {
     let coord = origin.split_whitespace().next()?;
     let (group, name) = coord.split_once('/')?;
     let specs_delimiter = format!("/{}/", layout_paths::specs(""));
     let (_, doc_rest) = path.split_once(&specs_delimiter)?;
-    let doc_path = doc_rest.strip_suffix(".md").unwrap_or(doc_rest);
+    let doc_path = doc_rest
+        .strip_suffix(".md")
+        .or_else(|| doc_rest.strip_suffix(".xml"))
+        .unwrap_or(doc_rest);
     SpecAddress::parse(&format!("spec://{group}/{name}/{doc_path}")).ok()
 }
 
@@ -116,5 +122,21 @@ mod tests {
         assert!(normal_seed("com.example.hello/greeter", "some/other/path.md").is_none());
         let invalid = layout_paths::slot_specs(layout_paths::vibedeps("x/1.0.0"), "a.md");
         assert!(normal_seed("nogroup", &invalid).is_none());
+    }
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#addressing")]
+    fn normal_seed_strips_the_xml_serialisation_too() {
+        // A document's address does not change with its serialisation
+        // (PROP-045): an XML-materialised contract must yield the same
+        // extensionless doc-path a Markdown one does, or the seed carries
+        // `.xml` into the address and resolution dies on a double extension.
+        let slot = layout_paths::vibedeps("org.vibevm.world.wal/1.0.0");
+        let snippet = layout_paths::slot_specs(&slot, "boot/10-flow-wal.xml");
+        let s = normal_seed("org.vibevm.world/wal", &snippet).unwrap();
+        assert_eq!(
+            s.without_pin(),
+            "spec://org.vibevm.world/wal/boot/10-flow-wal"
+        );
     }
 }

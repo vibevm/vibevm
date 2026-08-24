@@ -97,6 +97,13 @@ pub fn qualify_contribution(text: &str, origin: &str) -> (String, Vec<RenameEntr
         } else if let Some((_, id)) = fact_id(line) {
             note_definition(id.to_string(), &slug, &mut defined, &mut renames);
         }
+        // Cell facts (PROP-043 §3.8 as amended by K6.5): a `@fact:ID` opening
+        // a TABLE CELL is a definition in the same one namespace — both
+        // dialect frontends read it as one, so the qualify pass must rename
+        // it or two spliced docs sharing a row template collide on bare ids.
+        for (_, id) in cell_fact_ids(line) {
+            note_definition(id, &slug, &mut defined, &mut renames);
+        }
     }
 
     // Pass 2 — rewrite definitions and references against the collected set.
@@ -116,11 +123,51 @@ pub fn qualify_contribution(text: &str, origin: &str) -> (String, Vec<RenameEntr
         } else if let Some((range, id)) = fact_id(&rewritten) {
             rewritten.replace_range(range, &format!("{slug}--{id}"));
         }
+        // Cell-fact definitions, right-to-left so earlier ranges stay valid.
+        for (range, id) in cell_fact_ids(&rewritten).into_iter().rev() {
+            rewritten.replace_range(range, &format!("{slug}--{id}"));
+        }
         rewritten = rewrite_links(&rewritten, &slug, &defined);
         out_lines.push(rewritten);
     }
 
     (out_lines.join("\n"), renames)
+}
+
+/// Every `@fact:ID` opening a table CELL of `line` — `(id-range, id)` pairs
+/// in cell order. A cell fact is the K6.5 form: the sigil sits immediately
+/// after a `|` separator (whitespace allowed), which is exactly where both
+/// dialect frontends recognise a cell-grain definition (PROP-043 §3.8).
+/// A line with no `|` has no cells and returns empty; a mid-cell `@fact:` is
+/// prose and is not matched.
+fn cell_fact_ids(line: &str) -> Vec<(std::ops::Range<usize>, String)> {
+    if !line.contains('|') {
+        return Vec::new();
+    }
+    let bytes = line.as_bytes();
+    let mut out = Vec::new();
+    for (pos, _) in line.match_indices('|') {
+        let mut i = pos + 1;
+        while i < bytes.len() && (bytes[i] == b' ' || bytes[i] == b'\t') {
+            i += 1;
+        }
+        let Some(rest) = line[i..].strip_prefix("@fact:") else {
+            continue;
+        };
+        let start = i + "@fact:".len();
+        let id_len = rest
+            .bytes()
+            .take_while(|b| b.is_ascii_alphanumeric() || *b == b'-' || *b == b'_')
+            .count();
+        if id_len == 0 {
+            continue;
+        }
+        out.push((
+            start..start + id_len,
+            line[start..start + id_len].to_string(),
+        ));
+    }
+    out
 }
 
 /// Record a definition: insert into the dedup set and, on first sight, append a
@@ -165,11 +212,25 @@ fn heading_anchor(line: &str) -> Option<(std::ops::Range<usize>, &str)> {
 }
 
 /// The optional leading list marker's content offset on a content line: past
-/// leading whitespace, and past a `- `/`* `/`+ ` or `N. `/`N) ` marker if one
-/// opens the line. Mirrors `facts::list_item_content` (the two scanners hold
-/// the convention separately, by the crate's separability seam).
+/// leading whitespace, past any run of blockquote markers (`> `, nesting
+/// allowed — a `<quote>` fact projects as `> @fact:ID …`, and the dialect
+/// frontends read that as a definition), and past a `- `/`* `/`+ ` or
+/// `N. `/`N) ` marker if one opens the line. Mirrors
+/// `facts::list_item_content` (the two scanners hold the convention
+/// separately, by the crate's separability seam).
 fn content_offset(line: &str) -> usize {
-    let lead = line.len() - line.trim_start().len();
+    let mut lead = line.len() - line.trim_start().len();
+    // Blockquote markers: each `>` may carry one following space; repeat for
+    // nested quotes, re-eating indentation between markers.
+    loop {
+        let rest = &line[lead..];
+        if let Some(after) = rest.strip_prefix('>') {
+            lead += 1 + (after.starts_with(' ') as usize);
+            lead += line[lead..].len() - line[lead..].trim_start().len();
+        } else {
+            break;
+        }
+    }
     let rest = &line[lead..];
     for pre in ["- ", "* ", "+ "] {
         if rest.starts_with(pre) {
@@ -310,263 +371,5 @@ pub(crate) fn read_anchor_id(bytes: &[u8], start: usize) -> Option<(&str, usize)
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    // ---- 1. Golden — every category, exact output ---------------------------
-
-    #[test]
-    fn golden_contribution_rewrites_every_category() {
-        let slug = "org-vibevm-world--wal";
-        // Exercises: a heading anchor, a paragraph fact, a list-item fact,
-        // intra-links to a heading and to a fact, an unknown intra-link,
-        // a fenced block carrying fake labels (incl. a (#root) that IS
-        // defined — it must stay unrewritten inside the fence), an inline-code
-        // span carrying a defined (#root), a full spec:// address, an @spec://
-        // in-place use, and a directive line.
-        let input = "\
-# Heading One {#root}
-
-##FACT-ONE The first fact.
-
-See [the link](#root) and [the fact](#FACT-ONE) and [none](#missing).
-
-- ##FACT-TWO A list fact.
-
-```
-# fake ##root and (#never) and (#root)
-```
-
-Inline code: `##root` and `(#root)`.
-
-@spec://org.vibevm.world/wal/doc#root is a use.
-
-#use spec://org.vibevm.world/wal/doc#root
-";
-        let expected = format!(
-            "\
-# Heading One {{#{slug}--root}}
-
-##{slug}--FACT-ONE The first fact.
-
-See [the link](#{slug}--root) and [the fact](#{slug}--FACT-ONE) and [none](#missing).
-
-- ##{slug}--FACT-TWO A list fact.
-
-```
-# fake ##root and (#never) and (#root)
-```
-
-Inline code: `##root` and `(#root)`.
-
-@spec://org.vibevm.world/wal/doc#root is a use.
-
-#use spec://org.vibevm.world/wal/doc#root
-"
-        );
-
-        let (out, renames) = qualify_contribution(input, "org.vibevm.world/wal");
-
-        assert_eq!(out, expected);
-        assert_eq!(
-            renames
-                .iter()
-                .map(|r| r.original.as_str())
-                .collect::<Vec<_>>(),
-            vec!["root", "FACT-ONE", "FACT-TWO"],
-            "rename map is in document order"
-        );
-        assert_eq!(
-            renames
-                .iter()
-                .map(|r| r.qualified.as_str())
-                .collect::<Vec<_>>(),
-            vec![
-                "org-vibevm-world--wal--root",
-                "org-vibevm-world--wal--FACT-ONE",
-                "org-vibevm-world--wal--FACT-TWO",
-            ]
-        );
-    }
-
-    #[test]
-    fn the_qualified_opener_is_qualified_too() {
-        // The failure this guards against is silent by construction: an
-        // unrecognised opener is not an error here, it is simply a label left
-        // unqualified — and two packages sharing a fact id then collide in the
-        // compiled lane with nothing said. Measured once at 466 markers
-        // spliced, none of them qualified.
-        let slug = "org-vibevm-world--wal";
-        let input = "\
-# Heading One {#root}
-
-@fact:FACT-ONE The first fact. @status:impl/done
-
-- @fact:FACT-TWO A list fact. @status:spec/work
-
-See [the fact](#FACT-ONE).
-";
-        let expected = format!(
-            "\
-# Heading One {{#{slug}--root}}
-
-@fact:{slug}--FACT-ONE The first fact. @status:impl/done
-
-- @fact:{slug}--FACT-TWO A list fact. @status:spec/work
-
-See [the fact](#{slug}--FACT-ONE).
-"
-        );
-
-        let (out, renames) = qualify_contribution(input, "org.vibevm.world/wal");
-        assert_eq!(out, expected);
-        assert_eq!(
-            renames
-                .iter()
-                .map(|r| r.original.as_str())
-                .collect::<Vec<_>>(),
-            vec!["root", "FACT-ONE", "FACT-TWO"]
-        );
-    }
-
-    #[test]
-    fn both_openers_qualify_to_the_same_label() {
-        // A half-migrated snippet must not produce two different labels for
-        // what is one id.
-        let legacy = qualify_contribution("##A One. @impl/done\n", "org.vibevm.world/wal");
-        let qualified =
-            qualify_contribution("@fact:A One. @status:impl/done\n", "org.vibevm.world/wal");
-        assert_eq!(
-            legacy.1.first().map(|r| r.qualified.as_str()),
-            qualified.1.first().map(|r| r.qualified.as_str()),
-        );
-    }
-
-    // ---- 2. Prefix-reversibility -------------------------------------------
-
-    #[test]
-    fn stripping_the_prefix_restores_the_original() {
-        // Idempotence-by-construction is not claimed; instead the prefix is
-        // reversible: applying the rename map in reverse (longest qualified
-        // first, so a label that prefixes another is handled cleanly) restores
-        // the original byte-for-byte.
-        let input = "# H {#root}\n##FACT-A the statement\nSee [r](#root) and [f](#FACT-A).\n";
-        let (qualified, renames) = qualify_contribution(input, "org.vibevm.world/wal");
-
-        // The structural form first (it only borrows `qualified`): every
-        // change inserts exactly `<slug>--`, and that substring is absent from
-        // the input, so removing it restores the original.
-        assert_eq!(
-            qualified.replace("org-vibevm-world--wal--", ""),
-            input,
-            "every rewrite is a pure insertion of the slug prefix"
-        );
-
-        // And the map-driven form: applying the rename map in reverse (longest
-        // qualified first, so a label that prefixes another is handled cleanly)
-        // restores the original byte-for-byte.
-        let mut sorted = renames.clone();
-        sorted.sort_by_key(|r| std::cmp::Reverse(r.qualified.len()));
-        let mut restored = qualified;
-        for r in &sorted {
-            restored = restored.replace(&r.qualified, &r.original);
-        }
-        assert_eq!(restored, input);
-    }
-
-    // ---- 3. Append-independence --------------------------------------------
-
-    #[test]
-    fn qualify_is_independent_of_sibling_contributions() {
-        // The signature takes ONE contribution's text and its origin — no view
-        // of any sibling — so qualifying A is byte-identical whether or not B
-        // exists. The property is enforced structurally: there is no
-        // cross-input for it to depend on.
-        let a = "# A {#root}\n##A-FACT x\n[link](#root)\n";
-        let b = "# B {#root}\n##B-FACT y\n[link](#root)\n";
-
-        let (qa, ra) = qualify_contribution(a, "org.vibevm.world/aaa");
-        // B is qualified in a separate call A can never observe.
-        let _ = qualify_contribution(b, "org.vibevm.world/bbb");
-        let (qa2, ra2) = qualify_contribution(a, "org.vibevm.world/aaa");
-
-        assert_eq!(qa, qa2);
-        assert_eq!(ra, ra2);
-        // A's labels carry A's origin, never B's.
-        assert!(qa.contains("org-vibevm-world--aaa--root"));
-        assert!(!qa.contains("org-vibevm-world--bbb"));
-    }
-
-    // ---- 4. Slug edge cases ------------------------------------------------
-
-    #[test]
-    fn origin_slug_edge_cases() {
-        // Dotted group: dots -> `-`, the group/name `/` -> `--`.
-        assert_eq!(origin_slug("org.vibevm.world/wal"), "org-vibevm-world--wal");
-        // A single host-like token (no `/`): slug is the lowercased token, no
-        // joiner.
-        assert_eq!(origin_slug("vibevm"), "vibevm");
-        // A ` [shared by ...]` provenance suffix is dropped (normal_seed's rule).
-        assert_eq!(
-            origin_slug("org.vibevm.world/wal [shared by a/b]"),
-            "org-vibevm-world--wal"
-        );
-        // Always lowercased.
-        assert_eq!(origin_slug("Org.VIBEVM.World/Wal"), "org-vibevm-world--wal");
-    }
-
-    #[test]
-    fn single_token_origin_qualifies_labels_without_a_joiner() {
-        // A no-`/` origin mints a joiner-less slug, so the qualified form is
-        // `<token>--<label>` (one `--`, the label joiner — no group/name join).
-        let (out, renames) = qualify_contribution("# H {#root}\n", "vibevm");
-        assert_eq!(out, "# H {#vibevm--root}\n");
-        assert_eq!(renames[0].qualified, "vibevm--root");
-    }
-
-    // ---- 5. Empty rename map -----------------------------------------------
-
-    #[test]
-    fn contribution_with_no_labels_is_unchanged_with_empty_map() {
-        let input = "# A plain heading\n\nSome prose with no labels or links.\n";
-        let (out, renames) = qualify_contribution(input, "org.vibevm.world/wal");
-        assert!(renames.is_empty());
-        assert_eq!(out, input);
-    }
-
-    // ---- R3 pinned: a `###` run is never a fact id -------------------------
-
-    #[test]
-    fn h3_run_and_glued_triple_hash_are_not_fact_ids() {
-        // R3: a spaced `### Heading` is a heading (its anchor IS qualified);
-        // a glued `###GLUED` is neither heading nor fact. Neither mints a fact.
-        let (out, renames) =
-            qualify_contribution("### Heading {#h}\n###GLUED prose\n", "vibevm/wal");
-        assert_eq!(out, "### Heading {#vibevm--wal--h}\n###GLUED prose\n");
-        assert_eq!(
-            renames
-                .iter()
-                .map(|r| r.original.as_str())
-                .collect::<Vec<_>>(),
-            vec!["h"]
-        );
-    }
-
-    #[test]
-    fn mid_line_double_hash_is_not_a_fact_definition() {
-        // A `##X` that is not the line's lead token is prose, not a definition.
-        let (out, renames) =
-            qualify_contribution("lead text then ##NOT-A-FACT here\n", "vibevm/wal");
-        assert_eq!(out, "lead text then ##NOT-A-FACT here\n");
-        assert!(renames.is_empty());
-    }
-
-    #[test]
-    fn unknown_intra_link_is_left_untouched() {
-        // A (#y) whose target this contribution does not define is not ours to
-        // resolve — left byte-identical.
-        let (out, renames) = qualify_contribution("[x](#missing)\n", "vibevm/wal");
-        assert_eq!(out, "[x](#missing)\n");
-        assert!(renames.is_empty());
-    }
-}
+#[path = "qualify/tests_in_place.rs"]
+mod tests_in_place;

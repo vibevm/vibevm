@@ -169,11 +169,11 @@ fn alias_binding_and_at_bang_reference_compile_identically_over_an_xml_dependenc
     // exactly as over the Markdown twin (byte-equality already pins this;
     // the witnesses name what that equality means).
     assert!(
-        md_lane.contains("## The laws {#org-vibevm-core--vibevm--laws}"),
+        md_lane.contains("## The laws {#org-vibevm-core--vibevm--common-dep--laws}"),
         "{md_lane}"
     );
     assert!(
-        md_lane.contains("@fact:org-vibevm-core--vibevm--FACT-ONE"),
+        md_lane.contains("@fact:org-vibevm-core--vibevm--common-dep--FACT-ONE"),
         "{md_lane}"
     );
     assert_no_directive_lines(&md_lane);
@@ -234,11 +234,11 @@ fn an_alias_declared_inside_the_dependency_compiles_identically_in_xml() {
     // The node's self-reference survived the rename — qualified within the
     // node, exactly as over the Markdown twin.
     assert!(
-        md_lane.contains("(#org-vibevm-core--vibevm--laws)"),
+        md_lane.contains("(#org-vibevm-core--vibevm--common-dep--laws)"),
         "{md_lane}"
     );
     assert!(
-        md_lane.contains("@fact:org-vibevm-core--vibevm--DEP-FACT"),
+        md_lane.contains("@fact:org-vibevm-core--vibevm--common-dep--DEP-FACT"),
         "{md_lane}"
     );
     assert_no_directive_lines(&md_lane);
@@ -295,16 +295,16 @@ fn two_same_short_anchors_splice_qualified_apart_identically_over_md_xml_and_mix
     assert_eq!(md_renames, mixed_renames);
     // The same short anchor qualified apart per-node, under each package's
     // own origin — and the self-references rewritten to the qualified heirs.
-    assert!(md_md.contains("{#org-a--pkg--laws}"), "{md_md}");
-    assert!(md_md.contains("{#org-b--qty--laws}"), "{md_md}");
-    assert!(md_md.contains("(#org-a--pkg--laws)"), "{md_md}");
-    assert!(md_md.contains("(#org-b--qty--laws)"), "{md_md}");
+    assert!(md_md.contains("{#org-a--pkg--doc--laws}"), "{md_md}");
+    assert!(md_md.contains("{#org-b--qty--doc--laws}"), "{md_md}");
+    assert!(md_md.contains("(#org-a--pkg--doc--laws)"), "{md_md}");
+    assert!(md_md.contains("(#org-b--qty--doc--laws)"), "{md_md}");
     assert!(
         !md_md.contains("(#laws)"),
         "a bare short link survived: {md_md}"
     );
-    assert!(md_md.contains("@fact:org-a--pkg--A-LAW"), "{md_md}");
-    assert!(md_md.contains("@fact:org-b--qty--B-LAW"), "{md_md}");
+    assert!(md_md.contains("@fact:org-a--pkg--doc--A-LAW"), "{md_md}");
+    assert!(md_md.contains("@fact:org-b--qty--doc--B-LAW"), "{md_md}");
     assert!(md_md.contains("Entry prose."), "{md_md}");
     assert_no_directive_lines(&md_md);
     assert!(
@@ -346,7 +346,7 @@ fn a_fact_grain_use_through_an_alias_compiles_identically_over_an_xml_dependency
     // reference rewritten to the full address.
     assert!(md_lane.contains("the fact body"), "{md_lane}");
     assert!(
-        md_lane.contains("@fact:org-vibevm-core--vibevm--FACT-ONE"),
+        md_lane.contains("@fact:org-vibevm-core--vibevm--common-dep--FACT-ONE"),
         "{md_lane}"
     );
     assert!(
@@ -437,11 +437,11 @@ fn a_normal_entry_compiles_the_same_closure_over_an_xml_dependency() {
     // Markdown twin (the per-node qualify renames both lanes identically,
     // which the byte-equality above already pins).
     assert!(
-        md_lane.contains("## The laws {#org-vibevm-core--vibevm--laws}"),
+        md_lane.contains("## The laws {#org-vibevm-core--vibevm--common-dep--laws}"),
         "{md_lane}"
     );
     assert!(
-        md_lane.contains("@fact:org-vibevm-core--vibevm--FACT-ONE"),
+        md_lane.contains("@fact:org-vibevm-core--vibevm--common-dep--FACT-ONE"),
         "{md_lane}"
     );
     assert!(md_lane.contains("Entry prose."), "{md_lane}");

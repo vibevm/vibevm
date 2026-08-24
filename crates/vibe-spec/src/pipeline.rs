@@ -136,8 +136,9 @@ fn compile_static_inner(
     let order = topo_order_from(seed, source)?; // phase 2
     let qualify = matches!(mode, CompileMode::QualifyPerNode);
 
-    let mut out = String::new();
-    let mut renames: Vec<(String, RenameEntry)> = Vec::new();
+    // Prefetch every node's text once — the emission loop below reuses it,
+    // and the absorbed-node filter needs the full set up front.
+    let mut texts: Vec<(String, SpecAddress, String)> = Vec::with_capacity(order.len());
     for key in &order {
         let addr = SpecAddress::parse(key)?;
         let text = source
@@ -146,6 +147,36 @@ fn compile_static_inner(
                 addr: key.clone(),
                 reason,
             })?;
+        texts.push((key.clone(), addr, text));
+    }
+    // §7.4 READ-ONCE over overlapping spans: two closure nodes of ONE doc
+    // may nest (a whole-doc / `#root` node beside a section inside it — the
+    // `usage#root` + `usage#re-derive` shape). Emitting both defines every
+    // shared label twice, which the lane's XML conversion rightly refuses.
+    // A node whose text is wholly contained in a same-doc sibling's text is
+    // ABSORBED — its bytes already arrive with the ancestor. Equal texts
+    // (two addresses of one section) keep the first in topo order.
+    let absorbed: Vec<bool> = texts
+        .iter()
+        .enumerate()
+        .map(|(i, (_, addr, text))| {
+            texts.iter().enumerate().any(|(j, (_, other, other_text))| {
+                i != j
+                    && addr.authority == other.authority
+                    && addr.doc_path == other.doc_path
+                    && (text.len() < other_text.len() && other_text.contains(text.as_str())
+                        || text == other_text && j < i)
+            })
+        })
+        .collect();
+
+    let mut out = String::new();
+    let mut renames: Vec<(String, RenameEntry)> = Vec::new();
+    for (i, (key, addr, text)) in texts.iter().enumerate() {
+        if absorbed[i] {
+            continue;
+        }
+        let (addr, text) = (addr.clone(), text.clone());
 
         // phase 3 — fold the node's whole `#source` closure RECURSIVELY (§7.3,
         // §8 phase 3): a source that itself declares `#source` folds before it
@@ -177,7 +208,16 @@ fn compile_static_inner(
         // left for the second pass below.
         let emitted = if qualify {
             let origin = node_origin(&addr);
-            let (qualified, node_renames) = qualify_contribution(&emitted, &origin);
+            // Multi-doc closures of ONE package (a contract `@spec`-pulling a
+            // sibling doc) would collide on the standard anchors (`root`,
+            // `summary`) under a plain origin slug — so a node outside the
+            // package's `boot/` contract home carries its doc in the slug
+            // (PROP-035 §8 phase 5, the multi-doc rider). Pure per-node:
+            // f(origin, doc, label), independent of closure composition, so
+            // late additions stay append-only and today's boot-contract
+            // units keep their exact names.
+            let slug_origin = node_slug_origin(&addr, &origin);
+            let (qualified, node_renames) = qualify_contribution(&emitted, &slug_origin);
             renames.extend(node_renames.into_iter().map(|r| (origin.clone(), r)));
             qualified
         } else {
@@ -210,6 +250,24 @@ fn node_origin(addr: &SpecAddress) -> String {
         Authority::Host(h) => h.clone(),
         Authority::Package { group, name, .. } => format!("{group}/{name}"),
     }
+}
+
+/// The slug-authority a node's labels qualify under. A doc in a package's
+/// contract home — `boot/` (the snippet home) or `contract/` (§4) — keeps
+/// the plain origin (today's names, byte-stable); any other doc appends its
+/// doc-path so two docs of one package cannot define the same qualified
+/// label (`root`, `summary` are near-universal). The doc rides the origin
+/// as `/`-joined-with-`.`-segments so [`origin_slug`]'s existing mapping
+/// (`/`→`--`, `.`→`-`, lowercase) yields `<origin-slug>--<doc-seg-doc-seg…>`
+/// with no qualify-side change.
+fn node_slug_origin(addr: &SpecAddress, origin: &str) -> String {
+    if addr.doc_path.starts_with("boot/")
+        || addr.doc_path.starts_with("contract/")
+        || addr.doc_path.is_empty()
+    {
+        return origin.to_string();
+    }
+    format!("{origin}/{}", addr.doc_path.replace('/', "."))
 }
 
 /// Remove directive lines of the given kinds. `#use` is resolved by the

@@ -137,16 +137,19 @@ fn visit(
             reason,
         })?;
 
-    // Edges to follow, selected by `kind`. `Use` follows `#use` plus `@spec`
-    // in-place uses (§7.2/§7.4), line-sorted so a `@spec` interleaves with the
-    // `#use`s by where it sits in the prose. `Source` follows only `#source`
-    // (§7.3) — and every such edge passes through [`source_addresses`], the ONE
-    // place that knows a `#source` may carry a pattern (a glob expands to its
-    // sorted members, a point address to itself), flattened in declaration order.
-    // Owning the addresses (rather than borrowing the parsed directives) is what
-    // lets an expanded glob contribute addresses no directive ever held; the
-    // `Use` branch clones for the same uniform shape, which leaves its behaviour
-    // — order, dedup by reach, cycle detection — byte-for-byte as before.
+    // Edges to follow, selected by `kind`. `Use` follows explicit `#use`
+    // declarations (§7.2) — and ONLY those: an `@spec://…` in-place use
+    // (§7.4) is the AGENT's mandatory read, not a compiler splice. The
+    // address itself is the compiled artefact — AOT-splicing every `@spec`
+    // target multiplied the host lane tenfold (250 KB → 2.5 MB, the
+    // ##OPEN-CLOSURE-EXPLOSION risk realised, 2026-08-24), where the §2
+    // equivalence invariant is carried by the agent's read obligation
+    // instead. `Source` follows only `#source` (§7.3) — and every such edge
+    // passes through [`source_addresses`], the ONE place that knows a
+    // `#source` may carry a pattern (a glob expands to its sorted members, a
+    // point address to itself), flattened in declaration order. Owning the
+    // addresses (rather than borrowing the parsed directives) is what lets
+    // an expanded glob contribute addresses no directive ever held.
     let edges: Vec<SpecAddress> = match kind {
         EdgeKind::Use => {
             let directives = Directives::parse(&text);
@@ -155,12 +158,6 @@ fn visit(
                 .iter()
                 .filter(|d| d.kind == DirectiveKind::Use)
                 .map(|d| (d.line, d.address.clone()))
-                .chain(
-                    directives
-                        .in_place_uses
-                        .iter()
-                        .map(|u| (u.line, u.address.clone())),
-                )
                 .collect();
             e.sort_by_key(|(line, _)| *line);
             e.into_iter().map(|(_, a)| a).collect()
@@ -305,7 +302,11 @@ mod tests {
     }
 
     #[test]
-    fn in_place_use_is_a_dependency_edge() {
+    fn in_place_use_is_the_agents_edge_not_the_compilers() {
+        // §7.4 as of 2026-08-24: `@spec` is the AGENT's mandatory read; to
+        // the AOT compiler it is not a splice edge (the realised
+        // ##OPEN-CLOSURE-EXPLOSION: address pointers multiplied the host
+        // lane tenfold). The address stays in the text — nothing splices.
         let src = MockSource::new(&[
             (
                 "spec://org.vibevm.core/vibevm/a#r",
@@ -314,13 +315,7 @@ mod tests {
             ("spec://org.vibevm.core/vibevm/b#r", "leaf"),
         ]);
         let order = topo_order_from(&seed(), &src).unwrap();
-        assert_eq!(
-            order,
-            vec![
-                "spec://org.vibevm.core/vibevm/b#r".to_string(),
-                "spec://org.vibevm.core/vibevm/a#r".to_string(),
-            ]
-        );
+        assert_eq!(order, vec!["spec://org.vibevm.core/vibevm/a#r".to_string()]);
     }
 
     #[test]

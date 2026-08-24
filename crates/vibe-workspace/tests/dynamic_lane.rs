@@ -383,3 +383,102 @@ fn exhibit_c_a_missed_short_anchor_answers_with_qualified_heirs() {
         "qualified_candidates must return both heirs, sorted"
     );
 }
+
+/// A `normal` package whose contract materialised as dialect XML (PROP-045
+/// pairing — the form every org.vibevm package ships in since the corpus
+/// conversion) compiles into the lane exactly as a Markdown one does: the
+/// seed strips the `.xml` serialisation from the doc-path, the source loads
+/// through its canonical MD projection, and the closure's labels qualify
+/// under the entry's origin.
+#[test]
+fn a_normal_xml_contract_compiles_into_the_lane() {
+    let ws = TempDir::new().unwrap();
+    let contract = write_spec_doc(
+        ws.path(),
+        "org.demo.gamma",
+        "boot/contract.xml",
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+         <spec xmlns=\"https://vibevm.org/spec/1\">\n\
+         \x20 <title id=\"gamma-root\">Gamma contract</title>\n\
+         \x20 <p><GAMMA-LAW fact=\"true\" status=\"impl/done\">GAMMA_BODY — the xml-shipped law.</GAMMA-LAW></p>\n\
+         </spec>\n",
+    );
+
+    let lane = render_static(
+        &boot(vec![entry_normal(&contract, "org.demo/gamma")]),
+        ws.path(),
+        &coord(),
+    )
+    .unwrap()
+    .unwrap();
+
+    // The compiled closure carries the contract's text...
+    assert!(
+        lane.contains("GAMMA_BODY"),
+        "the xml contract's body must reach the lane:\n{lane}"
+    );
+    // ...its labels qualified under the entry's origin (B-011), which is
+    // only possible if the seed resolved: a seed carrying `.xml` into the
+    // address would fail the compile outright.
+    assert!(
+        lane.contains("org-demo--gamma--gamma-root"),
+        "the xml contract's heading must qualify under its origin:\n{lane}"
+    );
+    assert!(
+        lane.contains("org-demo--gamma--GAMMA-LAW"),
+        "the xml contract's fact must qualify under its origin:\n{lane}"
+    );
+}
+
+/// A `normal` contract that `#use`-pulls a SECOND doc of its own package —
+/// both docs carrying the standard `{#root}` / `{#summary}` anchors (the
+/// git-atomic-commits shape) — compiles without a label collision: the
+/// pulled non-boot doc qualifies with a doc slug, the contract keeps the
+/// plain origin slug, and both survive the XML lane conversion that used
+/// to refuse the duplicate ids. (An `@spec` pointer, by contrast, is the
+/// agent's read edge and splices nothing — the closure-explosion ruling.)
+#[test]
+fn a_multi_doc_closure_of_one_package_does_not_collide_on_standard_anchors() {
+    let ws = TempDir::new().unwrap();
+    write_spec_doc(
+        ws.path(),
+        "org.demo.delta",
+        "flows/deep/PROTOCOL.md",
+        "# The protocol {#root}\n\nPROTOCOL_BODY.\n\n## Summary {#summary}\n\nsummary body.\n",
+    );
+    let contract = write_spec_doc(
+        ws.path(),
+        "org.demo.delta",
+        "boot/contract.md",
+        "# Delta contract {#root}\n#use spec://org.demo/delta/flows/deep/PROTOCOL#root\n\n## Summary {#summary}\n\ncontract summary.\n",
+    );
+
+    let lane = render_static(
+        &boot(vec![entry_normal(&contract, "org.demo/delta")]),
+        ws.path(),
+        &coord(),
+    )
+    .unwrap()
+    .unwrap();
+
+    // The contract's own labels keep the plain origin slug...
+    assert!(
+        lane.contains("org-demo--delta--root"),
+        "the contract root keeps the origin slug:\n{lane}"
+    );
+    // ...the pulled doc's labels carry the doc slug, so nothing collides.
+    assert!(
+        lane.contains("org-demo--delta--flows-deep-protocol--root"),
+        "the pulled doc's root must carry a doc slug:\n{lane}"
+    );
+    assert!(
+        lane.contains("PROTOCOL_BODY"),
+        "the pulled doc's body is spliced (mandatory in-place use):\n{lane}"
+    );
+    // No label is defined twice — the collision the XML converter refuses.
+    let count = lane.matches("{#org-demo--delta--root}").count();
+    assert_eq!(
+        count, 1,
+        "exactly one definition of the contract root:\n{lane}"
+    );
+}

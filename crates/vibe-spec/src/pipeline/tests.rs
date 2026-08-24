@@ -153,8 +153,8 @@ fn q1_two_origins_each_qualify_their_own_label() {
 
     // Each node's THE-RULE is qualified under its own origin — never the
     // entry's.
-    assert!(out.contains("##org-a--a--THE-RULE"), "{out}");
-    assert!(out.contains("##org-b--b--THE-RULE"), "{out}");
+    assert!(out.contains("##org-a--a--doc--THE-RULE"), "{out}");
+    assert!(out.contains("##org-b--b--doc--THE-RULE"), "{out}");
     // The rename map carries both origins for THE-RULE.
     let rule_origins: Vec<&str> = renames
         .iter()
@@ -176,9 +176,9 @@ fn q2_within_node_self_reference_is_qualified_by_its_own_origin() {
     )]);
     let seed = SpecAddress::parse("spec://org.a/a/doc#r").unwrap();
     let (out, _) = compile_static_qualified(&seed, &src).unwrap();
-    assert!(out.contains("{#org-a--a--root}"), "{out}");
-    assert!(out.contains("(#org-a--a--root)"), "{out}");
-    assert!(out.contains("(#org-a--a--OTHER)"), "{out}");
+    assert!(out.contains("{#org-a--a--doc--root}"), "{out}");
+    assert!(out.contains("(#org-a--a--doc--root)"), "{out}");
+    assert!(out.contains("(#org-a--a--doc--OTHER)"), "{out}");
 }
 
 #[test]
@@ -194,7 +194,7 @@ fn q3_cross_node_short_link_resolves_to_the_unique_definer() {
     ]);
     let seed = SpecAddress::parse("spec://org.a/a/doc#r").unwrap();
     let (out, _) = compile_static_qualified(&seed, &src).unwrap();
-    assert!(out.contains("(#org-b--b--THE-RULE)"), "{out}");
+    assert!(out.contains("(#org-b--b--doc--THE-RULE)"), "{out}");
     assert!(
         !out.contains("(#THE-RULE)"),
         "the bare cross-node link must be gone: {out}"
@@ -218,8 +218,8 @@ fn q4_ambiguous_cross_node_short_link_fails_with_candidates() {
         Err(CompileError::AmbiguousShortLink { label, candidates }) => {
             assert_eq!(label, "SHARED");
             let joined = candidates.join(" | ");
-            assert!(joined.contains("org-b--b--SHARED"), "{joined}");
-            assert!(joined.contains("org-c--c--SHARED"), "{joined}");
+            assert!(joined.contains("org-b--b--doc--SHARED"), "{joined}");
+            assert!(joined.contains("org-c--c--doc--SHARED"), "{joined}");
         }
         other => panic!("expected AmbiguousShortLink, got {other:?}"),
     }
@@ -254,7 +254,7 @@ fn q5_fenced_blocks_are_untouched_by_both_passes() {
         "fenced ##FENCED must not become a definition: {renames:?}"
     );
     // The same cross-node link OUTSIDE the fence was resolved.
-    assert!(out.contains("(#org-b--b--ONLY-IN-B) live"), "{out}");
+    assert!(out.contains("(#org-b--b--doc--ONLY-IN-B) live"), "{out}");
 }
 
 #[test]
@@ -493,3 +493,54 @@ pub(super) const MD_DEP_TWIN: &str = concat!(
     "`req r1`\n\n",
     "@fact:FACT-ONE the fact body @status:impl/done\n\n"
 );
+
+// ---- absorbed-node dedup (§7.4 READ-ONCE over overlapping spans) ----------
+
+#[test]
+fn q7_a_nested_section_node_is_absorbed_by_its_ancestor_node() {
+    // The seed pulls BOTH a doc's `#root` and a section nested inside that
+    // root (`#sub`). The nested node's text already arrives with its
+    // ancestor — emitting it again would define every shared label twice
+    // (the discovery-prompt usage#root + usage#re-derive shape). READ-ONCE:
+    // the absorbed node is dropped from the emission order.
+    let src = MockSource::new(&[
+        (
+            "spec://org.a/a/doc#r",
+            "# A {#root}\nSee both.\n#use spec://org.b/b/doc#root\n#use spec://org.b/b/doc#sub\n",
+        ),
+        (
+            "spec://org.b/b/doc#root",
+            "# B {#root}\nb body.\n## Sub {#sub}\n##B-FACT the fact\nsub body.\n",
+        ),
+        (
+            "spec://org.b/b/doc#sub",
+            "## Sub {#sub}\n##B-FACT the fact\nsub body.\n",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.a/a/doc#r").unwrap();
+    let (out, _) = compile_static_qualified(&seed, &src).unwrap();
+    // The fact is defined exactly once — the nested node was absorbed.
+    let fact_count = out.matches("##org-b--b--doc--B-FACT").count();
+    assert_eq!(fact_count, 1, "absorbed node must not re-emit:\n{out}");
+    // And the absorbed node's begin-marker is gone while the ancestor's stays.
+    assert!(out.contains("vibe:begin spec://org.b/b/doc#root"), "{out}");
+    assert!(!out.contains("vibe:begin spec://org.b/b/doc#sub"), "{out}");
+}
+
+#[test]
+fn q8_sibling_sections_of_one_doc_both_emit() {
+    // Two NON-overlapping sections of one doc: both emit — absorption is
+    // span-nesting, not same-doc-ness.
+    let src = MockSource::new(&[
+        (
+            "spec://org.a/a/doc#r",
+            "# A {#root}\n#use spec://org.b/b/doc#one\n#use spec://org.b/b/doc#two\n",
+        ),
+        ("spec://org.b/b/doc#one", "# One {#one}\n##ONE-FACT one\n"),
+        ("spec://org.b/b/doc#two", "# Two {#two}\n##TWO-FACT two\n"),
+    ]);
+    let seed = SpecAddress::parse("spec://org.a/a/doc#r").unwrap();
+    let (out, _) = compile_static_qualified(&seed, &src).unwrap();
+    assert!(out.contains("##org-b--b--doc--ONE-FACT"), "{out}");
+    assert!(out.contains("##org-b--b--doc--TWO-FACT"), "{out}");
+}

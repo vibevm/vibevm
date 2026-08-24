@@ -391,7 +391,20 @@ fn format_static_contribution(
     if !matches!(spec_format, SpecFormat::Xml) {
         return Ok(body.to_string());
     }
-    let doc = vibe_specdoc::from_markdown(body).map_err(|e| WorkspaceError::InlineCompile {
+    // The compiler's node markers are FRAMING, not document payload (the
+    // rule this function's header states) — and a `<!-- vibe:begin … -->`
+    // ahead of the H1 shifts the scanner's granularity so the document's
+    // own `<status …/>` silently drops. Strip them before the pivot; the
+    // Markdown lanes keep them (the structural loader's navigation).
+    let body: String = body
+        .lines()
+        .filter(|l| {
+            let t = l.trim_start();
+            !t.starts_with("<!-- vibe:begin ") && !t.starts_with("<!-- vibe:close ")
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    let doc = vibe_specdoc::from_markdown(&body).map_err(|e| WorkspaceError::InlineCompile {
         reason: format!("converting static contribution `{origin}` to XML: {e}"),
     })?;
     Ok(vibe_specdoc::to_xml(&doc))
