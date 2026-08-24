@@ -8,7 +8,7 @@ what the extractors already see and what inputs are missing for the two
 twins. No design recommendations — measurements and missing inputs only.
 
 All paths are relative to the worktree root, on the worktree's own
-non-vendored copies under `packages/org.vibevm.ai-native/...` (the
+non-vendored copies under `vibevm/vibepacks/org.vibevm.ai-native/...` (the
 `vibedeps/**` and `*-mcp/**` / `*-lang/**` vendor copies are regenerated
 mirrors and are not cited). The Rust paradigm lives in the v0.8.0 core
 crate (the line ranges the packet and the parity table cite match v0.8.0,
@@ -29,11 +29,11 @@ reference on an error type.
 
 ## Q1 — The Rust paradigm (two rules, two halves, one fact)
 
-File: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs`.
+File: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs`.
 
 Both halves consume the **same** fact variant,
 `Fact::ErrorVariant { enum_symbol, variant, message, line, enum_attrs }`,
-defined at `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:66-73`
+defined at `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:66-73`
 (`enum_attrs` documented as "Attributes of the OWNING enum (where the REQ
 edge lives)", facts.rs:71).
 
@@ -71,7 +71,7 @@ Display template string), not the AST; the fact does the abstraction.
 
 ### The rule side — a kind inside the umbrella, no id of its own
 
-File: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs`.
+File: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs`.
 
 - `GoUnsafeInDomain` struct (`:52-54`); constructor `new(cells_dir: Option<&str>)` (`:56-61`); `in_cells(file)` (`:63-67`).
 - `Rule::id() = "go-unsafe-in-domain"` (`:70-73`). **Every finding this struct emits carries this umbrella id** as its `rule` field (`:153`), including the seam-error one — there is no dedicated id.
@@ -96,7 +96,7 @@ REQ. The finding rides `go-unsafe-in-domain`, with no rule id of its own.
 
 ### The extractor side — what go-extract sees and emits
 
-File: `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go`.
+File: `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go`.
 
 - `seamErrorShape(s *ast.TypeSpec, errOwners map[string]bool)` (`:519-535`) is the producer:
   - fires only when `strings.HasSuffix(s.Name.Name, "Error") && errOwners[s.Name.Name]` (`:520`) — the type name ends in `Error` **and** it owns an `Error()` method;
@@ -117,7 +117,7 @@ File: `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/e
 So the structure-half signal that reaches NDJSON is exactly one record,
 `{"fact":"go_unsafe","kind":"seam_error_missing_req","line":<struct-decl-line>}`,
 confirmed by the bridge's replay fixture
-(`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:304`).
+(`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:304`).
 **Nothing in the stream says whether `Error()` renders `violates REQ` /
 `spec://`** — that is the missing input for the message half.
 
@@ -125,7 +125,7 @@ confirmed by the bridge's replay fixture
 
 ## Q3 — Go fixtures: the clean and dirty seam-error idioms
 
-Canonical fixtures under `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/`.
+Canonical fixtures under `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/`.
 
 **CLEAN — `clean/internal/cells/greet/greet.go`** (both halves satisfied; no finding):
 
@@ -158,7 +158,7 @@ does not currently read (Q2).
 
 ### The extractor emits no error-union signal at all
 
-File: `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts`.
+File: `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts`.
 
 - The fact vocabulary emitted (interfaces): `UnsafeFact` (`ts_unsafe`, kinds `any_type | as_cross | non_null | ts_ignore | ts_expect_error`) (`:56-66`); `ImportFact` (`:68-72`); `ItemFact` (`:74-81`); `MetricsFact` (`:83-86`); `EnvReadFact` (`ts_env_read`) (`:88-92`); union `ExtractFact` (`:94`). **No error / union / variant fact.**
 - `declarationInfo` (`:286-321`) classifies declarations; a type alias becomes an `item` of kind `"type"` (`:303-305`) — but it captures only the name/symbol/export flag, **not** the alias's RHS, its union members, or any discriminant.
@@ -167,13 +167,13 @@ File: `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-e
 
 ### Engine side — no error fact, no error rule (explicit fact)
 
-- `Fact` variants in `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs`: the TS-relevant ones are `TsUnsafe` (`:113-118`) and `TsEnvRead` (`:146-150`). **There is no `Fact::ErrorVariant` twin for TS** (the Rust `ErrorVariant` at `:66-73` is fed only by the Rust frontend).
-- The TS rules file `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs` defines `TsUnsafeInDomain` (`:46-104`), `TsCellIsolation` (`:131-239`), `TsFlagSites` (`:285-346`). **None consumes an error fact; none touches error unions.**
+- `Fact` variants in `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs`: the TS-relevant ones are `TsUnsafe` (`:113-118`) and `TsEnvRead` (`:146-150`). **There is no `Fact::ErrorVariant` twin for TS** (the Rust `ErrorVariant` at `:66-73` is fed only by the Rust frontend).
+- The TS rules file `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs` defines `TsUnsafeInDomain` (`:46-104`), `TsCellIsolation` (`:131-239`), `TsFlagSites` (`:285-346`). **None consumes an error fact; none touches error unions.**
 
 ### The guide promise — verbatim search
 
 The literal phrase **"the E union cites spec:// REQs" is not in the guide**
-(it is the parity table's paraphrase — `campaigns/packages-2026-09/harvest/e10-b035-parity-pass.md` row 1, attributed to "census Q6"). The governing clauses in `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` are:
+(it is the parity table's paraphrase — `campaigns/packages-2026-09/harvest/e10-b035-parity-pass.md` row 1, attributed to "census Q6"). The governing clauses in `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` are:
 
 - `:152` `##FAILURE-IS-A-VALUE-ON-THE-CONTRACT-SURFACE` — "…a discriminated union `Result<T, E> = { ok: true; value: T } | { ok: false; error: E }` …, with `E` a discriminated union of named error variants carrying `spec://` REQ references."
 - `:154` `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED` (neighbour clause).
@@ -201,14 +201,14 @@ the map for any new record kind — including a Go message-half signal.
 ### The full `ts_env_read` path (the template)
 
 1. **extract.ts** — `EnvReadFact` interface (`:88-92`); detector `envReadSource()` (`:334-359`); emission in `visit()` (`:388-395`).
-2. **bridge** — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs`: `RawFact::TsEnvRead { source, line }` (`:94-97`); the `conform_facts` arm lowers it to `Fact::TsEnvRead { source, line, in_test }`, stamping `in_test` from the record (`:231-235`).
+2. **bridge** — `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs`: `RawFact::TsEnvRead { source, line }` (`:94-97`); the `conform_facts` arm lowers it to `Fact::TsEnvRead { source, line, in_test }`, stamping `in_test` from the record (`:231-235`).
 3. **engine** — `Fact::TsEnvRead` (`facts.rs:146-150`).
 4. **rule** — `TsFlagSites` (`typescript.rs:285-346`), matching `Fact::TsEnvRead` (`:310-314`); mounted **conditionally** in the TS driver only when `[typescript] composition_root` is set (`typescript-ai-native-conform/src/lib.rs:62-64`).
 
 ### The Go equivalent path (where a new Go record kind / field inserts)
 
 1. **extract.go** — emission via `unsafeAt(kind, line)` (`:411-421`), called by `seamErrorShape` (`:534`); the `fact` struct (`:48-67`) is where a new field or variant is added.
-2. **bridge** — `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs`: `RawFact::GoUnsafe { kind, line, reason }` (`:70-75`); the `conform_facts` arm lowers it to `Fact::GoUnsafe { kind, line, in_test, reason }`, stamping `in_test` from the record (`:260-265`).
+2. **bridge** — `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs`: `RawFact::GoUnsafe { kind, line, reason }` (`:70-75`); the `conform_facts` arm lowers it to `Fact::GoUnsafe { kind, line, in_test, reason }`, stamping `in_test` from the record (`:260-265`).
 3. **engine** — `Fact::GoUnsafe` (`facts.rs:129-134`).
 4. **rule** — `GoUnsafeInDomain` (`go.rs:52-164`), the `seam_error_missing_req` arm at `:145-149`; mounted in the Go driver (`go-ai-native-conform/src/lib.rs:53-55`).
 
@@ -230,15 +230,15 @@ slots via the frontend version.
 
 ### id conventions (from the three `build_rules` rosters)
 
-- **Rust** rules carry **no language prefix** — `error-enum-cites-req`, `error-message-cites-req`, `seam-has-doctest`, `pub-doctest`, `flag-sites`, `cell-isolation`, `unsafe-gate`, `cell-has-oracle`, `no-unwrap-in-domain`, `ambient-env`, `file-length` (`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:53-93`).
-- **Go** rules carry the **`go-`** prefix — `go-unsafe-in-domain`, `go-cell-isolation`, `file-length` (`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:51-63`).
-- **TypeScript** rules carry the **`ts-`** prefix — `ts-unsafe-in-domain`, `ts-cell-isolation`, `ts-flag-sites`, `file-length` (`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:48-69`).
+- **Rust** rules carry **no language prefix** — `error-enum-cites-req`, `error-message-cites-req`, `seam-has-doctest`, `pub-doctest`, `flag-sites`, `cell-isolation`, `unsafe-gate`, `cell-has-oracle`, `no-unwrap-in-domain`, `ambient-env`, `file-length` (`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:53-93`).
+- **Go** rules carry the **`go-`** prefix — `go-unsafe-in-domain`, `go-cell-isolation`, `file-length` (`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:51-63`).
+- **TypeScript** rules carry the **`ts-`** prefix — `ts-unsafe-in-domain`, `ts-cell-isolation`, `ts-flag-sites`, `file-length` (`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:48-69`).
 
 ### Rule home files (defined ONCE in the neutral core)
 
-- Go rules: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs`.
-- TS rules: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs`.
-- Rust diagnostics rules: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs`.
+- Go rules: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs`.
+- TS rules: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs`.
+- Rust diagnostics rules: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/diagnostics.rs`.
 - The neutrality argument (rules defined once so they cannot drift between language projections) is stated at `go.rs:1-7` and `typescript.rs:1-7`.
 
 ### Mounting exemplars

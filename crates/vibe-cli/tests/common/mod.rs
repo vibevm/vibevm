@@ -1,7 +1,7 @@
 //! Shared helpers for the `vibe-cli` integration-test binaries.
 //!
 //! The `wal` integration tests dogfood the real `org.vibevm.world/wal`
-//! package that ships in this repo at `packages/org.vibevm.world/wal/`
+//! package that ships in this repo at `vibevm/vibepacks/org.vibevm.world/wal/`
 //! (the loading model installs the actual product, not a stale mini-copy
 //! fixture). The non-`wal` tests still run against the hand-written
 //! `fixtures/registry/` tree. The git builders below construct per-package
@@ -56,12 +56,12 @@ pub fn deps_root() -> PathBuf {
     vibe_core::layout::current_vibedeps_root()
 }
 
-/// The live boot-lane directory as a `PathBuf` (`spec/boot/` today).
+/// The live boot-lane directory as a `PathBuf` (`vibevm/vibespecs/boot/` today).
 pub fn boot_dir() -> PathBuf {
     vibe_core::layout::current_boot_dir()
 }
 
-/// The live boot manifest, forward-slashed (`spec/boot/INDEX.md` today).
+/// The live boot manifest, forward-slashed (`vibevm/vibespecs/boot/INDEX.md` today).
 pub fn index_rel() -> String {
     vibe_core::machine_json_path(&vibe_core::layout::current_boot_index())
 }
@@ -89,7 +89,7 @@ pub fn static_md_rel() -> String {
 }
 
 /// The generated static lane, XML spelling, forward-slashed
-/// (`spec/boot/STATIC.xml` today).
+/// (`vibevm/vibespecs/boot/STATIC.xml` today).
 pub fn static_xml_rel() -> String {
     vibe_core::machine_json_path(&vibe_core::layout::current_boot_static_xml())
 }
@@ -100,7 +100,7 @@ pub fn specs_str() -> String {
     vibe_core::machine_json_path(&specs_root())
 }
 
-/// The live boot lane as a forward-slashed string (`spec/boot` today).
+/// The live boot lane as a forward-slashed string (`vibevm/vibespecs/boot` today).
 pub fn boot_str() -> String {
     vibe_core::machine_json_path(&boot_dir())
 }
@@ -111,7 +111,7 @@ pub fn spec_rel(tail: &str) -> String {
     vibe_core::machine_json_path(&specs_root().join(tail))
 }
 
-/// One boot-lane file, forward-slashed (`spec/boot/<file>` today).
+/// One boot-lane file, forward-slashed (`vibevm/vibespecs/boot/<file>` today).
 pub fn boot_rel(file: &str) -> String {
     vibe_core::machine_json_path(&boot_dir().join(file))
 }

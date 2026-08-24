@@ -1,153 +1,101 @@
-# CONTINUE — холодный резюм (чекпойнт 2026-08-23, перед компактификацией)
+# CONTINUE — холодный резюм (чекпойнт 2026-08-24, перед компактом; СЕРЕДИНА ПЕРЕЕЗДА)
 
-> WAL (`spec/WAL.xml`) — канонический ЖИВОЙ статус и главнее этого снапшота,
-> если они разойдутся.
+> WAL (`vibevm/vibespecs/WAL.xml`) — канонический живой статус.
+> **ВНИМАНИЕ: рабочее дерево несёт НЕЗАКОММИЧЕННЫЙ физический переезд
+> (~6.5k renames/правок). Это НАМЕРЕННО: панель ещё не зелёная, красное
+> не коммитим. Диск переживает компакт — ничего не потеряно.**
 
 ## TL;DR
 
-**Сегодня за один день спроектирована, ратифицирована владельцем и целиком
-построена система видимости зависимостей (PROP-050)** — W1–W8 посажены,
-PROP-050 в статусе BUILT, финальная панель `all green`, зеркала синхронны,
-дерево чисто (HEAD `aaeecc2e`). Параллельно живёт прежнее состояние релиза
-1.0.0: всё готово, ждёт владельческой инспекции и PAT для C6 (публикации).
+1. **XML-переход (goal-половина 1) — ЗАВЕРШЁН И ПОСАЖЕН.** PROP-051 BUILT,
+   план CONVERT-SOURCE ЗАВЕРШЁН, K1…K7+K6.5 (2170 ячеечных имён, оба
+   линта anchored-when-marked-на-ячейки), корпус 871 файл в XML, панели
+   были all green, зеркала синхронны. Посажено вплоть до `373683b7` /
+   `265af3dc` / `011e6614` (R2) / `12b53193` (PROP-052+план).
+2. **Раскладка vibevm/ (goal-половина 2) — ФИЗИЧЕСКИ ВЫПОЛНЕНА, НЕ
+   ПОСАЖЕНА.** Сделано на диске: 4 корня хоста → `vibevm/{vibespecs,
+   vibepacks,vibedeps,vibefacts}`; spec→vibevm/vibespecs внутри всех 86
+   пакетов + вложенные vibedeps 4 пакетов; `USE_NEW_LAYOUT=true`
+   (crates/vibe-core/src/layout.rs); свип путей 497 файлов/3304 + 26
+   (sync-engines.toml) + 8 (Cargo.toml, exclude=["vibevm"]); манифесты
+   пакетов: boot_snippet source → `vibevm/vibespecs/boot/*.xml` (70
+   файлов); фикстурные пакеты fixtures/registry — мигрированы (L4).
+3. **Сейчас:** R6-панель выгребает слои полусвипнутых скаффолдов —
+   фоновая задача blwzg7ywa (`…\tasks\blwzg7ywa.output`). Метод слоя:
+   красный тест → фикстуру/скаффолд на `vibe_core::layout::current_*`
+   (или литерал новой формы с комментом-ссылкой в крейтах без vibe-core)
+   → targeted test → снова панель.
 
-## Два активных трека
+## Уже ДОКАЗАНО на новой раскладке (не перепроверять зря)
 
-1. **Видимость (PROP-050) — ЗАВЕРШЕНА.** Остатки осознанно в
-   `BACKLOG.md` B-102…B-105; два из них ждут владельческого слова (B-103
-   budget-cap, B-105 concept-гейт).
-2. **Релиз 1.0.0 — ждёт владельца.** Блокер: новый GitHub PAT → C6-волна →
-   тег v1.0.0. Чеклист: `RELEASE-INSPECTION-CHECKLIST.md`; ТЗ:
-   `campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md` (строка `_STATUS:`).
+- `cargo xtask specmap`: **0 unresolved** — адреса пережили переезд (L1).
+- Идемпотентность: двойная установка, дифф lock == только `generated_at`.
+- `vibe why org.vibevm.world/wal` — живой root-edge chain.
+- `vibe check`: 0 errors (2 softened-concept warnings — штатные F7).
+- Слоты зеркалят новую раскладку (`…/wal/0.2.0/vibevm/vibespecs/boot/10-flow-wal.xml`).
 
-## Что построено сегодня (карта для холодного читателя)
+## Выгребенные слои фоллаута (НЕ переделывать)
 
-**Закон:** `spec/common/PROP-050-dependency-visibility.xml` (BUILT; все десять
-владельческих развилок F1–F10 отрулены; единственный неотрулённый скетч —
-`##CONCEPT-GATE-DIRECTION`). **Хроника стройки с приёмкой построчно:**
-`spec/terraforms/VISIBILITY-BUILD-PLAN-v0.1.xml`. **Prior-art и замеры:**
-`spec/research/dependency-visibility-2026-08/` (3 отчёта воркеров + 04-measurements).
+Cargo.toml (path-депсы+exclude) · sync-engines.toml (26) · движок:
+Config::default→vibevm/vibespecs + двухпрефиксный canonical_doc_path
+(R2E-воркер, трансплантирован в vibevm/vibepacks-путь, 143/143) ·
+vibe-core query.rs slot_manifest_path · vibe-trace целиком (vibedeps_dir()
+многокомп., все скаффолды) · vibe-check oracle + wal-чеки двухформенные ·
+cli-фикстуры: facts, mcp_path_parity, progress_sidecar, spec_format,
+workspace_publish, explain_foreign, refactor e2e (+сообщение spec-src из
+layout) · vibe-install: incremental_in_place, slot_integrity_verify
+(fixture_pkg, vibefacts-оверлей, **slot_verify.rs::live_overlay_hash —
+многокомпонентный дерайвер корня**), store_materialisation seed ·
+vibe-spec compile.rs — литералы новой формы (нет vibe-core) · панель
+нарратит 48 шагов (счётчик/таймстампы/heartbeat 30s) — запрос владельца.
 
-Модель одним абзацем: на ребре — `access` (public-дефолт / private =
-dev-мир декларанта / friends-only = круг) и `friend` (false-дефолт; голая
-friends-only-метка имплицирует свой грант — F10); на узле — `[visibility]`
-(friends / unfriend / allow-friends: нет=открыто, []=запечатано, список=круг;
-ignore-concept-warnings) и `[override]` (штатный ТИХИЙ взлом чужих рёбер,
-any-node, ближний к корню побеждает). Печать гейтит ДРУЖБУ (внутрянку цели),
-не доставку самой цели. Замыкание C(R) и эффективное множество E(R) —
-`vibe_core::visibility::analyze` (joint fixpoint, экзистенциальность по
-цепям). Слоение: видимость → резолв → link-ось → линкер → ленты; форс
-`static-transitive` не пробивает видимость.
+## Незакрытые хвосты (порядок работы после компакта)
 
-Код по крейтам: `vibe-core` (manifest/package/visibility.rs — словарь;
-visibility/{graph,closure,effective,diagnostics,query}.rs — движок + мир
-установленного); `vibe-install` (visibility_projection.rs — проекция,
-итерация строгости cap 4, FilteringDepProvider; plan/apply/record — E(R) и
-провенанс в lock v6); `vibe-cli` (why.rs, friends.rs,
-install/closure_diff.rs, tree-суффиксы, registry.rs — конструкция ячеек);
-`vibe-check` (visibility_hygiene.rs; snippet_presupposition смягчена).
-Сквозные доказательства: `crates/vibe-cli/tests/cli_visibility_lanes.rs` (5)
-и `cli_visibility_power.rs` (6).
+1. **Дожать панель**: tail blwzg7ywa; красный слой → тем же методом.
+   Кандидаты-остатки: vibe-mcp tools_oracle (патчен, не гонялся отдельно),
+   vibe-publish/workspace tests, cli_spec_format e2e глубже, engine-гейты
+   пакетных воркспейсов (шаги 7-10 панели ещё не достигались!).
+2. **По зелёной панели — ПОСАДКА** (3+ коммитов): (а) физический переезд+свип
+   (renames spec→vibevm/... + текстовые правки + манифесты + фикстуры), (б)
+   продуктовые починки (layout flip, query/trace/install/engine, panel-нарация,
+   Cargo.toml), (в) chore(install) перегенерированный мир+lock; затем статусы
+   плана (R4/R5→done), зеркала.
+3. **R6-доказательства** (PROP-052 ##RELAYOUT-PROOF, частично сделаны):
+   остались — clean-room смоук (vibe init→install→check в tempdir), ноль-греп
+   старых корней вне layout-модуля/санкционированных, скрипт-резолюция
+   INDEX-целей, агентская проба маршрутизации (cold-читатель по CLAUDE.md
+   находит vibevm/vibespecs/boot). Потом R7: статусы, BACKLOG-остатки
+   (research/rust-demo path-dep на свой vibedeps — вне периметра, записать),
+   WAL/CONTINUE, зеркала.
+4. **Обещано владельцу**: прогресс-нарация `cargo xtask sync-engines`
+   (по-сетно `[k/9] … crates→targets`) — сделать при первой свободной панели.
+5. Уроки в `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md` уже дописаны
+   (PID-точные убийства+MSIX, потолок 2 холодных cargo, Monitor-не-sleep,
+   touch-пакета при провизии); страж MSIX в codexrunner живой.
 
-Числа: хост 37 пакетов (7 root-edge + 30 public-chain), `STATIC.xml`
-248 429 B byte-identical через обе переустановки; расчётный эффект W7 для
-стороннего потребителя `delegation-first`: ≈32 → 2 пакета.
+## Механика воркеров (живое)
 
-## Блокер и точное действие владельца
+Лейны: codexrunner (nvm4w codex-cli 0.148.0, страж WindowsApps) + claudez.
+Возможных живых нет — все посажены: K1/K1b/K25/K26/K65/R1/R2A-E (архивы+
+меты в `C:\Users\olegc\git\v\cache\agents\sorted\<ID>/`). Worktrees
+`.wt/{K1-CONVERT,R1-LAYOUT,R2C-CHECKS,R2D-TAILS}` — на старой базе, их
+диффы ПРИМЕНЕНЫ; после посадки переезда — снести без сожаления.
 
-- **Релиз:** выдать PAT → сказать слово → C6-волна → тег v1.0.0 (ТЗ §10).
-- **Стройка:** рулинги по B-103 (budget-cap на ленту) и B-105
-  (`when="concept:X"`) — по желанию; опция «wal у хоста через
-  friends-only-redbook вместо прямого ребра» — вынесена, не срочно.
+## Ловушки этой стройки (не наступать повторно)
 
-## Рецепт следующих шагов (если владелец скажет продолжать без него)
+`cmd | tail` маскирует код (использовать `>file; echo EXIT=$?`) ·
+polusweep-жанр: скаффолд наполовину новый → os error 3 (лечить
+КОГЕРЕНТНОСТЬЮ через layout) · `create_dir` не умеет вложенный
+`vibevm/vibepacks` → `create_dir_all` · Windows user-mapped lock (1224)
+на STATIC/INDEX → ретрай · generated-свап локи → снести `generated.new-*`
+· питон-replace по бэкслэшам мимо → Edit-инструментом · `spec://` в
+r4_sweep неуязвим (`spec/` требует слэш сразу после spec).
 
-1. B-104: развести омоним ключа `override` (легаси `[[override]]`-пины vs
-   visibility-таблица) — no-legacy право есть; периметр:
-   `vibe-core/src/manifest/package/visibility.rs` (ManifestWire union) +
-   `project.rs` (OverrideSection) + спека `##OVERRIDE-KEY-COEXISTENCE`.
-2. B-102: удешевить `edge_contributes`
-   (`vibe-install/src/visibility_projection.rs:138`) — батч-proof по цели.
-3. 37 stale + аудит `2026-08-06-01` — прежняя очередь (см. WAL known-issues).
-
-## Небанальные находки сессии (уроки — в WAL-констрейнтах, тут указатели)
-
-- `codexrunner exec` читает stdin → только `< /dev/null` (иначе виснет).
-- Схемный бамп через живые worktree = межволновой дрейф фикстур → lock-шапки
-  в тестах только `CURRENT_SCHEMA_VERSION`.
-- `vibe install` обязан читать неподдерживаемую схему lock как пустую
-  (регенерационный глагол) — починено (`b8b61f74`) + юнит.
-- Windows-локи бьют свап `crates/vibe-wire/src/generated` → снести
-  `generated.new-*`, перегнать check-codegen.
-- Conform R-001: конструкция провайдер-ячеек — ТОЛЬКО в
-  `vibe-cli/src/registry.rs` (за это уже платили красной панелью).
-- Честный стоп воркера с точным списком минимального расширения периметра —
-  штатный исход; пакет правится по его списку и респавнится (W2 v1→v2).
-
-## Карта репозитория (крупно)
-
-`crates/` — рабочее пространство vibe (core / install / cli / check /
-workspace / resolver / registry / facts / specdoc / wire / mcp / xtask …);
-`packages/` — авторские prompt-пакеты (org.vibevm.world редбук и флоу,
-org.vibevm.ai-native стеки, org.vibevm.fractality); `vibedeps/` —
-материализованные слоты (генерят); `spec/` — законы: `common/PROP-0xx`,
-`modules/<crate>/PROP-0xx`, `boot/` (генерённые ленты STATIC/INDEX),
-`terraforms/` (планы), `research/`; `campaigns/packages-2026-09/` —
-релизная кампания (ТЗ, суд, harvest); корень: CLAUDE=AGENTS=GEMINI.md,
-TASKS.md, BACKLOG.md, AUDIT.md, SPECSPACES.md, AGENT-MODE.toml.
-
-## Действующие архитектурные решения (длинно — в законах, тут список)
-
-Токеномика — центральный закон (PROP-048; STATIC = кэш-стабильный префикс;
-THE-LAYER-LAW). Видимость выше материализации (PROP-050 §3). Дефолты:
-presence щедрое (`access=public`), дружба скупая (`friend=false`), F10.
-No-legacy: схема одна, lock v6, откатов нет. Роли [project]/[package]
-эквипотентны (PROP-024, consumer_node). Жанр сниппетов: никакой
-пресуппозиции чужих дисциплин (PROP-049, смягчена до warnings по F7).
-Делегирование-first: codexrunner → claudez (claudez2 запрещён), YOLO-заборы
-= текст пакета + боссово ревью диффа; спеки/вердикты/коммиты не делегируются.
-Судейская юрисдикция кампании НЕ покрывает spec/common/PROP-050 (долг 0/0 —
-подтверждено; статусы стройки ведены вручную).
-
-## Последние 26 коммитов
-
-aaeecc2e chore(lock): timestamp from the W5b live smoke reinstall
-e3a37dbd docs(spec): PROP-050 is BUILT — statuses flipped, backlog drained…(W8)
-4268008d feat(cli): closure diff on install/update + tree provenance (W5b)
-4ae826e3 docs(plan): W7 landed
-d1d6d629 docs(research): W7 measurements — byte-identical lanes, 32→2
-20658ad0 chore(install): host reinstall after the W7 narrowing
-0aa66062 feat(packages): fractality group narrows deliberately (W7)
-2480a1a0 docs(plan): W5a landed, panel green
-27ae1393 chore(specmap): visibility query/observe edges
-75cd38c5 refactor(cli): cells return to the registry seam (R-001)
-f2531a68 fix(tests): omnibus lock assertion follows CURRENT_SCHEMA_VERSION
-c7d4017a feat(observe): vibe why, vibe friends, visibility_hygiene (W5a)
-e20b5589 docs(plan): W6 landed
-07443301 test(cli): e2e power goldens (W6)
-1b645cd1 chore(lock): host reinstall on the E(R) machinery — v6
-b8b61f74 fix(install): unsupported-schema lock reads as empty on install
-adeef22d docs(plan): W3 landed
-2fbd9cc3 test(cli): e2e lane goldens (W3)
-7034e743 docs(spec): PROP-009/034/035/038 — the linker's world is E(R)
-6f02ff95 docs(plan): W2 landed
-243dbb73 feat(install): resolution and lock live on E(R) (W2)
-074a45f0 docs(plan): W4 closed; W2 v2 in flight after an honest stop
-ad6d5caf feat(check): concepts gate learns the mute + seeping exemption (W4b)
-1899680b docs(plan): W1 and W4a landed
-981496df docs(spec): PROP-050 — joint fixpoint corrected at landing…
-342b3aae feat(core): the visibility vocabulary and the pure closure engine (W1)
-
-## Быстрый старт
+## Быстрый старт после компакта
 
 ```sh
-bash tools/self-check.sh            # панель; вердикт только по хвосту
-cargo xtask specmap                 # после spec/code-правок
-cargo run -q -p vibe-cli -- why org.vibevm.world/wal      # наблюдаемость живьём
-cargo run -q -p vibe-cli -- install --path . --assume-yes # переустановка хоста
-cargo xtask mirror                  # раскатка (ff-only)
-python campaigns/packages-2026-09/tasks/judging-debt.py   # судейский долг
+tail -30 "C:\Users\olegc\AppData\Local\Temp\claude\C--Users-olegc-git-v-vibevm\65ac15d7-9831-4db5-8a5b-736924494335\tasks\blwzg7ywa.output"
+git status --short | head    # незакоммиченный переезд — это норма
+bash tools/self-check.sh     # нарратит шаги [N/48 HH:MM:SS]
 ```
-
-Аудит здоровья: активное подмножество — `AUDIT.md` (P1 `2026-08-06-01` —
-пересуд будущей кампанией).
+Свип-скрипт: `$CLAUDE_JOB_DIR/tmp/r4_sweep.py` (условный по цели).

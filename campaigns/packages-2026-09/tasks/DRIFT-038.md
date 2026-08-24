@@ -53,7 +53,7 @@ grep* — is what produced the extra twelve.
   history (§3.3); it left the corpus rather than being marked, and it is not
   edited either.
 - **5 sites that are the directory or document name**, per §trap.
-- **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — 7 sites.** That
+- **`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — 7 sites.** That
   is the finding's own text; the dead names there are the record of what was
   wrong.
 

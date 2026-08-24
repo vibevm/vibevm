@@ -66,13 +66,13 @@ Verified 2026-07-26 by DRIFT-029 before it stopped. **Do not re-discover.**
   `[boot_snippet]`, and `build_unit_table` resolves undeclared edges off the
   target's suggestion (`hybrid_emit.rs:57-63`), making `git-practices` the
   tree's only intermediate static edge.
-- Observable today: `spec/boot/STATIC.xml` carries each of the four git-\*
+- Observable today: `vibevm/vibespecs/boot/STATIC.xml` carries each of the four git-\*
   snippets twice (first copy at lines 363/421/486/514; second, via the
   aggregator's compiled unit, at 557/615/680/708).
 
 **Two things DRIFT-029 disproved — do not reintroduce them:**
 
-- The write at `hybrid_emit.rs:151-153` that puts `spec/boot/{INDEX,STATIC}.md`
+- The write at `hybrid_emit.rs:151-153` that puts `vibevm/vibespecs/boot/{INDEX,STATIC}.md`
   into a slot is **correct and mandated** by PROP-038 `##UNIT-PER-PACKAGE`. Do
   not suppress it.
 - There is **no path-based fallback**. `bootgen.rs:305-307` reads a
@@ -112,7 +112,7 @@ change which location is chosen, only who is counted as a consumer.
   that is a §8 stop — the reviewer lands every spec change in this campaign.
 - **Do not touch** `packages/**` or any package manifest. In particular, do not
   change `git-practices`' or any member's `link` to dodge the counter.
-- **Do not hand-edit** `spec/boot/STATIC.xml` or `spec/boot/INDEX.md`; they are
+- **Do not hand-edit** `vibevm/vibespecs/boot/STATIC.xml` or `vibevm/vibespecs/boot/INDEX.md`; they are
   generated and the fix is verified by regenerating them.
 - **Do not touch** `campaigns/**` except §9 of this file.
 - Never edit a golden test to make it pass. `render_static_errors_on_a_missing_contribution`
@@ -132,8 +132,8 @@ Then, from a clean tree:
 
 ```bash
 cargo run -q -p vibe-cli --bin vibe -- update --all --assume-yes
-grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml
-grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.xml
+grep -c "^# Flow: Atomic Commits" vibevm/vibespecs/boot/STATIC.xml
+grep -c "vibe:static org.vibevm.world/git-practices" vibevm/vibespecs/boot/STATIC.xml
 git status --short
 ```
 
@@ -215,7 +215,7 @@ so the file content is emitted once per entry.
 - *Baseline (today's code):* root copies of the member text = **2**, aggregator
   copies = **1**. Root markers: the member's own snippet, the aggregator's
   compiled `STATIC.md`, and the member again inside it. This reproduces the live
-  `spec/boot/STATIC.xml` defect in a fixture.
+  `vibevm/vibespecs/boot/STATIC.xml` defect in a fixture.
 - *With §4 step 2's counter applied* (entry-point nodes counted as pullers,
   mirroring `node_dependency_boot`'s link resolution): root copies = **2**,
   aggregator copies = **0**. Root markers:
@@ -233,10 +233,10 @@ correctly degrades to the `#use` marker `##HOIST-MARKERS` / `##MARKER-USE`
 design, and `emit_package_units` / `zone_to_effective` need no change. But the
 duplicate simply migrates from *inside the aggregator's unit* to *the root's own
 lane*, where it now reads as two `vibe:static` blocks for the same file. §6's
-`grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml` would still be **2**.
+`grep -c "^# Flow: Atomic Commits" vibevm/vibespecs/boot/STATIC.xml` would still be **2**.
 
 **Why the collision is structural, not incidental.** PROP-038 `##HOIST-LCA`
-(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:72`) puts the hoist
+(`vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:72`) puts the hoist
 target at the least common ancestor *within a continuous static zone*, and
 `##HOIST-WITHIN-ZONE` (line 74) calls within-zone hoisting free and always done.
 vibevm's chain root → `redbook` → `git-practices` → member is unbroken static, so
@@ -286,7 +286,7 @@ below). Budget spent: 2 files, well inside §8's 6-file / 200-line signal.
 **Not verified — open items, not assumptions.** The reviewer's instruction for
 this run replaced §6's execution with `cargo fmt --all` + `cargo test -p
 vibe-workspace` only, because a concurrent markup task holds
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` dirty. So
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/` dirty. So
 `bash tools/self-check.sh` and the whole `vibe update --all` verification block
 were **not** executed and no claim is made about them. (`tools/self-check.sh`
 also read as locally modified at the start of this run, by neither this task nor

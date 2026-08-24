@@ -48,7 +48,7 @@
 #  10. the mcp package gates            — the three MCP servers, likewise.
 #
 # Before any of it, step 0b asserts the floor's own DENOMINATOR: every LIVE
-# package workspace under packages/org.vibevm.ai-native/ (the newest version
+# package workspace under vibevm/vibepacks/org.vibevm.ai-native/ (the newest version
 # slot of each package — superseded slots are frozen history) is one this
 # file builds, and every slot it builds is still live. Four of seven
 # packages were gated for months and "all green" was true the whole time
@@ -162,7 +162,7 @@ OVERALL=0
 # workspace (PROP-024 §2.4) that the root steps 1-5 never build, so every
 # slot path lives here once and the steps below only reference it. The
 # denominator guard (step 0b) asserts this list IS the live set.
-FAMILY_ROOT="packages/org.vibevm.ai-native"
+FAMILY_ROOT="vibevm/vibepacks/org.vibevm.ai-native"
 CORE_SLOT="$FAMILY_ROOT/core-ai-native/v1.0.0"
 PKG_DIR="$FAMILY_ROOT/rust-ai-native-lang/v1.0.0"
 TSPKG_DIR="$FAMILY_ROOT/typescript-ai-native-lang/v1.0.0"

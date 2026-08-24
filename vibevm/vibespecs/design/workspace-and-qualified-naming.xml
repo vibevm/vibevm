@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Design rationale: Workspace &amp; qualified naming</title>
+  <status stage="doc" state="done" comment="B0 2026-07-24: non-normative design record, captured 2026-05-20 in an owner session"/>
+  <p><companion-line fact="true" status="doc/done">**Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.xml) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.xml) (qualified naming).</companion-line></p>
+  <p><status-line fact="true" status="doc/done">**Status:** non-normative design record. Captured 2026-05-20 in an owner design session.</status-line></p>
+  <p><authority-line fact="true" status="doc/done">**Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins.</authority-line></p>
+  <section title="1. What this document is">
+    <p><what-this-is fact="true" status="doc/done">PROP-007 and PROP-008 say *what* the workspace + qualified-naming refactor does. This document says *why* — and keeps the lore: the owner's mental model, the four-axis decomposition, every fork weighed during the session, the Cargo-vs-Maven precedents studied, the publication model that needed careful explaining, and the ideas that surfaced but were parked.</what-this-is></p>
+    <p><why-exists fact="true" status="doc/done">It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`vibevm/vibespecs/design/README.md`](README.md) for the genre.</why-exists></p>
+  </section>
+  <section title="2. The owner&apos;s request and mental model">
+    <p><owner-request fact="true" status="doc/done">The owner asked for a structure "most like Maven submodules and cargo": a project that decomposes *naturally* into modules; modules that publish to a repository **individually** — or are deliberately **not** shared; and the whole structure declared right in the project description.</owner-request></p>
+    <p><extremes-lead fact="true" status="doc/done">Two extremes were named as must-work cases, and they anchor the whole design:</extremes-lead></p>
+    <facts ordered="false">
+      <extreme-invisible fact="true" status="doc/done">**Entirely invisible** — a fully structured project that lives nowhere in any external repository.</extreme-invisible>
+      <extreme-published fact="true" status="doc/done">**Entirely published** — the whole project, every sub-package individually, published.</extreme-published>
+    </facts>
+    <p><in-between-first-class fact="true" status="doc/done">The "everything in between" (some modules public, some private, some workspace-internal) must also be first-class.</in-between-first-class></p>
+    <p><INVISIBLE-SUBPROJECT-PHRASE fact="true" status="doc/done">A load-bearing phrase from the session, recorded verbatim because it shaped several decisions: *"the user works in a sub-project and doesn't even notice that it is actually a small piece of something bigger."* This is why commands bubble up to the workspace root (PROP-007 §2.4) and why there is one unified manifest rather than many files (§2.2) — "reading a million different files is hard for a human, and for a small dumb LLM agent too."</INVISIBLE-SUBPROJECT-PHRASE></p>
+    <p><flexibility-spirit fact="true" status="doc/done">The spirit throughout: **flexibility and convention-over-configuration**. The owner repeatedly chose "support both, default sensibly" over "pick one." That preference resolved R3 (version inheritance: both modes) and W8 (member versioning: both).</flexibility-spirit></p>
+  </section>
+  <section title="3. The four axes">
+    <p><four-axes-lead fact="true" status="doc/done">The request decomposes into four orthogonal axes. Keeping them separate was the single most clarifying move of the session — they have different cost, different dependencies, and ship as different milestones.</four-axes-lead></p>
+    <table>
+      <tr>
+        <td>Axis</td>
+        <td>Essence</td>
+        <td>Analogue</td>
+      </tr>
+      <tr>
+        <td><ROW-AXIS-A fact="true" status="doc/done">**A. Workspace**</ROW-AXIS-A></td>
+        <td><ROW-AXIS-A-ESSENCE fact="true" status="doc/done">Project = a set of modules; structure declared in `vibe.toml`</ROW-AXIS-A-ESSENCE></td>
+        <td><ROW-AXIS-A-ANALOGUE fact="true" status="doc/done">cargo `[workspace]`, Maven `&lt;modules&gt;`</ROW-AXIS-A-ANALOGUE></td>
+      </tr>
+      <tr>
+        <td><ROW-AXIS-B fact="true" status="doc/done">**B. Selective publish**</ROW-AXIS-B></td>
+        <td><ROW-AXIS-B-ESSENCE fact="true" status="doc/done">Each module publishes / does not, by choice</ROW-AXIS-B-ESSENCE></td>
+        <td><ROW-AXIS-B-ANALOGUE fact="true" status="doc/done">cargo `publish = false`, Maven `deploy.skip`</ROW-AXIS-B-ANALOGUE></td>
+      </tr>
+      <tr>
+        <td><ROW-AXIS-C fact="true" status="doc/done">**C. Qualified naming**</ROW-AXIS-C></td>
+        <td><ROW-AXIS-C-ESSENCE fact="true" status="doc/done">Reverse-FQDN at the top (`org.vibevm.wal`), short aliases (`wal`) kept</ROW-AXIS-C-ESSENCE></td>
+        <td><ROW-AXIS-C-ANALOGUE fact="true" status="doc/done">Maven `groupId:artifactId`</ROW-AXIS-C-ANALOGUE></td>
+      </tr>
+      <tr>
+        <td><ROW-AXIS-D fact="true" status="doc/done">**D. Conflict-aware resolve**</ROW-AXIS-D></td>
+        <td><ROW-AXIS-D-ESSENCE fact="true" status="doc/done">Collision → show alternatives; conflict → fail without applying; full-auto → fail</ROW-AXIS-D-ESSENCE></td>
+        <td><ROW-AXIS-D-ANALOGUE fact="true" status="doc/done">npm / Maven</ROW-AXIS-D-ANALOGUE></td>
+      </tr>
+    </table>
+    <p><axis-a-eighty-percent fact="true" status="doc/done">Axis A alone closes roughly 80% of the request — multi-package projects, local cross-deps, selective publish, both extremes — and it depends on nothing. That was the good news delivered early: the heavy part (naming, discovery) is separable and can come later.</axis-a-eighty-percent></p>
+  </section>
+  <section title="4. The dependency graph between axes">
+    <fence>Axis A (workspace)          — independent ───────────────► do first
+Axis B (selective publish)  — depends on A
+Axis C (qualified naming)   — depends on PROP-005 (index)
+Axis D (conflict-aware)     — depends on C; the conflict half partly exists already</fence>
+    <p><chain-key-finding fact="true" status="doc/done">The chain `D → C → PROP-005 index` is the key finding. Reasoning:</chain-key-finding></p>
+    <facts ordered="false">
+      <c-needs-index fact="true" status="doc/done">**C needs the index.** A short name `wal` must be resolved to a qualified `org.vibevm.world/wal`. That requires enumerating candidates `(*, wal)` across registries. The host cannot list an org cheaply (PROP-005 §1: GitVerse exposes no org listing; GitHub is rate-limited). Therefore short-name resolution requires PROP-005 implemented.</c-needs-index>
+      <d-needs-c fact="true" status="doc/done">**D needs C.** A *collision* is two different packages sharing a short name. You can only tell a collision apart from a harmless mirror (the same package served by two registries) once `group` exists to distinguish them. Without `group`, first-match-wins is the only sane policy.</d-needs-c>
+      <conflict-half-exists fact="true" status="doc/done">**The conflict half of D already exists.** The depsolver (resolvo/libsolv per PROP-003), `[conflicts]`, and the conflict-explanation chain are in place; the install pipeline is already atomic (resolve → plan → confirm → apply), so a failed resolve never reaches apply. "Fail without applying the plan" is already true. Only *collision* detection is new.</conflict-half-exists>
+    </facts>
+    <p><recommended-sequencing fact="true" status="doc/done">This is why the recommended sequencing is **A → PROP-005 implementation → C → D**.</recommended-sequencing></p>
+  </section>
+  <section title="5. The fork-by-fork decision record">
+    <p><forks-lead fact="true" status="doc/done">Every fork weighed in the session, the options, the choice, and the reasoning. This is the most valuable part to preserve — settled questions that would otherwise be re-litigated.</forks-lead></p>
+    <section title="Naming forks">
+      <facts ordered="false">
+        <fork-separator fact="true" status="doc/done">**Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm.world/wal`. `:` is taken by `kind`, `@` by version; npm-scope (`@org/`) was rejected because `@` doubling with version would confuse.</fork-separator>
+        <fork-group-mandatory fact="true" status="doc/done">**Is `group` mandatory?** Chosen: **mandatory**. Maven makes groupId mandatory; an optional `group` creates a grey zone ("no group" vs "has group"). The three legacy packages migrate silently — the owner waved that through ("they are test packages anyway").</fork-group-mandatory>
+        <fork-no-fqdn-enforcement fact="true" status="doc/done">**Enforce reverse-FQDN?** Chosen: **core does not enforce**. Whether `group` looks like a reversed domain is style — for humans and linters, not the resolver. Maven likewise does not enforce groupId shape.</fork-no-fqdn-enforcement>
+        <fork-canonical-group fact="true" status="doc/done">**Canonical group for vibevm.** `org.vibevm` (domain `vibevm.org`). Recorded in PROP-008 §2.1.</fork-canonical-group>
+        <fork-kind-out-of-repo-name fact="true" status="doc/done">**`kind` in the repository name?** The owner asked: can `kind` leave the repo name entirely? Yes — because identity is already URL-orthogonal (PROP-002 §2.1), the repo name identifies nothing. The one thing `kind` gave the name was disambiguation (`flow-wal` vs `feat-wal`); making `name` unique *within a group* (rather than within a kind) removes that need. Result: repo = `&lt;group&gt;.&lt;name&gt;` = `org.vibevm.wal`, `naming = "fqdn"`. `kind` becomes pure metadata and leaves the identity tuple.</fork-kind-out-of-repo-name>
+        <fork-kind-prefix-optional fact="true" status="doc/done">**`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed, validated when present**. The owner's exact framing: if `flow:` is purely a UX feature, make it optional but possible; and if an install used the prefix explicitly, validate it matches the manifest. So `org.vibevm.world/wal` and `flow:org.vibevm.world/wal` are both legal; a present prefix is checked (`KindMismatch` on mismatch). It is validation + a UX signal — it never disambiguates, because `name` is unique within `group`.</fork-kind-prefix-optional>
+        <fork-qualified-in-manifests fact="true" status="doc/done">**Short name in manifests?** Chosen: **no — manifests store the qualified form**. The short name is CLI-only sugar; `vibe install wal` resolves once and writes `org.vibevm.world/wal`. This is the cargo/npm pattern (`cargo add serde` → `serde = "1"`). The decisive consequence: the dependency graph is built entirely from qualified names, so **transitive collisions vanish by construction** — short-name resolution only ever happens at the human-typed CLI boundary, not recursively through the graph.</fork-qualified-in-manifests>
+        <fork-exit-code-7 fact="true" status="doc/done">**Exit code for ambiguity.** Chosen: **new code `7`**, distinct from `3` (package conflict).</fork-exit-code-7>
+      </facts>
+    </section>
+    <section title="Workspace forks (7a–7e)">
+      <facts ordered="false">
+        <fork-7a-universal-node fact="true" status="doc/done">**7a — member is a "package" or a "project"?** Chosen: **universal node** — it can be both; one structure serves all roles.</fork-7a-universal-node>
+        <fork-7b-member-consumer fact="true" status="doc/done">**7b — can a member be a consumer itself?** Chosen: **yes** — "and usually it should be: the user works in a sub-project without noticing it is a piece of something bigger." This drove command-bubbling.</fork-7b-member-consumer>
+        <fork-7c-one-lockfile fact="true" status="doc/done">**7c — one lockfile per workspace or per member?** The owner asked back: how do Cargo and Maven do it? Answer studied (see §6). Chosen: **one `vibe.lock` at the absolute root** (cargo model). Commands inside a member bubble up to it — which *is* the mechanism for 7b's "doesn't notice."</fork-7c-one-lockfile>
+        <fork-7d-cascade-override fact="true" status="doc/done">**7d — `[[registry]]` / `[active]` / `[llm]` shared or per-member?** Chosen: **cascade with override** — the root sets defaults, a member may override. This is safe for `[[registry]]` only because identity is URL-orthogonal: a member overrides *where to fetch from*, not *what* identity it gets; if two registries served a genuinely different `content_hash` under one name, that is a collision and axis D catches it.</fork-7d-cascade-override>
+        <fork-7e-one-manifest fact="true" status="doc/done">**7e — one manifest file or two?** Chosen: **one `vibe.toml` for everything**; `vibe-package.toml` is retired. Reason: a member is simultaneously a developed consumer and a publishable artifact — two files would duplicate `[requires]` and drift. Plus the owner's "read one file, not a million" point. The escape hatch noted: "if it becomes impossible without splitting — we'll split later."</fork-7e-one-manifest>
+      </facts>
+    </section>
+    <section title="Forks resolved by the owner accepting recommendations">
+      <facts ordered="false">
+        <fork-r1-project-package fact="true" status="doc/done">**R1 — `[project]` vs `[package]`.** Chosen: 7-α — keep both sections distinct (a node is a non-publishable project *or* a publishable package), rather than folding `[project]` into a `[package]` with optional `kind`. Explicitness; `kind` stays strictly mandatory wherever `[package]` appears.</fork-r1-project-package>
+        <fork-r2-qualified-confirmed fact="true" status="doc/done">**R2 — manifests store the qualified form** (see naming forks above) — confirmed.</fork-r2-qualified-confirmed>
+        <fork-r3-versions-recursion fact="true" status="doc/done">**R3 — version placeholders.** Chosen: named `[workspace.versions]` (Maven `&lt;properties&gt;` shape). And: **depth 2 is not enough — recursion to arbitrary nesting depth**. This *reversed* a default the assistant had set (W3: "nested workspaces forbidden"). The reversal is load-bearing — it is what makes the matryoshka resolution arbitrary-depth — and it raised the cost of PROP-007 (recursion in root discovery, member aggregation, placeholder resolution).</fork-r3-versions-recursion>
+        <fork-r4-org-vibevm fact="true" status="doc/done">**R4 — `org.vibevm`** (recorded above).</fork-r4-org-vibevm>
+        <fork-r5-kind-out fact="true" status="doc/done">**R5 — kind out of repo name + optional kind prefix** (recorded in naming forks).</fork-r5-kind-out>
+        <fork-r6-owner-sanction fact="true" status="doc/done">**R6 — owner sanction** to edit any specification, including the owner-frozen `VIBEVM-SPEC.md`. Granted 2026-05-20 after requirements were judged sufficiently complete.</fork-r6-owner-sanction>
+        <fork-dual-form-path-dep fact="true" status="doc/done">**dual-form path-dep** — `{ path, version }` both present: `path` for local development, `version` for when the consuming node is itself published. Required because the owner explicitly wants the mixed mode (some modules local, some published).</fork-dual-form-path-dep>
+      </facts>
+    </section>
+    <section title="Defaults the assistant set; the owner accepted silently (except W3)">
+      <p><w-defaults fact="true" status="doc/done">W1 root discovery by walking up to `[workspace]`; W2 glob in `members`; **W3 nested workspaces — reversed by R3 into recursion**; W4 dependency cycles between members are an error; W5 path outside the workspace allowed but path-only consumers are non-publishable; W6 `vibe install` addressing (root vs `-p` vs cwd); W7 `vibe workspace publish` is non-atomic, stop-on-first-failure; W8 member versioning supports both independent and inherited; collision in an interactive run shows alternatives and fails (no interactive pick — the choice must be recorded deliberately); the lockfile is authoritative when resolving a short name; `group` grammar follows Maven groupId; lockfile schema bumps to v4.</w-defaults></p>
+    </section>
+  </section>
+  <section title="6. Cargo vs Maven — the precedent lore">
+    <p><precedent-lead fact="true" status="doc/done">Both were studied point by point. The findings, kept here so a future session need not re-derive them.</precedent-lead></p>
+    <table>
+      <tr>
+        <td>Aspect</td>
+        <td>Cargo</td>
+        <td>Maven</td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-LOCKFILE fact="true" status="doc/done">Lockfile</ROW-PREC-LOCKFILE></td>
+        <td><ROW-PREC-LOCKFILE-CARGO fact="true" status="doc/done">One `Cargo.lock` at the workspace root; no per-crate locks</ROW-PREC-LOCKFILE-CARGO></td>
+        <td><ROW-PREC-LOCKFILE-MAVEN fact="true" status="doc/done">**No lockfile at all** — a known reproducibility gap; the parent POM's `&lt;dependencyManagement&gt;` plays the "single source of versions" role</ROW-PREC-LOCKFILE-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-RESOLUTION fact="true" status="doc/done">Resolution</ROW-PREC-RESOLUTION></td>
+        <td><ROW-PREC-RESOLUTION-CARGO fact="true" status="doc/done">Unified across the workspace — one version of each dep</ROW-PREC-RESOLUTION-CARGO></td>
+        <td><ROW-PREC-RESOLUTION-MAVEN fact="true" status="doc/done">"Nearest-wins" per build; reproducibility is discipline + fixed versions</ROW-PREC-RESOLUTION-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-MEMBERS fact="true" status="doc/done">Members</ROW-PREC-MEMBERS></td>
+        <td><ROW-PREC-MEMBERS-CARGO fact="true" status="doc/done">Each is a full crate with its own `Cargo.toml`</ROW-PREC-MEMBERS-CARGO></td>
+        <td><ROW-PREC-MEMBERS-MAVEN fact="true" status="doc/done">Each is a full module with its own `pom.xml` + `&lt;parent&gt;`</ROW-PREC-MEMBERS-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-VERSION-INHERITANCE fact="true" status="doc/done">Version inheritance</ROW-PREC-VERSION-INHERITANCE></td>
+        <td><ROW-PREC-VERSION-INHERITANCE-CARGO fact="true" status="doc/done">`version.workspace = true` from `[workspace.package]`</ROW-PREC-VERSION-INHERITANCE-CARGO></td>
+        <td><ROW-PREC-VERSION-INHERITANCE-MAVEN fact="true" status="doc/done">Modules often share the parent's `${project.version}`</ROW-PREC-VERSION-INHERITANCE-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-CENTRAL-VERSIONS fact="true" status="doc/done">Centralised versions</ROW-PREC-CENTRAL-VERSIONS></td>
+        <td><ROW-PREC-CENTRAL-VERSIONS-CARGO fact="true" status="doc/done">`[workspace.dependencies]` + `{ workspace = true }`</ROW-PREC-CENTRAL-VERSIONS-CARGO></td>
+        <td><ROW-PREC-CENTRAL-VERSIONS-MAVEN fact="true" status="doc/done">`&lt;dependencyManagement&gt;` (per-artifact) + `&lt;properties&gt;` (named placeholders)</ROW-PREC-CENTRAL-VERSIONS-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-NESTED fact="true" status="doc/done">Nested workspaces</ROW-PREC-NESTED></td>
+        <td><ROW-PREC-NESTED-CARGO fact="true" status="doc/done">**Forbidden** — to avoid "which workspace is mine" ambiguity</ROW-PREC-NESTED-CARGO></td>
+        <td><ROW-PREC-NESTED-MAVEN fact="true" status="doc/done">Parent POMs nest to arbitrary depth</ROW-PREC-NESTED-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-PUBLISH fact="true" status="doc/done">Publish</ROW-PREC-PUBLISH></td>
+        <td><ROW-PREC-PUBLISH-CARGO fact="true" status="doc/done">`cargo publish -p &lt;crate&gt;` — per-crate, to crates.io</ROW-PREC-PUBLISH-CARGO></td>
+        <td><ROW-PREC-PUBLISH-MAVEN fact="true" status="doc/done">`mvn deploy` — per-module; `&lt;skip&gt;` opts a module out</ROW-PREC-PUBLISH-MAVEN></td>
+      </tr>
+      <tr>
+        <td><ROW-PREC-NAMING fact="true" status="doc/done">Top-level naming</ROW-PREC-NAMING></td>
+        <td><ROW-PREC-NAMING-CARGO fact="true" status="doc/done">Flat crate names on crates.io</ROW-PREC-NAMING-CARGO></td>
+        <td><ROW-PREC-NAMING-MAVEN fact="true" status="doc/done">`groupId:artifactId` — reverse-FQDN groupId</ROW-PREC-NAMING-MAVEN></td>
+      </tr>
+    </table>
+    <p><drawn-lead fact="true" status="doc/done">The decisions vibevm drew from this:</drawn-lead></p>
+    <facts ordered="false">
+      <DRAWN-LOCKFILE-CARGO fact="true" status="doc/done">**Lockfile: Cargo model.** vibevm already mandates a lockfile (content-hash integrity, PROP-002 §2.1). Maven's lockless model would mean discarding working machinery. One `vibe.lock` at the absolute root.</DRAWN-LOCKFILE-CARGO>
+      <DRAWN-NESTED-PERMITTED fact="true" status="doc/done">**Nested workspaces: vibevm permits them, unlike Cargo.** Cargo forbids them to dodge ambiguity. vibevm can afford them because it fixes "lock always at the absolute root" — that rule resolves the ambiguity deterministically. Maven shows arbitrary nesting works when version coordination aggregates upward.</DRAWN-NESTED-PERMITTED>
+      <DRAWN-MAVEN-PROPERTIES fact="true" status="doc/done">**Version placeholders: Maven `&lt;properties&gt;` shape**, because that is literally what the owner described ("write `0.0.1` once, reference it by name"). `[workspace.dependencies]` (Cargo's centralised per-pkgref defaults) is noted as a possible companion mechanism, not the primary one.</DRAWN-MAVEN-PROPERTIES>
+      <DRAWN-GROUPID fact="true" status="doc/done">**groupId: adopted as `group`** — but as a package attribute, not a registry attribute, which is why it does not reopen PROP-002 §3.4's rejection of per-registry identity.</DRAWN-GROUPID>
+    </facts>
+  </section>
+  <section title="7. The physical publication model">
+    <p><publication-model-lead fact="true" status="doc/done">This needed careful explanation — the owner flagged it as confusing and asked directly.</publication-model-lead></p>
+    <p><PUBLICATION-MODEL fact="true" status="doc/done">The model: **the development tree is one source tree** (one git repo, or not in git at all if private). Workspace members are subdirectories; the split into packages is logical, at the resolver level. **Publishing is a separate operation that copies a package directory's content into a new, separate repository** in the registry org and tags it — exactly what `vibe registry publish` does today for one package, repeated per member by `vibe workspace publish`.</PUBLICATION-MODEL></p>
+    <p><NO-FILE-MOVING fact="true" status="doc/done">A nested package does **not** "surface" by moving files. Only a *copy of its content* is published, into its own repository, at publish time. The source tree stays unified — a monorepo for development; the registry holds split copies.</NO-FILE-MOVING></p>
+    <fence>DEVELOPMENT — one tree, one git repo (or no git):
+  my-project/
+  ├── vibe.toml          [workspace] members = ["packages/X", "packages/Y"]
+  └── packages/{X,Y}/    each: vibe.toml with [package]
+
+PUBLISH — splits into separate repos:
+  packages/X/  --content copy--&gt;  &lt;registry-org&gt;/org.vibevm.X   tag v…
+  packages/Y/  --content copy--&gt;  &lt;registry-org&gt;/org.vibevm.Y   tag v…
+  The development tree is NOT modified.</fence>
+    <p><flat-siblings-recommendation fact="true" status="doc/done">Recommendation: keep members as flat siblings, not physically nested. Logical hierarchy ("X is built from Y") is a path-dependency, not a nested directory. Physical nesting is supported (with subtree excision when publishing the outer package, cargo-style) but discouraged for the "holes in the tree" complexity.</flat-siblings-recommendation></p>
+  </section>
+  <section title="8. &quot;Do not contribute here&quot; — the signalling lore">
+    <p><signalling-question fact="true" status="doc/done">The owner asked: when a sub-package's published copy is cloned, how do we make it super-obvious that pull requests there are pointless and contribution belongs to the main project?</signalling-question></p>
+    <p><prior-art-mirrors fact="true" status="doc/done">Prior art studied: AOSP / Chromium / Bazel keep read-only mirrors on GitHub with explicit "this is a mirror, do not send PRs, contribute upstream" banners. GitHub offers no "disable PRs only" switch — only full archival blocks PRs.</prior-art-mirrors></p>
+    <p><layered-answer fact="true" status="doc/done">The layered answer (detail in PROP-007 §2.8): README banner as the first block; repo `description`; Issues disabled; a `PULL_REQUEST_TEMPLATE.md` STOP notice; and `archived = true` as the nuclear `--archive` option (full read-only — vibevm drives the unarchive→push→archive cycle on re-publish). Plus a machine-readable `[origin]` marker in the published copy, and a `published_repos = "read-only" | "open"` setting for operators who want the inverse model.</layered-answer></p>
+    <p><terminology-published-repo fact="true" status="doc/done">Terminology fixed: the published copy is a **published package repository**; the source of truth is the **workspace**. It is *not* a `[[mirror]]` (that term is taken — an availability copy of a registry).</terminology-published-repo></p>
+  </section>
+  <section title="9. Ideas parked for the future">
+    <facts ordered="false">
+      <parked-registry-explorer fact="true" status="doc/done">**vibevm registry explorer.** The owner asked whether a Maven-Central-style browsable visualisation is possible — and wanted it richer. Yes: the per-org index (PROP-005) carries the data. Beyond Maven Central: a reverse-FQDN group tree with drill-down, plus `kind` filtering, a capability graph, `describes`/PURL links to upstream libraries, redirect-stub delegation, the full dependency DAG, and workspace provenance ("sub-package of X" from the `[origin]` marker). Recorded as a `ROADMAP.md` M3+ entry and in PROP-008 §2.9. The only obligation on the refactor: the index must carry `group` and `workspace_origin` so the explorer is not a retrofit.</parked-registry-explorer>
+      <parked-workspace-dependencies fact="true" status="doc/done">**`[workspace.dependencies]`** — Cargo-style centralised per-pkgref version defaults, alongside the named placeholders. Deferred until a concrete need surfaces.</parked-workspace-dependencies>
+      <parked-inverse-model fact="true" status="doc/done">**Inverse contribution model** — `published_repos = "open"` for projects where the split repo, not the monorepo, is the canonical contribution target.</parked-inverse-model>
+    </facts>
+  </section>
+  <section title="10. Session log">
+    <facts ordered="false">
+      <session-log-2026-05-20 fact="true" status="doc/done">**2026-05-20.** Session restored from `CONTINUE.md` + `vibevm/vibespecs/WAL.xml`. First closed the `vibe registry redirect-update` tech-debt item (M1.16 deferred-list — 4 commits, `f8af587..b44729d`). Then the owner opened the question of structuring a project with packages without necessarily publishing to a repository. The discussion grew into the workspace + qualified-naming refactor: the four-axis decomposition, the fork-by-fork resolution recorded in §5, two DRAFT PROPs (PROP-007 + PROP-008, commit `ff23a0f`), and finally the decision to create the `vibevm/vibespecs/design/` genre so this lore is not lost when the implementation moves to a fresh session. Implementation deferred to a new session; this document plus PROP-007/008 are the handoff.</session-log-2026-05-20>
+      <session-log-2026-05-21 fact="true" status="doc/done">**2026-05-21.** PROP-007 implemented — M1.17 Phases 1–5 (the workspace data model, discovery, path-source + `vibe.lock` v4, `[workspace.versions]`, `vibe workspace publish`) shipped on branch `m1.17-workspace`; Phase 6 documented it. The detailed implementation record is [PROP-007 §9](../modules/vibe-workspace/PROP-007-workspace.xml#impl). Workspace-aware `vibe install` remains, gated on the materialisation-target decision (PROP-007 §6 q3). PROP-008 (qualified naming) is still unimplemented — its turn comes after PROP-005 (index).</session-log-2026-05-21>
+    </facts>
+  </section>
+  <section title="11. Pointers">
+    <facts ordered="false">
+      <ptr-prop-007 fact="true" status="doc/done">[PROP-007](../modules/vibe-workspace/PROP-007-workspace.xml) — workspace (the contract).</ptr-prop-007>
+      <ptr-prop-008 fact="true" status="doc/done">[PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.xml) — qualified naming (the contract).</ptr-prop-008>
+      <ptr-prop-002 fact="true" status="doc/done">[PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.xml) — identity, registry, the per-registry-identity rejection (§3.4).</ptr-prop-002>
+      <ptr-prop-005 fact="true" status="doc/done">[PROP-005](../modules/vibe-index/PROP-005-package-index.xml) — the index; a prerequisite for short-name resolution.</ptr-prop-005>
+      <ptr-roadmap fact="true" status="doc/done">[`ROADMAP.md`](../../ROADMAP.md) — milestones M1.17 (workspace), M1.19 (qualified naming — the number shifted after this session was captured; M1.18 went to the loading model), and the M3+ registry-explorer entry.</ptr-roadmap>
+    </facts>
+  </section>
+</spec>

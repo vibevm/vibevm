@@ -4,7 +4,7 @@ Contributor-facing setup: what to install on a fresh machine to clone the repo, 
 
 For end-user setup (how to *use* the shipped `vibe` CLI), see [`RUNTIME-GUIDE.md`](RUNTIME-GUIDE.md).
 
-**Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](spec/common/PROP-000.xml) — the obligation is load-bearing.
+**Update policy.** Every change touching toolchain, prerequisites, env vars, or bootstrap steps MUST update this file in the same commit. Never ship a dev-env change and a doc update separately. Policy pinned in [PROP-000](vibevm/vibespecs/common/PROP-000.xml) — the obligation is load-bearing.
 
 ---
 
@@ -21,7 +21,7 @@ Pinned in [`rust-toolchain.toml`](rust-toolchain.toml). Install rustup from <htt
 
 ### 2.2 git
 
-System `git` must be in `PATH`. `vibe-registry` shells out to `git` for all registry operations — see [PROP-001 §2.1](spec/modules/vibe-registry/PROP-001-git-backend.xml#backend).
+System `git` must be in `PATH`. `vibe-registry` shells out to `git` for all registry operations — see [PROP-001 §2.1](vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml#backend).
 
 - Windows: [Git for Windows](https://git-scm.com/download/win). Bundled OpenSSH works with GitVerse out of the box once your key is in `ssh-agent`.
 - macOS: `brew install git` or Xcode command-line tools.
@@ -42,7 +42,7 @@ The package registry organization (`vibespecs`) lives on GitHub at <https://gith
 
 The publish-token loader also accepts the legacy `~/.vibe/git.publish.token` (host-agnostic fallback) and the env-var `VIBEVM_PUBLISH_TOKEN` (wins over both). Per-host file precedence — `~/.vibe/<host-prefix>.publish.token` — exists so you can hold tokens for several hosts without juggling env vars. The pre-consolidation `~/.vibevm/` is no longer read (removed 2026-07-26): if a token still lives there, move it into `~/.vibe/` yourself — `vibe` will not find it, and never reads or moves anything in that directory.
 
-**Token files are surface secrets per [PROP-000 §20](spec/common/PROP-000.xml#token-secrecy):**
+**Token files are surface secrets per [PROP-000 §20](vibevm/vibespecs/common/PROP-000.xml#token-secrecy):**
 
 - chmod 600 / Windows ACL-restricted to your user.
 - Never committed to git, never pasted into chat, never echoed in shell snippets, never quoted in screenshots or recordings.
@@ -52,7 +52,7 @@ Needed only for the publish subcommand; ordinary install/update never touches a 
 
 ### 2.5 Schema codegen (JTD)
 
-JTD (JSON Type Definition, RFC 8927) is the source of truth for every wire contract in the project ([PROP-000 §16](spec/common/PROP-000.xml#jtd)). `jtd-codegen` generates Rust types (and, eventually, other-language client types) from the `*.jtd.json` schemas at the repo root under [`schemas/`](schemas/) into [`crates/vibe-wire/src/generated/`](crates/vibe-wire/src/generated/).
+JTD (JSON Type Definition, RFC 8927) is the source of truth for every wire contract in the project ([PROP-000 §16](vibevm/vibespecs/common/PROP-000.xml#jtd)). `jtd-codegen` generates Rust types (and, eventually, other-language client types) from the `*.jtd.json` schemas at the repo root under [`schemas/`](schemas/) into [`crates/vibe-wire/src/generated/`](crates/vibe-wire/src/generated/).
 
 **Install** the generator binary into the project-local `tools/jtd-codegen/` per the procedure in [`tools/jtd-codegen/README.md`](tools/jtd-codegen/README.md). The binary itself is gitignored; only the README travels with the repo.
 
@@ -260,7 +260,7 @@ The `( … )` subshell handles CWD restoration automatically — exit the subshe
 
 **Install.** The server ships with the toolchain: `rustup component add rust-analyzer`. Editor bindings: VS Code / VSCodium — the official *rust-analyzer* extension; Neovim / Emacs / Helix / JetBrains (via the Rust plugin) all drive the same `rust-analyzer` binary.
 
-**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) `exclude`s `packages/` and `vibedeps/`, and those carry their *own* workspaces — `packages/org.vibevm.fractality/fractality/v0.1.0/`, the AI-native stacks under `packages/org.vibevm.ai-native/…`, and the vendored copies under `vibedeps/`. So:
+**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) `exclude`s `packages/` and `vibedeps/`, and those carry their *own* workspaces — `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/`, the AI-native stacks under `vibevm/vibepacks/org.vibevm.ai-native/…`, and the vendored copies under `vibedeps/`. So:
 
 - Opening the **repo root** indexes the host workspace (`crates/`, `xtask`, `apps/`). That is what you want for `vibe-cli` work.
 - To edit a **nested workspace** (fractality, the discipline stacks, an mcp package), open that subdirectory in a second editor window, or add its `Cargo.toml` to your editor's linked-projects list (VS Code: `rust-analyzer.linkedProjects`). Pointing the root workspace at a nested one slows indexing and confuses `cargo metadata`.
@@ -288,7 +288,7 @@ extraArgs = ["--all-targets"]
 allTargets = true
 ```
 
-**Spec anchors.** Every code cell carries `specmark::scope!` / `#[spec(...)]` / `#[verifies(...)]` citing `spec://…` URIs. rust-analyzer's go-to-definition and rename treat these like any other macro; the URI strings are the source of truth — edit the spec, not the strings (see the Addressable Specs flow in [`spec/boot/STATIC.xml`](spec/boot/STATIC.xml)). The `vibe trace` command (a delegating alias to `rust-ai-native trace`) resolves a URI to its definition.
+**Spec anchors.** Every code cell carries `specmark::scope!` / `#[spec(...)]` / `#[verifies(...)]` citing `spec://…` URIs. rust-analyzer's go-to-definition and rename treat these like any other macro; the URI strings are the source of truth — edit the spec, not the strings (see the Addressable Specs flow in [`vibevm/vibespecs/boot/STATIC.xml`](vibevm/vibespecs/boot/STATIC.xml)). The `vibe trace` command (a delegating alias to `rust-ai-native trace`) resolves a URI to its definition.
 
 **Toolchain note.** Pinned to edition 2024 / stable ≥ 1.93 ([`rust-toolchain.toml`](rust-toolchain.toml)). A rust-analyzer release from the last few months is current enough; if inlay hints misrender or macros error, `rustup update` and update the editor extension.
 
@@ -303,7 +303,7 @@ Live integration scripts live under [`manual-tests/`](manual-tests/). One file p
 - `github.com` (or any subdomain) → `GitHubCreator`. `POST /orgs/{org}/repos` works natively; HTTPS push uses the token embedded in the URL for one push (modern git ≥ 2.31 redacts URL passwords in its own logs).
 - `gitverse.ru` → `GitVerseCreator`. `GET /repos/{owner}/{repo}` works for presence; `POST /orgs/{org}/repos` is not exposed by the live host (verified 2026-04-26), so create-leg requires manual web-UI pre-creation. The adapter remains in tree for any future Gitea-shape host that fully supports the org-scoped POST.
 
-Full design: [PROP-002 §2.10](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). User-facing reference: [`docs/commands/registry-publish.md`](docs/commands/registry-publish.md).
+Full design: [PROP-002 §2.10](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). User-facing reference: [`docs/commands/registry-publish.md`](docs/commands/registry-publish.md).
 
 **Routine usage:**
 
@@ -337,7 +337,7 @@ If you only want the spec linter without the build/test prelude, run step 3 dire
 
 CI wiring: a single `bash tools/self-check.sh` line is enough. Local development: run before opening a PR; for quick iteration during a feature, run the relevant slice directly (`cargo test -p vibe-foo`) and reserve `self-check.sh` for "is the tree shippable right now?".
 
-If you `vibe install <pkgref>` against this manifest by accident, the install will succeed — there are no boot-prefix collisions today (`spec/boot/` carries only `00-core.xml` and `90-user.xml`). It will, however, materialise package files into `spec/flows/`, `spec/feats/`, or `spec/stacks/` and rewrite `vibe.lock` with `[[package]]` entries; revert with `vibe uninstall` (or `git restore vibe.lock spec/`) before committing.
+If you `vibe install <pkgref>` against this manifest by accident, the install will succeed — there are no boot-prefix collisions today (`vibevm/vibespecs/boot/` carries only `00-core.xml` and `90-user.xml`). It will, however, materialise package files into `spec/flows/`, `spec/feats/`, or `spec/stacks/` and rewrite `vibe.lock` with `[[package]]` entries; revert with `vibe uninstall` (or `git restore vibe.lock spec/`) before committing.
 
 ## 7. Troubleshooting
 

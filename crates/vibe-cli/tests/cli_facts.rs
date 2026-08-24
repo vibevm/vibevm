@@ -203,7 +203,8 @@ fn package_set_rederives_and_adopt_fills_only_absent_statuses() {
         .join("org.example")
         .join("facts-pkg")
         .join("v1.0.0");
-    fs::create_dir_all(package.join("spec")).expect("package spec dir");
+    fs::create_dir_all(package.join(vibe_core::layout::current_specs_root()))
+        .expect("package spec dir");
     fs::write(
         package.join("vibe.toml"),
         "[package]\ngroup = \"org.example\"\nname = \"facts-pkg\"\nkind = \"flow\"\nversion = \"1.0.0\"\nepoch = 1\n",

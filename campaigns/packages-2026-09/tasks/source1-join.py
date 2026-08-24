@@ -3,7 +3,7 @@
 carry the anchor it is cited by?
 
 Usage:
-    python tasks/source1-join.py [<path-prefix> …]        # default: packages/org.vibevm.world
+    python tasks/source1-join.py [<path-prefix> …]        # default: vibevm/vibepacks/org.vibevm.world
 
 §3.1's first source is «the package's own shipped artifacts» — «a protocol document
 a snippet cites must exist and say what the snippet says it says». The second half
@@ -17,7 +17,7 @@ if the target carries it either as a heading anchor `{#name}` or as a fact ancho
 Fragment matching is case-sensitive, because the anchors are.
 
 What it deliberately does NOT resolve. `spec://` URIs: measured over
-`packages/org.vibevm.world/**`, 55 occurrences of which all but two are
+`vibevm/vibepacks/org.vibevm.world/**`, 55 occurrences of which all but two are
 ILLUSTRATIVE — `spec://com.example.shop/PROP-001#…`, `spec://oproto/PROP-002#…`,
 a bare `spec://…` — teaching the grammar rather than citing a document. A resolver
 over those would report a wall of failures about examples that are correct, and a
@@ -53,7 +53,7 @@ def observed():
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     corpus_only = "--corpus" in sys.argv
-    prefixes = args or ["packages/org.vibevm.world"]
+    prefixes = args or ["vibevm/vibepacks/org.vibevm.world"]
     files = sorted(f for p in prefixes for f in (ROOT / p).rglob("*.md"))
     if corpus_only:
         keep = observed()

@@ -109,7 +109,7 @@ cargo run -q -p vibe-cli --bin vibe -- progress baseline --campaign campaigns/pa
 - **Before:** `progress baseline` names **5** stale files (`00-core.xml`,
   `90-user.xml`, `MT-02-vibe-tree-tui.xml`, `PROP-026-tcg-tool-family.xml`,
   `PROP-043-progress-markup.xml`). Report the list you actually get.
-- Seal `spec/boot/00-core.xml` and `spec/boot/90-user.xml` — both were edited
+- Seal `vibevm/vibespecs/boot/00-core.xml` and `vibevm/vibespecs/boot/90-user.xml` — both were edited
   today and their markers all carry verdicts. **After: 3 stale files.** The
   other three must still be named: MT-02 and PROP-026 were edited by Phase D
   and nobody re-verified them, and PROP-043 had 4 of ~300 anchors re-derived.
@@ -175,7 +175,7 @@ live cache:
   is not.
 - So the refusal built here is the one §8 asks for and it does fire — one
   live corpus file trips it today
-  (`packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`, 6 markers,
+  (`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`, 6 markers,
   0 verdicts) — but it is a **coverage** gate, not a recency gate. Between
   scans the command's honesty rests where `gate`'s does: on the caller having
   done the work it reports. PROP-043 stays flagged because nobody sealed it,

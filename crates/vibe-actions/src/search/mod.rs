@@ -14,7 +14,7 @@
 //! crates (§10.4); this module is the frontend-agnostic engine they plug into,
 //! carrying **zero rendering dependencies** (§1 `#no-render-dep`).
 //!
-//! Spec: [PROP-039 §10](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#search-everywhere).
+//! Spec: [PROP-039 §10](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#search-everywhere).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#search-everywhere");
 

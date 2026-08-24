@@ -9,7 +9,7 @@
 //! Registries are a priority-ordered `[[registry]]` array, with optional
 //! `[[mirror]]` entries for transparent fallback and `[[override]]` entries
 //! that bypass the registry layer for specific pkgrefs. Schema:
-//! `VIBEVM-SPEC.md` §7.5, [PROP-002 §2.2 / §2.3 / §2.4](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+//! `VIBEVM-SPEC.md` §7.5, [PROP-002 §2.2 / §2.3 / §2.4](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
@@ -178,7 +178,7 @@ pub struct RegistrySection {
     pub naming: NamingConvention,
 
     /// Authentication regime for fetching from this registry. See
-    /// [PROP-002 §2.2.1](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-auth).
+    /// [PROP-002 §2.2.1](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#registry-auth).
     /// Default `none`: public read, no credential prompts in scripted runs,
     /// 401 → walk to next registry.
     #[serde(default, skip_serializing_if = "AuthKind::is_default")]
@@ -465,8 +465,8 @@ pub struct OverrideSection {
 /// GitVerse to GitHub on 2026-04-29 because GitVerse's public REST API
 /// does not expose org-scoped repo creation, blocking
 /// `vibe registry publish` end-to-end automation. Migration rationale:
-/// [PROP-000 §7](../../../spec/common/PROP-000.md#registry) and
-/// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
+/// [PROP-000 §7](../../../vibevm/vibespecs/common/PROP-000.xml#registry) and
+/// [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish).
 /// The vibevm tool source itself stays on GitVerse.
 pub const DEFAULT_REGISTRY_URL: &str = "https://github.com/vibespecs";
 

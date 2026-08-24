@@ -22,7 +22,7 @@
 //! for diffing, and `toml_edit` for comment-preserving writes — zero rendering
 //! deps.
 //!
-//! Spec: [PROP-040 §6, §3](../../../../spec/modules/vibe-settings/PROP-040-settings.md#diff-from-default).
+//! Spec: [PROP-040 §6, §3](../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#diff-from-default).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default");
 

@@ -42,7 +42,7 @@ fn write_slot(project: &Path, group: &str, name: &str, version: &str, requires: 
     );
     write_file(
         &project
-            .join("vibedeps")
+            .join(crate::layout::current_vibedeps_root())
             .join(format!("{group}.{name}"))
             .join(version)
             .join("vibe.toml"),

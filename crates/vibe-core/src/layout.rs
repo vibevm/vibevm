@@ -12,7 +12,7 @@
 //! behaviour change, and R4 flips the whole product by editing the one
 //! [`USE_NEW_LAYOUT`] line here.
 //!
-//! Spec: [PROP-052](../../../spec/common/PROP-052-directory-layout.xml).
+//! Spec: [PROP-052](../../../vibevm/vibespecs/common/PROP-052-directory-layout.xml).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-052#root");
 
@@ -59,7 +59,7 @@ pub const LEGACY_VIBEFACTS_DIR: &str = "vibefacts";
 // Derived names inside the specs root (the boot lane and the WAL)
 // ---------------------------------------------------------------------------
 
-/// The generated boot lane directory: `<specs>/boot` (`spec/boot` today,
+/// The generated boot lane directory: `<specs>/boot` (`vibevm/vibespecs/boot` today,
 /// `vibevm/vibespecs/boot` after the move).
 pub const BOOT_DIR: &str = "boot";
 /// The living WAL, XML form.
@@ -138,7 +138,7 @@ pub fn boot_static_md() -> PathBuf {
 /// crates to this module changes no behaviour. When R4 moves the four
 /// roots into `vibevm/`, this line — and only this line — flips to
 /// `true`, and every `current_*` call site names the new root at once.
-const USE_NEW_LAYOUT: bool = false;
+const USE_NEW_LAYOUT: bool = true;
 
 /// The specs root of whichever layout is live: `spec` today,
 /// `vibevm/vibespecs` after the R4 flip of [`USE_NEW_LAYOUT`].
@@ -183,14 +183,14 @@ pub fn current_vibefacts_root() -> PathBuf {
     }
 }
 
-/// The boot lane directory of the live layout: `spec/boot` today,
+/// The boot lane directory of the live layout: `vibevm/vibespecs/boot` today,
 /// `vibevm/vibespecs/boot` after the flip. Derived from
 /// [`current_specs_root`], so the flip needs no second edit here.
 pub fn current_boot_dir() -> PathBuf {
     current_specs_root().join(BOOT_DIR)
 }
 
-/// The WAL stem, XML form, of the live layout (`spec/WAL.xml` today).
+/// The WAL stem, XML form, of the live layout (`vibevm/vibespecs/WAL.xml` today).
 pub fn current_wal_xml() -> PathBuf {
     current_specs_root().join(WAL_XML)
 }
@@ -200,13 +200,13 @@ pub fn current_wal_md() -> PathBuf {
     current_specs_root().join(WAL_MD)
 }
 
-/// The boot manifest of the live layout (`spec/boot/INDEX.md` today).
+/// The boot manifest of the live layout (`vibevm/vibespecs/boot/INDEX.md` today).
 pub fn current_boot_index() -> PathBuf {
     current_boot_dir().join(INDEX_MD)
 }
 
 /// The static boot lane, XML form, of the live layout
-/// (`spec/boot/STATIC.xml` today).
+/// (`vibevm/vibespecs/boot/STATIC.xml` today).
 pub fn current_boot_static_xml() -> PathBuf {
     current_boot_dir().join(STATIC_XML)
 }
@@ -301,7 +301,7 @@ mod tests {
     fn current_derived_paths_nest_under_the_live_specs_root() {
         // Derived current_* paths derive from current_specs_root(), so
         // the R4 flip re-maps them with no second edit (e.g. today they
-        // name spec/boot/..., after it vibevm/vibespecs/boot/...).
+        // name vibevm/vibespecs/boot/..., after it vibevm/vibespecs/boot/...).
         assert_eq!(current_boot_dir(), current_specs_root().join(BOOT_DIR));
         assert_eq!(current_wal_xml(), current_specs_root().join(WAL_XML));
         assert_eq!(current_wal_md(), current_specs_root().join(WAL_MD));

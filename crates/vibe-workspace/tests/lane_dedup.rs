@@ -182,10 +182,29 @@ fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
 /// Write a `simple` boot file under `vibedeps/<slot>/1.0.0/boot.md` and return
 /// its workspace-relative path (the `simple`-format on-disk shape, R3).
 fn write_snippet(ws: &Path, slot: &str, body: &str) -> String {
-    let p = ws.join(format!("vibedeps/{slot}/1.0.0/boot.md"));
+    let rel = format!("{}/{slot}/1.0.0/boot.md", deps_root());
+    let p = ws.join(&rel);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(&p, body).unwrap();
-    format!("vibedeps/{slot}/1.0.0/boot.md")
+    rel
+}
+/// The live layout roots, `/`-separated (PROP-052): fixtures spell slot
+/// paths through the layout module so the R4 flip carries them.
+fn deps_root() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_vibedeps_root())
+}
+
+fn specs_root() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+}
+
+/// A slot's generated unit-STATIC path in the live layout shape.
+fn slot_static(slot: &str) -> String {
+    format!(
+        "{}/{slot}/1.0.0/{}/boot/STATIC.md",
+        deps_root(),
+        specs_root()
+    )
 }
 
 /// The entry whose origin pkgref is `name`.
@@ -230,7 +249,7 @@ fn t1_contentless_aggregator_elides_members_render_once() {
     insert(&mut table, "m2", Some(&m2), vec![]);
 
     let mut eff = boot(vec![
-        entry_sub("vibedeps/agg/1.0.0/spec/boot/STATIC.md", &pkgref("agg")),
+        entry_sub(&slot_static("agg"), &pkgref("agg")),
         entry_static(&m1, &pkgref("m1")),
         entry_static(&m2, &pkgref("m2")),
     ]);
@@ -289,7 +308,7 @@ fn t2_coverage_guard_retains_substitution_when_member_absent() {
     insert(&mut table, "m2", Some(&m2), vec![]);
 
     let mut eff = boot(vec![
-        entry_sub("vibedeps/agg/1.0.0/spec/boot/STATIC.md", &pkgref("agg")),
+        entry_sub(&slot_static("agg"), &pkgref("agg")),
         entry_static(&m1, &pkgref("m1")),
         entry_dyn(&m2, &pkgref("m2")),
     ]);
@@ -345,10 +364,7 @@ fn t3_mixed_consumers_identity_dedup_order_invariant() {
                     } else if n == "m2" {
                         entry_static(&m2, &pkgref("m2"))
                     } else {
-                        entry_sub(
-                            &format!("vibedeps/{n}/1.0.0/spec/boot/STATIC.md"),
-                            &pkgref(n),
-                        )
+                        entry_sub(&slot_static(n), &pkgref(n))
                     }
                 })
                 .collect(),
@@ -406,7 +422,7 @@ fn t4_aggregator_with_snippet_de_substitutes_to_snippet() {
     insert(&mut table, "m2", Some(&m2), vec![]);
 
     let mut eff = boot(vec![
-        entry_sub("vibedeps/r/1.0.0/spec/boot/STATIC.md", &pkgref("r")),
+        entry_sub(&slot_static("r"), &pkgref("r")),
         entry_static(&m1, &pkgref("m1")),
         entry_static(&m2, &pkgref("m2")),
     ]);
@@ -428,7 +444,7 @@ fn t4_aggregator_with_snippet_de_substitutes_to_snippet() {
     );
     assert_eq!(lane.matches("M1BODY").count(), 1);
     assert!(
-        !lane.contains("vibedeps/r/1.0.0/spec/boot/STATIC.md"),
+        !lane.contains(&slot_static("r")),
         "R's unit-STATIC path not in the lane:\n{lane}"
     );
 }
@@ -456,7 +472,7 @@ fn t5_unrelated_append_leaves_t1_verdicts_unchanged() {
     insert(&mut table, "x", Some(&x), vec![]);
 
     let mut eff = boot(vec![
-        entry_sub("vibedeps/agg/1.0.0/spec/boot/STATIC.md", &pkgref("agg")),
+        entry_sub(&slot_static("agg"), &pkgref("agg")),
         entry_static(&m1, &pkgref("m1")),
         entry_static(&m2, &pkgref("m2")),
         entry_static(&x, &pkgref("x")),
@@ -499,8 +515,8 @@ fn t6_nested_umbrellas_collapse_in_one_pass() {
     // snapshot — yet P elides, because GP (contentless) is not a boot-bearing
     // member of P's zone. That is the single-pass property.
     let mut eff = boot(vec![
-        entry_sub("vibedeps/p/1.0.0/spec/boot/STATIC.md", &pkgref("p")),
-        entry_sub("vibedeps/gp/1.0.0/spec/boot/STATIC.md", &pkgref("gp")),
+        entry_sub(&slot_static("p"), &pkgref("p")),
+        entry_sub(&slot_static("gp"), &pkgref("gp")),
         entry_static(&m1, &pkgref("m1")),
         entry_static(&m2, &pkgref("m2")),
     ]);
@@ -539,7 +555,7 @@ fn t7_presence_matcher_hoisted_form_and_prefix_guard() {
 
     // Probe 1 — a hoisted shared-by entry IS present.
     let mut eff_a = boot(vec![
-        entry_sub("vibedeps/umb-a/1.0.0/spec/boot/STATIC.md", &pkgref("umb-a")),
+        entry_sub(&slot_static("umb-a"), &pkgref("umb-a")),
         hoisted_entry(&a, "a", &["org.demo/x"]),
     ]);
     desubstitute_covered_units(&mut eff_a, &table);
@@ -550,7 +566,7 @@ fn t7_presence_matcher_hoisted_form_and_prefix_guard() {
 
     // Probe 2 — a prefix-extension name does NOT match.
     let mut eff_m = boot(vec![
-        entry_sub("vibedeps/umb-m/1.0.0/spec/boot/STATIC.md", &pkgref("umb-m")),
+        entry_sub(&slot_static("umb-m"), &pkgref("umb-m")),
         hoisted_entry(&mem, "member", &["org.demo/x"]),
     ]);
     desubstitute_covered_units(&mut eff_m, &table);

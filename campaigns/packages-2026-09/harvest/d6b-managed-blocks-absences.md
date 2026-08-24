@@ -1,7 +1,7 @@
 # D6b — `managed-blocks` v0.1.0: three claimed absences, re-verified before demotion
 
 _Worked 2026-07-29. Subject:
-`packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/`.
+`vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/flows/managed-blocks/`.
 Three obligations, all `build-or-demote`, 9 drift verdicts. Every one asserts
 that some mechanism, fixture, consent gate or message shape **does not exist**._
 
@@ -37,7 +37,7 @@ ours.
 
 **Why that perimeter and not the package.** `managed-blocks` is a
 *tool-neutral* flow: it specifies a discipline, and this host repository is the
-project that adopted it (`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:11`
+project that adopted it (`vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:11`
 names the flow as its own discipline line). A mechanism in this family has four
 layers — SPEC in the package, ENGINE in `crates/vibe-workspace`, DRIVER in
 `crates/vibe-cli`, DEPLOYMENT in the consuming project. A fact can be true at
@@ -56,7 +56,7 @@ recorded below
 **Files touched:** `none`
 **Perimeter searched:** the standing perimeter above. The decisive widening over
 the verdict's own `crates/` is **`packages/**`**, which holds a second Cargo
-workspace of ours — `packages/org.vibevm.fractality/fractality/v0.1.0/crates/` —
+workspace of ours — `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/` —
 that a host-`crates/` grep cannot reach. Searched for the **thing** (a code path
 that deletes a tool-owned region and restores the surrounding bytes), not the
 string the verdict used: `remove_block` · `remove_managed` · `strip_block` ·
@@ -95,13 +95,13 @@ $ grep -rn -E "managed block|BLOCK_OPEN|BLOCK_CLOSE|BLOCK_BEGIN|BLOCK_END" \
       crates xtask tools packages --include=*.rs
 crates/vibe-workspace/src/boot_artifacts.rs:87,90    <vibevm> … </vibevm>      (markdown)
 crates/vibe-cli/src/commands/vvm/env.rs:171,172      # >>> vibevm (VVM) … <<<  (shell rc)
-packages/org.vibevm.fractality/…/fractality-cli/src/harness.rs:4
+vibevm/vibepacks/org.vibevm.fractality/…/fractality-cli/src/harness.rs:4
     //! The managed-blocks law, adapted to JSON: **the command string is the
 ```
 
 The third one implements the verb, and its module doc names this protocol as
 its own contract while enumerating all three
-(`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:1-13`):
+(`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:1-13`):
 
 ```rust
 //! `fractality harness install|status|remove claude-code` (Campaign 2
@@ -116,7 +116,7 @@ its own contract while enumerating all three
 
 **This is not a coincidence of vocabulary — fractality is a declared adopter of
 this flow.** `flow-managed-blocks` is one of its 27 materialised `vibedeps/`
-slots (`packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-managed-blocks/`),
+slots (`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibedeps/flow-managed-blocks/`),
 so the protocol sits in that project's boot lane, and `harness.rs` is precisely
 what §re-derive of this very document asks an adopter to produce: *«Adapt it by
 handing your agent the task, not a copied template … Specify the three verbs,
@@ -182,11 +182,11 @@ but never touches the `<vibevm>` block, so uninstalling the last package leaves
 the block behind»*. `##VERB-REMOVE` fires when *«the file is present and **the
 tool** is uninstalling»* — the tool, not one of its packages. `vibe uninstall`
 uninstalls a **package**; the `<vibevm>` block is vibevm's own redirect to
-`spec/boot/INDEX.md`, which still exists and is still vibevm's after the last
+`vibevm/vibespecs/boot/INDEX.md`, which still exists and is still vibevm's after the last
 package goes. Leaving it in place there is correct, and the host's own
 characterization pins that as intended: `discipline/golden/uninstall.transcript.md:57-75`
 is an install-then-uninstall flow whose final tree still carries `./CLAUDE.md`,
-`./AGENTS.md`, `./GEMINI.md` and `./spec/boot/INDEX.md`, exit 0. The verb's real
+`./AGENTS.md`, `./GEMINI.md` and `./vibevm/vibespecs/boot/INDEX.md`, exit 0. The verb's real
 trigger — uninstalling vibevm *from a project* — **has no command to fire it**:
 
 ```console
@@ -199,7 +199,7 @@ so vibevm's own instance has no *occasion* to remove, which is a materially
 different fact from «the verb is unbuilt».
 
 **Which layer has it, if any:** **consumer CLI** —
-`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`,
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`,
 all three verbs, wired at `main.rs:414-427`, with two tests on the removal
 round-trip. **Host engine** for every other clause of the two summary anchors:
 three states exactly (`boot_artifacts.rs:306-316`), absent→create-at-end
@@ -264,7 +264,7 @@ once the perimeter includes the adopter. `##SUM-REMOVE-RESTORES-THE-FILE-AND-NO-
    hard-stopping — a second, separate non-compliance, with `##ROW-STATE-MALFORMED`,
    in a crate no verdict in this obligation searched.
 2. **The Phase C close-out states the falsified premise as a finding.**
-   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144` reads *«Verbs
+   `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144` reads *«Verbs
    are specified and never built — managed-blocks' `remove`, qualified-naming's
    `KindMismatch`, each costing five to six sentences downstream.»* That is the
    §3.7 **corollary case** — a claim restated at phase-summary level from the
@@ -390,7 +390,7 @@ round-trip this fact asks to assert cannot be written here, because the
 operation it round-trips does not exist … so “write then remove returns the
 original bytes” has no first step to invert»*. F-176 establishes the operation:
 `fractality harness remove claude-code`
-(`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350-369`
+(`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350-369`
 over `strip()` at `:177-210`). The two assertions this anchor asks for are
 `harness.rs:392-408` — `upsert` then `strip`, then
 `assert_eq!(doc, json!({}), "a clean uninstall leaves no residue")`, the
@@ -436,7 +436,7 @@ $ grep -rln "<vibevm>" fixtures schemas manual-tests
 consent (`vibe-workspace` decides, `vibe-cli` prompts); **host engine** for the
 exact-match conversion guard and for nine of the ten fixture rows; **consumer
 CLI** for the clean-removal round trip
-(`packages/org.vibevm.fractality/…/harness.rs`). **Nowhere** for the empty-body
+(`vibevm/vibepacks/org.vibevm.fractality/…/harness.rs`). **Nowhere** for the empty-body
 fixture.
 
 **Anchor by anchor.**
@@ -511,7 +511,7 @@ producers (`crates/vibe-workspace/src/lib.rs:229-239`,
 points (`boot_artifacts.rs:396-401`, `install/bootgen.rs:405-418`), the
 exit-code mapping and its tests (`crates/vibe-cli/src/exit_code.rs:82-150`), the
 finding type (`crates/vibe-check/src/lib.rs:196-258`), and the third adopter's
-malformed path (`packages/org.vibevm.fractality/…/harness.rs:298-312`). Searched
+malformed path (`vibevm/vibepacks/org.vibevm.fractality/…/harness.rs:298-312`). Searched
 for a **snapshot or golden of the message text** — the thing that would pin its
 shape — across `discipline/**`, `manual-tests/**`, `fixtures/**`, `docs/**`,
 `terraform/**` and every test in `crates/vibe-workspace` and `crates/vibe-cli`.
@@ -626,7 +626,7 @@ file at `:329`), which is that medium's line number.
 elements; **host CLI** for the exit-code contract (`exit_code.rs:82-150`);
 **host docs** for the operator-facing render (`docs/troubleshooting.md:38-44`);
 **consumer CLI** for the no-files-changed clause
-(`packages/org.vibevm.fractality/…/harness.rs:298-312`). **Nowhere** for line
+(`vibevm/vibepacks/org.vibevm.fractality/…/harness.rs:298-312`). **Nowhere** for line
 numbers in any malformed-block report, for the labelled multi-line
 `found:` / `expected:` / `fix:` shape, and for any test, golden or snapshot that
 pins the message text.
@@ -700,7 +700,7 @@ three are §3.6(b) — the rule is sound and the consumer does not keep it — a
 none is repaired by moving a marker in the package.
 
 **Where the six false absences were hiding, and it is one place.** Five of the
-six were falsified by `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
+six were falsified by `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
 — a **second Cargo workspace of ours, inside `packages/`**, belonging to a
 project that carries `flow-managed-blocks` in its `vibedeps/` and says so in its
 own module doc: *«The managed-blocks law, adapted to JSON … We create, update,
@@ -724,7 +724,7 @@ perimeter; it was defeated by re-running its own command.
 
 **Two things need a decision that is not mine.**
 
-1. **`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144`** states the
+1. **`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3144`** states the
    falsified premise as a Phase C finding — *«Verbs are specified and never
    built — managed-blocks' `remove`, qualified-naming's `KindMismatch`»*. The
    first half is now falsified. **The second half was written from the same

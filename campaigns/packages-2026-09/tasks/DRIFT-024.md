@@ -38,7 +38,7 @@ Measured 2026-07-26 — do not re-discover, but contradict me if a number is wro
 - The three `spec/cards/INDEX.md` (rust v0.7.0, typescript v0.6.0, go v0.1.0)
   say of themselves: *"Generated/maintained as a derived index (A2/R-030);
   hand edits are a defect."* Markup written there dies at the next
-  regeneration — the exact reason wave 1 kept `spec/boot/STATIC.xml` and
+  regeneration — the exact reason wave 1 kept `vibevm/vibespecs/boot/STATIC.xml` and
   `INDEX.md` out of scope.
 - `progress.toml` **cannot express either exclusion today**: PROP-043 §4 is
   include-only by design, and no include glob can say "everything under
@@ -126,7 +126,7 @@ cargo run -q -p vibe-cli --bin vibe -- progress check --exhaustive --campaign ca
   `exclude` glob drops the derived index and does **not** drop a sibling card;
   an `exclude` pattern matching nothing warns and names itself.
 - **The proof the cards survived:** show that
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/` still
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/` still
   contributes its authored card files to the corpus, and only `INDEX.md` left.
   An over-broad exclusion is the way this task fails.
 - Discipline: `cargo fmt --all`, clippy clean, no AI attribution.
@@ -179,7 +179,7 @@ Budget signal: past ~4 files, stop and return.
 
 - Worth knowing for the next widening: the exclusion `packages/**/spec/cards/INDEX.md`
   is *today* indistinguishable in effect from `**/INDEX.md`, because no other
-  `INDEX.md` is in the corpus (`spec/boot/INDEX.md` is already outside the
+  `INDEX.md` is in the corpus (`vibevm/vibespecs/boot/INDEX.md` is already outside the
   include globs). The narrow form is deliberate anyway — the next package that
   ships an authored `INDEX.md` is the case the broad form would silently eat.
 

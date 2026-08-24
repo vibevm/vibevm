@@ -130,11 +130,11 @@ const UNRECOMPUTABLE_REASON: &str = "could not recompute the fingerprint from th
 /// let r = root.path();
 /// fs::write(
 ///     r.join("specmap.toml"),
-///     "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+///     "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
 /// )
 /// .unwrap();
-/// fs::create_dir_all(r.join("spec")).unwrap();
-/// fs::write(r.join("spec/D.md"), "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n").unwrap();
+/// fs::create_dir_all(r.join(vibe_core::layout::current_specs_root())).unwrap();
+/// fs::write(r.join(vibe_core::layout::current_specs_root()).join("D.md"), "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n").unwrap();
 /// let src = r.join("crates/x/src");
 /// fs::create_dir_all(&src).unwrap();
 /// fs::write(

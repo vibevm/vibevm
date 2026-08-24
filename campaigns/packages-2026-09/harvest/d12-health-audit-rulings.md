@@ -19,8 +19,8 @@ git write. `git` was run read-only (`rev-parse`, `log`, `show`, `status`,
 **Measured at `HEAD = c3b3fe19`** (`feat(spec): the decision-record criterion
 lands where the genre lives, and spec/decisions/ is closed by name`, 2026-08-01).
 The batch opened at `96b5b55f` and **HEAD advanced twice while it ran** — first
-to `f1abad16` (`docs(wal): …`, `spec/WAL.xml` only, 238+/332−) and then to
-`c3b3fe19` (`spec/design/README.md` only, +92). **Both touched files this batch
+to `f1abad16` (`docs(wal): …`, `vibevm/vibespecs/WAL.xml` only, 238+/332−) and then to
+`c3b3fe19` (`vibevm/vibespecs/design/README.md` only, +92). **Both touched files this batch
 reads**, so every figure was re-taken at each move; **all of them hold and two
 moved by the arithmetic of the moves themselves** (the commit gap 1702 → 1703).
 See [§0.5](#head-move). Recorded rather than silently re-based, per
@@ -41,7 +41,7 @@ Three perimeter rules bind every figure in this file:
 - **`refs/**`, `vibedeps/**` and `.vibe/cache/**` are broken out and excluded
   from every host-practice count.** They are third-party or regenerated dep
   copies; counting them measures the package, not the host.
-- **`spec/WAL.xml` is measured as a host artefact and never quoted for campaign
+- **`vibevm/vibespecs/WAL.xml` is measured as a host artefact and never quoted for campaign
   numbers.** It appears below only as the checkpoint the flow's
   reconciliation rule names ([§3.4](#f-164-owes)).
 
@@ -59,11 +59,11 @@ Three perimeter rules bind every figure in this file:
 3. [`run/cache.json`](../run/cache.json) — the verdict and evidence standing
    against each anchor, read with the instrument in §0.5.
 4. The host's practice surfaces the anchors judge: [`AUDIT.md`](../../../AUDIT.md)
-   in full, [`spec/common/PROP-013-periodic-health-audit.xml`](../../../spec/common/PROP-013-periodic-health-audit.xml)
+   in full, [`vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml`](../../../spec/common/PROP-013-periodic-health-audit.xml)
    in full, [`tools/self-check.sh`](../../../tools/self-check.sh),
    `discipline/DEBT.md`, `discipline/registry/{debt,intent}.json`,
    `discipline/health/latest.json`, `ROADMAP.md`, `vibe.lock`,
-   `spec/boot/STATIC.xml`, and the three agent skill homes.
+   `vibevm/vibespecs/boot/STATIC.xml`, and the three agent skill homes.
 5. [`PHASE-D-BATCH-PLAN.md` §3.6](../PHASE-D-BATCH-PLAN.md#which-side) and
    [§6.1](../PHASE-D-BATCH-PLAN.md#delegation-lessons);
    [`PHASE-D-HOST-OBLIGATIONS.md`](../PHASE-D-HOST-OBLIGATIONS.md) in full;
@@ -209,8 +209,8 @@ the same flow and fails the same rule». At HEAD it is wider than that:
 for f in $(find . -name vibe.lock -not -path "./refs/*" -not -path "*/.vibe/cache/*" \
                   -not -path "*/vibedeps/*" -not -path "./.git/*"); do
   grep -q 'name = "health-audit"' "$f" && echo "INSTALLS: $f"; done
-# INSTALLS: ./packages/org.vibevm.fractality/delegation-rules/v0.1.0/vibe.lock
-# INSTALLS: ./packages/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
+# INSTALLS: ./vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/vibe.lock
+# INSTALLS: ./vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
 # INSTALLS: ./vibe.lock
 
 find . -name AUDIT.md -not -path "./refs/*" -not -path "*/vibedeps/*" \
@@ -219,7 +219,7 @@ find . -name AUDIT.md -not -path "./refs/*" -not -path "*/vibedeps/*" \
 ```
 
 **Three projects install the flow; one has an `AUDIT.md`.** The `fractality`
-specspace boots it at slot 42 of its own generated `spec/boot/INDEX.md`
+specspace boots it at slot 42 of its own generated `vibevm/vibespecs/boot/INDEX.md`
 (`vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md`), has no
 `AUDIT.md`, has never run an audit, and its `WAL.md:3` declares **«THE FIVE-TASK
 GOAL IS COMPLETE»** (2026-07-12) — a close-out on an un-audited base by the same
@@ -246,15 +246,15 @@ artefact — and the commands quoted in §0.1 reproduce its two aggregate number
 directly.
 
 **The two HEAD moves.** The batch opened at `96b5b55f`, passed through
-`f1abad16` (`spec/WAL.xml`, 238+/332−) and closed at `c3b3fe19`
-(`spec/design/README.md`, +92). Both files are ones this batch reads — the WAL
-in [§3.4](#f-164-owes), `spec/design/` as part of the host's spec surface — so
+`f1abad16` (`vibevm/vibespecs/WAL.xml`, 238+/332−) and closed at `c3b3fe19`
+(`vibevm/vibespecs/design/README.md`, +92). Both files are ones this batch reads — the WAL
+in [§3.4](#f-164-owes), `vibevm/vibespecs/design/` as part of the host's spec surface — so
 every figure was re-taken at the final HEAD:
 
 ```bash
 git rev-parse --short HEAD                                         # c3b3fe19
 grep -cE '^## Audit run' AUDIT.md                                  # 3   (was 3)
-grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.xml   # 0   (was 0)
+grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" vibevm/vibespecs/WAL.xml   # 0   (was 0)
 git rev-list --count 3656f362..HEAD                                # 1703  (was 1702)
 python -c "import json,pathlib;r=json.loads(pathlib.Path('campaigns/packages-2026-09/run/state/routing.json').read_text(encoding='utf-8'));
 print(len([e for e in r['entries'] if '/health-audit/' in e['anchor']]))"   # 19  (was 19)
@@ -288,14 +288,14 @@ commit-anchored ranges only:**
 ## §1 — F-097 · the boot snippet {#f-097}
 
 _3 routed anchors, all in
-`packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.xml`.
+`vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/boot/42-flow-health-audit.xml`.
 Routed wave 7 (2026-07-31). **This is the compiled boot lane** — the snippet is
-inlined into `spec/boot/STATIC.xml:903–974`, so every host session reads all three
+inlined into `vibevm/vibespecs/boot/STATIC.xml:903–974`, so every host session reads all three
 of these sentences on boot. That is what makes F-097's genre «an instruction
 that fails when followed» rather than a document nobody opens._
 
 ```bash
-grep -n "vibe:static" spec/boot/STATIC.xml | awk -F: '$1>900 && $1<1050'
+grep -n "vibe:static" vibevm/vibespecs/boot/STATIC.xml | awk -F: '$1>900 && $1<1050'
 # 903:<!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->
 # 975:<!-- vibe:static org.vibevm.world/licensing … -->     <- the next block; 903–974 is this flow's
 ```
@@ -497,7 +497,7 @@ grep -c "skill" vibe.lock                                # 0
 the sentence is in the compiled boot lane:
 
 ```bash
-grep -n "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE" spec/boot/STATIC.xml
+grep -n "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE" vibevm/vibespecs/boot/STATIC.xml
 # 948:##USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: …
 ```
 
@@ -505,13 +505,13 @@ grep -n "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE" spec/boot/STATIC.xml
 declares it exactly as the working ones do:
 
 ```bash
-grep -A3 '^\[\[skill\]\]' packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml
+grep -A3 '^\[\[skill\]\]' vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibe.toml
 # [[skill]]
 # name = "health-audit"
 # path = "spec/skills/health-audit"
 # description = "Run one periodic health audit: walk the category checklist, …"
 
-grep -n "rust-ai-native-sweep" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml
+grep -n "rust-ai-native-sweep" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml
 # 50:name = "rust-ai-native-sweep"          <- projected into all three homes
 ```
 
@@ -680,7 +680,7 @@ its aids, and at HEAD **most of them already run**:
 | **E1–E4** (4) | `cargo xtask specmap --check`, `cargo xtask conform check`, `cargo xtask health` → `discipline/health/latest.json` | **live and gated** — `conform check` is step 5 of `tools/self-check.sh:291` |
 | **B1–B2** (2) | `tools/self-check.sh` step 0b — the denominator guard that asserts every live package workspace is one the floor builds | **live and gated** (`self-check.sh:148`) |
 | **C1–C2** (2) | `vibe check --path . --quiet` (self-check step 4); the campaign's own ref-resolution instruments | **live** |
-| **C3** (1) | read `spec/WAL.xml` against `git log --oneline` | **free**, and already measured in [§3.4](#f-164-owes) |
+| **C3** (1) | read `vibevm/vibespecs/WAL.xml` against `git log --oneline` | **free**, and already measured in [§3.4](#f-164-owes) |
 | **A2, D1–D3** (4) | `grep` — run in this batch in under a minute: `#[ignore]` **2**, `#[allow` **87**, `TODO\|FIXME\|HACK\|XXX` **11**, over `crates/ xtask/` | **free** |
 | **A3** (1) | none — «pure judgment», the flow's own words, and the highest-value row | judgment |
 | **C4** (1) | live registry state vs the code's expectations | owner-court |
@@ -690,7 +690,7 @@ its aids, and at HEAD **most of them already run**:
 ```bash
 # A1 — no coverage tool anywhere in the host perimeter
 grep -rn "llvm-cov\|tarpaulin\|grcov" --include=*.sh --include=*.toml --include=*.yml --include=*.md . \
-  | grep -v "^./refs/\|^./vibedeps/\|^./.vibe/cache\|^./campaigns/.*/run/"
+  | grep -v "^./refs/\|^./vibevm/vibedeps/\|^./.vibe/cache\|^./campaigns/.*/run/"
 # ./campaigns/packages-2026-09/harvest/d2-wal-audit-manual-repairs.md:962  <- campaign-own, excluded
 
 # D4 — neither tool installed
@@ -1212,13 +1212,13 @@ seen.** The 2026-06-12 run *did* reconcile the checkpoint — that is finding
 `2026-06-12-12`, dispositioned `fixed`. At HEAD the reconciliation is gone:
 
 ```bash
-grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" spec/WAL.xml   # 0
-grep -n "^## Known issues" spec/WAL.xml                              # 205
+grep -c "2026-05-23-\|2026-06-12-\|AUD-00\|AUDIT.md" vibevm/vibespecs/WAL.xml   # 0
+grep -n "^## Known issues" vibevm/vibespecs/WAL.xml                              # 205
 ```
 
 **The WAL's «Known issues» section cites zero audit finding ids and never
 mentions `AUDIT.md`.** It carries the campaign's `F-` and `B-` findings only.
-And this figure was re-taken *after* `f1abad16` rewrote `spec/WAL.xml` wholesale
+And this figure was re-taken *after* `f1abad16` rewrote `vibevm/vibespecs/WAL.xml` wholesale
 (238+/332−) — so the checkpoint was rewritten on 2026-08-01 and the audit's 12
 `open` and 11 `filed` findings did not survive into it.
 
@@ -1237,11 +1237,11 @@ wrong about where to keep findings. What failed is the *reconciliation step*
 **(1) Adopt.** Sub-obligations 1 and 3 ride on claim 2's run —
 [§2.2](#f-141-walk-costed) — and cost nothing extra: a run that walks the
 checklist and carries forward *is* sub-obligations 1 and 3. Sub-obligation 4 is
-separable and cheap on its own: **one «known issues» bullet in `spec/WAL.xml`
+separable and cheap on its own: **one «known issues» bullet in `vibevm/vibespecs/WAL.xml`
 pointing at `AUDIT.md`'s open subset**, in the shape the flow prescribes («the
 checkpoint merely points at the active subset»). *Derivable artefact:* a
 `##WAL-KI-AUDIT` bullet alongside the existing `##WAL-KI-OPEN` /
-`##WAL-KI-CLOSED-THIS-ARC` / `##WAL-KI-BACKLOG` trio at `spec/WAL.xml:205-231`.
+`##WAL-KI-CLOSED-THIS-ARC` / `##WAL-KI-BACKLOG` trio at `vibevm/vibespecs/WAL.xml:205-231`.
 Because the WAL is rewritten each session, the durable form is the bullet's
 *place in the wind-down contract*, not its contents.
 
@@ -1261,7 +1261,7 @@ durable inventory tell the same story, so a session reading only the WAL is not
 misled about what is open.
 
 **(3) Defer.** The checkpoint and the inventory keep telling different stories.
-Concretely: a session that reads `spec/WAL.xml` today sees the campaign's open
+Concretely: a session that reads `vibevm/vibespecs/WAL.xml` today sees the campaign's open
 findings and **none of the audit's 12 `open` items**, with no signal that an
 audit inventory exists at all.
 
@@ -1439,7 +1439,7 @@ flow's own third blind spot, occurring inside the flow's own artefacts.
 
 ## §6 — F-311 · the README {#f-311}
 
-_1 routed anchor, in `packages/org.vibevm.world/health-audit/v0.1.0/README.md`.
+_1 routed anchor, in `vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/README.md`.
 Routed wave 2 (2026-07-29)._
 
 ### 6.1 `##A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE` {#f-311-cadence}

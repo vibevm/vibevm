@@ -359,8 +359,8 @@ fn package_src_converts_spec_homes_only_and_skips_vibedeps() {
     // A root WAL.md is a HOUSE convention, not a universal spec home —
     // the generic package verb must leave it alone (owner correction).
     fs::write(temp.path().join("WAL.md"), CANONICAL_MD).expect("write house working doc");
-    let spec = temp.path().join("spec");
-    fs::create_dir(&spec).expect("create spec");
+    let spec = temp.path().join(vibe_core::layout::current_specs_root());
+    fs::create_dir_all(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
     let dependency = temp.path().join(common::deps_root()).join("slot");
     fs::create_dir_all(&dependency).expect("create dependency slot");
@@ -420,8 +420,8 @@ fn spec_src_converts_only_the_package_spec_directory() {
     fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
     let readme = temp.path().join("README.md");
     fs::write(&readme, CANONICAL_MD).expect("write readme");
-    let spec = temp.path().join("spec");
-    fs::create_dir(&spec).expect("create spec");
+    let spec = temp.path().join(vibe_core::layout::current_specs_root());
+    fs::create_dir_all(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
 
     let output = vibe(&[
@@ -446,8 +446,8 @@ fn spec_src_converts_only_the_package_spec_directory() {
 fn spec_src_without_argument_finds_the_nearest_project_root() {
     let temp = tempfile::tempdir().expect("tempdir");
     fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
-    let spec = temp.path().join("spec");
-    fs::create_dir(&spec).expect("create spec");
+    let spec = temp.path().join(vibe_core::layout::current_specs_root());
+    fs::create_dir_all(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");
     let nested = temp.path().join("one").join("two");
     fs::create_dir_all(&nested).expect("create nested cwd");
@@ -463,7 +463,8 @@ fn spec_src_without_argument_finds_the_nearest_project_root() {
 fn equal_from_and_to_are_rejected_by_every_conversion_verb() {
     let temp = tempfile::tempdir().expect("tempdir");
     fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
-    fs::create_dir(temp.path().join("spec")).expect("create spec");
+    fs::create_dir_all(temp.path().join(vibe_core::layout::current_specs_root()))
+        .expect("create spec");
     let root = path_text(temp.path());
     let cases: &[&[&str]] = &[
         &[

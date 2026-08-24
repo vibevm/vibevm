@@ -11,7 +11,7 @@ baseline пустой → каждая находка считается нов�
 
 Слоты:
 
-- **S1 core** = `packages/org.vibevm.ai-native/core-ai-native/v0.8.0` (5 крейтов)
+- **S1 core** = `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0` (5 крейтов)
 - **S2 rust-lang** = `…/rust-ai-native-lang/v0.7.0` (7 крейтов)
 - **S3 ts-lang** = `…/typescript-ai-native-lang/v0.6.0` (8 крейтов)
 - **S4 go-lang** = `…/go-ai-native-lang/v0.1.0` (8 крейтов)

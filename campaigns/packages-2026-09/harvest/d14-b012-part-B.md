@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-01
 **HEAD:** `ed0abbab docs(campaign): волна 10 closes the D13 seal tail in the LOG`
-**Subject spec:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
+**Subject spec:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
 
 **Nature of this document.** Evidence only, for the owner's B-012 feasibility
 question ("can it be built"). No verdicts, no build/don't-build recommendation,
@@ -13,7 +13,7 @@ perimeter that produced it.
 widens it):
 
 - `crates/` (host crates)
-- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/` (engine crates)
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/` (engine crates)
 - `xtask/`
 - `tools/`
 - `schemas/`
@@ -66,7 +66,7 @@ signature is `fn run(&self, project_root: &Path, opts: &CheckOptions, report:
 index.
 
 **The other candidate home already runs.** The specmap driver
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/lib.rs:22`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/lib.rs:22`
 (`run_specmap`) builds the index and then runs `run_ratchet_gate` (`:64`), which
 already walks the built `Specmap` and emits per-symbol findings to stderr
 (`:74`–`:86`), blocking under `--check` (`:94`). The host reaches it through the
@@ -79,7 +79,7 @@ two-line shim `xtask/src/specmap.rs:11`–`:13`.
 — a `HashSet` where the lint wants a counting map.
 
 **Absence check.** `rg -n -i "multiplicity|edges_per_item|edge_count|fan.?out"`
-over `crates/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/
+over `crates/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/
 tools/ schemas/` returns **no traceability hit**: the only matches are
 `xtask/src/mirror.rs` (git mirror fan-out), `crates/vibe-settings/src/events/mod.rs:238`
 (event fan-out), `crates/vibe-resolver/src/lib.rs:213`, `features.rs:262`,
@@ -117,7 +117,7 @@ threshold field on `Config` (`…/src/config.rs`, the `specmap.toml` parser — 
 `run_ratchet_gate`. No schema change: the finding is computed at gate time, the
 same posture the orphan table already takes ("computed at gate time and
 deliberately not serialised", `ratchet.rs:22`–`:24`, echoed at `index.rs:11`).
-Edit propagation: authored copy under `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`,
+Edit propagation: authored copy under `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`,
 then `cargo xtask sync-engines` writes through the vendored slots
 (`xtask/src/sync_engines.rs:293`; the host builds the vendored
 `rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmap`, per
@@ -271,7 +271,7 @@ and hashing it with the existing `crate::content_hash` is a handful of lines in
     in the same commit as the code;
   - must go through the JTD codegen, and **that route is stale**:
     `xtask/src/codegen.rs:48`–`:55` routes the `specmap` schema's output to
-    `packages/org.vibevm.ai-native/rust-ai-native-lang/**v0.5.0**/crates/specmap-core/src/generated`
+    `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/**v0.5.0**/crates/specmap-core/src/generated`
     — a path that does not exist (the only slot under `rust-ai-native-lang/` is
     `v0.7.0`; `ls` of the v0.5.0 path fails). The same stale path is repeated
     for the drift check at `codegen.rs:215`. Meanwhile the engine's own header
@@ -284,7 +284,7 @@ and hashing it with the existing `crate::content_hash` is a handful of lines in
     generated module) before the field can land cleanly;
   - propagates through `cargo xtask sync-engines` (`xtask/src/sync_engines.rs:293`,
     manifest `sync-engines.toml`) to the vendored copies. Under
-    `packages/org.vibevm.ai-native/**` the specmap engine exists in **8** slots
+    `vibevm/vibepacks/org.vibevm.ai-native/**` the specmap engine exists in **8** slots
     (authored `core-ai-native/v0.8.0`, a legacy `core-ai-native/v0.7.0`, and
     vendored copies in `rust-ai-native-lang/v0.7.0`, `rust-ai-native-mcp/v0.7.0`,
     `typescript-ai-native-lang/v0.6.0`, `typescript-ai-native-mcp/v0.6.0`,
@@ -405,7 +405,7 @@ says `vibe explain --prose`. What ships is `trace explain --prose`:
 local ledger (LEDGER §6 query kind 2): template producer, epoch-keyed cache under
 `.ledger/`, provenance line on every render"), dispatched at `:335`–`:343` to
 `run_trace_explain`
-(`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:8`,
+(`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:8`,
 prose branch `:13`–`:27`). **`vibe explain` does not exist**: `rg "\bexplain\b"`
 over `crates/vibe-cli/src/cli/*.rs` and `crates/vibe-cli/src/main.rs` returns a
 single hit — `crates/vibe-cli/src/cli/agentic.rs:23`, which is PROP-018's
@@ -548,7 +548,7 @@ figure is a target with no enforcement."*
 ### 1. What exists today
 
 **Absence, with the perimeter named.** `rg -n "\b120\b"` over `crates/`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`, `xtask/`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`, `xtask/`,
 `tools/`, `schemas/` returns exactly three hits, none of them a rule:
 `…/core-ai-native-conform/src/rules/budget.rs:210` (a line number inside a
 doctest fixture), `crates/vibe-cli/src/commands/aiui/control.rs:46` (a default
@@ -630,22 +630,22 @@ can be rejected or re-run:
 | leaf units (no anchored heading nested inside) | 946 | **3** |
 
 Longest under the literal rule:
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root` — 4406 lines;
-`…:713 #log` — 3579; `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root`
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root` — 4406 lines;
+`…:713 #log` — 3579; `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1 #root`
 — 1858; `VIBEVM-SPEC.md:1 #root` — 1588. The three leaf offenders are
-`spec/modules/vibe-progress/OWNER-GUIDE.xml:1 #root` (176),
+`vibevm/vibespecs/modules/vibe-progress/OWNER-GUIDE.xml:1 #root` (176),
 `VIBEVM-SPEC.md:702 #manifest-schema-consumer-project-role` (129),
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:329 #redirect` (125).
+`vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml:329 #redirect` (125).
 
 **Freshness caveat on index-derived numbers** (measured while doing the above,
 recorded once and applying to every count in this document that comes from the
 committed artefact): for **599 of 5266** spec units the `line` recorded in
 `specmap.json` no longer lands on that unit's anchor in the working tree at HEAD
-— e.g. `spec/boot/00-core.xml` records `LAYER-HEAD` at line 34 where the tree now
-has `##VOID-FOLLOW-HEIRS`; concentrated in `spec/common/PROP-000.xml` (137),
-`spec/modules/vibe-progress/PROP-043-progress-markup.xml` (112),
-`spec/common/PROP-018-agentic-standalone-modes.xml` (92),
-`spec/modules/vibe-workspace/PROP-009-loading-model.xml` (91). The **code** side
+— e.g. `vibevm/vibespecs/boot/00-core.xml` records `LAYER-HEAD` at line 34 where the tree now
+has `##VOID-FOLLOW-HEIRS`; concentrated in `vibevm/vibespecs/common/PROP-000.xml` (137),
+`vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml` (112),
+`vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml` (92),
+`vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml` (91). The **code** side
 does not show this: 898 of 912 edges land on a line carrying `#[spec(`,
 `#[verifies(` or `scope!` (the 14 others are consistent with multi-line
 attributes). So the spec tree has moved since the index was last regenerated;
@@ -806,7 +806,7 @@ spec→rustdoc is built; rustdoc→explain is not.
 described: `schemas/specmap.jtd.json` → jtd-codegen → the checked-in generated
 module → `SCHEMA` bump `index.rs:29` → a full rewrite of all 898 `code_items` →
 `cargo xtask sync-engines` propagation to the eight
-`packages/org.vibevm.ai-native/**` slots — with the same obstacle that the
+`vibevm/vibepacks/org.vibevm.ai-native/**` slots — with the same obstacle that the
 codegen route is stale (`xtask/src/codegen.rs:50`–`:52` targets a
 `rust-ai-native-lang/v0.5.0` path that does not exist). Two size questions this
 one raises that B2(a) does not:
@@ -913,7 +913,7 @@ None`); `decides` returns zero hits across every crate."*
 
 **Absence of `decides`, with the perimeter.** `rg -n '"decides"|Decides|decides
 *='` over `crates/`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`, `xtask/`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`, `xtask/`,
 `tools/`, `schemas/` returns **zero** hits. (A looser `rg "\bdecides\b"` over the
 same perimeter returns 23 hits, all English prose inside doc comments — "the
 caller decides…", `crates/vibe-actions/src/gate.rs:12`,
@@ -978,7 +978,7 @@ to be a deliberate edit rather than a drift); add the wire variant
 (`rscan.rs:21`); add `verb_str` arms (`index.rs:31`, `explain.rs:12`); pick the
 `verb_key` slot (`index.rs:42`) and accept whatever edge reordering follows;
 regenerate the index; `cargo xtask sync-engines` to the eight
-`packages/org.vibevm.ai-native/**` slots (B2 §2). Mechanically this is the
+`vibevm/vibepacks/org.vibevm.ai-native/**` slots (B2 §2). Mechanically this is the
 best-understood change in this document — the enum is small, centralised, and
 every consumer is an exhaustive `match` the compiler will point at.
 

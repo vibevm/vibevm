@@ -15,8 +15,8 @@ fact. No design recommendations.
 ## Path convention
 
 Paths are worktree-relative on the non-vendored originals under
-`packages/org.vibevm.ai-native/`. The shared engine is
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` (the v0.8.0
+`vibevm/vibepacks/org.vibevm.ai-native/`. The shared engine is
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/` (the v0.8.0
 release is the one that carries `rules/go.rs`; v0.7.0 does not). Each
 language stack vendors a byte-identical copy of the engine under its own
 `crates/vendor/core-ai-native-conform/` — line numbers cited against
@@ -42,23 +42,23 @@ In the Go consumer demo (`research/go-demo`):
 
 The guide's own canonical example (the `— MUST` form):
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:201` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:201` —
   `var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud — MUST`
 
 Reinforced in the package boot and scaffold cards (prose, same idiom):
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.xml:32` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/boot/20-stack-go-ai-native-lang.xml:32` —
   "Every cell carries `var _ Seam = (*Impl)(nil)`."
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.xml:76` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/INDEX.xml:76` —
   "The loud-conformance assertion (`var _ Seam = (*Impl)(nil)`, guide §2) rides card".
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.xml:21` and `:44` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml:21` and `:44` —
   "Conformance assertion (`var _ Seam = (*Impl)(nil)` — structural typing made loud, guide §2)" / "Add the loud-conformance assertion `var _ Seam = (*Impl)(nil)` beside the impl."
 
 ### What the Go guide verbatim promises about the assertion and the gate
 
 The load-bearing promise (and its honest self-annotation) is one block:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:191-192` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:191-192` —
   `##CONFORMANCE-IS-MADE-LOUD`: "Conformance is made loud — every cell
   carries the compile-time assertion, and conform checks its presence
   (T-syn)" — then, in the same row: "*Specified, not built (→ B-030): the
@@ -71,20 +71,20 @@ So the guide PROMISES "conform checks its presence (T-syn)" and
 simultaneously annotates that promise as not-yet-built (pointing at
 B-030). The motivating gap is stated one section up:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:97-98` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:97-98` —
   `##GAP-CONFORMANCE-IS-SILENT`: "Interface conformance is silent.
   Structural satisfaction means a cell can drift off its seam without a
   compile error naming the seam. Conformance is made loud (§2)."
 
 And the envelope row names the property at the top of the guide:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:27-28` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:27-28` —
   `##ENVELOPE-LOUD-CONFORMANCE`: "loud interface conformance".
 
 The codemod that scaffolds a new cell emits the assertion as part of its
 checked skeleton:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:302-303` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:302-303` —
   "`go-ai-native codemod add-cell` emits a cell skeleton (package,
   conformance assertion, directive tags, registry arm, Example stub) as
   ONE checked operation."
@@ -96,9 +96,9 @@ test scaffolds that are NOT conformance assertions (they keep a symbol
 referenced from tests), so a syntactic scanner must be precise about the
 `= (*Type)(nil)` form:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:61` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:61` —
   `var _ = New // the constructor is the surface (GUIDE §2)`
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:63` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:63` —
   `var _ *{type_name} // keep the type name referenced from tests`
 
 ### The extractor's own fixtures do not carry the assertion
@@ -108,9 +108,9 @@ extractor's own test corpus — contain no `var _` assertion, so the
 pattern is unexercised by the corpus that would regression-test a new
 emit:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/clean/internal/cells/greet/greet.go:1-41` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/clean/internal/cells/greet/greet.go:1-41` —
   no `var _`; the only interface is a consumer-side narrow one (`type clock interface`, :11).
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/dirty/internal/cells/plan/plan.go:1-52` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/dirty/internal/cells/plan/plan.go:1-52` —
   no `var _`.
 
 ## Q2 — go-extract under the task: facts today, the var-_ skip, the ts_env_read wire, the Go analog, the minimal missing record
@@ -118,14 +118,14 @@ emit:
 ### Fact kinds go-extract emits today
 
 `extract.go` emits exactly two fact tags (the struct at
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:46-51`):
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:46-51`):
 
 - `go_unsafe` — `fact{Fact: "go_unsafe", Kind, Line}` at
   `extract.go:412`; `Kind` is one of the ban-census kinds
   (`init_decl`, `blank_import`, `ambient_call`, `naked_go`,
   `error_string_match`, `t_skip`, `reasonless_suppression`,
   `seam_error_missing_req` — per the engine docstring at
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:119-128`).
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:119-128`).
 - `item` — at `extract.go:431` (func/method), `:449` (type), `:467`
   (var/const); carries `Kind` ∈ {`func`,`method`,`type`,`var`,`const`},
   `Symbol`, `IsExported`, `HasDocExample`, and for `kind=type` a
@@ -138,7 +138,7 @@ There is no third tag.
 The `ValueSpec` (var/const) branch in `genItems` skips every name `_`
 with the comment that names the very pattern at issue:
 
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:461-463` —
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:461-463` —
   ```
   if name.Name == "_" {
       continue // conformance assertions et al.
@@ -158,35 +158,35 @@ The packet's template is the TS `ts_env_read` pathway. It exists
 end-to-end today and is the shape a Go conformance wire would copy:
 
 1. **Extract** — the TS extractor emits the fact:
-   `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:89` (type def `fact: "ts_env_read"`) and `:391` (the emit); exercised by the test at
+   `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/extract.ts:89` (type def `fact: "ts_env_read"`) and `:391` (the emit); exercised by the test at
    `tools/ts-extract/test/extract.test.ts:104-107`.
-2. **Bridge / parse** — the TS bridge has a `RawFact::TsEnvRead { source, line }` variant (`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs:94`) mapped to the engine fact at `:231`.
+2. **Bridge / parse** — the TS bridge has a `RawFact::TsEnvRead { source, line }` variant (`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs:94`) mapped to the engine fact at `:231`.
 3. **Fact** — engine `Fact::TsEnvRead { source, line, in_test }` at
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:146-150`.
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:146-150`.
 4. **Rule** — `TsFlagSites` consumes it: the `let Fact::TsEnvRead { .. } = fact else { continue }` match at
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:310`; the rule is mounted only when `[typescript] composition_root` is set.
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript.rs:310`; the rule is mounted only when `[typescript] composition_root` is set.
 
 The Go analog that already exists (the wire to model a Go conformance
 fact on) is `go_unsafe`:
 
 1. **Extract** — `extract.go:412` emits `go_unsafe`.
 2. **Bridge** — Go `RawFact::GoUnsafe { kind, line, reason }` at
-   `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:70-75`, mapped to the engine fact at `:260`.
+   `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:70-75`, mapped to the engine fact at `:260`.
 3. **Fact** — engine `Fact::GoUnsafe { kind, line, in_test, reason }` at
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:129-134`.
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:129-134`.
 4. **Rule** — `GoUnsafeInDomain` consumes it (`rules/go.rs`).
 
 **What is absent for a Go conformance wire (the gap):**
 
 - The engine `Fact` enum has no conformance-assertion variant — full
   enum enumerated at
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:25-151`;
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:25-151`;
   the variants are `Item`, `Import`, `Ctor`, `UnsafeUse`,
   `ErrorVariant`, `FileMetrics`, `UnwrapUse`, `EnvRead`, `TsUnsafe`,
   `GoUnsafe`, `TsEnvRead`. None carries a "type asserts it satisfies a
   seam" signal for any language.
 - The Go bridge `RawFact` enum has no such variant — full enum at
-  `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:69-96`;
+  `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:69-96`;
   variants are `GoUnsafe`, `Import`, `Item`, `FileMetrics`.
 - `extract.go:461-463` discards the assertion before emitting (above).
 
@@ -206,20 +206,20 @@ adding a variant bumps the frontend version and retires old cache slots
 
 ### What the Rust guide promises about registration / assertion / seams
 
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:51` —
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:51` —
   `##ONE-CELL-ONE-REGISTRATION-POINT`: "One cell, one registration point.
   Cells import seams + core only, never sibling cells (R-002)."
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:53` —
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:53` —
   `##OWNERSHIP-ALIGNS-WITH-FILE-BOUNDARIES`: "one cell = one file-set
   with a single registration point."
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:68` —
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:68` —
   `##SCAFFOLD-B-TYPED-BUILDERS`: "seam protocols are encoded in types,
   not docstrings; the wrong call fails `cargo check`, not a runtime
   assert (R3-008; 94% of compile errors are type-level)."
   This is the Rust answer to "conformance is made loud": the compiler is
   the assertion — a cell type that does not satisfy its seam trait fails
   `cargo check` at the use site.
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:69` —
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:69` —
   `##SCAFFOLD-C-RUNNABLE-CONTRACTS`: "every load-bearing invariant is
   witnessed by a runnable assertion or proof where it is relied upon."
 
@@ -234,22 +234,22 @@ a conform rule checks trait-satisfaction.
 ### What the Rust gate already checks, and what nobody checks
 
 The Rust roster is
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:53-93`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:53-93`
 (11 rules). The three the packet names:
 
 - `R-002` `CellIsolation` —
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:87-146`.
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:87-146`.
   It keys on `Fact::Import` (the import graph) and flags a cell module
   that imports a sibling cell module (`:108-141`). This enforces the
   STRUCTURE of the registration point (cells import seams + core only);
   it does NOT verify the cell type implements its seam.
 - `cell-has-oracle` `CellHasOracle` —
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:148-180`.
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:148-180`.
   It keys on `cell_types` (items with `#[cell(...)]` attrs, i.e.
   `Fact::Item`) and checks each is referenced from an integration test
   (`:177`). It does NOT verify seam-satisfaction.
 - `R-001` `FlagSites` —
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:26-75`.
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/structure.rs:26-75`.
   It keys on `Fact::Ctor` (`:49`) — construction sites — not seam
   satisfaction.
 
@@ -294,32 +294,32 @@ idiom exists in the host tree exactly once and is unrelated to cells.
 
 The TS "conformance made loud" is a suite of mechanisms, not one idiom:
 
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:130` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:130` —
   `##STRUCTURAL-TYPING-TRAP`: "TypeScript must recover [nominal safety]
   manually through branding … identifiers and other meaning-bearing
   primitives crossing a seam are branded
   (`type UserId = string & { readonly __brand: 'UserId' }`, or a
   branding helper) so the wrong same-shaped value fails `tsc`."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:137` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:137` —
   `##SCAFFOLD-B-TYPED-SURFACES`: "Branded types for nominal safety …
   `satisfies` for exhaustiveness; sealed unions … seam protocols are
   encoded in types, not docstrings (R3-008)."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:154` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:154` —
   `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED`: "Exhaustiveness over `E` is
   enforced by a `satisfies never` / `assertNever` check in the default
   branch."
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:175` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:175` —
   `##FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE`: the registry is "a
   branded or `as const` table, not stringly-typed ambient lookup" —
   built (B-039), demo at `research/ts-demo/src/main.ts`.
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233` —
   `##TYPE-LEVEL-TESTING-IS-TYPESCRIPT-UNIQUE`: "TypeScript can assert
   type relationships at compile time".
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:235` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:235` —
   `##TYPE-LEVEL-TEST-TOOLING`: "`expectTypeOf<X>().toEqualTypeOf<Y>()`
   (vitest), `tsd`'s `expectType`, and `@ts-expect-error` as a negative
   assertion".
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:237` —
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:237` —
   `##RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS`: "public
   generic/branded/union surfaces carry type-level tests asserting their
   key relationships; these run in the Class E loop (a type-level test
@@ -328,14 +328,14 @@ The TS "conformance made loud" is a suite of mechanisms, not one idiom:
 ### What the TS gate checks today
 
 The TS roster is exactly four rules at
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:50-69`:
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:50-69`:
 `TsUnsafeInDomain` (always), `TsCellIsolation` (conditional on
 `cells_dir`), `TsFlagSites` (conditional on `composition_root`), and
 `FileLength` (always). None checks branding presence,
 `satisfies`-exhaustiveness, or type-level-test presence.
 
 The TS extractor emits five fact kinds — full `RawFact` enum at
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs:67-99`:
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-extract-bridge/src/lib.rs:67-99`:
 `TsUnsafe`, `Import`, `Item`, `FileMetrics`, `TsEnvRead`. The `Item`
 fact (`:80-85`) carries no brand field at all (contrast the Go `Item`
 which carries `underlying` at `go-ai-native-extract-bridge/src/lib.rs:86-91`).
@@ -343,7 +343,7 @@ There is no fact for a branded type, a `satisfies` check, or a
 type-level test.
 
 The TS gate DOC is honest in a way the Go doc was not: a grep of
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/conform-frontend-typescript.xml`
 for `conformance`/`assert`/`brand`/`satisfies`/`type-level` returns only
 `:25` (bans-as-facts) and `:73`
 (`##NATIVE-TYPE-TOOLING-IS-REAL-TODAY`: "the native type tooling (the
@@ -391,9 +391,9 @@ checks none of them, and the extractor emits no fact for any:
 
 Go-native rule ids are kebab-case, language-prefixed:
 
-- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:72` —
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:72` —
   `"go-unsafe-in-domain"`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:232` —
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go.rs:232` —
   `"go-cell-isolation"`
 
 Shared/legacy engine ids mix legacy codes and kebab (`R-001`, `R-002`,
@@ -403,13 +403,13 @@ conformance rule would by this convention take a `go-*` kebab id.
 ### rules/go.rs shape and mounting
 
 A rule is a plain struct `impl Rule` (the trait at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53-57`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53-57`
 — methods `id`, `why`, `check` only). Go rules live in
 `rules/go.rs`, are re-exported at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:23`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:23`
 (`pub use go::{GoCellIsolation, GoUnsafeInDomain};`), and are mounted in
 `build_rules` at
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:51-60`:
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:51-60`:
 
 - `GoUnsafeInDomain` pushed unconditionally (`:53`),
 - `GoCellIsolation` pushed only when `config.go.cells_dir` is set
@@ -425,13 +425,13 @@ template for a rule that should stay off until its config knob exists
 ### Severity / advisory mechanics — there is no per-finding severity
 
 The engine has NO per-finding severity. The `Finding` struct at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27-36`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27-36`
 has fields `rule`, `file`, `line`, `message`, `why`, `fingerprint` — no
 `severity`, no `level`, no advisory flag. The `Rule` trait
 (`finding.rs:53-57`) has `id`/`why`/`check` — no severity method. A grep
 for `severity`/`advisory`/`level:`/`warning_only`/`non-block`/`soft_rule`
 over the engine `src/` returns one comment only:
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:350`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs:350`
 — "(nothing gated, everything advisory)" — which is about the
 gated/exempt lists, not a per-finding severity.
 
@@ -442,7 +442,7 @@ expressed through two mechanisms that DO exist, not through severity:
    when its config field is present (the `cells_dir` / `composition_root`
    pattern above), so a project without the idiom never runs the rule.
 2. **The ratchet baseline** —
-   `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:112-128`
+   `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:112-128`
    (`run_check`): `baseline::load` then `baseline::diff(&base, &findings)`
    splits findings into `new` (fingerprint NOT in baseline — these fail
    the gate; the `run_check` doc at `:109` says "any new finding fails")
@@ -450,7 +450,7 @@ expressed through two mechanisms that DO exist, not through severity:
    "prune it"). The baseline file is
    `conform-baseline.json` (`{"findings":[fingerprints],"schema":1}`,
    currently `findings: []`); its contract is stated at
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:11`
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:11`
    — "The file only shrinks" (the ratchet only tightens). So a new rule
    can land soft by writing its current findings into the baseline: the
    gate stays green, and the ratchet forbids regression while the

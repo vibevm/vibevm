@@ -63,9 +63,9 @@ def repo_root() -> Path:
 
 
 def zone_of(path: str) -> str:
-    if path.startswith("packages/org.vibevm.ai-native/"):
+    if path.startswith("vibevm/vibepacks/org.vibevm.ai-native/"):
         return "ai-native"
-    if path.startswith("packages/org.vibevm.world/"):
+    if path.startswith("vibevm/vibepacks/org.vibevm.world/"):
         return "world"
     return "host"
 

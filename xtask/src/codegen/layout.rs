@@ -28,7 +28,7 @@ use walkdir::WalkDir;
 /// xtask carries no vibe-core edge; the single home of the root names
 /// is `crates/vibe-core/src/layout.rs` (PROP-052 L2) — the R4 relayout
 /// sweep retires this duplication.
-const SPECMAP_ENGINE_SLOT: &str = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0";
+const SPECMAP_ENGINE_SLOT: &str = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0";
 
 /// The engine package's own `schemas/` — the second schema home the
 /// codegen scans besides the host `schemas/` at the repo root.

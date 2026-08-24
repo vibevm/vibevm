@@ -20,7 +20,7 @@
 //!   break an exact-key tie.
 //! - A [`Keymap`] holds the bindings; [`Keymap::resolve`] is the resolver.
 //!
-//! Spec: [PROP-039 §9](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#keymap).
+//! Spec: [PROP-039 §9](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#keymap).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#keymap");
 

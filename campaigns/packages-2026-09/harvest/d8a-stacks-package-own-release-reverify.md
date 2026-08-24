@@ -24,7 +24,7 @@ batch, plus three unrelated host commits).
 `git diff --name-only f2b11b0a 45cd30b0` touches
 `campaigns/…/harvest/d8b-…md`, `run/cache.json`, four host crates
 (`vibe-check`, `vibe-workspace`) and one `org.vibevm.world` protocol document —
-**no file under `packages/org.vibevm.ai-native/**`, no stack crate,
+**no file under `vibevm/vibepacks/org.vibevm.ai-native/**`, no stack crate,
 no `crates/vibe-cli/src/cli.rs`, no `spec/common/PROP-031`.** Every quotation,
 line number and count below therefore still holds at `45cd30b0`, and the eight
 neighbouring cache verdicts cited in this file were re-read there unchanged.
@@ -42,7 +42,7 @@ claim per obligation is part of the job below.
 
 **The standing perimeter.** Unless an entry narrows it, every search was run from
 the repository root over: `packages/**` **including
-`packages/org.vibevm.fractality/**`** (a second complete project that adopted
+`vibevm/vibepacks/org.vibevm.fractality/**`** (a second complete project that adopted
 this discipline — [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness)),
 `vibedeps/**`, `crates/**`, `xtask/**`, `tools/**`, `spec/**`, `discipline/**`,
 `terraform/**`, `research/**` (including `research/rust-demo`, `research/ts-demo`,
@@ -93,7 +93,7 @@ characterisation in the queue also holds.
 **Perimeter searched:** the standing perimeter for the *thing* rather than the
 string — every directory named `cards` anywhere in the tree
 (`find . -type d -name cards`, 30 hits), every `GUIDE-AI-NATIVE-*.md`
-(`find packages/org.vibevm.ai-native -name "GUIDE-AI-NATIVE-*.md"`), plus the
+(`find vibevm/vibepacks/org.vibevm.ai-native -name "GUIDE-AI-NATIVE-*.md"`), plus the
 **four boot lanes** a reader can stand in (the host, `research/rust-demo`,
 `research/ts-demo`, the `fractality` specspace) and the three packages' own
 `vibe.toml` manifests. §3.8 note: the decisive evidence is **entirely
@@ -106,7 +106,7 @@ TypeScript stack does not have.
 
 ```
 $ grep -n "GUIDE-AI-NATIVE\|cards/INDEX.md" \
-    packages/org.vibevm.ai-native/{go-ai-native-lang/v0.1.0,rust-ai-native-lang/v0.7.0,typescript-ai-native-lang/v0.6.0}/spec/boot/20-stack-*.md
+    vibevm/vibepacks/org.vibevm.ai-native/{go-ai-native-lang/v0.1.0,rust-ai-native-lang/v0.7.0,typescript-ai-native-lang/v0.6.0}/spec/boot/20-stack-*.md
 ```
 
 - go `20-stack-go-ai-native-lang.xml:5-6` —
@@ -127,15 +127,15 @@ The verdict states the targets «live under `spec/` in the package». Both halve
 tested by existence, in the package lane and in the installed lane:
 
 ```
-$ find packages/org.vibevm.ai-native -name "GUIDE-AI-NATIVE-*.md" -not -path "*/target/*"
-packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml
+$ find vibevm/vibepacks/org.vibevm.ai-native -name "GUIDE-AI-NATIVE-*.md" -not -path "*/target/*"
+vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml
+vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml
+vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml
 
-$ find packages/org.vibevm.ai-native -name "INDEX.md" -path "*cards*" -not -path "*/target/*"
-packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.xml
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.xml
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.xml
+$ find vibevm/vibepacks/org.vibevm.ai-native -name "INDEX.md" -path "*cards*" -not -path "*/target/*"
+vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/INDEX.xml
+vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/INDEX.xml
+vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/INDEX.xml
 ```
 
 The six bare addresses, tested as literal paths from each package's root:
@@ -172,24 +172,24 @@ is no lane in which the bare form resolves.
 ### From where the reader actually stands — both lanes, and the queue's characterisation
 
 The verdict's rule is `r-path-does-not-resolve`, so *where the reader stands*
-decides it. A boot snippet is not read in place: a consumer's `spec/boot/INDEX.md`
+decides it. A boot snippet is not read in place: a consumer's `vibevm/vibespecs/boot/INDEX.md`
 names it by full slot path, so the reader's cwd is the **consuming project root**
 and the file being read is inside the slot.
 
 ```
-$ grep -n "ai-native-lang" spec/boot/INDEX.md research/rust-demo/spec/boot/INDEX.md \
-      research/ts-demo/spec/boot/INDEX.md packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md
-spec/boot/INDEX.md:22:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
-spec/boot/INDEX.md:26:  path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
+$ grep -n "ai-native-lang" vibevm/vibespecs/boot/INDEX.md research/rust-demo/spec/boot/INDEX.md \
+      research/ts-demo/spec/boot/INDEX.md vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/boot/INDEX.md
+vibevm/vibespecs/boot/INDEX.md:22:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+vibevm/vibespecs/boot/INDEX.md:26:  path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
 research/rust-demo/…/INDEX.md:17:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 research/ts-demo/…/INDEX.md:17:  path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
 fractality/…/INDEX.md:21:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 ```
 
-(`research/go-demo` has no `spec/boot/INDEX.md` at all, which is exactly §3.8's
+(`research/go-demo` has no `vibevm/vibespecs/boot/INDEX.md` at all, which is exactly §3.8's
 picture of the Go stack and is recorded, not used.) The snippet body is **not**
-inlined into `spec/boot/STATIC.xml` —
-`grep -rn "GUIDE-AI-NATIVE\|cards/INDEX.md" spec/boot/` returns **no output** —
+inlined into `vibevm/vibespecs/boot/STATIC.xml` —
+`grep -rn "GUIDE-AI-NATIVE\|cards/INDEX.md" vibevm/vibespecs/boot/` returns **no output** —
 so the reader really is reading the file in the slot. From that slot root:
 
 ```
@@ -326,11 +326,11 @@ existence test:
 
 ```
 $ for p in go-ai-native-lang/v0.1.0 rust-ai-native-lang/v0.7.0 typescript-ai-native-lang/v0.6.0; do
-    f="packages/org.vibevm.ai-native/$p/README.md"
+    f="vibevm/vibepacks/org.vibevm.ai-native/$p/README.md"
     [ -e "$f" ] && echo "EXISTS  $f  ($(wc -c < "$f") bytes)" || echo "MISSING $f"; done
-EXISTS  packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md  (8060 bytes)
-EXISTS  packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md  (4925 bytes)
-MISSING packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/README.md
+EXISTS  vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md  (8060 bytes)
+EXISTS  vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md  (4925 bytes)
+MISSING vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/README.md
 ```
 
 ### The two falling anchors, each falsified by its own recorded evidence
@@ -361,9 +361,9 @@ above. The first half («no code, no boot snippet, no policy lives here») is tr
 of the aggregator's own tree and its own manifest:
 
 ```
-$ ls -a packages/org.vibevm.ai-native/go-ai-native/v0.1.0/
+$ ls -a vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v0.1.0/
 .  ..  LICENSE.xml  README.md  vibe.toml
-$ grep -c "boot_snippet\|\[\[binary\]\]" packages/org.vibevm.ai-native/go-ai-native/v0.1.0/vibe.toml
+$ grep -c "boot_snippet\|\[\[binary\]\]" vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v0.1.0/vibe.toml
 0
 ```
 
@@ -393,7 +393,7 @@ line**, because there is none to cite. The sentence's first target does not exis
 The absence, with its perimeter named:
 
 ```
-$ find packages/org.vibevm.ai-native -maxdepth 3 -name "README.md" -not -path "*/target/*"
+$ find vibevm/vibepacks/org.vibevm.ai-native -maxdepth 3 -name "README.md" -not -path "*/target/*"
 …/core-ai-native/v0.7.0/README.md      …/core-ai-native/v0.8.0/README.md
 …/go-ai-native-lang/v0.1.0/README.md   …/go-ai-native-mcp/v0.1.0/README.md
 …/go-ai-native/v0.1.0/README.md        …/rust-ai-native-lang/v0.7.0/README.md
@@ -403,7 +403,7 @@ $ find packages/org.vibevm.ai-native -maxdepth 3 -name "README.md" -not -path "*
 
 $ total=0; missing=0; for d in packages/*/*/v*/; do total=$((total+1));
     [ -e "$d/README.md" ] || { missing=$((missing+1)); echo "NO README: $d"; }; done
-NO README: packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/
+NO README: vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/
 packages scanned: 42 ; without README: 1
 ```
 
@@ -412,7 +412,7 @@ that does not is the one the sentence points at.** And it is not a deletion — 
 file has never existed:
 
 ```
-$ git log --oneline --all -- "packages/org.vibevm.ai-native/typescript-ai-native-lang/*/README.md"
+$ git log --oneline --all -- "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/*/README.md"
 (no output)
 ```
 
@@ -614,7 +614,7 @@ justified by a fact that is not about the line being changed.
 the Go copy of the same card gets it right:**
 
 ```
-$ grep -n "EVIDENCE-AND-TRANSFER-STRENGTH" packages/org.vibevm.ai-native/*/v*/spec/cards/scaffold-i-codemods.md
+$ grep -n "EVIDENCE-AND-TRANSFER-STRENGTH" vibevm/vibepacks/org.vibevm.ai-native/*/v*/spec/cards/scaffold-i-codemods.md
 go   :33  … + R2C-006 (edit size drives failure) + DR1-015 (constraints lift weak models). …
 rust :33  … + R2C-006 (edit size drives Rust failure) + DL1-015 (constraints lift weak models). …
 ts   :33  … + R2C-006 (edit size drives failure) + DL1-015 (constraints lift weak models). …
@@ -679,7 +679,7 @@ is shown.
 **Perimeter searched:** per stack, that stack's own `crates/`, `spec/`, `tools/`
 and manifests; plus, for the Rust anchor only (legitimate host evidence under
 §3.8, since VibeVM is a consumer of the Rust stack), the host's `vibe` CLI command
-enum and `spec/common/`. The `vibe` binary's own subcommand list is read as a
+enum and `vibevm/vibespecs/common/`. The `vibe` binary's own subcommand list is read as a
 statement about **the product every consumer runs**, not about this repository's
 adoption — but the TypeScript anchor below is decided **without it**, on the TS
 package's own tree alone, so nothing there depends on that reading.
@@ -811,7 +811,7 @@ card that says the command exists.
 
 **The decisive corroboration is host-side and legitimate for Rust under §3.8 —
 this repository's own spec had to disclaim the sentence.**
-`spec/common/PROP-031-algorithmic-refactoring.xml:21-22`:
+`vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml:21-22`:
 
 ```
 - ##BEACHHEAD-SCAFFOLD-I The beachhead exists. The AI-Native discipline already ships
@@ -838,7 +838,7 @@ Current text, `typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.m
 observable, so the ruling that voids `F-187` and `F-189` does not reach it:
 
 ```
-$ grep -rn "rename-seam\|rename_seam" packages/org.vibevm.ai-native/typescript-ai-native-lang/
+$ grep -rn "rename-seam\|rename_seam" vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/
 …/spec/cards/scaffold-i-codemods.md:19    ← the sentence itself, and nothing else
    (one hit in the entire package: no crate, no tool, no fixture, no test)
 
@@ -850,7 +850,7 @@ enum CodemodCmd {
 }
    — one variant, two flags, dispatched at main.rs:193-195. No rename verb.
 
-$ grep -rn "ts-morph" packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ \
+$ grep -rn "ts-morph" vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ \
      --include=*.json --include=*.ts --include=*.rs --include=*.toml
 (no output)
 ```
@@ -1360,7 +1360,7 @@ copy is wrong, or the reverse:
 4. **`typescript-ai-native-lang/v0.6.0` is the only one of the repository's 42
    shipped package versions with no `README.md`**, and the file has never existed
    in git history.
-5. **`spec/common/PROP-031-algorithmic-refactoring.xml:21` rests a host PROP's
+5. **`vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml:21` rests a host PROP's
    «the beachhead exists» on the card's `rename-seam` command**, then corrects
    itself one line down (`##BEACHHEAD-LIMITS`). The card's repair and the PROP's
    citation should move together.

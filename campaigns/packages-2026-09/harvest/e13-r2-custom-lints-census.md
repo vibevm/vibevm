@@ -4,9 +4,9 @@ Read-only census of the third structural-diagnostics channel promised by the
 Discipline guides (Scaffold F) but built for no language: **custom lints whose
 messages name the rule and the remedy**. Measurements only — no design
 recommendations. All paths are repo-relative; `vibedeps/**` (regenerated
-dependency mirrors) and the nested `packages/org.vibevm.fractality/**/vibedeps/**`
+dependency mirrors) and the nested `vibevm/vibepacks/org.vibevm.fractality/**/vibedeps/**`
 mirrors are excluded throughout — they duplicate the cited canonical source. The
-engine is `packages/org.vibevm.ai-native/core-ai-native/v0.8.0` unless a version
+engine is `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0` unless a version
 is stated. "Not found" is stated as an explicit fact with a count.
 
 The three structured-diagnostics channels the guides promise, and their state:
@@ -25,7 +25,7 @@ The three structured-diagnostics channels the guides promise, and their state:
 
 ### Rust — vehicle named: "custom clippy lints"
 
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:72`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:72`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -42,7 +42,7 @@ census below shows the channel is in fact unbuilt (Q3).
 
 ### TypeScript — vehicle named: "Custom @typescript-eslint rules"
 
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:141`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:141`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -57,7 +57,7 @@ token is `<uri>` here (a full URI), whereas the Rust guide writes `REQ-X`.
 
 ### Go — NO vehicle named; "custom checks" only
 
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:284`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:284`
 (`##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`), quoted in full:
 
 > **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
@@ -84,11 +84,11 @@ The grammar is `violates REQ <uri>: <why>; fix surface: <where>`. Authoritative
 sites, by reading the content:
 
 1. **Engine definition (the contract).**
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:33`
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:33`
    (doc grammar), `…/mod.rs:54` (the `format!` string), `…/mod.rs:66-73` (the
    `matches_req_grammar` acceptor). This is the single source of truth; see Q2.
 2. **The roster entry.**
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml:115-116`
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml:115-116`
    (`##FINDING-R3-011` — "Tool output is agent food: structured, requirement-citing
    diagnostics"). The superseded `core-ai-native/v0.7.0/spec/appendix/ATLAS.md`
    carries the same id; `core-ai-native/v0.7.0/…/rules/mod.rs` carries the older
@@ -122,7 +122,7 @@ are byte-identical sync mirrors of site 1, not independent definitions.
 
 The renderer lives in the engine, exactly where the packet guessed:
 
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:53-55`:
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:53-55`:
 
 ```rust
 pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {
@@ -182,7 +182,7 @@ citing `spec/discipline/README.md` for the URI convention).
 
 **Floor (`rust-ai-native floor`) — consumer clippy, `-D warnings`:**
 - The step dictionary `STEPS`:
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:36-44`
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:36-44`
   — `["fmt","test","clippy","conform","specmap","test-gate","fast-loop"]`.
 - The clippy step:
   `…/floor.rs:126-142` — `cargo clippy --workspace --all-targets --quiet -- -D warnings`, gated by `is_step_disabled("clippy", …)`.
@@ -210,7 +210,7 @@ citing `spec/discipline/README.md` for the URI convention).
 **Absence of any custom-Rust-lint machinery (whole tree minus `vibedeps/`):**
 - `dylint` — **0** in `.rs` and **0** in `.toml`. The 11 non-vendored mentions are
   all prose/state: `BACKLOG.md` (B-037 itself), `CONTINUE.md`, `TOOLING-MAP.md`,
-  `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, and campaign
+  `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, and campaign
   baseline/run-state/evidence JSON. No `[dependencies] dylint*` anywhere.
 - `declare_lint!` / `declare_tool_lint!` — **0** in source (the only string hit is
   inside the prior census `campaigns/.../harvest/d7d-stacks-sync-reverify.md:98`,
@@ -241,7 +241,7 @@ non-vendored tree (content grep returns no code hits; the only matches are the
 terraform doc, and the demo's package files).
 
 **The stack itself carries NO eslint dependency.** The stack's TS tooling
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/package.json:9-12`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/package.json:9-12`
 has `devDependencies` of **only** `typescript ^6.0.0` (no `eslint`, no
 `typescript-eslint`). Same for `tools/ts-oracle/package.json`. So the discipline
 ships no eslint config and no custom plugin; the consumer brings their own per
@@ -272,7 +272,7 @@ step failure** carrying the recipe `npm install -D eslint typescript-eslint`
 ## Q5 — Go today
 
 **Go floor** (`go-ai-native floor`) —
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs`.
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs`.
 Step dictionary `STEPS` (`floor.rs:28-36`):
 `["gofmt","vet","tests","staticcheck","conform","specmap","test-gate"]`. Steps and
 exact commands:
@@ -334,7 +334,7 @@ authored + a `vendor/` mirror dir):
   (`Cargo.toml:97-104`): `conform-core`, `rust-ai-native-conform-frontend`,
   `rust-ai-native-conform`, `rust-ai-native-cli`, `rust-ai-native-env-audit`,
   `specmap-core`, `rust-ai-native-specmap`, `specmark`, all pointing at
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/…`.
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/…`.
 - The package's OWN workspace:
   `rust-ai-native-lang/v0.7.0/Cargo.toml:9-23`, `[workspace] members` = the 7
   authored crates + the 4 vendored engine copies under `crates/vendor/`

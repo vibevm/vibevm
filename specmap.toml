@@ -18,7 +18,7 @@ namespace = "org.vibevm.core/vibevm"
 scan_roots = ["crates/*", "xtask"]
 
 # Markdown trees walked for anchored spec units (<root>/**/*.md).
-spec_roots = ["spec"]
+spec_roots = ["vibevm/vibespecs"]
 
 # Directories walked for JTD schemas (`<root>/**/*.jtd.json`), whose
 # `metadata.spec` block carries the same verb → URI tags a `#[spec]` attribute
@@ -60,9 +60,9 @@ schema_roots = ["schemas"]
 #                       address. Indexing it makes this project's index claim
 #                       572 units it neither authored nor can edit.
 #
-# `spec/boot/INDEX.md` is deliberately NOT here: it is a TOML manifest and
+# `vibevm/vibespecs/boot/INDEX.md` is deliberately NOT here: it is a TOML manifest and
 # mints no units, so an exclusion for it would be born stale.
-spec_exclude = ["spec/WAL.md", "spec/WAL.xml", "spec/boot/STATIC.md", "spec/boot/STATIC.xml"]
+spec_exclude = ["vibevm/vibespecs/WAL.md", "vibevm/vibespecs/WAL.xml", "vibevm/vibespecs/boot/STATIC.md", "vibevm/vibespecs/boot/STATIC.xml"]
 
 # Individual root-level spec documents scanned in addition to spec_roots — the
 # owner-frozen implementation spec lives at the repo root, outside any spec/
@@ -121,4 +121,4 @@ dispositioned = []
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]
 namespace = "core-ai-native"
-root = "vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec"
+root = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs"

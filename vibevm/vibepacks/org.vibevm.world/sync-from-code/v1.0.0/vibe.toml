@@ -1,0 +1,24 @@
+[package]
+name = "sync-from-code"
+group = "org.vibevm.world"
+kind = "flow"
+version = "1.0.0"
+epoch = 1
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Sync-from-Code protocol: reconcile specs with code when the code changed first"
+keywords = ["sync", "reconciliation", "spec-drift", "discipline"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/20-flow-sync-from-code.xml"
+
+category = "flow"
+
+[[boot_snippet.fragment]]
+source = "vibevm/vibespecs/boot/20a-wal-binding.xml"
+when = "installed:org.vibevm.world/wal"
+

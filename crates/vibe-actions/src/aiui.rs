@@ -15,7 +15,7 @@
 //! (§1 `#no-render-dep`, §11.2); a future in-process / JSON-RPC / MCP binding
 //! realises it (§11.3, DO18).
 //!
-//! Spec: [PROP-039 §11.3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#aiui).
+//! Spec: [PROP-039 §11.3](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#aiui).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#aiui");
 

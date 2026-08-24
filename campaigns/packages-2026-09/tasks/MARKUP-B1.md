@@ -3,7 +3,7 @@
 **Phase:** B (markup, facts pass). **Executor:** Opus, per package.
 **Reviewer:** Fable — reviews **every** diff and owns sense-preserving splits,
 anchor names and `audience` (owner ruling 2026-07-26, hybrid markup).
-**Corpus:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/`.
+**Corpus:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/`.
 
 ## Why this batch is not the whole package {#split}
 
@@ -526,7 +526,7 @@ ruling would need.
     **The control is internal and same-file, which is the strongest kind this
     campaign recognises.** `wal/…/spec/flows/wal/session-end-hook.md` keeps
     «**Scope of this document.** The procedure every session ends with: confirm a
-    good stopping state, rewrite `spec/WAL.xml`, overwrite `CONTINUE.md`, report.»
+    good stopping state, rewrite `vibevm/vibespecs/WAL.xml`, overwrite `CONTINUE.md`, report.»
     whole at four comma-separated steps behind a colon (line 5) — and splits
     «Emit a short end-of-session report in the chat:» into four bullets 120 lines
     later. One file, one author, one batch, opposite calls, and the difference is

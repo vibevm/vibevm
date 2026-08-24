@@ -29,8 +29,8 @@ source_ref = "v0.1.0"
 content_hash = "sha256:deadbeef"
 boot_snippet = "10-flow-wal.md"
 files_written = [
-    "spec/flows/wal/PROTOCOL.md",
-    "spec/boot/10-flow-wal.md",
+    "vibevm/vibespecs/flows/wal/PROTOCOL.md",
+    "vibevm/vibespecs/boot/10-flow-wal.md",
 ]
 features = ["default", "base-discipline"]
 describes = "pkg:cargo/sqlx@0.8.0"
@@ -40,12 +40,12 @@ language = "ru"
 path = "stack/rust"
 delivery = "lazy-push"
 files_written = [
-    "spec/flows/wal/PROTOCOL.md",
-    "spec/boot/10-flow-wal.md",
+    "vibevm/vibespecs/flows/wal/PROTOCOL.md",
+    "vibevm/vibespecs/boot/10-flow-wal.md",
 ]
 cache_files = [
-    "spec/flows/wal/PROTOCOL.md",
-    "spec/boot/10-flow-wal.md",
+    "vibevm/vibespecs/flows/wal/PROTOCOL.md",
+    "vibevm/vibespecs/boot/10-flow-wal.md",
 ]
 
 [[package.subskills_active]]
@@ -53,7 +53,7 @@ path = "sqlx/v08"
 delivery = "lazy-pull"
 describes = "pkg:cargo/sqlx@^0.8"
 cache_files = [
-    "spec/flows/wal/SQLX-NOTES.md",
+    "vibevm/vibespecs/flows/wal/SQLX-NOTES.md",
 ]
 "#;
 
@@ -123,12 +123,16 @@ fn project_with_specmap() -> (tempfile::TempDir, ServerContext) {
     let root = dir.path();
     std::fs::write(
         root.join("specmap.toml"),
-        "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+        format!(
+            "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"{}\"]\n",
+            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+        ),
     )
     .unwrap();
-    std::fs::create_dir_all(root.join("spec")).unwrap();
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).unwrap();
     std::fs::write(
-        root.join("spec/D.md"),
+        root.join(vibe_core::layout::current_specs_root())
+            .join("D.md"),
         "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
     )
     .unwrap();
@@ -356,10 +360,16 @@ fn query_package_cell_invalid_pkgref_errors() {
 #[test]
 fn read_subskill_cell_returns_paths_and_content() {
     let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let p = dir.path().join("spec/flows/wal/PROTOCOL.md");
+    let p = dir
+        .path()
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/wal/PROTOCOL.md");
     std::fs::create_dir_all(p.parent().unwrap()).unwrap();
     std::fs::write(&p, "Russian-localised PROTOCOL bytes here.").unwrap();
-    let b = dir.path().join("spec/boot/10-flow-wal.md");
+    let b = dir
+        .path()
+        .join(vibe_core::layout::current_specs_root())
+        .join("boot/10-flow-wal.md");
     std::fs::create_dir_all(b.parent().unwrap()).unwrap();
     std::fs::write(&b, "boot snippet bytes here.").unwrap();
 
@@ -403,7 +413,9 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
         .join("org.vibevm")
         .join("wal")
         .join("v0.1.0")
-        .join("subskills/sqlx/v08/spec/flows/wal");
+        .join("subskills/sqlx/v08")
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/wal");
     std::fs::create_dir_all(&cache_root).unwrap();
     std::fs::write(
         cache_root.join("SQLX-NOTES.md"),
@@ -424,8 +436,11 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
         .iter()
         .map(|p| p.as_str().unwrap())
         .collect();
-    assert!(written.contains(&"spec/flows/wal/SQLX-NOTES.md"));
-    let materialised = dir.path().join("spec/flows/wal/SQLX-NOTES.md");
+    assert!(written.contains(&"vibevm/vibespecs/flows/wal/SQLX-NOTES.md"));
+    let materialised = dir
+        .path()
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/wal/SQLX-NOTES.md");
     assert!(materialised.is_file());
     assert!(
         std::fs::read_to_string(&materialised)
@@ -454,10 +469,15 @@ fn materialise_subskill_cell_refuses_overwrite_without_force() {
         .join("org.vibevm")
         .join("wal")
         .join("v0.1.0")
-        .join("subskills/sqlx/v08/spec/flows/wal");
+        .join("subskills/sqlx/v08")
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/wal");
     std::fs::create_dir_all(&cache_root).unwrap();
     std::fs::write(cache_root.join("SQLX-NOTES.md"), "from-cache").unwrap();
-    let target_dir = dir.path().join("spec/flows/wal");
+    let target_dir = dir
+        .path()
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/wal");
     std::fs::create_dir_all(&target_dir).unwrap();
     std::fs::write(target_dir.join("SQLX-NOTES.md"), "user-edit").unwrap();
 

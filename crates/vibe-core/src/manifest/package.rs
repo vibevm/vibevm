@@ -10,7 +10,7 @@
 //!
 //! Schema: `VIBEVM-SPEC.md` §7.3. The capability-based dependency vocabulary
 //! (`[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` /
-//! `[conflicts]`) is defined in [PROP-002 §2.9](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#capability).
+//! `[conflicts]`) is defined in [PROP-002 §2.9](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#capability).
 //!
 //! `[requires.packages]` is a TOML table — each key a bare `<kind>:<name>`
 //! pkgref, each value either a version-constraint string (registry-resolved)

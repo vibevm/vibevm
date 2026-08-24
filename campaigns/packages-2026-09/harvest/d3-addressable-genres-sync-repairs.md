@@ -58,20 +58,20 @@ route.
 **Re-verification:**
 
 ```console
-$ for f in packages/org.vibevm.world/*/v0.1.0/spec/boot/*.md; do \
+$ for f in vibevm/vibepacks/org.vibevm.world/*/v0.1.0/spec/boot/*.md; do \
     w=$(wc -w < "$f"); echo "$w words ~$((w*4/3)) tok $f"; done | sort -rn | head -3
-565 words  ~753 tok  packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.xml
-506 words  ~674 tok  packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.xml
-499 words  ~665 tok  packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml
+565 words  ~753 tok  vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml
+506 words  ~674 tok  vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml
+499 words  ~665 tok  vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml
 
-$ w=$(wc -w < packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.xml); echo "$w words ~$((w*4/3)) tok"
+$ w=$(wc -w < vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml); echo "$w words ~$((w*4/3)) tok"
 360 words ~480 tok
 
-$ lane=$(cat spec/boot/STATIC.xml spec/boot/00-core.xml spec/boot/90-user.xml spec/boot/INDEX.md | wc -w)
+$ lane=$(cat vibevm/vibespecs/boot/STATIC.xml vibevm/vibespecs/boot/00-core.xml vibevm/vibespecs/boot/90-user.xml vibevm/vibespecs/boot/INDEX.md | wc -w)
 $ echo "boot lane words: $lane  ~tokens: $((lane*500/375))"
 boot lane words: 12102  ~tokens: 16136
 
-$ for f in spec/modules/*/*.md spec/common/*.md; do w=$(wc -w < "$f"); \
+$ for f in vibevm/vibespecs/modules/*/*.md vibevm/vibespecs/common/*.md; do w=$(wc -w < "$f"); \
     [ "$w" -gt 3750 ] && echo "$f"; done | wc -l
 9
 ```
@@ -80,8 +80,8 @@ $ for f in spec/modules/*/*.md spec/common/*.md; do w=$(wc -w < "$f"); \
 and common specs are over; the package's own boot snippet is **inside** the
 budget it sets.
 **Perimeter searched:** the whole boot lane a session loads unconditionally
-(`spec/boot/STATIC.xml` + `00-core.xml` + `90-user.xml` + `INDEX.md`), `spec/WAL.xml`,
-and `spec/modules/*/*.md` + `spec/common/*.md` for the 5 000-token ceiling —
+(`vibevm/vibespecs/boot/STATIC.xml` + `00-core.xml` + `90-user.xml` + `INDEX.md`), `vibevm/vibespecs/WAL.xml`,
+and `vibevm/vibespecs/modules/*/*.md` + `vibevm/vibespecs/common/*.md` for the 5 000-token ceiling —
 measured at the flow's own conversion (`##rule-of-thumb-500-tokens-is-a-page`:
 500 tokens ≈ 375 English words), not at chars/token.
 **What changed and why:** nothing. This is a budget with a stated remedy
@@ -89,7 +89,7 @@ measured at the flow's own conversion (`##rule-of-thumb-500-tokens-is-a-page`:
 split. Raising 500 to admit ~16 136 is the exact shape wave 2 reverted three
 times. The package obeys its own rule in its own tree — 480 tokens against its
 own 500 — so there is nothing here for the package to yield. Host obligation:
-the boot lane (~32× over), `spec/WAL.xml` and the nine oversized specs are over
+the boot lane (~32× over), `vibevm/vibespecs/WAL.xml` and the nine oversized specs are over
 budget and the split has never fired. Phase C's «9 of 47» reproduces as **9 of
 43** on today's tree — the numerator, which is what the verdict turns on, is
 exact.
@@ -123,9 +123,9 @@ ls: cannot access 'spec/BOOT.md': No such file or directory
 **Who falsifies it:** the host — it keeps three full-contract entry files and
 boots from a directory rather than a file.
 **Perimeter searched:** repo root (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`),
-`spec/` root for `BOOT.md`, and `spec/boot/**` for the actual lane. The host's
-entry point is the generated `spec/boot/INDEX.md` manifest plus
-`spec/boot/STATIC.xml`, not a single file.
+`spec/` root for `BOOT.md`, and `vibevm/vibespecs/boot/**` for the actual lane. The host's
+entry point is the generated `vibevm/vibespecs/boot/INDEX.md` manifest plus
+`vibevm/vibespecs/boot/STATIC.xml`, not a single file.
 **What changed and why:** nothing. Both halves are the host declining a `should`.
 The package is internally consistent about `spec/BOOT.md` — its own reference
 tree at `spec-tree-layout.xml:19` names the same file the rule points at, and
@@ -150,24 +150,24 @@ is a host defect with no registry row that I could find under
 **Re-verification:**
 
 ```console
-$ grep -h "^#" spec/boot/00-core.xml spec/boot/90-user.xml spec/boot/INDEX.md | grep -c "{#"
+$ grep -h "^#" vibevm/vibespecs/boot/00-core.xml vibevm/vibespecs/boot/90-user.xml vibevm/vibespecs/boot/INDEX.md | grep -c "{#"
 0
-$ grep -c "{#" packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.xml
+$ grep -c "{#" vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml
 7
 ```
 
-**Who falsifies it:** the host — its own `spec/boot/` and `spec/WAL.xml` headings
+**Who falsifies it:** the host — its own `vibevm/vibespecs/boot/` and `vibevm/vibespecs/WAL.xml` headings
 are unanchored; the package's boot snippet stating the rule is fully anchored.
-**Perimeter searched:** `spec/boot/00-core.xml`, `spec/boot/90-user.xml`,
-`spec/boot/INDEX.md` (host-authored boot lane; `STATIC.md` is generated from
+**Perimeter searched:** `vibevm/vibespecs/boot/00-core.xml`, `vibevm/vibespecs/boot/90-user.xml`,
+`vibevm/vibespecs/boot/INDEX.md` (host-authored boot lane; `STATIC.md` is generated from
 installed packages and is not host-authored), and the package's own
-`spec/boot/*.md`.
+`vibevm/vibespecs/boot/*.md`.
 **What changed and why:** nothing. The verdict is `DRIFT on coverage, confirmed
 on form` — 519 anchors, zero malformed — and the coverage gap is 125 host
 headings, all of them in host-authored files. There is no way to repair this in
 the package that does not amount to exempting the boot lane from
 addressability, which is the one place the flow most wants it. Host obligation:
-anchor the 23 headings in `spec/boot/` and the 8 in `spec/WAL.xml`.
+anchor the 23 headings in `vibevm/vibespecs/boot/` and the 8 in `vibevm/vibespecs/WAL.xml`.
 **New obligations noticed:** the WAL's Constraints section is the most normative
 content the sibling `flow:wal` names and cannot be cited at all today.
 
@@ -183,14 +183,14 @@ content the sibling `flow:wal` names and cannot be cited at all today.
 ```console
 $ ls spec/*PROTOCOL*.md
 ls: cannot access 'spec/*PROTOCOL*.md': No such file or directory
-$ ls packages/org.vibevm.world/*/v0.1.0/spec/flows/*/*PROTOCOL*.md | wc -l
+$ ls vibevm/vibepacks/org.vibevm.world/*/v0.1.0/spec/flows/*/*PROTOCOL*.md | wc -l
 18
 ```
 
 **Who falsifies it:** the host — it receives conflict and sync rules as installed
-flows under `spec/flows/<flow>/`, compiled into `spec/boot/STATIC.xml`.
-**Perimeter searched:** `spec/` root (glob `spec/*PROTOCOL*.md`), `spec/common/`,
-`spec/boot/**`, and `packages/org.vibevm.world/*/v0.1.0/spec/flows/*/`.
+flows under `spec/flows/<flow>/`, compiled into `vibevm/vibespecs/boot/STATIC.xml`.
+**Perimeter searched:** `spec/` root (glob `spec/*PROTOCOL*.md`), `vibevm/vibespecs/common/`,
+`vibevm/vibespecs/boot/**`, and `vibevm/vibepacks/org.vibevm.world/*/v0.1.0/spec/flows/*/`.
 **What changed and why:** nothing, and this was the closest call in the batch.
 The row is internally consistent with its own reference tree at
 `spec-tree-layout.xml:21`, so the package does not contradict itself. The
@@ -217,9 +217,9 @@ which names a single file for the same reason and meets the same directory.
 **Re-verification:**
 
 ```console
-$ grep -c "MUST" spec/design/structural-loader.xml
+$ grep -c "MUST" vibevm/vibespecs/design/structural-loader.xml
 2
-$ grep -n "idx-structural-loader" spec/design/README.md
+$ grep -n "idx-structural-loader" vibevm/vibespecs/design/README.md
 50:- ##idx-structural-loader [Structural loader](structural-loader.xml) — provisional loader instructions held for PROP-035; not yet wired into any live boot. @spec/hold
 ```
 
@@ -231,7 +231,7 @@ the imperative, which is the reverted shape exactly. `##GENRE-TYPING-REMOVES-ALL
 is the thesis those steps serve, and the verdict's own words are that «genre
 typing gave the host the vocabulary to SEE the failure and the file is still in
 it» — that is the host not applying the typing it has, not the typing failing.
-Host obligation: `spec/design/structural-loader.xml` is half requirement and half
+Host obligation: `vibevm/vibespecs/design/structural-loader.xml` is half requirement and half
 story and needs splitting along the binding line.
 **New obligations noticed — the README arithmetic, checked and left alone.** The
 brief named a route-(a) over-count in this package's own README. It is real and
@@ -239,12 +239,12 @@ it is measured:
 
 ```console
 $ grep -rh "This package ships \(three\|four\) pieces of content plus a boot snippet" \
-    packages/org.vibevm.world/*/v0.1.0/README.md | sort | uniq -c
+    vibevm/vibepacks/org.vibevm.world/*/v0.1.0/README.md | sort | uniq -c
       2 This package ships four pieces of content plus a boot snippet: @impl/done
      14 This package ships three pieces of content plus a boot snippet: @impl/done
-$ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/ | wc -l
+$ ls vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/ | wc -l
 3
-$ ls packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/*/ | wc -l
+$ ls vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/*/ | wc -l
 3
 ```
 
@@ -269,13 +269,13 @@ routes that way.
 **Re-verification:**
 
 ```console
-$ grep -rno "Consequence" spec/design/
-spec/design/loading-and-boot-model.xml:196:Consequence
-$ grep -o "Chosen:" spec/design/workspace-and-qualified-naming.xml | wc -l
+$ grep -rno "Consequence" vibevm/vibespecs/design/
+vibevm/vibespecs/design/loading-and-boot-model.xml:196:Consequence
+$ grep -o "Chosen:" vibevm/vibespecs/design/workspace-and-qualified-naming.xml | wc -l
 13
 ```
 
-_The single «Consequence» in `spec/design/` is the heading `## 7. Consequences
+_The single «Consequence» in `vibevm/vibespecs/design/` is the heading `## 7. Consequences
 and findings` at :196, covering a whole document — not a fork field. Phase C's
 verdict says 14 `Chosen:` bullets; the reproducible count is 13, which does not
 change the finding (13 forks in a one-field shape is the same defect) but is
@@ -288,8 +288,8 @@ rationale (scannable rather than buried in prose), and the host's forks are
 buried in prose — which is the failure the template names, not a counter-example
 to it. Widening the skeleton to admit «Options offered:» + «Resolution —» is a
 rule rewritten around a consumer's habit. Host obligation: 18 forks across
-`spec/design/loading-and-boot-model.xml` and
-`spec/design/workspace-and-qualified-naming.xml` carry no Rejected or Consequence
+`vibevm/vibespecs/design/loading-and-boot-model.xml` and
+`vibevm/vibespecs/design/workspace-and-qualified-naming.xml` carry no Rejected or Consequence
 lines.
 
 ---
@@ -304,25 +304,25 @@ lines.
 **Re-verification:**
 
 ```console
-$ ls spec/modules/*/PROP-*.md spec/common/PROP-*.md | wc -l
+$ ls vibevm/vibespecs/modules/*/PROP-*.md spec/common/PROP-*.md | wc -l
 42
-$ grep -rln "design-rationale" spec/modules/ spec/common/ | wc -l
+$ grep -rln "design-rationale" vibevm/vibespecs/modules/ vibevm/vibespecs/common/ | wc -l
 3
-$ grep -rln "design/" spec/modules/*/PROP-*.md spec/common/PROP-*.md | wc -l
+$ grep -rln "design/" vibevm/vibespecs/modules/*/PROP-*.md spec/common/PROP-*.md | wc -l
 9
-$ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/
+$ ls vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/
 SPEC-GENRES-PROTOCOL.xml
 design-docs.xml
 when-to-write-what.xml
-$ grep -rl "spec/design/" packages/org.vibevm.world/spec-genres/ | wc -l
+$ grep -rl "vibevm/vibespecs/design/" vibevm/vibepacks/org.vibevm.world/spec-genres/ | wc -l
 0
 ```
 
 **Who falsifies it:** the host — its own PROP-to-design-doc ratio, i.e. its
 authoring practice.
-**Perimeter searched:** `spec/modules/**/PROP-*.md`, `spec/common/PROP-*.md`
-(42 contracts), and `spec/design/**` for the linked side; then the whole of
-`packages/org.vibevm.world/spec-genres/v0.1.0/` for anything that could measure
+**Perimeter searched:** `vibevm/vibespecs/modules/**/PROP-*.md`, `spec/common/PROP-*.md`
+(42 contracts), and `vibevm/vibespecs/design/**` for the linked side; then the whole of
+`vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/` for anything that could measure
 the quantifier from inside the package — nothing does, it ships three flow docs,
 a boot snippet and a README, and no contracts or design docs at all. Note the
 verdict's «5 of 42» is not reproducible by one command: the strict
@@ -334,7 +334,7 @@ be re-judged. The sentence is descriptive rather than normative, which argues fo
 route (a) — but the only measurable population is the host's authoring practice,
 and my contract is that a package yields only where its own sentence is false
 about something inside its own tree. Nothing in
-`packages/org.vibevm.world/spec-genres/v0.1.0/` measures decisions against design
+`vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/` measures decisions against design
 docs. Recorded for the owner instead of guessed at.
 **New obligations noticed:** the same passage's routing table already says the
 long-form story goes in a design doc «if any»
@@ -353,30 +353,30 @@ internal tension is the evidence to cite, not the host's 12 %.
 **Re-verification:**
 
 ```console
-$ grep -rn "structural-loader" spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml BACKLOG.md
-spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:770:  design↔PROP backlinks hold 4/4 (structural-loader parked by its own
-$ grep -c "PROP-035" spec/design/structural-loader.xml
+$ grep -rn "structural-loader" vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml BACKLOG.md
+vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:770:  design↔PROP backlinks hold 4/4 (structural-loader parked by its own
+$ grep -c "PROP-035" vibevm/vibespecs/design/structural-loader.xml
 3
-$ grep -c "structural-loader" spec/modules/vibe-workspace/PROP-035-spec-compiler.xml
+$ grep -c "structural-loader" vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml
 0
 ```
 
 **Who falsifies it:** the host — its record classifies the instance as parked,
 where the flow classifies it as a defect.
-**Perimeter searched:** `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`
-and `BACKLOG.md` for a finding id (none in either), `spec/design/README.md` for
-the index entry, and `spec/modules/*/` + `spec/common/` for the contract.
+**Perimeter searched:** `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`
+and `BACKLOG.md` for a finding id (none in either), `vibevm/vibespecs/design/README.md` for
+the index entry, and `vibevm/vibespecs/modules/*/` + `vibevm/vibespecs/common/` for the contract.
 **Correction to the Phase C reason, and it matters:** the reason reads as though
 the doc is unlinked in both directions. It is not. `PROP-035-spec-compiler.xml`
-**exists** at `spec/modules/vibe-workspace/`, 37 KB, and
-`spec/design/structural-loader.xml` names it three times — its own status line
+**exists** at `vibevm/vibespecs/modules/vibe-workspace/`, 37 KB, and
+`vibevm/vibespecs/design/structural-loader.xml` names it three times — its own status line
 says «DESIGN — provisional (PROP-035 §13)». What is missing is only the return
 leg: PROP-035's `##related` header at :8 links
-`spec/design/loading-and-boot-model.xml` and never mentions `structural-loader`.
+`vibevm/vibespecs/design/loading-and-boot-model.xml` and never mentions `structural-loader`.
 So the instance is a **one-directional** link, not an unlinked doc.
 **What changed and why:** nothing, and I considered `RE-JUDGE: confirmed` here
 under §3.6 route (c) — the host *does* carry a marked exception
-(`spec/design/README.md:50` marks the doc `@spec/hold`, and the campaign log at
+(`vibevm/vibespecs/design/README.md:50` marks the doc `@spec/hold`, and the campaign log at
 :770 says it was «parked by its own» marker). I did not take it: route (c)
 requires the exception to be *written down as an exception to this rule*, and
 `@spec/hold` is a progress marker about a document's own readiness, not a ruling
@@ -387,7 +387,7 @@ anything in its own tree either way.
 host adopts verbatim as
 `SPEC-GENRES-PROTOCOL.xml#A-ONE-DIRECTIONAL-LINK-IS-A-LATENT-BREAK` (`confirmed`
 in Phase C on this same file). Host obligation: add the return leg to
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.xml`'s `##related` line — one
+`vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml`'s `##related` line — one
 link closes it. That is a cheaper and better-founded closure than either reading
 of F-335, and whichever wave re-judges this anchor should be told the contract
 half exists.
@@ -437,17 +437,17 @@ document's own definition, and no sync since has been run.
 `when-to-apply.xml#BOUNDARY-FLOW-ATOMIC-COMMITS`; **not edited**
 `when-to-apply.xml#BOUNDARY-VIBE-BUILD`
 **Files touched:**
-`packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.xml`
+`vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml`
 **Re-verification:**
 
 ```console
-$ grep -n "CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY" packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml
+$ grep -n "CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY" vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml
 26:##CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @impl/done
 
-$ ls -d packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/
-packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/
+$ ls -d vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/flows/conventional-commits/
+vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/flows/conventional-commits/
 
-$ diff <(git show HEAD:packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.xml | sort) && echo IDENTICAL
+$ diff <(git show HEAD:vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml | sort) && echo IDENTICAL
 IDENTICAL
 ```
 
@@ -551,18 +551,18 @@ commits must carry the affected anchor's `spec://` URI in the body.
 **Anchors:** 1 edited of 1 —
 `cognitive-load-split.xml#TEXT-THAT-WORKS-FOR-THE-AI-WORKS-FOR-THE-OTHER-TWO`
 **Files touched:**
-`packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.xml`
+`vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml`
 **Re-verification:**
 
 ```console
-$ grep -n "THE-REPORT-IS-FOR-THE-HUMAN\|they-serve-different-readers" packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.xml
+$ grep -n "THE-REPORT-IS-FOR-THE-HUMAN\|they-serve-different-readers" vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/flows/wal/session-end-hook.xml
 140:##THE-REPORT-IS-FOR-THE-HUMAN The report is for the human's quick scan. @impl/done
 145:##they-serve-different-readers They serve different readers. @impl/done
 
-$ grep -n "READ-THE-END-OF-SESSION-REPORT-EVERY-TIME" packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.xml
+$ grep -n "READ-THE-END-OF-SESSION-REPORT-EVERY-TIME" vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml
 67:##READ-THE-END-OF-SESSION-REPORT-EVERY-TIME It is structured input for the next decision
 
-$ diff <(git show HEAD:packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.xml | sort) && echo IDENTICAL
+$ diff <(git show HEAD:vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml | sort) && echo IDENTICAL
 IDENTICAL
 ```
 
@@ -593,17 +593,17 @@ sibling package is. Anchor set byte-identical to HEAD; no `../` link added.
 **Re-verification:**
 
 ```console
-$ wc -w spec/boot/STATIC.xml spec/boot/00-core.xml spec/boot/90-user.xml spec/WAL.xml
-  9860 spec/boot/STATIC.xml
-   827 spec/boot/00-core.xml
-  1282 spec/boot/90-user.xml
-  3296 spec/WAL.xml
+$ wc -w vibevm/vibespecs/boot/STATIC.xml vibevm/vibespecs/boot/00-core.xml vibevm/vibespecs/boot/90-user.xml vibevm/vibespecs/WAL.xml
+  9860 vibevm/vibespecs/boot/STATIC.xml
+   827 vibevm/vibespecs/boot/00-core.xml
+  1282 vibevm/vibespecs/boot/90-user.xml
+  3296 vibevm/vibespecs/WAL.xml
  15265 total
 ```
 
 _At the sibling flow's conversion (`500 tokens ≈ 375 English words`): the boot
 lane totals ~16 136 tokens against ~500 (the F-170 measurement, which adds
-`spec/boot/INDEX.md` to the four files above), and `spec/WAL.xml` is ~4 395
+`vibevm/vibespecs/boot/INDEX.md` to the four files above), and `vibevm/vibespecs/WAL.xml` is ~4 395
 against ~3 000. The overrun is **~32×** on boot, not the 45× the Phase C reason
 states — that reason counted at ~4 chars/token rather than the collection's own
 rule of thumb. Either figure falsifies the row; the direction is not in doubt._
@@ -611,7 +611,7 @@ rule of thumb. Either figure falsifies the row; the direction is not in doubt._
 **Who falsifies it:** the host — its boot lane, its checkpoint and nine of its
 module and common specs are over the budgets; the plane's membership and
 direction, which is the rest of the row, are exactly right at
-`spec/boot/00-core.xml:9-13`.
+`vibevm/vibespecs/boot/00-core.xml:9-13`.
 **Perimeter searched:** identical to F-170's — same three budgets, same tree.
 **What changed and why:** nothing, for F-170's reason and by the same rule. The
 row's own remedy — «split when over» — is the repair, and it belongs to the
@@ -630,23 +630,23 @@ three numbers in two packages with nothing forcing them to agree — a
 **Anchors:** 1 edited of 1 —
 `spec/boot/11-flow-wal-specspaces.md#READS-THE-SPECSPACES-OWN-BOOT-CONTRACT`
 **Files touched:**
-`packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.xml`
+`vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml`
 **Re-verification:**
 
 ```console
-$ grep -n "^- ##FIELD-" packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml
+$ grep -n "^- ##FIELD-" vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml
 60:- ##FIELD-DEFAULT **`default:`** (optional, above the table) — which target a **bare**
 66:- ##FIELD-NAME **name** — the word used in session phrases. Short, unique,
 68:- ##FIELD-ROOT **root** — the specspace root, relative to the host root. The
 70:- ##FIELD-WAL-AND-CONTINUE **wal**, **continue** — paths relative to root. Defaults are
 74:- ##FIELD-STATUS **status** — one line, refreshed at every specspace wind-down:
 
-$ sed -n '55,57p' packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml
+$ sed -n '55,57p' vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml
 | name | root | wal | continue | status |
 |---|---|---|---|---|
-| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — ignition PLANNED; next: Phase 0 |
+| fractality | vibevm/vibepacks/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — ignition PLANNED; next: Phase 0 |
 
-$ diff <(git show HEAD:packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.xml | sort) && echo IDENTICAL
+$ diff <(git show HEAD:vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml | grep -o '##[A-Za-z0-9-]*' | sort) <(grep -o '##[A-Za-z0-9-]*' vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml | sort) && echo IDENTICAL
 IDENTICAL
 ```
 

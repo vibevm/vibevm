@@ -12,7 +12,7 @@ language package. "Not found" is stated as an explicit fact with a count.
 
 ### Card schema (mandatory sections / fields)
 
-Source: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`.
+Source: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml`.
 A card has three bands; every field below is a load-bearing section. The
 authoring stub is `:65-94`.
 
@@ -159,12 +159,12 @@ verifies that a cited card or anchor exists.
 - `BACKLOG.md:888,892,893,898` — B-038 entry (R-060 = "тест-матрицы объявляются
   данными, никогда полный перебор 2^n").
 - `crates/vibe-cli/src/registry.rs:65` — `/// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.`
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:127`
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:127`
   — `##DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL *(R-060, retained.)* Declared test matrices, never \`2^n\`.`
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233`
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:233`
   — `##MATRIX-IS-AUTHORED-DATA … (R-060, projected).` (also `##TEST-MATRICES-ARE-DECLARED`
   and `##MATRIX-TOOLING` at `:231` region).
-- `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2669,4436`; `TOOLING-MAP.md:41`;
+- `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2669,4436`; `TOOLING-MAP.md:41`;
   `CONTINUE.md:57`; campaign harvest docs (`campaigns/packages-2026-09/harvest/d7d-stacks-sync-reverify.md:1135-1157,2307,2350`, `…/PHASE-D-HOST-OBLIGATIONS.md:317`).
 
 ### Card and checker absent (confirmed by grep)

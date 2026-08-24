@@ -1,10 +1,10 @@
 # vibevm — read this first
 
-Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (the generated static lane `spec/boot/STATIC.xml`/`STATIC.md` first and in full, then every file `spec/boot/INDEX.md` names), then `spec/WAL.xml`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
+Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the end of this file prescribes (the generated static lane `vibevm/vibespecs/boot/STATIC.xml` — or `STATIC.md` in a Markdown-lane project — first and in full, then every file `vibevm/vibespecs/boot/INDEX.md` names), then `vibevm/vibespecs/WAL.xml`, then any relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/` for the task at hand. Only after that, start work.
 
-The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from the generated static lane in `spec/boot/`. The rules live in that static lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.xml#commits).
+The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from the generated static lane in `vibevm/vibespecs/boot/`. The rules live in that static lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](vibevm/vibespecs/common/PROP-000.xml#commits).
 
-Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.xml#commits).
+Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](vibevm/vibespecs/common/PROP-000.xml#commits).
 
 ## Delegation-first — spend Claude on judgment, run execution on fractality
 
@@ -15,15 +15,15 @@ What follows is **only** vibevm's operational specifics on that directive — th
 **Running fractality here.** The first-level usage lives in the package; the
 verified operating facts (profiles, tokens, packet schema, build state) are the
 ledger below. The entry points between them: the launcher is
-`packages/org.vibevm.fractality/fractality.ps1` (PowerShell) / `fractality.sh`
+`vibevm/vibepacks/org.vibevm.fractality/fractality.ps1` (PowerShell) / `fractality.sh`
 (Bash), built once via `cargo build -p fractality-cli` from
-`packages/org.vibevm.fractality/fractality/v1.0.0/` against the global
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/` against the global
 `~/.fractality` home. Drive it — `./fractality.ps1 run --packet <task.toml>`
 (sync) or `spawn … ; wait <id>` (async); free `route` / `gate` helpers (no
 daemon, no spend); no-packet interim route
 `opencode run -m zai-coding-plan/glm-5.2 "<task>"`. RLM's need-gate is
 `fractality gate …`; its recursive-descent machinery is
-`packages/org.vibevm.fractality/fractality/v1.0.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml`
 (Campaign 3 Stage B, maturing). On Claude Code, `ultracode` / the Workflow tool
 cannot spawn GLM workers directly, so a swarm under them still routes through
 fractality.
@@ -32,7 +32,7 @@ fractality.
 
 *(The fractality workspace runs the strong, mechanized form of this — its
 ⛔ DELEGATION LAW + live-observation protocol in
-`packages/org.vibevm.fractality/CLAUDE.md`. The delegation-first package above is
+`vibevm/vibepacks/org.vibevm.fractality/CLAUDE.md`. The delegation-first package above is
 the general form for all vibevm sessions; a workspace session follows its own contract.)*
 
 ### Operating facts — the in-place fractality ledger (owner-authorised, keep current)
@@ -58,7 +58,7 @@ Keep it current-state; prune stale lines.
   default failure mode. Launcher verified live 2026-07-15.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
-  `packages/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;
+  `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;
   global home `~/.fractality`. Binaries verified built 2026-07-12.
 - **Daemon:** `mc start` is idempotent; read-verbs auto-start it
   (`connect_or_start`); one daemon already runs live on the global home
@@ -86,7 +86,7 @@ Keep it current-state; prune stale lines.
 - **Packets** (TOML, schema 1): `[task]` goal/acceptance,
   `[workspace] mode = "worktree" | "dir"` (worktree default → `repo`/`base`,
   deliverable branch), `[output]`, `[budget]`, `[routing]` profile/model.
-  Golden: `…/fractality/v1.0.0/spec/examples/hello-glm.toml`. Workers **cannot
+  Golden: `…/fractality/v1.0.0/vibevm/vibespecs/examples/hello-glm.toml`. Workers **cannot
   run git** — the boss commits/merges the `fractality/<id>` branch.
 - **Enable RLM (worker recursion):** profile `allow_tools = ["Bash"]` (worker
   may itself call `fractality spawn`) and/or `ask_boss = true` — both off by
@@ -95,7 +95,7 @@ Keep it current-state; prune stale lines.
   MAX_PATH on deep `vibedeps/` paths → provisioning uses
   `-c core.longpaths=true`; only a deep real repo catches it.
 - **Filing fractality bugs:** operational / behavioural bugs found while running
-  fractality go to `packages/org.vibevm.fractality/plans/external/E-BUG-NNN.md`
+  fractality go to `vibevm/vibepacks/org.vibevm.fractality/plans/external/E-BUG-NNN.md`
   (stable id in the filename), in the **E-BUG format** — *what happened · what I
   wanted · what I got · why they differ · ideas on the cause · ideas on the fix ·
   workaround · references* — worked during fractality's own development. First:
@@ -125,7 +125,7 @@ Keep it current-state; prune stale lines.
   fmt + 2 behavioural edge cases — exactly the "boss verifies + finishes the
   tail" split.
 - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The
-  canonical `packages/org.vibevm.*/**` (redbook family, discipline stack,
+  canonical `vibevm/vibepacks/org.vibevm.*/**` (redbook family, discipline stack,
   fractality, delegation-rules, wal-specspaces) were relicensed by MT-05 firing #2
   (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed
   2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
@@ -134,7 +134,7 @@ Keep it current-state; prune stale lines.
   (regenerated dep copies), `fixtures/**` + `crates/**` test data (tests assert on
   `"EULA"`), the `licensing` package (legitimate eula-template), and
   `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
-  `…/fractality/v1.0.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
+  `…/fractality/v1.0.0/vibevm/vibespecs/manual-tests/MT-05-dogfood-relicense.xml`.
 
 ## Режим взаимодействия — владельческий переключатель `AGENT-MODE.toml`
 
@@ -151,21 +151,21 @@ Keep it current-state; prune stale lines.
 всегда, в любом режиме. Субагенты (claudez / codexrunner / будущие) от
 переключателя не зависят: они ВСЕГДА в субагентском режиме — экранный текст
 воркера не читается никем, каждый пакет несёт обязательную клаузу
-`##subagent-quiet-clause` из `SUBAGENT-LAUNCHERS.md`.
+`##subagent-quiet-clause` из `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`.
 
 ## Specspaces — nested projects with their own WAL
 
-This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`spec/boot/11-flow-wal-specspaces.md` in that package) is compiled into the generated static boot lane in `spec/boot/`, and the full protocol is `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` inside that package. This section is the signpost; two rules bind regardless:
+This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`vibevm/vibespecs/boot/11-flow-wal-specspaces.xml` in that package) is compiled into the generated static boot lane in `vibevm/vibespecs/boot/`, and the full protocol is `vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml` inside that package. This section is the signpost; two rules bind regardless:
 
-- **Target resolution.** A **bare** session phrase (`восстанови сессию` / `RESUME SESSION` with no name) targets the `default:` declared in `SPECSPACES.md` if one is set, and otherwise **this host project** — never a specspace by accident. Name a specspace (`восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality`) to target it; an explicit name or directory always overrides the default. Registered today: `fractality` (`packages/org.vibevm.fractality/`).
-- **Boot scoping.** A specspace session reads the host's Rules 1–4 above (repo-wide, they bind every commit) plus the specspace's own boot contract → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read the host `spec/boot/`, `spec/WAL.xml`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first. A specspace wind-down refreshes that specspace's one-line status in `SPECSPACES.md`; the host WAL is updated only if host files changed in the same session.
+- **Target resolution.** A **bare** session phrase (`восстанови сессию` / `RESUME SESSION` with no name) targets the `default:` declared in `SPECSPACES.md` if one is set, and otherwise **this host project** — never a specspace by accident. Name a specspace (`восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality`) to target it; an explicit name or directory always overrides the default. Registered today: `fractality` (`vibevm/vibepacks/org.vibevm.fractality/`).
+- **Boot scoping.** A specspace session reads the host's Rules 1–4 above (repo-wide, they bind every commit) plus the specspace's own boot contract → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read the host `vibevm/vibespecs/boot/`, `vibevm/vibespecs/WAL.xml`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first. A specspace wind-down refreshes that specspace's one-line status in `SPECSPACES.md`; the host WAL is updated only if host files changed in the same session.
 
 ## Memory discipline: project facts stay in the project
 
 Facts about *this project* — its design, conventions, decisions, milestones, open questions, owner preferences that govern technology choices — live **inside this repository**. The canonical homes are:
 
 - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).
-- `MEMORY.md` at repo root (currently a pointer to [`spec/boot/90-user.xml`](spec/boot/90-user.xml), the user-owned boot snippet).
+- `MEMORY.md` at repo root (currently a pointer to [`vibevm/vibespecs/boot/90-user.xml`](vibevm/vibespecs/boot/90-user.xml), the user-owned boot snippet).
 - `TASKS.md` at repo root — the current work-slice's checklist, each item a
   commit waiting to be made. **Present since 2026-04; the parenthetical here
   that said otherwise stood for three months.**
@@ -173,7 +173,7 @@ Facts about *this project* — its design, conventions, decisions, milestones, o
   not act on, severity-triaged P1/P2/P3, drained by the next wave. The opposite
   genre to `TASKS.md`: nobody is working on these yet, and they are kept so the
   decision to start can be taken deliberately (owner directive 2026-07-26).
-- Authoritatively, the `spec/**/*.md` tree — PROP / FEAT documents, `spec/WAL.xml`, `spec/boot/*`.
+- Authoritatively, the `vibevm/vibespecs/**` tree — PROP / FEAT documents, `vibevm/vibespecs/WAL.xml`, `vibevm/vibespecs/boot/*`.
 
 Project facts do **not** belong in the running harness's global per-user auto-memory (whatever tool-specific path that happens to be). A teammate who clones the repo will never see global user-memory, and anything they need to know about the project must live in the repo.
 
@@ -204,12 +204,12 @@ When the user issues any of the trigger phrases below, treat it as a structured 
    - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.
    - Quick-start commands for the workspace.
    - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.
-2. **Rewrite `spec/WAL.xml` wholesale** to the current checkpoint — rewrite, not append and not a section-by-section refresh: the WAL reflects only the *current* state (date line, current phase, next, known issues, constraints, the session's new findings). History lives in `git log` and milestone commits, never accumulated in the checkpoint.
-3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.xml`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.
-4. **Roll out via `cargo xtask mirror`** — the standard rollout ([`spec/boot/90-user.xml`](spec/boot/90-user.xml) `##CMD-MIRROR`, [PROP-016](spec/common/PROP-016-source-mirrors.xml) `##CMD-MIRROR`): pushes `main` + tags to every mirror, fast-forward-only, never `--force`; routine per Rule 4, since the user invoked the wind-down explicitly. A bare `git push origin main` reaches one host and leaves the other mirrors behind — use it only as the fallback when the fan-out itself is unavailable. (If the fan-out reports drift, would be non-fast-forward, or is otherwise risky, stop and ask first per Rule 4's escape hatch.)
+2. **Rewrite `vibevm/vibespecs/WAL.xml` wholesale** to the current checkpoint — rewrite, not append and not a section-by-section refresh: the WAL reflects only the *current* state (date line, current phase, next, known issues, constraints, the session's new findings). History lives in `git log` and milestone commits, never accumulated in the checkpoint.
+3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `vibevm/vibespecs/WAL.xml`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.
+4. **Roll out via `cargo xtask mirror`** — the standard rollout ([`vibevm/vibespecs/boot/90-user.xml`](vibevm/vibespecs/boot/90-user.xml) `##CMD-MIRROR`, [PROP-016](vibevm/vibespecs/common/PROP-016-source-mirrors.xml) `##CMD-MIRROR`): pushes `main` + tags to every mirror, fast-forward-only, never `--force`; routine per Rule 4, since the user invoked the wind-down explicitly. A bare `git push origin main` reaches one host and leaves the other mirrors behind — use it only as the fallback when the fan-out itself is unavailable. (If the fan-out reports drift, would be non-fast-forward, or is otherwise risky, stop and ask first per Rule 4's escape hatch.)
 5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.
 
-The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.xml` with no degradation. Treat it as a hard contract, not a courtesy.
+The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `vibevm/vibespecs/WAL.xml` with no degradation. Treat it as a hard contract, not a courtesy.
 
 ## Session-resume command — `ВОССТАНОВИ СЕССИЮ` / `RESUME SESSION`
 
@@ -220,7 +220,7 @@ When the user issues a resume trigger phrase, the job is to **restore context an
 
 **Required behaviour** when a resume phrase fires:
 
-1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.xml`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).
+1. Run the full boot sequence (this file → `vibevm/vibespecs/boot/INDEX.md` and its files → `vibevm/vibespecs/WAL.xml`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).
 2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, the **judging debt** while a campaign is live (`python campaigns/<zone>/tasks/judging-debt.py` — unjudged facts, orphaned verdicts, stale files; reporting it is not paying it, and its priority is the owner's), and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).
 3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any "resume work at …" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.
 
@@ -234,9 +234,9 @@ Rationale: the resume boundary exists so the owner can inspect the restored stat
 This project's boot sequence is computed by vibe (the PROP-009 loading
 model). To begin a session, read these files in order:
 
-1. `spec/boot/STATIC.xml` — if it exists. The static (priority) lane: read it
+1. `vibevm/vibespecs/boot/STATIC.xml` — if it exists. The static (priority) lane: read it
    first and in full.
-2. `spec/boot/INDEX.md` — a generated TOML manifest. Read every file named
+2. `vibevm/vibespecs/boot/INDEX.md` — a generated TOML manifest. Read every file named
    by its `[[entry]]` tables, in the listed order. A `kind = "static"`
    entry is read directly; a `kind = "dynamic"` entry is an INCLUDE
    resolved at boot, and one carrying a `when` condition is read only when

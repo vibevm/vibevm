@@ -1,9 +1,9 @@
 # D6d — four small `world` packages: seven claimed absences, re-verified before demotion
 
-_Worked 2026-07-29. Subjects: `packages/org.vibevm.world/secrets-hygiene/v0.1.0/`,
-`packages/org.vibevm.world/addressable-specs/v0.1.0/`,
-`packages/org.vibevm.world/qualified-naming/v0.1.0/`,
-`packages/org.vibevm.world/tool-design-lessons/v0.1.0/`. Seven obligations,
+_Worked 2026-07-29. Subjects: `vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/`. Seven obligations,
 all `build-or-demote`, 8 drift verdicts. Every one asserts that some mechanism,
 checker, artefact or record **does not exist**._
 
@@ -86,7 +86,7 @@ verdict states:**
 ```console
 $ grep -rn -E "set_permissions|PermissionsExt|from_mode|0o600|0o700|icacls|Set-Acl|SetNamedSecurityInfo|DACL|windows_acl|umask|attrib \+" \
     crates xtask tools spec discipline terraform schemas fixtures docs manual-tests \
-    packages/org.vibevm.world packages/org.vibevm.ai-native \
+    vibevm/vibepacks/org.vibevm.world vibevm/vibepacks/org.vibevm.ai-native \
     --include='*.rs' --include='*.toml' --include='*.json' --include='*.sh' --include='*.ps1' \
     --include='*.md' --include='*.go' --include='*.ts' --include='*.py' --include='*.yml'
 crates/vibe-cli/src/commands/vvm/env.rs:143:    use std::os::unix::fs::PermissionsExt;
@@ -102,7 +102,7 @@ One implementation of the pattern does ship, in a package's own crate, and it is
 worth naming because it is the shape a builder would copy:
 
 ```console
-$ sed -n '52,67p' packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-mc-client/src/lock.rs
+$ sed -n '52,67p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-mc-client/src/lock.rs
     /// Writes the lockfile. On Unix the file is chmod 0600; on Windows the
     /// user-profile ACL is the boundary for v0.1 (hardening: DEF-10).
     pub fn write(&self, home: &Utf8Path) -> Result<(), String> {
@@ -126,7 +126,7 @@ no writer anywhere:
 
 ```console
 $ grep -rn -E "write.*publish\.token|publish\.token.*write|fs::write.*token" \
-    crates xtask tools packages/org.vibevm.world packages/org.vibevm.ai-native --include='*.rs'
+    crates xtask tools vibevm/vibepacks/org.vibevm.world vibevm/vibepacks/org.vibevm.ai-native --include='*.rs'
 crates/vibe-publish/src/lib.rs:142:  Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibe/git.publish.token`. \
 crates/vibe-publish/src/lib.rs:144:  fix: export `VIBEVM_PUBLISH_TOKEN` or write `~/.vibe/<host-prefix>.publish.token`)"
 ```
@@ -145,14 +145,14 @@ RUNTIME-GUIDE.md:53:**Token files are surface secrets** — set chmod 600 (POSIX
   your user (Windows), never commit, never paste into chat / logs / screenshots /
   video. `vibe` redacts the value at every level (CLI output, JSON event stream,
   error messages); the operator must extend the same discipline. See
-  [PROP-000 §20](spec/common/PROP-000.xml#token-secrecy).
+  [PROP-000 §20](vibevm/vibespecs/common/PROP-000.xml#token-secrecy).
 DEV-GUIDE.md:47:- chmod 600 / Windows ACL-restricted to your user.
 ```
 
 `RUNTIME-GUIDE.md:53` states the rule in the right idiom for each platform and
 says outright that **«the operator must extend the same discipline»**. The
 consumer therefore *accepted* this rule; it did not reject it, and it did not
-route it to code. `spec/common/PROP-000.xml:303`'s «chmod-protected» is the same
+route it to code. `vibevm/vibespecs/common/PROP-000.xml:303`'s «chmod-protected» is the same
 rule stated in the POSIX idiom only — a host-side wording defect on a
 Windows-primary box, not a package defect.
 
@@ -267,7 +267,7 @@ tooling handles. That is a live exposure, not a documentation defect, and it
 belongs in front of the owner ahead of any verdict bookkeeping. The rule the
 package states is the rule that would have prevented it.
 
-**New obligations noticed:** (1) `spec/common/PROP-000.xml:303`'s
+**New obligations noticed:** (1) `vibevm/vibespecs/common/PROP-000.xml:303`'s
 `##TS-NEVER-PERSISTED` says «per-user, chmod-protected» — a POSIX-only idiom for
 a property that on this platform is an ACL, while the consumer's own
 `RUNTIME-GUIDE.md:53` already states it correctly in both. A host-side
@@ -289,7 +289,7 @@ vibevm can do without owning the file.
 — corrected, marker deliberately **kept** at `@impl/done`. Verified to be a real
 definition at that file's line 221, not a citation.
 **Files touched:**
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml`
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml`
 **Perimeter searched:** the standing perimeter above, for `Implements: spec://`
 · `^Test:` · `^Tests:` · `^Verified-by:` · `^Verifies:` · `#[spec(` ·
 `#[verifies(` · `#[specmark::spec(` · `#[specmark::verifies(` · `specmark::scope!` ·
@@ -310,7 +310,7 @@ $ grep -rhoE "#\[(specmark::)?(verifies|spec)\(|specmark::scope!\(" crates xtask
       6 #[specmark::verifies(
 
 $ grep -rn "^ *Test: |^ *Tests: |^ *Verified-by:|^ *Verifies:" spec discipline terraform docs legacy-spec packages --include='*.md'
-packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml:230:Test: payments_core::tests::timeout_marks_old_messages
+vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml:230:Test: payments_core::tests::timeout_marks_old_messages
 ```
 
 The `Test:` line the fact illustrates occurs **exactly once in the whole
@@ -332,7 +332,7 @@ is used **228 times** (222 bare + 6 path-qualified) — within four of `#[spec]`
 298. Those become edges through a named producer:
 
 ```console
-$ grep -rn "verifies" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs
+$ grep -rn "verifies" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs
 rscan.rs:1:   //! Rust side of the scanner: `#[spec]` / `#[verifies]` attributes and
 rscan.rs:24:  specmark_grammar::Verb::Verifies => EdgeVerb::Verifies,
 rscan.rs:105: "verifies" => match &attr.meta {
@@ -343,7 +343,7 @@ and the renderer answers the question **from the spec unit**, not from the code
 item — `explain_unit` takes a `spec://` URI and lists every edge into it:
 
 ```console
-$ sed -n '89,116p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs
+$ sed -n '89,116p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs
 /// Render the subgraph around a `spec://` URI: the unit, every edge
 /// into it, suspects.
 fn explain_unit(map: &Specmap, uri: &str) -> Result<String> {
@@ -463,23 +463,23 @@ sentence's own subject once, to ask whether this repository keeps the trigger
 **What the search found — first, the verdict's number reproduces exactly:**
 
 ```console
-$ python  # every spec/**/*.md sized (spec/boot excluded), words x 1.33 -> tokens
-spec/ documents measured (spec/boot excluded): 59
+$ python  # every spec/**/*.md sized (vibevm/vibespecs/boot excluded), words x 1.33 -> tokens
+spec/ documents measured (vibevm/vibespecs/boot excluded): 59
 over the 5000-token hard limit: 11
-  ~ 45611 tok   34294 words  spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
-  ~ 17321 tok   13024 words  spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
-  ~ 14362 tok   10799 words  spec/modules/vibe-registry/PROP-002-decentralized-registry.xml
-  ~ 14000 tok   10527 words  spec/modules/vibe-resolver/PROP-003-dep-evolution.xml
-  ~ 11209 tok    8428 words  spec/modules/vibe-index/PROP-005-package-index.xml
-  ~  6954 tok    5229 words  spec/modules/vibe-cli/PROP-037-tree-tui.xml
-  ~  6947 tok    5224 words  spec/common/PROP-019-version-manager.xml
-  ~  6784 tok    5101 words  spec/modules/vibe-workspace/PROP-035-spec-compiler.xml
-  ~  6524 tok    4906 words  spec/modules/vibe-progress/PROP-043-progress-markup.xml
-  ~  6047 tok    4547 words  spec/modules/vibe-workspace/PROP-007-workspace.xml
-  ~  5403 tok    4063 words  spec/common/PROP-000.xml
+  ~ 45611 tok   34294 words  vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+  ~ 17321 tok   13024 words  vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
+  ~ 14362 tok   10799 words  vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml
+  ~ 14000 tok   10527 words  vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
+  ~ 11209 tok    8428 words  vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml
+  ~  6954 tok    5229 words  vibevm/vibespecs/modules/vibe-cli/PROP-037-tree-tui.xml
+  ~  6947 tok    5224 words  vibevm/vibespecs/common/PROP-019-version-manager.xml
+  ~  6784 tok    5101 words  vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml
+  ~  6524 tok    4906 words  vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml
+  ~  6047 tok    4547 words  vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml
+  ~  5403 tok    4063 words  vibevm/vibespecs/common/PROP-000.xml
 ```
 
-Eleven over the limit; drop the two campaign plans in `spec/terraforms/`, which
+Eleven over the limit; drop the two campaign plans in `vibevm/vibespecs/terraforms/`, which
 are not «one module spec document», and the count is **exactly the nine** the
 verdict names. The three worst — PROP-002 at ~14.4k, PROP-003 at ~14.0k,
 PROP-005 at ~11.2k — are each **2–3× the hard limit and each still one file**.
@@ -510,7 +510,7 @@ measures a spec document.
 
 **But the second of those is the finding that decides the route.** That code
 budget has a checker — `FileLength { max_lines: 600 }`
-(`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:137-141`),
+(`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:137-141`),
 configured at `conform.toml:35` — and it **fires, and files get split because of
 it**, with the split recorded in the file that resulted:
 
@@ -553,7 +553,7 @@ in the same two sections was judged **confirmed** in the same Phase-C batch
 split-triggers-lead                      confirmed   "a lead-in to the four-item list … four bullets"
 SPLIT-WHEN-OVER-BUDGET                   drift       (F-288)
 SPLIT-WHEN-A-UNIT-NEEDS-AND-ALSO         confirmed   PROP-029's changelog line 50, a dated host instance
-SPLIT-WHEN-TWO-AUDIENCES-EMERGE          confirmed   spec/modules/vibe-progress/ split three ways by genre
+SPLIT-WHEN-TWO-AUDIENCES-EMERGE          confirmed   vibevm/vibespecs/modules/vibe-progress/ split three ways by genre
 SPLIT-WHEN-ONE-SECTION-IS-CITED-FAR-MORE confirmed   PROP-029 #CHANGELOG-EXTRACTED, the one split on record
 A-SPEC-PAST-ITS-BUDGET-IS-TWO-SPECS      confirmed   "the three worst overruns have exactly the shape the fact predicts"
 THE-NUMBERS-ARE-BUDGETS-NOT-PHYSICS      confirmed
@@ -583,7 +583,7 @@ first move and it is worth writing down with the route: the spec-side budget has
 no checker while the code-side one does, so «nine documents over» is invisible
 until someone measures by hand — as this entry just did. A spec-document size
 check is a small, mechanical Phase-E item of exactly the shape
-`core-ai-native-conform` already ships for code. (2) The two `spec/terraforms/`
+`core-ai-native-conform` already ships for code. (2) The two `vibevm/vibespecs/terraforms/`
 campaign plans are ~45.6k and ~17.3k tokens — 9× and 3.5× the hard limit, far
 past every module spec — and were excluded above only because they are not
 «module spec documents». Whether a campaign plan is inside or outside this budget
@@ -619,8 +619,8 @@ footing than the verdict had:**
 ```console
 $ grep -rn "KindMismatch" crates xtask tools spec packages vibedeps docs schemas fixtures *.md
 crates/vibe-core/src/package_ref.rs:428:   /// one; it is validated against the resolved manifest (a `KindMismatch`)
-spec/design/workspace-and-qualified-naming.xml:81:  … a present prefix is checked (`KindMismatch` on mismatch) …
-spec/modules/vibe-registry/PROP-008-qualified-naming.xml:97:  … the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error.
+vibevm/vibespecs/design/workspace-and-qualified-naming.xml:81:  … a present prefix is checked (`KindMismatch` on mismatch) …
+vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml:97:  … the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error.
 ```
 
 Three hits, none of them code — as the sibling verdict found. The searches for
@@ -682,7 +682,7 @@ driver, no deployment, and the field it would read is parsed and never checked.
 **Host crates** for the never-disambiguates half, settled structurally rather
 than by a check (`package_ref.rs:499-506`, `short_name.rs:28-37`). **Host spec**
 for the claim restated and equally unbuilt (`PROP-008 ##KIND-VALIDATION`,
-`@impl/done`; `spec/design/workspace-and-qualified-naming.xml:81`).
+`@impl/done`; `vibevm/vibespecs/design/workspace-and-qualified-naming.xml:81`).
 
 **Why this is route (b): the campaign's own wave-2–4 rule decides it.** The §7
 LOG entry for waves 2–4 states the test in one line — *«a package moves only
@@ -738,10 +738,10 @@ it is the summary restatement of the same claim and inherits its body's route by
 the same precedent its own verdict invokes.
 
 **New obligations noticed:** (1) The host obligation is **two documents, not
-one**: `spec/modules/vibe-registry/PROP-008-qualified-naming.xml:97`
+one**: `vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml:97`
 (`##KIND-VALIDATION`, `@impl/done`) specifies `resolved.kind == prefix` and a
 `KindMismatch` error that no code contains, and
-`spec/design/workspace-and-qualified-naming.xml:81` records the owner's decision
+`vibevm/vibespecs/design/workspace-and-qualified-naming.xml:81` records the owner's decision
 that a present prefix *is* checked. Both are host-side and outside my edit
 scope; both are falsified by the same three searches above. (2) The build this
 implies is genuinely small — the prefix is already parsed onto
@@ -773,9 +773,9 @@ verdict reached:**
 
 ```console
 $ grep -rn -E "VIBE_PROJECT_ROOT|PROJECT_ROOT" crates xtask tools spec packages vibedeps discipline terraform docs schemas fixtures manual-tests legacy-spec *.md *.toml *.json
-spec/common/PROP-024-code-bearing-packages.xml:158:   that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment
-spec/common/PROP-024-code-bearing-packages.xml:270:   **`VIBE_PROJECT_ROOT`** …
-spec/modules/vibe-workspace/PROP-020-install-hooks.xml:108:  `VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
+vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml:158:   that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment
+vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml:270:   **`VIBE_PROJECT_ROOT`** …
+vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml:108:  `VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
 specmap.json:22601:  "heading": "…**`VIBE_PROJECT_ROOT`**"   (the indexed copy of PROP-024:270)
 ```
 
@@ -813,7 +813,7 @@ environment, not the cwd. **Host spec** for the specification, twice.
 decides the route.** Both host statements are honest about not having shipped it:
 
 ```console
-$ sed -n '104,109p' spec/modules/vibe-workspace/PROP-020-install-hooks.xml
+$ sed -n '104,109p' vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml
 - ##HOOK-ENV The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
   `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,
   `VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.
@@ -821,7 +821,7 @@ $ sed -n '104,109p' spec/modules/vibe-workspace/PROP-020-install-hooks.xml
   build hook can target a gitignored build dir *outside* the slot; **it lands with
   that work**.) @impl/done
 
-$ sed -n '154,161p' spec/common/PROP-024-code-bearing-packages.xml
+$ sed -n '154,161p' vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml
 - ##HOOK-BUILD A code-bearing tool package builds via a **`post-install` hook** …
   To let a hook address that location, the hook runner **gains** a `VIBE_PROJECT_ROOT`
   environment variable … — a small [PROP-020 §2.2](…) addition. @spec/done
@@ -848,7 +848,7 @@ retrospective and therefore describing what its author actually built — the
 document says in its own opening that it is not:
 
 ```console
-$ sed -n '14,16p' packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.xml
+$ sed -n '14,16p' vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml
 ##vocabulary-is-generic Vocabulary is generic — *the
 package*, *the consumer*, *the slot* — because the laws port even where
 the build system does not.
@@ -1027,7 +1027,7 @@ there, and one call site skipped it. That is a bug in `run_use_cmd`, and the
 package is not where it gets fixed.
 
 The host says the same thing, at the same strength, and is equally unkept:
-`spec/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` — *«consent +
+`vibevm/vibespecs/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` — *«consent +
 honesty (mutating edits need a confirm / `-y` / `self doctor --fix`, print the
 diff, and say the change reaches only new shells)»*, marked `@spec/done`.
 
@@ -1043,7 +1043,7 @@ line for the queue: `run_use_cmd` (`crates/vibe-cli/src/commands/vvm/mod.rs:311-
 writes the user's durable environment with no confirm and no `--yes`, while
 `confirm()` sits at `mod.rs:441` in the same file and four sibling paths use it;
 `VvmUseArgs` (`crates/vibe-cli/src/cli/vvm.rs:121-132`) would need a `yes` field.
-(2) `spec/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` asserts the
+(2) `vibevm/vibespecs/common/PROP-019-version-manager.xml:221` `##RULE-CONSENT` asserts the
 same three clauses and is equally unkept on the same path — a host-side
 obligation on a *host* document, outside my edit scope, recorded. (3) The diff
 clause has an unusually cheap implementation available: both writers already
@@ -1157,7 +1157,7 @@ not own.**
    bug with an obvious fix.
 3. **Kind validation is specified in two host documents and built in neither**
    (F-244) — `PROP-008 ##KIND-VALIDATION` (`@impl/done`, so the *marker* is wrong
-   too) and `spec/design/workspace-and-qualified-naming.xml:81`. The prefix is
+   too) and `vibevm/vibespecs/design/workspace-and-qualified-naming.xml:81`. The prefix is
    already parsed onto `PackageRef.kind` and survives `qualify()`, so the missing
    work is one comparison and one error variant.
 4. **Nine spec documents sit over the hard size budget with no checker**

@@ -92,13 +92,15 @@ fn materialise_copies_the_tree_verbatim() {
         fs::read_to_string(slot.join(crate::layout_paths::specs_path("flows/wal/WAL.md"))).unwrap(),
         "# protocol"
     );
-    // The returned footprint is slot-relative, forward-slashed, sorted.
+    // The returned footprint is slot-relative, forward-slashed, sorted —
+    // so the expectation uses the forward-slashed string helper, not the
+    // native-separator PathBuf one.
     assert_eq!(
         written,
         vec![
             PathBuf::from("boot/10-flow-wal.md"),
-            crate::layout_paths::specs_path("flows/wal/WAL.md"),
             PathBuf::from("vibe.toml"),
+            PathBuf::from(crate::layout_paths::specs("flows/wal/WAL.md")),
         ]
     );
 }

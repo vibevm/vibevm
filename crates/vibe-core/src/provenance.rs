@@ -10,7 +10,7 @@
 //! identity [`ContentHash`](crate::ContentHash) and with each other —
 //! not for validation.
 //!
-//! Spec: [PROP-002 §2.7](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile).
+//! Spec: [PROP-002 §2.7](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#lockfile).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile");
 

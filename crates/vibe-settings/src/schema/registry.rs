@@ -7,7 +7,7 @@
 //! [`Schema::paths_in`], and [`Schema::get`] **without parsing files** — the
 //! introspection bottleneck of IntelliJ (§3.9) is avoided by construction.
 //!
-//! Spec: [PROP-040 §5, §6](../../../../../../spec/modules/vibe-settings/PROP-040-settings.md#unified-introspection).
+//! Spec: [PROP-040 §5, §6](../../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#unified-introspection).
 
 use std::collections::BTreeMap;
 

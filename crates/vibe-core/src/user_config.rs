@@ -7,9 +7,9 @@
 //! carries the `[env]` section — environment-variable defaults for
 //! `VIBE_*` / `VIBEVM_*` names only, surfaced by `vibe show config` —
 //! `[install]`, the install-
-//! behaviour settings of [PROP-011](../../../spec/modules/vibe-workspace/PROP-011-incremental-install.md),
+//! behaviour settings of [PROP-011](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml),
 //! `[init]` (`vibe init` prompt defaults), and `[net]`, the network
-//! posture of [PROP-010](../../../spec/modules/vibe-registry/PROP-010-local-package-cache.md)
+//! posture of [PROP-010](../../../vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml)
 //! §2.5.
 //!
 //! Path resolution:

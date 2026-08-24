@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-03
 **HEAD:** `779b3aaa docs(campaign): коэффициент параллельности — до 5 на запускалку, 10 всего`
-**Subject path:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml`
+**Subject path:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml`
 **Genre:** evidence only. Every in-tree claim carries `file:line`; every
 absence claim names its perimeter and search terms; every model-knowledge
 line is marked «model knowledge — verify at build time». **No verdicts, no
@@ -14,11 +14,11 @@ as a pointer, never as evidence.
 **Default search perimeter** (used for every absence claim below unless a
 section widens it):
 
-- ENGINE: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`
+- ENGINE: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`
 - DRIVERS (incl. `tools/` sidecars and `tests/`):
-  - `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`
-  - `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/`
-  - `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`
+  - `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`
+  - `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/`
+  - `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`
 - HOST: `crates/`, `xtask/`, `tools/`, `schemas/`
 
 Excluded always: `legacy-spec/**`, `target/**`, `node_modules/**`,

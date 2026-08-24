@@ -1,6 +1,6 @@
 //! `vibe registry publish <path>` — maintainer-side per-package publishing.
 //!
-//! Layered design per [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish):
+//! Layered design per [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish):
 //!
 //! - [`RepoCreator`] — host-specific trait for "create a repo in this
 //!   org, check whether one exists, produce the URL to push to". Two
@@ -12,7 +12,7 @@
 //!   coordinates with [`RepoCreator`] for repo presence + creation,
 //!   shells out to `git` for the working-tree → push → tag flow,
 //!   classifies errors per the surface in PROP-002.
-//! - [`Token`] — token loading per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy).
+//! - [`Token`] — token loading per [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy).
 //!   Per-host file precedence: `VIBEVM_PUBLISH_TOKEN` env →
 //!   `~/.vibe/<host-prefix>.publish.token` → legacy
 //!   `~/.vibe/git.publish.token`. Both file legs live in the one settings
@@ -96,7 +96,7 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 // ---------------------------------------------------------------------------
 
 /// Publish failure surface, tuned for non-admin contributors per
-/// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish)
+/// [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish)
 /// — every refusal names the violated expectation and the fix surface:
 ///
 /// ```
@@ -292,7 +292,7 @@ pub fn extract_host_segment(org_url: &str) -> Result<String, PublishError> {
 /// `expected_org` is the organization segment the adapter will be
 /// scoped to (extracted from the same registry URL by the caller via
 /// [`extract_org_segment`]). Adapters refuse operations against any
-/// other org per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy).
+/// other org per [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy).
 ///
 /// ```
 /// use vibe_publish::{RepoCreator, Token, creator_for_url, extract_org_segment};

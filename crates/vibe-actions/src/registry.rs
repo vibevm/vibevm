@@ -9,7 +9,7 @@
 //! **fully enumerable** — [`Registry::iter`] reaches every action, and
 //! [`Registry::aliases`] every alias (§4.3, §2.2).
 //!
-//! Spec: [PROP-039 §4](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#registry).
+//! Spec: [PROP-039 §4](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#registry).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry");
 

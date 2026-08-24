@@ -61,7 +61,7 @@ Exact counts for the task-named segments, via a boundary-anchored regex:
 | `terraforms` | 12 |
 | `flows` | 0 |
 | `boot` | 4 |
-| `design` | 0 (`spec/design/` exists on disk but is uncited) |
+| `design` | 0 (`vibevm/vibespecs/design/` exists on disk but is uncited) |
 | **named subtotal** | **1825** |
 
 "Other" = 2330 − 1825 = **505**. First-component tally via
@@ -107,29 +107,29 @@ top files `grep -ro $E --include='*.json' 'spec://org.vibevm.core/vibevm' … | 
 
 ## 2. Host exceptions in the contracts — verbatim
 
-### PROP-029 — `spec/common/PROP-029-fully-qualified-addresses.xml`
+### PROP-029 — `vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml`
 
-`##SCOPE-HOST` (the host exception), `spec/common/PROP-029-fully-qualified-addresses.xml:43`:
+`##SCOPE-HOST` (the host exception), `vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml:43`:
 
 > `- ##SCOPE-HOST The **host vibevm project's own** specs keep the project authority \`spec://org.vibevm.core/vibevm/…\` — the root project is not a package with a group; §1 binds packages. @spec/done`
 
 Sibling scope rules in the same §4: `:44 ##SCOPE-FIXTURES` (test fixtures
 `spec://demo/…`, `spec://com.example.shop/…` are out of scope) and `:45 ##SCOPE-GROUP-CHANGE`.
 
-`grep -ni host spec/common/PROP-029-fully-qualified-addresses.xml` → the word
+`grep -ni host vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml` → the word
 "host" appears on **exactly one line**, `:43`. So SCOPE-HOST is the sole host
 carve-out in PROP-029.
 
-`grep -n vibevm spec/common/PROP-029-fully-qualified-addresses.xml` → lines
+`grep -n vibevm vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml` → lines
 `:5, :17, :21, :22, :23, :31, :43, :49, :50`. Of these, only `:43` is a
 host-scope exception; the rest use `vibevm` as the project name in prose or as
 package carrier *examples* (`stack:org.vibevm.ai-native/rust-ai-native-lang`
 at `:21`, `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` at
 `:22`) — i.e. the `org.vibevm.*` *group*, not the host spec namespace.
 
-### PROP-035 — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml`
+### PROP-035 — `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml`
 
-`##UNIFIED-GRAMMAR`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:94-103`:
+`##UNIFIED-GRAMMAR`, `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml:94-103`:
 
 > `##UNIFIED-GRAMMAR **Unified grammar** (reconciled with the pkgref grammar of PROP-008): @impl/done`
 >
@@ -140,15 +140,15 @@ at `:21`, `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` at
 > `- ##URI-TREE-PATH \`#<anchor>.<sub>…\` is a **tree path** into the document IR (§5). @impl/done` (`:102`)
 > `- ##URI-REVISION-PIN \`~r<N>\` pins a spec-unit revision (PROP-014), not a package version. @spec/done` (`:103`)
 
-`##ROUTER-DOC-ID`, `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:107`:
+`##ROUTER-DOC-ID`, `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml:107`:
 
 > `- ##ROUTER-DOC-ID **Doc-id truncation** — \`PROP-NNN\` / \`FEAT-NNN\` in a URI resolve to \`PROP-NNN-<slug>.md\`; other docs use the full stem. (This is \`canonical_doc_path\` in the specmap engine, reused, not reinvented.) @impl/done`
 
-`grep -ni host spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` → **no
+`grep -ni host vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml` → **no
 matches**. PROP-035 contains no host-special-case language at all; §6's grammar
 is written uniformly as `spec://<group>/<name>/…` with no carve-out for the host.
 
-`grep -n vibevm spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` → lines
+`grep -n vibevm vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml` → lines
 `:8, :23, :247, :265, :267, :285, :287`. None is a host-scope exception; all are
 prose ("Loading vibevm itself", `:23`; "every project, package, and library
 vibevm manages", `:247`; "Convert vibevm itself last", `:267`; "aligning vibevm
@@ -306,7 +306,7 @@ Only `PROP-NNN` and `FEAT-NNN` truncate (test at `:190`: `assert!(!is_id_stem("D
 
 ### (b) population: truncated vs full, host `common/` + `modules/` citations
 
-Actual file stems on disk, `ls -1 spec/common/*.md spec/modules/*/*.md | sed -E 's#.*/##; s#\.md$##'` → 44 stems
+Actual file stems on disk, `ls -1 vibevm/vibespecs/common/*.md vibevm/vibespecs/modules/*/*.md | sed -E 's#.*/##; s#\.md$##'` → 44 stems
 (`PROP-000`, `PROP-001-git-backend`, … `PROP-043-progress-markup`, plus
 `OWNER-GUIDE`). Every PROP doc on disk has the full `PROP-NNN-<slug>` form
 (except `PROP-000` which is bare `PROP-000.xml`).
@@ -357,7 +357,7 @@ authorities (dotted first segment) whose doc-id is a bare `PROP-NNN`/`FEAT-NNN`.
 
 All 190 are in the prose perimeter (`spec/`, `campaigns/`, `packages/`); **0** in
 `crates/`. The 165 real ones cite the specmap doc, e.g.
-`spec/common/PROP-031-algorithmic-refactoring.xml:45  [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary)`.
+`vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml:45  [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary)`.
 The 25 `PROP-001` are demo/illustrative authorities (`com.example.shop`,
 `com.olegchir.telegram.oproto`).
 
@@ -395,13 +395,13 @@ context (semantics not judged):
 | `vibe.toml:2` | `name = "vibevm"` | project **identity** name (see §7a), not spec:// namespace |
 | `vibe.toml:11,12,19,28,37` | `"stack:org.vibevm.ai-native/…"`, `"flow:org.vibevm.world/…"`, `"flow:org.vibevm.fractality/…"` | dependency **pkgref keys** (the `org.vibevm.*` group) |
 | `Cargo.toml:57-58` | `repository`/`homepage = "https://gitverse.ru/vibevm/vibevm"` | repo URL |
-| `Cargo.toml:86,90,97-104,125` | comments + `path = "packages/org.vibevm.ai-native/…/…"]` | path-deps / group paths |
+| `Cargo.toml:86,90,97-104,125` | comments + `path = "vibevm/vibepacks/org.vibevm.ai-native/…/…"]` | path-deps / group paths |
 | `mirrors.toml:26,33` | `url = "git@gitverse.ru:vibevm/vibevm.git"`, `git@github.com:vibevm/vibevm.git` | repo URLs |
 | `conform.toml:1,4,6,22,23,86,128` | prose "vibevm's own …"; `stack:org.vibevm.ai-native/…` | project-name prose + group ref |
 | `progress.toml:35,51,89,90,125,126` | `packages/org.vibevm.*/**` globs; scope comments | package **paths** |
-| `sync-engines.toml:11,14,22-127` | `packages/org.vibevm.ai-native/…` source_roots/targets | package **paths** |
+| `sync-engines.toml:11,14,22-127` | `vibevm/vibepacks/org.vibevm.ai-native/…` source_roots/targets | package **paths** |
 | `xtask/src/batch_review/refs.rs:31` | comment: `this repository's own namespace is \`org.vibevm\`` | a namespace **claim** (group form, in prose) |
-| `tools/self-check.sh:118` | `FAMILY_ROOT="packages/org.vibevm.ai-native"` | package path |
+| `tools/self-check.sh:118` | `FAMILY_ROOT="vibevm/vibepacks/org.vibevm.ai-native"` | package path |
 | `tools/*.sh`, `tools/*.ps1` (various) | `# vibevm …` | project-name prose |
 
 The only sites where `vibevm` is the **spec:// namespace-value** are
@@ -490,15 +490,15 @@ Notable `root_dependencies` values (`:6-7`):
 `org.vibevm` group exists only as a pkgref string in `root_dependencies`, with
 no resolving `[[package]]` block.
 
-### (c) `SPECSPACES.md` and `spec/boot/INDEX.md` — `vibevm`-namespace ties
+### (c) `SPECSPACES.md` and `vibevm/vibespecs/boot/INDEX.md` — `vibevm`-namespace ties
 
 - `SPECSPACES.md`: `grep -nE 'vibevm|namespace|spec://' SPECSPACES.md` → hits
   at `:5, :6, :22`, all package **paths/groups**: canon
   `flow:org.vibevm.world/wal-specspaces` (`:5`), authored in
-  `packages/org.vibevm.world/wal-specspaces/` (`:6`), the `fractality` row
-  `packages/org.vibevm.fractality/` (`:22`). No `spec://` hits — ties are to
+  `vibevm/vibepacks/org.vibevm.world/wal-specspaces/` (`:6`), the `fractality` row
+  `vibevm/vibepacks/org.vibevm.fractality/` (`:22`). No `spec://` hits — ties are to
   the `org.vibevm.*` package groups, not the host spec namespace.
-- `spec/boot/INDEX.md`: `grep -nE 'vibevm|namespace|spec://' spec/boot/INDEX.md`
+- `vibevm/vibespecs/boot/INDEX.md`: `grep -nE 'vibevm|namespace|spec://' vibevm/vibespecs/boot/INDEX.md`
   → **no matches**. The generated boot manifest carries no `vibevm`-namespace
   tie.
 
@@ -530,11 +530,11 @@ Per-package occurrence counts
 
 Example lines (`grep -rn $E 'spec://org.vibevm.core/vibevm/' packages/ | head -5`):
 
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:299  const GRAMMAR: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:301  "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:421  assert!(explain_text(&map, "spec://org.vibevm.core/vibevm/x#nope").is_err());`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs:243  uri: "spec://org.vibevm.core/vibevm/common/PROP-000#root".into(),`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/mdspec.rs:150  /// \`spec://org.vibevm.core/vibevm/common/PROP-000#commits\`): relative to \`spec/\`, the`
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:299  const GRAMMAR: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";`
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:301  "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";`
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:421  assert!(explain_text(&map, "spec://org.vibevm.core/vibevm/x#nope").is_err());`
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs:243  uri: "spec://org.vibevm.core/vibevm/common/PROP-000#root".into(),`
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/mdspec.rs:150  /// \`spec://org.vibevm.core/vibevm/common/PROP-000#commits\`): relative to \`spec/\`, the`
 
 ### (b) installed view `vibedeps/*/spec/**` citing the host
 

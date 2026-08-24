@@ -133,7 +133,7 @@ pub fn load_installed_world(project_root: &Path) -> Result<InstalledWorld, Strin
 /// working tree carries no version directory (PROP-022 §2.4).
 fn slot_manifest_path(project_root: &Path, member: &LockedPackage) -> std::path::PathBuf {
     let slot = project_root
-        .join("vibedeps")
+        .join(crate::layout::current_vibedeps_root())
         .join(format!("{}.{}", member.group, member.name));
     if member.materialization.is_in_place() {
         slot.join(Manifest::FILENAME)

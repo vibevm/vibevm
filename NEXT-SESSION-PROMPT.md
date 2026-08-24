@@ -16,8 +16,8 @@
 
 ## Шаг 1. Загрузка — полностью, без сокращений
 
-По `CLAUDE.md`: статическая полоса `spec/boot/STATIC.xml` целиком →
-каждый файл из `spec/boot/INDEX.md` → `spec/WAL.xml` → `CONTINUE.md` →
+По `CLAUDE.md`: статическая полоса `vibevm/vibespecs/boot/STATIC.xml` целиком →
+каждый файл из `vibevm/vibespecs/boot/INDEX.md` → `vibevm/vibespecs/WAL.xml` → `CONTINUE.md` →
 этот промт → **ТЗ целиком**: `campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md`
 (мандат §0, решения §2, слайсы §3, марафон-механика §5). Перед первым
 фан-аутом воркеров — `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`
@@ -52,8 +52,8 @@ specmap` (если трогались spec/код) → стейдж → полн
 раз** → долг 0) → коммиты по смыслу → `cargo xtask mirror` → обновить
 `_STATUS:` в ТЗ, галочки `TASKS.md`, строку LOG ТЗ §9.
 
-Судимый корпус: `campaigns/**`, `BACKLOG.md`, `TASKS.md`, `spec/WAL.xml` —
-НЕ входят; `spec/boot/90-user.xml` — ВХОДИТ. Вердикт —
+Судимый корпус: `campaigns/**`, `BACKLOG.md`, `TASKS.md`, `vibevm/vibespecs/WAL.xml` —
+НЕ входят; `vibevm/vibespecs/boot/90-user.xml` — ВХОДИТ. Вердикт —
 `confirmed | drift | unverifiable`, доказательства непустые и
 нетривиальные.
 
@@ -173,4 +173,4 @@ org `vibespecs`. Не бампать ничего, кроме волны С5. Н
 цель достигнута, петля кончается. Дальше — владелец: инспекция по
 `RELEASE-INSPECTION-CHECKLIST.md`, его слово на тег `v1.0.0`, раскатка,
 объявление тестерам. Если владелец скажет завершать сессию — полный
-wind-down протокол (`CONTINUE.md` + `spec/WAL.xml` + коммиты + mirror).
+wind-down протокол (`CONTINUE.md` + `vibevm/vibespecs/WAL.xml` + коммиты + mirror).

@@ -8,7 +8,7 @@
 //! variant's `Display` cites that REQ so a surface diagnostic can point the
 //! reader at the contract clause.
 //!
-//! Spec: [PROP-040 §3](../../../../spec/modules/vibe-settings/PROP-040-settings.md#locations).
+//! Spec: [PROP-040 §3](../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#locations).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default");
 

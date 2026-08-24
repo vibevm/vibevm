@@ -25,10 +25,10 @@ host restates, or a rule the host's code implements. They are different evidence
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/managed-blocks \
-    packages/org.vibevm.world/qualified-naming \
-    packages/org.vibevm.world/tool-design-lessons
-source-1 join over 18 file(s) under packages/org.vibevm.world/managed-blocks, packages/org.vibevm.world/qualified-naming, packages/org.vibevm.world/tool-design-lessons
+    vibevm/vibepacks/org.vibevm.world/managed-blocks \
+    vibevm/vibepacks/org.vibevm.world/qualified-naming \
+    vibevm/vibepacks/org.vibevm.world/tool-design-lessons
+source-1 join over 18 file(s) under vibevm/vibepacks/org.vibevm.world/managed-blocks, vibevm/vibepacks/org.vibevm.world/qualified-naming, vibevm/vibepacks/org.vibevm.world/tool-design-lessons
   relative .md citations resolved: 35
   broken: 0
 ```
@@ -166,7 +166,7 @@ kind = "flow"
 name = "addressable-specs"
 group = "org.vibevm.world"
 version = "0.1.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/addressable-specs/v0.1.0"
+source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0"
 content_hash = "sha256:7663afa33398592e419a6bf5f19e07c181f6eadcf5bb5780a1a5e62b0ef1496c"
 $ grep -coE '"?(flow|feat|stack|tool|mcp):[a-z0-9.]+/[a-z0-9-]+' vibe.lock
 38
@@ -182,8 +182,8 @@ flow's identity tuple, decomposed in one place and spelled out in the other.
 `group`, so the pair is the qualified form; the flow's prohibition is on storing a
 name that *cannot* be resolved to a group. Say which reading you applied.
 
-The host's own contract is `spec/modules/vibe-registry/PROP-008-qualified-naming.xml`,
-and `spec/boot/90-user.xml`'s `##REGISTRY-VIBESPECS` records the repo-naming
+The host's own contract is `vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml`,
+and `vibevm/vibespecs/boot/90-user.xml`'s `##REGISTRY-VIBESPECS` records the repo-naming
 convention in force (`NamingConvention::Fqdn`, `org.vibevm_wal`, default since
 M1.19) with the legacy `flow-*` repos archived read-only. Both are durable
 citation targets. The collision-vs-conflict distinction, the rename-is-a-new-identity
@@ -236,19 +236,19 @@ Measured from `campaigns/packages-2026-09/run/mirror/`; the total agrees with
 
 ```
 managed-blocks (198)
-  19  packages/org.vibevm.world/managed-blocks/v0.1.0/README.md
+  19  vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/README.md
    9  …/spec/boot/65-flow-managed-blocks.md
   74  …/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md
   44  …/spec/flows/managed-blocks/adoption-guide.md
   52  …/spec/flows/managed-blocks/rejected-designs.md
 qualified-naming (190)
-  29  packages/org.vibevm.world/qualified-naming/v0.1.0/README.md
+  29  vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/README.md
   14  …/spec/boot/67-flow-qualified-naming.md
   48  …/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md
   52  …/spec/flows/qualified-naming/naming-forks.md
   47  …/spec/flows/qualified-naming/ref-grammar.md
 tool-design-lessons (215)
-  19  packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md
+  19  vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/README.md
   12  …/spec/boot/70-flow-tool-design-lessons.md
   43  …/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md
   63  …/spec/flows/tool-design-lessons/packaging-lessons.md

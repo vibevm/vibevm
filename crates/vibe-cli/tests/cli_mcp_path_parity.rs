@@ -23,8 +23,8 @@ version = "0.2.0"
 source_url = "https://example.invalid/org.vibevm.wal.git"
 content_hash = "sha256:deadbeef"
 files_written = [
-    'spec\flows\wal\PROTOCOL.md',
-    'spec\boot\10-flow-wal.md',
+    'vibevm\vibespecs\flows\wal\PROTOCOL.md',
+    'vibevm\vibespecs\boot\10-flow-wal.md',
 ]
 "#;
 

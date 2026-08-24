@@ -20,11 +20,11 @@ already compiled directly.
 
 ```
 > Content-minimal (PROP-028): no boot snippet of its own; each member ships theirs.
-> — packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml, [package].description
+> — vibevm/vibepacks/org.vibevm.world/git-practices/v0.1.0/vibe.toml, [package].description
 ```
 
 ```
-> The boot snippets of the transitive deps still land in spec/boot/INDEX.md
+> The boot snippets of the transitive deps still land in vibevm/vibespecs/boot/INDEX.md
 > via the resolver's BFS closure (PROP-009).
 > — vibe.toml, [requires.packages] comment
 ```
@@ -38,7 +38,7 @@ members makes the host read them twice.
 Measured 2026-07-26, immediately after `vibe update --all` on a clean tree.
 **Do not re-discover these — they are verified.**
 
-- `packages/org.vibevm.world/git-practices/v0.1.0/` contains **exactly three
+- `vibevm/vibepacks/org.vibevm.world/git-practices/v0.1.0/` contains **exactly three
   files**: `LICENSE`, `README.md`, `vibe.toml`. There is **no `spec/`**.
 - `.vibe/cache/org.vibevm.world/git-practices/v0.1.0/` contains **the same
   three files**. There is **no `spec/`**. The cache is clean; cache poisoning
@@ -49,7 +49,7 @@ Measured 2026-07-26, immediately after `vibe update --all` on a clean tree.
   `# vibe:fp <hash>` fingerprint line.
 - By elimination (source clean + cache clean + slot populated), **vibe wrote
   those two files during materialisation**.
-- The host's `spec/boot/STATIC.xml` grew by **194 lines, 0 deletions**, and now
+- The host's `vibevm/vibespecs/boot/STATIC.xml` grew by **194 lines, 0 deletions**, and now
   carries each of the four git-\* snippets **twice**:
   - first copy, from the members' own snippets — lines 363, 421, 486, 514;
   - second copy, under
@@ -61,7 +61,7 @@ Measured 2026-07-26, immediately after `vibe update --all` on a clean tree.
 - Only `flow-git-practices` is affected among the 36 materialised slots. The
   one other slot carrying a generated `INDEX.md`
   (`vibedeps/flow-delegation-rules/0.1.0/`) ships it **from source** —
-  `packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/INDEX.md`
+  `vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/vibevm/vibespecs/boot/INDEX.md`
   exists and is tracked. That one is **not** this task's subject.
 
 ## 4. Required behavior {#behavior}
@@ -74,7 +74,7 @@ installer walks (`iter_nodes`) — the reporter line
 count and the write are worth reconciling before changing anything.
 
 ```
-1. Find the code path that writes spec/boot/{INDEX,STATIC}.md into a
+1. Find the code path that writes vibevm/vibespecs/boot/{INDEX,STATIC}.md into a
    vibedeps/ slot. Name it in §9 with file:line before you change it.
 2. A materialised dependency slot is a consumer copy, not a project node:
    it must not have boot artifacts compiled into it. Suppress the write.
@@ -86,7 +86,7 @@ count and the write are worth reconciling before changing anything.
    on an already-updated tree changes nothing.
 ```
 
-Edge cases: a package that genuinely **ships** `spec/boot/STATIC.xml` from
+Edge cases: a package that genuinely **ships** `vibevm/vibespecs/boot/STATIC.xml` from
 source (i.e. the file is present in the source package directory) must keep
 contributing it exactly as before — the fix distinguishes *generated here* from
 *shipped by the package*, not "has a STATIC.md". `delegation-rules` is the live
@@ -100,9 +100,9 @@ Error paths: none new. This removes a write; it introduces no failure mode.
   the current behaviour, that is a §8 stop, not an edit. The reviewer lands
   every spec change in this campaign.
 - **Do not touch** `packages/**`. In particular, do not "fix" this by adding a
-  `spec/boot/` to `git-practices` or by editing its manifest — the package is
+  `vibevm/vibespecs/boot/` to `git-practices` or by editing its manifest — the package is
   content-minimal by design and that is correct.
-- **Do not hand-edit** `spec/boot/STATIC.xml` or `spec/boot/INDEX.md`. They are
+- **Do not hand-edit** `vibevm/vibespecs/boot/STATIC.xml` or `vibevm/vibespecs/boot/INDEX.md`. They are
   generated; the fix is upstream of them and is verified by regenerating.
 - **Do not touch** `campaigns/**` except §9 of this file.
 - Never edit golden tests to make them pass.
@@ -125,16 +125,16 @@ git status --short
 ```
 
 - `vibedeps/flow-git-practices/0.1.0/spec/` **does not exist**.
-- `grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml` → **1** (it is 2 today).
-- `grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.xml` → **0**.
+- `grep -c "^# Flow: Atomic Commits" vibevm/vibespecs/boot/STATIC.xml` → **1** (it is 2 today).
+- `grep -c "vibe:static org.vibevm.world/git-practices" vibevm/vibespecs/boot/STATIC.xml` → **0**.
 - `vibedeps/flow-delegation-rules/0.1.0/spec/boot/INDEX.md` **still exists** —
   the shipped-from-source case is untouched.
 - A second identical `update --all` run leaves `git status` unchanged
   (idempotence).
 
 New test: `vibe-workspace` gains a test asserting that materialising a package
-whose source directory has no `spec/boot/` produces a slot with no
-`spec/boot/`. Name it for the behaviour, not for this bug.
+whose source directory has no `vibevm/vibespecs/boot/` produces a slot with no
+`vibevm/vibespecs/boot/`. Name it for the behaviour, not for this bug.
 
 Discipline: `#[spec(implements = "spec://…#anchor")]` on new items where an
 anchor governs, `cargo fmt --all`, clippy clean, one atomic commit, Conventional
@@ -174,7 +174,7 @@ child other than itself.
 
 **The stop.** §8's first bullet fires verbatim. PROP-038 §2.1 carries the
 spec unit `##UNIT-PER-PACKAGE`
-(`spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:33`, `@impl/done`):
+(`vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml:33`, `@impl/done`):
 
 > **Decision.** Every package materialised under `vibedeps/` carries its
 > **own** boot artifacts — `vibedeps/<slot>/spec/boot/STATIC.xml` … and
@@ -224,7 +224,7 @@ skip. §4's "Error paths: none new. This removes a write; it introduces no
 failure mode" does not hold.
 
 **Where the duplication actually enters — the question for the owner.** The
-host-side double copy is real and reproduced (`spec/boot/STATIC.xml`: members at
+host-side double copy is real and reproduced (`vibevm/vibespecs/boot/STATIC.xml`: members at
 363/421/486/514 from the root's own forced-inline closure, the aggregator's
 compiled lane at 551 carrying the same four at 557/615/680/708). It enters
 through the **hoist counter**, not through per-unit emission.
@@ -260,7 +260,7 @@ task's mandate):**
 
 `vibedeps/flow-delegation-rules/0.1.0/` is unaffected either way — its
 `INDEX.md` is copied from the tracked source
-`packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/INDEX.md`
+`vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/vibevm/vibespecs/boot/INDEX.md`
 (confirmed via `git ls-files`), not emitted.
 
 **Landed:** the `<!-- REVIEW: … -->` marker §8 requires, at

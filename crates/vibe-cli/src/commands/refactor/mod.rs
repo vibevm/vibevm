@@ -241,13 +241,16 @@ fn resolve_spec_target(path: PathBuf) -> ConversionTarget {
 }
 
 fn spec_target(root: PathBuf) -> ConversionTarget {
-    let spec = root.join("spec");
+    let spec = root.join(vibe_core::layout::current_specs_root());
     if spec.is_dir() {
         ConversionTarget::Path(spec)
     } else {
         ConversionTarget::Refused {
             path: spec,
-            reason: "package has no `spec/` directory".to_string(),
+            reason: format!(
+                "package has no `{}/` directory",
+                vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+            ),
         }
     }
 }

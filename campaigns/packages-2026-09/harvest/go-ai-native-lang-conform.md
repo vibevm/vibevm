@@ -1,6 +1,6 @@
 # go-ai-native-lang — conform
 
-_Captured 2026-07-28 against `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
+_Captured 2026-07-28 against `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
 
 ```console
 $ go-ai-native conform check
@@ -16,4 +16,4 @@ Error: go-ai-native-conform: 5 new finding(s) against the baseline
 EXIT=1
 ```
 
-**Scope:** every fact under `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/` that this run bears on. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).
+**Scope:** every fact under `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/` that this run bears on. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).

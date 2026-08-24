@@ -147,7 +147,14 @@ fn fixture_pkg(fixtures: &Path, name: &str, body: &str) {
             "[package]\ngroup = \"org.vibevm\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"1.0.0\"\n{requires}"
         ),
     );
-    write(fixtures, &format!("{name}/spec/flows/{name}/SPEC.md"), body);
+    write(
+        fixtures,
+        &format!(
+            "{name}/{}/flows/{name}/SPEC.md",
+            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+        ),
+        body,
+    );
 }
 
 /// The resolved graph: root `pkg-a` depending on transitive `pkg-b`.
@@ -252,8 +259,8 @@ fn installed_project(integrity: SlotIntegrity) -> (FixtureSource, TempDir, PathB
     (source, outer, project)
 }
 
-const SLOT_A: &str = "vibedeps/org.vibevm.pkg-a/1.0.0";
-const SLOT_B: &str = "vibedeps/org.vibevm.pkg-b/1.0.0";
+const SLOT_A: &str = "vibevm/vibedeps/org.vibevm.pkg-a/1.0.0";
+const SLOT_B: &str = "vibevm/vibedeps/org.vibevm.pkg-b/1.0.0";
 
 #[test]
 fn verify_accepts_untouched_slots_without_copying() {
@@ -298,7 +305,9 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
     // slot diverges from every recorded hash while still being "present
     // for the version", exactly the corruption `verify` exists to catch.
     let slot_b = project.join(SLOT_B);
-    let spec_b = slot_b.join("spec/flows/pkg-b/SPEC.md");
+    let spec_b = slot_b
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/pkg-b/SPEC.md");
     fs::write(&spec_b, "# TAMPERED content\n").unwrap();
     let actual = compute_content_hash(&slot_b).unwrap();
     let expected = compute_content_hash(&outer.path().join("pkg-b")).unwrap();
@@ -394,7 +403,8 @@ fn changing_format_rematerialises_even_under_trust_presence() {
     assert!(
         project
             .join(SLOT_A)
-            .join("spec/flows/pkg-a/SPEC.xml")
+            .join(vibe_core::layout::current_specs_root())
+            .join("flows/pkg-a/SPEC.xml")
             .is_file()
     );
 
@@ -409,13 +419,15 @@ fn changing_format_rematerialises_even_under_trust_presence() {
     assert!(
         project
             .join(SLOT_A)
-            .join("spec/flows/pkg-a/SPEC.md")
+            .join(vibe_core::layout::current_specs_root())
+            .join("flows/pkg-a/SPEC.md")
             .is_file()
     );
     assert!(
         !project
             .join(SLOT_A)
-            .join("spec/flows/pkg-a/SPEC.xml")
+            .join(vibe_core::layout::current_specs_root())
+            .join("flows/pkg-a/SPEC.xml")
             .exists()
     );
     let manifest = vibe_workspace::vibedeps::read_derived_manifest(&project.join(SLOT_A)).unwrap();
@@ -445,7 +457,10 @@ fn transformed_verify_accepts_intact_and_repairs_derived_hash_divergence() {
     assert!(project.join(SLOT_A).join("target/SENTINEL").is_file());
 
     fs::write(
-        project.join(SLOT_B).join("spec/flows/pkg-b/SPEC.xml"),
+        project
+            .join(SLOT_B)
+            .join(vibe_core::layout::current_specs_root())
+            .join("flows/pkg-b/SPEC.xml"),
         "<tampered/>",
     )
     .unwrap();
@@ -477,7 +492,14 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
     };
     let project = outer.path().join("project");
     run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
-    write(&project, "vibefacts/org.vibevm.pkg-b.toml", "schema = 1\n");
+    write(
+        &project,
+        &format!(
+            "{}/org.vibevm.pkg-b.toml",
+            vibe_core::machine_json_path(&vibe_core::layout::current_vibefacts_root())
+        ),
+        "schema = 1\n",
+    );
 
     let pkgref = PackageRef::parse("org.vibevm/pkg-b").unwrap();
     let cached = source

@@ -16,7 +16,7 @@
 //! `#missing-is-default`), surfaced to stderr — the command continues with that
 //! layer treated as absent.
 //!
-//! Spec: [PROP-040 §8](../../../../spec/modules/vibe-settings/PROP-040-settings.md#prefs-command).
+//! Spec: [PROP-040 §8](../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#prefs-command).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 

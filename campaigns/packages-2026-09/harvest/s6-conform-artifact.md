@@ -8,9 +8,9 @@
 ВЕНДОР-копия под стеком `rust-ai-native-lang`, на которую указывает
 `Cargo.toml:103`. Короткое обозначение ниже:
 
-- `CONF` = `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src`
+- `CONF` = `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src`
   (вендор-копия, **то, что реально компилируется и бежит**);
-- `FE` = `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src`
+- `FE` = `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src`
   (фронтенд-драйвер `run_check`/`run_freeze`).
 
 Все цитаты `CONF:…` и `FE:…` даны по этим префиксам.
@@ -40,7 +40,7 @@
 | B1 | `run_conform_check(baseline_rel, scope)` — тонкая обёртка над `rust_ai_native_conform::run_check(&repo_root()?, baseline_rel, scope)` | ПОДТВЕРЖДЕНО | `xtask/src/conform.rs:13-15` (рядом `run_conform_freeze` → `run_freeze`, `xtask/src/conform.rs:17-19`) |
 | B2 | в корне лежат `conform.toml` и `conform-baseline.json`, оба под git | ПОДТВЕРЖДЕНО | оба присутствуют в свежем worktree (`conform-baseline.json` 36 B, `conform.toml` 7529 B); ни один не покрыт `.gitignore` (правила `/target/`, `**/target/` — `.gitignore:2-3` — их не задевают; отдельного правила для `conform*` нет) |
 | B3 | шаг панели `run_step "cargo xtask conform check" …` стоит в `tools/self-check.sh:325`, комментарий над ним — про «content-addressed fact store», который «re-extracts only changed files» | ПОДТВЕРЖДЕНО | `tools/self-check.sh:325` (`run_step "cargo xtask conform check" cargo xtask conform check`); комментарий `tools/self-check.sh:319-324` («its content-addressed fact store re-extracts only changed files») |
-| B4 | движок в `…/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/` (есть `baseline.rs`, `config.rs`, `facts.rs`, `finding.rs`, `lib.rs`); рядом есть Rust-фронтенд `rust-ai-native-conform` | ПОДТВЕРЖДЕНО | директория существует и содержит ровно эти файлы (+`store.rs`, `sarif.rs`, `rules/`); фронтенд найден в ДВУХ стеках: `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform` и `…/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-conform`. **Оговорка к B4 (см. §9):** указанный в координате каталог `v0.7.0` — устаревший снимок; то, что бежит — вендор-копия `CONF` (v0.8.0-эквивалент) |
+| B4 | движок в `…/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/` (есть `baseline.rs`, `config.rs`, `facts.rs`, `finding.rs`, `lib.rs`); рядом есть Rust-фронтенд `rust-ai-native-conform` | ПОДТВЕРЖДЕНО | директория существует и содержит ровно эти файлы (+`store.rs`, `sarif.rs`, `rules/`); фронтенд найден в ДВУХ стеках: `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform` и `…/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-conform`. **Оговорка к B4 (см. §9):** указанный в координате каталог `v0.7.0` — устаревший снимок; то, что бежит — вендор-копия `CONF` (v0.8.0-эквивалент) |
 | B5 | во всём хосте зависимость на движок качества несёт ровно один крейт — `xtask`; `vibe-trace`/`vibe-cli`/`vibe-mcp` его не знают | ПОДТВЕРЖДЕНО | conform-зависимости только в `xtask/Cargo.toml:22-24` (`rust-ai-native-conform.workspace`, `conform-core.workspace`, `rust-ai-native-conform-frontend.workspace`); workspace-ключи — `Cargo.toml:103-105`. Grep `conform` по `crates/*/Cargo.toml` и корневому `Cargo.toml` (кроме объявления ключей) находок не дал — ни `vibe-trace`, ни `vibe-cli`, ни `vibe-mcp` conform не несут |
 
 ## 3. Артефакт: путь, писатель, формат, git-статус
@@ -301,12 +301,12 @@ specmap — `:108-109` (обе через `path = "…/rust-ai-native-lang/v0.7.
 - `sed -n '319,325p' tools/self-check.sh` → шаг `cargo xtask conform check` + комментарий про fact store.
 - `sed -n '13,19p' xtask/src/conform.rs` → обёртки `run_conform_check`/`run_conform_freeze`.
 - `sed -n '270,292p' xtask/src/main.rs` → `ConformCmd::{Check,Freeze}` (Check «emit SARIF … gate»; Freeze «Rewrite the baseline»).
-- `grep -n "report.sarif\|fs::write" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs` → `:172` (путь SARIF), `:176` (запись), `:255` (запись baseline).
-- `sed -n '23,98p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs` → рендер SARIF, «no wall-clock», поля включая `startLine`.
+- `grep -n "report.sarif\|fs::write" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs` → `:172` (путь SARIF), `:176` (запись), `:255` (запись baseline).
+- `sed -n '23,98p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/sarif.rs` → рендер SARIF, «no wall-clock», поля включая `startLine`.
 - `sed -n '29,98p' …/vendor/core-ai-native-conform/src/finding.rs` → тип `Finding` (8 полей) + `FindingStatus`.
 - `sed -n '22,27p;98,107p' …/vendor/core-ai-native-conform/src/baseline.rs` → `Baseline{schema,findings:Vec<String>}` + `freezeable`.
 - `grep -rni "conform" Cargo.toml xtask/Cargo.toml crates/*/Cargo.toml` → conform только в `xtask/Cargo.toml:22-24` (+ объявление ключей в `Cargo.toml:103-105`).
 - `grep -rni "specmap" crates/*/Cargo.toml xtask/Cargo.toml` → specmap в `xtask`, `vibe-cli`, `vibe-trace`.
 - `sed -n '37,75p' crates/vibe-trace/src/search.rs` → `HitSource` (дверь второго поставщика) + `Hit{source,…,file,line}`.
-- `find packages/org.vibevm.ai-native -name baseline.rs` → две версии (v0.7.0 без `freezeable`, v0.8.0 + вендор-копии с `freezeable`).
+- `find vibevm/vibepacks/org.vibevm.ai-native -name baseline.rs` → две версии (v0.7.0 без `freezeable`, v0.8.0 + вендор-копии с `freezeable`).
 - `grep -rn "fn freezeable" packages/` → только в v0.8.0 и вендор-копиях, НЕ в v0.7.0 (доказывает §9.1).

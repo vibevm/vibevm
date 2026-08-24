@@ -9,10 +9,10 @@ _TODO: one paragraph describing what `{project_name}` is and who it is for._
 ## Session boot sequence
 
 Every AI session starts here. In order:
-1. Read every file in `spec/boot/` in filename order.
+1. Read every file in `vibevm/vibespecs/boot/` in filename order.
 2. Read `spec/WAL.md` — current project state (checkpoint, not history log).
-3. Read the relevant PROP/FEAT documents under `spec/common/` and
-   `spec/modules/` for the task at hand.
+3. Read the relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and
+   `vibevm/vibespecs/modules/` for the task at hand.
 4. Only then begin work.
 
 If `spec/WAL.md` is older than 24 hours, verify the state with the user before

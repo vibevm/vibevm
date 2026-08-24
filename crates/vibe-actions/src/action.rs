@@ -10,7 +10,7 @@
 //! from the address (§8.1). A [`ResolvedAction`] is the immutable snapshot a
 //! surface renders (§3.2) — change is delivered by re-resolution, not mutation.
 //!
-//! Spec: [PROP-039 §3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#action-value).
+//! Spec: [PROP-039 §3](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#action-value).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#action-value");
 

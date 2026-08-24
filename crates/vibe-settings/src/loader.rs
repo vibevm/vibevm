@@ -15,7 +15,7 @@
 //! Frontend-agnostic (PROP-040 §1 `#frontend-agnostic`): only `std`, `toml`
 //! parse, and a read-only `HOME` lookup for the L1 root — zero rendering deps.
 //!
-//! Spec: [PROP-040 §3, §9](../../../../spec/modules/vibe-settings/PROP-040-settings.md#locations).
+//! Spec: [PROP-040 §3, §9](../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#locations).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#locations");
 

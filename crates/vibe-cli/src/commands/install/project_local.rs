@@ -39,7 +39,8 @@ mod tests {
     #[test]
     fn packages_dir_present_resolves_to_it() {
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::create_dir(tmp.path().join(vibe_core::layout::current_packages_root())).unwrap();
+        std::fs::create_dir_all(tmp.path().join(vibe_core::layout::current_packages_root()))
+            .unwrap();
         assert_eq!(
             project_packages_root(tmp.path()),
             Some(tmp.path().join(vibe_core::layout::current_packages_root()))
@@ -57,11 +58,11 @@ mod tests {
         // `is_dir()` not `exists()` — a stray packages-root file does not
         // masquerade as a registry root.
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::write(
-            tmp.path().join(vibe_core::layout::current_packages_root()),
-            "not a dir",
-        )
-        .unwrap();
+        let packages_file = tmp.path().join(vibe_core::layout::current_packages_root());
+        if let Some(parent) = packages_file.parent() {
+            std::fs::create_dir_all(parent).unwrap();
+        }
+        std::fs::write(&packages_file, "not a dir").unwrap();
         assert_eq!(project_packages_root(tmp.path()), None);
     }
 }

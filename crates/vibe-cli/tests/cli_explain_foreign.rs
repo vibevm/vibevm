@@ -21,7 +21,7 @@ use std::fs;
 fn slot(root: &std::path::Path, with_map: bool) -> std::path::PathBuf {
     let slot = root.join(common::slot_dir("org.demo.demo", "0.1.0"));
     fs::create_dir_all(slot.join("crates/x/src")).unwrap();
-    fs::create_dir_all(slot.join("spec")).unwrap();
+    fs::create_dir_all(slot.join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(
         slot.join("vibe.toml"),
         "[package]\ngroup = \"org.demo\"\nname = \"demo\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
@@ -30,7 +30,7 @@ fn slot(root: &std::path::Path, with_map: bool) -> std::path::PathBuf {
     if with_map {
         fs::write(
             slot.join("specmap.toml"),
-            "namespace = \"org.demo/demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+            "namespace = \"org.demo/demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
         )
         .unwrap();
     }
@@ -95,11 +95,11 @@ fn the_projects_own_address_builds_fresh_alongside_a_carried_map() {
     // The project's own spec tree, under its own namespace `proj`.
     fs::write(
         root.join("specmap.toml"),
-        "namespace = \"proj\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+        "namespace = \"proj\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
     )
     .unwrap();
     fs::create_dir_all(root.join("crates/p/src")).unwrap();
-    fs::create_dir_all(root.join("spec")).unwrap();
+    fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(
         root.join(common::spec_rel("P.md")),
         "## own {#req-o}\n`req r1`\n",

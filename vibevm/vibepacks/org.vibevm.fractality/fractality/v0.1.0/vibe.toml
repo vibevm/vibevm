@@ -1,0 +1,68 @@
+[package]
+name = "fractality"
+group = "org.vibevm.fractality"
+kind = "tool"
+version = "0.1.0"
+epoch = 1
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "An agent operating system in its earliest form: fractality-mission-control (a scheduler daemon holding the agent roster, call tree, and usage metering) plus the fractality CLI, which lets an expensive boss agent delegate tasks to swarms of cheap worker agents running in isolated Claude Code processes under other model providers, exchanging everything through files on disk"
+keywords = ["agents", "orchestration", "delegation", "swarm", "scheduler", "mission-control"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# Owner directive (2026-07-09, Phase 1): every fractality package adopts the
+# redbook practices and the AI-Native Rust discipline from birth — this
+# workspace and all its future sub-packages carry both requires (standing
+# rule, recorded in the workspace CLAUDE.md). The redbook umbrella pins the
+# practice edition; the rust-ai-native aggregator pulls the -lang stack, the
+# -mcp server, and (transitively) core-ai-native at one version set.
+[requires.packages]
+"flow:org.vibevm.world/redbook" = "^0.2.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
+# fractality is itself a specspace of the host; it dogfoods the specspace
+# grammar it lives under (boot snippet slot 11 → target resolution + registry).
+"flow:org.vibevm.world/wal-specspaces" = "^0.1.0"
+
+# The boss-side integration (IGNITION Phase 6): the boot snippet a
+# consuming boss loads at session start (slot 75 — outside the redbook
+# grid, no collision), and the guided delegation loop as a skill.
+[boot_snippet]
+source = "vibevm/vibespecs/boot/75-tool-fractality.xml"
+category = "tool"
+
+[[skill]]
+name = "fractality-delegate"
+path = "spec/skills/fractality-delegate"
+description = "Delegate a task to a fractality worker or swarm: matrix routing, packet authoring, spawn/observe, and the boss review loop"
+
+# The shipped binaries (PROP-025): `vibe bin build` compiles them in the
+# slot; `vibe bin exec <name>` dispatches through the consumer lockfile.
+[[binary]]
+name = "fractality"
+crate = "crates/fractality-cli"
+
+[[binary]]
+name = "fractality-mission-control"
+crate = "crates/fractality-mission-control"
+
+[[binary]]
+name = "fractality-pod"
+crate = "crates/fractality-pod"
+
+# The default registry pair every vibevm project carries (same blocks the
+# host root and `vibe init` use). In-repo packages resolve from the local
+# packages/ directory (passed as `--registry` on install); these two cover
+# the redbook members published only on vibespecs (e.g. atomic-commits,
+# sync-from-code). GitHub is the canonical publish target; GitVerse is the
+# resolve fall-through.
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"

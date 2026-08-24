@@ -2,6 +2,12 @@
 # campaign: the host `spec/` tree only. `packages/` waves come later;
 # widen this include list when the owner opens wave 2.
 #
+# LAYOUT NOTE (PROP-052, R4 flip 2026-08-24): the LIVE globs below spell the
+# new roots — `spec/` → `vibevm/vibespecs/`, `packages/` → `vibevm/vibepacks/`
+# (and a package's own specs sit at `<slot>/vibevm/vibespecs/`). The prose in
+# this file is dated chronicle and keeps the root names of its era; only the
+# `include` / `exclude` arrays are live configuration.
+#
 # The generated boot artifacts `spec/boot/STATIC.md` + `spec/boot/INDEX.md`
 # are OUT of scope (owner ruling 2026-07-24, campaign plan LOG): they are
 # rewritten by `vibe install`, so markup written into them dies on regen.
@@ -81,13 +87,13 @@
 # pass `--campaign campaigns/packages-2026-09` (or the wave-1 zone) from here on.
 schema = 1
 include = [
-    "spec/boot/[0-9]*.md",
-    "spec/common/**/*.md",
-    "spec/design/**/*.md",
-    "spec/manual-tests/**/*.md",
-    "spec/modules/**/*.md",
-    "packages/org.vibevm.world/**/*.md",
-    "packages/org.vibevm.ai-native/**/*.md",
+    "vibevm/vibespecs/boot/[0-9]*.md",
+    "vibevm/vibespecs/common/**/*.md",
+    "vibevm/vibespecs/design/**/*.md",
+    "vibevm/vibespecs/manual-tests/**/*.md",
+    "vibevm/vibespecs/modules/**/*.md",
+    "vibevm/vibepacks/org.vibevm.world/**/*.md",
+    "vibevm/vibepacks/org.vibevm.ai-native/**/*.md",
 ]
 
 # Enumerated exclusions, applied after the includes above (DRIFT-024 §4.2).
@@ -108,7 +114,7 @@ include = [
 # them are contracts and STAY observed — this pattern must never be widened
 # to `cards/**` or to `**/INDEX.md`.
 exclude = [
-    "packages/**/spec/cards/INDEX.md",
+    "vibevm/vibepacks/**/vibevm/vibespecs/cards/INDEX.md",
     # SUPERSEDED VERSION SLOTS — frozen history, not living contracts.
     # Plan §3.3 rules that a superseded slot is "marked, never verified",
     # because verifying frozen history costs what a live contract costs and
@@ -122,8 +128,8 @@ exclude = [
     # edited in place and `vibe update` re-materialises consumers, so new
     # superseded slots appear only at a real release — which is also why the
     # -lang re-mint was called off rather than executed.
-    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
-    "packages/org.vibevm.world/redbook/v0.1.0/**",
+    "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/**",
+    "vibevm/vibepacks/org.vibevm.world/redbook/v0.1.0/**",
     # LEGACY LANGUAGE PROJECTIONS — frozen history, same category as a
     # superseded version slot and excluded for the same reason: §3.3 rules them
     # "marked, never verified", and `--exhaustive` cannot express that (it
@@ -143,7 +149,7 @@ exclude = [
     # today; a pattern that stops matching is warned about by name on every run.
     # Re-add the languages here as includes when a stack for them lands — that
     # is the owner's "когда-нибудь", and it is an addition, not a revert.
-    "packages/**/spec/legacy-projections/**",
+    "vibevm/vibepacks/**/vibevm/vibespecs/legacy-projections/**",
     # THE BOOK — reference depth, not a contract.
     # OWNER RULING 2026-07-26, F-091: «исключи spec/book/**».
     # `flow:redbook` ships the AI-native development book at `spec/book/ru/`
@@ -163,7 +169,7 @@ exclude = [
     # README goes with the edition it plans.
     # Re-admitting it needs a rule the campaign does not have — "lore is marked
     # but never verified" — and that rule needs tooling, not just a glob.
-    "packages/**/spec/book/**",
+    "vibevm/vibepacks/**/vibevm/vibespecs/book/**",
     # THE DISCOVERY PROMPT — a payload, not a claim.
     # OWNER RULING 2026-07-27, F-096, asked before B8 was dispatched rather than
     # after it was marked: exclude `DISCOVERY-PROMPT.md` (169 units, 37 % of that
@@ -189,5 +195,5 @@ exclude = [
     # The counter-argument is recorded in the campaign LOG rather than won: the
     # artifact is what the package exists to ship, so its corpus is now
     # meta-commentary about something unobserved. The owner accepted that.
-    "packages/**/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md",
+    "vibevm/vibepacks/**/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.md",
 ]

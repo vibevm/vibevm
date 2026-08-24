@@ -7,7 +7,7 @@
 //! threads a [`CancellationToken`], then awaits the action's own async body.
 //! The result is a first-class typed [`InvokeResult`].
 //!
-//! Spec: [PROP-039 §7](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#invocation).
+//! Spec: [PROP-039 §7](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#invocation).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invocation");
 

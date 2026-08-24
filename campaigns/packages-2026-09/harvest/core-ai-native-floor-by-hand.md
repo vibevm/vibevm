@@ -1,6 +1,6 @@
 # core-ai-native — the floor, run by hand
 
-_Captured 2026-07-28 against `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/`._
+_Captured 2026-07-28 against `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/`._
 
 **`core-ai-native` ships library crates only** — `-conform` and `-specmap` build to rlibs and `-specmark` to a proc-macro dll, so the package has no umbrella CLI and no `floor` subcommand exists for it. The floor's three portable steps are therefore run by hand here; the discipline-specific steps (conform, specmap, test-gate) have no runnable form in this package at all.
 
@@ -283,4 +283,4 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 EXIT=0
 ```
 
-**Scope:** every fact under `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` that this run bears on. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).
+**Scope:** every fact under `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/` that this run bears on. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).

@@ -1,9 +1,9 @@
 # D6e — the git family + `sync-from-code`: six claimed absences, re-verified before any demotion
 
-_Worked 2026-07-29. Subjects: `packages/org.vibevm.world/git-attribution-policy/v0.1.0/`,
-`packages/org.vibevm.world/git-conventional-commits/v0.1.0/`,
-`packages/org.vibevm.world/git-atomic-commits/v0.1.0/`,
-`packages/org.vibevm.world/sync-from-code/v0.1.0/`. Six obligations, all
+_Worked 2026-07-29. Subjects: `vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/`. Six obligations, all
 `build-or-demote`, 8 drift verdicts. Every one asserts that some checker,
 mechanism or record **does not exist**._
 
@@ -135,11 +135,11 @@ place to change it, zero copies to drift», under the single-place law two lines
 above it. The consumer keeps neither half:
 
 ```console
-$ grep -n "git-attribution-policy" spec/boot/STATIC.xml
+$ grep -n "git-attribution-policy" vibevm/vibespecs/boot/STATIC.xml
 421:<!-- vibe:static org.vibevm.world/git-attribution-policy — …/55-flow-attribution-policy.xml -->
 615:<!-- vibe:static org.vibevm.world/git-attribution-policy — …/55-flow-attribution-policy.xml -->
 
-$ diff <(sed -n '421,470p' spec/boot/STATIC.xml) <(sed -n '615,664p' spec/boot/STATIC.xml)
+$ diff <(sed -n '421,470p' vibevm/vibespecs/boot/STATIC.xml) <(sed -n '615,664p' vibevm/vibespecs/boot/STATIC.xml)
    (no output — two verbatim copies in one generated always-loaded file)
 ```
 
@@ -149,16 +149,16 @@ hand restatement**: the flow is pinned `=0.1.0` by the family aggregator
 (`vibedeps/flow-redbook/0.2.0/vibe.toml:29`) and the host installs
 `link = "static-transitive"` (`vibe.toml:28`). On top of the two compiled
 copies the policy is restated at `CLAUDE.md:5`, `AGENTS.md:5`, `GEMINI.md:5`,
-`spec/boot/00-core.xml:21`, `spec/common/PROP-000.xml:161`
+`vibevm/vibespecs/boot/00-core.xml:21`, `vibevm/vibespecs/common/PROP-000.xml:161`
 (`##GP-ATTRIBUTION`), and `.claude/agents/opus5.md:15`.
 
 The drift the verdict predicted is present:
 
 ```console
-$ grep -n "12\.1" spec/common/PROP-000.xml          # (no output)
-$ grep -nE "^## 12" spec/common/PROP-000.xml
+$ grep -n "12\.1" vibevm/vibespecs/common/PROP-000.xml          # (no output)
+$ grep -nE "^## 12" vibevm/vibespecs/common/PROP-000.xml
 157:## 12. Commit and push discipline {#commits}
-$ grep -n "PROP-000 §12.1" spec/boot/00-core.xml
+$ grep -n "PROP-000 §12.1" vibevm/vibespecs/boot/00-core.xml
 21:… The rule itself (and its copy in PROP-000 §12.1) is the only place …
 ```
 
@@ -170,7 +170,7 @@ the copy-drift the anchor says the single-place law prevents.
 layers — the package ships no executable (`vibe.toml` declares one
 `[boot_snippet]` and nothing else), no engine crate exists for it, no CLI drives
 it, and the consumer deployed no hook. **Host deployment** for the
-configuration half: the snippet is compiled into `spec/boot/STATIC.xml` and read
+configuration half: the snippet is compiled into `vibevm/vibespecs/boot/STATIC.xml` and read
 at every session start, and the surface it governs is clean.
 
 **Why nothing moved.** Both sentences are the package **prescribing**, not
@@ -202,17 +202,17 @@ and the consumer breaks it.
 **Anchors:** 1 of 1 moved: `##PACKAGE-MAKES-THE-CHOICE-EXPLICIT-AND-ENFORCED`
 (defined at `README.md:14`, checked against the file rather than assumed).
 **Files touched:**
-`packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md`
+`vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/README.md`
 **Perimeter searched:** F-230's perimeter (shared — same absence, same day, not
 re-run), **plus** the package's own tree listed in full rather than grepped,
 because the claim's subject is the package: `find
-packages/org.vibevm.world/git-attribution-policy -type f`, and its `vibe.toml`
+vibevm/vibepacks/org.vibevm.world/git-attribution-policy -type f`, and its `vibe.toml`
 read for what an install actually writes.
 
 **What the search found:**
 
 ```console
-$ find packages/org.vibevm.world/git-attribution-policy -type f
+$ find vibevm/vibepacks/org.vibevm.world/git-attribution-policy -type f
   …/v0.1.0/LICENSE.md
   …/v0.1.0/README.md
   …/v0.1.0/spec/boot/55-flow-attribution-policy.md
@@ -250,7 +250,7 @@ files; the deciding one is not.
 **Why PARTIAL and not a flat demotion.** *Explicit* is true and verifiable:
 both postures are documented as first-class, the single-place law is stated, and
 the boot snippet lands compiled into this consumer's always-loaded lane
-(`spec/boot/STATIC.xml:421`). And the package's **own** doctrine ranks that above
+(`vibevm/vibespecs/boot/STATIC.xml:421`). And the package's **own** doctrine ranks that above
 scanning — `enforcement-checklist.xml:57` («Scanning catches slips; configuration
 prevents them») and `:63-65` («Put the policy there — this package's boot
 snippet is exactly that — and the agent stops *producing* the marks»). Measured,
@@ -262,7 +262,7 @@ checker is a wish.
 
 **Which layer has it, if any:** **spec** for *explicit* (three documents plus
 the snippet, all present); **host deployment** for the configuration effect (the
-snippet compiled into `spec/boot/STATIC.xml`); **nowhere** for a checker — not in
+snippet compiled into `vibevm/vibespecs/boot/STATIC.xml`); **nowhere** for a checker — not in
 the package, not as an engine crate, not as a CLI driver, not deployed by this
 consumer.
 
@@ -371,12 +371,12 @@ $ grep -rniE "commitlint|conventional.?commit|commit-msg|commit_msg|imperative" 
     --include=*.rs --include=*.sh --include=*.ps1 --include=*.py \
     --include=*.toml --include=*.json --include=*.yml \
     crates xtask tools discipline terraform schemas fixtures manual-tests \
-    packages/org.vibevm.world
+    vibevm/vibepacks/org.vibevm.world
   … every hit is a commit-message PRODUCER, not a checker:
   crates/vibe-publish/src/git_publish.rs:57   let commit_msg = format!("Release {package_name}@{version}");
   crates/vibe-cli/src/commands/registry/redirect/update.rs:450  build_redirect_update_commit_msg(…)
   xtask/src/batch_review/mod.rs:180           "conventional-commits",   ← the dead-name allowlist again
-  packages/org.vibevm.world/*/vibe.toml       package descriptions
+  vibevm/vibepacks/org.vibevm.world/*/vibe.toml       package descriptions
 
 $ ls package.json .commitlintrc* commitlint.config.*   # rc=2, none exist
 $ ls -1 crates/vibe-check/src/checks/
@@ -433,7 +433,7 @@ reading, not by absence — plus a keyword sweep of that document for `checker` 
 `linter` · `hook` · `CI` · `script` · `automat*` · `tool will` · `command`;
 plus F-234's commit-checker sweep over the standing perimeter, not re-run; plus
 this repository's own history read-only for the test's real behaviour; plus the
-compiled boot lane (`spec/boot/STATIC.xml`) and the installed copy under
+compiled boot lane (`vibevm/vibespecs/boot/STATIC.xml`) and the installed copy under
 `vibedeps/`, which is the layer a package-scoped read cannot see.
 
 **What the search found — the document does not claim a checker, anywhere:**
@@ -458,9 +458,9 @@ no checker»* — presupposes a checker the document never promises.
 
 **Where the test does live, which is the layer a package-scoped read misses.**
 The atomicity flow is compiled into this consumer's always-loaded boot
-(`spec/boot/STATIC.xml:363`, and again at `:557` — the same duplication F-230
+(`vibevm/vibespecs/boot/STATIC.xml:363`, and again at `:557` — the same duplication F-230
 records), and the compiled snippet carries the *procedure*:
-`spec/boot/STATIC.xml:392` — «Group changes into atomic commits — one commit per
+`vibevm/vibespecs/boot/STATIC.xml:392` — «Group changes into atomic commits — one commit per
 intent, not per file» — and points at the full protocol at `:411`. The pointed-at
 document is installed and on disk at
 `vibedeps/flow-git-atomic-commits/0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md`.
@@ -499,7 +499,7 @@ document's own next section.**
 
 **Which layer has it, if any:** **spec** — the test is a rule for a human, stated
 in the protocol and installed under `vibedeps/`; **host deployment / boot lane**
-for the procedure that invokes it (`spec/boot/STATIC.xml:392`). **Nowhere** for
+for the procedure that invokes it (`vibevm/vibespecs/boot/STATIC.xml:392`). **Nowhere** for
 an automated checker — and nowhere is where the package puts it, deliberately.
 
 **Why nothing moved, stated plainly.** Demoting this would append *«Specified,
@@ -538,7 +538,7 @@ whole of it rather than `spec/` alone** — the verdict's figure of 13 is a
 says a package-scoped perimeter reads adoption as absence. Plus this
 repository's own history, read-only: every `docs(spec)` commit (181 of them),
 every commit whose body names sync-from-code, and the per-file diffs of the four
-candidates. Plus the **compiled boot lane** (`spec/boot/STATIC.xml`) and the
+candidates. Plus the **compiled boot lane** (`vibevm/vibespecs/boot/STATIC.xml`) and the
 installed copy under `vibedeps/`, which is the layer that decides whether the
 rule was even in the room.
 
@@ -566,7 +566,7 @@ $ git show 4ea09ad0 --format="" -- spec/ | grep -c -i revisit
 — and every one of the 13 is an `"id": "…-revisit"` key inside
 `campaigns/progress-2026-08/run/cache.json`, the campaign's verdict cache, which
 rides along in the same commit. **The spec diff itself
-(`spec/modules/vibe-cli/PROP-042-aiui-observation.xml`, +17 lines) contains no
+(`vibevm/vibespecs/modules/vibe-cli/PROP-042-aiui-observation.xml`, +17 lines) contains no
 revisit trigger at all** — it adds four `##VERB-*` bullets and stops.
 `04d7e4ae`'s spec diff (`PROP-002-decentralized-registry.xml`, 11 lines) likewise
 returns 0. Two further code-driven spec corrections that do not name the
@@ -592,14 +592,14 @@ The `campaigns/` bulk is **the campaign's own JSON evidence and baseline files
 quoting package anchors whose ids contain the word** — machine records, not
 instances of the practice. Strip them and the genuine practice outside `spec/`
 is **9 lines in two documents**: `PHASE-D-BATCH-PLAN.md` × 5 (§3.1, §3.2, §3.3,
-§3.4, §3.6) and `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` × 4,
+§3.4, §3.6) and `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` × 4,
 both in the sibling `decision-records` form. Likewise the `packages/` 85 are
 `fractality` (24), `delegation-rules` (16) and `decision-records` (5) — other
 packages using the form, not this consumer's spec tree.
 
 **So the verdict's `spec/` measurement holds, and I can sharpen it.** The 13 in
 `spec/` are **12 actual triggers plus the rule itself**, the latter compiled into
-this repository's own boot at `spec/boot/STATIC.xml:255`: *«| **When to revisit**
+this repository's own boot at `vibevm/vibespecs/boot/STATIC.xml:255`: *«| **When to revisit**
 | A measurable trigger: metric + threshold + where it is observed. |»* Against
 that, `**Decision**`-labelled sections number **151 in `spec/`** (264 across the
 perimeter) — so the trigger is present on roughly **8 %** of the decisions that
@@ -611,7 +611,7 @@ artifacts stop being committed»; `PROP-043:98/141/255` «the XML storage fronte
 lands» / «never expected» / «the post-campaign fold»; `PROP-001:25` «when a
 concrete reason arises» — which is close to the flow's own *bad* example;
 `PROP-001:113` «if and when we need one of:». The **closest to compliant** is
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:116` — *«a third of
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:116` — *«a third of
 `world`'s units land `unverifiable`»* — which has a metric and a threshold and
 leaves the observation point implicit. **None of the twelve carries all three.**
 
@@ -619,9 +619,9 @@ leaves the observation point implicit. **None of the twelve carries all three.**
 **loaded**:
 
 ```console
-$ grep -n "sync-from-code" spec/boot/STATIC.xml
+$ grep -n "sync-from-code" vibevm/vibespecs/boot/STATIC.xml
 1221:<!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->
-$ sed -n '1248,1251p' spec/boot/STATIC.xml
+$ sed -n '1248,1251p' vibevm/vibespecs/boot/STATIC.xml
 2. Draft a diff against the relevant spec section. Include: new value,
    reason, and the condition under which the decision should be
    revisited.
@@ -632,7 +632,7 @@ This anchor's sentence is verbatim in this repository's always-loaded boot file
 at the start of the very sessions that ran both syncs. The rule was in the room
 and was not followed. *(The registry's `installed: False` on this row is a path
 artefact: the snippet compiles from `boot/20-flow-sync-from-code.md`, not
-`spec/boot/…`, in the install slot.)*
+`vibevm/vibespecs/boot/…`, in the install slot.)*
 
 **And the package passes its own test**, which is the mandate's acceptance
 criterion and worth recording explicitly. `SYNC-PROTOCOL.xml:143-144` carries the
@@ -643,7 +643,7 @@ does not.
 
 **Which layer has it, if any:** **spec** — the step, the required part, the
 reviewer check and a compliant worked example, all in the package; **host
-deployment / boot lane** — the step compiled into `spec/boot/STATIC.xml:1248` and
+deployment / boot lane** — the step compiled into `vibevm/vibespecs/boot/STATIC.xml:1248` and
 the trigger's shape definition at `:255`. **Nowhere** in the consumer's four
 code-driven spec edits, and on 8 % of its decision sections.
 
@@ -691,7 +691,7 @@ Four code-driven spec edits (`4ea09ad0`, `04d7e4ae`, `812bfecc`, `5ad0aaf2`),
 against 151 `**Decision**`-labelled sections; **none of the twelve carrying
 metric + threshold + observation point together**, which is the shape
 `review-workflow.xml:67` sets as its good example (*«When p99 network latency
-drops below 100 s, per mon/latency-p99»*) and `spec/boot/STATIC.xml:255` compiles
+drops below 100 s, per mon/latency-p99»*) and `vibevm/vibespecs/boot/STATIC.xml:255` compiles
 into this repository's boot as the field's requirement.
 
 So the reviewer-side statement is falsified in the only way it can be: the third
@@ -728,7 +728,7 @@ mechanism lands wrong, and it is worth recording because a batch cut on
 **Which layer has it, if any:** **spec** — the required part, the reviewer
 check, the good and bad examples, and a compliant worked instance, all inside
 the package; **host deployment / boot lane** — the sibling `decision-records`
-field table at `spec/boot/STATIC.xml:255` defines the shape and is loaded every
+field table at `vibevm/vibespecs/boot/STATIC.xml:255` defines the shape and is loaded every
 session. **Nowhere** in what this consumer's agents actually handed its reviewer.
 
 **Why nothing moved.** *«**A revisit trigger** — the condition under which the

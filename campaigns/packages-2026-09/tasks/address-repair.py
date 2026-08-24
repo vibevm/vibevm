@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """The address family's repair, as a transformation rather than 69 hand edits.
 
-Every `../flows/…` link in a package's `spec/boot/` snippet is correct where it
+Every `../flows/…` link in a package's `vibevm/vibespecs/boot/` snippet is correct where it
 is written and broken where it is read.  Measured over the three lanes:
 
     packages/  canonical    70 links,   0 dangling
     vibedeps/  installed   142 links,  21 dangling
-    spec/boot/ compiled     75 links,  75 dangling
+    vibevm/vibespecs/boot/ compiled     75 links,  75 dangling
 
 The compiler concatenates snippet bodies verbatim into `spec/boot/STATIC.md`
 (PROP-035's linker stage), so a relative path that meant `<pkg>/spec/flows/…`
@@ -103,7 +103,7 @@ def plan(include_out_of_scope: bool = False) -> list[Repair]:
             for m in LINK.finditer(line):
                 target = m.group("target")
                 doc, _, fragment = target.partition("#")
-                # `../flows/x/DOC.md` read from `spec/boot/` → `spec/flows/x/DOC.md`
+                # `../flows/x/DOC.md` read from `vibevm/vibespecs/boot/` → `spec/flows/x/DOC.md`
                 doc_path = doc[len("../") :]           # flows/x/DOC.md
                 on_disk = version_root / "spec" / doc_path
                 stem = doc_path[: -len(".md")] if doc_path.endswith(".md") else doc_path

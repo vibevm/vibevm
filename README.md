@@ -123,8 +123,8 @@ vibe install --offline --path hello-vibe
 - `vibe.toml` — authored project/package/workspace declarations and direct requirements.
 - `vibe.lock` — the exact resolved package graph and content identities.
 - `vibedeps/` — per-project materialised package content, copied from the machine store.
-- `spec/boot/STATIC.xml` and `spec/boot/INDEX.md` — the computed agent boot lanes.
-- `spec/WAL.xml` — the project's living session checkpoint.
+- `vibevm/vibespecs/boot/STATIC.xml` and `vibevm/vibespecs/boot/INDEX.md` — the computed agent boot lanes.
+- `vibevm/vibespecs/WAL.xml` — the project's living session checkpoint.
 
 `vibe` keeps authored project specs separate from materialised dependencies. See [the loading model](docs/loading-model.md) and [architecture](docs/architecture.md) for the full layout.
 

@@ -11,7 +11,7 @@
 //! normalization rules) are pinned in
 //! [`spec/modules/vibe-registry/PROP-001-git-backend.md`][prop].
 //!
-//! [prop]: ../../../../spec/modules/vibe-registry/PROP-001-git-backend.md
+//! [prop]: ../../../../vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait");
 

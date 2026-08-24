@@ -94,10 +94,11 @@ fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
 /// its workspace-relative path. Mirrors `boot_artifacts::tests::write_simple_boot`
 /// (the `simple`-format on-disk shape, R3).
 fn write_simple_boot(ws: &Path, slot: &str, body: &str) -> String {
-    let p = ws.join(format!("vibedeps/{slot}/1.0.0/boot.md"));
+    let rel = format!("{}/{slot}/1.0.0/boot.md", deps_root());
+    let p = ws.join(&rel);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(&p, body).unwrap();
-    format!("vibedeps/{slot}/1.0.0/boot.md")
+    rel
 }
 
 /// Write a `normal` package's source file under `vibedeps/<slot>/1.0.0/spec/<rel>`
@@ -105,10 +106,20 @@ fn write_simple_boot(ws: &Path, slot: &str, body: &str) -> String {
 /// on-disk shape, R3) and return its workspace-relative path. Mirrors the
 /// `write_aliaser_fixture` / `write_greeter_fixture` layout.
 fn write_spec_doc(ws: &Path, slot: &str, rel: &str, body: &str) -> String {
-    let p = ws.join(format!("vibedeps/{slot}/1.0.0/spec/{rel}"));
+    let full = format!("{}/{slot}/1.0.0/{}/{rel}", deps_root(), specs_root());
+    let p = ws.join(&full);
     fs::create_dir_all(p.parent().unwrap()).unwrap();
     fs::write(&p, body).unwrap();
-    format!("vibedeps/{slot}/1.0.0/spec/{rel}")
+    full
+}
+/// The live layout roots, `/`-separated (PROP-052): fixtures spell slot
+/// paths through the layout module so the R4 flip carries them.
+fn deps_root() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_vibedeps_root())
+}
+
+fn specs_root() -> String {
+    vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
 }
 
 /// Extract one package's compiled block (its provenance marker + origin-

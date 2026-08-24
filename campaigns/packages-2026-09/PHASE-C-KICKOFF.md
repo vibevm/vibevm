@@ -29,10 +29,10 @@ Phase B закрыта: progress check --exhaustive выходит 0 по все
 
 Перед началом прочитай, в этом порядке:
   1. campaigns/packages-2026-09/PHASE-C-KICKOFF.md  — этот файл целиком
-  2. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
+  2. vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
      (#world-verdicts, #ai-native-verdicts, #phase-c) — правила вердиктов
      и выходной гейт из пяти пунктов
-  3. spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml — запись Phase C
+  3. vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml — запись Phase C
      волны 1 (2026-07-25): механика вердиктов, семантика по стадиям,
      и чем она закрылась (4 944 маркера, 93.0 % confirmed)
 
@@ -46,7 +46,7 @@ scan сохраняет карты, перезапись с нуля их сот
 отклоняется — «probably true» не вердикт, пиши unverifiable.
 
 Начни с §3.2-кластера (ai-native): его чекеры надо ПРОГНАТЬ по
-packages/org.vibevm.ai-native/**, и их вывод и есть доказательство для
+vibevm/vibepacks/org.vibevm.ai-native/**, и их вывод и есть доказательство для
 большей части этого namespace. Выходной гейт требует, чтобы эти прогоны
 лежали ФАЙЛАМИ в campaigns/packages-2026-09/harvest/ как «команда → живой
 вывод» — волна 1 этот пункт пропустила и заплатила отложенной фазой
@@ -65,7 +65,7 @@ Five clauses, and clause (iii) is the one wave 1 skipped:
    packages.
 3. **The §3.2 checker runs exist as FILES** under
    `campaigns/packages-2026-09/harvest/` — floor, `conform`, `specmap` and the
-   health collector over `packages/org.vibevm.ai-native/**`, each captured as
+   health collector over `vibevm/vibepacks/org.vibevm.ai-native/**`, each captured as
    `command → real output`.
 4. **Every `world` verdict records which of §3.1's three source classes it rests
    on**, and those resting on source 1 alone are counted separately as

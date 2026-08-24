@@ -1,6 +1,6 @@
 //! Check 6 — WAL has the canonical sections (Current Phase,
 //! Constraints, Done, Next, Issues). The WAL is a spec source and lives
-//! in either PROP-045 serialisation — `spec/WAL.md` or `spec/WAL.xml` —
+//! in either PROP-045 serialisation — `spec/WAL.md` or `vibevm/vibespecs/WAL.xml` —
 //! one document, one form; an XML WAL is read through its canonical
 //! Markdown projection, so the heading scan is form-blind.
 

@@ -177,13 +177,13 @@ Budget signal: past ~3 files, stop and return.
   settings-dir consolidation — the canonical path is `~/.vibe/config.toml`.
   Pre-existing, not this task's; noted because the reviewer is in the file.)
 
-  `spec/modules/vibe-registry/PROP-010-local-package-cache.xml:68` —
+  `vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml:68` —
 
   > ```
   > @fact:USER-LEVEL-REGISTRIES **Decision.** A **user-level default registry configuration** — `[[registry]]` (and `[[mirror]]`) entries in the existing user config (`~/.config/vibe/config.toml`, the `UserConfig` layer that already promotes `[env]` per `VIBEVM-SPEC.md` §9.5). It supplies registry configuration when no project does, and seeds a new one: @status:spec/done
   > ```
 
-  `spec/modules/vibe-registry/PROP-010-local-package-cache.xml:74` —
+  `vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml:74` —
 
   > ```
   > - @fact:PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @status:spec/done
@@ -191,10 +191,10 @@ Budget signal: past ~3 files, stop and return.
 
   Both are incidental cross-references; neither states which names are
   permitted, so the allowlist falsifies neither. Nothing under
-  `spec/modules/vibe-workspace/` describes the table at all (PROP-011,
+  `vibevm/vibespecs/modules/vibe-workspace/` describes the table at all (PROP-011,
   which `user_config.rs` cites, covers only `[install] slot_integrity`).
 
-  `spec/WAL.xml:22-24` and `:111-114` describe this task as parked on the
+  `vibevm/vibespecs/WAL.xml:22-24` and `:111-114` describe this task as parked on the
   owner's letter; both go stale once this lands.
 
 - **Drift I created and then fixed, outside spec.**
@@ -218,5 +218,5 @@ Budget signal: past ~3 files, stop and return.
 
 - **Not absorbed.** The stale `~/.config/vibe/config.toml` path in
   `VIBEVM-SPEC.md:1077` and in `docs/commands/show.md:139,146,154-159`
-  (canonical is `~/.vibe/config.toml`); the two `spec/WAL.xml` passages
+  (canonical is `~/.vibe/config.toml`); the two `vibevm/vibespecs/WAL.xml` passages
   that call this task parked. Neither is this task's contract.

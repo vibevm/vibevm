@@ -84,7 +84,7 @@ The one conditional content pass is the `#embed` expander,
 no directives at all:
 
 ```
-$ grep -c -E '^\s*#(embed|use|source) ' spec/boot/STATIC.xml
+$ grep -c -E '^\s*#(embed|use|source) ' vibevm/vibespecs/boot/STATIC.xml
 0
 ```
 
@@ -178,7 +178,7 @@ terraforms
 
 So the three targets are:
 
-| link in the compiled lane | resolves from `spec/boot/` to | real path |
+| link in the compiled lane | resolves from `vibevm/vibespecs/boot/` to | real path |
 | --- | --- | --- |
 | `../flows/wal/WAL-PROTOCOL.md` | `spec/flows/wal/WAL-PROTOCOL.md` (absent) | `vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md` |
 | `../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` | `spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` (absent) | `vibedeps/flow-campaign-plans/0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md` |
@@ -191,10 +191,10 @@ snippet lives, for most packages.** From
 `INDEX.md` dynamic lane therefore works: it names the snippet at its installed
 path (`crates/vibe-workspace/src/install/bootgen.rs:327`), and a session opening
 that file resolves the sibling link correctly. It is *concatenation into
-`spec/boot/STATIC.xml`* that severs the link, not installation.
+`vibevm/vibespecs/boot/STATIC.xml`* that severs the link, not installation.
 
 **Except for five packages, where the link is broken in the slot too.** Their
-snippet is declared at a bare `boot/`, not `spec/boot/`, while the flow docs sit
+snippet is declared at a bare `boot/`, not `vibevm/vibespecs/boot/`, while the flow docs sit
 under `spec/flows/`:
 
 ```
@@ -219,7 +219,7 @@ vibedeps/flow-git-atomic-commits/0.1.0/vibe.toml
 `../flows/atomic-commits/…` from `boot/` names `<slot>/flows/atomic-commits/…`,
 one `spec/` short of the real file. This trait matches the campaign's earlier
 in-package finding at
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1538-1546` — 8 broken
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1538-1546` — 8 broken
 links across the five bare-`boot/` packages.
 
 ---
@@ -229,7 +229,7 @@ links across the five bare-`boot/` packages.
 ### 4.1 `](../flows/` in the compiled lane
 
 ```
-$ grep -o -F '](../flows/' spec/boot/STATIC.xml | wc -l
+$ grep -o -F '](../flows/' vibevm/vibespecs/boot/STATIC.xml | wc -l
 69
 ```
 
@@ -238,7 +238,7 @@ $ grep -o -F '](../flows/' spec/boot/STATIC.xml | wc -l
 ### 4.2 Root-relative `spec/flows/` paths in the compiled lane
 
 ```
-$ grep -o -F 'spec/flows/' spec/boot/STATIC.xml | wc -l
+$ grep -o -F 'spec/flows/' vibevm/vibespecs/boot/STATIC.xml | wc -l
 41
 ```
 
@@ -247,7 +247,7 @@ Of those 41, **38 are the *label* of one of the 69 links** — the markdown read
 human-visible text already asserts the host-root path that does not exist:
 
 ```
-$ grep -c -E '\[`spec/flows/[^`]*`\]\(\.\./flows/' spec/boot/STATIC.xml
+$ grep -c -E '\[`spec/flows/[^`]*`\]\(\.\./flows/' vibevm/vibespecs/boot/STATIC.xml
 38
 ```
 
@@ -255,7 +255,7 @@ The remaining **3 are bare prose mentions with no link at all** — invisible to
 any `\.\./flows/` scan:
 
 ```
-$ grep -n -F 'spec/flows/' spec/boot/STATIC.xml | grep -v -F '](../flows/'
+$ grep -n -F 'spec/flows/' vibevm/vibespecs/boot/STATIC.xml | grep -v -F '](../flows/'
 457:- This snippet and `spec/flows/attribution-policy/` are the **only**
 651:- This snippet and `spec/flows/attribution-policy/` are the **only**
 1422:- This flow owns only the protocol files under `spec/flows/wal/`, the
@@ -264,10 +264,10 @@ $ grep -n -F 'spec/flows/' spec/boot/STATIC.xml | grep -v -F '](../flows/'
 ### 4.3 Distinct target documents
 
 ```
-$ grep -o -E '\]\(\.\./flows/[^)#]*' spec/boot/STATIC.xml | sort -u | wc -l
+$ grep -o -E '\]\(\.\./flows/[^)#]*' vibevm/vibespecs/boot/STATIC.xml | sort -u | wc -l
 60
 
-$ grep -o -E '\]\(\.\./flows/[^/)]*' spec/boot/STATIC.xml | sort -u | wc -l
+$ grep -o -E '\]\(\.\./flows/[^/)]*' vibevm/vibespecs/boot/STATIC.xml | sort -u | wc -l
 25
 ```
 
@@ -279,7 +279,7 @@ link strings including anchors; the extra is
 ### 4.4 How the 69 distribute across contributions
 
 ```
-$ awk '/^<!-- vibe:static /{ if(src!="") printf "%3d  %s\n", n, src; src=$0; sub(/^<!-- vibe:static [^—]*— /,"",src); sub(/ -->$/,"",src); n=0; next } { n+=gsub(/\]\(\.\.\/flows\//,"&") } END{ if(src!="") printf "%3d  %s\n", n, src }' spec/boot/STATIC.xml
+$ awk '/^<!-- vibe:static /{ if(src!="") printf "%3d  %s\n", n, src; src=$0; sub(/^<!-- vibe:static [^—]*— /,"",src); sub(/ -->$/,"",src); n=0; next } { n+=gsub(/\]\(\.\.\/flows\//,"&") } END{ if(src!="") printf "%3d  %s\n", n, src }' vibevm/vibespecs/boot/STATIC.xml
   3  vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md
   3  vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md
   3  vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md
@@ -327,7 +327,7 @@ compiled per-unit artifact concatenated into the host lane as one entry
 
 ### 4.5 Would a rewrite actually land the links? Two resolutions, measured
 
-Script: `resolve.py` / `resolve2.py` (scratchpad), reading `spec/boot/STATIC.xml`,
+Script: `resolve.py` / `resolve2.py` (scratchpad), reading `vibevm/vibespecs/boot/STATIC.xml`,
 tracking the in-scope `vibe:static` provenance marker, and `os.path.isfile`-ing
 each of the 69 targets.
 
@@ -448,33 +448,33 @@ skipped; `tr` normalises Windows separators before filtering nested copies):
 
 ```
 $ rg -c --no-ignore -F '](../flows/' packages/ | tr '\\' '/' | grep -v '/vibedeps/' | grep -v '/\.vibe/' | sort
-packages/org.vibevm.fractality/delegation-first/v0.1.0/spec/boot/76-flow-delegation-first.xml:1
-packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/77-flow-delegation-rules.xml:2
-packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.xml:3
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml:3
-packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.xml:3
-packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.xml:3
-packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml:3
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.xml:1
-packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.xml:3
-packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml:2
-packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.xml:3
-packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.xml:1
-packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.xml:1
-packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.xml:3
-packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.xml:1
-packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.xml:3
-packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.xml:1
-packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.xml:2
-packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.xml:3
-packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.xml:3
-packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.xml:3
-packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.xml:3
-packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.xml:3
-packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.xml:3
-packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.xml:4
-packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.xml:1
-packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.xml:3
+vibevm/vibepacks/org.vibevm.fractality/delegation-first/v0.1.0/vibevm/vibespecs/boot/76-flow-delegation-first.xml:1
+vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/vibevm/vibespecs/boot/77-flow-delegation-rules.xml:2
+vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml:3
+vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml:3
+vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml:3
+vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml:3
+vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml:3
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml:1
+vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml:3
+vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml:2
+vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml:3
+vibevm/vibepacks/org.vibevm.world/git-autonomy/v0.1.0/vibevm/vibespecs/boot/32-flow-autonomy.xml:1
+vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml:1
+vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/boot/42-flow-health-audit.xml:3
+vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml:1
+vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml:3
+vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml:1
+vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml:2
+vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml:3
+vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml:3
+vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml:3
+vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml:3
+vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml:3
+vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml:3
+vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml:4
+vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml:1
+vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/boot/10-flow-wal.xml:3
 
 $ … | wc -l
 27
@@ -496,12 +496,12 @@ $ rg -c --no-ignore -F '](../flows/' packages/ | awk -F: '{s+=$NF} END {print s}
 184
 ```
 
-Those extra 43 files are `packages/org.vibevm.fractality/{delegation-rules,fractality}/v0.1.0/vibedeps/**`
+Those extra 43 files are `vibevm/vibepacks/org.vibevm.fractality/{delegation-rules,fractality}/v0.1.0/vibedeps/**`
 — regenerated dependency copies that follow their upstream, not authored surface.
 
 Three cost riders that the raw count hides:
 
-- **The 3 bare prose mentions** (`spec/boot/STATIC.xml:457, 651, 1422`) carry no
+- **The 3 bare prose mentions** (`vibevm/vibespecs/boot/STATIC.xml:457, 651, 1422`) carry no
   `](` and are outside the 65. So are the **38 backticked labels** — each of the
   65 links generally carries a `` `spec/flows/…` `` label that would need the
   same edit, doubling the textual churn per link.
@@ -510,8 +510,8 @@ Three cost riders that the raw count hides:
   other 22.
 - **A snippet edit does not reach the host** until each package is republished
   and reinstalled: `vibedeps/` is committed content
-  (`spec/modules/vibe-workspace/PROP-009-loading-model.xml:38`), and
-  `spec/boot/STATIC.xml` is regenerated from it.
+  (`vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml:38`), and
+  `vibevm/vibespecs/boot/STATIC.xml` is regenerated from it.
 
 ### Repair B — fix the compiler
 
@@ -523,9 +523,9 @@ the static lane; both the host node
 so one edit at line 259 covers both. The rewrite would sit between the read at
 line 257 and the push at line 259: scan the body for markdown links matching
 `](../flows/…)`, resolve each against the directory of the contributing snippet,
-and re-express the result relative to the node's `spec/boot/`.
+and re-express the result relative to the node's `vibevm/vibespecs/boot/`.
 
-**What the correct target path is from `spec/boot/`.** `spec/boot/` is two
+**What the correct target path is from `vibevm/vibespecs/boot/`.** `vibevm/vibespecs/boot/` is two
 levels below the workspace root, so a workspace-relative target `T` becomes
 `../../T`. For `flow-wal` that is
 `../../vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md`. In general:
@@ -572,7 +572,7 @@ parameter, no new lookup is needed for the ordinary case.
 ### 7.1 `spec/flows/` is *not* a directory the design intends to exist
 
 The governing decision retires it explicitly.
-`spec/modules/vibe-workspace/PROP-009-loading-model.xml:40-41`:
+`vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml:40-41`:
 
 > `- ##MIRROR-RETIRED **Consequence — the mirror layout is retired.**`
 > `VIBEVM-SPEC.md` §13.1's mirror layout (a package's `[writes]` entry is both
@@ -591,13 +591,13 @@ $ grep -o 'files_written = .*' vibe.lock | sort | uniq -c
      36 files_written = []
 ```
 
-And `spec/modules/vibe-workspace/PROP-009-loading-model.xml:34` forbids the
+And `vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml:34` forbids the
 alternative outright: *"`vibe install` **never writes into any node's authored
 `spec/`**"*.
 
 ### 7.2 …but a stale statement in the spec tree still says it does
 
-`spec/common/PROP-000.xml:173`, §13 "Package layout convention":
+`vibevm/vibespecs/common/PROP-000.xml:173`, §13 "Package layout convention":
 
 > @fact:mirror-example Concretely, the canonical `flow:wal@0.1.0` payload … contains
 > `spec/flows/wal/WAL-PROTOCOL.md` at exactly that relative path; after `vibe
@@ -621,7 +621,7 @@ PROP disagree about whether it has happened.
 
 ### 7.3 "Verbatim" is a word in the decision Repair B would touch
 
-`spec/modules/vibe-workspace/PROP-009-loading-model.xml:61`:
+`vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml:61`:
 
 > `- ##ARTIFACT-STATIC-MD **`STATIC.md`** — the **verbatim** concatenation, in
 > priority order, of every `static`-typed (§2.4) contribution …` @status:impl/done
@@ -640,11 +640,11 @@ byte-identical (PROP-038 §5)"*).
 
 ### 7.4 The dynamic lane is not broken, so a repair could over-reach
 
-`spec/boot/INDEX.md` names each snippet at its installed path
+`vibevm/vibespecs/boot/INDEX.md` names each snippet at its installed path
 (`crates/vibe-workspace/src/install/bootgen.rs:327`), e.g.
 `vibedeps/flow-delegation-rules/0.1.0/spec/boot/77-flow-delegation-rules.md`
-(`spec/boot/INDEX.md:30`). Opened there, `../flows/…` resolves correctly for the
-22 `spec/boot/`-rooted packages. Any repair that changes the *snippet* text
+(`vibevm/vibespecs/boot/INDEX.md:30`). Opened there, `../flows/…` resolves correctly for the
+22 `vibevm/vibespecs/boot/`-rooted packages. Any repair that changes the *snippet* text
 (Repair A) changes what that working reader sees; any repair that changes only
 the *compiled lane* (Repair B) leaves two divergent renderings of the same
 sentence on disk.
@@ -673,6 +673,6 @@ $ grep -n -F 'spec/flows/' CLAUDE.md
 
 Same dangling path, in a hand-authored file that no compiler touches and no
 package owns. The three bare mentions in the compiled lane
-(`spec/boot/STATIC.xml:457, 651, 1422`) are the package-side analogue: prose, not
+(`vibevm/vibespecs/boot/STATIC.xml:457, 651, 1422`) are the package-side analogue: prose, not
 links, invisible to a `\.\./flows/` scan and therefore to a rewrite that only
 matches markdown link syntax.

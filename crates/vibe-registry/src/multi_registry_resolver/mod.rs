@@ -2,7 +2,7 @@
 //!
 //! Sits on top of one or more [`GitPerPackageRegistry`] instances and dispatches
 //! resolution / fetch through the priority + override + (eventually) mirror
-//! decision tree pinned in [PROP-002 §2.2 / §2.3 / §2.4](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+//! decision tree pinned in [PROP-002 §2.2 / §2.3 / §2.4](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 //!
 //! Decision order on `resolve(pkgref)`:
 //!

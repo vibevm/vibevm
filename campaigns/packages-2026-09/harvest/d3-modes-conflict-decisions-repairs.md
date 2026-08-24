@@ -58,7 +58,7 @@ whole working tree, ignored files included, everything except `.git/`
 inside the perimeter). Exactly one live hit, and it is a Phase C evidence
 artefact quoting the loss, not a copy of the text:
 `campaigns/packages-2026-09/tasks/evidence/ev-W5c.json`. The original itself
-survives only in git history at `spec/common/PROP-006-operating-modes.xml:24`
+survives only in git history at `vibevm/vibespecs/common/PROP-006-operating-modes.xml:24`
 as of `a6df6050`, removed by `4d5ccf83` one day later.
 
 **What changed and why:** the lead now says what the blockquote is — the
@@ -75,7 +75,7 @@ into a published package, which is a publication decision, not a prose repair.
 **New obligations noticed:**
 
 1. **The MFBT authorisation exists in no live file.** The owner's Russian
-   original was kept in `spec/common/PROP-006-operating-modes.xml` by
+   original was kept in `vibevm/vibespecs/common/PROP-006-operating-modes.xml` by
    `a6df6050` for the stated reason that the package copy is a paraphrase, and
    deleted by `4d5ccf83` the next day on the opposite ground. Two commits one
    day apart cannot both be right, and the loss is real. Restoring it — to the
@@ -83,7 +83,7 @@ into a published package, which is a publication decision, not a prose repair.
    named depth switches the English renders as «Work at full reasoning depth».
 2. **The package's flagship exemplar now visibly fails its own protocol part
    2** (`OPERATING-MODES-PROTOCOL.xml#ROW-PART-AUTHORITATIVE-DESCRIPTION`), and
-   `spec/common/PROP-006-operating-modes.xml:19` still tells a host session that
+   `vibevm/vibespecs/common/PROP-006-operating-modes.xml:19` still tells a host session that
    «the owner's verbatim description is recorded in the flow». That host
    sentence is now false on the package's own admission and needs a host-side
    repair (route (b)).
@@ -103,11 +103,11 @@ into a published package, which is a publication decision, not a prose repair.
 **Re-verification:**
 
 ```
-$ rg -n 'Each rule is testable' packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.xml
+$ rg -n 'Each rule is testable' vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml
 54:##EACH-RULE-IS-TESTABLE-BY-THE-AGENT-ITSELF Each rule is testable in
 55:the sense that the agent can tell whether it is obeying it.
 
-$ rg -n 'vague-rules' packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.xml
+$ rg -n 'vague-rules' vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml
 57:##vague-rules-are-useless-specific-ones-are-the-value Vague rules ("be thorough") are useless; specific ones ("each phase
 
 $ rg -n 'ЗАВЕРШИ СЕССИЮ|ВОССТАНОВИ СЕССИЮ' CLAUDE.md
@@ -119,8 +119,8 @@ $ rg -n 'ЗАВЕРШИ СЕССИЮ|ВОССТАНОВИ СЕССИЮ' CLAUDE.m
 imperatives (a rule is not made false by an instance failing it) and the third
 was measured against a criterion it does not state. For the fourth, the host.
 
-**Perimeter searched:** the codeword catalogue — `spec/boot/90-user.xml`
-(`##CODEWORD-MFBT`, `##operating-modes-intro`), `spec/common/PROP-006-operating-modes.xml`,
+**Perimeter searched:** the codeword catalogue — `vibevm/vibespecs/boot/90-user.xml`
+(`##CODEWORD-MFBT`, `##operating-modes-intro`), `vibevm/vibespecs/common/PROP-006-operating-modes.xml`,
 `CLAUDE.md`. The two phrase families the verdict names sit in `CLAUDE.md`,
 outside the catalogue the rule points at.
 
@@ -145,7 +145,7 @@ not move.
 **New obligations noticed:** the host's session-end and session-resume
 commands in `CLAUDE.md` are recognised by intent from two-language trigger
 lists and called «a hard contract, not a courtesy», but are not in the
-codeword catalogue at `spec/boot/90-user.xml` and carry no five-part spec. Host
+codeword catalogue at `vibevm/vibespecs/boot/90-user.xml` and carry no five-part spec. Host
 obligation: catalogue them, or record the exception on the host side per
 §3.6(c).
 
@@ -164,7 +164,7 @@ obligation: catalogue them, or record the exception on the host side per
 **Re-verification:**
 
 ```
-$ rg -n 'CODEWORD-MFBT|operating-modes-intro' spec/boot/90-user.xml
+$ rg -n 'CODEWORD-MFBT|operating-modes-intro' vibevm/vibespecs/boot/90-user.xml
 64:##operating-modes-intro Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). …
 68:- ##CODEWORD-MFBT **«move fast and break things»** … Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. …
 
@@ -198,17 +198,17 @@ exception host-side. One obligation covers both; do not mint two.
 **Re-verification:**
 
 ```
-$ rg -n 'ROW-PART-AUTHORITATIVE-DESCRIPTION' packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml
+$ rg -n 'ROW-PART-AUTHORITATIVE-DESCRIPTION' vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml
 66:| ##ROW-PART-AUTHORITATIVE-DESCRIPTION **2. Authoritative description** @impl/done | the owner's own framing of what the mode is for, recorded verbatim @impl/done |
 
-$ rg -n 'verbatim description is recorded in the flow' spec/common/PROP-006-operating-modes.xml
+$ rg -n 'verbatim description is recorded in the flow' vibevm/vibespecs/common/PROP-006-operating-modes.xml
 19:##mfbt-pointer The pre-authorised heads-down execution codeword — … (the owner's verbatim description is recorded in the flow) — …
 ```
 
 **Who falsifies it:** neither, once F-202 landed. The row is a definition and
 was never false; the contradiction was `mfbt-mode.xml` presenting a rendering
 as satisfying it, and that claim is now withdrawn inside the same package.
-What remains — `spec/common/PROP-006-operating-modes.xml:19` telling a session
+What remains — `vibevm/vibespecs/common/PROP-006-operating-modes.xml:19` telling a session
 the verbatim description «is recorded in the flow» — is a host sentence:
 route (b).
 
@@ -218,7 +218,7 @@ reverts in wave 2. The package's exemplar was repaired instead, at
 `mfbt-mode.xml` under F-202, which is where the false claim actually sat.
 
 **New obligations noticed:** host obligation, already recorded under F-202
-item 2 — repoint or correct `spec/common/PROP-006-operating-modes.xml:19`. Do
+item 2 — repoint or correct `vibevm/vibespecs/common/PROP-006-operating-modes.xml:19`. Do
 not mint a second.
 
 ---
@@ -234,21 +234,21 @@ not mint a second.
 **Re-verification:**
 
 ```
-$ sed -n '36,45p' spec/boot/00-core.xml
+$ sed -n '36,45p' vibevm/vibespecs/boot/00-core.xml
 ## Reading layers (per book, `refs/book/`)
 ##reading-layers-lead vibevm's instance of the **two-process-model** flow (…) — human and agent
 as two processes sharing one repository; these are its reading layers, information flowing
 top-down, the human winning conflicts: @impl/done
 - ##LAYER-HEAD **Head** (human's memory) — … Human wins conflicts with the spec. @impl/done
-- ##LAYER-WAL **WAL** (`spec/WAL.xml`) — volatile, rewritten each session, describes *current* state.
+- ##LAYER-WAL **WAL** (`vibevm/vibespecs/WAL.xml`) — volatile, rewritten each session, describes *current* state.
 - ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via spec:// URIs.
 - ##LAYER-CODE **Code** (everything under `crates/`, including each crate's own `tests/`) — artefacts.
   Losing them is inconvenient; losing the spec is a catastrophe. @impl/done
 
-$ sed -n '36,46p' spec/boot/00-core.xml | rg -c '>'
+$ sed -n '36,46p' vibevm/vibespecs/boot/00-core.xml | rg -c '>'
 0 matches
 
-$ sed -n '183,196p' spec/boot/STATIC.xml
+$ sed -n '183,196p' vibevm/vibespecs/boot/STATIC.xml
 ## The hierarchy {#hierarchy}
 Every disagreement between layers is settled by fixed priority:
     Human  >  Spec  >  Tests  >  Code  >  WAL
@@ -272,7 +272,7 @@ $ sed -n '205,213p' refs/book/chapter-1-two-process-model.md
    или в спеке, но не в обоих)
 
 $ diff <(sed -n '160,215p' refs/book/chapter-1-two-process-model.md) \
-       <(sed -n '160,215p' packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.xml) \
+       <(sed -n '160,215p' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml) \
   && echo "IDENTICAL 160-215"
 IDENTICAL 160-215
 ```
@@ -281,15 +281,15 @@ IDENTICAL 160-215
 falsifier it names is the host, and the host sentence it reads as a competing
 priority order is not one.
 
-**Perimeter searched:** every place the host states an ordering — `spec/boot/`
+**Perimeter searched:** every place the host states an ordering — `vibevm/vibespecs/boot/`
 in full (`00-core.xml`, `STATIC.md`, `INDEX.md` and every snippet it names),
-`spec/common/`, `spec/modules/**`, `CLAUDE.md`, and the reference the host
+`vibevm/vibespecs/common/`, `vibevm/vibespecs/modules/**`, `CLAUDE.md`, and the reference the host
 cites, `refs/book/` chapters 1–3 plus its packaged twin
-`packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/`. Two structures
+`vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/book/ru/`. Two structures
 exist, on two axes; a third ordering does not.
 
 **What changed and why:** nothing, because there are not three orderings.
-`spec/boot/00-core.xml:36-45` is titled **«Reading layers»**, calls itself
+`vibevm/vibespecs/boot/00-core.xml:36-45` is titled **«Reading layers»**, calls itself
 «its reading layers», belongs to a *different* flow (`two-process-model`),
 contains **no `>` operator at all**, and makes exactly one conflict claim —
 «the human winning conflicts». It is vibevm's instance of the book's
@@ -298,7 +298,7 @@ contains **no `>` operator at all**, and makes exactly one conflict claim —
 before it states «Иерархия приоритетов». The verdict converted list position
 into rank and produced «WAL SECOND, above Spec and Code», which the host text
 never says. The host's one stated conflict priority is
-`spec/boot/STATIC.xml:185-196` — this flow's own snippet, installed verbatim,
+`vibevm/vibespecs/boot/STATIC.xml:185-196` — this flow's own snippet, installed verbatim,
 identical to the flow. On the Tests anchors the same conflation applies:
 `00-core.xml:43` classifies `crates/**/tests/` as a generated *artefact* (the
 book's Level 2, which lists Код and Тесты together), while
@@ -334,24 +334,24 @@ installed verbatim in the host's boot lane, so a repair is a release event.
 **Re-verification:**
 
 ```
-$ rg -n 'reading layers' spec/boot/00-core.xml
+$ rg -n 'reading layers' vibevm/vibespecs/boot/00-core.xml
 38:##reading-layers-lead … these are its reading layers, information flowing top-down, the human
 winning conflicts: @impl/done
 
-$ sed -n '36,46p' spec/boot/00-core.xml | rg -c '>'
+$ sed -n '36,46p' vibevm/vibespecs/boot/00-core.xml | rg -c '>'
 0 matches
 
-$ rg -n 'Every disagreement between layers is settled by fixed priority' spec/boot/STATIC.xml
+$ rg -n 'Every disagreement between layers is settled by fixed priority' vibevm/vibespecs/boot/STATIC.xml
 185:Every disagreement between layers is settled by fixed priority:
 ```
 
 **Who falsifies it:** neither — the host's stated conflict priority at
-`spec/boot/STATIC.xml:185-196` **is** this snippet, installed verbatim. The
+`vibevm/vibespecs/boot/STATIC.xml:185-196` **is** this snippet, installed verbatim. The
 only competing text is the reading-layers taxonomy, which is not a priority
 order (F-174).
 
-**Perimeter searched:** as F-174 — `spec/boot/**` in full, `spec/common/`,
-`spec/modules/**`, `CLAUDE.md`, `refs/book/` chapters 1–3 and the redbook
+**Perimeter searched:** as F-174 — `vibevm/vibespecs/boot/**` in full, `vibevm/vibespecs/common/`,
+`vibevm/vibespecs/modules/**`, `CLAUDE.md`, `refs/book/` chapters 1–3 and the redbook
 package twin.
 
 **What changed and why:** nothing. The verdict's sharpest claim — that a
@@ -360,7 +360,7 @@ is the one that fails on inspection: what it reads is one priority order
 (`STATIC.md`) and one file-role taxonomy (`00-core.xml`), and the taxonomy
 carries no ordering operator. `THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST`
 is confirmed by the host's own mechanised practice, which the verdict itself
-concedes: `spec/boot/00-core.xml:64` rewrites the WAL wholesale at session end
+concedes: `vibevm/vibespecs/boot/00-core.xml:64` rewrites the WAL wholesale at session end
 precisely because it is a record and not a source of truth.
 
 **New obligations noticed:** none beyond F-174's.
@@ -377,7 +377,7 @@ precisely because it is a record and not a source of truth.
 **Re-verification:**
 
 ```
-$ rg -n 'practice-extracted-from-the-book' -A3 packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md
+$ rg -n 'practice-extracted-from-the-book' -A3 vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/README.md
 86:##practice-extracted-from-the-book The practice is extracted from *AI-native development*, chapters 1–2:
 87:the priority hierarchy and the memory-fence framing come from
 88:chapter 1 (two co-processors sharing files as their only IPC); the
@@ -418,14 +418,14 @@ is not.
 **Re-verification:**
 
 ```
-$ rg -n 'dep-weight|DEP-WEIGHT-NOT-FACTOR|PICK-STRONGEST|TOO-HEAVY-NOT-REASON' spec/common/PROP-000.xml
+$ rg -n 'dep-weight|DEP-WEIGHT-NOT-FACTOR|PICK-STRONGEST|TOO-HEAVY-NOT-REASON' vibevm/vibespecs/common/PROP-000.xml
 206:## 15. Dependency weight is not a decision factor {#dep-weight}
 208:- ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive dep weight are NOT
      decision factors when selecting third-party libraries. @spec/done
 209:- ##PICK-STRONGEST Pick the strongest available library for the job … @spec/done
 221:##TOO-HEAVY-NOT-REASON "Too heavy" alone is **not** a reason. @spec/done
 
-$ rg -n 'ROW-PREFER-NO-NEW-DEPENDENCY' packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.xml
+$ rg -n 'ROW-PREFER-NO-NEW-DEPENDENCY' vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml
 85:| ##ROW-PREFER-NO-NEW-DEPENDENCY No new dependency @spec/done | Adding one @spec/done | A
      dependency is a permanent tax, and its removal is a migration. @spec/done |
 ```
@@ -433,8 +433,8 @@ $ rg -n 'ROW-PREFER-NO-NEW-DEPENDENCY' packages/org.vibevm.world/conflict-protoc
 **Who falsifies it:** the host — and it did so in the marked, recorded form
 §3.6(c) exists for, which is why the fact is confirmed rather than deferred.
 
-**Perimeter searched:** `spec/common/PROP-000.xml` §15 in full (lines 206–226),
-plus `spec/common/`, `spec/modules/**`, `CLAUDE.md` and `spec/boot/**` for any
+**Perimeter searched:** `vibevm/vibespecs/common/PROP-000.xml` §15 in full (lines 206–226),
+plus `vibevm/vibespecs/common/`, `vibevm/vibespecs/modules/**`, `CLAUDE.md` and `vibevm/vibespecs/boot/**` for any
 other dependency-selection rule. The verdict's own NOTE FOR THE RECORD is
 upheld: the delegated table's «no host rule discouraging new dependencies
 exists» was an unchecked absence, and §15 exists and is the governing anchor.
@@ -469,7 +469,7 @@ and the exception is named.
 
 ```
 $ rg -n 'TRIGGERS-DO-NOT-FIRE-THEMSELVES|nothing-pages-anyone|RE-READING-IS-WHAT-FIRES-TRIGGERS' \
-     packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml
+     vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml
 97:##TRIGGERS-DO-NOT-FIRE-THEMSELVES Triggers do not fire themselves. @spec/done
 99:##nothing-pages-anyone-for-a-decision-grade-signal Nothing pages anyone when p99
 103:##RE-READING-IS-WHAT-FIRES-TRIGGERS The mechanism that actually
@@ -489,7 +489,7 @@ $ f=packages/.../record-template.md; diff <(git show HEAD:$f | rg -o '##[A-Za-z]
 ANCHOR SET IDENTICAL
 
 $ for pat in '\*\*Decision' '\*\*Why' '\*\*Considered and rejected' '\*\*(When to revisit|Revisit when)'; do
-    rg -c --glob '*.md' "$pat" spec/common spec/modules | awk -F: -v p="$pat" '{s+=$NF} END {print p, "->", s+0}'; done
+    rg -c --glob '*.md' "$pat" vibevm/vibespecs/common vibevm/vibespecs/modules | awk -F: -v p="$pat" '{s+=$NF} END {print p, "->", s+0}'; done
 \*\*Decision -> 154
 \*\*Why -> 33
 \*\*Considered and rejected -> 4
@@ -533,14 +533,14 @@ obligation
 
 ```
 $ rg -n 'EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT|EVENT-TRIGGERS-TAKE-THE-SAME-TEST|event-trigger-examples' \
-     packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml
+     vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml
 58:##EVENT-TRIGGERS-ARE-THE-SANCTIONED-NON-NUMERIC-VARIANT **Event triggers** are the sanctioned variant for non-numeric
 61:##event-trigger-examples "A compliance requirement mandates a NIST-approved hash"; "upstream
 64:##EVENT-TRIGGERS-TAKE-THE-SAME-TEST The test is the same — a stranger could answer yes-or-no today.
 
 $ rg -n --glob '*.md' '\*\*(When to revisit|Revisit when)' spec/ | wc -l
 12
-   (11 host lines + spec/boot/STATIC.xml:255, which is this package's own snippet installed verbatim)
+   (11 host lines + vibevm/vibespecs/boot/STATIC.xml:255, which is this package's own snippet installed verbatim)
 ```
 
 **Who falsifies it:** the host — and only on the third of the definition's
@@ -548,8 +548,8 @@ three parts. The eight «event-shaped without a threshold» lines the verdict
 counted as failures are the variant this package explicitly sanctions.
 
 **Perimeter searched:** every revisit line the host has —
-`rg '\*\*(When to revisit|Revisit when)' spec/` across `spec/boot/**`,
-`spec/common/`, `spec/modules/**` and `spec/terraforms/`, 12 hits, one of
+`rg '\*\*(When to revisit|Revisit when)' spec/` across `vibevm/vibespecs/boot/**`,
+`vibevm/vibespecs/common/`, `vibevm/vibespecs/modules/**` and `vibevm/vibespecs/terraforms/`, 12 hits, one of
 which is the installed snippet itself. Also `CLAUDE.md`, `campaigns/**` and
 `legacy-spec/**` for records outside `spec/` — the campaign plans carry
 `**Revisit when:**` lines, and the verdict already notes they are outside the
@@ -596,15 +596,15 @@ three anchors, falsifier `self`.
 **Re-verification:**
 
 ```
-$ rg -c --glob '*.md' '\*\*Decision' spec/common spec/modules | awk -F: '{s+=$NF} END {print "Decision labels:", s}'
+$ rg -c --glob '*.md' '\*\*Decision' vibevm/vibespecs/common vibevm/vibespecs/modules | awk -F: '{s+=$NF} END {print "Decision labels:", s}'
 Decision labels: 154
 
-$ rg -ln --glob '*.md' '\*\*Considered and rejected' spec/common spec/modules
-spec/modules\vibe-progress\PROP-043-progress-markup.xml
-spec/modules\vibe-cli\PROP-036-package-tree.xml
+$ rg -ln --glob '*.md' '\*\*Considered and rejected' vibevm/vibespecs/common vibevm/vibespecs/modules
+vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml
+vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml
 
-$ rg -n '\*\*Considered and rejected' spec/modules/vibe-cli/PROP-036-package-tree.xml \
-     spec/modules/vibe-progress/PROP-043-progress-markup.xml
+$ rg -n '\*\*Considered and rejected' vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml \
+     vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml
 PROP-036-package-tree.xml:93:   - ##decision-artifacts-rejected **Considered and rejected:** …
 PROP-043-progress-markup.xml:96:  - ##element-name-rejected **Considered and rejected:** …
 PROP-043-progress-markup.xml:139: - ##freeze-rejected **Considered and rejected:** …
@@ -614,7 +614,7 @@ PROP-043-progress-markup.xml:251: - ##registers-rejected **Considered and reject
 **Who falsifies it:** the host. Three sound rules; a corpus that does not
 follow them.
 
-**Perimeter searched:** `spec/common/` and `spec/modules/**`, every markdown
+**Perimeter searched:** `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/**`, every markdown
 file, for all four field labels — the census above is my own third
 instrument and lands on the same four complete records the verdict names
 (PROP-036 §2.3; PROP-043 §§3.1, 3.3, 3.8), in the same two files.
@@ -634,7 +634,7 @@ host's ~154 Decision-bearing sections are two-field stubs or bare Decision
 lines.** Either complete them at the governing anchors, or record host-side
 that vibevm's spec tree keeps Decision lines without the full record shape —
 a §3.6(c) exception the owner rules on, since it is a policy choice rather
-than a note. `spec/common/` contributes 0 of the 4 complete records.
+than a note. `vibevm/vibespecs/common/` contributes 0 of the 4 complete records.
 
 ---
 
@@ -650,15 +650,15 @@ than a note. `spec/common/` contributes 0 of the 4 complete records.
 
 ```
 $ for pat in '\*\*Decision' '\*\*Why' '\*\*Considered and rejected' '\*\*(When to revisit|Revisit when)'; do
-    rg -c --glob '*.md' "$pat" spec/common spec/modules | awk -F: -v p="$pat" '{s+=$NF} END {print p, "->", s+0}'; done
+    rg -c --glob '*.md' "$pat" vibevm/vibespecs/common vibevm/vibespecs/modules | awk -F: -v p="$pat" '{s+=$NF} END {print p, "->", s+0}'; done
 \*\*Decision -> 154
 \*\*Why -> 33
 \*\*Considered and rejected -> 4
 \*\*(When to revisit|Revisit when) -> 7
 
 $ rg -n 'SUM-THE-BEFORE-AFTER-TEST|NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER' \
-     packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml \
-     packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml
+     vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/record-template.xml \
+     vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml
 record-template.xml:151:- ##SUM-THE-BEFORE-AFTER-TEST … if the record only says what the code already says, it is a
      fact with decoration — complete it or delete it. @impl/done
 25-flow-decision-records.xml:77:- ##NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a
@@ -668,8 +668,8 @@ record-template.xml:151:- ##SUM-THE-BEFORE-AFTER-TEST … if the record only say
 **Who falsifies it:** the host. Nothing inside the package contradicts «four
 fields, always».
 
-**Perimeter searched:** as F-197 — every markdown file under `spec/common/`
-and `spec/modules/**`, all four field labels, counted independently of Phase C
+**Perimeter searched:** as F-197 — every markdown file under `vibevm/vibespecs/common/`
+and `vibevm/vibespecs/modules/**`, all four field labels, counted independently of Phase C
 and of the delegated worker; the `Considered and rejected` field lands in
 exactly two files and four sections, which is the verdict's own «4 of 153».
 
@@ -715,13 +715,13 @@ cross-package relative link added; no `git` write command run.
 
 1. The MFBT authorisation exists in no live file — restore the owner's Russian
    original or rule that the English rendering stands (F-202, F-177, F-321);
-   `spec/common/PROP-006-operating-modes.xml:19` states the opposite today.
+   `vibevm/vibespecs/common/PROP-006-operating-modes.xml:19` states the opposite today.
 2. `CLAUDE.md`'s session-end and session-resume phrase families are acted on as
    hard contracts but are not catalogued and carry two of five parts (F-177,
    F-201).
 3. 149 of the host's ~154 Decision-bearing sections are stubs or bare Decision
    lines; 142 carry no revisit condition (F-197, F-198, F-224, F-225).
-4. `spec/common/PROP-000.xml#dep-weight` is the recorded §3.6(c) exception that
+4. `vibevm/vibespecs/common/PROP-000.xml#dep-weight` is the recorded §3.6(c) exception that
    confirms F-298 — no work, record the exception against the row.
 
 **Package obligations noticed and deliberately not fixed (2):**

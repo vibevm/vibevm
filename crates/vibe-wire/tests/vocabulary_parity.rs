@@ -384,19 +384,19 @@ fn package_kind_copies_match_the_declared_domain() {
     prose(
         &mut drift,
         "PROP-000 package identity list",
-        "spec/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-000.xml",
         &format!("kind ∈ {{{plain}}}"),
     );
     prose(
         &mut drift,
         "PROP-000 vocabulary invariant list",
-        "spec/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-000.xml",
         &format!("The installable kinds are {ticked}"),
     );
     prose(
         &mut drift,
         "boot core terminology list",
-        "spec/boot/00-core.xml",
+        "vibevm/vibespecs/boot/00-core.xml",
         &format!("only six installable kinds — {ticked}"),
     );
 

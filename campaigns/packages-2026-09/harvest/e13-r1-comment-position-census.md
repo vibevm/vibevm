@@ -3,7 +3,7 @@
 Read-only census of the inputs a B-036 implementation would consume, taken on
 branch `wt/E13-R1-COMMENT-POSITION`. Every factual claim carries a `path:line`,
 relative to the worktree root, over the **non-vendored** copies under
-`packages/org.vibevm.ai-native/…`. `vibedeps/**` copies are regenerated mirrors
+`vibevm/vibepacks/org.vibevm.ai-native/…`. `vibedeps/**` copies are regenerated mirrors
 and are never cited; in-package `crates/vendor/core-ai-native-conform/` copies
 are byte-identical mirrors of the canonical engine and are only noted as a
 fan-out fact. "Not found" is recorded explicitly as a fact about the perimeter,
@@ -12,7 +12,7 @@ never silently omitted. This is a measurement file for the B-036 design
 design recommendations.**
 
 The canonical engine is `core-ai-native-conform` **v0.8.0** at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/`
 (not v0.7.0). Unless a copy is named otherwise, every `budget.rs` /
 `facts.rs` / `config.rs` / `finding.rs` / `baseline.rs` line citation below
 refers to that canonical v0.8.0 tree.
@@ -23,15 +23,15 @@ refers to that canonical v0.8.0 tree.
 
 ### The three `##POSITION-IS-A-RESOURCE` clauses
 
-**Rust** — `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:59` (one line):
+**Rust** — `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:59` (one line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): safety-critical invariants live at file top or bottom, never the diluted middle. Prefer more, smaller, single-purpose files at equal token mass. A conform check warns on files over a length threshold **and on invariant-bearing comments in the middle third.** `@impl/done`
 
-**TypeScript** — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:128` (one line):
+**TypeScript** — `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:128` (one line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): module-level invariants and the public surface live at the top; prefer more, smaller, single-purpose modules over long files at equal token mass. A conform check warns on files over a length threshold **and on invariant-bearing comments in the diluted middle third** (for `.ts` that structural gate runs through the `typescript-ai-native-conform-frontend` crate — `typescript/tools/conform-frontend-typescript.md` — feeding the same language-neutral engine the Rust stack ships…). `@impl/done`
 
-**Go** — `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:232-236` (multi-line):
+**Go** — `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:232-236` (multi-line):
 
 > `##POSITION-IS-A-RESOURCE` **Position is a resource** (R3-003): package-level invariants live in the package doc block (`doc.go`) or at file top; safety-critical facts never sit in a file's diluted middle third. Prefer more, smaller, single-purpose files at equal token mass — Go packages are natively multi-file, so splitting costs nothing (§15). A conform check warns on files over the length budget. `@impl/done`
 
@@ -550,7 +550,7 @@ cleanly under the tombstone gate.
   Go `extract_test.go` by-kind) — these hard-assert the record shape.
 - **New rule that fires on existing code:** the **frozen baselines** (host
   `conform-baseline.json`, `research/{rust,go,ts}--demo/*-baseline.json`,
-  `packages/org.vibevm.fractality/fractality/v0.1.0/conform-baseline.json`) gain
+  `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/conform-baseline.json`) gain
   fingerprints; by design these are re-frozen via `run_freeze`, not "broken"
   (`rust-ai-native-conform/src/lib.rs:187-189`).
 - **Engine per-rule counts:** `core-ai-native-conform/src/rules/tests.rs` exact

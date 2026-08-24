@@ -1,8 +1,8 @@
 //! `vibe.lock` — the project lockfile.
 //!
 //! Schema: `VIBEVM-SPEC.md` §7.4,
-//! [PROP-002 §2.7](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile),
-//! [PROP-007 §2.5](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
+//! [PROP-002 §2.7](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#lockfile),
+//! [PROP-007 §2.5](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml).
 //!
 //! # Schema version
 //!

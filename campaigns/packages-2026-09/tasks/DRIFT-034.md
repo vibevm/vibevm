@@ -108,7 +108,7 @@ Error paths: the anchor-rejection message text changes. No new error kind.
 ```bash
 cargo fmt --all
 cargo test -p vibe-spec
-cargo test --manifest-path packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml --workspace
+cargo test --manifest-path vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml --workspace
 cargo xtask sync-engines --check
 bash tools/self-check.sh ; echo "EXIT=$?"
 cargo run -q -p vibe-cli --bin vibe -- progress check --no-cache --campaign campaigns/packages-2026-09
@@ -163,7 +163,7 @@ listed them; shipped nothing. Also established: duplicate detection lives in
 `doctree.rs:70`'s map **is** the resolution index — so any future fold would
 have to be a second parallel key set, never the lookup key. Recorded that
 **zero** case-folding calls exist anywhere in the relevant tree, and that 69
-byte-exact duplicate anchors sit inside the generated `spec/boot/STATIC.xml`
+byte-exact duplicate anchors sit inside the generated `vibevm/vibespecs/boot/STATIC.xml`
 (the F-078 duplication seen by another instrument).
 
 **The stop was correct and the reviewer's argument was the thing that was

@@ -195,7 +195,7 @@ impl GitPerPackageRegistry {
     ///   never survive into the next attempt's clone while nothing on
     ///   disk is deleted along the way (PROP-010 §2.6). This is the
     ///   supply-chain check from
-    ///   [PROP-002 §2.3](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
+    ///   [PROP-002 §2.3](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#mirror).
     ///
     /// **The store insert happens only for an accepted source** — the
     /// store is written once (`~/.vibe/cache/`, PROP-010 §2.7), so a

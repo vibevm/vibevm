@@ -10,7 +10,7 @@
 //! binds to that item's own decor, not the document root), so the header
 //! survives regardless of which item carries it.
 //!
-//! Spec: [PROP-040 §3, §6](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#role-marker).
+//! Spec: [PROP-040 §3, §6](../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#role-marker).
 
 use std::path::Path;
 

@@ -45,7 +45,7 @@ while the heading kebab-only law stays untouched.
 > fact-vs-heading) is an extraction warning. Heading anchors keep the
 > kebab-only law; the wider id grammar applies to `##` ids only.
 > — PROP-014 §2.1 (fact amendment, 2026-07-24),
-> `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
+> `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
 
 > Fact units carry no `kind:` line (§2.2 typing stays a heading-unit
 > discipline); their normativity signal is the id register. Edges cite
@@ -109,9 +109,9 @@ while the heading kebab-only law stays untouched.
 ## 5. Boundaries {#boundaries}
 
 - Touch ONLY
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/**`
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/**`
   and
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/**`
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/**`
   (source + their tests/fixtures).
 - Do NOT touch: `v0.7.0/**` (published line), ANY `crates/vendor/**`
   copy anywhere (vendored engines are regenerated, never hand-edited),
@@ -123,9 +123,9 @@ while the heading kebab-only law stays untouched.
 
 ## 6. Acceptance {#acceptance}
 
-- `cargo test --manifest-path packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml -p core-ai-native-specmap -p core-ai-native-specmark-grammar`
+- `cargo test --manifest-path vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml -p core-ai-native-specmap -p core-ai-native-specmark-grammar`
   green, including every §4.3 case.
-- `cargo clippy --manifest-path packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml -p core-ai-native-specmap -p core-ai-native-specmark-grammar --all-targets -- -D warnings`
+- `cargo clippy --manifest-path vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml -p core-ai-native-specmap -p core-ai-native-specmark-grammar --all-targets -- -D warnings`
   clean; `cargo fmt` over that workspace clean.
 - `is_valid_anchor` behavior byte-identical (existing grammar tests
   untouched and green).

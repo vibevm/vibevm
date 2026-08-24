@@ -1,8 +1,8 @@
 # D6c — `source-mirrors` + `licensing` v0.1.0: nine claimed absences, re-verified before demotion
 
 _Worked 2026-07-29. Subjects:
-`packages/org.vibevm.world/source-mirrors/v0.1.0/` and
-`packages/org.vibevm.world/licensing/v0.1.0/`. Five obligations, all
+`vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/` and
+`vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/`. Five obligations, all
 `build-or-demote`, 9 drift verdicts. Every one asserts that some mechanism,
 gate, record or audit line **does not exist**._
 
@@ -41,9 +41,9 @@ ours. Its whole yield for this batch is at the foot of this file.
 
 **Why that perimeter and not the package.** Both packages are *tool-neutral*
 flows: they specify a discipline, and this host repository is the project that
-adopted it — `spec/common/PROP-016-source-mirrors.xml:8` names the
+adopted it — `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:8` names the
 `source-mirrors` flow as its own general model and thins itself to «what is
-specific to vibevm», and `spec/boot/STATIC.xml:802-852` carries the licensing
+specific to vibevm», and `vibevm/vibespecs/boot/STATIC.xml:802-852` carries the licensing
 snippet verbatim into every session's boot. A mechanism in this family has four
 layers — SPEC in the package, ENGINE in a host crate, DRIVER in a CLI, and
 DEPLOYMENT in the consuming project. A fact can be true at any one and invisible
@@ -67,7 +67,7 @@ yields. That distinction splits F-204 down the middle.
 `##SUM-A-NON-FAST-FORWARD-ABORTS-THAT-TARGET-LOUD`. **Not touched, recommended
 route (b):** `##INVARIANT-THE-ANCESTRY-GATE`.
 **Files touched:**
-`packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.xml`
+`vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml`
 **Perimeter searched:** the standing perimeter, for the *thing* rather than the
 verdict's string — `merge-base` · `is-ancestor` · `ls-remote` · `rev-list`
 (a commit range has to be computed by something), plus a **filename** sweep for
@@ -84,9 +84,9 @@ mirror` was **not executed** — it pushes to real remotes.
 $ rg -n 'merge-base|is-ancestor' <standing perimeter>
 packages/…/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md:181
 vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.xml:151
-packages/org.vibevm.fractality/…/vibedeps/flow-source-mirrors/…:151      (vendored)
-packages/org.vibevm.fractality/…/.vibe/cache/…/source-mirrors/…:151      (cached)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143             (a citation)
+vibevm/vibepacks/org.vibevm.fractality/…/vibedeps/flow-source-mirrors/…:151      (vendored)
+vibevm/vibepacks/org.vibevm.fractality/…/.vibe/cache/…/source-mirrors/…:151      (cached)
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143             (a citation)
 campaigns/packages-2026-09/…/ev-W6b.json, batch-W6b-3.json, baseline.json (this campaign's own evidence)
 ```
 
@@ -132,7 +132,7 @@ Reading it settles all three anchors:
   ask: `push_args` is a pure function (`xtask/src/mirror.rs:262-268`) and
   `push_args_never_force` (`:426-440`) asserts no `--force`, `-f` or
   `+`-prefixed refspec for four ref shapes.
-  `spec/common/PROP-016-source-mirrors.xml:64` books that as «runnable capital,
+  `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:64` books that as «runnable capital,
   not prose» — this document's own §never-force-test wording.
 
 **The find that splits the obligation, and it is the package's own script.**
@@ -259,7 +259,7 @@ not. There is no demotion available here and none was made.
 unchanged — it reproduces:
 
 ```console
-$ rg -n -i "revisit|parallel|integrator" spec/common/PROP-016-source-mirrors.xml
+$ rg -n -i "revisit|parallel|integrator" vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 (exit 1 — no match)
 ```
 
@@ -267,7 +267,7 @@ Then the same file, searched for the **thing** instead of the spelling:
 
 ```console
 $ rg -n -i "deferred until|until needed|worth opening if|when a host must" \
-      spec/common/PROP-016-source-mirrors.xml
+      vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 72:1. ##open-server-side **Server-side mirroring.** When a host must originate writes
    outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host), add
    one-directional server-side mirroring (a GitHub Action mirroring GitHub→GitVerse,
@@ -308,16 +308,16 @@ flow's own remedy sentence and its trigger sentence are one bullet apart.
 
 **The practice, for the record, is the host's default and its form is compiled
 into the boot lane.** The `decision-records` flow's four-field record reaches
-every session at `spec/boot/STATIC.xml:255` — *«**When to revisit** | A
+every session at `vibevm/vibespecs/boot/STATIC.xml:255` — *«**When to revisit** | A
 measurable trigger: metric + threshold + where it is observed»* — and
 `:299-300` forbids *«a decision with a missing reason or a missing revisit
 trigger — that is a fact with decoration, not a record»*. The host writes them
 under several spellings, none of which a single-word grep of one file could
-reach: `spec/common/PROP-000.xml:23` (`##LANG-REVISIT`), `:57`
+reach: `vibevm/vibespecs/common/PROP-000.xml:23` (`##LANG-REVISIT`), `:57`
 (`##LICENSE-REVISIT`, whose previous trigger is recorded as **fired** on
-2026-07-12 and spent), `spec/modules/vibe-registry/PROP-001-git-backend.xml:113-121`,
-`spec/modules/vibe-cli/PROP-036-package-tree.xml:95`,
-`spec/modules/vibe-progress/PROP-043-progress-markup.xml:98,141,255`.
+2026-07-12 and spent), `vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml:113-121`,
+`vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml:95`,
+`vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:98,141,255`.
 
 **On the verdict's second clause — «the *acceptable and cheaper than the
 alternative* evaluation is absent from every host document searched, so the
@@ -326,14 +326,14 @@ judgement is the **flow's**, made for a genre («for small-team projects»), not
 report of a host judgement — its body carries it at
 `SOURCE-MIRRORS-PROTOCOL.xml:145-148`, `##for-a-small-team-the-trade-is-strongly-positive`,
 already `@spec/done`. And the host did record the comparison, in the place a
-decision record lives: `spec/common/PROP-016-source-mirrors.xml:78`
+decision record lives: `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:78`
 (`##HIST-AUTHORED`, «2026-06-14 — authored, in force»), which closes
 *«Supersedes the interim multi-push-remote and the abandoned
 bidirectional-multi-master sketch»* — naming the two alternatives this model
 was chosen over.
 
 **Which layer has it, if any:** **host deployment** — the trigger is at
-`spec/common/PROP-016-source-mirrors.xml:72`, in the consuming project, because
+`vibevm/vibespecs/common/PROP-016-source-mirrors.xml:72`, in the consuming project, because
 recording it is what complying with this fact means. That is §3.7's structure
 exactly: a search confined to `packages/` cannot see a trigger whose whole
 purpose is to be written down by the adopter.
@@ -345,7 +345,7 @@ adopter kept the norm, in the flow's own prescribed words).
 **New obligations noticed:** `##RECORD-THAT-AS-A-REVISIT-TRIGGER`
 (`SOURCE-MIRRORS-PROTOCOL.xml:157`, `@impl/done`, **not in my anchor list**) is
 the body rule this summary restates, and it is confirmed by the same host
-artefact — whatever was concluded about it needs `spec/common/PROP-016-source-mirrors.xml:72`
+artefact — whatever was concluded about it needs `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:72`
 in the perimeter before it moves. Same for
 `##when-a-project-outgrows-one-integrator-this-is-the-wrong-tool` (l. 153-156),
 already `@spec/done`.
@@ -354,7 +354,7 @@ already `@spec/done`.
 `##SUM-WHAT-IT-COSTS` → **confirmed** — the cost is factually this host's
 situation, the flow makes the acceptability judgement for its own genre, and
 the revisit trigger the verdict called absent is recorded at
-`spec/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
+`vibevm/vibespecs/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
 «one-directional server-side mirroring» form; the marker is already `@spec/done`.
 
 ---
@@ -384,12 +384,12 @@ plus `tools/self-check.sh`'s gate chain.
 The skill is real, it is declared, and it is installed into the consumer:
 
 ```console
-$ ls packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/ ;
+$ ls vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills/draft-eula/ ;
   ls vibedeps/flow-licensing/0.1.0/spec/skills/draft-eula/
 SKILL.md
 SKILL.md
 
-$ sed -n '1,4p' packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md
+$ sed -n '1,4p' vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills/draft-eula/SKILL.md
 ---
 name: draft-eula
 description: Draft or review a project's license posture — the placeholder EULA with
@@ -398,7 +398,7 @@ description: Draft or review a project's license posture — the placeholder EUL
   Guidance, not legal advice.
 ---
 
-$ sed -n '19,22p' packages/org.vibevm.world/licensing/v0.1.0/vibe.toml
+$ sed -n '19,22p' vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibe.toml
 [[skill]]
 name = "draft-eula"
 path = "spec/skills/draft-eula"
@@ -461,7 +461,7 @@ That is a host deployment posture, uniform and visible, and it says nothing
 about whether the `licensing` package's sentence is true.
 
 `draft-eula` appears nowhere outside the package, its vendored and cached
-copies, the compiled boot lane (`spec/boot/STATIC.xml:837`) and this campaign's
+copies, the compiled boot lane (`vibevm/vibespecs/boot/STATIC.xml:837`) and this campaign's
 own records — the verdict's negative reproduces exactly; it is the *reading* of
 that negative that does not survive.
 
@@ -484,7 +484,7 @@ and no wrong name, so there is nothing imprecise to repair; adding «materialise
 it with `vibe skill install`» would be a *new* sentence in a boot snippet, which
 is a published-surface change and a release event, not a demotion pass's work.
 The sibling README claim `##CONTENT-THE-DRAFT-EULA-SKILL`
-(`packages/org.vibevm.world/licensing/v0.1.0/README.md:32-33`) was already ruled
+(`vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/README.md:32-33`) was already ruled
 confirmed by Phase C on the same facts.
 
 **What the search found — second anchor
@@ -525,9 +525,9 @@ $ rg -n -i 'licen' tools/*.sh tools/*.ps1
 ```
 
 The two careful checks the verdict credits are real and I confirmed them:
-`spec/modules/vibe-resolver/PROP-003-dep-evolution.xml:92` classifies libsolv
+`vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml:92` classifies libsolv
 only after naming its actual licence files, and
-`spec/modules/vibe-registry/PROP-001-git-backend.xml:95-98` reasons about GPL-v2
+`vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml:95-98` reasons about GPL-v2
 `git` and libgit2's Linking Exception rather than asserting. So the practice is
 kept where it is load-bearing and broken where it is blanket.
 
@@ -587,13 +587,13 @@ must not move.
 **Anchors:** 2 touched of 2: `##RE-AUDIT-ON-A-SCHEDULE`,
 `##SUM-AUTOMATE-AND-RE-AUDIT`.
 **Files touched:**
-`packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.xml`
+`vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/flows/licensing/dependency-licenses.xml`
 **Perimeter searched:** the standing perimeter, and deliberately **widened past
 the verdict's own** in three directions it did not go. The verdict searched
 `vibedeps/flow-health-audit/`; I searched the **canonical package** at
-`packages/org.vibevm.world/health-audit/v0.1.0/` as well, because a vendored
+`vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/` as well, because a vendored
 copy can lag its source. It searched `AUDIT.md`; I also searched the host's
-audit *contract* (`spec/common/PROP-013-periodic-health-audit.xml`), the
+audit *contract* (`vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml`), the
 `manual-tests/` recipes, `tools/self-check.sh`'s gate chain, and
 `cargo xtask health`'s section list, because «a periodic audit line» could be a
 recipe or a collector section rather than a markdown bullet. And it searched
@@ -609,10 +609,10 @@ in the canonical package, not only in the vendored copy:
 
 ```console
 $ rg -n -i 'licen|copyleft|GPL|permissive|SPDX' \
-      packages/org.vibevm.world/health-audit/v0.1.0/spec/
+      vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/
 (no output)
 
-$ sed -n '187,196p' packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.xml
+$ sed -n '187,196p' vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/flows/health-audit/audit-checklist.xml
 ### D4 · Dependency staleness {#d4}
 
 - ##D4-LOOK-FOR **Look for.** Outdated dependencies and open security advisories.
@@ -626,7 +626,7 @@ One dependency category, and it is versions and CVEs. The host's own audit
 contract says the same thing in one line:
 
 ```console
-$ sed -n '51p' spec/common/PROP-013-periodic-health-audit.xml
+$ sed -n '51p' vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml
 - ##D4-DEP-STALENESS **D4 · Dependency staleness** — `cargo update --dry-run`;
   `cargo audit` / `cargo outdated`. @spec/done
 ```
@@ -735,11 +735,11 @@ failure.
 
 **Outcome:** DEMOTED (1 of 1)
 **Anchors:** 1 touched of 1: `##COMPOSES-HEALTH-AUDIT`.
-**Files touched:** `packages/org.vibevm.world/licensing/v0.1.0/README.md`
+**Files touched:** `vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/README.md`
 **Perimeter searched:** the same widened perimeter as F-238 — the standing
-perimeter, plus the **canonical** `packages/org.vibevm.world/health-audit/v0.1.0/`
+perimeter, plus the **canonical** `vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/`
 rather than only its `vibedeps/` copy, the host's audit contract
-`spec/common/PROP-013-periodic-health-audit.xml`, the host's audit *record*
+`vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml`, the host's audit *record*
 `AUDIT.md`, `manual-tests/`, `tools/self-check.sh`, `cargo xtask health`'s
 section list, and seven names of dependency-licence tooling. Terms: `licen` ·
 `copyleft` · `GPL` · `permissive` · `SPDX`. The evidence is the same body of
@@ -756,10 +756,10 @@ canonical package:
 
 ```console
 $ rg -n -i 'licen|copyleft|GPL|permissive|SPDX' \
-      packages/org.vibevm.world/health-audit/v0.1.0/spec/
+      vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/
 (no output)
 
-$ find packages/org.vibevm.world/health-audit -name '*.md'
+$ find vibevm/vibepacks/org.vibevm.world/health-audit -name '*.md'
 …/spec/boot/42-flow-health-audit.md
 …/spec/flows/health-audit/audit-checklist.md
 …/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md

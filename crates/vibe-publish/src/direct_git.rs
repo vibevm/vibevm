@@ -14,10 +14,10 @@
 //! the org-extraction + create-repo + token-aware push-URL flow and
 //! pushes the freshly-built commit + tag straight to the supplied URL.
 //!
-//! Per [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish):
+//! Per [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish):
 //! adapters are pluggable; this is the explicit "operator-managed
 //! repository" plug. The token-secrecy invariant
-//! ([PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy))
+//! ([PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy))
 //! is upheld trivially because no token participates in this path —
 //! the credential surface is local-git's, not vibevm's.
 

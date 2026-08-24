@@ -12,7 +12,7 @@
 //!   non-obvious VSCode "arrays replace, never concatenate" semantics, made
 //!   explicit per §4).
 //!
-//! Spec: [PROP-040 §4](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#merge).
+//! Spec: [PROP-040 §4](../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#merge).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-algorithm");
 

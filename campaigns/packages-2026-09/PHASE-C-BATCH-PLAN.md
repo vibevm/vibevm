@@ -62,7 +62,7 @@ The host is 4 440 of 4 441 — Phase C inherits three small debts, not a cluster
 - one unjudged anchor, `CACHE-TALLY-COMPUTED` in PROP-043, added by wave 1's own
   close-out after the file had been judged;
 - five files whose `processed_hash` no longer matches their `content_hash` —
-  `spec/boot/00-core.xml`, `MT-02-vibe-tree-tui.xml`, `PROP-026-tcg-tool-family.xml`,
+  `vibevm/vibespecs/boot/00-core.xml`, `MT-02-vibe-tree-tui.xml`, `PROP-026-tcg-tool-family.xml`,
   `PROP-043-progress-markup.xml`, `PROP-003-dep-evolution.xml`;
 - five orphan verdict keys naming anchors that no longer exist — `authority-line`
   and `status-line` in both `loading-and-boot-model.xml` and
@@ -108,7 +108,7 @@ conform: NO conform.toml — topology default in force, nothing is gated; run `r
 Error: conform.toml: crate `rust-ai-native-cli` is neither gated nor exempt — classify it
 ```
 
-**No slot under `packages/org.vibevm.ai-native/` carries a `conform.toml` or a
+**No slot under `vibevm/vibepacks/org.vibevm.ai-native/` carries a `conform.toml` or a
 `discipline/` directory** (`specmap.toml` is present in six of eleven). Running
 `init` would create the policy the measurement is asking about — a green result
 manufactured by the act of measuring. The mandate asks whether the discipline holds
@@ -121,7 +121,7 @@ rather than its absence.
 ### 2.3 `vibedeps/` stands in for §3.1's third source {#source-three}
 
 **Decision.** «The installed reality» is read from `vibedeps/<slot>/` on disk plus
-the generated `spec/boot/STATIC.xml` and `spec/boot/INDEX.md`, **not** from the
+the generated `vibevm/vibespecs/boot/STATIC.xml` and `vibevm/vibespecs/boot/INDEX.md`, **not** from the
 lockfile's `files_written`.
 
 **Why:** the field §3.1 names is empty for every package that exists here.
@@ -244,7 +244,7 @@ layers and invisible at the other three.
 So a brief names all of them by default:
 
 ```
-packages/org.vibevm.ai-native/**   crates/**   xtask/**   spec/**   schemas/**
+vibevm/vibepacks/org.vibevm.ai-native/**   crates/**   xtask/**   spec/**   schemas/**
 specmap.json  specmap.toml  conform.toml  vibe.toml  vibe.lock  vibedeps/**
 research/rust-demo/**  research/ts-demo/**
 campaigns/packages-2026-09/harvest/*.md

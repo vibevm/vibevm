@@ -14,7 +14,7 @@ counter fix alone moves the duplicate rather than removing it.
 
 ## 1. Goal {#goal}
 
-`spec/boot/STATIC.xml` carries each statically-linked package exactly once, with
+`vibevm/vibespecs/boot/STATIC.xml` carries each statically-linked package exactly once, with
 every other consumer referencing it — what `##MODE-STATIC-SOFT` promises and
 what the tree does not do.
 
@@ -76,7 +76,7 @@ re-derive; do re-run the measurement (§4 step 1).
   static, so the LCA **is the root** — the hoist destination and the root's own
   compile site are the same file.
 - Live symptom: each of the four git-\* snippets appears twice in
-  `spec/boot/STATIC.xml`.
+  `vibevm/vibespecs/boot/STATIC.xml`.
 
 ## 4. Required behavior {#behavior}
 
@@ -128,7 +128,7 @@ Error paths: none new. Suppressing a duplicate append removes no diagnostic.
   that, and doing it would turn a duplicated boot lane into a **failed install**
   (`render_static` hard-errors on a missing contribution, pinned by
   `boot_artifacts::tests::render_static_errors_on_a_missing_contribution`).
-- **Do not hand-edit** `spec/boot/STATIC.xml` or `INDEX.md`; they are generated
+- **Do not hand-edit** `vibevm/vibespecs/boot/STATIC.xml` or `INDEX.md`; they are generated
   and the fix is proven by regenerating them.
 - **Do not touch** `packages/**` or any manifest's `link` to dodge the problem.
 - **Do not touch** `campaigns/**` except §9 of this file.
@@ -147,15 +147,15 @@ Then, from a clean tree:
 
 ```bash
 cargo run -q -p vibe-cli --bin vibe -- update --all --assume-yes
-grep -c "^# Flow: Atomic Commits" spec/boot/STATIC.xml
-grep -c "vibe:static org.vibevm.world/git-practices" spec/boot/STATIC.xml
+grep -c "^# Flow: Atomic Commits" vibevm/vibespecs/boot/STATIC.xml
+grep -c "vibe:static org.vibevm.world/git-practices" vibevm/vibespecs/boot/STATIC.xml
 git status --short
 ```
 
 - first grep → **1** (it is 2 today);
 - second grep → **1**, *not* 0 — the aggregator still contributes its unit; that
   unit now *references* the members instead of containing them;
-- `spec/boot/STATIC.xml` shrinks by roughly the 192 lines the duplicate occupies;
+- `vibevm/vibespecs/boot/STATIC.xml` shrinks by roughly the 192 lines the duplicate occupies;
 - `vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md` still **exists**;
 - a second identical `update --all` leaves `git status` unchanged.
 

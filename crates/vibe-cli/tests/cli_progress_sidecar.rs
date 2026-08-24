@@ -23,7 +23,8 @@ use common::UserScratch;
 /// plus an empty campaign zone. No `[progress] cache_dir`: the point here
 /// is the default.
 fn fixture(root: &Path) {
-    std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
+    std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root()))
+        .expect("mkdir spec");
     std::fs::write(
         root.join(common::spec_rel("a.md")),
         "<status stage=\"impl\" state=\"work\"/>\n\n\

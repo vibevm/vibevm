@@ -28,7 +28,7 @@
 //! budget; doctests on every public seam (the [`Watcher`] trait is exercised
 //! through a mock impl).
 //!
-//! Spec: [PROP-040 §10](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#events).
+//! Spec: [PROP-040 §10](../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#events).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#events");
 

@@ -535,7 +535,7 @@ mod canonical_doc_path_layout_tests {
             "notes/random-file"
         );
         assert_eq!(
-            canonical_doc_path("spec/common/PROP-000.xml"),
+            canonical_doc_path("vibevm/vibespecs/common/PROP-000.xml"),
             "common/PROP-000"
         );
         assert_eq!(canonical_doc_path("spec/WAL.md"), "WAL");

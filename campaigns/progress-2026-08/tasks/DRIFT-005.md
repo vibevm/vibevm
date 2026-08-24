@@ -35,7 +35,7 @@ a build error, and the resolver/`#embed` address fact units.
 > namespace. The resolver (§6) resolves a fact address like any node;
 > `#embed` of a fact splices exactly its unit …; `#use` of a fact address
 > pulls the top-level anchored ancestor of its **enclosing section**.
-> — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml` §5 (fact amendment)
+> — `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml` §5 (fact amendment)
 
 > 1. **Section fate by default.** Facts ride their section …
 > 2. **Per-fact override.** Within a merged `:add` section, a source fact
@@ -64,7 +64,7 @@ a build error, and the resolver/`#embed` address fact units.
   the host scanner `crates/progress-core/src/parse/facts.rs`
   (`take_fact_id`, list markers `-`/`*`/`+`/`N.`/`N)` at any indent,
   whitespace/EOL terminator, fence opacity) and the package twin
-  `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs`
+  `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs`
   (`fact_anchor_at`, `list_item_content`, `segment_block_facts`).
 
 ## 4. Required behavior {#behavior}

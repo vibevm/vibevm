@@ -88,7 +88,7 @@ camelCase-поля, ни одного `Option<Box<>>`, ни одного али�
 - **U5 ПОДТВЕРЖДЕНО.** `grep -rn "x-default" schemas/ formats/` → ровно два
   вхождения, оба `formats/vocabularies.json:410` и `:416`, оба
   `"x-default": false` (поля `yanked` и `frozen` фрагмента `version_entry`).
-- **U6 ПОДТВЕРЖДЕНО.** `grep -rn "\"type\": \"timestamp\"" schemas/ formats/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/` →
+- **U6 ПОДТВЕРЖДЕНО.** `grep -rn "\"type\": \"timestamp\"" schemas/ formats/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/` →
   пусто (exit 1). Время на проводе — всегда `ref` на фрагмент `timestamp`
   (5 сайтов: by_name:11,41; repomd:23; journal:9; vocabularies.json:318), сам
   фрагмент объявлен `"type": "string"` (`formats/vocabularies.json:38-43`).
@@ -96,7 +96,7 @@ camelCase-поля, ни одного `Option<Box<>>`, ни одного али�
   `foreign_parsers = "none"` — строка 180, `[format.config]`, и у неё же
   `schema = "none"` (строка 178). Ни у одного формата с построенной JTD-схемой
   роль не «none» (все JTD-форматы — `many` либо `ours`).
-- **U8 ПОДТВЕРЖДЕНО.** `grep -cn "x-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json` → **0**
+- **U8 ПОДТВЕРЖДЕНО.** `grep -cn "x-" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json` → **0**
   (exit 1). Схема движка не несёт ни одной `x-…`-аннотации.
 
 ---
@@ -620,11 +620,11 @@ pub compatibility: Option<Box<CompatibilityEntry>>,
 # инвентарь домов схем (13 + словник + движок)
 find schemas -type f | sort
 ls formats/vocabularies.json formats/REGISTRY.toml
-ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/
+ls vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/
 
 # оба сгенерированных дерева
 find crates/vibe-wire/src/generated -type f | sort
-find packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated -type f | sort
+find vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated -type f | sort
 
 # U3: 81 camelCase-поле, разбивка по файлам
 grep -rcE "pub [a-z]+[A-Z][A-Za-z0-9]*:" crates/vibe-wire/src/generated/ | grep -v ":0"
@@ -646,7 +646,7 @@ for f in $(grep -rl "pub enum" crates/vibe-wire/src/generated/); do awk '
   inf&&/^    [A-Z][A-Za-z0-9]*[ ,({]/&&!/^    #/{count++}' "$f"; done
 
 # allow(non_snake_case) — единственный сайт
-grep -rn "non_snake_case" crates/vibe-wire/src/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/
+grep -rn "non_snake_case" crates/vibe-wire/src/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/
 
 # №2: ЭТОТ СКРИПТ ВАКУУМЕН — НЕ ЧИТАТЬ ЕГО ПУСТОЙ ВЫВОД КАК ДОКАЗАТЕЛЬСТВО
 # (поправка 2026-08-17, §5). Шаблон ниже требует конца строки сразу после
@@ -663,8 +663,8 @@ for f in $(find crates/vibe-wire/src/generated -name "*.rs"); do awk '
 
 # serde(rename) всего/движок
 grep -r "serde(rename" crates/vibe-wire/src/generated/ | wc -l            # 385
-grep -r "serde(rename" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/ | wc -l  # 56
-grep -rcE "pub [a-z]+[A-Z][A-Za-z0-9]*:" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/  # 12
+grep -r "serde(rename" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/ | wc -l  # 56
+grep -rcE "pub [a-z]+[A-Z][A-Za-z0-9]*:" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/  # 12
 
 # №4: deny_unknown_fields сегодня — ноль; структур — 69
 grep -rc "deny_unknown_fields" crates/vibe-wire/src/generated/ | grep -v ":0"   # пусто
@@ -681,7 +681,7 @@ grep -r ": Group\b" crates/vibe-wire/src/generated/ | wc -l     # 13
 # §3: аннотации по каждому файлу схем (строки «enum=… x-vocab=… coll=… x-empty=… x-default=… x-rust-type=…»)
 for f in schemas/*.jtd.json schemas/index/e1/*.jtd.json schemas/journal/e1/*.jtd.json \
          formats/vocabularies.json \
-         packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json; do
+         vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json; do
   echo "$f enum=$(grep -c '\"enum\"' "$f") x-vocab=$(grep -c '\"x-vocabulary\"' "$f") \
 coll=$(grep -cE '\"elements\"|\"values\"' "$f") x-empty=$(grep -c '\"x-empty\"' "$f") \
 x-default=$(grep -c '\"x-default\"' "$f") x-rust-type=$(grep -c '\"x-rust-type\"' "$f")"; done
@@ -689,8 +689,8 @@ x-default=$(grep -c '\"x-default\"' "$f") x-rust-type=$(grep -c '\"x-rust-type\"
 
 # U5/U6/U8
 grep -rn "x-default" schemas/ formats/
-grep -rn "\"type\": \"timestamp\"" schemas/ formats/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/
-grep -cn "x-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json   # 0
+grep -rn "\"type\": \"timestamp\"" schemas/ formats/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/
+grep -cn "x-" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json   # 0
 
 # U7 + дыра handshake
 grep -n "foreign_parsers\|^schema\|^\[" formats/REGISTRY.toml

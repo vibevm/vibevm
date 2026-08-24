@@ -172,8 +172,8 @@ EXIT=0
 
 ```sh
 target/debug/vibe-index init    "$TEMP/f62/live" --registry vibespecs --registry-url https://example.invalid/vibespecs
-target/debug/vibe-index add    "$TEMP/f62/live" --manifest packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml
-target/debug/vibe-index add    "$TEMP/f62/live" --manifest packages/org.vibevm.ai-native/go-ai-native/v0.1.0/vibe.toml
+target/debug/vibe-index add    "$TEMP/f62/live" --manifest vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml
+target/debug/vibe-index add    "$TEMP/f62/live" --manifest vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v0.1.0/vibe.toml
 cargo xtask rebuild --check "$TEMP/f62/live"
 ```
 
@@ -316,7 +316,7 @@ error-строки в выводе (`grep -c "^error"` → 0). Формулир�
 не отказ.
 
 *Помеченный манифест прочитан:* например
-`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml` — `grep -n
+`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml` — `grep -n
 epoch` по файлу даёт пустоту (exit 1); в `[package]` полей эпохи нет.
 
 *Контроль §0.6.* Пакет предписывал «найди манифест с эпохой в дереве» —
@@ -344,7 +344,7 @@ temp и доказан `diff`-ом против копии (все три выв
 ```
 $ diff /tmp/f62/vocabularies.json.orig formats/vocabularies.json
 $ diff /tmp/f62/hello.jtd.json.orig schemas/hello/e1/hello.jtd.json
-$ diff /tmp/f62/jtd-codegen-vibe.toml.orig packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml
+$ diff /tmp/f62/jtd-codegen-vibe.toml.orig vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/vibe.toml
 (все три: пустой вывод, exit 0)
 ```
 

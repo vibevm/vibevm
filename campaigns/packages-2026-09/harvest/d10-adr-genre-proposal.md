@@ -54,14 +54,14 @@ Two perimeter rules bind every figure in this file:
 
 1. [`BACKLOG.md` #b-007](../../../BACKLOG.md#b-007) in full — the question, the
    measurements, «what it unblocks».
-2. `packages/org.vibevm.world/decision-records/v0.1.0/spec/` in full: the boot
+2. `vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/` in full: the boot
    snippet [`25-flow-decision-records.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.xml),
    [`DECISION-RECORDS-PROTOCOL.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml),
    [`record-template.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml),
    [`revisit-triggers.xml`](../../../packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml).
 3. The genre map: `spec-genres`'
    [`SPEC-GENRES-PROTOCOL.xml#genres`](../../../packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml)
-   and the host's instance, [`spec/design/README.md`](../../../spec/design/README.md)
+   and the host's instance, [`vibevm/vibespecs/design/README.md`](../../../spec/design/README.md)
    `##genre-table-lead`.
 4. The living practice: the `fractality` specspace's own decision blocks; this
    campaign's [`PHASE-D-BATCH-PLAN.md` §3](../PHASE-D-BATCH-PLAN.md#decisions).
@@ -109,9 +109,9 @@ The figure reproduces. Its content does not survive being opened.
 ```bash
 # every Decision-labelled section in the fractality specspace, and how many
 # carry all four fields — excluding .vibe/cache/** as the census did
-python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
+python <scratchpad>/adr-census.py vibevm/vibepacks/org.vibevm.fractality \
   | grep -v '/\.vibe/'                                     # 33 labels
-python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
+python <scratchpad>/adr-census.py vibevm/vibepacks/org.vibevm.fractality \
   | grep -v '/\.vibe/' | awk -F'\t' '$5==1&&$6==1&&$7==1'  # 14 complete
 ```
 
@@ -120,7 +120,7 @@ instrument carries against every one of its figures (§3). And **all fourteen of
 the complete records are vendored copies of the flow packages' own documents**:
 
 ```bash
-python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
+python <scratchpad>/adr-census.py vibevm/vibepacks/org.vibevm.fractality \
   | grep -v '/\.vibe/' | awk -F'\t' '$5==1&&$6==1&&$7==1 {print $1" #"$4}'
 ```
 
@@ -135,7 +135,7 @@ python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
 | `…/vibedeps/flow-comparative-research/0.1.0/…/from-research-to-roadmap.xml` `#accepted` | a different flow's worked example |
 
 Seven documents — **counted twice**, because two packages under
-`packages/org.vibevm.fractality/` each vendor the same flows
+`vibevm/vibepacks/org.vibevm.fractality/` each vendor the same flows
 (`fractality/v0.1.0/vibedeps/` and `delegation-rules/v0.1.0/vibedeps/`).
 7 × 2 = 14, exactly.
 
@@ -147,7 +147,7 @@ carries `**Decision:** 600 seconds.` at line 51 and `**Decision:** blake3 for
 every content hash.` at line 98.
 
 ```bash
-diff packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.xml \
+diff vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/record-template.xml \
      packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-decision-records/0.1.0/spec/flows/decision-records/record-template.md
 ```
 
@@ -155,14 +155,14 @@ diff packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-recor
 a different, three-label dialect.**
 
 ```bash
-python <scratchpad>/adr-census.py packages/org.vibevm.fractality \
+python <scratchpad>/adr-census.py vibevm/vibepacks/org.vibevm.fractality \
   | grep -v '/\.vibe/\|/vibedeps/'                          # 9 labels
-grep -rn "When to revisit\|Revisit when" packages/org.vibevm.fractality \
+grep -rn "When to revisit\|Revisit when" vibevm/vibepacks/org.vibevm.fractality \
   --include='*.md' | grep -v '/\.vibe/\|/vibedeps/' | wc -l # 0
 ```
 
 Seven are `D-R1`…`D-R7` in
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml`
 §4; two are in `spec/refs/notes/rlm-runners-up-t3.md`. The dialect, verbatim
 (`D-R1`, lines 111–120):
 
@@ -193,21 +193,21 @@ owner's protocol.
 
 **The same shape contaminates one more published figure.** Of the census's
 «all of `spec/` **157 → 7**», one of the seven is
-`spec/boot/STATIC.xml#core-rule` — the *same* boot-snippet table, compiled into
+`vibevm/vibespecs/boot/STATIC.xml#core-rule` — the *same* boot-snippet table, compiled into
 the host's static lane. Two more are in
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, this campaign's own
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, this campaign's own
 plan. **Four of the seven are host PROP/FEAT records; three are the
 specification of the practice, or the campaign writing about it.**
 
 ```bash
 python <scratchpad>/adr-census.py spec | awk -F'\t' '$5==1&&$6==1&&$7==1 {print $1":"$2"  #"$4}'
-# spec/boot/STATIC.xml:252  #core-rule                    <- the flow's own table
-# spec/modules/vibe-cli/PROP-036-package-tree.xml:88  #effective-load
-# spec/modules/vibe-progress/PROP-043-progress-markup.xml:91  #element
-# spec/modules/vibe-progress/PROP-043-progress-markup.xml:134  #stages
-# spec/modules/vibe-progress/PROP-043-progress-markup.xml:243  #placement
-# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:93  #world-verdicts   <- this campaign
-# spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:121  #ai-native-verdicts
+# vibevm/vibespecs/boot/STATIC.xml:252  #core-rule                    <- the flow's own table
+# vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml:88  #effective-load
+# vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:91  #element
+# vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:134  #stages
+# vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:243  #placement
+# vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:93  #world-verdicts   <- this campaign
+# vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:121  #ai-native-verdicts
 ```
 
 ### What this does to the question {#zero-consequence}
@@ -319,11 +319,11 @@ both.
 ## §2 — Six worked examples, three each way {#examples}
 
 All six are quoted from `HEAD = 91ebf1fd`, with file and line, and all six sit
-inside the `spec/common` + `spec/modules` perimeter the census measures.
+inside the `vibevm/vibespecs/common` + `vibevm/vibespecs/modules` perimeter the census measures.
 
 ### R · `PROP-001` §2.5 `#freshness` — a measured threshold {#ex-ttl}
 
-`spec/modules/vibe-registry/PROP-001-git-backend.xml:225,231`:
+`vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml:225,231`:
 
 > @fact:FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked
 > against `meta.toml.last_pulled_at`. …
@@ -348,7 +348,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### R · `PROP-002` §2.8 `#solver` — a library pick with the record already written in prose {#ex-solver}
 
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:538,544,546`:
+`vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml:538,544,546`:
 
 > @fact:RESOLVO-PRIMARY **Decision.** The primary depsolver is the
 > [`resolvo`](https://crates.io/crates/resolvo) crate (pure Rust,
@@ -377,7 +377,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### R · `PROP-012` §2.2 `#markers` — a protocol shape with a named, declined alternative {#ex-markers}
 
-`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:58,60,61`:
+`vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:58,60,61`:
 
 > @fact:BARE-TAGS **Decision.** The block is delimited by the literal **bare tags**
 > `<vibevm>` and `</vibevm>` …
@@ -400,7 +400,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-008` §2.2 `#identity` — definitional {#ex-identity}
 
-`spec/modules/vibe-registry/PROP-008-qualified-naming.xml:59,63`:
+`vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml:59,63`:
 
 > @fact:IDENTITY-TUPLE **Decision.** Package identity becomes
 > `(group, name, version, content_hash)`. `kind` **leaves the identity tuple**.
@@ -427,7 +427,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-000` §5 `#layout` — a pointer, not a decision {#ex-layout}
 
-`spec/common/PROP-000.xml:77`:
+`vibevm/vibespecs/common/PROP-000.xml:77`:
 
 > - @fact:LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2.
 
@@ -439,7 +439,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 ### N · `PROP-009` §2.9 `#uniform` — downstream of PROP-007 {#ex-uniform}
 
-`spec/modules/vibe-workspace/PROP-009-loading-model.xml:148`:
+`vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml:148`:
 
 > @fact:UNIFORM-MODEL **Decision.** The loading model is uniform: a single-package
 > project is a degenerate (zero-member) workspace. `Workspace::discover` already
@@ -454,14 +454,14 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 ### Two calibration cases the corpus already settled for us {#ex-calibration}
 
 - **The host has already written a «not reopenable» verdict, in the flow's own
-  field.** `spec/common/PROP-000.xml:23` — `@fact:LANG-REVISIT **When to revisit:**
+  field.** `vibevm/vibespecs/common/PROP-000.xml:23` — `@fact:LANG-REVISIT **When to revisit:**
   Never, in the scope of v1. If Rust proves inadequate for a future milestone,
   open a new PROP superseding this one.` By `##ROW-TRIGGER-LATER` that is a bad
   trigger; by §1 it is an **honest N1 classification wearing the trigger
   field**. Any option the owner picks should let a section say this without it
   reading as a defect.
 - **The host has already reopened a record correctly, unprompted.**
-  `spec/modules/vibe-index/PROP-005-package-index.xml:820,822` —
+  `vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml:820,822` —
   `##WORKSPACE-MEMBER **Decision (revised 2026-05-22).**` followed by
   `@fact:fold-in-why **Why this reverses the original standalone-workspace
   decision.** … It rotted silently against the M1.17 / M1.18 manifest-schema
@@ -477,18 +477,18 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 ### 3.1 The population, re-measured {#population}
 
 ```bash
-python <scratchpad>/adr-census.py spec/common spec/modules            # 154 labels
-python <scratchpad>/adr-census.py spec/common spec/modules \
+python <scratchpad>/adr-census.py vibevm/vibespecs/common vibevm/vibespecs/modules            # 154 labels
+python <scratchpad>/adr-census.py vibevm/vibespecs/common vibevm/vibespecs/modules \
   | awk -F'\t' '{print $5,$6,$7}' | sort | uniq -c | sort -rn         # field histogram
 ```
 
 | perimeter | Decision labels | Why | Considered-and-rejected | Revisit | all four |
 |---|---:|---:|---:|---:|---:|
-| `spec/common` + `spec/modules` — the census's perimeter | **154** | 27 | 4 | 7 | **4** |
+| `vibevm/vibespecs/common` + `vibevm/vibespecs/modules` — the census's perimeter | **154** | 27 | 4 | 7 | **4** |
 | all of `spec/` | 158 | — | — | — | 7 *(3 of them not host records — [§0](#zero))* |
 | `campaigns/**` — **this campaign's own, broken out**, excluding `harvest/d10-*` | 17 | — | — | — | 10 |
 | the same, **including this file and its sibling** | 31 | — | — | — | 12 |
-| `packages/org.vibevm.fractality/**` **excluding** `.vibe/` | 33 | — | — | — | 14 *(all 14 vendored — [§0](#zero))* |
+| `vibevm/vibepacks/org.vibevm.fractality/**` **excluding** `.vibe/` | 33 | — | — | — | 14 *(all 14 vendored — [§0](#zero))* |
 | the same, **authored by the specspace itself** | **9** | 0 | 0 | 0 | **0** |
 
 **Two reconciliations, stated rather than smoothed.**
@@ -627,7 +627,7 @@ PROP/FEAT that owns the decision, as a separate `spec/decisions/` genre, or as
 the four-field block the `decision-records` flow already prescribes»*.
 
 **The middle one is not open.** The flow is installed in this project (its boot
-snippet compiles into `spec/boot/STATIC.xml`), and it forbids the silo in four
+snippet compiles into `vibevm/vibespecs/boot/STATIC.xml`), and it forbids the silo in four
 places:
 
 - `25-flow-decision-records.xml:27` @fact:NO-SEPARATE-ADR-DIRECTORY — *«There is no
@@ -752,22 +752,22 @@ Two things follow, and the second is the more surprising.
   *document kind* with a charter, a reader and an authority; a decision record
   is a **section-level form** that lives inside two of the existing binding
   genres. Adding a row would require naming a home — and the host's own instance
-  of the table, `spec/design/README.md` ##genre-table-lead, is keyed on
+  of the table, `vibevm/vibespecs/design/README.md` ##genre-table-lead, is keyed on
   `| Directory | Holds | Normative? |`. **A row needs a directory, and the flow
   forbids the directory.** The two facts meet exactly here.
 - **The map assigns records to the genre that has none of them.**
   «Amended by decision record» is the mutability of **Foundational decisions** —
-  `spec/common/` in the host's instance. Measured:
+  `vibevm/vibespecs/common/` in the host's instance. Measured:
 
 ```bash
-python <scratchpad>/adr-census.py spec/common spec/modules \
+python <scratchpad>/adr-census.py vibevm/vibespecs/common vibevm/vibespecs/modules \
   | awk -F'\t' '$5==1&&$6==1&&$7==1 {print $1}' | sort | uniq -c
 ```
 
 | genre | host directory | Decision labels | complete records |
 |---|---|---:|---:|
-| Foundational decisions — *«amended by decision record»* | `spec/common/` | 35 | **0** |
-| Module contracts — *«edit + changelog line»* | `spec/modules/` | 119 | **4** |
+| Foundational decisions — *«amended by decision record»* | `vibevm/vibespecs/common/` | 35 | **0** |
+| Module contracts — *«edit + changelog line»* | `vibevm/vibespecs/modules/` | 119 | **4** |
 
 **The practice is inverted against the map.** Every complete record the host has
 written sits in the genre the map does *not* ask for one, and the genre the map
@@ -777,7 +777,7 @@ has proposed yet ([§5](#options), option A′).
 
 **If the owner does want the map amended, the minimal honest change is a
 mutability statement, not a row** — for the host's instance,
-`spec/design/README.md`, a fourth column or a sentence under
+`vibevm/vibespecs/design/README.md`, a fourth column or a sentence under
 @fact:genre-table-lead reading approximately:
 
 > **Decision records are a section form, not a directory.** A reopenable choice
@@ -872,9 +872,9 @@ identical. Two ways out, and the cheap one is right:
 
 ### Option A′ — the same, scoped to the genre the map already names {#option-a-prime}
 
-**The shape.** Option A, but the obligation binds **`spec/common/` only** — the
+**The shape.** Option A, but the obligation binds **`vibevm/vibespecs/common/` only** — the
 *Foundational decisions* genre, whose declared mutability in the installed map
-is already *«amended by decision record»* ([§4.3](#genre-row)). `spec/modules/`
+is already *«amended by decision record»* ([§4.3](#genre-row)). `vibevm/vibespecs/modules/`
 keeps its declared mutability, *«edit + changelog line»*, unchanged.
 
 **What it costs.** 35 Decision labels in scope, of which the sample puts ≈ 2 in 7
@@ -889,7 +889,7 @@ module contracts naming the genre map as its ground. Phase C's ruling —
 
 **Why it is worth putting on the table.** It is the only option whose scope is
 argued from a document rather than from a budget, and it inverts the finding
-that `spec/common/` — the genre the map assigns records to — has **zero** of
+that `vibevm/vibespecs/common/` — the genre the map assigns records to — has **zero** of
 them.
 
 ---
@@ -897,12 +897,12 @@ them.
 ### Option B — the four-field block is required forward-only; no backfill {#option-b}
 
 **The shape.** From the ruling forward, any *new or reopened* decision in
-`spec/common` or `spec/modules` carries the four fields. Existing sections are
+`vibevm/vibespecs/common` or `vibevm/vibespecs/modules` carries the four fields. Existing sections are
 untouched. `##WRITE-IN-THE-SESSION-THAT-DECIDES` becomes the operative rule and
 `##backfilled-reasoning-is-fiction` becomes the stated reason for not
 backfilling.
 
-**What it costs.** One paragraph in `spec/design/README.md` (§4.3's draft), plus
+**What it costs.** One paragraph in `vibevm/vibespecs/design/README.md` (§4.3's draft), plus
 per-decision discipline. **Zero backfill.** The marginal cost of a record
 written in the deciding session is minutes, because the reasoning is in working
 memory — which is the flow's entire argument.
@@ -967,7 +967,7 @@ declines.
 
 ### 5.5 The options side by side {#options-table}
 
-| | **A** — backfill the reopenable | **A′** — backfill `spec/common` only | **B** — forward-only | **C** — status quo as a marked exception |
+| | **A** — backfill the reopenable | **A′** — backfill `vibevm/vibespecs/common` only | **B** — forward-only | **C** — status quo as a marked exception |
 |---|---|---|---|---|
 | **sections in scope** | ≈ 60 of 154 | ≈ 10 of 35 | 0 existing | 0 |
 | **records to write** | ≈ 60 | ≈ 10 | new decisions only | none |
@@ -992,11 +992,11 @@ verdict.)*
 > applied and no verdict has moved.
 
 **Recommended: B + A′ — forward-only as the standing rule, plus the small
-document-argued backfill of `spec/common/`. Written as the record it proposes,
+document-argued backfill of `vibevm/vibespecs/common/`. Written as the record it proposes,
 so the form can be judged on its own example.**
 
 @fact:DECISION-ADR-GENRE **Decision — the four-field block, inside the owning
-section, required forward-only; backfilled only over `spec/common/`; no
+section, required forward-only; backfilled only over `vibevm/vibespecs/common/`; no
 `spec/decisions/`, now or later.**
 
 - @fact:adr-genre-why **Why.** Four measurements, each with its command in this
@@ -1012,7 +1012,7 @@ section, required forward-only; backfilled only over `spec/common/`; no
   *«a record backfilled a week later is fiction with confidence»*, and
   `##ROW-ANTI-BACKFILLED-MEMORY`. Sixty backfilled records under a phase
   deadline is that anti-pattern executed at scale, by the campaign that exists
-  to remove exactly this defect class. *(iv)* `spec/common/` is the one scope
+  to remove exactly this defect class. *(iv)* `vibevm/vibespecs/common/` is the one scope
   argued from a document rather than a budget: the installed genre map already
   declares its mutability *«amended by decision record»*, and it holds **35
   labels and 0 complete records** — the practice is inverted against the map
@@ -1047,7 +1047,7 @@ section, required forward-only; backfilled only over `spec/common/`; no
     [§4.3](#genre-row).
 
 - @fact:adr-genre-revisit **Revisit when.** Re-run the census
-  (`adr-census.py spec/common spec/modules`, excluding `vibedeps/**` and
+  (`adr-census.py vibevm/vibespecs/common vibevm/vibespecs/modules`, excluding `vibedeps/**` and
   `.vibe/**`) **at the close of the next campaign**. Two triggers, either one
   reopening this:
   - **the forward rule is not being kept** — fewer than **3 in 4** Decision
@@ -1068,7 +1068,7 @@ this one.**
    Everything below is scoped by that.
 2. **Ratify or amend the criterion** of [§1](#criterion) (Q1 condition · Q2
    observation point · Q3 loser), and decide **where it is published** — the
-   natural home is `spec/design/README.md`, beside ##genre-table-lead, so the
+   natural home is `vibevm/vibespecs/design/README.md`, beside ##genre-table-lead, so the
    count of «sections owed a record» becomes **derivable** rather than
    hand-maintained (`BACKLOG.md` ##ENTRY-PREFER-GENERATED). Without this, the
    negative classification is unrecorded and the same census re-fires next year.

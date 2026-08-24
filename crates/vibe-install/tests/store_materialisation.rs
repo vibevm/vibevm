@@ -39,7 +39,10 @@ fn materialisation_reads_its_bytes_from_the_store_entry() {
     );
     write(
         &registry_root,
-        "org.vibevm/wal/v0.2.0/spec/flows/wal/PROTOCOL.md",
+        &format!(
+            "org.vibevm/wal/v0.2.0/{}/flows/wal/PROTOCOL.md",
+            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
+        ),
         "protocol bytes\n",
     );
     let registry = LocalRegistry::new(&registry_root).unwrap();
@@ -69,11 +72,15 @@ fn materialisation_reads_its_bytes_from_the_store_entry() {
     );
 
     let slot = workspace_root
-        .join("vibedeps")
+        .join(vibe_core::layout::current_vibedeps_root())
         .join("org.vibevm.wal")
         .join("0.2.0");
     assert_eq!(
-        fs::read_to_string(slot.join("spec/flows/wal/PROTOCOL.md")).unwrap(),
+        fs::read_to_string(
+            slot.join(vibe_core::layout::current_specs_root())
+                .join("flows/wal/PROTOCOL.md")
+        )
+        .unwrap(),
         "protocol bytes\n",
         "vibedeps gets the store entry's bytes"
     );

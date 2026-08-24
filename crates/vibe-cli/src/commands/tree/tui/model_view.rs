@@ -6,8 +6,8 @@
 //! is the semantic sibling of the render plane ([`super::snapshot_headless`]):
 //! same `(tree, script)`, but the model instead of the glyph grid.
 //!
-//! Spec: [PROP-042 §4](../../../../spec/modules/vibe-cli/PROP-042-aiui-observation.md#aiui-cli)
-//! (the `state` verb), [PROP-039 §11.2](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#model-view).
+//! Spec: [PROP-042 §4](../../../../vibevm/vibespecs/modules/vibe-cli/PROP-042-aiui-observation.xml#aiui-cli)
+//! (the `state` verb), [PROP-039 §11.2](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#model-view).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli");
 

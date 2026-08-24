@@ -17,7 +17,7 @@
 //! rewrite via `toml_edit`, and `.gitignore` auto-gen (§9). The surface stays
 //! stable — only the host's write step changes.
 //!
-//! Spec: [PROP-040 §8](../../../../spec/modules/vibe-settings/PROP-040-settings.md#prefs-command).
+//! Spec: [PROP-040 §8](../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#prefs-command).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 

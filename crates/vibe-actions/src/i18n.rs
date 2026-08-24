@@ -9,7 +9,7 @@
 //!
 //! English is the default, mandatory-complete, terminating fallback (§8.3).
 //!
-//! Spec: [PROP-039 §8](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#i18n).
+//! Spec: [PROP-039 §8](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#i18n).
 //
 // TODO: Fluent on-disk format (PROP-039 §8.1) — this is a plain in-memory map
 // for now; the `locales/<lang>.ftl` loader + `ArcSwap<Catalogue>` locale swap

@@ -5,7 +5,7 @@ command printed above it._
 
 W2 is the batch where §3.1's source 2 is at its strongest anywhere in `world`: these
 four flows specify the session ritual this repository actually runs, and the
-artifacts they name — `spec/WAL.xml`, `CONTINUE.md`, `SPECSPACES.md`, the session
+artifacts they name — `vibevm/vibespecs/WAL.xml`, `CONTINUE.md`, `SPECSPACES.md`, the session
 commands — are all in the host and all in daily use. A claim here is rarely
 unverifiable; it is right or it is drift.
 
@@ -13,8 +13,8 @@ unverifiable; it is right or it is drift.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/two-process-model packages/org.vibevm.world/wal \
-    packages/org.vibevm.world/wal-specspaces packages/org.vibevm.world/sync-from-code
+    vibevm/vibepacks/org.vibevm.world/two-process-model vibevm/vibepacks/org.vibevm.world/wal \
+    vibevm/vibepacks/org.vibevm.world/wal-specspaces vibevm/vibepacks/org.vibevm.world/sync-from-code
 source-1 join over 23 file(s) under …
   relative .md citations resolved: 23
   broken: 0
@@ -46,7 +46,7 @@ Two of the four are on the join's problem list and two are not — `wal` and
 
   | package | host, installed and compiled |
   |---|---|
-  | `spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}` | `spec/boot/STATIC.xml:1321  ## The architecture` |
+  | `spec/boot/05-flow-two-process-model.md:15  ## The architecture {#architecture}` | `vibevm/vibespecs/boot/STATIC.xml:1321  ## The architecture` |
   | `:30  ## Standing consequences {#consequences}` | `STATIC.md:1336  ## Standing consequences` |
   | `:48  ## Never {#never}` | `STATIC.md:1354  ## Never` |
 
@@ -64,12 +64,12 @@ Two of the four are on the join's problem list and two are not — `wal` and
   looking for a missing rule.*
 - **`sync-from-code` is NO-SOURCE for the same reason four of W1's five were**: the
   installed copy sits at the pre-DRIFT-039 `boot/` path while the package ships at
-  `spec/boot/`, so the join cannot pair them and declines to compare words.
+  `vibevm/vibespecs/boot/`, so the join cannot pair them and declines to compare words.
 
 **The `wal-status` skill is shipped and not installed.**
 
 ```console
-$ ls packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/
+$ ls vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/skills/wal-status/
 SKILL.md
 $ ls .claude/skills/
 rust-ai-native-sweep  rust-ai-native-terraform
@@ -85,9 +85,9 @@ none of them is it — the same shape C6 found for the two Go skills.
 The consuming project is this repository, and it runs all four rituals.
 
 ```console
-$ test -f spec/WAL.xml && test -f CONTINUE.md && test -f SPECSPACES.md ; echo present
+$ test -f vibevm/vibespecs/WAL.xml && test -f CONTINUE.md && test -f SPECSPACES.md ; echo present
 present
-$ grep -m1 '^_Updated' spec/WAL.xml
+$ grep -m1 '^_Updated' vibevm/vibespecs/WAL.xml
 _Updated: 2026-07-28 (**Phase C — the reviewing debt is CLOSED and `world` batch W1
 $ grep -n '^default:' SPECSPACES.md
 18:default: host

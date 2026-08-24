@@ -17,7 +17,7 @@
 //! query matches everything at score `0` with no ranges (the empty-pattern
 //! lane the engine drains in provider order).
 //!
-//! Spec: [PROP-039 §10.3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#se-ranking).
+//! Spec: [PROP-039 §10.3](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#se-ranking).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#search-everywhere");
 

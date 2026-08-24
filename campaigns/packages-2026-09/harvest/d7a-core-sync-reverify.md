@@ -2,7 +2,7 @@
 
 _Worked 2026-07-31 at HEAD `9f79acf1` (`fix(campaign): the last two boss-closable
 obligations, and neither one moved a package`), working tree clean. Subject:
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` — every open
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/` — every open
 `sync-from-code` obligation whose package is `core-ai-native`, enumerated from
 `run/state/obligations.json` minus everything already in `run/state/routing.json`:
 **8 obligations, 38 anchors**._
@@ -75,7 +75,7 @@ Rust-stack, which is why nothing moved.
 Run from the repository root; referred to below as *the standing perimeter*:
 
 ```
-packages/**  (INCLUDING packages/org.vibevm.fractality/** — a second adopter, not just a subject)
+packages/**  (INCLUDING vibevm/vibepacks/org.vibevm.fractality/** — a second adopter, not just a subject)
 vibedeps/**  crates/**  xtask/**  tools/**  spec/**  discipline/**  terraform/**
 research/**  campaigns/**  fixtures/**  schemas/**  docs/**  manual-tests/**
 and the repository root's own *.md / *.toml / *.json / *.sh / *.ps1
@@ -99,7 +99,7 @@ search to «the host's crates» or to `crates/` — and `core-ai-native` **is a 
 workspace with five member crates of its own**, one of which is an MCP server:
 
 ```console
-$ ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates
+$ ls vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates
 core-ai-native-conform
 core-ai-native-mcp
 core-ai-native-specmap
@@ -115,11 +115,11 @@ Every entry below names the perimeter it used.
 **Three further layer facts, measured once here and cited by several entries:**
 
 ```console
-$ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/
+$ ls vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/
 rust-ai-native-cli            rust-ai-native-conform-frontend  rust-ai-native-specmap
 rust-ai-native-conform        rust-ai-native-env-audit         rust-ai-native-tcg
 rust-ai-native-tcg-bridge     vendor
-$ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/
+$ ls vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/
 core-ai-native-conform  core-ai-native-specmap  core-ai-native-specmark  core-ai-native-specmark-grammar
 ```
 
@@ -143,18 +143,18 @@ than the citation.
 
 **What the measurement shows:**
 
-The sentence, in full, at `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:19`:
+The sentence, in full, at `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:19`:
 
 ```
 ##PROMPT-CONTENT-ONLY This package is prompt content only. @impl/done
 ```
 
 Its own `Cargo.toml` declares five workspace members
-(`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11-17`), and
+(`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11-17`), and
 every one of them is real code:
 
 ```console
-$ P=packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ P=vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ for c in $P/crates/*/; do n=$(basename $c); \
     echo "$n rs=$(find $c/src -name '*.rs'|wc -l) loc=$(find $c/src -name '*.rs' -exec cat {} + |wc -l) bin=$(grep -c '\[\[bin\]\]' $c/Cargo.toml) main=$(test -f $c/src/main.rs && echo yes || echo no)"; done
 core-ai-native-conform  rs=14 loc=3928 bin=0 main=no
@@ -198,7 +198,7 @@ crates it authors — five **library** crates (`core-ai-native-conform`,
 This keeps the contrast the next anchor draws (`##RUNNABLE-HALF-IN-STACKS`: the
 runnable half — the CLI drivers — ships in each stack) while removing the false
 half. *Note for the boss:* the same sentence is live in the superseded v0.7.0
-slot (`packages/org.vibevm.ai-native/core-ai-native/v0.7.0/README.md:10`) and in
+slot (`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/README.md:10`) and in
 every `vibedeps/` copy; §3.3 of the campaign spec marks superseded slots rather
 than verifying them, and the `vibedeps/` copies move only through a re-vendor, so
 neither is part of this repair.
@@ -246,7 +246,7 @@ sentence.
 **(1) `00-MANIFESTO.xml#status-line` does not mention GUIDE-SPEC-AUTHORING at all.**
 
 ```console
-$ sed -n '5p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml
+$ sed -n '5p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml
 ##status-line **Discipline v0.2 · status: BETA · supersedes DISCIPLINE-CHARTER-v0.1** @impl/done
 ```
 
@@ -298,7 +298,7 @@ ratified) · `req r1 planned` · `req r2 disputed(#other-anchor)` · retired
 anchor-id validation on the disputed argument:
 
 ```console
-$ sed -n '98,113p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs
+$ sed -n '98,113p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs
     let (status, disputes) = match words.next() {
         None => (None, None),
         Some("planned") => (Some(SpecUnitStatus::Planned), None),
@@ -325,10 +325,10 @@ is the default and therefore absent by design, and `retired` is a tombstone
 comment, specified at `PROP-014-specmap-bidirectional-traceability.xml:80`
 (`##HEADING-ANCHOR-GRAMMAR-AND-IMMUTABILITY`, *«retiring a unit tombstones the
 anchor (`<!-- RETIRED: superseded by #new-anchor -->`)»*). The kind line itself
-is practised in the host's live specs — `spec/common/PROP-018-agentic-standalone-modes.xml:115`,
-`:139`, `spec/common/PROP-019-version-manager.xml:83`,
-`spec/modules/vibe-mcp/PROP-015-mcp-integration.xml:125`,
-`spec/modules/vibe-resolver/PROP-003-dep-evolution.xml:454` — and the module that
+is practised in the host's live specs — `vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml:115`,
+`:139`, `vibevm/vibespecs/common/PROP-019-version-manager.xml:83`,
+`vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml:125`,
+`vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml:454` — and the module that
 parses it opens with a doc comment citing the amended document by name
 (`mdspec.rs:4-9`).
 
@@ -433,7 +433,7 @@ and each document answers that against itself, in writing.** No absence claim is
 needed, and none is made here:
 
 ```console
-$ P=packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ P=vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ for f in PROP-014-specmap-bidirectional-traceability LEDGER-INTENT-v0.1 BROWNFIELD-PROTOCOL-v0.1; do
     printf "%s: %s\n" "$f" "$(grep -ciE 'specified, not built' $P/spec/mechanisms/$f.md)"; done
 PROP-014-specmap-bidirectional-traceability: 5
@@ -613,7 +613,7 @@ That reads the phrase against the **code** side. The markdown scanner reads it
 the other way, and says so, quoting the clause and its section number:
 
 ```console
-$ sed -n '1,9p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs
+$ sed -n '1,9p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/mdspec.rs
 //! Markdown side of the scanner: anchored spec units.
 //!
 //! A unit is the span from an anchored heading (`### Title {#anchor}`)
@@ -658,7 +658,7 @@ $ sed -n '81,84p' terraform/REPORT.md
 
 §3.6(c) is explicit that a **marked** exception is not drift, and wave 6 applied
 that ruling to a CI clause in another package already
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3488`). This is the
+(`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3488`). This is the
 same shape, and the marking is seven weeks older than the verdict.
 
 **`refs/**`, reported separately:** `grep -rl 'conflicts_with' refs/` returns
@@ -745,7 +745,7 @@ quoting them; every one reproduces on the **wider** perimeter, which is the
 outcome that matters — a `not-found` that survives a perimeter it did not need.
 
 **The DRIVER-layer file that could have overturned this and does not.**
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/ledger.rs`
 is a **different ledger** and must not be mistaken for this one — its own header
 (`:1-8`) says it renders *«the two BROWNFIELD §3 registries: `discipline/DEBT.md`
 from `debt.json` … and `discipline/INTENT.md` from `intent.json`»*. It is the
@@ -761,7 +761,7 @@ epoch, cost, created_at, confidence}`»*. There is no entry type. The store writ
 the render itself:
 
 ```console
-$ sed -n '155p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs
+$ sed -n '155p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs
     std::fs::write(&slot, &text).with_context(|| format!("writing {}", slot.display()))?;
 ```
 
@@ -960,7 +960,7 @@ falsifying evidence.** Its first two evidence refs are `sarif.rs:82
 fn sarif_is_byte_stable()` and `sarif.rs:99 assert_eq!(a, b)`. Read together:
 
 ```console
-$ sed -n '81,101p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs
+$ sed -n '81,101p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs
     #[test]
     fn sarif_is_byte_stable() {
         …
@@ -982,7 +982,7 @@ The **whole-pipeline** version — the one the fact actually promises — is in 
 driver, and it too is a verdict evidence ref (`tests/engine.rs:123`):
 
 ```console
-$ sed -n '103p;121,124p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs
+$ sed -n '103p;121,124p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs
 fn findings_and_sarif_are_deterministic_and_baseline_gates() {
     let (findings_a, sarif_a) = run();
     let (findings_b, sarif_b) = run();
@@ -1011,7 +1011,7 @@ The verdict: *«the command as written cannot be run … the language stacks'
 That last clause is checkable and false. The Rust driver:
 
 ```console
-$ sed -n '142,152p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs
+$ sed -n '142,152p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs
 enum ConformCmd {
     /// Extract facts, run the rules, fail on any new finding past the
     /// baseline.
@@ -1030,7 +1030,7 @@ family's `conform`**, with the third flag as well and the scope semantics spelle
 out exactly as the document uses them:
 
 ```console
-$ sed -n '24,33p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/main.rs
+$ sed -n '24,33p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/main.rs
     Check {
         /// Project root.
         #[arg(long, default_value = ".")]
@@ -1056,7 +1056,7 @@ the document's.)
 And the exit-code half — the actual load-bearing claim — is literal:
 
 ```console
-$ sed -n '172,174p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs
+$ sed -n '172,174p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs
     if !new.is_empty() {
         bail!("conform: {} new finding(s) against the baseline", new.len());
     }
@@ -1089,7 +1089,7 @@ stricter one. `frontend unavailable` returns **0** over every layer, and
 line to degrade to. What happens instead is fail-fast:
 
 ```console
-$ sed -n '65,70p' packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs
+$ sed -n '65,70p' vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs
     // Fail HARD on a broken toolchain before the gate can run on zero
     // facts — the bridge's taxonomy carries the fix surface.
     frontend
@@ -1110,7 +1110,7 @@ degrading, which is the better behaviour and the wrong description.
 wrong in both parameters:
 
 ```console
-$ sed -n '51,56p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs
+$ sed -n '51,56p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs
 pub trait Rule {
     fn id(&self) -> &'static str;
     fn why(&self) -> &'static str;
@@ -1127,7 +1127,7 @@ trait also has two members the document omits (`id`, `why`).
 **`##FINDINGS-CARRY-THE-A1-CHAIN`** (`:88`) — five links claimed, three present:
 
 ```console
-$ sed -n '27,36p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs
+$ sed -n '27,36p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs
 pub struct Finding {
     pub rule: &'static str,
     pub file: String,
@@ -1299,7 +1299,7 @@ $ sed -n '20p' terraform/REPORT.md
 by its own admission:*
 
 ```console
-$ grep -ci 'specified, not built' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.xml
+$ grep -ci 'specified, not built' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml
 8
 ```
 
@@ -1329,7 +1329,7 @@ trait Frontend {
 The shipped trait is:
 
 ```console
-$ sed -n '176,189p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs
+$ sed -n '176,189p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs
 pub trait Frontend {
     fn id(&self) -> &'static str;
     fn version(&self) -> &'static str;
@@ -1461,7 +1461,7 @@ authors the neutral server crate they build on (`core-ai-native-mcp`, 1 035 line
 Their declared inventory:
 
 ```console
-$ sed -n '48,67p' packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs
+$ sed -n '48,67p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs
 pub const TOOL_NAMES: [&str; 18] = [
     "codemod_add_cell", "conform_check", "conform_freeze", "fast_loop",
     "floor", "health", "init", "ledger_render",

@@ -77,9 +77,9 @@ and it is therefore one ruling, not twenty-nine.
 
 > **Re-measured 2026-07-31 over the whole tree, and the characterisation needs
 > one correction that changes the ruling.** The ratios above were taken over
-> `spec/terraforms/` and `legacy-spec/` — the same perimeter wave 6 proved blind,
+> `vibevm/vibespecs/terraforms/` and `legacy-spec/` — the same perimeter wave 6 proved blind,
 > because it omits the `fractality` specspace, a **second project that adopted
-> this flow** and boots it at slot 40 of its own generated `spec/boot/INDEX.md`.
+> this flow** and boots it at slot 40 of its own generated `vibevm/vibespecs/boot/INDEX.md`.
 > Counted by file across archived · host-live · fractality:
 >
 > | form | host live plans | `fractality` plans |
@@ -118,7 +118,7 @@ rulings are about what the host will actually keep doing, not about wording.
 **Three carry a defect the routing record already names, and each is a
 one-line host fix rather than a ruling:**
 
-- `PROP-035`'s `##related` has no return leg to `spec/design/structural-loader.xml`,
+- `PROP-035`'s `##related` has no return leg to `vibevm/vibespecs/design/structural-loader.xml`,
   which names it three times (from F-335).
 - The `revisit-triggers` field definition and its own example library disagree
   about whether an event trigger is a legal trigger (from F-224) — and that one
@@ -131,10 +131,10 @@ one-line host fix rather than a ruling:**
 ## The census that sizes the biggest ruling {#census}
 
 Measured here rather than taken from anyone's report, over
-`spec/common/*.md` + `spec/modules/*/*.md`:
+`vibevm/vibespecs/common/*.md` + `vibevm/vibespecs/modules/*/*.md`:
 
 ```bash
-grep -rc "\*\*Decision\.\*\*" spec/common/*.md spec/modules/*/*.md | awk -F: '{s+=$2} END{print s}'
+grep -rc "\*\*Decision\.\*\*" vibevm/vibespecs/common/*.md vibevm/vibespecs/modules/*/*.md | awk -F: '{s+=$2} END{print s}'
 ```
 
 **122 sections carry a `**Decision.**` line and 4 carry a `Revisit when`** —
@@ -143,7 +143,7 @@ two files**, `PROP-036` once and `PROP-043` three times.
 
 *Two workers reported ~154 sections and 149 stubs; my count over the perimeter
 stated above is 122 and 118. The gap is a perimeter difference, not a
-disagreement about the finding — theirs presumably reaches `spec/design/` and
+disagreement about the finding — theirs presumably reaches `vibevm/vibespecs/design/` and
 mine does not. **The number to act on is the one whose perimeter is written
 down**, which is why this paragraph carries the command.*
 
@@ -162,7 +162,7 @@ host adopts the practice* before anyone writes a hundred-odd records.
 >
 > | perimeter | Decision-labelled | all four |
 > |---|---:|---:|
-> | `spec/common` + `spec/modules` — the perimeter above | 153 | **4** |
+> | `vibevm/vibespecs/common` + `vibevm/vibespecs/modules` — the perimeter above | 153 | **4** |
 > | all of `spec/` | 157 | **7** |
 > | `campaigns/` — *this campaign's own records* | 15 | **8** |
 > | **the `fractality` specspace** | 34 | **14** |
@@ -215,14 +215,14 @@ forbids stayed off the table.
 | F-288 | walk the nine over-budget documents as split candidates; journal genres expected exceptions |
 | F-322 | the five-part codeword instruction sleeps until a second codeword is proposed |
 | F-327 + F-328 | assert/verify the token file's ACL explicitly (one debt covers both rows) |
-| F-336 | move the normative must/shall out of the one offending `spec/design/` file |
+| F-336 | move the normative must/shall out of the one offending `vibevm/vibespecs/design/` file |
 | F-338 + F-339 | covered forward by the landed B+A′ criterion (four fields at minting, triggers included); recorded as satisfied-going-forward |
 | F-342 | build the hook-output variable (Phase E candidate; specified in two PROPs) |
 | F-343 | bring the self-update consent/honesty path up to the lesson's three clauses (Phase E candidate) |
 
 **Answer (2) — a deliberate exception, recorded (F-230, first anchor):** the
 attribution posture is enforced procedurally, not mechanically — the exception
-lives at `spec/common/PROP-000.xml` `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and
+lives at `vibevm/vibespecs/common/PROP-000.xml` `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and
 the anchor re-judged `confirmed` with the exception named. **The row's second
 anchor carried a different defect** (the posture restated in ~ten places, two
 copies drifted, a dead «PROP-000 §12.1» pointer) — closing it on this ruling
@@ -271,7 +271,7 @@ the debt drains together with them. Owner: *«Сделать как будет �
 
 **F-218 (both anchors) — `deferred` onto B-011, raised to highest priority:**
 the 59-collision measurement is the boot compiler's flattening
-(`{#root}` ×26 in the compiled `spec/boot/STATIC.xml`), both anchors were routed
+(`{#root}` ×26 in the compiled `vibevm/vibespecs/boot/STATIC.xml`), both anchors were routed
 out at the wave-2 review, and the fix is B-011's aliasing/renaming design —
 today enriched with the owner's directions (labels renamed so every reference
 stays valid document-wide; the dynamic-loading case of libraries carrying their
@@ -390,7 +390,7 @@ build with the reserved `TYPE_MISMATCH=4` exit, short-name acceptance for
 «stated here as the anchor every restatement echoes» (D36 confirmed), the
 resolver anchor routed onto B-045 — **F-178 `deferred`, owed 0.**
 *(Q3, F-199 — answer (1)):* the host records the **boot-surface marked
-exception** at `spec/common/PROP-000.xml` `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
+exception** at `vibevm/vibespecs/common/PROP-000.xml` `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
 — 00-core's Rule 1, the CLAUDE/AGENTS/GEMINI triple (0c-gated) and
 `.claude/agents/` carry the four-rules digest by design («правила обязаны
 доезжать до каждого агента на старте»); §12 stays the authoritative

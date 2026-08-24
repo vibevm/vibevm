@@ -18,5 +18,5 @@ Take the first unfinished step above; when none remain, continue with the next q
 
 - Every session: read this file, recover Unfinished, then take Next.
 - Close the current step before ending a session; never start one you cannot finish.
-- Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml` §4–§5. Contract: `spec/modules/vibe-progress/PROP-043-progress-markup.xml`.
+- Plan: `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml` §4–§5. Contract: `vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml`.
 - Dashboard: `node tools/progress-dashboard/serve.mjs`.

@@ -426,7 +426,7 @@ fn push_with_classification(
 /// output (≥ 2.31), but `vibe-publish` cannot rely on the version of git
 /// the operator has installed and MUST scrub anything that could end up in
 /// a `PublishError` message rendered to the user. Per
-/// [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy) the
+/// [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy) the
 /// publish token never appears in any vibevm-produced output.
 pub(crate) fn redact_credentials(s: impl AsRef<str>) -> String {
     let s = s.as_ref();

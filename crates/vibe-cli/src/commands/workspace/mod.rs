@@ -1,6 +1,6 @@
 //! `vibe workspace …` — multi-package workspace operations.
 //!
-//! Spec: [PROP-007 §2.7–§2.9](../../../spec/modules/vibe-workspace/PROP-007-workspace.md#selective-publish).
+//! Spec: [PROP-007 §2.7–§2.9](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml#selective-publish).
 //!
 //! Today the one subcommand is `publish`. `vibe workspace publish` discovers
 //! the workspace enclosing the current directory, selects every node that

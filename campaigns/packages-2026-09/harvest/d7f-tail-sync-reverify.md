@@ -2,11 +2,11 @@
 
 _Worked 2026-07-31 at `HEAD = 596588fb` (`docs(campaign): two more queue figures
 restated…`, 2026-07-31 13:42:53 +0300), 2 198 commits on `main`. Subjects:
-`packages/org.vibevm.world/health-audit/v0.1.0/`,
-`packages/org.vibevm.world/secrets-hygiene/v0.1.0/`,
-`packages/org.vibevm.world/licensing/v0.1.0/`,
-`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/`,
-`packages/org.vibevm.world/redbook/v0.2.0/`. Seven obligations, **16 drift
+`vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/`,
+`vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/`. Seven obligations, **16 drift
 verdicts**, all on the `sync-from-code` route:_
 
 | id | type | falsifier | anchors | package |
@@ -66,7 +66,7 @@ the discipline, wherever it sits** — this repository holds at least two, the
 host and the `fractality` specspace inside `packages/`:
 
 ```
-packages/**  (INCLUDING packages/org.vibevm.fractality/**)
+packages/**  (INCLUDING vibevm/vibepacks/org.vibevm.fractality/**)
 vibedeps/**  crates/**  xtask/**  tools/**  spec/**  discipline/**  terraform/**
 research/**  campaigns/**  legacy-spec/**  fixtures/**  schemas/**  docs/**  manual-tests/**
 and the repository root's own *.md / *.toml / *.json / *.sh / *.ps1
@@ -94,7 +94,7 @@ named `file:line` before being judged.
 `42-flow-health-audit.xml#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE` — route (b) (**line 57**)
 All four verified to be real definitions, not citations.
 **Perimeter searched:** the standing perimeter, **specifically including
-`packages/org.vibevm.fractality/fractality/v0.1.0/`** — which turns out to be a
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/`** — which turns out to be a
 second consumer of this exact flow — for `Audit run —` · `AUDIT.md` ·
 `health-audit` · `skills/health-audit` · `[[skill]]`, plus every harness skill
 home in both projects and the `ROADMAP.md` milestone table.
@@ -141,14 +141,14 @@ contract carries an audit trigger phrase. Nothing here is wrong.
 
 *The floor half is breached — by both consumers.* This is the §3.7 perimeter
 check, and it went the way that widens the finding rather than the way that
-kills it. `packages/org.vibevm.fractality/fractality/v0.1.0/` is the second
+kills it. `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/` is the second
 project that adopted this discipline: it carries `flow-health-audit` in its own
 `vibedeps/` (its `vibe.lock:30` reads
 `"flow:org.vibevm.world/health-audit@=0.1.0"`) and compiles this very snippet
 into its own boot lane —
 
 ```console
-$ sed -n '56,58p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md
+$ sed -n '56,58p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/boot/INDEX.md
 path = "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
 kind = "static"
 ```
@@ -172,14 +172,14 @@ audit runs). So the second consumer does not falsify the verdict; it is a
 consumer projection step, and it fails for six skills, not one.* The snippet
 says the skill «reads the category checklist, walks it against the repository,
 and drafts the `AUDIT.md` section for your approval». Read against
-`packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md`
+`vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/skills/health-audit/SKILL.md`
 that is **exact**: step 1 reads `audit-checklist.xml` and `running-an-audit.xml`
 in full (`SKILL.md:21-23`), step 4 walks the checklist breadth-first against the
 repository (`SKILL.md:28-33`), the Output section produces a draft `AUDIT.md`
 section (`SKILL.md:41-42`), and the Do-not section forbids committing before the
 owner approves (`SKILL.md:48-49`). The skill ships and installs — it exists at
 that path and at `vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md`,
-and `packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:19-22` declares it
+and `vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibe.toml:19-22` declares it
 as a `[[skill]]` named `health-audit`.
 
 What is missing is the *projection*, and it is not specific to this package:
@@ -212,7 +212,7 @@ vibevm                                                (5)                       
 `vibe skill install` for the rust and typescript stacks and for nothing else.
 `vibe.lock:307` records `files_written = []` for this package, which is correct:
 projection is a separate command (`##CMD-SKILL-INSTALL`,
-`spec/common/PROP-018-agentic-standalone-modes.xml:212`), not an install effect.
+`vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml:212`), not an install effect.
 So the instruction does fail when followed here — and it fails for the same
 reason five sibling instructions would.
 
@@ -421,7 +421,7 @@ identical rule at the identical strength and is equally unbuilt, at `@impl/done`
 on both:
 
 ```console
-$ sed -n '123,131p' spec/modules/vibe-workspace/PROP-020-install-hooks.xml
+$ sed -n '123,131p' vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml
 - ##ALLOW-LIST **Allow-listed groups run silently.** A config key (global
   `~/.vibe/config.toml` `[hooks].allowed_groups`, with a project-level
   override) lists trusted package groups. … @impl/done
@@ -788,10 +788,10 @@ statements.
 **The verdict's own commands, re-run — both reproduce exactly:**
 
 ```console
-$ find packages/org.vibevm.world/licensing/v0.1.0/spec/skills -type f
-packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md
+$ find vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills -type f
+vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills/draft-eula/SKILL.md
 
-$ sed -n '25p' packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md
+$ sed -n '25p' vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills/draft-eula/SKILL.md
    in `spec/flows/licensing/eula-template.md`: product name,
 ```
 
@@ -899,7 +899,7 @@ $ git show --stat --format='%h %ad %s' --date=short 5086c5b5
 5086c5b5 2026-07-12 chore(license): relicense vibevm to UPL-1.0
  LICENSE.xml | 65 ++++++---   1 file changed, 44 insertions(+), 21 deletions(-)
 
-$ git log -S'UPL-1.0' --format='%h %ad %s' --date=short -- spec/common/PROP-000.xml
+$ git log -S'UPL-1.0' --format='%h %ad %s' --date=short -- vibevm/vibespecs/common/PROP-000.xml
 71d8383b 2026-07-25 docs(spec): Phase D d1b — the foundation catches up with reality
 bf311a39 2026-04-17 docs(spec): bootstrap self-hosted vibevm spec tree per §14.1
 
@@ -1146,13 +1146,13 @@ your subject, count it yourself» — the redbook family has three rosters recor
 at 22 / 21 / 23):**
 
 ```console
-$ grep -cE '^"flow:' packages/org.vibevm.world/redbook/v0.2.0/vibe.toml
+$ grep -cE '^"flow:' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml
 22
 $ grep -cE '^"flow:[^"]+" = "=[0-9]+\.[0-9]+\.[0-9]+"$' …/vibe.toml
 22
 $ grep -E '^"flow:' …/vibe.toml | grep -vcE '= "=[0-9]+\.[0-9]+\.[0-9]+"$'
 0
-$ grep -cE '^\| ##ROW-' packages/org.vibevm.world/redbook/v0.2.0/README.md
+$ grep -cE '^\| ##ROW-' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md
 21
 ```
 
@@ -1166,7 +1166,7 @@ count in this entry cannot be mistaken for it.) And the manifest comment the
 verdict quotes is exactly where it says:
 
 ```console
-$ sed -n '48,49p' packages/org.vibevm.world/redbook/v0.2.0/vibe.toml
+$ sed -n '48,49p' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml
 # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the
 # full new practice set has settled; accumulated here in place meanwhile).
 ```
@@ -1177,14 +1177,14 @@ as added, all under one unmoving version:
 
 ```console
 $ for c in 69708287 041ef527 c939951a 093c053c HEAD; do
-      git show $c:packages/org.vibevm.world/redbook/v0.2.0/vibe.toml | grep -cE '^"flow:'; done
+      git show $c:vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml | grep -cE '^"flow:'; done
 69708287  2026-07-12  pins=21  version = "0.2.0"
 041ef527  2026-07-14  pins=22  version = "0.2.0"   -atomic-commits +git-practices +dev-runtime-docs
 c939951a  2026-07-14  pins=21  version = "0.2.0"   -attribution-policy
 093c053c  2026-07-15  pins=22  version = "0.2.0"   +wal-specspaces
 HEAD      2026-07-31  pins=22  version = "0.2.0"
 
-$ git log -p -- packages/org.vibevm.world/redbook/v0.2.0/vibe.toml | grep -E '^\+version|^-version'
+$ git log -p -- vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml | grep -E '^\+version|^-version'
 +version = "0.2.0"          # written once, never changed
 ```
 
@@ -1204,7 +1204,7 @@ LOG's wave-2–4 test («a package moves only where its own sentence is false ab
 something inside its own tree») is satisfied here and nowhere else in D7f.
 
 **Proposed correction (NOT APPLIED).** Exact replacement for
-`packages/org.vibevm.world/redbook/v0.2.0/README.md:25-27`:
+`vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md:25-27`:
 
 ```markdown
 ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a
@@ -1231,7 +1231,7 @@ sentence at `README.md:119-120` is:
 The verdict ruled its second half contradicted by the host's written contract:
 
 ```console
-$ sed -n '530p' spec/modules/vibe-registry/PROP-002-decentralized-registry.xml
+$ sed -n '530p' vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml
 - ##LF-ROOT-DEPENDENCIES … `vibe uninstall` of a root drops the entry from both
   files; `vibe uninstall` of a pure transitive is rejected with an explanation. @impl/done
 ```
@@ -1295,7 +1295,7 @@ integration test expects a pure transitive to uninstall cleanly, and the
 sentence describes what the tool does.
 
 **Host obligations this opens (recorded, not acted on).** (1)
-`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:530`
+`vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml:530`
 `##LF-ROOT-DEPENDENCIES` is `@impl/done` over «`vibe uninstall` of a pure
 transitive is rejected with an explanation», and no code rejects anything; the
 same claim is repeated in a doc comment at
@@ -1437,7 +1437,7 @@ text, and one holds flows the current edition does not contain.
 - **Widening into `packages/`** (the wave-6 extension): the `fractality`
   specspace **installs `flow-health-audit`** (its `vibe.lock:30`) and
   **compiles this very snippet into its own boot lane** (its
-  `spec/boot/INDEX.md:57`) while keeping **no `AUDIT.md` at all**. A second
+  `vibevm/vibespecs/boot/INDEX.md:57`) while keeping **no `AUDIT.md` at all**. A second
   consumer failing the same rule — F-097 widens rather than falls.
 - **Widening into `packages/` again, and it narrowed a finding:** the sixteen
   `vibe.toml` manifests still reading `license = "EULA"` are **all** inside that
@@ -1477,7 +1477,7 @@ text, and one holds flows the current edition does not contain.
    statements also disagree about whether the guard already runs everywhere
    (`registry/publish.rs:125-126` «every method call» vs `creator.rs:154-155`
    «`repo_exists` / `create_repo`»).
-3. **`spec/modules/vibe-registry/PROP-002-decentralized-registry.xml:530` is
+3. **`vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml:530` is
    `@impl/done` over a refusal no code performs** (F-114), repeated as a doc
    comment at `crates/vibe-core/src/manifest/lockfile.rs:120`. If it were built,
    **18 of `redbook`'s 22 members become uninstallable in this repository** — a

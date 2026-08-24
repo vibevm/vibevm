@@ -1,0 +1,18 @@
+[package]
+name = "secrets-hygiene"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+epoch = 1
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Secrets hygiene for agent-driven repositories: surface-secrets never printed or persisted, sanctioned process boundaries, and scope discipline"
+keywords = ["secrets", "tokens", "security", "hygiene", "scope"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml"
+category = "flow"

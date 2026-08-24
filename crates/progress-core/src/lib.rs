@@ -56,8 +56,8 @@ use std::path::Path;
 /// `cache.json` and hands the same documents to
 /// [`sidecar::Payloads::store`].
 ///
-/// (Layout note, PROP-052: the example's `spec/` scaffold names the
-/// legacy specs root that [`scope::DEFAULT_INCLUDES`] observes today —
+/// (Layout note, PROP-052: the example's `vibevm/vibespecs/` scaffold
+/// names the live specs root that [`scope::DEFAULT_INCLUDES`] observes —
 /// see the duplication note on that constant; this crate is standalone
 /// by law and cannot import `vibe_core::layout`.)
 ///
@@ -65,9 +65,9 @@ use std::path::Path;
 /// use progress_core::{cache::Cache, scope::ScopeConfig, sidecar::Payloads, scan_tree};
 ///
 /// let dir = tempfile::tempdir().expect("tempdir");
-/// std::fs::create_dir_all(dir.path().join("spec")).expect("mkdir");
+/// std::fs::create_dir_all(dir.path().join("vibevm/vibespecs")).expect("mkdir");
 /// std::fs::write(
-///     dir.path().join("spec/a.md"),
+///     dir.path().join("vibevm/vibespecs/a.md"),
 ///     "# A {#a}\n\n<status stage=\"impl\" state=\"work\"/>\n\n##b1 Body. @test/plan\n",
 /// ).expect("write");
 ///
@@ -78,7 +78,7 @@ use std::path::Path;
 ///     .expect("scan");
 /// assert_eq!(docs.len(), 1);
 /// assert_eq!(docs[0].markers.len(), 2);
-/// assert!(cache.is_current("spec/a.md", &docs[0].content_hash));
+/// assert!(cache.is_current("vibevm/vibespecs/a.md", &docs[0].content_hash));
 /// ```
 pub fn scan_tree(
     root: &Path,

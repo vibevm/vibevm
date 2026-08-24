@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-000: Foundational technical decisions</title>
+  <status stage="spec" state="done" comment="B1 2026-07-24: foundational decisions in force; had no legacy status line; fact grain 2026-07-24"/>
+  <facts ordered="false">
+    <DOC-PINS fact="true" status="spec/done">This document pins the foundational technical decisions for the vibevm implementation.</DOC-PINS>
+    <ASSUME-TRUE fact="true" status="spec/done">Every subsequent PROP/FEAT may assume these are true.</ASSUME-TRUE>
+    <AMEND-FIRST fact="true" status="spec/done">Changing any of them requires an explicit amendment here first, then downstream updates.</AMEND-FIRST>
+  </facts>
+  <facts ordered="false">
+    <SOURCE-AUTHORITY fact="true" status="spec/done">Source authority: [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) §10 and the book in `refs/book/`.</SOURCE-AUTHORITY>
+    <SPEC-WINS fact="true" status="spec/done">Where this PROP and the spec disagree, the spec wins.</SPEC-WINS>
+  </facts>
+  <language title="1. Language: Rust">
+    <p><LANG-RUST fact="true" status="spec/done">**Decision:** The vibevm CLI and all supporting crates are written in Rust.</LANG-RUST></p>
+    <p><LANG-WHY fact="true" status="spec/done">**Why:** Single-binary distribution, no runtime dependency, cross-platform by default, strong type system aligned with the project's discipline philosophy, excellent CLI ecosystem (`clap`, `serde`, `toml`, `reqwest`, `git2`, `tokio`, `anyhow`, `thiserror`, `tracing`, `dialoguer`, `console`, `sha2`). See `VIBEVM-SPEC.md` §10.1.</LANG-WHY></p>
+    <facts ordered="false">
+      <MSRV-POLICY fact="true" status="spec/done">**MSRV:** Latest stable at the time of each milestone.</MSRV-POLICY>
+      <MSRV-M0 fact="true" status="spec/done">M0 pins MSRV to the latest stable at the tag.</MSRV-M0>
+    </facts>
+    <p><LANG-REVISIT fact="true" status="spec/done">**When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one.</LANG-REVISIT></p>
+  </language>
+  <build title="2. Build system: Cargo workspace">
+    <p><WORKSPACE-LAYOUT fact="true" status="spec/done">**Decision:** Single Cargo workspace at repo root. Crates live under `crates/` per `VIBEVM-SPEC.md` §10.2:</WORKSPACE-LAYOUT></p>
+    <facts ordered="false">
+      <CRATE-CLI fact="true" status="spec/done">`vibe-cli` — CLI entry point, argument parsing.</CRATE-CLI>
+      <CRATE-CORE fact="true" status="spec/done">`vibe-core` — types, manifest schemas, graph model.</CRATE-CORE>
+      <CRATE-GRAPH fact="true" status="spec/done">`vibe-graph` — graph builder and runner.</CRATE-GRAPH>
+      <CRATE-REGISTRY fact="true" status="spec/done">`vibe-registry` — registry fetch/cache/resolve.</CRATE-REGISTRY>
+      <CRATE-INSTALL fact="true" status="spec/done">`vibe-install` — install/uninstall/update logic.</CRATE-INSTALL>
+      <CRATE-LLM fact="true" status="spec/done">`vibe-llm` — LLM provider abstraction (stub in M0, real in M1.5).</CRATE-LLM>
+      <CRATE-CHECK fact="true" status="spec/done">`vibe-check` — linter (M1).</CRATE-CHECK>
+    </facts>
+    <p><BUILD-WHY fact="true" status="spec/done">**Why:** Standard Rust workspace layout, enables shared dependency versions via `[workspace.dependencies]`, supports independent testing of each crate.</BUILD-WHY></p>
+    <p><BINARY-NAME fact="true" status="spec/done">**Binary name:** `vibe` (built from `vibe-cli`).</BINARY-NAME></p>
+  </build>
+  <license title="3. License">
+    <facts ordered="false">
+      <LICENSE-EULA fact="true" status="impl/done">**Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over.</LICENSE-EULA>
+      <NO-CRATES-IO fact="true" status="spec/done">Crates in this workspace set `license-file = "LICENSE.md"` and `publish = false` so none of them can be accidentally pushed to crates.io.</NO-CRATES-IO>
+    </facts>
+    <facts ordered="false">
+      <LICENSE-OWNER-CALL fact="true" status="spec/done">**Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part of vibevm gets one permissive licence and no per-package archaeology.</LICENSE-OWNER-CALL>
+      <LICENSE-SPEC-DEFERS fact="true" status="spec/done">`VIBEVM-SPEC.md` §1 explicitly defers the *produced* software's license to the owner; the owner's choice is UPL-1.0.</LICENSE-SPEC-DEFERS>
+      <license-rejected fact="true" status="spec/done">**Considered and rejected:** the placeholder **proprietary EULA** of the project's first phase — superseded 2026-07-12, *"that phase is over"* (`##LICENSE-EULA`); **per-package licensing** across the shipped surface — rejected because a consumer of any part of vibevm would then face per-package archaeology instead of one permissive licence (`##LICENSE-OWNER-CALL`); **any copyleft licence** (GPL / AGPL / LGPL) — never in contention, for the same reason it is forbidden in dependencies: it would force the whole product to relicense, *"which is exactly what UPL-1.0 exists to prevent"* (`##COPYLEFT-FORBIDDEN`, `##PROPRIETARY-TIGHTENS`).</license-rejected>
+    </facts>
+    <facts ordered="false">
+      <DEPS-PERMISSIVE-ONLY fact="true" status="spec/done">**Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent.</DEPS-PERMISSIVE-ONLY>
+      <COPYLEFT-FORBIDDEN fact="true" status="spec/done">GPL / AGPL / LGPL are forbidden, period.</COPYLEFT-FORBIDDEN>
+      <PROPRIETARY-TIGHTENS fact="true" status="spec/done">The permissive license of vibevm itself does not relax that constraint — a copyleft dependency mingles with our code and would force the whole product to relicense, which is exactly what UPL-1.0 exists to prevent.</PROPRIETARY-TIGHTENS>
+    </facts>
+    <p><LICENSE-REVISIT fact="true" status="spec/done">**When to revisit:** the previous trigger — "when the owner decides to relicense (most likely UPL 1.0)" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = "UPL-1.0"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb.</LICENSE-REVISIT></p>
+  </license>
+  <manifests title="4. Manifest format: TOML">
+    <p><MANIFEST-TOML fact="true" status="spec/done">**Decision:** All vibevm manifests use TOML 1.0 (`toml` crate, `serde`-based).</MANIFEST-TOML></p>
+    <p><files-lead fact="true" status="spec/done">Files:</files-lead></p>
+    <facts ordered="false">
+      <FILE-VIBE-TOML fact="true" status="spec/done">`vibe.toml` — project manifest. Schema: `VIBEVM-SPEC.md` §7.5.</FILE-VIBE-TOML>
+      <FILE-PACKAGE-TOML fact="true" status="impl/done">`vibe.toml` is the *only* manifest: one file per node, the role set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`). The separate `vibe-package.toml` of the early schema is **retired** (workspace fork 7e); the package schema of `VIBEVM-SPEC.md` §7.3 now lives in `vibe.toml`'s `[package]` section.</FILE-PACKAGE-TOML>
+      <FILE-LOCK fact="true" status="spec/done">`vibe.lock` — lockfile. Schema: `VIBEVM-SPEC.md` §7.4.</FILE-LOCK>
+    </facts>
+    <p><TOML-WHY fact="true" status="spec/done">**Why:** TOML is the Rust ecosystem default (cargo), readable, has clear escaping rules, and maps cleanly to `serde` structs. See `VIBEVM-SPEC.md` §10.1.</TOML-WHY></p>
+  </manifests>
+  <layout title="5. Directory layout">
+    <facts ordered="false">
+      <LAYOUT-PER-SPEC fact="true" status="spec/done">**Decision:** Per `VIBEVM-SPEC.md` §4.2.</LAYOUT-PER-SPEC>
+      <SPEC-DIR-FIXED fact="true" status="spec/done">The `spec/` directory is hardcoded — never configurable in v1.</SPEC-DIR-FIXED>
+      <VIBE-DIR-IGNORED fact="true" status="spec/done">The `.vibe/` cache directory is gitignored and per-project.</VIBE-DIR-IGNORED>
+      <REFS-SRC-IGNORED fact="true" status="spec/done">`refs/src/` is gitignored (external reference sources, cloned by the implementer for study, not part of the vibevm repo itself).</REFS-SRC-IGNORED>
+    </facts>
+  </layout>
+  <identity title="6. Package identity">
+    <facts ordered="false">
+      <IDENTITY-FORM fact="true" status="impl/done">**Decision:** `[&lt;kind&gt;:]&lt;group&gt;/&lt;name&gt;@&lt;version&gt;` — identity is **qualified** since M1.19 ([PROP-008 §2.2](../modules/vibe-registry/PROP-008-qualified-naming.xml#identity)); the unqualified `&lt;kind&gt;:&lt;name&gt;@&lt;version&gt;` of `VIBEVM-SPEC.md` §7.1 is CLI sugar that resolves once, at the human boundary.</IDENTITY-FORM>
+      <KIND-SET fact="true" status="impl/done">`kind ∈ {flow, feat, stack, tool, mcp, lang}` — six kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.xml). (§Invariants `INV-VOCABULARY` in this file carries the same list.)</KIND-SET>
+      <NAME-VERSION-RULES fact="true" status="impl/done">`name` is kebab-case and `(group, name)` is globally unique ([PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.xml#identity) — uniqueness moved from *within kind* to *within group*). `version` is semver.</NAME-VERSION-RULES>
+    </facts>
+    <p><constraint-forms-lead fact="true" status="spec/done">Constraint forms in CLI:</constraint-forms-lead></p>
+    <facts ordered="false">
+      <CF-LATEST fact="true" status="spec/done">`flow:wal` → latest stable.</CF-LATEST>
+      <CF-EXACT fact="true" status="spec/done">`flow:wal@0.3.0` → exact.</CF-EXACT>
+      <CF-RANGE fact="true" status="spec/done">`flow:wal@^0.3` → semver range.</CF-RANGE>
+    </facts>
+  </identity>
+  <registry title="7. Registry model (M0 vs M1)">
+    <facts ordered="false">
+      <REG-M0 fact="true" status="spec/done">**Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2.</REG-M0>
+      <REG-M1 fact="true" status="spec/done">**M1:** git registry added per `VIBEVM-SPEC.md` §8. Configured in `vibe.toml`'s `[[registry]]` array. Default public registry URL = `https://github.com/vibespecs` (HTTPS org root; per-package URLs are derived at fetch time via [`NamingConvention`](../../crates/vibe-core/src/manifest/project.rs)).</REG-M1>
+      <REG-BACKEND-PIN fact="true" status="spec/done">**Backend choice, trait design, cache layout, and Windows UX for M1** are pinned in [spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001](../modules/vibe-registry/PROP-001-git-backend.xml) — in brief: shell-out to the system `git` (not `libgit2`), behind a `GitBackend` trait that leaves the door open for a future `libgit2` swap.</REG-BACKEND-PIN>
+    </facts>
+    <facts ordered="false">
+      <INIT-DEFAULT-REGISTRY fact="true" status="spec/done">**Default in new projects.** `vibe init` writes the default registry URL (`DEFAULT_REGISTRY_URL` in [`vibe_core::manifest`](../../crates/vibe-core/src/manifest/project.rs)) into every new `vibe.toml`'s `[[registry]]` entry unless the operator passes `--no-registry` or overrides with `--registry-url &lt;URL&gt;` / `--registry-ref &lt;REF&gt;`.</INIT-DEFAULT-REGISTRY>
+      <DEFAULT-RATIONALE fact="true" status="spec/done">The default exists so that a plain `vibe init` → `vibe install flow:wal` flow works out of the box against the public registry; overrides are there for forks, staging registries, and offline / air-gapped setups.</DEFAULT-RATIONALE>
+      <URL-SSOT fact="true" status="spec/done">The single source of truth for the URL is the constant in `vibe-core` — manual-tests, smoke scripts, and docs all reference it from there.</URL-SSOT>
+    </facts>
+    <p><SPLIT-HOST-POSTURE fact="true" status="spec/done">**Source repositories — split-host posture.** The vibevm project and the package registry live on **separate hosts** by deliberate decision (2026-04-29). Each host is chosen on its own merits:</SPLIT-HOST-POSTURE></p>
+    <facts ordered="false">
+      <HOST-SOURCE-GITVERSE fact="true" status="impl/done">**vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.xml), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it).</HOST-SOURCE-GITVERSE>
+      <HOST-REGISTRY-GITHUB fact="true" status="impl/done">**Package registry: GitHub, organization `vibespecs`.** `https://github.com/vibespecs` (org root) — per-package repos are `https://github.com/vibespecs/&lt;group&gt;.&lt;name&gt;` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.xml#repo-naming) `NamingConvention::Fqdn` (dot join — owner ruling 2026-08-13; e.g. `org.vibevm.wal`; the live `_`-joined repos of the M1.19 era rename as that ruling's follow-up). The earlier `&lt;kind&gt;-&lt;name&gt;` repos (`NamingConvention::KindName`, [PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.xml#registry-model)) are archived read-only.</HOST-REGISTRY-GITHUB>
+      <REG-MIGRATION-WHY fact="true" status="spec/done">The migration from `git@gitverse.ru:vibespecs/*` happened on 2026-04-29 because GitVerse's public REST API does not expose org-scoped repo creation (`POST /orgs/{org}/repos` returns 404 / WAF 403; documented exhaustively in [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish) and `crates/vibe-publish/src/gitverse.rs`). Without that endpoint `vibe registry publish` cannot fully drive the publish loop end to end.</REG-MIGRATION-WHY>
+      <REG-GITHUB-WORKS fact="true" status="spec/done">GitHub's equivalent endpoint works natively, so the registry organization moved while the vibevm project repository stays put.</REG-GITHUB-WORKS>
+      <REG-HASH-STABLE fact="true" status="spec/done">Identity is content-hashed (PROP-002 §2.1) — the lockfile's `source_url` rotates but no `content_hash` value is invalidated by the host change.</REG-HASH-STABLE>
+      <HOST-LEGACY-READONLY fact="true" status="spec/done">**Legacy registry, read-only.** `git@gitverse.ru:anarchic/vibespecs.git` (HEAD `2203239`, 2026-04-23, three v0.1.0 flows in monorepo form). Kept readable for any project still on schema-v1 lockfiles until they migrate; no new publishes happen there.</HOST-LEGACY-READONLY>
+      <split-host-decision fact="true" status="spec/done">**Decision (owner, 2026-08-01 — the current posture, refining the equal-canonical reading above):** **GitHub carries the leading role** for both surfaces — the canonical public home of the vibevm source and of the `vibespecs` registry. **GitVerse is supplementary**: (1) a full mirror of the vibevm source — the fan-out mechanics of PROP-016 are unchanged, mainline stays the maintainer's local `main`, every host a fast-forward-only read-replica; (2) additional storage for the registry, **used in full but published to deliberately, package by package — never blanket-mirrored**.</split-host-decision>
+      <split-host-why fact="true" status="spec/done">**Why:** two grounds, one technical and one observational. The technical one is recorded above: GitVerse's public REST API exposes no org-scoped repo creation (`##REG-MIGRATION-WHY`), so the publish loop cannot run end-to-end there while that stands. The observational one is the owner's, 2026-08-01: which host the audience actually reads is visible from the owner's seat, not from this tree, and the observed answer is GitHub.</split-host-why>
+      <split-host-rejected fact="true" status="spec/done">**Considered and rejected:** **the equal-canonical dual-host posture** (the reading this section carried until 2026-08-01) — superseded: kept as mirror mechanics, dropped as a role statement; **GitVerse-led** — impossible while `##REG-MIGRATION-WHY`'s endpoint gap stands; **blanket-mirroring the registry to GitVerse** — rejected in the ruling's own words («пакеты туда должны выкладываться специально, а не зеркалироваться всё подряд»): the supplementary store is curated by deliberate publication, never synchronised wholesale.</split-host-rejected>
+      <split-host-revisit fact="true" status="spec/done">**Revisit when:** the halves re-open separately. The publish-loop half: GitVerse's `POST /orgs/{org}/repos` starts returning 2xx — observation point: one request against gitverse.ru; the probe and its failure codes are documented in [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish). The leading-role half: by the owner's notice from external observation — deliberately no code-observable trigger, per the same-day B-015 precedent (`BACKLOG.md`).</split-host-revisit>
+    </facts>
+    <facts ordered="false">
+      <CACHE-REGISTRIES fact="true" status="spec/done">**Cache location:** `~/.vibe/registries/&lt;hash&gt;/` for cloned registries.</CACHE-REGISTRIES>
+      <CACHE-PACKAGES fact="true" status="impl/done">`&lt;project&gt;/.vibe/cache/&lt;group&gt;/&lt;name&gt;/&lt;version&gt;/` for per-package cache — identity-keyed, as the shipped tree already is (`.vibe/cache/org.vibevm.world/wal/…` on disk; the earlier `&lt;kind&gt;/&lt;name&gt;` spelling lagged the code). See `VIBEVM-SPEC.md` §8.3.</CACHE-PACKAGES>
+    </facts>
+  </registry>
+  <graph title="8. Task graph model">
+    <facts ordered="false">
+      <GRAPH-BUILTIN-NODES fact="true" status="spec/done">**Decision:** Built-in nodes only in v1 (content-only plugin contribution model per `VIBEVM-SPEC.md` §5.4).</GRAPH-BUILTIN-NODES>
+      <RUNNER-SEQUENTIAL fact="true" status="spec/done">Runner is sequential (no parallelism) in v1 per §5.2.</RUNNER-SEQUENTIAL>
+      <TYPED-VALUES fact="true" status="spec/done">Typed value system per §5.3.</TYPED-VALUES>
+      <graph-nodes-why fact="true" status="spec/done">**Why:** the frozen `VIBEVM-SPEC.md` §5.4 states the constraint and its reason: v1's contribution model is *content-only* — *"a package materialises as a verbatim `vibedeps/` subtree and contributes a boot snippet, but does not contribute executable nodes. This keeps v1 small."*</graph-nodes-why>
+      <graph-nodes-rejected fact="true" status="spec/done">**Considered and rejected:** **packages contributing executable / LLM nodes** (e.g. a flow adding a `wal:checkpoint` node bound after `build:compile`) — **deferred, not rejected**: `VIBEVM-SPEC.md` §5.4 targets v1.5 and directs *"document the extension point but do not implement it in v1."* Plugins influence the graph in v1 only by changing what content the built-in nodes operate on.</graph-nodes-rejected>
+      <graph-nodes-revisit fact="true" status="spec/done">**Revisit when:** the v1.5 milestone opens — `VIBEVM-SPEC.md` §5.4 names it as the target for the extension point (observation point: the milestone list in `vibevm/vibespecs/WAL.xml`) — or earlier, when a published package needs a graph node the built-in set does not provide, observed as a `[hooks].post-install` doing work a node should do or a `requires` no built-in node can satisfy (adopted with both clauses, owner 2026-08-01).</graph-nodes-revisit>
+    </facts>
+    <p><WORKFLOWS-QUERIES fact="true" status="spec/done">Workflows are graph queries (target node + transitive dependencies) per §5.5.</WORKFLOWS-QUERIES></p>
+  </graph>
+  <conflicts title="9. Conflict resolution">
+    <p><CONFLICT-ORDER fact="true" status="spec/done">vibevm's writer-conflict resolution — the **Human &gt; Spec &gt; Tests &gt; Code** order (also pinned in [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) §2.2 and book chapter 1) — is the `conflict-protocol` flow: `spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root`.</CONFLICT-ORDER></p>
+  </conflicts>
+  <observability title="10. Observability">
+    <facts ordered="false">
+      <OBS-TRACING fact="true" status="spec/done">**Decision:** Use `tracing` for structured logs.</OBS-TRACING>
+      <OBS-OUTPUT-MODES fact="true" status="spec/done">CLI defaults to human-readable Markdown-flavored output; `--json` for machine-readable; `--quiet` for one-line summaries.</OBS-OUTPUT-MODES>
+      <OBS-EXIT-CODES fact="true" status="spec/done">Exit codes per `VIBEVM-SPEC.md` §9.4.</OBS-EXIT-CODES>
+    </facts>
+  </observability>
+  <platforms title="11. Cross-platform target">
+    <facts ordered="false">
+      <PLATFORMS-TRIO fact="true" status="spec/done">**Decision:** M0 builds and runs on macOS, Linux, and Windows.</PLATFORMS-TRIO>
+      <PATH-HANDLING fact="true" status="spec/done">Path handling goes through `std::path::Path` — no manual separator manipulation.</PATH-HANDLING>
+      <CASING-RULES fact="true" status="spec/done">File operations respect platform casing rules where the OS enforces them.</CASING-RULES>
+    </facts>
+    <facts ordered="false">
+      <DEV-ON-WINDOWS fact="true" status="spec/done">**Test matrix:** M0 dev is primarily on Windows 11 (this machine).</DEV-ON-WINDOWS>
+      <CI-MATRIX-M2 fact="true" status="spec/done">CI matrix for all three OSes lands in M2 per `VIBEVM-SPEC.md` §11.4.</CI-MATRIX-M2>
+    </facts>
+  </platforms>
+  <decisions title="13. Decision records live inside PROPs">
+    <p><DECISIONS-LIVE-INSIDE-PROPS fact="true" status="impl/done">Architectural decisions are recorded as an ADR-part **inside the PROP they belong to** — a section (or clearly-marked facts) stating the decision, the alternatives weighed, and why — never as standalone ADR files. One document carries a contract AND the reasoning that shaped it; a reader never chases a second file to learn why. (Owner ruling 2026-08-20, closing BACKLOG B-007.)</DECISIONS-LIVE-INSIDE-PROPS></p>
+  </decisions>
+  <commits title="12. Commit and push discipline">
+    <p><GIT-PRACTICES-FAMILY fact="true" status="spec/done">The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text:</GIT-PRACTICES-FAMILY></p>
+    <facts ordered="false">
+      <GP-ATTRIBUTION fact="true" status="spec/done">human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`;</GP-ATTRIBUTION>
+      <GP-CONVENTIONAL fact="true" status="spec/done">the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`;</GP-CONVENTIONAL>
+      <GP-ATOMICITY fact="true" status="spec/done">**atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;</GP-ATOMICITY>
+      <GP-AUTONOMY fact="true" status="spec/done">commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`.</GP-AUTONOMY>
+    </facts>
+    <p><ATTRIBUTION-ENFORCEMENT-EXCEPTION fact="true" status="spec/done">**Marked exception (owner ruling, 2026-08-01):** the attribution posture is enforced **procedurally, not mechanically** — the rules live in the boot contract and every session holds them; no commit hook, trailer scanner, or CI check exists or is planned, consistent with the standing no-CI decision. Recorded so the absence of machinery reads as a deliberate choice, not an oversight.</ATTRIBUTION-ENFORCEMENT-EXCEPTION></p>
+    <p><ATTRIBUTION-BOOT-SURFACE-EXCEPTION fact="true" status="spec/done">**Marked exception (owner ruling, 2026-08-02):** the installed flow's single-place law (`spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`, its boot snippet's `#SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED`) is deliberately not kept literally by this host's **boot surfaces**: `vibevm/vibespecs/boot/00-core.xml` (Rule 1's summary), the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` triple (byte-identical by contract, gated by self-check step 0c), and the agent instruction files under `.claude/agents/` each carry a short digest of the four rules **by design** — «правила обязаны доезжать до каждого агента на старте»: a session reads its boot files and does not resolve links at boot, so boot reliability wins over single-statement purity. The legal restatement set is exactly: the boot surfaces above; this §12, the host's authoritative record; and the invariant roster's one-line echo (`##INV-HUMAN-AUTHORSHIP`), which names its source in the same sentence. Everything else cites the flow or this section; a new restatement outside a boot surface is a defect.</ATTRIBUTION-BOOT-SURFACE-EXCEPTION></p>
+  </commits>
+  <package-layout title="13. Package layout convention">
+    <facts ordered="false">
+      <MIRROR-LAYOUT fact="true" status="spec/done">**Decision:** vibevm packages use a **mirror layout**. Every entry in a package's `writes.files` is simultaneously (a) the path of the file inside the package directory and (b) the path at which it will be installed in the consumer's project.</MIRROR-LAYOUT>
+      <NO-TARGET-FIELD fact="true" status="spec/done">There is no separate `target = "…"` field per entry; `writes.files` is the single source of truth for "where does this file go?"</NO-TARGET-FIELD>
+    </facts>
+    <p><mirror-example fact="true" status="spec/done">Concretely, the canonical `flow:wal@0.1.0` payload (vendored as a hermetic e2e test fixture under `fixtures/registry/flow/wal/v0.1.0/`) contains `spec/flows/wal/WAL-PROTOCOL.md` at exactly that relative path; after `vibe install flow:wal`, the file lives at `spec/flows/wal/WAL-PROTOCOL.md` inside the user's project. No mapping, no rewriting.</mirror-example></p>
+    <p><BOOT-SNIPPET-EXCEPTION fact="true" status="spec/done">**Boot snippets are the one exception.** The `[boot_snippet]` table carries an explicit `source` field naming the path inside the package (conventionally under `boot/`), while the target is always the fixed `vibevm/vibespecs/boot/&lt;filename&gt;`.</BOOT-SNIPPET-EXCEPTION></p>
+    <facts ordered="false">
+      <MIRROR-WHY-DRIFT fact="true" status="spec/done">**Why:** a single source of truth for source-and-target paths eliminates a whole class of authoring bug where the package layout drifts from the declared writes.</MIRROR-WHY-DRIFT>
+      <MIRROR-WHY-READABLE fact="true" status="spec/done">It also makes a package directory instantly readable — a human looking at the tree knows exactly what will appear in a consumer's project without cross-referencing a separate mapping table.</MIRROR-WHY-READABLE>
+      <mirror-rejected fact="true" status="spec/done">**Considered and rejected:** a **per-entry `target = "…"` field** in `writes.files` — rejected because `writes.files` would stop being the single source of truth for *"where does this file go?"* (`##NO-TARGET-FIELD`), reviving the authoring-drift bug `##MIRROR-WHY-DRIFT` names and costing the package directory its at-a-glance readability (`##MIRROR-WHY-READABLE`). `[boot_snippet].source` is the **one retained exception**, not a rejection: its target is the fixed `vibevm/vibespecs/boot/&lt;filename&gt;` (`##BOOT-SNIPPET-EXCEPTION`).</mirror-rejected>
+      <mirror-revisit fact="true" status="spec/done">**Revisit when:** a **second** source/target exception is proposed — i.e. any manifest table beyond `[boot_snippet]` needing an install path that differs from its in-package path. Observation point: the manifest schema in [`crates/vibe-core`](../../crates/vibe-core/) — a per-entry target field appearing there *is* the fired state. One exception stands today; a second means the mirror rule is carrying less than `##MIRROR-LAYOUT` claims.</mirror-revisit>
+    </facts>
+    <facts ordered="false">
+      <MIRROR-PINNED fact="true" status="spec/done">**Where pinned:** `VIBEVM-SPEC.md` §13.1 shows the mirror-layout diagram and §13.2 the matching manifest. This PROP-000 entry is the decision record; the spec carries the operational definition.</MIRROR-PINNED>
+      <INSTALL-RELIES fact="true" status="spec/done">`vibe-install` relies on this convention — the source path of a planned write is computed by joining `cache_dir` with the manifest's declared target path.</INSTALL-RELIES>
+    </facts>
+  </package-layout>
+  <manual-tests title="14. Manual-test protocol">
+    <facts ordered="false">
+      <MT-LOCATION fact="true" status="spec/done">**Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `&lt;milestone&gt;-&lt;slug&gt;.md` (e.g. `M1.1-git-registry-smoke.md`); the directory's own [`README.md`](../../manual-tests/README.md) carries the index.</MT-LOCATION>
+      <MT-FLOW-POINTER fact="true" status="spec/done">The tier itself — why a project keeps a second, human-run test layer alongside the automated suite, what a manual test is and is not, when to run one, and who signs it off (a human, over an agent's pre-run) — is the `manual-tests` flow: `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root`, with the four authoring rules in its `authoring-rules` document and the copy-ready skeleton in `test-template`.</MT-FLOW-POINTER>
+    </facts>
+    <facts ordered="false">
+      <MT-HERMETIC-SUITE fact="true" status="spec/done">**vibevm's real-world surfaces.** `cargo test --workspace` uses fakes, tempdirs, and local bare repositories for speed and hermeticity (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#why-second-tier`).</MT-HERMETIC-SUITE>
+      <MT-LAST-MILE fact="true" status="spec/done">The manual tier is the last mile for what only the real world has here: SSH auth against GitVerse, the lockfile `source_uri` exactly as a downstream consumer receives it, the `~/.vibe/` layout on a user's actual filesystem, and a human confirming the CLI output says what they meant.</MT-LAST-MILE>
+    </facts>
+    <facts ordered="false">
+      <MT-ISOLATION fact="true" status="spec/done">**vibevm's bindings.** Every test isolates state with `mktemp -d` for the project and `VIBE_REGISTRY_CACHE` pointing inside the scratch dir for the registry cache — the user's real `~/.vibe/` is never touched by a run.</MT-ISOLATION>
+      <MT-GIT-BASH fact="true" status="spec/done">Git Bash on Windows is the primary smoke-test environment (macOS and Linux must work too); where platform output differs (path separators, `.exe` suffix), the Windows form comes first with a portable note.</MT-GIT-BASH>
+    </facts>
+    <p><mt-when-lead fact="true" status="spec/done">**When to run** (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#when`, against vibevm's surfaces):</mt-when-lead></p>
+    <facts ordered="false">
+      <MT-WHEN-TAGGING fact="true" status="spec/done">before tagging any milestone;</MT-WHEN-TAGGING>
+      <MT-WHEN-CHANGES fact="true" status="spec/done">after changes to the git backend, CLI arg parsing, or lockfile format even when `cargo test` stays green;</MT-WHEN-CHANGES>
+      <MT-WHEN-REPRO fact="true" status="spec/done">and as reproducers whenever a user files an integration bug.</MT-WHEN-REPRO>
+    </facts>
+    <p><MT-WAL-NAMES fact="true" status="spec/done">[`vibevm/vibespecs/WAL.xml`](../WAL.md) names the outstanding manual runs for the current milestone — a practice that must not lapse: MT-02 and MT-03 have been awaiting owner sign-off since the TUI work landed, and a WAL that names none reads as "nothing pending".</MT-WAL-NAMES></p>
+  </manual-tests>
+  <dep-weight title="15. Dependency weight is not a decision factor">
+    <facts ordered="false">
+      <DEP-WEIGHT-NOT-FACTOR fact="true" status="spec/done">**Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries.</DEP-WEIGHT-NOT-FACTOR>
+      <PICK-STRONGEST fact="true" status="spec/done">Pick the strongest available library for the job — for both the Rust CLI and any future Java / frontend side.</PICK-STRONGEST>
+    </facts>
+    <facts ordered="false">
+      <WHY-PRECEDENT fact="true" status="spec/done">**Why:** Software of comparable surface area (Chrome, modern IDEs, production package managers) routinely ships tens to hundreds of dependencies and remains fast and capable.</WHY-PRECEDENT>
+      <WHY-DEBT fact="true" status="spec/done">Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves. vibevm intends to be best-in-class, and best-in-class means using best-in-class primitives.</WHY-DEBT>
+    </facts>
+    <p><reject-reasons-lead fact="true" status="spec/done">**Legitimate reasons to reject a dep:**</reject-reasons-lead></p>
+    <facts ordered="false">
+      <REJECT-LICENSE fact="true" status="spec/done">non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers),</REJECT-LICENSE>
+      <REJECT-ABANDONED fact="true" status="spec/done">abandoned upstream,</REJECT-ABANDONED>
+      <REJECT-SECURITY fact="true" status="spec/done">demonstrated security issues (CVE history, unpatched known exploit),</REJECT-SECURITY>
+      <REJECT-ERGONOMICS fact="true" status="spec/done">fundamentally bad API ergonomics that would propagate into our own interfaces.</REJECT-ERGONOMICS>
+    </facts>
+    <p><TOO-HEAVY-NOT-REASON fact="true" status="spec/done">"Too heavy" alone is **not** a reason.</TOO-HEAVY-NOT-REASON></p>
+    <facts ordered="false">
+      <READMISSIBLE fact="true" status="spec/done">**Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified.</READMISSIBLE>
+      <PROP-001-PRUNE fact="true" status="spec/done">The size-based argument in [PROP-001 §2.1](../modules/vibe-registry/PROP-001-git-backend.xml#backend) against `git2` is to be pruned — the remaining arguments (Windows SSH auth, shell-out diagnostic clarity) may still carry that decision, but not the size one.</PROP-001-PRUNE>
+      <dep-weight-rejected fact="true" status="spec/done">**Considered and rejected:** the **predecessor policy — reject a dependency on footprint** (binary size, crate count, transitive weight) — rejected, and its consequences already executed in this section: libraries previously refused on footprint grounds are re-admissible, `libsolv` and `git2` named (`##READMISSIBLE`), and PROP-001 §2.1's size-based argument against `git2` is marked for pruning (`##PROP-001-PRUNE`). Four grounds survive and are the *only* ones — licence, abandonment, demonstrated security issues, API ergonomics (`##REJECT-LICENSE` … `##REJECT-ERGONOMICS`); *"too heavy" alone is not a reason* (`##TOO-HEAVY-NOT-REASON`).</dep-weight-rejected>
+      <dep-weight-revisit fact="true" status="spec/done">**Revisit when:** the premise of `##WHY-PRECEDENT` — that weight does not cost us — stops holding: a dependency is admitted whose weight measurably degrades a user-visible surface (install time, first-run latency, release binary size), recorded as a finding. Observation points exist today — the release artefact's size and `cargo build --timings`; numeric thresholds were offered and not set (owner, 2026-08-01), so the trigger is event-shaped until numbers exist.</dep-weight-revisit>
+    </facts>
+  </dep-weight>
+  <jtd title="16. JTD + codegen for wire contracts">
+    <facts ordered="false">
+      <JTD-SSOT fact="true" status="spec/done">**Decision:** JSON Type Definition (RFC 8927) schemas are the single source of truth for every client/server and machine-to-machine contract in this project.</JTD-SSOT>
+      <JTD-CODEGEN fact="true" status="spec/done">Rust types — and types in any future non-Rust clients — are **generated** from JTD schemas via `jtd-codegen`, not hand-maintained.</JTD-CODEGEN>
+      <NO-DUPLICATION fact="true" status="spec/done">No client/server duplication is permitted on contracts.</NO-DUPLICATION>
+    </facts>
+    <facts ordered="false">
+      <JTD-WHY-SKEW fact="true" status="spec/done">**Why:** duplication between a server contract and a hand-written client is a classic source of version-skew bugs; schema-first codegen eliminates that class of bug categorically.</JTD-WHY-SKEW>
+      <JTD-OVER-JSONSCHEMA fact="true" status="spec/done">JTD specifically (over JSON Schema / OpenAPI alone) because JTD is deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches.</JTD-OVER-JSONSCHEMA>
+      <jtd-rejected fact="true" status="spec/done">**Considered and rejected:** **JSON Schema / OpenAPI alone** — rejected: JTD is *"deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches"* (`##JTD-OVER-JSONSCHEMA`); **a hand-written client against each server contract** — rejected: that duplication is *"a classic source of version-skew bugs"* which codegen eliminates categorically (`##JTD-WHY-SKEW`, `##NO-DUPLICATION`). The boundary in the other direction is not a rejection: human-edited manifests stay TOML via `serde` — *"JTD is for wire, not for configs humans hand-edit"* (`##JTD-OUT-OF-SCOPE`).</jtd-rejected>
+      <jtd-revisit fact="true" status="spec/done">**Revisit when:** either upstream fails us — **`jtd-codegen` ships no release for 24 months** (observation point: its upstream repository, version-pinned in `tools/jtd-codegen/` per `##TC-BINARY`) — **or** a contract listed in `##JTD-IN-SCOPE` proves inexpressible in JTD's grammar and would need an escape hatch, which is the property `##JTD-OVER-JSONSCHEMA` bought the narrowness for. Observation point for the second: the first schema in `schemas/` that cannot be written.</jtd-revisit>
+    </facts>
+    <p><JTD-IN-SCOPE fact="true" status="spec/done">**In scope:** LLM provider API wrappers (Anthropic, OpenAI, OpenRouter, Ollama), GitVerse public-API client, `vibe --json` CLI output, telemetry / event log formats, future hosted-registry HTTP surface.</JTD-IN-SCOPE></p>
+    <p><JTD-OUT-OF-SCOPE fact="true" status="spec/done">**Out of scope:** human-authored manifests — `vibe.toml`, `vibe.lock`, `vibe-package.toml` — stay TOML via `serde`. JTD is for wire, not for configs humans hand-edit.</JTD-OUT-OF-SCOPE></p>
+    <p><toolchain-lead fact="true" status="spec/done">**Toolchain placement:**</toolchain-lead></p>
+    <facts ordered="false">
+      <TC-BINARY fact="true" status="spec/done">`jtd-codegen` binary in project-local `tools/jtd-codegen/` (gitignored; version pinned).</TC-BINARY>
+      <TC-SCHEMAS fact="true" status="spec/done">Schemas in `schemas/` at repo root, one `.jtd.json` file per contract, committed.</TC-SCHEMAS>
+      <TC-GENERATED fact="true" status="spec/done">Generated Rust code in `crates/vibe-wire/src/generated/`, committed, with a `// DO NOT EDIT — regenerate via cargo xtask codegen` header on every file.</TC-GENERATED>
+      <TC-REGEN fact="true" status="spec/done">Regeneration via `cargo xtask codegen`. CI enforces zero drift (`cargo xtask codegen &amp;&amp; git diff --exit-code`).</TC-REGEN>
+    </facts>
+    <facts ordered="false">
+      <TC-AGENT-SETS-UP fact="true" status="spec/done">**Toolchain install ownership:** the coding agent sets up the codegen toolchain itself.</TC-AGENT-SETS-UP>
+      <TC-RUNAS fact="true" status="spec/done">Machine-global changes (PATH mutation, admin-level installs, env-var additions) go through `runas` with an operator confirmation at the moment of the change.</TC-RUNAS>
+    </facts>
+  </jtd>
+  <prod-arch title="17. Production architecture in the prototype phase">
+    <facts ordered="false">
+      <PROD-QUALITY-DAY-ONE fact="true" status="spec/done">**Decision:** Load-bearing surfaces — lockfile schema, registry protocol, dep-resolver semantics, wire formats, identity model — are designed to production quality from day one.</PROD-QUALITY-DAY-ONE>
+      <FORMATS-BIND fact="true" status="spec/done">The project is a prototype today; the formats and protocols it chooses today are the ones its future users will be bound to. Changing them later is orders of magnitude more expensive than designing them correctly now.</FORMATS-BIND>
+    </facts>
+    <facts ordered="false">
+      <PRINCIPAL-LENS fact="true" status="spec/done">**Lens:** "a principal engineer at a top-tier infrastructure company, designing a format or protocol that will be used by millions" is one of the reflection lenses to reach for when a design decision lands.</PRINCIPAL-LENS>
+      <LENS-NOT-ONLY fact="true" status="spec/done">It is **not** the only lens — "the simplest thing that works" remains valid for leaf features — but architecture-heavy surfaces prefer the principal-engineer lens.</LENS-NOT-ONLY>
+    </facts>
+    <p><prod-consequences-lead fact="true" status="spec/done">**Consequences:**</prod-consequences-lead></p>
+    <facts ordered="false">
+      <PC-PREFER-DESIGNED fact="true" status="spec/done">Prefer a recent-but-well-designed library over a tactical shortcut, even when the shortcut is cheaper in the short term.</PC-PREFER-DESIGNED>
+      <PC-EXTENSION-POINTS fact="true" status="spec/done">Extension points, versioning markers, and forward-compatibility hooks land with the initial cut, not in a later "hardening" pass.</PC-EXTENSION-POINTS>
+      <PC-REVERSIBILITY fact="true" status="spec/done">Reversibility matters: if a format or protocol decision is hard to reverse (lockfile schema, registry URL scheme, identity hash), lean heavier into design rigour before first commit.</PC-REVERSIBILITY>
+      <PC-FIX-LATER-SCOPE fact="true" status="spec/done">"We'll fix it later" is a valid stance only for implementation quality inside a well-chosen architectural surface — not for the surface itself.</PC-FIX-LATER-SCOPE>
+    </facts>
+  </prod-arch>
+  <complexity title="18. Complexity expectation: higher than RPM">
+    <facts ordered="false">
+      <RPM-CLASS-TARGET fact="true" status="spec/done">**Decision:** The dependency / package model is designed to handle complexity **at least** matching RPM-class systems (zypper, DNF), and in several dimensions greater.</RPM-CLASS-TARGET>
+      <RICH-DEPS-DAY-ONE fact="true" status="impl/done">Manifest grammar and lockfile schema reserve fields for — and the resolver implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, and multi-kind cross-deps. **Semantic (LLM-reviewed) conflicts are the one exception:** the heuristic static check ships ([PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.xml) `CHECK-ACTIVATION-CONFLICT`) while the LLM lane waits on the unbuilt `vibe-llm` emission engine. All of it is designed in from day one, not deferred.</RICH-DEPS-DAY-ONE>
+    </facts>
+    <facts ordered="false">
+      <WIDER-THAN-RPM fact="true" status="spec/done">**Why:** vibevm's dependency surface is not simpler than RPM — it is wider. A `feat` package may require a `stack` providing a specific capability, `flow`s may declare semantic compatibility with other `flow`s, LLM-backed review adds a non-mechanical conflict dimension RPM never had.</WIDER-THAN-RPM>
+      <UNDERSHOOT-COST fact="true" status="spec/done">Undershoot — picking a resolver that lacks virtual packages or disjunctions, or a manifest that cannot express capability-based requires — would force an incompatible schema migration after users exist.</UNDERSHOOT-COST>
+    </facts>
+    <facts ordered="false">
+      <RESOLVER-RESOLVO fact="true" status="spec/done">**Resolver choice** (pinned in the module PROP): `resolvo` crate as the primary depsolver.</RESOLVER-RESOLVO>
+      <RESOLVER-LIBSOLV-FALLBACK fact="true" status="spec/done">`libsolv` as an explicit FFI-backed fallback behind a `DepSolver` trait (analogous to [PROP-001 §2.2](../modules/vibe-registry/PROP-001-git-backend.xml#backend-trait)'s `GitBackend` pattern).</RESOLVER-LIBSOLV-FALLBACK>
+      <RESOLVER-PUBGRUB-REJECTED fact="true" status="spec/done">PubGrub is rejected for the *primary* role — its algorithm does not handle virtual packages or disjunctions — but is acceptable for explanatory rendering of conflicts in CLI output if it proves superior there.</RESOLVER-PUBGRUB-REJECTED>
+    </facts>
+  </complexity>
+  <setup-docs title="19. Load-bearing setup documentation">
+    <p><SETUP-DOCS fact="true" status="spec/done">**Decision:** Two files at the repo root are load-bearing for the project:</SETUP-DOCS></p>
+    <facts ordered="false">
+      <DOC-DEV-GUIDE fact="true" status="spec/done">[`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository.</DOC-DEV-GUIDE>
+      <DOC-RUNTIME-GUIDE fact="true" status="spec/done">[`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI.</DOC-RUNTIME-GUIDE>
+    </facts>
+    <p><SETUP-DOCS-FLOW fact="true" status="spec/done">vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`.</SETUP-DOCS-FLOW></p>
+  </setup-docs>
+  <token-secrecy title="20. Token secrecy and adapter scope">
+    <p><req-token-secrecy fact="true" status="spec/done">`req r1`</req-token-secrecy></p>
+    <facts ordered="false">
+      <TOKEN-SURFACE-SECRET fact="true" status="spec/done">**Decision.** Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets** in the sense of the `secrets-hygiene` flow (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#surface-secret`): their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed.</TOKEN-SURFACE-SECRET>
+      <token-bindings-lead fact="true" status="spec/done">vibevm's bindings of the flow's four laws (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#laws`):</token-bindings-lead>
+    </facts>
+    <facts ordered="false">
+      <TS-NEVER-PRINTED fact="true" status="spec/done">**Never printed.** Not to stdout, stderr, the CLI log, the `--json` event stream, error messages, panic traces, telemetry, or the lockfile. The CLI prints the *source* of a token (explicit / env-var name / file path) but never the value. The in-process wrapper types (`vibe_publish::Token`, future `vibe_llm::ApiKey`) MUST redact on `Display` and `Debug` — verified by unit tests (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#law-tested`).</TS-NEVER-PRINTED>
+      <TS-NEVER-PERSISTED fact="true" status="spec/done">**Never persisted.** Not committed to the repository, not written into the lockfile, not embedded in cache files, not landed in the `.vibe/` tree. The single sanctioned at-rest location is the operator's `~/.vibe/&lt;host&gt;.publish.token` file (per-user, chmod-protected).</TS-NEVER-PERSISTED>
+      <TS-BOUNDARIES fact="true" status="spec/done">**Sanctioned process boundaries.** The token may cross a process boundary only via: (a) the host API's `Authorization: Bearer …` header, sent over TLS; (b) a single `git remote add` / `git push` invocation where the token is embedded in the URL as `https://x-access-token:&lt;TOKEN&gt;@host/…` (modern git ≥ 2.31 redacts URL passwords in its own log output to `***`). No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`).</TS-BOUNDARIES>
+      <TS-ADAPTER-SCOPE fact="true" status="spec/done">**Adapter scope.** A `RepoCreator` impl MUST refuse to operate outside the organization specified in the project's `[[registry]].url`. A publish run targeting `github.com/vibespecs` may not create, modify, or even probe a repository under a different `github.com` org or under any user namespace. Adapter implementations carry an explicit org-prefix check and surface a `PublishError` on attempted scope escalation. (The general integration-scope discipline is the flow's `scope-discipline` document.)</TS-ADAPTER-SCOPE>
+    </facts>
+    <facts ordered="false">
+      <BLAST-RADIUS fact="true" status="spec/done">**Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads); of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`). Both are catastrophic beyond what module-local discipline can bound, so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited.</BLAST-RADIUS>
+      <ROTATE-FIRST fact="true" status="spec/done">On any suspected leak, rotate first (the flow's `#leak-drill`).</ROTATE-FIRST>
+    </facts>
+    <p><TOKEN-PINNED-WHERE fact="true" status="spec/done">**Where pinned (operationally):** [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.xml#publish) carries the publish-side mechanics; [`vibevm/vibespecs/boot/90-user.xml`](../boot/90-user.xml) carries the operator-facing rule for this machine. Both are subordinate to this PROP-000 entry.</TOKEN-PINNED-WHERE></p>
+  </token-secrecy>
+  <surfaces title="21. Surface floor — which channels a capability owes">
+    <p><SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW fact="true" status="spec/done">**Decision:** a capability lives in a **library**; the CLI, the TUI and the MCP server are thin surfaces over it. The rule and its vocabulary are the installed `omnichannel` flow: `spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#root`. This section declares only vibevm's own floor, which is what that flow asks each project to state for itself.</SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW></p>
+    <p><VIBEVM-DECLARES-LIBRARY-CLI-MCP fact="true" status="spec/plan">**vibevm's declared floor: library + CLI + MCP**, plus **TUI** where one exists (`vibe tree` has one today). A new capability ships with those, or with a recorded reason why one sufficed.</VIBEVM-DECLARES-LIBRARY-CLI-MCP></p>
+    <p><LSP-AND-IDE-ARE-NOT-DECLARED fact="true" status="spec/done">**LSP and IDE extensions are deliberately NOT declared** (owner, 2026-08-06: he will open that work himself). By the flow's own rule an undeclared surface is not a debt, so their absence is a choice and not a gap to be closed.</LSP-AND-IDE-ARE-NOT-DECLARED></p>
+    <p><THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION fact="true" status="spec/done">**This is a target, not a description of today.** The census that motivated the decision (`campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md`) measured the opposite in places: of 29 top-level commands, 19 keep their substance in a separate crate and **10 keep it inside `vibe-cli`** — the largest being the whole `vibe self` version manager. Of 5 MCP tools, 2 share a library function with their CLI twin, 2 have no CLI twin, and 1 reads the same data as `vibe list` while building its output by hand.</THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION></p>
+    <p><THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR fact="true" status="spec/done">**The gap is not theoretical.** `vibe list --json` and the MCP `query_package` printed different values for one field on Windows until 2026-08-06, because each rendered the path itself — two surfaces of one capability answering one question differently, which is exactly the failure this floor exists to prevent.</THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR></p>
+  </surfaces>
+  <invariants title="Invariants">
+    <p><INVARIANTS-STOP-RULE fact="true" status="spec/done">(These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.)</INVARIANTS-STOP-RULE></p>
+    <facts ordered="true">
+      <INV-VOCABULARY fact="true" status="spec/done">**Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book.</INV-VOCABULARY>
+      <INV-SPEC-DIR fact="true" status="spec/done">**`spec/` is fixed.** The directory name and role cannot be configured away in v1.</INV-SPEC-DIR>
+      <INV-USER-FILES fact="true" status="spec/done">**User-owned files are never written by `vibe`.** `vibevm/vibespecs/boot/00-core.xml` and `vibevm/vibespecs/boot/90-user.xml` are off-limits to install/uninstall/update.</INV-USER-FILES>
+      <INV-ATOMIC-COMMITS fact="true" status="spec/done">**One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant.</INV-ATOMIC-COMMITS>
+      <INV-DOGFOOD fact="true" status="spec/done">**Dogfood.** vibevm is being built using the same discipline it enforces. The `spec/` tree in this repo IS `vibe init`'s reference output.</INV-DOGFOOD>
+      <INV-HUMAN-AUTHORSHIP fact="true" status="spec/done">**Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only.</INV-HUMAN-AUTHORSHIP>
+      <INV-TOKEN-SECRECY fact="true" status="spec/done">**Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety.</INV-TOKEN-SECRECY>
+    </facts>
+  </invariants>
+</spec>

@@ -10,7 +10,7 @@ TS `ts-flag-sites` rule; the Go-floor fixtures fix). The previous cut is
 `harvest/e8-r2-gate-units-census.md` (its Q3/Q4/Q5 rows).
 
 Every cell carries `path:line` (relative to the worktree root, on the
-worktree’s own non-vendored copies under `packages/org.vibevm.ai-native/...`)
+worktree’s own non-vendored copies under `vibevm/vibepacks/org.vibevm.ai-native/...`)
 or `none`. “Delta” = what batch 1 changed against the first-pass / E8-R2 Q-row
 cited. Verdicts are **candidates for the boss** (prefixed `CANDIDATE:`) in the
 packet’s three classes — build / record-reason / parity-achieved.

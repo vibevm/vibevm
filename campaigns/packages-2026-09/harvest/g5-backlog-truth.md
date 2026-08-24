@@ -4,9 +4,9 @@ _Замер задачи E-G9-BACKLOG-TRUTH, 2026-08-05. Рабочий ката
 `wt/E-G9-BACKLOG-TRUTH`. Гит не запускался. Это измерение по дереву, не решение;
 вердикт по каждой строке — `PENDING` (пишет босс). Поиск вёл только по
 авторскому дереву: `crates/**`, `xtask/**`, корневые конфиги,
-`packages/org.vibevm.ai-native/**` (живые слоты: core-ai-native v0.8.0,
+`vibevm/vibepacks/org.vibevm.ai-native/**` (живые слоты: core-ai-native v0.8.0,
 rust-ai-native-lang v0.7.0, typescript-ai-native-lang v0.6.0, go-ai-native-lang
-v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
+v0.1.0), `vibevm/vibepacks/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 `legacy-spec/`, `.wt/` не заглядывал (копии/история)._
 
 ## Итог по четырём статусам
@@ -40,7 +40,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-002 — budget-строка байндит сгенерированные артефакты наравне с авторскими
 - **asks** — уточнить строку `ROW-BUDGET-BOOT-FILE`: сгенерированный boot-артефакт не несёт токен-бюджета.
 - **status** — NOT-BUILT
-- **evidence** — `packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.xml:135`: `##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | …`. Строка даёт ОДИН бюджет на «Boot file», без различения авторский/сгенерированный — правка не внесена.
+- **evidence** — `vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml:135`: `##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | …`. Строка даёт ОДИН бюджет на «Boot file», без различения авторский/сгенерированный — правка не внесена.
 - **note** — это release-event правка спеки (диспозиция `open`, «ждёт release-batch»); измеримый факт — строка не различает.
 - **verdict** — PENDING
 
@@ -144,7 +144,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-032 — протокол гранулярности планирования (FEAT-файлы как единицы)
 - **asks** — протокольный абзац «как выбрать медиум» + форма «план ссылается на FEAT-файлы».
 - **status** — NOT-BUILT
-- **evidence** — `grep "when-to-propose|FEAT.*file|granularity|which.*medium|compose.*FEAT"` по `packages/org.vibevm.world` → единственный матч — нерелевантное «per-change granularity» в `atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:74`. В флоу `campaign-plans`/`spec-tree-layout` протокола выбора медиума нет.
+- **evidence** — `grep "when-to-propose|FEAT.*file|granularity|which.*medium|compose.*FEAT"` по `vibevm/vibepacks/org.vibevm.world` → единственный матч — нерелевантное «per-change granularity» в `atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:74`. В флоу `campaign-plans`/`spec-tree-layout` протокола выбора медиума нет.
 - **note** — это новая норма на стыке двух пакетов (release event), не построена.
 - **verdict** — PENDING
 
@@ -207,7 +207,7 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-044 — no-zombie тест: процесс-таблица подтверждает смерть ребёнка оракула
 - **asks** — по тесту на стек: поднять оракул, убить обёртку, опросить процесс-таблицу с дедлайном.
 - **status** — NOT-BUILT
-- **evidence** — `grep -i "sysinfo|no.zombie|process.*table.*assert"` → единственная настоящая process-table-ассерция (sysinfo-проба с дедлайном) — у fractality: `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs` (+ `supervise.rs`, `worker_env.rs`). TCG-оракулы трёх стеков (`rust/go/ts-ai-native-tcg-bridge/.../live_oracle.rs`, `oracle.rs`, `client.rs`) содержат kill-on-drop/`try_wait` МЕХАНИКУ, но не sysinfo-ассерцию смерти ребёнка.
+- **evidence** — `grep -i "sysinfo|no.zombie|process.*table.*assert"` → единственная настоящая process-table-ассерция (sysinfo-проба с дедлайном) — у fractality: `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs` (+ `supervise.rs`, `worker_env.rs`). TCG-оракулы трёх стеков (`rust/go/ts-ai-native-tcg-bridge/.../live_oracle.rs`, `oracle.rs`, `client.rs`) содержат kill-on-drop/`try_wait` МЕХАНИКУ, но не sysinfo-ассерцию смерти ребёнка.
 - **note** — механика убийства построена, тест-ассерция «ребёнок действительно умер» — только у fractality и про чужого (pod), не про оракул.
 - **verdict** — PENDING
 
@@ -286,6 +286,6 @@ v0.1.0), `packages/org.vibevm.world/**`. В `vibedeps/`, `.vibe/`, `refs/`,
 ## B-062 — четыреста размеченных фактов вне корпуса: маркер стоит, вердикта нет
 - **asks** — расширить корпус наблюдения на документы, несущие статусы (или снять статусы / третий режим).
 - **status** — NOT-BUILT
-- **evidence** — `progress.toml:83-91` `include = [ "spec/boot/[0-9]*.md", "spec/common/**/*.md", "spec/design/**/*.md", "spec/manual-tests/**/*.md", "spec/modules/**/*.md", "packages/org.vibevm.world/**/*.md", "packages/org.vibevm.ai-native/**/*.md" ]`. Ни один из четырёх названных документов не покрывается: `BACKLOG.md` и `TOOLING-MAP.md` (корень, вне `spec/`/`packages/`), `campaigns/…` (`campaigns` — структурное исключение движка `scope.rs`, и не в include), `PHASE-T-SPEC.md` (вне glob'ов). Маркеры на них стоят, вердиктов не получают.
+- **evidence** — `progress.toml:83-91` `include = [ "vibevm/vibespecs/boot/[0-9]*.md", "vibevm/vibespecs/common/**/*.md", "vibevm/vibespecs/design/**/*.md", "vibevm/vibespecs/manual-tests/**/*.md", "vibevm/vibespecs/modules/**/*.md", "vibevm/vibepacks/org.vibevm.world/**/*.md", "vibevm/vibepacks/org.vibevm.ai-native/**/*.md" ]`. Ни один из четырёх названных документов не покрывается: `BACKLOG.md` и `TOOLING-MAP.md` (корень, вне `spec/`/`packages/`), `campaigns/…` (`campaigns` — структурное исключение движка `scope.rs`, и не в include), `PHASE-T-SPEC.md` (вне glob'ов). Маркеры на них стоят, вердиктов не получают.
 - **note** — это развилка владельца о ЦЕНЕ расширения корпуса (решение, не правка), но измеримый факт — документы по-прежнему не наблюдаются, статусы не проверяются.
 - **verdict** — PENDING

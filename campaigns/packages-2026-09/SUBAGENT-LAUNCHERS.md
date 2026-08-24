@@ -1257,7 +1257,7 @@ describes.
 **A worktree is a full checkout, so it carries `CLAUDE.md`, and the worker obeys
 its boot contract before it reads a word of the packet (2026-08-16, measured on
 both lanes):** each worker's opening `PROGRESS` line named the boot lane —
-`spec/boot/STATIC.xml` (2186 lines), `INDEX.md` and its eight files, `spec/WAL.xml`
+`vibevm/vibespecs/boot/STATIC.xml` (2186 lines), `INDEX.md` and its eight files, `vibevm/vibespecs/WAL.xml`
 — and only then turned to the task. Nothing failed because of it: both packets
 were accepted on the first pass. But the reading is not free, and it is the
 PACKET's omission, not the worker's diligence: a packet built under

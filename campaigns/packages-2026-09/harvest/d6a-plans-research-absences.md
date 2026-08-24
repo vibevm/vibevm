@@ -1,8 +1,8 @@
 # D6a — `campaign-plans` + `comparative-research`: four claimed absences, re-verified before demotion
 
 _Worked 2026-07-29. Subjects:
-`packages/org.vibevm.world/campaign-plans/v0.1.0/` (3 obligations, 12 drift
-verdicts) and `packages/org.vibevm.world/comparative-research/v0.1.0/`
+`vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/` (3 obligations, 12 drift
+verdicts) and `vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/`
 (1 obligation, 4 drift verdicts). All four are `build-or-demote`,
 `falsifier = host`, `missing-support`, rule `r-zero-instances` — every one
 asserts that some form, record or artefact **has no live instance**._
@@ -33,7 +33,7 @@ minus  **/target/**  .git/**  **/node_modules/**  campaigns/*/run/**
 corpus, not our shipped surface.
 
 **Why that perimeter and not the one the verdicts used.** Every verdict in this
-batch was measured over three plan homes — `spec/terraforms/`,
+batch was measured over three plan homes — `vibevm/vibespecs/terraforms/`,
 `legacy-spec/terraforms/`, `legacy-spec/research/` — plus the campaign zones.
 That is the host root's plan homes and it is **not** the set of live campaign
 plans in this repository. `flow:campaign-plans` is booted by a second consumer
@@ -42,17 +42,17 @@ inside this tree: the **`fractality` specspace**, registered in
 the flow at slot 40 —
 
 ```console
-$ sed -n '36,38p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md
+$ sed -n '36,38p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/boot/INDEX.md
 [[entry]]
 path = "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
 kind = "static"
 ```
 
 — and which carries **six live campaign plans** under
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/`. §3.7's law is
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/`. §3.7's law is
 that the artefacts proving adoption live in the CONSUMER; here the consumer that
 adopted the format hardest is a specspace inside `packages/`, which every
-verdict's `spec/terraforms/ legacy-spec/ campaigns/` perimeter excluded by
+verdict's `vibevm/vibespecs/terraforms/ legacy-spec/ campaigns/` perimeter excluded by
 construction.
 
 ---
@@ -71,8 +71,8 @@ construction.
 `commit-map` · `^#+ .*quick.?start` · `^#+ .*(whole.campaign|campaign)
 acceptance` · `^\*+Commits:` · `^\*+Exit:` · `^\*+Prediction` · `Phase 0` ·
 `Execution ledger`. The decisive widening over every verdict in this obligation
-is `packages/org.vibevm.fractality/**`, which no verdict's perimeter
-(`spec/terraforms/ legacy-spec/terraforms/ legacy-spec/research/ campaigns/`)
+is `vibevm/vibepacks/org.vibevm.fractality/**`, which no verdict's perimeter
+(`vibevm/vibespecs/terraforms/ legacy-spec/terraforms/ legacy-spec/research/ campaigns/`)
 could reach. `refs/**` reported separately at the end of the entry.
 
 **What the search found:**
@@ -88,10 +88,10 @@ $ grep -rlniE 'commit map|commit-map' $PERIM *.md *.toml *.json *.sh *.ps1 \
     --exclude-dir=target --exclude-dir=node_modules --exclude-dir=run \
     --exclude-dir=.vibe --exclude-dir=vibedeps | sort -u
 …
-packages/org.vibevm.fractality/CLAUDE.md
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.xml
+vibevm/vibepacks/org.vibevm.fractality/CLAUDE.md
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml
 …
 ```
 
@@ -101,10 +101,10 @@ number and title:
 
 ```console
 $ grep -c "^### Phase .* — EXECUTED .*; commit map" \
-    packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
+    vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
 8
 $ grep -c "^- \*\*Ф[0-9]* — EXECUTED .*Commit map:\*\*" \
-    packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+    vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
 5
 ```
 
@@ -130,7 +130,7 @@ deviations, discovered work. All three are in one ledger:
 five, because the live instance restates the anchor almost word for word:
 
 ```console
-$ sed -n '615,618p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+$ sed -n '615,618p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
 ## 14. Execution ledger
 
 _Filled at each phase boundary: commit map (hash → planned subject),
@@ -176,7 +176,7 @@ journal, API` · `feat(fractality): session attribution — env stamp + session
 verbs`»*, with `Exit:` on the next line.
 
 ```console
-$ for f in packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml; do
+$ for f in vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml; do
     printf "Commits:%s Exit:%s Prediction:%s\n" \
       "$(grep -ciE '^\*+Commits:' $f)" "$(grep -ciE '^\*+Exit:?\*' $f)" "$(grep -ciE '^\*+Prediction' $f)"; done
 Commits:8 Exit:8 Prediction:9
@@ -185,17 +185,17 @@ Commits:8 Exit:8 Prediction:9
 **`##the-quick-start-block-lead`** — this one is false twice over. It restates
 `##COLD-A-LITERAL-QUICK-START-BLOCK`, which the owner already ruled on (§7 LOG,
 2026-07-29, «the first route-(b) ruling»): the host yielded and both live plans
-in `spec/terraforms/` gained the section. Independently, three fractality plans
+in `vibevm/vibespecs/terraforms/` gained the section. Independently, three fractality plans
 carried it all along:
 
 ```console
 $ grep -rniE '^#+ .*quick.?start' <standing perimeter> | grep -v legacy-spec | grep -viE 'CONTINUE|README|guides|harvest'
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:1087:## 11. Quick-start for the executing session
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml:554:## 11. Quick-start for the executing session
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml:393:## 11. Quick-start for the executing session {#quick-start}
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:198:### 11 — Quick-start for the executing session {#s11-quick-start}
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3442:## 10. Quick-start for the executing session {#quick-start}
-spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1420:## 12. Quick-start for the executing session {#quick-start}
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:1087:## 11. Quick-start for the executing session
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml:554:## 11. Quick-start for the executing session
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml:393:## 11. Quick-start for the executing session {#quick-start}
+vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:198:### 11 — Quick-start for the executing session {#s11-quick-start}
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3442:## 10. Quick-start for the executing session {#quick-start}
+vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1420:## 12. Quick-start for the executing session {#quick-start}
 ```
 
 `FRACTALITY-IGNITION-PLAN-v0.1.xml:1087-1098` is a literal ```` ```sh ```` block
@@ -212,14 +212,14 @@ $ sed -n '1101,1113p' …/FRACTALITY-IGNITION-PLAN-v0.1.xml
 ## 12. Whole-campaign acceptance
 
 ```sh
-cd packages/org.vibevm.fractality/fractality/v0.1.0
+cd vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0
 rust-ai-native floor                                                 # exit 0 (D15)
 fractality mc start && fractality mc status                          # healthy
 fractality run --packet spec/examples/hello-glm.toml                 # exit 0
 test -s ~/.fractality/runs/<that-run>/result.md                      # non-empty result
 fractality stats                                                     # ≥5 completed runs, ≥1 swarm parent w/ 3 children
 fractality questions                                                 # empty at close
-ls spec/manual-tests/                                                # 5 recorded procedures with outputs
+ls vibevm/vibespecs/manual-tests/                                                # 5 recorded procedures with outputs
 (cd ../../../.. && bash tools/self-check.sh); echo "EXIT=$?"          # host floor green
 ```
 ````
@@ -253,14 +253,14 @@ instrument and §3.6's route (b) would have been the disposition — the shape t
 owner already ruled on for `##COLD-A-LITERAL-QUICK-START-BLOCK`.
 
 **New obligations noticed:** (1) the two live host-root plans in
-`spec/terraforms/` still carry **no** commit map — `grep -niE 'commit map'
-spec/terraforms/*.md` returns one line, `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3030`,
+`vibevm/vibespecs/terraforms/` still carry **no** commit map — `grep -niE 'commit map'
+vibevm/vibespecs/terraforms/*.md` returns one line, `PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3030`,
 and that is this campaign quoting its own finding. That is a genuine host
 non-compliance and belongs in `PHASE-D-HOST-OBLIGATIONS.md` under §3.6(b), the
 same disposition the owner gave the quick-start gap — but it does **not**
 support an absence claim, because the form is live elsewhere. (2) The Phase-C
 verdicts under this obligation, and under F-155 / F-195 in the earlier
-`prose-edit` pass, all measured «live plans» as `spec/terraforms/*.md`. The
+`prose-edit` pass, all measured «live plans» as `vibevm/vibespecs/terraforms/*.md`. The
 `fractality` specspace is a registered live sub-project of this repository with
 six plans; any future measurement of «how this host writes plans» that excludes
 it is wrong by 6 documents in 8.
@@ -315,7 +315,7 @@ plans**». The fourth element is spelled in advance in two live plans, once per
 phase:
 
 ```console
-$ grep -niE '^\*Commits:' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
+$ grep -niE '^\*Commits:' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml
 785:*Commits:* exactly one — `docs(fractality): plan v0.1 amended with Phase 0
 894:*Commits:* `feat(fractality): cargo workspace + core model` ·
 918:*Commits:* `feat(fractality): profiles + clean-slate worker env` ·
@@ -341,14 +341,14 @@ between the two is itself a recorded finding»* — is the one the verdict conce
 was «attested» only in the archive, and it is attested twice in the live window:
 
 ```console
-$ sed -n '666,672p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+$ sed -n '666,672p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
     (C2 Ф1)`. **Drift vs plan: one feat commit instead of the two
     planned** — the field addition, the MC subsystem, and the CLI
     attribution surface compile only together; splitting them would
     have manufactured a non-building intermediate commit for
     ceremony's sake. Ledgered, not absorbed (P7 bookkeeping).
 
-$ sed -n '18,20p;24,27p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+$ sed -n '18,20p;24,27p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
 **Commit range:** `47412ad` (campaign open) → the close commits,
 19 fractality-scoped commits total (15 planned; see P7). Executed
 across two sessions on 2026-07-10: …
@@ -370,14 +370,14 @@ is the flow's alone.»* Re-run over the first perimeter the verdict itself names
 
 ```console
 $ grep -rniE 'commits.by.meaning|commit.by.meaning' spec/
-spec/boot/00-core.xml:23:3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done
+vibevm/vibespecs/boot/00-core.xml:23:3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done
 ```
 
 One hit, in the host's own boot contract, as **Rule 3**, in bold, read at every
 session start. The phrase is not the flow's alone; it is the host's standing
 rule and the flow's rationale points at it. This is a `not-found` that fails on
 its author's own stated perimeter, not on a widened one. Two further live
-echoes: `packages/org.vibevm.fractality/reports/2026-10-07-21-11-defc2slice-started-plan.xml:33`
+echoes: `vibevm/vibepacks/org.vibevm.fractality/reports/2026-10-07-21-11-defc2slice-started-plan.xml:33`
 and `…-21-30-defc2slice-completed-plan.md:29` both list *«commits grouped by
 meaning»* as a phase acceptance item.
 
@@ -395,7 +395,7 @@ returns nothing.
 
 **Which layer has it, if any:** **consumer deployment** — the same fractality
 specspace as F-163 — for the four elements, the pre-drawn map and the drift
-findings; and the **host's own boot lane** (`spec/boot/00-core.xml:23`) for the
+findings; and the **host's own boot lane** (`vibevm/vibespecs/boot/00-core.xml:23`) for the
 commits-by-meaning rule the rationale cites.
 
 **What changed and why:** nothing. The family's shared premise — «the commit set
@@ -406,7 +406,7 @@ have checked inside the perimeter he named. As with F-163, none of the four
 promises a mechanism: they describe how a phase is written, so §3.3 was never
 the right instrument even if the absence had held.
 
-**New obligations noticed:** the host-root live plans in `spec/terraforms/`
+**New obligations noticed:** the host-root live plans in `vibevm/vibespecs/terraforms/`
 carry neither `*Commits:*` nor a per-phase commit map, so the four-element rule
 is genuinely unkept **there**. That is one host-compliance obligation, already
 implied by F-155's route-(b) record in the `prose-edit` pass, and it is the same
@@ -417,7 +417,7 @@ form.
 `##a-phase-carries-four-elements-lead` → **confirmed**; all four elements are
 carried by every post-Ф0 phase of two live plans.
 `##why-subjects-are-spelled-in-advance` → **confirmed**; the rationale's phrase
-is the host's Rule 3 at `spec/boot/00-core.xml:23`, and eight live phases spell
+is the host's Rule 3 at `vibevm/vibespecs/boot/00-core.xml:23`, and eight live phases spell
 subjects in advance. Already `@spec/done`; nothing to demote.
 `##EXECUTION-STAGES-ONTO-A-PRE-DRAWN-MAP` → **confirmed**; map, binding and
 recorded drift all live, `19 landed / 15 planned` reconciled per phase.
@@ -446,7 +446,7 @@ are written to:
 
 ```console
 $ grep -n "Format: \`flow:org.vibevm.world/campaign-plans\`" \
-    packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/*.md
+    vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/*.md
 FRACTALITY-IGNITION-PLAN-v0.1.xml:9:(one file, five roles). Campaigns 2–3 draw their mandates from §15._
 FRACTALITY-INITIATIVE-PLAN-v0.1.xml:11:(one file, five roles) ·
 ```
@@ -460,15 +460,15 @@ as the standard they follow has measured the wrong window.
 
 **`##COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS`** — the verdict concedes the
 baseline half and says *«The exit half has no live instance at all: `grep -niE
-'exit state' spec/terraforms/*.md` returns 0»*. Over the standing perimeter:
+'exit state' vibevm/vibespecs/terraforms/*.md` returns 0»*. Over the standing perimeter:
 
 ```console
 $ grep -rniE 'exit state|exit-state' <standing perimeter, vendored copies excluded>
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:32:**§4 exit state, reconciled:** 1 code package `fractality` v0.1.0 with
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:251:Exit state of this campaign:
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml:144:**Exit state:**
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml:330:## 8. Baseline and exit state {#baseline}
-packages/org.vibevm.fractality/reports/campaign-close.xml:21:## What exists now (the §4 exit state, reconciled)
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:32:**§4 exit state, reconciled:** 1 code package `fractality` v0.1.0 with
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml:251:Exit state of this campaign:
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml:144:**Exit state:**
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml:330:## 8. Baseline and exit state {#baseline}
+vibevm/vibepacks/org.vibevm.fractality/reports/campaign-close.xml:21:## What exists now (the §4 exit state, reconciled)
 …
 ```
 
@@ -525,7 +525,7 @@ archived plans and **0 live ones**»*. It is stated in the **status line** of a
 live plan, in the package's own §1 wording:
 
 ```console
-$ sed -n '11,13p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
+$ sed -n '11,13p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.xml
 Format: `flow:org.vibevm.world/campaign-plans` (one file, five roles) ·
 cold-executable: any phase boundary is a safe stop; the floor is green at
 every boundary. Lineage: drains DEF-1 (+ two named IGNITION leftovers)
@@ -538,7 +538,7 @@ boundary.»* Two more live statements:
 stop; the gate panel for a docs-only phase is "specmap green + the named
 artifacts committed"»*) and `FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml:119`. The
 law is also carried as a shipped discipline anchor one package over —
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.xml:161`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/04-SWEEP-PLAYBOOK.xml:161`
 `##ANY-SINGLE-ITEM-IS-A-SAFE-STOP`, projected into all three language stacks'
 sweep skills.
 
@@ -565,9 +565,9 @@ nothing relevant. Neither is an instance of ours.
 `fractality` specspace, which installs `flow-campaign-plans/0.1.0`, reads its
 boot snippet at slot 40, and names the flow in the status line of every plan it
 writes. Additionally **the host's own boot lane** for the wording under test:
-`spec/boot/STATIC.xml:87` and `:96-97` carry this snippet's two sentences
+`vibevm/vibespecs/boot/STATIC.xml:87` and `:96-97` carry this snippet's two sentences
 verbatim, so the host has adopted the rules into its contract even where its own
-`spec/terraforms/` plans do not yet keep them.
+`vibevm/vibespecs/terraforms/` plans do not yet keep them.
 
 **What changed and why:** nothing. Three claimed absences, three live instances,
 and in two of the three the live instance is closer to the package's wording
@@ -576,7 +576,7 @@ demotion here would have marked as unbuilt three rules that a campaign in this
 repository executed, gated on, and closed against six weeks ago.
 
 **New obligations noticed:** (1) the exit-state and acceptance gaps in
-`spec/terraforms/`'s two plans are real and are a host obligation of the same
+`vibevm/vibespecs/terraforms/`'s two plans are real and are a host obligation of the same
 class the owner already ruled on for the quick-start —
 `PHASE-D-HOST-OBLIGATIONS.md:74` already books the family («commit maps 3 / 0,
 safe stop 12 / 0, Phase 0 five archived and none live»), and those ratios should
@@ -630,7 +630,7 @@ this tree: the fractality specspace runs **two** research campaigns
 authored explicitly to this flow —
 
 ```console
-$ sed -n '3,7p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/RLM-SYNTHESIS.xml
+$ sed -n '3,7p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml
 _Ф5 deliverable of
 [`FRACTALITY-RLM-RESEARCH-PLAN-v0.1`](../../plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md),
 form per D-R6 (flow:comparative-research: two-way gaps, numbered
@@ -653,7 +653,7 @@ human's words attached:
 - **Accept** — `FRACTALITY-RLM-PLAN-v0.1.xml:72` `## 4. Decisions (seeded from
   synthesis; finalized at commissioning) {#decisions}`, ten numbered decisions
   `D-C3-1 … D-C3-10`, each a recorded decision born from named deltas.
-- **Defer** — `packages/org.vibevm.fractality/plans/postponed/PP-003-option-c-advisor-slice.xml:1-6`:
+- **Defer** — `vibevm/vibepacks/org.vibevm.fractality/plans/postponed/PP-003-option-c-advisor-slice.xml:1-6`:
   *«Status: **POSTPONED** (owner cut it from Campaign 3 Stage B — «отдельная
   задача, запланируй») · Origin: RP-C3-1 ruling (Stage B plan §1, §8); scope
   options §3; decision D-C3-7.»* — a delta marked deferred, with the deciding
@@ -667,7 +667,7 @@ human's words attached:
 And the review itself is a recorded, dated human act rather than an inference:
 
 ```console
-$ sed -n '207,212p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.xml
+$ sed -n '207,212p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml
 - **RP-C3-1 — mandate & scope cut (RULED 2026-07-11 → Option B):**
   owner verbatim «Вариант 1. Вариант плана - B (нисхождение +
   эскалация). Вариант C с адвайзором - отдельная задача,
@@ -698,7 +698,7 @@ anchor names. All ten decisions carry one. On the Tessl side the citation is the
 study's title and link, at the living spec's own anchor:
 
 ```console
-$ sed -n '12p' spec/modules/vibe-resolver/PROP-003-dep-evolution.xml
+$ sed -n '12p' vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml
 ##revision-r2 **Revision r2 (2026-05-04, post-PROP-004).** First revision shipped 2026-05-04 morning. Second revision shipped same day after the [PROP-004 Tessl comparative research](…) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later. Diff at the section level: @spec/done
 ```
 
@@ -716,13 +716,13 @@ re-run verbatim:
 
 ```console
 $ grep -rn 'Considered and rejected' ROADMAP.md spec/
-spec/boot/STATIC.xml:254:| **Considered and rejected** | One line per alternative, each carrying its rejection reason. |
-spec/modules/vibe-cli/PROP-036-package-tree.xml:93:- ##decision-artifacts-rejected **Considered and rejected:** recomputing `EffectiveBoot` fresh every run —
-spec/modules/vibe-progress/PROP-043-progress-markup.xml:96:- ##element-name-rejected **Considered and rejected:** `progress` (HTML collision), `vp`/`prg`
-spec/modules/vibe-progress/PROP-043-progress-markup.xml:139:- ##freeze-rejected **Considered and rejected:** `stage="done"` (ambiguous against
-spec/modules/vibe-progress/PROP-043-progress-markup.xml:251:   - ##registers-rejected **Considered and rejected:** single UPPER
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:111:consumer that does not behave as promised. **Considered and rejected:**
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:129:run it. **Considered and rejected:** trusting the host's green floor as
+vibevm/vibespecs/boot/STATIC.xml:254:| **Considered and rejected** | One line per alternative, each carrying its rejection reason. |
+vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml:93:- ##decision-artifacts-rejected **Considered and rejected:** recomputing `EffectiveBoot` fresh every run —
+vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:96:- ##element-name-rejected **Considered and rejected:** `progress` (HTML collision), `vp`/`prg`
+vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:139:- ##freeze-rejected **Considered and rejected:** `stage="done"` (ambiguous against
+vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:251:   - ##registers-rejected **Considered and rejected:** single UPPER
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:111:consumer that does not behave as promised. **Considered and rejected:**
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:129:run it. **Considered and rejected:** trusting the host's green floor as
 ```
 
 Seven hits, where the verdict reports *«no hit»*. At **study-derived** landings
@@ -730,7 +730,7 @@ specifically, the field is the house style of the entire research corpus —
 **fourteen** study notes carry a named non-adoption section:
 
 ```console
-$ grep -rn 'Non-adoptions' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/
+$ grep -rn 'Non-adoptions' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/
 barkain-study.xml:98:## Non-adoptions (named)
 codex-first-study.xml:82:## Non-adoptions (named)
 conductor-study.xml:60:**Non-adoptions:** NL-emitted workflows as our execution format
@@ -741,7 +741,7 @@ roma-study.xml:97 · srlm-study.xml:56 · trinity-study.xml:61
 ```
 
 The complete four-field record, all in one anchor, exists too —
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml:81`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml:81`
 carries *«Considered and rejected (owner, 2026-07-26): folding case for
 duplicate detection.»* with the reason **and** *«Revisit when: a case-only
 collision is observed to mislead a reader in practice.»*
@@ -749,12 +749,12 @@ collision is observed to mislead a reader in practice.»*
 On the sentence's own trailing clause — *«including "do nothing", if the study
 weighed it»* — the verdict says no located study weighs it. The status-quo
 alternative is weighed explicitly at three landings:
-`spec/common/PROP-031-algorithmic-refactoring.xml:110` `@fact:REJ-LLM-REWRITE **LLM
+`vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml:110` `@fact:REJ-LLM-REWRITE **LLM
 free-form file-rewriting (the status quo).** The problem, not a solution …`;
-`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:166`
+`vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:166`
 `@fact:REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo).
 Rejected …`; and
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.xml:52`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:52`
 `@fact:ALTERNATIVE-MANUAL-REVIEW *Manual review:* the status quo; fails exactly where
 we need it`. The clause is conditional («if the study weighed it») and is
 therefore not falsifiable by an absence in any case.
@@ -764,7 +764,7 @@ claim is absolute: *«the back-annotation does not exist anywhere»*. It exists,
 a whole deliverable:
 
 ```console
-$ sed -n '33,40p' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/FUGU-FRACTALITY-MAPPING.xml
+$ sed -n '33,40p' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml
 ## 2. The mapping table {#table}
 
 | Fugu finding (FD) | Ours it lands on | Verdict → action |
@@ -800,7 +800,7 @@ engineering specs practising the same field. Not instances of ours and not
 counted above.
 
 **Which layer has it, if any:** **consumer deployment**, twice over — the living
-spec (`spec/modules/vibe-resolver/PROP-003-dep-evolution.xml`'s `##revision-r2`
+spec (`vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml`'s `##revision-r2`
 block for the Tessl programme) and the `fractality` specspace's research corpus
 (two research plans, 20 study notes, two syntheses, one mapping analysis, ten
 recorded decisions, five postponed-delta records) for the RLM/Fugu programme.
@@ -826,9 +826,9 @@ repair: 21 RD deltas and 15 Tessl deltas each gaining one clause. Worth booking
 in `PHASE-D-HOST-OBLIGATIONS.md` rather than re-derived next wave. (2)
 `ROADMAP.md`'s Tessl milestones carry `Source: [PROP-004 §5.x]` and a `✅`
 per-slice scope list but no revisit trigger; the record shape is kept in
-`spec/modules/**` and not in `ROADMAP.md`, which is the same route-(b) gap at a
+`vibevm/vibespecs/modules/**` and not in `ROADMAP.md`, which is the same route-(b) gap at a
 different landing. (3) `legacy-spec/research/PROP-004-tessl-comparative-research.md`
-is archived while `spec/modules/vibe-resolver/PROP-003-dep-evolution.xml:12` cites
+is archived while `vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml:12` cites
 it as the live justification for eight shipped design decisions; whether an
 archived study may be a live citation target is a question for the owner, not
 this batch.
@@ -869,13 +869,13 @@ that writes was run.
 obligations are not four independent measurements. They are one measurement —
 «how does this repository write campaign plans and research documents» — taken
 four times over the same window, and the window was wrong in the same way each
-time: it was `spec/terraforms/` + `legacy-spec/` + `campaigns/`, which is the
+time: it was `vibevm/vibespecs/terraforms/` + `legacy-spec/` + `campaigns/`, which is the
 host root's plan homes and not the set of live plans in this tree. The
 `fractality` specspace installs `flow-campaign-plans` and `flow-comparative-research`,
 boots both, names them in the status line of every plan it writes, and holds six
 campaign plans, two research plans, twenty study notes, two syntheses and a
 mapping analysis. **Twelve of the sixteen verdicts are falsified solely by files
-under `packages/org.vibevm.fractality/`**; the other four are falsified there and
+under `vibevm/vibepacks/org.vibevm.fractality/`**; the other four are falsified there and
 in the host as well. This is §3.7 exactly — the artefacts that prove adoption
 live in the consumer — with the twist that the consumer here is a **sub-project
 of the host**, not the host root, so even a perimeter that reached `discipline/`
@@ -884,7 +884,7 @@ and `terraform/` would still have missed it.
 **Three of the sixteen are false without any widening at all**, on the perimeter
 the verdict itself named: `##why-subjects-are-spelled-in-advance`'s
 *«`grep -rniE 'commits.by.meaning' …` across the spec tree … returns 0»* (it
-returns `spec/boot/00-core.xml:23`, Rule 3), and
+returns `vibevm/vibespecs/boot/00-core.xml:23`, Rule 3), and
 `##RECORD-FIELD-CONSIDERED-AND-REJECTED`'s *«`grep -rn 'Considered and rejected'
 ROADMAP.md spec/` returns no hit»* (seven hits), which also carries
 `##this-is-decision-records-doing-its-job`'s record half.
@@ -893,7 +893,7 @@ ROADMAP.md spec/` returns no hit»* (seven hits), which also carries
 routed out of a package here — all sixteen anchors are recommended
 **confirmed**, which is a re-judge, not a route. Three genuine host-compliance
 gaps surfaced on the way and belong in `PHASE-D-HOST-OBLIGATIONS.md` rather than
-in a package edit: the two `spec/terraforms/` plans carry no commit map, no
+in a package edit: the two `vibevm/vibespecs/terraforms/` plans carry no commit map, no
 `*Commits:*` per phase, and no exit-state arithmetic; and `PROP-004` §6 plus
 `RLM-SYNTHESIS.xml` §3 carry no per-delta back-annotation. All three are §3.6(b) —
 the rule is sound, the consumer does not keep it — and the owner has already
@@ -903,11 +903,11 @@ ruled that shape once on this same package.
 `PHASE-D-HOST-OBLIGATIONS.md:74` books the family as «commit maps 3 / 0, safe
 stop 12 / 0, Phase 0 five archived and none live». Re-measured over the full
 tree, counting **files**, and excluding
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — which matches all
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — which matches all
 three patterns only because line 3030 quotes this very finding:
 
 ```console
-$ P=packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans
+$ P=vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans
 $ grep -rlniE 'commit map|commit-map' legacy-spec/terraforms/ legacy-spec/research/ | wc -l   # archived
 4
 $ grep -rlniE 'commit map|commit-map' $P | wc -l                                              # live
@@ -924,6 +924,6 @@ $ grep -rliE '^#+ .*(phase 0|wave 0)|^\*\*Ф0' $P | wc -l
 
 So the true ratios are **commit maps 4 / 3**, **safe stop 13 / 3**, **Phase 0
 12 archived / 2 live** — not «/ 0» in any of the three. The host obligation is
-still real for the two host-root plans in `spec/terraforms/`, which carry none of
+still real for the two host-root plans in `vibevm/vibespecs/terraforms/`, which carry none of
 the three; the ratio that framed it as an abandoned practice is what does not
 survive.

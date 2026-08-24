@@ -211,7 +211,7 @@ verdict.** The verdict's number is exact and reproduces:
 $ python -c "…split SPECSPACES.md line 22 on '|' …"
 cells: 5
 0   10  'fractality'
-1   31  'packages/org.vibevm.fractality/'
+1   31  'vibevm/vibepacks/org.vibevm.fractality/'
 2    6  'WAL.md'
 3   11  'CONTINUE.md'
 4 1029  '2026-07-12 — **five-task goal COMPLETE (5/5)** (~28 commits, both remotes). ✅1 b…'
@@ -254,7 +254,7 @@ exactly.** `SPECSPACES-PROTOCOL.xml:57`, inside the fenced registry example this
 same section prescribes:
 
 ```markdown
-| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — ignition PLANNED; next: Phase 0 |
+| fractality | vibevm/vibepacks/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — ignition PLANNED; next: Phase 0 |
 ```
 
 That status cell is **44 characters** and is literally the field's three parts in
@@ -273,14 +273,14 @@ status cell grow to 1 029 characters.
 
 **(5) `##LAW-STATE-LOCALITY`'s first clause holds, and I verified it at the
 specspace rather than assuming it.** The specspace's canonical state does live in
-the specspace: `packages/org.vibevm.fractality/WAL.xml` exists alongside
+the specspace: `vibevm/vibepacks/org.vibevm.fractality/WAL.xml` exists alongside
 `CLAUDE.md`, `CONTINUE.md` and `VIBEVM-BACKLOG.xml`, and the specspace's own boot
-contract calls it exactly that — `packages/org.vibevm.fractality/CLAUDE.md:22`:
+contract calls it exactly that — `vibevm/vibepacks/org.vibevm.fractality/CLAUDE.md:22`:
 *«`WAL.md` (this directory) — the living project state. Canonical.»* Only the
 law's **middle** clause fails, and it fails in the consumer.
 
 *The law's third clause — «the host WAL never carries specspace detail» — I did
-not re-verify, deliberately: the only file that could settle it is `spec/WAL.xml`,
+not re-verify, deliberately: the only file that could settle it is `vibevm/vibespecs/WAL.xml`,
 which this batch may not read or cite as evidence because every wind-down
 rewrites it. The verdict did not dispute that clause, and a claim I cannot cite
 durably is a claim I will not make.*
@@ -303,7 +303,7 @@ one table cell in the consumer. Demoting `##FIELD-STATUS` to «specified, not
 built» would say a field nobody has trouble writing cannot be written — while a
 44-character conforming example sits eighteen lines above it in the same file.
 The repair is a host obligation: re-cut `SPECSPACES.md:22` to one pointer line
-and move its content into `packages/org.vibevm.fractality/WAL.xml`, where the law
+and move its content into `vibevm/vibepacks/org.vibevm.fractality/WAL.xml`, where the law
 says it belongs.
 
 **Verdict recommendation, per anchor:**
@@ -311,7 +311,7 @@ says it belongs.
 characters against the package's own 44-character conforming example at `:57`;
 the package is right and the host does not comply.
 `##LAW-STATE-LOCALITY` → **drift stands, route (b)** — clause 1 verified true at
-`packages/org.vibevm.fractality/CLAUDE.md:22`, clause 2 false in the consumer
+`vibevm/vibepacks/org.vibevm.fractality/CLAUDE.md:22`, clause 2 false in the consumer
 only, clause 3 not re-verified because its only evidence file is uncitable here.
 
 ---
@@ -322,8 +322,8 @@ only, clause 3 not re-verified because its only evidence file is uncitable here.
 **Anchors:** 0 of 1 moved. `##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR` —
 **not edited.**
 **Files touched:** none
-**Perimeter searched:** the verdict scoped itself to `spec/common/` +
-`spec/modules/**`; I ran that scope **and then widened it to the whole standing
+**Perimeter searched:** the verdict scoped itself to `vibevm/vibespecs/common/` +
+`vibevm/vibespecs/modules/**`; I ran that scope **and then widened it to the whole standing
 perimeter**, because §3.7's whole point is that a package-or-partial scope reads
 adoption as absence — the anchor says «at the spec anchor that governs the
 value», which is not a claim about two directories. Terms: the canonical field
@@ -339,7 +339,7 @@ to land on it.** Sections are cut at Markdown headings; a section counts once
 however many Decision labels it carries:
 
 ```console
-$ python <count_dr.py>          # spec/common + spec/modules
+$ python <count_dr.py>          # vibevm/vibespecs/common + vibevm/vibespecs/modules
 files scanned: 47
 sections carrying a bolded Decision label: 153
 total **Decision label occurrences: 154
@@ -349,10 +349,10 @@ total **Decision label occurrences: 154
   sections with 1 of the four fields: 127
 
 THE FOUR-FIELD SECTIONS:
-  spec/modules/vibe-cli/PROP-036-package-tree.xml:88
-  spec/modules/vibe-progress/PROP-043-progress-markup.xml:91
-  spec/modules/vibe-progress/PROP-043-progress-markup.xml:134
-  spec/modules/vibe-progress/PROP-043-progress-markup.xml:243
+  vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml:88
+  vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:91
+  vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:134
+  vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:243
 
 label totals across the corpus:
   **Why: 33   **Considered: 4   **Revisit/When to revisit: 7
@@ -366,11 +366,11 @@ it is strongest in the newest documents in the tree:
 
 ```console
 --- the whole host spec/ tree: 63 files, 157 sections   4-of-4: 7
-      spec/boot/STATIC.xml:252
-      spec/modules/vibe-cli/PROP-036-package-tree.xml:88
-      spec/modules/vibe-progress/PROP-043-progress-markup.xml:91,134,243
-      spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:93
-      spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:121
+      vibevm/vibespecs/boot/STATIC.xml:252
+      vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml:88
+      vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml:91,134,243
+      vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:93
+      vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:121
 --- campaigns/: 134 files, 12 sections               4-of-4: 7
       campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:83, :99, :123
       campaigns/packages-2026-09/PHASE-D-BATCH-PLAN.md:169, :197, :214, :232
@@ -381,13 +381,13 @@ it is strongest in the newest documents in the tree:
 **`campaigns/` keeps the form 7 of 12** — the batch plans this very phase runs
 on (`PHASE-D-BATCH-PLAN.md` §3.1 / §3.2 / §3.3 / §3.6) each carry Decision · Why ·
 Considered and rejected · Revisit when in full. One hit must be discounted
-honestly: `spec/boot/STATIC.xml:244-262` is **this package's own compiled boot
+honestly: `vibevm/vibespecs/boot/STATIC.xml:244-262` is **this package's own compiled boot
 snippet** — its four-field requirement table, vendored into the host's boot lane —
 not an independent host record. Net host-authored complete records across the
 whole durable surface: **13**, of which 9 were written in the last two months.
 
 **(3) The decisive §3.6 test — the package's own tree keeps its own rule, 6 for
-6.** Every section of `packages/org.vibevm.world/decision-records/v0.1.0/**` that
+6.** Every section of `vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/**` that
 carries a Decision label carries all four fields:
 
 ```console
@@ -436,8 +436,8 @@ proves it practical in its own tree and in a copy-ready template, and the
 consumer's newest documents keep it while its oldest do not. «Specified, not
 built» would be flatly false here — thirteen complete records exist in the host,
 seven of them in the plans steering this campaign. The honest repair is a host
-obligation: back-fill the fields on the choices in `spec/common/` +
-`spec/modules/**` that a reader could plausibly re-open, most cheaply on the 22
+obligation: back-fill the fields on the choices in `vibevm/vibespecs/common/` +
+`vibevm/vibespecs/modules/**` that a reader could plausibly re-open, most cheaply on the 22
 sections already carrying two or three of the four.
 
 **Verdict recommendation, per anchor:**
@@ -458,7 +458,7 @@ the failing side is the consumer.
 `five-part` · `not yet a codeword` · `is a proposal` · `propose adding` ·
 `codeword` — looking for **the thing**: any phrase, anywhere, held as a
 proposal pending its missing parts. Plus the host's catalogue read in full
-(`spec/boot/90-user.xml`), the host's pointer (`spec/common/PROP-006-operating-modes.xml`),
+(`vibevm/vibespecs/boot/90-user.xml`), the host's pointer (`vibevm/vibespecs/common/PROP-006-operating-modes.xml`),
 the two `CLAUDE.md` phrase families read clause by clause, the package's own
 worked codeword read heading by heading, and the host commit that created the
 catalogue (`git show`, read-only).
@@ -495,12 +495,12 @@ demonstrates its own rule in the only instance it ships. Nothing in this
 package's tree is false about this package's tree.
 
 **(2) The host's catalogue is one codeword, and it is fully specified — the rule
-is satisfied where it applies.** `spec/boot/90-user.xml:62-68` is the catalogue:
+is satisfied where it applies.** `vibevm/vibespecs/boot/90-user.xml:62-68` is the catalogue:
 `##operating-modes-intro` at `:64` and exactly one entry, `##CODEWORD-MFBT` at
-`:68`. `spec/common/PROP-006-operating-modes.xml:15-23` is the host's pointer at
+`:68`. `vibevm/vibespecs/common/PROP-006-operating-modes.xml:15-23` is the host's pointer at
 it, and `:21-23` restates part 4 (what it suspends, what survives, red lines
 intact). The compiled boot carries the governing never-rule verbatim —
-`spec/boot/STATIC.xml:996-997`: *«Never act on a codeword that is not in the
+`vibevm/vibespecs/boot/STATIC.xml:996-997`: *«Never act on a codeword that is not in the
 catalogue — propose adding it first.»*
 
 **(3) The two `CLAUDE.md` families, measured against the five parts rather than
@@ -522,7 +522,7 @@ not a courtesy»*, which is exactly acting on it.
 words.** The obvious defence of the package is that these are not codewords at
 all: the protocol defines one as flipping the session into *«an alternate
 posture for one work cycle»* (`OPERATING-MODES-PROTOCOL.xml:34-35`) and changing
-*«confirmation behaviour»* (`:41-42`), and `spec/boot/90-user.xml:64` scopes the
+*«confirmation behaviour»* (`:41-42`), and `vibevm/vibespecs/boot/90-user.xml:64` scopes the
 catalogue to *«Trigger phrases that switch the session into an alternate working
 posture»* — which a one-shot wind-down arguably is not. That defence fails on
 evidence, and the evidence is the host's own commit creating the catalogue:
@@ -545,7 +545,7 @@ searching for the thing, not the string:
 $ grep -rn "not yet a codeword|is a proposal|propose adding|five parts|five-part" \
       --include=*.md <standing perimeter>
 (every hit is: the flow's own text; a vendored copy of it under
- packages/org.vibevm.fractality/…/vibedeps/flow-operating-modes/0.1.0/;
+ vibevm/vibepacks/org.vibevm.fractality/…/vibedeps/flow-operating-modes/0.1.0/;
  this campaign's own harvest and OBLIGATIONS records; and one unrelated
  golden fixture, crates/vibe-index/fixtures/golden-flow-wal-0.1.0/boot/10-flow-wal.md:16)
 ```
@@ -587,7 +587,7 @@ the choice between them is a genre ruling and therefore not mine)
 **not edited.**
 **Files touched:** none
 **Perimeter searched:** the verdict scoped itself to the 6 files of
-`spec/design/`; I ran that scope **and then widened to every lore-genre document
+`vibevm/vibespecs/design/`; I ran that scope **and then widened to every lore-genre document
 in the standing perimeter** — 50 files, found by `stage="doc"` **or** the
 presence of `@doc/` markers rather than by directory, because §3.7's lesson is
 that a scope chosen by location misses the population. Terms: `MUST` · `SHALL` ·
@@ -599,17 +599,17 @@ plus lowercase `must` counted separately.
 **(1) The verdict's count reproduces exactly.**
 
 ```console
-$ for f in spec/design/*.md; do grep -c "\bMUST\b\|\bSHALL\b\|\bMUST NOT\b" "$f"; grep -ci "\bshall\b" "$f"; done
-spec/design/README.md                          UPPER=0  shall=0
-spec/design/action-system.xml                   UPPER=0  shall=0
-spec/design/loading-and-boot-model.xml          UPPER=0  shall=0
-spec/design/structural-loader.xml               UPPER=2  shall=0
-spec/design/tui-visual-language.xml             UPPER=0  shall=0
-spec/design/workspace-and-qualified-naming.xml  UPPER=0  shall=0
+$ for f in vibevm/vibespecs/design/*.md; do grep -c "\bMUST\b\|\bSHALL\b\|\bMUST NOT\b" "$f"; grep -ci "\bshall\b" "$f"; done
+vibevm/vibespecs/design/README.md                          UPPER=0  shall=0
+vibevm/vibespecs/design/action-system.xml                   UPPER=0  shall=0
+vibevm/vibespecs/design/loading-and-boot-model.xml          UPPER=0  shall=0
+vibevm/vibespecs/design/structural-loader.xml               UPPER=2  shall=0
+vibevm/vibespecs/design/tui-visual-language.xml             UPPER=0  shall=0
+vibevm/vibespecs/design/workspace-and-qualified-naming.xml  UPPER=0  shall=0
 ```
 
 Six files, five clean, `shall` absent everywhere, and the two uppercase MUST are
-`spec/design/structural-loader.xml:13` (`##MUST-LOAD-FIRST`, which also carries
+`vibevm/vibespecs/design/structural-loader.xml:13` (`##MUST-LOAD-FIRST`, which also carries
 *«is **broken**»* and a second, lowercase *«must inject them»*) and `:15`
 (`##SAME-EFFECTIVE-SPEC`). Reported alongside, because the anchor bans
 *«"must", "shall", requirement lists»* and not only the uppercase form:
@@ -624,10 +624,10 @@ system is **declared, not inferred from location**:
 `SPEC-GENRES-PROTOCOL.xml:33-36` `##THE-KIND-FIXES-CHARTER-MUTABILITY-AUDIENCE-AND-AUTHORITY`
 — *«Each document declares what kind of thing it is; the kind fixes its charter,
 its mutability, its audience, and — decisively — its authority.»* Measured across
-`spec/design/`:
+`vibevm/vibespecs/design/`:
 
 ```console
-$ for f in spec/design/*.md; do head -3 "$f" | grep -o "<status[^>]*>"; \
+$ for f in vibevm/vibespecs/design/*.md; do head -3 "$f" | grep -o "<status[^>]*>"; \
       grep -o "@[a-z]*/[a-z]*" "$f" | sort | uniq -c; done
 README.md                          stage="doc"     28 @doc/done   1 @spec/hold
 action-system.xml                   (no element)    78 @doc/done
@@ -638,10 +638,10 @@ workspace-and-qualified-naming.xml  stage="doc"    101 @doc/done   1 @org/
 ```
 
 **460 `@doc/done` markers across the five clean files; zero in the sixth.**
-`spec/design/structural-loader.xml:3` declares
+`vibevm/vibespecs/design/structural-loader.xml:3` declares
 `<status stage="spec" … comment="B0 2026-07-24: DESIGN provisional (PROP-035 S13);
 authored, not yet wired into any live boot"/>` and its twenty fact markers are
-all `@spec/*`. Its index entry, `spec/design/README.md:50`
+all `@spec/*`. Its index entry, `vibevm/vibespecs/design/README.md:50`
 `##idx-structural-loader`, is the **only `@spec/hold` in the whole design tree** —
 *«provisional loader instructions held for PROP-035; not yet wired into any live
 boot»*.
@@ -660,8 +660,8 @@ because it is not typed lore at all:
 $ python <genre_scan.py>
 files genre-typed as lore (stage="doc" or carrying @doc/ markers): 50
   legacy-spec/research/action-systems-vscode-idea.md            UPPER=2
-  packages/org.vibevm.ai-native/go-ai-native-lang/…/README.md   UPPER=2
-  packages/org.vibevm.world/operating-modes/…/README.md         shall=1
+  vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/…/README.md   UPPER=2
+  vibevm/vibepacks/org.vibevm.world/operating-modes/…/README.md         shall=1
 lore-genre files carrying uppercase normative verbs: 3 of 50
 ```
 
@@ -675,7 +675,7 @@ proceed?" is overhead already paid for»* — a false positive of the regex.
 
 **(4) The half-executed remedy is real, and I verified both halves.** The
 anchor's remedy is *«Extract it to the contract; link back.»* Extracted — the
-twin is at `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:35`
+twin is at `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml:35`
 `##EQUIVALENCE-INVARIANT`, and closer still at `:238-240` §13:
 `##LOADER-FIRST-EVERYWHERE` (*«MUST load **first, everywhere**»*) and
 `##LOADER-BROKEN-WITHOUT` (*«A project or package **without** them is considered
@@ -683,13 +683,13 @@ twin is at `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:35`
 them»*) — nearly verbatim, the word «broken» included. Not linked back:
 
 ```console
-$ grep -n "structural-loader" spec/modules/vibe-workspace/PROP-035-spec-compiler.xml
+$ grep -n "structural-loader" vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml
 35:   … the structural loader (a prompt today, a hard algorithmic agent later, §13) …
 236: ## 13. The structural loader — the "first instructions" {#loader-prompt}
 276:   … the first-loaded structural loader (§13); …
 ```
 
-Three prose mentions, no Markdown link to `spec/design/structural-loader.xml`
+Three prose mentions, no Markdown link to `vibevm/vibespecs/design/structural-loader.xml`
 anywhere in PROP-035. The extraction happened, the reduction did not, and the
 back-link does not exist.
 
@@ -706,7 +706,7 @@ reported inside the perimeter deliberately.
 **The two readings, stated fairly, because the choice between them is a genre
 ruling.**
 
-- **(A) — route (b), the verdict's reading.** The file sits in `spec/design/`, is
+- **(A) — route (b), the verdict's reading.** The file sits in `vibevm/vibespecs/design/`, is
   indexed by that tree's genre index, and its own `##status-line` at `:5` says
   *«Status: DESIGN — provisional»*. A cold agent reading the tree meets two
   uppercase MUST and an *«is **broken**»* in a directory named `design`. The rule
@@ -733,7 +733,7 @@ which is the only part of this that is mine to decide.
 one host file of six carries uppercase normative prose and its extracted twin at
 `PROP-035:238-240` was never linked back; the rule is sound, the package's own
 tree keeps it, and 47 of the 50 lore-genre documents in the perimeter keep it
-too. **Boss decision available:** if `spec/design/structural-loader.xml`'s
+too. **Boss decision available:** if `vibevm/vibespecs/design/structural-loader.xml`'s
 declared `stage="spec"` is ruled to type it out of the design-doc genre, this
 becomes §3.6(c) — a marked exception — and the anchor re-judges **confirmed**.
 
@@ -748,11 +748,11 @@ becomes §3.6(c) — a marked exception — and the anchor re-judges **confirmed
 · `not append` · `patch it` · `Constraints` · `Known issues` · `checkpoint, not
 a journal`, over the package's own four flow files, its **installed copy** under
 `vibedeps/flow-wal/0.2.0/`, the host's **compiled boot lane**
-(`spec/boot/STATIC.xml`, which is the layer a package-scoped search cannot see),
+(`vibevm/vibespecs/boot/STATIC.xml`, which is the layer a package-scoped search cannot see),
 and `CLAUDE.md`.
 
 **A citation restriction obeyed and stated, because it bears on the evidence.**
-This obligation's registry row cites `spec/WAL.xml:56` as evidence. I did not read
+This obligation's registry row cites `vibevm/vibespecs/WAL.xml:56` as evidence. I did not read
 or cite that file: this batch's durability rule forbids it — every wind-down
 rewrites it wholesale — and a claim resting on it would be dead within a day.
 Nothing below depends on it, and where the anchor's «constraints» clause could
@@ -764,13 +764,13 @@ only be settled by inspecting the live WAL, I say so instead of asserting.
 route (a) is closed.** `cold-resume.xml:90-92`:
 
 ```markdown
-2. ##STEP-REWRITE-THE-WAL **Rewrite `spec/WAL.xml`** per
+2. ##STEP-REWRITE-THE-WAL **Rewrite `vibevm/vibespecs/WAL.xml`** per
    [`session-end-hook.xml`](session-end-hook.xml): fresh date line,
    current phase, constraints, next step. @impl/done
 ```
 
 The document it points at says exactly that, emphatically —
-`session-end-hook.xml:47` is the heading `## 2. Rewrite spec/WAL.xml {#rewrite}`,
+`session-end-hook.xml:47` is the heading `## 2. Rewrite vibevm/vibespecs/WAL.xml {#rewrite}`,
 `:49` `##WAL-IS-A-CHECKPOINT-NOT-AN-APPEND-ONLY-LOG`, and `:51-52`
 `##REWRITE-THE-FILE-DO-NOT-PATCH-OR-APPEND` — *«**Rewrite** the file — don't
 patch it, don't append to it.»* And the anchor's four are a correct subset of the
@@ -785,7 +785,7 @@ this package is false about this package.
 
 ```console
 $ sed -n '73,75p' vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md
-2. **Rewrite `spec/WAL.xml`** per
+2. **Rewrite `vibevm/vibespecs/WAL.xml`** per
    [`session-end-hook.xml`](session-end-hook.xml): fresh date line,
    current phase, constraints, next step.
 
@@ -798,15 +798,15 @@ in the exact words the package ships.
 
 **(3) The finding that decides the routing — the host adopted this rule into its
 own compiled boot lane, verbatim, and reads it at every session start.**
-`spec/boot/STATIC.xml:1369` is the compiled `flow-wal` 0.2.0 snippet
+`vibevm/vibespecs/boot/STATIC.xml:1369` is the compiled `flow-wal` 0.2.0 snippet
 (`<!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->`),
 and its «At the end of every session» section is `:1400-1406`:
 
 ```console
-$ sed -n '1400,1406p' spec/boot/STATIC.xml
+$ sed -n '1400,1406p' vibevm/vibespecs/boot/STATIC.xml
 ## At the end of every session {#session-end}
 
-6. Rewrite `spec/WAL.xml` per the protocol in
+6. Rewrite `vibevm/vibespecs/WAL.xml` per the protocol in
    [`spec/flows/wal/session-end-hook.md`](../flows/wal/session-end-hook.md).
    Rewrite, not append — the WAL must reflect the **current** state,
    not the history. History lives in `git log` and in milestone commit
@@ -824,7 +824,7 @@ reader that a rule this session read on boot does not exist.
 **(4) What actually contradicts it is one paragraph of one host file, and the
 contradiction is host-internal.** `CLAUDE.md:189`:
 
-> 2. **Update `spec/WAL.xml`** with the current checkpoint — bump the date line,
+> 2. **Update `vibevm/vibespecs/WAL.xml`** with the current checkpoint — bump the date line,
 > refresh the "Current phase" / "Next" / "Known issues" sections, record any new
 > findings or commits since the last WAL update.
 
@@ -864,14 +864,14 @@ built» would be false in every layer that exists. The repair is a host
 obligation and it is a two-line edit: change `CLAUDE.md:189` from «Update … bump
 … refresh» to «Rewrite … per `spec/flows/wal/session-end-hook.md`», and restore
 Constraints to the list — which would also end the disagreement between
-`CLAUDE.md` and `spec/boot/STATIC.xml:1404` that this obligation has really found.
+`CLAUDE.md` and `vibevm/vibespecs/boot/STATIC.xml:1404` that this obligation has really found.
 **`CLAUDE.md` is outside this batch's edit scope and I did not touch it.**
 
 **Verdict recommendation, per anchor:**
 `##STEP-REWRITE-THE-WAL` → **drift stands, route (b)** — the anchor's citation
 resolves at `session-end-hook.xml:47-52`, its four sections are a correct subset
 of `WAL-PROTOCOL.xml:74-98`, and the rule is live in the host's own compiled boot
-at `spec/boot/STATIC.xml:1402-1406`; the failing artefact is `CLAUDE.md:189`,
+at `vibevm/vibespecs/boot/STATIC.xml:1402-1406`; the failing artefact is `CLAUDE.md:189`,
 which contradicts the host's boot lane as much as it contradicts the package.
 
 ---
@@ -909,8 +909,8 @@ missed material evidence.** None changes the routing; all three change what the
 record says, which is why the perimeter rule exists:
 
 - **F-299** — the count is exact and reproduces on a third independent pass
-  (153 / 4 / 3 / 19 / 127), but it was taken over `spec/common/` +
-  `spec/modules/**` while the anchor says «at the spec anchor that governs the
+  (153 / 4 / 3 / 19 / 127), but it was taken over `vibevm/vibespecs/common/` +
+  `vibevm/vibespecs/modules/**` while the anchor says «at the spec anchor that governs the
   value». Widened: **13 complete four-field records exist host-wide**, seven of
   them in the campaign plans steering this phase, and `campaigns/` keeps the form
   **7 of 12**. The practice is late-adopted, not absent.
@@ -923,7 +923,7 @@ record says, which is why the perimeter rule exists:
   reading on the table alongside route (b).
 - **F-351** — the contradiction is real, and it is **host-internal**. The rule
   said to be unhonoured is compiled verbatim into the host's own boot lane at
-  `spec/boot/STATIC.xml:1402-1406` (*«Rewrite, not append»*) and read at every
+  `vibevm/vibespecs/boot/STATIC.xml:1402-1406` (*«Rewrite, not append»*) and read at every
   session start; what disagrees with it is `CLAUDE.md:189`, which therefore
   contradicts the host's boot as much as the package. This is the F-150
   `##BAND-3-ON-TRIGGER` shape, and demoting the anchor would have denied a rule
@@ -940,7 +940,7 @@ calls codewords in its own commit `251987b1`.
 
 **Five things need a decision that is not mine.**
 
-1. **F-336's genre ruling.** Does `spec/design/structural-loader.xml`'s declared
+1. **F-336's genre ruling.** Does `vibevm/vibespecs/design/structural-loader.xml`'s declared
    `stage="spec"` type it out of the design-doc genre? Route (b) if no; §3.6(c)
    marked exception, and the anchor re-judges confirmed, if yes. Both readings
    are stated in that entry; the boss owns the choice.

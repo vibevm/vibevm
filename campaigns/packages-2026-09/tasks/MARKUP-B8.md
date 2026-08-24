@@ -2,8 +2,8 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.world/discovery-prompt/v0.1.0/` and
-`packages/org.vibevm.world/decision-records/v0.1.0/`.
+**Corpus:** `vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/` and
+`vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/`.
 
 **All thirty-three locked conventions in
 [`MARKUP-B1.md`](MARKUP-B1.md#locked) bind this batch.** Two are struck (18, 19).

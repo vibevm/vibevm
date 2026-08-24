@@ -52,17 +52,17 @@ pub const DEFAULT_EXCLUDE_FILES: [&str; 1] = ["LICENSE.md"];
 /// stay blind so an explicit project config inherits the same pairing.
 ///
 /// Layout note (PROP-052): these globs spell the ROOT names of the live
-/// directory layout (`spec/`, `packages/` today; `vibevm/vibespecs/`,
-/// `vibevm/vibepacks/` after the R4 flip). progress-core is standalone
-/// by law (PROP-043 §2 — no vibe-* dependencies), so it cannot route
-/// through `vibe_core::layout` (`crates/vibe-core/src/layout.rs`, the
-/// one home of the root names, PROP-052 L2); these four entries are the
-/// sanctioned duplication, and they flip BY HAND with RELAYOUT-PLAN R4.
+/// directory layout (`vibevm/vibespecs/`, `vibevm/vibepacks/` since the
+/// R4 flip). progress-core is standalone by law (PROP-043 §2 — no vibe-*
+/// dependencies), so it cannot route through `vibe_core::layout`
+/// (`crates/vibe-core/src/layout.rs`, the one home of the root names,
+/// PROP-052 L2); these four entries are the sanctioned duplication,
+/// flipped BY HAND with RELAYOUT-PLAN R4.
 pub const DEFAULT_INCLUDES: [&str; 4] = [
-    "spec/**/*.md",
-    "spec/**/*.xml",
-    "packages/**/*.md",
-    "packages/**/*.xml",
+    "vibevm/vibespecs/**/*.md",
+    "vibevm/vibespecs/**/*.xml",
+    "vibevm/vibepacks/**/*.md",
+    "vibevm/vibepacks/**/*.xml",
 ];
 
 /// The `[progress]` table — knobs that are not about which files are
@@ -265,23 +265,29 @@ mod tests {
     use super::*;
 
     // Layout note (PROP-052): these scaffolds pin the glob semantics on
-    // the LEGACY tree (`spec/`, `packages/`) that `DEFAULT_INCLUDES`
-    // names today. They are this test module's own fixtures (the L2
-    // "tests' own scaffolds" exemption), and they flip together with
-    // `DEFAULT_INCLUDES` — by hand, at RELAYOUT-PLAN R4 — because
+    // the live tree (`vibevm/vibespecs/`) that `DEFAULT_INCLUDES` names.
+    // They are this test module's own fixtures (the L2 "tests' own
+    // scaffolds" exemption), and they flip together with
+    // `DEFAULT_INCLUDES` — by hand, as at RELAYOUT-PLAN R4 — because
     // progress-core is standalone by law (PROP-043 §2) and cannot import
     // `vibe_core::layout` (`crates/vibe-core/src/layout.rs`).
 
     #[test]
     fn default_includes_observe_both_serialisations() {
         let dir = tempfile::tempdir().expect("tempdir");
-        std::fs::create_dir_all(dir.path().join("spec")).expect("mkdir");
-        std::fs::write(dir.path().join("spec/a.md"), "x").expect("write");
-        std::fs::write(dir.path().join("spec/b.xml"), "x").expect("write");
+        std::fs::create_dir_all(dir.path().join("vibevm/vibespecs")).expect("mkdir");
+        std::fs::write(dir.path().join("vibevm/vibespecs/a.md"), "x").expect("write");
+        std::fs::write(dir.path().join("vibevm/vibespecs/b.xml"), "x").expect("write");
         let files = observed_files(dir.path(), &ScopeConfig::default()).expect("enumerate");
         let names: Vec<String> = files.iter().map(|f| rel_str(f)).collect();
-        assert!(names.contains(&"spec/a.md".to_string()), "{names:?}");
-        assert!(names.contains(&"spec/b.xml".to_string()), "{names:?}");
+        assert!(
+            names.contains(&"vibevm/vibespecs/a.md".to_string()),
+            "{names:?}"
+        );
+        assert!(
+            names.contains(&"vibevm/vibespecs/b.xml".to_string()),
+            "{names:?}"
+        );
     }
 
     #[test]

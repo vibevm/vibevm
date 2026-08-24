@@ -2829,13 +2829,13 @@ fn omnibus_install_exercises_every_prop003_surface() {
     );
     assert!(
         alpha_slot
-            .join("subskills/feature/extra-discipline/spec/flows/integration-alpha/EXTRA-DISCIPLINE.md")
+            .join("subskills/feature/extra-discipline/vibevm/vibespecs/flows/integration-alpha/EXTRA-DISCIPLINE.md")
             .is_file(),
         "subskill directories ride along inside the slot as plain content"
     );
     assert!(
         alpha_slot
-            .join("subskills/sqlx/v08/spec/flows/integration-alpha/SQLX-V08.md")
+            .join("subskills/sqlx/v08/vibevm/vibespecs/flows/integration-alpha/SQLX-V08.md")
             .is_file(),
         "every subskill — lazy-pull included — is part of the verbatim slot"
     );

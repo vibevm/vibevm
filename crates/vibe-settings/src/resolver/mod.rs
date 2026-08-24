@@ -36,7 +36,7 @@
 //! [`ResolvedPrefs::diagnostics`] (R2 — mixed scalar/table/array at one path
 //! is rare and skipped, never a panic); ≤600-line file budget.
 //!
-//! Spec: [PROP-040 §4, §5](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#resolver).
+//! Spec: [PROP-040 §4, §5](../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#resolver).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#resolver");
 

@@ -24,7 +24,7 @@ addressable set of every touched file is unchanged; no re-mirror is owed.
 under the v0.7.0 slot.
 
 ```
-$ cd packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0
 $ grep -rn "ra_path\|ra_version" --include=*.rs --include=*.md --include=*.toml .
 ./crates/rust-ai-native-tcg/src/serve.rs:78:        "ra_version": oracle.capabilities().server_version,
 ./spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md:57:- ##OP-INIT **`init`** `{root}` → `{ra_version, ra_path, toolchain, root_files,
@@ -90,24 +90,24 @@ so as a specification rather than as a fact.
 
 **Twin in another stack:** all three have twins in `go-ai-native-lang`, **not
 touched** —
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:46`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:46`
 (`#INIT-RESULT-CARRIES-PATH-AND-VERSION`, the same sentence verbatim), `:203`
 (no-zombie, shorter wording), `:210` (gopls stderr chatter, same shape). The
 Phase C reasons say the Go twin fails identically in two of the three cases.
 There is no typescript twin for anchors 1 and 3; the typescript no-zombie
 sentence
-(`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`)
+(`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`)
 is worded differently and carries **no obligation** in the registry — see the
 next block.
 
 **New obligations noticed:**
 
-- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml:138-140`
   makes the same no-zombie claim for the TS stack (*«no surviving pid on this
   box»*, `@impl/done`) and carries no obligation row. If it fails the same way
   the rust and go ones do, Phase C missed it. Not checked here — outside my
   eight, and not fixed.
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml:57`
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml:57`
   (`#OP-INIT`) still advertises `ra_path` in the wire schema. That is **F-211**
   (`release` route, spans rust + go) and is already owned; recorded here only
   so the boss can see the two must land consistently — F-192's demotion and
@@ -161,9 +161,9 @@ demotion does not apply and the evidence falsifies only the justification.
 
 **Twin in another stack:** the sentence has near-twins in **both** siblings, and
 **neither is a defect, so neither was touched**.
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml:12`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:12`
 and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml:11`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:11`
 carry the same sentence, but their registry rows agree with it — go's
 `spec/cards/INDEX.md:19` reads *«specified (pilot: `research/go-demo` fuzz
 differential)»* and typescript's `spec/cards/INDEX.md:13` reads *«specified
@@ -176,7 +176,7 @@ leave a sibling out of step.
 ## F-277 — the README pointed the specmark proc-macro at a path this package has never had
 
 **Outcome:** EDITED
-**Files touched:** `C:\Users\olegc\git\v\vibevm\packages\org.vibevm.ai-native\rust-ai-native-lang\v0.7.0\README.md` (one anchor, `#SHIPS-SPECMARK-PROC-MACRO`)
+**Files touched:** `C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md` (one anchor, `#SHIPS-SPECMARK-PROC-MACRO`)
 
 **Re-verification:** the reason holds exactly as written — **and it settles the
 type, which the registry has wrong.** Both halves checked.
@@ -217,7 +217,7 @@ honest route is a prose path fix, and demoting a shipped proc-macro to
 
 **Twin in another stack:** «none found» for the sentence — the go and
 typescript packages ship no Rust proc-macro and their READMEs carry no such
-bullet (`grep -rn "specmark" packages/org.vibevm.ai-native/*/v*/README.md`
+bullet (`grep -rn "specmark" vibevm/vibepacks/org.vibevm.ai-native/*/v*/README.md`
 returns three lines: this one, this file's `:83` wiring pointer, and
 `core-ai-native/v0.8.0/README.md:21`, which is a different sentence in a
 package that is not mine and is already correct about its own layout).
@@ -279,11 +279,11 @@ still says `PIN-BOTH-HOPS` and was deliberately **not** renamed; renaming it
 would change the file's addressable set for no gain in truth.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml:158`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml:158`
 (`#REPLAY-GOLDENS-PIN-BOTH-HOPS`) is the same sentence under a shorter id, and
 the Phase C reason says *«The Go twin fails identically»*. **Not touched** —
 another worker owns that package. No typescript twin
-(`grep -rn "PIN-BOTH-HOPS" packages/org.vibevm.ai-native/ --include=*.md`
+(`grep -rn "PIN-BOTH-HOPS" vibevm/vibepacks/org.vibevm.ai-native/ --include=*.md`
 returns only the go and rust lines).
 
 **New obligations noticed:** none new; but note that the *«recorded LSP
@@ -331,10 +331,10 @@ the Windows child lifecycle needs a no-zombie assertion, and now says the
 package owes one.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.xml:192`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/vibe-agentic-tcg-go.xml:192`
 carries the same list (*«kill-on-drop + shutdown op + no-zombie assertions»*)
 and **was not touched**. The typescript sibling
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.xml:185`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml:185`
 also carries it; it is **not in my eight and carries no obligation row**, so it
 was left alone — flagged below rather than fixed, because fixing it would mean
 judging the TS stack's own no-zombie evidence, which no verdict has done.
@@ -363,7 +363,7 @@ re-checked inside the package instead, which is the stronger case: the package
 ships exactly one `tsconfig.json`, and it sets none of the five either.
 
 ```
-$ cd packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0
 $ find . -name "tsconfig*.json" -not -path "*/node_modules/*"
 ./tools/ts-oracle/test/fixtures/proj/tsconfig.json
 $ cat tools/ts-oracle/test/fixtures/proj/tsconfig.json
@@ -429,7 +429,7 @@ package" is `core-ai-native`, not mine. Verified:
 "GENERATED from findings.jsonl (A2: derived, do not hand-edit)" at `:5` —
 publishes 75.3 % (synthesis) and 70.2 % (translation) for the same finding
 DR2-012. And the figure is a **corpus-wide convention**, not a local slip —
-`grep -rn "74\.8" --include=*.md packages/org.vibevm.ai-native/` returns 12
+`grep -rn "74\.8" --include=*.md vibevm/vibepacks/org.vibevm.ai-native/` returns 12
 sites:
 
 ```
@@ -471,7 +471,7 @@ appendices disagree with each other.
   it.
 
 **Twin in another stack:** «none found» for the four edited sentences.
-`grep -rn "TSCONFIG-DEFECT-CATCHERS\|noUnusedLocals" --include=*.md packages/org.vibevm.ai-native/`
+`grep -rn "TSCONFIG-DEFECT-CATCHERS\|noUnusedLocals" --include=*.md vibevm/vibepacks/org.vibevm.ai-native/`
 returns only the edited line;
 `grep -rn "NO-IF-FLAG-IN-DOMAIN-CELLS\|RULE-FLAGS-READ-AT-THE-ROOT" --include=*.md .`
 likewise (the R-001 hits elsewhere are core-ai-native's C++/Go/Java **legacy
@@ -484,14 +484,14 @@ exactly why it was left alone.
 **New obligations noticed:**
 
 1. **`core-ai-native` contradicts itself on the PLDI'25 figure.**
-   `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml:28,31`
-   says 74.8 %; `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml:106`
+   `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml:28,31`
+   says 74.8 %; `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml:106`
    says 75.3 % / 70.2 % for the same finding DR2-012, and ATLAS is the derived,
    do-not-hand-edit appendix. Eleven downstream sites across four packages quote
    the 74.8 %. No obligation row covers the pair. This is a release-event-shaped
    family (§4.5) and it is **not fixed here**.
 2. **`#TSCONFIG-BEYOND-STRICT` was confirmed on evidence that covers half of
-   it.** `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:89`
+   it.** `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml:89`
    names four mandatory beyond-strict flags; the package's only `tsconfig.json`
    (`tools/ts-oracle/test/fixtures/proj/tsconfig.json`) and the host demo
    (`research/ts-demo/tsconfig.json`) each set two of the four —
@@ -503,7 +503,7 @@ exactly why it was left alone.
    nowhere** in the package — `grep -rn "two-arm\|two arms\|arm A\|arm B" spec/`
    returns three lines, all uses, no definition. A candidate `missing-support`
    on
-   `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.xml`.
+   `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml`.
    Recorded, not fixed.
 
 ## F-282 — the sunset condition named a binary that was renamed two versions ago
@@ -516,13 +516,13 @@ markdown and TOML.
 
 ```
 $ grep -rn "vibe-tcg-ts" packages/ --include=*.md --include=*.toml
-packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml:60:- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) …
+vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:60:- ##RISK-SUNSET *Sunset condition:* if generation-time tools (`vibe-tcg-ts`) …
 ```
 
 One hit, and it is the fact under judgement. Inside the v0.6.0 slot the same
 search returns the same single line, so nothing in the package defines,
 declares or builds that name. What the package does ship is declared in its own
-manifest — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:45`,
+manifest — `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:45`,
 `name = "typescript-ai-native-tcg"`, the 4th of four `[[binary]]` entries
 (`:30` `typescript-ai-native`, `:35` `-conform`, `:40` `-specmap`, `:45`
 `-tcg`). The surviving `vibe-tcg-ts` copies are in `.vibe/cache/` under the
@@ -539,10 +539,10 @@ rather than `missing-support`, and no code was written.
 
 **Twin in another stack:** both siblings carry the same risk row and **neither
 needed touching**.
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml:101`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:101`
 names **no** binary at all (*«if generation-time tooling plus contracts ever
 make …»*) and Phase C recorded it `confirmed`;
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.xml:58`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml:58`
 names `vibe-tcg`, which is still a live name — it is the host-side product-seam
 crate (`spec/typescript/tools/vibe-agentic-tcg-ts.md:130`, *«the `vibe-tcg`
 crate — tool schemas, registry, slot dispatch»*) — and Phase C recorded that one
@@ -610,12 +610,12 @@ target measured rather than merely posted.
 
 **Twin in another stack:** the target exists in all three, split differently,
 and **neither sibling was touched**.
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:233`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:233`
 carries the complete half under its own id `#TARGET-WARM-COMPLETE` (`complete`
 p50 < 300 ms) — that anchor is **F-215**, an open obligation assigned outside my
 eight, and although it sits in one of my two packages I left it alone rather
 than collide with its owner. The Go sibling
-(`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:238,242`)
+(`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml:238,242`)
 posts a `validate` target and a cold-init target and **no `complete` target at
 all**, so it has nothing corresponding to repair.
 
@@ -629,10 +629,10 @@ two should land with the same wording or the family goes out of step (§4.5).
 (`RULE-UPDATE-MARKERS` / `vibe progress check` green over all touched files):
 
 ```
-$ ./target/release/vibe.exe progress check --path packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0 --no-cache
+$ ./target/release/vibe.exe progress check --path vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0 --no-cache
 progress check: clean (18 files, 0 warning(s))
 EXIT=0
-$ ./target/release/vibe.exe progress check --path packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0 --no-cache
+$ ./target/release/vibe.exe progress check --path vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0 --no-cache
 progress check: clean (19 files, 0 warning(s))
 EXIT=0
 ```
@@ -653,14 +653,14 @@ renamed**, so no `vibe progress mirror` is owed before `merge-verdicts.py`
 
 | file | anchors edited |
 |---|---|
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md` | `SHIPS-SPECMARK-PROC-MACRO` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.xml` | `card-is-beta` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml` | `RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`, `GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY`, `STDOUT-CARRIES-LSP-FRAMES-ONLY` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml` | `REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS` |
-| `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.xml` | `RISK-WINDOWS-CHILD-LIFECYCLE` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.xml` | `RISK-SUNSET` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` | `TSCONFIG-DEFECT-CATCHERS`, `NO-IF-FLAG-IN-DOMAIN-CELLS`, `RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED`, `AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml` | `TARGET-WARM-VALIDATE-AND-COMPLETE` |
+| `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md` | `SHIPS-SPECMARK-PROC-MACRO` |
+| `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml` | `card-is-beta` |
+| `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml` | `RESOLVED-PATH-AND-VERSION-LAND-IN-INIT`, `GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY`, `STDOUT-CARRIES-LSP-FRAMES-ONLY` |
+| `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml` | `REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS` |
+| `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml` | `RISK-WINDOWS-CHILD-LIFECYCLE` |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml` | `RISK-SUNSET` |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml` | `TSCONFIG-DEFECT-CATCHERS`, `NO-IF-FLAG-IN-DOMAIN-CELLS`, `RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED`, `AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml` | `TARGET-WARM-VALIDATE-AND-COMPLETE` |
 
 Nothing outside these two package slots was modified. No `git` command was run.
 

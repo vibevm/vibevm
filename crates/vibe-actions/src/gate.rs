@@ -13,8 +13,8 @@
 //! allocation-light checks with zero rendering dependencies (§1
 //! `#no-render-dep`).
 //!
-//! Spec: [PROP-039 §8.4](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#legibility-gate),
-//! [§12.2](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#gates).
+//! Spec: [PROP-039 §8.4](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#legibility-gate),
+//! [§12.2](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#gates).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#gates");
 

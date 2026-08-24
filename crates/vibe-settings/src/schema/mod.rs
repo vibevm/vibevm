@@ -25,7 +25,7 @@
 //! Frontend-agnostic (PROP-040 §1 `#frontend-agnostic`): `std`, `toml::Value`
 //! for defaults, `thiserror` for typed errors — zero rendering deps.
 //!
-//! Spec: [PROP-040 §6, §7](../../../../../../spec/modules/vibe-settings/PROP-040-settings.md#schema).
+//! Spec: [PROP-040 §6, §7](../../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#schema).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema");
 

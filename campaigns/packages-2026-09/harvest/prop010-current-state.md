@@ -4,7 +4,7 @@
 
 ## 1. Что меряли и каким инструментом
 
-Предмет — `spec/modules/vibe-registry/PROP-010-local-package-cache.xml` (216 строк,
+Предмет — `vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml` (216 строк,
 107 фактов `@fact:`; счёт в §2). По каждому факту вынесен ровно один вердикт из
 четырёх: **BUILT** (истинно про сегодняшнее дерево, есть исполняющий код,
 `file:line` + дословный фрагмент), **PARTLY** (исполнена часть; адрес исполненной
@@ -26,7 +26,7 @@ with PROP-002»), вердикт выносится по этому утверж
 
 ## 2. Счёт фактов и сходимость
 
-- Шаг 3.1, `grep -c '@fact:' spec/modules/vibe-registry/PROP-010-local-package-cache.xml`
+- Шаг 3.1, `grep -c '@fact:' vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml`
   → **107** (совпадает с числом в пакете; расхождений-находок нет).
 - Второй, иной способ — `grep -o '@fact:' <тот же файл> | wc -l` → **107**.
   Два инструмента сошлись, поэтому 107 есть свойство предмета, а не одного

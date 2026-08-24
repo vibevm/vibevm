@@ -62,7 +62,7 @@ Verified 2026-07-26 by reading the grammar crate and measuring the corpus.
 
 **Three sites the fix must reach, and the second is the one that gets missed:**
 
-1. `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:195`
+1. `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark-grammar/src/lib.rs:195`
    — the authored grammar.
 2. **`crates/vibe-spec/src/address.rs:217`** — the HOST's own twin,
    `is_valid_anchor_segment`, whose comment at `:234` says it mirrors "the
@@ -127,7 +127,7 @@ Error paths: the anchor-rejection message changes text. No new error kind.
 ```bash
 cargo fmt --all
 cargo test -p vibe-spec
-cargo test --manifest-path packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml --workspace
+cargo test --manifest-path vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml --workspace
 cargo xtask sync-engines --check
 bash tools/self-check.sh ; echo "EXIT=$?"
 ```
@@ -237,7 +237,7 @@ all green; `sync-engines --check` clean; `bash tools/self-check.sh` → all 25 s
 
 **Open items for the reviewer (not acted on — outside §5).**
 
-1. `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0` and
+1. `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0` and
    `…/go-ai-native-mcp/v0.1.0` vendor `core-ai-native-specmark-grammar`
    copies that are **byte-identical to the v0.7.0 authored crate**, while their
    `vibe.toml` declares `flow:…/core-ai-native = "^0.8"`. They are absent from

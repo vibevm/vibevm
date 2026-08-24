@@ -2,7 +2,7 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`.
+**Corpus:** `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`.
 
 **All thirty-two locked conventions in
 [`MARKUP-B1.md`](MARKUP-B1.md#locked) bind this batch.** Two are struck (18, 19
@@ -65,7 +65,7 @@ the author is here.
 @fact:B7-README-RETURNS **The README is back.** B6 had none, so no file in it took `doc` or an
 `audience`; B7 has exactly one such file. Ruling 7: `doc/done` +
 `audience="user"`. Two marked precedents, both landed:
-`packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md` (the Phase A
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md` (the Phase A
 pilot, the aggregator README) and the go twin's. Everything else in the batch
 takes `impl` (boot snippet, both `SKILL.md`) or `spec` (guide, nine cards, two
 `mechanisms/`, two `tools/`) — measured off the landed go stack, not derived.
@@ -91,7 +91,7 @@ licence facts. Those are checkable against `vibe.toml` and the tree and may be
 **stale**. That is a finding, reported, never fixed.
 
 @fact:B7-EXPECT-HOST-ONLY-CITATION `spec/rust/tools/vibe-agentic-tcg-rust.md:156` cites
-`spec/boot/90-user.xml` — a path that exists in the **host** repository and not
+`vibevm/vibespecs/boot/90-user.xml` — a path that exists in the **host** repository and not
 in the package a consumer installs. The TypeScript twin carries the identical
 citation and B6 reported it; **the go twin does not**. Confirm the shape here
 and report it. Mark stage and state and move on — whether a document may cite

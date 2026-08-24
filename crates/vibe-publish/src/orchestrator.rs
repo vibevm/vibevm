@@ -4,7 +4,7 @@
 //! presence and creation, and shells out to git (via
 //! [`crate::git_publish`]) for the working-tree → push → tag flow.
 //! Layering per
-//! [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
+//! [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 

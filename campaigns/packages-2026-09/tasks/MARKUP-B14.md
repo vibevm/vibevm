@@ -2,7 +2,7 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.world/{sync-from-code/v0.1.0,
+**Corpus:** `vibevm/vibepacks/org.vibevm.world/{sync-from-code/v0.1.0,
 licensing/v0.1.0, manual-tests/v0.1.0}/`.
 
 **All fifty-two locked conventions in [`MARKUP-B1.md`](MARKUP-B1.md#locked) bind
@@ -29,7 +29,7 @@ mark the prose normally. The frontmatter itself is structure and owes nothing
 (DRIFT-037) — do not touch it, and do not put an anchor in it.
 
 @fact:B14-BOOT-SNIPPET-PATH `sync-from-code` keeps its boot snippet at
-**`boot/20-flow-sync-from-code.md`**, not `spec/boot/`. That is a family trait,
+**`boot/20-flow-sync-from-code.md`**, not `vibevm/vibespecs/boot/`. That is a family trait,
 not a defect — `dev-runtime-docs` and the three `git-*` packages do the same,
 and all four are B15's. **Ruling 7 is about the genre, not the path:** an
 installed boot snippet takes `impl/done` wherever it sits, with `audience`

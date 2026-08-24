@@ -60,7 +60,7 @@ measurement.
 *Owner ruling 2026-07-26: option (a), with (b) named as successor.*
 
 A `world` fact is a behavioural contract with no callable surface —
-*«the session reads `spec/WAL.xml` before doing anything else»*. There is nothing
+*«the session reads `vibevm/vibespecs/WAL.xml` before doing anything else»*. There is nothing
 to invoke and no value to assert. Forcing three tests onto 3 862 such facts
 produces **11 586 tests with no oracle**, which is worse than none: it looks
 like coverage.

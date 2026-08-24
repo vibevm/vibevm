@@ -253,7 +253,7 @@ Budget signal: past ~6 files, stop and return.
   --control-rate 0` on the unchanged tree:
 
   > 0 new, 1 changed (suspect), 919 carried-forward, 0 control-sample
-  > Changed spec/boot/00-core.xml#L1  [crate `vibe-cli` moved after the verdict]
+  > Changed vibevm/vibespecs/boot/00-core.xml#L1  [crate `vibe-cli` moved after the verdict]
 
   `marker_diverged` is **false on all 920 rows**. The one non-carried row is
   not a writer/reader disagreement: `crate_moved` is only ever set on the

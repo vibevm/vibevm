@@ -38,9 +38,9 @@ of ours.
 **Perimeter searched:** the standing perimeter above, three independent sweeps —
 one per claimed absence. Globs: `-g '!target/**'` throughout; `-g '!refs/**'`
 where noted; `find . -name "rule-*.md"` for the card; every `spec/cards/`
-directory in `packages/org.vibevm.ai-native/*/` plus their vendored copies under
+directory in `vibevm/vibepacks/org.vibevm.ai-native/*/` plus their vendored copies under
 `vibedeps/`, `research/*/vibedeps/` and
-`packages/org.vibevm.fractality/*/vibedeps/`.
+`vibevm/vibepacks/org.vibevm.fractality/*/vibedeps/`.
 
 **What the search found:**
 
@@ -62,7 +62,7 @@ either; the rust stack's conform rule roster is:
 
 ```
 $ rg -o 'id: *"[a-z][a-z0-9_-]+"|"[a-z][a-z0-9-]{6,}"' \
-    packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/ | sort -u
+    vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/ | sort -u
 ambient-env  audited  cell-has-oracle  env-audit  error-enum-cites-req
 error-message-cites-req  file-length  go-cell-isolation  go-unsafe-in-domain
 no-unwrap-in-domain  pub-doctest  seam-has-doctest  ts-cell-isolation
@@ -78,7 +78,7 @@ $ rg -c "track_caller" -g '!target/**' .
 returns hits in exactly three classes: `refs/src/cargo/**` and
 `refs/src/warp/**` (third-party study sources — not ours), the guide's own line
 plus its vendored copies, and campaign bookkeeping
-(`campaigns/**`, `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2383`,
+(`campaigns/**`, `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2383`,
 which independently records `#[track_caller]` zero repo-wide). No `.rs` file
 under `packages/**`, `crates/**`, `xtask/**`, `tools/**` or the three
 `research/*-demo` consumers carries the attribute.
@@ -93,7 +93,7 @@ $ rg -n "##FINDING-R-0|##R-021|##RULE-R-021" -g '!target/**' -g '!refs/**' .
 The core ATLAS is the authored roster, and its id space does not contain R-021:
 
 ```
-$ rg -o "##FINDING-[A-Z0-9]+-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml | sort -u
+$ rg -o "##FINDING-[A-Z0-9]+-" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml | sort -u
 BLD-  DR1-  DR2-  R2C-  R3-
 ```
 
@@ -101,7 +101,7 @@ R-021 survives only as a citation — `ENGINE-CONFORM-v0.1.xml:36`
 (`##EXAMPLE-R-021-FORBIDDEN-IDIOM`, itself an *example* of a rule tier, not a
 rule) and a dozen `legacy-projections/GUIDE-*.md` mentions. The campaign's own
 governing spec already reached the same conclusion twice
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1896` — *"(R-021,
+(`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:1896` — *"(R-021,
 R-020) do not exist; R-002 does"* — and `:2385-2386`).
 
 **Which layer has it, if any:** *nowhere*, for all three — with two honest
@@ -298,8 +298,8 @@ for a `vibe-tcg` crate or binary declaration; a directory search
 `find . -type d -name "vibe-tcg*"`; `legacy-spec/terraforms/**`; the two sibling
 `mcp`-kind packages `rust-ai-native-mcp/v0.7.0` and
 `typescript-ai-native-mcp/v0.6.0` (which the four-layer rule says would hold the
-DRIVER); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` in full; and a
-fixture sweep `find packages/org.vibevm.ai-native -name "*.snap" -o -name "*golden*"`.
+DRIVER); `vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` in full; and a
+fixture sweep `find vibevm/vibepacks/org.vibevm.ai-native -name "*.snap" -o -name "*golden*"`.
 
 **What the search found:**
 
@@ -310,7 +310,7 @@ $ rg -n "OracleRegistry|oracle_registry" -g '!target/**' -g '!refs/**' .
 legacy-spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md:112 …      # historical plan
 legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md:70 …            # historical plan
 legacy-spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md:383 …            # historical plan
-spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml:110 ##ORACLE-REGISTRY …
+vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml:110 ##ORACLE-REGISTRY …
 $ find . -path ./target -prune -o -type d -name "vibe-tcg*" -print
 (no output)
 ```
@@ -336,9 +336,9 @@ pub struct TcgSession { root: PathBuf, oracle: Option<Oracle> }
 did not mention them and a package-local grep would not have found them:
 
 ```
-$ find packages/org.vibevm.ai-native -name "live_chain*.rs" -not -path "*/target/*"
-packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs
-packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/tests/live_chain.rs
+$ find vibevm/vibepacks/org.vibevm.ai-native -name "live_chain*.rs" -not -path "*/target/*"
+vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/tests/live_chain.rs
+vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/tests/live_chain.rs
 ```
 
 Two of them, exactly as the fact says — but in the two `mcp` packages, per
@@ -347,7 +347,7 @@ language, **not** "at the product level".
 *(d) the goldens do not exist.*
 
 ```
-$ find packages/org.vibevm.ai-native -not -path "*/target/*" \( -name "*.snap" -o -name "*golden*" \)
+$ find vibevm/vibepacks/org.vibevm.ai-native -not -path "*/target/*" \( -name "*.snap" -o -name "*golden*" \)
 (no output)
 ```
 
@@ -404,7 +404,7 @@ in prose.
 stays `@impl/done`
 **Anchors:** 1 of 1 — `##SHIPS-SPECMARK-PROC-MACRO`
 **Files touched:**
-`C:\Users\olegc\git\v\vibevm\packages\org.vibevm.ai-native\rust-ai-native-lang\v0.7.0\README.md`
+`C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md`
 **Perimeter searched:** the standing perimeter, plus a whole-tree directory
 search for the crate under any name — `find . -type d -name "specmark*"` — and
 the package's own `Cargo.toml` workspace-member and dependency tables.
@@ -474,8 +474,8 @@ the verdict did not name (recorded, not fixed)
 `C:\Users\olegc\git\v\vibevm\packages\org.vibevm.ai-native\rust-ai-native-lang\v0.7.0\spec\rust\tools\rust-ai-native-tcg.md`
 **Perimeter searched:** the standing perimeter, plus: the host crate roster
 `ls crates/`; every `Cargo.toml` in `crates/` and `packages/` for a
-`name = "vibe-tcg"` or a `[[bin]]` of that name; `spec/common/PROP-028-package-families.xml`
-§2.4 in full (`:136-150`); `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml`;
+`name = "vibe-tcg"` or a `[[bin]]` of that name; `vibevm/vibespecs/common/PROP-028-package-families.xml`
+§2.4 in full (`:136-150`); `vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml`;
 and the directory search from F-214 (`find . -type d -name "vibe-tcg*"` →
 nothing).
 
@@ -488,7 +488,7 @@ verdict.
 `@impl/done` in the host:
 
 ```
-$ sed -n '136,150p' spec/common/PROP-028-package-families.xml
+$ sed -n '136,150p' vibevm/vibespecs/common/PROP-028-package-families.xml
 - ##D13-SUPERSEDED  **Supersession of the `-rust` suffix policy (D13).** …
 - ##D13-LANGUAGE-LEADS `conform-rust` becomes `rust-ai-native-conform` …
 - ##D13-NEUTRAL-OUTSIDE Language-NEUTRAL artifacts stay outside any family stem: vibevm's own generic
@@ -509,7 +509,7 @@ Every tcg crate in the tree is per-family — `rust-ai-native-tcg`,
 `typescript-ai-native-tcg`, `go-ai-native-tcg`, each with its own `[[bin]]` — and
 PROP-026 `##TCG-CRATE-DELETED` records why.
 
-**The contradiction the verdict missed, found by widening to `spec/common/`:**
+**The contradiction the verdict missed, found by widening to `vibevm/vibespecs/common/`:**
 the last line quoted above, `##D13-NEUTRAL-OUTSIDE`, **still names "the
 `vibe-tcg` product cell"** as a live example of a language-neutral artifact, and
 is itself marked `@impl/done`. So two host documents disagree: PROP-026 deletes
@@ -523,7 +523,7 @@ still asserts the reservation, PROP-026 §0 retracts the thing reserved. No
 engine, driver, deployment or demo layer has a `vibe-tcg` anything.
 
 **Twin in another stack:** none found.
-`rg "belongs solely|RENAMED-FROM" -g '*.md' packages/org.vibevm.ai-native/`
+`rg "belongs solely|RENAMED-FROM" -g '*.md' vibevm/vibepacks/org.vibevm.ai-native/`
 returns this one line only — the TypeScript and Go tcg briefs carry no
 equivalent rename record.
 
@@ -539,11 +539,11 @@ the `vibe-*` stem for a language family. No code written, nothing deleted, and
 PROP-026/PROP-028 are cited by name in prose rather than by relative link.
 
 **New obligations noticed:**
-1. `spec/common/PROP-028-package-families.xml#D13-NEUTRAL-OUTSIDE` (`:148`) is
+1. `vibevm/vibespecs/common/PROP-028-package-families.xml#D13-NEUTRAL-OUTSIDE` (`:148`) is
    `@impl/done` and names "the `vibe-tcg` product cell" as a current example of
-   a language-neutral artifact. `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml#TCG-CRATE-DELETED`
+   a language-neutral artifact. `vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml#TCG-CRATE-DELETED`
    (`:42`) says that cell is DELETED. A host-side `contradiction` between two
-   `spec/common` / `spec/modules` documents — outside my three packages and not
+   `vibevm/vibespecs/common` / `vibevm/vibespecs/modules` documents — outside my three packages and not
    touched.
 
 ---
@@ -993,7 +993,7 @@ $ rg -n "FINDING-R2C-005" .../ATLAS.xml
 The roster steps `DR1-013` → `DR1-015`. Repo-wide, `DR1-014` survives only in
 this guide, in the Rust tcg brief, and in campaign bookkeeping — never as an
 anchor. The host's own campaign spec had already measured this
-(`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`: *«`DR1-013` and
+(`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`: *«`DR1-013` and
 `DR1-015` exist; `DR1-014` has no anchor»*).
 
 *(b) no bundler exists in the consumer.* The build-time tier needs one and there
@@ -1025,7 +1025,7 @@ where widening to the engine changed the answer. The vendored conform crate
 exports a `FlagSites` rule:
 
 ```
-$ rg -n "FlagSites" -g '*.rs' packages/org.vibevm.ai-native/typescript-ai-native-lang/
+$ rg -n "FlagSites" -g '*.rs' vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/
 .../rules/structure.rs:26:  pub struct FlagSites { pub registry_file: String, pub gated_crate: String }
 .../rules/structure.rs:33:  impl Rule for FlagSites   →  fn id() -> "R-001"
 .../rules/mod.rs:24:        pub use structure::{CellHasOracle, CellIsolation, FlagSites};
@@ -1108,11 +1108,11 @@ The old name is gone from every live surface:
 ```
 $ rg -l "vibe-tcg-ts" -g '!target/**' .
 ./specmap.json                                    # host index
-./spec/boot/90-user.xml                            # host boot snippet
-./spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+./vibevm/vibespecs/boot/90-user.xml                            # host boot snippet
+./vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 ./legacy-spec/terraforms/{AGENTIC-TCG-TS-PLAN,DEFERRALS-CLOSEOUT-PLAN}-v0.1.md   # historical plans
-./packages/…/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md   # this card
-./research/ts-demo/vibedeps/…, ./vibedeps/…       # vendored copies of this card
+./vibevm/vibepacks/…/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md   # this card
+./research/ts-demo/vibedeps/…, ./vibevm/vibedeps/…       # vendored copies of this card
 ./campaigns/packages-2026-09/tasks/evidence/…     # campaign bookkeeping
 ```
 
@@ -1180,7 +1180,7 @@ written, nothing deleted, no relative link added.
 1. `rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md#RISK-SUNSET`
    (`:58`) names `vibe-tcg`, a crate PROP-026 records as DELETED. Same sentence,
    worse defect, **no obligation covers it**. Mine, unjudged, untouched.
-2. `spec/boot/90-user.xml` and the host's `specmap.json` still carry the
+2. `vibevm/vibespecs/boot/90-user.xml` and the host's `specmap.json` still carry the
    `vibe-tcg-ts` name. `90-user.xml` is a boot snippet every session reads and is
    owner-owned — host-side, explicitly not touched.
 3. Three sibling cards state one norm in three wordings, one of which (Go's) is
@@ -1232,7 +1232,7 @@ quarter, would have been demoted wrongly on the opening verdicts alone.**
 | `GUIDE-AI-NATIVE-{GO,TYPESCRIPT}#CONTRACT-FIRST-ORDERING` | **no obligation** | twins of F-191, mine, unjudged |
 | `scaffold-d-differential-oracle.xml#RISK-SUNSET` (Rust) | **no obligation** | twin of F-282, mine, worse defect (`vibe-tcg` deleted) |
 | `TCG-ORACLE-GO#STDOUT-CARRIES-LSP-FRAMES-ONLY`, `TCG-ORACLE-v0.1.xml#STDOUT-CARRIES-PROTOCOL-FRAMES-ONLY` | **no obligation** | twins of F-192, mine, unjudged |
-| everything in `core-ai-native`, `spec/common/**`, `spec/modules/**` | another package / the host | outside my three directories |
+| everything in `core-ai-native`, `vibevm/vibespecs/common/**`, `vibevm/vibespecs/modules/**` | another package / the host | outside my three directories |
 
 **The standing rule I applied to every unjudged twin:** §3.1 closes an obligation
 by editing *and re-judging every anchor in its list*. An anchor no verdict covers
@@ -1248,7 +1248,7 @@ not an oversight.
 Ten files changed, all inside the three package directories in scope:
 
 ```
-$ git diff --stat -- packages/org.vibevm.ai-native/{rust-ai-native-lang,go-ai-native-lang,typescript-ai-native-lang}
+$ git diff --stat -- vibevm/vibepacks/org.vibevm.ai-native/{rust-ai-native-lang,go-ai-native-lang,typescript-ai-native-lang}
  go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md                    | 18 +++-
  go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md         | 46 ++++++++++--
  go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md             | 12 ++-

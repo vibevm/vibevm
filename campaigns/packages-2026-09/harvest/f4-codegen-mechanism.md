@@ -34,10 +34,10 @@ worktree физически нет: `tools/jtd-codegen/` содержит оди
    переживёт; естественный шов раскола — модуль-каталог по прецеденту
    `xtask/src/batch_review/` и `xtask/src/mirror/`.
 3. **Версия генератора не сведена с артефактами.** Пин — 0.4.1
-   (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25`), все 8
+   (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25`), все 8
    закоммиченных JTD-артефактов печатают `v0.2.1` в первой строке (см. §7.1), и
    ни один гейт версию не проверяет
-   (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`). Постпроцессор
+   (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`). Постпроцессор
    по плану привязан к форме эмиссии 0.4.1
    (`campaigns/packages-2026-09/harvest/f0-gen-poc.md:553-554`) — сводить надо до
    постпроцессора, не после.
@@ -51,7 +51,7 @@ worktree физически нет: `tools/jtd-codegen/` содержит оди
 | U3 | `check-codegen` — это `git diff --exit-code` по generated-каталогам | **ПОДТВЕРЖДЕНО**, с оговоркой: сперва выполняется полная регенерация (`run_codegen()` в первой строке), и только затем diff ровно по двум generated-каталогам | `xtask/src/codegen.rs:259` (реген), `xtask/src/codegen.rs:264-273` (argv: `git diff --exit-code -- <dir1> <dir2>`) |
 | U4 | `check-codegen` НЕ видит untracked-файлов | **ПОДТВЕРЖДЕНО** по чтению реализации (разбор в §4) | `xtask/src/codegen.rs:269-273` (весь argv; в нём нет ни `add`, ни `status`, ни `--no-index`) |
 | U5 | генератор НЕ трогает `crates/vibe-cli/resources/package-tree.schema.v1.json`, потому что маршрутизация идёт по суффиксу `*.jtd.json` | **ПОДТВЕРЖДЕНО**, причина двойная: (а) фильтр суффикса `.jtd.json` — у файла суффикс `.v1.json`; (б) каталог `crates/vibe-cli/resources/` вообще не сканируется — кодоген обходит только `schemas/` и engine-`schemas/`. Реестр фиксирует это решение дважды | суффикс: `xtask/src/codegen.rs:97-103`; каталоги сканирования: `xtask/src/codegen.rs:115`; решение в реестре: `formats/REGISTRY.toml:25-26`, `formats/REGISTRY.toml:89-90`; сам файл существует (Glob `crates/vibe-cli/resources/*` → `package-tree.schema.v1.json`) |
-| U6 | в дереве есть ВТОРОЕ семейство JTD-схем — движка трассировки под `packages/org.vibevm.ai-native/**` — и `codegen.rs` его тоже маршрутизирует | **ПОДТВЕРЖДЕНО**. Второй дом схем — `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/`, сканируется наравне с хостовым, маршрутизируется веткой `"specmap"` в engine-крейт. Оговорка: «семейство» сегодня — **одна** схема `specmap.jtd.json` (Glob каталога: `specmap.jtd.json`, `specmap.example.json`); копия в `vibedeps/…0.8.0/schemas/` не сканируется (правильно — это регенерируемое зеркало) | слот: `xtask/src/codegen.rs:49`; каталог: `xtask/src/codegen.rs:53-55`; сканирование: `xtask/src/codegen.rs:115`; маршрутизация: `xtask/src/codegen.rs:65-67` |
+| U6 | в дереве есть ВТОРОЕ семейство JTD-схем — движка трассировки под `vibevm/vibepacks/org.vibevm.ai-native/**` — и `codegen.rs` его тоже маршрутизирует | **ПОДТВЕРЖДЕНО**. Второй дом схем — `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/`, сканируется наравне с хостовым, маршрутизируется веткой `"specmap"` в engine-крейт. Оговорка: «семейство» сегодня — **одна** схема `specmap.jtd.json` (Glob каталога: `specmap.jtd.json`, `specmap.example.json`); копия в `vibedeps/…0.8.0/schemas/` не сканируется (правильно — это регенерируемое зеркало) | слот: `xtask/src/codegen.rs:49`; каталог: `xtask/src/codegen.rs:53-55`; сканирование: `xtask/src/codegen.rs:115`; маршрутизация: `xtask/src/codegen.rs:65-67` |
 | U7 | jtd-codegen эмитит поля в camelCase с `#[serde(rename)]` и НЕ эмитит `deny_unknown_fields` | **ПОДТВЕРЖДЕНО**. Rust-поля — camelCase, `#[serde(rename)]` несёт wire-имя: `pub codeItems: …` под `#[serde(rename = "code_items")]`. `deny_unknown_fields` — 0 вхождений в обоих generated-деревьях (grep). Пояснение в исходниках называют это «v0.4.1-only quirk» | camelCase+rename: `packages/…/core-ai-native-specmap/src/generated/specmap/mod.rs:14-15`, `:23-24`, `:37-38`, `:44-45`; свидетельства исходников: `crates/vibe-wire/src/lib.rs:46-52`, `packages/…/core-ai-native-specmap/src/lib.rs:28-30`; отсутствие deny: grep `deny_unknown_fields` по `crates/vibe-wire/src/generated` и engine-`generated` — 0 совпадений |
 
 Ценность для нарезки: опровергнуты U1 (сильно) и U2 (по существу — «одна ветка»
@@ -67,7 +67,7 @@ U3–U7, из них U4 и U6 — с важными нюансами (§4, §7).
 ### 3.1. Цели генерации — полный перечень (9)
 
 Входы-схемы собираются из **двух домов**: `schemas/` в корне и
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/` — цикл по массиву
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/` — цикл по массиву
 из двух каталогов, отсутствие любого — ошибка «broken checkout»
 (`xtask/src/codegen.rs:114-120`). Отбор — только файлы с суффиксом `*.jtd.json`,
 лежащие **непосредственно** в каталоге (`xtask/src/codegen.rs:92-105`).
@@ -92,7 +92,7 @@ U3–U7, из них U4 и U6 — с важными нюансами (§4, §7).
 
 Функция — `generated_dir_for(stem, root)`, `xtask/src/codegen.rs:63-70`. Ветки:
 
-1. `"specmap"` → `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated`
+1. `"specmap"` → `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated`
    (`xtask/src/codegen.rs:65-67`; слот — константа `SPECMAP_ENGINE_SLOT`, `:49`);
 2. `_` (всё прочее) → `crates/vibe-wire/src/generated`
    (`xtask/src/codegen.rs:68`, реализация `:77-79`).
@@ -118,7 +118,7 @@ U3–U7, из них U4 и U6 — с важными нюансами (§4, §7).
 (`tools/jtd-codegen/README.md:3-5`).
 
 **Ожидаемая версия — 0.4.1**, записана в четырёх местах: пин-дом
-`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25` («single home»,
+`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25` («single home»,
 `:26-28`), комментарий о поведении `jtd-codegen 0.4.1` (`xtask/src/codegen.rs:180`),
 комментарий в `crates/vibe-wire/src/lib.rs:46-47`, указатель панели
 `tools/self-check.sh:28-29`.
@@ -132,7 +132,7 @@ U3–U7, из них U4 и U6 — с важными нюансами (§4, §7).
 если его эмиссия отличается (уже первой строкой), гейт должен уйти в красный до
 перегенерации; и никакой гейт версию генератора не принуждает — прямо записано
 «CI … does not enforce a particular generator build»
-(`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`). Статически
+(`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`). Статически
 установить, чем порождена разница (артефакты старше пина / другая семантика
 шапки у версий), нельзя — бинарь не запускался (§ шапка); зафиксировано как
 дыра №1 в §7.
@@ -336,10 +336,10 @@ plus (при новом виде входа) собственный загруз
 > (коммит `e8d8238f`).
 
 1. **Версия генератора не сведена с артефактами.** Пин 0.4.1
-   (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25`); все 8
+   (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:25`); все 8
    артефактов печатают v0.2.1 (`crates/vibe-wire/src/generated/*/mod.rs:1` — 7
    файлов; `packages/…/core-ai-native-specmap/src/generated/specmap/mod.rs:1`).
-   Гейта на версию нет (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`),
+   Гейта на версию нет (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:28-29`),
    `find_jtd_codegen` проверяет лишь успех `--version`, не строку версии
    (`xtask/src/codegen.rs:30-32`). Для Ф4.2, чей постпроцессор привязан к форме
    эмиссии, это первое, что надо свести.
@@ -396,26 +396,26 @@ grep -n 'roots = ' conform.toml                   # xtask в корнях: ст�
 
 # цели: инвентарь схем и выходов
 ls schemas
-ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas
+ls vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas
 ls crates/vibe-wire/src/generated
 grep -rn --include='*.jtd.json' -l . schemas \
-  packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas
+  vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas
 
 # версия генератора: пин против артефактов
-grep -n '0.4.1' packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md
+grep -n '0.4.1' vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md
 grep -rn '^// Code generated' crates/vibe-wire/src/generated \
-  packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated
+  vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated
 
 # U7: camelCase + rename, отсутствие deny_unknown_fields
-grep -n 'serde(rename' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs
+grep -n 'serde(rename' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs
 grep -rn 'deny_unknown_fields' crates/vibe-wire/src/generated \
-  packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated
+  vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated
 
 # байт-стабильность: LF в артефактах (0 = чисто)
 grep -c $'\r' crates/vibe-wire/src/generated/init_report/mod.rs \
   crates/vibe-wire/src/generated/mod.rs \
   crates/vibe-wire/src/generated/format_id/mod.rs \
-  packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs
+  vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs
 
 # тест полноты format_id
 grep -rn 'format_id_completeness' crates/vibe-wire

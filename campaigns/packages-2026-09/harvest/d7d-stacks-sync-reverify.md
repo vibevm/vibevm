@@ -22,7 +22,7 @@ F-279, F-280, F-281, F-284 (1 each).
 
 **The standing perimeter.** Unless an entry narrows it, every search was run
 from the repository root over: `packages/**` **including
-`packages/org.vibevm.fractality/**`** (the second complete project that adopted
+`vibevm/vibepacks/org.vibevm.fractality/**`** (the second complete project that adopted
 this discipline — [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness)),
 `vibedeps/**`, `crates/**`, `xtask/**`, `tools/**`, `spec/**`, `discipline/**`,
 `terraform/**`, `research/**` (including the three bootstrapped consumers
@@ -102,7 +102,7 @@ per point 3, the host:
   in direction: it was cited to show the Go sentence is **not** drift, and the Go
   copy carries no verdict here in any case. The Rust conviction stands on
   package-own evidence: `{Variant}{Seam}` appears in no file under
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/**`, only in
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/**`, only in
   `core-ai-native`'s `legacy-projections/`.
 - **F-154 `##PROSE-NEAR-CODE-…`** — «no adopter authors a `#[spec(documents)]`
   edge» is legitimate for Rust (point 3). The `ts-demo` and fractality legs of
@@ -156,7 +156,7 @@ three bench harnesses:
 $ for s in rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg \
            go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg \
            typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg; do
-    grep -ci "complete" packages/org.vibevm.ai-native/$s/src/bench.rs; done
+    grep -ci "complete" vibevm/vibepacks/org.vibevm.ai-native/$s/src/bench.rs; done
 0
 0
 0
@@ -230,7 +230,7 @@ the same perimeter miss D5 caught on the Go twin (F-160, catch *(e)*): the
 warning is one document over, in the sibling brief, inside this very package.
 
 ```
-$ sed -n '190,195p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.xml
+$ sed -n '190,195p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml
 - ##RISK-COLD-INIT-ON-LARGE-WORKSPACES **Cold init on large workspaces.** 14.7 s cache-cold on a MINIMAL
   crate on this box (sysroot indexing dominates; 2.5 s warm). On big
   consumer trees the first answer may exceed the product's 60 s
@@ -251,7 +251,7 @@ is supported by nothing in this stack**, and the stack's own two other figures
 disagree with it.
 
 ```
-$ grep -rn "QUIESCENCE_BUDGET" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs
+$ grep -rn "QUIESCENCE_BUDGET" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/lib.rs
 33:pub const QUIESCENCE_BUDGET: std::time::Duration = std::time::Duration::from_secs(45);
 ```
 
@@ -341,11 +341,11 @@ duplex with `{proto, id, op, params}` frames. Its entry point is `run_serve`
 
 ```
 $ grep -rn "run_serve\|serve::run" --include=*.rs \
-    packages/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang/v*/crates/ | grep -iE "test"
+    vibevm/vibepacks/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang/v*/crates/ | grep -iE "test"
 (no output)
 
 $ grep -rn "ORACLE_PROTOCOL\|\"proto\"" --include=*.rs \
-    packages/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang/v*/crates/ | grep -i test
+    vibevm/vibepacks/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang/v*/crates/ | grep -i test
 (no output)
 ```
 
@@ -362,7 +362,7 @@ And there is no checked-in recorded stream anywhere in the three stacks to
 replay from:
 
 ```
-$ find packages/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang -not -path "*/target/*" \
+$ find vibevm/vibepacks/org.vibevm.ai-native/{rust,go,typescript}-ai-native-lang -not -path "*/target/*" \
     \( -name "*.jsonl" -o -name "*transcript*" -o -name "*golden*" -o -name "*.snap" -o -name "*recorded*" \)
 (no output)
 ```
@@ -455,7 +455,7 @@ gate actually mounts:
 $ for st in rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform \
             go-ai-native-lang/v0.1.0/crates/go-ai-native-conform \
             typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform; do
-    grep -n "out.push(Box::new" packages/org.vibevm.ai-native/$st/src/lib.rs; done
+    grep -n "out.push(Box::new" vibevm/vibepacks/org.vibevm.ai-native/$st/src/lib.rs; done
 
 rust : 59 FlagSites · 64 CellIsolation · 65 UnsafeGate · 68 SeamHasDoctest
        71 PubDoctest · 74 ErrorEnumCitesReq · 77 CellHasOracle
@@ -554,7 +554,7 @@ wrong, in two different ways.
 $ find . -name "specmap.jtd.json" -not -path "./target/*" -not -path "./.git/*"
 ./schemas/specmap.jtd.json
 
-$ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/
+$ ls vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/
 Cargo.lock  Cargo.toml  LICENSE.xml  README.md  crates  spec  specmap.toml  target  vibe.toml
 
 $ ls vibedeps/stack-rust-ai-native-lang/0.7.0/
@@ -625,7 +625,7 @@ with no family consequence.
 **Anchors:** 1 of 1 —
 `rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md#RISK-WINDOWS-CHILD-LIFECYCLE` (`:203-205`)
 **Perimeter searched:** the standing perimeter — **including
-`packages/org.vibevm.fractality/**`** per
+`vibevm/vibepacks/org.vibevm.fractality/**`** per
 [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness) — for
 the *thing* rather than the string:
 `surviving.?pid|no.?zombie|process_table|sysinfo|pgrep|tasklist|OpenProcess|try_wait|GetExitCodeProcess`
@@ -679,7 +679,7 @@ a tcg oracle child**:
    layer — and it is still implementation, not a test assertion.
 3. **The wave-6 perimeter catch, and it is a genuine one that nevertheless does
    not rescue the anchor** —
-   `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs:288-299`
+   `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs:288-299`
    is a real, working no-zombie assertion in this repository:
 
    ```
@@ -769,9 +769,9 @@ $ grep -rn "##FINDING-DR1-014\|##DR1-014" --include=*.md packages vibedeps crate
 
 and survives as a citation in exactly two live documents plus campaign
 bookkeeping: this brief (`:11`), the TypeScript guide (`GUIDE-AI-NATIVE-TYPESCRIPT.xml:39`),
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`, and cached copies
+`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2583`, and cached copies
 under `research/rust-demo/.vibe/cache/` and
-`packages/org.vibevm.fractality/*/.vibe/cache/` (superseded slots, per §3.3).
+`vibevm/vibepacks/org.vibevm.fractality/*/.vibe/cache/` (superseded slots, per §3.3).
 
 **Per stack — and the TypeScript copy is already fixed, which is the whole
 recommendation here.** `GUIDE-AI-NATIVE-TYPESCRIPT.xml:39
@@ -884,12 +884,12 @@ Every one of the six verdicts names its perimeter as «the host's crates AND
 `research/rust-demo/`», which is exactly the scope
 [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness) says
 misses the second adopter. So every search below was re-run over the standing
-perimeter **including `packages/org.vibevm.fractality/fractality/v0.1.0/`**,
+perimeter **including `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/`**,
 which is a Rust project that adopted this discipline — it carries its own
 `conform.toml`, `specmap.toml`, `discipline/registry/` and Cargo workspace:
 
 ```
-$ ls packages/org.vibevm.fractality/fractality/v0.1.0/
+$ ls vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/
 AGENTS.md  CLAUDE.md  Cargo.lock  Cargo.toml  GEMINI.md  LICENSE.xml  README.md
 conform-baseline.json  conform.toml  crates  …  specmap.toml  discipline/registry
 ```
@@ -1139,7 +1139,7 @@ $ grep -rn "R-060" --include=*.md --include=*.rs packages spec crates research c
   | grep -v "/target/" | grep -v "\.vibe/cache" | grep -v vibedeps
 .../rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:127   *(R-060, retained.)*
 .../typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:231   (R-060, projected)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2385   … R-021 and R-060 … cited by name whose cards are unauthored
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2385   … R-021 and R-060 … cited by name whose cards are unauthored
 crates/vibe-cli/src/registry.rs:63   /// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.
 ```
 
@@ -1216,7 +1216,7 @@ configuration is **neither configured nor reachable**.»
 
 ```
 $ head -3 campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md
-_Captured 2026-07-28 against `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
+_Captured 2026-07-28 against `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
 $ go vet ./...
 pattern ./...: directory prefix . does not contain main module or its selected dependencies
 ```
@@ -1502,7 +1502,7 @@ boss's.)* rust → **none — correct as written.** typescript → **none.**
 «the no-zombie property **is test-asserted**». The dance and the backstop ship
 (`oracle.rs:360` `shutdown`, `client.rs:357` `impl Drop … kill(); wait()`); the
 assertion does not, in this package's tests or in any other. The full sweep —
-including the `packages/org.vibevm.fractality/**` widening and the finding that
+including the `vibevm/vibepacks/org.vibevm.fractality/**` widening and the finding that
 the only real process-table assertion in the repository belongs to fractality's
 own pod/worker pair and therefore does not rescue this anchor — is under
 **F-281** and is not repeated. **Six copies of this claim exist across the three
@@ -1720,7 +1720,7 @@ $ grep -rn "OracleRegistry\|oracle_registry" --include=*.rs --include=*.go --inc
 
 Zero source files of any language, in any package. The crate was retired with the
 whole multiplexed-product topology —
-`spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` `##TOPOLOGY-RETIRED` and
+`vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` `##TOPOLOGY-RETIRED` and
 `##TCG-CRATE-DELETED` (`:42`) — and D5's F-214 recorded the same for the Rust
 twin, whose demotion clause is live at
 `TCG-PROTOCOL-RUST-v0.1.xml#ONE-PRODUCT-CLIENT-DRIVES-BOTH-RELAYS`.
@@ -2343,7 +2343,7 @@ family is re-judged together or corrected only where a verdict exists.
 2. **One no-zombie assertion per bridge** re-judges up to six anchors across the
    three stacks (F-281, F-167, and the three `confirmed` copies). The technique is
    already proven in this repository at
-   `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs:288-299`.
+   `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-pod/tests/loopback.rs:288-299`.
 3. **One outer-frame replay test per stack** (`run_serve` over recorded
    `{proto, id, op, params}` frames) re-judges F-280, F-210 and the TypeScript
    copy.

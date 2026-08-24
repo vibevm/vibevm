@@ -68,7 +68,7 @@ mod tests {
     fn external_with_packages_dir_resolves_to_it() {
         let tmp = tempfile::tempdir().unwrap();
         let packages = tmp.path().join(vibe_core::layout::current_packages_root());
-        std::fs::create_dir(&packages).unwrap();
+        std::fs::create_dir_all(&packages).unwrap();
         let rec = external_record(Some(tmp.path().to_str().unwrap()));
         assert_eq!(embedded_root_for(&rec), Some(packages));
     }
@@ -90,7 +90,8 @@ mod tests {
         // Even with a real packages root on disk, only `external` installs
         // carry an embedded registry (PROP-030 §2).
         let tmp = tempfile::tempdir().unwrap();
-        std::fs::create_dir(tmp.path().join(vibe_core::layout::current_packages_root())).unwrap();
+        std::fs::create_dir_all(tmp.path().join(vibe_core::layout::current_packages_root()))
+            .unwrap();
         let mut rec = external_record(Some(tmp.path().to_str().unwrap()));
         rec.origin = Origin::Managed;
         assert_eq!(embedded_root_for(&rec), None);

@@ -14,7 +14,7 @@ does not exist, because the flow documents live at `<pkg>/spec/flows/…`.
 **8 of 8 links broken**, resolved one at a time rather than sampled:
 `sync-from-code` 3, `git-atomic-commits` 2, `git-autonomy` 1,
 `git-conventional-commits` 1, `dev-runtime-docs` 1. The 22 packages using
-`spec/boot/` had **zero** broken links, so the trait and the defect coincided
+`vibevm/vibespecs/boot/` had **zero** broken links, so the trait and the defect coincided
 exactly.
 
 Separately (F-110), all five READMEs named the snippet as `spec/boot/NN-…`
@@ -23,7 +23,7 @@ while their manifests declared `source = "boot/NN-…"`.
 ## Why the fix is a move and not a link edit {#why}
 
 **The links were already correct for the installed form.** Once `vibe install`
-places the snippet at a consuming project's `spec/boot/`, `../flows/…` resolves
+places the snippet at a consuming project's `vibevm/vibespecs/boot/`, `../flows/…` resolves
 to `<project>/spec/flows/…` — right. Rewriting them to `../spec/flows/…` would
 have fixed the package and broken every consumer.
 
@@ -35,10 +35,10 @@ along; the layout had never caught up to them.**
 Three facts settled the direction:
 
 - **`vibe init` scaffolds `source = "spec/boot/10-tool-{name}.md"`.** The
-  tool's own convention is `spec/boot/`.
-- **22 packages use `spec/boot/`, 5 used `boot/`.**
+  tool's own convention is `vibevm/vibespecs/boot/`.
+- **22 packages use `vibevm/vibespecs/boot/`, 5 used `boot/`.**
 - **`git-attribution-policy` — a member of the same family, renamed by the same
-  commit as three of the five — already used `spec/boot/`.** The family was
+  commit as three of the five — already used `vibevm/vibespecs/boot/`.** The family was
   split against itself.
 
 *Checked and found false before it was written down:* the bare-`boot/` layout is

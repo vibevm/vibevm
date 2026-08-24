@@ -2,7 +2,7 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.world/{git-atomic-commits, git-autonomy,
+**Corpus:** `vibevm/vibepacks/org.vibevm.world/{git-atomic-commits, git-autonomy,
 git-conventional-commits, git-practices, wal-specspaces, dev-runtime-docs}/v0.1.0/`.
 `git-attribution-policy` is **already marked** (B13) and out of scope.
 
@@ -19,7 +19,7 @@ grounds that a condition names no set.
 sibling's corresponding file before marking yours.
 
 @fact:B15-UMBRELLA-PRECEDENT **`git-practices` is a family aggregator and there is exactly one marked
-one in the corpus: `packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`
+one in the corpus: `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`
 (the Phase A pilot).** It uses `##AGG-ROLE` for the role sentence, `##AGG-MEMBER-*`
 for each member entry, `##AGG-HOW-TO-REQUIRE` for the requirement line, and
 `doc/done audience="user"` as the document marker. **Follow it.** `git-practices`
@@ -124,11 +124,11 @@ would be new, and the review checks for one mechanically.
 ## F-103 is universal in this batch — all five links broken {#f103}
 
 @fact:B15-F103-ALL-FIVE **Four of the six packages keep their boot snippet at `boot/`, not
-`spec/boot/`, and every relative link in all four is broken in-package**:
+`vibevm/vibespecs/boot/`, and every relative link in all four is broken in-package**:
 `git-atomic-commits` 2, `git-autonomy` 1, `git-conventional-commits` 1,
 `dev-runtime-docs` 1. They point at `../flows/…`, which from `boot/` resolves to
 `<pkg>/flows/…`; the files are at `<pkg>/spec/flows/…`. They work only once the
-snippet is installed into a consuming project. `wal-specspaces` uses `spec/boot/`
+snippet is installed into a consuming project. `wal-specspaces` uses `vibevm/vibespecs/boot/`
 and its links resolve correctly.
 
 @fact:B15-F103-FILED **Already filed and widened — do not re-file.** Ruling 7 is about the

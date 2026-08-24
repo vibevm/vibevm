@@ -7,7 +7,7 @@
 //! unknown parameter with a typed [`ParamError`] *before* the action body runs
 //! (§5.2 — closes the incumbents' `unknown[]` / phantom-key gap).
 //!
-//! Spec: [PROP-039 §5](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#parameters).
+//! Spec: [PROP-039 §5](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#parameters).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#parameters");
 

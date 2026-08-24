@@ -201,7 +201,7 @@ spec/код) → стейдж → полная панель `bash tools/self-che
 1. Перекличка Ⓜ-фактов §1 командами (панель, scan/mirror/debt,
    `git status`, `mirror --check` — читать строки, не хвост: B-090).
 2. Поправка рамки кампании в
-   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`: (а) фаза T
+   `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`: (а) фаза T
    отменена — цитата §0.7 дословно, спеки PHASE-T-* остаются авторским
    материалом будущей кампании; (б) выход кампании = релиз 1.0.0 по этому
    ТЗ; (в) G расщеплена по D10. Файл в судимом корпусе — суд тем же
@@ -553,7 +553,7 @@ NEXT-SESSION-PROMPT.md (слово владельца) и по слайсам Т
   (прогон над деревом посадки, PANEL_EXIT=0, «self-check: all green»).
   Рамка кампании поправлена пятью правками (status-строка ×2, #phase-t
   cancellation с цитатой, #phase-g split, LOG-запись); файл кампании
-  ВНЕ наблюдаемого корпуса (spec/terraforms/** нет в include-глобах
+  ВНЕ наблюдаемого корпуса (vibevm/vibespecs/terraforms/** нет в include-глобах
   progress.toml) — суд не полагается. Подтвердилось: специмап от правки
   WAL не двинулся (байт-в-байт), т.е. WAL не юнит карты — ложная тревога
   снята замером, а не предположением.

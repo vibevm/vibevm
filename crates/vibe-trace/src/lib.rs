@@ -109,12 +109,12 @@ pub enum Explain {
 /// let r = root.path();
 /// fs::write(
 ///     r.join("specmap.toml"),
-///     "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+///     "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
 /// )
 /// .unwrap();
-/// fs::create_dir_all(r.join("spec")).unwrap();
+/// fs::create_dir_all(r.join(vibe_core::layout::current_specs_root())).unwrap();
 /// fs::write(
-///     r.join("spec/D.md"),
+///     r.join(vibe_core::layout::current_specs_root()).join("D.md"),
 ///     "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
 /// )
 /// .unwrap();
@@ -175,12 +175,13 @@ mod tests {
         let root = tmp.path();
         std::fs::write(
             root.join("specmap.toml"),
-            "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+            "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
         )
         .unwrap();
-        std::fs::create_dir_all(root.join("spec")).unwrap();
+        std::fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).unwrap();
         std::fs::write(
-            root.join("spec/D.md"),
+            root.join(vibe_core::layout::current_specs_root())
+                .join("D.md"),
             "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
         )
         .unwrap();

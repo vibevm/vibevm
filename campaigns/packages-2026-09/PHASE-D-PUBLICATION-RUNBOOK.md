@@ -75,11 +75,11 @@ the lane's budget on noise permanently to save one small reviewed build once.
 3. **Re-materialise**: `cargo run -q -p vibe-cli --bin vibe -- reinstall
    --force --assume-yes` — refreshes all `vibedeps/` from local sources at
    pinned versions and regenerates the boot artifacts.
-4. **Verify the lane**: `grep -c "\.\./flows/" spec/boot/STATIC.xml` → **0**
+4. **Verify the lane**: `grep -c "\.\./flows/" vibevm/vibespecs/boot/STATIC.xml` → **0**
    (today: 69); `address-repair.py --verify` green; `cargo xtask sync-engines
    --check` still green (33 pairs; .md-only edits touch no engine);
    `bash tools/self-check.sh` → 0; fork-(б) only: `grep -c "@status:impl/done"
-   spec/boot/STATIC.xml` → 0.
+   vibevm/vibespecs/boot/STATIC.xml` → 0.
 5. **Refresh the campaign mirror**: `vibe progress mirror --campaign
    campaigns/packages-2026-09` (the new ts-lang README enters the corpus
    here, unjudged by design).

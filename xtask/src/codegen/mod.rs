@@ -424,7 +424,7 @@ pub(crate) fn run_check_codegen() -> Result<()> {
              reads as drift, and recipe 1 would commit ITS emission over \
              ours. Fix: run `jtd-codegen --version`, compare it with the \
              pin's single home \
-             (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md`), \
+             (`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md`), \
              and install the pinned build per that recipe before \
              regenerating.\n\n\
              The distinction is load-bearing: eight post-processing passes \

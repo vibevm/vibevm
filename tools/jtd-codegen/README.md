@@ -7,7 +7,7 @@ keeps every toolchain binary out of git.
 The tool's canonical home — the pinned upstream version, the per-platform
 install commands, and the use notes — is the package
 **`tool:org.vibevm.ai-native/jtd-codegen`**:
-[`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md`](../../packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md).
+[`vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md`](../../packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md).
 Install per that recipe; do not restate the version pin here — one pin,
 one home.
 

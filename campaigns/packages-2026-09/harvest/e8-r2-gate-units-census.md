@@ -4,14 +4,14 @@ Read-only census for the B-034 / B-039 / B-035 fork: *what is a gate unit
 per language, where the gate lists live today, and what the FlagSites rule
 (R-001) actually checks and mounts.* Every claim is pinned to `path:line`
 relative to the worktree root. All paths use the worktree's own copies
-(`packages/org.vibevm.ai-native/...`); `vibedeps/**` and `*/vendor/**`
+(`vibevm/vibepacks/org.vibevm.ai-native/...`); `vibedeps/**` and `*/vendor/**`
 copies are the same files and are not cited.
 
 **Perimeter read.** Engine `core-ai-native-conform` (the crate dependents
 import as `conform_core`; package name `core-ai-native-conform`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:2`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:2`,
 lib name `conform_core` as used by every frontend, e.g.
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:16`).
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:16`).
 The three gate drivers
 (`rust-`/`go-`/`typescript-ai-native-conform/src/lib.rs`), their three
 frontend bridges (`*-conform-frontend/src/lib.rs`), the two extractors

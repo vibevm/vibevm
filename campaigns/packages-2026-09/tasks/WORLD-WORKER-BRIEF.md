@@ -27,14 +27,14 @@ contain it; a protocol document a snippet cites must exist and say what the snip
 says it says. This is the weakest source: the package agreeing with itself.
 
 **2 — the host's observed conformance.** This repository is a living consumer of
-every flow it installs. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`, `spec/boot/**`,
-`spec/WAL.xml`, `CONTINUE.md`, `spec/common/PROP-*`, `spec/modules/**`, the
+every flow it installs. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`, `vibevm/vibespecs/boot/**`,
+`vibevm/vibespecs/WAL.xml`, `CONTINUE.md`, `spec/common/PROP-*`, `vibevm/vibespecs/modules/**`, the
 `campaigns/**` zones, `AUDIT.md`, `TASKS.md`, `BACKLOG.md`, the crates — and, for
 the git flows, **this repository's own `git log`**. If a flow promises a behaviour,
 the host either behaves that way or does not, and that is checkable.
 
 **3 — the installed reality.** What a consumer actually receives: `vibedeps/<slot>/`
-on disk, plus the generated `spec/boot/STATIC.xml` and `spec/boot/INDEX.md`, which
+on disk, plus the generated `vibevm/vibespecs/boot/STATIC.xml` and `vibevm/vibespecs/boot/INDEX.md`, which
 are COMPILED from the installed packages and carry a provenance marker per
 contribution. (`files_written` in `vibe.lock` is `[]` for all 36 packages, so
 `vibedeps/` is the sanctioned substitute — batch plan §2.3.)
@@ -51,7 +51,7 @@ cluster, and not one of them was a worker's error: each brief pointed the search
 the wrong place. So the default perimeter is all of this:
 
 ```
-packages/org.vibevm.world/**   packages/org.vibevm.ai-native/**   vibedeps/**
+vibevm/vibepacks/org.vibevm.world/**   vibevm/vibepacks/org.vibevm.ai-native/**   vibedeps/**
 spec/**   crates/**   xtask/**   schemas/**   campaigns/packages-2026-09/harvest/*.md
 CLAUDE.md  AGENTS.md  GEMINI.md  MEMORY.md  README.md  AUDIT.md  TASKS.md  BACKLOG.md
 CONTINUE.md  ROADMAP.md  DEV-GUIDE.md  RUNTIME-GUIDE.md  SPECSPACES.md  CHANGELOG.md
@@ -81,7 +81,7 @@ Return a JSON array. One object per marked fact, in document order:
 
 ```json
 {
-  "file":   "packages/org.vibevm.world/<pkg>/<ver>/<path>.md",
+  "file":   "vibevm/vibepacks/org.vibevm.world/<pkg>/<ver>/<path>.md",
   "anchor": "THE-ANCHOR-ID",
   "marker": "@impl/done",
   "claim":  "one line, in your own words, of what this fact asserts",

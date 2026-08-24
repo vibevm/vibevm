@@ -24,14 +24,14 @@ flow being softened.
 
 Twelve blocks follow: six forms × two plans.
 
-- [`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml)
+- [`vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml)
   — wave 1, **CLOSED** 2026-07-26. Its six forms are **honest retrospect**,
   written at close-out on 2026-07-31 under the owner's bring-into-line ruling.
   Not one of them pretends to have been written in advance, and each says so in
   its own opening line. A retrospective risk register is a list of what
   happened; a retrospective Phase 0 is a statement of what stood before Phase A
   *and* of the fact that no Phase 0 ran.
-- [`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml)
+- [`vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](../../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml)
   — wave 2, **LIVE**, Phase D near its exit. Its Phase 0 and the closed half of
   its commit map are retrospective; its safe stop, risks, non-goals and
   whole-campaign acceptance are **real going forward** and bind the sessions
@@ -44,17 +44,17 @@ both plans carry none**, and the blocks below therefore carry `{#slug}` heading
 anchors only — which is what "match the file exactly" resolves to here:
 
 ```sh
-grep -c '^##[A-Za-z]' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml      # 0
-grep -c '^##[A-Za-z]' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml  # 0
-grep -o '@\(spec\|impl\|doc\)/[a-z]*' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort | uniq -c
+grep -c '^##[A-Za-z]' vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml      # 0
+grep -c '^##[A-Za-z]' vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml  # 0
+grep -o '@\(spec\|impl\|doc\)/[a-z]*' vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort | uniq -c
 #   13 @impl/done   ·   5 @spec/done   — every one of them inside prose ABOUT
 #   another document's markers, never marking a fact of this plan's own
 ```
 
 The reason is in `progress.toml`: the include list names
-`spec/boot/[0-9]*.md`, `spec/common/**`, `spec/design/**`,
-`spec/manual-tests/**`, `spec/modules/**`, `packages/org.vibevm.world/**` and
-`packages/org.vibevm.ai-native/**` — and **not** `spec/terraforms/**`. Neither
+`vibevm/vibespecs/boot/[0-9]*.md`, `vibevm/vibespecs/common/**`, `vibevm/vibespecs/design/**`,
+`vibevm/vibespecs/manual-tests/**`, `vibevm/vibespecs/modules/**`, `vibevm/vibepacks/org.vibevm.world/**` and
+`vibevm/vibepacks/org.vibevm.ai-native/**` — and **not** `vibevm/vibespecs/terraforms/**`. Neither
 plan is scanned, so `check --exhaustive` neither requires nor validates a fact
 anchor in either file, and adding one would make these two the only fact-grain
 documents in an unobserved directory. Both plans use `{#slug}` headings on every
@@ -176,7 +176,7 @@ verification step.
 
 # SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml — wave 1, CLOSED {#w1}
 
-**File:** `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 1 437 lines at
+**File:** `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 1 437 lines at
 HEAD `fffcb494` (`wc -l`). Sections today: §0 mandate (13) · §1 baseline (39) ·
 §2 executors (52) · §3 layout (64) · §4 resume (80) · §5 phases (99, with A 104,
 B 127, L 145, C 196, D 216, E 241, F 262, G 280, Close-out 301) · §6 recurrence
@@ -369,7 +369,7 @@ exactly the two that were never named. Reason and disposition on each, per
 - **Does NOT extend to `packages/**`.** *Reason:* one corpus at a time; the
   method had to be proven before it was scaled. *Disposition:* **wave 2**,
   [`PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`](PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml).
-- **Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
+- **Does NOT touch `vibevm/vibepacks/org.vibevm.fractality/**`.** *Reason:* its own
   specspace, own boot contract, own WAL; the mandate excluded it in as many
   words («the fractality specspace excluded until the owner says otherwise»).
   *Disposition:* held by the owner. *(Recorded 2026-07-31, because it turned out
@@ -380,12 +380,12 @@ exactly the two that were never named. Reason and disposition on each, per
   as historical records, not living contracts. *Disposition:* rejected outright
   — and reinforced by the owner's ruling of 2026-07-31 that `legacy-spec/**` is
   not evidence of practice in either direction.
-- **Does NOT mark generated artifacts.** `spec/boot/STATIC.xml`,
-  `spec/boot/INDEX.md` and `spec/WAL.xml` in session form. *Reason:* markup
+- **Does NOT mark generated artifacts.** `vibevm/vibespecs/boot/STATIC.xml`,
+  `vibevm/vibespecs/boot/INDEX.md` and `vibevm/vibespecs/WAL.xml` in session form. *Reason:* markup
   written into a generated file dies at the next `vibe install` or wind-down.
   *Disposition:* rejected; owner rulings 2026-07-24. The *authored* boot
-  snippets (`00-core`, `90-user`) stay observed via `spec/boot/[0-9]*.md`.
-- **Does NOT edit `spec/boot/90-user.xml`.** *Reason:* user-owned;
+  snippets (`00-core`, `90-user`) stay observed via `vibevm/vibespecs/boot/[0-9]*.md`.
+- **Does NOT edit `vibevm/vibespecs/boot/90-user.xml`.** *Reason:* user-owned;
   `00-core`'s `NOTOUCH-90-USER` forbids it to every session. *Disposition:*
   deferred **to the owner, not to a campaign** — F-063's half was handed over in
   full rather than edited, and closed 2026-07-26 when the owner lifted the bar.
@@ -525,7 +525,7 @@ the perimeter below gives the rest.
 **Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
 
     git log --reverse --format='%h %ad %s' --date=short -- \
-      campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
+      campaigns/progress-2026-08 vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
 
 **139 commits**, `b1276c39` (plan authored, 2026-07-24) → `f5248dae`
 (2026-07-29). The zone catches the work commits as well as the bookkeeping ones
@@ -556,7 +556,7 @@ predate the campaign zone).
 `60100f87`..`a1bb2111`. Opens `8d5ccc82` (the wave-1 scope config, the
 campaign's first journal step); closes `a1bb2111` (boundary — exit gate green,
 corpus fully marked). Landmarks: `2c98a1e6` B0, the 73-line status conversion ·
-`91274c89` B1, paragraph-exhaustive markup of `spec/common` · `6714876e` the
+`91274c89` B1, paragraph-exhaustive markup of `vibevm/vibespecs/common` · `6714876e` the
 fact-grain re-pilot · `508bbdb9` DRIFT-004, fact anchors become addressable spec
 units · `5c89839b` DRIFT-005, fact inheritance end to end · `7d9dd964` B2 batch
 26, the corpus is fully marked. Two scope rulings landed inside the phase:
@@ -642,7 +642,7 @@ rather than incidental.
 over the perimeter above, at HEAD `fffcb494`:
 
 ```sh
-P='campaigns/progress-2026-08 spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml'
+P='campaigns/progress-2026-08 vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml'
 git rev-list --count b1276c39^..60100f87 -- $P   #  4   Phase A (in perimeter)
 git rev-list --count 60100f87..a1bb2111  -- $P   # 60   Phase B
 git rev-list --count a1bb2111..15c5bb30  -- $P   #  7   Phase L
@@ -748,7 +748,7 @@ the block says so rather than implying a green floor nobody observed.
 
 # PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml — wave 2, LIVE {#w2}
 
-**File:** `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 3 788 lines
+**File:** `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml`, 3 788 lines
 at HEAD `fffcb494` (`wc -l`). Sections today: §0 mandate (15) · §1 baseline (34)
 · §2 executors (71) · §3 decisions (85, with 3.1 at 91, 3.2 at 119, 3.3 at 136)
 · §4 campaign zone (147) · §4.5 amendments (163) · §5 phases (218, with A 220,
@@ -920,7 +920,7 @@ listed with the instance rather than as a caution:
 - **A wind-down that rewrites the files a finished batch cites.** *Fired
   2026-07-28:* W2's four evidence tables were verified clean at 3 unresolvable
   and re-read **65** at the next session's open — `CONTINUE.md` was overwritten
-  wholesale and `spec/WAL.xml`'s `_Updated:` line rewritten *after* the tables
+  wholesale and `vibevm/vibespecs/WAL.xml`'s `_Updated:` line rewritten *after* the tables
   were returned and committed. Not one of the 62 was a fiction, and nobody was
   left who could re-anchor them. **The durable-citation rule exists for exactly
   this**, and the controlled experiment is on record: the one batch written
@@ -977,7 +977,7 @@ judgment axis, the doc trees) are exactly the two that cost it a phase.*
 - **Does NOT re-measure wave 1.** *Reason:* the host's 58 files stay in scope
   and their verdicts stand; the two corpora share one `progress check` gate that
   must stay at 0. *Disposition:* settled; §4's scope config.
-- **Does NOT touch `packages/org.vibevm.fractality/**`.** *Reason:* its own
+- **Does NOT touch `vibevm/vibepacks/org.vibevm.fractality/**`.** *Reason:* its own
   specspace, own boot contract, own WAL. *Disposition:* held by the owner —
   **with a consequence this campaign has already paid.** Wave 6 proved the
   perimeter blind to a **second adopter of the discipline living inside
@@ -1046,7 +1046,7 @@ aspirational — and every one is still live for the phases that remain.
   host-live count of `campaign-plans` sections that showed one hit for **every**
   form, every hit inside this plan, matching only because the LOG entry written
   the day before quoted those words in prose. *Detection:* every count over
-  `spec/terraforms/` or `campaigns/` names its perimeter in the sentence that
+  `vibevm/vibespecs/terraforms/` or `campaigns/` names its perimeter in the sentence that
   reports it. *Fallback:* exclude `campaigns/*/run/**` by default and report both
   numbers — with and without the campaign's own records.
 - **R2 — a package-scoped search reads every successful adoption as an
@@ -1145,7 +1145,7 @@ command gives the rest.
 **Perimeter, so the counts are reproducible.** Measured at HEAD `fffcb494`:
 
     git log --reverse --format='%h %ad %s' --date=short -- \
-      campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+      campaigns/packages-2026-09 vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 
 **336 commits**, `3aa8295e` (plan authored, 2026-07-25) → `fffcb494`
 (2026-07-31), the campaign still open. Over the same span the repository as a
@@ -1248,7 +1248,7 @@ recorded finding.*
 over the perimeter above, at HEAD `fffcb494`:
 
 ```sh
-P='campaigns/packages-2026-09 spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml'
+P='campaigns/packages-2026-09 vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml'
 git rev-list --count 3aa8295e^..6ad264da -- $P   #   3   plan authoring + ratification
 git rev-list --count 6ad264da..fc731127  -- $P   # 124   Phase A + Phase B
 git rev-list --count fc731127..ef40a1ce  -- $P   # 146   Phase C

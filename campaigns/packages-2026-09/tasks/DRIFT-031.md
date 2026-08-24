@@ -52,7 +52,7 @@ code span; a marker *outside* one, at the end of the paragraph, is exactly what
 Both reproduced 2026-07-26 by running the gate, not by reading. **Do not
 re-discover; do reproduce before fixing, so you can watch each go green.**
 
-**F-083.** In `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.xml`
+**F-083.** In `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml`
 §3, four `- [ ]` items were marked in the canonical shape:
 
 ```
@@ -130,7 +130,7 @@ bash tools/self-check.sh ; echo "EXIT=$?"
 Read the floor's **real** exit code; never judge it from a piped `tail`.
 
 Then restore the four task-list anchors in
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml`
 §3 exactly as §3 above quotes them (`##CHECKLIST-RUNS-OR-CHECKS`,
 `##CHECKLIST-CARRIES-COGNITION`, `##CHECKLIST-FAST-ENOUGH`,
 `##CHECKLIST-CANNOT-SILENTLY-LIE`), and run:

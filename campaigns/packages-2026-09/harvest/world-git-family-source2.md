@@ -52,4 +52,4 @@ reported: the policy's «never mention model names in commit messages» is broke
 four times in four hundred, and its «never state or imply machine authorship» is
 not broken at all.
 
-**Scope:** §3.1 source 2 for the five `git-*` flows of `packages/org.vibevm.world/`.
+**Scope:** §3.1 source 2 for the five `git-*` flows of `vibevm/vibepacks/org.vibevm.world/`.

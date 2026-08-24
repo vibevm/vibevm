@@ -50,7 +50,7 @@ Highlights of the release arc, on top of everything chronicled below:
 
 ### M1.19 — Qualified package naming (PROP-008)
 
-Reverse-FQDN `group` qualification — the Maven `groupId` shape — replaces the flat `<kind>:<name>` namespace, so two unrelated authors can each ship a `wal` without colliding. Design lock: [PROP-008](spec/modules/vibe-registry/PROP-008-qualified-naming.xml). The whole milestone — the identity core (Phases 1–4 + 7), index-backed short-name resolution, and collision detection — landed under MFBT.
+Reverse-FQDN `group` qualification — the Maven `groupId` shape — replaces the flat `<kind>:<name>` namespace, so two unrelated authors can each ship a `wal` without colliding. Design lock: [PROP-008](vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml). The whole milestone — the identity core (Phases 1–4 + 7), index-backed short-name resolution, and collision detection — landed under MFBT.
 
 - **`group` and the identity tuple.** `[package]` gains a mandatory `group` field — dot-separated `[a-z0-9_-]` segments, reverse-FQDN by convention (not enforced, exactly as Maven does not enforce `groupId` shape). Package identity becomes `(group, name, version, content_hash)`; a `name` is unique within its `group`, not within its `kind`. `kind` leaves identity entirely — it stays a mandatory `[package]` field, but it is pure metadata: it places content, drives the `--kind` filter, and is a UX signal in a kind-prefixed pkgref, while identifying and naming nothing.
 - **pkgref grammar `[kind:][group/]name[@version]`.** The qualified `org.vibevm.world/wal` form is what manifests and the lockfile store. `flow:org.vibevm.world/wal` adds a kind prefix, validated against the manifest after resolution. The short `wal` / `flow:wal` form stays as CLI-only sugar.
@@ -63,7 +63,7 @@ Reverse-FQDN `group` qualification — the Maven `groupId` shape — replaces th
 
 ### PROP-005 — Package index (`vibe-index`) (2026-05-22)
 
-A registry-org metadata index, so `vibe` can `list` / `search` / `outdated` / shortlist versions against cached, mirror-able metadata instead of a live `git ls-remote` per package. Design lock: [PROP-005](spec/modules/vibe-index/PROP-005-package-index.xml). The index layer is strictly optional — a registry without one keeps working through the live path unchanged. This block records work that landed across earlier sessions but was never written up here, plus the 2026-05-22 reconciliation that brought it green.
+A registry-org metadata index, so `vibe` can `list` / `search` / `outdated` / shortlist versions against cached, mirror-able metadata instead of a live `git ls-remote` per package. Design lock: [PROP-005](vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml). The index layer is strictly optional — a registry without one keeps working through the live path unchanged. This block records work that landed across earlier sessions but was never written up here, plus the 2026-05-22 reconciliation that brought it green.
 
 - **`vibe-index` — server + CLI** (`crates/vibe-index/`, PROP-005 slices 1–8). One binary, two modes: a CLI that builds an index data directory from a registry's package repos (`reindex --from-clones` / `--from-github`, plus `init` / `add` / `remove` / `get` / `list` / `search` / `capabilities` / `purls` / `outdated` / `verify` / `dump`), and an axum HTTP server (`serve`) exposing the same surface — read routes open, write routes bearer-token-authed, with a per-token / per-IP rate limiter. The on-disk format is RPM-shaped: a `repomd.json` manifest over `primary.jsonl`, `by-name/`, `by-cap/`, `by-purl/`.
 - **Publisher hook** (slice 9). `vibe registry publish` optionally POSTs the new entry to the registry's index after a successful push; failure is non-fatal — the next `reindex` covers the gap.
@@ -75,7 +75,7 @@ A registry-org metadata index, so `vibe` can `list` / `search` / `outdated` / sh
 
 ### M1.21 — Incremental install (PROP-011) (2026-05-22)
 
-PROP-009's `vibe install` re-ran the depsolver and re-copied every `vibedeps/` slot on every invocation, whatever had changed. PROP-011 makes it incremental — the `cargo build` / `npm install` shape. Design lock: [PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.xml).
+PROP-009's `vibe install` re-ran the depsolver and re-copied every `vibedeps/` slot on every invocation, whatever had changed. PROP-011 makes it incremental — the `cargo build` / `npm install` shape. Design lock: [PROP-011](vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml).
 
 - **Skip resolution when fresh.** Before the depsolver runs, a freshness check asks whether `vibe.lock` is still a correct resolution of every node's `[requires]` — a cargo-style satisfiability test, no manifest digest stored. When it is, a bare `vibe install` skips the depsolver entirely: no registry walk, no network, just a whole-tree boot regeneration. This also makes `vibe install` **lockfile-respecting** — an unchanged `[requires]` honours the locked versions verbatim, ending the silent version drift the unconditional re-resolve caused.
 - **Materialise only the diff.** Materialisation skips a `vibedeps/` slot already present for the resolved version — versions are immutable, so the content is correct; only a new or version-bumped dependency is copied. A `slot_integrity` key in the vibevm user config (`trust-presence` default, or `verify`) governs the skip; `verify` re-materialises every slot.
@@ -86,22 +86,22 @@ Boot-artifact regeneration deliberately stays whole-tree — the cheap, self-hea
 
 ### M1.18 — Loading model (PROP-009 + PROP-012) (2026-05-22)
 
-The flat `spec/boot/NN-*.md` boot model is replaced by a computed loading model. Design locks: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.xml), [PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml). Shipped across seven phases.
+The flat `spec/boot/NN-*.md` boot model is replaced by a computed loading model. Design locks: [PROP-009](vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml), [PROP-012](vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml). Shipped across seven phases.
 
 - **Two trees.** A node's authored `spec/` and its materialised dependencies are physically separate. `vibe install` copies each resolved package's published tree verbatim into a committed `vibedeps/<kind>-<name>/<version>/` slot at the workspace root, and never writes into authored `spec/`. The `[writes]` package section is retired — a materialised package *is* its subtree.
-- **Computed boot.** Each node's boot sequence is computed from the unified resolution — inherited foundation + the node's own authored boot + dependency boot + user overrides — and projected into generated `spec/boot/INLINE.md` (the verbatim inline priority lane) and `spec/boot/INDEX.md` (a TOML manifest of `static` / `dynamic` entries). Three inclusion types — `inline` / `static` / `dynamic` — are declared per dependency via `link`. The `NN-` filename prefix is retired; `vibe` owns ordering by `category` band.
+- **Computed boot.** Each node's boot sequence is computed from the unified resolution — inherited foundation + the node's own authored boot + dependency boot + user overrides — and projected into generated `spec/boot/INLINE.md` (the verbatim inline priority lane) and `vibevm/vibespecs/boot/INDEX.md` (a TOML manifest of `static` / `dynamic` entries). Three inclusion types — `inline` / `static` / `dynamic` — are declared per dependency via `link`. The `NN-` filename prefix is retired; `vibe` owns ordering by `category` band.
 - **OS-gated boot snippets.** A package's `[boot_snippet]` may declare a `when = "os:<name>"` condition (`windows` / `macos` / `linux`). `vibe` renders the contribution as a `dynamic` `INDEX.md` entry carrying the condition — irrespective of any `link`, since a condition cannot be inlined — and the agent reads the file at boot only on a matching operating system. This closes the dynamic-entry `when` gap PROP-009 §2.3 flagged at Phase 4. The same OS probe is reserved as `if_os` in the subskill `[activation]` vocabulary, so the two mechanisms share one grammar.
 - **`vibe reinstall`.** Regenerates the materialised state and boot artifacts without re-resolving; `--force` re-fetches every locked package from source.
 - **The managed `<vibevm>` block (PROP-012).** `vibe` no longer overwrites the whole of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` — it owns only a delimited `<vibevm>` … `</vibevm>` block and preserves every byte outside it, so the developer and other tools can co-tenant the file. A malformed block is a hard error, validated before any mutation; `vibe install` maps it to exit code 3.
-- **The boot-directory linter** (`vibe check`) stops enforcing the retired `NN-` filename pattern; it now verifies only that `spec/boot/` exists and holds markdown.
-- **vibevm self-migration.** vibevm migrated to its own loading model — `spec/boot/INDEX.md` generated, a `<vibevm>` block appended to its `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (every hand-authored line, the four rules included, preserved).
+- **The boot-directory linter** (`vibe check`) stops enforcing the retired `NN-` filename pattern; it now verifies only that `vibevm/vibespecs/boot/` exists and holds markdown.
+- **vibevm self-migration.** vibevm migrated to its own loading model — `vibevm/vibespecs/boot/INDEX.md` generated, a `<vibevm>` block appended to its `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (every hand-authored line, the four rules included, preserved).
 - **Docs.** `VIBEVM-SPEC.md` §6 and the rest of the retired-model footprint rewritten for the loading model; the `docs/` sweep covers the new model and `vibe reinstall`.
 
 Every phase landed clippy-clean (`-D warnings`) with its full test suite green.
 
 ### M1.17 — Workspace (multi-package projects) (2026-05-21)
 
-The cargo-`[workspace]` / Maven-multi-module shape: a project decomposes into member packages, each published independently — or not at all. Design lock: [PROP-007](spec/modules/vibe-workspace/PROP-007-workspace.xml). Shipped in five implementation phases plus documentation.
+The cargo-`[workspace]` / Maven-multi-module shape: a project decomposes into member packages, each published independently — or not at all. Design lock: [PROP-007](vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml). Shipped in five implementation phases plus documentation.
 
 - **Unified manifest.** The two manifest files — `vibe.toml` and `vibe-package.toml` — collapse into **one file, `vibe.toml`**, carried by every node. The role is set by which sections are present: `[project]` (a consumer) and `[package]` (a publishable artifact) are mutually exclusive; `[workspace]` composes with either or neither. One `Manifest` type in `vibe-core` replaces `ProjectManifest` + `PackageManifest`; `Manifest::validate` enforces the role rules.
 - **Hard compatibility break — all manifest legacy removed.** vibevm is pre-release; there is no migration path and none is needed. Gone: the `vibe-package.toml` filename, the `[dependencies]` section, the array-form `packages = ["…"]`, the singleton `[registry]` table, and the `vibe.lock` v1/v2/v3 readers. A manifest or lockfile using a removed form is a hard error.
@@ -140,7 +140,7 @@ End-to-end and smoke fixtures moved out of the canonical `vibespecs` org (and `o
 
 ### M1.15 — Git-source dependencies (2026-05-10)
 
-The Cargo / npm / Poetry / Bundler / Go-modules-style affordance — declare a dep as `{ git = "https://...", tag = "v0.1.0" }` instead of resolving it through `[[registry]]`. Spec: [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#git-source).
+The Cargo / npm / Poetry / Bundler / Go-modules-style affordance — declare a dep as `{ git = "https://...", tag = "v0.1.0" }` instead of resolving it through `[[registry]]`. Spec: [PROP-002 §2.4.1](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#git-source).
 
 - **`[requires.packages]` table-form schema** in `vibe-core`: `Vec<PackageRef>` (legacy) and `BTreeMap<PackageRef, GitPackageDep>` (modern) parse transparently; round-trip writes the modern map. Inline-table values declare git-source: `"flow:internal-helper" = { git = "...", tag = "v0.1.0", auth = "token-env", ... }`.
 - **`GitPackageRegistry::open_single_package`** — single-package URL constructor that bypasses `org_url + naming`. Reuses M1.14 token-injection / bootstrap-with-scrub plumbing.
@@ -155,7 +155,7 @@ The Cargo / npm / Poetry / Bundler / Go-modules-style affordance — declare a d
 
 ### M1.16 — Registry redirect (delegated package via stub repo) (2026-05-10)
 
-The Linux-distro-style virtual-package mechanism — a registry org's stub repo carries `vibe-redirect.toml` pointing at an external git repo where the package's actual content lives, instead of carrying the content directly. Spec: [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml#redirect).
+The Linux-distro-style virtual-package mechanism — a registry org's stub repo carries `vibe-redirect.toml` pointing at an external git repo where the package's actual content lives, instead of carrying the content directly. Spec: [PROP-002 §2.4.2](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#redirect).
 
 - **`vibe-redirect.toml` schema** in `vibe-core::manifest::redirect`: `[redirect]` block with required `target_url`, optional `ref_policy = pass-through-tag | pinned`, `pinned_ref` (required iff pinned), `auth` / `token_env` (target-side, mirrors PROP-002 §2.2.1), `description`. Mutually exclusive with `vibe-package.toml` at the same ref (`AmbiguousStub`). 11 unit tests.
 - **`MultiRegistryResolver::follow_redirect`** — resolver detects the marker after a registry-walk success, opens a synthetic single-package registry on `target_url`, fetches manifest at the pass-through-tag (or `pinned_ref`). Hop limit = 1: target cannot itself be a stub. `MultiResolution.via_redirect` carries the stub URL through the resolve→fetch boundary; `redirect_target_auth` / `redirect_target_token_env` propagate target-side auth.
@@ -213,7 +213,7 @@ Phase A of M1.1-revision shipped earlier on `main` between 2026-04-23 and 2026-0
 
 ## M1.1-revision Phase A — 2026-04-24 / 2026-04-25
 
-The decentralized per-package registry refactor. Replaced the M1.1 monorepo-shaped registry with the model spelled out in [`PROP-002`](spec/modules/vibe-registry/PROP-002-decentralized-registry.xml): one git repo per package under an organization URL, identity = `(kind, name, version, content_hash)`, `[[registry]]` array + `[[mirror]]` + `[[override]]` schema, transitive dependency resolution, maintainer-side publish command, JTD-driven wire contracts.
+The decentralized per-package registry refactor. Replaced the M1.1 monorepo-shaped registry with the model spelled out in [`PROP-002`](vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml): one git repo per package under an organization URL, identity = `(kind, name, version, content_hash)`, `[[registry]]` array + `[[mirror]]` + `[[override]]` schema, transitive dependency resolution, maintainer-side publish command, JTD-driven wire contracts.
 
 ### Documentation slice (2026-04-24)
 
@@ -222,10 +222,10 @@ The decentralized per-package registry refactor. Replaced the M1.1 monorepo-shap
 - Added repo-root `DEV-GUIDE.md` and `RUNTIME-GUIDE.md` scaffolds.
 - Amended `VIBEVM-SPEC.md` §7.3 / §7.4 / §7.5 / §8.1 / §8.2 / §8.3 / §8.4 / §8.6 / §11.2 / §16 for the per-package registry, capability-based deps, lockfile schema v2, and the new `vibe registry publish` command.
 - Marked `PROP-001` §2.3 / §2.4 / §2.6 superseded by `PROP-002`; pruned the size-based argument in §2.1 per PROP-000 §15.
-- Added `spec/modules/vibe-registry/PROP-002-decentralized-registry.xml`: full design lock for the new registry model.
+- Added `vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml`: full design lock for the new registry model.
 - Added `ROADMAP.md` M1.1-revision active section + M1.6 multi-registry-polish queued section.
 - Added repo-root `TASKS.md` as the live work-slice checklist.
-- Refreshed `spec/WAL.xml` for the new phase.
+- Refreshed `vibevm/vibespecs/WAL.xml` for the new phase.
 
 ### Schemas and codegen foundation (2026-04-25)
 
@@ -291,7 +291,7 @@ Content for the M1.5-gate target: three demo flows live on the (then-monorepo) `
 
 ## M1.1 — 2026-04-22
 
-Git-backed registry. Decisions pinned in [`PROP-001`](spec/modules/vibe-registry/PROP-001-git-backend.xml).
+Git-backed registry. Decisions pinned in [`PROP-001`](vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml).
 
 - `feat(registry)` — `GitBackend` trait with `ShellGit` impl: shells out to system `git`, no `libgit2` runtime dep. Windows-specific spawn flags (`CREATE_NO_WINDOW`, `LC_ALL=C`, `GIT_TERMINAL_PROMPT=0`) so the child never flashes a console window or hangs CI. Stable stderr classification for `RepoNotFound`, `AuthFailed`, `NetworkUnreachable`, `RefNotFound`.
 - `feat(registry)` — `Registry` trait at the crate root with `LocalRegistry` (M0 path, kept) and `GitRegistry` (new) implementations. `git+<transport>://` source URIs in the lockfile.
@@ -322,6 +322,6 @@ The M0 milestone — proves the file-management mechanics work end-to-end.
 
 ## Format notes
 
-This file is curated, not auto-generated. Each milestone block is a hand-written rollup of conventional-commit subjects since the previous milestone, organised by area. Conventional Commits per [`PROP-000 §12.2`](spec/common/PROP-000.xml#conventional-commits) make the rollup mechanical; the value-add of this file over `git log --oneline` is the milestone framing and cross-references to PROPs / SPEC sections that explain *why* a change happened.
+This file is curated, not auto-generated. Each milestone block is a hand-written rollup of conventional-commit subjects since the previous milestone, organised by area. Conventional Commits per [`PROP-000 §12.2`](vibevm/vibespecs/common/PROP-000.xml#conventional-commits) make the rollup mechanical; the value-add of this file over `git log --oneline` is the milestone framing and cross-references to PROPs / SPEC sections that explain *why* a change happened.
 
 Future format tightening: once we have a tagged release, `[Unreleased]` becomes a normal milestone block dated when the tag was cut, and a new `[Unreleased]` opens at the top.

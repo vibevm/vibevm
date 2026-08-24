@@ -127,7 +127,7 @@ version = "0.0.1"
 "#,
     )
     .unwrap();
-    fs::create_dir_all(pkg_dir.path().join("spec")).unwrap();
+    fs::create_dir_all(pkg_dir.path().join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(
         pkg_dir.path().join(common::spec_rel("PROTOCOL.md")),
         "hello\n",

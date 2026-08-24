@@ -5,10 +5,10 @@
 **Свёрнут 2026-08-18** по собственному закону §11.
 
 **Контракт, который этот план построил:**
-[`spec/common/PROP-044-change-native-formats.xml`](../../spec/common/PROP-044-change-native-formats.xml)
+[`vibevm/vibespecs/common/PROP-044-change-native-formats.xml`](../../spec/common/PROP-044-change-native-formats.xml)
 — ратифицирован владельцем 2026-08-13, и он же несёт мандат владельца дословно
 (`##MANDATE-VERBATIM`). Форма построенного каталога — контракт
-[`spec/modules/vibe-index/PROP-005-package-index.xml`](../../spec/modules/vibe-index/PROP-005-package-index.xml).
+[`vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml`](../../spec/modules/vibe-index/PROP-005-package-index.xml).
 
 **Что осталось в этом файле и почему.** §11 велит сохранить то, что нигде
 больше не живёт, и свернуть в могильники всё, чьё содержимое переехало:
@@ -25,7 +25,7 @@
 владельческое.** Ссылок на него в `spec/**` не осталось ни одной живой: два
 указателя (`PROP-044` `##PURPOSE` и `##SOURCES`) сняты тем же заходом, два
 провенанс-упоминания (`PROP-044` `<status>` и
-`spec/research/schema-evolution-2026-08/README-PROVENANCE.xml`) сохранены —
+`vibevm/vibespecs/research/schema-evolution-2026-08/README-PROVENANCE.xml`) сохранены —
 они говорят, ОТКУДА взялось, а не ведут читателя ЗА содержанием, и потому
 переживают план. Если файл будет удалён, провенанс-ссылка обязана назвать
 коммит, а не путь.
@@ -43,7 +43,7 @@ live in \<дома\>»**. Коммиты позволяют прочитать �
   законный дом по закону дисциплины «explanation capital must be runnable
   capital».
 
-**Домом НЕ являются:** сам этот план, `spec/WAL.xml` и `CONTINUE.md` (летучие),
+**Домом НЕ являются:** сам этот план, `vibevm/vibespecs/WAL.xml` и `CONTINUE.md` (летучие),
 находка в `harvest/` (замер, а не контракт), коммит-сообщение.
 
 **Где лежит пофактная таблица.** Могильники ниже называют дома; ДОСЛОВНЫЕ
@@ -101,7 +101,7 @@ The rulings and their reasoning now live in the anchors below.**
 
 | решение | дом |
 |---|---|
-| D1 «одноразовые миры» | `PROP-044` `##TRUTH-KERNEL`, `##DERIVED-IS-DISPOSABLE`, `##ONE-ETERNAL-FILE`; отвергнутые архитектуры — `spec/design/change-native-formats-verdict.xml` `#arch-b` (гербарий), `#arch-c` (вечная линия), `#arch-d` (формат как программа) |
+| D1 «одноразовые миры» | `PROP-044` `##TRUTH-KERNEL`, `##DERIVED-IS-DISPOSABLE`, `##ONE-ETERNAL-FILE`; отвергнутые архитектуры — `vibevm/vibespecs/design/change-native-formats-verdict.xml` `#arch-b` (гербарий), `#arch-c` (вечная линия), `#arch-d` (формат как программа) |
 | D2 тегированное объединение | `PROP-005` `##REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED` (с причиной и ссылкой на записку `formats/breaks/001.md`) |
 | D3 журнал вместо read-modify-write | `PROP-044` `##M-JOURNAL-NOT-RMW`; следствие для читателя — `PROP-005` `##FORWARD-COMPAT` |
 | D4 свой слой генерации | `PROP-044` `##M-SCHEMA-DESCRIBES-FORM`, `##M-OPEN-ENUM-FROM-CLOSED` |
@@ -141,10 +141,10 @@ The rulings and their reasoning now live in the anchors below.**
 | пункт | дом |
 |---|---|
 | 1. читать PROP-044 + план + `CLAUDE.md`; воркеры не запускают git | `CLAUDE.md`; `SUBAGENT-LAUNCHERS.md` |
-| 2. вендоренные копии и движки дисциплины не трогать | `spec/WAL.xml` `##WAL-C-VENDORED` (стоячий констрейнт) |
-| 3. фаза кончается зелёной панелью; `specmap` в той же посадке | флоу `campaign-plans` `##EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP`; `spec/WAL.xml` `##WAL-C-LANDING-ORDER` |
+| 2. вендоренные копии и движки дисциплины не трогать | `vibevm/vibespecs/WAL.xml` `##WAL-C-VENDORED` (стоячий констрейнт) |
+| 3. фаза кончается зелёной панелью; `specmap` в той же посадке | флоу `campaign-plans` `##EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP`; `vibevm/vibespecs/WAL.xml` `##WAL-C-LANDING-ORDER` |
 | 4. бюджет 600 строк после `cargo fmt` | не проза, а **чекер**: шаг `conform check` панели |
-| 5. атомарные Conventional Commits, явные пути, heredoc | флоу `git-atomic-commits`, `git-conventional-commits`; `spec/WAL.xml` `##WAL-C-GIT` |
+| 5. атомарные Conventional Commits, явные пути, heredoc | флоу `git-atomic-commits`, `git-conventional-commits`; `vibevm/vibespecs/WAL.xml` `##WAL-C-GIT` |
 | 6. ошибки цитируют REQ; `unwrap`/`expect` запрещены | стек `rust-ai-native-lang` `##RULE-ERROR-ENUM-PER-LAYER` и conform-гейт |
 | 7. ничего не публикуется наружу; тесты герметичны | D13 → `PROP-044` `##THE-PUBLIC-SWITCH` |
 | 8. тексты отказов генерируются из данных | `PROP-044` `##AGENT-MESSAGES`; реализация — `PROP-005` `##THE-RECIPE-HAS-ONE-HOME`, `crates/vibe-index/src/index/quarantine.rs` |

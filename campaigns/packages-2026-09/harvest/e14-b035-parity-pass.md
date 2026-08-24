@@ -14,7 +14,7 @@ only the CHANGED / NEW rows are re-stated here, the rest hold at pass №1/№2/
 
 Every cell carries `path:line` relative to the worktree root, on the
 worktree’s own non-vendored copies. The engine lives at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/…` (v0.8.0 is the
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/…` (v0.8.0 is the
 canonical home batch 4 landed in — verified: the B-025 commit `05f8bdff` and
 the B-026 commit `decc5d0a` touch v0.8.0 only; the prior `core-ai-native/v0.7.0`
 copy is untouched by batch 4, its `finding.rs` last moved only by the
@@ -118,13 +118,13 @@ rule, the Go floor, or any custom-lint vehicle.
   silent.
 - **Row 17 — the custom-lint inversion (unchanged).** TypeScript **built** it
   (`typescript-ai-native-lang/v0.6.0/tools/eslint-plugin-ai-native/`); Rust and
-  Go did not — grep over `packages/org.vibevm.ai-native/**` for
+  Go did not — grep over `vibevm/vibepacks/org.vibevm.ai-native/**` for
   `dylint`/`declare_lint!`/`LateLintPass`/`analysis.Analyzer` returns matches
   only in the three `GUIDE-AI-NATIVE-*.md` and `scaffold-f-structured-diagnostics.xml`
   cards (promises), never in source. Per
   `##PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE` the bar rose to TS, so Rust and Go
   are the weaker cells, each with a recorded reason + named route
-  (`spec/design/new-rule-classes.xml` §3, `BACKLOG.md {#b-050}`, P3). Recorded
+  (`vibevm/vibespecs/design/new-rule-classes.xml` §3, `BACKLOG.md {#b-050}`, P3). Recorded
   not silent.
 - **Rows 1–5, 7, 9–16 — hold at pass №1/№2/№3.** Unchanged this pass: the
   infrastructure rows (2–5), seam-error REQ-citation (1), conformance-assertion

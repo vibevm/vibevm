@@ -139,7 +139,7 @@ HEAD, периметр 1240 файлов. Ожидание: P1–P4 → raw ~100
 ## Сторона стоимости (§5) — измерено по дереву
 
 **1. Кто производит элементы кода в карте.** Трейт `CodeScanner` объявлен в
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:21`.
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/scanner.rs:21`.
 Его реализации (уникальные, не `vendor/`-копии):
 
 | язык        | реализация                          | путь                                                                    | чем парсит                          |
@@ -156,7 +156,7 @@ HEAD, периметр 1240 файлов. Ожидание: P1–P4 → raw ~100
 сгенерированный модуль
 `…/core-ai-native-specmap/src/generated/specmap/mod.rs:36`, ровно 5 полей
 (`crateName`, `file`, `itemKind`, `line`, `symbol`) — без отпечатка и без конца.
-Схема `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json`,
+Схема `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json`,
 секция `"code_item"` (строка 81), свойства `symbol`/`item_kind`/`crate_name`/`file`/`line`
 (строки 86–104) — тоже без отпечатка/конца. Канонический пример
 `…/schemas/specmap.example.json` подтверждает: `code_items[0]` = ровно та же пятёрка

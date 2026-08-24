@@ -20,7 +20,7 @@ F-329 prose-edit  F-331 prose-edit
 ## F-268 — the demotion's basis was an absence, and the absence is false: the golden transcripts exist
 
 **Outcome:** RE-JUDGE: confirmed
-**Anchors:** 0 edited of 1 — `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml#PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED`
+**Anchors:** 0 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml#PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED`
 **Files touched:** none
 
 **Re-verification:**
@@ -48,11 +48,11 @@ $ grep -n "golden" terraform/BASELINE.md
 $ grep -n "BROWNFIELD" terraform/BASELINE.md
 119:debt/intent reference in the PR (BROWNFIELD §6).
 
-$ grep -rn "discipline/golden" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md
+$ grep -rn "discipline/golden" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md
 96:- ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`): must fail loudly, re-captured
 97:  deliberately (`capture.sh`), never auto-updated. @impl/done
 
-$ sed -n '107p' packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml
+$ sed -n '107p' vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml
 ##PHASE-GATES-NOW-MEAN-SNAPSHOTS-UNCHANGED Phase gates that previously said "behavior unchanged" now mean "characterization snapshots unchanged, except where a debt/intent record says we changed it deliberately." @impl/done
 ```
 
@@ -97,20 +97,20 @@ package does not move for it. Recorded, not fixed.
 **Outcome:** EDITED
 **Anchors:** 2 edited of 2 — `spec/00-MANIFESTO.md#MAP-RUST-GUIDE`,
 `spec/00-MANIFESTO.md#ADOPTION-PLAN-LIVES-OUTSIDE`
-(both `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/`)
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml`
+(both `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/`)
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml`
 
 **Re-verification:**
 
 ```
-$ grep -n "MAP-RUST-GUIDE\|ADOPTION-PLAN-LIVES-OUTSIDE" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml
+$ grep -n "MAP-RUST-GUIDE\|ADOPTION-PLAN-LIVES-OUTSIDE" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml
 172:- ##MAP-RUST-GUIDE `spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.) @impl/done
 187:##ADOPTION-PLAN-LIVES-OUTSIDE The vibevm-specific adoption plan lives OUTSIDE this package, in the host's `terraform/`, because the Discipline is the product and vibevm is its pilot. @impl/done
 
-$ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
+$ ls vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml
+vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml
 
-$ ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/
+$ ls vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/
 00-MANIFESTO.xml  01-PATTERN-CARD-FORMAT.xml  02-EXECUTABLE-SCAFFOLDS.xml
 03-RAID-PLAYBOOK.xml  04-SWEEP-PLAYBOOK.xml  05-CAMPAIGN-FORM.xml
 06-WAL-CONVENTION.xml  appendix  boot  legacy-projections  mechanisms
@@ -165,17 +165,17 @@ the stacks by the superseded short form `stack-rust-ai-native` /
 ## F-269 — the README's front-door pointer to the stack guide is one path segment short
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md#READ-STACK-GUIDE`
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md#READ-STACK-GUIDE`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
 
 **Re-verification:**
 
 ```
-$ grep -n "READ-STACK-GUIDE" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md
+$ grep -n "READ-STACK-GUIDE" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md
 31:4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @impl/done
 
-$ ls packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
-packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml
+$ ls vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml
+vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml
 ```
 
 **Who falsifies it:** a sibling package — `rust-ai-native-lang` roots the guide
@@ -197,16 +197,16 @@ exists and is shipped.
 ## F-264 — «Most cards aim here» is false in all three shipped registries: inline holds 2 of 9, gate holds 5
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml#TRIGGER-INLINE`
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml#TRIGGER-INLINE`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml`
 
 **Re-verification:**
 
 ```
-$ grep -n "TRIGGER-INLINE" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.xml
+$ grep -n "TRIGGER-INLINE" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml
 129:1. ##TRIGGER-INLINE **Inline (edit-time)** — lint-detectable, fires in the per-cell loop; the cheapest mode and the one that fires most often. Each stack's `cards/INDEX.md` is the roster: of the nine scaffold cards, 2 sit here (C, F) against 5 at gate. @impl/done
 
-$ grep -A4 "Trigger-mode delivery summary" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.xml
+$ grep -A4 "Trigger-mode delivery summary" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/INDEX.xml
 - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.
 - **gate** (per-merge): B, D, E, G, H.
 - **raid** (scheduled/on-adoption): A, I.
@@ -243,22 +243,22 @@ on any anchor of this obligation. Recorded, not fixed.
 ## F-265 — the format names a GoF section it never adopted: no card has *Related Patterns*, and the format's own field list has none either
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml#PARENT-GOF-RECOGNITION`
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml#PARENT-GOF-RECOGNITION`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml`
 
 **Re-verification:**
 
 ```
-$ grep -n "PARENT-GOF-RECOGNITION" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml
+$ grep -n "PARENT-GOF-RECOGNITION" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml
 13:- ##PARENT-GOF-RECOGNITION **GoF → recognition & navigation.** Its load-bearing sections for us are *Applicability* (how to RECOGNIZE the situation from the code) and the neighbour-pattern pointer GoF calls *Related Patterns*, which this format carries under the name *Collaborations* (§1 Band 2 — where to go if this feels wrong). @impl/done
 
 $ grep -c "Related Patterns" \
-    packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/*.md \
-    packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/*.md \
-    packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/*.md | grep -v ":0"
+    vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/*.md \
+    vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/*.md \
+    vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/*.md | grep -v ":0"
    (no output — 0 in every one of the 30 shipped cards)
 
-$ grep -n "FIELD-COLLABORATIONS\|FIELD-APPLICABILITY" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.xml
+$ grep -n "FIELD-COLLABORATIONS\|FIELD-APPLICABILITY" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml
 29:- ##FIELD-APPLICABILITY-RECOGNITION **Applicability / Recognition** — THE central section: …
 33:- ##FIELD-COLLABORATIONS **Collaborations** — interaction with other cards and the toolchain at runtime. @impl/done
    (the §4 copy-paste authoring stub likewise has `Collaborations:` and no `Related Patterns:`)
@@ -272,7 +272,7 @@ sibling packages agree.
 **Perimeter searched:** all three `spec/cards/` directories (30 card files) plus
 the format document itself and the `core-ai-native/v0.7.0` predecessor slot, for
 the literal string `Related Patterns` — via `grep -rn "Related Patterns"
-packages/org.vibevm.ai-native/ --include=*.md`. The only hits are this sentence
+vibevm/vibepacks/org.vibevm.ai-native/ --include=*.md`. The only hits are this sentence
 and its v0.7.0 twin.
 
 **What changed and why:** the fact claimed GoF's *Related Patterns* is
@@ -300,13 +300,13 @@ exhaustive, that field is a fourth source. Recorded, not fixed.
 `#FROZEN-NEVER-AMEND` (edited),
 `#FROZEN-NEVER-REBASE-THE-PUSHED-RANGE` (edited),
 `#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO` (**RE-JUDGE: confirmed**, not edited).
-All in `packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml`
-**Files touched:** `packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml`
+All in `vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml`
 
 **Re-verification:**
 
 ```
-$ sed -n '155,166p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml
+$ sed -n '155,166p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml
 ## Pushed history is frozen {#pushed}
 
 ##once-a-commit-has-been-pushed-lead Once a commit has been pushed: @impl/done
@@ -321,7 +321,7 @@ $ sed -n '216,217p' .../ATOMIC-COMMITS-PROTOCOL.xml      # the document's own su
 - ##SUM-PUSHED-HISTORY-IS-FROZEN Pushed history is frozen. Amend/force-push only with human
   approval. @impl/done
 
-$ sed -n '40,42p;63,64p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml
+$ sed -n '40,42p;63,64p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml
 4. ##STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
    new commit instead, unless the human explicitly approves history
    rewriting. @impl/done
@@ -337,15 +337,15 @@ governing spec anchor
 (`spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`)
 — and neither substitutes for the other. @impl/done
 
-$ sed -n '5,10p' packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml
+$ sed -n '5,10p' vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml
 ##scope-of-this-document ... *where* records live (at the governing spec anchor, not in an ADR silo) ...
 
 $ grep -rn "spec://org.vibevm.world/decision-records" --include=*.md packages/ spec/
-spec/design/README.md:7: ... (the **decision-records** genre: `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`) ...
+vibevm/vibespecs/design/README.md:7: ... (the **decision-records** genre: `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`) ...
    (the URI form written into the fact is the one already in use, not invented here)
 
 --- the anchor that was NOT edited, and why ---
-$ grep -rni "mechanical" packages/org.vibevm.world/git-atomic-commits/v0.1.0 --include=*.md
+$ grep -rni "mechanical" vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0 --include=*.md
 README.md:27:  ... `splitting-large-changes.xml` — mechanical procedure for turning a messy working tree into a sequence of atomic commits using `git add -p` ...
 ATOMIC-COMMITS-PROTOCOL.xml:91: ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: ...
 ATOMIC-COMMITS-PROTOCOL.xml:112: ##sibling-document-pointers Mechanical procedure for producing the split:
@@ -353,7 +353,7 @@ ATOMIC-COMMITS-PROTOCOL.xml:213: - ##SUM-THE-NO-ALSO-TEST The "no 'also' in the 
 splitting-large-changes.xml:169: ##the-agent-is-better-at-this-than-most-humans-under-pressure This is a highly mechanical task and the agent is genuinely better
 splitting-large-changes.xml:216: - ##SUM-DELEGATE-AND-VERIFY-THE-PLAN Delegate the mechanical split to the agent; verify the plan,
 
-$ sed -n '88,89p' packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.xml
+$ sed -n '88,89p' vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml
 ##THE-MECHANICAL-TEST The mechanical test: *"when it breaks" is not a trigger; a trigger
 is a measurable signal.*
 ```
@@ -367,8 +367,8 @@ and is not cited.
 
 **Perimeter searched:** for the meaning of «mechanical» — the whole
 `git-atomic-commits` package (`README.md`, both protocol files, the boot
-snippet) and all 27 `packages/org.vibevm.world/*` packages, via
-`grep -rni "mechanical\|mechanically" packages/org.vibevm.world/ --include=*.md`.
+snippet) and all 27 `vibevm/vibepacks/org.vibevm.world/*` packages, via
+`grep -rni "mechanical\|mechanically" vibevm/vibepacks/org.vibevm.world/ --include=*.md`.
 
 **What changed and why:**
 
@@ -390,7 +390,7 @@ snippet) and all 27 `packages/org.vibevm.world/*` packages, via
   fact now keeps everything it was actually defending — per-change granularity,
   bound to the diff, surviving prose decay and WAL overwrites — and names the
   other home for the other granularity. The sibling is named by `spec://` URI,
-  the form already used at `spec/design/README.md:7`, so no cross-package
+  the form already used at `vibevm/vibespecs/design/README.md:7`, so no cross-package
   relative link was added.
 
 **RE-JUDGE: confirmed — `THE-TEST-IS-MECHANICAL-THE-WORD-ALSO`.** The verdict
@@ -412,7 +412,7 @@ vocabulary the sentence is true, and a demotion here would be the §6.1
 1. `spec/boot/30-flow-atomic-commits.md#WHY-COMMIT-LOG-AS-DECISION-RECORD`
    carries the *same* «the message is the only place where *why* survives»
    sentence that was just repaired in the protocol, and it is compiled into the
-   host at `spec/boot/STATIC.xml:602-603`. It is **not** in this obligation's
+   host at `vibevm/vibespecs/boot/STATIC.xml:602-603`. It is **not** in this obligation's
    anchor list and carries no verdict of its own — so the package now states the
    repaired form in the protocol and the old exclusive form in the boot lane.
    This one needs an obligation of its own; recorded, not fixed.
@@ -425,13 +425,13 @@ vocabulary the sentence is true, and a demotion here would be the §6.1
 ## F-304 — the README claims a role its own first paragraph and its own boot snippet both hand to a sibling package
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md#COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE`
-**Files touched:** `packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/README.md#COMPOSES-SYNC-FROM-CODE-FOR-THE-COMMIT-MESSAGE`
+**Files touched:** `vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/README.md`
 
 **Re-verification:**
 
 ```
-$ sed -n '53,62p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md
+$ sed -n '53,62p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/README.md
 ## Composition {#composition}
 
 - ##COMPOSES-WAL-AND-SYNC-FROM-CODE-BY-DISTINCT-PREFIXES Works with `flow:wal` (`10-…`) and `flow:sync-from-code` (`20-…`):
@@ -443,11 +443,11 @@ $ sed -n '53,62p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md
 - ##COMPOSES-WAL-FOR-THE-SESSION-END-COMMIT End-of-session WAL rewrite (from `flow:wal`) ends in a commit;
   git-atomic-commits is how that commit is shaped. @impl/done
 
-$ sed -n '20p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md
+$ sed -n '20p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/README.md
 ##package-contents-lead This package ships the **atomicity** discipline (the message **format** is the separate
 `flow:git-conventional-commits` package):
 
-$ sed -n '23,30p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml
+$ sed -n '23,30p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml
 ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
 `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
 
@@ -486,8 +486,8 @@ no relative link was added. Marker unchanged.
 does not keep it, the package does not move. A **host** obligation is recorded
 below; the registry row belongs at `status: deferred` naming it.
 **Anchors:** 0 edited of 2 —
-`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.xml#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT`,
-`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT`
+`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT`,
+`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml#EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT`
 **Files touched:** none
 
 **Re-verification:** the verdict's Selector A was re-run from scratch and
@@ -527,12 +527,12 @@ or any mechanism that could be missing. There is nothing here for the package to
 be wrong *about*.
 
 **Perimeter searched:** the package's whole tree
-(`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/` — README, boot snippet,
+(`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/` — README, boot snippet,
 protocol) for any self-contradiction or unmet promise, and the host history
 `be5e0600..HEAD` (2 086 commits) with both of the verdict's selectors plus the
 guides' own file history. Also checked for a §3.6 route **(c)** marked
 exception on the host side: `DEV-GUIDE.md:7` and `RUNTIME-GUIDE.md:5` both
-*restate* the obligation as MUST, and `spec/common/PROP-000.xml:291`
+*restate* the obligation as MUST, and `vibevm/vibespecs/common/PROP-000.xml:291`
 (`##SETUP-DOCS-FLOW`) pins it to this flow. **No exception is recorded
 anywhere**, so this is (b) and not (c).
 
@@ -558,8 +558,8 @@ not fixed, and **not** charged to the package.
 
 **Outcome:** OUT-OF-ROUTE — §3.6 **route (b)**, same determination as F-226.
 **Anchors:** 0 edited of 2 —
-`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.xml#NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT`,
-`packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml#NEVER-DEFER-THE-DOC-UPDATE-TO-LATER`
+`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml#NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT`,
+`vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml#NEVER-DEFER-THE-DOC-UPDATE-TO-LATER`
 **Files touched:** none
 
 **Re-verification:**
@@ -604,7 +604,7 @@ one compliance gap with one remedy, not two.
 does not keep it, the package does not move. A **host** obligation is recorded
 below.
 **Anchors:** 0 edited of 2 —
-`packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml#NO-RESTATEMENT-ANYWHERE-ELSE`,
+`vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml#NO-RESTATEMENT-ANYWHERE-ELSE`,
 `…/ATTRIBUTION-POLICY.xml#SUM-RUN-IT-HONESTLY`
 **Files touched:** none
 
@@ -623,7 +623,7 @@ $ sed -n '5p' CLAUDE.md
 The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** … The rules live in that inline lane, not restated here.
    → the parenthetical IS the restatement, inside the clause asserting there is none.
 
-$ sed -n '101,102p' packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.xml
+$ sed -n '101,102p' vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml
 ##NO-RESTATEMENT-ANYWHERE-ELSE No repeating it in the README, no per-directory
 reminders, no comments citing it. @impl/done
 ```
@@ -666,7 +666,7 @@ so it stops for the owner either way.
 does not keep it, and nothing in this tree checks it. A **host** obligation is
 recorded below.
 **Anchors:** 0 edited of 2 —
-`packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.xml#HEADER-SUBJECT-LENGTH-MOOD-AND-CASE`,
+`vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml#HEADER-SUBJECT-LENGTH-MOOD-AND-CASE`,
 `…/31-flow-conventional-commits.xml#NEVER-CAPITALISE-OR-OMIT-THE-TYPE`
 **Files touched:** none
 
@@ -725,22 +725,22 @@ not fixed, and explicitly **not** written into the package.
 
 ---
 
-## F-274 — the campaign note points at a `spec/terraforms/` this package does not have; its `spec/` holds `tools/` alone
+## F-274 — the campaign note points at a `vibevm/vibespecs/terraforms/` this package does not have; its `spec/` holds `tools/` alone
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md#campaign-in-flight-note`
-**Files touched:** `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md#campaign-in-flight-note`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md`
 
 **Re-verification:**
 
 ```
-$ sed -n '12,15p' packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md
+$ sed -n '12,15p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md
 > ##campaign-in-flight-note Campaign in flight: built end-to-end per
 > GO-AI-NATIVE-PLAN v0.1, the campaign plan, which is authored outside
 > this package; the server brief is `spec/tools/discipline-mcp-go.md`.
 > This README is finalized at campaign close. @spec/done
 
-$ ls -R packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/
+$ ls -R vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/vibevm/vibespecs/
 spec/:        tools
 spec/tools:   discipline-mcp-go.xml
    → no `terraforms/`; the second half of the note (the server brief) resolves.
@@ -749,7 +749,7 @@ $ find . -name "GO-AI-NATIVE-PLAN-v0.1.md" -not -path "./target/*"
 ./legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md
    → one copy in the tree, in the host, outside every package.
 
-$ grep -rn "GO-AI-NATIVE-PLAN" packages/org.vibevm.ai-native/ --include=*.md
+$ grep -rn "GO-AI-NATIVE-PLAN" vibevm/vibepacks/org.vibevm.ai-native/ --include=*.md
 go-ai-native-lang/v0.1.0/spec/cards/INDEX.md:56:            GO-AI-NATIVE-PLAN campaign)
 go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:5:  GO-AI-NATIVE-PLAN v0.1 (Phase 3)
 go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:5:  GO-AI-NATIVE-PLAN v0.1 (Phase 3)
@@ -765,7 +765,7 @@ route (a), `falsifier` would read `self` on the strict reading even though the
 row says `mixed`.
 
 **Perimeter searched:** the package's own tree
-(`ls -R packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/`) and the
+(`ls -R vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/vibevm/vibespecs/`) and the
 whole repository for the plan file (`find . -name "GO-AI-NATIVE-PLAN-v0.1.md"
 -not -path "./target/*"` → one hit, in the host).
 
@@ -786,20 +786,20 @@ stays `@spec/done`.
 ## F-276 — 74.8 % is not the figure the corpus's own findings register holds; the register says 75.3 % / 70.2 %
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.xml#RISK-TRANSFER-UNPROVEN`
-**Files touched:** `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.xml`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml#RISK-TRANSFER-UNPROVEN`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml`
 
 **Re-verification:**
 
 ```
-$ sed -n '78p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.xml
+$ sed -n '78p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml
 - ##RISK-TRANSFER-UNPROVEN **Transfer unproven:** the PLDI'25 reduction — 75.3% on synthesis and 70.2% on translation (DR2-012) — is TypeScript. Rust's richer types may yield smaller gains, or the per-completion analyzer latency may make Stage 3 impractical for interactive generation. Measure at Stage 2 before committing to Stage 3. @spec/done
 
-$ grep -n "DR2-012" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml
+$ grep -n "DR2-012" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml
 ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness
   … reduces compilation errors by 75.3% (synthesis) and 70.2% (translation) …
 
-$ grep -n "DR2-012" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.xml
+$ grep -n "DR2-012" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml
 11:  … DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript) …   ← F-216, sync-from-code, NOT this obligation
 78:  … (DR2-012) …                                                          ← this edit
 81:  … (The CITYWALK false-positive trap, DR2-012 caveat.)
@@ -811,7 +811,7 @@ $ grep -n "DR2-012" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spe
 this brief's own §1 cites as its evidence base.
 
 **Perimeter searched:** every `74.8` in the ai-native tree —
-`grep -n "74.8\|74,8" -r packages/org.vibevm.ai-native/ --include=*.md` → **12
+`grep -n "74.8\|74,8" -r vibevm/vibepacks/org.vibevm.ai-native/ --include=*.md` → **12
 sites in 5 packages**, and **not one of them is in the findings register**. The
 register carries 75.3 / 70.2 and its own title says «~75 %».
 
@@ -849,13 +849,13 @@ batch is cut by route first.
 **Outcome:** OUT-OF-ROUTE — §3.6 **route (b)**: the rule is sound, the consumer
 did not keep it. A **host** obligation is recorded below.
 **Anchors:** 0 edited of 1 —
-`packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.xml#WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT`
+`vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml#WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT`
 **Files touched:** none
 
 **Re-verification:**
 
 ```
-$ sed -n '38,40p' packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.xml
+$ sed -n '38,40p' vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml
 - ##WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT A change touching the licence file, the manifest `license` field,
   or the third-party carve-out updates all of them together, in one
   commit. @impl/done
@@ -865,7 +865,7 @@ $ git show --stat --format="%h %ad %s" --date=short 5086c5b5 | head -5
  LICENSE.xml | 65 ++++++++++++++++++++++++++++++++++++++++++--------------------
  1 file changed, 44 insertions(+), 21 deletions(-)
 
-$ git log -S'UPL-1.0' --format="%h %ad %s" --date=short -- spec/common/PROP-000.xml | head -2
+$ git log -S'UPL-1.0' --format="%h %ad %s" --date=short -- vibevm/vibespecs/common/PROP-000.xml | head -2
 71d8383b 2026-07-25 docs(spec): Phase D d1b — the foundation catches up with reality
    → thirteen days later, in a separate commit.
 
@@ -884,7 +884,7 @@ kept — the relicense was an owner act.
 
 **Perimeter searched:** the package tree (boot snippet + `LICENSING-PROTOCOL.xml`)
 for an internal contradiction — none. Host side: `LICENSE.xml`, `README.md`,
-`VIBEVM-SPEC.md`, `spec/common/PROP-000.xml`, and the CLAUDE.md carve-out ledger.
+`VIBEVM-SPEC.md`, `vibevm/vibespecs/common/PROP-000.xml`, and the CLAUDE.md carve-out ledger.
 The ledger at `CLAUDE.md:132-137` enumerates the deliberately-stale `"EULA"`
 strings — `refs/**`, `vibedeps/**`, `.vibe/cache/**`, `fixtures/**`, `crates/**`
 test data, the licensing package, `VIBEVM-SPEC.md` and specs. **`README.md` is
@@ -907,18 +907,18 @@ the carve-out ledger already says it is not exempt. Recorded, not fixed.
 
 **Outcome:** RE-JUDGE: confirmed
 **Anchors:** 0 edited of 1 —
-`packages/org.vibevm.world/qualified-naming/v0.1.0/README.md#IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE`
+`vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/README.md#IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE`
 **Files touched:** none
 
 **Re-verification:**
 
 ```
-$ sed -n '99p;106p;122p' spec/modules/vibe-workspace/PROP-009-loading-model.xml
+$ sed -n '99p;106p;122p' vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml
 - ##LINK-DYNAMIC `link = "dynamic"` — **the default.** … An optional `when` condition gates the read … **v1 implements the `os:` probe end-to-end** — `when = "os:windows"` matches the session's operating system (`windows` / `macos` / `linux`); the remaining probes are reserved until PROP-003's activation engine is built. @impl/done
 ##WHEN-FORCES-DYNAMIC A `[boot_snippet]` that declares a `when` condition (§2.6) stays a conditional `dynamic` entry … OS-specific content must never reach a session on the wrong OS. @impl/done
 - ##SCHEMA-BOOT-SNIPPET … For v1 the only `when` is an operating-system match, the wire string `"os:<name>"` with `<name>` one of `windows` / `macos` / `linux` …
 
-$ cat packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml   # the [boot_snippet] table, in full
+$ cat vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml   # the [boot_snippet] table, in full
 [boot_snippet]
 source = "spec/boot/67-flow-qualified-naming.md"
 category = "flow"
@@ -931,7 +931,7 @@ $ sed -n '28p' vibe.toml
    → the snippet reaches STATIC.md transitively through the redbook collection,
      under a link mode the HOST chose.
 
-$ sed -n '13,20p' packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.xml
+$ sed -n '13,20p' vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml
 ## When this applies {#when}
 
 ##READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED When you design any user-facing namespace — a package registry, a
@@ -946,8 +946,8 @@ read [`QUALIFIED-NAMING-PROTOCOL.xml`](../flows/qualified-naming/QUALIFIED-NAMIN
 host to change and none of which the package could have avoided.
 
 **Perimeter searched:** for a mechanism that could have made the snippet
-conditional — `spec/modules/vibe-workspace/PROP-009-loading-model.xml` (§2.3,
-§2.4, §2.6 and the §history entry) and `spec/modules/vibe-resolver/PROP-003-dep-evolution.xml`
+conditional — `vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml` (§2.3,
+§2.4, §2.6 and the §history entry) and `vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml`
 (`##CH-IF-OS`, the shared probe vocabulary). For who chose the lane — the
 package's `vibe.toml` and the host's `vibe.toml`.
 
@@ -984,13 +984,13 @@ a **host** roadmap item, not a defect in this package. Recorded, not fixed.
 ## F-326 — «the Discipline's internal copies defer to them from their next release»: the next release came, and deferred in neither
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.world/redbook/v0.2.0/README.md#THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP`
-**Files touched:** `packages/org.vibevm.world/redbook/v0.2.0/README.md`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md#THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP`
+**Files touched:** `vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md`
 
 **Re-verification:**
 
 ```
-$ sed -n '99,105p' packages/org.vibevm.world/redbook/v0.2.0/README.md
+$ sed -n '99,105p' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md
 ##THE-REDBOOK-PACKAGE-IS-CANONICAL-WHERE-THE-TWO-OVERLAP Where the two describe the same practice, **the redbook package is
 canonical**: `flow:wal` is the canonical home of the WAL convention
 and `flow:campaign-plans` of the campaign-plan format. That is this
@@ -1000,12 +1000,12 @@ core-ai-native 0.8.0 its `05-CAMPAIGN-FORM.xml` and
 copies until one lands. @spec/done
 
 $ grep -c "campaign-plans\|redbook\|defer\|superseded" \
-      packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.xml \
-      packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.xml
+      vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/05-CAMPAIGN-FORM.xml \
+      vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/06-WAL-CONVENTION.xml
 …/05-CAMPAIGN-FORM.xml:0
 …/06-WAL-CONVENTION.xml:0                 # 117 and 104 lines respectively
 
-$ Grep "redbook" over packages/org.vibevm.ai-native/
+$ Grep "redbook" over vibevm/vibepacks/org.vibevm.ai-native/
 No files found                            # zero across the entire ai-native tree
 
 $ git log --format="%h %ad %s" --date=short -1 bfb72da7
@@ -1028,7 +1028,7 @@ contain the word `redbook`. Not the host.
 **Perimeter searched:** both overlapping documents in the installed
 `core-ai-native/v0.8.0` slot for `campaign-plans` / `redbook` / `defer` /
 `superseded` (0 hits in 221 lines), and the entire
-`packages/org.vibevm.ai-native/` tree for `redbook` (no files). `vibe.lock`
+`vibevm/vibepacks/org.vibevm.ai-native/` tree for `redbook` (no files). `vibe.lock`
 confirms v0.8.0 is the installed slot, so the check is against what a consumer
 actually reads.
 
@@ -1053,13 +1053,13 @@ not a prose edit. It is not this obligation's to make. Recorded, not fixed.
 ## F-329 — «enforced by mechanical scans» over-claims for both halves, and both packages say so themselves
 
 **Outcome:** EDITED
-**Anchors:** 1 edited of 1 — `packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md#COMPOSES-ATTRIBUTION-POLICY`
-**Files touched:** `packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md`
+**Anchors:** 1 edited of 1 — `vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/README.md#COMPOSES-ATTRIBUTION-POLICY`
+**Files touched:** `vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/README.md`
 
 **Re-verification:**
 
 ```
-$ sed -n '65,70p' packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md
+$ sed -n '65,70p' vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/README.md
 - ##COMPOSES-ATTRIBUTION-POLICY `flow:git-attribution-policy` (`55-…`) is the sibling policy package:
   both are one-place policies, mechanised where mechanisation reaches
   and reviewed everywhere else — the sibling scans two of its eight
@@ -1068,7 +1068,7 @@ $ sed -n '65,70p' packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md
   secret values off every surface. @impl/done
 
 $ grep -n "SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL" -A2 \
-      packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.xml
+      vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml
 - ##SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL Eight surfaces; two of them (messages, trailers) get a mechanical
   pre-push scan, the rest ride templates, tool configuration, and
   the periodic audit. @impl/done
@@ -1077,12 +1077,12 @@ $ grep -n "SUM-EIGHT-SURFACES-TWO-OF-THEM-MECHANICAL" -A2 \
     — for two surfaces, and it says so.)
 
 $ grep -n "^### Law 4\|THE-REDACTION-IS-BACKED-BY-A-UNIT-TEST\|EVERY-NEW-CODE-PATH-IS-REVIEWED" \
-      packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml
+      vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml
 107:### Law 4 — redaction is tested, not promised {#law-tested}
 113:##THE-REDACTION-IS-BACKED-BY-A-UNIT-TEST That redaction is **backed by a unit test** …
 120:##EVERY-NEW-CODE-PATH-IS-REVIEWED-AGAINST-THE-FOUR-LAWS Every new code path that touches a secret is reviewed against these …
 
-$ grep -rn "scan\|mechanical\|checker" packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/ --include=*.md
+$ grep -rn "scan\|mechanical\|checker" vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/ --include=*.md
 SECRETS-HYGIENE-PROTOCOL.xml:147: … the response is mechanical:      ← the accidental-read drill
    → exactly one hit, and it is about incident response. This package ships
      NO scan of its own; its enforcement is a unit test plus review.
@@ -1121,7 +1121,7 @@ sibling's filename, not about this rule; not fixed here.
 contradiction is in the host's own boot contract, so the fix is a host policy
 decision, not a boss edit.
 **Anchors:** 0 edited of 1 —
-`packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`
+`vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`
 **Files touched:** none
 
 **Re-verification:**
@@ -1142,27 +1142,27 @@ $ git reflog show refs/remotes/github/main --format='%gs' | sort | uniq -c | sor
 --- the host instructing the violation ---
 $ sed -n '191p' CLAUDE.md
 4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. …
-$ sed -n '34p' spec/boot/90-user.xml
+$ sed -n '34p' vibevm/vibespecs/boot/90-user.xml
 - ##CMD-ROUTINE-PUSH Routine push to GitVerse: `git push origin main`. …
 
 --- the host instructing the rule, in the same file ---
-$ sed -n '13p;35p' spec/boot/90-user.xml
+$ sed -n '13p;35p' vibevm/vibespecs/boot/90-user.xml
 - ##SRC-MULTI-HOMED … Roll a change out to both with `cargo xtask mirror` … NOT `git push origin` (which only hits GitVerse). …
 - ##CMD-MIRROR … `cargo xtask mirror` … This is the standard rollout, preferred over a bare `git push origin`. …
-$ sed -n '15p' spec/common/PROP-016-source-mirrors.xml
+$ sed -n '15p' vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 - ##HOST-GITVERSE **GitVerse** … `origin` on the maintainer's machine points here — a single-host convenience remote; fan-out is the manifest, not `git push origin`. @spec/done
 ```
 
 **Who falsifies it:** **the host**, twice over — in its reflogs and in its own
-written contract. `spec/boot/90-user.xml` says both things: line 13 forbids
+written contract. `vibevm/vibespecs/boot/90-user.xml` says both things: line 13 forbids
 `git push origin`, line 34 prescribes it as routine. Nothing in
 `source-mirrors/v0.1.0/` disagrees with itself; its `#never` list is internally
 consistent (`NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`,
 `NEVER-FORCE-ANY-TARGET`, `NEVER-RESOLVE-A-DIVERGENCE-BY-CLOBBERING`).
 
 **Perimeter searched:** the package tree for a self-contradiction — none; the
-host for both sides of the instruction — `CLAUDE.md:191`, `spec/boot/90-user.xml`
-lines 13 / 34 / 35, `spec/common/PROP-016-source-mirrors.xml:15`; and both
+host for both sides of the instruction — `CLAUDE.md:191`, `vibevm/vibespecs/boot/90-user.xml`
+lines 13 / 34 / 35, `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:15`; and both
 tracking reflogs for the push-path signature.
 
 **What changed and why:** nothing. This is the clearest route (b) in the batch
@@ -1174,7 +1174,7 @@ replica host, and PROP-016 and `90-user.xml:13` need correcting) or whether
 which is owner-sensitive, and the flow's rule is unaffected by whichever way it
 goes.
 
-**New obligations noticed — HOST, for the owner:** `spec/boot/90-user.xml`
+**New obligations noticed — HOST, for the owner:** `vibevm/vibespecs/boot/90-user.xml`
 contradicts itself at lines 13 and 34 about whether `git push origin main` is
 permitted, and `CLAUDE.md:191` makes the forbidden form step 4 of the END
 SESSION contract. This is a genuine policy fork, not an editorial slip; it is

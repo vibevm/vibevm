@@ -2,7 +2,7 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/`.
+**Corpus:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/`.
 
 **All twenty-one locked conventions in
 [`MARKUP-B1.md`](MARKUP-B1.md#locked) bind this batch.** They were paid for by

@@ -1,0 +1,65 @@
+[package]
+name = "redbook"
+group = "org.vibevm.world"
+kind = "flow"
+version = "1.0.0"
+epoch = 1
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The redbook collection: the AI-native development practices, distilled from the book into installable flows — one edition, one tested set"
+keywords = ["collection", "practices", "ai-native", "spec-driven", "book"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/03-flow-redbook.xml"
+
+
+category = "flow"
+
+# Edition 1.0.0 — the 1.0 release edition. An edition is a tested set:
+# members are pinned exactly, and the umbrella's version is the
+# edition number. Members evolve on their own lines between editions.
+# This edition adds the wave-2 practices (operating-modes through
+# tool-design-lessons) to the ten of edition 0.1.0.
+
+[[boot_snippet.fragment]]
+source = "vibevm/vibespecs/boot/03a-member-wal.xml"
+when = "installed:org.vibevm.world/wal"
+
+[[boot_snippet.fragment]]
+source = "vibevm/vibespecs/boot/03b-member-wal-specspaces.xml"
+when = "installed:org.vibevm.world/wal-specspaces"
+
+[requires.packages]
+# The book's core (edition 0.1.0)
+"flow:org.vibevm.world/two-process-model" = "=1.0.0"
+"flow:org.vibevm.world/sync-from-code" = "=1.0.0"
+"flow:org.vibevm.world/git-practices" = "=1.0.0"
+"flow:org.vibevm.world/addressable-specs" = "=1.0.0"
+"flow:org.vibevm.world/decision-records" = "=1.0.0"
+"flow:org.vibevm.world/conflict-protocol" = "=1.0.0"
+"flow:org.vibevm.world/campaign-plans" = "=1.0.0"
+"flow:org.vibevm.world/discovery-prompt" = "=1.0.0"
+# attribution-policy now arrives via git-practices (§12.1 human-authored)
+# The project-practice wave (edition 0.2.0)
+"flow:org.vibevm.world/operating-modes" = "=1.0.0"
+"flow:org.vibevm.world/health-audit" = "=1.0.0"
+"flow:org.vibevm.world/manual-tests" = "=1.0.0"
+"flow:org.vibevm.world/secrets-hygiene" = "=1.0.0"
+"flow:org.vibevm.world/licensing" = "=1.0.0"
+"flow:org.vibevm.world/source-mirrors" = "=1.0.0"
+"flow:org.vibevm.world/spec-genres" = "=1.0.0"
+"flow:org.vibevm.world/comparative-research" = "=1.0.0"
+"flow:org.vibevm.world/managed-blocks" = "=1.0.0"
+"flow:org.vibevm.world/qualified-naming" = "=1.0.0"
+"flow:org.vibevm.world/tool-design-lessons" = "=1.0.0"
+# The cultural-extraction wave (first accumulated after edition 0.2.0; now
+# part of the 1.0.0 tested set).
+# Standing rule (owner, 2026-08-02, the F-114 ruling): the NEXT roster change
+# bumps the edition — a member set never changes again under an unmoved
+# version number.
+"flow:org.vibevm.world/dev-runtime-docs" = "=1.0.0"
+"flow:org.vibevm.world/wal-specspaces" = "=1.0.0"

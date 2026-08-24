@@ -1,7 +1,7 @@
 //! End-to-end tests for the full M0 walk: init → install → list → uninstall.
 //!
 //! The `wal` package exercised here is the real `org.vibevm.world/wal` that
-//! ships in this repo at `packages/org.vibevm.world/wal/` — the tests dogfood
+//! ships in this repo at `vibevm/vibepacks/org.vibevm.world/wal/` — the tests dogfood
 //! the actual product package, not a hand-written fixture. Also covers the
 //! M1.1 git-backed-registry install and the M1.15 git-source installs (`--git`
 //! + `--tag` / `--branch`).

@@ -1,8 +1,8 @@
 //! Content-addressed package identity.
 //!
-//! Spec: [PROP-008 §2.2](../../../spec/modules/vibe-registry/PROP-008-qualified-naming.md#identity)
+//! Spec: [PROP-008 §2.2](../../../vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml#identity)
 //! (the `(group, name, version, content_hash)` identity tuple),
-//! [PROP-002 §2.1](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity)
+//! [PROP-002 §2.1](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#identity)
 //! (content addressing).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");

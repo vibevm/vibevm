@@ -74,7 +74,7 @@ depending only on which lane you read it in:
 |---|---:|---:|
 | `packages/**` — where the text is authored | 70 | **0** |
 | `vibedeps/**` — the installed slots | 142 | 21 |
-| `spec/boot/STATIC.xml` — where a session reads it | 75 | **75** |
+| `vibevm/vibespecs/boot/STATIC.xml` — where a session reads it | 75 | **75** |
 
 `spec/flows/` does not exist in this host (`ls spec/` → `WAL.md boot common
 design manual-tests modules terraforms`). The boot compiler concatenates snippet
@@ -85,7 +85,7 @@ moved, and an `@spec://` address can. That is why the owner's ruling puts the
 repair in the packages and not in the compiler — and it is also why the repair
 **cannot be verified by editing a package**.
 
-- @fact:A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.xml` is
+- @fact:A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `vibevm/vibespecs/boot/STATIC.xml` is
   generated from `vibedeps/` — its own provenance comments say so
   (`<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/… -->`).
   So a package edit reaches the lane only through a version bump and
@@ -133,7 +133,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   model:», «Full rationale:», «Grammar and forms:», «Responsibility table:»,
   «read …». Every one deliberately withholds the target's content. The emitted
   form copies the house form already live in the host's own spec
-  (`spec/common/PROP-000.xml:161-164`, `PROP-016:8`):
+  (`vibevm/vibespecs/common/PROP-000.xml:161-164`, `PROP-016:8`):
   `spec://<group>/<name>/<doc-path>#<anchor>`, no `.md`, always an anchor.
 - @fact:A1-F240-IS-SCOPED-AT-TWO-AND-THE-DEFECT-IS-IN-SEVENTEEN **`F-240`'s scope is wrong, and this is the one thing here that
   changes what the owner should approve.** The root-relative variant — a

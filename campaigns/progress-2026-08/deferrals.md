@@ -18,7 +18,7 @@ being worked is in `tasks/INDEX.md`, not here.
   the spec to match would delete a promise the engine is about to keep.
   *Deferred to wave 2, by construction rather than by choice.*
 
-- ~~**`spec/boot/90-user.xml` `##TOKEN-FILE-CONVENTION` — the owner's half of
+- ~~**`vibevm/vibespecs/boot/90-user.xml` `##TOKEN-FILE-CONVENTION` — the owner's half of
   F-063.**~~ **CLOSED 2026-07-26**, when the owner lifted the NOTOUCH bar on
   the boot pair and the corrected line landed under sync-from-code. Kept here
   with its original reasoning because a deferral that silently vanishes
@@ -52,9 +52,9 @@ being worked is in `tasks/INDEX.md`, not here.
 ## 3. Re-verify first, next campaign {#reverify}
 
 - **Two files carry verdicts formed against text that has since moved:**
-  `spec/manual-tests/MT-02-vibe-tree-tui.xml` (edited by Phase D wave d2e,
+  `vibevm/vibespecs/manual-tests/MT-02-vibe-tree-tui.xml` (edited by Phase D wave d2e,
   `389abc68`, after its 12:50 verdict) and
-  `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` (edited by d2g/d2h,
+  `vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml` (edited by d2g/d2h,
   `f6c17f92`, after its 14:55 verdict). `vibe progress baseline` names both on
   every run. In each case the edit was a sync-from-code correction that moved
   the prose *toward* reality with the ledger updated in the same commit, so
@@ -76,7 +76,7 @@ being worked is in `tasks/INDEX.md`, not here.
   were re-authored in Phase D against the shipped F-key surface (the old steps
   walked a human through `n`/`x`/`t`/`Tab`/`q`, none of which exist). An agent
   may pre-run them; **only a person signs off**, so the run status did not
-  move and `spec/WAL.xml` names them as outstanding — which is itself what
+  move and `vibevm/vibespecs/WAL.xml` names them as outstanding — which is itself what
   makes `MT-WAL-NAMES` true rather than merely worded.
 
 ## 5. Standing conditions carried forward {#standing}

@@ -11,7 +11,7 @@
 //! Scope violations ([`DiagnosticKind::WrongScope`]) are **not** produced here
 //! — they require layer context and are emitted by the resolver (phase 2.3).
 //!
-//! Spec: [PROP-040 §6](../../../../../../spec/modules/vibe-settings/PROP-040-settings.md#schema).
+//! Spec: [PROP-040 §6](../../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#schema).
 
 use super::registry::Schema;
 use super::types::KeyType;

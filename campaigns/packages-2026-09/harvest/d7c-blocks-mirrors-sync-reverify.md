@@ -1,8 +1,8 @@
 # D7c — `managed-blocks` + `source-mirrors`: thirty `sync-from-code` verdicts, re-measured before any diff is prepared
 
 _Worked 2026-07-31, wave 7. Subjects:
-`packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/` and
-`packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/`.
+`vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/flows/managed-blocks/` and
+`vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/`.
 Six obligations, all `closure_route: sync-from-code`, all
 `type: reality-mismatch`, **30 drift verdicts** — 18 on `managed-blocks`
 (F-143 · F-148 · F-242), 12 on `source-mirrors` (F-179 · F-180 · F-181)._
@@ -43,7 +43,7 @@ re-stated against that sha below.
 The standing perimeter, run from the repository root:
 
 ```
-packages/**  (INCLUDING packages/org.vibevm.fractality/**)
+packages/**  (INCLUDING vibevm/vibepacks/org.vibevm.fractality/**)
 vibedeps/**  crates/**  xtask/**  tools/**  spec/**  discipline/**  terraform/**
 research/**  campaigns/**  legacy-spec/**  fixtures/**  schemas/**  docs/**  manual-tests/**
 and the repository root's own *.md / *.toml / *.json / *.sh / *.ps1
@@ -60,7 +60,7 @@ the package, ENGINE in a library crate, DRIVER in a CLI, DEPLOYMENT in the
 consuming project — and **two more places a `world` flow's mechanism can live**,
 both of which decide verdicts below:
 
-- **A second adopter inside `packages/`.** `packages/org.vibevm.fractality/fractality/v0.1.0/`
+- **A second adopter inside `packages/`.** `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/`
   is a complete project with its own `vibe.toml`, its own `vibedeps/` carrying
   `flow-managed-blocks`, and its own Cargo workspace. For `managed-blocks` there
   are therefore **two** implementations a description can be measured against —
@@ -116,13 +116,13 @@ verdicts' own commands first, then the **thing** rather than the string:
 `consent_to_build` · `DestructiveGuard` · `Confirm` · `assume_yes` ·
 `user_attended` · `interact()` · `println!` / `eprintln!` / `tracing::` /
 `log::`, over `crates/**`, `xtask/**`, `tools/**` and
-`packages/org.vibevm.fractality/**`. For the fixture rows, by **shape not
+`vibevm/vibepacks/org.vibevm.fractality/**`. For the fixture rows, by **shape not
 string** — an absent fixture cannot be grepped for — so: a full listing of every
 block test in `crates/vibe-workspace/src/boot_artifacts/tests.rs`, the whole of
 `crates/vibe-check/src/checks/redirect_block.rs` read end to end, and a
 tree-wide sweep for any marker-carrying file on disk in `fixtures/`, `schemas/`,
 `manual-tests/`, `discipline/`, `terraform/` and `tools/`. Second adopter
-included: `packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
+included: `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
 read end to end — its `notices` channel is the print surface this family asks
 for, in the other medium.
 
@@ -215,7 +215,7 @@ automated around is named and declared gone, in the release notes, in one plain
 sentence. Clause two is the hand-editor's reassurance, and it names *other tools*
 explicitly. `CHANGELOG.md:57` then records the one-time migration with the
 preservation guarantee, and
-`spec/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:148`
+`vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml:148`
 (`##SELF-MIGRATION-APPEND`) says the same in the spec. The anchor is already
 `@spec/done` and needs no change.
 
@@ -228,7 +228,7 @@ hand-authored prefix asserted at `:510`) and `:520-534` on the splice path
 `##VERB-REMOVE`". That premise is exactly the one wave 6 falsified: the verb is
 built, wired and round-trip tested in the second adopter, and **both** assertions
 this anchor calls deserving exist there —
-`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:392-408`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:392-408`
 (`install_into_an_empty_document_then_remove_restores_empty`, asserting "a clean
 uninstall leaves no residue") and `:431-462`
 (`foreign_entries_survive_install_and_remove`, the identity function on the
@@ -386,7 +386,7 @@ both enforcement points (`boot_artifacts.rs:396-401`,
 neighbouring obligation did not reach and which changes the picture; the
 exit-code mapping (`crates/vibe-cli/src/exit_code.rs:70-90`); and the second
 adopter's malformed path
-(`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:114-127`,
+(`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:114-127`,
 `:298-312`). Searched for a **golden or snapshot of the message text** across
 `discipline/**`, `manual-tests/**`, `fixtures/**`, `docs/**`, `terraform/**`.
 
@@ -574,13 +574,13 @@ against both it (`fanout-mechanics.xml:178-205`) and the host's port
 revisit trigger, the verdict's own command re-run on its own file and then the
 **thing** rather than the spelling — `deferred until` · `until needed` ·
 `worth opening if` · `when a host must` · `one-directional server-side
-mirroring` — over `spec/common/**`. Plus a re-measurement of every figure the
+mirroring` — over `vibevm/vibespecs/common/**`. Plus a re-measurement of every figure the
 four verdicts rest on, at HEAD `9f79acf1`.
 
 **The verdicts' own commands, re-run.**
 
 ```console
-$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.xml
+$ grep -n -i 'revisit\|parallel\|integrator' vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 (exit 1 — no match)
 ```
 
@@ -611,7 +611,7 @@ sentence: `##when-a-project-outgrows-one-integrator-this-is-the-wrong-tool`
 server-side mirroring or move to a shared-forge workflow"* — and `:157` says
 "Record that as a revisit trigger, not a someday-maybe." The host recorded
 exactly that, in the flow's own words, at
-`spec/common/PROP-016-source-mirrors.xml:72`:
+`vibevm/vibespecs/common/PROP-016-source-mirrors.xml:72`:
 
 > 1. @fact:open-server-side **Server-side mirroring.** When a host must originate
 > writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host),
@@ -661,7 +661,7 @@ host: not `git push host-a`, not a click in a web UI — the fan-out"* is
 `fanout-mechanics.xml:83-84`, and the boot-lane form of it,
 `62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST`, was routed out
 under §3.6(b) in wave 6 as *"a policy fork stated and not decided"* — the host
-forbids `git push origin` at `spec/boot/90-user.xml:13` and prescribes it at
+forbids `git push origin` at `vibevm/vibespecs/boot/90-user.xml:13` and prescribes it at
 `:34`, and `CLAUDE.md:191` makes it step 4 of the END SESSION contract. Both
 lines verified at HEAD. That is one obligation, already before the owner; these
 two anchors do not add a second.
@@ -713,7 +713,7 @@ the path into mainline, and there is one writer over 2 202 commits.
 `##THE-MODEL-MAKES-SERIALIZATION-THE-ONLY-WRITE-PATH` → **re-judge confirmed** —
 "and diverge" is the claim, and no divergence exists.
 `##RECORD-THAT-AS-A-REVISIT-TRIGGER` → **re-judge confirmed** — the trigger is at
-`spec/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
+`vibevm/vibespecs/common/PROP-016-source-mirrors.xml:72` in the flow's own prescribed
 "one-directional server-side mirroring" wording; its own summary was re-judged
 confirmed on that artefact in wave 6.
 
@@ -792,7 +792,7 @@ Three further measurements, each independently sufficient:
 **And the host non-compliance these verdicts really found is already before the
 owner.** `62-flow-source-mirrors.xml#NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST` was
 routed out under §3.6(b) in wave 6 as *"a policy fork stated and not decided"* —
-`spec/boot/90-user.xml:13` forbids `git push origin` (*"Roll a change out to both
+`vibevm/vibespecs/boot/90-user.xml:13` forbids `git push origin` (*"Roll a change out to both
 with `cargo xtask mirror` … NOT `git push origin` (which only hits GitVerse)"*),
 `:34` prescribes it as routine, and `CLAUDE.md:191` makes it step 4 of the END
 SESSION contract. All three lines verified at HEAD. **Route (b) is the defensible
@@ -935,13 +935,13 @@ obligation:
 ```console
 $ grep -rn "merge-base\|is-ancestor" --include=*.rs --include=*.sh --include=*.ps1 \
       --include=*.py --include=*.md --include=*.toml <standing perimeter>
-packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.xml:193
+vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml:193
 vibedeps/flow-source-mirrors/0.1.0/…/fanout-mechanics.xml:151                      (the installed copy)
 vibedeps/flow-delegation-rules/0.1.0/vibedeps/flow-source-mirrors/…:151           (transitively vendored)
-packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-source-mirrors/…:151         (the second project's copy)
-packages/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/…/source-mirrors/…:151         (its resolver cache, ×2)
-packages/org.vibevm.fractality/delegation-rules/v0.1.0/…/flow-source-mirrors/…:151          (×2)
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143,3494                 (citations of this finding)
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibedeps/flow-source-mirrors/…:151         (the second project's copy)
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/.vibe/cache/…/source-mirrors/…:151         (its resolver cache, ×2)
+vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/…/flow-source-mirrors/…:151          (×2)
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:3143,3494                 (citations of this finding)
 campaigns/packages-2026-09/harvest/d6c-mirrors-licensing-absences.md              (wave 6's own record)
 ```
 
@@ -995,7 +995,7 @@ grammar says so.** The sentence (`:209-210`) is *"The two invariants to preserve
 **when you port it**"* — a norm addressed to a porter, not a report about any
 port. Its two children split: `##INVARIANT-THE-ABSENCE-OF-ANY-FORCE-PATH`
 (`:214`) is **confirmed** and the host strengthened it into a unit test that
-`spec/common/PROP-016-source-mirrors.xml:64` calls «runnable capital, not prose»;
+`vibevm/vibespecs/common/PROP-016-source-mirrors.xml:64` calls «runnable capital, not prose»;
 `##INVARIANT-THE-ANCESTRY-GATE` (`:212`) is **routed out under (b)**. A parent
 whose children are one confirmed and one routed is not a package defect.
 
@@ -1056,7 +1056,7 @@ marker-owning tool does and a search of one crate sees one of them:
 `crates/vibe-check/src/checks/redirect_block.rs` (the linter's independent scan),
 `crates/vibe-cli/src/commands/vvm/env.rs` (the shell-rc block, comment-style
 markers) and
-`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs`
 (the second project's JSON adaptation, whose ownership marker is the command
 string). Searched for the **thing**: `BLOCK_OPEN` · `BLOCK_CLOSE` · `BLOCK_BEGIN`
 · `BLOCK_END` · `remove_block` · `strip` · `is_ours` · a version attribute on any
@@ -1095,7 +1095,7 @@ on the ground that "of update and remove, only update exists. **Root at
 
 That root is falsified. `##VERB-REMOVE` (`:165-169`) was re-judged **confirmed**
 in wave 6: the verb is built at
-`packages/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350-369`
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/crates/fractality-cli/src/harness.rs:350-369`
 over `strip()` at `:180-210`, wired to the CLI at `main.rs:427`, and pinned by two
 round-trip tests (`harness.rs:392-408`, `:431-462`). And the **summary of this
 very table** says the same sentence and is **confirmed**:

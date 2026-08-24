@@ -152,7 +152,7 @@ Budget signal: past ~5 files or ~350 lines, stop and return.
 - Live-corpus survey behind that number (the whole basis of the 0): the
   observed tree carries **11** section-level markers — `PROP-006#mfbt`,
   the open-questions sections of PROP-013 / PROP-016 / PROP-028 / PROP-031 /
-  PROP-032 / PROP-033, and four in `spec/design/README.md`. Three are exact
+  PROP-032 / PROP-033, and four in `vibevm/vibespecs/design/README.md`. Three are exact
   folds (units agree and match), four are agreeing sections whose marker
   adds a `comment` the units lack (not a loss — the test is one-directional),
   and four are mixed sections that §4.4 silences.

@@ -21,12 +21,13 @@ fn own_tree() -> tempfile::TempDir {
     let root = tmp.path();
     fs::write(
         root.join("specmap.toml"),
-        "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+        "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
     )
     .unwrap();
-    fs::create_dir_all(root.join("spec")).unwrap();
+    fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(
-        root.join("spec/D.md"),
+        root.join(vibe_core::layout::current_specs_root())
+            .join("D.md"),
         "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
     )
     .unwrap();
@@ -45,7 +46,9 @@ fn own_tree() -> tempfile::TempDir {
 /// edit drifts against. Mirrors `foreign::tests::slot_with_map`, kept local so
 /// the fragment tests are self-contained.
 fn slot_with_map(root: &Path) -> std::path::PathBuf {
-    let slot = root.join("vibedeps/org.demo.demo/0.1.0");
+    let slot = root
+        .join(vibe_core::layout::current_vibedeps_root())
+        .join("org.demo.demo/0.1.0");
     fs::create_dir_all(&slot).unwrap();
     fs::write(
         slot.join("vibe.toml"),
@@ -54,12 +57,13 @@ fn slot_with_map(root: &Path) -> std::path::PathBuf {
     .unwrap();
     fs::write(
         slot.join("specmap.toml"),
-        format!("namespace = \"{COORD}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n"),
+        format!("namespace = \"{COORD}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n"),
     )
     .unwrap();
-    fs::create_dir_all(slot.join("spec")).unwrap();
+    fs::create_dir_all(slot.join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(
-        slot.join("spec/D.md"),
+        slot.join(vibe_core::layout::current_specs_root())
+            .join("D.md"),
         "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
     )
     .unwrap();

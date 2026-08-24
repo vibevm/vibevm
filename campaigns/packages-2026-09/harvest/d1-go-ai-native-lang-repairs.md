@@ -6,7 +6,7 @@ sits inside the package or its own install slot, so §3.6 route **(a)** applies
 and the package yields._
 
 **Perimeter of every edit:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`. Nothing outside it
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`. Nothing outside it
 was touched. The rust and typescript twins named below are **left alone by
 design** — another worker owns them — and are recorded because a family fix
 landing in one member and not its siblings is a new `duplication` obligation,
@@ -20,14 +20,14 @@ not a closure ([PHASE-D-BATCH-PLAN.md §4.5](../PHASE-D-BATCH-PLAN.md#release)).
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/boot/20-stack-go-ai-native-lang.xml`
 
 **Re-verification:**
 
 The two cited paths do not resolve from the package root:
 
 ```console
-$ cd packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0
 $ ls go/GUIDE-AI-NATIVE-GO.md cards/INDEX.md
 ls: cannot access 'go/GUIDE-AI-NATIVE-GO.md': No such file or directory
 ls: cannot access 'cards/INDEX.md': No such file or directory
@@ -41,7 +41,7 @@ reader actually stands. The boot lane reads the snippet in place inside the
 slot:
 
 ```console
-$ grep -n "stack-rust-ai-native-lang\|20-stack" spec/boot/INDEX.md
+$ grep -n "stack-rust-ai-native-lang\|20-stack" vibevm/vibespecs/boot/INDEX.md
 22:path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 26:path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
 ```
@@ -73,9 +73,9 @@ introduced; the paths stay backticked prose, per the rule against
 package-relative links that resolve only in this dev tree.
 
 **Twin in another stack:** yes, and **not edited** —
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml`
 lines 6 and 12 (`rust/GUIDE-AI-NATIVE-RUST.md`, `cards/INDEX.md`) and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml`
 lines 7 and 13 (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`, `cards/INDEX.md`).
 F-153's own anchor list names all six. This obligation is a **release event**
 across three packages: the go-side edit alone is not the closure.
@@ -93,7 +93,7 @@ repair is the rule then this line is inconsistent with it. Recorded, not fixed.
 
 **Outcome:** EDITED (demotion per [§3.3](../PHASE-D-BATCH-PLAN.md#demote) — no code written)
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
 
 **Re-verification:** all five reasons hold, each for the cause stated.
 
@@ -144,7 +144,7 @@ with-tools-2026-07-07-0701.jsonl
 Two baselines, TypeScript and Rust. No Go run.
 
 `#LARGE-WORKSPACE-COLD-INIT-WARNING` — no 60 s ceiling is emitted or documented.
-Perimeter: the go stack's `crates/`, then `spec/modules/vibe-mcp/`, then
+Perimeter: the go stack's `crates/`, then `vibevm/vibespecs/modules/vibe-mcp/`, then
 `spec/` + `packages/` repo-wide.
 
 ```console
@@ -152,12 +152,12 @@ $ grep -rn "60" <go-stack>/crates/ --include=*.rs | grep -i "sec|ceiling|warn|fi
 crates/go-ai-native-cli/src/health.rs:7://! Sections: file-length early warning (the `[540, 600)` danger band),
 crates/go-ai-native-cli/src/main.rs:95:  /// Per-cell first-signal budget, seconds (card default: 60).
 crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:31:  GoOracle::spawn(root, Duration::from_secs(60))...
-$ grep -rn "60 s|60s|60 seconds" spec/modules/vibe-mcp/ ; echo "grep exit=$?"
+$ grep -rn "60 s|60s|60 seconds" vibevm/vibespecs/modules/vibe-mcp/ ; echo "grep exit=$?"
 grep exit=1
 $ grep -rn "first-request ceiling" spec/ packages/
 packages/.../go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:235
 packages/.../rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md:243
-  (+5 vendored copies of the rust file under packages/org.vibevm.fractality/**)
+  (+5 vendored copies of the rust file under vibevm/vibepacks/org.vibevm.fractality/**)
 ```
 
 None of the three `60`s is a first-request ceiling — a health file-length band,
@@ -190,9 +190,9 @@ plus a re-mirror, which the brief forbids by default. Flagged rather than taken.
 
 **Twin in another stack:** `##BENCH-HARNESS-RECORDS-DISTRIBUTIONS` exists
 verbatim as an anchor in both siblings —
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml`
 and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml`.
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml`.
 The 60 s sentence has a near-verbatim twin at
 `…/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md:243`,
 and the corpus sentence a paraphrase twin at the same file line 137
@@ -212,7 +212,7 @@ unclaimed by any obligation I was given. Recorded, not fixed.
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
 
 **Re-verification:** all four hold; one holds for a *sharper* cause than stated.
 
@@ -243,7 +243,7 @@ implementation documents a step the mechanism spec omits.
 package and never in an assertion. Perimeter: the entire package directory.
 
 ```console
-$ grep -rn "zombie" packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/
+$ grep -rn "zombie" vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/
 .../crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:3://! surface), hover, completion, shutdown with no zombie. Requires
 .../spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:203:the backstop; the no-zombie property is test-asserted. @impl/done
 .../spec/go/tools/vibe-agentic-tcg-go.md:192:  no-zombie assertions). @impl/done
@@ -285,9 +285,9 @@ the existing step 1 rather than minting a new anchor for a new step 0.
 sentence says it has no instrument yet.
 
 **Twin in another stack:** the target twin is
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:233`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:233`
 (`##TARGET-WARM-COMPLETE`, `complete` p50 < 300 ms) and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.xml:153-154`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml:153-154`
 (`##TARGET-WARM-VALIDATE-AND-COMPLETE`). **Not edited.** The other three anchors
 are Go-only.
 
@@ -303,7 +303,7 @@ instrumented either. It is not in my ten and I left it untouched. Closing
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml`
 
 **Re-verification:** the reason holds exactly. `update {content: null}` removes
 the document from the overlay map, and `open_or_update` then takes the `None`
@@ -344,7 +344,7 @@ again at version 1 — naming the bridge's own overlay-version test as what pins
 it. The marker stays `@impl/done`: the corrected sentence is exactly what ships.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:114`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml:114`
 carries the same sentence word-for-word under a *different* anchor id
 (`##OVERLAY-RULE-VERSIONS-NEVER-REPEAT`), so the registry's shared-anchor merge
 could not see it and F-270 is filed as a Go-only singleton. **Not edited.**
@@ -363,7 +363,7 @@ and appears to be claimed by no obligation in my ten.
 **Outcome:** EDITED — **with the verdict's stated cause corrected: half of it is
 falsified.**
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md`
 
 **Re-verification:** the reason says *«the two strings the sweep tells a reader
 to look for — `Defaulted` and `DISABLED by policy` — appear in no shipped string
@@ -427,9 +427,9 @@ lines are shipped and printed. No prescription weakened — the weekly
 re-question rule and the shrinking-floor rationale are untouched.
 
 **Twin in another stack:** yes, and **not edited** —
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:47`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md:47`
 (`##CHECK-THE-PRINTED-POLICY-ORIGIN-LINES`) and
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:48`
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/skills/typescript-ai-native-sweep/SKILL.md:48`
 (`##CHECK-THE-PRINTED-POLICY-LINES`). This is a **release event** across three
 packages. The twins' replacement text is **not** the same string as Go's — the
 captured runs show each tool printing its own wording
@@ -453,7 +453,7 @@ before they edit.
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md`
 
 **Re-verification:** the reason holds on all four names, and the two names it did
 *not* challenge check out as correct.
@@ -500,7 +500,7 @@ reader types into a config file, so a wrong name here fails closed and silently
 — which is why the rename is the whole repair and nothing else moved.
 
 **Twin in another stack:**
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:75`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md:75`
 carries `##RATCHET-CENSUS-REGRESSIONS` with Rust's own kind list
 (`unwrap_domain` / `env_nonroot` / …). **Not edited** — F-212 is a **release
 event** over those two packages. Note the rust twin's *kinds* are a different
@@ -524,7 +524,7 @@ list will miss it.
 
 **Outcome:** EDITED (demotion per §3.3)
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml`
 
 **Re-verification:** the reason holds on every clause. The three documented keys
 occur **zero times in the entire go stack** — perimeter: the whole `crates/`
@@ -567,7 +567,7 @@ implemented; only the parameter and three keys are not. `@spec/done` therefore
 under-states it, and splitting would cost a new anchor. Flagged, not taken.
 
 **Twin in another stack:** yes, and **not edited** —
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml#OP-INIT`,
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml#OP-INIT`,
 which F-211's anchor list names as the second member. Its verdict records the
 identical shape one language over: printed `{ra_version, ra_path, toolchain,
 root_files, quiescent}` against a shipped `ra_version, position_encoding,
@@ -576,10 +576,10 @@ alone is not the closure.
 
 **New obligations noticed:** the anchor exists in a **third** package that
 F-211's list does not name —
-`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml#OP-INIT`:
+`vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml#OP-INIT`:
 
 ```console
-$ grep -rl "##OP-INIT" packages/org.vibevm.ai-native/rust-ai-native-lang packages/org.vibevm.ai-native/typescript-ai-native-lang
+$ grep -rl "##OP-INIT" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang
 .../rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md
 .../typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md
 ```
@@ -594,7 +594,7 @@ before publication.
 
 **Outcome:** EDITED (demotion per §3.3 — no code written)
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/vibe-agentic-tcg-go.xml`
 
 **Re-verification:** the reason holds, and both of its halves check out. The ops
 ship — `Serve`, `Validate`, `Scope`, `Complete` (and `Type`, `Bench`) are real
@@ -622,7 +622,7 @@ touched, because in their packages the sentence is TRUE.** The anchor exists in
 both siblings:
 
 ```console
-$ grep -rl "##STAGE-A-CONSULTATION-ORACLE" packages/org.vibevm.ai-native/rust-ai-native-lang packages/org.vibevm.ai-native/typescript-ai-native-lang
+$ grep -rl "##STAGE-A-CONSULTATION-ORACLE" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang
 .../rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md
 .../typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md
 ```
@@ -652,7 +652,7 @@ fixed.
 **Outcome:** EDITED — **and the recorded reason does not support its own
 verdict.** See the ruling below.
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md`
 
 **Re-verification, clause by clause.** The fact reads: «The worked pilot lives in
 the vibevm dev tree at `research/go-demo` — a miniature reconciler **with the
@@ -703,7 +703,7 @@ is **red**:
 ```console
 $ sed -n '1,20p' campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md
 # go-ai-native-lang — floor
-_Captured 2026-07-28 against `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
+_Captured 2026-07-28 against `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`._
 ...
 floor: `gofmt` FAILED
 floor: `vet` FAILED
@@ -755,7 +755,7 @@ floor run, anywhere.**
 **Twin in another stack:** «worked pilot» sentences exist in the sibling READMEs
 but name each stack's own pilot, so there is no shared sentence to break;
 `grep -rl "##WORKED-PILOT-IS-RESEARCH-GO-DEMO"` over
-`packages/org.vibevm.ai-native/rust-ai-native-lang` and
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang` and
 `…/typescript-ai-native-lang` returns nothing. **None found.**
 
 **New obligations noticed:** two.
@@ -777,7 +777,7 @@ drain. That is a credibility-loop item for Phase F, not a document defect.
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/vibe-agentic-tcg-go.xml`
 
 **Re-verification:** the reason holds exactly, including its sharpest claim —
 there is no `build` step at all.
@@ -849,7 +849,7 @@ F-273 exists to fix. Flagged for the boss; not fixed, because it is not mine.
 
 ## Files touched — six, all inside the permitted perimeter
 
-| file (under `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`) | obligations |
+| file (under `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/`) | obligations |
 |---|---|
 | `spec/boot/20-stack-go-ai-native-lang.md` | F-153 |
 | `spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md` | F-160, F-167, F-270 |

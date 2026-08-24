@@ -9,7 +9,7 @@ end-of-range, **(б)** the map riding inside an installed package, **(в)** priv
 profiles — not a spec: nothing here is proposed, only measured.
 
 The canonical specmap engine is `core-ai-native-specmap` v0.8.0 at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/`.
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/`.
 Unless a copy is named otherwise, every `index.rs` / `mdspec.rs` / `scanner.rs` /
 `rscan.rs` / `ledger.rs` line citation below refers to that canonical v0.8.0 tree.
 The `v0.7.0` slot and every `crates/vendor/core-ai-native-specmap/` tree are
@@ -69,9 +69,9 @@ Perimeter: the whole tree **except** `vibedeps/`, `.vibe/`, `target/`, `.wt/`
 |---|---|---|
 | host xtask | `xtask/src/specmap.rs:11` (`run_specmap`) → `rust_ai_native_specmap::run_specmap(&repo_root()?, check)`; dispatch `xtask/src/main.rs:325` (`Cmd::Specmap { check } => run_specmap(check)`) | host root `specmap.json` over `crates/*` + `xtask` under namespace `org.vibevm.core/vibevm` (`specmap.toml`) |
 | core write | `index.rs:297` `write` / `index.rs:302` `write_with_scanner`; the physical `std::fs::write` at `index.rs:316` | the actual byte emitter (canonical pretty JSON + trailing newline, `index.rs:178`) |
-| Rust stack binary | `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/main.rs` (`--check` / `--gate`) | standalone `rust-ai-native-specmap` over Rust trees |
-| TS stack binary | `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap/src/main.rs` | standalone `typescript-ai-native-specmap` (injects the TS scanner via the D3 seam) |
-| Go stack driver | `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-specmap/src/lib.rs` | `run_specmap_go` (injects the Go scanner) |
+| Rust stack binary | `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-specmap/src/main.rs` (`--check` / `--gate`) | standalone `rust-ai-native-specmap` over Rust trees |
+| TS stack binary | `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-specmap/src/main.rs` | standalone `typescript-ai-native-specmap` (injects the TS scanner via the D3 seam) |
+| Go stack driver | `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-specmap/src/lib.rs` | `run_specmap_go` (injects the Go scanner) |
 | MCP servers | `specmap_write` tool in `rust-ai-native-mcp/…/tools_discipline.rs:199`, `typescript-ai-native-mcp/…/tools_discipline.rs:209`, `go-ai-native-mcp/…/tools_discipline.rs:200` | agent-facing regenerate-and-write, thin wrappers over the same library fns |
 
 The D3 seam that lets a non-Rust scanner build the index is
@@ -103,7 +103,7 @@ self-check.sh is the gate panel. → Discrepancy D1.
 | `load_committed` | `index.rs:289` | reads the committed artefact to classify drift during `write` (`index.rs:309`) |
 | explain | `explain.rs:89` `explain_unit`, `:199` `explain_text`, `:209` `explain_json` | renders the traceability subgraph around a `spec://` URI — operates on an **in-memory** `Specmap`, not disk |
 | intent ledger | `ledger.rs:217` `prose_explain` → `explain::explain_json` | prose render, epoch-keyed cache under `.ledger/` (the map is passed in, not read from disk) |
-| `trace explain` CLI | `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:8` | **builds a fresh in-memory map** (`index::build`), does **not** read the committed `specmap.json` |
+| `trace explain` CLI | `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:8` | **builds a fresh in-memory map** (`index::build`), does **not** read the committed `specmap.json` |
 | MCP `trace_explain` | `rust-ai-native-mcp/…/tools_discipline.rs:207` (+ TS/Go) | same fresh-build explain path |
 
 No reader consumes a **foreign** package's committed map — see §3.4.
@@ -113,11 +113,11 @@ No reader consumes a **foreign** package's committed map — see §3.4.
 | path | owner |
 |---|---|
 | `specmap.json` | host root traceability index (namespace `org.vibevm.core/vibevm`) |
-| `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json` | the fractality package's own self-trace (schema 2; real `code_items`) |
-| `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/specmap.json` | go-extract test golden files (2) |
-| `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/specmap.json` | go-extract test golden files (2) |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/specmap.json` | ts-extract test golden files (2) |
-| `packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/specmap.json` | ts-extract test golden files (2) |
+| `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json` | the fractality package's own self-trace (schema 2; real `code_items`) |
+| `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/specmap.json` | go-extract test golden files (2) |
+| `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/specmap.json` | go-extract test golden files (2) |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/specmap.json` | ts-extract test golden files (2) |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/specmap.json` | ts-extract test golden files (2) |
 | `research/{rust,ts,go}-demo/specmap.json` | research demo artefacts (3) |
 
 ---
@@ -217,7 +217,7 @@ mechanism.
 
 **Yes — two:**
 
-1. `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json` — a generated
+1. `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json` — a generated
    specmap (schema 2, real `code_items` over `fractality_backend_claude_code`)
    committed *inside* a published package's tree. It sits at the package root, so
    it is in the shippable set and feeds `compute_content_hash`. This is a direct,
@@ -309,7 +309,7 @@ source; no self-declared namespace exists in `Manifest` (`document.rs:67-184`).
 
 ### §3.6.2 Files a 2 → 3 bump must touch
 
-1. JTD source of truth: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json`.
+1. JTD source of truth: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json`.
 2. Generated wire types (regenerated, not hand-edited): `…/crates/core-ai-native-specmap/src/generated/specmap/mod.rs` + `…/src/generated/mod.rs` (`// Generated by cargo xtask codegen. DO NOT EDIT.`, `generated/mod.rs:1`).
 3. The `SCHEMA` const + its doc comment: `index.rs:27-29` (and the use at `:168`).
 4. Canonical example: `…/schemas/specmap.example.json` (`"schema": 2,` `:38`).

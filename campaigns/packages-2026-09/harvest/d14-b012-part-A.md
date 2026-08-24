@@ -2,13 +2,13 @@
 
 **Date:** 2026-08-01
 **HEAD:** `ed0abbab docs(campaign): волна 10 closes the D13 seal tail in the LOG`
-**Subject:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
+**Subject:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml` (read in full)
 **Owner directive:** B-012 — «провести исследование, можно ли реализовать». This document is **evidence only**: facts with `file:line`, no verdicts, no build/skip recommendation. The recommendation stays with the boss.
 
 **Default search perimeter** (used for every absence claim below unless a section widens it):
 
 - `crates/` (host crates)
-- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/` (engine crates)
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/` (engine crates)
 - `xtask/`
 - `tools/`
 - `schemas/`
@@ -35,7 +35,7 @@ Annotations under test: `#DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY` (:58) — *"
 
 **The index producer is complete and gated.**
 
-- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25` — `pub const INDEX_REL_PATH: &str = "specmap.json"`; `:27` `pub const SCHEMA: u32 = 2`.
+- `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:25` — `pub const INDEX_REL_PATH: &str = "specmap.json"`; `:27` `pub const SCHEMA: u32 = 2`.
 - Build / serialise / write / gate: `index.rs:55` `build`, `:64` `build_with_scanner`, `:178` `to_canonical_bytes`, `:184` `index_path`, `:297` `write`, `:324` `check`.
 - Wire types are codegen'd from a JTD schema: `schemas/specmap.jtd.json` → `core-ai-native-specmap/src/generated/specmap/mod.rs` (`content_hash` field at `generated/specmap/mod.rs:156`).
 - Policy is a per-project file, not a per-package one: `core-ai-native-specmap/src/config.rs:127` `Config::REL_PATH = "specmap.toml"`, `:134` `Config::load`, and the root `specmap.toml` declares `namespace`, `scan_roots`, `spec_roots`, `root_spec_docs`, `exempt`, `dispositioned`, `[[external_specs]]`.
@@ -60,7 +60,7 @@ Annotations under test: `#DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY` (:58) — *"
 - `find . -name 'vibe.toml' -not -path './target/*' -not -path './legacy-spec/*'` → 343 manifests; piping all of them through `grep -n 'specmap\.json\|metamodel'` returns **zero** hits.
 - The manifest type has no file-selection surface at all: `crates/vibe-core/src/manifest/document.rs:67-185` — `Manifest` fields are `project`, `package`, `workspace`, `origin`, `requires`, `requires_any`, `provides`, `obsoletes`, `conflicts`, `recommends`, `suggests`, `skill`, `binary`, `mcp_server`, `hooks`, `compatibility`, `boot_snippet`, `features`, `target`, `active`, `llm`, `registry`, `mirror`, `override`, `i18n`, `boot`. No `files` / `payload` / `include`.
 - What ships is the whole tree minus a fixed exclusion list: `crates/vibe-index/src/content_hash.rs:28` — `const SHIPPABLE_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"]`, applied per-entry at `:36`, `:43`.
-- Consequence, verified on disk: a `specmap.json` at a package root already travels. `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json` sits beside `packages/org.vibevm.fractality/fractality/v0.1.0/vibe.toml` (`[package] name = "fractality"`, `kind = "tool"`, `version = "0.1.0"`). No `.gitignore` in the tree names `specmap` (`grep -rn 'specmap' --include='.gitignore' .` → zero hits outside `target/`).
+- Consequence, verified on disk: a `specmap.json` at a package root already travels. `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json` sits beside `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibe.toml` (`[package] name = "fractality"`, `kind = "tool"`, `version = "0.1.0"`). No `.gitignore` in the tree names `specmap` (`grep -rn 'specmap' --include='.gitignore' .` → zero hits outside `target/`).
 - The other `specmap.json` files under `packages/` are indeed fixtures: `…/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/specmap.json`, `…/go-ai-native-mcp/v0.1.0/…`, `…/typescript-ai-native-{lang,mcp}/…/tools/ts-extract/test/fixtures/{clean,dirty}/specmap.json`.
 
 **A cross-package consumption path already exists — and it deliberately does *not* use a shipped index.** Root `specmap.toml`, the `[[external_specs]]` table: `namespace = "core-ai-native"`, `root = "vibedeps/flow-core-ai-native/0.7.0/spec"`, with the comment *"Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 §7.1) … Units found here never enter the committed specmap.json."* Typed at `config.rs:99` `ExternalSpec { namespace, root }`. So the host reads an installed package's **markdown source** out of the materialised slot and re-derives units, rather than reading an index the package shipped.
@@ -72,14 +72,14 @@ Two independent halves; the annotation treats them as one sentence.
 **Half 1 — ship the index (mechanically small).**
 
 - Nothing in the manifest layer needs a new key for the *file* to travel; the missing pieces are (a) a decision on where in a package tree the index lives and under whose namespace its URIs are minted, (b) a producer step so package-owned indices are generated and gated the way the host's is, and (c) whether the index enters the package's `content_hash` (it would, automatically, via `compute_content_hash` — which makes the index self-invalidating on every code edit inside the package, a new churn surface for `vibe.lock` pins).
-- Surfaces touched: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs` (a "package mode" root), each shipping package's own CI wiring, `specmap.toml` per package.
+- Surfaces touched: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs` (a "package mode" root), each shipping package's own CI wiring, `specmap.toml` per package.
 - A *consumer-side reader* is the real new surface: today the only reader of a foreign package's traceability data is `[[external_specs]]`, which re-derives from markdown. Reading a shipped index instead means a new resolution path that trusts bytes it did not produce — which is where A5 attaches.
 
 **Half 2 — fetch-by-content-hash (genuinely new).**
 
 - New types: a fragment address (today `content_hash` is a *field on a unit*, not a key), and a store mapping `sha256:…` → source text. Nothing of the kind exists.
 - New protocol surface: a retrieval verb. The registry layer's vocabulary is package-granular (`fetch`, `fetch_with_expected_hash`, `lookup`) — `crates/vibe-registry/src/git_package_registry/fetch.rs`.
-- Backward compatibility: an index that carries fragment addresses is a **schema bump** — `schemas/specmap.jtd.json` + regenerated `generated/specmap/mod.rs` + `index.rs:27 SCHEMA` from `2` to `3`, and every committed `specmap.json` (host root, `research/*/specmap.json`, `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json`) is regenerated. `code_item` gaining a content hash — which §2.2's and §2.5's own annotations flag as missing — would be the same bump.
+- Backward compatibility: an index that carries fragment addresses is a **schema bump** — `schemas/specmap.jtd.json` + regenerated `generated/specmap/mod.rs` + `index.rs:27 SCHEMA` from `2` to `3`, and every committed `specmap.json` (host root, `research/*/specmap.json`, `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json`) is regenerated. `code_item` gaining a content hash — which §2.2's and §2.5's own annotations flag as missing — would be the same bump.
 - Open design question the spec does not answer: what a "source fragment" *is* on the code side. `CodeItem` has `file`+`line` and no span end and no body, so a code fragment cannot be addressed from the index as it stands.
 
 ### 3. Dependencies
@@ -98,7 +98,7 @@ Two independent halves; the annotation treats them as one sentence.
 ### 5. Observations on warrant
 
 - **A consumer already exists for the data, in a different shape.** `[[external_specs]]` (root `specmap.toml`, `config.rs:99`) proves the host wants a foreign package's spec units at build time and gets them by re-deriving from shipped markdown. Whether a shipped index beats re-derivation is an efficiency question with a measurable answer: the host derives 5266 units per run.
-- **The index is already shipped by accident in at least one package** (`packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json`), with no manifest key, no namespace declaration, and nothing that reads it. That file is evidence the "no payload key" framing is not the obstacle.
+- **The index is already shipped by accident in at least one package** (`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json`), with no manifest key, no namespace declaration, and nothing that reads it. That file is evidence the "no payload key" framing is not the obstacle.
 - **The engine ships in a package; the policy stays with the consumer.** Root `specmap.toml`'s own header states this posture explicitly ("A consumer of the rust-ai-native stack writes its own specmap.toml for its own layout — the same posture conform.toml takes (PROP-024)"). A package-shipped index inverts that for one artefact.
 - **Nothing in the tree currently asks a package "what do you trace".** Both `#DISTRIBUTION-…` consumers named in §1.2 and §2.8 are the runtime channel (A4), which is unbuilt for consumers.
 
@@ -112,7 +112,7 @@ Annotation under test: `#QUERY-ERROR-PROVENANCE` (:226) — *"error renderings c
 
 **The compile-time half is real and enforced, at scale.**
 
-- Engine: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:25`, `:37`, `:48` — three `#[error("… (violates spec://…/MCP-CORE-v0.1#wire; fix surface: …)")]` variants, pinned by the doctest at `error.rs:14-20` (`assert!(e.to_string().contains("MCP-CORE-v0.1#wire"))`).
+- Engine: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/error.rs:25`, `:37`, `:48` — three `#[error("… (violates spec://…/MCP-CORE-v0.1#wire; fix surface: …)")]` variants, pinned by the doctest at `error.rs:14-20` (`assert!(e.to_string().contains("MCP-CORE-v0.1#wire"))`).
 - Host: `crates/vibe-core/src/error.rs` — the enum carries `#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-identity")]` at `:30`, and its variants embed the URI in the Display template: `:34` emits `violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref` for the `BadPackageRef` variant declared at `:37`. Fifteen `violates spec://` occurrences in this file alone.
 - **Scale, measured:** `grep -rn --include='*.rs' -o 'violates spec://' crates/` → **232** occurrences across **48** files. The engine crates add 3 more (`packages/…/core-ai-native/v0.8.0/crates/`).
 - The conform grammar is the second, *separate* citation channel: `core-ai-native-conform/src/rules/mod.rs:49` `req_message(uri, why, fix_surface) -> "violates REQ {uri}: {why}; fix surface: {fix_surface}"`, with its acceptor beside it at `rules/mod.rs:62` `matches_req_grammar` (accepts `spec://`, `discipline://`, `misra://`).
@@ -135,7 +135,7 @@ Annotation under test: `#QUERY-ERROR-PROVENANCE` (:226) — *"error renderings c
 - The parser is complete: `core-ai-native-specmap/src/mdspec.rs:63` `parse_kind_line` accepts `` `prop|req|design|guide r<N> [planned|disputed(#anchor)]` `` and warns (non-fatally) on a malformed revision (`:88-96`).
 - Other projects' committed indices do populate it: `research/rust-demo/specmap.json` — 6 units, 5 with revision and kind; `research/go-demo/specmap.json` — 7 units, 6 with revision and kind, and 16/16 edges pinned.
 - Host `specmap.json` edges: 912 total, **201 carry `pinned_r`** (the code-side `r = N`); verbs `implements` 677 / `verifies` 223 / `deviates` 12; `suspects` 0.
-- `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json`: 171 units, 0 with revision/kind; 75 edges, 0 pinned.
+- `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json`: 171 units, 0 with revision/kind; 75 edges, 0 pinned.
 
 **No `vibe explain` hint exists anywhere.** `grep -rn --include='*.rs' -E 'run: vibe explain|vibe explain|trace explain' crates/` returns exactly one line: `crates/vibe-cli/src/cli.rs:220`, the doc-comment example on the `Trace` subcommand. And that subcommand is a **delegating alias** — `cli.rs:215-218` documents it as *"arguments pass through verbatim to the installed `rust-ai-native trace`"*, dispatched at `main.rs:217` via `commands::trace::run(&args)`, which returns a child exit code, not a `Result<()>` through `ctx.error`.
 
@@ -178,7 +178,7 @@ Annotations under test: `#RUNTIME-PROFILES` (:241) — *"`[metamodel]` is in no 
 
 **Absence confirmed, perimeter named.**
 
-- `grep -rn --include='*.rs' --include='*.toml' --include='*.json' -i 'metamodel'` over `crates/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/ tools/ schemas/` → **one** hit, and it is prose: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:34` — *"the discipline package in effect, and the metamodel wire schema"* (a doc comment naming an epoch input).
+- `grep -rn --include='*.rs' --include='*.toml' --include='*.json' -i 'metamodel'` over `crates/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/ tools/ schemas/` → **one** hit, and it is prose: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:34` — *"the discipline package in effect, and the metamodel wire schema"* (a doc comment naming an epoch input).
 - All 343 `vibe.toml` files (`find . -name 'vibe.toml' -not -path './target/*' -not -path './legacy-spec/*'`) piped through `grep -n 'specmap\.json\|metamodel'` → **zero** hits.
 - No `redact`-anything: `grep -i 'redact'` over the same perimeter returns only publish-token hygiene — `crates/vibe-cli/src/commands/registry/publish.rs:182`, `:185`; `crates/vibe-cli/src/commands/registry/redirect/{create.rs:197,update.rs:87}`; `crates/vibe-cli/src/commands/show/config.rs:88`, `:234-239`, `:393`. Nothing redacts spec or code content.
 
@@ -237,21 +237,21 @@ Annotations under test: `#RUNTIME-TRANSPORT` (:239) — *"there is no `specmap_s
 
 **Two corrections to the :56 annotation, both verified.**
 
-*(a) `core-ai-native-mcp` ships **zero** tools, not one.* `echo` is a test fixture: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:187` opens `#[cfg(test)] mod tests`, and `struct Echo` is at `:193` with `name: "echo"` at `:197`. Nothing in `core-ai-native-mcp`'s public surface (`lib.rs:31-37`: `capture`, `Server`, `StdioTransport`, `Transport`, `testing`, `Tool`, `ToolDescriptor`, `ToolOutput`, `ToolSet`, wire types) is a tool. Its own header (`lib.rs:20-22`) states the seam: *"Nothing here knows any language, any discipline rule, or vibe."*
+*(a) `core-ai-native-mcp` ships **zero** tools, not one.* `echo` is a test fixture: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-mcp/src/server.rs:187` opens `#[cfg(test)] mod tests`, and `struct Echo` is at `:193` with `name: "echo"` at `:197`. Nothing in `core-ai-native-mcp`'s public surface (`lib.rs:31-37`: `capture`, `Server`, `StdioTransport`, `Transport`, `testing`, `Tool`, `ToolDescriptor`, `ToolOutput`, `ToolSet`, wire types) is a tool. Its own header (`lib.rs:20-22`) states the seam: *"Nothing here knows any language, any discipline rule, or vibe."*
 
 *(b) `trace_explain` is a **shipped MCP tool** in all three stack servers.* The narrower :239 annotation is accurate; the blanket ":56" sentence is not.
 
-- `packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs:48-67` — `pub const TOOL_NAMES: [&str; 18]`, containing `specmap_check` (`:57`), `specmap_write` (`:58`), `trace_explain` (`:65`). Pinned by `lib.rs:76-80` (`tools/list` is exactly the declared inventory) and by the doctest at `:27-33`.
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs:48-67` — `pub const TOOL_NAMES: [&str; 18]`, containing `specmap_check` (`:57`), `specmap_write` (`:58`), `trace_explain` (`:65`). Pinned by `lib.rs:76-80` (`tools/list` is exactly the declared inventory) and by the doctest at `:27-33`.
 - Handlers: `rust-ai-native-mcp/src/tools_discipline.rs:192` (`specmap_check`), `:199` (`specmap_write`), `:206` (`trace_explain`, with `target` required at `:216-218`, `json`/`prose` booleans at `:212-213`, dispatching to `rust_ai_native_cli::run_trace_explain` at `:219`).
-- `packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/lib.rs:50-68` — 17 tools, `trace_explain` at `:66`.
-- `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:49-67` — 17 tools, `trace_explain` at `:65`; handler at `tools_discipline.rs:207`.
-- Declared to agent hosts: `packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/vibe.toml:27-31` — `[[mcp_server]] name = "rust-ai-native"`, `binary = "rust-ai-native-mcp"`, `args = ["--path", "{project_root}"]`.
+- `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/src/lib.rs:50-68` — 17 tools, `trace_explain` at `:66`.
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:49-67` — 17 tools, `trace_explain` at `:65`; handler at `tools_discipline.rs:207`.
+- Declared to agent hosts: `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/vibe.toml:27-31` — `[[mcp_server]] name = "rust-ai-native"`, `binary = "rust-ai-native-mcp"`, `args = ["--path", "{project_root}"]`.
 - Exercised end-to-end: `rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/tests/server_replay.rs:85-90` drives `specmap_write` then `specmap_check` over the replay transport.
 - Documented as parity rows: `…/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md:41-43`; `…/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md:46-48`.
 
 **What that shipped channel is *not*: a consumer channel.** The gap is precise and structural.
 
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:11-12` — `Config::load(root)?` then `index::build(root, &cfg)`. Its own comment at `:9-10`: *"Build fresh in-memory: explain answers for the tree as it is, never for a stale committed artefact."* The tool therefore needs a **source checkout with a `specmap.toml`**, not an installed package.
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/trace.rs:11-12` — `Config::load(root)?` then `index::build(root, &cfg)`. Its own comment at `:9-10`: *"Build fresh in-memory: explain answers for the tree as it is, never for a stale committed artefact."* The tool therefore needs a **source checkout with a `specmap.toml`**, not an installed package.
 - The server is bound to the consuming project's own root (`rust-ai-native-mcp/src/main.rs:16-21`, `--path` defaulting to `.`, registrations passing `{project_root}`).
 - Foreign packages' units are deliberately excluded from the map the explainer sees: `core-ai-native-specmap/src/index.rs:77` `scan_external_units` feeds only the revision map (`:87-92`), and the comment at `:70-75` states *"their units feed the revision map below … but are never serialised into this project's index."* `Specmap.specUnits` at `:165` is the project's own units only.
 - Consequence, from the explainer's own code: `explain.rs:92-94` — `explain_unit` filters `map.specUnits` by URI and `bail!("no spec unit with URI `{uri}` in the index")` when empty. So `trace_explain "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#runtime"` fails **even in a project whose `specmap.toml` declares that package under `[[external_specs]]`** (root `specmap.toml` does declare it: `namespace = "core-ai-native"`, `root = "vibedeps/flow-core-ai-native/0.7.0/spec"`).
@@ -314,7 +314,7 @@ Annotation under test: `#RUNTIME-SECURITY-IS-NON-OPTIONAL` (:242) — *"Specifie
 
 **(a) Signing — absent, confirmed.**
 
-`grep -rn -iE 'sigstore|minisign|cosign|ed25519|gpg|pgp|\bsign(ed|ing|ature)\b'` across `crates/ packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/ tools/ schemas/` over `*.rs`, `*.toml`, `*.json`, `*.sh`, after filtering the "function signature" sense, yields **five** lines and none is cryptographic:
+`grep -rn -iE 'sigstore|minisign|cosign|ed25519|gpg|pgp|\bsign(ed|ing|ature)\b'` across `crates/ vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/ xtask/ tools/ schemas/` over `*.rs`, `*.toml`, `*.json`, `*.sh`, after filtering the "function signature" sense, yields **five** lines and none is cryptographic:
 
 - `crates/vibe-actions/src/params.rs:27`, `crates/vibe-cli/src/commands/prefs/tui/form/control.rs:120`, `crates/vibe-settings/src/schema/types.rs:36` — "a 64-bit **signed** integer".
 - `crates/vibe-cli/src/commands/tree/tui/flatten.rs:27` — a function signature.
@@ -349,7 +349,7 @@ What the repository *does* have, and what it is not:
 - A scheme decision first (`#OPEN-SIGNING-SCHEME`), which determines everything downstream: key custody, trust roots, revocation, offline verification, and whether CI can sign.
 - **What** is signed is also undecided in a load-bearing way. §2.8.4(a) says *"the shipped index and fragments"*; but the artefact that actually travels is a whole package tree already identified by `content_hash` (`crates/vibe-core/src/content_hash.rs:34`, computed at `crates/vibe-index/src/content_hash.rs:40`). Signing the existing tree hash is a smaller change with wider effect; signing the index alone requires A1 first and leaves everything else unsigned.
 - Surfaces: `crates/vibe-publish/` (produce), `crates/vibe-registry/` + `crates/vibe-install/` (verify at fetch — the natural point is beside `fetch_with_expected_hash`, `fetch.rs:274`), `crates/vibe-core/` (a signature type and probably a lockfile field, i.e. a **lockfile schema change**), plus a new dependency outside the current tree (nothing crypto beyond `sha2` is vendored).
-- Rule 4 note: this is CI / signing / secrets territory — non-routine by `spec/boot/00-core.xml:24` and `spec/boot/STATIC.xml:619`, `:849`, `:1195-1196`. It stops for the owner before it is started, delegated or not.
+- Rule 4 note: this is CI / signing / secrets territory — non-routine by `vibevm/vibespecs/boot/00-core.xml:24` and `vibevm/vibespecs/boot/STATIC.xml:619`, `:849`, `:1195-1196`. It stops for the owner before it is started, delegated or not.
 
 **(b) Framing — small in code, a policy decision in substance.**
 
@@ -388,5 +388,5 @@ What the repository *does* have, and what it is not:
 
 ## Cross-cutting notes
 
-- **Measurement commands used** (all read-only): `git log --oneline -1`; `find . -name 'vibe.toml' -not -path './target/*' -not -path './legacy-spec/*' | xargs grep -n 'specmap\.json\|metamodel'`; `grep -rn --include='*.rs' -o 'violates spec://' crates/ | wc -l`; a Python read of `specmap.json` / `research/{rust,go}-demo/specmap.json` / `packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json` counting units, kinds, revisions, pins, verbs, suspects, warnings; a Python extraction of `violates spec://…#anchor` URIs from `crates/**/*.rs` intersected against `spec_units[].uri`. No build, no test run, no `vibe` command, no writes outside this file.
-- **One incidental drift noticed while reading, not acted on:** `schemas/specmap.jtd.json` still names `crates/specmap-core/src/generated/specmap/` in its description and `specmap_core::specmap` in `metadata.rustOptions.package`, a path that no longer exists after the engine relocated into `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/`. Anyone bumping the index schema (A1 half 2, A3's `contract` profile) meets this first.
+- **Measurement commands used** (all read-only): `git log --oneline -1`; `find . -name 'vibe.toml' -not -path './target/*' -not -path './legacy-spec/*' | xargs grep -n 'specmap\.json\|metamodel'`; `grep -rn --include='*.rs' -o 'violates spec://' crates/ | wc -l`; a Python read of `specmap.json` / `research/{rust,go}-demo/specmap.json` / `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/specmap.json` counting units, kinds, revisions, pins, verbs, suspects, warnings; a Python extraction of `violates spec://…#anchor` URIs from `crates/**/*.rs` intersected against `spec_units[].uri`. No build, no test run, no `vibe` command, no writes outside this file.
+- **One incidental drift noticed while reading, not acted on:** `schemas/specmap.jtd.json` still names `crates/specmap-core/src/generated/specmap/` in its description and `specmap_core::specmap` in `metadata.rustOptions.package`, a path that no longer exists after the engine relocated into `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/`. Anyone bumping the index schema (A1 half 2, A3's `contract` profile) meets this first.

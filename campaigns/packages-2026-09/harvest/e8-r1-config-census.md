@@ -8,7 +8,7 @@ evidence file for the B-029 + B-034 design (see `BACKLOG.md` `{#b-029}`,
 `{#b-034}`), not a spec — no spec markers.
 
 The canonical engine is `core-ai-native-conform` v0.8.0 at
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/`.
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/`.
 Unless a copy is named otherwise, every `config.rs` / `lib.rs` line citation
 below refers to that canonical v0.8.0 tree; vendor and `vibedeps/` copies are
 byte-identical mirrors (see Q2) and are only cited separately where their
@@ -18,7 +18,7 @@ existence matters.
 
 ## Q1 — Full inventory of `Config`
 
-Source: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs`.
+Source: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs`.
 
 ### Root table `Config` (struct `config.rs:36`; container attr `config.rs:35` = `#[serde(default, deny_unknown_fields)]`; `Default` impl `config.rs:75-92`)
 
@@ -82,7 +82,7 @@ Source: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-nati
 ### v0.7.0 vs v0.8.0 — one-line verdict
 
 The v0.7.0 copy at
-`packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/config.rs`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/src/config.rs`
 differs from v0.8.0 in **exactly one way**: v0.7.0 has no `go` field on `Config`
 (its `Config` ends at the `typescript` field, v0.7.0 `config.rs:68`) and no
 `GoConfig` struct. Every root-table field, `TsConfig`, `FloorDisable`,
@@ -100,17 +100,17 @@ Every directory below contains a copy of the `core-ai-native-conform` crate
 
 ### Canonical package slots (the authoritative sources)
 
-1. `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/` — canonical engine, **v0.8.0** (has `[go]`).
-2. `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/` — canonical engine, **v0.7.0** (no `[go]`).
+1. `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/` — canonical engine, **v0.8.0** (has `[go]`).
+2. `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-conform/` — canonical engine, **v0.7.0** (no `[go]`).
 
 ### In-package vendor copies (each language / MCP package vendors the engine under `crates/vendor/core-ai-native-conform/`)
 
-3. `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/` (v0.8.0 engine body)
-4. `packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/vendor/core-ai-native-conform/`
-5. `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/`
-6. `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/vendor/core-ai-native-conform/`
-7. `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/`
-8. `packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/vendor/core-ai-native-conform/`
+3. `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/` (v0.8.0 engine body)
+4. `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/vendor/core-ai-native-conform/`
+5. `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/`
+6. `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/vendor/core-ai-native-conform/`
+7. `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/`
+8. `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/vendor/core-ai-native-conform/`
 
 ### Host `vibedeps/` copies (regenerated dep copies at the repo root)
 
@@ -124,8 +124,8 @@ Every directory below contains a copy of the `core-ai-native-conform` crate
 
 ### `fractality` specspace `vibedeps/` copies
 
-16. `packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/{flow-core-ai-native/0.7.0, mcp-rust-ai-native-mcp/0.7.0, stack-rust-ai-native-lang/0.7.0}/...`
-17. `packages/org.vibevm.fractality/delegation-rules/v0.1.0/vibedeps/{flow-core-ai-native/0.7.0, mcp-rust-ai-native-mcp/0.7.0, stack-rust-ai-native-lang/0.7.0}/...`
+16. `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibedeps/{flow-core-ai-native/0.7.0, mcp-rust-ai-native-mcp/0.7.0, stack-rust-ai-native-lang/0.7.0}/...`
+17. `vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v0.1.0/vibevm/vibedeps/{flow-core-ai-native/0.7.0, mcp-rust-ai-native-mcp/0.7.0, stack-rust-ai-native-lang/0.7.0}/...`
 
 Net: **2 canonical slots** (core v0.7.0 + v0.8.0), **6 in-package vendor copies**, and the rest are host/specspace `vibedeps/` regenerated mirrors of those same two bodies. Any engine change must be replayed across the canonical slots and then re-vendored; the `vibedeps/` copies regenerate from manifests on install.
 
@@ -225,11 +225,11 @@ policy-shape check, not a source-scan rule; it runs before extraction.
 ### Call-sites (production; vendor/`vibedeps` mirrors omitted)
 
 - `rust-ai-native-conform/src/lib.rs:119` — `run_check`, canonical path
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:119`.
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:119`.
 - `rust-ai-native-conform/src/lib.rs:188` — `run_freeze`, same file.
 - `rust-ai-native-cli/src/init.rs:335` and `:375` — the `rust-ai-native init`
   command's own tests (canonical
-  `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/init.rs:335,375`).
+  `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/init.rs:335,375`).
 - `xtask/src/conform.rs:33` — the host invariant test `every_crate_is_gated_or_exempt`.
 - Engine self-tests: `core-ai-native-conform/src/config.rs:397,406,415,423,435,454,460,466` (v0.8.0).
 
@@ -263,20 +263,20 @@ surface if a key is renamed):
 | file | sections / keys used |
 |---|---|
 | `conform.toml` (host root) | `roots` `:13`, `exclude_substrings` `:14`, `registry_file` `:17`, `registry_gated_crate` `:18`, `audit_crates` `:33`, `max_file_lines` `:36`, `gated_crates` `:41` (13 names), `gated_pub_doctest` `:61` (2), `env_roots` `:71` (many), `[[exempt]]` ×6 (`:106,:110,:114,:118,:122,:126`, each `crate`+`reason`). **No `[go]`/`[typescript]`.** |
-| `packages/org.vibevm.fractality/fractality/v0.1.0/conform.toml` | `roots` `:8`, `exclude_substrings` `:9`, `max_file_lines` `:10`, `gated_crates` `:15` (7), `gated_pub_doctest` `:26` (`[]`), `audit_crates` `:27` (`[]`), `env_roots` `:35` (7). No exempt/go/ts. |
+| `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/conform.toml` | `roots` `:8`, `exclude_substrings` `:9`, `max_file_lines` `:10`, `gated_crates` `:15` (7), `gated_pub_doctest` `:26` (`[]`), `audit_crates` `:27` (`[]`), `env_roots` `:35` (7). No exempt/go/ts. |
 | `research/rust-demo/conform.toml` | `roots` `:8`, `exclude_substrings` `:9`, `max_file_lines` `:10`, `gated_crates` `:16` (`["rust-demo"]`), `gated_pub_doctest` `:17`, `audit_crates` `:18` (`[]`), `env_roots` `:19` (`[]`). |
 | `research/go-demo/conform.toml` | `roots` `:9` (`[]`), `max_file_lines` `:10`, `[go]` `:12` {`roots` `:13`, `exclude_substrings` `:14`, `cells_dir` `:15`, `seams_pkg` `:16`, `registry_pkg` `:17`}. **No `gated_crates`/`[[exempt]]`.** |
 | `research/ts-demo/conform.toml` | `roots` `:9` (`[]`), `max_file_lines` `:10`, `[typescript]` `:12` {`roots` `:13`, `exclude_substrings` `:14`, `cells_dir` `:15`, `seam` `:16`}. **No `gated_crates`/`[[exempt]]`.** |
-| `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/conform.toml` | `roots` (`[]`), `[go]` {`roots=["."]`, `cells_dir="internal/cells"`}. (clean `:4-6`, dirty `:5-7`) |
-| `packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/conform.toml` | identical to the `lang` fixtures above |
-| `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/conform.toml` | `roots` (`[]`), `[typescript]` {`roots=["src"]`, `exclude_substrings=[]`, `cells_dir="src/cells"`, `seam="index"`} |
-| `packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/conform.toml` | identical to the `lang` fixtures above |
+| `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/conform.toml` | `roots` (`[]`), `[go]` {`roots=["."]`, `cells_dir="internal/cells"`}. (clean `:4-6`, dirty `:5-7`) |
+| `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/tools/go-extract/test/fixtures/{clean,dirty}/conform.toml` | identical to the `lang` fixtures above |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/conform.toml` | `roots` (`[]`), `[typescript]` {`roots=["src"]`, `exclude_substrings=[]`, `cells_dir="src/cells"`, `seam="index"`} |
+| `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/tools/ts-extract/test/fixtures/{clean,dirty}/conform.toml` | identical to the `lang` fixtures above |
 | `vibedeps/mcp-typescript-ai-native-mcp/0.6.0/...` and `vibedeps/stack-typescript-ai-native-lang/0.6.0/...` ts fixtures | regenerated mirrors of the two ts fixtures above |
 
 ### Migration surface on renaming `gated_crates`
 
 Only **three** files actually carry the key today: host `conform.toml:41`,
-`packages/org.vibevm.fractality/fractality/v0.1.0/conform.toml:15`,
+`vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/conform.toml:15`,
 `research/rust-demo/conform.toml:16`. The Go/TS demos and all eight fixtures
 carry **no** `gated_crates`. The Rust `init` template emits `gated_crates = []`
 (`rust-ai-native-cli/src/init.rs:179`) plus the `[[exempt]]` block
@@ -306,15 +306,15 @@ mention it).
 
 ### Docs / skills / guides tied to `gated_crates` (what reads wrong on rename)
 
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:82` — "add the crate to conform.toml's `gated_crates`" (mirrors at the `vibedeps/.../stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:69`, and the fractality specspace copies).
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:79` — "flip a crate into `gated_crates`" (mirrors at `:59`).
-- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.xml:169` — gated_crates / `[[exempt]]` / "every-crate-gated-or-exempt invariant enforced on every check"; `:181` — gated_crates / `gated_pub_doctest` flip-only-after-drain (mirrors at `:107,:119`).
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.xml:110` — names `registry_pkg`, `gated_crates`.
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.xml:626` — "a package enters `gated_crates` only at zero findings (the key is the shared neutral engine's — one spelling across the language stacks today)".
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:89` — "flip a package into `gated_crates`".
-- `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:62` — `[go].floor_disable` spelling.
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-terraform/SKILL.md:82` — "add the crate to conform.toml's `gated_crates`" (mirrors at the `vibedeps/.../stack-rust-ai-native-lang/0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md:69`, and the fractality specspace copies).
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md:79` — "flip a crate into `gated_crates`" (mirrors at `:59`).
+- `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml:169` — gated_crates / `[[exempt]]` / "every-crate-gated-or-exempt invariant enforced on every check"; `:181` — gated_crates / `gated_pub_doctest` flip-only-after-drain (mirrors at `:107,:119`).
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/conform-frontend-go.xml:110` — names `registry_pkg`, `gated_crates`.
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml:626` — "a package enters `gated_crates` only at zero findings (the key is the shared neutral engine's — one spelling across the language stacks today)".
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md:89` — "flip a package into `gated_crates`".
+- `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:62` — `[go].floor_disable` spelling.
 - `BACKLOG.md:769` (B029-LOCATOR), `BACKLOG.md:838` (B034-LOCATOR) — the items this census feeds.
-- Historical / evidence references (campaigns + terraforms): `campaigns/packages-2026-09/harvest/d1-go-ai-native-lang-repairs.md:461-512,945`; `…/d7d-stacks-sync-reverify.md:1636-1682`; `…/d8a-stacks-package-own-release-reverify.md:1089-1345`; `…/d9-release-corrections-prepared.md:1073-1162`; `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2706,2777,4275`; `legacy-spec/terraforms/{TRACEABILITY-RELOCATION-PLAN-v0.1.md:248, SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:44,87, SELF-SUFFICIENCY-PLAN-v0.1.md:319,408,536,583, DISCIPLINE-SWEEP-v0.2.md:42}`.
+- Historical / evidence references (campaigns + terraforms): `campaigns/packages-2026-09/harvest/d1-go-ai-native-lang-repairs.md:461-512,945`; `…/d7d-stacks-sync-reverify.md:1636-1682`; `…/d8a-stacks-package-own-release-reverify.md:1089-1345`; `…/d9-release-corrections-prepared.md:1073-1162`; `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml:2706,2777,4275`; `legacy-spec/terraforms/{TRACEABILITY-RELOCATION-PLAN-v0.1.md:248, SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md:44,87, SELF-SUFFICIENCY-PLAN-v0.1.md:319,408,536,583, DISCIPLINE-SWEEP-v0.2.md:42}`.
 
 ### What breaks on a `gated_crates` rename
 

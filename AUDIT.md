@@ -1,7 +1,7 @@
 # AUDIT.md — project health inventory
 
 The recurring defect / rot / drift inventory defined by
-[PROP-013](spec/common/PROP-013-periodic-health-audit.xml). Each audit
+[PROP-013](vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml). Each audit
 run appends a dated section; findings carry forward until they are
 dispositioned. This file is committed to git — its history is the
 project's health trend.
@@ -320,7 +320,7 @@ convert as the ruling intends, when their own text moves.
 ### 2026-08-06-02 · A2/B2 · P2 · fixed 2026-08-06 (same day it was met)
 
 **The freshness instrument every session is told to run reports a clean zero
-over a cache that is behind the tree.** `spec/WAL.xml` opens with «every number
+over a cache that is behind the tree.** `vibevm/vibespecs/WAL.xml` opens with «every number
 below is reproduced by commands; run them rather than quoting this file» and
 names three, one of which is `tasks/text-stability.py`. Its report is what a
 session reads to learn whether any judged fact needs re-judging.

@@ -7,7 +7,7 @@
 //! default, human description (mandatory, non-empty), scope, `applies`, array
 //! `merge` strategy, deprecation, and `restricted` flag.
 //!
-//! Spec: [PROP-040 §6, §7](../../../../../../spec/modules/vibe-settings/PROP-040-settings.md#schema).
+//! Spec: [PROP-040 §6, §7](../../../../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml#schema).
 
 use std::fmt;
 

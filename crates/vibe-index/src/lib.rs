@@ -12,7 +12,7 @@
 //! Help-text rendering for every subcommand is exercised by
 //! `tests/help_smoke.rs` and is a standing regression invariant.
 //!
-//! [prop]: ../../../spec/modules/vibe-index/PROP-005-package-index.md
+//! [prop]: ../../../vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");

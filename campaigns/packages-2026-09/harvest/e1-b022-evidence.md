@@ -2,15 +2,15 @@
 
 **Date:** 2026-08-03
 **HEAD:** `779b3aaa docs(campaign): коэффициент параллельности — до 5 на запускалку, 10 всего`
-**Subject:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml` (read whole)
-**Engine:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs` (read whole, 303 lines)
+**Subject:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml` (read whole)
+**Engine:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs` (read whole, 303 lines)
 
 **Owner directive (BACKLOG.md B-022):** «давай положим в бэклог исследование» (2026-08-01). This document is **evidence only** — facts with `file:line`, no verdicts, no build/skip recommendation. The recommendation stays with the boss. Every claim below carries a `path:line` citation; every absence claim names its perimeter and the search terms used.
 
 **Default search perimeter** (used for every absence claim below unless a section widens it):
 
-- ENGINE: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`
-- DRIVERS: `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`, `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/`, `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/` (plus the three `-mcp` siblings)
+- ENGINE: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/`
+- DRIVERS: `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/`, `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/`, `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/` (plus the three `-mcp` siblings)
 - HOST: `crates/`, `xtask/`, `tools/`, `schemas/`
 - DEPLOYMENT: `.ledger/` on disk, `terraform/REPORT.md`
 
@@ -191,8 +191,8 @@ The spec (`:85`): *«At tag time, a frozen subset … is exported, **signed**, a
 
 ### Vendored copies of the engine crate (an engine edit is a release event)
 
-- **The authored engine** is `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/` (the subject). `sync-engines.toml` declares it the single source: every `[[sync]]` block sets `source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates"` and lists `core-ai-native-specmap` among the crates mirrored. The file's header states the contract: *«Crates are AUTHORED once and every other home is a byte-identical vendored copy … `--check` gates drift in self-check; the fix surface is ALWAYS the authored copy, never a vendored one.»*
-- **Six vendored copies** of `core-ai-native-specmap/src/ledger.rs` under `packages/org.vibevm.ai-native/*/v*/crates/vendor/` (the packet's perimeter), each a `cargo xtask sync-engines` mirror of the v0.8.0 authored file:
+- **The authored engine** is `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/` (the subject). `sync-engines.toml` declares it the single source: every `[[sync]]` block sets `source_root = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates"` and lists `core-ai-native-specmap` among the crates mirrored. The file's header states the contract: *«Crates are AUTHORED once and every other home is a byte-identical vendored copy … `--check` gates drift in self-check; the fix surface is ALWAYS the authored copy, never a vendored one.»*
+- **Six vendored copies** of `core-ai-native-specmap/src/ledger.rs` under `vibevm/vibepacks/org.vibevm.ai-native/*/v*/crates/vendor/` (the packet's perimeter), each a `cargo xtask sync-engines` mirror of the v0.8.0 authored file:
   1. `rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmap/src/ledger.rs`
   2. `typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-specmap/src/ledger.rs`
   3. `go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-specmap/src/ledger.rs`
@@ -201,7 +201,7 @@ The spec (`:85`): *«At tag time, a frozen subset … is exported, **signed**, a
   6. `go-ai-native-mcp/v0.1.0/crates/vendor/core-ai-native-specmap/src/ledger.rs`
 
   **Byte-identity verified:** `diff -q` between the rust-lang vendor copy and the v0.8.0 authored file returns no differences; all three compared copies (v0.8.0 authored, v0.7.0 authored-slot, rust-lang vendor) are 303 lines.
-- **A second authored version slot exists:** `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs` (303 lines, byte-identical `ledger.rs` to v0.8.0) — this is the `flow-core-ai-native/0.7.0` flow-package copy, a separately-versioned authored engine, not a `vendor/` mirror. The vendor copies pin the stacks to 0.7.0-level consumers but mirror the **v0.8.0** authored engine per `sync-engines.toml`.
+- **A second authored version slot exists:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs` (303 lines, byte-identical `ledger.rs` to v0.8.0) — this is the `flow-core-ai-native/0.7.0` flow-package copy, a separately-versioned authored engine, not a `vendor/` mirror. The vendor copies pin the stacks to 0.7.0-level consumers but mirror the **v0.8.0** authored engine per `sync-engines.toml`.
 - **Further mirrors under `vibedeps/**`** (`flow-core-ai-native/0.7.0`, `flow-delegation-rules/0.1.0`, `stack-rust-ai-native-lang/0.7.0`, etc.) are excluded as evidence per the perimeter — they are regenerated dep copies of the same crates, not independent implementations.
 - **Consequence for any mechanism build:** an edit to `ledger.rs` propagates to the six vendor copies via `cargo xtask sync-engines`, gated by `--check` in self-check, and is a **release event** for the six consumer packages (each ships the byte-identical crate under its own version pin).
 

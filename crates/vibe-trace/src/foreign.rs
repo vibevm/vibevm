@@ -36,9 +36,18 @@ use crate::Explain;
 /// the contract carry the same literal.
 const MAP_FILENAME: &str = "package.specmap.json";
 
-/// The materialisation tree at the project root (PROP-009 §2.1):
-/// `vibedeps/<group>.<name>/<version>/` holds each installed package verbatim.
-const VIBEDEPS_DIR: &str = "vibedeps";
+/// The materialisation tree at the project root (PROP-009 §2.1; the
+/// PROP-052 layout): `vibevm/vibedeps/<group>.<name>/<version>/` holds
+/// each installed package verbatim — resolved through the one layout
+/// module, never spelled here.
+fn vibedeps_dir() -> std::path::PathBuf {
+    vibe_core::layout::current_vibedeps_root()
+}
+
+/// The same root as a forward-slashed display string for diagnostics.
+fn vibedeps_display() -> String {
+    vibe_core::machine_json_path(&vibedeps_dir())
+}
 
 /// What discovery learned about one installed coordinate.
 #[derive(Debug)]
@@ -96,12 +105,15 @@ pub(crate) fn resolve_foreign(root: &Path, target: &str) -> Result<Option<Foreig
                 coordinate,
             }))
         }
-        Some(Carriage::NoMap) => bail!(
-            "package `{coordinate}` is installed under `{VIBEDEPS_DIR}/` but does not participate \
+        Some(Carriage::NoMap) => {
+            let deps = vibedeps_display();
+            bail!(
+                "package `{coordinate}` is installed under `{deps}/` but does not participate \
              in traceability — its slot carries no `{MAP_FILENAME}` (no `specmap.toml` in its \
              source tree, so `vibe specmap` writes nothing). Re-publish it with a map to query \
              its addresses. A typo in the address would surface a different `no spec unit` message."
-        ),
+            )
+        }
         None => Ok(None),
     }
 }
@@ -145,7 +157,7 @@ fn coordinate_of(target: &str) -> Option<String> {
 /// engine's own not-found.
 fn discover(root: &Path) -> Resolver {
     let mut by_coordinate: BTreeMap<String, Vec<SlotRec>> = BTreeMap::new();
-    for kind_name_dir in subdirs(&root.join(VIBEDEPS_DIR)) {
+    for kind_name_dir in subdirs(&root.join(vibedeps_dir())) {
         // An in-place slot carries `.git` at the `<group>.<name>` level and
         // holds the package directly (PROP-022 §2.4); a `copy` slot holds
         // `<version>/` subdirs and never carries `.git`.
@@ -256,9 +268,10 @@ fn render_foreign(map: &Specmap, target: &str, json: bool, coordinate: &str) -> 
         Ok(Explain::Json(value))
     } else {
         let body = specmap_core::explain::explain_text(map, target)?;
+        let deps = vibedeps_display();
         Ok(Explain::Text(format!(
             "note: answered from the carried map under `spec://{coordinate}/` \
-             ({VIBEDEPS_DIR}/…/{MAP_FILENAME}), not built fresh from this tree\n{body}"
+             ({deps}/…/{MAP_FILENAME}), not built fresh from this tree\n{body}"
         )))
     }
 }
@@ -320,7 +333,9 @@ mod tests {
     /// is built with the same engine `vibe specmap` uses and written as
     /// `package.specmap.json`.
     fn slot_with_map(root: &Path) -> PathBuf {
-        let slot = root.join("vibedeps/org.demo.demo/0.1.0");
+        let slot = root
+            .join(vibe_core::layout::current_vibedeps_root())
+            .join("org.demo.demo/0.1.0");
         fs::create_dir_all(&slot).unwrap();
         fs::write(
             slot.join("vibe.toml"),
@@ -330,13 +345,14 @@ mod tests {
         fs::write(
             slot.join("specmap.toml"),
             format!(
-                "namespace = \"{COORD}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n"
+                "namespace = \"{COORD}\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n"
             ),
         )
         .unwrap();
-        fs::create_dir_all(slot.join("spec")).unwrap();
+        fs::create_dir_all(slot.join(vibe_core::layout::current_specs_root())).unwrap();
         fs::write(
-            slot.join("spec/D.md"),
+            slot.join(vibe_core::layout::current_specs_root())
+                .join("D.md"),
             "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
         )
         .unwrap();
@@ -403,7 +419,10 @@ mod tests {
     #[test]
     fn an_installed_package_without_a_map_says_it_does_not_participate() {
         let tmp = tempfile::tempdir().unwrap();
-        let slot = tmp.path().join("vibedeps/org.demo.demo/0.1.0");
+        let slot = tmp
+            .path()
+            .join(vibe_core::layout::current_vibedeps_root())
+            .join("org.demo.demo/0.1.0");
         fs::create_dir_all(&slot).unwrap();
         fs::write(
             slot.join("vibe.toml"),
@@ -436,11 +455,16 @@ mod tests {
         // The project's own spec tree, under its own namespace `proj`.
         fs::write(
             root.join("specmap.toml"),
-            "namespace = \"proj\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+            "namespace = \"proj\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"vibevm/vibespecs\"]\n",
         )
         .unwrap();
-        fs::create_dir_all(root.join("spec")).unwrap();
-        fs::write(root.join("spec/P.md"), "## own {#req-o}\n`req r1`\n").unwrap();
+        fs::create_dir_all(root.join(vibe_core::layout::current_specs_root())).unwrap();
+        fs::write(
+            root.join(vibe_core::layout::current_specs_root())
+                .join("P.md"),
+            "## own {#req-o}\n`req r1`\n",
+        )
+        .unwrap();
         let src = root.join("crates/p/src");
         fs::create_dir_all(&src).unwrap();
         fs::write(

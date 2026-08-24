@@ -32,7 +32,7 @@
 //! organized by `(group, name)` identity, the URLs are just one routing
 //! decision.
 //!
-//! Spec: [PROP-002 §2.5 / §2.6 / §2.12](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+//! Spec: [PROP-002 §2.5 / §2.6 / §2.12](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 

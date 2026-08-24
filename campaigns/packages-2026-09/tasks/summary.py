@@ -33,9 +33,9 @@ ORDER = ["confirmed", "drift", "unverifiable"]
 
 
 def namespace(path):
-    if "packages/org.vibevm.ai-native/" in path:
+    if "vibevm/vibepacks/org.vibevm.ai-native/" in path:
         return "ai-native"
-    if "packages/org.vibevm.world/" in path:
+    if "vibevm/vibepacks/org.vibevm.world/" in path:
         return "world"
     return "host"
 

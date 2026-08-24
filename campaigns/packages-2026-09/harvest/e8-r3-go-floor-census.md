@@ -7,7 +7,7 @@ extractor fixture as if it were a source). Every factual claim carries a
 is recorded explicitly as a fact about the perimeter.
 
 Roots are repo-relative. `go-pkg` abbreviates
-`packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0`.
+`vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0`.
 
 ---
 
@@ -58,7 +58,7 @@ How each step gathers its target set, and whether it has any exclusion:
    (`floor.rs:168`). This step **does** carry an exclusion: inside `run_check`
    the engine builds `Store::for_go(root, config)` and runs `extract_go`,
    which filters the file walk by `config.go.exclude_substrings`
-   (`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:73`,
+   (`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:73`,
    `:75-81`, `:118-126`). The exclusion is the conform engine's, not the
    floor's — and the default list does not cover `/fixtures/` (see Q3).
 
@@ -276,7 +276,7 @@ the Go `exclude_substrings` default at `config.rs:136` omits it).
 
 ## Q5 — The Rust and TS floors: same class of hole?
 
-**Rust floor** — `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs`.
+**Rust floor** — `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs`.
 Its formatting step is `cargo fmt --all --check`
 (`rust-.../floor.rs:57-61`), run via `run_cargo(root, &["fmt", "--all",
 "--check"])` (`floor.rs:36-42`). This is **not** a raw recursive walk of the
@@ -291,7 +291,7 @@ not reached either. **The Rust floor does not have the gofmt class of
 hole** — its fmt step is cargo-scoped rather than a filesystem walk, and
 the package has no fixture tree to be walked.
 
-**TypeScript floor** — `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs`.
+**TypeScript floor** — `vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-cli/src/floor.rs`.
 This floor **does** have the same structural class of hole on two of its
 steps. The formatting step is `prettier --check .`
 (`typescript-.../floor.rs:78-97`, the args at `:82`) and the lint step is

@@ -7,8 +7,8 @@ W5 is the batch where **source 2 is at its most literal anywhere in `world`**.
 All four flows describe practices the host performs and leaves artefacts for:
 
 - **`operating-modes`** — the host keeps a codeword catalogue in its own contract
-  tree (`spec/common/PROP-006-operating-modes.xml`) and surfaces it at boot from
-  `spec/boot/90-user.xml`. One codeword is in force and its invocations are in the
+  tree (`vibevm/vibespecs/common/PROP-006-operating-modes.xml`) and surfaces it at boot from
+  `vibevm/vibespecs/boot/90-user.xml`. One codeword is in force and its invocations are in the
   commit record.
 - **`health-audit`** — the host keeps `AUDIT.md` at the root, 24 363 bytes, three
   dated runs. The flow's cadence rule is checkable against the gap since the last.
@@ -26,11 +26,11 @@ practices are adopted.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/operating-modes \
-    packages/org.vibevm.world/health-audit \
-    packages/org.vibevm.world/manual-tests \
-    packages/org.vibevm.world/secrets-hygiene
-source-1 join over 25 file(s) under packages/org.vibevm.world/operating-modes, packages/org.vibevm.world/health-audit, packages/org.vibevm.world/manual-tests, packages/org.vibevm.world/secrets-hygiene
+    vibevm/vibepacks/org.vibevm.world/operating-modes \
+    vibevm/vibepacks/org.vibevm.world/health-audit \
+    vibevm/vibepacks/org.vibevm.world/manual-tests \
+    vibevm/vibepacks/org.vibevm.world/secrets-hygiene
+source-1 join over 25 file(s) under vibevm/vibepacks/org.vibevm.world/operating-modes, vibevm/vibepacks/org.vibevm.world/health-audit, vibevm/vibepacks/org.vibevm.world/manual-tests, vibevm/vibepacks/org.vibevm.world/secrets-hygiene
   relative .md citations resolved: 35
   broken: 0
 ```
@@ -45,7 +45,7 @@ source 1 is clean.
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py | grep -E 'operating-modes|health-audit|manual-tests|secrets-hygiene'
   org.vibevm.world/operating-modes  [INSTALLED SOURCED WORDS-DIFFER]
     installed: vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md
-    source   : packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.xml
+    source   : vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml
 ```
 
 **Three of the four are clean** — `health-audit`, `manual-tests` and
@@ -58,7 +58,7 @@ INSTALLED, SOURCED and word-identical to what the host boots.
 $ python - <<'PY'   # word-stream diff, package source vs the compiled host lane
   only in package: ['recognise', 'a', 'codeword', 'by', 'intent', 'not', 'exact', 'wording']
   only in host   : []
-$ grep -nE '^\s*-?\s*##[A-Za-z][A-Za-z0-9_.:-]*\s*$' packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.xml
+$ grep -nE '^\s*-?\s*##[A-Za-z][A-Za-z0-9_.:-]*\s*$' vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml
 30:##RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING
 ```
 
@@ -73,7 +73,7 @@ and `##sibling-document-pointers`.
 `health-audit`'s boot snippet says «Use the **`health-audit`** skill».
 
 ```console
-$ ls packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/
+$ ls vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/skills/health-audit/
 SKILL.md
 $ ls vibedeps/flow-health-audit/0.1.0/spec/skills/
 health-audit
@@ -108,22 +108,22 @@ in the consuming project — W1's 69-dangling finding, in its ninth and tenth
 packages. It is a fact about the pointer, not about the rule the pointer sits
 under.
 
-**One trap specific to this batch:** the host DOES have `spec/manual-tests/`, so a
+**One trap specific to this batch:** the host DOES have `vibevm/vibespecs/manual-tests/`, so a
 `manual-tests` pointer of the form `../flows/manual-tests/…` is still dangling
-while a claim about `spec/manual-tests/` is not. Read which one the fact makes.
+while a claim about `vibevm/vibespecs/manual-tests/` is not. Read which one the fact makes.
 
 ## Source 2 — the host's observed conformance {#source-2}
 
 ### operating-modes — the catalogue exists and is a pointer {#s2-modes}
 
 ```console
-$ sed -n '5p;13p' spec/common/PROP-006-operating-modes.xml
+$ sed -n '5p;13p' vibevm/vibespecs/common/PROP-006-operating-modes.xml
 ##status-line **Status:** accepted 2026-05-06; the framework and its codewords were extracted to the `operating-modes` flow 2026-07-14 (reached via the redbook dependency). This entry is now a thin pointer.
-##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`spec/boot/90-user.xml`](../boot/90-user.md). @freeze/done
+##CATALOGUE-AT-BOOT The codeword catalogue is surfaced at session boot by [`vibevm/vibespecs/boot/90-user.xml`](../boot/90-user.md). @freeze/done
 ```
 
 The host's own PROP was **extracted into this flow on 2026-07-14** and reduced to a
-pointer that cites the flow by qualified `spec://` URI. `spec/boot/90-user.xml`
+pointer that cites the flow by qualified `spec://` URI. `vibevm/vibespecs/boot/90-user.xml`
 carries the catalogue at boot with one codeword in force —
 «move fast and break things» — and restates the red-lines law verbatim.
 
@@ -183,15 +183,15 @@ M1.1-git-registry-smoke.md   M1.15-git-source-smoke.md   M1.16-redirect-smoke.md
 M1.17-workspace-publish-smoke.md   M1.5-gate-multi-package-smoke.md
 M1.5-gate-v2-per-package-smoke.md  M1.6-mirror-vendor-smoke.md
 M2.10-index-smoke.md   README.md
-$ ls spec/manual-tests/
+$ ls vibevm/vibespecs/manual-tests/
 MT-01-vibe-tree.xml   MT-02-vibe-tree-tui.xml   MT-03-vibe-prefs-tui.xml
 $ grep -n 'MT-05' CLAUDE.md | head -1
 131:  2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
 ```
 
 Three homes: `manual-tests/` at the root (8 tests, `M<milestone>` numbering),
-`spec/manual-tests/` (3 tests, `MT-NN` numbering, the ones the campaign scope
-includes), and `packages/org.vibevm.fractality/…/spec/manual-tests/MT-05-…` inside
+`vibevm/vibespecs/manual-tests/` (3 tests, `MT-NN` numbering, the ones the campaign scope
+includes), and `vibevm/vibepacks/org.vibevm.fractality/…/spec/manual-tests/MT-05-…` inside
 the specspace.
 
 **`manual-tests/README.md` is an index in prose and it states the flow's own
@@ -219,10 +219,10 @@ rows, one occurrence of «required». And the `MT-NN` home has no index at all.
 
 The host also records outstanding runs outside the tier, in its checkpoint —
 MT-02 and MT-03 await owner sign-off. **Cite the durable side of that fact**
-(`spec/manual-tests/MT-02-vibe-tree-tui.xml` and `MT-03-vibe-prefs-tui.xml`
+(`vibevm/vibespecs/manual-tests/MT-02-vibe-tree-tui.xml` and `MT-03-vibe-prefs-tui.xml`
 themselves), never the checkpoint.
 
-`grep -rn 'Expected' spec/manual-tests/*.md | wc -l` returns **10** — the flow's
+`grep -rn 'Expected' vibevm/vibespecs/manual-tests/*.md | wc -l` returns **10** — the flow's
 «never write a step without an Expected paragraph» is countable per file.
 
 ### secrets-hygiene — the fourth law has machinery {#s2-secrets}
@@ -273,15 +273,15 @@ names.
 The host's written contract on the same surface:
 
 ```console
-$ grep -cE 'publish.token|VIBEVM_PUBLISH_TOKEN' spec/common/PROP-000.xml spec/boot/90-user.xml
-spec/common/PROP-000.xml:2
-spec/boot/90-user.xml:5
+$ grep -cE 'publish.token|VIBEVM_PUBLISH_TOKEN' vibevm/vibespecs/common/PROP-000.xml vibevm/vibespecs/boot/90-user.xml
+vibevm/vibespecs/common/PROP-000.xml:2
+vibevm/vibespecs/boot/90-user.xml:5
 ```
 
-`spec/boot/90-user.xml` carries `##TOKEN-DISCIPLINE`, `##TOKEN-FILE-CONVENTION` and
+`vibevm/vibespecs/boot/90-user.xml` carries `##TOKEN-DISCIPLINE`, `##TOKEN-FILE-CONVENTION` and
 `##SCOPE-DISCIPLINE` — the host restating this flow's laws in its own vocabulary,
 including the sanctioned at-rest location, the env-var precedence, and the
-scope-escalation refusal. `spec/common/PROP-000.xml` §20 is the governing anchor.
+scope-escalation refusal. `vibevm/vibespecs/common/PROP-000.xml` §20 is the governing anchor.
 **Both are durable citation targets; prefer them.**
 
 ## The twenty-one files and their anchor counts {#files}
@@ -291,26 +291,26 @@ Measured from `campaigns/packages-2026-09/run/mirror/`; the total agrees with
 
 ```
 health-audit (217)
-  20  packages/org.vibevm.world/health-audit/v0.1.0/README.md
+  20  vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/README.md
   17  …/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md
   71  …/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md
   65  …/spec/flows/health-audit/audit-checklist.md
   30  …/spec/flows/health-audit/running-an-audit.md
   14  …/spec/skills/health-audit/SKILL.md
 manual-tests (123)
-  18  packages/org.vibevm.world/manual-tests/v0.1.0/README.md
+  18  vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/README.md
   16  …/spec/boot/44-flow-manual-tests.md
   37  …/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md
   35  …/spec/flows/manual-tests/authoring-rules.md
   17  …/spec/flows/manual-tests/test-template.md
 operating-modes (166)
-  20  packages/org.vibevm.world/operating-modes/v0.1.0/README.md
+  20  vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/README.md
   24  …/spec/boot/45-flow-operating-modes.md
   52  …/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md
   33  …/spec/flows/operating-modes/mfbt-mode.md
   37  …/spec/flows/operating-modes/writing-a-codeword.md
 secrets-hygiene (191)
-  20  packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md
+  20  vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/README.md
   21  …/spec/boot/57-flow-secrets-hygiene.md
   63  …/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md
   47  …/spec/flows/secrets-hygiene/scope-discipline.md

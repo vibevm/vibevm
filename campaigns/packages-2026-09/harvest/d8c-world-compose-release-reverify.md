@@ -33,7 +33,7 @@ F-251 | reality-mismatch | release | mixed | open | 2 anchors
 
 **The standing perimeter.** Unless an entry narrows it, every search was run from
 the repository root over: `packages/**` **including
-`packages/org.vibevm.fractality/**`** (a second complete adopter project with its
+`vibevm/vibepacks/org.vibevm.fractality/**`** (a second complete adopter project with its
 own `vibe.toml`, `vibedeps/` and plans —
 [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness)),
 `vibedeps/**`, `crates/**`, `xtask/**`, `tools/**`, `spec/**`, `discipline/**`,
@@ -53,7 +53,7 @@ conformance · **[3]** the installed reality (`vibe.lock`, `vibedeps/`,
 
 **The inside-own-corpus trap, applied throughout.** Per
 [`##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS`](../PHASE-D-BATCH-PLAN.md#delegation-lessons),
-every count over `campaigns/**` or `spec/terraforms/**` was opened and each hit
+every count over `campaigns/**` or `vibevm/vibespecs/terraforms/**` was opened and each hit
 confirmed to be an **instance** of the form rather than this campaign's prose
 **about** the finding. Where campaign prose matched, it is counted separately and
 named.
@@ -141,7 +141,7 @@ depends on what a consumer does, and the sentence is falsifiable entirely inside
 **The rule lives in the sibling, and the sibling's snippet is addressable proof** [1]:
 
 ```console
-$ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
+$ grep -rn "spec://" vibevm/vibepacks/org.vibevm.world/git-conventional-commits/
 …/spec/boot/31-flow-conventional-commits.md:24:##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
 …/spec/flows/conventional-commits/conventional-commits.md:75:  measurement, or conversation that drove it. Use `spec://…` URIs
 …/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
@@ -160,7 +160,7 @@ full rule is at `conventional-commits.xml:74-77` [1]:
 **`git-atomic-commits` does not carry it, and explicitly disclaims the class** [1]:
 
 ```console
-$ grep -rn "spec://" packages/org.vibevm.world/git-atomic-commits/
+$ grep -rn "spec://" vibevm/vibepacks/org.vibevm.world/git-atomic-commits/
 …/spec/boot/30-flow-atomic-commits.md:24:`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
 …/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:78:(`spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root`)
 …/spec/flows/atomic-commits/splitting-large-changes.md:96:`git-conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`). @impl/done
@@ -277,7 +277,7 @@ absence* argument, and that is what is re-verified below.
 `legacy-spec/`**:
 
 ```
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.xml:67
+vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml:67
 legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374        ← EXCLUDED perimeter
 legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298            ← EXCLUDED perimeter
 vibe.lock:293
@@ -303,28 +303,28 @@ point: the numbers are right and the perimeter is wrong.
 ```console
 $ grep -rlE '\*Commits' legacy-spec/terraforms/*.md | wc -l        # EXCLUDED; run only to reproduce
 4
-$ grep -rlE '\*Commits' spec/terraforms/*.md | wc -l
+$ grep -rlE '\*Commits' vibevm/vibespecs/terraforms/*.md | wc -l
 0
 $ grep -rlE '\*Commits' campaigns/packages-2026-09/*.md | wc -l
 0
-$ for p in spec/terraforms/*.md; do grep -ciE 'commits:' "$p"; done
+$ for p in vibevm/vibespecs/terraforms/*.md; do grep -ciE 'commits:' "$p"; done
 0
 0
 ```
 
 **The perimeter miss, and it is [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness)
 exactly.** The verdict searched this host's two live campaign zones
-(`spec/terraforms/`, `campaigns/packages-2026-09/`) and the archive. It did not
+(`vibevm/vibespecs/terraforms/`, `campaigns/packages-2026-09/`) and the archive. It did not
 search **the second complete project in this repository that installs
 `flow:campaign-plans` and boots it** — the `fractality` specspace inside
 `packages/`. That project is a consumer of this very flow [3]:
 
 ```console
-$ grep -n "campaign-plans" packages/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
+$ grep -n "campaign-plans" vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
 25:    "flow:org.vibevm.world/campaign-plans@=0.1.0",
 135:name = "campaign-plans"
 
-$ grep -n "campaign-plans" packages/org.vibevm.fractality/fractality/v0.1.0/spec/boot/INDEX.md
+$ grep -n "campaign-plans" vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/boot/INDEX.md
 37:path = "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
 ```
 
@@ -340,9 +340,9 @@ campaigns/packages-2026-09/baseline.json                                   ← c
 campaigns/packages-2026-09/harvest/d2-campaign-plans-research-repairs.md   ← campaign prose ABOUT the finding
 campaigns/packages-2026-09/harvest/d6a-plans-research-absences.md          ← campaign prose ABOUT the finding
 campaigns/packages-2026-09/tasks/evidence/…  (6 files)                     ← campaign records
-packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml   ← INSTANCE
-packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.xml       ← the spec itself
-packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.xml
+vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/FRACTALITY-IGNITION-PLAN-v0.1.xml   ← INSTANCE
+vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml       ← the spec itself
+vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml
 ```
 
 **Nine of the twelve hits are this campaign's own footprint**
@@ -430,14 +430,14 @@ neither Constraints, nor anchors, nor resumed sessions.
 
 ### The WAL measurements, re-run at HEAD [2]
 
-`spec/WAL.xml` is measured here as a **host artefact** (source 2 — the host's
+`vibevm/vibespecs/WAL.xml` is measured here as a **host artefact** (source 2 — the host's
 observed conformance), never quoted for campaign numbers.
 
 ```console
-$ grep -c "spec://" spec/WAL.xml
+$ grep -c "spec://" vibevm/vibespecs/WAL.xml
 2
 
-$ grep -n "spec://" spec/WAL.xml
+$ grep -n "spec://" vibevm/vibespecs/WAL.xml
 65:links take `@spec://` where they are pointers and `#embed` where the target
 337:cannot be cited. `spec://` occurs zero times in this file, in every revision
 ```
@@ -475,7 +475,7 @@ And the two that cite anything cite **section numbers, not anchors** [2]:
 replace. **So the honest figure is 2 of 28 by any notation and 0 of 28 by
 anchor** — the direction of the verdict is right and its arithmetic is stale, the
 WAL having been rewritten at three wind-downs since (`git log --oneline -5 --
-spec/WAL.xml`).
+vibevm/vibespecs/WAL.xml`).
 
 ### Anchor 1 — `addressable-specs/v0.1.0/README.md#COMPOSES-WAL` → **ROUTE-OUT-CANDIDATE (§3.6(b))**
 
@@ -521,7 +521,7 @@ all** [1]:
 Measuring the `Next` section for anchor citations tests a rule that does not
 exist. The section the rule actually binds is `##SECTION-IN-PROGRESS` (`:92`,
 «Cite spec anchors (`spec://…`)»), and the host fails **that** one too — its
-`## In progress` (`spec/WAL.xml:199-226`) names campaign files and paths
+`## In progress` (`vibevm/vibespecs/WAL.xml:199-226`) names campaign files and paths
 (`harvest/world-w6-project-practice-ii.md`, `tasks/batch-progress.py`,
 `ev-W5a…d`) and cites no anchor [2]. So the finding survives on the correct
 section; the reason cites the wrong one.
@@ -537,7 +537,7 @@ naming it. Editing `addressable-specs` here would be the *профанация* 
 rewriting the discipline to describe a lax consumer.
 
 **Which consumer, and what it owes.** The consumer is **this host repository**,
-and the obligation is on `spec/WAL.xml`, not on the package:
+and the obligation is on `vibevm/vibespecs/WAL.xml`, not on the package:
 
 1. `## Constraints — do not violate` — bring the 28 entries under
    `flow:wal` `##SECTION-CONSTRAINTS`: each carries a *why* citing a spec anchor
@@ -546,7 +546,7 @@ and the obligation is on `spec/WAL.xml`, not on the package:
 2. `## In progress` — bring it under `##SECTION-IN-PROGRESS`: «Cite spec anchors
    (`spec://…`)». It currently cites campaign file paths only.
 3. **The prerequisite the host already recorded against itself**
-   (`spec/WAL.xml:335-337`, this campaign's own note): *«all 8 [headings] here
+   (`vibevm/vibespecs/WAL.xml:335-337`, this campaign's own note): *«all 8 [headings] here
    carry no anchor, so the Constraints section above cannot be cited»* — the WAL
    is not addressable, so a constraint entry cannot even be pointed at. That is
    the same defect one level up and belongs in the same host task.
@@ -577,22 +577,22 @@ ground is a HOST-INTERNAL contradiction, not a falsification of this sentence.**
 
 The recorded reason argues: *«`CLAUDE.md`'s END SESSION command, step 4,
 prescribes «Push to `origin/main`» — the bare named-remote push that
-`spec/boot/90-user.xml:35` and `PROP-016:59` BOTH name as not the standard
+`vibevm/vibespecs/boot/90-user.xml:35` and `PROP-016:59` BOTH name as not the standard
 rollout.»* Every fact in that sentence is true, and it acquits the package. Read
 the two documents it names [2]:
 
 ```
-spec/boot/90-user.xml:35
+vibevm/vibespecs/boot/90-user.xml:35
 - ##CMD-MIRROR Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14:
   `cargo xtask mirror` … This is the standard rollout, preferred over a bare `git push origin`.
 
-spec/common/PROP-016-source-mirrors.xml:59
+vibevm/vibespecs/common/PROP-016-source-mirrors.xml:59
 - ##CMD-MIRROR `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target,
   fast-forward-only, never `--force` … This — not `git push origin` — is the standard rollout.
 ```
 
 **Both host documents agree with the package.** The only document out of step is
-`CLAUDE.md:191`. So the disagreement is *`CLAUDE.md` against `spec/boot/90-user.xml`
+`CLAUDE.md:191`. So the disagreement is *`CLAUDE.md` against `vibevm/vibespecs/boot/90-user.xml`
 and `PROP-016`* — a host-internal contradiction between three host documents —
 and the package's sentence sits on the side that two of the three take. This is
 [`##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE`](../PHASE-D-BATCH-PLAN.md#delegation-lessons)
@@ -615,7 +615,7 @@ rollout. That is a host obligation for the boss, on a file
 this is the only surviving ground.**
 
 ```console
-$ grep -niE "fanned out|fan out|fan-out|xtask mirror" spec/WAL.xml
+$ grep -niE "fanned out|fan out|fan-out|xtask mirror" vibevm/vibespecs/WAL.xml
 (no output)
 ```
 
@@ -631,7 +631,7 @@ $ grep -rln "fanned out" packages spec campaigns terraform discipline research \
 Twelve files, **and every one was opened**. Five are campaign records
 (`baseline.json`, four `tasks/evidence/*W6b*.json`). Two are vendored copies of
 this very sentence
-(`packages/org.vibevm.fractality/{delegation-rules,fractality}/…/vibedeps/flow-source-mirrors/0.1.0/README.md`)
+(`vibevm/vibepacks/org.vibevm.fractality/{delegation-rules,fractality}/…/vibedeps/flow-source-mirrors/0.1.0/README.md`)
 [3]. One is the sentence itself. **The remaining four are a different sense of
 the word entirely** — the delegation sense, not the mirror sense:
 
@@ -651,11 +651,11 @@ form.** Perimeter named, per
 this anchor from its sibling** [1]:
 
 ```console
-$ grep -rni "mirror\|fan.out" packages/org.vibevm.world/wal/v0.2.0/
+$ grep -rni "mirror\|fan.out" vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/
 (no output)
 ```
 
-`flow:wal` — the flow that owns `spec/WAL.xml`'s section grammar (`:76-98`,
+`flow:wal` — the flow that owns `vibevm/vibespecs/WAL.xml`'s section grammar (`:76-98`,
 eight numbered sections) — **never mentions mirrors or fan-out at all**. So
 `source-mirrors` prescribes content for a document whose own protocol has no slot
 for it, and no consumer has ever produced it. That is *not* the addressable-specs
@@ -667,13 +667,13 @@ instance.
 > DRIFT on the WAL-entry half only, and on different evidence than first
 > recorded. The «fan-out is a natural session wind-down step» half is **sound**:
 > the package's own `daily-loop.xml:42` states it, and the host's
-> `spec/boot/90-user.xml:35` and `spec/common/PROP-016-source-mirrors.xml:59` both
+> `vibevm/vibespecs/boot/90-user.xml:35` and `vibevm/vibespecs/common/PROP-016-source-mirrors.xml:59` both
 > name `cargo xtask mirror` the standard rollout, «preferred over a bare
 > `git push origin`». The document that disagrees is `CLAUDE.md:191`, which
 > contradicts those two host documents — a host defect, not this sentence's. What
 > does not hold is the second half: no WAL entry notes «fanned out at
 > <checkpoint>». `grep -niE "fanned out|fan out|fan-out|xtask mirror"
-> spec/WAL.xml` → 0 at `HEAD = f2b11b0a`, and over the standing perimeter every
+> vibevm/vibespecs/WAL.xml` → 0 at `HEAD = f2b11b0a`, and over the standing perimeter every
 > «fanned out» hit outside this README and its two vendored copies is the
 > delegation sense of the word (`terraform/adopt-v0.3/LOG.md:542`,
 > `fractality/spec/PROP-001-foundation.md:70`, `MT-C3-01:124`,
@@ -758,15 +758,15 @@ not exist, and would have read every genuine record as an absence. The host in
 fact **practises the four-field form**, and the search missed all of it [2]:
 
 ```console
-$ grep -rl -i "when to revisit" spec/common/*.md spec/modules/*/*.md
-spec/common/PROP-000.xml                            (##LANG-REVISIT:23, ##LICENSE-REVISIT:57)
-spec/modules/vibe-cli/PROP-036-package-tree.xml     (##decision-artifacts-revisit:95)
-spec/modules/vibe-registry/PROP-001-git-backend.xml (##revisit-lead:113)
+$ grep -rl -i "when to revisit" vibevm/vibespecs/common/*.md vibevm/vibespecs/modules/*/*.md
+vibevm/vibespecs/common/PROP-000.xml                            (##LANG-REVISIT:23, ##LICENSE-REVISIT:57)
+vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml     (##decision-artifacts-revisit:95)
+vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml (##revisit-lead:113)
 ```
 
 The clause of that reason that **is** load-bearing and **is** correct is the last
 one: «PROP-000 §12 records the posture as a pointer with no trigger». Verified —
-`awk 'NR>=157 && NR<=168' spec/common/PROP-000.xml | grep -ciE "revisit|considered and rejected"` → **0**.
+`awk 'NR>=157 && NR<=168' vibevm/vibespecs/common/PROP-000.xml | grep -ciE "revisit|considered and rejected"` → **0**.
 
 ### Anchor 1 — `git-attribution-policy/v0.1.0/README.md#COMPOSES-DECISION-RECORDS` → **ROUTE-OUT-CANDIDATE (§3.6(b))**
 
@@ -812,12 +812,12 @@ $ grep -rln -i "regulation" packages spec campaigns terraform discipline researc
 campaigns/packages-2026-09/baseline.json                      ← campaign record
 campaigns/packages-2026-09/tasks/evidence/batch-W1c.json      ← campaign record
 campaigns/packages-2026-09/tasks/evidence/ev-W1c.json         ← campaign record
-packages/org.vibevm.world/git-attribution-policy/…  (4 files) ← the package itself
-spec/boot/STATIC.xml                                           ← the COMPILED copy of that package's snippet
-spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml       ← campaign prose ABOUT the finding
+vibevm/vibepacks/org.vibevm.world/git-attribution-policy/…  (4 files) ← the package itself
+vibevm/vibespecs/boot/STATIC.xml                                           ← the COMPILED copy of that package's snippet
+vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml       ← campaign prose ABOUT the finding
 ```
 
-**Every hit was opened.** `spec/boot/STATIC.xml:445-446` and `:639-640` are the
+**Every hit was opened.** `vibevm/vibespecs/boot/STATIC.xml:445-446` and `:639-640` are the
 package's own boot snippet compiled into the host's lane [3] («*such regulation
 and violates no present law; the owner chooses the posture proactively…*») — the
 package speaking, not a host record. Four are this campaign's own footprint. **No
@@ -825,7 +825,7 @@ host document anywhere carries a regulation-tied revisit trigger**, and neither
 does the second adopter:
 
 ```console
-$ grep -rn -i "regulation" packages/org.vibevm.fractality/ --include=*.md | grep -v vibedeps | grep -v "\.vibe"
+$ grep -rn -i "regulation" vibevm/vibepacks/org.vibevm.fractality/ --include=*.md | grep -v vibedeps | grep -v "\.vibe"
 (no output)
 ```
 
@@ -833,12 +833,12 @@ $ grep -rn -i "regulation" packages/org.vibevm.fractality/ --include=*.md | grep
 shape:
 
 ```
-spec/boot/00-core.xml:21
+vibevm/vibespecs/boot/00-core.xml:21
 1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits,
    branches, comments, or any artefact as machine-authored. The rule itself (and its copy in
    PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done
 
-spec/common/PROP-000.xml:161
+vibevm/vibespecs/common/PROP-000.xml:161
 - ##GP-ATTRIBUTION human-authored **attribution** —
   `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done
 ```
@@ -861,14 +861,14 @@ $ grep -n "attribution-policy@\|decision-records@" vibe.lock
 46:    "flow:org.vibevm.world/decision-records@=0.1.0",
 294:    "flow:org.vibevm.world/git-attribution-policy@=0.1.0",
 
-$ grep -n "attribution-policy@\|decision-records@" packages/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
+$ grep -n "attribution-policy@\|decision-records@" vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibe.lock
 24:    "flow:org.vibevm.world/attribution-policy@=0.1.0",
 28:    "flow:org.vibevm.world/decision-records@=0.1.0",
 ```
 
 Both this host and the `fractality` specspace install both flows; neither records
 the posture. **The host owes** a four-field record at the anchor that governs the
-posture — `spec/boot/00-core.xml` `##RULE-ATTRIBUTION` or `PROP-000` §12
+posture — `vibevm/vibespecs/boot/00-core.xml` `##RULE-ATTRIBUTION` or `PROP-000` §12
 `##GP-ATTRIBUTION` — carrying the *why* (present law imposes none; the owner
 chooses proactively so future regulation finds no hook), the rejected alternative
 (the disclosure posture, which the package already documents in full), and a
@@ -913,10 +913,10 @@ recorded decisions» — it says «**each with a revisit trigger**» and then qu
 one. The verdict's own command reproduces exactly at HEAD [2]:
 
 ```console
-$ grep -n -i 'revisit\|parallel\|integrator' spec/common/PROP-016-source-mirrors.xml
+$ grep -n -i 'revisit\|parallel\|integrator' vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 (no output; rc=1)
 
-$ wc -l < spec/common/PROP-016-source-mirrors.xml
+$ wc -l < vibevm/vibespecs/common/PROP-016-source-mirrors.xml
 80
 ```
 
@@ -948,9 +948,9 @@ the two alternatives `##HIST-AUTHORED` already names.
 **The scale datum, which is the argument for routing out rather than editing** [2]:
 
 ```console
-$ ls spec/common/*.md spec/modules/*/*.md | wc -l
+$ ls vibevm/vibespecs/common/*.md vibevm/vibespecs/modules/*/*.md | wc -l
 43
-$ grep -rl -i "when to revisit" spec/common/*.md spec/modules/*/*.md | wc -l
+$ grep -rl -i "when to revisit" vibevm/vibespecs/common/*.md vibevm/vibespecs/modules/*/*.md | wc -l
 3
 ```
 
@@ -981,7 +981,7 @@ verbatim**, which is precisely the reading the verdict performs.
 ### The corpus, re-measured at HEAD — seventeen exactly, and the roster matches [1]
 
 ```console
-$ grep -rn "^Read spec/flows/" packages/org.vibevm.world/*/v*/spec/flows/*/*.md | wc -l
+$ grep -rn "^Read spec/flows/" vibevm/vibepacks/org.vibevm.world/*/v*/spec/flows/*/*.md | wc -l
 17
 ```
 
@@ -1001,7 +1001,7 @@ consumers in this repository** [2][3]:
 $ ls spec/
 WAL.md  boot  common  design  manual-tests  modules  terraforms
 
-$ ls packages/org.vibevm.fractality/fractality/v0.1.0/spec/
+$ ls vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/
 PROP-001-foundation.xml  VISION-RECURSIVE-FABRIC.xml  boot  examples
 manual-tests  plans  refs  skills
 ```
@@ -1143,7 +1143,7 @@ B-004's scope question.**
 **Recorded, not used — the «prompt was never run here» half.** The registry
 reason concedes it («expected rather than damning — this host is the extraction
 SOURCE»), and the concession is right: the host's licensing posture predates the
-package (`spec/common/PROP-000.xml` §3 `##LICENSE-REVISIT:57` records the
+package (`vibevm/vibespecs/common/PROP-000.xml` §3 `##LICENSE-REVISIT:57` records the
 relicensing trigger as fired and spent on 2026-07-12). Ask (2) of the fenced
 prompt — «list any current dependencies that violate it» — is the one output no
 host artefact could show, and its absence is not evidence about either anchor.
@@ -1181,10 +1181,10 @@ and the content documents are over-counted by one.
 **And the tree agrees** [1]:
 
 ```console
-$ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/*.md
+$ ls vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/*.md
 SPEC-GENRES-PROTOCOL.xml   design-docs.xml   when-to-write-what.xml          (3)
 
-$ find packages/org.vibevm.world/spec-genres -type f | wc -l
+$ find vibevm/vibepacks/org.vibevm.world/spec-genres -type f | wc -l
 7
 ```
 
@@ -1208,10 +1208,10 @@ plus a boot snippet.
 Identical shape, identical defect [1]:
 
 ```console
-$ ls packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/*.md
+$ ls vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/*.md
 TOOL-DESIGN-LESSONS.xml   packaging-lessons.xml   self-updating-tools.xml     (3)
 
-$ find packages/org.vibevm.world/tool-design-lessons -type f | wc -l
+$ find vibevm/vibepacks/org.vibevm.world/tool-design-lessons -type f | wc -l
 7
 ```
 
@@ -1346,7 +1346,7 @@ crates/vibe-check/src/checks/redirect_block.rs
 crates/vibe-workspace/src/boot_artifacts.rs
 crates/vibe-workspace/src/boot_artifacts/tests.rs
 crates/vibe-workspace/src/lib.rs
-packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml
+vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml
 ```
 
 **One of the six files is a file this batch cites** —
@@ -1358,7 +1358,7 @@ occurrences) is untouched. Re-run at `12640d7c` [1] — identical to the figures
 the F-219 entry:
 
 ```console
-$ grep -rn "spec://" packages/org.vibevm.world/git-atomic-commits/
+$ grep -rn "spec://" vibevm/vibepacks/org.vibevm.world/git-atomic-commits/
   …/spec/boot/30-flow-atomic-commits.md:24                       (pointer to the sibling)
   …/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:78      (pointer to decision-records)
   …/spec/flows/atomic-commits/splitting-large-changes.md:96      (pointer to the sibling)
@@ -1374,7 +1374,7 @@ $ awk 'NR==24' …/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventiona
 
 ```console
 $ git diff --name-only f2b11b0a..HEAD -- \
-    packages/org.vibevm.world/{addressable-specs,campaign-plans,source-mirrors,git-attribution-policy,licensing,spec-genres,tool-design-lessons,wal,decision-records} \
+    vibevm/vibepacks/org.vibevm.world/{addressable-specs,campaign-plans,source-mirrors,git-attribution-policy,licensing,spec-genres,tool-design-lessons,wal,decision-records} \
     spec/ vibe.lock vibedeps/ CLAUDE.md
 (no output)
 ```

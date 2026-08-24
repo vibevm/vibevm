@@ -21,7 +21,7 @@
 //!
 //! The token is loaded by [`crate::token::load_token_for_host`] with the
 //! per-host file precedence pinned in
-//! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy):
+//! [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy):
 //! `VIBEVM_PUBLISH_TOKEN` env → `~/.vibe/github.publish.token` →
 //! legacy `~/.vibe/git.publish.token`. The value is never logged and is
 //! redacted on `Display`/`Debug` of the [`Token`] wrapper.

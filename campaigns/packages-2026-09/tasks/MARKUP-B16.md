@@ -3,8 +3,8 @@
 **Phase:** B (markup, facts pass) — **the last batch.** **Executor:** Opus.
 **Reviewer:** the boss, who owns sense-preserving splits, anchor names and
 `audience`.
-**Corpus:** `packages/org.vibevm.world/redbook/v0.2.0/` and
-`packages/org.vibevm.ai-native/{rust-ai-native-mcp/v0.7.0,
+**Corpus:** `vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/` and
+`vibevm/vibepacks/org.vibevm.ai-native/{rust-ai-native-mcp/v0.7.0,
 typescript-ai-native-mcp/v0.6.0, go-ai-native-mcp/v0.1.0,
 typescript-ai-native/v0.6.0, go-ai-native/v0.1.0}/`.
 
@@ -22,7 +22,7 @@ convention is ambiguous, **report it rather than absorbing it quietly**.
 ## Eight marked siblings, and this batch is mostly siblings {#siblings}
 
 @fact:B16-STACK-AGGREGATOR-PRECEDENT **Two of your ten files are stack aggregators, and their third sibling is
-already marked**: `packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`
+already marked**: `vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md`
 (the Phase A pilot). It uses `##AGG-ROLE`, `##AGG-MEMBER-*`,
 `##AGG-HOW-TO-REQUIRE`, and `doc/done audience="user"`. `git-practices` (B15)
 added `##AGG-CLOSURE-*`. **The three stack aggregators are uniform in their H1

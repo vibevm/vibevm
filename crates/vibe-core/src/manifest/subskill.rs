@@ -1,7 +1,7 @@
 //! `vibe-subskill.toml` — manifest for an optional content unit inside a
 //! package.
 //!
-//! Spec: [PROP-003 §2.5](../../../spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskills).
+//! Spec: [PROP-003 §2.5](../../../vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml#subskills).
 //!
 //! A subskill is the smallest activatable content unit inside a package.
 //! It has its own manifest, files, and (optionally) nested subskills.

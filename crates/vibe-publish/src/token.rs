@@ -1,7 +1,7 @@
 //! Publish-token loading.
 //!
 //! Host-aware precedence pinned in
-//! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy):
+//! [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy):
 //!
 //! 1. Explicit value (`Token::from_explicit`) — used by tests.
 //! 2. `VIBEVM_PUBLISH_TOKEN_<HOST>` environment variable — host-specific
@@ -34,7 +34,7 @@
 //! Tokens are surface secrets; never logged at any level. The
 //! [`Token`] type wraps the string and `Display`s as `***` to make
 //! accidental logging visible at code-review time. See
-//! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy)
+//! [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy)
 //! for the full discipline.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy");

@@ -21,7 +21,7 @@
 
 ### Флоу `campaign-plans` — авторский пакет
 
-- Каталог пакета: `packages/org.vibevm.world/campaign-plans/v0.1.0/`
+- Каталог пакета: `vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/`
 - Главные спек-документы флоу (каталог `spec/flows/campaign-plans/`):
   - `CAMPAIGN-PLAN-FORMAT.xml` — **283 строки**
   - `phase-gates.xml` — **208 строк**
@@ -31,19 +31,19 @@
 
 ### Флоу `addressable-specs` (в нём живёт документ `spec-tree-layout`) — авторский пакет
 
-- Каталог пакета: `packages/org.vibevm.world/addressable-specs/v0.1.0/`
+- Каталог пакета: `vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/`
 - Документ `spec-tree-layout` (искомый «ряд-дом»): `spec/flows/addressable-specs/spec-tree-layout.md` — **181 строка**
 - Соседние документы того же флоу: `ADDRESSABLE-SPECS-PROTOCOL.xml` (296),
   `authoring-rules.xml` (263); boot-сниппет `spec/boot/15-flow-addressable-specs.md` (69);
   фасад `README.md` (99).
 
 **Почему это — АВТОРСКИЕ копии, а не что-то ещё.** Только пути под
-`packages/org.vibevm.world/` несут пакетный фасад (`LICENSE.xml`, `README.md`,
+`vibevm/vibepacks/org.vibevm.world/` несут пакетный фасад (`LICENSE.xml`, `README.md`,
 `vibe.toml`) и объявляют координату пакета — это авторский дом. Те же два флоу
-лежат ещё **копиями** под `vibedeps/` внутри `packages/org.vibevm.fractality/**`:
+лежат ещё **копиями** под `vibedeps/` внутри `vibevm/vibepacks/org.vibevm.fractality/**`:
 
-- `packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-campaign-plans/0.1.0/...`
-- `packages/org.vibevm.fractality/fractality/v0.1.0/vibedeps/flow-addressable-specs/0.1.0/...`
+- `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibedeps/flow-campaign-plans/0.1.0/...`
+- `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibedeps/flow-addressable-specs/0.1.0/...`
 - (и дубль в `…/delegation-rules/v0.1.0/vibedeps/…`)
 
 Это регенерируемые потребительские копии (фрактальность как адоптер стянула
@@ -55,9 +55,9 @@
 Воспроизводящие команды:
 
 ```
-wc -l packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/*.md \
-      packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml \
-      packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.xml
+wc -l vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/*.md \
+      vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml \
+      vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml
 ```
 
 ---
@@ -68,12 +68,12 @@ wc -l packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/
 документе. Boot-сниппет `spec/boot/40-flow-campaign-plans.md` несёт явный
 заголовок:
 
-`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml:9`
+`vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml:9`
 ```
 ## When to propose a campaign {#when}
 ```
 и тут же правило под ним, дословно:
-`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml:11-13`
+`vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml:11-13`
 ```
 ##PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE When the owner commissions work that spans **more than one session or
 more than a handful of commits**, propose a campaign plan before
@@ -81,7 +81,7 @@ touching the tree. @impl/done
 ```
 
 Форматный документ добавляет порог «когда платить за формат» дословно:
-`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:29-31`
+`vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:29-31`
 ```
 ##PAY-THE-FORMATS-COST-ONLY-FOR-WORK-THAT-SPANS-SESSIONS The
 format's cost is real: pay it only when the work spans sessions or
@@ -132,13 +132,13 @@ FORMAT L29–31). Замечу для вердикта: эта секция го
 
 Ряд, называющий дом для фичи, стоит в секции
 `## What goes where {#what-goes-where}` (заголовок на
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.xml:78`)
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml:78`)
 и после правки 2026-08-02 действительно **называет оба дома** — и FEAT-файл, и
 план кампании. Дословно:
 
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.xml:84`
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml:84`
 ```
-| ##ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @impl/done | `spec/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) @impl/done |
+| ##ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @impl/done | `vibevm/vibespecs/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) @impl/done |
 ```
 
 - **Якорь ряда:** `##ROW-HOME-FEATURE-SCOPE`.
@@ -162,9 +162,9 @@ FORMAT L29–31). Замечу для вердикта: эта секция го
 Греп `FEAT|campaign` по авторскому пакету `addressable-specs` даёт совместное
 упоминание обоих медиумов **только в одной строке** — том самом ряде-доме из Q3,
 и там критерия выбора нет:
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.xml:84`
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml:84`
 ```
-... `spec/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) ...
+... `vibevm/vibespecs/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) ...
 ```
 Это локатор («или план кампании там, где проект гоняет срезы как планы»), а не
 правило выбора.
@@ -233,7 +233,7 @@ find . -type d -iname 'feat-*' | sort        # каталоги — 0
 **Что флоу предписывает как «план кампании».** Форматный документ определяет
 план как **один документ** с пятью ролями, а re-derive-промпт фиксирует имя и
 расположение дословно:
-`packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:264`
+`vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml:264`
 ```
 2. Name where campaign plans live (a version-controlled directory)
    and the filename convention (<NAME>-PLAN-v<N>.md).
@@ -244,16 +244,16 @@ find . -type d -iname 'feat-*' | sort        # каталоги — 0
 '*-PLAN-v*.md'` → **31 файл**, но почти все не «живые хостовые»:
 - `legacy-spec/research/` — 3 файла, `legacy-spec/terraforms/` — 22 файла
   (**25 legacy**, замороженная история, не живые контракты — см. `progress.toml:13-22`);
-- `packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/` — **6 файлов**
+- `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/plans/` — **6 файлов**
   (это specspace фрактальности, отдельный проект со своим boot/WAL).
 
 **Хостовый нюанс (важно для вердикта):** хост для своих *живых* кампаний
 использует **не** предписанный `-PLAN-v*`, а инфикс `-CAMPAIGN-v*`. Живых хостовых
-планов кампаний — **2**, оба в `spec/terraforms/`, оба в активном исполнении:
-- `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml` — header: «**status:
+планов кампаний — **2**, оба в `vibevm/vibespecs/terraforms/`, оба в активном исполнении:
+- `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml` — header: «**status:
   AUTHORED 2026-07-24 · IN FLIGHT** … Phase D OPEN …» (согласно
   `progress.toml:18-20` — это тот самый carve-out «active campaign plan»).
-- `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — header:
+- `vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml` — header:
   «**status: RATIFIED 2026-07-26 · … PHASE E AUTHORIZED 2026-08-03**».
 
 Отдельно: под `campaigns/` лежит **операционная** структура исполнения
@@ -261,7 +261,7 @@ find . -type d -iname 'feat-*' | sort        # каталоги — 0
 campaign.json`, `baseline.json`, `deferrals.md`, `tasks/`, `harvest/`). Это
 run-state «Progress Control» (PROP-043), а не документы-планы; `campaign_id` там
 (`packages-2026-09`, `progress-2026-08`) по имени не совпадает с планами в
-`spec/terraforms/`.
+`vibevm/vibespecs/terraforms/`.
 
 **Воспроизведение «8» из B-032-LOCATOR.** Цифра **воспроизводится точно** как
 **2 живых хостовых плана + 6 планов specspace фрактальности = 8** документов
@@ -270,12 +270,12 @@ run-state «Progress Control» (PROP-043), а не документы-планы
 
 ```
 find spec -type f -iname '*-CAMPAIGN-v*.md' | sort                                   # хост: 2
-find packages/org.vibevm.fractality -type f -iname '*-PLAN-v*.md' -not -path '*/vibedeps/*' | wc -l   # specspace: 6
+find vibevm/vibepacks/org.vibevm.fractality -type f -iname '*-PLAN-v*.md' -not -path '*/vibedeps/*' | wc -l   # specspace: 6
 ```
 
 Замечу для вердикта о границе: разложение 2+6 **пересекает границу
 хост/specspace** (строка B-032 в остальном держит границу — `progress.toml:35-37`
-явно выводит `packages/org.vibevm.fractality/**` из хостового периметра). Если
+явно выводит `vibevm/vibepacks/org.vibevm.fractality/**` из хостового периметра). Если
 считать **только хост**, живых планов кампаний — **2**, не 8. Замер 2026-08-02
 «8» корректен ровно для чтения «всё дерево минус legacy минус копии».
 
@@ -290,7 +290,7 @@ find packages/org.vibevm.fractality -type f -iname '*-PLAN-v*.md' -not -path '*/
 
 ### Адрес как таковой — выводится из пути, нулевой конфиг
 
-`packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.xml:138-140`
+`vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml:138-140`
 ```
 ##A-URI-RESOLVES-WITH-ZERO-INDEX `spec://com.example.shop/PROP-001#verification.timeout` resolves with
 zero index: `spec/modules/com.example.shop/PROP-001.md`, then find
@@ -309,8 +309,8 @@ zero index: `spec/modules/com.example.shop/PROP-001.md`, then find
 # Markdown trees walked for anchored spec units (<root>/**/*.md).
 spec_roots = ["spec"]
 ```
-со исключениями `specmap.toml:65` → `spec_exclude = ["spec/WAL.xml",
-"spec/boot/STATIC.xml"]`. Файл вида `spec/…/FEAT-что-нибудь.md` попадает под
+со исключениями `specmap.toml:65` → `spec_exclude = ["vibevm/vibespecs/WAL.xml",
+"vibevm/vibespecs/boot/STATIC.xml"]`. Файл вида `spec/…/FEAT-что-нибудь.md` попадает под
 `spec/**/*.md` и **не** в исключения → подлежит обходу и минтингу адресов.
 
 ### Периметр 2 — `progress.toml` (наблюдаемый периметр, include-глобы), корень репозитория
@@ -318,30 +318,30 @@ spec_roots = ["spec"]
 `progress.toml:83-91` (include-массив, дословно):
 ```
 include = [
-    "spec/boot/[0-9]*.md",
-    "spec/common/**/*.md",
-    "spec/design/**/*.md",
-    "spec/manual-tests/**/*.md",
-    "spec/modules/**/*.md",
-    "packages/org.vibevm.world/**/*.md",
-    "packages/org.vibevm.ai-native/**/*.md",
+    "vibevm/vibespecs/boot/[0-9]*.md",
+    "vibevm/vibespecs/common/**/*.md",
+    "vibevm/vibespecs/design/**/*.md",
+    "vibevm/vibespecs/manual-tests/**/*.md",
+    "vibevm/vibespecs/modules/**/*.md",
+    "vibevm/vibepacks/org.vibevm.world/**/*.md",
+    "vibevm/vibepacks/org.vibevm.ai-native/**/*.md",
 ]
 ```
 
 **Попал бы новый `spec/…/FEAT-что-нибудь.md` под эти глобы?** — **ДА, если он в
 каноническом доме.** Канонический дом FEAT, по тому же ряду-дому
-(`spec-tree-layout.xml:84`), — `spec/modules/<m>/FEAT-*`; его накрывает глоб
+(`spec-tree-layout.xml:84`), — `vibevm/vibespecs/modules/<m>/FEAT-*`; его накрывает глоб
 `progress.toml:88`
 ```
-    "spec/modules/**/*.md",
+    "vibevm/vibespecs/modules/**/*.md",
 ```
-Также накрыты `spec/common/`, `spec/design/`, `spec/manual-tests/`. Не накрыт
+Также накрыты `vibevm/vibespecs/common/`, `vibevm/vibespecs/design/`, `vibevm/vibespecs/manual-tests/`. Не накрыт
 только FEAT, положенный *прямо в корень* `spec/` (не под одним из перечисленных
 подкаталогов) — но это не канонический дом.
 
-**Итог Q7:** новый `spec/modules/<m>/FEAT-что-нибудь.md` (а) адресуется
+**Итог Q7:** новый `vibevm/vibespecs/modules/<m>/FEAT-что-нибудь.md` (а) адресуется
 `spec://<координата>/modules/<m>/FEAT-…` выводом из пути без конфига и (б)
-попадает в наблюдаемый периметр через `progress.toml:88` `spec/modules/**/*.md`
+попадает в наблюдаемый периметр через `progress.toml:88` `vibevm/vibespecs/modules/**/*.md`
 и в адресный периметр через `specmap.toml:21` `spec_roots = ["spec"]`. Утверждение
 «якоря бесплатно» — подтверждено.
 

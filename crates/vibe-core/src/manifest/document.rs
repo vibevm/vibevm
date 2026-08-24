@@ -1,6 +1,6 @@
 //! `vibe.toml` — the unified manifest document.
 //!
-//! Schema: `VIBEVM-SPEC.md` §7, [PROP-007](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
+//! Schema: `VIBEVM-SPEC.md` §7, [PROP-007](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml).
 //!
 //! # One file, variable roles
 //!

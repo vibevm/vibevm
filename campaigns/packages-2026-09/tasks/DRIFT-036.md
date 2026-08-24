@@ -14,7 +14,7 @@
 
 ## 1. Goal {#goal}
 
-Every live Rust workspace under `packages/org.vibevm.ai-native/**` is built by
+Every live Rust workspace under `vibevm/vibepacks/org.vibevm.ai-native/**` is built by
 the floor and covered by `sync-engines`, and **both gates fail when a new one
 appears and is not added** — instead of reporting a count with no denominator.
 
@@ -85,7 +85,7 @@ Measured 2026-07-26; verify cheaply, do not re-survey.
    -D warnings, and the specmap self-trace where the package has one.
 4. THE DENOMINATOR, and it is the half that outlives this task:
    a. sync-engines --check must enumerate every directory under
-      packages/org.vibevm.ai-native/** holding a vendored engine copy
+      vibevm/vibepacks/org.vibevm.ai-native/** holding a vendored engine copy
       and FAIL naming any that is not a target.
    b. the floor must enumerate every live Rust workspace under the
       same root (a Cargo.toml that is not a frozen slot) and FAIL
@@ -287,7 +287,7 @@ stronger. It costs ~12 s and it is what surfaced the stale-rlib finding above.
 #### Step 4 — the denominators {#step4}
 
 **Sync half** (`xtask/src/sync_engines.rs`). `vendored_dirs` enumerates every
-directory under `packages/org.vibevm.ai-native/` named `vendor` whose parent is
+directory under `vibevm/vibepacks/org.vibevm.ai-native/` named `vendor` whose parent is
 named `crates` — the layout law `sync-engines.toml` already states — and
 `uncovered_vendor_dirs` names any that no `[[sync]]` set targets. `vibedeps/`,
 `.vibe/`, `target/`, `.git/`, `node_modules/` are never descended: they hold
@@ -295,10 +295,10 @@ named `crates` — the layout law `sync-engines.toml` already states — and
 exist under `packages/`, all outside the family root or under those names), and
 counting them would demand sync sets for generated directories. Two unit tests
 carry it. The success line now ends `…; all 6 vendored engine dir(s) under
-packages/org.vibevm.ai-native/ are sync targets.`
+vibevm/vibepacks/org.vibevm.ai-native/ are sync targets.`
 
 **Floor half** (`tools/self-check.sh`, step 0b). `live_slots` walks
-`packages/org.vibevm.ai-native/*/` and takes the **newest** version slot of each
+`vibevm/vibepacks/org.vibevm.ai-native/*/` and takes the **newest** version slot of each
 package (`sort -V`), keeping it only if it holds a `Cargo.toml`.
 `check_floor_denominator` compares that set with `GATED_SLOTS` **both ways** —
 a live workspace the floor does not build, and a slot it builds that is no
@@ -324,7 +324,7 @@ builds 7.**
 
 ```
 === the floor builds every live package workspace ===
-self-check: `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0` is a live package workspace the floor does not build.
+self-check: `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0` is a live package workspace the floor does not build.
 self-check: fix GATED_SLOTS in this file (and the steps that use it);
 self-check: a floor that counts only what it was told about cannot be wrong.
 self-check: `the floor builds every live package workspace` failed (exit 1)
@@ -335,25 +335,25 @@ self-check: `the floor builds every live package workspace` failed (exit 1)
 
 ```
 === the floor builds every live package workspace ===
-self-check: `packages/org.vibevm.ai-native/core-ai-native/v0.8.0` is a live package workspace the floor does not build.
-self-check: `packages/org.vibevm.ai-native/core-ai-native/v0.7.0` is gated but is not the live slot of its package.
+self-check: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0` is a live package workspace the floor does not build.
+self-check: `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.7.0` is gated but is not the live slot of its package.
 ```
 
 Restored, `bash tools/self-check.sh` → `self-check: the floor builds all 7 live
-package workspace(s) under packages/org.vibevm.ai-native/.` and **EXIT=0**.
+package workspace(s) under vibevm/vibepacks/org.vibevm.ai-native/.` and **EXIT=0**.
 
 **Guard 2 — sync denominator** (drop `go-ai-native-lang`'s vendor dir from the
 first set's `targets`), `cargo xtask sync-engines --check`, **EXIT=1**:
 
 ```
-sync-engines: `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor` holds vendored engine copies but is the target of no [[sync]] set — its copies drift with nothing watching.
-Error: sync-engines --check: 1 of 6 vendored engine dir(s) under packages/org.vibevm.ai-native/ are the target of no [[sync]] set (named above). Add each to `sync-engines.toml` — a package whose engines nothing syncs ships whatever it was copied with.
+sync-engines: `vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor` holds vendored engine copies but is the target of no [[sync]] set — its copies drift with nothing watching.
+Error: sync-engines --check: 1 of 6 vendored engine dir(s) under vibevm/vibepacks/org.vibevm.ai-native/ are the target of no [[sync]] set (named above). Add each to `sync-engines.toml` — a package whose engines nothing syncs ships whatever it was copied with.
 ```
 
 Restored, **EXIT=0**:
 
 ```
-sync-engines --check: every vendored crate matches its authored source (51 pair(s) across 9 sync set(s)); all 6 vendored engine dir(s) under packages/org.vibevm.ai-native/ are sync targets.
+sync-engines --check: every vendored crate matches its authored source (51 pair(s) across 9 sync set(s)); all 6 vendored engine dir(s) under vibevm/vibepacks/org.vibevm.ai-native/ are sync targets.
 ```
 
 #### §6 acceptance, verbatim {#accept}
@@ -363,15 +363,15 @@ $ cargo fmt --all
 EXIT=0
 
 $ cargo xtask sync-engines --check
-sync-engines --check: every vendored crate matches its authored source (51 pair(s) across 9 sync set(s)); all 6 vendored engine dir(s) under packages/org.vibevm.ai-native/ are sync targets.
+sync-engines --check: every vendored crate matches its authored source (51 pair(s) across 9 sync set(s)); all 6 vendored engine dir(s) under vibevm/vibepacks/org.vibevm.ai-native/ are sync targets.
 EXIT=0
 
 $ bash tools/self-check.sh ; echo "EXIT=$?"
 === the floor builds every live package workspace ===
-self-check: the floor builds all 7 live package workspace(s) under packages/org.vibevm.ai-native/.
+self-check: the floor builds all 7 live package workspace(s) under vibevm/vibepacks/org.vibevm.ai-native/.
 self-check: NOTE — gopls absent; the go live-oracle test is not run.
 self-check: NOTE — `go install golang.org/x/tools/gopls@latest` restores it.
-self-check: NOTE — a tools/*/node_modules under packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0 is absent;
+self-check: NOTE — a tools/*/node_modules under vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0 is absent;
 self-check: NOTE — the 6 tsc-dependent TS tests are not run;
 self-check: NOTE — `npm install` in tools/ts-extract and tools/ts-oracle restores them.
 [… 35 further step headers, all green …]

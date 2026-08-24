@@ -19,7 +19,7 @@ That marker is the join. For each contribution this resolves three things:
   INSTALLED   the `vibedeps/` path the marker names exists — source 3, and the
               honest substitute for `files_written`, which is `[]` for all 36
               packages in the lockfile (batch plan §2.3)
-  SOURCED     the same snippet exists in `packages/org.vibevm.world/<name>/<ver>/`
+  SOURCED     the same snippet exists in `vibevm/vibepacks/org.vibevm.world/<name>/<ver>/`
               — the shipped artifact the installed copy came from
   SAME-WORDS  the compiled text in the host's boot lane carries the same word
               stream as the package's source — the unit a re-split cannot change

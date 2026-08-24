@@ -9,7 +9,7 @@
 //!   (lowercase alphanumeric with internal single hyphens; e.g.
 //!   `copy.markdown`, `search.everywhere`).
 //!
-//! Spec: [PROP-039 §2](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#addressing).
+//! Spec: [PROP-039 §2](../../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml#addressing).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#addressing");
 

@@ -2,7 +2,7 @@
 
 What a user needs to install and configure on their machine to run the `vibe` CLI. For contributor / build setup, see [`DEV-GUIDE.md`](DEV-GUIDE.md).
 
-**Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](spec/common/PROP-000.xml).
+**Update policy.** Every change that affects user-facing setup (new env var, path convention, prerequisite, auth flow) MUST update this file in the same commit. Policy pinned in [PROP-000](vibevm/vibespecs/common/PROP-000.xml).
 
 ---
 
@@ -50,7 +50,7 @@ For SSH-based access (faster on subsequent fetches, mandatory for some self-host
 
 The pre-consolidation `~/.vibevm/` is **no longer read at all** (its last read legs — publish tokens and aiui discovery — were removed 2026-07-26). If a token or config file still lives there, move it into `~/.vibe/` yourself: `vibe` will not find it, and deliberately never reads, moves, or deletes anything in that directory.
 
-**Token files are surface secrets** — set chmod 600 (POSIX) or restrict ACLs to your user (Windows), never commit, never paste into chat / logs / screenshots / video. `vibe` redacts the value at every level (CLI output, JSON event stream, error messages); the operator must extend the same discipline. See [PROP-000 §20](spec/common/PROP-000.xml#token-secrecy).
+**Token files are surface secrets** — set chmod 600 (POSIX) or restrict ACLs to your user (Windows), never commit, never paste into chat / logs / screenshots / video. `vibe` redacts the value at every level (CLI output, JSON event stream, error messages); the operator must extend the same discipline. See [PROP-000 §20](vibevm/vibespecs/common/PROP-000.xml#token-secrecy).
 
 ## 4. First-time flow
 

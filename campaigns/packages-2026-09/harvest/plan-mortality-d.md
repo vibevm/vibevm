@@ -142,7 +142,7 @@ e1-фрагмент) — будет некому вспомнить в день,
 
 **Что искалось и не нашлось** (паттерн + счётчик + контроль):
 `specmark::scope` по `spec/**` — хиты только чужие (счётные таблицы кампаний в
-`spec/terraforms/**`, `spec/design/**`, PROP-037 про vibe-cli), самого правила
+`vibevm/vibespecs/terraforms/**`, `vibevm/vibespecs/design/**`, PROP-037 про vibe-cli), самого правила
 про `tests/` нет; контроль того же грепа по коду: `specmark::scope!` в
 `crates/vibe-index/src` — **70 файлов**, в `crates/vibe-index/tests` — **0**
 (единообразие подтверждено, но записано только фактом дерева, не правилом).

@@ -28,9 +28,9 @@ import re, sys, pathlib, collections, difflib
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 STACKS = {
-    "rust": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards",
-    "ts": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards",
-    "go": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards",
+    "rust": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards",
+    "ts": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards",
+    "go": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards",
 }
 # Names that legitimately differ per projection. Filtered from the word view so a
 # language's own vocabulary cannot read as a divergence.

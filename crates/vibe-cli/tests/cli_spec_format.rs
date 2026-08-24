@@ -475,7 +475,7 @@ fn write_xml_package(source: &Path) {
 
 fn xml_from_markdown(markdown: &str) -> String {
     let source = tempfile::tempdir().unwrap();
-    fs::create_dir_all(source.path().join("spec")).unwrap();
+    fs::create_dir_all(source.path().join(vibe_core::layout::current_specs_root())).unwrap();
     fs::write(source.path().join(common::spec_rel("input.md")), markdown).unwrap();
     let output = tempfile::tempdir().unwrap();
     let coordinate = Coordinate {

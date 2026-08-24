@@ -1,6 +1,6 @@
 //! Portable workspace-relative paths.
 //!
-//! Spec: [PROP-007](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
+//! Spec: [PROP-007](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section");
 

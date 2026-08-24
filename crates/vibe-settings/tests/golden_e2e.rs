@@ -4,7 +4,7 @@
 //! migrate — over a real temp dir. This is the integration guard above the
 //! per-cell unit tests; it fails if any cell regresses the whole.
 //!
-//! Spec: [PROP-040](../../../spec/modules/vibe-settings/PROP-040-settings.md).
+//! Spec: [PROP-040](../../../vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml).
 
 use tempfile::tempdir;
 

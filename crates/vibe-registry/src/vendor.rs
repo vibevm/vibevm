@@ -16,7 +16,7 @@
 //! `[[mirror]] url = "file:///abs/path"` for offline / air-gapped
 //! installs.
 //!
-//! Spec: [PROP-002 §2.3 (mirror layer)](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
+//! Spec: [PROP-002 §2.3 (mirror layer)](../../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#mirror).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror");
 

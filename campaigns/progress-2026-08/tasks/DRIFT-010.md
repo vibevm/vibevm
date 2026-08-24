@@ -175,7 +175,7 @@ Budget signal: past ~8 files or ~600 lines, stop and return.
   times.
 - Concurrency note for the reviewer: this tree was **not** exclusive. While
   this task ran, other agents edited `campaigns/…/DRIFT-012.md`,
-  `DRIFT-014.md`, `spec/modules/vibe-cli/PROP-042-aiui-observation.xml`,
+  `DRIFT-014.md`, `vibevm/vibespecs/modules/vibe-cli/PROP-042-aiui-observation.xml`,
   `specmap.json`, `crates/vibe-resolver/**` and `crates/vibe-cli/tests/**`.
   That is why `progress scan` reports 4 979 markers where §6 predicted
   4 975: the whole +4 is PROP-042 (58 → 62 markers), which this task never

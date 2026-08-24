@@ -2,7 +2,7 @@
 
 **Phase:** B (markup, facts pass). **Executor:** Opus. **Reviewer:** the boss,
 who owns sense-preserving splits, anchor names and `audience`.
-**Corpus:** `packages/org.vibevm.world/{source-mirrors/v0.1.0,
+**Corpus:** `vibevm/vibepacks/org.vibevm.world/{source-mirrors/v0.1.0,
 tool-design-lessons/v0.1.0, qualified-naming/v0.1.0}/`.
 
 **All forty-six locked conventions in [`MARKUP-B1.md`](MARKUP-B1.md#locked) bind

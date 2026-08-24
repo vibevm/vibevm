@@ -166,11 +166,22 @@ impl SlotVerifier for RegistrySlotVerifier {
 
 fn live_overlay_hash(slot: &Path) -> Option<String> {
     let package_dir = slot.parent()?;
-    let vibedeps_dir = package_dir.parent()?;
-    if vibedeps_dir.file_name()?.to_str()? != vibe_workspace::vibedeps::VIBEDEPS_DIR {
-        return None;
+    // The slot sits under the layout's dependency root — which may be
+    // MULTI-component (`vibevm/vibedeps`, PROP-052): strip every component
+    // of `current_vibedeps_root()` from the tail to reach the project root.
+    let mut cursor = package_dir.parent()?;
+    let deps_root = vibe_core::layout::current_vibedeps_root();
+    let mut components: Vec<_> = deps_root
+        .components()
+        .filter_map(|c| c.as_os_str().to_str().map(str::to_owned))
+        .collect();
+    while let Some(expected) = components.pop() {
+        if cursor.file_name()?.to_str()? != expected {
+            return None;
+        }
+        cursor = cursor.parent()?;
     }
-    let project_root = vibedeps_dir.parent()?;
+    let project_root = cursor;
     let package_key = package_dir.file_name()?.to_str()?;
     vibe_facts::overlay_file_hash(project_root, package_key)
 }

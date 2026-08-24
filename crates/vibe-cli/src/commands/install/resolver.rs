@@ -397,7 +397,7 @@ fn open_multi_from(
 ///    `~/.vibe/registry.toml` (project-first, PROP-002 §2.2.2) →
 ///    [`MultiRegistryResolver`] covering priority order, mirrors, and
 ///    overrides per
-///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+///    [PROP-002](../../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml).
 ///
 /// `global` is the machine-global registry config, loaded once at the caller
 /// (composition root) and threaded in so this function performs no filesystem

@@ -79,7 +79,7 @@ more. **6 anchors · 6 one-segment prefixes · no design choice owed.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '5,17p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.xml
+$ sed -n '5,17p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/boot/20-stack-go-ai-native-lang.xml
 ```
 
 ```
@@ -91,7 +91,7 @@ $ sed -n '5,17p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boo
 ```
 
 ```console
-$ sed -n '5,13p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.xml
+$ sed -n '5,13p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml
 ```
 
 ```
@@ -103,7 +103,7 @@ $ sed -n '5,13p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/b
 ```
 
 ```console
-$ sed -n '5,14p' packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.xml
+$ sed -n '5,14p' vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml
 ```
 
 ```
@@ -127,7 +127,7 @@ origin at the package root, and the reader of a boot snippet stands in the
 relative form must resolve from **two** roots. Tested from both:
 
 ```console
-$ for root in packages/org.vibevm.ai-native/{go-ai-native-lang/v0.1.0,rust-ai-native-lang/v0.7.0,typescript-ai-native-lang/v0.6.0} \
+$ for root in vibevm/vibepacks/org.vibevm.ai-native/{go-ai-native-lang/v0.1.0,rust-ai-native-lang/v0.7.0,typescript-ai-native-lang/v0.6.0} \
               vibedeps/stack-{rust-ai-native-lang/0.7.0,typescript-ai-native-lang/0.6.0}; do … [ -e "$root/$cand" ] …
 ```
 
@@ -153,14 +153,14 @@ the Go correction is judged on the package lane alone, which is where it is
 decided anyway.
 
 **The compiled lane is not involved, and this is what separates F-153 from the
-address family.** The snippet body is *not* inlined into `spec/boot/STATIC.xml` —
+address family.** The snippet body is *not* inlined into `vibevm/vibespecs/boot/STATIC.xml` —
 the host names the file by full slot path and the reader opens it in the slot:
 
 ```console
-$ grep -rn "GUIDE-AI-NATIVE\|cards/INDEX.md" spec/boot/
+$ grep -rn "GUIDE-AI-NATIVE\|cards/INDEX.md" vibevm/vibespecs/boot/
 (no output; exit 1)
 
-$ grep -n "ai-native-lang" spec/boot/INDEX.md
+$ grep -n "ai-native-lang" vibevm/vibespecs/boot/INDEX.md
 22:  path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 26:  path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
 ```
@@ -210,13 +210,13 @@ card; the nine executable scaffolds A–I in their TypeScript shape). @impl/done
 A `spec://` qualified address would also resolve —
 `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` is PROP-029's own
 worked example for exactly this package
-(`spec/common/PROP-029-fully-qualified-addresses.xml:22`, `##CARRIER-SPEC-URI`) —
+(`vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml:22`, `##CARRIER-SPEC-URI`) —
 and it resolves from *anywhere*, not just the two roots above. It is **not**
 offered as an option because the phase has already ruled this shape twice and
 the repaired text is live at HEAD:
 
 ```console
-$ grep -n "MAP-RUST-GUIDE\|READ-STACK-GUIDE" -r packages/org.vibevm.ai-native/core-ai-native/v0.8.0/
+$ grep -n "MAP-RUST-GUIDE\|READ-STACK-GUIDE" -r vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/
 README.md:31:4. ##READ-STACK-GUIDE The active language stack's GUIDE (e.g. `spec/rust/GUIDE-AI-NATIVE-RUST.md` in the Rust stack). @impl/done
 spec/00-MANIFESTO.md:172:- ##MAP-RUST-GUIDE `spec/rust/GUIDE-AI-NATIVE-RUST.md` in `stack:org.vibevm.ai-native/rust-ai-native-lang` — … @impl/done
 ```
@@ -277,7 +277,7 @@ the package all three stacks depend on, naming five bare paths and one bare
 Every one of those lives under `spec/`:
 
 ```console
-$ ls packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/
+$ ls vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/
 00-MANIFESTO.xml  01-PATTERN-CARD-FORMAT.xml  02-EXECUTABLE-SCAFFOLDS.xml
 03-RAID-PLAYBOOK.xml  04-SWEEP-PLAYBOOK.xml  05-CAMPAIGN-FORM.xml  06-WAL-CONVENTION.xml
 appendix  boot  legacy-projections  mechanisms
@@ -309,7 +309,7 @@ names differ in every position but `root_files`. **2 anchors.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '57,62p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml
+$ sed -n '57,62p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml
 ```
 
 ```
@@ -322,7 +322,7 @@ $ sed -n '57,62p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go
 ```
 
 ```console
-$ sed -n '69,75p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml
+$ sed -n '69,75p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml
 ```
 
 ```
@@ -628,15 +628,15 @@ owner should rule on it rather than inherit it silently.** `d8a` suggested
 appending «see `spec://org.vibevm.core/vibevm/common/PROP-031#beachhead`». Two problems, both
 measured:
 
-1. **That anchor does not exist.** `grep -n "{#beachhead}" spec/common/PROP-031-algorithmic-refactoring.xml`
+1. **That anchor does not exist.** `grep -n "{#beachhead}" vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml`
    → no match; the section is `## 1. Problem statement {#problem}` and the
    sentences are `##BEACHHEAD-SCAFFOLD-I` / `##BEACHHEAD-LIMITS` at `:21-22`.
    Shipping it would mint a *new* dangling pointer inside the diff that closes a
    pointer family.
 2. **It points a shipped `ai-native` card at a host PROP.** Per
    [§3.8](../PHASE-D-BATCH-PLAN.md#audience) these packages ship to consumers who
-   do not have vibevm's `spec/common/`. Every one of the 27 `spec://org.vibevm.core/vibevm/`
-   strings in `packages/org.vibevm.ai-native/*/v*/spec/` today is an
+   do not have vibevm's `vibevm/vibespecs/common/`. Every one of the 27 `spec://org.vibevm.core/vibevm/`
+   strings in `vibevm/vibepacks/org.vibevm.ai-native/*/v*/spec/` today is an
    **illustrative example inside a code sample** (`GUIDE-*-v0.1.md`'s
    `@spec implements spec://org.vibevm.core/vibevm/…#req-…`), not a live cross-boundary pointer.
    This would be the first.
@@ -646,7 +646,7 @@ measured:
    `##BEACHHEAD-LIMITS` id) and accept the first live host pointer in an
    `ai-native` card; or leave the sentence self-contained as drafted above. The
    host side of the relationship is unaffected either way —
-   `spec/common/PROP-031-algorithmic-refactoring.xml:21-22` already cites this
+   `vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml:21-22` already cites this
    card and already writes the correction («today it is one operation
    (`add-cell` scaffolding only)»), which is the strongest evidence the sentence
    reads as a fact claim.
@@ -663,7 +663,7 @@ measured:
 bench for TypeScript):
 
 ```console
-$ grep -rn "rename-seam\|rename_seam" packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ | grep -v /target/
+$ grep -rn "rename-seam\|rename_seam" vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ | grep -v /target/
 …/spec/cards/scaffold-i-codemods.md:19        ← the sentence itself, and nothing else
 
 $ grep -rn "ts-morph" packages/…/typescript-ai-native-lang/v0.6.0/ --include=*.json --include=*.ts --include=*.rs --include=*.toml | grep -v /target/
@@ -712,10 +712,10 @@ re-verified both anchors: STAND** … the correction remains two words, «four»
 ### Current text at HEAD
 
 ```console
-$ sed -n '32p' packages/org.vibevm.world/spec-genres/v0.1.0/README.md
+$ sed -n '32p' vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/README.md
 ##package-contents-lead This package ships four pieces of content plus a boot snippet: @impl/done
 
-$ sed -n '22p' packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md
+$ sed -n '22p' vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/README.md
 ##package-contents-lead This package ships four pieces of content plus a boot snippet: @impl/done
 ```
 
@@ -725,10 +725,10 @@ repair is the same word in each.
 ### The measurement — each package's own tree
 
 ```console
-$ ls packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/*.md
+$ ls vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/*.md
 SPEC-GENRES-PROTOCOL.xml   design-docs.xml   when-to-write-what.xml            → 3
 
-$ ls packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/*.md
+$ ls vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/*.md
 TOOL-DESIGN-LESSONS.xml    packaging-lessons.xml    self-updating-tools.xml    → 3
 
 $ grep -c '^- ##CONTENT-' …/spec-genres/v0.1.0/README.md …/tool-design-lessons/v0.1.0/README.md
@@ -745,7 +745,7 @@ decidable inside each package with no consumer and no host observable.
 The house convention the 14 conforming siblings keep is live in the exemplar:
 
 ```console
-$ grep -n "package-contents-lead" packages/org.vibevm.world/addressable-specs/v0.1.0/README.md
+$ grep -n "package-contents-lead" vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/README.md
 22:##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done
 ```
 
@@ -754,13 +754,13 @@ completeness. **The number names the flow documents.**
 
 ### Proposed correction (NOT APPLIED)
 
-`packages/org.vibevm.world/spec-genres/v0.1.0/README.md:32`:
+`vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/README.md:32`:
 
 ```
 ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done
 ```
 
-`packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md:22`:
+`vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/README.md:22`:
 
 ```
 ##package-contents-lead This package ships three pieces of content plus a boot snippet: @impl/done
@@ -780,7 +780,7 @@ one-anchor `prose-edit` row:
 
 ```console
 $ python -c "…run/state/obligations.json… F-186"
- anchors: ['packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.xml#EVIDENCE-AND-TRANSFER-STRENGTH']
+ anchors: ['vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml#EVIDENCE-AND-TRANSFER-STRENGTH']
  route: prose-edit   status: open   wave: 1
 ```
 
@@ -791,14 +791,14 @@ still rides the publication.
 ### Current text at HEAD
 
 ```console
-$ sed -n '33p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.xml
+$ sed -n '33p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml
 ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DL1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @spec/done
 ```
 
 ### The measurement
 
 ```console
-$ grep -c "DL1-" packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml
+$ grep -c "DL1-" vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml
 0
 $ grep -n "DR1-015" …/ATLAS.xml
 181:- ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones
@@ -878,7 +878,7 @@ the known Phase B markup difference,
 ### Current text at HEAD
 
 ```console
-$ sed -n '64,65p' packages/org.vibevm.world/addressable-specs/v0.1.0/README.md
+$ sed -n '64,65p' vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/README.md
 - ##COMPOSES-ATOMIC-COMMITS `flow:git-atomic-commits` — commit bodies cite `spec://` URIs; this
   package defines what those URIs resolve to. @impl/done
 ```
@@ -897,7 +897,7 @@ one that owns it.
 **The rule is authored in `git-conventional-commits`:**
 
 ```console
-$ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
+$ grep -rn "spec://" vibevm/vibepacks/org.vibevm.world/git-conventional-commits/
 …/spec/boot/31-flow-conventional-commits.md:24:##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
 …/spec/flows/conventional-commits/conventional-commits.md:75:  measurement, or conversation that drove it. Use `spec://…` URIs
 …/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
@@ -909,7 +909,7 @@ with the full rule at `conventional-commits.xml:74-77` (`##INCLUDE-WHY-THIS-CHAN
 own snippet:**
 
 ```console
-$ grep -rn "spec://" packages/org.vibevm.world/git-atomic-commits/
+$ grep -rn "spec://" vibevm/vibepacks/org.vibevm.world/git-atomic-commits/
 …/spec/boot/30-flow-atomic-commits.md:24:  `spec://org.vibevm.world/git-conventional-commits/…#root`. @impl/done
 …/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:78: (`spec://org.vibevm.world/decision-records/…#root`)
 …/spec/flows/atomic-commits/splitting-large-changes.md:96: `git-conventional-commits` flow: `spec://…#root`. @impl/done
@@ -919,7 +919,7 @@ $ grep -rn "spec://" packages/org.vibevm.world/git-atomic-commits/
 draws the line the composition row erases:
 
 ```console
-$ sed -n '21,26p' packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.xml
+$ sed -n '21,26p' vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml
 21  ## Message format {#message-format}
 23  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
 24  `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
@@ -947,7 +947,7 @@ Neither figure is «716», which was a **line** count mis-read as a commit count
 a sibling world package was routed §3.6(a) and closed as F-253 in wave 3:
 
 ```console
-$ sed -n '144,148p' packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.xml
+$ sed -n '144,148p' vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml
 - ##BOUNDARY-FLOW-ATOMIC-COMMITS **`flow:git-atomic-commits`** handles commit discipline: one sync,
   one commit, one logical idea. The message *format* — Conventional
   Commits, with `docs(spec)` as the type a sync commit carries — is
@@ -1028,7 +1028,7 @@ line the tool actually prints**.
 ### Current text at HEAD
 
 ```console
-$ sed -n '79,83p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md
+$ sed -n '79,83p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md
 5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /
    `naked_go_in_cell` / `error_string_match` / `seam_error_missing_req`
    non-zero on a gated package) — drain immediately; restructure beats
@@ -1176,7 +1176,7 @@ the registry — F-115 is now a one-anchor `prose-edit` row:
 ```console
 $ python -c "…run/state/obligations.json…"
 AGG-FRONT-DOOR -> [('F-115', 'prose-edit', 'open',
-  ['packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR'])]
+  ['vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR'])]
 ```
 
 **1 anchor · TWO OPTIONS · nothing decided.**
@@ -1184,7 +1184,7 @@ AGG-FRONT-DOOR -> [('F-115', 'prose-edit', 'open',
 ### Current text at HEAD
 
 ```console
-$ sed -n '22,24p' packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md
+$ sed -n '22,24p' vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md
 ##AGG-FRONT-DOOR The consumer front door — wiring, floor, sweep — is
 documented in the `-lang` package's README and
 `spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`. @impl/done
@@ -1197,12 +1197,12 @@ the anchor carries `@impl/done`.
 
 ```console
 $ for p in go-ai-native-lang/v0.1.0 rust-ai-native-lang/v0.7.0 typescript-ai-native-lang/v0.6.0; do
-    f="packages/org.vibevm.ai-native/$p/README.md"; [ -e "$f" ] && echo "EXISTS $f" || echo "MISSING $f"; done
+    f="vibevm/vibepacks/org.vibevm.ai-native/$p/README.md"; [ -e "$f" ] && echo "EXISTS $f" || echo "MISSING $f"; done
 EXISTS  …/go-ai-native-lang/v0.1.0/README.md
 EXISTS  …/rust-ai-native-lang/v0.7.0/README.md
 MISSING …/typescript-ai-native-lang/v0.6.0/README.md
 
-$ ls -a packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ | grep -v '^target$'
+$ ls -a vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/ | grep -v '^target$'
 .  ..  Cargo.lock  Cargo.toml  LICENSE.xml  crates  spec  tools  vibe.toml
 ```
 
@@ -1375,7 +1375,7 @@ package versions; 41 carry a `README.md`; the one that does not is the one this
 sentence points at — and it is not a deletion:
 
 ```console
-$ git log --oneline --all -- "packages/org.vibevm.ai-native/typescript-ai-native-lang/*/README.md"
+$ git log --oneline --all -- "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/*/README.md"
 (no output)
 ```
 
@@ -1414,7 +1414,7 @@ row's»:
 
 | anchor | its own recorded reason | belongs to |
 |---|---|---|
-| `#IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE` | the row's `reason`: «self-defeating by construction … it sits inside `spec/boot/STATIC.xml` … so it IS read every session» | **this item** |
+| `#IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE` | the row's `reason`: «self-defeating by construction … it sits inside `vibevm/vibespecs/boot/STATIC.xml` … so it IS read every session» | **this item** |
 | `#fork-by-fork-rationale-pointer` | `reasons[0]`: «DRIFT, third of three. **The target exists** and carries four forks … the `../flows/…` link resolves nowhere in the host for the same reason as its two siblings» | **the address family** — [§A.1](../PHASE-D-RELEASE-QUEUE.md#addresses-scope) counts F-245 as «1 of 2» on a repaired link; its diff is `tasks/address-repair.py`, **out of scope here** |
 
 So: **1 anchor drafted · 1 anchor already covered by the address transformation ·
@@ -1423,7 +1423,7 @@ a real design choice on the one drafted.**
 ### Current text at HEAD
 
 ```console
-$ sed -n '9,10p' packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.xml
+$ sed -n '9,10p' vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml
 ##IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime
 rule: read it once while shaping identifiers, not on every session. @impl/done
 ```
@@ -1436,7 +1436,7 @@ File-level `<status stage="impl" state="done"/>` at `:3`; anchor `@impl/done`.
 full.**
 
 ```console
-$ sed -n '1001,1008p' spec/boot/STATIC.xml
+$ sed -n '1001,1008p' vibevm/vibespecs/boot/STATIC.xml
 1001  <!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->
 1003  # Flow: Qualified Naming {#root}
 1005  This project ships the **qualified-naming** practice for *ecosystem
@@ -1445,14 +1445,14 @@ $ sed -n '1001,1008p' spec/boot/STATIC.xml
 1008  rule: read it once while shaping identifiers, not on every session.
 ```
 
-`CLAUDE.md`'s generated boot block instructs every session: «`spec/boot/STATIC.xml`
+`CLAUDE.md`'s generated boot block instructs every session: «`vibevm/vibespecs/boot/STATIC.xml`
 — … The static (priority) lane: **read it first and in full**.»
 
 **(ii) The manifest declares no condition, and the field it would use is named
 `when`.**
 
 ```console
-$ cat packages/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml
+$ cat vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibe.toml
 …
 [boot_snippet]
 source = "spec/boot/67-flow-qualified-naming.md"
@@ -1497,7 +1497,7 @@ $ grep -rn "^when *=" packages/*/*/v*/vibe.toml vibedeps/*/*/vibe.toml
 (no output)
 ```
 
-**(iv) A dynamic link alone would not make the sentence true.** `spec/boot/INDEX.md`'s
+**(iv) A dynamic link alone would not make the sentence true.** `vibevm/vibespecs/boot/INDEX.md`'s
 own generated header (`:1-8`): «Read every file the `[[entry]]` list names, in
 order. … A `kind = "dynamic"` entry: an INCLUDE resolved at boot — when it **also**
 carries `when = "os:<name>"`, read the file only if …». Only the condition gates
@@ -1514,7 +1514,7 @@ it links static:
 $ grep -n "redbook" vibe.toml
 28:"flow:org.vibevm.world/redbook" = { version = "^0.2.0", link = "static-transitive" }
 
-$ grep -n "qualified-naming" packages/org.vibevm.world/redbook/v0.2.0/vibe.toml
+$ grep -n "qualified-naming" vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml
 46:"flow:org.vibevm.world/qualified-naming" = "=0.1.0"
 ```
 
@@ -1528,7 +1528,7 @@ instrument:
 ```console
 $ python -c "…run/cache.json… qualified-naming"
 README.md | IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE      -> confirmed
-   ev: spec/boot/STATIC.xml  `grep -n 'design-time' spec/boot/STATIC.xml` returns nothing
+   ev: vibevm/vibespecs/boot/STATIC.xml  `grep -n 'design-time' vibevm/vibespecs/boot/STATIC.xml` returns nothing
        - the sentence is not in the compiled lane at all
    ev: packages/…/vibe.toml  [boot_snippet] source = "spec/boot/67-flow-qualified-naming.md"
        - the README is not the source of the boot snippet
@@ -1536,7 +1536,7 @@ README.md | IT-IS-A-DESIGN-TIME-DISCIPLINE-READ-ONCE      -> confirmed
 67-flow-qualified-naming.xml | fork-by-fork-rationale-pointer                -> drift
 ```
 
-Re-run at HEAD: `grep -n "design-time" spec/boot/STATIC.xml` → no output (exit 1).
+Re-run at HEAD: `grep -n "design-time" vibevm/vibespecs/boot/STATIC.xml` → no output (exit 1).
 
 **So «ruled the same way» means the same TEST was applied — «does this sentence
 reach the lane the reader is told to read first and in full?» — and it produced

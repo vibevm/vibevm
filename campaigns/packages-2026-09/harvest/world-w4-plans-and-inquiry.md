@@ -8,7 +8,7 @@ the split is worth knowing before the first row is written:
 
 - **`campaign-plans` has the richest source 2 in the cluster after the git family.**
   The host runs campaigns as its primary working form — two ratified plans in
-  `spec/terraforms/`, two zones under `campaigns/`, 314 commits between them — so
+  `vibevm/vibespecs/terraforms/`, two zones under `campaigns/`, 314 commits between them — so
   every prescription about roles, phase gates, ledgers and reports can be checked
   against a living instance rather than argued about.
 - **`comparative-research` has almost no *living* source 2.** The genre is adopted,
@@ -26,19 +26,19 @@ the split is worth knowing before the first row is written:
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/campaign-plans \
-    packages/org.vibevm.world/comparative-research \
-    packages/org.vibevm.world/discovery-prompt \
-    packages/org.vibevm.world/redbook
-source-1 join over 31 file(s) under packages/org.vibevm.world/campaign-plans, packages/org.vibevm.world/comparative-research, packages/org.vibevm.world/discovery-prompt, packages/org.vibevm.world/redbook
+    vibevm/vibepacks/org.vibevm.world/campaign-plans \
+    vibevm/vibepacks/org.vibevm.world/comparative-research \
+    vibevm/vibepacks/org.vibevm.world/discovery-prompt \
+    vibevm/vibepacks/org.vibevm.world/redbook
+source-1 join over 31 file(s) under vibevm/vibepacks/org.vibevm.world/campaign-plans, vibevm/vibepacks/org.vibevm.world/comparative-research, vibevm/vibepacks/org.vibevm.world/discovery-prompt, vibevm/vibepacks/org.vibevm.world/redbook
   relative .md citations resolved: 37
   broken: 2
 
   MISSING FILE: 2
 
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.xml
+  MISSING FILE    vibevm/vibepacks/org.vibevm.world/redbook/v0.1.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.xml
+  MISSING FILE    vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
 ```
 
@@ -52,18 +52,18 @@ file appears in W4's fifteen. Prior batches: W1 11 clean, W2 23 clean, W3 24 cle
 ### redbook's member list against its own pin list {#redbook-arithmetic}
 
 ```console
-$ grep -cE '^"flow:org\.vibevm\.world/' packages/org.vibevm.world/redbook/v0.2.0/vibe.toml
+$ grep -cE '^"flow:org\.vibevm\.world/' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml
 22
-$ grep -cE '^- ##MEMBER-' packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.xml
+$ grep -cE '^- ##MEMBER-' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/boot/03-flow-redbook.xml
 23
 ```
 
 The boot snippet's member list and the manifest's pin list are **not the same set**:
 
 ```console
-$ grep -oE '^- ##MEMBER-[A-Z-]+ `[a-z-]+`' packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.xml \
+$ grep -oE '^- ##MEMBER-[A-Z-]+ `[a-z-]+`' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/boot/03-flow-redbook.xml \
     | grep -oE '`[a-z-]+`$' | tr -d '\140' | sort > /tmp/named.txt
-$ grep -oE '^"flow:org\.vibevm\.world/[a-z-]+' packages/org.vibevm.world/redbook/v0.2.0/vibe.toml \
+$ grep -oE '^"flow:org\.vibevm\.world/[a-z-]+' vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibe.toml \
     | sed 's|.*/||' | sort > /tmp/pinned.txt
 $ comm -23 /tmp/named.txt /tmp/pinned.txt          # named in the snippet, not pinned
 git-atomic-commits
@@ -90,25 +90,25 @@ $ for m in $(pins); do test -d "vibedeps/flow-$m" || echo "NOT INSTALLED: flow-$
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py
-boot-lane join over 31 contribution(s) in spec/boot/STATIC.xml
+boot-lane join over 31 contribution(s) in vibevm/vibespecs/boot/STATIC.xml
   installed, sourced, same word stream: 17
   problems: 14
 
   org.vibevm.world/campaign-plans  [INSTALLED SOURCED WORDS-DIFFER]
     installed: vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md
-    source   : packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml
+    source   : vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml
     package 441 words, host 435 — 6 differ
     only in the package: cold facts verified at writing time
 
   org.vibevm.world/comparative-research  [INSTALLED SOURCED WORDS-DIFFER]
     installed: vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md
-    source   : packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.xml
+    source   : vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml
     package 314 words, host 311 — 3 differ
     only in the package: sibling document pointers
 
   org.vibevm.world/redbook  [INSTALLED SOURCED WORDS-DIFFER]
     installed: vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md
-    source   : packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.xml
+    source   : vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/boot/03-flow-redbook.xml
     package 519 words, host 513 — 6 differ
     only in the package: spirit source member list git git
 ```
@@ -123,9 +123,9 @@ The join's `strip_markup` removes a fact anchor only when a space or tab follows
 strip and is counted as prose.** Both of these are that:
 
 ```console
-$ grep -n 'COLD-FACTS-VERIFIED-AT-WRITING-TIME' packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.xml
+$ grep -n 'COLD-FACTS-VERIFIED-AT-WRITING-TIME' vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml
 35:- ##COLD-FACTS-VERIFIED-AT-WRITING-TIME
-$ grep -n '##sibling-document-pointers' packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.xml
+$ grep -n '##sibling-document-pointers' vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml
 13:##sibling-document-pointers
 ```
 
@@ -153,10 +153,10 @@ semantic difference rather than a markup one.
 > **Corrected by W4d's worker, 2026-07-29.** This paragraph originally cited two
 > locations for the qualified names. Only one is right:
 > ```console
-> $ grep -c 'atomic-commits\|attribution-policy\|git-practices' spec/boot/INDEX.md
+> $ grep -c 'atomic-commits\|attribution-policy\|git-practices' vibevm/vibespecs/boot/INDEX.md
 > 0
 > ```
-> `spec/boot/INDEX.md` is 40 lines naming seven `[[entry]]` paths, none of them a
+> `vibevm/vibespecs/boot/INDEX.md` is 40 lines naming seven `[[entry]]` paths, none of them a
 > git flow. The qualified names live **only** in `STATIC.md`'s `vibe:static`
 > provenance markers (lines 363, 421, 557, 615). The conclusion above stands; one
 > of its two supports did not.
@@ -207,7 +207,7 @@ is the first W4 fact to check rather than assume.
 ### campaign-plans — the host is a heavy, measurable consumer {#s2-campaigns}
 
 ```console
-$ ls spec/terraforms/
+$ ls vibevm/vibespecs/terraforms/
 PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
 $ ls campaigns/
@@ -230,7 +230,7 @@ progress-2026-08
 **Wave 1's REPORT scores every prediction individually**, and scores one of them
 against the process rather than the number:
 
-> `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1314` — *A prediction that no
+> `vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml:1314` — *A prediction that no
 > step of the plan forces you to run is one you will reach the end of the campaign
 > without having tested.*
 
@@ -246,11 +246,11 @@ falsified:
 ```console
 $ git log --oneline -- campaigns/packages-2026-09 | wc -l
 189
-$ grep -oE '\b[0-9a-f]{8}\b' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort -u | wc -l
+$ grep -oE '\b[0-9a-f]{8}\b' vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort -u | wc -l
 17
 $ git log --oneline -- campaigns/progress-2026-08 | wc -l
 125
-$ grep -oE '\b[0-9a-f]{8}\b' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort -u | wc -l
+$ grep -oE '\b[0-9a-f]{8}\b' vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml | sort -u | wc -l
 20
 ```
 
@@ -264,7 +264,7 @@ zone — but the flow asks for the map at every boundary, and the boundaries are
 "Phase N landed, floor green, next: Phase N+1":
 
 ```console
-$ sed -n 5p spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+$ sed -n 5p vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 **status: RATIFIED 2026-07-26 · PHASE A OPEN · all six [§4.5](#amendments) amendments adopted · …**
 $ python campaigns/packages-2026-09/tasks/summary.py | tail -2
   ALL                    confi  8523  drift   347  unver    40   total  8910    95.7 %
@@ -275,11 +275,11 @@ The plan says **PHASE A OPEN**; Phases A and B are closed and C is at 64.4 %.
 **Review points: the two waves diverge sharply.**
 
 ```console
-$ grep -ciE 'review point' spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
+$ grep -ciE 'review point' vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml
 0
-$ grep -ciE 'review point' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
+$ grep -ciE 'review point' vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml
 8
-$ grep -nE '\*\*(OPEN|RESOLVED)' spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml | wc -l
+$ grep -nE '\*\*(OPEN|RESOLVED)' vibevm/vibespecs/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml | wc -l
 6
 ```
 
@@ -331,7 +331,7 @@ living spec tree**:
 
 ```console
 $ grep -rlniE 'comparative.research genre|two-way gap' spec/ docs/
-spec/boot/STATIC.xml
+vibevm/vibespecs/boot/STATIC.xml
 ```
 
 The only hit in `spec/` is the compiled boot lane — the flow's own snippet. The
@@ -354,15 +354,15 @@ normative source, and that is itself the finding, not evidence of conformance.**
 The `fractality` specspace carries 15 study notes:
 
 ```console
-$ ls packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/*-study.md | wc -l
+$ ls vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/*-study.md | wc -l
 15
-$ grep -nE '^#{1,3} ' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/rlm-study.xml
+$ grep -nE '^#{1,3} ' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/rlm-study.xml
 1:# Study note — Recursive Language Models (the anchor project) {#root}
 10:## What it is {#what}
 33:## Verified facts that matter to us {#facts}
 91:## Decisions we take (→ synthesis deltas) {#decisions}
 137:## Open questions carried to synthesis {#open}
-$ grep -c 'accessed\|Accessed' packages/org.vibevm.fractality/fractality/v0.1.0/spec/refs/notes/*.md | grep -c ':0$'
+$ grep -c 'accessed\|Accessed' vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/vibevm/vibespecs/refs/notes/*.md | grep -c ':0$'
 21          # of 22 .md files in that directory; only rlm-source-selection.xml carries any
 ```
 
@@ -381,7 +381,7 @@ $ grep -c 'accessed\|Accessed' packages/org.vibevm.fractality/fractality/v0.1.0/
 > form it follows. **And the pipeline's downstream half is entirely in the living
 > tree:** `ROADMAP.md:43` records that milestones M1.7–M1.11 and M2.7–M2.10 derive
 > from the Tessl study, six of them carrying `Source: [PROP-004 §5.1]`
-> back-pointers; `spec/modules/vibe-resolver/PROP-003-dep-evolution.xml` cites the
+> back-pointers; `vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml` cites the
 > study at five anchors; and `FRACTALITY-RLM-PLAN-v0.1.xml` cites `RD-n` 22 times,
 > converting deltas into ratified decisions. **The documents are archived; the
 > ratification is live.** Read the section below with that correction in force.
@@ -395,9 +395,9 @@ accessed: 2026-07-10
 fugu pages accessed: 2026-07-11
 ```
 
-**Widen to `packages/org.vibevm.fractality/**` for this package** — it is not on the
+**Widen to `vibevm/vibepacks/org.vibevm.fractality/**` for this package** — it is not on the
 brief's default perimeter and it is where the living practice is. Exclude the nested
-`packages/org.vibevm.fractality/*/*/vibedeps/**` and `.vibe/cache/**` copies: those
+`vibevm/vibepacks/org.vibevm.fractality/*/*/vibedeps/**` and `.vibe/cache/**` copies: those
 are the specspace's own installed dependencies, i.e. copies of the very flows under
 verification, and counting them counts the subject as its own consumer.
 
@@ -406,10 +406,10 @@ verification, and counting them counts the subject as its own consumer.
 ```console
 $ grep -rl 'PrimaryHypothesis' --include='*.md' . | grep -vE '^\./vibedeps/|\.vibe/cache'
 ./legacy-spec/research/DISCOVERY_PROMPT.md
-./packages/org.vibevm.fractality/…/vibedeps/flow-discovery-prompt/0.1.0/…   (4 files, nested install)
-./packages/org.vibevm.world/discovery-prompt/v0.1.0/…                       (4 files, the package)
-./spec/boot/STATIC.xml
-$ diff legacy-spec/research/DISCOVERY_PROMPT.md packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.xml
+./vibevm/vibepacks/org.vibevm.fractality/…/vibedeps/flow-discovery-prompt/0.1.0/…   (4 files, nested install)
+./vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/…                       (4 files, the package)
+./vibevm/vibespecs/boot/STATIC.xml
+$ diff legacy-spec/research/DISCOVERY_PROMPT.md vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml
   IDENTICAL   (23 479 bytes, modulo CRLF)
 ```
 
@@ -422,10 +422,10 @@ not the flow being ignored** — judge these facts on what they prescribe, per �
 ### redbook — the umbrella, the book, and what the gate cannot see {#s2-redbook}
 
 ```console
-$ ls packages/org.vibevm.world/redbook/
+$ ls vibevm/vibepacks/org.vibevm.world/redbook/
 v0.1.0
 v0.2.0
-$ find packages/org.vibevm.world/redbook/v0.2.0 -type f
+$ find vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0 -type f
   …/LICENSE.xml  …/README.md  …/vibe.toml
   …/spec/boot/03-flow-redbook.md
   …/spec/book/README.md
@@ -452,23 +452,23 @@ Measured from `campaigns/packages-2026-09/run/mirror/`; the batch total agrees w
 
 ```
 campaign-plans (218)
-  23  packages/org.vibevm.world/campaign-plans/v0.1.0/README.md
+  23  vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/README.md
   29  …/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md
   64  …/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md
   48  …/spec/flows/campaign-plans/execution-ledger.md
   54  …/spec/flows/campaign-plans/phase-gates.md
 comparative-research (180)
-  21  packages/org.vibevm.world/comparative-research/v0.1.0/README.md
+  21  vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/README.md
   12  …/spec/boot/52-flow-comparative-research.md
   60  …/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md
   61  …/spec/flows/comparative-research/from-research-to-roadmap.md
   26  …/spec/flows/comparative-research/research-template.md
 discovery-prompt (83)
-  19  packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md
+  19  vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/README.md
   10  …/spec/boot/50-flow-discovery-prompt.md
   54  …/spec/flows/discovery-prompt/usage.md
 redbook (83)
-  44  packages/org.vibevm.world/redbook/v0.2.0/README.md
+  44  vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md
   39  …/spec/boot/03-flow-redbook.md
 ```
 

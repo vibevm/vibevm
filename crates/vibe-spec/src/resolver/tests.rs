@@ -84,7 +84,7 @@ fn t5_a_groupless_project_has_no_self_coordinate() {
     let coord = SelfCoordinate::new(None, "solo".into());
     let r = FileResolver::new(ws.path(), coord);
 
-    // Package form of the project's own name → slot lookup, not spec/.
+    // Package form of the project's own name → slot lookup, not vibevm/vibespecs/.
     let pkg = SpecAddress::parse("spec://org.foo/solo/x/y").unwrap();
     assert!(matches!(
         r.resolve_file(&pkg).unwrap_err(),

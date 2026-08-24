@@ -4,7 +4,7 @@
 
 Сегмент 239–1720 прочитан целиком; рулинги перечислены по заголовкам `^\*\*Р<число>\.` (в
 сегменте их 30, нумерация перезапускается в блоках — ссылки даю как `<строка>: Р<номер>`).
-Спек-кандидат №1 (`spec/common/PROP-044-change-native-formats.xml`) прочитан полностью,
+Спек-кандидат №1 (`vibevm/vibespecs/common/PROP-044-change-native-formats.xml`) прочитан полностью,
 остальные спеки и весь код обхожу грепом по ключевому слову рулинга (Grep по `spec/`,
 `crates/`, `xtask/`, `formats/`, `schemas/`, `tools/`), затем читаю найденный файл в месте
 попадания. Цитатой считаю дословный текст докблока/комментария/аннотации схемы; класс
@@ -93,7 +93,7 @@
 
 Цитаты спек-домов (spec/both), дословно:
 
-- **394: Р1** — `spec/common/PROP-044-change-native-formats.xml`, секция `{#laws}`,
+- **394: Р1** — `vibevm/vibespecs/common/PROP-044-change-native-formats.xml`, секция `{#laws}`,
   `@fact:TERMS-SNAPSHOT-FROZEN-CHANNEL`: «**snapshot** ≡ `frozen = false` (the default:
   …) and **frozen** ≡ `frozen = true` (…) are **antonyms — the two states of the one
   `frozen` axis, with no third state.**» — это и есть причина, по которой рулинг отверг
@@ -145,7 +145,7 @@
 
 **Что искалось и не нашлось** (паттерн + счётчик + контроль):
 - Grep `поимённо|литерал|одиннадцат` по `spec/` → 2 попадания, оба нерелевантны
-  (`spec/research/schema-evolution-2026-08/01-measure-our-wire-format-claudez.xml:57` —
+  (`vibevm/vibespecs/research/schema-evolution-2026-08/01-measure-our-wire-format-claudez.xml:57` —
   про rename-варианты `NamingConvention`; `12-HANDOFF.xml:221` — про пустые файлы
   харнесса). Ни одно не про Default литералов записи.
 - Grep `impl Default for VersionEntry` по `crates/` → 0 (у записи Default нет и сегодня;

@@ -75,7 +75,7 @@ pub type WorldSunset = DateTime<FixedOffset>;
 /// sometimes null".
 const REQUIRED_NULLABLE: &str = r#"#[derive(Serialize, Deserialize)]
 pub struct ListEntry {
-    /// Filename of the package's boot snippet under `spec/boot/`, or null
+    /// Filename of the package's boot snippet under `vibevm/vibespecs/boot/`, or null
     /// if absent.
     pub boot_snippet: Option<Box<String>>,
 }
@@ -270,7 +270,7 @@ fn a_required_nullable_member_lifts_the_box_and_becomes_strict() -> Result<()> {
         apply(REQUIRED_NULLABLE, "list_report/mod.rs", doc)?,
         r#"#[derive(Serialize, Deserialize)]
 pub struct ListEntry {
-    /// Filename of the package's boot snippet under `spec/boot/`, or null
+    /// Filename of the package's boot snippet under `vibevm/vibespecs/boot/`, or null
     /// if absent.
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub boot_snippet: Option<String>,

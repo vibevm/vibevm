@@ -18,11 +18,11 @@ W6's four flows govern four host artefacts that exist on disk and can be opened:
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/licensing \
-    packages/org.vibevm.world/source-mirrors \
-    packages/org.vibevm.world/spec-genres \
-    packages/org.vibevm.world/dev-runtime-docs
-source-1 join over 22 file(s) under packages/org.vibevm.world/licensing, packages/org.vibevm.world/source-mirrors, packages/org.vibevm.world/spec-genres, packages/org.vibevm.world/dev-runtime-docs
+    vibevm/vibepacks/org.vibevm.world/licensing \
+    vibevm/vibepacks/org.vibevm.world/source-mirrors \
+    vibevm/vibepacks/org.vibevm.world/spec-genres \
+    vibevm/vibepacks/org.vibevm.world/dev-runtime-docs
+source-1 join over 22 file(s) under vibevm/vibepacks/org.vibevm.world/licensing, vibevm/vibepacks/org.vibevm.world/source-mirrors, vibevm/vibepacks/org.vibevm.world/spec-genres, vibevm/vibepacks/org.vibevm.world/dev-runtime-docs
   relative .md citations resolved: 22
   broken: 0
 ```
@@ -51,16 +51,16 @@ vibedeps/flow-dev-runtime-docs/0.1.0/LICENSE
 vibedeps/flow-dev-runtime-docs/0.1.0/README.md
 vibedeps/flow-dev-runtime-docs/0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md
 vibedeps/flow-dev-runtime-docs/0.1.0/vibe.toml
-$ find packages/org.vibevm.world/dev-runtime-docs -type f
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/LICENSE
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.xml
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml
-packages/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml
+$ find vibevm/vibepacks/org.vibevm.world/dev-runtime-docs -type f
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/LICENSE
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml
+vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibe.toml
 ```
 
 The installed copy carries the boot snippet at **`boot/`**; the package ships it at
-**`spec/boot/`**. That is the pre-DRIFT-039 layout, so the join's path-matching
+**`vibevm/vibespecs/boot/`**. That is the pre-DRIFT-039 layout, so the join's path-matching
 finds no source and reports NO-SOURCE — the same shape W2 recorded for
 `sync-from-code`. The **prose is the same**: a direct diff shows only the Phase B
 markup (`<status/>`, `##ANCHOR`, `@impl/done`) and the heading anchors the package
@@ -167,8 +167,8 @@ mirror: all push targets synced.
 ```
 
 Two targets, both fast-forward, no `--force`. The host's own boot snippet
-(`spec/boot/90-user.xml`, `##CMD-MIRROR` and `##SRC-MULTI-HOMED`) prescribes
-`cargo xtask mirror` over a bare `git push origin`, and `spec/common/PROP-016-source-mirrors.xml`
+(`vibevm/vibespecs/boot/90-user.xml`, `##CMD-MIRROR` and `##SRC-MULTI-HOMED`) prescribes
+`cargo xtask mirror` over a bare `git push origin`, and `vibevm/vibespecs/common/PROP-016-source-mirrors.xml`
 is the governing host contract. **All three are durable citation targets.**
 
 Check separately rather than together: the fan-out mechanics, the daily loop, the
@@ -181,25 +181,25 @@ is where the implemented half lives.
 ```console
 $ ls spec/
 WAL.md  boot  common  design  manual-tests  modules  terraforms
-$ ls spec/common/PROP-*.md spec/modules/**/PROP-*.md | wc -l
+$ ls spec/common/PROP-*.md vibevm/vibespecs/modules/**/PROP-*.md | wc -l
 42
-$ find . -name 'FEAT-*.md' -not -path './vibedeps/*' -not -path '*/.vibe/*'
+$ find . -name 'FEAT-*.md' -not -path './vibevm/vibedeps/*' -not -path '*/.vibe/*'
    (no output)
 ```
 
 **Forty-two PROP documents and not one FEAT document anywhere in the repository.**
 The genre map's «Module contracts (here: PROP / FEAT)» names both, and the tooling
-supports both — `spec/modules/vibe-workspace/PROP-035-spec-compiler.xml:107` says
+supports both — `vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml:107` says
 «`PROP-NNN` / `FEAT-NNN` in a URI resolve to `PROP-NNN-<slug>.md`», so the resolver
 was built for a genre the tree never used.
 
-The rest of the map has instances to check against: boot files (`spec/boot/`),
-foundational decisions (`spec/common/PROP-000.xml`), module contracts
-(`spec/modules/**`), **design docs** (`spec/design/` — 6 files), research docs
-(`legacy-spec/research/`, an archive), campaign plans (`spec/terraforms/`), and the
-checkpoint (`spec/WAL.xml`). The flow's two-way-link law — «a contract section that
+The rest of the map has instances to check against: boot files (`vibevm/vibespecs/boot/`),
+foundational decisions (`vibevm/vibespecs/common/PROP-000.xml`), module contracts
+(`vibevm/vibespecs/modules/**`), **design docs** (`vibevm/vibespecs/design/` — 6 files), research docs
+(`legacy-spec/research/`, an archive), campaign plans (`vibevm/vibespecs/terraforms/`), and the
+checkpoint (`vibevm/vibespecs/WAL.xml`). The flow's two-way-link law — «a contract section that
 has lore links to it; the lore names the section it explains» — is checkable in
-both directions across `spec/design/` and `spec/modules/`.
+both directions across `vibevm/vibespecs/design/` and `vibevm/vibespecs/modules/`.
 
 ### dev-runtime-docs — the same-commit rule, and a commit that keeps it {#s2-runtime}
 
@@ -239,24 +239,24 @@ Measured from `campaigns/packages-2026-09/run/mirror/`; the total agrees with
 
 ```
 dev-runtime-docs (30)
-   9  packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md
+   9  vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md
    6  …/spec/boot/58-flow-dev-runtime-docs.md
   15  …/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md
 licensing (137)
-  24  packages/org.vibevm.world/licensing/v0.1.0/README.md
+  24  vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/README.md
   17  …/spec/boot/60-flow-licensing.md
   48  …/spec/flows/licensing/LICENSING-PROTOCOL.md
   30  …/spec/flows/licensing/dependency-licenses.md
   18  …/spec/flows/licensing/eula-template.md
   14  …/spec/skills/draft-eula/SKILL.md
 source-mirrors (200)
-  23  packages/org.vibevm.world/source-mirrors/v0.1.0/README.md
+  23  vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/README.md
   16  …/spec/boot/62-flow-source-mirrors.md
   52  …/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md
   52  …/spec/flows/source-mirrors/daily-loop.md
   57  …/spec/flows/source-mirrors/fanout-mechanics.md
 spec-genres (191)
-  26  packages/org.vibevm.world/spec-genres/v0.1.0/README.md
+  26  vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/README.md
   23  …/spec/boot/17-flow-spec-genres.md
   59  …/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md
   41  …/spec/flows/spec-genres/design-docs.md

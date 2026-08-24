@@ -12,7 +12,7 @@ which says *«same obligation types, same loop-until-dry waves, same escalation
 rule»* and points at wave 1's mechanics:
 [spec://org.vibevm.core/vibevm/terraforms/spec-actualization#phase-d](../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.xml#phase-d).
 The SPEC-task shape is
-[`spec/modules/vibe-progress/templates/spec-task.xml`](../../spec/modules/vibe-progress/templates/spec-task.xml)
+[`vibevm/vibespecs/modules/vibe-progress/templates/spec-task.xml`](../../spec/modules/vibe-progress/templates/spec-task.xml)
 and is not restated here.
 
 **Every number in this document came from a command.** Reproduce the whole
@@ -340,7 +340,7 @@ invisible at the other three.
 was written against a search confined to `packages/` that could not see the
 host. Wave 6 found the mirror image: **three verdicts scoped their search to the
 host's `crates/`, and the adopter that falsified them lives inside
-`packages/`.** `packages/org.vibevm.fractality/fractality/v0.1.0/` is not a
+`packages/`.** `vibevm/vibepacks/org.vibevm.fractality/fractality/v0.1.0/` is not a
 document collection — it is a **second complete project that adopted this
 discipline**, with its own `vibe.toml`, its own `vibedeps/` carrying twenty-odd
 installed flows (`flow-managed-blocks` among them), and its own Cargo workspace.
@@ -498,7 +498,7 @@ it on the next run.
 **The open question this raises, stated rather than answered.** The
 `../flows/…` family (F-136 at 11 verdicts over 7 packages, F-145 at 8 over 8)
 is a compiled-lane defect: the pointer resolves inside the package and inside
-the install slot, and not from `spec/boot/` where a session actually reads it.
+the install slot, and not from `vibevm/vibespecs/boot/` where a session actually reads it.
 There are two readings — repair fifteen snippets across fifteen packages, or
 repair the boot compiler once so relative links are rewritten on compile. The
 second is a host code change and therefore Phase E's, and it would close both
@@ -539,9 +539,9 @@ What is delegated and what is not:
 - **The decision to close an obligation is never delegated**, and neither is the
   review of delegated output. A worker prepares an edit and gathers evidence;
   the boss reads the diff and decides.
-- **Every brief cites durable files only** — `CLAUDE.md`, `spec/boot/**`,
-  `spec/common/**`, `spec/modules/**`, `crates/` — and **never `CONTINUE.md` or
-  `spec/WAL.xml`**, which every wind-down rewrites wholesale. Phase C ran the
+- **Every brief cites durable files only** — `CLAUDE.md`, `vibevm/vibespecs/boot/**`,
+  `vibevm/vibespecs/common/**`, `vibevm/vibespecs/modules/**`, `crates/` — and **never `CONTINUE.md` or
+  `vibevm/vibespecs/WAL.xml`**, which every wind-down rewrites wholesale. Phase C ran the
   controlled experiment: the one batch written before that rule carries 116 dead
   refs today; every batch written under it verifies clean.
 - **Every brief names the exact output paths and says to flush one file at a
@@ -613,7 +613,7 @@ owner routes and had to be reverted wholesale by owner ruling.*
   reading is telling you the reading is wrong.
 - @fact:THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS **A search over this repository finds this campaign's own
   records, and they are not evidence about the subject.** The campaign writes
-  its findings into `campaigns/**`, into `spec/terraforms/`'s §7 LOG, and into
+  its findings into `campaigns/**`, into `vibevm/vibespecs/terraforms/`'s §7 LOG, and into
   harvest files — all inside the tree it measures. So a grep for the very term a
   finding is about will match the finding. It has fired three times in two waves:
   a `revisit` sweep whose 581 raw hits were «almost entirely campaign JSON
@@ -622,7 +622,7 @@ owner routes and had to be reverted wholesale by owner ruling.*
   `campaign-plans` sections that showed one hit for **every** form, every one of
   them inside this campaign's own plan, matching because the LOG entry written
   the day before quotes those words in prose. **Exclude `campaigns/*/run/**` by
-  default, and when a count over `spec/terraforms/` or `campaigns/` is the
+  default, and when a count over `vibevm/vibespecs/terraforms/` or `campaigns/` is the
   evidence, open the hits and confirm they are instances of the form rather than
   prose about it.** The trap is worst exactly where the campaign has been most
   thorough, because that is where its own footprint is largest.

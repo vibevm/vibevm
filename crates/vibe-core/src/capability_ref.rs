@@ -18,7 +18,7 @@
 //! Namespace and name validation reuses the kebab-case rule in
 //! [`super::package_ref`]'s `validate_package_name`.
 //!
-//! Spec: `VIBEVM-SPEC.md` §7.3, [PROP-002 §2.9](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#capability).
+//! Spec: `VIBEVM-SPEC.md` §7.3, [PROP-002 §2.9](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#capability).
 //!
 //! [prov]: crate::manifest::Provides
 //! [req]: crate::manifest::Requires

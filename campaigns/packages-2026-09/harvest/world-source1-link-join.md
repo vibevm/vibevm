@@ -1,6 +1,6 @@
 # world — §3.1 source 1, the link join
 
-_Captured 2026-07-28 against `packages/org.vibevm.world/`._
+_Captured 2026-07-28 against `vibevm/vibepacks/org.vibevm.world/`._
 
 §3.1's first source is the package's own shipped artifacts: «a protocol document
 a snippet cites must exist and say what the snippet says it says». This run settles
@@ -11,7 +11,7 @@ judgement and is not delegated to a script.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py --corpus
-source-1 join over 121 file(s) under packages/org.vibevm.world
+source-1 join over 121 file(s) under vibevm/vibepacks/org.vibevm.world
   relative .md citations resolved: 185
   broken: 0
 EXIT=0
@@ -21,15 +21,15 @@ EXIT=0
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py
-source-1 join over 154 file(s) under packages/org.vibevm.world
+source-1 join over 154 file(s) under vibevm/vibepacks/org.vibevm.world
   relative .md citations resolved: 187
   broken: 2
 
   MISSING FILE: 2
 
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.xml
+  MISSING FILE    vibevm/vibepacks/org.vibevm.world/redbook/v0.1.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
-  MISSING FILE    packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.xml
+  MISSING FILE    vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/book/ru/chapter-1-two-process-model.xml
                     -> safeharbor.md
 EXIT=1
 ```
@@ -46,4 +46,4 @@ all but two are illustrative (`spec://com.example.shop/PROP-001#…`,
 cite a document, and a resolver over them would bury two real references under
 fifty-three correct examples.
 
-**Scope:** the §3.1 source-1 existence check for every fact under `packages/org.vibevm.world/` that cites a sibling document. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).
+**Scope:** the §3.1 source-1 existence check for every fact under `vibevm/vibepacks/org.vibevm.world/` that cites a sibling document. The anchor list is not maintained here — a verdict cites this file in its `ev[]`, and the reverse index is derived from the verdict maps at the phase close (PHASE-C-BATCH-PLAN.md §5).

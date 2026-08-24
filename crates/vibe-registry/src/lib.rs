@@ -14,7 +14,7 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §8.
 //!
-//! [prop]: ../../../spec/modules/vibe-registry/PROP-001-git-backend.md
+//! [prop]: ../../../vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#root");

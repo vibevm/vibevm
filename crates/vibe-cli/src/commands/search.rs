@@ -2,7 +2,7 @@
 //! optional package index. Read-only; no lockfile or cache mutation.
 //!
 //! Spec: [ROADMAP §M2.10](../../../../ROADMAP.md) and
-//! [PROP-005 §2.10](../../../../spec/modules/vibe-index/PROP-005-package-index.md#index-routes)
+//! [PROP-005 §2.10](../../../../vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml#index-routes)
 //! for the wire shape served by the index server.
 //!
 //! Resolution path: walk every `[[registry]]` (or just one with

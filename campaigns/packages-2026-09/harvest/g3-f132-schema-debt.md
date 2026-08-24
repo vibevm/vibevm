@@ -148,7 +148,7 @@ host `schemas/` корректно: эта схема принадлежит п�
 своим обходом и хардкодит свой фильтр расширений (центральной таблицы
 «расширение→обработчик» нет — см. Q5). Движок, который собирает host,
 разрешается через `Cargo.toml:108-109` в
-`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmap/`
+`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-specmap/`
 (далее `$ENG`).
 
 Множество расширений задано дословно в трёх местах (одно и то же сравнение):

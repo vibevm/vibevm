@@ -3,7 +3,7 @@
 //! [`CreateOpts`]). One impl per supported git host; the orchestrator
 //! ([`crate::Publisher`]) drives the trait and never sees a concrete
 //! host. Layering per
-//! [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
+//! [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
@@ -63,8 +63,8 @@ pub struct CreateOpts {
 /// comment the next implementer is free to forget — and forgetting it is
 /// exactly the latent hole this type closes. Making the scope check a
 /// *type* turns the "never escalate scope" rule
-/// ([PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish);
-/// scope discipline per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy))
+/// ([PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish);
+/// scope discipline per [PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy))
 /// into a compile-time gate: [`repo_exists`](RepoCreator::repo_exists),
 /// [`create_repo`](RepoCreator::create_repo), and
 /// [`push_url`](RepoCreator::push_url) each demand a `&ValidatedOrg`, so a
@@ -96,11 +96,11 @@ impl ValidatedOrg {
 /// Host-specific operations for the publish flow. One impl per
 /// supported git host. Today: [`GithubRepoCreator`] (primary) and
 /// [`GitverseRepoCreator`] (legacy / retained). Adapter pattern matches
-/// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish)
+/// [PROP-002 §2.10](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#publish)
 /// — adding Gitea / Forgejo / GitLab is one new `impl RepoCreator`,
 /// no consumer-side changes.
 ///
-/// **Scope discipline** ([PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy)).
+/// **Scope discipline** ([PROP-000 §20](../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy)).
 /// Each impl SHOULD constrain operations to a specific organization at
 /// construction time via the `expected_org()` hook. The default
 /// [`RepoCreator::validate_scope`] then refuses any call addressed to

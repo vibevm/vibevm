@@ -105,7 +105,7 @@ python campaigns/packages-2026-09/tasks/source23-boot-join.py
 word stream**, 6 differ by a handful of real words (`campaign-plans` by six —
 «cold facts verified at writing time» — `comparative-research` by three), and 8 have
 no source at the path the installed copy names, because they were installed from
-`boot/` and DRIFT-039 moved the packages to `spec/boot/`. The lane was written
+`boot/` and DRIFT-039 moved the packages to `vibevm/vibespecs/boot/`. The lane was written
 2026-07-14 and the packages were marked through 07-27; **0 of 32 installed snippets
 carry Phase B markup while every package copy does.** The join also reproduces
 **F-078** mechanically: four git flows appear twice in `STATIC.md`, once directly and
@@ -123,7 +123,7 @@ DEPLOYMENT in a consuming project.** A fact can be true at one layer and invisib
 at the other three. The default perimeter is:
 
 ```
-packages/org.vibevm.ai-native/**  packages/org.vibevm.world/**  crates/**  xtask/**
+vibevm/vibepacks/org.vibevm.ai-native/**  vibevm/vibepacks/org.vibevm.world/**  crates/**  xtask/**
 spec/**  schemas/**  vibedeps/**  .claude/skills/**
 specmap.json  specmap.toml  conform.toml  vibe.toml  vibe.lock
 research/rust-demo/**  research/ts-demo/**  research/go-demo/**
@@ -192,7 +192,7 @@ a card, guide or tool spec; 63 are cited nowhere else.**
   1. campaigns/packages-2026-09/PHASE-C-RESUME.md   — этот файл целиком
   2. campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md — особенно §2.1 (поле src),
      §4.5 (закон периметра) и §5 (как цитируется harvest)
-  3. spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
+  3. vibevm/vibespecs/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.xml §3.1, §3.2, §5
      — правила вердиктов и выходной гейт из пяти пунктов; плюс §9 LOG с конца,
      там записи этой фазы
 
@@ -235,7 +235,7 @@ load-and-merge; verified_at и processed_hash пишет только `vibe prog
 ТОКЕНЫ НЕ ЭКОНОМЬ. Не ужимайся, не сокращай чтение таблиц, не классифицируй
 строки пачкой ради экономии — именно так возник долг из 138 строк выше. Если
 контекст подходит к концу: остановись, сохрани состояние (CONTINUE.md +
-spec/WAL.xml + запись в §9 LOG кампании), напиши новый промт для продолжения по
+vibevm/vibespecs/WAL.xml + запись в §9 LOG кампании), напиши новый промт для продолжения по
 образцу этого файла, зафиксируй и раскатай — и скажи об этом прямо.
 ```
 

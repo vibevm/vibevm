@@ -17,7 +17,7 @@
 //! after PROP-005 so operators on orgs without an index get useful
 //! discovery without running their own infrastructure first.
 //!
-//! Token discipline ([PROP-000 §20](../../../../spec/common/PROP-000.md#token-secrecy)):
+//! Token discipline ([PROP-000 §20](../../../../vibevm/vibespecs/common/PROP-000.xml#token-secrecy)):
 //! authentication is via `vibe_publish::token::load_token_for_host("github.com")`
 //! when available — same precedence chain as `vibe registry publish`.
 //! Anonymous calls work but the GitHub rate limit drops to 60 req/h.

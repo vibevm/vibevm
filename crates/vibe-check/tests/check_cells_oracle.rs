@@ -38,7 +38,7 @@ fn opts() -> CheckOptions {
 }
 
 /// The same minimal clean tree the unit suite uses: `vibe.toml`,
-/// `spec/boot/` with two markdown files, and a WAL carrying every
+/// `vibevm/vibespecs/boot/` with two markdown files, and a WAL carrying every
 /// canonical section, its mtime pinned 1h before [`fixed_now`].
 fn write_minimal_project(root: &Path) {
     fs::write(
@@ -53,10 +53,10 @@ url = "https://example/vibespecs"
 "#,
     )
     .unwrap();
-    fs::create_dir_all(root.join("spec/boot")).unwrap();
-    fs::write(root.join("spec/boot/00-core.md"), "# core\n").unwrap();
-    fs::write(root.join("spec/boot/90-user.md"), "# user\n").unwrap();
-    let wal = root.join("spec/WAL.md");
+    fs::create_dir_all(root.join("vibevm/vibespecs/boot")).unwrap();
+    fs::write(root.join("vibevm/vibespecs/boot/00-core.md"), "# core\n").unwrap();
+    fs::write(root.join("vibevm/vibespecs/boot/90-user.md"), "# user\n").unwrap();
+    let wal = root.join("vibevm/vibespecs/WAL.md");
     fs::write(
         &wal,
         "# WAL\n\n## Current phase\n\n## Constraints\n\n## Done\n\n## Next\n\n## Known issues\n",

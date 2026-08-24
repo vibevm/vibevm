@@ -1,7 +1,7 @@
 # D1 — `core-ai-native` v0.8.0 repairs (eleven self-falsifier obligations)
 
 _Worked 2026-07-29. Subject:
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/`. Every obligation here
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/`. Every obligation here
 carries `falsifier: self` — the falsifying reference sits inside the package,
 so route (a) of [§3.6](../PHASE-D-BATCH-PLAN.md#which-side) applies without a
 judgement call and the package is what changes. No code was written; no `git`
@@ -15,11 +15,11 @@ F-266 · F-267 · F-268.
 ## F-260 — the README's mechanism roster names four of the five specs that ship
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
 **Re-verification:**
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 spec/mechanisms/
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 spec/mechanisms/
 BROWNFIELD-PROTOCOL-v0.1.xml
 ENGINE-CONFORM-v0.1.xml
 LEDGER-INTENT-v0.1.xml
@@ -60,11 +60,11 @@ Recorded, not fixed — the registry is derived and never hand-edited
 ## F-263 — the README's front door says "prompt content only" while five Rust crates ship inside
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md`
 **Re-verification:**
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 crates/*/src/lib.rs
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0 && ls -1 crates/*/src/lib.rs
 crates/core-ai-native-conform/src/lib.rs
 crates/core-ai-native-mcp/src/lib.rs
 crates/core-ai-native-specmap/src/lib.rs
@@ -112,12 +112,12 @@ claim.
 ## F-266 — the ATLAS reports 16 status-less records as `new`, overstating genuinely-new findings by sixteen
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml`
 **Re-verification:** counted every `_class · confidence · status_` line in the
 file and bucketed by the status token:
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && python - <<'PY'
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0 && python - <<'PY'
 … (regex `^\s+_([^·]+)·([^·]+)·(.*?)_ —` over spec/appendix/ATLAS.md) …
 PY
 records with a _..._ line: 87
@@ -168,11 +168,11 @@ into a present one.
 ## F-267 — C-7 calls H6-uniformity unmeasured while the map's own index carries a measurement of it
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml`
 **Re-verification:**
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0 && grep -rn "H6" --include=*.md .
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0 && grep -rn "H6" --include=*.md .
 ./spec/appendix/ATLAS.md:32:  _benchmark · low · refines:H6_ — Surveys + studies: code data improves LLM reasoning/planning…
 ./spec/appendix/ATLAS.md:38:  _theory · high · refines:H6_ — Models imitate visible neighbors. One way per operation…
 ./spec/appendix/ATLAS.md:130:  _benchmark · high · refines:H6_ — Name-only obfuscation collapses intent-level summaries…
@@ -216,11 +216,11 @@ wants a new fact rather than an edit.
 ## F-259 — C-6 side B cites a `4–7/80` score that no record in the package carries
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml`
 **Re-verification:**
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ for d in "4-7" "4–7" "4—7"; do echo "[$d]"; grep -rnF "$d" --include=*.md . ; done
 [4-7]
 [4–7]
@@ -272,12 +272,12 @@ asserting the result twice more without a source.
 ## F-159 — LEDGER-INTENT describes an entry struct, a GC, a cost metric and a signed release slice, none of which exist
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml`
 **Re-verification:** perimeter is every `.rs` file under `crates/` plus every
 `Cargo.toml` in the package.
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ for t in confidence created_at timestamp model_id prompt_rev; do
     printf '%-12s hits=%s\n' "$t" "$(grep -rn --include=*.rs --include=Cargo.toml -i "$t" crates/ Cargo.toml | wc -l)"; done
 confidence   hits=0
@@ -341,7 +341,7 @@ but it reads as an enforced control and is not one.
 ## F-152 — six LEDGER-INTENT facts depend on machinery that does not exist: two query kinds, the index, the warm copy, the draft-input recompute, the poisoning predicate
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml`
 **Re-verification:** same perimeter — every `.rs` under `crates/`.
 
 ```console
@@ -404,13 +404,13 @@ verify them.
 ## F-151 — six BROWNFIELD facts rest on machinery nothing implements: golden transcripts, conflict detection, the REPORT, the reconciliation check, the close quota
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
 **Re-verification:** two perimeters, because the reason names the Rust stack's
 CLI and that lives in a different package.
 
 ```console
 ### perimeter A — this package: crates/**/*.rs + *.toml + *.json
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ for t in golden characterization transcript snapshot 'burn.down' 'half.life' \
            shrinkage unaccounted quota flatline entrench; do … done
 golden 2 · characterization 3 · transcript 0 · snapshot 0 · burn.down 0
@@ -423,11 +423,11 @@ crates/core-ai-native-conform/src/store.rs:370:  /// goldens/fixtures, and build
 
 ### perimeter B — the Rust stack's CLI (read-only; NOT edited)
 $ grep -rlniE 'golden|characterization|transcript' \
-    packages/org.vibevm.ai-native/rust-ai-native-lang/*/crates/ --include=*.rs
+    vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/*/crates/ --include=*.rs
 …/rust-ai-native-cli/src/codemod.rs        (one hit: a doc string it emits)
 …/crates/vendor/core-ai-native-conform/…   (the vendored copy of perimeter A)
 
-$ find packages/org.vibevm.ai-native -iname "*golden*"
+$ find vibevm/vibepacks/org.vibevm.ai-native -iname "*golden*"
 (no output)
 
 $ grep -rniE 'insta::|expect_test|trycmd|assert_cmd|stdout_snapshot' \
@@ -438,7 +438,7 @@ $ grep -rniE 'insta::|expect_test|trycmd|assert_cmd|stdout_snapshot' \
 Every `golden`/`characterization` hit in both perimeters is prose — a skip-list
 comment, a conform rule telling the *user* to write a characterization test, and
 the vendored duplicate of the same. No golden file exists anywhere under
-`packages/org.vibevm.ai-native/`, and no snapshot-testing crate is in use. The
+`vibevm/vibepacks/org.vibevm.ai-native/`, and no snapshot-testing crate is in use. The
 reason holds on all six anchors.
 
 **Where the cause is more precise than the reason.** On `##STATUS-DISPUTED` the
@@ -486,16 +486,16 @@ checks whether `debt.json` and `intent.json` have producers.
 ## F-268 — a phase gate is redefined to mean "snapshots unchanged" where nothing captures a snapshot
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`
 **Re-verification:** the absence half is the same measurement as F-151 above —
 `transcript` and `snapshot` return **0** across this package's crates, no
-`*golden*` file exists under `packages/org.vibevm.ai-native/`, and no
+`*golden*` file exists under `vibevm/vibepacks/org.vibevm.ai-native/`, and no
 snapshot-testing crate is in use in either perimeter. The reason's *second*
 half — «the floor's actual gate is fmt/test/clippy/conform/specmap» — checks out
 and is slightly incomplete:
 
 ```console
-$ sed -n '1,7p' packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs
+$ sed -n '1,7p' vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs
 //! `rust-ai-native floor` — the portable verification floor (Sweep
 //! Playbook Tier 0): format → tests → lints → the conform gate → the
 //! specmap check → the xfail-strict test-gate (when a baseline registry
@@ -523,7 +523,7 @@ document self-contradictory again.
 ## F-207 — PROP-014's edge model claims a Brownfield amendment that landed in prose and not in code, and a Phase-0 acceptance that is impossible by design
 
 **Outcome:** EDITED
-**Files touched:** `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
+**Files touched:** `vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`
 **Re-verification:** perimeter is every `.rs` under the package's `crates/`.
 
 ```console
@@ -592,10 +592,10 @@ claim too and finds no computation. Outside my eleven, untouched, recorded.
 
 **Outcome:** EDITED
 **Files touched:**
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.xml`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`,
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.xml`
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml`,
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml`
 
 **Re-verification:** the three closing-rule anchors are settled by the work
 recorded under F-151, F-152, F-159 and F-207 above — each of those obligations
@@ -604,7 +604,7 @@ deleted are still present in the same document. Nothing enforces the rule
 either:
 
 ```console
-$ cd packages/org.vibevm.ai-native/core-ai-native/v0.8.0
+$ cd vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0
 $ grep -rniE 'unexercised|aspiration' --include=*.rs crates/; echo "(exit $?)"
 (exit 1)
 ```
@@ -687,7 +687,7 @@ different deadlines — «Playbook (v0.2) Phase 2» (BROWNFIELD), «Playbook Pha
 
 All eleven obligations closed as edits; none re-judged confirmed, none blocked.
 Six files touched, all inside
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/`:
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/`:
 
 | file | obligations |
 |---|---|
@@ -702,7 +702,7 @@ Six files touched, all inside
 
 ```console
 $ cargo run -q -p vibe-cli --bin vibe -- progress check \
-    --path packages/org.vibevm.ai-native/core-ai-native/v0.8.0 --no-cache
+    --path vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0 --no-cache
 progress check: clean (26 files, 0 warning(s))
 EXIT=0
 ```
@@ -726,7 +726,7 @@ key») also keeps `@impl/done`: the epoch genuinely is in the shipped key. The
 other three cells of that row are `@spec/done`.
 
 **No code was written, no `git` command was run, and nothing outside
-`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` was edited.** Two edits
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/` was edited.** Two edits
 reach beyond an obligation's own anchor and are flagged in their entries for the
 boss to accept or revert: the `## 6. Query kinds in v0.1` heading (F-152) and
 the four-instance closing-rule treatment being applied to three of five

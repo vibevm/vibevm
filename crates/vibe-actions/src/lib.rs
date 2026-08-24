@@ -27,8 +27,8 @@
 //! consumer crates. The Surface layer (§11.1) is implemented by the consumer
 //! surface; the headless **AIUI** reference (§11.3) lives in the [`aiui`] module.
 //!
-//! Spec: [PROP-039](../../../spec/modules/vibe-actions/PROP-039-action-system.md);
-//! design: [`spec/design/action-system.md`](../../../spec/design/action-system.md).
+//! Spec: [PROP-039](../../../vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml);
+//! design: [`spec/design/action-system.md`](../../../vibevm/vibespecs/design/action-system.xml).
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#root");

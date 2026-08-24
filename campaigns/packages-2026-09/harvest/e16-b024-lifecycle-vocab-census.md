@@ -148,7 +148,7 @@ of stage**.
   `rollup.rs:343-364`.
 - **Live carrier:** `PROP-029-fully-qualified-addresses.xml:43` (`##SCOPE-HOST`,
   retired 2026-08-04 by B-031) carries both `<status stage="spec" state="void">`
-  and `@spec/void` — the unambiguous tombstone. (`spec/boot/00-core.xml:32` and
+  and `@spec/void` — the unambiguous tombstone. (`vibevm/vibespecs/boot/00-core.xml:32` and
   `PROP-043:327` only *describe* the syntax.)
 
 ### 3. Corpus frequency (perimeter: `spec/**`, `packages/**` excl.

@@ -27,7 +27,7 @@ write-out `HEAD = 12640d7c`, three commits on — `5b8c9cb6`, `a49a74c1`,
 `campaigns/packages-2026-09/run/cache.json`, three `crates/vibe-{check,workspace}`
 sources and their tests, and one `org.vibevm.world` flow document. **Not one of
 them is a file this batch measured** — no `ai-native` package file, no
-`spec/modules/vibe-mcp/`, no `crates/vibe-mcp/` or `crates/vibe-cli/`, no
+`vibevm/vibespecs/modules/vibe-mcp/`, no `crates/vibe-mcp/` or `crates/vibe-cli/`, no
 `discipline/`. The cache diff (219 changed lines) mentions none of this batch's
 four anchor names. **Every figure below therefore holds at both HEADs**, and the
 working tree carried no modification at any point — only three untracked sibling
@@ -41,7 +41,7 @@ four report `closure_route: release` in `run/state/obligations.json`: **F-187**
 
 **The standing perimeter.** Unless an entry narrows it, every search was run from
 the repository root over: `packages/**` **including
-`packages/org.vibevm.fractality/**`** (the second complete project that adopted
+`vibevm/vibepacks/org.vibevm.fractality/**`** (the second complete project that adopted
 this discipline — [§3.7's wave-6 extension](../PHASE-D-BATCH-PLAN.md#compliance-blindness)),
 `vibedeps/**`, `crates/**`, `xtask/**`, `tools/**`, `spec/**`, `discipline/**`,
 `terraform/**`, `research/**` (including `research/rust-demo`, `research/ts-demo`,
@@ -147,7 +147,7 @@ it names no consumer at all. «Projects them» is a **capability**, not a practi
 *(a) The package declares both skills in its own manifest.*
 
 ```
-$ grep -n -A4 "\[\[skill\]\]" packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibe.toml
+$ grep -n -A4 "\[\[skill\]\]" vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibe.toml
 49:[[skill]]
 50-name = "go-ai-native-sweep"
 51-path = "spec/skills/go-ai-native-sweep"
@@ -162,7 +162,7 @@ $ grep -n -A4 "\[\[skill\]\]" packages/org.vibevm.ai-native/go-ai-native-lang/v0
 the declaration.*
 
 ```
-$ find packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills -type f | while read f; do echo "$(wc -l < $f) $f"; done
+$ find vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills -type f | while read f; do echo "$(wc -l < $f) $f"; done
 151 .../spec/skills/go-ai-native-sweep/SKILL.md
 128 .../spec/skills/go-ai-native-terraform/SKILL.md
 
@@ -225,7 +225,7 @@ rust-ai-native-sweep   rust-ai-native-terraform   typescript-ai-native-sweep   t
 $ grep -n "rust-ai-native-lang" vibe.lock
 88:    "stack:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0",
 118:name = "rust-ai-native-lang"
-121:source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0"
+121:source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0"
 
 $ ls vibedeps/ | grep rust-ai-native
 stack-rust-ai-native   stack-rust-ai-native-lang
@@ -334,7 +334,7 @@ full at the head; and each brief read **from `## 3. Component shape` through
 
 ```
 $ grep -n "SUPERSEDED-TOPOLOGY\|TOOLS-NEW-HOME\|ENUM-BET-REREAD\|LANGUAGE-COMPAT-PARAM\|TCG-CRATE-DELETED\|RETIRED-SECTIONS-KEPT" \
-    spec/modules/vibe-mcp/PROP-026-tcg-tool-family.xml
+    vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml
 27:- ##SUPERSEDED-TOPOLOGY **SUPERSEDED IN TOPOLOGY, 2026-07-07 …
 33:- ##TOOLS-NEW-HOME The tools now ship in the per-language
 37:- ##ENUM-BET-REREAD The §2 enum-value bet re-reads as «a new language is a new mcp package
@@ -375,7 +375,7 @@ adapter in `vibe-mcp`.
 implement it identically as a compat guard:
 
 ```
-$ grep -n -A10 "fn language_mismatch" packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_discipline.rs
+$ grep -n -A10 "fn language_mismatch" vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_discipline.rs
 19:pub(crate) fn language_mismatch(args: &Value) -> Option<ToolOutput> {
 20:    let asked = args.get("language").and_then(Value::as_str)?;
 21:    if asked == "go" { return None; }
@@ -394,7 +394,7 @@ language is refused, not routed.** Nothing dispatches by `language` anywhere.
 *(d) The four tools do exist per language — in the `-mcp` packages.*
 
 ```
-$ grep -n "tcg_validate\|tcg_scope\|tcg_complete\|tcg_type" packages/org.vibevm.ai-native/*/v*/crates/*-mcp/src/lib.rs
+$ grep -n "tcg_validate\|tcg_scope\|tcg_complete\|tcg_type" vibevm/vibepacks/org.vibevm.ai-native/*/v*/crates/*-mcp/src/lib.rs
 go-ai-native-mcp/…/src/lib.rs:60-63    "tcg_complete", "tcg_scope", "tcg_type", "tcg_validate",
 rust-ai-native-mcp/…/src/lib.rs:60-63  (same four)
 typescript-ai-native-mcp/…/src/lib.rs:61-64 (same four)
@@ -435,7 +435,7 @@ against a Go package convicts it of a consumer's silence.
    is no lockfile `language`-dispatch to a slot artifact for `"go"`, `"rust"` or
    `"typescript"`.
 2. **«No new PROP» is falsified by a PROP that exists and that this very package
-   cites.** `spec/modules/vibe-mcp/PROP-027-mcp-packages.xml` is exactly the new
+   cites.** `vibevm/vibespecs/modules/vibe-mcp/PROP-027-mcp-packages.xml` is exactly the new
    PROP the retirement created, and the Go stack's **own boot snippet** names it:
    `spec/boot/20-stack-go-ai-native-lang.md:60` «`mcp:org.vibevm.ai-native/go-ai-native-mcp`
    — **PROP-027**». Package-own evidence, no host observable involved.
@@ -562,13 +562,13 @@ imports**) — the owner's portability amendment» — is not merely still true,
 is what happened**. The lift was performed:
 
 ```
-$ grep -n -A12 "^\[dependencies\]" packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/Cargo.toml
+$ grep -n -A12 "^\[dependencies\]" vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/typescript-ai-native-mcp/Cargo.toml
 13:[dependencies]
 14:mcp-core.workspace = true
 15:specmark.workspace = true
 …  typescript-ai-native-{conform,specmap,cli,tcg,tcg-bridge}.workspace = true
 
-$ grep -rn "vibe-mcp\|vibe_mcp" packages/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml
+$ grep -rn "vibe-mcp\|vibe_mcp" vibevm/vibepacks/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml
 (no output)
 ```
 
@@ -618,7 +618,7 @@ that quote it and absent from the third**. And the three sentences differ becaus
 **Anchors:** 3 of 3.
 
 **Perimeter searched.** Each stack's **own** tree only (`falsifier: self`; §3.8's
-legitimate bench regardless): `packages/org.vibevm.ai-native/<stack>/v*/crates/**`
+legitimate bench regardless): `vibevm/vibepacks/org.vibevm.ai-native/<stack>/v*/crates/**`
 minus `target/`, case-sensitively for `Defaulted` / `DEFAULTED` and
 case-insensitively for `disabled by policy`; then the printing sites read in
 full; then the three floor-run captures. **The three floor captures under
@@ -633,7 +633,7 @@ a campaign *finding*
 sites are:
 
 ```
-$ grep -rn "ConfigOrigin::Defaulted => eprintln" packages/org.vibevm.ai-native/*-ai-native-lang/v*/crates/*-conform/src/lib.rs
+$ grep -rn "ConfigOrigin::Defaulted => eprintln" vibevm/vibepacks/org.vibevm.ai-native/*-ai-native-lang/v*/crates/*-conform/src/lib.rs
 go   crates/go-ai-native-conform/src/lib.rs:31
 rust crates/rust-ai-native-conform/src/lib.rs:33
 ts   crates/typescript-ai-native-conform/src/lib.rs:28
@@ -652,7 +652,7 @@ the read rather than adding to it. **`Defaulted` is printed nowhere.** The singl
 place any spelling of it reaches stderr is uppercase and in a different tool:
 
 ```
-$ grep -rn "DEFAULTED" packages/org.vibevm.ai-native/{go,rust,typescript}-ai-native-lang
+$ grep -rn "DEFAULTED" vibevm/vibepacks/org.vibevm.ai-native/{go,rust,typescript}-ai-native-lang
 go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/lib.rs:55
     conform_core::ConfigOrigin::Defaulted => "DEFAULTED — run `go-ai-native init`",
 ```
@@ -666,7 +666,7 @@ it applies).** The string ships **verbatim, in the exact casing the skills
 quote**, in both CLIs that have the mechanism:
 
 ```
-$ grep -rni "disabled by policy" packages/org.vibevm.ai-native/{go,rust,typescript}-ai-native-lang/v*/crates/
+$ grep -rni "disabled by policy" vibevm/vibepacks/org.vibevm.ai-native/{go,rust,typescript}-ai-native-lang/v*/crates/
 go   crates/go-ai-native-cli/src/floor.rs:66   "floor: step `{}` DISABLED by policy — {} (conform.toml [go])"
 go   crates/go-ai-native-cli/src/floor.rs:220  "\nfloor: all green ({} step(s) run, {} disabled by policy)."
 ts   crates/typescript-ai-native-cli/src/floor.rs:62   "floor: step `{}` DISABLED by policy — {} (conform.toml [typescript])"
@@ -696,10 +696,10 @@ in its purest form: the disproof was in the cited file.
 no floor-disable mechanism at all — nothing to print:
 
 ```
-$ grep -n "floor_disable\|DISABLED\|disabled" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs
+$ grep -n "floor_disable\|DISABLED\|disabled" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs
 (no output)
 
-$ grep -n "pub floor_disable" packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/config.rs
+$ grep -n "pub floor_disable" vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/config.rs
 129:    pub floor_disable: Vec<FloorDisable>,   (inside `pub struct GoConfig`, :106)
 173:    pub floor_disable: Vec<FloorDisable>,   (inside `pub struct TsConfig`, :157)
 ```
@@ -927,7 +927,7 @@ install-qualified.transcript.md  install-short-name.transcript.md  uninstall.tra
 
 One adopting project in this repository has run the terraform procedure, and it
 produced exactly what the procedure says it produces. `research/rust-demo`,
-`research/ts-demo`, `research/go-demo` and `packages/org.vibevm.fractality/**`
+`research/ts-demo`, `research/go-demo` and `vibevm/vibepacks/org.vibevm.fractality/**`
 carry no `discipline/golden/` — they are partial adoptions, and their silence is
 [`##ABSENCE-NAMES-ITS-PERIMETER`](../PHASE-D-BATCH-PLAN.md#delegation-lessons)
 material, not evidence against a rule.
@@ -964,7 +964,7 @@ not even a consumer to break it.
 appear in the Go sweep skill at all**:
 
 ```
-$ grep -n "capture" packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md
+$ grep -n "capture" vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md
 (no output)
 ```
 
@@ -978,7 +978,7 @@ in three of its own documents.**
 *(a) The directory is created by this package's own sibling skill:*
 
 ```
-$ sed -n '56,58p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md
+$ sed -n '56,58p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-terraform/SKILL.md
 6. ##INVENTORY-CHARACTERIZE **Characterize** currently-passing observable behavior (golden
    transcripts under `discipline/golden/`, normalized for volatile
    fields). A pinned bug is visible debt; an unpinned bug is a landmine. @impl/done
@@ -992,7 +992,7 @@ description names the terraform skill as its counterpart.
 package's own card:*
 
 ```
-$ sed -n '85,87p' packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.xml
+$ sed -n '85,87p' vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml
 - ##CONSEQUENCE-GOLDENS-ENSHRINE-CURRENT-BEHAVIOR (−) Characterization goldens enshrine current behavior including bugs — pair with a
   spec edge marking intentional vs incidental; goldens must fail loudly, never
   auto-update (the `-update` flag never runs in CI). @spec/done

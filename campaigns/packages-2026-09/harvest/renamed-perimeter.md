@@ -34,7 +34,7 @@ rg --no-ignore --hidden -i -c "renam" \
 - **Звуковое правило класса A.** Идентификаторы события существуют только в
   формах `Renamed` (Rust-арм) и `renamed` (провод-тег); форма `RENAMED` в этом
   дереве принадлежит только чужой машинерии «RENAMED ANCHORS»
-  (`spec/boot/STATIC.xml`, qualify-таблица коротких имён), а формы
+  (`vibevm/vibespecs/boot/STATIC.xml`, qualify-таблица коротких имён), а формы
   `rename`/`rename_all`/`RenameEntry`/… — serde-механике и переименованиям
   файлов/якорей/пакетов. Поэтому: (а) просмотрены вручную ВСЕ строки всех 148
   файлов, содержащих формы `renamed`/`Renamed`/`RENAMED`; (б) файлы без этих
@@ -76,7 +76,7 @@ total_hits=4567
 | C7 | **ПОДТВЕРЖДЕНО** | `crates/vibe-index/tests/wire_parity_journal.rs:79` — `("renamed", 3),` — строка таблицы `ARM_WIRE_SHAPES` (объявлена :69) с числом 3 (тег + `from` + `to`). |
 | C8 | **ПОДТВЕРЖДЕНО** | `crates/vibe-wire/src/generated/journal/e1/journal/mod.rs:72-73` — `#[serde(rename = "renamed")]` / `Renamed(Box<EventRenamed>),` — и `mod.rs:212` — `pub struct EventRenamed {`. |
 | C9 | **ОПРОВЕРГНУТО** | Поиск `generated::journal` и `journal::e1` по дереву находит ровно три употребления, все — тесты: `crates/vibe-index/tests/wire_parity_journal.rs:46` — `use vibe_wire::generated::journal::e1::journal::JournalRecord as GeneratedJournal;`; `crates/vibe-wire/tests/canonical_order.rs:24` (`...journal::FeaturesEntry`); плюс комментарий-заголовок `wire_parity_journal.rs:3`. Реэкспортов короткого пути нет: `crates/vibe-wire/src/generated/journal/mod.rs:7` — `pub mod e1;` (единственное содержимое модуля). Контроль непустоты: та же команда находит эти заведомо существующие употребления — инструмент видит то, что есть; продуктовых (`src/`) употреблений нет. |
-| C10 | **ПОДТВЕРЖДЕНО** | `spec/modules/vibe-index/PROP-005-package-index.xml:971` (внутри §2.18, открывающегося :957 `### 2.18 Channels — author-named version pointers {#channels}`) — «`Renamed`, `Notice` and `ForceReplaced` stand in the same place for the same reason.» — про отказ проектора из-за непостроенного носителя. |
+| C10 | **ПОДТВЕРЖДЕНО** | `vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml:971` (внутри §2.18, открывающегося :957 `### 2.18 Channels — author-named version pointers {#channels}`) — «`Renamed`, `Notice` and `ForceReplaced` stand in the same place for the same reason.» — про отказ проектора из-за непостроенного носителя. |
 | C11 | **ПОДТВЕРЖДЕНО** | `formats/breaks/001.md:1` — `# Break 001 — `repomd.json`: the `files` union becomes symmetrically tagged`; формат образца самоописан, `formats/breaks/001.md:5-8` — «Its shape is the pattern every later note follows; the fields are fixed by PROP-044 §4.7 — *what · epoch · who fixes · sunset · user recipe*». |
 | C12 | **ОПРОВЕРГНУТО (записи-данных нет)** | `grep -rn '"kind":"renamed"' -e '"kind": "renamed"'` по дереву (с исключениями §1) — пусто, `exit=1`. Контроль непустоты той же командой для существующего тега: `formats/corpora/index/e1/state/journal/2026-08.ndjson:2` — `{"at":"2026-08-02T10:00:00Z",...,"event":{"kind":"yanked",...}}` — инструмент находит то, что есть. Корпус журнала на диске (`formats/corpora/index/e1/state/journal/*.ndjson`) не содержит записи `renamed`. |
 
@@ -93,14 +93,14 @@ total_hits=4567
 | `crates/vibe-index/src/journal/tests.rs` | 244 | тест (конструктор арма в фикстуре) | переписать | фикстура переезжает на новый факт |
 | `crates/vibe-index/tests/wire_parity_journal.rs` | 20, 79, 280, 373 | тест-оракул (док о парах, строка таблицы `("renamed", 3)`, конструктор, пин арности пары) | переписать | одиннадцатиармовый оракул пересчитывается: строка арма, счётчик, фикстура, пин |
 | `crates/vibe-wire/src/generated/journal/e1/journal/mod.rs` | 38, 72, 73, 210, 212 | сгенерированный код (описание союза, атрибут и вариант, док и структура `EventRenamed`) | перегенерировать | файл генерируется из схемы (`cargo xtask codegen`), правится schema → код пересобирается |
-| `spec/modules/vibe-index/PROP-005-package-index.xml` | 587, 589–593 | спек-проза (блок решений о коллапсе) | правки не нужны (текст постановки, не описание текущего словаря) | это сами факты-решения, executer сворачивает их исполнением; :593 — обязанность того же коммита |
-| `spec/modules/vibe-index/PROP-005-package-index.xml` | 971 | спек-проза (предложение §2.18 об отказе) | переписать | обязано тем же коммитом (PROP-005:593): перестаёт быть верным в обеих половинах |
-| `spec/modules/vibe-index/PROP-005-package-index.xml` | 237 | спек-проза (рабочий пример надгробия — переименование) | правки не нужно | пример — модель нового факта (reason + superseded_by), решение на него опирается (PROP-005:590) |
+| `vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml` | 587, 589–593 | спек-проза (блок решений о коллапсе) | правки не нужны (текст постановки, не описание текущего словаря) | это сами факты-решения, executer сворачивает их исполнением; :593 — обязанность того же коммита |
+| `vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml` | 971 | спек-проза (предложение §2.18 об отказе) | переписать | обязано тем же коммитом (PROP-005:593): перестаёт быть верным в обеих половинах |
+| `vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml` | 237 | спек-проза (рабочий пример надгробия — переименование) | правки не нужно | пример — модель нового факта (reason + superseded_by), решение на него опирается (PROP-005:590) |
 | `crates/vibe-index/docs/format.md` | 160 | документация (тот же пример надгробия) | правки не нужно | пример остаётся верным носителем семантики |
 | `TASKS.md` | 41, 47, 78, 79, 85, 87 | план работ (задача перелома) | правки не нужно | пункт закрывается самим исполнением |
 | `CONTINUE.md` | 49, 162 | документация холодного резюме | правки не нужно | живой снимок, переписывается на конце сессии |
 | `NEXT-SESSION-PROMPT.md` | 89, 92 | документация следующей сессии | правки не нужно | живой указатель, переписывается при следующем ветре |
-| `spec/WAL.xml` | 50, 87 | состояние работ (WAL) | правки не нужно | живой журнал сессии |
+| `vibevm/vibespecs/WAL.xml` | 50, 87 | состояние работ (WAL) | правки не нужно | живой журнал сессии |
 | `PACKET-E-RENAMED-PERIMETER.md` | 22 строки | пакет замера (сам этот заказ) | правки не нужно | переходящий артефакт задачи, исчезает с ней |
 | `campaigns/packages-2026-09/harvest/f3-index-state-and-projection.md` | 12, 94, 141 | документация-замер (карта приёмников событий; `Renamed`→`Tombstone.superseded_by`) | правки не нужно | историческая находка-замер, датируется, не переписывается |
 | `campaigns/packages-2026-09/harvest/f0-rmw-volume.md` | 252 | документация-замер (перечисление вариантов `Event`) | правки не нужно | исторический замер объёма |
@@ -123,7 +123,7 @@ total_hits=4567
 | домен | попаданий | файлов | суть употребления |
 |---|---|---|---|
 | `campaigns/packages-2026-09/` run+tasks | 1572 | 97 | корпус/кэш кампании, evidence-JSON, задачи: переименования пакетов (`git-*`), якорей (`RENAMED-FROM-VIBE-TCG`), бинарей; serde-цензусы |
-| `packages/org.vibevm.ai-native/**` | 616 | 114 | вендорные копии сгенерированного specmap-кода: `#[serde(rename…)]`, `rename_all`; переименования инструментов |
+| `vibevm/vibepacks/org.vibevm.ai-native/**` | 616 | 114 | вендорные копии сгенерированного specmap-кода: `#[serde(rename…)]`, `rename_all`; переименования инструментов |
 | `campaigns/progress-2026-08/**` | 523 | 7 | корпус/кэш/baseline прогресс-кампании: переименованные link-типы, файлы, манифесты |
 | `campaigns/packages-2026-09/` корень | 410 | 8 | baseline.json (399: копии чужих переименований) и PHASE/TZ-документы |
 | `spec/**` | 262 | 46 | законы переименования якорей/пакетов (qualified-naming, PROP-028/029/031), исследовательские записки npm/cargo, atomic-write |
@@ -133,10 +133,10 @@ total_hits=4567
 | `legacy-spec/**` | 65 | 16 | планы прошлых волн: переименования стеков/арм/файлов |
 | `crates/vibe-spec/**` | 64 | 8 | qualify: переименование коротких якорей в квалифицированные |
 | `crates/vibe-cli/**` | 55 | 18 | дерево/vvm: переименования узлов, serde/clap-атрибуты |
-| `packages/org.vibevm.world/**` | 40 | 18 | законы именования: «a rename is a new identity», форки |
+| `vibevm/vibepacks/org.vibevm.world/**` | 40 | 18 | законы именования: «a rename is a new identity», форки |
 | `crates/vibe-workspace/**` | 40 | 6 | «RENAMED ANCHORS»-таблица компилированной полосы, file-rename |
 | `crates/vibe-core/**` | 38 | 13 | serde-переименования манифеста (`snapshot`→`copy` и т.п.) |
-| `packages/org.vibevm.fractality/**` | 34 | 26 | свой журнал fractality: `rename_all`, ротация файлов (`fs::rename`) |
+| `vibevm/vibepacks/org.vibevm.fractality/**` | 34 | 26 | свой журнал fractality: `rename_all`, ротация файлов (`fs::rename`) |
 | `crates/progress-core/**` | 27 | 11 | baseline/cache: переименования файлов между прогонами |
 | `crates/vibe-wire/**` | 27 | 8 | сгенерированные типы других словарей: `#[serde(rename…)]` (B-часть журнального mod.rs — 11 строк чужих армов — здесь же учтена) |
 | `crates/vibe-index/**` | 20 | 21 | atomic-write (`tmp + rename + fsync`), serde/clap-атрибуты, прочие wire-parity доки |
@@ -144,7 +144,7 @@ total_hits=4567
 | `crates/vibe-trace/**` | 7 | 2 | поимённые rename глаголов Verb |
 | прочие (`docs/`, `neworder2/`, `discipline/`, корневые `*.md`, `Cargo.toml`, `.zcode`, `.git`-файл, `formats/`, `schemas/index`, `vibe-settings/mcp/publish/install/actions`, `ROADMAP`, `CHANGELOG`, `BACKLOG`, `TOOLING-MAP`, `DEV-GUIDE`) | 27 | 22 | переименования флагов/токенов/пакетов; B-части корневых файлов; имя worktree `E-RENAMED-PERIMETER` в файле `./.git` |
 
-Характерные примеры: `crates/vibe-index/src/index/persistence.rs:35` — `fs::rename(&tmp, path)...` (атомарная запись); `crates/vibe-workspace/src/boot_artifacts.rs:364` — `let mut out = String::from("<!-- RENAMED ANCHORS (short → qualified heirs):\n");` (таблица qualify); `spec/boot/STATIC.xml:109` — `LAW-A-RENAME-IS-A-NEW-IDENTITY → ...` (компилированный закон именования); `xtask/src/codegen/snake_case.rs` — правила serde-регистра.
+Характерные примеры: `crates/vibe-index/src/index/persistence.rs:35` — `fs::rename(&tmp, path)...` (атомарная запись); `crates/vibe-workspace/src/boot_artifacts.rs:364` — `let mut out = String::from("<!-- RENAMED ANCHORS (short → qualified heirs):\n");` (таблица qualify); `vibevm/vibespecs/boot/STATIC.xml:109` — `LAW-A-RENAME-IS-A-NEW-IDENTITY → ...` (компилированный закон именования); `xtask/src/codegen/snake_case.rs` — правила serde-регистра.
 
 ## 6. Класс C — пограничное, оставлено боссу
 
@@ -153,7 +153,7 @@ total_hits=4567
 семантически остаются верными — журнал по-прежнему будет записывать
 переименования, но уже как снятия):
 
-1. `spec/common/PROP-044-change-native-formats.xml:146` — «(3) the **registry facts journal** — append-only records of what sources cannot carry: publication, yank, rename, removal, ownership, security notice;»
+1. `vibevm/vibespecs/common/PROP-044-change-native-formats.xml:146` — «(3) the **registry facts journal** — append-only records of what sources cannot carry: publication, yank, rename, removal, ownership, security notice;»
 2. `crates/vibe-index/docs/operator-handbook.md:22` — «Lose the journal and no amount of re-scanning brings back a yank, a rename, a freeze or a tombstone —»
 
 Оба текста переживут замену без правки по смыслу; требует ли их редактуры

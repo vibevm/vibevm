@@ -13,12 +13,12 @@ two mechanised joins the phase already built.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source1-join.py \
-    packages/org.vibevm.world/git-atomic-commits \
-    packages/org.vibevm.world/git-attribution-policy \
-    packages/org.vibevm.world/git-autonomy \
-    packages/org.vibevm.world/git-conventional-commits \
-    packages/org.vibevm.world/git-practices
-source-1 join over 17 file(s) under packages/org.vibevm.world/git-atomic-commits, …
+    vibevm/vibepacks/org.vibevm.world/git-atomic-commits \
+    vibevm/vibepacks/org.vibevm.world/git-attribution-policy \
+    vibevm/vibepacks/org.vibevm.world/git-autonomy \
+    vibevm/vibepacks/org.vibevm.world/git-conventional-commits \
+    vibevm/vibepacks/org.vibevm.world/git-practices
+source-1 join over 17 file(s) under vibevm/vibepacks/org.vibevm.world/git-atomic-commits, …
   relative .md citations resolved: 11
   broken: 0
 ```
@@ -32,7 +32,7 @@ what the snippet says it says* — is per-anchor and stays the reviewer's.
 
 ```console
 $ python campaigns/packages-2026-09/tasks/source23-boot-join.py
-boot-lane join over 31 contribution(s) in spec/boot/STATIC.xml
+boot-lane join over 31 contribution(s) in vibevm/vibespecs/boot/STATIC.xml
   org.vibevm.world/git-atomic-commits  [INSTALLED NO-SOURCE]
     installed: vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md
   org.vibevm.world/git-autonomy  [INSTALLED NO-SOURCE]
@@ -50,16 +50,16 @@ Two facts, both load-bearing for this batch's verdicts.
 under `vibedeps/` exactly where the host's provenance marker names it — so a
 consumer does receive the artifact, which is what source 3 is for. What does not
 resolve is the *package-side* path: the installed copies were written from
-`boot/…`, and the packages now ship the same snippets at `spec/boot/…` (DRIFT-039
+`boot/…`, and the packages now ship the same snippets at `vibevm/vibespecs/boot/…` (DRIFT-039
 moved them). The join cannot pair them by path, so it reports NO-SOURCE and
 declines to compare words.
 
 **Each of the four member flows appears TWICE in the host's boot lane** — once
 directly and once compiled in through the `git-practices` umbrella, whose installed
-tree carries a generated `spec/boot/STATIC.xml` holding all four. That is **F-078**,
+tree carries a generated `vibevm/vibespecs/boot/STATIC.xml` holding all four. That is **F-078**,
 reproduced mechanically here rather than read: `atomic-commits`,
 `conventional-commits`, `autonomy` and `attribution-policy` are each read twice at
-every session boot, and `# Flow: Attribution Policy` sits at `spec/boot/STATIC.xml`
+every session boot, and `# Flow: Attribution Policy` sits at `vibevm/vibespecs/boot/STATIC.xml`
 lines **423 and 617**.
 
 **One of the five resolves cleanly and four do not, and the split is worth
@@ -185,4 +185,4 @@ commit bodies name a model, two as a colour-theme name and two as configuration
 data, and **none states or implies machine authorship**.
 
 **Scope:** §3.1 sources 1, 2 and 3 for the five `git-*` flows of
-`packages/org.vibevm.world/`, batch W1.
+`vibevm/vibepacks/org.vibevm.world/`, batch W1.
