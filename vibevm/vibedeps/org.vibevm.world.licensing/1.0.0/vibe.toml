@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Licensing posture for a product: a proprietary-with-relicense-intent placeholder, permissive-only dependencies, and the EULA-to-open path"

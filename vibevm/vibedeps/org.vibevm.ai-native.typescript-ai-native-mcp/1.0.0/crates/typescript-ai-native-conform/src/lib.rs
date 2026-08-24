@@ -290,8 +290,11 @@ mod tests {
     /// toolchain floor (the live demo run is the boss's acceptance).
     #[test]
     fn demo_config_mounts_flag_sites_and_validates_green() {
+        // Seven hops: the host packages root is `vibevm/vibepacks/`
+        // (PROP-052 — one level deeper than the old root), so the climb
+        // out of `<family>/<pkg>/<ver>/crates/<crate>` gained a step.
         let demo = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../../../../../research/ts-demo");
+            .join("../../../../../../../research/ts-demo");
         assert!(demo.is_dir(), "demo tree must exist at {}", demo.display());
         assert!(
             demo.join("src/main.ts").is_file(),

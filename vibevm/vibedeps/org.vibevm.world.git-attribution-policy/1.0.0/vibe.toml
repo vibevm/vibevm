@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "A deliberate authorship-attribution posture for AI-assisted repositories: human-authored surface by default, with the disclosure alternative documented"

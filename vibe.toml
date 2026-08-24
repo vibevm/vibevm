@@ -2,51 +2,28 @@
 name = "vibevm"
 group = "org.vibevm.core"
 version = "1.0.0"
-authors = ["Oleg Chirukhin"]
 # PROP-045: материализация спек зависимостей — XML (слово владельца 2026-08-22,
 # догфуд сценария №0: исходники MD, слоты XML).
 spec_format = "xml"
+authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-# The two family aggregators (PROP-028): each pulls its -lang stack + -mcp
-# server at an exact-pinned set, and core-ai-native arrives transitively
-# through the -lang stacks. The boot snippets of the transitive deps still
-# land in spec/boot/INDEX.md via the resolver's BFS closure (PROP-009).
+"flow:org.vibevm.world/omnichannel" = "^1.0.0"
+"flow:org.vibevm.world/wal-specspaces" = "^1.0.0"
 "stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
 "stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.0"
 
-# The specspaces flow — the host now dogfoods its own specspace grammar
-# instead of hand-inlining it in CLAUDE.md: its boot snippet, compiled into
-# the static lane `spec/boot/STATIC.md`, delivers RESUME/END SESSION target
-# resolution and the SPECSPACES.md registry. Resolves locally from packages/
-# (its transitive wal =1.0.0 pin is present there).
-"flow:org.vibevm.world/wal" = { version = "^1.0.0", link = "static-transitive" }
-"flow:org.vibevm.world/wal-specspaces" = "^1.0.0"
+[requires.packages."flow:org.vibevm.fractality/delegation-first"]
+version = "^1.0.0"
+link = "dynamic"
 
-# The omnichannel flow — a capability lives in a library; CLI, TUI and MCP are
-# thin surfaces over it. The host is its first consumer and its first subject:
-# a census of this very tree found 10 of 29 top-level commands keeping their
-# substance inside `vibe-cli`, and two surfaces of one capability printing
-# different values for the same field. Resolves locally from packages/.
-"flow:org.vibevm.world/omnichannel" = "^1.0.0"
+[requires.packages."flow:org.vibevm.world/wal"]
+version = "^1.0.0"
+link = "static-transitive"
 
-# vibevm dogfoods the whole redbook — the curated, tested edition of AI-native
-# development practices (a PROP-028 collection). Depending on the collection, not
-# on individual flows, means every practice extracted from this project's own
-# specs reaches vibevm through redbook as it is collected — no per-flow host entry.
-# dev-runtime-docs (§19), conflict-protocol (§9), and the git-practices family
-# (§12 + the trio Rules) now arrive transitively through it; the git-* commit
-# rules self-suggest the priority lane, so they still land in spec/boot/STATIC.md.
-"flow:org.vibevm.world/redbook" = { version = "^1.0.0", link = "static-transitive" }
-
-# The delegation-first directive (fractality group), static — delegate execution
-# by default, keep the boss for judgment and review. It pulls the delegation-rules
-# calculus it sits above, so the boot now delivers the delegation practice the
-# CLAUDE.md directive anticipated installing ("until it is installed as a
-# dependency, read it in-place"). CLAUDE.md still carries the fuller directive plus
-# the fractality-specific launcher ops and the live ledger; thinning the general
-# part to a pointer at this package is a follow-up.
-"flow:org.vibevm.fractality/delegation-first" = { version = "^1.0.0", link = "dynamic" }
+[requires.packages."org.vibevm.world/redbook"]
+version = "^1.0.0"
+link = "static-transitive"
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from

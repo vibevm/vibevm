@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Conflict resolution for two writers on one file set: Human > Spec > Tests > Code, REVIEW markers, and the conservative-default uncertainty path"

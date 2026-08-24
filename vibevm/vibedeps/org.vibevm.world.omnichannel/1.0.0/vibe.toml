@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "A capability lives in a library; CLI, TUI, MCP, REST and the rest are thin surfaces over it — none of them the base. Names the surface vocabulary so a project can declare its own floor"

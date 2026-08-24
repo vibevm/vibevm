@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Non-central WALs: register sub-projects (specspaces) inside a host repository, each with its own WAL, cold-resume file, and boot contract; scoped wind-down/resume grammar switches a session into a specspace without loading the host's full boot"

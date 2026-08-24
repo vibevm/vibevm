@@ -319,6 +319,35 @@
   ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE → org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE (org.vibevm.world/git-autonomy)
   ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE → org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE (org.vibevm.world/git-autonomy)
   ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON → org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON (org.vibevm.world/git-autonomy)
+  ROW-FIELD-CONSIDERED-AND-REJECTED → org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED (org.vibevm.world/decision-records)
+  ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT → org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT (org.vibevm.world/decision-records)
+  ROW-FIELD-DECISION → org-vibevm-world--decision-records--ROW-FIELD-DECISION (org.vibevm.world/decision-records)
+  ROW-FIELD-DECISION-REQUIREMENT → org-vibevm-world--decision-records--ROW-FIELD-DECISION-REQUIREMENT (org.vibevm.world/decision-records)
+  ROW-FIELD-WHEN-TO-REVISIT → org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT (org.vibevm.world/decision-records)
+  ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT → org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT (org.vibevm.world/decision-records)
+  ROW-FIELD-WHY → org-vibevm-world--decision-records--ROW-FIELD-WHY (org.vibevm.world/decision-records)
+  ROW-FIELD-WHY-REQUIREMENT → org-vibevm-world--decision-records--ROW-FIELD-WHY-REQUIREMENT (org.vibevm.world/decision-records)
+  ROW-GENRE-BOOT-FILES → org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES (org.vibevm.world/spec-genres)
+  ROW-GENRE-BOOT-FILES-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-BOOT-FILES-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-CAMPAIGN-PLANS → org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS (org.vibevm.world/spec-genres)
+  ROW-GENRE-CAMPAIGN-PLANS-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-CAMPAIGN-PLANS-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-DESIGN-DOCS → org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS (org.vibevm.world/spec-genres)
+  ROW-GENRE-DESIGN-DOCS-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-DESIGN-DOCS-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-FOUNDATIONAL-DECISIONS → org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS (org.vibevm.world/spec-genres)
+  ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-MODULE-CONTRACTS → org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS (org.vibevm.world/spec-genres)
+  ROW-GENRE-MODULE-CONTRACTS-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-MODULE-CONTRACTS-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-RESEARCH-DOCS → org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS (org.vibevm.world/spec-genres)
+  ROW-GENRE-RESEARCH-DOCS-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-RESEARCH-DOCS-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-HOLDS (org.vibevm.world/spec-genres)
+  ROW-GENRE-THE-CHECKPOINT → org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT (org.vibevm.world/spec-genres)
+  ROW-GENRE-THE-CHECKPOINT-BINDING → org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-BINDING (org.vibevm.world/spec-genres)
+  ROW-GENRE-THE-CHECKPOINT-HOLDS → org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-HOLDS (org.vibevm.world/spec-genres)
   RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION → org-vibevm-world--sync-from-code--RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION (org.vibevm.world/sync-from-code)
   SCOPE-PRODUCT-IS-CARVED-OUT → org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT (org.vibevm.world/git-attribution-policy)
   SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED → org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED (org.vibevm.world/git-attribution-policy)
@@ -570,8 +599,9 @@ invariant the reader statistically skipped.</org-vibevm-world--addressable-specs
       <org-vibevm-world--addressable-specs--NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE fact="true" status="impl/done">Never bury an invariant in the middle of a file.</org-vibevm-world--addressable-specs--NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE>
       <org-vibevm-world--addressable-specs--NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR fact="true" status="impl/done">Never rename or delete an anchor that has ever been cited —
   anchors are immutable; retire with a tombstone instead.</org-vibevm-world--addressable-specs--NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR>
-      <org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR fact="true" status="impl/done">Never invent an anchor — resolve the URI and read the unit before
-  acting on it.</org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR>
+      <org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR fact="true">Never invent an anchor — resolve the URI and read the unit before
+  acting on it. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/addressable-specs/boot/15-flow-addressable-specs --&gt;</org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR>
     </facts>
   </org-vibevm-world--addressable-specs--never>
 </spec>
@@ -653,9 +683,10 @@ the record half:
       <org-vibevm-world--campaign-plans--NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT fact="true" status="impl/done">Never close a campaign without the report checking every
   prediction — a campaign that skips the report learns nothing
   durable.</org-vibevm-world--campaign-plans--NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT>
-      <org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE fact="true" status="impl/done">Never carry a deferral outside the plan file — the deferrals
+      <org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE fact="true">Never carry a deferral outside the plan file — the deferrals
   ledger is where deferrals live, and the next campaign's mandate
-  drains from it.</org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE>
+  drains from it. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/campaign-plans/boot/40-flow-campaign-plans --&gt;</org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE>
     </facts>
   </org-vibevm-world--campaign-plans--never>
 </spec>
@@ -705,8 +736,9 @@ and hold the laws:</org-vibevm-world--comparative-research--reach-for-the-skelet
   marketing for the subject, lead-only is marketing for us.</org-vibevm-world--comparative-research--NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS>
       <org-vibevm-world--comparative-research--NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC fact="true" status="impl/done">Never ratify a delta inside the research doc — it proposes;
   acceptance is recorded downstream.</org-vibevm-world--comparative-research--NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC>
-      <org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE fact="true" status="impl/done">Never let a study silently outlive its subject's next major
-  release — stale-flag it and refresh via the re-fetch list.</org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE>
+      <org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE fact="true">Never let a study silently outlive its subject's next major
+  release — stale-flag it and refresh via the re-fetch list. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/comparative-research/boot/52-flow-comparative-research --&gt;</org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE>
     </facts>
   </org-vibevm-world--comparative-research--never>
 </spec>
@@ -767,8 +799,9 @@ silently invent semantic behavior.</org-vibevm-world--conflict-protocol--NEVER-S
       <org-vibevm-world--conflict-protocol--NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT fact="true" status="impl/done">Never invent semantics when the spec is silent — mark the choice
   and proceed conservatively.</org-vibevm-world--conflict-protocol--NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT>
     </facts>
-    <p><org-vibevm-world--conflict-protocol--recovery-drills-pointer fact="true" status="impl/done">Recovery drills for when the protocol has already been broken:
-@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root.</org-vibevm-world--conflict-protocol--recovery-drills-pointer></p>
+    <p><org-vibevm-world--conflict-protocol--recovery-drills-pointer fact="true">Recovery drills for when the protocol has already been broken:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/conflict-protocol/boot/35-flow-conflict-protocol --&gt;</org-vibevm-world--conflict-protocol--recovery-drills-pointer></p>
   </org-vibevm-world--conflict-protocol--never>
 </spec>
 
@@ -777,9 +810,10 @@ silently invent semantic behavior.</org-vibevm-world--conflict-protocol--NEVER-S
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="org-vibevm-world--conflict-protocol--root">Conflict protocol — the WAL binding</title>
-  <p><org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile state
+  <p><org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING fact="true">With `flow:wal` installed, the volatile state
 file of the priority ladder is `vibevm/vibespecs/WAL.xml`; the full ladder reads
-Human &gt; Spec &gt; Tests &gt; Code &gt; WAL.</org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING></p>
+Human &gt; Spec &gt; Tests &gt; Code &gt; WAL. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/conflict-protocol/boot/35a-wal-binding --&gt;</org-vibevm-world--conflict-protocol--CONFLICT-WAL-BINDING></p>
 </spec>
 
 <!-- vibe:static org.vibevm.world/decision-records — vibevm/vibedeps/org.vibevm.world.decision-records/1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml -->
@@ -804,20 +838,20 @@ gets a **four-field record at the spec anchor that governs the value**:</org-vib
         <td>Requirement</td>
       </tr>
       <tr>
-        <td><ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</ROW-FIELD-DECISION></td>
-        <td><ROW-FIELD-DECISION-REQUIREMENT fact="true" status="impl/done">The chosen value or approach. One line.</ROW-FIELD-DECISION-REQUIREMENT></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-DECISION fact="true" status="impl/done">**Decision**</org-vibevm-world--decision-records--ROW-FIELD-DECISION></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-DECISION-REQUIREMENT fact="true" status="impl/done">The chosen value or approach. One line.</org-vibevm-world--decision-records--ROW-FIELD-DECISION-REQUIREMENT></td>
       </tr>
       <tr>
-        <td><ROW-FIELD-WHY fact="true" status="impl/done">**Why**</ROW-FIELD-WHY></td>
-        <td><ROW-FIELD-WHY-REQUIREMENT fact="true" status="impl/done">Concrete and cited: a measurement, a constraint, an incident — with data.</ROW-FIELD-WHY-REQUIREMENT></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-WHY fact="true" status="impl/done">**Why**</org-vibevm-world--decision-records--ROW-FIELD-WHY></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-WHY-REQUIREMENT fact="true" status="impl/done">Concrete and cited: a measurement, a constraint, an incident — with data.</org-vibevm-world--decision-records--ROW-FIELD-WHY-REQUIREMENT></td>
       </tr>
       <tr>
-        <td><ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</ROW-FIELD-CONSIDERED-AND-REJECTED></td>
-        <td><ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT fact="true" status="impl/done">One line per alternative, each carrying its rejection reason.</ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED fact="true" status="impl/done">**Considered and rejected**</org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT fact="true" status="impl/done">One line per alternative, each carrying its rejection reason.</org-vibevm-world--decision-records--ROW-FIELD-CONSIDERED-AND-REJECTED-REQUIREMENT></td>
       </tr>
       <tr>
-        <td><ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</ROW-FIELD-WHEN-TO-REVISIT></td>
-        <td><ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT fact="true" status="impl/done">A measurable trigger: metric + threshold + where it is observed.</ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT fact="true" status="impl/done">**When to revisit**</org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT></td>
+        <td><org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT fact="true" status="impl/done">A measurable trigger: metric + threshold + where it is observed.</org-vibevm-world--decision-records--ROW-FIELD-WHEN-TO-REVISIT-REQUIREMENT></td>
       </tr>
     </table>
     <p><org-vibevm-world--decision-records--NO-SEPARATE-ADR-DIRECTORY fact="true" status="impl/done">There is no separate ADR directory and no immutable numbered log.</org-vibevm-world--decision-records--NO-SEPARATE-ADR-DIRECTORY></p>
@@ -862,8 +896,9 @@ hardening into dogma.</org-vibevm-world--decision-records--TRIGGER-KEEPS-IMMUNIT
   state first.</org-vibevm-world--decision-records--NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE>
       <org-vibevm-world--decision-records--NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY fact="true" status="impl/done">Never put a decision's why into a commit message only. The commit
   cites the record; the spec carries it.</org-vibevm-world--decision-records--NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY>
-      <org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER fact="true" status="impl/done">Never record a decision with a missing reason or a missing revisit
-  trigger — that is a fact with decoration, not a record.</org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER>
+      <org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER fact="true">Never record a decision with a missing reason or a missing revisit
+  trigger — that is a fact with decoration, not a record. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/decision-records/boot/25-flow-decision-records --&gt;</org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER>
     </facts>
   </org-vibevm-world--decision-records--never>
 </spec>
@@ -888,7 +923,8 @@ exactly where the drift these files exist to prevent lives.</org-vibevm-world--d
   <org-vibevm-world--dev-runtime-docs--never title="Never">
     <facts ordered="false">
       <org-vibevm-world--dev-runtime-docs--NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT fact="true" status="impl/done">Never ship a dev-env or runtime-setup change with its doc update in a later commit.</org-vibevm-world--dev-runtime-docs--NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT>
-      <org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN fact="true" status="impl/done">Never let the setup docs describe a toolchain the project no longer uses.</org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN>
+      <org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN fact="true">Never let the setup docs describe a toolchain the project no longer uses. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/dev-runtime-docs/boot/58-flow-dev-runtime-docs --&gt;</org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN>
     </facts>
   </org-vibevm-world--dev-runtime-docs--never>
 </spec>
@@ -903,7 +939,9 @@ exactly where the drift these files exist to prevent lives.</org-vibevm-world--d
 distributable user-level prompt that reshapes an LLM session into
 structured co-inquiry.</org-vibevm-world--discovery-prompt--PROJECT-SHIPS-THE-DISCOVERY-PROMPT></p>
   <p><org-vibevm-world--discovery-prompt--ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY fact="true" status="impl/done">The artifact lives at
-@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT#root.</org-vibevm-world--discovery-prompt--ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY></p>
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT
+(the whole-document address: the payload is a title-less prompt, so it
+carries no `#root` anchor to cite).</org-vibevm-world--discovery-prompt--ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY></p>
   <p><org-vibevm-world--discovery-prompt--ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS fact="true" status="impl/done">It is a **payload for a fresh session**, not standing instructions —
 do not load it into context outside an explicit deployment request.</org-vibevm-world--discovery-prompt--ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS></p>
   <org-vibevm-world--discovery-prompt--when title="When to deploy">
@@ -931,8 +969,9 @@ failure.</org-vibevm-world--discovery-prompt--STANCE-UNCERTAINTY-IS-DATA-NOT-FAI
   its overhead pays off only when the answer space is genuinely open.</org-vibevm-world--discovery-prompt--NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION>
       <org-vibevm-world--discovery-prompt--NEVER-EDIT-THE-ARTIFACT-IN-PLACE fact="true" status="impl/done">Never edit the artifact in place; adapt a copy via the re-derive
   prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive.</org-vibevm-world--discovery-prompt--NEVER-EDIT-THE-ARTIFACT-IN-PLACE>
-      <org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES fact="true" status="impl/done">Never treat the confidence numbers as guarantees — they are
-  calibration aids, not measurements.</org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES>
+      <org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES fact="true">Never treat the confidence numbers as guarantees — they are
+  calibration aids, not measurements. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/discovery-prompt/boot/50-flow-discovery-prompt --&gt;</org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES>
     </facts>
   </org-vibevm-world--discovery-prompt--never>
 </spec>
@@ -992,8 +1031,9 @@ Commits and a violation of the atomic rule.</org-vibevm-world--git-atomic-commit
       <org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX fact="true" status="impl/done">Never mix refactor + feature + docs + bugfix in one commit.</org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX>
       <org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — the diff does
   that. Write *why*.</org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED>
-      <org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL fact="true" status="impl/done">Never `git commit --amend` on a pushed commit without explicit human
-  approval. Same for `git push --force`.</org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL>
+      <org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL fact="true">Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-atomic-commits/boot/30-flow-atomic-commits --&gt;</org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL>
     </facts>
   </org-vibevm-world--git-atomic-commits--never>
 </spec>
@@ -1061,10 +1101,11 @@ itself is recorded openly here.</org-vibevm-world--git-attribution-policy--a-pub
   repository — one policy, one place. Changing it is one edit to
   this file, made by the owner.</org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE>
     </facts>
-    <p><org-vibevm-world--git-attribution-policy--sibling-document-pointers fact="true" status="impl/done">Full policy and rationale:
+    <p><org-vibevm-world--git-attribution-policy--sibling-document-pointers fact="true">Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root.</org-vibevm-world--git-attribution-policy--sibling-document-pointers></p>
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-attribution-policy/boot/55-flow-attribution-policy --&gt;</org-vibevm-world--git-attribution-policy--sibling-document-pointers></p>
   </org-vibevm-world--git-attribution-policy--never>
 </spec>
 
@@ -1097,7 +1138,8 @@ Per-surface checks:
       <org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**any operation whose reversal would cost work.**</org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK>
     </facts>
     <p><org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK fact="true" status="impl/done">**When uncertain, ask.**</org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK></p>
-    <p><org-vibevm-world--git-autonomy--sibling-document-pointers fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root.</org-vibevm-world--git-autonomy--sibling-document-pointers></p>
+    <p><org-vibevm-world--git-autonomy--sibling-document-pointers fact="true">Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-autonomy/boot/32-flow-autonomy --&gt;</org-vibevm-world--git-autonomy--sibling-document-pointers></p>
   </org-vibevm-world--git-autonomy--red-lines>
 </spec>
 
@@ -1137,8 +1179,9 @@ allowed-type table, scope rules, body structure, worked examples, and anti-patte
 (one commit = one logical idea).</org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY></p>
     <p><org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE fact="true" status="impl/done">A `feat: add foo, bar, and baz` message is valid Conventional
 Commits *and* a violation of the atomic rule.</org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE></p>
-    <p><org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER fact="true" status="impl/done">Atomicity is the separate `git-atomic-commits` flow;
-the two run together.</org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER></p>
+    <p><org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER fact="true">Atomicity is the separate `git-atomic-commits` flow;
+the two run together. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-conventional-commits/boot/31-flow-conventional-commits --&gt;</org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER></p>
   </org-vibevm-world--git-conventional-commits--format-is-not-atomicity>
 </spec>
 
@@ -1200,9 +1243,10 @@ the run procedure:
       <org-vibevm-world--health-audit--NEVER-LET-THE-CHECKLIST-FOSSILIZE fact="true" status="impl/done">Never let the checklist fossilize. A new defect class a run
   discovers becomes a permanent category, so the same gap is never
   re-missed.</org-vibevm-world--health-audit--NEVER-LET-THE-CHECKLIST-FOSSILIZE>
-      <org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT fact="true" status="impl/done">Never mistake a green gate for a healthy project. The gate is blind
+      <org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT fact="true">Never mistake a green gate for a healthy project. The gate is blind
   by construction to uncovered code, out-of-gate trees, drift, and
-  slow debt — each individually invisible, collectively corrosive.</org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT>
+  slow debt — each individually invisible, collectively corrosive. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/health-audit/boot/42-flow-health-audit --&gt;</org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT>
     </facts>
   </org-vibevm-world--health-audit--never>
 </spec>
@@ -1212,9 +1256,10 @@ the run procedure:
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="org-vibevm-world--health-audit--root">Health audit — the WAL binding</title>
-  <p><org-vibevm-world--health-audit--AUDIT-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the volatile session
+  <p><org-vibevm-world--health-audit--AUDIT-WAL-BINDING fact="true">With `flow:wal` installed, the volatile session
 checkpoints of the finding rule are `vibevm/vibespecs/WAL.xml` and `CONTINUE.md` —
-reconciled against `AUDIT.md`, never its substitute.</org-vibevm-world--health-audit--AUDIT-WAL-BINDING></p>
+reconciled against `AUDIT.md`, never its substitute. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/health-audit/boot/42a-wal-binding --&gt;</org-vibevm-world--health-audit--AUDIT-WAL-BINDING></p>
 </spec>
 
 <!-- vibe:static org.vibevm.world/licensing — vibevm/vibedeps/org.vibevm.world.licensing/1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml -->
@@ -1270,8 +1315,9 @@ dependency on licence grounds regardless of how good it is.</org-vibevm-world--l
   disagree.</org-vibevm-world--licensing--NEVER-LET-THE-MANIFEST-AND-THE-LICENCE-FILE-DISAGREE>
       <org-vibevm-world--licensing--NEVER-REJECT-A-DEPENDENCY-FOR-BEING-TOO-HEAVY fact="true" status="impl/done">Never reject a dependency for being "too heavy" — weight is not a
   licence problem; licence is.</org-vibevm-world--licensing--NEVER-REJECT-A-DEPENDENCY-FOR-BEING-TOO-HEAVY>
-      <org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING fact="true" status="impl/done">Never claim a licence is permissive without checking; when unsure,
-  treat it as non-permissive and ask.</org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING>
+      <org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING fact="true">Never claim a licence is permissive without checking; when unsure,
+  treat it as non-permissive and ask. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/licensing/boot/60-flow-licensing --&gt;</org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING>
     </facts>
   </org-vibevm-world--licensing--never>
 </spec>
@@ -1312,7 +1358,8 @@ state machine, and what belongs inside the block:
   the block is found by a deterministic byte scan or not at all.</org-vibevm-world--managed-blocks--NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR>
       <org-vibevm-world--managed-blocks--NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK fact="true" status="impl/done">Never auto-repair a malformed block. Hard stop, precise report;
   the human decides.</org-vibevm-world--managed-blocks--NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK>
-      <org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL fact="true" status="impl/done">Never rewrite a file when the result is byte-identical.</org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL>
+      <org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL fact="true">Never rewrite a file when the result is byte-identical. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/managed-blocks/boot/65-flow-managed-blocks --&gt;</org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL>
     </facts>
   </org-vibevm-world--managed-blocks--never>
 </spec>
@@ -1367,9 +1414,10 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
       <org-vibevm-world--manual-tests--NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED fact="true" status="impl/done">**Never tag a milestone with the index's required runs
   unexecuted.** Green automated suite plus unrun manual tests is not
   a shippable milestone.</org-vibevm-world--manual-tests--NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED>
-      <org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN fact="true" status="impl/done">**Never delete a failing manual test to make the panel green.** A
+      <org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN fact="true">**Never delete a failing manual test to make the panel green.** A
   test that caught something is working; file what it caught and fix
-  the product, not the test.</org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN>
+  the product, not the test. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/manual-tests/boot/44-flow-manual-tests --&gt;</org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN>
     </facts>
   </org-vibevm-world--manual-tests--never>
 </spec>
@@ -1439,8 +1487,9 @@ I proceed?" is the exact overhead the codeword was spoken to remove.</org-vibevm
   starts in the default posture.</org-vibevm-world--operating-modes--NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY>
       <org-vibevm-world--operating-modes--NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD fact="true" status="impl/done">Never act on a codeword that is not in the catalogue — propose
   adding it first.</org-vibevm-world--operating-modes--NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD>
-      <org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED fact="true" status="impl/done">Never reply to your own completed work with a permission question
-  when a mode pre-authorised it — report status and continue.</org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED>
+      <org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED fact="true">Never reply to your own completed work with a permission question
+  when a mode pre-authorised it — report status and continue. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/operating-modes/boot/45-flow-operating-modes --&gt;</org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED>
     </facts>
   </org-vibevm-world--operating-modes--never>
 </spec>
@@ -1489,8 +1538,9 @@ shipped flat namespace is a migration; getting it right first is free.</org-vibe
   coordinate that meant one artifact must never mean another.</org-vibevm-world--qualified-naming--NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT>
       <org-vibevm-world--qualified-naming--NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY fact="true" status="impl/done">Never resolve a naming ambiguity interactively — fail with the
   candidate list and let a human record the qualified form.</org-vibevm-world--qualified-naming--NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY>
-      <org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME fact="true" status="impl/done">Never treat a change of group or name as a rename — it is a new
-  package, and versions do not carry over.</org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME>
+      <org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME fact="true">Never treat a change of group or name as a rename — it is a new
+  package, and versions do not carry over. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/qualified-naming/boot/67-flow-qualified-naming --&gt;</org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME>
     </facts>
   </org-vibevm-world--qualified-naming--never>
 </spec>
@@ -1566,10 +1616,11 @@ may have been seen.</org-vibevm-world--secrets-hygiene--TREAT-THE-VALUE-AS-COMPR
   scope escalation — it is an error, not a warning.</org-vibevm-world--secrets-hygiene--NEVER-LET-AN-INTEGRATION-ESCALATE-SCOPE>
       <org-vibevm-world--secrets-hygiene--ON-SUSPECTED-EXPOSURE-ROTATE-FIRST fact="true" status="impl/done">On any suspected exposure: rotate first, investigate second.</org-vibevm-world--secrets-hygiene--ON-SUSPECTED-EXPOSURE-ROTATE-FIRST>
     </facts>
-    <p><org-vibevm-world--secrets-hygiene--sibling-document-pointers fact="true" status="impl/done">Full protocol:
+    <p><org-vibevm-world--secrets-hygiene--sibling-document-pointers fact="true">Full protocol:
 @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#root.
 Scope rules: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/scope-discipline#root.
-Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root.</org-vibevm-world--secrets-hygiene--sibling-document-pointers></p>
+Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/secrets-hygiene/boot/57-flow-secrets-hygiene --&gt;</org-vibevm-world--secrets-hygiene--sibling-document-pointers></p>
   </org-vibevm-world--secrets-hygiene--never>
 </spec>
 
@@ -1621,8 +1672,9 @@ uses `--force`.</org-vibevm-world--source-mirrors--HISTORY-REACHES-A-HOST-ONLY-T
       <org-vibevm-world--source-mirrors--NEVER-RESOLVE-A-DIVERGENCE-BY-CLOBBERING fact="true" status="impl/done">Never resolve a divergence by clobbering the target. A diverged
   target is investigated and reconciled into mainline, never silently
   overwritten.</org-vibevm-world--source-mirrors--NEVER-RESOLVE-A-DIVERGENCE-BY-CLOBBERING>
-      <org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED fact="true" status="impl/done">Never treat a web-UI merge as integrated until its commits are in
-  mainline.</org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED>
+      <org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED fact="true">Never treat a web-UI merge as integrated until its commits are in
+  mainline. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/source-mirrors/boot/62-flow-source-mirrors --&gt;</org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED>
     </facts>
   </org-vibevm-world--source-mirrors--never>
 </spec>
@@ -1648,39 +1700,39 @@ it may change, and what authority it carries.</org-vibevm-world--spec-genres--EV
         <td>Binding?</td>
       </tr>
       <tr>
-        <td><ROW-GENRE-BOOT-FILES fact="true" status="impl/done">Boot files</ROW-GENRE-BOOT-FILES></td>
-        <td><ROW-GENRE-BOOT-FILES-HOLDS fact="true" status="impl/done">Standing instructions read at session start</ROW-GENRE-BOOT-FILES-HOLDS></td>
-        <td><ROW-GENRE-BOOT-FILES-BINDING fact="true" status="impl/done">yes</ROW-GENRE-BOOT-FILES-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES fact="true" status="impl/done">Boot files</org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-HOLDS fact="true" status="impl/done">Standing instructions read at session start</org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-BINDING fact="true" status="impl/done">yes</org-vibevm-world--spec-genres--ROW-GENRE-BOOT-FILES-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">Foundational decisions</ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
-        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS fact="true" status="impl/done">Choices that cross every module</ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS></td>
-        <td><ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING fact="true" status="impl/done">yes</ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS fact="true" status="impl/done">Foundational decisions</org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS fact="true" status="impl/done">Choices that cross every module</org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING fact="true" status="impl/done">yes</org-vibevm-world--spec-genres--ROW-GENRE-FOUNDATIONAL-DECISIONS-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">Module contracts</ROW-GENRE-MODULE-CONTRACTS></td>
-        <td><ROW-GENRE-MODULE-CONTRACTS-HOLDS fact="true" status="impl/done">What each module does (here: PROP / FEAT)</ROW-GENRE-MODULE-CONTRACTS-HOLDS></td>
-        <td><ROW-GENRE-MODULE-CONTRACTS-BINDING fact="true" status="impl/done">yes</ROW-GENRE-MODULE-CONTRACTS-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS fact="true" status="impl/done">Module contracts</org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-HOLDS fact="true" status="impl/done">What each module does (here: PROP / FEAT)</org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-BINDING fact="true" status="impl/done">yes</org-vibevm-world--spec-genres--ROW-GENRE-MODULE-CONTRACTS-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">Design docs</ROW-GENRE-DESIGN-DOCS></td>
-        <td><ROW-GENRE-DESIGN-DOCS-HOLDS fact="true" status="impl/done">Why we chose what we chose — the lore</ROW-GENRE-DESIGN-DOCS-HOLDS></td>
-        <td><ROW-GENRE-DESIGN-DOCS-BINDING fact="true" status="impl/done">no</ROW-GENRE-DESIGN-DOCS-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS fact="true" status="impl/done">Design docs</org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-HOLDS fact="true" status="impl/done">Why we chose what we chose — the lore</org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-BINDING fact="true" status="impl/done">no</org-vibevm-world--spec-genres--ROW-GENRE-DESIGN-DOCS-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">Research docs</ROW-GENRE-RESEARCH-DOCS></td>
-        <td><ROW-GENRE-RESEARCH-DOCS-HOLDS fact="true" status="impl/done">What *other* projects did</ROW-GENRE-RESEARCH-DOCS-HOLDS></td>
-        <td><ROW-GENRE-RESEARCH-DOCS-BINDING fact="true" status="impl/done">no</ROW-GENRE-RESEARCH-DOCS-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS fact="true" status="impl/done">Research docs</org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-HOLDS fact="true" status="impl/done">What *other* projects did</org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-BINDING fact="true" status="impl/done">no</org-vibevm-world--spec-genres--ROW-GENRE-RESEARCH-DOCS-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">Campaign plans</ROW-GENRE-CAMPAIGN-PLANS></td>
-        <td><ROW-GENRE-CAMPAIGN-PLANS-HOLDS fact="true" status="impl/done">Phases and gates of one multi-session change</ROW-GENRE-CAMPAIGN-PLANS-HOLDS></td>
-        <td><ROW-GENRE-CAMPAIGN-PLANS-BINDING fact="true" status="impl/done">no</ROW-GENRE-CAMPAIGN-PLANS-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS fact="true" status="impl/done">Campaign plans</org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-HOLDS fact="true" status="impl/done">Phases and gates of one multi-session change</org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-BINDING fact="true" status="impl/done">no</org-vibevm-world--spec-genres--ROW-GENRE-CAMPAIGN-PLANS-BINDING></td>
       </tr>
       <tr>
-        <td><ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">The checkpoint</ROW-GENRE-THE-CHECKPOINT></td>
-        <td><ROW-GENRE-THE-CHECKPOINT-HOLDS fact="true" status="impl/done">Where work stands right now</ROW-GENRE-THE-CHECKPOINT-HOLDS></td>
-        <td><ROW-GENRE-THE-CHECKPOINT-BINDING fact="true" status="impl/done">state, not truth</ROW-GENRE-THE-CHECKPOINT-BINDING></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT fact="true" status="impl/done">The checkpoint</org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-HOLDS fact="true" status="impl/done">Where work stands right now</org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-HOLDS></td>
+        <td><org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-BINDING fact="true" status="impl/done">state, not truth</org-vibevm-world--spec-genres--ROW-GENRE-THE-CHECKPOINT-BINDING></td>
       </tr>
     </table>
     <p><org-vibevm-world--spec-genres--full-charters-pointer fact="true" status="impl/done">Full charters, mutability rules, and conflict authority:
@@ -1717,8 +1769,9 @@ authority to a sentence without asking anyone.</org-vibevm-world--spec-genres--G
       <org-vibevm-world--spec-genres--NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE fact="true" status="impl/done">Never resolve a contract-vs-lore conflict by editing the contract
   to match the lore. The correction runs the other way.</org-vibevm-world--spec-genres--NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE>
       <org-vibevm-world--spec-genres--NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE fact="true" status="impl/done">Never create a document without deciding its genre.</org-vibevm-world--spec-genres--NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE>
-      <org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT fact="true" status="impl/done">Never let lore go unlinked from its contract — an unlinked design
-  doc is invisible at the next cold start.</org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT>
+      <org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT fact="true">Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/spec-genres/boot/17-flow-spec-genres --&gt;</org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT>
     </facts>
   </org-vibevm-world--spec-genres--never>
 </spec>
@@ -1773,8 +1826,9 @@ caused the drift.</org-vibevm-world--sync-from-code--RUN-THE-PROTOCOL-EXACTLY-ON
       <org-vibevm-world--sync-from-code--NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES fact="true" status="impl/done">Never batch two unrelated code changes into one spec edit. One intent
   per sync run.</org-vibevm-world--sync-from-code--NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES>
     </facts>
-    <p><org-vibevm-world--sync-from-code--sibling-document-pointers fact="true" status="impl/done">Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
-Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root.</org-vibevm-world--sync-from-code--sibling-document-pointers></p>
+    <p><org-vibevm-world--sync-from-code--sibling-document-pointers fact="true">Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
+Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/sync-from-code/boot/20-flow-sync-from-code --&gt;</org-vibevm-world--sync-from-code--sibling-document-pointers></p>
   </org-vibevm-world--sync-from-code--never>
 </spec>
 
@@ -1783,9 +1837,10 @@ Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="org-vibevm-world--sync-from-code--root">Sync-from-Code — the WAL binding</title>
-  <p><org-vibevm-world--sync-from-code--SYNC-WAL-BINDING fact="true" status="impl/done">With `flow:wal` installed, the durable session state
+  <p><org-vibevm-world--sync-from-code--SYNC-WAL-BINDING fact="true">With `flow:wal` installed, the durable session state
 of this flow's rules is `vibevm/vibespecs/WAL.xml`: the top-down river reads
-head → WAL → spec → code, and a temporary hack is recorded in the WAL.</org-vibevm-world--sync-from-code--SYNC-WAL-BINDING></p>
+head → WAL → spec → code, and a temporary hack is recorded in the WAL. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/sync-from-code/boot/20a-wal-binding --&gt;</org-vibevm-world--sync-from-code--SYNC-WAL-BINDING></p>
 </spec>
 
 <!-- vibe:static org.vibevm.world/tool-design-lessons — vibevm/vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml -->
@@ -1827,8 +1882,9 @@ rationale is why it is not negotiable.</org-vibevm-world--tool-design-lessons--t
   and detect change cheaply.</org-vibevm-world--tool-design-lessons--NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY>
       <org-vibevm-world--tool-design-lessons--NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE fact="true" status="impl/done">Never ship prose describing tooling the consumer does not receive —
   ship the runtime.</org-vibevm-world--tool-design-lessons--NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE>
-      <org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS fact="true" status="impl/done">Never let a package's identity include build artifacts — identity is
-  the source.</org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS>
+      <org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS fact="true">Never let a package's identity include build artifacts — identity is
+  the source. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/tool-design-lessons/boot/70-flow-tool-design-lessons --&gt;</org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS>
     </facts>
   </org-vibevm-world--tool-design-lessons--never>
 </spec>
@@ -1894,7 +1950,8 @@ the work it is structurally good at.</org-vibevm-world--two-process-model--THE-S
     </facts>
     <p><org-vibevm-world--two-process-model--full-model-pointer fact="true" status="impl/done">Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root.</org-vibevm-world--two-process-model--full-model-pointer></p>
     <p><org-vibevm-world--two-process-model--responsibility-table-pointer fact="true" status="impl/done">Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root.</org-vibevm-world--two-process-model--responsibility-table-pointer></p>
-    <p><org-vibevm-world--two-process-model--file-channel-pointer fact="true" status="impl/done">The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root.</org-vibevm-world--two-process-model--file-channel-pointer></p>
+    <p><org-vibevm-world--two-process-model--file-channel-pointer fact="true">The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/two-process-model/boot/05-flow-two-process-model --&gt;</org-vibevm-world--two-process-model--file-channel-pointer></p>
   </org-vibevm-world--two-process-model--never>
 </spec>
 
@@ -1970,7 +2027,8 @@ chooses its own session-durability scheme — many WALs (the registered-
 subprojects form is `flow:wal-specspaces`), or none — by not installing
 this flow or by superseding it; nothing in VibeVM requires a WAL
 (PROP-049).</org-vibevm-world--wal--WAL-IS-THE-SINGLE-DEVELOPER-CONVENTION></p>
-    <p><org-vibevm-world--wal--full-protocol-pointer fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root.</org-vibevm-world--wal--full-protocol-pointer></p>
+    <p><org-vibevm-world--wal--full-protocol-pointer fact="true">Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/wal/boot/10-flow-wal --&gt;</org-vibevm-world--wal--full-protocol-pointer></p>
   </org-vibevm-world--wal--scope>
 </spec>
 
@@ -2043,8 +2101,9 @@ specspace's one-line status in `SPECSPACES.md`.</org-vibevm-world--wal-specspace
 updated only when host files actually changed in the session.</org-vibevm-world--wal-specspaces--THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED></p>
     <p><org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT fact="true" status="impl/done">Resume remains report-then-wait: restore, verify state empirically,
 report, stop.</org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT></p>
-    <p><org-vibevm-world--wal-specspaces--sibling-document-pointers fact="true" status="impl/done">Full protocol:
-@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.</org-vibevm-world--wal-specspaces--sibling-document-pointers></p>
+    <p><org-vibevm-world--wal-specspaces--sibling-document-pointers fact="true">Full protocol:
+@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/wal-specspaces/boot/11-flow-wal-specspaces --&gt;</org-vibevm-world--wal-specspaces--sibling-document-pointers></p>
   </org-vibevm-world--wal-specspaces--commands>
 </spec>
 
@@ -2133,8 +2192,9 @@ session needs.</org-vibevm-world--redbook--OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUES
     </facts>
     <p><org-vibevm-world--redbook--AN-EDITION-IS-A-TESTED-SET fact="true" status="impl/done">An **edition** is a tested set: the umbrella pins every member
 exactly, and the umbrella's version is the edition number.</org-vibevm-world--redbook--AN-EDITION-IS-A-TESTED-SET></p>
-    <p><org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS fact="true" status="impl/done">Individual
-members may move ahead on their own lines between editions.</org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS></p>
+    <p><org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS fact="true">Individual
+members may move ahead on their own lines between editions. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/redbook/boot/03-flow-redbook --&gt;</org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS></p>
   </org-vibevm-world--redbook--member-list>
 </spec>
 
@@ -2143,8 +2203,9 @@ members may move ahead on their own lines between editions.</org-vibevm-world--r
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="org-vibevm-world--redbook--root">Redbook member — wal</title>
-  <p><org-vibevm-world--redbook--MEMBER-WAL fact="true" status="impl/done">`wal` — the checkpoint file and cold-resume snapshot; session
-wind-down and resume rituals.</org-vibevm-world--redbook--MEMBER-WAL></p>
+  <p><org-vibevm-world--redbook--MEMBER-WAL fact="true">`wal` — the checkpoint file and cold-resume snapshot; session
+wind-down and resume rituals. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/redbook/boot/03a-member-wal --&gt;</org-vibevm-world--redbook--MEMBER-WAL></p>
 </spec>
 
 <!-- vibe:static org.vibevm.world/redbook — vibevm/vibedeps/org.vibevm.world.redbook/1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml -->
@@ -2152,7 +2213,8 @@ wind-down and resume rituals.</org-vibevm-world--redbook--MEMBER-WAL></p>
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
   <title id="org-vibevm-world--redbook--root">Redbook member — wal-specspaces</title>
-  <p><org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES fact="true" status="impl/done">`wal-specspaces` — nested projects (specspaces), each carrying its
-own boot contract, checkpoint file, and cold-resume file.</org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES></p>
+  <p><org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES fact="true">`wal-specspaces` — nested projects (specspaces), each carrying its
+own boot contract, checkpoint file, and cold-resume file. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/redbook/boot/03b-member-wal-specspaces --&gt;</org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES></p>
 </spec>
 

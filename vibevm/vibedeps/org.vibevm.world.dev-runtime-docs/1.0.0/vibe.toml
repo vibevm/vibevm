@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Load-bearing setup + runtime docs: a change to toolchain / prerequisites / env / paths ships with the doc update in the same commit, never deferred"

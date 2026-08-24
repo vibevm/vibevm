@@ -9742,10 +9742,19 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts/normal.rs",
       "item_kind": "fn",
-      "line": 94,
+      "line": 100,
       "symbol": "vibe_workspace::boot_artifacts::normal::tests::normal_seed_derives_the_whole_doc_contract_address",
-      "end_line": 119,
+      "end_line": 125,
       "fingerprint": "tok1:415b6d84466dfdc4e5979f6911db431dbacdc0a2878c2b63c53847ac371623a7"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/normal.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_workspace::boot_artifacts::normal::tests::normal_seed_strips_the_xml_serialisation_too",
+      "end_line": 141,
+      "fingerprint": "tok1:829c9b1a0b94a1d4ab2fe54b71098c9c7a796780987f64fa1f0c2dbeb429ffb4"
     },
     {
       "crate_name": "vibe-workspace",
@@ -9850,9 +9859,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 472,
+      "line": 485,
       "symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "end_line": 500,
+      "end_line": 513,
       "fingerprint": "tok1:3ae117637c16689c1be6edc2d782eaa5c12463ff73cc773cd72b24163a642c8d"
     },
     {
@@ -18678,7 +18687,15 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts/normal.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::normal::tests::normal_seed_derives_the_whole_doc_contract_address",
-      "line": 95,
+      "line": 101,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#addressing",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/normal.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::normal::tests::normal_seed_strips_the_xml_serialisation_too",
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#addressing",
       "verb": "verifies"
@@ -18791,7 +18808,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "line": 483,
+      "line": 496,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant",
       "verb": "implements",
@@ -74578,7 +74595,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:eeac2ca16a56d4e98b7cc30c1b41d0a55ace209df146ec7c728f732dc8509816",
+      "content_hash": "sha256:506aa0e9460dffed7c654bbaf4a87543971e8f3beb119201ee26fe69deb75117",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -75136,7 +75153,7 @@
     },
     {
       "anchor": "directives",
-      "content_hash": "sha256:da683c6dc3a728926f482613f28e79ce1bb7572dd0317a261b5851200d590464",
+      "content_hash": "sha256:d3f2057cf66d5a1dd50a1c5fa6eee7ccf352429c70c665d195074c7ae9d54734",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7. The three directives",
@@ -75496,7 +75513,7 @@
     },
     {
       "anchor": "in-place-use",
-      "content_hash": "sha256:46d9330f42c90290a6f8133a8fa1e572860eb84a9a9f1e47a8740816df4c1adc",
+      "content_hash": "sha256:fcdc48730f5053370f9412895affcc290a97b3335d5dd81aa148b8b4cde4ad85",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7.4 In-place use — the `@spec://` sigil",
@@ -75514,10 +75531,10 @@
     },
     {
       "anchor": "AT-SPEC-MANDATORY",
-      "content_hash": "sha256:909d10d689b7fb59910a6e719f040414ba390147fcaa165f12dcadbb8b9a0606",
+      "content_hash": "sha256:b73760ff06e8a18aae6dd01ebb6b67c238d2031035bfb1f6e89589ee749c0f47",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**`@spec://…`** (an `@` before `spec`) is an **in-place use**: the agent MUST read it (mandatory), exactly as if a `#use` had been declared at the top of the file. @status:impl/done",
+      "heading": "**`@spec://…`** (an `@` before `spec`) is an **in-place use**: the agent MUST read it (mandatory), exactly as if a `#use` had been declared at the top of the file. **Amendment (2026-08-24, the normal-flip ruling):** the obligation is the AGENT's, not the AOT compiler's — a `@spec` target is **never spliced** into a compiled lane; the address itself is the compiled artefact, and the §2 equivalence invariant is carried by the agent's read obligation. (Splicing every `@spec` realised ##OPEN-CLOSURE-EXPLOSION on the first normal-format host build: the lane grew 250 KB → 2.5 MB off prose pointers.) Only an explicit `#use` is a compiler splice edge. @status:impl/done",
       "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#AT-SPEC-MANDATORY"
     },
@@ -75613,7 +75630,7 @@
     },
     {
       "anchor": "pipeline",
-      "content_hash": "sha256:59d0cc0f1369b6e41bdef5270e44afc738dc1ebad4cd1832edeccb91c49004ac",
+      "content_hash": "sha256:40dffb40a8a0fb49aeb0561bb5d3af2e9d7c0bcddad64408c728963c8b52f699",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "8. The compilation pipeline — the standard order",
@@ -75640,10 +75657,10 @@
     },
     {
       "anchor": "PIPE-USE-GRAPH",
-      "content_hash": "sha256:2b10f1033ca3c4c22da2d62f8f58ccd35eadd9ae5a0e09a1470ab589843186b8",
+      "content_hash": "sha256:bfe83fb1cf071a98b1289d51429ba38f33f032f954736cf5f59db90fc4b54abd",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**Build the use-graph and topologically sort.** Nodes = document sections (or packages, at the coarser tier); edges = explicit `#use` + `@spec` in-place uses (§7.4) + implicit references. Topological order = every dependency before its dependent. @status:impl/done",
+      "heading": "**Build the use-graph and topologically sort.** Nodes = document sections (or packages, at the coarser tier); edges = explicit `#use` declarations only — an `@spec` in-place use is the agent's read edge, never a compiler splice (§7.4 amendment 2026-08-24). Topological order = every dependency before its dependent. **Absorbed nodes (READ-ONCE over overlapping spans, 2026-08-24):** two closure nodes of one doc may nest (a whole-doc node beside a section inside it); a node whose text is wholly contained in a same-doc sibling's is absorbed — emitted once with its ancestor, never twice. @status:impl/done",
       "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-USE-GRAPH"
     },
@@ -75667,10 +75684,10 @@
     },
     {
       "anchor": "PIPE-QUALIFY",
-      "content_hash": "sha256:06b43440a6db171b4fcc663ce555bfcf9c19f2faf407e2003e5dafbe158596ac",
+      "content_hash": "sha256:77317a8da9c27599f62d90e0f62c0ac3eee3e596c1849b760788220029a820a3",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**Qualify (B-011, owner-approved 2026-08-04; per-node refinement — the B-006 rider, owner-approved 2026-08-04).** For the static build only: rewrite label definitions — heading `{#x}` and fact `##X`, one namespace (§7.3) — to the qualified form `<origin-slug>--<original>` (the slug is the lowercased `<group>/<name>` with dots and the joiner mapped to `-`/`--`; the original tail keeps its case), **per node, each node under its own authoring origin**: a compiled closure that splices cross-origin nodes qualifies every node under the origin that authored it, never the carrying entry's — provenance is never re-attributed by splicing. An intra-closure `(#x)` link rewrites to the qualified name of the **defining** node (so a cross-origin link stays resolvable under the two-scope lookup); a `simple` contribution is one node, where this reduces to B-011's original whole-contribution rewrite. Full `spec://` addresses, `@spec` uses, directive lines, and fenced content are never touched. The qualified name is a pure function of `(origin, original label)` — independent of splice order and composition, which is what makes late lane additions append-only. `@!X` rewrites to its full address here (§7.4). @status:spec/work",
+      "heading": "**Qualify (B-011, owner-approved 2026-08-04; per-node refinement — the B-006 rider, owner-approved 2026-08-04).** For the static build only: rewrite label definitions — heading `{#x}` and fact `##X`, one namespace (§7.3) — to the qualified form `<origin-slug>--<original>` (the slug is the lowercased `<group>/<name>` with dots and the joiner mapped to `-`/`--`; the original tail keeps its case), **per node, each node under its own authoring origin**: a compiled closure that splices cross-origin nodes qualifies every node under the origin that authored it, never the carrying entry's — provenance is never re-attributed by splicing. An intra-closure `(#x)` link rewrites to the qualified name of the **defining** node (so a cross-origin link stays resolvable under the two-scope lookup); a `simple` contribution is one node, where this reduces to B-011's original whole-contribution rewrite. Full `spec://` addresses, `@spec` uses, directive lines, and fenced content are never touched. The qualified name is a pure function of `(origin, original label)` — independent of splice order and composition, which is what makes late lane additions append-only. `@!X` rewrites to its full address here (§7.4). **Multi-doc rider (2026-08-24):** a closure node whose doc-path lies OUTSIDE the package's contract homes (`boot/`, `contract/`) qualifies with its doc in the slug — `<origin-slug>--<doc-seg-doc-seg…>--<original>`, a pure function of `(origin, doc, label)` — so two docs of one package cannot collide on the near-universal anchors (`root`, `summary`); contract-home nodes keep the plain origin slug, so every existing boot-snippet unit is byte-stable. **Definition positions (2026-08-24):** the qualify pass recognises every position the fact frontends do — the lead of a paragraph or list item, a table CELL opening (`| @fact:ID …`, the K6.5 cell grain), and a blockquote lead (`> @fact:ID …`, the `<quote>` projection) — one namespace, all renamed. @status:spec/work",
       "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-QUALIFY"
     },
@@ -76045,7 +76062,7 @@
     },
     {
       "anchor": "open",
-      "content_hash": "sha256:2a758246b259be296e84c023ff4a1ba000a8d036952d94f0201cee091a7ea4a3",
+      "content_hash": "sha256:c6a454ecd29e4385ff8cced705f8b7fa53ebc0a17b6e828b9286b69dd72c32cc",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "16. Open questions",
@@ -76081,10 +76098,10 @@
     },
     {
       "anchor": "OPEN-CLOSURE-EXPLOSION",
-      "content_hash": "sha256:63533d53666e8030637f36e3893c852cd5e24ba025412ccc6bbbb6502e20b722",
+      "content_hash": "sha256:48a7af5e92d9bb714151403806dfa8d16db96c547e9c04a9027a1167853f90de",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**Implicit-reference closure explosion (§7.4).** With bare `spec://` at the agent's discretion, and `@spec` mandatory, bound the transitive closure a single in-place use can pull; measure on the demo corpus. @status:spec/work",
+      "heading": "**Implicit-reference closure explosion (§7.4) — REALISED AND RESOLVED (2026-08-24).** The first normal-format host build spliced every `@spec` target and grew the lane tenfold (250 KB → 2.5 MB). Resolution: `@spec` is the agent's read edge, never a compiler splice (the §7.4 amendment); only explicit `#use` splices. The compiled lane returned to snippet size (+3% for the cell-fact tombstones). @status:impl/done",
       "line": 258,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-CLOSURE-EXPLOSION"
     },

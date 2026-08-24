@@ -150,8 +150,9 @@ Commits and a violation of the atomic rule.</org-vibevm-world--git-atomic-commit
       <org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX fact="true" status="impl/done">Never mix refactor + feature + docs + bugfix in one commit.</org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX>
       <org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED fact="true" status="impl/done">Never write a subject that summarises *what* changed — the diff does
   that. Write *why*.</org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED>
-      <org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL fact="true" status="impl/done">Never `git commit --amend` on a pushed commit without explicit human
-  approval. Same for `git push --force`.</org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL>
+      <org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL fact="true">Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-atomic-commits/boot/30-flow-atomic-commits --&gt;</org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL>
     </facts>
   </org-vibevm-world--git-atomic-commits--never>
 </spec>
@@ -219,10 +220,11 @@ itself is recorded openly here.</org-vibevm-world--git-attribution-policy--a-pub
   repository — one policy, one place. Changing it is one edit to
   this file, made by the owner.</org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE>
     </facts>
-    <p><org-vibevm-world--git-attribution-policy--sibling-document-pointers fact="true" status="impl/done">Full policy and rationale:
+    <p><org-vibevm-world--git-attribution-policy--sibling-document-pointers fact="true">Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root.</org-vibevm-world--git-attribution-policy--sibling-document-pointers></p>
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-attribution-policy/boot/55-flow-attribution-policy --&gt;</org-vibevm-world--git-attribution-policy--sibling-document-pointers></p>
   </org-vibevm-world--git-attribution-policy--never>
 </spec>
 
@@ -255,7 +257,8 @@ Per-surface checks:
       <org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK fact="true" status="impl/done">**any operation whose reversal would cost work.**</org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK>
     </facts>
     <p><org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK fact="true" status="impl/done">**When uncertain, ask.**</org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK></p>
-    <p><org-vibevm-world--git-autonomy--sibling-document-pointers fact="true" status="impl/done">Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root.</org-vibevm-world--git-autonomy--sibling-document-pointers></p>
+    <p><org-vibevm-world--git-autonomy--sibling-document-pointers fact="true">Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-autonomy/boot/32-flow-autonomy --&gt;</org-vibevm-world--git-autonomy--sibling-document-pointers></p>
   </org-vibevm-world--git-autonomy--red-lines>
 </spec>
 
@@ -295,8 +298,9 @@ allowed-type table, scope rules, body structure, worked examples, and anti-patte
 (one commit = one logical idea).</org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY></p>
     <p><org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE fact="true" status="impl/done">A `feat: add foo, bar, and baz` message is valid Conventional
 Commits *and* a violation of the atomic rule.</org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE></p>
-    <p><org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER fact="true" status="impl/done">Atomicity is the separate `git-atomic-commits` flow;
-the two run together.</org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER></p>
+    <p><org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER fact="true">Atomicity is the separate `git-atomic-commits` flow;
+the two run together. @status:impl/done
+&lt;!-- vibe:end spec://org.vibevm.world/git-conventional-commits/boot/31-flow-conventional-commits --&gt;</org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER></p>
   </org-vibevm-world--git-conventional-commits--format-is-not-atomicity>
 </spec>
 
