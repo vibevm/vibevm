@@ -749,11 +749,11 @@ run_step "index clock gate (no Utc::now/SystemTime::now in index/, types/ or jou
 # which is why the grep matches those forms and not the bare address.
 check_lane_citations() {
   local hits
-  hits=$(grep -rEn --include='*.md' \
+  hits=$(grep -rEn --include='*.md' --include='*.xml' \
       -e '@spec://[^[:space:]`]*/boot/STATIC#' \
       -e '^[[:space:]]*#(use|embed|source)[[:space:]]+[^ ]*spec://[^[:space:]]*/boot/STATIC' \
       spec/ packages/ crates/ 2>/dev/null \
-    | grep -v 'spec/boot/STATIC\.md' \
+    | grep -vE 'spec/boot/STATIC\.(md|xml)' \
     | grep -v 'legacy-spec/')
   if [ -n "$hits" ]; then
     printf '%s\n' "$hits" >&2
@@ -786,9 +786,19 @@ check_closed_plan_links() {
   while IFS= read -r plan_path; do
     [ -n "$plan_path" ] || continue
     basename="${plan_path##*/}"
-    hits=$(grep -rFn --include='*.md' \
-        -e "$plan_path" -e "$basename" spec/ 2>/dev/null \
-      | grep -v '^spec/WAL\.md:')
+    # A closed plan may have converted serialisations (PROP-051): match the
+    # recorded spelling AND its md/xml twin, over both source forms.
+    twin_path=""; twin_base=""
+    case "$plan_path" in
+      *.md)  twin_path="${plan_path%.md}.xml" ;;
+      *.xml) twin_path="${plan_path%.xml}.md" ;;
+    esac
+    [ -n "$twin_path" ] && twin_base="${twin_path##*/}"
+    hits=$(grep -rFn --include='*.md' --include='*.xml' \
+        -e "$plan_path" -e "$basename" \
+        ${twin_path:+-e "$twin_path"} ${twin_base:+-e "$twin_base"} \
+        spec/ 2>/dev/null \
+      | grep -vE '^spec/WAL\.(md|xml):')
     if [ -n "$hits" ]; then
       printf '%s\n' "$hits" \
         | sed -E 's/^([^:]+:[0-9]+):.*$/\1/' \

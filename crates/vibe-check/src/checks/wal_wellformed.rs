@@ -1,14 +1,42 @@
 //! Check 6 — WAL has the canonical sections (Current Phase,
-//! Constraints, Done, Next, Issues).
+//! Constraints, Done, Next, Issues). The WAL is a spec source and lives
+//! in either PROP-045 serialisation — `spec/WAL.md` or `spec/WAL.xml` —
+//! one document, one form; an XML WAL is read through its canonical
+//! Markdown projection, so the heading scan is form-blind.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
+
+/// How a project's WAL resolves under the one-document-one-form law.
+pub(crate) enum WalResolution {
+    /// No WAL in either form — the project has not opted into the
+    /// convention; never a finding.
+    Absent,
+    /// Exactly one serialisation, at this project-relative path.
+    One(PathBuf),
+    /// Both serialisations present — a split brain to report loudly.
+    Pair { md: PathBuf, xml: PathBuf },
+}
+
+/// Resolve `spec/WAL.{md,xml}` for `project_root`.
+pub(crate) fn resolve_wal(project_root: &Path) -> WalResolution {
+    let md = PathBuf::from("spec/WAL.md");
+    let xml = PathBuf::from("spec/WAL.xml");
+    match (
+        project_root.join(&md).is_file(),
+        project_root.join(&xml).is_file(),
+    ) {
+        (true, true) => WalResolution::Pair { md, xml },
+        (true, false) => WalResolution::One(md),
+        (false, true) => WalResolution::One(xml),
+        (false, false) => WalResolution::Absent,
+    }
+}
 
 const WAL_REQUIRED_SECTIONS: &[&str] = &[
     "current phase",
@@ -28,18 +56,34 @@ impl Check for WalWellformedCheck {
     }
 
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
-        let wal_rel = PathBuf::from("spec/WAL.md");
+        let wal_rel = match resolve_wal(project_root) {
+            WalResolution::Absent => {
+                // WAL discipline is a project convention, not part of the
+                // package manager's contract. A project that hasn't opted
+                // in simply has no WAL — that's not a finding. The
+                // well-formedness check only fires once the file exists
+                // and the operator has implicitly committed to it.
+                return;
+            }
+            WalResolution::Pair { md, xml } => {
+                report.err(
+                    CheckId::WalWellformed,
+                    Some(md.clone()),
+                    None,
+                    format!(
+                        "`{}` and `{}` are one logical document in two forms — one \
+                         document, one form (PROP-045); delete one of the pair",
+                        md.display(),
+                        xml.display()
+                    ),
+                );
+                return;
+            }
+            WalResolution::One(rel) => rel,
+        };
         let wal = project_root.join(&wal_rel);
-        if !wal.exists() {
-            // WAL discipline is a project convention, not part of the
-            // package manager's contract. A project that hasn't opted in
-            // simply has no `spec/WAL.md` — that's not a finding. The
-            // well-formedness check only fires once the file exists and
-            // the operator has implicitly committed to maintaining it.
-            return;
-        }
-        let body = match fs::read_to_string(&wal) {
-            Ok(s) => s,
+        let body = match vibe_specdoc::load_spec_text(&wal) {
+            Ok((s, _kind)) => s,
             Err(e) => {
                 report.err(
                     CheckId::WalWellformed,
@@ -139,6 +183,45 @@ mod tests {
                 .iter()
                 .all(|f| f.check != CheckId::WalWellformed && f.check != CheckId::WalFreshness),
             "missing WAL must produce no WAL findings; got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn an_xml_wal_is_checked_through_its_projection() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let wal = project.path().join("spec/WAL.md");
+        if wal.exists() {
+            fs::remove_file(&wal).unwrap();
+        }
+        let md = "# WAL {#root}\n\n## Current phase {#phase}\n\n(no other sections)\n";
+        let xml = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown(md).unwrap());
+        fs::write(project.path().join("spec/WAL.xml"), xml).unwrap();
+        let report = check_project(project.path(), &opts());
+        let missing: Vec<&str> = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::WalWellformed)
+            .map(|f| f.message.as_str())
+            .collect();
+        assert!(missing.iter().any(|m| m.contains("constraints")), "{missing:?}");
+        assert!(missing.iter().any(|m| m.contains("known issues")), "{missing:?}");
+    }
+
+    #[test]
+    fn a_wal_pair_is_a_loud_split_brain() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(project.path().join("spec/WAL.md"), "# WAL\n").unwrap();
+        let xml = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown("# WAL {#root}\n").unwrap());
+        fs::write(project.path().join("spec/WAL.xml"), xml).unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report.findings.iter().any(|f| {
+                f.check == CheckId::WalWellformed && f.message.contains("one document, one form")
+            }),
+            "got: {:?}",
             report.findings
         );
     }

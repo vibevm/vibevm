@@ -4,7 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::UNIX_EPOCH;
 
 use specmark::cell;
@@ -23,13 +23,14 @@ impl Check for WalFreshnessCheck {
     fn run(&self, project_root: &Path, opts: &CheckOptions, report: &mut CheckReport) {
         let now_unix = opts.now_unix_utc.unwrap_or_else(crate::unix_now_utc);
         let max_age_hours = opts.wal_max_age_hours;
-        let wal_rel = PathBuf::from("spec/WAL.md");
+        let wal_rel = match super::wal_wellformed::resolve_wal(project_root) {
+            // Absence and the two-form split brain are both surfaced once
+            // by the WAL well-formedness cell. Don't double-report.
+            super::wal_wellformed::WalResolution::Absent
+            | super::wal_wellformed::WalResolution::Pair { .. } => return,
+            super::wal_wellformed::WalResolution::One(rel) => rel,
+        };
         let wal = project_root.join(&wal_rel);
-        if !wal.exists() {
-            // Surfaced once by the WAL well-formedness cell. Don't
-            // double-report.
-            return;
-        }
         let mtime = match fs::metadata(&wal).and_then(|m| m.modified()) {
             Ok(t) => t,
             Err(e) => {

@@ -1804,9 +1804,9 @@
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/checks/wal_wellformed.rs",
       "item_kind": "mod",
-      "line": 4,
+      "line": 7,
       "symbol": "vibe_check::checks::wal_wellformed",
-      "end_line": 4,
+      "end_line": 7,
       "fingerprint": "tok1:74041e9f00501aca4df9bad93fd58560936dd5e05c6eb003d85c2d605943379f"
     },
     {
@@ -11292,7 +11292,7 @@
     {
       "file": "crates/vibe-check/src/checks/wal_wellformed.rs",
       "from_symbol": "vibe_check::checks::wal_wellformed",
-      "line": 4,
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter",
       "verb": "implements"
@@ -78845,12 +78845,6 @@
       "message": "edge `vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#vendoring` carries no kind/revision line yet"
     },
     {
-      "code": "xml-dialect",
-      "file": "spec/boot/STATIC.xml",
-      "line": 582,
-      "message": "content after </spec> — one document, one root"
-    },
-    {
       "code": "long-section",
       "file": "spec/common/PROP-045-xml-spec-sources.md",
       "line": 32,
@@ -78897,6 +78891,12 @@
       "file": "spec/terraforms/CONVERT-SOURCE-APPLICATION-v0.1.md",
       "line": 18,
       "message": "section `Нарезка` spans 120 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
+    },
+    {
+      "code": "stale-exclude",
+      "file": "specmap.toml",
+      "line": 0,
+      "message": "exclude pattern `spec/WAL.xml` matched no spec file — a stale exclusion protects nothing; remove it from specmap.toml"
     },
     {
       "code": "stale-exclude",

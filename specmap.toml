@@ -62,7 +62,7 @@ schema_roots = ["schemas"]
 #
 # `spec/boot/INDEX.md` is deliberately NOT here: it is a TOML manifest and
 # mints no units, so an exclusion for it would be born stale.
-spec_exclude = ["spec/WAL.md", "spec/boot/STATIC.md"]
+spec_exclude = ["spec/WAL.md", "spec/WAL.xml", "spec/boot/STATIC.md", "spec/boot/STATIC.xml"]
 
 # Individual root-level spec documents scanned in addition to spec_roots — the
 # owner-frozen implementation spec lives at the repo root, outside any spec/
