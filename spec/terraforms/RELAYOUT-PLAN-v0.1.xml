@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">RELAYOUT — переезд на корень vibevm/ (PROP-052)</title>
+  <status stage="impl" state="work" comment="нарезка R0-R7; R0-инвентарь снят 2026-08-24; исполняется под goal «переход на новую раскладку директорий проведен до конца в автоматическом режиме» после посадки XML-флипа"/>
+  <p>_STATUS: R0 СНЯТ, R1 готовится — 2026-08-24 · закон: `spec/common/PROP-052-directory-layout.xml` · предшественник: XML-флип посажен (`1ab9cc75`+`99b349d3`+`ee0651b4`, панель all green)</p>
+  <inventory title="R0 — инвентарь (снят)">
+    <p><R0-INVENTORY fact="true" status="impl/done">Хардкоды четырёх корней в продукте (греп `"spec/`,
+`"packages`, `"vibedeps`, `"vibefacts`, `spec/boot` по `src/`):
+vibe-workspace 357, vibe-cli 178, vibe-check 97, progress-core 60,
+vibe-spec 38, vibe-core 36, vibe-facts 18, vibe-registry 10,
+vibe-specdoc 10, vibe-index 6, vibe-mcp 0; xtask+tools+.claude 46.
+Итого ≈856 продуктовых + интеграционные тесты (сотни скаффолдов
+tempdir — правятся через общие test-support-хелперы). Главный зверь —
+vibe-workspace (bootgen, материализация, INDEX/STATIC,
+CLAUDE-блок).</R0-INVENTORY></p>
+  </inventory>
+  <slices title="Нарезка R1-R7">
+    <p><R1-LAYOUT-MODULE fact="true" status="impl/plan">**R1 — layout-модуль (воркер).** Один модуль в vibe-core:
+константы/функции четырёх корней + производные бут-пути; смена
+`canonical_doc_path`-слоя в vibe-spec на новый префикс с
+доказательством L1 (адреса не движутся — юнит: старый и новый
+физический путь канонизируются в один док-путь ЗАПРЕЩЁН — только
+новый существует, юнит держит сам маппинг); конформ-правило «строка
+корня вне layout-модуля — находка» (red-first). Красная фаза до
+переезда: модуль объявляет НОВЫЕ имена, продукт ещё на старых —
+поэтому R1 и R2 садятся одним локальным актом на worktree воркеров,
+панель — по завершению R4.</R1-LAYOUT-MODULE></p>
+    <p><R2-CRATE-MIGRATIONS fact="true" status="impl/plan">**R2 — миграция крейтов (веер воркеров, дизъюнктные
+периметры).** Пакеты: (a) vibe-workspace — bootgen/материализация/
+INDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблоны,
+команды, refactor-глагол (L5: новые spec homes + громкий рецепт на
+старом корне); (c) vibe-check + vibe-facts + progress-core (scope.rs
+excludes) + vibe-spec (glob/resolver); (d) vibe-index/vibe-registry/
+vibe-specdoc хвосты + xtask + tools/self-check.sh + .claude/hooks +
+specmap.toml. Все через layout-модуль; свои tempdir-скаффолды тестов
+переезжают в тех же пакетах.</R2-CRATE-MIGRATIONS></p>
+    <p><R3-TEST-SWEEP fact="true" status="impl/plan">**R3 — тестовый свип (воркеры).** Остаточные интеграционные
+тесты и фикстуры-скаффолды всех крейтов на новую раскладку;
+byte-чувствительные голдены пакетных движков НЕ трогаются руками —
+их фикстурные ПРОЕКТЫ переезжают структурно, голдены
+перегенерируются штатными регенераторами с осознанным диффом.</R3-TEST-SWEEP></p>
+    <p><R4-HOST-MOVE fact="true" status="impl/plan">**R4 — физический переезд хоста (босс).** `git mv` четырёх
+корней в `vibevm/`; текстовый свип спек/кампаний/корневых доков/
+хуков: пути `spec/`→`vibevm/vibespecs/`, `packages/`→
+`vibevm/vibepacks/`, `vibedeps/`→`vibevm/vibedeps/`, `vibefacts`→
+`vibevm/vibefacts` — УСЛОВНО по существованию цели (скрипт класса
+K3-свипа), generic-слова в прозе не трогаются; CLAUDE/AGENTS/GEMINI
+указатели; specmap.toml корни; переустановка; спецспейс fractality —
+его контракт отдельной правкой.</R4-HOST-MOVE></p>
+    <p><R5-PACKAGES-MOVE fact="true" status="impl/plan">**R5 — переезд пакетов (босс-скрипт + воркеры хвостов).**
+86 корней: `spec/`→`vibevm/vibespecs/` внутри каждого (+ их
+внутренние ссылки); движковые воркспейсы внутри пакетов не
+переезжают (crates/ — код, не спеки); рематериализация зеркалит
+новую раскладку в слоты.</R5-PACKAGES-MOVE></p>
+    <p><R6-GATES fact="true" status="impl/plan">**R6 — доказательство (босс).** Все проверки PROP-052
+##RELAYOUT-PROOF: панель, 0/0/0, specmap-паритет рёбер, двойная
+установка без дрейфа, скрипт-резолюция INDEX-целей, ноль грепов
+старых корней вне layout-модуля, clean-room смоук init→install→check,
+агентская проба маршрутизации по vibevm/vibespecs/boot.</R6-GATES></p>
+    <p><R7-WINDDOWN fact="true" status="impl/plan">**R7 — финализация.** Статусы, BACKLOG-остатки, зеркала,
+WAL/CONTINUE-чекпойнт.</R7-WINDDOWN></p>
+  </slices>
+</spec>

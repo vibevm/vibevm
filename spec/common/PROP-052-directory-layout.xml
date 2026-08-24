@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-052: the vibevm/ root — the directory layout law</title>
+  <status stage="spec" state="done" comment="commissioned and ruled by the owner 2026-08-24 (mandate quoted verbatim in §1); build rides spec/terraforms/RELAYOUT-PLAN-v0.1.xml under the session goal «переход на новую раскладку директорий проведен до конца в автоматическом режиме»"/>
+  <mandate title="1. Mandate">
+    <p><RELAYOUT-MANDATE-VERBATIM fact="true" status="spec/done">The owner's mandate, verbatim (2026-08-24):
+«Я обнаружил проблему: массовые клеши с реально существующими
+проектами, имеющими директорию spec или packages в корне. Кроме
+того, динамическим лоадерам сложно искать по таким директориям. В
+качестве решения, я хочу сделать глобальное переименование корневых
+директорий в проектах/пакетах. В корне создается директория vibevm.
+Внутрь неё переезжают директории: Директория spec переезжает с
+именем vibespecs. Директория packages переезжает с именем vibepacks.
+Директория vibedeps переезжает c исходным именем. Директория
+vibefacts переезжает с исходным именем. В мире не существует никаких
+легаси проектов с директорией vibevm в корне, а по именам типа
+"vibespecs" агентам проще делать grep и find, чем по spec (который
+приносит много мусора). Совершенно все спецификации, которые
+содержат эти имена (spec, packages, vibedeps, vibefacts) - должны
+быть проверены и переписаны соответствующе (spec ->
+vibevm/vibespecs). Конечно же, совершенно весь код. Сам проект
+vibevm и все его пакеты в packages должны быть переделаны под новую
+раскладку директорий. Результаты проверены/протестированы и
+измерены на предмет того, что ничего не сломалось.»</RELAYOUT-MANDATE-VERBATIM></p>
+    <p><THE-LAYOUT fact="true" status="spec/done">The layout: every project and every package carries ONE
+distinctive root directory `vibevm/`, holding `vibevm/vibespecs`
+(was `spec/`), `vibevm/vibepacks` (was `packages/`),
+`vibevm/vibedeps` (was root `vibedeps/`) and `vibevm/vibefacts`
+(was root `vibefacts/`). Nothing else moves; `vibe.toml` stays at
+the project root.</THE-LAYOUT></p>
+  </mandate>
+  <laws title="2. Laws">
+    <p><ADDRESSES-SURVIVE-THE-MOVE fact="true" status="spec/done">**L1 — physics moves, addresses do not.** `spec://`
+addresses, anchors, fact ids, specmap edges, `scope!` citations and
+recorded verdicts are LOGICAL and do not change: only the physical
+prefix maps differently (`vibevm/vibespecs/common/PROP-000.xml`
+still canonicalises to the same `common/PROP-000` document path).
+Any relayout step that would rename an address is a defect of the
+step.</ADDRESSES-SURVIVE-THE-MOVE></p>
+    <p><ONE-LAYOUT-MODULE fact="true" status="spec/done">**L2 — one layout module.** The four roots are named in
+exactly ONE place in the product — a layout module in the core
+(`vibespecs_root()` / `vibepacks_root()` / `vibedeps_root()` /
+`vibefacts_root()` and the derived boot paths); every crate routes
+through it, and a string literal of the old or new root outside
+that module (tests' own scaffolds excepted) is a conform-guarded
+defect.</ONE-LAYOUT-MODULE></p>
+    <p><NO-LEGACY-LAYOUT fact="true" status="spec/done">**L3 — no legacy reading.** The old layout is not read and
+not migrated silently: a project carrying root `spec/` beside
+`vibe.toml` (or root `vibedeps/`/`vibefacts/`) fails loudly with
+the migration recipe. The owner's ground: no project in the world
+carries a root `vibevm/` today, so the new root is unambiguous and
+the old one is retired whole.</NO-LEGACY-LAYOUT></p>
+    <p><PACKAGES-CARRY-THE-LAYOUT-TOO fact="true" status="spec/done">**L4 — packages too.** Every package root mirrors the same
+layout (`vibevm/vibespecs` inside the package instead of `spec/`);
+materialisation mirrors package layout into the slots, boot-snippet
+paths and INDEX targets follow.</PACKAGES-CARRY-THE-LAYOUT-TOO></p>
+    <p><REFACTOR-VERBS-FOLLOW fact="true" status="spec/done">**L5 — the refactor family follows.** `convert-package-src`
+and `convert-spec-src` resolve spec homes by the NEW names
+(`vibevm/vibespecs`, `vibevm/vibepacks`); an old-layout root gets
+the loud migration recipe, never a silent walk.</REFACTOR-VERBS-FOLLOW></p>
+  </laws>
+  <verification title="3. Verification">
+    <p><RELAYOUT-PROOF fact="true" status="spec/done">«Ничего не сломалось» is proven, not assumed: the full
+panel green over the moved world; `vibe check` 0/0/0; specmap
+resolve 0 unresolved with the SAME edge count as before the move;
+judging debt unchanged; a double reinstall with zero lock drift
+(idempotence); INDEX targets resolving to on-disk files by script;
+zero grep hits of the old roots in product code outside the layout
+module; a clean-room smoke (`vibe init` → `install` → `check` in a
+tempdir) on the new layout; and a cold-agent routing probe finding
+the lanes under `vibevm/vibespecs/boot`.</RELAYOUT-PROOF></p>
+  </verification>
+</spec>

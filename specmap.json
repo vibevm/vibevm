@@ -33976,6 +33976,114 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-051#HISTORY-COMMISSIONED"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:73e1c5d10306b02b4c571a8949c485c25345994a9999782a872b48cd1b9cf509",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "PROP-052: the vibevm/ root — the directory layout law",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:5f170103d8bd2b89000cdb0f8f8c4a6d2f6f3a779ab7f6096e7da9ffd9828133",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "1. Mandate",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#mandate"
+    },
+    {
+      "anchor": "RELAYOUT-MANDATE-VERBATIM",
+      "content_hash": "sha256:284385c7e2f227db2e85062cea4338a6f680556028a1473bd942d8646095719b",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "The owner's mandate, verbatim (2026-08-24):\n«Я обнаружил проблему: массовые клеши с реально существующими\nпроектами, имеющими директорию spec или packages в корне. Кроме\nтого, динамическим лоадерам сложно искать по таким директориям. В\nкачестве решения, я хочу сделать глобальное переименование корневых\nдиректорий в проектах/пакетах. В корне создается директория vibevm.\nВнутрь неё переезжают директории: Директория spec переезжает с\nименем vibespecs. Директория packages переезжает с именем vibepacks.\nДиректория vibedeps переезжает c исходным именем. Директория\nvibefacts переезжает с исходным именем. В мире не существует никаких\nлегаси проектов с директорией vibevm в корне, а по именам типа\n\"vibespecs\" агентам проще делать grep и find, чем по spec (который\nприносит много мусора). Совершенно все спецификации, которые\nсодержат эти имена (spec, packages, vibedeps, vibefacts) - должны\nбыть проверены и переписаны соответствующе (spec ->\nvibevm/vibespecs). Конечно же, совершенно весь код. Сам проект\nvibevm и все его пакеты в packages должны быть переделаны под новую\nраскладку директорий. Результаты проверены/протестированы и\nизмерены на предмет того, что ничего не сломалось.» @status:spec/done",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#RELAYOUT-MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "THE-LAYOUT",
+      "content_hash": "sha256:de57c57cda91f9b38e1afc08fa7fcf8c10b3f23c7af67302c0370d898b164c9e",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "The layout: every project and every package carries ONE\ndistinctive root directory `vibevm/`, holding `vibevm/vibespecs`\n(was `spec/`), `vibevm/vibepacks` (was `packages/`),\n`vibevm/vibedeps` (was root `vibedeps/`) and `vibevm/vibefacts`\n(was root `vibefacts/`). Nothing else moves; `vibe.toml` stays at\nthe project root. @status:spec/done",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"
+    },
+    {
+      "anchor": "laws",
+      "content_hash": "sha256:14afc26f4542d7628a238dd4338a3775ebf7528c1a2fe175902bf78229ef0fad",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "2. Laws",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#laws"
+    },
+    {
+      "anchor": "ADDRESSES-SURVIVE-THE-MOVE",
+      "content_hash": "sha256:c8be15c6b1cb3a611d4ca667d82f749a22a71b27982cb4c7e84dee3aeb4b85e6",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "**L1 — physics moves, addresses do not.** `spec://`\naddresses, anchors, fact ids, specmap edges, `scope!` citations and\nrecorded verdicts are LOGICAL and do not change: only the physical\nprefix maps differently (`vibevm/vibespecs/common/PROP-000.xml`\nstill canonicalises to the same `common/PROP-000` document path).\nAny relayout step that would rename an address is a defect of the\nstep. @status:spec/done",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"
+    },
+    {
+      "anchor": "ONE-LAYOUT-MODULE",
+      "content_hash": "sha256:f41515408c786ed8397f7c114a475c34cd10c4392e401cc2226553a6f9d2d9bb",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "**L2 — one layout module.** The four roots are named in\nexactly ONE place in the product — a layout module in the core\n(`vibespecs_root()` / `vibepacks_root()` / `vibedeps_root()` /\n`vibefacts_root()` and the derived boot paths); every crate routes\nthrough it, and a string literal of the old or new root outside\nthat module (tests' own scaffolds excepted) is a conform-guarded\ndefect. @status:spec/done",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#ONE-LAYOUT-MODULE"
+    },
+    {
+      "anchor": "NO-LEGACY-LAYOUT",
+      "content_hash": "sha256:390c9cd217d58267320598ce3cd59e83f96a8fe09d32ec3ae9b56edaf33b2170",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "**L3 — no legacy reading.** The old layout is not read and\nnot migrated silently: a project carrying root `spec/` beside\n`vibe.toml` (or root `vibedeps/`/`vibefacts/`) fails loudly with\nthe migration recipe. The owner's ground: no project in the world\ncarries a root `vibevm/` today, so the new root is unambiguous and\nthe old one is retired whole. @status:spec/done",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#NO-LEGACY-LAYOUT"
+    },
+    {
+      "anchor": "PACKAGES-CARRY-THE-LAYOUT-TOO",
+      "content_hash": "sha256:9cb72a280c1dc9e9bd8956f4a91f699fabbd7a29be9cf4c64dcc09029ec863de",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "**L4 — packages too.** Every package root mirrors the same\nlayout (`vibevm/vibespecs` inside the package instead of `spec/`);\nmaterialisation mirrors package layout into the slots, boot-snippet\npaths and INDEX targets follow. @status:spec/done",
+      "line": 53,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#PACKAGES-CARRY-THE-LAYOUT-TOO"
+    },
+    {
+      "anchor": "REFACTOR-VERBS-FOLLOW",
+      "content_hash": "sha256:91483766fc1cb23eab0b66572bbcf7428dc16b390ecbb0793b334099b6ac7910",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "**L5 — the refactor family follows.** `convert-package-src`\nand `convert-spec-src` resolve spec homes by the NEW names\n(`vibevm/vibespecs`, `vibevm/vibepacks`); an old-layout root gets\nthe loud migration recipe, never a silent walk. @status:spec/done",
+      "line": 57,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#REFACTOR-VERBS-FOLLOW"
+    },
+    {
+      "anchor": "verification",
+      "content_hash": "sha256:cbbafdf6c4b52597520ebfc74188456f27a69cd090306b273ffddff4ee845fda",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "3. Verification",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#verification"
+    },
+    {
+      "anchor": "RELAYOUT-PROOF",
+      "content_hash": "sha256:a61bdb77bf8ff3d2a864562330453e3e646ac976f88938cd730aed4efc2da08d",
+      "doc_path": "common/PROP-052",
+      "file": "spec/common/PROP-052-directory-layout.xml",
+      "heading": "«Ничего не сломалось» is proven, not assumed: the full\npanel green over the moved world; `vibe check` 0/0/0; specmap\nresolve 0 unresolved with the SAME edge count as before the move;\njudging debt unchanged; a double reinstall with zero lock drift\n(idempotence); INDEX targets resolving to on-disk files by script;\nzero grep hits of the old roots in product code outside the layout\nmodule; a clean-room smoke (`vibe init` → `install` → `check` in a\ntempdir) on the new layout; and a cold-agent routing probe finding\nthe lanes under `vibevm/vibespecs/boot`. @status:spec/done",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#RELAYOUT-PROOF"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",
@@ -77506,6 +77614,105 @@
       "heading": "11. Whole-campaign acceptance",
       "line": 5621,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#acceptance"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:10f6f51f67dc411e3a9948694d1333cb0c8abfe45ccd6728db4256b4a91c9fdc",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "RELAYOUT — переезд на корень vibevm/ (PROP-052)",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "inventory",
+      "content_hash": "sha256:22b99785cd303a5770c75cec474fc21d79d5f7f93f7793f4a1de8e887b2e8f7f",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "R0 — инвентарь (снят)",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#inventory"
+    },
+    {
+      "anchor": "R0-INVENTORY",
+      "content_hash": "sha256:a799b85c0a39bde7992fcd5120c8196eae873c708a01331d19b56241aacdd222",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "Хардкоды четырёх корней в продукте (греп `\"spec/`,\n`\"packages`, `\"vibedeps`, `\"vibefacts`, `spec/boot` по `src/`):\nvibe-workspace 357, vibe-cli 178, vibe-check 97, progress-core 60,\nvibe-spec 38, vibe-core 36, vibe-facts 18, vibe-registry 10,\nvibe-specdoc 10, vibe-index 6, vibe-mcp 0; xtask+tools+.claude 46.\nИтого ≈856 продуктовых + интеграционные тесты (сотни скаффолдов\ntempdir — правятся через общие test-support-хелперы). Главный зверь —\nvibe-workspace (bootgen, материализация, INDEX/STATIC,\nCLAUDE-блок). @status:impl/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R0-INVENTORY"
+    },
+    {
+      "anchor": "slices",
+      "content_hash": "sha256:7b9964da0e2d2f59e7a3fc6bb8f3431c78456eb18685c154450db5174dd75626",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "Нарезка R1-R7",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#slices"
+    },
+    {
+      "anchor": "R1-LAYOUT-MODULE",
+      "content_hash": "sha256:69c9e1b9204ae8e1980a20585f9b0bb551bd7a8ff642adbc7bf78a64339647d1",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R1 — layout-модуль (воркер).** Один модуль в vibe-core:\nконстанты/функции четырёх корней + производные бут-пути; смена\n`canonical_doc_path`-слоя в vibe-spec на новый префикс с\nдоказательством L1 (адреса не движутся — юнит: старый и новый\nфизический путь канонизируются в один док-путь ЗАПРЕЩЁН — только\nновый существует, юнит держит сам маппинг); конформ-правило «строка\nкорня вне layout-модуля — находка» (red-first). Красная фаза до\nпереезда: модуль объявляет НОВЫЕ имена, продукт ещё на старых —\nпоэтому R1 и R2 садятся одним локальным актом на worktree воркеров,\nпанель — по завершению R4. @status:impl/plan",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R1-LAYOUT-MODULE"
+    },
+    {
+      "anchor": "R2-CRATE-MIGRATIONS",
+      "content_hash": "sha256:4e264353f333dd29222d5af2593af7d0945c43777dd1848234d501be6f7afbeb",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R2 — миграция крейтов (веер воркеров, дизъюнктные\nпериметры).** Пакеты: (a) vibe-workspace — bootgen/материализация/\nINDEX/STATIC/CLAUDE-блок/boot_artifacts; (b) vibe-cli — init-шаблоны,\nкоманды, refactor-глагол (L5: новые spec homes + громкий рецепт на\nстаром корне); (c) vibe-check + vibe-facts + progress-core (scope.rs\nexcludes) + vibe-spec (glob/resolver); (d) vibe-index/vibe-registry/\nvibe-specdoc хвосты + xtask + tools/self-check.sh + .claude/hooks +\nspecmap.toml. Все через layout-модуль; свои tempdir-скаффолды тестов\nпереезжают в тех же пакетах. @status:impl/plan",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R2-CRATE-MIGRATIONS"
+    },
+    {
+      "anchor": "R3-TEST-SWEEP",
+      "content_hash": "sha256:53a256beefdb6ccda79d862ad99c0a35b3ef7d5ffc3e61bc4eb9f67d0a76920e",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R3 — тестовый свип (воркеры).** Остаточные интеграционные\nтесты и фикстуры-скаффолды всех крейтов на новую раскладку;\nbyte-чувствительные голдены пакетных движков НЕ трогаются руками —\nих фикстурные ПРОЕКТЫ переезжают структурно, голдены\nперегенерируются штатными регенераторами с осознанным диффом. @status:impl/plan",
+      "line": 37,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R3-TEST-SWEEP"
+    },
+    {
+      "anchor": "R4-HOST-MOVE",
+      "content_hash": "sha256:89e43381e18a5a8db15f12811a6cf8cd6e74bf6245bb5e58fe524793339ac391",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R4 — физический переезд хоста (босс).** `git mv` четырёх\nкорней в `vibevm/`; текстовый свип спек/кампаний/корневых доков/\nхуков: пути `spec/`→`vibevm/vibespecs/`, `packages/`→\n`vibevm/vibepacks/`, `vibedeps/`→`vibevm/vibedeps/`, `vibefacts`→\n`vibevm/vibefacts` — УСЛОВНО по существованию цели (скрипт класса\nK3-свипа), generic-слова в прозе не трогаются; CLAUDE/AGENTS/GEMINI\nуказатели; specmap.toml корни; переустановка; спецспейс fractality —\nего контракт отдельной правкой. @status:impl/plan",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R4-HOST-MOVE"
+    },
+    {
+      "anchor": "R5-PACKAGES-MOVE",
+      "content_hash": "sha256:c0518814afa7647e835a872dd04f5360d20e0212a15e56c11e5ea46acd7e7e74",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R5 — переезд пакетов (босс-скрипт + воркеры хвостов).**\n86 корней: `spec/`→`vibevm/vibespecs/` внутри каждого (+ их\nвнутренние ссылки); движковые воркспейсы внутри пакетов не\nпереезжают (crates/ — код, не спеки); рематериализация зеркалит\nновую раскладку в слоты. @status:impl/plan",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R5-PACKAGES-MOVE"
+    },
+    {
+      "anchor": "R6-GATES",
+      "content_hash": "sha256:8bfaff17da90e39119f2759cd1cd4b674c998b89d753598f242ceb7b277ebb0f",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R6 — доказательство (босс).** Все проверки PROP-052\n##RELAYOUT-PROOF: панель, 0/0/0, specmap-паритет рёбер, двойная\nустановка без дрейфа, скрипт-резолюция INDEX-целей, ноль грепов\nстарых корней вне layout-модуля, clean-room смоук init→install→check,\nагентская проба маршрутизации по vibevm/vibespecs/boot. @status:impl/plan",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R6-GATES"
+    },
+    {
+      "anchor": "R7-WINDDOWN",
+      "content_hash": "sha256:dfcacdf680f839df81e3099481e2561e696c07694d2d4a5408d025fb827f948c",
+      "doc_path": "terraforms/RELAYOUT-PLAN-v0.1",
+      "file": "spec/terraforms/RELAYOUT-PLAN-v0.1.xml",
+      "heading": "**R7 — финализация.** Статусы, BACKLOG-остатки, зеркала,\nWAL/CONTINUE-чекпойнт. @status:impl/plan",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/RELAYOUT-PLAN-v0.1#R7-WINDDOWN"
     },
     {
       "anchor": "root",
