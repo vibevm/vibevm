@@ -34331,6 +34331,1788 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#RELAYOUT-PROOF"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:fc59092ff6191e87c9e3beaaf55b165de10a5241b6437733bf420907b7914116",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "PROP-054 — The vibe lifecycle and the extension machine",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#root"
+    },
+    {
+      "anchor": "related",
+      "content_hash": "sha256:996e9e9d57dea812cf58a6c377f5df316b8e1af538f765c2943ec22590861670",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Related:** [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.xml) (install orchestration — becomes phase 2 of the default lifecycle), [PROP-011](../modules/vibe-workspace/PROP-011-incremental-install.xml) (skip-when-fresh — §9 revises its materialise step from slot-wipe to per-file diff), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml) (the two install hooks whose `##REJ-GENERAL-LIFECYCLE` deferral this document un-defers; its trust gate is adopted whole), [PROP-022](../modules/vibe-workspace/PROP-022-materialization-modes.xml) (slot reset semantics — §9 refines them), [PROP-024](PROP-024-code-bearing-packages.xml) (code in packages; §8 amends its §2.3 build-output home), [PROP-025 §3–§4](../modules/vibe-workspace/PROP-025-binary-delivery.xml#dispatch) (`[[binary]]` build-in-slot — the precedent §8 generalises), [PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.xml) (the compile pipeline §7 attaches extension points to), [PROP-045](PROP-045-xml-spec-sources.xml) (the derived manifest — the per-file record §9 generalises), [PROP-053](../modules/vibe-workspace/PROP-053-clean-verb.xml) (verb chaining — §4.4 is the \"own semantics ruling\" its `##CHAIN-ONLY-INSTALL` demanded before any wider grammar). @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#related"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:2dc32ed65554cf0a75e74020c8183c5de638954dc404f8b4907de6d7b4405aff",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "1. The owner's mandate",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#mandate"
+    },
+    {
+      "anchor": "LIFE-MANDATE-VERBATIM",
+      "content_hash": "sha256:4839c3caf8c11a390e470846faf2b0a254694b2cb36ece10b90850e6ca4bffc0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The owner's words (2026-08-24), verbatim, abridged only of the courtesy framing: «Я хочу продумать аналог Lifecycle как то сделано в Maven. И сделать хуки в этот Lifecycle как это сделано в Maven и Babel. […] Ложится ли наш Lifecycle на Maven Lifecycle? Каких фаз у нас еще нет? Я хочу чтобы движок лайфсайклов был встроен прямо в Vibe, и так же как в Maven если мы делаем стадию более высокого уровня, то все предыдущие тоже выполняются. Но надо понимать разницу между нашим install и их install. Их install это компиляция, наш - это материализация в vibedeps. Поэтому наш install запускается в самом начале, первой фазой (при этом он должен быть строго инкрементальным - если vibe.toml не поменялся, инсталлировать пакеты не нужно). Наш аналог стадии install будет называться build и create. На стадии build будут собирать алгоритмически собираемые исходники (например, Rust). На стадии create - в этот момент будет активироваться какой-нибудь внешний агент или vibe-llm (если запущено из командной строки) либо если vibe вызван из агента - будут нашим хитрым механизмом передаваться промты для обеспечения агентного режима. Собственно, vibe build это довольно понятная детерминированная стадия, а вот create - это долго и непонятно, поэтому она одна из последних (но до package и deploy по аналогии с Maven). На этапе package мы соответственно будем собирать что-то типа статически собираемых скиллов, плагинов для Claude, инсталляторов для локально запускаемых утилит, и так далее. Deploy - это обычно раскатка на сервера. Я хочу сразу запроектировать две вещи. Во-первых, стандартный ритуал вызова стандартных методов как в Maven. Второе - так же как в Maven, возможность сделать пакет-плагин и добавить новую функциональность в этот ритуал.» @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFE-MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "LIFE-MANDATE-FULL-IR",
+      "content_hash": "sha256:3d289b822a336a58f3ff5dbb7b81ac03d8e4bf75d2aa4cc871130b952f581da1",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The owner's second ruling (2026-08-25), verbatim, on reviewing the first draft: «Я бы хотел, чтобы плагины компилятора имели полный доступ к IR пакетов и могли его изменять как хочешь. То есть, чтобы это был полноценное компиляторное расширение - так же как ты можешь писать новые оптимизации на бэкенде и новые фронтенды для LLVM. Да, это небезопасно, поэтому я предлагаю сделать отдельный флаг в vibe.toml который явно покажет, что плагин попросил доступ к такому низкоуровневому API. Я хочу чтобы пользователи могли прямо достроить компилятор поверх этого. Вероятно, под это нужно отрефакторить переходы в нашем IR и сделать всё высоко композируемым.» This ruling shapes §7's two-tier model, §7.5's IR refactor, and the pass tier's `compiler_internals` flag. @status:spec/done",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFE-MANDATE-FULL-IR"
+    },
+    {
+      "anchor": "LIFE-MANDATE-NO-CONSENT",
+      "content_hash": "sha256:c95a5c0ee735f1f5c8f60d3cce1c3e9619dbde321c142684e1c7275ae3c926d7",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The owner's third ruling (2026-08-25), verbatim: «Я не хочу консентов. Если пользователь установил пакет - это само по себе уже консент. Есть множество компиляторов от Gradle и Webpack до Clang которые поддерживают всевозможные нативные расширения. Где ты видел, чтобы пользователь сидел и подтверждал эти разрешения? На модификацию графа? Да обычный пользователь вообще не разбирается, как это всё внутри работает, он пришел за работающими промтами. Что полезно сделать: полную прозрачность observability, чтобы отладчики, сканеры, специалисты по internals мгновенно могли понять, что там происходит.» And, on binary distribution: «…если кто-то захочет создать полностью закрытый плагин и не поставлять исходников, ему придется скомпилировать этот плагин подо все существующие в природе версии Rust, что кажется очень сложной задачей» — the fear this document answers by NOT being ABI-bound to Rust (§8.1: the C-ABI/VST posture, and §8.2's prebuilt closed-source form). These rulings shape §3.3's installation-is-consent law, §3.5's observability surface, and closed `##OPEN-PHASE-NAMES` (the nine-phase table stands as drafted) and `##OPEN-NATIVE-TRUST`. @status:spec/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFE-MANDATE-NO-CONSENT"
+    },
+    {
+      "anchor": "LIFE-MANDATE-VERBATIM-2",
+      "content_hash": "sha256:fe8f994e667cff2a0bc945730accfdfa7cd0e12c72be0162e4be8d9fc7a73a62",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Continued, verbatim: «В качестве тестового сценария обработки стадии vibevm lifecycle я предлагаю какой-то механизм, который может определить плагин в своем манифесте, который программно будет что-то печатать - например, название стадии. […] Сейчас стоит посмотреть на то, какая информация попадает в обработку стадий в Maven и сделать это. Вторая иерархия мест расширения - это процесс компиляции, который аналогичен Babel. […] В данном случае копипастить бессмысленно с Babel не нужно, нужно только в общих чертах делать не хуже. В качестве тестового сценария плагина компилятора я предлагаю какой-нибудь простейший ТЕСТОВЫЙ алгоритм компрессии, например - в результирующем XML удалить все пробелы и переносы строк между тэгами […]. На самом деле, убирать пробелы и переносы - это плохая идея […], но это хороший пример для тестирования механики. В дальнейшем мы например, сделаем туда плагин компрессии по Caveman […]. Почему я рассказываю тебе про обе эти системы вместе? Потому что их дизайн должен быть сделан похоже и синергично, чтобы у пользователей не было ощущения разброда и нелогичности в разных форматах расширения VibeVM. Они должны быть взаимодополняющими, удобными, понятными. Также важная техническая деталь. Поскольку мы пишем не на Java или JavaScript как Maven или Babel, мы не можем просто так легко обрабатывать стадии скриптами. […] Должен быть еще один и самый продвинутый способ - что для lifecycle что для компилятора - это вызов нативного Rust кода. Я предлагаю систему, в которой библиотеки могут поставить код, который соберется в динамическую библиотеку, которую vibevm подхватит. Такие библиотеки, могут быть специфичны для проекта, поэтому собранные расширения нужно собирать inplace прямо внутри vibedeps либо внутри packages (если это \"наш\" пакет). Крайне важно, чтобы vibevm делала install инкрементально, потому что иначе она рискует стереть уже собранные нативные расширения […]. Нужна ревизия инкрементальности утилиты install, чтобы она не стирала всё перед установкой пакета, а накатывала только реально обновленную разницу. Эта инкрементальность - супер важный кусок, без которого всё будет слишком сильно тормозить, чтобы этим можно было пользоваться.» @status:spec/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFE-MANDATE-VERBATIM-2"
+    },
+    {
+      "anchor": "prior-art",
+      "content_hash": "sha256:4e3e1387e4427b989d3dcdde6f81ae774133ea07f90320c6ba7662774d9b8fc1",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2. Prior art, and where we stand against it",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#prior-art"
+    },
+    {
+      "anchor": "maven-model",
+      "content_hash": "sha256:ac0f00b676959d02ba03ade4bd29b24abd0db973c7f78d921bce7a3299a8295d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2.1 The Maven model — what we adopt and what we do not",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#maven-model"
+    },
+    {
+      "anchor": "MAVEN-MODEL",
+      "content_hash": "sha256:087dc2556e3201267014c0fe276c2aea70645b3a2b5bd7d250a4491f647120f0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Maven's model, from the primary source (the lifecycle introduction, read 2026-08-24): three built-in lifecycles — `default` (23 phases: validate, initialize, generate-sources … compile … test … package … verify, install, deploy), `clean` (pre-clean, clean, post-clean), `site`. Invoking a phase executes every prior phase of that lifecycle plus the phase itself; `mvn clean deploy` runs two lifecycles in sequence. A **phase** is a slot; a **plugin goal** is a task bound to a slot; *«if a build phase has no goals bound to it, that build phase will not execute»* — an empty phase is a free no-op. The `<packaging>` element selects a default goal-to-phase binding table (jar binds `compiler:compile` to compile, `surefire:test` to test, `jar:jar` to package…; `pom` packaging binds almost nothing). Plugins add goals via `<executions>` with per-execution `<phase>`, `<configuration>` and an id; multiple goals on one phase run in POM declaration order, packaging-bound goals first. @status:spec/done",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MAVEN-MODEL"
+    },
+    {
+      "anchor": "ADOPT-FROM-MAVEN",
+      "content_hash": "sha256:8634206005ed543c4311a33897a7f6803d970039209f842298d09539b46f269f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Adopted:** the phase line as the user-facing ritual (one short vocabulary that builds any vibe project); invoke-runs-all-priors; clean as a separate lifecycle composed by `vibe clean <phase>`; empty-phase-is-a-no-op; packaging-style default bindings selected by the manifest (§4.5); plugin executions with per-execution phase, id and config (§6). @status:spec/plan",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ADOPT-FROM-MAVEN"
+    },
+    {
+      "anchor": "NOT-FROM-MAVEN",
+      "content_hash": "sha256:0d554d13876184d7ed8a6c0107532f4449afc9e8cbbf47ce91d9f43d814cdb99",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Not adopted:** the 23-phase granularity (our default lifecycle has nine phases — the hyphenated `pre-*`/`process-*` intermediate slots are exactly the ones Maven itself says are *«not usually directly called from the command line»*, and we start without them; a future phase can be inserted behind its own ruling because phase order is a table, not an enum in stone); the `site` lifecycle (our \"site\" — the boot lane and generated docs — is already the product of install/compile, not a third lifecycle); Maven's unconditional re-execution (§4.3 makes every phase skip-when-fresh — the Gradle/Bazel property, and the owner's hard requirement). @status:spec/plan",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#NOT-FROM-MAVEN"
+    },
+    {
+      "anchor": "babel-model",
+      "content_hash": "sha256:4e11182708f3d1e23730566401a688eb6ebf90a504bd5670015b2d9e2b6cfd4e",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2.2 The Babel model — what we adopt and what we do not",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#babel-model"
+    },
+    {
+      "anchor": "BABEL-MODEL",
+      "content_hash": "sha256:85ad50950c39382501de3fe4871ed3053a9d3d9f937f48e8edc97ec0e51bf98f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Babel's model, from the primary source (the plugins reference, read 2026-08-24): compilation is parse → transform → generate; plugins are functions returning a `visitor` keyed by AST node type (`Identifier(path) { … }`), enabled by listing them in configuration; options ride as `[\"plugin-name\", { …opts }]`; ordering is *«plugins run before presets; plugin ordering is first to last; preset ordering is reversed»*; a transform plugin auto-enables its syntax plugin; presets are named plugin groups. @status:spec/done",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BABEL-MODEL"
+    },
+    {
+      "anchor": "ADOPT-FROM-BABEL",
+      "content_hash": "sha256:4b4d5b9cdba5e426c8e177393fa366936ace96c20e00fea4fbbb3f2a965c8779",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Adopted:** transforms as declared, configured, ordered pipeline entries over the compiler's own IR; per-plugin options in the declaration; presets as named groups (our kind-presets, §4.5, serve both hierarchies). @status:spec/plan",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ADOPT-FROM-BABEL"
+    },
+    {
+      "anchor": "NOT-FROM-BABEL",
+      "content_hash": "sha256:b320e7abcf3937c8a678edf5113457faa2869cae1835281a206d88e6614dcc28",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Not adopted (per the mandate — \"не хуже в общих чертах, без копипаста\"):** the reversed-preset ordering rule (one rule for everything: declaration order, §3.4 — Babel's reversal is a compat artefact users must memorise); the per-node-type visitor as the FIRST-wave external plugin API — our tier-1 transform stages are document-grained (§7.2), because our compiler already runs its own visitors internally (qualify, the absorbed filter) and a document-grained transform crosses the native ABI in one call instead of thousands (§8.5); full-depth mutation is served by the pass tier (§7.4) as whole-IR-in/whole-IR-out, not by an interactive per-node visitor API — that interactive surface stays deferred behind this anchor. @status:spec/plan",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#NOT-FROM-BABEL"
+    },
+    {
+      "anchor": "llvm-model",
+      "content_hash": "sha256:d8c84a7f454986e2547af3bdb256491bb34b93e90e19c92926c26a3861e6c9c6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2.3 The LLVM/MLIR model — the pass tier's ancestry",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#llvm-model"
+    },
+    {
+      "anchor": "LLVM-MODEL",
+      "content_hash": "sha256:ac269538731b937b66dd4de01d453a2930b06fe32d82b6c231c2ad9614c9efa1",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The 2026-08-25 ruling names a third ancestor: LLVM — where an extension is not a consumer of fixed hook points but a **pass** over the compiler's own IR, ordered by a pass manager among the built-in passes, with custom frontends lowering new source languages INTO the IR and custom backends lowering it OUT. The closest structural match for us is actually **MLIR's multi-level shape**: our compilation is a progressive lowering through named representations (§7.4.1), transforms run *within* a level, lowerings step *between* levels, and a verifier runs between passes so a broken invariant fails at its author, not three passes later. @status:spec/done",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LLVM-MODEL"
+    },
+    {
+      "anchor": "ADOPT-FROM-LLVM",
+      "content_hash": "sha256:b6d872c71b0bc250d957643e81e49284a202408345f8629e47a978c1a932d8b9",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Adopted (tier 2, §7.4):** the pass as the unit of extension; the pass manager with position-by-name (after/before/replace a built-in pass); frontends and backends as lowering passes anyone can add; the inter-pass verifier. **Not adopted:** LLVM's in-process C++ API surface as the plugin contract (no stable Rust ABI exists — §8.1's law stands; a pass crosses the C ABI as whole-IR-in / whole-IR-out JSON, §7.4.4) and LLVM's unversioned IR churn (our IR wire schema is versioned and gated, §7.4.5). @status:spec/plan",
+      "line": 29,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ADOPT-FROM-LLVM"
+    },
+    {
+      "anchor": "webpack-model",
+      "content_hash": "sha256:2791f5b697f4fb2b33caf4f493f42b950d3f3bb096aa24498d506c8194398226",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2.4 The Webpack model — the audit that found three gaps",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#webpack-model"
+    },
+    {
+      "anchor": "WEBPACK-MODEL",
+      "content_hash": "sha256:2f5107c675f687af56e4294567a9218018b4a639d270aade7548a7ad15bc5534",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Webpack (owner-supplied source, 2026-08-25): an **event-driven plugin-based compiler** — a lifecycle of hook events (compile → resolve → parse → bundle → post-process) where even core functionality ships as default plugins on the same hooks; **loaders** transform individual files (selected per-file by `test`/include/exclude rules, chained) while **plugins** work on the whole bundle at the end; the dependency graph is built by recursive resolution from an entry, topologically sorted, merged, then tree-shaken and minified; watch mode and persistent caching make rebuilds incremental; `stats`/bundle-analyzer attribute bundle size to modules. @status:spec/done",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WEBPACK-MODEL"
+    },
+    {
+      "anchor": "WEBPACK-ALREADY-COVERED",
+      "content_hash": "sha256:8093192f8869eb5531c41c285ed200112b388c2f511d945c19ca8b6a942b940d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Already ours, checked point by point:** core-as-plugins ⇔ §7.5's «built-ins are not privileged»; loaders-vs-plugins ⇔ tier 1's per-document stages (`compile:source`/`document`) versus whole-lane stages (`compile:lane`/`emitted`) — one machine where Webpack has two vocabularies; entry ⇔ the boot-snippet seed; import-order/cycles ⇔ the topo order and three-colour cycle walker PROP-035 already ships; code-splitting/lazy chunks ⇔ static-vs-dynamic lanes plus lazy-pull subskills, already the loading model; minification ⇔ §10.2; stats/profiling ⇔ §3.5. **Tree shaking we have by construction, not as an optimisation:** the closure is computed FROM the seed over authored edges, so unreachable content never enters the lane at all — Webpack prunes after the fact what our loading semantics never admits. @status:spec/done",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WEBPACK-ALREADY-COVERED"
+    },
+    {
+      "anchor": "WEBPACK-GAPS-TAKEN",
+      "content_hash": "sha256:f0b303e53c016204e1182017ac7c53d7a232f10787b9212601086fecf94c7bcd",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Three things the audit found missing, now specified:** per-contribution SELECTORS (the loader `test`-rule genre — §3.2 `##CONTRIB-SELECTOR`); the compile cache the refactor must not preclude (the persistent-cache/Turbopack lesson — §7.5 `##COMPILE-CACHE-READY`); and the lane analyzer (the bundle-analyzer genre bound to our tokenomics law — §3.5 `##OBS-LANE-ANALYZER`). @status:spec/plan",
+      "line": 35,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WEBPACK-GAPS-TAKEN"
+    },
+    {
+      "anchor": "gap-map",
+      "content_hash": "sha256:4dcfe62002b57b5b94a982c280f5f3648845d4d4ae1ef70ba9f337dc0c5c0c9c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "2.5 Does our lifecycle map onto Maven's? Which phases are missing?",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#gap-map"
+    },
+    {
+      "anchor": "GAP-ANSWER",
+      "content_hash": "sha256:ef9d928d2c47bca5195aa9aede3092933dbcb03f7e616fff6c541ce15d1fd21d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The owner's direct question, answered. It maps — with three systematic shifts, not one-to-one. **Shift 1:** Maven's dependency resolution is not a phase (it happens before/lazily); ours IS the first real phase, because our `target/`-equivalent is the materialised prompt world itself. **Shift 2:** Maven's single `compile` splits in two for us — deterministic `build` and agentic `create` — because we have a producer Maven does not: the LLM. **Shift 3:** Maven re-runs everything; every phase of ours must be skip-when-fresh or the agentic/native costs make the ritual unusable. @status:spec/done",
+      "line": 39,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#GAP-ANSWER"
+    },
+    {
+      "anchor": "GAP-TABLE",
+      "content_hash": "sha256:b45936f111d02086b74551f22723f41cc0594cea0ceddde76a9dfa1094dda8fc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The correspondence, phase by phase (their name → ours → what exists today): @status:spec/done",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#GAP-TABLE"
+    },
+    {
+      "anchor": "synergy",
+      "content_hash": "sha256:a6bb3deefe4e475a085946ee50eb2b0a440a51ef0ccfa40e88d44dbdcfd7e992",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3. One extension machine — the synergy law",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#synergy"
+    },
+    {
+      "anchor": "ONE-MACHINE",
+      "content_hash": "sha256:2b071619104fab2bf84249009e3da13cefb8398ac036c0c00477f98c3536a226",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Decision.** The lifecycle hooks and the compiler plugins are ONE machine with two families of extension points, not two machines. One declaration grammar, one context-envelope shape, one handler taxonomy, one trust gate, one ordering rule. A user who has written a lifecycle contribution knows how to write a compiler transform, and vice versa — this is the mandate's «похоже и синергично» made structural. @status:spec/plan",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE"
+    },
+    {
+      "anchor": "points",
+      "content_hash": "sha256:b25946ac2c0211307a48472e21c117f270c0c73881badf660aaaa4391f060619",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3.1 Extension points — one namespace, three families",
+      "line": 65,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#points"
+    },
+    {
+      "anchor": "POINT-GRAMMAR",
+      "content_hash": "sha256:a99e78871fb0871d03e73d11e9f1f6cf9afa32b7c2954d2ccaef3ee03a03b467",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "An **extension point** is a string `<family>:<name>`. Three families: **`phase:`** — the default-lifecycle phases and `clean` (project-scoped moments: `phase:build`, `phase:create`, …); **`compile:`** — the compiler's two tiers: the §7.2 staged positions (`compile:source`, `compile:document`, `compile:lane`, `compile:emitted`) and the §7.4 pass tier's single point `compile:pass`, whose position inside the pipeline is carried by the contribution's `pass = { … }` declaration; **`slot:`** — the per-package materialisation moments that already exist as PROP-020 (`slot:pre-install`, `slot:post-install`), re-stated in this vocabulary without changing their semantics, timing, or manifest spelling ([`[hooks]`](../modules/vibe-workspace/PROP-020-install-hooks.xml#manifest) keeps working verbatim; it is now sugar for two `slot:` contributions). @status:spec/plan",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"
+    },
+    {
+      "anchor": "contributions",
+      "content_hash": "sha256:58aeb4eceb8953c4c64bc65e92b031b2f2446d6a1edda053177f90d2bb5bf1c6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3.2 Contributions — the [[extension]] table",
+      "line": 68,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#contributions"
+    },
+    {
+      "anchor": "CONTRIB-GRAMMAR",
+      "content_hash": "sha256:61a07a3691f0484b7be3b9eeb4efaff26cc5a108d3c6628db79d12802cc9cc03",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A **contribution** binds a handler to a point. It is declared as an `[[extension]]` table — in a **package** manifest (the package ships and offers the behaviour) or in the **project** manifest (the host adds its own). The shape is one grammar for every family: @status:spec/plan",
+      "line": 69,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"
+    },
+    {
+      "anchor": "CONTRIB-FIELDS",
+      "content_hash": "sha256:6f15754d143a772887b28930ebfad1bc4b3d7cdbec832a0c4d5b5d34fd81a6e2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Fields: `id` (execution identity — Maven's execution id; also the disable/override key), `point`, `handler` (§6), `config` (free TOML delivered to the handler verbatim — Babel's plugin options), `auto` (§3.3), and optionally `when` (a guard: `kind = \"rust-stack\"`-style applicability conditions, future work behind this anchor). @status:spec/plan",
+      "line": 82,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS"
+    },
+    {
+      "anchor": "MULTI-EXEC",
+      "content_hash": "sha256:15ca39dedb9e4fe004872b2fc9e42add19e68d41f147b18112e36dc8c848f3ba",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The same handler may be bound more than once with different `id`s and configs — Maven's multiple-executions property, verbatim need (e.g. `log` at `phase:validate` and again at `phase:package`). @status:spec/plan",
+      "line": 83,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MULTI-EXEC"
+    },
+    {
+      "anchor": "CONTRIB-SELECTOR",
+      "content_hash": "sha256:d9d5d15772d3456ecc82997077d1af61b4ba760e0b0336dee5499a3ced5dbada",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Selectors** (the Webpack loader `test`-rule genre, 2026-08-25 audit): a contribution may carry `applies_to = { packages = [\"org.x/*\"], paths = [\"vibevm/vibespecs/prompts/**\"] }` — declarative include/exclude scoping evaluated by the ENGINE, so a per-document transform (tier-1 `compile:source`/`document`) or a per-slot moment runs only where declared, visible to §3.5's registry, instead of every plugin re-implementing filtering privately in `config`. Absent selector = applies everywhere its point fires, today's behaviour. @status:spec/plan",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR"
+    },
+    {
+      "anchor": "activation",
+      "content_hash": "sha256:a4a06c4e33a0c4371049be453d302b5d68ad32e2d907c36f406411e6135768c8",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3.3 Activation — installation is consent; configuration is not a permission slip",
+      "line": 87,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#activation"
+    },
+    {
+      "anchor": "INSTALL-IS-CONSENT",
+      "content_hash": "sha256:9ec69b397964bb72b1b104e7d5ac1a6acaa7fdba66cc60979da5485456034573",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Installing a package IS the consent to run its extensions** (owner ruling 2026-08-25, `##LIFE-MANDATE-NO-CONSENT`). No allow-lists, no first-run prompts, no `--allow-…` flags — the Gradle/Webpack/Clang posture: an ecosystem of native extensions where the trust decision is made once, at dependency selection, like `build.rs` and `postinstall` before us. The safety model is not permission dialogs but **total observability** (§3.5). At build time this obligates an amendment at PROP-020 §2.3 (its allow-list + first-run-consent + non-interactive-abort machinery is superseded by this law for all handler kinds; statuses moved at their anchors, nothing renamed). @status:spec/plan",
+      "line": 89,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INSTALL-IS-CONSENT"
+    },
+    {
+      "anchor": "AUTO-BY-FAMILY",
+      "content_hash": "sha256:723bb66d961436a6d1be2c4c6dc1f4d94e3aef2197867e6512255302a2af7c3c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**A dependency's `phase:`/`slot:` contributions are active once the package is installed** — the owner's test scenario verbatim: a plugin declares in ITS OWN manifest and prints. **A dependency's `compile:` contributions default to `auto = false` — they activate by a host manifest line.** The asymmetry is CONFIGURATION, not a permission gate: a compile transform shapes the host's own artifact (which transforms produce MY lane is the host's choice, like `spec_format` is), while a phase contribution performs the package's own declared job. A package MAY declare `auto = true` on a compile contribution; it is ignored with a warning — the shape of the host's lane is the host's word. @status:spec/plan",
+      "line": 90,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AUTO-BY-FAMILY"
+    },
+    {
+      "anchor": "HOST-ACTIVATION",
+      "content_hash": "sha256:c6b80a57c08a3b83bf8358be8b101d94256c0ee437004320921b68e21cb63b4f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Host activation and override.** The consuming manifest activates a dependency's non-auto contribution, or re-configures an auto one, by reference: `[[extension.use]] ref = \"org.vibevm.x/y#xml-squeeze\"` with optional `config` override; `[extensions] disable = [\"org.vibevm.x/y#announce\"]` turns any contribution off. The reference key is `<group>/<name>#<id>` — stable, printable, greppable. @status:spec/plan",
+      "line": 91,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION"
+    },
+    {
+      "anchor": "SURFACE-THE-RITUAL",
+      "content_hash": "sha256:92347279e9db435c19ded79be4918088bce7c8f83a1d4dc3f690c4219ef7ca87",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Nothing runs invisibly.** Every phase run prints the contributions it will execute (id, point, handler kind, providing package) before running them — the narrator genre the tooling already speaks (`[k/n]` lines). A ritual whose steps are secret is not a ritual. The full instrument rack is §3.5. @status:spec/plan",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL"
+    },
+    {
+      "anchor": "ordering",
+      "content_hash": "sha256:697cdab5c74b62c4c27dec0fce98a0d5417827203133867d4cdcaa8fbbf4e9e5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3.4 Ordering — one rule everywhere",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ordering"
+    },
+    {
+      "anchor": "ORDER-LAW",
+      "content_hash": "sha256:d402cfaca01c69442ff26f2e353bd9c3de1ad630e61105971627df1c5a29e140",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Within one extension point, contributions run in this order: **(1)** built-in bindings of the effective kind-preset (§4.5) — Maven's «packaging first»; **(2)** dependency-declared contributions, in lockfile package order (deterministic, no filesystem enumeration), then declaration order within a package; **(3)** host-manifest contributions and `[[extension.use]]` activations, in declaration order. First-to-last, no reversals anywhere — one rule a user can hold in their head, against Babel's plugins-vs-presets special case (`##NOT-FROM-BABEL`). @status:spec/plan",
+      "line": 96,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW"
+    },
+    {
+      "anchor": "observability",
+      "content_hash": "sha256:4ea4088ffd874c6a75ec9e48c9bbbafbed1431b316a212936f0639f77b47cf28",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "3.5 Observability — the safety model is glass, not gates",
+      "line": 98,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#observability"
+    },
+    {
+      "anchor": "OBS-LAW",
+      "content_hash": "sha256:a76fbc084a1bfd8e270819bcd035df0c3dcb9fdacbe611a50553e807fedeb1bf",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The owner's trade (2026-08-25): no consent dialogs, total transparency instead** — debuggers, scanners, and internals specialists must be able to see instantly what the extension machine is doing. Observability is therefore a REQUIREMENT of the machine, specified with it, not a later courtesy: @status:spec/plan",
+      "line": 99,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LAW"
+    },
+    {
+      "anchor": "OBS-REGISTRY",
+      "content_hash": "sha256:1dbadeb4375825967c18ed46ef50de439dec654d969548b006bcc7d014823de9",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The extension registry is a query surface:** `vibe extensions` (with `--json`) lists every declared contribution in the installed world — id, point, handler kind, providing package and version, config, `compiler_internals` flag, auto/host-activated state, disabled state, and for natives the artifact path + build state + content hash. One command answers \"what runs on my project and who brought it\". `vibe list`/`show` mark internals-bearing packages, as §7.4.3 already requires. @status:spec/plan",
+      "line": 101,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY"
+    },
+    {
+      "anchor": "OBS-STATIC-SCANNABLE",
+      "content_hash": "sha256:21b1a4d1a74b16745e4383fa1c064836219233e8ce6d87019cb5ba1d1f098646",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Everything a plugin CAN do is declared, so a scanner needs no execution:** points, pass positions, formats, the internals flag, prebuilt artifact paths — all in manifests, greppable in the materialised world. A security scanner (the PROP-020 §4 \"LLM antivirus\" future) reads the whole capability surface statically; the machine adds no runtime-discovered powers. @status:spec/plan",
+      "line": 102,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-STATIC-SCANNABLE"
+    },
+    {
+      "anchor": "OBS-TRACE",
+      "content_hash": "sha256:4e9ea0f4eb9f16c06e31f8e505f327304bf49570be515d7aebd11a1a72d6dddb",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Compilation is traceable, LLVM-style:** `--trace-compile` (or `[compile] trace = true`) dumps the IR snapshot after every pass — built-in and plugin alike — to `.vibe/trace/<run>/NN-<pass>.json`, the `-print-after-all` genre; a per-pass timing table (the `-time-passes` genre) prints with the run. Diffing two adjacent snapshots answers \"what did THIS pass change\" in seconds — the debugger's and the internals specialist's first instrument. @status:spec/plan",
+      "line": 103,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE"
+    },
+    {
+      "anchor": "OBS-LANE-ANALYZER",
+      "content_hash": "sha256:3d1998eff21052197564040ac3a90999598f0aae601707ed3a170932500a2969",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The lane analyzer** (the bundle-analyzer genre, 2026-08-25 audit): a report attributing the compiled lane's weight — bytes and estimated tokens — per node, per package, per pass-delta (what each transform added or saved), answering «кто сколько приносит в лейн». This is [PROP-048](PROP-048-tokenomics.xml)'s tokenomics law given its instrument: the token budget is a design constraint, so its spend must be measurable at a glance. Surfaced as `vibe extensions analyze` (or a `vibe show lane` view) with `--json`. @status:spec/plan",
+      "line": 104,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LANE-ANALYZER"
+    },
+    {
+      "anchor": "OBS-RUN-RECORD",
+      "content_hash": "sha256:12668e2a10f91fe961613059cf4020a95dc03d8f0a778cf0a39e82c96c702939",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Every run leaves a record:** the phase narration (`##SURFACE-THE-RITUAL`), the generated artifact's transforms/pass header (§7.1, §7.4.3), and `.vibe/lifecycle.toml`'s per-execution fingerprints, timings and statuses — so \"what ran, in what order, on what inputs, how long\" is answerable after the fact without re-running. @status:spec/plan",
+      "line": 105,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-RUN-RECORD"
+    },
+    {
+      "anchor": "lifecycle",
+      "content_hash": "sha256:5801cad12ed6f3cdf98493b1659c68a417aa3458e92a5420baf77cb912443514",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4. The vibe lifecycle",
+      "line": 109,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#lifecycle"
+    },
+    {
+      "anchor": "shape",
+      "content_hash": "sha256:5897a53b90ea5efbdcea7ca6993d703d48d5e2b50659e377c2d622d4b24b739a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4.1 Two lifecycles, nine default phases",
+      "line": 110,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#shape"
+    },
+    {
+      "anchor": "LIFECYCLES",
+      "content_hash": "sha256:8b9a215d359ec4bd16cd6f385de28e944326c72d3c395e010aebbfa5bb0e51c0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "vibe has **two** lifecycles. **`clean`** — one phase, exactly PROP-053. **`default`** — nine phases, in this fixed order: @status:spec/plan",
+      "line": 111,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES"
+    },
+    {
+      "anchor": "INVOKE-RUNS-PRIORS",
+      "content_hash": "sha256:cb637ed5702ba16528da9fdb54fcac8c115b50e33383b93f3635ef0904db1960",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "`vibe <phase>` executes every default-lifecycle phase up to and including the named one, in order — the Maven ritual verbatim. `vibe clean <phase>` runs the clean lifecycle first, then the default lifecycle up to `<phase>` (§4.4). A phase with no contributions and no built-in binding **completes as a no-op** — Maven's empty-phase law, which is what makes nine slots cost nothing for a prompt-only project (its `deploy` chain degenerates to validate+install). @status:spec/plan",
+      "line": 113,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS"
+    },
+    {
+      "anchor": "ENGINE-ALGORITHM",
+      "content_hash": "sha256:9d5cd8dd6b14d041794973d899efd609d086fafde4e88e8ab845f184a6a303f2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The engine, as an algorithm** (normative; written out so no implementer has to reverse-engineer it from prose): @status:spec/plan",
+      "line": 114,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:47ab17120d80b13870d3aff7e2324dbfa23f869410b15af682b7189c518fbdc2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4.2 What each phase means",
+      "line": 137,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#phases"
+    },
+    {
+      "anchor": "PHASE-VALIDATE",
+      "content_hash": "sha256:fd664fd4e528f972ab1a3baf3fa8a5385092abc98cc1cf0ecf6e148b90a25fe4",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`validate`** — the cheap preflight: the manifest parses, the role/epoch/format are supported, declared extension references resolve to installed packages. Seconds, no network, no LLM. It is NOT `vibe check` (which stays a standalone diagnostic verb, our `mvn site`-grade tool); the phase is the subset whose failure makes every later phase meaningless. @status:spec/plan",
+      "line": 139,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE"
+    },
+    {
+      "anchor": "PHASE-INSTALL",
+      "content_hash": "sha256:57583f49fba0334f35a0d6af441ff9267f69aafff3f91106c5939737e83d3a43",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`install`** — the whole existing PROP-009/PROP-011 machine: resolve, fetch, materialise `vibevm/vibedeps/`, regenerate the boot lane (which is where the `compile:` family fires, §7.1), write the lock. **Strictly incremental by the owner's law:** manifest unchanged + lock satisfied + sources fresh ⇒ the phase reports fresh and does nothing (`##EMPTY-REQUIRES-IS-A-NO-OP` and the PROP-011 freshness gate already carry most of this; §9 closes the remaining hole — the per-file diff). Runs FIRST among real phases because everything downstream reads the world it materialises. @status:spec/plan",
+      "line": 140,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-INSTALL"
+    },
+    {
+      "anchor": "PHASE-GENERATE",
+      "content_hash": "sha256:bf2ba31ea949fec42f1cd0d469782b42c852a5ca6ed47d27b64dff2344a81fff",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`generate`** — derived *sources* from specs/prompts (the spec-driven codegen genre the host already practises as `cargo xtask codegen`): K6.5-table→constants, schema→types, prompt-catalog→registry. Empty by default; stack presets and plugins populate it. Sits between install (needs the world) and build (produces what build compiles). @status:spec/plan",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-GENERATE"
+    },
+    {
+      "anchor": "PHASE-BUILD",
+      "content_hash": "sha256:9d4a8e379b8e6475fffcafb05545ec0025ecda6b080cc089be6753b2a79e420f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`build`** — the deterministic, algorithmic build. Built-in binding: build every installed package's `[[binary]]` (PROP-025's `build_binary`, today per-name behind `vibe bin build`) and every declared native extension (§8) — in-slot, incremental via cargo's own fingerprinting (which §9's mtime preservation makes work). Stack presets add the project's own build (`cargo build` for the rust stack, `npm`/`tsc` for typescript, `go build` for go). Understandable, repeatable, cacheable — the owner's words. @status:spec/plan",
+      "line": 142,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-BUILD"
+    },
+    {
+      "anchor": "PHASE-TEST",
+      "content_hash": "sha256:756fabc4d4160967b3a3195cce2c2eef678d7f9abd015002351c5001e715e0e6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`test`** — deterministic checks: stack preset binds the language's test runner; discipline packages contribute their conform/oracle/tcg gates as plugin contributions (this is exactly the owner's «на вызов фазы типа vibe test должно быть возможно повесить алгоритмический хук или вызов агента»). No LLM by default. @status:spec/plan",
+      "line": 143,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-TEST"
+    },
+    {
+      "anchor": "PHASE-CREATE",
+      "content_hash": "sha256:c71676e398a9f9e0931a13fb6d2699e9271489266ce407b676c20d4172fdef2b",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`create`** — the agentic producer, our phase Maven does not have. Long, non-deterministic, expensive — therefore LATE (after test: the deterministic world is proven before tokens are spent) but before package/deploy (its outputs are what gets packaged). Contributions are `handler = { kind = \"agent\" }` executions (§6.4): from a terminal, `vibe-llm` drives them; under an agent host, the §6.5 handshake delegates them to the hosting agent. Skip-when-fresh is VITAL here — a create whose inputs (prompt + spec fingerprint) are unchanged must not re-spend tokens (§4.3). @status:spec/plan",
+      "line": 144,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-CREATE"
+    },
+    {
+      "anchor": "PHASE-VERIFY",
+      "content_hash": "sha256:22e68a514b08aa020a9b159ca1b596442edb445786d918d54ba8309027e58443",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`verify`** — the quality gate over build+create outputs, before anything is packaged: checksums, contract assertions, and (as plugins) LLM-judge checks. Empty by default; exists so that create's non-determinism has a named gate in front of package, the same reason Maven puts verify before install/deploy. @status:spec/plan",
+      "line": 145,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VERIFY"
+    },
+    {
+      "anchor": "PHASE-PACKAGE",
+      "content_hash": "sha256:2cda7f5dc91e8d652499326e4f3bffea74167ea01c8d70344e646df0b21e59f5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`package`** — assemble distributables: statically-assembled skills, Claude plugins/skill bundles, installers for locally-run utilities, zips of the §C9 genre. Built-in bindings arrive with the packaging work (skill projection is the first candidate); plugins extend. @status:spec/plan",
+      "line": 146,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE"
+    },
+    {
+      "anchor": "PHASE-DEPLOY",
+      "content_hash": "sha256:106c66e9c8ab3d6d94401dbdf9a8aab35e99fdac59cfc82127ac28b406dea557",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`deploy`** — push the packaged artifacts out: servers, registries, marketplaces. Empty by default, plugin-populated; red lines (publishing, tokens, PROP-000 §20) bind exactly as they bind everywhere else. @status:spec/plan",
+      "line": 147,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-DEPLOY"
+    },
+    {
+      "anchor": "freshness",
+      "content_hash": "sha256:21a4f3a84365e80d6abd16e646219b6ed78e24265af5e6055144f8edaffed913",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4.3 The incremental law — every phase is skip-when-fresh",
+      "line": 150,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#freshness"
+    },
+    {
+      "anchor": "PHASE-FINGERPRINT",
+      "content_hash": "sha256:e8dd075faf06a36a55d968424294954886d7802c5dbbc9edd0684423424b8e70",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Every phase execution owns a fingerprint** — a hash over its declared inputs (for install: manifest+sources, already built; for build: the slot sources + project sources the preset names; for create: the prompt documents + their spec closure). A phase whose fingerprint matches the recorded one **skips**, reporting `fresh` per contribution — the Gradle up-to-date property grafted onto the Maven ritual. This is the design answer to «если vibe.toml не поменялся, инсталлировать пакеты не нужно», generalised to all nine phases because create (tokens) and build (native compile time) are even more expensive than install. @status:spec/plan",
+      "line": 152,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT"
+    },
+    {
+      "anchor": "PHASE-STATE-HOME",
+      "content_hash": "sha256:6c47ce9c8d385c7dffa725dedec473d3bc8f03de54abc075bf8b1442234cb3bc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Fingerprints and last-run records live in `.vibe/lifecycle.toml` at the workspace root — machine state beside the project settings that already live in `.vibe/`, inside the shippable-tree denylist (PROP-024 §2.2), never committed, never hashed. `vibe clean` does NOT remove it (it describes work, it is not derived prompt state); a `--force` flag on any phase ignores it for one run. @status:spec/plan",
+      "line": 153,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME"
+    },
+    {
+      "anchor": "FRESHNESS-IS-PER-CONTRIBUTION",
+      "content_hash": "sha256:323ab19a73f2fe2baf081a0aa1b47def57665a31ed0203779613c4d1210f13be",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Freshness is judged **per contribution**, not only per phase: one stale execution re-runs alone; its peers stay skipped. A handler MAY declare extra inputs in its manifest entry (`inputs = [\"spec/prompts/**\"]`); a handler that declares none is conservatively re-run whenever the phase's own inputs move. @status:spec/plan",
+      "line": 154,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FRESHNESS-IS-PER-CONTRIBUTION"
+    },
+    {
+      "anchor": "chaining",
+      "content_hash": "sha256:01127caec23d4bbf8a786051aa191e6fd69a2b8cc5c4e573397de724ac7f51ad",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4.4 The command grammar — PROP-053's chain, generalised by its own rule",
+      "line": 157,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#chaining"
+    },
+    {
+      "anchor": "CHAIN-GENERAL",
+      "content_hash": "sha256:6f851e0c6ef7feb0c064edbbc85bfec9d973b6f8b344df3de4f1610304e4f6cb",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`vibe [clean] <phase> [<pkgref>…] [flags]`.** Any default-lifecycle phase may be named; `clean` before it runs the clean lifecycle first. `vibe clean install org.x/y --offline` keeps its exact PROP-053 semantics (wipe → world from lock → refresh the named) as the special case it already was. This section IS the «own semantics ruling» PROP-053 `##CHAIN-ONLY-INSTALL` required before any wider grammar — that anchor is superseded by this one **at build time, by a status move and a successor note beside it, never by deleting or renaming it**. Pkgrefs remain meaningful only to the install phase (they scope what refreshes); other phases take flags, not pkgrefs, until a ruling says otherwise. @status:spec/plan",
+      "line": 158,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL"
+    },
+    {
+      "anchor": "EXISTING-VERBS-STAY",
+      "content_hash": "sha256:648dc31ad3673dff5fb487fa9a8cc71710c7c4177e35735e7773d935e8985c87",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Existing verbs are untouched: `vibe check`, `vibe bin build`, `vibe skill`, `vibe cache …` keep their meanings as directly-invoked tools — Maven's «a goal not bound to any build phase could be executed outside of the build lifecycle by direct invocation». `vibe install` the verb IS the install phase invoked directly (one implementation, two spellings of the same thing). Mixing direct verbs into a phase chain on one command line (Maven's `mvn clean dependency:copy-dependencies package`) is **not** adopted now — each verb keeps its own invocation; revisit behind this anchor if the need shows. @status:spec/plan",
+      "line": 159,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#EXISTING-VERBS-STAY"
+    },
+    {
+      "anchor": "presets",
+      "content_hash": "sha256:ed8c8baddadb4494445848dbd598df8cdfcdd2988ddd04365d507c98927d7b94",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "4.5 Kind-presets — our packaging element",
+      "line": 161,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#presets"
+    },
+    {
+      "anchor": "PRESET-LAW",
+      "content_hash": "sha256:7b83bf7e2f81049705c961eb5fe7f7910647c9b69c81fee72c9d3d1b07061c2b",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The manifest's existing `kind` (flow, feat, stack, tool, mcp, lang) plus the installed stack select a **binding preset** — the table of built-in contributions, exactly Maven's packaging→bindings table. A prompt-only flow package binds nothing beyond validate/install (the `pom`-packaging analogue); a project with the rust stack installed gets generate/build/test bound to the cargo genre; a skill-bearing package gets a package-phase binding. Presets are DATA (a table shipped in vibe or contributed by a stack package), not code branches. @status:spec/plan",
+      "line": 163,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW"
+    },
+    {
+      "anchor": "STACK-CONTRIBUTES-PRESET",
+      "content_hash": "sha256:927d77c22ef644cba4a116af7452d95c37926e33a86f7df5a59b92c3c0a7f247",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A stack package may ship its preset as a set of `[[extension]]` contributions in its own manifest (auto, trust-gated like everything else) — this is how `rust-ai-native-lang` teaches `vibe build`/`vibe test` to drive cargo without vibe hardcoding cargo, the OOS-AUTODETECT posture of PROP-024 kept intact: the package declares, vibe never infers. @status:spec/plan",
+      "line": 164,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET"
+    },
+    {
+      "anchor": "context",
+      "content_hash": "sha256:9c357c75b28aa1e70032f915ba100e7fcb7da8c9e9a4b331437adca150fb65ca",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "5. The context envelope — what a contribution receives",
+      "line": 168,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#context"
+    },
+    {
+      "anchor": "ENVELOPE-LAW",
+      "content_hash": "sha256:f11efc6b6005ddbbb2e256936a4de91b512aafe9ec8e3dc87fb67ee8d920516d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Every handler, in every family, receives one **context envelope** — a versioned JSON document (the wire form for `script`/`binary`/`native` handlers; builtin handlers get the same data as a Rust struct; agent handlers get its prose projection). Modelled on what Maven hands a Mojo — MavenProject, MavenSession, MojoExecution, per-parameter configuration — translated to our world and extended with what the owner predicted: «в стадии будет попадать много больше, чем их просто название». @status:spec/plan",
+      "line": 169,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW"
+    },
+    {
+      "anchor": "ENVELOPE-MAPPING",
+      "content_hash": "sha256:d1477774507ad0ee36782581646b0dea8590964977e77372709148a789a97127",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The Maven correspondence, so the translation is checkable: `project` ↔ MavenProject (coordinates, dirs, model); `world` ↔ the resolved dependency set + session repository view; `run` ↔ MavenSession (request, properties, offline flag); `execution` ↔ MojoExecution (id + configuration); `artifacts` ↔ attached artifacts; `io.scratch` ↔ the plugin's work directory convention. @status:spec/done",
+      "line": 186,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-MAPPING"
+    },
+    {
+      "anchor": "ARTIFACT-REGISTRY",
+      "content_hash": "sha256:8cb93323d9a772572b793819e3be6118870e7ce307429c5ff50393336ed63d4a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The artifact registry is how phases talk.** A contribution's reply may declare artifacts (`{\"artifacts\":[{\"id\",\"path\",\"kind\"}]}`); later phases receive the accumulated list (create's outputs are what package packs). The registry is part of the run, persisted into `.vibe/lifecycle.toml` for freshness accounting — never a hidden channel. @status:spec/plan",
+      "line": 187,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ARTIFACT-REGISTRY"
+    },
+    {
+      "anchor": "REPLY-SHAPE",
+      "content_hash": "sha256:a7e44d3b4673f6b255d9d3406433660a0cd6448304ba9fa6d52d8661441e9154",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The **reply envelope** (same versioning): `{\"status\": \"ok\"|\"fail\"|\"skip\", \"message\": \"…\", \"artifacts\": […], \"tasks\": […]}` — `tasks` is non-empty only from agent handlers under the §6.5 handshake. `script` handlers reply by exit code + a `VIBE_REPLY` file in scratch (streams stay human); `binary`/`native` reply with the JSON itself. @status:spec/plan",
+      "line": 188,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE"
+    },
+    {
+      "anchor": "COMPILE-ENVELOPE",
+      "content_hash": "sha256:f8e0e4f57286822589f53ce2d491b3afb030583f2d695b05187cf3884a724081",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The `compile:` family rides the SAME envelope with a `payload` member instead of `artifacts`/`run`-chain: `{\"payload\": {\"stage\": \"emitted\", \"format\": \"xml\", \"bytes_b64\"| \"text\": …, \"doc\": …}}`, reply `{\"status\", \"payload\"}` — one shape, two families, which is the synergy law §3 made mechanical. @status:spec/plan",
+      "line": 189,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ENVELOPE"
+    },
+    {
+      "anchor": "FAILURE-BY-PHASE",
+      "content_hash": "sha256:fa842634e0f10237dee261bf7cbd12ad1e8100ad732504327bbd2b336d16ba6c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Failure semantics generalise PROP-020 §2.5:** a failing contribution in validate/install/generate/build/test **stops the chain** (the phase reports which execution failed); a failing create/verify contribution stops before package (nothing half-created is packaged); package/deploy failures stop the chain trivially (they are last). `slot:pre-install` keeps its rollback; `slot:post-install` keeps installed-but-flagged. A `skip` reply is bookkept, never an error. @status:spec/plan",
+      "line": 190,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE"
+    },
+    {
+      "anchor": "handlers",
+      "content_hash": "sha256:39612ec599e713f0b26c11940501fe655e16a9ea7d5eef14bf4ad0ec13b6463f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "6. The handler taxonomy — five kinds, two of them already ours",
+      "line": 193,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#handlers"
+    },
+    {
+      "anchor": "HANDLER-KINDS",
+      "content_hash": "sha256:7ec4d56677c604646b4623709982aed83b45e8d9e4aa5b63a7d5ad02f40719cc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A contribution's `handler.kind` is one of five. Two wrap machinery that exists; three are new. All five are legal at every `phase:`/`slot:` point; the `compile:` family accepts `builtin` and `native` only (§8.5 explains why). @status:spec/plan",
+      "line": 194,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"
+    },
+    {
+      "anchor": "H-BUILTIN",
+      "content_hash": "sha256:5bfb77be2ab89f43f8fbb238560d1ca85a61ae7747fe795db0570aca7ed02428",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`builtin`** — a named handler compiled into vibe (`log`, the §10.1 test bearer; future: `copy`, `zip`, `checksum`). Zero trust surface, zero build cost; the vocabulary grows only by shipping vibe. @status:spec/plan",
+      "line": 196,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-BUILTIN"
+    },
+    {
+      "anchor": "H-SCRIPT",
+      "content_hash": "sha256:60d685071068e623b26fbd3ffd04ebd3635f8fa76560cb36645bcc6bd84f4072",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`script`** — a base path resolved `.sh`/`.ps1` with the PROP-020 §2.2 interpreter ladder, environment (`VIBE_*`) and streams, unchanged — plus the envelope on `VIBE_CONTEXT` (a file path in scratch, not an env blob). The existing `[hooks]` table compiles to two `script` contributions at `slot:` points; nothing published breaks. @status:spec/plan",
+      "line": 197,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT"
+    },
+    {
+      "anchor": "H-BINARY",
+      "content_hash": "sha256:7ab6562bb6fd7f335acae9f12ba263d865faefd75aa2643e2499207f1e84edb9",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`binary`** — a `[[binary]]` name from an installed package (PROP-025): built if missing (PROP-025's build flow; its build-consent prompt is superseded by `##INSTALL-IS-CONSENT` at build time — narrated, never asked), then invoked with the envelope on stdin, reply on stdout. The right kind for per-run tools where process-spawn cost is irrelevant. @status:spec/plan",
+      "line": 198,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY"
+    },
+    {
+      "anchor": "H-NATIVE",
+      "content_hash": "sha256:d52d6dbf475b85d902a501cda5ac5fb00b6c0b137bac5a4a2112a475166d3c46",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`native`** — a cdylib loaded in-process (§8): built from `handler.crate_dir` inside the providing package, or shipped prebuilt per platform for closed-source plugins (§8.2 `##PREBUILT-CLOSED`). The advanced tier the mandate names; required for `compile:` (per-lane call frequency) and available to `phase:` (long-lived state, no spawn cost). @status:spec/plan",
+      "line": 199,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-NATIVE"
+    },
+    {
+      "anchor": "H-AGENT",
+      "content_hash": "sha256:13f010590a09ea75d95a296e3cefebaf1a1706112f01452c374828d233e0c7ab",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`agent`** — a prompt-bearing execution: `handler = { kind = \"agent\", prompt = \"spec://…\" }`, the prompt being a spec document the package ships. Executed by §6.4/§6.5 depending on `run.agent_mode`. The only handler kind that may spend tokens, and the reason create is late in the line. @status:spec/plan",
+      "line": 200,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#H-AGENT"
+    },
+    {
+      "anchor": "agent-cli",
+      "content_hash": "sha256:0bfc0ab1dc079033e672a5688b240dc40256cf76b4e64628e01237f6cae60521",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "6.4 Agent handlers from a terminal — vibe-llm",
+      "line": 202,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#agent-cli"
+    },
+    {
+      "anchor": "AGENT-CLI",
+      "content_hash": "sha256:b8fb97091b4dc71325ab0eb5b21757f81bb6ee4a383d31141c1416963578e2e4",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "In `agent_mode = \"cli\"` (a human at a terminal, no agent host detected), agent executions run through **`vibe-llm`** (the workspace crate; today an M0 stub, its `LLMProvider` trait the seam): resolve the prompt address against the materialised world, assemble the envelope's prose projection, call the configured provider, write outputs to the declared paths, validate the declared artifacts exist. No provider configured ⇒ the execution fails with remediation («configure [llm] or run under an agent»), never a silent skip — the PROP-020 no-silent-skip posture. @status:spec/plan",
+      "line": 203,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI"
+    },
+    {
+      "anchor": "agent-handshake",
+      "content_hash": "sha256:8f55b59c90c9d3d0a397bc987d2c72cca2156b6f077874bbd4612213096835c3",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "6.5 Agent handlers under an agent — the delegation handshake",
+      "line": 205,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#agent-handshake"
+    },
+    {
+      "anchor": "AGENT-HANDSHAKE",
+      "content_hash": "sha256:ca8b50266a421adf457c68e878288b4afdae286f77bf9b48b747f97a901dd6a0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "In `agent_mode = \"agent\"` (detected via env — the CLAUDECODE/VIBE_AGENT genre — or forced by `--agent-mode`), vibe does NOT call an LLM. It **parks the work and hands it to the hosting agent**: for each agent execution it writes a task file under `.vibe/agentic/outbox/<run>/<execution>.md` — the resolved prompt, the envelope's prose projection, and the output contract (paths + acceptance) — then prints a fenced `vibe-agent-tasks` block naming the run id and every task file, and exits the phase with status `delegated` (chain pauses; nothing downstream runs). The hosting agent performs the tasks, writes the outputs, and re-invokes the same phase: vibe finds the outputs, validates them against the contract, marks the executions done and the chain continues — resumability falls out of §4.3's fingerprints, no special resume verb. The parking place and the relay posture are [PROP-018](PROP-018-agentic-standalone-modes.xml)'s agentic-relay genre (`.vibe/agentic/`, `vibe agentic explain`, the dual CLI/MCP transport) extended from one command to a phase's worth of tasks; this gives that genre a wire contract. An MCP surface for the same handshake (the vibevm MCP server exposing `lifecycle_run`/`lifecycle_tasks`) is the second consumer of the same files, not a second mechanism. @status:spec/plan",
+      "line": 206,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-HANDSHAKE"
+    },
+    {
+      "anchor": "compiler",
+      "content_hash": "sha256:d366a35aa449ea2451a170d5223f7f999cf75bd99ba9df8c1bf1354c7cfecb76",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7. The compiler extension points — two tiers: staged transforms and full passes",
+      "line": 209,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#compiler"
+    },
+    {
+      "anchor": "where",
+      "content_hash": "sha256:1715621946febb57a770cccd5e46d19d2ac7c88ea6ed7b1c1a41e47e0743923e",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.1 Where the compiler runs, and whose word activates a transform",
+      "line": 210,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#where"
+    },
+    {
+      "anchor": "COMPILE-SITE",
+      "content_hash": "sha256:91f489fc2b96b69407c376b647640ea23fba78c1f392034611726f0c4910a5c3",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The spec compiler (PROP-035 §8) runs inside boot-lane regeneration — today a step of install — with the fixed internal pipeline: parse/topo of the `#use` graph → `#source` merge → `#embed` expansion → per-node qualification + absorbed-node filtering + cross-node short-link resolution → marker-wrapped emit. Those internal passes ARE visitors in the Babel sense; they stay internal and ordered by the spec, not pluggable — determinism of the boot lane is a PROP-009 constitutional property. @status:spec/done",
+      "line": 211,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-SITE"
+    },
+    {
+      "anchor": "COMPILE-ACTIVATION",
+      "content_hash": "sha256:8ca04cabc03cf2c10903c8050c331754ad0061a2be875239f6ad60b1982a7793",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Transforms are activated by the manifest of the workspace whose lane is being compiled (host manifest for the host lane, package manifest for a package's own lane) — `##AUTO-BY-FAMILY`'s host-opt-in rule. The activated list, in §3.4 order, is recorded in the generated artifact's header comment (`<!-- vibe:transforms … -->`) so a reader of STATIC.xml can see what touched it — the same honesty rule as `##SURFACE-THE-RITUAL`. @status:spec/plan",
+      "line": 212,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION"
+    },
+    {
+      "anchor": "stages",
+      "content_hash": "sha256:b21a27cb645f7fc026dff9079539a9c61d1c4ca59652c3d3f7ce59e48897e2f8",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.2 Tier 1 — the four staged transforms",
+      "line": 214,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#stages"
+    },
+    {
+      "anchor": "STAGE-SOURCE",
+      "content_hash": "sha256:3e2f5553a9f1ffdccedf29437e5eedf63a5ac3ecfb8b410ad32127153ac78e9d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`compile:source`** — one document's raw text before parsing (the preprocessor seam; Babel's parse-options analogue). Payload: text + its spec address. May rewrite text; may not change the address. @status:spec/plan",
+      "line": 216,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-SOURCE"
+    },
+    {
+      "anchor": "STAGE-DOCUMENT",
+      "content_hash": "sha256:3b832c17c5f28b0b4ba7ed77b93045218f5e36434c799cb2bcee37dda5336601",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`compile:document`** — one document's parsed tree (the specdoc/DocTree JSON projection) after parse, before it enters the closure. The transform-plugin analogue at document grain: rewrite prose, drop or annotate nodes, normalise vocabulary. One call per document, whole-tree payload. @status:spec/plan",
+      "line": 217,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-DOCUMENT"
+    },
+    {
+      "anchor": "STAGE-LANE",
+      "content_hash": "sha256:84cb8fcbdeb2528176675f45ac59abdecbd73762c2c4d4e16f2cbbb9d9e19175",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`compile:lane`** — the assembled lane as an ordered node list (origin, slug, body per node) after the internal pipeline, before serialisation. Where cross-cutting compression genres (the future Caveman pass) live: they see everything that will ship, in final order, still structured. @status:spec/plan",
+      "line": 218,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-LANE"
+    },
+    {
+      "anchor": "STAGE-EMITTED",
+      "content_hash": "sha256:c8d4acc3274d8bf4171a207187d71e0737b916150c148ad799465e53b6956e92",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`compile:emitted`** — the serialised artifact bytes (per artifact: STATIC.xml, STATIC.md, INLINE.*) as the last word before the file is written. Byte-to-byte transforms; the §10.2 minifier's home. @status:spec/plan",
+      "line": 219,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-EMITTED"
+    },
+    {
+      "anchor": "NO-CLOSURE-HOOK",
+      "content_hash": "sha256:5779ce4af7f2c01a9e04540756464b85f1194b12f40cb3effd30b18589a2321c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Within tier 1 there is deliberately NO closure/graph access** — a staged transform cannot add or remove `#use` edges or change which nodes enter the lane. What loads stays decided by authored directives, auditable from sources alone; a transform that could silently widen the closure would be a prompt-injection lever. Full IR access — closure included — EXISTS, but only in tier 2, behind the `compiler_internals` flag, host activation, and the header record (§7.4.3): the capability is not denied, it is priced. @status:spec/plan",
+      "line": 220,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#NO-CLOSURE-HOOK"
+    },
+    {
+      "anchor": "oracle",
+      "content_hash": "sha256:f66250d17312d43788f4e2f740585cfed91159fe32c8bdd61a4dcb64df2fb0ca",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.3 Transforms versus the oracles",
+      "line": 223,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#oracle"
+    },
+    {
+      "anchor": "TRANSFORM-VS-ORACLE",
+      "content_hash": "sha256:4433a06368b15d93bde21db31b0535664a48311296ce30e5941db811e90f7e20",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The byte-stability oracles (convert-source round-trips, `check-codegen`-style diffs) judge the UNtransformed compile — transforms apply after the oracle's reference output is taken, and the recorded transform list (§7.1) is part of the artifact's identity (a changed transform set ⇒ the lane is stale, regenerate). Otherwise every transform would read as corruption to the very instruments that keep the compiler honest. @status:spec/plan",
+      "line": 224,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-VS-ORACLE"
+    },
+    {
+      "anchor": "pass-tier",
+      "content_hash": "sha256:d99b289965027619b9283a3bf4a9d749d7da56c82ddf0f32be3772e690e0189b",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4 Tier 2 — the pass tier: full IR access behind compiler_internals",
+      "line": 226,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#pass-tier"
+    },
+    {
+      "anchor": "PASS-TIER-LAW",
+      "content_hash": "sha256:d270eff12de37d9cbd1a6bc1f05ba464cb7f947f15ffcbd191f48ed753f7c578",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Decision (owner ruling 2026-08-25).** A plugin may be a **full compiler extension** — a pass with complete access to the packages' IR, free to change it arbitrarily: new optimisations, new frontends, new backends, the LLVM posture verbatim. Users can build the compiler onward from here. The price of the power is explicitness: the pass tier exists only behind a dedicated manifest flag, only under host activation, only in-process (`builtin`/`native`), and always on the record (§7.4.3). @status:spec/plan",
+      "line": 227,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW"
+    },
+    {
+      "anchor": "ir-levels",
+      "content_hash": "sha256:5f851f592a94878852ad332e7e6a0aa1b90f9a83080aa4042b19945d50c8a3f6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4.1 The IR — five named levels, lowered progressively",
+      "line": 228,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-levels"
+    },
+    {
+      "anchor": "IR-LEVELS",
+      "content_hash": "sha256:aa523a47654f873c92b8fa92cfee55bbaea4f28b175492f92d9fa50b6313314f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The compiler's IR is **multi-level** (the MLIR shape, because that is what our compilation already is — a progressive lowering): **`source`** — one document's raw text plus its spec address; **`document`** — one document's parsed tree (sections, facts, directives, anchors); **`closure`** — the whole compilation unit: every node reachable from the seed, topo-ordered, with the `#use`/`#source`/`#embed` graph, origins and rename state — *this is \"the packages' IR\" of the mandate: every package's contribution, visible and mutable at once*; **`lane`** — the assembled artifact as an ordered node list with marker/provenance metadata, ready to serialise; **`emitted`** — the serialised bytes per artifact. Today these representations exist implicitly inside `compile_static_inner`; §7.5 makes them explicit types with named transitions. @status:spec/plan",
+      "line": 229,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS"
+    },
+    {
+      "anchor": "pass-kinds",
+      "content_hash": "sha256:86f804272cf12ae59b9a7ab761833507de3432e896b6e5a031a0767a016c687c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4.2 Pass kinds — transform, lowering, frontend, backend",
+      "line": 231,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#pass-kinds"
+    },
+    {
+      "anchor": "PASS-TRANSFORM",
+      "content_hash": "sha256:c917eba043a4d58036c31efaae4a59dd36bd7426654296a3d7d224ecd4060d62",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Transform pass** — level N → level N (an optimisation): `pass = { kind = \"transform\", level = \"closure\", after = \"qualify\" }`. Position is by built-in pass name (`after` / `before`), exactly LLVM's pass ordering; tier 1's four stages are, mechanically, transform passes pinned to canonical positions — one machine, two doors. @status:spec/plan",
+      "line": 233,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TRANSFORM"
+    },
+    {
+      "anchor": "PASS-LOWERING",
+      "content_hash": "sha256:2712d9078faaa5547aef25334078942212a945a32ae83a3aa08ae0e1039c1c76",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Lowering pass** — level N → level N+1. The built-in chain IS a lowering sequence: `parse` (source→document), `close` (documents→closure, the topo/merge/embed complex), `assemble` (closure→lane), `emit` (lane→emitted). A plugin lowering **replaces or augments** a named built-in: `pass = { kind = \"lowering\", replace = \"emit\", artifact = \"static-xml\" }`. @status:spec/plan",
+      "line": 234,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-LOWERING"
+    },
+    {
+      "anchor": "PASS-FRONTEND",
+      "content_hash": "sha256:2cf42bffc049b7a2c1d742dd79af9b30d7439f4a85c9bc7418999b1225c092a3",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Frontend** — a `parse`-position lowering registered for new source formats: `pass = { kind = \"frontend\", formats = [\"adoc\"] }` receives `source`, returns `document`. The address grammar treats a registered extension exactly as it treats `.md`/`.xml` (canonical doc paths strip it), so a new format's documents are first-class `spec://` citizens. @status:spec/plan",
+      "line": 235,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND"
+    },
+    {
+      "anchor": "PASS-BACKEND",
+      "content_hash": "sha256:b7f6356a50f098f848f8ba8d22f5660d3adad59d35ae6f22668814ee7be12db3",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Backend** — an `emit`-position lowering: receives `lane`, returns artifact bytes — a new lane serialisation (JSON lane, compact lane, HTML projection) or a replacement of a built-in emitter for one named artifact. Built-in emit passes carry stable names (`emit:static-xml`, `emit:static-md`, `emit:index`, `emit:inline`) so replacement is precise. @status:spec/plan",
+      "line": 236,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-BACKEND"
+    },
+    {
+      "anchor": "the-flag",
+      "content_hash": "sha256:97cea40ced0bedaa2c3f9319ffa77497fabd9b8ed96b304541dba22a52652607",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4.3 The flag, and the trust posture of full access",
+      "line": 239,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#the-flag"
+    },
+    {
+      "anchor": "COMPILER-INTERNALS-FLAG",
+      "content_hash": "sha256:f15d4127d0049d6a11e685968bd271ed32bbebca390551703c6a0a8cb75be919",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A contribution enters the pass tier by declaring **`compiler_internals = true`** on its `[[extension]]` table — the owner-mandated flag, a single conspicuous boolean whose presence means \"this plugin asked for the low-level API\". Without it, `pass = …` is a validation error. With it: **host activation is always required** (`auto` is ignored for this tier — stricter than tier 1's compile rule, same direction); the activated pass list, positions included, is recorded in the generated artifact's header (`<!-- vibe:transforms … -->` gains the pass entries); and the install/build narration names each internals-plugin before it runs. The flag rides the package manifest, so `vibe list`/`show` can surface \"this dependency contains compiler-internals extensions\" before anything activates. @status:spec/plan",
+      "line": 240,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG"
+    },
+    {
+      "anchor": "INTERNALS-TRUST",
+      "content_hash": "sha256:da0e5fdb27a049c54df1f68b30049697af0aaf72a929a48dca8425b0ddc1a544",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The tier is `builtin`/`native` only (§8.5's reasons apply with more force). **The flag is a declaration, not a permission dialog** (owner ruling 2026-08-25, `##INSTALL-IS-CONSENT`): no consent prompt guards it — its job is to make the capability VISIBLE (to `vibe extensions`, to `vibe list`, to static scanners, to a human reading the manifest) before anything runs. Installation plus the host's activation line are the whole authorisation, the Clang-plugin posture; the safety spend goes into §3.5's observability instead of gates. @status:spec/done",
+      "line": 241,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTERNALS-TRUST"
+    },
+    {
+      "anchor": "the-wire",
+      "content_hash": "sha256:f2b0c77b9d1504e032fc7e59867b4a917be750dbd56a523f5d65728b8426f32a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4.4 The wire — whole IR in, whole IR out",
+      "line": 243,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#the-wire"
+    },
+    {
+      "anchor": "WHOLE-IR-WIRE",
+      "content_hash": "sha256:322d6b8bafc40e481dca7b49816ef56b5cf66d32ffb9fd90beb3104b90c3bcb3",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A pass crosses the C ABI as **one call per pass per compilation**: the request carries the full serialised IR of its level (`payload.ir`, schema-versioned JSON), the reply carries the rewritten IR (or bytes, for a backend). No handle API, no callbacks into vibe, no partial views — composability comes from the pass MANAGER (many small passes in sequence), not from an interactive surface. This keeps §8.1's ABI honest, makes a pass trivially testable (a pure JSON→JSON function), and postpones the LLVM-C-API tarpit until a real pass cannot be written this way (recorded as a deferral in §11). @status:spec/plan",
+      "line": 244,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE"
+    },
+    {
+      "anchor": "ir-contract",
+      "content_hash": "sha256:f073a802e6f97c3a90eaac5ab886790b908f8e496481d2a4343cba6f731a5972",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.4.5 The IR schema is a versioned contract, and the verifier runs between passes",
+      "line": 246,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-contract"
+    },
+    {
+      "anchor": "IR-SCHEMA-VERSIONED",
+      "content_hash": "sha256:50c5e25e57aeabb61b0a70106003fd0d6c64ee59c49a636879039915b9a96bfb",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The IR wire schema carries `ir_schema` (starts at 1); additive growth within a version, a bump when a shape breaks; a plugin's `vibe_ext_manifest` declares the schema it speaks, and a mismatch refuses with remediation before any invoke — the anti-LLVM-churn stance `##ADOPT-FROM-LLVM` promises. @status:spec/plan",
+      "line": 248,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-SCHEMA-VERSIONED"
+    },
+    {
+      "anchor": "INTER-PASS-VERIFIER",
+      "content_hash": "sha256:57ce867f4c5061e4b0780c90de880f501d74387ce042472c2e1eaffb89a8e575",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The verifier is what makes arbitrary mutation survivable:** after every pass-tier pass, the level's invariants are re-checked (well-formed trees, anchor-namespace uniqueness — the existing `DuplicateId` gate — closure acyclicity, lane/marker integrity), so a pass that breaks the IR fails AT THAT PASS, by name, not three passes later as a mystery. This is LLVM's `-verify-each` practice adopted as a default that cannot be switched off from a manifest. @status:spec/plan",
+      "line": 249,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER"
+    },
+    {
+      "anchor": "REFERENCE-STAYS-ORACLE",
+      "content_hash": "sha256:8f95c66bb18cc4df28a9bee865873aaf6da9859aba264713ffc7e00fb118ff2a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "§7.3's oracle rule extends unchanged: the reference semantics are the built-in pipeline with zero plugin passes, and the recorded transform/pass list is part of the artifact's identity. @status:spec/plan",
+      "line": 250,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REFERENCE-STAYS-ORACLE"
+    },
+    {
+      "anchor": "ir-refactor",
+      "content_hash": "sha256:afe3ff66cfcb8586a7bf46eb0824bbbf9900030b202aeee204e93a092302961a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "7.5 The IR refactor — the composability precondition",
+      "line": 254,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-refactor"
+    },
+    {
+      "anchor": "IR-REFACTOR",
+      "content_hash": "sha256:a9c413c0108acf9ad33aaca9d694415fbbdcbb8b4e133a69608db929c82ad328",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The mandate's closing sentence is a work item:** today the transitions live as one monolithic phase loop (`compile_static_inner` — parse/topo, merge, embed, qualify, absorb, link, emit in fixed code order) over implicit representations. Before any pass-tier API exists, the compiler is refactored so that: **(1)** the five §7.4.1 levels are explicit types; **(2)** every built-in phase is a named first-class pass over them (`parse`, `close`, `merge`, `embed`, `qualify`, `absorb`, `link`, `assemble`, `emit:*`) registered in the same pass manager plugins will use — built-ins are not privileged, which is the composability test; **(3)** the default pipeline is a declared pass LIST, not control flow. **The refactor's gate is byte-identity:** the default pipeline over the whole existing corpus must emit byte-identical artifacts before and after — the compiler's own oracles (round-trip, byte-stable lanes) judge it, and no external API ships until they are green. @status:spec/plan",
+      "line": 255,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR"
+    },
+    {
+      "anchor": "COMPILER-CODE-MAP",
+      "content_hash": "sha256:124e23f46d19b2c0d724bfa925de0d57c59e102a59d689f1980f65d6d33617f0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Where the compiler lives TODAY** (verified against the tree 2026-08-24/25; the refactor's raw material, so an implementer starts from addresses, not archaeology): the phase loop — `crates/vibe-spec/src/pipeline.rs` (`compile_static_inner`, with `compile_static` / `compile_static_qualified` as its two modes); the `#use` graph and topo order — `use_graph.rs` (`topo_order_from`, `source_fold_order`); the `#source` fold — `merge.rs` (`fold_sources`) plus `pipeline.rs`'s `fold` module; `#embed` — `embed.rs` (`expand_embeds`, the `SectionSource` trait every resolver implements); qualification and rename maps — `qualify.rs` (`qualify_contribution`, `origin_slug`); reversible markers — `markers.rs` (`open`/`close`/`decompile`); addresses and routing — `address.rs` / `resolver.rs`; the doc IR — `doctree.rs` (`DocTree`) with the format pivot in the separate `vibe-specdoc` crate (`from_markdown`/`from_xml`/`to_xml`/`to_markdown`). The lane is INVOKED from `vibe-workspace`'s boot_artifacts (`boot_artifacts.rs`, `boot_artifacts/normal.rs` — the normal-lane seed) during install's boot regeneration. @status:spec/done",
+      "line": 256,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-CODE-MAP"
+    },
+    {
+      "anchor": "COMPILE-CACHE-READY",
+      "content_hash": "sha256:e16cb9462cceeadbac998a0e21c9e1661f9de0e2315dab763275ca460d66a4f0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The refactor must leave the door open to per-level memoization** (the Webpack persistent-cache / Turbopack lesson, 2026-08-25 audit): once every pass is a pure function of typed IR, a level's output is cacheable by its input hashes — parse results keyed by source hash (one edited document re-parses one document, not ninety-eight), pass outputs keyed by (input IR hash, pass identity, config). Not built in R3 — today's corpus compiles fast enough — but the pass signatures are designed so that adding the cache later is a wrapper, not a rewrite; the day an expensive plugin pass (an LLM-driven compression) joins the pipeline, this is what keeps the ritual usable. @status:spec/plan",
+      "line": 257,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-CACHE-READY"
+    },
+    {
+      "anchor": "native",
+      "content_hash": "sha256:89c7b3c8fbb9cec003b83d9218705e74093f0d8b49993ab84e0f1245a36ddfdc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "8. Native extensions — one ABI for both families",
+      "line": 260,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#native"
+    },
+    {
+      "anchor": "why-c-abi",
+      "content_hash": "sha256:c06eaeeb1b028ca5006b90475ac412a6df1620550d0b770248c86a8fb6770186",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "8.1 The ABI is C + JSON, never the Rust ABI",
+      "line": 261,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#why-c-abi"
+    },
+    {
+      "anchor": "C-ABI-LAW",
+      "content_hash": "sha256:e648bd82ca54f95e90406cece89e235d4b3ef74962dc44a99fca6269bc134ba0",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A native handler is a **cdylib** exposing a four-symbol C ABI: `vibe_ext_abi() -> u32` (contract version, starts at 1); `vibe_ext_manifest() -> *const c_char` (JSON: the ids and points it implements); `vibe_ext_invoke(req_ptr, req_len, resp_ptr, resp_len) -> i32` (request = context envelope JSON bytes, response = reply envelope JSON bytes); `vibe_ext_free(ptr, len)`. **The Rust ABI is not a wire:** it is unstable across compiler versions, and a plugin built by yesterday's rustc against today's vibe would be undefined behaviour — the «compile it for every rustc in existence» hell the owner named (2026-08-25). C ABI + JSON costs one serialisation per call and buys total version independence — and §7.2's document-grained stages exist precisely so \"per call\" means \"per artifact\", making that cost invisible. **This is the VST posture the owner asked for:** a plugin compiles ONCE, with any toolchain that can emit a C-ABI cdylib (Rust, C, C++, Zig, Go — authorship is not Rust-bound), and keeps working across vibe releases; migrations happen when OUR plugin API moves (`vibe_ext_abi`, the envelope, `ir_schema` — all versioned, additive within a version, a break announced as a `formats/breaks/` note), never when a compiler does. @status:spec/plan",
+      "line": 262,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW"
+    },
+    {
+      "anchor": "ABI-CRATE",
+      "content_hash": "sha256:ecf82dce9a5beadb1e4eae3842d06be46312e5093aa48945cb16811e0c132aa2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "vibe ships a small **`vibe-ext` helper crate** (published with the rust stack) so a plugin author writes a safe `fn handle(ctx: Context) -> Reply` and a `vibe_extension!` macro emits the four symbols, the catch_unwind guard, and the (de)serialisation. Authors never touch `unsafe`. @status:spec/plan",
+      "line": 264,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ABI-CRATE"
+    },
+    {
+      "anchor": "PANIC-AND-VERSION",
+      "content_hash": "sha256:1d857202ac68cebc0046e794e03b1d9f29be8e62eedd24f41798f0afcd7d6afd",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The loader (libloading) checks `vibe_ext_abi` before any invoke — a mismatch refuses with remediation («rebuild: `vibe build`»), never a crash. Every invoke crosses a catch_unwind at the plugin's own boundary (the macro's job); a panicking plugin fails its execution, reported like any failing contribution — it does not take vibe down. @status:spec/plan",
+      "line": 265,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION"
+    },
+    {
+      "anchor": "build-home",
+      "content_hash": "sha256:dd0806f03a87cd33b926a970607fec974441299f772c9ad68125facb8307955b",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "8.2 Where native extensions build — in place, amending PROP-024 §2.3",
+      "line": 268,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#build-home"
+    },
+    {
+      "anchor": "IN-SLOT-BUILD",
+      "content_hash": "sha256:29460c906937931f2ce267097ddb7b56f2812fd953f371c13c3d57a19bcc2b96",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Per the mandate («собирать inplace прямо внутри vibedeps либо внутри packages»), and per the precedent PROP-025 already set (`build_binary` runs `cargo build --release` in the slot): **a dependency's native extension builds inside its own slot** (`<slot>/<crate_dir>` workspace, `target/` in the slot), and an authored package of ours builds inside its `vibevm/vibepacks/...` live slot with its own workspace. This AMENDS PROP-024 §2.3's «build output is directed to a gitignored location e.g. `.vibe/<pkg>-target/`, never the slot» — the amendment is recorded here and lands at that anchor at build time: build output in the slot was already reality for PROP-025 binaries, it stays outside the content hash and the shippable tree by the §2.2 denylist (`target/`, `node_modules/`), and what makes it SAFE is §9 (materialisation stops deleting what it did not write). vibe maintains the ignore entries (a generated `.gitignore` inside the vibedeps root covering `**/target/` and `**/node_modules/` — the vendored world stays clean in git without per-slot files). @status:spec/plan",
+      "line": 269,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD"
+    },
+    {
+      "anchor": "BUILD-PHASE-OWNS-IT",
+      "content_hash": "sha256:8f1a85ec168e13a62763f334c965044beaa78fcfffdcf1342be064b28fc7117e",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "The **build phase** builds native extensions (and `[[binary]]`s) — with cargo's own incrementality and `vibe bin build`'s narration genre (announced per artifact; PROP-025's build-consent prompt dies with the rest of the prompts, `##INSTALL-IS-CONSENT` — that amendment rides §9's plan too). Lazily building on first use stays available for `binary` handlers (as today); `native` handlers used by the COMPILER are never built lazily mid-compile — see the bootstrap order. @status:spec/plan",
+      "line": 270,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT"
+    },
+    {
+      "anchor": "PREBUILT-CLOSED",
+      "content_hash": "sha256:72a2c449c1022bc350c46615569d944b7fb941b6fab0cf2f2cfc2b7a1acbac7c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Closed-source plugins ship prebuilt** (owner case 2026-08-25): a package may carry ready cdylib artifacts instead of (or beside) sources — `handler = { kind = \"native\", prebuilt = { \"windows-x86_64\" = \"ext/bin/squeeze.dll\", \"linux-x86_64\" = \"ext/bin/libsqueeze.so\", \"macos-aarch64\" = \"ext/bin/libsqueeze.dylib\" } }`, keyed by the PROP-000 platform trio's target names. A prebuilt artifact is ordinary package content: hashed into `content_hash`, materialised verbatim, integrity for free. Loading order: prebuilt for the current platform if declared, else build from `crate_dir` if sources ship, else refuse naming the missing platform — never a silent skip. The build phase skips prebuilt-only natives (nothing to build); `vibe_ext_abi`/`ir_schema` gates apply to a prebuilt exactly as to a built one, which is what makes closed-source distribution SAFE to version: the C-ABI wire (§8.1) is the whole contract, so one artifact per platform serves every vibe release the schema allows. @status:spec/plan",
+      "line": 271,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PREBUILT-CLOSED"
+    },
+    {
+      "anchor": "BOOTSTRAP-ORDER",
+      "content_hash": "sha256:9d7a03799bd2e32495bc8a55124d795320555916a2ea7ead67a58b45bec90e17",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The bootstrap order, stated because install precedes build:** if an activated `compile:` transform's cdylib artifact is absent when install compiles the lane, install compiles WITHOUT it, marks the lane `transforms-pending` in the artifact header, and says so; the build phase, having built the extension, re-runs the (cheap) lane compile so the chain `vibe build` converges in one invocation. A `vibe install` alone with a missing transform artifact is thus honest and usable, never wedged — and never silently different from what the manifest declares. @status:spec/plan",
+      "line": 272,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER"
+    },
+    {
+      "anchor": "wasm",
+      "content_hash": "sha256:fef728bb63bbcec3369c920fe0d95046391cca4b7ab0187f78e2b12f27d9a405",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "8.3 The road not taken now",
+      "line": 274,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#wasm"
+    },
+    {
+      "anchor": "WASM-DEFERRED",
+      "content_hash": "sha256:80c7756a9ebb1718f3e3c7a936c1ae1c8dc6459e6de866142a057342f8468697",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**WASM handlers — deferred, not rejected:** a wasm component would buy sandboxing (the PROP-020 §4 accepted-risk posture could tighten) and cross-platform artifacts, at the cost of a runtime dependency and awkward filesystem/process access — exactly the operations phase handlers exist to do. When the sandboxing need fires (third-party plugin ecosystems beyond the allow-list), this anchor is where the design resumes. Until then the trust gate is the boundary, exactly as PROP-020 records it. @status:spec/plan",
+      "line": 275,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WASM-DEFERRED"
+    },
+    {
+      "anchor": "compile-native-only",
+      "content_hash": "sha256:3df5d4a0fba10914c4e39b9443c6c677e1cb93a2c08fceb71af9b361c2fdc552",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "8.5 Why compile: takes only builtin and native",
+      "line": 277,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#compile-native-only"
+    },
+    {
+      "anchor": "COMPILE-NATIVE-ONLY",
+      "content_hash": "sha256:f8214eea3c620c90b5184b35ee93514767af49de92626e7a3d7dc43a0c8ae451",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A `compile:` transform runs on every lane regeneration — inside install, potentially per document. A process spawn per document (script/binary kinds) is a Windows-hostile cost multiplier and an interpreter-availability hazard inside the innermost loop the whole product depends on; and an agent in the compiler would make the boot lane non-deterministic, which PROP-009 forbids constitutionally. Hence: `builtin` and `native` only — the two in-process kinds. @status:spec/plan",
+      "line": 278,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY"
+    },
+    {
+      "anchor": "incremental",
+      "content_hash": "sha256:789296d5462e6a62c753ae62a961560273a09dfdc3b6d251bd0146bf8c78c279",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "9. The incremental-install revision — materialise becomes a diff",
+      "line": 281,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#incremental"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:c15c26f7d1b2a0245874fd2564d0f394a96a3c4bcbc7a7c21dfe32496e6ad361",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "9.1 The defect, named from the code",
+      "line": 282,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#problem"
+    },
+    {
+      "anchor": "WIPE-TODAY",
+      "content_hash": "sha256:27a5e26b73b01872519b4c47edc434e89436942d10f13dee80ac2a5ab074c4f7",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Today `materialise_with` (vibe-workspace `vibedeps.rs`) clears the whole slot (`remove_dir_all`) and re-copies on every re-materialisation, and a **mutable local source is NEVER presence-trusted** (`install.rs`: `!dep.source_mutable` in the trust gate) — so every `vibe install` over an edited-in-workspace package wipes its slot, and with it the `target/` PROP-025 just built there. The owner's fear is already a live defect for package binaries; native compile («может идти очень долго») raises the stakes, it does not create them. @status:spec/done",
+      "line": 283,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WIPE-TODAY"
+    },
+    {
+      "anchor": "MATERIALISE-CODE-MAP",
+      "content_hash": "sha256:1e19e3c6509d6a15725e3842eafe3d2a3d96d43140e7481056cfa17efc7ed6c5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Where materialisation lives TODAY** (verified 2026-08-24/25): the copy machine — `crates/vibe-workspace/src/vibedeps.rs` (`materialise` / `materialise_with` — the `remove_dir_all` + `copy_tree` pair this section replaces with a diff; `slot_rel_path`/`slot_abs_path`; the returned footprint `Vec<PathBuf>` this section's record persists); the transformed-slot variant — `vibedeps/derived.rs` (`materialise_with_spec_format`, the `.vibe-derived.toml` manifest §9.2 absorbs, `LEGACY0_EXCLUDES`); the trust gate and per-dep loop — `install.rs` (`materialise_resolution_with_spec_format`: the `present`/`format_current`/`!dep.source_mutable`/`slot_integrity` decision, `SlotIntegrity::TrustPresence|Verify`, the `slot_verifier` seam); freshness — `freshness.rs` (`hold_pins` and the fresh-check the install verb consults); hooks that must re-run only on real change — `hooks.rs` + `install/hooks_run.rs`; the in-slot binary precedent — `bins.rs` (`build_binary`, `DeclaredBinary::artifact`). @status:spec/done",
+      "line": 284,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MATERIALISE-CODE-MAP"
+    },
+    {
+      "anchor": "record",
+      "content_hash": "sha256:15c4adafb8cf80e86a3b65e2569eca9c180b49019e2ed47d2037bba415c47797",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "9.2 The slot record — the footprint becomes a file",
+      "line": 286,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#record"
+    },
+    {
+      "anchor": "SLOT-RECORD",
+      "content_hash": "sha256:c7b168965aa19305b81977c14282cf28afbddad515e170d8e62d6c20f3b64ea4",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Every materialised slot gains a **slot record** — `.vibe-slot.toml` at the slot root: schema, the source `content_hash`, the spec-format identity (absorbing PROP-045's `.vibe-derived.toml` fields for transformed slots — ONE record file, not two), and `[[file]]` rows `{path, sha256}` for every file the materialiser wrote. `materialise` already returns exactly this footprint («and, in a later phase, record» — its own docstring names this phase); the record is that promise kept. The record itself, like the derived manifest today, is outside the content hash. @status:spec/plan",
+      "line": 287,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD"
+    },
+    {
+      "anchor": "diff",
+      "content_hash": "sha256:6065193c205bb0650b7c2dde46f95d22c123cdd362933fd0418fb775d17a7bd2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "9.3 The diff algorithm — write what changed, delete what was ours, touch nothing else",
+      "line": 289,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#diff"
+    },
+    {
+      "anchor": "DIFF-MATERIALISE",
+      "content_hash": "sha256:427ec39922ac6c91b2fcffa9c75a7fe722d2dd2c4f5c475babb7beb47c7af919",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Re-materialising a slot that carries a record: **(1)** compute the incoming footprint (path→hash) from the source; **(2)** for each incoming file — recorded hash equal ⇒ **leave the file untouched** (no write, no mtime change); differing or unrecorded ⇒ write it; **(3)** for each RECORDED file absent from the incoming footprint ⇒ delete it (and now-empty parent dirs, best-effort); **(4)** any on-disk path NOT in the record — `target/`, `node_modules/`, any build output — is **never touched**; **(5)** write the new record. A slot with no record (legacy) pays one last full wipe-and-copy and comes out recorded. `vibe clean` remains the only whole-slot wipe (PROP-053 unchanged). @status:spec/plan",
+      "line": 290,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE"
+    },
+    {
+      "anchor": "MTIME-LAW",
+      "content_hash": "sha256:0937e0928d0f413bfd3b201240319be22447c7deeb0c4506b6cd54299a8433ab",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Step 2's \"untouched\" is a law, not an optimisation:** unchanged files keep their bytes AND their mtimes, so cargo's fingerprinting sees an unchanged workspace and the native/binary rebuild inside the slot is a no-op. This single property is what makes «инкрементальность — супер важный кусок» hold end-to-end: edit one prompt file in a package → one file rewritten in the slot → cargo rebuilds nothing. @status:spec/plan",
+      "line": 292,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MTIME-LAW"
+    },
+    {
+      "anchor": "MUTABLE-GETS-A-GATE",
+      "content_hash": "sha256:6589e16916bdcd21e40cc0a59cc8d1948c75efd0800bd53e42d295355970a101",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Mutable sources get a freshness gate instead of a wipe:** for a PROP-011 §2.6 `file://` working-tree source, install re-hashes the source's shippable tree (cheap — read-and-hash, no copy) and compares against the record's `content_hash`: equal ⇒ the slot is fresh, skip entirely (this is the missing half of «vibe.toml не поменялся — не инсталлировать»); differing ⇒ the §9.3 diff. The never-trust-presence rule stays true in spirit — presence alone is still not trusted; the record's hash is what earns the skip. @status:spec/plan",
+      "line": 293,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MUTABLE-GETS-A-GATE"
+    },
+    {
+      "anchor": "SELF-HEAL",
+      "content_hash": "sha256:8be93d67589a766848f4488bf51b13190831ae0ede84b9c75e6612ca4ec0e9de",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Drift repair gets cheaper, not weaker.** PROP-020's reset guarantee (hook edits never compound) is re-based: \"reset\" = the §9.3 diff restores every RECORDED file to footprint state, byte-exact, whenever the slot re-materialises; `verify`-integrity mode compares per-file against the record and heals only divergent files. Hooks re-run only when the diff actually changed something — re-running them over an untouched slot would compound effects, the exact disease PROP-020 §2.1 exists to prevent. @status:spec/plan",
+      "line": 294,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SELF-HEAL"
+    },
+    {
+      "anchor": "AMENDMENT-PLAN",
+      "content_hash": "sha256:c611341d28c0f9ced61dcd8eac4110557f0f1171757856bfa68a53bb080958b5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Amendments this section obligates at build time** (recorded here so the build session lands them at the owning anchors, statuses moved, nothing renamed): PROP-011 gains the diff-materialise ruling and the mutable-source freshness gate; PROP-020 §2.1 `##RESET-THEN-RERUN` gains the record-diff-restore successor note, and its §2.3 trust gate (allow-list, first-run consent, non-interactive abort, `--allow-hooks`) is superseded by `##INSTALL-IS-CONSENT` + §3.5 observability; PROP-022 §2.2's snapshot reset language likewise; PROP-045's manifest is absorbed into the slot record (its facts re-pointed, file format superseded); PROP-024 §2.3 per §8.2; PROP-025's build-consent prompt likewise yields to `##INSTALL-IS-CONSENT`. @status:spec/plan",
+      "line": 295,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AMENDMENT-PLAN"
+    },
+    {
+      "anchor": "scenarios",
+      "content_hash": "sha256:7c4f8f85c3840b00f37caa636f5a81eb1116c53d558e7387ce5774a1a01dafee",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "10. The two commissioning test scenarios",
+      "line": 299,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#scenarios"
+    },
+    {
+      "anchor": "lifecycle-test",
+      "content_hash": "sha256:19e9192f6704a31b88886d9db5683913582132b165b955356e30cd505052fdbe",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "10.1 Lifecycle: the phase-announcer plugin",
+      "line": 300,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#lifecycle-test"
+    },
+    {
+      "anchor": "TEST-LOG-PLUGIN",
+      "content_hash": "sha256:a59e54b9b276e5a5e5a08b828bb5c9e152d62384ffed5dfc64c9520e8a10707a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A fixture package declares in its own manifest: `[[extension]] id=\"announce\" point=\"phase:build\" handler={kind=\"builtin\", name=\"log\"} config={message=\"hello from {phase} in {project}\"}` (plus a second execution at `phase:test` — the multi-execution property under test). E2E: install the fixture into a scratch project, run `vibe test`, assert stdout carries both rendered lines in phase order, each attributed to the providing package (§3.3 surface rule); run `vibe test` again and assert the executions report `fresh` (§4.3 under test); assert `vibe extensions --json` lists both executions with their provider (§3.5 under test), and that a host `[extensions] disable = [...]` line silences exactly one of them (§3.3 under test). The `log` builtin renders `{phase}`, `{project}`, `{package}` from the envelope — proving the envelope reaches handlers, which is the scenario's real point. @status:spec/plan",
+      "line": 301,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-LOG-PLUGIN"
+    },
+    {
+      "anchor": "compiler-test",
+      "content_hash": "sha256:f96e1a8a8a52604c536353b1d16b72b76b80868fc4d7c25e97b0c45889287874",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "10.2 Compiler: the XML whitespace squeezer — a TEST vehicle, not a shipping practice",
+      "line": 303,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#compiler-test"
+    },
+    {
+      "anchor": "TEST-XML-MINIFY",
+      "content_hash": "sha256:480a74e500c59447ab461e3bfa73bd1e2205d8b33826491eb47c79ad87f9fecd",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "A `compile:emitted` transform (builtin first — proving the declaration/activation/ordering tract; then re-shipped as a `native` cdylib in a fixture package — proving the §8 build/load/invoke tract with byte-identical output, which is itself the assertion). **The algorithm, XML-aware and safe by parent-shape:** parse the emitted XML; delete every text node consisting solely of whitespace whose parent element has at least one ELEMENT child and no non-whitespace text child (pure element containers lose their pretty-printing; mixed-content elements — anything carrying prose — are untouched byte-for-byte); comments (the compiled lane's `vibe:` markers) and CDATA survive verbatim; serialise. Applies to `.xml` artifacts only. @status:spec/plan",
+      "line": 304,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY"
+    },
+    {
+      "anchor": "MINIFY-NOT-FOR-PROD",
+      "content_hash": "sha256:a463ff75303c578c5d8f4e882f8b69468e61e26ed1f3de99c63dbed8fe2e913a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**The owner's own caveat, recorded as a norm:** inter-tag whitespace stripping is a poor production idea — token savings are marginal and the readability/diffability of the lane (and its reversibility oracle, §7.3) suffer. The transform ships as a test fixture and a mechanics-proof, default-off everywhere; the real tenant of these stages is the future **Caveman compression** pass at `compile:lane`, which compresses prose content deliberately rather than shaving markup accidentally. @status:spec/done",
+      "line": 305,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MINIFY-NOT-FOR-PROD"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:d5318d24ad5ff407c12fc3e611f761e19e639ebb0f712db7ba3fbed527c10d93",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "11. Rejected and deferred alternatives",
+      "line": 308,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#rejected"
+    },
+    {
+      "anchor": "REJ-TWO-GRAMMARS",
+      "content_hash": "sha256:93c51993d904a3040c62ec0ea42abc3d2816e71ec4117053817b92ac0de66629",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Two separate extension grammars** (a `[hooks]`-style table for lifecycle, a Babel-style list for the compiler) — rejected: the mandate's core is one coherent machine; divergence here is the «разброд» the owner named as the failure mode. @status:spec/plan",
+      "line": 310,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-TWO-GRAMMARS"
+    },
+    {
+      "anchor": "REJ-FULL-MAVEN-PHASES",
+      "content_hash": "sha256:c92447b07eb56a68c5761cf54611d8b6b799aaaa9edd223e2eb4bc9c581175e5",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Adopting Maven's full 23-phase table** — rejected: the hyphenated phases exist to sequence JVM build minutiae we do not have; nine phases cover the mandate, and the phase table is extensible behind a ruling when a real between-slot need arrives. @status:spec/plan",
+      "line": 311,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-FULL-MAVEN-PHASES"
+    },
+    {
+      "anchor": "REJ-RUST-ABI",
+      "content_hash": "sha256:e6463d8a2c7bf8e811978c6fad3d3963f25076feedca1e5883c1b2c838e256cd",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**`dylib` with Rust-native symbols** (handing `&mut DocTree` across the boundary) — rejected: no stable Rust ABI exists; every plugin would be pinned to the exact compiler and vibe build, which is undistributable. C ABI + JSON (§8.1) is the only honest wire. @status:spec/plan",
+      "line": 312,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-RUST-ABI"
+    },
+    {
+      "anchor": "REJ-SUBPROCESS-COMPILER",
+      "content_hash": "sha256:1c1a1f46c22d3a74ddc191ef896e37a707202a99cf41779042f96e10687ebc54",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Script/binary handlers for `compile:` stages** — rejected (§8.5): spawn-per-document inside install's innermost loop, interpreter availability as a compile dependency, and agent handlers there would break boot-lane determinism. @status:spec/plan",
+      "line": 313,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-SUBPROCESS-COMPILER"
+    },
+    {
+      "anchor": "REJ-CLOSURE-HOOKS",
+      "content_hash": "sha256:f624539a585deb2b73e3d63e32d2d15689e2b0d00a1e8b44657a96ee99f59426",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Closure/graph access in the STAGED tier** (a tier-1 transform adding/removing `#use` edges) — rejected as a prompt-injection lever and an auditability break (§7.2 `##NO-CLOSURE-HOOK`). Full access moved tiers rather than dying: the 2026-08-25 ruling prices it into the pass tier behind `compiler_internals` + host activation + the header record (§7.4.3) — an explicit capability, never a silent one. @status:spec/plan",
+      "line": 314,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-CLOSURE-HOOKS"
+    },
+    {
+      "anchor": "DEFER-HANDLE-API",
+      "content_hash": "sha256:b2bed19496b4a5e96af8dd201ceaaafab24697d2bc3afa8525b5c1fb5ffc81bd",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Deferred: an interactive handle/callback C API for passes** (the LLVM-C-API genre — the plugin calls back into vibe to walk and mutate nodes piecemeal) — the pass wire is whole-IR-in/whole-IR-out (§7.4.4) until a real pass demonstrably cannot be written that way; the deferral lives behind this anchor. @status:spec/plan",
+      "line": 315,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DEFER-HANDLE-API"
+    },
+    {
+      "anchor": "REJ-INLINE-COMMANDS-STAND",
+      "content_hash": "sha256:47ce4f66d954d1f6653fcda28449d532cb9a5c5e5ef5961427ba9767b930fc3f",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Inline command strings in the manifest** — stays rejected exactly as PROP-020 §3 ruled; the `script` kind keeps the reviewable-file form, and `builtin`/`binary`/`native` are the structured alternatives. @status:spec/plan",
+      "line": 316,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REJ-INLINE-COMMANDS-STAND"
+    },
+    {
+      "anchor": "DEFER-GOAL-MIXING",
+      "content_hash": "sha256:dac63000a5b5d56d0e5495a08111cf0376320e72ae0221f8f9e2314aaf8103e2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Deferred:** direct-verb mixing in a chain (`##EXISTING-VERBS-STAY`); WASM handlers (`##WASM-DEFERRED`); a per-node visitor API for external transforms (`##NOT-FROM-BABEL`); pkgrefs scoping non-install phases (`##CHAIN-GENERAL`). @status:spec/plan",
+      "line": 317,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DEFER-GOAL-MIXING"
+    },
+    {
+      "anchor": "roadmap",
+      "content_hash": "sha256:8bb695604b530f5a78d9c61ffb8a24141c1480618c1171b29323cdc2989ef686",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "12. The proposed build order — six self-standing waves",
+      "line": 320,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#roadmap"
+    },
+    {
+      "anchor": "R1-DIFF",
+      "content_hash": "sha256:16fa98b472ab662133184a9baad0bb6f915304a1292b0fb5d1b7a79d52b7a00d",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R1 — the materialise diff (§9).** Slot record, diff algorithm, mutable-source freshness gate, mtime law; amendments landed at PROP-011/020/022/024/045 anchors. Ships alone and pays immediately: `vibe install` stops killing slot `target/`s (a today-bug for PROP-025 binaries), and edit-one-prompt installs become near-instant. **First because everything after it builds artifacts the old wipe would destroy.** @status:impl/plan",
+      "line": 322,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R1-DIFF"
+    },
+    {
+      "anchor": "R2-ENGINE",
+      "content_hash": "sha256:b18669859a897e3b2adb91871830645e6ac28601404af6c5e3a1b3894bbe5af2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R2 — the lifecycle engine (§3–§6 minus agent).** The phase table, chain grammar (superseding PROP-053 `##CHAIN-ONLY-INSTALL` at its anchor), `[[extension]]` parsing, trust-gate extension, envelope, `builtin`/`script`/`binary` handlers, `.vibe/lifecycle.toml` freshness, the `log` builtin, and the §10.1 e2e. `vibe build`/`vibe test` become real (preset: binaries + stack commands). @status:impl/plan",
+      "line": 323,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R2-ENGINE"
+    },
+    {
+      "anchor": "R3-IR-REFACTOR",
+      "content_hash": "sha256:b8a38910dc688cbc1d6a3617980757ae505b35b764f22cd28cd3c08ce5f85edb",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R3 — the IR refactor (§7.5).** Explicit level types, built-in phases as named passes, the declared default pipeline, the inter-pass verifier skeleton — no external API yet. Gate: byte-identical artifacts over the whole corpus, judged by the existing oracles. Before both compiler tiers, so they are born on the pass manager instead of retrofitted onto the monolith. @status:impl/plan",
+      "line": 324,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R3-IR-REFACTOR"
+    },
+    {
+      "anchor": "R4-STAGED",
+      "content_hash": "sha256:d09745d15d3ddfc26a6585b2148a7977d4046943833a044b3a4699f389ffad84",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R4 — tier 1, the staged transforms (§7.2).** The four canonical transform positions, host activation, the transforms header, the oracle rule, and the §10.2 builtin minifier e2e. @status:impl/plan",
+      "line": 325,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R4-STAGED"
+    },
+    {
+      "anchor": "R5-NATIVE",
+      "content_hash": "sha256:0e1ae4dc329ef4b35e12ab624207ee8b48021cc34f847e3d2e5de193d5ddd3c6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R5 — the native tier (§8).** `vibe-ext` crate, the four-symbol ABI, loader + catch_unwind + version gate, build-phase integration, bootstrap order, and the §10.2 native-parity e2e. @status:impl/plan",
+      "line": 326,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R5-NATIVE"
+    },
+    {
+      "anchor": "R6-PASS-TIER",
+      "content_hash": "sha256:6543632cd622b18f06df2063dd2b7cac2b780826cb70d363965537a3ca5adaaf",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R6 — tier 2, the pass tier (§7.4).** The `compiler_internals` flag, pass declarations (transform/lowering/frontend/backend), the whole-IR wire with `ir_schema`, the verifier turned on between plugin passes, `vibe list`/`show` surfacing. E2E: a fixture frontend for a trivial format whose documents resolve as `spec://` citizens, and a fixture JSON backend for the lane — both behind the flag, both refused without it. @status:impl/plan",
+      "line": 327,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R6-PASS-TIER"
+    },
+    {
+      "anchor": "R7-AGENT",
+      "content_hash": "sha256:992a103dddfe593874256e9b7c6fd4c629337d677209473bda0cc90ec225a662",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R7 — create and the agent tier (§6.4–§6.5).** The agent handler, vibe-llm provider seam made real, the outbox handshake, `delegated` status and fingerprint-resume, MCP surface. @status:impl/plan",
+      "line": 328,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R7-AGENT"
+    },
+    {
+      "anchor": "R8-PACKAGE-DEPLOY",
+      "content_hash": "sha256:ae95e1b49a4b2fede40316543f5edccd39be501a28f6d846775f81622c1c03a1",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**R8 — package/deploy substance.** Skill/plugin/installer bindings for package; first deploy plugins. Shaped by what exists when its turn comes; deliberately last. @status:impl/plan",
+      "line": 329,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#R8-PACKAGE-DEPLOY"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "sha256:fab64145ce8dc302f700b9e43e156154fb8e09021b87bf3ba2a76dec5b73e47e",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "13. Open questions — the owner's forks",
+      "line": 332,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#open"
+    },
+    {
+      "anchor": "OPEN-PHASE-NAMES",
+      "content_hash": "sha256:3f0c91ca913bcd6d0d63f2994e879f88da5716d282880096f45a38814bf1a539",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Naming — CLOSED (owner, 2026-08-25: «окей»):** the nine-phase table stands as drafted — `generate` separate from `build`, `verify` in the table from day one, the name `create` confirmed. @status:spec/done",
+      "line": 334,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-PHASE-NAMES"
+    },
+    {
+      "anchor": "OPEN-NATIVE-TRUST",
+      "content_hash": "sha256:8b41d0d41d63de1e2948f6314ced7a54ff26dda3792f744619eea98259d042b7",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Native trust — CLOSED (owner, 2026-08-25):** no consent tier of any kind — installation is the consent (`##INSTALL-IS-CONSENT`), for in-process cdylibs exactly as for scripts, the Gradle/Webpack/Clang norm. The safety budget is spent on §3.5 observability. §8.3's wasm sandboxing note stays the eventual escape if a hostile-ecosystem era ever demands one. @status:spec/done",
+      "line": 335,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-NATIVE-TRUST"
+    },
+    {
+      "anchor": "OPEN-CREATE-BUDGET",
+      "content_hash": "sha256:5dc8db03f671ee6b5657743ffac4ad78a119b02cdf8e2d48aa7f3a6553d3a8bf",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Create economics:** whether agent executions carry a declared token budget in `config` and whether vibe enforces it (refuse vs warn) — policy, not mechanics; the envelope has room either way. @status:spec/plan",
+      "line": 336,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-CREATE-BUDGET"
+    },
+    {
+      "anchor": "OPEN-DEPLOY-TARGETS",
+      "content_hash": "sha256:7433219dcbe05b5aab7a8bd57b0e1b03b724dee502408b5a90541ac668949b06",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**Deploy first targets:** what R8 should actually push to first (the vibespecs registry? a server genre? Claude marketplace?) — pure owner-roadmap territory. @status:spec/plan",
+      "line": 337,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARGETS"
+    },
+    {
+      "anchor": "reference",
+      "content_hash": "sha256:4273dac9c1c1e94a026c5809f1a2f0cdd67ce3256e75f75b5cd199b785dc33cc",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14. Reference — the exact shapes (normative for the build)",
+      "line": 340,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#reference"
+    },
+    {
+      "anchor": "REF-PURPOSE",
+      "content_hash": "sha256:b3ab765c94ec1b46b4e0e6fcd8d1046a4eba69480e3712d66d90f34c7b9a4bc6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "This section exists so that an implementer — human or model — never has to guess a field name, a file layout, or a call sequence from the prose above. Where a shape is deliberately unfrozen it says so; everything else here is normative. @status:spec/done",
+      "line": 341,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-PURPOSE"
+    },
+    {
+      "anchor": "ext-grammar",
+      "content_hash": "sha256:c4fd6c1ed64073a933d9863f420bf0d3d95ab571982364e43010c5fc98cebfa7",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.1 The [[extension]] table, field by field",
+      "line": 342,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ext-grammar"
+    },
+    {
+      "anchor": "REF-HANDLER-TABLES",
+      "content_hash": "sha256:ee089e657c64f5ed1c0dd9d78ba52eb51f33915926982522622d8e0521a14ff2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Handler sub-shapes: `builtin` → `{ kind, name }`; `script` → `{ kind, base }` (base path without extension, PROP-020 §2.2 resolution); `binary` → `{ kind, name }` (a `[[binary]]` name); `native` → `{ kind, crate_dir? , prebuilt? }` (at least one of the two, §8.2); `agent` → `{ kind, prompt }` (a `spec://` address the package resolves). @status:spec/plan",
+      "line": 363,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES"
+    },
+    {
+      "anchor": "state-files",
+      "content_hash": "sha256:523548bc9493fd5eec46da39b63c78709c63b045ae60e009bb28cda27f25694a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.2 .vibe/lifecycle.toml — the run/freshness record",
+      "line": 365,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#state-files"
+    },
+    {
+      "anchor": "REF-LIFECYCLE-TOML",
+      "content_hash": "sha256:81f7a2005c1c4bf8e6d127420d99601841af27089bb093a1cfab9bb6f1be14eb",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Machine state: inside `.vibe/` (shippable-tree denylist), never committed, never hashed, survives `vibe clean` (§4.3), erasable at will — losing it costs one full re-run, nothing else. Schema-versioned like every state file we own. @status:spec/plan",
+      "line": 378,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-LIFECYCLE-TOML"
+    },
+    {
+      "anchor": "slot-record",
+      "content_hash": "sha256:deeedde06c09d8495b9865117bf97200301eceb0b65a62efc189e738f7fa26c2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.3 .vibe-slot.toml — the materialised-slot record (§9.2)",
+      "line": 380,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#slot-record"
+    },
+    {
+      "anchor": "REF-SLOT-RECORD",
+      "content_hash": "sha256:65207f8ee48a3bf049debc2b9f4505e0af94e48322fee25a635b09de005c7725",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Lives at the slot root; excluded from the slot's content identity exactly as `.vibe-derived.toml` is today; unknown fields refuse (deny_unknown, schema bump to extend). The §9.3 diff reads the old record, computes the incoming footprint, and writes the new record LAST — a crash between steps leaves a slot the next run heals (recorded files re-diff; unrecorded paths were never touched). @status:spec/plan",
+      "line": 392,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-SLOT-RECORD"
+    },
+    {
+      "anchor": "wire-details",
+      "content_hash": "sha256:6344bf5664ab6f3c5efd4c064fa37e59d7e56cbf77272aed9b3ca9ff9398e6ac",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.4 Handler wires, end to end",
+      "line": 394,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#wire-details"
+    },
+    {
+      "anchor": "REF-WIRE-SCRIPT",
+      "content_hash": "sha256:5555765a4df391b2224e015611eb6721f17e327b5fd40e42de8b0cf0542b606c",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**script:** interpreter per PROP-020 §2.2 (`.sh` via bash first, `.ps1` via PowerShell on Windows fallback); cwd = slot for `slot:` points, project root for `phase:`; env = the `VIBE_*` set PROP-020 documents plus `VIBE_CONTEXT` (absolute path of the envelope JSON written into scratch) and `VIBE_REPLY` (absolute path where a reply JSON MAY be written); exit 0 + no reply file = `{\"status\":\"ok\"}`; non-zero exit = fail regardless of reply file; streams go to the user live. @status:spec/plan",
+      "line": 396,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-SCRIPT"
+    },
+    {
+      "anchor": "REF-WIRE-BINARY",
+      "content_hash": "sha256:f708f38c37cb905283f69ad457179196a8743b45ae5887f9b77fe09a13e39e9e",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**binary:** the artifact is resolved via PROP-025 (`DeclaredBinary::artifact`, built if absent); envelope JSON on stdin (closed after write); reply JSON expected on stdout (whole stdout parsed as one JSON document; stderr streams to the user); non-zero exit = fail; a malformed reply = fail naming the execution. @status:spec/plan",
+      "line": 397,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-BINARY"
+    },
+    {
+      "anchor": "REF-WIRE-NATIVE",
+      "content_hash": "sha256:af9cfde4864b74f20c233069b262c4853fbef90f940eccd250ea2375c48247b6",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "**native, one invocation, seven steps:** (1) resolve artifact — prebuilt-for-platform, else built cdylib, else refuse; (2) load (libloading), once per run, cached by path; (3) `vibe_ext_abi()` — must equal a supported ABI version or refuse with «rebuild: vibe build»; (4) `vibe_ext_manifest()` — parse, check the execution's id/point/`ir_schema` are declared; (5) `vibe_ext_invoke(req, req_len, &resp, &resp_len)` under `catch_unwind` at the plugin macro's boundary — request/response are UTF-8 JSON byte buffers, envelope in, reply out; non-zero return or panic = the execution fails, vibe survives; (6) parse reply; (7) `vibe_ext_free(resp, resp_len)`. The `vibe-ext` helper crate's `vibe_extension!` macro generates all four symbols from a safe `fn handle(Context) -> Reply`. @status:spec/plan",
+      "line": 398,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE"
+    },
+    {
+      "anchor": "agent-wire",
+      "content_hash": "sha256:6468673fe15af108fb70eeb8385ffc4115e6e11d0be84c6506ed14788fa99ea2",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.5 The agent handshake, on the wire (§6.5)",
+      "line": 401,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#agent-wire"
+    },
+    {
+      "anchor": "REF-AGENT-RESUME",
+      "content_hash": "sha256:47cdc3bc274d3e4981f747e5c75da4efdbe83ad12a051a4f87c3acfe9d0b31f4",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "Resume is the SAME phase command re-run: the engine finds the run id in `.vibe/lifecycle.toml` (status `delegated`), validates each task's declared outputs, marks satisfied executions done, re-parks unsatisfied ones (idempotent), and continues the chain. No dedicated resume verb; `--force` re-parks everything. @status:spec/plan",
+      "line": 420,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME"
+    },
+    {
+      "anchor": "ir-skeletons",
+      "content_hash": "sha256:7a5e1c699a0690a01d51c5d7984f165ef67ee8ca9f55c4c3350363da0dbe7a25",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "14.6 IR level skeletons (tier-2 wire; frozen at R6, sketched now)",
+      "line": 422,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ir-skeletons"
+    },
+    {
+      "anchor": "REF-IR-UNFROZEN",
+      "content_hash": "sha256:2d2074bfc43944fc464916950e6a634ba6fb32cd3bf4516e947b8bde2e9692a4",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "These skeletons fix the VOCABULARY (level names, the node/edge/entry framing); exact field sets freeze in R6 when the wire ships, derived from the R3 types — deliberately, so the refactor is not forced to mirror a JSON guess made before it ran. `ir_schema` starts at 1 the day the first external pass can load. @status:spec/plan",
+      "line": 436,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-IR-UNFROZEN"
+    },
+    {
+      "anchor": "glossary",
+      "content_hash": "sha256:2bc986a5bd4478cda331ea9a3534682ae8e264365eb62abaf170ba3a6279aa8a",
+      "doc_path": "common/PROP-054",
+      "file": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "heading": "15. Glossary — the words this document leans on",
+      "line": 439,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#glossary"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",
