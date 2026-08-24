@@ -347,13 +347,25 @@ fn id_file_matches(path: &Path, id: &str) -> bool {
 }
 
 /// The forward half of this router's law: a spec file's canonical
-/// citation doc-path — relative to `spec/`, the serialisation extension
-/// stripped, and a `PROP-NNN` / `FEAT-NNN` descriptive-slug filename
-/// truncated to its id (`spec/modules/x/PROP-003-dep-evolution.md`
+/// citation doc-path — relative to the specs root, the serialisation
+/// extension stripped, and a `PROP-NNN` / `FEAT-NNN` descriptive-slug
+/// filename truncated to its id (`spec/modules/x/PROP-003-dep-evolution.md`
 /// → `modules/x/PROP-003`), so `resolve_doc` inverts it. Files without
 /// a document id keep their full stem (`boot/00-core`, `WAL`).
+///
+/// The specs root is two-shaped today (PROP-052, the relayout): the
+/// physical file may still sit under the legacy `spec/` prefix or under
+/// the new `vibevm/vibespecs/` one — the LONG prefix is checked first,
+/// and both canonicalise to the same doc-path (L1: physics moves,
+/// addresses do not). vibe-spec cannot depend on vibe-core, so the two
+/// prefixes are spelled here as the one sanctioned duplication of the
+/// layout names outside `vibe_core::layout` (see
+/// `crates/vibe-core/src/layout.rs`, PROP-052 L2).
 pub fn canonical_doc_path(file_rel: &str) -> String {
-    let rel = file_rel.strip_prefix("spec/").unwrap_or(file_rel);
+    let rel = file_rel
+        .strip_prefix("vibevm/vibespecs/")
+        .or_else(|| file_rel.strip_prefix("spec/"))
+        .unwrap_or(file_rel);
     let (dir, name) = match rel.rsplit_once('/') {
         Some((d, n)) => (Some(d), n),
         None => (None, rel),
@@ -403,3 +415,95 @@ pub use glob::is_pattern;
 
 #[cfg(test)]
 mod tests;
+
+/// The PROP-052 half of [`canonical_doc_path`]: both physical layouts
+/// canonicalise to one doc-path (L1 — addresses survive the move).
+/// Kept inline in this file — not in the sibling `tests` module — so the
+/// relayout slice touches exactly this one file.
+#[cfg(test)]
+mod canonical_doc_path_layout_tests {
+    use super::canonical_doc_path;
+
+    /// The two specs-root prefixes, as string literals. vibe-spec cannot
+    /// depend on vibe-core, where `layout.rs` names the roots once
+    /// (PROP-052 L2) — this is a test's own scaffold duplication, not a
+    /// product literal; the single home is `crates/vibe-core/src/layout.rs`.
+    const NEW_SPECS_PREFIX: &str = "vibevm/vibespecs/";
+    const OLD_SPECS_PREFIX: &str = "spec/";
+
+    #[test]
+    fn one_doc_path_for_both_layouts() {
+        // The PROP-052 ##ADDRESSES-SURVIVE-THE-MOVE proof: the same
+        // document reached under either physical prefix canonicalises
+        // to the identical citation doc-path.
+        for doc in [
+            "common/PROP-000.xml",
+            "common/PROP-000.md",
+            "common/PROP-046-adoption-facts-registry.md",
+            "modules/x/PROP-003-dep-evolution.md",
+            "modules/x/FEAT-012-thing.xml",
+            "boot/00-core.md",
+            "WAL.xml",
+        ] {
+            let new = format!("{NEW_SPECS_PREFIX}{doc}");
+            let old = format!("{OLD_SPECS_PREFIX}{doc}");
+            assert_eq!(
+                canonical_doc_path(&new),
+                canonical_doc_path(&old),
+                "diverged for {doc}"
+            );
+        }
+    }
+
+    #[test]
+    fn new_prefix_strips_and_truncates_like_the_old() {
+        // Not just equality of the two shapes: each new-layout input
+        // lands on the exact expected doc-path (slug truncation, the
+        // id-less stem, nested dirs, either serialisation).
+        assert_eq!(
+            canonical_doc_path("vibevm/vibespecs/modules/x/PROP-003-dep-evolution.md"),
+            "modules/x/PROP-003"
+        );
+        assert_eq!(
+            canonical_doc_path("vibevm/vibespecs/common/FEAT-012-thing.xml"),
+            "common/FEAT-012"
+        );
+        assert_eq!(
+            canonical_doc_path("vibevm/vibespecs/boot/00-core.md"),
+            "boot/00-core"
+        );
+        assert_eq!(canonical_doc_path("vibevm/vibespecs/WAL.xml"), "WAL");
+    }
+
+    #[test]
+    fn long_prefix_wins_over_the_short_one() {
+        // The strip order is longest-first: the new root is checked
+        // before the legacy one, so neither prefix can eat into the
+        // other's documents. Both serialisations of the same document
+        // canonicalise identically under the new root…
+        assert_eq!(
+            canonical_doc_path("vibevm/vibespecs/common/PROP-000.xml"),
+            canonical_doc_path("vibevm/vibespecs/common/PROP-000.md"),
+        );
+        // A bare root name without the trailing separator is NOT a doc
+        // path and keeps its shape (no partial strip).
+        assert_eq!(canonical_doc_path("vibevm/vibespecs"), "vibevm/vibespecs");
+        assert_eq!(canonical_doc_path("vibespecs"), "vibespecs");
+    }
+
+    #[test]
+    fn unprefixed_and_legacy_shapes_are_unchanged() {
+        // Additivity: with no prefix at all, or with the legacy one,
+        // behaviour is byte-for-byte the pre-relayout function's.
+        assert_eq!(canonical_doc_path("PROP-000.xml"), "PROP-000");
+        assert_eq!(
+            canonical_doc_path("notes/random-file.md"),
+            "notes/random-file"
+        );
+        assert_eq!(
+            canonical_doc_path("spec/common/PROP-000.xml"),
+            "common/PROP-000"
+        );
+        assert_eq!(canonical_doc_path("spec/WAL.md"), "WAL");
+    }
+}

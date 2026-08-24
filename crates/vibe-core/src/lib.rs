@@ -17,6 +17,7 @@ pub mod capability_ref;
 pub mod content_hash;
 pub mod error;
 pub mod global_registry;
+pub mod layout;
 pub mod manifest;
 pub mod package_ref;
 pub mod provenance;
