@@ -64,7 +64,7 @@ F7). Шаг 53: 3 dead-exclude предупреждения facts.toml (B-107). 
   <done title="Done">
     <p><WAL-DONE fact="true" status="impl/done">2026-08-24 целиком: переезд vibevm/ (утро, ecb0a5de…) →
 normal-флип 42 пакетов с дозреванием компилятора (день) → install-фиксы
-+ vibe clean (вечер). Панели all green после каждой волны; спеки дня:
+и vibe clean (вечер). Панели all green после каждой волны; спеки дня:
 PROP-052 BUILT, PROP-035 четыре поправки, PROP-011 три рулинга,
 PROP-053 новый. Нарация sync-engines `[k/9]` жива.</WAL-DONE></p>
   </done>
