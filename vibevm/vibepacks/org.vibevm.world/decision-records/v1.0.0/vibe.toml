@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Decisions, not facts: record why with data and a revisit trigger, at the spec anchor the decision governs"

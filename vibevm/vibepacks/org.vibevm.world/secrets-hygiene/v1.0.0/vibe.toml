@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Secrets hygiene for agent-driven repositories: surface-secrets never printed or persisted, sanctioned process boundaries, and scope discipline"

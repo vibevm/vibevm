@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The DISCOVERY collaborative-research prompt: a structured-uncertainty response grammar, adversarial self-checks, and intensity knobs for LLM research sessions"

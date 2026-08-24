@@ -4,6 +4,7 @@ group = "org.vibevm.fractality"
 kind = "tool"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "An agent operating system in its earliest form: fractality-mission-control (a scheduler daemon holding the agent roster, call tree, and usage metering) plus the fractality CLI, which lets an expensive boss agent delegate tasks to swarms of cheap worker agents running in isolated Claude Code processes under other model providers, exchanging everything through files on disk"

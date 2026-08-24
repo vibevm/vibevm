@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Atomic commits discipline: one commit = one logical idea — how to split a mixed working tree, when to batch, and why atomicity matters more in a human-AI team (the message FORMAT is the separate conventional-commits flow)"

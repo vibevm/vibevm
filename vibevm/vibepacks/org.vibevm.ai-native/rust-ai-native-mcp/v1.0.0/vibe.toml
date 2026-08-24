@@ -4,6 +4,7 @@ group = "org.vibevm.ai-native"
 kind = "mcp"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The AI-Native Rust discipline over MCP: every rust-ai-native command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"

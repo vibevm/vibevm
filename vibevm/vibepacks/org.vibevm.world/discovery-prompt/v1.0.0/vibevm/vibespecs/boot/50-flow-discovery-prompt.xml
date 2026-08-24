@@ -6,7 +6,9 @@
 distributable user-level prompt that reshapes an LLM session into
 structured co-inquiry.</PROJECT-SHIPS-THE-DISCOVERY-PROMPT></p>
   <p><ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY fact="true" status="impl/done">The artifact lives at
-@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT#root.</ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY></p>
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT
+(the whole-document address: the payload is a title-less prompt, so it
+carries no `#root` anchor to cite).</ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY></p>
   <p><ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS fact="true" status="impl/done">It is a **payload for a fresh session**, not standing instructions —
 do not load it into context outside an explicit deployment request.</ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS></p>
   <when title="When to deploy">

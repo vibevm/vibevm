@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The Conventional Commits message format: a typed header (type(scope): subject), a why-not-what body, the allowed-type set, scope convention, worked examples, and anti-patterns"

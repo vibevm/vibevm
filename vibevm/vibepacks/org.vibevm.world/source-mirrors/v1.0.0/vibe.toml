@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Single-writer source mirrors: one mainline, hosts as read-replicas, manifest-driven fast-forward-only fan-out that fails loud"

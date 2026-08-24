@@ -4,6 +4,7 @@ group = "org.vibevm.world"
 kind = "flow"
 version = "1.0.0"
 epoch = 1
+format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Qualified naming for package ecosystems: mandatory groups, identity tuples, short names only at the CLI boundary, collision vs conflict"
