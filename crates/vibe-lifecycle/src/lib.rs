@@ -21,18 +21,28 @@
 //!     ],
 //! );
 //! ```
+//!
+//! The vocabulary remains available from this crate for compatibility even
+//! though its single owner is now `vibe_core::lifecycle`:
+//!
+//! ```
+//! use vibe_lifecycle::{CompilePoint, ExtensionPoint, Phase, PhasePoint};
+//!
+//! let phase = PhasePoint::Default(Phase::Build);
+//! let point = ExtensionPoint::Phase(phase);
+//! let core_point: vibe_core::lifecycle::ExtensionPoint = point;
+//! assert_eq!(core_point.to_string(), "phase:build");
+//! assert_eq!("compile:pass".parse(), Ok(CompilePoint::Pass));
+//! ```
 
 #![forbid(unsafe_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 mod chain;
-mod phase;
-mod point;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
-pub use phase::{DEFAULT_PHASES, Phase, PhaseParseError};
-pub use point::{
-    CompilePoint, CompilePointParseError, ExtensionPoint, ExtensionPointParseError, PhasePoint,
-    PhasePointParseError, SlotPoint, SlotPointParseError,
+pub use vibe_core::lifecycle::{
+    CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,
+    Phase, PhaseParseError, PhasePoint, PhasePointParseError, SlotPoint, SlotPointParseError,
 };

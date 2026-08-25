@@ -12,4 +12,4 @@ description = "Deterministic lifecycle phase model and request chaining for vibe
 
 [dependencies]
 specmark.workspace = true
-thiserror.workspace = true
+vibe-core.workspace = true

@@ -6,7 +6,7 @@ use std::{fmt, str::FromStr};
 
 use specmark::spec;
 
-use crate::{DEFAULT_PHASES, Phase};
+use super::{DEFAULT_PHASES, Phase};
 
 mod compile;
 mod slot;
@@ -27,7 +27,7 @@ pub(super) const POINT_GRAMMAR_SPEC_URI: &str =
 /// and slot points will receive their own domain types.
 ///
 /// ```
-/// use vibe_lifecycle::{Phase, PhasePoint};
+/// use vibe_core::lifecycle::{Phase, PhasePoint};
 ///
 /// assert_eq!("phase:clean".parse(), Ok(PhasePoint::Clean));
 /// assert_eq!(
@@ -82,7 +82,7 @@ impl FromStr for PhasePoint {
 /// identifies this type's family boundary, and points to the normative grammar.
 ///
 /// ```
-/// use vibe_lifecycle::PhasePoint;
+/// use vibe_core::lifecycle::PhasePoint;
 ///
 /// let error = "compile:source"
 ///     .parse::<PhasePoint>()
@@ -131,7 +131,7 @@ impl PhasePointParseError {
 /// legal point.
 ///
 /// ```
-/// use vibe_lifecycle::{CompilePoint, ExtensionPoint, Phase, PhasePoint, SlotPoint};
+/// use vibe_core::lifecycle::{CompilePoint, ExtensionPoint, Phase, PhasePoint, SlotPoint};
 ///
 /// assert_eq!(
 ///     "phase:build".parse(),
@@ -195,7 +195,7 @@ impl FromStr for ExtensionPoint {
 /// from the same family tables as the parsers.
 ///
 /// ```
-/// use vibe_lifecycle::ExtensionPoint;
+/// use vibe_core::lifecycle::ExtensionPoint;
 ///
 /// let error = "unknown:build"
 ///     .parse::<ExtensionPoint>()

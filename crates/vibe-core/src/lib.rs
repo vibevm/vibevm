@@ -4,6 +4,8 @@
 //! - Package identity: [`PackageRef`], [`PackageKind`], [`VersionSpec`].
 //! - Capability identity: [`CapabilityRef`] — abstract interfaces a package
 //!   can `provide` and another package can `require` (PROP-002 §2.9).
+//! - Lifecycle vocabulary: [`lifecycle::Phase`] and
+//!   [`lifecycle::ExtensionPoint`].
 //! - Manifest schemas: [`manifest::Manifest`], [`manifest::Lockfile`].
 //! - Typed-value tags exchanged between task-graph nodes: [`values::ValueTag`].
 //!
@@ -18,6 +20,7 @@ pub mod content_hash;
 pub mod error;
 pub mod global_registry;
 pub mod layout;
+pub mod lifecycle;
 pub mod manifest;
 pub mod package_ref;
 pub mod provenance;

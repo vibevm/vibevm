@@ -11,7 +11,7 @@ use super::{POINT_GRAMMAR_SPEC_URI, write_choices};
 /// One extension point in the `compile` family.
 ///
 /// ```
-/// use vibe_lifecycle::CompilePoint;
+/// use vibe_core::lifecycle::CompilePoint;
 ///
 /// assert_eq!("compile:source".parse(), Ok(CompilePoint::Source));
 /// assert_eq!("compile:emitted".parse(), Ok(CompilePoint::Emitted));
@@ -73,7 +73,7 @@ impl FromStr for CompilePoint {
 /// A value that is not an exact lowercase point in the `compile` family.
 ///
 /// ```
-/// use vibe_lifecycle::CompilePoint;
+/// use vibe_core::lifecycle::CompilePoint;
 ///
 /// let error = "slot:pre-install"
 ///     .parse::<CompilePoint>()

@@ -11,7 +11,7 @@ use super::{POINT_GRAMMAR_SPEC_URI, write_choices};
 /// One extension point in the `slot` family.
 ///
 /// ```
-/// use vibe_lifecycle::SlotPoint;
+/// use vibe_core::lifecycle::SlotPoint;
 ///
 /// assert_eq!("slot:pre-install".parse(), Ok(SlotPoint::PreInstall));
 /// assert_eq!(
@@ -60,7 +60,7 @@ impl FromStr for SlotPoint {
 /// A value that is not an exact lowercase point in the `slot` family.
 ///
 /// ```
-/// use vibe_lifecycle::SlotPoint;
+/// use vibe_core::lifecycle::SlotPoint;
 ///
 /// let error = "phase:install"
 ///     .parse::<SlotPoint>()

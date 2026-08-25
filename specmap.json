@@ -4943,9 +4943,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 13,
+      "line": 15,
       "symbol": "vibe_core",
-      "end_line": 13,
+      "end_line": 15,
       "fingerprint": "tok1:8248be3c011fc4b8cc9e2695f4ee654c19e63b1bbc013d86ce8796fbec3afa3e"
     },
     {
@@ -5091,6 +5091,231 @@
       "symbol": "vibe_core::layout",
       "end_line": 17,
       "fingerprint": "tok1:0e174c5070f40de60986c6db3f550c63b456e4877a2dee100208e28f0737ce35"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::lifecycle::phase",
+      "end_line": 3,
+      "fingerprint": "tok1:4479b6a02506d3b587f2a73485ea05f14c4f81350d07b23737f1f7c20b4188c9"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "item_kind": "fn",
+      "line": 102,
+      "symbol": "vibe_core::lifecycle::phase::Phase::from_str",
+      "end_line": 110,
+      "fingerprint": "tok1:332109d90b78ae4ee5a27a30bd27d2ba1d907d37f696a6dea80a5984b5ea80c5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "item_kind": "fn",
+      "line": 147,
+      "symbol": "vibe_core::lifecycle::phase::tests::every_canonical_phase_round_trips",
+      "end_line": 160,
+      "fingerprint": "tok1:954c08d36aef9d1568b16fdc6998a08c8a6621092c9417ac1e1250f5d1f2061f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "item_kind": "fn",
+      "line": 171,
+      "symbol": "vibe_core::lifecycle::phase::tests::parse_error_is_actionable_and_complete",
+      "end_line": 179,
+      "fingerprint": "tok1:75ec4189043624ce3704106b2206dd8c540d9d00c42c8bf836c167c5b6cd88db"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "item_kind": "fn",
+      "line": 162,
+      "symbol": "vibe_core::lifecycle::phase::tests::parser_is_exact_and_rejects_clean",
+      "end_line": 169,
+      "fingerprint": "tok1:f251679984cde5f82bb9f7af2ac5ef0ace5e1e129c8468b6a458de52a3862548"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::lifecycle::point",
+      "end_line": 3,
+      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 172,
+      "symbol": "vibe_core::lifecycle::point::ExtensionPoint::from_str",
+      "end_line": 189,
+      "fingerprint": "tok1:b8d57efb5b10940e6deab252621c1e22cebe56079775e22154ab84ff5a58bb84"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 59,
+      "symbol": "vibe_core::lifecycle::point::PhasePoint::from_str",
+      "end_line": 76,
+      "fingerprint": "tok1:d616498d6c88bc5203faabc44d24e756aabe9a74b872cae9c27a54a59a9a6bb1"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::lifecycle::point::compile",
+      "end_line": 3,
+      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "item_kind": "fn",
+      "line": 64,
+      "symbol": "vibe_core::lifecycle::point::compile::CompilePoint::from_str",
+      "end_line": 70,
+      "fingerprint": "tok1:008b6c6e656fb50908128ae32fe8e1f2e511093783cfde3f804d59b31d1da203"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "item_kind": "fn",
+      "line": 124,
+      "symbol": "vibe_core::lifecycle::point::compile::tests::all_five_compile_points_parse_and_round_trip",
+      "end_line": 140,
+      "fingerprint": "tok1:f2c323f6f41ebf9e5baabe5d3f6791b305c6ab67f185ff7f2b3d1cf9558c7a34"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "item_kind": "fn",
+      "line": 162,
+      "symbol": "vibe_core::lifecycle::point::compile::tests::compile_error_lists_the_compile_ssot_and_exact_rule",
+      "end_line": 174,
+      "fingerprint": "tok1:378355a8dbe902e5c2526c2dcb49c1738d47cd00ecc9a80d0d396148f923f27c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "item_kind": "fn",
+      "line": 142,
+      "symbol": "vibe_core::lifecycle::point::compile::tests::compile_parser_rejects_case_whitespace_family_and_colon_errors",
+      "end_line": 160,
+      "fingerprint": "tok1:8bb73c6939e8a51797480bcf3c14bd8af62e2f71b45dca6ff6977331fcd0734a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::lifecycle::point::slot",
+      "end_line": 3,
+      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "item_kind": "fn",
+      "line": 51,
+      "symbol": "vibe_core::lifecycle::point::slot::SlotPoint::from_str",
+      "end_line": 57,
+      "fingerprint": "tok1:af47ab39c4f4b156f7012271bd4633a2ab7f87bdce280ce123b7d16b63a848d1"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "item_kind": "fn",
+      "line": 110,
+      "symbol": "vibe_core::lifecycle::point::slot::tests::both_slot_points_parse_and_round_trip",
+      "end_line": 120,
+      "fingerprint": "tok1:2b3e4f9cbaef9aa06c66cfc6fe10c3cea41a846347138b9ff7d00da4ef6f2786"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "item_kind": "fn",
+      "line": 142,
+      "symbol": "vibe_core::lifecycle::point::slot::tests::slot_error_lists_the_slot_ssot_and_exact_rule",
+      "end_line": 154,
+      "fingerprint": "tok1:5e0d563a0ac0abc6c25789394fdd0aab3538b4817152e74572ba8fe28bc9bc8a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "item_kind": "fn",
+      "line": 122,
+      "symbol": "vibe_core::lifecycle::point::slot::tests::slot_parser_rejects_case_whitespace_family_and_colon_errors",
+      "end_line": 140,
+      "fingerprint": "tok1:d35f57e887aa3f2ae79ba219b7e15df5a17e89207fd1c73bcca31ee777fc0875"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 387,
+      "symbol": "vibe_core::lifecycle::point::tests::aggregate_error_lists_the_family_ssots_and_exact_rule",
+      "end_line": 405,
+      "fingerprint": "tok1:8184e09e8b629753bfdabea2d1c83579ce02b92e6176315f46981d7052b1d43a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 363,
+      "symbol": "vibe_core::lifecycle::point::tests::aggregate_parser_rejects_case_whitespace_family_and_colon_errors",
+      "end_line": 385,
+      "fingerprint": "tok1:d9bba07580f867f3c8c4d9d7ae9e6c3299ec5eeb48a5d9b83e5e96957c2efe14"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 347,
+      "symbol": "vibe_core::lifecycle::point::tests::aggregate_parser_round_trips_all_seventeen_legal_points",
+      "end_line": 361,
+      "fingerprint": "tok1:93314394dd75514e97ca6d3008f18d4757e74847fdee34bde8507fc4b269d9ea"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 284,
+      "symbol": "vibe_core::lifecycle::point::tests::all_ten_legal_spellings_parse_and_round_trip",
+      "end_line": 291,
+      "fingerprint": "tok1:46d58a1ef114a53604125efe2c9e8a1f22d22eb3e7e602cf221777c90a5d45f6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 293,
+      "symbol": "vibe_core::lifecycle::point::tests::clean_stays_outside_the_default_phase_vocabulary",
+      "end_line": 304,
+      "fingerprint": "tok1:7a5f8215517ecb9fbcc77ffa96e9ddfc14a0c1c5f2d994e42cf1d0d01e57e9c6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 329,
+      "symbol": "vibe_core::lifecycle::point::tests::invalid_diagnostic_is_actionable_and_points_to_the_exact_rule",
+      "end_line": 345,
+      "fingerprint": "tok1:9b739ab23e21d80a2a744927236c7219398404212d9bf725236e70ccb94534cd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "item_kind": "fn",
+      "line": 306,
+      "symbol": "vibe_core::lifecycle::point::tests::parser_rejects_noncanonical_and_out_of_family_inputs",
+      "end_line": 327,
+      "fingerprint": "tok1:a13c5aa479f29db95e02957652916df41e2999af811daf04621bf3df2520eb93"
     },
     {
       "crate_name": "vibe-core",
@@ -6887,9 +7112,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/lib.rs",
       "item_kind": "mod",
-      "line": 27,
+      "line": 40,
       "symbol": "vibe_lifecycle",
-      "end_line": 27,
+      "end_line": 40,
       "fingerprint": "tok1:853b38218301cd0dc8554f533f5a602938fbf104ecc7a4cb623f02e471f01e35"
     },
     {
@@ -6972,231 +7197,6 @@
       "symbol": "vibe_lifecycle::chain::tests::validate_and_deploy_are_the_default_chain_boundaries",
       "end_line": 164,
       "fingerprint": "tok1:4e340accffd21fa6ff14d3fda806d5ebe53aeb39f0c7bb69fac779ae1fc310e8"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "item_kind": "mod",
-      "line": 3,
-      "symbol": "vibe_lifecycle::phase",
-      "end_line": 3,
-      "fingerprint": "tok1:4479b6a02506d3b587f2a73485ea05f14c4f81350d07b23737f1f7c20b4188c9"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "item_kind": "fn",
-      "line": 103,
-      "symbol": "vibe_lifecycle::phase::Phase::from_str",
-      "end_line": 111,
-      "fingerprint": "tok1:332109d90b78ae4ee5a27a30bd27d2ba1d907d37f696a6dea80a5984b5ea80c5"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "item_kind": "fn",
-      "line": 148,
-      "symbol": "vibe_lifecycle::phase::tests::every_canonical_phase_round_trips",
-      "end_line": 161,
-      "fingerprint": "tok1:954c08d36aef9d1568b16fdc6998a08c8a6621092c9417ac1e1250f5d1f2061f"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "item_kind": "fn",
-      "line": 172,
-      "symbol": "vibe_lifecycle::phase::tests::parse_error_is_actionable_and_complete",
-      "end_line": 180,
-      "fingerprint": "tok1:75ec4189043624ce3704106b2206dd8c540d9d00c42c8bf836c167c5b6cd88db"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "item_kind": "fn",
-      "line": 163,
-      "symbol": "vibe_lifecycle::phase::tests::parser_is_exact_and_rejects_clean",
-      "end_line": 170,
-      "fingerprint": "tok1:f251679984cde5f82bb9f7af2ac5ef0ace5e1e129c8468b6a458de52a3862548"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "mod",
-      "line": 3,
-      "symbol": "vibe_lifecycle::point",
-      "end_line": 3,
-      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 172,
-      "symbol": "vibe_lifecycle::point::ExtensionPoint::from_str",
-      "end_line": 189,
-      "fingerprint": "tok1:b8d57efb5b10940e6deab252621c1e22cebe56079775e22154ab84ff5a58bb84"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 59,
-      "symbol": "vibe_lifecycle::point::PhasePoint::from_str",
-      "end_line": 76,
-      "fingerprint": "tok1:d616498d6c88bc5203faabc44d24e756aabe9a74b872cae9c27a54a59a9a6bb1"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "item_kind": "mod",
-      "line": 3,
-      "symbol": "vibe_lifecycle::point::compile",
-      "end_line": 3,
-      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "item_kind": "fn",
-      "line": 64,
-      "symbol": "vibe_lifecycle::point::compile::CompilePoint::from_str",
-      "end_line": 70,
-      "fingerprint": "tok1:008b6c6e656fb50908128ae32fe8e1f2e511093783cfde3f804d59b31d1da203"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "item_kind": "fn",
-      "line": 124,
-      "symbol": "vibe_lifecycle::point::compile::tests::all_five_compile_points_parse_and_round_trip",
-      "end_line": 140,
-      "fingerprint": "tok1:f2c323f6f41ebf9e5baabe5d3f6791b305c6ab67f185ff7f2b3d1cf9558c7a34"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "item_kind": "fn",
-      "line": 162,
-      "symbol": "vibe_lifecycle::point::compile::tests::compile_error_lists_the_compile_ssot_and_exact_rule",
-      "end_line": 174,
-      "fingerprint": "tok1:378355a8dbe902e5c2526c2dcb49c1738d47cd00ecc9a80d0d396148f923f27c"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "item_kind": "fn",
-      "line": 142,
-      "symbol": "vibe_lifecycle::point::compile::tests::compile_parser_rejects_case_whitespace_family_and_colon_errors",
-      "end_line": 160,
-      "fingerprint": "tok1:8bb73c6939e8a51797480bcf3c14bd8af62e2f71b45dca6ff6977331fcd0734a"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "item_kind": "mod",
-      "line": 3,
-      "symbol": "vibe_lifecycle::point::slot",
-      "end_line": 3,
-      "fingerprint": "tok1:171d64d18e89d04d4d5c9c0b9cce9681d568565f27564cc20c0aa915b31495fe"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "item_kind": "fn",
-      "line": 51,
-      "symbol": "vibe_lifecycle::point::slot::SlotPoint::from_str",
-      "end_line": 57,
-      "fingerprint": "tok1:af47ab39c4f4b156f7012271bd4633a2ab7f87bdce280ce123b7d16b63a848d1"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "item_kind": "fn",
-      "line": 110,
-      "symbol": "vibe_lifecycle::point::slot::tests::both_slot_points_parse_and_round_trip",
-      "end_line": 120,
-      "fingerprint": "tok1:2b3e4f9cbaef9aa06c66cfc6fe10c3cea41a846347138b9ff7d00da4ef6f2786"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "item_kind": "fn",
-      "line": 142,
-      "symbol": "vibe_lifecycle::point::slot::tests::slot_error_lists_the_slot_ssot_and_exact_rule",
-      "end_line": 154,
-      "fingerprint": "tok1:5e0d563a0ac0abc6c25789394fdd0aab3538b4817152e74572ba8fe28bc9bc8a"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "item_kind": "fn",
-      "line": 122,
-      "symbol": "vibe_lifecycle::point::slot::tests::slot_parser_rejects_case_whitespace_family_and_colon_errors",
-      "end_line": 140,
-      "fingerprint": "tok1:d35f57e887aa3f2ae79ba219b7e15df5a17e89207fd1c73bcca31ee777fc0875"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 387,
-      "symbol": "vibe_lifecycle::point::tests::aggregate_error_lists_the_family_ssots_and_exact_rule",
-      "end_line": 405,
-      "fingerprint": "tok1:8184e09e8b629753bfdabea2d1c83579ce02b92e6176315f46981d7052b1d43a"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 363,
-      "symbol": "vibe_lifecycle::point::tests::aggregate_parser_rejects_case_whitespace_family_and_colon_errors",
-      "end_line": 385,
-      "fingerprint": "tok1:d9bba07580f867f3c8c4d9d7ae9e6c3299ec5eeb48a5d9b83e5e96957c2efe14"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 347,
-      "symbol": "vibe_lifecycle::point::tests::aggregate_parser_round_trips_all_seventeen_legal_points",
-      "end_line": 361,
-      "fingerprint": "tok1:93314394dd75514e97ca6d3008f18d4757e74847fdee34bde8507fc4b269d9ea"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 284,
-      "symbol": "vibe_lifecycle::point::tests::all_ten_legal_spellings_parse_and_round_trip",
-      "end_line": 291,
-      "fingerprint": "tok1:46d58a1ef114a53604125efe2c9e8a1f22d22eb3e7e602cf221777c90a5d45f6"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 293,
-      "symbol": "vibe_lifecycle::point::tests::clean_stays_outside_the_default_phase_vocabulary",
-      "end_line": 304,
-      "fingerprint": "tok1:7a5f8215517ecb9fbcc77ffa96e9ddfc14a0c1c5f2d994e42cf1d0d01e57e9c6"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 329,
-      "symbol": "vibe_lifecycle::point::tests::invalid_diagnostic_is_actionable_and_points_to_the_exact_rule",
-      "end_line": 345,
-      "fingerprint": "tok1:9b739ab23e21d80a2a744927236c7219398404212d9bf725236e70ccb94534cd"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "item_kind": "fn",
-      "line": 306,
-      "symbol": "vibe_lifecycle::point::tests::parser_rejects_noncanonical_and_out_of_family_inputs",
-      "end_line": 327,
-      "fingerprint": "tok1:a13c5aa479f29db95e02957652916df41e2999af811daf04621bf3df2520eb93"
     },
     {
       "crate_name": "vibe-mcp",
@@ -14709,7 +14709,7 @@
     {
       "file": "crates/vibe-core/src/lib.rs",
       "from_symbol": "vibe_core",
-      "line": 13,
+      "line": 15,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "implements"
@@ -14841,6 +14841,206 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-052#root",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "from_symbol": "vibe_core::lifecycle::phase",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "from_symbol": "vibe_core::lifecycle::phase::Phase::from_str",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "from_symbol": "vibe_core::lifecycle::phase::tests::every_canonical_phase_round_trips",
+      "line": 148,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "from_symbol": "vibe_core::lifecycle::phase::tests::parse_error_is_actionable_and_complete",
+      "line": 172,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/phase.rs",
+      "from_symbol": "vibe_core::lifecycle::phase::tests::parser_is_exact_and_rejects_clean",
+      "line": 163,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::ExtensionPoint::from_str",
+      "line": 172,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::PhasePoint::from_str",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "from_symbol": "vibe_core::lifecycle::point::compile",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "from_symbol": "vibe_core::lifecycle::point::compile::CompilePoint::from_str",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "from_symbol": "vibe_core::lifecycle::point::compile::tests::all_five_compile_points_parse_and_round_trip",
+      "line": 125,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "from_symbol": "vibe_core::lifecycle::point::compile::tests::compile_error_lists_the_compile_ssot_and_exact_rule",
+      "line": 163,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/compile.rs",
+      "from_symbol": "vibe_core::lifecycle::point::compile::tests::compile_parser_rejects_case_whitespace_family_and_colon_errors",
+      "line": 143,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "from_symbol": "vibe_core::lifecycle::point::slot",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "from_symbol": "vibe_core::lifecycle::point::slot::SlotPoint::from_str",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "from_symbol": "vibe_core::lifecycle::point::slot::tests::both_slot_points_parse_and_round_trip",
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "from_symbol": "vibe_core::lifecycle::point::slot::tests::slot_error_lists_the_slot_ssot_and_exact_rule",
+      "line": 143,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point/slot.rs",
+      "from_symbol": "vibe_core::lifecycle::point::slot::tests::slot_parser_rejects_case_whitespace_family_and_colon_errors",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::aggregate_error_lists_the_family_ssots_and_exact_rule",
+      "line": 388,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::aggregate_parser_rejects_case_whitespace_family_and_colon_errors",
+      "line": 364,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::aggregate_parser_round_trips_all_seventeen_legal_points",
+      "line": 348,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::all_ten_legal_spellings_parse_and_round_trip",
+      "line": 285,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::clean_stays_outside_the_default_phase_vocabulary",
+      "line": 294,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::invalid_diagnostic_is_actionable_and_points_to_the_exact_rule",
+      "line": 330,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/lifecycle/point.rs",
+      "from_symbol": "vibe_core::lifecycle::point::tests::parser_rejects_noncanonical_and_out_of_family_inputs",
+      "line": 307,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-core/src/manifest/mod.rs",
@@ -16505,7 +16705,7 @@
     {
       "file": "crates/vibe-lifecycle/src/lib.rs",
       "from_symbol": "vibe_lifecycle",
-      "line": 27,
+      "line": 40,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "implements"
@@ -16580,206 +16780,6 @@
       "line": 160,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "from_symbol": "vibe_lifecycle::phase",
-      "line": 3,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "from_symbol": "vibe_lifecycle::phase::Phase::from_str",
-      "line": 103,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "from_symbol": "vibe_lifecycle::phase::tests::every_canonical_phase_round_trips",
-      "line": 149,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "from_symbol": "vibe_lifecycle::phase::tests::parse_error_is_actionable_and_complete",
-      "line": 173,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/phase.rs",
-      "from_symbol": "vibe_lifecycle::phase::tests::parser_is_exact_and_rejects_clean",
-      "line": 164,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#LIFECYCLES",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point",
-      "line": 3,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::ExtensionPoint::from_str",
-      "line": 172,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::PhasePoint::from_str",
-      "line": 59,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "from_symbol": "vibe_lifecycle::point::compile",
-      "line": 3,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "from_symbol": "vibe_lifecycle::point::compile::CompilePoint::from_str",
-      "line": 64,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "from_symbol": "vibe_lifecycle::point::compile::tests::all_five_compile_points_parse_and_round_trip",
-      "line": 125,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "from_symbol": "vibe_lifecycle::point::compile::tests::compile_error_lists_the_compile_ssot_and_exact_rule",
-      "line": 163,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/compile.rs",
-      "from_symbol": "vibe_lifecycle::point::compile::tests::compile_parser_rejects_case_whitespace_family_and_colon_errors",
-      "line": 143,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "from_symbol": "vibe_lifecycle::point::slot",
-      "line": 3,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "from_symbol": "vibe_lifecycle::point::slot::SlotPoint::from_str",
-      "line": 51,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "from_symbol": "vibe_lifecycle::point::slot::tests::both_slot_points_parse_and_round_trip",
-      "line": 111,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "from_symbol": "vibe_lifecycle::point::slot::tests::slot_error_lists_the_slot_ssot_and_exact_rule",
-      "line": 143,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point/slot.rs",
-      "from_symbol": "vibe_lifecycle::point::slot::tests::slot_parser_rejects_case_whitespace_family_and_colon_errors",
-      "line": 123,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::aggregate_error_lists_the_family_ssots_and_exact_rule",
-      "line": 388,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::aggregate_parser_rejects_case_whitespace_family_and_colon_errors",
-      "line": 364,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::aggregate_parser_round_trips_all_seventeen_legal_points",
-      "line": 348,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::all_ten_legal_spellings_parse_and_round_trip",
-      "line": 285,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::clean_stays_outside_the_default_phase_vocabulary",
-      "line": 294,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::invalid_diagnostic_is_actionable_and_points_to_the_exact_rule",
-      "line": 330,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/point.rs",
-      "from_symbol": "vibe_lifecycle::point::tests::parser_rejects_noncanonical_and_out_of_family_inputs",
-      "line": 307,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
       "verb": "verifies"
     },
     {

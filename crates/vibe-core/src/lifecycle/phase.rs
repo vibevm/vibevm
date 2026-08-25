@@ -14,12 +14,11 @@ const PHASE_CHOICES: &str =
 /// One phase of the default lifecycle.
 ///
 /// Its textual form is the exact lowercase command vocabulary. `clean` is
-/// deliberately absent: it is a separate lifecycle represented by
-/// [`crate::LifecycleStep::Clean`].
+/// deliberately absent: it belongs to the engine's separate clean lifecycle.
 ///
 /// ```
 /// use std::str::FromStr;
-/// use vibe_lifecycle::Phase;
+/// use vibe_core::lifecycle::Phase;
 ///
 /// assert_eq!(Phase::from_str("generate"), Ok(Phase::Generate));
 /// assert_eq!(Phase::Package.as_str(), "package");
@@ -55,7 +54,7 @@ pub enum Phase {
 /// phase chain.
 ///
 /// ```
-/// use vibe_lifecycle::{DEFAULT_PHASES, Phase};
+/// use vibe_core::lifecycle::{DEFAULT_PHASES, Phase};
 ///
 /// assert_eq!(DEFAULT_PHASES.len(), 9);
 /// assert_eq!(DEFAULT_PHASES[0], Phase::Validate);
@@ -117,7 +116,7 @@ impl FromStr for Phase {
 /// every valid choice, making it suitable for CLI and manifest adapters.
 ///
 /// ```
-/// use vibe_lifecycle::Phase;
+/// use vibe_core::lifecycle::Phase;
 ///
 /// let error = "BUILD".parse::<Phase>().expect_err("uppercase is not canonical");
 /// assert_eq!(error.input(), "BUILD");
