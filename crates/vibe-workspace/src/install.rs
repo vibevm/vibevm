@@ -379,7 +379,7 @@ fn materialise_resolution_with_spec_format(
             continue;
         }
         let source_hash = required_source_hash(dep)?;
-        vibedeps::materialise_with_spec_format(
+        let _materialise_report = vibedeps::materialise_with_spec_format_report(
             workspace_root,
             &dep.group,
             &dep.name,

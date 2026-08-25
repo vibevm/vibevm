@@ -10539,6 +10539,24 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::vibedeps::slot_diff::plan",
+      "end_line": 3,
+      "fingerprint": "tok1:04fdc955ed400e286d2a6811922a01e7aa7befe304e2a3e41f9ef561ad229964"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff/report.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::vibedeps::slot_diff::report",
+      "end_line": 3,
+      "fingerprint": "tok1:1ba804692c92917d4a3ae60a9a019a1fd4c2c28104b87a403bcda4fe2f58adad"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
       "item_kind": "mod",
       "line": 3,
@@ -19553,6 +19571,22 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_diff::plan",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff/report.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_diff::report",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SELF-HEAL",
       "verb": "implements"
     },
     {

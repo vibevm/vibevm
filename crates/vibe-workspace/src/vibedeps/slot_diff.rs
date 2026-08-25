@@ -16,6 +16,12 @@ use super::{
 };
 use crate::{WorkspaceError, path_to_slash};
 
+mod plan;
+mod report;
+
+use plan::DiffPlan;
+pub(crate) use report::MaterialiseReport;
+
 /// Content prepared and hashed before the slot is mutated.
 pub(super) struct PreparedSlotFile {
     path: PathBuf,
@@ -112,74 +118,44 @@ pub(super) fn reconcile_slot(
     slot: &Path,
     files: &[PreparedSlotFile],
     record: &SlotRecord,
-) -> Result<Vec<PathBuf>, WorkspaceError> {
+) -> Result<MaterialiseReport, WorkspaceError> {
     let old_record = inspect_existing_record(slot)?;
     let footprint = files.iter().map(|file| file.path.clone()).collect();
 
     let Some(old_record) = old_record else {
+        let migrated = slot.exists();
         migrate_unrecorded_slot(slot)?;
         place_all(slot, files)?;
         write_record_last(slot, record)?;
-        return Ok(footprint);
+        let written = files.iter().map(|file| file.path.clone()).collect();
+        return Ok(MaterialiseReport::new(
+            footprint,
+            written,
+            Vec::new(),
+            migrated,
+            None,
+            record,
+        ));
     };
 
     let plan = DiffPlan::build(slot, files, &old_record)?;
-    remove_stale_files(slot, &plan.stale)?;
+    let removed = remove_stale_files(slot, &plan.stale)?;
+    let mut written = Vec::new();
     for (file, keep) in files.iter().zip(plan.keep) {
         if !keep {
             place_atomically(slot, file)?;
+            written.push(file.path.clone());
         }
     }
     write_record_last(slot, record)?;
-    Ok(footprint)
-}
-
-struct DiffPlan {
-    keep: Vec<bool>,
-    stale: Vec<PathBuf>,
-}
-
-impl DiffPlan {
-    fn build(
-        slot: &Path,
-        incoming: &[PreparedSlotFile],
-        old: &SlotRecord,
-    ) -> Result<Self, WorkspaceError> {
-        let old_files: BTreeMap<&str, &super::SlotFile> = old
-            .files
-            .iter()
-            .map(|file| (file.path.as_str(), file))
-            .collect();
-        let incoming_paths: BTreeSet<String> =
-            incoming.iter().map(PreparedSlotFile::path_wire).collect();
-        refuse_incoming_topology_collisions(slot, &incoming_paths)?;
-
-        let stale = old
-            .files
-            .iter()
-            .filter(|file| !incoming_paths.contains(&file.path))
-            .map(|file| PathBuf::from(&file.path))
-            .collect::<Vec<_>>();
-        let stale_paths: BTreeSet<String> = stale.iter().map(|path| path_to_slash(path)).collect();
-        inspect_stale_paths(slot, &stale)?;
-        inspect_incoming_parents(slot, &incoming_paths, &old_files, &stale)?;
-
-        let mut keep = Vec::with_capacity(incoming.len());
-        for file in incoming {
-            let wire = file.path_wire();
-            let destination = slot.join(&file.path);
-            let old_file = old_files.get(wire.as_str()).copied();
-            let stale_scaffold = old_file.is_none()
-                && directory_contains_only_stale(&destination, slot, &stale_paths)?;
-            keep.push(inspect_destination(
-                &destination,
-                old_file,
-                file.sha256(),
-                stale_scaffold,
-            )?);
-        }
-        Ok(Self { keep, stale })
-    }
+    Ok(MaterialiseReport::new(
+        footprint,
+        written,
+        removed,
+        false,
+        Some(&old_record),
+        record,
+    ))
 }
 
 fn inspect_existing_record(slot: &Path) -> Result<Option<SlotRecord>, WorkspaceError> {
@@ -516,20 +492,23 @@ fn place_hardlink(
     persist_staged(temporary, destination, expected_hash)
 }
 
-fn remove_stale_files(slot: &Path, stale: &[PathBuf]) -> Result<(), WorkspaceError> {
+fn remove_stale_files(slot: &Path, stale: &[PathBuf]) -> Result<Vec<PathBuf>, WorkspaceError> {
     let mut stale = stale.to_vec();
     stale.sort_by_key(|path| std::cmp::Reverse(path.components().count()));
+    let mut removed = Vec::new();
     for relative in stale {
         let path = slot.join(&relative);
         match fs::remove_file(&path) {
             Ok(()) => {
+                removed.push(relative);
                 prune_empty_parents(slot, path.parent());
             }
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
             Err(error) => return Err(io_err(&path, error)),
         }
     }
-    Ok(())
+    removed.sort();
+    Ok(removed)
 }
 
 fn prune_empty_parents(slot: &Path, mut parent: Option<&Path>) {

@@ -34,11 +34,13 @@ mod derived;
 mod slot_diff;
 mod slot_record;
 
+pub(crate) use derived::materialise_with_spec_format_report;
 pub use derived::{
     CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,
     DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
     read_derived_manifest,
 };
+pub(crate) use slot_diff::MaterialiseReport;
 pub use slot_record::{
     SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,
     compute_recorded_payload_hash, read_slot_record, sha256_file, verify_recorded_files,
@@ -142,6 +144,27 @@ pub fn materialise_with(
     mode: CopyMode,
     source_hash: &ContentHash,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
+    materialise_with_report(
+        workspace_root,
+        group,
+        name,
+        version,
+        content_src,
+        mode,
+        source_hash,
+    )
+    .map(MaterialiseReport::into_footprint)
+}
+
+pub(crate) fn materialise_with_report(
+    workspace_root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    content_src: &Path,
+    mode: CopyMode,
+    source_hash: &ContentHash,
+) -> Result<MaterialiseReport, WorkspaceError> {
     let slot = slot_abs_path(workspace_root, group, name, version);
     let slot_label = slot_rel_path(group, name, version);
 
@@ -368,6 +391,9 @@ mod tests_slot_record;
 
 #[cfg(test)]
 mod tests_diff;
+
+#[cfg(test)]
+mod tests_report;
 
 #[cfg(test)]
 mod tests_transformed;

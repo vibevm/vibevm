@@ -14,7 +14,9 @@ use vibe_core::{ContentHash, Group};
 use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
 use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
 
-use super::slot_diff::{PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot};
+use super::slot_diff::{
+    MaterialiseReport, PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot,
+};
 use super::{
     CopyMode, SLOT_RECORD_FILENAME, SlotFile, SlotFileDisposition, SlotRecord,
     compute_recorded_payload_hash, io_err, read_slot_record, slot_abs_path,
@@ -95,8 +97,32 @@ pub fn materialise_with_spec_format(
     spec_format: SpecFormat,
     source_hash: &ContentHash,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
+    materialise_with_spec_format_report(
+        workspace_root,
+        group,
+        name,
+        version,
+        content_src,
+        mode,
+        spec_format,
+        source_hash,
+    )
+    .map(MaterialiseReport::into_footprint)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn materialise_with_spec_format_report(
+    workspace_root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    content_src: &Path,
+    mode: CopyMode,
+    spec_format: SpecFormat,
+    source_hash: &ContentHash,
+) -> Result<MaterialiseReport, WorkspaceError> {
     if spec_format == SpecFormat::Mixed {
-        return super::materialise_with(
+        return super::materialise_with_report(
             workspace_root,
             group,
             name,
