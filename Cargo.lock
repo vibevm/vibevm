@@ -4074,6 +4074,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-lifecycle"
+version = "1.0.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "vibe-llm"
 version = "1.0.0"
 dependencies = [

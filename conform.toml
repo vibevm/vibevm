@@ -54,6 +54,7 @@ gated = [
     "vibe-settings",
     "vibe-index",
     "vibe-install",
+    "vibe-lifecycle",
     "vibe-resolver",
     "vibe-registry",
     "vibe-workspace",
@@ -70,6 +71,7 @@ gated = [
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
     "vibe-core",
+    "vibe-lifecycle",
     "vibe-mcp",
 ]
 

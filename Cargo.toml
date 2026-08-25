@@ -15,6 +15,7 @@ members = [
     "crates/vibe-graph",
     "crates/vibe-index",
     "crates/vibe-install",
+    "crates/vibe-lifecycle",
     "crates/vibe-registry",
     "crates/vibe-resolver",
     "crates/vibe-llm",
@@ -39,6 +40,7 @@ default-members = [
     "crates/vibe-graph",
     "crates/vibe-index",
     "crates/vibe-install",
+    "crates/vibe-lifecycle",
     "crates/vibe-registry",
     "crates/vibe-resolver",
     "crates/vibe-llm",
@@ -76,6 +78,7 @@ vibe-facts = { path = "crates/vibe-facts", version = "1.0.0" }
 vibe-graph = { path = "crates/vibe-graph", version = "1.0.0" }
 vibe-index = { path = "crates/vibe-index", version = "1.0.0" }
 vibe-install = { path = "crates/vibe-install", version = "1.0.0" }
+vibe-lifecycle = { path = "crates/vibe-lifecycle", version = "1.0.0" }
 vibe-registry = { path = "crates/vibe-registry", version = "1.0.0" }
 vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
 vibe-llm = { path = "crates/vibe-llm", version = "1.0.0" }
