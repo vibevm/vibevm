@@ -3967,6 +3967,7 @@ dependencies = [
  "vibe-facts",
  "vibe-graph",
  "vibe-install",
+ "vibe-lifecycle",
  "vibe-mcp",
  "vibe-publish",
  "vibe-registry",

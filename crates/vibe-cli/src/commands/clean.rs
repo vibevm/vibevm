@@ -17,7 +17,7 @@ use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_workspace::Workspace;
 
-use crate::cli::{CleanArgs, CleanChain};
+use crate::cli::CleanArgs;
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -37,19 +37,19 @@ const GENERATED_BOOT: [&str; 5] = [
 pub fn run(
     ctx: &output::Context,
     args: CleanArgs,
-    embedded_root: Option<PathBuf>,
+    prepare_install: impl FnOnce() -> Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
-    // With a chained install, the install's own --path names the project
-    // for both phases (unless clean's --path was given explicitly).
-    let path = match (&args.chain, args.path.as_os_str().to_str()) {
-        (Some(CleanChain::Install(install)), Some(".")) => install.path.clone(),
-        _ => args.path.clone(),
-    };
-    let assume_yes =
-        args.assume_yes || matches!(&args.chain, Some(CleanChain::Install(i)) if i.assume_yes);
+    if args.chain.is_some() {
+        return super::lifecycle::run_clean(ctx, args, prepare_install, root_offline);
+    }
+    wipe(ctx, &args.path, args.assume_yes)?;
+    Ok(())
+}
 
-    let project_root = super::install::resolve_project_root(&path)?;
+/// Execute the one clean phase and return the canonical project root.
+pub(crate) fn wipe(ctx: &output::Context, path: &Path, assume_yes: bool) -> Result<PathBuf> {
+    let project_root = super::install::resolve_project_root(path)?;
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
 
@@ -111,16 +111,7 @@ pub fn run(
         }
     }
 
-    // The chained phase — exactly as if `vibe install …` had been typed
-    // (PROP-053 ##CHAIN-GRAMMAR). A failing install stops the chain with
-    // the tree cleaned; nothing rolls back.
-    match args.chain {
-        None => Ok(()),
-        Some(CleanChain::Install(mut install)) => {
-            install.path = project_root;
-            super::install::run(ctx, install, embedded_root, root_offline)
-        }
-    }
+    Ok(project_root)
 }
 
 /// Top-level slot directories under the vibedeps root (what the report

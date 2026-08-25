@@ -26,11 +26,12 @@ use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 
 use crate::hooks::{
-    HookContext, HookError, HookPhase, HookPolicy, HookReport, HookRunner, InterpreterProbe,
-    Platform, SystemHookRunner, SystemProbe, run_package_hook,
+    HookContext, HookError, HookOutput, HookPhase, HookPolicy, HookReport, HookRunner,
+    InterpreterProbe, Platform, SystemHookRunner, SystemProbe, run_package_hook,
 };
 use crate::{Workspace, WorkspaceError, layout_paths, vibedeps};
 
+mod hook_output;
 mod hooks_run;
 pub mod model;
 
@@ -43,8 +44,9 @@ use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};
 
-pub use hooks_run::run_post_install_hooks;
+pub use hook_output::apply_resolution_with_spec_format_and_hook_output;
 use hooks_run::{SubtreeOutcome, run_pre_install_hook};
+pub use hooks_run::{run_post_install_hooks, run_post_install_hooks_with_output};
 
 pub use bootgen::verify_boot_graph;
 pub use bootgen::{
@@ -125,58 +127,15 @@ pub fn apply_resolution_with_spec_format(
     slot_verifier: Option<&dyn SlotVerifier>,
     hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
-    // 0. Validate every node's `<vibevm>` instruction-file block before
-    //    any mutation — a malformed block aborts here, not mid-install
-    //    (PROP-012 §2.4).
-    validate_redirect_blocks(workspace)?;
-
-    // 1. Materialise the resolution into dependency slots. PROP-011 §2.3 — a
-    //    slot already present with the resolved source identity is trusted
-    //    and skipped; only a new, version-bumped, or source-changed dependency
-    //    pays reconciliation. Mutable `file://` sources earn the same fast
-    //    path from their freshly-fetched source hash and valid slot record.
-    //    Under `SlotIntegrity::Verify` trust is also earned through the
-    //    `slot_verifier` seam: a payload match accepts the slot without the
-    //    copy, a divergence re-materialises it (with a warn line).
-    let Materialised {
-        materialised,
-        skipped,
-        integrity_warnings,
-        post_install_deps,
-        hook_reports,
-    } = materialise_resolution_with_spec_format(
-        &workspace.root,
+    apply_resolution_with_spec_format_and_hook_output(
+        workspace,
         resolution,
-        MaterialiseOptions {
-            slot_integrity,
-            spec_format,
-            slot_verifier,
-            hooks,
-            probe: &SystemProbe,
-            runner: &SystemHookRunner,
-        },
-    )?;
-
-    // 2. Prune any dependency slot no longer in the resolution — a
-    //    version bump or a dropped dependency must leave no orphan. Both
-    //    the freshly-materialised and the skipped slots belong to the
-    //    current resolution and are kept.
-    let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
-    let pruned = prune_stale_slots(&workspace.root, &kept)?;
-
-    // 3. Regenerate every node's boot artifacts from the resolution.
-    let nodes_regenerated =
-        regenerate_boot_from_with_spec_format(workspace, resolution, spec_format)?;
-
-    Ok(InstallOutcome {
-        materialised,
-        skipped,
-        integrity_warnings,
-        pruned,
-        nodes_regenerated,
-        post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
-        hook_reports,
-    })
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        hooks,
+        HookOutput::Inherit,
+    )
 }
 
 /// Internal materialisation, integrity, and hook-scheduling bookkeeping.

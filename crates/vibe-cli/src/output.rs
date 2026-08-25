@@ -109,6 +109,7 @@ pub fn resolve_offline(cli_flag: bool, config_offline: bool) -> bool {
     cli_flag || env_offline() || config_offline
 }
 
+#[derive(Clone)]
 pub struct Context {
     pub mode: Mode,
     pub tick: Style,
@@ -128,6 +129,10 @@ pub struct Context {
     /// for every mutating subcommand and stamps the JSON envelope
     /// with `"unattended": true`.
     unattended: bool,
+    /// Suppress this context's rendering while preserving its behavioural
+    /// mode (`is_json`, unattended, invocation provenance). Lifecycle
+    /// prerequisite phases use this for a single final outer report.
+    suppress_output: bool,
 }
 
 impl Context {
@@ -157,7 +162,16 @@ impl Context {
             invoked_by,
             invoked_by_provenance,
             unattended,
+            suppress_output: false,
         }
+    }
+
+    /// A child context that performs the same operation under the same
+    /// invocation posture but emits nothing of its own.
+    pub fn quiet_child(&self) -> Self {
+        let mut child = self.clone();
+        child.suppress_output = true;
+        child
     }
 
     pub fn is_json(&self) -> bool {
@@ -165,7 +179,11 @@ impl Context {
     }
 
     pub fn is_quiet(&self) -> bool {
-        self.mode == Mode::HumanQuiet
+        self.mode == Mode::HumanQuiet || self.suppress_output
+    }
+
+    pub(crate) fn suppresses_output(&self) -> bool {
+        self.suppress_output
     }
 
     pub fn invoked_by(&self) -> Option<&str> {
@@ -227,6 +245,9 @@ impl Context {
     }
 
     pub fn summary(&self, text: &str) {
+        if self.suppress_output {
+            return;
+        }
         match self.mode {
             Mode::Human | Mode::HumanQuiet => println!("{text}"),
             Mode::Json => {}
@@ -234,6 +255,9 @@ impl Context {
     }
 
     pub fn error(&self, err: &anyhow::Error) {
+        if self.suppress_output {
+            return;
+        }
         match self.mode {
             Mode::Human | Mode::HumanQuiet => {
                 eprintln!("{} {err:#}", self.cross.apply_to("error:"));
@@ -342,7 +366,7 @@ impl Context {
     }
 
     pub fn emit_json<T: Serialize>(&self, value: &T) -> anyhow::Result<()> {
-        if !self.is_json() {
+        if !self.is_json() || self.suppress_output {
             return Ok(());
         }
         let rendered = self.render_json(value)?;

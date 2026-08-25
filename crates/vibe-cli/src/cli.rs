@@ -16,6 +16,7 @@ mod aiui;
 mod cache;
 mod explain;
 mod inspect;
+mod lifecycle;
 mod mcp;
 mod pkg;
 mod prefs;
@@ -35,6 +36,7 @@ pub use aiui::*;
 pub use cache::*;
 pub use explain::*;
 pub use inspect::*;
+pub use lifecycle::*;
 pub use mcp::*;
 pub use pkg::*;
 pub use prefs::*;
@@ -119,12 +121,36 @@ pub enum Command {
     /// List the packages recorded in the project's lockfile.
     List(ListArgs),
 
+    /// Validate the workspace, without network access or materialisation.
+    Validate(LifecycleArgs),
+
     /// Install one or more packages into the current project.
     Install(InstallArgs),
 
+    /// Run the default lifecycle through generated-source production.
+    Generate(LifecycleArgs),
+
+    /// Run the default lifecycle through deterministic build work.
+    Build(LifecycleArgs),
+
+    /// Run the default lifecycle through deterministic tests.
+    Test(LifecycleArgs),
+
+    /// Run the default lifecycle through agentic creation.
+    Create(LifecycleArgs),
+
+    /// Run the default lifecycle through output verification.
+    Verify(LifecycleArgs),
+
+    /// Run the default lifecycle through distributable assembly.
+    Package(LifecycleArgs),
+
+    /// Run all nine default-lifecycle phases through deployment.
+    Deploy(LifecycleArgs),
+
     /// Remove the derived prompt state — dependency slots and generated
     /// boot artifacts — keeping every authored file, the lock, and the
-    /// machine cache (PROP-053). Chain `vibe clean install …` to rebuild.
+    /// machine cache. Any lifecycle phase may follow the clean prefix.
     Clean(CleanArgs),
 
     /// Show installed packages whose registry-side latest version is
@@ -387,8 +413,84 @@ pub enum BinCmd {
 #[cfg(test)]
 mod tests {
     use clap::Parser;
+    use specmark::verifies;
 
-    use super::{Cli, Command};
+    use super::{CleanChain, Cli, Command};
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
+    fn every_non_install_lifecycle_verb_accepts_global_flags() {
+        for verb in [
+            "validate", "generate", "build", "test", "create", "verify", "package", "deploy",
+        ] {
+            let cli = Cli::try_parse_from(["vibe", verb, "--json", "--offline", "--path", "."])
+                .unwrap_or_else(|error| panic!("parse `{verb}`: {error}"));
+            assert!(cli.json, "{verb}: --json reaches the root");
+            assert!(cli.offline, "{verb}: --offline reaches the root");
+            assert!(matches!(
+                (verb, cli.command),
+                ("validate", Command::Validate(_))
+                    | ("generate", Command::Generate(_))
+                    | ("build", Command::Build(_))
+                    | ("test", Command::Test(_))
+                    | ("create", Command::Create(_))
+                    | ("verify", Command::Verify(_))
+                    | ("package", Command::Package(_))
+                    | ("deploy", Command::Deploy(_))
+            ));
+        }
+    }
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
+    fn non_install_lifecycle_verbs_reject_pkgrefs() {
+        for verb in [
+            "validate", "generate", "build", "test", "create", "verify", "package", "deploy",
+        ] {
+            assert!(
+                Cli::try_parse_from(["vibe", verb, "flow:org.example/pkg"]).is_err(),
+                "{verb} must not accept an install pkgref",
+            );
+        }
+        for argv in [
+            vec!["vibe", "build", "--exact"],
+            vec!["vibe", "build", "--git", "https://example.invalid/pkg.git"],
+            vec!["vibe", "build", "--force"],
+        ] {
+            assert!(
+                Cli::try_parse_from(argv).is_err(),
+                "non-install lifecycle verbs must reject install-only flags",
+            );
+        }
+    }
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
+    fn clean_accepts_every_default_lifecycle_phase() {
+        for verb in [
+            "validate", "install", "generate", "build", "test", "create", "verify", "package",
+            "deploy",
+        ] {
+            let cli = Cli::try_parse_from(["vibe", "clean", verb])
+                .unwrap_or_else(|error| panic!("parse `clean {verb}`: {error}"));
+            let Command::Clean(args) = cli.command else {
+                panic!("`clean {verb}` did not parse as clean");
+            };
+            let chain = args.chain.expect("a continuation");
+            assert!(matches!(
+                (verb, chain),
+                ("validate", CleanChain::Validate(_))
+                    | ("install", CleanChain::Install(_))
+                    | ("generate", CleanChain::Generate(_))
+                    | ("build", CleanChain::Build(_))
+                    | ("test", CleanChain::Test(_))
+                    | ("create", CleanChain::Create(_))
+                    | ("verify", CleanChain::Verify(_))
+                    | ("package", CleanChain::Package(_))
+                    | ("deploy", CleanChain::Deploy(_))
+            ));
+        }
+    }
 
     /// The root `--offline` parses before any subcommand (PROP-010
     /// §2.5): the posture is a property of the invocation, not of one

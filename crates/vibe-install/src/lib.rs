@@ -42,7 +42,9 @@ mod record;
 mod slot_verify;
 mod visibility_projection;
 
-pub use apply::{ApplyReport, apply, apply_with_spec_format};
+pub use apply::{
+    ApplyReport, apply, apply_with_spec_format, apply_with_spec_format_and_hook_output,
+};
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
 pub use fetched::{Fetched, NodeInstallMeta};

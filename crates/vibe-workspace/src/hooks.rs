@@ -13,7 +13,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases");
 
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use specmark::spec;
 use thiserror::Error;
@@ -251,7 +251,25 @@ pub trait HookRunner {
     ) -> Result<i32, String>;
 }
 
-/// Production runner: spawn the interpreter on the script in the slot.
+/// Whether a production hook inherits the CLI streams or runs silently.
+///
+/// Direct install-family commands preserve the historical inherited streams.
+/// A lifecycle prerequisite install selects `Suppress` so its single outer
+/// JSON/quiet report cannot be corrupted by a hook subprocess.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum HookOutput {
+    #[default]
+    Inherit,
+    Suppress,
+}
+
+/// Historical production runner with inherited subprocess streams.
+///
+/// ```
+/// use vibe_workspace::hooks::{HookRunner, SystemHookRunner};
+///
+/// let _runner: &dyn HookRunner = &SystemHookRunner;
+/// ```
 pub struct SystemHookRunner;
 
 impl HookRunner for SystemHookRunner {
@@ -261,14 +279,48 @@ impl HookRunner for SystemHookRunner {
         cwd: &Path,
         env: &[(String, String)],
     ) -> Result<i32, String> {
-        let mut cmd = Command::new(&inv.interpreter);
-        cmd.arg(&inv.script).current_dir(cwd);
-        for (k, v) in env {
-            cmd.env(k, v);
-        }
-        let status = cmd.status().map_err(|e| e.to_string())?;
-        Ok(status.code().unwrap_or(-1))
+        run_system_hook(inv, cwd, env, HookOutput::Inherit)
     }
+}
+
+/// Configured production runner used only behind additive execution seams.
+pub(crate) struct ConfiguredHookRunner {
+    output: HookOutput,
+}
+
+impl ConfiguredHookRunner {
+    pub fn new(output: HookOutput) -> Self {
+        Self { output }
+    }
+}
+
+impl HookRunner for ConfiguredHookRunner {
+    fn run(
+        &self,
+        inv: &HookInvocation,
+        cwd: &Path,
+        env: &[(String, String)],
+    ) -> Result<i32, String> {
+        run_system_hook(inv, cwd, env, self.output)
+    }
+}
+
+fn run_system_hook(
+    inv: &HookInvocation,
+    cwd: &Path,
+    env: &[(String, String)],
+    output: HookOutput,
+) -> Result<i32, String> {
+    let mut cmd = Command::new(&inv.interpreter);
+    cmd.arg(&inv.script).current_dir(cwd);
+    for (k, v) in env {
+        cmd.env(k, v);
+    }
+    if output == HookOutput::Suppress {
+        cmd.stdout(Stdio::null()).stderr(Stdio::null());
+    }
+    let status = cmd.status().map_err(|e| e.to_string())?;
+    Ok(status.code().unwrap_or(-1))
 }
 
 /// Decide whether a package's hooks may run (PROP-020 §2.3): allow-listed

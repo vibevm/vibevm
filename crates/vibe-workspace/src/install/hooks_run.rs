@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases");
 
 use super::*;
+use crate::hooks::ConfiguredHookRunner;
 
 /// Run one `phase` hook for `dep` against its materialised slot under the
 /// resolved [`HookPolicy`] (PROP-020). Returns `None` when the package
@@ -101,7 +102,17 @@ pub fn run_post_install_hooks(
     plan: PostInstallPlan,
     policy: &HookPolicy,
 ) -> Result<Vec<HookReport>, WorkspaceError> {
-    run_post_install_with(plan, policy, &SystemProbe, &SystemHookRunner)
+    run_post_install_hooks_with_output(plan, policy, HookOutput::Inherit)
+}
+
+/// Run post-install hooks with an explicit subprocess stream policy.
+pub fn run_post_install_hooks_with_output(
+    plan: PostInstallPlan,
+    policy: &HookPolicy,
+    output: HookOutput,
+) -> Result<Vec<HookReport>, WorkspaceError> {
+    let runner = ConfiguredHookRunner::new(output);
+    run_post_install_with(plan, policy, &SystemProbe, &runner)
 }
 
 /// What [`materialise_subtree`] placed — reporting plus one-shot post-install

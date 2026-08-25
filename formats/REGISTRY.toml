@@ -29,7 +29,7 @@
 # built by this TZ (D12, wave 3); a variant nothing can use is an inventory of
 # the non-existent. It enters on the first line of wave 3.
 
-# ── CLI machine-JSON reports (7 JTD + 1 JSON Schema), PROP-044 §6.5 ──────────
+# ── CLI machine-JSON reports (8 JTD + 1 JSON Schema), PROP-044 §6.5 ──────────
 [format.cli-init-report]
 epoch = 1
 schema = "schemas/init_report.jtd.json"
@@ -49,6 +49,14 @@ sunset = "none"
 [format.cli-install-report]
 epoch = 1
 schema = "schemas/install_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-lifecycle-report]
+epoch = 1
+schema = "schemas/lifecycle_report.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"

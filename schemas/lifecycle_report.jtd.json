@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "description": "Wire format for the final `vibe <phase> --json` lifecycle report. Source of truth for `crates/vibe-wire/src/generated/lifecycle_report/`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_report"
+    }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"lifecycle\"` for this report."
+      }
+    },
+    "requested": {
+      "type": "string",
+      "metadata": {
+        "description": "The exact default-lifecycle phase requested by the user."
+      }
+    },
+    "chain": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The executed phase spellings in order, including a leading `clean` when the clean lifecycle was composed."
+      }
+    },
+    "steps": {
+      "elements": {
+        "ref": "lifecycle_step_report"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One outcome for every phase in `chain`, in the same order."
+      }
+    }
+  },
+  "definitions": {
+    "lifecycle_step_report": {
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "metadata": {
+            "description": "Phase outcome vocabulary. R2.2 writes `ok`, `fresh`, or `no-op`; later engine slices may add already normative outcomes without breaking older readers."
+          }
+        }
+      }
+    }
+  }
+}

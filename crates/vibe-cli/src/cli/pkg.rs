@@ -459,31 +459,3 @@ pub struct UninstallArgs {
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
 }
-
-/// Arguments for `vibe clean [install …]` (PROP-053): remove the derived
-/// prompt state — the vibedeps root and the generated boot artifacts — and
-/// optionally chain straight into an install, Maven-style.
-#[derive(Debug, clap::Args)]
-pub struct CleanArgs {
-    /// Directory of the project (defaults to current). With a chained
-    /// `install`, the install's own `--path` names the project for both
-    /// phases.
-    #[arg(long, default_value = ".")]
-    pub path: PathBuf,
-
-    /// Skip the interactive confirmation prompt (non-interactive envs).
-    #[arg(long, alias = "yes")]
-    pub assume_yes: bool,
-
-    /// The chained phase to run after the wipe.
-    #[command(subcommand)]
-    pub chain: Option<CleanChain>,
-}
-
-/// The one chain PROP-053 ships: `vibe clean install …`.
-#[derive(Debug, clap::Subcommand)]
-pub enum CleanChain {
-    /// Reinstall the world after the wipe; with pkgrefs, additionally
-    /// refresh the named packages (the full-solve semantics of PROP-011).
-    Install(InstallArgs),
-}

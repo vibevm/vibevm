@@ -101,15 +101,34 @@ fn main() -> ExitCode {
         }
         commands::vvm::embedded_root_at(self_loc.as_ref()?.root.clone())
     };
+    let prepare_lifecycle_install = || {
+        if read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
+            && let Err(e) = vibe_core::ensure_default_global_registry()
+        {
+            eprintln!("vibe: warning: could not seed ~/.vibe/registry.toml: {e}");
+        }
+        discover_embedded_root()
+    };
+    let run_lifecycle = |phase, args| {
+        commands::lifecycle::run(&ctx, phase, args, prepare_lifecycle_install, cli.offline)
+    };
 
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
+        Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
         Command::Install(args) => {
-            commands::install::run(&ctx, args, discover_embedded_root(), cli.offline)
+            commands::install::run(&ctx, args, discover_embedded_root(), cli.offline).map(|_| ())
         }
+        Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
+        Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
+        Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),
+        Command::Create(args) => run_lifecycle(vibe_lifecycle::Phase::Create, args),
+        Command::Verify(args) => run_lifecycle(vibe_lifecycle::Phase::Verify, args),
+        Command::Package(args) => run_lifecycle(vibe_lifecycle::Phase::Package, args),
+        Command::Deploy(args) => run_lifecycle(vibe_lifecycle::Phase::Deploy, args),
         Command::Clean(args) => {
-            commands::clean::run(&ctx, args, discover_embedded_root(), cli.offline)
+            commands::clean::run(&ctx, args, prepare_lifecycle_install, cli.offline)
         }
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {

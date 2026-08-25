@@ -18,6 +18,7 @@ pub mod init_report;
 pub mod install_plan;
 pub mod install_report;
 pub mod journal;
+pub mod lifecycle_report;
 pub mod list_report;
 pub mod registry_publish_report;
 pub mod registry_sync_report;

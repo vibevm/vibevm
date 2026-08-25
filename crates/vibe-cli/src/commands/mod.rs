@@ -37,6 +37,7 @@ pub(crate) mod facts_check;
 pub mod friends;
 pub mod init;
 pub mod install;
+pub mod lifecycle;
 pub mod list;
 pub mod mcp;
 pub mod outdated;

@@ -10,6 +10,7 @@ use common::{UserScratch, git_available, run_git, write_project_with_per_package
 #[derive(Clone, Copy)]
 enum HookFixture {
     Count,
+    CountPrint(&'static str),
     Exit(i32),
 }
 
@@ -24,6 +25,16 @@ value=$((value + 1))
 printf '%s\n' "$value" > "$counter"
 "#
             .to_string(),
+            Self::CountPrint(marker) => format!(
+                r#"set -eu
+counter=.hook-count
+value=0
+if [ -f "$counter" ]; then value=$(tr -d '\r\n' < "$counter"); fi
+value=$((value + 1))
+printf '%s\n' "$value" > "$counter"
+printf '%s\n' '{marker}'
+"#
+            ),
             Self::Exit(code) => format!("exit {code}\n"),
         }
     }
@@ -39,6 +50,17 @@ Set-Content -LiteralPath $counter -Value ($value + 1)
 exit 0
 "#
             .to_string(),
+            Self::CountPrint(marker) => format!(
+                r#"$counter = Join-Path (Get-Location) ".hook-count"
+$value = 0
+if (Test-Path -LiteralPath $counter) {{
+    $value = [int](Get-Content -Raw -LiteralPath $counter).Trim()
+}}
+Set-Content -LiteralPath $counter -Value ($value + 1)
+Write-Output "{marker}"
+exit 0
+"#
+            ),
             Self::Exit(code) => format!("exit {code}\n"),
         }
     }
@@ -108,6 +130,136 @@ fn read_counter(slot: &Path) -> String {
         .unwrap()
         .trim()
         .to_string()
+}
+
+#[test]
+fn lifecycle_suppresses_hook_subprocess_streams_in_json_and_quiet_modes() {
+    if !git_available() {
+        eprintln!("skipping lifecycle hook-stdio e2e: git not on PATH");
+        return;
+    }
+
+    const MARKER: &str = "HOOK-STDIO-MUST-NOT-ESCAPE";
+    let outer = tempfile::tempdir().unwrap();
+    let registry = make_hook_registry(
+        outer.path(),
+        "org.vibevm",
+        &[("0.1.0", "payload\n", HookFixture::CountPrint(MARKER))],
+    );
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url(&registry));
+    user.vibe()
+        .arg("install")
+        .arg("org.vibevm/hooked@=0.1.0")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.hooked", "0.1.0"));
+    for mode in ["json", "quiet"] {
+        user.vibe()
+            .arg("clean")
+            .arg("--path")
+            .arg(project.path())
+            .arg("--assume-yes")
+            .assert()
+            .success();
+
+        let mut command = user.vibe();
+        command.arg("build");
+        command.arg(if mode == "json" { "--json" } else { "--quiet" });
+        let output = command
+            .arg("--path")
+            .arg(project.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{mode}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(!stdout.contains(MARKER), "{mode}: {stdout}");
+        if mode == "json" {
+            let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
+                serde_json::from_slice(&output.stdout)
+                    .expect("hook output must not corrupt the lifecycle document");
+            assert_eq!(report.command, "lifecycle");
+        } else {
+            assert_eq!(stdout.lines().count(), 1, "{stdout}");
+        }
+        assert_eq!(read_counter(&slot), "1", "{mode}: hook did not run once");
+    }
+}
+
+#[test]
+fn lifecycle_json_refuses_untrusted_hooks_without_running_or_reporting_success() {
+    if !git_available() {
+        eprintln!("skipping lifecycle hook-trust e2e: git not on PATH");
+        return;
+    }
+
+    const MARKER: &str = "UNTRUSTED-HOOK-MUST-NOT-RUN";
+    let outer = tempfile::tempdir().unwrap();
+    let registry = make_hook_registry(
+        outer.path(),
+        "org.example",
+        &[("0.1.0", "payload\n", HookFixture::CountPrint(MARKER))],
+    );
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url(&registry));
+    user.vibe()
+        .arg("install")
+        .arg("org.example/hooked@=0.1.0")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .arg("--allow-hooks")
+        .assert()
+        .success();
+    user.vibe()
+        .arg("clean")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let output = user
+        .vibe()
+        .args(["build", "--json"])
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty(), "no lifecycle success document");
+    let error: serde_json::Value = serde_json::from_slice(&output.stderr).unwrap();
+    assert_eq!(error["ok"], false);
+    assert!(
+        error["error"]
+            .as_str()
+            .is_some_and(|message| message.contains("not trusted")),
+        "{error}",
+    );
+    assert!(
+        !project
+            .path()
+            .join(common::slot_dir("org.example.hooked", "0.1.0"))
+            .exists(),
+        "refusal must happen before materialisation and hook execution",
+    );
+    assert!(!String::from_utf8_lossy(&output.stdout).contains(MARKER));
 }
 
 #[test]

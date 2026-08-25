@@ -78,7 +78,8 @@ pub fn run(
     // root offline flag travels along and the delegate resolves the full
     // posture against its own user-config load.
     if args.all || args.packages.is_empty() {
-        return super::install::run(ctx, install_args_from(&args), embedded_root, root_offline);
+        return super::install::run(ctx, install_args_from(&args), embedded_root, root_offline)
+            .map(|_| ());
     }
 
     // Scoped update: only the named packages and their subtrees move.

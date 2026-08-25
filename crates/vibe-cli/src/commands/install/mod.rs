@@ -32,7 +32,9 @@ use vibe_core::user_config::UserConfig;
 use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver};
 use vibe_resolver::FeatureRequest;
 use vibe_workspace::Workspace;
-use vibe_workspace::hooks::{DEFAULT_ALLOWED_GROUPS, HookPolicy, HookTrust, decide_trust};
+use vibe_workspace::hooks::{
+    DEFAULT_ALLOWED_GROUPS, HookOutput, HookPolicy, HookTrust, decide_trust,
+};
 
 use crate::cli::InstallArgs;
 use crate::commands::short_name;
@@ -88,12 +90,21 @@ impl PlanObserver for CtxObserver<'_> {
     }
 }
 
+/// Whether the existing install implementation applied a plan or proved the
+/// materialised world fresh. Lifecycle callers consume this instead of
+/// inferring machine state from rendered text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum InstallDisposition {
+    Fresh,
+    Applied,
+}
+
 pub fn run(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-) -> Result<()> {
+) -> Result<InstallDisposition> {
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
     // user config so a malformed config fails before any resolution. The
@@ -161,7 +172,8 @@ pub fn run(
         let nodes =
             vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
                 .context("regenerating boot artifacts for the empty world")?;
-        return report::emit_fresh_report(ctx, &nodes);
+        report::emit_fresh_report(ctx, &nodes)?;
+        return Ok(InstallDisposition::Fresh);
     }
 
     // PROP-050 ##VERIFY-LOCK-DIFF — the lane-size half of the pre-apply
@@ -219,7 +231,8 @@ pub fn run(
                 .context("re-discovering the workspace for boot regeneration")?;
             let nodes = vibe_workspace::install::regenerate_boot_with_spec_format(&ws, spec_format)
                 .context("regenerating boot artifacts from the materialised state")?;
-            report::emit_fresh_report(ctx, &nodes)
+            report::emit_fresh_report(ctx, &nodes)?;
+            Ok(InstallDisposition::Fresh)
         }
         Plan::Ready(planned) => {
             // Show the plan: the packages to materialise.
@@ -261,12 +274,17 @@ pub fn run(
             // than run third-party code unseen.
             let hook_policy = resolve_hook_policy(ctx, &args, &planned.resolution)?;
 
-            let applied = vibe_install::apply_with_spec_format(
+            let applied = vibe_install::apply_with_spec_format_and_hook_output(
                 &resolver,
                 *planned,
                 slot_integrity,
                 spec_format,
                 &hook_policy,
+                if ctx.suppresses_output() {
+                    HookOutput::Suppress
+                } else {
+                    HookOutput::Inherit
+                },
             )?;
             // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
             // the closure diff (the pre-apply lock snapshot vs the freshly
@@ -285,7 +303,8 @@ pub fn run(
                     &lane_sizes(&workspace.root),
                 );
             }
-            report::emit_report(ctx, &applied)
+            report::emit_report(ctx, &applied)?;
+            Ok(InstallDisposition::Applied)
         }
     }
 }

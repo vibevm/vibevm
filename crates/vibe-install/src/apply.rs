@@ -11,9 +11,10 @@ use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
-use vibe_workspace::hooks::{HookPolicy, HookReport};
+use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
-    InstallOutcome, ResolvedDep, apply_resolution_with_spec_format, run_post_install_hooks,
+    InstallOutcome, ResolvedDep, apply_resolution_with_spec_format_and_hook_output,
+    run_post_install_hooks_with_output,
 };
 use vibe_workspace::vibedeps;
 
@@ -66,6 +67,26 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
     hooks: &HookPolicy,
+) -> Result<ApplyReport> {
+    apply_with_spec_format_and_hook_output(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        hooks,
+        HookOutput::Inherit,
+    )
+}
+
+/// Apply with an explicit hook-subprocess stream policy. The existing public
+/// entry points remain byte-compatible and inherit hook streams.
+pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    hooks: &HookPolicy,
+    hook_output: HookOutput,
 ) -> Result<ApplyReport> {
     let PlannedInstall {
         project_root,
@@ -149,13 +170,14 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let mut outcome = apply_resolution_with_spec_format(
+    let mut outcome = apply_resolution_with_spec_format_and_hook_output(
         &workspace,
         &resolution,
         slot_integrity,
         spec_format,
         Some(&slot_verifier),
         Some(hooks),
+        hook_output,
     )?;
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
@@ -221,7 +243,7 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     //     as a flagged report, not fatal; a missing interpreter is a hard
     //     error. Only slots whose materialised payload changed run their hook.
     let post_install_reports = match outcome.take_post_install_plan() {
-        Some(plan) => run_post_install_hooks(plan, hooks)?,
+        Some(plan) => run_post_install_hooks_with_output(plan, hooks, hook_output)?,
         None => Vec::new(),
     };
 
