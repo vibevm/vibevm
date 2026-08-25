@@ -151,7 +151,7 @@ footprint.</HARDLINK-CONTRACT>
 Status remains `impl/done`. Evidence: `1cf4f189` hardlink replacement and
 source/cache immutability oracles.
 
-## 3. PROP-020 §2.1 — owner ruling required for repair versus hooks
+## 3. PROP-020 §2.1 — owner selected payload-diff hook scheduling
 
 Owning document:
 `vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml`.
@@ -163,9 +163,9 @@ Exact owning anchor:
 The shared part is settled: for copy/hardlink slots, “reset” no longer means a
 whole-slot replacement. It means restoring recorded payload bytes through the
 PROP-054 §9.3 diff while leaving every unrecorded path alone. What happens next
-has two incompatible contracts.
+had two incompatible contracts; the owner selected 3.A on 2026-08-25.
 
-### 3.A SPEC-WINS — recommended
+### 3.A SPEC-WINS — selected and implemented
 
 Any nonempty payload diff, including a `SlotIntegrity::Verify` repair, reruns
 the declared hooks once. Empty diff runs none.
@@ -181,7 +181,7 @@ slot again represents materialised payload plus declared hook effects.
 </RESET-THEN-RERUN>
 ```
 
-This is the recommended ruling because it preserves PROP-020's effective-state
+This ruling preserves PROP-020's effective-state
 law. If a hook intentionally rewrites a recorded file and that file later
 drifts, verify repair first restores the pristine materialised byte. Skipping
 the hook at that point leaves the slot in a third state—neither the previously
@@ -189,7 +189,7 @@ prepared package nor the declared package-plus-hook result—until some unrelate
 future source change happens to rerun the hook. Rerunning once after every
 nonempty payload change restores the pure-function model without compounding.
 
-### 3.B TZ-DEMO — alternative, not recommended
+### 3.B TZ-DEMO — rejected
 
 Source/update diffs rerun hooks, but a report whose only disposition is
 `repair_only` skips them.
@@ -208,12 +208,11 @@ must be explicit in PROP-020, not hidden as an implementation detail.
 
 ### 3.1 Status and evidence gate
 
-Do not edit `##RESET-THEN-RERUN` or move any status on the basis of the neutral
-report alone. After the owner selects A or B, R1.4 must land hook scheduling
-over `4503fdb6`'s facts, hook-runner counter oracles for the selected contract,
-and a full green panel. Only then is the replacement above legitimately
-`impl/done`. `##RESET-IS-MODE-PROPERTY` remains `impl/done`, with “record diff”
-added as the copy/hardlink implementation.
+Owner evidence is now complete: `9c545f0d` implements 3.A over `4503fdb6`, with
+red-proven repair/identity/in-place/hardlink/reinstall oracles and the full green
+panel. The draft replacement above may therefore move to `impl/done` in the
+authoritative owner session. `##RESET-IS-MODE-PROPERTY` remains `impl/done`,
+with record diff and exact git-native change reports named as implementations.
 
 ## 4. PROP-045 — `.vibe-derived.toml` is absorbed by `.vibe-slot.toml`
 
@@ -297,16 +296,15 @@ not perform them:
 | `##DIFF-MATERIALISE` | `spec/plan` | `impl/done` | `1cf4f189` |
 | `##MTIME-LAW` | `spec/plan` | `impl/done` | unchanged-file byte/inode/mtime oracles in `1cf4f189` |
 | `##MUTABLE-GETS-A-GATE` | `spec/plan` | `impl/done` | `6a7f750d` |
-| `##SELF-HEAL` | `spec/plan` | **no move yet** | R1.4 not landed; hook fork unresolved |
+| `##SELF-HEAL` | `spec/plan` | `impl/done` | `9c545f0d`: 3.A, one-shot post plan, COW hardlinks, exact in-place change report |
 | `##AMENDMENT-PLAN` | `spec/plan` | **no move yet** | this file is only the draft; authoritative owners have not applied it, and later lifecycle amendments remain |
-| `##R1-DIFF` | `impl/plan` | **no move yet** | close only after R1.4, owner amendment landing, and wave gate |
+| `##R1-DIFF` | `impl/plan` | **no move yet** | code/gate complete through `9c545f0d`; owner amendments still must land |
 
 `##WIPE-TODAY` may retain its historical status but should gain a dated
 successor sentence naming `6d606ef2`, `1cf4f189`, and `6a7f750d`.
-`##MATERIALISE-CODE-MAP` should be refreshed after R1.4 lands to include
-`vibedeps/slot_record.rs`, `vibedeps/slot_diff.rs`, the neutral report module,
-and record-aware `vibe-install/src/slot_verify.rs`; do not write the final map
-while those paths are still changing.
+`##MATERIALISE-CODE-MAP` should now include `slot_record`, `slot_diff/report`,
+`slot_cow`, consuming `PostInstallPlan`, registry in-place change detection and
+record-aware `vibe-install/src/slot_verify.rs` (evidence through `9c545f0d`).
 
 ## 6. Remaining `##AMENDMENT-PLAN` obligations — deliberately deferred
 
@@ -371,16 +369,15 @@ implemented contract. Do not move its status on R1 evidence.
 
 ## 7. Owner application checklist
 
-- Select PROP-020 hook alternative **3.A (recommended)** or 3.B.
-- Wait for a landed R1.4 commit and full green panel before applying any
-  self-heal/hook status movement.
+- 3.A selected; R1.4 landed as `9c545f0d` with a full green panel.
+- Apply the SELF-HEAL / RESET status movements now supported by that evidence.
 - Apply §§1–4 at their owning anchors without renaming facts.
 - Regenerate specmap and run the full repository panel in the authoritative
   owner session.
 - Leave §6 trust/native/build amendments deferred until their corresponding
   lifecycle waves land.
-- Only after the authoritative amendments and R1.4 evidence exist, close
-  PROP-054 `##R1-DIFF`; this draft alone is not closure evidence.
+- Close PROP-054 `##R1-DIFF` only after the owner applies §§1–4; this draft
+  remains evidence and replacement text, never the authoritative edit itself.
 
 ## 8. R2/R3 normative conflict queue
 
@@ -401,7 +398,7 @@ Anchors: PROP-054 `##LIFECYCLES`, `##INVOKE-RUNS-PRIORS`,
 `##REF-LIFECYCLE-TOML`. The normative state example records requested `build`
 as `validate, install, build`, contradicting the closed phase table.
 
-**Recommended ruling:** persist exactly `inclusive_chain(requested)`, therefore
+**Owner ruling (accepted 2026-08-25):** persist exactly `inclusive_chain(requested)`, therefore
 `validate, install, generate, build`. Treating `chain` as completed-work-only is
 rejected because §14.2 calls it the whole requested chain. Blocks R2.5 goldens.
 
@@ -411,7 +408,7 @@ Anchors: `##CONTRIB-GRAMMAR`, `##HOST-ACTIVATION`, §14.1. TOML nests
 `[[extension.use]]` under the current `[[extension]]` row; without such a row it
 is invalid. `b580bd1d` therefore deliberately rejects it.
 
-**Recommended ruling:** keep declarations as `[[extension]]`; spell activations
+**Owner ruling (accepted 2026-08-25):** keep declarations as `[[extension]]`; spell activations
 `[[extensions.use]]`; keep `[extensions].disable` in that plural namespace.
 Alternatives `[[extension_use]]` and inline arrays are representable but less
 coherent. The current spelling is not representable. Blocks R2.3 onward.
@@ -422,7 +419,7 @@ Anchors: `##HOST-ACTIVATION`, `##ORDER-LAW`, `##REF-LIFECYCLE-TOML`.
 Ungrouped projects cannot form `<group>/<name>#<id>`, and separate declaration
 and use arrays cannot preserve a source-interleaved order through serde.
 
-**Recommended ruling:** use an opaque typed host-provider identity rendered as
+**Owner ruling (accepted 2026-08-25):** use an opaque typed host-provider identity rendered as
 `__host__/<project-name>#<id>` (never parse it as `PackageRef`). Within the host
 tier, direct declarations run in their array order, followed by activations in
 their array order. A pure virtual workspace declares no extension. Blocks state
@@ -434,7 +431,7 @@ Anchors: `##ORDER-LAW`, `##PRESET-LAW`, `##STACK-CONTRIBUTES-PRESET`. A stack's
 ordinary declarations otherwise look like dependency-tier contributions even
 when the same rows are said to be preset tier.
 
-**Recommended ruling:** classify `phase:*` contributions from the project's
+**Owner ruling (accepted 2026-08-25):** classify `phase:*` contributions from the project's
 effective active stack as preset bindings in effective-stack/lock order. Its
 `slot:*` and `compile:*` declarations remain ordinary contributions. Blocks the
 R2.3 order oracle and R2.7 presets.
@@ -445,7 +442,7 @@ Anchors: `##ENGINE-ALGORITHM`, `##PHASE-INSTALL`, `##ORDER-LAW`,
 `##ENVELOPE-LAW`. The algorithm currently collects contributions before install
 even though install may create or change the installed world.
 
-**Recommended ruling:** two ritual epochs. Epoch A runs bootstrap built-in
+**Owner ruling (accepted 2026-08-25):** two ritual epochs. Epoch A runs bootstrap built-in
 validate/install. After successful install, reload lock, slots, manifests and
 effective world. Epoch B narrates and executes extension contributions over the
 canonical requested slots, including validate/install contributions, without
@@ -457,7 +454,7 @@ Anchors: `##LIFECYCLES`, `##ORDER-LAW`, `##PHASE-FINGERPRINT`,
 `##PHASE-STATE-HOME`, `##CHAIN-GENERAL`. Generic freshness could skip a
 destructive clean; wiping first also removes providers needed by clean hooks.
 
-**Recommended ruling:** run clean contributions once before the terminal
+**Owner ruling (accepted 2026-08-25):** run clean contributions once before the terminal
 built-in wipe; never fresh-skip them; failure stops before the wipe. The wipe is
 a terminator, not a preset contribution, and `.vibe/lifecycle.toml` survives.
 Blocks generalized CleanChain, R2.5 and clean handlers.
@@ -467,7 +464,7 @@ Blocks generalized CleanChain, R2.5 and clean handlers.
 Anchors: `##INVOKE-RUNS-PRIORS`, `##PHASE-VALIDATE`, `##PHASE-INSTALL`; TZ R2.2.
 The TZ demo calls all nine rows no-op while validate/install have real built-ins.
 
-**Recommended ruling:** every requested slot is traversed and narrated. “No-op”
+**Owner ruling (accepted 2026-08-25):** every requested slot is traversed and narrated. “No-op”
 means no extension execution or additional built-in binding in that slot;
 validate/install still perform or report fresh, and the other seven rows may be
 empty. Blocks the CLI output oracle only, not the phase table.
@@ -478,7 +475,7 @@ Anchors: `##IR-LEVELS`, `##WHOLE-IR-WIRE`, `##IR-REFACTOR`,
 `##REF-IR-UNFROZEN`; evidence `a7a04b69`. Current compiler APIs are one-seed
 fragment compilers while plugin wording promises one whole compilation/artifact.
 
-**Recommended ruling:** `SourceIr` and `DocumentIr` each represent one addressed
+**Owner ruling (accepted 2026-08-25):** `SourceIr` and `DocumentIr` each represent one addressed
 document; the parse worklist yields an explicit `Documents(Vec<DocumentIr>)`
 batch; `ClosureIr` is the ordered multi-seed graph for one final artifact;
 `LaneIr` and `EmittedIr` are each one final artifact including normal/simple
@@ -493,33 +490,29 @@ XML comment validation and refuses internal `--`. Current committed STATIC.xml
 markers contain exactly that illegal sequence in preamble/tombstone payloads
 such as `<origin-slug>--<original>`. Multi-root framing itself is supported.
 
-**Recommended ruling:** repair the upstream marker encoding to an XML-valid,
+**Owner ruling (accepted 2026-08-25):** repair the upstream marker encoding to an XML-valid,
 reversible spelling and deliberately update the byte oracles before binding the
 kernel. Do not weaken comment validation: that would make an “XML-safe”
 transform bless output that is not XML. R4.1/R4.2 production binding remains
 blocked after the activation and artifact-cardinality rulings as well.
 
-The characterization suite also records the existing XML `vibe:end` escape
-caused by the historical `vibe:close` filter. That is a separate compiler bug;
-do not silently fold its fix into the transform binding.
+The separate XML `vibe:end` escape caused by the historical `vibe:close` filter
+was red-proven and fixed in `289260fe`; it is no longer part of the R4 blocker.
 
 ## 10. Owner ruling checklist for continuation
 
-- Select hook alternative 3.A (recommended) or 3.B for R1.4.
-- Accept or amend recommendations 8.1–8.8; accepting all authorises the R2/R3
-  architecture described above, not any authoritative status edit.
-- Select the XML marker repair policy in §9 before R4 binding.
+- 3.A and §§8.1–8.8 are accepted; implementation is authorised, not status edits.
+- §9's XML-valid reversible principle is accepted; exact encoding remains open.
 - Keep `##OPEN-CREATE-BUDGET` deferred unless R7 should enforce a budget.
 - Choose `##OPEN-DEPLOY-TARGETS` before R8, as the TZ requires.
-- Accept or amend the downstream wire rulings in §11; they are consequences of
-  the repository-wide JTD law, not permission to start R5/R7 before R2/R4.
-- After rulings, implement and fully gate first; authoritative PROP text/status
+- §§11.1–11.3 are accepted; R7.2 merge/alias/absolute-path details remain open.
+- Implement and fully gate first; authoritative PROP text/status
   changes remain an owner-session action using this queue as the draft.
 
 ## 11. Dependency-order and wire audit
 
-This audit was run after `624c255d` to find policy-independent work while the
-§10 rulings remain open. It found none beyond the already-landed characterization
+This audit was run after `624c255d` to find policy-independent work before the
+§10 rulings were accepted. It found none beyond the already-landed characterization
 and pure kernels: TZ §6 makes R5 depend on R2+R4 and R7 depend on R2. An
 experimental uncommitted `vibe-ext` sketch was removed in full after review.
 
@@ -528,7 +521,7 @@ experimental uncommitted `vibe-ext` sketch was removed in full after review.
 `##WHOLE-IR-WIRE` says one call per pass per compilation, while source/document
 levels are necessarily per addressed document under the recommended model.
 
-**Recommended clarification:** source and document transforms run once per
+**Owner ruling (accepted 2026-08-25):** source and document transforms run once per
 addressed document in the explicit worklist; closure, lane and emitted passes
 run once per final artifact. “Whole IR” means the whole value of the level being
 passed, never a partial handle. R3.1 remains blocked until §8.8 is ruled.
@@ -538,7 +531,7 @@ passed, never a partial handle. R3.1 remains blocked until §8.8 is ruled.
 Anchors: PROP-000 `##JTD-SSOT`, `##JTD-CODEGEN`; PROP-054 `##C-ABI-LAW`,
 `##ABI-CRATE`, `##PANIC-AND-VERSION`, `##REF-WIRE-NATIVE`.
 
-**Recommended ruling:** before the public helper crate, register JTD epoch-1
+**Owner ruling (accepted 2026-08-25):** before the public helper crate, register JTD epoch-1
 contracts for native context, native reply and extension manifest; generate
 their Rust types into `vibe-wire`; let `vibe-ext` re-export/wrap those generated
 types rather than hand-author JSON structs. The manifest root is
@@ -559,7 +552,7 @@ Anchors: PROP-000 `##JTD-IN-SCOPE`; PROP-054 `##AGENT-CLI`,
 `##OPEN-CREATE-BUDGET`. OpenAI-compatible request/response wrappers are named by
 the JTD law explicitly; handwritten serde request/response structs are illegal.
 
-**Recommended ruling:** R7.1 registers and generates Chat Completions request
+**Owner ruling (accepted 2026-08-25):** R7.1 registers and generates Chat Completions request
 and response contracts, then implements a synchronous object-safe `chat` seam
 with blocking reqwest and a mock transport. `[llm]` in the user config names
 `openai-compatible`, model, the full endpoint URL, and a token-file path. Resolve
