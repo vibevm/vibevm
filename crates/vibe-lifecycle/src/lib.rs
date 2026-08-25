@@ -28,6 +28,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 
 mod chain;
 mod phase;
+mod point;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
 pub use phase::{DEFAULT_PHASES, Phase, PhaseParseError};
+pub use point::{PhasePoint, PhasePointParseError};
