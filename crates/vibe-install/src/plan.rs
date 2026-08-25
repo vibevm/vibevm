@@ -405,6 +405,7 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
                 via_override: provenance.and_then(|witness| witness.via_override.clone()),
                 // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
                 source_mutable: is_in_workspace_file_source(&f.cached.source_uri, &workspace.root),
+                in_place_changed: None,
             }
         })
         .collect();

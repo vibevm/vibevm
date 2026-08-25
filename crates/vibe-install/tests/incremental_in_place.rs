@@ -11,7 +11,7 @@
 //! installer detection, PROP-007 §9.5): the binary name carries no `install`
 //! substring.
 
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -37,6 +37,7 @@ struct MockSource {
     graph: ResolvedGraph,
     fetched: RefCell<Vec<String>>,
     placed: RefCell<Vec<(String, PathBuf)>>,
+    changed: Cell<bool>,
 }
 
 impl InstallSource for MockSource {
@@ -99,6 +100,7 @@ impl InstallSource for MockSource {
             source_ref: "v1.0.0".to_string(),
             resolved_commit: Some(FETCHED_COMMIT.to_string()),
             content_hash: "sha256:feedface".to_string(),
+            changed: self.changed.get(),
             manifest,
         })
     }
@@ -143,6 +145,26 @@ fn general_install_defers_in_place_instead_of_recloning() {
          resolved_commit = \"1111111111111111111111111111111111111111\"\n\
          materialization = \"in-place\"\n",
     );
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/hooks/prepare.sh",
+        "printf '%s\\n' \"$VIBE_HOOK_PHASE\" >> hook.log\n",
+    );
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/hooks/finalise.sh",
+        "printf '%s\\n' \"$VIBE_HOOK_PHASE\" >> hook.log\n",
+    );
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/hooks/prepare.ps1",
+        "$env:VIBE_HOOK_PHASE | Add-Content -Path hook.log\n",
+    );
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/hooks/finalise.ps1",
+        "$env:VIBE_HOOK_PHASE | Add-Content -Path hook.log\n",
+    );
 
     // The present in-place slot: a git working tree (`.git`) with the package's
     // manifest and a sentinel that must survive (proof nothing was moved).
@@ -159,7 +181,10 @@ fn general_install_defers_in_place_instead_of_recloning() {
          name = \"giant\"\n\
          kind = \"feat\"\n\
          version = \"1.0.0\"\n\
-         materialization = \"in-place\"\n",
+         materialization = \"in-place\"\n\n\
+         [hooks]\n\
+         pre-install = \"hooks/prepare\"\n\
+         post-install = \"hooks/finalise\"\n",
     );
     write(
         root,
@@ -179,6 +204,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
         },
         fetched: RefCell::new(Vec::new()),
         placed: RefCell::new(Vec::new()),
+        changed: Cell::new(false),
     };
 
     let request = InstallRequest {
@@ -207,7 +233,17 @@ fn general_install_defers_in_place_instead_of_recloning() {
         allowed_groups: vec!["org.vibevm".to_string()],
         allow_hooks: false,
     };
-    vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy).expect("apply succeeds");
+    let applied = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy)
+        .expect("apply succeeds");
+    assert!(applied.outcome.hook_reports.is_empty());
+    assert!(applied.post_install_reports.is_empty());
+    assert!(
+        !root
+            .join(vibe_core::layout::current_vibedeps_root())
+            .join("org.vibevm.giant/hook.log")
+            .exists(),
+        "Some(false) must suppress both hook phases"
+    );
 
     // materialise_in_place was the path taken — exactly once, against the slot.
     let placed = source.placed.borrow();
@@ -248,4 +284,30 @@ fn general_install_defers_in_place_instead_of_recloning() {
         .expect("giant survives in the rewritten lockfile");
     assert!(giant.materialization.is_in_place());
     assert_eq!(giant.resolved_commit.as_deref(), Some(FETCHED_COMMIT));
+    drop(placed);
+
+    source.changed.set(true);
+    let request = InstallRequest {
+        roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
+        features: FeatureRequest::default(),
+        language: None,
+        exact: false,
+        generated_by: "vibe test".to_string(),
+    };
+    let planned = match vibe_install::plan(&source, root, request, &NullObserver).unwrap() {
+        Plan::Ready(planned) => planned,
+        Plan::Fresh => panic!("explicit-root install must stay actionable"),
+    };
+    let applied = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy).unwrap();
+    assert_eq!(applied.outcome.hook_reports.len(), 1);
+    assert_eq!(applied.post_install_reports.len(), 1);
+    let log = fs::read_to_string(
+        root.join(vibe_core::layout::current_vibedeps_root())
+            .join("org.vibevm.giant/hook.log"),
+    )
+    .unwrap();
+    assert_eq!(
+        log.lines().collect::<Vec<_>>(),
+        ["pre-install", "post-install"]
+    );
 }

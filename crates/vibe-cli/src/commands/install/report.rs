@@ -12,6 +12,89 @@ use vibe_workspace::install::ResolvedDep;
 
 use crate::output;
 
+/// One rendering policy for install-hook reports across every install-family
+/// command. The view borrows the pre/post slices so callers retain the typed
+/// reports without cloning or flattening away phase ordering.
+pub(crate) struct HookReportView<'a> {
+    reports: Vec<&'a HookReport>,
+}
+
+impl<'a> HookReportView<'a> {
+    pub(crate) fn new(pre_install: &'a [HookReport], post_install: &'a [HookReport]) -> Self {
+        Self {
+            reports: pre_install.iter().chain(post_install).collect(),
+        }
+    }
+
+    pub(crate) fn empty() -> Self {
+        Self {
+            reports: Vec::new(),
+        }
+    }
+
+    pub(crate) fn json(&self) -> Vec<serde_json::Value> {
+        self.reports
+            .iter()
+            .map(|report| {
+                serde_json::json!({
+                    "phase": report.phase,
+                    "status": report.status,
+                    "note": report.note,
+                })
+            })
+            .collect()
+    }
+
+    pub(crate) fn flagged_count(&self) -> usize {
+        self.reports
+            .iter()
+            .filter(|report| !matches!(report.status, "not-declared" | "ran"))
+            .count()
+    }
+
+    pub(crate) fn quiet_suffix(&self) -> String {
+        let flagged: Vec<String> = self
+            .reports
+            .iter()
+            .filter(|report| !matches!(report.status, "not-declared" | "ran"))
+            .map(|report| match report.note.as_deref() {
+                Some(note) => format!("{}: {} — {note}", report.phase, report.status),
+                None => format!("{}: {}", report.phase, report.status),
+            })
+            .collect();
+        let count = self.flagged_count();
+        if count == 0 {
+            String::new()
+        } else {
+            format!(
+                ", {count} hook report{} flagged ({})",
+                if count == 1 { "" } else { "s" },
+                flagged.join("; "),
+            )
+        }
+    }
+
+    pub(crate) fn render_human(&self, ctx: &output::Context) {
+        for report in &self.reports {
+            let note = report
+                .note
+                .as_deref()
+                .map(|note| format!(" — {note}"))
+                .unwrap_or_default();
+            match report.status {
+                "not-declared" => {}
+                "ran" => ctx.step(&format!("{} hook ran", report.phase)),
+                "skipped-needs-consent" => ctx.step(&format!(
+                    "{} hook skipped (consent withheld){note}",
+                    report.phase
+                )),
+                "post-install-failed" => ctx.step(&format!("{} hook failed{note}", report.phase)),
+                status => ctx.step(&format!("{} hook reported `{status}`{note}", report.phase)),
+            }
+        }
+    }
+}
+
 pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDep]) {
     if ctx.is_json() {
         #[derive(Serialize)]
@@ -52,23 +135,9 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
     // the materialise pass) followed by post-install (after the lockfile
     // write). Surfaced so a skipped or failed hook is never silent
     // (PROP-020 §2.3/§2.5).
-    let hooks: Vec<&HookReport> = outcome
-        .hook_reports
-        .iter()
-        .chain(&applied.post_install_reports)
-        .collect();
+    let hooks = HookReportView::new(&outcome.hook_reports, &applied.post_install_reports);
 
     if ctx.is_json() {
-        let hooks_json: Vec<serde_json::Value> = hooks
-            .iter()
-            .map(|h| {
-                serde_json::json!({
-                    "phase": h.phase,
-                    "status": h.status,
-                    "note": h.note,
-                })
-            })
-            .collect();
         ctx.emit_json(&serde_json::json!({
             "ok": true,
             "command": "install",
@@ -76,19 +145,20 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
             "skipped": outcome.skipped,
             "pruned": outcome.pruned,
             "nodes_regenerated": outcome.nodes_regenerated,
-            "hooks": hooks_json,
+            "hooks": hooks.json(),
         }))?;
         return Ok(());
     }
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe install: {} package{} materialised",
+            "vibe install: {} package{} materialised{}",
             outcome.materialised.len(),
             if outcome.materialised.len() == 1 {
                 ""
             } else {
                 "s"
             },
+            hooks.quiet_suffix(),
         ));
         return Ok(());
     }
@@ -121,30 +191,8 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
             if outcome.pruned.len() == 1 { "" } else { "s" },
         ));
     }
-    render_hook_lines(ctx, &hooks);
+    hooks.render_human(ctx);
     Ok(())
-}
-
-/// Surface every hook that ran, was skipped for want of consent, or failed
-/// (PROP-020 §2.3/§2.5). A `not-declared` report (a package that declares the
-/// other phase only) is silent — nothing happened for this phase.
-fn render_hook_lines(ctx: &output::Context, hooks: &[&HookReport]) {
-    for h in hooks {
-        let note = h
-            .note
-            .as_deref()
-            .map(|n| format!(" — {n}"))
-            .unwrap_or_default();
-        match h.status {
-            "ran" => ctx.step(&format!("{} hook ran", h.phase)),
-            "skipped-needs-consent" => ctx.step(&format!(
-                "{} hook skipped (consent withheld){note}",
-                h.phase
-            )),
-            "post-install-failed" => ctx.step(&format!("{} hook failed{note}", h.phase)),
-            _ => {}
-        }
-    }
 }
 
 /// Report the PROP-011 §2.2 fast path — `vibe.lock` was fresh, so no

@@ -37,6 +37,9 @@ mod fixtures {
         /// Recorded bootstrap-call URLs, in order. Tests assert on
         /// this when verifying primary-then-mirror dispatch.
         pub(crate) bootstrap_urls: Mutex<Vec<String>>,
+        pub(crate) head_commits: Mutex<HashMap<PathBuf, String>>,
+        pub(crate) next_update_heads: Mutex<HashMap<PathBuf, String>>,
+        pub(crate) dirty_paths: Mutex<HashSet<PathBuf>>,
     }
 
     impl FakeBackend {
@@ -77,6 +80,21 @@ mod fixtures {
         }
         pub(crate) fn bootstrap_urls(&self) -> Vec<String> {
             self.bootstrap_urls.lock().unwrap().clone()
+        }
+        pub(crate) fn set_head(&self, dest: &Path, commit: &str) {
+            self.head_commits
+                .lock()
+                .unwrap()
+                .insert(dest.to_path_buf(), commit.to_string());
+        }
+        pub(crate) fn move_head_on_update(&self, dest: &Path, commit: &str) {
+            self.next_update_heads
+                .lock()
+                .unwrap()
+                .insert(dest.to_path_buf(), commit.to_string());
+        }
+        pub(crate) fn mark_dirty(&self, dest: &Path) {
+            self.dirty_paths.lock().unwrap().insert(dest.to_path_buf());
         }
     }
 
@@ -126,7 +144,20 @@ mod fixtures {
                     refname: refname.to_string(),
                 });
             }
+            if let Some(commit) = self.next_update_heads.lock().unwrap().remove(dest) {
+                self.head_commits
+                    .lock()
+                    .unwrap()
+                    .insert(dest.to_path_buf(), commit);
+            }
+            self.dirty_paths.lock().unwrap().remove(dest);
             Ok(())
+        }
+        fn head_commit(&self, dest: &Path) -> Result<Option<String>, GitError> {
+            Ok(self.head_commits.lock().unwrap().get(dest).cloned())
+        }
+        fn working_tree_dirty(&self, dest: &Path) -> Result<bool, GitError> {
+            Ok(self.dirty_paths.lock().unwrap().contains(dest))
         }
         fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
             self.tags

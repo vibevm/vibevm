@@ -105,6 +105,10 @@ fn materialise_in_place_clones_then_updates_the_slot() {
         .join(vibe_core::layout::current_vibedeps_root())
         .join("org.vibevm.giant");
     let placed = r.materialise_in_place(&resolved, &slot).unwrap();
+    assert!(
+        placed.changed,
+        "a fresh clone is a nonempty in-place change"
+    );
     assert_eq!(placed.source_uri, url);
     assert_eq!(placed.source_ref, "v1.0.0");
     assert_eq!(placed.manifest.package.as_ref().unwrap().name, "giant");
@@ -115,7 +119,20 @@ fn materialise_in_place_clones_then_updates_the_slot() {
     // The slot now carries `.git` → a second placement updates incrementally
     // (PROP-022 §2.4), never re-clones — no new bootstrap, one update.
     let again = r.materialise_in_place(&resolved, &slot).unwrap();
+    assert!(!again.changed, "an unchanged refresh is a true no-op");
     assert_eq!(again.source_ref, "v1.0.0");
     assert_eq!(fake.bootstrap_count(), 1);
     assert_eq!(fake.update_count(), 1);
+
+    fake.set_head(&slot, "old-commit");
+    fake.move_head_on_update(&slot, "new-commit");
+    let moved = r.materialise_in_place(&resolved, &slot).unwrap();
+    assert!(moved.changed, "a HEAD move changes in-place payload");
+
+    fake.mark_dirty(&slot);
+    let repaired = r.materialise_in_place(&resolved, &slot).unwrap();
+    assert!(
+        repaired.changed,
+        "resetting dirty tracked/untracked/ignored state is a change"
+    );
 }

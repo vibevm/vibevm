@@ -18,6 +18,7 @@ mod resolver;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use project_local::project_packages_root;
+pub(crate) use report::HookReportView;
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
 pub(crate) use vibe_install::exact_pinned_pkgref;
 

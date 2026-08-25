@@ -35,7 +35,7 @@ pub struct ApplyReport {
     /// orchestrator.
     pub outcome: InstallOutcome,
     /// `post-install` hook reports (PROP-020 §2.1), gathered after the
-    /// lockfile was written. Empty when no materialised package declares a
+    /// lockfile was written. Empty when no payload-changing package declares a
     /// `post-install` hook; the CLI renders them with the pre-install
     /// reports carried on `outcome.hook_reports`.
     pub post_install_reports: Vec<HookReport>,
@@ -149,7 +149,7 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let outcome = apply_resolution_with_spec_format(
+    let mut outcome = apply_resolution_with_spec_format(
         &workspace,
         &resolution,
         slot_integrity,
@@ -219,9 +219,11 @@ pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
     //     (lockfile written, boot regenerated). A non-zero exit is surfaced
     //     as a flagged report, not fatal; a missing interpreter is a hard
-    //     error. Only the freshly-materialised slots run their hook.
-    let post_install_reports =
-        run_post_install_hooks(&workspace.root, &resolution, &outcome.materialised, hooks)?;
+    //     error. Only slots whose materialised payload changed run their hook.
+    let post_install_reports = match outcome.take_post_install_plan() {
+        Some(plan) => run_post_install_hooks(plan, hooks)?,
+        None => Vec::new(),
+    };
 
     Ok(ApplyReport {
         outcome,
@@ -276,6 +278,7 @@ fn materialise_deferred_in_place<S: InstallSource + ?Sized>(
         f.cached.source_ref = Some(placed.source_ref);
         f.cached.resolved_commit = placed.resolved_commit;
         resolution[i].manifest = placed.manifest;
+        resolution[i].in_place_changed = Some(placed.changed);
     }
     Ok(())
 }

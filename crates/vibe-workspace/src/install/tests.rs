@@ -25,7 +25,7 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    let outcome = apply_resolution(
+    let mut outcome = apply_resolution(
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
@@ -57,6 +57,8 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
     );
     // The redirect lands at the node root.
     assert!(ws_dir.path().join("CLAUDE.md").is_file());
+    assert!(outcome.take_post_install_plan().is_some());
+    assert!(outcome.take_post_install_plan().is_none());
 }
 
 #[test]
@@ -69,9 +71,10 @@ fn apply_resolution_with_no_dependencies_still_writes_index() {
     );
     write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    let outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence, None).unwrap();
+    let mut outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence, None).unwrap();
     assert!(outcome.materialised.is_empty());
     assert_eq!(outcome.nodes_regenerated, vec!["."]);
+    assert!(outcome.take_post_install_plan().is_none());
     assert!(ws_dir.path().join(boot_rel("INDEX.md")).is_file());
 }
 

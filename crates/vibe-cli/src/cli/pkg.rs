@@ -439,6 +439,11 @@ pub struct ReinstallArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// Run install hooks regardless of package group. Uses the same
+    /// explicit non-interactive opt-in as `vibe install --allow-hooks`.
+    #[arg(long)]
+    pub allow_hooks: bool,
 }
 
 #[derive(Debug, clap::Args)]

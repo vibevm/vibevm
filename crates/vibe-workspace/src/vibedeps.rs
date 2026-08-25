@@ -32,6 +32,7 @@ use crate::{WorkspaceError, layout_paths};
 
 mod build_ignore;
 mod derived;
+mod slot_cow;
 mod slot_diff;
 mod slot_record;
 
@@ -42,6 +43,7 @@ pub use derived::{
     DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
     read_derived_manifest,
 };
+pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;
 pub use slot_record::{
     SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,

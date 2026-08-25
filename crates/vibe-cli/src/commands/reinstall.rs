@@ -28,6 +28,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
+mod report;
+
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -40,12 +42,12 @@ use vibe_install::InstallSource;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
     ResolvedDep, SlotCheck, SlotVerifier, apply_resolution_with_spec_format,
-    regenerate_boot_with_spec_format,
+    regenerate_boot_with_spec_format, run_post_install_hooks,
 };
 use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, ReinstallArgs};
-use crate::commands::install::build_install_resolver;
+use crate::commands::install::{HookReportView, build_install_resolver, resolve_hook_policy};
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -239,7 +241,7 @@ fn run_regenerate(
 
     let nodes = regenerate_boot_with_spec_format(workspace, spec_format)
         .context("regenerating boot artifacts")?;
-    emit_report(ctx, false, &nodes, &[]);
+    report::emit(ctx, false, &nodes, &[], &HookReportView::empty())?;
     Ok(())
 }
 
@@ -270,20 +272,32 @@ fn run_force(
         )? {
             return Err(InstallError::UserDeclined.into());
         }
-        // `--force` always re-materialises — `SlotIntegrity::Verify` —
-        // though with an empty resolution there is nothing to copy. Hooks
-        // are not wired into `reinstall` yet (PROP-020 install path lands
-        // first); `None` skips hook running.
-        let outcome = apply_resolution_with_spec_format(
+        // `--force` still goes through the install-family hook policy, even
+        // though an empty resolution can schedule no hooks.
+        let hook_policy = resolve_hook_policy(ctx, &hook_policy_args(args), &[])?;
+        let mut outcome = apply_resolution_with_spec_format(
             workspace,
             &[],
             SlotIntegrity::Verify,
             spec_format,
             None,
-            None,
+            Some(&hook_policy),
         )
         .context("regenerating the workspace")?;
-        emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
+        let post_install_reports = match outcome.take_post_install_plan() {
+            Some(plan) => {
+                run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
+            }
+            None => Vec::new(),
+        };
+        let hook_reports = HookReportView::new(&outcome.hook_reports, &post_install_reports);
+        report::emit(
+            ctx,
+            true,
+            &outcome.nodes_regenerated,
+            &outcome.pruned,
+            &hook_reports,
+        )?;
         return Ok(());
     }
 
@@ -396,23 +410,37 @@ fn run_force(
                 &cached.source_uri,
                 &workspace.root,
             ),
+            in_place_changed: None,
         });
     }
 
-    // `--force` re-fetched every slot's content; `SlotIntegrity::Verify`
-    // makes `apply_resolution` overwrite every slot rather than trust a
-    // present one — re-materialisation is the whole point of `--force`.
-    // Hooks are not wired into `reinstall` yet; `None` skips hook running.
-    let outcome = apply_resolution_with_spec_format(
+    // Resolve exactly the policy `vibe install` uses before any slot changes.
+    // The apply pass runs pre-install hooks for payload-changing slots and
+    // returns an opaque, one-shot post-install plan for the durable boundary.
+    let hook_policy = resolve_hook_policy(ctx, &hook_policy_args(args), &resolution)?;
+    let mut outcome = apply_resolution_with_spec_format(
         workspace,
         &resolution,
         SlotIntegrity::Verify,
         spec_format,
         Some(&SourceHashes(source_hashes)),
-        None,
+        Some(&hook_policy),
     )
     .context("re-materialising the workspace")?;
-    emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
+    let post_install_reports = match outcome.take_post_install_plan() {
+        Some(plan) => {
+            run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
+        }
+        None => Vec::new(),
+    };
+    let hook_reports = HookReportView::new(&outcome.hook_reports, &post_install_reports);
+    report::emit(
+        ctx,
+        true,
+        &outcome.nodes_regenerated,
+        &outcome.pruned,
+        &hook_reports,
+    )?;
     Ok(())
 }
 
@@ -479,6 +507,14 @@ fn resolver_args() -> InstallArgs {
     }
 }
 
+/// The install-shaped arguments consumed by the shared hook-policy resolver.
+fn hook_policy_args(args: &ReinstallArgs) -> InstallArgs {
+    let mut install_args = resolver_args();
+    install_args.assume_yes = args.assume_yes;
+    install_args.allow_hooks = args.allow_hooks;
+    install_args
+}
+
 /// Interactive confirmation, matching the install / update / uninstall
 /// contract: `--assume-yes`, `--unattended`, and `--json` all imply yes;
 /// a non-TTY with none of those set is a hard error.
@@ -497,54 +533,6 @@ fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str) -> Result<
         .default(false)
         .interact()
         .context("reading user confirmation")
-}
-
-/// Report the outcome — JSON envelope, quiet one-liner, or human summary.
-fn emit_report(
-    ctx: &output::Context,
-    forced: bool,
-    nodes_regenerated: &[String],
-    pruned: &[String],
-) {
-    if ctx.is_json() {
-        let _ = ctx.emit_json(&serde_json::json!({
-            "ok": true,
-            "command": "reinstall",
-            "forced": forced,
-            "nodes_regenerated": nodes_regenerated,
-            "pruned": pruned,
-        }));
-        return;
-    }
-    if ctx.is_quiet() {
-        ctx.summary(&format!(
-            "vibe reinstall: boot artifacts regenerated for {} node{}",
-            nodes_regenerated.len(),
-            if nodes_regenerated.len() == 1 {
-                ""
-            } else {
-                "s"
-            },
-        ));
-        return;
-    }
-    ctx.summary(&format!(
-        "\nReinstalled — regenerated boot artifacts for {} node{}{}.",
-        nodes_regenerated.len(),
-        if nodes_regenerated.len() == 1 {
-            ""
-        } else {
-            "s"
-        },
-        if forced { " from a fresh fetch" } else { "" },
-    ));
-    if !pruned.is_empty() {
-        ctx.step(&format!(
-            "pruned {} stale vibedeps/ slot{}",
-            pruned.len(),
-            if pruned.len() == 1 { "" } else { "s" },
-        ));
-    }
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {

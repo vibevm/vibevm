@@ -315,6 +315,7 @@ impl CachedPackage {
 ///     source_ref: "v1.0.0".to_string(),
 ///     resolved_commit: Some("9e3c1f0a".to_string()),
 ///     content_hash: "sha256:1d3a…".to_string(),
+///     changed: true,
 ///     manifest,
 /// };
 /// // Identity is the resolved commit (§2.5); the tag rode along for the lockfile.
@@ -334,6 +335,9 @@ pub struct InPlaceMaterialised {
     /// walk; identity is the commit). `sha256:` of the empty string when the
     /// backend reported no commit.
     pub content_hash: String,
+    /// Whether this placement created the clone, moved HEAD, or repaired
+    /// tracked/untracked/ignored working-tree state.
+    pub changed: bool,
     /// The slot's manifest, read back after placement.
     pub manifest: vibe_core::manifest::Manifest,
 }

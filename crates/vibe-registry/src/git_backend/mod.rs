@@ -191,6 +191,19 @@ pub trait GitBackend: Send + Sync {
         Ok(None)
     }
 
+    /// Whether tracked, untracked, or ignored working-tree state would be
+    /// repaired by an in-place reset. Test backends with no real checkout are
+    /// clean by default; [`ShellGit`] asks git directly.
+    fn working_tree_dirty(&self, _dest: &Path) -> Result<bool, GitError> {
+        Ok(false)
+    }
+
+    /// Remove untracked and ignored working-tree state for direct in-place
+    /// slots. Generic registry-cache refresh deliberately does not call this.
+    fn clean_worktree(&self, _dest: &Path) -> Result<(), GitError> {
+        Ok(())
+    }
+
     /// List the tag names available on `url` without cloning. Implemented
     /// via `git ls-remote --tags`. Tags annotated with the
     /// `^{}` peeled-form suffix are stripped so the caller sees clean

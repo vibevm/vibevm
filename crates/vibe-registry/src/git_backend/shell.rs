@@ -178,8 +178,7 @@ impl GitBackend for ShellGit {
         }
         // The working tree now matches the target ref; re-sync submodules
         // to the gitlink commits that ref pins (PROP-021 §2.1). `--init`
-        // picks up newly-added submodules, `--recursive` handles nesting,
-        // and the whole step is a no-op on a repo with no submodules.
+        // picks up new submodules; `--recursive` handles nesting and is a no-op otherwise.
         self.run(
             &["submodule", "update", "--init", "--recursive"],
             Some(dest),
@@ -200,6 +199,26 @@ impl GitBackend for ShellGit {
         } else {
             Ok(Some(sha))
         }
+    }
+
+    fn working_tree_dirty(&self, dest: &Path) -> Result<bool, GitError> {
+        self.preflight()?;
+        let output = self.run(
+            &[
+                "status",
+                "--porcelain=v1",
+                "-z",
+                "--untracked-files=normal",
+                "--ignored=matching",
+            ],
+            Some(dest),
+        )?;
+        Ok(!output.stdout.is_empty())
+    }
+
+    fn clean_worktree(&self, dest: &Path) -> Result<(), GitError> {
+        self.preflight()?;
+        self.run(&["clean", "-dfx"], Some(dest)).map(|_| ())
     }
 
     fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {

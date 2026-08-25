@@ -7,6 +7,25 @@
 //! `unwrap`s as test code (matching `install/tests.rs`).
 
 use super::*;
+
+#[test]
+fn generic_interpreter_probe_uses_the_version_flag() {
+    assert_eq!(interpreter_probe_args("bash"), ["--version"]);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_powershell_probe_uses_its_native_command_grammar() {
+    assert_eq!(
+        interpreter_probe_args("powershell"),
+        [
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            "$null = $PSVersionTable.PSVersion"
+        ]
+    );
+}
 use std::fs;
 use std::path::PathBuf;
 

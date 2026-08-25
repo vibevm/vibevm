@@ -115,7 +115,15 @@ impl GitPerPackageRegistry {
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
         let tag = format!("v{}", resolved.version);
+        let existed = slot.join(".git").exists();
+        let before_head = if existed {
+            self.backend.head_commit(slot)?
+        } else {
+            None
+        };
+        let dirty = existed && self.backend.working_tree_dirty(slot)?;
         self.bootstrap_chain_into(&resolved.group, &resolved.name, &tag, slot)?;
+        self.backend.clean_worktree(slot)?;
         let manifest_path = slot.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
@@ -124,13 +132,15 @@ impl GitPerPackageRegistry {
                 reason: "in-place package manifest must carry a [package] table".to_string(),
             });
         }
-        let resolved_commit = self.backend.head_commit(slot).ok().flatten();
+        let resolved_commit = self.backend.head_commit(slot)?;
         let content_hash = commit_content_hash(resolved_commit.as_deref().unwrap_or_default());
+        let changed = !existed || dirty || before_head != resolved_commit;
         Ok(InPlaceMaterialised {
             source_uri: canonical_url,
             source_ref: tag,
             resolved_commit,
             content_hash,
+            changed,
             manifest,
         })
     }

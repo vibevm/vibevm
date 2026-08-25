@@ -34,7 +34,7 @@ use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, UpdateArgs};
 use crate::commands::install::{
-    build_install_resolver, emit_closure_diff, exact_pinned_pkgref, lane_sizes,
+    HookReportView, build_install_resolver, emit_closure_diff, exact_pinned_pkgref, lane_sizes,
 };
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
@@ -191,7 +191,7 @@ pub fn run(
     // incrementally on its own `.git` (PROP-022 §2.4) — a version bump on a
     // giant transfers only changed objects rather than re-cloning the tree. We
     // resolve those nodes here but defer the slot mutation past the confirm.
-    let mut updated: Vec<(CachedPackage, Vec<PackageRef>)> = Vec::new();
+    let mut updated: Vec<(CachedPackage, Vec<PackageRef>, Option<bool>)> = Vec::new();
     let mut pending_in_place: Vec<PendingInPlace> = Vec::new();
     for node in graph.iter() {
         let pkgref = exact_pinned_pkgref(node);
@@ -210,7 +210,7 @@ pub fn run(
             continue;
         }
         let cached = resolver.resolve_and_fetch(&pkgref, &store_root, None)?;
-        updated.push((cached, node.dependencies.clone()));
+        updated.push((cached, node.dependencies.clone(), None));
     }
     let total = updated.len() + pending_in_place.len();
 
@@ -271,7 +271,7 @@ pub fn run(
             is_local: false,
             via_redirect: None,
         };
-        updated.push((cached, p.dependencies));
+        updated.push((cached, p.dependencies, Some(placed.changed)));
     }
 
     // Build the partial resolution for the subtree — the form the shared
@@ -279,7 +279,7 @@ pub fn run(
     // `vibe install` hands to `apply_resolution`).
     let resolution: Vec<ResolvedDep> = updated
         .iter()
-        .map(|(cached, deps)| ResolvedDep {
+        .map(|(cached, deps, in_place_changed)| ResolvedDep {
             kind: cached.package_meta().kind,
             group: cached.resolved.group.clone(),
             name: cached.resolved.name.clone(),
@@ -300,6 +300,7 @@ pub fn run(
                 &cached.source_uri,
                 &workspace.root,
             ),
+            in_place_changed: *in_place_changed,
         })
         .collect();
 
@@ -313,7 +314,7 @@ pub fn run(
     // (an in-place slot is unversioned — nothing to prune), and record the
     // bumps for the report.
     let mut bumps: Vec<String> = Vec::new();
-    for (cached, _) in &updated {
+    for (cached, _, _) in &updated {
         let name = &cached.resolved.name;
         let Some(old_v) = lockfile
             .find(&cached.resolved.group, name)
@@ -339,7 +340,7 @@ pub fn run(
     let source_hashes = SourceHashes(
         updated
             .iter()
-            .map(|(cached, _)| {
+            .map(|(cached, _, _)| {
                 (
                     (cached.resolved.group.clone(), cached.resolved.name.clone()),
                     cached.content_hash.clone(),
@@ -347,7 +348,7 @@ pub fn run(
             })
             .collect(),
     );
-    let subtree = materialise_subtree_with_spec_format(
+    let mut subtree = materialise_subtree_with_spec_format(
         &workspace.root,
         &resolution,
         SlotIntegrity::Verify,
@@ -364,7 +365,7 @@ pub fn run(
     // Replace each subtree package's lockfile entry, carrying the
     // install-scoped metadata (features / language) the version bump does
     // not change.
-    for (cached, deps) in &updated {
+    for (cached, deps, _) in &updated {
         let old = lockfile.find(&cached.resolved.group, &cached.resolved.name);
         let entry = locked_package(cached, deps, old);
         match lockfile
@@ -395,15 +396,15 @@ pub fn run(
 
     // PROP-020 §2.1 — post-install hooks run once the updated packages are
     // durable (lockfile written, boot regenerated).
-    run_post_install_hooks(
-        &workspace.root,
-        &resolution,
-        &subtree.materialised,
-        &hook_policy,
-    )
-    .context("running post-install hooks")?;
+    let post_install_reports = match subtree.take_post_install_plan() {
+        Some(plan) => {
+            run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
+        }
+        None => Vec::new(),
+    };
+    let hook_reports = HookReportView::new(&subtree.hook_reports, &post_install_reports);
 
-    emit_report(ctx, updated.len(), &bumps);
+    emit_report(ctx, updated.len(), &bumps, &hook_reports)?;
     Ok(())
 }
 
@@ -492,34 +493,43 @@ fn locked_package(
     }
 }
 
-fn emit_report(ctx: &output::Context, count: usize, bumps: &[String]) {
+fn emit_report(
+    ctx: &output::Context,
+    count: usize,
+    bumps: &[String],
+    hook_reports: &HookReportView<'_>,
+) -> Result<()> {
     if ctx.is_json() {
-        let _ = ctx.emit_json(&serde_json::json!({
+        ctx.emit_json(&serde_json::json!({
             "ok": true,
             "command": "update",
             "packages_resolved": count,
             "version_bumps": bumps,
-        }));
-        return;
+            "hooks": hook_reports.json(),
+        }))?;
+        return Ok(());
     }
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe update: {count} package{} re-resolved, {} bump{}",
+            "vibe update: {count} package{} re-resolved, {} bump{}{}",
             if count == 1 { "" } else { "s" },
             bumps.len(),
             if bumps.len() == 1 { "" } else { "s" },
+            hook_reports.quiet_suffix(),
         ));
-        return;
+        return Ok(());
     }
     for b in bumps {
         ctx.created(b);
     }
+    hook_reports.render_human(ctx);
     ctx.summary(&format!(
         "\nUpdated {count} package{} ({} version bump{}).",
         if count == 1 { "" } else { "s" },
         bumps.len(),
         if bumps.len() == 1 { "" } else { "s" },
     ));
+    Ok(())
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {

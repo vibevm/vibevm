@@ -58,6 +58,7 @@ pub(super) fn read_materialised(workspace_root: &Path) -> Result<Vec<ResolvedDep
                 // Boot-only re-derivation from materialised slots — never
                 // re-materialises, so the §2.6 mutable-source flag is moot.
                 source_mutable: false,
+                in_place_changed: None,
             });
         }
     }

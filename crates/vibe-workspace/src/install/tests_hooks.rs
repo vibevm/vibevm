@@ -41,6 +41,7 @@ fn dep_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: None,
     };
     (dep, pkg)
 }
@@ -188,6 +189,7 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: None,
     };
     (dep, pkg)
 }
@@ -197,7 +199,7 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
     r = 1
 )]
-fn post_install_runs_for_materialised_slots_and_flags_failure() {
+fn post_install_consumes_an_install_bound_plan_and_flags_failure() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_with_post_hook("wal", "0.3.0");
     // Materialise the slot first (no pre-install) so the post-install script
@@ -213,11 +215,9 @@ fn post_install_runs_for_materialised_slots_and_flags_failure() {
     )
     .unwrap();
 
-    // Runs for the freshly-materialised slot.
+    // Runs for the payload-changing dependency carried by the opaque plan.
     let ran = run_post_install_with(
-        ws.path(),
-        std::slice::from_ref(&dep),
-        &mat.materialised,
+        PostInstallPlan::new(ws.path(), mat.post_install_deps).unwrap(),
         &allow_vibevm(),
         &FakeProbe(vec!["bash".to_string()]),
         &FakeRunner(0),
@@ -227,23 +227,11 @@ fn post_install_runs_for_materialised_slots_and_flags_failure() {
     assert_eq!(ran[0].phase, "post-install");
     assert_eq!(ran[0].status, "ran");
 
-    // A slot absent from the materialised set is skipped entirely.
-    let skipped = run_post_install_with(
-        ws.path(),
-        std::slice::from_ref(&dep),
-        &[],
-        &allow_vibevm(),
-        &FakeProbe(vec!["bash".to_string()]),
-        &FakeRunner(0),
-    )
-    .unwrap();
-    assert!(skipped.is_empty());
+    assert!(PostInstallPlan::new(ws.path(), Vec::new()).is_none());
 
     // A non-zero post-install exit is reported, not fatal (PROP-020 §2.5).
     let flagged = run_post_install_with(
-        ws.path(),
-        std::slice::from_ref(&dep),
-        &mat.materialised,
+        PostInstallPlan::new(ws.path(), vec![dep]).unwrap(),
         &allow_vibevm(),
         &FakeProbe(vec!["bash".to_string()]),
         &FakeRunner(1),
@@ -292,6 +280,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: None,
     };
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -405,6 +394,7 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: None,
     };
     (dep, pkg)
 }
@@ -495,7 +485,7 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
         "boot/wal.md",
         "# wal",
     );
-    let out = materialise_subtree(
+    let mut out = materialise_subtree(
         ws.path(),
         std::slice::from_ref(&dep),
         SlotIntegrity::Verify,
@@ -510,6 +500,8 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
         "stray",
         &ver("0.1.0")
     ));
+    assert!(out.take_post_install_plan().is_some());
+    assert!(out.take_post_install_plan().is_none());
 }
 
 #[test]
@@ -553,6 +545,7 @@ fn already_placed_in_place_slot_runs_hook_without_moving() {
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: Some(true),
     };
 
     let out = materialise_resolution(

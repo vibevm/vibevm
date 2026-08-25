@@ -47,4 +47,13 @@ impl MaterialiseReport {
     pub(crate) fn into_footprint(self) -> Vec<PathBuf> {
         self.footprint
     }
+
+    /// Whether reconciliation changed the materialiser-owned payload.
+    ///
+    /// Record-only identity changes are deliberately excluded: lifecycle
+    /// hooks prepare payload bytes, so they rerun only after an actual write
+    /// or removal.
+    pub(crate) fn payload_changed(&self) -> bool {
+        !self.written.is_empty() || !self.removed.is_empty()
+    }
 }

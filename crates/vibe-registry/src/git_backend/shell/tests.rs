@@ -72,6 +72,34 @@ fn clone_then_update_against_bare_origin() {
 }
 
 #[test]
+fn in_place_reset_detects_and_repairs_tracked_untracked_and_ignored_state() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin(tmp.path());
+    let dest = tmp.path().join("clone");
+    let git = ShellGit::new();
+    git.bootstrap(&bare.to_string_lossy(), "main", &dest)
+        .unwrap();
+
+    fs::write(dest.join("README.md"), "tracked drift\n").unwrap();
+    fs::write(dest.join("untracked.tmp"), "untracked\n").unwrap();
+    fs::write(dest.join(".git/info/exclude"), "ignored.tmp\n").unwrap();
+    fs::write(dest.join("ignored.tmp"), "ignored\n").unwrap();
+    assert!(git.working_tree_dirty(&dest).unwrap());
+
+    git.update(&dest, "main").unwrap();
+    git.clean_worktree(&dest).unwrap();
+
+    assert!(!git.working_tree_dirty(&dest).unwrap());
+    assert!(!dest.join("untracked.tmp").exists());
+    assert!(!dest.join("ignored.tmp").exists());
+    assert_ne!(
+        fs::read_to_string(dest.join("README.md")).unwrap(),
+        "tracked drift\n"
+    );
+}
+
+#[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#lock",
     r = 1

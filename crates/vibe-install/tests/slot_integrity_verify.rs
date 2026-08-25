@@ -541,17 +541,13 @@ fn transformed_verifier_accepts_a_legacy_derived_manifest_without_a_record() {
         legacy.converter_recipe,
         legacy.derived_hash
     );
-    write(
-        &slot,
-        vibe_workspace::vibedeps::DERIVED_MANIFEST_FILENAME,
-        &wire,
-    );
+    let derived_manifest = vibe_workspace::vibedeps::DERIVED_MANIFEST_FILENAME;
+    write(&slot, derived_manifest, &wire);
     let verified = run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
     assert_eq!(verified.outcome.skipped, vec![SLOT_A, SLOT_B]);
     assert!(verified.outcome.materialised.is_empty());
     assert!(verified.outcome.integrity_warnings.is_empty());
 }
-
 #[test]
 fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
     let outer = TempDir::new().unwrap();
@@ -576,7 +572,6 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         ),
         "schema = 1\n",
     );
-
     let pkgref = PackageRef::parse("org.vibevm/pkg-b").unwrap();
     let cached = source
         .resolve_and_fetch(&pkgref, outer.path(), None)
@@ -593,6 +588,7 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         admitted_by: None,
         via_override: None,
         source_mutable: false,
+        in_place_changed: None,
     };
     let verifier =
         production_slot_verify::RegistrySlotVerifier::from_fetched(&[fetched::Fetched { cached }]);

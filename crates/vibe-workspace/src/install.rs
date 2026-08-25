@@ -41,11 +41,10 @@ pub use bootgen::desubstitute_covered_units;
 pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
-pub use model::{InstallOutcome, ResolvedDep, SlotCheck, SlotVerifier};
+pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};
 
-use hooks_run::SubtreeOutcome;
-use hooks_run::run_dep_hook;
 pub use hooks_run::run_post_install_hooks;
+use hooks_run::{SubtreeOutcome, run_pre_install_hook};
 
 pub use bootgen::verify_boot_graph;
 pub use bootgen::{
@@ -143,6 +142,7 @@ pub fn apply_resolution_with_spec_format(
         materialised,
         skipped,
         integrity_warnings,
+        post_install_deps,
         hook_reports,
     } = materialise_resolution_with_spec_format(
         &workspace.root,
@@ -174,19 +174,19 @@ pub fn apply_resolution_with_spec_format(
         integrity_warnings,
         pruned,
         nodes_regenerated,
+        post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
         hook_reports,
     })
 }
 
-/// The slot bookkeeping [`apply_resolution`] needs back from the materialise
-/// pass: which slots it wrote, which it trusted-and-skipped (PROP-011 §2.3),
-/// the warn lines a `verify`-mode divergence produced, and the `pre-install`
-/// hook reports it gathered (PROP-020 §2.1).
+/// Internal materialisation, integrity, and hook-scheduling bookkeeping.
+/// Public outcome reporting stays separate from hook eligibility.
 #[derive(Debug)]
 struct Materialised {
     materialised: Vec<String>,
     skipped: Vec<String>,
     integrity_warnings: Vec<String>,
+    post_install_deps: Vec<ResolvedDep>,
     hook_reports: Vec<HookReport>,
 }
 
@@ -223,23 +223,12 @@ fn materialise_resolution(
     )
 }
 
-/// Materialise a resolution into dependency slots and run each freshly-populated
-/// slot's `pre-install` hook (PROP-009 §2.7, PROP-020 §2.1). The interpreter
-/// `probe` and process `runner` are seams so the hook paths — run, skip, and
-/// the pre-install-failure rollback — are unit-tested without spawning
-/// processes.
-///
-/// PROP-011 §2.3: an identity-current present slot is trusted and skipped
-/// under [`SlotIntegrity::TrustPresence`]. Immutable sources earn identity
-/// freshness from the resolved version and representation; mutable `file://`
-/// sources additionally require a valid slot record whose source hash matches
-/// the freshly-fetched hash. Under [`SlotIntegrity::Verify`] an eligible slot
-/// is trusted only when the `slot_verifier` seam confirms its payload (a
-/// divergence re-materialises it and warns; no verifier keeps the
-/// rematerialise discipline). Only a new, changed, or untrusted dependency
-/// materialises and re-runs hooks (a skipped slot was never reset, so its hook
-/// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
-/// removes the offending slot and aborts (PROP-020 §2.5).
+/// Materialise a resolution and run `pre-install` after a nonempty payload
+/// diff (PROP-009 §2.7, PROP-020 §2.1). Injectable seams cover hook execution
+/// and the PROP-011 integrity check. Identity-current slots may be skipped;
+/// verification divergence reconciles and warns. Reconciliation reporting is
+/// independent: identity-only work is materialised but runs no hook. A failed
+/// `pre-install` removes the offending slot and aborts (PROP-020 §2.5).
 fn materialise_resolution_with_spec_format(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -256,6 +245,7 @@ fn materialise_resolution_with_spec_format(
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
     let mut integrity_warnings = Vec::new();
+    let mut post_install_deps = Vec::new();
     let mut hook_reports = Vec::new();
     for dep in resolution {
         // PROP-022 §2.4 — an in-place package is a project-local git working
@@ -295,25 +285,25 @@ fn materialise_resolution_with_spec_format(
                 )?;
                 vibedeps::ensure_gitignored(workspace_root, &rel)?;
             }
-            // PROP-020 §2.1 — run the pre-install hook against the fresh
-            // in-place working tree. The re-clone / incremental update IS the
-            // §2.4 reset, so the hook stays a pure function of the upstream
-            // content; a failure rolls the slot back (PROP-020 §2.5).
+            let changed = if already_placed {
+                dep.in_place_changed.unwrap_or(true)
+            } else {
+                true
+            };
+            if !changed {
+                skipped.push(rel);
+                continue;
+            }
+            // In-place keeps its git-native reset/eligibility semantics.
+            post_install_deps.push(dep.clone());
             if let Some(policy) = hooks {
-                match run_dep_hook(
-                    HookPhase::PreInstall,
-                    dep,
-                    workspace_root,
-                    policy,
-                    probe,
-                    runner,
-                ) {
+                match run_pre_install_hook(dep, workspace_root, policy, probe, runner) {
                     Ok(Some(report)) => hook_reports.push(report),
                     Ok(None) => {}
                     Err(err) => {
                         let _ =
                             vibedeps::remove_in_place_slot(workspace_root, &dep.group, &dep.name);
-                        return Err(WorkspaceError::from(err));
+                        return Err(err);
                     }
                 }
             }
@@ -379,7 +369,7 @@ fn materialise_resolution_with_spec_format(
             continue;
         }
         let source_hash = required_source_hash(dep)?;
-        let _materialise_report = vibedeps::materialise_with_spec_format_report(
+        let materialise_report = vibedeps::materialise_with_spec_format_report(
             workspace_root,
             &dep.group,
             &dep.name,
@@ -389,23 +379,22 @@ fn materialise_resolution_with_spec_format(
             spec_format,
             source_hash,
         )?;
-        if let Some(policy) = hooks {
-            match run_dep_hook(
-                HookPhase::PreInstall,
-                dep,
-                workspace_root,
-                policy,
-                probe,
-                runner,
-            ) {
-                Ok(Some(report)) => hook_reports.push(report),
-                Ok(None) => {}
-                Err(err) => {
-                    // PROP-020 §2.5 — preparation failed; vibevm never uses a
-                    // half-prepared slot, so roll it back before surfacing.
-                    let _ =
-                        vibedeps::remove_slot(workspace_root, &dep.group, &dep.name, &dep.version);
-                    return Err(WorkspaceError::from(err));
+        if materialise_report.payload_changed() {
+            post_install_deps.push(dep.clone());
+            if let Some(policy) = hooks {
+                match run_pre_install_hook(dep, workspace_root, policy, probe, runner) {
+                    Ok(Some(report)) => hook_reports.push(report),
+                    Ok(None) => {}
+                    Err(err) => {
+                        // A failed preparation never leaves a half-ready slot.
+                        let _ = vibedeps::remove_slot(
+                            workspace_root,
+                            &dep.group,
+                            &dep.name,
+                            &dep.version,
+                        );
+                        return Err(err);
+                    }
                 }
             }
         }
@@ -415,6 +404,7 @@ fn materialise_resolution_with_spec_format(
         materialised,
         skipped,
         integrity_warnings,
+        post_install_deps,
         hook_reports,
     })
 }
@@ -432,8 +422,8 @@ fn required_source_hash(dep: &ResolvedDep) -> Result<&ContentHash, WorkspaceErro
 }
 
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
-/// — into dependency slots and run each freshly-materialised slot's `pre-install`
-/// hook (PROP-020 §2.1), the same placement + hook flow [`apply_resolution`]
+/// — into dependency slots and run `pre-install` for each payload-changing slot
+/// (PROP-020 §2.1), the same placement + hook flow [`apply_resolution`]
 /// performs (copy / hardlink / in-place move + rollback), but
 /// **without** pruning unrelated slots or regenerating boot. A scoped update
 /// touches only the named subtree, so the caller removes any superseded slots
@@ -471,6 +461,7 @@ pub fn materialise_subtree_with_spec_format(
         materialised,
         skipped,
         integrity_warnings,
+        post_install_deps,
         hook_reports,
     } = materialise_resolution_with_spec_format(
         workspace_root,
@@ -488,6 +479,7 @@ pub fn materialise_subtree_with_spec_format(
         materialised,
         skipped,
         integrity_warnings,
+        post_install_plan: PostInstallPlan::new(workspace_root, post_install_deps),
         hook_reports,
     })
 }

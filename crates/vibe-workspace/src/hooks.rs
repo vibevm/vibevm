@@ -196,10 +196,23 @@ pub struct SystemProbe;
 impl InterpreterProbe for SystemProbe {
     fn has(&self, program: &str) -> bool {
         Command::new(program)
-            .arg("--version")
+            .args(interpreter_probe_args(program))
             .output()
             .map(|o| o.status.success())
             .unwrap_or(false)
+    }
+}
+
+fn interpreter_probe_args(program: &str) -> &'static [&'static str] {
+    if cfg!(windows) && program.eq_ignore_ascii_case("powershell") {
+        &[
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            "$null = $PSVersionTable.PSVersion",
+        ]
+    } else {
+        &["--version"]
     }
 }
 

@@ -52,6 +52,11 @@ pub struct ResolvedDep {
     /// immutable remote-registry sources and boot-only disk re-derivations.
     /// `in-place` (PROP-022) packages take their separate update branch.
     pub source_mutable: bool,
+    /// Exact change evidence for an already-placed `in-place` slot. `Some`
+    /// comes only from the registry's post-confirmation git refresh; `None`
+    /// is every copy/hardlink dependency and every fresh clone still awaiting
+    /// placement.
+    pub in_place_changed: Option<bool>,
 }
 
 /// The verdict of a `slot_integrity = verify` spot-check on a present
@@ -142,8 +147,34 @@ pub trait SlotVerifier {
     }
 }
 
+/// One-shot authority to run exactly the post-install hooks selected by one
+/// materialisation pass.
+///
+/// The plan binds the workspace root to owned clones of the eligible resolved
+/// dependencies. It has no public constructor or fields and is consumed by
+/// [`super::run_post_install_hooks`], so a caller cannot combine slot labels
+/// from one install with a different resolution or workspace.
+#[derive(Debug)]
+pub struct PostInstallPlan {
+    workspace_root: PathBuf,
+    eligible_deps: Vec<ResolvedDep>,
+}
+
+impl PostInstallPlan {
+    pub(super) fn new(workspace_root: &Path, eligible_deps: Vec<ResolvedDep>) -> Option<Self> {
+        (!eligible_deps.is_empty()).then(|| Self {
+            workspace_root: workspace_root.to_path_buf(),
+            eligible_deps,
+        })
+    }
+
+    pub(super) fn into_parts(self) -> (PathBuf, Vec<ResolvedDep>) {
+        (self.workspace_root, self.eligible_deps)
+    }
+}
+
 /// What [`apply_resolution`] did — for the caller to report.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct InstallOutcome {
     /// Dependency-slot paths materialised this run — a new or version-bumped
     /// dependency, or a present slot whose recorded footprint was reconciled.
@@ -166,11 +197,25 @@ pub struct InstallOutcome {
     pub pruned: Vec<String>,
     /// `rel_path` of every node whose boot artifacts were regenerated.
     pub nodes_regenerated: Vec<String>,
+    /// One-shot post-install authority, deliberately excluded from the public
+    /// reporting surface.
+    pub(super) post_install_plan: Option<PostInstallPlan>,
     /// Structured reports from the `pre-install` hooks that ran this install
-    /// (PROP-020 §2.1) — one per freshly-materialised package that declares a
+    /// (PROP-020 §2.1) — one per payload-changing package that declares a
     /// `pre-install` script. Empty when no package declares hooks or hook
     /// running was not requested (`hooks = None`). Each report is `ran` /
     /// `skipped-needs-consent`; the CLI renders them so a skipped hook is
     /// surfaced, never silent.
     pub hook_reports: Vec<HookReport>,
+}
+
+impl InstallOutcome {
+    /// Take the post-install plan produced by this install, at most once.
+    ///
+    /// `None` means either no dependency changed eligible payload or the plan
+    /// was already taken. The returned value is consumed by
+    /// [`super::run_post_install_hooks`].
+    pub fn take_post_install_plan(&mut self) -> Option<PostInstallPlan> {
+        self.post_install_plan.take()
+    }
 }
