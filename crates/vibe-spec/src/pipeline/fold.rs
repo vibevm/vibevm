@@ -2,13 +2,14 @@
 //! out of the parent [`pipeline`](super) module along the responsibility seam so
 //! neither file breaches the 600-line budget (`conform.toml` `max_file_lines`).
 //!
-//! The parent composes the migrated parse schedule with the legacy close
-//! continuation (topo/source-merge/embed → emit), owns the error layer, the
-//! per-node qualification, and the short-link rewriting; this submodule holds
-//! the recursive fold closure itself and the pre-fold source-section collision
-//! gate (B-056) — the two pieces that walk the `#source` edges and need each
-//! source's tree separate from the contract's.
+//! The parent composes the migrated parse/close schedule with the legacy
+//! source-merge/embed → emit continuation, owns the error layer, the per-node
+//! qualification, and the short-link rewriting; this submodule holds the
+//! recursive fold closure itself and the pre-fold source-section collision gate
+//! (B-056) — the two pieces that walk `#source` edges and need each source's
+//! tree separate from the contract's.
 
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
@@ -20,6 +21,41 @@ use crate::merge::fold_sources;
 use crate::use_graph::{UseGraphError, source_addresses, source_fold_order};
 
 use super::CompileError;
+
+/// One observation of every `#source` pattern during a legacy fold.
+///
+/// The fold guard and the merge traversal both ask `source_addresses`; this
+/// wrapper makes those two reads share one expansion result. Until `merge`
+/// becomes a named pass, this legacy cell is the sole expansion owner.
+struct ExpansionCacheSource<'a, S> {
+    source: &'a S,
+    expansions: RefCell<HashMap<String, Result<Vec<SpecAddress>, String>>>,
+}
+
+impl<'a, S> ExpansionCacheSource<'a, S> {
+    fn new(source: &'a S) -> Self {
+        Self {
+            source,
+            expansions: RefCell::new(HashMap::new()),
+        }
+    }
+}
+
+impl<S: SectionSource> SectionSource for ExpansionCacheSource<'_, S> {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        self.source.section_text(address)
+    }
+
+    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        let key = address.without_pin();
+        if let Some(result) = self.expansions.borrow().get(&key) {
+            return result.clone();
+        }
+        let result = self.source.expand_pattern(address);
+        self.expansions.borrow_mut().insert(key, result.clone());
+        result
+    }
+}
 
 /// Phase 3 — fold a node's whole `#source` closure into one body (PROP-035
 /// §7.3, §8 phase 3), **recursively**: a source that itself declares `#source`
@@ -68,6 +104,7 @@ pub(super) fn fold_source_closure(
     addr: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<String, CompileError> {
+    let source = ExpansionCacheSource::new(source);
     // РТ-4: the guard walks the `#source` edges BEFORE any fold text is loaded,
     // so an unreachable source surfaces here as `UseGraphError::Unresolved`
     // (naming that source) — measured: this path fires first, not the per-node
@@ -76,7 +113,7 @@ pub(super) fn fold_source_closure(
     // stable (a `#source` that won't load is a load failure, not a graph-
     // ordering one) and the seed-level addr attribution is preserved; a true
     // cycle stays a graph error and propagates as `CompileError::UseGraph`.
-    let order = source_fold_order(addr, source).map_err(|e| match e {
+    let order = source_fold_order(addr, &source).map_err(|e| match e {
         UseGraphError::Unresolved { addr, reason } => CompileError::Unresolved { addr, reason },
         other => CompileError::UseGraph(other),
     })?;
@@ -128,7 +165,7 @@ pub(super) fn fold_source_closure(
         //       lost: it lives where the member was first inlined (the first
         //       parent the fold order reached through it), and that parent's body
         //       reaches the seed by the same recursive inclusion.
-        let member_trees: Vec<DocTree> = source_addresses(&text, source)
+        let member_trees: Vec<DocTree> = source_addresses(&text, &source)
             .map_err(|e| match e {
                 UseGraphError::Unresolved { addr, reason } => {
                     CompileError::Unresolved { addr, reason }

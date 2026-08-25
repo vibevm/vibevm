@@ -18,8 +18,6 @@
 //! three-colour walk over `#source` alone is exposed as [`source_fold_order`]
 //! for the contract→impl fold — one traverser, two edge sets.
 
-use std::collections::HashMap;
-
 use crate::address::SpecAddress;
 use crate::directives::{DirectiveKind, Directives};
 use crate::embed::SectionSource;
@@ -33,23 +31,6 @@ pub enum UseGraphError {
     Unresolved { addr: String, reason: String },
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Color {
-    Gray,
-    Black,
-}
-
-/// Which edges a walk follows. The cycle law — three-colour DFS, contract-only
-/// loop admission, dedup by reach — is shared verbatim; only the edge set
-/// differs. One `visit` body serves both, parameterised by this.
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum EdgeKind {
-    /// `#use` directives + `@spec` in-place uses (§7.2 / §7.4) — the link edge.
-    Use,
-    /// `#source` directives (§7.3) — the contract→impl fold edge.
-    Source,
-}
-
 /// Walk the use-graph reachable from `seed` and return its node keys
 /// (`SpecAddress::without_pin`) in topological order — every dependency before
 /// its dependents, `seed` last. Deduplicated: a node reached by several paths
@@ -58,18 +39,15 @@ pub fn topo_order_from(
     seed: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<Vec<String>, UseGraphError> {
-    let mut state: HashMap<String, Color> = HashMap::new();
-    let mut order = Vec::new();
-    let mut path = Vec::new();
-    visit(
-        seed,
-        source,
-        &mut state,
-        &mut order,
-        &mut path,
-        EdgeKind::Use,
-    )?;
-    Ok(order)
+    topology::order_by(seed, |addr| {
+        let text = source
+            .section_text(addr)
+            .map_err(|reason| UseGraphError::Unresolved {
+                addr: addr.to_string(),
+                reason,
+            })?;
+        Ok(use_addresses(&Directives::parse(&text)))
+    })
 }
 
 /// Walk the `#source` edges reachable from `seed` (PROP-035 §7.3) and return
@@ -85,94 +63,27 @@ pub fn source_fold_order(
     seed: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<Vec<String>, UseGraphError> {
-    let mut state: HashMap<String, Color> = HashMap::new();
-    let mut order = Vec::new();
-    let mut path = Vec::new();
-    visit(
-        seed,
-        source,
-        &mut state,
-        &mut order,
-        &mut path,
-        EdgeKind::Source,
-    )?;
-    Ok(order)
+    topology::order_by(seed, |addr| {
+        let text = source
+            .section_text(addr)
+            .map_err(|reason| UseGraphError::Unresolved {
+                addr: addr.to_string(),
+                reason,
+            })?;
+        source_addresses(&text, source)
+    })
 }
 
-fn visit(
-    addr: &SpecAddress,
-    source: &impl SectionSource,
-    state: &mut HashMap<String, Color>,
-    order: &mut Vec<String>,
-    path: &mut Vec<String>,
-    kind: EdgeKind,
-) -> Result<(), UseGraphError> {
-    let key = addr.without_pin();
-    match state.get(&key) {
-        Some(Color::Black) => return Ok(()),
-        Some(Color::Gray) => {
-            // Back-edge to a node still on the stack: a cycle. PROP-035 §9 makes
-            // it legal when every node on the loop is a contract (the
-            // forward-declaration case) — admit it by not re-entering the edge.
-            // A loop touching any source node is a hard error.
-            let start = path.iter().position(|k| *k == key).unwrap_or(0);
-            let loop_nodes = &path[start..];
-            if is_contract(&key) && loop_nodes.iter().all(|k| is_contract(k)) {
-                return Ok(());
-            }
-            let mut cycle = loop_nodes.to_vec();
-            cycle.push(key);
-            return Err(UseGraphError::Cycle(cycle));
-        }
-        None => {}
-    }
-
-    state.insert(key.clone(), Color::Gray);
-    path.push(key.clone());
-
-    let text = source
-        .section_text(addr)
-        .map_err(|reason| UseGraphError::Unresolved {
-            addr: addr.to_string(),
-            reason,
-        })?;
-
-    // Edges to follow, selected by `kind`. `Use` follows explicit `#use`
-    // declarations (§7.2) — and ONLY those: an `@spec://…` in-place use
-    // (§7.4) is the AGENT's mandatory read, not a compiler splice. The
-    // address itself is the compiled artefact — AOT-splicing every `@spec`
-    // target multiplied the host lane tenfold (250 KB → 2.5 MB, the
-    // ##OPEN-CLOSURE-EXPLOSION risk realised, 2026-08-24), where the §2
-    // equivalence invariant is carried by the agent's read obligation
-    // instead. `Source` follows only `#source` (§7.3) — and every such edge
-    // passes through [`source_addresses`], the ONE place that knows a
-    // `#source` may carry a pattern (a glob expands to its sorted members, a
-    // point address to itself), flattened in declaration order. Owning the
-    // addresses (rather than borrowing the parsed directives) is what lets
-    // an expanded glob contribute addresses no directive ever held.
-    let edges: Vec<SpecAddress> = match kind {
-        EdgeKind::Use => {
-            let directives = Directives::parse(&text);
-            let mut e: Vec<(usize, SpecAddress)> = directives
-                .directives
-                .iter()
-                .filter(|d| d.kind == DirectiveKind::Use)
-                .map(|d| (d.line, d.address.clone()))
-                .collect();
-            e.sort_by_key(|(line, _)| *line);
-            e.into_iter().map(|(_, a)| a).collect()
-        }
-        EdgeKind::Source => source_addresses(&text, source)?,
-    };
-
-    for target in &edges {
-        visit(target, source, state, order, path, kind)?;
-    }
-
-    state.insert(key.clone(), Color::Black);
-    path.pop();
-    order.push(key);
-    Ok(())
+/// Explicit `#use` targets in declaration order.
+pub(crate) fn use_addresses(directives: &Directives) -> Vec<SpecAddress> {
+    let mut edges: Vec<(usize, SpecAddress)> = directives
+        .directives
+        .iter()
+        .filter(|directive| directive.kind == DirectiveKind::Use)
+        .map(|directive| (directive.line, directive.address.clone()))
+        .collect();
+    edges.sort_by_key(|(line, _)| *line);
+    edges.into_iter().map(|(_, address)| address).collect()
 }
 
 /// The concrete `#source` addresses a document declares, in declaration order —
@@ -215,13 +126,7 @@ pub(crate) fn source_addresses(
     Ok(out)
 }
 
-/// A node is a contract if its doc-path has a `contract` segment (PROP-035 §4) —
-/// the layer where a `#use` cycle is a legal forward declaration (§9).
-fn is_contract(key: &str) -> bool {
-    SpecAddress::parse(key)
-        .map(|addr| addr.doc_path.split('/').any(|seg| seg == "contract"))
-        .unwrap_or(false)
-}
+pub(crate) mod topology;
 
 #[cfg(test)]
 mod tests {

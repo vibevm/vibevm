@@ -16,6 +16,8 @@ use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 use std::ops::Range;
 
+use crate::directives::Directives;
+
 /// An index into a [`DocTree`]'s node arena.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct NodeId(usize);
@@ -70,6 +72,7 @@ pub struct DocTree {
     anchors: HashMap<String, NodeId>,
     duplicate_anchors: Vec<String>,
     lines: Vec<String>,
+    directives: Box<Directives>,
 }
 
 impl DocTree {
@@ -78,6 +81,7 @@ impl DocTree {
     /// occurrence in the index and records the collision (see
     /// [`duplicate_anchors`](Self::duplicate_anchors)).
     pub fn parse(source: &str) -> Self {
+        let directives = Directives::parse(source);
         let lines: Vec<String> = source.lines().map(String::from).collect();
         let fenced = fence_mask(&lines);
 
@@ -195,6 +199,7 @@ impl DocTree {
             anchors,
             duplicate_anchors,
             lines,
+            directives: Box::new(directives),
         }
     }
 
@@ -243,6 +248,15 @@ impl DocTree {
     /// empty slice means every anchor is unique.
     pub fn duplicate_anchors(&self) -> &[String] {
         &self.duplicate_anchors
+    }
+
+    /// Directives parsed from the same document bytes as this tree.
+    ///
+    /// Keeping them in the document carrier lets close discover and order the
+    /// graph without rescanning raw [`crate::compiler::ir::SourceIr`] text or
+    /// creating a second parse side path.
+    pub(crate) fn directives(&self) -> &Directives {
+        &self.directives
     }
 
     /// The qualified heirs of a short anchor name (B-011 §6.1 layer 3): every

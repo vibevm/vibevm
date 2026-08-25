@@ -8,7 +8,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
 use std::collections::BTreeSet;
 
-use super::ir::{DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, SourceIr};
+use super::ir::{
+    ClosureIr, DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, SourceIr,
+};
 use super::pass::{
     AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
 };
@@ -16,6 +18,7 @@ use super::pass::{
 const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Document);
 const DOCUMENT_DOCUMENT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Document);
 const DOCUMENT_ARTIFACT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Artifact);
+const CLOSURE_ARTIFACT: IrShape = IrShape::new(IrLevel::Closure, IrCardinality::Artifact);
 const EMITTED_ARTIFACT: IrShape = IrShape::new(IrLevel::Emitted, IrCardinality::Artifact);
 
 /// The typed cardinality boundary between per-document and per-artifact work.
@@ -135,26 +138,76 @@ impl CompilerPipeline {
         self.run_documents_unchecked(sources)
     }
 
+    /// Run the per-document segment for one newly discovered addressed source.
+    ///
+    /// Close discovers a finite worklist from parsed directives, so the full
+    /// vector does not exist before the first parse invocation. Every call
+    /// still traverses this manager's declared document segment; gathering is
+    /// explicit and happens exactly once after discovery.
+    pub(crate) fn run_document(
+        &self,
+        source: SourceIr,
+    ) -> Result<DocumentIr, CompilerPipelineError> {
+        self.validate_document_boundaries()?;
+        self.run_document_unchecked(source)
+    }
+
+    /// Cross the one scheduler-owned document/artifact cardinality boundary.
+    pub(crate) fn gather_documents(&self, documents: Vec<DocumentIr>) -> Documents {
+        self.gather.run(documents)
+    }
+
+    /// Run the declared artifact prefix through the named `close` lowering.
+    pub(crate) fn run_to_closure(
+        &self,
+        documents: Documents,
+    ) -> Result<ClosureIr, CompilerPipelineError> {
+        self.expect_boundary(
+            "artifact segment input",
+            DOCUMENT_ARTIFACT,
+            self.artifact.first_input(),
+        )?;
+        self.expect_boundary(
+            "artifact close output",
+            CLOSURE_ARTIFACT,
+            self.artifact.last_output(),
+        )?;
+        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        match output {
+            AnyIr::Closure(closure) => Ok(closure),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "artifact close output",
+                expected: CLOSURE_ARTIFACT,
+                actual: other.shape(),
+            }),
+        }
+    }
+
     fn run_documents_unchecked(
         &self,
         sources: Vec<SourceIr>,
     ) -> Result<Documents, CompilerPipelineError> {
         let mut documents = Vec::with_capacity(sources.len());
         for source in sources {
-            let output = self.document.run(AnyIr::Source(source))?;
-            match output {
-                AnyIr::Document(document) => documents.push(document),
-                other => {
-                    return Err(CompilerPipelineError::UnexpectedCarrier {
-                        boundary: "document segment output",
-                        expected: DOCUMENT_DOCUMENT,
-                        actual: other.shape(),
-                    });
-                }
-            }
+            documents.push(self.run_document_unchecked(source)?);
         }
 
         Ok(self.gather.run(documents))
+    }
+
+    fn run_document_unchecked(
+        &self,
+        source: SourceIr,
+    ) -> Result<DocumentIr, CompilerPipelineError> {
+        let output = self.document.run(AnyIr::Source(source))?;
+        match output {
+            AnyIr::Document(document) => Ok(document),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "document segment output",
+                expected: DOCUMENT_DOCUMENT,
+                actual: other.shape(),
+            }),
+        }
     }
 
     fn validate_boundaries(&self) -> Result<(), CompilerPipelineError> {

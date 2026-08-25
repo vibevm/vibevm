@@ -4,40 +4,156 @@
 //! not a sketch of the future types or their cardinality.
 
 use specmark::verifies;
+use std::cell::{Cell, RefCell};
+use std::collections::HashMap;
 
 use super::tests::MockSource;
 use super::*;
-use crate::compiler::ir::{DocumentAddress, DocumentIr, Documents, SourceFormatId, SourceIr};
-use crate::{DocTree, UseGraphError};
+use crate::compiler::ir::{
+    ArtifactId, ClosureContribution, ClosureDocument, ClosureIr, ClosureNodeId, ContributionMeta,
+    DocumentAddress,
+};
+use crate::{DocTree, UseGraphError, topo_order_from};
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-fn legacy_continuation_emits_the_parsed_tree_not_the_paired_raw_source() {
+fn legacy_continuation_emits_the_close_carrier_body() {
     let key = "spec://org.demo/pkg/boot/entry#root";
     let addr = SpecAddress::parse(key).unwrap();
-    let raw = "# Raw {#raw}\nRAW-BODY\n";
-    let parsed = "# Parsed {#parsed}\nPARSED-BODY\n";
-    let document = DocumentIr::new(
-        SourceIr::new(
-            DocumentAddress::Spec(addr),
-            SourceFormatId::canonical_markdown(),
-            raw,
-        ),
-        DocTree::parse(parsed),
-    );
-    let source = MockSource::new(&[(key, raw)]);
+    let closure = ClosureIr {
+        artifact: ArtifactId::new("static-fragment").unwrap(),
+        nodes: vec![ClosureDocument {
+            address: DocumentAddress::Spec(addr),
+            origin: "org.demo/pkg".to_string(),
+            body: "# Closed {#closed}\nCLOSE-BODY".to_string(),
+        }],
+        edges: Vec::new(),
+        contributions: vec![ClosureContribution::Normal {
+            meta: ContributionMeta {
+                origin: "org.demo/pkg".to_string(),
+                path: "boot/entry".to_string(),
+            },
+            seed: ClosureNodeId(0),
+            emission_order: vec![ClosureNodeId(0)],
+        }],
+        renames: Vec::new(),
+    };
+    let source = MockSource::new(&[(key, "# Raw {#raw}\nRAW-BODY\n")]);
 
-    let (out, renames) = compile_static_continuation(
-        vec![key.to_string()],
-        Documents::new(vec![document]),
-        &source,
-        CompileMode::Plain,
-    )
-    .unwrap();
+    let (out, renames) = compile_static_continuation(closure, &source, CompileMode::Plain).unwrap();
 
-    assert!(out.contains("PARSED-BODY"), "{out}");
+    assert!(out.contains("CLOSE-BODY"), "{out}");
     assert!(!out.contains("RAW-BODY"), "{out}");
     assert!(renames.is_empty());
+}
+
+struct CountingSource {
+    texts: HashMap<String, String>,
+    loads: RefCell<HashMap<String, usize>>,
+}
+
+impl CountingSource {
+    fn new(pairs: &[(&str, &str)]) -> Self {
+        Self {
+            texts: pairs
+                .iter()
+                .map(|(key, text)| ((*key).to_string(), (*text).to_string()))
+                .collect(),
+            loads: RefCell::new(HashMap::new()),
+        }
+    }
+}
+
+impl SectionSource for CountingSource {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        let key = address.without_pin();
+        *self.loads.borrow_mut().entry(key.clone()).or_default() += 1;
+        self.texts
+            .get(&key)
+            .cloned()
+            .ok_or_else(|| "not in counting source".to_string())
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn production_close_reorders_a_diamond_and_loads_each_document_once() {
+    let a = "spec://org.demo/pkg/boot/a#root";
+    let b = "spec://org.demo/pkg/boot/b#root";
+    let c = "spec://org.demo/pkg/boot/c#root";
+    let d = "spec://org.demo/pkg/boot/d#root";
+    let source = CountingSource::new(&[
+        (a, &format!("# A {{#root}}\n#use {b}\n#use {c}\n")),
+        (b, &format!("# B {{#root}}\n#use {d}\n")),
+        (c, &format!("# C {{#root}}\n#use {d}\n")),
+        (d, "# D {#root}\n"),
+    ]);
+
+    let out = compile_static(&SpecAddress::parse(a).unwrap(), &source).unwrap();
+    let marker_positions: Vec<usize> = [d, b, c, a]
+        .into_iter()
+        .map(|key| out.find(&crate::markers::open(key)).unwrap())
+        .collect();
+
+    assert!(marker_positions.windows(2).all(|pair| pair[0] < pair[1]));
+    assert_eq!(
+        source.loads.into_inner(),
+        HashMap::from([
+            (a.to_string(), 1),
+            (b.to_string(), 1),
+            (c.to_string(), 1),
+            (d.to_string(), 1),
+        ])
+    );
+}
+
+struct StatefulExpansionSource {
+    seed: String,
+    member: String,
+    pattern: String,
+    member_address: SpecAddress,
+    expansion_calls: Cell<usize>,
+}
+
+impl SectionSource for StatefulExpansionSource {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        if address.without_pin() == self.member_address.without_pin() {
+            Ok(self.member.clone())
+        } else {
+            Ok(self.seed.clone())
+        }
+    }
+
+    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        assert_eq!(address.without_pin(), self.pattern);
+        let call = self.expansion_calls.get() + 1;
+        self.expansion_calls.set(call);
+        if call == 1 {
+            Ok(vec![self.member_address.clone()])
+        } else {
+            Ok(Vec::new())
+        }
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn legacy_merge_observes_each_source_expansion_once_and_emits_that_observation() {
+    let seed = "spec://org.demo/pkg/contract/api#root";
+    let pattern = "spec://org.demo/plugin-*/source/impl#root";
+    let member = SpecAddress::parse("spec://org.demo/plugin-a/source/impl#root").unwrap();
+    let source = StatefulExpansionSource {
+        seed: format!("# API {{#root}}\n#source {pattern}\nCONTRACT\n"),
+        member: "# Impl {#impl}\nMEMBER-FROM-FIRST-EXPANSION\n".to_string(),
+        pattern: pattern.to_string(),
+        member_address: member,
+        expansion_calls: Cell::new(0),
+    };
+
+    let out = compile_static(&SpecAddress::parse(seed).unwrap(), &source).unwrap();
+
+    assert_eq!(source.expansion_calls.get(), 1);
+    assert!(out.contains("MEMBER-FROM-FIRST-EXPANSION"), "{out}");
 }
 
 #[test]

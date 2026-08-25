@@ -2,10 +2,9 @@
 //!
 //! `compile_static` runs the phases in the fixed order the spec pins:
 //!
-//! 1. **parse** — lower each addressed source through the declared named pass;
-//!    the still-legacy `close` prelude discovers and topo-orders that worklist
-//!    from the seed so every dependency precedes its dependents (§7.2, §8
-//!    phase 2);
+//! 1. **parse / close** — the scheduler loads the finite explicit-`#use`
+//!    worklist; named `parse` lowers each source, then named `close` owns graph
+//!    cycles and dependency-before-dependent order (§7.2, §8 phase 2);
 //! 2. **source-merge** — fold every declared `#source` into `contract`, in
 //!    declaration order (§7.3);
 //! 3. **embed-expand** — splice every `#embed` to a fixed point (§7.1);
@@ -22,16 +21,17 @@
 //! semantics the structural loader is later checked against.
 
 use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fmt::Write as _;
 
-use crate::address::{Authority, SpecAddress, SpecAddressError};
-use crate::compiler::ir::{DocumentAddress, Documents, SourceFormatId, SourceIr};
+use crate::address::{SpecAddress, SpecAddressError};
+use crate::compiler::ir::{ClosureContribution, ClosureIr, DocumentAddress};
 use crate::directives::{DirectiveKind, Directives};
 use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::gate::DuplicateId;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
-use crate::use_graph::{UseGraphError, topo_order_from};
+use crate::use_graph::UseGraphError;
 
 use fold::fold_source_closure;
 
@@ -125,8 +125,8 @@ enum CompileMode {
     QualifyPerNode,
 }
 
-/// The shared phase loop (PROP-035 §8): declared parse schedule → legacy close
-/// continuation (topo/source-merge/embed) → qualify/absorb/link/assemble/emit.
+/// The shared phase loop (PROP-035 §8): declared parse → gather → close
+/// schedule, then the legacy merge/embed/qualify/absorb/link/assemble/emit tail.
 /// In [`CompileMode::QualifyPerNode`] each node is qualified under its own
 /// origin before emission and a second pass resolves cross-node short
 /// references; in [`CompileMode::Plain`] the body is emitted as-authored and
@@ -137,62 +137,55 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    // Graph discovery remains the unmigrated `close` prelude. Its ordered raw
-    // worklist is now lowered by the declared `parse` pass, once per addressed
-    // document, before any later legacy phase sees it.
-    let order = topo_order_from(seed, source)?;
-    let mut parse_inputs = Vec::with_capacity(order.len());
-    for key in &order {
-        let addr = SpecAddress::parse(key)?;
-        let text = source
-            .section_text(&addr)
-            .map_err(|reason| CompileError::Unresolved {
-                addr: key.clone(),
-                reason,
-            })?;
-        parse_inputs.push(SourceIr::new(
-            DocumentAddress::Spec(addr),
-            SourceFormatId::canonical_markdown(),
-            text,
-        ));
-    }
-    let documents = crate::compiler::builtin::parse_sources(parse_inputs);
-    compile_static_continuation(order, documents, source, mode)
+    let closure = crate::compiler::builtin::compile_closure(seed, source)?;
+    compile_static_continuation(closure, source, mode)
 }
 
-/// Bridge from the migrated document level into the still-legacy close and
-/// artifact phases.
+/// Bridge from the migrated closure level into the still-legacy artifact tail.
 ///
-/// The parsed tree is the source of the continuation text. The paired raw
-/// [`SourceIr`] remains in [`crate::compiler::ir::DocumentIr`] for exact-source
-/// identity and future transforms, but bypassing the parse result here is not
-/// permitted: a different parsed tree produces a different compiled body. The
-/// topo keys ride beside the batch unchanged, so marker spelling remains the
-/// exact spelling the pre-refactor loop received (including pin removal).
+/// Close owns topology and stores parsed-tree bodies in dependency-first node
+/// order. The tail reads that carrier directly; the overlay caches only those
+/// use-closure documents. `#source` expansion and `#embed` loading deliberately
+/// fall through to their still-owning legacy cells.
 fn compile_static_continuation(
-    order: Vec<String>,
-    documents: Documents,
+    closure: ClosureIr,
     source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
     let qualify = matches!(mode, CompileMode::QualifyPerNode);
-    let documents = documents.into_vec();
-    assert_eq!(
-        order.len(),
-        documents.len(),
-        "the document schedule must return one result per addressed source"
-    );
-
-    let mut texts = Vec::with_capacity(documents.len());
-    for (key, document) in order.into_iter().zip(documents) {
-        let (parsed_source, tree) = document.into_parts();
-        let (address, _format, _raw_text) = parsed_source.into_parts();
-        let DocumentAddress::Spec(addr) = address else {
-            unreachable!("the one-seed parse worklist contains only spec addresses")
-        };
-        let text = tree.text(tree.root());
-        texts.push((key, addr, text));
-    }
+    let emission_order = match closure.contributions.as_slice() {
+        [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
+        _ => unreachable!("one-seed compatibility close returns one normal contribution"),
+    };
+    let cached_bodies: HashMap<String, String> = closure
+        .nodes
+        .iter()
+        .map(|node| match &node.address {
+            DocumentAddress::Spec(address) => (address.without_pin(), node.body.clone()),
+            DocumentAddress::StaticEntry { .. } => {
+                unreachable!("one-seed compatibility close contains only spec addresses")
+            }
+        })
+        .collect();
+    let closure_source = ClosureSectionSource {
+        cached_bodies: &cached_bodies,
+        fallback: source,
+    };
+    let texts: Vec<(String, SpecAddress, String, String)> = emission_order
+        .into_iter()
+        .map(|node_id| {
+            let node = &closure.nodes[node_id.0];
+            let DocumentAddress::Spec(address) = &node.address else {
+                unreachable!("one-seed compatibility close contains only spec addresses")
+            };
+            (
+                address.without_pin(),
+                address.clone(),
+                node.origin.clone(),
+                node.body.clone(),
+            )
+        })
+        .collect();
 
     // §7.4 READ-ONCE over overlapping spans: two closure nodes of ONE doc
     // may nest (a whole-doc / `#root` node beside a section inside it — the
@@ -204,20 +197,23 @@ fn compile_static_continuation(
     let absorbed: Vec<bool> = texts
         .iter()
         .enumerate()
-        .map(|(i, (_, addr, text))| {
-            texts.iter().enumerate().any(|(j, (_, other, other_text))| {
-                i != j
-                    && addr.authority == other.authority
-                    && addr.doc_path == other.doc_path
-                    && (text.len() < other_text.len() && other_text.contains(text.as_str())
-                        || text == other_text && j < i)
-            })
+        .map(|(i, (_, addr, _, text))| {
+            texts
+                .iter()
+                .enumerate()
+                .any(|(j, (_, other, _, other_text))| {
+                    i != j
+                        && addr.authority == other.authority
+                        && addr.doc_path == other.doc_path
+                        && (text.len() < other_text.len() && other_text.contains(text.as_str())
+                            || text == other_text && j < i)
+                })
         })
         .collect();
 
     let mut out = String::new();
     let mut renames: Vec<(String, RenameEntry)> = Vec::new();
-    for (i, (key, addr, text)) in texts.into_iter().enumerate() {
+    for (i, (key, addr, origin, text)) in texts.into_iter().enumerate() {
         if absorbed[i] {
             continue;
         }
@@ -227,10 +223,10 @@ fn compile_static_continuation(
         // merges into its parent, every node folds once, and a cycle is judged
         // by `source_fold_order`. See [`fold_source_closure`] for the recursion,
         // the legal-cycle forward-declaration rule, and the per-level gate.
-        let folded = fold_source_closure(&text, &addr, source)?;
+        let folded = fold_source_closure(&text, &addr, &closure_source)?;
         // phase 4 — embed over the use/source-resolved body.
         let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
-        let expanded = expand_embeds(&body, source)?;
+        let expanded = expand_embeds(&body, &closure_source)?;
 
         // B-011 §7.4 (PROP-035 §8 phase 5): rewrite every `@!<Alias>` to the
         // full `@spec://<target>` it denotes. The alias table is parsed from the
@@ -251,7 +247,6 @@ fn compile_static_continuation(
         // its own label is resolved within the node; a cross-node short link is
         // left for the second pass below.
         let emitted = if qualify {
-            let origin = node_origin(&addr);
             // Multi-doc closures of ONE package (a contract `@spec`-pulling a
             // sibling doc) would collide on the standard anchors (`root`,
             // `summary`) under a plain origin slug — so a node outside the
@@ -284,18 +279,30 @@ fn compile_static_continuation(
     Ok((out, renames))
 }
 
+struct ClosureSectionSource<'a, S> {
+    cached_bodies: &'a HashMap<String, String>,
+    fallback: &'a S,
+}
+
+impl<S: SectionSource> SectionSource for ClosureSectionSource<'_, S> {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        self.cached_bodies
+            .get(&address.without_pin())
+            .cloned()
+            .map(Ok)
+            .unwrap_or_else(|| self.fallback.section_text(address))
+    }
+
+    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        self.fallback.expand_pattern(address)
+    }
+}
+
 /// The authoring origin of a closure node — `<group>/<name>` for a package, the
 /// host token for the host project (PROP-035 §6). Derived from the node's topo
 /// key by the same authority half `normal_seed` builds a coordinate from, so a
 /// node compiled from another package's `#use` target is qualified under THAT
 /// package's origin, not the entry's (B-006 rider).
-fn node_origin(addr: &SpecAddress) -> String {
-    match &addr.authority {
-        Authority::Host(h) => h.clone(),
-        Authority::Package { group, name, .. } => format!("{group}/{name}"),
-    }
-}
-
 /// The slug-authority a node's labels qualify under. A doc in a package's
 /// contract home — `boot/` (the snippet home) or `contract/` (§4) — keeps
 /// the plain origin (today's names, byte-stable); any other doc appends its
