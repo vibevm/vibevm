@@ -341,11 +341,11 @@ PROP-054 `##IN-SLOT-BUILD` and `##BUILD-PHASE-OWNS-IT`.
 
 Deferred replacement: native extensions and declared binaries build under the
 package's own slot/workspace, with `target/` and `node_modules/` outside the
-shippable tree, outside `.vibe-slot.toml` ownership, and ignored in the vendored
-world. R1 now makes preserving such unrecorded output safe, but the lifecycle
-build phase, native build orchestration, and generated ignore maintenance are
-**later R2/R6 work and are not implemented by the three R1 commits**. Keep the
-PROP-024 facts and PROP-054 native facts at their current statuses for now.
+shippable tree and outside `.vibe-slot.toml` ownership. R1 makes preserving such
+unrecorded output safe; `03f4371d` now maintains the generated vibedeps-root
+ignore rules for the already-shipped PROP-025 binary build. The lifecycle build
+phase and native build orchestration remain later work. Keep the PROP-024 facts
+and PROP-054 native-build facts at their current statuses for now.
 
 ### 6.3 PROP-025 build consent and refresh wording
 
@@ -381,3 +381,135 @@ implemented contract. Do not move its status on R1 evidence.
   lifecycle waves land.
 - Only after the authoritative amendments and R1.4 evidence exist, close
   PROP-054 `##R1-DIFF`; this draft alone is not closure evidence.
+
+## 8. R2/R3 normative conflict queue
+
+This queue records implementation-blocking choices discovered after R1. It
+changes no authoritative status. Policy-independent evidence already landed:
+
+| Evidence | What it proves |
+|---|---|
+| `8d91ccf3`, `eb862d84`, `336db5cf` | nine-phase order, clean-prefixed chains, and all 17 typed extension points |
+| `9b27e7b4`, `d62e9652`, `23d0d439` | cycle-free vocabulary ownership, manifest-validation seam, recursive comment preservation |
+| `b580bd1d` | strict declaration-only `[[extension]]` grammar and real `vibe check` commissioning boundary |
+| `016f0fab` | policy-free, byte-preserving XML-minify kernel; no production binding |
+| `03f4371d` | race-safe generated ignores for existing in-slot binary builds |
+
+### 8.1 Lifecycle-state example omits `generate`
+
+Anchors: PROP-054 `##LIFECYCLES`, `##INVOKE-RUNS-PRIORS`,
+`##REF-LIFECYCLE-TOML`. The normative state example records requested `build`
+as `validate, install, build`, contradicting the closed phase table.
+
+**Recommended ruling:** persist exactly `inclusive_chain(requested)`, therefore
+`validate, install, generate, build`. Treating `chain` as completed-work-only is
+rejected because §14.2 calls it the whole requested chain. Blocks R2.5 goldens.
+
+### 8.2 `[[extension.use]]` is not an independent TOML array
+
+Anchors: `##CONTRIB-GRAMMAR`, `##HOST-ACTIVATION`, §14.1. TOML nests
+`[[extension.use]]` under the current `[[extension]]` row; without such a row it
+is invalid. `b580bd1d` therefore deliberately rejects it.
+
+**Recommended ruling:** keep declarations as `[[extension]]`; spell activations
+`[[extensions.use]]`; keep `[extensions].disable` in that plural namespace.
+Alternatives `[[extension_use]]` and inline arrays are representable but less
+coherent. The current spelling is not representable. Blocks R2.3 onward.
+
+### 8.3 Host identity and ordering
+
+Anchors: `##HOST-ACTIVATION`, `##ORDER-LAW`, `##REF-LIFECYCLE-TOML`.
+Ungrouped projects cannot form `<group>/<name>#<id>`, and separate declaration
+and use arrays cannot preserve a source-interleaved order through serde.
+
+**Recommended ruling:** use an opaque typed host-provider identity rendered as
+`__host__/<project-name>#<id>` (never parse it as `PackageRef`). Within the host
+tier, direct declarations run in their array order, followed by activations in
+their array order. A pure virtual workspace declares no extension. Blocks state
+keys, attribution, registry output, disable, and the R2.8 scenario.
+
+### 8.4 Effective stack versus preset tier
+
+Anchors: `##ORDER-LAW`, `##PRESET-LAW`, `##STACK-CONTRIBUTES-PRESET`. A stack's
+ordinary declarations otherwise look like dependency-tier contributions even
+when the same rows are said to be preset tier.
+
+**Recommended ruling:** classify `phase:*` contributions from the project's
+effective active stack as preset bindings in effective-stack/lock order. Its
+`slot:*` and `compile:*` declarations remain ordinary contributions. Blocks the
+R2.3 order oracle and R2.7 presets.
+
+### 8.5 Install is a world barrier
+
+Anchors: `##ENGINE-ALGORITHM`, `##PHASE-INSTALL`, `##ORDER-LAW`,
+`##ENVELOPE-LAW`. The algorithm currently collects contributions before install
+even though install may create or change the installed world.
+
+**Recommended ruling:** two ritual epochs. Epoch A runs bootstrap built-in
+validate/install. After successful install, reload lock, slots, manifests and
+effective world. Epoch B narrates and executes extension contributions over the
+canonical requested slots, including validate/install contributions, without
+repeating the bootstrap built-ins. Blocks R2.2–R2.8 and native bootstrap.
+
+### 8.6 Clean is terminal and never fresh-skipped
+
+Anchors: `##LIFECYCLES`, `##ORDER-LAW`, `##PHASE-FINGERPRINT`,
+`##PHASE-STATE-HOME`, `##CHAIN-GENERAL`. Generic freshness could skip a
+destructive clean; wiping first also removes providers needed by clean hooks.
+
+**Recommended ruling:** run clean contributions once before the terminal
+built-in wipe; never fresh-skip them; failure stops before the wipe. The wipe is
+a terminator, not a preset contribution, and `.vibe/lifecycle.toml` survives.
+Blocks generalized CleanChain, R2.5 and clean handlers.
+
+### 8.7 What “nine no-op phases” means
+
+Anchors: `##INVOKE-RUNS-PRIORS`, `##PHASE-VALIDATE`, `##PHASE-INSTALL`; TZ R2.2.
+The TZ demo calls all nine rows no-op while validate/install have real built-ins.
+
+**Recommended ruling:** every requested slot is traversed and narrated. “No-op”
+means no extension execution or additional built-in binding in that slot;
+validate/install still perform or report fresh, and the other seven rows may be
+empty. Blocks the CLI output oracle only, not the phase table.
+
+### 8.8 IR and artifact cardinality
+
+Anchors: `##IR-LEVELS`, `##WHOLE-IR-WIRE`, `##IR-REFACTOR`,
+`##REF-IR-UNFROZEN`; evidence `a7a04b69`. Current compiler APIs are one-seed
+fragment compilers while plugin wording promises one whole compilation/artifact.
+
+**Recommended ruling:** `SourceIr` and `DocumentIr` each represent one addressed
+document; the parse worklist yields an explicit `Documents(Vec<DocumentIr>)`
+batch; `ClosureIr` is the ordered multi-seed graph for one final artifact;
+`LaneIr` and `EmittedIr` are each one final artifact including normal/simple
+contributions and frame. Existing `compile_static*` remain one-seed compatibility
+fragment wrappers, not external-pass invocations. Blocks R3.1 and all R4/R6
+artifact-wide work.
+
+## 9. R4 binding blocker discovered by the pure kernel
+
+Anchor: `##TEST-XML-MINIFY`; evidence `016f0fab`. The kernel correctly enables
+XML comment validation and refuses internal `--`. Current committed STATIC.xml
+markers contain exactly that illegal sequence in preamble/tombstone payloads
+such as `<origin-slug>--<original>`. Multi-root framing itself is supported.
+
+**Recommended ruling:** repair the upstream marker encoding to an XML-valid,
+reversible spelling and deliberately update the byte oracles before binding the
+kernel. Do not weaken comment validation: that would make an “XML-safe”
+transform bless output that is not XML. R4.1/R4.2 production binding remains
+blocked after the activation and artifact-cardinality rulings as well.
+
+The characterization suite also records the existing XML `vibe:end` escape
+caused by the historical `vibe:close` filter. That is a separate compiler bug;
+do not silently fold its fix into the transform binding.
+
+## 10. Owner ruling checklist for continuation
+
+- Select hook alternative 3.A (recommended) or 3.B for R1.4.
+- Accept or amend recommendations 8.1–8.8; accepting all authorises the R2/R3
+  architecture described above, not any authoritative status edit.
+- Select the XML marker repair policy in §9 before R4 binding.
+- Keep `##OPEN-CREATE-BUDGET` deferred unless R7 should enforce a budget.
+- Choose `##OPEN-DEPLOY-TARGETS` before R8, as the TZ requires.
+- After rulings, implement and fully gate first; authoritative PROP text/status
+  changes remain an owner-session action using this queue as the draft.
