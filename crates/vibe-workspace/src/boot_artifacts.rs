@@ -590,5 +590,9 @@ mod tests;
 mod tests_inheritance_parity;
 
 #[cfg(test)]
+#[path = "boot_artifacts/tests_ir_characterization.rs"]
+mod tests_ir_characterization;
+
+#[cfg(test)]
 #[path = "boot_artifacts/tests_qualify.rs"]
 mod tests_qualify;

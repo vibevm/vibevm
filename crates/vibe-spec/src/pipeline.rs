@@ -451,6 +451,8 @@ fn rewrite_cross_node_links(
 mod fold;
 
 #[cfg(test)]
+mod characterization_tests;
+#[cfg(test)]
 mod collision_tests;
 #[cfg(test)]
 mod fold_tests;
