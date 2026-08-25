@@ -2,15 +2,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 
 use crate::use_graph::{UseGraphError, use_addresses};
-use crate::{DocTree, SectionSource, SpecAddress};
+use crate::{DirectiveKind, DocTree, SectionSource, SpecAddress};
 
 use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
 use super::ir::{ClosureIr, DocumentAddress, DocumentIr, SourceFormatId, SourceIr};
+use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
+use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
 const PARSE_PASS_NAME: &str = "parse";
 const MARKDOWN_FORMAT: &str = "markdown";
@@ -81,6 +83,9 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(ClosePass::new(seed, close_state.clone()))
             .expect("the static built-in close schedule is valid");
+        pipeline
+            .push_artifact(MergePass::new())
+            .expect("the static built-in merge schedule is valid");
         Self {
             pipeline,
             close_state,
@@ -97,7 +102,10 @@ impl BuiltinSchedule {
         self.close_state.record_failure(address, reason);
     }
 
-    fn close(&self, documents: Vec<DocumentIr>) -> Result<ClosureIr, UseGraphError> {
+    fn close(
+        &self,
+        documents: Vec<DocumentIr>,
+    ) -> Result<ClosureIr, crate::pipeline::CompileError> {
         let documents = self.pipeline.gather_documents(documents);
         match self.pipeline.run_to_closure(documents) {
             Ok(closure) => Ok(closure),
@@ -106,9 +114,19 @@ impl BuiltinSchedule {
             {
                 source
                     .downcast::<UseGraphError>()
-                    .map(|error| Err(*error))
+                    .map(|error| Err(crate::pipeline::CompileError::UseGraph(*error)))
                     .unwrap_or_else(|source| {
                         panic!("the close pass returned an unexpected error type: {source}")
+                    })
+            }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == MERGE_PASS_NAME =>
+            {
+                source
+                    .downcast::<MergePassError>()
+                    .map(|error| Err(error.into_compile_error()))
+                    .unwrap_or_else(|source| {
+                        panic!("the merge pass returned an unexpected error type: {source}")
                     })
             }
             Err(error) => panic!("the private built-in close schedule is invalid: {error}"),
@@ -116,34 +134,97 @@ impl BuiltinSchedule {
     }
 }
 
-/// Compile one compatibility seed's explicit `#use` closure through the
-/// declared parse/gather/close schedule. `#source` and `#embed` resolution stay
-/// exclusively in their legacy tail until their named pass atoms.
-pub(crate) fn compile_closure(
+/// Compile one compatibility seed through parse/gather/close/merge. Source
+/// observations are frozen before gather and interpreted only by merge;
+/// `#embed` stays exclusively in its legacy owner.
+pub(crate) fn compile_merged_closure(
     seed: &SpecAddress,
     source: &impl SectionSource,
-) -> Result<ClosureIr, UseGraphError> {
+) -> Result<ClosureIr, crate::pipeline::CompileError> {
     let schedule = BuiltinSchedule::new(seed.clone());
-    let mut seen = HashSet::new();
-    let mut documents = Vec::new();
-    discover_documents(seed, source, &schedule, &mut seen, &mut documents);
+    let (documents, snapshot) = discover_documents(seed, source, &schedule);
+    schedule.close_state.set_pending_sources(snapshot);
     schedule.close(documents)
 }
 
 fn discover_documents(
+    seed: &SpecAddress,
+    source: &impl SectionSource,
+    schedule: &BuiltinSchedule,
+) -> (Vec<DocumentIr>, SourceResolutionSnapshot) {
+    let mut resolved = BTreeMap::new();
+    let mut failures = BTreeMap::new();
+    let mut discovery_order = Vec::new();
+    let mut use_seen = HashSet::new();
+    let mut use_order = Vec::new();
+    discover_uses(
+        seed,
+        source,
+        schedule,
+        &mut use_seen,
+        &mut use_order,
+        &mut discovery_order,
+        &mut resolved,
+        &mut failures,
+    );
+
+    let mut expansions = BTreeMap::new();
+    let mut source_seen = HashSet::new();
+    for key in use_order.clone() {
+        discover_sources(
+            &key,
+            source,
+            schedule,
+            &mut source_seen,
+            &mut discovery_order,
+            &mut resolved,
+            &mut failures,
+            &mut expansions,
+        );
+    }
+
+    let mut observations = failures;
+    for (key, document) in &resolved {
+        observations.insert(key.clone(), DocumentObservation::Resolved(document.clone()));
+    }
+    let snapshot = SourceResolutionSnapshot {
+        discovery_order: discovery_order.clone(),
+        documents: observations,
+        expansions,
+        explicit_use_keys: use_order.iter().cloned().collect::<BTreeSet<_>>(),
+    };
+    let documents = discovery_order
+        .into_iter()
+        .filter_map(|key| resolved.remove(&key))
+        .collect();
+    (documents, snapshot)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn discover_uses(
     address: &SpecAddress,
     source: &impl SectionSource,
     schedule: &BuiltinSchedule,
     seen: &mut HashSet<String>,
-    documents: &mut Vec<DocumentIr>,
+    use_order: &mut Vec<String>,
+    discovery_order: &mut Vec<String>,
+    resolved: &mut BTreeMap<String, DocumentIr>,
+    failures: &mut BTreeMap<String, DocumentObservation>,
 ) {
     if !seen.insert(address.without_pin()) {
         return;
     }
+    let key = address.without_pin();
     let text = match source.section_text(address) {
         Ok(text) => text,
         Err(reason) => {
-            schedule.record_failure(address, reason);
+            schedule.record_failure(address, reason.clone());
+            failures
+                .entry(key)
+                .or_insert_with(|| DocumentObservation::Failed {
+                    requested: address.clone(),
+                    reason,
+                });
             return;
         }
     };
@@ -153,9 +234,104 @@ fn discover_documents(
         text,
     ));
     let targets = use_addresses(document.tree().directives());
-    documents.push(document);
+    discovery_order.push(key.clone());
+    use_order.push(key.clone());
+    resolved.insert(key, document);
     for target in targets {
-        discover_documents(&target, source, schedule, seen, documents);
+        discover_uses(
+            &target,
+            source,
+            schedule,
+            seen,
+            use_order,
+            discovery_order,
+            resolved,
+            failures,
+        );
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn discover_sources(
+    key: &str,
+    source: &impl SectionSource,
+    schedule: &BuiltinSchedule,
+    seen: &mut HashSet<String>,
+    discovery_order: &mut Vec<String>,
+    resolved: &mut BTreeMap<String, DocumentIr>,
+    failures: &mut BTreeMap<String, DocumentObservation>,
+    expansions: &mut BTreeMap<String, ExpansionObservation>,
+) {
+    if !seen.insert(key.to_string()) {
+        return;
+    }
+    let Some(document) = resolved.get(key) else {
+        return;
+    };
+    let patterns: Vec<SpecAddress> = document
+        .tree()
+        .directives()
+        .directives
+        .iter()
+        .filter(|directive| directive.kind == DirectiveKind::Source)
+        .map(|directive| directive.address.clone())
+        .collect();
+    for pattern in patterns {
+        let pattern_key = pattern.without_pin();
+        if !expansions.contains_key(&pattern_key) {
+            let observation = match source.expand_pattern(&pattern) {
+                Ok(targets) => ExpansionObservation::Resolved {
+                    requested: pattern.clone(),
+                    targets,
+                },
+                Err(reason) => ExpansionObservation::Failed {
+                    requested: pattern.clone(),
+                    reason,
+                },
+            };
+            expansions.insert(pattern_key.clone(), observation);
+        }
+        let targets = match &expansions[&pattern_key] {
+            ExpansionObservation::Resolved { targets, .. } => targets.clone(),
+            ExpansionObservation::Failed { .. } => continue,
+        };
+        for target in targets {
+            let target_key = target.without_pin();
+            if !resolved.contains_key(&target_key) && !failures.contains_key(&target_key) {
+                match source.section_text(&target) {
+                    Ok(text) => {
+                        let document = schedule.parse_source(SourceIr::new(
+                            DocumentAddress::Spec(target.clone()),
+                            SourceFormatId::canonical_markdown(),
+                            text,
+                        ));
+                        discovery_order.push(target_key.clone());
+                        resolved.insert(target_key.clone(), document);
+                    }
+                    Err(reason) => {
+                        failures.insert(
+                            target_key.clone(),
+                            DocumentObservation::Failed {
+                                requested: target.clone(),
+                                reason,
+                            },
+                        );
+                    }
+                }
+            }
+            if resolved.contains_key(&target_key) {
+                discover_sources(
+                    &target_key,
+                    source,
+                    schedule,
+                    seen,
+                    discovery_order,
+                    resolved,
+                    failures,
+                    expansions,
+                );
+            }
+        }
     }
 }
 
@@ -185,7 +361,7 @@ mod tests {
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_prefix_declares_parse_gather_close() {
+    fn production_prefix_declares_parse_gather_close_merge() {
         let pipeline = BuiltinSchedule::new(seed()).pipeline;
         let schedule = pipeline.schedule();
 
@@ -195,12 +371,16 @@ mod tests {
                 ScheduleItem::Pass(parse),
                 ScheduleItem::GatherDocuments,
                 ScheduleItem::Pass(close),
+                ScheduleItem::Pass(merge),
             ] if parse.name.as_str() == PARSE_PASS_NAME
                 && parse.input == SourceIr::SHAPE
                 && parse.output == DocumentIr::SHAPE
                 && close.name.as_str() == CLOSE_PASS_NAME
                 && close.input == super::super::ir::Documents::SHAPE
                 && close.output == ClosureIr::SHAPE
+                && merge.name.as_str() == MERGE_PASS_NAME
+                && merge.input == ClosureIr::SHAPE
+                && merge.output == ClosureIr::SHAPE
         ));
     }
 

@@ -37,7 +37,7 @@ pub enum NodeKind {
 /// `##<ID>` fact leaf. The synthetic root (`NodeId(0)`) is a [`NodeKind::Heading`]
 /// with `level = 0`, no `id`, spanning the whole document (its own body is the
 /// preamble before the first heading).
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Node {
     /// The heading's `{#anchor}` or the fact's `##<ID>`, if it declared one.
     pub id: Option<String>,
@@ -66,7 +66,7 @@ pub struct Node {
 }
 
 /// A parsed document tree plus an anchor index.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DocTree {
     nodes: Vec<Node>,
     anchors: HashMap<String, NodeId>,

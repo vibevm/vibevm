@@ -393,7 +393,7 @@ fn a_source_cycle_between_contracts_compiles() {
     // РТ-1: a `#source` cycle whose every node is a contract is a legal forward
     // declaration (§9). In fold order b's member a is its own ancestor — not yet
     // folded — so a contributes nothing to b (the forward-declaration drop, see
-    // `fold_source_closure`); b still folds into a. No error; both bodies live.
+    // named merge); b still folds into a. No error; both bodies live.
     let src = MockSource::new(&[
         (
             "spec://org.vibevm.demo/lib/contract/a#root",

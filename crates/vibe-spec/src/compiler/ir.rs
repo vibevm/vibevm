@@ -9,6 +9,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
 use crate::{DocTree, RenameEntry, SpecAddress};
 
+use super::source_snapshot::SourceResolutionSnapshot;
+
 /// One of the five progressively lowered compiler representations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum IrLevel {
@@ -153,7 +155,7 @@ impl SourceIr {
 ///
 /// The source stays beside the tree so exact text/newline identity remains
 /// available while the current [`DocTree`] is still a source-span tree.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct DocumentIr {
     source: SourceIr,
     tree: DocTree,
@@ -187,7 +189,7 @@ impl DocumentIr {
 ///
 /// This is a document-level value with artifact cardinality, not a sixth IR
 /// level. Vector order is the deterministic worklist order.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub(crate) struct Documents(Vec<DocumentIr>);
 
 impl Documents {
@@ -273,7 +275,7 @@ pub(crate) enum ArtifactInput {
 }
 
 /// Stable index of a node inside one [`ClosureIr`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) struct ClosureNodeId(pub(crate) usize);
 
 /// One closed document payload.
@@ -286,7 +288,7 @@ pub(crate) struct ClosureNodeId(pub(crate) usize);
 pub(crate) struct ClosureDocument {
     pub(crate) address: DocumentAddress,
     pub(crate) origin: String,
-    pub(crate) body: String,
+    pub(crate) tree: DocTree,
 }
 
 /// The three authored dependency relations represented by the closure.
@@ -322,7 +324,7 @@ pub(crate) enum ClosureContribution {
     },
     Simple {
         meta: ContributionMeta,
-        document: ClosureDocument,
+        document: Box<ClosureDocument>,
     },
 }
 
@@ -338,6 +340,7 @@ pub(crate) struct ClosureIr {
     pub(crate) edges: Vec<ClosureEdge>,
     pub(crate) contributions: Vec<ClosureContribution>,
     pub(crate) renames: Vec<OriginRename>,
+    pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
 }
 
 /// The single shared frame surrounding one assembled lane.

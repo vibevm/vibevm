@@ -27,9 +27,8 @@
 //! not where it is caught, and the post-merge anchor-uniqueness check is not
 //! either: [`crate::gate::first_duplicate`] deliberately tolerates a repeated
 //! heading (indistinguishable from the legitimate `:add` concatenation), and by
-//! the time it runs nothing records which source brought what. The catcher sits
-//! upstream in [`crate::pipeline::fold`], which still holds each source's tree
-//! separately.
+//! the time it runs nothing records which source brought what. The named
+//! compiler merge pass catches it while each source tree is still separate.
 //!
 //! **Per-fact override** (§7.3, fact-inheritance clause 2). Within an `:add`
 //! merge, a fact redeclaring a contract fact's `##<ID>` overrides it: the
@@ -224,10 +223,10 @@ pub fn fold_sources(contract: &DocTree, sources: &[&DocTree]) -> String {
     // Top-level source-only sections, across all sources in slice order. No
     // deduplication between sources: two sources declaring the same source-only
     // anchor both appear. That is an error (a declaration is idempotent, a
-    // definition is not), and it is rejected BEFORE this runs, by
-    // `pipeline::fold::first_source_section_collision` — the only layer that
-    // still knows which source brought which section. The post-merge gate
-    // cannot do it: it tolerates a heading-only repeat on purpose.
+    // definition is not), and the named compiler merge pass rejects it around
+    // this primitive while it still knows which source brought which section.
+    // The post-merge gate cannot do it: it tolerates a heading-only repeat on
+    // purpose.
     for source in sources {
         for &schild in source.children(source.root()) {
             if source.node(schild).kind == NodeKind::Heading

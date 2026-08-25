@@ -281,8 +281,8 @@ fn q6_plain_compile_static_emits_labels_unqualified() {
 // ---- B-056-L4B: a `#source` glob reaches the fold (one edge law, one place) -
 //
 // A `#source` may name a SET — a `*` in the package name — not a file. Both the
-// fold guard (`source_fold_order`) and the fold itself (`fold_source_closure`)
-// now reach a document's `#source` edges through ONE function —
+// source topology and named merge reach a document's `#source` edges through
+// one declaration/expansion law —
 // `use_graph::source_addresses` — which expands each directive (a glob → its
 // sorted members, a point address → itself) in declaration order. These pin that
 // contract: the glob folds its members, expands in place, degrades on an empty

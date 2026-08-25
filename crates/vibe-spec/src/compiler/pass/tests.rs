@@ -31,7 +31,7 @@ fn closure() -> ClosureIr {
                 SpecAddress::parse("spec://org.demo/pkg/boot/entry#root").unwrap(),
             ),
             origin: "org.demo/pkg".to_string(),
-            body: "BODY\n".to_string(),
+            tree: DocTree::parse("BODY\n"),
         }],
         edges: Vec::new(),
         contributions: vec![ClosureContribution::Normal {
@@ -43,6 +43,7 @@ fn closure() -> ClosureIr {
             emission_order: vec![node],
         }],
         renames: Vec::new(),
+        pending_sources: None,
     }
 }
 

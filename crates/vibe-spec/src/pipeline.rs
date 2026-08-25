@@ -33,8 +33,6 @@ use crate::gate::DuplicateId;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
 use crate::use_graph::UseGraphError;
 
-use fold::fold_source_closure;
-
 /// Why static compilation failed.
 #[derive(Debug, thiserror::Error)]
 pub enum CompileError {
@@ -125,8 +123,8 @@ enum CompileMode {
     QualifyPerNode,
 }
 
-/// The shared phase loop (PROP-035 §8): declared parse → gather → close
-/// schedule, then the legacy merge/embed/qualify/absorb/link/assemble/emit tail.
+/// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
+/// schedule, then the legacy embed/qualify/absorb/link/assemble/emit tail.
 /// In [`CompileMode::QualifyPerNode`] each node is qualified under its own
 /// origin before emission and a second pass resolves cross-node short
 /// references; in [`CompileMode::Plain`] the body is emitted as-authored and
@@ -137,16 +135,16 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_closure(seed, source)?;
+    let closure = crate::compiler::builtin::compile_merged_closure(seed, source)?;
     compile_static_continuation(closure, source, mode)
 }
 
 /// Bridge from the migrated closure level into the still-legacy artifact tail.
 ///
-/// Close owns topology and stores parsed-tree bodies in dependency-first node
-/// order. The tail reads that carrier directly; the overlay caches only those
-/// use-closure documents. `#source` expansion and `#embed` loading deliberately
-/// fall through to their still-owning legacy cells.
+/// Close owns explicit-use topology and named merge owns source observation,
+/// replay, folding and graph membership. The tail reads the merged trees
+/// directly; its overlay caches only emitted use-closure documents, so `#embed`
+/// loading still falls through to the legacy embed owner.
 fn compile_static_continuation(
     closure: ClosureIr,
     source: &impl SectionSource,
@@ -157,11 +155,15 @@ fn compile_static_continuation(
         [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
         _ => unreachable!("one-seed compatibility close returns one normal contribution"),
     };
-    let cached_bodies: HashMap<String, String> = closure
-        .nodes
+    let cached_bodies: HashMap<String, String> = emission_order
         .iter()
-        .map(|node| match &node.address {
-            DocumentAddress::Spec(address) => (address.without_pin(), node.body.clone()),
+        .map(|node_id| match &closure.nodes[node_id.0].address {
+            DocumentAddress::Spec(address) => (
+                address.without_pin(),
+                closure.nodes[node_id.0]
+                    .tree
+                    .text(closure.nodes[node_id.0].tree.root()),
+            ),
             DocumentAddress::StaticEntry { .. } => {
                 unreachable!("one-seed compatibility close contains only spec addresses")
             }
@@ -182,7 +184,7 @@ fn compile_static_continuation(
                 address.without_pin(),
                 address.clone(),
                 node.origin.clone(),
-                node.body.clone(),
+                node.tree.text(node.tree.root()),
             )
         })
         .collect();
@@ -218,14 +220,8 @@ fn compile_static_continuation(
             continue;
         }
 
-        // phase 3 — fold the node's whole `#source` closure RECURSIVELY (§7.3,
-        // §8 phase 3): a source that itself declares `#source` folds before it
-        // merges into its parent, every node folds once, and a cycle is judged
-        // by `source_fold_order`. See [`fold_source_closure`] for the recursion,
-        // the legal-cycle forward-declaration rule, and the per-level gate.
-        let folded = fold_source_closure(&text, &addr, &closure_source)?;
-        // phase 4 — embed over the use/source-resolved body.
-        let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
+        // phase 4 — embed over the already source-merged body.
+        let body = strip_directive_lines(&text, &[DirectiveKind::Use, DirectiveKind::Source]);
         let expanded = expand_embeds(&body, &closure_source)?;
 
         // B-011 §7.4 (PROP-035 §8 phase 5): rewrite every `@!<Alias>` to the
@@ -236,7 +232,7 @@ fn compile_static_continuation(
         // lane is then self-describing without the alias table, and resolvable
         // after any future cleaning — the alias binds to the address, never to
         // compiled text.
-        let aliases = Directives::parse(&folded).aliases;
+        let aliases = Directives::parse(&text).aliases;
         let emitted = rewrite_at_bang(&expanded, &aliases);
 
         // B-006 rider (PROP-035 §8 phase 5): in qualified mode each node's
@@ -499,8 +495,6 @@ fn rewrite_cross_node_links(
     Ok(out)
 }
 
-mod fold;
-
 #[cfg(test)]
 mod characterization_tests;
 #[cfg(test)]
@@ -509,5 +503,7 @@ mod collision_tests;
 mod fold_tests;
 #[cfg(test)]
 mod inheritance_parity_tests;
+#[cfg(test)]
+mod merge_characterization_tests;
 #[cfg(test)]
 mod tests;

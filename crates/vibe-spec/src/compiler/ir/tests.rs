@@ -17,7 +17,7 @@ fn node(raw: &str, origin: &str, body: &str) -> ClosureDocument {
     ClosureDocument {
         address: DocumentAddress::Spec(spec(raw)),
         origin: origin.to_string(),
-        body: body.to_string(),
+        tree: DocTree::parse(body),
     }
 }
 
@@ -111,7 +111,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
             path: "vibevm/vibespecs/boot/20-local.md".to_string(),
         },
         origin: "host".to_string(),
-        body: "SIMPLE-AFTER-DOCUMENT-PASSES".to_string(),
+        tree: DocTree::parse("SIMPLE-AFTER-DOCUMENT-PASSES"),
     };
     let closure = ClosureIr {
         artifact: ArtifactId::new("static-xml").unwrap(),
@@ -152,7 +152,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
             },
             ClosureContribution::Simple {
                 meta: meta("host"),
-                document: simple_document,
+                document: Box::new(simple_document),
             },
             ClosureContribution::Normal {
                 meta: meta("org.demo/omega"),
@@ -161,6 +161,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
             },
         ],
         renames: Vec::new(),
+        pending_sources: None,
     };
 
     let ClosureContribution::Normal {
@@ -194,7 +195,10 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         document.address,
         DocumentAddress::StaticEntry { .. }
     ));
-    assert_eq!(document.body, "SIMPLE-AFTER-DOCUMENT-PASSES");
+    assert_eq!(
+        document.tree.text(document.tree.root()),
+        "SIMPLE-AFTER-DOCUMENT-PASSES"
+    );
     assert_eq!(closure.artifact.as_str(), "static-xml");
 }
 

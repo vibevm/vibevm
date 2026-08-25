@@ -25,7 +25,7 @@ fn legacy_continuation_emits_the_close_carrier_body() {
         nodes: vec![ClosureDocument {
             address: DocumentAddress::Spec(addr),
             origin: "org.demo/pkg".to_string(),
-            body: "# Closed {#closed}\nCLOSE-BODY".to_string(),
+            tree: DocTree::parse("# Closed {#closed}\nCLOSE-BODY"),
         }],
         edges: Vec::new(),
         contributions: vec![ClosureContribution::Normal {
@@ -37,6 +37,7 @@ fn legacy_continuation_emits_the_close_carrier_body() {
             emission_order: vec![ClosureNodeId(0)],
         }],
         renames: Vec::new(),
+        pending_sources: None,
     };
     let source = MockSource::new(&[(key, "# Raw {#raw}\nRAW-BODY\n")]);
 
@@ -138,7 +139,7 @@ impl SectionSource for StatefulExpansionSource {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-fn legacy_merge_observes_each_source_expansion_once_and_emits_that_observation() {
+fn named_merge_observes_each_source_expansion_once_and_emits_that_observation() {
     let seed = "spec://org.demo/pkg/contract/api#root";
     let pattern = "spec://org.demo/plugin-*/source/impl#root";
     let member = SpecAddress::parse("spec://org.demo/plugin-a/source/impl#root").unwrap();
@@ -154,6 +155,110 @@ fn legacy_merge_observes_each_source_expansion_once_and_emits_that_observation()
 
     assert_eq!(source.expansion_calls.get(), 1);
     assert!(out.contains("MEMBER-FROM-FIRST-EXPANSION"), "{out}");
+}
+
+struct SharedSourceObservation {
+    texts: HashMap<String, String>,
+    pattern: String,
+    target: SpecAddress,
+    expansion_calls: Cell<usize>,
+    target_loads: Cell<usize>,
+}
+
+impl SectionSource for SharedSourceObservation {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        let key = address.without_pin();
+        if key == self.target.without_pin() {
+            self.target_loads.set(self.target_loads.get() + 1);
+        }
+        self.texts
+            .get(&key)
+            .cloned()
+            .ok_or_else(|| "not in shared source".to_string())
+    }
+
+    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        assert_eq!(address.without_pin(), self.pattern);
+        self.expansion_calls.set(self.expansion_calls.get() + 1);
+        Ok(vec![self.target.clone()])
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn two_use_roots_share_one_expansion_load_and_parse_but_fold_per_root() {
+    let a = "spec://org.demo/pkg/boot/a#root";
+    let b = "spec://org.demo/pkg/boot/b#root";
+    let pattern = "spec://org.demo/plugin-*/source/impl#root";
+    let target = SpecAddress::parse("spec://org.demo/plugin-a/source/impl#root").unwrap();
+    let source = SharedSourceObservation {
+        texts: HashMap::from([
+            (
+                a.to_string(),
+                format!("# A {{#root}}\n#use {b}\n#source {pattern}\n"),
+            ),
+            (b.to_string(), format!("# B {{#root}}\n#source {pattern}\n")),
+            (
+                target.without_pin(),
+                "# Shared source {#shared}\nSHARED-SOURCE-BODY\n".to_string(),
+            ),
+        ]),
+        pattern: pattern.to_string(),
+        target,
+        expansion_calls: Cell::new(0),
+        target_loads: Cell::new(0),
+    };
+
+    crate::compiler::merge::reset_merge_invocations();
+    let out = compile_static(&SpecAddress::parse(a).unwrap(), &source).unwrap();
+
+    assert_eq!(source.expansion_calls.get(), 1);
+    assert_eq!(source.target_loads.get(), 1);
+    assert_eq!(crate::compiler::merge::merge_invocations(), 1);
+    assert_eq!(out.matches("SHARED-SOURCE-BODY").count(), 2, "{out}");
+}
+
+struct SourceEmbedOverlap {
+    seed: String,
+    target: SpecAddress,
+    target_reads: Cell<usize>,
+}
+
+impl SectionSource for SourceEmbedOverlap {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        if address.without_pin() != self.target.without_pin() {
+            return Ok(self.seed.clone());
+        }
+        let read = self.target_reads.get() + 1;
+        self.target_reads.set(read);
+        if read == 1 {
+            Ok("# Source view {#source-view}\nSOURCE-OWNER-VIEW\n".to_string())
+        } else {
+            Ok("# Embed view {#embed-view}\nEMBED-OWNER-VIEW\n".to_string())
+        }
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn source_target_that_is_also_embedded_is_observed_again_by_embed_owner() {
+    let seed = "spec://org.demo/pkg/contract/api#root";
+    let target = SpecAddress::parse("spec://org.demo/pkg/common/shared#root").unwrap();
+    let source = SourceEmbedOverlap {
+        seed: format!(
+            "# API {{#root}}\n#source {}\n#embed {}\n",
+            target.without_pin(),
+            target.without_pin()
+        ),
+        target,
+        target_reads: Cell::new(0),
+    };
+
+    let out = compile_static(&SpecAddress::parse(seed).unwrap(), &source).unwrap();
+
+    assert_eq!(source.target_reads.get(), 2);
+    assert!(out.contains("SOURCE-OWNER-VIEW"), "{out}");
+    assert!(out.contains("EMBED-OWNER-VIEW"), "{out}");
 }
 
 #[test]

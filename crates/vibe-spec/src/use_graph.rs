@@ -91,11 +91,8 @@ pub(crate) fn use_addresses(directives: &Directives) -> Vec<SpecAddress> {
 /// point address to itself) and flattened into one list.
 ///
 /// This is the ONE place that knows a `#source` edge may carry a pattern. The
-/// fold guard ([`source_fold_order`], via [`visit`]) and the pipeline's source
-/// fold ([`fold_source_closure`](crate::pipeline::fold_source_closure)) both
-/// reach a document's `#source` edges through here, so the graph they walk is
-/// identical — a glob that expanded one way for the guard and another for the
-/// fold would build a guard over the wrong graph, and such divergence is silent.
+/// fold guard ([`source_fold_order`]) and the compiler merge pass use this same
+/// declaration/expansion law, so their graphs cannot silently disagree.
 ///
 /// `Directives::parse` collects directives top-to-bottom by source line, so the
 /// iteration order is the author's declaration order; a glob expands *in place*

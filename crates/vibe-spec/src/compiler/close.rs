@@ -13,6 +13,7 @@ use super::ir::{
     ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr, Documents,
 };
 use super::pass::{Pass, PassName};
+use super::source_snapshot::SourceResolutionSnapshot;
 
 pub(crate) const CLOSE_PASS_NAME: &str = "close";
 
@@ -30,6 +31,7 @@ struct LoadFailure {
 #[derive(Debug, Clone, Default)]
 pub(crate) struct CloseState {
     failures: Arc<Mutex<HashMap<String, LoadFailure>>>,
+    pending_sources: Arc<Mutex<Option<SourceResolutionSnapshot>>>,
 }
 
 impl CloseState {
@@ -50,6 +52,23 @@ impl CloseState {
             .expect("close discovery failure map is not poisoned")
             .get(&address.without_pin())
             .cloned()
+    }
+
+    pub(crate) fn set_pending_sources(&self, snapshot: SourceResolutionSnapshot) {
+        let previous = self
+            .pending_sources
+            .lock()
+            .expect("close pending-source state is not poisoned")
+            .replace(snapshot);
+        assert!(previous.is_none(), "pending source snapshot is set once");
+    }
+
+    fn pending_sources(&self) -> SourceResolutionSnapshot {
+        self.pending_sources
+            .lock()
+            .expect("close pending-source state is not poisoned")
+            .clone()
+            .unwrap_or_default()
     }
 }
 
@@ -145,7 +164,7 @@ fn close_documents(
         nodes.push(ClosureDocument {
             origin: document_origin(&address),
             address: DocumentAddress::Spec(address),
-            body: tree.text(tree.root()),
+            tree,
         });
     }
 
@@ -183,6 +202,7 @@ fn close_documents(
             emission_order: (0..order.len()).map(ClosureNodeId).collect(),
         }],
         renames: Vec::new(),
+        pending_sources: Some(state.pending_sources()),
     })
 }
 
