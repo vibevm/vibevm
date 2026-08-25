@@ -5348,9 +5348,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "struct",
-      "line": 52,
+      "line": 53,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 194,
+      "end_line": 195,
       "fingerprint": "tok1:540eb68ee4e57ed310de9d22d08f3debb792a2773aaa1aea2bb5356ca7bdc51d"
     },
     {
@@ -5469,6 +5469,15 @@
       "symbol": "vibe_core::manifest::document::tests::root_package_composes_workspace_and_package",
       "end_line": 155,
       "fingerprint": "tok1:9b53342cd9642516b3617fff3dc2df9c2abbd3d2183098a46520e319512c158d"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/validation.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::manifest::document::validation",
+      "end_line": 3,
+      "fingerprint": "tok1:6462f761e1dab8e366e3c8e54a88f5d226c14f3ee15890c119a6b085e7f37744"
     },
     {
       "crate_name": "vibe-core",
@@ -15069,7 +15078,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 63,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
@@ -15185,6 +15194,14 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root-package",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/validation.rs",
+      "from_symbol": "vibe_core::manifest::document::validation",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-core/src/manifest/i18n.rs",
