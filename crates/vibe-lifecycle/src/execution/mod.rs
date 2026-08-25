@@ -15,6 +15,7 @@ use vibe_wire::generated::lifecycle::e1::context::{
     Artifact, Context, Execution, Io, Project, Run, RunAgentMode, World,
 };
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
+use vibe_wire::generated::lifecycle_state::StateArtifact;
 
 use crate::ExtensionRegistryRow;
 
@@ -40,6 +41,8 @@ pub struct RunMetadata {
     pub force: bool,
     /// Machine-safe id used to isolate scratch paths within this run.
     pub run_id: String,
+    /// Injected RFC3339 run-start clock value persisted in lifecycle state.
+    pub started: String,
 }
 
 /// Mutable state shared by contribution invocations in one world epoch.
@@ -123,12 +126,22 @@ impl ExecutionSession {
         }
     }
 
-    fn dispatch_one(
+    pub fn dispatch_one(
         &mut self,
         phase: &str,
         row: &ExtensionRegistryRow,
     ) -> Result<ContributionOutcome, DispatchError> {
         let envelope = self.envelope_for(phase, row)?;
+        self.dispatch_prepared(row, envelope)
+    }
+
+    /// Dispatch the exact generated envelope whose stable fields were already
+    /// fingerprinted by the caller.
+    pub fn dispatch_prepared(
+        &mut self,
+        row: &ExtensionRegistryRow,
+        envelope: Context,
+    ) -> Result<ContributionOutcome, DispatchError> {
         let reply = match &row.declaration().handler {
             ExtensionHandler::Builtin { name } => BuiltinRegistry::dispatch(name, row, &envelope)?,
             handler => {
@@ -156,10 +169,22 @@ impl ExecutionSession {
                 id: artifact.id.clone(),
                 kind: artifact.kind.clone(),
                 path: artifact.path.clone(),
-                phase: phase.to_string(),
+                phase: envelope.run.phase.clone(),
             });
         }
         Ok(ContributionOutcome { envelope, reply })
+    }
+
+    /// Rehydrate artifacts retained by a fresh execution before downstream
+    /// envelopes/fingerprints are built.
+    pub fn hydrate_artifacts(&mut self, phase: &str, artifacts: &[StateArtifact]) {
+        self.artifacts
+            .extend(artifacts.iter().map(|artifact| Artifact {
+                id: artifact.id.clone(),
+                kind: artifact.kind.clone(),
+                path: artifact.path.clone(),
+                phase: phase.to_string(),
+            }));
     }
 }
 

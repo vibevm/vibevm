@@ -112,7 +112,7 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
-# ── Lifecycle handler wire contracts (2 JTD), PROP-054 §5 ──────────────────
+# ── Lifecycle handler/state wire contracts (3 JTD), PROP-054 §4.3/§5 ───────
 [format.lifecycle-context]
 epoch = 1
 schema = "schemas/lifecycle/e1/context.jtd.json"
@@ -126,6 +126,14 @@ epoch = 1
 schema = "schemas/lifecycle/e1/reply.jtd.json"
 recoverable = true
 foreign_parsers = "ours"
+corpus = "formats/corpora/lifecycle/e1"
+sunset = "none"
+
+[format.lifecycle-state]
+epoch = 1
+schema = "schemas/lifecycle_state.jtd.json"
+recoverable = true
+foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 

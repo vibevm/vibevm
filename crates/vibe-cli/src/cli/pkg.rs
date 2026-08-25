@@ -285,6 +285,11 @@ pub struct InstallArgs {
     /// flag). `org.vibevm` is always allow-listed and runs regardless.
     #[arg(long)]
     pub allow_hooks: bool,
+
+    /// Ignore reusable lifecycle contribution fingerprints for this install's
+    /// post-durability callback. Resolution/materialisation semantics are unchanged.
+    #[arg(long)]
+    pub force: bool,
 }
 
 #[derive(Debug, clap::Args)]

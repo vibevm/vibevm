@@ -30,6 +30,7 @@ pub(crate) struct RitualPlan {
     pub(crate) notices: Vec<String>,
     pub(crate) project: EnvelopeProject,
     pub(crate) world: EnvelopeWorld,
+    pub(crate) workspace_root: PathBuf,
 }
 
 impl RitualPlan {
@@ -64,6 +65,7 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
             .collect(),
         project: loaded.project,
         world: loaded.world,
+        workspace_root: loaded.workspace_root,
     })
 }
 
@@ -87,6 +89,7 @@ pub(crate) fn plan_clean(path: &Path) -> Result<RitualPlan> {
             .collect(),
         project: loaded.project,
         world: loaded.world,
+        workspace_root: loaded.workspace_root,
     })
 }
 
@@ -100,6 +103,7 @@ struct LoadedRegistry {
     registry: ExtensionRegistry,
     project: EnvelopeProject,
     world: EnvelopeWorld,
+    workspace_root: PathBuf,
 }
 
 fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry> {
@@ -161,6 +165,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         registry,
         project,
         world,
+        workspace_root: workspace.root.clone(),
     })
 }
 

@@ -187,6 +187,7 @@ fn stub_install_args(path: PathBuf) -> InstallArgs {
         git_auth: None,
         git_token_env: None,
         allow_hooks: false,
+        force: false,
     }
 }
 

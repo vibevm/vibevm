@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "run": {
+    "requested": "build",
+    "chain": ["validate", "install", "generate", "build"],
+    "started": "2026-08-25T12:00:00Z"
+  },
+  "execution": {
+    "org.demo/provider#announce": {
+      "phase": "build",
+      "fingerprint": "sha256:0123456789abcdef",
+      "status": "ok",
+      "duration_ms": 12,
+      "artifacts": [
+        { "id": "demo", "path": "C:/work/demo/out.txt", "kind": "text" }
+      ]
+    }
+  }
+}

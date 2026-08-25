@@ -14,8 +14,7 @@ use specmark::spec;
 use vibe_core::manifest::ExtensionHandler;
 use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{
-    ContributionTier, DispatchBatch, ExecutionSession, ExtensionProvider, LifecycleRequest,
-    LifecycleStep, Phase, RunMetadata,
+    ContributionTier, ExtensionProvider, LifecycleRequest, LifecycleStep, Phase, RunMetadata,
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_wire::generated::lifecycle::e1::reply::ReplyStatus;
@@ -30,6 +29,7 @@ use crate::output;
 
 use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary};
 
+mod dispatch;
 mod world;
 
 /// Execute a top-level default-lifecycle phase verb.
@@ -99,12 +99,13 @@ pub(crate) fn run_clean_only(
         agent_mode: RunAgentMode::Cli,
         force: false,
         run_id: new_run_id(),
+        started: crate::commands::init::current_timestamp_utc(),
     };
     let notices = plan.notices.clone();
     surface_plan(ctx, &plan, &metadata, true)?;
     let wipe_plan = super::clean::plan_wipe(&args.path)?;
     super::clean::confirm_wipe(ctx, &wipe_plan, metadata.assume_yes)?;
-    let contributions = dispatch_plan(ctx, &plan, metadata)?;
+    let contributions = dispatch::dispatch_plan_untracked(ctx, &plan, metadata)?;
     let wipe_ctx = if ctx.is_json() || ctx.is_quiet() {
         ctx.quiet_child()
     } else {
@@ -158,8 +159,9 @@ fn execute(
         offline,
         assume_yes,
         agent_mode: RunAgentMode::Cli,
-        force: false,
+        force: install_args.force,
         run_id: new_run_id(),
+        started: crate::commands::init::current_timestamp_utc(),
     };
     let mut reports = Vec::with_capacity(steps.len());
     let mut contribution_reports = Vec::new();
@@ -171,7 +173,11 @@ fn execute(
         surface_plan(ctx, &clean_plan, &metadata, true)?;
         let wipe_plan = super::clean::plan_wipe(&install_args.path)?;
         super::clean::confirm_wipe(ctx, &wipe_plan, assume_yes)?;
-        contribution_reports.extend(dispatch_plan(ctx, &clean_plan, metadata.clone())?);
+        contribution_reports.extend(dispatch::dispatch_plan_untracked(
+            ctx,
+            &clean_plan,
+            metadata.clone(),
+        )?);
         let root = super::clean::apply_wipe(&child, wipe_plan)?;
         install_args.path = root;
         reports.push(step_report("clean", StepStatus::Ok));
@@ -210,12 +216,25 @@ fn execute(
     let ritual = world::plan_default(&install_args.path, &phases)?;
     notices.extend(ritual.notices.clone());
     surface_plan(ctx, &ritual, &metadata, true)?;
-    contribution_reports.extend(dispatch_plan(ctx, &ritual, metadata)?);
+    let state_chain = phases.iter().map(ToString::to_string).collect();
+    contribution_reports.extend(dispatch::dispatch_plan(
+        ctx,
+        &ritual,
+        metadata,
+        state_chain,
+    )?);
     for phase in phases {
         let status = match phase {
             Phase::Validate => validate_status.unwrap_or(StepStatus::Ok),
             Phase::Install => install_status.unwrap_or(StepStatus::Ok),
             _ if ritual.count_for(phase) == 0 => StepStatus::NoOp,
+            _ if contribution_reports
+                .iter()
+                .filter(|row| row.phase == phase.as_str())
+                .all(|row| row.status == "fresh") =>
+            {
+                StepStatus::Fresh
+            }
             _ => StepStatus::Ok,
         };
         reports.push(step_report(phase.as_str(), status));
@@ -229,40 +248,6 @@ fn execute(
         contribution_reports,
         notices,
     )
-}
-
-fn dispatch_plan(
-    ctx: &output::Context,
-    plan: &world::RitualPlan,
-    metadata: RunMetadata,
-) -> Result<Vec<LifecycleContributionReport>> {
-    let mut session = ExecutionSession::new(plan.project.clone(), plan.world.clone(), metadata);
-    let mut reports = Vec::with_capacity(plan.executions.len());
-    let mut cursor = 0;
-    while cursor < plan.executions.len() {
-        let phase = plan.executions[cursor].phase.clone();
-        let end = plan.executions[cursor..]
-            .iter()
-            .position(|execution| execution.phase != phase)
-            .map_or(plan.executions.len(), |offset| cursor + offset);
-        let rows = plan.executions[cursor..end]
-            .iter()
-            .map(|execution| execution.row.clone())
-            .collect::<Vec<_>>();
-        let DispatchBatch { outcomes, failure } = session.dispatch_phase(&phase, &rows);
-        for (execution, outcome) in plan.executions[cursor..end].iter().zip(outcomes) {
-            let report = contribution_report(execution, &outcome.reply);
-            render_outcome(ctx, &report);
-            reports.push(report);
-        }
-        if let Some(failure) = failure {
-            return Err(anyhow::Error::new(failure).context(format!(
-                "phase `{phase}` stopped before any later lifecycle contribution"
-            )));
-        }
-        cursor = end;
-    }
-    Ok(reports)
 }
 
 fn surface_plan(
@@ -296,25 +281,6 @@ fn planned_contribution(execution: &world::PlannedExecution) -> PlannedContribut
         phase: execution.phase.clone(),
         point: row.declaration().point.to_string(),
         provider,
-        tier: tier_name(row.effective_tier()).to_string(),
-        version,
-    }
-}
-
-fn contribution_report(
-    execution: &world::PlannedExecution,
-    reply: &vibe_wire::generated::lifecycle::e1::reply::Reply,
-) -> LifecycleContributionReport {
-    let row = &execution.row;
-    let (provider, version) = provider_and_version(row.provider());
-    LifecycleContributionReport {
-        handler: row.declaration().handler.kind().to_string(),
-        key: row.key().to_string(),
-        message: reply.message.clone(),
-        phase: execution.phase.clone(),
-        point: row.declaration().point.to_string(),
-        provider,
-        status: reply_status(&reply.status),
         tier: tier_name(row.effective_tier()).to_string(),
         version,
     }
@@ -360,15 +326,6 @@ fn render_ritual(
     }
 }
 
-fn render_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
-    if ctx.is_json() || ctx.is_quiet() {
-        return;
-    }
-    if let Some(message) = &report.message {
-        ctx.step(&format!("log [{}]: {message}", report.provider));
-    }
-}
-
 fn emit_report(
     ctx: &output::Context,
     requested: &str,
@@ -389,20 +346,21 @@ fn emit_report(
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    let contribution_summary = if report.contributions.is_empty() {
-        "0 contribution(s) selected, 0 executed, 0 ok".to_string()
-    } else {
-        format!(
-            "{} contribution(s) selected, {} executed, {} ok",
-            report.contributions.len(),
-            report.contributions.len(),
-            report
-                .contributions
-                .iter()
-                .filter(|row| row.status == "ok")
-                .count(),
-        )
-    };
+    let fresh = report
+        .contributions
+        .iter()
+        .filter(|row| row.status == "fresh")
+        .count();
+    let executed = report.contributions.len() - fresh;
+    let ok = report
+        .contributions
+        .iter()
+        .filter(|row| row.status == "ok")
+        .count();
+    let contribution_summary = format!(
+        "{} contribution(s) selected, {executed} executed, {ok} ok, {fresh} fresh",
+        report.contributions.len(),
+    );
     if ctx.is_quiet() {
         ctx.summary(&format!(
             "vibe lifecycle: {requested} completed ({} phases, {contribution_summary}, {} notice(s))",
@@ -438,11 +396,13 @@ pub(crate) fn after_direct_install(
         offline: run.offline,
         assume_yes: run.assume_yes,
         agent_mode: RunAgentMode::Cli,
-        force: false,
+        force: run.force,
         run_id: new_run_id(),
+        started: run.started,
     };
     surface_plan(ctx, &ritual, &metadata, false)?;
-    let contributions = dispatch_plan(ctx, &ritual, metadata)?;
+    let state_chain = metadata.chain.clone();
+    let contributions = dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?;
     if ctx.is_json() && (!contributions.is_empty() || !ritual.notices.is_empty()) {
         emit_report(
             ctx,
@@ -464,10 +424,17 @@ pub(crate) fn after_direct_install(
     }
     Ok(WorldCallbackSummary {
         selected_contributions: ritual.executions.len(),
-        executed_contributions: contributions.len(),
+        executed_contributions: contributions
+            .iter()
+            .filter(|row| row.status != "fresh")
+            .count(),
         successful_contributions: contributions
             .iter()
             .filter(|row| row.status == "ok")
+            .count(),
+        fresh_contributions: contributions
+            .iter()
+            .filter(|row| row.status == "fresh")
             .count(),
         notices: ritual.notices.len(),
     })

@@ -423,10 +423,30 @@ mod tests {
         for verb in [
             "validate", "generate", "build", "test", "create", "verify", "package", "deploy",
         ] {
-            let cli = Cli::try_parse_from(["vibe", verb, "--json", "--offline", "--path", "."])
-                .unwrap_or_else(|error| panic!("parse `{verb}`: {error}"));
+            let cli = Cli::try_parse_from([
+                "vibe",
+                verb,
+                "--json",
+                "--offline",
+                "--force",
+                "--path",
+                ".",
+            ])
+            .unwrap_or_else(|error| panic!("parse `{verb}`: {error}"));
             assert!(cli.json, "{verb}: --json reaches the root");
             assert!(cli.offline, "{verb}: --offline reaches the root");
+            let force = match &cli.command {
+                Command::Validate(args)
+                | Command::Generate(args)
+                | Command::Build(args)
+                | Command::Test(args)
+                | Command::Create(args)
+                | Command::Verify(args)
+                | Command::Package(args)
+                | Command::Deploy(args) => args.force,
+                _ => false,
+            };
+            assert!(force, "{verb}: --force reaches lifecycle freshness");
             assert!(matches!(
                 (verb, cli.command),
                 ("validate", Command::Validate(_))
@@ -455,7 +475,6 @@ mod tests {
         for argv in [
             vec!["vibe", "build", "--exact"],
             vec!["vibe", "build", "--git", "https://example.invalid/pkg.git"],
-            vec!["vibe", "build", "--force"],
         ] {
             assert!(
                 Cli::try_parse_from(argv).is_err(),

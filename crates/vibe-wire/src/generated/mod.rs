@@ -21,6 +21,7 @@ pub mod journal;
 pub mod lifecycle;
 pub mod lifecycle_plan;
 pub mod lifecycle_report;
+pub mod lifecycle_state;
 pub mod list_report;
 pub mod registry_publish_report;
 pub mod registry_sync_report;

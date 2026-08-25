@@ -123,6 +123,7 @@ fn session() -> ExecutionSession {
             agent_mode: RunAgentMode::Cli,
             force: false,
             run_id: "run-1".to_string(),
+            started: "2026-08-25T12:00:00Z".to_string(),
         },
     )
 }
@@ -172,6 +173,18 @@ fn generated_envelope_carries_the_complete_epoch_one_context_and_override() {
         envelope.io.scratch,
         "C:/work/demo/.vibe/lifecycle/run-1/6f72672e64656d6f2f70726f766964657223616e6e6f756e6365/"
     );
+}
+
+#[test]
+fn prepared_dispatch_returns_the_exact_envelope_that_was_observed() {
+    let registry = host_registry(vec![builtin("prepared", "log", Some("message"))]);
+    let row = registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped())[0].clone();
+    let mut execution = session();
+    let prepared = execution.envelope_for("build", &row).unwrap();
+
+    let outcome = execution.dispatch_prepared(&row, prepared.clone()).unwrap();
+
+    assert_eq!(outcome.envelope, prepared);
 }
 
 #[test]

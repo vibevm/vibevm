@@ -8,6 +8,7 @@ use vibe_wire::generated::lifecycle::e1::context::{Context, RunAgentMode};
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 use vibe_wire::generated::lifecycle_plan::LifecyclePlan;
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
+use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -75,4 +76,19 @@ fn plan_is_selection_only_and_precedes_the_distinct_outcome_shape() {
     assert_eq!(plan.contributions[0].key, report.contributions[0].key);
     assert_eq!(report.contributions[0].status, "ok");
     assert!(report.contributions[0].message.is_some());
+}
+
+#[test]
+fn state_corpus_round_trips_generated_semantics_and_exact_build_chain() {
+    let state: LifecycleState = read("state.json");
+    assert_eq!(state.schema, 1);
+    assert_eq!(
+        state.run.chain,
+        ["validate", "install", "generate", "build"]
+    );
+    assert_eq!(state.run.started, "2026-08-25T12:00:00Z");
+    let row = &state.execution["org.demo/provider#announce"];
+    assert_eq!(row.status, ExecutionRecordStatus::Ok);
+    assert_eq!(row.duration_ms, 12);
+    assert_eq!(row.artifacts[0].kind, "text");
 }

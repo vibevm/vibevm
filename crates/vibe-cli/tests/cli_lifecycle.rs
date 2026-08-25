@@ -8,6 +8,7 @@ use std::path::Path;
 use common::{UserScratch, fixture_registry};
 use specmark::verifies;
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
+use vibe_wire::generated::lifecycle_state::LifecycleState;
 
 fn init_project(user: &UserScratch) -> tempfile::TempDir {
     let project = tempfile::tempdir().unwrap();
@@ -104,6 +105,12 @@ fn deploy_reports_all_nine_canonical_phases_through_the_generated_reader() {
     ] {
         assert_eq!(status(&report, phase), "no-op");
     }
+    let state: LifecycleState =
+        toml::from_str(&fs::read_to_string(project.path().join(".vibe/lifecycle.toml")).unwrap())
+            .unwrap();
+    assert_eq!(state.run.requested, "deploy");
+    assert_eq!(state.run.chain, report.chain);
+    assert!(state.execution.is_empty());
 }
 
 #[test]
@@ -261,7 +268,7 @@ fn quiet_lifecycle_is_exactly_one_summary_line() {
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
     assert!(
         stdout.contains(
-            "deploy completed (9 phases, 0 contribution(s) selected, 0 executed, 0 ok, 0 notice(s))"
+            "deploy completed (9 phases, 0 contribution(s) selected, 0 executed, 0 ok, 0 fresh, 0 notice(s))"
         ),
         "{stdout}"
     );
@@ -274,8 +281,7 @@ fn clean_build_wipes_then_restores_the_world_and_keeps_lifecycle_state() {
     let project = init_project(&user);
     install_alpha(&user, project.path());
     let state = project.path().join(".vibe/lifecycle.toml");
-    fs::create_dir_all(state.parent().unwrap()).unwrap();
-    fs::write(&state, "sentinel = \"survives-clean\"\n").unwrap();
+    let before = fs::read_to_string(&state).unwrap();
 
     let assert = user
         .vibe()
@@ -301,10 +307,54 @@ fn clean_build_wipes_then_restores_the_world_and_keeps_lifecycle_state() {
         "the prerequisite install restores dependency slots after clean",
     );
     assert!(project.path().join(common::index_rel()).is_file());
+    let after = fs::read_to_string(&state).unwrap();
+    assert_ne!(after, before, "default epoch must checkpoint its new run");
+    let state: LifecycleState = toml::from_str(&after).unwrap();
+    assert_eq!(state.run.requested, "build");
     assert_eq!(
-        fs::read_to_string(&state).unwrap(),
-        "sentinel = \"survives-clean\"\n"
+        state.run.chain,
+        ["validate", "install", "generate", "build"]
     );
+}
+
+#[test]
+fn clean_only_never_fresh_skips_and_byte_preserves_invalid_state() {
+    let user = UserScratch::new();
+    let project = init_project(&user);
+    let manifest = project.path().join("vibe.toml");
+    let mut body = fs::read_to_string(&manifest).unwrap();
+    body.push_str(
+        r#"
+[[extension]]
+id = "host-clean"
+point = "phase:clean"
+handler = { kind = "builtin", name = "log" }
+config = { message = "CLEAN-ALWAYS" }
+"#,
+    );
+    fs::write(manifest, body).unwrap();
+    let state = project.path().join(".vibe/lifecycle.toml");
+    fs::create_dir_all(state.parent().unwrap()).unwrap();
+    fs::write(&state, "arbitrary invalid sentinel bytes\n").unwrap();
+    for _ in 0..2 {
+        let output = user
+            .vibe()
+            .args(["clean", "--path"])
+            .arg(project.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert!(String::from_utf8_lossy(&output.stdout).contains("CLEAN-ALWAYS"));
+        assert_eq!(
+            fs::read_to_string(&state).unwrap(),
+            "arbitrary invalid sentinel bytes\n"
+        );
+    }
 }
 
 #[test]

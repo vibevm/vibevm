@@ -90,6 +90,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 mod chain;
 mod execution;
 mod registry;
+mod state;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
 pub use execution::{
@@ -102,6 +103,10 @@ pub use registry::{
     ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
     HostExtensionSource, HostIdentity, HostProvider, RegistryView, SelectorSubject,
     collect_extensions,
+};
+pub use state::{
+    FingerprintError, LifecycleStateError, LifecycleStateStore, fingerprint_execution,
+    preparation_error_fingerprint,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

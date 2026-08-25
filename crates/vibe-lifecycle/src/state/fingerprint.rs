@@ -1,0 +1,346 @@
+//! Epoch/domain-separated deterministic execution fingerprints.
+
+use std::path::{Component, Path};
+
+use glob::{MatchOptions, Pattern};
+use serde_json::Value;
+use sha2::{Digest, Sha256};
+use specmark::spec;
+use thiserror::Error;
+use vibe_core::manifest::{ExtensionHandler, ExtensionKey};
+use vibe_wire::generated::lifecycle::e1::context::Context;
+use walkdir::{DirEntry, WalkDir};
+
+use crate::{ExtensionProvider, ExtensionRegistryRow};
+
+#[derive(Debug, Error)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub enum FingerprintError {
+    #[error(
+        "extension `{key}` has invalid inputs pattern `{pattern}`: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
+          fix: use a provider-root-relative forward-slash glob)"
+    )]
+    InvalidInput {
+        key: ExtensionKey,
+        pattern: String,
+        reason: String,
+    },
+    #[error(
+        "extension `{key}` cannot fingerprint `{path}`: {source} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
+          fix: make the declared input readable or correct its inputs glob)"
+    )]
+    Read {
+        key: ExtensionKey,
+        path: String,
+        source: std::io::Error,
+    },
+    #[error(
+        "extension `{key}` cannot encode canonical fingerprint material: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
+          fix: report this generated-envelope serialization failure)"
+    )]
+    Encode { key: ExtensionKey, reason: String },
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn fingerprint_execution(
+    row: &ExtensionRegistryRow,
+    context: &Context,
+) -> Result<String, FingerprintError> {
+    let mut hash = FramedHash::new();
+    hash.field("key", row.key().to_string().as_bytes());
+    hash.field("phase", context.run.phase.as_bytes());
+    hash.field("point", context.point.as_bytes());
+    hash.field("handler-kind", row.declaration().handler.kind().as_bytes());
+    handler_coordinates(&mut hash, &row.declaration().handler);
+    hash.json("effective-config", &context.execution.config, row.key())?;
+    provider_material(&mut hash, row.provider());
+    hash.field("requested", context.run.requested.as_bytes());
+    hash.json("chain", &context.run.chain, row.key())?;
+    hash.field("offline", &[u8::from(context.run.offline)]);
+    hash.json("agent-mode", &context.run.agent_mode, row.key())?;
+    hash.json("project", &context.project, row.key())?;
+    hash.json("world", &context.world, row.key())?;
+    hash.json("artifacts", &context.artifacts, row.key())?;
+    file_or_missing(
+        &mut hash,
+        "manifest",
+        Path::new(&context.project.manifest),
+        row.key(),
+    )?;
+    file_or_missing(
+        &mut hash,
+        "lockfile",
+        Path::new(&context.world.lockfile),
+        row.key(),
+    )?;
+    declared_inputs(&mut hash, row)?;
+    Ok(hash.finish())
+}
+
+/// Stable non-reusable fingerprint for failures before the real fingerprint
+/// exists. Error text and paths are deliberately excluded.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn preparation_error_fingerprint(key: &ExtensionKey, phase: &str) -> String {
+    let mut hash = FramedHash::new();
+    hash.field("key", key.to_string().as_bytes());
+    hash.field("phase", phase.as_bytes());
+    hash.field("transition", b"preparation-error");
+    hash.finish()
+}
+
+fn handler_coordinates(hash: &mut FramedHash, handler: &ExtensionHandler) {
+    match handler {
+        ExtensionHandler::Builtin { name } | ExtensionHandler::Binary { name } => {
+            hash.field("handler-name", name.as_bytes());
+        }
+        ExtensionHandler::Script { base } => {
+            hash.field("handler-base", machine_path(base).as_bytes());
+        }
+        ExtensionHandler::Native {
+            crate_dir,
+            prebuilt,
+        } => {
+            hash.field(
+                "handler-crate",
+                crate_dir
+                    .as_deref()
+                    .map(machine_path)
+                    .unwrap_or_default()
+                    .as_bytes(),
+            );
+            if let Some(prebuilt) = prebuilt {
+                for (platform, path) in prebuilt {
+                    hash.field("handler-platform", platform.as_bytes());
+                    hash.field("handler-prebuilt", machine_path(path).as_bytes());
+                }
+            }
+        }
+        ExtensionHandler::Agent { prompt } => hash.field("handler-prompt", prompt.as_bytes()),
+    }
+}
+
+fn provider_material(hash: &mut FramedHash, provider: &ExtensionProvider) {
+    hash.field("provider-id", provider.to_string().as_bytes());
+    match provider {
+        ExtensionProvider::Dependency(provider) => {
+            hash.field("provider-version", provider.version.as_bytes());
+            hash.field(
+                "provider-content",
+                provider.content_hash.to_string().as_bytes(),
+            );
+        }
+        ExtensionProvider::Host(provider) => {
+            hash.field("provider-version", provider.version.as_bytes());
+            hash.field(
+                "provider-content",
+                provider
+                    .content_hash
+                    .as_ref()
+                    .map(ToString::to_string)
+                    .unwrap_or_default()
+                    .as_bytes(),
+            );
+        }
+    }
+}
+
+fn file_or_missing(
+    hash: &mut FramedHash,
+    label: &str,
+    path: &Path,
+    key: &ExtensionKey,
+) -> Result<(), FingerprintError> {
+    match std::fs::read(path) {
+        Ok(bytes) => {
+            hash.field(&format!("{label}-presence"), b"present");
+            hash.field(label, &bytes);
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            hash.field(&format!("{label}-presence"), b"missing");
+        }
+        Err(source) => {
+            return Err(FingerprintError::Read {
+                key: key.clone(),
+                path: machine_path(path),
+                source,
+            });
+        }
+    }
+    Ok(())
+}
+
+fn declared_inputs(
+    hash: &mut FramedHash,
+    row: &ExtensionRegistryRow,
+) -> Result<(), FingerprintError> {
+    let Some(patterns) = row.declaration().inputs.as_deref() else {
+        return Ok(());
+    };
+    let root = match row.provider() {
+        ExtensionProvider::Dependency(provider) => provider.root.as_path(),
+        ExtensionProvider::Host(provider) => provider.root.as_path(),
+    };
+    for authored in patterns {
+        validate_input(row.key(), authored)?;
+        let pattern = Pattern::new(authored).map_err(|error| FingerprintError::InvalidInput {
+            key: row.key().clone(),
+            pattern: authored.clone(),
+            reason: error.to_string(),
+        })?;
+        hash.field("input-pattern", authored.as_bytes());
+        let mut matches = Vec::new();
+        for entry in WalkDir::new(root).into_iter().filter_entry(shippable_entry) {
+            let entry = entry.map_err(|error| FingerprintError::Read {
+                key: row.key().clone(),
+                path: machine_path(root),
+                source: error
+                    .into_io_error()
+                    .unwrap_or_else(|| std::io::Error::other("walking input tree")),
+            })?;
+            if !entry.file_type().is_file() {
+                continue;
+            }
+            let relative = entry
+                .path()
+                .strip_prefix(root)
+                .map_err(|_| FingerprintError::Read {
+                    key: row.key().clone(),
+                    path: machine_path(entry.path()),
+                    source: std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        "input walk escaped its provider root",
+                    ),
+                })?;
+            // Authored patterns are UTF-8. A non-UTF-8 filesystem name is
+            // outside that namespace and cannot be selected; skipping it
+            // avoids both false failures and lossy alias/order collisions.
+            let Some(relative) = relative.to_str() else {
+                continue;
+            };
+            let relative = relative.replace('\\', "/");
+            let options = MatchOptions {
+                case_sensitive: true,
+                require_literal_separator: true,
+                require_literal_leading_dot: false,
+            };
+            if pattern.matches_with(&relative, options) {
+                matches.push((relative, entry.into_path()));
+            }
+        }
+        matches.sort_by(|left, right| left.0.cmp(&right.0));
+        for (relative, path) in matches {
+            let bytes = std::fs::read(&path).map_err(|source| FingerprintError::Read {
+                key: row.key().clone(),
+                path: machine_path(&path),
+                source,
+            })?;
+            hash.field("input-path", relative.as_bytes());
+            hash.field("input-bytes", &bytes);
+        }
+    }
+    Ok(())
+}
+
+fn validate_input(key: &ExtensionKey, pattern: &str) -> Result<(), FingerprintError> {
+    let path = Path::new(pattern);
+    let drive = pattern.as_bytes().get(1) == Some(&b':');
+    let invalid = pattern.contains('\\')
+        || path.has_root()
+        || pattern.starts_with('/')
+        || drive
+        || path
+            .components()
+            .any(|component| component == Component::ParentDir);
+    if invalid {
+        return Err(FingerprintError::InvalidInput {
+            key: key.clone(),
+            pattern: pattern.to_string(),
+            reason: "absolute, drive-prefixed, backslash, and `..` paths are forbidden".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn shippable_entry(entry: &DirEntry) -> bool {
+    entry.depth() == 0
+        || !matches!(
+            entry.file_name().to_str(),
+            Some(".git" | ".vibe" | "target" | "node_modules")
+        )
+}
+
+fn machine_path(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
+}
+
+struct FramedHash(Sha256);
+
+impl FramedHash {
+    fn new() -> Self {
+        let mut hash = Sha256::new();
+        hash.update(b"vibe-lifecycle-fingerprint\0epoch=1\0");
+        Self(hash)
+    }
+    fn field(&mut self, label: &str, bytes: &[u8]) {
+        self.0.update((label.len() as u64).to_be_bytes());
+        self.0.update(label.as_bytes());
+        self.0.update((bytes.len() as u64).to_be_bytes());
+        self.0.update(bytes);
+    }
+    fn json<T: serde::Serialize>(
+        &mut self,
+        label: &str,
+        value: &T,
+        key: &ExtensionKey,
+    ) -> Result<(), FingerprintError> {
+        let value = serde_json::to_value(value).map_err(|error| FingerprintError::Encode {
+            key: key.clone(),
+            reason: error.to_string(),
+        })?;
+        let mut bytes = Vec::new();
+        canonical_json(&value, &mut bytes).map_err(|error| FingerprintError::Encode {
+            key: key.clone(),
+            reason: error.to_string(),
+        })?;
+        self.field(label, &bytes);
+        Ok(())
+    }
+    fn finish(self) -> String {
+        format!("sha256:{:x}", self.0.finalize())
+    }
+}
+
+fn canonical_json(value: &Value, out: &mut Vec<u8>) -> Result<(), serde_json::Error> {
+    match value {
+        Value::Object(map) => {
+            out.push(b'{');
+            let mut keys = map.keys().collect::<Vec<_>>();
+            keys.sort();
+            for (index, key) in keys.into_iter().enumerate() {
+                if index > 0 {
+                    out.push(b',');
+                }
+                out.extend(serde_json::to_vec(key)?);
+                out.push(b':');
+                canonical_json(&map[key], out)?;
+            }
+            out.push(b'}');
+        }
+        Value::Array(values) => {
+            out.push(b'[');
+            for (index, value) in values.iter().enumerate() {
+                if index > 0 {
+                    out.push(b',');
+                }
+                canonical_json(value, out)?;
+            }
+            out.push(b']');
+        }
+        _ => out.extend(serde_json::to_vec(value)?),
+    }
+    Ok(())
+}

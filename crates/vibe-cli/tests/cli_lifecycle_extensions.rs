@@ -184,40 +184,48 @@ fn direct_fresh_install_keeps_builtin_status_separate_from_the_planned_ritual() 
     let registry = extension_registry();
     install_from(&user, project.path(), registry.path());
 
-    let output = user
-        .vibe()
-        .args(["install", "--json"])
-        .arg("--registry")
-        .arg(registry.path())
-        .arg("--path")
-        .arg(project.path())
-        .arg("--assume-yes")
-        .output()
+    for force in [false, true] {
+        let mut command = user.vibe();
+        command.args(["install", "--json"]);
+        if force {
+            command.arg("--force");
+        }
+        let output = command
+            .arg("--registry")
+            .arg(registry.path())
+            .arg("--path")
+            .arg(project.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let documents = json_documents(&output.stdout);
+        assert_eq!(documents.last().unwrap()["command"], "install");
+        assert_eq!(documents.last().unwrap()["unchanged"], true);
+        let ritual: LifecycleReport = serde_json::from_value(
+            documents
+                .iter()
+                .find(|document| document["command"] == "lifecycle")
+                .unwrap()
+                .clone(),
+        )
         .unwrap();
-    assert!(
-        output.status.success(),
-        "{}",
-        String::from_utf8_lossy(&output.stderr)
-    );
-    let documents = json_documents(&output.stdout);
-    assert_eq!(documents.last().unwrap()["command"], "install");
-    assert_eq!(documents.last().unwrap()["unchanged"], true);
-    let ritual: LifecycleReport = serde_json::from_value(
-        documents
-            .iter()
-            .find(|document| document["command"] == "lifecycle")
-            .unwrap()
-            .clone(),
-    )
-    .unwrap();
-    assert_eq!(status(&ritual, "validate"), "ok");
-    assert_eq!(status(&ritual, "install"), "fresh");
-    assert!(
-        ritual
-            .contributions
-            .iter()
-            .any(|row| row.phase == "install" && row.status == "ok")
-    );
+        assert_eq!(status(&ritual, "install"), "fresh");
+        assert_eq!(
+            ritual.contributions[0].status,
+            if force { "ok" } else { "fresh" }
+        );
+        if !force {
+            let raw = fs::read_to_string(project.path().join(".vibe/lifecycle.toml")).unwrap();
+            let state: vibe_wire::generated::lifecycle_state::LifecycleState =
+                toml::from_str(&raw).unwrap();
+            assert!(state.execution.values().all(|row| row.duration_ms == 0));
+        }
+    }
 }
 
 #[test]
@@ -401,8 +409,7 @@ disable = ["org.vibevm/integration-alpha#clean-guard"]
     );
     fs::write(&manifest, body).unwrap();
     let state = project.path().join(".vibe/lifecycle.toml");
-    fs::create_dir_all(state.parent().unwrap()).unwrap();
-    fs::write(&state, "sentinel = true\n").unwrap();
+    let before = fs::read_to_string(&state).unwrap();
     user.vibe()
         .args(["clean", "build", "--json"])
         .arg("--path")
@@ -412,7 +419,11 @@ disable = ["org.vibevm/integration-alpha#clean-guard"]
         .arg("--assume-yes")
         .assert()
         .success();
-    assert_eq!(fs::read_to_string(state).unwrap(), "sentinel = true\n");
+    let after = fs::read_to_string(state).unwrap();
+    assert_ne!(after, before);
+    let state: vibe_wire::generated::lifecycle_state::LifecycleState =
+        toml::from_str(&after).unwrap();
+    assert_eq!(state.run.requested, "build");
     assert!(
         project
             .path()
@@ -437,6 +448,8 @@ disable = ["org.vibevm/integration-alpha#clean-guard"]
 "#,
     );
     fs::write(&manifest, body).unwrap();
+    let state = project.path().join(".vibe/lifecycle.toml");
+    fs::write(&state, "arbitrary invalid sentinel bytes\n").unwrap();
 
     for _ in 0..2 {
         user.vibe()
@@ -445,6 +458,10 @@ disable = ["org.vibevm/integration-alpha#clean-guard"]
             .arg("--assume-yes")
             .assert()
             .success();
+        assert_eq!(
+            fs::read_to_string(&state).unwrap(),
+            "arbitrary invalid sentinel bytes\n"
+        );
     }
 }
 

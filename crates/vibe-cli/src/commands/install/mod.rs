@@ -101,10 +101,12 @@ pub(crate) enum InstallDisposition {
 
 /// Effective invocation facts the durable-world lifecycle callback needs in
 /// the canonical handler envelope.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct InstallRunContext {
     pub(crate) offline: bool,
     pub(crate) assume_yes: bool,
+    pub(crate) force: bool,
+    pub(crate) started: String,
 }
 
 /// Counts produced by an additive post-durability observer. Keeping them
@@ -114,6 +116,7 @@ pub(crate) struct WorldCallbackSummary {
     pub(crate) selected_contributions: usize,
     pub(crate) executed_contributions: usize,
     pub(crate) successful_contributions: usize,
+    pub(crate) fresh_contributions: usize,
     pub(crate) notices: usize,
 }
 
@@ -158,6 +161,8 @@ pub(crate) fn run_with_world_callback(
     let lifecycle_run = InstallRunContext {
         offline,
         assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
+        force: args.force,
+        started: crate::commands::init::current_timestamp_utc(),
     };
 
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;

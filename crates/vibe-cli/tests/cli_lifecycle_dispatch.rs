@@ -8,6 +8,7 @@ use std::path::Path;
 use common::{UserScratch, fixture_registry};
 use specmark::verifies;
 use vibe_wire::generated::lifecycle_report::LifecycleReport;
+use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, LifecycleState};
 
 fn init_project(user: &UserScratch) -> tempfile::TempDir {
     let project = tempfile::tempdir().unwrap();
@@ -205,6 +206,25 @@ config = { message = "NEVER-RAN" }
     assert!(!stdout.contains("NEVER-RAN"), "{stdout}");
     assert!(stderr.contains("#stop"), "{stderr}");
     assert!(stderr.contains("unknown builtin `unknown`"), "{stderr}");
+    let state: LifecycleState =
+        toml::from_str(&fs::read_to_string(project.path().join(".vibe/lifecycle.toml")).unwrap())
+            .unwrap();
+    assert_eq!(
+        state
+            .execution
+            .values()
+            .filter(|row| row.status == ExecutionRecordStatus::Ok)
+            .count(),
+        1
+    );
+    assert_eq!(
+        state
+            .execution
+            .values()
+            .filter(|row| row.status == ExecutionRecordStatus::Fail)
+            .count(),
+        1
+    );
 }
 
 #[test]
@@ -354,8 +374,11 @@ fn direct_install_applied_fresh_and_empty_world_callbacks_are_once_and_json_last
         )
         .unwrap();
         assert_eq!(lifecycle.contributions.len(), 1);
-        assert_eq!(lifecycle.contributions[0].status, "ok");
-        assert!(lifecycle.contributions[0].message.is_some());
+        assert_eq!(
+            lifecycle.contributions[0].status,
+            if packages { "ok" } else { "fresh" }
+        );
+        assert_eq!(lifecycle.contributions[0].message.is_some(), packages);
     }
 
     let empty = init_project(&user);
@@ -413,7 +436,6 @@ fn lifecycle_json_is_a_structured_plan_and_outcome_while_quiet_is_one_line() {
     assert!(documents[0]["contributions"][0].get("message").is_none());
     let report: LifecycleReport = serde_json::from_value(documents[1].clone()).unwrap();
     assert!(report.contributions.iter().all(|row| row.status == "ok"));
-    assert!(report.contributions.iter().all(|row| row.message.is_some()));
 
     let quiet = user
         .vibe()
@@ -427,20 +449,20 @@ fn lifecycle_json_is_a_structured_plan_and_outcome_while_quiet_is_one_line() {
     let stdout = String::from_utf8_lossy(&quiet.get_output().stdout);
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
     assert!(
-        stdout.contains("3 contribution(s) selected, 3 executed, 3 ok"),
+        stdout.contains("3 contribution(s) selected, 0 executed, 0 ok, 3 fresh"),
         "{stdout}"
     );
     assert!(!stdout.contains("BUILD|"), "{stdout}");
 }
 
 #[test]
-fn r2_4_has_no_freshness_skip_and_runs_the_log_again() {
+fn second_build_is_fresh_and_force_executes_every_selected_log() {
     let user = UserScratch::new();
     let project = init_project(&user);
     let registry = log_registry();
     install_from(&user, project.path(), registry.path());
 
-    for _ in 0..2 {
+    for (force, expected_fresh) in [(false, false), (false, true), (true, false)] {
         let assert = user
             .vibe()
             .args(["build", "--path"])
@@ -448,12 +470,76 @@ fn r2_4_has_no_freshness_skip_and_runs_the_log_again() {
             .arg("--registry")
             .arg(registry.path())
             .arg("--assume-yes")
+            .args(force.then_some("--force"))
             .assert()
             .success();
         let stdout = String::from_utf8_lossy(&assert.get_output().stdout);
-        assert!(stdout.contains("BUILD|build|"), "{stdout}");
-        assert!(!stdout.contains("fresh-skipped"), "{stdout}");
+        assert_eq!(stdout.contains("BUILD|build|"), !expected_fresh, "{stdout}");
+        assert_eq!(stdout.contains("fresh `"), expected_fresh, "{stdout}");
     }
+}
+
+#[test]
+fn editing_one_declared_input_reruns_only_its_contribution() {
+    let user = UserScratch::new();
+    let project = init_project(&user);
+    fs::write(project.path().join("a.txt"), "a1").unwrap();
+    fs::write(project.path().join("b.txt"), "b1").unwrap();
+    append(
+        project.path(),
+        r#"
+[[extension]]
+id = "input-a"
+point = "phase:build"
+handler = { kind = "builtin", name = "log" }
+config = { message = "INPUT-A" }
+inputs = ["a.txt"]
+[[extension]]
+id = "input-b"
+point = "phase:build"
+handler = { kind = "builtin", name = "log" }
+config = { message = "INPUT-B" }
+inputs = ["b.txt"]
+"#,
+    );
+    let run = || {
+        let output = user
+            .vibe()
+            .args(["build", "--json", "--path"])
+            .arg(project.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let docs = json_documents(&output.stdout);
+        serde_json::from_value::<LifecycleReport>(docs.last().unwrap().clone()).unwrap()
+    };
+    assert!(run().contributions.iter().all(|row| row.status == "ok"));
+    assert!(run().contributions.iter().all(|row| row.status == "fresh"));
+    fs::write(project.path().join("a.txt"), "a2").unwrap();
+    let report = run();
+    assert_eq!(
+        report
+            .contributions
+            .iter()
+            .find(|row| row.key.ends_with("#input-a"))
+            .unwrap()
+            .status,
+        "ok"
+    );
+    assert_eq!(
+        report
+            .contributions
+            .iter()
+            .find(|row| row.key.ends_with("#input-b"))
+            .unwrap()
+            .status,
+        "fresh"
+    );
 }
 
 #[test]

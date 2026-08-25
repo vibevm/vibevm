@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "description": "Epoch-1 `.vibe/lifecycle.toml` freshness and run record. Generated Rust is the runtime state type.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-LIFECYCLE-TOML"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_state"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "run": { "ref": "state_run" },
+    "execution": {
+      "values": { "ref": "execution_record" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "state_run": {
+      "properties": {
+        "requested": { "type": "string" },
+        "chain": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        },
+        "started": { "type": "string" }
+      }
+    },
+    "execution_record": {
+      "properties": {
+        "phase": { "type": "string" },
+        "fingerprint": { "type": "string" },
+        "status": {
+          "enum": ["ok", "fail", "skip", "fresh", "delegated"],
+          "metadata": { "x-vocabulary": "closed" }
+        },
+        "duration_ms": { "type": "uint32" },
+        "artifacts": {
+          "elements": { "ref": "state_artifact" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "state_artifact": {
+      "properties": {
+        "id": { "type": "string" },
+        "path": { "type": "string" },
+        "kind": { "type": "string" }
+      }
+    }
+  }
+}
