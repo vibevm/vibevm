@@ -2,11 +2,12 @@
 //! out of the parent [`pipeline`](super) module along the responsibility seam so
 //! neither file breaches the 600-line budget (`conform.toml` `max_file_lines`).
 //!
-//! The parent composes the phases (parse/topo → source-merge → embed → emit),
-//! owns the error layer, the per-node qualification, and the short-link
-//! rewriting; this submodule holds the recursive fold closure itself and the
-//! pre-fold source-section collision gate (B-056) — the two pieces that walk the
-//! `#source` edges and need each source's tree separate from the contract's.
+//! The parent composes the migrated parse schedule with the legacy close
+//! continuation (topo/source-merge/embed → emit), owns the error layer, the
+//! per-node qualification, and the short-link rewriting; this submodule holds
+//! the recursive fold closure itself and the pre-fold source-section collision
+//! gate (B-056) — the two pieces that walk the `#source` edges and need each
+//! source's tree separate from the contract's.
 
 use std::collections::HashMap;
 use std::collections::HashSet;

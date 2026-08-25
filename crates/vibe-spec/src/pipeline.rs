@@ -2,8 +2,10 @@
 //!
 //! `compile_static` runs the phases in the fixed order the spec pins:
 //!
-//! 1. **parse / topo** — build the `#use` graph from the seed and order it so
-//!    every dependency precedes its dependents (§7.2, §8 phase 2);
+//! 1. **parse** — lower each addressed source through the declared named pass;
+//!    the still-legacy `close` prelude discovers and topo-orders that worklist
+//!    from the seed so every dependency precedes its dependents (§7.2, §8
+//!    phase 2);
 //! 2. **source-merge** — fold every declared `#source` into `contract`, in
 //!    declaration order (§7.3);
 //! 3. **embed-expand** — splice every `#embed` to a fixed point (§7.1);
@@ -24,6 +26,7 @@ use std::collections::HashSet;
 use std::fmt::Write as _;
 
 use crate::address::{Authority, SpecAddress, SpecAddressError};
+use crate::compiler::ir::{DocumentAddress, Documents, SourceFormatId, SourceIr};
 use crate::directives::{DirectiveKind, Directives};
 use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::gate::DuplicateId;
@@ -122,9 +125,10 @@ enum CompileMode {
     QualifyPerNode,
 }
 
-/// The shared phase loop (PROP-035 §8): parse/topo → source-merge → embed →
-/// emit. In [`CompileMode::QualifyPerNode`] each node is qualified under its
-/// own origin before emission and a second pass resolves cross-node short
+/// The shared phase loop (PROP-035 §8): declared parse schedule → legacy close
+/// continuation (topo/source-merge/embed) → qualify/absorb/link/assemble/emit.
+/// In [`CompileMode::QualifyPerNode`] each node is qualified under its own
+/// origin before emission and a second pass resolves cross-node short
 /// references; in [`CompileMode::Plain`] the body is emitted as-authored and
 /// the rename map is empty. One loop, parameterised by mode — never two copies
 /// of the phase body (B-006 rider).
@@ -133,12 +137,11 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let order = topo_order_from(seed, source)?; // phase 2
-    let qualify = matches!(mode, CompileMode::QualifyPerNode);
-
-    // Prefetch every node's text once — the emission loop below reuses it,
-    // and the absorbed-node filter needs the full set up front.
-    let mut texts: Vec<(String, SpecAddress, String)> = Vec::with_capacity(order.len());
+    // Graph discovery remains the unmigrated `close` prelude. Its ordered raw
+    // worklist is now lowered by the declared `parse` pass, once per addressed
+    // document, before any later legacy phase sees it.
+    let order = topo_order_from(seed, source)?;
+    let mut parse_inputs = Vec::with_capacity(order.len());
     for key in &order {
         let addr = SpecAddress::parse(key)?;
         let text = source
@@ -147,8 +150,50 @@ fn compile_static_inner(
                 addr: key.clone(),
                 reason,
             })?;
-        texts.push((key.clone(), addr, text));
+        parse_inputs.push(SourceIr::new(
+            DocumentAddress::Spec(addr),
+            SourceFormatId::canonical_markdown(),
+            text,
+        ));
     }
+    let documents = crate::compiler::builtin::parse_sources(parse_inputs);
+    compile_static_continuation(order, documents, source, mode)
+}
+
+/// Bridge from the migrated document level into the still-legacy close and
+/// artifact phases.
+///
+/// The parsed tree is the source of the continuation text. The paired raw
+/// [`SourceIr`] remains in [`crate::compiler::ir::DocumentIr`] for exact-source
+/// identity and future transforms, but bypassing the parse result here is not
+/// permitted: a different parsed tree produces a different compiled body. The
+/// topo keys ride beside the batch unchanged, so marker spelling remains the
+/// exact spelling the pre-refactor loop received (including pin removal).
+fn compile_static_continuation(
+    order: Vec<String>,
+    documents: Documents,
+    source: &impl SectionSource,
+    mode: CompileMode,
+) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
+    let qualify = matches!(mode, CompileMode::QualifyPerNode);
+    let documents = documents.into_vec();
+    assert_eq!(
+        order.len(),
+        documents.len(),
+        "the document schedule must return one result per addressed source"
+    );
+
+    let mut texts = Vec::with_capacity(documents.len());
+    for (key, document) in order.into_iter().zip(documents) {
+        let (parsed_source, tree) = document.into_parts();
+        let (address, _format, _raw_text) = parsed_source.into_parts();
+        let DocumentAddress::Spec(addr) = address else {
+            unreachable!("the one-seed parse worklist contains only spec addresses")
+        };
+        let text = tree.text(tree.root());
+        texts.push((key, addr, text));
+    }
+
     // §7.4 READ-ONCE over overlapping spans: two closure nodes of ONE doc
     // may nest (a whole-doc / `#root` node beside a section inside it — the
     // `usage#root` + `usage#re-derive` shape). Emitting both defines every
@@ -172,11 +217,10 @@ fn compile_static_inner(
 
     let mut out = String::new();
     let mut renames: Vec<(String, RenameEntry)> = Vec::new();
-    for (i, (key, addr, text)) in texts.iter().enumerate() {
+    for (i, (key, addr, text)) in texts.into_iter().enumerate() {
         if absorbed[i] {
             continue;
         }
-        let (addr, text) = (addr.clone(), text.clone());
 
         // phase 3 — fold the node's whole `#source` closure RECURSIVELY (§7.3,
         // §8 phase 3): a source that itself declares `#source` folds before it
@@ -224,12 +268,12 @@ fn compile_static_inner(
             emitted
         };
 
-        writeln!(out, "{}", crate::markers::open(key)).unwrap(); // phase 5
+        writeln!(out, "{}", crate::markers::open(&key)).unwrap(); // phase 5
         out.push_str(&emitted);
         if !emitted.ends_with('\n') {
             out.push('\n');
         }
-        writeln!(out, "{}", crate::markers::close(key)).unwrap();
+        writeln!(out, "{}", crate::markers::close(&key)).unwrap();
     }
 
     if qualify {

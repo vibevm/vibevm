@@ -20,7 +20,7 @@
 mod address;
 #[expect(
     dead_code,
-    reason = "R3.1 defines the dormant compiler IR/pass skeleton; remove when R3.2 wires the first pass"
+    reason = "later R3 phase carriers stay dormant until their built-in passes migrate"
 )]
 mod compiler;
 mod directives;

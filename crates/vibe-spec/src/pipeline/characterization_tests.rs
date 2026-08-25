@@ -7,7 +7,57 @@ use specmark::verifies;
 
 use super::tests::MockSource;
 use super::*;
+use crate::compiler::ir::{DocumentAddress, DocumentIr, Documents, SourceFormatId, SourceIr};
 use crate::{DocTree, UseGraphError};
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn legacy_continuation_emits_the_parsed_tree_not_the_paired_raw_source() {
+    let key = "spec://org.demo/pkg/boot/entry#root";
+    let addr = SpecAddress::parse(key).unwrap();
+    let raw = "# Raw {#raw}\nRAW-BODY\n";
+    let parsed = "# Parsed {#parsed}\nPARSED-BODY\n";
+    let document = DocumentIr::new(
+        SourceIr::new(
+            DocumentAddress::Spec(addr),
+            SourceFormatId::canonical_markdown(),
+            raw,
+        ),
+        DocTree::parse(parsed),
+    );
+    let source = MockSource::new(&[(key, raw)]);
+
+    let (out, renames) = compile_static_continuation(
+        vec![key.to_string()],
+        Documents::new(vec![document]),
+        &source,
+        CompileMode::Plain,
+    )
+    .unwrap();
+
+    assert!(out.contains("PARSED-BODY"), "{out}");
+    assert!(!out.contains("RAW-BODY"), "{out}");
+    assert!(renames.is_empty());
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
+fn pinned_seed_preserves_the_exact_topo_key_in_marker_bytes() {
+    let key = "spec://org.demo/pkg@0.2/boot/entry#root";
+    let source = MockSource::new(&[(key, "# Entry {#root}\nbody\n")]);
+    let seed = SpecAddress::parse(&format!("{key}~r7")).unwrap();
+    let old_order = topo_order_from(&seed, &source).unwrap();
+
+    assert_eq!(old_order, vec![key.to_string()]);
+    assert_eq!(
+        compile_static(&seed, &source).unwrap(),
+        format!(
+            "{}\n# Entry {{#root}}\nbody\n{}\n",
+            crate::markers::open(&old_order[0]),
+            crate::markers::close(&old_order[0]),
+        )
+    );
+}
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]

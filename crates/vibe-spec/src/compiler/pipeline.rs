@@ -108,6 +108,37 @@ impl CompilerPipeline {
     pub(crate) fn run(&self, sources: Vec<SourceIr>) -> Result<EmittedIr, CompilerPipelineError> {
         self.validate_boundaries()?;
 
+        let documents = self.run_documents_unchecked(sources)?;
+        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        match output {
+            AnyIr::Emitted(emitted) => Ok(emitted),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "artifact segment output",
+                expected: EMITTED_ARTIFACT,
+                actual: other.shape(),
+            }),
+        }
+    }
+
+    /// Run the declared per-document schedule through its gather boundary.
+    ///
+    /// R3 migrates the built-ins one at a time. This is the executable seam for
+    /// that progression: while only `parse` has moved, its `SourceIr ->
+    /// DocumentIr` result still crosses the one explicit [`Documents`] gather
+    /// before the legacy artifact phases continue. Once `close` moves, the full
+    /// [`CompilerPipeline::run`] path takes over without changing cardinality.
+    pub(crate) fn run_documents(
+        &self,
+        sources: Vec<SourceIr>,
+    ) -> Result<Documents, CompilerPipelineError> {
+        self.validate_document_boundaries()?;
+        self.run_documents_unchecked(sources)
+    }
+
+    fn run_documents_unchecked(
+        &self,
+        sources: Vec<SourceIr>,
+    ) -> Result<Documents, CompilerPipelineError> {
         let mut documents = Vec::with_capacity(sources.len());
         for source in sources {
             let output = self.document.run(AnyIr::Source(source))?;
@@ -123,29 +154,11 @@ impl CompilerPipeline {
             }
         }
 
-        let documents = self.gather.run(documents);
-        let output = self.artifact.run(AnyIr::Documents(documents))?;
-        match output {
-            AnyIr::Emitted(emitted) => Ok(emitted),
-            other => Err(CompilerPipelineError::UnexpectedCarrier {
-                boundary: "artifact segment output",
-                expected: EMITTED_ARTIFACT,
-                actual: other.shape(),
-            }),
-        }
+        Ok(self.gather.run(documents))
     }
 
     fn validate_boundaries(&self) -> Result<(), CompilerPipelineError> {
-        self.expect_boundary(
-            "document segment input",
-            SOURCE_DOCUMENT,
-            self.document.first_input(),
-        )?;
-        self.expect_boundary(
-            "document segment output",
-            DOCUMENT_DOCUMENT,
-            self.document.last_output(),
-        )?;
+        self.validate_document_boundaries()?;
         self.expect_boundary(
             "artifact segment input",
             DOCUMENT_ARTIFACT,
@@ -155,6 +168,19 @@ impl CompilerPipeline {
             "artifact segment output",
             EMITTED_ARTIFACT,
             self.artifact.last_output(),
+        )
+    }
+
+    fn validate_document_boundaries(&self) -> Result<(), CompilerPipelineError> {
+        self.expect_boundary(
+            "document segment input",
+            SOURCE_DOCUMENT,
+            self.document.first_input(),
+        )?;
+        self.expect_boundary(
+            "document segment output",
+            DOCUMENT_DOCUMENT,
+            self.document.last_output(),
         )
     }
 

@@ -59,6 +59,10 @@ pub(crate) enum DocumentAddress {
 pub(crate) struct SourceFormatId(String);
 
 impl SourceFormatId {
+    pub(crate) fn canonical_markdown() -> Self {
+        Self("markdown".to_string())
+    }
+
     pub(crate) fn new(value: impl Into<String>) -> Result<Self, IrIdError> {
         let value = value.into();
         if value.trim().is_empty() {
