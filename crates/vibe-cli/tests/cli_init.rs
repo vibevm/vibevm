@@ -345,3 +345,59 @@ fn init_registry_url_and_no_registry_conflict() {
         .assert()
         .failure();
 }
+
+fn append_manifest_extension(path: &std::path::Path, declaration: &str) {
+    let manifest_path = path.join("vibe.toml");
+    let mut manifest = fs::read_to_string(&manifest_path).unwrap();
+    manifest.push('\n');
+    manifest.push_str(declaration);
+    fs::write(manifest_path, manifest).unwrap();
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
+fn vibe_check_accepts_a_valid_builtin_log_extension() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    append_manifest_extension(
+        project.path(),
+        r#"[[extension]]
+id = "announce"
+point = "phase:build"
+handler = { kind = "builtin", name = "log" }
+config = { message = "hello from {phase}" }
+"#,
+    );
+
+    user.vibe()
+        .args(["check", "--path"])
+        .arg(project.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("manifest_validity").not())
+        .stderr(predicate::str::contains("manifest_validity").not());
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
+fn vibe_check_rejects_and_names_an_unknown_nested_extension_field() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    append_manifest_extension(
+        project.path(),
+        r#"[[extension]]
+id = "announce"
+point = "phase:build"
+handler = { kind = "builtin", name = "log", mystery = true }
+"#,
+    );
+
+    user.vibe()
+        .args(["check", "--path"])
+        .arg(project.path())
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("unknown field").and(predicate::str::contains("mystery")));
+}

@@ -13,6 +13,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 mod consumer;
 mod decor;
 mod document;
+mod extension;
 pub mod i18n;
 mod lockfile;
 mod package;
@@ -23,6 +24,10 @@ mod subskill;
 
 pub use consumer::{ConsumerNode, NodeRole};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
+pub use extension::{
+    ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
+    ExtensionPass, ExtensionPassKind, ExtensionWhen,
+};
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,

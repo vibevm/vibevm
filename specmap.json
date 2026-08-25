@@ -1844,6 +1844,24 @@
       "fingerprint": "tok1:9f178f8ce367f14475eab8bf03886e33bed28fc96737e9d33c27aae2d3bd1c8b"
     },
     {
+      "crate_name": "vibe-check",
+      "file": "crates/vibe-check/tests/check_cells_oracle.rs",
+      "item_kind": "fn",
+      "line": 205,
+      "symbol": "vibe_check::tests::check_cells_oracle::manifest_validity_accepts_a_builtin_log_extension",
+      "end_line": 227,
+      "fingerprint": "tok1:1bb9559ff442c4d3bdf6613ad4da5b70ef9d21dfcd3d732eb94d7173e402a89c"
+    },
+    {
+      "crate_name": "vibe-check",
+      "file": "crates/vibe-check/tests/check_cells_oracle.rs",
+      "item_kind": "fn",
+      "line": 229,
+      "symbol": "vibe_check::tests::check_cells_oracle::manifest_validity_names_an_unknown_nested_extension_field",
+      "end_line": 253,
+      "fingerprint": "tok1:307bee487325b2e6643a537b13a395fe11badbdb943d64507667a65a5107747a"
+    },
+    {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "mod",
@@ -4725,6 +4743,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_init.rs",
+      "item_kind": "fn",
+      "line": 357,
+      "symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
+      "end_line": 380,
+      "fingerprint": "tok1:ba33fecec7b25529830608bb9f4675dbee62b6f3d8a3b676fce78f5f9cf75715"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_init.rs",
+      "item_kind": "fn",
+      "line": 382,
+      "symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
+      "end_line": 403,
+      "fingerprint": "tok1:3f9942f74422f432cc52e1769c984e44c5b86a8cdefc7d346951515df3b4ebe0"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "item_kind": "fn",
       "line": 84,
@@ -5357,10 +5393,10 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "struct",
-      "line": 53,
+      "line": 54,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 195,
-      "fingerprint": "tok1:540eb68ee4e57ed310de9d22d08f3debb792a2773aaa1aea2bb5356ca7bdc51d"
+      "end_line": 201,
+      "fingerprint": "tok1:60c72946599949776cb2f9b85ae0c92428177160201f379493b07a487c5f855a"
     },
     {
       "crate_name": "vibe-core",
@@ -5481,12 +5517,255 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_core::manifest::document::tests_extensions::all_five_handler_shapes_parse_without_restricting_agent_to_create",
+      "end_line": 70,
+      "fingerprint": "tok1:35ee0fcf664c8b6124e8b6c76b26c27066a506e47aba9f281b21c0e3ec36e2f6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 266,
+      "symbol": "vibe_core::manifest::document::tests_extensions::bad_point_is_a_typed_toml_shape_error",
+      "end_line": 281,
+      "fingerprint": "tok1:b1045cb24c57c2c41be05b5e39deee5ae33f9753107bff6e6ed075922ce6b48d"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 193,
+      "symbol": "vibe_core::manifest::document::tests_extensions::declarations_are_role_blind_between_project_and_package_but_not_virtual_workspace",
+      "end_line": 220,
+      "fingerprint": "tok1:af89091b77eedefd14a32e93af887cc753dcdffcfd4551252ca03d4ac56fcf6a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 283,
+      "symbol": "vibe_core::manifest::document::tests_extensions::duplicate_ids_are_semantic_invalid_manifest_errors",
+      "end_line": 303,
+      "fingerprint": "tok1:58b06c969d5ae8bf3360fca9f229daa1ee36877a4909402f03d33609d303ee27"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 72,
+      "symbol": "vibe_core::manifest::document::tests_extensions::every_optional_field_preserves_presence_and_structural_roundtrip",
+      "end_line": 143,
+      "fingerprint": "tok1:1231e85ac51d31dbb0b4419fdd8966f1f35ba2114cd5c98c09d6809fe650b6dc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 145,
+      "symbol": "vibe_core::manifest::document::tests_extensions::manifest_write_preserves_commented_nested_extension_tables",
+      "end_line": 191,
+      "fingerprint": "tok1:52f683ac7902f0f2dac8b3cd6b57145828d7ccb33e6987a5db2723bb6a4fd220"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 416,
+      "symbol": "vibe_core::manifest::document::tests_extensions::optional_field_presence_laws_are_enforced_through_the_wire",
+      "end_line": 451,
+      "fingerprint": "tok1:99e8e2828df6eecadee754122b772f19cdae2b7aa459f05601aa31d89501f049"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 366,
+      "symbol": "vibe_core::manifest::document::tests_extensions::pass_wire_accepts_every_kind_and_level_without_placement_policy",
+      "end_line": 414,
+      "fingerprint": "tok1:8e4db53e1627f6d74322cee5aaf4ad387bee8468089b257755d0d23df465e615"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 222,
+      "symbol": "vibe_core::manifest::document::tests_extensions::required_fields_fail_as_toml_shape_errors_and_name_the_field",
+      "end_line": 246,
+      "fingerprint": "tok1:e48bae613ffc405c697ce72a49e34b86fb820b782d5c011ed30328dffa0a2c33"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 305,
+      "symbol": "vibe_core::manifest::document::tests_extensions::semantic_extension_errors_follow_legacy_role_precedence",
+      "end_line": 346,
+      "fingerprint": "tok1:e7325b6222ec5a632c744481fe667c9171ea9f48b2253da37b1573daa53ac46b"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "item_kind": "fn",
+      "line": 248,
+      "symbol": "vibe_core::manifest::document::tests_extensions::strict_unknown_fields_cover_the_row_selector_and_pass_tables",
+      "end_line": 264,
+      "fingerprint": "tok1:e9fb4e68609fe1adada2437f5be52141d54925daef0201cd8dcd8298700b9dde"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/validation.rs",
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_core::manifest::document::validation",
       "end_line": 3,
       "fingerprint": "tok1:6462f761e1dab8e366e3c8e54a88f5d226c14f3ee15890c119a6b085e7f37744"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_core::manifest::extension",
+      "end_line": 7,
+      "fingerprint": "tok1:a2b746e6a5d7320eb1dea7dbe50bf3199245b8a9ca794c783188db831c554823"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "struct",
+      "line": 68,
+      "symbol": "vibe_core::manifest::extension::ExtensionAppliesTo",
+      "end_line": 84,
+      "fingerprint": "tok1:2ff9b8927556972905306441f1563b56d41d479b9ecfd4b8b9457e66d0100662"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "struct",
+      "line": 151,
+      "symbol": "vibe_core::manifest::extension::ExtensionConfig",
+      "end_line": 162,
+      "fingerprint": "tok1:795db9474095e148aff90afe3de90d582cbaefbe7e85af597c91d3589a9b7b1b"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "struct",
+      "line": 212,
+      "symbol": "vibe_core::manifest::extension::ExtensionDecl",
+      "end_line": 240,
+      "fingerprint": "tok1:881dc120945403d4dba733b9e50f3e7b93aa26c6a398c594a8f50f83250371cd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "enum",
+      "line": 26,
+      "symbol": "vibe_core::manifest::extension::ExtensionHandler",
+      "end_line": 53,
+      "fingerprint": "tok1:16800271a301cf07db7402f905595ffab466bd99a9c56544bb9e56c862f2d891"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "enum",
+      "line": 102,
+      "symbol": "vibe_core::manifest::extension::ExtensionIrLevel",
+      "end_line": 117,
+      "fingerprint": "tok1:ac8090c3023be220a59fc22828acb32a4ec3bc108b2ef332b69763d4f95befb4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "struct",
+      "line": 119,
+      "symbol": "vibe_core::manifest::extension::ExtensionPass",
+      "end_line": 149,
+      "fingerprint": "tok1:51ed2e41d98a6c55988855526460d17d36b204457077852491493bc3f14364cb"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "enum",
+      "line": 86,
+      "symbol": "vibe_core::manifest::extension::ExtensionPassKind",
+      "end_line": 100,
+      "fingerprint": "tok1:e786b8a6643c9140b4fc170c7d93195ead80a3f3ddf9021b68b7cc6ec7e0d075"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "item_kind": "struct",
+      "line": 182,
+      "symbol": "vibe_core::manifest::extension::ExtensionWhen",
+      "end_line": 192,
+      "fingerprint": "tok1:f2bada53c77279c8f8f8e04e9d73e6ba0fbe6043d58a6ca78518f1161a54d655"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 203,
+      "symbol": "vibe_core::manifest::extension::tests::compile_points_accept_only_builtin_and_native",
+      "end_line": 231,
+      "fingerprint": "tok1:cd3fc4b99db1a9ad2d763949e5732b904e41285c78fe3c20523074e107ac039c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 270,
+      "symbol": "vibe_core::manifest::extension::tests::optional_fields_are_gated_by_point_family_and_presence",
+      "end_line": 310,
+      "fingerprint": "tok1:6ab5e394a6e067c45c04fc002c5a96125eee56ddbd74b043df87752457792ff9"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 233,
+      "symbol": "vibe_core::manifest::extension::tests::pass_flag_and_optional_pass_table_follow_presence_laws",
+      "end_line": 268,
+      "fingerprint": "tok1:fb95cb5bb740547d3746fc6d4421a1b6d99e9b8497187b0b5feffaa45b0851f4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_core::manifest::extension::tests::script_and_native_paths_are_portably_declarant_root_relative",
+      "end_line": 201,
+      "fingerprint": "tok1:89591b4a51c776bc06f9f89577df99c80f7b84bcd0d8e064c7396182c796076b"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 49,
+      "symbol": "vibe_core::manifest::extension::tests::semantic_toml_equality_keeps_signed_zero_datetime_and_nested_types",
+      "end_line": 76,
+      "fingerprint": "tok1:9f7da324a74bd1e7b950ac884afa544913aeeeb9ed9a80e4eb5595023003cd86"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_core::manifest::extension::tests::semantic_toml_wrappers_keep_manifest_eq_and_make_nan_reflexive",
+      "end_line": 47,
+      "fingerprint": "tok1:ff7073a98360bc6ff0aeab4e0f36c48f05a1dca91920ee6bc2cef90e944373ec"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/wire.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::manifest::extension::wire",
+      "end_line": 3,
+      "fingerprint": "tok1:a2b746e6a5d7320eb1dea7dbe50bf3199245b8a9ca794c783188db831c554823"
     },
     {
       "crate_name": "vibe-core",
@@ -11888,6 +12167,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-check/tests/check_cells_oracle.rs",
+      "from_symbol": "vibe_check::tests::check_cells_oracle::manifest_validity_accepts_a_builtin_log_extension",
+      "line": 206,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-check/tests/check_cells_oracle.rs",
+      "from_symbol": "vibe_check::tests::check_cells_oracle::manifest_validity_names_an_unknown_nested_extension_field",
+      "line": 230,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli",
       "line": 7,
@@ -14494,6 +14789,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_init.rs",
+      "from_symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
+      "line": 358,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_init.rs",
+      "from_symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
+      "line": 383,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
       "line": 86,
@@ -15095,7 +15406,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 64,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
@@ -15213,11 +15524,227 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::all_five_handler_shapes_parse_without_restricting_agent_to_create",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::bad_point_is_a_typed_toml_shape_error",
+      "line": 267,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::declarations_are_role_blind_between_project_and_package_but_not_virtual_workspace",
+      "line": 194,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::duplicate_ids_are_semantic_invalid_manifest_errors",
+      "line": 284,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::every_optional_field_preserves_presence_and_structural_roundtrip",
+      "line": 73,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::manifest_write_preserves_commented_nested_extension_tables",
+      "line": 146,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::optional_field_presence_laws_are_enforced_through_the_wire",
+      "line": 417,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::pass_wire_accepts_every_kind_and_level_without_placement_policy",
+      "line": 367,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::required_fields_fail_as_toml_shape_errors_and_name_the_field",
+      "line": 223,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::semantic_extension_errors_follow_legacy_role_precedence",
+      "line": 306,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+      "from_symbol": "vibe_core::manifest::document::tests_extensions::strict_unknown_fields_cover_the_row_selector_and_pass_tables",
+      "line": 249,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/document/validation.rs",
       "from_symbol": "vibe_core::manifest::document::validation",
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionAppliesTo",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionConfig",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionDecl",
+      "line": 228,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionHandler",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionIrLevel",
+      "line": 110,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionPass",
+      "line": 138,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionPassKind",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension.rs",
+      "from_symbol": "vibe_core::manifest::extension::ExtensionWhen",
+      "line": 191,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::compile_points_accept_only_builtin_and_native",
+      "line": 204,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::optional_fields_are_gated_by_point_family_and_presence",
+      "line": 271,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::pass_flag_and_optional_pass_table_follow_presence_laws",
+      "line": 234,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::script_and_native_paths_are_portably_declarant_root_relative",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::semantic_toml_equality_keeps_signed_zero_datetime_and_nested_types",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/tests.rs",
+      "from_symbol": "vibe_core::manifest::extension::tests::semantic_toml_wrappers_keep_manifest_eq_and_make_nan_reflexive",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/wire.rs",
+      "from_symbol": "vibe_core::manifest::extension::wire",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "implements"
     },
     {

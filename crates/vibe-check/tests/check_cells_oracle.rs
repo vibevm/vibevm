@@ -201,3 +201,53 @@ fn minimal_project_is_clean_through_the_seam() {
         );
     }
 }
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
+fn manifest_validity_accepts_a_builtin_log_extension() {
+    let project = tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        r#"[project]
+name = "demo"
+version = "0.1.0"
+
+[[extension]]
+id = "announce"
+point = "phase:build"
+handler = { kind = "builtin", name = "log" }
+config = { message = "hello from {phase}" }
+"#,
+    )
+    .unwrap();
+
+    let mut report = CheckReport::default();
+    ManifestValidityCheck.run(project.path(), &opts(), &mut report);
+    assert!(report.findings.is_empty(), "got: {:?}", report.findings);
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
+fn manifest_validity_names_an_unknown_nested_extension_field() {
+    let project = tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        r#"[project]
+name = "demo"
+version = "0.1.0"
+
+[[extension]]
+id = "announce"
+point = "phase:build"
+handler = { kind = "builtin", name = "log", mystery = true }
+"#,
+    )
+    .unwrap();
+
+    let mut report = CheckReport::default();
+    ManifestValidityCheck.run(project.path(), &opts(), &mut report);
+    assert_eq!(report.findings.len(), 1, "got: {:?}", report.findings);
+    let message = &report.findings[0].message;
+    assert!(message.contains("unknown field"), "{message}");
+    assert!(message.contains("mystery"), "{message}");
+}

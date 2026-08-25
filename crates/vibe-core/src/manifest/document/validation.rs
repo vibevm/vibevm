@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 use crate::error::{Error, Result};
+use crate::manifest::extension::validate_extension_declarations;
 use crate::manifest::package::{MCP_ARG_VARS, validate_visibility};
 
 use super::Manifest;
@@ -93,6 +94,11 @@ impl Manifest {
             }
         }
 
+        // Preserve the established diagnostic order: the legacy role,
+        // visibility, and package-role checks above still win. Extension
+        // declarations are judged next; the existing MCP-kind check stays last.
+        validate_extension_declarations(&self.extensions, has_project, has_package)
+            .map_err(|reason| Error::InvalidManifest { reason })?;
         self.validate_mcp_kind()?;
         Ok(())
     }

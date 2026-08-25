@@ -5,6 +5,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::manifest::document::{BootSection, Manifest, OriginSection, WorkspaceSection};
+use crate::manifest::extension::{ExtensionDeclWire, validate_extension_declarations};
 use crate::manifest::i18n::I18nDecl;
 use crate::manifest::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -319,6 +320,8 @@ pub(crate) struct ManifestWire {
     mcp_servers: Vec<McpServerDecl>,
     #[serde(default, skip_serializing_if = "HooksDecl::is_empty")]
     hooks: HooksDecl,
+    #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
+    extensions: Vec<ExtensionDeclWire>,
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
     compatibility: Compatibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -360,6 +363,11 @@ impl TryFrom<ManifestWire> for Manifest {
             }
             None => (Vec::new(), None),
         };
+        let extensions = wire
+            .extensions
+            .into_iter()
+            .map(TryInto::try_into)
+            .collect::<Result<Vec<_>, String>>()?;
         Ok(Self {
             project: wire.project,
             package: wire.package,
@@ -376,6 +384,7 @@ impl TryFrom<ManifestWire> for Manifest {
             binaries: wire.binaries,
             mcp_servers: wire.mcp_servers,
             hooks: wire.hooks,
+            extensions,
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
             features: wire.features,
@@ -397,6 +406,8 @@ impl TryFrom<Manifest> for ManifestWire {
     type Error = String;
 
     fn try_from(manifest: Manifest) -> Result<Self, Self::Error> {
+        let has_project = manifest.project.is_some();
+        let has_package = manifest.package.is_some();
         let override_wire = match (manifest.overrides.is_empty(), manifest.override_table) {
             (false, Some(_)) => {
                 return Err("manifest cannot serialize registry [[override]] and visibility [override] together".into());
@@ -405,6 +416,12 @@ impl TryFrom<Manifest> for ManifestWire {
             (true, Some(table)) => Some(OverrideWire::Visibility(table)),
             (true, None) => None,
         };
+        validate_extension_declarations(&manifest.extensions, has_project, has_package)?;
+        let extensions = manifest
+            .extensions
+            .into_iter()
+            .map(TryInto::try_into)
+            .collect::<Result<Vec<_>, String>>()?;
         Ok(Self {
             project: manifest.project,
             package: manifest.package,
@@ -421,6 +438,7 @@ impl TryFrom<Manifest> for ManifestWire {
             binaries: manifest.binaries,
             mcp_servers: manifest.mcp_servers,
             hooks: manifest.hooks,
+            extensions,
             compatibility: manifest.compatibility,
             boot_snippet: manifest.boot_snippet,
             features: manifest.features,

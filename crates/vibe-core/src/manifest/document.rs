@@ -39,6 +39,7 @@ use specmark::spec;
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
+use super::extension::ExtensionDecl;
 use super::i18n::I18nDecl;
 use super::package::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
@@ -140,6 +141,11 @@ pub struct Manifest {
     /// (PROP-020). Universal, not bridge-only (package-role).
     #[serde(default, skip_serializing_if = "HooksDecl::is_empty")]
     pub hooks: HooksDecl,
+
+    /// `[[extension]]` — ordered lifecycle/compiler contributions declared by
+    /// either a project or a package (PROP-054 §3.2).
+    #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
+    pub extensions: Vec<ExtensionDecl>,
 
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
@@ -412,6 +418,9 @@ impl Manifest {
 #[cfg(test)]
 #[path = "document/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "document/tests_extensions.rs"]
+mod tests_extensions;
 #[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;
