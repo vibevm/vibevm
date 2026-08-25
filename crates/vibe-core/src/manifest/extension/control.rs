@@ -17,6 +17,16 @@ use super::ExtensionConfig;
 /// Authored values retain every character exactly. Constructed package and
 /// host identities use the two closed spellings accepted by the lifecycle
 /// contract, but the resulting value still has no component-extraction API.
+///
+/// ```
+/// use vibe_core::{Group, PackageName};
+/// use vibe_core::manifest::ExtensionKey;
+///
+/// let group = Group::parse("org.demo").unwrap();
+/// let name = PackageName::parse("tools").unwrap();
+/// let key = ExtensionKey::for_package(&group, &name, "announce");
+/// assert_eq!(key.as_str(), "org.demo/tools#announce");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ExtensionKey(String);
 
@@ -50,6 +60,16 @@ impl fmt::Display for ExtensionKey {
 }
 
 /// One ordered `[[extensions.use]]` activation.
+///
+/// ```
+/// use vibe_core::manifest::{ExtensionKey, ExtensionUse};
+///
+/// let activation = ExtensionUse {
+///     reference: ExtensionKey::authored("org.demo/tools#announce"),
+///     config: None,
+/// };
+/// assert!(activation.config.is_none());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExtensionUse {
     pub reference: ExtensionKey,
@@ -59,6 +79,16 @@ pub struct ExtensionUse {
 }
 
 /// Consumer-side extension activation and disable controls.
+///
+/// ```
+/// use vibe_core::manifest::{ExtensionKey, ExtensionsControl};
+///
+/// let controls = ExtensionsControl {
+///     uses: Vec::new(),
+///     disable: vec![ExtensionKey::authored("__host__/demo#legacy")],
+/// };
+/// assert!(!controls.is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ExtensionsControl {
     pub uses: Vec<ExtensionUse>,
