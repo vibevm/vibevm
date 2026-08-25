@@ -18,6 +18,11 @@
 //! pipeline (§8) and link tables (§10) build on top of it next.
 
 mod address;
+#[expect(
+    dead_code,
+    reason = "R3.1 defines the dormant compiler IR/pass skeleton; remove when R3.2 wires the first pass"
+)]
+mod compiler;
 mod directives;
 mod doctree;
 mod embed;

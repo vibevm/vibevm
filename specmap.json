@@ -10161,6 +10161,150 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_spec::compiler::ir",
+      "end_line": 8,
+      "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_spec::compiler::ir::tests::artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address",
+      "end_line": 100,
+      "fingerprint": "tok1:910f1be707cf19ebbdea2d5964566d59a64d5fa7ee4e45a7aafc294bd97608c5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "item_kind": "fn",
+      "line": 201,
+      "symbol": "vibe_spec::compiler::ir::tests::lane_has_one_frame_around_heterogeneous_contributions",
+      "end_line": 257,
+      "fingerprint": "tok1:4ed9258b5d8b09835b0dba5f6fe0b2b4c47cad774e8ecbd5e559d238c3b18e4e"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "item_kind": "fn",
+      "line": 102,
+      "symbol": "vibe_spec::compiler::ir::tests::one_graph_can_preserve_shared_nodes_and_each_roots_emission_order",
+      "end_line": 199,
+      "fingerprint": "tok1:86b59b7994e8a307026ed274a0776a00a67031e763d58bf220ce06bdf5be6135"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "item_kind": "fn",
+      "line": 259,
+      "symbol": "vibe_spec::compiler::ir::tests::owned_transform_apis_preserve_identity_and_make_mutation_deliberate",
+      "end_line": 292,
+      "fingerprint": "tok1:e8c04f3073b2138c39f7f9d64f40df06b102f1c9091a0505103b545ebf78c6b0"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "item_kind": "fn",
+      "line": 24,
+      "symbol": "vibe_spec::compiler::ir::tests::two_addresses_into_one_physical_document_remain_two_document_values",
+      "end_line": 50,
+      "fingerprint": "tok1:877e2926c710508d565783fe521edfdcd12ef8f97c6c2ec0c3b434f63eec275d"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_spec::compiler::pass",
+      "end_line": 7,
+      "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "item_kind": "fn",
+      "line": 214,
+      "symbol": "vibe_spec::compiler::pass::tests::documents_is_an_artifact_batch_at_the_document_level",
+      "end_line": 223,
+      "fingerprint": "tok1:c398b7a733be5f3a82ebd0e70522d4d3daa60f4b88eec49fb867c8004b3b50e6"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "item_kind": "fn",
+      "line": 190,
+      "symbol": "vibe_spec::compiler::pass::tests::erased_output_shape_is_checked_even_after_a_lying_adapter",
+      "end_line": 212,
+      "fingerprint": "tok1:012091fe9f102a15d19c0474928263025f69eb5ce79a16478380ff79c38a9eff"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "item_kind": "fn",
+      "line": 68,
+      "symbol": "vibe_spec::compiler::pass::tests::heterogeneous_segment_keeps_typed_boundaries_behind_erasure",
+      "end_line": 97,
+      "fingerprint": "tok1:19f687b2d53080dde50a789c663971181b41305f4724e168dd86ff6807890f81"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "item_kind": "fn",
+      "line": 99,
+      "symbol": "vibe_spec::compiler::pass::tests::identity_preserves_artifact_structure_and_non_utf8_emitted_bytes",
+      "end_line": 130,
+      "fingerprint": "tok1:185cb567ee4efb06bcbd5daada9da6b7b2027a8d79017823271eb95e9af3fc28"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "item_kind": "fn",
+      "line": 132,
+      "symbol": "vibe_spec::compiler::pass::tests::segment_rejects_duplicate_names_incompatible_chains_and_wrong_inputs",
+      "end_line": 172,
+      "fingerprint": "tok1:1b7db34b9315be0fa7fdf53bd6b291bb41ab7773e87f4e4cc0ca61048b9f06b0"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pipeline.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_spec::compiler::pipeline",
+      "end_line": 7,
+      "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_spec::compiler::pipeline::tests::duplicate_pass_names_are_global_across_both_segments",
+      "end_line": 183,
+      "fingerprint": "tok1:adb7ee5c37e02ab05129de19dd56517991eeee7be71ecc05dedde116e087123f"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "item_kind": "fn",
+      "line": 141,
+      "symbol": "vibe_spec::compiler::pipeline::tests::scheduler_maps_documents_gathers_once_then_runs_the_artifact_segment",
+      "end_line": 167,
+      "fingerprint": "tok1:81ff495a4187a472314f3e3c56b8d3fafc3966c536bbaef376569107b9138f73"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "item_kind": "fn",
+      "line": 185,
+      "symbol": "vibe_spec::compiler::pipeline::tests::segments_reject_passes_that_bypass_the_gather_cardinality_boundary",
+      "end_line": 233,
+      "fingerprint": "tok1:e9994269b976dde01f901c30e934b1e14137cd7a64249a8c51728affc9f0abd1"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/pipeline/characterization_tests.rs",
       "item_kind": "fn",
       "line": 109,
@@ -20252,6 +20396,134 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir.rs",
+      "from_symbol": "vibe_spec::compiler::ir",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::tests::artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::tests::lane_has_one_frame_around_heterogeneous_contributions",
+      "line": 202,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::tests::one_graph_can_preserve_shared_nodes_and_each_roots_emission_order",
+      "line": 103,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::tests::owned_transform_apis_preserve_identity_and_make_mutation_deliberate",
+      "line": 260,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
+      "from_symbol": "vibe_spec::compiler::ir::tests::two_addresses_into_one_physical_document_remain_two_document_values",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass.rs",
+      "from_symbol": "vibe_spec::compiler::pass",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pass::tests::documents_is_an_artifact_batch_at_the_document_level",
+      "line": 215,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pass::tests::erased_output_shape_is_checked_even_after_a_lying_adapter",
+      "line": 191,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pass::tests::heterogeneous_segment_keeps_typed_boundaries_behind_erasure",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pass::tests::identity_preserves_artifact_structure_and_non_utf8_emitted_bytes",
+      "line": 100,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pass/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pass::tests::segment_rejects_duplicate_names_incompatible_chains_and_wrong_inputs",
+      "line": 133,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pipeline.rs",
+      "from_symbol": "vibe_spec::compiler::pipeline",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pipeline::tests::duplicate_pass_names_are_global_across_both_segments",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pipeline::tests::scheduler_maps_documents_gathers_once_then_runs_the_artifact_segment",
+      "line": 142,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/pipeline/tests.rs",
+      "from_symbol": "vibe_spec::compiler::pipeline::tests::segments_reject_passes_that_bypass_the_gather_cardinality_boundary",
+      "line": 186,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-spec/src/pipeline/characterization_tests.rs",

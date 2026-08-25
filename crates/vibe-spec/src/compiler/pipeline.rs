@@ -1,0 +1,211 @@
+//! The single declared compiler schedule and its cardinality barrier.
+//!
+//! Source/document passes run once for every addressed document. Their owned
+//! outputs cross [`GatherDocuments`]—a scheduler operation, never a named
+//! compiler pass—then closure/lane/emitted passes run once for the artifact.
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
+
+use std::collections::BTreeSet;
+
+use super::ir::{DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, SourceIr};
+use super::pass::{
+    AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
+};
+
+const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Document);
+const DOCUMENT_DOCUMENT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Document);
+const DOCUMENT_ARTIFACT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Artifact);
+const EMITTED_ARTIFACT: IrShape = IrShape::new(IrLevel::Emitted, IrCardinality::Artifact);
+
+/// The typed cardinality boundary between per-document and per-artifact work.
+///
+/// It has no name and cannot be targeted by pass ordering: gathering values is
+/// execution mechanics, not a sixth IR level or an extension point.
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct GatherDocuments;
+
+impl GatherDocuments {
+    pub(crate) fn run(self, documents: Vec<DocumentIr>) -> Documents {
+        Documents::new(documents)
+    }
+}
+
+/// One item of the declared schedule, including its non-pass barrier.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum ScheduleItem {
+    Pass(PassDescriptor),
+    GatherDocuments,
+}
+
+/// One complete schedule: document segment → gather → artifact segment.
+#[derive(Default)]
+pub(crate) struct CompilerPipeline {
+    document: PassSegment,
+    gather: GatherDocuments,
+    artifact: PassSegment,
+    pass_names: BTreeSet<PassName>,
+}
+
+impl CompilerPipeline {
+    pub(crate) fn push_document<P: Pass>(&mut self, pass: P) -> Result<(), CompilerPipelineError> {
+        let name = pass.name().clone();
+        Self::ensure_segment_cardinality::<P>("document", IrCardinality::Document, &name)?;
+        self.ensure_name_free(&name)?;
+        self.document.push(pass)?;
+        self.pass_names.insert(name);
+        Ok(())
+    }
+
+    pub(crate) fn push_artifact<P: Pass>(&mut self, pass: P) -> Result<(), CompilerPipelineError> {
+        let name = pass.name().clone();
+        Self::ensure_segment_cardinality::<P>("artifact", IrCardinality::Artifact, &name)?;
+        self.ensure_name_free(&name)?;
+        self.artifact.push(pass)?;
+        self.pass_names.insert(name);
+        Ok(())
+    }
+
+    fn ensure_name_free(&self, name: &PassName) -> Result<(), CompilerPipelineError> {
+        if self.pass_names.contains(name) {
+            Err(CompilerPipelineError::DuplicateName { pass: name.clone() })
+        } else {
+            Ok(())
+        }
+    }
+
+    fn ensure_segment_cardinality<P: Pass>(
+        segment: &'static str,
+        expected: IrCardinality,
+        pass: &PassName,
+    ) -> Result<(), CompilerPipelineError> {
+        let input = P::Input::SHAPE;
+        let output = P::Output::SHAPE;
+        if input.cardinality == expected && output.cardinality == expected {
+            Ok(())
+        } else {
+            Err(CompilerPipelineError::WrongSegmentCardinality {
+                segment,
+                pass: pass.clone(),
+                expected,
+                input,
+                output,
+            })
+        }
+    }
+
+    /// The one declared schedule in execution order.
+    pub(crate) fn schedule(&self) -> Vec<ScheduleItem> {
+        self.document
+            .descriptors()
+            .map(ScheduleItem::Pass)
+            .chain(std::iter::once(ScheduleItem::GatherDocuments))
+            .chain(self.artifact.descriptors().map(ScheduleItem::Pass))
+            .collect()
+    }
+
+    /// Run the declared schedule with the accepted cardinality law.
+    pub(crate) fn run(&self, sources: Vec<SourceIr>) -> Result<EmittedIr, CompilerPipelineError> {
+        self.validate_boundaries()?;
+
+        let mut documents = Vec::with_capacity(sources.len());
+        for source in sources {
+            let output = self.document.run(AnyIr::Source(source))?;
+            match output {
+                AnyIr::Document(document) => documents.push(document),
+                other => {
+                    return Err(CompilerPipelineError::UnexpectedCarrier {
+                        boundary: "document segment output",
+                        expected: DOCUMENT_DOCUMENT,
+                        actual: other.shape(),
+                    });
+                }
+            }
+        }
+
+        let documents = self.gather.run(documents);
+        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        match output {
+            AnyIr::Emitted(emitted) => Ok(emitted),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "artifact segment output",
+                expected: EMITTED_ARTIFACT,
+                actual: other.shape(),
+            }),
+        }
+    }
+
+    fn validate_boundaries(&self) -> Result<(), CompilerPipelineError> {
+        self.expect_boundary(
+            "document segment input",
+            SOURCE_DOCUMENT,
+            self.document.first_input(),
+        )?;
+        self.expect_boundary(
+            "document segment output",
+            DOCUMENT_DOCUMENT,
+            self.document.last_output(),
+        )?;
+        self.expect_boundary(
+            "artifact segment input",
+            DOCUMENT_ARTIFACT,
+            self.artifact.first_input(),
+        )?;
+        self.expect_boundary(
+            "artifact segment output",
+            EMITTED_ARTIFACT,
+            self.artifact.last_output(),
+        )
+    }
+
+    fn expect_boundary(
+        &self,
+        boundary: &'static str,
+        expected: IrShape,
+        actual: Option<IrShape>,
+    ) -> Result<(), CompilerPipelineError> {
+        if actual == Some(expected) {
+            Ok(())
+        } else {
+            Err(CompilerPipelineError::ScheduleBoundary {
+                boundary,
+                expected,
+                actual,
+            })
+        }
+    }
+}
+
+/// Why the declared schedule could not be built or executed.
+#[derive(Debug, thiserror::Error)]
+pub(crate) enum CompilerPipelineError {
+    #[error("compiler schedule contains duplicate pass name `{pass}`")]
+    DuplicateName { pass: PassName },
+    #[error(
+        "compiler pass `{pass}` cannot enter the {segment} segment: both sides must have {expected:?} cardinality, got {input:?} -> {output:?}"
+    )]
+    WrongSegmentCardinality {
+        segment: &'static str,
+        pass: PassName,
+        expected: IrCardinality,
+        input: IrShape,
+        output: IrShape,
+    },
+    #[error(transparent)]
+    Segment(#[from] PassSegmentError),
+    #[error("{boundary} must be {expected:?}, got {actual:?}")]
+    ScheduleBoundary {
+        boundary: &'static str,
+        expected: IrShape,
+        actual: Option<IrShape>,
+    },
+    #[error("{boundary} must be {expected:?}, got {actual:?}")]
+    UnexpectedCarrier {
+        boundary: &'static str,
+        expected: IrShape,
+        actual: IrShape,
+    },
+}
+
+#[cfg(test)]
+mod tests;
