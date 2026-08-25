@@ -5690,8 +5690,8 @@
       "item_kind": "struct",
       "line": 54,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 201,
-      "fingerprint": "tok1:60c72946599949776cb2f9b85ae0c92428177160201f379493b07a487c5f855a"
+      "end_line": 210,
+      "fingerprint": "tok1:e2bd468ae5193ef15e410a4532d9c1567689473ceba685f0991fcf4285f8f724"
     },
     {
       "crate_name": "vibe-core",
@@ -5922,82 +5922,91 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 8,
       "symbol": "vibe_core::manifest::extension",
-      "end_line": 7,
+      "end_line": 8,
       "fingerprint": "tok1:a2b746e6a5d7320eb1dea7dbe50bf3199245b8a9ca794c783188db831c554823"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "struct",
-      "line": 68,
+      "line": 71,
       "symbol": "vibe_core::manifest::extension::ExtensionAppliesTo",
-      "end_line": 84,
+      "end_line": 87,
       "fingerprint": "tok1:2ff9b8927556972905306441f1563b56d41d479b9ecfd4b8b9457e66d0100662"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "struct",
-      "line": 151,
+      "line": 154,
       "symbol": "vibe_core::manifest::extension::ExtensionConfig",
-      "end_line": 162,
+      "end_line": 165,
       "fingerprint": "tok1:795db9474095e148aff90afe3de90d582cbaefbe7e85af597c91d3589a9b7b1b"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "struct",
-      "line": 212,
+      "line": 215,
       "symbol": "vibe_core::manifest::extension::ExtensionDecl",
-      "end_line": 240,
+      "end_line": 243,
       "fingerprint": "tok1:881dc120945403d4dba733b9e50f3e7b93aa26c6a398c594a8f50f83250371cd"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "enum",
-      "line": 26,
+      "line": 29,
       "symbol": "vibe_core::manifest::extension::ExtensionHandler",
-      "end_line": 53,
+      "end_line": 56,
       "fingerprint": "tok1:16800271a301cf07db7402f905595ffab466bd99a9c56544bb9e56c862f2d891"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "enum",
-      "line": 102,
+      "line": 105,
       "symbol": "vibe_core::manifest::extension::ExtensionIrLevel",
-      "end_line": 117,
+      "end_line": 120,
       "fingerprint": "tok1:ac8090c3023be220a59fc22828acb32a4ec3bc108b2ef332b69763d4f95befb4"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "struct",
-      "line": 119,
+      "line": 122,
       "symbol": "vibe_core::manifest::extension::ExtensionPass",
-      "end_line": 149,
+      "end_line": 152,
       "fingerprint": "tok1:51ed2e41d98a6c55988855526460d17d36b204457077852491493bc3f14364cb"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "enum",
-      "line": 86,
+      "line": 89,
       "symbol": "vibe_core::manifest::extension::ExtensionPassKind",
-      "end_line": 100,
+      "end_line": 103,
       "fingerprint": "tok1:e786b8a6643c9140b4fc170c7d93195ead80a3f3ddf9021b68b7cc6ec7e0d075"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "item_kind": "struct",
-      "line": 182,
+      "line": 185,
       "symbol": "vibe_core::manifest::extension::ExtensionWhen",
-      "end_line": 192,
+      "end_line": 195,
       "fingerprint": "tok1:f2bada53c77279c8f8f8e04e9d73e6ba0fbe6043d58a6ca78518f1161a54d655"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/control.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_core::manifest::extension::control",
+      "end_line": 7,
+      "fingerprint": "tok1:b227294c7e24b891df4e4df5d859749e7daeb60ea01b92167f7cbbc8a9dabc5f"
     },
     {
       "crate_name": "vibe-core",
@@ -6061,6 +6070,15 @@
       "symbol": "vibe_core::manifest::extension::wire",
       "end_line": 3,
       "fingerprint": "tok1:a2b746e6a5d7320eb1dea7dbe50bf3199245b8a9ca794c783188db831c554823"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/extension/wire.rs",
+      "item_kind": "struct",
+      "line": 41,
+      "symbol": "vibe_core::manifest::extension::wire::ExtensionsControlWire",
+      "end_line": 50,
+      "fingerprint": "tok1:3de4331108a3f8775d43a1e8d0ce4905306c42531a3558ee5d69c79a4c641971"
     },
     {
       "crate_name": "vibe-core",
@@ -16676,7 +16694,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension",
-      "line": 7,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "implements"
@@ -16684,7 +16702,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionAppliesTo",
-      "line": 80,
+      "line": 83,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR",
       "verb": "implements"
@@ -16692,7 +16710,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionConfig",
-      "line": 161,
+      "line": 164,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
       "verb": "implements"
@@ -16700,7 +16718,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionDecl",
-      "line": 228,
+      "line": 231,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "implements"
@@ -16708,7 +16726,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionHandler",
-      "line": 35,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES",
       "verb": "implements"
@@ -16716,7 +16734,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionIrLevel",
-      "line": 110,
+      "line": 113,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
       "verb": "implements"
@@ -16724,7 +16742,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionPass",
-      "line": 138,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW",
       "verb": "implements"
@@ -16732,7 +16750,7 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionPassKind",
-      "line": 94,
+      "line": 97,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW",
       "verb": "implements"
@@ -16740,9 +16758,17 @@
     {
       "file": "crates/vibe-core/src/manifest/extension.rs",
       "from_symbol": "vibe_core::manifest::extension::ExtensionWhen",
-      "line": 191,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/control.rs",
+      "from_symbol": "vibe_core::manifest::extension::control",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "implements"
     },
     {
@@ -16799,6 +16825,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/extension/wire.rs",
+      "from_symbol": "vibe_core::manifest::extension::wire::ExtensionsControlWire",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "implements"
     },
     {

@@ -39,7 +39,7 @@ use specmark::spec;
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
-use super::extension::ExtensionDecl;
+use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
 use super::package::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
@@ -146,6 +146,15 @@ pub struct Manifest {
     /// either a project or a package (PROP-054 §3.2).
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
     pub extensions: Vec<ExtensionDecl>,
+
+    /// `[extensions]` / `[[extensions.use]]` — consumer-side activation and
+    /// disable controls (PROP-054 §3.3 `HOST-ACTIVATION`).
+    #[serde(
+        default,
+        rename = "extensions",
+        skip_serializing_if = "ExtensionsControl::is_empty"
+    )]
+    pub extension_controls: ExtensionsControl,
 
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
@@ -418,6 +427,9 @@ impl Manifest {
 #[cfg(test)]
 #[path = "document/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "document/tests_extension_controls.rs"]
+mod tests_extension_controls;
 #[cfg(test)]
 #[path = "document/tests_extensions.rs"]
 mod tests_extensions;

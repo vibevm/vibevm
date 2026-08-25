@@ -26,7 +26,7 @@ pub use consumer::{ConsumerNode, NodeRole};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use extension::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
-    ExtensionPass, ExtensionPassKind, ExtensionWhen,
+    ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,

@@ -5,7 +5,9 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::manifest::document::{BootSection, Manifest, OriginSection, WorkspaceSection};
-use crate::manifest::extension::{ExtensionDeclWire, validate_extension_declarations};
+use crate::manifest::extension::{
+    ExtensionDeclWire, ExtensionsControlWire, validate_extension_declarations,
+};
 use crate::manifest::i18n::I18nDecl;
 use crate::manifest::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -322,6 +324,12 @@ pub(crate) struct ManifestWire {
     hooks: HooksDecl,
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
     extensions: Vec<ExtensionDeclWire>,
+    #[serde(
+        default,
+        rename = "extensions",
+        skip_serializing_if = "ExtensionsControlWire::is_empty"
+    )]
+    extension_controls: ExtensionsControlWire,
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
     compatibility: Compatibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -385,6 +393,7 @@ impl TryFrom<ManifestWire> for Manifest {
             mcp_servers: wire.mcp_servers,
             hooks: wire.hooks,
             extensions,
+            extension_controls: wire.extension_controls.into(),
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
             features: wire.features,
@@ -439,6 +448,7 @@ impl TryFrom<Manifest> for ManifestWire {
             mcp_servers: manifest.mcp_servers,
             hooks: manifest.hooks,
             extensions,
+            extension_controls: manifest.extension_controls.into(),
             compatibility: manifest.compatibility,
             boot_snippet: manifest.boot_snippet,
             features: manifest.features,

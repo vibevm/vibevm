@@ -451,7 +451,7 @@ fn optional_field_presence_laws_are_enforced_through_the_wire() {
 }
 
 #[test]
-fn extension_use_spelling_remains_rejected_until_its_owner_ruling() {
+fn singular_extension_use_remains_rejected_after_plural_ruling() {
     let error = parse_error(
         PROJECT,
         r#"

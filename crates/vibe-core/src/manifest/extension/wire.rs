@@ -6,10 +6,11 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use super::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
-    ExtensionPass, ExtensionPassKind, ExtensionWhen,
+    ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
 use crate::lifecycle::ExtensionPoint;
 
@@ -35,6 +36,32 @@ pub(crate) struct ExtensionDeclWire {
     pass: Option<ExtensionPassWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     when: Option<toml::Table>,
+}
+
+/// Strict wire shape for the plural consumer-side `[extensions]` namespace.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION")]
+pub(crate) struct ExtensionsControlWire {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    disable: Vec<String>,
+    #[serde(default, rename = "use", skip_serializing_if = "Vec::is_empty")]
+    uses: Vec<ExtensionUseWire>,
+}
+
+impl ExtensionsControlWire {
+    pub(crate) fn is_empty(&self) -> bool {
+        self.disable.is_empty() && self.uses.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ExtensionUseWire {
+    #[serde(rename = "ref")]
+    reference: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    config: Option<toml::Table>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -153,6 +180,46 @@ impl TryFrom<ExtensionDecl> for ExtensionDeclWire {
             pass: extension.pass.map(Into::into),
             when: extension.when.map(ExtensionWhen::into_table),
         })
+    }
+}
+
+impl From<ExtensionsControlWire> for ExtensionsControl {
+    fn from(wire: ExtensionsControlWire) -> Self {
+        Self {
+            uses: wire
+                .uses
+                .into_iter()
+                .map(|entry| ExtensionUse {
+                    reference: ExtensionKey::authored(entry.reference),
+                    config: entry.config.map(ExtensionConfig::from_table),
+                })
+                .collect(),
+            disable: wire
+                .disable
+                .into_iter()
+                .map(ExtensionKey::authored)
+                .collect(),
+        }
+    }
+}
+
+impl From<ExtensionsControl> for ExtensionsControlWire {
+    fn from(controls: ExtensionsControl) -> Self {
+        Self {
+            disable: controls
+                .disable
+                .into_iter()
+                .map(|key| key.as_str().to_owned())
+                .collect(),
+            uses: controls
+                .uses
+                .into_iter()
+                .map(|entry| ExtensionUseWire {
+                    reference: entry.reference.as_str().to_owned(),
+                    config: entry.config.map(ExtensionConfig::into_table),
+                })
+                .collect(),
+        }
     }
 }
 

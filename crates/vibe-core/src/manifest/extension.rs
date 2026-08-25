@@ -1,8 +1,9 @@
-//! Declaration-only model for the unified `[[extension]]` manifest table.
+//! Unified extension declaration and consumer-control manifest grammar.
 //!
-//! This cell owns what a package or project can declare. Activation,
-//! collection, ordering, state, and handler execution belong to later
-//! lifecycle cells; no declaration here implies that anything has run.
+//! This cell owns what a package or project can declare and how a consuming
+//! host can activate or disable it. World-aware collection, ordering, state,
+//! and handler execution belong to later lifecycle cells; no row here implies
+//! that anything has run.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR");
 
@@ -13,8 +14,10 @@ use specmark::spec;
 
 use crate::lifecycle::{CompilePoint, ExtensionPoint};
 
+mod control;
 mod wire;
-pub(crate) use wire::ExtensionDeclWire;
+pub use control::{ExtensionKey, ExtensionUse, ExtensionsControl};
+pub(crate) use wire::{ExtensionDeclWire, ExtensionsControlWire};
 
 const CONTRIB_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR";
 const HANDLER_TABLES: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES";
