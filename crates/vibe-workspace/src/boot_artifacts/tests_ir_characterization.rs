@@ -38,6 +38,50 @@ fn fixture() -> (TempDir, EffectiveBoot, String, String, String) {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#markers")]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET")]
+fn xml_static_payload_strips_only_compiler_framing_and_keeps_validation_loud() {
+    let framed = concat!(
+        "<!-- vibe:begin spec://org.demo/alpha/boot/entry -->\n",
+        "# Alpha {#root}\n\n",
+        "##PAYLOAD literal `<!-- vibe:end stays in prose -->`.\n",
+        "<!-- vibe:end spec://org.demo/alpha/boot/entry -->\n",
+    );
+    let payload = concat!(
+        "# Alpha {#root}\n\n",
+        "##PAYLOAD literal `<!-- vibe:end stays in prose -->`.\n",
+    );
+    let expected = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown(payload).unwrap());
+
+    assert_eq!(
+        format_static_contribution(framed, SpecFormat::Xml, "org.demo/alpha").unwrap(),
+        expected
+    );
+    assert!(
+        expected.contains("&lt;!-- vibe:end stays in prose --&gt;"),
+        "{expected}"
+    );
+    assert_eq!(
+        format_static_contribution(framed, SpecFormat::Markdown, "org.demo/alpha").unwrap(),
+        framed
+    );
+
+    let invalid = concat!(
+        "<!-- vibe:begin spec://org.demo/alpha/boot/entry -->\n",
+        "# Alpha {#root}\n\n",
+        "##DUP one.\n\n",
+        "##DUP two.\n",
+        "<!-- vibe:end spec://org.demo/alpha/boot/entry -->\n",
+    );
+    let err = format_static_contribution(invalid, SpecFormat::Xml, "org.demo/alpha")
+        .expect_err("duplicate facts stay invalid after framing is removed");
+    let WorkspaceError::InlineCompile { reason } = err else {
+        panic!("expected InlineCompile, got {err:?}");
+    };
+    assert!(reason.contains("twice"), "{reason}");
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts")]
 fn final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markdown_and_xml() {
@@ -111,18 +155,13 @@ fn final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markd
     assert_eq!(xml.matches("<spec ").count(), 3, "{xml}");
     assert!(!xml.contains("<!-- vibe:begin "), "{xml}");
     assert!(!xml.contains("<!-- vibe:end "), "{xml}");
-    // Current byte oracle: the XML pivot strips `vibe:begin`, but its filter
-    // still names the historical `vibe:close` spelling, so the two normal
-    // entries carry their `vibe:end` marker as escaped payload. R3 is a
-    // byte-identity refactor; changing this belongs to a separate fix.
-    assert_eq!(xml.matches("&lt;!-- vibe:end ").count(), 2, "{xml}");
+    assert!(!xml.contains("&lt;!-- vibe:begin "), "{xml}");
+    assert!(!xml.contains("&lt;!-- vibe:end "), "{xml}");
 
     let alpha_payload = vibe_specdoc::to_xml(
-        &vibe_specdoc::from_markdown(concat!(
-            "# Alpha {#org-demo--alpha--root}\n\n",
-            "##org-demo--alpha--A-FACT alpha normal.\n",
-            "<!-- vibe:end spec://org.demo/alpha/boot/entry -->",
-        ))
+        &vibe_specdoc::from_markdown(
+            "# Alpha {#org-demo--alpha--root}\n\n##org-demo--alpha--A-FACT alpha normal.\n",
+        )
         .unwrap(),
     );
     let simple_payload = vibe_specdoc::to_xml(
@@ -132,11 +171,9 @@ fn final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markd
         .unwrap(),
     );
     let omega_payload = vibe_specdoc::to_xml(
-        &vibe_specdoc::from_markdown(concat!(
-            "# Omega {#org-demo--omega--root}\n\n",
-            "##org-demo--omega--O-FACT omega normal.\n",
-            "<!-- vibe:end spec://org.demo/omega/boot/entry -->",
-        ))
+        &vibe_specdoc::from_markdown(
+            "# Omega {#org-demo--omega--root}\n\n##org-demo--omega--O-FACT omega normal.\n",
+        )
         .unwrap(),
     );
     for payload in [&alpha_payload, &simple_payload, &omega_payload] {

@@ -10784,10 +10784,19 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
       "item_kind": "fn",
-      "line": 40,
+      "line": 84,
       "symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markdown_and_xml",
-      "end_line": 171,
-      "fingerprint": "tok1:dbd512c5e8d210f029c40e610374b8929e6c504eac9e14b67bfe504e05ac60d4"
+      "end_line": 208,
+      "fingerprint": "tok1:84c89d94de132f0b029913978a0d9e9099985865afcf689f0383934582814032"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::xml_static_payload_strips_only_compiler_framing_and_keeps_validation_loud",
+      "end_line": 82,
+      "fingerprint": "tok1:6230c833a89b6b35659cbde45da9a4e38c36dd4a8c025958beb48b03657ade80"
     },
     {
       "crate_name": "vibe-workspace",
@@ -20770,7 +20779,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markdown_and_xml",
-      "line": 41,
+      "line": 85,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -20778,9 +20787,25 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markdown_and_xml",
-      "line": 42,
+      "line": 86,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::xml_static_payload_strips_only_compiler_framing_and_keeps_validation_loud",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::tests_ir_characterization::xml_static_payload_strips_only_compiler_framing_and_keeps_validation_loud",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#markers",
       "verb": "verifies"
     },
     {

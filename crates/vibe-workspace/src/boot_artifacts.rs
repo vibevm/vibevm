@@ -400,7 +400,7 @@ fn format_static_contribution(
         .lines()
         .filter(|l| {
             let t = l.trim_start();
-            !t.starts_with("<!-- vibe:begin ") && !t.starts_with("<!-- vibe:close ")
+            !t.starts_with("<!-- vibe:begin ") && !t.starts_with("<!-- vibe:end ")
         })
         .collect::<Vec<_>>()
         .join("\n");
