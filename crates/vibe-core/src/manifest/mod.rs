@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 mod consumer;
+mod decor;
 mod document;
 pub mod i18n;
 mod lockfile;
@@ -99,15 +100,14 @@ where
 ///    first table — header comments and blank lines) from existing
 ///    onto new.
 ///
-/// 3. For each top-level table key that appears in **both** the
-///    new and the existing document, copy the table's `decor()`
-///    (the `prefix` part — comments and blank lines that come
-///    immediately *before* the table header) from existing.
-///    Tables that only exist in new (e.g. `[requires]` after the
-///    operator's first install) get their default decoration.
-///    Tables that only existed in existing (e.g. `[active]` if
-///    something deletes it) drop with their decoration —
-///    structural change wins over decoration preservation.
+/// 3. Recursively pair matching table keys and value shapes, copying
+///    their formatting decoration from existing. Tables that only
+///    exist in new (e.g. `[requires]` after the operator's first
+///    install) get their default decoration. Tables that only existed
+///    in existing (e.g. `[active]` if something deletes it) drop with
+///    their decoration — structural change wins over decoration
+///    preservation. Arrays of tables keep their historical index
+///    pairing; ordinary arrays recurse only when their lengths match.
 ///
 /// 4. **Document-level suffix** (anything after the last table —
 ///    typically operator's footer comments) is preserved by
@@ -134,48 +134,9 @@ fn merge_preserving_comments(existing: &str, new_rendered: &str) -> String {
         new_root.decor_mut().set_prefix(prefix.clone());
     }
 
-    // 2. Per-table decoration. `Item::Table` carries its own
-    //    leading decor; `Item::ArrayOfTables` carries decoration
-    //    on each element (`[[registry]]`). Inside each preserved
-    //    table, `copy_inline_kv_decor` walks the (key, Value)
-    //    pairs and copies prefix / suffix decoration on
-    //    matching keys — that's how `# inline note` comments
-    //    inside a `[[registry]]` block survive a write.
-    for (key, existing_item) in existing_root.iter() {
-        let Some(new_item) = new_doc.as_table_mut().get_mut(key) else {
-            continue;
-        };
-        match (existing_item, new_item) {
-            (toml_edit::Item::Table(et), toml_edit::Item::Table(nt)) => {
-                if let Some(prefix) = et.decor().prefix() {
-                    nt.decor_mut().set_prefix(prefix.clone());
-                }
-                copy_inline_kv_decor(et, nt);
-            }
-            (toml_edit::Item::ArrayOfTables(eaot), toml_edit::Item::ArrayOfTables(naot)) => {
-                // Copy element-level decor up to the shorter of the
-                // two arrays — operators rarely add comments
-                // intermediate to array elements, and a strict
-                // index-pairing is the simplest defensible
-                // approximation.
-                let pair_count = eaot.len().min(naot.len());
-                for i in 0..pair_count {
-                    if let (Some(et), Some(nt)) = (eaot.get(i), naot.get_mut(i)) {
-                        if let Some(prefix) = et.decor().prefix() {
-                            nt.decor_mut().set_prefix(prefix.clone());
-                        }
-                        copy_inline_kv_decor(et, nt);
-                    }
-                }
-            }
-            _ => {
-                // Type changed (e.g. table → value or vice versa).
-                // Don't try to preserve decor across a type
-                // mismatch — the structure changed enough that
-                // copying comments would be misleading.
-            }
-        }
-    }
+    // 2. Nested decoration. The document root keeps its separately-owned
+    //    prefix above; the recursive walker starts at its matching children.
+    decor::copy_matching_table_items(existing_root, new_doc.as_table_mut());
 
     // 3. Document-level trailing — anything after the last
     //    table. `DocumentMut::trailing()` returns the
@@ -189,63 +150,6 @@ fn merge_preserving_comments(existing: &str, new_rendered: &str) -> String {
     new_doc.set_trailing(trailing);
 
     new_doc.to_string()
-}
-
-/// Copy per-key inline decoration (the prefix / suffix attached
-/// to a `Value`'s `Decor`) from `existing` onto matching keys in
-/// `new`. This is what preserves comments and blank-line padding
-/// **inside** a `[[registry]]` block — between
-/// `name = "internal"` and `url = "..."`, for example.
-///
-/// The pairing is by string-equal key. Keys that exist only in
-/// one side fall through with their default decoration (a
-/// brand-new `[requires]` written by `vibe install` doesn't try
-/// to inherit decor from anywhere).
-///
-/// Does not recurse into nested tables; deeper nesting is
-/// unusual in `vibe.toml` (the schema is mostly flat) and
-/// adding recursion would extend correctness obligations
-/// without a corresponding payoff. If a future schema grows
-/// nested tables and an operator's inline comments matter, this
-/// helper extends naturally.
-fn copy_inline_kv_decor(existing: &toml_edit::Table, new: &mut toml_edit::Table) {
-    // toml_edit splits per-key decor across two surfaces:
-    //
-    //   - the **Key** carries the leading whitespace + comments
-    //     up to the `=` (where `# host migrated…` between two
-    //     entries actually lives).
-    //   - the **Value** carries the post-`=` decoration plus any
-    //     same-line trailing comment (`name = "x"  # this`).
-    //
-    // Both must be cloned for full inline-preservation. We
-    // collect the read side first, then apply mutably — the
-    // borrow checker doesn't allow holding an immutable iter
-    // open while we mutate via `get_mut`.
-    use toml_edit::Decor;
-    let mut updates: Vec<(String, Option<Decor>, Option<Decor>)> = Vec::new();
-    for (key, _) in new.iter() {
-        let key_str = key.to_string();
-        let key_decor = existing.key(&key_str).map(|k| k.leaf_decor().clone());
-        let val_decor = match existing.get(&key_str) {
-            Some(toml_edit::Item::Value(v)) => Some(v.decor().clone()),
-            _ => None,
-        };
-        if key_decor.is_some() || val_decor.is_some() {
-            updates.push((key_str, key_decor, val_decor));
-        }
-    }
-    for (key_str, key_decor, val_decor) in updates {
-        if let Some(decor) = key_decor
-            && let Some(mut k) = new.key_mut(&key_str)
-        {
-            *k.leaf_decor_mut() = decor;
-        }
-        if let Some(decor) = val_decor
-            && let Some(toml_edit::Item::Value(nv)) = new.get_mut(&key_str)
-        {
-            *nv.decor_mut() = decor;
-        }
-    }
 }
 
 #[cfg(test)]
@@ -374,6 +278,172 @@ packages = [\"flow:wal@^0.1.0\"]
         );
         assert!(merged.contains("[requires]"));
         assert!(merged.contains("flow:wal@^0.1.0"));
+    }
+
+    #[test]
+    fn nested_extension_tables_preserve_comments_and_new_values_recursively() {
+        let existing = r#"[[extension]] # KEEP-EXTENSION-HEADER
+id = "announce"
+point = "phase:build"
+
+# KEEP-HANDLER-PREFIX
+[extension.handler] # KEEP-HANDLER-HEADER
+kind = "builtin" # KEEP-HANDLER-KIND
+# KEEP-HANDLER-NAME
+name = "log"
+
+# KEEP-CONFIG-PREFIX
+[extension.config]
+# KEEP-CONFIG-MESSAGE
+message = "old message"
+
+# KEEP-PASS-PREFIX
+[extension.pass]
+kind = "transform" # KEEP-PASS-KIND
+level = "document"
+
+# KEEP-PREBUILT-PREFIX
+[extension.handler.prebuilt]
+# KEEP-PREBUILT-PLATFORM
+windows = "old.dll"
+"#;
+        let new_rendered = r#"[[extension]]
+id = "announce"
+point = "phase:build"
+
+[extension.handler]
+kind = "builtin"
+name = "log"
+
+[extension.config]
+message = "new message"
+
+[extension.pass]
+kind = "transform"
+level = "document"
+
+[extension.handler.prebuilt]
+windows = "new.dll"
+"#;
+
+        let merged = merge_preserving_comments(existing, new_rendered);
+        for marker in [
+            "KEEP-EXTENSION-HEADER",
+            "KEEP-HANDLER-PREFIX",
+            "KEEP-HANDLER-HEADER",
+            "KEEP-HANDLER-KIND",
+            "KEEP-HANDLER-NAME",
+            "KEEP-CONFIG-PREFIX",
+            "KEEP-CONFIG-MESSAGE",
+            "KEEP-PASS-PREFIX",
+            "KEEP-PASS-KIND",
+            "KEEP-PREBUILT-PREFIX",
+            "KEEP-PREBUILT-PLATFORM",
+        ] {
+            assert!(merged.contains(marker), "lost {marker}:\n{merged}");
+        }
+        assert!(merged.contains("message = \"new message\""), "{merged}");
+        assert!(merged.contains("windows = \"new.dll\""), "{merged}");
+        assert!(!merged.contains("old message"), "{merged}");
+        assert!(!merged.contains("old.dll"), "{merged}");
+    }
+
+    #[test]
+    fn inline_table_preserves_inner_and_outer_decoration() {
+        let existing = r#"[[extension]]
+id = "inline"
+handler = { kind=  "builtin" , name =  "log" } # KEEP-OUTER
+"#;
+        let new_rendered = r#"[[extension]]
+id = "inline"
+handler = { kind = "builtin", name = "log" }
+"#;
+
+        let merged = merge_preserving_comments(existing, new_rendered);
+        assert!(
+            merged.contains("handler = { kind=  \"builtin\" , name =  \"log\" } # KEEP-OUTER"),
+            "inline-table decor must survive byte-for-byte:\n{merged}"
+        );
+    }
+
+    #[test]
+    fn equal_length_nested_arrays_preserve_element_decoration_and_new_values() {
+        let existing = r#"[[extension]]
+id = "array"
+
+[extension.config]
+paths = [
+    "old-alpha", # KEEP-ALPHA
+    # KEEP-BETA
+    "old-beta",
+]
+"#;
+        let new_rendered = r#"[[extension]]
+id = "array"
+
+[extension.config]
+paths = ["new-alpha", "new-beta"]
+"#;
+
+        let merged = merge_preserving_comments(existing, new_rendered);
+        assert!(merged.contains("KEEP-ALPHA"), "{merged}");
+        assert!(merged.contains("KEEP-BETA"), "{merged}");
+        assert!(merged.contains("new-alpha"), "{merged}");
+        assert!(merged.contains("new-beta"), "{merged}");
+        assert!(!merged.contains("old-alpha"), "{merged}");
+        assert!(!merged.contains("old-beta"), "{merged}");
+    }
+
+    #[test]
+    fn decoration_does_not_cross_type_key_or_array_length_mismatches() {
+        let type_existing = r#"[[extension]]
+id = "shape"
+# DROP-TYPE-KEY
+config = { mode = "old" } # DROP-TYPE-MISMATCH
+"#;
+        let type_new = r#"[[extension]]
+id = "shape"
+
+[extension.config]
+mode = "new"
+"#;
+        let type_merged = merge_preserving_comments(type_existing, type_new);
+        assert!(!type_merged.contains("DROP-TYPE-KEY"));
+        assert!(!type_merged.contains("DROP-TYPE-MISMATCH"));
+        assert!(type_merged.contains("mode = \"new\""));
+
+        let key_existing = r#"[[extension]]
+id = "key"
+legacy = "old" # DROP-KEY-MISMATCH
+"#;
+        let key_new = r#"[[extension]]
+id = "key"
+replacement = "new"
+"#;
+        let key_merged = merge_preserving_comments(key_existing, key_new);
+        assert!(!key_merged.contains("DROP-KEY-MISMATCH"));
+        assert!(key_merged.contains("replacement = \"new\""));
+
+        let length_existing = r#"[[extension]]
+id = "length"
+
+[extension.config]
+# DROP-LENGTH-KEY
+paths = [
+    "one", # DROP-LENGTH-MISMATCH
+    "two",
+]
+"#;
+        let length_new = r#"[[extension]]
+id = "length"
+
+[extension.config]
+paths = ["one", "two", "three"]
+"#;
+        let length_merged = merge_preserving_comments(length_existing, length_new);
+        assert!(!length_merged.contains("DROP-LENGTH-KEY"));
+        assert!(!length_merged.contains("DROP-LENGTH-MISMATCH"));
+        assert!(length_merged.contains("three"));
     }
 
     #[test]
