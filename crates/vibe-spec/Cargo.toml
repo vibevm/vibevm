@@ -11,12 +11,16 @@ homepage.workspace = true
 description = "spec:// addressing, the document IR, and the deterministic router (PROP-035)"
 
 [dependencies]
+specmark.workspace = true
 thiserror.workspace = true
+# The R4.2 emitted-XML test vehicle needs raw event spans. It cannot route
+# through vibe-specdoc's pivot: the lane is a multi-root stream and every
+# non-whitespace byte, including comments and lexical spelling, must survive.
+quick-xml.workspace = true
 # The spec-source dispatch (PROP-045 ##PROJECTION-READ): `FsSectionSource`
 # reads a `.xml` dependency through `load_spec_text`'s canonical Markdown
 # projection, so the fold/embed closure works unchanged over either form.
 vibe-specdoc.workspace = true
 
 [dev-dependencies]
-specmark.workspace = true
 tempfile.workspace = true

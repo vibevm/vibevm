@@ -10187,6 +10187,141 @@
       "fingerprint": "tok1:8ed462bdc5518a1f68cc8122bf3b054f55c377768e1f318bd84ea1a927b123ad"
     },
     {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/mod.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::transforms",
+      "end_line": 3,
+      "fingerprint": "tok1:162a1990272070f97fe5d9d35c1496cccac4c1d0f61aee00d21591235bfd513b"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_spec::transforms::xml_minify",
+      "end_line": 9,
+      "fingerprint": "tok1:a5e3019b966769043ad984ddabb7b197db44f2119c9670b3c47b51549afd5de0"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
+      "item_kind": "fn",
+      "line": 66,
+      "symbol": "vibe_spec::transforms::xml_minify::minify_emitted_xml",
+      "end_line": 245,
+      "fingerprint": "tok1:5701de4b203569661a3375263c8dc1020c4de1a79e8051114d1101478fe2b2e4"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 156,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::character_references_join_the_surrounding_logical_text_node",
+      "end_line": 166,
+      "fingerprint": "tok1:7f94e01ff42d2c2b589852b8d7e90c545893a3449a0176c8c8ee79624a07212b"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::declarations_and_top_level_framing_are_strict_per_root",
+      "end_line": 127,
+      "fingerprint": "tok1:30c19e1a1d5f04e43cec02d43def9682a78a6fd537d1d565f482096e224a9fcc"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 71,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::element_names_and_attributes_are_fully_validated_before_editing",
+      "end_line": 86,
+      "fingerprint": "tok1:a36aab0f56c579d5ae5d047f4ae61770996e2e04004c15344d9d729c3d66b684"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 60,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::emitted_stream_accepts_two_declarations_and_roots_while_pivot_rejects_it",
+      "end_line": 69,
+      "fingerprint": "tok1:2924e07039a8f4b70d966368960662918d171ee3906431a372eba1d400031aff"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 19,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::leaf_whitespace_and_mixed_parent_direct_whitespace_are_preserved",
+      "end_line": 31,
+      "fingerprint": "tok1:f4524004c22ed66ebf0f0a0d71164042e58272ec8c59ec80949ba308aadea2a4"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 147,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::legal_unicode_names_and_characters_remain_byte_exact",
+      "end_line": 154,
+      "fingerprint": "tok1:f3658103fc133ed6ff6302d3832f883fd8c9a171aafd94c5ccd12b052e722ca0"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 33,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::lexical_spelling_comments_and_cdata_survive_exactly",
+      "end_line": 58,
+      "fingerprint": "tok1:ce6c59ed350fa04b9eb8b4a86dcede03ea5d37baaae8a97e9414d7fe3f56a8bf"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 191,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::no_op_borrows_and_a_changed_stream_is_idempotent",
+      "end_line": 206,
+      "fingerprint": "tok1:1d523067852d0be15b41eddb4693012567a978f5839e4b70948b8348f4e1a14f"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 9,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::pure_nested_and_empty_element_containers_lose_only_whitespace_text",
+      "end_line": 17,
+      "fingerprint": "tok1:83a254394748cdf8e9584d07221b5482f31d78c2ac4c3dbf70b2ce4e582894b5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 168,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::unsafe_or_non_xml_inputs_fail_with_owned_typed_diagnostics",
+      "end_line": 189,
+      "fingerprint": "tok1:d347ab42ac02f6375808f296a9e7371f43301aba47d1741e91617904843ef86c"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "item_kind": "fn",
+      "line": 129,
+      "symbol": "vibe_spec::transforms::xml_minify::tests::xml_10_character_law_covers_text_cdata_attributes_and_numeric_references",
+      "end_line": 145,
+      "fingerprint": "tok1:f9f3524ad8f1f8dbb46e3e5347c0e1d188f73ff748f71e29361b68a8151d12eb"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/validate.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::transforms::xml_minify::validate",
+      "end_line": 3,
+      "fingerprint": "tok1:a5e3019b966769043ad984ddabb7b197db44f2119c9670b3c47b51549afd5de0"
+    },
+    {
       "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/lib.rs",
       "item_kind": "mod",
@@ -19885,6 +20020,134 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/mod.rs",
+      "from_symbol": "vibe_spec::transforms",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-EMITTED",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::minify_emitted_xml",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::character_references_join_the_surrounding_logical_text_node",
+      "line": 157,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::declarations_and_top_level_framing_are_strict_per_root",
+      "line": 89,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::element_names_and_attributes_are_fully_validated_before_editing",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::emitted_stream_accepts_two_declarations_and_roots_while_pivot_rejects_it",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-EMITTED",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::emitted_stream_accepts_two_declarations_and_roots_while_pivot_rejects_it",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::leaf_whitespace_and_mixed_parent_direct_whitespace_are_preserved",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::legal_unicode_names_and_characters_remain_byte_exact",
+      "line": 148,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::lexical_spelling_comments_and_cdata_survive_exactly",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::no_op_borrows_and_a_changed_stream_is_idempotent",
+      "line": 192,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::pure_nested_and_empty_element_containers_lose_only_whitespace_text",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::unsafe_or_non_xml_inputs_fail_with_owned_typed_diagnostics",
+      "line": 169,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::tests::xml_10_character_law_covers_text_cdata_attributes_and_numeric_references",
+      "line": 130,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/validate.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::validate",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-specdoc/src/lib.rs",

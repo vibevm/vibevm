@@ -4186,6 +4186,7 @@ name = "vibe-spec"
 version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
+ "quick-xml",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-specdoc",

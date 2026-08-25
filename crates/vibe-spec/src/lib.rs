@@ -29,6 +29,7 @@ mod merge;
 mod pipeline;
 mod qualify;
 mod resolver;
+mod transforms;
 mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
@@ -44,4 +45,5 @@ pub use merge::{
 pub use pipeline::{CompileError, compile_static, compile_static_qualified};
 pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
 pub use resolver::{FileResolver, ResolveError, SelfCoordinate, canonical_doc_path, is_pattern};
+pub use transforms::{XmlMinifyError, minify_emitted_xml};
 pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};
