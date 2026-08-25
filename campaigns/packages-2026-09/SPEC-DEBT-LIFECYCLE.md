@@ -511,5 +511,63 @@ do not silently fold its fix into the transform binding.
 - Select the XML marker repair policy in §9 before R4 binding.
 - Keep `##OPEN-CREATE-BUDGET` deferred unless R7 should enforce a budget.
 - Choose `##OPEN-DEPLOY-TARGETS` before R8, as the TZ requires.
+- Accept or amend the downstream wire rulings in §11; they are consequences of
+  the repository-wide JTD law, not permission to start R5/R7 before R2/R4.
 - After rulings, implement and fully gate first; authoritative PROP text/status
   changes remain an owner-session action using this queue as the draft.
+
+## 11. Dependency-order and wire audit
+
+This audit was run after `624c255d` to find policy-independent work while the
+§10 rulings remain open. It found none beyond the already-landed characterization
+and pure kernels: TZ §6 makes R5 depend on R2+R4 and R7 depend on R2. An
+experimental uncommitted `vibe-ext` sketch was removed in full after review.
+
+### 11.1 R3 invocation cardinality follows §8.8
+
+`##WHOLE-IR-WIRE` says one call per pass per compilation, while source/document
+levels are necessarily per addressed document under the recommended model.
+
+**Recommended clarification:** source and document transforms run once per
+addressed document in the explicit worklist; closure, lane and emitted passes
+run once per final artifact. “Whole IR” means the whole value of the level being
+passed, never a partial handle. R3.1 remains blocked until §8.8 is ruled.
+
+### 11.2 R5 native ABI must be schema-first and unwind-capable
+
+Anchors: PROP-000 `##JTD-SSOT`, `##JTD-CODEGEN`; PROP-054 `##C-ABI-LAW`,
+`##ABI-CRATE`, `##PANIC-AND-VERSION`, `##REF-WIRE-NATIVE`.
+
+**Recommended ruling:** before the public helper crate, register JTD epoch-1
+contracts for native context, native reply and extension manifest; generate
+their Rust types into `vibe-wire`; let `vibe-ext` re-export/wrap those generated
+types rather than hand-author JSON structs. The manifest root is
+`{"extensions":[{"id","point","ir_schema?"}]}`. Context/reply artifact rows
+are distinct: accumulated input carries engine-owned `phase`; reply declarations
+do not. Native replies expose no `tasks` field. Envelope 1 is checked before the
+safe handler runs. ABI return values promise only zero/non-zero; internal error
+numbers are not public policy.
+
+`catch_unwind` cannot contain `panic=abort`. `vibe_extension!` therefore emits a
+compile refusal under `cfg(panic = "abort")`, with a compile-fail fixture; an
+unwinding build gets the required catch boundary. The loader and helper remain
+R5 work after R2.4 owns the canonical envelope and R4 owns activation/artifacts.
+
+### 11.3 R7 provider wires and configuration
+
+Anchors: PROP-000 `##JTD-IN-SCOPE`; PROP-054 `##AGENT-CLI`,
+`##OPEN-CREATE-BUDGET`. OpenAI-compatible request/response wrappers are named by
+the JTD law explicitly; handwritten serde request/response structs are illegal.
+
+**Recommended ruling:** R7.1 registers and generates Chat Completions request
+and response contracts, then implements a synchronous object-safe `chat` seam
+with blocking reqwest and a mock transport. `[llm]` in the user config names
+`openai-compatible`, model, the full endpoint URL, and a token-file path. Resolve
+relative token paths under the config directory; never expand `~`; keyed traffic
+requires HTTPS with redirects disabled; keyless HTTP is loopback-only. Secrets
+are redacted from Debug/errors and response bodies are never echoed.
+
+R7.2 still needs a ruling for per-field merge with the existing project
+`[llm]` (`api_key_env`), provider aliases, and whether absolute token paths are
+legal. Keep create-token budgets deferred. Per TZ dependency order, even the
+provider seam lands only after the R2 engine exists.
