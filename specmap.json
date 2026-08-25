@@ -4743,6 +4743,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_mutable_slot.rs",
+      "item_kind": "fn",
+      "line": 82,
+      "symbol": "vibe_cli::tests::cli_mutable_slot::in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file",
+      "end_line": 145,
+      "fingerprint": "tok1:dba5cc53dbb14013e2722f7402470ead5ce684f8449b2784d4be510f5f8eb9bd"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
       "line": 20,
@@ -14118,6 +14127,14 @@
       "line": 18,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#kind",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_mutable_slot.rs",
+      "from_symbol": "vibe_cli::tests::cli_mutable_slot::in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#MUTABLE-GETS-A-GATE",
       "verb": "verifies"
     },
     {

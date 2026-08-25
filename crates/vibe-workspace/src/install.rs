@@ -87,17 +87,18 @@ pub fn apply_resolution(
 }
 
 /// The seam-injectable form of [`apply_resolution`]: `slot_verifier` is
-/// consulted — for a present, immutable slot, and only under
-/// [`SlotIntegrity::Verify`] (PROP-011 §2.3/§5.2) — before the fast path
-/// trusts the slot. A hash that matches the resolution's recorded
+/// consulted for an identity-current present slot under
+/// [`SlotIntegrity::Verify`] (PROP-011 §2.3/§5.2) before the fast path trusts
+/// it. A hash that matches the resolution's recorded
 /// `content_hash` accepts the slot **without** materialising (the
 /// always-rematerialise behaviour `verify` shipped with was stricter and
 /// costlier than the contract: the spot-check replaces that pass, it does
 /// not add to it); a divergence re-materialises the slot and records a
 /// warn line naming the package and both hashes. `None` degrades `Verify`
-/// to the shipped always-rematerialise discipline. Mutable in-workspace
-/// `file://` sources (§2.6) and `in-place` packages (PROP-022 §2.4) never
-/// reach the check — they re-materialise regardless of the setting.
+/// to the shipped always-rematerialise discipline. A mutable in-workspace
+/// `file://` source (§2.6) is identity-current only when its valid slot record
+/// carries the freshly-fetched source hash; an `in-place` package
+/// (PROP-022 §2.4) remains on its separate update path.
 pub fn apply_resolution_with(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -131,12 +132,13 @@ pub fn apply_resolution_with_spec_format(
     validate_redirect_blocks(workspace)?;
 
     // 1. Materialise the resolution into dependency slots. PROP-011 §2.3 — a
-    //    slot already present for the resolved (immutable) version is
-    //    trusted and skipped; only a new or version-bumped dependency
-    //    pays the recursive copy. Under `SlotIntegrity::Verify` that
-    //    trust is earned per-slot through the `slot_verifier` seam: a
-    //    hash match accepts the slot without the copy, a divergence
-    //    re-materialises it (with a warn line).
+    //    slot already present with the resolved source identity is trusted
+    //    and skipped; only a new, version-bumped, or source-changed dependency
+    //    pays reconciliation. Mutable `file://` sources earn the same fast
+    //    path from their freshly-fetched source hash and valid slot record.
+    //    Under `SlotIntegrity::Verify` trust is also earned through the
+    //    `slot_verifier` seam: a payload match accepts the slot without the
+    //    copy, a divergence re-materialises it (with a warn line).
     let Materialised {
         materialised,
         skipped,
@@ -227,13 +229,15 @@ fn materialise_resolution(
 /// the pre-install-failure rollback — are unit-tested without spawning
 /// processes.
 ///
-/// PROP-011 §2.3: a slot already present for the resolved (immutable) version
-/// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; under
-/// [`SlotIntegrity::Verify`] it is trusted only when the `slot_verifier`
-/// seam confirms its `content_hash` (a divergence re-materialises it and
-/// warns; no verifier keeps the always-rematerialise discipline). Only a new,
-/// version-bumped, or untrusted dependency enters materialisation and
-/// re-runs hooks (a skipped slot was never reset, so re-running its hook
+/// PROP-011 §2.3: an identity-current present slot is trusted and skipped
+/// under [`SlotIntegrity::TrustPresence`]. Immutable sources earn identity
+/// freshness from the resolved version and representation; mutable `file://`
+/// sources additionally require a valid slot record whose source hash matches
+/// the freshly-fetched hash. Under [`SlotIntegrity::Verify`] an eligible slot
+/// is trusted only when the `slot_verifier` seam confirms its payload (a
+/// divergence re-materialises it and warns; no verifier keeps the
+/// rematerialise discipline). Only a new, changed, or untrusted dependency
+/// materialises and re-runs hooks (a skipped slot was never reset, so its hook
 /// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
 /// removes the offending slot and aborts (PROP-020 §2.5).
 fn materialise_resolution_with_spec_format(
@@ -323,22 +327,26 @@ fn materialise_resolution_with_spec_format(
         // PROP-045: representation freshness precedes every presence-based
         // trust decision. A changed project/user setting always re-materialises.
         let format_current = present && vibedeps::format_is_current(&slot_abs, spec_format);
-        // A mutable local `file://` source (PROP-011 §2.6) is never
-        // presence-trusted: slot-present-for-a-version is not a proxy for
-        // correctness when the source is a working tree edited in place, so it
-        // falls through to re-materialise regardless of `slot_integrity`.
-        //
-        // An immutable present slot is trusted per the `slot_integrity`
-        // strategy (§2.3/§5.2): `trust-presence` accepts it outright;
-        // `verify` first spot-checks its `content_hash` through the
-        // caller's `slot_verifier` seam — a matching hash accepts the
-        // slot WITHOUT materialising (the always-rematerialise behaviour `verify`
-        // shipped with was stricter and costlier than the contract), a
-        // divergence re-materialises the slot and records a warn line,
-        // and no verifier at all (or an unverifiable slot) keeps the
-        // shipped always-rematerialise discipline.
-        let trusted = present
-            && !dep.source_mutable
+        // Mutable local `file://` sources (PROP-011 §2.6) cannot use version
+        // presence as identity: the author may edit the source in place. The
+        // fresh LocalRegistry fetch already put the current tree hash on the
+        // resolution, so a valid record carrying that same hash earns
+        // eligibility without another tree walk here. Missing, malformed, or
+        // mismatched records fall through to reconciliation; its strict record
+        // reader turns malformed state into a hard error instead of wiping it.
+        let source_identity_current = present
+            && (!dep.source_mutable
+                || (format_current
+                    && vibedeps::read_slot_record(&slot_abs).is_ok_and(|record| {
+                        required_source_hash(dep).is_ok_and(|hash| record.source_hash == *hash)
+                    })));
+
+        // Every identity-current slot follows the configured integrity
+        // strategy (§2.3/§5.2): `trust-presence` accepts it outright; `verify`
+        // still spot-checks payload through the caller's seam, so local drift
+        // heals even when the mutable source itself is unchanged. No verifier
+        // (or an unverifiable slot) keeps the shipped rematerialise discipline.
+        let trusted = source_identity_current
             && match slot_integrity {
                 SlotIntegrity::TrustPresence => format_current,
                 SlotIntegrity::Verify => match slot_verifier {
@@ -586,3 +594,7 @@ mod tests_hooks;
 #[cfg(test)]
 #[path = "install/tests_hybrid.rs"]
 mod tests_hybrid;
+
+#[cfg(test)]
+#[path = "install/tests_mutable.rs"]
+mod tests_mutable;

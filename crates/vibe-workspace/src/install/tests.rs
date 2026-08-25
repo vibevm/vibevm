@@ -348,61 +348,6 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
     assert!(sentinel.is_file());
 }
 
-#[test]
-fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() {
-    // A `source_mutable` (local `file://`) dependency is never presence-trusted
-    // (PROP-011 §2.6): even under the default TrustPresence its present slot is
-    // rematerialised, so an in-place source edit lands in the dependency slot.
-    let ws_dir = TempDir::new().unwrap();
-    write(
-        ws_dir.path(),
-        "vibe.toml",
-        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
-    );
-    write(ws_dir.path(), boot_rel("00-core.md"), "# core");
-    let (mut dep, _pkg) = dep_with_boot(
-        "wal",
-        "0.3.0",
-        "[boot_snippet]\nsource = \"boot/wal.md\"\n",
-        "boot/wal.md",
-        "# wal",
-    );
-    dep.source_mutable = true;
-    let ws = Workspace::load(ws_dir.path()).unwrap();
-
-    apply_resolution(
-        &ws,
-        std::slice::from_ref(&dep),
-        SlotIntegrity::TrustPresence,
-        None,
-    )
-    .unwrap();
-    let sentinel = ws_dir
-        .path()
-        .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
-    fs::write(&sentinel, "unrecorded").unwrap();
-
-    // Second apply — TrustPresence would normally skip a present slot, but the
-    // mutable source overrides that, so the slot is re-materialised.
-    let second = apply_resolution(
-        &ws,
-        std::slice::from_ref(&dep),
-        SlotIntegrity::TrustPresence,
-        None,
-    )
-    .unwrap();
-    assert_eq!(second.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
-    assert!(
-        second.skipped.is_empty(),
-        "a mutable file:// source must not be presence-trusted (§2.6)"
-    );
-    assert!(
-        sentinel.is_file(),
-        "mutable-source refresh must preserve unrecorded slot content"
-    );
-}
-
 // --- PROP-011 §5.2 — the `verify` slot spot-check ----------------------
 
 /// A [`SlotVerifier`] stub returning a fixed verdict — the unit-level
@@ -419,8 +364,7 @@ impl SlotVerifier for StubVerifier {
 }
 
 /// A [`SlotVerifier`] whose consultation is itself the failure — proves
-/// the paths that must never reach the check (`trust-presence`, the
-/// mutable-source boundary) really do not.
+/// the `trust-presence` path never reaches the check.
 #[cfg(test)]
 struct UntouchedVerifier;
 
@@ -571,27 +515,6 @@ fn trust_presence_never_consults_the_slot_verifier() {
     .unwrap();
     assert_eq!(outcome.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.materialised.is_empty());
-    assert!(sentinel.is_file());
-}
-
-#[test]
-fn verify_still_never_trusts_a_mutable_file_source_slot() {
-    let (ws, mut dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
-    dep.source_mutable = true;
-
-    // §2.6 boundary: even a verifier that would vouch for the slot is
-    // never asked — a mutable in-workspace `file://` source's slot is
-    // re-materialised regardless of `slot_integrity`.
-    let outcome = apply_resolution_with(
-        &ws,
-        std::slice::from_ref(&dep),
-        SlotIntegrity::Verify,
-        Some(&UntouchedVerifier),
-        None,
-    )
-    .unwrap();
-    assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
-    assert!(outcome.skipped.is_empty());
     assert!(sentinel.is_file());
 }
 

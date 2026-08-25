@@ -44,12 +44,13 @@ pub struct ResolvedDep {
     pub via_override: Option<String>,
     /// `true` iff the package came from a mutable local `file://` source — an
     /// in-repo / local-directory registry (`--registry <path>`, the
-    /// package-authoring shape). Such a source is a working tree the author
-    /// edits in place, so its dependency slot is **never** presence-trusted by
-    /// the PROP-011 §2.3 fast path: it is re-materialised every install
-    /// (PROP-011 §2.6). `false` for immutable remote-registry sources and for
-    /// boot-only re-derivations from disk. `in-place` (PROP-022) packages take
-    /// the separate in-place branch and never reach the skip this flag guards.
+    /// package-authoring shape). Version presence alone cannot vouch for such a
+    /// working tree. The PROP-011 §2.6 fast path instead requires a valid slot
+    /// record whose source hash matches this resolution's freshly-fetched
+    /// [`source_hash`](Self::source_hash); unchanged sources can then skip,
+    /// while changed ones reconcile only their payload diff. `false` for
+    /// immutable remote-registry sources and boot-only disk re-derivations.
+    /// `in-place` (PROP-022) packages take their separate update branch.
     pub source_mutable: bool,
 }
 
@@ -80,9 +81,11 @@ pub enum SlotCheck {
 }
 
 /// The `verify`-mode slot spot-check seam (PROP-011 §2.3/§5.2). The
-/// materialise pass calls it for a present, immutable slot **only** under
-/// [`SlotIntegrity::Verify`], handing the resolved dep and the slot's
-/// absolute path. New slots verify their typed record and recorded payload;
+/// materialise pass calls it for an identity-current present slot **only**
+/// under [`SlotIntegrity::Verify`], handing the resolved dep and the slot's
+/// absolute path. For mutable sources, identity-current means the valid record
+/// already matches the freshly-fetched source hash. New slots verify their
+/// typed record and recorded payload;
 /// legacy slots retain their historical tree-hash checks.
 ///
 /// A seam, not a call, because this crate deliberately depends on neither
@@ -109,7 +112,7 @@ pub enum SlotCheck {
 /// }
 ///
 /// // The materialise pass consumes the seam through &dyn — the wiring
-/// // `apply_resolution_with` performs for every present immutable slot.
+/// // `apply_resolution_with` performs for every eligible present slot.
 /// fn consult(v: &dyn SlotVerifier) -> bool {
 ///     let _ = v; // hash + compare happens against a real slot in production
 ///     true
@@ -146,11 +149,12 @@ pub struct InstallOutcome {
     /// dependency, or a present slot whose recorded footprint was reconciled.
     pub materialised: Vec<String>,
     /// Dependency-slot paths skipped — already present for the resolved
-    /// version, trusted without materialising (PROP-011 §2.3). Under
-    /// `trust-presence` (the default) that trust is presence alone; under
-    /// `verify` a slot lands here only after its `content_hash` checked
-    /// out — and never when no [`SlotVerifier`] was supplied, which keeps
-    /// the always-rematerialise discipline.
+    /// version and source identity, trusted without materialising (PROP-011
+    /// §2.3). Under `trust-presence` (the default), immutable sources need
+    /// current representation while mutable sources also need a matching
+    /// source hash in their valid record. Under `verify`, either kind lands
+    /// here only after its payload checked out — and never when no
+    /// [`SlotVerifier`] was supplied, preserving the rematerialise discipline.
     pub skipped: Vec<String>,
     /// One warn line per `verify`-mode slot whose hash diverged from the
     /// recorded one (naming the package and both hashes) — the slot was
