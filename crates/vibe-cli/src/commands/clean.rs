@@ -41,15 +41,22 @@ pub fn run(
     root_offline: bool,
 ) -> Result<()> {
     if args.chain.is_some() {
-        return super::lifecycle::run_clean(ctx, args, prepare_install, root_offline);
+        super::lifecycle::run_clean(ctx, args, prepare_install, root_offline)
+    } else {
+        super::lifecycle::run_clean_only(ctx, args, root_offline)
     }
-    super::lifecycle::guard_clean(ctx, &args.path)?;
-    wipe(ctx, &args.path, args.assume_yes)?;
-    Ok(())
 }
 
-/// Execute the one clean phase and return the canonical project root.
-pub(crate) fn wipe(ctx: &output::Context, path: &Path, assume_yes: bool) -> Result<PathBuf> {
+/// Exact terminal-wipe plan. Constructing and confirming it has no filesystem
+/// side effect, so lifecycle handlers may run only after confirmation.
+pub(crate) struct CleanPlan {
+    project_root: PathBuf,
+    deps_root: PathBuf,
+    slot_count: usize,
+    generated: Vec<PathBuf>,
+}
+
+pub(crate) fn plan_wipe(path: &Path) -> Result<CleanPlan> {
     let project_root = super::install::resolve_project_root(path)?;
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
@@ -68,38 +75,59 @@ pub(crate) fn wipe(ctx: &output::Context, path: &Path, assume_yes: bool) -> Resu
         .filter(|p| is_generated_artifact(p))
         .collect();
 
-    if slot_count == 0 && generated.is_empty() {
+    Ok(CleanPlan {
+        project_root,
+        deps_root,
+        slot_count,
+        generated,
+    })
+}
+
+pub(crate) fn confirm_wipe(
+    ctx: &output::Context,
+    plan: &CleanPlan,
+    assume_yes: bool,
+) -> Result<()> {
+    if plan.slot_count == 0 && plan.generated.is_empty() {
+        return Ok(());
+    }
+    let approved = if assume_yes || ctx.is_unattended() || ctx.is_json() {
+        true
+    } else if !console::user_attended() {
+        bail!(
+            "no TTY available for confirmation; re-run with `--assume-yes` to clean non-interactively"
+        );
+    } else {
+        Confirm::new()
+            .with_prompt(format!(
+                "Remove {} dependency slot(s) and {} generated boot artifact(s)?",
+                plan.slot_count,
+                plan.generated.len(),
+            ))
+            .default(false)
+            .interact()
+            .context("reading user confirmation")?
+    };
+    if !approved {
+        return Err(InstallError::UserDeclined.into());
+    }
+    Ok(())
+}
+
+pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathBuf> {
+    if plan.slot_count == 0 && plan.generated.is_empty() {
         ctx.heading("nothing to clean — no dependency slots, no generated boot artifacts");
     } else {
-        let approved = if assume_yes || ctx.is_unattended() || ctx.is_json() {
-            true
-        } else if !console::user_attended() {
-            bail!(
-                "no TTY available for confirmation; re-run with `--assume-yes` to clean non-interactively"
-            );
-        } else {
-            Confirm::new()
-                .with_prompt(format!(
-                    "Remove {slot_count} dependency slot(s) and {} generated boot artifact(s)?",
-                    generated.len(),
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")?
-        };
-        if !approved {
-            return Err(InstallError::UserDeclined.into());
-        }
-
-        if deps_root.exists() {
-            std::fs::remove_dir_all(&deps_root)
-                .with_context(|| format!("removing `{}`", deps_root.display()))?;
+        if plan.deps_root.exists() {
+            std::fs::remove_dir_all(&plan.deps_root)
+                .with_context(|| format!("removing `{}`", plan.deps_root.display()))?;
             ctx.heading(&format!(
-                "cleaned {slot_count} dependency slot(s) — `{}` removed",
+                "cleaned {} dependency slot(s) — `{}` removed",
+                plan.slot_count,
                 vibe_core::machine_json_path(&vibe_core::layout::current_vibedeps_root()),
             ));
         }
-        for artifact in &generated {
+        for artifact in &plan.generated {
             std::fs::remove_file(artifact)
                 .with_context(|| format!("removing `{}`", artifact.display()))?;
             ctx.heading(&format!(
@@ -112,7 +140,7 @@ pub(crate) fn wipe(ctx: &output::Context, path: &Path, assume_yes: bool) -> Resu
         }
     }
 
-    Ok(project_root)
+    Ok(plan.project_root)
 }
 
 /// Top-level slot directories under the vibedeps root (what the report

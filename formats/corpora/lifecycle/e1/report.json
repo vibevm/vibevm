@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "command": "lifecycle",
+  "requested": "build",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build"
+  ],
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    },
+    {
+      "phase": "install",
+      "status": "fresh"
+    },
+    {
+      "phase": "generate",
+      "status": "no-op"
+    },
+    {
+      "phase": "build",
+      "status": "ok"
+    }
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/provider#announce",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/provider",
+      "tier": "dependency",
+      "status": "ok",
+      "message": "hello from build in demo",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": []
+}

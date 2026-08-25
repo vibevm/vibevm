@@ -99,11 +99,21 @@ pub(crate) enum InstallDisposition {
     Applied,
 }
 
+/// Effective invocation facts the durable-world lifecycle callback needs in
+/// the canonical handler envelope.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct InstallRunContext {
+    pub(crate) offline: bool,
+    pub(crate) assume_yes: bool,
+}
+
 /// Counts produced by an additive post-durability observer. Keeping them
 /// typed prevents quiet rendering from dropping a class of ritual output.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub(crate) struct WorldCallbackSummary {
-    pub(crate) planned_contributions: usize,
+    pub(crate) selected_contributions: usize,
+    pub(crate) executed_contributions: usize,
+    pub(crate) successful_contributions: usize,
     pub(crate) notices: usize,
 }
 
@@ -113,7 +123,7 @@ pub fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<InstallDisposition> {
-    run_with_world_callback(ctx, args, embedded_root, root_offline, |_, _| {
+    run_with_world_callback(ctx, args, embedded_root, root_offline, |_, _, _| {
         Ok(WorldCallbackSummary::default())
     })
 }
@@ -127,7 +137,11 @@ pub(crate) fn run_with_world_callback(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-    after_durable_world: impl FnOnce(&Path, InstallDisposition) -> Result<WorldCallbackSummary>,
+    after_durable_world: impl FnOnce(
+        &Path,
+        InstallDisposition,
+        InstallRunContext,
+    ) -> Result<WorldCallbackSummary>,
 ) -> Result<InstallDisposition> {
     let mut after_durable_world = Some(after_durable_world);
     let project_root = resolve_project_root(&args.path)?;
@@ -141,6 +155,10 @@ pub(crate) fn run_with_world_callback(
     // `VIBE_OFFLINE` > user-config `[net].offline`. Resolved here, once,
     // so the resolver below receives a single boolean.
     let offline = output::resolve_offline(root_offline || args.offline, user_config.net.offline);
+    let lifecycle_run = InstallRunContext {
+        offline,
+        assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
+    };
 
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
     let spec_format = resolve_spec_format(&manifest, &user_config);
@@ -200,7 +218,7 @@ pub(crate) fn run_with_world_callback(
         let after = after_durable_world
             .take()
             .context("internal: install durable-world callback already consumed")?;
-        let world_summary = after(&project_root, InstallDisposition::Fresh)?;
+        let world_summary = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
         report::emit_fresh_report(ctx, &nodes, world_summary)?;
         return Ok(InstallDisposition::Fresh);
     }
@@ -263,7 +281,7 @@ pub(crate) fn run_with_world_callback(
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
-            let world_summary = after(&project_root, InstallDisposition::Fresh)?;
+            let world_summary = after(&project_root, InstallDisposition::Fresh, lifecycle_run)?;
             report::emit_fresh_report(ctx, &nodes, world_summary)?;
             Ok(InstallDisposition::Fresh)
         }
@@ -322,7 +340,7 @@ pub(crate) fn run_with_world_callback(
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
-            let world_summary = after(&project_root, InstallDisposition::Applied)?;
+            let world_summary = after(&project_root, InstallDisposition::Applied, lifecycle_run)?;
             // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
             // the closure diff (the pre-apply lock snapshot vs the freshly
             // written one, lane bytes before/after): a mid-graph re-export

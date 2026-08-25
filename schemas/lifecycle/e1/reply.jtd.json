@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "description": "Canonical epoch-1 generic lifecycle handler reply. It remains distinct from the later native ABI manifest/reply contract: generic agent replies may carry tasks, while the R5 native surface will not.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle::e1::reply"
+    }
+  },
+  "properties": {
+    "envelope": {
+      "type": "uint32"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "fail",
+        "skip"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "artifacts": {
+      "elements": {
+        "ref": "reply_artifact"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "tasks": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Generic agent-handler task references. Builtin/script/binary replies leave this empty."
+      }
+    }
+  },
+  "optionalProperties": {
+    "message": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "reply_artifact": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

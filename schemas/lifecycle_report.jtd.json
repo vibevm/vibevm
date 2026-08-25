@@ -48,7 +48,7 @@
       },
       "metadata": {
         "x-empty": "emit",
-        "description": "Effective lifecycle contributions in canonical execution order. R2.3 reports these as planned; it does not dispatch handlers."
+        "description": "Effective lifecycle contributions in canonical execution order with their execution outcomes."
       }
     },
     "notices": {
@@ -85,11 +85,18 @@
         "status": {
           "type": "string",
           "metadata": {
-            "description": "R2.3 writes `planned`: the handler was selected and narrated, never run."
+            "description": "Honest handler outcome such as `ok`, `fail`, or `skip`."
           }
         }
       },
       "optionalProperties": {
+        "message": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Structured handler message. Human mode may render it; JSON mode never leaks it outside this document."
+          }
+        },
         "version": {
           "type": "string",
           "metadata": {
@@ -106,7 +113,7 @@
         "status": {
           "type": "string",
           "metadata": {
-            "description": "Phase outcome vocabulary. R2.2/R2.3 write `ok`, `fresh`, `no-op`, or `planned`; later engine slices may add already normative outcomes without breaking older readers."
+            "description": "Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the first handler failure aborts the chain."
           }
         }
       }

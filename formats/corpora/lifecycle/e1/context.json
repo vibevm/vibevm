@@ -1,0 +1,53 @@
+{
+  "envelope": 1,
+  "point": "phase:build",
+  "execution": {
+    "id": "announce",
+    "package": "org.demo/provider",
+    "config": {
+      "message": "hello from {phase} in {project}"
+    }
+  },
+  "project": {
+    "root": "C:/work/demo",
+    "name": "demo",
+    "version": "0.2.0",
+    "kind": "project",
+    "manifest": "C:/work/demo/vibe.toml",
+    "spec_roots": [
+      "C:/work/demo/vibevm/vibespecs"
+    ]
+  },
+  "world": {
+    "lockfile": "C:/work/demo/vibe.lock",
+    "deps_root": "C:/work/demo/vibevm/vibedeps",
+    "packages": [
+      {
+        "group": "org.demo",
+        "name": "provider",
+        "version": "1.0.0",
+        "kind": "tool",
+        "slot": "C:/work/demo/vibevm/vibedeps/org.demo.provider/1.0.0"
+      }
+    ]
+  },
+  "run": {
+    "requested": "test",
+    "chain": [
+      "validate",
+      "install",
+      "generate",
+      "build",
+      "test"
+    ],
+    "phase": "build",
+    "offline": false,
+    "assume_yes": true,
+    "agent_mode": "cli",
+    "force": false
+  },
+  "artifacts": [],
+  "io": {
+    "scratch": "C:/work/demo/.vibe/lifecycle/run-1/616e6e6f756e6365/"
+  }
+}

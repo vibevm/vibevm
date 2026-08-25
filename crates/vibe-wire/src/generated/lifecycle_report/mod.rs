@@ -13,8 +13,8 @@ pub struct LifecycleReport {
     /// Always `"lifecycle"` for this report.
     pub command: String,
 
-    /// Effective lifecycle contributions in canonical execution order. R2.3
-    /// reports these as planned; it does not dispatch handlers.
+    /// Effective lifecycle contributions in canonical execution order with
+    /// their execution outcomes.
     pub contributions: Vec<LifecycleContributionReport>,
 
     /// Non-fatal collection notices that must remain observable in structured
@@ -42,10 +42,15 @@ pub struct LifecycleContributionReport {
 
     pub provider: String,
 
-    /// R2.3 writes `planned`: the handler was selected and narrated, never run.
+    /// Honest handler outcome such as `ok`, `fail`, or `skip`.
     pub status: String,
 
     pub tier: String,
+
+    /// Structured handler message. Human mode may render it; JSON mode never
+    /// leaks it outside this document.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -55,8 +60,7 @@ pub struct LifecycleContributionReport {
 pub struct LifecycleStepReport {
     pub phase: String,
 
-    /// Phase outcome vocabulary. R2.2/R2.3 write `ok`, `fresh`, `no-op`,
-    /// or `planned`; later engine slices may add already normative outcomes
-    /// without breaking older readers.
+    /// Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the
+    /// first handler failure aborts the chain.
     pub status: String,
 }

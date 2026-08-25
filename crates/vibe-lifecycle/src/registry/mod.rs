@@ -9,8 +9,9 @@ mod selector;
 pub use collect::{CollectionError, CollectionNotice, collect_extensions};
 pub use model::{
     ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,
-    ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
-    HostExtensionSource, HostIdentity, HostProvider, RegistryView,
+    ExecutableContribution, ExecutablePlan, ExtensionProvider, ExtensionRegistry,
+    ExtensionRegistryRow, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
+    RegistryView,
 };
 pub use selector::SelectorSubject;
 

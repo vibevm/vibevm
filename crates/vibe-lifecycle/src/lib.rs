@@ -88,14 +88,20 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 mod chain;
+mod execution;
 mod registry;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
+pub use execution::{
+    BuiltinRegistry, ContributionOutcome, DispatchBatch, DispatchError, ExecutionSession,
+    RunMetadata,
+};
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
-    DependencyProvider, DependencyProviderId, ExtensionProvider, ExtensionRegistry,
-    ExtensionRegistryRow, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
-    RegistryView, SelectorSubject, collect_extensions,
+    DependencyProvider, DependencyProviderId, ExecutableContribution, ExecutablePlan,
+    ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
+    HostExtensionSource, HostIdentity, HostProvider, RegistryView, SelectorSubject,
+    collect_extensions,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

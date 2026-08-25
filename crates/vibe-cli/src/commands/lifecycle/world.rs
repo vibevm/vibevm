@@ -13,95 +13,81 @@ use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization};
 use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
-    ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,
-    ExtensionProvider, ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity,
-    HostProvider, SelectorSubject, collect_extensions,
+    DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExecutablePlan,
+    ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
+    SelectorSubject, collect_extensions,
 };
-use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
+use vibe_wire::generated::lifecycle::e1::context::{
+    Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
+};
 use vibe_workspace::Workspace;
 use vibe_workspace::vibedeps::{in_place_slot_abs_path, slot_abs_path};
 
 /// Effective contribution plan and non-fatal collection notices for one ritual.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub(crate) struct RitualPlan {
-    pub(crate) contributions: Vec<LifecycleContributionReport>,
+    pub(crate) executions: ExecutablePlan,
     pub(crate) notices: Vec<String>,
+    pub(crate) project: EnvelopeProject,
+    pub(crate) world: EnvelopeWorld,
 }
 
 impl RitualPlan {
     pub(crate) fn count_for(&self, phase: Phase) -> usize {
-        self.contributions
-            .iter()
-            .filter(|row| row.phase == phase.as_str())
-            .count()
+        self.executions.count_for(phase.as_str())
     }
 }
 
+/// One effective declaration retained for execution in canonical order.
+pub(crate) type PlannedExecution = vibe_lifecycle::ExecutableContribution;
+
 /// Load the selected node's effective world and plan the requested default phases.
 pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> {
-    let registry = load_registry(path, WorldLoadMode::Default)?;
-    let mut contributions = Vec::new();
-    for phase in phases {
-        contributions.extend(plan_point(
-            &registry,
-            ExtensionPoint::Phase(PhasePoint::Default(*phase)),
-            phase.as_str(),
-        ));
-    }
+    let loaded = load_registry(path, WorldLoadMode::Default)?;
+    let executions = ExecutablePlan::from_points(
+        &loaded.registry,
+        phases.iter().map(|phase| {
+            (
+                phase.to_string(),
+                ExtensionPoint::Phase(PhasePoint::Default(*phase)),
+            )
+        }),
+        SelectorSubject::unscoped(),
+    );
     Ok(RitualPlan {
-        contributions,
-        notices: registry.notices().iter().map(ToString::to_string).collect(),
+        executions,
+        notices: loaded
+            .registry
+            .notices()
+            .iter()
+            .map(ToString::to_string)
+            .collect(),
+        project: loaded.project,
+        world: loaded.world,
     })
 }
 
 /// Load and plan the independent clean point before any destructive wipe.
 pub(crate) fn plan_clean(path: &Path) -> Result<RitualPlan> {
-    let registry = load_registry(path, WorldLoadMode::PreClean)?;
+    let loaded = load_registry(path, WorldLoadMode::PreClean)?;
     Ok(RitualPlan {
-        contributions: plan_point(&registry, ExtensionPoint::Phase(PhasePoint::Clean), "clean"),
-        notices: registry.notices().iter().map(ToString::to_string).collect(),
+        executions: ExecutablePlan::from_points(
+            &loaded.registry,
+            [(
+                "clean".to_string(),
+                ExtensionPoint::Phase(PhasePoint::Clean),
+            )],
+            SelectorSubject::unscoped(),
+        ),
+        notices: loaded
+            .registry
+            .notices()
+            .iter()
+            .map(ToString::to_string)
+            .collect(),
+        project: loaded.project,
+        world: loaded.world,
     })
-}
-
-fn plan_point(
-    registry: &ExtensionRegistry,
-    point: ExtensionPoint,
-    phase: &str,
-) -> Vec<LifecycleContributionReport> {
-    registry
-        .plan(point, SelectorSubject::unscoped())
-        .into_iter()
-        .map(|row| {
-            let (provider, version) = match row.provider() {
-                ExtensionProvider::Dependency(provider) => {
-                    (provider.id.to_string(), Some(provider.version.clone()))
-                }
-                ExtensionProvider::Host(provider) => (
-                    provider.identity.to_string(),
-                    (!provider.version.is_empty()).then(|| provider.version.clone()),
-                ),
-            };
-            LifecycleContributionReport {
-                handler: row.declaration().handler.kind().to_string(),
-                key: row.key().to_string(),
-                phase: phase.to_string(),
-                point: point.to_string(),
-                provider,
-                status: "planned".to_string(),
-                tier: tier_name(row.effective_tier()).to_string(),
-                version,
-            }
-        })
-        .collect()
-}
-
-const fn tier_name(tier: ContributionTier) -> &'static str {
-    match tier {
-        ContributionTier::Preset => "preset",
-        ContributionTier::Dependency => "dependency",
-        ContributionTier::HostDeclaration => "host-declaration",
-        ContributionTier::HostActivation => "host-activation",
-    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -110,7 +96,13 @@ enum WorldLoadMode {
     PreClean,
 }
 
-fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<ExtensionRegistry> {
+struct LoadedRegistry {
+    registry: ExtensionRegistry,
+    project: EnvelopeProject,
+    world: EnvelopeWorld,
+}
+
+fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry> {
     let selected = super::super::install::resolve_project_root(selected)?;
     let workspace = Workspace::discover(&selected)
         .context("discovering the workspace for lifecycle contribution collection")?;
@@ -152,17 +144,66 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<ExtensionRegist
         dependency_sources(&workspace, &host_manifest, &lock, mode)?
     };
     let effective_stack = effective_stack(&host_manifest, &installed, mode)?;
-    let mut host = host_source(host_manifest, selected)?;
+    let mut host = host_source(host_manifest, selected.clone())?;
     if mode == WorldLoadMode::PreClean {
         retain_pre_clean_controls(&mut host, &installed);
     }
 
-    collect_extensions(ExtensionWorld {
+    let project = envelope_project(&host.provider, &selected);
+    let world = envelope_world(&workspace, &installed);
+    let registry = collect_extensions(ExtensionWorld {
         installed,
         host,
         effective_stack,
     })
-    .context("collecting lifecycle extensions from the effective world")
+    .context("collecting lifecycle extensions from the effective world")?;
+    Ok(LoadedRegistry {
+        registry,
+        project,
+        world,
+    })
+}
+
+fn envelope_project(provider: &HostProvider, selected: &Path) -> EnvelopeProject {
+    let (name, kind) = match &provider.identity {
+        HostIdentity::UngroupedProject(name) => (name.clone(), "project".to_string()),
+        HostIdentity::Coordinate(identity) => (
+            identity.name().to_string(),
+            provider
+                .kind
+                .map_or_else(|| "project".to_string(), |kind| kind.as_str().to_string()),
+        ),
+        HostIdentity::VirtualWorkspace => {
+            ("<virtual-workspace>".to_string(), "workspace".to_string())
+        }
+    };
+    EnvelopeProject {
+        kind,
+        manifest: vibe_core::machine_json_path(&selected.join(Manifest::FILENAME)),
+        name,
+        root: vibe_core::machine_json_path(selected),
+        spec_roots: vec![vibe_core::machine_json_path(
+            &selected.join(vibe_core::layout::current_specs_root()),
+        )],
+        version: provider.version.clone(),
+    }
+}
+
+fn envelope_world(workspace: &Workspace, installed: &[DependencyExtensionSource]) -> EnvelopeWorld {
+    EnvelopeWorld {
+        deps_root: vibe_core::machine_json_path(&workspace.vibedeps_root()),
+        lockfile: vibe_core::machine_json_path(&workspace.lockfile_path()),
+        packages: installed
+            .iter()
+            .map(|source| WorldPackage {
+                group: source.provider.id.group().to_string(),
+                kind: source.provider.kind.as_str().to_string(),
+                name: source.provider.id.name().to_string(),
+                slot: vibe_core::machine_json_path(&source.provider.root),
+                version: source.provider.version.clone(),
+            })
+            .collect(),
+    }
 }
 
 /// Pre-clean sees the old installed intersection, which may lag one host edit.

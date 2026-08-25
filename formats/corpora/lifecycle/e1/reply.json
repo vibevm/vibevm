@@ -1,0 +1,7 @@
+{
+  "envelope": 1,
+  "status": "ok",
+  "message": "hello from build in demo",
+  "artifacts": [],
+  "tasks": []
+}

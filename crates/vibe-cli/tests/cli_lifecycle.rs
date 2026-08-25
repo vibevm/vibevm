@@ -54,12 +54,19 @@ fn lifecycle_json(user: &UserScratch, project: &Path, phase: &str) -> LifecycleR
         .arg("--assume-yes")
         .assert()
         .success();
-    serde_json::from_slice(&assert.get_output().stdout).unwrap_or_else(|error| {
+    lifecycle_document(&assert.get_output().stdout).unwrap_or_else(|error| {
         panic!(
             "generated lifecycle reader rejected stdout: {error}\n{}",
             String::from_utf8_lossy(&assert.get_output().stdout),
         )
     })
+}
+
+fn lifecycle_document(bytes: &[u8]) -> serde_json::Result<LifecycleReport> {
+    let values = serde_json::Deserializer::from_slice(bytes)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()?;
+    serde_json::from_value(values.last().cloned().unwrap())
 }
 
 fn status<'a>(report: &'a LifecycleReport, phase: &str) -> &'a str {
@@ -141,8 +148,8 @@ fn json_parent_keeps_install_auto_approval_while_child_output_stays_silent() {
         .arg(fixture_registry())
         .assert()
         .success();
-    let report: LifecycleReport = serde_json::from_slice(&assert.get_output().stdout)
-        .expect("one lifecycle document and no child install JSON");
+    let report = lifecycle_document(&assert.get_output().stdout)
+        .expect("plan then lifecycle report, with no child install JSON");
     assert_eq!(status(&report, "install"), "ok");
 }
 
@@ -181,7 +188,11 @@ fn lifecycle_json_keeps_global_invocation_stamps() {
         .arg(project.path())
         .assert()
         .success();
-    let value: serde_json::Value = serde_json::from_slice(&assert.get_output().stdout).unwrap();
+    let values = serde_json::Deserializer::from_slice(&assert.get_output().stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    let value = values.last().unwrap();
     assert_eq!(value["command"], "lifecycle");
     assert_eq!(value["invoked_by"], "r2-test");
     assert_eq!(value["unattended"], true);
@@ -249,7 +260,9 @@ fn quiet_lifecycle_is_exactly_one_summary_line() {
     let stdout = String::from_utf8_lossy(&assert.get_output().stdout);
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
     assert!(
-        stdout.contains("deploy completed (9 phases, 0 contribution(s) planned, 0 notice(s))"),
+        stdout.contains(
+            "deploy completed (9 phases, 0 contribution(s) selected, 0 executed, 0 ok, 0 notice(s))"
+        ),
         "{stdout}"
     );
 }
@@ -274,7 +287,7 @@ fn clean_build_wipes_then_restores_the_world_and_keeps_lifecycle_state() {
         .arg("--assume-yes")
         .assert()
         .success();
-    let report: LifecycleReport = serde_json::from_slice(&assert.get_output().stdout).unwrap();
+    let report = lifecycle_document(&assert.get_output().stdout).unwrap();
 
     assert_eq!(
         report.chain,
@@ -414,7 +427,16 @@ fn install_failure_after_clean_does_not_roll_the_wipe_back() {
         .output()
         .unwrap();
     assert!(!output.status.success());
-    assert!(output.stdout.is_empty(), "no success report on failure");
+    let documents = serde_json::Deserializer::from_slice(&output.stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    assert!(
+        documents
+            .iter()
+            .all(|document| document["command"] == "lifecycle:plan"),
+        "selection may be reported before failure, outcomes may not: {documents:?}"
+    );
     let error: serde_json::Value = serde_json::from_slice(&output.stderr).unwrap();
     assert_eq!(error["ok"], false);
     assert!(!slot.exists(), "failed install must not restore the slot");

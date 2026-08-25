@@ -96,6 +96,27 @@ fn host_identity_is_grouped_ungrouped_or_virtual_without_guessing() {
         virtual_host.provider.identity,
         HostIdentity::VirtualWorkspace
     ));
+    let envelope = envelope_project(&virtual_host.provider, Path::new("C:/virtual"));
+    assert_eq!(envelope.name, "<virtual-workspace>");
+    assert_eq!(envelope.version, "");
+    assert_eq!(envelope.kind, "workspace");
+}
+
+#[test]
+fn loader_envelope_paths_are_absolute_forward_slashed_machine_json() {
+    let project = tempfile::tempdir().unwrap();
+    workspace(&project);
+    let ritual = plan_default(project.path(), &[Phase::Validate]).unwrap();
+    for path in [
+        &ritual.project.root,
+        &ritual.project.manifest,
+        &ritual.project.spec_roots[0],
+        &ritual.world.lockfile,
+        &ritual.world.deps_root,
+    ] {
+        assert!(!path.contains('\\'), "{path}");
+        assert!(Path::new(path).is_absolute(), "{path}");
+    }
 }
 
 #[test]
@@ -257,7 +278,7 @@ fn only_pre_clean_treats_an_absent_root_as_an_empty_installed_world() {
     lock.packages = vec![a];
     lock.write(workspace.lockfile_path()).unwrap();
 
-    assert!(plan_clean(project.path()).unwrap().contributions.is_empty());
+    assert!(plan_clean(project.path()).unwrap().executions.is_empty());
     let error = plan_default(project.path(), &[Phase::Build])
         .unwrap_err()
         .to_string();
@@ -311,6 +332,7 @@ version = "0.1.0"
 id = "build"
 point = "phase:build"
 handler = { kind = "builtin", name = "log" }
+config = { message = "build" }
 "#,
     );
     std::fs::write(a_root.join("vibe.toml"), a_manifest).unwrap();
@@ -321,8 +343,11 @@ handler = { kind = "builtin", name = "log" }
     lock.write(workspace.lockfile_path()).unwrap();
 
     let ritual = plan_default(&member_root, &[Phase::Build]).unwrap();
-    assert_eq!(ritual.contributions.len(), 1);
-    assert_eq!(ritual.contributions[0].key, "org.demo/a#build");
+    assert_eq!(ritual.executions.len(), 1);
+    assert_eq!(
+        ritual.executions[0].row.key().to_string(),
+        "org.demo/a#build"
+    );
 }
 
 #[test]

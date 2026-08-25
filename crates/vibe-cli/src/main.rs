@@ -122,8 +122,8 @@ fn main() -> ExitCode {
             args,
             discover_embedded_root(),
             cli.offline,
-            |project_root, disposition| {
-                commands::lifecycle::after_direct_install(&ctx, project_root, disposition)
+            |project_root, disposition, run| {
+                commands::lifecycle::after_direct_install(&ctx, project_root, disposition, run)
             },
         )
         .map(|_| ()),

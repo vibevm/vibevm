@@ -4080,9 +4080,11 @@ version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "glob",
+ "serde_json",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
+ "vibe-wire",
 ]
 
 [[package]]

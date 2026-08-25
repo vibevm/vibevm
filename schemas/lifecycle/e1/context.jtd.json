@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "description": "Canonical epoch-1 lifecycle context envelope. This is the one wire shape presented to every extension handler; builtin handlers consume the generated Rust type directly.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle::e1::context"
+    }
+  },
+  "properties": {
+    "envelope": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Context-envelope epoch. Epoch 1 is the only supported value in R2.4."
+      }
+    },
+    "point": {
+      "type": "string"
+    },
+    "execution": {
+      "ref": "execution"
+    },
+    "project": {
+      "ref": "project"
+    },
+    "world": {
+      "ref": "world"
+    },
+    "run": {
+      "ref": "run"
+    },
+    "artifacts": {
+      "elements": {
+        "ref": "artifact"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Artifacts accumulated from successful earlier contributions. Empty in R2.4, but present on every envelope."
+      }
+    },
+    "io": {
+      "ref": "io"
+    }
+  },
+  "definitions": {
+    "execution": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "Actual dependency or host provider identity, without an invented package coordinate for an ungrouped host."
+          }
+        },
+        "config": {
+          "values": {},
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Effective handler configuration after whole-value host activation override."
+          }
+        }
+      }
+    },
+    "project": {
+      "properties": {
+        "root": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "manifest": {
+          "type": "string"
+        },
+        "spec_roots": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "world": {
+      "properties": {
+        "lockfile": {
+          "type": "string"
+        },
+        "deps_root": {
+          "type": "string"
+        },
+        "packages": {
+          "elements": {
+            "ref": "world_package"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Selected reachable packages in canonical lockfile order."
+          }
+        }
+      }
+    },
+    "world_package": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "slot": {
+          "type": "string"
+        }
+      }
+    },
+    "run": {
+      "properties": {
+        "requested": {
+          "type": "string"
+        },
+        "chain": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "phase": {
+          "type": "string"
+        },
+        "offline": {
+          "type": "boolean"
+        },
+        "assume_yes": {
+          "type": "boolean"
+        },
+        "agent_mode": {
+          "enum": [
+            "cli",
+            "agent"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "force": {
+          "type": "boolean"
+        }
+      }
+    },
+    "artifact": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      }
+    },
+    "io": {
+      "properties": {
+        "scratch": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

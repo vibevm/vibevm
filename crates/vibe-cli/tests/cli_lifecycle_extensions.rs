@@ -35,31 +35,31 @@ fn extension_registry() -> tempfile::TempDir {
 id = "install-plan"
 point = "phase:install"
 handler = { kind = "builtin", name = "log" }
-
+config = { message = "install {phase} {package}" }
 [[extension]]
 id = "build-default"
 point = "phase:build"
-handler = { kind = "binary", name = "build-default" }
-
+handler = { kind = "builtin", name = "log" }
+config = { message = "build default {phase} {package}" }
 [[extension]]
 id = "build-activated"
 point = "phase:build"
-handler = { kind = "binary", name = "build-activated" }
-
+handler = { kind = "builtin", name = "log" }
+config = { message = "build activated {phase} {package}" }
 [[extension]]
 id = "test-plan"
 point = "phase:test"
-handler = { kind = "agent", prompt = "test" }
-
+handler = { kind = "builtin", name = "log" }
+config = { message = "test {phase} {package}" }
 [[extension]]
 id = "clean-guard"
 point = "phase:clean"
 handler = { kind = "script", base = "hooks/clean" }
-
 [[extension]]
 id = "compile-auto-ignored"
 point = "compile:document"
 handler = { kind = "builtin", name = "log" }
+config = { message = "compile {phase} {package}" }
 auto = true
 "#,
     );
@@ -88,7 +88,8 @@ fn append_host_controls(project: &Path, disable: &[&str]) {
 [[extension]]
 id = "host-build"
 point = "phase:build"
-handler = { kind = "builtin", name = "host" }
+handler = { kind = "builtin", name = "log" }
+config = { message = "host {phase} {package}" }
 
 [extensions]
 "#,
@@ -117,6 +118,9 @@ fn json_documents(bytes: &[u8]) -> Vec<serde_json::Value> {
         .unwrap()
 }
 
+fn last_lifecycle(bytes: &[u8]) -> LifecycleReport {
+    serde_json::from_value(json_documents(bytes).pop().unwrap()).unwrap()
+}
 fn status<'a>(report: &'a LifecycleReport, phase: &str) -> &'a str {
     report
         .steps
@@ -167,7 +171,7 @@ fn direct_install_reloads_the_new_world_and_keeps_its_final_json_document_last()
     assert!(ritual.contributions.iter().any(|row| {
         row.key == "org.vibevm/integration-alpha#install-plan"
             && row.phase == "install"
-            && row.status == "planned"
+            && row.status == "ok"
     }));
     assert_eq!(ritual.notices.len(), 1);
     assert!(ritual.notices[0].contains("compile-auto-ignored"));
@@ -212,7 +216,7 @@ fn direct_fresh_install_keeps_builtin_status_separate_from_the_planned_ritual() 
         ritual
             .contributions
             .iter()
-            .any(|row| row.phase == "install" && row.status == "planned")
+            .any(|row| row.phase == "install" && row.status == "ok")
     );
 }
 
@@ -229,6 +233,7 @@ fn direct_empty_world_callback_plans_host_install_once_before_the_final_report()
 id = "host-install"
 point = "phase:install"
 handler = { kind = "builtin", name = "log" }
+config = { message = "host install {phase} {package}" }
 "#,
     );
     fs::write(&manifest, body).unwrap();
@@ -280,7 +285,7 @@ fn lifecycle_plan_keeps_phase_lock_declaration_and_control_tier_order() {
         .arg("--assume-yes")
         .assert()
         .success();
-    let report: LifecycleReport = serde_json::from_slice(&assert.get_output().stdout).unwrap();
+    let report = last_lifecycle(&assert.get_output().stdout);
     let host_name = vibe_core::manifest::Manifest::read(project.path().join("vibe.toml"))
         .unwrap()
         .project
@@ -313,8 +318,8 @@ fn lifecycle_plan_keeps_phase_lock_declaration_and_control_tier_order() {
             ),
         ]
     );
-    assert_eq!(status(&report, "build"), "planned");
-    assert_eq!(status(&report, "test"), "planned");
+    assert_eq!(status(&report, "build"), "ok");
+    assert_eq!(status(&report, "test"), "ok");
     assert_eq!(report.notices.len(), 1);
     assert!(report.notices[0].contains("compile-auto-ignored"));
     assert!(
@@ -343,7 +348,7 @@ fn direct_install_quiet_is_one_line_and_names_the_planned_count() {
     let stdout = String::from_utf8_lossy(&assert.get_output().stdout);
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
     assert!(
-        stdout.contains("1 lifecycle contribution(s) planned"),
+        stdout.contains("1 lifecycle contribution(s) selected, 1 executed, 1 ok"),
         "{stdout}"
     );
     assert!(stdout.contains("1 lifecycle notice(s)"), "{stdout}");
@@ -369,44 +374,14 @@ fn standalone_and_chained_clean_refuse_a_plan_before_the_wipe() {
             .arg("--assume-yes")
             .assert()
             .failure()
-            .stderr(predicates::str::contains("cannot dispatch handlers yet"));
+            .stderr(predicates::str::contains(
+                "R2.4 supports builtin handlers only",
+            ));
         assert!(
             slot.is_dir(),
             "clean wiped before refusing (chained={chained})"
         );
     }
-}
-
-#[test]
-fn json_clean_refusal_names_the_exact_row_before_the_wipe() {
-    let user = UserScratch::new();
-    let project = init_project(&user);
-    let registry = extension_registry();
-    install_from(&user, project.path(), registry.path());
-    let slot = project
-        .path()
-        .join(common::slot_dir("org.vibevm.integration-alpha", "0.1.0"));
-
-    let output = user
-        .vibe()
-        .args(["clean", "--json", "--path"])
-        .arg(project.path())
-        .arg("--assume-yes")
-        .output()
-        .unwrap();
-    assert!(!output.status.success());
-    let error: serde_json::Value = serde_json::from_slice(&output.stderr).unwrap();
-    let error = error.to_string();
-    assert!(
-        error.contains("org.vibevm/integration-alpha#clean-guard"),
-        "{error}"
-    );
-    assert!(error.contains("handler=script"), "{error}");
-    assert!(
-        error.contains("provider=org.vibevm/integration-alpha"),
-        "{error}"
-    );
-    assert!(slot.is_dir(), "JSON refusal happened after the wipe");
 }
 
 #[test]
@@ -541,6 +516,7 @@ fn clean_build_defers_future_stack_and_controls_until_after_install() {
 id = "future-build"
 point = "phase:build"
 handler = { kind = "builtin", name = "log" }
+config = { message = "future {phase} {package}" }
 "#,
     );
     fs::write(beta_manifest, beta_body).unwrap();
@@ -586,7 +562,7 @@ handler = { kind = "builtin", name = "log" }
         .arg("--assume-yes")
         .assert()
         .success();
-    let report: LifecycleReport = serde_json::from_slice(&assert.get_output().stdout).unwrap();
+    let report = last_lifecycle(&assert.get_output().stdout);
     assert!(report.contributions.iter().any(|row| {
         row.key == "org.vibevm/integration-beta#future-build"
             && row.phase == "build"

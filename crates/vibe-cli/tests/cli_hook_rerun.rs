@@ -188,9 +188,13 @@ fn lifecycle_suppresses_hook_subprocess_streams_in_json_and_quiet_modes() {
         let stdout = String::from_utf8_lossy(&output.stdout);
         assert!(!stdout.contains(MARKER), "{mode}: {stdout}");
         if mode == "json" {
+            let documents = serde_json::Deserializer::from_slice(&output.stdout)
+                .into_iter::<serde_json::Value>()
+                .collect::<Result<Vec<_>, _>>()
+                .expect("hook output must not corrupt lifecycle JSON documents");
             let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
-                serde_json::from_slice(&output.stdout)
-                    .expect("hook output must not corrupt the lifecycle document");
+                serde_json::from_value(documents.last().cloned().unwrap())
+                    .expect("final lifecycle outcome document must use the generated shape");
             assert_eq!(report.command, "lifecycle");
         } else {
             assert_eq!(stdout.lines().count(), 1, "{stdout}");

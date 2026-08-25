@@ -237,8 +237,11 @@ fn ritual_suffix(summary: WorldCallbackSummary) -> String {
         String::new()
     } else {
         format!(
-            ", {} lifecycle contribution(s) planned, {} lifecycle notice(s)",
-            summary.planned_contributions, summary.notices,
+            ", {} lifecycle contribution(s) selected, {} executed, {} ok, {} lifecycle notice(s)",
+            summary.selected_contributions,
+            summary.executed_contributions,
+            summary.successful_contributions,
+            summary.notices,
         )
     }
 }

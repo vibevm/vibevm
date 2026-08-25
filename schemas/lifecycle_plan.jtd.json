@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "description": "Wire format for the complete pre-dispatch lifecycle ritual. `command` is always `lifecycle:plan`. It carries selection only—never outcomes or handler messages—and is emitted before execution begins.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::lifecycle_plan"
+    }
+  },
+  "properties": {
+    "command": {
+      "type": "string"
+    },
+    "requested": {
+      "type": "string"
+    },
+    "chain": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "contributions": {
+      "elements": {
+        "ref": "planned_contribution"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "planned_contribution": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "point": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

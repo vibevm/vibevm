@@ -1,0 +1,22 @@
+{
+  "command": "lifecycle:plan",
+  "requested": "build",
+  "chain": [
+    "validate",
+    "install",
+    "generate",
+    "build"
+  ],
+  "contributions": [
+    {
+      "key": "org.demo/provider#announce",
+      "phase": "build",
+      "point": "phase:build",
+      "handler": "builtin",
+      "provider": "org.demo/provider",
+      "tier": "dependency",
+      "version": "1.0.0"
+    }
+  ],
+  "notices": []
+}
