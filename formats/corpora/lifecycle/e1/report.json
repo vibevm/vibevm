@@ -35,7 +35,20 @@
       "provider": "org.demo/provider",
       "tier": "dependency",
       "status": "ok",
+      "flagged": false,
       "message": "hello from build in demo",
+      "reference": "hooks.post-install",
+      "slot_target": {
+        "group": "org.demo",
+        "name": "target",
+        "version": "2.0.0",
+        "kind": "tool",
+        "root": "C:/work/demo/vibevm/vibedeps/org.demo.target/2.0.0"
+      },
+      "stdout": "hello from build in demo\n",
+      "stderr": "warning: demo diagnostic\n",
+      "stdout_truncated": false,
+      "stderr_truncated": false,
       "version": "1.0.0"
     }
   ],

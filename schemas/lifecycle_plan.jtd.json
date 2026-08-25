@@ -63,11 +63,44 @@
         }
       },
       "optionalProperties": {
+        "reference": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Authored source reference for a synthetic or translated lifecycle contribution."
+          }
+        },
+        "slot_target": {
+          "ref": "slot_target",
+          "metadata": {
+            "x-default": null,
+            "description": "Package slot whose pre/post-install timing event this contribution targets."
+          }
+        },
         "version": {
           "type": "string",
           "metadata": {
             "x-default": null
           }
+        }
+      }
+    },
+    "slot_target": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
         }
       }
     }

@@ -125,7 +125,7 @@ sunset = "none"
 epoch = 1
 schema = "schemas/lifecycle/e1/reply.jtd.json"
 recoverable = true
-foreign_parsers = "ours"
+foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 

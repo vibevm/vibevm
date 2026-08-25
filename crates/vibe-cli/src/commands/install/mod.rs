@@ -18,7 +18,7 @@ mod resolver;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use project_local::project_packages_root;
-pub(crate) use report::HookReportView;
+pub(crate) use report::{HookReportPresentation, HookReportView, LifecycleHookView};
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
 pub(crate) use vibe_install::exact_pinned_pkgref;
 
@@ -29,12 +29,12 @@ use dialoguer::Confirm;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::user_config::UserConfig;
-use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver};
+use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver, SlotLifecycleReport};
+use vibe_lifecycle::process::StreamMode;
+use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
 use vibe_resolver::FeatureRequest;
+use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_workspace::Workspace;
-use vibe_workspace::hooks::{
-    DEFAULT_ALLOWED_GROUPS, HookOutput, HookPolicy, HookTrust, decide_trust,
-};
 
 use crate::cli::InstallArgs;
 use crate::commands::short_name;
@@ -90,6 +90,35 @@ impl PlanObserver for CtxObserver<'_> {
     }
 }
 
+pub(crate) struct LifecycleSlotObserver {
+    ctx: output::Context,
+    metadata: RunMetadata,
+}
+
+impl LifecycleSlotObserver {
+    pub(crate) fn new(ctx: &output::Context, metadata: RunMetadata) -> Self {
+        Self {
+            ctx: ctx.clone(),
+            metadata,
+        }
+    }
+}
+
+impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
+    fn observe(&self, plan: &vibe_install::SlotLifecyclePlan) -> std::result::Result<(), String> {
+        super::lifecycle::surface_slot_plan(&self.ctx, plan, &self.metadata)
+            .map_err(|error| error.to_string())
+    }
+
+    fn outcome(
+        &self,
+        report: &vibe_install::SlotLifecycleReport,
+    ) -> std::result::Result<(), String> {
+        super::lifecycle::emit_slot_transition_outcome(&self.ctx, &self.metadata, report)
+            .map_err(|error| error.to_string())
+    }
+}
+
 /// Whether the existing install implementation applied a plan or proved the
 /// materialised world fresh. Lifecycle callers consume this instead of
 /// inferring machine state from rendered text.
@@ -101,12 +130,11 @@ pub(crate) enum InstallDisposition {
 
 /// Effective invocation facts the durable-world lifecycle callback needs in
 /// the canonical handler envelope.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub(crate) struct InstallRunContext {
-    pub(crate) offline: bool,
-    pub(crate) assume_yes: bool,
-    pub(crate) force: bool,
-    pub(crate) started: String,
+    pub(crate) metadata: RunMetadata,
+    pub(crate) lifecycle_run: Option<LifecycleRunHandle>,
+    pub(crate) lifecycle_reports: Vec<SlotLifecycleReport>,
 }
 
 /// Counts produced by an additive post-durability observer. Keeping them
@@ -146,6 +174,30 @@ pub(crate) fn run_with_world_callback(
         InstallRunContext,
     ) -> Result<WorldCallbackSummary>,
 ) -> Result<InstallDisposition> {
+    run_with_lifecycle_context(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        None,
+        None,
+        after_durable_world,
+    )
+}
+
+pub(crate) fn run_with_lifecycle_context(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    metadata: Option<RunMetadata>,
+    lifecycle_output: Option<&output::Context>,
+    after_durable_world: impl FnOnce(
+        &Path,
+        InstallDisposition,
+        InstallRunContext,
+    ) -> Result<WorldCallbackSummary>,
+) -> Result<InstallDisposition> {
     let mut after_durable_world = Some(after_durable_world);
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
@@ -158,11 +210,29 @@ pub(crate) fn run_with_world_callback(
     // `VIBE_OFFLINE` > user-config `[net].offline`. Resolved here, once,
     // so the resolver below receives a single boolean.
     let offline = output::resolve_offline(root_offline || args.offline, user_config.net.offline);
-    let lifecycle_run = InstallRunContext {
+    let metadata = metadata.unwrap_or_else(|| RunMetadata {
+        requested: "install".into(),
+        chain: vec!["validate".into(), "install".into()],
         offline,
         assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
+        agent_mode: RunAgentMode::Cli,
         force: args.force,
+        run_id: String::new(),
         started: crate::commands::init::current_timestamp_utc(),
+    });
+    let metadata = if metadata.run_id.is_empty() {
+        RunMetadata {
+            run_id: vibe_lifecycle::process::allocate_run_id(&project_root)
+                .context("allocating install lifecycle run id")?,
+            ..metadata
+        }
+    } else {
+        metadata
+    };
+    let mut lifecycle_run = InstallRunContext {
+        metadata,
+        lifecycle_run: None,
+        lifecycle_reports: Vec::new(),
     };
 
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
@@ -323,25 +393,31 @@ pub(crate) fn run_with_world_callback(
                 return Err(InstallError::UserDeclined.into());
             }
 
-            // PROP-020 §2.3 — resolve install-hook trust before applying:
-            // allow-listed groups (incl. `org.vibevm`) and `--allow-hooks`
-            // run silently, any other hook-declaring package prompts for
-            // consent interactively, and a non-interactive run aborts rather
-            // than run third-party code unseen.
-            let hook_policy = resolve_hook_policy(ctx, &args, &planned.resolution)?;
-
-            let applied = vibe_install::apply_with_spec_format_and_hook_output(
+            // PROP-054 ##INSTALL-IS-CONSENT: `[hooks]` is translated to
+            // `slot:` contributions and runs through the lifecycle handler
+            // engine. The install confirmation above is the sole trust
+            // decision; there is no hook-specific prompt or allow flag.
+            let observer = LifecycleSlotObserver::new(
+                lifecycle_output.unwrap_or(ctx),
+                lifecycle_run.metadata.clone(),
+            );
+            let applied = vibe_install::apply_with_spec_format_and_lifecycle_observed(
                 &resolver,
                 *planned,
                 slot_integrity,
                 spec_format,
-                &hook_policy,
-                if ctx.suppresses_output() {
-                    HookOutput::Suppress
+                lifecycle_run.metadata.clone(),
+                if ctx.is_json() {
+                    StreamMode::Capture
+                } else if ctx.suppresses_output() {
+                    StreamMode::Null
                 } else {
-                    HookOutput::Inherit
+                    StreamMode::Inherit
                 },
+                std::sync::Arc::new(observer),
             )?;
+            lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
+            lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();
             let after = after_durable_world
                 .take()
                 .context("internal: install durable-world callback already consumed")?;
@@ -377,70 +453,6 @@ pub(crate) fn resolve_spec_format(manifest: &Manifest, user_config: &UserConfig)
         .and_then(|node| node.spec_format)
         .or(user_config.install.spec_format)
         .unwrap_or_default()
-}
-
-/// Resolve the install-hook trust policy for a planned resolution
-/// (PROP-020 §2.3). Allow-listed groups (`DEFAULT_ALLOWED_GROUPS`, including
-/// `org.vibevm`) and `--allow-hooks` run with no prompt; any other
-/// hook-declaring package's group is asked for consent once, interactively;
-/// a non-interactive run carrying such a package aborts unless `--allow-hooks`
-/// is set — a hook never runs unseen. A declined group is simply left out of
-/// the policy, so the pipeline skips-and-reports its hooks rather than failing.
-pub(crate) fn resolve_hook_policy(
-    ctx: &output::Context,
-    args: &InstallArgs,
-    resolution: &[vibe_workspace::install::ResolvedDep],
-) -> Result<HookPolicy> {
-    let allowed: Vec<String> = DEFAULT_ALLOWED_GROUPS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
-    // Hook consent is interactive only on an attended TTY in human mode;
-    // `--assume-yes`, `--json`, and `--unattended` are each non-interactive
-    // for the purpose of running third-party code (PROP-020 §2.3).
-    let interactive =
-        console::user_attended() && !ctx.is_json() && !ctx.is_unattended() && !args.assume_yes;
-    let mut consented: Vec<String> = Vec::new();
-    let mut decided: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
-    for dep in resolution {
-        if dep.manifest.hooks.is_empty() {
-            continue;
-        }
-        // One decision per group covers all its hook-declaring packages.
-        let group = dep.group.as_str().to_string();
-        if !decided.insert(group.clone()) {
-            continue;
-        }
-        match decide_trust(&dep.group, &allowed, interactive, args.allow_hooks) {
-            HookTrust::Allowed => {}
-            HookTrust::NeedsConsent => {
-                let ok = Confirm::new()
-                    .with_prompt(format!(
-                        "Package group `{group}` declares install hooks (PROP-020). \
-                         Run them during this install?"
-                    ))
-                    .default(false)
-                    .interact()
-                    .context("reading hook consent")?;
-                if ok {
-                    consented.push(group);
-                }
-            }
-            HookTrust::Refused => {
-                bail!(
-                    "package group `{group}` declares install hooks but is not trusted to run \
-                     them non-interactively (PROP-020 §2.3). Re-run interactively to consent, \
-                     allow-list `{group}`, or pass `--allow-hooks`."
-                );
-            }
-        }
-    }
-    let mut allowed_groups = allowed;
-    allowed_groups.extend(consented);
-    Ok(HookPolicy {
-        allowed_groups,
-        allow_hooks: args.allow_hooks,
-    })
 }
 
 /// The lockfile provenance stamp this binary writes.

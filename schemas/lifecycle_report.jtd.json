@@ -90,6 +90,13 @@
         }
       },
       "optionalProperties": {
+        "flagged": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "True when a durable operation completed but this contribution left it requiring attention."
+          }
+        },
         "message": {
           "type": "string",
           "metadata": {
@@ -97,11 +104,72 @@
             "description": "Structured handler message. Human mode may render it; JSON mode never leaks it outside this document."
           }
         },
+        "reference": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Authored source reference for a synthetic or translated lifecycle contribution."
+          }
+        },
+        "slot_target": {
+          "ref": "slot_target",
+          "metadata": {
+            "x-default": null,
+            "description": "Package slot whose pre/post-install timing event this contribution targeted."
+          }
+        },
+        "stdout": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Bounded UTF-8 lossy capture of script stdout for structured lifecycle reports, at most 1 MiB. Binary stdout is the reply protocol and is never stored here."
+          }
+        },
+        "stderr": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Bounded UTF-8 lossy capture of handler stderr for structured lifecycle reports, at most 1 MiB."
+          }
+        },
+        "stdout_truncated": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "True when stdout exceeded the 1 MiB structured-report bound and was truncated."
+          }
+        },
+        "stderr_truncated": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "True when stderr exceeded the 1 MiB structured-report bound and was truncated."
+          }
+        },
         "version": {
           "type": "string",
           "metadata": {
             "x-default": null
           }
+        }
+      }
+    },
+    "slot_target": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
         }
       }
     },

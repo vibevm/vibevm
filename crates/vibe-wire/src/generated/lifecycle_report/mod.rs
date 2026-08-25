@@ -47,10 +47,46 @@ pub struct LifecycleContributionReport {
 
     pub tier: String,
 
+    /// True when a durable operation completed but this contribution left it
+    /// requiring attention.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub flagged: Option<bool>,
+
     /// Structured handler message. Human mode may render it; JSON mode never
     /// leaks it outside this document.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
+
+    /// Authored source reference for a synthetic or translated lifecycle
+    /// contribution.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference: Option<String>,
+
+    /// Package slot whose pre/post-install timing event this contribution
+    /// targeted.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot_target: Option<SlotTarget>,
+
+    /// Bounded UTF-8 lossy capture of handler stderr for structured lifecycle
+    /// reports, at most 1 MiB.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stderr: Option<String>,
+
+    /// True when stderr exceeded the 1 MiB structured-report bound and was
+    /// truncated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stderr_truncated: Option<bool>,
+
+    /// Bounded UTF-8 lossy capture of script stdout for structured lifecycle
+    /// reports, at most 1 MiB. Binary stdout is the reply protocol and is never
+    /// stored here.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stdout: Option<String>,
+
+    /// True when stdout exceeded the 1 MiB structured-report bound and was
+    /// truncated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stdout_truncated: Option<bool>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -63,4 +99,17 @@ pub struct LifecycleStepReport {
     /// Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the
     /// first handler failure aborts the chain.
     pub status: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SlotTarget {
+    pub group: String,
+
+    pub kind: String,
+
+    pub name: String,
+
+    pub root: String,
+
+    pub version: String,
 }

@@ -47,6 +47,13 @@
     "force": false
   },
   "artifacts": [],
+  "slot_target": {
+    "group": "org.demo",
+    "name": "target",
+    "version": "2.0.0",
+    "kind": "tool",
+    "root": "C:/work/demo/vibevm/vibedeps/org.demo.target/2.0.0"
+  },
   "io": {
     "scratch": "C:/work/demo/.vibe/lifecycle/run-1/616e6e6f756e6365/"
   }

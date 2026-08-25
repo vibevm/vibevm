@@ -15,6 +15,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+mod lifecycle;
+
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -23,18 +25,20 @@ use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
-use vibe_install::InstallSource;
+use vibe_install::{InstallSlotLifecycle, InstallSource};
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
-    ResolvedDep, SlotCheck, SlotVerifier, materialise_subtree_with_spec_format,
-    regenerate_boot_with_spec_format, run_post_install_hooks,
+    ResolvedDep, SlotCheck, SlotLifecycleMode, SlotVerifier,
+    materialise_subtree_with_spec_format_and_slot_lifecycle, regenerate_boot_with_spec_format,
+    run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, UpdateArgs};
 use crate::commands::install::{
-    HookReportView, build_install_resolver, emit_closure_diff, exact_pinned_pkgref, lane_sizes,
+    HookReportPresentation, LifecycleHookView, build_install_resolver, emit_closure_diff,
+    exact_pinned_pkgref, lane_sizes,
 };
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
@@ -305,12 +309,6 @@ pub fn run(
         })
         .collect();
 
-    // PROP-020 §2.1 — `vibe update` resets and re-runs install hooks. Resolve
-    // hook trust (allow-list / interactive consent / abort) before touching
-    // any slot, exactly as `vibe install` does.
-    let hook_policy =
-        crate::commands::install::resolve_hook_policy(ctx, &install_args_from(&args), &resolution)?;
-
     // Remove any superseded *versioned* slot so a bump leaves no stale slot
     // (an in-place slot is unversioned — nothing to prune), and record the
     // bumps for the report.
@@ -349,13 +347,32 @@ pub fn run(
             })
             .collect(),
     );
-    let mut subtree = materialise_subtree_with_spec_format(
+    let lifecycle_metadata = lifecycle::metadata(
+        ctx,
+        &project_root,
+        "update",
+        root_offline || user_config.net.offline,
+        args.assume_yes,
+    )?;
+    let lifecycle_observer =
+        crate::commands::install::LifecycleSlotObserver::new(ctx, lifecycle_metadata.clone());
+    let provisional_world = lifecycle::provisional_world(&workspace, &lockfile, &resolution)?;
+    let lifecycle = InstallSlotLifecycle::from_projection_observed(
+        &project_root,
+        &manifest,
+        &provisional_world,
+        &resolution,
+        lifecycle_metadata.clone(),
+        lifecycle::stream_mode(ctx),
+        std::sync::Arc::new(lifecycle_observer),
+    )?;
+    let mut subtree = materialise_subtree_with_spec_format_and_slot_lifecycle(
         &workspace.root,
         &resolution,
         SlotIntegrity::Verify,
         spec_format,
         Some(&source_hashes),
-        Some(&hook_policy),
+        &lifecycle,
     )
     .context("re-materialising the updated subtree")?;
 
@@ -395,15 +412,12 @@ pub fn run(
         &lane_sizes(&workspace.root),
     );
 
-    // PROP-020 §2.1 — post-install hooks run once the updated packages are
-    // durable (lockfile written, boot regenerated).
-    let post_install_reports = match subtree.take_post_install_plan() {
-        Some(plan) => {
-            run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
-        }
-        None => Vec::new(),
-    };
-    let hook_reports = HookReportView::new(&subtree.hook_reports, &post_install_reports);
+    if let Some(plan) = subtree.take_post_install_plan() {
+        run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle))
+            .context("running post-install lifecycle")?;
+    }
+    let lifecycle_reports = lifecycle.take_reports()?;
+    let hook_reports = LifecycleHookView::new(&lifecycle_reports);
 
     emit_report(ctx, updated.len(), &bumps, &hook_reports)?;
     Ok(())
@@ -431,9 +445,6 @@ fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         rev: None,
         git_auth: None,
         git_token_env: None,
-        // `vibe update` carries no `--allow-hooks`; hook consent on the
-        // whole-graph path is resolved by the `vibe install` it delegates to.
-        allow_hooks: false,
         force: false,
         prefer_embedded: false,
         no_prefer_embedded: false,
@@ -499,7 +510,7 @@ fn emit_report(
     ctx: &output::Context,
     count: usize,
     bumps: &[String],
-    hook_reports: &HookReportView<'_>,
+    hook_reports: &dyn HookReportPresentation,
 ) -> Result<()> {
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
@@ -507,7 +518,7 @@ fn emit_report(
             "command": "update",
             "packages_resolved": count,
             "version_bumps": bumps,
-            "hooks": hook_reports.json(),
+            "hooks": [],
         }))?;
         return Ok(());
     }
@@ -524,7 +535,6 @@ fn emit_report(
     for b in bumps {
         ctx.created(b);
     }
-    hook_reports.render_human(ctx);
     ctx.summary(&format!(
         "\nUpdated {count} package{} ({} version bump{}).",
         if count == 1 { "" } else { "s" },

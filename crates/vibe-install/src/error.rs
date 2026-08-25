@@ -76,6 +76,12 @@ pub enum Error {
     #[error(transparent)]
     Feature(#[from] vibe_resolver::FeatureError),
 
+    #[error(
+        "install lifecycle integration failed: {0} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT)"
+    )]
+    Lifecycle(String),
+
     #[error(transparent)]
     Workspace(#[from] vibe_workspace::WorkspaceError),
 }

@@ -11,6 +11,7 @@ use vibe_core::manifest::{ExtensionHandler, ExtensionKey};
 use vibe_wire::generated::lifecycle::e1::context::Context;
 use walkdir::{DirEntry, WalkDir};
 
+use crate::HandlerExecution;
 use crate::{ExtensionProvider, ExtensionRegistryRow};
 
 #[derive(Debug, Error)]
@@ -54,6 +55,7 @@ pub fn fingerprint_execution(
     hash.field("key", row.key().to_string().as_bytes());
     hash.field("phase", context.run.phase.as_bytes());
     hash.field("point", context.point.as_bytes());
+    hash.json("slot-target", &context.slot_target, row.key())?;
     hash.field("handler-kind", row.declaration().handler.kind().as_bytes());
     handler_coordinates(&mut hash, &row.declaration().handler);
     hash.json("effective-config", &context.execution.config, row.key())?;
@@ -81,12 +83,32 @@ pub fn fingerprint_execution(
     Ok(hash.finish())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn fingerprint_handler_execution(
+    execution: &HandlerExecution,
+    context: &Context,
+) -> Result<String, FingerprintError> {
+    let mut fingerprint = fingerprint_execution(execution.row(), context)?;
+    if execution.slot_target().is_some() {
+        let mut hash = FramedHash::new();
+        hash.field("base-fingerprint", fingerprint.as_bytes());
+        hash.field("execution-identity", execution.key().as_bytes());
+        fingerprint = hash.finish();
+    }
+    Ok(fingerprint)
+}
+
 /// Stable non-reusable fingerprint for failures before the real fingerprint
 /// exists. Error text and paths are deliberately excluded.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
 pub fn preparation_error_fingerprint(key: &ExtensionKey, phase: &str) -> String {
+    preparation_error_fingerprint_for_identity(&key.to_string(), phase)
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn preparation_error_fingerprint_for_identity(key: &str, phase: &str) -> String {
     let mut hash = FramedHash::new();
-    hash.field("key", key.to_string().as_bytes());
+    hash.field("key", key.as_bytes());
     hash.field("phase", phase.as_bytes());
     hash.field("transition", b"preparation-error");
     hash.finish()

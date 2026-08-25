@@ -143,6 +143,7 @@ console = "0.16"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 sha2 = "0.10"
+getrandom = "0.3"
 semver = { version = "1", features = ["serde"] }
 indexmap = { version = "2", features = ["serde"] }
 # `preserve_order` keeps a parsed JSON document's existing key order on

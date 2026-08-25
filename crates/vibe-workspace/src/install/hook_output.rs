@@ -17,10 +17,81 @@ pub fn apply_resolution_with_spec_format_and_hook_output(
     hooks: Option<&HookPolicy>,
     hook_output: HookOutput,
 ) -> Result<InstallOutcome, WorkspaceError> {
+    let lifecycle = match hooks {
+        Some(policy) => SlotLifecycleMode::LegacyHooks {
+            policy,
+            output: hook_output,
+        },
+        None => SlotLifecycleMode::None,
+    };
+    apply_resolution_with_spec_format_and_slot_lifecycle(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+    )
+}
+
+/// Apply a full resolution under exactly one dependency-slot lifecycle mode.
+///
+/// The mode is neutral to lifecycle implementation and structurally prevents
+/// legacy `[hooks]` execution from being combined with a lifecycle callback.
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+) -> Result<InstallOutcome, WorkspaceError> {
+    match lifecycle {
+        SlotLifecycleMode::None => apply_with_materialise_lifecycle(
+            workspace,
+            resolution,
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            MaterialiseLifecycle::None,
+        ),
+        SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
+            workspace,
+            resolution,
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            MaterialiseLifecycle::Callback(callback),
+        ),
+        SlotLifecycleMode::LegacyHooks { policy, output } => {
+            let runner = ConfiguredHookRunner::new(output);
+            apply_with_materialise_lifecycle(
+                workspace,
+                resolution,
+                slot_integrity,
+                spec_format,
+                slot_verifier,
+                MaterialiseLifecycle::LegacyHooks {
+                    policy,
+                    probe: &SystemProbe,
+                    runner: &runner,
+                },
+            )
+        }
+    }
+}
+
+fn apply_with_materialise_lifecycle(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: MaterialiseLifecycle<'_>,
+) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
     validate_redirect_blocks(workspace)?;
 
-    let system_runner = ConfiguredHookRunner::new(hook_output);
     let Materialised {
         materialised,
         skipped,
@@ -34,9 +105,7 @@ pub fn apply_resolution_with_spec_format_and_hook_output(
             slot_integrity,
             spec_format,
             slot_verifier,
-            hooks,
-            probe: &SystemProbe,
-            runner: &system_runner,
+            lifecycle,
         },
     )?;
 

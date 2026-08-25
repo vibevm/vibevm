@@ -43,6 +43,15 @@
       "ref": "io"
     }
   },
+  "optionalProperties": {
+    "slot_target": {
+      "ref": "slot_target",
+      "metadata": {
+        "x-default": null,
+        "description": "Package slot whose pre/post-install timing event is executing. Absent for phase contributions."
+      }
+    }
+  },
   "definitions": {
     "execution": {
       "properties": {
@@ -177,6 +186,25 @@
           "type": "string"
         },
         "kind": {
+          "type": "string"
+        }
+      }
+    },
+    "slot_target": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "root": {
           "type": "string"
         }
       }

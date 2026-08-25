@@ -32,6 +32,29 @@ pub struct PlannedContribution {
 
     pub tier: String,
 
+    /// Authored source reference for a synthetic or translated lifecycle
+    /// contribution.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference: Option<String>,
+
+    /// Package slot whose pre/post-install timing event this contribution
+    /// targets.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot_target: Option<SlotTarget>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SlotTarget {
+    pub group: String,
+
+    pub kind: String,
+
+    pub name: String,
+
+    pub root: String,
+
+    pub version: String,
 }

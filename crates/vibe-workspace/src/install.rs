@@ -34,6 +34,7 @@ use crate::{Workspace, WorkspaceError, layout_paths, vibedeps};
 mod hook_output;
 mod hooks_run;
 pub mod model;
+mod slot_lifecycle;
 
 mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
@@ -44,9 +45,18 @@ use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};
 
-pub use hook_output::apply_resolution_with_spec_format_and_hook_output;
-use hooks_run::{SubtreeOutcome, run_pre_install_hook};
-pub use hooks_run::{run_post_install_hooks, run_post_install_hooks_with_output};
+pub use hook_output::{
+    apply_resolution_with_spec_format_and_hook_output,
+    apply_resolution_with_spec_format_and_slot_lifecycle,
+};
+use hooks_run::SubtreeOutcome;
+pub use hooks_run::{
+    run_post_install_hooks, run_post_install_hooks_with_output, run_post_install_slot_lifecycle,
+};
+use slot_lifecycle::{MaterialiseLifecycle, PreInstallPlan};
+pub use slot_lifecycle::{
+    SlotLifecycle, SlotLifecycleContext, SlotLifecycleMode, SlotLifecycleTarget,
+};
 
 pub use bootgen::verify_boot_graph;
 pub use bootgen::{
@@ -153,9 +163,7 @@ struct MaterialiseOptions<'a> {
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
     slot_verifier: Option<&'a dyn SlotVerifier>,
-    hooks: Option<&'a HookPolicy>,
-    probe: &'a dyn InterpreterProbe,
-    runner: &'a dyn HookRunner,
+    lifecycle: MaterialiseLifecycle<'a>,
 }
 
 #[cfg(test)]
@@ -175,9 +183,14 @@ fn materialise_resolution(
             slot_integrity,
             spec_format: SpecFormat::Mixed,
             slot_verifier,
-            hooks,
-            probe,
-            runner,
+            lifecycle: match hooks {
+                Some(policy) => MaterialiseLifecycle::LegacyHooks {
+                    policy,
+                    probe,
+                    runner,
+                },
+                None => MaterialiseLifecycle::None,
+            },
         },
     )
 }
@@ -197,15 +210,14 @@ fn materialise_resolution_with_spec_format(
         slot_integrity,
         spec_format,
         slot_verifier,
-        hooks,
-        probe,
-        runner,
+        lifecycle,
     } = options;
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
     let mut integrity_warnings = Vec::new();
     let mut post_install_deps = Vec::new();
     let mut hook_reports = Vec::new();
+    let mut pre_install = PreInstallPlan::new(&lifecycle, workspace_root);
     for dep in resolution {
         // PROP-022 §2.4 — an in-place package is a project-local git working
         // tree in an unversioned slot. Move the fetched clone (with its
@@ -255,17 +267,7 @@ fn materialise_resolution_with_spec_format(
             }
             // In-place keeps its git-native reset/eligibility semantics.
             post_install_deps.push(dep.clone());
-            if let Some(policy) = hooks {
-                match run_pre_install_hook(dep, workspace_root, policy, probe, runner) {
-                    Ok(Some(report)) => hook_reports.push(report),
-                    Ok(None) => {}
-                    Err(err) => {
-                        let _ =
-                            vibedeps::remove_in_place_slot(workspace_root, &dep.group, &dep.name);
-                        return Err(err);
-                    }
-                }
-            }
+            pre_install.run_or_defer(dep, &mut hook_reports)?;
             materialised.push(rel);
             continue;
         }
@@ -340,25 +342,11 @@ fn materialise_resolution_with_spec_format(
         )?;
         if materialise_report.payload_changed() {
             post_install_deps.push(dep.clone());
-            if let Some(policy) = hooks {
-                match run_pre_install_hook(dep, workspace_root, policy, probe, runner) {
-                    Ok(Some(report)) => hook_reports.push(report),
-                    Ok(None) => {}
-                    Err(err) => {
-                        // A failed preparation never leaves a half-ready slot.
-                        let _ = vibedeps::remove_slot(
-                            workspace_root,
-                            &dep.group,
-                            &dep.name,
-                            &dep.version,
-                        );
-                        return Err(err);
-                    }
-                }
-            }
+            pre_install.run_or_defer(dep, &mut hook_reports)?;
         }
         materialised.push(slot);
     }
+    pre_install.dispatch()?;
     Ok(Materialised {
         materialised,
         skipped,
@@ -429,9 +417,50 @@ pub fn materialise_subtree_with_spec_format(
             slot_integrity,
             spec_format,
             slot_verifier,
-            hooks,
-            probe: &SystemProbe,
-            runner: &SystemHookRunner,
+            lifecycle: match hooks {
+                Some(policy) => MaterialiseLifecycle::LegacyHooks {
+                    policy,
+                    probe: &SystemProbe,
+                    runner: &SystemHookRunner,
+                },
+                None => MaterialiseLifecycle::None,
+            },
+        },
+    )?;
+    Ok(SubtreeOutcome {
+        materialised,
+        skipped,
+        integrity_warnings,
+        post_install_plan: PostInstallPlan::new(workspace_root, post_install_deps),
+        hook_reports,
+    })
+}
+
+/// Format-aware scoped materialisation under exactly one slot-lifecycle
+/// callback. Production update paths use this instead of the legacy hook
+/// runner so `[hooks]` sugar and explicit slot contributions cannot double.
+pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: &dyn SlotLifecycle,
+) -> Result<SubtreeOutcome, WorkspaceError> {
+    let Materialised {
+        materialised,
+        skipped,
+        integrity_warnings,
+        post_install_deps,
+        hook_reports,
+    } = materialise_resolution_with_spec_format(
+        workspace_root,
+        resolution,
+        MaterialiseOptions {
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            lifecycle: MaterialiseLifecycle::Callback(lifecycle),
         },
     )?;
     Ok(SubtreeOutcome {
@@ -549,3 +578,7 @@ mod tests_hybrid;
 #[cfg(test)]
 #[path = "install/tests_mutable.rs"]
 mod tests_mutable;
+
+#[cfg(test)]
+#[path = "install/tests_slot_lifecycle.rs"]
+mod tests_slot_lifecycle;

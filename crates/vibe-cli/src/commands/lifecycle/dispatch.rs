@@ -1,17 +1,13 @@
 //! One-contribution lifecycle execution with per-transition checkpoints.
 
-use std::time::Instant;
-
 use anyhow::Result;
+use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime};
+use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
-    DispatchBatch, ExecutionSession, LifecycleStateStore, RunMetadata, fingerprint_execution,
-    preparation_error_fingerprint,
+    ExecutionReuse, HandlerExecution, LifecycleRun, LifecycleRunHandle, RunMetadata,
 };
-use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
-use vibe_wire::generated::lifecycle_state::{
-    ExecutionRecord, ExecutionRecordStatus, StateArtifact,
-};
+use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use crate::output;
 
@@ -22,31 +18,36 @@ pub(super) fn dispatch_plan_untracked(
     plan: &world::RitualPlan,
     metadata: RunMetadata,
 ) -> Result<Vec<LifecycleContributionReport>> {
-    let mut session = ExecutionSession::new(plan.project.clone(), plan.world.clone(), metadata);
+    let mut run =
+        LifecycleRun::untracked(plan.project.clone(), plan.world.clone(), metadata.clone());
     let mut reports = Vec::with_capacity(plan.executions.len());
-    let mut cursor = 0;
-    while cursor < plan.executions.len() {
-        let phase = plan.executions[cursor].phase.clone();
-        let end = plan.executions[cursor..]
-            .iter()
-            .position(|execution| execution.phase != phase)
-            .map_or(plan.executions.len(), |offset| cursor + offset);
-        let rows = plan.executions[cursor..end]
-            .iter()
-            .map(|execution| execution.row.clone())
-            .collect::<Vec<_>>();
-        let DispatchBatch { outcomes, failure } = session.dispatch_phase(&phase, &rows);
-        for (execution, outcome) in plan.executions[cursor..end].iter().zip(outcomes) {
-            let report = contribution_report(execution, &outcome.reply);
-            render_outcome(ctx, &report);
-            reports.push(report);
-        }
-        if let Some(failure) = failure {
-            return Err(anyhow::Error::new(failure).context(format!(
-                "phase `{phase}` stopped before any later lifecycle contribution"
-            )));
-        }
-        cursor = end;
+    let runtime = runtime(ctx);
+    for execution in plan.executions.iter() {
+        let handler = HandlerExecution::from_row(&execution.row);
+        let outcome =
+            match run.execute_one(&handler, &execution.phase, ExecutionReuse::Always, &runtime) {
+                Ok(outcome) => outcome,
+                Err(error) => {
+                    if let Some(failed) = error.failed_transition() {
+                        reports.push(contribution_status_report(
+                            execution,
+                            "fail",
+                            Some(failed.message.clone()),
+                            Some(&failed.streams),
+                        ));
+                        super::emit_failure_outcome(ctx, &metadata, &execution.phase, &reports)?;
+                    }
+                    return Err(error.into());
+                }
+            };
+        let report = contribution_status_report(
+            execution,
+            state_status(&outcome.status),
+            outcome.message,
+            Some(&outcome.streams),
+        );
+        render_outcome(ctx, &report);
+        reports.push(report);
     }
     Ok(reports)
 }
@@ -57,177 +58,184 @@ pub(super) fn dispatch_plan(
     metadata: RunMetadata,
     state_chain: Vec<String>,
 ) -> Result<Vec<LifecycleContributionReport>> {
-    let mut store = LifecycleStateStore::begin(
+    let run = LifecycleRun::begin(
         &plan.workspace_root,
-        metadata.requested.clone(),
+        plan.project.clone(),
+        plan.world.clone(),
+        metadata.clone(),
         state_chain,
-        metadata.started.clone(),
-    )?;
-    let force = metadata.force;
-    let mut session = ExecutionSession::new(plan.project.clone(), plan.world.clone(), metadata);
-    let mut reports = Vec::with_capacity(plan.executions.len());
-    for execution in plan.executions.iter() {
-        let key = execution.row.key().to_string();
-        let started = Instant::now();
-        let envelope = match session.envelope_for(&execution.phase, &execution.row) {
-            Ok(envelope) => envelope,
-            Err(failure) => {
-                return Err(checkpoint_preparation_failure(
-                    &mut store,
-                    execution,
-                    &key,
-                    started,
-                    anyhow::Error::new(failure),
-                ));
-            }
-        };
-        let fingerprint = match fingerprint_execution(&execution.row, &envelope) {
-            Ok(fingerprint) => fingerprint,
-            Err(failure) => {
-                return Err(checkpoint_preparation_failure(
-                    &mut store,
-                    execution,
-                    &key,
-                    started,
-                    anyhow::Error::new(failure),
-                ));
-            }
-        };
-        if !force && let Some(prior) = store.reusable_record(&key, &fingerprint).cloned() {
-            session.hydrate_artifacts(&execution.phase, &prior.artifacts);
-            store.checkpoint(
-                key.clone(),
-                ExecutionRecord {
-                    artifacts: prior.artifacts,
-                    duration_ms: 0,
-                    fingerprint,
-                    phase: execution.phase.clone(),
-                    status: ExecutionRecordStatus::Fresh,
-                },
-            )?;
-            let report = contribution_status_report(execution, "fresh", None);
-            render_outcome(ctx, &report);
-            reports.push(report);
-            continue;
-        }
+    )?
+    .shared();
+    dispatch_plan_with_run(ctx, plan, &run, &metadata)
+}
 
-        match session.dispatch_prepared(&execution.row, envelope) {
-            Ok(outcome) => {
-                let status = match outcome.reply.status {
-                    ReplyStatus::Ok => ExecutionRecordStatus::Ok,
-                    ReplyStatus::Skip => ExecutionRecordStatus::Skip,
-                    ReplyStatus::Fail => ExecutionRecordStatus::Fail,
-                };
-                let artifacts = outcome
-                    .reply
-                    .artifacts
-                    .iter()
-                    .map(|artifact| StateArtifact {
-                        id: artifact.id.clone(),
-                        kind: artifact.kind.clone(),
-                        path: artifact.path.clone(),
-                    })
-                    .collect();
-                store.checkpoint(
-                    key,
-                    ExecutionRecord {
-                        artifacts,
-                        duration_ms: elapsed_ms(started),
-                        fingerprint,
-                        phase: execution.phase.clone(),
-                        status,
-                    },
-                )?;
-                let report = contribution_report(execution, &outcome.reply);
-                render_outcome(ctx, &report);
-                reports.push(report);
-            }
-            Err(failure) => {
-                let primary = anyhow::Error::new(failure).context(format!(
+pub(super) fn dispatch_plan_with_run(
+    ctx: &output::Context,
+    plan: &world::RitualPlan,
+    run: &LifecycleRunHandle,
+    metadata: &RunMetadata,
+) -> Result<Vec<LifecycleContributionReport>> {
+    let runtime = runtime(ctx);
+    let mut reports = Vec::with_capacity(plan.executions.len());
+    let mut run = run
+        .lock()
+        .map_err(|_| anyhow::anyhow!("lifecycle run lock was poisoned"))?;
+    run.rebind_world(plan.project.clone(), plan.world.clone())?;
+    for execution in plan.executions.iter() {
+        let handler = HandlerExecution::from_row(&execution.row);
+        let transition = match run.execute_one(
+            &handler,
+            &execution.phase,
+            ExecutionReuse::FreshnessAware,
+            &runtime,
+        ) {
+            Ok(transition) => transition,
+            Err(error) => {
+                if let Some(failed) = error.failed_transition() {
+                    reports.push(contribution_status_report(
+                        execution,
+                        "fail",
+                        Some(failed.message.clone()),
+                        Some(&failed.streams),
+                    ));
+                    super::emit_failure_outcome(ctx, metadata, &execution.phase, &reports)?;
+                }
+                return Err(anyhow::Error::new(error).context(format!(
                     "phase `{}` stopped before any later lifecycle contribution",
-                    execution.phase,
-                ));
-                return Err(checkpoint_failure(
-                    &mut store,
-                    key,
-                    ExecutionRecord {
-                        artifacts: Vec::new(),
-                        duration_ms: elapsed_ms(started),
-                        fingerprint,
-                        phase: execution.phase.clone(),
-                        status: ExecutionRecordStatus::Fail,
-                    },
-                    primary,
-                ));
+                    execution.phase
+                )));
             }
-        }
+        };
+        let status = state_status(&transition.status);
+        let fresh = transition.is_fresh();
+        let report = contribution_status_report(
+            execution,
+            status,
+            transition.message,
+            (!fresh).then_some(&transition.streams),
+        );
+        render_outcome(ctx, &report);
+        reports.push(report);
     }
     Ok(reports)
 }
 
-fn checkpoint_preparation_failure(
-    store: &mut LifecycleStateStore,
-    execution: &world::PlannedExecution,
-    key: &str,
-    started: Instant,
-    primary: anyhow::Error,
-) -> anyhow::Error {
-    let record = ExecutionRecord {
-        artifacts: Vec::new(),
-        duration_ms: elapsed_ms(started),
-        fingerprint: preparation_error_fingerprint(execution.row.key(), &execution.phase),
-        phase: execution.phase.clone(),
-        status: ExecutionRecordStatus::Fail,
-    };
-    checkpoint_failure(store, key.to_string(), record, primary)
-}
-
-fn checkpoint_failure(
-    store: &mut LifecycleStateStore,
-    key: String,
-    record: ExecutionRecord,
-    primary: anyhow::Error,
-) -> anyhow::Error {
-    match store.checkpoint(key.clone(), record) {
-        Ok(()) => primary,
-        Err(checkpoint) => primary.context(format!(
-            "also failed to checkpoint lifecycle failure for `{key}`: {checkpoint}"
-        )),
+fn state_status(status: &ExecutionRecordStatus) -> &'static str {
+    match status {
+        ExecutionRecordStatus::Ok => "ok",
+        ExecutionRecordStatus::Skip => "skip",
+        ExecutionRecordStatus::Fresh => "fresh",
+        ExecutionRecordStatus::Fail => "fail",
+        ExecutionRecordStatus::Delegated => "delegated",
     }
-}
-
-fn elapsed_ms(started: Instant) -> u32 {
-    u32::try_from(started.elapsed().as_millis()).unwrap_or(u32::MAX)
-}
-
-fn contribution_report(
-    execution: &world::PlannedExecution,
-    reply: &Reply,
-) -> LifecycleContributionReport {
-    contribution_status_report(
-        execution,
-        &super::reply_status(&reply.status),
-        reply.message.clone(),
-    )
 }
 
 fn contribution_status_report(
     execution: &world::PlannedExecution,
     status: &str,
     message: Option<String>,
+    streams: Option<&vibe_lifecycle::handlers::HandlerStreams>,
 ) -> LifecycleContributionReport {
     let row = &execution.row;
     let (provider, version) = super::provider_and_version(row.provider());
     LifecycleContributionReport {
+        flagged: None,
         handler: row.declaration().handler.kind().to_string(),
         key: row.key().to_string(),
         message,
+        stderr: streams
+            .and_then(|streams| (!streams.stderr.is_empty()).then(|| streams.stderr.clone())),
+        stderr_truncated: streams.and_then(|streams| streams.stderr_truncated.then_some(true)),
+        stdout: streams
+            .and_then(|streams| (!streams.stdout.is_empty()).then(|| streams.stdout.clone())),
+        stdout_truncated: streams.and_then(|streams| streams.stdout_truncated.then_some(true)),
         phase: execution.phase.clone(),
         point: row.declaration().point.to_string(),
         provider,
+        reference: None,
+        slot_target: None,
         status: status.to_string(),
         tier: super::tier_name(row.effective_tier()).to_string(),
         version,
+    }
+}
+
+fn runtime(ctx: &output::Context) -> HandlerRuntime<'static> {
+    static PROCESS: SystemProcessRunner = SystemProcessRunner;
+    static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
+    static BINARY_QUIET: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: true };
+    static PROBE: vibe_workspace::hooks::SystemProbe = vibe_workspace::hooks::SystemProbe;
+    HandlerRuntime {
+        process: &PROCESS,
+        binary: if ctx.is_json() || ctx.is_quiet() {
+            &BINARY_QUIET
+        } else {
+            &BINARY_INHERIT
+        },
+        probe: &PROBE,
+        streams: if ctx.is_json() {
+            StreamMode::Capture
+        } else if ctx.is_quiet() {
+            StreamMode::Null
+        } else {
+            StreamMode::Inherit
+        },
+    }
+}
+
+struct WorkspaceBinaryBackend {
+    quiet: bool,
+}
+impl BinaryBackend for WorkspaceBinaryBackend {
+    fn resolve_or_build(
+        &self,
+        row: &vibe_lifecycle::ExtensionRegistryRow,
+        name: &str,
+    ) -> Result<std::path::PathBuf, String> {
+        let (binary, home) = match row.provider() {
+            vibe_lifecycle::ExtensionProvider::Dependency(provider) => (
+                vibe_workspace::bins::find_binary_in_provider_slot(
+                    &provider.root,
+                    provider.id.group(),
+                    provider.id.name().as_str(),
+                    &provider.version,
+                    name,
+                ),
+                vibe_workspace::bins::BinaryProviderHome::InstalledSlot,
+            ),
+            vibe_lifecycle::ExtensionProvider::Host(provider) => {
+                let vibe_lifecycle::HostIdentity::Coordinate(id) = &provider.identity else {
+                    return Err("binary handler host must be a package-role coordinate".into());
+                };
+                if provider.kind.is_none() {
+                    return Err("binary handler host must be an authored package root".into());
+                }
+                (
+                    vibe_workspace::bins::find_binary_in_authored_package_root(
+                        &provider.root,
+                        id.group(),
+                        id.name().as_str(),
+                        &provider.version,
+                        name,
+                    ),
+                    vibe_workspace::bins::BinaryProviderHome::AuthoredPackageRoot,
+                )
+            }
+        };
+        let binary = binary.map_err(|error| error.to_string())?;
+        if !binary.artifact().exists() {
+            vibe_workspace::bins::build_binary_authorized_with_output(
+                &binary,
+                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home },
+                if self.quiet {
+                    vibe_workspace::bins::BuildOutput::Quiet
+                } else {
+                    vibe_workspace::bins::BuildOutput::Inherit
+                },
+            )
+            .map_err(|error| error.to_string())?;
+        }
+        Ok(binary.artifact())
     }
 }
 

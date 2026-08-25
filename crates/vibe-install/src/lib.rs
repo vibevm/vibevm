@@ -37,6 +37,7 @@ mod apply;
 mod error;
 mod events;
 mod fetched;
+mod lifecycle;
 mod plan;
 mod record;
 mod slot_verify;
@@ -44,10 +45,15 @@ mod visibility_projection;
 
 pub use apply::{
     ApplyReport, apply, apply_with_spec_format, apply_with_spec_format_and_hook_output,
+    apply_with_spec_format_and_lifecycle, apply_with_spec_format_and_lifecycle_observed,
 };
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
 pub use fetched::{Fetched, NodeInstallMeta};
+pub use lifecycle::{
+    InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan,
+    SlotLifecyclePlanEntry, SlotLifecycleReport,
+};
 pub use plan::{InstallRequest, Plan, PlannedInstall, plan, plan_with_spec_format};
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,

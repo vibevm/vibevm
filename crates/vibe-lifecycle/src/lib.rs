@@ -89,13 +89,18 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 
 mod chain;
 mod execution;
+pub mod handlers;
+mod legacy_hooks;
+pub use legacy_hooks::SyntheticHookIdentity;
+pub mod process;
 mod registry;
+mod runner;
 mod state;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
 pub use execution::{
     BuiltinRegistry, ContributionOutcome, DispatchBatch, DispatchError, ExecutionSession,
-    RunMetadata,
+    HandlerExecution, RunMetadata, SlotTarget,
 };
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
@@ -104,9 +109,14 @@ pub use registry::{
     HostExtensionSource, HostIdentity, HostProvider, RegistryView, SelectorSubject,
     collect_extensions,
 };
+pub use runner::{
+    ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,
+    LifecycleRunError, LifecycleRunHandle,
+};
 pub use state::{
     FingerprintError, LifecycleStateError, LifecycleStateStore, fingerprint_execution,
-    preparation_error_fingerprint,
+    fingerprint_handler_execution, preparation_error_fingerprint,
+    preparation_error_fingerprint_for_identity,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

@@ -382,9 +382,7 @@ fn standalone_and_chained_clean_refuse_a_plan_before_the_wipe() {
             .arg("--assume-yes")
             .assert()
             .failure()
-            .stderr(predicates::str::contains(
-                "R2.4 supports builtin handlers only",
-            ));
+            .stderr(predicates::str::contains("cannot select a usable script"));
         assert!(
             slot.is_dir(),
             "clean wiped before refusing (chained={chained})"

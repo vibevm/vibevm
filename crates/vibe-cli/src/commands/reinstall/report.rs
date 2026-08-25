@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use anyhow::Result;
 
-use crate::commands::install::HookReportView;
+use crate::commands::install::HookReportPresentation;
 use crate::output;
 
 pub(super) fn emit(
@@ -12,7 +12,7 @@ pub(super) fn emit(
     forced: bool,
     nodes_regenerated: &[String],
     pruned: &[String],
-    hook_reports: &HookReportView<'_>,
+    hook_reports: &dyn HookReportPresentation,
 ) -> Result<()> {
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
@@ -21,7 +21,7 @@ pub(super) fn emit(
             "forced": forced,
             "nodes_regenerated": nodes_regenerated,
             "pruned": pruned,
-            "hooks": hook_reports.json(),
+            "hooks": [],
         }))?;
         return Ok(());
     }
@@ -55,6 +55,5 @@ pub(super) fn emit(
             if pruned.len() == 1 { "" } else { "s" },
         ));
     }
-    hook_reports.render_human(ctx);
     Ok(())
 }

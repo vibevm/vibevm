@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW");
 
 use std::collections::BTreeMap;
 
+use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::{ExtensionHandler, ExtensionKey};
@@ -18,10 +19,13 @@ use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 use vibe_wire::generated::lifecycle_state::StateArtifact;
 
 use crate::ExtensionRegistryRow;
+use crate::handlers::{HandlerError, HandlerRuntime, HandlerStreams};
 
 mod builtin;
+mod descriptor;
 
 pub use builtin::BuiltinRegistry;
+pub use descriptor::{HandlerExecution, SlotTarget};
 
 /// Immutable request facts shared by every envelope in one lifecycle run.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW")]
@@ -78,6 +82,15 @@ impl ExecutionSession {
         phase: &str,
         row: &ExtensionRegistryRow,
     ) -> Result<Context, DispatchError> {
+        self.envelope_for_execution(phase, &HandlerExecution::from_row(row))
+    }
+
+    pub fn envelope_for_execution(
+        &self,
+        phase: &str,
+        execution: &HandlerExecution,
+    ) -> Result<Context, DispatchError> {
+        let row = execution.row();
         let config = effective_config(row)?;
         Ok(Context {
             artifacts: self.artifacts.clone(),
@@ -88,7 +101,7 @@ impl ExecutionSession {
                 package: row.provider().to_string(),
             },
             io: Io {
-                scratch: scratch_path(&self.project.root, &self.run.run_id, row.key()),
+                scratch: scratch_path(&self.project.root, &self.run.run_id, &execution.key()),
             },
             point: row.declaration().point.to_string(),
             project: self.project.clone(),
@@ -102,6 +115,7 @@ impl ExecutionSession {
                 requested: self.run.requested.clone(),
             },
             world: self.world.clone(),
+            slot_target: execution.slot_target().cloned(),
         })
     }
 
@@ -151,17 +165,79 @@ impl ExecutionSession {
                 });
             }
         };
+        self.accept_reply(
+            &row.key().to_string(),
+            envelope,
+            reply,
+            HandlerStreams::default(),
+        )
+    }
+
+    pub fn dispatch_prepared_with(
+        &mut self,
+        row: &ExtensionRegistryRow,
+        envelope: Context,
+        runtime: &HandlerRuntime<'_>,
+    ) -> Result<ContributionOutcome, DispatchError> {
+        if matches!(row.declaration().handler, ExtensionHandler::Builtin { .. }) {
+            return self.dispatch_prepared(row, envelope);
+        }
+        let (reply, streams) = runtime.dispatch(row, &envelope).map_err(|error| {
+            let streams = error.streams().cloned().unwrap_or_default();
+            DispatchError::Handler {
+                key: row.key().to_string(),
+                error: Box::new(error),
+                streams: Box::new(streams),
+            }
+        })?;
+        self.accept_reply(&row.key().to_string(), envelope, reply, streams)
+    }
+
+    pub fn dispatch_execution(
+        &mut self,
+        execution: &HandlerExecution,
+        envelope: Context,
+        runtime: &HandlerRuntime<'_>,
+    ) -> Result<ContributionOutcome, DispatchError> {
+        if matches!(
+            execution.row().declaration().handler,
+            ExtensionHandler::Builtin { .. }
+        ) {
+            return self.dispatch_prepared(execution.row(), envelope);
+        }
+        let (reply, streams) =
+            runtime
+                .dispatch_execution(execution, &envelope)
+                .map_err(|error| {
+                    let streams = error.streams().cloned().unwrap_or_default();
+                    DispatchError::Handler {
+                        key: execution.key(),
+                        error: Box::new(error),
+                        streams: Box::new(streams),
+                    }
+                })?;
+        self.accept_reply(&execution.key(), envelope, reply, streams)
+    }
+
+    fn accept_reply(
+        &mut self,
+        key: &str,
+        envelope: Context,
+        reply: Reply,
+        streams: HandlerStreams,
+    ) -> Result<ContributionOutcome, DispatchError> {
         if reply.envelope != 1 {
             return Err(DispatchError::UnsupportedReplyEpoch {
-                key: row.key().clone(),
+                key: key.to_string(),
                 epoch: reply.envelope,
             });
         }
         if reply.status == ReplyStatus::Fail {
             return Err(DispatchError::FailedReply {
-                key: row.key().clone(),
+                key: key.to_string(),
                 status: "fail".to_string(),
                 message: reply.message,
+                streams: Box::new(streams),
             });
         }
         for artifact in &reply.artifacts {
@@ -172,7 +248,11 @@ impl ExecutionSession {
                 phase: envelope.run.phase.clone(),
             });
         }
-        Ok(ContributionOutcome { envelope, reply })
+        Ok(ContributionOutcome {
+            envelope,
+            reply,
+            streams,
+        })
     }
 
     /// Rehydrate artifacts retained by a fresh execution before downstream
@@ -186,6 +266,13 @@ impl ExecutionSession {
                 phase: phase.to_string(),
             }));
     }
+
+    /// Replace the selected durable world without losing run identity or the
+    /// artifact registry accumulated before the install barrier.
+    pub fn rebind_world(&mut self, project: Project, world: World) {
+        self.project = project;
+        self.world = world;
+    }
 }
 
 /// Successful contribution result and the exact envelope that produced it.
@@ -194,6 +281,7 @@ impl ExecutionSession {
 pub struct ContributionOutcome {
     pub envelope: Context,
     pub reply: Reply,
+    pub streams: HandlerStreams,
 }
 
 /// Prefix outcomes plus an optional first failure.
@@ -242,7 +330,7 @@ pub enum DispatchError {
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \
           fix: return `envelope = 1`)"
     )]
-    UnsupportedReplyEpoch { key: ExtensionKey, epoch: u32 },
+    UnsupportedReplyEpoch { key: String, epoch: u32 },
 
     #[error(
         "extension `{key}` returned status `{status}`{detail}; the lifecycle stopped at the first failure \
@@ -251,10 +339,45 @@ pub enum DispatchError {
         detail = message.as_deref().map_or(String::new(), |message| format!(": {message}"))
     )]
     FailedReply {
-        key: ExtensionKey,
+        key: String,
         status: String,
         message: Option<String>,
+        streams: Box<HandlerStreams>,
     },
+
+    #[error(
+        "extension `{key}` handler failed: {error} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; \
+          fix: correct the named handler or its process/reply wire)"
+    )]
+    Handler {
+        key: String,
+        error: Box<HandlerError>,
+        streams: Box<HandlerStreams>,
+    },
+}
+
+impl DispatchError {
+    #[must_use]
+    pub fn streams(&self) -> Option<&HandlerStreams> {
+        match self {
+            Self::FailedReply { streams, .. } | Self::Handler { streams, .. } => {
+                Some(streams.as_ref())
+            }
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn is_durable_soft_post(&self) -> bool {
+        match self {
+            Self::FailedReply { .. } => true,
+            Self::Handler { error, .. } => {
+                matches!(error.as_ref(), HandlerError::NonZero { .. })
+            }
+            _ => false,
+        }
+    }
 }
 
 fn effective_config(
@@ -278,13 +401,8 @@ fn effective_config(
         .unwrap_or_else(|| Ok(BTreeMap::new()))
 }
 
-fn scratch_path(project_root: &str, run_id: &str, key: &ExtensionKey) -> String {
-    let execution = key
-        .to_string()
-        .as_bytes()
-        .iter()
-        .map(|byte| format!("{byte:02x}"))
-        .collect::<String>();
+fn scratch_path(project_root: &str, run_id: &str, key: &str) -> String {
+    let execution = format!("{:x}", Sha256::digest(key.as_bytes()));
     format!(
         "{}/.vibe/lifecycle/{run_id}/{execution}/",
         project_root.trim_end_matches('/'),

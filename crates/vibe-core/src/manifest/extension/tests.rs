@@ -27,6 +27,26 @@ fn table(body: &str) -> toml::Table {
 fn assert_eq_type<T: Eq>() {}
 
 #[test]
+fn authored_extension_id_cannot_use_the_vibe_prefix() {
+    let error = crate::manifest::Manifest::parse_str(
+        r#"
+[project]
+name = "demo"
+version = "0.0.1"
+
+[[extension]]
+id = "@vibe/hooks/pre-install"
+point = "slot:pre-install"
+handler = { kind = "builtin", name = "log" }
+"#,
+    )
+    .expect_err("@vibe/ is reserved");
+    let error = error.to_string();
+    assert!(error.contains("reserved `@vibe/` prefix"), "{error}");
+    assert!(error.contains("@vibe/hooks/pre-install"), "{error}");
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS")]
 fn semantic_toml_wrappers_keep_manifest_eq_and_make_nan_reflexive() {
     assert_eq_type::<crate::manifest::Manifest>();

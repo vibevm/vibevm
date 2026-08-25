@@ -4069,8 +4069,10 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-facts",
+ "vibe-lifecycle",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-wire",
  "vibe-workspace",
 ]
 
@@ -4079,7 +4081,9 @@ name = "vibe-lifecycle"
 version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
+ "getrandom 0.3.4",
  "glob",
+ "libc",
  "serde",
  "serde_json",
  "sha2",
@@ -4088,6 +4092,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
  "vibe-wire",
+ "vibe-workspace",
  "walkdir",
 ]
 

@@ -43,7 +43,6 @@ fn base_args() -> InstallArgs {
         rev: None,
         git_auth: None,
         git_token_env: None,
-        allow_hooks: false,
         force: false,
         prefer_embedded: false,
         no_prefer_embedded: false,

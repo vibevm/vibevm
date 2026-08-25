@@ -311,7 +311,7 @@ impl FormatId {
             FormatId::IndexRepomd => ForeignParsers::Many,
             FormatId::Journal => ForeignParsers::Ours,
             FormatId::LifecycleContext => ForeignParsers::Many,
-            FormatId::LifecycleReply => ForeignParsers::Ours,
+            FormatId::LifecycleReply => ForeignParsers::None,
             FormatId::LifecycleState => ForeignParsers::None,
             FormatId::Lockfile => ForeignParsers::Ours,
             FormatId::Manifest => ForeignParsers::Many,

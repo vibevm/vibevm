@@ -115,6 +115,42 @@ pub fn run_post_install_hooks_with_output(
     run_post_install_with(plan, policy, &SystemProbe, &runner)
 }
 
+/// Consume one install-produced post plan under one exclusive slot lifecycle
+/// mode. Callback mode is the neutral seam used by lifecycle orchestration;
+/// legacy mode preserves hook stream policy and reports.
+pub fn run_post_install_slot_lifecycle(
+    plan: PostInstallPlan,
+    lifecycle: SlotLifecycleMode<'_>,
+) -> Result<Vec<HookReport>, WorkspaceError> {
+    match lifecycle {
+        SlotLifecycleMode::None => Ok(Vec::new()),
+        SlotLifecycleMode::LegacyHooks { policy, output } => {
+            run_post_install_hooks_with_output(plan, policy, output)
+        }
+        SlotLifecycleMode::Callback(callback) => {
+            let (workspace_root, eligible_deps) = plan.into_parts();
+            for dep in &eligible_deps {
+                let slot = if is_in_place(dep) {
+                    vibedeps::in_place_slot_abs_path(&workspace_root, &dep.group, &dep.name)
+                } else {
+                    vibedeps::slot_abs_path(&workspace_root, &dep.group, &dep.name, &dep.version)
+                };
+                if !is_in_place(dep) {
+                    vibedeps::detach_recorded_hardlinks(&slot)?;
+                }
+                callback
+                    .post_install(slot_lifecycle::context_with_slot(dep, &slot))
+                    .map_err(|reason| WorkspaceError::SlotLifecycle {
+                        phase: "post-install",
+                        package: format!("{}/{}", dep.group, dep.name),
+                        reason,
+                    })?;
+            }
+            Ok(Vec::new())
+        }
+    }
+}
+
 /// What [`materialise_subtree`] placed — reporting plus one-shot post-install
 /// authority.
 #[derive(Debug)]

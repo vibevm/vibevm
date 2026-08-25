@@ -73,10 +73,6 @@ pub struct LifecycleArgs {
     #[arg(long)]
     pub no_prefer_local: bool,
 
-    /// Run install hooks regardless of package group.
-    #[arg(long)]
-    pub allow_hooks: bool,
-
     /// Ignore reusable lifecycle fingerprints for this invocation.
     #[arg(long)]
     pub force: bool,
@@ -111,7 +107,6 @@ impl LifecycleArgs {
             rev: None,
             git_auth: None,
             git_token_env: None,
-            allow_hooks: self.allow_hooks,
             force: self.force,
         }
     }

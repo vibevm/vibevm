@@ -122,7 +122,7 @@ fn session() -> ExecutionSession {
             assume_yes: true,
             agent_mode: RunAgentMode::Cli,
             force: false,
-            run_id: "run-1".to_string(),
+            run_id: "00000000000000000000000000000000".to_string(),
             started: "2026-08-25T12:00:00Z".to_string(),
         },
     )
@@ -169,10 +169,12 @@ fn generated_envelope_carries_the_complete_epoch_one_context_and_override() {
     assert!(envelope.run.assume_yes);
     assert!(!envelope.run.force);
     assert!(envelope.artifacts.is_empty());
+    let scratch = std::path::Path::new(&envelope.io.scratch);
     assert_eq!(
-        envelope.io.scratch,
-        "C:/work/demo/.vibe/lifecycle/run-1/6f72672e64656d6f2f70726f766964657223616e6e6f756e6365/"
+        scratch.parent().unwrap().file_name().unwrap(),
+        "00000000000000000000000000000000"
     );
+    assert_eq!(scratch.file_name().unwrap().to_string_lossy().len(), 64);
 }
 
 #[test]
@@ -311,4 +313,67 @@ fn owned_plan_survives_registry_drop_without_recollection_or_resort() {
         .map(|outcome| outcome.reply.message.as_deref().unwrap())
         .collect::<Vec<_>>();
     assert_eq!(messages, ["first", "second"]);
+}
+
+#[test]
+fn durable_post_softness_is_typed_and_display_independent() {
+    let streams = HandlerStreams {
+        stdout: "out".into(),
+        stderr: "diagnostic wording changed".into(),
+        stdout_truncated: false,
+        stderr_truncated: true,
+    };
+    let nonzero = || DispatchError::Handler {
+        key: "typed-nonzero".into(),
+        error: Box::new(crate::handlers::HandlerError::NonZero {
+            key: "typed-nonzero".into(),
+            code: Some(17),
+            stderr: "no legacy phrase here".into(),
+            streams: Box::new(streams.clone()),
+        }),
+        streams: Box::new(streams.clone()),
+    };
+    let misleading = DispatchError::Handler {
+        key: "spawn".into(),
+        error: Box::new(crate::handlers::HandlerError::Process {
+            key: "spawn".into(),
+            reason: "unrelated transport text says exited nonzero".into(),
+        }),
+        streams: Box::new(HandlerStreams::default()),
+    };
+    let fail_reply = DispatchError::FailedReply {
+        key: "reply".into(),
+        status: "fail".into(),
+        message: None,
+        streams: Box::new(streams.clone()),
+    };
+    assert!(nonzero().is_durable_soft_post());
+    assert!(!misleading.is_durable_soft_post());
+    assert!(fail_reply.is_durable_soft_post());
+
+    let registry = host_registry(vec![builtin("envelope", "log", Some("x"))]);
+    let row = build_rows(&registry).remove(0);
+    let envelope = session().envelope_for("build", &row).unwrap();
+    let transition = crate::FailedExecutionTransition {
+        envelope,
+        message: "typed".into(),
+        streams: streams.clone(),
+    };
+    let soft = crate::LifecycleRunError::FailedTransition {
+        transition: Box::new(transition.clone()),
+        source: Box::new(nonzero()),
+    };
+    let checkpoint = crate::LifecycleRunError::Checkpoint {
+        key: "typed-nonzero".into(),
+        primary: "handler failed".into(),
+        checkpoint: Box::new(crate::LifecycleStateError::Write {
+            path: "lifecycle.toml".into(),
+            source: std::io::Error::other("checkpoint failed"),
+        }),
+        transition: Some(Box::new(transition)),
+        dispatch: Some(Box::new(nonzero())),
+    };
+    assert!(soft.is_durable_soft_post());
+    assert!(!checkpoint.is_durable_soft_post());
+    assert!(checkpoint.failed_transition().is_some());
 }

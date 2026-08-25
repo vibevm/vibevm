@@ -8,13 +8,23 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch");
 
-use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{BinaryDecl, Lockfile, Manifest};
 
-use crate::{Workspace, vibedeps};
+use crate::Workspace;
+
+mod build;
+mod provider;
+
+#[cfg(test)]
+use build::prepare_build_output_ignores;
+pub use build::{
+    BinaryProviderHome, BuildAuthorization, BuildOutput, build_binary, build_binary_authorized,
+    build_binary_authorized_with_output, consent_to_build,
+};
+pub use provider::{find_binary_in_authored_package_root, find_binary_in_provider_slot};
 
 /// This cell's failure surface (one thiserror enum per layer; every
 /// message cites its violated REQ and a fix surface).
@@ -47,6 +57,35 @@ pub enum BinsError {
          {known:?}); fix surface: `vibe bin list` shows the full table"
     )]
     UnknownBinary { name: String, known: Vec<String> },
+
+    #[error(
+        "violates spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY: \
+         reading binary provider manifest `{path}`: {detail}; fix surface: \
+         reinstall the exact providing package slot"
+    )]
+    ProviderManifest { path: PathBuf, detail: String },
+
+    #[error(
+        "violates spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY: \
+         binary provider slot `{slot}` contains `{actual}`, expected `{expected}`; \
+         fix surface: reinstall the provider so its slot and manifest coordinate agree"
+    )]
+    ProviderMismatch {
+        slot: PathBuf,
+        expected: String,
+        actual: String,
+    },
+
+    #[error(
+        "violates spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY: \
+         provider `{package}` declares no binary `{name}` (declared: {known:?}); \
+         fix surface: name a [[binary]] from that exact provider manifest"
+    )]
+    UnknownProviderBinary {
+        package: String,
+        name: String,
+        known: Vec<String>,
+    },
 
     #[error(
         "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#security: \
@@ -126,7 +165,7 @@ pub struct DeclaredBinary {
 impl DeclaredBinary {
     /// The bare artifact filename — `<name>.exe` on Windows, `<name>`
     /// elsewhere.
-    fn artifact_file(&self) -> String {
+    pub(super) fn artifact_file(&self) -> String {
         if cfg!(windows) {
             format!("{}.exe", self.decl.name)
         } else {
@@ -329,239 +368,9 @@ pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>
     Ok(out)
 }
 
-/// The PROP-020-shaped consent gate for a build (PROP-025 §8):
-/// `org.vibevm` is allow-listed; anything else needs explicit consent —
-/// there is no prompt at this layer, callers refuse with the recipe.
-pub fn consent_to_build(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsError> {
-    if bin.group == "org.vibevm" || assume_yes {
-        return Ok(());
-    }
-    Err(BinsError::ConsentRequired {
-        name: bin.decl.name.clone(),
-        package: bin.package.clone(),
-        group: bin.group.clone(),
-    })
-}
-
-/// Consent-gated `cargo build --release` of one declared binary in its
-/// slot; verifies the artifact landed where dispatch will look.
-pub fn build_binary(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsError> {
-    consent_to_build(bin, assume_yes)?;
-    eprintln!(
-        "bin build: `{}` ({}) — cargo build --release in {}",
-        bin.decl.name,
-        bin.package,
-        bin.slot.display()
-    );
-    prepare_build_output_ignores(bin)?;
-    let status = std::process::Command::new("cargo")
-        .arg("build")
-        .arg("--release")
-        .arg("--manifest-path")
-        .arg(bin.slot.join("Cargo.toml"))
-        .arg("--bin")
-        .arg(&bin.decl.name)
-        .status()
-        .map_err(|e| BinsError::CargoSpawn {
-            name: bin.decl.name.clone(),
-            detail: e.to_string(),
-        })?;
-    if !status.success() {
-        return Err(BinsError::BuildFailed {
-            name: bin.decl.name.clone(),
-        });
-    }
-    if !bin.release_artifact().exists() {
-        return Err(BinsError::ArtifactMissing {
-            artifact: bin.release_artifact(),
-        });
-    }
-    Ok(())
-}
-
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build")]
-fn prepare_build_output_ignores(bin: &DeclaredBinary) -> Result<(), BinsError> {
-    let root = &bin.vibedeps_root;
-    if root.file_name() != Some(OsStr::new(vibedeps::VIBEDEPS_DIR)) {
-        return Err(BinsError::MalformedSlot {
-            name: bin.decl.name.clone(),
-            slot: bin.slot.clone(),
-            root: root.clone(),
-            reason: format!(
-                "the authoritative root's final component must be exactly `{}`",
-                vibedeps::VIBEDEPS_DIR
-            ),
-        });
-    }
-    let relative = bin
-        .slot
-        .strip_prefix(root)
-        .map_err(|_| BinsError::MalformedSlot {
-            name: bin.decl.name.clone(),
-            slot: bin.slot.clone(),
-            root: root.clone(),
-            reason: "slot is not beneath the authoritative root".to_string(),
-        })?;
-    let components: Vec<_> = relative.components().collect();
-    if components.len() != 2
-        || !components
-            .iter()
-            .all(|component| matches!(component, std::path::Component::Normal(_)))
-    {
-        return Err(BinsError::MalformedSlot {
-            name: bin.decl.name.clone(),
-            slot: bin.slot.clone(),
-            root: root.clone(),
-            reason: "slot must be exactly `<root>/<coordinate>/<version>` using two normal path components"
-                .to_string(),
-        });
-    }
-    vibedeps::ensure_build_output_ignores(root).map_err(|error| BinsError::BuildOutputIgnore {
-        name: bin.decl.name.clone(),
-        root: root.to_path_buf(),
-        detail: error.to_string(),
-    })?;
-    Ok(())
-}
-
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    const LOCK: &str = r#"
-[meta]
-generated_by = "vibe-test"
-generated_at = "2026-07-07T00:00:00Z"
-schema_version = 6
-
-[[package]]
-kind = "stack"
-group = "org.vibevm"
-name = "typescript-ai-native-lang"
-version = "0.4.0"
-registry = "vibespecs"
-source_url = "file://packages"
-source_ref = "v0.4.0"
-content_hash = "sha256:deadbeef"
-files_written = []
-"#;
-
-    fn fixture_project() -> tempfile::TempDir {
-        let dir = tempfile::tempdir().expect("tempdir");
-        std::fs::write(
-            dir.path().join("vibe.toml"),
-            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
-        )
-        .expect("vibe.toml");
-        std::fs::write(dir.path().join("vibe.lock"), LOCK).expect("vibe.lock");
-        let slot = dir
-            .path()
-            .join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.typescript-ai-native-lang")
-            .join("0.4.0");
-        std::fs::create_dir_all(&slot).expect("slot");
-        std::fs::write(
-            slot.join("vibe.toml"),
-            r#"[package]
-name = "typescript-ai-native-lang"
-group = "org.vibevm"
-kind = "stack"
-version = "0.4.0"
-authors = ["x"]
-license = "EULA"
-description = "fixture"
-keywords = []
-
-[[binary]]
-name = "typescript-ai-native-tcg"
-crate = "crates/typescript-ai-native-tcg"
-"#,
-        )
-        .expect("slot manifest");
-        dir
-    }
-
-    #[test]
-    fn collect_walks_lockfile_slots_and_sorts() {
-        let dir = fixture_project();
-        let bins = collect_binaries(dir.path()).expect("collect");
-        assert_eq!(bins.len(), 1);
-        assert_eq!(bins[0].decl.name, "typescript-ai-native-tcg");
-        assert_eq!(bins[0].group, "org.vibevm");
-        assert_eq!(
-            bins[0].vibedeps_root,
-            dir.path().join(vibe_core::layout::current_vibedeps_root())
-        );
-        // No build on disk in the fixture slot → dispatch resolves to the
-        // release path (the stable fallback).
-        assert!(bins[0].artifact().to_string_lossy().contains("release"));
-    }
-
-    #[test]
-    fn artifact_prefers_debug_over_release() {
-        let dir = tempfile::tempdir().expect("tempdir");
-        let bin = DeclaredBinary {
-            decl: vibe_core::manifest::BinaryDecl {
-                name: "typescript-ai-native-tcg".into(),
-                crate_dir: "crates/typescript-ai-native-tcg".into(),
-                description: None,
-            },
-            package: "org.vibevm/typescript-ai-native-lang".into(),
-            group: "org.vibevm".into(),
-            vibedeps_root: dir.path().to_path_buf(),
-            slot: dir.path().to_path_buf(),
-        };
-        // Nothing built yet → dispatch falls back to the release path.
-        assert_eq!(bin.artifact(), bin.release_artifact());
-        // A plain `cargo build` (debug) in the slot wins over release.
-        let debug = bin.debug_artifact();
-        std::fs::create_dir_all(debug.parent().expect("debug parent")).expect("debug dir");
-        std::fs::write(&debug, b"stub").expect("debug artifact");
-        assert_eq!(bin.artifact(), debug);
-        // Debug still wins even once a release build also exists.
-        let release = bin.release_artifact();
-        std::fs::create_dir_all(release.parent().expect("release parent")).expect("release dir");
-        std::fs::write(&release, b"stub").expect("release artifact");
-        assert_eq!(bin.artifact(), bin.debug_artifact());
-    }
-
-    #[test]
-    fn missing_lockfile_is_an_empty_set() {
-        let dir = tempfile::tempdir().expect("tempdir");
-        std::fs::write(
-            dir.path().join("vibe.toml"),
-            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
-        )
-        .expect("vibe.toml");
-        assert!(collect_binaries(dir.path()).expect("collect").is_empty());
-    }
-
-    #[test]
-    fn unknown_binary_names_the_known_set() {
-        let dir = fixture_project();
-        let bins = collect_binaries(dir.path()).expect("collect");
-        let err = find_binary(&bins, "nope").expect_err("unknown");
-        let msg = err.to_string();
-        assert!(
-            msg.contains("nope") && msg.contains("typescript-ai-native-tcg"),
-            "{msg}"
-        );
-    }
-
-    #[test]
-    fn consent_allowlists_org_vibevm_and_refuses_with_recipe() {
-        let dir = fixture_project();
-        let bins = collect_binaries(dir.path()).expect("collect");
-        assert!(consent_to_build(&bins[0], false).is_ok(), "allow-listed");
-
-        let mut foreign = bins[0].clone();
-        foreign.group = "com.example".to_string();
-        foreign.package = "com.example/thing".to_string();
-        let err = consent_to_build(&foreign, false).expect_err("refused");
-        assert!(err.to_string().contains("--assume-yes"), "{err}");
-        assert!(consent_to_build(&foreign, true).is_ok(), "explicit consent");
-    }
-}
+#[path = "bins/tests.rs"]
+mod tests;
 
 #[cfg(test)]
 #[path = "bins/tests_build_ignore.rs"]

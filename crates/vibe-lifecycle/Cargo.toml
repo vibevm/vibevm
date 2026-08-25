@@ -12,6 +12,8 @@ description = "Deterministic lifecycle phase model and request chaining for vibe
 
 [dependencies]
 glob.workspace = true
+getrandom.workspace = true
+libc.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
@@ -20,6 +22,7 @@ thiserror.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
 vibe-wire.workspace = true
+vibe-workspace.workspace = true
 walkdir.workspace = true
 
 [dev-dependencies]

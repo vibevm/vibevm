@@ -25,6 +25,7 @@ const HANDLER_KINDS: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#HANDL
 const SELECTOR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SELECTOR";
 const INTERNALS_FLAG: &str =
     "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG";
+const RESERVED_EXTENSION_ID_PREFIX: &str = "@vibe/";
 
 /// One handler bound to one extension point by a manifest declaration.
 ///
@@ -388,6 +389,12 @@ pub(crate) fn validate_extension_declarations(
 
     let mut ids = BTreeSet::new();
     for extension in extensions {
+        if extension.id.starts_with(RESERVED_EXTENSION_ID_PREFIX) {
+            return Err(format!(
+                "[[extension]] field `id` value `{}` uses the reserved `{RESERVED_EXTENSION_ID_PREFIX}` prefix; authored extension ids must not impersonate generated vibe contributions ({CONTRIB_GRAMMAR})",
+                extension.id,
+            ));
+        }
         extension.validate()?;
         if !ids.insert(extension.id.as_str()) {
             return Err(format!(

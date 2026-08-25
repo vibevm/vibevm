@@ -6,7 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 use anyhow::Result;
 use serde::Serialize;
-use vibe_install::ApplyReport;
+use vibe_install::{ApplyReport, SlotLifecycleReport};
 use vibe_workspace::hooks::HookReport;
 use vibe_workspace::install::ResolvedDep;
 
@@ -19,6 +19,10 @@ use super::WorldCallbackSummary;
 /// reports without cloning or flattening away phase ordering.
 pub(crate) struct HookReportView<'a> {
     reports: Vec<&'a HookReport>,
+}
+
+pub(crate) trait HookReportPresentation {
+    fn quiet_suffix(&self) -> String;
 }
 
 impl<'a> HookReportView<'a> {
@@ -97,6 +101,37 @@ impl<'a> HookReportView<'a> {
     }
 }
 
+pub(crate) struct LifecycleHookView<'a>(&'a [SlotLifecycleReport]);
+
+impl LifecycleHookView<'_> {
+    pub(crate) const fn new(reports: &[SlotLifecycleReport]) -> LifecycleHookView<'_> {
+        LifecycleHookView(reports)
+    }
+    fn quiet_suffix(&self) -> String {
+        let flagged = self.0.iter().filter(|report| report.flagged).count();
+        if flagged == 0 {
+            String::new()
+        } else {
+            format!(
+                ", {flagged} lifecycle hook{} flagged",
+                if flagged == 1 { "" } else { "s" },
+            )
+        }
+    }
+}
+
+impl HookReportPresentation for HookReportView<'_> {
+    fn quiet_suffix(&self) -> String {
+        HookReportView::quiet_suffix(self)
+    }
+}
+
+impl HookReportPresentation for LifecycleHookView<'_> {
+    fn quiet_suffix(&self) -> String {
+        LifecycleHookView::quiet_suffix(self)
+    }
+}
+
 pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDep]) {
     if ctx.is_json() {
         #[derive(Serialize)]
@@ -142,6 +177,7 @@ pub(super) fn emit_report(
     // write). Surfaced so a skipped or failed hook is never silent
     // (PROP-020 §2.3/§2.5).
     let hooks = HookReportView::new(&outcome.hook_reports, &applied.post_install_reports);
+    let lifecycle_hooks = LifecycleHookView(&applied.lifecycle_reports);
 
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
@@ -156,7 +192,12 @@ pub(super) fn emit_report(
         return Ok(());
     }
     if ctx.is_quiet() {
-        let suffix = format!("{}{}", hooks.quiet_suffix(), ritual_suffix(world_summary));
+        let suffix = format!(
+            "{}{}{}",
+            hooks.quiet_suffix(),
+            lifecycle_hooks.quiet_suffix(),
+            ritual_suffix(world_summary),
+        );
         ctx.summary(&format!(
             "vibe install: {} package{} materialised{}",
             outcome.materialised.len(),

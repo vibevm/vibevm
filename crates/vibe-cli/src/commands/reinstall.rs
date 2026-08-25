@@ -38,16 +38,19 @@ use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::{SlotIntegrity, UserConfig};
 use vibe_core::{ContentHash, Group, PackageKind, PackageRef, VersionSpec};
-use vibe_install::InstallSource;
+use vibe_install::{InstallSlotLifecycle, InstallSource};
+use vibe_lifecycle::RunMetadata;
+use vibe_lifecycle::process::StreamMode;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
-    ResolvedDep, SlotCheck, SlotVerifier, apply_resolution_with_spec_format,
-    regenerate_boot_with_spec_format, run_post_install_hooks,
+    ResolvedDep, SlotCheck, SlotLifecycleMode, SlotVerifier,
+    apply_resolution_with_spec_format_and_slot_lifecycle, regenerate_boot_with_spec_format,
+    run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, ReinstallArgs};
-use crate::commands::install::{HookReportView, build_install_resolver, resolve_hook_policy};
+use crate::commands::install::{HookReportView, LifecycleHookView, build_install_resolver};
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -272,25 +275,16 @@ fn run_force(
         )? {
             return Err(InstallError::UserDeclined.into());
         }
-        // `--force` still goes through the install-family hook policy, even
-        // though an empty resolution can schedule no hooks.
-        let hook_policy = resolve_hook_policy(ctx, &hook_policy_args(args), &[])?;
-        let mut outcome = apply_resolution_with_spec_format(
+        let outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
             workspace,
             &[],
             SlotIntegrity::Verify,
             spec_format,
             None,
-            Some(&hook_policy),
+            SlotLifecycleMode::None,
         )
         .context("regenerating the workspace")?;
-        let post_install_reports = match outcome.take_post_install_plan() {
-            Some(plan) => {
-                run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
-            }
-            None => Vec::new(),
-        };
-        let hook_reports = HookReportView::new(&outcome.hook_reports, &post_install_reports);
+        let hook_reports = HookReportView::empty();
         report::emit(
             ctx,
             true,
@@ -414,26 +408,33 @@ fn run_force(
         });
     }
 
-    // Resolve exactly the policy `vibe install` uses before any slot changes.
-    // The apply pass runs pre-install hooks for payload-changing slots and
-    // returns an opaque, one-shot post-install plan for the durable boundary.
-    let hook_policy = resolve_hook_policy(ctx, &hook_policy_args(args), &resolution)?;
-    let mut outcome = apply_resolution_with_spec_format(
+    let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
+    let lifecycle_metadata = reinstall_metadata(ctx, &workspace.root, root_offline, args)?;
+    let lifecycle_observer =
+        crate::commands::install::LifecycleSlotObserver::new(ctx, lifecycle_metadata.clone());
+    let lifecycle = InstallSlotLifecycle::from_resolution_observed(
+        &workspace.root,
+        &manifest,
+        &resolution,
+        lifecycle_metadata.clone(),
+        reinstall_stream_mode(ctx),
+        std::sync::Arc::new(lifecycle_observer),
+    )?;
+    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
         workspace,
         &resolution,
         SlotIntegrity::Verify,
         spec_format,
         Some(&SourceHashes(source_hashes)),
-        Some(&hook_policy),
+        SlotLifecycleMode::Callback(&lifecycle),
     )
     .context("re-materialising the workspace")?;
-    let post_install_reports = match outcome.take_post_install_plan() {
-        Some(plan) => {
-            run_post_install_hooks(plan, &hook_policy).context("running post-install hooks")?
-        }
-        None => Vec::new(),
-    };
-    let hook_reports = HookReportView::new(&outcome.hook_reports, &post_install_reports);
+    if let Some(plan) = outcome.take_post_install_plan() {
+        run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(&lifecycle))
+            .context("running post-install lifecycle")?;
+    }
+    let lifecycle_reports = lifecycle.take_reports()?;
+    let hook_reports = LifecycleHookView::new(&lifecycle_reports);
     report::emit(
         ctx,
         true,
@@ -442,6 +443,34 @@ fn run_force(
         &hook_reports,
     )?;
     Ok(())
+}
+
+fn reinstall_metadata(
+    ctx: &output::Context,
+    root: &Path,
+    offline: bool,
+    args: &ReinstallArgs,
+) -> Result<RunMetadata> {
+    Ok(RunMetadata {
+        requested: "reinstall".into(),
+        chain: vec!["install".into()],
+        offline,
+        assume_yes: args.assume_yes || ctx.is_unattended() || ctx.is_json(),
+        agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Cli,
+        force: true,
+        run_id: vibe_lifecycle::process::allocate_run_id(root)?,
+        started: crate::commands::init::current_timestamp_utc(),
+    })
+}
+
+fn reinstall_stream_mode(ctx: &output::Context) -> StreamMode {
+    if ctx.is_json() {
+        StreamMode::Capture
+    } else if ctx.suppresses_output() {
+        StreamMode::Null
+    } else {
+        StreamMode::Inherit
+    }
 }
 
 /// Build the `=<version>` pkgref that re-fetches exactly the locked
@@ -496,7 +525,6 @@ fn resolver_args() -> InstallArgs {
         rev: None,
         git_auth: None,
         git_token_env: None,
-        allow_hooks: false,
         force: false,
         prefer_embedded: false,
         no_prefer_embedded: false,
@@ -506,14 +534,6 @@ fn resolver_args() -> InstallArgs {
         prefer_local: false,
         no_prefer_local: false,
     }
-}
-
-/// The install-shaped arguments consumed by the shared hook-policy resolver.
-fn hook_policy_args(args: &ReinstallArgs) -> InstallArgs {
-    let mut install_args = resolver_args();
-    install_args.assume_yes = args.assume_yes;
-    install_args.allow_hooks = args.allow_hooks;
-    install_args
 }
 
 /// Interactive confirmation, matching the install / update / uninstall

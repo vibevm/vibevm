@@ -7,7 +7,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 use std::path::Path;
-use std::sync::atomic::{AtomicU64, Ordering};
 
 use anyhow::{Context, Result};
 use specmark::spec;
@@ -17,7 +16,6 @@ use vibe_lifecycle::{
     ContributionTier, ExtensionProvider, LifecycleRequest, LifecycleStep, Phase, RunMetadata,
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
-use vibe_wire::generated::lifecycle::e1::reply::ReplyStatus;
 use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
 use vibe_wire::generated::lifecycle_report::{
     LifecycleContributionReport, LifecycleReport, LifecycleStepReport,
@@ -30,7 +28,12 @@ use crate::output;
 use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary};
 
 mod dispatch;
+mod slot;
 mod world;
+
+pub(crate) use slot::{
+    emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,
+};
 
 /// Execute a top-level default-lifecycle phase verb.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
@@ -98,7 +101,7 @@ pub(crate) fn run_clean_only(
         assume_yes: metadata_assume_yes(ctx, args.assume_yes),
         agent_mode: RunAgentMode::Cli,
         force: false,
-        run_id: new_run_id(),
+        run_id: new_run_id(Path::new(&plan.project.root))?,
         started: crate::commands::init::current_timestamp_utc(),
     };
     let notices = plan.notices.clone();
@@ -160,12 +163,14 @@ fn execute(
         assume_yes,
         agent_mode: RunAgentMode::Cli,
         force: install_args.force,
-        run_id: new_run_id(),
+        run_id: new_run_id(&super::install::resolve_project_root(&install_args.path)?)?,
         started: crate::commands::init::current_timestamp_utc(),
     };
     let mut reports = Vec::with_capacity(steps.len());
     let mut contribution_reports = Vec::new();
     let mut notices = Vec::new();
+    let mut install_lifecycle_run = None;
+    let mut install_contribution_reports = Vec::new();
 
     if steps.first() == Some(&LifecycleStep::Clean) {
         let clean_plan = world::plan_clean(&install_args.path)?;
@@ -202,8 +207,23 @@ fn execute(
                 let prepare = prepare_install
                     .take()
                     .context("internal: install inputs prepared more than once")?;
-                let disposition =
-                    super::install::run(&child, install_args.clone(), prepare(), root_offline)?;
+                let disposition = super::install::run_with_lifecycle_context(
+                    &child,
+                    install_args.clone(),
+                    prepare(),
+                    root_offline,
+                    Some(metadata.clone()),
+                    Some(ctx),
+                    |_, _, run| {
+                        install_lifecycle_run = run.lifecycle_run;
+                        install_contribution_reports = run
+                            .lifecycle_reports
+                            .into_iter()
+                            .map(slot::contribution_report)
+                            .collect();
+                        Ok(WorldCallbackSummary::default())
+                    },
+                )?;
                 install_status = Some(match disposition {
                     InstallDisposition::Fresh => StepStatus::Fresh,
                     InstallDisposition::Applied => StepStatus::Ok,
@@ -217,12 +237,15 @@ fn execute(
     notices.extend(ritual.notices.clone());
     surface_plan(ctx, &ritual, &metadata, true)?;
     let state_chain = phases.iter().map(ToString::to_string).collect();
-    contribution_reports.extend(dispatch::dispatch_plan(
-        ctx,
-        &ritual,
-        metadata,
-        state_chain,
-    )?);
+    contribution_reports.extend(if let Some(shared) = install_lifecycle_run {
+        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
+    } else {
+        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
+    });
+    if !ctx.is_json() && !install_contribution_reports.is_empty() {
+        install_contribution_reports.append(&mut contribution_reports);
+        contribution_reports = install_contribution_reports;
+    }
     for phase in phases {
         let status = match phase {
             Phase::Validate => validate_status.unwrap_or(StepStatus::Ok),
@@ -281,6 +304,8 @@ fn planned_contribution(execution: &world::PlannedExecution) -> PlannedContribut
         phase: execution.phase.clone(),
         point: row.declaration().point.to_string(),
         provider,
+        reference: None,
+        slot_target: None,
         tier: tier_name(row.effective_tier()).to_string(),
         version,
     }
@@ -381,6 +406,29 @@ fn emit_report(
     Ok(())
 }
 
+pub(super) fn emit_failure_outcome(
+    ctx: &output::Context,
+    metadata: &RunMetadata,
+    phase: &str,
+    contributions: &[LifecycleContributionReport],
+) -> Result<()> {
+    if !ctx.is_json() {
+        return Ok(());
+    }
+    ctx.emit_json(&LifecycleReport {
+        chain: metadata.chain.clone(),
+        command: "lifecycle".into(),
+        contributions: contributions.to_vec(),
+        notices: Vec::new(),
+        ok: false,
+        requested: metadata.requested.clone(),
+        steps: vec![LifecycleStepReport {
+            phase: phase.into(),
+            status: "fail".into(),
+        }],
+    })
+}
+
 /// Direct install callback after durability and before its final document.
 pub(crate) fn after_direct_install(
     ctx: &output::Context,
@@ -390,19 +438,15 @@ pub(crate) fn after_direct_install(
 ) -> Result<WorldCallbackSummary> {
     let phases = [Phase::Validate, Phase::Install];
     let ritual = world::plan_default(path, &phases)?;
-    let metadata = RunMetadata {
-        requested: Phase::Install.to_string(),
-        chain: phases.iter().map(ToString::to_string).collect(),
-        offline: run.offline,
-        assume_yes: run.assume_yes,
-        agent_mode: RunAgentMode::Cli,
-        force: run.force,
-        run_id: new_run_id(),
-        started: run.started,
-    };
+    let metadata = run.metadata.clone();
     surface_plan(ctx, &ritual, &metadata, false)?;
     let state_chain = metadata.chain.clone();
-    let contributions = dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?;
+    let slot_reports = run.lifecycle_reports;
+    let contributions = if let Some(shared) = run.lifecycle_run {
+        dispatch::dispatch_plan_with_run(ctx, &ritual, &shared, &metadata)?
+    } else {
+        dispatch::dispatch_plan(ctx, &ritual, metadata, state_chain)?
+    };
     if ctx.is_json() && (!contributions.is_empty() || !ritual.notices.is_empty()) {
         emit_report(
             ctx,
@@ -423,15 +467,17 @@ pub(crate) fn after_direct_install(
         )?;
     }
     Ok(WorldCallbackSummary {
-        selected_contributions: ritual.executions.len(),
+        selected_contributions: ritual.executions.len() + slot_reports.len(),
         executed_contributions: contributions
             .iter()
             .filter(|row| row.status != "fresh")
-            .count(),
+            .count()
+            + slot_reports.len(),
         successful_contributions: contributions
             .iter()
             .filter(|row| row.status == "ok")
-            .count(),
+            .count()
+            + slot_reports.iter().filter(|row| row.status == "ok").count(),
         fresh_contributions: contributions
             .iter()
             .filter(|row| row.status == "fresh")
@@ -463,13 +509,8 @@ fn metadata_assume_yes(ctx: &output::Context, explicit: bool) -> bool {
     explicit || ctx.is_unattended() || ctx.is_json()
 }
 
-fn new_run_id() -> String {
-    static NEXT_RUN: AtomicU64 = AtomicU64::new(1);
-    format!(
-        "{}-{}",
-        std::process::id(),
-        NEXT_RUN.fetch_add(1, Ordering::Relaxed),
-    )
+fn new_run_id(project_root: &Path) -> Result<String> {
+    vibe_lifecycle::process::allocate_run_id(project_root).map_err(Into::into)
 }
 
 fn step_name(step: &LifecycleStep) -> String {
@@ -484,15 +525,6 @@ fn step_report(phase: &str, status: StepStatus) -> LifecycleStepReport {
         phase: phase.to_string(),
         status: status.as_str().to_string(),
     }
-}
-
-fn reply_status(status: &ReplyStatus) -> String {
-    match status {
-        ReplyStatus::Ok => "ok",
-        ReplyStatus::Fail => "fail",
-        ReplyStatus::Skip => "skip",
-    }
-    .to_string()
 }
 
 const fn tier_name(tier: ContributionTier) -> &'static str {

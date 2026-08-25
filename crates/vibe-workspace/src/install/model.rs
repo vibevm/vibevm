@@ -152,8 +152,9 @@ pub trait SlotVerifier {
 ///
 /// The plan binds the workspace root to owned clones of the eligible resolved
 /// dependencies. It has no public constructor or fields and is consumed by
-/// [`super::run_post_install_hooks`], so a caller cannot combine slot labels
-/// from one install with a different resolution or workspace.
+/// [`super::run_post_install_slot_lifecycle`] (or its legacy-hook wrapper), so
+/// a caller cannot combine slot labels from one install with a different
+/// resolution or workspace.
 #[derive(Debug)]
 pub struct PostInstallPlan {
     workspace_root: PathBuf,
@@ -214,7 +215,7 @@ impl InstallOutcome {
     ///
     /// `None` means either no dependency changed eligible payload or the plan
     /// was already taken. The returned value is consumed by
-    /// [`super::run_post_install_hooks`].
+    /// [`super::run_post_install_slot_lifecycle`] or the legacy hook wrapper.
     pub fn take_post_install_plan(&mut self) -> Option<PostInstallPlan> {
         self.post_install_plan.take()
     }

@@ -186,25 +186,33 @@ fn lifecycle_suppresses_hook_subprocess_streams_in_json_and_quiet_modes() {
             String::from_utf8_lossy(&output.stderr)
         );
         let stdout = String::from_utf8_lossy(&output.stdout);
-        assert!(!stdout.contains(MARKER), "{mode}: {stdout}");
         if mode == "json" {
             let documents = serde_json::Deserializer::from_slice(&output.stdout)
                 .into_iter::<serde_json::Value>()
                 .collect::<Result<Vec<_>, _>>()
                 .expect("hook output must not corrupt lifecycle JSON documents");
-            let report: vibe_wire::generated::lifecycle_report::LifecycleReport =
-                serde_json::from_value(documents.last().cloned().unwrap())
-                    .expect("final lifecycle outcome document must use the generated shape");
-            assert_eq!(report.command, "lifecycle");
+            assert!(
+                documents
+                    .iter()
+                    .filter(|document| document["command"] == "lifecycle")
+                    .flat_map(|document| {
+                        document["contributions"].as_array().into_iter().flatten()
+                    })
+                    .any(|row| row["stdout"]
+                        .as_str()
+                        .is_some_and(|text| text.contains(MARKER))),
+                "JSON must contain bounded structured hook stdout"
+            );
         } else {
             assert_eq!(stdout.lines().count(), 1, "{stdout}");
+            assert!(!stdout.contains(MARKER), "{mode}: {stdout}");
         }
         assert_eq!(read_counter(&slot), "1", "{mode}: hook did not run once");
     }
 }
 
 #[test]
-fn lifecycle_json_refuses_untrusted_hooks_without_running_or_reporting_success() {
+fn install_is_consent_for_hooks_from_any_group() {
     if !git_available() {
         eprintln!("skipping lifecycle hook-trust e2e: git not on PATH");
         return;
@@ -221,49 +229,29 @@ fn lifecycle_json_refuses_untrusted_hooks_without_running_or_reporting_success()
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
     write_project_with_per_package_registry(project.path(), &registry_url(&registry));
-    user.vibe()
+    let output = user
+        .vibe()
         .arg("install")
         .arg("org.example/hooked@=0.1.0")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
-        .arg("--allow-hooks")
-        .assert()
-        .success();
-    user.vibe()
-        .arg("clean")
-        .arg("--path")
-        .arg(project.path())
-        .arg("--assume-yes")
-        .assert()
-        .success();
-
-    let output = user
-        .vibe()
-        .args(["build", "--json"])
-        .arg("--path")
-        .arg(project.path())
-        .arg("--assume-yes")
         .output()
         .unwrap();
-    assert!(!output.status.success());
-    assert!(output.stdout.is_empty(), "no lifecycle success document");
-    let error: serde_json::Value = serde_json::from_slice(&output.stderr).unwrap();
-    assert_eq!(error["ok"], false);
     assert!(
-        error["error"]
-            .as_str()
-            .is_some_and(|message| message.contains("not trusted")),
-        "{error}",
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr),
     );
     assert!(
-        !project
-            .path()
-            .join(common::slot_dir("org.example.hooked", "0.1.0"))
-            .exists(),
-        "refusal must happen before materialisation and hook execution",
+        String::from_utf8_lossy(&output.stdout).contains(MARKER),
+        "{}",
+        String::from_utf8_lossy(&output.stdout),
     );
-    assert!(!String::from_utf8_lossy(&output.stdout).contains(MARKER));
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.example.hooked", "0.1.0"));
+    assert_eq!(read_counter(&slot), "1");
 }
 
 #[test]
@@ -291,7 +279,6 @@ fn reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff() {
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
-        .arg("--allow-hooks")
         .output()
         .unwrap();
 
@@ -319,15 +306,42 @@ fn reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff() {
         .success();
     assert_eq!(read_counter(&slot), "1");
 
-    // Force with byte-identical payload has no post-install plan.
-    user.vibe()
+    // Force with byte-identical payload and identity-only record repair has no
+    // lifecycle event/plan/outcome.
+    let record_path = slot.join(".vibe-slot.toml");
+    let record = fs::read_to_string(&record_path).unwrap();
+    let record = record
+        .lines()
+        .map(|line| {
+            if line.starts_with("source_hash = ") {
+                format!("source_hash = \"sha256:{}\"", "3".repeat(64))
+            } else {
+                line.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    fs::write(&record_path, format!("{record}\n")).unwrap();
+    let unchanged = user
+        .vibe()
+        .arg("--json")
         .arg("reinstall")
         .arg(project.path())
         .arg("--force")
         .arg("--assume-yes")
-        .arg("--allow-hooks")
-        .assert()
-        .success();
+        .output()
+        .unwrap();
+    assert!(unchanged.status.success());
+    let unchanged_docs = serde_json::Deserializer::from_slice(&unchanged.stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    assert_eq!(
+        unchanged_docs.len(),
+        1,
+        "unchanged force has no phantom ritual"
+    );
+    assert_eq!(unchanged_docs[0]["command"], "reinstall");
     assert_eq!(read_counter(&slot), "1");
 
     fs::write(slot.join("payload.txt"), "corrupted\n").unwrap();
@@ -338,17 +352,27 @@ fn reinstall_runs_post_hook_once_only_for_a_nonempty_force_diff() {
         .arg(project.path())
         .arg("--force")
         .arg("--assume-yes")
-        .arg("--allow-hooks")
         .output()
         .unwrap();
     assert!(output.status.success());
     assert_eq!(read_counter(&slot), "2", "the repaired slot runs once");
-    let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    let hooks = report["hooks"].as_array().unwrap();
-    assert_eq!(hooks.len(), 2, "pre and post reports are both retained");
-    assert_eq!(hooks[0]["status"], "not-declared");
-    assert_eq!(hooks[1]["phase"], "post-install");
-    assert_eq!(hooks[1]["status"], "ran");
+    let reports = serde_json::Deserializer::from_slice(&output.stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    let hooks = reports
+        .iter()
+        .find(|report| report["command"] == "lifecycle")
+        .unwrap()["contributions"]
+        .as_array()
+        .unwrap();
+    assert_eq!(
+        hooks.len(),
+        1,
+        "only selected lifecycle contributions report"
+    );
+    assert_eq!(hooks[0]["point"], "slot:post-install");
+    assert_eq!(hooks[0]["status"], "ok");
 }
 
 #[test]
@@ -401,13 +425,22 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .into_iter()
         .collect::<Result<_, _>>()
         .unwrap();
-    let report = reports.last().unwrap();
-    assert_eq!(report["command"], "update");
-    let hooks = report["hooks"].as_array().unwrap();
-    assert_eq!(hooks.len(), 2, "pre and post reports are both retained");
-    assert_eq!(hooks[0]["status"], "not-declared");
-    assert_eq!(hooks[1]["phase"], "post-install");
-    assert_eq!(hooks[1]["status"], "post-install-failed");
+    assert_eq!(reports.last().unwrap()["command"], "update");
+    assert_eq!(reports.last().unwrap()["hooks"], serde_json::json!([]));
+    let hooks = reports
+        .iter()
+        .find(|report| report["command"] == "lifecycle")
+        .unwrap()["contributions"]
+        .as_array()
+        .unwrap();
+    assert_eq!(
+        hooks.len(),
+        1,
+        "only selected lifecycle contributions report"
+    );
+    assert_eq!(hooks[0]["point"], "slot:post-install");
+    assert_eq!(hooks[0]["status"], "fail");
+    assert_eq!(hooks[0]["flagged"], true);
 
     let slot = project
         .path()
@@ -422,7 +455,7 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .arg("--assume-yes")
         .assert()
         .success()
-        .stdout(predicates::str::contains("1 hook report flagged"));
+        .stdout(predicates::str::contains("1 lifecycle hook flagged"));
 
     fs::write(slot.join("payload.txt"), "corrupted once more\n").unwrap();
     user.vibe()
@@ -433,5 +466,5 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .arg("--assume-yes")
         .assert()
         .success()
-        .stdout(predicates::str::contains("post-install hook failed"));
+        .stdout(predicates::str::contains("fail `org.vibevm/hooked#"));
 }

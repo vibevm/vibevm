@@ -27,6 +27,11 @@ pub struct Context {
     pub run: Run,
 
     pub world: World,
+
+    /// Package slot whose pre/post-install timing event is executing. Absent
+    /// for phase contributions.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot_target: Option<SlotTarget>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -97,6 +102,19 @@ pub struct Run {
     pub phase: String,
 
     pub requested: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SlotTarget {
+    pub group: String,
+
+    pub kind: String,
+
+    pub name: String,
+
+    pub root: String,
+
+    pub version: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

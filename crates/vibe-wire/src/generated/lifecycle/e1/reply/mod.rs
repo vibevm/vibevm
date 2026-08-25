@@ -18,6 +18,7 @@ pub enum ReplyStatus {
 /// the later native ABI manifest/reply contract: generic agent replies may
 /// carry tasks, while the R5 native surface will not.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Reply {
     pub artifacts: Vec<ReplyArtifact>,
 
@@ -34,6 +35,7 @@ pub struct Reply {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ReplyArtifact {
     pub id: String,
 

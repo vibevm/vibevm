@@ -5,22 +5,28 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
+use std::sync::Arc;
 
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
+use vibe_lifecycle::process::StreamMode;
+use vibe_lifecycle::{LifecycleRunHandle, RunMetadata};
 use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
-    InstallOutcome, ResolvedDep, apply_resolution_with_spec_format_and_hook_output,
-    run_post_install_hooks_with_output,
+    InstallOutcome, ResolvedDep, SlotLifecycleMode,
+    apply_resolution_with_spec_format_and_slot_lifecycle, run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
 use crate::InstallSource;
 use crate::error::{Error, Result};
 use crate::fetched::Fetched;
+use crate::lifecycle::{
+    InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecycleReport,
+};
 use crate::plan::PlannedInstall;
 use crate::record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
@@ -40,6 +46,12 @@ pub struct ApplyReport {
     /// `post-install` hook; the CLI renders them with the pre-install
     /// reports carried on `outcome.hook_reports`.
     pub post_install_reports: Vec<HookReport>,
+    /// Legacy `[hooks]` translated to `slot:` contributions and executed by
+    /// the lifecycle handler engine. Empty only on compatibility entry points.
+    pub lifecycle_reports: Vec<SlotLifecycleReport>,
+    /// The same canonical run used by slot callbacks; the caller rebinds it
+    /// to the durable world before dispatching normal phase contributions.
+    pub lifecycle_run: Option<LifecycleRunHandle>,
 }
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
@@ -87,6 +99,70 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     hooks: &HookPolicy,
     hook_output: HookOutput,
+) -> Result<ApplyReport> {
+    apply_with_spec_format_and_slot_lifecycle(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        SlotLifecycleMode::LegacyHooks {
+            policy: hooks,
+            output: hook_output,
+        },
+    )
+}
+
+/// Apply through the canonical lifecycle handler engine. `[hooks]` is sugar
+/// for one `slot:` script contribution per declared phase; install itself is
+/// consent, so this path has no [`HookPolicy`] or prompt surface.
+pub fn apply_with_spec_format_and_lifecycle<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    run: RunMetadata,
+    streams: StreamMode,
+) -> Result<ApplyReport> {
+    apply_with_spec_format_and_lifecycle_observed(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        run,
+        streams,
+        Arc::new(NoSlotLifecycleObserver),
+    )
+}
+
+pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    run: RunMetadata,
+    streams: StreamMode,
+    observer: Arc<dyn SlotLifecycleObserver>,
+) -> Result<ApplyReport> {
+    let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, observer)?;
+    let lifecycle_run = lifecycle.run_handle();
+    let mut report = apply_with_spec_format_and_slot_lifecycle(
+        source,
+        planned,
+        slot_integrity,
+        spec_format,
+        SlotLifecycleMode::Callback(&lifecycle),
+    )?;
+    report.lifecycle_reports = lifecycle.take_reports()?;
+    report.lifecycle_run = Some(lifecycle_run);
+    Ok(report)
+}
+
+fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    lifecycle: SlotLifecycleMode<'_>,
 ) -> Result<ApplyReport> {
     let PlannedInstall {
         project_root,
@@ -170,14 +246,13 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let mut outcome = apply_resolution_with_spec_format_and_hook_output(
+    let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
         &workspace,
         &resolution,
         slot_integrity,
         spec_format,
         Some(&slot_verifier),
-        Some(hooks),
-        hook_output,
+        lifecycle,
     )?;
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
@@ -243,13 +318,15 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
     //     as a flagged report, not fatal; a missing interpreter is a hard
     //     error. Only slots whose materialised payload changed run their hook.
     let post_install_reports = match outcome.take_post_install_plan() {
-        Some(plan) => run_post_install_hooks_with_output(plan, hooks, hook_output)?,
+        Some(plan) => run_post_install_slot_lifecycle(plan, lifecycle)?,
         None => Vec::new(),
     };
 
     Ok(ApplyReport {
         outcome,
         post_install_reports,
+        lifecycle_reports: Vec::new(),
+        lifecycle_run: None,
     })
 }
 

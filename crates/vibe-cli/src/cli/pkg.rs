@@ -277,15 +277,6 @@ pub struct InstallArgs {
     #[arg(long, value_name = "ENV_VAR", requires = "git")]
     pub git_token_env: Option<String>,
 
-    /// Run every installed package's declared install hooks (PROP-020 §2.3)
-    /// without an interactive consent prompt, even for groups that are not
-    /// allow-listed. This is the non-interactive opt-in: a hook-declaring
-    /// package whose group is not trusted otherwise aborts the install
-    /// (re-run interactively to consent, allow-list the group, or pass this
-    /// flag). `org.vibevm` is always allow-listed and runs regardless.
-    #[arg(long)]
-    pub allow_hooks: bool,
-
     /// Ignore reusable lifecycle contribution fingerprints for this install's
     /// post-durability callback. Resolution/materialisation semantics are unchanged.
     #[arg(long)]
@@ -444,11 +435,6 @@ pub struct ReinstallArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
-
-    /// Run install hooks regardless of package group. Uses the same
-    /// explicit non-interactive opt-in as `vibe install --allow-hooks`.
-    #[arg(long)]
-    pub allow_hooks: bool,
 }
 
 #[derive(Debug, clap::Args)]

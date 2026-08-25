@@ -164,6 +164,7 @@ fn row(
 fn context(root: &std::path::Path, config: &ExtensionConfig) -> Context {
     let root_text = root.to_string_lossy().replace('\\', "/");
     Context {
+        slot_target: None,
         artifacts: vec![],
         envelope: 1,
         execution: Execution {

@@ -261,6 +261,17 @@ pub enum WorkspaceError {
     /// this surfaces (PROP-020 §2.5).
     #[error(transparent)]
     Hook(#[from] crate::hooks::HookError),
+
+    #[error(
+        "slot lifecycle {phase} callback for `{package}` failed: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR; \
+         fix: repair the lifecycle contribution and retry the phase)"
+    )]
+    SlotLifecycle {
+        phase: &'static str,
+        package: String,
+        reason: String,
+    },
 }
 
 type Result<T> = std::result::Result<T, WorkspaceError>;

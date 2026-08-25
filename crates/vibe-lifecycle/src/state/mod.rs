@@ -5,7 +5,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME
 mod fingerprint;
 mod store;
 
-pub use fingerprint::{FingerprintError, fingerprint_execution, preparation_error_fingerprint};
+pub use fingerprint::{
+    FingerprintError, fingerprint_execution, fingerprint_handler_execution,
+    preparation_error_fingerprint, preparation_error_fingerprint_for_identity,
+};
 pub use store::{LifecycleStateError, LifecycleStateStore};
 
 #[cfg(test)]
