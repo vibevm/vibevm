@@ -12,6 +12,8 @@ use vibe_workspace::install::ResolvedDep;
 
 use crate::output;
 
+use super::WorldCallbackSummary;
+
 /// One rendering policy for install-hook reports across every install-family
 /// command. The view borrows the pre/post slices so callers retain the typed
 /// reports without cloning or flattening away phase ordering.
@@ -129,7 +131,11 @@ pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDe
     println!();
 }
 
-pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Result<()> {
+pub(super) fn emit_report(
+    ctx: &output::Context,
+    applied: &ApplyReport,
+    world_summary: WorldCallbackSummary,
+) -> Result<()> {
     let outcome = &applied.outcome;
     // Every install-hook report for this run — pre-install (gathered during
     // the materialise pass) followed by post-install (after the lockfile
@@ -150,6 +156,7 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
         return Ok(());
     }
     if ctx.is_quiet() {
+        let suffix = format!("{}{}", hooks.quiet_suffix(), ritual_suffix(world_summary));
         ctx.summary(&format!(
             "vibe install: {} package{} materialised{}",
             outcome.materialised.len(),
@@ -158,7 +165,7 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
             } else {
                 "s"
             },
-            hooks.quiet_suffix(),
+            suffix,
         ));
         return Ok(());
     }
@@ -198,7 +205,11 @@ pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Resul
 /// Report the PROP-011 §2.2 fast path — `vibe.lock` was fresh, so no
 /// resolution ran. Kept distinct from [`emit_report`] so the operator can
 /// tell a no-op `vibe install` from one that materialised packages.
-pub(super) fn emit_fresh_report(ctx: &output::Context, nodes_regenerated: &[String]) -> Result<()> {
+pub(super) fn emit_fresh_report(
+    ctx: &output::Context,
+    nodes_regenerated: &[String],
+    world_summary: WorldCallbackSummary,
+) -> Result<()> {
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({
             "ok": true,
@@ -209,13 +220,25 @@ pub(super) fn emit_fresh_report(ctx: &output::Context, nodes_regenerated: &[Stri
         return Ok(());
     }
     ctx.summary(&format!(
-        "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date)",
+        "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date){}",
         nodes_regenerated.len(),
         if nodes_regenerated.len() == 1 {
             ""
         } else {
             "s"
         },
+        ritual_suffix(world_summary),
     ));
     Ok(())
+}
+
+fn ritual_suffix(summary: WorldCallbackSummary) -> String {
+    if summary == WorldCallbackSummary::default() {
+        String::new()
+    } else {
+        format!(
+            ", {} lifecycle contribution(s) planned, {} lifecycle notice(s)",
+            summary.planned_contributions, summary.notices,
+        )
+    }
 }

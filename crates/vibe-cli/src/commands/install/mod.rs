@@ -99,12 +99,37 @@ pub(crate) enum InstallDisposition {
     Applied,
 }
 
+/// Counts produced by an additive post-durability observer. Keeping them
+/// typed prevents quiet rendering from dropping a class of ritual output.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub(crate) struct WorldCallbackSummary {
+    pub(crate) planned_contributions: usize,
+    pub(crate) notices: usize,
+}
+
 pub fn run(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<InstallDisposition> {
+    run_with_world_callback(ctx, args, embedded_root, root_offline, |_, _| {
+        Ok(WorldCallbackSummary::default())
+    })
+}
+
+/// The one install implementation with an additive post-durability callback.
+///
+/// Only the direct top-level install facade supplies a non-empty callback. All
+/// install-family callers retain [`run`]'s byte-for-byte rendering behaviour.
+pub(crate) fn run_with_world_callback(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    after_durable_world: impl FnOnce(&Path, InstallDisposition) -> Result<WorldCallbackSummary>,
+) -> Result<InstallDisposition> {
+    let mut after_durable_world = Some(after_durable_world);
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
     // user config so a malformed config fails before any resolution. The
@@ -172,7 +197,11 @@ pub fn run(
         let nodes =
             vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
                 .context("regenerating boot artifacts for the empty world")?;
-        report::emit_fresh_report(ctx, &nodes)?;
+        let after = after_durable_world
+            .take()
+            .context("internal: install durable-world callback already consumed")?;
+        let world_summary = after(&project_root, InstallDisposition::Fresh)?;
+        report::emit_fresh_report(ctx, &nodes, world_summary)?;
         return Ok(InstallDisposition::Fresh);
     }
 
@@ -231,7 +260,11 @@ pub fn run(
                 .context("re-discovering the workspace for boot regeneration")?;
             let nodes = vibe_workspace::install::regenerate_boot_with_spec_format(&ws, spec_format)
                 .context("regenerating boot artifacts from the materialised state")?;
-            report::emit_fresh_report(ctx, &nodes)?;
+            let after = after_durable_world
+                .take()
+                .context("internal: install durable-world callback already consumed")?;
+            let world_summary = after(&project_root, InstallDisposition::Fresh)?;
+            report::emit_fresh_report(ctx, &nodes, world_summary)?;
             Ok(InstallDisposition::Fresh)
         }
         Plan::Ready(planned) => {
@@ -286,6 +319,10 @@ pub fn run(
                     HookOutput::Inherit
                 },
             )?;
+            let after = after_durable_world
+                .take()
+                .context("internal: install durable-world callback already consumed")?;
+            let world_summary = after(&project_root, InstallDisposition::Applied)?;
             // PROP-050 ##VERIFY-LOCK-DIFF — after a successful apply, print
             // the closure diff (the pre-apply lock snapshot vs the freshly
             // written one, lane bytes before/after): a mid-graph re-export
@@ -303,7 +340,7 @@ pub fn run(
                     &lane_sizes(&workspace.root),
                 );
             }
-            report::emit_report(ctx, &applied)?;
+            report::emit_report(ctx, &applied, world_summary)?;
             Ok(InstallDisposition::Applied)
         }
     }

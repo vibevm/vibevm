@@ -13,6 +13,14 @@ pub struct LifecycleReport {
     /// Always `"lifecycle"` for this report.
     pub command: String,
 
+    /// Effective lifecycle contributions in canonical execution order. R2.3
+    /// reports these as planned; it does not dispatch handlers.
+    pub contributions: Vec<LifecycleContributionReport>,
+
+    /// Non-fatal collection notices that must remain observable in structured
+    /// output.
+    pub notices: Vec<String>,
+
     pub ok: bool,
 
     /// The exact default-lifecycle phase requested by the user.
@@ -23,11 +31,32 @@ pub struct LifecycleReport {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LifecycleContributionReport {
+    pub handler: String,
+
+    pub key: String,
+
+    pub phase: String,
+
+    pub point: String,
+
+    pub provider: String,
+
+    /// R2.3 writes `planned`: the handler was selected and narrated, never run.
+    pub status: String,
+
+    pub tier: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LifecycleStepReport {
     pub phase: String,
 
-    /// Phase outcome vocabulary. R2.2 writes `ok`, `fresh`, or `no-op`; later
-    /// engine slices may add already normative outcomes without breaking older
-    /// readers.
+    /// Phase outcome vocabulary. R2.2/R2.3 write `ok`, `fresh`, `no-op`,
+    /// or `planned`; later engine slices may add already normative outcomes
+    /// without breaking older readers.
     pub status: String,
 }

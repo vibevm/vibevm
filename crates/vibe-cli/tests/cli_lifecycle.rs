@@ -154,6 +154,8 @@ fn generated_reader_is_forward_compatible_with_future_step_statuses() {
         "command": "lifecycle",
         "requested": "create",
         "chain": ["create"],
+        "contributions": [],
+        "notices": [],
         "steps": [{"phase": "create", "status": "delegated"}],
     }))
     .expect("a newer normative status must not break an older reader");
@@ -246,7 +248,10 @@ fn quiet_lifecycle_is_exactly_one_summary_line() {
         .success();
     let stdout = String::from_utf8_lossy(&assert.get_output().stdout);
     assert_eq!(stdout.lines().count(), 1, "{stdout}");
-    assert!(stdout.contains("deploy completed (9 phases)"), "{stdout}");
+    assert!(
+        stdout.contains("deploy completed (9 phases, 0 contribution(s) planned, 0 notice(s))"),
+        "{stdout}"
+    );
 }
 
 #[test]

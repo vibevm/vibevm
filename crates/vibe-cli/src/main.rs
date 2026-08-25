@@ -117,9 +117,16 @@ fn main() -> ExitCode {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
-        Command::Install(args) => {
-            commands::install::run(&ctx, args, discover_embedded_root(), cli.offline).map(|_| ())
-        }
+        Command::Install(args) => commands::install::run_with_world_callback(
+            &ctx,
+            args,
+            discover_embedded_root(),
+            cli.offline,
+            |project_root, disposition| {
+                commands::lifecycle::after_direct_install(&ctx, project_root, disposition)
+            },
+        )
+        .map(|_| ()),
         Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
         Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),
         Command::Test(args) => run_lifecycle(vibe_lifecycle::Phase::Test, args),

@@ -1,23 +1,27 @@
 //! CLI adapter for the default lifecycle's phase line.
 //!
-//! R2.2 deliberately has no contribution runtime. This module only expands a
-//! typed [`LifecycleRequest`], invokes the two existing built-ins (`validate`
-//! and `install`), and records every other phase as an honest no-op.
+//! This adapter owns the two-epoch ritual: validate and bootstrap install run
+//! first, then the durable world is reloaded and every effective contribution
+//! is planned and narrated. R2.3 never dispatches a handler.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 use std::path::Path;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use specmark::spec;
 use vibe_lifecycle::{LifecycleRequest, LifecycleStep, Phase};
-use vibe_wire::generated::lifecycle_report::{LifecycleReport, LifecycleStepReport};
+use vibe_wire::generated::lifecycle_report::{
+    LifecycleContributionReport, LifecycleReport, LifecycleStepReport,
+};
 use vibe_workspace::Workspace;
 
 use crate::cli::{CleanArgs, CleanChain, InstallArgs, LifecycleArgs};
 use crate::output;
 
-use super::install::InstallDisposition;
+use super::install::{InstallDisposition, WorldCallbackSummary};
+
+mod world;
 
 /// Execute a top-level default-lifecycle phase verb.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]
@@ -98,11 +102,17 @@ fn execute(
     let child = ctx.quiet_child();
     let mut prepare_install = Some(prepare_install);
 
-    let reports = traverse(request, |step| {
+    let steps = request.steps();
+    if steps.first() == Some(&LifecycleStep::Clean) {
+        let clean_plan = world::plan_clean(&install_args.path)?;
+        render_ritual(ctx, &clean_plan.notices, &clean_plan.contributions);
+        refuse_undispatchable_clean(&clean_plan.contributions)?;
+    }
+
+    let mut reports = Vec::with_capacity(steps.len());
+    for step in &steps {
         let (phase, status) = match step {
             LifecycleStep::Clean => {
-                // R2.2 has no clean contributions. Preserve PROP-053's human
-                // deletion account, while quiet/JSON keep one final report.
                 let clean_ctx = if ctx.is_json() || ctx.is_quiet() {
                     &child
                 } else {
@@ -135,12 +145,39 @@ fn execute(
             }
             LifecycleStep::Default(phase) => (phase.to_string(), StepStatus::NoOp),
         };
-        Ok((phase, status))
-    })?;
+        reports.push(LifecycleStepReport {
+            phase,
+            status: status.as_str().to_string(),
+        });
+    }
 
-    emit_report(ctx, requested, reports)
+    let phases: Vec<Phase> = steps
+        .iter()
+        .filter_map(|step| match step {
+            LifecycleStep::Default(phase) => Some(*phase),
+            LifecycleStep::Clean => None,
+        })
+        .collect();
+    let ritual = world::plan_default(&install_args.path, &phases)?;
+    for report in &mut reports {
+        let Ok(phase) = report.phase.parse::<Phase>() else {
+            continue;
+        };
+        if !matches!(phase, Phase::Validate | Phase::Install) && ritual.count_for(phase) > 0 {
+            report.status = StepStatus::Planned.as_str().to_string();
+        }
+    }
+    render_ritual(ctx, &ritual.notices, &ritual.contributions);
+    emit_report(
+        ctx,
+        requested,
+        reports,
+        ritual.contributions,
+        ritual.notices,
+    )
 }
 
+#[cfg(test)]
 fn traverse(
     request: LifecycleRequest,
     mut run_step: impl FnMut(LifecycleStep) -> Result<(String, StepStatus)>,
@@ -171,11 +208,15 @@ fn emit_report(
     ctx: &output::Context,
     requested: Phase,
     steps: Vec<LifecycleStepReport>,
+    contributions: Vec<LifecycleContributionReport>,
+    notices: Vec<String>,
 ) -> Result<()> {
     let chain = steps.iter().map(|step| step.phase.clone()).collect();
     let report = LifecycleReport {
         chain,
         command: "lifecycle".to_string(),
+        contributions,
+        notices,
         ok: true,
         requested: requested.to_string(),
         steps,
@@ -186,9 +227,11 @@ fn emit_report(
     }
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe lifecycle: {} completed ({} phases)",
+            "vibe lifecycle: {} completed ({} phases, {} contribution(s) planned, {} notice(s))",
             requested,
             report.steps.len(),
+            report.contributions.len(),
+            report.notices.len(),
         ));
         return Ok(());
     }
@@ -198,9 +241,11 @@ fn emit_report(
         ctx.step(&format!("{}: {}", step.phase, status_name(&step.status)));
     }
     ctx.summary(&format!(
-        "vibe lifecycle: {} completed ({} phases)",
+        "vibe lifecycle: {} completed ({} phases, {} contribution(s) planned, {} notice(s))",
         requested,
         report.steps.len(),
+        report.contributions.len(),
+        report.notices.len(),
     ));
     Ok(())
 }
@@ -210,6 +255,7 @@ enum StepStatus {
     Ok,
     Fresh,
     NoOp,
+    Planned,
 }
 
 impl StepStatus {
@@ -218,8 +264,99 @@ impl StepStatus {
             Self::Ok => "ok",
             Self::Fresh => "fresh",
             Self::NoOp => "no-op",
+            Self::Planned => "planned",
         }
     }
+}
+
+fn render_ritual(
+    ctx: &output::Context,
+    notices: &[String],
+    contributions: &[LifecycleContributionReport],
+) {
+    if ctx.is_json() || ctx.is_quiet() {
+        return;
+    }
+    for notice in notices {
+        ctx.step(&format!("lifecycle notice: {notice}"));
+    }
+    for row in contributions {
+        let version = row
+            .version
+            .as_deref()
+            .map(|version| format!("@{version}"))
+            .unwrap_or_default();
+        ctx.step(&format!(
+            "would run `{}` — point={}, handler={}, provider={}{} tier={} (planned; not run)",
+            row.key, row.point, row.handler, row.provider, version, row.tier,
+        ));
+    }
+}
+
+/// Callback used only by the top-level direct install facade after the durable
+/// world exists and before install's established final report is rendered.
+pub(crate) fn after_direct_install(
+    ctx: &output::Context,
+    path: &Path,
+    disposition: InstallDisposition,
+) -> Result<WorldCallbackSummary> {
+    let ritual = world::plan_default(path, &[Phase::Validate, Phase::Install])?;
+    render_ritual(ctx, &ritual.notices, &ritual.contributions);
+    if ctx.is_json() && (!ritual.contributions.is_empty() || !ritual.notices.is_empty()) {
+        let reports = vec![
+            LifecycleStepReport {
+                phase: Phase::Validate.to_string(),
+                status: StepStatus::Ok.as_str().to_string(),
+            },
+            LifecycleStepReport {
+                phase: Phase::Install.to_string(),
+                status: match disposition {
+                    InstallDisposition::Fresh => StepStatus::Fresh,
+                    InstallDisposition::Applied => StepStatus::Ok,
+                }
+                .as_str()
+                .to_string(),
+            },
+        ];
+        emit_report(
+            ctx,
+            Phase::Install,
+            reports,
+            ritual.contributions.clone(),
+            ritual.notices.clone(),
+        )?;
+    }
+    Ok(WorldCallbackSummary {
+        planned_contributions: ritual.contributions.len(),
+        notices: ritual.notices.len(),
+    })
+}
+
+/// Pre-wipe clean gate shared by bare clean and the composed clean prefix.
+pub(crate) fn guard_clean(ctx: &output::Context, path: &Path) -> Result<()> {
+    let ritual = world::plan_clean(path)?;
+    render_ritual(ctx, &ritual.notices, &ritual.contributions);
+    refuse_undispatchable_clean(&ritual.contributions)
+}
+
+fn refuse_undispatchable_clean(contributions: &[LifecycleContributionReport]) -> Result<()> {
+    if contributions.is_empty() {
+        return Ok(());
+    }
+    let rows = contributions
+        .iter()
+        .map(|row| {
+            format!(
+                "`{}` (handler={}, provider={})",
+                row.key, row.handler, row.provider,
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(", ");
+    bail!(
+        "phase:clean has {} planned contribution(s) that R2.3 cannot dispatch handlers yet: {rows}; disable the exact key(s) before wiping or wait for handler dispatch",
+        contributions.len(),
+    )
 }
 
 fn status_name(status: &str) -> &str {

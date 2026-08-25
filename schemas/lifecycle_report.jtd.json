@@ -41,9 +41,63 @@
         "x-empty": "emit",
         "description": "One outcome for every phase in `chain`, in the same order."
       }
+    },
+    "contributions": {
+      "elements": {
+        "ref": "lifecycle_contribution_report"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Effective lifecycle contributions in canonical execution order. R2.3 reports these as planned; it does not dispatch handlers."
+      }
+    },
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Non-fatal collection notices that must remain observable in structured output."
+      }
     }
   },
   "definitions": {
+    "lifecycle_contribution_report": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "point": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "metadata": {
+            "description": "R2.3 writes `planned`: the handler was selected and narrated, never run."
+          }
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
     "lifecycle_step_report": {
       "properties": {
         "phase": {
@@ -52,7 +106,7 @@
         "status": {
           "type": "string",
           "metadata": {
-            "description": "Phase outcome vocabulary. R2.2 writes `ok`, `fresh`, or `no-op`; later engine slices may add already normative outcomes without breaking older readers."
+            "description": "Phase outcome vocabulary. R2.2/R2.3 write `ok`, `fresh`, `no-op`, or `planned`; later engine slices may add already normative outcomes without breaking older readers."
           }
         }
       }

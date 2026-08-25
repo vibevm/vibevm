@@ -43,6 +43,7 @@ pub fn run(
     if args.chain.is_some() {
         return super::lifecycle::run_clean(ctx, args, prepare_install, root_offline);
     }
+    super::lifecycle::guard_clean(ctx, &args.path)?;
     wipe(ctx, &args.path, args.assume_yes)?;
     Ok(())
 }
