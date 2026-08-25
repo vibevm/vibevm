@@ -11,5 +11,10 @@ homepage.workspace = true
 description = "Deterministic lifecycle phase model and request chaining for vibe"
 
 [dependencies]
+glob.workspace = true
 specmark.workspace = true
+thiserror.workspace = true
 vibe-core.workspace = true
+
+[dev-dependencies]
+toml.workspace = true

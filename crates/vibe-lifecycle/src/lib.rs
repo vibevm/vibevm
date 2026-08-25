@@ -34,14 +34,69 @@
 //! assert_eq!(core_point.to_string(), "phase:build");
 //! assert_eq!("compile:pass".parse(), Ok(CompilePoint::Pass));
 //! ```
+//!
+//! Collection is pure: callers hand the crate an already selected installed
+//! world in canonical lock order, then query the retained registry for a
+//! subject-specific execution plan.
+//!
+//! ```
+//! use std::path::PathBuf;
+//! use vibe_core::{ContentHash, Group, PackageKind, PackageName};
+//! use vibe_core::manifest::{ExtensionDecl, ExtensionHandler, ExtensionsControl};
+//! use vibe_lifecycle::{
+//!     DependencyExtensionSource, DependencyProvider, DependencyProviderId,
+//!     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
+//!     SelectorSubject, collect_extensions,
+//! };
+//!
+//! let id = DependencyProviderId::new(
+//!     Group::parse("org.demo").unwrap(),
+//!     PackageName::parse("tools").unwrap(),
+//! );
+//! let declaration = ExtensionDecl {
+//!     id: "announce".into(),
+//!     point: "phase:build".parse().unwrap(),
+//!     handler: ExtensionHandler::Builtin { name: "log".into() },
+//!     config: None, auto: None, inputs: None, applies_to: None,
+//!     compiler_internals: None, pass: None, when: None,
+//! };
+//! let world = ExtensionWorld {
+//!     installed: vec![DependencyExtensionSource {
+//!         provider: DependencyProvider {
+//!             id, root: PathBuf::from("vibedeps/tools"), version: "1.0.0".into(),
+//!             kind: PackageKind::Tool,
+//!             content_hash: ContentHash::parse("sha256:aa").unwrap(),
+//!         },
+//!         declarations: vec![declaration],
+//!     }],
+//!     host: HostExtensionSource {
+//!         provider: HostProvider {
+//!             identity: HostIdentity::ungrouped_project("demo"), root: PathBuf::from("."),
+//!             version: "0.1.0".into(), kind: None, content_hash: None,
+//!         },
+//!         declarations: Vec::new(), controls: ExtensionsControl::default(),
+//!     },
+//!     effective_stack: None,
+//! };
+//! let registry = collect_extensions(world).unwrap();
+//! let point = "phase:build".parse().unwrap();
+//! assert_eq!(registry.plan(point, SelectorSubject::unscoped()).len(), 1);
+//! ```
 
 #![forbid(unsafe_code)]
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 mod chain;
+mod registry;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
+pub use registry::{
+    CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
+    DependencyProvider, DependencyProviderId, ExtensionProvider, ExtensionRegistry,
+    ExtensionRegistryRow, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
+    RegistryView, SelectorSubject, collect_extensions,
+};
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,
     Phase, PhaseParseError, PhasePoint, PhasePointParseError, SlotPoint, SlotPointParseError,
