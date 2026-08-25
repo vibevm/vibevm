@@ -32,4 +32,7 @@ mod point;
 
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
 pub use phase::{DEFAULT_PHASES, Phase, PhaseParseError};
-pub use point::{PhasePoint, PhasePointParseError};
+pub use point::{
+    CompilePoint, CompilePointParseError, ExtensionPoint, ExtensionPointParseError, PhasePoint,
+    PhasePointParseError, SlotPoint, SlotPointParseError,
+};
