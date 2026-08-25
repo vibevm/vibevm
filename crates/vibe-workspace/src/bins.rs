@@ -8,12 +8,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch");
 
+use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{BinaryDecl, Lockfile, Manifest};
 
-use crate::Workspace;
+use crate::{Workspace, vibedeps};
 
 /// This cell's failure surface (one thiserror enum per layer; every
 /// message cites its violated REQ and a fix surface).
@@ -62,6 +63,31 @@ pub enum BinsError {
 
     #[error(
         "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build: \
+         declared binary `{name}` has slot `{slot}` outside the authoritative \
+         dependency root `{root}`: {reason}; fix surface: re-run `vibe install` so the \
+         lockfile and materialised slot use the canonical layout"
+    )]
+    MalformedSlot {
+        name: String,
+        slot: PathBuf,
+        root: PathBuf,
+        reason: String,
+    },
+
+    #[error(
+        "violates spec://org.vibevm.core/vibevm/common/PROP-054#IN-SLOT-BUILD: \
+         preparing build-output ignores for `{name}` at `{root}`: {detail}; \
+         fix surface: make the dependency root writable and ensure `.gitignore` \
+         is an independent regular file with exactly one hardlink"
+    )]
+    BuildOutputIgnore {
+        name: String,
+        root: PathBuf,
+        detail: String,
+    },
+
+    #[error(
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build: \
          spawning cargo for `{name}`: {detail}; fix surface: install a Rust \
          toolchain — package binaries build with the consumer's cargo"
     )]
@@ -91,6 +117,8 @@ pub struct DeclaredBinary {
     pub package: String,
     /// The declaring package's group (consent allow-listing).
     pub group: String,
+    /// Authoritative dependency root that owns `slot`.
+    pub vibedeps_root: PathBuf,
     /// Absolute slot directory.
     pub slot: PathBuf,
 }
@@ -121,6 +149,7 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
+    ///     vibedeps_root: vibe_core::layout::current_vibedeps_root(),
     ///     slot: vibe_core::layout::current_vibedeps_root()
     ///         .join("org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
@@ -162,6 +191,7 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
+    ///     vibedeps_root: vibe_core::layout::current_vibedeps_root(),
     ///     slot: vibe_core::layout::current_vibedeps_root()
     ///         .join("org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
@@ -188,6 +218,7 @@ pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, Bins
         path: project_root.to_path_buf(),
         detail: e.to_string(),
     })?;
+    let vibedeps_root = ws.vibedeps_root();
     let mut out = Vec::new();
     let lock_path = ws.lockfile_path();
     if !lock_path.exists() {
@@ -211,6 +242,7 @@ pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, Bins
                 decl: decl.clone(),
                 package: format!("{}/{}", pkg.group, pkg.name),
                 group: pkg.group.to_string(),
+                vibedeps_root: vibedeps_root.clone(),
                 slot: slot.clone(),
             });
         }
@@ -257,6 +289,7 @@ pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>
         path: project_root.to_path_buf(),
         detail: e.to_string(),
     })?;
+    let vibedeps_root = ws.vibedeps_root();
     let mut out = Vec::new();
     let lock_path = ws.lockfile_path();
     if !lock_path.exists() {
@@ -285,6 +318,7 @@ pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>
                     decl: bin_decl.clone(),
                     package: format!("{}/{}", pkg.group, pkg.name),
                     group: pkg.group.to_string(),
+                    vibedeps_root: vibedeps_root.clone(),
                     slot: slot.clone(),
                 },
                 version: pkg.version.to_string(),
@@ -319,6 +353,7 @@ pub fn build_binary(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsEr
         bin.package,
         bin.slot.display()
     );
+    prepare_build_output_ignores(bin)?;
     let status = std::process::Command::new("cargo")
         .arg("build")
         .arg("--release")
@@ -341,6 +376,51 @@ pub fn build_binary(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsEr
             artifact: bin.release_artifact(),
         });
     }
+    Ok(())
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build")]
+fn prepare_build_output_ignores(bin: &DeclaredBinary) -> Result<(), BinsError> {
+    let root = &bin.vibedeps_root;
+    if root.file_name() != Some(OsStr::new(vibedeps::VIBEDEPS_DIR)) {
+        return Err(BinsError::MalformedSlot {
+            name: bin.decl.name.clone(),
+            slot: bin.slot.clone(),
+            root: root.clone(),
+            reason: format!(
+                "the authoritative root's final component must be exactly `{}`",
+                vibedeps::VIBEDEPS_DIR
+            ),
+        });
+    }
+    let relative = bin
+        .slot
+        .strip_prefix(root)
+        .map_err(|_| BinsError::MalformedSlot {
+            name: bin.decl.name.clone(),
+            slot: bin.slot.clone(),
+            root: root.clone(),
+            reason: "slot is not beneath the authoritative root".to_string(),
+        })?;
+    let components: Vec<_> = relative.components().collect();
+    if components.len() != 2
+        || !components
+            .iter()
+            .all(|component| matches!(component, std::path::Component::Normal(_)))
+    {
+        return Err(BinsError::MalformedSlot {
+            name: bin.decl.name.clone(),
+            slot: bin.slot.clone(),
+            root: root.clone(),
+            reason: "slot must be exactly `<root>/<coordinate>/<version>` using two normal path components"
+                .to_string(),
+        });
+    }
+    vibedeps::ensure_build_output_ignores(root).map_err(|error| BinsError::BuildOutputIgnore {
+        name: bin.decl.name.clone(),
+        root: root.to_path_buf(),
+        detail: error.to_string(),
+    })?;
     Ok(())
 }
 
@@ -408,6 +488,10 @@ crate = "crates/typescript-ai-native-tcg"
         assert_eq!(bins.len(), 1);
         assert_eq!(bins[0].decl.name, "typescript-ai-native-tcg");
         assert_eq!(bins[0].group, "org.vibevm");
+        assert_eq!(
+            bins[0].vibedeps_root,
+            dir.path().join(vibe_core::layout::current_vibedeps_root())
+        );
         // No build on disk in the fixture slot → dispatch resolves to the
         // release path (the stable fallback).
         assert!(bins[0].artifact().to_string_lossy().contains("release"));
@@ -424,6 +508,7 @@ crate = "crates/typescript-ai-native-tcg"
             },
             package: "org.vibevm/typescript-ai-native-lang".into(),
             group: "org.vibevm".into(),
+            vibedeps_root: dir.path().to_path_buf(),
             slot: dir.path().to_path_buf(),
         };
         // Nothing built yet → dispatch falls back to the release path.
@@ -477,3 +562,7 @@ crate = "crates/typescript-ai-native-tcg"
         assert!(consent_to_build(&foreign, true).is_ok(), "explicit consent");
     }
 }
+
+#[cfg(test)]
+#[path = "bins/tests_build_ignore.rs"]
+mod tests_build_ignore;

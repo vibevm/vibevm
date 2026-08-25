@@ -28,5 +28,15 @@ vibe-facts.workspace = true
 vibe-spec.workspace = true
 vibe-wire.workspace = true
 
+[target.'cfg(unix)'.dependencies]
+# O_NOFOLLOW and O_NONBLOCK are the platform constants std's safe
+# OpenOptionsExt requires for race-safe opens without unsafe code.
+libc.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+# Safe wrappers around by-handle metadata keep identity and hardlink checks
+# compatible with the workspace's `forbid(unsafe_code)` contract.
+winapi-util.workspace = true
+
 [dev-dependencies]
 proptest.workspace = true

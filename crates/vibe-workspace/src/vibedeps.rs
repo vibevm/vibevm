@@ -30,10 +30,12 @@ use vibe_core::{ContentHash, Group, layout};
 
 use crate::{WorkspaceError, layout_paths};
 
+mod build_ignore;
 mod derived;
 mod slot_diff;
 mod slot_record;
 
+pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
 pub(crate) use derived::materialise_with_spec_format_report;
 pub use derived::{
     CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,

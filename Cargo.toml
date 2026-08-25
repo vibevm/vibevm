@@ -129,6 +129,8 @@ quick-xml = "0.41.0"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
+libc = "0.2"
+winapi-util = "0.1.11"
 anyhow = "1"
 arboard = "3.4"
 thiserror = "2"
