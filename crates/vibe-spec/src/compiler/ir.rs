@@ -7,8 +7,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
+use std::collections::BTreeMap;
+
 use crate::{DocTree, RenameEntry, SpecAddress};
 
+use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::source_snapshot::SourceResolutionSnapshot;
 
 /// One of the five progressively lowered compiler representations.
@@ -289,6 +292,7 @@ pub(crate) struct ClosureDocument {
     pub(crate) address: DocumentAddress,
     pub(crate) origin: String,
     pub(crate) tree: DocTree,
+    pub(crate) aliases: BTreeMap<String, SpecAddress>,
 }
 
 /// The three authored dependency relations represented by the closure.
@@ -341,6 +345,7 @@ pub(crate) struct ClosureIr {
     pub(crate) contributions: Vec<ClosureContribution>,
     pub(crate) renames: Vec<OriginRename>,
     pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
+    pub(crate) pending_embeds: Option<EmbedResolutionSnapshot>,
 }
 
 /// The single shared frame surrounding one assembled lane.

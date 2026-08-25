@@ -2,6 +2,7 @@ use specmark::verifies;
 
 use super::*;
 use crate::DocTree;
+use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
 use crate::compiler::ir::{SourceFormatId, SourceIr};
 use crate::compiler::pass::IrPayload;
 use crate::compiler::source_snapshot::{ExpansionObservation, SourceResolutionSnapshot};
@@ -184,4 +185,27 @@ fn close_transports_invalid_pending_sources_without_judging_membership() {
     assert_eq!(closure.nodes.len(), 1);
     assert!(closure.edges.is_empty());
     assert_eq!(closure.pending_sources, Some(pending));
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE")]
+fn close_transports_pending_embeds_without_judging_membership() {
+    let key = "spec://org.demo/pkg/boot/root#root";
+    let pending = EmbedResolutionSnapshot {
+        discovery_order: vec!["spec://org.demo/pkg/common/piece#root".to_string()],
+        ..Default::default()
+    };
+    let state = CloseState::default();
+    state.set_pending_embeds(pending.clone());
+
+    let closure = close_documents(
+        &spec(key),
+        Documents::new(vec![document(key, "# Root {#root}\n")]),
+        &state,
+    )
+    .unwrap();
+
+    assert_eq!(closure.nodes.len(), 1);
+    assert!(closure.edges.is_empty());
+    assert_eq!(closure.pending_embeds, Some(pending));
 }

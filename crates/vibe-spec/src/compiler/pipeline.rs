@@ -125,11 +125,9 @@ impl CompilerPipeline {
 
     /// Run the declared per-document schedule through its gather boundary.
     ///
-    /// R3 migrates the built-ins one at a time. This is the executable seam for
-    /// that progression: while only `parse` has moved, its `SourceIr ->
-    /// DocumentIr` result still crosses the one explicit [`Documents`] gather
-    /// before the legacy artifact phases continue. Once `close` moves, the full
-    /// [`CompilerPipeline::run`] path takes over without changing cardinality.
+    /// R3 migrates the built-ins one at a time. Every `SourceIr -> DocumentIr`
+    /// result crosses this one explicit [`Documents`] gather before the named
+    /// whole-artifact segment runs.
     pub(crate) fn run_documents(
         &self,
         sources: Vec<SourceIr>,
@@ -140,10 +138,10 @@ impl CompilerPipeline {
 
     /// Run the per-document segment for one newly discovered addressed source.
     ///
-    /// Close discovers a finite worklist from parsed directives, so the full
-    /// vector does not exist before the first parse invocation. Every call
-    /// still traverses this manager's declared document segment; gathering is
-    /// explicit and happens exactly once after discovery.
+    /// The scheduler discovers a finite worklist from parsed directives, so
+    /// the full vector does not exist before the first parse invocation. Every
+    /// call still traverses this manager's declared document segment;
+    /// gathering is explicit and happens exactly once after discovery.
     pub(crate) fn run_document(
         &self,
         source: SourceIr,
@@ -157,7 +155,7 @@ impl CompilerPipeline {
         self.gather.run(documents)
     }
 
-    /// Run the declared artifact prefix through the named `close` lowering.
+    /// Run the declared artifact prefix through its last closure-level pass.
     pub(crate) fn run_to_closure(
         &self,
         documents: Documents,
@@ -168,7 +166,7 @@ impl CompilerPipeline {
             self.artifact.first_input(),
         )?;
         self.expect_boundary(
-            "artifact close output",
+            "artifact closure output",
             CLOSURE_ARTIFACT,
             self.artifact.last_output(),
         )?;
@@ -176,7 +174,7 @@ impl CompilerPipeline {
         match output {
             AnyIr::Closure(closure) => Ok(closure),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
-                boundary: "artifact close output",
+                boundary: "artifact closure output",
                 expected: CLOSURE_ARTIFACT,
                 actual: other.shape(),
             }),

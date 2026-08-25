@@ -1,7 +1,6 @@
-//! Byte-level characterization of the one-seed compiler that R3 will split
-//! into explicit IR levels and named passes. These tests call only today's
-//! public plain/qualified entry points: they are the before-refactor oracle,
-//! not a sketch of the future types or their cardinality.
+//! Byte-level characterization of the one-seed compiler while R3 splits it
+//! into explicit IR levels and named passes. Public-entry tests remain the
+//! compatibility oracle rather than a sketch of future carrier shapes.
 
 use specmark::verifies;
 use std::cell::{Cell, RefCell};
@@ -26,6 +25,7 @@ fn legacy_continuation_emits_the_close_carrier_body() {
             address: DocumentAddress::Spec(addr),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Closed {#closed}\nCLOSE-BODY"),
+            aliases: Default::default(),
         }],
         edges: Vec::new(),
         contributions: vec![ClosureContribution::Normal {
@@ -38,10 +38,9 @@ fn legacy_continuation_emits_the_close_carrier_body() {
         }],
         renames: Vec::new(),
         pending_sources: None,
+        pending_embeds: None,
     };
-    let source = MockSource::new(&[(key, "# Raw {#raw}\nRAW-BODY\n")]);
-
-    let (out, renames) = compile_static_continuation(closure, &source, CompileMode::Plain).unwrap();
+    let (out, renames) = compile_static_continuation(closure, CompileMode::Plain).unwrap();
 
     assert!(out.contains("CLOSE-BODY"), "{out}");
     assert!(!out.contains("RAW-BODY"), "{out}");
@@ -241,7 +240,7 @@ impl SectionSource for SourceEmbedOverlap {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-fn source_target_that_is_also_embedded_is_observed_again_by_embed_owner() {
+fn source_embed_overlap_shares_one_parse_but_replays_both_semantics() {
     let seed = "spec://org.demo/pkg/contract/api#root";
     let target = SpecAddress::parse("spec://org.demo/pkg/common/shared#root").unwrap();
     let source = SourceEmbedOverlap {
@@ -256,9 +255,9 @@ fn source_target_that_is_also_embedded_is_observed_again_by_embed_owner() {
 
     let out = compile_static(&SpecAddress::parse(seed).unwrap(), &source).unwrap();
 
-    assert_eq!(source.target_reads.get(), 2);
-    assert!(out.contains("SOURCE-OWNER-VIEW"), "{out}");
-    assert!(out.contains("EMBED-OWNER-VIEW"), "{out}");
+    assert_eq!(source.target_reads.get(), 1);
+    assert_eq!(out.matches("SOURCE-OWNER-VIEW").count(), 2, "{out}");
+    assert!(!out.contains("EMBED-OWNER-VIEW"), "{out}");
 }
 
 #[test]

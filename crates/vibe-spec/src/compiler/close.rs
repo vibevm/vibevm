@@ -8,6 +8,7 @@ use std::sync::{Arc, Mutex};
 use crate::use_graph::{UseGraphError, topology, use_addresses};
 use crate::{Authority, SpecAddress};
 
+use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
     ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr,
     ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr, Documents,
@@ -32,6 +33,7 @@ struct LoadFailure {
 pub(crate) struct CloseState {
     failures: Arc<Mutex<HashMap<String, LoadFailure>>>,
     pending_sources: Arc<Mutex<Option<SourceResolutionSnapshot>>>,
+    pending_embeds: Arc<Mutex<Option<EmbedResolutionSnapshot>>>,
 }
 
 impl CloseState {
@@ -67,6 +69,23 @@ impl CloseState {
         self.pending_sources
             .lock()
             .expect("close pending-source state is not poisoned")
+            .clone()
+            .unwrap_or_default()
+    }
+
+    pub(crate) fn set_pending_embeds(&self, snapshot: EmbedResolutionSnapshot) {
+        let previous = self
+            .pending_embeds
+            .lock()
+            .expect("close pending-embed state is not poisoned")
+            .replace(snapshot);
+        assert!(previous.is_none(), "pending embed snapshot is set once");
+    }
+
+    fn pending_embeds(&self) -> EmbedResolutionSnapshot {
+        self.pending_embeds
+            .lock()
+            .expect("close pending-embed state is not poisoned")
             .clone()
             .unwrap_or_default()
     }
@@ -165,6 +184,7 @@ fn close_documents(
             origin: document_origin(&address),
             address: DocumentAddress::Spec(address),
             tree,
+            aliases: Default::default(),
         });
     }
 
@@ -203,6 +223,7 @@ fn close_documents(
         }],
         renames: Vec::new(),
         pending_sources: Some(state.pending_sources()),
+        pending_embeds: Some(state.pending_embeds()),
     })
 }
 

@@ -18,6 +18,7 @@ fn node(raw: &str, origin: &str, body: &str) -> ClosureDocument {
         address: DocumentAddress::Spec(spec(raw)),
         origin: origin.to_string(),
         tree: DocTree::parse(body),
+        aliases: Default::default(),
     }
 }
 
@@ -112,6 +113,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         },
         origin: "host".to_string(),
         tree: DocTree::parse("SIMPLE-AFTER-DOCUMENT-PASSES"),
+        aliases: Default::default(),
     };
     let closure = ClosureIr {
         artifact: ArtifactId::new("static-xml").unwrap(),
@@ -162,6 +164,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         ],
         renames: Vec::new(),
         pending_sources: None,
+        pending_embeds: None,
     };
 
     let ClosureContribution::Normal {

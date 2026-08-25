@@ -2,12 +2,13 @@
 //!
 //! `compile_static` runs the phases in the fixed order the spec pins:
 //!
-//! 1. **parse / close** — the scheduler loads the finite explicit-`#use`
-//!    worklist; named `parse` lowers each source, then named `close` owns graph
-//!    cycles and dependency-before-dependent order (§7.2, §8 phase 2);
-//! 2. **source-merge** — fold every declared `#source` into `contract`, in
-//!    declaration order (§7.3);
-//! 3. **embed-expand** — splice every `#embed` to a fixed point (§7.1);
+//! 1. **parse / close** — the scheduler loads the finite addressed worklist;
+//!    named `parse` lowers each source, then named `close` owns explicit-`#use`
+//!    graph cycles and dependency-before-dependent order (§7.2, §8 phase 2);
+//! 2. **source-merge** — named `merge` folds every declared `#source` into
+//!    `contract`, in declaration order (§7.3);
+//! 3. **embed-expand** — named `embed` splices every surviving `#embed` to a
+//!    fixed point (§7.1);
 //! 4. **emit** — concatenate the nodes in topological order, each wrapped in
 //!    open/close markers (§11), so the output is reversible.
 //!
@@ -21,14 +22,11 @@
 //! semantics the structural loader is later checked against.
 
 use std::collections::BTreeMap;
-use std::collections::HashMap;
-use std::collections::HashSet;
 use std::fmt::Write as _;
 
 use crate::address::{SpecAddress, SpecAddressError};
 use crate::compiler::ir::{ClosureContribution, ClosureIr, DocumentAddress};
-use crate::directives::{DirectiveKind, Directives};
-use crate::embed::{EmbedError, SectionSource, expand_embeds};
+use crate::embed::{EmbedError, SectionSource};
 use crate::gate::DuplicateId;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
 use crate::use_graph::UseGraphError;
@@ -124,7 +122,7 @@ enum CompileMode {
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// schedule, then the legacy embed/qualify/absorb/link/assemble/emit tail.
+/// → embed schedule, then the legacy qualify/absorb/link/assemble/emit tail.
 /// In [`CompileMode::QualifyPerNode`] each node is qualified under its own
 /// origin before emission and a second pass resolves cross-node short
 /// references; in [`CompileMode::Plain`] the body is emitted as-authored and
@@ -135,57 +133,54 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_merged_closure(seed, source)?;
-    compile_static_continuation(closure, source, mode)
+    let closure = crate::compiler::builtin::compile_embedded_closure(seed, source)?;
+    compile_static_continuation(closure, mode)
+}
+
+struct ContinuationNode {
+    key: String,
+    address: SpecAddress,
+    origin: String,
+    text: String,
+    aliases: BTreeMap<String, SpecAddress>,
 }
 
 /// Bridge from the migrated closure level into the still-legacy artifact tail.
 ///
-/// Close owns explicit-use topology and named merge owns source observation,
-/// replay, folding and graph membership. The tail reads the merged trees
-/// directly; its overlay caches only emitted use-closure documents, so `#embed`
-/// loading still falls through to the legacy embed owner.
+/// Close owns explicit-use topology, named merge owns source replay/folding,
+/// and named embed owns recursive splicing and embed membership. The tail reads
+/// the expanded trees and aliases directly and performs no source access.
 fn compile_static_continuation(
     closure: ClosureIr,
-    source: &impl SectionSource,
     mode: CompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
+    assert!(
+        closure.pending_sources.is_none(),
+        "legacy continuation requires the named merge pass"
+    );
+    assert!(
+        closure.pending_embeds.is_none(),
+        "legacy continuation requires the named embed pass"
+    );
     let qualify = matches!(mode, CompileMode::QualifyPerNode);
     let emission_order = match closure.contributions.as_slice() {
         [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
         _ => unreachable!("one-seed compatibility close returns one normal contribution"),
     };
-    let cached_bodies: HashMap<String, String> = emission_order
-        .iter()
-        .map(|node_id| match &closure.nodes[node_id.0].address {
-            DocumentAddress::Spec(address) => (
-                address.without_pin(),
-                closure.nodes[node_id.0]
-                    .tree
-                    .text(closure.nodes[node_id.0].tree.root()),
-            ),
-            DocumentAddress::StaticEntry { .. } => {
-                unreachable!("one-seed compatibility close contains only spec addresses")
-            }
-        })
-        .collect();
-    let closure_source = ClosureSectionSource {
-        cached_bodies: &cached_bodies,
-        fallback: source,
-    };
-    let texts: Vec<(String, SpecAddress, String, String)> = emission_order
+    let texts: Vec<ContinuationNode> = emission_order
         .into_iter()
         .map(|node_id| {
             let node = &closure.nodes[node_id.0];
             let DocumentAddress::Spec(address) = &node.address else {
                 unreachable!("one-seed compatibility close contains only spec addresses")
             };
-            (
-                address.without_pin(),
-                address.clone(),
-                node.origin.clone(),
-                node.tree.text(node.tree.root()),
-            )
+            ContinuationNode {
+                key: address.without_pin(),
+                address: address.clone(),
+                origin: node.origin.clone(),
+                text: node.tree.text(node.tree.root()),
+                aliases: node.aliases.clone(),
+            }
         })
         .collect();
 
@@ -199,30 +194,31 @@ fn compile_static_continuation(
     let absorbed: Vec<bool> = texts
         .iter()
         .enumerate()
-        .map(|(i, (_, addr, _, text))| {
-            texts
-                .iter()
-                .enumerate()
-                .any(|(j, (_, other, _, other_text))| {
-                    i != j
-                        && addr.authority == other.authority
-                        && addr.doc_path == other.doc_path
-                        && (text.len() < other_text.len() && other_text.contains(text.as_str())
-                            || text == other_text && j < i)
-                })
+        .map(|(i, node)| {
+            texts.iter().enumerate().any(|(j, other)| {
+                i != j
+                    && node.address.authority == other.address.authority
+                    && node.address.doc_path == other.address.doc_path
+                    && (node.text.len() < other.text.len()
+                        && other.text.contains(node.text.as_str())
+                        || node.text == other.text && j < i)
+            })
         })
         .collect();
 
     let mut out = String::new();
     let mut renames: Vec<(String, RenameEntry)> = Vec::new();
-    for (i, (key, addr, origin, text)) in texts.into_iter().enumerate() {
+    for (i, node) in texts.into_iter().enumerate() {
         if absorbed[i] {
             continue;
         }
-
-        // phase 4 — embed over the already source-merged body.
-        let body = strip_directive_lines(&text, &[DirectiveKind::Use, DirectiveKind::Source]);
-        let expanded = expand_embeds(&body, &closure_source)?;
+        let ContinuationNode {
+            key,
+            address: addr,
+            origin,
+            text,
+            aliases,
+        } = node;
 
         // B-011 §7.4 (PROP-035 §8 phase 5): rewrite every `@!<Alias>` to the
         // full `@spec://<target>` it denotes. The alias table is parsed from the
@@ -232,8 +228,7 @@ fn compile_static_continuation(
         // lane is then self-describing without the alias table, and resolvable
         // after any future cleaning — the alias binds to the address, never to
         // compiled text.
-        let aliases = Directives::parse(&text).aliases;
-        let emitted = rewrite_at_bang(&expanded, &aliases);
+        let emitted = rewrite_at_bang(&text, &aliases);
 
         // B-006 rider (PROP-035 §8 phase 5): in qualified mode each node's
         // emitted body is qualified under ITS OWN authoring origin — derived
@@ -275,25 +270,6 @@ fn compile_static_continuation(
     Ok((out, renames))
 }
 
-struct ClosureSectionSource<'a, S> {
-    cached_bodies: &'a HashMap<String, String>,
-    fallback: &'a S,
-}
-
-impl<S: SectionSource> SectionSource for ClosureSectionSource<'_, S> {
-    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
-        self.cached_bodies
-            .get(&address.without_pin())
-            .cloned()
-            .map(Ok)
-            .unwrap_or_else(|| self.fallback.section_text(address))
-    }
-
-    fn expand_pattern(&self, address: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
-        self.fallback.expand_pattern(address)
-    }
-}
-
 /// The authoring origin of a closure node — `<group>/<name>` for a package, the
 /// host token for the host project (PROP-035 §6). Derived from the node's topo
 /// key by the same authority half `normal_seed` builds a coordinate from, so a
@@ -315,27 +291,6 @@ fn node_slug_origin(addr: &SpecAddress, origin: &str) -> String {
         return origin.to_string();
     }
     format!("{origin}/{}", addr.doc_path.replace('/', "."))
-}
-
-/// Remove directive lines of the given kinds. `#use` is resolved by the
-/// ordering and `#source` by the fold, so both would be leftovers in the
-/// compiled output.
-fn strip_directive_lines(text: &str, kinds: &[DirectiveKind]) -> String {
-    let directives = Directives::parse(text);
-    let strip: HashSet<usize> = directives
-        .directives
-        .iter()
-        .filter(|d| kinds.contains(&d.kind))
-        .map(|d| d.line)
-        .collect();
-
-    let kept: Vec<&str> = text
-        .lines()
-        .enumerate()
-        .filter(|(i, _)| !strip.contains(i))
-        .map(|(_, line)| line)
-        .collect();
-    kept.join("\n")
 }
 
 /// Rewrite every `@!<Alias>` in `text` to the full `@spec://<target>` its alias
@@ -499,6 +454,8 @@ fn rewrite_cross_node_links(
 mod characterization_tests;
 #[cfg(test)]
 mod collision_tests;
+#[cfg(test)]
+mod embed_characterization_tests;
 #[cfg(test)]
 mod fold_tests;
 #[cfg(test)]

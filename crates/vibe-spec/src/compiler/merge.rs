@@ -173,6 +173,7 @@ fn merge_closure(mut closure: ClosureIr) -> Result<ClosureIr, MergePassError> {
             address: DocumentAddress::Spec(address.clone()),
             origin: document_origin(address),
             tree: document.tree().clone(),
+            aliases: Default::default(),
         });
         node_ids.insert(key.clone(), id);
     }

@@ -57,26 +57,44 @@ pub enum EmbedError {
 
 /// Expand every `#embed` in `text` to a fixed point.
 pub fn expand_embeds(text: &str, source: &impl SectionSource) -> Result<String, EmbedError> {
+    let mut resolve = |address: &SpecAddress| source.section_text(address);
+    let mut edge = |_from: &str, _ordinal: usize, _to: &SpecAddress| {};
+    expand_with(text, "", &mut resolve, &mut edge)
+}
+
+/// Shared byte engine used by the public helper and the named compiler pass.
+/// `edge` receives the pinless source context and the embed directive's ordinal
+/// among embeds in that context, a stable authored-occurrence identity even
+/// when pre-embed normalization removes preceding use/source lines.
+pub(crate) fn expand_with(
+    text: &str,
+    root_context: &str,
+    resolve: &mut impl FnMut(&SpecAddress) -> Result<String, String>,
+    edge: &mut impl FnMut(&str, usize, &SpecAddress),
+) -> Result<String, EmbedError> {
     let mut stack = Vec::new();
-    expand_rec(text, source, &mut stack)
+    expand_rec(text, root_context, resolve, edge, &mut stack)
 }
 
 fn expand_rec(
     text: &str,
-    source: &impl SectionSource,
+    context: &str,
+    resolve: &mut impl FnMut(&SpecAddress) -> Result<String, String>,
+    edge: &mut impl FnMut(&str, usize, &SpecAddress),
     stack: &mut Vec<String>,
 ) -> Result<String, EmbedError> {
     let directives = Directives::parse(text);
-    let embeds: HashMap<usize, &SpecAddress> = directives
+    let embeds: HashMap<usize, (usize, &SpecAddress)> = directives
         .directives
         .iter()
         .filter(|d| d.kind == DirectiveKind::Embed)
-        .map(|d| (d.line, &d.address))
+        .enumerate()
+        .map(|(ordinal, d)| (d.line, (ordinal, &d.address)))
         .collect();
 
     let mut out = String::new();
     for (i, line) in text.lines().enumerate() {
-        let Some(addr) = embeds.get(&i) else {
+        let Some((ordinal, addr)) = embeds.get(&i) else {
             out.push_str(line);
             out.push('\n');
             continue;
@@ -89,15 +107,14 @@ fn expand_rec(
             return Err(EmbedError::Cycle(path));
         }
 
-        let section = source
-            .section_text(addr)
-            .map_err(|reason| EmbedError::Unresolved {
-                addr: addr.to_string(),
-                reason,
-            })?;
+        let section = resolve(addr).map_err(|reason| EmbedError::Unresolved {
+            addr: addr.to_string(),
+            reason,
+        })?;
 
+        edge(context, *ordinal, addr);
         stack.push(key.clone());
-        let expanded = expand_rec(&section, source, stack)?;
+        let expanded = expand_rec(&section, &key, resolve, edge, stack)?;
         stack.pop();
 
         writeln!(out, "<!-- embed: {key} -->").unwrap();
@@ -260,6 +277,28 @@ mod tests {
     }
 
     #[test]
+    fn cycle_is_detected_before_the_repeated_address_is_resolved_again() {
+        let a = "spec://org.vibevm.core/vibevm/a#x";
+        let b = "spec://org.vibevm.core/vibevm/b#y";
+        let mut resolved = Vec::new();
+        let mut resolve = |address: &SpecAddress| {
+            let key = address.without_pin();
+            resolved.push(key.clone());
+            match key.as_str() {
+                key if key == a => Ok(format!("#embed {b}")),
+                key if key == b => Ok(format!("#embed {a}")),
+                _ => unreachable!("unexpected embed target"),
+            }
+        };
+        let mut edge = |_from: &str, _ordinal: usize, _to: &SpecAddress| {};
+
+        let error = expand_with(&format!("#embed {a}\n"), "", &mut resolve, &mut edge).unwrap_err();
+
+        assert_eq!(error, EmbedError::Cycle(vec![a.into(), b.into(), a.into()]));
+        assert_eq!(resolved, vec![a, b]);
+    }
+
+    #[test]
     fn reports_an_unresolved_embed() {
         let src = MockSource::new(&[]);
         let err =
@@ -273,6 +312,19 @@ mod tests {
         let out = expand_embeds("#embed spec://org.vibevm.core/vibevm/a#x\n", &src).unwrap();
         assert!(out.contains("<!-- embed: spec://org.vibevm.core/vibevm/a#x -->"));
         assert!(out.contains("<!-- /embed: spec://org.vibevm.core/vibevm/a#x -->"));
+    }
+
+    #[test]
+    fn revision_pin_is_omitted_from_the_exact_embed_marker_key() {
+        let key = "spec://org.vibevm.core/vibevm/a#x";
+        let src = MockSource::new(&[(key, "BODY")]);
+
+        let out = expand_embeds(&format!("#embed {key}~r7\n"), &src).unwrap();
+
+        assert_eq!(
+            out,
+            format!("<!-- embed: {key} -->\nBODY\n<!-- /embed: {key} -->\n")
+        );
     }
 
     /// A [`SectionSource`] backed by a real [`DocTree`]: it resolves an address's

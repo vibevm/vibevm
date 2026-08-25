@@ -32,6 +32,7 @@ fn closure() -> ClosureIr {
             ),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("BODY\n"),
+            aliases: Default::default(),
         }],
         edges: Vec::new(),
         contributions: vec![ClosureContribution::Normal {
@@ -44,6 +45,7 @@ fn closure() -> ClosureIr {
         }],
         renames: Vec::new(),
         pending_sources: None,
+        pending_embeds: None,
     }
 }
 

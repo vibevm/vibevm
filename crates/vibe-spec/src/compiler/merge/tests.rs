@@ -3,6 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use specmark::verifies;
 
 use super::*;
+use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
 use crate::compiler::ir::{ArtifactId, ContributionMeta, SourceFormatId, SourceIr};
 
 fn spec(raw: &str) -> SpecAddress {
@@ -60,6 +61,7 @@ fn closure(root: &str, tree: &str, snapshot: SourceResolutionSnapshot) -> Closur
             address: DocumentAddress::Spec(spec(root)),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse(tree),
+            aliases: Default::default(),
         }],
         edges: Vec::new(),
         contributions: vec![ClosureContribution::Normal {
@@ -72,6 +74,7 @@ fn closure(root: &str, tree: &str, snapshot: SourceResolutionSnapshot) -> Closur
         }],
         renames: Vec::new(),
         pending_sources: Some(snapshot),
+        pending_embeds: None,
     }
 }
 
@@ -94,11 +97,16 @@ fn merge_consumes_pending_snapshot_then_adds_source_membership() {
         vec![(source, vec![spec(source)])],
         &[root],
     );
-    let before = closure(
+    let mut before = closure(
         root,
         &format!("# API {{#root}}\n#source {source}\n"),
         pending,
     );
+    let pending_embeds = EmbedResolutionSnapshot {
+        discovery_order: vec!["spec://org.demo/pkg/common/piece#root".to_string()],
+        ..Default::default()
+    };
+    before.pending_embeds = Some(pending_embeds.clone());
     assert_eq!(before.nodes.len(), 1);
     assert!(before.edges.is_empty());
     assert!(before.pending_sources.is_some());
@@ -106,9 +114,16 @@ fn merge_consumes_pending_snapshot_then_adds_source_membership() {
     let after = merge_closure(before).unwrap();
 
     assert!(after.pending_sources.is_none());
+    assert_eq!(after.pending_embeds, Some(pending_embeds));
     assert_eq!(after.nodes.len(), 2);
     assert_eq!(after.edges.len(), 1);
     assert_eq!(after.edges[0].kind, ClosureEdgeKind::Source);
+    assert!(
+        after
+            .edges
+            .iter()
+            .all(|edge| edge.kind != ClosureEdgeKind::Embed)
+    );
     assert_eq!(
         after.nodes[0].tree.text(after.nodes[0].tree.root()),
         "# API {#root}\n#source spec://org.demo/pkg/source/impl#root\n# Impl {#impl}\nSOURCE"
@@ -155,6 +170,7 @@ fn source_target_that_is_already_a_use_node_reuses_its_id() {
         address: DocumentAddress::Spec(spec(source)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("# Shared {#shared}\nSHARED\n"),
+        aliases: Default::default(),
     });
 
     let output = merge_closure(input).unwrap();
@@ -211,6 +227,7 @@ fn final_membership_follows_close_replay_not_scheduler_preorder() {
         address: DocumentAddress::Spec(spec(a)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(&format!("# A {{#root}}\n#source {source_a}\n")),
+        aliases: Default::default(),
     });
     input.contributions[0] = ClosureContribution::Normal {
         meta: ContributionMeta {
