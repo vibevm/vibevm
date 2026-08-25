@@ -14,10 +14,10 @@ use vibe_core::{ContentHash, Group};
 use vibe_facts::{FactStatus, PackageOverlay, Registry, overlay_file_hash};
 use vibe_specdoc::doc::{Block, Section, SpecDoc, StatusEl, Unit};
 
+use super::slot_diff::{PreparedSlotFile, compute_prepared_payload_hash, reconcile_slot};
 use super::{
     CopyMode, SLOT_RECORD_FILENAME, SlotFile, SlotFileDisposition, SlotRecord,
-    compute_recorded_payload_hash, io_err, place_file, read_slot_record, sha256_file,
-    slot_abs_path, write_slot_record,
+    compute_recorded_payload_hash, io_err, read_slot_record, slot_abs_path,
 };
 use crate::{WorkspaceError, path_to_slash};
 
@@ -82,6 +82,8 @@ pub struct DerivedManifest {
 /// Files already in the target format and every non-spec file copy verbatim.
 /// An opposite-format candidate that the pivot rejects also copies verbatim
 /// and is recorded as `copied`, preserving install availability honestly.
+/// Existing recorded slots are reconciled by output path and hash, so renamed
+/// outputs are removed while unrecorded build artifacts remain untouched.
 #[allow(clippy::too_many_arguments)]
 pub fn materialise_with_spec_format(
     workspace_root: &Path,
@@ -127,17 +129,12 @@ pub fn materialise_with_spec_format(
         });
     }
     super::refuse_reserved_source_record(content_src)?;
-    if slot.exists() {
-        fs::remove_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
-    }
-    fs::create_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
-
     let mut sources = Vec::new();
     collect_files(content_src, content_src, &mut sources)?;
     sources.sort_by(|a, b| a.0.cmp(&b.0));
 
     let mut outputs = BTreeSet::new();
-    let mut written = Vec::new();
+    let mut incoming = Vec::new();
     let mut files = Vec::new();
     for (rel, source) in sources {
         let transformed = transform_file(&source, &rel, spec_format, &package, &overlay)?;
@@ -154,39 +151,29 @@ pub fn materialise_with_spec_format(
                 ),
             });
         }
-        let destination = slot.join(&output_rel);
-        if let Some(parent) = destination.parent() {
-            fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
-        }
-        let disposition = if let Some((_, bytes)) = transformed {
-            fs::write(&destination, bytes).map_err(|e| io_err(&destination, e))?;
-            SlotFileDisposition::Converted
+        let (prepared, disposition) = if let Some((_, bytes)) = transformed {
+            (
+                PreparedSlotFile::from_bytes(output_rel.clone(), bytes),
+                SlotFileDisposition::Converted,
+            )
         } else {
-            place_file(&source, &destination, mode)?;
-            SlotFileDisposition::Copied
+            (
+                PreparedSlotFile::from_source(output_rel.clone(), source, mode)?,
+                SlotFileDisposition::Copied,
+            )
         };
-        let sha256 =
-            sha256_file(&destination).map_err(|reason| WorkspaceError::SpecMaterialization {
-                path: destination.clone(),
-                reason: format!("materialised payload cannot be hashed: {reason}"),
-            })?;
         files.push(SlotFile {
             path: output_wire,
-            sha256,
+            sha256: prepared.sha256().to_string(),
             source: Some(path_to_slash(&rel)),
             disposition: Some(disposition),
         });
-        written.push(output_rel);
+        incoming.push(prepared);
     }
 
-    written.sort();
+    incoming.sort_by(|left, right| left.path().cmp(right.path()));
     files.sort_by(|a, b| a.path.cmp(&b.path));
-    let derived_hash = compute_recorded_payload_hash(&slot, &files).map_err(|reason| {
-        WorkspaceError::SpecMaterialization {
-            path: slot.clone(),
-            reason: format!("derived tree cannot be hashed: {reason}"),
-        }
-    })?;
+    let derived_hash = compute_prepared_payload_hash(&incoming)?;
     let record = SlotRecord {
         schema: super::SLOT_RECORD_SCHEMA,
         source_hash: source_hash.clone(),
@@ -196,11 +183,7 @@ pub fn materialise_with_spec_format(
         derived_hash: Some(derived_hash),
         files,
     };
-    write_slot_record(&slot, &record).map_err(|reason| WorkspaceError::SpecMaterialization {
-        path: slot.join(SLOT_RECORD_FILENAME),
-        reason,
-    })?;
-    Ok(written)
+    reconcile_slot(&slot, &incoming, &record)
 }
 
 /// Read and validate the typed derived manifest from `slot`.

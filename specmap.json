@@ -10521,6 +10521,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_workspace::vibedeps::slot_diff",
+      "end_line": 3,
+      "fingerprint": "tok1:04fdc955ed400e286d2a6811922a01e7aa7befe304e2a3e41f9ef561ad229964"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
       "item_kind": "mod",
       "line": 3,
@@ -19519,6 +19528,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_diff",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE",
       "verb": "implements"
     },
     {

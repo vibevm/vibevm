@@ -288,10 +288,9 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
     assert_eq!(first.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(first.skipped.is_empty());
 
-    // A sentinel inside the slot — a file the source never had. If
-    // the second apply re-copies the slot, `materialise` clears it
-    // first and the sentinel vanishes; if it skips, the sentinel
-    // survives. It is the proof the skip actually skipped.
+    // A sentinel inside the slot — a file the source never had. It remains
+    // outside materialiser ownership; outcome accounting proves this path
+    // skipped without entering the diff materialiser.
     let sentinel = ws_dir
         .path()
         .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
@@ -306,7 +305,7 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
     .unwrap();
     assert!(
         second.materialised.is_empty(),
-        "a present slot must not be re-copied"
+        "a present slot must not be rematerialised"
     );
     assert_eq!(second.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(
@@ -338,22 +337,22 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
     let sentinel = ws_dir
         .path()
         .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
-    fs::write(&sentinel, "doomed").unwrap();
+    fs::write(&sentinel, "unrecorded").unwrap();
 
-    // Second apply under Verify — the present slot is re-materialised,
-    // so the sentinel is cleared along with it.
+    // Second apply under Verify reports a materialisation pass, but the
+    // unrecorded sentinel remains outside materialiser ownership.
     let second =
         apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify, None).unwrap();
     assert_eq!(second.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
-    assert!(second.skipped.is_empty(), "Verify must re-copy, never skip");
-    assert!(!sentinel.exists(), "Verify must re-materialise the slot");
+    assert!(second.skipped.is_empty());
+    assert!(sentinel.is_file());
 }
 
 #[test]
 fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() {
     // A `source_mutable` (local `file://`) dependency is never presence-trusted
     // (PROP-011 §2.6): even under the default TrustPresence its present slot is
-    // re-copied, so an in-place source edit lands in the dependency slot.
+    // rematerialised, so an in-place source edit lands in the dependency slot.
     let ws_dir = TempDir::new().unwrap();
     write(
         ws_dir.path(),
@@ -382,7 +381,7 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
     let sentinel = ws_dir
         .path()
         .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
-    fs::write(&sentinel, "doomed").unwrap();
+    fs::write(&sentinel, "unrecorded").unwrap();
 
     // Second apply — TrustPresence would normally skip a present slot, but the
     // mutable source overrides that, so the slot is re-materialised.
@@ -399,8 +398,8 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
         "a mutable file:// source must not be presence-trusted (§2.6)"
     );
     assert!(
-        !sentinel.exists(),
-        "the mutable source's slot must be re-materialised"
+        sentinel.is_file(),
+        "mutable-source refresh must preserve unrecorded slot content"
     );
 }
 
@@ -434,10 +433,10 @@ impl SlotVerifier for UntouchedVerifier {
 
 /// The standard §5.2 fixture: a one-node workspace plus a resolved `wal`
 /// dep. First materialises the slot (under `trust-presence`), then drops
-/// a sentinel INSIDE the slot — a re-copy clears it, a skip keeps it, so
-/// the sentinel is the observable difference between the two. The dep's
-/// content-tree `TempDir` rides along: it must outlive the fixture (the
-/// second apply re-copies from it on every diverged/untrusted path).
+/// an unrecorded sentinel inside the slot. Both a skip and a diff
+/// materialisation must keep it; outcome accounting distinguishes the paths.
+/// The dep's content-tree `TempDir` rides along because diverged/untrusted
+/// paths still prepare and reconcile its incoming footprint.
 #[cfg(test)]
 fn verified_slot_fixture() -> (Workspace, ResolvedDep, TempDir, TempDir, PathBuf) {
     let ws_dir = TempDir::new().unwrap();
@@ -485,7 +484,7 @@ fn verify_accepts_a_hash_matching_slot_without_copying() {
     .unwrap();
     assert!(
         outcome.materialised.is_empty(),
-        "a hash-matching slot must NOT be re-copied under verify"
+        "a hash-matching slot must NOT be rematerialised under verify"
     );
     assert_eq!(outcome.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.integrity_warnings.is_empty());
@@ -514,8 +513,8 @@ fn verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes() {
     assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.skipped.is_empty(), "a diverged slot is not trusted");
     assert!(
-        !sentinel.exists(),
-        "a diverged slot must be re-materialised"
+        sentinel.is_file(),
+        "a diverged slot refresh must preserve unrecorded content"
     );
     // The warn line names the package and BOTH hashes.
     assert_eq!(outcome.integrity_warnings.len(), 1);
@@ -535,7 +534,7 @@ fn verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes() {
 }
 
 #[test]
-fn verify_falls_back_to_recopying_an_unverifiable_slot_silently() {
+fn verify_falls_back_to_rematerialising_an_unverifiable_slot_silently() {
     let (ws, dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
     let verifier = StubVerifier(SlotCheck::Unverifiable);
 
@@ -551,9 +550,9 @@ fn verify_falls_back_to_recopying_an_unverifiable_slot_silently() {
     assert!(outcome.skipped.is_empty());
     assert!(
         outcome.integrity_warnings.is_empty(),
-        "an unverifiable slot re-copies without claiming divergence"
+        "an unverifiable slot rematerialises without claiming divergence"
     );
-    assert!(!sentinel.exists());
+    assert!(sentinel.is_file());
 }
 
 #[test]
@@ -593,7 +592,7 @@ fn verify_still_never_trusts_a_mutable_file_source_slot() {
     .unwrap();
     assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(outcome.skipped.is_empty());
-    assert!(!sentinel.exists());
+    assert!(sentinel.is_file());
 }
 
 // --- PROP-020 2.1 — pre-install hooks ride the materialise pass ---------

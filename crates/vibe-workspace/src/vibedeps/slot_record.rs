@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD");
 
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::path::{Component, Path};
 
 use sha2::{Digest, Sha256};
@@ -74,12 +74,38 @@ pub fn write_slot_record(slot: &Path, record: &SlotRecord) -> Result<(), String>
             path.display()
         )
     })?;
-    fs::write(&path, wire).map_err(|error| {
+    let mut temporary = tempfile::Builder::new()
+        .prefix(".vibe-record-")
+        .tempfile_in(slot)
+        .map_err(|error| {
+            format!(
+                "slot record I/O failure at `{}`: cannot stage: {error}",
+                path.display()
+            )
+        })?;
+    temporary
+        .as_file_mut()
+        .write_all(wire.as_bytes())
+        .map_err(|error| {
+            format!(
+                "slot record I/O failure at `{}`: cannot stage: {error}",
+                path.display()
+            )
+        })?;
+    temporary.as_file().sync_all().map_err(|error| {
         format!(
-            "slot record I/O failure at `{}`: cannot write: {error}",
+            "slot record I/O failure at `{}`: cannot sync: {error}",
             path.display()
         )
-    })
+    })?;
+    temporary.into_temp_path().persist(&path).map_err(|error| {
+        format!(
+            "slot record I/O failure at `{}`: cannot replace: {}",
+            path.display(),
+            error.error
+        )
+    })?;
+    Ok(())
 }
 
 fn record_from_wire(wire: WireSlotRecord) -> Result<SlotRecord, ValidationError> {
@@ -256,7 +282,7 @@ pub fn compute_recorded_payload_hash(
     )))
 }
 
-fn lower_hex(bytes: &[u8]) -> String {
+pub(super) fn lower_hex(bytes: &[u8]) -> String {
     const HEX: &[u8; 16] = b"0123456789abcdef";
     let mut output = String::with_capacity(64);
     for &byte in bytes {

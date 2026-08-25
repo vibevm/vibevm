@@ -1,16 +1,14 @@
 //! The `slot_integrity = verify` spot-check (PROP-011 §2.3/§5.2) driven
 //! through the real plan → apply pipeline: under `verify` a present slot
 //! whose `content_hash` matches the resolution's is accepted WITHOUT the
-//! re-copy (the spot-check replaces the work), and a diverged slot is
+//! materialisation pass (the spot-check replaces the work), and a diverged slot is
 //! re-materialised with a warn line naming the package and both hashes.
 //! `trust-presence` keeps skipping by presence alone.
 //!
-//! The "no copy happened" witness is a sentinel placed under the slot's
-//! `target/` — inside the copy perimeter (a re-materialise clears the
-//! slot, so the sentinel dies) but OUTSIDE the hash perimeter (recipe 0
-//! prunes `target/`, so the sentinel cannot flip the verdict the test is
-//! measuring). mtime would be a weaker witness (§6 rejects it as an
-//! oracle; granularity is filesystem-dependent).
+//! Sentinels under `target/` exercise the ownership boundary: they are absent
+//! from `.vibe-slot.toml`, so both a verified skip and a diff materialisation
+//! preserve them. Outcome accounting distinguishes those paths; the sentinels
+//! cannot flip the recorded-payload verdict being measured.
 //!
 //! Integration-grain because the crate sets `[lib] test = false` (Windows
 //! UAC installer detection, PROP-007 §9.5): the binary name carries no
@@ -266,9 +264,8 @@ const SLOT_B: &str = "vibevm/vibedeps/org.vibevm.pkg-b/1.0.0";
 fn verify_accepts_untouched_slots_without_copying() {
     let (source, _outer, project) = installed_project(SlotIntegrity::Verify);
 
-    // Sentinels INSIDE the copy perimeter but OUTSIDE the hash perimeter
-    // (`target/` is pruned by recipe 0): a re-copy clears them, a verified
-    // skip keeps them, and they cannot flip the hash being measured.
+    // Sentinels outside the recorded footprint: a verified skip keeps them,
+    // and they cannot flip the recorded-payload hash being measured.
     for slot in [SLOT_A, SLOT_B] {
         write(&project, &format!("{slot}/target/SENTINEL"), "untouched");
     }
@@ -283,7 +280,7 @@ fn verify_accepts_untouched_slots_without_copying() {
     );
     assert!(
         second.outcome.materialised.is_empty(),
-        "a hash-matching slot must NOT be re-copied under verify"
+        "a hash-matching slot must NOT be rematerialised under verify"
     );
     assert!(
         second.outcome.integrity_warnings.is_empty(),
@@ -319,15 +316,15 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
     let actual = vibe_workspace::vibedeps::sha256_file(&spec_b).unwrap();
     assert_ne!(actual, expected, "the tamper must actually diverge");
 
-    // pkg-a stays intact; its sentinel proves the pass did not blindly
-    // re-copy everything either.
+    // pkg-a stays intact; outcome accounting proves the pass did not blindly
+    // materialise everything either.
     write(&project, &format!("{SLOT_A}/target/SENTINEL"), "untouched");
 
     let second = run_install(&source, &project, SlotIntegrity::Verify);
     assert_eq!(
         second.outcome.materialised,
         vec![SLOT_B],
-        "only the diverged slot is re-copied"
+        "only the diverged slot is rematerialised"
     );
     assert_eq!(
         second.outcome.skipped,
@@ -356,30 +353,43 @@ fn verify_rematerialises_a_corrupted_slot_and_warns() {
     );
     assert!(
         project.join(SLOT_A).join("target/SENTINEL").is_file(),
-        "the intact slot was not re-copied"
+        "the intact slot was not rematerialised"
     );
 }
 
 #[test]
-fn verify_rejects_a_malformed_new_slot_record() {
+fn verify_surfaces_a_malformed_record_without_touching_the_slot() {
     let (source, _outer, project) = installed_project(SlotIntegrity::Verify);
-    let record_path = project
-        .join(SLOT_A)
-        .join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME);
+    let slot = project.join(SLOT_A);
+    let record_path = slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME);
     let mut wire = fs::read_to_string(&record_path).unwrap();
     wire.push_str("unknown = true\n");
-    fs::write(&record_path, wire).unwrap();
+    fs::write(&record_path, &wire).unwrap();
+    let payload = slot.join(vibe_core::machine_json_path(
+        &vibe_core::layout::current_specs_root().join("flows/pkg-a/SPEC.md"),
+    ));
+    let payload_before = fs::read(&payload).unwrap();
+    write(&slot, "target/SENTINEL", "unrecorded");
 
-    let second = run_install(&source, &project, SlotIntegrity::Verify);
-    assert_eq!(second.outcome.materialised, vec![SLOT_A]);
-    assert_eq!(second.outcome.skipped, vec![SLOT_B]);
-    assert_eq!(second.outcome.integrity_warnings.len(), 1);
+    let plan =
+        vibe_install::plan(&source, &project, request(), &NullObserver).expect("plan succeeds");
+    let planned = match plan {
+        Plan::Ready(planned) => planned,
+        Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
+    };
+    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy())
+        .expect_err("a present malformed record is never treated as a legacy missing record");
+
     assert!(
-        second.outcome.integrity_warnings[0].contains("slot record is invalid"),
-        "{}",
-        second.outcome.integrity_warnings[0]
+        error.to_string().contains("slot record parse failure"),
+        "{error}"
     );
-    assert!(vibe_workspace::vibedeps::read_slot_record(&project.join(SLOT_A)).is_ok());
+    assert_eq!(fs::read_to_string(&record_path).unwrap(), wire);
+    assert_eq!(fs::read(&payload).unwrap(), payload_before);
+    assert_eq!(
+        fs::read_to_string(slot.join("target/SENTINEL")).unwrap(),
+        "unrecorded"
+    );
 }
 
 #[test]

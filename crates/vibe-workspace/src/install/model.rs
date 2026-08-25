@@ -142,16 +142,15 @@ pub trait SlotVerifier {
 /// What [`apply_resolution`] did — for the caller to report.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
-    /// Dependency-slot paths freshly materialised this run — a new or
-    /// version-bumped dependency whose content was copied, or a present
-    /// slot whose `verify` spot-check diverged and was overwritten.
+    /// Dependency-slot paths materialised this run — a new or version-bumped
+    /// dependency, or a present slot whose recorded footprint was reconciled.
     pub materialised: Vec<String>,
     /// Dependency-slot paths skipped — already present for the resolved
-    /// version, trusted and not re-copied (PROP-011 §2.3). Under
+    /// version, trusted without materialising (PROP-011 §2.3). Under
     /// `trust-presence` (the default) that trust is presence alone; under
     /// `verify` a slot lands here only after its `content_hash` checked
     /// out — and never when no [`SlotVerifier`] was supplied, which keeps
-    /// the always-re-copy discipline.
+    /// the always-rematerialise discipline.
     pub skipped: Vec<String>,
     /// One warn line per `verify`-mode slot whose hash diverged from the
     /// recorded one (naming the package and both hashes) — the slot was

@@ -132,7 +132,7 @@ fn materialise_skips_dot_git() {
 }
 
 #[test]
-fn materialise_is_idempotent_and_clears_stale_files() {
+fn materialise_is_idempotent_and_removes_recorded_stale_files() {
     let ws = TempDir::new().unwrap();
     let src1 = TempDir::new().unwrap();
     write(src1.path(), "vibe.toml", "v1");

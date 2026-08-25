@@ -63,12 +63,12 @@ pub use bootgen::{
 ///
 /// `slot_integrity` governs the PROP-011 §2.3 materialise-diff skip: with
 /// [`SlotIntegrity::TrustPresence`] a slot already on disk for the
-/// resolved version is trusted and not re-copied; with
+/// resolved version is trusted without a materialisation pass; with
 /// [`SlotIntegrity::Verify`] a present slot is accepted only after its
 /// `content_hash` checks out — see [`apply_resolution_with`], which takes
 /// the verifying seam. This entry point carries no verifier, so `Verify`
-/// here is the shipped always-re-copy discipline — exactly what
-/// `vibe reinstall --force` (overwrite slots from a fresh fetch) and
+/// here is the shipped always-rematerialise discipline — exactly what
+/// `vibe reinstall --force` (reconcile slots from a fresh fetch) and
 /// `vibe update` ask for.
 pub fn apply_resolution(
     workspace: &Workspace,
@@ -90,12 +90,12 @@ pub fn apply_resolution(
 /// consulted — for a present, immutable slot, and only under
 /// [`SlotIntegrity::Verify`] (PROP-011 §2.3/§5.2) — before the fast path
 /// trusts the slot. A hash that matches the resolution's recorded
-/// `content_hash` accepts the slot **without** the re-copy (the
-/// always-re-copy behaviour `verify` shipped with was stricter and
-/// costlier than the contract: the spot-check replaces the copy, it does
+/// `content_hash` accepts the slot **without** materialising (the
+/// always-rematerialise behaviour `verify` shipped with was stricter and
+/// costlier than the contract: the spot-check replaces that pass, it does
 /// not add to it); a divergence re-materialises the slot and records a
 /// warn line naming the package and both hashes. `None` degrades `Verify`
-/// to the shipped always-re-copy discipline. Mutable in-workspace
+/// to the shipped always-rematerialise discipline. Mutable in-workspace
 /// `file://` sources (§2.6) and `in-place` packages (PROP-022 §2.4) never
 /// reach the check — they re-materialise regardless of the setting.
 pub fn apply_resolution_with(
@@ -231,8 +231,8 @@ fn materialise_resolution(
 /// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; under
 /// [`SlotIntegrity::Verify`] it is trusted only when the `slot_verifier`
 /// seam confirms its `content_hash` (a divergence re-materialises it and
-/// warns; no verifier keeps the always-re-copy discipline). Only a new,
-/// version-bumped, or untrusted dependency pays the recursive copy and
+/// warns; no verifier keeps the always-rematerialise discipline). Only a new,
+/// version-bumped, or untrusted dependency enters materialisation and
 /// re-runs hooks (a skipped slot was never reset, so re-running its hook
 /// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
 /// removes the offending slot and aborts (PROP-020 §2.5).
@@ -332,11 +332,11 @@ fn materialise_resolution_with_spec_format(
         // strategy (§2.3/§5.2): `trust-presence` accepts it outright;
         // `verify` first spot-checks its `content_hash` through the
         // caller's `slot_verifier` seam — a matching hash accepts the
-        // slot WITHOUT the re-copy (the always-re-copy behaviour `verify`
+        // slot WITHOUT materialising (the always-rematerialise behaviour `verify`
         // shipped with was stricter and costlier than the contract), a
         // divergence re-materialises the slot and records a warn line,
         // and no verifier at all (or an unverifiable slot) keeps the
-        // shipped always-re-copy discipline.
+        // shipped always-rematerialise discipline.
         let trusted = present
             && !dep.source_mutable
             && match slot_integrity {
@@ -432,8 +432,8 @@ fn required_source_hash(dep: &ResolvedDep) -> Result<&ContentHash, WorkspaceErro
 /// itself and regenerates boot from the whole materialised tree afterwards;
 /// pruning here would delete every slot outside the subtree. Runs against the
 /// production seams and with no [`SlotVerifier`], so `Verify` here keeps the
-/// always-re-copy discipline — the scoped update wants the fresh fetch's
-/// bytes placed, not a hash-checked skip.
+/// always-rematerialise discipline — the scoped update wants the fresh fetch
+/// reconciled into the slot, not a hash-checked skip.
 pub fn materialise_subtree(
     workspace_root: &Path,
     resolution: &[ResolvedDep],

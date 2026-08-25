@@ -31,6 +31,7 @@ use vibe_core::{ContentHash, Group, layout};
 use crate::{WorkspaceError, layout_paths};
 
 mod derived;
+mod slot_diff;
 mod slot_record;
 
 pub use derived::{
@@ -85,9 +86,11 @@ pub fn is_materialised(
 /// package's published content tree (`content_src`) verbatim into
 /// live dependency-root path.
 ///
-/// **Idempotent.** An existing slot is cleared first, so re-materialising
-/// the same package yields a byte-identical slot and stale files from an
-/// earlier content revision never linger.
+/// **Idempotent.** Re-materialisation diffs the incoming footprint against
+/// `.vibe-slot.toml`: unchanged recorded files retain their inode and mtime,
+/// changed files are atomically replaced, and stale recorded files are
+/// removed. Unrecorded build output remains outside materialiser ownership.
+/// A legacy slot with no record receives one final whole-slot replacement.
 ///
 /// A `.git` entry in the source is skipped at every depth — a materialised
 /// slot is plain content committed into the outer repository, never a
@@ -152,34 +155,16 @@ pub fn materialise_with(
     }
     refuse_reserved_source_record(content_src)?;
 
-    // Idempotent: clear an existing slot so the result is exactly the
-    // source — no leftovers from an earlier content revision.
-    if slot.exists() {
-        fs::remove_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
-    }
-    fs::create_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
-
-    let mut written: Vec<PathBuf> = Vec::new();
-    copy_tree(content_src, content_src, &slot, mode, &mut written)?;
-    written.sort();
-    let files = written
+    let incoming = slot_diff::prepare_source_tree(content_src, mode)?;
+    let files = incoming
         .iter()
-        .map(|relative| {
-            let destination = slot.join(relative);
-            let sha256 = sha256_file(&destination).map_err(|reason| {
-                WorkspaceError::SpecMaterialization {
-                    path: destination,
-                    reason: format!("materialised payload cannot be hashed: {reason}"),
-                }
-            })?;
-            Ok(SlotFile {
-                path: crate::path_to_slash(relative),
-                sha256,
-                source: None,
-                disposition: None,
-            })
+        .map(|file| SlotFile {
+            path: file.path_wire(),
+            sha256: file.sha256().to_string(),
+            source: None,
+            disposition: None,
         })
-        .collect::<Result<Vec<_>, WorkspaceError>>()?;
+        .collect();
     let record = SlotRecord {
         schema: SLOT_RECORD_SCHEMA,
         source_hash: source_hash.clone(),
@@ -189,11 +174,7 @@ pub fn materialise_with(
         overlay_hash: None,
         files,
     };
-    write_slot_record(&slot, &record).map_err(|reason| WorkspaceError::SpecMaterialization {
-        path: slot.join(SLOT_RECORD_FILENAME),
-        reason,
-    })?;
-    Ok(written)
+    slot_diff::reconcile_slot(&slot, &incoming, &record)
 }
 
 fn refuse_reserved_source_record(content_src: &Path) -> Result<(), WorkspaceError> {
@@ -370,64 +351,6 @@ fn copy_all(src: &Path, dest: &Path) -> Result<(), WorkspaceError> {
     Ok(())
 }
 
-/// Recursively copy the contents of `dir` into the slot at `dest_root`.
-/// `src_root` is the materialisation source root; every copied file's path
-/// relative to it (forward-slashed) is pushed to `written`.
-fn copy_tree(
-    dir: &Path,
-    src_root: &Path,
-    dest_root: &Path,
-    mode: CopyMode,
-    written: &mut Vec<PathBuf>,
-) -> Result<(), WorkspaceError> {
-    for entry in fs::read_dir(dir).map_err(|e| io_err(dir, e))? {
-        let entry = entry.map_err(|e| io_err(dir, e))?;
-        // `.git` is never materialised — a slot is plain committed content,
-        // not a repository (whether `.git` is a directory or a gitlink file).
-        if entry.file_name() == ".git" {
-            continue;
-        }
-        let path = entry.path();
-        let file_type = entry.file_type().map_err(|e| io_err(&path, e))?;
-        if file_type.is_dir() {
-            copy_tree(&path, src_root, dest_root, mode, written)?;
-        } else if file_type.is_file() {
-            let rel = path
-                .strip_prefix(src_root)
-                .map_err(|_| WorkspaceError::Io {
-                    path: path.clone(),
-                    reason: format!("walked path escaped its copy root `{}`", src_root.display()),
-                })?;
-            let dest = dest_root.join(rel);
-            if let Some(parent) = dest.parent() {
-                fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
-            }
-            place_file(&path, &dest, mode)?;
-            written.push(PathBuf::from(crate::path_to_slash(rel)));
-        }
-        // A symlink is neither a dir nor a file via the non-following
-        // `file_type` — it falls through and is skipped (see the docs).
-    }
-    Ok(())
-}
-
-/// Place one file into the slot per [`CopyMode`]. A `Hardlink` that the
-/// filesystem refuses (cross-volume, unsupported) falls back to a byte copy
-/// (PROP-022 §2.3), so the slot always materialises.
-fn place_file(src: &Path, dest: &Path, mode: CopyMode) -> Result<(), WorkspaceError> {
-    match mode {
-        CopyMode::Copy => {
-            fs::copy(src, dest).map_err(|e| io_err(dest, e))?;
-        }
-        CopyMode::Hardlink => {
-            if fs::hard_link(src, dest).is_err() {
-                fs::copy(src, dest).map_err(|e| io_err(dest, e))?;
-            }
-        }
-    }
-    Ok(())
-}
-
 /// Build a [`WorkspaceError::Io`] from a `std::io::Error` and the path it
 /// failed on.
 fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
@@ -442,6 +365,9 @@ mod tests;
 
 #[cfg(test)]
 mod tests_slot_record;
+
+#[cfg(test)]
+mod tests_diff;
 
 #[cfg(test)]
 mod tests_transformed;
