@@ -14,9 +14,11 @@ started. The repository and every campaign worktree were reconciled against
 
 Result: **no unique implementation was lost or stranded.** Final R3.2, R7.1 and
 R8.1 worktrees contain only packets/reports beyond their landed commits.
-Intermediate dirty R2/R3 worktrees are older construction snapshots superseded
-by richer files on `main`; keep them until the epic closes, but do not treat
-them as candidate patches. Missing later waves were never implemented.
+Intermediate dirty R2/R3 worktrees were older construction snapshots
+superseded by richer files on `main`. Their unique R4/R5 audit decisions were
+synthesised here, then 33 obsolete worktrees were removed under rolling GC;
+only the six active, unintegrated atoms remain. Missing later waves were never
+implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -30,19 +32,22 @@ only durable home of a decision.
 - `cargo xtask specmap --check`: 6769 units, 1670 tagged code items, 1526
   edges, 0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
   warnings.
-- Judging debt is currently **unmeasured**, not zero. The host script reports
-  19,496 addressable facts, 0 unjudged, 0 orphaned and 35 stale files from the
-  pre-relayout mirror/cache; a detached worktree reports an empty domain because
-  that mirror is not carried there. Direct census proves all 502 judged cache
-  paths are absent from the live tree: 98 map through the root relayout and 404
-  additionally changed `.md`→`.xml`. `text-stability.py` misdiagnoses this as a
-  hash-recipe drift. Close B-107 by observing package XML and migrate cache,
-  mirror and verdict paths with anchor equality proofs before claiming debt.
+- B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
+  one-to-one to live paths (98 retain their extension; 404 become XML), six new
+  unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
+  42,318 evidence lines retain their payload/timestamps. Stability proves 75
+  files / 2,280 verdicts sealable, 191 files / 859 moved facts requiring
+  re-judgement, and 236 refused files / 8,634 verdicts; a further 122 moved facts
+  live inside 22 refused files and are reported separately, never double-counted.
+  Live judging debt is now measured: **2,498 unjudged facts in 154 files, 0
+  orphaned, 484 stale files**. One historical gap is named separately from
+  1,082 comparable moved facts; no sealing or re-judgement occurred.
 - Full 47-step panel for this batch: pending. Two runs reached workspace tests
   and exposed real integration tails (redacted TOML diagnostic oracle; expected
   boot transaction lock); both are repaired and exact tests are green.
-- Publication: `main` is 10 commits ahead of both mirrors at this checkpoint.
-  Mirror immediately after the current unchanged batch panel is green.
+- Publication: the accumulated batch remains ahead of both mirrors. Mirror
+  immediately after the current unchanged batch panel is green; no fixed count
+  is kept here while rolling integrations continue.
 
 ## 3. Granular R1–R8 ledger
 
