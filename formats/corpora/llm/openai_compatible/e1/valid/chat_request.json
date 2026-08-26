@@ -1,0 +1,22 @@
+{
+  "model": "demo-chat-model",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Return one concise answer."
+    },
+    {
+      "role": "user",
+      "content": "Name the first lifecycle phase."
+    },
+    {
+      "role": "assistant",
+      "content": "The first lifecycle phase is validate."
+    },
+    {
+      "role": "user",
+      "content": "Reply with only its name."
+    }
+  ],
+  "stream": false
+}

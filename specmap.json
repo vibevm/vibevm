@@ -106,6 +106,46 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/llm/openai_compatible/e1/chat_request.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "chat_request",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/llm/openai_compatible/e1/chat_request.jtd.json",
+      "item_kind": "schema-def",
+      "line": 32,
+      "symbol": "chat_request::message",
+      "end_line": 49
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/llm/openai_compatible/e1/chat_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "chat_response",
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/llm/openai_compatible/e1/chat_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 29,
+      "symbol": "chat_response::choice",
+      "end_line": 35
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/llm/openai_compatible/e1/chat_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 36,
+      "symbol": "chat_response::message",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/lifecycle/e1/context.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -14314,6 +14354,22 @@
     }
   ],
   "edges": [
+    {
+      "file": "schemas/llm/openai_compatible/e1/chat_request.jtd.json",
+      "from_symbol": "chat_request",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/llm/openai_compatible/e1/chat_response.jtd.json",
+      "from_symbol": "chat_response",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI",
+      "verb": "implements"
+    },
     {
       "file": "schemas/lifecycle/e1/context.jtd.json",
       "from_symbol": "context",

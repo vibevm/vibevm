@@ -145,6 +145,27 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# ── OpenAI-compatible provider wire (2 JTD), PROP-000 §16 / PROP-054 §6.4 ─
+# The request is published to independent OpenAI-compatible parsers, while the
+# response has one parser owned by this project. Both are transient and can be
+# re-created by executing the same provider call; neither is authoritative
+# state. The corpus is shared because request/response parity is one exchange.
+[format.llm-openai-compatible-chat-request]
+epoch = 1
+schema = "schemas/llm/openai_compatible/e1/chat_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/llm/openai_compatible/e1"
+sunset = "none"
+
+[format.llm-openai-compatible-chat-response]
+epoch = 1
+schema = "schemas/llm/openai_compatible/e1/chat_response.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "formats/corpora/llm/openai_compatible/e1"
+sunset = "none"
+
 # ── vibe-index CLI machine-JSON reports (7 JTD), PROP-044 §6.5 / B-079 ───────
 # The `vibe-index` twin of the CLI section above: seven `--json` envelopes of
 # the index utility's read verbs, minted 2026-08-20 (owner act on B-079).

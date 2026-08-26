@@ -1,0 +1,32 @@
+{
+  "id": "chatcmpl-demo-official-1",
+  "object": "chat.completion",
+  "created": 1787729800,
+  "model": "demo-chat-model",
+  "service_tier": "default",
+  "system_fingerprint": "fp_demo",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "validate",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 12,
+    "completion_tokens": 1,
+    "total_tokens": 13,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

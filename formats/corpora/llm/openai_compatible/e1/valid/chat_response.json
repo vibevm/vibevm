@@ -1,0 +1,18 @@
+{
+  "id": "chatcmpl-demo-1",
+  "model": "demo-chat-model",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "validate"
+      }
+    },
+    {
+      "message": {
+        "role": "assistant",
+        "content": "install"
+      }
+    }
+  ]
+}

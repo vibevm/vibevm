@@ -1,0 +1,11 @@
+{
+  "id": "chatcmpl-demo-invalid-1",
+  "model": "demo-chat-model",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant"
+      }
+    }
+  ]
+}

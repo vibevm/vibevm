@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "description": "Minimal epoch-1 request accepted by the synchronous OpenAI-compatible Chat Completions provider seam. The request carries one model, ordered text messages, and an explicit non-streaming switch; provider-specific options are outside this contract.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::llm::openai_compatible::e1::chat_request"
+    }
+  },
+  "properties": {
+    "model": {
+      "type": "string"
+    },
+    "messages": {
+      "elements": {
+        "ref": "message"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Conversation messages in provider-visible order. The provider layer rejects an empty conversation before transport."
+      }
+    },
+    "stream": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Always false for the synchronous epoch-1 seam; represented as the provider's JSON boolean rather than an invented string constant."
+      }
+    }
+  },
+  "definitions": {
+    "message": {
+      "properties": {
+        "role": {
+          "enum": [
+            "system",
+            "user",
+            "assistant"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "The text-only role vocabulary supported by epoch 1."
+          }
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

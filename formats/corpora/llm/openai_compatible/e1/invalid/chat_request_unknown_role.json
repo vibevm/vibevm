@@ -1,0 +1,10 @@
+{
+  "model": "demo-chat-model",
+  "messages": [
+    {
+      "role": "tool",
+      "content": "unsupported in epoch one"
+    }
+  ],
+  "stream": false
+}

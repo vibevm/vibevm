@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "description": "Minimal epoch-1 response read by the synchronous OpenAI-compatible Chat Completions provider seam. Only provider-independent fields needed to identify the answer and recover ordered assistant text are contracted.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::llm::openai_compatible::e1::chat_response"
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "choices": {
+      "elements": {
+        "ref": "choice"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Assistant choices in provider order. The provider layer rejects an empty choice list before producing a domain result."
+      }
+    }
+  },
+  "definitions": {
+    "choice": {
+      "properties": {
+        "message": {
+          "ref": "message"
+        }
+      }
+    },
+    "message": {
+      "properties": {
+        "role": {
+          "enum": [
+            "assistant"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed",
+            "description": "A Chat Completions choice is an assistant message in the text-only epoch-1 seam."
+          }
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

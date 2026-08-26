@@ -4,8 +4,5 @@
 // `*.jtd.json` schema under `schemas/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/index_http/e1/` / `schemas/journal/e1/` / `schemas/lifecycle/e1/` / `schemas/llm/openai_compatible/e1/`. Editing
 // this file by hand will be overwritten on the next codegen run.
 
-pub mod by_cap;
-pub mod by_name;
-pub mod by_purl;
-pub mod entry;
-pub mod repomd;
+pub mod chat_request;
+pub mod chat_response;
