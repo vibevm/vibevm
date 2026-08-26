@@ -93,7 +93,7 @@ fn production_closure_carries_an_applied_auditable_plan() {
     ]);
     let seed = SpecAddress::parse(entry).unwrap();
 
-    let closure = crate::compiler::builtin::compile_absorbed_closure(
+    let closure = crate::compiler::builtin::compile_linked_closure(
         &seed,
         &source,
         StaticCompileMode::QualifyPerNode,

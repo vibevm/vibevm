@@ -11,8 +11,10 @@ use super::*;
 use crate::compiler::ir::{
     AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
     ClosureDocument, ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta,
-    DocumentAddress, QualificationState, StaticCompileMode,
+    DocumentAddress, LinkState, QualificationState, StaticCompileMode,
 };
+use crate::compiler::link::LinkPass;
+use crate::compiler::pass::Pass;
 use crate::{DocTree, UseGraphError, topo_order_from};
 
 #[test]
@@ -55,9 +57,11 @@ fn legacy_continuation_emits_the_close_carrier_body() {
                 }],
             }],
         }),
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     };
+    let closure = LinkPass::new().run(closure).unwrap();
     let (out, renames) = compile_static_continuation(closure).unwrap();
 
     assert!(out.contains("CLOSE-BODY"), "{out}");

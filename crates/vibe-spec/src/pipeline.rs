@@ -13,7 +13,8 @@
 //!    READ-ONCE absorption, and qualifies live node labels in qualified mode;
 //! 5. **absorb** — named `absorb` projects every normal contribution to its
 //!    exact live occurrence order;
-//! 6. **emit** — the legacy tail links and concatenates surviving
+//! 6. **link** — named `link` resolves surviving cross-node short references;
+//! 7. **emit** — the legacy tail concatenates surviving
 //!    nodes in topological order, each wrapped in
 //!    open/close markers (§11), so the output is reversible.
 //!
@@ -26,17 +27,11 @@
 //! This is the algorithmic, LLM-free static compiler (§2) — the reference
 //! semantics the structural loader is later checked against.
 
-use std::collections::BTreeMap;
-use std::fmt::Write as _;
-
 use crate::address::{SpecAddress, SpecAddressError};
-use crate::compiler::ir::{
-    AbsorptionState, ClosureContribution, ClosureIr, DocumentAddress, QualificationState,
-    StaticCompileMode,
-};
+use crate::compiler::ir::{ClosureIr, StaticCompileMode};
 use crate::embed::{EmbedError, SectionSource};
 use crate::gate::DuplicateId;
-use crate::qualify::{RenameEntry, read_anchor_id};
+use crate::qualify::RenameEntry;
 use crate::use_graph::UseGraphError;
 
 /// Why static compilation failed.
@@ -120,7 +115,7 @@ pub fn compile_static_qualified(
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// → embed → qualify → absorb schedule, then the legacy link/assemble/emit tail.
+/// → embed → qualify → absorb → link schedule, then the legacy assemble/emit tail.
 /// Both public modes traverse the same pass list; mode is whole-artifact input
 /// state, never a privileged wrapper branch.
 fn compile_static_inner(
@@ -128,14 +123,11 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: StaticCompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_absorbed_closure(seed, source, mode)?;
+    let closure = crate::compiler::builtin::compile_linked_closure(seed, source, mode)?;
     compile_static_continuation(closure)
 }
 
-/// Bridge from the named absorb pass into the still-legacy artifact tail.
-///
-/// Link remains the sole cross-node short-name owner. Assembly/emission only
-/// render the already-projected surviving node orders.
+/// Bridge from the named link pass into the still-legacy assemble/emit tail.
 fn compile_static_continuation(
     closure: ClosureIr,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
@@ -147,152 +139,15 @@ fn compile_static_continuation(
         closure.pending_embeds.is_none(),
         "legacy continuation requires the named embed pass"
     );
-    let mode = match closure.qualification {
-        QualificationState::Applied(mode) => mode,
-        QualificationState::Pending(_) => {
-            panic!("legacy continuation requires the named qualify pass")
-        }
-    };
-    if !matches!(&closure.absorption, AbsorptionState::Applied(_)) {
-        panic!("legacy continuation requires the named absorb pass")
-    }
-    crate::compiler::absorb::validate_applied_absorption(&closure).unwrap_or_else(|error| {
-        panic!("legacy continuation received invalid absorption state: {error}")
-    });
-    let emission_order = match closure.contributions.as_slice() {
-        [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
-        _ => unreachable!("one-seed compatibility close returns one normal contribution"),
-    };
-
-    let mut out = String::new();
-    for node_id in emission_order {
-        let node = &closure.nodes[node_id.0];
-        let DocumentAddress::Spec(address) = &node.address else {
-            unreachable!("one-seed compatibility close contains only spec addresses")
-        };
-        let key = address.without_pin();
-        let emitted = node.tree.text(node.tree.root());
-
-        writeln!(out, "{}", crate::markers::open(&key)).unwrap(); // phase 5
-        out.push_str(&emitted);
-        if !emitted.ends_with('\n') {
-            out.push('\n');
-        }
-        writeln!(out, "{}", crate::markers::close(&key)).unwrap();
-    }
+    let out = crate::compiler::link::linked_text(&closure)
+        .unwrap_or_else(|error| panic!("legacy continuation received invalid link state: {error}"));
 
     let renames: Vec<(String, RenameEntry)> = closure
         .renames
         .into_iter()
         .map(|entry| (entry.origin, entry.rename))
         .collect();
-    if matches!(mode, StaticCompileMode::QualifyPerNode) {
-        // Second pass — resolve the cross-node short references the per-node
-        // qualify could not see (B-006 rider).
-        out = resolve_cross_node_short_links(&out, &renames)?;
-    }
     Ok((out, renames))
-}
-
-/// Second pass of per-node qualification (B-006 rider / PROP-035 §8 phase 5):
-/// resolve the cross-node short references the per-node qualify left behind.
-///
-/// After every node's labels are qualified under its own origin, a `(#x)` in
-/// node A whose target lives in node B is still bare — node A's qualify pass
-/// could not see B's labels. This pass walks the assembled lane (outside fenced
-/// code) and rewrites each remaining `(#x)` against the union of every node's
-/// definitions: a label one node defines → that node's qualified heir; a label
-/// ≥2 nodes define → a build error ([`CompileError::AmbiguousShortLink`]) citing
-/// the candidates (B-011: fail with candidates, never a silent pick); a label no
-/// node defines → left as written (resolving it is the loader's two-scope
-/// lookup, not the compiler's).
-fn resolve_cross_node_short_links(
-    text: &str,
-    renames: &[(String, RenameEntry)],
-) -> Result<String, CompileError> {
-    // The union map: short label → every (origin, qualified heir) that defines
-    // it, across the whole closure. Built from the per-node rename maps.
-    let mut defs: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
-    for (origin, r) in renames {
-        defs.entry(r.original.clone())
-            .or_default()
-            .push((origin.clone(), r.qualified.clone()));
-    }
-
-    // Split on '\n' (not `lines()`) so a trailing newline round-trips; reuse the
-    // qualify cell's fence mask so this pass and the per-node pass agree on what
-    // is code.
-    let lines: Vec<String> = text.split('\n').map(String::from).collect();
-    let fenced = crate::doctree::fence_mask(&lines);
-    let mut out_lines: Vec<String> = Vec::with_capacity(lines.len());
-    for (i, line) in lines.iter().enumerate() {
-        if fenced[i] {
-            out_lines.push(line.clone());
-        } else {
-            out_lines.push(rewrite_cross_node_links(line, &defs)?);
-        }
-    }
-    Ok(out_lines.join("\n"))
-}
-
-/// Rewrite the remaining `(#x)` short references in one non-fenced line against
-/// the union definition map (B-006 rider). Inline-code spans are skipped via the
-/// same backtick toggle the qualify cell uses, and the anchor id is read with
-/// the qualify cell's [`read_anchor_id`] scanner so the two passes never disagree
-/// on what counts as a name. References already qualified by the per-node pass
-/// (a `<slug>--<id>` form) are not keys in `defs` and so pass through untouched.
-fn rewrite_cross_node_links(
-    line: &str,
-    defs: &BTreeMap<String, Vec<(String, String)>>,
-) -> Result<String, CompileError> {
-    let bytes = line.as_bytes();
-    let mut out = String::with_capacity(line.len());
-    let mut last = 0usize; // first not-yet-flushed byte (exclusive boundary)
-    let mut i = 0usize;
-    let mut in_code = false;
-    while i < bytes.len() {
-        let b = bytes[i];
-        if b == b'`' {
-            in_code = !in_code;
-            i += 1;
-            continue;
-        }
-        if !in_code
-            && b == b'('
-            && bytes.get(i + 1) == Some(&b'#')
-            && let Some((id, after_id)) = read_anchor_id(bytes, i + 2)
-            && bytes.get(after_id) == Some(&b')')
-        {
-            match defs.get(id) {
-                Some(heirs) if heirs.len() == 1 => {
-                    // A unique definer → rewrite to its qualified heir.
-                    out.push_str(&line[last..i]);
-                    out.push_str("(#");
-                    out.push_str(&heirs[0].1);
-                    out.push(')');
-                    last = after_id + 1;
-                    i = after_id + 1;
-                    continue;
-                }
-                Some(heirs) => {
-                    // ≥2 definers → ambiguous: fail citing the candidates.
-                    let mut candidates: Vec<String> = heirs
-                        .iter()
-                        .map(|(origin, qualified)| format!("{qualified} ({origin})"))
-                        .collect();
-                    candidates.sort();
-                    return Err(CompileError::AmbiguousShortLink {
-                        label: id.to_string(),
-                        candidates,
-                    });
-                }
-                None => {} // no definer → leave the reference as written
-            }
-        }
-        i += 1;
-    }
-    out.push_str(&line[last..]);
-    Ok(out)
 }
 
 #[cfg(test)]
@@ -307,6 +162,8 @@ mod embed_characterization_tests;
 mod fold_tests;
 #[cfg(test)]
 mod inheritance_parity_tests;
+#[cfg(test)]
+mod link_characterization_tests;
 #[cfg(test)]
 mod merge_characterization_tests;
 #[cfg(test)]

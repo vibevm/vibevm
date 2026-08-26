@@ -4202,6 +4202,7 @@ version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "quick-xml",
+ "sha2",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-specdoc",

@@ -2,7 +2,7 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ClosureNodeId,
+    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ClosureNodeId, LinkState,
     StaticCompileMode,
 };
 use crate::compiler::pass::{AnyIr, PassSegment, PassSegmentError};
@@ -82,6 +82,7 @@ fn planned_closure(nodes: Vec<ClosureDocument>, seed: usize, order: &[usize]) ->
         renames: Vec::new(),
         qualification: QualificationState::Applied(StaticCompileMode::QualifyPerNode),
         absorption: AbsorptionState::Planned(plan),
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     }
@@ -98,6 +99,7 @@ fn empty_normal_static_seed_fails_analysis_and_planned_validation() {
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     };

@@ -7,7 +7,8 @@ use super::*;
 use crate::DocTree;
 use crate::compiler::ir::{
     AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureIr,
-    ClosureNodeId, ContributionMeta, DocumentAddress, QualificationState, StaticCompileMode,
+    ClosureNodeId, ContributionMeta, DocumentAddress, LinkState, QualificationState,
+    StaticCompileMode,
 };
 use crate::compiler::pass::Pass;
 use crate::compiler::qualify::{
@@ -51,6 +52,7 @@ fn pending_closure(
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     }
@@ -168,6 +170,7 @@ fn legacy_tail_rejects_a_bypassed_qualify_pass() {
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::Plain),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     };

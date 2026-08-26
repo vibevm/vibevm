@@ -402,6 +402,82 @@ pub(crate) enum AbsorptionState {
     Applied(AbsorptionPlan),
 }
 
+/// Exact digest of the semantic input used by the named link pass.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct LinkInputDigest(pub(crate) [u8; 32]);
+
+/// The Markdown fence state at one linked occurrence boundary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LinkFenceSnapshot {
+    Closed,
+    Open { delimiter: char, run: usize },
+}
+
+/// Engine-authored bytes interleaved with linked occurrence payloads.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum LinkLiteralKind {
+    NormalOpen,
+    ForcedNewline,
+    NormalClose,
+}
+
+/// Exact top-level identity consumed by link, including empty contributions.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LinkContributionWitness {
+    Normal {
+        meta: ContributionMeta,
+        seed: ClosureNodeId,
+        seed_address: SpecAddress,
+        occurrence_count: usize,
+    },
+    Simple {
+        meta: ContributionMeta,
+        address: DocumentAddress,
+    },
+}
+
+/// One exact output chunk of the linked pre-lane stream.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LinkChunk {
+    Literal {
+        kind: LinkLiteralKind,
+        bytes: String,
+    },
+    NormalOccurrence {
+        contribution: usize,
+        occurrence: usize,
+        node: ClosureNodeId,
+        address: SpecAddress,
+        fence_before: LinkFenceSnapshot,
+        fence_after: LinkFenceSnapshot,
+        bytes: String,
+    },
+    SimpleOccurrence {
+        contribution: usize,
+        occurrence: usize,
+        address: DocumentAddress,
+        fence_before: LinkFenceSnapshot,
+        fence_after: LinkFenceSnapshot,
+        bytes: String,
+    },
+}
+
+/// Canonical result of linking one whole Closure/artifact.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct LinkResult {
+    pub(crate) mode: StaticCompileMode,
+    pub(crate) input_digest: LinkInputDigest,
+    pub(crate) contributions: Vec<LinkContributionWitness>,
+    pub(crate) chunks: Vec<LinkChunk>,
+}
+
+/// Runtime typestate of the occurrence-sensitive link transform.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum LinkState {
+    Unlinked,
+    Linked(LinkResult),
+}
+
 /// The ordered multi-seed graph for one final artifact.
 ///
 /// A graph node may appear in more than one normal root's `emission_order`.
@@ -416,6 +492,7 @@ pub(crate) struct ClosureIr {
     pub(crate) renames: Vec<OriginRename>,
     pub(crate) qualification: QualificationState,
     pub(crate) absorption: AbsorptionState,
+    pub(crate) link: LinkState,
     pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
     pub(crate) pending_embeds: Option<EmbedResolutionSnapshot>,
 }

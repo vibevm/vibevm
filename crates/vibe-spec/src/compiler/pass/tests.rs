@@ -7,7 +7,7 @@ use crate::{DocTree, SpecAddress};
 
 use crate::compiler::ir::{
     AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureNodeId,
-    ContributionMeta, DocumentAddress, EmittedIr, QualificationState, SourceFormatId,
+    ContributionMeta, DocumentAddress, EmittedIr, LinkState, QualificationState, SourceFormatId,
     StaticCompileMode,
 };
 
@@ -47,6 +47,7 @@ fn closure() -> ClosureIr {
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::Plain),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     }

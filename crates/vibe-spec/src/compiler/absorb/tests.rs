@@ -3,7 +3,7 @@ use specmark::verifies;
 use super::*;
 use crate::compiler::ir::{
     AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ClosureEdge,
-    ClosureEdgeKind, ClosureNodeId, OriginRename, StaticCompileMode,
+    ClosureEdgeKind, ClosureNodeId, LinkState, OriginRename, StaticCompileMode,
 };
 use crate::compiler::pass::{AnyIr, PassSegment, PassSegmentError};
 use crate::{DocTree, RenameEntry, SpecAddress};
@@ -80,6 +80,7 @@ fn closure(
             mode: StaticCompileMode::QualifyPerNode,
             contributions: plan,
         }),
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     }

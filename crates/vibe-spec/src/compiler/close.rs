@@ -12,7 +12,7 @@ use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
     AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge,
     ClosureEdgeKind, ClosureIr, ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr,
-    Documents, QualificationState, StaticCompileMode,
+    Documents, LinkState, QualificationState, StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 use super::source_snapshot::SourceResolutionSnapshot;
@@ -242,6 +242,7 @@ fn close_documents(
         renames: Vec::new(),
         qualification: QualificationState::Pending(mode),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: Some(state.pending_sources()),
         pending_embeds: Some(state.pending_embeds()),
     })

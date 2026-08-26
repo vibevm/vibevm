@@ -5,8 +5,8 @@ use specmark::verifies;
 use super::*;
 use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
 use crate::compiler::ir::{
-    AbsorptionState, ArtifactId, ContributionMeta, DocumentIr, QualificationState, SourceFormatId,
-    SourceIr, StaticCompileMode,
+    AbsorptionState, ArtifactId, ContributionMeta, DocumentIr, LinkState, QualificationState,
+    SourceFormatId, SourceIr, StaticCompileMode,
 };
 use crate::compiler::source_snapshot::DocumentObservation;
 
@@ -66,6 +66,7 @@ fn closure(root: &str, tree: &str, pending: EmbedResolutionSnapshot) -> ClosureI
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::Plain),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: Some(pending),
     }

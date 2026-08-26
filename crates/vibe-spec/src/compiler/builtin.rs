@@ -14,6 +14,7 @@ use super::ir::{
     ArtifactId, ArtifactInput, ArtifactPlan, ClosureIr, ContributionMeta, DocumentIr, SourceIr,
     StaticCompileMode,
 };
+use super::link::{LINK_PASS_NAME, LinkPass, LinkPassError};
 use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
@@ -129,6 +130,9 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(AbsorbPass::new())
             .expect("the static built-in absorb schedule is valid");
+        pipeline
+            .push_artifact(LinkPass::new())
+            .expect("the static built-in link schedule is valid");
         Self {
             pipeline,
             close_state,
@@ -182,15 +186,25 @@ impl BuiltinSchedule {
                         panic!("the embed pass returned an unexpected error type: {source}")
                     })
             }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == LINK_PASS_NAME =>
+            {
+                source
+                    .downcast::<LinkPassError>()
+                    .map(|error| Err(error.into_compile_error()))
+                    .unwrap_or_else(|source| {
+                        panic!("the link pass returned an unexpected error type: {source}")
+                    })
+            }
             Err(error) => panic!("the private built-in artifact schedule is invalid: {error}"),
         }
     }
 }
 
-/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify/absorb.
+/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify/absorb/link.
 /// External observations are frozen before the single gather; the whole-IR
 /// passes alone interpret their respective state.
-pub(crate) fn compile_absorbed_closure(
+pub(crate) fn compile_linked_closure(
     seed: &SpecAddress,
     source: &impl SectionSource,
     mode: StaticCompileMode,
@@ -260,7 +274,7 @@ mod tests {
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb() {
+    fn production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb_link() {
         let pipeline = BuiltinSchedule::new(&plan(StaticCompileMode::Plain)).pipeline;
         let schedule = pipeline.schedule();
 
@@ -274,6 +288,7 @@ mod tests {
                 ScheduleItem::Pass(embed),
                 ScheduleItem::Pass(qualify),
                 ScheduleItem::Pass(absorb),
+                ScheduleItem::Pass(link),
             ] if parse.name.as_str() == PARSE_PASS_NAME
                 && parse.input == SourceIr::SHAPE
                 && parse.output == DocumentIr::SHAPE
@@ -292,6 +307,9 @@ mod tests {
                 && absorb.name.as_str() == ABSORB_PASS_NAME
                 && absorb.input == ClosureIr::SHAPE
                 && absorb.output == ClosureIr::SHAPE
+                && link.name.as_str() == LINK_PASS_NAME
+                && link.input == ClosureIr::SHAPE
+                && link.output == ClosureIr::SHAPE
         ));
     }
 

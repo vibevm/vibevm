@@ -6,7 +6,7 @@ use super::*;
 use crate::compiler::ir::{
     AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
     ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId,
-    ContributionAbsorption, ContributionMeta, DocumentAddress, QualificationState,
+    ContributionAbsorption, ContributionMeta, DocumentAddress, LinkState, QualificationState,
     StaticCompileMode,
 };
 
@@ -51,6 +51,7 @@ fn closure(
         renames: Vec::new(),
         qualification: QualificationState::Pending(mode),
         absorption: AbsorptionState::Unplanned,
+        link: LinkState::Unlinked,
         pending_sources: None,
         pending_embeds: None,
     }
