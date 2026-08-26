@@ -9,8 +9,9 @@ use std::collections::HashMap;
 use super::tests::MockSource;
 use super::*;
 use crate::compiler::ir::{
-    ArtifactId, ClosureContribution, ClosureDocument, ClosureIr, ClosureNodeId, ContributionMeta,
-    DocumentAddress,
+    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureContribution, ClosureDocument,
+    ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta, DocumentAddress,
+    QualificationState, StaticCompileMode,
 };
 use crate::{DocTree, UseGraphError, topo_order_from};
 
@@ -37,10 +38,24 @@ fn legacy_continuation_emits_the_close_carrier_body() {
             emission_order: vec![ClosureNodeId(0)],
         }],
         renames: Vec::new(),
+        qualification: QualificationState::Applied(StaticCompileMode::Plain),
+        absorption: Some(AbsorptionPlan {
+            contributions: vec![ContributionAbsorption::Normal {
+                meta: ContributionMeta {
+                    origin: "org.demo/pkg".to_string(),
+                    path: "boot/entry".to_string(),
+                },
+                seed: ClosureNodeId(0),
+                occurrences: vec![AbsorptionOccurrence {
+                    node: ClosureNodeId(0),
+                    absorbed: false,
+                }],
+            }],
+        }),
         pending_sources: None,
         pending_embeds: None,
     };
-    let (out, renames) = compile_static_continuation(closure, CompileMode::Plain).unwrap();
+    let (out, renames) = compile_static_continuation(closure).unwrap();
 
     assert!(out.contains("CLOSE-BODY"), "{out}");
     assert!(!out.contains("RAW-BODY"), "{out}");

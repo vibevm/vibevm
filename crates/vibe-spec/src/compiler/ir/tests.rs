@@ -63,6 +63,7 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     );
     let plan = ArtifactPlan {
         artifact: ArtifactId::new("static-markdown").unwrap(),
+        mode: StaticCompileMode::QualifyPerNode,
         contributions: vec![
             ArtifactInput::Normal {
                 meta: meta("org.demo/alpha"),
@@ -80,6 +81,7 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     };
 
     assert_eq!(plan.artifact.as_str(), "static-markdown");
+    assert_eq!(plan.mode, StaticCompileMode::QualifyPerNode);
     assert!(matches!(
         plan.contributions[0],
         ArtifactInput::Normal { .. }
@@ -163,6 +165,8 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
             },
         ],
         renames: Vec::new(),
+        qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
+        absorption: None,
         pending_sources: None,
         pending_embeds: None,
     };

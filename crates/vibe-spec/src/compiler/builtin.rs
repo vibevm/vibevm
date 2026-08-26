@@ -5,12 +5,18 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 use crate::use_graph::UseGraphError;
 use crate::{DocTree, SectionSource, SpecAddress};
 
-use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
+use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState, document_origin};
 use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
-use super::ir::{ClosureIr, DocumentIr, SourceIr};
+use super::ir::{
+    ArtifactId, ArtifactInput, ArtifactPlan, ClosureIr, ContributionMeta, DocumentIr, SourceIr,
+    StaticCompileMode,
+};
 use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
 use super::pipeline::{CompilerPipeline, CompilerPipelineError};
+#[cfg(test)]
+use super::qualify::QUALIFY_PASS_NAME;
+use super::qualify::QualifyPass;
 use super::worklist;
 
 const PARSE_PASS_NAME: &str = "parse";
@@ -90,14 +96,23 @@ pub(crate) struct BuiltinSchedule {
 }
 
 impl BuiltinSchedule {
-    fn new(seed: SpecAddress) -> Self {
+    fn new(plan: &ArtifactPlan) -> Self {
+        let [ArtifactInput::Normal { meta, seed }] = plan.contributions.as_slice() else {
+            panic!("the compatibility schedule requires one normal contribution")
+        };
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         pipeline
             .push_document(ParsePass::new())
             .expect("the static built-in parse schedule is valid");
         pipeline
-            .push_artifact(ClosePass::new(seed, close_state.clone()))
+            .push_artifact(ClosePass::new(
+                plan.artifact.clone(),
+                meta.clone(),
+                plan.mode,
+                seed.clone(),
+                close_state.clone(),
+            ))
             .expect("the static built-in close schedule is valid");
         pipeline
             .push_artifact(MergePass::new())
@@ -105,6 +120,9 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(EmbedPass::new())
             .expect("the static built-in embed schedule is valid");
+        pipeline
+            .push_artifact(QualifyPass::new())
+            .expect("the static built-in qualify schedule is valid");
         Self {
             pipeline,
             close_state,
@@ -163,14 +181,27 @@ impl BuiltinSchedule {
     }
 }
 
-/// Compile one compatibility seed through parse/gather/close/merge/embed.
+/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify.
 /// External observations are frozen before the single gather; the whole-IR
-/// merge and embed passes alone interpret their respective directives.
-pub(crate) fn compile_embedded_closure(
+/// passes alone interpret their respective state.
+pub(crate) fn compile_qualified_closure(
     seed: &SpecAddress,
     source: &impl SectionSource,
+    mode: StaticCompileMode,
 ) -> Result<ClosureIr, crate::pipeline::CompileError> {
-    let schedule = BuiltinSchedule::new(seed.clone());
+    let plan = ArtifactPlan {
+        artifact: ArtifactId::new("static-fragment")
+            .expect("the static compatibility artifact id is non-blank"),
+        mode,
+        contributions: vec![ArtifactInput::Normal {
+            meta: ContributionMeta {
+                origin: document_origin(seed),
+                path: seed.doc_path.clone(),
+            },
+            seed: seed.clone(),
+        }],
+    };
+    let schedule = BuiltinSchedule::new(&plan);
     let worklist = worklist::discover(
         seed,
         source,
@@ -206,10 +237,25 @@ mod tests {
         SpecAddress::parse("spec://org.demo/pkg/common/doc#root").unwrap()
     }
 
+    fn plan(mode: StaticCompileMode) -> ArtifactPlan {
+        let seed = seed();
+        ArtifactPlan {
+            artifact: ArtifactId::new("static-fragment").unwrap(),
+            mode,
+            contributions: vec![ArtifactInput::Normal {
+                meta: ContributionMeta {
+                    origin: document_origin(&seed),
+                    path: seed.doc_path.clone(),
+                },
+                seed,
+            }],
+        }
+    }
+
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_prefix_declares_parse_gather_close_merge_embed() {
-        let pipeline = BuiltinSchedule::new(seed()).pipeline;
+    fn production_prefix_declares_parse_gather_close_merge_embed_qualify() {
+        let pipeline = BuiltinSchedule::new(&plan(StaticCompileMode::Plain)).pipeline;
         let schedule = pipeline.schedule();
 
         assert!(matches!(
@@ -220,6 +266,7 @@ mod tests {
                 ScheduleItem::Pass(close),
                 ScheduleItem::Pass(merge),
                 ScheduleItem::Pass(embed),
+                ScheduleItem::Pass(qualify),
             ] if parse.name.as_str() == PARSE_PASS_NAME
                 && parse.input == SourceIr::SHAPE
                 && parse.output == DocumentIr::SHAPE
@@ -232,13 +279,16 @@ mod tests {
                 && embed.name.as_str() == EMBED_PASS_NAME
                 && embed.input == ClosureIr::SHAPE
                 && embed.output == ClosureIr::SHAPE
+                && qualify.name.as_str() == QUALIFY_PASS_NAME
+                && qualify.input == ClosureIr::SHAPE
+                && qualify.output == ClosureIr::SHAPE
         ));
     }
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
     fn parse_runs_once_for_each_addressed_document_then_gathers() {
-        let schedule = BuiltinSchedule::new(seed());
+        let schedule = BuiltinSchedule::new(&plan(StaticCompileMode::Plain));
         let documents = schedule
             .pipeline
             .run_documents(vec![
@@ -279,7 +329,7 @@ mod tests {
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
     fn parse_failure_keeps_the_pass_name_and_concrete_source() {
-        let error = BuiltinSchedule::new(seed())
+        let error = BuiltinSchedule::new(&plan(StaticCompileMode::Plain))
             .pipeline
             .run_documents(vec![source("unsupported", "body")])
             .unwrap_err();

@@ -7,7 +7,7 @@ use crate::{DocTree, SpecAddress};
 
 use crate::compiler::ir::{
     ArtifactId, ClosureContribution, ClosureDocument, ClosureNodeId, ContributionMeta,
-    DocumentAddress, EmittedIr, SourceFormatId,
+    DocumentAddress, EmittedIr, QualificationState, SourceFormatId, StaticCompileMode,
 };
 
 fn name(value: &str) -> PassName {
@@ -44,6 +44,8 @@ fn closure() -> ClosureIr {
             emission_order: vec![node],
         }],
         renames: Vec::new(),
+        qualification: QualificationState::Pending(StaticCompileMode::Plain),
+        absorption: None,
         pending_sources: None,
         pending_embeds: None,
     }

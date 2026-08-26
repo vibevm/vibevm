@@ -9,7 +9,10 @@
 //!    `contract`, in declaration order (§7.3);
 //! 3. **embed-expand** — named `embed` splices every surviving `#embed` to a
 //!    fixed point (§7.1);
-//! 4. **emit** — concatenate the nodes in topological order, each wrapped in
+//! 4. **qualify** — named `qualify` lowers aliases in both modes, plans
+//!    READ-ONCE absorption, and qualifies live node labels in qualified mode;
+//! 5. **emit** — the legacy tail absorbs, links, and concatenates surviving
+//!    nodes in topological order, each wrapped in
 //!    open/close markers (§11), so the output is reversible.
 //!
 //! A `#use` line is *resolved by the ordering* — its target is emitted, once,
@@ -25,10 +28,13 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
 use crate::address::{SpecAddress, SpecAddressError};
-use crate::compiler::ir::{ClosureContribution, ClosureIr, DocumentAddress};
+use crate::compiler::ir::{
+    ClosureContribution, ClosureIr, ContributionAbsorption, DocumentAddress, QualificationState,
+    StaticCompileMode,
+};
 use crate::embed::{EmbedError, SectionSource};
 use crate::gate::DuplicateId;
-use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
+use crate::qualify::{RenameEntry, read_anchor_id};
 use crate::use_graph::UseGraphError;
 
 /// Why static compilation failed.
@@ -85,7 +91,7 @@ pub fn compile_static(
     seed: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<String, CompileError> {
-    let (out, _) = compile_static_inner(seed, source, CompileMode::Plain)?;
+    let (out, _) = compile_static_inner(seed, source, StaticCompileMode::Plain)?;
     Ok(out)
 }
 
@@ -108,51 +114,29 @@ pub fn compile_static_qualified(
     seed: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    compile_static_inner(seed, source, CompileMode::QualifyPerNode)
-}
-
-/// Whether [`compile_static_inner`] qualifies each node under its own origin.
-#[derive(Clone, Copy)]
-enum CompileMode {
-    /// Reference semantics — labels emitted as authored (the structural
-    /// loader's oracle).
-    Plain,
-    /// Per-node origin qualification (PROP-035 §8 phase 5, B-006 rider).
-    QualifyPerNode,
+    compile_static_inner(seed, source, StaticCompileMode::QualifyPerNode)
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// → embed schedule, then the legacy qualify/absorb/link/assemble/emit tail.
-/// In [`CompileMode::QualifyPerNode`] each node is qualified under its own
-/// origin before emission and a second pass resolves cross-node short
-/// references; in [`CompileMode::Plain`] the body is emitted as-authored and
-/// the rename map is empty. One loop, parameterised by mode — never two copies
-/// of the phase body (B-006 rider).
+/// → embed → qualify schedule, then the legacy absorb/link/assemble/emit tail.
+/// Both public modes traverse the same pass list; mode is whole-artifact input
+/// state, never a privileged wrapper branch.
 fn compile_static_inner(
     seed: &SpecAddress,
     source: &impl SectionSource,
-    mode: CompileMode,
+    mode: StaticCompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_embedded_closure(seed, source)?;
-    compile_static_continuation(closure, mode)
+    let closure = crate::compiler::builtin::compile_qualified_closure(seed, source, mode)?;
+    compile_static_continuation(closure)
 }
 
-struct ContinuationNode {
-    key: String,
-    address: SpecAddress,
-    origin: String,
-    text: String,
-    aliases: BTreeMap<String, SpecAddress>,
-}
-
-/// Bridge from the migrated closure level into the still-legacy artifact tail.
+/// Bridge from the named qualify pass into the still-legacy artifact tail.
 ///
-/// Close owns explicit-use topology, named merge owns source replay/folding,
-/// and named embed owns recursive splicing and embed membership. The tail reads
-/// the expanded trees and aliases directly and performs no source access.
+/// Absorb consumes the occurrence-aligned plan produced from pre-rewrite text;
+/// it never recomputes against qualified bodies. Link remains the sole
+/// cross-node short-name owner. Assembly/emission only render surviving nodes.
 fn compile_static_continuation(
-    closure: ClosureIr,
-    mode: CompileMode,
+    mut closure: ClosureIr,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
     assert!(
         closure.pending_sources.is_none(),
@@ -162,97 +146,50 @@ fn compile_static_continuation(
         closure.pending_embeds.is_none(),
         "legacy continuation requires the named embed pass"
     );
-    let qualify = matches!(mode, CompileMode::QualifyPerNode);
-    let emission_order = match closure.contributions.as_slice() {
-        [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
+    let mode = match closure.qualification {
+        QualificationState::Applied(mode) => mode,
+        QualificationState::Pending(_) => {
+            panic!("legacy continuation requires the named qualify pass")
+        }
+    };
+    let absorption = closure
+        .absorption
+        .take()
+        .expect("legacy continuation requires qualify's absorption plan");
+    crate::compiler::qualify::validate_absorption(&absorption, &closure).unwrap_or_else(|error| {
+        panic!("legacy absorb received invalid qualification state: {error}")
+    });
+    let (emission_order, occurrences) = match (
+        closure.contributions.as_slice(),
+        absorption.contributions.as_slice(),
+    ) {
+        (
+            [ClosureContribution::Normal { emission_order, .. }],
+            [ContributionAbsorption::Normal { occurrences, .. }],
+        ) => (emission_order.clone(), occurrences.clone()),
         _ => unreachable!("one-seed compatibility close returns one normal contribution"),
     };
-    let texts: Vec<ContinuationNode> = emission_order
-        .into_iter()
-        .map(|node_id| {
-            let node = &closure.nodes[node_id.0];
-            let DocumentAddress::Spec(address) = &node.address else {
-                unreachable!("one-seed compatibility close contains only spec addresses")
-            };
-            ContinuationNode {
-                key: address.without_pin(),
-                address: address.clone(),
-                origin: node.origin.clone(),
-                text: node.tree.text(node.tree.root()),
-                aliases: node.aliases.clone(),
-            }
-        })
-        .collect();
-
-    // §7.4 READ-ONCE over overlapping spans: two closure nodes of ONE doc
-    // may nest (a whole-doc / `#root` node beside a section inside it — the
-    // `usage#root` + `usage#re-derive` shape). Emitting both defines every
-    // shared label twice, which the lane's XML conversion rightly refuses.
-    // A node whose text is wholly contained in a same-doc sibling's text is
-    // ABSORBED — its bytes already arrive with the ancestor. Equal texts
-    // (two addresses of one section) keep the first in topo order.
-    let absorbed: Vec<bool> = texts
-        .iter()
-        .enumerate()
-        .map(|(i, node)| {
-            texts.iter().enumerate().any(|(j, other)| {
-                i != j
-                    && node.address.authority == other.address.authority
-                    && node.address.doc_path == other.address.doc_path
-                    && (node.text.len() < other.text.len()
-                        && other.text.contains(node.text.as_str())
-                        || node.text == other.text && j < i)
-            })
-        })
-        .collect();
+    assert_eq!(
+        emission_order.len(),
+        occurrences.len(),
+        "legacy absorb requires an identity-bound occurrence sequence"
+    );
 
     let mut out = String::new();
-    let mut renames: Vec<(String, RenameEntry)> = Vec::new();
-    for (i, node) in texts.into_iter().enumerate() {
-        if absorbed[i] {
+    for (node_id, occurrence) in emission_order.into_iter().zip(occurrences) {
+        assert_eq!(
+            node_id, occurrence.node,
+            "legacy absorb requires identity-bound occurrence alignment"
+        );
+        if occurrence.absorbed {
             continue;
         }
-        let ContinuationNode {
-            key,
-            address: addr,
-            origin,
-            text,
-            aliases,
-        } = node;
-
-        // B-011 §7.4 (PROP-035 §8 phase 5): rewrite every `@!<Alias>` to the
-        // full `@spec://<target>` it denotes. The alias table is parsed from the
-        // pre-strip `folded` text, so the `#use … as <Alias>` bindings survive
-        // even though the declaration lines themselves are stripped above (they
-        // leave the body together with every other `#use` line). The compiled
-        // lane is then self-describing without the alias table, and resolvable
-        // after any future cleaning — the alias binds to the address, never to
-        // compiled text.
-        let emitted = rewrite_at_bang(&text, &aliases);
-
-        // B-006 rider (PROP-035 §8 phase 5): in qualified mode each node's
-        // emitted body is qualified under ITS OWN authoring origin — derived
-        // from the topo key the same way `normal_seed` derives a package
-        // coordinate — never the entry's, so a node spliced in from another
-        // package keeps its true provenance. Per-node, so a node referencing
-        // its own label is resolved within the node; a cross-node short link is
-        // left for the second pass below.
-        let emitted = if qualify {
-            // Multi-doc closures of ONE package (a contract `@spec`-pulling a
-            // sibling doc) would collide on the standard anchors (`root`,
-            // `summary`) under a plain origin slug — so a node outside the
-            // package's `boot/` contract home carries its doc in the slug
-            // (PROP-035 §8 phase 5, the multi-doc rider). Pure per-node:
-            // f(origin, doc, label), independent of closure composition, so
-            // late additions stay append-only and today's boot-contract
-            // units keep their exact names.
-            let slug_origin = node_slug_origin(&addr, &origin);
-            let (qualified, node_renames) = qualify_contribution(&emitted, &slug_origin);
-            renames.extend(node_renames.into_iter().map(|r| (origin.clone(), r)));
-            qualified
-        } else {
-            emitted
+        let node = &closure.nodes[node_id.0];
+        let DocumentAddress::Spec(address) = &node.address else {
+            unreachable!("one-seed compatibility close contains only spec addresses")
         };
+        let key = address.without_pin();
+        let emitted = node.tree.text(node.tree.root());
 
         writeln!(out, "{}", crate::markers::open(&key)).unwrap(); // phase 5
         out.push_str(&emitted);
@@ -262,91 +199,17 @@ fn compile_static_continuation(
         writeln!(out, "{}", crate::markers::close(&key)).unwrap();
     }
 
-    if qualify {
+    let renames: Vec<(String, RenameEntry)> = closure
+        .renames
+        .into_iter()
+        .map(|entry| (entry.origin, entry.rename))
+        .collect();
+    if matches!(mode, StaticCompileMode::QualifyPerNode) {
         // Second pass — resolve the cross-node short references the per-node
         // qualify could not see (B-006 rider).
         out = resolve_cross_node_short_links(&out, &renames)?;
     }
     Ok((out, renames))
-}
-
-/// The authoring origin of a closure node — `<group>/<name>` for a package, the
-/// host token for the host project (PROP-035 §6). Derived from the node's topo
-/// key by the same authority half `normal_seed` builds a coordinate from, so a
-/// node compiled from another package's `#use` target is qualified under THAT
-/// package's origin, not the entry's (B-006 rider).
-/// The slug-authority a node's labels qualify under. A doc in a package's
-/// contract home — `boot/` (the snippet home) or `contract/` (§4) — keeps
-/// the plain origin (today's names, byte-stable); any other doc appends its
-/// doc-path so two docs of one package cannot define the same qualified
-/// label (`root`, `summary` are near-universal). The doc rides the origin
-/// as `/`-joined-with-`.`-segments so [`origin_slug`]'s existing mapping
-/// (`/`→`--`, `.`→`-`, lowercase) yields `<origin-slug>--<doc-seg-doc-seg…>`
-/// with no qualify-side change.
-fn node_slug_origin(addr: &SpecAddress, origin: &str) -> String {
-    if addr.doc_path.starts_with("boot/")
-        || addr.doc_path.starts_with("contract/")
-        || addr.doc_path.is_empty()
-    {
-        return origin.to_string();
-    }
-    format!("{origin}/{}", addr.doc_path.replace('/', "."))
-}
-
-/// Rewrite every `@!<Alias>` in `text` to the full `@spec://<target>` its alias
-/// binds to (B-011 §7.4 / PROP-035 §8 phase 5). Fenced code blocks are left
-/// untouched (the shared fence mask). An `@!X` whose `X` is not a declared alias
-/// is left in place — it is already a `DirectiveError` the scan recorded, and
-/// the rewrite must not silently drop prose. The fast path (no aliases) returns
-/// the text unchanged, so a directive-free lane is byte-identical.
-fn rewrite_at_bang(text: &str, aliases: &BTreeMap<String, SpecAddress>) -> String {
-    if aliases.is_empty() {
-        return text.to_string();
-    }
-    let lines: Vec<String> = text.split('\n').map(String::from).collect();
-    let fenced = crate::doctree::fence_mask(&lines);
-    let out_lines: Vec<String> = lines
-        .iter()
-        .enumerate()
-        .map(|(i, line)| {
-            if fenced[i] {
-                line.clone()
-            } else {
-                rewrite_at_bang_line(line, aliases)
-            }
-        })
-        .collect();
-    out_lines.join("\n")
-}
-
-/// Rewrite `@!<Alias>` occurrences in a single non-fenced line, leaving
-/// everything else byte-identical. The identifier boundary reuses
-/// [`directives::identifier_run`] so this rewrite and the scanner can never
-/// disagree on what counts as a name.
-fn rewrite_at_bang_line(line: &str, aliases: &BTreeMap<String, SpecAddress>) -> String {
-    let bytes = line.as_bytes();
-    let mut out = String::with_capacity(line.len());
-    let mut last = 0usize; // first not-yet-flushed byte (exclusive boundary)
-    let mut i = 0usize;
-    while i + 1 < bytes.len() {
-        if bytes[i] == b'@' && bytes[i + 1] == b'!' {
-            let id = crate::directives::identifier_run(&line[i + 2..]);
-            if !id.is_empty()
-                && let Some(target) = aliases.get(id)
-            {
-                out.push_str(&line[last..i]);
-                out.push('@');
-                out.push_str(&target.without_pin());
-                let after = i + 2 + id.len();
-                last = after;
-                i = after;
-                continue;
-            }
-        }
-        i += 1;
-    }
-    out.push_str(&line[last..]);
-    out
 }
 
 /// Second pass of per-node qualification (B-006 rider / PROP-035 §8 phase 5):
@@ -462,5 +325,7 @@ mod fold_tests;
 mod inheritance_parity_tests;
 #[cfg(test)]
 mod merge_characterization_tests;
+#[cfg(test)]
+mod qualify_characterization_tests;
 #[cfg(test)]
 mod tests;

@@ -255,12 +255,31 @@ pub(crate) struct ContributionMeta {
     pub(crate) path: String,
 }
 
+/// The compatibility/static-lane policy carried through the whole artifact.
+///
+/// Both modes traverse the same named pass list. `Plain` keeps labels as
+/// authored, but qualification still lowers aliases and plans READ-ONCE
+/// absorption; `QualifyPerNode` additionally qualifies node-local labels.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum StaticCompileMode {
+    Plain,
+    QualifyPerNode,
+}
+
+/// Runtime typestate of the closure-level qualify transform.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum QualificationState {
+    Pending(StaticCompileMode),
+    Applied(StaticCompileMode),
+}
+
 /// Immutable invocation input for compiling one artifact.
 ///
 /// This is configuration around the five levels, not another IR level.
 #[derive(Debug, Clone)]
 pub(crate) struct ArtifactPlan {
     pub(crate) artifact: ArtifactId,
+    pub(crate) mode: StaticCompileMode,
     pub(crate) contributions: Vec<ArtifactInput>,
 }
 
@@ -332,6 +351,36 @@ pub(crate) enum ClosureContribution {
     },
 }
 
+/// READ-ONCE disposition aligned to one contribution occurrence-for-occurrence.
+///
+/// A node id may repeat in one order or be shared by several roots, so a bool
+/// mask or set of absorbed node ids would lose the identity it judged.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct AbsorptionOccurrence {
+    pub(crate) node: ClosureNodeId,
+    pub(crate) absorbed: bool,
+}
+
+/// The analyzed occurrence sequence bound to its exact contribution identity.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum ContributionAbsorption {
+    Normal {
+        meta: ContributionMeta,
+        seed: ClosureNodeId,
+        occurrences: Vec<AbsorptionOccurrence>,
+    },
+    Simple {
+        meta: ContributionMeta,
+        address: DocumentAddress,
+    },
+}
+
+/// The immutable pre-qualification overlap judgment for one artifact.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct AbsorptionPlan {
+    pub(crate) contributions: Vec<ContributionAbsorption>,
+}
+
 /// The ordered multi-seed graph for one final artifact.
 ///
 /// A graph node may appear in more than one normal root's `emission_order`.
@@ -344,6 +393,8 @@ pub(crate) struct ClosureIr {
     pub(crate) edges: Vec<ClosureEdge>,
     pub(crate) contributions: Vec<ClosureContribution>,
     pub(crate) renames: Vec<OriginRename>,
+    pub(crate) qualification: QualificationState,
+    pub(crate) absorption: Option<AbsorptionPlan>,
     pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
     pub(crate) pending_embeds: Option<EmbedResolutionSnapshot>,
 }

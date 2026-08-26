@@ -18,9 +18,12 @@
 //! pipeline (§8) and link tables (§10) build on top of it next.
 
 mod address;
-#[expect(
-    dead_code,
-    reason = "later R3 phase carriers stay dormant until their built-in passes migrate"
+#[cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "later R3 phase carriers stay dormant until their built-in passes migrate"
+    )
 )]
 mod compiler;
 mod directives;

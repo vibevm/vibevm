@@ -4,7 +4,9 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
-use crate::compiler::ir::{ArtifactId, ContributionMeta, SourceFormatId, SourceIr};
+use crate::compiler::ir::{
+    ArtifactId, ContributionMeta, QualificationState, SourceFormatId, SourceIr, StaticCompileMode,
+};
 
 fn spec(raw: &str) -> SpecAddress {
     SpecAddress::parse(raw).unwrap()
@@ -73,6 +75,8 @@ fn closure(root: &str, tree: &str, snapshot: SourceResolutionSnapshot) -> Closur
             emission_order: vec![ClosureNodeId(0)],
         }],
         renames: Vec::new(),
+        qualification: QualificationState::Pending(StaticCompileMode::Plain),
+        absorption: None,
         pending_sources: Some(snapshot),
         pending_embeds: None,
     }

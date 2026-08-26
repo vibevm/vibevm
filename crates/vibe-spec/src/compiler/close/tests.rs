@@ -21,6 +21,24 @@ fn document(raw: &str, text: &str) -> DocumentIr {
     DocumentIr::new(source, tree)
 }
 
+fn close(
+    seed: &SpecAddress,
+    documents: Documents,
+    state: &CloseState,
+) -> Result<ClosureIr, UseGraphError> {
+    close_documents(
+        &ArtifactId::new("static-fragment").unwrap(),
+        &ContributionMeta {
+            origin: document_origin(seed),
+            path: seed.doc_path.clone(),
+        },
+        StaticCompileMode::Plain,
+        seed,
+        documents,
+        state,
+    )
+}
+
 fn node_keys(closure: &ClosureIr) -> Vec<String> {
     closure
         .nodes
@@ -46,7 +64,7 @@ fn diamond_is_dependency_first_deduplicated_and_exact() {
         document(c, &format!("# C {{#root}}\n#use {d}\n")),
     ]);
 
-    let closure = close_documents(&spec(a), documents, &CloseState::default()).unwrap();
+    let closure = close(&spec(a), documents, &CloseState::default()).unwrap();
 
     assert_eq!(node_keys(&closure), vec![d, b, c, a]);
     assert_eq!(
@@ -73,7 +91,7 @@ fn implementation_cycle_keeps_the_exact_public_path() {
     let state = CloseState::default();
     state.record_failure(&missing, "later missing".to_string());
 
-    let error = close_documents(&spec(a), documents, &state).unwrap_err();
+    let error = close(&spec(a), documents, &state).unwrap_err();
     assert_eq!(
         error,
         UseGraphError::Cycle(vec![a.to_string(), b.to_string(), a.to_string()])
@@ -91,7 +109,7 @@ fn contract_cycle_is_admitted_with_dependency_first_legacy_order() {
         document(b, &format!("# B {{#root}}\n#use {a}\n")),
     ]);
 
-    let closure = close_documents(&spec(a), documents, &CloseState::default()).unwrap();
+    let closure = close(&spec(a), documents, &CloseState::default()).unwrap();
     assert_eq!(node_keys(&closure), vec![b, a]);
 }
 
@@ -114,7 +132,7 @@ fn unresolved_load_is_replayed_at_its_declared_graph_position() {
     let state = CloseState::default();
     state.record_failure(&missing, "not in mock".to_string());
 
-    let error = close_documents(&spec(a), documents, &state).unwrap_err();
+    let error = close(&spec(a), documents, &state).unwrap_err();
     assert_eq!(
         error,
         UseGraphError::Unresolved {
@@ -135,7 +153,7 @@ fn close_is_one_artifact_and_its_parsed_tree_body_is_load_bearing() {
     );
     let document = DocumentIr::new(raw, DocTree::parse("# Parsed {#parsed}\nPARSED\n"));
 
-    let closure = close_documents(
+    let closure = close(
         &spec(key),
         Documents::new(vec![document]),
         &CloseState::default(),
@@ -180,7 +198,7 @@ fn close_transports_invalid_pending_sources_without_judging_membership() {
     let state = CloseState::default();
     state.set_pending_sources(pending.clone());
 
-    let closure = close_documents(&spec(key), Documents::new(vec![document]), &state).unwrap();
+    let closure = close(&spec(key), Documents::new(vec![document]), &state).unwrap();
 
     assert_eq!(closure.nodes.len(), 1);
     assert!(closure.edges.is_empty());
@@ -198,7 +216,7 @@ fn close_transports_pending_embeds_without_judging_membership() {
     let state = CloseState::default();
     state.set_pending_embeds(pending.clone());
 
-    let closure = close_documents(
+    let closure = close(
         &spec(key),
         Documents::new(vec![document(key, "# Root {#root}\n")]),
         &state,
@@ -208,4 +226,9 @@ fn close_transports_pending_embeds_without_judging_membership() {
     assert_eq!(closure.nodes.len(), 1);
     assert!(closure.edges.is_empty());
     assert_eq!(closure.pending_embeds, Some(pending));
+    assert_eq!(
+        closure.qualification,
+        QualificationState::Pending(StaticCompileMode::Plain)
+    );
+    assert!(closure.absorption.is_none());
 }

@@ -11,7 +11,8 @@ use crate::{Authority, SpecAddress};
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
     ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr,
-    ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr, Documents,
+    ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr, Documents, QualificationState,
+    StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 use super::source_snapshot::SourceResolutionSnapshot;
@@ -93,15 +94,27 @@ impl CloseState {
 
 pub(crate) struct ClosePass {
     name: PassName,
+    artifact: ArtifactId,
+    meta: ContributionMeta,
+    mode: StaticCompileMode,
     seed: SpecAddress,
     state: CloseState,
 }
 
 impl ClosePass {
-    pub(crate) fn new(seed: SpecAddress, state: CloseState) -> Self {
+    pub(crate) fn new(
+        artifact: ArtifactId,
+        meta: ContributionMeta,
+        mode: StaticCompileMode,
+        seed: SpecAddress,
+        state: CloseState,
+    ) -> Self {
         Self {
             name: PassName::new(CLOSE_PASS_NAME)
                 .expect("the static built-in close pass name is non-blank"),
+            artifact,
+            meta,
+            mode,
             seed,
             state,
         }
@@ -118,11 +131,21 @@ impl Pass for ClosePass {
     }
 
     fn run(&self, input: Documents) -> Result<ClosureIr, UseGraphError> {
-        close_documents(&self.seed, input, &self.state)
+        close_documents(
+            &self.artifact,
+            &self.meta,
+            self.mode,
+            &self.seed,
+            input,
+            &self.state,
+        )
     }
 }
 
 fn close_documents(
+    artifact: &ArtifactId,
+    meta: &ContributionMeta,
+    mode: StaticCompileMode,
     seed: &SpecAddress,
     input: Documents,
     state: &CloseState,
@@ -207,21 +230,18 @@ fn close_documents(
 
     let seed_key = seed.without_pin();
     let seed_id = node_ids[&seed_key];
-    let origin = document_origin(seed);
     Ok(ClosureIr {
-        artifact: ArtifactId::new("static-fragment")
-            .expect("the static compatibility artifact id is non-blank"),
+        artifact: artifact.clone(),
         nodes,
         edges,
         contributions: vec![ClosureContribution::Normal {
-            meta: ContributionMeta {
-                origin,
-                path: seed.doc_path.clone(),
-            },
+            meta: meta.clone(),
             seed: seed_id,
             emission_order: (0..order.len()).map(ClosureNodeId).collect(),
         }],
         renames: Vec::new(),
+        qualification: QualificationState::Pending(mode),
+        absorption: None,
         pending_sources: Some(state.pending_sources()),
         pending_embeds: Some(state.pending_embeds()),
     })
