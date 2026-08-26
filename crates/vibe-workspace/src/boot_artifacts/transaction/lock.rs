@@ -9,7 +9,10 @@ use crate::safe_file::{self, FileIdentity};
 
 use super::io_error;
 
-pub(super) const LOCK_NAME: &str = ".vibe-boot-artifacts.lock";
+/// The lock basename is law in `vibe_core::layout` (the SSOT); the
+/// alias keeps this module's and the safety tests' `lock::LOCK_NAME`
+/// spellings working.
+pub(super) const LOCK_NAME: &str = vibe_core::layout::BOOT_ARTIFACTS_LOCK;
 
 pub(super) struct BootArtifactLock {
     file: File,

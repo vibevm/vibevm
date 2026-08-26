@@ -72,6 +72,13 @@ pub const INDEX_MD: &str = "INDEX.md";
 pub const STATIC_XML: &str = "STATIC.xml";
 /// The generated static boot lane, Markdown form.
 pub const STATIC_MD: &str = "STATIC.md";
+/// The transaction engine's persistent lock in the boot directory
+/// (vibe-workspace's crash-released exclusive lock). Unlike the journal
+/// and stage files it is not crash state: it survives a successful
+/// transaction as normal layout, so a checker treats exactly this name
+/// as engine-owned clean state. The basename is law here once —
+/// vibe-workspace sources its lock name from this constant.
+pub const BOOT_ARTIFACTS_LOCK: &str = ".vibe-boot-artifacts.lock";
 
 /// The project-relative specs root under the NEW layout: `vibevm/vibespecs`.
 pub fn vibespecs_root() -> PathBuf {
@@ -274,6 +281,15 @@ mod tests {
         assert_eq!(boot_index(), boot_dir().join(INDEX_MD));
         assert_eq!(boot_static_xml(), boot_dir().join(STATIC_XML));
         assert_eq!(boot_static_md(), boot_dir().join(STATIC_MD));
+    }
+
+    #[test]
+    fn the_boot_artifacts_lock_name_is_pinned() {
+        // A wire-format golden, not a derivation: the exact basename is
+        // the contract with the on-disk world (`.gitignore`, checkers,
+        // vibe-workspace's lock), so here the literal is the point — the
+        // composed-paths rule above does not apply to it.
+        assert_eq!(BOOT_ARTIFACTS_LOCK, ".vibe-boot-artifacts.lock");
     }
 
     #[test]

@@ -87,6 +87,15 @@ impl Check for BootDirectoryCheck {
                 has_static_xml |= name == "STATIC.xml";
                 continue;
             }
+            // The transaction engine's persistent lock is the one
+            // engine-owned file that is normal layout, not crash state:
+            // it is crash-released and survives a successful transaction,
+            // so exactly this name is silently accepted. Exact equality
+            // only — near misses (`.bak`) and the crash-only journal and
+            // stage control names must keep warning below.
+            if name == vibe_core::layout::BOOT_ARTIFACTS_LOCK {
+                continue;
+            }
             if !vibe_specdoc::is_spec_source(&path) {
                 report.warn(
                     CheckId::BootDirectory,
@@ -237,6 +246,63 @@ mod tests {
             "a non-spec-source file in the boot directory must warn; got: {:?}",
             report.findings
         );
+    }
+
+    /// The transaction engine's persistent lock is the ONE engine-owned
+    /// file the boot directory silently accepts: it is crash-released and
+    /// survives a successful transaction as normal layout. Exactly that
+    /// name and nothing else — near misses and the crash-only journal and
+    /// stage control names stay warnings like any stray.
+    #[test]
+    fn boot_dir_accepts_only_the_exact_persistent_lock() {
+        let clean = tempdir().unwrap();
+        write_minimal_project(clean.path());
+        fs::write(
+            clean
+                .path()
+                .join(layout::current_boot_dir())
+                .join(layout::BOOT_ARTIFACTS_LOCK),
+            "",
+        )
+        .unwrap();
+        let report = check_project(clean.path(), &opts());
+        assert!(
+            !report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::BootDirectory),
+            "the exact persistent lock must be engine-owned clean state; got: {:?}",
+            report.findings
+        );
+
+        // A suffix away from the lock, plus the crash-only controls a
+        // crashed transaction leaves behind (journal, stage) — none of
+        // them is granted clean-state status.
+        let strays = [
+            format!("{}.bak", layout::BOOT_ARTIFACTS_LOCK),
+            ".vibe-boot-artifacts.transaction.toml".to_string(),
+            ".vibe-boot-txn-ABCDEF12-index-after.stage".to_string(),
+        ];
+        for name in strays {
+            let project = tempdir().unwrap();
+            write_minimal_project(project.path());
+            fs::write(
+                project.path().join(layout::current_boot_dir()).join(&name),
+                "",
+            )
+            .unwrap();
+            let report = check_project(project.path(), &opts());
+            assert!(
+                report
+                    .findings
+                    .iter()
+                    .any(|f| f.check == CheckId::BootDirectory
+                        && f.severity == Severity::Warning
+                        && f.message.contains(name.as_str())),
+                "`{name}` must stay a BootDirectory warning; got: {:?}",
+                report.findings
+            );
+        }
     }
 
     /// PROP-045 ##LOADER-LAW: a dialect-XML boot file is a first-class
