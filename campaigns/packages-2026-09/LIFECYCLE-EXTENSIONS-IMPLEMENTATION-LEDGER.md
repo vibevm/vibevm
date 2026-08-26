@@ -39,8 +39,9 @@ only durable home of a decision.
   files / 2,280 verdicts sealable, 191 files / 859 moved facts requiring
   re-judgement, and 236 refused files / 8,634 verdicts; a further 122 moved facts
   live inside 22 refused files and are reported separately, never double-counted.
-  Live judging debt is now measured: **2,498 unjudged facts in 154 files, 0
-  orphaned, 484 stale files**. One historical gap is named separately from
+  Live judging debt after the three new ChatGPT-runner facts is now measured:
+  **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files**. One
+  historical gap is named separately from
   1,082 comparable moved facts; no sealing or re-judgement occurred.
 - Full 47-step panel for this batch: pending. Two runs reached workspace tests
   and exposed real integration tails (redacted TOML diagnostic oracle; expected
