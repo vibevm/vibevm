@@ -1,82 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
-  <title id="root">WAL — чекпойнт 2026-08-25 (дизайн-день: PROP-054 и ТЗ исполнителя посажены)</title>
-  <status stage="spec" state="done" comment="лайфсайкл и машина расширений спроектированы по четырём владельческим рулингам; спека и входное ТЗ мультиагентной коробки на main; стройка не начата — ждёт владельческого запуска коробки"/>
+  <title id="root">WAL — checkpoint 2026-08-26: lifecycle/extensions implementation active</title>
+  <status stage="impl" state="work" comment="R1/R2 complete; R3.1-R3.2, R7.1 and R8.1 landed; verifier, compiler tiers, native/pass tier, agent handshake and expanded build/package/deploy remain active"/>
+
   <current-phase title="Current phase">
-    <p><WAL-PHASE fact="true" status="spec/done">Дизайн-день 2026-08-25. **PROP-054**
-(`vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml`, `a11d881f`) — лайфсайкл
-Maven-жанра (девять фаз validate→…→deploy + clean, цепочка обобщает
-PROP-053) и единая машина расширений: `[[extension]]`-грамматика, пять
-хендлеров (builtin/script/binary/native/agent), двухъярусный компилятор —
-staged-трансформы и pass tier (полный IR за `compiler_internals`; пять
-уровней IR; пассы transform/lowering/frontend/backend; verifier между
-пассами; рефакторинг `compile_static_inner` в композируемый конвейер);
-installation-is-consent + observability (реестр/трейс/lane-analyzer);
-C-ABI/VST-провод нативов, prebuilt closed-source; ревизия материализации
-— слот-рекорд `.vibe-slot.toml` и дифф вместо wipe (сегодня install
-убивает слотовые `target/` — `##WIPE-TODAY`). §14 Reference и §15
-Glossary — под младших исполнителей. **ТЗ коробки**
-(`campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`,
-`dbd7a772`) — восемь инкрементальных волн R1–R8, каждый шаг с
-демо-блоком; правила, мины, SPEC-DEBT-протокол. Панель: утренний полный
-прогон all green 54/54; вечерние правки — только доки; финальную панель
-владелец санкционировал словом. specmap 6702/0/0.</WAL-PHASE></p>
+    <p><WAL-PHASE fact="true" status="impl/work">The active epic is
+    `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md`. Its truthful
+    per-step state, owner-addition ledger, physical recovery audit and dependency
+    plan live in
+    `campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`.
+    R1 and R2 are complete. R3's whole typed parse→close→merge→embed→qualify→
+    absorb→link→assemble→emit schedule is on `main`; R3.3 verifier is in the
+    `codex/r3-verifier` execution worktree. Parallel work has begun on the
+    schema-first six-carrier compiler IR wire (`codex/r6-ir-wire`), R7.2 CLI
+    agent/output contract (`codex/r7-agent-cli`) and R8 artifact/mechanism
+    grammar (`codex/r8-mechanism-grammar`). Root retains architecture, diff
+    acceptance, commits and gates.</WAL-PHASE></p>
   </current-phase>
-  <constraints title="Constraints — do not violate">
-    <p><WAL-C-EPOCHS fact="true" status="impl/done">`formats/EPOCHS.toml` не трогать; `public` флипает
-только владелец.</WAL-C-EPOCHS></p>
-    <p><WAL-C-ANCHORS fact="true" status="impl/done">Якорь с вердиктом не заменяют — надгробие с
-наследником; `spec://`-адреса стабильны; фрозен-слоты пакетов —
-замороженная история; синк-таргеты (mcp, vendor) — write-through: править
-только авторскую копию, разносит `cargo xtask sync-engines`; пакетные
-воркспейсы форматирует ИХ собственный `cargo fmt`.</WAL-C-ANCHORS></p>
-    <p><WAL-C-AT-SPEC fact="true" status="impl/done">`@spec` в компиляторе — НЕ ребро вклейки (PROP-035,
-рулинг 2026-08-24): вклеивает только явный `#use`.</WAL-C-AT-SPEC></p>
-    <p><WAL-C-CACHE-REFRESH fact="true" status="impl/done">Машинный кэш write-once с гардом дрейфа
-(`insert_current_at`): не обходить руками, голый `insert_at` в фетч-пути
-не возвращать.</WAL-C-CACHE-REFRESH></p>
-    <p><WAL-C-PANEL-JOBS fact="true" status="impl/done">Панель на занятом боксе — `CARGO_BUILD_JOBS=4`
-(0xc0000142 от полного параллелизма линкеров); потолок 2 холодных
-cargo-воркера; вотчеры только Monitor; убийства PID-точечно.</WAL-C-PANEL-JOBS></p>
-    <p><WAL-C-WIN-LOCKS fact="true" status="impl/done">Windows-локи: user-mapped section (1224) на
-STATIC/INDEX и Access denied (5) на свапе generated — транзиент: снести
-`generated.new-*`, перегнать. `check-codegen` диффит против ИНДЕКСА.
-WAL-проза: строка-продолжение факта не начинается с `+ `.</WAL-C-WIN-LOCKS></p>
-    <p><WAL-C-SCAN-WRITES fact="true" status="impl/done">`vibe progress scan --campaign` — ПИШУЩИЙ верб:
-перепроецирует run/-стейт кампании на текущие include-глобы и прунит
-out-of-scope записи С ВЕРДИКТАМИ (2026-08-25 чуть не унёс 377k строк
-кэша; откатано). Диагностика долга — только `judging-debt.py` /
-`text-stability.py`; scan с зоной гонять лишь когда изменение стейта —
-цель.</WAL-C-SCAN-WRITES></p>
-    <p><WAL-C-LANDING-ORDER fact="true" status="impl/done">Порядок посадки: дифф → `cargo fmt --all` (плюс
-пакетные fmt) → `cargo xtask specmap` → панель (вердикт по хвосту
-`all green`) → суд (если трогался судимый корпус) → коммит →
-`cargo xtask mirror`.</WAL-C-LANDING-ORDER></p>
+
+  <landed title="Landed evidence">
+    <facts ordered="false">
+      <WAL-R1 fact="true" status="impl/done">R1 slot ownership/diff/freshness/
+      verify-heal/hook law: `6d606ef2`, `1cf4f189`, `6a7f750d`, `4503fdb6`,
+      `9c545f0d`; amendment draft in `SPEC-DEBT-LIFECYCLE.md`.</WAL-R1>
+      <WAL-R2 fact="true" status="impl/done">R2 lifecycle engine through the
+      phase-announcer owner scenario: grammar/controls, two epochs, nine phases,
+      typed envelope, freshness, script/binary, presets and registry query.
+      Commissioning evidence `3137990c`.</WAL-R2>
+      <WAL-R3 fact="true" status="impl/work">R3.1/R3.2 are complete through
+      `4403cb55`, including one whole artifact, named backends and crash-safe
+      boot publication. R3.3/R3.4 remain open.</WAL-R3>
+      <WAL-R7 fact="true" status="impl/work">R7.1 provider seam is landed at
+      `f42334ff` + `e2392893`; agent execution, hosted resume and MCP remain
+      open. Provider presence activates nothing by itself.</WAL-R7>
+      <WAL-R8 fact="true" status="impl/work">R8.1 project-only skill package
+      binding is landed at `c0fa49be` + `9275f373`, with strict JTD receipt,
+      intent/recovery/CAS and containment. The general artifact/mechanism/deploy
+      plane remains open.</WAL-R8>
+    </facts>
+  </landed>
+
+  <architecture title="Architecture decisions in force">
+    <facts ordered="false">
+      <WAL-C-PHASE-BOUNDARY fact="true" status="spec/done">Dependency
+      materialisation is `install`; portable production is `package`; user,
+      client, remote and system reconciliation is `deploy`. `clean` never
+      silently undeploys.</WAL-C-PHASE-BOUNDARY>
+      <WAL-C-ALGORITHMIC-BASELINE fact="true" status="spec/done">VibeVM
+      remains fully useful without an LLM. Paid enhancement is explicit per
+      feature (`off | assist | required`), lazily binds a provider and cannot
+      replace the subsystem's algorithmic mode. An explicitly selected agent
+      handler is itself the requested advanced action and fails honestly when
+      neither provider nor host exists.</WAL-C-ALGORITHMIC-BASELINE>
+      <WAL-C-IR-CARDINALITY fact="true" status="spec/done">Source/document
+      execute per addressed document; Documents gathers once; closure/lane/
+      emitted execute per complete final artifact. One JTD epoch with six
+      discriminated carriers is pulled before R3.4 and is shared by trace and
+      the R6 pass ABI.</WAL-C-IR-CARDINALITY>
+      <WAL-C-VERIFIER fact="true" status="spec/done">The verifier is immutable
+      and manager-owned. Use/Source contract-only cycles follow their existing
+      per-relation law; Embed is acyclic; a union cycle is not automatically a
+      recursive cycle. R3 enables only in tests; R6 enables the same seam for
+      every plugin pass, with no manifest off switch.</WAL-C-VERIFIER>
+      <WAL-C-MECHANISMS fact="true" status="spec/done">Scheduled extensions
+      answer when; sibling qualified mechanism providers answer how. Selection
+      is exact target pin → host route → builtin default → hard failure.
+      Builtins are replaceable providers, never hidden branches.</WAL-C-MECHANISMS>
+      <WAL-C-DEPLOY fact="true" status="spec/done">Deploy uses named target
+      profiles, explicit scope/effects, plan, durable intent, independent verify
+      and strict receipt. Static skill, Agent Plugin, Cargo, client projections,
+      `~/.vibe/bin`, custom installers and future system package providers share
+      this artifact/mechanism plane.</WAL-C-DEPLOY>
+      <WAL-C-WORKER-HANDOFF fact="true" status="spec/done">Claudez and Opus
+      are trusted with normal machine tools. A writing worker's handoff remains
+      a visible unstaged diff plus report; it does not add/commit/stash/branch/
+      reset/push or hide product state. Root reviews and integrates.</WAL-C-WORKER-HANDOFF>
+    </facts>
+  </architecture>
+
+  <constraints title="Current operational constraints">
+    <facts ordered="false">
+      <WAL-C-GATES fact="true" status="impl/done">Development uses exact
+      affected tests. The full 47-step panel runs only at coherent batch
+      boundaries on the final unchanged tree, with `CARGO_BUILD_JOBS=4` and
+      Git Bash on this Windows host.</WAL-C-GATES>
+      <WAL-C-JTD fact="true" status="impl/done">Every machine JSON/ABI/report
+      starts from JTD + registry + corpus + codegen. Never touch
+      `formats/EPOCHS.toml` or hand-edit generated Rust.</WAL-C-JTD>
+      <WAL-C-FILES fact="true" status="impl/done">Authored changed/new files
+      stay at or below 600 physical lines; split by domain seam before the
+      gate.</WAL-C-FILES>
+      <WAL-C-SCAN fact="true" status="impl/done">`vibe progress scan` writes
+      campaign state. Debt measurement uses `judging-debt.py`; the current
+      `text-stability.py` hash recipe is stale and must be repaired before its
+      per-fact output is trusted.</WAL-C-SCAN>
+    </facts>
   </constraints>
+
   <next title="Next">
-    <p><WAL-NEXT fact="true" status="spec/work">Кандидаты (владельческие, сессия не начинает сама):
-(1) запуск мультиагентной коробки по
-`campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (коробка
-читает PROP-054 целиком первым; права на коммит/пуш — слово владельца;
-статусы фактов спек исполнитель не двигает — SPEC-DEBT-протокол);
-(2) релиз 1.0.0 — PAT → С6 → тег; (3) B-107 и прежние B-103/B-105;
-(4) `impl/plan → impl/done` в PROP-053 и PROP-011-рулингах; (5) TS
-fresh-e2e — `npm install` в tools/ts-extract и ts-oracle; (6) открытые
-развилки PROP-054 §13 — create-бюджет, deploy-цели.</WAL-NEXT></p>
+    <p><WAL-NEXT fact="true" status="impl/work">Finish the durable reconciliation
+    commit, run the current unchanged full panel + host check + boot-byte no-op,
+    and mirror the ten single-box commits. Then accept/repair and integrate the
+    four active implementation worktrees in dependency order. The full
+    remaining sequence is in the implementation ledger; no wave or owner
+    addition is dropped merely because the in-memory plan is compacted.</WAL-NEXT></p>
   </next>
+
   <known-issues title="Known issues">
-    <p><WAL-ISSUES fact="true" status="impl/work">2 softened-concept warnings панели — штатные. Шаг 53:
-3 dead-exclude предупреждения facts.toml (B-107). B-106 — гниль 116
-старых ссылок (P3). Прежние очереди (37 stale-форматов, аудит
-2026-08-06-01, релиз за PAT) — без изменений. `AGENT-MODE.toml` вернулся
-в `auto` (временный collab кончился с сессией).</WAL-ISSUES></p>
+    <facts ordered="false">
+      <WAL-I-PUBLICATION fact="true" status="impl/work">At this checkpoint,
+      `main` is ten commits ahead of both mirrors. This is the largest immediate
+      loss risk; mirror after the current batch panel, not after the whole epic.
+      </WAL-I-PUBLICATION>
+      <WAL-I-DURABLE-STATE fact="true" status="impl/work">The prior WAL,
+      CONTINUE, TASKS and TZ header all said implementation had not started.
+      This checkpoint and the new ledger repair that contradiction; CONTINUE
+      and TASKS are refreshed in the same recovery batch.</WAL-I-DURABLE-STATE>
+      <WAL-I-DEBT fact="true" status="impl/work">Judging debt is 0 unjudged / 0
+      orphaned with 35 stale files on the host measurement. The stability helper
+      refuses because its hash recipe diverged across all 502 judged files.
+      </WAL-I-DEBT>
+      <WAL-I-PANEL fact="true" status="impl/work">Workspace tests are green.
+      The final full panel for the current batch has not yet completed after the
+      two repaired integration findings.</WAL-I-PANEL>
+    </facts>
   </known-issues>
-  <done title="Done">
-    <p><WAL-DONE fact="true" status="spec/done">2026-08-25: дизайн-день целиком — PROP-054 по четырём
-дословным рулингам владельца (эпик-мандат; полный IR/LLVM-ярус с флагом;
-no-consent + observability + VST/prebuilt; фазы «окей», план
-инкрементальный) и входное ТЗ коробки. Прежний хвост (2026-08-24: переезд
-vibevm/, normal-флип, install-фиксы + vibe clean, генераторы стеков) — в
-истории, `af68fa85` и ниже.</WAL-DONE></p>
-  </done>
 </spec>

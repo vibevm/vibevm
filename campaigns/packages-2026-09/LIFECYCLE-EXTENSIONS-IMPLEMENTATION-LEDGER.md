@@ -252,4 +252,3 @@ Apply every spec-debt amendment/status with landed evidence, repair the
 stability instrument, run both owner scenarios, independent audit, final
 unchanged full panel, and mirror. The epic is not complete before every row in
 §3 is `done` or explicitly `future` by the owner design.
-
