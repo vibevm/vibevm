@@ -187,6 +187,18 @@
       for a central coordinator's explicitly serialized command. The wrapper is
       campaign harness infrastructure, never a VibeVM product command or
       standing instruction for Claude.</ATOMIC-CARGO-SLOTS>
+      <ROLLING-WORKTREE-GC fact="true" status="spec/done">Campaign worktrees
+      are reclaimed **continuously, not at campaign close** (owner ruling
+      2026-08-26). As soon as an atom is accepted and integrated, root proves
+      that its product diff is landed, its report/decisions have a durable home,
+      its worker process is closed, and no unique untracked artifact remains;
+      then it immediately removes that exact worktree with `git worktree remove`
+      and runs `git worktree prune`. A clean obsolete worktree already proved
+      superseded is treated the same way. `--force` is used only after the same
+      evidence proves every remaining untracked file disposable; a live or
+      unintegrated dirty worktree is never reclaimed for space. Root measures
+      and reports reclaimed bytes. Retaining hundreds of gigabytes of rebuildable
+      `target/` trees until the epic ends is itself a process defect.</ROLLING-WORKTREE-GC>
       <QUIET-ARTIFACT-CONTRACT fact="true" status="spec/done">Every packet
       carries `##subagent-quiet-clause`, an expected write perimeter, exact
       acceptance, narrow self-verify commands, a durable
