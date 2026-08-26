@@ -4,7 +4,11 @@ use super::*;
 #[test]
 fn unclosed_fence_makes_shared_occurrences_contextual_and_positional() {
     let nodes = vec![
-        normal_node("spec://org.demo/a/boot/open#root", "org.demo/a", "```"),
+        normal_node(
+            "spec://org.demo/a/boot/open#root",
+            "org.demo/a",
+            "##org-demo--a--X definition\n```",
+        ),
         normal_node(
             "spec://org.demo/a/boot/shared#root",
             "org.demo/a",
@@ -20,24 +24,24 @@ fn unclosed_fence_makes_shared_occurrences_contextual_and_positional() {
 
     let output = LinkPass::new().run(input).unwrap();
     let occurrences: Vec<_> = linked_result(&output)
-        .chunks
+        .occurrences
         .iter()
-        .filter_map(|chunk| match chunk {
-            LinkChunk::NormalOccurrence {
+        .map(|occurrence| match occurrence {
+            LinkOccurrence::Normal {
                 contribution,
                 occurrence,
                 fence_before,
                 fence_after,
-                bytes,
+                body,
                 ..
-            } => Some((
+            } => (
                 *contribution,
                 *occurrence,
                 fence_before,
                 fence_after,
-                bytes.as_str(),
-            )),
-            _ => None,
+                body.as_str(),
+            ),
+            LinkOccurrence::Simple { .. } => unreachable!(),
         })
         .collect();
 
@@ -62,15 +66,15 @@ fn unclosed_fence_makes_shared_occurrences_contextual_and_positional() {
         unreachable!()
     };
     let duplicate = result
-        .chunks
+        .occurrences
         .iter()
-        .rposition(|chunk| matches!(chunk, LinkChunk::NormalOccurrence { .. }))
+        .rposition(|occurrence| matches!(occurrence, LinkOccurrence::Normal { .. }))
         .unwrap();
-    result.chunks.remove(duplicate);
+    result.occurrences.remove(duplicate);
     assert!(matches!(
         validate_linked(&collapsed),
         Err(LinkPassError::ReplayMismatch {
-            field: "linked chunks"
+            field: "linked occurrences"
         })
     ));
 }

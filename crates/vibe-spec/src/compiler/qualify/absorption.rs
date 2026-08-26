@@ -24,6 +24,7 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
             ClosureContribution::Normal {
                 meta,
                 seed,
+                seed_address,
                 emission_order,
             } => {
                 let seed_node =
@@ -34,32 +35,34 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
                             contribution: contribution_index,
                             node: seed.0,
                         })?;
-                let DocumentAddress::Spec(seed_address) = &seed_node.address else {
+                let DocumentAddress::Spec(node_seed_address) = &seed_node.address else {
                     return Err(QualifyPassError::NonSpecSeedGraphNode {
                         contribution: contribution_index,
                         node: seed.0,
                     });
                 };
-                let seed_address = seed_address.clone();
+                debug_assert_eq!(node_seed_address.without_pin(), seed_address.without_pin());
                 let mut candidates = Vec::with_capacity(emission_order.len());
-                for (occurrence, node_id) in emission_order.iter().copied().enumerate() {
-                    let node =
-                        closure
-                            .nodes
-                            .get(node_id.0)
-                            .ok_or(QualifyPassError::InvalidNodeId {
-                                contribution: contribution_index,
-                                occurrence,
-                                node: node_id.0,
-                            })?;
+                for (occurrence, current) in emission_order.iter().enumerate() {
+                    let node = closure.nodes.get(current.node.0).ok_or(
+                        QualifyPassError::InvalidNodeId {
+                            contribution: contribution_index,
+                            occurrence,
+                            node: current.node.0,
+                        },
+                    )?;
                     let DocumentAddress::Spec(address) = &node.address else {
                         return Err(QualifyPassError::NonSpecGraphNode {
                             contribution: contribution_index,
                             occurrence,
                         });
                     };
+                    debug_assert_eq!(
+                        address.without_pin(),
+                        current.requested_address.without_pin()
+                    );
                     candidates.push(Candidate {
-                        address: address.clone(),
+                        address: current.requested_address.clone(),
                         text: node.tree.text(node.tree.root()),
                     });
                 }
@@ -80,19 +83,18 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
                     .collect();
                 let occurrences = emission_order
                     .iter()
-                    .copied()
                     .zip(&candidates)
                     .zip(dispositions)
-                    .map(|((node, candidate), absorbed)| AbsorptionOccurrence {
-                        node,
-                        address: candidate.address.clone(),
+                    .map(|((current, candidate), absorbed)| AbsorptionOccurrence {
+                        node: current.node,
+                        requested_address: candidate.address.clone(),
                         absorbed,
                     })
                     .collect();
                 contributions.push(ContributionAbsorption::Normal {
                     meta: meta.clone(),
                     seed: *seed,
-                    seed_address,
+                    seed_address: seed_address.clone(),
                     occurrences,
                 });
             }
@@ -100,6 +102,15 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
                 contributions.push(ContributionAbsorption::Simple {
                     meta: meta.clone(),
                     address: document.address.clone(),
+                });
+            }
+            ClosureContribution::Elided { meta } => {
+                contributions.push(ContributionAbsorption::Elided { meta: meta.clone() });
+            }
+            ClosureContribution::Hoisted { meta, target } => {
+                contributions.push(ContributionAbsorption::Hoisted {
+                    meta: meta.clone(),
+                    target: target.clone(),
                 });
             }
         }
@@ -142,6 +153,7 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                 ClosureContribution::Normal {
                     meta,
                     seed,
+                    seed_address,
                     emission_order,
                 },
                 ContributionAbsorption::Normal {
@@ -167,18 +179,26 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                             contribution: index,
                             node: seed.0,
                         })?;
-                let DocumentAddress::Spec(actual_seed_address) = &seed_node.address else {
+                let DocumentAddress::Spec(node_seed_address) = &seed_node.address else {
                     return Err(QualifyPassError::NonSpecSeedGraphNode {
                         contribution: index,
                         node: seed.0,
                     });
                 };
-                if expected_seed_address != actual_seed_address {
+                if node_seed_address.without_pin() != seed_address.without_pin() {
+                    return Err(QualifyPassError::AbsorptionSeedAddress {
+                        contribution: index,
+                        node: seed.0,
+                        expected: Box::new(seed_address.clone()),
+                        actual: Box::new(node_seed_address.clone()),
+                    });
+                }
+                if expected_seed_address != seed_address {
                     return Err(QualifyPassError::AbsorptionSeedAddress {
                         contribution: index,
                         node: seed.0,
                         expected: Box::new(expected_seed_address.clone()),
-                        actual: Box::new(actual_seed_address.clone()),
+                        actual: Box::new(seed_address.clone()),
                     });
                 }
                 if occurrences.len() != emission_order.len() {
@@ -191,36 +211,43 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                 for (occurrence, (current, expected)) in
                     emission_order.iter().zip(occurrences).enumerate()
                 {
-                    if expected.node != *current {
+                    if expected.node != current.node {
                         return Err(QualifyPassError::AbsorptionOccurrence {
                             contribution: index,
                             occurrence,
                             expected: expected.node.0,
-                            actual: current.0,
+                            actual: current.node.0,
                         });
                     }
-                    let current_node =
-                        closure
-                            .nodes
-                            .get(current.0)
-                            .ok_or(QualifyPassError::InvalidNodeId {
-                                contribution: index,
-                                occurrence,
-                                node: current.0,
-                            })?;
+                    let current_node = closure.nodes.get(current.node.0).ok_or(
+                        QualifyPassError::InvalidNodeId {
+                            contribution: index,
+                            occurrence,
+                            node: current.node.0,
+                        },
+                    )?;
                     let DocumentAddress::Spec(actual_address) = &current_node.address else {
                         return Err(QualifyPassError::NonSpecGraphNode {
                             contribution: index,
                             occurrence,
                         });
                     };
-                    if expected.address != *actual_address {
+                    if actual_address.without_pin() != current.requested_address.without_pin() {
                         return Err(QualifyPassError::AbsorptionOccurrenceAddress {
                             contribution: index,
                             occurrence,
-                            node: current.0,
-                            expected: Box::new(expected.address.clone()),
+                            node: current.node.0,
+                            expected: Box::new(current.requested_address.clone()),
                             actual: Box::new(actual_address.clone()),
+                        });
+                    }
+                    if expected.requested_address != current.requested_address {
+                        return Err(QualifyPassError::AbsorptionOccurrenceAddress {
+                            contribution: index,
+                            occurrence,
+                            node: current.node.0,
+                            expected: Box::new(expected.requested_address.clone()),
+                            actual: Box::new(current.requested_address.clone()),
                         });
                     }
                 }
@@ -241,6 +268,31 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                             expected_meta.origin, expected_meta.path
                         ),
                         actual: format!("{}:{}:{:?}", meta.origin, meta.path, document.address),
+                    });
+                }
+            }
+            (
+                ClosureContribution::Elided { meta },
+                ContributionAbsorption::Elided {
+                    meta: expected_meta,
+                },
+            ) => validate_meta(index, expected_meta, meta)?,
+            (
+                ClosureContribution::Hoisted { meta, target },
+                ContributionAbsorption::Hoisted {
+                    meta: expected_meta,
+                    target: expected_target,
+                },
+            ) => {
+                validate_meta(index, expected_meta, meta)?;
+                if expected_target != target {
+                    return Err(QualifyPassError::AbsorptionContributionIdentity {
+                        contribution: index,
+                        expected: format!(
+                            "{}:{}:{expected_target}",
+                            expected_meta.origin, expected_meta.path
+                        ),
+                        actual: format!("{}:{}:{target}", meta.origin, meta.path),
                     });
                 }
             }

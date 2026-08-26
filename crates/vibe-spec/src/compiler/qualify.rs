@@ -167,11 +167,13 @@ pub(crate) enum QualifyPassError {
 struct GraphUpdate {
     node: ClosureNodeId,
     tree: Option<DocTree>,
+    renames: Vec<OriginRename>,
 }
 
 struct SimpleUpdate {
     contribution: usize,
     tree: Option<DocTree>,
+    renames: Vec<OriginRename>,
 }
 
 struct DocumentUpdate {
@@ -199,7 +201,6 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
     let mut seen_nodes = HashSet::new();
     let mut graph_updates = Vec::new();
     let mut simple_updates = Vec::new();
-    let mut renames = Vec::new();
 
     for (contribution_index, (contribution, disposition)) in input
         .contributions
@@ -212,28 +213,28 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
                 ClosureContribution::Normal { emission_order, .. },
                 ContributionAbsorption::Normal { occurrences, .. },
             ) => {
-                for (occurrence, (node_id, disposition)) in
-                    emission_order.iter().copied().zip(occurrences).enumerate()
+                for (occurrence, (current, disposition)) in
+                    emission_order.iter().zip(occurrences).enumerate()
                 {
-                    debug_assert_eq!(node_id, disposition.node);
-                    if disposition.absorbed || !seen_nodes.insert(node_id) {
+                    debug_assert_eq!(current.node, disposition.node);
+                    if disposition.absorbed || !seen_nodes.insert(current.node) {
                         continue;
                     }
                     let node =
                         input
                             .nodes
-                            .get(node_id.0)
+                            .get(current.node.0)
                             .ok_or(QualifyPassError::InvalidNodeId {
                                 contribution: contribution_index,
                                 occurrence,
-                                node: node_id.0,
+                                node: current.node.0,
                             })?;
                     let origin = node_qualification_origin(node)?;
                     let update = transform_document(node, &origin, &node.origin, mode);
-                    renames.extend(update.renames);
                     graph_updates.push(GraphUpdate {
-                        node: node_id,
+                        node: current.node,
                         tree: update.tree,
+                        renames: update.renames,
                     });
                 }
             }
@@ -247,12 +248,14 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
                     });
                 }
                 let update = transform_document(document, &meta.origin, &meta.origin, mode);
-                renames.extend(update.renames);
                 simple_updates.push(SimpleUpdate {
                     contribution: contribution_index,
                     tree: update.tree,
+                    renames: update.renames,
                 });
             }
+            (ClosureContribution::Elided { .. }, ContributionAbsorption::Elided { .. })
+            | (ClosureContribution::Hoisted { .. }, ContributionAbsorption::Hoisted { .. }) => {}
             _ => {
                 return Err(QualifyPassError::AbsorptionKind {
                     contribution: contribution_index,
@@ -264,7 +267,10 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
     // Finalization is one transaction over the owned carrier. No graph or
     // occurrence identity changes; only live document payloads and metadata do.
     let mut output = input;
+    let mut graph_renames = BTreeMap::new();
+    let mut simple_renames = BTreeMap::new();
     for update in graph_updates {
+        graph_renames.insert(update.node, update.renames.clone());
         let node = &mut output.nodes[update.node.0];
         if let Some(tree) = update.tree {
             node.tree = tree;
@@ -272,6 +278,7 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
         node.aliases.clear();
     }
     for update in simple_updates {
+        simple_renames.insert(update.contribution, update.renames.clone());
         let ClosureContribution::Simple { document, .. } =
             &mut output.contributions[update.contribution]
         else {
@@ -282,7 +289,7 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
         }
         document.aliases.clear();
     }
-    output.renames = renames;
+    output.renames = rename_audit(&output, &plan, &graph_renames, &simple_renames);
     output.absorption = AbsorptionState::Planned(plan);
     output.qualification = QualificationState::Applied(mode);
     Ok(output)
@@ -301,14 +308,57 @@ fn transform_document(
         StaticCompileMode::QualifyPerNode => qualify_contribution(&aliased, qualification_origin),
     };
     let tree = (text != original).then(|| DocTree::parse(&text));
-    let renames = entries
-        .into_iter()
-        .map(|rename| OriginRename {
-            origin: rename_origin.to_string(),
-            rename,
-        })
-        .collect();
-    DocumentUpdate { tree, renames }
+    DocumentUpdate {
+        tree,
+        renames: entries
+            .into_iter()
+            .map(|rename| OriginRename {
+                origin: rename_origin.to_string(),
+                rename,
+            })
+            .collect(),
+    }
+}
+
+fn rename_audit(
+    input: &ClosureIr,
+    plan: &super::ir::AbsorptionPlan,
+    graph: &BTreeMap<ClosureNodeId, Vec<OriginRename>>,
+    simple: &BTreeMap<usize, Vec<OriginRename>>,
+) -> Vec<OriginRename> {
+    let mut audit = Vec::new();
+    for (index, (contribution, disposition)) in input
+        .contributions
+        .iter()
+        .zip(&plan.contributions)
+        .enumerate()
+    {
+        match (contribution, disposition) {
+            (
+                ClosureContribution::Normal { .. },
+                ContributionAbsorption::Normal { occurrences, .. },
+            ) => {
+                let mut seen = HashSet::new();
+                for occurrence in occurrences {
+                    if occurrence.absorbed || !seen.insert(occurrence.node) {
+                        continue;
+                    }
+                    if let Some(renames) = graph.get(&occurrence.node) {
+                        audit.extend(renames.iter().cloned());
+                    }
+                }
+            }
+            (ClosureContribution::Simple { .. }, ContributionAbsorption::Simple { .. }) => {
+                if let Some(renames) = simple.get(&index) {
+                    audit.extend(renames.iter().cloned());
+                }
+            }
+            (ClosureContribution::Elided { .. }, ContributionAbsorption::Elided { .. })
+            | (ClosureContribution::Hoisted { .. }, ContributionAbsorption::Hoisted { .. }) => {}
+            _ => unreachable!("validated absorption keeps contribution kinds aligned"),
+        }
+    }
+    audit
 }
 
 fn node_qualification_origin(document: &ClosureDocument) -> Result<String, QualifyPassError> {

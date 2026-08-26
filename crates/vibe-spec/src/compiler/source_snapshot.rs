@@ -49,6 +49,6 @@ impl SourceResolutionSnapshot {
     }
 
     pub(crate) fn expansion(&self, address: &SpecAddress) -> Option<&ExpansionObservation> {
-        self.expansions.get(&address.without_pin())
+        self.expansions.get(&address.to_string())
     }
 }

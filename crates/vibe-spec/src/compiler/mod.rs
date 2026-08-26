@@ -18,3 +18,6 @@ pub(crate) mod pipeline;
 pub(crate) mod qualify;
 pub(crate) mod source_snapshot;
 pub(crate) mod worklist;
+
+#[cfg(test)]
+mod artifact_tests;

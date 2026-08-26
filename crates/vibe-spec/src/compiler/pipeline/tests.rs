@@ -5,7 +5,7 @@ use specmark::verifies;
 use super::*;
 use crate::{DocTree, SpecAddress};
 
-use crate::compiler::ir::{ArtifactId, DocumentAddress, SourceFormatId};
+use crate::compiler::ir::{ArtifactContext, DocumentAddress, SourceFormatId, StaticCompileMode};
 use crate::compiler::pass::{IdentityPass, IrPayload, PassName};
 
 fn pass_name(value: &str) -> PassName {
@@ -106,10 +106,10 @@ impl Pass for EmitDocuments {
             .into_iter()
             .flat_map(|document| document.into_parts().0.into_parts().2.into_bytes())
             .collect();
-        Ok(EmittedIr {
-            artifact: ArtifactId::new("test-artifact").unwrap(),
+        Ok(EmittedIr::testing(
+            ArtifactContext::compatibility(StaticCompileMode::Plain),
             bytes,
-        })
+        ))
     }
 }
 
@@ -146,7 +146,7 @@ fn scheduler_maps_documents_gathers_once_then_runs_the_artifact_segment() {
         .run(vec![source("one", "ONE\n"), source("two", "TWO\n")])
         .unwrap();
 
-    assert_eq!(emitted.artifact.as_str(), "test-artifact");
+    assert_eq!(emitted.context().artifact().as_str(), "static-fragment");
     assert_eq!(
         String::from_utf8(emitted.bytes).unwrap(),
         concat!(

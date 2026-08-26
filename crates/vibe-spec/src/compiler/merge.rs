@@ -119,8 +119,13 @@ fn merge_closure(mut closure: ClosureIr) -> Result<ClosureIr, MergePassError> {
         .contributions
         .iter()
         .flat_map(|contribution| match contribution {
-            ClosureContribution::Normal { emission_order, .. } => emission_order.clone(),
-            ClosureContribution::Simple { .. } => Vec::new(),
+            ClosureContribution::Normal { emission_order, .. } => emission_order
+                .iter()
+                .map(|occurrence| occurrence.node)
+                .collect(),
+            ClosureContribution::Simple { .. }
+            | ClosureContribution::Elided { .. }
+            | ClosureContribution::Hoisted { .. } => Vec::new(),
         })
         .collect();
 
@@ -178,20 +183,23 @@ fn merge_closure(mut closure: ClosureIr) -> Result<ClosureIr, MergePassError> {
         node_ids.insert(key.clone(), id);
     }
 
-    closure
-        .edges
-        .extend(accepted_edges.into_iter().map(|(from, to)| ClosureEdge {
-            from: node_ids[&from],
-            to: node_ids[&to],
-            kind: ClosureEdgeKind::Source,
-        }));
+    closure.edges.extend(
+        accepted_edges
+            .into_iter()
+            .map(|(from, target)| ClosureEdge {
+                from: node_ids[&from],
+                to: node_ids[&target.without_pin()],
+                kind: ClosureEdgeKind::Source,
+                requested_target: target,
+            }),
+    );
     Ok(closure)
 }
 
 struct FoldRoot {
     tree: DocTree,
     order: Vec<String>,
-    edges: Vec<(String, String)>,
+    edges: Vec<(String, SpecAddress)>,
 }
 
 fn fold_root(
@@ -211,12 +219,12 @@ fn fold_root(
         UseGraphError::Unresolved { addr, reason } => MergePassError::Unresolved { addr, reason },
     })?;
     let seed_key = seed.without_pin();
-    let accepted_edges: Vec<(String, String)> = order
+    let accepted_edges: Vec<(String, SpecAddress)> = order
         .iter()
         .flat_map(|key| {
             targets_by_key[key]
                 .iter()
-                .map(|target| (key.clone(), target.without_pin()))
+                .map(|target| (key.clone(), target.clone()))
         })
         .collect();
     if order.len() == 1 {
@@ -282,12 +290,10 @@ fn tree_for<'a>(
     }
     match snapshot.document(address) {
         Some(DocumentObservation::Resolved(document)) => Ok(document.tree()),
-        Some(DocumentObservation::Failed { requested, reason }) => {
-            Err(MergePassError::Unresolved {
-                addr: requested.to_string(),
-                reason: reason.clone(),
-            })
-        }
+        Some(DocumentObservation::Failed { reason, .. }) => Err(MergePassError::Unresolved {
+            addr: address.to_string(),
+            reason: reason.clone(),
+        }),
         None => panic!("source snapshot omitted `{key}`"),
     }
 }
@@ -305,16 +311,13 @@ fn source_targets(
             Some(ExpansionObservation::Resolved {
                 targets: expanded, ..
             }) => targets.extend(expanded.clone()),
-            Some(ExpansionObservation::Failed { requested, reason }) => {
+            Some(ExpansionObservation::Failed { reason, .. }) => {
                 return Err(MergePassError::Unresolved {
-                    addr: requested.to_string(),
+                    addr: directive.address.to_string(),
                     reason: reason.clone(),
                 });
             }
-            None => panic!(
-                "source snapshot omitted expansion `{}`",
-                directive.address.without_pin()
-            ),
+            None => panic!("source snapshot omitted expansion `{}`", directive.address),
         }
     }
     Ok(targets)

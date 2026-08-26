@@ -2,12 +2,27 @@ use sha2::{Digest, Sha256};
 
 use super::*;
 
-const LINK_DIGEST_DOMAIN: &[u8] = b"vibe-spec/link-input/v1";
+const LINK_DIGEST_DOMAIN: &[u8] = b"vibe-spec/link-input/v2";
 
 pub(super) fn digest_input(closure: &ClosureIr, plan: &PlannedLink) -> LinkInputDigest {
     let mut digest = LinkDigest::new();
     digest.field(LINK_DIGEST_DOMAIN);
-    digest.field(closure.artifact.as_str().as_bytes());
+    digest.field(closure.context().artifact().as_str().as_bytes());
+    digest.byte(match closure.context().target() {
+        ArtifactTarget::StaticMarkdown => 0,
+        ArtifactTarget::StaticXml => 1,
+    });
+    match closure.context().frame() {
+        ArtifactFrame::CompatibilityFragment => digest.byte(0),
+        ArtifactFrame::StaticLane {
+            generated_path,
+            source_root,
+        } => {
+            digest.byte(1);
+            digest.field(generated_path.as_bytes());
+            digest.field(source_root.as_bytes());
+        }
+    }
     digest.byte(match plan.mode {
         StaticCompileMode::Plain => 0,
         StaticCompileMode::QualifyPerNode => 1,
@@ -18,13 +33,24 @@ pub(super) fn digest_input(closure: &ClosureIr, plan: &PlannedLink) -> LinkInput
         digest.field(rename.rename.original.as_bytes());
         digest.field(rename.rename.qualified.as_bytes());
     }
+    digest.usize(closure.edges.len());
+    for edge in &closure.edges {
+        digest.usize(edge.from.0);
+        digest.usize(edge.to.0);
+        digest.byte(match edge.kind {
+            ClosureEdgeKind::Use => 0,
+            ClosureEdgeKind::Source => 1,
+            ClosureEdgeKind::Embed => 2,
+        });
+        digest.field(edge.requested_target.to_string().as_bytes());
+    }
     digest.usize(plan.contributions.len());
     for contribution in &plan.contributions {
         hash_contribution(&mut digest, contribution);
     }
-    digest.usize(plan.chunks.len());
-    for chunk in &plan.chunks {
-        hash_chunk(&mut digest, chunk);
+    digest.usize(plan.occurrences.len());
+    for occurrence in &plan.occurrences {
+        hash_occurrence(&mut digest, occurrence);
     }
     LinkInputDigest(digest.finish())
 }
@@ -92,45 +118,47 @@ fn hash_contribution(digest: &mut LinkDigest, contribution: &LinkContributionWit
             hash_meta(digest, meta);
             hash_address(digest, address);
         }
+        LinkContributionWitness::Elided { meta } => {
+            digest.byte(2);
+            hash_meta(digest, meta);
+        }
+        LinkContributionWitness::Hoisted { meta, target } => {
+            digest.byte(3);
+            hash_meta(digest, meta);
+            digest.field(target.to_string().as_bytes());
+        }
     }
 }
 
-fn hash_chunk(digest: &mut LinkDigest, chunk: &InputChunk) {
-    match chunk {
-        InputChunk::Literal { kind, bytes } => {
-            digest.byte(0);
-            digest.byte(match kind {
-                LinkLiteralKind::NormalOpen => 0,
-                LinkLiteralKind::ForcedNewline => 1,
-                LinkLiteralKind::NormalClose => 2,
-            });
-            digest.field(bytes.as_bytes());
-        }
-        InputChunk::NormalOccurrence {
+fn hash_occurrence(digest: &mut LinkDigest, occurrence: &InputOccurrence) {
+    match occurrence {
+        InputOccurrence::Normal {
             contribution,
             occurrence,
             node,
             address,
-            bytes,
+            marker,
+            body,
         } => {
-            digest.byte(1);
+            digest.byte(0);
             digest.usize(*contribution);
             digest.usize(*occurrence);
             digest.usize(node.0);
             digest.field(address.to_string().as_bytes());
-            digest.field(bytes.as_bytes());
+            digest.field(marker.as_str().as_bytes());
+            digest.field(body.as_bytes());
         }
-        InputChunk::SimpleOccurrence {
+        InputOccurrence::Simple {
             contribution,
             occurrence,
             address,
-            bytes,
+            body,
         } => {
-            digest.byte(2);
+            digest.byte(1);
             digest.usize(*contribution);
             digest.usize(*occurrence);
             hash_address(digest, address);
-            digest.field(bytes.as_bytes());
+            digest.field(body.as_bytes());
         }
     }
 }

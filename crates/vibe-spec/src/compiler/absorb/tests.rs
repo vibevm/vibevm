@@ -2,8 +2,8 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ClosureEdge,
-    ClosureEdgeKind, ClosureNodeId, LinkState, OriginRename, StaticCompileMode,
+    AbsorptionOccurrence, AbsorptionPlan, ArtifactContext, ClosureDocument, ClosureEdge,
+    ClosureEdgeKind, ClosureNodeId, ClosureOccurrence, LinkState, OriginRename, StaticCompileMode,
 };
 use crate::compiler::pass::{AnyIr, PassSegment, PassSegmentError};
 use crate::{DocTree, RenameEntry, SpecAddress};
@@ -35,11 +35,23 @@ fn meta(path: &str) -> ContributionMeta {
     }
 }
 
-fn normal(path: &str, seed: usize, order: &[usize]) -> ClosureContribution {
+fn normal(
+    path: &str,
+    seed: usize,
+    order: &[usize],
+    nodes: &[ClosureDocument],
+) -> ClosureContribution {
     ClosureContribution::Normal {
         meta: meta(path),
         seed: ClosureNodeId(seed),
-        emission_order: order.iter().copied().map(ClosureNodeId).collect(),
+        seed_address: node_spec_address(&nodes[seed]),
+        emission_order: order
+            .iter()
+            .map(|node| ClosureOccurrence {
+                node: ClosureNodeId(*node),
+                requested_address: node_spec_address(&nodes[*node]),
+            })
+            .collect(),
     }
 }
 
@@ -57,7 +69,7 @@ fn normal_plan(
             .iter()
             .map(|(node, absorbed)| AbsorptionOccurrence {
                 node: ClosureNodeId(*node),
-                address: node_spec_address(&nodes[*node]),
+                requested_address: node_spec_address(&nodes[*node]),
                 absorbed: *absorbed,
             })
             .collect(),
@@ -69,21 +81,21 @@ fn closure(
     contributions: Vec<ClosureContribution>,
     plan: Vec<ContributionAbsorption>,
 ) -> ClosureIr {
-    ClosureIr {
-        artifact: ArtifactId::new("static-absorb-test").unwrap(),
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
         nodes,
-        edges: Vec::new(),
+        Vec::new(),
         contributions,
-        renames: Vec::new(),
-        qualification: QualificationState::Applied(StaticCompileMode::QualifyPerNode),
-        absorption: AbsorptionState::Planned(AbsorptionPlan {
+        Vec::new(),
+        QualificationState::Applied(StaticCompileMode::QualifyPerNode),
+        AbsorptionState::Planned(AbsorptionPlan {
             mode: StaticCompileMode::QualifyPerNode,
             contributions: plan,
         }),
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    }
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 fn order(closure: &ClosureIr, contribution: usize) -> Vec<usize> {
@@ -91,7 +103,7 @@ fn order(closure: &ClosureIr, contribution: usize) -> Vec<usize> {
     else {
         panic!("expected normal contribution")
     };
-    emission_order.iter().map(|node| node.0).collect()
+    emission_order.iter().map(|node| node.node.0).collect()
 }
 
 fn plan(closure: &ClosureIr) -> &AbsorptionPlan {
@@ -127,7 +139,7 @@ fn two_node_closure() -> ClosureIr {
     ];
     closure(
         nodes.clone(),
-        vec![normal("boot/a", 0, &[0, 1])],
+        vec![normal("boot/a", 0, &[0, 1], &nodes)],
         vec![normal_plan("boot/a", 0, &[(0, false), (1, false)], &nodes)],
     )
 }
@@ -141,7 +153,7 @@ fn duplicate_live_occurrences_preserve_multiplicity_and_the_whole_carrier() {
     ];
     let mut input = closure(
         nodes.clone(),
-        vec![normal("common/doc", 0, &[0, 0, 1])],
+        vec![normal("common/doc", 0, &[0, 0, 1], &nodes)],
         vec![normal_plan(
             "common/doc",
             0,
@@ -153,6 +165,7 @@ fn duplicate_live_occurrences_preserve_multiplicity_and_the_whole_carrier() {
         from: ClosureNodeId(0),
         to: ClosureNodeId(1),
         kind: ClosureEdgeKind::Use,
+        requested_target: node_spec_address(&nodes[1]),
     });
     input.renames.push(OriginRename {
         origin: "org.demo/pkg".to_string(),
@@ -205,20 +218,20 @@ fn shared_all_dead_empty_and_simple_contributions_keep_their_exact_identity() {
         tree: DocTree::parse("simple body"),
         aliases: Default::default(),
     };
-    let contributions = vec![
-        normal("root-a", 0, &[0, 1, 2]),
-        normal("root-b", 1, &[1, 2]),
-        normal("all-dead", 2, &[2]),
-        normal("empty", 0, &[]),
-        ClosureContribution::Simple {
-            meta: simple_meta.clone(),
-            document: Box::new(simple_document.clone()),
-        },
-    ];
     let nodes = vec![
         node("spec://org.demo/pkg/common/doc#root", "root and shared"),
         node("spec://org.demo/pkg/common/doc#shared", "shared"),
         node("spec://org.demo/pkg/common/doc#dead", "dead"),
+    ];
+    let contributions = vec![
+        normal("root-a", 0, &[0, 1, 2], &nodes),
+        normal("root-b", 1, &[1, 2], &nodes),
+        normal("all-dead", 2, &[2], &nodes),
+        normal("empty", 0, &[], &nodes),
+        ClosureContribution::Simple {
+            meta: simple_meta.clone(),
+            document: Box::new(simple_document.clone()),
+        },
     ];
     let plan = vec![
         normal_plan("root-a", 0, &[(0, false), (1, true), (2, true)], &nodes),
@@ -236,11 +249,13 @@ fn shared_all_dead_empty_and_simple_contributions_keep_their_exact_identity() {
             from: ClosureNodeId(0),
             to: ClosureNodeId(1),
             kind: ClosureEdgeKind::Use,
+            requested_target: spec("spec://org.demo/pkg/common/doc#shared"),
         },
         ClosureEdge {
             from: ClosureNodeId(1),
             to: ClosureNodeId(2),
             kind: ClosureEdgeKind::Embed,
+            requested_target: spec("spec://org.demo/pkg/common/doc#dead"),
         },
     ];
     let before = input.clone();
@@ -269,7 +284,7 @@ fn stale_identity_is_rejected_before_any_projection_is_consumed() {
     ];
     let mut stale = closure(
         nodes.clone(),
-        vec![normal("boot/a", 0, &[0, 1])],
+        vec![normal("boot/a", 0, &[0, 1], &nodes)],
         vec![normal_plan("boot/a", 0, &[(0, false), (1, false)], &nodes)],
     );
     let ClosureContribution::Normal { emission_order, .. } = &mut stale.contributions[0] else {
@@ -329,7 +344,7 @@ fn planned_identity_binds_node_order_addresses_and_empty_seed() {
     let nodes = vec![node("spec://org.demo/pkg/boot/empty#root", "empty")];
     let mut empty = closure(
         nodes.clone(),
-        vec![normal("boot/empty", 0, &[])],
+        vec![normal("boot/empty", 0, &[], &nodes)],
         vec![normal_plan("boot/empty", 0, &[], &nodes)],
     );
     let expected = node_spec_address(&empty.nodes[0]);
@@ -419,7 +434,11 @@ fn planned_and_applied_mode_and_address_drift_are_precise() {
     let ContributionAbsorption::Normal { occurrences, .. } = &mut plan.contributions[0] else {
         unreachable!()
     };
-    occurrences[1].address = coherent_address;
+    occurrences[1].requested_address = coherent_address.clone();
+    let ClosureContribution::Normal { emission_order, .. } = &mut coherent.contributions[0] else {
+        unreachable!()
+    };
+    emission_order[1].requested_address = coherent_address;
     assert!(AbsorbPass::new().run(coherent).is_ok());
 }
 
@@ -428,7 +447,7 @@ fn state_preconditions_reject_bypass_pending_and_double_application() {
     let nodes = vec![node("spec://org.demo/pkg/boot/entry#root", "body")];
     let base = closure(
         nodes.clone(),
-        vec![normal("boot/entry", 0, &[0])],
+        vec![normal("boot/entry", 0, &[0], &nodes)],
         vec![normal_plan("boot/entry", 0, &[(0, false)], &nodes)],
     );
     let mut pending = base.clone();
@@ -479,7 +498,7 @@ fn applied_verifier_rejects_projection_and_retained_graph_drift() {
     ];
     let base = closure(
         nodes.clone(),
-        vec![normal("boot/a", 0, &[0, 1])],
+        vec![normal("boot/a", 0, &[0, 1], &nodes)],
         vec![normal_plan("boot/a", 0, &[(0, false), (1, false)], &nodes)],
     );
     let output = AbsorbPass::new().run(base).unwrap();

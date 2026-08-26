@@ -22,6 +22,13 @@ fn node(raw: &str, origin: &str, body: &str) -> ClosureDocument {
     }
 }
 
+fn node_spec_address(node: &ClosureDocument) -> SpecAddress {
+    let DocumentAddress::Spec(address) = &node.address else {
+        unreachable!()
+    };
+    address.clone()
+}
+
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 fn two_addresses_into_one_physical_document_remain_two_document_values() {
@@ -61,32 +68,53 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
         SourceFormatId::new("markdown").unwrap(),
         "# Local {#root}\n",
     );
-    let plan = ArtifactPlan {
-        artifact: ArtifactId::new("static-markdown").unwrap(),
-        mode: StaticCompileMode::QualifyPerNode,
-        contributions: vec![
+    let context = ArtifactContext::new(
+        ArtifactId::new("static-md").unwrap(),
+        ArtifactTarget::StaticMarkdown,
+        ArtifactFrame::StaticLane {
+            generated_path: "vibevm/vibespecs/boot/STATIC.md".to_string(),
+            source_root: "vibevm/vibedeps".to_string(),
+        },
+        StaticCompileMode::QualifyPerNode,
+    )
+    .unwrap();
+    let simple_meta = ContributionMeta {
+        origin: "ungrouped-host".to_string(),
+        path: "vibevm/vibespecs/boot/20-local.md".to_string(),
+    };
+    let plan = ArtifactPlan::new(
+        context,
+        vec![
             ArtifactInput::Normal {
                 meta: meta("org.demo/alpha"),
                 seed: spec("spec://org.demo/alpha/boot/entry"),
             },
             ArtifactInput::Simple {
-                meta: meta("ungrouped-host"),
+                meta: simple_meta,
                 source: simple_source,
+            },
+            ArtifactInput::Elided {
+                meta: meta("org.demo/elided"),
+            },
+            ArtifactInput::Hoisted {
+                meta: meta("org.demo/hoisted"),
+                target: spec("spec://org.demo/hoisted/boot/entry"),
             },
             ArtifactInput::Normal {
                 meta: meta("org.demo/omega"),
                 seed: spec("spec://org.demo/omega/boot/entry"),
             },
         ],
-    };
+    )
+    .unwrap();
 
-    assert_eq!(plan.artifact.as_str(), "static-markdown");
-    assert_eq!(plan.mode, StaticCompileMode::QualifyPerNode);
+    assert_eq!(plan.context().artifact().as_str(), "static-md");
+    assert_eq!(plan.context().mode(), StaticCompileMode::QualifyPerNode);
     assert!(matches!(
-        plan.contributions[0],
+        plan.contributions()[0],
         ArtifactInput::Normal { .. }
     ));
-    let ArtifactInput::Simple { source, meta } = &plan.contributions[1] else {
+    let ArtifactInput::Simple { source, meta } = &plan.contributions()[1] else {
         panic!("middle contribution must remain simple")
     };
     assert_eq!(meta.origin, "ungrouped-host");
@@ -97,7 +125,15 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     ));
     assert_eq!(source.format().as_str(), "markdown");
     assert!(matches!(
-        plan.contributions[2],
+        plan.contributions()[2],
+        ArtifactInput::Elided { .. }
+    ));
+    assert!(matches!(
+        plan.contributions()[3],
+        ArtifactInput::Hoisted { .. }
+    ));
+    assert!(matches!(
+        plan.contributions()[4],
         ArtifactInput::Normal { .. }
     ));
 }
@@ -117,42 +153,68 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         tree: DocTree::parse("SIMPLE-AFTER-DOCUMENT-PASSES"),
         aliases: Default::default(),
     };
-    let closure = ClosureIr {
-        artifact: ArtifactId::new("static-xml").unwrap(),
-        nodes: vec![
-            node(
-                "spec://org.demo/shared/boot/base",
-                "org.demo/shared",
-                "BASE",
-            ),
-            node(
-                "spec://org.demo/alpha/boot/entry",
-                "org.demo/alpha",
-                "ALPHA",
-            ),
-            node(
-                "spec://org.demo/omega/boot/entry",
-                "org.demo/omega",
-                "OMEGA",
-            ),
-        ],
-        edges: vec![
+    let nodes = vec![
+        node(
+            "spec://org.demo/shared/boot/base",
+            "org.demo/shared",
+            "BASE",
+        ),
+        node(
+            "spec://org.demo/alpha/boot/entry",
+            "org.demo/alpha",
+            "ALPHA",
+        ),
+        node(
+            "spec://org.demo/omega/boot/entry",
+            "org.demo/omega",
+            "OMEGA",
+        ),
+    ];
+    let shared_address = node_spec_address(&nodes[0]);
+    let alpha_address = node_spec_address(&nodes[1]);
+    let omega_address = node_spec_address(&nodes[2]);
+    let context = ArtifactContext::new(
+        ArtifactId::new("static-xml").unwrap(),
+        ArtifactTarget::StaticXml,
+        ArtifactFrame::StaticLane {
+            generated_path: "vibevm/vibespecs/boot/STATIC.xml".to_string(),
+            source_root: "vibevm/vibedeps".to_string(),
+        },
+        StaticCompileMode::QualifyPerNode,
+    )
+    .unwrap();
+    let closure = ClosureIr::testing(
+        context,
+        nodes,
+        vec![
             ClosureEdge {
                 from: alpha,
                 to: shared,
                 kind: ClosureEdgeKind::Use,
+                requested_target: shared_address.clone(),
             },
             ClosureEdge {
                 from: omega,
                 to: shared,
                 kind: ClosureEdgeKind::Use,
+                requested_target: shared_address.clone(),
             },
         ],
-        contributions: vec![
+        vec![
             ClosureContribution::Normal {
                 meta: meta("org.demo/alpha"),
                 seed: alpha,
-                emission_order: vec![shared, alpha],
+                seed_address: alpha_address.clone(),
+                emission_order: vec![
+                    ClosureOccurrence {
+                        node: shared,
+                        requested_address: shared_address.clone(),
+                    },
+                    ClosureOccurrence {
+                        node: alpha,
+                        requested_address: alpha_address,
+                    },
+                ],
             },
             ClosureContribution::Simple {
                 meta: meta("host"),
@@ -161,16 +223,26 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
             ClosureContribution::Normal {
                 meta: meta("org.demo/omega"),
                 seed: omega,
-                emission_order: vec![shared, omega],
+                seed_address: omega_address.clone(),
+                emission_order: vec![
+                    ClosureOccurrence {
+                        node: shared,
+                        requested_address: shared_address,
+                    },
+                    ClosureOccurrence {
+                        node: omega,
+                        requested_address: omega_address,
+                    },
+                ],
             },
         ],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    };
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::QualifyPerNode),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    );
 
     let ClosureContribution::Normal {
         emission_order: first,
@@ -186,8 +258,14 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
     else {
         panic!("last contribution must be normal")
     };
-    assert_eq!(first, &[shared, alpha]);
-    assert_eq!(last, &[shared, omega]);
+    assert_eq!(
+        first.iter().map(|entry| entry.node).collect::<Vec<_>>(),
+        [shared, alpha]
+    );
+    assert_eq!(
+        last.iter().map(|entry| entry.node).collect::<Vec<_>>(),
+        [shared, omega]
+    );
     assert_eq!(closure.nodes.len(), 3);
     assert_eq!(closure.edges.len(), 2);
     assert!(
@@ -207,7 +285,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         document.tree.text(document.tree.root()),
         "SIMPLE-AFTER-DOCUMENT-PASSES"
     );
-    assert_eq!(closure.artifact.as_str(), "static-xml");
+    assert_eq!(closure.context().artifact().as_str(), "static-xml");
 }
 
 #[test]
@@ -222,9 +300,9 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
         body: format!("{origin}\n"),
         markers: marker,
     };
-    let lane = LaneIr {
-        artifact: ArtifactId::new("static-markdown").unwrap(),
-        frame: LaneFrame {
+    let lane = LaneIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        LaneFrame {
             header: "HEADER\n".to_string(),
             preamble: "PREAMBLE\n".to_string(),
             renames: vec![OriginRename {
@@ -235,7 +313,7 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
                 },
             }],
         },
-        contributions: vec![
+        vec![
             LaneContribution::Normal {
                 meta: meta("org.demo/alpha"),
                 nodes: vec![lane_node(
@@ -259,13 +337,13 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
                 )],
             },
         ],
-    };
+    );
 
     assert_eq!(lane.frame.header, "HEADER\n");
     assert_eq!(lane.frame.preamble, "PREAMBLE\n");
     assert_eq!(lane.frame.renames.len(), 1);
     assert_eq!(lane.contributions.len(), 3);
-    assert_eq!(lane.artifact.as_str(), "static-markdown");
+    assert_eq!(lane.context().artifact().as_str(), "static-fragment");
 }
 
 #[test]

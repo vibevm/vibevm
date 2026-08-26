@@ -6,9 +6,9 @@ use super::*;
 use crate::{DocTree, SpecAddress};
 
 use crate::compiler::ir::{
-    AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureNodeId,
-    ContributionMeta, DocumentAddress, EmittedIr, LinkState, QualificationState, SourceFormatId,
-    StaticCompileMode,
+    AbsorptionState, ArtifactContext, ClosureContribution, ClosureDocument, ClosureNodeId,
+    ClosureOccurrence, ContributionMeta, DocumentAddress, EmittedIr, LinkState, QualificationState,
+    SourceFormatId, StaticCompileMode,
 };
 
 fn name(value: &str) -> PassName {
@@ -25,32 +25,35 @@ fn source(text: &str) -> SourceIr {
 
 fn closure() -> ClosureIr {
     let node = ClosureNodeId(0);
-    ClosureIr {
-        artifact: ArtifactId::new("static-markdown").unwrap(),
-        nodes: vec![ClosureDocument {
-            address: DocumentAddress::Spec(
-                SpecAddress::parse("spec://org.demo/pkg/boot/entry#root").unwrap(),
-            ),
+    let address = SpecAddress::parse("spec://org.demo/pkg/boot/entry#root").unwrap();
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ClosureDocument {
+            address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("BODY\n"),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: ContributionMeta {
                 origin: "org.demo/pkg".to_string(),
                 path: "vibedeps/org.demo.pkg/1.0.0/boot/entry.md".to_string(),
             },
             seed: node,
-            emission_order: vec![node],
+            seed_address: address.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node,
+                requested_address: address,
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    }
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::Plain),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 struct ParseForTest {
@@ -119,10 +122,10 @@ fn identity_preserves_artifact_structure_and_non_utf8_emitted_bytes() {
     };
     assert_eq!(actual, expected);
 
-    let expected = EmittedIr {
-        artifact: ArtifactId::new("opaque-backend").unwrap(),
-        bytes: vec![0, 0xff, b'\n'],
-    };
+    let expected = EmittedIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![0, 0xff, b'\n'],
+    );
     let mut emitted_segment = PassSegment::default();
     emitted_segment
         .push(IdentityPass::<EmittedIr>::new(name("emitted-identity")))

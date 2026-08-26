@@ -9,9 +9,9 @@ use std::collections::HashMap;
 use super::tests::MockSource;
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
-    ClosureDocument, ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta,
-    DocumentAddress, LinkState, QualificationState, StaticCompileMode,
+    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureContribution,
+    ClosureDocument, ClosureIr, ClosureNodeId, ClosureOccurrence, ContributionAbsorption,
+    ContributionMeta, DocumentAddress, LinkState, QualificationState, StaticCompileMode,
 };
 use crate::compiler::link::LinkPass;
 use crate::compiler::pass::Pass;
@@ -22,26 +22,30 @@ use crate::{DocTree, UseGraphError, topo_order_from};
 fn legacy_continuation_emits_the_close_carrier_body() {
     let key = "spec://org.demo/pkg/boot/entry#root";
     let addr = SpecAddress::parse(key).unwrap();
-    let closure = ClosureIr {
-        artifact: ArtifactId::new("static-fragment").unwrap(),
-        nodes: vec![ClosureDocument {
+    let closure = ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ClosureDocument {
             address: DocumentAddress::Spec(addr.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Closed {#closed}\nCLOSE-BODY"),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: ContributionMeta {
                 origin: "org.demo/pkg".to_string(),
                 path: "boot/entry".to_string(),
             },
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: addr.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: addr.clone(),
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Applied(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Applied(AbsorptionPlan {
+        Vec::new(),
+        QualificationState::Applied(StaticCompileMode::Plain),
+        AbsorptionState::Applied(AbsorptionPlan {
             mode: StaticCompileMode::Plain,
             contributions: vec![ContributionAbsorption::Normal {
                 meta: ContributionMeta {
@@ -52,15 +56,15 @@ fn legacy_continuation_emits_the_close_carrier_body() {
                 seed_address: addr.clone(),
                 occurrences: vec![AbsorptionOccurrence {
                     node: ClosureNodeId(0),
-                    address: addr,
+                    requested_address: addr,
                     absorbed: false,
                 }],
             }],
         }),
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    };
+        LinkState::Unlinked,
+        None,
+        None,
+    );
     let closure = LinkPass::new().run(closure).unwrap();
     let (out, renames) = compile_static_continuation(closure).unwrap();
 

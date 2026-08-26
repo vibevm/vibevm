@@ -4,8 +4,8 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
-    ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId,
+    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureContribution,
+    ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId, ClosureOccurrence,
     ContributionAbsorption, ContributionMeta, DocumentAddress, LinkState, QualificationState,
     StaticCompileMode,
 };
@@ -34,27 +34,55 @@ fn normal(seed: usize, order: &[usize], origin: &str) -> ClosureContribution {
     ClosureContribution::Normal {
         meta: meta(origin),
         seed: ClosureNodeId(seed),
-        emission_order: order.iter().copied().map(ClosureNodeId).collect(),
+        seed_address: spec("spec://org.placeholder/pkg/boot/entry#root"),
+        emission_order: order
+            .iter()
+            .map(|node| ClosureOccurrence {
+                node: ClosureNodeId(*node),
+                requested_address: spec("spec://org.placeholder/pkg/boot/entry#root"),
+            })
+            .collect(),
     }
 }
 
 fn closure(
     mode: StaticCompileMode,
     nodes: Vec<ClosureDocument>,
-    contributions: Vec<ClosureContribution>,
+    mut contributions: Vec<ClosureContribution>,
 ) -> ClosureIr {
-    ClosureIr {
-        artifact: ArtifactId::new("static-test").unwrap(),
-        nodes,
-        edges: Vec::new(),
-        contributions,
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(mode),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
+    for contribution in &mut contributions {
+        let ClosureContribution::Normal {
+            seed,
+            seed_address,
+            emission_order,
+            ..
+        } = contribution
+        else {
+            continue;
+        };
+        let DocumentAddress::Spec(address) = &nodes[seed.0].address else {
+            unreachable!()
+        };
+        *seed_address = address.clone();
+        for occurrence in emission_order {
+            let DocumentAddress::Spec(address) = &nodes[occurrence.node.0].address else {
+                unreachable!()
+            };
+            occurrence.requested_address = address.clone();
+        }
     }
+    ClosureIr::testing(
+        ArtifactContext::compatibility(mode),
+        nodes,
+        Vec::new(),
+        contributions,
+        Vec::new(),
+        QualificationState::Pending(mode),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 fn run(input: ClosureIr) -> ClosureIr {
@@ -271,7 +299,7 @@ fn duplicate_node_occurrences_keep_an_aligned_mask_and_one_live_transform() {
     ));
     assert!(occurrences.iter().all(|occurrence| matches!(
         &output.nodes[occurrence.node.0].address,
-        DocumentAddress::Spec(address) if occurrence.address == *address
+        DocumentAddress::Spec(address) if occurrence.requested_address.without_pin() == address.without_pin()
     )));
     assert!(
         output.nodes[0]
@@ -302,6 +330,7 @@ fn absorption_is_per_contribution_and_shared_live_node_keeps_graph_identity() {
         from: ClosureNodeId(0),
         to: ClosureNodeId(1),
         kind: ClosureEdgeKind::Use,
+        requested_target: spec("spec://org.demo/pkg/common/doc#sub"),
     }];
     let mut input = closure(
         StaticCompileMode::QualifyPerNode,
@@ -382,6 +411,7 @@ fn source_or_embed_only_graph_node_stays_entirely_untouched() {
         from: ClosureNodeId(0),
         to: ClosureNodeId(1),
         kind: ClosureEdgeKind::Source,
+        requested_target: spec("spec://org.other/dep/common/piece#root"),
     });
     let output = run(input);
 
@@ -488,7 +518,7 @@ fn absorption_alignment_is_a_private_invariant() {
             seed_address: address.clone(),
             occurrences: vec![AbsorptionOccurrence {
                 node: ClosureNodeId(0),
-                address,
+                requested_address: address,
                 absorbed: false,
             }],
         }],

@@ -86,6 +86,17 @@ struct RootUpdate {
     aliases: BTreeMap<String, SpecAddress>,
 }
 
+struct SimpleUpdate {
+    contribution: usize,
+    tree: DocTree,
+    aliases: BTreeMap<String, SpecAddress>,
+}
+
+enum EmbedRoot {
+    Normal(ClosureNodeId),
+    Simple(usize),
+}
+
 fn embed_closure(mut closure: ClosureIr) -> Result<ClosureIr, EmbedPassError> {
     embed_closure_in_place(&mut closure)?;
     Ok(closure)
@@ -96,25 +107,29 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
         .pending_embeds
         .as_ref()
         .expect("close supplies one pending embed snapshot");
-    let mut root_seen = HashSet::new();
-    let roots: Vec<ClosureNodeId> = closure
+    let roots: Vec<EmbedRoot> = closure
         .contributions
         .iter()
-        .flat_map(|contribution| match contribution {
-            ClosureContribution::Normal { emission_order, .. } => emission_order.clone(),
-            ClosureContribution::Simple { .. } => Vec::new(),
+        .enumerate()
+        .flat_map(|(index, contribution)| match contribution {
+            ClosureContribution::Normal { emission_order, .. } => emission_order
+                .iter()
+                .map(|occurrence| EmbedRoot::Normal(occurrence.node))
+                .collect(),
+            ClosureContribution::Simple { .. } => vec![EmbedRoot::Simple(index)],
+            ClosureContribution::Elided { .. } | ClosureContribution::Hoisted { .. } => Vec::new(),
         })
-        .filter(|node| root_seen.insert(*node))
         .collect();
     let current: HashMap<String, DocTree> = roots
         .iter()
-        .map(|id| match &closure.nodes[id.0].address {
-            DocumentAddress::Spec(address) => {
-                (address.without_pin(), closure.nodes[id.0].tree.clone())
-            }
-            DocumentAddress::StaticEntry { .. } => {
-                unreachable!("normal embed root is spec-addressed")
-            }
+        .filter_map(|root| match root {
+            EmbedRoot::Normal(node) => match &closure.nodes[node.0].address {
+                DocumentAddress::Spec(address) => {
+                    Some((address.without_pin(), closure.nodes[node.0].tree.clone()))
+                }
+                DocumentAddress::StaticEntry { .. } => unreachable!(),
+            },
+            EmbedRoot::Simple(_) => None,
         })
         .collect();
 
@@ -122,57 +137,106 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
     let mut accepted_nodes = Vec::new();
     let mut accepted_edges = Vec::new();
     let mut accepted_occurrences = HashSet::new();
-    for node in roots {
-        let DocumentAddress::Spec(address) = &closure.nodes[node.0].address else {
-            unreachable!("normal embed root is spec-addressed")
-        };
-        let tree = &closure.nodes[node.0].tree;
-        let aliases = tree.directives().aliases.clone();
-        let normalized = strip_resolved_directives(tree);
-        let mut missing = None;
-        let mut observed_failure = None;
-        let mut resolve = |target: &SpecAddress| match lookup_text(target, snapshot, &current) {
-            Ok(text) => Ok(text),
-            Err(EmbedPassError::Embed(error @ EmbedError::Unresolved { .. })) => {
-                observed_failure = Some(error);
-                Err("recorded embed observation failed".to_string())
-            }
-            Err(EmbedPassError::MissingObservation { addr }) => {
-                missing = Some(addr);
-                Err("missing compiler embed observation".to_string())
-            }
-            Err(EmbedPassError::Embed(EmbedError::Cycle(_))) => unreachable!(),
-        };
-        let mut edge = |from: &str, ordinal: usize, target: &SpecAddress| {
-            let target_key = target.without_pin();
-            if accepted_occurrences.insert((from.to_string(), ordinal)) {
-                accepted_edges.push((from.to_string(), target_key.clone()));
-            }
-            if !accepted_nodes
-                .iter()
-                .any(|accepted: &SpecAddress| accepted.without_pin() == target_key)
-            {
-                accepted_nodes.push(target.clone());
-            }
-        };
-        let expanded =
-            match expand_with(&normalized, &address.without_pin(), &mut resolve, &mut edge) {
-                Ok(expanded) => expanded,
-                Err(error) => {
-                    if let Some(addr) = missing {
-                        return Err(EmbedPassError::MissingObservation { addr });
+    let mut simple_updates = Vec::new();
+    let mut normal_seen = HashSet::new();
+    let mut simple_cache: HashMap<String, (DocTree, BTreeMap<String, SpecAddress>)> =
+        HashMap::new();
+    for root in roots {
+        match root {
+            EmbedRoot::Normal(node) if normal_seen.insert(node) => {
+                let DocumentAddress::Spec(address) = &closure.nodes[node.0].address else {
+                    unreachable!("normal embed root is spec-addressed")
+                };
+                let tree = &closure.nodes[node.0].tree;
+                let aliases = tree.directives().aliases.clone();
+                let normalized = strip_resolved_directives(tree);
+                let mut missing = None;
+                let mut observed_failure = None;
+                let mut resolve =
+                    |target: &SpecAddress| match lookup_text(target, snapshot, &current) {
+                        Ok(text) => Ok(text),
+                        Err(EmbedPassError::Embed(error @ EmbedError::Unresolved { .. })) => {
+                            observed_failure = Some(error);
+                            Err("recorded embed observation failed".to_string())
+                        }
+                        Err(EmbedPassError::MissingObservation { addr }) => {
+                            missing = Some(addr);
+                            Err("missing compiler embed observation".to_string())
+                        }
+                        Err(EmbedPassError::Embed(EmbedError::Cycle(_))) => unreachable!(),
+                    };
+                let mut edge = |from: &str, ordinal: usize, target: &SpecAddress| {
+                    let target_key = target.without_pin();
+                    if accepted_occurrences.insert((from.to_string(), ordinal)) {
+                        accepted_edges.push((from.to_string(), target.clone()));
                     }
-                    if let Some(error) = observed_failure {
-                        return Err(EmbedPassError::Embed(error));
+                    if !accepted_nodes
+                        .iter()
+                        .any(|accepted: &SpecAddress| accepted.without_pin() == target_key)
+                    {
+                        accepted_nodes.push(target.clone());
                     }
-                    return Err(EmbedPassError::Embed(error));
-                }
-            };
-        updates.push(RootUpdate {
-            node,
-            tree: DocTree::parse(&expanded),
-            aliases,
-        });
+                };
+                let expanded =
+                    expand_with(&normalized, &address.without_pin(), &mut resolve, &mut edge);
+                let expanded = finish_expansion(expanded, missing, observed_failure)?;
+                updates.push(RootUpdate {
+                    node,
+                    tree: DocTree::parse(&expanded),
+                    aliases,
+                });
+            }
+            EmbedRoot::Normal(_) => {}
+            EmbedRoot::Simple(contribution) => {
+                let ClosureContribution::Simple { document, .. } =
+                    &closure.contributions[contribution]
+                else {
+                    unreachable!()
+                };
+                let base = match &document.address {
+                    DocumentAddress::Spec(address) => address.without_pin(),
+                    DocumentAddress::StaticEntry { origin, path } => {
+                        format!("static:{origin}\0{path}")
+                    }
+                };
+                let (tree, aliases) = if let Some(cached) = simple_cache.get(&base) {
+                    cached.clone()
+                } else {
+                    let aliases = document.tree.directives().aliases.clone();
+                    let mut missing = None;
+                    let mut observed_failure = None;
+                    let mut resolve =
+                        |target: &SpecAddress| match lookup_text(target, snapshot, &current) {
+                            Ok(text) => Ok(text),
+                            Err(EmbedPassError::Embed(error @ EmbedError::Unresolved { .. })) => {
+                                observed_failure = Some(error);
+                                Err("recorded embed observation failed".to_string())
+                            }
+                            Err(EmbedPassError::MissingObservation { addr }) => {
+                                missing = Some(addr);
+                                Err("missing compiler embed observation".to_string())
+                            }
+                            Err(EmbedPassError::Embed(EmbedError::Cycle(_))) => unreachable!(),
+                        };
+                    let mut ignore_edge = |_: &str, _: usize, _: &SpecAddress| {};
+                    let expanded = expand_with(
+                        &document.tree.text(document.tree.root()),
+                        &base,
+                        &mut resolve,
+                        &mut ignore_edge,
+                    );
+                    let expanded = finish_expansion(expanded, missing, observed_failure)?;
+                    let value = (DocTree::parse(&expanded), aliases);
+                    simple_cache.insert(base, value.clone());
+                    value
+                };
+                simple_updates.push(SimpleUpdate {
+                    contribution,
+                    tree,
+                    aliases,
+                });
+            }
+        }
     }
 
     let existing_keys: HashSet<String> = closure
@@ -210,6 +274,15 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
         closure.nodes[update.node.0].tree = update.tree;
         closure.nodes[update.node.0].aliases = update.aliases;
     }
+    for update in simple_updates {
+        let ClosureContribution::Simple { document, .. } =
+            &mut closure.contributions[update.contribution]
+        else {
+            unreachable!("the staged simple contribution kept its identity")
+        };
+        document.tree = update.tree;
+        document.aliases = update.aliases;
+    }
     let mut node_ids: HashMap<String, ClosureNodeId> = closure
         .nodes
         .iter()
@@ -226,15 +299,37 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
         closure.nodes.push(node);
         node_ids.insert(key, id);
     }
-    closure
-        .edges
-        .extend(accepted_edges.into_iter().map(|(from, to)| ClosureEdge {
-            from: node_ids[&from],
-            to: node_ids[&to],
-            kind: ClosureEdgeKind::Embed,
-        }));
+    closure.edges.extend(
+        accepted_edges
+            .into_iter()
+            .map(|(from, target)| ClosureEdge {
+                from: node_ids[&from],
+                to: node_ids[&target.without_pin()],
+                kind: ClosureEdgeKind::Embed,
+                requested_target: target,
+            }),
+    );
     closure.pending_embeds = None;
     Ok(())
+}
+
+fn finish_expansion(
+    expanded: Result<String, EmbedError>,
+    missing: Option<String>,
+    observed_failure: Option<EmbedError>,
+) -> Result<String, EmbedPassError> {
+    match expanded {
+        Ok(expanded) => Ok(expanded),
+        Err(error) => {
+            if let Some(addr) = missing {
+                return Err(EmbedPassError::MissingObservation { addr });
+            }
+            if let Some(error) = observed_failure {
+                return Err(EmbedPassError::Embed(error));
+            }
+            Err(EmbedPassError::Embed(error))
+        }
+    }
 }
 
 fn lookup_text(

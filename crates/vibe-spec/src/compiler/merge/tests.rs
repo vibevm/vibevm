@@ -5,8 +5,8 @@ use specmark::verifies;
 use super::*;
 use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
 use crate::compiler::ir::{
-    AbsorptionState, ArtifactId, ContributionMeta, LinkState, QualificationState, SourceFormatId,
-    SourceIr, StaticCompileMode,
+    AbsorptionState, ArtifactContext, ClosureOccurrence, ContributionMeta, LinkState,
+    QualificationState, SourceFormatId, SourceIr, StaticCompileMode,
 };
 
 fn spec(raw: &str) -> SpecAddress {
@@ -58,30 +58,108 @@ fn snapshot(
 }
 
 fn closure(root: &str, tree: &str, snapshot: SourceResolutionSnapshot) -> ClosureIr {
-    ClosureIr {
-        artifact: ArtifactId::new("static-fragment").unwrap(),
-        nodes: vec![ClosureDocument {
-            address: DocumentAddress::Spec(spec(root)),
+    let address = spec(root);
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ClosureDocument {
+            address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse(tree),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: ContributionMeta {
                 origin: "org.demo/pkg".to_string(),
                 path: "contract/api".to_string(),
             },
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: address.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: address,
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: Some(snapshot),
-        pending_embeds: None,
-    }
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::Plain),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        Some(snapshot),
+        None,
+    )
+}
+
+#[test]
+fn failed_point_source_replay_names_the_current_exact_request() {
+    let root = "spec://org.demo/pkg/contract/api#root";
+    let target = "spec://org.demo/shared/source/impl#root";
+    let r7 = spec(&format!("{target}~r7"));
+    let r9 = spec(&format!("{target}~r9"));
+    let shared_reason = "shared source failure".to_string();
+
+    let expansion_failure = SourceResolutionSnapshot {
+        expansions: [r7.clone(), r9.clone()]
+            .into_iter()
+            .map(|requested| {
+                (
+                    requested.to_string(),
+                    ExpansionObservation::Failed {
+                        requested,
+                        reason: shared_reason.clone(),
+                    },
+                )
+            })
+            .collect(),
+        ..Default::default()
+    };
+    let error = merge_closure(closure(
+        root,
+        &format!("# API {{#root}}\n#source {r9}\n"),
+        expansion_failure,
+    ))
+    .unwrap_err();
+    assert!(matches!(
+        error,
+        MergePassError::Unresolved { addr, reason }
+            if addr == r9.to_string() && reason == shared_reason
+    ));
+
+    let document_failure = SourceResolutionSnapshot {
+        discovery_order: vec![target.to_string()],
+        documents: [(
+            target.to_string(),
+            DocumentObservation::Failed {
+                requested: r7.clone(),
+                reason: shared_reason.clone(),
+            },
+        )]
+        .into_iter()
+        .collect(),
+        expansions: [r7.clone(), r9.clone()]
+            .into_iter()
+            .map(|requested| {
+                (
+                    requested.to_string(),
+                    ExpansionObservation::Resolved {
+                        requested: requested.clone(),
+                        targets: vec![requested],
+                    },
+                )
+            })
+            .collect(),
+        ..Default::default()
+    };
+    let error = merge_closure(closure(
+        root,
+        &format!("# API {{#root}}\n#source {r9}\n"),
+        document_failure,
+    ))
+    .unwrap_err();
+    assert!(matches!(
+        error,
+        MergePassError::Unresolved { addr, reason }
+            if addr == r9.to_string() && reason == shared_reason
+    ));
 }
 
 #[test]
@@ -142,7 +220,11 @@ fn merge_consumes_pending_snapshot_then_adds_source_membership() {
                 path: "contract/api".to_string(),
             },
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: spec("spec://org.demo/pkg/contract/api#root"),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: spec("spec://org.demo/pkg/contract/api#root"),
+            }],
         }
     );
 }
@@ -241,7 +323,17 @@ fn final_membership_follows_close_replay_not_scheduler_preorder() {
             path: "contract/a".to_string(),
         },
         seed: ClosureNodeId(1),
-        emission_order: vec![ClosureNodeId(0), ClosureNodeId(1)],
+        seed_address: spec(a),
+        emission_order: vec![
+            ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: spec(b),
+            },
+            ClosureOccurrence {
+                node: ClosureNodeId(1),
+                requested_address: spec(a),
+            },
+        ],
     };
 
     let output = merge_closure(input).unwrap();

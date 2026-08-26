@@ -30,8 +30,25 @@ pub(crate) struct GatherDocuments;
 
 impl GatherDocuments {
     pub(crate) fn run(self, documents: Vec<DocumentIr>) -> Documents {
+        #[cfg(test)]
+        GATHER_INVOCATIONS.with(|count| count.set(count.get() + 1));
         Documents::new(documents)
     }
+}
+
+#[cfg(test)]
+std::thread_local! {
+    static GATHER_INVOCATIONS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+#[cfg(test)]
+pub(crate) fn reset_gather_invocations() {
+    GATHER_INVOCATIONS.with(|count| count.set(0));
+}
+
+#[cfg(test)]
+pub(crate) fn gather_invocations() -> usize {
+    GATHER_INVOCATIONS.with(std::cell::Cell::get)
 }
 
 /// One item of the declared schedule, including its non-pass barrier.

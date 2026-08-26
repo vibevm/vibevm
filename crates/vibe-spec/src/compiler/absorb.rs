@@ -162,7 +162,7 @@ pub(crate) enum AbsorbPassError {
 
 struct Projection {
     contribution: usize,
-    emission_order: Vec<super::ir::ClosureNodeId>,
+    emission_order: Vec<super::ir::ClosureOccurrence>,
 }
 
 fn absorb_closure(input: ClosureIr) -> Result<ClosureIr, AbsorbPassError> {
@@ -195,10 +195,15 @@ fn absorb_closure(input: ClosureIr) -> Result<ClosureIr, AbsorbPassError> {
                 emission_order: occurrences
                     .iter()
                     .filter(|occurrence| !occurrence.absorbed)
-                    .map(|occurrence| occurrence.node)
+                    .map(|occurrence| super::ir::ClosureOccurrence {
+                        node: occurrence.node,
+                        requested_address: occurrence.requested_address.clone(),
+                    })
                     .collect(),
             }),
             (ClosureContribution::Simple { .. }, ContributionAbsorption::Simple { .. }) => {}
+            (ClosureContribution::Elided { .. }, ContributionAbsorption::Elided { .. }) => {}
+            (ClosureContribution::Hoisted { .. }, ContributionAbsorption::Hoisted { .. }) => {}
             _ => unreachable!("planned absorption validation checked contribution kinds"),
         }
     }
@@ -263,6 +268,7 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                 ClosureContribution::Normal {
                     meta,
                     seed,
+                    seed_address,
                     emission_order,
                 },
                 ContributionAbsorption::Normal {
@@ -288,18 +294,26 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                             contribution: index,
                             node: seed.0,
                         })?;
-                let DocumentAddress::Spec(actual_seed_address) = &seed_node.address else {
+                let DocumentAddress::Spec(node_seed_address) = &seed_node.address else {
                     return Err(AbsorbPassError::AppliedNonSpecSeedNode {
                         contribution: index,
                         node: seed.0,
                     });
                 };
-                if expected_seed_address != actual_seed_address {
+                if node_seed_address.without_pin() != seed_address.without_pin() {
+                    return Err(AbsorbPassError::AppliedSeedAddress {
+                        contribution: index,
+                        node: seed.0,
+                        expected: Box::new(seed_address.clone()),
+                        actual: Box::new(node_seed_address.clone()),
+                    });
+                }
+                if expected_seed_address != seed_address {
                     return Err(AbsorbPassError::AppliedSeedAddress {
                         contribution: index,
                         node: seed.0,
                         expected: Box::new(expected_seed_address.clone()),
-                        actual: Box::new(actual_seed_address.clone()),
+                        actual: Box::new(seed_address.clone()),
                     });
                 }
                 for (occurrence, planned) in occurrences.iter().enumerate() {
@@ -317,12 +331,12 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                             node: planned.node.0,
                         });
                     };
-                    if planned.address != *actual_address {
+                    if actual_address.without_pin() != planned.requested_address.without_pin() {
                         return Err(AbsorbPassError::AppliedOccurrenceAddress {
                             contribution: index,
                             occurrence,
                             node: planned.node.0,
-                            expected: Box::new(planned.address.clone()),
+                            expected: Box::new(planned.requested_address.clone()),
                             actual: Box::new(actual_address.clone()),
                         });
                     }
@@ -330,7 +344,10 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                 let expected: Vec<_> = occurrences
                     .iter()
                     .filter(|occurrence| !occurrence.absorbed)
-                    .map(|occurrence| occurrence.node)
+                    .map(|occurrence| super::ir::ClosureOccurrence {
+                        node: occurrence.node,
+                        requested_address: occurrence.requested_address.clone(),
+                    })
                     .collect();
                 if expected.len() != emission_order.len() {
                     return Err(AbsorbPassError::AppliedAlignment {
@@ -342,12 +359,21 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                 for (occurrence, (expected, actual)) in
                     expected.iter().zip(emission_order).enumerate()
                 {
-                    if expected != actual {
+                    if expected.node != actual.node {
                         return Err(AbsorbPassError::AppliedOccurrence {
                             contribution: index,
                             occurrence,
-                            expected: expected.0,
-                            actual: actual.0,
+                            expected: expected.node.0,
+                            actual: actual.node.0,
+                        });
+                    }
+                    if expected.requested_address != actual.requested_address {
+                        return Err(AbsorbPassError::AppliedOccurrenceAddress {
+                            contribution: index,
+                            occurrence,
+                            node: actual.node.0,
+                            expected: Box::new(expected.requested_address.clone()),
+                            actual: Box::new(actual.requested_address.clone()),
                         });
                     }
                 }
@@ -365,6 +391,31 @@ pub(crate) fn validate_applied_absorption(closure: &ClosureIr) -> Result<(), Abs
                         contribution: index,
                         expected: contribution_identity(expected_meta, Some(address)),
                         actual: contribution_identity(meta, Some(&document.address)),
+                    });
+                }
+            }
+            (
+                ClosureContribution::Elided { meta },
+                ContributionAbsorption::Elided {
+                    meta: expected_meta,
+                },
+            ) => validate_meta(index, expected_meta, meta)?,
+            (
+                ClosureContribution::Hoisted { meta, target },
+                ContributionAbsorption::Hoisted {
+                    meta: expected_meta,
+                    target: expected_target,
+                },
+            ) => {
+                validate_meta(index, expected_meta, meta)?;
+                if expected_target != target {
+                    return Err(AbsorbPassError::AppliedContributionIdentity {
+                        contribution: index,
+                        expected: format!(
+                            "{}:{}:{expected_target}",
+                            expected_meta.origin, expected_meta.path
+                        ),
+                        actual: format!("{}:{}:{target}", meta.origin, meta.path),
                     });
                 }
             }

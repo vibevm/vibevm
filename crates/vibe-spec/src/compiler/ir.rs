@@ -14,6 +14,11 @@ use crate::{DocTree, RenameEntry, SpecAddress};
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::source_snapshot::SourceResolutionSnapshot;
 
+mod artifact;
+pub(crate) use artifact::*;
+mod link;
+pub(crate) use link::*;
+
 /// One of the five progressively lowered compiler representations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum IrLevel {
@@ -74,25 +79,6 @@ impl SourceFormatId {
             Err(IrIdError {
                 kind: "source format",
             })
-        } else {
-            Ok(Self(value))
-        }
-    }
-
-    pub(crate) fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
-/// Open identity of one final compiler artifact.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct ArtifactId(String);
-
-impl ArtifactId {
-    pub(crate) fn new(value: impl Into<String>) -> Result<Self, IrIdError> {
-        let value = value.into();
-        if value.trim().is_empty() {
-            Err(IrIdError { kind: "artifact" })
         } else {
             Ok(Self(value))
         }
@@ -248,24 +234,6 @@ impl<'a> IntoIterator for &'a mut Documents {
     }
 }
 
-/// Provenance of one top-level static contribution in effective-boot order.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct ContributionMeta {
-    pub(crate) origin: String,
-    pub(crate) path: String,
-}
-
-/// The compatibility/static-lane policy carried through the whole artifact.
-///
-/// Both modes traverse the same named pass list. `Plain` keeps labels as
-/// authored, but qualification still lowers aliases and plans READ-ONCE
-/// absorption; `QualifyPerNode` additionally qualifies node-local labels.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum StaticCompileMode {
-    Plain,
-    QualifyPerNode,
-}
-
 /// Runtime typestate of the closure-level qualify transform.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum QualificationState {
@@ -273,32 +241,16 @@ pub(crate) enum QualificationState {
     Applied(StaticCompileMode),
 }
 
-/// Immutable invocation input for compiling one artifact.
-///
-/// This is configuration around the five levels, not another IR level.
-#[derive(Debug, Clone)]
-pub(crate) struct ArtifactPlan {
-    pub(crate) artifact: ArtifactId,
-    pub(crate) mode: StaticCompileMode,
-    pub(crate) contributions: Vec<ArtifactInput>,
-}
-
-/// One heterogeneous artifact input in effective-boot order.
-#[derive(Debug, Clone)]
-pub(crate) enum ArtifactInput {
-    Normal {
-        meta: ContributionMeta,
-        seed: SpecAddress,
-    },
-    Simple {
-        meta: ContributionMeta,
-        source: SourceIr,
-    },
-}
-
 /// Stable index of a node inside one [`ClosureIr`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct ClosureNodeId(pub(crate) usize);
+
+/// One exact request for a shared logical closure node.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct ClosureOccurrence {
+    pub(crate) node: ClosureNodeId,
+    pub(crate) requested_address: SpecAddress,
+}
 
 /// One closed document payload.
 ///
@@ -328,6 +280,7 @@ pub(crate) struct ClosureEdge {
     pub(crate) from: ClosureNodeId,
     pub(crate) to: ClosureNodeId,
     pub(crate) kind: ClosureEdgeKind,
+    pub(crate) requested_target: SpecAddress,
 }
 
 /// One rename together with the origin whose namespace produced it.
@@ -343,11 +296,19 @@ pub(crate) enum ClosureContribution {
     Normal {
         meta: ContributionMeta,
         seed: ClosureNodeId,
-        emission_order: Vec<ClosureNodeId>,
+        seed_address: SpecAddress,
+        emission_order: Vec<ClosureOccurrence>,
     },
     Simple {
         meta: ContributionMeta,
         document: Box<ClosureDocument>,
+    },
+    Elided {
+        meta: ContributionMeta,
+    },
+    Hoisted {
+        meta: ContributionMeta,
+        target: SpecAddress,
     },
 }
 
@@ -362,7 +323,7 @@ pub(crate) enum ClosureContribution {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct AbsorptionOccurrence {
     pub(crate) node: ClosureNodeId,
-    pub(crate) address: SpecAddress,
+    pub(crate) requested_address: SpecAddress,
     pub(crate) absorbed: bool,
 }
 
@@ -378,6 +339,13 @@ pub(crate) enum ContributionAbsorption {
     Simple {
         meta: ContributionMeta,
         address: DocumentAddress,
+    },
+    Elided {
+        meta: ContributionMeta,
+    },
+    Hoisted {
+        meta: ContributionMeta,
+        target: SpecAddress,
     },
 }
 
@@ -402,82 +370,6 @@ pub(crate) enum AbsorptionState {
     Applied(AbsorptionPlan),
 }
 
-/// Exact digest of the semantic input used by the named link pass.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct LinkInputDigest(pub(crate) [u8; 32]);
-
-/// The Markdown fence state at one linked occurrence boundary.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum LinkFenceSnapshot {
-    Closed,
-    Open { delimiter: char, run: usize },
-}
-
-/// Engine-authored bytes interleaved with linked occurrence payloads.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum LinkLiteralKind {
-    NormalOpen,
-    ForcedNewline,
-    NormalClose,
-}
-
-/// Exact top-level identity consumed by link, including empty contributions.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum LinkContributionWitness {
-    Normal {
-        meta: ContributionMeta,
-        seed: ClosureNodeId,
-        seed_address: SpecAddress,
-        occurrence_count: usize,
-    },
-    Simple {
-        meta: ContributionMeta,
-        address: DocumentAddress,
-    },
-}
-
-/// One exact output chunk of the linked pre-lane stream.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum LinkChunk {
-    Literal {
-        kind: LinkLiteralKind,
-        bytes: String,
-    },
-    NormalOccurrence {
-        contribution: usize,
-        occurrence: usize,
-        node: ClosureNodeId,
-        address: SpecAddress,
-        fence_before: LinkFenceSnapshot,
-        fence_after: LinkFenceSnapshot,
-        bytes: String,
-    },
-    SimpleOccurrence {
-        contribution: usize,
-        occurrence: usize,
-        address: DocumentAddress,
-        fence_before: LinkFenceSnapshot,
-        fence_after: LinkFenceSnapshot,
-        bytes: String,
-    },
-}
-
-/// Canonical result of linking one whole Closure/artifact.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct LinkResult {
-    pub(crate) mode: StaticCompileMode,
-    pub(crate) input_digest: LinkInputDigest,
-    pub(crate) contributions: Vec<LinkContributionWitness>,
-    pub(crate) chunks: Vec<LinkChunk>,
-}
-
-/// Runtime typestate of the occurrence-sensitive link transform.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum LinkState {
-    Unlinked,
-    Linked(LinkResult),
-}
-
 /// The ordered multi-seed graph for one final artifact.
 ///
 /// A graph node may appear in more than one normal root's `emission_order`.
@@ -485,7 +377,7 @@ pub(crate) enum LinkState {
 /// per-root emission multiplicity or byte order.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct ClosureIr {
-    pub(crate) artifact: ArtifactId,
+    context: ArtifactContext,
     pub(crate) nodes: Vec<ClosureDocument>,
     pub(crate) edges: Vec<ClosureEdge>,
     pub(crate) contributions: Vec<ClosureContribution>,
@@ -495,6 +387,67 @@ pub(crate) struct ClosureIr {
     pub(crate) link: LinkState,
     pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
     pub(crate) pending_embeds: Option<EmbedResolutionSnapshot>,
+}
+
+impl ClosureIr {
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn from_plan(
+        plan: &ArtifactPlan,
+        nodes: Vec<ClosureDocument>,
+        edges: Vec<ClosureEdge>,
+        contributions: Vec<ClosureContribution>,
+        renames: Vec<OriginRename>,
+        qualification: QualificationState,
+        absorption: AbsorptionState,
+        link: LinkState,
+        pending_sources: Option<SourceResolutionSnapshot>,
+        pending_embeds: Option<EmbedResolutionSnapshot>,
+    ) -> Self {
+        Self {
+            context: plan.context().clone(),
+            nodes,
+            edges,
+            contributions,
+            renames,
+            qualification,
+            absorption,
+            link,
+            pending_sources,
+            pending_embeds,
+        }
+    }
+
+    #[cfg(test)]
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn testing(
+        context: ArtifactContext,
+        nodes: Vec<ClosureDocument>,
+        edges: Vec<ClosureEdge>,
+        contributions: Vec<ClosureContribution>,
+        renames: Vec<OriginRename>,
+        qualification: QualificationState,
+        absorption: AbsorptionState,
+        link: LinkState,
+        pending_sources: Option<SourceResolutionSnapshot>,
+        pending_embeds: Option<EmbedResolutionSnapshot>,
+    ) -> Self {
+        Self {
+            context,
+            nodes,
+            edges,
+            contributions,
+            renames,
+            qualification,
+            absorption,
+            link,
+            pending_sources,
+            pending_embeds,
+        }
+    }
+
+    pub(crate) fn context(&self) -> &ArtifactContext {
+        &self.context
+    }
 }
 
 /// The single shared frame surrounding one assembled lane.
@@ -537,16 +490,46 @@ pub(crate) enum LaneContribution {
 /// One fully framed artifact, still structured and not yet serialised.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct LaneIr {
-    pub(crate) artifact: ArtifactId,
+    context: ArtifactContext,
     pub(crate) frame: LaneFrame,
     pub(crate) contributions: Vec<LaneContribution>,
+}
+
+impl LaneIr {
+    #[cfg(test)]
+    pub(crate) fn testing(
+        context: ArtifactContext,
+        frame: LaneFrame,
+        contributions: Vec<LaneContribution>,
+    ) -> Self {
+        Self {
+            context,
+            frame,
+            contributions,
+        }
+    }
+
+    pub(crate) fn context(&self) -> &ArtifactContext {
+        &self.context
+    }
 }
 
 /// The exact bytes of one final artifact.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct EmittedIr {
-    pub(crate) artifact: ArtifactId,
+    context: ArtifactContext,
     pub(crate) bytes: Vec<u8>,
+}
+
+impl EmittedIr {
+    #[cfg(test)]
+    pub(crate) fn testing(context: ArtifactContext, bytes: Vec<u8>) -> Self {
+        Self { context, bytes }
+    }
+
+    pub(crate) fn context(&self) -> &ArtifactContext {
+        &self.context
+    }
 }
 
 #[cfg(test)]

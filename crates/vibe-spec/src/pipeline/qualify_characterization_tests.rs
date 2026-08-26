@@ -6,9 +6,9 @@ use super::tests::MockSource;
 use super::*;
 use crate::DocTree;
 use crate::compiler::ir::{
-    AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureIr,
-    ClosureNodeId, ContributionMeta, DocumentAddress, LinkState, QualificationState,
-    StaticCompileMode,
+    AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureContribution, ClosureDocument,
+    ClosureIr, ClosureNodeId, ClosureOccurrence, ContributionMeta, DocumentAddress, LinkState,
+    QualificationState, StaticCompileMode,
 };
 use crate::compiler::pass::Pass;
 use crate::compiler::qualify::{
@@ -36,26 +36,55 @@ fn ir_normal(meta: ContributionMeta, seed: usize, order: &[usize]) -> ClosureCon
     ClosureContribution::Normal {
         meta,
         seed: ClosureNodeId(seed),
-        emission_order: order.iter().copied().map(ClosureNodeId).collect(),
+        seed_address: SpecAddress::parse("spec://org.placeholder/pkg/boot/entry#root").unwrap(),
+        emission_order: order
+            .iter()
+            .map(|node| ClosureOccurrence {
+                node: ClosureNodeId(*node),
+                requested_address: SpecAddress::parse("spec://org.placeholder/pkg/boot/entry#root")
+                    .unwrap(),
+            })
+            .collect(),
     }
 }
 
 fn pending_closure(
     nodes: Vec<ClosureDocument>,
-    contributions: Vec<ClosureContribution>,
+    mut contributions: Vec<ClosureContribution>,
 ) -> ClosureIr {
-    ClosureIr {
-        artifact: ArtifactId::new("static-stale-plan-test").unwrap(),
-        nodes,
-        edges: Vec::new(),
-        contributions,
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
+    for contribution in &mut contributions {
+        let ClosureContribution::Normal {
+            seed,
+            seed_address,
+            emission_order,
+            ..
+        } = contribution
+        else {
+            continue;
+        };
+        let DocumentAddress::Spec(address) = &nodes[seed.0].address else {
+            unreachable!()
+        };
+        *seed_address = address.clone();
+        for occurrence in emission_order {
+            let DocumentAddress::Spec(address) = &nodes[occurrence.node.0].address else {
+                unreachable!()
+            };
+            occurrence.requested_address = address.clone();
+        }
     }
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
+        nodes,
+        Vec::new(),
+        contributions,
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::QualifyPerNode),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 fn planned_plan(closure: &ClosureIr) -> &AbsorptionPlan {
@@ -150,30 +179,34 @@ fn cross_package_source_text_qualifies_under_its_emitted_contract_owner() {
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 fn legacy_tail_rejects_a_bypassed_qualify_pass() {
     let address = SpecAddress::parse("spec://org.demo/pkg/boot/entry#root").unwrap();
-    let closure = ClosureIr {
-        artifact: ArtifactId::new("static-fragment").unwrap(),
-        nodes: vec![ClosureDocument {
-            address: DocumentAddress::Spec(address),
+    let closure = ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
+        vec![ClosureDocument {
+            address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Entry {#root}\n"),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: ContributionMeta {
                 origin: "org.demo/pkg".to_string(),
                 path: "boot/entry".to_string(),
             },
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: address.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: address,
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    };
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::Plain),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    );
 
     let panic = std::panic::catch_unwind(|| compile_static_continuation(closure));
     assert!(

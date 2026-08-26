@@ -8,12 +8,9 @@ use crate::{DocTree, SectionSource, SpecAddress};
 #[cfg(test)]
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
-use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState, document_origin};
+use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
 use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
-use super::ir::{
-    ArtifactId, ArtifactInput, ArtifactPlan, ClosureIr, ContributionMeta, DocumentIr, SourceIr,
-    StaticCompileMode,
-};
+use super::ir::{ArtifactPlan, ClosureIr, DocumentIr, SourceIr, StaticCompileMode};
 use super::link::{LINK_PASS_NAME, LinkPass, LinkPassError};
 use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
@@ -101,22 +98,13 @@ pub(crate) struct BuiltinSchedule {
 
 impl BuiltinSchedule {
     fn new(plan: &ArtifactPlan) -> Self {
-        let [ArtifactInput::Normal { meta, seed }] = plan.contributions.as_slice() else {
-            panic!("the compatibility schedule requires one normal contribution")
-        };
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         pipeline
             .push_document(ParsePass::new())
             .expect("the static built-in parse schedule is valid");
         pipeline
-            .push_artifact(ClosePass::new(
-                plan.artifact.clone(),
-                meta.clone(),
-                plan.mode,
-                seed.clone(),
-                close_state.clone(),
-            ))
+            .push_artifact(ClosePass::new(plan.clone(), close_state.clone()))
             .expect("the static built-in close schedule is valid");
         pipeline
             .push_artifact(MergePass::new())
@@ -201,29 +189,17 @@ impl BuiltinSchedule {
     }
 }
 
-/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify/absorb/link.
-/// External observations are frozen before the single gather; the whole-IR
-/// passes alone interpret their respective state.
-pub(crate) fn compile_linked_closure(
-    seed: &SpecAddress,
+/// Compile one validated whole artifact plan through the artifact prefix.
+///
+/// Parse-dependent discovery invokes the document segment per honest document,
+/// crosses one gather barrier, then the whole artifact segment runs once.
+pub(crate) fn compile_artifact_prefix(
+    plan: ArtifactPlan,
     source: &impl SectionSource,
-    mode: StaticCompileMode,
 ) -> Result<ClosureIr, crate::pipeline::CompileError> {
-    let plan = ArtifactPlan {
-        artifact: ArtifactId::new("static-fragment")
-            .expect("the static compatibility artifact id is non-blank"),
-        mode,
-        contributions: vec![ArtifactInput::Normal {
-            meta: ContributionMeta {
-                origin: document_origin(seed),
-                path: seed.doc_path.clone(),
-            },
-            seed: seed.clone(),
-        }],
-    };
     let schedule = BuiltinSchedule::new(&plan);
     let worklist = worklist::discover(
-        seed,
+        &plan,
         source,
         |input| schedule.parse_source(input),
         |address, reason| schedule.record_failure(address, reason),
@@ -231,6 +207,16 @@ pub(crate) fn compile_linked_closure(
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.close(worklist.documents)
+}
+
+/// The one-normal compatibility adapter used by the public `compile_static*`
+/// signatures. It is not the product's final whole-artifact driver.
+pub(crate) fn compile_linked_closure(
+    seed: &SpecAddress,
+    source: &impl SectionSource,
+    mode: StaticCompileMode,
+) -> Result<ClosureIr, crate::pipeline::CompileError> {
+    compile_artifact_prefix(ArtifactPlan::compatibility(seed.clone(), mode), source)
 }
 
 #[cfg(test)]
@@ -258,18 +244,7 @@ mod tests {
     }
 
     fn plan(mode: StaticCompileMode) -> ArtifactPlan {
-        let seed = seed();
-        ArtifactPlan {
-            artifact: ArtifactId::new("static-fragment").unwrap(),
-            mode,
-            contributions: vec![ArtifactInput::Normal {
-                meta: ContributionMeta {
-                    origin: document_origin(&seed),
-                    path: seed.doc_path.clone(),
-                },
-                seed,
-            }],
-        }
+        ArtifactPlan::compatibility(seed(), mode)
     }
 
     #[test]

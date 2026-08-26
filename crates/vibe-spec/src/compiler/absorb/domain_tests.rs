@@ -2,8 +2,8 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ClosureNodeId, LinkState,
-    StaticCompileMode,
+    AbsorptionOccurrence, AbsorptionPlan, ArtifactContext, ClosureDocument, ClosureNodeId,
+    ClosureOccurrence, LinkState, StaticCompileMode,
 };
 use crate::compiler::pass::{AnyIr, PassSegment, PassSegmentError};
 use crate::compiler::qualify::{QualifyPass, QualifyPassError};
@@ -41,11 +41,18 @@ fn meta() -> ContributionMeta {
     }
 }
 
-fn normal(seed: usize, order: &[usize]) -> ClosureContribution {
+fn normal(seed: usize, order: &[usize], nodes: &[ClosureDocument]) -> ClosureContribution {
     ClosureContribution::Normal {
         meta: meta(),
         seed: ClosureNodeId(seed),
-        emission_order: order.iter().copied().map(ClosureNodeId).collect(),
+        seed_address: node_address(nodes, seed),
+        emission_order: order
+            .iter()
+            .map(|node| ClosureOccurrence {
+                node: ClosureNodeId(*node),
+                requested_address: node_address(nodes, *node),
+            })
+            .collect(),
     }
 }
 
@@ -61,7 +68,7 @@ fn planned_closure(nodes: Vec<ClosureDocument>, seed: usize, order: &[usize]) ->
         .iter()
         .map(|node| AbsorptionOccurrence {
             node: ClosureNodeId(*node),
-            address: node_address(&nodes, *node),
+            requested_address: node_address(&nodes, *node),
             absorbed: false,
         })
         .collect();
@@ -74,35 +81,41 @@ fn planned_closure(nodes: Vec<ClosureDocument>, seed: usize, order: &[usize]) ->
             occurrences,
         }],
     };
-    ClosureIr {
-        artifact: ArtifactId::new("domain-test").unwrap(),
+    let contributions = vec![normal(seed, order, &nodes)];
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
         nodes,
-        edges: Vec::new(),
-        contributions: vec![normal(seed, order)],
-        renames: Vec::new(),
-        qualification: QualificationState::Applied(StaticCompileMode::QualifyPerNode),
-        absorption: AbsorptionState::Planned(plan),
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    }
+        Vec::new(),
+        contributions,
+        Vec::new(),
+        QualificationState::Applied(StaticCompileMode::QualifyPerNode),
+        AbsorptionState::Planned(plan),
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
 fn empty_normal_static_seed_fails_analysis_and_planned_validation() {
-    let analyze = ClosureIr {
-        artifact: ArtifactId::new("domain-test").unwrap(),
-        nodes: vec![static_node("boot/local.md")],
-        edges: Vec::new(),
-        contributions: vec![normal(0, &[])],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    };
+    let analyze = ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
+        vec![static_node("boot/local.md")],
+        Vec::new(),
+        vec![ClosureContribution::Normal {
+            meta: meta(),
+            seed: ClosureNodeId(0),
+            seed_address: spec("spec://org.demo/pkg/boot/entry#root"),
+            emission_order: Vec::new(),
+        }],
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::QualifyPerNode),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        None,
+    );
     assert!(matches!(
         QualifyPass::new().run(analyze),
         Err(QualifyPassError::NonSpecSeedGraphNode {
@@ -245,8 +258,10 @@ fn revision_pin_is_part_of_the_exact_normal_witness() {
         0,
         &[0],
     );
-    planned.nodes[0].address =
-        DocumentAddress::Spec(spec("spec://org.demo/pkg/boot/entry#root~r7"));
+    let ClosureContribution::Normal { seed_address, .. } = &mut planned.contributions[0] else {
+        unreachable!()
+    };
+    *seed_address = spec("spec://org.demo/pkg/boot/entry#root~r7");
     assert!(matches!(
         AbsorbPass::new().run(planned),
         Err(AbsorbPassError::InvalidPlan(
@@ -269,7 +284,10 @@ fn revision_pin_is_part_of_the_exact_normal_witness() {
             &[0, 1],
         ))
         .unwrap();
-    applied.nodes[1].address = DocumentAddress::Spec(spec("spec://org.demo/pkg/boot/b#root~r9"));
+    let ClosureContribution::Normal { emission_order, .. } = &mut applied.contributions[0] else {
+        unreachable!()
+    };
+    emission_order[1].requested_address = spec("spec://org.demo/pkg/boot/b#root~r9");
     assert!(matches!(
         validate_applied_absorption(&applied),
         Err(AbsorbPassError::AppliedOccurrenceAddress {

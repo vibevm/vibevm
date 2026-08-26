@@ -3,7 +3,7 @@ use specmark::verifies;
 use super::*;
 use crate::DocTree;
 use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
-use crate::compiler::ir::{SourceFormatId, SourceIr};
+use crate::compiler::ir::{ArtifactPlan, SourceFormatId, SourceIr, StaticCompileMode};
 use crate::compiler::pass::IrPayload;
 use crate::compiler::source_snapshot::{ExpansionObservation, SourceResolutionSnapshot};
 
@@ -27,13 +27,7 @@ fn close(
     state: &CloseState,
 ) -> Result<ClosureIr, UseGraphError> {
     close_documents(
-        &ArtifactId::new("static-fragment").unwrap(),
-        &ContributionMeta {
-            origin: document_origin(seed),
-            path: seed.doc_path.clone(),
-        },
-        StaticCompileMode::Plain,
-        seed,
+        &ArtifactPlan::compatibility(seed.clone(), StaticCompileMode::Plain),
         documents,
         state,
     )
@@ -231,4 +225,27 @@ fn close_transports_pending_embeds_without_judging_membership() {
         QualificationState::Pending(StaticCompileMode::Plain)
     );
     assert!(matches!(closure.absorption, AbsorptionState::Unplanned));
+}
+
+#[test]
+fn pin_distinct_failure_replay_uses_the_current_exact_request() {
+    let root = spec("spec://org.demo/pkg/boot/root#root");
+    let missing_r7 = spec("spec://org.demo/pkg/boot/missing#root~r7");
+    let missing_r9 = spec("spec://org.demo/pkg/boot/missing#root~r9");
+    let state = CloseState::default();
+    state.record_failure(&missing_r7, "first pin".to_string());
+    state.record_failure(&missing_r9, "current pin".to_string());
+    let documents = Documents::new(vec![document(
+        &root.to_string(),
+        &format!("# Root {{#root}}\n#use {missing_r9}\n"),
+    )]);
+
+    let error = close(&root, documents, &state).unwrap_err();
+    assert_eq!(
+        error,
+        UseGraphError::Unresolved {
+            addr: missing_r9.to_string(),
+            reason: "current pin".to_string(),
+        }
+    );
 }

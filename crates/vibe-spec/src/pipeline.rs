@@ -13,10 +13,11 @@
 //!    READ-ONCE absorption, and qualifies live node labels in qualified mode;
 //! 5. **absorb** — named `absorb` projects every normal contribution to its
 //!    exact live occurrence order;
-//! 6. **link** — named `link` resolves surviving cross-node short references;
-//! 7. **emit** — the legacy tail concatenates surviving
-//!    nodes in topological order, each wrapped in
-//!    open/close markers (§11), so the output is reversible.
+//! 6. **link** — named `link` resolves surviving cross-node short references
+//!    into backend-neutral typed occurrences;
+//! 7. **compatibility tail** — only the public one-seed adapters temporarily
+//!    spell reversible Markdown markers from those typed semantics. Whole
+//!    artifact assemble/emit replace this tail in the next atoms.
 //!
 //! A `#use` line is *resolved by the ordering* — its target is emitted, once,
 //! above — so the line itself is stripped from a node's body on emit; it would
@@ -115,7 +116,7 @@ pub fn compile_static_qualified(
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// → embed → qualify → absorb → link schedule, then the legacy assemble/emit tail.
+/// → embed → qualify → absorb → link schedule, then the one-seed compatibility tail.
 /// Both public modes traverse the same pass list; mode is whole-artifact input
 /// state, never a privileged wrapper branch.
 fn compile_static_inner(
@@ -127,7 +128,7 @@ fn compile_static_inner(
     compile_static_continuation(closure)
 }
 
-/// Bridge from the named link pass into the still-legacy assemble/emit tail.
+/// Temporary one-seed Markdown adapter over backend-neutral linked semantics.
 fn compile_static_continuation(
     closure: ClosureIr,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {

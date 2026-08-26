@@ -2,16 +2,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 use crate::doctree::{FenceSnapshot as MarkdownFenceSnapshot, FenceTracker};
 use crate::qualify::read_anchor_id;
 
 use super::absorb::{AbsorbPassError, validate_applied_absorption};
 use super::ir::{
-    AbsorptionState, ClosureContribution, ClosureIr, ClosureNodeId, ContributionMeta,
-    DocumentAddress, LinkChunk, LinkContributionWitness, LinkFenceSnapshot, LinkInputDigest,
-    LinkLiteralKind, LinkResult, LinkState, OriginRename, QualificationState, StaticCompileMode,
+    AbsorptionState, ArtifactFrame, ArtifactTarget, ClosureContribution, ClosureEdgeKind,
+    ClosureIr, ClosureNodeId, ContributionMeta, DocumentAddress, LinkContributionWitness,
+    LinkFenceSnapshot, LinkInputDigest, LinkMarkerKey, LinkOccurrence, LinkResult, LinkState,
+    QualificationState, StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 
@@ -86,13 +87,10 @@ pub(crate) enum LinkPassError {
         occurrence: usize,
         node: usize,
     },
-    #[error(
-        "link contribution {contribution} occurrence {occurrence} node {node} is not a spec document"
-    )]
+    #[error("link contribution {contribution} occurrence {occurrence} is not a spec document")]
     NonSpecNode {
         contribution: usize,
         occurrence: usize,
-        node: usize,
     },
     #[error("ambiguous short link `{label}`: defined by {}", .candidates.join(", "))]
     AmbiguousShortLink {
@@ -120,27 +118,24 @@ impl LinkPassError {
 struct PlannedLink {
     mode: StaticCompileMode,
     contributions: Vec<LinkContributionWitness>,
-    chunks: Vec<InputChunk>,
+    occurrences: Vec<InputOccurrence>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-enum InputChunk {
-    Literal {
-        kind: LinkLiteralKind,
-        bytes: String,
-    },
-    NormalOccurrence {
+enum InputOccurrence {
+    Normal {
         contribution: usize,
         occurrence: usize,
         node: ClosureNodeId,
         address: crate::SpecAddress,
-        bytes: String,
+        marker: LinkMarkerKey,
+        body: String,
     },
-    SimpleOccurrence {
+    Simple {
         contribution: usize,
         occurrence: usize,
         address: DocumentAddress,
-        bytes: String,
+        body: String,
     },
 }
 
@@ -157,12 +152,12 @@ fn link_closure(mut input: ClosureIr) -> Result<ClosureIr, LinkPassError> {
 fn derive_result(closure: &ClosureIr) -> Result<LinkResult, LinkPassError> {
     let plan = plan_stream(closure)?;
     let input_digest = digest_input(closure, &plan);
-    let chunks = resolve_stream(&plan, &closure.renames)?;
+    let occurrences = resolve_stream(&plan, closure)?;
     Ok(LinkResult {
         mode: plan.mode,
         input_digest,
         contributions: plan.contributions,
-        chunks,
+        occurrences,
     })
 }
 
@@ -182,12 +177,13 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
     debug_assert_eq!(absorption.mode, mode);
 
     let mut contributions = Vec::with_capacity(closure.contributions.len());
-    let mut chunks = Vec::new();
+    let mut occurrences = Vec::new();
     for (contribution, current) in closure.contributions.iter().enumerate() {
         match current {
             ClosureContribution::Normal {
                 meta,
                 seed,
+                seed_address,
                 emission_order,
             } => {
                 let seed_node =
@@ -198,56 +194,46 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
                             contribution,
                             node: seed.0,
                         })?;
-                let DocumentAddress::Spec(seed_address) = &seed_node.address else {
+                let DocumentAddress::Spec(node_seed_address) = &seed_node.address else {
                     return Err(LinkPassError::NonSpecSeedNode {
                         contribution,
                         node: seed.0,
                     });
                 };
+                debug_assert_eq!(node_seed_address.without_pin(), seed_address.without_pin());
                 contributions.push(LinkContributionWitness::Normal {
                     meta: meta.clone(),
                     seed: *seed,
                     seed_address: seed_address.clone(),
                     occurrence_count: emission_order.len(),
                 });
-                for (occurrence, node) in emission_order.iter().copied().enumerate() {
-                    let document = closure
-                        .nodes
-                        .get(node.0)
-                        .ok_or(LinkPassError::MissingNode {
-                            contribution,
-                            occurrence,
-                            node: node.0,
-                        })?;
+                for (occurrence, current) in emission_order.iter().enumerate() {
+                    let document =
+                        closure
+                            .nodes
+                            .get(current.node.0)
+                            .ok_or(LinkPassError::MissingNode {
+                                contribution,
+                                occurrence,
+                                node: current.node.0,
+                            })?;
                     let DocumentAddress::Spec(address) = &document.address else {
                         return Err(LinkPassError::NonSpecNode {
                             contribution,
                             occurrence,
-                            node: node.0,
                         });
                     };
-                    chunks.push(InputChunk::Literal {
-                        kind: LinkLiteralKind::NormalOpen,
-                        bytes: format!("{}\n", crate::markers::open(&address.without_pin())),
-                    });
-                    let body = document.tree.text(document.tree.root());
-                    let needs_newline = !body.ends_with('\n');
-                    chunks.push(InputChunk::NormalOccurrence {
+                    debug_assert_eq!(
+                        address.without_pin(),
+                        current.requested_address.without_pin()
+                    );
+                    occurrences.push(InputOccurrence::Normal {
                         contribution,
                         occurrence,
-                        node,
-                        address: address.clone(),
-                        bytes: body,
-                    });
-                    if needs_newline {
-                        chunks.push(InputChunk::Literal {
-                            kind: LinkLiteralKind::ForcedNewline,
-                            bytes: "\n".to_string(),
-                        });
-                    }
-                    chunks.push(InputChunk::Literal {
-                        kind: LinkLiteralKind::NormalClose,
-                        bytes: format!("{}\n", crate::markers::close(&address.without_pin())),
+                        node: current.node,
+                        address: current.requested_address.clone(),
+                        marker: LinkMarkerKey::from_address(&current.requested_address),
+                        body: document.tree.text(document.tree.root()),
                     });
                 }
             }
@@ -256,93 +242,134 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
                     meta: meta.clone(),
                     address: document.address.clone(),
                 });
-                let body = document.tree.text(document.tree.root());
-                let needs_newline = !body.ends_with('\n');
-                chunks.push(InputChunk::SimpleOccurrence {
+                occurrences.push(InputOccurrence::Simple {
                     contribution,
                     occurrence: 0,
                     address: document.address.clone(),
-                    bytes: body,
+                    body: document.tree.text(document.tree.root()),
                 });
-                if needs_newline {
-                    chunks.push(InputChunk::Literal {
-                        kind: LinkLiteralKind::ForcedNewline,
-                        bytes: "\n".to_string(),
-                    });
-                }
+            }
+            ClosureContribution::Elided { meta } => {
+                contributions.push(LinkContributionWitness::Elided { meta: meta.clone() });
+            }
+            ClosureContribution::Hoisted { meta, target } => {
+                contributions.push(LinkContributionWitness::Hoisted {
+                    meta: meta.clone(),
+                    target: target.clone(),
+                });
             }
         }
     }
     Ok(PlannedLink {
         mode,
         contributions,
-        chunks,
+        occurrences,
     })
 }
 
 type Definitions = BTreeMap<String, Vec<(String, String)>>;
 
-fn definitions(renames: &[OriginRename]) -> Definitions {
+fn definitions_for(closure: &ClosureIr, contribution: usize) -> Result<Definitions, LinkPassError> {
+    let ClosureContribution::Normal { emission_order, .. } = &closure.contributions[contribution]
+    else {
+        return Ok(BTreeMap::new());
+    };
+    let mut seen = HashSet::new();
     let mut definitions = BTreeMap::new();
-    for entry in renames {
-        definitions
-            .entry(entry.rename.original.clone())
-            .or_insert_with(Vec::new)
-            .push((entry.origin.clone(), entry.rename.qualified.clone()));
+    for (occurrence, current) in emission_order.iter().enumerate() {
+        if !seen.insert(current.node) {
+            continue;
+        }
+        let document = closure
+            .nodes
+            .get(current.node.0)
+            .ok_or(LinkPassError::MissingNode {
+                contribution,
+                occurrence,
+                node: current.node.0,
+            })?;
+        for entry in &closure.renames {
+            if entry.origin != document.origin
+                || !document
+                    .tree
+                    .anchored()
+                    .any(|(_, id)| id == entry.rename.qualified)
+            {
+                continue;
+            }
+            let rename = &entry.rename;
+            let candidate = (document.origin.clone(), rename.qualified.clone());
+            let candidates = definitions
+                .entry(rename.original.clone())
+                .or_insert_with(Vec::new);
+            if !candidates.contains(&candidate) {
+                candidates.push(candidate);
+            }
+        }
     }
-    definitions
+    Ok(definitions)
 }
 
 fn resolve_stream(
     plan: &PlannedLink,
-    renames: &[OriginRename],
-) -> Result<Vec<LinkChunk>, LinkPassError> {
-    let definitions = definitions(renames);
-    let mut fence = FenceTracker::default();
+    closure: &ClosureIr,
+) -> Result<Vec<LinkOccurrence>, LinkPassError> {
     let qualified = matches!(plan.mode, StaticCompileMode::QualifyPerNode);
-    let mut output = Vec::with_capacity(plan.chunks.len());
-    for chunk in &plan.chunks {
-        match chunk {
-            InputChunk::Literal { kind, bytes } => output.push(LinkChunk::Literal {
-                kind: *kind,
-                bytes: link_text(bytes, &mut fence, &definitions, qualified)?,
-            }),
-            InputChunk::NormalOccurrence {
+    let mut output = Vec::with_capacity(plan.occurrences.len());
+    let mut current_contribution = None;
+    let mut fence = FenceTracker::default();
+    let mut definitions = BTreeMap::new();
+    for occurrence in &plan.occurrences {
+        let contribution = match occurrence {
+            InputOccurrence::Normal { contribution, .. }
+            | InputOccurrence::Simple { contribution, .. } => *contribution,
+        };
+        if current_contribution != Some(contribution) {
+            current_contribution = Some(contribution);
+            fence = FenceTracker::default();
+            definitions = definitions_for(closure, contribution)?;
+        }
+        match occurrence {
+            InputOccurrence::Normal {
                 contribution,
                 occurrence,
                 node,
                 address,
-                bytes,
+                marker,
+                body,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let bytes = link_text(bytes, &mut fence, &definitions, qualified)?;
+                let body = link_text(body, &mut fence, &definitions, qualified)?;
                 let fence_after = link_fence_snapshot(fence.snapshot());
-                output.push(LinkChunk::NormalOccurrence {
+                output.push(LinkOccurrence::Normal {
                     contribution: *contribution,
                     occurrence: *occurrence,
                     node: *node,
                     address: address.clone(),
+                    marker: marker.clone(),
                     fence_before,
                     fence_after,
-                    bytes,
+                    trailing_newline_required: !body.ends_with('\n'),
+                    body,
                 });
             }
-            InputChunk::SimpleOccurrence {
+            InputOccurrence::Simple {
                 contribution,
                 occurrence,
                 address,
-                bytes,
+                body,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let bytes = link_text(bytes, &mut fence, &definitions, qualified)?;
+                let body = link_text(body, &mut fence, &definitions, qualified)?;
                 let fence_after = link_fence_snapshot(fence.snapshot());
-                output.push(LinkChunk::SimpleOccurrence {
+                output.push(LinkOccurrence::Simple {
                     contribution: *contribution,
                     occurrence: *occurrence,
                     address: address.clone(),
                     fence_before,
                     fence_after,
-                    bytes,
+                    trailing_newline_required: !body.ends_with('\n'),
+                    body,
                 });
             }
         }
@@ -442,25 +469,53 @@ pub(crate) fn validate_linked(closure: &ClosureIr) -> Result<(), LinkPassError> 
             field: "contribution witnesses",
         });
     }
-    if actual.chunks != expected.chunks {
+    if actual.occurrences != expected.occurrences {
         return Err(LinkPassError::ReplayMismatch {
-            field: "linked chunks",
+            field: "linked occurrences",
         });
     }
     Ok(())
 }
 
+/// Temporary compatibility serializer. Concrete markers live here only until
+/// named assemble/emit replace this one-seed public-API tail.
 pub(crate) fn linked_text(closure: &ClosureIr) -> Result<String, LinkPassError> {
     validate_linked(closure)?;
+    debug_assert!(matches!(
+        closure.context().frame(),
+        ArtifactFrame::CompatibilityFragment
+    ));
     let LinkState::Linked(result) = &closure.link else {
         unreachable!("linked validator accepted only Linked")
     };
     let mut output = String::new();
-    for chunk in &result.chunks {
-        match chunk {
-            LinkChunk::Literal { bytes, .. }
-            | LinkChunk::NormalOccurrence { bytes, .. }
-            | LinkChunk::SimpleOccurrence { bytes, .. } => output.push_str(bytes),
+    for occurrence in &result.occurrences {
+        match occurrence {
+            LinkOccurrence::Normal {
+                marker,
+                body,
+                trailing_newline_required,
+                ..
+            } => {
+                output.push_str(&crate::markers::open(marker.as_str()));
+                output.push('\n');
+                output.push_str(body);
+                if *trailing_newline_required {
+                    output.push('\n');
+                }
+                output.push_str(&crate::markers::close(marker.as_str()));
+                output.push('\n');
+            }
+            LinkOccurrence::Simple {
+                body,
+                trailing_newline_required,
+                ..
+            } => {
+                output.push_str(body);
+                if *trailing_newline_required {
+                    output.push('\n');
+                }
+            }
         }
     }
     Ok(output)

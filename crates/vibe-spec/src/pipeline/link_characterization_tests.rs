@@ -4,9 +4,9 @@ use super::tests::MockSource;
 use super::*;
 use crate::DocTree;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
-    ClosureDocument, ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta,
-    DocumentAddress, LinkState, QualificationState,
+    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactContext, ClosureContribution,
+    ClosureDocument, ClosureIr, ClosureNodeId, ClosureOccurrence, ContributionAbsorption,
+    ContributionMeta, DocumentAddress, LinkState, QualificationState, StaticCompileMode,
 };
 use crate::compiler::link::{link_invocations, reset_link_invocations};
 
@@ -50,23 +50,27 @@ fn legacy_continuation_rejects_an_unlinked_applied_closure() {
         origin: "org.demo/pkg".to_string(),
         path: "boot/entry".to_string(),
     };
-    let closure = ClosureIr {
-        artifact: ArtifactId::new("static-fragment").unwrap(),
-        nodes: vec![ClosureDocument {
+    let closure = ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ClosureDocument {
             address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("BODY"),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: meta.clone(),
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: address.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: address.clone(),
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Applied(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Applied(AbsorptionPlan {
+        Vec::new(),
+        QualificationState::Applied(StaticCompileMode::Plain),
+        AbsorptionState::Applied(AbsorptionPlan {
             mode: StaticCompileMode::Plain,
             contributions: vec![ContributionAbsorption::Normal {
                 meta,
@@ -74,15 +78,15 @@ fn legacy_continuation_rejects_an_unlinked_applied_closure() {
                 seed_address: address.clone(),
                 occurrences: vec![AbsorptionOccurrence {
                     node: ClosureNodeId(0),
-                    address,
+                    requested_address: address,
                     absorbed: false,
                 }],
             }],
         }),
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    };
+        LinkState::Unlinked,
+        None,
+        None,
+    );
 
     let panic = std::panic::catch_unwind(|| compile_static_continuation(closure));
     assert!(

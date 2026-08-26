@@ -2,6 +2,7 @@ use specmark::verifies;
 
 use super::test_support::*;
 use super::*;
+use crate::SpecAddress;
 use crate::compiler::pass::{AnyIr, PassSegment, PassSegmentError};
 
 fn mask_link(mut closure: ClosureIr) -> ClosureIr {
@@ -11,7 +12,7 @@ fn mask_link(mut closure: ClosureIr) -> ClosureIr {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-fn heterogeneous_global_linking_is_once_ordered_and_preserves_the_carrier() {
+fn heterogeneous_artifact_linking_is_once_ordered_and_scoped_per_contribution() {
     let nodes = vec![
         normal_node(
             "spec://org.demo/a/boot/a#root",
@@ -43,8 +44,8 @@ fn heterogeneous_global_linking_is_once_ordered_and_preserves_the_carrier() {
     assert_eq!(
         occurrence_bytes(linked_result(&output)),
         [
-            "A sees (#host--SIMPLE) and (#MISSING)",
-            "simple sees (#org-demo--a--NORMAL)",
+            "A sees (#SIMPLE) and (#MISSING)",
+            "simple sees (#NORMAL)",
             "B body",
         ]
     );
@@ -57,22 +58,22 @@ fn heterogeneous_global_linking_is_once_ordered_and_preserves_the_carrier() {
         ]
     ));
     let positions: Vec<_> = linked_result(&output)
-        .chunks
+        .occurrences
         .iter()
-        .filter_map(|chunk| match chunk {
-            LinkChunk::NormalOccurrence {
+        .map(|occurrence| match occurrence {
+            LinkOccurrence::Normal {
                 contribution,
                 occurrence,
                 node,
                 ..
             } => Some((*contribution, *occurrence, Some(node.0))),
-            LinkChunk::SimpleOccurrence {
+            LinkOccurrence::Simple {
                 contribution,
                 occurrence,
                 ..
             } => Some((*contribution, *occurrence, None)),
-            LinkChunk::Literal { .. } => None,
         })
+        .map(Option::unwrap)
         .collect();
     assert_eq!(positions, [(0, 0, Some(0)), (1, 0, None), (2, 0, Some(1))]);
     assert_eq!(mask_link(before), mask_link(output.clone()));
@@ -101,7 +102,7 @@ fn plain_is_identity_and_empty_and_double_states_are_explicit() {
     let empty = closure(StaticCompileMode::Plain, Vec::new(), Vec::new(), Vec::new());
     let empty = LinkPass::new().run(empty).unwrap();
     assert!(linked_result(&empty).contributions.is_empty());
-    assert!(linked_result(&empty).chunks.is_empty());
+    assert!(linked_result(&empty).occurrences.is_empty());
 
     let empty_normal = closure(
         StaticCompileMode::Plain,
@@ -121,23 +122,20 @@ fn plain_is_identity_and_empty_and_double_states_are_explicit() {
             ..
         }]
     ));
-    assert!(linked_result(&empty_normal).chunks.is_empty());
+    assert!(linked_result(&empty_normal).occurrences.is_empty());
 }
 
 #[test]
 fn ambiguity_keeps_duplicate_candidates_and_manager_attribution() {
     let input = closure(
         StaticCompileMode::QualifyPerNode,
-        vec![normal_node(
-            "spec://org.demo/a/boot/a#root",
-            "org.demo/a",
-            "See (#X)",
-        )],
-        vec![normal("org.demo/a", "boot/a", 0, &[0])],
         vec![
-            rename("same", "X", "same--X"),
-            rename("same", "X", "same--X"),
+            normal_node("spec://org.demo/a/boot/a#root", "org.demo/a", "See (#X)"),
+            normal_node("spec://org.demo/b/boot/b#root", "one", "##same--X one"),
+            normal_node("spec://org.demo/c/boot/c#root", "two", "##same--X two"),
         ],
+        vec![normal("org.demo/a", "boot/a", 0, &[1, 2, 0])],
+        vec![rename("one", "X", "same--X"), rename("two", "X", "same--X")],
     );
     let mut segment = PassSegment::default();
     segment.push(LinkPass::new()).unwrap();
@@ -150,7 +148,7 @@ fn ambiguity_keeps_duplicate_candidates_and_manager_attribution() {
         source.downcast_ref::<LinkPassError>(),
         Some(LinkPassError::AmbiguousShortLink { label, candidates })
             if label == "X"
-                && candidates == &["same--X (same)".to_string(), "same--X (same)".to_string()]
+                && candidates == &["same--X (one)".to_string(), "same--X (two)".to_string()]
     ));
 }
 
@@ -185,29 +183,34 @@ fn digest_and_replay_reject_self_asserted_and_post_link_drift() {
     let LinkState::Linked(result) = &mut chunk.link else {
         unreachable!()
     };
-    let LinkChunk::NormalOccurrence { bytes, .. } = &mut result.chunks[1] else {
-        panic!("the first body follows its open literal")
+    let LinkOccurrence::Normal { body, .. } = &mut result.occurrences[0] else {
+        panic!("the first linked item is a normal occurrence")
     };
-    bytes.push_str(" MUTATED");
+    body.push_str(" MUTATED");
     assert!(matches!(
         validate_linked(&chunk),
         Err(LinkPassError::ReplayMismatch {
-            field: "linked chunks"
+            field: "linked occurrences"
         })
     ));
 
-    let mut literal = output.clone();
-    let LinkState::Linked(result) = &mut literal.link else {
+    let mut marker_drift = output.clone();
+    let LinkState::Linked(result) = &mut marker_drift.link else {
         unreachable!()
     };
-    let LinkChunk::Literal { bytes, .. } = &mut result.chunks[0] else {
-        panic!("the stream begins with the normal open literal")
+    let LinkOccurrence::Normal {
+        marker: marker_key, ..
+    } = &mut result.occurrences[0]
+    else {
+        unreachable!()
     };
-    bytes.push(' ');
+    *marker_key = LinkMarkerKey::from_address(
+        &SpecAddress::parse("spec://org.demo/changed/boot/a#root").unwrap(),
+    );
     assert!(matches!(
-        validate_linked(&literal),
+        validate_linked(&marker_drift),
         Err(LinkPassError::ReplayMismatch {
-            field: "linked chunks"
+            field: "linked occurrences"
         })
     ));
 
@@ -215,14 +218,14 @@ fn digest_and_replay_reject_self_asserted_and_post_link_drift() {
     let LinkState::Linked(result) = &mut position.link else {
         unreachable!()
     };
-    let LinkChunk::NormalOccurrence { occurrence, .. } = &mut result.chunks[1] else {
+    let LinkOccurrence::Normal { occurrence, .. } = &mut result.occurrences[0] else {
         unreachable!()
     };
     *occurrence = 99;
     assert!(matches!(
         validate_linked(&position),
         Err(LinkPassError::ReplayMismatch {
-            field: "linked chunks"
+            field: "linked occurrences"
         })
     ));
 
@@ -257,7 +260,7 @@ fn digest_and_replay_reject_self_asserted_and_post_link_drift() {
 }
 
 #[test]
-fn exact_literals_pin_markers_pins_and_newlines_without_reparse() {
+fn semantic_occurrence_pins_marker_key_and_newline_without_backend_literals() {
     let address = "spec://org.demo/a/boot/a#root~r7";
     let input = closure(
         StaticCompileMode::Plain,
@@ -277,27 +280,17 @@ fn exact_literals_pin_markers_pins_and_newlines_without_reparse() {
         )
     );
     assert!(matches!(
-        linked_result(&output).chunks.as_slice(),
-        [
-            LinkChunk::Literal {
-                kind: LinkLiteralKind::NormalOpen,
-                ..
-            },
-            LinkChunk::NormalOccurrence { .. },
-            LinkChunk::Literal {
-                kind: LinkLiteralKind::ForcedNewline,
-                bytes,
-            },
-            LinkChunk::Literal {
-                kind: LinkLiteralKind::NormalClose,
-                ..
-            },
-        ] if bytes == "\n"
+        linked_result(&output).occurrences.as_slice(),
+        [LinkOccurrence::Normal {
+            marker,
+            trailing_newline_required: true,
+            ..
+        }] if marker.as_str() == "spec://org.demo/a/boot/a#root"
     ));
 }
 
 #[test]
-fn terminal_newline_variants_have_exact_equal_bytes_but_distinct_literals() {
+fn terminal_newline_variants_keep_compatibility_bytes_and_typed_requirement() {
     let mut outputs = Vec::new();
     let mut forced = Vec::new();
     for body in ["BODY", "BODY\n", "BODY\n\n"] {
@@ -315,13 +308,13 @@ fn terminal_newline_variants_have_exact_equal_bytes_but_distinct_literals() {
         outputs.push(linked_text(&output).unwrap());
         forced.push(
             linked_result(&output)
-                .chunks
+                .occurrences
                 .iter()
-                .filter(|chunk| {
+                .filter(|occurrence| {
                     matches!(
-                        chunk,
-                        LinkChunk::Literal {
-                            kind: LinkLiteralKind::ForcedNewline,
+                        occurrence,
+                        LinkOccurrence::Normal {
+                            trailing_newline_required: true,
                             ..
                         }
                     )
@@ -341,10 +334,16 @@ fn inline_backticks_are_line_local_and_only_outside_links_rewrite() {
         vec![normal_node(
             "spec://org.demo/a/boot/a#root",
             "org.demo/a",
-            "`(#X)` and (#X)\n`open-only (#X)\n(#X) next-line",
+            "`(#X)` and (#X)\n`open-only (#X)\n(#X) next-line\n# Definition {#org-demo--a--X}",
         )],
         vec![normal("org.demo/a", "boot/a", 0, &[0])],
         vec![rename("org.demo/a", "X", "org-demo--a--X")],
+    );
+    assert!(
+        input.nodes[0]
+            .tree
+            .find_by_anchor("org-demo--a--X")
+            .is_some()
     );
     let output = LinkPass::new().run(input).unwrap();
     assert_eq!(
@@ -352,7 +351,8 @@ fn inline_backticks_are_line_local_and_only_outside_links_rewrite() {
         [concat!(
             "`(#X)` and (#org-demo--a--X)\n",
             "`open-only (#X)\n",
-            "(#org-demo--a--X) next-line",
+            "(#org-demo--a--X) next-line\n",
+            "# Definition {#org-demo--a--X}",
         )]
     );
 }

@@ -5,8 +5,8 @@ use specmark::verifies;
 use super::*;
 use crate::compiler::embed_snapshot::EmbedResolutionSnapshot;
 use crate::compiler::ir::{
-    AbsorptionState, ArtifactId, ContributionMeta, DocumentIr, LinkState, QualificationState,
-    SourceFormatId, SourceIr, StaticCompileMode,
+    AbsorptionState, ArtifactContext, ClosureOccurrence, ContributionMeta, DocumentIr, LinkState,
+    QualificationState, SourceFormatId, SourceIr, StaticCompileMode,
 };
 use crate::compiler::source_snapshot::DocumentObservation;
 
@@ -46,29 +46,57 @@ fn snapshot(documents: &[(&str, &str)], use_keys: &[&str]) -> EmbedResolutionSna
 }
 
 fn closure(root: &str, tree: &str, pending: EmbedResolutionSnapshot) -> ClosureIr {
-    ClosureIr {
-        artifact: ArtifactId::new("static-fragment").unwrap(),
-        nodes: vec![ClosureDocument {
-            address: DocumentAddress::Spec(spec(root)),
+    let address = spec(root);
+    ClosureIr::testing(
+        ArtifactContext::compatibility(StaticCompileMode::Plain),
+        vec![ClosureDocument {
+            address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse(tree),
             aliases: Default::default(),
         }],
-        edges: Vec::new(),
-        contributions: vec![ClosureContribution::Normal {
+        Vec::new(),
+        vec![ClosureContribution::Normal {
             meta: ContributionMeta {
                 origin: "org.demo/pkg".to_string(),
                 path: "contract/api".to_string(),
             },
             seed: ClosureNodeId(0),
-            emission_order: vec![ClosureNodeId(0)],
+            seed_address: address.clone(),
+            emission_order: vec![ClosureOccurrence {
+                node: ClosureNodeId(0),
+                requested_address: address,
+            }],
         }],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: Some(pending),
+        Vec::new(),
+        QualificationState::Pending(StaticCompileMode::Plain),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        None,
+        Some(pending),
+    )
+}
+
+fn node_address(nodes: &[ClosureDocument], node: usize) -> SpecAddress {
+    let DocumentAddress::Spec(address) = &nodes[node].address else {
+        unreachable!()
+    };
+    address.clone()
+}
+
+fn occurrence(nodes: &[ClosureDocument], node: usize) -> ClosureOccurrence {
+    ClosureOccurrence {
+        node: ClosureNodeId(node),
+        requested_address: node_address(nodes, node),
+    }
+}
+
+fn edge(nodes: &[ClosureDocument], from: usize, to: usize, kind: ClosureEdgeKind) -> ClosureEdge {
+    ClosureEdge {
+        from: ClosureNodeId(from),
+        to: ClosureNodeId(to),
+        kind,
+        requested_target: node_address(nodes, to),
     }
 }
 
@@ -131,7 +159,8 @@ fn accepted_replay_order_not_scheduler_discovery_orders_nodes_and_edges() {
             path: "boot/a".to_string(),
         },
         seed: ClosureNodeId(0),
-        emission_order: vec![ClosureNodeId(1), ClosureNodeId(0)],
+        seed_address: spec(a),
+        emission_order: vec![occurrence(&input.nodes, 1), occurrence(&input.nodes, 0)],
     };
 
     let output = embed_closure(input).unwrap();
@@ -152,11 +181,13 @@ fn accepted_replay_order_not_scheduler_discovery_orders_nodes_and_edges() {
                 from: ClosureNodeId(1),
                 to: ClosureNodeId(2),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(b_target),
             },
             ClosureEdge {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(3),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(a_target),
             },
         ]
     );
@@ -193,7 +224,8 @@ fn shared_node_across_contributions_is_expanded_once_at_first_emission_encounter
                 path: "boot/alpha".to_string(),
             },
             seed: ClosureNodeId(1),
-            emission_order: vec![ClosureNodeId(0), ClosureNodeId(1)],
+            seed_address: spec(alpha),
+            emission_order: vec![occurrence(&input.nodes, 0), occurrence(&input.nodes, 1)],
         },
         ClosureContribution::Normal {
             meta: ContributionMeta {
@@ -201,7 +233,8 @@ fn shared_node_across_contributions_is_expanded_once_at_first_emission_encounter
                 path: "boot/omega".to_string(),
             },
             seed: ClosureNodeId(2),
-            emission_order: vec![ClosureNodeId(0), ClosureNodeId(2)],
+            seed_address: spec(omega),
+            emission_order: vec![occurrence(&input.nodes, 0), occurrence(&input.nodes, 2)],
         },
     ];
     let contributions = input.contributions.clone();
@@ -217,6 +250,7 @@ fn shared_node_across_contributions_is_expanded_once_at_first_emission_encounter
             from: ClosureNodeId(0),
             to: ClosureNodeId(3),
             kind: ClosureEdgeKind::Embed,
+            requested_target: spec(target),
         }]
     );
     assert_eq!(output.contributions, contributions);
@@ -258,6 +292,7 @@ fn current_root_directives_override_stale_snapshot_directives() {
             from: ClosureNodeId(0),
             to: ClosureNodeId(1),
             kind: ClosureEdgeKind::Embed,
+            requested_target: spec(current),
         }]
     );
 }
@@ -282,18 +317,17 @@ fn embedded_explicit_use_target_reuses_its_id_and_current_tree() {
         tree: DocTree::parse("# Current {#root}\nCURRENT-TARGET\n"),
         aliases: Default::default(),
     });
-    input.edges.push(ClosureEdge {
-        from: ClosureNodeId(0),
-        to: ClosureNodeId(1),
-        kind: ClosureEdgeKind::Use,
-    });
+    input
+        .edges
+        .push(edge(&input.nodes, 0, 1, ClosureEdgeKind::Use));
     input.contributions[0] = ClosureContribution::Normal {
         meta: ContributionMeta {
             origin: "org.demo/pkg".to_string(),
             path: "boot/root".to_string(),
         },
         seed: ClosureNodeId(0),
-        emission_order: vec![ClosureNodeId(1), ClosureNodeId(0)],
+        seed_address: spec(root),
+        emission_order: vec![occurrence(&input.nodes, 1), occurrence(&input.nodes, 0)],
     };
 
     let output = embed_closure(input).unwrap();
@@ -309,11 +343,13 @@ fn embedded_explicit_use_target_reuses_its_id_and_current_tree() {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(1),
                 kind: ClosureEdgeKind::Use,
+                requested_target: spec(target),
             },
             ClosureEdge {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(1),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(target),
             },
         ]
     );
@@ -337,18 +373,17 @@ fn nested_explicit_use_replay_keeps_one_edge_per_authored_occurrence() {
         tree: DocTree::parse(&format!("# B {{#root}}\nCURRENT-B\n#embed {c}\n")),
         aliases: Default::default(),
     });
-    input.edges.push(ClosureEdge {
-        from: ClosureNodeId(0),
-        to: ClosureNodeId(1),
-        kind: ClosureEdgeKind::Use,
-    });
+    input
+        .edges
+        .push(edge(&input.nodes, 0, 1, ClosureEdgeKind::Use));
     input.contributions[0] = ClosureContribution::Normal {
         meta: ContributionMeta {
             origin: "org.demo/pkg".to_string(),
             path: "boot/a".to_string(),
         },
         seed: ClosureNodeId(0),
-        emission_order: vec![ClosureNodeId(1), ClosureNodeId(0)],
+        seed_address: spec(a),
+        emission_order: vec![occurrence(&input.nodes, 1), occurrence(&input.nodes, 0)],
     };
 
     let output = embed_closure(input).unwrap();
@@ -366,21 +401,25 @@ fn nested_explicit_use_replay_keeps_one_edge_per_authored_occurrence() {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(1),
                 kind: ClosureEdgeKind::Use,
+                requested_target: spec(b),
             },
             ClosureEdge {
                 from: ClosureNodeId(1),
                 to: ClosureNodeId(2),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(c),
             },
             ClosureEdge {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(1),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(b),
             },
             ClosureEdge {
                 from: ClosureNodeId(0),
                 to: ClosureNodeId(1),
                 kind: ClosureEdgeKind::Embed,
+                requested_target: spec(b),
             },
         ]
     );
@@ -406,11 +445,9 @@ fn embedded_source_only_target_reuses_its_id_but_reads_the_snapshot_tree() {
         tree: DocTree::parse("# Mutated {#root}\nSOURCE-NODE-TREE\n"),
         aliases: Default::default(),
     });
-    input.edges.push(ClosureEdge {
-        from: ClosureNodeId(0),
-        to: ClosureNodeId(1),
-        kind: ClosureEdgeKind::Source,
-    });
+    input
+        .edges
+        .push(edge(&input.nodes, 0, 1, ClosureEdgeKind::Source));
 
     let output = embed_closure(input).unwrap();
     let root_text = output.nodes[0].tree.text(output.nodes[0].tree.root());
@@ -424,6 +461,7 @@ fn embedded_source_only_target_reuses_its_id_but_reads_the_snapshot_tree() {
             from: ClosureNodeId(0),
             to: ClosureNodeId(1),
             kind: ClosureEdgeKind::Embed,
+            requested_target: spec(target),
         })
     );
 }
@@ -507,7 +545,8 @@ fn failure_in_a_later_root_leaves_the_entire_closure_unmodified() {
             path: "boot/first".to_string(),
         },
         seed: ClosureNodeId(0),
-        emission_order: vec![ClosureNodeId(0), ClosureNodeId(1)],
+        seed_address: spec(first),
+        emission_order: vec![occurrence(&input.nodes, 0), occurrence(&input.nodes, 1)],
     };
     let before = input.clone();
 

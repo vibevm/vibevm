@@ -1,8 +1,8 @@
-//! The built-in explicit-`#use` document-batch to closure lowering.
+//! The built-in gathered-document batch to multi-seed Closure lowering.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
 
 use crate::use_graph::{UseGraphError, topology, use_addresses};
@@ -10,12 +10,13 @@ use crate::{Authority, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge,
-    ClosureEdgeKind, ClosureIr, ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr,
-    Documents, LinkState, QualificationState, StaticCompileMode,
+    AbsorptionState, ArtifactInput, ArtifactPlan, ClosureContribution, ClosureDocument,
+    ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId, DocumentAddress, DocumentIr, Documents,
+    LinkState, QualificationState,
 };
 use super::pass::{Pass, PassName};
 use super::source_snapshot::SourceResolutionSnapshot;
+use super::worklist::document_key;
 
 pub(crate) const CLOSE_PASS_NAME: &str = "close";
 
@@ -25,11 +26,7 @@ struct LoadFailure {
     reason: String,
 }
 
-/// Scheduler load observations required for close to replay use-graph errors.
-///
-/// Discovery records failed loads but never judges them. Close traverses the
-/// gathered graph itself and surfaces the first failure or cycle at the exact
-/// point the canonical DFS reaches it.
+/// Scheduler observations replayed by the named close/merge/embed passes.
 #[derive(Debug, Clone, Default)]
 pub(crate) struct CloseState {
     failures: Arc<Mutex<HashMap<String, LoadFailure>>>,
@@ -42,7 +39,7 @@ impl CloseState {
         self.failures
             .lock()
             .expect("close discovery failure map is not poisoned")
-            .entry(address.without_pin())
+            .entry(address.to_string())
             .or_insert_with(|| LoadFailure {
                 address: address.to_string(),
                 reason,
@@ -53,7 +50,7 @@ impl CloseState {
         self.failures
             .lock()
             .expect("close discovery failure map is not poisoned")
-            .get(&address.without_pin())
+            .get(&address.to_string())
             .cloned()
     }
 
@@ -94,28 +91,16 @@ impl CloseState {
 
 pub(crate) struct ClosePass {
     name: PassName,
-    artifact: ArtifactId,
-    meta: ContributionMeta,
-    mode: StaticCompileMode,
-    seed: SpecAddress,
+    plan: ArtifactPlan,
     state: CloseState,
 }
 
 impl ClosePass {
-    pub(crate) fn new(
-        artifact: ArtifactId,
-        meta: ContributionMeta,
-        mode: StaticCompileMode,
-        seed: SpecAddress,
-        state: CloseState,
-    ) -> Self {
+    pub(crate) fn new(plan: ArtifactPlan, state: CloseState) -> Self {
         Self {
             name: PassName::new(CLOSE_PASS_NAME)
                 .expect("the static built-in close pass name is non-blank"),
-            artifact,
-            meta,
-            mode,
-            seed,
+            plan,
             state,
         }
     }
@@ -131,121 +116,153 @@ impl Pass for ClosePass {
     }
 
     fn run(&self, input: Documents) -> Result<ClosureIr, UseGraphError> {
-        close_documents(
-            &self.artifact,
-            &self.meta,
-            self.mode,
-            &self.seed,
-            input,
-            &self.state,
-        )
+        close_documents(&self.plan, input, &self.state)
     }
 }
 
 fn close_documents(
-    artifact: &ArtifactId,
-    meta: &ContributionMeta,
-    mode: StaticCompileMode,
-    seed: &SpecAddress,
+    plan: &ArtifactPlan,
     input: Documents,
     state: &CloseState,
 ) -> Result<ClosureIr, UseGraphError> {
-    let mut documents: HashMap<String, DocumentIr> = input
-        .into_iter()
-        .map(|document| {
-            let key = match document.source().address() {
-                DocumentAddress::Spec(address) => address.without_pin(),
-                DocumentAddress::StaticEntry { .. } => {
-                    unreachable!("the one-seed close worklist contains only spec addresses")
-                }
-            };
-            (key, document)
-        })
-        .collect();
-
-    let order = topology::order_by(seed, |address| {
-        if let Some(document) = documents.get(&address.without_pin()) {
-            return Ok(use_addresses(document.tree().directives()));
+    let mut spec_documents = BTreeMap::new();
+    let mut simple_documents = BTreeMap::new();
+    for document in input {
+        match document.source().address() {
+            DocumentAddress::Spec(address) => {
+                spec_documents.insert(address.without_pin(), document);
+            }
+            address @ DocumentAddress::StaticEntry { .. } => {
+                simple_documents.insert(document_key(address), document);
+            }
         }
-        let failure = state.failure(address).unwrap_or_else(|| {
-            panic!(
-                "close discovery omitted `{}` without recording a load failure",
-                address.without_pin()
-            )
-        });
-        Err(UseGraphError::Unresolved {
-            addr: failure.address,
-            reason: failure.reason,
-        })
-    })?;
-
-    let edge_keys: Vec<(String, Vec<String>)> = order
-        .iter()
-        .map(|key| {
-            let document = documents
-                .get(key)
-                .expect("topology only returns gathered documents");
-            let targets = use_addresses(document.tree().directives())
-                .into_iter()
-                .map(|address| address.without_pin())
-                .collect();
-            (key.clone(), targets)
-        })
-        .collect();
-
-    let mut nodes = Vec::with_capacity(order.len());
-    for key in &order {
-        let document = documents
-            .remove(key)
-            .expect("topology only returns gathered documents");
-        let (source, tree) = document.into_parts();
-        let (address, _format, _raw_text) = source.into_parts();
-        let DocumentAddress::Spec(address) = address else {
-            unreachable!("the one-seed close worklist contains only spec addresses")
-        };
-        nodes.push(ClosureDocument {
-            origin: document_origin(&address),
-            address: DocumentAddress::Spec(address),
-            tree,
-            aliases: Default::default(),
-        });
     }
 
-    let node_ids: HashMap<String, ClosureNodeId> = order
-        .iter()
-        .enumerate()
-        .map(|(index, key)| (key.clone(), ClosureNodeId(index)))
-        .collect();
+    let mut nodes = Vec::new();
+    let mut node_ids = BTreeMap::new();
     let mut edges = Vec::new();
-    for (from, targets) in edge_keys {
-        let from = node_ids[&from];
-        for target in targets {
-            edges.push(ClosureEdge {
-                from,
-                to: node_ids[&target],
-                kind: ClosureEdgeKind::Use,
-            });
+    let mut contributions = Vec::with_capacity(plan.contributions().len());
+
+    for input in plan.contributions() {
+        match input {
+            ArtifactInput::Normal { meta, seed } => {
+                let mut requests = BTreeMap::new();
+                let order = topology::order_by(seed, |address| {
+                    requests
+                        .entry(address.without_pin())
+                        .or_insert_with(|| address.clone());
+                    if let Some(document) = spec_documents.get(&address.without_pin()) {
+                        return Ok(use_addresses(document.tree().directives()));
+                    }
+                    let failure = state.failure(address).unwrap_or_else(|| {
+                        panic!(
+                            "close discovery omitted `{}` without recording a load failure",
+                            address.without_pin()
+                        )
+                    });
+                    Err(UseGraphError::Unresolved {
+                        addr: failure.address,
+                        reason: failure.reason,
+                    })
+                })?;
+
+                let mut emission_order = Vec::with_capacity(order.len());
+                for key in &order {
+                    let id = ensure_node(key, &spec_documents, &mut nodes, &mut node_ids);
+                    emission_order.push(super::ir::ClosureOccurrence {
+                        node: id,
+                        requested_address: requests[key].clone(),
+                    });
+                }
+                for key in &order {
+                    let from = node_ids[key];
+                    let document = &spec_documents[key];
+                    for target in use_addresses(document.tree().directives()) {
+                        let edge = ClosureEdge {
+                            from,
+                            to: node_ids[&target.without_pin()],
+                            kind: ClosureEdgeKind::Use,
+                            requested_target: target,
+                        };
+                        if !edges.contains(&edge) {
+                            edges.push(edge);
+                        }
+                    }
+                }
+                contributions.push(ClosureContribution::Normal {
+                    meta: meta.clone(),
+                    seed: node_ids[&seed.without_pin()],
+                    seed_address: seed.clone(),
+                    emission_order,
+                });
+            }
+            ArtifactInput::Simple { meta, source } => {
+                let key = document_key(source.address());
+                let document = simple_documents
+                    .get(&key)
+                    .unwrap_or_else(|| panic!("gather omitted simple document `{key}`"));
+                contributions.push(ClosureContribution::Simple {
+                    meta: meta.clone(),
+                    document: Box::new(close_document(document)),
+                });
+            }
+            ArtifactInput::Elided { meta } => {
+                contributions.push(ClosureContribution::Elided { meta: meta.clone() })
+            }
+            ArtifactInput::Hoisted { meta, target } => {
+                contributions.push(ClosureContribution::Hoisted {
+                    meta: meta.clone(),
+                    target: target.clone(),
+                });
+            }
         }
     }
 
-    let seed_key = seed.without_pin();
-    let seed_id = node_ids[&seed_key];
-    Ok(ClosureIr {
-        artifact: artifact.clone(),
+    Ok(ClosureIr::from_plan(
+        plan,
         nodes,
         edges,
-        contributions: vec![ClosureContribution::Normal {
-            meta: meta.clone(),
-            seed: seed_id,
-            emission_order: (0..order.len()).map(ClosureNodeId).collect(),
-        }],
-        renames: Vec::new(),
-        qualification: QualificationState::Pending(mode),
-        absorption: AbsorptionState::Unplanned,
-        link: LinkState::Unlinked,
-        pending_sources: Some(state.pending_sources()),
-        pending_embeds: Some(state.pending_embeds()),
-    })
+        contributions,
+        Vec::new(),
+        QualificationState::Pending(plan.context().mode()),
+        AbsorptionState::Unplanned,
+        LinkState::Unlinked,
+        Some(state.pending_sources()),
+        Some(state.pending_embeds()),
+    ))
+}
+
+fn ensure_node(
+    key: &str,
+    documents: &BTreeMap<String, DocumentIr>,
+    nodes: &mut Vec<ClosureDocument>,
+    node_ids: &mut BTreeMap<String, ClosureNodeId>,
+) -> ClosureNodeId {
+    if let Some(id) = node_ids.get(key) {
+        return *id;
+    }
+    let id = ClosureNodeId(nodes.len());
+    nodes.push(close_document(
+        documents
+            .get(key)
+            .expect("topology only returns gathered documents"),
+    ));
+    node_ids.insert(key.to_string(), id);
+    id
+}
+
+fn close_document(document: &DocumentIr) -> ClosureDocument {
+    let address = document.source().address().clone();
+    let origin = match &address {
+        DocumentAddress::Spec(address) => document_origin(address),
+        DocumentAddress::StaticEntry { origin, .. } => origin.clone(),
+    };
+    ClosureDocument {
+        address,
+        origin,
+        tree: document.tree().clone(),
+        aliases: Default::default(),
+    }
 }
 
 pub(crate) fn document_origin(address: &SpecAddress) -> String {
@@ -256,4 +273,5 @@ pub(crate) fn document_origin(address: &SpecAddress) -> String {
 }
 
 #[cfg(test)]
+#[path = "close/tests.rs"]
 mod tests;

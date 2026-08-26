@@ -1,6 +1,7 @@
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureDocument, ContributionAbsorption,
+    AbsorptionOccurrence, AbsorptionPlan, ArtifactContext, ClosureDocument, ClosureOccurrence,
+    ContributionAbsorption, OriginRename,
 };
 use crate::{DocTree, RenameEntry, SpecAddress};
 
@@ -45,7 +46,14 @@ pub(super) fn normal(
     ClosureContribution::Normal {
         meta: meta(origin, path),
         seed: ClosureNodeId(seed),
-        emission_order: order.iter().copied().map(ClosureNodeId).collect(),
+        seed_address: spec("spec://org.placeholder/pkg/boot/entry#root"),
+        emission_order: order
+            .iter()
+            .map(|node| ClosureOccurrence {
+                node: ClosureNodeId(*node),
+                requested_address: spec("spec://org.placeholder/pkg/boot/entry#root"),
+            })
+            .collect(),
     }
 }
 
@@ -76,25 +84,40 @@ fn spec_address(nodes: &[ClosureDocument], id: ClosureNodeId) -> SpecAddress {
 pub(super) fn closure(
     mode: StaticCompileMode,
     nodes: Vec<ClosureDocument>,
-    contributions: Vec<ClosureContribution>,
+    mut contributions: Vec<ClosureContribution>,
     renames: Vec<OriginRename>,
 ) -> ClosureIr {
+    for contribution in &mut contributions {
+        if let ClosureContribution::Normal {
+            seed,
+            seed_address,
+            emission_order,
+            ..
+        } = contribution
+        {
+            *seed_address = spec_address(&nodes, *seed);
+            for occurrence in emission_order {
+                occurrence.requested_address = spec_address(&nodes, occurrence.node);
+            }
+        }
+    }
     let absorption = contributions
         .iter()
         .map(|contribution| match contribution {
             ClosureContribution::Normal {
                 meta,
                 seed,
+                seed_address,
                 emission_order,
             } => ContributionAbsorption::Normal {
                 meta: meta.clone(),
                 seed: *seed,
-                seed_address: spec_address(&nodes, *seed),
+                seed_address: seed_address.clone(),
                 occurrences: emission_order
                     .iter()
-                    .map(|node| AbsorptionOccurrence {
-                        node: *node,
-                        address: spec_address(&nodes, *node),
+                    .map(|occurrence| AbsorptionOccurrence {
+                        node: occurrence.node,
+                        requested_address: occurrence.requested_address.clone(),
                         absorbed: false,
                     })
                     .collect(),
@@ -103,23 +126,30 @@ pub(super) fn closure(
                 meta: meta.clone(),
                 address: document.address.clone(),
             },
+            ClosureContribution::Elided { meta } => {
+                ContributionAbsorption::Elided { meta: meta.clone() }
+            }
+            ClosureContribution::Hoisted { meta, target } => ContributionAbsorption::Hoisted {
+                meta: meta.clone(),
+                target: target.clone(),
+            },
         })
         .collect();
-    ClosureIr {
-        artifact: ArtifactId::new("link-test").unwrap(),
+    ClosureIr::testing(
+        ArtifactContext::compatibility(mode),
         nodes,
-        edges: Vec::new(),
+        Vec::new(),
         contributions,
         renames,
-        qualification: QualificationState::Applied(mode),
-        absorption: AbsorptionState::Applied(AbsorptionPlan {
+        QualificationState::Applied(mode),
+        AbsorptionState::Applied(AbsorptionPlan {
             mode,
             contributions: absorption,
         }),
-        link: LinkState::Unlinked,
-        pending_sources: None,
-        pending_embeds: None,
-    }
+        LinkState::Unlinked,
+        None,
+        None,
+    )
 }
 
 pub(super) fn linked_result(closure: &ClosureIr) -> &LinkResult {
@@ -131,12 +161,12 @@ pub(super) fn linked_result(closure: &ClosureIr) -> &LinkResult {
 
 pub(super) fn occurrence_bytes(result: &LinkResult) -> Vec<&str> {
     result
-        .chunks
+        .occurrences
         .iter()
-        .filter_map(|chunk| match chunk {
-            LinkChunk::NormalOccurrence { bytes, .. }
-            | LinkChunk::SimpleOccurrence { bytes, .. } => Some(bytes.as_str()),
-            LinkChunk::Literal { .. } => None,
+        .map(|occurrence| match occurrence {
+            LinkOccurrence::Normal { body, .. } | LinkOccurrence::Simple { body, .. } => {
+                body.as_str()
+            }
         })
         .collect()
 }
