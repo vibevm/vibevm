@@ -143,24 +143,29 @@
       gets a dedicated worktree/cwd and packet file. Continuation (`-c`) is used
       only from that exact cwd. Large context travels in the packet file, never
       a command-line argument.</ONE-CWD-ONE-THREAD>
-      <CLAUDEZ-PERMISSION-RESET fact="true" status="spec/done">Every
-      `claudez -c` worker invocation explicitly sets
-      `--permission-mode dontAsk` plus the positive `--allowedTools` list. A
-      resumed Claude thread can otherwise retain `bypassPermissions` from its
-      original session and execute a text-forbidden command despite a later
-      allow-list. This was observed live when an R8 repair continuation ran a
-      read-only `git diff` forbidden by its packet. The diff caused no mutation,
-      but it proves the transport fence is not assumed. A later `dontAsk` run
-      also executed benign `ls`/`grep` Bash not named by `--allowedTools`:
-      that flag is an auto-approval list, **not** a closed capability universe.
-      Pair it with explicit `--disallowedTools` patterns for forbidden command
-      families; deny every ungranted built-in tool too. An isolated R8 specmap
-      packet allowed only Read/Edit/Write textually and positively, yet the
-      worker still invoked one Glob and two Grep calls because neither tool was
-      explicitly disallowed. The worker disclosed the deviation and caused no
-      out-of-perimeter mutation; textual bans and root artifact review remain
-      mandatory.
-      </CLAUDEZ-PERMISSION-RESET>
+      <WORKER-PERMISSION-POSTURE fact="true" status="spec/done">**Owner
+      ruling 2026-08-26: `claudez` and Opus are trusted to operate the
+      computer.** Do not spend orchestration effort protecting the machine
+      from these workers or starve them of PowerShell/Bash, Read/Glob/Grep,
+      repository history, formatters, generators and exact tests. Launch an
+      autonomous worker with an explicit non-interactive permission mode and
+      a normal task-capable tool surface; a restricted `--tools` experiment is
+      justified only when the restriction itself is being measured. Claude
+      Code 2.1.220 distinguishes `--tools` (the actual universe) from
+      `--allowedTools` (auto-approval), but this is an observability fact, not
+      a mandate to micromanage a strong worker. A resumed thread still gets an
+      explicit mode so stale session permissions are not accidental.
+      </WORKER-PERMISSION-POSTURE>
+      <REVIEWABLE-WORKTREE-LAW fact="true" status="spec/done">The protected
+      boundary is the **handoff representation**, not the worker's access to
+      the machine. A writing worker leaves its result as ordinary unstaged
+      working-tree files plus the durable report in its dedicated cwd. It MUST
+      NOT package or hide the state in the index, a commit/branch, stash,
+      private worktree, patch-only deliverable, ignored/cache-only product
+      copy, reset/checkout state or an external service. Read-only git history,
+      blame, status and diffs are encouraged. Root can then inspect one visible
+      diff, rerun the oracles, stage, commit and integrate without decoding a
+      worker-private state machine.</REVIEWABLE-WORKTREE-LAW>
       <DISJOINT-WRITES fact="true" status="spec/done">Parallelism is routed on
       write intersections, not read intersections. Read-only reviewers may
       overlap. Intersecting or many-place writes are serialized under one
@@ -171,11 +176,13 @@
       otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the
       repository rule requires it.</TWO-COLD-CARGO>
       <QUIET-ARTIFACT-CONTRACT fact="true" status="spec/done">Every packet
-      carries `##subagent-quiet-clause`, a closed write perimeter, exact
+      carries `##subagent-quiet-clause`, an expected write perimeter, exact
       acceptance, narrow self-verify commands, a durable
-      `WORKER-REPORT-&lt;id&gt;.md`, a git/commit/push/full-panel ban and final
-      `TASK-DONE`. Screen prose is discarded; reports and diffs are the
-      deliverable.</QUIET-ARTIFACT-CONTRACT>
+      `WORKER-REPORT-&lt;id&gt;.md`, the reviewable-worktree law, a worker-side
+      full-panel ban and final `TASK-DONE`. A reasoned perimeter expansion is
+      disclosed in the report (and is forbidden only when it would intersect a
+      parallel writer). Screen prose is discarded; reports and visible diffs
+      are the deliverable.</QUIET-ARTIFACT-CONTRACT>
       <REPORT-BUDGET fact="true" status="spec/done">Default a worker report to
       at most 150 lines: verdict, findings, changed-file set, decisive evidence,
       commands and deviations. A longer report is justified only by a large
@@ -183,6 +190,14 @@
       source it read; exact citations replace narrative. The 2026-08-26 probes
       showed that a good Opus review can consume 47k output tokens and a GLM
       review 30k when no report budget is stated.</REPORT-BUDGET>
+      <SUBSCRIPTION-LANES fact="true" status="spec/done">`claude` and
+      `claudez` run against subscription quotas and are cheap enough to use
+      freely and concurrently. Provider JSON may expose a nominal `costUSD`;
+      record it as comparative telemetry, never treat it as the owner's
+      marginal bill or set `--max-budget-usd`. Five-hour quota availability and
+      review throughput are the practical limits. **Deep-research agents are a
+      separate, genuinely expensive class** and are commissioned deliberately;
+      they are not implied by ordinary Opus/GLM delegation.</SUBSCRIPTION-LANES>
       <NO-SECRETS-TO-WORKERS fact="true" status="spec/done">Workers never
       receive token contents or a task that reads a token file. Secret-bearing
       live smoke stays central and prints only a safe verdict. Launchers load
@@ -314,11 +329,16 @@ scope, STOP and write the exact blocker. Do not silently choose a new design.
 
 ## Write perimeter
 
-- &lt;closed list of files/directories allowed to change&gt;
+- &lt;expected files/directories to change; mark any path intersecting a parallel writer as closed&gt;
 - `WORKER-REPORT-&lt;task-id&gt;.md`
 
-Every other path is read-only. Preserve pre-existing/user changes. Do not create
-a branch/worktree; root already provisioned the cwd. Do not spawn subagents.
+Leave every product change as an ordinary **unstaged** working-tree diff in
+this cwd. Preserve pre-existing/user changes. If solving the task genuinely
+requires another non-conflicting path, change it and explain the expansion in
+the report. Do not create/package state in a branch, commit, index, stash,
+private worktree, patch-only deliverable or ignored/cache-only product copy;
+root already provisioned the cwd. Do not spawn subagents unless the packet
+explicitly delegates a nested swarm.
 
 ## Acceptance
 
@@ -332,19 +352,23 @@ known positive control demonstrates the instrument can fire.
 
 ## Constraints
 
-- NO git command at all, including read-only `git diff/status/log`.
-- NO commit, push, merge, checkout, stash, reset, worktree or history action.
+- Use the machine normally: Read/Glob/Grep, PowerShell/Bash, read-only git
+  archaeology, formatters, generators and the exact tests are available when
+  they help. `git log/show/blame/diff/status` are normal evidence sources.
+- Keep the handoff reviewable: NO git add/commit/push/merge/rebase,
+  checkout/restore/reset, stash, clean, worktree, tag, config mutation or
+  history rewrite; do not leave the only deliverable in generated scratch,
+  cache, a patch file or an external service.
 - NO full repository panel; run only the exact commands listed below.
 - NO specs/status/SPEC-DEBT/WAL/CONTINUE/TASKS/BACKLOG/AGENTS/campaign edits.
-- NO network, publish, user-home mutation, token-file read or secret in
-  argv/env/log/report unless this packet explicitly grants one exact operation.
-- NO shell file-writing tricks; use Edit/Write. Use `CARGO_BUILD_JOBS=4`.
+- Work inside the assigned task. Network, user-home or external writes are
+  allowed when the task needs them, but publishing/pushing or another
+  irreversible external action still requires the packet to grant it. Never
+  expose a token value in argv, logs or the report.
+- Use `CARGO_BUILD_JOBS=4` for repository Cargo commands.
 - NO new `unsafe`, FFI, handwritten OS ABI or home-grown security/locking
   primitive unless the packet explicitly grants that architecture. Stop and
   report the missing primitive instead; do not invent a mini-runtime.
-- NO process/IDE manipulation. If a named verifier is blocked by an external
-  file lock, report it; do not inspect or kill unrelated processes, rename a
-  live generated tree, or hand-edit generated output as a substitute.
 - Every changed/new file remains at or below 600 physical lines. Check while
   editing; split early, not after fmt.
 - Do not weaken, delete or rewrite an oracle merely to make it green.
@@ -378,8 +402,8 @@ PASS | FAIL | BLOCKED (advisory only)
 - command → exit + decisive lines
 ## Decisions and why
 - every choice within granted latitude, or none
-## Deviations / forbidden-command incidents
-- disclose every deviation, including accidental git/network/broad test, or none
+## Perimeter expansions / external effects
+- disclose every extra changed path, external write, broad test or state effect, or none
 ## Leftovers
 - exact remaining work, or none
 ```
@@ -391,19 +415,16 @@ the durable report, and final `TASK-DONE`. No greeting, task restatement,
 intermediate chat reasoning or final screen summary.</fence>
     <facts ordered="false">
       <TEMPLATE-LAUNCH-GUARD fact="true" status="spec/done">Launch with an
-      explicit `--permission-mode dontAsk` and the smallest positive
-      `--allowedTools` auto-approval set **plus explicit `--disallowedTools`**
-      rules for git, process control and every task-specific forbidden shell
-      family. For an edit packet this includes shell writers and interpreters
-      (`python`, `perl`, `ruby`, `node`, `sed`, `awk`, `tee`, `cp`, `mv`, `rm`,
-      PowerShell/cmd), not only git: R8 correction 3 used a Python heredoc to
-      rewrite source despite the packet's Edit/Write-only clause. `allowedTools`
-      alone does not deny an unlisted tool. Explicitly disallow every unused
-      Claude tool class too (`Glob`, `Grep`, web, agents/tasks and notebook
-      tools when not granted); the R8 specmap probe used Glob/Grep despite a
-      Read/Edit/Write-only packet. Repeat the git/commit/full-panel/report
-      clauses in the short pointer prompt: weak workers skim pointer
-      indirection, and resumed threads may retain stale permissions.
+      explicit autonomous non-interactive permission mode and the normal tool
+      surface; do not construct a tiny deny-list as a substitute for review.
+      `Read Glob Grep`, PowerShell/Bash, read-only git history, formatters and
+      exact tests are legitimate worker instruments. The short pointer prompt
+      repeats only the handoff invariants: keep product work as an unstaged
+      visible diff, do not add/commit/stash/branch/reset/push, do not run the
+      full panel, and write the report before finishing. Root review, not tool
+      starvation, is the safety and acceptance mechanism. Do not set a maximum
+      dollar budget for Opus/Claude runs (owner ruling 2026-08-26); record cost
+      post-facto when JSON telemetry is available.
       </TEMPLATE-LAUNCH-GUARD>
       <TEMPLATE-ROOT-CLOSE fact="true" status="spec/done">After `TASK-DONE`,
       root mechanically compares actual changed files to the report, reads the
@@ -414,12 +435,84 @@ intermediate chat reasoning or final screen summary.</fence>
     </facts>
   </claudez-template>
 
-  <history title="8. History">
+  <opus-lane title="8. Opus 5 max — CLI lane and accumulated lessons">
+    <p><OPUS-USES-SAME-PACKET fact="true" status="spec/done">Opus/max uses
+    the canonical packet above with `claudez` replaced by Opus where named.
+    Root still supplies the idea, accepted architecture, task boundaries and
+    red proofs; Opus implements or independently audits, leaves a reviewable
+    worktree, and receives exact acceptance repairs from root.</OPUS-USES-SAME-PACKET></p>
+    <invocation title="8.1 Fresh run and continuation">
+      <p><OPUS-CLI-ONLY fact="true" status="spec/done">Run the installed
+      Claude Code launcher, never a hand-written direct API client. A first
+      turn is fresh `claude -p`; `-c` means continue the most recent session in
+      that cwd and is therefore used only for root's repair/acceptance follow-up.
+      Every concurrent Opus thread gets its own cwd so `-c` cannot resume a
+      neighbour. Do not use `--no-session-persistence` when a repair loop may
+      be needed.</OPUS-CLI-ONLY></p>
+      <fence lang="powershell"># Fresh task, from the worker's dedicated cwd
+claude -p $pointer --model opus --effort max `
+  --permission-mode bypassPermissions --output-format json
+
+# Same-cwd root correction / continuation
+claude -c -p $repair --model opus --effort max `
+  --permission-mode bypassPermissions --output-format json</fence>
+      <p><OPUS-NO-FALLBACK fact="true" status="spec/done">Omit a fallback
+      model and inspect the JSON result's `canonicalModel`; never accept Fable.
+      The 2026-08-26 probes resolved `--model opus` to
+      `claude-opus-5` with a 1,000,000-token context. Omit
+      `--max-budget-usd` by owner ruling: subscription quota, not nominal API
+      accounting, is this lane's resource model.</OPUS-NO-FALLBACK></p>
+    </invocation>
+    <opus-routing title="8.2 Task shape and parallelism">
+      <facts ordered="false">
+        <OPUS-JUDGMENT-LANE fact="true" status="spec/done">Prefer Opus/max
+        for wide code archaeology, adversarial architecture/transaction review,
+        ambiguous repairs and implementation whose verification needs sustained
+        cross-file judgment. It may code as freely as `claudez`; root retains
+        architecture and acceptance. Deterministic micro-edits still fail the
+        verification-cheaper-than-generation test.</OPUS-JUDGMENT-LANE>
+        <OPUS-PARALLEL fact="true" status="spec/done">Multiple Opus processes
+        may run concurrently in separate cwd/session pairs. Parallel readers
+        may overlap; writers are separated by intersecting product paths. Their
+        subscription quota is independent of `claudez`, so using both families
+        at once expands throughput and supplies review diversity.</OPUS-PARALLEL>
+        <OPUS-TOOLS fact="true" status="spec/done">Give Opus the normal
+        machine toolset. The first two audits were unnecessarily launched with
+        a read-only tool profile; one sensible PowerShell line-count command
+        was denied. Both still completed, but the owner corrected the policy:
+        PowerShell/Bash, Grep/Glob/Read, read-only git history and exact tests
+        are ordinary reasoning instruments. Protect only the reviewable
+        worktree handoff.</OPUS-TOOLS>
+      </facts>
+    </opus-routing>
+    <measurements title="8.3 Live measurements — 2026-08-26">
+      <p><OPUS-FIRST-LIVE-BATCH fact="true" status="spec/done">Two Opus/max
+      read-only audits ran concurrently through Claude Code 2.1.220. R3
+      verifier/trace: terminal success, 91 turns, about 9.2 minutes wall,
+      37,491 output tokens, nominal telemetry `$6.57`, 215-line report. R4
+      staged transforms: terminal success, 94 turns, about 9.8 minutes wall,
+      41,137 output tokens, nominal telemetry `$11.01`, 236-line report. Both
+      wrote only their report and produced concrete file/line matrices, red
+      proofs and commit slices. The nominal dollar fields do not change the
+      subscription-lane ruling.</OPUS-FIRST-LIVE-BATCH></p>
+      <p><OPUS-REPORT-SHAPE fact="true" status="spec/done">A broad Opus audit
+      genuinely benefits from a 200–240-line cap; implementation reports stay
+      near the canonical 140-line target. Require the report before final
+      completion because screen output is not the handoff. JSON telemetry is
+      kept for model/turn/time observation; it does not replace the durable
+      report.</OPUS-REPORT-SHAPE></p>
+    </measurements>
+  </opus-lane>
+
+  <history title="9. History">
     <p><HIST-OWNER-2026-08-26 fact="true" status="spec/done">Authored from the
     owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native
     workers because quotas are separate; never select Fable; consolidate the
     strategy in one ChatGPT-only document; keep the agent-instruction triplet
     byte-identical; replace per-atom full panels with exact gates and batch
-    panels.</HIST-OWNER-2026-08-26></p>
+    panels; trust both launchers with normal machine tools; preserve their
+    result as an unstaged, centrally reviewable worktree rather than a worker
+    commit/stash/index; and never cap subscription runs by nominal dollar
+    budget.</HIST-OWNER-2026-08-26></p>
   </history>
 </spec>
