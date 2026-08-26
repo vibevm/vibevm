@@ -32,6 +32,7 @@ pub mod cache;
 pub mod check;
 pub mod clean;
 pub mod explain;
+pub mod extensions;
 pub mod facts;
 pub(crate) mod facts_check;
 pub mod friends;

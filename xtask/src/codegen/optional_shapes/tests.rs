@@ -33,6 +33,14 @@ pub struct ListEntry {
 }
 "#;
 
+const REQUIRED_NULLABLE_MAP_ALIAS: &str = r#"#[derive(Serialize, Deserialize)]
+pub struct ExtensionEntry {
+    pub authored_config: Option<Box<JsonMap>>,
+}
+
+pub type JsonMap = BTreeMap<String, Option<Value>>;
+"#;
+
 /// The optional enum shape the slot-record schema introduces.
 const OPTIONAL_ENUM: &str = r#"#[derive(Serialize, Deserialize)]
 pub struct SlotFile {
@@ -323,6 +331,33 @@ pub struct ListEntry {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub boot_snippet: Option<String>,
 }
+"#
+    );
+    Ok(())
+}
+
+#[test]
+fn a_required_nullable_collection_alias_keeps_null_distinct_from_empty() -> Result<()> {
+    let doc = json!({
+        "properties": {
+            "authored_config": {
+                "ref": "json_map",
+                "nullable": true
+            }
+        },
+        "definitions": {
+            "json_map": { "values": {} }
+        }
+    });
+    assert_eq!(
+        apply(REQUIRED_NULLABLE_MAP_ALIAS, "extensions_report/mod.rs", doc)?,
+        r#"#[derive(Serialize, Deserialize)]
+pub struct ExtensionEntry {
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub authored_config: Option<JsonMap>,
+}
+
+pub type JsonMap = BTreeMap<String, Option<Value>>;
 "#
     );
     Ok(())

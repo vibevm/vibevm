@@ -90,7 +90,7 @@ pub enum CollectionError {
 
     /// An activation named no declaration in the selected world.
     #[error(
-        "unresolved [[extensions.use]] reference `{key}`; install its provider or correct the exact ref (spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION)"
+        "unresolved [[extensions.use]] reference `{key}`; run `vibe install` to refresh providers, or correct the exact ref (spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION)"
     )]
     UnresolvedUse { key: ExtensionKey },
 
@@ -102,7 +102,7 @@ pub enum CollectionError {
 
     /// A disable key named no declaration in the selected world.
     #[error(
-        "unknown [extensions].disable reference `{key}`; correct or remove the exact key (spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION)"
+        "unknown [extensions].disable reference `{key}`; run `vibe install` to refresh providers, or correct or remove the exact key (spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION)"
     )]
     UnknownDisable { key: ExtensionKey },
 

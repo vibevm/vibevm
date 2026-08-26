@@ -116,6 +116,7 @@ fn main() -> ExitCode {
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
+        Command::Extensions(args) => commands::extensions::run(&ctx, args),
         Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
         Command::Install(args) => commands::install::run_with_world_callback(
             &ctx,

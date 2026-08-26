@@ -19,6 +19,7 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    CliExtensionsReport,
     CliInitReport,
     CliInstallPlan,
     CliInstallReport,
@@ -79,6 +80,7 @@ pub enum ForeignParsers {
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::CliExtensionsReport,
         FormatId::CliInitReport,
         FormatId::CliInstallPlan,
         FormatId::CliInstallReport,
@@ -127,6 +129,7 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::CliExtensionsReport => "cli-extensions-report",
             FormatId::CliInitReport => "cli-init-report",
             FormatId::CliInstallPlan => "cli-install-plan",
             FormatId::CliInstallReport => "cli-install-report",
@@ -176,6 +179,7 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::CliExtensionsReport => 1,
             FormatId::CliInitReport => 1,
             FormatId::CliInstallPlan => 1,
             FormatId::CliInstallReport => 1,
@@ -225,6 +229,7 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::CliExtensionsReport => true,
             FormatId::CliInitReport => true,
             FormatId::CliInstallPlan => true,
             FormatId::CliInstallReport => true,
@@ -274,6 +279,7 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::CliExtensionsReport => ForeignParsers::Many,
             FormatId::CliInitReport => ForeignParsers::Many,
             FormatId::CliInstallPlan => ForeignParsers::Many,
             FormatId::CliInstallReport => ForeignParsers::Many,

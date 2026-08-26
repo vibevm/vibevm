@@ -1,0 +1,164 @@
+{
+  "metadata": {
+    "description": "Epoch-1 exhaustive report for `vibe extensions --json`. Every retained declaration appears exactly once, including disabled, inactive, and selector-mismatched rows.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::extensions_report"
+    }
+  },
+  "properties": {
+    "ok": { "type": "boolean" },
+    "command": { "type": "string" },
+    "project": { "ref": "project" },
+    "selector_subject": { "ref": "selector_subject" },
+    "count": { "type": "uint32" },
+    "effective_count": { "type": "uint32" },
+    "declarations": {
+      "elements": { "ref": "extension_entry" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "notices": {
+      "elements": { "type": "string" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "project": {
+      "properties": {
+        "root": { "type": "string" },
+        "identity": { "type": "string" },
+        "version": { "type": "string" },
+        "manifest_kind": { "ref": "manifest_kind" },
+        "effective_stack": { "type": "string", "nullable": true }
+      }
+    },
+    "manifest_kind": {
+      "enum": ["project", "workspace", "flow", "feat", "stack", "tool", "mcp", "lang"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "selector_subject": {
+      "properties": {
+        "kind": {
+          "enum": ["unscoped"],
+          "metadata": { "x-vocabulary": "closed" }
+        },
+        "package": { "type": "string", "nullable": true },
+        "path": { "type": "string", "nullable": true }
+      }
+    },
+    "extension_entry": {
+      "properties": {
+        "sequence": { "type": "uint32" },
+        "key": { "type": "string" },
+        "id": { "type": "string" },
+        "point": { "type": "string" },
+        "provider": { "ref": "provider" },
+        "handler": { "ref": "handler" },
+        "authored_config": { "ref": "json_map", "nullable": true },
+        "effective_config": { "ref": "json_map", "nullable": true },
+        "authored_auto": { "type": "boolean", "nullable": true },
+        "auto": { "type": "boolean" },
+        "activated": { "type": "boolean" },
+        "disabled": { "type": "boolean" },
+        "compiler_internals": { "type": "boolean" },
+        "inputs": { "ref": "string_list", "nullable": true },
+        "applies_to": { "ref": "applies_to", "nullable": true },
+        "selector_matches": { "type": "boolean" },
+        "pass": { "ref": "pass", "nullable": true },
+        "when": { "ref": "json_map", "nullable": true },
+        "natural_tier": { "ref": "tier" },
+        "tier": { "ref": "tier" },
+        "state": { "ref": "state" },
+        "effective": { "type": "boolean" },
+        "native": { "ref": "native_observation", "nullable": true },
+        "order": { "ref": "order" }
+      }
+    },
+    "provider": {
+      "properties": {
+        "source": {
+          "enum": ["dependency", "host"],
+          "metadata": { "x-vocabulary": "closed" }
+        },
+        "identity": { "type": "string" },
+        "version": { "type": "string" },
+        "kind": { "ref": "package_kind", "nullable": true },
+        "root": { "type": "string", "nullable": true },
+        "content_hash": { "type": "string", "nullable": true }
+      }
+    },
+    "handler": {
+      "discriminator": "kind",
+      "mapping": {
+        "builtin": { "properties": { "name": { "type": "string" } } },
+        "script": { "properties": { "base": { "type": "string" } } },
+        "binary": { "properties": { "name": { "type": "string" } } },
+        "native": {
+          "properties": {
+            "crate_dir": { "type": "string", "nullable": true },
+            "prebuilt": { "ref": "string_map", "nullable": true }
+          }
+        },
+        "agent": { "properties": { "prompt": { "type": "string" } } }
+      }
+    },
+    "applies_to": {
+      "properties": {
+        "packages": { "ref": "string_list", "nullable": true },
+        "paths": { "ref": "string_list", "nullable": true }
+      }
+    },
+    "pass": {
+      "properties": {
+        "kind": { "ref": "pass_kind" },
+        "level": { "ref": "ir_level", "nullable": true },
+        "from": { "ref": "ir_level", "nullable": true },
+        "to": { "ref": "ir_level", "nullable": true },
+        "after": { "type": "string", "nullable": true },
+        "before": { "type": "string", "nullable": true },
+        "replace": { "type": "string", "nullable": true },
+        "formats": { "ref": "string_list", "nullable": true },
+        "artifact": { "type": "string", "nullable": true }
+      }
+    },
+    "native_observation": {
+      "properties": {
+        "artifact_path": { "type": "string", "nullable": true },
+        "build_state": { "type": "string" },
+        "content_hash": { "type": "string", "nullable": true }
+      }
+    },
+    "order": {
+      "properties": {
+        "provider": { "type": "uint32", "nullable": true },
+        "declaration": { "type": "uint32" },
+        "activation": { "type": "uint32", "nullable": true }
+      }
+    },
+    "json_map": { "values": {} },
+    "string_map": { "values": { "type": "string" } },
+    "string_list": { "elements": { "type": "string" } },
+    "tier": {
+      "enum": ["preset", "dependency", "host-declaration", "host-activation"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "state": {
+      "enum": ["disabled", "inactive", "selector-mismatch", "effective"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "package_kind": {
+      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "pass_kind": {
+      "enum": ["transform", "lowering", "frontend", "backend"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "ir_level": {
+      "enum": ["source", "document", "closure", "lane", "emitted"],
+      "metadata": { "x-vocabulary": "closed" }
+    }
+  }
+}

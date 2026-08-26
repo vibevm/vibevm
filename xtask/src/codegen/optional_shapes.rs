@@ -94,6 +94,9 @@ enum ShapeClass {
     Vocabulary,
     /// A `properties` / `optionalProperties` form: a generated struct.
     Structure,
+    /// An `elements` / `values` form reached through a named alias. Direct
+    /// collection fields remain owned by the empty-policy pass.
+    Collection,
 }
 
 impl ShapeClass {
@@ -103,6 +106,7 @@ impl ShapeClass {
             ShapeClass::Scalar => "scalar",
             ShapeClass::Vocabulary => "vocabulary",
             ShapeClass::Structure => "structure",
+            ShapeClass::Collection => "collection",
         }
     }
 }
@@ -296,6 +300,12 @@ fn site_decision(
 ) -> Result<Option<(ShapeClass, Decision)>> {
     let form = resolve_form(site.node, definitions, &site.path, schema)?;
     if form.contains_key("elements") || form.contains_key("values") {
+        if site.required == Required::Required
+            && site.node.get("nullable") == Some(&Value::Bool(true))
+            && site.node.contains_key("ref")
+        {
+            return Ok(Some((ShapeClass::Collection, Decision::RequiredNullable)));
+        }
         return Ok(None);
     }
     let class = classify_form(form, &site.path, schema)?;
@@ -320,6 +330,7 @@ fn site_decision(
         // A structure reads no annotation: the Option is the point, the
         // Box is the noise, and the decision is already made.
         ShapeClass::Structure => Decision::OptionValue,
+        ShapeClass::Collection => unreachable!("required collection refs returned above"),
         ShapeClass::Scalar => scalar_decision(site, schema)?,
         ShapeClass::Vocabulary => vocabulary_decision(site, schema)?,
     };

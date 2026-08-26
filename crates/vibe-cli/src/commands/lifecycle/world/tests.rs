@@ -103,6 +103,29 @@ fn host_identity_is_grouped_ungrouped_or_virtual_without_guessing() {
 }
 
 #[test]
+fn effective_manifest_kind_is_derived_from_the_selected_node_role() {
+    let project = manifest("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n");
+    assert_eq!(
+        effective_manifest_kind(&project),
+        EffectiveManifestKind::Project
+    );
+
+    let package = manifest(
+        "[package]\ngroup = \"org.demo\"\nname = \"tool\"\nkind = \"tool\"\nversion = \"1.0.0\"\n",
+    );
+    assert_eq!(
+        effective_manifest_kind(&package),
+        EffectiveManifestKind::Package(PackageKind::Tool)
+    );
+
+    let workspace = manifest("[workspace]\nmembers = []\n");
+    assert_eq!(
+        effective_manifest_kind(&workspace),
+        EffectiveManifestKind::VirtualWorkspace
+    );
+}
+
+#[test]
 fn loader_envelope_paths_are_absolute_forward_slashed_machine_json() {
     let project = tempfile::tempdir().unwrap();
     workspace(&project);

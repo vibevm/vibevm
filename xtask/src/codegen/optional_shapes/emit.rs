@@ -263,6 +263,9 @@ fn classify_payload(
             if is_primitive(target) {
                 return Ok(ShapeClass::Scalar);
             }
+            if is_collection(target) {
+                return Ok(ShapeClass::Collection);
+            }
             let Some(next) = decls.aliases.get(target).copied() else {
                 bail!(
                     "{file}:{line}: the alias `{ty}` resolves to `{target}`, \
@@ -302,6 +305,10 @@ fn classify_payload(
          Fix: give the member a scalar, vocabulary, or structure form, or teach \
          `optional_shapes.rs` this one, then run `cargo xtask codegen`."
     );
+}
+
+fn is_collection(ty: &str) -> bool {
+    ty.starts_with("Vec<") || ty.starts_with("BTreeMap<")
 }
 
 /// The primitive payload types the pinned emission spells — the JTD

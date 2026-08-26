@@ -202,6 +202,158 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "extensions_report",
+      "end_line": 164
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 107,
+      "symbol": "extensions_report::applies_to",
+      "end_line": 112
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 51,
+      "symbol": "extensions_report::extension_entry",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 92,
+      "symbol": "extensions_report::handler",
+      "end_line": 106
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 159,
+      "symbol": "extensions_report::ir_level",
+      "end_line": 162
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 140,
+      "symbol": "extensions_report::json_map",
+      "end_line": 140
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "extensions_report::manifest_kind",
+      "end_line": 40
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 126,
+      "symbol": "extensions_report::native_observation",
+      "end_line": 132
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 133,
+      "symbol": "extensions_report::order",
+      "end_line": 139
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 151,
+      "symbol": "extensions_report::package_kind",
+      "end_line": 154
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 113,
+      "symbol": "extensions_report::pass",
+      "end_line": 125
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 155,
+      "symbol": "extensions_report::pass_kind",
+      "end_line": 158
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 28,
+      "symbol": "extensions_report::project",
+      "end_line": 36
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "extensions_report::provider",
+      "end_line": 91
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "extensions_report::selector_subject",
+      "end_line": 50
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 147,
+      "symbol": "extensions_report::state",
+      "end_line": 150
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 142,
+      "symbol": "extensions_report::string_list",
+      "end_line": 142
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 141,
+      "symbol": "extensions_report::string_map",
+      "end_line": 141
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/extensions_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 143,
+      "symbol": "extensions_report::tier",
+      "end_line": 146
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index_cli/e1/get_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -1159,414 +1311,423 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 200,
+      "line": 205,
       "symbol": "vibe agentic",
-      "end_line": 205,
+      "end_line": 210,
       "fingerprint": "tok1:38d2c7c84dbc9027225d4def9f39afe3748240181c35a687610f0482adf04d8e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 177,
+      "line": 182,
       "symbol": "vibe aiui",
-      "end_line": 181,
+      "end_line": 186,
       "fingerprint": "tok1:55e1694e709d4faadda95473101940a572d1d6169ceb282b3d53349b7c70303a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 299,
+      "line": 304,
       "symbol": "vibe bin",
-      "end_line": 306,
+      "end_line": 311,
       "fingerprint": "tok1:fa28839d0a2d9eb3130cab2ea9b2eeda91b18d37bd59b58be3537b394d89a27f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 133,
+      "line": 138,
       "symbol": "vibe build",
-      "end_line": 134,
+      "end_line": 139,
       "fingerprint": "tok1:036e0d456e8801b9e1808068561b822e3e3e531d1975155a1106a1ff15cb332a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 265,
+      "line": 270,
       "symbol": "vibe cache",
-      "end_line": 273,
+      "end_line": 278,
       "fingerprint": "tok1:6a35c24edfa5b22c29374adab93625e3ea8ff7ed571b18a3f8f4b9207329b57b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 225,
+      "line": 230,
       "symbol": "vibe check",
-      "end_line": 226,
+      "end_line": 231,
       "fingerprint": "tok1:38fcbbc45c7ad30c975d15d0086afc07aa2e4fca1dfdf72c62f969ca46df6118"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 151,
+      "line": 156,
       "symbol": "vibe clean",
-      "end_line": 154,
+      "end_line": 159,
       "fingerprint": "tok1:7bf42926379ba9585e9243cf398ebd32009a780f9c096b7047560fc39870f92b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 207,
+      "line": 212,
       "symbol": "vibe command",
-      "end_line": 213,
+      "end_line": 218,
       "fingerprint": "tok1:ef53bda5ded39eceee051d99ca027cdb39dced3df83fea0808f23940514540d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 139,
+      "line": 144,
       "symbol": "vibe create",
-      "end_line": 140,
+      "end_line": 145,
       "fingerprint": "tok1:c97d95a2578610ca645757ca375a39adb3befa95173ae403b170df0158120648"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 148,
+      "line": 153,
       "symbol": "vibe deploy",
-      "end_line": 149,
+      "end_line": 154,
       "fingerprint": "tok1:9acf11996b246e6aab3eb068674f95a916d7b3e3c34ddc86a596a4ddb8279835"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 308,
+      "line": 313,
       "symbol": "vibe explain",
-      "end_line": 315,
+      "end_line": 320,
       "fingerprint": "tok1:58c34bfb60261b47d8861f07462898d5ae5c28a9d44f2ae4624b8ed1a0bfe1f7"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 228,
+      "line": 126,
+      "symbol": "vibe extensions",
+      "end_line": 127,
+      "fingerprint": "tok1:acbe42bbe60139be195063d1143d208e86c1e59261c8f788fd6cd8cfabf63b86"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli.rs",
+      "item_kind": "command",
+      "line": 233,
       "symbol": "vibe facts",
-      "end_line": 229,
+      "end_line": 234,
       "fingerprint": "tok1:d7dd96f48f6f2689d1d7d87f56e3424ef5f2b265c027a14946dbe1d337f92213"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 188,
+      "line": 193,
       "symbol": "vibe frame",
-      "end_line": 191,
+      "end_line": 196,
       "fingerprint": "tok1:4985ceaa5272c36e1c73077f882fc30a4aec1244e308099d8257582bec0f79a8"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 239,
+      "line": 244,
       "symbol": "vibe friends",
-      "end_line": 243,
+      "end_line": 248,
       "fingerprint": "tok1:655f25b8fc752269ccab00637c8a5cfe5797e8321bfe2ac6cc626c64419f9073"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 130,
+      "line": 135,
       "symbol": "vibe generate",
-      "end_line": 131,
+      "end_line": 136,
       "fingerprint": "tok1:67fd0ea725b8ab727bad0f4ff416b00a7152ee9a3cce69d9ead43f0fc4f868e9"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 118,
+      "line": 120,
       "symbol": "vibe init",
-      "end_line": 119,
+      "end_line": 121,
       "fingerprint": "tok1:3d6986e0bcb4fb0c21b909f29fd453a077247d5b2361712ab268652df5294764"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 127,
+      "line": 132,
       "symbol": "vibe install",
-      "end_line": 128,
+      "end_line": 133,
       "fingerprint": "tok1:b38bd68a6fe42780d421692d2536b0c9df5b559fe60377adc411ac362e06b30f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 121,
+      "line": 123,
       "symbol": "vibe list",
-      "end_line": 122,
+      "end_line": 124,
       "fingerprint": "tok1:2a1bcc9e9b5c5335104e94830edba85a9d3d095e366088576450e1ab3fe90946"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 170,
+      "line": 175,
       "symbol": "vibe mcp",
-      "end_line": 175,
+      "end_line": 180,
       "fingerprint": "tok1:f37a9c7d50509325b588f478574f851ff11d7bdafae86f5d4cef35c487b4cb73"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 156,
+      "line": 161,
       "symbol": "vibe outdated",
-      "end_line": 160,
+      "end_line": 165,
       "fingerprint": "tok1:d1073beb727d86daaab1588ec6deaaf7fc97e4a3df0fdb2548587e350480885a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 145,
+      "line": 150,
       "symbol": "vibe package",
-      "end_line": 146,
+      "end_line": 151,
       "fingerprint": "tok1:90b8ba854977ebf8e07a82d54538ce18cd1b49dd71b5a36624e529c2e156b1b6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 248,
+      "line": 253,
       "symbol": "vibe prefs",
-      "end_line": 252,
+      "end_line": 257,
       "fingerprint": "tok1:c37b655b66cbc0af9ccfdabf5d84ba9d067cbea39dd9d1c89b5e4a77f79d4009"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 369,
+      "line": 374,
       "symbol": "vibe progress",
-      "end_line": 372,
+      "end_line": 377,
       "fingerprint": "tok1:0343b59ebde2d3646b75f27f0c451ee131c5f3f4a2415b9d79ab4ef092fca9c0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 317,
+      "line": 322,
       "symbol": "vibe query",
-      "end_line": 326,
+      "end_line": 331,
       "fingerprint": "tok1:36680144f94d98e3b9a8bd38c89c746ee621dbdfadb21422f0ff7bffe4c1e069"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 236,
+      "line": 241,
       "symbol": "vibe refactor",
-      "end_line": 237,
+      "end_line": 242,
       "fingerprint": "tok1:c3af138c24767234b956446b0d4e040f1941d8052390ceaf2883c8f1618c5d83"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 262,
+      "line": 267,
       "symbol": "vibe registry",
-      "end_line": 263,
+      "end_line": 268,
       "fingerprint": "tok1:510e526eda2f3774a369c2ecad541147e0de8643662891a8c9e2dd3af384f70e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 221,
+      "line": 226,
       "symbol": "vibe reinstall",
-      "end_line": 223,
+      "end_line": 228,
       "fingerprint": "tok1:6e67dfc6071d8f65b58e5ff6a848695dc0f1da97f80ed1c92bf8f1f409d0f755"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 162,
+      "line": 167,
       "symbol": "vibe search",
-      "end_line": 168,
+      "end_line": 173,
       "fingerprint": "tok1:b47b591a719431fd92337bfb669e9141237a1180367223d594d4c2e9aa549524"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 328,
+      "line": 333,
       "symbol": "vibe select",
-      "end_line": 339,
+      "end_line": 344,
       "fingerprint": "tok1:16e391d4035c196770cac77470dedaa7ff004a71e0a48dc88ecc3b5aeccda1b1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 281,
+      "line": 286,
       "symbol": "vibe self",
-      "end_line": 287,
+      "end_line": 292,
       "fingerprint": "tok1:3587ac93f410662938dfdb2e5a411a952a847f14338cd21bc4aaff4b1b1cdd23"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 245,
+      "line": 250,
       "symbol": "vibe show",
-      "end_line": 246,
+      "end_line": 251,
       "fingerprint": "tok1:12c7f4b09b59503b8a56b9c4b3965d3f73e0e62f78a2df10a7b4425c94c89cf5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 193,
+      "line": 198,
       "symbol": "vibe skill",
-      "end_line": 198,
+      "end_line": 203,
       "fingerprint": "tok1:0f2269b52a3046796d5ce3c6c1633b17564ae4fa4b4a5f91d478e0f5404476ee"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 341,
+      "line": 346,
       "symbol": "vibe specmap",
-      "end_line": 349,
+      "end_line": 354,
       "fingerprint": "tok1:95fe1742b042d98c18fa9ddca05706d6b6a8129fb78a25ee827349929b9ba012"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 183,
+      "line": 188,
       "symbol": "vibe term",
-      "end_line": 186,
+      "end_line": 191,
       "fingerprint": "tok1:6de072333697fa577d56d6b6437e4be14b04ef83495a35d0db8c1a234077b846"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 136,
+      "line": 141,
       "symbol": "vibe test",
-      "end_line": 137,
+      "end_line": 142,
       "fingerprint": "tok1:76357bfd53419ff32fc4070f68158c8d995aa77f44462753716378614f721a6a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 289,
+      "line": 294,
       "symbol": "vibe tools",
-      "end_line": 297,
+      "end_line": 302,
       "fingerprint": "tok1:160baa5bced8144814d419728f9e456b1d4c9648edb498bb5b94cfcce812b2e0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 351,
+      "line": 356,
       "symbol": "vibe trace",
-      "end_line": 360,
+      "end_line": 365,
       "fingerprint": "tok1:f3b1c393c3e385763d9a81c5ad9f9f19d6c16d2a1a2c0bbdad8db90494f7af9a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 254,
+      "line": 259,
       "symbol": "vibe tree",
-      "end_line": 260,
+      "end_line": 265,
       "fingerprint": "tok1:8027f7f6f7878e12ba2eb4bfdc137ac5c46f0d31af6015ecbd40d91d439a5f12"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 215,
+      "line": 220,
       "symbol": "vibe uninstall",
-      "end_line": 216,
+      "end_line": 221,
       "fingerprint": "tok1:e7544f7fabc8952fa2a094e32d923d60121a134be5aca63306fdadd16b5a585f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 218,
+      "line": 223,
       "symbol": "vibe update",
-      "end_line": 219,
+      "end_line": 224,
       "fingerprint": "tok1:14a6b49ed5a4cc88ad74c7c738b1db06604785819538b588a78d124d9b87f362"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 124,
+      "line": 129,
       "symbol": "vibe validate",
-      "end_line": 125,
+      "end_line": 130,
       "fingerprint": "tok1:8cca275e78ec883e3f4609d448d5485777b55b8e3d75938f647a20f71d1c5d33"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 362,
+      "line": 367,
       "symbol": "vibe vars",
-      "end_line": 367,
+      "end_line": 372,
       "fingerprint": "tok1:af6c5c4b0395cb84cb619b17b19d77a249e673553a62f01587ef9cf48dd847ae"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 142,
+      "line": 147,
       "symbol": "vibe verify",
-      "end_line": 143,
+      "end_line": 148,
       "fingerprint": "tok1:ea70875de57aa1689a45722c113d075326c04774665c7d0de1e0bff18a5e0b06"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 374,
+      "line": 379,
       "symbol": "vibe version",
-      "end_line": 375,
+      "end_line": 380,
       "fingerprint": "tok1:33315f272409a4c8ad6648ba9671fc4df16e2b163ceb37e3c58d6b44af2f16f1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 231,
+      "line": 236,
       "symbol": "vibe why",
-      "end_line": 234,
+      "end_line": 239,
       "fingerprint": "tok1:9b76974e8b4a3d3129ff66bc15a3164b1a6f812b631c52e440b5914ef53cf71e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 275,
+      "line": 280,
       "symbol": "vibe workspace",
-      "end_line": 279,
+      "end_line": 284,
       "fingerprint": "tok1:ac2163fa0ecd131bbca2d73185a0d8cbf06ae47e50276d68a969ea05ac6ee8ac"
     },
     {
@@ -2165,6 +2326,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/extensions.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::cli::extensions",
+      "end_line": 3,
+      "fingerprint": "tok1:28e25a81cb88809f62cbe1e79e568c2c3840a2bab60c39b027d64f4dc08f7ace"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "item_kind": "mod",
       "line": 7,
@@ -2275,27 +2445,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "fn",
-      "line": 486,
+      "line": 491,
       "symbol": "vibe_cli::cli::tests::clean_accepts_every_default_lifecycle_phase",
-      "end_line": 512,
+      "end_line": 517,
       "fingerprint": "tok1:d629c8dbd6e26bcadd485560f1547e0fc419c098d258bde26d9fd74e52facfed"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "fn",
-      "line": 420,
+      "line": 425,
       "symbol": "vibe_cli::cli::tests::every_non_install_lifecycle_verb_accepts_global_flags",
-      "end_line": 462,
+      "end_line": 467,
       "fingerprint": "tok1:f651a654a3db92844cc17083f414990a48d1b0f8a3a7ae1d2f99e324522fb325"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "fn",
-      "line": 464,
+      "line": 469,
       "symbol": "vibe_cli::cli::tests::non_install_lifecycle_verbs_reject_pkgrefs",
-      "end_line": 484,
+      "end_line": 489,
       "fingerprint": "tok1:9901460e07a98cc0cdd844f07ce54702e4b40ca6dbdfc9271725ab95306a84bb"
     },
     {
@@ -2459,6 +2629,15 @@
       "symbol": "vibe_cli::commands::explain",
       "end_line": 8,
       "fingerprint": "tok1:f3ba674969dd161e05a0560506fdd123d26290a79b8e3faf11b6a2dcc5b1163b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/extensions.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::extensions",
+      "end_line": 3,
+      "fingerprint": "tok1:28e25a81cb88809f62cbe1e79e568c2c3840a2bab60c39b027d64f4dc08f7ace"
     },
     {
       "crate_name": "vibe-cli",
@@ -4993,9 +5172,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 321,
+      "line": 322,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 446,
+      "end_line": 447,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -8389,7 +8568,7 @@
       "line": 49,
       "symbol": "vibe_lifecycle::registry::collect::CollectionError",
       "end_line": 114,
-      "fingerprint": "tok1:65eb713c43f4abbb4cdf14f8f49c94cc5ba3209f6f2c96c138243a162533d1eb"
+      "fingerprint": "tok1:49da4ef1126f54fa683291b31b7d56382524ccdef393a552b56ff449e9d65d8f"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -8413,9 +8592,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "enum",
-      "line": 196,
+      "line": 215,
       "symbol": "vibe_lifecycle::registry::model::ContributionTier",
-      "end_line": 208,
+      "end_line": 227,
       "fingerprint": "tok1:b78e07879d3e52bee5ccb3ad862887164833cb169d2f8e8b8d27a16f1141f6c2"
     },
     {
@@ -8449,54 +8628,54 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 390,
+      "line": 409,
       "symbol": "vibe_lifecycle::registry::model::ExecutableContribution",
-      "end_line": 401,
+      "end_line": 420,
       "fingerprint": "tok1:2bbfaa2e734681b8860a1ee2512008563f42cf6e145769ff4c594cd5e9f47d0a"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 403,
+      "line": 422,
       "symbol": "vibe_lifecycle::registry::model::ExecutablePlan",
-      "end_line": 406,
+      "end_line": 425,
       "fingerprint": "tok1:7750a655f8fe62e943814aa28f20306d6cea9826cff0646ee084468d43cff57f"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "enum",
-      "line": 169,
+      "line": 188,
       "symbol": "vibe_lifecycle::registry::model::ExtensionProvider",
-      "end_line": 177,
+      "end_line": 196,
       "fingerprint": "tok1:a30b54a6986a5e5e776c4bb5099d1588bdaaea1e2d5de9f5e59c1bb21cbc2aa8"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 336,
+      "line": 355,
       "symbol": "vibe_lifecycle::registry::model::ExtensionRegistry",
-      "end_line": 343,
+      "end_line": 362,
       "fingerprint": "tok1:6b6339d2556f906a8cc9ac9390aa11fdfe3320e697d1d125788f0f658dec32c8"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 210,
+      "line": 229,
       "symbol": "vibe_lifecycle::registry::model::ExtensionRegistryRow",
-      "end_line": 230,
+      "end_line": 249,
       "fingerprint": "tok1:1053ddbb95cfd923b5d419800d7017f6a797cac36a5753fec4ade23c5d0338b8"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 157,
+      "line": 176,
       "symbol": "vibe_lifecycle::registry::model::ExtensionWorld",
-      "end_line": 167,
+      "end_line": 186,
       "fingerprint": "tok1:dec74a5a8d7ca4719c97e389d13b903ae613b4e0ae4bca20fb1920ded982eac1"
     },
     {
@@ -8530,9 +8709,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "item_kind": "struct",
-      "line": 318,
+      "line": 337,
       "symbol": "vibe_lifecycle::registry::model::RegistryView",
-      "end_line": 326,
+      "end_line": 345,
       "fingerprint": "tok1:c2c2d957e3319c8c8d192db4bfabc20bbae30d15ded72ebd060267178f8c7a65"
     },
     {
@@ -8705,6 +8884,15 @@
       "symbol": "vibe_lifecycle::registry::tests::selectors::selector_mismatch_stays_in_all_view_but_not_in_plan",
       "end_line": 152,
       "fingerprint": "tok1:6a155589add774f16ca2c8a4cf706af26a9ab79c1c4aaa14fa7ca95106719dfd"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/registry/view.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_lifecycle::registry::view",
+      "end_line": 3,
+      "fingerprint": "tok1:28e25a81cb88809f62cbe1e79e568c2c3840a2bab60c39b027d64f4dc08f7ace"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -14090,6 +14278,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/extensions_report.jtd.json",
+      "from_symbol": "extensions_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/init_report.jtd.json",
       "from_symbol": "init_report",
       "line": 1,
@@ -14940,6 +15136,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/extensions.rs",
+      "from_symbol": "vibe_cli::cli::extensions",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "from_symbol": "vibe_cli::cli::inspect",
       "line": 7,
@@ -15038,7 +15242,7 @@
     {
       "file": "crates/vibe-cli/src/cli.rs",
       "from_symbol": "vibe_cli::cli::tests::clean_accepts_every_default_lifecycle_phase",
-      "line": 487,
+      "line": 492,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL",
       "verb": "verifies"
@@ -15046,7 +15250,7 @@
     {
       "file": "crates/vibe-cli/src/cli.rs",
       "from_symbol": "vibe_cli::cli::tests::every_non_install_lifecycle_verb_accepts_global_flags",
-      "line": 421,
+      "line": 426,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS",
       "verb": "verifies"
@@ -15054,7 +15258,7 @@
     {
       "file": "crates/vibe-cli/src/cli.rs",
       "from_symbol": "vibe_cli::cli::tests::non_install_lifecycle_verbs_reject_pkgrefs",
-      "line": 465,
+      "line": 470,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL",
       "verb": "verifies"
@@ -15201,6 +15405,14 @@
       "line": 8,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/PROP-014#queries",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/extensions.rs",
+      "from_symbol": "vibe_cli::commands::extensions",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "implements"
     },
     {
@@ -17499,7 +17711,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 399,
+      "line": 400,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -20696,7 +20908,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ContributionTier",
-      "line": 197,
+      "line": 216,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
       "verb": "documents"
@@ -20728,7 +20940,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExecutableContribution",
-      "line": 394,
+      "line": 413,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -20736,7 +20948,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExecutablePlan",
-      "line": 404,
+      "line": 423,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -20744,7 +20956,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExtensionProvider",
-      "line": 170,
+      "line": 189,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -20752,7 +20964,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExtensionRegistry",
-      "line": 337,
+      "line": 356,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -20760,7 +20972,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExtensionRegistryRow",
-      "line": 214,
+      "line": 233,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -20768,7 +20980,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::ExtensionWorld",
-      "line": 158,
+      "line": 177,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
@@ -20800,7 +21012,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/model.rs",
       "from_symbol": "vibe_lifecycle::registry::model::RegistryView",
-      "line": 319,
+      "line": 338,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "documents"
@@ -20964,6 +21176,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/registry/view.rs",
+      "from_symbol": "vibe_lifecycle::registry::view",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-lifecycle/src/runner.rs",

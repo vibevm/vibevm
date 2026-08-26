@@ -29,7 +29,7 @@ use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary
 
 mod dispatch;
 mod slot;
-mod world;
+pub(crate) mod world;
 
 pub(crate) use slot::{
     emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,

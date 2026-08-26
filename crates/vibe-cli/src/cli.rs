@@ -15,6 +15,7 @@ mod agentic;
 mod aiui;
 mod cache;
 mod explain;
+mod extensions;
 mod inspect;
 mod lifecycle;
 mod mcp;
@@ -35,6 +36,7 @@ pub use agentic::*;
 pub use aiui::*;
 pub use cache::*;
 pub use explain::*;
+pub use extensions::*;
 pub use inspect::*;
 pub use lifecycle::*;
 pub use mcp::*;
@@ -120,6 +122,9 @@ pub enum Command {
 
     /// List the packages recorded in the project's lockfile.
     List(ListArgs),
+
+    /// List every extension declaration in the selected installed world.
+    Extensions(ExtensionsArgs),
 
     /// Validate the workspace, without network access or materialisation.
     Validate(LifecycleArgs),

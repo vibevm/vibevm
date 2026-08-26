@@ -13,9 +13,9 @@ use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization};
 use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
-    DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExecutablePlan,
-    ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
-    SelectorSubject, collect_extensions,
+    DependencyExtensionSource, DependencyProvider, DependencyProviderId, EffectiveManifestKind,
+    ExecutablePlan, ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity,
+    HostProvider, SelectorSubject, collect_extensions,
 };
 use vibe_wire::generated::lifecycle::e1::context::{
     Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
@@ -99,11 +99,19 @@ enum WorldLoadMode {
     PreClean,
 }
 
-struct LoadedRegistry {
-    registry: ExtensionRegistry,
-    project: EnvelopeProject,
+pub(crate) struct LoadedRegistry {
+    pub(crate) registry: ExtensionRegistry,
+    pub(crate) project: EnvelopeProject,
     world: EnvelopeWorld,
-    workspace_root: PathBuf,
+    pub(crate) workspace_root: PathBuf,
+    pub(crate) host_identity: HostIdentity,
+    pub(crate) manifest_kind: EffectiveManifestKind,
+    pub(crate) effective_stack: Option<DependencyProviderId>,
+}
+
+/// Strict read-only inspection of one selected node's durable effective world.
+pub(crate) fn inspect(path: &Path) -> Result<LoadedRegistry> {
+    load_registry(path, WorldLoadMode::Default)
 }
 
 fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry> {
@@ -111,6 +119,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
     let workspace = Workspace::discover(&selected)
         .context("discovering the workspace for lifecycle contribution collection")?;
     let host_manifest = selected_manifest(&workspace, &selected)?.clone();
+    let manifest_kind = effective_manifest_kind(&host_manifest);
     let lock_path = workspace.lockfile_path();
     let vibedeps_root = workspace.vibedeps_root();
 
@@ -125,7 +134,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
     })?;
     if vibedeps_exists && !vibedeps_root.is_dir() {
         bail!(
-            "lifecycle dependency root `{}` exists but is not a directory",
+            "lifecycle dependency root `{}` exists but is not a directory; remove or repair it, then run `vibe install`",
             vibedeps_root.display(),
         );
     }
@@ -141,7 +150,12 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         Vec::new()
     } else {
         let lock = if lock_exists {
-            Lockfile::read(&lock_path).context("reading the lifecycle effective-world lockfile")?
+            Lockfile::read(&lock_path).with_context(|| {
+                format!(
+                    "reading lifecycle effective-world lockfile `{}`; repair or remove it, then run `vibe install`",
+                    lock_path.display()
+                )
+            })?
         } else {
             Lockfile::empty("lifecycle-empty-world", "1970-01-01T00:00:00Z")
         };
@@ -149,6 +163,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
     };
     let effective_stack = effective_stack(&host_manifest, &installed, mode)?;
     let mut host = host_source(host_manifest, selected.clone())?;
+    let host_identity = host.provider.identity.clone();
     if mode == WorldLoadMode::PreClean {
         retain_pre_clean_controls(&mut host, &installed);
     }
@@ -158,7 +173,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
     let registry = collect_extensions(ExtensionWorld {
         installed,
         host,
-        effective_stack,
+        effective_stack: effective_stack.clone(),
     })
     .context("collecting lifecycle extensions from the effective world")?;
     Ok(LoadedRegistry {
@@ -166,7 +181,20 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         project,
         world,
         workspace_root: workspace.root.clone(),
+        host_identity,
+        manifest_kind,
+        effective_stack,
     })
+}
+
+fn effective_manifest_kind(manifest: &Manifest) -> EffectiveManifestKind {
+    if let Some(package) = &manifest.package {
+        EffectiveManifestKind::Package(package.kind)
+    } else if manifest.project.is_some() {
+        EffectiveManifestKind::Project
+    } else {
+        EffectiveManifestKind::VirtualWorkspace
+    }
 }
 
 fn envelope_project(provider: &HostProvider, selected: &Path) -> EnvelopeProject {
@@ -296,7 +324,7 @@ fn dependency_sources(
                 continue;
             }
             bail!(
-                "selected host requires `{group}/{name}`, but it is absent from effective-world lock `{}`",
+                "selected host requires `{group}/{name}`, but it is absent from effective-world lock `{}`; run `vibe install`",
                 workspace.lockfile_path().display(),
             );
         }
@@ -313,7 +341,7 @@ fn dependency_sources(
             .copied()
             .with_context(|| {
                 format!(
-                    "selected host reaches `{group}/{name}`, but the package is absent from `{}`",
+                    "selected host reaches `{group}/{name}`, but the package is absent from `{}`; run `vibe install`",
                     workspace.lockfile_path().display()
                 )
             })?;
@@ -363,13 +391,14 @@ fn dependency_source(
     }
     let manifest = Manifest::read(root.join(Manifest::FILENAME)).with_context(|| {
         format!(
-            "reading reachable slot manifest `{}`",
-            root.join(Manifest::FILENAME).display()
+            "reading reachable slot manifest `{}`; remove or repair slot `{}`, then run `vibe install`",
+            root.join(Manifest::FILENAME).display(),
+            root.display(),
         )
     })?;
     let declared = manifest.package.as_ref().with_context(|| {
         format!(
-            "reachable slot `{}` has no `[package]` identity",
+            "reachable slot `{}` has no `[package]` identity; remove or repair the slot, then run `vibe install`",
             root.display()
         )
     })?;
@@ -379,7 +408,7 @@ fn dependency_source(
         || declared.kind != package.kind
     {
         bail!(
-            "reachable slot `{}` declares `{}:{}/{}@{}`, but the lock requires `{}:{}/{}@{}`",
+            "reachable slot `{}` declares `{}:{}/{}@{}`, but the lock requires `{}:{}/{}@{}`; remove or repair the slot, then run `vibe install`",
             root.display(),
             declared.kind,
             declared.group,
@@ -428,7 +457,7 @@ fn effective_stack(
         [id] => Ok(Some(id.clone())),
         [] if mode == WorldLoadMode::PreClean => Ok(None),
         [] => bail!(
-            "[active].stack `{short_name}` names no installed reachable stack package; install it or correct the short name"
+            "[active].stack `{short_name}` names no installed reachable stack package; run `vibe install` or correct the short name"
         ),
         many => bail!(
             "[active].stack `{short_name}` is ambiguous across installed reachable stacks: {}; use a unique stack short name",

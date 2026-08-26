@@ -104,9 +104,9 @@ pub use execution::{
 };
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
-    DependencyProvider, DependencyProviderId, ExecutableContribution, ExecutablePlan,
-    ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
-    HostExtensionSource, HostIdentity, HostProvider, RegistryView, SelectorSubject,
+    DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,
+    ExecutablePlan, ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
+    HostExtensionSource, HostIdentity, HostProvider, RegistryState, RegistryView, SelectorSubject,
     collect_extensions,
 };
 pub use runner::{
