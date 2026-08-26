@@ -175,6 +175,18 @@
       plus one cargo-heavy review/test at most; text/read-only workers may use
       otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the
       repository rule requires it.</TWO-COLD-CARGO>
+      <ATOMIC-CARGO-SLOTS fact="true" status="spec/done">A process census is
+      observation, not exclusion: on 2026-08-26 three independent workers all
+      observed zero Cargo processes and then started three cold builds in the
+      same race window. Every ChatGPT-commissioned worker therefore runs each
+      repository Cargo command through
+      `python campaigns/packages-2026-09/tasks/chatgpt-cargo.py -- cargo …`.
+      The wrapper holds one of two OS file locks for the complete child lifetime,
+      emits a waiting heartbeat, sets `CARGO_BUILD_JOBS=4` unless already set,
+      and releases on normal exit or process death. A packet may bypass it only
+      for a central coordinator's explicitly serialized command. The wrapper is
+      campaign harness infrastructure, never a VibeVM product command or
+      standing instruction for Claude.</ATOMIC-CARGO-SLOTS>
       <QUIET-ARTIFACT-CONTRACT fact="true" status="spec/done">Every packet
       carries `##subagent-quiet-clause`, an expected write perimeter, exact
       acceptance, narrow self-verify commands, a durable
@@ -293,6 +305,13 @@
       tests/review, let root compile between packets, and reserve the final two
       worker turns for the durable report. `max_turns` exhaustion preserves the
       worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
+      <CLAUDEZ-HOURLY-PROBE fact="true" status="spec/done">While this campaign
+      is active, the ChatGPT thread owns an hourly heartbeat named «Проверка
+      доступности claudez». It starts one fresh isolated `claudez -p` elementary
+      task whose only valid answer is `CLAUDEZ_OK`, records resolved model,
+      latency, transport/429 category and advertised reset time, and performs no
+      retry or repository work. This observes five-hour quota recovery without
+      burning a real implementation packet or spinning against a known wall.</CLAUDEZ-HOURLY-PROBE>
     </facts>
   </observability>
 
@@ -365,7 +384,10 @@ known positive control demonstrates the instrument can fire.
   allowed when the task needs them, but publishing/pushing or another
   irreversible external action still requires the packet to grant it. Never
   expose a token value in argv, logs or the report.
-- Use `CARGO_BUILD_JOBS=4` for repository Cargo commands.
+- Run every repository Cargo command through
+  `python campaigns/packages-2026-09/tasks/chatgpt-cargo.py -- cargo …`; the
+  wrapper owns the two-slot ceiling and supplies `CARGO_BUILD_JOBS=4`. Do not
+  replace it with a process census, which races across workers.
 - NO new `unsafe`, FFI, handwritten OS ABI or home-grown security/locking
   primitive unless the packet explicitly grants that architecture. Stop and
   report the missing primitive instead; do not invent a mini-runtime.
