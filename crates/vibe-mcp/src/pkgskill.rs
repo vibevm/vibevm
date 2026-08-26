@@ -22,6 +22,14 @@ use vibe_core::machine_json_path;
 
 use crate::agents::{Agent, Scope};
 
+#[path = "pkgskill/projection.rs"]
+mod projection;
+
+pub use projection::{
+    DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, collect_declared_skills,
+    prepare_declared_skill_projection, project_declared_skills_project_scope,
+};
+
 /// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
 /// reading a skill source, writing the projection into an agent's skills
 /// directory, or resolving the agent's skills root. One enum for the layer.

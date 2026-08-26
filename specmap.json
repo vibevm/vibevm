@@ -3565,9 +3565,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/skill/mod.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 8,
       "symbol": "vibe_cli::commands::skill",
-      "end_line": 12,
+      "end_line": 8,
       "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
     },
     {
@@ -9361,37 +9361,73 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "enum",
-      "line": 25,
+      "line": 33,
       "symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "end_line": 65,
+      "end_line": 73,
       "fingerprint": "tok1:50e93253c9a3bd2f45a019480bc14b44b1b89bf0b63a2d7e3fd41781fd26daec"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "struct",
-      "line": 67,
+      "line": 75,
       "symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "end_line": 93,
+      "end_line": 101,
       "fingerprint": "tok1:415119c3f214e33f346ac73019a5c29591662591213a3aee47b6e5d3b97c0508"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 95,
+      "line": 103,
       "symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "end_line": 114,
+      "end_line": 122,
       "fingerprint": "tok1:d640819f4cbecc751b8189b08226926d9f2165bcbd7ad7ab96986505b85b33d4"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 116,
+      "line": 124,
       "symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "end_line": 193,
+      "end_line": 201,
       "fingerprint": "tok1:336626b33609f2650de622baabfa5f12567db57f47bccb634e40c3ed450d3d56"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_mcp::pkgskill::projection",
+      "end_line": 7,
+      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 21,
+      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkill",
+      "end_line": 32,
+      "fingerprint": "tok1:f39aa11431dd3c67e8a26303d6fc48627d8242621a51655706f9e9ddd3c61164"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 34,
+      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillFilter",
+      "end_line": 40,
+      "fingerprint": "tok1:5a122c338be8beec1a88c54b4e97bf2032b66c22248c59f27bddb66c2b2ca965"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 119,
+      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProjection",
+      "end_line": 127,
+      "fingerprint": "tok1:72d1af57a07076c3085113f8617e6561534b6ff16436680240d93bd896fad581"
     },
     {
       "crate_name": "vibe-mcp",
@@ -9415,9 +9451,9 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 195,
+      "line": 203,
       "symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "end_line": 239,
+      "end_line": 247,
       "fingerprint": "tok1:e8223baf07f54e1a5259021340e4c14b2ee767b1936cbfc2d95c0ad3268c5f08"
     },
     {
@@ -16306,7 +16342,7 @@
     {
       "file": "crates/vibe-cli/src/commands/skill/mod.rs",
       "from_symbol": "vibe_cli::commands::skill",
-      "line": 12,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -21702,7 +21738,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "line": 35,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -21710,7 +21746,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "line": 83,
+      "line": 91,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -21718,7 +21754,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "line": 104,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -21726,11 +21762,43 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "line": 121,
+      "line": 129,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_mcp::pkgskill::projection",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkill",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillFilter",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProjection",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-mcp/src/pkgskill/tests.rs",
@@ -21753,7 +21821,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "line": 199,
+      "line": 207,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
