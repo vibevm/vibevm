@@ -1,0 +1,16 @@
+{
+  "id": "chatcmpl-demo-invalid-usage",
+  "model": "demo-chat-model",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "validate"
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 12,
+    "completion_tokens": 1
+  }
+}

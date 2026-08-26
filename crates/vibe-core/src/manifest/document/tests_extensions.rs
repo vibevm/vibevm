@@ -237,7 +237,8 @@ fn required_fields_fail_as_toml_shape_errors_and_name_the_field() {
         ),
     ] {
         match Manifest::parse_str(&format!("{PROJECT}\n{row}")) {
-            Err(Error::ParseToml { detail, .. }) => {
+            Err(Error::ParseToml { diagnostic, .. }) => {
+                let detail = diagnostic.to_string();
                 assert!(detail.contains(field), "field={field}: {detail}");
             }
             other => panic!("expected ParseToml for missing `{field}`, got {other:?}"),
@@ -254,7 +255,8 @@ fn strict_unknown_fields_cover_the_row_selector_and_pass_tables() {
         "[[extension]]\nid = \"x\"\npoint = \"compile:pass\"\nhandler = { kind = \"builtin\", name = \"x\" }\ncompiler_internals = true\npass = { kind = \"transform\", mystery = true }\n",
     ] {
         match Manifest::parse_str(&format!("{PROJECT}\n{row}")) {
-            Err(Error::ParseToml { detail, .. }) => {
+            Err(Error::ParseToml { diagnostic, .. }) => {
+                let detail = diagnostic.to_string();
                 assert!(detail.contains("unknown field"), "{detail}");
                 assert!(detail.contains("mystery"), "{detail}");
             }
@@ -269,7 +271,8 @@ fn bad_point_is_a_typed_toml_shape_error() {
     match Manifest::parse_str(&format!(
         "{PROJECT}\n[[extension]]\nid = \"x\"\npoint = \"phase:BUILD\"\nhandler = {{ kind = \"builtin\", name = \"x\" }}\n"
     )) {
-        Err(Error::ParseToml { detail, .. }) => {
+        Err(Error::ParseToml { diagnostic, .. }) => {
+            let detail = diagnostic.to_string();
             assert!(
                 detail.contains("field `point` value `phase:BUILD`"),
                 "{detail}"
@@ -338,7 +341,8 @@ auto = false
 
     let unknown = "[[extension]]\nid = \"x\"\npoint = \"phase:build\"\nhandler = { kind = \"builtin\", name = \"x\", mystery = true }\n";
     match Manifest::parse_str(&format!("{PROJECT}\n{unknown}")) {
-        Err(Error::ParseToml { detail, .. }) => {
+        Err(Error::ParseToml { diagnostic, .. }) => {
+            let detail = diagnostic.to_string();
             assert!(detail.contains("mystery"), "{detail}");
         }
         other => panic!("expected unknown field to stay ParseToml, got {other:?}"),

@@ -33,7 +33,7 @@ pub mod visibility;
 
 pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;
-pub use error::{Error, Result};
+pub use error::{Error, Result, SafeTomlParseError};
 pub use global_registry::{
     EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, default_registries,
     ensure_default_global_registry, merge_effective, url_is_local,

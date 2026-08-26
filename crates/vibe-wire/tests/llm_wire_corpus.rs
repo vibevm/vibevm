@@ -90,6 +90,7 @@ fn response_corpus_round_trips_ordered_assistant_text() {
     );
     assert_eq!(response.choices[0].message.content, "validate");
     assert_eq!(response.choices[1].message.content, "install");
+    assert!(response.usage.is_none());
 }
 
 #[test]
@@ -103,11 +104,15 @@ fn response_projection_accepts_the_standard_external_superset() {
     assert_eq!(response.id, "chatcmpl-demo-official-1");
     assert_eq!(response.model, "demo-chat-model");
     assert_eq!(response.choices[0].message.content, "validate");
+    let usage = response.usage.as_ref().unwrap();
+    assert_eq!(usage.prompt_tokens, 12);
+    assert_eq!(usage.completion_tokens, 1);
+    assert_eq!(usage.total_tokens, 13);
 
     let projected = serde_json::to_value(response).unwrap();
     assert_eq!(
         projected.as_object().unwrap().keys().collect::<Vec<_>>(),
-        ["choices", "id", "model"]
+        ["choices", "id", "model", "usage"]
     );
     assert_eq!(
         projected["choices"][0]["message"]
@@ -116,6 +121,14 @@ fn response_projection_accepts_the_standard_external_superset() {
             .keys()
             .collect::<Vec<_>>(),
         ["content", "role"]
+    );
+    assert_eq!(
+        projected["usage"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .collect::<Vec<_>>(),
+        ["completion_tokens", "prompt_tokens", "total_tokens"]
     );
 }
 

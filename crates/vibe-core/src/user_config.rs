@@ -8,9 +8,10 @@
 //! `VIBE_*` / `VIBEVM_*` names only, surfaced by `vibe show config` —
 //! `[install]`, the install-
 //! behaviour settings of [PROP-011](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml),
-//! `[init]` (`vibe init` prompt defaults), and `[net]`, the network
+//! `[init]` (`vibe init` prompt defaults), `[net]`, the network
 //! posture of [PROP-010](../../../vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml)
-//! §2.5.
+//! §2.5, and `[llm]`, the user-owned OpenAI-compatible provider
+//! endpoint and token-file source.
 //!
 //! Path resolution:
 //!
@@ -36,12 +37,10 @@
 //!
 //! The zero-consumer v0 scoping is history: `vibe install` reads
 //! `install.slot_integrity` (the PROP-011 §5.2 strategy) and
-//! `net.offline` from this layer today, beside `vibe show config`'s
-//! display read. Wiring further values (`default_cache_root`,
-//! `init_tracing`, future LLM-key paths) remains follow-up work.
-//! decision on env-var promotion vs. dedicated config-getters).
-//! Until then this module is informational; the operator must
-//! `export VIBE_REGISTRY_CACHE=…` for the value to actually apply.
+//! `net.offline`; `vibe-llm`'s effective resolver consumes `[llm]` together
+//! with the selected file path for token resolution; `vibe show config`
+//! performs the display read. Wiring unrelated values such as
+//! `default_cache_root` and `init_tracing` remains follow-up work.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff");
 
@@ -63,6 +62,7 @@ use specmark::spec;
 /// assert!(cfg.env.is_empty());
 /// assert!(cfg.install.is_default());
 /// assert!(cfg.net.is_default());
+/// assert!(cfg.llm.is_none());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -98,6 +98,12 @@ pub struct UserConfig {
     /// `VIBE_OFFLINE` env-var, then this key.
     #[serde(default, skip_serializing_if = "NetConfig::is_default")]
     pub net: NetConfig,
+
+    /// `[llm]` — user-owned provider defaults and endpoint. Project
+    /// `[llm]` may override provider/model and name an env credential;
+    /// it cannot supply an endpoint or token-file path.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub llm: Option<LlmConfig>,
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
@@ -190,6 +196,49 @@ impl NetConfig {
     }
 }
 
+/// `[llm]` section in the user config.
+///
+/// ```
+/// use vibe_core::user_config::LlmConfig;
+///
+/// let c: LlmConfig = toml::from_str(r#"
+///     provider = "openai-compatible"
+///     model = "example-chat"
+///     endpoint = "https://example.invalid/v1/chat/completions"
+///     token_file = "provider.token"
+/// "#).unwrap();
+/// assert_eq!(c.provider, "openai-compatible");
+/// assert_eq!(c.token_file.unwrap().to_string_lossy(), "provider.token");
+/// ```
+#[derive(Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
+pub struct LlmConfig {
+    /// Exact provider adapter id. R7 accepts `openai-compatible` only.
+    pub provider: String,
+    /// User-level model fallback, overridden by project
+    /// `[llm].default_model` when that section exists.
+    pub model: String,
+    /// Full Chat Completions endpoint URL. There is deliberately no
+    /// project-level counterpart.
+    pub endpoint: String,
+    /// Optional credential file. Relative paths resolve beside the selected
+    /// user-config file; absolute paths remain absolute; `~` has no magic.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub token_file: Option<PathBuf>,
+}
+
+impl std::fmt::Debug for LlmConfig {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("LlmConfig")
+            .field("provider", &self.provider)
+            .field("model", &self.model)
+            .field("endpoint", &"[REDACTED ENDPOINT]")
+            .field("token_file", &self.token_file)
+            .finish()
+    }
+}
+
 /// `[install].slot_integrity` — the materialisation slot-skip strategy
 /// (PROP-011 §2.3 / §5.2). Chosen once in the user config; it persists
 /// across runs.
@@ -260,7 +309,7 @@ impl UserConfig {
         })?;
         let cfg: UserConfig = toml::from_str(&body).map_err(|source| UserConfigError::Parse {
             path: path.to_path_buf(),
-            source,
+            diagnostic: Box::new(crate::SafeTomlParseError::new(source, &body)),
         })?;
         Ok(cfg)
     }
@@ -323,14 +372,14 @@ pub enum UserConfigError {
         source: std::io::Error,
     },
     #[error(
-        "`{path}` is malformed: {source} \
+        "`{path}` is malformed: {diagnostic} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
           fix: repair the TOML at the reported location)"
     )]
     Parse {
         path: PathBuf,
         #[source]
-        source: toml::de::Error,
+        diagnostic: Box<crate::SafeTomlParseError>,
     },
     #[error(
         "could not serialise the user config for `{path}`: {source} \

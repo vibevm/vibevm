@@ -55,6 +55,7 @@ gated = [
     "vibe-index",
     "vibe-install",
     "vibe-lifecycle",
+    "vibe-llm",
     "vibe-resolver",
     "vibe-registry",
     "vibe-workspace",
@@ -72,6 +73,7 @@ gated = [
 gated_pub_doctest = [
     "vibe-core",
     "vibe-lifecycle",
+    "vibe-llm",
     "vibe-mcp",
 ]
 
@@ -146,6 +148,11 @@ env_roots = [
     # git_cli.rs, `VIBE_LOG` in main.rs) and now flow through this one
     # root.
     "crates/vibe-index/src/config.rs",
+    # R7's effective LLM configuration resolver reads the one env-var whose
+    # name the project `[llm].api_key_env` field selects. It is the narrow
+    # credential-resolution root; no provider/transport module reads ambient
+    # environment.
+    "crates/vibe-llm/src/config.rs",
 ]
 
 # Crates deliberately OUTSIDE `gated`, each paired with the reason it has
@@ -155,10 +162,6 @@ env_roots = [
 [[rust.exempt]]
 unit = "vibe-graph"
 reason = "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; nothing to gate until it lands"
-
-[[rust.exempt]]
-unit = "vibe-llm"
-reason = "M0 stub, no code yet — providers land in the v1.5 LLM milestone per VIBEVM-SPEC §10.4; nothing to gate until then"
 
 [[rust.exempt]]
 unit = "vibe-wire"

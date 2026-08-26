@@ -13,6 +13,85 @@ use thiserror::Error;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
+/// A TOML diagnostic detached from the parsed source bytes.
+///
+/// `toml::de::Error` retains the complete input and echoes its source line in
+/// `Display`/`Debug`. This wrapper first detaches that input through the TOML
+/// API, then copies only the remaining diagnosis plus numeric location
+/// metadata and drops the original error.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
+pub struct SafeTomlParseError {
+    message: String,
+    span: Option<std::ops::Range<usize>>,
+    line: Option<usize>,
+    column: Option<usize>,
+}
+
+impl SafeTomlParseError {
+    pub(crate) fn new(mut source: toml::de::Error, input: &str) -> Self {
+        let span = source.span();
+        let (line, column) = span
+            .as_ref()
+            .map(|span| line_column(input, span.start))
+            .map_or((None, None), |(line, column)| (Some(line), Some(column)));
+        source.set_input(None);
+        Self {
+            message: source.to_string().trim().to_owned(),
+            span,
+            line,
+            column,
+        }
+    }
+
+    pub fn message(&self) -> &str {
+        &self.message
+    }
+
+    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+        self.span.clone()
+    }
+
+    pub fn line(&self) -> Option<usize> {
+        self.line
+    }
+
+    pub fn column(&self) -> Option<usize> {
+        self.column
+    }
+}
+
+impl std::fmt::Display for SafeTomlParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match (self.line, self.column) {
+            (Some(line), Some(column)) => {
+                write!(f, "{} at line {line}, column {column}", self.message)
+            }
+            _ => f.write_str(&self.message),
+        }
+    }
+}
+
+impl std::error::Error for SafeTomlParseError {}
+
+fn line_column(input: &str, byte_offset: usize) -> (usize, usize) {
+    let mut offset = byte_offset.min(input.len());
+    while !input.is_char_boundary(offset) {
+        offset -= 1;
+    }
+    let prefix = &input[..offset];
+    let line = prefix
+        .chars()
+        .filter(|&character| character == '\n')
+        .count()
+        + 1;
+    let column = prefix
+        .rsplit('\n')
+        .next()
+        .map_or(1, |tail| tail.chars().count() + 1);
+    (line, column)
+}
+
 /// The crate's error type — one `thiserror` enum for the parse, validate,
 /// and I/O layer of `vibe-core`. Every variant's `Display` embeds the
 /// `spec://` REQ it guards plus a fix hint, so a failing run is navigable
@@ -135,29 +214,20 @@ pub enum Error {
     },
 
     #[error(
-        "failed to parse `{path}`: {detail} \
+        "failed to parse `{path}`: {diagnostic} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
           fix: {fix})"
     )]
     ParseToml {
         path: PathBuf,
-        /// The deserialiser's own diagnosis, rendered verbatim — the field
-        /// name for a missing key (`missing field \`group\``), or the parser's
-        /// `TOML parse error at line N, column M` plus caret for broken
-        /// syntax. Surfacing this is the whole point: the `#[source]` it sits
-        /// next to is never printed by `Display`, so before this field existed
-        /// the operator saw neither the field name nor the position.
-        detail: String,
+        /// Parser message and numeric location only. No source line or parsed
+        /// input is retained by this public error or its source chain.
+        #[source]
+        diagnostic: Box<SafeTomlParseError>,
         /// A remedy matched to the failure kind — not the generic "repair the
         /// syntax" that used to fire even when only a key was missing. See
         /// [`Error::parse_toml`] for how the kind is told apart.
         fix: String,
-        // Boxed to keep the variant (and so every `Result<_, Error>`) under
-        // clippy's `result_large_err` threshold: `toml::de::Error` is ~96 B on
-        // its own, and `detail`/`fix` already push this variant past 128 B. The
-        // chain is preserved — `Box<toml::de::Error>` still implements `Error`.
-        #[source]
-        source: Box<toml::de::Error>,
     },
 
     #[error(
@@ -183,13 +253,11 @@ impl Error {
     /// either. The one reliable signal is the message text: `missing field
     /// \`X\`` is serde's own `missing_field` contract, which toml does not
     /// override, so it is stable across toml versions. Everything else is a
-    /// rejection the parser already describes — and, for real syntax errors,
-    /// points at with a line/column — in its own `Display`, which we render
-    /// verbatim into `detail`.
-    pub(crate) fn parse_toml(path: PathBuf, source: toml::de::Error) -> Self {
-        let detail = source.to_string();
-        let detail = detail.trim_end();
+    /// rejection the parser already describes. Only `message()` and numeric
+    /// position survive; the original source-bearing error is dropped.
+    pub(crate) fn parse_toml(path: PathBuf, source: toml::de::Error, input: &str) -> Self {
         let missing_field = source.message().contains("missing field");
+        let diagnostic = SafeTomlParseError::new(source, input);
         let fix = if missing_field {
             "add the missing field to vibe.toml"
         } else {
@@ -197,9 +265,8 @@ impl Error {
         };
         Error::ParseToml {
             path,
-            detail: detail.to_string(),
+            diagnostic: Box::new(diagnostic),
             fix: fix.to_string(),
-            source: Box::new(source),
         }
     }
 }
@@ -237,14 +304,13 @@ mod tests {
 
     #[test]
     fn broken_syntax_carries_the_parser_position() {
-        // `this is = not = toml` is malformed TOML. The parser's own framing
-        // — `TOML parse error at line N, column M` — must now reach the
-        // reader; the bare `#[source]` used to swallow it whole.
+        // `this is = not = toml` is malformed TOML. The safe wrapper keeps the
+        // numeric position and parser message, but never the source line.
         let err = Manifest::parse_str("this is = not = toml\n").unwrap_err();
         let msg = err.to_string();
         assert!(
-            msg.contains("TOML parse error"),
-            "a syntax error must surface the parser's framing: {msg}"
+            !msg.contains("this is = not = toml"),
+            "source leaked: {msg}"
         );
         assert!(
             msg.contains("line") && msg.contains("column"),
@@ -279,11 +345,13 @@ mod tests {
                 "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
             )
             .unwrap_err(),
+            "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
         )
         .to_string();
         let broken = Error::parse_toml(
             "vibe.toml".into(),
             toml::from_str::<Manifest>("this is = not = toml\n").unwrap_err(),
+            "this is = not = toml\n",
         )
         .to_string();
         let req = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema";

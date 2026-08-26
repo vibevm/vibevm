@@ -8,8 +8,15 @@ license-file.workspace = true
 publish.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "LLM provider abstraction for vibevm (M1.5+); stub in M0"
+description = "Synchronous LLM provider abstraction and OpenAI-compatible adapter"
 
 [dependencies]
-anyhow.workspace = true
+reqwest.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
 thiserror.workspace = true
+vibe-core.workspace = true
+vibe-wire.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

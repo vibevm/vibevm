@@ -2,6 +2,7 @@
 //! Split out of `user_config.rs` (DISCIPLINE-SWEEP §1a tests-out) and
 //! included via `#[path]`; the module stays private test code.
 
+use std::error::Error;
 use std::process::Command;
 
 use super::*;
@@ -10,6 +11,17 @@ use tempfile::tempdir;
 /// Planted into the file at the former location. If it ever shows up on a
 /// stream, the notice printed contents.
 const PLANTED_MARKER: &str = "planted-config-body-must-never-be-printed";
+
+fn error_chain_text(error: &(dyn Error + 'static)) -> String {
+    let mut out = format!("{error:?}\n{error}");
+    let mut source = error.source();
+    while let Some(next) = source {
+        out.push('\n');
+        out.push_str(&format!("{next:?}\n{next}"));
+        source = next.source();
+    }
+    out
+}
 
 /// Set on a re-executed copy of this test binary to put it in child mode —
 /// see [`a_config_planted_at_the_former_location_is_never_resolved`].
@@ -199,6 +211,119 @@ fn load_from_rejects_an_unknown_net_key() {
         UserConfig::load_from(&path).unwrap_err(),
         UserConfigError::Parse { .. }
     ));
+}
+
+// --- PROP-000 §16 / PROP-054 §6.4 — the user `[llm]` section ----------
+
+#[test]
+fn llm_section_parses_and_round_trips_all_user_owned_fields() {
+    let raw = r#"
+[llm]
+provider = "openai-compatible"
+model = "demo-chat"
+endpoint = "https://example.invalid/v1/chat/completions"
+token_file = "credentials/provider.token"
+"#;
+    let cfg: UserConfig = toml::from_str(raw).unwrap();
+    let llm = cfg.llm.as_ref().unwrap();
+    assert_eq!(llm.provider, "openai-compatible");
+    assert_eq!(llm.model, "demo-chat");
+    assert_eq!(llm.endpoint, "https://example.invalid/v1/chat/completions");
+    assert_eq!(
+        llm.token_file.as_deref(),
+        Some(Path::new("credentials/provider.token"))
+    );
+
+    let rendered = toml::to_string_pretty(&cfg).unwrap();
+    let back: UserConfig = toml::from_str(&rendered).unwrap();
+    assert_eq!(back, cfg);
+}
+
+#[test]
+fn llm_token_file_is_optional_and_unknown_fields_refuse() {
+    let without_file: UserConfig = toml::from_str(
+        "[llm]\nprovider = \"openai-compatible\"\nmodel = \"m\"\nendpoint = \"https://example.invalid/v1/chat/completions\"\n",
+    )
+    .unwrap();
+    assert!(without_file.llm.unwrap().token_file.is_none());
+
+    let unknown = "[llm]\nprovider = \"openai-compatible\"\nmodel = \"m\"\nendpoint = \"https://example.invalid/v1/chat/completions\"\napi_key = \"not-a-supported-field\"\n";
+    assert!(toml::from_str::<UserConfig>(unknown).is_err());
+}
+
+#[test]
+fn project_llm_section_cannot_supply_a_token_file() {
+    let manifest = r#"
+[project]
+name = "demo"
+version = "1.0.0"
+
+[llm]
+default_provider = "openai-compatible"
+default_model = "demo-chat"
+token_file = "project-secret.token"
+"#;
+    assert!(crate::manifest::Manifest::parse_str(manifest).is_err());
+}
+
+#[test]
+fn llm_debug_and_public_parse_errors_never_retain_raw_config_canaries() {
+    const QUERY_CANARY: &str = "query-config-canary-must-never-appear";
+    const PROJECT_TOKEN_CANARY: &str = "project-token-canary-must-never-appear";
+
+    let llm = LlmConfig {
+        provider: "openai-compatible".into(),
+        model: "demo".into(),
+        endpoint: format!("https://example.invalid/v1/chat/completions?secret={QUERY_CANARY}"),
+        token_file: Some("provider.token".into()),
+    };
+    assert!(!format!("{llm:?}").contains(QUERY_CANARY));
+    let cfg = UserConfig {
+        llm: Some(llm),
+        ..UserConfig::default()
+    };
+    assert!(!format!("{cfg:?}").contains(QUERY_CANARY));
+
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    std::fs::write(
+        &path,
+        format!(
+            "[llm]\nprovider = \"openai-compatible\"\nmodel = \"demo\"\nendpoint = \"https://example.invalid/v1/chat/completions?secret={QUERY_CANARY}\n"
+        ),
+    )
+    .unwrap();
+    let error = UserConfig::load_from(&path).unwrap_err();
+    match &error {
+        UserConfigError::Parse { diagnostic, .. } => {
+            assert!(diagnostic.span().is_some());
+            assert!(diagnostic.line().is_some());
+            assert!(diagnostic.column().is_some());
+            assert!(!diagnostic.message().is_empty());
+        }
+        other => panic!("expected safe parse diagnostic, got {other:?}"),
+    }
+    let rendered = error_chain_text(&error);
+    assert!(!rendered.contains(QUERY_CANARY), "{rendered}");
+    assert!(rendered.contains("line") && rendered.contains("column"));
+    assert!(rendered.contains(&path.display().to_string()));
+
+    let manifest = format!(
+        "[project]\nname = \"demo\"\nversion = \"1.0.0\"\n\
+         [llm]\ndefault_provider = \"openai-compatible\"\ndefault_model = \"demo\"\n\
+         api_key = \"{PROJECT_TOKEN_CANARY}\"\n"
+    );
+    let error = crate::manifest::Manifest::parse_str(&manifest).unwrap_err();
+    match &error {
+        crate::Error::ParseToml { diagnostic, .. } => {
+            assert!(diagnostic.span().is_some());
+            assert!(diagnostic.message().contains("unknown field"));
+        }
+        other => panic!("expected safe manifest diagnostic, got {other:?}"),
+    }
+    let rendered = error_chain_text(&error);
+    assert!(!rendered.contains(PROJECT_TOKEN_CANARY), "{rendered}");
+    assert!(rendered.contains("unknown field"), "{rendered}");
 }
 
 // --- One config home: the former location is named, never read ------------

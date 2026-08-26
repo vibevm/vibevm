@@ -68,7 +68,8 @@ where
         path: path.to_path_buf(),
         source,
     })?;
-    toml::from_str::<T>(&text).map_err(|source| Error::parse_toml(path.to_path_buf(), source))
+    toml::from_str::<T>(&text)
+        .map_err(|source| Error::parse_toml(path.to_path_buf(), source, &text))
 }
 
 pub(crate) fn write_toml<T, P>(path: P, value: &T) -> Result<()>

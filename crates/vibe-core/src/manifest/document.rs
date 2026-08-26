@@ -334,7 +334,7 @@ impl Manifest {
     /// the registry reading a manifest out of a fetched package tree.
     pub fn parse_str(text: &str) -> Result<Self> {
         let m: Manifest = toml::from_str(text)
-            .map_err(|source| Error::parse_toml(PathBuf::from(Self::FILENAME), source))?;
+            .map_err(|source| Error::parse_toml(PathBuf::from(Self::FILENAME), source, text))?;
         m.validate()?;
         Ok(m)
     }

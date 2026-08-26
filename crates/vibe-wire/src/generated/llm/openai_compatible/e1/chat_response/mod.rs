@@ -3,8 +3,9 @@
 use serde::{Deserialize, Serialize};
 
 /// Minimal epoch-1 response read by the synchronous OpenAI-compatible Chat
-/// Completions provider seam. Only provider-independent fields needed to
-/// identify the answer and recover ordered assistant text are contracted.
+/// Completions provider seam. The contract identifies the answer, recovers
+/// ordered assistant text, and optionally records provider-independent token
+/// usage for cost accounting.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ChatResponse {
     /// Assistant choices in provider order. The provider layer rejects an empty
@@ -14,6 +15,12 @@ pub struct ChatResponse {
     pub id: String,
 
     pub model: String,
+
+    /// Provider-independent token counts when the endpoint reports them.
+    /// Additional provider-specific usage details remain outside this
+    /// projection.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub usage: Option<Usage>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -36,4 +43,13 @@ pub struct Message {
     /// A Chat Completions choice is an assistant message in the text-only
     /// epoch-1 seam.
     pub role: MessageRole,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Usage {
+    pub completion_tokens: u32,
+
+    pub prompt_tokens: u32,
+
+    pub total_tokens: u32,
 }

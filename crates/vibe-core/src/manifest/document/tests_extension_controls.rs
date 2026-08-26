@@ -13,7 +13,7 @@ fn parse(body: &str) -> Manifest {
 
 fn parse_toml_error(body: &str) -> String {
     match Manifest::parse_str(&format!("{PROJECT}\n{body}")) {
-        Err(Error::ParseToml { detail, .. }) => detail,
+        Err(Error::ParseToml { diagnostic, .. }) => diagnostic.to_string(),
         other => panic!("expected strict TOML shape failure, got {other:?}"),
     }
 }

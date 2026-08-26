@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Minimal epoch-1 response read by the synchronous OpenAI-compatible Chat Completions provider seam. Only provider-independent fields needed to identify the answer and recover ordered assistant text are contracted.",
+    "description": "Minimal epoch-1 response read by the synchronous OpenAI-compatible Chat Completions provider seam. The contract identifies the answer, recovers ordered assistant text, and optionally records provider-independent token usage for cost accounting.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI"
     },
@@ -25,6 +25,15 @@
       }
     }
   },
+  "optionalProperties": {
+    "usage": {
+      "ref": "usage",
+      "metadata": {
+        "x-default": null,
+        "description": "Provider-independent token counts when the endpoint reports them. Additional provider-specific usage details remain outside this projection."
+      }
+    }
+  },
   "definitions": {
     "choice": {
       "properties": {
@@ -46,6 +55,19 @@
         },
         "content": {
           "type": "string"
+        }
+      }
+    },
+    "usage": {
+      "properties": {
+        "prompt_tokens": {
+          "type": "uint32"
+        },
+        "completion_tokens": {
+          "type": "uint32"
+        },
+        "total_tokens": {
+          "type": "uint32"
         }
       }
     }
