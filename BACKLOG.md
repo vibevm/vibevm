@@ -1261,5 +1261,15 @@ structure, and it goes when the file does.
 | @fact:B107-ANCHOR **anchor** | `facts.toml` `exclude` (рулинги F-071 cards/INDEX, F-080 legacy-projections, F-096 DISCOVERY-PROMPT) против include-глобов `vibevm/vibepacks/**/*.md` |
 | @fact:B107-LOCATOR **locator** | панель, шаг `vibe facts check --exhaustive`: три предупреждения «matched no observed file»; корпус наблюдает 98 файлов — пакетные спеки стали `.xml` (K-волны), а include пакетов остался `*.md`-only, так что и исключать нечего; сами файлы живы (`…/cards/INDEX.xml`, `legacy-projections/*.xml`) |
 | @fact:B107-SEVERITY **severity** | P2 |
-| @fact:B107-DISPOSITION **disposition** | `open` — владельческое решение: наблюдать ли пакетный XML-корпус (`**/*.xml` в include + перевод трёх рулингов на живые `.xml`-формы), либо удалить мёртвые паттерны по закону файла; кампанийная перекалибровка, не аварийная |
+| @fact:B107-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-27 (`f8f197cd`, `c195eae1`)**: корпус наблюдает Markdown и XML в живой раскладке, все 502 судимые записи перенесены один-к-одному (98 прежних расширений + 404 XML), зеркало/кэш/состояние сходятся на 508 файлах, а каждый из шести exclude-паттернов снова матчится хотя бы один раз. 19 548 verdicts и 42 318 evidence-строк сохранены; migration/stability-харнессы 18/18 и 15/15 |
 | @fact:B107-FILED **filed by** | посадка переезда раскладки (PROP-052 R6), 2026-08-24 |
+
+### B-108 — contention-тест package-skill запускает таймер до того, как parent разрешает старт {#b-108}
+
+| поле | значение |
+|---|---|
+| @fact:B108-ANCHOR **anchor** | `crates/vibe-mcp/src/pkgskill/receipt/concurrency_tests.rs` — `two_child_reconciles_converge_from_one_baseline` |
+| @fact:B108-LOCATOR **locator** | каждый child пишет `ready-*.marker`, затем на строках 194–198 запускает собственный 10-секундный `BUDGET` ожидания общего `go.marker`; parent ждёт оба ready последовательно и пишет go только на строках 131–133. Под тяжёлой параллельной сборкой ранний child может исчерпать бюджет до release. Наблюдено 2 падения примерно в 19 полных прогонах при R8.1 portability repair; отдельные тёплые повторы затем зелёные, product-law тесты не падали |
+| @fact:B108-SEVERITY **severity** | P3 |
+| @fact:B108-DISPOSITION **disposition** | `open` — test-harness flake, не product-дефект. Сделать barrier без pre-release wall-clock бюджета либо передавать child exit-reason по каналу, который parent действительно читает; текущий stdout child направлен в null/libtest capture и скрывает причину exit 101 |
+| @fact:B108-FILED **filed by** | независимая приёмка R8.1 receipt portability, 2026-08-27 |
