@@ -52,8 +52,11 @@ fronts currently in flight. A worker report or old worktree is never completion.
       parse→…→emit artifact schedule with crash-safe publication.
 - [x] **R3.3** — immutable test-only verifier at the pass-manager boundary
       (`15793f2e`; verifier-off production bytes/errors preserved).
-- [ ] **R6.2a before R3.4** — schema-first six-carrier compiler IR wire and
-      corpus (`codex/r6-ir-wire`); then strict domain conversion.
+- [x] **R6.2a before R3.4** — schema-first six-carrier compiler IR wire and
+      corpus (`c26cd039`; strict gates, exact builtin oracles, final freeze).
+- [ ] **R6.2b before R3.4** — strict lossless domain↔wire conversion; owned
+      custom target identity, with registration/invocation still deferred to
+      R6.3.
 - [ ] **R3.4** — compile snapshots/timings over that same wire.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.

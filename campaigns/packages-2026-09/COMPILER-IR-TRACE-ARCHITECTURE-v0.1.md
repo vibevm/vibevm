@@ -80,6 +80,16 @@ reconstructed field-by-field, digests/base64 are recomputed where the manager
 owns them, and a domain value that cannot fit epoch 1 refuses rather than
 truncating.
 
+The open `artifact_target` vocabulary is lossless at this boundary. R6.2b
+replaces the test-only borrowed custom spelling with an owned, validated
+backend identity, and every valid custom-target corpus carrier must survive
+wire→domain→wire exactly. This identity constructor is crate-private and does
+not imply that an implementation is installed. R6.3 still owns registry
+membership, backend selection and native invocation. Decode never leaks an
+untrusted string, interns it globally or consults the runtime registry; an
+`UnsupportedCustomTarget` refusal would be an undocumented sixteenth gate and
+is forbidden.
+
 ### 2.3 DocTree encapsulation
 
 `DocTree` gains a crate-private checked parts constructor/view. Conversion does

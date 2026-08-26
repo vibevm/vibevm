@@ -116,7 +116,8 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence / gap |
 |---|---|---|
 | R6.1 `compiler_internals` + executable pass grammar | partial | conspicuous flag/raw table land; kind-specific required/forbidden fields intentionally deferred |
-| R6.2 whole-IR wire | missing | one JTD epoch with six discriminated carriers required |
+| R6.2a whole-IR wire epoch | done | `c26cd039`; six strict carriers, generated types, derived corpus, 42 conversion-gate/producer-oracle tests and independent final freeze |
+| R6.2b strict domain conversion | missing | one lossless `AnyIr` projection implementing all named gates; open custom target identity is owned here, not refused until R6.3 |
 | R6.3 before/after/replace, frontend/backend | missing | compiler never consumes manifest pass rows |
 | R6.4 mandatory verifier after plugin passes | missing | depends on R3.3/R5 |
 | R6.5 `.txt` frontend + JSON lane backend e2e | missing | no custom format registry/backend artifact surface |
@@ -256,6 +257,14 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     Phase-native loading can land from the lifecycle envelope, while native
     compiler parity depends on the accepted R6 whole-IR payload/conversion and
     may not invent an interim compile DTO.
+18. The compiler wire's open `artifact_target` is already a valid epoch-1
+    identity, not a future-only spelling. R6.2b therefore gives
+    `ArtifactTarget` an owned, validated custom backend id and round-trips every
+    valid carrier without an `UnsupportedCustomTarget` carve-out. This does not
+    install or execute a backend: R6.3 separately owns registration, selection
+    and invocation. Leaking attacker-controlled strings, interning them in a
+    process-global table or consulting the runtime registry during decode are
+    forbidden.
 
 ## 6. Physical state and loss prevention
 
