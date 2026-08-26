@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-26T19:36:42Z",
+  "updated_at": "2026-08-26T21:28:15Z",
   "files": {
     "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "ff7af977a9d019455442fbeac89952742fc274eda60afd4214c24eda5d4b7528",
@@ -161974,7 +161974,7 @@
       "issue_count": 0
     },
     "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml": {
-      "content_hash": "e002bd6eb6d5574f70601a1928856c8880be8545c665d9542e9acfd4a0de038b",
+      "content_hash": "fbf159c17b239ac77862926bf5c111ecd1586c1ae84a1083916c9d38017a887a",
       "rollup": {
         "explicit": [
           "spec",
@@ -161988,11 +161988,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 54,
-        "fact_count": 53,
+        "marker_count": 57,
+        "fact_count": 56,
         "unmarked_facts": 0
       },
-      "marker_count": 54,
+      "marker_count": 57,
       "unit_count": 14,
       "issue_count": 0
     },
