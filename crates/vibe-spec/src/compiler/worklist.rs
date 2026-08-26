@@ -39,12 +39,12 @@ impl ErrorOwners {
 #[derive(Debug, Clone)]
 enum DiscoveryKey {
     Spec(String),
-    Simple(String),
+    Simple(DocumentKey),
 }
 
 enum ArtifactRoot {
     Normal { input: usize, keys: Vec<String> },
-    Simple { input: usize, key: String },
+    Simple { input: usize, key: DocumentKey },
 }
 
 pub(crate) fn discover(
@@ -219,10 +219,45 @@ fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
         .collect()
 }
 
-pub(crate) fn document_key(address: &DocumentAddress) -> String {
+/// The canonical identity of one gathered document.
+///
+/// Typed, never a delimiter-joined string. A joined spelling such as
+/// `static:{origin}\0{path}` cannot separate `("a", "b\0c")` from `("a\0b", "c")`,
+/// so two genuinely distinct static entries would land on one map slot and the
+/// second would silently overwrite the first. This is the key every map that
+/// can overwrite a document uses — discovery, close, and the inter-pass gather
+/// guard alike — so the guard's collision set is exactly the map's.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub(crate) enum DocumentKey {
+    Spec(String),
+    Static { origin: String, path: String },
+}
+
+impl DocumentKey {
+    /// A human label for diagnostics; never used as an identity.
+    pub(crate) fn label(&self) -> String {
+        match self {
+            Self::Spec(key) => key.clone(),
+            Self::Static { origin, path } => {
+                format!("static entry (origin {origin:?}, path {path:?})")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for DocumentKey {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str(&self.label())
+    }
+}
+
+pub(crate) fn document_key(address: &DocumentAddress) -> DocumentKey {
     match address {
-        DocumentAddress::Spec(address) => address.without_pin(),
-        DocumentAddress::StaticEntry { origin, path } => format!("static:{origin}\0{path}"),
+        DocumentAddress::Spec(address) => DocumentKey::Spec(address.without_pin()),
+        DocumentAddress::StaticEntry { origin, path } => DocumentKey::Static {
+            origin: origin.clone(),
+            path: path.clone(),
+        },
     }
 }
 

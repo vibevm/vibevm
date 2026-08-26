@@ -9,10 +9,22 @@ use super::{ClosureNodeId, ContributionMeta, DocumentAddress, StaticCompileMode}
 pub(crate) struct LinkInputDigest(pub(crate) [u8; 32]);
 
 /// The Markdown fence state at one linked occurrence boundary.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum LinkFenceSnapshot {
     Closed,
     Open { delimiter: char, run: usize },
+}
+
+impl LinkFenceSnapshot {
+    /// The same boundary state as the Markdown fence machine sees it, so a
+    /// consumer of the lane can resume scanning a body exactly where link left
+    /// off instead of assuming every body starts outside a fence.
+    pub(crate) fn markdown(&self) -> crate::doctree::FenceSnapshot {
+        match *self {
+            Self::Closed => crate::doctree::FenceSnapshot::Closed,
+            Self::Open { delimiter, run } => crate::doctree::FenceSnapshot::Open { delimiter, run },
+        }
+    }
 }
 
 /// Typed reversible-marker identity; concrete comment bytes belong to emit.

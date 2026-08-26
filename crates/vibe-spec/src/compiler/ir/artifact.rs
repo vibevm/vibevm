@@ -184,7 +184,10 @@ impl ArtifactPlan {
         context: ArtifactContext,
         contributions: Vec<ArtifactInput>,
     ) -> Result<Self, ArtifactPlanError> {
-        let mut simple_identities: BTreeMap<String, (usize, &SourceIr)> = BTreeMap::new();
+        // The identity is the typed (origin, path) pair, never a joined string:
+        // a delimiter spelling cannot separate ("a", "b\0c") from ("a\0b", "c"),
+        // so a plan holding both would drop one conflict check on the floor.
+        let mut simple_identities: BTreeMap<(&str, &str), (usize, &SourceIr)> = BTreeMap::new();
         for (index, contribution) in contributions.iter().enumerate() {
             contribution
                 .validate()
@@ -199,7 +202,7 @@ impl ArtifactPlan {
                         origin: meta.origin.clone(),
                     });
                 }
-                let key = format!("{}\0{}", meta.origin, meta.path);
+                let key = (meta.origin.as_str(), meta.path.as_str());
                 if let Some((first, prior)) = simple_identities.get(&key) {
                     if *prior != source {
                         return Err(ArtifactPlanError::ConflictingSimpleIdentity {

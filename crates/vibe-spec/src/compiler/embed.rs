@@ -139,8 +139,10 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
     let mut accepted_occurrences = HashSet::new();
     let mut simple_updates = Vec::new();
     let mut normal_seen = HashSet::new();
-    let mut simple_cache: HashMap<String, (DocTree, BTreeMap<String, SpecAddress>)> =
-        HashMap::new();
+    let mut simple_cache: HashMap<
+        super::worklist::DocumentKey,
+        (DocTree, BTreeMap<String, SpecAddress>),
+    > = HashMap::new();
     for root in roots {
         match root {
             EmbedRoot::Normal(node) if normal_seen.insert(node) => {
@@ -193,12 +195,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                 else {
                     unreachable!()
                 };
-                let base = match &document.address {
-                    DocumentAddress::Spec(address) => address.without_pin(),
-                    DocumentAddress::StaticEntry { origin, path } => {
-                        format!("static:{origin}\0{path}")
-                    }
-                };
+                let base = super::worklist::document_key(&document.address);
                 let (tree, aliases) = if let Some(cached) = simple_cache.get(&base) {
                     cached.clone()
                 } else {
@@ -221,7 +218,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                     let mut ignore_edge = |_: &str, _: usize, _: &SpecAddress| {};
                     let expanded = expand_with(
                         &document.tree.text(document.tree.root()),
-                        &base,
+                        &base.label(),
                         &mut resolve,
                         &mut ignore_edge,
                     );

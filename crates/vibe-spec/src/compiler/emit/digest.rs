@@ -65,7 +65,7 @@ pub(super) fn chunks_digest(chunks: &[LaneChunk]) -> [u8; 32] {
     digest.finish()
 }
 
-pub(super) fn bytes_digest(bytes: &[u8]) -> [u8; 32] {
+pub(crate) fn bytes_digest(bytes: &[u8]) -> [u8; 32] {
     let mut digest = StableDigest::new(BYTES_DOMAIN);
     digest.field(bytes);
     digest.finish()

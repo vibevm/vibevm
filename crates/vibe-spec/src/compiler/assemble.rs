@@ -11,7 +11,7 @@ use project::{LaneProjectionError, project_lane};
 mod transition;
 pub(crate) use transition::{LaneTransitionError, validate_assembled_transition};
 mod validate;
-pub(crate) use validate::{LaneValidationError, validate_lane};
+pub(crate) use validate::{LaneShape, LaneValidationError, validate_lane, validate_shape};
 
 pub(crate) const ASSEMBLE_PASS_NAME: &str = "assemble";
 
@@ -85,6 +85,10 @@ fn assemble_closure(input: ClosureIr) -> Result<LaneIr, AssemblePassError> {
 #[cfg(test)]
 #[path = "assemble/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "assemble/fence_boundary_tests.rs"]
+mod fence_boundary_tests;
 
 #[cfg(test)]
 #[path = "assemble/manager_tests.rs"]

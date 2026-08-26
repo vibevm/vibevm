@@ -36,7 +36,7 @@ fn occurrence(node: usize, requested: &str) -> ClosureOccurrence {
     }
 }
 
-fn full_context() -> ArtifactContext {
+pub(super) fn full_context() -> ArtifactContext {
     ArtifactContext::new(
         ArtifactId::new("static-xml").unwrap(),
         ArtifactTarget::StaticXml,
@@ -49,7 +49,7 @@ fn full_context() -> ArtifactContext {
     .unwrap()
 }
 
-fn applied_closure(context: ArtifactContext) -> ClosureIr {
+pub(super) fn applied_closure(context: ArtifactContext) -> ClosureIr {
     let a_request = "spec://org.demo/a/boot/a#root~r7";
     let shared_request = "spec://org.demo/shared/boot/shared#root";
     let empty_request = "spec://org.demo/empty/boot/empty#root";
@@ -202,8 +202,8 @@ pub(super) fn independent_expected_lane(closure: &ClosureIr) -> LaneIr {
             requested_address: address.clone(),
             origin: document.origin.clone(),
             marker: marker.clone(),
-            fence_before: fence_before.clone(),
-            fence_after: fence_after.clone(),
+            fence_before: *fence_before,
+            fence_after: *fence_after,
             body: body.clone(),
         })));
         if *trailing_newline_required {
@@ -238,8 +238,8 @@ pub(super) fn independent_expected_lane(closure: &ClosureIr) -> LaneIr {
         occurrence: *occurrence,
         address: address.clone(),
         origin: document.origin.clone(),
-        fence_before: fence_before.clone(),
-        fence_after: fence_after.clone(),
+        fence_before: *fence_before,
+        fence_after: *fence_after,
         body: body.clone(),
     }))];
     if *trailing_newline_required {
@@ -571,18 +571,21 @@ fn transition_rejects_context_provenance_rename_request_and_simple_origin_mutati
     assert!(validate_lane(&body).is_ok());
     assert!(validate_assembled_transition(&closure, &body).is_err());
 
+    // A context change the lane itself cannot see: the target stays structured
+    // and the frame still matches, so `validate_lane` is blind and only the
+    // transition catches the drift.
     let changed_context = ArtifactContext::new(
-        ArtifactId::new("static-md").unwrap(),
-        ArtifactTarget::StaticMarkdown,
+        ArtifactId::new("static-xml").unwrap(),
+        ArtifactTarget::StaticXml,
         ArtifactFrame::StaticLane {
-            generated_path: "vibevm/vibespecs/boot/STATIC.md".to_string(),
+            generated_path: "vibevm/vibespecs/boot/OTHER.xml".to_string(),
             source_root: "vibevm/vibedeps".to_string(),
         },
         StaticCompileMode::QualifyPerNode,
     )
     .unwrap();
     let mut changed_frame = lane.frame.clone();
-    changed_frame.generated_path = Some("vibevm/vibespecs/boot/STATIC.md".to_string());
+    changed_frame.generated_path = Some("vibevm/vibespecs/boot/OTHER.xml".to_string());
     let context = LaneIr::assembled(
         changed_context,
         lane.source_node_count,

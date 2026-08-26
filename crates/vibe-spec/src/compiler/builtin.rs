@@ -137,6 +137,11 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(LinkPass::new())
             .expect("the static built-in link schedule is valid");
+        #[cfg(test)]
+        // The R3.3 test-only enabling seam: every built-in pass output crosses
+        // the real verifier hook in unit tests. Production construction keeps
+        // the verifier off, byte- and error-identical to before.
+        pipeline.enable_verify_each_for_tests();
         Self {
             pipeline,
             close_state,
@@ -183,16 +188,22 @@ impl BuiltinSchedule {
         &self,
         documents: Vec<DocumentIr>,
     ) -> Result<ClosureIr, crate::pipeline::CompileError> {
-        let documents = self.pipeline.gather_documents(documents);
-        self.map_artifact_result(self.pipeline.run_to_closure(documents))
+        let closure = self
+            .pipeline
+            .gather_documents(documents)
+            .and_then(|documents| self.pipeline.run_to_closure(documents));
+        self.map_artifact_result(closure)
     }
 
     fn assemble(
         &self,
         documents: Vec<DocumentIr>,
     ) -> Result<LaneIr, crate::pipeline::CompileError> {
-        let documents = self.pipeline.gather_documents(documents);
-        self.map_artifact_result(self.pipeline.run_to_lane(documents))
+        let lane = self
+            .pipeline
+            .gather_documents(documents)
+            .and_then(|documents| self.pipeline.run_to_lane(documents));
+        self.map_artifact_result(lane)
     }
 
     fn emit(
@@ -201,7 +212,14 @@ impl BuiltinSchedule {
         plan: &ArtifactPlan,
         owners: &worklist::ErrorOwners,
     ) -> Result<EmittedArtifact, ArtifactCompileError> {
-        let documents = self.pipeline.gather_documents(documents);
+        let documents = match self.pipeline.gather_documents(documents) {
+            Ok(documents) => documents,
+            Err(error) => {
+                return Err(ArtifactCompileError::Manager {
+                    reason: error.to_string(),
+                });
+            }
+        };
         match self.pipeline.run_to_emitted(documents) {
             Ok(emitted) => Ok(emitted),
             Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
@@ -282,6 +300,19 @@ impl BuiltinSchedule {
                     }),
                 }
             }
+            Err(CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
+                pass,
+                source,
+                ..
+            })) => Err(ArtifactCompileError::Pass {
+                pass: pass.as_str().to_string(),
+                reason: format!("inter-pass verification rejected the output: {source}"),
+            }),
+            Err(CompilerPipelineError::Segment(
+                error @ PassSegmentError::InputVerification { .. },
+            )) => Err(ArtifactCompileError::Manager {
+                reason: format!("inter-pass verification rejected the segment input: {error}"),
+            }),
             Err(error) => Err(ArtifactCompileError::Manager {
                 reason: error.to_string(),
             }),
@@ -343,6 +374,22 @@ impl BuiltinSchedule {
                         panic!("the assemble pass returned an unexpected error type: {source}")
                     });
                 panic!("the built-in assemble pass rejected validated compiler state: {error}")
+            }
+            // Verification failures keep their honest pass attribution instead
+            // of dissolving into the generic schedule panic below. Reachable
+            // only under the test-only enabling seam; production construction
+            // never produces these variants.
+            Err(CompilerPipelineError::Segment(PassSegmentError::VerificationFailed {
+                pass,
+                source,
+                ..
+            })) => panic!("inter-pass verification rejected `{pass}` output: {source}"),
+            Err(CompilerPipelineError::Segment(PassSegmentError::InputVerification {
+                input,
+                source,
+            })) => panic!("inter-pass verification rejected the {input:?} segment input: {source}"),
+            Err(CompilerPipelineError::GatherVerification { source }) => {
+                panic!("inter-pass verification rejected the gather-documents boundary: {source}")
             }
             Err(error) => panic!("the private built-in artifact schedule is invalid: {error}"),
         }
@@ -410,154 +457,5 @@ pub(crate) fn compile_linked_closure(
 }
 
 #[cfg(test)]
-mod tests {
-    use specmark::verifies;
-
-    use super::*;
-    use crate::SpecAddress;
-    use crate::compiler::ir::{DocumentAddress, SourceFormatId};
-    use crate::compiler::pass::{IrPayload, PassSegmentError};
-    use crate::compiler::pipeline::{CompilerPipelineError, ScheduleItem};
-
-    fn source(format: &str, text: &str) -> SourceIr {
-        SourceIr::new(
-            DocumentAddress::Spec(
-                SpecAddress::parse("spec://org.demo/pkg/common/doc#root").unwrap(),
-            ),
-            SourceFormatId::new(format).unwrap(),
-            text,
-        )
-    }
-
-    fn seed() -> SpecAddress {
-        SpecAddress::parse("spec://org.demo/pkg/common/doc#root").unwrap()
-    }
-
-    fn plan(mode: StaticCompileMode) -> ArtifactPlan {
-        ArtifactPlan::compatibility(seed(), mode)
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_assemble() {
-        let pipeline = BuiltinSchedule::assembled(&plan(StaticCompileMode::Plain)).pipeline;
-        let schedule = pipeline.schedule();
-
-        assert!(matches!(
-            schedule.as_slice(),
-            [
-                ScheduleItem::Pass(parse),
-                ScheduleItem::GatherDocuments,
-                ScheduleItem::Pass(close),
-                ScheduleItem::Pass(merge),
-                ScheduleItem::Pass(embed),
-                ScheduleItem::Pass(qualify),
-                ScheduleItem::Pass(absorb),
-                ScheduleItem::Pass(link),
-                ScheduleItem::Pass(assemble),
-            ] if parse.name.as_str() == PARSE_PASS_NAME
-                && parse.input == SourceIr::SHAPE
-                && parse.output == DocumentIr::SHAPE
-                && close.name.as_str() == CLOSE_PASS_NAME
-                && close.input == super::super::ir::Documents::SHAPE
-                && close.output == ClosureIr::SHAPE
-                && merge.name.as_str() == MERGE_PASS_NAME
-                && merge.input == ClosureIr::SHAPE
-                && merge.output == ClosureIr::SHAPE
-                && embed.name.as_str() == EMBED_PASS_NAME
-                && embed.input == ClosureIr::SHAPE
-                && embed.output == ClosureIr::SHAPE
-                && qualify.name.as_str() == QUALIFY_PASS_NAME
-                && qualify.input == ClosureIr::SHAPE
-                && qualify.output == ClosureIr::SHAPE
-                && absorb.name.as_str() == ABSORB_PASS_NAME
-                && absorb.input == ClosureIr::SHAPE
-                && absorb.output == ClosureIr::SHAPE
-                && link.name.as_str() == LINK_PASS_NAME
-                && link.input == ClosureIr::SHAPE
-                && link.output == ClosureIr::SHAPE
-                && assemble.name.as_str() == ASSEMBLE_PASS_NAME
-                && assemble.input == ClosureIr::SHAPE
-                && assemble.output == LaneIr::SHAPE
-        ));
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
-    fn parse_runs_once_for_each_addressed_document_then_gathers() {
-        let schedule = BuiltinSchedule::linked(&plan(StaticCompileMode::Plain));
-        let documents = schedule
-            .pipeline
-            .run_documents(vec![
-                source(MARKDOWN_FORMAT, "# One {#one}\n"),
-                source(MARKDOWN_FORMAT, "# Two {#two}\n"),
-            ])
-            .unwrap();
-
-        assert_eq!(documents.len(), 2);
-        assert!(
-            documents
-                .iter()
-                .any(|document| document.tree().find_by_anchor("one").is_some())
-        );
-        assert!(
-            documents
-                .iter()
-                .any(|document| document.tree().find_by_anchor("two").is_some())
-        );
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn removing_parse_makes_the_production_schedule_unrunnable() {
-        let error = CompilerPipeline::default()
-            .run_documents(vec![source(MARKDOWN_FORMAT, "# Doc {#root}\n")])
-            .unwrap_err();
-
-        assert!(matches!(
-            error,
-            CompilerPipelineError::ScheduleBoundary {
-                boundary: "document segment input",
-                ..
-            }
-        ));
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn parse_failure_keeps_the_pass_name_and_concrete_source() {
-        let error = BuiltinSchedule::linked(&plan(StaticCompileMode::Plain))
-            .pipeline
-            .run_documents(vec![source("unsupported", "body")])
-            .unwrap_err();
-        let CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }) = error
-        else {
-            panic!("expected the parse pass failure")
-        };
-
-        assert_eq!(pass.as_str(), PARSE_PASS_NAME);
-        let parse = source
-            .downcast_ref::<ParseError>()
-            .expect("the concrete parse error must survive manager attribution");
-        assert_eq!(parse.format, "unsupported");
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn removing_close_makes_the_gathered_schedule_unrunnable() {
-        let mut pipeline = CompilerPipeline::default();
-        pipeline.push_document(ParsePass::new()).unwrap();
-        let documents = pipeline
-            .run_documents(vec![source(MARKDOWN_FORMAT, "# Doc {#root}\n")])
-            .unwrap();
-
-        let error = pipeline.run_to_closure(documents).unwrap_err();
-        assert!(matches!(
-            error,
-            CompilerPipelineError::ScheduleBoundary {
-                boundary: "artifact segment input",
-                ..
-            }
-        ));
-    }
-}
+#[path = "builtin/tests.rs"]
+mod tests;

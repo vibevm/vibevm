@@ -20,6 +20,8 @@ use crate::directives::Directives;
 
 mod fence;
 pub(crate) use fence::{FenceSnapshot, FenceTracker, fence_mask};
+mod invariant;
+pub(crate) use invariant::DocTreeInvariantError;
 
 /// An index into a [`DocTree`]'s node arena.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -84,9 +86,21 @@ impl DocTree {
     /// occurrence in the index and records the collision (see
     /// [`duplicate_anchors`](Self::duplicate_anchors)).
     pub fn parse(source: &str) -> Self {
+        Self::parse_from_fence(source, FenceSnapshot::Closed)
+    }
+
+    /// Parse a *fragment* that resumes at a known Markdown fence boundary.
+    ///
+    /// A linked lane occurrence may begin inside a fence its predecessor opened
+    /// (`LinkFenceSnapshot::Open`). Parsing such a body from the closed state
+    /// would read fenced `#` and `##<ID>` lines as real headings and facts —
+    /// inventing nodes, and with them anchor collisions the document does not
+    /// have. Every consumer that re-parses an occurrence body goes through this
+    /// seam; there is no second, ad-hoc scanner.
+    pub(crate) fn parse_from_fence(source: &str, fence: FenceSnapshot) -> Self {
         let directives = Directives::parse(source);
         let lines: Vec<String> = source.lines().map(String::from).collect();
-        let fenced = fence_mask(&lines);
+        let fenced = fence::mask_from(&lines, fence);
 
         let mut nodes = vec![Node {
             id: None,
@@ -360,6 +374,14 @@ impl DocTree {
     /// [`len`](Self::len).
     pub fn is_empty(&self) -> bool {
         false
+    }
+
+    /// Prove this tree's arena is one well-formed tree (the inter-pass
+    /// verifier's document-level structural law, PROP-054
+    /// `##INTER-PASS-VERIFIER`). Checked traversal only; a malformed arena is a
+    /// typed error, never a panic.
+    pub(crate) fn verify_structure(&self) -> Result<(), DocTreeInvariantError> {
+        invariant::verify_structure(self)
     }
 }
 

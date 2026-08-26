@@ -14,6 +14,17 @@ pub(crate) struct FenceTracker {
 }
 
 impl FenceTracker {
+    /// Resume from an exact boundary state — the lane carries one per node, so
+    /// a body wholly inside a fence its predecessor opened is read as fenced.
+    pub(crate) fn from_snapshot(snapshot: FenceSnapshot) -> Self {
+        Self {
+            open: match snapshot {
+                FenceSnapshot::Closed => None,
+                FenceSnapshot::Open { delimiter, run } => Some((delimiter, run)),
+            },
+        }
+    }
+
     pub(crate) fn snapshot(&self) -> FenceSnapshot {
         match self.open {
             Some((delimiter, run)) => FenceSnapshot::Open { delimiter, run },
@@ -46,7 +57,12 @@ impl FenceTracker {
 /// A precomputed mask marking lines inside fenced code blocks, including the
 /// fence lines themselves.
 pub(crate) fn fence_mask(lines: &[String]) -> Vec<bool> {
-    let mut tracker = FenceTracker::default();
+    mask_from(lines, FenceSnapshot::Closed)
+}
+
+/// [`fence_mask`] for a fragment that resumes at a known boundary.
+pub(crate) fn mask_from(lines: &[String], snapshot: FenceSnapshot) -> Vec<bool> {
+    let mut tracker = FenceTracker::from_snapshot(snapshot);
     lines.iter().map(|line| tracker.classify(line)).collect()
 }
 

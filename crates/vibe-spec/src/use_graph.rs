@@ -123,6 +123,7 @@ pub(crate) fn source_addresses(
     Ok(out)
 }
 
+pub(crate) mod cycle;
 pub(crate) mod topology;
 
 #[cfg(test)]
@@ -241,6 +242,37 @@ mod tests {
             }
             other => panic!("expected a cycle, got {other:?}"),
         }
+    }
+
+    /// Two cycles through one seed, `a-b-a` and `a-c-a`, declared in both
+    /// orders. Node ids are handed out by the discovery walk, so an id-keyed
+    /// report would name whichever branch was declared first; the law keys on
+    /// the stable pinless address, so the offender and the exact path are the
+    /// same either way.
+    #[test]
+    fn the_reported_cycle_does_not_depend_on_declaration_order() {
+        let a = "spec://org.vibevm.core/vibevm/a#r";
+        let b = "spec://org.vibevm.core/vibevm/b#r";
+        let c = "spec://org.vibevm.core/vibevm/c#r";
+        let report = |first: &str, second: &str| {
+            let src = MockSource::new(&[
+                (a, &format!("#use {first}\n#use {second}")),
+                (b, &format!("#use {a}")),
+                (c, &format!("#use {a}")),
+            ]);
+            match topo_order_from(&SpecAddress::parse(a).unwrap(), &src) {
+                Err(UseGraphError::Cycle(path)) => path,
+                other => panic!("expected a cycle, got {other:?}"),
+            }
+        };
+
+        let declared = report(b, c);
+        let swapped = report(c, b);
+        assert_eq!(
+            declared, swapped,
+            "the report must not follow declaration order"
+        );
+        assert_eq!(declared, vec![a.to_string(), b.to_string(), a.to_string()]);
     }
 
     #[test]

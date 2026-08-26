@@ -75,6 +75,17 @@ pub(crate) fn validate_planned_absorption(
     absorption::validate(plan, closure)
 }
 
+/// The pure READ-ONCE analysis over a pre-qualification view, read-only.
+///
+/// The inter-pass verifier derives its transition witness through this same
+/// facade, so the expected absorption plan and the pass's own planning can
+/// never be two different algorithms.
+pub(crate) fn analyze_absorption(
+    closure: &ClosureIr,
+) -> Result<super::ir::AbsorptionPlan, QualifyPassError> {
+    absorption::analyze(closure)
+}
+
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum QualifyPassError {
     #[error("qualify requires pending qualification state")]

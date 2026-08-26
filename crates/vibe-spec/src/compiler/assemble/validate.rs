@@ -37,12 +37,36 @@ pub(crate) enum LaneValidationError {
     },
 }
 
+/// What the intrinsic walk observed beyond pass/fail: the fence state each
+/// top-level contribution leaves behind, in contribution order.
+///
+/// The intrinsic validator owns *shape*; whether an open boundary is legal is a
+/// target policy the inter-pass verifier owns. Handing the summary out keeps
+/// both laws on the single [`FenceTracker`] walk below — no second scan, and no
+/// parallel grammar — while leaving `validate_lane`'s verdict exactly what it
+/// was before R3.3.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct LaneShape {
+    pub(crate) closing_fences: Vec<LinkFenceSnapshot>,
+}
+
 /// Validate a Lane using only the Lane value and its immutable context.
+///
+/// This is the production verdict: `AssemblePass`, `EmitPass` and the assemble
+/// transition all run it, so it must accept exactly what it accepted before
+/// R3.3. It deliberately drops the shape summary.
 pub(crate) fn validate_lane(lane: &LaneIr) -> Result<(), LaneValidationError> {
+    validate_shape(lane).map(|_| ())
+}
+
+/// The same intrinsic walk, returning its [`LaneShape`] summary for the
+/// inter-pass verifier.
+pub(crate) fn validate_shape(lane: &LaneIr) -> Result<LaneShape, LaneValidationError> {
     validate_frame(lane)?;
+    let mut closing_fences = Vec::with_capacity(lane.contributions.len());
     for (contribution, entry) in lane.contributions.iter().enumerate() {
         validate_meta(contribution, entry)?;
-        match entry {
+        closing_fences.push(match entry {
             LaneContribution::Normal { seed, chunks, .. } => {
                 require(
                     seed.0 < lane.source_node_count,
@@ -50,15 +74,18 @@ pub(crate) fn validate_lane(lane: &LaneIr) -> Result<(), LaneValidationError> {
                     0,
                     "seed node bounds",
                 )?;
-                validate_normal(contribution, chunks, lane.source_node_count)?;
+                validate_normal(contribution, chunks, lane.source_node_count)?
             }
             LaneContribution::Simple {
                 address, chunks, ..
             } => validate_simple(contribution, address, chunks)?,
-            LaneContribution::Elided { .. } | LaneContribution::Hoisted { .. } => {}
-        }
+            // Neither emits bytes, so neither can leave a fence open.
+            LaneContribution::Elided { .. } | LaneContribution::Hoisted { .. } => {
+                LinkFenceSnapshot::Closed
+            }
+        });
     }
-    Ok(())
+    Ok(LaneShape { closing_fences })
 }
 
 fn validate_frame(lane: &LaneIr) -> Result<(), LaneValidationError> {
@@ -102,11 +129,14 @@ fn validate_meta(contribution: usize, entry: &LaneContribution) -> Result<(), La
     Ok(())
 }
 
+/// Returns the fence state this contribution leaves behind — the very tracker
+/// the occurrence-by-occurrence `fence_before`/`fence_after` checks already run,
+/// never a second scan with a parallel grammar.
 fn validate_normal(
     contribution: usize,
     chunks: &[LaneChunk],
     source_node_count: usize,
-) -> Result<(), LaneValidationError> {
+) -> Result<LinkFenceSnapshot, LaneValidationError> {
     let mut cursor = LaneCursor::new(contribution, chunks);
     let mut occurrence = 0;
     let mut fence = FenceTracker::default();
@@ -226,14 +256,16 @@ fn validate_normal(
         )?;
         occurrence += 1;
     }
-    Ok(())
+    Ok(fence_snapshot(fence.snapshot()))
 }
 
+/// Returns the fence state this contribution leaves behind, from its own
+/// tracker — see [`validate_normal`].
 fn validate_simple(
     contribution: usize,
     address: &DocumentAddress,
     chunks: &[LaneChunk],
-) -> Result<(), LaneValidationError> {
+) -> Result<LinkFenceSnapshot, LaneValidationError> {
     let DocumentAddress::StaticEntry {
         origin: address_origin,
         path: address_path,
@@ -296,7 +328,7 @@ fn validate_simple(
     if let Some(chunk) = cursor.peek() {
         return Err(cursor.unexpected(cursor.index, "end of simple contribution", chunk));
     }
-    Ok(())
+    Ok(fence_snapshot(fence.snapshot()))
 }
 
 fn validate_newline(

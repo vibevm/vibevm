@@ -172,8 +172,8 @@ fn project_normal(
         requested_address: address.clone(),
         origin: document.origin.clone(),
         marker: marker.clone(),
-        fence_before: fence_before.clone(),
-        fence_after: fence_after.clone(),
+        fence_before: *fence_before,
+        fence_after: *fence_after,
         body: body.clone(),
     })));
     if *trailing_newline_required {
@@ -222,8 +222,8 @@ fn project_simple(
         occurrence: 0,
         address: actual_address.clone(),
         origin: origin.to_string(),
-        fence_before: fence_before.clone(),
-        fence_after: fence_after.clone(),
+        fence_before: *fence_before,
+        fence_after: *fence_after,
         body: body.clone(),
     })));
     if *trailing_newline_required {

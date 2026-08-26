@@ -14,6 +14,7 @@ use std::marker::PhantomData;
 use super::ir::{
     ClosureIr, DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, LaneIr, SourceIr,
 };
+use super::verify::IrVerifier;
 
 /// Stable identity used to position and attribute one compiler pass.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -135,7 +136,7 @@ pub(crate) trait Pass: Send + Sync + 'static {
     fn run(&self, input: Self::Input) -> Result<Self::Output, Self::Error>;
 }
 
-trait DynPass: Send + Sync {
+pub(crate) trait DynPass: Send + Sync {
     fn descriptor(&self) -> PassDescriptor;
     fn run_erased(&self, input: AnyIr) -> Result<AnyIr, PassSegmentError>;
 }
@@ -204,6 +205,17 @@ impl PassSegment {
         Ok(())
     }
 
+    /// Test-only route past the typed pass surface, so the erased manager's
+    /// own defensive checks (wrong runtime output carrier) stay provable.
+    /// Production passes enter through [`Self::push`].
+    #[cfg(test)]
+    pub(crate) fn push_erased_for_test(
+        &mut self,
+        pass: Box<dyn DynPass>,
+    ) -> Result<(), PassSegmentError> {
+        self.push_dyn(pass)
+    }
+
     pub(crate) fn descriptors(&self) -> impl Iterator<Item = PassDescriptor> + '_ {
         self.passes.iter().map(|pass| pass.descriptor())
     }
@@ -216,9 +228,38 @@ impl PassSegment {
         self.passes.last().map(|pass| pass.descriptor().output)
     }
 
-    pub(crate) fn run(&self, mut input: AnyIr) -> Result<AnyIr, PassSegmentError> {
+    pub(crate) fn run(&self, input: AnyIr) -> Result<AnyIr, PassSegmentError> {
+        self.run_checked(input, None)
+    }
+
+    /// The one execution path shared by every heterogeneous pass. When a
+    /// verifier is present (R3.3: `#[cfg(test)]` only), the segment input is
+    /// verified at its honest engine/gather boundary before any pass runs, and
+    /// every successful, correctly shaped pass output is semantically verified
+    /// and authenticated against an immutable pre-pass witness before the next
+    /// pass is invoked (PROP-054 `##INTER-PASS-VERIFIER`).
+    pub(crate) fn run_checked(
+        &self,
+        mut input: AnyIr,
+        verifier: Option<IrVerifier>,
+    ) -> Result<AnyIr, PassSegmentError> {
+        if let Some(verifier) = verifier {
+            verifier
+                .verify(&input)
+                .map_err(|source| PassSegmentError::InputVerification {
+                    input: input.shape(),
+                    source: Box::new(source),
+                })?;
+        }
         for pass in &self.passes {
             let descriptor = pass.descriptor();
+            let before = verifier
+                .map(|verifier| verifier.witness(&input))
+                .transpose()
+                .map_err(|source| PassSegmentError::InputVerification {
+                    input: input.shape(),
+                    source: Box::new(source),
+                })?;
             input = pass.run_erased(input)?;
             let actual = input.shape();
             if actual != descriptor.output {
@@ -227,6 +268,19 @@ impl PassSegment {
                     expected: descriptor.output,
                     actual,
                 });
+            }
+            if let Some(verifier) = verifier {
+                verifier
+                    .verify(&input)
+                    .and_then(|()| match &before {
+                        Some(before) => verifier.verify_transition(before, &input),
+                        None => Ok(()),
+                    })
+                    .map_err(|source| PassSegmentError::VerificationFailed {
+                        pass: descriptor.name,
+                        output: actual,
+                        source: Box::new(source),
+                    })?;
             }
         }
         Ok(input)
@@ -264,6 +318,21 @@ pub(crate) enum PassSegmentError {
         pass: PassName,
         #[source]
         source: Box<dyn Error + Send + Sync>,
+    },
+    #[error(
+        "compiler segment input {input:?} failed semantic verification before any pass ran: {source}"
+    )]
+    InputVerification {
+        input: IrShape,
+        #[source]
+        source: Box<super::verify::VerificationError>,
+    },
+    #[error("compiler pass `{pass}` returned semantically invalid {output:?} IR: {source}")]
+    VerificationFailed {
+        pass: PassName,
+        output: IrShape,
+        #[source]
+        source: Box<super::verify::VerificationError>,
     },
 }
 

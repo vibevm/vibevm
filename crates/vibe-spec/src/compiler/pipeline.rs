@@ -14,6 +14,7 @@ use super::ir::{
 use super::pass::{
     AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
 };
+use super::verify::IrVerifier;
 
 const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Document);
 const DOCUMENT_DOCUMENT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Document);
@@ -66,6 +67,7 @@ pub(crate) struct CompilerPipeline {
     gather: GatherDocuments,
     artifact: PassSegment,
     pass_names: BTreeSet<PassName>,
+    verifier: Option<IrVerifier>,
 }
 
 impl CompilerPipeline {
@@ -125,12 +127,24 @@ impl CompilerPipeline {
             .collect()
     }
 
+    /// Turn on verify-each for this pipeline. The sole R3.3 enabling seam:
+    /// test-only by construction, with no public flag, Cargo feature, manifest
+    /// field, or CLI surface. Production construction stays `None`; R6 later
+    /// enables this same seam unconditionally for every built-in and plugin
+    /// pass.
+    #[cfg(test)]
+    pub(crate) fn enable_verify_each_for_tests(&mut self) {
+        self.verifier = Some(IrVerifier);
+    }
+
     /// Run the declared schedule with the accepted cardinality law.
     pub(crate) fn run(&self, sources: Vec<SourceIr>) -> Result<EmittedIr, CompilerPipelineError> {
         self.validate_boundaries()?;
 
         let documents = self.run_documents_unchecked(sources)?;
-        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        let output = self
+            .artifact
+            .run_checked(AnyIr::Documents(documents), self.verifier)?;
         match output {
             AnyIr::Emitted(emitted) => Ok(emitted),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -169,8 +183,30 @@ impl CompilerPipeline {
     }
 
     /// Cross the one scheduler-owned document/artifact cardinality boundary.
-    pub(crate) fn gather_documents(&self, documents: Vec<DocumentIr>) -> Documents {
-        self.gather.run(documents)
+    ///
+    /// With a verifier present the gathered batch is validated once at this
+    /// honest scheduler boundary — before the close pass can silently
+    /// overwrite a duplicate canonical document key — and a failure names
+    /// `gather-documents`, never the `parse` or `close` pass that did not
+    /// produce it.
+    pub(crate) fn gather_documents(
+        &self,
+        documents: Vec<DocumentIr>,
+    ) -> Result<Documents, CompilerPipelineError> {
+        let documents = self.gather.run(documents);
+        if let Some(verifier) = self.verifier {
+            let carrier = AnyIr::Documents(documents);
+            verifier.verify(&carrier).map_err(|source| {
+                CompilerPipelineError::GatherVerification {
+                    source: Box::new(source),
+                }
+            })?;
+            let AnyIr::Documents(documents) = carrier else {
+                unreachable!("the gather carrier was just built as the Documents variant")
+            };
+            return Ok(documents);
+        }
+        Ok(documents)
     }
 
     /// Run the declared artifact prefix through its last closure-level pass.
@@ -188,7 +224,9 @@ impl CompilerPipeline {
             CLOSURE_ARTIFACT,
             self.artifact.last_output(),
         )?;
-        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        let output = self
+            .artifact
+            .run_checked(AnyIr::Documents(documents), self.verifier)?;
         match output {
             AnyIr::Closure(closure) => Ok(closure),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -214,7 +252,9 @@ impl CompilerPipeline {
             LANE_ARTIFACT,
             self.artifact.last_output(),
         )?;
-        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        let output = self
+            .artifact
+            .run_checked(AnyIr::Documents(documents), self.verifier)?;
         match output {
             AnyIr::Lane(lane) => Ok(lane),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -240,7 +280,9 @@ impl CompilerPipeline {
             EMITTED_ARTIFACT,
             self.artifact.last_output(),
         )?;
-        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        let output = self
+            .artifact
+            .run_checked(AnyIr::Documents(documents), self.verifier)?;
         match output {
             AnyIr::Emitted(emitted) => Ok(emitted),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -260,14 +302,16 @@ impl CompilerPipeline {
             documents.push(self.run_document_unchecked(source)?);
         }
 
-        Ok(self.gather.run(documents))
+        self.gather_documents(documents)
     }
 
     fn run_document_unchecked(
         &self,
         source: SourceIr,
     ) -> Result<DocumentIr, CompilerPipelineError> {
-        let output = self.document.run(AnyIr::Source(source))?;
+        let output = self
+            .document
+            .run_checked(AnyIr::Source(source), self.verifier)?;
         match output {
             AnyIr::Document(document) => Ok(document),
             other => Err(CompilerPipelineError::UnexpectedCarrier {
@@ -351,6 +395,11 @@ pub(crate) enum CompilerPipelineError {
         boundary: &'static str,
         expected: IrShape,
         actual: IrShape,
+    },
+    #[error("the gather-documents scheduler boundary rejected the document batch: {source}")]
+    GatherVerification {
+        #[source]
+        source: Box<super::verify::VerificationError>,
     },
 }
 

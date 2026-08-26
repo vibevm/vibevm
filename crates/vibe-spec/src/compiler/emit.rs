@@ -13,6 +13,7 @@ use super::ir::{
 use super::pass::{Pass, PassName};
 
 mod digest;
+pub(crate) use digest::bytes_digest as emitted_bytes_digest;
 mod framing;
 #[cfg(feature = "test-support")]
 pub(crate) mod opaque_test_vehicle;
@@ -112,6 +113,17 @@ fn build_provenance(
         contributions: witness.emission_witnesses.clone(),
         bytes_digest: digest::bytes_digest(bytes),
     }
+}
+
+/// The pass's own witness capture, for tests that drive a backend directly
+/// instead of building a whole schedule. Production always reaches it through
+/// [`EmitPass::run`].
+#[cfg(test)]
+pub(crate) fn capture_witness_for_test(
+    lane: &LaneIr,
+    backend: &BackendId,
+) -> Result<PreEmissionWitness, BackendError> {
+    capture_witness(lane, backend)
 }
 
 fn capture_witness(lane: &LaneIr, backend: &BackendId) -> Result<PreEmissionWitness, BackendError> {
