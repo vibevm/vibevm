@@ -219,6 +219,31 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     `vibe-spec`. The kernel owns provider/world rows, ordering, controls,
     selectors and views. Workspace adapters supply the authoritative root lock
     order; unsorted materialised-directory enumeration is never ordering input.
+16. R4's untransformed emitter remains the reference oracle. An emitted
+    transform therefore needs a manager-owned constructor that recomputes
+    provenance/digests after the oracle; mutating `EmittedArtifact.bytes` in
+    place is forbidden. An active-plan-only transforms header must be accepted
+    by the emitted-tape validators and enter both node and per-unit
+    fingerprints. Per-unit lanes must join the crash-safe artifact transaction
+    before byte-changing transforms ship. XML-minify needs explicit REDs for
+    hoisted top-level `#use`, all-elided streams, comment/CDATA boundaries,
+    semantic `from_xml` parity and a strictly-smaller real lane; it may never
+    bless non-XML text by weakening the strict kernel. Document selector
+    subjects must be carried from typed provider/path identity, not recovered
+    by parsing display strings. Compatibility fragments do not run tier-1
+    transforms.
+17. R5 uses three JTD-first native roots (context, reply, manifest) while
+    sharing lifecycle subshapes through the vocabulary/generated shared-module
+    mechanism, never copied DTOs. Point stays an open string on the wire and is
+    parsed by the host's closed `ExtensionPoint` vocabulary. Invoke request
+    bytes are host-borrowed; successful response bytes are plugin-allocated and
+    freed exactly once through `vibe_ext_free`; failure returns null/zero.
+    `vibe_ext_manifest()` returns a NUL-terminated UTF-8 static pointer valid for
+    the loaded library lifetime, copied immediately and never freed. The safe
+    SDK compile-refuses `panic=abort`; catch-unwind lives inside the cdylib.
+    Phase-native loading can land from the lifecycle envelope, while native
+    compiler parity depends on the accepted R6 whole-IR payload/conversion and
+    may not invent an interim compile DTO.
 
 ## 6. Physical state and loss prevention
 
