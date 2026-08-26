@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-23T09:34:08Z",
+  "updated_at": "2026-08-26T19:36:43Z",
   "files": [
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -249,7 +249,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/00-MANIFESTO.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -1146,7 +1146,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -1448,7 +1448,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -1817,7 +1817,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/03-RAID-PLAYBOOK.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -2076,7 +2076,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/04-SWEEP-PLAYBOOK.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -2589,7 +2589,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/05-CAMPAIGN-FORM.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -2931,7 +2931,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/06-WAL-CONVENTION.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -3196,7 +3196,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/ATLAS.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -4054,7 +4054,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -4301,7 +4301,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/boot/10-flow-core-ai-native.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -4466,7 +4466,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -4988,7 +4988,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -5382,7 +5382,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -5735,7 +5735,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/MCP-CORE-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -6039,7 +6039,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v0.8.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -7400,7 +7400,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -7582,7 +7582,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/00-MANIFESTO.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/00-MANIFESTO.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -8233,7 +8233,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/01-PATTERN-CARD-FORMAT.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/01-PATTERN-CARD-FORMAT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -8475,7 +8475,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/02-EXECUTABLE-SCAFFOLDS.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/02-EXECUTABLE-SCAFFOLDS.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -8742,7 +8742,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/03-RAID-PLAYBOOK.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/03-RAID-PLAYBOOK.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -8930,7 +8930,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/04-SWEEP-PLAYBOOK.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/04-SWEEP-PLAYBOOK.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -9298,7 +9298,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/05-CAMPAIGN-FORM.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/05-CAMPAIGN-FORM.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -9540,7 +9540,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/06-WAL-CONVENTION.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/06-WAL-CONVENTION.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -9734,7 +9734,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/appendix/ATLAS.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/appendix/ATLAS.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -10318,7 +10318,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/appendix/CONTRADICTION-MAP.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/appendix/CONTRADICTION-MAP.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -10501,7 +10501,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/boot/10-flow-core-ai-native.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/boot/10-flow-core-ai-native.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -10623,7 +10623,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/BROWNFIELD-PROTOCOL-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -11028,7 +11028,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/ENGINE-CONFORM-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -11355,7 +11355,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/mechanisms/LEDGER-INTENT-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/LEDGER-INTENT-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -11622,7 +11622,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/mechanisms/MCP-CORE-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/MCP-CORE-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -11852,7 +11852,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/core-ai-native/v1.0.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/mechanisms/PROP-014-specmap-bidirectional-traceability.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -12936,7 +12936,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -13223,7 +13223,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/boot/20-stack-go-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -13399,7 +13399,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -13530,7 +13530,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -13664,7 +13664,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -13796,7 +13796,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14251,7 +14251,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14386,7 +14386,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14525,7 +14525,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14658,7 +14658,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14794,7 +14794,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -14925,7 +14925,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -16193,7 +16193,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -16802,7 +16802,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -17178,7 +17178,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/conform-frontend-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -17459,7 +17459,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/go-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -17692,7 +17692,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/go/tools/vibe-agentic-tcg-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -18027,7 +18027,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -18338,7 +18338,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibevm/vibespecs/skills/go-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -18660,7 +18660,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -18866,7 +18866,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/boot/20-stack-go-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/boot/20-stack-go-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -19000,7 +19000,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19104,7 +19104,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19208,7 +19208,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19312,7 +19312,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19650,7 +19650,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19754,7 +19754,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19858,7 +19858,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -19962,7 +19962,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -20066,7 +20066,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -20170,7 +20170,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/GUIDE-AI-NATIVE-GO.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/GUIDE-AI-NATIVE-GO.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -21097,7 +21097,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/mechanisms/TCG-ORACLE-GO-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -21550,7 +21550,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/mechanisms/TCG-PROTOCOL-GO-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -21822,7 +21822,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/tools/conform-frontend-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/tools/conform-frontend-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -22028,7 +22028,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/tools/go-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/tools/go-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -22204,7 +22204,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/go/tools/vibe-agentic-tcg-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/go/tools/vibe-agentic-tcg-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -22452,7 +22452,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/skills/go-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/go-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -22682,7 +22682,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/spec/skills/go-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/go-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -22918,7 +22918,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -22968,7 +22968,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/vibevm/vibespecs/tools/discipline-mcp-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -23266,7 +23266,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -23310,7 +23310,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/spec/tools/discipline-mcp-go.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native-mcp/v1.0.0/vibevm/vibespecs/tools/discipline-mcp-go.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -23540,7 +23540,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -23608,7 +23608,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/go-ai-native/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/go-ai-native/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -23664,7 +23664,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -23781,7 +23781,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -23874,7 +23874,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -24040,7 +24040,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -24206,7 +24206,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/rule-closed-vocabulary-naming.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24325,7 +24325,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/rule-declared-test-matrices.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24442,7 +24442,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/rule-position-is-a-resource.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24559,7 +24559,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24693,7 +24693,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24827,7 +24827,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -24963,7 +24963,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -25401,7 +25401,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -25540,7 +25540,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -25679,7 +25679,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -25813,7 +25813,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -25952,7 +25952,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -26085,7 +26085,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -26889,7 +26889,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -27505,7 +27505,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -27882,7 +27882,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/conform-frontend-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/conform-frontend-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -28166,7 +28166,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -28473,7 +28473,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -28839,7 +28839,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -29159,7 +29159,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibevm/vibespecs/skills/rust-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -29474,7 +29474,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -29596,7 +29596,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/boot/20-stack-rust-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -29724,7 +29724,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/rule-closed-vocabulary-naming.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/rule-closed-vocabulary-naming.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -29828,7 +29828,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/rule-declared-test-matrices.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/rule-declared-test-matrices.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -29932,7 +29932,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/rule-position-is-a-resource.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/rule-position-is-a-resource.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30036,7 +30036,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30140,7 +30140,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30244,7 +30244,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30348,7 +30348,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30680,7 +30680,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30784,7 +30784,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30888,7 +30888,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -30992,7 +30992,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -31096,7 +31096,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -31200,7 +31200,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/GUIDE-AI-NATIVE-RUST.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/GUIDE-AI-NATIVE-RUST.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -31761,7 +31761,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/mechanisms/TCG-ORACLE-RUST-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -32213,7 +32213,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -32491,7 +32491,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/tools/conform-frontend-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/tools/conform-frontend-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -32775,7 +32775,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/tools/rust-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/tools/rust-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -33017,7 +33017,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/rust/tools/vibe-agentic-tcg-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/rust/tools/vibe-agentic-tcg-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -33283,7 +33283,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/skills/rust-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/rust-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -33519,7 +33519,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/spec/skills/rust-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/rust-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -33749,7 +33749,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -33827,7 +33827,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/vibevm/vibespecs/tools/discipline-mcp-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -34117,7 +34117,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -34179,7 +34179,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/spec/tools/discipline-mcp-rust.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0/vibevm/vibespecs/tools/discipline-mcp-rust.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -34403,7 +34403,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -34480,7 +34480,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/rust-ai-native/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -34542,7 +34542,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -34670,7 +34670,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -34880,7 +34880,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -34999,7 +34999,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35119,7 +35119,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35237,7 +35237,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35635,7 +35635,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35753,7 +35753,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35874,7 +35874,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -35992,7 +35992,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -36109,7 +36109,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -36224,7 +36224,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/skills/typescript-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -36480,7 +36480,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/skills/typescript-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -36763,7 +36763,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -38033,7 +38033,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -38392,7 +38392,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -38742,7 +38742,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/conform-frontend-typescript.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -39063,7 +39063,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/typescript-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -39310,7 +39310,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -39673,7 +39673,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -39801,7 +39801,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/boot/20-stack-typescript-ai-native-lang.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -39959,7 +39959,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-a-generators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-a-generators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40063,7 +40063,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-b-typed-builders.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-b-typed-builders.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40167,7 +40167,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-c-runnable-contracts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-c-runnable-contracts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40271,7 +40271,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-d-differential-oracle.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-d-differential-oracle.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40609,7 +40609,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-e-fast-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-e-fast-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40713,7 +40713,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-f-structured-diagnostics.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-f-structured-diagnostics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40817,7 +40817,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-g-doctests.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-g-doctests.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -40921,7 +40921,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-h-simulators.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-h-simulators.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -41025,7 +41025,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/cards/scaffold-i-codemods.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/cards/scaffold-i-codemods.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -41129,7 +41129,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/skills/typescript-ai-native-sweep/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/typescript-ai-native-sweep/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -41317,7 +41317,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/skills/typescript-ai-native-terraform/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/skills/typescript-ai-native-terraform/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -41523,7 +41523,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -42475,7 +42475,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/mechanisms/TCG-ORACLE-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -42741,7 +42741,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/mechanisms/TCG-PROTOCOL-v0.1.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -43001,7 +43001,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/tools/conform-frontend-typescript.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/tools/conform-frontend-typescript.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -43237,7 +43237,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/tools/typescript-ai-native-tcg.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/tools/typescript-ai-native-tcg.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -43425,7 +43425,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/spec/typescript/tools/vibe-agentic-tcg-ts.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0/vibevm/vibespecs/typescript/tools/vibe-agentic-tcg-ts.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -43697,7 +43697,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -43775,7 +43775,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/vibevm/vibespecs/tools/discipline-mcp-typescript.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -44057,7 +44057,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -44119,7 +44119,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/spec/tools/discipline-mcp-typescript.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0/vibevm/vibespecs/tools/discipline-mcp-typescript.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -44337,7 +44337,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -44415,7 +44415,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.ai-native/typescript-ai-native/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -44477,7 +44477,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -44779,7 +44779,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -45050,7 +45050,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -46050,7 +46050,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -46956,7 +46956,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v0.1.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -47692,7 +47692,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -47927,7 +47927,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v1.0.0/spec/boot/15-flow-addressable-specs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -48142,7 +48142,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v1.0.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -48929,7 +48929,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v1.0.0/spec/flows/addressable-specs/authoring-rules.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/authoring-rules.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -49649,7 +49649,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/addressable-specs/v1.0.0/spec/flows/addressable-specs/spec-tree-layout.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0/vibevm/vibespecs/flows/addressable-specs/spec-tree-layout.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -50239,7 +50239,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -50579,7 +50579,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -50977,7 +50977,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -51975,7 +51975,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -52626,7 +52626,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v0.1.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -53366,7 +53366,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -53620,7 +53620,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v1.0.0/spec/boot/40-flow-campaign-plans.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/boot/40-flow-campaign-plans.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -53935,7 +53935,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v1.0.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -54680,7 +54680,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v1.0.0/spec/flows/campaign-plans/execution-ledger.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/execution-ledger.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -55177,7 +55177,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/campaign-plans/v1.0.0/spec/flows/campaign-plans/phase-gates.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0/vibevm/vibespecs/flows/campaign-plans/phase-gates.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -55736,7 +55736,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -56048,7 +56048,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -56252,7 +56252,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -57073,7 +57073,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -57868,7 +57868,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v0.1.0/vibevm/vibespecs/flows/comparative-research/research-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -58238,7 +58238,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -58471,7 +58471,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v1.0.0/spec/boot/52-flow-comparative-research.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/boot/52-flow-comparative-research.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -58621,7 +58621,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v1.0.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -59242,7 +59242,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v1.0.0/spec/flows/comparative-research/from-research-to-roadmap.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/from-research-to-roadmap.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -59873,7 +59873,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/comparative-research/v1.0.0/spec/flows/comparative-research/research-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0/vibevm/vibespecs/flows/comparative-research/research-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -60154,7 +60154,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -60464,7 +60464,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -60785,7 +60785,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -61650,7 +61650,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -62322,7 +62322,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v0.1.0/vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -62950,7 +62950,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -63196,7 +63196,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/boot/35-flow-conflict-protocol.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35-flow-conflict-protocol.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -63460,7 +63460,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/boot/35a-wal-binding.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/boot/35a-wal-binding.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -63489,7 +63489,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/CONFLICT-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -64197,7 +64197,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/flows/conflict-protocol/failure-modes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/failure-modes.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -64755,7 +64755,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/conflict-protocol/v1.0.0/spec/flows/conflict-protocol/uncertainty-protocol.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0/vibevm/vibespecs/flows/conflict-protocol/uncertainty-protocol.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -65274,7 +65274,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -65607,7 +65607,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/boot/25-flow-decision-records.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -65946,7 +65946,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -66773,7 +66773,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/record-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -67163,7 +67163,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v0.1.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -67897,7 +67897,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -68158,7 +68158,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v1.0.0/spec/boot/25-flow-decision-records.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/boot/25-flow-decision-records.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -68443,7 +68443,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v1.0.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -69105,7 +69105,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v1.0.0/spec/flows/decision-records/record-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/record-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -69423,7 +69423,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/decision-records/v1.0.0/spec/flows/decision-records/revisit-triggers.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0/vibevm/vibespecs/flows/decision-records/revisit-triggers.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -70016,7 +70016,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -70168,7 +70168,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -70275,7 +70275,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v0.1.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -70507,7 +70507,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -70627,7 +70627,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v1.0.0/spec/boot/58-flow-dev-runtime-docs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/boot/58-flow-dev-runtime-docs.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -70715,7 +70715,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/dev-runtime-docs/v1.0.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.0.0/vibevm/vibespecs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -70894,7 +70894,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -71200,7 +71200,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -71367,7 +71367,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v0.1.0/vibevm/vibespecs/flows/discovery-prompt/usage.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -72120,7 +72120,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -72342,7 +72342,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v1.0.0/spec/boot/50-flow-discovery-prompt.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/boot/50-flow-discovery-prompt.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -72475,7 +72475,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/discovery-prompt/v1.0.0/spec/flows/discovery-prompt/usage.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.0.0/vibevm/vibespecs/flows/discovery-prompt/usage.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -73050,7 +73050,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -73303,7 +73303,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -73637,7 +73637,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -74480,7 +74480,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v0.1.0/vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -75236,7 +75236,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -75423,7 +75423,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v1.0.0/spec/boot/30-flow-atomic-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/boot/30-flow-atomic-commits.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -75675,7 +75675,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v1.0.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -76343,7 +76343,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-atomic-commits/v1.0.0/spec/flows/atomic-commits/splitting-large-changes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0/vibevm/vibespecs/flows/atomic-commits/splitting-large-changes.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -76929,7 +76929,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -77237,7 +77237,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -77490,7 +77490,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -77999,7 +77999,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -78434,7 +78434,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v0.1.0/vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -78871,7 +78871,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -79104,7 +79104,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v1.0.0/spec/boot/55-flow-attribution-policy.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/boot/55-flow-attribution-policy.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -79301,7 +79301,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v1.0.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/ATTRIBUTION-POLICY.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -79680,7 +79680,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v1.0.0/spec/flows/attribution-policy/disclosure-alternative.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/disclosure-alternative.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -80015,7 +80015,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-attribution-policy/v1.0.0/spec/flows/attribution-policy/enforcement-checklist.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0/vibevm/vibespecs/flows/attribution-policy/enforcement-checklist.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -80345,7 +80345,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -80478,7 +80478,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v0.1.0/vibevm/vibespecs/boot/32-flow-autonomy.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -80704,7 +80704,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v0.1.0/vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -81074,7 +81074,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -81176,7 +81176,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v1.0.0/spec/boot/32-flow-autonomy.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/boot/32-flow-autonomy.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -81354,7 +81354,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-autonomy/v1.0.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.0.0/vibevm/vibespecs/flows/autonomy/AUTONOMY-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -81639,7 +81639,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -81801,7 +81801,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -82008,7 +82008,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v0.1.0/vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -82690,7 +82690,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -82812,7 +82812,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v1.0.0/spec/boot/31-flow-conventional-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/boot/31-flow-conventional-commits.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -82970,7 +82970,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-conventional-commits/v1.0.0/spec/flows/conventional-commits/conventional-commits.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.0.0/vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -83510,7 +83510,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-practices/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-practices/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -83687,7 +83687,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/git-practices/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/git-practices/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -83830,7 +83830,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -84140,7 +84140,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/boot/42-flow-health-audit.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -84413,7 +84413,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -85420,7 +85420,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/flows/health-audit/audit-checklist.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -86296,7 +86296,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/flows/health-audit/running-an-audit.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -86708,7 +86708,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v0.1.0/vibevm/vibespecs/skills/health-audit/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -86920,7 +86920,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -87150,7 +87150,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/boot/42-flow-health-audit.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42-flow-health-audit.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -87351,7 +87351,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/boot/42a-wal-binding.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/boot/42a-wal-binding.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -87380,7 +87380,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/HEALTH-AUDIT-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -88106,7 +88106,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/flows/health-audit/audit-checklist.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/audit-checklist.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -88780,7 +88780,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/flows/health-audit/running-an-audit.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/flows/health-audit/running-an-audit.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -89099,7 +89099,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/health-audit/v1.0.0/spec/skills/health-audit/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0/vibevm/vibespecs/skills/health-audit/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -89265,7 +89265,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -89667,7 +89667,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/boot/60-flow-licensing.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -89974,7 +89974,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -90727,7 +90727,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/flows/licensing/dependency-licenses.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -91202,7 +91202,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/flows/licensing/eula-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -91496,7 +91496,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v0.1.0/vibevm/vibespecs/skills/draft-eula/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -91740,7 +91740,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -92011,7 +92011,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/spec/boot/60-flow-licensing.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/boot/60-flow-licensing.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -92220,7 +92220,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/LICENSING-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -92765,7 +92765,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/spec/flows/licensing/dependency-licenses.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/dependency-licenses.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -93117,7 +93117,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/spec/flows/licensing/eula-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/flows/licensing/eula-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -93337,7 +93337,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/licensing/v1.0.0/spec/skills/draft-eula/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0/vibevm/vibespecs/skills/draft-eula/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -93513,7 +93513,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -93889,7 +93889,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -94079,7 +94079,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -95538,7 +95538,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -96387,7 +96387,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v0.1.0/vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -97319,7 +97319,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -97538,7 +97538,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v1.0.0/spec/boot/65-flow-managed-blocks.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/boot/65-flow-managed-blocks.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -97657,7 +97657,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v1.0.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -98420,7 +98420,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v1.0.0/spec/flows/managed-blocks/adoption-guide.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/adoption-guide.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -98886,7 +98886,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/managed-blocks/v1.0.0/spec/flows/managed-blocks/rejected-designs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0/vibevm/vibespecs/flows/managed-blocks/rejected-designs.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -99422,7 +99422,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -99699,7 +99699,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -99956,7 +99956,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -100499,7 +100499,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/vibevm/vibespecs/flows/manual-tests/authoring-rules.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -101015,7 +101015,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v0.1.0/vibevm/vibespecs/flows/manual-tests/test-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -101283,7 +101283,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -101494,7 +101494,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v1.0.0/spec/boot/44-flow-manual-tests.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/boot/44-flow-manual-tests.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -101690,7 +101690,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v1.0.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/MANUAL-TESTS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -102088,7 +102088,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v1.0.0/spec/flows/manual-tests/authoring-rules.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/authoring-rules.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -102464,7 +102464,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/manual-tests/v1.0.0/spec/flows/manual-tests/test-template.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0/vibevm/vibespecs/flows/manual-tests/test-template.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -102658,7 +102658,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -102785,7 +102785,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v0.1.0/spec/boot/68-flow-omnichannel.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v0.1.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -102934,7 +102934,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v0.1.0/vibevm/vibespecs/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -103262,7 +103262,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -103374,7 +103374,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v1.0.0/spec/boot/68-flow-omnichannel.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.0.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -103503,7 +103503,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/omnichannel/v1.0.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/omnichannel/v1.0.0/vibevm/vibespecs/flows/omnichannel/OMNICHANNEL-PROTOCOL.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -103798,7 +103798,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -104121,7 +104121,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -104488,7 +104488,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -105240,7 +105240,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -105726,7 +105726,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v0.1.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -106260,7 +106260,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -106502,7 +106502,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v1.0.0/spec/boot/45-flow-operating-modes.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/boot/45-flow-operating-modes.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -106785,7 +106785,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v1.0.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/OPERATING-MODES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -107368,7 +107368,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v1.0.0/spec/flows/operating-modes/mfbt-mode.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/mfbt-mode.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -107749,7 +107749,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/operating-modes/v1.0.0/spec/flows/operating-modes/writing-a-codeword.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0/vibevm/vibespecs/flows/operating-modes/writing-a-codeword.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -108173,7 +108173,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -108600,7 +108600,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -108809,7 +108809,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -109493,7 +109493,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/flows/qualified-naming/naming-forks.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -110187,7 +110187,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v0.1.0/vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -110941,7 +110941,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -111265,7 +111265,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v1.0.0/spec/boot/67-flow-qualified-naming.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/boot/67-flow-qualified-naming.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -111436,7 +111436,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v1.0.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -111963,7 +111963,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v1.0.0/spec/flows/qualified-naming/naming-forks.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/naming-forks.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -112520,7 +112520,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/qualified-naming/v1.0.0/spec/flows/qualified-naming/ref-grammar.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0/vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -113112,7 +113112,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -113803,7 +113803,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v0.2.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -114440,7 +114440,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -114931,7 +114931,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03-flow-redbook.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -115350,7 +115350,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03a-member-wal.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03a-member-wal.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -115379,7 +115379,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/redbook/v1.0.0/spec/boot/03b-member-wal-specspaces.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0/vibevm/vibespecs/boot/03b-member-wal-specspaces.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -115408,7 +115408,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -115695,7 +115695,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -115989,7 +115989,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -116794,7 +116794,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -117413,7 +117413,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v0.1.0/vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -117966,7 +117966,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -118194,7 +118194,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v1.0.0/spec/boot/57-flow-secrets-hygiene.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/boot/57-flow-secrets-hygiene.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -118432,7 +118432,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v1.0.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -119085,7 +119085,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v1.0.0/spec/flows/secrets-hygiene/scope-discipline.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -119581,7 +119581,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/secrets-hygiene/v1.0.0/spec/flows/secrets-hygiene/third-party-code-consent.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0/vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -120007,7 +120007,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -120361,7 +120361,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -120620,7 +120620,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -121331,7 +121331,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/daily-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -122050,7 +122050,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v0.1.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -122875,7 +122875,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -123139,7 +123139,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v1.0.0/spec/boot/62-flow-source-mirrors.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/boot/62-flow-source-mirrors.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -123338,7 +123338,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v1.0.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -123896,7 +123896,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v1.0.0/spec/flows/source-mirrors/daily-loop.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/daily-loop.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -124461,7 +124461,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/source-mirrors/v1.0.0/spec/flows/source-mirrors/fanout-mechanics.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0/vibevm/vibespecs/flows/source-mirrors/fanout-mechanics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -125065,7 +125065,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -125442,7 +125442,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -125771,7 +125771,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -126560,7 +126560,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/design-docs.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -127108,7 +127108,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v0.1.0/vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -127673,7 +127673,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -127964,7 +127964,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v1.0.0/spec/boot/17-flow-spec-genres.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/boot/17-flow-spec-genres.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -128222,7 +128222,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v1.0.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/SPEC-GENRES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -128834,7 +128834,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v1.0.0/spec/flows/spec-genres/design-docs.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/design-docs.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -129265,7 +129265,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/spec-genres/v1.0.0/spec/flows/spec-genres/when-to-write-what.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0/vibevm/vibespecs/flows/spec-genres/when-to-write-what.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -129708,7 +129708,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -130019,7 +130019,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -130315,7 +130315,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -131060,7 +131060,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/review-workflow.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -131707,7 +131707,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v0.1.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -132198,7 +132198,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -132430,7 +132430,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/boot/20-flow-sync-from-code.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20-flow-sync-from-code.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -132661,7 +132661,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/boot/20a-wal-binding.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/boot/20a-wal-binding.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -132690,7 +132690,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/SYNC-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -133244,7 +133244,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/flows/sync-from-code/review-workflow.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/review-workflow.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -133728,7 +133728,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/sync-from-code/v1.0.0/spec/flows/sync-from-code/when-to-apply.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0/vibevm/vibespecs/flows/sync-from-code/when-to-apply.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -134100,7 +134100,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -134413,7 +134413,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -134617,7 +134617,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -135292,7 +135292,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -136216,7 +136216,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v0.1.0/vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -137382,7 +137382,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -137603,7 +137603,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v1.0.0/spec/boot/70-flow-tool-design-lessons.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/boot/70-flow-tool-design-lessons.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -137751,7 +137751,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v1.0.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -138201,7 +138201,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v1.0.0/spec/flows/tool-design-lessons/packaging-lessons.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/packaging-lessons.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -138867,7 +138867,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/tool-design-lessons/v1.0.0/spec/flows/tool-design-lessons/self-updating-tools.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0/vibevm/vibespecs/flows/tool-design-lessons/self-updating-tools.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -139673,7 +139673,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -139994,7 +139994,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -140248,7 +140248,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -140881,7 +140881,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -141522,7 +141522,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v0.1.0/vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -142054,7 +142054,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -142296,7 +142296,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v1.0.0/spec/boot/05-flow-two-process-model.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/boot/05-flow-two-process-model.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -142498,7 +142498,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v1.0.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/TWO-PROCESS-MODEL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -143002,7 +143002,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v1.0.0/spec/flows/two-process-model/cognitive-load-split.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/cognitive-load-split.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -143509,7 +143509,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/two-process-model/v1.0.0/spec/flows/two-process-model/files-as-ipc.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0/vibevm/vibespecs/flows/two-process-model/files-as-ipc.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -143932,7 +143932,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -144096,7 +144096,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -144442,7 +144442,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v0.1.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -145095,7 +145095,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -145219,7 +145219,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v1.0.0/spec/boot/11-flow-wal-specspaces.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/boot/11-flow-wal-specspaces.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -145481,7 +145481,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal-specspaces/v1.0.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.0.0/vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -145962,7 +145962,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -146361,7 +146361,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/boot/10-flow-wal.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -146602,7 +146602,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -147421,7 +147421,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/flows/wal/cold-resume.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -148236,7 +148236,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/flows/wal/morning-routine.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -148788,7 +148788,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/flows/wal/session-end-hook.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -149388,7 +149388,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v0.2.0/vibevm/vibespecs/skills/wal-status/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -149536,7 +149536,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/README.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -149839,7 +149839,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/boot/10-flow-wal.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/boot/10-flow-wal.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -150035,7 +150035,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/flows/wal/WAL-PROTOCOL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/WAL-PROTOCOL.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -150673,7 +150673,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/flows/wal/cold-resume.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/cold-resume.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -151318,7 +151318,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/flows/wal/morning-routine.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/morning-routine.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -151771,7 +151771,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/flows/wal/session-end-hook.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/flows/wal/session-end-hook.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -152252,7 +152252,7 @@
       }
     },
     {
-      "path": "packages/org.vibevm.world/wal/v1.0.0/spec/skills/wal-status/SKILL.md",
+      "path": "vibevm/vibepacks/org.vibevm.world/wal/v1.0.0/vibevm/vibespecs/skills/wal-status/SKILL.md",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -152370,7 +152370,7 @@
       }
     },
     {
-      "path": "spec/boot/00-core.md",
+      "path": "vibevm/vibespecs/boot/00-core.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -152594,7 +152594,7 @@
       }
     },
     {
-      "path": "spec/boot/90-user.md",
+      "path": "vibevm/vibespecs/boot/90-user.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -152878,7 +152878,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-000.md",
+      "path": "vibevm/vibespecs/common/PROP-000.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -154050,7 +154050,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-006-operating-modes.md",
+      "path": "vibevm/vibespecs/common/PROP-006-operating-modes.xml",
       "effective": {
         "stage": "freeze",
         "state": "done"
@@ -154140,7 +154140,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-013-periodic-health-audit.md",
+      "path": "vibevm/vibespecs/common/PROP-013-periodic-health-audit.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -154434,7 +154434,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-016-source-mirrors.md",
+      "path": "vibevm/vibespecs/common/PROP-016-source-mirrors.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -154644,7 +154644,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-018-agentic-standalone-modes.md",
+      "path": "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -155401,7 +155401,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-019-version-manager.md",
+      "path": "vibevm/vibespecs/common/PROP-019-version-manager.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -156698,7 +156698,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-024-code-bearing-packages.md",
+      "path": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -156717,7 +156717,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
+        "processed_hash": "3c9863ad9e8421797526ebd0ade20f6858dbf1f9760efa8d7763cf7047090549",
         "summary": {
           "confirmed": 89
         },
@@ -157261,12 +157261,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T17:36:33Z",
+        "verified_at": "2026-08-23T09:34:09Z",
         "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13 + P024-EQUIPOTENCE"
       }
     },
     {
-      "path": "spec/common/PROP-028-package-families.md",
+      "path": "vibevm/vibespecs/common/PROP-028-package-families.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -157543,7 +157543,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-029-fully-qualified-addresses.md",
+      "path": "vibevm/vibespecs/common/PROP-029-fully-qualified-addresses.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -157751,7 +157751,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-031-algorithmic-refactoring.md",
+      "path": "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -158231,7 +158231,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-032-project-model-ide-substrate.md",
+      "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -158903,7 +158903,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-033-refactoring-registry.md",
+      "path": "vibevm/vibespecs/common/PROP-033-refactoring-registry.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -159341,7 +159341,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-044-change-native-formats.md",
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -159705,7 +159705,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-045-xml-spec-sources.md",
+      "path": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -159917,7 +159917,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-046-adoption-facts-registry.md",
+      "path": "vibevm/vibespecs/common/PROP-046-adoption-facts-registry.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -160027,7 +160027,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-048-tokenomics.md",
+      "path": "vibevm/vibespecs/common/PROP-048-tokenomics.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -160191,7 +160191,7 @@
       }
     },
     {
-      "path": "spec/common/PROP-049-snippet-genre.md",
+      "path": "vibevm/vibespecs/common/PROP-049-snippet-genre.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -160283,7 +160283,92 @@
       }
     },
     {
-      "path": "spec/design/README.md",
+      "path": "vibevm/vibespecs/common/PROP-050-dependency-visibility.xml",
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 188,
+      "units": 27,
+      "facts": 187,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-051-refactor-umbrella.xml",
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 17,
+      "units": 6,
+      "facts": 16,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 9,
+      "units": 4,
+      "facts": 8,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+      "effective": {
+        "stage": "spec",
+        "state": "plan"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "plan"
+      },
+      "markers": 141,
+      "units": 58,
+      "facts": 140,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 54,
+      "units": 14,
+      "facts": 53,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "vibevm/vibespecs/design/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -160628,7 +160713,7 @@
       }
     },
     {
-      "path": "spec/design/action-system.md",
+      "path": "vibevm/vibespecs/design/action-system.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -161013,7 +161098,7 @@
       }
     },
     {
-      "path": "spec/design/change-native-formats-verdict.md",
+      "path": "vibevm/vibespecs/design/change-native-formats-verdict.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -161249,7 +161334,7 @@
       }
     },
     {
-      "path": "spec/design/command-nodes.md",
+      "path": "vibevm/vibespecs/design/command-nodes.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -161567,7 +161652,7 @@
       }
     },
     {
-      "path": "spec/design/deterministic-loading-aliasing.md",
+      "path": "vibevm/vibespecs/design/deterministic-loading-aliasing.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -162038,7 +162123,7 @@
       }
     },
     {
-      "path": "spec/design/gate-parity-config.md",
+      "path": "vibevm/vibespecs/design/gate-parity-config.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -162225,7 +162310,7 @@
       }
     },
     {
-      "path": "spec/design/host-as-package.md",
+      "path": "vibevm/vibespecs/design/host-as-package.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -162479,7 +162564,7 @@
       }
     },
     {
-      "path": "spec/design/lane-composition-dedup.md",
+      "path": "vibevm/vibespecs/design/lane-composition-dedup.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -162685,7 +162770,7 @@
       }
     },
     {
-      "path": "spec/design/loading-and-boot-model.md",
+      "path": "vibevm/vibespecs/design/loading-and-boot-model.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -163083,7 +163168,7 @@
       }
     },
     {
-      "path": "spec/design/map-format-change.md",
+      "path": "vibevm/vibespecs/design/map-format-change.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -163475,7 +163560,7 @@
       }
     },
     {
-      "path": "spec/design/map-query-language.md",
+      "path": "vibevm/vibespecs/design/map-query-language.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -163754,7 +163839,7 @@
       }
     },
     {
-      "path": "spec/design/multiple-sources-and-plugins.md",
+      "path": "vibevm/vibespecs/design/multiple-sources-and-plugins.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -163992,7 +164077,7 @@
       }
     },
     {
-      "path": "spec/design/new-rule-classes.md",
+      "path": "vibevm/vibespecs/design/new-rule-classes.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -164271,7 +164356,7 @@
       }
     },
     {
-      "path": "spec/design/seam-error-and-assertion-parity.md",
+      "path": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -164517,7 +164602,7 @@
       }
     },
     {
-      "path": "spec/design/structural-loader.md",
+      "path": "vibevm/vibespecs/design/structural-loader.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -164673,7 +164758,7 @@
       }
     },
     {
-      "path": "spec/design/tui-visual-language.md",
+      "path": "vibevm/vibespecs/design/tui-visual-language.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -165131,7 +165216,7 @@
       }
     },
     {
-      "path": "spec/design/typed-seams.md",
+      "path": "vibevm/vibespecs/design/typed-seams.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -165472,7 +165557,7 @@
       }
     },
     {
-      "path": "spec/design/workspace-and-qualified-naming.md",
+      "path": "vibevm/vibespecs/design/workspace-and-qualified-naming.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -165971,7 +166056,7 @@
       }
     },
     {
-      "path": "spec/manual-tests/MT-01-vibe-tree.md",
+      "path": "vibevm/vibespecs/manual-tests/MT-01-vibe-tree.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -166167,7 +166252,7 @@
       }
     },
     {
-      "path": "spec/manual-tests/MT-02-vibe-tree-tui.md",
+      "path": "vibevm/vibespecs/manual-tests/MT-02-vibe-tree-tui.xml",
       "effective": {
         "stage": "impl",
         "state": "work"
@@ -166329,7 +166414,7 @@
       }
     },
     {
-      "path": "spec/manual-tests/MT-03-vibe-prefs-tui.md",
+      "path": "vibevm/vibespecs/manual-tests/MT-03-vibe-prefs-tui.xml",
       "effective": {
         "stage": "impl",
         "state": "work"
@@ -166448,7 +166533,7 @@
       }
     },
     {
-      "path": "spec/modules/README.md",
+      "path": "vibevm/vibespecs/modules/README.md",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -166754,7 +166839,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-actions/PROP-039-action-system.md",
+      "path": "vibevm/vibespecs/modules/vibe-actions/PROP-039-action-system.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -167099,7 +167184,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-cli/PROP-036-package-tree.md",
+      "path": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -167621,7 +167706,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
+      "path": "vibevm/vibespecs/modules/vibe-cli/PROP-037-tree-tui.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -168435,7 +168520,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "path": "vibevm/vibespecs/modules/vibe-cli/PROP-042-aiui-observation.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -168837,7 +168922,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-facts/PROP-043-facts-markup.md",
+      "path": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -169565,7 +169650,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "path": "vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -172360,7 +172445,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
+      "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -172926,7 +173011,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-026-tcg-tool-family.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -173239,7 +173324,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
+      "path": "vibevm/vibespecs/modules/vibe-mcp/PROP-027-mcp-packages.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -173617,7 +173702,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/OWNER-GUIDE.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/OWNER-GUIDE.xml",
       "effective": {
         "stage": "doc",
         "state": "done"
@@ -174030,7 +174115,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/PROP-043-progress-markup.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -174066,7 +174151,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/PROP-047-progress-campaigns.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/PROP-047-progress-campaigns.xml",
       "effective": {
         "stage": "impl",
         "state": "work"
@@ -174488,7 +174573,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/templates/harvest-card.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/templates/harvest-card.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -174578,7 +174663,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/templates/impl-task.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/templates/impl-task.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -174771,7 +174856,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-progress/templates/spec-task.md",
+      "path": "vibevm/vibespecs/modules/vibe-progress/templates/spec-task.xml",
       "effective": {
         "stage": "spec",
         "state": "done"
@@ -174913,7 +174998,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-001-git-backend.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -175504,7 +175589,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -177419,7 +177504,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-008-qualified-naming.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -178079,7 +178164,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml",
       "effective": {
         "stage": "spec",
         "state": "work"
@@ -178928,7 +179013,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-021-submodule-sources.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -179210,7 +179295,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-023-bridge-packages.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -179551,7 +179636,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
+      "path": "vibevm/vibespecs/modules/vibe-registry/PROP-030-embedded-registry.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -180100,7 +180185,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -181895,7 +181980,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-017-resolvo-resolver.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -182407,7 +182492,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-settings/PROP-040-settings.md",
+      "path": "vibevm/vibespecs/modules/vibe-settings/PROP-040-settings.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -182828,7 +182913,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
+      "path": "vibevm/vibespecs/modules/vibe-settings/PROP-041-settings-ui.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -183123,7 +183208,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -183883,7 +183968,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -183892,9 +183977,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 110,
+      "markers": 111,
       "units": 20,
-      "facts": 109,
+      "facts": 110,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -184597,7 +184682,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -184606,9 +184691,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 97,
+      "markers": 99,
       "units": 15,
-      "facts": 96,
+      "facts": 98,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -185209,7 +185294,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -185743,7 +185828,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-020-install-hooks.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -186114,7 +186199,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-022-materialization-modes.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -186490,7 +186575,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -186796,7 +186881,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -186805,9 +186890,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 66,
+      "markers": 67,
       "units": 12,
-      "facts": 65,
+      "facts": 66,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -187223,7 +187308,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -187236,7 +187321,7 @@
       "units": 22,
       "facts": 157,
       "unmarked": 0,
-      "issues": 0,
+      "issues": 1,
       "campaign": {
         "anchors_judged": 134,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
@@ -188252,7 +188337,7 @@
       }
     },
     {
-      "path": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "effective": {
         "stage": "impl",
         "state": "done"
@@ -188261,9 +188346,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 87,
+      "markers": 88,
       "units": 16,
-      "facts": 86,
+      "facts": 87,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -188760,6 +188845,23 @@
         "verified_at": "2026-08-04T23:36:33Z",
         "verify_batch": "c4d2-workspace-rest + d2d + H4-stale-host + H6-stale-host-tail"
       }
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-053-clean-verb.xml",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 13,
+      "units": 4,
+      "facts": 12,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
     }
   ]
 }

@@ -8,6 +8,23 @@
 # this file is dated chronicle and keeps the root names of its era; only the
 # `include` / `exclude` arrays are live configuration.
 #
+# FORMAT NOTE (B-107, 2026-08-26): every include glob is spelled TWICE, once
+# per serialisation — `*.md` and `*.xml` side by side, exactly as the engine's
+# own `DEFAULT_INCLUDES` are (`crates/progress-core/src/scope.rs`, PROP-045
+# ##LOADER-LAW: a project may hold a document as Markdown or as dialect XML and
+# the corpus observes whichever form each document took). Until this landed the
+# package and host globs were `*.md`-only, so the K-wave conversion silently
+# emptied the corpus: 404 of the campaign's 502 judged documents had become
+# `.xml` and left the scope without a word, and the three exclusion rulings
+# below had nothing left to exclude — the "matched no observed file" warnings
+# B-107 filed. A document in BOTH forms is still not a scope question; the
+# consumer's pair-collision check (`vibe_specdoc::pair_collisions_in`) rejects
+# that loudly before any parse, so the globs stay blind on purpose.
+# The `.md` spellings are NOT vestigial: 98 observed documents are still
+# Markdown today — every package `README.md` and `SKILL.md`, plus the two host
+# `README.md` under design/ and modules/ — and an include that matches nothing
+# is silent (only a dead *exclude* is reported by name).
+#
 # The generated boot artifacts `spec/boot/STATIC.md` + `spec/boot/INDEX.md`
 # are OUT of scope (owner ruling 2026-07-24, campaign plan LOG): they are
 # rewritten by `vibe install`, so markup written into them dies on regen.
@@ -88,12 +105,19 @@
 schema = 1
 include = [
     "vibevm/vibespecs/boot/[0-9]*.md",
+    "vibevm/vibespecs/boot/[0-9]*.xml",
     "vibevm/vibespecs/common/**/*.md",
+    "vibevm/vibespecs/common/**/*.xml",
     "vibevm/vibespecs/design/**/*.md",
+    "vibevm/vibespecs/design/**/*.xml",
     "vibevm/vibespecs/manual-tests/**/*.md",
+    "vibevm/vibespecs/manual-tests/**/*.xml",
     "vibevm/vibespecs/modules/**/*.md",
+    "vibevm/vibespecs/modules/**/*.xml",
     "vibevm/vibepacks/org.vibevm.world/**/*.md",
+    "vibevm/vibepacks/org.vibevm.world/**/*.xml",
     "vibevm/vibepacks/org.vibevm.ai-native/**/*.md",
+    "vibevm/vibepacks/org.vibevm.ai-native/**/*.xml",
 ]
 
 # Enumerated exclusions, applied after the includes above (DRIFT-024 §4.2).
@@ -113,8 +137,14 @@ include = [
 # out. The three files leave; the authored `spec/cards/*.md` cards beside
 # them are contracts and STAY observed — this pattern must never be widened
 # to `cards/**` or to `**/INDEX.md`.
+# SPELLING (B-107, 2026-08-26): the file is `INDEX.xml` since the K-wave
+# conversion — six of them now, one per live `-lang` slot. The ruling is
+# unchanged and the pattern still names one file per package; only the
+# serialisation moved. Restore the `.md` spelling beside this one if a card
+# index is ever authored back into Markdown; two live patterns are cheap and a
+# dead one is reported by name.
 exclude = [
-    "vibevm/vibepacks/**/vibevm/vibespecs/cards/INDEX.md",
+    "vibevm/vibepacks/**/vibevm/vibespecs/cards/INDEX.xml",
     # SUPERSEDED VERSION SLOTS — frozen history, not living contracts.
     # Plan §3.3 rules that a superseded slot is "marked, never verified",
     # because verifying frozen history costs what a live contract costs and
@@ -195,5 +225,12 @@ exclude = [
     # The counter-argument is recorded in the campaign LOG rather than won: the
     # artifact is what the package exists to ship, so its corpus is now
     # meta-commentary about something unobserved. The owner accepted that.
-    "vibevm/vibepacks/**/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.md",
+    # SPELLING (B-107, 2026-08-26): `.xml` since the K-wave conversion, in both
+    # live slots (v0.1.0 and v1.0.0). The ruling and the perimeter are
+    # unchanged — the payload leaves, every document that makes a claim ABOUT
+    # it stays observed. The `vibedeps/` copies of the same file are still
+    # Markdown and are still invisible for a different reason entirely: a
+    # `vibedeps` path component is an always-on exclusion (`DEFAULT_EXCLUDES`),
+    # so this pattern neither reaches them nor needs to.
+    "vibevm/vibepacks/**/vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml",
 ]
