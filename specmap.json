@@ -11818,10 +11818,46 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
       "item_kind": "fn",
-      "line": 170,
+      "line": 283,
+      "symbol": "vibe_spec::compiler::artifact_tests::real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane",
+      "end_line": 330,
+      "fingerprint": "tok1:672e7224ec76fa5f296826a3157cecc4e0ca82185704be7201d93459266f80b3"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "item_kind": "fn",
+      "line": 175,
       "symbol": "vibe_spec::compiler::artifact_tests::whole_artifact_prefix_is_heterogeneous_shared_and_gathered_once",
-      "end_line": 276,
+      "end_line": 281,
       "fingerprint": "tok1:a25023864ea283fa95cb6aba3b56fe410cdde623ad3d14299c8df8c4612a18d8"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/assemble.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::compiler::assemble",
+      "end_line": 3,
+      "fingerprint": "tok1:e07cfb85e6867ed3520a766132bad04898f13156b28185fb49603ac4f660d1e2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/assemble/manager_tests.rs",
+      "item_kind": "fn",
+      "line": 46,
+      "symbol": "vibe_spec::compiler::assemble::manager_tests::assemble_descriptor_is_closure_artifact_to_lane_artifact",
+      "end_line": 53,
+      "fingerprint": "tok1:3d4a85f90bfe6926d87d6ce51006c7fb82d030be71f53480e92a66ac87895102"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/assemble/tests.rs",
+      "item_kind": "fn",
+      "line": 336,
+      "symbol": "vibe_spec::compiler::assemble::tests::heterogeneous_shared_duplicate_and_empty_projection_is_exact",
+      "end_line": 440,
+      "fingerprint": "tok1:35e46fb3fb8e6211307bbdfaf5549322c01ff71fe19cf1efb01e3dfbcd71ee21"
     },
     {
       "crate_name": "vibe-spec",
@@ -11836,45 +11872,45 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "item_kind": "fn",
-      "line": 332,
+      "line": 391,
       "symbol": "vibe_spec::compiler::builtin::tests::parse_failure_keeps_the_pass_name_and_concrete_source",
-      "end_line": 349,
-      "fingerprint": "tok1:b80a2f16f799ece56fe812185129d94b862501cdb4d3919ea367357aa186b60d"
+      "end_line": 408,
+      "fingerprint": "tok1:23b4052df8bbab0294346f994436d0962415216cf64fa4bb82aa2b36445ac48c"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "item_kind": "fn",
-      "line": 291,
+      "line": 350,
       "symbol": "vibe_spec::compiler::builtin::tests::parse_runs_once_for_each_addressed_document_then_gathers",
-      "end_line": 314,
-      "fingerprint": "tok1:7364c74ee264130f82611083d96966436399125baebfde29add9c1a2f0af08f6"
+      "end_line": 373,
+      "fingerprint": "tok1:92624a7002daefddba507ed13a5a9f8a57aa905d9ccf52244daf0dd4c23a8190"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "item_kind": "fn",
-      "line": 250,
-      "symbol": "vibe_spec::compiler::builtin::tests::production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb_link",
-      "end_line": 289,
-      "fingerprint": "tok1:9fdd39c6067a06b11f71eeb2152d03e1ca43ec0fe438fce22bf99d2af695144e"
+      "line": 305,
+      "symbol": "vibe_spec::compiler::builtin::tests::production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_assemble",
+      "end_line": 348,
+      "fingerprint": "tok1:a6117df1a94bd44f5db684d918148e9aa09d8bc21d6908af13696b51c27af8ec"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "item_kind": "fn",
-      "line": 351,
+      "line": 410,
       "symbol": "vibe_spec::compiler::builtin::tests::removing_close_makes_the_gathered_schedule_unrunnable",
-      "end_line": 368,
+      "end_line": 427,
       "fingerprint": "tok1:229d74c9bb74027672a6a4e9a99b20cec5ce19b709436570873e7f9d2591b382"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "item_kind": "fn",
-      "line": 316,
+      "line": 375,
       "symbol": "vibe_spec::compiler::builtin::tests::removing_parse_makes_the_production_schedule_unrunnable",
-      "end_line": 330,
+      "end_line": 389,
       "fingerprint": "tok1:bf0fa85e5085fa3595050bf1c48c15ef2aca425f0676ac2cc6120324184bdc22"
     },
     {
@@ -12054,8 +12090,8 @@
       "item_kind": "fn",
       "line": 291,
       "symbol": "vibe_spec::compiler::ir::tests::lane_has_one_frame_around_heterogeneous_contributions",
-      "end_line": 347,
-      "fingerprint": "tok1:942f8d222e6afe8904a0f7db63cd231c6a6ed1cb4e2c55a83e24917676e7e329"
+      "end_line": 375,
+      "fingerprint": "tok1:daf82c2e784210c1070035fd6406b245678cde468bfd37f91c6677f6f7374c2f"
     },
     {
       "crate_name": "vibe-spec",
@@ -12070,9 +12106,9 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
       "item_kind": "fn",
-      "line": 349,
+      "line": 377,
       "symbol": "vibe_spec::compiler::ir::tests::owned_transform_apis_preserve_identity_and_make_mutation_deliberate",
-      "end_line": 382,
+      "end_line": 410,
       "fingerprint": "tok1:e8c04f3073b2138c39f7f9d64f40df06b102f1c9091a0505103b545ebf78c6b0"
     },
     {
@@ -24035,8 +24071,16 @@
     },
     {
       "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
+      "from_symbol": "vibe_spec::compiler::artifact_tests::real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane",
+      "line": 284,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
       "from_symbol": "vibe_spec::compiler::artifact_tests::whole_artifact_prefix_is_heterogeneous_shared_and_gathered_once",
-      "line": 171,
+      "line": 176,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
       "verb": "verifies"
@@ -24044,9 +24088,33 @@
     {
       "file": "crates/vibe-spec/src/compiler/artifact_tests.rs",
       "from_symbol": "vibe_spec::compiler::artifact_tests::whole_artifact_prefix_is_heterogeneous_shared_and_gathered_once",
-      "line": 172,
+      "line": 177,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/assemble.rs",
+      "from_symbol": "vibe_spec::compiler::assemble",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/assemble/manager_tests.rs",
+      "from_symbol": "vibe_spec::compiler::assemble::manager_tests::assemble_descriptor_is_closure_artifact_to_lane_artifact",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-LOWERING",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/assemble/tests.rs",
+      "from_symbol": "vibe_spec::compiler::assemble::tests::heterogeneous_shared_duplicate_and_empty_projection_is_exact",
+      "line": 337,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
       "verb": "verifies"
     },
     {
@@ -24060,7 +24128,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "from_symbol": "vibe_spec::compiler::builtin::tests::parse_failure_keeps_the_pass_name_and_concrete_source",
-      "line": 333,
+      "line": 392,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -24068,15 +24136,15 @@
     {
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "from_symbol": "vibe_spec::compiler::builtin::tests::parse_runs_once_for_each_addressed_document_then_gathers",
-      "line": 292,
+      "line": 351,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
       "verb": "verifies"
     },
     {
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
-      "from_symbol": "vibe_spec::compiler::builtin::tests::production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb_link",
-      "line": 251,
+      "from_symbol": "vibe_spec::compiler::builtin::tests::production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_assemble",
+      "line": 306,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -24084,7 +24152,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "from_symbol": "vibe_spec::compiler::builtin::tests::removing_close_makes_the_gathered_schedule_unrunnable",
-      "line": 352,
+      "line": 411,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -24092,7 +24160,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/builtin.rs",
       "from_symbol": "vibe_spec::compiler::builtin::tests::removing_parse_makes_the_production_schedule_unrunnable",
-      "line": 317,
+      "line": 376,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -24268,7 +24336,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/ir/tests.rs",
       "from_symbol": "vibe_spec::compiler::ir::tests::owned_transform_apis_preserve_identity_and_make_mutation_deliberate",
-      "line": 350,
+      "line": 378,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
       "verb": "verifies"

@@ -291,20 +291,24 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 fn lane_has_one_frame_around_heterogeneous_contributions() {
-    let lane_node = |origin: &str, marker: NodeMarkers| LaneNode {
-        address: DocumentAddress::StaticEntry {
-            origin: origin.to_string(),
-            path: "boot/entry.md".to_string(),
-        },
-        origin: origin.to_string(),
-        body: format!("{origin}\n"),
-        markers: marker,
-    };
-    let lane = LaneIr::testing(
-        ArtifactContext::compatibility(StaticCompileMode::Plain),
+    let address = spec("spec://org.demo/alpha/boot/entry#root~r7");
+    let marker = LinkMarkerKey::from_address(&address);
+    let lane = LaneIr::assembled(
+        ArtifactContext::new(
+            ArtifactId::new("static-md").unwrap(),
+            ArtifactTarget::StaticMarkdown,
+            ArtifactFrame::StaticLane {
+                generated_path: "vibevm/vibespecs/boot/STATIC.md".to_string(),
+                source_root: "vibevm/vibedeps".to_string(),
+            },
+            StaticCompileMode::QualifyPerNode,
+        )
+        .unwrap(),
+        1,
+        LinkInputDigest([7; 32]),
         LaneFrame {
-            header: "HEADER\n".to_string(),
-            preamble: "PREAMBLE\n".to_string(),
+            generated_path: Some("vibevm/vibespecs/boot/STATIC.md".to_string()),
+            source_root: Some("vibevm/vibedeps".to_string()),
             renames: vec![OriginRename {
                 origin: "org.demo/alpha".to_string(),
                 rename: RenameEntry {
@@ -316,34 +320,58 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
         vec![
             LaneContribution::Normal {
                 meta: meta("org.demo/alpha"),
-                nodes: vec![lane_node(
-                    "org.demo/alpha",
-                    NodeMarkers::Reversible {
-                        key: "spec://org.demo/alpha/boot/entry".to_string(),
+                seed: ClosureNodeId(0),
+                seed_address: address.clone(),
+                chunks: vec![
+                    LaneChunk::NormalOpen {
+                        contribution: 0,
+                        occurrence: 0,
+                        marker: marker.clone(),
                     },
-                )],
+                    LaneChunk::Node(Box::new(LaneNode::Normal {
+                        contribution: 0,
+                        occurrence: 0,
+                        node: ClosureNodeId(0),
+                        requested_address: address,
+                        origin: "org.demo/alpha".to_string(),
+                        marker: marker.clone(),
+                        fence_before: LinkFenceSnapshot::Closed,
+                        fence_after: LinkFenceSnapshot::Closed,
+                        body: "ALPHA\n".to_string(),
+                    })),
+                    LaneChunk::NormalClose {
+                        contribution: 0,
+                        occurrence: 0,
+                        marker,
+                    },
+                ],
             },
             LaneContribution::Simple {
                 meta: meta("host"),
-                node: lane_node("host", NodeMarkers::None),
+                address: DocumentAddress::StaticEntry {
+                    origin: "host".to_string(),
+                    path: "boot/entry.md".to_string(),
+                },
+                chunks: Vec::new(),
             },
-            LaneContribution::Normal {
-                meta: meta("org.demo/omega"),
-                nodes: vec![lane_node(
-                    "org.demo/omega",
-                    NodeMarkers::Reversible {
-                        key: "spec://org.demo/omega/boot/entry".to_string(),
-                    },
-                )],
+            LaneContribution::Elided {
+                meta: meta("org.demo/elided"),
+            },
+            LaneContribution::Hoisted {
+                meta: meta("org.demo/hoisted"),
+                target: spec("spec://org.demo/hoisted/boot/entry#root"),
             },
         ],
     );
 
-    assert_eq!(lane.frame.header, "HEADER\n");
-    assert_eq!(lane.frame.preamble, "PREAMBLE\n");
+    assert_eq!(
+        lane.frame.generated_path.as_deref(),
+        Some("vibevm/vibespecs/boot/STATIC.md")
+    );
+    assert_eq!(lane.frame.source_root.as_deref(), Some("vibevm/vibedeps"));
     assert_eq!(lane.frame.renames.len(), 1);
-    assert_eq!(lane.contributions.len(), 3);
-    assert_eq!(lane.context().artifact().as_str(), "static-fragment");
+    assert_eq!(lane.contributions.len(), 4);
+    assert_eq!(lane.context().artifact().as_str(), "static-md");
 }
 
 #[test]

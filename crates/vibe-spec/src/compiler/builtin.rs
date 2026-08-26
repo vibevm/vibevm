@@ -8,9 +8,10 @@ use crate::{DocTree, SectionSource, SpecAddress};
 #[cfg(test)]
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
+use super::assemble::{ASSEMBLE_PASS_NAME, AssemblePass, AssemblePassError};
 use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
 use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
-use super::ir::{ArtifactPlan, ClosureIr, DocumentIr, SourceIr, StaticCompileMode};
+use super::ir::{ArtifactPlan, ClosureIr, DocumentIr, LaneIr, SourceIr, StaticCompileMode};
 use super::link::{LINK_PASS_NAME, LinkPass, LinkPassError};
 use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
@@ -97,7 +98,7 @@ pub(crate) struct BuiltinSchedule {
 }
 
 impl BuiltinSchedule {
-    fn new(plan: &ArtifactPlan) -> Self {
+    fn linked(plan: &ArtifactPlan) -> Self {
         let close_state = CloseState::default();
         let mut pipeline = CompilerPipeline::default();
         pipeline
@@ -127,6 +128,15 @@ impl BuiltinSchedule {
         }
     }
 
+    fn assembled(plan: &ArtifactPlan) -> Self {
+        let mut schedule = Self::linked(plan);
+        schedule
+            .pipeline
+            .push_artifact(AssemblePass::new())
+            .expect("the static built-in assemble schedule is valid");
+        schedule
+    }
+
     fn parse_source(&self, source: SourceIr) -> DocumentIr {
         self.pipeline
             .run_document(source)
@@ -142,7 +152,22 @@ impl BuiltinSchedule {
         documents: Vec<DocumentIr>,
     ) -> Result<ClosureIr, crate::pipeline::CompileError> {
         let documents = self.pipeline.gather_documents(documents);
-        match self.pipeline.run_to_closure(documents) {
+        self.map_artifact_result(self.pipeline.run_to_closure(documents))
+    }
+
+    fn assemble(
+        &self,
+        documents: Vec<DocumentIr>,
+    ) -> Result<LaneIr, crate::pipeline::CompileError> {
+        let documents = self.pipeline.gather_documents(documents);
+        self.map_artifact_result(self.pipeline.run_to_lane(documents))
+    }
+
+    fn map_artifact_result<T>(
+        &self,
+        result: Result<T, CompilerPipelineError>,
+    ) -> Result<T, crate::pipeline::CompileError> {
+        match result {
             Ok(closure) => Ok(closure),
             Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
                 if pass.as_str() == CLOSE_PASS_NAME =>
@@ -184,6 +209,16 @@ impl BuiltinSchedule {
                         panic!("the link pass returned an unexpected error type: {source}")
                     })
             }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == ASSEMBLE_PASS_NAME =>
+            {
+                let error = source
+                    .downcast::<AssemblePassError>()
+                    .unwrap_or_else(|source| {
+                        panic!("the assemble pass returned an unexpected error type: {source}")
+                    });
+                panic!("the built-in assemble pass rejected validated compiler state: {error}")
+            }
             Err(error) => panic!("the private built-in artifact schedule is invalid: {error}"),
         }
     }
@@ -197,7 +232,7 @@ pub(crate) fn compile_artifact_prefix(
     plan: ArtifactPlan,
     source: &impl SectionSource,
 ) -> Result<ClosureIr, crate::pipeline::CompileError> {
-    let schedule = BuiltinSchedule::new(&plan);
+    let schedule = BuiltinSchedule::linked(&plan);
     let worklist = worklist::discover(
         &plan,
         source,
@@ -207,6 +242,26 @@ pub(crate) fn compile_artifact_prefix(
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.close(worklist.documents)
+}
+
+/// Compile one validated whole artifact through the real Lane boundary.
+///
+/// This is crate-private until named emit and the workspace binder land. It is
+/// production code, not a test-only hand-built IR path.
+pub(crate) fn compile_artifact_lane(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+) -> Result<LaneIr, crate::pipeline::CompileError> {
+    let schedule = BuiltinSchedule::assembled(&plan);
+    let worklist = worklist::discover(
+        &plan,
+        source,
+        |input| schedule.parse_source(input),
+        |address, reason| schedule.record_failure(address, reason),
+    );
+    schedule.close_state.set_pending_sources(worklist.sources);
+    schedule.close_state.set_pending_embeds(worklist.embeds);
+    schedule.assemble(worklist.documents)
 }
 
 /// The one-normal compatibility adapter used by the public `compile_static*`
@@ -249,8 +304,8 @@ mod tests {
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb_link() {
-        let pipeline = BuiltinSchedule::new(&plan(StaticCompileMode::Plain)).pipeline;
+    fn production_lane_declares_parse_gather_close_merge_embed_qualify_absorb_link_assemble() {
+        let pipeline = BuiltinSchedule::assembled(&plan(StaticCompileMode::Plain)).pipeline;
         let schedule = pipeline.schedule();
 
         assert!(matches!(
@@ -264,6 +319,7 @@ mod tests {
                 ScheduleItem::Pass(qualify),
                 ScheduleItem::Pass(absorb),
                 ScheduleItem::Pass(link),
+                ScheduleItem::Pass(assemble),
             ] if parse.name.as_str() == PARSE_PASS_NAME
                 && parse.input == SourceIr::SHAPE
                 && parse.output == DocumentIr::SHAPE
@@ -285,13 +341,16 @@ mod tests {
                 && link.name.as_str() == LINK_PASS_NAME
                 && link.input == ClosureIr::SHAPE
                 && link.output == ClosureIr::SHAPE
+                && assemble.name.as_str() == ASSEMBLE_PASS_NAME
+                && assemble.input == ClosureIr::SHAPE
+                && assemble.output == LaneIr::SHAPE
         ));
     }
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
     fn parse_runs_once_for_each_addressed_document_then_gathers() {
-        let schedule = BuiltinSchedule::new(&plan(StaticCompileMode::Plain));
+        let schedule = BuiltinSchedule::linked(&plan(StaticCompileMode::Plain));
         let documents = schedule
             .pipeline
             .run_documents(vec![
@@ -332,7 +391,7 @@ mod tests {
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
     fn parse_failure_keeps_the_pass_name_and_concrete_source() {
-        let error = BuiltinSchedule::new(&plan(StaticCompileMode::Plain))
+        let error = BuiltinSchedule::linked(&plan(StaticCompileMode::Plain))
             .pipeline
             .run_documents(vec![source("unsupported", "body")])
             .unwrap_err();

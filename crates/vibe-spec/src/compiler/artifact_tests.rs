@@ -4,12 +4,16 @@ use std::collections::BTreeMap;
 use specmark::verifies;
 
 use super::absorb::{absorb_invocations, reset_absorb_invocations};
-use super::builtin::{compile_artifact_prefix, parse_invocations, reset_parse_invocations};
+use super::assemble::{assemble_invocations, reset_assemble_invocations};
+use super::builtin::{
+    compile_artifact_lane, compile_artifact_prefix, parse_invocations, reset_parse_invocations,
+};
 use super::embed::{embed_invocations, reset_embed_invocations};
 use super::ir::{
     ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactPlan, ArtifactTarget,
-    ClosureContribution, ContributionMeta, DocumentAddress, LinkContributionWitness,
-    LinkOccurrence, LinkState, SourceFormatId, SourceIr, StaticCompileMode,
+    ClosureContribution, ContributionMeta, DocumentAddress, LaneContribution, LaneNode,
+    LinkContributionWitness, LinkOccurrence, LinkState, SourceFormatId, SourceIr,
+    StaticCompileMode,
 };
 use super::link::{link_invocations, reset_link_invocations, validate_linked};
 use super::merge::{merge_invocations, reset_merge_invocations};
@@ -165,6 +169,7 @@ fn reset_counters() {
     reset_qualify_invocations();
     reset_absorb_invocations();
     reset_link_invocations();
+    reset_assemble_invocations();
 }
 
 #[test]
@@ -276,6 +281,55 @@ fn whole_artifact_prefix_is_heterogeneous_shared_and_gathered_once() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE")]
+fn real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane() {
+    let fixture = fixture();
+    reset_counters();
+    let lane = compile_artifact_lane(fixture.plan, &fixture.source).unwrap();
+
+    assert_eq!(gather_invocations(), 1);
+    assert_eq!(link_invocations(), 1);
+    assert_eq!(assemble_invocations(), 1);
+    assert_eq!(lane.context().target(), ArtifactTarget::StaticXml);
+    assert_eq!(
+        lane.frame.generated_path.as_deref(),
+        Some("vibevm/vibespecs/boot/STATIC.xml")
+    );
+    assert_eq!(lane.frame.source_root.as_deref(), Some("vibevm/vibedeps"));
+    assert!(matches!(
+        lane.contributions.as_slice(),
+        [
+            LaneContribution::Normal { .. },
+            LaneContribution::Simple { .. },
+            LaneContribution::Elided { .. },
+            LaneContribution::Hoisted { .. },
+            LaneContribution::Normal { .. },
+        ]
+    ));
+    let normal_nodes = lane
+        .contributions
+        .iter()
+        .filter_map(|contribution| match contribution {
+            LaneContribution::Normal { chunks, .. } => Some(
+                chunks
+                    .iter()
+                    .filter_map(|chunk| match chunk {
+                        super::ir::LaneChunk::Node(node) => match node.as_ref() {
+                            LaneNode::Normal { node, .. } => Some(*node),
+                            LaneNode::Simple { .. } => None,
+                        },
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>(),
+            ),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(normal_nodes.len(), 2);
+    assert_eq!(normal_nodes[0][0], normal_nodes[1][0]);
+}
+
+#[test]
 fn plan_order_occurrence_multiplicity_and_identity_are_link_replay_inputs() {
     let fixture = fixture();
     let closure = compile_artifact_prefix(fixture.plan, &fixture.source).unwrap();
@@ -320,6 +374,7 @@ fn artifact_plan_rejects_mismatched_simple_identity_before_discovery() {
 
 #[test]
 fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
+    reset_assemble_invocations();
     let dep = "spec://org.demo/dep/boot/entry#root";
     let root = "spec://org.demo/root/boot/entry#root";
     let source = CountingSource::with(&[
@@ -375,6 +430,11 @@ fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
                 "org-z--z--SHARED (org.z/z)".to_string(),
             ]
     ));
+    assert_eq!(
+        assemble_invocations(),
+        0,
+        "one-seed compatibility wrappers stay on the legacy linked tail until emit"
+    );
 }
 
 #[path = "artifact_tests/repair.rs"]

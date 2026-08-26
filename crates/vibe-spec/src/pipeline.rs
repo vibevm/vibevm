@@ -16,8 +16,9 @@
 //! 6. **link** — named `link` resolves surviving cross-node short references
 //!    into backend-neutral typed occurrences;
 //! 7. **compatibility tail** — only the public one-seed adapters temporarily
-//!    spell reversible Markdown markers from those typed semantics. Whole
-//!    artifact assemble/emit replace this tail in the next atoms.
+//!    spell reversible Markdown markers from those typed semantics. The real
+//!    whole-artifact path already ends at named assemble; named emit replaces
+//!    this compatibility tail in the next atom.
 //!
 //! A `#use` line is *resolved by the ordering* — its target is emitted, once,
 //! above — so the line itself is stripped from a node's body on emit; it would

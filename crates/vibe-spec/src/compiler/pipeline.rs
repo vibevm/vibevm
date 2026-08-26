@@ -9,7 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 use std::collections::BTreeSet;
 
 use super::ir::{
-    ClosureIr, DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, SourceIr,
+    ClosureIr, DocumentIr, Documents, EmittedIr, IrCardinality, IrLevel, IrShape, LaneIr, SourceIr,
 };
 use super::pass::{
     AnyIr, IrPayload, Pass, PassDescriptor, PassName, PassSegment, PassSegmentError,
@@ -19,6 +19,7 @@ const SOURCE_DOCUMENT: IrShape = IrShape::new(IrLevel::Source, IrCardinality::Do
 const DOCUMENT_DOCUMENT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Document);
 const DOCUMENT_ARTIFACT: IrShape = IrShape::new(IrLevel::Document, IrCardinality::Artifact);
 const CLOSURE_ARTIFACT: IrShape = IrShape::new(IrLevel::Closure, IrCardinality::Artifact);
+const LANE_ARTIFACT: IrShape = IrShape::new(IrLevel::Lane, IrCardinality::Artifact);
 const EMITTED_ARTIFACT: IrShape = IrShape::new(IrLevel::Emitted, IrCardinality::Artifact);
 
 /// The typed cardinality boundary between per-document and per-artifact work.
@@ -193,6 +194,32 @@ impl CompilerPipeline {
             other => Err(CompilerPipelineError::UnexpectedCarrier {
                 boundary: "artifact closure output",
                 expected: CLOSURE_ARTIFACT,
+                actual: other.shape(),
+            }),
+        }
+    }
+
+    /// Run the declared whole-artifact prefix through the named assemble lowering.
+    pub(crate) fn run_to_lane(
+        &self,
+        documents: Documents,
+    ) -> Result<LaneIr, CompilerPipelineError> {
+        self.expect_boundary(
+            "artifact segment input",
+            DOCUMENT_ARTIFACT,
+            self.artifact.first_input(),
+        )?;
+        self.expect_boundary(
+            "artifact lane output",
+            LANE_ARTIFACT,
+            self.artifact.last_output(),
+        )?;
+        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        match output {
+            AnyIr::Lane(lane) => Ok(lane),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "artifact lane output",
+                expected: LANE_ARTIFACT,
                 actual: other.shape(),
             }),
         }

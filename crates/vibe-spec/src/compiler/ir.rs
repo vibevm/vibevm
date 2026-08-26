@@ -16,6 +16,8 @@ use super::source_snapshot::SourceResolutionSnapshot;
 
 mod artifact;
 pub(crate) use artifact::*;
+mod lane;
+pub(crate) use lane::*;
 mod link;
 pub(crate) use link::*;
 
@@ -442,70 +444,6 @@ impl ClosureIr {
             link,
             pending_sources,
             pending_embeds,
-        }
-    }
-
-    pub(crate) fn context(&self) -> &ArtifactContext {
-        &self.context
-    }
-}
-
-/// The single shared frame surrounding one assembled lane.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct LaneFrame {
-    pub(crate) header: String,
-    pub(crate) preamble: String,
-    pub(crate) renames: Vec<OriginRename>,
-}
-
-/// Reversible compiler-marker policy of one lane node.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum NodeMarkers {
-    None,
-    Reversible { key: String },
-}
-
-/// One structured node ready for lane serialisation.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct LaneNode {
-    pub(crate) address: DocumentAddress,
-    pub(crate) origin: String,
-    pub(crate) body: String,
-    pub(crate) markers: NodeMarkers,
-}
-
-/// One contribution in the final artifact's declaration order.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum LaneContribution {
-    Normal {
-        meta: ContributionMeta,
-        nodes: Vec<LaneNode>,
-    },
-    Simple {
-        meta: ContributionMeta,
-        node: LaneNode,
-    },
-}
-
-/// One fully framed artifact, still structured and not yet serialised.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct LaneIr {
-    context: ArtifactContext,
-    pub(crate) frame: LaneFrame,
-    pub(crate) contributions: Vec<LaneContribution>,
-}
-
-impl LaneIr {
-    #[cfg(test)]
-    pub(crate) fn testing(
-        context: ArtifactContext,
-        frame: LaneFrame,
-        contributions: Vec<LaneContribution>,
-    ) -> Self {
-        Self {
-            context,
-            frame,
-            contributions,
         }
     }
 
