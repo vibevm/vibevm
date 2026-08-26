@@ -1,0 +1,255 @@
+# Lifecycle/extensions — implementation reconciliation ledger
+
+_Rolling owner-facing checkpoint, 2026-08-26. This is the durable execution
+map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
+`SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
+with landed commit, source, and decisive test evidence._
+
+## 1. Why this ledger exists
+
+Several worker processes were lost during a multi-hour network outage, while
+the old WAL, CONTINUE and TZ header still said that implementation had not
+started. The repository and every campaign worktree were reconciled against
+`main` before continuing.
+
+Result: **no unique implementation was lost or stranded.** Final R3.2, R7.1 and
+R8.1 worktrees contain only packets/reports beyond their landed commits.
+Intermediate dirty R2/R3 worktrees are older construction snapshots superseded
+by richer files on `main`; keep them until the epic closes, but do not treat
+them as candidate patches. Missing later waves were never implemented.
+
+The reusable decisions from untracked architecture/review reports are
+synthesised below. Those reports are evidence inputs, not authority and not the
+only durable home of a decision.
+
+## 2. Evidence standard and current baseline
+
+- Audit base: `main` at `b4bfe6bd` plus the two integration repairs
+  `ae1a90af` and `7ac27240` already included below that head.
+- `cargo test --workspace --locked`: green on 2026-08-26 after the repairs.
+- `cargo xtask specmap --check`: 6769 units, 1670 tagged code items, 1526
+  edges, 0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
+  warnings.
+- Judging debt on the real host worktree: 19,496 addressable marked facts,
+  0 unjudged, 0 orphaned, 35 stale files. `text-stability.py` currently refuses
+  its own result because all 502 judged files disagree with its stale hash
+  recipe; repair/replace that instrument before claiming per-fact stability.
+- Full 47-step panel for this batch: pending. Two runs reached workspace tests
+  and exposed real integration tails (redacted TOML diagnostic oracle; expected
+  boot transaction lock); both are repaired and exact tests are green.
+- Publication: `main` is 10 commits ahead of both mirrors at this checkpoint.
+  Mirror immediately after the current unchanged batch panel is green.
+
+## 3. Granular R1–R8 ledger
+
+Legend: `done` = landed and proven; `partial` = useful substrate only;
+`missing` = no production implementation; `future` = deliberately not built in
+this campaign, but compatibility law is preserved.
+
+### R1 — diff materialisation
+
+| Step | State | Landed evidence |
+|---|---|---|
+| R1.1 strict JTD slot record | done | `6d606ef2`; `vibedeps/slot_record.rs`; slot-record corpus/tests |
+| R1.2 record-owned diff, no wipe | done | `1cf4f189`; `vibedeps/slot_diff*`; unrecorded/mtime/hardlink reds |
+| R1.3 mutable-source hash gate | done | `6a7f750d`; mutable install unit + CLI e2e |
+| R1.4 verify-heal and hook only on nonempty diff (owner 3.A) | done | `4503fdb6`, `9c545f0d`; `cli_hook_rerun.rs` |
+| R1.5 amendment draft | done as draft | `c7438ff0` and `SPEC-DEBT-LIFECYCLE.md` §§1–7; authoritative movement pending |
+
+### R2 — lifecycle engine
+
+| Step | State | Landed evidence |
+|---|---|---|
+| R2.1 strict `[[extension]]` grammar | done | `b580bd1d`; manifest wire/semantic suites |
+| R2.2 nine-phase line, phase verbs, clean chain | done | `8d91ccf3`, `26cc4472`; `cli_lifecycle.rs` |
+| R2.3 two-epoch collection/order/controls/selectors | done | `85f5eb56`, `767fb4da`, `f2e97fff`; registry + pre-barrier tests |
+| R2.4 envelope and builtin `log` | done | `910e022c`; lifecycle wire + dispatch tests |
+| R2.5 durable freshness and `--force` | done | `07941230`; state and update-world tests |
+| R2.6 script/binary handlers and hook sugar | done | `a8aa5d4a`; script/binary/failure/hook suites |
+| R2.7 data presets and `vibe extensions` | done | `21ff9da7`, `516b49b7`; preset/query/JTD corpus tests |
+| R2.8 owner scenario §10.1 | done | `3137990c`; `cli_lifecycle_commissioning.rs` |
+
+### R3 — explicit compiler IR and manager
+
+| Step | State | Landed evidence / exact absence |
+|---|---|---|
+| R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
+| R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
+| R3.3 verifier-each skeleton | in progress | no landed manager semantic hook; implementation worktree `codex/r3-verifier` |
+| R3.4 compile snapshots/timings | missing | no `trace_compile`, `[compile] trace`, or `.vibe/trace` production surface |
+
+R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
+unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
+
+### R4 — tier-1 staged transforms
+
+| Step | State | Evidence |
+|---|---|---|
+| R4.0 one pure registry below lifecycle/workspace | missing | required to avoid a dependency cycle and a duplicate extension machine |
+| R4.1 four positions, host activation, header, fingerprint, reference oracle | missing | no transform descriptors/passes/header binding |
+| R4.2 builtin XML minify | partial | pure strict kernel `016f0fab` and reversible comment codec `fbbd5140`; no activation/on-off e2e |
+| R4.3 lane analyzer | missing | no `vibe extensions analyze` or machine report |
+
+### R5 — native tier
+
+| Step | State | Required result |
+|---|---|---|
+| R5.1 native JTD context/reply/manifest + `vibe-ext` macro | missing | schema first; panic-abort compile refusal; unwind catch boundary |
+| R5.2 loader | missing | separate unsafe-quarantine crate, libloading/cache/free-once tests |
+| R5.3 source/prebuilt resolution and in-slot build | partial substrate | build ignores exist; no native artifact/provider build path |
+| R5.4 pending bootstrap convergence | missing | install may mark pending; build rebuilds and recompiles once |
+| R5.5 native/builtin minify parity | missing | owner scenario §10.2 |
+
+### R6 — full compiler pass tier
+
+| Step | State | Evidence / gap |
+|---|---|---|
+| R6.1 `compiler_internals` + executable pass grammar | partial | conspicuous flag/raw table land; kind-specific required/forbidden fields intentionally deferred |
+| R6.2 whole-IR wire | missing | one JTD epoch with six discriminated carriers required |
+| R6.3 before/after/replace, frontend/backend | missing | compiler never consumes manifest pass rows |
+| R6.4 mandatory verifier after plugin passes | missing | depends on R3.3/R5 |
+| R6.5 `.txt` frontend + JSON lane backend e2e | missing | no custom format registry/backend artifact surface |
+
+### R7 — provider, create and hosted-agent tier
+
+| Step | State | Evidence / gap |
+|---|---|---|
+| R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
+| R7.2 CLI agent handler + output contract | missing | `ExtensionHandler::Agent` parses but runtime rejects it as non-process-backed |
+| R7.3 hosted outbox/delegated resume | missing | delegated enum exists; no durable run id/outbox/fenced block/resume |
+| R7.4 MCP lifecycle surfaces | missing | no `lifecycle_run` or `lifecycle_tasks` tools |
+
+R7.1 live Z.AI smoke was environment-inconclusive; mock/security gates are the
+current proof. The algorithmic system remains fully usable with no provider.
+
+### R8 — package, build and deploy substance
+
+| Atom | State | Evidence / gap |
+|---|---|---|
+| R8.1 project package-skill binding | done | `c0fa49be`, `9275f373`; strict JTD receipt, intent/recovery/CAS/containment, Claude/Codex/OpenCode project projections |
+| artifact records and target DAG | missing | no `[[artifacts.build]]`/`[[artifacts.package]]` grammar or registry |
+| `[[mechanism]]` providers and host routing | missing | no build/package/deploy/acquire mechanism plane |
+| Cargo commissioning build provider | missing | no metadata/compiler-artifact JSON selection through lifecycle |
+| fully static one-file skill | missing | no include-consumption/static safety builder |
+| Agent Plugins 1.0 directory | missing | no plugin schema/package provider |
+| Claude/Codex/OpenCode client projections and local deploy | partial only | project skill writer is not a portable plugin artifact or user deployment |
+| deploy targets/profiles/plan/undeploy | missing | draft grammar/rulings only |
+| intent/receipt/recovery for general destinations | partial precedent | package-skill receipt is safe but not the general deploy protocol |
+| `deploy:vibe-bin` under `~/.vibe/bin` | missing | existing `vibe bin` is a different project-pinned launcher genre |
+| deterministic Windows zip lifecycle binding | missing | pre-campaign scripts/archive recipe exist outside lifecycle |
+| plugin-overridable builder/installer/deployer fixture | missing | no mechanism selection or replacement e2e |
+
+## 4. Owner additions — preservation and implementation status
+
+All additions are durably captured by `518be400` in
+`BUILD-PACKAGE-DEPLOY-ARCHITECTURE-v0.1.md` and the R7/R8 spec-debt
+continuation. They are not silently reduced to the old three-line R8 minimum.
+
+| Owner requirement | Durable law | Implementation |
+|---|---|---|
+| LLM is optional paid enhancement | algorithmic baseline; `off/assist/required`; lazy provider; per-feature/run budgets | missing outside provider seam |
+| Static skill artifact | exactly one validated `SKILL.md`; explicit include consumption | missing |
+| Agent Plugin | 1.0 directory, portable skill/MCP subset, client projections distinct | missing |
+| Classic Cargo/meta-build | provider protocol, Cargo metadata + JSON artifact messages, no autodetect | missing |
+| Claude/Codex/OpenCode local install | versioned adapters; CLI/public filesystem contracts; ownership receipts | project projection only |
+| VibeVM tools in `~/.vibe/bin` | immutable store + version-free launcher; separate from `vibe bin` | missing |
+| Deploy profiles | named target selections; local/remote; explicit default; plan and inverse | missing |
+| User-overridable mechanisms | exact pin → host route → builtin default → failure | missing |
+| Download/system package managers/VibeVM OS horizon | qualified identities; desired/artifact/deployment separate; effect class + receipt | future by design; compatibility constraints active now |
+
+## 5. Architecture decisions in force
+
+1. One nine-phase line: dependency materialisation is `install`; user/remote/
+   system placement is `deploy`; `package` mutates no destination.
+2. One extension/mechanism plane. Scheduled contributions answer _when_;
+   sibling mechanism providers answer _how_. Builtins are ordinary qualified
+   providers and may be deliberately replaced by host routing.
+3. Source/document calls are per addressed document. Documents gather once;
+   closure/lane/emitted are per complete final artifact. Compatibility wrappers
+   are never production whole-artifact drivers.
+4. The R3 verifier is immutable, manager-owned and test-only now; R6 enables
+   the same seam unconditionally. DuplicateId semantics are reused, not
+   strengthened accidentally. Use/Source cycles are checked separately with
+   the existing contract-only exception; Embed is strictly acyclic; the union
+   is not one recursion graph.
+5. Pull the R6.2 JTD compiler-IR projection before R3.4. It has six tagged
+   carriers (`source-document`, `document-document`, `documents-artifact`,
+   `closure-artifact`, `lane-artifact`, `emitted-artifact`) and is also the
+   trace snapshot document. No handwritten trace DTO or serde on domain IR.
+6. Compiler registry collection is extracted to a lower pure crate and reused
+   by lifecycle and workspace; no dependency cycle and no second collector.
+7. R4 transforms run after the untransformed reference oracle. Empty transform
+   plans preserve exact historical bytes; active ordered plan/config/provider
+   identity enters fingerprints and an honest artifact header.
+8. Native wire is C+JSON, JTD-first. `vibe-ext` is safe author SDK; a separate
+   host crate quarantines libloading/unsafe. `panic=abort` extension builds
+   compile-refuse.
+9. R7 exact provider id is `openai-compatible`; project provider/model merge
+   per field over user config; nonempty project env credential beats user token
+   file; absolute operator token paths are legal; `~` is literal. Keyed HTTPS,
+   keyless loopback HTTP only, redirects off, no body/secret diagnostics.
+10. Hosted resume extends existing lifecycle state with a durable run id; it
+    reuses the same outbox/task path until outputs satisfy the contract. MCP is
+    a second adapter over those files, not a second mailbox.
+11. Automatic package skill binding is project-only. User/client installation
+    is explicit deploy, never an implicit side effect of package.
+12. Every external mutation has plan, effect class, intent, independent verify
+    and receipt. A third observed digest refuses; inverse removes only verified
+    owned state. Future OS resources reuse this law.
+
+## 6. Physical state and loss prevention
+
+- The final R3.2/R7.1/R8.1 branch commits are patch-equivalent or superseded by
+  `main`; their remaining files are reports/packets only.
+- No campaign stash exists. Do not delete old worktrees until final audit.
+- `cache/` is untracked and unignored. It is not a product home. Important
+  decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
+  ledger; future accepted decisions go directly here/spec-debt/code comments.
+- `main` must not remain single-box-only across another long wave. After the
+  current batch panel, run `cargo xtask mirror` before starting the next large
+  fan-out.
+
+## 7. Dependency plan and parallel lanes
+
+### Serialization 0 — restore a truthful durable baseline
+
+1. Land this ledger and refresh TZ/WAL/CONTINUE/TASKS pointers.
+2. Finish one unchanged full panel, host check, specmap and boot-byte no-op.
+3. Mirror the accumulated ten-commit batch.
+
+### Lane A — compiler and native/pass tiers (longest)
+
+1. R3.3 verifier.
+2. Compiler IR JTD epoch and strict domain conversion substrate.
+3. R3.4 trace/timings using that same wire.
+4. Pure registry extraction.
+5. R4.1 staged positions/header/oracle/fingerprint.
+6. R4.2 XML minify binding and full RED corpus.
+7. R4.3 analyzer wire/CLI.
+8. R5 native wire + SDK; loader; build/prebuilt; bootstrap; parity.
+9. R6 executable grammar/positions/frontends/backends/mandatory verifier/e2e.
+
+### Lane B — create and hosted agent (parallel after baseline)
+
+1. Agent output contract and generated agent-result wire; CLI provider path.
+2. Feature-level algorithmic enhancement policy (`off/assist/required`) and
+   lazy provider/budget accounting where a real enhancement consumes it.
+3. Lifecycle run-id wire; outbox/delegated resume; invoked-by adapter.
+4. MCP run/tasks adapters and standalone/hosted e2e.
+
+### Lane C — artifact/build/package/deploy (parallel, manifest edits serialized)
+
+1. Artifact records/target DAG and mechanism registry/routing.
+2. Cargo provider and `[[binary]]` compatibility lowering.
+3. Static-skill and Agent Plugin package providers in parallel.
+4. Client projections and general deploy planner/intent/receipt/recovery.
+5. `vibe-bin`, profiles/plan/undeploy, plugin replacement fixture and Windows
+   zip provider.
+
+### Final serialization
+
+Apply every spec-debt amendment/status with landed evidence, repair the
+stability instrument, run both owner scenarios, independent audit, final
+unchanged full panel, and mirror. The epic is not complete before every row in
+§3 is `done` or explicitly `future` by the owner design.
+

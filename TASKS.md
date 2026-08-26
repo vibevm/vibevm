@@ -35,6 +35,51 @@ owner's ruling and wins.
 
 ---
 
+## Current slice: lifecycle engine and extension machine (2026-08-26)
+
+**Carrier:**
+[`TZ-LIFECYCLE-EXTENSIONS-v0.1.md`](campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md).
+**Truthful status / dependency graph:**
+[`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](campaigns/packages-2026-09/LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).
+The ledger is the granular checklist; these rows are the commit-sized wave
+fronts currently in flight. A worker report or old worktree is never completion.
+
+- [x] **R1** — slot record, record-owned diff, mutable hash gate, verify-heal,
+      hook-on-nonempty-diff and amendment draft.
+- [x] **R2** — nine-phase engine, controls/order, envelope/freshness,
+      script/binary, presets/query and owner scenario §10.1.
+- [x] **R3.1–R3.2** — explicit multi-level IR and the whole named
+      parse→…→emit artifact schedule with crash-safe publication.
+- [~] **R3.3** — immutable test-only verifier at the pass-manager boundary
+      (`codex/r3-verifier`, `claudez` execution; root review/commit).
+- [ ] **R6.2a before R3.4** — schema-first six-carrier compiler IR wire and
+      corpus (`codex/r6-ir-wire`); then strict domain conversion.
+- [ ] **R3.4** — compile snapshots/timings over that same wire.
+- [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
+      transforms header/fingerprint/reference oracle; minify binding; analyzer.
+- [ ] **R5.1–R5.5** — native schemas/SDK, loader, source/prebuilt build,
+      pending convergence and native/builtin parity (§10.2).
+- [ ] **R6.1/R6.3–R6.5** — executable pass grammar, native pass placement,
+      mandatory verifier, `.txt` frontend and JSON backend.
+- [x] **R7.1** — real OpenAI-compatible provider seam and security gates.
+- [~] **R7.2** — CLI agent/output contract (`codex/r7-agent-cli`, Opus/max);
+      algorithmic default remains complete with no selected agent row.
+- [ ] **R7.3–R7.4** — durable hosted outbox/resume and shared MCP surfaces.
+- [x] **R8.1** — project-only package skill binding with strict ownership,
+      recovery and Claude/Codex/OpenCode projections.
+- [~] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar
+      (`codex/r8-mechanism-grammar`, `claudez`).
+- [ ] **R8.2–R8.4** — artifact records, Cargo provider, static skill, Agent
+      Plugin, client deploy, general receipts, `vibe-bin`, profiles, plugin
+      replacement and deterministic Windows zip.
+- [~] **Durable recovery baseline** — truthful TZ/TASKS/WAL/CONTINUE + ledger;
+      full panel, boot-byte no-op and mirror the currently single-box commits.
+- [ ] **Epic close** — authoritative spec-debt/status application, judging
+      stability repair, both owner scenarios, independent audit, final panel
+      and mirror rollout.
+
+---
+
 ## Current slice: РЕЛИЗ 1.0.0 — марафон (owner rulings 2026-08-20)
 
 **Носитель — [`campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md`](campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md)**;
