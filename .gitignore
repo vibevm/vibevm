@@ -13,6 +13,11 @@ Cargo.lock.bak
 # vibevm internal cache (per-project, gitignored per spec §4.2)
 .vibe/
 
+# vibevm boot-artifact control files — the persistent `.vibe-boot-artifacts.lock`
+# plus crash-retained journal/stage names, in the node root or boot directory.
+# Generated engine state, never authored; STATIC/INDEX/redirects stay tracked.
+**/.vibe-boot-*
+
 # Editor / OS
 .idea/
 .vscode/

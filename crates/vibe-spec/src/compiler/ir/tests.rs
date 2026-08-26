@@ -85,25 +85,25 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     let plan = ArtifactPlan::new(
         context,
         vec![
-            ArtifactInput::Normal {
+            ArtifactInput::from_kind(ArtifactInputKind::Normal {
                 meta: meta("org.demo/alpha"),
                 seed: spec("spec://org.demo/alpha/boot/entry"),
-            },
-            ArtifactInput::Simple {
+            }),
+            ArtifactInput::from_kind(ArtifactInputKind::Simple {
                 meta: simple_meta,
                 source: simple_source,
-            },
-            ArtifactInput::Elided {
+            }),
+            ArtifactInput::from_kind(ArtifactInputKind::Elided {
                 meta: meta("org.demo/elided"),
-            },
-            ArtifactInput::Hoisted {
+            }),
+            ArtifactInput::from_kind(ArtifactInputKind::Hoisted {
                 meta: meta("org.demo/hoisted"),
                 target: spec("spec://org.demo/hoisted/boot/entry"),
-            },
-            ArtifactInput::Normal {
+            }),
+            ArtifactInput::from_kind(ArtifactInputKind::Normal {
                 meta: meta("org.demo/omega"),
                 seed: spec("spec://org.demo/omega/boot/entry"),
-            },
+            }),
         ],
     )
     .unwrap();
@@ -111,10 +111,10 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     assert_eq!(plan.context().artifact().as_str(), "static-md");
     assert_eq!(plan.context().mode(), StaticCompileMode::QualifyPerNode);
     assert!(matches!(
-        plan.contributions()[0],
-        ArtifactInput::Normal { .. }
+        plan.contributions()[0].kind(),
+        ArtifactInputKind::Normal { .. }
     ));
-    let ArtifactInput::Simple { source, meta } = &plan.contributions()[1] else {
+    let ArtifactInputKind::Simple { source, meta } = plan.contributions()[1].kind() else {
         panic!("middle contribution must remain simple")
     };
     assert_eq!(meta.origin, "ungrouped-host");
@@ -125,16 +125,16 @@ fn artifact_plan_keeps_normal_simple_normal_without_a_fake_simple_address() {
     ));
     assert_eq!(source.format().as_str(), "markdown");
     assert!(matches!(
-        plan.contributions()[2],
-        ArtifactInput::Elided { .. }
+        plan.contributions()[2].kind(),
+        ArtifactInputKind::Elided { .. }
     ));
     assert!(matches!(
-        plan.contributions()[3],
-        ArtifactInput::Hoisted { .. }
+        plan.contributions()[3].kind(),
+        ArtifactInputKind::Hoisted { .. }
     ));
     assert!(matches!(
-        plan.contributions()[4],
-        ArtifactInput::Normal { .. }
+        plan.contributions()[4].kind(),
+        ArtifactInputKind::Normal { .. }
     ));
 }
 
@@ -413,4 +413,49 @@ fn owned_transform_apis_preserve_identity_and_make_mutation_deliberate() {
 fn internal_ids_reject_blank_values() {
     assert!(SourceFormatId::new(" \t").is_err());
     assert!(ArtifactId::new("\n").is_err());
+}
+
+#[test]
+fn public_normal_and_hoisted_inputs_bind_origin_to_typed_package_authority() {
+    let valid = ArtifactInput::hoisted(
+        "org.demo/pkg [shared by org.demo/a]",
+        "vibevm/vibedeps/org.demo.pkg/1.0.0/boot/entry.md",
+        spec("spec://org.demo/pkg/boot/entry"),
+    );
+    assert!(valid.is_ok());
+    for (origin, target) in [
+        ("org.demo/pkg", "spec://org.other/pkg/boot/entry"),
+        ("org.demo/pkg", "spec://host/boot-entry"),
+        ("org.demo/pkg", "spec://org.demo/pkg@1.0.0/boot/entry"),
+        ("org.demo/pkg", "spec://org.demo/pkg/boot/entry#root"),
+    ] {
+        assert!(
+            ArtifactInput::hoisted(origin, "boot/entry.md", spec(target)).is_err(),
+            "accepted {origin} -> {target}"
+        );
+    }
+    assert!(
+        ArtifactInput::hoisted(
+            "org.demo/pkg\nforged",
+            "boot/entry.md",
+            spec("spec://org.demo/pkg/boot/entry"),
+        )
+        .is_err()
+    );
+    assert!(
+        ArtifactInput::hoisted(
+            "org.demo/pkg forged",
+            "boot/entry.md",
+            spec("spec://org.demo/pkg/boot/entry"),
+        )
+        .is_err()
+    );
+    assert!(
+        ArtifactInput::normal(
+            "org.demo/a",
+            "boot/entry.md",
+            spec("spec://org.demo/b/boot/entry"),
+        )
+        .is_err()
+    );
 }

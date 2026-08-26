@@ -146,7 +146,7 @@ fn ambiguity_keeps_duplicate_candidates_and_manager_attribution() {
     assert_eq!(pass.as_str(), LINK_PASS_NAME);
     assert!(matches!(
         source.downcast_ref::<LinkPassError>(),
-        Some(LinkPassError::AmbiguousShortLink { label, candidates })
+        Some(LinkPassError::AmbiguousShortLink { label, candidates, .. })
             if label == "X"
                 && candidates == &["same--X (one)".to_string(), "same--X (two)".to_string()]
     ));

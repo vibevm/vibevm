@@ -41,6 +41,16 @@ mod transforms;
 mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
+pub use compiler::builtin::{ArtifactCompileError, compile_artifact};
+#[cfg(feature = "test-support")]
+pub use compiler::builtin::{
+    compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
+    compile_artifact_replacement_test_vehicle,
+};
+pub use compiler::ir::{
+    ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
+    ArtifactPlanError, ArtifactTarget, EmissionProvenance, EmittedArtifact,
+};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId, NodeKind};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};

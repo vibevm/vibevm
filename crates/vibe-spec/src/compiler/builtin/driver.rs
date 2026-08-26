@@ -1,0 +1,172 @@
+use crate::{SectionSource, SpecAddress};
+
+#[cfg(feature = "test-support")]
+use super::super::backend::BackendId;
+use super::super::backend::BackendRegistry;
+use super::super::ir::{ArtifactInputWitness, ArtifactPlan, EmittedArtifact, StaticCompileMode};
+use super::super::worklist::{self, ErrorOwners};
+use super::BuiltinSchedule;
+
+#[derive(Debug, thiserror::Error)]
+pub enum ArtifactCompileError {
+    #[error("artifact input {} ({}) failed: {source}", input.index, input.origin)]
+    Input {
+        input: ArtifactInputWitness,
+        #[source]
+        source: Box<ArtifactCompileError>,
+    },
+    #[error(transparent)]
+    Compile(#[from] crate::pipeline::CompileError),
+    #[error("compiler backend registry failed: {reason}")]
+    Registry { reason: String },
+    #[error("compiler pass `{pass}` failed: {reason}")]
+    Pass { pass: String, reason: String },
+    #[error("compiler backend pass `{pass}` failed: {reason}")]
+    Backend { pass: String, reason: String },
+    #[error("compiler manager failed: {reason}")]
+    Manager { reason: String },
+}
+
+pub fn compile_artifact(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    compile_artifact_with_registry(plan, source, &BackendRegistry::builtins())
+}
+
+pub(crate) fn compile_artifact_with_registry(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    registry: &BackendRegistry,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let schedule = BuiltinSchedule::emitted(&plan, registry).map_err(|error| {
+        ArtifactCompileError::Registry {
+            reason: error.to_string(),
+        }
+    })?;
+    run(plan, source, schedule)
+}
+
+#[cfg(feature = "test-support")]
+pub(crate) fn compile_artifact_with_backend_id(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    registry: &BackendRegistry,
+    backend: &BackendId,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let implementation = registry
+        .get(backend)
+        .map_err(|error| ArtifactCompileError::Registry {
+            reason: error.to_string(),
+        })?;
+    let schedule = BuiltinSchedule::with_backend(&plan, implementation);
+    run(plan, source, schedule)
+}
+
+#[cfg(feature = "test-support")]
+#[doc(hidden)]
+pub fn compile_artifact_opaque_test_vehicle(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let plan = ArtifactPlan::custom_for_test("opaque-test", plan.contributions().to_vec())
+        .map_err(|error| ArtifactCompileError::Manager {
+            reason: error.to_string(),
+        })?;
+    let mut registry = BackendRegistry::default();
+    registry
+        .register(std::sync::Arc::new(
+            super::super::emit::opaque_test_vehicle::OpaqueTestBackend::new(),
+        ))
+        .map_err(|error| ArtifactCompileError::Registry {
+            reason: error.to_string(),
+        })?;
+    compile_artifact_with_backend_id(
+        plan,
+        source,
+        &registry,
+        &BackendId::new("opaque-test").expect("test vehicle id is valid"),
+    )
+}
+
+#[cfg(feature = "test-support")]
+#[doc(hidden)]
+pub fn compile_artifact_missing_backend_test_vehicle(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    compile_artifact_with_registry(plan, source, &BackendRegistry::default())
+}
+
+#[cfg(feature = "test-support")]
+#[doc(hidden)]
+pub fn compile_artifact_replacement_test_vehicle(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let mut registry = BackendRegistry::builtins();
+    registry
+        .replace(std::sync::Arc::new(
+            super::super::emit::opaque_test_vehicle::OpaqueTestBackend::replacement(),
+        ))
+        .map_err(|error| ArtifactCompileError::Registry {
+            reason: error.to_string(),
+        })?;
+    compile_artifact_with_registry(plan, source, &registry)
+}
+
+fn run(
+    plan: ArtifactPlan,
+    source: &impl SectionSource,
+    schedule: BuiltinSchedule,
+) -> Result<EmittedArtifact, ArtifactCompileError> {
+    let worklist = worklist::discover(
+        &plan,
+        source,
+        |input| schedule.parse_source(input),
+        |address, reason| schedule.record_failure(address, reason),
+    );
+    schedule.close_state.set_pending_sources(worklist.sources);
+    schedule.close_state.set_pending_embeds(worklist.embeds);
+    schedule.emit(worklist.documents, &plan, &worklist.owners)
+}
+
+pub(crate) fn compile_compatibility_artifact(
+    seed: &SpecAddress,
+    source: &impl SectionSource,
+    mode: StaticCompileMode,
+) -> Result<EmittedArtifact, crate::pipeline::CompileError> {
+    match compile_artifact(ArtifactPlan::compatibility(seed.clone(), mode), source) {
+        Ok(emitted) => Ok(emitted),
+        Err(error) => Err(into_compatibility_error(error)),
+    }
+}
+
+fn into_compatibility_error(error: ArtifactCompileError) -> crate::pipeline::CompileError {
+    match error {
+        ArtifactCompileError::Compile(error) => error,
+        ArtifactCompileError::Input { source, .. } => into_compatibility_error(*source),
+        error => panic!("the built-in compatibility backend failed: {error}"),
+    }
+}
+
+pub(super) fn attribute_compile_error(
+    error: crate::pipeline::CompileError,
+    plan: &ArtifactPlan,
+    owners: &ErrorOwners,
+    explicit_input: Option<usize>,
+) -> ArtifactCompileError {
+    let owner = explicit_input.or_else(|| {
+        error
+            .attribution_address()
+            .and_then(|address| owners.owner(address))
+    });
+    let base = ArtifactCompileError::Compile(error);
+    match owner.and_then(|index| plan.input_witness(index)) {
+        Some(input) => ArtifactCompileError::Input {
+            input,
+            source: Box::new(base),
+        },
+        None => base,
+    }
+}

@@ -19,6 +19,7 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    BootArtifactTransaction,
     CliExtensionsReport,
     CliInitReport,
     CliInstallPlan,
@@ -82,6 +83,7 @@ pub enum ForeignParsers {
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::BootArtifactTransaction,
         FormatId::CliExtensionsReport,
         FormatId::CliInitReport,
         FormatId::CliInstallPlan,
@@ -133,6 +135,7 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::BootArtifactTransaction => "boot-artifact-transaction",
             FormatId::CliExtensionsReport => "cli-extensions-report",
             FormatId::CliInitReport => "cli-init-report",
             FormatId::CliInstallPlan => "cli-install-plan",
@@ -185,6 +188,7 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::BootArtifactTransaction => 1,
             FormatId::CliExtensionsReport => 1,
             FormatId::CliInitReport => 1,
             FormatId::CliInstallPlan => 1,
@@ -237,6 +241,7 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::BootArtifactTransaction => false,
             FormatId::CliExtensionsReport => true,
             FormatId::CliInitReport => true,
             FormatId::CliInstallPlan => true,
@@ -289,6 +294,7 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::BootArtifactTransaction => ForeignParsers::None,
             FormatId::CliExtensionsReport => ForeignParsers::Many,
             FormatId::CliInitReport => ForeignParsers::Many,
             FormatId::CliInstallPlan => ForeignParsers::Many,

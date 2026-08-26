@@ -394,6 +394,14 @@ foreign_parsers = "none"
 corpus = "none"
 sunset = "none"
 
+[format.boot-artifact-transaction]
+epoch = 1
+schema = "schemas/boot_artifact_transaction.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/boot-artifact-transaction/e1"
+sunset = "none"
+
 # ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
 [format.mcp-tools]
 epoch = 1

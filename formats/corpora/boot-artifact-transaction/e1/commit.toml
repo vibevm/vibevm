@@ -1,0 +1,38 @@
+schema = 1
+transaction = "exampletx"
+mode = "commit"
+
+[index]
+target = "INDEX.md"
+
+[index.before]
+present = true
+digest = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+staged = ".vibe-boot-txn-exampletx-index-before.stage"
+
+[index.after]
+present = true
+digest = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+staged = ".vibe-boot-txn-exampletx-index-after.stage"
+
+[selected]
+target = "STATIC.xml"
+
+[selected.before]
+present = false
+
+[selected.after]
+present = true
+digest = "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+staged = ".vibe-boot-txn-exampletx-selected-after.stage"
+
+[stale]
+target = "STATIC.md"
+
+[stale.before]
+present = true
+digest = "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+staged = ".vibe-boot-txn-exampletx-stale-before.stage"
+
+[stale.after]
+present = false

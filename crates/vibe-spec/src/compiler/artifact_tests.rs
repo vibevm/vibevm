@@ -6,13 +6,15 @@ use specmark::verifies;
 use super::absorb::{absorb_invocations, reset_absorb_invocations};
 use super::assemble::{assemble_invocations, reset_assemble_invocations};
 use super::builtin::{
-    compile_artifact_lane, compile_artifact_prefix, parse_invocations, reset_parse_invocations,
+    compile_artifact, compile_artifact_lane, compile_artifact_prefix, parse_invocations,
+    reset_parse_invocations,
 };
 use super::embed::{embed_invocations, reset_embed_invocations};
+use super::emit::{emit_invocations, reset_emit_invocations};
 use super::ir::{
-    ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactPlan, ArtifactTarget,
-    ClosureContribution, ContributionMeta, DocumentAddress, LaneContribution, LaneNode,
-    LinkContributionWitness, LinkOccurrence, LinkState, SourceFormatId, SourceIr,
+    ArtifactContext, ArtifactFrame, ArtifactId, ArtifactInput, ArtifactInputKind, ArtifactPlan,
+    ArtifactTarget, ClosureContribution, ContributionMeta, DocumentAddress, LaneContribution,
+    LaneNode, LinkContributionWitness, LinkOccurrence, LinkState, SourceFormatId, SourceIr,
     StaticCompileMode,
 };
 use super::link::{link_invocations, reset_link_invocations, validate_linked};
@@ -30,17 +32,7 @@ fn meta(origin: &str, path: &str) -> ContributionMeta {
 }
 
 fn simple(origin: &str, path: &str, text: &str) -> ArtifactInput {
-    ArtifactInput::Simple {
-        meta: meta(origin, path),
-        source: SourceIr::new(
-            DocumentAddress::StaticEntry {
-                origin: origin.to_string(),
-                path: path.to_string(),
-            },
-            SourceFormatId::canonical_markdown(),
-            text,
-        ),
-    }
+    ArtifactInput::simple(origin, path, text).unwrap()
 }
 
 #[derive(Default)]
@@ -113,7 +105,7 @@ fn fixture() -> Fixture {
             &omega.to_string(),
             &format!("# Omega {{#root}}\n#use {}\nOMEGA\n", shared.without_pin()),
         ),
-        (&piece.to_string(), "# Piece {#root}\nPIECE\n"),
+        (&piece.to_string(), "# Piece\nPIECE\n"),
     ]);
     let context = ArtifactContext::new(
         ArtifactId::new("static-xml").unwrap(),
@@ -132,22 +124,16 @@ fn fixture() -> Fixture {
     let plan = ArtifactPlan::new(
         context,
         vec![
-            ArtifactInput::Normal {
-                meta: meta("org.demo/alpha", "boot/alpha.md"),
-                seed: alpha.clone(),
-            },
+            ArtifactInput::normal("org.demo/alpha", "boot/alpha.md", alpha.clone()).unwrap(),
             simple("host", "boot/local.md", &simple_text),
-            ArtifactInput::Elided {
-                meta: meta("org.demo/elided", "boot/STATIC.md"),
-            },
-            ArtifactInput::Hoisted {
-                meta: meta("org.demo/hoisted", "boot/hoisted.md"),
-                target: spec("spec://org.demo/hoisted/boot/entry#root"),
-            },
-            ArtifactInput::Normal {
-                meta: meta("org.demo/omega", "boot/omega.md"),
-                seed: omega.clone(),
-            },
+            ArtifactInput::elided("org.demo/elided", "boot/STATIC.md").unwrap(),
+            ArtifactInput::hoisted(
+                "org.demo/hoisted",
+                "boot/hoisted.md",
+                spec("spec://org.demo/hoisted/boot/entry"),
+            )
+            .unwrap(),
+            ArtifactInput::normal("org.demo/omega", "boot/omega.md", omega.clone()).unwrap(),
         ],
     )
     .unwrap();
@@ -330,6 +316,40 @@ fn real_whole_artifact_path_invokes_assemble_once_and_ends_at_lane() {
 }
 
 #[test]
+fn heterogeneous_artifact_selects_and_invokes_exactly_one_emit_backend() {
+    let fixture = fixture();
+    reset_counters();
+    reset_emit_invocations();
+    let emitted = compile_artifact(fixture.plan, &fixture.source).unwrap();
+    assert_eq!(assemble_invocations(), 1);
+    assert_eq!(emit_invocations("static-xml"), 1);
+    assert_eq!(emit_invocations("static-md"), 0);
+    assert_eq!(emitted.provenance().backend_id(), "static-xml");
+    assert_eq!(emitted.provenance().producer(), "emit:static-xml");
+    assert!(matches!(
+        emitted.provenance.context.target(),
+        ArtifactTarget::StaticXml
+    ));
+    let xml = std::str::from_utf8(emitted.bytes()).unwrap();
+    let tombstone = xml
+        .split("<!--")
+        .filter_map(|tail| {
+            tail.split_once("-->")
+                .map(|(comment, _)| format!("<!--{comment}-->"))
+        })
+        .filter_map(|comment| vibe_specdoc::decode_generated_xml_comment(&comment).unwrap())
+        .find(|payload| payload.starts_with("RENAMED ANCHORS"))
+        .unwrap();
+    assert_eq!(
+        tombstone
+            .matches("org-demo--shared--SHARED (org.demo/shared)")
+            .count(),
+        2,
+        "shared rename multiplicity/order survives emit: {tombstone}"
+    );
+}
+
+#[test]
 fn plan_order_occurrence_multiplicity_and_identity_are_link_replay_inputs() {
     let fixture = fixture();
     let closure = compile_artifact_prefix(fixture.plan, &fixture.source).unwrap();
@@ -363,10 +383,10 @@ fn artifact_plan_rejects_mismatched_simple_identity_before_discovery() {
     );
     let error = ArtifactPlan::new(
         ArtifactContext::compatibility(StaticCompileMode::Plain),
-        vec![ArtifactInput::Simple {
+        vec![ArtifactInput::from_kind(ArtifactInputKind::Simple {
             meta: meta("host", "boot/local.md"),
             source,
-        }],
+        })],
     )
     .unwrap_err();
     assert!(error.to_string().contains("simple input identity"));
@@ -375,6 +395,7 @@ fn artifact_plan_rejects_mismatched_simple_identity_before_discovery() {
 #[test]
 fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
     reset_assemble_invocations();
+    reset_emit_invocations();
     let dep = "spec://org.demo/dep/boot/entry#root";
     let root = "spec://org.demo/root/boot/entry#root";
     let source = CountingSource::with(&[
@@ -432,10 +453,14 @@ fn public_one_seed_wrappers_keep_exact_bytes_renames_and_candidates() {
     ));
     assert_eq!(
         assemble_invocations(),
-        0,
-        "one-seed compatibility wrappers stay on the legacy linked tail until emit"
+        2,
+        "both successful compatibility wrappers traverse named assemble"
     );
+    assert_eq!(emit_invocations("static-md"), 2);
 }
 
 #[path = "artifact_tests/repair.rs"]
 mod repair;
+
+#[path = "artifact_tests/emit_errors.rs"]
+mod emit_errors;

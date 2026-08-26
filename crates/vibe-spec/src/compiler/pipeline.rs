@@ -225,6 +225,32 @@ impl CompilerPipeline {
         }
     }
 
+    /// Run the declared whole-artifact schedule through its selected backend.
+    pub(crate) fn run_to_emitted(
+        &self,
+        documents: Documents,
+    ) -> Result<EmittedIr, CompilerPipelineError> {
+        self.expect_boundary(
+            "artifact segment input",
+            DOCUMENT_ARTIFACT,
+            self.artifact.first_input(),
+        )?;
+        self.expect_boundary(
+            "artifact emitted output",
+            EMITTED_ARTIFACT,
+            self.artifact.last_output(),
+        )?;
+        let output = self.artifact.run(AnyIr::Documents(documents))?;
+        match output {
+            AnyIr::Emitted(emitted) => Ok(emitted),
+            other => Err(CompilerPipelineError::UnexpectedCarrier {
+                boundary: "artifact emitted output",
+                expected: EMITTED_ARTIFACT,
+                actual: other.shape(),
+            }),
+        }
+    }
+
     fn run_documents_unchecked(
         &self,
         sources: Vec<SourceIr>,

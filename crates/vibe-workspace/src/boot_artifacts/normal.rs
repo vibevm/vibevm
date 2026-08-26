@@ -1,69 +1,10 @@
-//! `normal + static` compilation (PROP-035 §8) — the branch of the static
-//! renderer ([`super::render_static`]) that compiles a `normal`-format
-//! package's contribution to its `#use` / `#source`-resolved, tree-shaken
-//! closure, rather than concatenating the file verbatim (the `simple` path).
-//!
-//! The hard algorithmic work is [`vibe_spec::compile_static_qualified`]; this
-//! cell only derives the closure's seed from a [`BootEntry`] and adapts the
-//! compiler's error into a REQ-citing [`WorkspaceError`].
+//! Derive the normal-format whole-document seed for the compiler binder.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline");
 
-use std::path::Path;
+use vibe_spec::SpecAddress;
 
-use specmark::spec;
-use vibe_spec::{
-    FileResolver, FsSectionSource, RenameEntry, SelfCoordinate, SpecAddress,
-    compile_static_qualified,
-};
-
-use crate::boot::BootEntry;
-use crate::{WorkspaceError, layout_paths};
-
-/// Compile a `normal` package's static contribution (PROP-035 §8): the
-/// `#use` / `#source`-resolved, tree-shaken, topologically-ordered closure
-/// reachable from the entry's boot-snippet contract, rather than the file
-/// concatenated verbatim. Resolution runs against the materialised
-/// dependency tree (the same [`FileResolver`] the `#embed` pass uses), so the
-/// closure may span `source/` and other packages the contract `#use`s.
-///
-/// Qualification is **per-node** (PROP-035 §8 phase 5, B-006 rider): every node
-/// in the closure is qualified under its own authoring origin — derived from its
-/// topo key — so a node spliced in from another package keeps its true
-/// provenance, never the entry's; the returned rename map is `(origin, rename)`
-/// per node, ready for the lane tombstone.
-///
-/// Errors are surfaced as [`WorkspaceError::InlineCompile`] naming the package
-/// and the governing requirement (PROP-035 §8) — a structured, REQ-citing
-/// diagnostic the installer prints rather than a bare compiler string.
-#[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline",
-    r = 1
-)]
-pub(super) fn compile_normal_entry(
-    entry: &BootEntry,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-) -> Result<(String, Vec<(String, RenameEntry)>), WorkspaceError> {
-    let seed =
-        normal_seed(&entry.origin, &entry.path).ok_or_else(|| WorkspaceError::InlineCompile {
-            reason: format!(
-                "cannot derive a spec:// seed for the normal package `{}` at `{}` \
-                 (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
-                 package's `{}` root",
-                entry.origin,
-                entry.path,
-                layout_paths::slot_specs("<slot>", "")
-            ),
-        })?;
-    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
-    compile_static_qualified(&seed, &source).map_err(|e| WorkspaceError::InlineCompile {
-        reason: format!(
-            "compiling the normal package `{}` closure (PROP-035 §8): {e}",
-            entry.origin
-        ),
-    })
-}
+use crate::layout_paths;
 
 /// Derive the `spec://` seed for a `normal` static entry — the whole-document
 /// address of its boot-snippet contract, from which [`compile_static_qualified`]
@@ -79,7 +20,7 @@ pub(super) fn compile_normal_entry(
 /// extensionless. The seed carries no anchor, so it names the whole document
 /// (`DocTree` resolves an empty anchor to the root). Returns `None` when the
 /// origin or path is not the expected package shape.
-fn normal_seed(origin: &str, path: &str) -> Option<SpecAddress> {
+pub(super) fn normal_seed(origin: &str, path: &str) -> Option<SpecAddress> {
     let coord = origin.split_whitespace().next()?;
     let (group, name) = coord.split_once('/')?;
     let specs_delimiter = format!("/{}/", layout_paths::specs(""));
@@ -89,6 +30,21 @@ fn normal_seed(origin: &str, path: &str) -> Option<SpecAddress> {
         .or_else(|| doc_rest.strip_suffix(".xml"))
         .unwrap_or(doc_rest);
     SpecAddress::parse(&format!("spec://{group}/{name}/{doc_path}")).ok()
+}
+
+/// The honest document witness for a hoisted simple or normal boot snippet.
+pub(super) fn hoisted_seed(origin: &str, path: &str) -> Option<SpecAddress> {
+    if let Some(seed) = normal_seed(origin, path) {
+        return Some(seed);
+    }
+    let coord = origin.split_whitespace().next()?;
+    let (group, name) = coord.split_once('/')?;
+    let (_, boot_rest) = path.rsplit_once("/boot/")?;
+    let doc = boot_rest
+        .strip_suffix(".md")
+        .or_else(|| boot_rest.strip_suffix(".xml"))
+        .unwrap_or(boot_rest);
+    SpecAddress::parse(&format!("spec://{group}/{name}/boot/{doc}")).ok()
 }
 
 #[cfg(test)]
@@ -138,5 +94,15 @@ mod tests {
             s.without_pin(),
             "spec://org.vibevm.world/wal/boot/10-flow-wal"
         );
+    }
+
+    #[test]
+    fn hoisted_seed_accepts_the_legacy_slot_boot_shape() {
+        let seed = hoisted_seed(
+            "org.vibevm/shared",
+            "vibevm/vibedeps/org.vibevm.shared/1.0.0/boot/shared.md",
+        )
+        .unwrap();
+        assert_eq!(seed.without_pin(), "spec://org.vibevm/shared/boot/shared");
     }
 }

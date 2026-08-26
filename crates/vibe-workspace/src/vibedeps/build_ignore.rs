@@ -9,9 +9,7 @@ use std::path::{Path, PathBuf};
 use specmark::spec;
 
 use crate::WorkspaceError;
-
-mod platform;
-use platform::FileIdentity;
+use crate::safe_file::{self, FileIdentity};
 
 /// Recursive build-output rules maintained at the dependency-root boundary.
 pub const BUILD_OUTPUT_IGNORES: [&str; 2] = ["**/target/", "**/node_modules/"];
@@ -65,7 +63,7 @@ pub fn ensure_build_output_ignores(vibedeps_root: &Path) -> Result<bool, Workspa
 
 fn read_existing(path: &Path) -> Result<Option<Vec<u8>>, WorkspaceError> {
     preflight_path_kind(path)?;
-    let mut file = match platform::open_existing_read(path) {
+    let mut file = match safe_file::open_existing_read(path) {
         Ok(file) => file,
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
         Err(error) => return Err(io_err(path, error)),
@@ -81,10 +79,10 @@ fn read_existing(path: &Path) -> Result<Option<Vec<u8>>, WorkspaceError> {
 fn open_regular_for_append(path: &Path) -> Result<File, WorkspaceError> {
     loop {
         preflight_path_kind(path)?;
-        match platform::open_existing_append(path) {
+        match safe_file::open_existing_append(path) {
             Ok(file) => return Ok(file),
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-                match platform::create_new_append(path) {
+                match safe_file::create_new_append(path) {
                     Ok(file) => return Ok(file),
                     Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => continue,
                     Err(error) => return Err(io_err(path, error)),
@@ -96,19 +94,7 @@ fn open_regular_for_append(path: &Path) -> Result<File, WorkspaceError> {
 }
 
 fn preflight_path_kind(path: &Path) -> Result<(), WorkspaceError> {
-    match fs::symlink_metadata(path) {
-        Ok(metadata) if metadata.file_type().is_symlink() => invariant(
-            path,
-            "refusing symbolic-link `.gitignore`; vibe never follows or replaces it",
-        ),
-        Ok(metadata) if !metadata.file_type().is_file() => invariant(
-            path,
-            "refusing non-file `.gitignore`; move it aside before building",
-        ),
-        Ok(_) => Ok(()),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
-        Err(error) => Err(io_err(path, error)),
-    }
+    safe_file::preflight_absent_or_regular(path).map_err(|error| io_err(path, error))
 }
 
 fn append_missing_locked(file: &mut File, path: &Path) -> Result<bool, WorkspaceError> {
@@ -147,12 +133,12 @@ fn append_missing_locked(file: &mut File, path: &Path) -> Result<bool, Workspace
 }
 
 fn handle_identity(file: &File, path: &Path) -> Result<FileIdentity, WorkspaceError> {
-    platform::identity(file).map_err(|error| io_err(path, error))
+    safe_file::identity(file).map_err(|error| io_err(path, error))
 }
 
 fn assert_path_identity(path: &Path, expected: FileIdentity) -> Result<(), WorkspaceError> {
     preflight_path_kind(path)?;
-    let file = platform::open_existing_read(path).map_err(|error| io_err(path, error))?;
+    let file = safe_file::open_existing_read(path).map_err(|error| io_err(path, error))?;
     let actual = handle_identity(&file, path)?;
     if actual != expected {
         return invariant(

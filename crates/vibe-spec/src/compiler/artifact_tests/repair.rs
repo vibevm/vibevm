@@ -3,9 +3,10 @@ use crate::EmbedError;
 use crate::compiler::ir::ClosureEdgeKind;
 
 fn static_context(target: ArtifactTarget) -> ArtifactContext {
-    let (id, path) = match target {
-        ArtifactTarget::StaticMarkdown => ("static-md", "vibevm/vibespecs/boot/STATIC.md"),
-        ArtifactTarget::StaticXml => ("static-xml", "vibevm/vibespecs/boot/STATIC.xml"),
+    let (id, path) = if target == ArtifactTarget::StaticMarkdown {
+        ("static-md", "vibevm/vibespecs/boot/STATIC.md")
+    } else {
+        ("static-xml", "vibevm/vibespecs/boot/STATIC.xml")
     };
     ArtifactContext::new(
         ArtifactId::new(id).unwrap(),
@@ -20,10 +21,7 @@ fn static_context(target: ArtifactTarget) -> ArtifactContext {
 }
 
 fn normal_input(origin: &str, path: &str, address: &str) -> ArtifactInput {
-    ArtifactInput::Normal {
-        meta: meta(origin, path),
-        seed: spec(address),
-    }
+    ArtifactInput::normal(origin, path, spec(address)).unwrap()
 }
 
 fn linked(closure: &super::super::ir::ClosureIr) -> &super::super::ir::LinkResult {
@@ -297,9 +295,7 @@ fn duplicate_simple_identity_requires_equal_source_and_keeps_two_occurrences() {
             static_context(ArtifactTarget::StaticMarkdown),
             vec![
                 first,
-                ArtifactInput::Elided {
-                    meta: meta("separator", "boot/sep"),
-                },
+                ArtifactInput::elided("separator", "boot/sep").unwrap(),
                 second,
             ],
         )

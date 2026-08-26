@@ -67,11 +67,7 @@ fn write_boot_artifacts_writes_index_and_redirects() {
 
     assert!(written.index.is_file());
     assert!(written.static_lane.is_none());
-    assert!(
-        !ws.path()
-            .join(crate::layout_paths::boot("STATIC.md"))
-            .exists()
-    );
+    assert!(fs::symlink_metadata(ws.path().join(crate::layout_paths::boot("STATIC.md"))).is_err());
     assert_eq!(written.redirects.len(), 3);
     for name in REDIRECT_FILES {
         assert!(ws.path().join(name).is_file(), "{name} must be written");
@@ -117,11 +113,7 @@ fn write_boot_artifacts_removes_a_stale_inline() {
         "flow:crit",
     )]);
     write_boot_artifacts(ws.path(), ws.path(), &coord(), &with_inline).unwrap();
-    assert!(
-        ws.path()
-            .join(crate::layout_paths::boot("STATIC.md"))
-            .exists()
-    );
+    assert!(fs::symlink_metadata(ws.path().join(crate::layout_paths::boot("STATIC.md"))).is_ok());
 
     // A later generation has none — the stale STATIC.md must go.
     let without = boot(vec![entry(
@@ -131,11 +123,7 @@ fn write_boot_artifacts_removes_a_stale_inline() {
     )]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &without).unwrap();
     assert!(written.static_lane.is_none());
-    assert!(
-        !ws.path()
-            .join(crate::layout_paths::boot("STATIC.md"))
-            .exists()
-    );
+    assert!(fs::symlink_metadata(ws.path().join(crate::layout_paths::boot("STATIC.md"))).is_err());
 }
 
 #[test]
@@ -166,11 +154,7 @@ fn switching_markdown_to_xml_removes_the_owned_stale_name() {
 
     write_boot_artifacts_with_spec_format(ws.path(), ws.path(), &coord(), &b, SpecFormat::Xml)
         .unwrap();
-    assert!(
-        !ws.path()
-            .join(crate::layout_paths::boot("STATIC.md"))
-            .exists()
-    );
+    assert!(fs::symlink_metadata(ws.path().join(crate::layout_paths::boot("STATIC.md"))).is_err());
     assert!(
         ws.path()
             .join(crate::layout_paths::boot("STATIC.xml"))

@@ -1,0 +1,29 @@
+[[case]]
+id = "index-targets-authored-core"
+mutation = "index-target"
+value = "00-core.xml"
+
+[[case]]
+id = "selected-targets-authored-user"
+mutation = "selected-target"
+value = "90-user.xml"
+
+[[case]]
+id = "stage-aliases-authored-user"
+mutation = "index-after-stage"
+value = "90-user.xml"
+
+[[case]]
+id = "duplicate-stage-names"
+mutation = "duplicate-selected-after-stage"
+value = "index-after"
+
+[[case]]
+id = "mismatched-rollback-twin"
+mutation = "rollback-index-after-digest"
+value = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+[[case]]
+id = "absent-index-after"
+mutation = "index-after-absent"
+value = "absent"

@@ -40,3 +40,4 @@ winapi-util.workspace = true
 
 [dev-dependencies]
 proptest.workspace = true
+vibe-spec = { workspace = true, features = ["test-support"] }

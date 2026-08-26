@@ -10,6 +10,10 @@ repository.workspace = true
 homepage.workspace = true
 description = "spec:// addressing, the document IR, and the deterministic router (PROP-035)"
 
+[features]
+default = []
+test-support = []
+
 [dependencies]
 specmark.workspace = true
 thiserror.workspace = true

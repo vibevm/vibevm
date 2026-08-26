@@ -8,9 +8,13 @@ pub(super) fn digest_input(closure: &ClosureIr, plan: &PlannedLink) -> LinkInput
     let mut digest = LinkDigest::new();
     digest.field(LINK_DIGEST_DOMAIN);
     digest.field(closure.context().artifact().as_str().as_bytes());
-    digest.byte(match closure.context().target() {
-        ArtifactTarget::StaticMarkdown => 0,
-        ArtifactTarget::StaticXml => 1,
+    let target = closure.context().target();
+    digest.byte(if target.is_static_markdown() {
+        0
+    } else if target.is_static_xml() {
+        1
+    } else {
+        2
     });
     match closure.context().frame() {
         ArtifactFrame::CompatibilityFragment => digest.byte(0),

@@ -6,10 +6,12 @@
 
 pub(crate) mod absorb;
 pub(crate) mod assemble;
+pub(crate) mod backend;
 pub(crate) mod builtin;
 pub(crate) mod close;
 pub(crate) mod embed;
 pub(crate) mod embed_snapshot;
+pub(crate) mod emit;
 pub(crate) mod ir;
 pub(crate) mod link;
 pub(crate) mod merge;

@@ -9,9 +9,13 @@ use crate::{DocTree, SectionSource, SpecAddress};
 use super::absorb::ABSORB_PASS_NAME;
 use super::absorb::AbsorbPass;
 use super::assemble::{ASSEMBLE_PASS_NAME, AssemblePass, AssemblePassError};
+use super::backend::{BackendRegistry, BackendRegistryError, EmitBackend};
 use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState};
 use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
-use super::ir::{ArtifactPlan, ClosureIr, DocumentIr, LaneIr, SourceIr, StaticCompileMode};
+use super::emit::{EmitPass, EmitPassError};
+use super::ir::{
+    ArtifactPlan, ClosureIr, DocumentIr, EmittedArtifact, LaneIr, SourceIr, StaticCompileMode,
+};
 use super::link::{LINK_PASS_NAME, LinkPass, LinkPassError};
 use super::merge::{MERGE_PASS_NAME, MergePass, MergePassError};
 use super::pass::{Pass, PassName, PassSegmentError};
@@ -23,6 +27,17 @@ use super::worklist;
 
 const PARSE_PASS_NAME: &str = "parse";
 const MARKDOWN_FORMAT: &str = "markdown";
+
+mod driver;
+#[cfg(test)]
+pub(crate) use driver::compile_artifact_with_registry;
+pub(crate) use driver::compile_compatibility_artifact;
+pub use driver::{ArtifactCompileError, compile_artifact};
+#[cfg(feature = "test-support")]
+pub use driver::{
+    compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
+    compile_artifact_replacement_test_vehicle,
+};
 
 /// The built-in source-to-document lowering.
 ///
@@ -137,6 +152,23 @@ impl BuiltinSchedule {
         schedule
     }
 
+    fn emitted(
+        plan: &ArtifactPlan,
+        registry: &BackendRegistry,
+    ) -> Result<Self, BackendRegistryError> {
+        let backend = registry.selected(plan.context().target())?;
+        Ok(Self::with_backend(plan, backend))
+    }
+
+    fn with_backend(plan: &ArtifactPlan, backend: std::sync::Arc<dyn EmitBackend>) -> Self {
+        let mut schedule = Self::assembled(plan);
+        schedule
+            .pipeline
+            .push_artifact(EmitPass::new(backend))
+            .expect("the selected emit backend continues the built-in schedule");
+        schedule
+    }
+
     fn parse_source(&self, source: SourceIr) -> DocumentIr {
         self.pipeline
             .run_document(source)
@@ -161,6 +193,99 @@ impl BuiltinSchedule {
     ) -> Result<LaneIr, crate::pipeline::CompileError> {
         let documents = self.pipeline.gather_documents(documents);
         self.map_artifact_result(self.pipeline.run_to_lane(documents))
+    }
+
+    fn emit(
+        &self,
+        documents: Vec<DocumentIr>,
+        plan: &ArtifactPlan,
+        owners: &worklist::ErrorOwners,
+    ) -> Result<EmittedArtifact, ArtifactCompileError> {
+        let documents = self.pipeline.gather_documents(documents);
+        match self.pipeline.run_to_emitted(documents) {
+            Ok(emitted) => Ok(emitted),
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == CLOSE_PASS_NAME =>
+            {
+                source
+                    .downcast::<UseGraphError>()
+                    .map(|error| {
+                        Err(driver::attribute_compile_error(
+                            crate::pipeline::CompileError::UseGraph(*error),
+                            plan,
+                            owners,
+                            None,
+                        ))
+                    })
+                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
+            }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == MERGE_PASS_NAME =>
+            {
+                source
+                    .downcast::<MergePassError>()
+                    .map(|error| {
+                        Err(driver::attribute_compile_error(
+                            error.into_compile_error(),
+                            plan,
+                            owners,
+                            None,
+                        ))
+                    })
+                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
+            }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == EMBED_PASS_NAME =>
+            {
+                source
+                    .downcast::<EmbedPassError>()
+                    .map(|error| {
+                        Err(driver::attribute_compile_error(
+                            error.into_compile_error(),
+                            plan,
+                            owners,
+                            None,
+                        ))
+                    })
+                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
+            }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source }))
+                if pass.as_str() == LINK_PASS_NAME =>
+            {
+                source
+                    .downcast::<LinkPassError>()
+                    .map(|error| {
+                        let input = match error.as_ref() {
+                            LinkPassError::AmbiguousShortLink { contribution, .. } => {
+                                Some(*contribution)
+                            }
+                            _ => None,
+                        };
+                        Err(driver::attribute_compile_error(
+                            error.into_compile_error(),
+                            plan,
+                            owners,
+                            input,
+                        ))
+                    })
+                    .unwrap_or_else(|source| unexpected_pass_error(&pass, source))
+            }
+            Err(CompilerPipelineError::Segment(PassSegmentError::PassFailed { pass, source })) => {
+                match source.downcast::<EmitPassError>() {
+                    Ok(error) => Err(ArtifactCompileError::Backend {
+                        pass: pass.as_str().to_string(),
+                        reason: error.to_string(),
+                    }),
+                    Err(source) => Err(ArtifactCompileError::Pass {
+                        pass: pass.as_str().to_string(),
+                        reason: source.to_string(),
+                    }),
+                }
+            }
+            Err(error) => Err(ArtifactCompileError::Manager {
+                reason: error.to_string(),
+            }),
+        }
     }
 
     fn map_artifact_result<T>(
@@ -222,6 +347,16 @@ impl BuiltinSchedule {
             Err(error) => panic!("the private built-in artifact schedule is invalid: {error}"),
         }
     }
+}
+
+fn unexpected_pass_error<T>(
+    pass: &PassName,
+    source: Box<dyn std::error::Error + Send + Sync>,
+) -> Result<T, ArtifactCompileError> {
+    Err(ArtifactCompileError::Pass {
+        pass: pass.as_str().to_string(),
+        reason: source.to_string(),
+    })
 }
 
 /// Compile one validated whole artifact plan through the artifact prefix.

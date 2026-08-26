@@ -53,47 +53,181 @@ fn decoded_c1_comments(text: &str) -> Vec<String> {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#markers")]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET")]
-fn xml_static_payload_strips_only_compiler_framing_and_keeps_validation_loud() {
-    let framed = concat!(
-        "<!-- vibe:begin spec://org.demo/alpha/boot/entry -->\n",
-        "# Alpha {#root}\n\n",
-        "##PAYLOAD literal `<!-- vibe:end stays in prose -->`.\n",
-        "<!-- vibe:end spec://org.demo/alpha/boot/entry -->\n",
-    );
-    let payload = concat!(
-        "# Alpha {#root}\n\n",
-        "##PAYLOAD literal `<!-- vibe:end stays in prose -->`.\n",
-    );
-    let expected = vibe_specdoc::to_xml(&vibe_specdoc::from_markdown(payload).unwrap());
-
-    assert_eq!(
-        format_static_contribution(framed, SpecFormat::Xml, "org.demo/alpha").unwrap(),
-        expected
-    );
+fn workspace_has_no_second_static_renderer() {
+    let binder = [
+        include_str!("../boot_artifacts.rs"),
+        include_str!("normal.rs"),
+        include_str!("format.rs"),
+        include_str!("redirect.rs"),
+        include_str!("transaction.rs"),
+        include_str!("transaction/durable_io.rs"),
+        include_str!("transaction/journal.rs"),
+        include_str!("transaction/prepare.rs"),
+        include_str!("transaction/intent.rs"),
+        include_str!("transaction/selector.rs"),
+        include_str!("transaction/lock.rs"),
+    ]
+    .join("\n");
+    for forbidden in [
+        "format_static_contribution",
+        "compile_normal_entry",
+        "qualify_contribution",
+        "expand_embeds",
+        "framing::",
+        "markers::open",
+        "markers::close",
+    ] {
+        assert!(
+            !binder.contains(forbidden),
+            "workspace retained `{forbidden}`"
+        );
+    }
     assert!(
-        expected.contains("&lt;!-- vibe:end stays in prose --&gt;"),
-        "{expected}"
+        !Path::new(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/src/boot_artifacts/framing.rs"
+        ))
+        .exists()
     );
-    assert_eq!(
-        format_static_contribution(framed, SpecFormat::Markdown, "org.demo/alpha").unwrap(),
-        framed
+}
+
+#[test]
+fn xml_backend_preserves_literal_marker_prose_and_c1_fields() {
+    let ws = TempDir::new().unwrap();
+    let literal = write_entry(
+        ws.path(),
+        "org.demo.literal",
+        "# Literal {#root}\n\n##PAYLOAD literal `<!-- vibe:begin stays -->`.\n",
+    );
+    let xml = render_static_with_spec_format(
+        &boot(vec![entry(
+            &literal,
+            vibe_core::manifest::LinkType::Static,
+            "org.demo/literal",
+        )]),
+        ws.path(),
+        &coord(),
+        SpecFormat::Xml,
+    )
+    .unwrap()
+    .unwrap();
+    assert!(
+        xml.contains("&lt;!-- vibe:begin stays --&gt;"),
+        "literal marker-looking prose was dropped: {xml}"
     );
 
-    let invalid = concat!(
-        "<!-- vibe:begin spec://org.demo/alpha/boot/entry -->\n",
-        "# Alpha {#root}\n\n",
-        "##DUP one.\n\n",
-        "##DUP two.\n",
-        "<!-- vibe:end spec://org.demo/alpha/boot/entry -->\n",
+    let mut elided = entry(
+        "dir/a--b-%雪.xml",
+        vibe_core::manifest::LinkType::Static,
+        "org.demo/a--b-%雪&<>",
     );
-    let err = format_static_contribution(invalid, SpecFormat::Xml, "org.demo/alpha")
-        .expect_err("duplicate facts stay invalid after framing is removed");
-    let WorkspaceError::InlineCompile { reason } = err else {
-        panic!("expected InlineCompile, got {err:?}");
+    elided.elided = true;
+    let xml =
+        render_static_with_spec_format(&boot(vec![elided]), ws.path(), &coord(), SpecFormat::Xml)
+            .unwrap()
+            .unwrap();
+    let decoded = decoded_c1_comments(&xml);
+    assert!(decoded.iter().any(|payload| {
+        payload.contains("vibe:static org.demo/a--b-%雪&<> — dir/a--b-%雪.xml; zone elided")
+    }));
+    assert!(!xml.contains("--b"), "c1 comment codec was bypassed: {xml}");
+}
+
+#[test]
+fn backend_failure_leaves_existing_index_and_static_bytes_unchanged() {
+    let ws = TempDir::new().unwrap();
+    let invalid = write_entry(
+        ws.path(),
+        "org.demo.invalid",
+        "# Invalid {#root}\n\n##DUP one.\n\n##DUP two.\n",
+    );
+    let boot_dir = ws.path().join(crate::layout_paths::boot(""));
+    fs::create_dir_all(&boot_dir).unwrap();
+    let index = boot_dir.join(INDEX_FILE);
+    let static_xml = boot_dir.join(STATIC_XML_FILE);
+    fs::write(&index, b"INDEX-SENTINEL").unwrap();
+    fs::write(&static_xml, b"STATIC-SENTINEL\xff").unwrap();
+    let result = write_boot_artifacts_with_spec_format(
+        ws.path(),
+        ws.path(),
+        &coord(),
+        &boot(vec![entry(
+            &invalid,
+            vibe_core::manifest::LinkType::Static,
+            "org.demo/invalid",
+        )]),
+        SpecFormat::Xml,
+    );
+    assert!(result.is_err());
+    assert_eq!(fs::read(index).unwrap(), b"INDEX-SENTINEL");
+    assert_eq!(fs::read(static_xml).unwrap(), b"STATIC-SENTINEL\xff");
+}
+
+#[test]
+fn normal_compile_error_restores_exact_package_attribution_wording() {
+    let ws = TempDir::new().unwrap();
+    let first = write_entry(
+        ws.path(),
+        "org.demo.first",
+        "# First {#root}\n#use spec://org.missing/missing/boot/x#root\n",
+    );
+    let second = write_entry(ws.path(), "org.demo.second", "# Second {#root}\n");
+    let error = render_static_with_spec_format(
+        &boot(vec![
+            entry_normal(&first, "org.demo/first"),
+            entry_normal(&second, "org.demo/second"),
+        ]),
+        ws.path(),
+        &coord(),
+        SpecFormat::Markdown,
+    )
+    .unwrap_err();
+    let WorkspaceError::InlineCompile { reason } = error else {
+        panic!("expected InlineCompile")
     };
-    assert!(reason.contains("twice"), "{reason}");
+    assert_eq!(
+        reason,
+        "compiling the normal package `org.demo/first` closure (PROP-035 §8): cannot resolve use spec://org.missing/missing/boot/x#root: no installed vibedeps slot for package `missing`"
+    );
+}
+
+#[test]
+fn real_workspace_binder_missing_and_invalid_replacement_do_not_touch_files() {
+    let ws = TempDir::new().unwrap();
+    let simple = write_entry(ws.path(), "org.demo.simple", "# Simple {#root}\n");
+    let effective = boot(vec![entry(
+        &simple,
+        vibe_core::manifest::LinkType::Static,
+        "org.demo/simple",
+    )]);
+    let boot_dir = ws.path().join(crate::layout_paths::boot(""));
+    fs::create_dir_all(&boot_dir).unwrap();
+    let index = boot_dir.join(INDEX_FILE);
+    let static_md = boot_dir.join(STATIC_FILE);
+    fs::write(&index, b"OLD-INDEX").unwrap();
+    fs::write(&static_md, b"OLD-STATIC").unwrap();
+
+    let missing = compile_static_artifact_with(
+        &effective,
+        ws.path(),
+        &coord(),
+        SpecFormat::Markdown,
+        vibe_spec::compile_artifact_missing_backend_test_vehicle,
+    );
+    assert!(missing.is_err());
+    assert_eq!(fs::read(&index).unwrap(), b"OLD-INDEX");
+    assert_eq!(fs::read(&static_md).unwrap(), b"OLD-STATIC");
+
+    let replacement = compile_static_artifact_with(
+        &effective,
+        ws.path(),
+        &coord(),
+        SpecFormat::Markdown,
+        vibe_spec::compile_artifact_replacement_test_vehicle,
+    );
+    assert!(replacement.is_err());
+    assert_eq!(fs::read(index).unwrap(), b"OLD-INDEX");
+    assert_eq!(fs::read(static_md).unwrap(), b"OLD-STATIC");
 }
 
 #[test]

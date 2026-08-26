@@ -15,7 +15,11 @@ use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::source_snapshot::SourceResolutionSnapshot;
 
 mod artifact;
-pub(crate) use artifact::*;
+pub use artifact::*;
+mod target;
+pub use target::*;
+mod emitted;
+pub use emitted::*;
 mod lane;
 pub(crate) use lane::*;
 mod link;
@@ -445,24 +449,6 @@ impl ClosureIr {
             pending_sources,
             pending_embeds,
         }
-    }
-
-    pub(crate) fn context(&self) -> &ArtifactContext {
-        &self.context
-    }
-}
-
-/// The exact bytes of one final artifact.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct EmittedIr {
-    context: ArtifactContext,
-    pub(crate) bytes: Vec<u8>,
-}
-
-impl EmittedIr {
-    #[cfg(test)]
-    pub(crate) fn testing(context: ArtifactContext, bytes: Vec<u8>) -> Self {
-        Self { context, bytes }
     }
 
     pub(crate) fn context(&self) -> &ArtifactContext {

@@ -36,6 +36,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts");
 
+#[cfg(test)]
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -43,20 +44,18 @@ use serde::Serialize;
 use specmark::spec;
 use vibe_core::{layout, manifest::SpecFormat};
 use vibe_spec::{
-    Directives, FileResolver, FsSectionSource, RenameEntry, SelfCoordinate, expand_embeds,
-    qualify_contribution,
+    ArtifactCompileError, ArtifactInput, ArtifactInputType, ArtifactPlan, ArtifactTarget,
+    EmittedArtifact, FileResolver, FsSectionSource, SelfCoordinate, compile_artifact,
 };
 
 use crate::boot::EffectiveBoot;
 use crate::{WorkspaceError, layout_paths};
-use normal::compile_normal_entry;
+use normal::{hoisted_seed, normal_seed};
 
 /// `normal + static` compilation — the branch that compiles a `normal`
 /// package's closure rather than concatenating it (PROP-035 §8).
 mod normal;
-
-/// The single format-aware renderer for every generated boot comment.
-mod framing;
+mod transaction;
 
 mod format;
 pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file, static_path};
@@ -197,7 +196,7 @@ pub fn render_index_with_spec_format(
 /// qualify, trailing whitespace trims, and the generated framing wraps it.
 /// A `normal`
 /// one is **compiled** to its `#use`/`#source`-resolved, tree-shaken closure
-/// (PROP-035 §8, [`compile_normal_entry`]) — so a `normal + static` edge bakes
+/// (PROP-035 §8, the compiler's whole-artifact normal input) — so a `normal + static` edge bakes
 /// in only what the contract actually reaches, merged, in dependency order,
 /// rather than the whole file. `workspace_root` resolves each contribution's
 /// path (and every `spec://` a `normal` closure walks) against the
@@ -217,189 +216,120 @@ pub fn render_static_with_spec_format(
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
 ) -> Result<Option<String>, WorkspaceError> {
+    let artifact = compile_static_artifact(boot, workspace_root, self_coord, spec_format)?;
+    artifact
+        .map(|artifact| {
+            String::from_utf8(artifact.into_bytes()).map_err(|error| {
+                WorkspaceError::InlineCompile {
+                    reason: format!(
+                        "the built-in STATIC backend returned non-UTF-8 bytes: {error}"
+                    ),
+                }
+            })
+        })
+        .transpose()
+}
+
+fn compile_static_artifact(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    spec_format: SpecFormat,
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+    compile_static_artifact_with(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        compile_artifact,
+    )
+}
+
+fn compile_static_artifact_with(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    spec_format: SpecFormat,
+    compiler: impl FnOnce(
+        ArtifactPlan,
+        &FsSectionSource,
+    ) -> Result<EmittedArtifact, ArtifactCompileError>,
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
     let entries: Vec<_> = boot.static_entries().collect();
     if entries.is_empty() {
         return Ok(None);
     }
-    // B-011 (PROP-035 §8 phase 5 / §11): the lane is built in two parts — the
-    // concatenated, origin-qualified contribution bodies, and the tombstone of
-    // every rename the qualify phase made. The header (with its resolution
-    // preamble) leads; the tombstone sits directly under it (START-placement,
-    // design §5.1/§6.1) when at least one rename happened; then the bodies.
-    let mut bodies = String::new();
-    let mut tombstone: Vec<(String, RenameEntry)> = Vec::new();
+    let mut inputs = Vec::with_capacity(entries.len());
     for entry in entries {
-        if entry.elided {
-            // B-006 (lane dedup): this entry's whole static zone is emitted
-            // member-by-member elsewhere in this lane (once-each). Render a
-            // provenance stub — NO `#use`, no body — so the lane carries the
-            // zone's text exactly once while the graph membership stays
-            // visible. Deliberately not a hoist marker (B1): there is no
-            // single root copy to point at; every member is right here.
-            bodies.push_str(&framing::elided_marker(
-                spec_format,
-                &entry.origin,
-                &entry.path,
-            ));
-            bodies.push_str("\n\n");
-            continue;
-        }
-        if entry.use_ref {
-            // A soft-hoist reference (PROP-038 §2.5): this package's text lives
-            // once in the global root STATIC.md. Leave a `#use` marker so the
-            // graph edge survives locally and the read-set dedups the read —
-            // the agent knows the package is part of this zone without a
-            // duplicated copy.
-            bodies.push_str(&framing::hoisted_marker(spec_format, &entry.origin));
-            bodies.push_str(&format!("\n#use spec://{}\n\n", entry.origin));
-            continue;
-        }
-        // An HTML-comment provenance marker — invisible in rendered markdown,
-        // names the origin the block's labels are qualified under (B-011 §3).
-        bodies.push_str(&framing::static_marker(
-            spec_format,
-            &entry.origin,
-            &entry.path,
-        ));
-        bodies.push_str("\n\n");
-        // PROP-035 §8: a `normal` package's static contribution is the
-        // `#use` / `#source`-resolved, tree-shaken closure reachable from its
-        // contract — compiled (with `@!X` already rewritten to its full
-        // address, §7.4) and qualified **per-node** (each node under its own
-        // origin, B-006 rider) — not concatenated. A `simple` package is
-        // carried whole — inclusion-verbatim, not byte-verbatim (embeds
-        // expand, anchors qualify; over-load is the author's problem,
-        // PROP-035 §3).
-        //
-        // Both branches yield `(body, per-node renames)` — the normal branch's
-        // renames already carry each node's own origin; the simple branch's are
-        // wrapped under the entry's origin. So the body is pushed as-compiled
-        // and the renames flow straight into the tombstone: a `normal` body is
-        // NEVER re-qualified whole under the entry's origin (that would
-        // mis-attribute a spliced-in node's labels and double-prefix every
-        // label).
-        let (body, mut renames): (String, Vec<(String, RenameEntry)>) = if entry.format.is_normal()
-        {
-            compile_normal_entry(entry, workspace_root, self_coord)?
-        } else {
-            let abs = workspace_root.join(&entry.path);
-            // The PROP-045 dispatch (##BOOT-LANE-SCOPE, ##PROJECTION-READ):
-            // an XML-materialised snippet enters the splice as its canonical
-            // MD projection — STATIC.md stays the compiled MARKDOWN artifact
-            // whatever form each slot materialised. Deterministic by S1's
-            // emitter, so the lane stays byte-reproducible.
-            let (raw, _) = vibe_specdoc::load_spec_text(&abs).map_err(|e| WorkspaceError::Io {
-                path: abs.clone(),
-                reason: e.to_string(),
+        let input = if entry.elided {
+            ArtifactInput::elided(&entry.origin, &entry.path)
+        } else if entry.use_ref {
+            let target = hoisted_seed(&entry.origin, &entry.path).ok_or_else(|| {
+                WorkspaceError::InlineCompile {
+                    reason: format!(
+                        "cannot derive the hoisted document target for `{}` at `{}`",
+                        entry.origin, entry.path
+                    ),
+                }
             })?;
-            // R3 (B-011): `#use … as` / `@!` are `normal`-format machinery; a
-            // `simple` contribution is carried whole and cannot bind or resolve
-            // aliases. Detected on the verbatim text (before any embed), so an
-            // embed-spliced `@!` from another document is not mis-attributed.
-            if let Some(reason) = simple_alias_machinery(&raw) {
-                return Err(WorkspaceError::InlineCompile {
-                    reason: format!("the simple package `{}` {reason}", entry.origin),
-                });
-            }
-            // R1 (B-011): expand this entry's `#embed`s to a fixed point BEFORE
-            // qualifying, so a label an embed splices in is qualified under the
-            // entry's origin and tombstoned with the rest. Per-entry, not
-            // whole-lane — `#embed` targets logical sources under dependency slots,
-            // never a sibling lane entry, so the result is identical and each
-            // entry's final body is self-contained for the qualify pass.
-            let expanded = if has_embed_directive(&raw) {
-                let source =
-                    FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
-                expand_embeds(&raw, &source).map_err(|e| WorkspaceError::InlineCompile {
-                    reason: e.to_string(),
-                })?
-            } else {
-                raw
-            };
-            // B-011 §3 (PROP-035 §8 phase 5): qualify every label this entry
-            // defines under its origin slug, and rewrite its intra-document
-            // `(#x)` links to match — a pure function of (body, origin), so the
-            // lane is collision-free by construction and append-only.
-            let (qualified, entry_renames) = qualify_contribution(&expanded, &entry.origin);
-            let pairs = entry_renames
-                .into_iter()
-                .map(|r| (entry.origin.clone(), r))
-                .collect();
-            (qualified, pairs)
-        };
-        tombstone.append(&mut renames);
-        let body = format_static_contribution(&body, spec_format, &entry.origin)?;
-        bodies.push_str(body.trim_end());
-        bodies.push_str("\n\n");
+            ArtifactInput::hoisted(&entry.origin, &entry.path, target)
+        } else if entry.format.is_normal() {
+            let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
+                WorkspaceError::InlineCompile {
+                    reason: format!(
+                        "cannot derive a spec:// seed for the normal package `{}` at `{}` \
+                         (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
+                         package's `{}` root",
+                        entry.origin,
+                        entry.path,
+                        layout_paths::slot_specs("<slot>", "")
+                    ),
+                }
+            })?;
+            ArtifactInput::normal(&entry.origin, &entry.path, seed)
+        } else {
+            let absolute = workspace_root.join(&entry.path);
+            let (markdown, _) =
+                vibe_specdoc::load_spec_text(&absolute).map_err(|error| WorkspaceError::Io {
+                    path: absolute,
+                    reason: error.to_string(),
+                })?;
+            ArtifactInput::simple(&entry.origin, &entry.path, markdown)
+        }
+        .map_err(|error| WorkspaceError::InlineCompile {
+            reason: error.to_string(),
+        })?;
+        inputs.push(input);
     }
-    let mut out = framing::static_header(spec_format);
-    out.push_str(&framing::resolution_preamble(spec_format));
-    if !tombstone.is_empty() {
-        out.push_str(&framing::tombstone(spec_format, &tombstone));
-    }
-    out.push_str(&bodies);
-    Ok(Some(out))
-}
-
-/// Cross the PROP-045 pivot once per compiled contribution. Framing,
-/// provenance, hoist markers and tombstones intentionally remain outside the
-/// document payload, so an XML lane is a deterministic stream rather than a
-/// falsely well-formed single-root document.
-fn format_static_contribution(
-    body: &str,
-    spec_format: SpecFormat,
-    origin: &str,
-) -> Result<String, WorkspaceError> {
-    if !matches!(spec_format, SpecFormat::Xml) {
-        return Ok(body.to_string());
-    }
-    // The compiler's node markers are FRAMING, not document payload (the
-    // rule this function's header states) — and a `<!-- vibe:begin … -->`
-    // ahead of the H1 shifts the scanner's granularity so the document's
-    // own `<status …/>` silently drops. Strip them before the pivot; the
-    // Markdown lanes keep them (the structural loader's navigation).
-    let body: String = body
-        .lines()
-        .filter(|l| {
-            let t = l.trim_start();
-            !t.starts_with("<!-- vibe:begin ") && !t.starts_with("<!-- vibe:end ")
-        })
-        .collect::<Vec<_>>()
-        .join("\n");
-    let doc = vibe_specdoc::from_markdown(&body).map_err(|e| WorkspaceError::InlineCompile {
-        reason: format!("converting static contribution `{origin}` to XML: {e}"),
-    })?;
-    Ok(vibe_specdoc::to_xml(&doc))
-}
-
-/// R3 (B-011): detect alias machinery a `simple`-format contribution must not
-/// carry — a `#use … as <Alias>` clause (the file's alias table is non-empty)
-/// or an `@!<Alias>` use with no matching declaration (the scanner reports it
-/// as an undeclared alias). Returns the defect description when present.
-fn simple_alias_machinery(raw: &str) -> Option<String> {
-    let d = Directives::parse(raw);
-    let has_as_clause = !d.aliases.is_empty();
-    let has_at_bang = d
-        .errors
-        .iter()
-        .any(|e| e.message.contains("undeclared alias"));
-    if has_as_clause || has_at_bang {
-        Some(
-            "carries alias machinery (`#use … as` / `@!`) that is \
-             `normal`-format only (PROP-035 §7.2); convert the package to \
-             `format = \"normal\"` or drop the alias"
-                .to_string(),
-        )
+    let target = if matches!(spec_format, SpecFormat::Xml) {
+        ArtifactTarget::StaticXml
     } else {
-        None
-    }
-}
-
-/// Whether the static lane carries an `#embed` directive (a line starting with
-/// `#embed ` after leading whitespace) — the guard that keeps a directive-free
-/// lane byte-identical.
-fn has_embed_directive(text: &str) -> bool {
-    text.lines().any(|l| l.trim_start().starts_with("#embed "))
+        ArtifactTarget::StaticMarkdown
+    };
+    let plan = ArtifactPlan::static_lane(
+        target,
+        static_path(spec_format),
+        layout_paths::vibedeps(""),
+        inputs,
+    )
+    .map_err(|error| WorkspaceError::InlineCompile {
+        reason: error.to_string(),
+    })?;
+    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
+    compiler(plan, &source).map(Some).map_err(|error| {
+        let reason = match error {
+            ArtifactCompileError::Input { input, source }
+                if input.kind == ArtifactInputType::Normal =>
+            {
+                format!(
+                    "compiling the normal package `{}` closure (PROP-035 §8): {source}",
+                    input.origin
+                )
+            }
+            error => error.to_string(),
+        };
+        WorkspaceError::InlineCompile { reason }
+    })
 }
 
 /// What [`write_boot_artifacts`] wrote — for the caller to report.
@@ -454,17 +384,14 @@ pub fn write_boot_artifacts_with_spec_format(
     boot: &EffectiveBoot,
     spec_format: SpecFormat,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
+    // Compile every fallible semantic artifact before touching existing files.
+    let index_text = render_index_with_spec_format(boot, None, spec_format)?;
+    let static_artifact = compile_static_artifact(boot, workspace_root, self_coord, spec_format)?;
     let boot_dir = node_dir.join(layout::current_boot_dir());
-    fs::create_dir_all(&boot_dir).map_err(|e| io_err(&boot_dir, e))?;
 
     // INDEX.md — always. A node carries no fingerprint (byte-stable); the
     // per-unit dirty-subgraph (PROP-038 §2.8) is emit-side, in `hybrid_emit`.
     let index = boot_dir.join(INDEX_FILE);
-    fs::write(
-        &index,
-        render_index_with_spec_format(boot, None, spec_format)?,
-    )
-    .map_err(|e| io_err(&index, e))?;
 
     // The selected STATIC artifact — only when there are static contributions.
     // The generator owns both spellings and always removes the unselected one.
@@ -474,24 +401,19 @@ pub fn write_boot_artifacts_with_spec_format(
     } else {
         STATIC_XML_FILE
     });
-    let static_lane =
-        match render_static_with_spec_format(boot, workspace_root, self_coord, spec_format)? {
-            Some(text) => {
-                fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;
-                remove_if_exists(&stale_path)?;
-                Some(static_path)
-            }
-            None => {
-                remove_if_exists(&static_path)?;
-                remove_if_exists(&stale_path)?;
-                None
-            }
-        };
-
-    // The redirects — vibevm's managed `<vibevm>` block in each (PROP-012).
-    // Only the block is written; co-tenant content is preserved, and a
-    // file already carrying an identical block is left untouched.
-    let redirects = write_redirect_blocks_with_spec_format(node_dir, spec_format)?;
+    let redirects = transaction::write_production_with_selectors(
+        transaction::ArtifactWrite {
+            index_path: &index,
+            index_bytes: index_text.as_bytes(),
+            static_path: &static_path,
+            static_bytes: static_artifact.as_ref().map(EmittedArtifact::bytes),
+            stale_path: &stale_path,
+        },
+        |transaction| {
+            redirect::write_redirect_blocks_with_transaction(node_dir, spec_format, transaction)
+        },
+    )?;
+    let static_lane = static_artifact.map(|_| static_path);
 
     Ok(WrittenArtifacts {
         index,
@@ -500,18 +422,10 @@ pub fn write_boot_artifacts_with_spec_format(
     })
 }
 
-fn remove_if_exists(path: &Path) -> Result<(), WorkspaceError> {
-    if path.exists() {
-        fs::remove_file(path).map_err(|e| io_err(path, e))?;
-    }
-    Ok(())
-}
-
-/// Build a [`WorkspaceError::Io`] from a `std::io::Error` and its path.
-fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
+fn io_err(path: &Path, error: std::io::Error) -> WorkspaceError {
     WorkspaceError::Io {
         path: path.to_path_buf(),
-        reason: e.to_string(),
+        reason: error.to_string(),
     }
 }
 

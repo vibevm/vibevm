@@ -30,7 +30,9 @@
 //! semantics the structural loader is later checked against.
 
 use crate::address::{SpecAddress, SpecAddressError};
-use crate::compiler::ir::{ClosureIr, StaticCompileMode};
+#[cfg(test)]
+use crate::compiler::ir::ClosureIr;
+use crate::compiler::ir::StaticCompileMode;
 use crate::embed::{EmbedError, SectionSource};
 use crate::gate::DuplicateId;
 use crate::qualify::RenameEntry;
@@ -82,6 +84,22 @@ pub enum CompileError {
     },
 }
 
+impl CompileError {
+    pub(crate) fn attribution_address(&self) -> Option<&str> {
+        match self {
+            Self::UseGraph(UseGraphError::Cycle(path)) | Self::Embed(EmbedError::Cycle(path)) => {
+                path.first().map(String::as_str)
+            }
+            Self::UseGraph(UseGraphError::Unresolved { addr, .. })
+            | Self::Embed(EmbedError::Unresolved { addr, .. })
+            | Self::Unresolved { addr, .. }
+            | Self::DuplicateId { addr, .. }
+            | Self::DuplicateSourceSection { addr, .. } => Some(addr),
+            Self::Address(_) | Self::AmbiguousShortLink { .. } => None,
+        }
+    }
+}
+
 /// Compile the closure reachable from `seed` into a single static document —
 /// the **unqualified** reference semantics (PROP-035 §2) the structural loader
 /// is later checked against. See [`compile_static_qualified`] for the per-node
@@ -117,7 +135,7 @@ pub fn compile_static_qualified(
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// → embed → qualify → absorb → link schedule, then the one-seed compatibility tail.
+/// → embed → qualify → absorb → link → assemble → emit:static-md schedule.
 /// Both public modes traverse the same pass list; mode is whole-artifact input
 /// state, never a privileged wrapper branch.
 fn compile_static_inner(
@@ -125,11 +143,20 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: StaticCompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_linked_closure(seed, source, mode)?;
-    compile_static_continuation(closure)
+    let emitted = crate::compiler::builtin::compile_compatibility_artifact(seed, source, mode)?;
+    let renames = emitted
+        .provenance
+        .renames
+        .iter()
+        .map(|entry| (entry.origin.clone(), entry.rename.clone()))
+        .collect();
+    let out = String::from_utf8(emitted.into_bytes())
+        .expect("the built-in Markdown compatibility backend always emits UTF-8");
+    Ok((out, renames))
 }
 
-/// Temporary one-seed Markdown adapter over backend-neutral linked semantics.
+/// Test-only linked oracle retained for focused pre-assemble characterizations.
+#[cfg(test)]
 fn compile_static_continuation(
     closure: ClosureIr,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {

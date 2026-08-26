@@ -10,7 +10,7 @@ use crate::{Authority, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    AbsorptionState, ArtifactInput, ArtifactPlan, ClosureContribution, ClosureDocument,
+    AbsorptionState, ArtifactInputKind, ArtifactPlan, ClosureContribution, ClosureDocument,
     ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId, DocumentAddress, DocumentIr, Documents,
     LinkState, QualificationState,
 };
@@ -144,8 +144,8 @@ fn close_documents(
     let mut contributions = Vec::with_capacity(plan.contributions().len());
 
     for input in plan.contributions() {
-        match input {
-            ArtifactInput::Normal { meta, seed } => {
+        match input.kind() {
+            ArtifactInputKind::Normal { meta, seed } => {
                 let mut requests = BTreeMap::new();
                 let order = topology::order_by(seed, |address| {
                     requests
@@ -196,7 +196,7 @@ fn close_documents(
                     emission_order,
                 });
             }
-            ArtifactInput::Simple { meta, source } => {
+            ArtifactInputKind::Simple { meta, source } => {
                 let key = document_key(source.address());
                 let document = simple_documents
                     .get(&key)
@@ -206,10 +206,10 @@ fn close_documents(
                     document: Box::new(close_document(document)),
                 });
             }
-            ArtifactInput::Elided { meta } => {
+            ArtifactInputKind::Elided { meta } => {
                 contributions.push(ClosureContribution::Elided { meta: meta.clone() })
             }
-            ArtifactInput::Hoisted { meta, target } => {
+            ArtifactInputKind::Hoisted { meta, target } => {
                 contributions.push(ClosureContribution::Hoisted {
                     meta: meta.clone(),
                     target: target.clone(),

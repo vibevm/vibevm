@@ -12,6 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#surface");
 
+#[cfg(test)]
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
@@ -20,7 +21,7 @@ use specmark::spec;
 use vibe_core::manifest::SpecFormat;
 
 use super::{io_err, static_path};
-use crate::{WorkspaceError, layout_paths};
+use crate::{WorkspaceError, layout_paths, safe_file};
 
 /// The agent instruction files a node carries at its root. vibevm owns
 /// only a `<vibevm>` block inside each (PROP-012); the rest of every file
@@ -207,17 +208,22 @@ fn at_lines(lines: &[usize]) -> String {
     r = 1
 )]
 fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {
-    write_managed_block_with_spec_format(path, SpecFormat::Mixed)
+    write_managed_block_with_spec_format(path, SpecFormat::Mixed, "redirecttest")
 }
 
 fn write_managed_block_with_spec_format(
     path: &Path,
     spec_format: SpecFormat,
+    transaction: &str,
 ) -> Result<Option<PathBuf>, WorkspaceError> {
-    let existing = match fs::read_to_string(path) {
-        Ok(s) => Some(s),
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
-        Err(e) => return Err(io_err(path, e)),
+    let existing = match safe_file::read_optional(path).map_err(|error| io_err(path, error))? {
+        Some(bytes) => Some(
+            String::from_utf8(bytes).map_err(|error| WorkspaceError::Io {
+                path: path.to_path_buf(),
+                reason: error.to_string(),
+            })?,
+        ),
+        None => None,
     };
     let block = render_block(spec_format);
     let new_content = match &existing {
@@ -261,7 +267,7 @@ fn write_managed_block_with_spec_format(
     if existing.as_deref() == Some(new_content.as_str()) {
         return Ok(None);
     }
-    fs::write(path, &new_content).map_err(|e| io_err(path, e))?;
+    super::transaction::replace_selector(path, new_content.as_bytes(), transaction)?;
     Ok(Some(path.to_path_buf()))
 }
 
@@ -278,12 +284,50 @@ pub fn write_redirect_blocks_with_spec_format(
     node_dir: &Path,
     spec_format: SpecFormat,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
+    let boot_dir = node_dir.join(vibe_core::layout::current_boot_dir());
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos();
+    let transaction = format!("redirect{}{nonce}", std::process::id());
+    super::transaction::with_boot_lock(&boot_dir, || {
+        write_redirect_blocks_with_transaction(node_dir, spec_format, &transaction)
+    })
+}
+
+pub(super) fn write_redirect_blocks_with_transaction(
+    node_dir: &Path,
+    spec_format: SpecFormat,
+    transaction: &str,
+) -> Result<Vec<PathBuf>, WorkspaceError> {
+    write_redirect_blocks_with_faults(node_dir, spec_format, transaction, &NoRedirectFault)
+}
+
+trait RedirectFaultInjector {
+    fn after_replace(&self, index: usize, path: &Path) -> Result<(), WorkspaceError>;
+}
+
+struct NoRedirectFault;
+
+impl RedirectFaultInjector for NoRedirectFault {
+    fn after_replace(&self, _index: usize, _path: &Path) -> Result<(), WorkspaceError> {
+        Ok(())
+    }
+}
+
+fn write_redirect_blocks_with_faults(
+    node_dir: &Path,
+    spec_format: SpecFormat,
+    transaction: &str,
+    faults: &impl RedirectFaultInjector,
+) -> Result<Vec<PathBuf>, WorkspaceError> {
     let mut written = Vec::new();
-    for name in REDIRECT_FILES {
-        if let Some(path) = write_managed_block_with_spec_format(&node_dir.join(name), spec_format)?
-        {
+    for (index, name) in REDIRECT_FILES.iter().enumerate() {
+        let path = node_dir.join(name);
+        if let Some(path) = write_managed_block_with_spec_format(&path, spec_format, transaction)? {
             written.push(path);
         }
+        faults.after_replace(index, &path)?;
     }
     Ok(written)
 }
@@ -291,3 +335,7 @@ pub fn write_redirect_blocks_with_spec_format(
 #[cfg(test)]
 #[path = "redirect/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "redirect/interruption_tests.rs"]
+mod interruption_tests;

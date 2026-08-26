@@ -216,12 +216,12 @@ fn open_handle_identity_is_stable_and_distinguishes_another_path() {
     fs::write(&first, b"first").unwrap();
     fs::write(&second, b"second").unwrap();
 
-    let first_a = platform::open_existing_read(&first).unwrap();
-    let first_b = platform::open_existing_read(&first).unwrap();
-    let second_file = platform::open_existing_read(&second).unwrap();
-    let identity = platform::identity(&first_a).unwrap();
-    assert_eq!(identity, platform::identity(&first_b).unwrap());
-    assert_ne!(identity, platform::identity(&second_file).unwrap());
+    let first_a = safe_file::open_existing_read(&first).unwrap();
+    let first_b = safe_file::open_existing_read(&first).unwrap();
+    let second_file = safe_file::open_existing_read(&second).unwrap();
+    let identity = safe_file::identity(&first_a).unwrap();
+    assert_eq!(identity, safe_file::identity(&first_b).unwrap());
+    assert_ne!(identity, safe_file::identity(&second_file).unwrap());
     assert_path_identity(&first, identity).unwrap();
 }
 
@@ -233,8 +233,8 @@ fn a_substituted_path_is_rejected_against_the_open_handle_identity() {
     let moved = root.join("moved");
     fs::write(&path, b"first").unwrap();
 
-    let opened = platform::open_existing_read(&path).unwrap();
-    let identity = platform::identity(&opened).unwrap();
+    let opened = safe_file::open_existing_read(&path).unwrap();
+    let identity = safe_file::identity(&opened).unwrap();
     fs::rename(&path, &moved).unwrap();
     fs::write(&path, b"substitute").unwrap();
 

@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "description": "Crash-recovery intent for publishing INDEX.md and its selected STATIC carrier. The record is written durably before the first replacement. A normal write retires it after redirects and stale cleanup; core-only recovery may retire it after selected STATIC and INDEX are durable while deliberately retaining the stale carrier until the next locked full write atomically refreshes every redirect and converges to exactly one carrier.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::boot_artifact_transaction"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "transaction": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": ["commit", "rollback"],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "index": {
+      "ref": "entry"
+    },
+    "selected": {
+      "ref": "entry"
+    },
+    "stale": {
+      "ref": "entry"
+    }
+  },
+  "definitions": {
+    "entry": {
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "before": {
+          "ref": "state"
+        },
+        "after": {
+          "ref": "state"
+        }
+      }
+    },
+    "state": {
+      "properties": {
+        "present": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "staged": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

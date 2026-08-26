@@ -7,7 +7,7 @@ use crate::{DirectiveKind, SectionSource, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    ArtifactInput, ArtifactPlan, DocumentAddress, DocumentIr, SourceFormatId, SourceIr,
+    ArtifactInputKind, ArtifactPlan, DocumentAddress, DocumentIr, SourceFormatId, SourceIr,
 };
 use super::source_snapshot::{DocumentObservation, ExpansionObservation, SourceResolutionSnapshot};
 
@@ -15,6 +15,25 @@ pub(crate) struct Worklist {
     pub(crate) documents: Vec<DocumentIr>,
     pub(crate) sources: SourceResolutionSnapshot,
     pub(crate) embeds: EmbedResolutionSnapshot,
+    pub(crate) owners: ErrorOwners,
+}
+
+#[derive(Debug, Clone, Default)]
+pub(crate) struct ErrorOwners(BTreeMap<String, usize>);
+
+impl ErrorOwners {
+    fn record(&mut self, address: &SpecAddress, input: usize) {
+        self.0.entry(address.to_string()).or_insert(input);
+        self.0.entry(address.without_pin()).or_insert(input);
+    }
+
+    pub(crate) fn owner(&self, address: &str) -> Option<usize> {
+        self.0.get(address).copied().or_else(|| {
+            SpecAddress::parse(address)
+                .ok()
+                .and_then(|parsed| self.0.get(&parsed.without_pin()).copied())
+        })
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -24,8 +43,8 @@ enum DiscoveryKey {
 }
 
 enum ArtifactRoot {
-    Normal(Vec<String>),
-    Simple(String),
+    Normal { input: usize, keys: Vec<String> },
+    Simple { input: usize, key: String },
 }
 
 pub(crate) fn discover(
@@ -40,10 +59,11 @@ pub(crate) fn discover(
     let mut discovery_order = Vec::new();
     let mut use_order = Vec::new();
     let mut roots = Vec::new();
+    let mut owners = ErrorOwners::default();
 
-    for input in plan.contributions() {
-        match input {
-            ArtifactInput::Normal { seed, .. } => {
+    for (input_index, input) in plan.contributions().iter().enumerate() {
+        match input.kind() {
+            ArtifactInputKind::Normal { seed, .. } => {
                 let mut seen = HashSet::new();
                 let mut membership = Vec::new();
                 discover_uses(
@@ -57,19 +77,27 @@ pub(crate) fn discover(
                     &mut discovery_order,
                     &mut resolved,
                     &mut failures,
+                    input_index,
+                    &mut owners,
                 );
-                roots.push(ArtifactRoot::Normal(membership));
+                roots.push(ArtifactRoot::Normal {
+                    input: input_index,
+                    keys: membership,
+                });
             }
-            ArtifactInput::Simple { source, .. } => {
+            ArtifactInputKind::Simple { source, .. } => {
                 let key = document_key(source.address());
-                roots.push(ArtifactRoot::Simple(key.clone()));
+                roots.push(ArtifactRoot::Simple {
+                    input: input_index,
+                    key: key.clone(),
+                });
                 if let std::collections::btree_map::Entry::Vacant(entry) = simple.entry(key.clone())
                 {
                     discovery_order.push(DiscoveryKey::Simple(key));
                     entry.insert(parse(source.clone()));
                 }
             }
-            ArtifactInput::Elided { .. } | ArtifactInput::Hoisted { .. } => {}
+            ArtifactInputKind::Elided { .. } | ArtifactInputKind::Hoisted { .. } => {}
         }
     }
 
@@ -88,6 +116,8 @@ pub(crate) fn discover(
             &mut resolved,
             &mut failures,
             &mut expansions,
+            owners.owner(&key).unwrap_or(0),
+            &mut owners,
         );
         source_membership.insert(key, membership);
     }
@@ -103,7 +133,7 @@ pub(crate) fn discover(
     let mut embed_order = Vec::new();
     for root in roots {
         match root {
-            ArtifactRoot::Normal(keys) => {
+            ArtifactRoot::Normal { input, keys } => {
                 for key in keys {
                     discover_embeds(
                         &key,
@@ -114,6 +144,8 @@ pub(crate) fn discover(
                         &mut discovery_order,
                         &mut resolved,
                         &mut failures,
+                        input,
+                        &mut owners,
                     );
                     for source_key in source_membership.get(&key).into_iter().flatten() {
                         discover_embeds(
@@ -125,11 +157,13 @@ pub(crate) fn discover(
                             &mut discovery_order,
                             &mut resolved,
                             &mut failures,
+                            input,
+                            &mut owners,
                         );
                     }
                 }
             }
-            ArtifactRoot::Simple(key) => {
+            ArtifactRoot::Simple { input, key } => {
                 let document = &simple[&key];
                 let targets = document
                     .tree()
@@ -148,6 +182,8 @@ pub(crate) fn discover(
                     &mut discovery_order,
                     &mut resolved,
                     &mut failures,
+                    input,
+                    &mut owners,
                 );
             }
         }
@@ -169,6 +205,7 @@ pub(crate) fn discover(
         documents,
         sources,
         embeds,
+        owners,
     }
 }
 
@@ -214,7 +251,10 @@ fn discover_uses(
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
+    input: usize,
+    owners: &mut ErrorOwners,
 ) {
+    owners.record(address, input);
     let key = address.without_pin();
     if !seen.insert(key.clone()) {
         return;
@@ -260,6 +300,8 @@ fn discover_uses(
             discovery_order,
             resolved,
             failures,
+            input,
+            owners,
         );
     }
 }
@@ -275,6 +317,8 @@ fn discover_sources(
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
     expansions: &mut BTreeMap<String, ExpansionObservation>,
+    input: usize,
+    owners: &mut ErrorOwners,
 ) {
     if !seen.insert(key.to_string()) {
         return;
@@ -291,6 +335,7 @@ fn discover_sources(
         .map(|directive| directive.address.clone())
         .collect();
     for pattern in patterns {
+        owners.record(&pattern, input);
         let request_key = pattern.to_string();
         expansions.entry(request_key.clone()).or_insert_with(|| {
             match source.expand_pattern(&pattern) {
@@ -309,6 +354,7 @@ fn discover_sources(
             ExpansionObservation::Failed { .. } => continue,
         };
         for target in targets {
+            owners.record(&target, input);
             observe_document(&target, source, parse, discovery_order, resolved, failures);
             let target_key = target.without_pin();
             if !membership.contains(&target_key) {
@@ -325,6 +371,8 @@ fn discover_sources(
                     resolved,
                     failures,
                     expansions,
+                    input,
+                    owners,
                 );
             }
         }
@@ -341,6 +389,8 @@ fn discover_embeds(
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
+    input: usize,
+    owners: &mut ErrorOwners,
 ) {
     if !seen.insert(key.to_string()) {
         return;
@@ -365,6 +415,8 @@ fn discover_embeds(
         discovery_order,
         resolved,
         failures,
+        input,
+        owners,
     );
 }
 
@@ -378,8 +430,11 @@ fn discover_embed_targets(
     discovery_order: &mut Vec<DiscoveryKey>,
     resolved: &mut BTreeMap<String, DocumentIr>,
     failures: &mut BTreeMap<String, DocumentObservation>,
+    input: usize,
+    owners: &mut ErrorOwners,
 ) {
     for target in targets {
+        owners.record(&target, input);
         let target_key = target.without_pin();
         if !embed_order.contains(&target_key) {
             embed_order.push(target_key.clone());
@@ -395,6 +450,8 @@ fn discover_embed_targets(
                 discovery_order,
                 resolved,
                 failures,
+                input,
+                owners,
             );
         }
     }

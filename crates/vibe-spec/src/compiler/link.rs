@@ -9,10 +9,9 @@ use crate::qualify::read_anchor_id;
 
 use super::absorb::{AbsorbPassError, validate_applied_absorption};
 use super::ir::{
-    AbsorptionState, ArtifactFrame, ArtifactTarget, ClosureContribution, ClosureEdgeKind,
-    ClosureIr, ClosureNodeId, ContributionMeta, DocumentAddress, LinkContributionWitness,
-    LinkFenceSnapshot, LinkInputDigest, LinkMarkerKey, LinkOccurrence, LinkResult, LinkState,
-    QualificationState, StaticCompileMode,
+    AbsorptionState, ArtifactFrame, ClosureContribution, ClosureEdgeKind, ClosureIr, ClosureNodeId,
+    ContributionMeta, DocumentAddress, LinkContributionWitness, LinkFenceSnapshot, LinkInputDigest,
+    LinkMarkerKey, LinkOccurrence, LinkResult, LinkState, QualificationState, StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 
@@ -94,6 +93,7 @@ pub(crate) enum LinkPassError {
     },
     #[error("ambiguous short link `{label}`: defined by {}", .candidates.join(", "))]
     AmbiguousShortLink {
+        contribution: usize,
         label: String,
         candidates: Vec<String>,
     },
@@ -106,9 +106,9 @@ pub(crate) enum LinkPassError {
 impl LinkPassError {
     pub(crate) fn into_compile_error(self) -> crate::pipeline::CompileError {
         match self {
-            Self::AmbiguousShortLink { label, candidates } => {
-                crate::pipeline::CompileError::AmbiguousShortLink { label, candidates }
-            }
+            Self::AmbiguousShortLink {
+                label, candidates, ..
+            } => crate::pipeline::CompileError::AmbiguousShortLink { label, candidates },
             other => panic!("the built-in link pass returned invalid private state: {other}"),
         }
     }
@@ -339,7 +339,7 @@ fn resolve_stream(
                 body,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let body = link_text(body, &mut fence, &definitions, qualified)?;
+                let body = link_text(body, &mut fence, &definitions, qualified, contribution)?;
                 let fence_after = link_fence_snapshot(fence.snapshot());
                 output.push(LinkOccurrence::Normal {
                     contribution: *contribution,
@@ -360,7 +360,7 @@ fn resolve_stream(
                 body,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let body = link_text(body, &mut fence, &definitions, qualified)?;
+                let body = link_text(body, &mut fence, &definitions, qualified, contribution)?;
                 let fence_after = link_fence_snapshot(fence.snapshot());
                 output.push(LinkOccurrence::Simple {
                     contribution: *contribution,
@@ -391,19 +391,24 @@ fn link_text(
     fence: &mut FenceTracker,
     definitions: &Definitions,
     qualified: bool,
+    contribution: &usize,
 ) -> Result<String, LinkPassError> {
     let mut output = Vec::new();
     for line in text.split('\n') {
         if fence.classify(line) || !qualified {
             output.push(line.to_string());
         } else {
-            output.push(rewrite_line(line, definitions)?);
+            output.push(rewrite_line(line, definitions, *contribution)?);
         }
     }
     Ok(output.join("\n"))
 }
 
-fn rewrite_line(line: &str, definitions: &Definitions) -> Result<String, LinkPassError> {
+fn rewrite_line(
+    line: &str,
+    definitions: &Definitions,
+    contribution: usize,
+) -> Result<String, LinkPassError> {
     let bytes = line.as_bytes();
     let mut output = String::with_capacity(line.len());
     let mut last = 0;
@@ -438,6 +443,7 @@ fn rewrite_line(line: &str, definitions: &Definitions) -> Result<String, LinkPas
                         .collect();
                     candidates.sort();
                     return Err(LinkPassError::AmbiguousShortLink {
+                        contribution,
                         label: id.to_string(),
                         candidates,
                     });
@@ -479,6 +485,7 @@ pub(crate) fn validate_linked(closure: &ClosureIr) -> Result<(), LinkPassError> 
 
 /// Temporary compatibility serializer. Concrete markers live here only until
 /// named assemble/emit replace this one-seed public-API tail.
+#[cfg(test)]
 pub(crate) fn linked_text(closure: &ClosureIr) -> Result<String, LinkPassError> {
     validate_linked(closure)?;
     debug_assert!(matches!(

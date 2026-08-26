@@ -1,5 +1,4 @@
 //! Workspace discovery and the multi-package member model.
-//!
 //! Spec: `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root`.
 //!
 //! A vibevm **workspace** is a tree of nodes — each a directory carrying one
@@ -49,6 +48,7 @@ pub mod vibedeps;
 
 mod expand;
 mod layout_paths;
+mod safe_file;
 
 pub use publish::{
     OriginInfo, PublishNode, Selection, SkippedNode, StagedNode, select_publishable_nodes,
