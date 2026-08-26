@@ -198,7 +198,7 @@ fn publish_target_cas(
         .unwrap_or_default();
     let mut changed = false;
     for file in &desired.file {
-        let current = project.read_file(&directory, &file.path)?;
+        let current = project.read_file_in(&directory, &file.path)?;
         let current_digest = current.as_deref().map(digest);
         match (&current_digest, owned_paths.contains(file.path.as_str())) {
             (Some(current), _) if current == &file.sha256 => continue,
@@ -247,9 +247,9 @@ fn remove_dropped_owned_files(
         if kept.contains(file.path.as_str()) {
             continue;
         }
-        match project.read_file(directory, &file.path)? {
+        match project.read_file_in(directory, &file.path)? {
             Some(bytes) if digest(&bytes) == file.sha256 => {
-                project.remove_file(directory, &file.path)?;
+                project.remove_file_in(directory, &file.path)?;
             }
             Some(_) => bail!(
                 "refusing to remove tampered owned file `{}` in target `{}`; \
@@ -276,7 +276,10 @@ fn publish(
         );
     };
     let bytes = stage.require(&file.sha256)?;
-    project.write_atomic(directory, &file.path, bytes)
+    project
+        .write_atomic_in(directory, &file.path, bytes)
+        .map(|_| ())
+        .map_err(vibe_safefs::PublishError::into_report)
 }
 
 /// Remove files a prior target owned and the desired state dropped. A file
@@ -298,9 +301,9 @@ fn remove_target_owned(
             return Ok(());
         };
         for file in &prior.file {
-            match project.read_file(&directory, &file.path)? {
+            match project.read_file_in(&directory, &file.path)? {
                 Some(bytes) if digest(&bytes) == file.sha256 => {
-                    project.remove_file(&directory, &file.path)?;
+                    project.remove_file_in(&directory, &file.path)?;
                 }
                 Some(_) => bail!(
                     "refusing to remove tampered owned file `{}` in target `{}`; \
@@ -480,7 +483,7 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                     bail!("target `{}` is absent after publication", target.path);
                 };
                 for file in &target.file {
-                    match project.read_file(&directory, &file.path)? {
+                    match project.read_file_in(&directory, &file.path)? {
                         Some(bytes) if digest(&bytes) == file.sha256 => {}
                         Some(bytes) => bail!(
                             "target file `{}/{}` shows `{}` instead of `{}`",
@@ -511,7 +514,7 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                             if kept.contains(file.path.as_str()) {
                                 continue;
                             }
-                            if project.read_file(&directory, &file.path)?.is_some() {
+                            if project.read_file_in(&directory, &file.path)?.is_some() {
                                 bail!(
                                     "removed owned file `{}/{}` is still present",
                                     target.path,
@@ -546,7 +549,7 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                     continue;
                 };
                 for file in &prior_target.file {
-                    if project.read_file(&directory, &file.path)?.is_some() {
+                    if project.read_file_in(&directory, &file.path)?.is_some() {
                         bail!(
                             "removed owned file `{}/{}` is still present",
                             prior_target.path,

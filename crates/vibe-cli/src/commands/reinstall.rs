@@ -418,7 +418,12 @@ fn run_force(
         &resolution,
         lifecycle_metadata.clone(),
         reinstall_stream_mode(ctx),
-        std::sync::Arc::new(lifecycle_observer),
+        vibe_install::SlotLifecycleSeams {
+            observer: std::sync::Arc::new(lifecycle_observer),
+            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+                &workspace.root,
+            )?),
+        },
     )?;
     let mut outcome = apply_resolution_with_spec_format_and_slot_lifecycle(
         workspace,

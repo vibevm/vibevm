@@ -115,7 +115,7 @@ fn final_cas_refuses_a_changed_plan_with_the_same_key_and_nonce() {
     );
     begin_interrupted(project.path(), &bindings[0]);
     let project_cap = Project::open(project.path()).unwrap();
-    let _guard = project_cap.lock().unwrap();
+    let _guard = project_cap.lock(super::nofollow::LOCK_FILE).unwrap();
     // (1) The original plan, captured from the valid durable receipt.
     let receipt = read_receipt(&project_cap).unwrap().unwrap();
     let applying = receipt.applying.clone().unwrap();
@@ -164,7 +164,7 @@ fn visible_tamper_between_execute_and_finalize_refuses_without_promotion() {
     begin_interrupted(project.path(), alpha);
     // Execute the stored plan exactly as recovery would…
     let project_cap = Project::open(project.path()).unwrap();
-    let _guard = project_cap.lock().unwrap();
+    let _guard = project_cap.lock(super::nofollow::LOCK_FILE).unwrap();
     let receipt = read_receipt(&project_cap).unwrap().unwrap();
     let applying = receipt.applying.clone().unwrap();
     let plan = super::transaction::Plan {
@@ -210,7 +210,7 @@ fn removed_target_recreated_before_finalize_refuses_without_promotion() {
     // Commit the binding so the receipt owns one target with one file.
     reconcile_project_skill_binding(project.path(), alpha).unwrap();
     let project_cap = Project::open(project.path()).unwrap();
-    let _guard = project_cap.lock().unwrap();
+    let _guard = project_cap.lock(super::nofollow::LOCK_FILE).unwrap();
     let receipt = read_receipt(&project_cap).unwrap().unwrap();
     // A pure removal plan: before keeps the committed row, after drops it.
     let plan = super::transaction::Plan {
@@ -291,13 +291,13 @@ fn exclusive_stage_directory_creation_refuses_reuse() {
 fn hardlinked_lock_file_refuses() {
     let project = tempfile::tempdir().unwrap();
     let capability = Project::open(project.path()).unwrap();
-    drop(capability.lock().unwrap());
+    drop(capability.lock(super::nofollow::LOCK_FILE).unwrap());
     // A second name for the lock file makes it a shared hard link: taking
     // the lock through either name must refuse.
     let lock = project.path().join(".vibe/package-skills.lock");
     let alias = project.path().join(".vibe/package-skills.lock.alias");
     fs::hard_link(&lock, &alias).unwrap();
-    let error = capability.lock().unwrap_err();
+    let error = capability.lock(super::nofollow::LOCK_FILE).unwrap_err();
     let error = format!("{error:#}");
     assert!(error.contains("hard link"), "{error}");
 }
@@ -332,9 +332,21 @@ fn corrupt_required_staged_file_refuses_with_intent_intact() {
     fs::write(files.join(&digest_name), "corrupted-bytes").unwrap();
     let error = recover_project_skill_bindings(project.path()).unwrap_err();
     let error = format!("{error:#}");
+    // Pinned exactly, not by fragments. A literal wrapped across source lines
+    // without a continuation bakes its indentation into the message, and every
+    // `contains("hashes to")` assertion in this file would still have passed
+    // while an operator read a sentence with eighteen spaces in the middle.
     assert!(
-        error.contains("hashes to") && error.contains("refusing to trust the durable stage"),
+        error.contains(&format!(
+            "required staged file `{digest_name}` hashes to `{}` instead of \
+             `sha256:{digest_name}`; refusing to trust the durable stage",
+            super::state::digest(b"corrupted-bytes"),
+        )),
         "{error}"
+    );
+    assert!(
+        !error.contains("  "),
+        "no run of spaces may survive: {error}"
     );
     let receipt = read_receipt(&Project::open(project.path()).unwrap())
         .unwrap()
@@ -370,7 +382,7 @@ fn changed_row_scoping_recovery_leaves_unrelated_tampered_targets_alone() {
     // Publish a removal-only intent for alpha that retains beta's row.
     {
         let project_cap = Project::open(project.path()).unwrap();
-        let _guard = project_cap.lock().unwrap();
+        let _guard = project_cap.lock(super::nofollow::LOCK_FILE).unwrap();
         let receipt = read_receipt(&project_cap).unwrap().unwrap();
         let beta_row = receipt
             .binding

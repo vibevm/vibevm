@@ -4071,6 +4071,7 @@ dependencies = [
  "vibe-graph",
  "vibe-install",
  "vibe-lifecycle",
+ "vibe-llm",
  "vibe-mcp",
  "vibe-publish",
  "vibe-registry",
@@ -4194,6 +4195,8 @@ dependencies = [
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
+ "vibe-safefs",
+ "vibe-spec",
  "vibe-wire",
  "vibe-workspace",
  "walkdir",
@@ -4217,11 +4220,8 @@ name = "vibe-mcp"
 version = "1.0.0"
 dependencies = [
  "anyhow",
- "cap-fs-ext",
- "cap-std",
  "core-ai-native-specmark",
  "dirs",
- "icu_normalizer",
  "serde",
  "serde_json",
  "sha2",
@@ -4229,12 +4229,11 @@ dependencies = [
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "tracing",
- "unicode-casefold",
  "vibe-core",
+ "vibe-safefs",
  "vibe-trace",
  "vibe-wire",
  "vibe-workspace",
- "winapi-util",
 ]
 
 [[package]]
@@ -4297,6 +4296,21 @@ dependencies = [
  "vibe-core",
  "vibe-registry",
  "walkdir",
+]
+
+[[package]]
+name = "vibe-safefs"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "cap-fs-ext",
+ "cap-std",
+ "core-ai-native-specmark",
+ "icu_normalizer",
+ "tempfile",
+ "unicode-casefold",
+ "vibe-core",
+ "winapi-util",
 ]
 
 [[package]]

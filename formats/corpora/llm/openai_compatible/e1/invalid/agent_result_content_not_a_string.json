@@ -1,0 +1,8 @@
+{
+  "outputs": [
+    {
+      "path": "docs/guide.md",
+      "content": ["# Guide", ""]
+    }
+  ]
+}

@@ -414,7 +414,16 @@ pub(crate) fn run_with_lifecycle_context(
                 } else {
                     StreamMode::Inherit
                 },
-                std::sync::Arc::new(observer),
+                // `agent` is legal at `slot:` points too, so the same
+                // `vibe-llm` adapter the create phase uses is injected here;
+                // an install-time agent contribution must not silently degrade
+                // to the refusing default just because it ran at the barrier.
+                vibe_install::SlotLifecycleSeams {
+                    observer: std::sync::Arc::new(observer),
+                    agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+                        &project_root,
+                    )?),
+                },
             )?;
             lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
             lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();

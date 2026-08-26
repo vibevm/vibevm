@@ -32,7 +32,7 @@ fn receipt_exists(project: &Project) -> Result<bool> {
         return Ok(false);
     };
     project
-        .read_file(&vibe, RECEIPT_FILE)
+        .read_file_in(&vibe, RECEIPT_FILE)
         .map(|bytes| bytes.is_some())
 }
 
@@ -98,7 +98,7 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
         Ok(vibe) => vibe,
         Err(_) => return Ok(None),
     };
-    let Some(bytes) = project.read_file(&vibe, RECEIPT_FILE)? else {
+    let Some(bytes) = project.read_file_in(&vibe, RECEIPT_FILE)? else {
         return Ok(None);
     };
     let text = String::from_utf8(bytes)
@@ -146,11 +146,14 @@ pub(super) fn write_receipt(project: &Project, receipt: &PackageSkillReceipt) ->
     // Everything above is pure. Only now may the project be opened for
     // writing.
     let vibe = project.dir(&[".vibe"], true)?;
-    if matches!(project.read_file(&vibe, RECEIPT_FILE), Ok(Some(ref existing)) if *existing == bytes)
+    if matches!(project.read_file_in(&vibe, RECEIPT_FILE), Ok(Some(ref existing)) if *existing == bytes)
     {
         return Ok(());
     }
-    project.write_atomic(&vibe, RECEIPT_FILE, &bytes)
+    project
+        .write_atomic_in(&vibe, RECEIPT_FILE, &bytes)
+        .map(|_| ())
+        .map_err(vibe_safefs::PublishError::into_report)
 }
 
 pub(super) fn empty_receipt() -> PackageSkillReceipt {
@@ -246,7 +249,7 @@ pub(super) fn owned_target_matches(
         Err(_) => return Ok(false),
     };
     for file in &target.file {
-        match project.read_file(&directory, &file.path) {
+        match project.read_file_in(&directory, &file.path) {
             Ok(Some(bytes)) => {
                 if digest(&bytes) != file.sha256 {
                     return Ok(false);

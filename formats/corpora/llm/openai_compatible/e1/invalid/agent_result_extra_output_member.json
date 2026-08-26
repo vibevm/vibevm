@@ -1,0 +1,9 @@
+{
+  "outputs": [
+    {
+      "path": "docs/guide.md",
+      "content": "# Guide\n",
+      "mode": "0755"
+    }
+  ]
+}

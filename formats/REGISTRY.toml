@@ -200,6 +200,22 @@ foreign_parsers = "ours"
 corpus = "formats/corpora/llm/openai_compatible/e1"
 sunset = "none"
 
+# The agent handler's standalone multi-output result: the exact JSON document
+# the prompt demands back inside the assistant message. Unlike its two
+# neighbours this is NOT a published third-party wire — we author the shape, we
+# publish it in the prompt, and we are the only reader — so `none` is the
+# honest role and the generated types are strict: an extra member is a provider
+# that did not honour the contract, not a newer version of someone else's API.
+# Transient: re-running the execution re-creates it, and nothing durable is
+# stored in this form.
+[format.llm-openai-compatible-agent-result]
+epoch = 1
+schema = "schemas/llm/openai_compatible/e1/agent_result.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/llm/openai_compatible/e1"
+sunset = "none"
+
 # ── vibe-index CLI machine-JSON reports (7 JTD), PROP-044 §6.5 / B-079 ───────
 # The `vibe-index` twin of the CLI section above: seven `--json` envelopes of
 # the index utility's read verbs, minted 2026-08-20 (owner act on B-079).

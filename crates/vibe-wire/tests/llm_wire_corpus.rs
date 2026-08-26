@@ -1,10 +1,12 @@
 //! Authored valid and invalid documents for the epoch-1 OpenAI-compatible
-//! Chat Completions request/response wire.
+//! Chat Completions request/response wire and the agent-result document the
+//! create-phase handler demands back inside the assistant message.
 
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
 use serde::de::DeserializeOwned;
+use vibe_wire::generated::llm::openai_compatible::e1::agent_result::AgentResult;
 use vibe_wire::generated::llm::openai_compatible::e1::chat_request::{ChatRequest, MessageRole};
 use vibe_wire::generated::llm::openai_compatible::e1::chat_response::{
     ChatResponse, MessageRole as ResponseMessageRole,
@@ -133,6 +135,36 @@ fn response_projection_accepts_the_standard_external_superset() {
 }
 
 #[test]
+fn agent_result_corpus_round_trips_ordered_multi_output_rows() {
+    let result: AgentResult = read_valid("agent_result.json");
+    assert_eq!(
+        result
+            .outputs
+            .iter()
+            .map(|output| output.path.as_str())
+            .collect::<Vec<_>>(),
+        ["docs/guide.md", "docs/reference.md"],
+        "declaration order is the wire order the handler compares against"
+    );
+    assert!(result.outputs[0].content.starts_with("# Guide"));
+    assert!(result.outputs[1].content.starts_with("# Reference"));
+}
+
+/// The empty array is representable — the refusal is the handler's contract
+/// comparison, not a wire-level trick that would also reject a legitimate
+/// future zero-output contract at the parser.
+#[test]
+fn agent_result_wire_represents_an_empty_output_set() {
+    let empty: AgentResult = serde_json::from_str(r#"{"outputs":[]}"#).unwrap();
+    assert!(empty.outputs.is_empty());
+    assert_eq!(
+        serde_json::to_string(&empty).unwrap(),
+        r#"{"outputs":[]}"#,
+        "a required collection is emitted, never omitted"
+    );
+}
+
+#[test]
 fn invalid_request_corpus_is_rejected_by_generated_types() {
     rejects_all::<ChatRequest>("invalid", "chat_request_");
 }
@@ -143,9 +175,41 @@ fn invalid_response_corpus_is_rejected_by_generated_types() {
 }
 
 #[test]
-fn both_jtd_contracts_are_closed_and_contain_no_json_catch_all() {
+fn invalid_agent_result_corpus_is_rejected_by_generated_types() {
+    rejects_all::<AgentResult>("invalid", "agent_result_");
+}
+
+/// The agent result is OUR contract, published in the prompt and read only
+/// here, so an unknown member is a provider that did not honour it — not a
+/// newer version of someone else's API. Forward-compatible tolerance belongs
+/// to the two Chat Completions wires next door, and this asserts the two
+/// policies really do differ rather than merely being described differently.
+#[test]
+fn the_agent_result_is_strict_while_the_foreign_chat_wire_stays_tolerant() {
+    let extra_root = r#"{"outputs":[{"path":"a.md","content":"x"}],"notes":"extra"}"#;
+    let extra_member = r#"{"outputs":[{"path":"a.md","content":"x","mode":"0755"}]}"#;
+    for (label, document) in [("root", extra_root), ("output", extra_member)] {
+        assert!(
+            serde_json::from_str::<AgentResult>(document).is_err(),
+            "an extra {label} member must be refused",
+        );
+    }
+    let foreign = r#"{"id":"x","model":"m","choices":[{"index":0,
+        "message":{"role":"assistant","content":"hi","refusal":null}}],"system_fingerprint":"fp"}"#;
+    assert!(
+        serde_json::from_str::<ChatResponse>(foreign).is_ok(),
+        "the foreign chat wire must stay forward-compatible",
+    );
+}
+
+#[test]
+fn every_jtd_contract_is_closed_and_contains_no_json_catch_all() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
-    for schema in ["chat_request.jtd.json", "chat_response.jtd.json"] {
+    for schema in [
+        "chat_request.jtd.json",
+        "chat_response.jtd.json",
+        "agent_result.jtd.json",
+    ] {
         schema_is_closed_and_has_no_catch_all(
             &root.join("schemas/llm/openai_compatible/e1").join(schema),
         );

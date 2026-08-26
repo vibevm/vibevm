@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "description": "The one JSON document an epoch-1 agent handler demands back from the provider: the complete, ordered set of project outputs it was asked to produce. One call carries every declared output, so a multi-output contract never degenerates into one provider request per file, and the assistant text is never assigned to a file by position. The lifecycle matches these rows against the declared output contract before a single byte is written.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::llm::openai_compatible::e1::agent_result"
+    }
+  },
+  "properties": {
+    "outputs": {
+      "elements": {
+        "ref": "output"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Produced outputs in the exact order the declared contract lists them. The lifecycle rejects a result whose paths differ from the contract in content, count, order or multiplicity; an empty array is representable on the wire and refused by that comparison, never silently accepted as `nothing to do`."
+      }
+    }
+  },
+  "definitions": {
+    "output": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The project-relative, forward-slashed path exactly as the declared contract spells it. It is compared, never re-derived: the provider cannot introduce a path the operator did not declare."
+          }
+        },
+        "content": {
+          "type": "string",
+          "metadata": {
+            "description": "The complete UTF-8 file body. The declared `non-empty file` acceptance is checked against this value before the write and against the written file afterwards."
+          }
+        }
+      }
+    }
+  }
+}

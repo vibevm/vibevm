@@ -87,6 +87,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
+pub mod agent;
+pub mod artifacts;
 mod chain;
 mod execution;
 pub mod handlers;
@@ -97,6 +99,10 @@ mod registry;
 mod runner;
 mod state;
 
+pub use agent::{
+    AgentBackend, AgentCompletion, AgentError, AgentRequest, AgentUsage, NoAgentBackend,
+    PreparedAgent, PromptRequest,
+};
 pub use chain::{LifecycleRequest, LifecycleStep, inclusive_chain};
 pub use execution::{
     BuiltinRegistry, ContributionOutcome, DispatchBatch, DispatchError, ExecutionSession,
@@ -118,8 +124,8 @@ pub use runner::{
 };
 pub use state::{
     FingerprintError, LifecycleStateError, LifecycleStateStore, fingerprint_execution,
-    fingerprint_handler_execution, preparation_error_fingerprint,
-    preparation_error_fingerprint_for_identity,
+    fingerprint_execution_with, fingerprint_handler_execution, fingerprint_handler_execution_with,
+    preparation_error_fingerprint, preparation_error_fingerprint_for_identity,
 };
 pub use vibe_core::lifecycle::{
     CompilePoint, CompilePointParseError, DEFAULT_PHASES, ExtensionPoint, ExtensionPointParseError,

@@ -21,9 +21,19 @@ specmark.workspace = true
 thiserror.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
+# `spec://` address grammar for `handler.prompt`. One parser owns the address
+# form; the agent handler compares an already-parsed authority against the
+# contributing provider rather than re-deriving the grammar.
+vibe-spec.workspace = true
+# Capability-relative, no-follow project mutation for declared agent outputs —
+# the same cell package-skill receipts publish through.
+vibe-safefs.workspace = true
 vibe-wire.workspace = true
 vibe-workspace.workspace = true
 walkdir.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+# The publish-stage REDs need a deterministic post-rename failure; the feature
+# compiles the injection point out of every shipped build.
+vibe-safefs = { workspace = true, features = ["inject-failures"] }

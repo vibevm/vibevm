@@ -59,7 +59,7 @@ pub(super) fn begin_interrupted(
     binding: &crate::pkgskill::ProjectSkillBinding,
 ) {
     let project = Project::open(project_root).unwrap();
-    let _guard = project.lock().unwrap();
+    let _guard = project.lock(super::nofollow::LOCK_FILE).unwrap();
     let files = binding.selected_files.as_ref().unwrap();
     let stage = Stage::create(&project, files).unwrap();
     let mut receipt = read_receipt(&project)
@@ -357,7 +357,7 @@ fn junction_swapped_at_mutation_boundary_cannot_escape() {
     );
     // …and the pinned mutation writes into the project's own directory.
     capability
-        .write_atomic(&pinned, "SKILL.md", b"pinned-write")
+        .write_atomic_in(&pinned, "SKILL.md", b"pinned-write")
         .unwrap();
     assert_eq!(
         fs::read_to_string(&canary).unwrap(),

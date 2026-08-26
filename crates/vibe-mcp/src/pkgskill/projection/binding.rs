@@ -108,7 +108,7 @@ fn lower_skills(
             bail!("duplicate package skill binding identity `{identity}`");
         }
         for target in &binding.targets {
-            let key = receipt::fold_key(&vibe_core::machine_json_path(&target.path));
+            let key = receipt::fold_key(vibe_core::machine_json_path(&target.path));
             if let Some(first) = physical_targets.insert(key, identity.clone()) {
                 bail!(
                     "package skill bindings `{first}` and `{identity}` collide at physical target `{}`",

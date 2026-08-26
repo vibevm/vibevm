@@ -12,6 +12,7 @@ use vibe_wire::generated::lifecycle::e1::context::Context;
 use walkdir::{DirEntry, WalkDir};
 
 use crate::HandlerExecution;
+use crate::agent::PreparedAgent;
 use crate::{ExtensionProvider, ExtensionRegistryRow};
 
 #[derive(Debug, Error)]
@@ -51,6 +52,23 @@ pub fn fingerprint_execution(
     row: &ExtensionRegistryRow,
     context: &Context,
 ) -> Result<String, FingerprintError> {
+    fingerprint_execution_with(row, context, None)
+}
+
+/// The same fingerprint, plus an agent row's credential-free preparation.
+///
+/// PROP-054 `##PHASE-FINGERPRINT` names the prompt **documents** — not the
+/// prompt address — as create's material, and an address is a constant while
+/// its document is authored text. Folding the resolved bytes (instructions and
+/// their spec closure) in here is what makes an edited prompt rerun; hashing
+/// the address alone would fresh-skip it and silently serve stale outputs.
+/// Non-agent rows pass `None` and keep a byte-identical fingerprint.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn fingerprint_execution_with(
+    row: &ExtensionRegistryRow,
+    context: &Context,
+    prepared: Option<&PreparedAgent>,
+) -> Result<String, FingerprintError> {
     let mut hash = FramedHash::new();
     hash.field("key", row.key().to_string().as_bytes());
     hash.field("phase", context.run.phase.as_bytes());
@@ -80,6 +98,11 @@ pub fn fingerprint_execution(
         row.key(),
     )?;
     declared_inputs(&mut hash, row, Path::new(&context.project.root))?;
+    if let Some(prepared) = prepared {
+        let (address, bytes) = prepared.fingerprint_material();
+        hash.field("agent-prompt-address", address.as_bytes());
+        hash.field("agent-prompt-bytes", bytes);
+    }
     Ok(hash.finish())
 }
 
@@ -88,7 +111,16 @@ pub fn fingerprint_handler_execution(
     execution: &HandlerExecution,
     context: &Context,
 ) -> Result<String, FingerprintError> {
-    let mut fingerprint = fingerprint_execution(execution.row(), context)?;
+    fingerprint_handler_execution_with(execution, context, None)
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT")]
+pub fn fingerprint_handler_execution_with(
+    execution: &HandlerExecution,
+    context: &Context,
+    prepared: Option<&PreparedAgent>,
+) -> Result<String, FingerprintError> {
+    let mut fingerprint = fingerprint_execution_with(execution.row(), context, prepared)?;
     if execution.slot_target().is_some() {
         let mut hash = FramedHash::new();
         hash.field("base-fingerprint", fingerprint.as_bytes());

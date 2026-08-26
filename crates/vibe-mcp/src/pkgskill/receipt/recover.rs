@@ -18,7 +18,7 @@ use crate::pkgskill::PackageSkillReport;
 /// Finish any pending applying transaction. `Ok(empty)` when there is none.
 pub(crate) fn recover_pending(project_root: &Path) -> Result<Vec<PackageSkillReport>> {
     let project = Project::open(project_root)?;
-    let _guard = project.lock()?;
+    let _guard = project.lock(super::nofollow::LOCK_FILE)?;
     let Some(receipt) = read_receipt(&project)? else {
         return Ok(Vec::new());
     };

@@ -10,7 +10,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
-use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization, SkillDecl};
+use vibe_core::manifest::{
+    ExtensionKey, LlmSection, Lockfile, Manifest, Materialization, SkillDecl,
+};
 use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, EffectiveManifestKind,
@@ -40,6 +42,9 @@ pub(crate) struct RitualPlan {
     pub(crate) package_bindings: BTreeMap<String, ProjectSkillBinding>,
     pub(crate) package_desired_keys: BTreeSet<String>,
     pub(crate) package_phase_planned: bool,
+    /// Project `[llm]`. Read with the manifest, never resolved here: an
+    /// endpoint or credential is touched only inside an actual agent call.
+    pub(crate) llm: Option<LlmSection>,
 }
 
 impl RitualPlan {
@@ -78,6 +83,7 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
         package_bindings: loaded.package_bindings,
         package_desired_keys: loaded.package_desired_keys,
         package_phase_planned: phases.contains(&Phase::Package),
+        llm: loaded.llm,
     })
 }
 
@@ -105,6 +111,7 @@ pub(crate) fn plan_clean(path: &Path) -> Result<RitualPlan> {
         package_bindings: BTreeMap::new(),
         package_desired_keys: BTreeSet::new(),
         package_phase_planned: false,
+        llm: loaded.llm,
     })
 }
 
@@ -124,6 +131,7 @@ pub(crate) struct LoadedRegistry {
     pub(crate) effective_stack: Option<DependencyProviderId>,
     package_bindings: BTreeMap<String, ProjectSkillBinding>,
     package_desired_keys: BTreeSet<String>,
+    llm: Option<LlmSection>,
 }
 
 /// Strict read-only inspection of one selected node's durable effective world.
@@ -137,6 +145,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         .context("discovering the workspace for lifecycle contribution collection")?;
     let host_manifest = selected_manifest(&workspace, &selected)?.clone();
     let manifest_kind = effective_manifest_kind(&host_manifest);
+    let llm = host_manifest.llm.clone();
     let lock_path = workspace.lockfile_path();
     let vibedeps_root = workspace.vibedeps_root();
 
@@ -221,6 +230,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         effective_stack,
         package_bindings,
         package_desired_keys,
+        llm,
     })
 }
 

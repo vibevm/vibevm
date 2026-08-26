@@ -123,11 +123,12 @@ fn slot_execution_uses_target_cwd_and_compatibility_package_environment() {
         process: &runner,
         binary: &NoBinaryBackend,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
     session
-        .dispatch_execution(&execution, context, &runtime)
+        .dispatch_execution(&execution, context, &runtime, None)
         .unwrap();
     let seen = runner.seen.lock().unwrap();
     assert_eq!(seen[0].cwd, target.path());
@@ -216,6 +217,7 @@ fn script_exit_zero_without_reply_defaults_ok_and_carries_exact_wire_env() {
         process: &runner,
         binary: &NoBinaryBackend,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
@@ -265,6 +267,7 @@ fn script_nonzero_wins_over_valid_reply() {
         process: &runner,
         binary: &NoBinaryBackend,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
@@ -299,6 +302,7 @@ fn successful_script_reply_is_canonicalized_and_pending_file_is_consumed() {
         process: &runner,
         binary: &NoBinaryBackend,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
@@ -351,6 +355,7 @@ fn binary_stdin_is_exact_context_and_contaminated_stdout_fails() {
         process: &runner,
         binary: &binary,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
@@ -397,6 +402,7 @@ fn binary_nonzero_wins_over_a_valid_reply_and_empty_stdout_is_refused() {
             process: &runner,
             binary: &binary,
             package_binding: &super::NoPackageBindingBackend,
+            agent: &crate::NoAgentBackend,
             probe: &BashProbe,
             streams: StreamMode::Capture,
         };
@@ -438,6 +444,7 @@ fn binary_nonzero_never_exposes_protocol_stdout_as_a_report_stream() {
         process: &runner,
         binary: &binary,
         package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
         probe: &BashProbe,
         streams: StreamMode::Capture,
     };
@@ -509,6 +516,7 @@ fn process_reply_refuses_tasks_unknown_fields_and_artifact_id_collisions() {
             process: &runner,
             binary: &binary,
             package_binding: &super::NoPackageBindingBackend,
+            agent: &crate::NoAgentBackend,
             probe: &BashProbe,
             streams: StreamMode::Capture,
         };
@@ -549,5 +557,10 @@ fn artifact_path_cannot_exit_and_reenter_with_parent_components() {
         tasks: Vec::new(),
     };
     let error = validate_reply(&reply, &context, "qualified@slot(target)").unwrap_err();
-    assert!(error.to_string().contains("non-Normal"), "{error}");
+    // The shared generic row law now catches this lexically, before any
+    // filesystem walk — the same refusal, one step earlier and one owner.
+    assert!(
+        error.to_string().contains("non-normal path component"),
+        "{error}"
+    );
 }

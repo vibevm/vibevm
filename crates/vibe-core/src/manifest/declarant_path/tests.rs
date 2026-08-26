@@ -198,6 +198,8 @@ fn device_table_judges_stems_extensions_and_superscripts() {
         "lpt0",
         "confidence.md",
         "com¹⁰",
+        "KON",
+        "ＣＯＮ",
     ] {
         assert!(!is_windows_device_name(ordinary), "{ordinary}");
         assert!(!is_windows_unsafe_component(ordinary), "{ordinary}");

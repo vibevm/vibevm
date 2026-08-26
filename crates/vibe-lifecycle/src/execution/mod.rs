@@ -19,6 +19,7 @@ use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 use vibe_wire::generated::lifecycle_state::StateArtifact;
 
 use crate::ExtensionRegistryRow;
+use crate::agent::PreparedAgent;
 use crate::handlers::{HandlerError, HandlerRuntime, HandlerStreams};
 
 mod builtin;
@@ -204,11 +205,16 @@ impl ExecutionSession {
         self.accept_reply(&row.key().to_string(), envelope, reply, streams)
     }
 
+    /// Dispatch one execution with the exact credential-free preparation the
+    /// caller already folded into its fingerprint. Passing it — rather than
+    /// letting the handler resolve again — is what makes the freshness
+    /// decision and the paid call agree on the same bytes.
     pub fn dispatch_execution(
         &mut self,
         execution: &HandlerExecution,
         envelope: Context,
         runtime: &HandlerRuntime<'_>,
+        prepared: Option<&PreparedAgent>,
     ) -> Result<ContributionOutcome, DispatchError> {
         if let ExtensionHandler::Builtin { name } = &execution.row().declaration().handler {
             let reply = BuiltinRegistry::dispatch(
@@ -219,17 +225,16 @@ impl ExecutionSession {
             )?;
             return self.accept_reply(&execution.key(), envelope, reply, HandlerStreams::default());
         }
-        let (reply, streams) =
-            runtime
-                .dispatch_execution(execution, &envelope)
-                .map_err(|error| {
-                    let streams = error.streams().cloned().unwrap_or_default();
-                    DispatchError::Handler {
-                        key: execution.key(),
-                        error: Box::new(error),
-                        streams: Box::new(streams),
-                    }
-                })?;
+        let (reply, streams) = runtime
+            .dispatch_execution(execution, &envelope, prepared)
+            .map_err(|error| {
+                let streams = error.streams().cloned().unwrap_or_default();
+                DispatchError::Handler {
+                    key: execution.key(),
+                    error: Box::new(error),
+                    streams: Box::new(streams),
+                }
+            })?;
         self.accept_reply(&execution.key(), envelope, reply, streams)
     }
 

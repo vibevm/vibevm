@@ -57,6 +57,7 @@ gated = [
     "vibe-lifecycle",
     "vibe-llm",
     "vibe-resolver",
+    "vibe-safefs",
     "vibe-registry",
     "vibe-workspace",
     "vibe-check",
@@ -73,6 +74,7 @@ gated = [
 gated_pub_doctest = [
     "vibe-core",
     "vibe-lifecycle",
+    "vibe-safefs",
     "vibe-llm",
     "vibe-mcp",
 ]

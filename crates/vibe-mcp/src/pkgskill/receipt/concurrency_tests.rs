@@ -32,6 +32,21 @@ fn spawn_helper(test: &str, mode: (&str, String)) -> Child {
         .expect("spawning the concurrency helper child")
 }
 
+/// A child is this same test binary under libtest, which CAPTURES its panic
+/// output — so a contending child's reason never reaches the parent's stderr.
+/// The helper therefore records its own failure beside the project, and the
+/// parent quotes it. Without this a real refusal and a timing flake are
+/// indistinguishable from `exit(101)` alone.
+fn child_failures(root: &Path) -> String {
+    let mut found = Vec::new();
+    for skill in ["alpha", "beta"] {
+        if let Ok(text) = fs::read_to_string(root.join(format!("child-{skill}.err"))) {
+            found.push(format!("{skill}: {text}"));
+        }
+    }
+    found.join(" | ")
+}
+
 fn wait_for_file(path: &Path) -> bool {
     let deadline = Instant::now() + BUDGET;
     while Instant::now() < deadline {
@@ -46,7 +61,7 @@ fn wait_for_file(path: &Path) -> bool {
 fn wait_for_lock(project: &Project) -> Option<LockGuard> {
     let deadline = Instant::now() + BUDGET;
     while Instant::now() < deadline {
-        if let Some(guard) = LockGuard::try_acquire(project).unwrap() {
+        if let Some(guard) = project.try_lock(super::nofollow::LOCK_FILE).unwrap() {
             return Some(guard);
         }
         std::thread::sleep(POLL);
@@ -70,7 +85,10 @@ fn lock_process_death_releases_the_exact_file_lock() {
     assert!(wait_for_file(&ready), "helper ready marker never appeared");
     let capability = Project::open(project.path()).unwrap();
     assert!(
-        LockGuard::try_acquire(&capability).unwrap().is_none(),
+        capability
+            .try_lock(super::nofollow::LOCK_FILE)
+            .unwrap()
+            .is_none(),
         "the live child must hold the lock"
     );
     // Kill and reap exactly this child; only its death may release the lock.
@@ -86,7 +104,7 @@ fn lock_process_death_releases_the_exact_file_lock() {
 
 fn lock_helper(project_root: &str) {
     let project = Project::open(Path::new(project_root)).unwrap();
-    let _guard = project.lock().unwrap();
+    let _guard = project.lock(super::nofollow::LOCK_FILE).unwrap();
     fs::write(Path::new(project_root).join("ready.marker"), "held").unwrap();
     // Hold the lock until the parent kills this exact process; bounded so an
     // orphaned helper cannot outlive the whole test run.
@@ -133,9 +151,16 @@ fn two_child_reconciles_converge_from_one_baseline() {
     fs::write(&go, "go").unwrap();
     for child in [&mut first, &mut second] {
         let status = child.wait().expect("reaping a reconcile child");
+        // Name the exit code: `2` is a malformed spec, `3` is the barrier
+        // budget expiring, anything else is a real reconcile failure. A bare
+        // "must succeed" makes a timing flake and a correctness break look
+        // identical from the failure text alone.
         assert!(
             status.success(),
-            "each contending reconcile child must succeed"
+            "each contending reconcile child must succeed \
+             (exit {:?}; 3 = barrier budget expired): {}",
+            status.code(),
+            child_failures(project.path()),
         );
     }
     // The parent proves its go instrument fired and both sides converged.
@@ -201,6 +226,13 @@ fn reconcile_helper(spec: &str) {
     let package = PathBuf::from(provider_root);
     let name = if skill == "alpha" { "one" } else { "two" };
     let input = provider(&package, name, skill, &["claude"]);
-    let bindings = lower_project_skill_bindings(root, vec![input]).unwrap();
-    reconcile_project_skill_binding(root, &bindings[0]).unwrap();
+    let outcome = lower_project_skill_bindings(root, vec![input])
+        .and_then(|bindings| reconcile_project_skill_binding(root, &bindings[0]));
+    if let Err(error) = outcome {
+        let _ = fs::write(
+            root.join(format!("child-{skill}.err")),
+            format!("{error:#}"),
+        );
+        std::process::exit(4);
+    }
 }

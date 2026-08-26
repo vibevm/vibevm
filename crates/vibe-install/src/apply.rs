@@ -115,23 +115,29 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
 /// Apply through the canonical lifecycle handler engine. `[hooks]` is sugar
 /// for one `slot:` script contribution per declared phase; install itself is
 /// consent, so this path has no [`HookPolicy`] or prompt surface.
-pub fn apply_with_spec_format_and_lifecycle<S: InstallSource + ?Sized>(
-    source: &S,
-    planned: PlannedInstall,
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    run: RunMetadata,
-    streams: StreamMode,
-) -> Result<ApplyReport> {
-    apply_with_spec_format_and_lifecycle_observed(
-        source,
-        planned,
-        slot_integrity,
-        spec_format,
-        run,
-        streams,
-        Arc::new(NoSlotLifecycleObserver),
-    )
+/// The caller-supplied seams the slot lifecycle runs through: narration, and
+/// the agent backend a slot-scoped `agent` contribution executes on.
+///
+/// There is deliberately **no `Default`**. `agent` is legal at slot points, so
+/// a defaulted seam is a silent downgrade of a selected contribution to the
+/// refusing backend — the exact failure that looks like nothing happening. A
+/// caller with genuinely nothing to inject writes
+/// [`SlotLifecycleSeams::refusing`] and says so at the call site.
+pub struct SlotLifecycleSeams {
+    pub observer: Arc<dyn SlotLifecycleObserver>,
+    pub agent: Arc<dyn vibe_lifecycle::AgentBackend>,
+}
+
+impl SlotLifecycleSeams {
+    /// Narrate nothing and refuse every agent row with remediation. Named, not
+    /// defaulted, so choosing it is visible in the diff.
+    #[must_use]
+    pub fn refusing() -> Self {
+        Self {
+            observer: Arc::new(NoSlotLifecycleObserver),
+            agent: Arc::new(vibe_lifecycle::NoAgentBackend),
+        }
+    }
 }
 
 pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
@@ -141,9 +147,9 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     run: RunMetadata,
     streams: StreamMode,
-    observer: Arc<dyn SlotLifecycleObserver>,
+    seams: SlotLifecycleSeams,
 ) -> Result<ApplyReport> {
-    let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, observer)?;
+    let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams)?;
     let lifecycle_run = lifecycle.run_handle();
     let mut report = apply_with_spec_format_and_slot_lifecycle(
         source,

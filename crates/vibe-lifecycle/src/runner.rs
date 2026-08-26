@@ -13,10 +13,11 @@ use vibe_wire::generated::lifecycle_state::{
     ExecutionRecord, ExecutionRecordStatus, StateArtifact,
 };
 
-use crate::handlers::{HandlerRuntime, HandlerStreams};
+use crate::agent::{AgentError, PreparedAgent};
+use crate::handlers::{HandlerError, HandlerRuntime, HandlerStreams};
 use crate::{
     ContributionOutcome, DispatchError, ExecutionSession, FingerprintError, HandlerExecution,
-    LifecycleStateError, LifecycleStateStore, RunMetadata, fingerprint_handler_execution,
+    LifecycleStateError, LifecycleStateStore, RunMetadata, fingerprint_handler_execution_with,
     preparation_error_fingerprint_for_identity,
 };
 
@@ -81,6 +82,16 @@ pub enum LifecycleRunError {
         #[source]
         source: FingerprintError,
     },
+    #[error(
+        "lifecycle agent preparation failed for `{key}`: {source} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
+          fix: correct the named execution's contract or prompt and rerun)"
+    )]
+    AgentPreparation {
+        key: String,
+        #[source]
+        source: Box<AgentError>,
+    },
     #[error(transparent)]
     Dispatch(#[from] DispatchError),
     #[error(
@@ -127,6 +138,22 @@ impl LifecycleRunError {
         match self {
             Self::FailedTransition { source, .. } => source.is_durable_soft_post(),
             _ => false,
+        }
+    }
+
+    /// The typed agent refusal, whether it came from the credential-free
+    /// preparation or from the dispatched paid half.
+    #[must_use]
+    pub fn agent_error(&self) -> Option<&AgentError> {
+        if let Self::AgentPreparation { source, .. } = self {
+            return Some(source.as_ref());
+        }
+        match self.dispatch_error()? {
+            DispatchError::Handler { error, .. } => match error.as_ref() {
+                HandlerError::Agent { error, .. } => Some(error.as_ref()),
+                _ => None,
+            },
+            _ => None,
         }
     }
 
@@ -249,19 +276,36 @@ impl LifecycleRun {
                 return Err(self.checkpoint_preparation_failure(execution, phase, started, failure));
             }
         };
-        if self.state.is_none() {
-            return self.dispatch_untracked(execution, envelope, runtime);
-        }
-        let fingerprint = match fingerprint_handler_execution(execution, &envelope) {
-            Ok(fingerprint) => fingerprint,
+        // Credential-free preparation FIRST: an agent row's contract, its
+        // provider-pinned address and the exact resolved prompt bytes are all
+        // decided before the freshness question is asked, so the same bytes
+        // that answer it are the bytes the paid call later uses.
+        let prepared = match crate::agent::prepare(runtime.agent, execution.row(), &envelope) {
+            Ok(prepared) => prepared,
             Err(source) => {
-                let failure = LifecycleRunError::Fingerprint {
+                let failure = LifecycleRunError::AgentPreparation {
                     key: key.clone(),
-                    source,
+                    source: Box::new(source),
                 };
                 return Err(self.checkpoint_preparation_failure(execution, phase, started, failure));
             }
         };
+        if self.state.is_none() {
+            return self.dispatch_untracked(execution, envelope, runtime, prepared.as_ref());
+        }
+        let fingerprint =
+            match fingerprint_handler_execution_with(execution, &envelope, prepared.as_ref()) {
+                Ok(fingerprint) => fingerprint,
+                Err(source) => {
+                    let failure = LifecycleRunError::Fingerprint {
+                        key: key.clone(),
+                        source,
+                    };
+                    return Err(
+                        self.checkpoint_preparation_failure(execution, phase, started, failure)
+                    );
+                }
+            };
         let prior = (reuse == ExecutionReuse::FreshnessAware && !self.force)
             .then(|| {
                 self.state
@@ -271,6 +315,20 @@ impl LifecycleRun {
             })
             .flatten();
         let prior = prior.filter(|prior| {
+            // An agent row's outputs are the whole point of the execution, so
+            // "the inputs did not change" is only half the question: a deleted,
+            // emptied, relinked or contract-mismatched output is not fresh, it
+            // is missing work. The probe is credential-free and provider-free.
+            if let Some(prepared) = prepared.as_ref() {
+                // The COMPLETE recorded rows, not their ids: a tampered path
+                // or kind must not survive into the hydrated envelope, where a
+                // later contribution would treat it as real.
+                return crate::agent::probe_outputs(
+                    Path::new(&envelope.project.root),
+                    prepared.contract(),
+                    &prior.artifacts,
+                );
+            }
             let vibe_core::manifest::ExtensionHandler::Builtin { name } =
                 &execution.row().declaration().handler
             else {
@@ -313,7 +371,7 @@ impl LifecycleRun {
             .session
             .as_mut()
             .ok_or(LifecycleRunError::Unbound)?
-            .dispatch_execution(execution, envelope.clone(), runtime);
+            .dispatch_execution(execution, envelope.clone(), runtime, prepared.as_ref());
         match dispatched {
             Ok(outcome) => self.checkpoint_success(key, phase, fingerprint, started, outcome),
             Err(source) => {
@@ -429,12 +487,13 @@ impl LifecycleRun {
         execution: &HandlerExecution,
         envelope: Context,
         runtime: &HandlerRuntime<'_>,
+        prepared: Option<&PreparedAgent>,
     ) -> Result<ExecutionTransition, LifecycleRunError> {
         let dispatched = self
             .session
             .as_mut()
             .ok_or(LifecycleRunError::Unbound)?
-            .dispatch_execution(execution, envelope.clone(), runtime);
+            .dispatch_execution(execution, envelope.clone(), runtime, prepared);
         let outcome = match dispatched {
             Ok(outcome) => outcome,
             Err(source) => return Err(failed_transition(envelope, source)),
@@ -477,4 +536,40 @@ fn failed_transition(envelope: Context, source: DispatchError) -> LifecycleRunEr
 
 fn elapsed_ms(started: Instant) -> u32 {
     u32::try_from(started.elapsed().as_millis()).unwrap_or(u32::MAX)
+}
+
+#[cfg(test)]
+mod diagnostic_tests {
+    use super::{AgentError, LifecycleRunError};
+
+    /// Every run refusal is one sentence. A multi-line `#[error]` literal
+    /// written without a `\` continuation bakes the next line's source
+    /// indentation into the message — and no `contains` assertion on a
+    /// fragment either side of that seam would ever notice.
+    #[test]
+    fn run_refusals_render_as_single_spaced_sentences() {
+        let rendered = LifecycleRunError::AgentPreparation {
+            key: "org.demo/tools#produce".into(),
+            source: Box::new(AgentError::Contract {
+                reason: "`config.outputs` is absent".into(),
+            }),
+        }
+        .to_string();
+
+        assert!(
+            rendered.starts_with(
+                "lifecycle agent preparation failed for `org.demo/tools#produce`: the declared \
+                 output contract is invalid: `config.outputs` is absent (governed by"
+            ),
+            "{rendered}"
+        );
+        assert!(
+            rendered.ends_with("fix: correct the named execution's contract or prompt and rerun)"),
+            "the remediation must survive intact: {rendered}"
+        );
+        assert!(
+            !rendered.contains("  "),
+            "a run of spaces is baked source indentation: {rendered}",
+        );
+    }
 }

@@ -42,13 +42,21 @@ pub(crate) fn validate_reply(
     context: &Context,
     key: &str,
 ) -> Result<(), HandlerError> {
-    if reply.envelope != 1 || !reply.tasks.is_empty() || reply.artifacts.len() > 1024 {
+    if reply.envelope != 1 || !reply.tasks.is_empty() {
         return Err(HandlerError::Reply {
             key: key.into(),
-            reason: "reply epoch/tasks/artifact count invalid".into(),
+            reason: "reply epoch/tasks invalid".into(),
             streams: None,
         });
     }
+    // The generic row law is shared with agent preparation, which applies it
+    // before a token is spent. One owner, so the pre-spend copy cannot drift.
+    crate::artifacts::validate_shape(&reply.artifacts, &context.artifacts, &context.project.root)
+        .map_err(|reason| HandlerError::Reply {
+        key: key.into(),
+        reason,
+        streams: None,
+    })?;
     if reply.artifacts.is_empty() {
         return Ok(());
     }
@@ -59,27 +67,10 @@ pub(crate) fn validate_reply(
             reason: error.to_string(),
             streams: None,
         })?;
-    let mut ids = std::collections::BTreeSet::new();
+    // What only the post-write caller can see: the physical file behind each
+    // row. The lexical shape above is already proven.
     let mut paths = std::collections::BTreeSet::new();
     for artifact in &reply.artifacts {
-        if artifact.id.is_empty()
-            || artifact.id.len() > 256
-            || artifact.kind.is_empty()
-            || artifact.kind.len() > 128
-            || !ids.insert(&artifact.id)
-            || context
-                .artifacts
-                .iter()
-                .any(|prior| prior.id == artifact.id)
-            || artifact.path.contains('\\')
-            || !Path::new(&artifact.path).is_absolute()
-        {
-            return Err(HandlerError::Reply {
-                key: key.into(),
-                reason: format!("invalid artifact `{}`", artifact.id),
-                streams: None,
-            });
-        }
         // Physical identity, not the raw spelling: two case-fold aliases of
         // one file are one artifact.
         let path =

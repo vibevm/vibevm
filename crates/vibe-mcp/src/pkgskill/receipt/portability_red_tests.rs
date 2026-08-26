@@ -40,7 +40,7 @@ fn prior_ownership_never_authorizes_a_differently_spelled_file() {
     fs::write(target.join("skill.md"), "someone-elses").unwrap();
 
     let project_cap = Project::open(project.path()).unwrap();
-    let _guard = project_cap.lock().unwrap();
+    let _guard = project_cap.lock(super::nofollow::LOCK_FILE).unwrap();
     let receipt = read_receipt(&project_cap).unwrap().unwrap();
     let desired = BTreeMap::from([("skill.md".to_string(), b"renamed-bytes".to_vec())]);
     let stage = Stage::create(&project_cap, &desired).unwrap();

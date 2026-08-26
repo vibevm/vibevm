@@ -364,7 +364,12 @@ pub fn run(
         &resolution,
         lifecycle_metadata.clone(),
         lifecycle::stream_mode(ctx),
-        std::sync::Arc::new(lifecycle_observer),
+        vibe_install::SlotLifecycleSeams {
+            observer: std::sync::Arc::new(lifecycle_observer),
+            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+                &project_root,
+            )?),
+        },
     )?;
     let mut subtree = materialise_subtree_with_spec_format_and_slot_lifecycle(
         &workspace.root,

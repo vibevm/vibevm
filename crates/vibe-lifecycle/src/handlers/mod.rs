@@ -8,9 +8,9 @@ use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
 use vibe_core::manifest::ExtensionHandler;
 use vibe_wire::generated::lifecycle::e1::context::Context;
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
-use vibe_wire::generated::lifecycle_state::StateArtifact;
 use vibe_workspace::hooks::{InterpreterProbe, Platform, select_invocation};
 
+use crate::agent::{AgentBackend, AgentError, PreparedAgent};
 use crate::process::{
     ProcessOutput, ProcessRunner, ProcessSpec, ScratchError, StreamMode, allocate_pending_reply,
     execution_scratch, minimal_environment, write_atomic_json,
@@ -19,7 +19,12 @@ use crate::{ExtensionProvider, ExtensionRegistryRow, HandlerExecution, SlotTarge
 
 const REPLY_CAP: usize = 1024 * 1024;
 
+mod backends;
 mod reply;
+pub use backends::{
+    BinaryBackend, NoBinaryBackend, NoPackageBindingBackend, PackageBindingArtifact,
+    PackageBindingBackend, PackageBindingOutcome,
+};
 use reply::parse_reply;
 pub(crate) use reply::validate_reply;
 
@@ -92,6 +97,16 @@ pub enum HandlerError {
     )]
     Binary { key: String, reason: String },
     #[error(
+        "extension `{key}` agent execution failed: {error} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI; \
+          fix: apply the inner failure's remediation and rerun the stopped lifecycle)"
+    )]
+    Agent {
+        key: String,
+        #[source]
+        error: Box<AgentError>,
+    },
+    #[error(
         "{error} (post-spawn streams retained; governed by \
          spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; \
          fix: correct the typed inner handler failure and rerun)"
@@ -139,129 +154,44 @@ impl HandlerError {
     }
 }
 
-/// Injectable provider-scoped binary resolution/build seam.
-///
-/// ```
-/// use std::path::PathBuf;
-/// use vibe_lifecycle::ExtensionRegistryRow;
-/// use vibe_lifecycle::handlers::BinaryBackend;
-/// struct Missing;
-/// impl BinaryBackend for Missing {
-///     fn resolve_or_build(&self, _: &ExtensionRegistryRow, name: &str)
-///         -> Result<PathBuf, String> { Err(format!("missing {name}")) }
-/// }
-/// ```
-#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY")]
-pub trait BinaryBackend: Send + Sync {
-    fn resolve_or_build(&self, row: &ExtensionRegistryRow, name: &str) -> Result<PathBuf, String>;
-}
-
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY")]
-pub struct NoBinaryBackend;
-impl BinaryBackend for NoBinaryBackend {
-    fn resolve_or_build(&self, _row: &ExtensionRegistryRow, name: &str) -> Result<PathBuf, String> {
-        Err(format!("no binary backend configured for `{name}`"))
-    }
-}
-
-/// Canonical artifact emitted by an injected algorithmic package binding.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
-pub struct PackageBindingArtifact {
-    pub id: String,
-    pub kind: String,
-    pub path: String,
-}
-
-/// Result of one package binding before it is lowered to the lifecycle reply.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
-pub struct PackageBindingOutcome {
-    pub artifacts: Vec<PackageBindingArtifact>,
-    pub message: Option<String>,
-}
-
-/// Transport-neutral injected owner for algorithmic package bindings. The
-/// lifecycle crate knows the reserved execution identity but not the concrete
-/// skill writer that serves it.
-///
-/// ```
-/// use vibe_lifecycle::{PackageBindingBackend, PackageBindingOutcome};
-/// use vibe_wire::generated::lifecycle_state::StateArtifact;
-///
-/// /// A minimal algorithmic backend: owns nothing, echoes one message.
-/// struct Echo;
-///
-/// impl PackageBindingBackend for Echo {
-///     fn probe(&self, _key: &str, _artifacts: &[StateArtifact]) -> Result<bool, String> {
-///         Ok(false)
-///     }
-///
-///     fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
-///         Ok(PackageBindingOutcome {
-///             artifacts: Vec::new(),
-///             message: Some(format!("echo `{key}`")),
-///         })
-///     }
-/// }
-///
-/// let backend: &dyn PackageBindingBackend = &Echo;
-/// assert!(!backend.probe("@vibe/package/skill/demo", &[]).unwrap());
-/// let outcome = backend.execute("@vibe/package/skill/demo").unwrap();
-/// assert_eq!(
-///     outcome.message.as_deref(),
-///     Some("echo `@vibe/package/skill/demo`")
-/// );
-/// ```
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW")]
-pub trait PackageBindingBackend: Send + Sync {
-    /// Verify the strict owner receipt and every recorded owned output before
-    /// lifecycle state may hydrate this internal execution as `fresh`.
-    fn probe(&self, key: &str, artifacts: &[StateArtifact]) -> Result<bool, String>;
-
-    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String>;
-}
-
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW")]
-pub struct NoPackageBindingBackend;
-impl PackageBindingBackend for NoPackageBindingBackend {
-    fn probe(&self, _key: &str, _artifacts: &[StateArtifact]) -> Result<bool, String> {
-        Ok(false)
-    }
-
-    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
-        Err(format!("no package binding backend configured for `{key}`"))
-    }
-}
-
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
 pub struct HandlerRuntime<'a> {
     pub process: &'a dyn ProcessRunner,
     pub binary: &'a dyn BinaryBackend,
     pub package_binding: &'a dyn PackageBindingBackend,
+    /// The transport-neutral owner of every paid agent execution. It is
+    /// consulted only from the `agent` handler branch, so a project with no
+    /// selected agent contribution never reaches a provider or a credential.
+    pub agent: &'a dyn AgentBackend,
     pub probe: &'a dyn InterpreterProbe,
     pub streams: StreamMode,
 }
 
 impl HandlerRuntime<'_> {
+    /// The state-blind entry: an agent row has no fingerprint-bound
+    /// preparation here, so it is prepared on the spot. Only the untracked
+    /// paths reach this; the freshness-aware runner always passes the exact
+    /// bytes it already hashed.
     pub fn dispatch(
         &self,
         row: &ExtensionRegistryRow,
         context: &Context,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
-        self.dispatch_inner(row, None, &row.key().to_string(), context)
+        self.dispatch_inner(row, None, &row.key().to_string(), context, None)
     }
 
     pub fn dispatch_execution(
         &self,
         execution: &HandlerExecution,
         context: &Context,
+        prepared: Option<&PreparedAgent>,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
         self.dispatch_inner(
             execution.row(),
             execution.slot_target(),
             &execution.key(),
             context,
+            prepared,
         )
     }
 
@@ -271,6 +201,7 @@ impl HandlerRuntime<'_> {
         target: Option<&SlotTarget>,
         execution_key: &str,
         context: &Context,
+        prepared: Option<&PreparedAgent>,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
         match &row.declaration().handler {
             ExtensionHandler::Script { base } => {
@@ -278,6 +209,28 @@ impl HandlerRuntime<'_> {
             }
             ExtensionHandler::Binary { name } => {
                 self.binary(row, target, execution_key, context, name)
+            }
+            ExtensionHandler::Agent { .. } => {
+                let agent_error = |error: AgentError| HandlerError::Agent {
+                    key: execution_key.to_string(),
+                    error: Box::new(error),
+                };
+                let owned;
+                let prepared = match prepared {
+                    Some(prepared) => prepared,
+                    None => {
+                        owned = crate::agent::prepare(self.agent, row, context)
+                            .map_err(agent_error)?
+                            .ok_or_else(|| HandlerError::Process {
+                                key: execution_key.to_string(),
+                                reason: "an agent row lost its handler kind".into(),
+                            })?;
+                        &owned
+                    }
+                };
+                crate::agent::execute(self.agent, execution_key, context, prepared)
+                    .map(|reply| (reply, HandlerStreams::default()))
+                    .map_err(agent_error)
             }
             other => Err(HandlerError::Process {
                 key: row.key().to_string(),

@@ -61,6 +61,11 @@ pub struct InstallSlotLifecycle {
     run: LifecycleRunHandle,
     reports: Mutex<Vec<SlotLifecycleReport>>,
     observer: Arc<dyn SlotLifecycleObserver>,
+    /// `agent` is legal at slot points as well as phase points, so a direct or
+    /// chained install must be able to execute one. It arrives through the
+    /// required seams parameter — there is no defaulting path that could turn
+    /// a selected contribution into a silent refusal.
+    agent: Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
 impl InstallSlotLifecycle {
@@ -68,7 +73,7 @@ impl InstallSlotLifecycle {
         planned: &PlannedInstall,
         run: RunMetadata,
         streams: StreamMode,
-        observer: Arc<dyn SlotLifecycleObserver>,
+        seams: crate::SlotLifecycleSeams,
     ) -> Result<Self> {
         Self::from_resolution_observed(
             &planned.project_root,
@@ -76,24 +81,7 @@ impl InstallSlotLifecycle {
             &planned.resolution,
             run,
             streams,
-            observer,
-        )
-    }
-
-    pub fn from_resolution(
-        project_root: &Path,
-        manifest: &Manifest,
-        resolution: &[ResolvedDep],
-        run: RunMetadata,
-        streams: StreamMode,
-    ) -> Result<Self> {
-        Self::from_resolution_observed(
-            project_root,
-            manifest,
-            resolution,
-            run,
-            streams,
-            Arc::new(NoSlotLifecycleObserver),
+            seams,
         )
     }
 
@@ -103,7 +91,7 @@ impl InstallSlotLifecycle {
         resolution: &[ResolvedDep],
         run: RunMetadata,
         streams: StreamMode,
-        observer: Arc<dyn SlotLifecycleObserver>,
+        seams: crate::SlotLifecycleSeams,
     ) -> Result<Self> {
         Self::from_projection_observed(
             project_root,
@@ -112,10 +100,15 @@ impl InstallSlotLifecycle {
             resolution,
             run,
             streams,
-            observer,
+            seams,
         )
     }
 
+    /// `seams` is not optional, and [`crate::SlotLifecycleSeams`] has no
+    /// `Default`: `agent` is legal at slot points, so a construction site that
+    /// could *forget* the caller's backend would silently degrade a selected
+    /// contribution to a refusal. Requiring the argument turns "every CLI path
+    /// injects it" from a habit into a compile error.
     pub fn from_projection_observed(
         project_root: &Path,
         manifest: &Manifest,
@@ -123,7 +116,7 @@ impl InstallSlotLifecycle {
         event_targets: &[ResolvedDep],
         run: RunMetadata,
         streams: StreamMode,
-        observer: Arc<dyn SlotLifecycleObserver>,
+        seams: crate::SlotLifecycleSeams,
     ) -> Result<Self> {
         let workspace = Workspace::discover(project_root)?;
         let installed = world_resolution
@@ -164,7 +157,8 @@ impl InstallSlotLifecycle {
             streams,
             run,
             reports: Mutex::new(Vec::new()),
-            observer,
+            observer: seams.observer,
+            agent: seams.agent,
         })
     }
 
@@ -230,6 +224,7 @@ impl InstallSlotLifecycle {
             process: &SystemProcessRunner,
             binary: &binary,
             package_binding: &vibe_lifecycle::NoPackageBindingBackend,
+            agent: self.agent.as_ref(),
             probe: &SystemProbe,
             streams: self.streams,
         };

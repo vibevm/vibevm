@@ -1,0 +1,9 @@
+{
+  "outputs": [
+    {
+      "path": "docs/guide.md",
+      "content": "# Guide\n"
+    }
+  ],
+  "notes": "a provider that added a field did not honour the contract"
+}

@@ -43,3 +43,7 @@ mod tests;
 #[cfg(test)]
 #[path = "receipt/transaction_red_tests.rs"]
 mod transaction_red_tests;
+
+#[cfg(test)]
+#[path = "receipt/stage_residue_tests.rs"]
+mod stage_residue_tests;

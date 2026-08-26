@@ -18,6 +18,7 @@ members = [
     "crates/vibe-lifecycle",
     "crates/vibe-registry",
     "crates/vibe-resolver",
+    "crates/vibe-safefs",
     "crates/vibe-llm",
     "crates/vibe-mcp",
     "crates/vibe-check",
@@ -43,6 +44,7 @@ default-members = [
     "crates/vibe-lifecycle",
     "crates/vibe-registry",
     "crates/vibe-resolver",
+    "crates/vibe-safefs",
     "crates/vibe-llm",
     "crates/vibe-mcp",
     "crates/vibe-check",
@@ -82,6 +84,7 @@ vibe-lifecycle = { path = "crates/vibe-lifecycle", version = "1.0.0" }
 vibe-registry = { path = "crates/vibe-registry", version = "1.0.0" }
 vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
 vibe-llm = { path = "crates/vibe-llm", version = "1.0.0" }
+vibe-safefs = { path = "crates/vibe-safefs", version = "1.0.0" }
 vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.0" }
 vibe-check = { path = "crates/vibe-check", version = "1.0.0" }
 vibe-publish = { path = "crates/vibe-publish", version = "1.0.0" }
@@ -147,7 +150,8 @@ icu_normalizer = { version = "2.2", default-features = false, features = [
 ] }
 # Full, non-Turkic Unicode case folding for that same identity, pinned to the
 # crate whose `UNICODE_VERSION` is 9.0.0 — the Unicode version APFS
-# case-insensitive matching uses. MIT/Apache-2.0.
+# case-insensitive matching uses. MIT/Apache-2.0. The concurrent receipt
+# repair uses this exact algorithm; one table, not two.
 unicode-casefold = "0.2"
 anyhow = "1"
 arboard = "3.4"

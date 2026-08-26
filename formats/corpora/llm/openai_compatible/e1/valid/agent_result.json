@@ -1,0 +1,12 @@
+{
+  "outputs": [
+    {
+      "path": "docs/guide.md",
+      "content": "# Guide\n\nThe first lifecycle phase is validate.\n"
+    },
+    {
+      "path": "docs/reference.md",
+      "content": "# Reference\n\nThe last lifecycle phase is deploy.\n"
+    }
+  ]
+}

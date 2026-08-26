@@ -23,7 +23,7 @@
 //! address. An undotted `spec://<host>/…` authority (the legacy form) parses
 //! but never resolves: it errors with [`ResolveError::LegacyHostAuthority`].
 
-use std::fs;
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use crate::address::{Authority, SpecAddress};
@@ -55,8 +55,44 @@ impl SelfCoordinate {
 /// Resolves `spec://` addresses to files under a workspace root.
 #[derive(Debug, Clone)]
 pub struct FileResolver {
+    /// Where the SELF coordinate's authored specs live. Equal to `ws_root` for
+    /// the ordinary workspace resolver; a caller that already knows the exact
+    /// root of the package it is resolving inside (an executing extension
+    /// provider, a workspace member node) pins it here instead, so no slot
+    /// search — and therefore no "freshest installed version" guess — can
+    /// substitute a different instance of the same coordinate.
+    self_root: PathBuf,
     ws_root: PathBuf,
     self_coord: SelfCoordinate,
+    /// When present, the ONLY coordinates that resolve, each pinned to an
+    /// exact root. A caller that already knows which instance of every package
+    /// its world selected hands that map here, and the slot scan below — which
+    /// answers with the semver-freshest *installed* version — is never reached.
+    /// A coordinate absent from the map refuses rather than falling back.
+    selected: Option<BTreeMap<(String, String), SelectedPackage>>,
+}
+
+/// One row of an already-selected world: the exact version a lock chose and
+/// the root it was materialised at.
+///
+/// Both halves are load-bearing. The root is what removes the slot scan; the
+/// version is what lets an explicit `@version` in an address be *checked*
+/// rather than dropped. Silently discarding a pin is the failure this type
+/// exists to make impossible: an author who wrote `@2.0.0` and got 1.0.0's
+/// bytes has no way to notice.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SelectedPackage {
+    pub version: String,
+    pub root: PathBuf,
+}
+
+impl SelectedPackage {
+    pub fn new(version: impl Into<String>, root: impl Into<PathBuf>) -> Self {
+        Self {
+            version: version.into(),
+            root: root.into(),
+        }
+    }
 }
 
 /// Why an address does not resolve to a file.
@@ -83,6 +119,26 @@ pub enum ResolveError {
     },
     #[error("no installed vibedeps slot for package `{0}`")]
     PackageSlotNotFound(String),
+    /// The resolver was given an exact selected world and the address names a
+    /// coordinate that world does not contain. Refusing is the point: falling
+    /// back to a scan would answer with an instance the lock never chose.
+    #[error(
+        "package `{given}` is not in this resolver's selected world; \
+         only coordinates the lock selected can be reached"
+    )]
+    UnselectedPackage { given: String },
+    /// The address pinned a version the selected world did not choose.
+    /// Refusing names both numbers, because the interesting question is
+    /// always "which one did I get" and silence answers it wrongly.
+    #[error(
+        "address pins `{given}@{requested}`, but the selected world holds \
+         `{given}@{selected}`; the pin and the lock disagree"
+    )]
+    SelectedVersionMismatch {
+        given: String,
+        requested: String,
+        selected: String,
+    },
     #[error("document `{doc_path}` not found under `{base}`")]
     DocNotFound { doc_path: String, base: String },
     #[error("document id `{id}` is ambiguous ({count} files match) under `{dir}`")]
@@ -120,10 +176,96 @@ impl FileResolver {
     /// own `<group>/<name>` authority — the coordinate a `spec://` address
     /// must name to reach the authored `spec/` tree (B-031).
     pub fn new(ws_root: impl Into<PathBuf>, self_coord: SelfCoordinate) -> Self {
+        let ws_root = ws_root.into();
         Self {
+            self_root: ws_root.clone(),
+            ws_root,
+            self_coord,
+            selected: None,
+        }
+    }
+
+    /// A resolver with separate self and dependency roots.
+    ///
+    /// `self_root` is where `self_coord`'s own authored specs live; `ws_root`
+    /// remains the selected workspace world every OTHER coordinate resolves
+    /// against. Pinning the two apart is what lets a caller resolve a document
+    /// inside one exact instance of a package — the version and directory that
+    /// is actually executing — while cross-package references still go through
+    /// the ordinary installed world.
+    ///
+    /// ```
+    /// use vibe_spec::{FileResolver, SelfCoordinate};
+    /// let resolver = FileResolver::with_roots(
+    ///     "/abs/vibedeps/org.demo.tools/1.0.0",
+    ///     "/abs/workspace",
+    ///     SelfCoordinate::new(Some("org.demo".into()), "tools".into()),
+    /// );
+    /// assert_eq!(resolver.self_root(), std::path::Path::new("/abs/vibedeps/org.demo.tools/1.0.0"));
+    /// ```
+    pub fn with_roots(
+        self_root: impl Into<PathBuf>,
+        ws_root: impl Into<PathBuf>,
+        self_coord: SelfCoordinate,
+    ) -> Self {
+        Self {
+            self_root: self_root.into(),
             ws_root: ws_root.into(),
             self_coord,
+            selected: None,
         }
+    }
+
+    /// A resolver whose dependency arm is an exact, already-selected world.
+    ///
+    /// `selected` maps `(group, name)` to the materialised root the caller's
+    /// lock chose. Every non-self coordinate resolves through it and nothing
+    /// else: an unselected coordinate answers
+    /// [`ResolveError::UnselectedPackage`], and no `vibedeps` directory is
+    /// scanned, so "freshest installed" cannot substitute an instance the lock
+    /// did not choose.
+    ///
+    /// An explicit `@version` on such an address is **checked, never
+    /// dropped**: it must equal the selected version or the address refuses
+    /// with both numbers named.
+    ///
+    /// ```
+    /// use std::collections::BTreeMap;
+    /// use vibe_spec::{FileResolver, SelectedPackage, SelfCoordinate, SpecAddress};
+    /// let mut selected = BTreeMap::new();
+    /// selected.insert(
+    ///     ("org.demo".to_string(), "b".to_string()),
+    ///     SelectedPackage::new("1.0.0", "/abs/b-1.0"),
+    /// );
+    /// let resolver = FileResolver::with_selected_world(
+    ///     "/abs/a-1.0",
+    ///     "/abs/workspace",
+    ///     selected,
+    ///     SelfCoordinate::new(Some("org.demo".into()), "a".into()),
+    /// );
+    /// let unselected = SpecAddress::parse("spec://org.demo/c/doc").unwrap();
+    /// assert!(resolver.resolve_file(&unselected).is_err());
+    /// let wrong_pin = SpecAddress::parse("spec://org.demo/b@2.0.0/doc").unwrap();
+    /// assert!(resolver.resolve_file(&wrong_pin).is_err());
+    /// ```
+    pub fn with_selected_world(
+        self_root: impl Into<PathBuf>,
+        ws_root: impl Into<PathBuf>,
+        selected: BTreeMap<(String, String), SelectedPackage>,
+        self_coord: SelfCoordinate,
+    ) -> Self {
+        Self {
+            self_root: self_root.into(),
+            ws_root: ws_root.into(),
+            self_coord,
+            selected: Some(selected),
+        }
+    }
+
+    /// The root this resolver's self coordinate resolves against.
+    #[must_use]
+    pub fn self_root(&self) -> &Path {
+        &self.self_root
     }
 
     /// Resolve an address to the file that holds its document. Ignores the
@@ -156,7 +298,7 @@ impl FileResolver {
                 group,
                 name,
                 version: None,
-            } if self.is_self(group, name) => Ok(specs_root_under(&self.ws_root)),
+            } if self.is_self(group, name) => Ok(specs_root_under(&self.self_root)),
             Authority::Package {
                 group,
                 name,
@@ -171,7 +313,32 @@ impl FileResolver {
                 name,
                 version,
             } => Ok({
-                let slot = self.package_slot(group, name, version.as_deref())?;
+                let slot = match &self.selected {
+                    Some(selected) => {
+                        let chosen =
+                            selected
+                                .get(&(group.clone(), name.clone()))
+                                .ok_or_else(|| ResolveError::UnselectedPackage {
+                                    given: format!("{group}/{name}"),
+                                })?;
+                        // A pin is a claim about which instance the author
+                        // meant. Honour it by checking it: agreeing pins pass,
+                        // disagreeing pins refuse with both numbers, and an
+                        // absent pin means "whatever the lock chose".
+                        if let Some(requested) = version.as_deref() {
+                            let requested = requested.trim_start_matches('=');
+                            if requested != chosen.version {
+                                return Err(ResolveError::SelectedVersionMismatch {
+                                    given: format!("{group}/{name}"),
+                                    requested: requested.to_string(),
+                                    selected: chosen.version.clone(),
+                                });
+                            }
+                        }
+                        chosen.root.clone()
+                    }
+                    None => self.package_slot(group, name, version.as_deref())?,
+                };
                 specs_root_under(&slot)
             }),
             Authority::Host(h) => Err(ResolveError::LegacyHostAuthority {
@@ -254,193 +421,23 @@ impl FileResolver {
     }
 }
 
-/// Resolve a doc-path (relative to a `spec/` root) to a spec-source file —
-/// either serialisation (`.md` or `.xml`; a document's address does not
-/// depend on its form, PROP-045 ##ADDRESSING-UNCHANGED) — inverting the
-/// `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan. `X.md` + `X.xml`
-/// beside each other is a [`ResolveError::PairCollision`]: one document,
-/// one form, and the resolver never guesses which half of a split brain
-/// to read.
-fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, ResolveError> {
-    let (dir, last) = match doc_path.rsplit_once('/') {
-        Some((d, l)) => (base_spec.join(d), l),
-        None => (base_spec.to_path_buf(), doc_path),
-    };
-
-    if is_id_stem(last) {
-        let matches: Vec<PathBuf> = read_dir_or_empty(&dir)
-            .map(|e| e.path())
-            .filter(|p| id_file_matches(p, last))
-            .collect();
-        if let Some((md, xml)) = pair_among(&matches) {
-            return Err(ResolveError::PairCollision { markdown: md, xml });
-        }
-        match matches.as_slice() {
-            [] => Err(ResolveError::DocNotFound {
-                doc_path: doc_path.to_string(),
-                base: base_spec.display().to_string(),
-            }),
-            [one] => Ok(one.clone()),
-            many => Err(ResolveError::AmbiguousDoc {
-                id: last.to_string(),
-                count: many.len(),
-                dir: dir.display().to_string(),
-            }),
-        }
-    } else {
-        let md = base_spec.join(format!("{doc_path}.md"));
-        let xml = base_spec.join(format!("{doc_path}.xml"));
-        match (md.is_file(), xml.is_file()) {
-            (true, true) => Err(ResolveError::PairCollision { markdown: md, xml }),
-            (true, false) => Ok(md),
-            (false, true) => Ok(xml),
-            (false, false) => Err(ResolveError::DocNotFound {
-                doc_path: doc_path.to_string(),
-                base: base_spec.display().to_string(),
-            }),
-        }
-    }
-}
-
-/// The first same-stem `.md` + `.xml` pair among `files`, if any — the
-/// one-document-one-form law over an already-filtered candidate list.
-fn pair_among(files: &[PathBuf]) -> Option<(PathBuf, PathBuf)> {
-    for a in files {
-        if !is_md(a) {
-            continue;
-        }
-        for b in files {
-            if is_xml(b) && a.file_stem() == b.file_stem() {
-                return Some((a.clone(), b.clone()));
-            }
-        }
-    }
-    None
-}
-
-fn is_md(p: &Path) -> bool {
-    p.extension().and_then(|e| e.to_str()) == Some("md")
-}
-
-fn is_xml(p: &Path) -> bool {
-    p.extension().and_then(|e| e.to_str()) == Some("xml")
-}
-
-/// Does a file stem (either serialisation's extension stripped) equal `id`
-/// or start with `id-` (the descriptive-slug form)?
-fn id_file_matches(path: &Path, id: &str) -> bool {
-    let Some(name) = path.file_name().and_then(|s| s.to_str()) else {
-        return false;
-    };
-    let Some(stem) = name
-        .strip_suffix(".md")
-        .or_else(|| name.strip_suffix(".xml"))
-    else {
-        return false;
-    };
-    stem == id
-        || stem
-            .strip_prefix(id)
-            .is_some_and(|rest| rest.starts_with('-'))
-}
-
-// --- The PROP-052 relayout seam — the one sanctioned duplication --------
-//
-// vibe-spec cannot depend on vibe-core (no new dependencies; and the
-// core's layout module — `crates/vibe-core/src/layout.rs` — is the ONE
-// home of the root names, PROP-052 L2). These four names are the single
-// sanctioned duplication outside that module: the forward half
-// (`canonical_doc_path`) strips both specs-root prefixes, and the
-// reverse half (the disk walk below) probes the new root first and
-// falls back to the legacy one — so behaviour on the legacy tree
-// (today's) is byte-identical, and the R4 flip needs no edit here.
-pub(crate) const NEW_SPECS_ROOT: &str = "vibevm/vibespecs";
-pub(crate) const LEGACY_SPECS_ROOT: &str = "spec";
-pub(crate) const NEW_VIBEDEPS_ROOT: &str = "vibevm/vibedeps";
-pub(crate) const LEGACY_VIBEDEPS_ROOT: &str = "vibedeps";
-
-/// The specs root of whichever layout is live under `base`: the new
-/// `vibevm/vibespecs` when it exists on disk, else the legacy `spec`
-/// (the fallback also names the legacy root in `DocNotFound` errors on
-/// a tree that carries neither — the pre-relayout message, byte for
-/// byte).
-pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
-    let new = base.join(NEW_SPECS_ROOT);
-    if new.is_dir() {
-        new
-    } else {
-        base.join(LEGACY_SPECS_ROOT)
-    }
-}
-
-/// The dependency-slot root of whichever layout is live under `base`:
-/// `vibevm/vibedeps` when it exists, else the legacy `vibedeps`
-/// (same probe discipline as [`specs_root_under`]).
-pub(crate) fn vibedeps_root_under(base: &Path) -> PathBuf {
-    let new = base.join(NEW_VIBEDEPS_ROOT);
-    if new.is_dir() {
-        new
-    } else {
-        base.join(LEGACY_VIBEDEPS_ROOT)
-    }
-}
-
-/// The forward half of this router's law: a spec file's canonical
-/// citation doc-path — relative to the specs root, the serialisation
-/// extension stripped, and a `PROP-NNN` / `FEAT-NNN` descriptive-slug
-/// filename truncated to its id (`spec/modules/x/PROP-003-dep-evolution.md`
-/// → `modules/x/PROP-003`), so `resolve_doc` inverts it. Files without
-/// a document id keep their full stem (`boot/00-core`, `WAL`).
-///
-/// The specs root is two-shaped today (PROP-052, the relayout): the
-/// physical file may still sit under the legacy `spec/` prefix or under
-/// the new `vibevm/vibespecs/` one — the LONG prefix is checked first,
-/// and both canonicalise to the same doc-path (L1: physics moves,
-/// addresses do not). vibe-spec cannot depend on vibe-core, so the two
-/// prefixes are spelled here as the one sanctioned duplication of the
-/// layout names outside `vibe_core::layout` (see
-/// `crates/vibe-core/src/layout.rs`, PROP-052 L2).
-pub fn canonical_doc_path(file_rel: &str) -> String {
-    let rel = file_rel
-        .strip_prefix(&format!("{NEW_SPECS_ROOT}/"))
-        .or_else(|| file_rel.strip_prefix(&format!("{LEGACY_SPECS_ROOT}/")))
-        .unwrap_or(file_rel);
-    let (dir, name) = match rel.rsplit_once('/') {
-        Some((d, n)) => (Some(d), n),
-        None => (None, rel),
-    };
-    let stem = name
-        .strip_suffix(".md")
-        .or_else(|| name.strip_suffix(".xml"))
-        .unwrap_or(name);
-    let mut parts = stem.split('-');
-    let canonical = match (parts.next(), parts.next()) {
-        (Some(kind @ ("PROP" | "FEAT")), Some(num))
-            if !num.is_empty() && num.bytes().all(|b| b.is_ascii_digit()) =>
-        {
-            format!("{kind}-{num}")
-        }
-        _ => stem.to_string(),
-    };
-    match dir {
-        Some(d) => format!("{d}/{canonical}"),
-        None => canonical,
-    }
-}
-
-/// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail).
-fn is_id_stem(s: &str) -> bool {
-    let Some((kind, num)) = s.split_once('-') else {
-        return false;
-    };
-    (kind == "PROP" || kind == "FEAT") && !num.is_empty() && num.bytes().all(|b| b.is_ascii_digit())
-}
-
-/// Iterate a directory's entries, yielding nothing if it is unreadable or
-/// absent (the resolver degrades to "not found", never panics).
-fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
-    fs::read_dir(dir).into_iter().flatten().flatten()
-}
+/// The document-lookup half: doc-path → file, the layout roots it resolves
+/// against, and the canonical doc-path both physical layouts fold onto. Split
+/// out of this file along its own responsibility seam — everything above
+/// answers "which `spec/` root does this authority mean", everything there
+/// answers "which file inside a root does this doc-path mean".
+mod lookup;
+pub use lookup::canonical_doc_path;
+pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
+// The layout roots stay reachable under their historical path for the tests
+// that assert both physical layouts fold onto one address.
+#[cfg(test)]
+pub(crate) use lookup::{
+    LEGACY_SPECS_ROOT, LEGACY_VIBEDEPS_ROOT, NEW_SPECS_ROOT, NEW_VIBEDEPS_ROOT,
+};
+#[cfg(test)]
+use lookup::{id_file_matches, is_id_stem};
+use lookup::{read_dir_or_empty, resolve_doc};
 
 /// Version ordering for the freshest-installed rule (B-028): `newest` selects
 /// the semver-newest installed version for an unpinned address.
@@ -454,90 +451,3 @@ pub use glob::is_pattern;
 
 #[cfg(test)]
 mod tests;
-
-/// The PROP-052 half of [`canonical_doc_path`]: both physical layouts
-/// canonicalise to one doc-path (L1 — addresses survive the move).
-/// Kept inline in this file — not in the sibling `tests` module — so the
-/// relayout slice touches exactly this one file.
-#[cfg(test)]
-mod canonical_doc_path_layout_tests {
-    use super::{LEGACY_SPECS_ROOT, NEW_SPECS_ROOT, canonical_doc_path};
-
-    #[test]
-    fn one_doc_path_for_both_layouts() {
-        // The PROP-052 ##ADDRESSES-SURVIVE-THE-MOVE proof: the same
-        // document reached under either physical prefix canonicalises
-        // to the identical citation doc-path. The prefixes are built
-        // from the module's sanctioned duplication pair — no fresh
-        // literals here.
-        for doc in [
-            "common/PROP-000.xml",
-            "common/PROP-000.md",
-            "common/PROP-046-adoption-facts-registry.md",
-            "modules/x/PROP-003-dep-evolution.md",
-            "modules/x/FEAT-012-thing.xml",
-            "boot/00-core.md",
-            "WAL.xml",
-        ] {
-            let new = format!("{NEW_SPECS_ROOT}/{doc}");
-            let old = format!("{LEGACY_SPECS_ROOT}/{doc}");
-            assert_eq!(
-                canonical_doc_path(&new),
-                canonical_doc_path(&old),
-                "diverged for {doc}"
-            );
-        }
-    }
-
-    #[test]
-    fn new_prefix_strips_and_truncates_like_the_old() {
-        // Not just equality of the two shapes: each new-layout input
-        // lands on the exact expected doc-path (slug truncation, the
-        // id-less stem, nested dirs, either serialisation).
-        assert_eq!(
-            canonical_doc_path("vibevm/vibespecs/modules/x/PROP-003-dep-evolution.md"),
-            "modules/x/PROP-003"
-        );
-        assert_eq!(
-            canonical_doc_path("vibevm/vibespecs/common/FEAT-012-thing.xml"),
-            "common/FEAT-012"
-        );
-        assert_eq!(
-            canonical_doc_path("vibevm/vibespecs/boot/00-core.md"),
-            "boot/00-core"
-        );
-        assert_eq!(canonical_doc_path("vibevm/vibespecs/WAL.xml"), "WAL");
-    }
-
-    #[test]
-    fn long_prefix_wins_over_the_short_one() {
-        // The strip order is longest-first: the new root is checked
-        // before the legacy one, so neither prefix can eat into the
-        // other's documents. Both serialisations of the same document
-        // canonicalise identically under the new root…
-        assert_eq!(
-            canonical_doc_path("vibevm/vibespecs/common/PROP-000.xml"),
-            canonical_doc_path("vibevm/vibespecs/common/PROP-000.md"),
-        );
-        // A bare root name without the trailing separator is NOT a doc
-        // path and keeps its shape (no partial strip).
-        assert_eq!(canonical_doc_path("vibevm/vibespecs"), "vibevm/vibespecs");
-        assert_eq!(canonical_doc_path("vibespecs"), "vibespecs");
-    }
-
-    #[test]
-    fn unprefixed_and_legacy_shapes_are_unchanged() {
-        // Additivity: with no prefix at all, or with the legacy one,
-        // behaviour is byte-for-byte the pre-relayout function's.
-        assert_eq!(canonical_doc_path("PROP-000.xml"), "PROP-000");
-        assert_eq!(
-            canonical_doc_path("notes/random-file.md"),
-            "notes/random-file"
-        );
-        assert_eq!(
-            canonical_doc_path("vibevm/vibespecs/common/PROP-000.xml"),
-            "common/PROP-000"
-        );
-        assert_eq!(canonical_doc_path("spec/WAL.md"), "WAL");
-    }
-}

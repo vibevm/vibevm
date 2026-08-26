@@ -14,6 +14,7 @@ use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
 use crate::output;
 
+use super::agent::CliAgentBackend;
 use super::world;
 
 pub(super) fn dispatch_plan_untracked(
@@ -25,7 +26,8 @@ pub(super) fn dispatch_plan_untracked(
         LifecycleRun::untracked(plan.project.clone(), plan.world.clone(), metadata.clone());
     let mut reports = Vec::with_capacity(plan.executions.len());
     let package_binding = ProjectPackageBindingBackend::new(plan);
-    let runtime = runtime(ctx, &package_binding);
+    let agent = CliAgentBackend::for_plan(plan);
+    let runtime = runtime(ctx, &package_binding, &agent);
     for execution in plan.executions.iter() {
         let handler = HandlerExecution::from_row(&execution.row);
         let outcome =
@@ -80,7 +82,8 @@ pub(super) fn dispatch_plan_with_run(
     metadata: &RunMetadata,
 ) -> Result<Vec<LifecycleContributionReport>> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
-    let runtime = runtime(ctx, &package_binding);
+    let agent = CliAgentBackend::for_plan(plan);
+    let runtime = runtime(ctx, &package_binding, &agent);
     let mut reports = Vec::with_capacity(plan.executions.len());
     let mut run = run
         .lock()
@@ -180,6 +183,7 @@ fn contribution_status_report(
 fn runtime<'a>(
     ctx: &output::Context,
     package_binding: &'a dyn PackageBindingBackend,
+    agent: &'a dyn vibe_lifecycle::AgentBackend,
 ) -> HandlerRuntime<'a> {
     static PROCESS: SystemProcessRunner = SystemProcessRunner;
     static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
@@ -193,6 +197,7 @@ fn runtime<'a>(
             &BINARY_INHERIT
         },
         package_binding,
+        agent,
         probe: &PROBE,
         streams: if ctx.is_json() {
             StreamMode::Capture

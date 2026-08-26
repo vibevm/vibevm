@@ -1,0 +1,33 @@
+[package]
+name = "vibe-safefs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Capability-relative, no-follow project filesystem mutation for vibevm"
+
+[dependencies]
+anyhow.workspace = true
+cap-std.workspace = true
+cap-fs-ext.workspace = true
+icu_normalizer.workspace = true
+unicode-casefold.workspace = true
+specmark.workspace = true
+# The single shared Windows device-name table lives with the manifest law;
+# this cell delegates to it rather than carrying a second, weaker copy.
+vibe-core.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+winapi-util.workspace = true
+
+[features]
+# Enables the post-publication failure injection point the publish-stage REDs
+# need. Off in every shipped build; the branch compiles to `None`.
+inject-failures = []
+
+[dev-dependencies]
+tempfile.workspace = true

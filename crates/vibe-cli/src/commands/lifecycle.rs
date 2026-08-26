@@ -27,6 +27,7 @@ use crate::output;
 
 use super::install::{InstallDisposition, InstallRunContext, WorldCallbackSummary};
 
+mod agent;
 mod dispatch;
 mod slot;
 pub(crate) mod world;
@@ -34,6 +35,18 @@ pub(crate) mod world;
 pub(crate) use slot::{
     emit_transition_outcome as emit_slot_transition_outcome, surface_plan as surface_slot_plan,
 };
+
+/// The agent backend the install barrier injects. It reads the selected node's
+/// manifest for project `[llm]` and nothing else — no credential, no endpoint,
+/// no provider construction happens until an actual agent execution runs.
+pub(crate) fn install_agent_backend(project_root: &Path) -> Result<agent::CliAgentBackend> {
+    let workspace = Workspace::discover(project_root)
+        .context("discovering the workspace for the install-time agent backend")?;
+    let llm = vibe_core::manifest::Manifest::read(project_root.join("vibe.toml"))
+        .ok()
+        .and_then(|manifest| manifest.llm);
+    Ok(agent::CliAgentBackend::new(workspace.root.clone(), llm))
+}
 
 /// Execute a top-level default-lifecycle phase verb.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INVOKE-RUNS-PRIORS")]

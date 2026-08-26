@@ -2,6 +2,8 @@
 //! budget (the pattern `mdspec/tests.rs` sets in the engine; the inline form
 //! this file carried until the XML-serialisation tests outgrew it).
 
+use std::fs;
+
 use super::*;
 
 // ----- B-031: the host is a package coordinate (Т1–Т6) ------------------
@@ -329,4 +331,145 @@ fn canonical_doc_path_is_the_forward_half_of_resolution() {
         canonical_doc_path("spec/PROP-abc-notes.md"),
         "PROP-abc-notes"
     );
+}
+
+// ----- selected world: exact roots, exact versions ---------------------
+
+/// A selected world is a claim about *which instance* each coordinate is, so
+/// an address that pins a version is checked against it rather than having the
+/// pin quietly dropped. Four rows, one for each way an address can relate to
+/// the lock.
+#[test]
+fn a_selected_world_enforces_the_exact_locked_version() {
+    use std::collections::BTreeMap;
+
+    use crate::SelectedPackage;
+
+    let ws = tempfile::tempdir().unwrap();
+    let b_one = ws.path().join("b-1.0.0");
+    let doc = b_one.join(NEW_SPECS_ROOT).join("common/note.md");
+    fs::create_dir_all(doc.parent().unwrap()).unwrap();
+    fs::write(&doc, "# Note {#root}\n\nselected\n").unwrap();
+
+    let mut selected = BTreeMap::new();
+    selected.insert(
+        ("org.demo".to_string(), "b".to_string()),
+        SelectedPackage::new("1.0.0", &b_one),
+    );
+    let resolver = FileResolver::with_selected_world(
+        ws.path().join("a-1.0.0"),
+        ws.path(),
+        selected,
+        SelfCoordinate::new(Some("org.demo".into()), "a".into()),
+    );
+
+    // Unversioned: whatever the lock chose.
+    let unversioned = SpecAddress::parse("spec://org.demo/b/common/note").unwrap();
+    assert_eq!(resolver.resolve_file(&unversioned).unwrap(), doc);
+
+    // Agreeing pin: the author's claim and the lock say the same thing.
+    let agreeing = SpecAddress::parse("spec://org.demo/b@1.0.0/common/note").unwrap();
+    assert_eq!(resolver.resolve_file(&agreeing).unwrap(), doc);
+
+    // Disagreeing pin: refuse, and name BOTH numbers — the only interesting
+    // question is "which one did I get", and silence answers it wrongly.
+    let disagreeing = SpecAddress::parse("spec://org.demo/b@2.0.0/common/note").unwrap();
+    let error = resolver.resolve_file(&disagreeing).unwrap_err().to_string();
+    assert!(
+        error.contains("2.0.0") && error.contains("1.0.0"),
+        "{error}"
+    );
+
+    // Unselected coordinate: still refused, never scanned for.
+    let unselected = SpecAddress::parse("spec://org.demo/c/common/note").unwrap();
+    let error = resolver.resolve_file(&unselected).unwrap_err().to_string();
+    assert!(error.contains("selected world"), "{error}");
+}
+
+/// Even with a newer instance sitting on disk beside the selected one, the
+/// selected world never scans: the lock's answer is the only answer.
+#[test]
+fn a_selected_world_never_falls_back_to_the_freshest_installed_slot() {
+    use std::collections::BTreeMap;
+
+    use crate::SelectedPackage;
+
+    let ws = tempfile::tempdir().unwrap();
+    for (version, body) in [("1.0.0", "selected\n"), ("2.0.0", "newer\n")] {
+        let slot = ws
+            .path()
+            .join(NEW_VIBEDEPS_ROOT)
+            .join("org.demo.b")
+            .join(version);
+        let doc = slot.join(NEW_SPECS_ROOT).join("common/note.md");
+        fs::create_dir_all(doc.parent().unwrap()).unwrap();
+        fs::write(&doc, format!("# Note {{#root}}\n\n{body}")).unwrap();
+    }
+    let chosen = ws
+        .path()
+        .join(NEW_VIBEDEPS_ROOT)
+        .join("org.demo.b")
+        .join("1.0.0");
+
+    let mut selected = BTreeMap::new();
+    selected.insert(
+        ("org.demo".to_string(), "b".to_string()),
+        SelectedPackage::new("1.0.0", &chosen),
+    );
+    let resolver = FileResolver::with_selected_world(
+        ws.path().join("a"),
+        ws.path(),
+        selected,
+        SelfCoordinate::new(Some("org.demo".into()), "a".into()),
+    );
+    let address = SpecAddress::parse("spec://org.demo/b/common/note").unwrap();
+    let resolved = resolver.resolve_file(&address).unwrap();
+    assert!(
+        fs::read_to_string(&resolved).unwrap().contains("selected"),
+        "the lock-selected instance must answer, not the newest installed",
+    );
+}
+
+/// Every refusal an operator can be shown is one sentence, not a source
+/// literal's indentation. A multi-line `#[error]` written without a `\`
+/// continuation bakes the leading whitespace of the next line into the
+/// message; nothing else in the suite would notice, because every other
+/// assertion is a `contains` of a fragment on one side of the seam.
+#[test]
+fn resolve_refusals_render_as_single_spaced_sentences() {
+    let rendered = [
+        ResolveError::UnselectedPackage {
+            given: "org.demo/b".into(),
+        }
+        .to_string(),
+        ResolveError::SelectedVersionMismatch {
+            given: "org.demo/b".into(),
+            requested: "2.0.0".into(),
+            selected: "1.0.0".into(),
+        }
+        .to_string(),
+        ResolveError::SelfCoordinateVersioned {
+            self_group: "org.demo".into(),
+            self_name: "a".into(),
+            version: "1.0.0".into(),
+        }
+        .to_string(),
+    ];
+    assert_eq!(
+        rendered[0],
+        "package `org.demo/b` is not in this resolver's selected world; only coordinates the \
+         lock selected can be reached",
+    );
+    assert_eq!(
+        rendered[1],
+        "address pins `org.demo/b@2.0.0`, but the selected world holds `org.demo/b@1.0.0`; \
+         the pin and the lock disagree",
+    );
+    for message in &rendered {
+        assert!(
+            !message.contains("  "),
+            "a run of spaces is baked source indentation: {message}",
+        );
+        assert!(!message.is_empty());
+    }
 }

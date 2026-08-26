@@ -30,8 +30,8 @@ mod subskill;
 pub use artifact::{ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection};
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{
-    DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_pattern,
-    is_windows_device_name, is_windows_unsafe_component,
+    DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_component,
+    declarant_path_pattern, is_windows_device_name, is_windows_unsafe_component,
 };
 pub use deploy::{DeployProfile, DeploySection, DeployTarget};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};

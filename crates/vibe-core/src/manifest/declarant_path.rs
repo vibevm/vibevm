@@ -78,6 +78,8 @@ pub enum DeclarantPathFault {
     Backslash,
     /// A `:` appears — a drive prefix or a Windows alternate data stream.
     Colon,
+    /// A slash appears inside a value that must be one component.
+    Separator,
     /// A character Windows cannot store in a name: `< > " | ?`, or a literal
     /// `*` outside [`DeclarantPathMode::Pattern`].
     InvalidCharacter,
@@ -108,6 +110,7 @@ impl DeclarantPathFault {
             Self::Control => "it carries a control character",
             Self::Backslash => "it carries a backslash",
             Self::Colon => "it carries `:`, a drive prefix or a Windows alternate data stream",
+            Self::Separator => "it carries a path separator",
             Self::InvalidCharacter => {
                 "it carries a character Windows cannot store in a name (`<`, `>`, `\"`, `|`, `?`, or a literal `*`)"
             }
@@ -162,6 +165,36 @@ pub fn declarant_path(path: &Path) -> Result<&str, DeclarantPathFault> {
 /// ```
 pub fn declarant_path_pattern(path: &Path) -> Result<&str, DeclarantPathFault> {
     judge(path, DeclarantPathMode::Pattern)
+}
+
+/// Judge one authored literal path component under the same law as a complete
+/// declarant path. Filesystem mutation cells use this instead of copying the
+/// Windows/control/device table.
+///
+/// ```
+/// use vibe_core::manifest::{DeclarantPathFault, declarant_path_component};
+///
+/// assert_eq!(declarant_path_component("guide.md"), Ok(()));
+/// assert_eq!(declarant_path_component("a/b"), Err(DeclarantPathFault::Separator));
+/// assert_eq!(declarant_path_component("NUL.txt"), Err(DeclarantPathFault::WindowsDevice));
+/// ```
+pub fn declarant_path_component(component: &str) -> Result<(), DeclarantPathFault> {
+    if component.is_empty() {
+        return Err(DeclarantPathFault::EmptySegment);
+    }
+    if component.chars().any(char::is_control) {
+        return Err(DeclarantPathFault::Control);
+    }
+    if component.contains('\\') {
+        return Err(DeclarantPathFault::Backslash);
+    }
+    if component.contains(':') {
+        return Err(DeclarantPathFault::Colon);
+    }
+    if component.contains('/') {
+        return Err(DeclarantPathFault::Separator);
+    }
+    judge_segment(component, DeclarantPathMode::Literal)
 }
 
 fn judge(path: &Path, mode: DeclarantPathMode) -> Result<&str, DeclarantPathFault> {
@@ -251,18 +284,18 @@ fn judge_segment(segment: &str, mode: DeclarantPathMode) -> Result<(), Declarant
 #[must_use]
 pub fn is_windows_device_name(component: &str) -> bool {
     let stem = component.split('.').next().unwrap_or(component);
-    let lowered = stem.to_lowercase();
-    let normalized: String = lowered
-        .chars()
-        .map(|character| match character {
+    let mut normalized = String::with_capacity(stem.len());
+    for character in stem.chars() {
+        normalized.push(match character {
             '¹' => '1',
             '²' => '2',
             '³' => '3',
-            other => other,
-        })
-        .collect();
-    if !normalized.is_ascii() {
-        return false;
+            other if other.is_ascii() => other.to_ascii_lowercase(),
+            // The Windows device vocabulary is ASCII plus the three port
+            // superscripts above. Never let the host Rust Unicode version
+            // decide whether an unrelated scalar lowers into that table.
+            _ => return false,
+        });
     }
     matches!(
         normalized.as_str(),
