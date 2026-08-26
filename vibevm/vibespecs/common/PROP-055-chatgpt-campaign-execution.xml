@@ -120,6 +120,15 @@
         Sol/native on primary-lane limit or a genuine context advantage. The
         packet supplies the skeleton; the worker fills named refinement points
         rather than redrawing the architecture.</ROUTE-MECHANICAL>
+        <ROUTE-MICRO-LOCAL fact="true" status="spec/done">A deterministic
+        micro-edit remains central when its complete implementation and oracle
+        are cheaper than provisioning, reporting and reviewing an external
+        worker. Measured 2026-08-26: one prescribed `specmark::scope!` line took
+        `claudez` about 150 seconds plus packet/report review. Such a run is
+        useful as an intentional transport/template probe, not the routine
+        execution path. This is the verification-cheaper-than-generation law,
+        not an exception to `claudez` priority for genuinely delegable work.
+        </ROUTE-MICRO-LOCAL>
         <ROUTE-CENTRAL fact="true" status="spec/done">Architecture, provider
         boundaries, public grammar, final trade-offs, commit grouping and
         integration stay central. External architecture work is adversarial
@@ -141,8 +150,17 @@
       original session and execute a text-forbidden command despite a later
       allow-list. This was observed live when an R8 repair continuation ran a
       read-only `git diff` forbidden by its packet. The diff caused no mutation,
-      but it proves the transport fence is not assumed; textual bans and root
-      artifact review remain mandatory.</CLAUDEZ-PERMISSION-RESET>
+      but it proves the transport fence is not assumed. A later `dontAsk` run
+      also executed benign `ls`/`grep` Bash not named by `--allowedTools`:
+      that flag is an auto-approval list, **not** a closed capability universe.
+      Pair it with explicit `--disallowedTools` patterns for forbidden command
+      families; deny every ungranted built-in tool too. An isolated R8 specmap
+      packet allowed only Read/Edit/Write textually and positively, yet the
+      worker still invoked one Glob and two Grep calls because neither tool was
+      explicitly disallowed. The worker disclosed the deviation and caused no
+      out-of-perimeter mutation; textual bans and root artifact review remain
+      mandatory.
+      </CLAUDEZ-PERMISSION-RESET>
       <DISJOINT-WRITES fact="true" status="spec/done">Parallelism is routed on
       write intersections, not read intersections. Read-only reviewers may
       overlap. Intersecting or many-place writes are serialized under one
@@ -251,6 +269,15 @@
       `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is
       therefore census-first: retain completed artifacts and restart only
       unfinished packets, never regenerate the batch wholesale.</PROBE-2026-08-26>
+      <CLAUDEZ-TURN-BUDGET fact="true" status="spec/done">A 140-turn R8
+      continuation reached turn 141 and transport-failed **before writing its
+      report**, despite useful code and focused-test progress; it emitted about
+      95k output tokens and repeatedly reran broad filters. Large continuation
+      budgets invite scope accretion rather than completion. Default to a
+      30–50-turn bounded edit packet, split implementation from child-process
+      tests/review, let root compile between packets, and reserve the final two
+      worker turns for the durable report. `max_turns` exhaustion preserves the
+      worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
     </facts>
   </observability>
 
@@ -333,7 +360,9 @@ known positive control demonstrates the instrument can fire.
 ## Deliverable report — draft within 140 lines
 
 Do not spend turns repeatedly trimming a long report. Start concise (140-line
-target leaves headroom under a 150-line hard cap).
+target leaves headroom under a 150-line hard cap). Write/update the durable
+report before the final two allowed turns; a worker that reaches `max_turns`
+without it has failed its deliverable even when useful edits remain.
 
 ```markdown
 # WORKER-REPORT — &lt;task-id&gt;
@@ -363,9 +392,18 @@ intermediate chat reasoning or final screen summary.</fence>
     <facts ordered="false">
       <TEMPLATE-LAUNCH-GUARD fact="true" status="spec/done">Launch with an
       explicit `--permission-mode dontAsk` and the smallest positive
-      `--allowedTools` set in addition to the text above. Repeat the git/commit/
-      full-panel/report clauses in the short pointer prompt: weak workers skim
-      pointer indirection, and resumed threads may retain stale permissions.
+      `--allowedTools` auto-approval set **plus explicit `--disallowedTools`**
+      rules for git, process control and every task-specific forbidden shell
+      family. For an edit packet this includes shell writers and interpreters
+      (`python`, `perl`, `ruby`, `node`, `sed`, `awk`, `tee`, `cp`, `mv`, `rm`,
+      PowerShell/cmd), not only git: R8 correction 3 used a Python heredoc to
+      rewrite source despite the packet's Edit/Write-only clause. `allowedTools`
+      alone does not deny an unlisted tool. Explicitly disallow every unused
+      Claude tool class too (`Glob`, `Grep`, web, agents/tasks and notebook
+      tools when not granted); the R8 specmap probe used Glob/Grep despite a
+      Read/Edit/Write-only packet. Repeat the git/commit/full-panel/report
+      clauses in the short pointer prompt: weak workers skim pointer
+      indirection, and resumed threads may retain stale permissions.
       </TEMPLATE-LAUNCH-GUARD>
       <TEMPLATE-ROOT-CLOSE fact="true" status="spec/done">After `TASK-DONE`,
       root mechanically compares actual changed files to the report, reads the
