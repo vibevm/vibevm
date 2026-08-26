@@ -50,8 +50,8 @@ fronts currently in flight. A worker report or old worktree is never completion.
       script/binary, presets/query and owner scenario §10.1.
 - [x] **R3.1–R3.2** — explicit multi-level IR and the whole named
       parse→…→emit artifact schedule with crash-safe publication.
-- [~] **R3.3** — immutable test-only verifier at the pass-manager boundary
-      (`codex/r3-verifier`, `claudez` execution; root review/commit).
+- [x] **R3.3** — immutable test-only verifier at the pass-manager boundary
+      (`15793f2e`; verifier-off production bytes/errors preserved).
 - [ ] **R6.2a before R3.4** — schema-first six-carrier compiler IR wire and
       corpus (`codex/r6-ir-wire`); then strict domain conversion.
 - [ ] **R3.4** — compile snapshots/timings over that same wire.

@@ -16,9 +16,9 @@ Result: **no unique implementation was lost or stranded.** Final R3.2, R7.1 and
 R8.1 worktrees contain only packets/reports beyond their landed commits.
 Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
-synthesised here, then 33 obsolete worktrees were removed under rolling GC;
-only the six active, unintegrated atoms remain. Missing later waves were never
-implemented.
+synthesised here, then 33 obsolete worktrees were removed under rolling GC.
+B-107 and R3.3 have since landed and their worktrees were reclaimed; four
+active, unintegrated atoms remain. Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -85,7 +85,7 @@ this campaign, but compatibility law is preserved.
 |---|---|---|
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
-| R3.3 verifier-each skeleton | in progress | no landed manager semantic hook; implementation worktree `codex/r3-verifier` |
+| R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
 | R3.4 compile snapshots/timings | missing | no `trace_compile`, `[compile] trace`, or `.vibe/trace` production surface |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
