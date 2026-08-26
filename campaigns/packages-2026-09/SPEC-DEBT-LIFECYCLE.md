@@ -564,3 +564,19 @@ R7.2 still needs a ruling for per-field merge with the existing project
 `[llm]` (`api_key_env`), provider aliases, and whether absolute token paths are
 legal. Keep create-token budgets deferred. Per TZ dependency order, even the
 provider seam lands only after the R2 engine exists.
+
+## 12. R7/R8 continuation cell
+
+The 600-line campaign budget leaves this parent cell no room for the exact R7
+and expanded R8 amendment bodies. They continue, as one queue, in
+[`SPEC-DEBT-LIFECYCLE-R7-R8.md`](SPEC-DEBT-LIFECYCLE-R7-R8.md). That cell owns:
+
+- the landed R7.1 provider evidence and `PROP-000 ##CRATE-LLM` correction;
+- the owner-selected algorithmic-baseline / `off | assist | required` LLM law;
+- the general build/package/deploy mechanism and artifact model;
+- Cargo-first meta-build, static skills and Agent Plugins 1.0;
+- local/client installation, deploy profiles, intents/receipts and the VibeVM
+  OS compatibility horizon.
+
+The split changes document storage only. Both files remain non-authoritative
+drafts, and no owning PROP status moves until the owner applies the queue.
