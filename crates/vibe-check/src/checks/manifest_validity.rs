@@ -98,11 +98,16 @@ mod tests {
         // The "failed to parse" marker is preserved (the existing degenerate
         // contract for this cell).
         assert!(msg.contains("failed to parse"), "{msg}");
-        // NEW: the parser's own framing now reaches the reader — it used to be
-        // swallowed by the bare `#[source]`.
+        // The parser's diagnosis reaches the reader, while the safe wrapper
+        // introduced with the provider seam never echoes the authored source
+        // line (which may contain a secret).
         assert!(
-            msg.contains("TOML parse error"),
-            "syntax framing missing: {msg}"
+            msg.contains("key with no value") && msg.contains("expected `=`"),
+            "parser diagnosis missing: {msg}"
+        );
+        assert!(
+            !msg.contains("this is = not = toml"),
+            "raw manifest source leaked: {msg}"
         );
         assert!(
             msg.contains("line") && msg.contains("column"),
