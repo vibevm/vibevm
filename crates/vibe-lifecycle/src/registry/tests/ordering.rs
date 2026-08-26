@@ -54,7 +54,8 @@ fn reverse_lexical_lock_order_and_manifest_declaration_order_are_preserved() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW")]
-fn effective_stack_is_preset_for_phase_only() {
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#AUTO-BY-FAMILY")]
+fn selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency() {
     let stack = provider_id("org.stack", "rust-stack");
     let registry = collect_extensions(world(
         vec![
@@ -86,8 +87,14 @@ fn effective_stack_is_preset_for_phase_only() {
     let phase = registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped());
     assert_eq!(phase[0].key().as_str(), "org.stack/rust-stack#stack-phase");
     assert_eq!(phase[0].natural_tier(), ContributionTier::Preset);
+    assert!(phase[0].active_by_default());
     assert_eq!(phase[1].key().as_str(), "org.other/other-stack#other-phase");
     assert_eq!(phase[1].natural_tier(), ContributionTier::Dependency);
+    assert!(phase[1].active_by_default());
+    let ExtensionProvider::Dependency(non_selected) = phase[1].provider() else {
+        panic!("non-selected stack remains an installed dependency provider")
+    };
+    assert_eq!(non_selected.kind, vibe_core::PackageKind::Stack);
 
     let slot = registry.plan(
         "slot:pre-install".parse().unwrap(),

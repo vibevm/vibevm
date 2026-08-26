@@ -3,6 +3,7 @@ use std::fs;
 use vibe_core::manifest::{
     ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionKey, ExtensionsControl,
 };
+use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_wire::generated::lifecycle::e1::context::{
     Context, Execution, Io, Project, Run, RunAgentMode, World,
 };
@@ -12,8 +13,9 @@ use vibe_wire::generated::lifecycle_state::{
 
 use super::*;
 use crate::{
-    ExecutionSession, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, RunMetadata,
-    SelectorSubject, collect_extensions,
+    DependencyExtensionSource, DependencyProvider, DependencyProviderId, ExecutionSession,
+    ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, RunMetadata, SelectorSubject,
+    collect_extensions,
 };
 
 fn record(status: ExecutionRecordStatus, fingerprint: &str) -> ExecutionRecord {
@@ -161,6 +163,55 @@ fn row(
     registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped())[0].clone()
 }
 
+fn dependency_row(
+    provider_root: &std::path::Path,
+    id: &str,
+    inputs: Option<Vec<String>>,
+    content_hash: &str,
+) -> crate::ExtensionRegistryRow {
+    let declaration = ExtensionDecl {
+        id: id.into(),
+        point: "phase:build".parse().unwrap(),
+        handler: ExtensionHandler::Builtin { name: "log".into() },
+        config: Some(config(id)),
+        auto: None,
+        inputs,
+        applies_to: None,
+        compiler_internals: None,
+        pass: None,
+        when: None,
+    };
+    let registry = collect_extensions(ExtensionWorld {
+        installed: vec![DependencyExtensionSource {
+            provider: DependencyProvider {
+                id: DependencyProviderId::new(
+                    Group::parse("org.demo").unwrap(),
+                    PackageName::parse("rust-stack").unwrap(),
+                ),
+                root: provider_root.into(),
+                version: "0.1.0".into(),
+                kind: PackageKind::Stack,
+                content_hash: ContentHash::parse(content_hash).unwrap(),
+            },
+            declarations: vec![declaration],
+        }],
+        host: HostExtensionSource {
+            provider: HostProvider {
+                identity: HostIdentity::ungrouped_project("demo"),
+                root: std::path::PathBuf::from("unused-host-root"),
+                version: "0.1.0".into(),
+                kind: None,
+                content_hash: None,
+            },
+            declarations: vec![],
+            controls: ExtensionsControl::default(),
+        },
+        effective_stack: None,
+    })
+    .unwrap();
+    registry.plan("phase:build".parse().unwrap(), SelectorSubject::unscoped())[0].clone()
+}
+
 fn context(root: &std::path::Path, config: &ExtensionConfig) -> Context {
     let root_text = root.to_string_lossy().replace('\\', "/");
     Context {
@@ -260,6 +311,103 @@ fn fingerprint_tracks_config_provider_and_declared_inputs_but_not_dynamic_or_sta
 }
 
 #[test]
+fn dependency_declared_inputs_select_project_sources_not_provider_shadows() {
+    let dir = tempfile::tempdir().unwrap();
+    let project = dir.path().join("project");
+    let provider = dir.path().join("provider");
+    for path in [
+        project.join("src"),
+        project.join("tests"),
+        provider.join("src"),
+    ] {
+        fs::create_dir_all(path).unwrap();
+    }
+    fs::write(
+        project.join("vibe.toml"),
+        "[project]\nname='demo'\nversion='0.1.0'\n",
+    )
+    .unwrap();
+    fs::write(project.join("vibe.lock"), "lock").unwrap();
+    fs::write(project.join("src/main.rs"), "fn main() {}\n").unwrap();
+    fs::write(project.join("tests/preset.rs"), "#[test] fn works() {}\n").unwrap();
+    fs::write(provider.join("src/main.rs"), "provider shadow\n").unwrap();
+
+    let source = dependency_row(
+        &provider,
+        "source",
+        Some(vec!["src/**".into()]),
+        "sha256:aa",
+    );
+    let tests = dependency_row(
+        &provider,
+        "tests",
+        Some(vec!["tests/**".into()]),
+        "sha256:aa",
+    );
+    let no_inputs = dependency_row(&provider, "none", None, "sha256:aa");
+    let source_context = context(&project, source.effective_config().unwrap());
+    let tests_context = context(&project, tests.effective_config().unwrap());
+    let none_context = context(&project, no_inputs.effective_config().unwrap());
+    let source_base = fingerprint_execution(&source, &source_context).unwrap();
+    let tests_base = fingerprint_execution(&tests, &tests_context).unwrap();
+    let none_base = fingerprint_execution(&no_inputs, &none_context).unwrap();
+
+    let provider_changed = dependency_row(
+        &provider,
+        "source",
+        Some(vec!["src/**".into()]),
+        "sha256:bb",
+    );
+    let provider_changed_context = context(&project, provider_changed.effective_config().unwrap());
+    assert_ne!(
+        fingerprint_execution(&provider_changed, &provider_changed_context).unwrap(),
+        source_base,
+        "typed provider content identity must move independently of project inputs"
+    );
+
+    fs::write(provider.join("src/main.rs"), "changed provider shadow\n").unwrap();
+    assert_eq!(
+        fingerprint_execution(&source, &source_context).unwrap(),
+        source_base
+    );
+    fs::write(project.join("README.md"), "unrelated\n").unwrap();
+    assert_eq!(
+        fingerprint_execution(&source, &source_context).unwrap(),
+        source_base
+    );
+    assert_eq!(
+        fingerprint_execution(&tests, &tests_context).unwrap(),
+        tests_base
+    );
+
+    fs::write(
+        project.join("src/main.rs"),
+        "fn main() { println!(\"changed\"); }\n",
+    )
+    .unwrap();
+    let source_changed = fingerprint_execution(&source, &source_context).unwrap();
+    assert_ne!(source_changed, source_base);
+    assert_eq!(
+        fingerprint_execution(&tests, &tests_context).unwrap(),
+        tests_base
+    );
+    assert_eq!(
+        fingerprint_execution(&no_inputs, &none_context).unwrap(),
+        none_base
+    );
+
+    fs::write(project.join("tests/preset.rs"), "#[test] fn changed() {}\n").unwrap();
+    assert_eq!(
+        fingerprint_execution(&source, &source_context).unwrap(),
+        source_changed
+    );
+    assert_ne!(
+        fingerprint_execution(&tests, &tests_context).unwrap(),
+        tests_base
+    );
+}
+
+#[test]
 fn invalid_input_paths_fail_actionably() {
     let dir = tempfile::tempdir().unwrap();
     fs::write(dir.path().join("vibe.toml"), "x").unwrap();
@@ -274,7 +422,7 @@ fn invalid_input_paths_fail_actionably() {
         let ctx = context(dir.path(), row.effective_config().unwrap());
         let error = fingerprint_execution(&row, &ctx).unwrap_err().to_string();
         assert!(error.contains(pattern), "{error}");
-        assert!(error.contains("provider-root-relative"), "{error}");
+        assert!(error.contains("project-root-relative"), "{error}");
     }
 }
 

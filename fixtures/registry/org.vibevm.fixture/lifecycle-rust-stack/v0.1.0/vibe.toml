@@ -1,0 +1,21 @@
+[package]
+name = "lifecycle-rust-stack"
+group = "org.vibevm.fixture"
+kind = "stack"
+version = "0.1.0"
+authors = ["vibevm test fixtures"]
+license = "EULA"
+description = "Hermetic stack fixture binding project build and test phases to cargo scripts"
+keywords = ["test", "fixture", "lifecycle", "rust"]
+
+[[extension]]
+id = "cargo-build"
+point = "phase:build"
+handler = { kind = "script", base = "scripts/build" }
+inputs = ["Cargo.toml", "src/**"]
+
+[[extension]]
+id = "cargo-test"
+point = "phase:test"
+handler = { kind = "script", base = "scripts/test" }
+inputs = ["Cargo.toml", "src/**", "tests/**"]

@@ -5243,6 +5243,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_lifecycle_presets.rs",
+      "item_kind": "fn",
+      "line": 324,
+      "symbol": "vibe_cli::tests::cli_lifecycle_presets::stack_manifest_drives_real_cargo_with_ordered_presets_and_selective_freshness",
+      "end_line": 433,
+      "fingerprint": "tok1:772275474de29f20aff0031b61279ee83366f326fe5909d1e355cdb67146617c"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "item_kind": "fn",
       "line": 84,
@@ -8620,36 +8629,27 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 55,
-      "symbol": "vibe_lifecycle::registry::tests::ordering::effective_stack_is_preset_for_phase_only",
-      "end_line": 112,
-      "fingerprint": "tok1:0218c2047caa35e8e154ab6b42d576ae0488ef2bcad8f80f93be07dbb0a6fa0b"
-    },
-    {
-      "crate_name": "vibe-lifecycle",
-      "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
-      "item_kind": "fn",
-      "line": 114,
+      "line": 121,
       "symbol": "vibe_lifecycle::registry::tests::ordering::host_declaration_precedes_activation_and_activation_never_duplicates",
-      "end_line": 166,
+      "end_line": 173,
       "fingerprint": "tok1:2114f0f49d4d9901cccd43b0956894c5eacce32f07c0ad4762e982ccd61bcb30"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 195,
+      "line": 202,
       "symbol": "vibe_lifecycle::registry::tests::ordering::installed_input_shape_has_no_consumer_controls",
-      "end_line": 205,
+      "end_line": 212,
       "fingerprint": "tok1:788779326cc8e1ce4388326f181019d65c6c6088c16eee37f984b40dcf4f10a5"
     },
     {
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "item_kind": "fn",
-      "line": 168,
+      "line": 175,
       "symbol": "vibe_lifecycle::registry::tests::ordering::provider_metadata_is_retained_separately_from_the_opaque_key",
-      "end_line": 193,
+      "end_line": 200,
       "fingerprint": "tok1:46ba028eaab338d6a3909722ca1d7a08558b83d73b7563f0ad39b5164f404d00"
     },
     {
@@ -8660,6 +8660,15 @@
       "symbol": "vibe_lifecycle::registry::tests::ordering::reverse_lexical_lock_order_and_manifest_declaration_order_are_preserved",
       "end_line": 53,
       "fingerprint": "tok1:9b37b9af4c57b46210fa1e1dd3b3eed89a536ce71395e174493ed06f60288ff3"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
+      "item_kind": "fn",
+      "line": 55,
+      "symbol": "vibe_lifecycle::registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
+      "end_line": 119,
+      "fingerprint": "tok1:4280752e142e43e98c10783b1694e40a0447fd9792e8a739d380631832304a97"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -8767,7 +8776,7 @@
       "line": 17,
       "symbol": "vibe_lifecycle::state::fingerprint::FingerprintError",
       "end_line": 47,
-      "fingerprint": "tok1:380c4a843902929a32d1a41b7ff73feba98ca819b5c4496dc1d3cb89a5123aa4"
+      "fingerprint": "tok1:7bc7380847703aabeedf8c10f58f449aed566e1ff01a73b7da451d05fbaba871"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -8776,7 +8785,7 @@
       "line": 49,
       "symbol": "vibe_lifecycle::state::fingerprint::fingerprint_execution",
       "end_line": 84,
-      "fingerprint": "tok1:8336605e9e4a6990fd65c5af44d218aecd32ee1589e1c4b5d3ddded8b4acb193"
+      "fingerprint": "tok1:0635f89f4e90a178383879870c717bf55a4280107594e57f6117d567ed2273f6"
     },
     {
       "crate_name": "vibe-lifecycle",
@@ -17677,6 +17686,22 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_lifecycle_presets.rs",
+      "from_symbol": "vibe_cli::tests::cli_lifecycle_presets::stack_manifest_drives_real_cargo_with_ordered_presets_and_selective_freshness",
+      "line": 325,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_lifecycle_presets.rs",
+      "from_symbol": "vibe_cli::tests::cli_lifecycle_presets::stack_manifest_drives_real_cargo_with_ordered_presets_and_selective_freshness",
+      "line": 326,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#STACK-CONTRIBUTES-PRESET",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
       "line": 86,
@@ -20826,16 +20851,8 @@
     },
     {
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
-      "from_symbol": "vibe_lifecycle::registry::tests::ordering::effective_stack_is_preset_for_phase_only",
-      "line": 56,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "from_symbol": "vibe_lifecycle::registry::tests::ordering::host_declaration_precedes_activation_and_activation_never_duplicates",
-      "line": 115,
+      "line": 122,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "verifies"
@@ -20843,7 +20860,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "from_symbol": "vibe_lifecycle::registry::tests::ordering::installed_input_shape_has_no_consumer_controls",
-      "line": 196,
+      "line": 203,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION",
       "verb": "verifies"
@@ -20851,7 +20868,7 @@
     {
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "from_symbol": "vibe_lifecycle::registry::tests::ordering::provider_metadata_is_retained_separately_from_the_opaque_key",
-      "line": 169,
+      "line": 176,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
       "verb": "verifies"
@@ -20860,6 +20877,22 @@
       "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
       "from_symbol": "vibe_lifecycle::registry::tests::ordering::reverse_lexical_lock_order_and_manifest_declaration_order_are_preserved",
       "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
+      "from_symbol": "vibe_lifecycle::registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#AUTO-BY-FAMILY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-lifecycle/src/registry/tests/ordering.rs",
+      "from_symbol": "vibe_lifecycle::registry::tests::ordering::selected_stack_phase_is_preset_while_nonselected_stack_stays_active_dependency",
+      "line": 56,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW",
       "verb": "verifies"

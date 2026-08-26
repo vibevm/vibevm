@@ -21,7 +21,7 @@ pub enum FingerprintError {
     #[error(
         "extension `{key}` has invalid inputs pattern `{pattern}`: {reason} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT; \
-          fix: use a provider-root-relative forward-slash glob)"
+          fix: use a project-root-relative forward-slash glob)"
     )]
     InvalidInput {
         key: ExtensionKey,
@@ -79,7 +79,7 @@ pub fn fingerprint_execution(
         Path::new(&context.world.lockfile),
         row.key(),
     )?;
-    declared_inputs(&mut hash, row)?;
+    declared_inputs(&mut hash, row, Path::new(&context.project.root))?;
     Ok(hash.finish())
 }
 
@@ -198,13 +198,10 @@ fn file_or_missing(
 fn declared_inputs(
     hash: &mut FramedHash,
     row: &ExtensionRegistryRow,
+    project_root: &Path,
 ) -> Result<(), FingerprintError> {
     let Some(patterns) = row.declaration().inputs.as_deref() else {
         return Ok(());
-    };
-    let root = match row.provider() {
-        ExtensionProvider::Dependency(provider) => provider.root.as_path(),
-        ExtensionProvider::Host(provider) => provider.root.as_path(),
     };
     for authored in patterns {
         validate_input(row.key(), authored)?;
@@ -215,10 +212,13 @@ fn declared_inputs(
         })?;
         hash.field("input-pattern", authored.as_bytes());
         let mut matches = Vec::new();
-        for entry in WalkDir::new(root).into_iter().filter_entry(shippable_entry) {
+        for entry in WalkDir::new(project_root)
+            .into_iter()
+            .filter_entry(shippable_entry)
+        {
             let entry = entry.map_err(|error| FingerprintError::Read {
                 key: row.key().clone(),
-                path: machine_path(root),
+                path: machine_path(project_root),
                 source: error
                     .into_io_error()
                     .unwrap_or_else(|| std::io::Error::other("walking input tree")),
@@ -226,17 +226,18 @@ fn declared_inputs(
             if !entry.file_type().is_file() {
                 continue;
             }
-            let relative = entry
-                .path()
-                .strip_prefix(root)
-                .map_err(|_| FingerprintError::Read {
-                    key: row.key().clone(),
-                    path: machine_path(entry.path()),
-                    source: std::io::Error::new(
-                        std::io::ErrorKind::InvalidData,
-                        "input walk escaped its provider root",
-                    ),
-                })?;
+            let relative =
+                entry
+                    .path()
+                    .strip_prefix(project_root)
+                    .map_err(|_| FingerprintError::Read {
+                        key: row.key().clone(),
+                        path: machine_path(entry.path()),
+                        source: std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            "input walk escaped its project root",
+                        ),
+                    })?;
             // Authored patterns are UTF-8. A non-UTF-8 filesystem name is
             // outside that namespace and cannot be selected; skipping it
             // avoids both false failures and lossy alias/order collisions.
