@@ -17,8 +17,9 @@ R8.1 worktrees contain only packets/reports beyond their landed commits.
 Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
-B-107 and R3.3 have since landed and their worktrees were reclaimed; four
-active, unintegrated atoms remain. Missing later waves were never implemented.
+B-107, R3.3 and the R8.2a grammar have since landed and their worktrees were
+reclaimed; three active, unintegrated atoms remain. Missing later waves were
+never implemented.
 
 The reusable decisions from untracked architecture/review reports are
 synthesised below. Those reports are evidence inputs, not authority and not the
@@ -137,8 +138,9 @@ current proof. The algorithmic system remains fully usable with no provider.
 | Atom | State | Evidence / gap |
 |---|---|---|
 | R8.1 project package-skill binding | done | `c0fa49be`, `9275f373`; strict JTD receipt, intent/recovery/CAS/containment, Claude/Codex/OpenCode project projections |
-| artifact records and target DAG | missing | no `[[artifacts.build]]`/`[[artifacts.package]]` grammar or registry |
-| `[[mechanism]]` providers and host routing | missing | no build/package/deploy/acquire mechanism plane |
+| R8.2a mechanism/artifact/deploy grammar | done | `2a3f3b44`; typed package/host provider pins, literal-vs-pattern path law, artifact/deploy DAGs and profiles, parse/write symmetry |
+| artifact records and target DAG runtime | partial | strict `[[artifacts.build]]`/`[[artifacts.package]]` grammar/DAG in `2a3f3b44`; no persisted `ArtifactRecord`, freshness or executor registry |
+| `[[mechanism]]` provider runtime and host routing | partial | strict declarations/routes/pins in `2a3f3b44`; no installed-world selection or plan/apply/verify dispatch yet |
 | Cargo commissioning build provider | missing | no metadata/compiler-artifact JSON selection through lifecycle |
 | fully static one-file skill | missing | no include-consumption/static safety builder |
 | Agent Plugins 1.0 directory | missing | no plugin schema/package provider |

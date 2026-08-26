@@ -67,8 +67,8 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [ ] **R7.3–R7.4** — durable hosted outbox/resume and shared MCP surfaces.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.
-- [~] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar
-      (`codex/r8-mechanism-grammar`, `claudez`).
+- [x] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar
+      (`2a3f3b44`; host/package identities and write symmetry included).
 - [ ] **R8.2–R8.4** — artifact records, Cargo provider, static skill, Agent
       Plugin, client deploy, general receipts, `vibe-bin`, profiles, plugin
       replacement and deterministic Windows zip.
