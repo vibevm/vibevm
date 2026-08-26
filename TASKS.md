@@ -65,8 +65,9 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [ ] **R6.1/R6.3–R6.5** — executable pass grammar, native pass placement,
       mandatory verifier, `.txt` frontend and JSON backend.
 - [x] **R7.1** — real OpenAI-compatible provider seam and security gates.
-- [~] **R7.2** — CLI agent/output contract (`codex/r7-agent-cli`, Opus/max);
-      algorithmic default remains complete with no selected agent row.
+- [x] **R7.2** — CLI agent/output contract (`26929050`); strict generated
+      result, selected-world prompt resolution and safe multi-output publish.
+      Algorithmic default remains complete with no selected agent row.
 - [ ] **R7.3–R7.4** — durable hosted outbox/resume and shared MCP surfaces.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.

@@ -127,7 +127,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 | Step | State | Evidence / gap |
 |---|---|---|
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
-| R7.2 CLI agent handler + output contract | missing | `ExtensionHandler::Agent` parses but runtime rejects it as non-process-backed |
+| R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
 | R7.3 hosted outbox/delegated resume | missing | delegated enum exists; no durable run id/outbox/fenced block/resume |
 | R7.4 MCP lifecycle surfaces | missing | no `lifecycle_run` or `lifecycle_tasks` tools |
 
@@ -265,6 +265,14 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     and invocation. Leaking attacker-controlled strings, interning them in a
     process-global table or consulting the runtime registry during decode are
     forbidden.
+19. Project-output path policy has one dependency chain. `vibe-core` owns
+    literal component legality (including the ASCII-only Windows device
+    vocabulary); `vibe-safefs` owns NFC→Unicode-9 full-fold→NFC physical
+    identity, lossless opaque OS-unit comparison and capability/no-follow
+    mutation; `vibe-mcp` keeps only receipt vocabulary and exact-spelling
+    ownership. Folded identity may refuse a collision or portable rename but
+    never authorises an update/removal. Agent outputs, package skills and
+    future deploy providers reuse this cell rather than copying it.
 
 ## 6. Physical state and loss prevention
 
