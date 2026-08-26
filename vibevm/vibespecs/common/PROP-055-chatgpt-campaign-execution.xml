@@ -55,6 +55,14 @@
       fresh independent thread. Diversity counts only with exact file/line
       evidence, a root rerun of the decisive test and a mutation or negative
       oracle; another model's confidence is not evidence.</MODEL-DIVERSITY-IS-A-GATE>
+      <CLAUDEZ-EXECUTES-ROOT-ACCEPTS fact="true" status="spec/done">The owner
+      assigns `claudez` execution priority, never acceptance authority. The
+      central coordinator authors the architecture and packet, closes the write
+      perimeter, names acceptance and red proofs, then reviews the result as a
+      PR, reruns decisive tests/mutations and issues accept, same-cwd repair,
+      re-commission or discard. Worker-written PASS/review/commit claims have
+      zero authority; staging, commits, integration and final gates remain
+      central.</CLAUDEZ-EXECUTES-ROOT-ACCEPTS>
     </facts>
   </roles>
 
@@ -64,20 +72,24 @@
     probed on live work; no lane is assumed healthy from an old ping.</POOL-IS-DYNAMIC></p>
     <facts ordered="false">
       <NATIVE-WORKERS fact="true" status="spec/done">**Native collaboration
-      workers** are the lowest-latency lane for a narrow edit or review that
-      benefits from current conversation context. Use disjoint write perimeters
-      in parallel; retain the packet/report/no-commit discipline.</NATIVE-WORKERS>
+      workers** are the low-latency fallback for a narrow edit/review that
+      specifically benefits from current conversation context. They are not the
+      default execution lane while `claudez` is healthy. Use disjoint write
+      perimeters in parallel; retain packet/report/no-commit discipline.
+      </NATIVE-WORKERS>
       <SOL-XHIGH fact="true" status="spec/done">**`codexrunner` —
-      `gpt-5.6-sol`, effort `xhigh`** — is the primary external lane for hard,
-      well-specified coding, broad code reading and mutation-backed repair. It
-      runs in a dedicated worktree. Its yolo transport makes root diff review
-      and a closed write allow-list mandatory; worker claims about review,
-      commits or panels have no authority.</SOL-XHIGH>
+      `gpt-5.6-sol`, effort `xhigh`** — is the second external lane for hard,
+      well-specified coding, broad code reading and mutation-backed repair when
+      `claudez` is busy/limited or model diversity is useful. It runs in a
+      dedicated worktree. Its yolo transport makes root diff review and a
+      closed write allow-list mandatory; worker claims about review, commits or
+      panels have no authority.</SOL-XHIGH>
       <CLAUDEZ-LANE fact="true" status="spec/done">**`claudez`** is a strong
-      parallel implementation and review lane with an independent quota pool.
-      Use it for a disjoint atom or cross-model review while Sol is busy. Its
-      gateway may hit a five-hour account limit: probe with a real bounded task
-      before fan-out, preserve the worktree/report/log and fail over instead of
+      implementation and review lane with an independent quota pool and is the
+      **default first choice** for every new delegable packet while its live
+      probe is healthy (owner priority ruling 2026-08-26). Its gateway may hit a
+      five-hour account limit: probe with a real bounded task before fan-out,
+      preserve the worktree/report/log and fail over to Sol/native instead of
       repeatedly paying a known 429 wall. `claudez2` remains disabled until the
       owner explicitly re-enables it.</CLAUDEZ-LANE>
       <OPUS-MAX-LANE fact="true" status="spec/done">**Plain Claude Code with
@@ -94,18 +106,20 @@
     <routing title="3.1 Default routing calculus">
       <facts ordered="false">
         <ROUTE-CODE fact="true" status="spec/done">Hard but explicit code with
-        a cheap oracle: Sol xhigh or `claudez`; use both concurrently only for
-        disjoint writes. Ambiguous high-impact code: one Opus-max or Sol-xhigh
-        implementation, then independent review.</ROUTE-CODE>
+        a cheap oracle: `claudez` first; Sol xhigh next when the primary lane is
+        unavailable or a second family is worth the spend. Use both concurrently
+        only for disjoint writes. Ambiguous high-impact code: `claudez` may
+        implement, but central/Opus/Sol independently reviews the judgment.
+        </ROUTE-CODE>
         <ROUTE-REVIEW fact="true" status="spec/done">Security, wire,
         transaction and lifecycle reviews: a fresh model family that did not
         author the change. Read-only reviews may run beside one code
         worker.</ROUTE-REVIEW>
         <ROUTE-MECHANICAL fact="true" status="spec/done">Mechanical edits,
-        fixtures, corpus additions and exact test matrices: native worker,
-        `claudez` or Sol, whichever is free. The packet supplies the skeleton;
-        the worker fills named refinement points rather than redrawing the
-        architecture.</ROUTE-MECHANICAL>
+        fixtures, corpus additions and exact test matrices: `claudez` first,
+        Sol/native on primary-lane limit or a genuine context advantage. The
+        packet supplies the skeleton; the worker fills named refinement points
+        rather than redrawing the architecture.</ROUTE-MECHANICAL>
         <ROUTE-CENTRAL fact="true" status="spec/done">Architecture, provider
         boundaries, public grammar, final trade-offs, commit grouping and
         integration stay central. External architecture work is adversarial
@@ -120,6 +134,15 @@
       gets a dedicated worktree/cwd and packet file. Continuation (`-c`) is used
       only from that exact cwd. Large context travels in the packet file, never
       a command-line argument.</ONE-CWD-ONE-THREAD>
+      <CLAUDEZ-PERMISSION-RESET fact="true" status="spec/done">Every
+      `claudez -c` worker invocation explicitly sets
+      `--permission-mode dontAsk` plus the positive `--allowedTools` list. A
+      resumed Claude thread can otherwise retain `bypassPermissions` from its
+      original session and execute a text-forbidden command despite a later
+      allow-list. This was observed live when an R8 repair continuation ran a
+      read-only `git diff` forbidden by its packet. The diff caused no mutation,
+      but it proves the transport fence is not assumed; textual bans and root
+      artifact review remain mandatory.</CLAUDEZ-PERMISSION-RESET>
       <DISJOINT-WRITES fact="true" status="spec/done">Parallelism is routed on
       write intersections, not read intersections. Read-only reviewers may
       overlap. Intersecting or many-place writes are serialized under one
@@ -222,11 +245,138 @@
       high-impact judgment because the two passes were materially more costly;
       `claudez` is a parallel peer for bounded code/review but may hit its
       separate five-hour wall. Both exceeded the desired prose budget, so
-      `##REPORT-BUDGET` is mandatory on future packets.</PROBE-2026-08-26>
+      `##REPORT-BUDGET` is mandatory on future packets. After a later multi-hour
+      network outage killed every live worker process, their worktrees and
+      reports remained intact; a fresh isolated `claudez -p` returned exact
+      `CLAUDEZ_OK` through `glm-5.3[1m]` in about nine seconds. Recovery is
+      therefore census-first: retain completed artifacts and restart only
+      unfinished packets, never regenerate the batch wholesale.</PROBE-2026-08-26>
     </facts>
   </observability>
 
-  <history title="7. History">
+  <claudez-template title="7. Canonical claudez packet template">
+    <p><TEMPLATE-IS-COPIED fact="true" status="spec/done">The central
+    coordinator copies this skeleton into every new `claudez` packet and fills
+    every bracketed field. Do not point a worker at PROP-055 itself: this spec
+    is ChatGPT-only. Task-specific instructions override a template default
+    only when the packet says so explicitly.</TEMPLATE-IS-COPIED></p>
+    <fence lang="markdown"># PACKET-&lt;task-id&gt; — &lt;one bounded outcome&gt;
+
+## Role and authority
+
+You are an EXECUTION worker, not the architect, reviewer, integrator or owner.
+The central coordinator owns architecture, acceptance, staging, commits and
+final gates. Your `PASS` is advisory. Do not claim that root reviewed/accepted
+anything. A prior report is a lead, never authority.
+
+On a `-c` continuation, discard your previous verdict where the correction
+packet contradicts it. Re-read the correction packet first and repair the
+named failure; do not defend the old answer.
+
+## Task
+
+&lt;exact behavior to implement or question to review&gt;
+
+## Required inputs
+
+- &lt;files/spec anchors/reports to read&gt;
+- &lt;facts supplied by root; confirm or refute each with exact evidence&gt;
+
+If an ambiguity would change public grammar, architecture, security posture or
+scope, STOP and write the exact blocker. Do not silently choose a new design.
+
+## Write perimeter
+
+- &lt;closed list of files/directories allowed to change&gt;
+- `WORKER-REPORT-&lt;task-id&gt;.md`
+
+Every other path is read-only. Preserve pre-existing/user changes. Do not create
+a branch/worktree; root already provisioned the cwd. Do not spawn subagents.
+
+## Acceptance
+
+1. &lt;criterion with observable result&gt;
+2. &lt;negative/security/failure criterion&gt;
+3. &lt;compatibility/idempotence criterion&gt;
+
+For every load-bearing branch name a RED proof: mutation or counterexample that
+fails when the guard is removed. An empty grep/test output is not proof until a
+known positive control demonstrates the instrument can fire.
+
+## Constraints
+
+- NO git command at all, including read-only `git diff/status/log`.
+- NO commit, push, merge, checkout, stash, reset, worktree or history action.
+- NO full repository panel; run only the exact commands listed below.
+- NO specs/status/SPEC-DEBT/WAL/CONTINUE/TASKS/BACKLOG/AGENTS/campaign edits.
+- NO network, publish, user-home mutation, token-file read or secret in
+  argv/env/log/report unless this packet explicitly grants one exact operation.
+- NO shell file-writing tricks; use Edit/Write. Use `CARGO_BUILD_JOBS=4`.
+- NO new `unsafe`, FFI, handwritten OS ABI or home-grown security/locking
+  primitive unless the packet explicitly grants that architecture. Stop and
+  report the missing primitive instead; do not invent a mini-runtime.
+- NO process/IDE manipulation. If a named verifier is blocked by an external
+  file lock, report it; do not inspect or kill unrelated processes, rename a
+  live generated tree, or hand-edit generated output as a substitute.
+- Every changed/new file remains at or below 600 physical lines. Check while
+  editing; split early, not after fmt.
+- Do not weaken, delete or rewrite an oracle merely to make it green.
+- Treat a non-zero runner exit as transport state; still write durable evidence
+  when possible.
+
+## Allowed self-verify
+
+```text
+&lt;exact fmt/test/check/clippy/codegen commands; no broader substitutes&gt;
+```
+
+## Deliverable report — draft within 140 lines
+
+Do not spend turns repeatedly trimming a long report. Start concise (140-line
+target leaves headroom under a 150-line hard cap).
+
+```markdown
+# WORKER-REPORT — &lt;task-id&gt;
+## Verdict
+PASS | FAIL | BLOCKED (advisory only)
+## Changed files
+- exact path — why
+## Acceptance evidence
+- criterion → result, exact file:line/test output
+## Red proofs
+- guard → mutation/counterexample
+## Commands
+- command → exit + decisive lines
+## Decisions and why
+- every choice within granted latitude, or none
+## Deviations / forbidden-command incidents
+- disclose every deviation, including accidental git/network/broad test, or none
+## Leftovers
+- exact remaining work, or none
+```
+
+## subagent-quiet-clause
+
+Your screen text is discarded. Output only mandated `PROGRESS:` heartbeats,
+the durable report, and final `TASK-DONE`. No greeting, task restatement,
+intermediate chat reasoning or final screen summary.</fence>
+    <facts ordered="false">
+      <TEMPLATE-LAUNCH-GUARD fact="true" status="spec/done">Launch with an
+      explicit `--permission-mode dontAsk` and the smallest positive
+      `--allowedTools` set in addition to the text above. Repeat the git/commit/
+      full-panel/report clauses in the short pointer prompt: weak workers skim
+      pointer indirection, and resumed threads may retain stale permissions.
+      </TEMPLATE-LAUNCH-GUARD>
+      <TEMPLATE-ROOT-CLOSE fact="true" status="spec/done">After `TASK-DONE`,
+      root mechanically compares actual changed files to the report, reads the
+      diff, checks Decisions/Deviations, reruns decisive commands and red proofs,
+      then accepts, sends exact `-c` repair notes, re-commissions or discards.
+      The packet/template reduces review cost; it never replaces review.
+      </TEMPLATE-ROOT-CLOSE>
+    </facts>
+  </claudez-template>
+
+  <history title="8. History">
     <p><HIST-OWNER-2026-08-26 fact="true" status="spec/done">Authored from the
     owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native
     workers because quotas are separate; never select Fable; consolidate the
