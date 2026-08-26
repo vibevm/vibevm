@@ -30,10 +30,14 @@ only durable home of a decision.
 - `cargo xtask specmap --check`: 6769 units, 1670 tagged code items, 1526
   edges, 0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
   warnings.
-- Judging debt on the real host worktree: 19,496 addressable marked facts,
-  0 unjudged, 0 orphaned, 35 stale files. `text-stability.py` currently refuses
-  its own result because all 502 judged files disagree with its stale hash
-  recipe; repair/replace that instrument before claiming per-fact stability.
+- Judging debt is currently **unmeasured**, not zero. The host script reports
+  19,496 addressable facts, 0 unjudged, 0 orphaned and 35 stale files from the
+  pre-relayout mirror/cache; a detached worktree reports an empty domain because
+  that mirror is not carried there. Direct census proves all 502 judged cache
+  paths are absent from the live tree: 98 map through the root relayout and 404
+  additionally changed `.md`→`.xml`. `text-stability.py` misdiagnoses this as a
+  hash-recipe drift. Close B-107 by observing package XML and migrate cache,
+  mirror and verdict paths with anchor equality proofs before claiming debt.
 - Full 47-step panel for this batch: pending. Two runs reached workspace tests
   and exposed real integration tails (redacted TOML diagnostic oracle; expected
   boot transaction lock); both are repaired and exact tests are green.
@@ -249,6 +253,6 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 ### Final serialization
 
 Apply every spec-debt amendment/status with landed evidence, repair the
-stability instrument, run both owner scenarios, independent audit, final
+campaign path/format migration and stability instrument, run both owner scenarios, independent audit, final
 unchanged full panel, and mirror. The epic is not complete before every row in
 §3 is `done` or explicitly `future` by the owner design.

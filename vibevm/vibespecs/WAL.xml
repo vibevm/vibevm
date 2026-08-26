@@ -91,9 +91,11 @@
       stay at or below 600 physical lines; split by domain seam before the
       gate.</WAL-C-FILES>
       <WAL-C-SCAN fact="true" status="impl/done">`vibe progress scan` writes
-      campaign state. Debt measurement uses `judging-debt.py`; the current
-      `text-stability.py` hash recipe is stale and must be repaired before its
-      per-fact output is trusted.</WAL-C-SCAN>
+      campaign state. Neither current debt helper measures the live corpus:
+      the host mirror/cache still names 502 pre-relayout Markdown paths, while a
+      detached worktree carries no mirror. Migrate those paths/verdicts to the
+      98 same-extension and 404 XML live targets with anchor-equality proof
+      before scan/seal or any zero-debt claim.</WAL-C-SCAN>
     </facts>
   </constraints>
 
@@ -116,9 +118,11 @@
       CONTINUE, TASKS and TZ header all said implementation had not started.
       This checkpoint and the new ledger repair that contradiction; CONTINUE
       and TASKS are refreshed in the same recovery batch.</WAL-I-DURABLE-STATE>
-      <WAL-I-DEBT fact="true" status="impl/work">Judging debt is 0 unjudged / 0
-      orphaned with 35 stale files on the host measurement. The stability helper
-      refuses because its hash recipe diverged across all 502 judged files.
+      <WAL-I-DEBT fact="true" status="impl/work">Judging debt is unmeasured.
+      Host `judging-debt.py` reports 19,496/0/0/35 from stale pre-relayout
+      mirrors; detached worktrees see zero mirrors. Every one of the 502 judged
+      paths moved, and 404 also converted Markdown→XML. This is B-107 plus a
+      campaign-state migration, not evidence of a clean or dirty live corpus.
       </WAL-I-DEBT>
       <WAL-I-PANEL fact="true" status="impl/work">Workspace tests are green.
       The final full panel for the current batch has not yet completed after the

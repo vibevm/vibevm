@@ -33,9 +33,12 @@ mirrors; mirror immediately after the current unchanged full panel is green.
   green. Run the next panel only after this docs checkpoint is committed.
 - Health audit: the durable active finding subset is in `AUDIT.md`; do not
   mirror it here.
-- Judging debt: 0 unjudged, 0 orphaned, 35 stale files on the host worktree.
-  `text-stability.py` refuses because its local canonical hash recipe disagrees
-  for all 502 judged files; repair the instrument before using its per-fact list.
+- Judging debt is unmeasured. Host `judging-debt.py` says 19,496 facts,
+  0 unjudged, 0 orphaned, 35 stale — but from pre-relayout mirror/cache paths;
+  a detached worktree sees no mirrors. Direct census proves all 502 judged paths
+  moved: 98 only through the root relayout and 404 also `.md`→`.xml`.
+  `text-stability.py` mislabels that as hash-recipe drift. Resolve B-107, migrate
+  paths/verdicts with anchor equality, regenerate mirror, then measure again.
 
 Re-measure rather than trusting these numbers after further work:
 
@@ -45,6 +48,9 @@ git rev-list --left-right --count origin/main...main
 python campaigns/packages-2026-09/tasks/judging-debt.py
 cargo xtask specmap --check
 ```
+
+The current judging command is diagnostic of the old state only until that
+migration lands; do not quote its zero as a live-corpus verdict.
 
 ## Active worktrees / processes
 
@@ -107,7 +113,10 @@ into “wave complete”; use the ledger's row-by-row evidence.
 6. Poll the four active worktrees, review them as PRs and integrate in this
    order: verifier → IR wire → agent/manifest atoms (their Cargo/format-registry
    overlaps are resolved centrally).
-7. Continue the three lanes exactly as the implementation ledger §7 prescribes.
+7. Commission a bounded B-107 campaign-state migration: include package XML,
+   map all 502 old paths to live paths, prove every verdict anchor survives,
+   then regenerate mirror/cache and re-run both debt instruments.
+8. Continue the three lanes exactly as the implementation ledger §7 prescribes.
 
 ## Active blockers and owner action
 
