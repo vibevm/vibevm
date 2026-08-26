@@ -542,17 +542,10 @@ pub(crate) fn split_relative(relative: &str) -> Result<(Vec<String>, String)> {
     ))
 }
 
+/// The mutation boundary judges components through the **one** portable
+/// component law, never a second table of its own.
 fn ensure_safe_component(component: &str) -> Result<()> {
-    if component.is_empty()
-        || component == "."
-        || component == ".."
-        || component.contains('\\')
-        || component.contains(':')
-        || component.contains('/')
-        || super::containment::is_device_name(component)
-        || component.ends_with('.')
-        || component.ends_with(' ')
-    {
+    if !super::containment::valid_path_component(component) {
         bail!("unsafe relative component `{component}`");
     }
     Ok(())

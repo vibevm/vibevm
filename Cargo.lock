@@ -3885,10 +3885,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eaea85b334db583fe3274d12b4cd1880032beab409c0d774be044d4480ab9a94"
 
 [[package]]
-name = "unicase"
-version = "2.9.0"
+name = "unicode-casefold"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbc4bc3a9f746d862c45cb89d705aa10f187bb96c76001afab07a0d35ce60142"
+checksum = "b7f66b1c8f8caa2ab31dc6d3f35386f16efdab89668f93411e565ac368908e8f"
 
 [[package]]
 name = "unicode-display-width"
@@ -4221,6 +4221,7 @@ dependencies = [
  "cap-std",
  "core-ai-native-specmark",
  "dirs",
+ "icu_normalizer",
  "serde",
  "serde_json",
  "sha2",
@@ -4228,7 +4229,7 @@ dependencies = [
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
  "tracing",
- "unicase",
+ "unicode-casefold",
  "vibe-core",
  "vibe-trace",
  "vibe-wire",

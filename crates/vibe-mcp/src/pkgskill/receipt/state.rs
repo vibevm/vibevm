@@ -14,7 +14,7 @@ use vibe_wire::generated::package_skill_receipt::{
     PackageSkillReceipt, PackageSkillTarget as ReceiptTarget,
 };
 
-use super::containment::{FoldSet, ensure_lexically_contained, fold_key, valid_relative_file};
+use super::containment::{ensure_lexically_contained, fold_key, judge_selection};
 use super::nofollow::Project;
 use crate::agents::{Agent, Scope};
 use crate::pkgskill::{PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, ProjectSkillBinding};
@@ -121,13 +121,31 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
     Ok(Some(receipt))
 }
 
+/// Persist a receipt this build's own strict reader will accept.
+///
+/// The complete value is canonicalized, schema-checked, semantically
+/// validated under the exact same law as [`read_receipt`], and encoded
+/// **before** the writer touches the project at all. Only a value already
+/// proven readable may acquire the `.vibe` directory capability, so a
+/// refused write leaves the project byte-identical — on a fresh project
+/// `.vibe` is not even created.
 pub(super) fn write_receipt(project: &Project, receipt: &PackageSkillReceipt) -> Result<()> {
-    let vibe = project.dir(&[".vibe"], true)?;
     let mut canonical = receipt.clone();
     canonicalize_receipt(&mut canonical);
+    if canonical.schema != SCHEMA {
+        bail!(
+            "refusing to persist package-skill receipt schema {}; this build writes schema {SCHEMA}",
+            canonical.schema
+        );
+    }
+    validate_receipt(project.root_path(), &canonical)
+        .context("refusing to persist a package-skill receipt this build cannot read back")?;
     let bytes = toml::to_string_pretty(&canonical)
         .context("encoding strict package-skill receipt")?
         .into_bytes();
+    // Everything above is pure. Only now may the project be opened for
+    // writing.
+    let vibe = project.dir(&[".vibe"], true)?;
     if matches!(project.read_file(&vibe, RECEIPT_FILE), Ok(Some(ref existing)) if *existing == bytes)
     {
         return Ok(());
@@ -364,17 +382,22 @@ fn validate_bindings(project_root: &Path, bindings: &[ReceiptBinding]) -> Result
                 );
             }
             ensure_lexically_contained(project_root, Path::new(&target.path))?;
-            if !physical_targets.insert(fold_key(target.path.clone())) {
+            if !physical_targets.insert(fold_key(&target.path)) {
                 bail!(
                     "receipt contains duplicate physical target `{}`",
                     target.path
                 );
             }
-            let mut files = FoldSet::new();
+            // One shared portability law for the whole owned set: no
+            // non-storeable spelling, and no two rows naming one physical
+            // file on a case-insensitive host.
+            if let Err(fault) = judge_selection(target.file.iter().map(|file| file.path.as_str())) {
+                bail!(
+                    "invalid or duplicate owned file set in receipt target `{}`: {fault}",
+                    target.path
+                );
+            }
             for file in &target.file {
-                if !valid_relative_file(&file.path) || !files.insert(&file.path) {
-                    bail!("invalid or duplicate owned file `{}` in receipt", file.path);
-                }
                 validate_digest(&file.sha256)?;
             }
         }

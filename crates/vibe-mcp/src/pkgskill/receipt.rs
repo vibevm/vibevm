@@ -10,6 +10,8 @@ mod nofollow;
 mod reconcile;
 #[path = "receipt/recover.rs"]
 mod recover;
+#[path = "receipt/rename.rs"]
+mod rename;
 #[path = "receipt/stage.rs"]
 mod stage;
 #[path = "receipt/state.rs"]
@@ -18,7 +20,7 @@ mod state;
 mod transaction;
 
 pub(super) use containment::{
-    FoldKey, ensure_no_follow_walk, fold_key, paths_overlap, valid_relative_file,
+    FoldKey, ensure_no_follow_walk, fold_key, judge_selection, paths_overlap,
 };
 pub(crate) use reconcile::{reconcile_binding, reconcile_vanished};
 pub(crate) use recover::recover_pending;
@@ -29,6 +31,10 @@ pub(crate) use state::{
 #[cfg(test)]
 #[path = "receipt/concurrency_tests.rs"]
 mod concurrency_tests;
+
+#[cfg(test)]
+#[path = "receipt/portability_red_tests.rs"]
+mod portability_red_tests;
 
 #[cfg(test)]
 #[path = "receipt/tests.rs"]

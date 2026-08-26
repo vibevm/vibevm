@@ -108,7 +108,7 @@ fn lower_skills(
             bail!("duplicate package skill binding identity `{identity}`");
         }
         for target in &binding.targets {
-            let key = receipt::fold_key(vibe_core::machine_json_path(&target.path));
+            let key = receipt::fold_key(&vibe_core::machine_json_path(&target.path));
             if let Some(first) = physical_targets.insert(key, identity.clone()) {
                 bail!(
                     "package skill bindings `{first}` and `{identity}` collide at physical target `{}`",
@@ -133,12 +133,14 @@ fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<Projec
     let selected_files = match fs::symlink_metadata(&skill.source) {
         Ok(_) => {
             let files = snapshot_source(&skill.source, &skill.decl.include)?;
-            if let Some(path) = files
-                .keys()
-                .find(|path| !receipt::valid_relative_file(path))
-            {
+            // Planning judges the **complete** selected set through the
+            // shared portability law before anything is staged or written:
+            // an unsafe spelling, or two spellings that are one file on a
+            // case-insensitive host, refuse with no target mutation and no
+            // `applying` receipt.
+            if let Err(fault) = receipt::judge_selection(files.keys().map(String::as_str)) {
                 bail!(
-                    "package skill `{}` selects unsafe file path `{path}`",
+                    "package skill `{}` selects unsafe file path set: {fault}",
                     skill.decl.name
                 );
             }

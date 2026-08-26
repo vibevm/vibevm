@@ -83,6 +83,98 @@ fn physical_collision_overlap_and_empty_selection_are_plan_errors() {
     assert!(error.contains("selects zero files"), "{error}");
 }
 
+/// Planning judges the complete selected source set through the shared fold
+/// law before any staging or write: a source carrying both aliases of one
+/// physical file refuses with zero target mutation and a readable, unchanged,
+/// non-applying receipt.
+#[test]
+fn dual_alias_source_selection_refuses_with_zero_mutation() {
+    let project = tempfile::tempdir().unwrap();
+    let package = tempfile::tempdir().unwrap();
+    let body = package.path().join("skills/demo");
+    fs::create_dir_all(&body).unwrap();
+    fs::write(body.join("SKILL.md"), "body").unwrap();
+    let binding = lower_project_skill_bindings(
+        project.path(),
+        vec![provider(package.path(), "one", "demo", "skills/demo")],
+    )
+    .unwrap()
+    .remove(0);
+    reconcile_project_skill_binding(project.path(), &binding).unwrap();
+    let target = project.path().join(".claude/skills/demo");
+    let receipt_path = project.path().join(".vibe/package-skills.toml");
+    let committed = fs::read(&receipt_path).unwrap();
+
+    // Both full-Unicode aliases in one source: distinct files here, one
+    // physical file on a case-insensitive host.
+    fs::write(body.join("Maße.md"), "eszett").unwrap();
+    fs::write(body.join("MASSE.md"), "upper").unwrap();
+    let error = lower_project_skill_bindings(
+        project.path(),
+        vec![provider(package.path(), "one", "demo", "skills/demo")],
+    )
+    .unwrap_err();
+    let error = format!("{error:#}");
+    assert!(
+        error.contains("one file on a case-insensitive host"),
+        "{error}"
+    );
+
+    assert_eq!(fs::read_to_string(target.join("SKILL.md")).unwrap(), "body");
+    assert!(!target.join("Maße.md").exists());
+    assert!(!target.join("MASSE.md").exists());
+    assert_eq!(fs::read(&receipt_path).unwrap(), committed);
+    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+        toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
+    assert!(receipt.applying.is_none(), "no `applying` receipt exists");
+}
+
+/// The canonical identity is composition-aware, so a source carrying both
+/// the NFC and the NFD spelling of one name refuses at planning — before any
+/// stage, durable intent, or target write.
+#[test]
+fn nfc_and_nfd_source_spellings_refuse_before_stage_or_intent() {
+    let project = tempfile::tempdir().unwrap();
+    let package = tempfile::tempdir().unwrap();
+    let body = package.path().join("skills/demo");
+    fs::create_dir_all(&body).unwrap();
+    fs::write(body.join("SKILL.md"), "body").unwrap();
+    let binding = lower_project_skill_bindings(
+        project.path(),
+        vec![provider(package.path(), "one", "demo", "skills/demo")],
+    )
+    .unwrap()
+    .remove(0);
+    reconcile_project_skill_binding(project.path(), &binding).unwrap();
+    let target = project.path().join(".claude/skills/demo");
+    let receipt_path = project.path().join(".vibe/package-skills.toml");
+    let committed = fs::read(&receipt_path).unwrap();
+
+    // Composed `é` (U+00E9) and decomposed `e` + U+0301: two files here,
+    // one file on macOS.
+    fs::write(body.join("caf\u{e9}.md"), "composed").unwrap();
+    fs::write(body.join("cafe\u{301}.md"), "decomposed").unwrap();
+    let error = lower_project_skill_bindings(
+        project.path(),
+        vec![provider(package.path(), "one", "demo", "skills/demo")],
+    )
+    .unwrap_err();
+    let error = format!("{error:#}");
+    assert!(
+        error.contains("one file on a case-insensitive host"),
+        "{error}"
+    );
+
+    assert_eq!(fs::read_to_string(target.join("SKILL.md")).unwrap(), "body");
+    assert!(!target.join("caf\u{e9}.md").exists());
+    assert!(!target.join("cafe\u{301}.md").exists());
+    assert!(!project.path().join(".vibe/package-skills/staged").exists());
+    assert_eq!(fs::read(&receipt_path).unwrap(), committed);
+    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+        toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
+    assert!(receipt.applying.is_none(), "no `applying` receipt exists");
+}
+
 #[test]
 fn missing_source_is_an_honest_planned_state() {
     let project = tempfile::tempdir().unwrap();

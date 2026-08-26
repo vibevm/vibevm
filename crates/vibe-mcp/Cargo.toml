@@ -29,7 +29,8 @@ tracing.workspace = true
 tempfile.workspace = true
 cap-std.workspace = true
 cap-fs-ext.workspace = true
-unicase.workspace = true
+icu_normalizer.workspace = true
+unicode-casefold.workspace = true
 
 [target.'cfg(windows)'.dependencies]
 winapi-util.workspace = true

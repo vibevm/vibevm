@@ -168,6 +168,77 @@ keywords = ["fixture"]
     assert!(state.execution.contains_key(SWEEP_KEY));
 }
 
+/// A source that renames an owned file to a fold-equivalent spelling is an
+/// unsupported portable rename: `vibe package` fails, every visible byte
+/// (owned and foreign alike) is preserved, and the receipt stays readable
+/// with no `applying` intent.
+#[test]
+fn portable_rename_of_an_owned_file_refuses_and_preserves_every_byte() {
+    let user = UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let project = tempfile::tempdir().unwrap();
+    fs::write(
+        project.path().join("vibe.toml"),
+        r#"[package]
+group = "org.example"
+name = "lifecycle-skills"
+kind = "tool"
+version = "0.1.0"
+authors = ["Fixture"]
+license = "EULA"
+description = "fixture"
+keywords = ["fixture"]
+
+[[skill]]
+name = "demo"
+path = "skills/demo"
+agents = ["claude"]
+"#,
+    )
+    .unwrap();
+    let source = project.path().join("skills/demo");
+    fs::create_dir_all(&source).unwrap();
+    fs::write(source.join("Maße.md"), "eszett\n").unwrap();
+    let (_, first) = run_json(&user, project.path(), home.path());
+    assert_eq!(report_status(&first, SKILL_KEY), "ok");
+    let target = project.path().join(".claude/skills/demo");
+    assert_eq!(
+        fs::read_to_string(target.join("Maße.md")).unwrap(),
+        "eszett\n"
+    );
+
+    // A foreign alias beside the owned file, and a source that renames the
+    // owned spelling onto it.
+    fs::write(target.join("MASSE.md"), "foreign\n").unwrap();
+    let receipt_path = project.path().join(".vibe/package-skills.toml");
+    let committed = fs::read(&receipt_path).unwrap();
+    fs::remove_file(source.join("Maße.md")).unwrap();
+    fs::write(source.join("MASSE.md"), "upper\n").unwrap();
+
+    let output = command(&user, project.path(), home.path(), false)
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
+    assert!(
+        stderr.contains("portable rename is unsupported"),
+        "{stderr}"
+    );
+    assert_eq!(
+        fs::read_to_string(target.join("Maße.md")).unwrap(),
+        "eszett\n"
+    );
+    assert_eq!(
+        fs::read_to_string(target.join("MASSE.md")).unwrap(),
+        "foreign\n"
+    );
+    assert_eq!(fs::read(&receipt_path).unwrap(), committed);
+    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+        toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
+    assert!(receipt.applying.is_none());
+    assert!(!project.path().join(".vibe/package-skills/staged").exists());
+}
+
 #[test]
 fn missing_or_malformed_receipt_never_authorizes_deletion() {
     let user = UserScratch::new();

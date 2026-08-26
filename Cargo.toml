@@ -137,9 +137,18 @@ winapi-util = "0.1.11"
 # old Windows-device advisory floor.
 cap-std = "4.0.2"
 cap-fs-ext = "4.0.2"
-# Conservative full Unicode case-fold keys for receipt/file-row dedup.
-# MIT/Apache-2.0.
-unicase = "2.9"
+# Canonical Unicode normalization (NFC) for the one cross-platform physical
+# path identity used by receipt/file-row dedup, target overlap, and portable
+# rename detection. Vetted, already in the shipped dependency graph via
+# `idna_adapter`; `compiled_data` only, so no extra data provider is needed.
+# Unicode-3.0.
+icu_normalizer = { version = "2.2", default-features = false, features = [
+    "compiled_data",
+] }
+# Full, non-Turkic Unicode case folding for that same identity, pinned to the
+# crate whose `UNICODE_VERSION` is 9.0.0 — the Unicode version APFS
+# case-insensitive matching uses. MIT/Apache-2.0.
+unicode-casefold = "0.2"
 anyhow = "1"
 arboard = "3.4"
 thiserror = "2"

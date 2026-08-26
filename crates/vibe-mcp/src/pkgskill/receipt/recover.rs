@@ -31,6 +31,12 @@ pub(crate) fn recover_pending(project_root: &Path) -> Result<Vec<PackageSkillRep
         before: receipt.binding.clone(),
         after: applying.binding.clone(),
     };
+    // A durable intent written by an older build may still carry an
+    // unsupported portable rename; refuse it before a stage is even loaded,
+    // so recovery never publishes one either. Unwrapped for the same reason
+    // as the planning call: the guard's message is the actionable one and
+    // surfaces render only the top-level message.
+    super::rename::ensure_no_portable_rename(&plan.before, &plan.after)?;
     // The durable stage is authoritative, and it owns only the plan-required
     // digests — the after-file digests of the plan's changed rows. A
     // removal-only plan that retains other bindings requires no stage; any

@@ -64,6 +64,13 @@ fn reconcile_with_receipt(
     }
     canonicalize_receipt(&mut after);
 
+    // An unsupported portable rename refuses here — before the stage, the
+    // durable intent, and every write — so all visible bytes and the
+    // previous receipt are preserved exactly as they were. Deliberately
+    // unwrapped: surfaces render only an error's top-level message, and the
+    // guard's own message is the actionable one.
+    super::rename::ensure_no_portable_rename(&before.binding, &after.binding)?;
+
     if expected.is_none() {
         // Missing source with no prior ownership is a non-mutating no-op
         // **before** any adoption guard: a foreign `HUMAN.md` in the would-be

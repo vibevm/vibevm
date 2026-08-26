@@ -22,11 +22,14 @@ use vibe_core::machine_json_path;
 
 use crate::agents::{Agent, Scope};
 
+#[path = "pkgskill/exact_path.rs"]
+mod exact_path;
 #[path = "pkgskill/projection.rs"]
 mod projection;
 #[path = "pkgskill/receipt.rs"]
 mod receipt;
 
+pub use exact_path::EscapedOsPath;
 pub use projection::{
     DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, DeclaredSkillProvider,
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
@@ -86,6 +89,19 @@ pub enum PackageSkillError {
           fix: use a contained normal path with no symlink, junction, or reparse ancestor)"
     )]
     UnsafePath { path: PathBuf, reason: String },
+
+    /// A path or entry name the OS accepts but this projection cannot spell
+    /// faithfully. Both fields are already-escaped [`EscapedOsPath`] values,
+    /// **never** `PathBuf`: `thiserror` renders a `Path`/`PathBuf` field
+    /// through `Path::display`, which substitutes `U+FFFD` for exactly the
+    /// units this diagnostic exists to name. Rendering a pre-escaped
+    /// `Display` value is the only way the outer error cannot re-lossify it.
+    #[error(
+        "unportable package-skill path `{path}` (escaped): {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
+          fix: rename the entry to an exact-UTF-8 portable name and rerun)"
+    )]
+    UnportablePath { path: EscapedOsPath, reason: String },
 }
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
@@ -340,6 +356,11 @@ fn skipped(skill_name: &str, agent: Agent, scope_str: &'static str) -> PackageSk
 /// Snapshot a skill body source into a `relpath -> bytes` map. A directory
 /// is walked recursively (relpaths forward-slashed); a single file maps to
 /// its file name (so a bare `SKILL.md` source lands as `<name>/SKILL.md`).
+///
+/// The **complete selected set** — after `include` filtering — is judged
+/// through the shared portability law before it can be returned to any
+/// caller, so neither surface ever stages, publishes, or writes a selection
+/// carrying a non-storeable spelling or two spellings of one physical file.
 fn snapshot_source(
     source: &Path,
     include: &[String],
@@ -365,10 +386,10 @@ fn snapshot_source(
             out.retain(|rel, _| include.iter().any(|pat| glob_match(pat, rel)));
         }
     } else if metadata.is_file() {
-        let name = source
-            .file_name()
-            .map(|n| n.to_string_lossy().to_string())
-            .unwrap_or_else(|| "SKILL.md".to_string());
+        let name = match source.file_name() {
+            Some(name) => exact_path::exact_utf8_component(name, source)?,
+            None => "SKILL.md".to_string(),
+        };
         let bytes = fs::read(source).map_err(|err| PackageSkillError::Read {
             path: source.to_path_buf(),
             source: err,
@@ -378,6 +399,12 @@ fn snapshot_source(
         return Err(PackageSkillError::UnsafePath {
             path: source.to_path_buf(),
             reason: "skill source is neither a regular file nor a directory".into(),
+        });
+    }
+    if let Err(fault) = receipt::judge_selection(out.keys().map(String::as_str)) {
+        return Err(PackageSkillError::UnsafePath {
+            path: source.to_path_buf(),
+            reason: format!("selected source file set is not portable: {fault}"),
         });
     }
     Ok(out)
@@ -434,16 +461,20 @@ fn collect_dir(
         if metadata.is_dir() {
             collect_dir(base, &path, out)?;
         } else if metadata.is_file() {
-            let rel = path
-                .strip_prefix(base)
-                .unwrap_or(&path)
-                .to_string_lossy()
-                .replace('\\', "/");
+            let rel = exact_path::exact_utf8_relative(base, &path)?;
             let bytes = fs::read(&path).map_err(|source| PackageSkillError::Read {
                 path: path.clone(),
                 source,
             })?;
-            out.insert(rel, bytes);
+            // Two entries can only ever land on one key through a lossy
+            // rendering, which no longer exists; refuse rather than let one
+            // file's bytes silently replace another's.
+            if out.insert(rel.clone(), bytes).is_some() {
+                return Err(PackageSkillError::UnsafePath {
+                    path,
+                    reason: format!("two skill tree entries share the relative path `{rel}`"),
+                });
+            }
         } else {
             return Err(PackageSkillError::UnsafePath {
                 path,

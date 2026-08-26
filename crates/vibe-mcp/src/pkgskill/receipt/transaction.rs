@@ -10,7 +10,6 @@ use vibe_wire::generated::package_skill_receipt::{
     PackageSkillTarget as ReceiptTarget,
 };
 
-use super::containment::fold_key;
 use super::nofollow::{Pinned, Project};
 use super::stage::Stage;
 use super::state::{digest, read_receipt, relative_components, write_receipt};
@@ -168,12 +167,18 @@ fn execute_binding(
 /// Apply the CAS rule to every desired file of one target:
 ///
 /// - current digest == desired digest: already published, keep it;
-/// - the path was previously owned by the receipt: replace — its bytes are
-///   ours to heal whatever they drifted to;
+/// - the path was previously owned by the receipt **under exactly this
+///   spelling**: replace — its bytes are ours to heal whatever they drifted
+///   to;
 /// - absent: create;
 /// - any other present state on a never-owned path: refuse and preserve
 ///   the bytes. Exact staged desired bytes are the only proof that an
 ///   interrupted *new* file is ours; intent alone is never ownership.
+///
+/// Ownership is the exact canonical relative spelling, never a fold key: a
+/// prior `SKILL.md` must not authorize overwriting a distinct `skill.md` on
+/// a case-sensitive host. Fold identity stays a portability *collision
+/// detector* — the plan-level refusal in [`super::rename`].
 fn publish_target_cas(
     project: &Project,
     project_root: &Path,
@@ -187,7 +192,7 @@ fn publish_target_cas(
             prior
                 .file
                 .iter()
-                .map(|file| fold_key(file.path.clone()))
+                .map(|file| file.path.as_str())
                 .collect::<BTreeSet<_>>()
         })
         .unwrap_or_default();
@@ -195,10 +200,7 @@ fn publish_target_cas(
     for file in &desired.file {
         let current = project.read_file(&directory, &file.path)?;
         let current_digest = current.as_deref().map(digest);
-        match (
-            &current_digest,
-            owned_paths.contains(&fold_key(file.path.clone())),
-        ) {
+        match (&current_digest, owned_paths.contains(file.path.as_str())) {
             (Some(current), _) if current == &file.sha256 => continue,
             (_, true) | (None, false) => {
                 publish(project, stage, &directory, file)?;
@@ -224,7 +226,9 @@ fn publish_target_cas(
 
 /// Remove files the prior target owned and the desired state dropped. A
 /// tampered current digest refuses — foreign bytes are preserved, never
-/// silently deleted.
+/// silently deleted. "Kept" is the exact spelling: an owned `SKILL.md` that
+/// the desired state dropped must not be left silently unowned because some
+/// `skill.md` folds onto it.
 fn remove_dropped_owned_files(
     project: &Project,
     directory: &Pinned,
@@ -237,10 +241,10 @@ fn remove_dropped_owned_files(
     let kept = desired
         .file
         .iter()
-        .map(|file| fold_key(file.path.clone()))
+        .map(|file| file.path.as_str())
         .collect::<BTreeSet<_>>();
     for file in &prior.file {
-        if kept.contains(&fold_key(file.path.clone())) {
+        if kept.contains(file.path.as_str()) {
             continue;
         }
         match project.read_file(directory, &file.path)? {
@@ -501,10 +505,10 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                         let kept = target
                             .file
                             .iter()
-                            .map(|file| fold_key(file.path.clone()))
+                            .map(|file| file.path.as_str())
                             .collect::<BTreeSet<_>>();
                         for file in &prior.file {
-                            if kept.contains(&fold_key(file.path.clone())) {
+                            if kept.contains(file.path.as_str()) {
                                 continue;
                             }
                             if project.read_file(&directory, &file.path)?.is_some() {
