@@ -6,6 +6,9 @@ PROP-054 `##IR-LEVELS`, `##WHOLE-IR-WIRE`, `##INTER-PASS-VERIFIER` and
 This document fixes the implementation seams so R6.2 conversion and R3.4 trace
 cannot independently invent two representations or two run models.
 
+Execution status and dependency order live in
+[`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).
+
 ## 1. Outcome and non-goals
 
 One compiler value has exactly one machine projection:

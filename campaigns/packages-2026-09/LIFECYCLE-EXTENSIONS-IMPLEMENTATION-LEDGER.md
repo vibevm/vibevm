@@ -215,6 +215,8 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     numbers, failed/verifier-rejected calls retain timing without certifying a
     snapshot, and pass/artifact names use reversible Windows-safe filename
     encoding. The no-trace path keeps the existing public wrappers and bytes.
+    Detailed implementation boundary:
+    [`COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md`](COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md).
 14. R6.3 keeps one `compiler_ir/e1` JTD and one domain projection. Before a
     foreign native invocation ships, request and reply channel roles must be
     represented honestly: plugins are foreign readers of requests while the
@@ -227,6 +229,8 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     `vibe-spec`. The kernel owns provider/world rows, ordering, controls,
     selectors and views. Workspace adapters supply the authoritative root lock
     order; unsorted materialised-directory enumeration is never ordering input.
+    Detailed extraction boundary:
+    [`R4-REGISTRY-KERNEL-ARCHITECTURE-v0.1.md`](R4-REGISTRY-KERNEL-ARCHITECTURE-v0.1.md).
 16. R4's untransformed emitter remains the reference oracle. An emitted
     transform therefore needs a manager-owned constructor that recomputes
     provenance/digests after the oracle; mutating `EmittedArtifact.bytes` in

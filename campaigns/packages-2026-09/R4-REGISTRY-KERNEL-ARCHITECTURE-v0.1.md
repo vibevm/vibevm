@@ -4,6 +4,9 @@ Status: central implementation design, 2026-08-27. Semantic authority remains
 PROP-054 §§3 and 7 plus the accepted lifecycle spec debt. This document fixes
 the crate boundary and execution dataflow before R4.0 extraction starts.
 
+Execution status and dependency order live in
+[`LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md`](LIFECYCLE-EXTENSIONS-IMPLEMENTATION-LEDGER.md).
+
 ## 1. The one-machine boundary
 
 Lifecycle contributions and compiler transforms share one declaration,
