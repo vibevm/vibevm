@@ -5395,6 +5395,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_lifecycle_commissioning.rs",
+      "item_kind": "fn",
+      "line": 22,
+      "symbol": "vibe_cli::tests::cli_lifecycle_commissioning::phase_announcer_owner_scenario_is_green_end_to_end",
+      "end_line": 357,
+      "fingerprint": "tok1:9fb44864213dddda95034c8895a9e5a893daf901369b4220cc8ebf6376ba8e95"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_lifecycle_dispatch.rs",
       "item_kind": "fn",
       "line": 264,
@@ -17907,6 +17916,22 @@
       "line": 209,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-VALIDATE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_lifecycle_commissioning.rs",
+      "from_symbol": "vibe_cli::tests::cli_lifecycle_commissioning::phase_announcer_owner_scenario_is_green_end_to_end",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_lifecycle_commissioning.rs",
+      "from_symbol": "vibe_cli::tests::cli_lifecycle_commissioning::phase_announcer_owner_scenario_is_green_end_to_end",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-LOG-PLUGIN",
       "verb": "verifies"
     },
     {

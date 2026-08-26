@@ -1,0 +1,21 @@
+[package]
+name = "phase-announcer"
+group = "org.vibevm.fixture"
+kind = "tool"
+version = "0.1.0"
+authors = ["vibevm test fixtures"]
+license = "EULA"
+description = "Hermetic two-phase lifecycle-announcer fixture"
+keywords = ["test", "fixture", "lifecycle"]
+
+[[extension]]
+id = "announce"
+point = "phase:build"
+handler = { kind = "builtin", name = "log" }
+config = { message = "hello from {phase} in {project} by {package}" }
+
+[[extension]]
+id = "announce-test"
+point = "phase:test"
+handler = { kind = "builtin", name = "log" }
+config = { message = "hello from {phase} in {project} by {package}" }
