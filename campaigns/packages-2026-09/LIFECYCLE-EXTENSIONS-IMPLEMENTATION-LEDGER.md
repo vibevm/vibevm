@@ -200,18 +200,42 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 12. Every external mutation has plan, effect class, intent, independent verify
     and receipt. A third observed digest refuses; inverse removes only verified
     owned state. Future OS resources reuse this law.
+13. R3.4 observes the existing pass manager; it does not create a trace-only IR.
+    One lifecycle/install `run_id` owns one recorder across every dirty unit and
+    workspace-node artifact. Each successful invocation serialises the accepted
+    R6 compiler-IR carrier, repeated document calls receive distinct sequence
+    numbers, failed/verifier-rejected calls retain timing without certifying a
+    snapshot, and pass/artifact names use reversible Windows-safe filename
+    encoding. The no-trace path keeps the existing public wrappers and bytes.
+14. R6.3 keeps one `compiler_ir/e1` JTD and one domain projection. Before a
+    foreign native invocation ships, request and reply channel roles must be
+    represented honestly: plugins are foreign readers of requests while the
+    host remains the strict reader of replies. This may not be solved by
+    duplicating the IR DTO/schema or by silently making the host permissive.
+15. R4.0 is a new pure registry-kernel crate below `vibe-spec`,
+    `vibe-workspace` and `vibe-lifecycle` (`kernel -> vibe-core`; all three
+    higher crates consume it). Manifest grammar stays in `vibe-core`, execution
+    stays in lifecycle, and behavior-bearing pass/backend registries stay in
+    `vibe-spec`. The kernel owns provider/world rows, ordering, controls,
+    selectors and views. Workspace adapters supply the authoritative root lock
+    order; unsorted materialised-directory enumeration is never ordering input.
 
 ## 6. Physical state and loss prevention
 
 - The final R3.2/R7.1/R8.1 branch commits are patch-equivalent or superseded by
   `main`; their remaining files are reports/packets only.
-- No campaign stash exists. Do not delete old worktrees until final audit.
+- No campaign stash exists. Worktrees are rolling recovery state, not an
+  end-of-campaign archive: once an atom is accepted/integrated and its unique
+  report decisions have a durable home, remove that worktree immediately and
+  prune the registry. Active dirty worktrees remain protected. Authoritative
+  operating law: PROP-055 `ROLLING-WORKTREE-GC`.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
 - `main` must not remain single-box-only across another long wave. After the
   current batch panel, run `cargo xtask mirror` before starting the next large
-  fan-out.
+  fan-out. Build caches are reclaimed continuously; the first cleanup returned
+  164.6 GiB from root plus roughly 372 GiB from inactive worktrees.
 
 ## 7. Dependency plan and parallel lanes
 
