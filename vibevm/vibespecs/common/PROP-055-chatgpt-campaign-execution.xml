@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">PROP-055 — ChatGPT-only campaign execution pool</title>
+  <status stage="spec" state="done" comment="owner rulings 2026-08-26; harness-scoped campaign operations, not product semantics"/>
+  <p><STATUS-LINE fact="true" status="spec/done">**Status: owner-ruled operating
+  contract for the central OpenAI ChatGPT/Codex coordinator while the
+  lifecycle/extensions campaign is active.** It consolidates worker routing,
+  launcher use and test-panel cadence. It does not change VibeVM product
+  semantics, Claude Code behavior, or a delegated packet.</STATUS-LINE></p>
+
+  <scope title="1. Applicability — a harness gate, not a repository-wide mode">
+    <facts ordered="false">
+      <OPENAI-CENTRAL-ONLY fact="true" status="spec/done">This document applies
+      only when the current owner-facing **central coordinator** runs under an
+      OpenAI ChatGPT/Codex harness and is executing
+      `campaigns/packages-2026-09/TZ-LIFECYCLE-EXTENSIONS-v0.1.md` (or the owner
+      explicitly reactivates this contract by name). All conditions are
+      required.</OPENAI-CENTRAL-ONLY>
+      <NON-OPENAI-MUST-SKIP fact="true" status="spec/done">Claude Code, a
+      `claudez` process, Gemini and every other non-OpenAI harness MUST NOT read
+      or apply this document. It is deliberately absent from the shared
+      `STATIC.xml` / `INDEX.md` boot lane. The byte-identical
+      `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` triplet carries one conditional
+      pointer: an applicable OpenAI coordinator follows it; every other harness
+      skips it.</NON-OPENAI-MUST-SKIP>
+      <SUBAGENTS-MUST-SKIP fact="true" status="spec/done">A task carrying
+      `##subagent-quiet-clause`, a worker packet or an explicit reviewer packet
+      is a subagent even when its executable is Codex. It follows that packet
+      and MUST NOT promote itself to this central contract. Native workers,
+      `codexrunner`, `claudez` and plain `claude` workers are all excluded by
+      this rule.</SUBAGENTS-MUST-SKIP>
+      <END-OF-CAMPAIGN fact="true" status="spec/done">When the lifecycle
+      campaign completes, pauses, or the owner selects another campaign, this
+      contract becomes inactive without changing global project practice. A
+      successor campaign needs an explicit owner ruling before it inherits any
+      item.</END-OF-CAMPAIGN>
+    </facts>
+  </scope>
+
+  <roles title="2. The central coordinator keeps judgment">
+    <facts ordered="false">
+      <CENTRAL-OWNS-JUDGMENT fact="true" status="spec/done">The central
+      ChatGPT/Codex session owns architecture, cross-wave planning, owner
+      rulings, destructive-action decisions, review verdicts, integration,
+      staging allow-lists, commits, mirrors and final gates. A worker may
+      propose or implement; it never self-accepts, moves authoritative status,
+      commits, pushes or declares the campaign complete.</CENTRAL-OWNS-JUDGMENT>
+      <DELEGATE-WHEN-CHEAPER-TO-VERIFY fact="true" status="spec/done">Delegate
+      a bounded task when independent verification is cheaper than generating
+      it centrally. Keep a cross-cutting edit in one thread when its write
+      perimeter intersects live atoms or correctness depends on an unresolved
+      architectural choice.</DELEGATE-WHEN-CHEAPER-TO-VERIFY>
+      <MODEL-DIVERSITY-IS-A-GATE fact="true" status="spec/done">For a
+      substantive implementation, prefer review by a different model family or
+      fresh independent thread. Diversity counts only with exact file/line
+      evidence, a root rerun of the decisive test and a mutation or negative
+      oracle; another model's confidence is not evidence.</MODEL-DIVERSITY-IS-A-GATE>
+    </facts>
+  </roles>
+
+  <pool title="3. Worker pool and routing">
+    <p><POOL-IS-DYNAMIC fact="true" status="spec/done">The pool is a set of
+    interchangeable execution lanes with separate limits. Availability is
+    probed on live work; no lane is assumed healthy from an old ping.</POOL-IS-DYNAMIC></p>
+    <facts ordered="false">
+      <NATIVE-WORKERS fact="true" status="spec/done">**Native collaboration
+      workers** are the lowest-latency lane for a narrow edit or review that
+      benefits from current conversation context. Use disjoint write perimeters
+      in parallel; retain the packet/report/no-commit discipline.</NATIVE-WORKERS>
+      <SOL-XHIGH fact="true" status="spec/done">**`codexrunner` —
+      `gpt-5.6-sol`, effort `xhigh`** — is the primary external lane for hard,
+      well-specified coding, broad code reading and mutation-backed repair. It
+      runs in a dedicated worktree. Its yolo transport makes root diff review
+      and a closed write allow-list mandatory; worker claims about review,
+      commits or panels have no authority.</SOL-XHIGH>
+      <CLAUDEZ-LANE fact="true" status="spec/done">**`claudez`** is a strong
+      parallel implementation and review lane with an independent quota pool.
+      Use it for a disjoint atom or cross-model review while Sol is busy. Its
+      gateway may hit a five-hour account limit: probe with a real bounded task
+      before fan-out, preserve the worktree/report/log and fail over instead of
+      repeatedly paying a known 429 wall. `claudez2` remains disabled until the
+      owner explicitly re-enables it.</CLAUDEZ-LANE>
+      <OPUS-MAX-LANE fact="true" status="spec/done">**Plain Claude Code with
+      Opus and max effort** is invoked explicitly as
+      `claude --model opus --effort max`; follow-up repair uses `claude -c` in
+      the exact same dedicated cwd. Use it for ambiguous code, adversarial
+      architecture/code review, or difficult correction. Read run metadata to
+      learn the resolved model; the alias is not proof of a version.</OPUS-MAX-LANE>
+      <NEVER-FABLE fact="true" status="spec/done">**Never select Fable.** Do
+      not name it, configure it as fallback, or accept automatic fallback to
+      it. If Opus is unavailable, route to Sol, `claudez`, a native worker or
+      the central coordinator.</NEVER-FABLE>
+    </facts>
+    <routing title="3.1 Default routing calculus">
+      <facts ordered="false">
+        <ROUTE-CODE fact="true" status="spec/done">Hard but explicit code with
+        a cheap oracle: Sol xhigh or `claudez`; use both concurrently only for
+        disjoint writes. Ambiguous high-impact code: one Opus-max or Sol-xhigh
+        implementation, then independent review.</ROUTE-CODE>
+        <ROUTE-REVIEW fact="true" status="spec/done">Security, wire,
+        transaction and lifecycle reviews: a fresh model family that did not
+        author the change. Read-only reviews may run beside one code
+        worker.</ROUTE-REVIEW>
+        <ROUTE-MECHANICAL fact="true" status="spec/done">Mechanical edits,
+        fixtures, corpus additions and exact test matrices: native worker,
+        `claudez` or Sol, whichever is free. The packet supplies the skeleton;
+        the worker fills named refinement points rather than redrawing the
+        architecture.</ROUTE-MECHANICAL>
+        <ROUTE-CENTRAL fact="true" status="spec/done">Architecture, provider
+        boundaries, public grammar, final trade-offs, commit grouping and
+        integration stay central. External architecture work is adversarial
+        review of a central draft, not delegation of the final decision.</ROUTE-CENTRAL>
+      </facts>
+    </routing>
+  </pool>
+
+  <transport title="4. Worker transport and resource limits">
+    <facts ordered="false">
+      <ONE-CWD-ONE-THREAD fact="true" status="spec/done">Every writing worker
+      gets a dedicated worktree/cwd and packet file. Continuation (`-c`) is used
+      only from that exact cwd. Large context travels in the packet file, never
+      a command-line argument.</ONE-CWD-ONE-THREAD>
+      <DISJOINT-WRITES fact="true" status="spec/done">Parallelism is routed on
+      write intersections, not read intersections. Read-only reviewers may
+      overlap. Intersecting or many-place writes are serialized under one
+      worker or the central coordinator.</DISJOINT-WRITES>
+      <TWO-COLD-CARGO fact="true" status="spec/done">The box ceiling is two
+      simultaneous cold Cargo workers. Prefer one cargo-heavy implementation
+      plus one cargo-heavy review/test at most; text/read-only workers may use
+      otherwise free lanes. Cargo runs use `CARGO_BUILD_JOBS=4` where the
+      repository rule requires it.</TWO-COLD-CARGO>
+      <QUIET-ARTIFACT-CONTRACT fact="true" status="spec/done">Every packet
+      carries `##subagent-quiet-clause`, a closed write perimeter, exact
+      acceptance, narrow self-verify commands, a durable
+      `WORKER-REPORT-&lt;id&gt;.md`, a git/commit/push/full-panel ban and final
+      `TASK-DONE`. Screen prose is discarded; reports and diffs are the
+      deliverable.</QUIET-ARTIFACT-CONTRACT>
+      <REPORT-BUDGET fact="true" status="spec/done">Default a worker report to
+      at most 150 lines: verdict, findings, changed-file set, decisive evidence,
+      commands and deviations. A longer report is justified only by a large
+      finding matrix or protocol review. Do not ask the worker to restate every
+      source it read; exact citations replace narrative. The 2026-08-26 probes
+      showed that a good Opus review can consume 47k output tokens and a GLM
+      review 30k when no report budget is stated.</REPORT-BUDGET>
+      <NO-SECRETS-TO-WORKERS fact="true" status="spec/done">Workers never
+      receive token contents or a task that reads a token file. Secret-bearing
+      live smoke stays central and prints only a safe verdict. Launchers load
+      their own credentials without exposing them in packet, argv, log or
+      report.</NO-SECRETS-TO-WORKERS>
+      <LIMIT-FAILOVER fact="true" status="spec/done">A quota/429/limit failure
+      is transport state, not a code verdict. Confirm it once, keep partial
+      artifacts, then re-route a fresh packet with durable context. Do not spin
+      retries, kill by broad process name, or discard a useful diff because the
+      runner exited non-zero.</LIMIT-FAILOVER>
+      <ROOT-ACCEPTANCE fact="true" status="spec/done">Root acceptance compares
+      actual changed files with the report, reads the diff as a PR, re-runs the
+      decisive narrow command, executes the red mutation/negative oracle, and
+      issues PASS, repair, re-commission or discard. Cosmetic tails are fixed
+      centrally; wrong judgment or behavior uses same-cwd continuation when
+      economical.</ROOT-ACCEPTANCE>
+    </facts>
+  </transport>
+
+  <gates title="5. Fast development gates and the full-panel cadence">
+    <p><OWNER-PANEL-RULING fact="true" status="spec/done">**Owner ruling,
+    2026-08-26:** the approximately twenty-minute full repository panel must not
+    run after every small atom. During this ChatGPT campaign, exact tests are
+    the development gate; the full panel is an integration/batch gate. This is
+    the scoped successor to older campaign-TZ wording and changes no other
+    project or harness.</OWNER-PANEL-RULING></p>
+    <facts ordered="false">
+      <EXACT-GATES-PER-ATOM fact="true" status="spec/done">Before accepting an
+      atom, run formatting for each touched workspace, `git diff --check`, exact
+      unit/integration tests for changed behavior, checks/clippy for touched
+      crates, and the task-specific oracle: codegen idempotence plus wire corpus
+      for schemas; byte identity for compiler changes; isolated homes for
+      user-state code; a red mutation or independent negative fixture for every
+      load-bearing branch. Expand only when dependency analysis names a real
+      affected consumer.</EXACT-GATES-PER-ATOM>
+      <NO-WORKER-FULL-PANEL fact="true" status="spec/done">A worker never runs
+      the full panel. It runs the narrow self-verify named by its packet. The
+      central coordinator does not run the full panel merely because a worker
+      finished.</NO-WORKER-FULL-PANEL>
+      <ATOMIC-LOCAL-COMMITS fact="true" status="spec/done">A coherent batch may
+      contain several atomic local Conventional Commits, each accepted by its
+      exact gate. They remain unmirrored until the batch integration panel is
+      green. If that panel finds a defect, repair forward in the same batch and
+      rerun newly relevant narrow tests before the next panel.</ATOMIC-LOCAL-COMMITS>
+      <FULL-PANEL-TRIGGERS fact="true" status="spec/done">Run the full
+      `CARGO_BUILD_JOBS=4 tools/self-check.sh` panel when: **(1)** a cross-crate
+      integration batch is ready to leave local state; **(2)** a lifecycle wave
+      or owner scenario is declared green; **(3)** before mirror/push of
+      accumulated code; **(4)** before final epic acceptance; **(5)** a
+      high-risk change has no cheaper complete affected set. One panel may
+      satisfy several triggers for the same unchanged tree.</FULL-PANEL-TRIGGERS>
+      <PANEL-IS-FOR-EXACT-TREE fact="true" status="spec/done">A panel result
+      belongs to the exact tree measured. A later product change invalidates
+      it. A report/docs-only change runs its document gates and may ride the
+      next integration panel, but cannot rewrite an earlier code verdict.</PANEL-IS-FOR-EXACT-TREE>
+      <MIRROR-AFTER-GREEN-BATCH fact="true" status="spec/done">Mirror only
+      after the accumulated batch panel is green and the staging allow-list is
+      reviewed. This preserves atomic human-authored commits while amortising
+      the slow panel over useful integration work.</MIRROR-AFTER-GREEN-BATCH>
+    </facts>
+  </gates>
+
+  <observability title="6. Live lane observations">
+    <facts ordered="false">
+      <OBSERVE-NOT-ASSUME fact="true" status="spec/done">Record only a live
+      task's exit, durable report, resolved-model metadata and reviewed quality.
+      A ping proves transport, not coding quality; an old successful run does
+      not prove a five-hour quota remains open.</OBSERVE-NOT-ASSUME>
+      <PROBE-2026-08-26 fact="true" status="spec/done">Live work, not a ping,
+      measured both extra lanes. `claudez` resolved to `glm-5.3[1m]`, completed
+      an independent R7.1 review, found the missing blocking-HTTP timeouts, then
+      used same-cwd `-c` to implement and gate the repair; root additionally
+      repeated the Windows proxy canary 20 times. Plain Claude resolved to
+      `claude-opus-5`, produced an adversarial build/package/deploy review and
+      used same-cwd `-c` for nine central objections; it explicitly withdrew or
+      narrowed four earlier claims and strengthened crash/ownership design.
+      Both are high-quality usable lanes. Opus/max is reserved for ambiguous,
+      high-impact judgment because the two passes were materially more costly;
+      `claudez` is a parallel peer for bounded code/review but may hit its
+      separate five-hour wall. Both exceeded the desired prose budget, so
+      `##REPORT-BUDGET` is mandatory on future packets.</PROBE-2026-08-26>
+    </facts>
+  </observability>
+
+  <history title="7. History">
+    <p><HIST-OWNER-2026-08-26 fact="true" status="spec/done">Authored from the
+    owner's 2026-08-26 rulings: use `claudez` and Opus/max alongside Sol/native
+    workers because quotas are separate; never select Fable; consolidate the
+    strategy in one ChatGPT-only document; keep the agent-instruction triplet
+    byte-identical; replace per-atom full panels with exact gates and batch
+    panels.</HIST-OWNER-2026-08-26></p>
+  </history>
+</spec>

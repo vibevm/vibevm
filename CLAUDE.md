@@ -153,6 +153,17 @@ Keep it current-state; prune stale lines.
 воркера не читается никем, каждый пакет несёт обязательную клаузу
 `##subagent-quiet-clause` из `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`.
 
+## Harness-scoped ChatGPT campaign runner
+
+This selector is intentionally byte-identical in `CLAUDE.md`, `AGENTS.md` and
+`GEMINI.md`. **Only** an owner-facing central session running under OpenAI
+ChatGPT/Codex reads
+[`PROP-055`](vibevm/vibespecs/common/PROP-055-chatgpt-campaign-execution.xml)
+after the common boot/WAL while the lifecycle/extensions campaign is active.
+Claude Code, `claudez`, Gemini, every other non-OpenAI harness, and every task
+carrying `##subagent-quiet-clause` MUST NOT read or apply PROP-055; their common
+boot and explicit worker packet remain the whole instruction surface.
+
 ## Specspaces — nested projects with their own WAL
 
 This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`vibevm/vibespecs/boot/11-flow-wal-specspaces.xml` in that package) is compiled into the generated static boot lane in `vibevm/vibespecs/boot/`, and the full protocol is `vibevm/vibespecs/flows/wal-specspaces/SPECSPACES-PROTOCOL.xml` inside that package. This section is the signpost; two rules bind regardless:
