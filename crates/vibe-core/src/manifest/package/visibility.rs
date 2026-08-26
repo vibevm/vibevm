@@ -4,11 +4,15 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Deserializer, Serialize};
 
+use crate::manifest::artifact::ArtifactsWire;
+use crate::manifest::deploy::DeploySectionWire;
 use crate::manifest::document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 use crate::manifest::extension::{
     ExtensionDeclWire, ExtensionsControlWire, validate_extension_declarations,
 };
 use crate::manifest::i18n::I18nDecl;
+use crate::manifest::mechanism::{MechanismDeclWire, MechanismRoutes, MechanismRoutesWire};
+use crate::manifest::plane::validate_plane;
 use crate::manifest::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
 };
@@ -330,6 +334,18 @@ pub(crate) struct ManifestWire {
         skip_serializing_if = "ExtensionsControlWire::is_empty"
     )]
     extension_controls: ExtensionsControlWire,
+    #[serde(default, rename = "mechanism", skip_serializing_if = "Vec::is_empty")]
+    mechanisms: Vec<MechanismDeclWire>,
+    #[serde(
+        default,
+        rename = "mechanisms",
+        skip_serializing_if = "MechanismRoutesWire::is_empty"
+    )]
+    mechanism_routes: MechanismRoutesWire,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    artifacts: Option<ArtifactsWire>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    deploy: Option<DeploySectionWire>,
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
     compatibility: Compatibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -376,6 +392,14 @@ impl TryFrom<ManifestWire> for Manifest {
             .into_iter()
             .map(TryInto::try_into)
             .collect::<Result<Vec<_>, String>>()?;
+        let mechanisms = wire
+            .mechanisms
+            .into_iter()
+            .map(TryInto::try_into)
+            .collect::<Result<Vec<_>, String>>()?;
+        let mechanism_routes: MechanismRoutes = wire.mechanism_routes.try_into()?;
+        let artifacts = wire.artifacts.map(TryInto::try_into).transpose()?;
+        let deploy = wire.deploy.map(TryInto::try_into).transpose()?;
         Ok(Self {
             project: wire.project,
             package: wire.package,
@@ -394,6 +418,10 @@ impl TryFrom<ManifestWire> for Manifest {
             hooks: wire.hooks,
             extensions,
             extension_controls: wire.extension_controls.into(),
+            mechanism_decls: mechanisms,
+            mechanism_routes,
+            artifacts,
+            deploy,
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
             features: wire.features,
@@ -417,6 +445,10 @@ impl TryFrom<Manifest> for ManifestWire {
     fn try_from(manifest: Manifest) -> Result<Self, Self::Error> {
         let has_project = manifest.project.is_some();
         let has_package = manifest.package.is_some();
+        validate_extension_declarations(&manifest.extensions, has_project, has_package)?;
+        // The identical whole-document validator `Manifest::validate` runs.
+        // A document that cannot be read back is never written.
+        validate_plane(&manifest)?;
         let override_wire = match (manifest.overrides.is_empty(), manifest.override_table) {
             (false, Some(_)) => {
                 return Err("manifest cannot serialize registry [[override]] and visibility [override] together".into());
@@ -425,12 +457,20 @@ impl TryFrom<Manifest> for ManifestWire {
             (true, Some(table)) => Some(OverrideWire::Visibility(table)),
             (true, None) => None,
         };
-        validate_extension_declarations(&manifest.extensions, has_project, has_package)?;
         let extensions = manifest
             .extensions
             .into_iter()
             .map(TryInto::try_into)
             .collect::<Result<Vec<_>, String>>()?;
+        let mechanisms = manifest
+            .mechanism_decls
+            .into_iter()
+            .map(TryInto::try_into)
+            .collect::<Result<Vec<_>, String>>()?;
+        let mechanism_routes = manifest.mechanism_routes.try_into()?;
+        let artifacts = manifest.artifacts.map(TryInto::try_into).transpose()?;
+        let deploy: Option<DeploySectionWire> =
+            manifest.deploy.map(TryInto::try_into).transpose()?;
         Ok(Self {
             project: manifest.project,
             package: manifest.package,
@@ -449,6 +489,10 @@ impl TryFrom<Manifest> for ManifestWire {
             hooks: manifest.hooks,
             extensions,
             extension_controls: manifest.extension_controls.into(),
+            mechanisms,
+            mechanism_routes,
+            artifacts,
+            deploy,
             compatibility: manifest.compatibility,
             boot_snippet: manifest.boot_snippet,
             features: manifest.features,

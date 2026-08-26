@@ -90,7 +90,10 @@ impl HostIdentity {
 impl fmt::Display for HostIdentity {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::UngroupedProject(name) => write!(formatter, "__host__/{name}"),
+            // One host-owner codec, shared with `ExtensionKey::for_host` and
+            // the mechanism `ProviderOwner::Host`, so a state key, an
+            // activation `ref` and a provider pin agree exactly.
+            Self::UngroupedProject(name) => vibe_core::HostOwner::new(name.clone()).fmt(formatter),
             Self::Coordinate(id) => id.fmt(formatter),
             Self::VirtualWorkspace => formatter.write_str("<virtual-workspace>"),
         }

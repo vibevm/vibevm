@@ -86,9 +86,12 @@ fn host_identity_is_grouped_ungrouped_or_virtual_without_guessing() {
         root.clone(),
     )
     .unwrap();
+    // The shared host-owner codec: an authored name with spaces has exactly
+    // one reversible spelling, the same one `ExtensionKey::for_host` and a
+    // mechanism provider pin use.
     assert_eq!(
         ungrouped.provider.identity.to_string(),
-        "__host__/Demo Authored Name"
+        "__host__/Demo%20Authored%20Name"
     );
 
     let virtual_host = host_source(manifest("[workspace]\nmembers = []\n"), root).unwrap();

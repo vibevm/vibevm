@@ -8,16 +8,17 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR");
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use specmark::spec;
 
 use crate::lifecycle::{CompilePoint, ExtensionPoint};
+use crate::manifest::declarant_path::{declarant_path, declarant_path_error};
 
 mod control;
 mod wire;
 pub use control::{ExtensionKey, ExtensionUse, ExtensionsControl};
-pub(crate) use wire::{ExtensionDeclWire, ExtensionsControlWire};
+pub(crate) use wire::{ExtensionDeclWire, ExtensionHandlerWire, ExtensionsControlWire};
 
 const CONTRIB_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR";
 const HANDLER_TABLES: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES";
@@ -247,57 +248,7 @@ pub struct ExtensionDecl {
 impl ExtensionDecl {
     /// Revalidate a declaration constructed through Rust rather than TOML.
     pub fn validate(&self) -> Result<(), String> {
-        match &self.handler {
-            ExtensionHandler::Script { base } if !is_declarant_root_relative(base) => {
-                return Err(format!(
-                    "[[extension]] `{}` field `handler.base` value `{}` must be declarant-root-relative UTF-8 with forward slashes and no root, drive prefix, backslash, or `..` segment ({HANDLER_TABLES})",
-                    self.id,
-                    base.display(),
-                ));
-            }
-            ExtensionHandler::Script { base } if base.extension().is_some() => {
-                return Err(format!(
-                    "[[extension]] `{}` field `handler.base` value `{}` must omit its script extension ({HANDLER_TABLES})",
-                    self.id,
-                    base.display(),
-                ));
-            }
-            ExtensionHandler::Native {
-                crate_dir,
-                prebuilt,
-            } if crate_dir.is_none() && prebuilt.is_none() => {
-                return Err(format!(
-                    "[[extension]] `{}` native handler requires field `crate_dir` or field `prebuilt` ({HANDLER_TABLES})",
-                    self.id,
-                ));
-            }
-            ExtensionHandler::Native {
-                crate_dir: Some(path),
-                ..
-            } if !is_declarant_root_relative(path) => {
-                return Err(format!(
-                    "[[extension]] `{}` field `handler.crate_dir` value `{}` must be declarant-root-relative UTF-8 with forward slashes and no root, drive prefix, backslash, or `..` segment ({HANDLER_TABLES})",
-                    self.id,
-                    path.display(),
-                ));
-            }
-            ExtensionHandler::Native {
-                prebuilt: Some(paths),
-                ..
-            } => {
-                if let Some((platform, path)) = paths
-                    .iter()
-                    .find(|(_, path)| !is_declarant_root_relative(path))
-                {
-                    return Err(format!(
-                        "[[extension]] `{}` field `handler.prebuilt.{platform}` value `{}` must be declarant-root-relative UTF-8 with forward slashes and no root, drive prefix, backslash, or `..` segment ({HANDLER_TABLES})",
-                        self.id,
-                        path.display(),
-                    ));
-                }
-            }
-            _ => {}
-        }
+        validate_handler_shape(&self.handler, &self.id, "[[extension]]")?;
 
         let is_compile = matches!(self.point, ExtensionPoint::Compile(_));
         let is_phase = matches!(self.point, ExtensionPoint::Phase(_));
@@ -362,18 +313,76 @@ impl ExtensionDecl {
     }
 }
 
-fn is_declarant_root_relative(path: &Path) -> bool {
-    let Some(spelling) = path.to_str() else {
-        return false;
-    };
-    if spelling.contains('\\') || spelling.starts_with('/') {
-        return false;
+/// Validate one handler declaration's structural shape — the shared
+/// `REF-HANDLER-TABLES` field laws, used by both `[[extension]]` and
+/// `[[mechanism]]` rows. `table` names the declaring table for diagnostics.
+///
+/// Every path here is judged by the one declarant-path law
+/// ([`declarant_path`]), the same law `[[skill]]`, `[[mechanism]]
+/// config_schema` and `[[artifacts.*]] inputs` answer to.
+pub(crate) fn validate_handler_shape(
+    handler: &ExtensionHandler,
+    id: &str,
+    table: &str,
+) -> Result<(), String> {
+    match handler {
+        ExtensionHandler::Script { base } => {
+            if let Err(fault) = declarant_path(base) {
+                return Err(declarant_path_error(
+                    table,
+                    id,
+                    "handler.base",
+                    base,
+                    fault,
+                    HANDLER_TABLES,
+                ));
+            }
+            if base.extension().is_some() {
+                return Err(format!(
+                    "{table} `{id}` field `handler.base` value `{}` must omit its script extension ({HANDLER_TABLES})",
+                    base.display(),
+                ));
+            }
+        }
+        ExtensionHandler::Native {
+            crate_dir,
+            prebuilt,
+        } => {
+            if crate_dir.is_none() && prebuilt.is_none() {
+                return Err(format!(
+                    "{table} `{id}` native handler requires field `crate_dir` or field `prebuilt` ({HANDLER_TABLES})",
+                ));
+            }
+            if let Some(path) = crate_dir
+                && let Err(fault) = declarant_path(path)
+            {
+                return Err(declarant_path_error(
+                    table,
+                    id,
+                    "handler.crate_dir",
+                    path,
+                    fault,
+                    HANDLER_TABLES,
+                ));
+            }
+            if let Some(paths) = prebuilt {
+                for (platform, path) in paths {
+                    if let Err(fault) = declarant_path(path) {
+                        return Err(declarant_path_error(
+                            table,
+                            id,
+                            &format!("handler.prebuilt.{platform}"),
+                            path,
+                            fault,
+                            HANDLER_TABLES,
+                        ));
+                    }
+                }
+            }
+        }
+        _ => {}
     }
-    let bytes = spelling.as_bytes();
-    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
-        return false;
-    }
-    !spelling.split('/').any(|segment| segment == "..")
+    Ok(())
 }
 
 /// Validate declaration order/identity and the project-or-package role law.

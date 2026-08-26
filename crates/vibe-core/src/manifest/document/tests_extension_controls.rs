@@ -220,9 +220,19 @@ fn extension_keys_are_exact_opaque_values_with_closed_constructors() {
     assert_eq!(package.as_str(), "org.demo/tools#announce#tail");
     assert_eq!(package.to_string(), package.as_str());
 
+    // The host name goes through the one host-owner codec, so a project name
+    // carrying delimiters can no longer alias another project's key: this
+    // used to render `__host__/odd/# project#id#tail`, which `odd` + id
+    // `# project#id#tail` also rendered.
     let host = ExtensionKey::for_host("odd/# project", "id#tail");
-    assert_eq!(host.as_str(), "__host__/odd/# project#id#tail");
+    assert_eq!(host.as_str(), "__host__/odd%2F%23%20project#id#tail");
+    assert_ne!(host, ExtensionKey::for_host("odd", "# project#id#tail"));
     assert_eq!(ExtensionKey::for_host("", "").as_str(), "__host__/#");
+    // Ordinary names are byte-identical to what they always were.
+    assert_eq!(
+        ExtensionKey::for_host("demo", "announce").as_str(),
+        "__host__/demo#announce"
+    );
 
     let authored = ExtensionKey::authored("  not/a#package  ");
     assert_eq!(authored.as_str(), "  not/a#package  ");

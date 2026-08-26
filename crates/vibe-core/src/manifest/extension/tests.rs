@@ -121,13 +121,7 @@ fn semantic_toml_equality_keeps_signed_zero_datetime_and_nested_types() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#REF-HANDLER-TABLES")]
 fn script_and_native_paths_are_portably_declarant_root_relative() {
-    for base in [
-        "",
-        ".",
-        "./hooks/prepare",
-        "hooks/prepare",
-        "dir.with.dot/prepare",
-    ] {
+    for base in ["hooks/prepare", "dir.with.dot/prepare", "scripts/build"] {
         let valid = decl(
             "phase:build",
             ExtensionHandler::Script { base: base.into() },
@@ -135,7 +129,15 @@ fn script_and_native_paths_are_portably_declarant_root_relative() {
         assert!(valid.validate().is_ok(), "valid path `{base}`");
     }
 
+    // Handler paths answer to the one shared declarant-path law, so the
+    // classes below refuse here exactly as they do for `[[skill]]`,
+    // `[[mechanism]] config_schema` and artifact inputs. `""`, `"."` and
+    // `"./hooks/prepare"` used to pass this table; they are self-referential
+    // or empty spellings of a script base and now refuse with the rest.
     for base in [
+        "",
+        ".",
+        "./hooks/prepare",
         "../prepare",
         "hooks/../prepare",
         "/root/prepare",
@@ -143,6 +145,11 @@ fn script_and_native_paths_are_portably_declarant_root_relative() {
         "C:/hooks/prepare",
         "c:hooks/prepare",
         r"hooks\prepare",
+        "hooks/prepare:stream",
+        "hooks//prepare",
+        "hooks/nul",
+        "hooks/CON",
+        "hooks/prepare ",
     ] {
         let invalid = decl(
             "phase:build",

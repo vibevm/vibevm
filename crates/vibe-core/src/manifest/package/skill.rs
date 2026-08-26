@@ -13,9 +13,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl");
 
-use std::path::{Component, Path, PathBuf};
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+
+use crate::manifest::declarant_path::{declarant_path, is_windows_device_name};
 
 /// `[[skill]]` — one agent-installable skill a package ships (PROP-018 §2.4).
 ///
@@ -143,61 +145,8 @@ fn valid_skill_name(name: &str) -> bool {
     segment_len > 0
 }
 
-/// Windows reserved device spellings, judged on the basename before the
-/// first `.` so extension-bearing aliases (`CON.txt`, `NUL.md`,
-/// `COM1.json`, `LPT9.log`) are devices too. `CONIN$`, `CONOUT$`, `CLOCK$`
-/// and the superscript `COM¹`/`COM²`/`COM³` (+ LPT equivalents) are
-/// included. One shared table for manifest validation and receipt
-/// containment alike.
-#[must_use]
-pub fn is_windows_device_name(component: &str) -> bool {
-    let stem = component.split('.').next().unwrap_or(component);
-    let lowered = stem.to_lowercase();
-    let normalized: String = lowered
-        .chars()
-        .map(|character| match character {
-            '¹' => '1',
-            '²' => '2',
-            '³' => '3',
-            other => other,
-        })
-        .collect();
-    if !normalized.is_ascii() {
-        return false;
-    }
-    matches!(
-        normalized.as_str(),
-        "con" | "prn" | "aux" | "nul" | "conin$" | "conout$" | "clock$"
-    ) || (normalized.len() == 4
-        && matches!(&normalized[..3], "com" | "lpt")
-        && matches!(normalized.as_bytes()[3], b'1'..=b'9'))
-}
-
-/// A single forward-slash component that Windows can never store as written:
-/// device spellings and components ending in `.` or a space.
-fn is_windows_unsafe_component(segment: &str) -> bool {
-    is_windows_device_name(segment) || segment.ends_with('.') || segment.ends_with(' ')
-}
-
 fn valid_declarant_path(path: &Path) -> bool {
-    let Some(text) = path.to_str() else {
-        return false;
-    };
-    if text.is_empty()
-        || text.contains('\\')
-        || text.contains(':')
-        || text.starts_with('/')
-        || path.has_root()
-        || text.split('/').any(|segment| {
-            segment.is_empty()
-                || matches!(segment, "." | "..")
-                || is_windows_unsafe_component(segment)
-        })
-    {
-        return false;
-    }
-    path.components()
-        .all(|component| matches!(component, Component::Normal(_)))
+    declarant_path(path).is_ok()
 }
 
 #[cfg(test)]

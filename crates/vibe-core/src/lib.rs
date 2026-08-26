@@ -19,6 +19,7 @@ pub mod capability_ref;
 pub mod content_hash;
 pub mod error;
 pub mod global_registry;
+pub mod host_owner;
 pub mod layout;
 pub mod lifecycle;
 pub mod manifest;
@@ -38,6 +39,7 @@ pub use global_registry::{
     EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, default_registries,
     ensure_default_global_registry, merge_effective, url_is_local,
 };
+pub use host_owner::{HOST_OWNER, HostOwner, HostSegmentError};
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{SourceUrl, TraceId};
 pub use rel_path::{RelPath, machine_json_path};

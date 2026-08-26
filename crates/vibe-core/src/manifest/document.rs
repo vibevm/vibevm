@@ -39,8 +39,11 @@ use specmark::spec;
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
+use super::artifact::ArtifactsSection;
+use super::deploy::DeploySection;
 use super::extension::{ExtensionDecl, ExtensionsControl};
 use super::i18n::I18nDecl;
+use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
     HooksDecl, LinkType, ManifestWire, McpServerDecl, Obsoletes, OverrideTable, PackageMeta,
@@ -155,6 +158,28 @@ pub struct Manifest {
         skip_serializing_if = "ExtensionsControl::is_empty"
     )]
     pub extension_controls: ExtensionsControl,
+
+    /// `[[mechanism]]` — provider declarations for the build/package/deploy
+    /// plane (sibling of `[[extension]]`; PROP-054 `ONE-MACHINE`).
+    #[serde(default, rename = "mechanism", skip_serializing_if = "Vec::is_empty")]
+    pub mechanism_decls: Vec<MechanismDecl>,
+
+    /// `[mechanisms]` — host-owned logical-key routes to exact providers,
+    /// legal on any node including a pure virtual workspace.
+    #[serde(
+        default,
+        rename = "mechanisms",
+        skip_serializing_if = "MechanismRoutes::is_empty"
+    )]
+    pub mechanism_routes: MechanismRoutes,
+
+    /// `[artifacts]` — desired build/package producers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub artifacts: Option<ArtifactsSection>,
+
+    /// `[deploy]` — deploy targets and named destination profiles.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub deploy: Option<DeploySection>,
 
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
@@ -433,6 +458,9 @@ mod tests_extension_controls;
 #[cfg(test)]
 #[path = "document/tests_extensions.rs"]
 mod tests_extensions;
+#[cfg(test)]
+#[path = "document/tests_mechanism_grammar.rs"]
+mod tests_mechanism_grammar;
 #[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;

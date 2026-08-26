@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#HOST-ACTIVATION"
 
 use std::fmt;
 
-use crate::{Group, PackageName};
+use crate::{Group, HostOwner, PackageName};
 
 use super::ExtensionConfig;
 
@@ -42,9 +42,22 @@ impl ExtensionKey {
         Self(format!("{group}/{name}#{id}"))
     }
 
-    /// Construct the reserved key for a declaration supplied by a project.
+    /// Construct the reserved key for a declaration supplied by an ungrouped
+    /// project.
+    ///
+    /// The project name goes through the one host-owner codec
+    /// ([`crate::HostOwner`]), so an arbitrary `[project].name` — delimiters,
+    /// spaces, Unicode and all — has exactly one key and no two names can
+    /// print the same one. An ordinary name is untouched.
+    ///
+    /// ```
+    /// use vibe_core::manifest::ExtensionKey;
+    ///
+    /// assert_eq!(ExtensionKey::for_host("demo", "announce").as_str(), "__host__/demo#announce");
+    /// assert_eq!(ExtensionKey::for_host("my app", "x").as_str(), "__host__/my%20app#x");
+    /// ```
     pub fn for_host(project_name: &str, id: &str) -> Self {
-        Self(format!("__host__/{project_name}#{id}"))
+        Self(format!("{}#{id}", HostOwner::new(project_name)))
     }
 
     /// The exact stored spelling.

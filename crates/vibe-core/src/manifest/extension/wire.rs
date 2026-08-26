@@ -66,7 +66,7 @@ struct ExtensionUseWire {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "lowercase", deny_unknown_fields)]
-enum ExtensionHandlerWire {
+pub(crate) enum ExtensionHandlerWire {
     Builtin {
         name: String,
     },

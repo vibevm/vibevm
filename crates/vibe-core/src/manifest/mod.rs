@@ -10,19 +10,30 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
+mod artifact;
 mod consumer;
+mod declarant_path;
 mod decor;
+mod deploy;
 mod document;
 mod extension;
 pub mod i18n;
 mod lockfile;
+mod mechanism;
 mod package;
+mod plane;
 mod project;
 pub mod purl;
 mod redirect;
 mod subskill;
 
+pub use artifact::{ArtifactInput, ArtifactOutput, ArtifactTarget, ArtifactsSection};
 pub use consumer::{ConsumerNode, NodeRole};
+pub use declarant_path::{
+    DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_pattern,
+    is_windows_device_name, is_windows_unsafe_component,
+};
+pub use deploy::{DeployProfile, DeploySection, DeployTarget};
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use extension::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
@@ -31,6 +42,11 @@ pub use extension::{
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,
+};
+pub use mechanism::{
+    HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
+    MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
+    ProviderPin, ProviderPinParseError,
 };
 pub use package::{
     AccessLevel, AllowFriendsOverride, BinaryDecl, BootCategory, BootSnippet, BootSnippetFragment,
@@ -400,24 +416,62 @@ paths = ["new-alpha", "new-beta"]
         assert!(!merged.contains("old-beta"), "{merged}");
     }
 
+    /// Inline-to-header is the serialiser's own canonicalisation, not a type
+    /// change the operator made: the row keeps its comments. This assertion
+    /// used to run the other way — it pinned the loss — which meant the first
+    /// rewrite after someone authored `config = { … }` the way the docs show
+    /// deleted their comment without saying so.
     #[test]
-    fn decoration_does_not_cross_type_key_or_array_length_mismatches() {
-        let type_existing = r#"[[extension]]
+    fn canonicalised_inline_rows_keep_the_comments_of_the_line_they_replace() {
+        let existing = r#"[[extension]]
 id = "shape"
-# DROP-TYPE-KEY
-config = { mode = "old" } # DROP-TYPE-MISMATCH
+# KEEP-CANONICALISED-KEY
+config = { mode = "old" } # KEEP-CANONICALISED-TRAILING
 "#;
-        let type_new = r#"[[extension]]
+        let new_rendered = r#"[[extension]]
 id = "shape"
 
 [extension.config]
 mode = "new"
 "#;
-        let type_merged = merge_preserving_comments(type_existing, type_new);
-        assert!(!type_merged.contains("DROP-TYPE-KEY"));
-        assert!(!type_merged.contains("DROP-TYPE-MISMATCH"));
-        assert!(type_merged.contains("mode = \"new\""));
+        let merged = merge_preserving_comments(existing, new_rendered);
+        assert!(merged.contains("KEEP-CANONICALISED-KEY"), "{merged}");
+        assert!(merged.contains("KEEP-CANONICALISED-TRAILING"), "{merged}");
+        assert!(merged.contains("mode = \"new\""), "{merged}");
+        assert!(!merged.contains("mode = \"old\""), "{merged}");
+        // Still a valid document after the comments moved onto the header.
+        assert!(merged.parse::<toml_edit::DocumentMut>().is_ok(), "{merged}");
+    }
 
+    /// A canonicalised array carries its own trailing note to the last header
+    /// it expands into — and a *true* mismatch beside it still refuses to
+    /// cross, so the bridge cannot become a general decoration leak.
+    #[test]
+    fn array_trailing_notes_move_but_mismatches_still_refuse() {
+        let existing = r#"[[extension]]
+id = "shape"
+inputs = [{ path = "a" }, { path = "b" }] # KEEP-ARRAY-NOTE
+legacy = "old" # DROP-RENAMED-KEY
+"#;
+        let new_rendered = r#"[[extension]]
+id = "shape"
+replacement = "new"
+
+[[extension.inputs]]
+path = "a"
+
+[[extension.inputs]]
+path = "b"
+"#;
+        let merged = merge_preserving_comments(existing, new_rendered);
+        assert_eq!(merged.matches("KEEP-ARRAY-NOTE").count(), 1, "{merged}");
+        assert!(!merged.contains("DROP-RENAMED-KEY"), "{merged}");
+        assert!(merged.contains("replacement = \"new\""), "{merged}");
+        assert!(merged.parse::<toml_edit::DocumentMut>().is_ok(), "{merged}");
+    }
+
+    #[test]
+    fn decoration_does_not_cross_key_or_array_length_mismatches() {
         let key_existing = r#"[[extension]]
 id = "key"
 legacy = "old" # DROP-KEY-MISMATCH
