@@ -79,8 +79,12 @@ fn redbook_polygon_follows_each_static_target_and_switches_without_an_orphan() {
     let xml = fs::read_to_string(&xml_path).unwrap();
     assert!(xml.contains("<spec "), "XML target emits dialect documents");
     assert!(
-        xml.contains("<!-- vibe:static "),
-        "provenance comments survive XML emission"
+        xml.contains("<!-- vibe:c1 vibe:static "),
+        "provenance comments use the c1 XML wire"
+    );
+    assert!(
+        !xml.contains("<!-- vibe:static "),
+        "legacy XML marker leaked"
     );
     assert_target(&user, project.path(), &registry.sources, SpecFormat::Xml);
 

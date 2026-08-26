@@ -543,9 +543,46 @@ fn xml_target_crosses_the_pivot_once_per_contribution() {
         .unwrap()
         .unwrap();
     assert!(
-        xml.starts_with(&format!("<!-- {}", crate::layout_paths::boot("STATIC.xml"))),
+        xml.starts_with(&format!(
+            "<!-- vibe:c1 {}",
+            crate::layout_paths::boot("STATIC.xml")
+        )),
         "{xml}"
     );
     assert_eq!(xml.matches("<spec ").count(), 2, "{xml}");
-    assert_eq!(xml.matches("<!-- vibe:static ").count(), 2, "{xml}");
+    assert_eq!(xml.matches("<!-- vibe:c1 vibe:static ").count(), 2, "{xml}");
+    assert!(!xml.contains("<!-- vibe:static "), "{xml}");
+    vibe_spec::minify_emitted_xml(&xml).expect("strict XML stream accepts c1 framing");
+}
+
+#[test]
+fn format_aware_framing_preserves_markdown_and_round_trips_dangerous_xml_fields() {
+    let origin = "org.demo/a--b-%雪&<>";
+    let path = "dir/a--b-/x%2D&雪.xml";
+    let logical_marker = format!("vibe:static {origin} — {path}");
+
+    let markdown = framing::static_marker(SpecFormat::Markdown, origin, path);
+    assert_eq!(markdown, format!("<!-- {logical_marker} -->"));
+
+    let xml = framing::static_marker(SpecFormat::Xml, origin, path);
+    assert_eq!(
+        vibe_specdoc::decode_generated_xml_comment(&xml)
+            .unwrap()
+            .as_deref(),
+        Some(logical_marker.as_str())
+    );
+    assert!(!xml.contains("--b"), "{xml}");
+
+    let rename = RenameEntry {
+        original: "short--%雪-".to_string(),
+        qualified: "qualified--%雪-".to_string(),
+    };
+    let rendered = framing::tombstone(SpecFormat::Xml, &[(origin.to_string(), rename)]);
+    let end = rendered.find("-->").unwrap() + 3;
+    let payload = vibe_specdoc::decode_generated_xml_comment(&rendered[..end])
+        .unwrap()
+        .unwrap();
+    assert!(payload.contains("short--%雪-"), "{payload}");
+    assert!(payload.contains("qualified--%雪-"), "{payload}");
+    assert!(payload.contains(origin), "{payload}");
 }

@@ -58,6 +58,27 @@ fn lexical_spelling_comments_and_cdata_survive_exactly() {
 }
 
 #[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY")]
+fn c1_comments_and_cdata_stay_exact_while_double_hyphen_names_are_untouched() {
+    let logical = "vibe:static org.demo/a--b — dir/a--b-/x%2D&雪.xml";
+    let comment = format!(
+        "<!-- vibe:c1 {} -->",
+        vibe_specdoc::encode_generated_xml_comment(logical)
+    );
+    let input = format!("<root>\n  {comment}\n  <a--b><![CDATA[x < y]]></a--b>\n</root>");
+    let expected = format!("<root>{comment}<a--b><![CDATA[x < y]]></a--b></root>");
+
+    assert_eq!(minify_emitted_xml(&input).unwrap(), expected);
+    assert!(expected.contains("<a--b>"));
+    assert_eq!(
+        vibe_specdoc::decode_generated_xml_comment(&comment)
+            .unwrap()
+            .as_deref(),
+        Some(logical)
+    );
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#STAGE-EMITTED")]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY")]
 fn emitted_stream_accepts_two_declarations_and_roots_while_pivot_rejects_it() {

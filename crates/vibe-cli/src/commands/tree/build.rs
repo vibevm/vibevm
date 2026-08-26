@@ -56,6 +56,8 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
     let static_contribs = static_text
         .as_deref()
         .map(artifacts::decompile_static)
+        .transpose()
+        .context("decoding generated comments in the committed static boot artifact")?
         .unwrap_or_default();
     let index = match index_text.as_deref() {
         Some(t) => artifacts::read_index(t)?,
