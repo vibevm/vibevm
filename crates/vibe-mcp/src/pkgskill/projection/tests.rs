@@ -74,6 +74,50 @@ fn project_only_helper_never_passes_user_scope_in_preview_or_apply() {
 }
 
 #[test]
+fn package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_source() {
+    let project = project_with_skill(&[], &["SKILL.md", "references/**"]);
+    let first = collect_project_skill_bindings(project.path()).unwrap();
+    assert_eq!(first.len(), 1);
+    let binding = &first[0];
+    assert_eq!(
+        binding
+            .targets
+            .iter()
+            .map(|target| target.agent.as_str())
+            .collect::<Vec<_>>(),
+        ["claude", "opencode", "codex"]
+    );
+    assert_eq!(
+        binding
+            .targets
+            .iter()
+            .map(|target| target.path.clone())
+            .collect::<Vec<_>>(),
+        [
+            project.path().join(".claude/skills/demo"),
+            project.path().join(".opencode/skills/demo"),
+            project.path().join(".agents/skills/demo"),
+        ]
+    );
+    let initial = binding.source_snapshot.clone();
+
+    fs::write(project.path().join("skills/demo/drop.md"), "ignored change").unwrap();
+    assert_eq!(
+        collect_project_skill_bindings(project.path()).unwrap()[0].source_snapshot,
+        initial
+    );
+    fs::write(
+        project.path().join("skills/demo/SKILL.md"),
+        "selected change",
+    )
+    .unwrap();
+    assert_ne!(
+        collect_project_skill_bindings(project.path()).unwrap()[0].source_snapshot,
+        initial
+    );
+}
+
+#[test]
 fn explicit_both_scope_remains_project_then_user() {
     let project = project_with_skill(&["claude"], &[]);
     let plan =

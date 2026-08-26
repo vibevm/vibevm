@@ -1,5 +1,6 @@
 //! Strict generated-type state reader and record-last atomic writer.
 
+use std::collections::BTreeSet;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -143,6 +144,23 @@ impl LifecycleStateStore {
     ) -> Result<(), LifecycleStateError> {
         self.state.execution.insert(key, record);
         self.write()
+    }
+
+    /// Prune vanished synthetic rows only after their owner has reconciled
+    /// durable outputs successfully. Other lifecycle history is untouched.
+    pub fn retain_prefixed(
+        &mut self,
+        prefix: &str,
+        keep: &BTreeSet<String>,
+    ) -> Result<(), LifecycleStateError> {
+        let before = self.state.execution.len();
+        self.state
+            .execution
+            .retain(|key, _| !key.starts_with(prefix) || keep.contains(key));
+        if self.state.execution.len() != before {
+            self.write()?;
+        }
+        Ok(())
     }
 
     #[must_use]

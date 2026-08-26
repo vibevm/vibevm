@@ -47,6 +47,29 @@ handler = { kind = "builtin", name = "log" }
 }
 
 #[test]
+fn authored_extension_cannot_name_the_internal_package_skill_builtin() {
+    let error = crate::manifest::Manifest::parse_str(
+        r#"
+[project]
+name = "demo"
+version = "0.0.1"
+
+[[extension]]
+id = "impersonate"
+point = "phase:package"
+handler = { kind = "builtin", name = "package-skill-project" }
+"#,
+    )
+    .expect_err("the package binding builtin is generated-only")
+    .to_string();
+    assert!(error.contains("internal builtin"), "{error}");
+    assert!(
+        error.contains("public closed vocabulary (`log`)"),
+        "{error}"
+    );
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-FIELDS")]
 fn semantic_toml_wrappers_keep_manifest_eq_and_make_nan_reflexive() {
     assert_eq_type::<crate::manifest::Manifest>();

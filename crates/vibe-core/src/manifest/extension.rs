@@ -26,6 +26,7 @@ const SELECTOR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-SE
 const INTERNALS_FLAG: &str =
     "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG";
 const RESERVED_EXTENSION_ID_PREFIX: &str = "@vibe/";
+const RESERVED_INTERNAL_BUILTIN: &str = "package-skill-project";
 
 /// One handler bound to one extension point by a manifest declaration.
 ///
@@ -392,6 +393,15 @@ pub(crate) fn validate_extension_declarations(
         if extension.id.starts_with(RESERVED_EXTENSION_ID_PREFIX) {
             return Err(format!(
                 "[[extension]] field `id` value `{}` uses the reserved `{RESERVED_EXTENSION_ID_PREFIX}` prefix; authored extension ids must not impersonate generated vibe contributions ({CONTRIB_GRAMMAR})",
+                extension.id,
+            ));
+        }
+        if matches!(
+            &extension.handler,
+            ExtensionHandler::Builtin { name } if name == RESERVED_INTERNAL_BUILTIN
+        ) {
+            return Err(format!(
+                "[[extension]] `{}` names internal builtin `{RESERVED_INTERNAL_BUILTIN}`; authored builtins are limited to the public closed vocabulary (`log`) ({HANDLER_TABLES})",
                 extension.id,
             ));
         }

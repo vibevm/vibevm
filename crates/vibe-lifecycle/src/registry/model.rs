@@ -185,6 +185,17 @@ pub struct ExtensionWorld {
     pub effective_stack: Option<DependencyProviderId>,
 }
 
+/// One algorithmic binding injected ahead of authored contributions. Its key
+/// is reserved by vibe, while provider attribution remains the package that
+/// declared the underlying capability.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW")]
+#[derive(Debug, Clone)]
+pub struct SyntheticPresetSource {
+    pub key: vibe_core::manifest::ExtensionKey,
+    pub provider: ExtensionProvider,
+    pub declaration: ExtensionDecl,
+}
+
 /// Provider metadata retained beside a registry declaration.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY")]
 #[derive(Debug, Clone, PartialEq, Eq)]

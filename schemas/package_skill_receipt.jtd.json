@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "description": "Epoch-1 `.vibe/package-skills.toml` ownership receipt for project-scope package skill projections.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::package_skill_receipt"
+    }
+  },
+  "properties": {
+    "schema": { "type": "uint32" },
+    "binding": {
+      "elements": { "ref": "package_skill_binding" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "optionalProperties": {
+    "applying": { "ref": "package_skill_applying" }
+  },
+  "definitions": {
+    "package_skill_applying": {
+      "properties": {
+        "key": { "type": "string" },
+        "nonce": { "type": "string" },
+        "binding": {
+          "elements": { "ref": "package_skill_binding" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "package_skill_binding": {
+      "metadata": {
+        "spec": {
+          "documents": "spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"
+        }
+      },
+      "properties": {
+        "key": { "type": "string" },
+        "provider": { "type": "string" },
+        "skill": { "type": "string" },
+        "source_snapshot": { "type": "string" },
+        "target": {
+          "elements": { "ref": "package_skill_target" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "package_skill_target": {
+      "properties": {
+        "agent": { "type": "string" },
+        "path": { "type": "string" },
+        "file": {
+          "elements": { "ref": "package_skill_file" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "package_skill_file": {
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    }
+  }
+}

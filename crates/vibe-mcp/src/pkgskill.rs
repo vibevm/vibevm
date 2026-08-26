@@ -24,10 +24,19 @@ use crate::agents::{Agent, Scope};
 
 #[path = "pkgskill/projection.rs"]
 mod projection;
+#[path = "pkgskill/receipt.rs"]
+mod receipt;
 
 pub use projection::{
-    DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, collect_declared_skills,
-    prepare_declared_skill_projection, project_declared_skills_project_scope,
+    DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, DeclaredSkillProvider,
+    PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
+    ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget, collect_declared_skills,
+    collect_project_skill_bindings, lower_project_skill_bindings,
+    prepare_declared_skill_projection, probe_project_skill_binding,
+    probe_recovered_project_skill_bindings, probe_vanished_project_skill_bindings,
+    project_declared_skills_project_scope, project_skill_receipt_exists,
+    reconcile_project_skill_binding, reconcile_vanished_project_skill_bindings,
+    recover_project_skill_bindings,
 };
 
 /// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
@@ -70,6 +79,13 @@ pub enum PackageSkillError {
           fix: act on the wrapped agent-config error)"
     )]
     SkillsRoot { detail: String },
+
+    #[error(
+        "unsafe package-skill path `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
+          fix: use a contained normal path with no symlink, junction, or reparse ancestor)"
+    )]
+    UnsafePath { path: PathBuf, reason: String },
 }
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
@@ -139,6 +155,12 @@ pub fn install_package_skill_selecting(
     include: &[String],
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
+    if !vibe_core::manifest::SkillDecl::valid_name(skill_name) {
+        return Err(PackageSkillError::UnsafePath {
+            path: PathBuf::from(skill_name),
+            reason: "skill name is not one safe lowercase-kebab component".into(),
+        });
+    }
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
 
@@ -152,9 +174,25 @@ pub fn install_package_skill_selecting(
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
+    let containment_root = match scope {
+        Scope::Project => project_root.unwrap_or(root.as_path()),
+        Scope::User | Scope::Both => root.as_path(),
+    };
+    receipt::ensure_no_follow_walk(containment_root, &target, true).map_err(|error| {
+        PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: error.to_string(),
+        }
+    })?;
     let path_str = machine_json_path(&target);
 
-    if !source.exists() {
+    let source_exists = source
+        .try_exists()
+        .map_err(|source_error| PackageSkillError::Read {
+            path: source.to_path_buf(),
+            source: source_error,
+        })?;
+    if !source_exists {
         return Ok(PackageSkillReport {
             skill: skill_name.to_string(),
             agent: agent_str,
@@ -181,7 +219,19 @@ pub fn install_package_skill_selecting(
         // Replace the projection wholesale so the agent dir mirrors the
         // package's skill body exactly. Only the skill's own dir is
         // touched — foreign skill dirs are never read or removed.
-        if target.exists() {
+        if target
+            .try_exists()
+            .map_err(|source| PackageSkillError::Write {
+                path: target.clone(),
+                source,
+            })?
+        {
+            receipt::ensure_no_follow_walk(containment_root, &target, false).map_err(|error| {
+                PackageSkillError::UnsafePath {
+                    path: target.clone(),
+                    reason: error.to_string(),
+                }
+            })?;
             fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
                 path: target.clone(),
                 source,
@@ -212,6 +262,12 @@ pub fn uninstall_package_skill(
     skill_name: &str,
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
+    if !vibe_core::manifest::SkillDecl::valid_name(skill_name) {
+        return Err(PackageSkillError::UnsafePath {
+            path: PathBuf::from(skill_name),
+            reason: "skill name is not one safe lowercase-kebab component".into(),
+        });
+    }
     let scope_str = scope.as_str();
     let Some(root) =
         agent
@@ -223,14 +279,35 @@ pub fn uninstall_package_skill(
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
+    let containment_root = match scope {
+        Scope::Project => project_root.unwrap_or(root.as_path()),
+        Scope::User | Scope::Both => root.as_path(),
+    };
+    receipt::ensure_no_follow_walk(containment_root, &target, true).map_err(|error| {
+        PackageSkillError::UnsafePath {
+            path: target.clone(),
+            reason: error.to_string(),
+        }
+    })?;
     let path_str = machine_json_path(&target);
-    let exists = target.exists();
+    let exists = target
+        .try_exists()
+        .map_err(|source| PackageSkillError::Write {
+            path: target.clone(),
+            source,
+        })?;
     let status: &'static str = match (exists, dry_run) {
         (false, _) => "absent",
         (true, true) => "would-remove",
         (true, false) => "removed",
     };
     if exists && !dry_run {
+        receipt::ensure_no_follow_walk(containment_root, &target, false).map_err(|error| {
+            PackageSkillError::UnsafePath {
+                path: target.clone(),
+                reason: error.to_string(),
+            }
+        })?;
         fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
             path: target.clone(),
             source,
@@ -268,7 +345,18 @@ fn snapshot_source(
     include: &[String],
 ) -> Result<BTreeMap<String, Vec<u8>>, PackageSkillError> {
     let mut out = BTreeMap::new();
-    if source.is_dir() {
+    let metadata =
+        fs::symlink_metadata(source).map_err(|source_error| PackageSkillError::Read {
+            path: source.to_path_buf(),
+            source: source_error,
+        })?;
+    if metadata.file_type().is_symlink() || metadata_is_reparse(&metadata) {
+        return Err(PackageSkillError::UnsafePath {
+            path: source.to_path_buf(),
+            reason: "skill source is a symlink/junction/reparse point".into(),
+        });
+    }
+    if metadata.is_dir() {
         collect_dir(source, source, &mut out)?;
         // PROP-015 §2.8: when `include` is set, keep only the files whose
         // relpath matches one of the patterns. Empty `include` keeps the
@@ -276,7 +364,7 @@ fn snapshot_source(
         if !include.is_empty() {
             out.retain(|rel, _| include.iter().any(|pat| glob_match(pat, rel)));
         }
-    } else {
+    } else if metadata.is_file() {
         let name = source
             .file_name()
             .map(|n| n.to_string_lossy().to_string())
@@ -286,14 +374,32 @@ fn snapshot_source(
             source: err,
         })?;
         out.insert(name, bytes);
+    } else {
+        return Err(PackageSkillError::UnsafePath {
+            path: source.to_path_buf(),
+            reason: "skill source is neither a regular file nor a directory".into(),
+        });
     }
     Ok(out)
 }
 
 /// Snapshot an existing target dir, or `None` when it does not exist.
 fn snapshot_dir(dir: &Path) -> Result<Option<BTreeMap<String, Vec<u8>>>, PackageSkillError> {
-    if !dir.exists() {
-        return Ok(None);
+    let metadata = match fs::symlink_metadata(dir) {
+        Ok(metadata) => metadata,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(source) => {
+            return Err(PackageSkillError::Read {
+                path: dir.to_path_buf(),
+                source,
+            });
+        }
+    };
+    if metadata.file_type().is_symlink() || metadata_is_reparse(&metadata) || !metadata.is_dir() {
+        return Err(PackageSkillError::UnsafePath {
+            path: dir.to_path_buf(),
+            reason: "skill target is not a no-follow directory".into(),
+        });
     }
     let mut out = BTreeMap::new();
     collect_dir(dir, dir, &mut out)?;
@@ -315,9 +421,19 @@ fn collect_dir(
             source,
         })?;
         let path = entry.path();
-        if path.is_dir() {
+        let metadata = fs::symlink_metadata(&path).map_err(|source| PackageSkillError::Read {
+            path: path.clone(),
+            source,
+        })?;
+        if metadata.file_type().is_symlink() || metadata_is_reparse(&metadata) {
+            return Err(PackageSkillError::UnsafePath {
+                path,
+                reason: "skill tree contains a symlink/junction/reparse point".into(),
+            });
+        }
+        if metadata.is_dir() {
             collect_dir(base, &path, out)?;
-        } else {
+        } else if metadata.is_file() {
             let rel = path
                 .strip_prefix(base)
                 .unwrap_or(&path)
@@ -328,6 +444,11 @@ fn collect_dir(
                 source,
             })?;
             out.insert(rel, bytes);
+        } else {
+            return Err(PackageSkillError::UnsafePath {
+                path,
+                reason: "skill tree contains a non-file, non-directory entry".into(),
+            });
         }
     }
     Ok(())
@@ -386,6 +507,10 @@ fn write_snapshot(
     target_dir: &Path,
     snap: &BTreeMap<String, Vec<u8>>,
 ) -> Result<(), PackageSkillError> {
+    fs::create_dir_all(target_dir).map_err(|source| PackageSkillError::Write {
+        path: target_dir.to_path_buf(),
+        source,
+    })?;
     for (rel, bytes) in snap {
         let dest = target_dir.join(rel);
         if let Some(parent) = dest.parent() {
@@ -400,6 +525,20 @@ fn write_snapshot(
         })?;
     }
     Ok(())
+}
+
+fn metadata_is_reparse(metadata: &fs::Metadata) -> bool {
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt;
+        const REPARSE_POINT: u32 = 0x400;
+        metadata.file_attributes() & REPARSE_POINT != 0
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = metadata;
+        false
+    }
 }
 
 #[cfg(test)]

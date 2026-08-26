@@ -11,12 +11,24 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use specmark::spec;
 use vibe_core::manifest::{Lockfile, Manifest, SkillDecl};
+use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_workspace::Workspace;
 
 use super::{
     PackageSkillError, PackageSkillReport, install_package_skill_selecting, uninstall_package_skill,
 };
 use crate::agents::{Agent, Scope};
+
+#[path = "projection/binding.rs"]
+mod binding;
+pub use binding::{
+    PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
+    ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,
+    collect_project_skill_bindings, lower_project_skill_bindings, probe_project_skill_binding,
+    probe_recovered_project_skill_bindings, probe_vanished_project_skill_bindings,
+    project_skill_receipt_exists, reconcile_project_skill_binding,
+    reconcile_vanished_project_skill_bindings, recover_project_skill_bindings,
+};
 
 /// A package or project `[[skill]]` declaration lowered to its absolute
 /// source path and a stable human-facing origin label.
@@ -29,6 +41,47 @@ pub struct DeclaredSkill {
     /// `"project"` / a member rel-path, or `"<kind>:<name>"` for an
     /// installed package.
     pub origin: String,
+    /// Typed package provenance retained independently from the historical
+    /// human-facing `origin` label.
+    pub provider: DeclaredSkillProvider,
+}
+
+/// Provider metadata needed by package-phase adapters without rediscovering
+/// manifests or lockfiles outside this library owner.
+#[derive(Debug, Clone)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
+pub enum DeclaredSkillProvider {
+    Authored {
+        group: Group,
+        name: PackageName,
+        version: String,
+        kind: PackageKind,
+        root: PathBuf,
+    },
+    Installed {
+        group: Group,
+        name: PackageName,
+        version: String,
+        kind: PackageKind,
+        root: PathBuf,
+        content_hash: ContentHash,
+    },
+}
+
+impl DeclaredSkillProvider {
+    pub fn identity(&self) -> String {
+        match self {
+            Self::Authored { group, name, .. } | Self::Installed { group, name, .. } => {
+                format!("{group}/{name}")
+            }
+        }
+    }
+
+    pub(crate) fn root(&self) -> &Path {
+        match self {
+            Self::Authored { root, .. } | Self::Installed { root, .. } => root,
+        }
+    }
 }
 
 /// Standalone/package-binding selection shared by every surface.
@@ -68,7 +121,7 @@ pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>
         } else {
             rel.to_string()
         };
-        lower_manifest_skills(manifest, &base, &origin, &mut out);
+        lower_manifest_skills(manifest, &base, &origin, None, &mut out)?;
     }
 
     let lock_path = ws.lockfile_path();
@@ -86,7 +139,13 @@ pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>
                 continue;
             };
             let origin = format!("{}:{}", pkg.kind.as_str(), pkg.name);
-            lower_manifest_skills(&manifest, &slot, &origin, &mut out);
+            lower_manifest_skills(
+                &manifest,
+                &slot,
+                &origin,
+                Some(pkg.content_hash.clone()),
+                &mut out,
+            )?;
         }
     }
     Ok(out)
@@ -96,15 +155,45 @@ fn lower_manifest_skills(
     manifest: &Manifest,
     base: &Path,
     origin: &str,
+    content_hash: Option<ContentHash>,
     out: &mut Vec<DeclaredSkill>,
-) {
+) -> Result<()> {
+    if manifest.skills.is_empty() {
+        return Ok(());
+    }
+    let package = manifest.package.as_ref().with_context(|| {
+        format!(
+            "manifest `{}` declares [[skill]] without package role",
+            base.join(Manifest::FILENAME).display()
+        )
+    })?;
+    let name = PackageName::parse(&package.name)?;
+    let provider = match content_hash {
+        Some(content_hash) => DeclaredSkillProvider::Installed {
+            group: package.group.clone(),
+            name,
+            version: package.version.to_string(),
+            kind: package.kind,
+            root: base.to_path_buf(),
+            content_hash,
+        },
+        None => DeclaredSkillProvider::Authored {
+            group: package.group.clone(),
+            name,
+            version: package.version.to_string(),
+            kind: package.kind,
+            root: base.to_path_buf(),
+        },
+    };
     for decl in &manifest.skills {
         out.push(DeclaredSkill {
             source: base.join(&decl.path),
             decl: decl.clone(),
             origin: origin.to_string(),
+            provider: provider.clone(),
         });
     }
+    Ok(())
 }
 
 #[derive(Debug, Clone)]
@@ -201,7 +290,9 @@ pub fn prepare_declared_skill_projection(
     let scopes = scope.expand();
     let mut tasks = Vec::new();
     for skill in selected {
-        for agent in skill_agents(&skill.decl, &requested_agents) {
+        super::receipt::ensure_no_follow_walk(skill.provider.root(), &skill.source, true)
+            .with_context(|| format!("unsafe source for declared skill `{}`", skill.decl.name))?;
+        for agent in skill_agents(&skill.decl, &requested_agents)? {
             for concrete_scope in &scopes {
                 tasks.push(ProjectionTask {
                     agent,
@@ -219,21 +310,55 @@ pub fn prepare_declared_skill_projection(
     })
 }
 
-fn skill_agents(decl: &SkillDecl, requested: &[Agent]) -> Vec<Agent> {
+/// The declaration's effective agent set, intersected with `requested`.
+///
+/// An explicit `agents` list must name known, skill-supporting agents: an
+/// unknown spelling or an agent with no project-scope skill loader is a plan
+/// error with remediation, never a silent zero-target success.
+fn skill_agents(decl: &SkillDecl, requested: &[Agent]) -> Result<Vec<Agent>> {
     if decl.agents.is_empty() {
-        return requested.to_vec();
+        return Ok(requested.to_vec());
     }
-    requested
+    let mut declared = Vec::new();
+    for name in &decl.agents {
+        let parsed = Agent::parse_filter(name).map_err(|error| {
+            anyhow::Error::msg(error).context(format!(
+                "[[skill]] `{}` names unknown agent `{name}`; fix its `agents` list \
+                 (known ids: claude, opencode, codex)",
+                decl.name
+            ))
+        })?;
+        if parsed.is_empty() {
+            bail!(
+                "[[skill]] `{}` names agent filter `{name}` that selects no agent",
+                decl.name
+            );
+        }
+        for agent in parsed {
+            if !declared.contains(&agent) {
+                declared.push(agent);
+            }
+        }
+    }
+    // Preserve the canonical Agent::ALL order regardless of authored order.
+    let declared = Agent::ALL
         .iter()
         .copied()
-        .filter(|agent| {
-            decl.agents.iter().any(|name| {
-                Agent::parse_filter(name)
-                    .map(|values| values.contains(agent))
-                    .unwrap_or(false)
-            })
-        })
-        .collect()
+        .filter(|agent| declared.contains(agent))
+        .collect::<Vec<_>>();
+    Ok(requested
+        .iter()
+        .copied()
+        .filter(|agent| declared.contains(agent))
+        .collect())
+}
+
+/// Whether one agent can receive a project-scope skill projection here.
+pub(crate) fn agent_supports_project_skills(agent: Agent, project_root: &Path) -> bool {
+    matches!(
+        agent.skills_root(Scope::Project, Some(project_root)),
+        Ok(Some(_))
+    )
 }
 
 /// Project every selected declaration into project-local agent roots only.

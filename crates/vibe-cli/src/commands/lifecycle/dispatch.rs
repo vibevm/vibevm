@@ -1,7 +1,10 @@
 //! One-contribution lifecycle execution with per-transition checkpoints.
 
 use anyhow::Result;
-use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime};
+use vibe_lifecycle::handlers::{
+    BinaryBackend, HandlerRuntime, PackageBindingArtifact, PackageBindingBackend,
+    PackageBindingOutcome,
+};
 use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
 use vibe_lifecycle::{
     ExecutionReuse, HandlerExecution, LifecycleRun, LifecycleRunHandle, RunMetadata,
@@ -21,7 +24,8 @@ pub(super) fn dispatch_plan_untracked(
     let mut run =
         LifecycleRun::untracked(plan.project.clone(), plan.world.clone(), metadata.clone());
     let mut reports = Vec::with_capacity(plan.executions.len());
-    let runtime = runtime(ctx);
+    let package_binding = ProjectPackageBindingBackend::new(plan);
+    let runtime = runtime(ctx, &package_binding);
     for execution in plan.executions.iter() {
         let handler = HandlerExecution::from_row(&execution.row);
         let outcome =
@@ -75,7 +79,8 @@ pub(super) fn dispatch_plan_with_run(
     run: &LifecycleRunHandle,
     metadata: &RunMetadata,
 ) -> Result<Vec<LifecycleContributionReport>> {
-    let runtime = runtime(ctx);
+    let package_binding = ProjectPackageBindingBackend::new(plan);
+    let runtime = runtime(ctx, &package_binding);
     let mut reports = Vec::with_capacity(plan.executions.len());
     let mut run = run
         .lock()
@@ -116,6 +121,18 @@ pub(super) fn dispatch_plan_with_run(
         );
         render_outcome(ctx, &report);
         reports.push(report);
+    }
+    if plan.package_phase_planned {
+        let reconciled = reports.iter().any(|report| {
+            report.key == world::PACKAGE_SKILL_RECONCILE_KEY
+                && matches!(report.status.as_str(), "ok" | "fresh")
+        });
+        if reconciled {
+            let mut keep = plan.package_desired_keys.clone();
+            keep.insert(world::PACKAGE_SKILL_RECONCILE_KEY.to_string());
+            keep.insert(world::PACKAGE_SKILL_RECOVER_KEY.to_string());
+            run.retain_execution_prefix(vibe_mcp::pkgskill::PROJECT_SKILL_PREFIX, &keep)?;
+        }
     }
     Ok(reports)
 }
@@ -160,7 +177,10 @@ fn contribution_status_report(
     }
 }
 
-fn runtime(ctx: &output::Context) -> HandlerRuntime<'static> {
+fn runtime<'a>(
+    ctx: &output::Context,
+    package_binding: &'a dyn PackageBindingBackend,
+) -> HandlerRuntime<'a> {
     static PROCESS: SystemProcessRunner = SystemProcessRunner;
     static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
     static BINARY_QUIET: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: true };
@@ -172,6 +192,7 @@ fn runtime(ctx: &output::Context) -> HandlerRuntime<'static> {
         } else {
             &BINARY_INHERIT
         },
+        package_binding,
         probe: &PROBE,
         streams: if ctx.is_json() {
             StreamMode::Capture
@@ -180,6 +201,114 @@ fn runtime(ctx: &output::Context) -> HandlerRuntime<'static> {
         } else {
             StreamMode::Inherit
         },
+    }
+}
+
+struct ProjectPackageBindingBackend<'a> {
+    project_root: &'a std::path::Path,
+    bindings: &'a std::collections::BTreeMap<String, vibe_mcp::pkgskill::ProjectSkillBinding>,
+    desired: &'a std::collections::BTreeSet<String>,
+}
+
+impl<'a> ProjectPackageBindingBackend<'a> {
+    fn new(plan: &'a world::RitualPlan) -> Self {
+        Self {
+            project_root: std::path::Path::new(&plan.project.root),
+            bindings: &plan.package_bindings,
+            desired: &plan.package_desired_keys,
+        }
+    }
+}
+
+impl PackageBindingBackend for ProjectPackageBindingBackend<'_> {
+    fn probe(
+        &self,
+        key: &str,
+        artifacts: &[vibe_wire::generated::lifecycle_state::StateArtifact],
+    ) -> Result<bool, String> {
+        if key == world::PACKAGE_SKILL_RECOVER_KEY {
+            return vibe_mcp::pkgskill::probe_recovered_project_skill_bindings(
+                self.project_root,
+                artifacts,
+            )
+            .map_err(|error| error.to_string());
+        }
+        if key == world::PACKAGE_SKILL_RECONCILE_KEY {
+            return vibe_mcp::pkgskill::probe_vanished_project_skill_bindings(
+                self.project_root,
+                self.desired,
+                artifacts,
+            )
+            .map_err(|error| error.to_string());
+        }
+        let binding = self.bindings.get(key).ok_or_else(|| {
+            format!("package binding `{key}` was not present in the prepared plan")
+        })?;
+        vibe_mcp::pkgskill::probe_project_skill_binding(self.project_root, binding, artifacts)
+            .map_err(|error| error.to_string())
+    }
+
+    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
+        if key == world::PACKAGE_SKILL_RECOVER_KEY {
+            let reports = vibe_mcp::pkgskill::recover_project_skill_bindings(self.project_root)
+                .map_err(|error| error.to_string())?;
+            return Ok(PackageBindingOutcome {
+                artifacts: Vec::new(),
+                message: Some(format!(
+                    "recovered {} pending package-skill target(s)",
+                    reports.len()
+                )),
+            });
+        }
+        if key == world::PACKAGE_SKILL_RECONCILE_KEY {
+            let reports = vibe_mcp::pkgskill::reconcile_vanished_project_skill_bindings(
+                self.project_root,
+                self.desired,
+            )
+            .map_err(|error| error.to_string())?;
+            return Ok(PackageBindingOutcome {
+                artifacts: Vec::new(),
+                message: Some(format!(
+                    "reconciled {} vanished project skill target(s)",
+                    reports.len()
+                )),
+            });
+        }
+        let binding = self.bindings.get(key).ok_or_else(|| {
+            format!("package binding `{key}` was not present in the prepared plan")
+        })?;
+        let reports =
+            vibe_mcp::pkgskill::reconcile_project_skill_binding(self.project_root, binding)
+                .map_err(|error| error.to_string())?;
+        let artifacts = if binding.selected_files.is_some() {
+            binding
+                .targets
+                .iter()
+                .map(|target| PackageBindingArtifact {
+                    id: binding.artifact_id(target.agent),
+                    kind: "agent-skill".into(),
+                    path: vibe_core::machine_json_path(&target.path),
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+        let summary = if reports.is_empty() && binding.selected_files.is_none() {
+            "source=missing, no receipt-owned target changed".to_string()
+        } else {
+            reports
+                .iter()
+                .map(|report| format!("{}={}", report.agent, report.status))
+                .collect::<Vec<_>>()
+                .join(", ")
+        };
+        Ok(PackageBindingOutcome {
+            artifacts,
+            message: Some(format!(
+                "projected skill `{}` ({summary})",
+                binding.skill.decl.name
+            )),
+        })
     }
 }
 
@@ -249,6 +378,10 @@ fn render_outcome(ctx: &output::Context, report: &LifecycleContributionReport) {
             report.key, report.provider
         ));
     } else if let Some(message) = &report.message {
-        ctx.step(&format!("log [{}]: {message}", report.provider));
+        if report.key.starts_with("@vibe/package/skill/") {
+            ctx.step(&format!("package binding [{}]: {message}", report.provider));
+        } else {
+            ctx.step(&format!("log [{}]: {message}", report.provider));
+        }
     }
 }

@@ -14,16 +14,22 @@ description = "Model Context Protocol server for vibevm — exposes installed pa
 specmark.workspace = true
 vibe-core.workspace = true
 vibe-workspace.workspace = true
+vibe-wire.workspace = true
 # The `explain` MCP tool is a thin surface over the shared `vibe-trace`
 # capability, which both the MCP tool and the `vibe explain` CLI call.
 vibe-trace.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+sha2.workspace = true
 toml.workspace = true
 dirs.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-
-[dev-dependencies]
 tempfile.workspace = true
+cap-std.workspace = true
+cap-fs-ext.workspace = true
+unicase.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+winapi-util.workspace = true

@@ -1,0 +1,23 @@
+{
+  "binding": [
+    {
+      "key": "@vibe/package/skill/org.demo/tools/review",
+      "provider": "org.demo/tools",
+      "skill": "review",
+      "source_snapshot": "sha256:abc",
+      "target": [
+        {
+          "agent": "claude",
+          "path": ".claude/skills/review",
+          "file": [
+            {
+              "path": "SKILL.md",
+              "sha256": "sha256:def"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "schema": 2
+}

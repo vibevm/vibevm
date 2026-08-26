@@ -102,12 +102,15 @@ pub use execution::{
     BuiltinRegistry, ContributionOutcome, DispatchBatch, DispatchError, ExecutionSession,
     HandlerExecution, RunMetadata, SlotTarget,
 };
+pub use handlers::{
+    NoPackageBindingBackend, PackageBindingArtifact, PackageBindingBackend, PackageBindingOutcome,
+};
 pub use registry::{
     CollectionError, CollectionNotice, ContributionTier, DependencyExtensionSource,
     DependencyProvider, DependencyProviderId, EffectiveManifestKind, ExecutableContribution,
     ExecutablePlan, ExtensionProvider, ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld,
     HostExtensionSource, HostIdentity, HostProvider, RegistryState, RegistryView, SelectorSubject,
-    collect_extensions,
+    SyntheticPresetSource, collect_extensions, collect_extensions_with_presets,
 };
 pub use runner::{
     ExecutionReuse, ExecutionTransition, FailedExecutionTransition, LifecycleRun,

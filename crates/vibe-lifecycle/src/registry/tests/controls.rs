@@ -359,3 +359,59 @@ fn row<'registry>(
         .find(|row| row.key().as_str().ends_with(suffix))
         .unwrap_or_else(|| panic!("test row with suffix `{suffix}` exists"))
 }
+
+/// Reserved engine rows cannot be disabled (or activated) by host controls:
+/// the package-skill recovery/reconcile contributions must always run so a
+/// stale target never outlives its evidence.
+#[test]
+fn reserved_engine_rows_refuse_host_disable_and_activation() {
+    use crate::registry::{
+        ExtensionProvider, SyntheticPresetSource, collect_extensions_with_presets,
+    };
+
+    let preset = SyntheticPresetSource {
+        key: ExtensionKey::authored("@vibe/package/skill/reconcile"),
+        provider: ExtensionProvider::Host(
+            super::support::host(
+                vec![],
+                ExtensionsControl {
+                    uses: vec![],
+                    disable: vec![],
+                },
+            )
+            .provider,
+        ),
+        declaration: super::support::declaration("package-skill-reconcile", "phase:package"),
+    };
+    let host = super::support::host(
+        vec![],
+        ExtensionsControl {
+            uses: vec![],
+            disable: vec![ExtensionKey::authored("@vibe/package/skill/reconcile")],
+        },
+    );
+    let error =
+        collect_extensions_with_presets(super::support::world(vec![], host, None), vec![preset])
+            .unwrap_err();
+    assert!(
+        error.to_string().contains("reserved engine contribution"),
+        "{error}"
+    );
+
+    let host = super::support::host(
+        vec![],
+        ExtensionsControl {
+            uses: vec![vibe_core::manifest::ExtensionUse {
+                reference: ExtensionKey::authored("@vibe/package/skill/recover"),
+                config: None,
+            }],
+            disable: vec![],
+        },
+    );
+    let error = collect_extensions_with_presets(super::support::world(vec![], host, None), vec![])
+        .unwrap_err();
+    assert!(
+        error.to_string().contains("reserved engine contribution"),
+        "{error}"
+    );
+}

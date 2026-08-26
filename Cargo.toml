@@ -131,6 +131,15 @@ quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
 libc = "0.2"
 winapi-util = "0.1.11"
+# Capability-relative filesystem access for the package-skill receipt
+# transaction (no-follow directory handles, capability-pinned mutation).
+# MIT/Apache-2.0 (cap-std, cap-fs-ext); the patched 4.0.2 line sits above the
+# old Windows-device advisory floor.
+cap-std = "4.0.2"
+cap-fs-ext = "4.0.2"
+# Conservative full Unicode case-fold keys for receipt/file-row dedup.
+# MIT/Apache-2.0.
+unicase = "2.9"
 anyhow = "1"
 arboard = "3.4"
 thiserror = "2"

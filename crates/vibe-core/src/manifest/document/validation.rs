@@ -94,6 +94,12 @@ impl Manifest {
             }
         }
 
+        for skill in &self.skills {
+            skill
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+        }
+
         // Preserve the established diagnostic order: the legacy role,
         // visibility, and package-role checks above still win. Extension
         // declarations are judged next; the existing MCP-kind check stays last.

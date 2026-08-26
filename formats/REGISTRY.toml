@@ -145,6 +145,14 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+[format.package-skill-receipt]
+epoch = 1
+schema = "schemas/package_skill_receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/package-skills/e1"
+sunset = "none"
+
 # ── OpenAI-compatible provider wire (2 JTD), PROP-000 §16 / PROP-054 §6.4 ─
 # The request is published to independent OpenAI-compatible parsers, while the
 # response has one parser owned by this project. Both are transient and can be

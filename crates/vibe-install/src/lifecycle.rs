@@ -229,6 +229,7 @@ impl InstallSlotLifecycle {
         let runtime = HandlerRuntime {
             process: &SystemProcessRunner,
             binary: &binary,
+            package_binding: &vibe_lifecycle::NoPackageBindingBackend,
             probe: &SystemProbe,
             streams: self.streams,
         };

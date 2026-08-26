@@ -157,7 +157,12 @@ impl ExecutionSession {
         envelope: Context,
     ) -> Result<ContributionOutcome, DispatchError> {
         let reply = match &row.declaration().handler {
-            ExtensionHandler::Builtin { name } => BuiltinRegistry::dispatch(name, row, &envelope)?,
+            ExtensionHandler::Builtin { name } => BuiltinRegistry::dispatch(
+                name,
+                row,
+                &envelope,
+                &crate::handlers::NoPackageBindingBackend,
+            )?,
             handler => {
                 return Err(DispatchError::UnsupportedHandler {
                     key: row.key().clone(),
@@ -179,8 +184,14 @@ impl ExecutionSession {
         envelope: Context,
         runtime: &HandlerRuntime<'_>,
     ) -> Result<ContributionOutcome, DispatchError> {
-        if matches!(row.declaration().handler, ExtensionHandler::Builtin { .. }) {
-            return self.dispatch_prepared(row, envelope);
+        if let ExtensionHandler::Builtin { name } = &row.declaration().handler {
+            let reply = BuiltinRegistry::dispatch(name, row, &envelope, runtime.package_binding)?;
+            return self.accept_reply(
+                &row.key().to_string(),
+                envelope,
+                reply,
+                HandlerStreams::default(),
+            );
         }
         let (reply, streams) = runtime.dispatch(row, &envelope).map_err(|error| {
             let streams = error.streams().cloned().unwrap_or_default();
@@ -199,11 +210,14 @@ impl ExecutionSession {
         envelope: Context,
         runtime: &HandlerRuntime<'_>,
     ) -> Result<ContributionOutcome, DispatchError> {
-        if matches!(
-            execution.row().declaration().handler,
-            ExtensionHandler::Builtin { .. }
-        ) {
-            return self.dispatch_prepared(execution.row(), envelope);
+        if let ExtensionHandler::Builtin { name } = &execution.row().declaration().handler {
+            let reply = BuiltinRegistry::dispatch(
+                name,
+                execution.row(),
+                &envelope,
+                runtime.package_binding,
+            )?;
+            return self.accept_reply(&execution.key(), envelope, reply, HandlerStreams::default());
         }
         let (reply, streams) =
             runtime
@@ -226,6 +240,13 @@ impl ExecutionSession {
         reply: Reply,
         streams: HandlerStreams,
     ) -> Result<ContributionOutcome, DispatchError> {
+        crate::handlers::validate_reply(&reply, &envelope, key).map_err(|error| {
+            DispatchError::InvalidReply {
+                key: key.to_string(),
+                reason: error.to_string(),
+                streams: Box::new(streams.clone()),
+            }
+        })?;
         if reply.envelope != 1 {
             return Err(DispatchError::UnsupportedReplyEpoch {
                 key: key.to_string(),
@@ -319,6 +340,24 @@ pub enum DispatchError {
     InvalidLogConfig { key: ExtensionKey, reason: String },
 
     #[error(
+        "package binding `{key}` failed: {reason}; the lifecycle stopped before every later contribution \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE; \
+          fix: repair the declared skill source or its project-local target and rerun)"
+    )]
+    PackageBinding { key: String, reason: String },
+
+    #[error(
+        "extension `{key}` returned an invalid reply: {reason} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE; \
+          fix: emit unique, project-contained, existing artifacts)"
+    )]
+    InvalidReply {
+        key: String,
+        reason: String,
+        streams: Box<HandlerStreams>,
+    },
+
+    #[error(
         "extension `{key}` config cannot enter the lifecycle envelope: {reason} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \
           fix: use TOML values representable in the epoch-1 JSON envelope)"
@@ -361,9 +400,9 @@ impl DispatchError {
     #[must_use]
     pub fn streams(&self) -> Option<&HandlerStreams> {
         match self {
-            Self::FailedReply { streams, .. } | Self::Handler { streams, .. } => {
-                Some(streams.as_ref())
-            }
+            Self::FailedReply { streams, .. }
+            | Self::InvalidReply { streams, .. }
+            | Self::Handler { streams, .. } => Some(streams.as_ref()),
             _ => None,
         }
     }

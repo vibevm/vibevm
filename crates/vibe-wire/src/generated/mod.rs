@@ -26,6 +26,7 @@ pub mod lifecycle_report;
 pub mod lifecycle_state;
 pub mod list_report;
 pub mod llm;
+pub mod package_skill_receipt;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
 pub mod shared;

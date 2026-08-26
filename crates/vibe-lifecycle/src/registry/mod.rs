@@ -7,12 +7,14 @@ mod model;
 mod selector;
 mod view;
 
-pub use collect::{CollectionError, CollectionNotice, collect_extensions};
+pub use collect::{
+    CollectionError, CollectionNotice, collect_extensions, collect_extensions_with_presets,
+};
 pub use model::{
     ContributionTier, DependencyExtensionSource, DependencyProvider, DependencyProviderId,
     EffectiveManifestKind, ExecutableContribution, ExecutablePlan, ExtensionProvider,
     ExtensionRegistry, ExtensionRegistryRow, ExtensionWorld, HostExtensionSource, HostIdentity,
-    HostProvider, RegistryView,
+    HostProvider, RegistryView, SyntheticPresetSource,
 };
 pub use selector::SelectorSubject;
 pub use view::RegistryState;

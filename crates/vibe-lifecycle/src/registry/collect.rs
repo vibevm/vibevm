@@ -12,7 +12,7 @@ use vibe_core::manifest::{ExtensionKey, ExtensionUse};
 
 use super::model::{
     ContributionTier, DependencyProvider, ExtensionProvider, ExtensionRegistry,
-    ExtensionRegistryRow, ExtensionWorld, HostIdentity, HostProvider,
+    ExtensionRegistryRow, ExtensionWorld, HostIdentity, HostProvider, SyntheticPresetSource,
 };
 use super::selector::{CompiledSelector, SelectorCompileError};
 
@@ -111,6 +111,12 @@ pub enum CollectionError {
         "pure virtual workspace cannot declare extension `{id}`; move it to a project/package manifest (spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR)"
     )]
     VirtualHostDeclaration { id: String },
+
+    /// A host control targeted an engine-owned synthetic row.
+    #[error(
+        "host control `{key}` targets a reserved engine contribution; synthetic package-skill rows cannot be activated, disabled, or re-tiered (spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW)"
+    )]
+    ReservedControl { key: ExtensionKey },
 }
 
 /// Collect every declaration, apply host controls, and freeze effective order.
@@ -119,6 +125,16 @@ pub enum CollectionError {
 /// This function performs no filesystem, environment, resolver, or workspace
 /// access and never infers an effective stack.
 pub fn collect_extensions(world: ExtensionWorld) -> Result<ExtensionRegistry, CollectionError> {
+    collect_extensions_with_presets(world, Vec::new())
+}
+
+/// Collect with algorithmic preset rows placed before every manifest-sourced
+/// contribution. Constructing the registry is pure and never executes a
+/// preset backend.
+pub fn collect_extensions_with_presets(
+    world: ExtensionWorld,
+    presets: Vec<SyntheticPresetSource>,
+) -> Result<ExtensionRegistry, CollectionError> {
     let ExtensionWorld {
         installed,
         host,
@@ -127,6 +143,27 @@ pub fn collect_extensions(world: ExtensionWorld) -> Result<ExtensionRegistry, Co
     let mut rows = Vec::new();
     let mut row_by_key = BTreeMap::new();
     let mut notices = Vec::new();
+
+    for (preset_ordinal, preset) in presets.into_iter().enumerate() {
+        validate_declaration(&preset.key, &preset.declaration)?;
+        let selector = compile_selector(&preset.key, preset.declaration.applies_to.as_ref())?;
+        let row = ExtensionRegistryRow {
+            key: preset.key,
+            provider: preset.provider,
+            effective_config: preset.declaration.config.clone(),
+            declaration: preset.declaration,
+            natural_tier: ContributionTier::Preset,
+            effective_tier: ContributionTier::Preset,
+            provider_ordinal: Some(preset_ordinal),
+            declaration_ordinal: 0,
+            activation_ordinal: None,
+            active_by_default: true,
+            activated: false,
+            disabled: false,
+            selector,
+        };
+        push_unique_row(&mut rows, &mut row_by_key, row)?;
+    }
 
     for (provider_ordinal, source) in installed.into_iter().enumerate() {
         let is_effective_stack = effective_stack.as_ref() == Some(&source.provider.id);
@@ -296,6 +333,14 @@ fn declaration_site(row: &ExtensionRegistryRow) -> String {
     }
 }
 
+/// Engine-owned synthetic rows carry the reserved `@vibe/` key prefix and are
+/// immune to host activation and disable controls.
+const RESERVED_ROW_PREFIX: &str = "@vibe/";
+
+fn reserved(key: &ExtensionKey) -> bool {
+    key.as_str().starts_with(RESERVED_ROW_PREFIX)
+}
+
 fn apply_activations(
     uses: Vec<ExtensionUse>,
     row_by_key: &BTreeMap<ExtensionKey, usize>,
@@ -304,6 +349,11 @@ fn apply_activations(
 ) -> Result<(), CollectionError> {
     let mut first_use_by_key = BTreeMap::new();
     for (activation_ordinal, activation) in uses.into_iter().enumerate() {
+        if reserved(&activation.reference) {
+            return Err(CollectionError::ReservedControl {
+                key: activation.reference,
+            });
+        }
         if let Some(first) =
             first_use_by_key.insert(activation.reference.clone(), activation_ordinal)
         {
@@ -342,6 +392,9 @@ fn apply_disables(
 ) -> Result<(), CollectionError> {
     let mut seen = BTreeSet::new();
     for key in disables {
+        if reserved(&key) {
+            return Err(CollectionError::ReservedControl { key });
+        }
         if !seen.insert(key.clone()) {
             continue;
         }

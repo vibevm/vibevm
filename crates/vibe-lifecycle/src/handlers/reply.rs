@@ -37,7 +37,7 @@ pub(super) fn parse_reply(bytes: &[u8], key: &str) -> Result<Reply, HandlerError
     Ok(reply)
 }
 
-pub(super) fn validate_reply(
+pub(crate) fn validate_reply(
     reply: &Reply,
     context: &Context,
     key: &str,
@@ -49,6 +49,9 @@ pub(super) fn validate_reply(
             streams: None,
         });
     }
+    if reply.artifacts.is_empty() {
+        return Ok(());
+    }
     let root = Path::new(&context.project.root)
         .canonicalize()
         .map_err(|error| HandlerError::Reply {
@@ -57,6 +60,7 @@ pub(super) fn validate_reply(
             streams: None,
         })?;
     let mut ids = std::collections::BTreeSet::new();
+    let mut paths = std::collections::BTreeSet::new();
     for artifact in &reply.artifacts {
         if artifact.id.is_empty()
             || artifact.id.len() > 256
@@ -76,6 +80,8 @@ pub(super) fn validate_reply(
                 streams: None,
             });
         }
+        // Physical identity, not the raw spelling: two case-fold aliases of
+        // one file are one artifact.
         let path =
             Path::new(&artifact.path)
                 .canonicalize()
@@ -88,6 +94,19 @@ pub(super) fn validate_reply(
             return Err(HandlerError::Reply {
                 key: key.into(),
                 reason: "artifact escapes selected project".into(),
+                streams: None,
+            });
+        }
+        if !paths.insert(path.clone())
+            || context.artifacts.iter().any(|prior| {
+                Path::new(&prior.path)
+                    .canonicalize()
+                    .is_ok_and(|prior| prior == path)
+            })
+        {
+            return Err(HandlerError::Reply {
+                key: key.into(),
+                reason: format!("duplicate artifact path `{}`", artifact.path),
                 streams: None,
             });
         }

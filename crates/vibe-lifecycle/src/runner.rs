@@ -1,5 +1,6 @@
 //! One canonical envelope/fingerprint/state/handler transition.
 
+use std::collections::BTreeSet;
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
@@ -212,6 +213,18 @@ impl LifecycleRun {
         Ok(())
     }
 
+    pub fn retain_execution_prefix(
+        &mut self,
+        prefix: &str,
+        keep: &BTreeSet<String>,
+    ) -> Result<(), LifecycleRunError> {
+        self.state
+            .as_mut()
+            .ok_or(LifecycleRunError::UntrackedCheckpoint)?
+            .retain_prefixed(prefix, keep)?;
+        Ok(())
+    }
+
     pub fn execute_one(
         &mut self,
         execution: &HandlerExecution,
@@ -249,14 +262,27 @@ impl LifecycleRun {
                 return Err(self.checkpoint_preparation_failure(execution, phase, started, failure));
             }
         };
-        if reuse == ExecutionReuse::FreshnessAware
-            && !self.force
-            && let Some(prior) = self
-                .state
-                .as_ref()
-                .and_then(|state| state.reusable_record(&key, &fingerprint))
-                .cloned()
-        {
+        let prior = (reuse == ExecutionReuse::FreshnessAware && !self.force)
+            .then(|| {
+                self.state
+                    .as_ref()
+                    .and_then(|state| state.reusable_record(&key, &fingerprint))
+                    .cloned()
+            })
+            .flatten();
+        let prior = prior.filter(|prior| {
+            let vibe_core::manifest::ExtensionHandler::Builtin { name } =
+                &execution.row().declaration().handler
+            else {
+                return true;
+            };
+            !crate::BuiltinRegistry::is_package_binding(name, execution.row())
+                || runtime
+                    .package_binding
+                    .probe(&key, &prior.artifacts)
+                    .unwrap_or(false)
+        });
+        if let Some(prior) = prior {
             self.session
                 .as_mut()
                 .ok_or(LifecycleRunError::Unbound)?

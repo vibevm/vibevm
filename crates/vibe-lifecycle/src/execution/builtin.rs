@@ -7,6 +7,7 @@ use vibe_wire::generated::lifecycle::e1::context::Context;
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
 
 use crate::ExtensionRegistryRow;
+use crate::handlers::PackageBindingBackend;
 
 use super::DispatchError;
 
@@ -17,6 +18,13 @@ pub struct BuiltinRegistry;
 impl BuiltinRegistry {
     /// Stable names accepted by this build of vibe.
     pub const NAMES: &'static [&'static str] = &["log"];
+    const PACKAGE_SKILL: &'static str = "package-skill-project";
+
+    pub(crate) fn is_package_binding(name: &str, row: &ExtensionRegistryRow) -> bool {
+        name == Self::PACKAGE_SKILL
+            && row.effective_tier() == crate::ContributionTier::Preset
+            && row.key().to_string().starts_with("@vibe/package/skill/")
+    }
 
     /// Dispatch exactly one known builtin against the canonical envelope.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-BUILTIN")]
@@ -24,15 +32,47 @@ impl BuiltinRegistry {
         name: &str,
         row: &ExtensionRegistryRow,
         envelope: &Context,
+        package_binding: &dyn PackageBindingBackend,
     ) -> Result<Reply, DispatchError> {
         match name {
             "log" => log(row, envelope),
+            name if Self::is_package_binding(name, row) => package_skill(row, package_binding),
             unknown => Err(DispatchError::UnknownBuiltin {
                 key: row.key().clone(),
                 name: unknown.to_string(),
             }),
         }
     }
+}
+
+fn package_skill(
+    row: &ExtensionRegistryRow,
+    backend: &dyn PackageBindingBackend,
+) -> Result<Reply, DispatchError> {
+    let key = row.key().to_string();
+    let outcome = backend
+        .execute(&key)
+        .map_err(|reason| DispatchError::PackageBinding {
+            key: key.clone(),
+            reason,
+        })?;
+    Ok(Reply {
+        artifacts: outcome
+            .artifacts
+            .into_iter()
+            .map(
+                |artifact| vibe_wire::generated::lifecycle::e1::reply::ReplyArtifact {
+                    id: artifact.id,
+                    kind: artifact.kind,
+                    path: artifact.path,
+                },
+            )
+            .collect(),
+        envelope: 1,
+        status: ReplyStatus::Ok,
+        tasks: Vec::new(),
+        message: outcome.message,
+    })
 }
 
 fn log(row: &ExtensionRegistryRow, envelope: &Context) -> Result<Reply, DispatchError> {

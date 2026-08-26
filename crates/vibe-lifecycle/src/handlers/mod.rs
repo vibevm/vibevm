@@ -8,6 +8,7 @@ use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
 use vibe_core::manifest::ExtensionHandler;
 use vibe_wire::generated::lifecycle::e1::context::Context;
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
+use vibe_wire::generated::lifecycle_state::StateArtifact;
 use vibe_workspace::hooks::{InterpreterProbe, Platform, select_invocation};
 
 use crate::process::{
@@ -19,7 +20,8 @@ use crate::{ExtensionProvider, ExtensionRegistryRow, HandlerExecution, SlotTarge
 const REPLY_CAP: usize = 1024 * 1024;
 
 mod reply;
-use reply::{parse_reply, validate_reply};
+use reply::parse_reply;
+pub(crate) use reply::validate_reply;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
@@ -162,10 +164,81 @@ impl BinaryBackend for NoBinaryBackend {
     }
 }
 
+/// Canonical artifact emitted by an injected algorithmic package binding.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
+pub struct PackageBindingArtifact {
+    pub id: String,
+    pub kind: String,
+    pub path: String,
+}
+
+/// Result of one package binding before it is lowered to the lifecycle reply.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
+pub struct PackageBindingOutcome {
+    pub artifacts: Vec<PackageBindingArtifact>,
+    pub message: Option<String>,
+}
+
+/// Transport-neutral injected owner for algorithmic package bindings. The
+/// lifecycle crate knows the reserved execution identity but not the concrete
+/// skill writer that serves it.
+///
+/// ```
+/// use vibe_lifecycle::{PackageBindingBackend, PackageBindingOutcome};
+/// use vibe_wire::generated::lifecycle_state::StateArtifact;
+///
+/// /// A minimal algorithmic backend: owns nothing, echoes one message.
+/// struct Echo;
+///
+/// impl PackageBindingBackend for Echo {
+///     fn probe(&self, _key: &str, _artifacts: &[StateArtifact]) -> Result<bool, String> {
+///         Ok(false)
+///     }
+///
+///     fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
+///         Ok(PackageBindingOutcome {
+///             artifacts: Vec::new(),
+///             message: Some(format!("echo `{key}`")),
+///         })
+///     }
+/// }
+///
+/// let backend: &dyn PackageBindingBackend = &Echo;
+/// assert!(!backend.probe("@vibe/package/skill/demo", &[]).unwrap());
+/// let outcome = backend.execute("@vibe/package/skill/demo").unwrap();
+/// assert_eq!(
+///     outcome.message.as_deref(),
+///     Some("echo `@vibe/package/skill/demo`")
+/// );
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW")]
+pub trait PackageBindingBackend: Send + Sync {
+    /// Verify the strict owner receipt and every recorded owned output before
+    /// lifecycle state may hydrate this internal execution as `fresh`.
+    fn probe(&self, key: &str, artifacts: &[StateArtifact]) -> Result<bool, String>;
+
+    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String>;
+}
+
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PRESET-LAW")]
+pub struct NoPackageBindingBackend;
+impl PackageBindingBackend for NoPackageBindingBackend {
+    fn probe(&self, _key: &str, _artifacts: &[StateArtifact]) -> Result<bool, String> {
+        Ok(false)
+    }
+
+    fn execute(&self, key: &str) -> Result<PackageBindingOutcome, String> {
+        Err(format!("no package binding backend configured for `{key}`"))
+    }
+}
+
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
 pub struct HandlerRuntime<'a> {
     pub process: &'a dyn ProcessRunner,
     pub binary: &'a dyn BinaryBackend,
+    pub package_binding: &'a dyn PackageBindingBackend,
     pub probe: &'a dyn InterpreterProbe,
     pub streams: StreamMode,
 }

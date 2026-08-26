@@ -150,7 +150,11 @@ fn copy_is_versioned_while_in_place_is_unversioned() {
     let copy = locked("org.demo", "copy", PackageKind::Flow);
     let copy_root = seed_slot(&workspace, &copy);
     assert_eq!(
-        dependency_source(&workspace, &copy).unwrap().provider.root,
+        dependency_source(&workspace, &copy)
+            .unwrap()
+            .source
+            .provider
+            .root,
         copy_root
     );
     assert!(copy_root.ends_with("1.0.0"));
@@ -161,6 +165,7 @@ fn copy_is_versioned_while_in_place_is_unversioned() {
     assert_eq!(
         dependency_source(&workspace, &in_place)
             .unwrap()
+            .source
             .provider
             .root,
         in_place_root
@@ -227,7 +232,7 @@ fn selected_host_closure_filters_unrelated_lock_rows_but_keeps_lock_order() {
     assert_eq!(
         sources
             .iter()
-            .map(|source| source.provider.id.name().as_str())
+            .map(|source| source.source.provider.id.name().as_str())
             .collect::<Vec<_>>(),
         ["b", "a"]
     );
@@ -374,6 +379,63 @@ config = { message = "build" }
 }
 
 #[test]
+fn package_skill_presets_use_only_selected_member_and_reachable_world() {
+    let project = tempfile::tempdir().unwrap();
+    let selected = project.path().join("selected");
+    let sibling = project.path().join("sibling");
+    std::fs::create_dir_all(selected.join("skills/selected")).unwrap();
+    std::fs::create_dir_all(sibling.join("skills/sibling")).unwrap();
+    std::fs::write(
+        project.path().join("vibe.toml"),
+        "[project]\nname='root'\nversion='0.1.0'\n[workspace]\nmembers=['selected','sibling']\n",
+    )
+    .unwrap();
+    std::fs::write(
+        selected.join("vibe.toml"),
+        "[package]\ngroup='org.host'\nname='selected'\nkind='tool'\nversion='0.1.0'\n\
+         [[skill]]\nname='selected-skill'\npath='skills/selected'\n",
+    )
+    .unwrap();
+    std::fs::write(selected.join("skills/selected/SKILL.md"), "selected").unwrap();
+    std::fs::write(
+        sibling.join("vibe.toml"),
+        "[package]\ngroup='org.host'\nname='sibling'\nkind='tool'\nversion='0.1.0'\n\
+         [[skill]]\nname='sibling-skill'\npath='skills/sibling'\n",
+    )
+    .unwrap();
+    std::fs::write(sibling.join("skills/sibling/SKILL.md"), "sibling").unwrap();
+
+    let workspace = Workspace::load(project.path()).unwrap();
+    let unreachable = locked("org.demo", "unreachable", PackageKind::Tool);
+    let slot = seed_slot(&workspace, &unreachable);
+    std::fs::create_dir_all(slot.join("skills/unreachable")).unwrap();
+    let mut manifest = std::fs::read_to_string(slot.join("vibe.toml")).unwrap();
+    manifest.push_str("\n[[skill]]\nname='unreachable-skill'\npath='skills/unreachable'\n");
+    std::fs::write(slot.join("vibe.toml"), manifest).unwrap();
+    std::fs::write(slot.join("skills/unreachable/SKILL.md"), "unreachable").unwrap();
+    let mut lock = Lockfile::empty("test", "2026-08-26T00:00:00Z");
+    lock.packages = vec![unreachable];
+    lock.write(workspace.lockfile_path()).unwrap();
+
+    let ritual = plan_default(&selected, &[Phase::Package]).unwrap();
+    assert_eq!(
+        ritual
+            .package_bindings
+            .keys()
+            .map(String::as_str)
+            .collect::<Vec<_>>(),
+        ["@vibe/package/skill/org.host/selected/selected-skill"]
+    );
+    assert!(
+        ritual
+            .world
+            .packages
+            .iter()
+            .all(|package| package.name != "unreachable")
+    );
+}
+
+#[test]
 fn active_stack_short_name_is_exact_and_ambiguity_is_loud() {
     let project = tempfile::tempdir().unwrap();
     let workspace = workspace(&project);
@@ -381,10 +443,14 @@ fn active_stack_short_name_is_exact_and_ambiguity_is_loud() {
     let second = locked("org.two", "rust", PackageKind::Stack);
     seed_slot(&workspace, &first);
     seed_slot(&workspace, &second);
-    let installed = vec![
+    let loaded = [
         dependency_source(&workspace, &first).unwrap(),
         dependency_source(&workspace, &second).unwrap(),
     ];
+    let installed = loaded
+        .iter()
+        .map(|dependency| dependency.source.clone())
+        .collect::<Vec<_>>();
     let host =
         manifest("[project]\nname = \"host\"\nversion = \"0.1.0\"\n\n[active]\nstack = \"rust\"\n");
     let error = effective_stack(&host, &installed, WorldLoadMode::Default)

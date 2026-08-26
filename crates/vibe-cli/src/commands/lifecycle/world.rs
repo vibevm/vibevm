@@ -10,18 +10,24 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
-use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization};
+use vibe_core::manifest::{ExtensionKey, Lockfile, Manifest, Materialization, SkillDecl};
 use vibe_core::{Group, PackageKind, PackageName};
 use vibe_lifecycle::{
     DependencyExtensionSource, DependencyProvider, DependencyProviderId, EffectiveManifestKind,
     ExecutablePlan, ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity,
-    HostProvider, SelectorSubject, collect_extensions,
+    HostProvider, SelectorSubject, collect_extensions_with_presets,
 };
+use vibe_mcp::pkgskill::ProjectSkillBinding;
 use vibe_wire::generated::lifecycle::e1::context::{
     Project as EnvelopeProject, World as EnvelopeWorld, WorldPackage,
 };
 use vibe_workspace::Workspace;
 use vibe_workspace::vibedeps::{in_place_slot_abs_path, slot_abs_path};
+
+#[path = "world/package_skill.rs"]
+mod package_skill;
+pub(crate) use package_skill::RECONCILE_KEY as PACKAGE_SKILL_RECONCILE_KEY;
+pub(crate) use package_skill::RECOVER_KEY as PACKAGE_SKILL_RECOVER_KEY;
 
 /// Effective contribution plan and non-fatal collection notices for one ritual.
 #[derive(Debug)]
@@ -31,6 +37,9 @@ pub(crate) struct RitualPlan {
     pub(crate) project: EnvelopeProject,
     pub(crate) world: EnvelopeWorld,
     pub(crate) workspace_root: PathBuf,
+    pub(crate) package_bindings: BTreeMap<String, ProjectSkillBinding>,
+    pub(crate) package_desired_keys: BTreeSet<String>,
+    pub(crate) package_phase_planned: bool,
 }
 
 impl RitualPlan {
@@ -66,6 +75,9 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
         project: loaded.project,
         world: loaded.world,
         workspace_root: loaded.workspace_root,
+        package_bindings: loaded.package_bindings,
+        package_desired_keys: loaded.package_desired_keys,
+        package_phase_planned: phases.contains(&Phase::Package),
     })
 }
 
@@ -90,6 +102,9 @@ pub(crate) fn plan_clean(path: &Path) -> Result<RitualPlan> {
         project: loaded.project,
         world: loaded.world,
         workspace_root: loaded.workspace_root,
+        package_bindings: BTreeMap::new(),
+        package_desired_keys: BTreeSet::new(),
+        package_phase_planned: false,
     })
 }
 
@@ -107,6 +122,8 @@ pub(crate) struct LoadedRegistry {
     pub(crate) host_identity: HostIdentity,
     pub(crate) manifest_kind: EffectiveManifestKind,
     pub(crate) effective_stack: Option<DependencyProviderId>,
+    package_bindings: BTreeMap<String, ProjectSkillBinding>,
+    package_desired_keys: BTreeSet<String>,
 }
 
 /// Strict read-only inspection of one selected node's durable effective world.
@@ -146,7 +163,7 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         );
     }
 
-    let installed = if mode == WorldLoadMode::PreClean && !vibedeps_exists {
+    let loaded_dependencies = if mode == WorldLoadMode::PreClean && !vibedeps_exists {
         Vec::new()
     } else {
         let lock = if lock_exists {
@@ -161,7 +178,12 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         };
         dependency_sources(&workspace, &host_manifest, &lock, mode)?
     };
+    let installed = loaded_dependencies
+        .iter()
+        .map(|dependency| dependency.source.clone())
+        .collect::<Vec<_>>();
     let effective_stack = effective_stack(&host_manifest, &installed, mode)?;
+    let host_skills = host_manifest.skills.clone();
     let mut host = host_source(host_manifest, selected.clone())?;
     let host_identity = host.provider.identity.clone();
     if mode == WorldLoadMode::PreClean {
@@ -170,11 +192,24 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
 
     let project = envelope_project(&host.provider, &selected);
     let world = envelope_world(&workspace, &installed);
-    let registry = collect_extensions(ExtensionWorld {
-        installed,
-        host,
-        effective_stack: effective_stack.clone(),
-    })
+    let (presets, package_bindings, package_desired_keys) = if mode == WorldLoadMode::Default {
+        package_skill::presets(
+            &selected,
+            &host.provider,
+            &host_skills,
+            &loaded_dependencies,
+        )?
+    } else {
+        (Vec::new(), BTreeMap::new(), BTreeSet::new())
+    };
+    let registry = collect_extensions_with_presets(
+        ExtensionWorld {
+            installed,
+            host,
+            effective_stack: effective_stack.clone(),
+        },
+        presets,
+    )
     .context("collecting lifecycle extensions from the effective world")?;
     Ok(LoadedRegistry {
         registry,
@@ -184,7 +219,15 @@ fn load_registry(selected: &Path, mode: WorldLoadMode) -> Result<LoadedRegistry>
         host_identity,
         manifest_kind,
         effective_stack,
+        package_bindings,
+        package_desired_keys,
     })
+}
+
+#[derive(Debug, Clone)]
+pub(super) struct LoadedDependency {
+    pub(super) source: DependencyExtensionSource,
+    pub(super) skills: Vec<SkillDecl>,
 }
 
 fn effective_manifest_kind(manifest: &Manifest) -> EffectiveManifestKind {
@@ -303,7 +346,7 @@ fn dependency_sources(
     host: &Manifest,
     lock: &Lockfile,
     mode: WorldLoadMode,
-) -> Result<Vec<DependencyExtensionSource>> {
+) -> Result<Vec<LoadedDependency>> {
     let by_id: BTreeMap<(&Group, &str), usize> = lock
         .packages
         .iter()
@@ -363,7 +406,7 @@ fn dependency_sources(
 fn dependency_source(
     workspace: &Workspace,
     package: &vibe_core::manifest::LockedPackage,
-) -> Result<DependencyExtensionSource> {
+) -> Result<LoadedDependency> {
     let root = match package.materialization {
         Materialization::InPlace => {
             in_place_slot_abs_path(&workspace.root, &package.group, &package.name)
@@ -421,15 +464,18 @@ fn dependency_source(
         );
     }
 
-    Ok(DependencyExtensionSource {
-        provider: DependencyProvider {
-            id: DependencyProviderId::new(package.group.clone(), package.name.clone()),
-            root,
-            version: package.version.to_string(),
-            kind: package.kind,
-            content_hash: package.content_hash.clone(),
+    Ok(LoadedDependency {
+        skills: manifest.skills,
+        source: DependencyExtensionSource {
+            provider: DependencyProvider {
+                id: DependencyProviderId::new(package.group.clone(), package.name.clone()),
+                root,
+                version: package.version.to_string(),
+                kind: package.kind,
+                content_hash: package.content_hash.clone(),
+            },
+            declarations: manifest.extensions,
         },
-        declarations: manifest.extensions,
     })
 }
 
