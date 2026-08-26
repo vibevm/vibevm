@@ -6,8 +6,9 @@ use super::*;
 use crate::{DocTree, SpecAddress};
 
 use crate::compiler::ir::{
-    ArtifactId, ClosureContribution, ClosureDocument, ClosureNodeId, ContributionMeta,
-    DocumentAddress, EmittedIr, QualificationState, SourceFormatId, StaticCompileMode,
+    AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureNodeId,
+    ContributionMeta, DocumentAddress, EmittedIr, QualificationState, SourceFormatId,
+    StaticCompileMode,
 };
 
 fn name(value: &str) -> PassName {
@@ -45,7 +46,7 @@ fn closure() -> ClosureIr {
         }],
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: None,
         pending_embeds: None,
     }

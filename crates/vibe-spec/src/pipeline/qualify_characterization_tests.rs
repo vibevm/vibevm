@@ -6,13 +6,13 @@ use super::tests::MockSource;
 use super::*;
 use crate::DocTree;
 use crate::compiler::ir::{
-    ArtifactId, ClosureContribution, ClosureDocument, ClosureIr, ClosureNodeId, ContributionMeta,
-    DocumentAddress, QualificationState, StaticCompileMode,
+    AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureIr,
+    ClosureNodeId, ContributionMeta, DocumentAddress, QualificationState, StaticCompileMode,
 };
 use crate::compiler::pass::Pass;
 use crate::compiler::qualify::{
     QualifyPass, QualifyPassError, qualify_invocations, reset_qualify_invocations,
-    validate_absorption,
+    validate_planned_absorption,
 };
 
 fn ir_node(raw: &str, origin: &str, text: &str) -> ClosureDocument {
@@ -50,10 +50,17 @@ fn pending_closure(
         contributions,
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: None,
         pending_embeds: None,
     }
+}
+
+fn planned_plan(closure: &ClosureIr) -> &AbsorptionPlan {
+    let AbsorptionState::Planned(plan) = &closure.absorption else {
+        panic!("expected planned absorption state")
+    };
+    plan
 }
 
 #[test]
@@ -160,7 +167,7 @@ fn legacy_tail_rejects_a_bypassed_qualify_pass() {
         }],
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::Plain),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: None,
         pending_embeds: None,
     };
@@ -197,7 +204,7 @@ fn same_length_emission_reorder_is_rejected_before_legacy_emission() {
     };
     emission_order.swap(0, 1);
 
-    let error = validate_absorption(qualified.absorption.as_ref().unwrap(), &qualified)
+    let error = validate_planned_absorption(planned_plan(&qualified), &qualified)
         .expect_err("stale occurrence order must fail");
     assert!(matches!(
         error,
@@ -211,7 +218,7 @@ fn same_length_emission_reorder_is_rejected_before_legacy_emission() {
     let consumer = std::panic::catch_unwind(|| compile_static_continuation(qualified));
     assert!(
         consumer.is_err(),
-        "legacy absorb must reject before returning any emitted artifact"
+        "named absorb must reject before returning any emitted artifact"
     );
 }
 
@@ -240,7 +247,7 @@ fn top_level_reorder_is_bound_by_seed_meta_and_simple_address() {
         .unwrap();
     seed_swap.contributions.swap(0, 1);
     assert!(matches!(
-        validate_absorption(seed_swap.absorption.as_ref().unwrap(), &seed_swap),
+        validate_planned_absorption(planned_plan(&seed_swap), &seed_swap),
         Err(QualifyPassError::AbsorptionSeed {
             contribution: 0,
             expected: 0,
@@ -259,7 +266,7 @@ fn top_level_reorder_is_bound_by_seed_meta_and_simple_address() {
         .unwrap();
     meta_swap.contributions.swap(0, 1);
     assert!(matches!(
-        validate_absorption(meta_swap.absorption.as_ref().unwrap(), &meta_swap),
+        validate_planned_absorption(planned_plan(&meta_swap), &meta_swap),
         Err(QualifyPassError::AbsorptionContributionIdentity {
             contribution: 0,
             ..
@@ -286,7 +293,7 @@ fn top_level_reorder_is_bound_by_seed_meta_and_simple_address() {
         .unwrap();
     simple_swap.contributions.swap(0, 1);
     assert!(matches!(
-        validate_absorption(simple_swap.absorption.as_ref().unwrap(), &simple_swap),
+        validate_planned_absorption(planned_plan(&simple_swap), &simple_swap),
         Err(QualifyPassError::AbsorptionContributionIdentity {
             contribution: 0,
             ..

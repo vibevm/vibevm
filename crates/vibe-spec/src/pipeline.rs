@@ -11,7 +11,9 @@
 //!    fixed point (§7.1);
 //! 4. **qualify** — named `qualify` lowers aliases in both modes, plans
 //!    READ-ONCE absorption, and qualifies live node labels in qualified mode;
-//! 5. **emit** — the legacy tail absorbs, links, and concatenates surviving
+//! 5. **absorb** — named `absorb` projects every normal contribution to its
+//!    exact live occurrence order;
+//! 6. **emit** — the legacy tail links and concatenates surviving
 //!    nodes in topological order, each wrapped in
 //!    open/close markers (§11), so the output is reversible.
 //!
@@ -29,7 +31,7 @@ use std::fmt::Write as _;
 
 use crate::address::{SpecAddress, SpecAddressError};
 use crate::compiler::ir::{
-    ClosureContribution, ClosureIr, ContributionAbsorption, DocumentAddress, QualificationState,
+    AbsorptionState, ClosureContribution, ClosureIr, DocumentAddress, QualificationState,
     StaticCompileMode,
 };
 use crate::embed::{EmbedError, SectionSource};
@@ -118,7 +120,7 @@ pub fn compile_static_qualified(
 }
 
 /// The shared phase loop (PROP-035 §8): declared parse → gather → close → merge
-/// → embed → qualify schedule, then the legacy absorb/link/assemble/emit tail.
+/// → embed → qualify → absorb schedule, then the legacy link/assemble/emit tail.
 /// Both public modes traverse the same pass list; mode is whole-artifact input
 /// state, never a privileged wrapper branch.
 fn compile_static_inner(
@@ -126,17 +128,16 @@ fn compile_static_inner(
     source: &impl SectionSource,
     mode: StaticCompileMode,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
-    let closure = crate::compiler::builtin::compile_qualified_closure(seed, source, mode)?;
+    let closure = crate::compiler::builtin::compile_absorbed_closure(seed, source, mode)?;
     compile_static_continuation(closure)
 }
 
-/// Bridge from the named qualify pass into the still-legacy artifact tail.
+/// Bridge from the named absorb pass into the still-legacy artifact tail.
 ///
-/// Absorb consumes the occurrence-aligned plan produced from pre-rewrite text;
-/// it never recomputes against qualified bodies. Link remains the sole
-/// cross-node short-name owner. Assembly/emission only render surviving nodes.
+/// Link remains the sole cross-node short-name owner. Assembly/emission only
+/// render the already-projected surviving node orders.
 fn compile_static_continuation(
-    mut closure: ClosureIr,
+    closure: ClosureIr,
 ) -> Result<(String, Vec<(String, RenameEntry)>), CompileError> {
     assert!(
         closure.pending_sources.is_none(),
@@ -152,38 +153,19 @@ fn compile_static_continuation(
             panic!("legacy continuation requires the named qualify pass")
         }
     };
-    let absorption = closure
-        .absorption
-        .take()
-        .expect("legacy continuation requires qualify's absorption plan");
-    crate::compiler::qualify::validate_absorption(&absorption, &closure).unwrap_or_else(|error| {
-        panic!("legacy absorb received invalid qualification state: {error}")
+    if !matches!(&closure.absorption, AbsorptionState::Applied(_)) {
+        panic!("legacy continuation requires the named absorb pass")
+    }
+    crate::compiler::absorb::validate_applied_absorption(&closure).unwrap_or_else(|error| {
+        panic!("legacy continuation received invalid absorption state: {error}")
     });
-    let (emission_order, occurrences) = match (
-        closure.contributions.as_slice(),
-        absorption.contributions.as_slice(),
-    ) {
-        (
-            [ClosureContribution::Normal { emission_order, .. }],
-            [ContributionAbsorption::Normal { occurrences, .. }],
-        ) => (emission_order.clone(), occurrences.clone()),
+    let emission_order = match closure.contributions.as_slice() {
+        [ClosureContribution::Normal { emission_order, .. }] => emission_order.clone(),
         _ => unreachable!("one-seed compatibility close returns one normal contribution"),
     };
-    assert_eq!(
-        emission_order.len(),
-        occurrences.len(),
-        "legacy absorb requires an identity-bound occurrence sequence"
-    );
 
     let mut out = String::new();
-    for (node_id, occurrence) in emission_order.into_iter().zip(occurrences) {
-        assert_eq!(
-            node_id, occurrence.node,
-            "legacy absorb requires identity-bound occurrence alignment"
-        );
-        if occurrence.absorbed {
-            continue;
-        }
+    for node_id in emission_order {
         let node = &closure.nodes[node_id.0];
         let DocumentAddress::Spec(address) = &node.address else {
             unreachable!("one-seed compatibility close contains only spec addresses")
@@ -313,6 +295,8 @@ fn rewrite_cross_node_links(
     Ok(out)
 }
 
+#[cfg(test)]
+mod absorb_characterization_tests;
 #[cfg(test)]
 mod characterization_tests;
 #[cfg(test)]

@@ -9,9 +9,9 @@ use std::collections::HashMap;
 use super::tests::MockSource;
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureContribution, ClosureDocument,
-    ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta, DocumentAddress,
-    QualificationState, StaticCompileMode,
+    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
+    ClosureDocument, ClosureIr, ClosureNodeId, ContributionAbsorption, ContributionMeta,
+    DocumentAddress, QualificationState, StaticCompileMode,
 };
 use crate::{DocTree, UseGraphError, topo_order_from};
 
@@ -23,7 +23,7 @@ fn legacy_continuation_emits_the_close_carrier_body() {
     let closure = ClosureIr {
         artifact: ArtifactId::new("static-fragment").unwrap(),
         nodes: vec![ClosureDocument {
-            address: DocumentAddress::Spec(addr),
+            address: DocumentAddress::Spec(addr.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Closed {#closed}\nCLOSE-BODY"),
             aliases: Default::default(),
@@ -39,15 +39,18 @@ fn legacy_continuation_emits_the_close_carrier_body() {
         }],
         renames: Vec::new(),
         qualification: QualificationState::Applied(StaticCompileMode::Plain),
-        absorption: Some(AbsorptionPlan {
+        absorption: AbsorptionState::Applied(AbsorptionPlan {
+            mode: StaticCompileMode::Plain,
             contributions: vec![ContributionAbsorption::Normal {
                 meta: ContributionMeta {
                     origin: "org.demo/pkg".to_string(),
                     path: "boot/entry".to_string(),
                 },
                 seed: ClosureNodeId(0),
+                seed_address: addr.clone(),
                 occurrences: vec![AbsorptionOccurrence {
                     node: ClosureNodeId(0),
+                    address: addr,
                     absorbed: false,
                 }],
             }],

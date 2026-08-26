@@ -5,7 +5,7 @@ use crate::SpecAddress;
 use super::QualifyPassError;
 use crate::compiler::ir::{
     AbsorptionOccurrence, AbsorptionPlan, ClosureContribution, ClosureIr, ContributionAbsorption,
-    ContributionMeta, DocumentAddress,
+    ContributionMeta, DocumentAddress, QualificationState,
 };
 
 struct Candidate {
@@ -14,6 +14,9 @@ struct Candidate {
 }
 
 pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPassError> {
+    let mode = match closure.qualification {
+        QualificationState::Pending(mode) | QualificationState::Applied(mode) => mode,
+    };
     let mut contributions = Vec::with_capacity(closure.contributions.len());
 
     for (contribution_index, contribution) in closure.contributions.iter().enumerate() {
@@ -23,6 +26,21 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
                 seed,
                 emission_order,
             } => {
+                let seed_node =
+                    closure
+                        .nodes
+                        .get(seed.0)
+                        .ok_or(QualifyPassError::InvalidSeedNodeId {
+                            contribution: contribution_index,
+                            node: seed.0,
+                        })?;
+                let DocumentAddress::Spec(seed_address) = &seed_node.address else {
+                    return Err(QualifyPassError::NonSpecSeedGraphNode {
+                        contribution: contribution_index,
+                        node: seed.0,
+                    });
+                };
+                let seed_address = seed_address.clone();
                 let mut candidates = Vec::with_capacity(emission_order.len());
                 for (occurrence, node_id) in emission_order.iter().copied().enumerate() {
                     let node =
@@ -63,12 +81,18 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
                 let occurrences = emission_order
                     .iter()
                     .copied()
+                    .zip(&candidates)
                     .zip(dispositions)
-                    .map(|(node, absorbed)| AbsorptionOccurrence { node, absorbed })
+                    .map(|((node, candidate), absorbed)| AbsorptionOccurrence {
+                        node,
+                        address: candidate.address.clone(),
+                        absorbed,
+                    })
                     .collect();
                 contributions.push(ContributionAbsorption::Normal {
                     meta: meta.clone(),
                     seed: *seed,
+                    seed_address,
                     occurrences,
                 });
             }
@@ -81,12 +105,24 @@ pub(super) fn analyze(closure: &ClosureIr) -> Result<AbsorptionPlan, QualifyPass
         }
     }
 
-    Ok(AbsorptionPlan { contributions })
+    Ok(AbsorptionPlan {
+        mode,
+        contributions,
+    })
 }
 
 /// Validate occurrence alignment before either qualify or the legacy tail
 /// consumes the plan. A node-id set cannot represent this invariant.
 pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(), QualifyPassError> {
+    let actual_mode = match closure.qualification {
+        QualificationState::Pending(mode) | QualificationState::Applied(mode) => mode,
+    };
+    if plan.mode != actual_mode {
+        return Err(QualifyPassError::AbsorptionMode {
+            expected: plan.mode,
+            actual: actual_mode,
+        });
+    }
     if plan.contributions.len() != closure.contributions.len() {
         return Err(QualifyPassError::AbsorptionAlignment {
             contribution: None,
@@ -111,6 +147,7 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                 ContributionAbsorption::Normal {
                     meta: expected_meta,
                     seed: expected_seed,
+                    seed_address: expected_seed_address,
                     occurrences,
                 },
             ) => {
@@ -120,6 +157,28 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                         contribution: index,
                         expected: expected_seed.0,
                         actual: seed.0,
+                    });
+                }
+                let seed_node =
+                    closure
+                        .nodes
+                        .get(seed.0)
+                        .ok_or(QualifyPassError::InvalidSeedNodeId {
+                            contribution: index,
+                            node: seed.0,
+                        })?;
+                let DocumentAddress::Spec(actual_seed_address) = &seed_node.address else {
+                    return Err(QualifyPassError::NonSpecSeedGraphNode {
+                        contribution: index,
+                        node: seed.0,
+                    });
+                };
+                if expected_seed_address != actual_seed_address {
+                    return Err(QualifyPassError::AbsorptionSeedAddress {
+                        contribution: index,
+                        node: seed.0,
+                        expected: Box::new(expected_seed_address.clone()),
+                        actual: Box::new(actual_seed_address.clone()),
                     });
                 }
                 if occurrences.len() != emission_order.len() {
@@ -140,11 +199,28 @@ pub(super) fn validate(plan: &AbsorptionPlan, closure: &ClosureIr) -> Result<(),
                             actual: current.0,
                         });
                     }
-                    if closure.nodes.get(current.0).is_none() {
-                        return Err(QualifyPassError::InvalidNodeId {
+                    let current_node =
+                        closure
+                            .nodes
+                            .get(current.0)
+                            .ok_or(QualifyPassError::InvalidNodeId {
+                                contribution: index,
+                                occurrence,
+                                node: current.0,
+                            })?;
+                    let DocumentAddress::Spec(actual_address) = &current_node.address else {
+                        return Err(QualifyPassError::NonSpecGraphNode {
+                            contribution: index,
+                            occurrence,
+                        });
+                    };
+                    if expected.address != *actual_address {
+                        return Err(QualifyPassError::AbsorptionOccurrenceAddress {
                             contribution: index,
                             occurrence,
                             node: current.0,
+                            expected: Box::new(expected.address.clone()),
+                            actual: Box::new(actual_address.clone()),
                         });
                     }
                 }

@@ -354,10 +354,15 @@ pub(crate) enum ClosureContribution {
 /// READ-ONCE disposition aligned to one contribution occurrence-for-occurrence.
 ///
 /// A node id may repeat in one order or be shared by several roots, so a bool
-/// mask or set of absorbed node ids would lose the identity it judged.
+/// mask or set of absorbed node ids would lose the identity it judged. The
+/// exact spec address keeps a stable normal-document witness if the indexed
+/// node vector is reordered or replaced; body text and origin intentionally
+/// remain mutable. `StaticEntry` identity remains exclusive to simple
+/// contributions and is unrepresentable here.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct AbsorptionOccurrence {
     pub(crate) node: ClosureNodeId,
+    pub(crate) address: SpecAddress,
     pub(crate) absorbed: bool,
 }
 
@@ -367,6 +372,7 @@ pub(crate) enum ContributionAbsorption {
     Normal {
         meta: ContributionMeta,
         seed: ClosureNodeId,
+        seed_address: SpecAddress,
         occurrences: Vec<AbsorptionOccurrence>,
     },
     Simple {
@@ -375,10 +381,25 @@ pub(crate) enum ContributionAbsorption {
     },
 }
 
-/// The immutable pre-qualification overlap judgment for one artifact.
+/// The immutable pre-qualification overlap judgment for one artifact,
+/// including the exact qualification mode under which it was produced.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct AbsorptionPlan {
+    pub(crate) mode: StaticCompileMode,
     pub(crate) contributions: Vec<ContributionAbsorption>,
+}
+
+/// Runtime typestate of READ-ONCE absorption over contribution occurrences.
+///
+/// The same identity-bound plan crosses both boundaries: `Planned` proves
+/// qualify judged the pre-rewrite occurrence view; `Applied` proves absorb
+/// projected every normal emission order without hiding the judgment in a
+/// process-local side table.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum AbsorptionState {
+    Unplanned,
+    Planned(AbsorptionPlan),
+    Applied(AbsorptionPlan),
 }
 
 /// The ordered multi-seed graph for one final artifact.
@@ -394,7 +415,7 @@ pub(crate) struct ClosureIr {
     pub(crate) contributions: Vec<ClosureContribution>,
     pub(crate) renames: Vec<OriginRename>,
     pub(crate) qualification: QualificationState,
-    pub(crate) absorption: Option<AbsorptionPlan>,
+    pub(crate) absorption: AbsorptionState,
     pub(crate) pending_sources: Option<SourceResolutionSnapshot>,
     pub(crate) pending_embeds: Option<EmbedResolutionSnapshot>,
 }

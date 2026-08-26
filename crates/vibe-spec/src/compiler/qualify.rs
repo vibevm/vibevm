@@ -3,7 +3,7 @@
 //! READ-ONCE applicability is planned from the immutable post-embed text before
 //! any alias or label rewrite. The pass then transforms each live graph node at
 //! most once, preserves contribution occurrences, and carries the plan for the
-//! still-legacy absorb tail.
+//! named absorb pass.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
@@ -13,8 +13,8 @@ use crate::qualify::qualify_contribution;
 use crate::{DocTree, SpecAddress};
 
 use super::ir::{
-    ClosureContribution, ClosureDocument, ClosureIr, ClosureNodeId, ContributionAbsorption,
-    DocumentAddress, OriginRename, QualificationState, StaticCompileMode,
+    AbsorptionState, ClosureContribution, ClosureDocument, ClosureIr, ClosureNodeId,
+    ContributionAbsorption, DocumentAddress, OriginRename, QualificationState, StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 
@@ -68,7 +68,7 @@ pub(crate) fn qualify_invocations() -> usize {
 
 /// Recheck occurrence alignment at a consumer boundary. R3.3's inter-pass
 /// verifier can lift this exact private invariant without changing the IR.
-pub(crate) fn validate_absorption(
+pub(crate) fn validate_planned_absorption(
     plan: &super::ir::AbsorptionPlan,
     closure: &ClosureIr,
 ) -> Result<(), QualifyPassError> {
@@ -91,6 +91,10 @@ pub(crate) enum QualifyPassError {
         occurrence: usize,
         node: usize,
     },
+    #[error("normal contribution {contribution} seed names missing closure node {node}")]
+    InvalidSeedNodeId { contribution: usize, node: usize },
+    #[error("normal contribution {contribution} seed node {node} is not a spec document")]
+    NonSpecSeedGraphNode { contribution: usize, node: usize },
     #[error("normal contribution {contribution} occurrence {occurrence} is not a spec document")]
     NonSpecGraphNode {
         contribution: usize,
@@ -113,6 +117,11 @@ pub(crate) enum QualifyPassError {
         expected: String,
         actual: String,
     },
+    #[error("absorption plan mode changed: expected {expected:?}, got {actual:?}")]
+    AbsorptionMode {
+        expected: StaticCompileMode,
+        actual: StaticCompileMode,
+    },
     #[error(
         "absorption contribution {contribution} seed changed: expected node {expected}, got {actual}"
     )]
@@ -122,6 +131,15 @@ pub(crate) enum QualifyPassError {
         actual: usize,
     },
     #[error(
+        "absorption contribution {contribution} seed node {node} address changed: expected {expected:?}, got {actual:?}"
+    )]
+    AbsorptionSeedAddress {
+        contribution: usize,
+        node: usize,
+        expected: Box<SpecAddress>,
+        actual: Box<SpecAddress>,
+    },
+    #[error(
         "absorption contribution {contribution} occurrence {occurrence} changed: expected node {expected}, got {actual}"
     )]
     AbsorptionOccurrence {
@@ -129,6 +147,16 @@ pub(crate) enum QualifyPassError {
         occurrence: usize,
         expected: usize,
         actual: usize,
+    },
+    #[error(
+        "absorption contribution {contribution} occurrence {occurrence} node {node} address changed: expected {expected:?}, got {actual:?}"
+    )]
+    AbsorptionOccurrenceAddress {
+        contribution: usize,
+        occurrence: usize,
+        node: usize,
+        expected: Box<SpecAddress>,
+        actual: Box<SpecAddress>,
     },
     #[error("absorption plan kind differs from contribution {contribution}")]
     AbsorptionKind { contribution: usize },
@@ -159,7 +187,7 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
     if input.pending_sources.is_some() || input.pending_embeds.is_some() {
         return Err(QualifyPassError::PendingEarlierPass);
     }
-    if input.absorption.is_some() || !input.renames.is_empty() {
+    if !matches!(&input.absorption, AbsorptionState::Unplanned) || !input.renames.is_empty() {
         return Err(QualifyPassError::DirtyOutputState);
     }
 
@@ -255,7 +283,7 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
         document.aliases.clear();
     }
     output.renames = renames;
-    output.absorption = Some(plan);
+    output.absorption = AbsorptionState::Planned(plan);
     output.qualification = QualificationState::Applied(mode);
     Ok(output)
 }

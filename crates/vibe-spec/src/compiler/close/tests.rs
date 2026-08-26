@@ -230,5 +230,5 @@ fn close_transports_pending_embeds_without_judging_membership() {
         closure.qualification,
         QualificationState::Pending(StaticCompileMode::Plain)
     );
-    assert!(closure.absorption.is_none());
+    assert!(matches!(closure.absorption, AbsorptionState::Unplanned));
 }

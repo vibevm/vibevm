@@ -5,6 +5,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 use crate::use_graph::UseGraphError;
 use crate::{DocTree, SectionSource, SpecAddress};
 
+#[cfg(test)]
+use super::absorb::ABSORB_PASS_NAME;
+use super::absorb::AbsorbPass;
 use super::close::{CLOSE_PASS_NAME, ClosePass, CloseState, document_origin};
 use super::embed::{EMBED_PASS_NAME, EmbedPass, EmbedPassError};
 use super::ir::{
@@ -123,6 +126,9 @@ impl BuiltinSchedule {
         pipeline
             .push_artifact(QualifyPass::new())
             .expect("the static built-in qualify schedule is valid");
+        pipeline
+            .push_artifact(AbsorbPass::new())
+            .expect("the static built-in absorb schedule is valid");
         Self {
             pipeline,
             close_state,
@@ -181,10 +187,10 @@ impl BuiltinSchedule {
     }
 }
 
-/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify.
+/// Compile one compatibility seed through parse/gather/close/merge/embed/qualify/absorb.
 /// External observations are frozen before the single gather; the whole-IR
 /// passes alone interpret their respective state.
-pub(crate) fn compile_qualified_closure(
+pub(crate) fn compile_absorbed_closure(
     seed: &SpecAddress,
     source: &impl SectionSource,
     mode: StaticCompileMode,
@@ -254,7 +260,7 @@ mod tests {
 
     #[test]
     #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
-    fn production_prefix_declares_parse_gather_close_merge_embed_qualify() {
+    fn production_prefix_declares_parse_gather_close_merge_embed_qualify_absorb() {
         let pipeline = BuiltinSchedule::new(&plan(StaticCompileMode::Plain)).pipeline;
         let schedule = pipeline.schedule();
 
@@ -267,6 +273,7 @@ mod tests {
                 ScheduleItem::Pass(merge),
                 ScheduleItem::Pass(embed),
                 ScheduleItem::Pass(qualify),
+                ScheduleItem::Pass(absorb),
             ] if parse.name.as_str() == PARSE_PASS_NAME
                 && parse.input == SourceIr::SHAPE
                 && parse.output == DocumentIr::SHAPE
@@ -282,6 +289,9 @@ mod tests {
                 && qualify.name.as_str() == QUALIFY_PASS_NAME
                 && qualify.input == ClosureIr::SHAPE
                 && qualify.output == ClosureIr::SHAPE
+                && absorb.name.as_str() == ABSORB_PASS_NAME
+                && absorb.input == ClosureIr::SHAPE
+                && absorb.output == ClosureIr::SHAPE
         ));
     }
 

@@ -166,7 +166,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
         ],
         renames: Vec::new(),
         qualification: QualificationState::Pending(StaticCompileMode::QualifyPerNode),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: None,
         pending_embeds: None,
     };

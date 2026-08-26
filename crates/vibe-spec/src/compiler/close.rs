@@ -10,9 +10,9 @@ use crate::{Authority, SpecAddress};
 
 use super::embed_snapshot::EmbedResolutionSnapshot;
 use super::ir::{
-    ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr,
-    ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr, Documents, QualificationState,
-    StaticCompileMode,
+    AbsorptionState, ArtifactId, ClosureContribution, ClosureDocument, ClosureEdge,
+    ClosureEdgeKind, ClosureIr, ClosureNodeId, ContributionMeta, DocumentAddress, DocumentIr,
+    Documents, QualificationState, StaticCompileMode,
 };
 use super::pass::{Pass, PassName};
 use super::source_snapshot::SourceResolutionSnapshot;
@@ -241,7 +241,7 @@ fn close_documents(
         }],
         renames: Vec::new(),
         qualification: QualificationState::Pending(mode),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: Some(state.pending_sources()),
         pending_embeds: Some(state.pending_embeds()),
     })

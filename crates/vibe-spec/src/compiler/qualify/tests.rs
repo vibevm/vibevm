@@ -4,9 +4,10 @@ use specmark::verifies;
 
 use super::*;
 use crate::compiler::ir::{
-    AbsorptionOccurrence, AbsorptionPlan, ArtifactId, ClosureContribution, ClosureDocument,
-    ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId, ContributionAbsorption,
-    ContributionMeta, DocumentAddress, QualificationState, StaticCompileMode,
+    AbsorptionOccurrence, AbsorptionPlan, AbsorptionState, ArtifactId, ClosureContribution,
+    ClosureDocument, ClosureEdge, ClosureEdgeKind, ClosureIr, ClosureNodeId,
+    ContributionAbsorption, ContributionMeta, DocumentAddress, QualificationState,
+    StaticCompileMode,
 };
 
 fn spec(raw: &str) -> SpecAddress {
@@ -49,7 +50,7 @@ fn closure(
         contributions,
         renames: Vec::new(),
         qualification: QualificationState::Pending(mode),
-        absorption: None,
+        absorption: AbsorptionState::Unplanned,
         pending_sources: None,
         pending_embeds: None,
     }
@@ -60,7 +61,7 @@ fn run(input: ClosureIr) -> ClosureIr {
 }
 
 fn mask(output: &ClosureIr, contribution: usize) -> Vec<bool> {
-    let plan = output.absorption.as_ref().unwrap();
+    let plan = planned_plan(output);
     let ContributionAbsorption::Normal { occurrences, .. } = &plan.contributions[contribution]
     else {
         panic!("expected normal absorption mask")
@@ -69,6 +70,13 @@ fn mask(output: &ClosureIr, contribution: usize) -> Vec<bool> {
         .iter()
         .map(|occurrence| occurrence.absorbed)
         .collect()
+}
+
+fn planned_plan(output: &ClosureIr) -> &AbsorptionPlan {
+    let AbsorptionState::Planned(plan) = &output.absorption else {
+        panic!("expected planned absorption state")
+    };
+    plan
 }
 
 #[test]
@@ -244,6 +252,26 @@ fn duplicate_node_occurrences_keep_an_aligned_mask_and_one_live_transform() {
 
     assert_eq!(mask(&output, 0), [false, true]);
     assert_eq!(output.contributions, original_order);
+    assert_eq!(
+        planned_plan(&output).mode,
+        StaticCompileMode::QualifyPerNode
+    );
+    let ContributionAbsorption::Normal {
+        seed_address,
+        occurrences,
+        ..
+    } = &planned_plan(&output).contributions[0]
+    else {
+        unreachable!()
+    };
+    assert!(matches!(
+        &output.nodes[0].address,
+        DocumentAddress::Spec(address) if seed_address == address
+    ));
+    assert!(occurrences.iter().all(|occurrence| matches!(
+        &output.nodes[occurrence.node.0].address,
+        DocumentAddress::Spec(address) if occurrence.address == *address
+    )));
     assert!(
         output.nodes[0]
             .tree
@@ -427,7 +455,7 @@ fn normal_simple_normal_order_and_simple_origin_are_preserved() {
         ["org.demo/alpha", "host", "org.demo/omega"]
     );
     assert!(matches!(
-        output.absorption.as_ref().unwrap().contributions.as_slice(),
+        planned_plan(&output).contributions.as_slice(),
         [
             ContributionAbsorption::Normal { .. },
             ContributionAbsorption::Simple { .. },
@@ -447,12 +475,19 @@ fn absorption_alignment_is_a_private_invariant() {
         )],
         vec![normal(0, &[0, 0], "org.demo/pkg")],
     );
+    let DocumentAddress::Spec(address) = &input.nodes[0].address else {
+        unreachable!()
+    };
+    let address = address.clone();
     let invalid = AbsorptionPlan {
+        mode: StaticCompileMode::Plain,
         contributions: vec![ContributionAbsorption::Normal {
             meta: meta("org.demo/pkg"),
             seed: ClosureNodeId(0),
+            seed_address: address.clone(),
             occurrences: vec![AbsorptionOccurrence {
                 node: ClosureNodeId(0),
+                address,
                 absorbed: false,
             }],
         }],
