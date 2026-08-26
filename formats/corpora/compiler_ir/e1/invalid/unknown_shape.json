@@ -1,0 +1,19 @@
+{
+  "shape": "blob-document",
+  "ir_schema": 1,
+  "level": "source",
+  "cardinality": "document",
+  "doc": {
+    "address": {
+      "kind": "spec",
+      "address": {
+        "raw": "spec://org.demo/lib/manual/guide.md#root",
+        "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+        "doc_path": "manual/guide.md",
+        "anchor": ["root"]
+      }
+    },
+    "format": "markdown",
+    "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
+  }
+}

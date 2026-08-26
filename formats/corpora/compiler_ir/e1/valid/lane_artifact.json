@@ -1,0 +1,162 @@
+{
+  "shape": "lane-artifact",
+  "ir_schema": 1,
+  "level": "lane",
+  "cardinality": "artifact",
+  "lane": {
+    "context": {
+      "artifact": "static-md",
+      "target": "static-md",
+      "frame": {
+        "kind": "static-lane",
+        "generated_path": "vibevm/vibespecs/boot/STATIC.md",
+        "source_root": "vibevm/vibespecs"
+      },
+      "mode": "qualify-per-node"
+    },
+    "source_node_count": 3,
+    "source_link_digest": "ed73521b98c3cab322c923afd66c6a5ecbe81a2a24983071f3ca35de314ea4f8",
+    "frame": {
+      "generated_path": "vibevm/vibespecs/boot/STATIC.md",
+      "source_root": "vibevm/vibespecs",
+      "renames": [
+        {
+          "origin": "org.demo/lib",
+          "rename": {"original": "api", "qualified": "org-demo--lib--manual-part-md--api"}
+        },
+        {
+          "origin": "org.demo/lib",
+          "rename": {"original": "root", "qualified": "org-demo--lib--manual-guide-md--root"}
+        },
+        {
+          "origin": "org.demo/lib",
+          "rename": {"original": "FACT-A", "qualified": "org-demo--lib--manual-guide-md--FACT-A"}
+        }
+      ]
+    },
+    "contributions": [
+      {
+        "kind": "normal",
+        "meta": {"origin": "org.demo/lib", "path": "manual/guide.md"},
+        "seed": 2,
+        "seed_address": {
+          "raw": "spec://org.demo/lib/manual/guide.md#root",
+          "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+          "doc_path": "manual/guide.md",
+          "anchor": ["root"]
+        },
+        "chunks": [
+          {
+            "kind": "normal-open",
+            "contribution": 0,
+            "occurrence": 0,
+            "marker": "spec://org.demo/lib/manual/part.md"
+          },
+          {
+            "kind": "node",
+            "node": {
+              "kind": "normal",
+              "contribution": 0,
+              "occurrence": 0,
+              "node": 0,
+              "requested_address": {
+                "raw": "spec://org.demo/lib/manual/part.md",
+                "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+                "doc_path": "manual/part.md",
+                "anchor": []
+              },
+              "origin": "org.demo/lib",
+              "marker": "spec://org.demo/lib/manual/part.md",
+              "fence_before": {"state": "closed"},
+              "fence_after": {"state": "open", "delimiter": "`", "run": 3},
+              "body": "# Part {#org-demo--lib--manual-part-md--api}\n\nReference body.\n\n```text\nunterminated sample"
+            }
+          },
+          {"kind": "forced-newline", "contribution": 0, "occurrence": 0},
+          {
+            "kind": "normal-close",
+            "contribution": 0,
+            "occurrence": 0,
+            "marker": "spec://org.demo/lib/manual/part.md"
+          },
+          {
+            "kind": "normal-open",
+            "contribution": 0,
+            "occurrence": 1,
+            "marker": "spec://org.demo/lib/manual/guide.md#root"
+          },
+          {
+            "kind": "node",
+            "node": {
+              "kind": "normal",
+              "contribution": 0,
+              "occurrence": 1,
+              "node": 2,
+              "requested_address": {
+                "raw": "spec://org.demo/lib/manual/guide.md#root",
+                "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+                "doc_path": "manual/guide.md",
+                "anchor": ["root"]
+              },
+              "origin": "org.demo/lib",
+              "marker": "spec://org.demo/lib/manual/guide.md#root",
+              "fence_before": {"state": "open", "delimiter": "`", "run": 3},
+              "fence_after": {"state": "open", "delimiter": "`", "run": 3},
+              "body": "# Guide {#org-demo--lib--manual-guide-md--root}\n\n##org-demo--lib--manual-guide-md--FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part"
+            }
+          },
+          {"kind": "forced-newline", "contribution": 0, "occurrence": 1},
+          {
+            "kind": "normal-close",
+            "contribution": 0,
+            "occurrence": 1,
+            "marker": "spec://org.demo/lib/manual/guide.md#root"
+          }
+        ]
+      },
+      {
+        "kind": "simple",
+        "meta": {"origin": "__host__/demo", "path": "vibevm/vibespecs/boot/00-core.md"},
+        "address": {
+          "kind": "static-entry",
+          "origin": "__host__/demo",
+          "path": "vibevm/vibespecs/boot/00-core.md"
+        },
+        "chunks": [
+          {
+            "kind": "node",
+            "node": {
+              "kind": "simple",
+              "contribution": 1,
+              "occurrence": 0,
+              "address": {
+                "kind": "static-entry",
+                "origin": "__host__/demo",
+                "path": "vibevm/vibespecs/boot/00-core.md"
+              },
+              "origin": "__host__/demo",
+              "fence_before": {"state": "closed"},
+              "fence_after": {"state": "closed"},
+              "body": "# Core boot rules\n\nRead this first."
+            }
+          },
+          {"kind": "forced-newline", "contribution": 1, "occurrence": 0}
+        ]
+      },
+      {
+        "kind": "elided",
+        "meta": {"origin": "org.demo/legacy", "path": "legacy/old.md"}
+      },
+      {
+        "kind": "hoisted",
+        "meta": {"origin": "org.demo/lib", "path": "manual/part.md"},
+        "target": {
+          "raw": "spec://org.demo/lib/manual/part.md",
+          "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+          "doc_path": "manual/part.md",
+          "anchor": []
+        }
+      }
+    ]
+  }
+}

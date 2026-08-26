@@ -82,10 +82,13 @@
 //! whether it does is not a per-type choice but the format's registry
 //! record — `foreign_parsers = "none"` in `formats/REGISTRY.toml` takes
 //! the attribute on every generated struct of that format's output,
-//! every other role keeps the permissive reading byte for byte. On
-//! today's registry no format with a built schema carries the `none`
-//! role, so the generated tree above is still entirely permissive —
-//! now as the registry's verdict rather than the generator's limit.
+//! every other role keeps the permissive reading byte for byte. The
+//! registry's verdict, not the generator's limit — and it is no longer
+//! uniformly permissive: `lifecycle-reply` and `compiler-ir` carry the
+//! `none` role, so their generated modules refuse an unknown field. Both
+//! are read only by our own code (a reply the host parses, an IR the
+//! manager hands its own conversion), which is exactly the condition
+//! under which strictness costs a foreign writer nothing.
 
 #![forbid(unsafe_code)]
 

@@ -1,0 +1,595 @@
+{
+  "metadata": {
+    "description": "Epoch-1 compiler IR wire: the six manager carriers of PROP-054 §7.4/§14.6, frozen from the landed R3 domain types. One whole value of the level being passed crosses per invocation (`##WHOLE-IR-WIRE`); source/document are one addressed document, documents is the explicit document batch, closure/lane/emitted are one complete final artifact (`##IR-LEVELS`, SPEC-DEBT §8.8). The same document is the R3.4 trace snapshot — no second trace-only IR shape exists. TWO metadata sets sit below and must not be confused: `x-conversion-gates` is what the strict domain decoder OWES on every carrier it is handed, including one a plugin transformed and returned; `x-corpus-producer-oracles` is characterization of what THIS corpus's builtin passes emitted. A plugin may legally return a verifier-valid closure whose anchors the builtin `qualify` would have spelled differently or whose order the builtin `close` would not have chosen — the decoder must accept it, and only the corpus tests hold it to the builtin spelling.",
+    "x-conversion-gates": [
+      "ir_schema == 1 at the manager gate before any invoke, and level/cardinality equal the variant they ride (belt: each is a single-value enum, so a mismatch is already reader-red)",
+      "every id is non-blank and free of newline/NUL (`ArtifactId`, `ContributionMeta`, `SourceFormatId`, origins, paths); `BackendId` also matches the id charset",
+      "the artifact id/target/frame/mode tuple is one `ArtifactContext::new` row, and a `static-lane` generated_path carries the target's extension",
+      "a normal/hoisted contribution's origin coordinate equals its target package coordinate; a hoisted target is an unversioned whole document (no version, no anchor, no pin)",
+      "every digest is 64 lowercase hex characters; emitted bytes are canonical padded standard base64 — both validated BEFORE any allocation from them",
+      "`raw` re-parses to the authority/doc_path/anchor/pinned_r carried beside it, and a fence delimiter is exactly one character",
+      "ARENA BOUNDS, checked before indexing: every `doc_node.parent`, `doc_node.children[]` and `doc_tree.anchors` value is < `doc_tree.nodes.len()`; every closure `seed`, `edge.from`/`edge.to`, occurrence `node` and lane `node` is < the node arena length (`lane.source_node_count` for a lane)",
+      "FOREST, checked iteratively and before any descent — total, so no input reaches an index: (a) `doc_tree.nodes` is NON-EMPTY, a typed violation rather than the panic `DocTree::root()` would take, since `DocTree::parse` always mints the synthetic root; (b) node 0 IS that root — level 0, kind `heading`, no `parent` member, no incoming child edge; (c) every non-root node has exactly ONE incoming child edge, claims that parent back (`nodes[c].parent == p` for every `c` in `nodes[p].children`), and is reachable from the root; (d) the walk carries a step bound of `nodes.len() + 1` so a `children` cycle is reported, never followed. Bounds alone are not enough — `DocTree::facts_under` pops a `children` stack and a cycle makes it LOOP FOREVER rather than panic, and a detached ring passes every count while no walk can reach it",
+      "SPAN BOUNDS, checked before slicing: `span.start <= span.end <= doc_tree.lines.len()` for every node, and `heading_line < lines.len()` for every non-root node of a non-empty document — `DocTree::text` slices `lines[span]` and panics rather than erroring on an out-of-range value",
+      "`doc_tree.anchors[a]` names a node whose `id` is `a`, and each `duplicate_anchors` entry is an anchor that repeats",
+      "SET PROJECTION: a member projecting a domain `BTreeSet<String>` (`source_resolution_snapshot.explicit_use_keys`, `embed_resolution_snapshot.explicit_use_keys`) carries its canonical sorted, duplicate-free spelling — otherwise wire→domain→wire silently renormalises and the round-trip is lossy",
+      "an applied absorption carries no pending source/embed snapshot, one plan witness per contribution in order, and each normal emission order is exactly the non-absorbed occurrence projection",
+      "a link result carries one witness per contribution in order, and a lane brackets each normal occurrence as open/node/[forced-newline]/close with one continuous fence history per contribution",
+      "PASS/SNAPSHOT: an `embed` edge exists only once `pending_embeds` is consumed and a `source` edge only once `pending_sources` is — each pass mints its edge kind and clears its own snapshot in one run, so the two can never coexist in any carrier a decoder is handed",
+      "EMIT IDENTITY: `artifact`, `target` and `backend` are one id, `producer` is `emit:<backend>`, a builtin `static-md`/`static-xml` tape is valid UTF-8 in its backend's framing while opaque bytes ride a custom target under the compatibility frame, and `bytes_digest` is `independent_bytes_digest(bytes)` = SHA-256 of `le64(26) ‖ \"vibe-spec/emitted-bytes/v1\" ‖ le64(len) ‖ bytes` — the one digest computable from the wire document alone, so a decoder recomputes it rather than trusting it"
+    ],
+    "x-corpus-producer-oracles": [
+      "CLOSE ORDER: for a value the BUILTIN `close` produced, TWO witnesses, in this order. (1) EDGE — the `kind == use` edge vector is RECONSTRUCTED from the carried directives, not trusted: per normal contribution in contribution order, walk the reached nodes in traversal order, take each node's OWN `tree.directives.directives`, keep `kind == use`, sort by `line` stably as `use_graph::use_addresses` does, resolve each target by PINLESS address identity to the one carried spec node (missing or ambiguous is a fault, never an index), and append `(from, to, requested_target)` unless that exact tuple is already present — `close.rs:146-197`, where a byte-identical repeat is suppressed while a request differing in pin or raw stays its own edge. Compare to the carrier's vector in exact order and exact requested-target fields; `source`/`embed` edges from later passes are outside this comparison. (2) ORDER — replay `topology::order_by` on the adjacency DERIVED in (1), never on the carrier's edges, and compare node-for-node with the pre-absorb order (the applied plan's occurrences, else the live `emission_order`): declaration-order DFS, Gray/Black colouring, postorder, a Gray target admitted only when it and every node on the current loop suffix is a `contract/…` document (`topology.rs:41-49`). Exact, not merely valid — a legal topological permutation the builtin would not have chosen is still a corpus regression, and deriving the adjacency is what stops (2) from proving only that the order agrees with whatever edges the carrier claims. Two consequences no index comparison could express: the admitted A↔B contract cycle orders `[b, a]` while carrying the edge `0 -> 1`, and two roots sharing nodes yield `[0,1,2]` and `[1,0,3]` from their own declaration orders",
+      "QUALIFY SPELLING: for a value the BUILTIN `qualify` produced under `qualify-per-node`, every anchor of a node it VISITED — the applied plan's non-absorbed, first-seen occurrences — is `origin_slug(node_qualification_origin(origin, doc_path))` + `--` + the original label, and `renames` is exactly that audit in visit order then document order. Nothing is claimed about a node qualify SKIPPED: an absorbed or already-seen occurrence keeps whatever its author wrote, which may itself look like a slug",
+      "OPAQUE TAPE: the emitted golden's `bytes_b64` decodes to `00 ff 0a` — the exact three bytes `OpaqueTestBackend::new` returns (`emit/opaque_test_vehicle.rs`) — under backend `opaque-test`. Characterization of THIS corpus, never a decode rule: any tape whose EMIT IDENTITY coherence holds is a valid carrier"
+    ],
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE" },
+    "rustOptions": { "package": "vibe_wire::compiler_ir::e1::ir" }
+  },
+  "discriminator": "shape",
+  "mapping": {
+    "source-document": {
+      "metadata": { "description": "Level source, cardinality document: one document's raw text plus its typed address and frontend format (`SourceIr`)." },
+      "properties": {
+        "ir_schema": { "type": "uint32", "metadata": { "description": "IR wire schema epoch; 1 in epoch 1. The manager gates a plugin's declared schema before any invoke." } },
+        "level": { "ref": "level_source" },
+        "cardinality": { "ref": "cardinality_document" },
+        "doc": { "ref": "source_doc" }
+      }
+    },
+    "document-document": {
+      "metadata": { "description": "Level document, cardinality document: one document's parsed tree beside its source (`DocumentIr`)." },
+      "properties": {
+        "ir_schema": { "type": "uint32" },
+        "level": { "ref": "level_document" },
+        "cardinality": { "ref": "cardinality_document" },
+        "doc": { "ref": "document_ir" }
+      }
+    },
+    "documents-artifact": {
+      "metadata": { "description": "Level document, cardinality artifact: the parse worklist after every per-document pass (`Documents`). Not a sixth level — a real carrier with artifact cardinality." },
+      "properties": {
+        "ir_schema": { "type": "uint32" },
+        "level": { "ref": "level_document" },
+        "cardinality": { "ref": "cardinality_artifact" },
+        "documents": { "elements": { "ref": "document_ir" }, "metadata": { "x-empty": "emit", "description": "Deterministic worklist order; the batch may be empty." } }
+      }
+    },
+    "closure-artifact": {
+      "metadata": { "description": "Level closure, cardinality artifact: the ordered multi-seed graph for one final artifact (`ClosureIr`), including qualification/absorption/link typestate and the pending source/embed snapshots." },
+      "properties": {
+        "ir_schema": { "type": "uint32" },
+        "level": { "ref": "level_closure" },
+        "cardinality": { "ref": "cardinality_artifact" },
+        "closure": { "ref": "closure_ir" }
+      }
+    },
+    "lane-artifact": {
+      "metadata": { "description": "Level lane, cardinality artifact: one complete artifact after linking and before backend serialisation (`LaneIr`)." },
+      "properties": {
+        "ir_schema": { "type": "uint32" },
+        "level": { "ref": "level_lane" },
+        "cardinality": { "ref": "cardinality_artifact" },
+        "lane": { "ref": "lane_ir" }
+      }
+    },
+    "emitted-artifact": {
+      "metadata": { "description": "Level emitted, cardinality artifact: final artifact bytes plus manager-owned immutable provenance (`EmittedIr`). Bytes are canonical standard base64 with padding." },
+      "properties": {
+        "ir_schema": { "type": "uint32" },
+        "level": { "ref": "level_emitted" },
+        "cardinality": { "ref": "cardinality_artifact" },
+        "emitted": { "ref": "emitted_artifact" }
+      }
+    }
+  },
+  "definitions": {
+    "level_source": { "enum": ["source"], "metadata": { "x-vocabulary": "closed", "description": "The only level a `source-document` value may carry; any other level spelling is a reader error." } },
+    "level_document": { "enum": ["document"], "metadata": { "x-vocabulary": "closed" } },
+    "level_closure": { "enum": ["closure"], "metadata": { "x-vocabulary": "closed" } },
+    "level_lane": { "enum": ["lane"], "metadata": { "x-vocabulary": "closed" } },
+    "level_emitted": { "enum": ["emitted"], "metadata": { "x-vocabulary": "closed" } },
+    "cardinality_document": { "enum": ["document"], "metadata": { "x-vocabulary": "closed", "description": "One addressed document per invocation." } },
+    "cardinality_artifact": { "enum": ["artifact"], "metadata": { "x-vocabulary": "closed", "description": "One complete final artifact per invocation." } },
+    "compile_mode": {
+      "metadata": { "x-vocabulary": "closed", "description": "The compatibility/static-lane policy (`StaticCompileMode`)." },
+      "enum": ["plain", "qualify-per-node"]
+    },
+    "artifact_target": {
+      "metadata": { "x-vocabulary": "open", "description": "Final-artifact target identity (`ArtifactTarget`). Open: a custom backend names itself; the two built-in STATIC targets are fixed. `ArtifactContext::new` admits a custom target only as `(custom, compatibility-fragment, _, artifact == backend id)`, and it is the only target whose emitted tape is opaque — `emit.rs::prepare_target` maps a builtin to a Markdown/XML tape the emit pass re-reads. Strict R6.2b conversion owns and preserves every valid backend id so every valid corpus carrier round-trips without an undocumented refusal; R6.3 separately owns registration, implementation selection and invocation. Identity does not imply that an implementation is installed." },
+      "enum": ["static-md", "static-xml"]
+    },
+    "authority": {
+      "metadata": { "description": "The authority half of a `spec://` address (`Authority`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "host": {
+          "metadata": { "description": "An undotted authority; parses but never resolves." },
+          "properties": { "name": { "type": "string" } }
+        },
+        "package": {
+          "properties": { "group": { "type": "string" }, "name": { "type": "string" } },
+          "optionalProperties": {
+            "version": { "type": "string", "metadata": { "x-default": null, "description": "Raw `@`-spec, unparsed; absent for an unversioned address." } }
+          }
+        }
+      }
+    },
+    "spec_address": {
+      "metadata": { "description": "A fully qualified `spec://` address (`SpecAddress`), carried field-by-field; conversion re-checks the fields against `raw`." },
+      "properties": {
+        "raw": { "type": "string", "metadata": { "description": "The address exactly as written, including any `~rN`." } },
+        "authority": { "ref": "authority" },
+        "doc_path": { "type": "string", "metadata": { "description": "Document path under the `spec/` root, `/`-joined, genre included." } },
+        "anchor": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Tree path segments; empty means the whole document." } }
+      },
+      "optionalProperties": {
+        "pinned_r": { "type": "uint32", "metadata": { "x-default": null, "description": "Spec-unit revision pin (`~rN`); absent when unpinned." } }
+      }
+    },
+    "document_address": {
+      "metadata": { "description": "A document's compiler identity (`DocumentAddress`): a real `spec://` address, or a simple static entry's provider/path identity." },
+      "discriminator": "kind",
+      "mapping": {
+        "spec": { "properties": { "address": { "ref": "spec_address" } } },
+        "static-entry": {
+          "metadata": { "description": "An ungrouped host's simple static entry — no honest spec address exists for it." },
+          "properties": { "origin": { "type": "string" }, "path": { "type": "string" } }
+        }
+      }
+    },
+    "span": {
+      "metadata": { "description": "Half-open source-line range `[start, end)`.", "x-conversion": "`start <= end <= doc_tree.lines.len()` — validated BEFORE slicing; `DocTree::text` indexes `lines[span]` and panics on an out-of-range value." },
+      "properties": { "start": { "type": "uint32" }, "end": { "type": "uint32" } }
+    },
+    "doc_node": {
+      "metadata": { "description": "One node of the document arena (`doctree::Node`): a heading section or a `##<ID>` fact leaf.", "x-conversion": "`heading_line < lines.len()` for every non-root node of a non-empty document; `parent` and every `children` entry are < `nodes.len()`, and together they form a FOREST rooted at index 0 (each child claims its parent back, one incoming edge per non-root, no cycle) — validated BEFORE indexing the arena, because a `children` cycle makes `DocTree::facts_under` loop rather than panic. A node carries an `id` only when its source line declares that anchor (`{#id}` on a heading, `##<ID>`/`@fact:<ID>` as a fact's lead token); a heading id the line does not carry is unreachable through `DocTree::parse`." },
+      "properties": {
+        "level": { "type": "uint8", "metadata": { "description": "Heading level 1..=6; 0 for the synthetic root and for fact leaves." } },
+        "kind": { "enum": ["heading", "fact"], "metadata": { "x-vocabulary": "closed" } },
+        "heading": { "type": "string", "metadata": { "description": "Heading text with `#`s and `{#anchor}` stripped; empty for a fact leaf." } },
+        "trailing": { "type": "string", "metadata": { "description": "Text after the `{#anchor}` on the heading line (merge markers); empty when absent." } },
+        "heading_line": { "type": "uint32", "metadata": { "description": "0-based source line of the heading, or the first line of a fact leaf's span." } },
+        "span": { "ref": "span", "metadata": { "description": "Source lines this node covers, subtree included." } },
+        "children": { "elements": { "type": "uint32" }, "metadata": { "x-empty": "emit", "description": "Arena indices of child nodes in document order." } }
+      },
+      "optionalProperties": {
+        "id": { "type": "string", "metadata": { "x-default": null, "description": "The `{#anchor}` or `##<ID>` label; absent when none was declared." } },
+        "parent": { "type": "uint32", "metadata": { "x-default": null, "description": "Arena index of the parent node; absent only for the root." } }
+      }
+    },
+    "directive": {
+      "metadata": { "description": "A parsed `#embed` / `#use` / `#source` directive (`Directive`)." },
+      "properties": {
+        "kind": { "enum": ["embed", "use", "source"], "metadata": { "x-vocabulary": "closed" } },
+        "options": { "type": "string", "metadata": { "description": "Raw options between the keyword and the address; may be empty." } },
+        "address": { "ref": "spec_address" },
+        "line": { "type": "uint32", "metadata": { "description": "0-based source line." } }
+      }
+    },
+    "in_place_use": {
+      "metadata": { "description": "An `@spec://…` in-place use (`InPlaceUse`) — mandatory to read on first encounter." },
+      "properties": { "address": { "ref": "spec_address" }, "line": { "type": "uint32" } }
+    },
+    "directive_error": {
+      "metadata": { "description": "A malformed directive or `@spec`, reported rather than fatal (`DirectiveError`).", "x-conversion": "Scanner diagnostics only — the five shapes `Directives::parse` emits (missing address, bad address, bad `@spec`, duplicate alias, undeclared `@!`). A duplicate fact id is NOT one of them: it lands in `doc_tree.duplicate_anchors`." },
+      "properties": { "line": { "type": "uint32" }, "message": { "type": "string" } }
+    },
+    "directives": {
+      "metadata": { "description": "Everything a directive scan finds, in document order (`Directives`), kept beside the tree so close never rescans raw text." },
+      "properties": {
+        "directives": { "elements": { "ref": "directive" }, "metadata": { "x-empty": "emit" } },
+        "in_place_uses": { "elements": { "ref": "in_place_use" }, "metadata": { "x-empty": "emit" } },
+        "errors": { "elements": { "ref": "directive_error" }, "metadata": { "x-empty": "emit" } },
+        "aliases": { "values": { "ref": "spec_address" }, "metadata": { "x-empty": "emit", "description": "`#use … as <Alias>` bindings; first declaration wins, duplicates are reported in `errors`." } }
+      }
+    },
+    "doc_tree": {
+      "metadata": { "description": "The complete document IR (`DocTree`): node arena, anchor index, duplicate-anchor record, source lines and the directive scan." },
+      "properties": {
+        "nodes": { "elements": { "ref": "doc_node" }, "metadata": { "x-empty": "emit", "description": "The arena; index 0 is the synthetic root." } },
+        "anchors": { "values": { "type": "uint32" }, "metadata": { "x-empty": "emit", "description": "Flat anchor → arena index; a repeated anchor keeps its first occurrence here." } },
+        "duplicate_anchors": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Each extra occurrence of a repeated anchor; empty means every anchor is unique — the `DuplicateId` verdict input." } },
+        "lines": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "The document's source lines; spans index into this vector." } },
+        "directives": { "ref": "directives" }
+      }
+    },
+    "source_doc": {
+      "metadata": { "description": "Source IR payload (`SourceIr`): typed address, frontend format, raw text." },
+      "properties": {
+        "address": { "ref": "document_address" },
+        "format": { "type": "string", "metadata": { "description": "Open frontend identity (`SourceFormatId`), e.g. `markdown`, `xml`, or a registered custom format. Deliberately not a closed vocabulary: frontends register without a schema bump. Conversion rejects a blank value." } },
+        "text": { "type": "string" }
+      }
+    },
+    "document_ir": {
+      "metadata": { "description": "Parsed document IR (`DocumentIr`): the tree with its source beside it, so exact text/newline identity survives while the tree is span-indexed." },
+      "properties": { "source": { "ref": "source_doc" }, "tree": { "ref": "doc_tree" } }
+    },
+    "fence_snapshot": {
+      "metadata": { "description": "Markdown fence state at one occurrence boundary (`LinkFenceSnapshot`)." },
+      "discriminator": "state",
+      "mapping": {
+        "closed": { "properties": {}, "metadata": { "description": "No fence is open." } },
+        "open": {
+          "properties": {
+            "delimiter": { "type": "string", "metadata": { "description": "The fence character (`` ` `` or `~`); conversion validates exactly one char." } },
+            "run": { "type": "uint32", "metadata": { "description": "Delimiter run length." } }
+          }
+        }
+      }
+    },
+    "rename_entry": {
+      "metadata": { "description": "One origin-qualification rename (`RenameEntry`)." },
+      "properties": { "original": { "type": "string" }, "qualified": { "type": "string" } }
+    },
+    "origin_rename": {
+      "metadata": { "description": "One rename together with the origin whose namespace produced it (`OriginRename`)." },
+      "properties": { "origin": { "type": "string" }, "rename": { "ref": "rename_entry" } }
+    },
+    "contribution_meta": {
+      "metadata": { "description": "Provenance of one top-level contribution in effective-boot order (`ContributionMeta`); conversion rejects blank values." },
+      "properties": { "origin": { "type": "string" }, "path": { "type": "string" } }
+    },
+    "closure_occurrence": {
+      "metadata": { "description": "One exact request for a shared logical closure node (`ClosureOccurrence`)." },
+      "properties": { "node": { "type": "uint32", "metadata": { "description": "Index into `closure.nodes`." } }, "requested_address": { "ref": "spec_address" } }
+    },
+    "absorption_occurrence": {
+      "metadata": { "description": "READ-ONCE disposition aligned to one contribution occurrence (`AbsorptionOccurrence`); identity is the exact spec address, never a bool mask." },
+      "properties": { "node": { "type": "uint32" }, "requested_address": { "ref": "spec_address" }, "absorbed": { "type": "boolean" } }
+    },
+    "closure_document": {
+      "metadata": { "description": "One closed document payload (`ClosureDocument`): a graph node while addressed by an id, a simple contribution's lowered payload outside the graph." },
+      "properties": {
+        "address": { "ref": "document_address" },
+        "origin": { "type": "string" },
+        "tree": { "ref": "doc_tree" },
+        "aliases": { "values": { "ref": "spec_address" }, "metadata": { "x-empty": "emit", "description": "This document's declared `#use … as` bindings." } }
+      }
+    },
+    "closure_edge": {
+      "metadata": { "description": "One ordered edge of the closure graph (`ClosureEdge`)." },
+      "properties": {
+        "from": { "type": "uint32", "metadata": { "description": "Index into `closure.nodes`." } },
+        "to": { "type": "uint32" },
+        "kind": { "enum": ["use", "source", "embed"], "metadata": { "x-vocabulary": "closed", "description": "The three authored dependency relations (`ClosureEdgeKind`)." } },
+        "requested_target": { "ref": "spec_address" }
+      }
+    },
+    "closure_contribution": {
+      "metadata": { "description": "One top-level contribution after the batch closes into a graph (`ClosureContribution`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "seed": { "type": "uint32", "metadata": { "description": "Root node index into `closure.nodes`." } },
+            "seed_address": { "ref": "spec_address" },
+            "emission_order": { "elements": { "ref": "closure_occurrence" }, "metadata": { "x-empty": "emit", "description": "Exact emission sequence; a node id may repeat or be shared by several roots." } }
+          }
+        },
+        "simple": {
+          "metadata": { "description": "A simple contribution's whole lowered document, carried outside the graph." },
+          "properties": { "meta": { "ref": "contribution_meta" }, "document": { "ref": "closure_document" } }
+        },
+        "elided": { "properties": { "meta": { "ref": "contribution_meta" } } },
+        "hoisted": {
+          "metadata": { "description": "A whole-document hoist; the target is an unversioned whole document." },
+          "properties": { "meta": { "ref": "contribution_meta" }, "target": { "ref": "spec_address" } }
+        }
+      }
+    },
+    "qualification_state": {
+      "metadata": { "description": "Runtime typestate of the qualify transform (`QualificationState`)." },
+      "discriminator": "state",
+      "mapping": {
+        "pending": { "properties": { "mode": { "ref": "compile_mode" } } },
+        "applied": { "properties": { "mode": { "ref": "compile_mode" } } }
+      }
+    },
+    "contribution_absorption": {
+      "metadata": { "description": "The analyzed occurrence sequence bound to its exact contribution identity (`ContributionAbsorption`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "seed": { "type": "uint32" },
+            "seed_address": { "ref": "spec_address" },
+            "occurrences": { "elements": { "ref": "absorption_occurrence" }, "metadata": { "x-empty": "emit" } }
+          }
+        },
+        "simple": { "properties": { "meta": { "ref": "contribution_meta" }, "address": { "ref": "document_address" } } },
+        "elided": { "properties": { "meta": { "ref": "contribution_meta" } } },
+        "hoisted": { "properties": { "meta": { "ref": "contribution_meta" }, "target": { "ref": "spec_address" } } }
+      }
+    },
+    "absorption_plan": {
+      "metadata": { "description": "The immutable pre-qualification overlap judgment for one artifact (`AbsorptionPlan`)." },
+      "properties": {
+        "mode": { "ref": "compile_mode" },
+        "contributions": { "elements": { "ref": "contribution_absorption" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "absorption_state": {
+      "metadata": { "description": "Runtime typestate of READ-ONCE absorption (`AbsorptionState`): the identity-bound plan crosses both boundaries; no side table holds it." },
+      "discriminator": "state",
+      "mapping": {
+        "unplanned": { "properties": {} },
+        "planned": { "properties": { "plan": { "ref": "absorption_plan" } } },
+        "applied": { "properties": { "plan": { "ref": "absorption_plan" } } }
+      }
+    },
+    "link_contribution_witness": {
+      "metadata": { "description": "Exact top-level identity consumed by link, including empty contributions (`LinkContributionWitness`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "seed": { "type": "uint32" },
+            "seed_address": { "ref": "spec_address" },
+            "occurrence_count": { "type": "uint32" }
+          }
+        },
+        "simple": { "properties": { "meta": { "ref": "contribution_meta" }, "address": { "ref": "document_address" } } },
+        "elided": { "properties": { "meta": { "ref": "contribution_meta" } } },
+        "hoisted": { "properties": { "meta": { "ref": "contribution_meta" }, "target": { "ref": "spec_address" } } }
+      }
+    },
+    "link_occurrence": {
+      "metadata": { "description": "One resolved occurrence (`LinkOccurrence`): semantics only, never backend marker bytes." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "contribution": { "type": "uint32", "metadata": { "description": "Index of the owning contribution." } },
+            "occurrence": { "type": "uint32", "metadata": { "description": "Occurrence index within the contribution." } },
+            "node": { "type": "uint32" },
+            "address": { "ref": "spec_address" },
+            "marker": { "type": "string", "metadata": { "description": "Typed reversible-marker key (`LinkMarkerKey`)." } },
+            "fence_before": { "ref": "fence_snapshot" },
+            "fence_after": { "ref": "fence_snapshot" },
+            "body": { "type": "string" },
+            "trailing_newline_required": { "type": "boolean" }
+          }
+        },
+        "simple": {
+          "properties": {
+            "contribution": { "type": "uint32" },
+            "occurrence": { "type": "uint32" },
+            "address": { "ref": "document_address" },
+            "fence_before": { "ref": "fence_snapshot" },
+            "fence_after": { "ref": "fence_snapshot" },
+            "body": { "type": "string" },
+            "trailing_newline_required": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "link_result": {
+      "metadata": { "description": "Canonical result of linking one whole artifact (`LinkResult`)." },
+      "properties": {
+        "mode": { "ref": "compile_mode" },
+        "input_digest": { "type": "string", "metadata": { "description": "SHA-256 of the semantic input, 64 lowercase hex chars; validated at conversion." } },
+        "contributions": { "elements": { "ref": "link_contribution_witness" }, "metadata": { "x-empty": "emit" } },
+        "occurrences": { "elements": { "ref": "link_occurrence" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "link_state": {
+      "metadata": { "description": "Runtime typestate of the link transform (`LinkState`)." },
+      "discriminator": "state",
+      "mapping": {
+        "unlinked": { "properties": {} },
+        "linked": { "properties": { "result": { "ref": "link_result" } } }
+      }
+    },
+    "document_observation": {
+      "metadata": { "description": "One observed source document (`DocumentObservation`)." },
+      "discriminator": "state",
+      "mapping": {
+        "resolved": { "properties": { "document": { "ref": "document_ir" } } },
+        "failed": { "properties": { "requested": { "ref": "spec_address" }, "reason": { "type": "string" } } }
+      }
+    },
+    "expansion_observation": {
+      "metadata": { "description": "One observed `#embed` expansion (`ExpansionObservation`)." },
+      "discriminator": "state",
+      "mapping": {
+        "resolved": {
+          "properties": {
+            "requested": { "ref": "spec_address" },
+            "targets": { "elements": { "ref": "spec_address" }, "metadata": { "x-empty": "emit" } }
+          }
+        },
+        "failed": { "properties": { "requested": { "ref": "spec_address" }, "reason": { "type": "string" } } }
+      }
+    },
+    "source_resolution_snapshot": {
+      "metadata": { "description": "Artifact-wide immutable observation of every source input (`SourceResolutionSnapshot`)." },
+      "properties": {
+        "discovery_order": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Keys of `documents` in discovery order." } },
+        "documents": { "values": { "ref": "document_observation" }, "metadata": { "x-empty": "emit", "description": "Keyed by the address without its pin." } },
+        "expansions": { "values": { "ref": "expansion_observation" }, "metadata": { "x-empty": "emit", "description": "Keyed by the full address string." } },
+        "explicit_use_keys": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "x-set": "sorted-unique", "x-conversion": "Projects a domain `BTreeSet<String>`: only the canonical sorted, duplicate-free spelling survives wire→domain→wire unchanged (see SET PROJECTION)." } }
+      }
+    },
+    "embed_resolution_snapshot": {
+      "metadata": { "description": "Artifact-wide immutable observation of every embed input (`EmbedResolutionSnapshot`)." },
+      "properties": {
+        "discovery_order": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "documents": { "values": { "ref": "document_observation" }, "metadata": { "x-empty": "emit" } },
+        "explicit_use_keys": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "x-set": "sorted-unique", "x-conversion": "Projects a domain `BTreeSet<String>`: only the canonical sorted, duplicate-free spelling survives wire→domain→wire unchanged (see SET PROJECTION)." } }
+      }
+    },
+    "artifact_frame": {
+      "metadata": { "description": "Frame policy surrounding all contributions of one artifact (`ArtifactFrame`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "static-lane": {
+          "properties": {
+            "generated_path": { "type": "string", "metadata": { "description": "Path of the generated artifact; conversion rejects blank and newline-bearing values." } },
+            "source_root": { "type": "string" }
+          }
+        },
+        "compatibility-fragment": { "properties": {}, "metadata": { "description": "The one-seed `compile_static*` compatibility fragment frame." } }
+      }
+    },
+    "artifact_context": {
+      "metadata": { "description": "Immutable identity and policy copied through every artifact-level IR (`ArtifactContext`); conversion re-validates the id/target/frame/mode tuple." },
+      "properties": {
+        "artifact": { "type": "string", "metadata": { "description": "Open artifact identity (`ArtifactId`), e.g. `static-xml`." } },
+        "target": { "ref": "artifact_target" },
+        "frame": { "ref": "artifact_frame" },
+        "mode": { "ref": "compile_mode" }
+      }
+    },
+    "closure_ir": {
+      "metadata": { "description": "The ordered multi-seed graph for one final artifact (`ClosureIr`). Nothing lives in a manager-side table: typestate and snapshots ride the value." },
+      "properties": {
+        "context": { "ref": "artifact_context" },
+        "nodes": { "elements": { "ref": "closure_document" }, "metadata": { "x-empty": "emit", "description": "The closure arena; edge/contribution ids index it." } },
+        "edges": { "elements": { "ref": "closure_edge" }, "metadata": { "x-empty": "emit" } },
+        "contributions": { "elements": { "ref": "closure_contribution" }, "metadata": { "x-empty": "emit", "description": "Effective-boot order." } },
+        "renames": { "elements": { "ref": "origin_rename" }, "metadata": { "x-empty": "emit", "description": "Document order per origin." } },
+        "qualification": { "ref": "qualification_state" },
+        "absorption": { "ref": "absorption_state" },
+        "link": { "ref": "link_state" }
+      },
+      "optionalProperties": {
+        "pending_sources": { "ref": "source_resolution_snapshot", "metadata": { "description": "Present until the source fold has consumed it." } },
+        "pending_embeds": { "ref": "embed_resolution_snapshot", "metadata": { "description": "Present until the embed expansion has consumed it." } }
+      }
+    },
+    "lane_frame": {
+      "metadata": { "description": "Semantic frame data shared by every concrete lane backend (`LaneFrame`)." },
+      "properties": {
+        "renames": { "elements": { "ref": "origin_rename" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "generated_path": { "type": "string", "metadata": { "x-default": null, "description": "Absent for the compatibility fragment." } },
+        "source_root": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "lane_node": {
+      "metadata": { "description": "One exact linked occurrence (`LaneNode`); marker policy is closed by type." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "contribution": { "type": "uint32" },
+            "occurrence": { "type": "uint32" },
+            "node": { "type": "uint32", "metadata": { "description": "Index into the source closure's node arena." } },
+            "requested_address": { "ref": "spec_address" },
+            "origin": { "type": "string" },
+            "marker": { "type": "string" },
+            "fence_before": { "ref": "fence_snapshot" },
+            "fence_after": { "ref": "fence_snapshot" },
+            "body": { "type": "string" }
+          }
+        },
+        "simple": {
+          "properties": {
+            "contribution": { "type": "uint32" },
+            "occurrence": { "type": "uint32" },
+            "address": { "ref": "document_address" },
+            "origin": { "type": "string" },
+            "fence_before": { "ref": "fence_snapshot" },
+            "fence_after": { "ref": "fence_snapshot" },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    },
+    "lane_chunk": {
+      "metadata": { "description": "Backend-neutral framing and body chunks for one contribution (`LaneChunk`); concrete comment or newline bytes stay the emit backend's responsibility." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal-open": {
+          "properties": { "contribution": { "type": "uint32" }, "occurrence": { "type": "uint32" }, "marker": { "type": "string" } }
+        },
+        "node": { "properties": { "node": { "ref": "lane_node" } } },
+        "forced-newline": { "properties": { "contribution": { "type": "uint32" }, "occurrence": { "type": "uint32" } } },
+        "normal-close": {
+          "properties": { "contribution": { "type": "uint32" }, "occurrence": { "type": "uint32" }, "marker": { "type": "string" } }
+        }
+      }
+    },
+    "lane_contribution": {
+      "metadata": { "description": "One top-level contribution in exact effective-boot order, assembled (`LaneContribution`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "seed": { "type": "uint32" },
+            "seed_address": { "ref": "spec_address" },
+            "chunks": { "elements": { "ref": "lane_chunk" }, "metadata": { "x-empty": "emit" } }
+          }
+        },
+        "simple": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "address": { "ref": "document_address" },
+            "chunks": { "elements": { "ref": "lane_chunk" }, "metadata": { "x-empty": "emit" } }
+          }
+        },
+        "elided": { "properties": { "meta": { "ref": "contribution_meta" } } },
+        "hoisted": { "properties": { "meta": { "ref": "contribution_meta" }, "target": { "ref": "spec_address" } } }
+      }
+    },
+    "lane_ir": {
+      "metadata": { "description": "One complete artifact after linking and before backend serialisation (`LaneIr`)." },
+      "properties": {
+        "context": { "ref": "artifact_context" },
+        "source_node_count": { "type": "uint32" },
+        "source_link_digest": { "type": "string", "metadata": { "description": "SHA-256 of the link input, 64 lowercase hex chars; validated at conversion." } },
+        "frame": { "ref": "lane_frame" },
+        "contributions": { "elements": { "ref": "lane_contribution" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "emission_contribution_witness": {
+      "metadata": { "description": "One contribution's emission witness (`EmissionContributionWitness`)." },
+      "discriminator": "kind",
+      "mapping": {
+        "normal": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "seed": { "type": "uint32" },
+            "seed_address": { "ref": "spec_address" },
+            "chunk_digest": { "type": "string", "metadata": { "description": "SHA-256, 64 lowercase hex chars; validated at conversion." } }
+          }
+        },
+        "simple": {
+          "properties": {
+            "meta": { "ref": "contribution_meta" },
+            "address": { "ref": "document_address" },
+            "chunk_digest": { "type": "string", "metadata": { "description": "SHA-256, 64 lowercase hex chars; validated at conversion." } }
+          }
+        },
+        "elided": { "properties": { "meta": { "ref": "contribution_meta" } } },
+        "hoisted": { "properties": { "meta": { "ref": "contribution_meta" }, "target": { "ref": "spec_address" } } }
+      }
+    },
+    "emission_provenance": {
+      "metadata": { "description": "Immutable evidence created by the manager at the backend boundary (`EmissionProvenance`)." },
+      "properties": {
+        "context": { "ref": "artifact_context" },
+        "backend": { "type": "string", "metadata": { "description": "Backend identity (`BackendId`), e.g. `static-xml`; conversion validates the id charset." } },
+        "producer": { "type": "string", "metadata": { "description": "Stable name of the emit pass that produced the bytes (`PassName`), e.g. `emit:static-xml`." } },
+        "source_lane_digest": { "type": "string", "metadata": { "description": "SHA-256, 64 lowercase hex chars; validated at conversion." } },
+        "renames": { "elements": { "ref": "origin_rename" }, "metadata": { "x-empty": "emit" } },
+        "contributions": { "elements": { "ref": "emission_contribution_witness" }, "metadata": { "x-empty": "emit" } },
+        "bytes_digest": { "type": "string", "metadata": { "description": "SHA-256 of the emitted bytes, 64 lowercase hex chars; validated at conversion." } }
+      }
+    },
+    "emitted_artifact": {
+      "metadata": { "description": "Final artifact bytes plus manager-owned immutable provenance (`EmittedArtifact`)." },
+      "properties": {
+        "provenance": { "ref": "emission_provenance" },
+        "bytes_b64": { "type": "string", "metadata": { "description": "Canonical standard base64 with padding (`A-Za-z0-9+/`, `=` padding), no whitespace; opaque bytes, never assumed UTF-8. Validated at conversion and by the corpus reader." } }
+      }
+    }
+  }
+}

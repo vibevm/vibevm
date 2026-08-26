@@ -1,0 +1,133 @@
+{
+  "shape": "document-document",
+  "ir_schema": 1,
+  "level": "document",
+  "cardinality": "document",
+  "doc": {
+    "source": {
+      "address": {
+        "kind": "spec",
+        "address": {
+          "raw": "spec://org.demo/lib/manual/guide.md#root",
+          "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+          "doc_path": "manual/guide.md",
+          "anchor": ["root"]
+        }
+      },
+      "format": "markdown",
+      "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
+    },
+    "tree": {
+      "nodes": [
+        {
+          "level": 0,
+          "kind": "heading",
+          "heading": "",
+          "trailing": "",
+          "heading_line": 0,
+          "span": {"start": 0, "end": 12},
+          "children": [1]
+        },
+        {
+          "level": 1,
+          "kind": "heading",
+          "heading": "Guide",
+          "trailing": "",
+          "heading_line": 0,
+          "span": {"start": 0, "end": 12},
+          "children": [2, 3],
+          "id": "root",
+          "parent": 0
+        },
+        {
+          "level": 0,
+          "kind": "fact",
+          "heading": "",
+          "trailing": "",
+          "heading_line": 2,
+          "span": {"start": 2, "end": 3},
+          "children": [],
+          "id": "FACT-A",
+          "parent": 1
+        },
+        {
+          "level": 2,
+          "kind": "heading",
+          "heading": "Install",
+          "trailing": "",
+          "heading_line": 10,
+          "span": {"start": 10, "end": 12},
+          "children": [],
+          "id": "install",
+          "parent": 1
+        }
+      ],
+      "anchors": {"root": 1, "FACT-A": 2, "install": 3},
+      "duplicate_anchors": [],
+      "lines": [
+        "# Guide {#root}",
+        "",
+        "##FACT-A One exact fact.",
+        "",
+        "#use spec://org.demo/lib/manual/part.md",
+        "#use spec://org.demo/lib/manual/part.md#api~r2 as Part",
+        "#embed spec://org.demo/lib/manual/part.md#api as Part",
+        "",
+        "See @spec://org.demo/lib/manual/part.md#api for details.",
+        "",
+        "## Install {#install}",
+        "Body line."
+      ],
+      "directives": {
+        "directives": [
+          {
+            "kind": "use",
+            "options": "",
+            "address": {
+              "raw": "spec://org.demo/lib/manual/part.md",
+              "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+              "doc_path": "manual/part.md",
+              "anchor": []
+            },
+            "line": 4
+          },
+          {
+            "kind": "use",
+            "options": "",
+            "address": {
+              "raw": "spec://org.demo/lib/manual/part.md#api~r2",
+              "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+              "doc_path": "manual/part.md",
+              "anchor": ["api"],
+              "pinned_r": 2
+            },
+            "line": 5
+          }
+        ],
+        "in_place_uses": [
+          {
+            "address": {
+              "raw": "spec://org.demo/lib/manual/part.md#api",
+              "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+              "doc_path": "manual/part.md",
+              "anchor": ["api"]
+            },
+            "line": 8
+          }
+        ],
+        "errors": [
+          {"line": 6, "message": "`as` is a `#use` clause, not valid on #embed"}
+        ],
+        "aliases": {
+          "Part": {
+            "raw": "spec://org.demo/lib/manual/part.md#api~r2",
+            "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+            "doc_path": "manual/part.md",
+            "anchor": ["api"],
+            "pinned_r": 2
+          }
+        }
+      }
+    }
+  }
+}

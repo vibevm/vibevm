@@ -145,6 +145,32 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# ── Compiler IR pass wire (1 JTD), PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ─────────
+# The six manager carriers, one contract, one discriminator, no second
+# trace-only IR shape. TODAY this row models exactly one channel: the HOST
+# reader — vibe's own R6.2b domain conversion and the R3.4 trace snapshots.
+# Nothing foreign parses it yet (native invocation is R5/R6, unbuilt), so the
+# reader is strict (`foreign_parsers = "none"` → deny_unknown_fields) and an
+# unknown field is a wire bug rather than forward compatibility; version skew
+# is governed by `ir_schema` at the manifest gate.
+#
+# This row does NOT model both native channel directions, and must not be read
+# as doing so. When foreign native invocation lands, the request the manager
+# hands a plugin acquires genuinely foreign readers while the reply the host
+# parses stays ours — the same split `lifecycle-context` (many) /
+# `lifecycle-reply` (none) already records. Central integration owes that
+# honest representation THEN, without duplicating this IR DTO or schema (one
+# schema, two registry roles is the shape to reach for). Until then, do not
+# weaken this host reader: a permissive host reader buys nothing today and
+# silently drops fields the conversion needs.
+[format.compiler-ir]
+epoch = 1
+schema = "schemas/compiler_ir/e1/ir.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/compiler_ir/e1"
+sunset = "none"
+
 [format.package-skill-receipt]
 epoch = 1
 schema = "schemas/package_skill_receipt.jtd.json"

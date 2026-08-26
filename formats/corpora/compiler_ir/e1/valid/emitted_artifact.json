@@ -1,0 +1,60 @@
+{
+  "shape": "emitted-artifact",
+  "ir_schema": 1,
+  "level": "emitted",
+  "cardinality": "artifact",
+  "emitted": {
+    "provenance": {
+      "context": {
+        "artifact": "opaque-test",
+        "target": "opaque-test",
+        "frame": {"kind": "compatibility-fragment"},
+        "mode": "plain"
+      },
+      "backend": "opaque-test",
+      "producer": "emit:opaque-test",
+      "source_lane_digest": "55c09fcad1c2cb4c9fc653fc0d15429958bd007d00ae2ba6d286d9362333b4a8",
+      "renames": [],
+      "contributions": [
+        {
+          "kind": "normal",
+          "meta": {"origin": "org.demo/lib", "path": "manual/guide.md"},
+          "seed": 0,
+          "seed_address": {
+            "raw": "spec://org.demo/lib/manual/guide.md#root",
+            "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+            "doc_path": "manual/guide.md",
+            "anchor": ["root"]
+          },
+          "chunk_digest": "5203d2ef44a97ac5f8eafc8c791032e47ad19641dac6e053a173adb3e8a7fe42"
+        },
+        {
+          "kind": "simple",
+          "meta": {"origin": "__host__/demo", "path": "vibevm/vibespecs/boot/00-core.md"},
+          "address": {
+            "kind": "static-entry",
+            "origin": "__host__/demo",
+            "path": "vibevm/vibespecs/boot/00-core.md"
+          },
+          "chunk_digest": "c8545863872c0d49ad2f20c2437c738da78b11b59736fff6c12d1661613ad9e9"
+        },
+        {
+          "kind": "elided",
+          "meta": {"origin": "org.demo/legacy", "path": "legacy/old.md"}
+        },
+        {
+          "kind": "hoisted",
+          "meta": {"origin": "org.demo/lib", "path": "manual/part.md"},
+          "target": {
+            "raw": "spec://org.demo/lib/manual/part.md",
+            "authority": {"kind": "package", "group": "org.demo", "name": "lib"},
+            "doc_path": "manual/part.md",
+            "anchor": []
+          }
+        }
+      ],
+      "bytes_digest": "b7f8278a784ffdd290fe40ad7615d0f7d577e72fdfe120d0aa529bfc93c7ef83"
+    },
+    "bytes_b64": "AP8K"
+  }
+}
