@@ -19,9 +19,10 @@ superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
 B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
 hardening and R7.3 hosted resume have since landed. Their worktrees are
-reclaimed under rolling GC. The R3.4 durable writer has now landed and its
-equivalent worktree was reclaimed immediately; no implementation worktree is
-currently retained.
+reclaimed under rolling GC. The R3.4 durable writer and its shared command-wire
+/ sticky-state prerequisites have now landed; each accepted worktree was or is
+reclaimed immediately. One protected R3.4 borrowed-threading worktree remains
+active until its own review/integration completes.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -30,9 +31,9 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `4d95a129` after hosted lifecycle resume,
-  compiler observer, durable trace writer and the R7.4 implementation
-  architecture.
+- Integration checkpoint: `main` at `0301f8f2` after hosted lifecycle resume,
+  compiler observer/writer, the shared trace command-report wire, sticky
+  lifecycle trace identity and the R7.4 implementation architecture.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
 - `cargo xtask specmap`: 6772 units, 2030 tagged code items, 1811 edges,
@@ -56,6 +57,15 @@ only durable home of a decision.
   create-new snapshots, project-serialized newest-nine retention, exact
   crash residue, a single concurrent soft-ceiling crossing and no observer→
   compiler failure channel.
+- R3.4 report/state prerequisite evidence on the current tree: `34d3f363`
+  shares one generated `Duration`/`TimingRow`/`CompileTraceReport` across the
+  index plus install/lifecycle/update/reinstall roots and validates seven
+  relational-law families; `0301f8f2` adds the false-defaulted sticky state
+  bit, effective adoption and exact state-proven `SupersededTrace`. The focused
+  wire/lifecycle/CLI gates and mutation reds are green; root additionally ran
+  the handler-envelope byte-identity RED, post-commit `check-codegen` is clean,
+  and an independent final review ended PASS. Disabled report/state members
+  remain absent on old bytes; no handler-envelope field was added.
 - R7.3 integration evidence on the current tree: state transaction tests 5/5;
   hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
   clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
@@ -120,7 +130,7 @@ this campaign, but compatibility law is preserved.
 | R3.1 five levels, six carriers, typed pass manager | done | `3630ab9e`; `compiler/{ir,pass,pipeline}.rs` |
 | R3.2 parse→close→merge→embed→qualify→absorb→link→assemble→emit | done | `a7961003`, `96eef07d`, `e53b9a4e`, `ec7ea7fe`, `e653654d`, `2feef271`, `6de7ef05`, `6f3fa61a`, `302a3509`, `4403cb55`; 84 boot-artifact + 10 emit gates |
 | R3.3 verifier-each skeleton | done | `15793f2e`; immutable test-only manager verifier, typed level/transition errors, SCC/document/lane/marker/fence invariants; 61 focused verifier tests + independent freeze |
-| R3.4 compile snapshots/timings | in progress | `6f4a717d` lands the JTD-first metadata/index/filename contract; `7adfbb5a` strict role-equipotent `[compile] trace`; `fa0662a9` the real pass observer and pre-encode seam; `4d95a129` the atomic run writer, cooperative lock, identity-bound newest-nine retention, crash truth and concurrent 128 MiB/run enforcement. One recorder through workspace/install/CLI, report presentation and e2e remain |
+| R3.4 compile snapshots/timings | in progress | `6f4a717d` metadata/index/filename contract; `7adfbb5a` manifest activation; `fa0662a9` observer/pre-encode seam; `4d95a129` atomic writer/lock/retention/budget; `34d3f363` one shared generated command-report member; `0301f8f2` sticky adoption + state-proven displacement. Borrowed recorder plumbing through workspace/install, then command-owned open/funnel/presentation/e2e remain |
 
 R3.2 also landed a crash-safe whole-artifact transaction/selector tier. That
 unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
@@ -374,7 +384,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   another 10,977,020,458 bytes immediately after its equivalent branch commit
   was proven present on `main`. The accepted R3.4 durable-writer worktree then
   returned 9,593,199,382 bytes after patch-id equivalence, durable decision
-  capture and final main-tree exact gates were proved.
+  capture and final main-tree exact gates were proved. The accepted R3.4
+  wire/state worktree measured 24,735,991,892 bytes immediately before the same
+  proof-and-reclaim sequence.
 
 ## 7. Dependency plan and parallel lanes
 

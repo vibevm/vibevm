@@ -65,7 +65,10 @@ fronts currently in flight. A worker report or old worktree is never completion.
       manager observer/pre-encode budget seam is landed (`fa0662a9`); the
       crash-legible atomic writer, cooperative retention lock, newest-nine
       collector and concurrent 128 MiB/run enforcement are landed
-      (`4d95a129`). One recorder through workspace/install/CLI, timing
+      (`4d95a129`). The shared generated trace member across all four command
+      reports is landed (`34d3f363`), as are sticky lifecycle activation and
+      exact state-proven displacement (`0301f8f2`). Borrowed recorder plumbing
+      through workspace/install, then command-owned open/funnel, timing
       presentation and e2e remain.
 - [ ] **R4.0–R4.3** — shared lower registry; four staged positions;
       transforms header/fingerprint/reference oracle; minify binding; analyzer.
