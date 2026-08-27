@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "description": "Epoch-1 compile trace INDEX: the metadata half of `.vibe/trace/<run-id>/index.json` (PROP-054 `##OBS-TRACE`, the `-print-after-all` / `-time-passes` genre). It records WHAT ran, in which order, for how long and into which snapshot FILE — never an IR payload. The snapshots themselves are the one `compiler_ir/e1` documents; this record names them by relative filename and nothing else. No IR field, no trace snapshot DTO, no untyped carrier, no dependency on the compiler domain: the generated type is pure metadata. The relational laws JTD cannot express are named below in `x-relational-laws` and enforced by the hand-written validator in `vibe-wire/src/behaviour/compiler_trace_index/` (one pure pass, typed errors, no untrusted scalar cloned into a refusal); the two label sets are pinned equal by a test, so an undocumented law and an unimplemented label are both red.",
+    "x-rust-type": "CompilerTraceIndex",
+    "x-vocabularies": ["timestamp"],
+    "x-diagnostic-cap-bytes": 8192,
+    "x-relational-laws": [
+      "schema-epoch: the root `schema` is 1 — the epoch-1 reader refuses any other number",
+      "scalar-gates: `run_id` is exactly 32 lowercase hex characters; `project.root_digest` is `sha256:` followed by exactly 64 lowercase hex characters; every free-text identity scalar (project display, scope id, scope label, artifact id, target spelling, fingerprint, pass name) is non-blank once trimmed and free of CR, LF and NUL; `project.display` is exactly `\".\"` in epoch 1 (the trace never leaks an absolute developer root — the outer node/unit labels live in the scopes); a CUSTOM artifact target, being an open-vocabulary spelling from a plugin, matches the same backend id charset `[a-z0-9][a-z0-9._-]{0,63}` the compiler applies to `BackendId`, while the two built-in STATIC targets satisfy it by construction",
+      "timestamp-coherence: `finished` is absent while `status` is `running`, and never earlier than `started`",
+      "scope-identity: scope ids are unique across the index, and every event's scope id names one declared scope",
+      "scope-status-coherence: a pending scope carries neither fingerprint nor failure; a compiled or skipped scope carries a fingerprint and no failure; a failed scope carries a failure and no fingerprint",
+      "skipped-scope-is-silent: a skipped scope records its fingerprint and has no pass events. ONLY `skipped` is required to be silent: a `compiled` or `failed` scope with no events is legal and says what it means — a zero-document artifact had nothing to run, or the scope failed before its first pass. The silence law exists because a SKIP is a claim that the cached fingerprint was reused; an event would contradict it",
+      "sequence-density: event sequences are dense ascending from 0 — `events[i].sequence == i` in list order. A list longer than a `uint32` can address has no dense numbering in this epoch and is refused; the position is never narrowed by a wrapping cast",
+      "invocation-key: for each (scope id, pass name) the invocation ordinals are DENSE from zero in encounter order — exactly `0..D-1`, so `parse` over D documents of one artifact numbers them `0,1,…,D-1` and every whole-artifact pass numbers `0`. Uniqueness alone would admit `0,7`, which no compiler produced; starting above zero, leaving a gap, and repeating or reordering a spent ordinal are all the same violation. The counter advances with checked addition and never wraps",
+      "shape-ladder: an input or output shape's level and cardinality follow the IR ladder — `source` is document cardinality; `document` is document or artifact; `closure`, `lane` and `emitted` are artifact",
+      "event-coherence: only `ok` names a certified snapshot; `ok` carries pass/verify/encode durations and no diagnostic; `snapshot-skipped-budget` carries pass/verify, no encode, no snapshot and no diagnostic; `pass-failed` carries only the pass duration plus a bounded diagnostic; `verification-failed` carries pass/verify plus a diagnostic; `snapshot-failed` carries pass/verify/encode plus a diagnostic and no snapshot — a failure or budget status never names a snapshot, and a missing duration is honest only where the law says so. Every duration an event does carry is CANONICAL: `saturated = true` means the true value was at least the ceiling, so it is legal only at `micros = u32::MAX`; an unsaturated `u32::MAX` stays legal, because an exact measurement may land exactly there",
+      "snapshot-portability: a snapshot filename is CONSTRUCTED from the event and its referenced scope, not merely screened by an alphabet — a name that passes a character filter but names the wrong pass, kind, label, artifact or ordinal no longer round-trips back to what wrote it, and reversibility is the point. Exactly two spellings are admitted, both one path component of at most 96 bytes: the FULL form `<seq:04>-<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>-<ord:03>.json`, and the SHORT form `<seq:04>-~<digest16>-<ord:03>.json` for names the run directory's absolute path cannot afford. `enc` leaves ONLY `[A-Za-z0-9.]` raw and percent-escapes every other UTF-8 byte as uppercase `%XX` — `%`, `-`, `_`, `~`, separators, `:` and non-ASCII included — so `-` and `_` cannot occur inside a component and the layout split is total and reversible; `kind` is the referenced scope's `node|unit|publish`; the widths are Rust MINIMUM widths (zero-padded to 4 and 3, wider when the value needs it); `digest16` is the first 16 lowercase hex characters of the SHA-256 of the encoded middle `<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>`, which the validator RECOMPUTES rather than accepting any `~` plus hex. The short form is legal whenever the writer chose it, because the path pressure that forces it is invisible from inside the index. Windows-safety follows rather than being enumerated: the alphabet admits no `<>:\"/\\|?*` and no control byte, the name begins with a digit so it cannot be a device stem, and the byte before `.json` is a digit so there is no trailing dot or space. Every other spelling — an over-encoded `%41`, a raw `-`/`_`/`~` inside a component, the wrong metadata, a two-digit ordinal, a lowercase escape, an over-96-byte name, an invented digest — is red, and the filename is unique across the run",
+      "root-coherence: the root `status` is the COMPILE/LIFECYCLE outcome, and this trace is an OBSERVER of it — the two must not be confused. A root `failure` rides only `status = failed` and `failed` carries one; `running` carries neither `finished` nor `failure`; `ok` is finished, carries no failure, no pending scope, no failed scope and no COMPILE-failed event (`pass-failed`, `verification-failed`) — a scope or pass failure hidden by root `ok` is red. A `snapshot-failed` or `snapshot-skipped-budget` event is expressly NOT a compile failure and root `ok` admits it: the observer failing to write, or standing down under budget, must never be able to turn a green run red, or `--trace-compile` would stop being a diagnostic switch. Conversely a root `failed` needs NO failed scope and NO failed event as evidence — the run may fail after every pass succeeded (the boot-artifact transaction rolling back a StaticWrite is the accepted case) — so `failed` + `finished` + a bounded `failure` is the whole obligation",
+      "aggregate-reconciliation: exactly one timing row per distinct event pass name, in FIRST-APPEARANCE order from `events` — the CLI table is a diffable artifact, so the same set of rows in a different order is red; each row's invocation count equals the event count for that pass, counted with checked arithmetic (a count past the `uint32` ceiling is refused, never wrapped); every carried total is canonical in the `event-coherence` sense before it is compared at all; each pass/verify/encode total is recomputed with checked/saturating arithmetic over the durations the events actually carry (a missing duration contributes nothing; a carried total is never trusted); a total is marked saturated when any summed duration was saturated or the sum itself overflowed, and a saturated total sits at `u32::MAX`",
+      "diagnostic-cap: every root failure, scope failure and event diagnostic is at most 8192 UTF-8 bytes (the `x-diagnostic-cap-bytes` value)"
+    ],
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE" },
+    "rustOptions": { "package": "vibe_wire::compiler_trace_index::e1::index" }
+  },
+  "properties": {
+    "schema": { "type": "uint32", "metadata": { "description": "Index wire schema epoch; 1 in epoch 1." } },
+    "run_id": { "type": "string", "metadata": { "description": "The lifecycle run that owns this trace: the exact 32-lowercase-hex `RunMetadata.run_id` allocated before any compilation began. One `vibe install` (or lifecycle verb) is one run directory; the validator refuses any other spelling." } },
+    "started": { "ref": "timestamp", "metadata": { "description": "When the run began, RFC 3339. Injected like every clock here: the writer never calls `now()`, time arrives as input (PROP-044 `##M-CANONICAL-BYTES`)." } },
+    "project": { "ref": "project_identity", "metadata": { "description": "Which project was compiled, without any absolute developer home path." } },
+    "status": { "ref": "run_status", "metadata": { "description": "Terminal state of the run at the moment this index was written. `running` is a partial index captured mid-run (the final status is written last); `ok` and `failed` are final." } },
+    "scopes": { "elements": { "ref": "scope" }, "metadata": { "x-empty": "emit", "description": "Every artifact compilation this run touched, in declaration order. Explicit even when empty, so a fresh `running` index is readable as `\"scopes\": []`." } },
+    "events": { "elements": { "ref": "pass_event" }, "metadata": { "x-empty": "emit", "description": "Every pass invocation, in run order (the global `sequence` is dense from 0). Explicit even when empty." } },
+    "aggregates": { "elements": { "ref": "timing_row" }, "metadata": { "x-empty": "emit", "description": "Per-pass timing totals the CLI table prints directly. Explicit even when empty; must reconcile exactly to `events` (a carried total is never trusted)." } }
+  },
+  "optionalProperties": {
+    "finished": { "ref": "timestamp", "metadata": { "x-default": null, "description": "When the run reached its terminal state; absent while `status` is `running`." } },
+    "failure": { "type": "string", "metadata": { "x-default": null, "description": "Bounded terminal diagnostic of a failed run (at most 8192 UTF-8 bytes). Present exactly when `status` is `failed`. Diagnostics are data: they may contain newlines, they never carry a provider body or secret — this schema has no such concept." } }
+  },
+  "definitions": {
+    "run_status": {
+      "metadata": { "x-vocabulary": "closed", "description": "The run's terminal state. Closed: an unknown spelling is a reader error, not a newer writer — additive evolution of this record rides new object members, never new status values." },
+      "enum": ["running", "ok", "failed"]
+    },
+    "project_identity": {
+      "metadata": { "description": "The compiled project's identity. Deliberately no absolute developer home path: `display` is the project-relative spelling (`\".\"` for the host root) and `root_digest` pins which tree was compiled." },
+      "properties": {
+        "display": { "type": "string", "metadata": { "description": "Project-relative display name. Epoch 1 compiles one project per run, so the only legal spelling is `\".\"` — the outer node/unit labels live in the scopes, and no absolute developer path ever reaches this member." } },
+        "root_digest": { "type": "string", "metadata": { "description": "`sha256:` followed by exactly 64 lowercase hex characters — the digest of the compiled project root." } }
+      }
+    },
+    "scope_kind": {
+      "metadata": { "x-vocabulary": "closed", "description": "Which kind of compilation this scope names." },
+      "enum": ["node", "unit", "publish"]
+    },
+    "scope_status": {
+      "metadata": { "x-vocabulary": "closed", "description": "Where this artifact compilation stands at the moment the index was written." },
+      "enum": ["pending", "compiled", "skipped", "failed"]
+    },
+    "artifact_target": {
+      "metadata": { "x-vocabulary": "open", "description": "Final-artifact target identity, spelled exactly as the compiler's open target vocabulary spells it (the two built-in STATIC targets are fixed; a custom backend names itself, and the validator holds its spelling to the same `BackendId` charset the compiler would have). Duplicated from `compiler_ir/e1` by meaning, not by reference: this record carries the spelling as metadata and never the target's IR. The day the generator supports cross-schema vocabulary refs may centralize the two copies." },
+      "enum": ["static-md", "static-xml"]
+    },
+    "ir_level": {
+      "metadata": { "x-vocabulary": "closed", "description": "The IR level a pass consumed or produced — the same closed level vocabulary `compiler_ir/e1` carries, duplicated here as metadata because this record describes passes without embedding their IR." },
+      "enum": ["source", "document", "closure", "lane", "emitted"]
+    },
+    "ir_cardinality": {
+      "metadata": { "x-vocabulary": "closed", "description": "How many values crossed one invocation: one addressed document, or one complete artifact. Same vocabulary, same meaning, same duplication ruling as `ir_level`." },
+      "enum": ["document", "artifact"]
+    },
+    "pass_shape": {
+      "metadata": { "description": "The shape of one input or output value of a pass invocation." },
+      "properties": {
+        "level": { "ref": "ir_level" },
+        "cardinality": { "ref": "ir_cardinality" }
+      }
+    },
+    "duration": {
+      "metadata": { "description": "One measured duration: microseconds plus an explicit saturation marker. `micros` saturates at u32::MAX rather than wrapping; `saturated` is true when the measurement hit that ceiling (or contributed to a total that did) — so the marker is legal ONLY at `micros = u32::MAX`, while an unsaturated `u32::MAX` stays legal because an exact measurement may land exactly there. Writer-side saturation policy lands with the recorder; the representable form is pinned here." },
+      "properties": {
+        "micros": { "type": "uint32" },
+        "saturated": { "type": "boolean" }
+      }
+    },
+    "scope": {
+      "metadata": { "description": "One artifact compilation of the run: a workspace node, a package unit, or a publish artifact. `label` is the exact unencoded outer label (the filename codec percent-encodes; the index retains the true string), `artifact` the artifact id (which repeats `static-md`/`static-xml` across scopes — the pair (`label`, `artifact`) is what disambiguates), `id` the stable scope id events reference." },
+      "properties": {
+        "id": { "type": "string", "metadata": { "description": "Stable scope id; unique across the index, referenced by every event of this scope." } },
+        "kind": { "ref": "scope_kind" },
+        "label": { "type": "string", "metadata": { "description": "The exact unencoded node/unit label." } },
+        "artifact": { "type": "string", "metadata": { "description": "Artifact id, e.g. `static-md`." } },
+        "target": { "ref": "artifact_target" },
+        "status": { "ref": "scope_status" }
+      },
+      "optionalProperties": {
+        "fingerprint": { "type": "string", "metadata": { "x-default": null, "description": "Fingerprint of the compiled output; present for `compiled` and `skipped`, absent for `pending` and `failed`." } },
+        "failure": { "type": "string", "metadata": { "x-default": null, "description": "Bounded diagnostic of a failed scope; present only for `failed`." } }
+      }
+    },
+    "pass_status": {
+      "metadata": { "x-vocabulary": "closed", "description": "How one pass invocation ended. Only `ok` certifies a snapshot; the two snapshot-refusals distinguish encode failure from a deliberately skipped write (budget), and the verifier half of the pipeline is reported separately from the pass body. `pass-failed` and `verification-failed` are COMPILE failures and a root `ok` refuses them; `snapshot-failed` and `snapshot-skipped-budget` are TRACE-side observability and a root `ok` admits them — the observer is not allowed to change the run's outcome." },
+      "enum": ["ok", "pass-failed", "verification-failed", "snapshot-failed", "snapshot-skipped-budget"]
+    },
+    "pass_event": {
+      "metadata": { "description": "One pass invocation: what ran (scope, pass, invocation ordinal), what it consumed and produced (input/output shapes), how it ended (status), how long each stage took (independently saturated pass/verify/encode durations — absent only where the law allows a failure to omit later stages honestly) and which certified snapshot FILE it wrote, if any. The IR itself lives in the snapshot, never here." },
+      "properties": {
+        "sequence": { "type": "uint32", "metadata": { "description": "Dense global run sequence; `events[i].sequence == i`. Also the decimal prefix of the snapshot filename." } },
+        "scope": { "type": "string", "metadata": { "description": "The scope id this invocation belongs to." } },
+        "invocation": { "type": "uint32", "metadata": { "description": "Dense invocation ordinal of THIS pass within THIS scope: encounter order is exactly `0..D-1` (parse runs per document; whole-artifact passes use 0)." } },
+        "pass": { "type": "string", "metadata": { "description": "Exact pass name, e.g. `parse`, `close`, `emit:static-xml`." } },
+        "input_shape": { "ref": "pass_shape", "metadata": { "description": "The shape of the value the pass consumed." } },
+        "output_shape": { "ref": "pass_shape", "metadata": { "description": "The shape of the value the pass produced." } },
+        "status": { "ref": "pass_status" }
+      },
+      "optionalProperties": {
+        "pass_micros": { "ref": "duration", "metadata": { "x-default": null, "description": "Duration of the pass body (`PassSegment`), saturated; present whenever the body ran." } },
+        "verify_micros": { "ref": "duration", "metadata": { "x-default": null, "description": "Duration of the inter-pass/semantic verification stage; present whenever the pass body succeeded (a pass with no verifier records zero, not absence)." } },
+        "encode_micros": { "ref": "duration", "metadata": { "x-default": null, "description": "Duration of the trace snapshot encoding, recorded separately from pass time; present exactly when an encode was attempted." } },
+        "snapshot": { "type": "string", "metadata": { "x-default": null, "description": "The certified snapshot's relative FILENAME — one path component, never a path, in one of the two canonical spellings `snapshot-portability` constructs: `<seq:04>-<enc(pass)>-<kind>_<enc(scope-label)>_<enc(artifact)>-<ord:03>.json`, or `<seq:04>-~<digest16>-<ord:03>.json` when the run directory cannot afford the full one. Only `ok` carries one." } },
+        "diagnostic": { "type": "string", "metadata": { "x-default": null, "description": "Bounded diagnostic of a failed invocation; present exactly on the three failure statuses." } }
+      }
+    },
+    "timing_row": {
+      "metadata": { "description": "One row of the CLI timing table: everything the run spent on one pass name, recomputable from `events` — the validator never trusts the carried totals." },
+      "properties": {
+        "pass": { "type": "string", "metadata": { "description": "Exact pass name this row aggregates." } },
+        "invocations": { "type": "uint32", "metadata": { "description": "How many events carry this pass name." } },
+        "pass_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the pass durations this pass name's events carry." } },
+        "verify_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the verify durations." } },
+        "encode_total": { "ref": "duration", "metadata": { "description": "Saturating sum of the encode durations." } }
+      }
+    }
+  }
+}

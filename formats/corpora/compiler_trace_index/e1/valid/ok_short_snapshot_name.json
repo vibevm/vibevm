@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "run_id": "112233445566778899aabbccddeeff00",
+  "started": "2026-08-27T13:00:00Z",
+  "finished": "2026-08-27T13:00:04Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:e1b2c3d4e1b2c3d4e1b2c3d4e1b2c3d4e1b2c3d4e1b2c3d4e1b2c3d4e1b2c3d4"
+  },
+  "status": "ok",
+  "scopes": [
+    {
+      "id": "unit:org.demo.enterprise.platform.reporting.subsystem",
+      "kind": "unit",
+      "label": "org.demo.enterprise.platform.reporting.subsystem",
+      "artifact": "static-xml",
+      "target": "static-xml",
+      "status": "compiled",
+      "fingerprint": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 0,
+      "scope": "unit:org.demo.enterprise.platform.reporting.subsystem",
+      "invocation": 0,
+      "pass": "emit:static-xml",
+      "input_shape": { "level": "lane", "cardinality": "artifact" },
+      "output_shape": { "level": "emitted", "cardinality": "artifact" },
+      "status": "ok",
+      "pass_micros": { "micros": 3300, "saturated": false },
+      "verify_micros": { "micros": 120, "saturated": false },
+      "encode_micros": { "micros": 900, "saturated": false },
+      "snapshot": "0000-~060ed29890b2fe3d-000.json"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "emit:static-xml",
+      "invocations": 1,
+      "pass_total": { "micros": 3300, "saturated": false },
+      "verify_total": { "micros": 120, "saturated": false },
+      "encode_total": { "micros": 900, "saturated": false }
+    }
+  ]
+}

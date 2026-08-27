@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "run_id": "9876543210fedcba9876543210fedcba",
+  "started": "2026-08-27T12:00:00Z",
+  "finished": "2026-08-27T12:00:01Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:d1b2c3d4d1b2c3d4d1b2c3d4d1b2c3d4d1b2c3d4d1b2c3d4d1b2c3d4d1b2c3d4"
+  },
+  "status": "ok",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  ],
+  "events": [],
+  "aggregates": []
+}

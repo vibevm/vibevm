@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "run_id": "fedcba9876543210fedcba9876543210",
+  "started": "2026-08-27T10:00:00Z",
+  "finished": "2026-08-27T10:00:07Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:b1b2c3d4b1b2c3d4b1b2c3d4b1b2c3d4b1b2c3d4b1b2c3d4b1b2c3d4b1b2c3d4"
+  },
+  "status": "failed",
+  "failure": "unit org.demo.tool failed to close: unresolvable #use target spec://org.demo/missing#anchor",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "id": "unit:org.demo.tool",
+      "kind": "unit",
+      "label": "org.demo.tool",
+      "artifact": "static-xml",
+      "target": "static-xml",
+      "status": "failed",
+      "failure": "unresolvable #use target spec://org.demo/missing#anchor"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 0,
+      "scope": "node:.",
+      "invocation": 0,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 1200, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 800, "saturated": false },
+      "snapshot": "0000-parse-node_._static%2Dmd-000.json"
+    },
+    {
+      "sequence": 1,
+      "scope": "unit:org.demo.tool",
+      "invocation": 0,
+      "pass": "close",
+      "input_shape": { "level": "document", "cardinality": "artifact" },
+      "output_shape": { "level": "closure", "cardinality": "artifact" },
+      "status": "pass-failed",
+      "pass_micros": { "micros": 650, "saturated": false },
+      "diagnostic": "unresolvable #use target spec://org.demo/missing#anchor"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "parse",
+      "invocations": 1,
+      "pass_total": { "micros": 1200, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 800, "saturated": false }
+    },
+    {
+      "pass": "close",
+      "invocations": 1,
+      "pass_total": { "micros": 650, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 0, "saturated": false }
+    }
+  ]
+}

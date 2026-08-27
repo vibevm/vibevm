@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "run_id": "0123456789abcdef0123456789abcdef",
+  "started": "2026-08-27T09:00:00Z",
+  "finished": "2026-08-27T09:00:42Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4"
+  },
+  "status": "crashed",
+  "scopes": [],
+  "events": [],
+  "aggregates": []
+}

@@ -506,6 +506,118 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "index",
+      "end_line": 135
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 60,
+      "symbol": "index::artifact_target",
+      "end_line": 63
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "index::duration",
+      "end_line": 85
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 68,
+      "symbol": "index::ir_cardinality",
+      "end_line": 71
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 64,
+      "symbol": "index::ir_level",
+      "end_line": 67
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 105,
+      "symbol": "index::pass_event",
+      "end_line": 123
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 72,
+      "symbol": "index::pass_shape",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 101,
+      "symbol": "index::pass_status",
+      "end_line": 104
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 45,
+      "symbol": "index::project_identity",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "index::run_status",
+      "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 86,
+      "symbol": "index::scope",
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 52,
+      "symbol": "index::scope_kind",
+      "end_line": 55
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 56,
+      "symbol": "index::scope_status",
+      "end_line": 59
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 124,
+      "symbol": "index::timing_row",
+      "end_line": 133
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -17152,6 +17264,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/compiler_trace_index/e1/index.jtd.json",
+      "from_symbol": "index",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
       "verb": "implements"
     },
     {

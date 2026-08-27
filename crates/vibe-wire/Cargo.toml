@@ -18,6 +18,11 @@ chrono.workspace = true
 semver.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+# The compile trace index's canonical snapshot filename collapses an
+# overlong name to `~` + 16 hex of the SHA-256 of its encoded middle
+# (R3.4 refresh ruling 3); the validator recomputes that digest rather
+# than trusting the shape.
+sha2.workspace = true
 vibe-core.workspace = true
 
 [dev-dependencies]

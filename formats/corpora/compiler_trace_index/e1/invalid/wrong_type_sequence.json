@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "run_id": "0123456789abcdef0123456789abcdef",
+  "started": "2026-08-27T09:00:00Z",
+  "finished": "2026-08-27T09:00:42Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4"
+  },
+  "status": "ok",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ],
+  "events": [
+    {
+      "sequence": "0",
+      "scope": "node:.",
+      "invocation": 0,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 1200, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 800, "saturated": false },
+      "snapshot": "0000-parse--static-md--0.json"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "parse",
+      "invocations": 1,
+      "pass_total": { "micros": 1200, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 800, "saturated": false }
+    }
+  ]
+}

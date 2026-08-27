@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "run_id": "0123456789abcdef0123456789abcdef",
+  "started": "2026-08-27T09:00:00Z",
+  "finished": "2026-08-27T09:00:42Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4"
+  },
+  "status": "ok",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "id": "unit:org.demo.tool",
+      "kind": "unit",
+      "label": "org.demo.tool",
+      "artifact": "static-xml",
+      "target": "static-xml",
+      "status": "compiled",
+      "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "id": "publish:org.demo.tool",
+      "kind": "publish",
+      "label": "org.demo.tool",
+      "artifact": "static-xml",
+      "target": "static-xml",
+      "status": "skipped",
+      "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 0,
+      "scope": "node:.",
+      "invocation": 0,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 1200, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 800, "saturated": false },
+      "snapshot": "0000-parse-node_._static%2Dmd-000.json"
+    },
+    {
+      "sequence": 1,
+      "scope": "node:.",
+      "invocation": 1,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 900, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 700, "saturated": false },
+      "snapshot": "0001-parse-node_._static%2Dmd-001.json"
+    },
+    {
+      "sequence": 2,
+      "scope": "unit:org.demo.tool",
+      "invocation": 0,
+      "pass": "emit:static-xml",
+      "input_shape": { "level": "lane", "cardinality": "artifact" },
+      "output_shape": { "level": "emitted", "cardinality": "artifact" },
+      "status": "ok",
+      "pass_micros": { "micros": 4200, "saturated": false },
+      "verify_micros": { "micros": 300, "saturated": false },
+      "encode_micros": { "micros": 1500, "saturated": false },
+      "snapshot": "0002-emit%3Astatic%2Dxml-unit_org.demo.tool_static%2Dxml-000.json"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "parse",
+      "invocations": 2,
+      "pass_total": { "micros": 2100, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 1500, "saturated": false }
+    },
+    {
+      "pass": "emit:static-xml",
+      "invocations": 1,
+      "pass_total": { "micros": 4200, "saturated": false },
+      "verify_total": { "micros": 300, "saturated": false },
+      "encode_total": { "micros": 1500, "saturated": false }
+    }
+  ]
+}

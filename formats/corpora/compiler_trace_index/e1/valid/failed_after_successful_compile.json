@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "run_id": "aabbccddeeff00112233445566778899",
+  "started": "2026-08-27T15:00:00Z",
+  "finished": "2026-08-27T15:00:06Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:0a1b2c3d0a1b2c3d0a1b2c3d0a1b2c3d0a1b2c3d0a1b2c3d0a1b2c3d0a1b2c3d"
+  },
+  "status": "failed",
+  "failure": "boot artifact transaction rolled back: StaticWrite refused to replace AGENTS.md (path identity changed under the writer)",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:0101010101010101010101010101010101010101010101010101010101010101"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 0,
+      "scope": "node:.",
+      "invocation": 0,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 1200, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 800, "saturated": false },
+      "snapshot": "0000-parse-node_._static%2Dmd-000.json"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "parse",
+      "invocations": 1,
+      "pass_total": { "micros": 1200, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 800, "saturated": false }
+    }
+  ]
+}

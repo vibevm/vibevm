@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "run_id": "00ffeeddccbbaa998877665544332211",
+  "started": "2026-08-27T14:00:00Z",
+  "finished": "2026-08-27T14:00:03Z",
+  "project": {
+    "display": ".",
+    "root_digest": "sha256:f1b2c3d4f1b2c3d4f1b2c3d4f1b2c3d4f1b2c3d4f1b2c3d4f1b2c3d4f1b2c3d4"
+  },
+  "status": "ok",
+  "scopes": [
+    {
+      "id": "node:.",
+      "kind": "node",
+      "label": ".",
+      "artifact": "static-md",
+      "target": "static-md",
+      "status": "compiled",
+      "fingerprint": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 0,
+      "scope": "node:.",
+      "invocation": 0,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "ok",
+      "pass_micros": { "micros": 1200, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 800, "saturated": false },
+      "snapshot": "0000-parse-node_._static%2Dmd-000.json"
+    },
+    {
+      "sequence": 1,
+      "scope": "node:.",
+      "invocation": 1,
+      "pass": "parse",
+      "input_shape": { "level": "source", "cardinality": "document" },
+      "output_shape": { "level": "document", "cardinality": "document" },
+      "status": "snapshot-failed",
+      "pass_micros": { "micros": 900, "saturated": false },
+      "verify_micros": { "micros": 0, "saturated": false },
+      "encode_micros": { "micros": 50, "saturated": false },
+      "diagnostic": "trace snapshot encode failed: no space left on device"
+    }
+  ],
+  "aggregates": [
+    {
+      "pass": "parse",
+      "invocations": 2,
+      "pass_total": { "micros": 2100, "saturated": false },
+      "verify_total": { "micros": 0, "saturated": false },
+      "encode_total": { "micros": 850, "saturated": false }
+    }
+  ]
+}

@@ -171,6 +171,24 @@ foreign_parsers = "none"
 corpus = "formats/corpora/compiler_ir/e1"
 sunset = "none"
 
+# ── Compile trace index (1 JTD), PROP-054 `##OBS-TRACE` / R3.4 ───────────────
+# The METADATA half of `.vibe/trace/<run-id>/index.json`: scopes, pass
+# invocation events, snapshot FILENAMES and timing aggregates. It embeds no
+# IR payload — the snapshots themselves are `compiler_ir/e1` documents, the
+# one registered snapshot payload contract. Rebuildable without a human
+# (delete the run directory and rerun the compile), and read by developers
+# and tools as raw JSON (`curl`/`jq` over a failed run's directory is the
+# first debugging instrument) — so `many`, permissive object members, and
+# the relational laws live in the hand-written validator beside the
+# generated reader, not in a stricter ad-hoc reader (PROP-044 §4.2).
+[format.compiler-trace-index]
+epoch = 1
+schema = "schemas/compiler_trace_index/e1/index.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/compiler_trace_index/e1"
+sunset = "none"
+
 [format.package-skill-receipt]
 epoch = 1
 schema = "schemas/package_skill_receipt.jtd.json"
