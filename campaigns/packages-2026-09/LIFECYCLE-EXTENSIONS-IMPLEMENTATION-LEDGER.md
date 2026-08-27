@@ -19,8 +19,9 @@ superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
 B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
 hardening and R7.3 hosted resume have since landed. Their worktrees are
-reclaimed under rolling GC. The R3.4 durable writer has now landed; its
-equivalent worktree is the next immediate rolling-GC target.
+reclaimed under rolling GC. The R3.4 durable writer has now landed and its
+equivalent worktree was reclaimed immediately; no implementation worktree is
+currently retained.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -345,7 +346,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
   372 GiB from inactive worktrees, and accepted R6.2a/R7.2 worktrees returned a
   further roughly 53 GiB immediately after integration. R6.2b then returned
   another 10,977,020,458 bytes immediately after its equivalent branch commit
-  was proven present on `main`.
+  was proven present on `main`. The accepted R3.4 durable-writer worktree then
+  returned 9,593,199,382 bytes after patch-id equivalence, durable decision
+  capture and final main-tree exact gates were proved.
 
 ## 7. Dependency plan and parallel lanes
 
