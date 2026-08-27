@@ -3391,6 +3391,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/compile_trace.rs",
+      "item_kind": "mod",
+      "line": 57,
+      "symbol": "vibe_cli::commands::compile_trace",
+      "end_line": 57,
+      "fingerprint": "tok1:07184da7149c2c3a749de11ebb4b8b7c6707b20dc3a815d03c890158349b6df2"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/explain.rs",
       "item_kind": "mod",
       "line": 8,
@@ -17107,6 +17116,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/compile_trace/open.rs",
+      "item_kind": "mod",
+      "line": 41,
+      "symbol": "vibe_workspace::compile_trace::open",
+      "end_line": 41,
+      "fingerprint": "tok1:07184da7149c2c3a749de11ebb4b8b7c6707b20dc3a815d03c890158349b6df2"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/compile_trace/retention.rs",
       "item_kind": "mod",
       "line": 45,
@@ -19431,6 +19449,14 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/compile_trace.rs",
+      "from_symbol": "vibe_cli::commands::compile_trace",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
       "verb": "implements"
     },
     {
@@ -32171,6 +32197,14 @@
       "file": "crates/vibe-workspace/src/compile_trace/identity.rs",
       "from_symbol": "vibe_workspace::compile_trace::identity",
       "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/compile_trace/open.rs",
+      "from_symbol": "vibe_workspace::compile_trace::open",
+      "line": 41,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
       "verb": "implements"
