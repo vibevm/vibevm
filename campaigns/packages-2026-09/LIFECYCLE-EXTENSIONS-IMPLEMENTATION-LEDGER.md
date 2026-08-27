@@ -1,6 +1,6 @@
 # Lifecycle/extensions — implementation reconciliation ledger
 
-_Rolling owner-facing checkpoint, 2026-08-26. This is the durable execution
+_Rolling owner-facing checkpoint, 2026-08-27. This is the durable execution
 map for `TZ-LIFECYCLE-EXTENSIONS-v0.1.md`; PROP-054 remains semantic authority.
 `SPEC-DEBT-LIFECYCLE*.md` remains the amendment queue. A row is complete only
 with landed commit, source, and decisive test evidence._
@@ -17,8 +17,9 @@ R8.1 worktrees contain only packets/reports beyond their landed commits.
 Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
-B-107, R3.3, R8.2a grammar and the R8.1 portability hardening have since landed
-and their worktrees were reclaimed; two active, unintegrated atoms remain.
+B-107, R3.3, R8.2a grammar, R6.2a, R7.2 and the R8.1 portability hardening have
+since landed and their worktrees were reclaimed; one active, unintegrated atom
+(R6.2b) remains.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -27,9 +28,10 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Audit base: `main` at `b4bfe6bd` plus the two integration repairs
-  `ae1a90af` and `7ac27240` already included below that head.
-- `cargo test --workspace --locked`: green on 2026-08-26 after the repairs.
+- Integration checkpoint: `main` at `b90cd209` after the compiler-wire,
+  provider/agent, shared safe-filesystem and host slot-record migrations.
+- `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
+  product checkpoint.
 - `cargo xtask specmap --check`: 6769 units, 1670 tagged code items, 1526
   edges, 0 suspects, 0 gated orphans, 0 unresolved host edges, 21 standing
   warnings.
@@ -44,12 +46,17 @@ only durable home of a decision.
   **2,501 unjudged facts in 154 files, 0 orphaned, 484 stale files**. One
   historical gap is named separately from
   1,082 comparable moved facts; no sealing or re-judgement occurred.
-- Full 47-step panel for this batch: pending. Two runs reached workspace tests
-  and exposed real integration tails (redacted TOML diagnostic oracle; expected
-  boot transaction lock); both are repaired and exact tests are green.
-- Publication: the accumulated batch remains ahead of both mirrors. Mirror
-  immediately after the current unchanged batch panel is green; no fixed count
-  is kept here while rolling integrations continue.
+- Full current 54-step panel: green on 2026-08-27. The official prefix 1–11
+  passed on the final code/spec tree; after the sole generated `specmap.json`
+  refresh, the exact official tail 12–54 passed through `self-check: all green`.
+  This includes workspace tests, fmt/clippy/check, wire/codegen/specmap drift,
+  package panels, exhaustive markup, licence and final tripwire gates.
+- Host materialisation is proved: a fresh `vibe reinstall --force` migrated all
+  37 tracked slots to strict ownership records with 1,354 independently
+  rehashed rows; subsequent install materialised 0/37 and the boot tree was
+  byte-identical (`BOOT_BYTE_NOOP=True`).
+- Publication: `cargo xtask mirror` fanned `main` at `b90cd209` plus tags to
+  GitVerse and GitHub successfully on 2026-08-27.
 
 ## 3. Granular R1–R8 ledger
 
@@ -62,7 +69,7 @@ this campaign, but compatibility law is preserved.
 | Step | State | Landed evidence |
 |---|---|---|
 | R1.1 strict JTD slot record | done | `6d606ef2`; `vibedeps/slot_record.rs`; slot-record corpus/tests |
-| R1.2 record-owned diff, no wipe | done | `1cf4f189`; `vibedeps/slot_diff*`; unrecorded/mtime/hardlink reds |
+| R1.2 record-owned diff, no wipe | done | `1cf4f189`, `45f3a8c3`, `b90cd209`; shared wire-path ordering; 37 host records / 1,354 SHA-valid rows; unrecorded/mtime/hardlink reds |
 | R1.3 mutable-source hash gate | done | `6a7f750d`; mutable install unit + CLI e2e |
 | R1.4 verify-heal and hook only on nonempty diff (owner 3.A) | done | `4503fdb6`, `9c545f0d`; `cli_hook_rerun.rs` |
 | R1.5 amendment draft | done as draft | `c7438ff0` and `SPEC-DEBT-LIFECYCLE.md` §§1–7; authoritative movement pending |
@@ -290,18 +297,20 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
-- `main` must not remain single-box-only across another long wave. After the
-  current batch panel, run `cargo xtask mirror` before starting the next large
-  fan-out. Build caches are reclaimed continuously; the first cleanup returned
-  164.6 GiB from root plus roughly 372 GiB from inactive worktrees.
+- `main` was mirrored at `b90cd209` after the green batch panel; it must not
+  remain single-box-only across another long wave. Build caches are reclaimed
+  continuously: the first cleanup returned 164.6 GiB from root plus roughly
+  372 GiB from inactive worktrees, and accepted R6.2a/R7.2 worktrees returned a
+  further roughly 53 GiB immediately after integration.
 
 ## 7. Dependency plan and parallel lanes
 
-### Serialization 0 — restore a truthful durable baseline
+### Serialization 0 — restore a truthful durable baseline (complete)
 
-1. Land this ledger and refresh TZ/WAL/CONTINUE/TASKS pointers.
+1. Land this ledger and refresh TZ/WAL/CONTINUE/TASKS pointers. **Done.**
 2. Finish one unchanged full panel, host check, specmap and boot-byte no-op.
-3. Mirror the accumulated ten-commit batch.
+   **Done at `b90cd209`.**
+3. Mirror the accumulated batch. **Done to GitVerse and GitHub.**
 
 ### Lane A — compiler and native/pass tiers (longest)
 

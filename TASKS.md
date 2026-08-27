@@ -76,8 +76,9 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [ ] **R8.2–R8.4** — artifact records, Cargo provider, static skill, Agent
       Plugin, client deploy, general receipts, `vibe-bin`, profiles, plugin
       replacement and deterministic Windows zip.
-- [~] **Durable recovery baseline** — truthful TZ/TASKS/WAL/CONTINUE + ledger;
-      full panel, boot-byte no-op and mirror the currently single-box commits.
+- [x] **Durable recovery baseline** — truthful TZ/TASKS/WAL/CONTINUE + ledger;
+      current 54-step panel green, strict 37-slot host migration independently
+      rehashed, boot-byte no-op proved, and `b90cd209` mirrored to both remotes.
 - [ ] **Epic close** — authoritative spec-debt/status application, judging
       stability repair, both owner scenarios, independent audit, final panel
       and mirror rollout.
