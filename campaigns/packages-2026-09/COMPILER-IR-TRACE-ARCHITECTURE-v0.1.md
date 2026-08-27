@@ -362,13 +362,25 @@ nondelegated state defaults false, and adoption uses `current_request OR
 prior.compile_trace`. A resume therefore keeps tracing even when the original
 one-shot flag is absent and the manifest changed meanwhile.
 
+The sticky bit proves an effective **request**, not that a recorder actually
+opened. A fresh identity may create its run; an adopted identity must use an
+`open-existing` seam. If the original invocation reported tracing unavailable
+and no run directory exists, its resume stays unavailable instead of silently
+starting a partial trace halfway through the lifecycle run. This also keeps a
+reopen from converting a previously unavailable observer into an apparently
+complete history with missing early compiles.
+
 When identity selection deliberately displaces a state-owned parked run
 (`--force`, changed command/chain/mode, and later selected-node mismatch), it
 returns that exact prior run identity and trace bit. Before opening the fresh
-run, the command attempts to reopen the state-proven old trace and finalise it
-`failed` as superseded. It never infers ownership from a 32-hex directory.
-This converts abandoned running traces into retention-eligible terminals and
-keeps repeated force-reparks bounded.
+run, the command attempts to **open the state-proven old trace only if it
+already exists** and finalise it `failed` as superseded. The open-existing
+operation takes the same cooperative project lock and applies the same
+identity/link/index validation as a normal reopen, but never creates a missing
+directory and never runs fresh-run retention. It never infers ownership from a
+32-hex directory. This converts real abandoned running traces into
+retention-eligible terminals, never manufactures a phantom trace merely to
+supersede it, and keeps repeated force-reparks bounded.
 
 Every exit after open passes one explicit outcome funnel:
 
@@ -444,9 +456,12 @@ future trace surface must be command-owned and JTD-first in the same way.
 22. Recompiling one artifact after a hosted park allocates the next scope
     occurrence; an interrupted pending occurrence is reacquired exactly.
 23. Park leaves a running trace; resume without the original one-shot flag
-    reopens it, appends sequence and eventually finalises the same run.
+    reopens it, appends sequence and eventually finalises the same run. If the
+    original requested trace never opened, resume reports it unavailable and
+    does not create a misleading mid-run history.
 24. Repeated traced force-reparks leave one active running trace and terminal,
-    retention-eligible state-proven predecessors.
+    retention-eligible state-proven predecessors; superseding a state-proven
+    but absent trace directory never creates a phantom terminal run.
 25. Install/lifecycle/update/reinstall use one shared generated trace member;
     disabled old JSON still round-trips with it absent and no standalone trace
     document is emitted.

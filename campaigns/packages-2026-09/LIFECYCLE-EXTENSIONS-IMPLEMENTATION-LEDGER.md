@@ -327,6 +327,15 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
     ownership. Folded identity may refuse a collision or portable rename but
     never authorises an update/removal. Agent outputs, package skills and
     future deploy providers reuse this cell rather than copying it.
+20. Lifecycle `compile_trace = true` is a sticky request bit, not proof that a
+    recorder opened. A fresh command identity may create its trace run; an
+    adopted identity and a state-proven superseded identity use a shared
+    `open-existing` path that takes the normal cooperative lock and validates
+    the existing directory/index but never creates a missing run or performs a
+    fresh retention sweep. Thus a previously unavailable trace cannot become a
+    misleading mid-run history on resume, and displacement cannot manufacture
+    an empty phantom trace just to mark it superseded. Canonical detail:
+    `COMPILER-IR-TRACE-ARCHITECTURE-v0.1.md` §5.3 / acceptance 23–24.
 
 ## 6. Physical state and loss prevention
 
