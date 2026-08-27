@@ -33,6 +33,19 @@ pub enum ExecutionRecordStatus {
     Skip,
 }
 
+/// Which plan a delegated row belongs to, recorded by the engine rather than
+/// inferred by parsing the execution key or a task filename. `phase` rows are
+/// reconciled against the current phase plan, `slot` rows against the current
+/// slot plan. Absent for non-delegated rows and in pre-R7.3 files.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ExecutionRecordScope {
+    #[serde(rename = "phase")]
+    Phase,
+
+    #[serde(rename = "slot")]
+    Slot,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExecutionRecord {
@@ -45,6 +58,41 @@ pub struct ExecutionRecord {
     pub phase: String,
 
     pub status: ExecutionRecordStatus,
+
+    /// Which plan a delegated row belongs to, recorded by the engine rather
+    /// than inferred by parsing the execution key or a task filename. `phase`
+    /// rows are reconciled against the current phase plan, `slot` rows against
+    /// the current slot plan. Absent for non-delegated rows and in pre-R7.3
+    /// files.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scope: Option<ExecutionRecordScope>,
+
+    /// Project-relative outbox task files this delegated row published.
+    /// Absent/empty for every non-delegated status.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tasks: Vec<String>,
+}
+
+/// Exactly which payload-event slot targets this install selected, in the
+/// order the orchestrator will visit them. Persisted so a resume whose lock is
+/// already fresh can rebuild the SAME slot run instead of inferring one from
+/// directory enumeration or from parsing task filenames.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SlotContinuation {
+    /// The exact ordered payload-event target set — the same set the one-shot
+    /// post-install plan consumes.
+    pub targets: Vec<SlotTargetRecord>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SlotTargetRecord {
+    pub group: String,
+
+    pub name: String,
+
+    pub version: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -65,4 +113,16 @@ pub struct StateRun {
     pub requested: String,
 
     pub started: String,
+
+    /// Durable identity of the run that wrote this state. Absent in pre-R7.3
+    /// files; present (32 lowercase hex) whenever any row is delegated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub run_id: Option<String>,
+
+    /// The unfinished slot-lifecycle continuation this run owes, recorded
+    /// BEFORE the first pre-install callback and cleared when the slot run
+    /// completes. Present only while a slot-scoped row is delegated; absent in
+    /// every pre-R7.3 file and after completion.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot_continuation: Option<SlotContinuation>,
 }

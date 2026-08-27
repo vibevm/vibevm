@@ -6,8 +6,9 @@ use serde::{Deserialize, Serialize};
 /// truth for `crates/vibe-wire/src/generated/lifecycle_report/`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LifecycleReport {
-    /// The executed phase spellings in order, including a leading `clean` when
-    /// the clean lifecycle was composed.
+    /// The REQUESTED full chain: every phase spelling this invocation set out
+    /// to run, in order, including a leading `clean` when the clean lifecycle
+    /// was composed. It does not shrink when the run stops early.
     pub chain: Vec<String>,
 
     /// Always `"lifecycle"` for this report.
@@ -26,8 +27,18 @@ pub struct LifecycleReport {
     /// The exact default-lifecycle phase requested by the user.
     pub requested: String,
 
-    /// One outcome for every phase in `chain`, in the same order.
+    /// The ACTUALLY EXECUTED prefix of `chain`, in the same order — one outcome
+    /// per phase that ran. A completed run reports every phase in `chain`; a
+    /// run that parked for a hosting agent ends at the phase whose status is
+    /// `delegated`, and the phases after it are absent because they did not
+    /// run.
     pub steps: Vec<LifecycleStepReport>,
+
+    /// Present exactly when the invocation parked an agent execution for the
+    /// hosting agent. Human/quiet rendering consumes the same value as the
+    /// typed member.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delegation: Option<LifecycleDelegation>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -93,11 +104,24 @@ pub struct LifecycleContributionReport {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LifecycleDelegation {
+    /// The exact command that resumes this run (`vibe <requested-phase>`).
+    pub resume: String,
+
+    /// The durable run identity the hosting agent resumes under.
+    pub run_id: String,
+
+    /// Ordered project-relative outbox task files awaiting the hosting agent.
+    pub tasks: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LifecycleStepReport {
     pub phase: String,
 
     /// Phase outcome vocabulary. R2.4 writes `ok`, `fresh`, or `no-op`; the
-    /// first handler failure aborts the chain.
+    /// first handler failure aborts the chain. R7.3 adds `delegated`: the chain
+    /// parked at this phase and later phases did not run.
     pub status: String,
 }
 

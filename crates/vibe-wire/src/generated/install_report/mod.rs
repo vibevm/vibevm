@@ -2,33 +2,155 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Wire format for `vibe install --json` (the final apply report). Source of
-/// truth for `crates/vibe-wire/src/generated/install_report.rs`.
+/// Wire format for `vibe install --json` — the ONE document the command emits,
+/// whatever it did. Normal apply, the fresh fast path, a hosted park and a
+/// slot failure all use this same root: the command's registered format never
+/// changes with runtime status. Every fact the pre-R7.3 document carried stays
+/// at the ROOT; parking adds only optional members. The engine measures SLOTS
+/// (directories), never a per-file census.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallReport {
     /// Always `"install"` for this report.
     pub command: String,
 
-    /// Required member: an apply that installed nothing writes `[]`, never an
-    /// absent key — omitting a required collection would produce a document
-    /// invalid by this same schema (rule R21).
-    pub installed: Vec<AppliedReport>,
+    /// True when this invocation ran to completion. False when it stopped part-
+    /// way — the slot sets above are then a partial, boundary-measured record,
+    /// never a final one.
+    pub complete: bool,
+
+    /// Dependency-slot paths materialised this run — a directory each, never
+    /// counted as files. Excludes any slot a rollback removed.
+    pub materialised: Vec<String>,
+
+    /// Workspace-relative path of every node whose boot artifacts were
+    /// regenerated.
+    pub nodes_regenerated: Vec<String>,
 
     pub ok: bool,
 
     pub project: String,
+
+    /// Slot paths removed — present before, absent from this resolution.
+    pub pruned: Vec<String>,
+
+    /// Slot paths already present for the resolved version and source identity,
+    /// trusted without materialising.
+    pub skipped: Vec<String>,
+
+    /// True on the PROP-011 §2.2 fast path: `vibe.lock` was already fresh, so
+    /// no resolution ran and no slot moved.
+    pub unchanged: bool,
+
+    /// Lifecycle contributions this command itself ran — slot-scoped rows from
+    /// the install barrier and the `phase:install` ritual. `vibe install` is
+    /// the outermost command on these paths and therefore the only one that
+    /// reports them; a phase verb whose prerequisite install runs them reports
+    /// them in its own lifecycle report instead.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub contributions: Vec<InstallContributionReport>,
+
+    /// Present exactly when a hosted `agent` contribution parked this install.
+    /// The install stopped there and `ok` stays true — a park is a durable
+    /// handoff, not a failure — while `complete` records whether the apply had
+    /// finished first.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delegation: Option<InstallDelegation>,
+
+    /// Install-hook reports (PROP-020 §2.1), pre-install first then post-
+    /// install, so a skipped or flagged hook is never silent.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub hooks: Vec<InstallHookReport>,
+
+    /// Lifecycle notices raised while planning the ritual this command ran —
+    /// an ignored auto-compile row, a selector that matched nothing. Surfaced
+    /// on the outermost command's own report so a notice is never lost with the
+    /// per-row echo that used to carry it.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notices: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct AppliedReport {
-    pub files_written: u32,
+pub struct InstallContributionReport {
+    pub handler: String,
 
-    /// Package label in `<kind>:<name>@<version>` form.
-    pub package: String,
+    pub key: String,
 
-    /// Forward-slash-normalised paths of every file the install wrote. Required
-    /// member: an entry that wrote nothing still writes `paths` as `[]` —
-    /// omitting a required collection would produce a document invalid by this
-    /// same schema (rule R21).
-    pub paths: Vec<String>,
+    pub phase: String,
+
+    pub point: String,
+
+    pub provider: String,
+
+    pub status: String,
+
+    pub tier: String,
+
+    /// A soft post-install failure: reported and surfaced, but not fatal to a
+    /// durable install.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub flagged: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference: Option<String>,
+
+    /// The materialised slot this row executed against.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot_target: Option<InstallSlotTarget>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stderr: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stderr_truncated: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stdout: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stdout_truncated: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+/// The hosted handoff, duplicated deliberately from `cli-lifecycle-report`'s
+/// `lifecycle_delegation`: JTD has no cross-schema `ref`, so each registered
+/// format carries its own copy of this three-field record and a wire test pins
+/// the spellings identical.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallDelegation {
+    /// The exact command that resumes this run.
+    pub resume: String,
+
+    /// The durable run identity the hosting agent resumes under.
+    pub run_id: String,
+
+    /// Ordered project-relative outbox task files awaiting the hosting agent.
+    pub tasks: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallHookReport {
+    pub phase: String,
+
+    pub status: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallSlotTarget {
+    pub group: String,
+
+    pub kind: String,
+
+    pub name: String,
+
+    pub root: String,
+
+    pub version: String,
 }

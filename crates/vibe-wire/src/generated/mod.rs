@@ -31,6 +31,8 @@ pub mod llm;
 pub mod package_skill_receipt;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
+pub mod reinstall_report;
 pub mod shared;
 pub mod slot_record;
 pub mod uninstall_report;
+pub mod update_report;
