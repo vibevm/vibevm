@@ -16,6 +16,7 @@ Landed evidence safe to cite now:
 | `26929050` | R7.2 strict generated agent-result wire, selected-world prompt resolution, optional CLI provider execution and safe multi-output publication; no selected agent row keeps the complete algorithmic path |
 | `9275f373`, `67886ea7` | project package-skill binding has strict JTD receipt, intent/recovery/CAS, exact ownership, lossless path handling and Unicode-9 physical-alias protection across Claude/Codex/OpenCode projections |
 | `2a3f3b44` | strict artifact/mechanism/deploy grammar, target DAGs, provider pins/routes and named profiles with parse/write symmetry |
+| `1dd5e1f5`, `eae4494e` | R7.3 durable hosted run/outbox, candidate-state atomicity, exact phase/slot reconciliation, same-command no-spend resume and generated install/update/reinstall report roots |
 
 The production provider's mock, loopback, proxy, redirect, size, redaction and
 timeout gates are green. The earlier ordinary-process transport failure was
@@ -76,6 +77,19 @@ the algorithmic baseline: with no selected agent contribution, no provider is
 constructed, no credential is read and the lifecycle remains complete.
 Hosted outbox/resume and MCP are separate R7.3/R7.4 adapters over this result
 contract.</AGENT-CLI-EXECUTION>
+
+<AGENT-HOSTED-HANDOFF fact="true" status="impl/done">R7.3 resolves hosted
+mode before provider dispatch, publishes one exact state-owned task under a
+durable run id, and parks the chain with zero provider calls. Same-command
+resume accepts outputs only against the prior delegated row's exact fingerprint
+and contract. Lifecycle state is committed as a validated candidate: slot debt
+and its ordered target continuation become durable or clear in the same write;
+phase/slot scopes reconcile removed declarations without guessing provenance;
+state is forgotten before exact task cleanup, so a cleanup failure leaves a
+named orphan rather than a live row pointing at absence. Install, update and
+reinstall expose the handoff as an optional member of their generated root,
+with command-level completion and boundary-measured progress. MCP R7.4 must
+adapt these same files and may not create a second mailbox.</AGENT-HOSTED-HANDOFF>
 ```
 
 Keep exact provider ids; no aliases route Anthropic/OpenRouter names through an
@@ -378,6 +392,7 @@ No movement is applied by this draft.
 | PROP-000 `##CRATE-LLM` | `impl/work` now (`e2392893`) |
 | PROP-054 `##AGENT-CLI` provider seam | add `impl/done` provider successor (`e2392893`) |
 | PROP-054 `##AGENT-CLI` CLI execution | add `impl/done` successor (`26929050`); hosted/MCP remain work |
+| PROP-054 `##AGENT-HANDSHAKE` hosted execution | add `impl/done` successor (`1dd5e1f5`, `eae4494e`); MCP remains work |
 | `##OPEN-CREATE-BUDGET` | close by §3 owner ruling after mode/budget implementation |
 | `##OPEN-DEPLOY-TARGETS` | close by §8 owner ruling; grammar/profiles landed at `2a3f3b44`, runtime statuses remain open |
 | project package-skill binding | record `impl/done` safety successor at `9275f373`/`67886ea7`; do not imply user deploy |

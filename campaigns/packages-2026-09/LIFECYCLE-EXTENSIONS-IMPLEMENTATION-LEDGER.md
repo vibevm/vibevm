@@ -18,8 +18,9 @@ Intermediate dirty R2/R3 worktrees were older construction snapshots
 superseded by richer files on `main`. Their unique R4/R5 audit decisions were
 synthesised here, then 33 obsolete worktrees were removed under rolling GC.
 B-107, R3.3, R8.2a grammar, R6.2a/R6.2b, R7.2 and the R8.1 portability
-hardening have since landed. Their worktrees were reclaimed under rolling GC;
-R7.3 is the only older active implementation worktree.
+hardening and R7.3 hosted resume have since landed. Their worktrees are
+reclaimed under rolling GC; the R3.4 writer is the only active implementation
+worktree.
 Missing later waves were never implemented.
 
 The reusable decisions from untracked architecture/review reports are
@@ -28,11 +29,11 @@ only durable home of a decision.
 
 ## 2. Evidence standard and current baseline
 
-- Integration checkpoint: `main` at `dee7ccb4` after the compiler observer and
-  its regenerated spec map.
+- Integration checkpoint: `main` at `870440ea` after hosted lifecycle resume,
+  combined generated reports and the regenerated spec map.
 - `cargo test --workspace --locked`: green on 2026-08-27 at the unchanged
   product checkpoint.
-- `cargo xtask specmap`: 6772 units, 1986 tagged code items, 1778 edges,
+- `cargo xtask specmap`: 6772 units, 2030 tagged code items, 1811 edges,
   0 suspects, 0 gated orphans, 0 unresolved host edges and 21 standing
   warnings. The 25 non-host edges are outside this map's jurisdiction.
 - R6.2b integration evidence on the current tree: `cargo xtask codegen`
@@ -45,6 +46,11 @@ only durable home of a decision.
   clippy is clean; independent final freeze is `PASS`. The seam uses generated
   trace-index metadata types, contains unwinding sink panics, performs no
   off-mode clock/allocation/encode, and decides budget stand-down before encode.
+- R7.3 integration evidence on the current tree: state transaction tests 5/5;
+  hosted cancellation/progress/sequential-slot e2e 2/5/1; targeted five-crate
+  clippy clean; 48-schema codegen idempotent; specmap has zero gated orphans;
+  the sixth independent freeze ended in `PASS` after two root-owned truth-tail
+  fixes.
 - B-107 is closed by `f8f197cd`/`c195eae1`: all 502 judged records map
   one-to-one to live paths (98 retain their extension; 404 become XML), six new
   unjudged live documents bring the corpus to 508, and all 19,548 verdicts plus
@@ -145,7 +151,7 @@ unplanned safety work is accepted substrate, not a substitute for R3.3/R3.4.
 |---|---|---|
 | R7.1 real provider seam | done | `f42334ff`, `e2392893`; JTD wire, config, endpoint/redirect/proxy/body/timeout/redaction tests |
 | R7.2 CLI agent handler + output contract | done | `26929050`; strict AgentResult JTD, prepared prompt/world resolution, ResultPlan, optional provider path, create/install/reinstall/update e2e and shared safe filesystem cell |
-| R7.3 hosted outbox/delegated resume | missing | delegated enum exists; no durable run id/outbox/fenced block/resume |
+| R7.3 hosted outbox/delegated resume | done | `1dd5e1f5`, generated reports `eae4494e`; durable run/outbox, exact task ownership, candidate-state atomicity, phase/slot reconciliation, command-level progress, no-spend sequential resume and independent final freeze |
 | R7.4 MCP lifecycle surfaces | missing | no `lifecycle_run` or `lifecycle_tasks` tools |
 
 R7 live Z.AI smoke is now conclusive (2026-08-27): central `vibe create`
@@ -222,9 +228,15 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
    per field over user config; nonempty project env credential beats user token
    file; absolute operator token paths are legal; `~` is literal. Keyed HTTPS,
    keyless loopback HTTP only, redirects off, no body/secret diagnostics.
-10. Hosted resume extends existing lifecycle state with a durable run id; it
-    reuses the same outbox/task path until outputs satisfy the contract. MCP is
-    a second adapter over those files, not a second mailbox.
+10. Hosted resume extends existing lifecycle state with one durable run id and
+    exact state-owned outbox task. A candidate `LifecycleState` reconciles
+    slot debt and its ordered target continuation, validates and lands
+    atomically before replacing memory; cancellation forgets state before exact
+    task cleanup. Phase and slot parks carry typed scopes and reconcile only
+    against their own current plans. Install/update/reinstall emit one hosted
+    command root with boundary-measured progress; sequential agent rows reuse
+    only engine-recorded exact-fingerprint outputs and never call the provider.
+    MCP is a second adapter over these files, not a second mailbox.
 11. Automatic package skill binding is project-only. User/client installation
     is explicit deploy, never an implicit side effect of package.
 12. Every external mutation has plan, effect class, intent, independent verify

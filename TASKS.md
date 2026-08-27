@@ -75,7 +75,11 @@ fronts currently in flight. A worker report or old worktree is never completion.
 - [x] **R7.2** — CLI agent/output contract (`26929050`); strict generated
       result, selected-world prompt resolution and safe multi-output publish.
       Algorithmic default remains complete with no selected agent row.
-- [ ] **R7.3–R7.4** — durable hosted outbox/resume and shared MCP surfaces.
+- [x] **R7.3** — durable hosted outbox/same-command resume (`1dd5e1f5`),
+      command-specific generated reports (`eae4494e`), candidate-state
+      checkpointing, slot/phase reconciliation and no-spend sequential parks.
+- [ ] **R7.4** — shared MCP `lifecycle_run` / `lifecycle_tasks` surfaces over
+      the same state and outbox files.
 - [x] **R8.1** — project-only package skill binding with strict ownership,
       recovery and Claude/Codex/OpenCode projections.
 - [x] **R8.2a** — strict mechanism/artifact/deploy-profile manifest grammar
