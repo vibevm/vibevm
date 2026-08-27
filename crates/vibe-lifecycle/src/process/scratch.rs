@@ -122,6 +122,7 @@ pub fn allocate_run_id(project_root: &Path) -> Result<String, ScratchError> {
 /// Owned here because this module mints run ids; the state store, the outbox
 /// path and adoption all judge identity through this one predicate.
 #[must_use]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn is_valid_run_id(id: &str) -> bool {
     id.len() == 32
         && id

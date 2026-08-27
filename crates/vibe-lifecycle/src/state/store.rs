@@ -486,6 +486,7 @@ pub struct RunIdentity {
 /// selected project root) — the two differ only in a multi-node workspace.
 /// Selection completes BEFORE allocation, so an adopted run never mints and
 /// abandons a candidate scratch directory.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn select_run_identity(
     state_root: &Path,
     allocation_root: &Path,
