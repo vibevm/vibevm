@@ -14725,6 +14725,141 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace.rs",
+      "item_kind": "mod",
+      "line": 37,
+      "symbol": "vibe_spec::compiler::trace",
+      "end_line": 37,
+      "fingerprint": "tok1:07184da7149c2c3a749de11ebb4b8b7c6707b20dc3a815d03c890158349b6df2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_before_snapshot_falls_back_to_the_default_encode_decision",
+      "end_line": 45,
+      "fingerprint": "tok1:37c74b7800078adabce3a02af1b21cef39773eaea153e896c74236001c887849"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "item_kind": "fn",
+      "line": 20,
+      "symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_before_snapshot_is_an_observer_defect_not_a_compile_outcome",
+      "end_line": 34,
+      "fingerprint": "tok1:d09a2ec4bb777845416ecb134f2d933a8fbdf685a560fb61754e3abf6355e99d"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "item_kind": "fn",
+      "line": 62,
+      "symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_record_cannot_replace_a_real_pass_error",
+      "end_line": 75,
+      "fingerprint": "tok1:f16e1525f2d3591443c30ccb772519178936a926d389401ee01586d144be9cf4"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "item_kind": "fn",
+      "line": 47,
+      "symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_record_is_contained_on_a_successful_compile",
+      "end_line": 60,
+      "fingerprint": "tok1:56e6d8de6f363bc99ab05e1d674c82f68e127b2001c8a168e265da1f0e87b9b4"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_spec::compiler::trace::tests::observed::a_sink_that_stands_down_on_budget_costs_the_compiler_no_encode_at_all",
+      "end_line": 157,
+      "fingerprint": "tok1:f060b65b1c45317809a0fb07204d0cbfa8bd54b54a9ad6c843a858dff346bfc2"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "item_kind": "fn",
+      "line": 13,
+      "symbol": "vibe_spec::compiler::trace::tests::observed::an_untraced_compile_encodes_nothing_and_keeps_its_bytes_and_errors",
+      "end_line": 54,
+      "fingerprint": "tok1:478af89313e6c63916d4c4bdfa39bdc9e19b3d4f78f617702e718c2b07a15c8f"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "item_kind": "fn",
+      "line": 90,
+      "symbol": "vibe_spec::compiler::trace::tests::observed::every_certified_snapshot_decodes_through_the_strict_reader_at_its_own_shape",
+      "end_line": 125,
+      "fingerprint": "tok1:3708dbcfaaf0fba1c62e2aec7ad7c875866649ef7aef8ce7f533afa0a8dafe8a"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "item_kind": "fn",
+      "line": 159,
+      "symbol": "vibe_spec::compiler::trace::tests::observed::the_default_pre_encode_decision_still_certifies_every_snapshot",
+      "end_line": 180,
+      "fingerprint": "tok1:00370d710b80ba37808abe145980829dc1fabca3ddad1c6ae2d1e9451c2ac8eb"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "item_kind": "fn",
+      "line": 56,
+      "symbol": "vibe_spec::compiler::trace::tests::observed::the_observed_names_equal_the_declared_schedule_with_one_parse_per_document",
+      "end_line": 88,
+      "fingerprint": "tok1:f83850f7c6c54e5c5d64f0326a963448afa5cf5226504ea6d65244c554eb93c5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "item_kind": "fn",
+      "line": 19,
+      "symbol": "vibe_spec::compiler::trace::tests::refusals::a_real_pass_failure_records_one_event_and_keeps_the_error_identity",
+      "end_line": 65,
+      "fingerprint": "tok1:53d2a59ac3cdd6b6607b82322457368791c62213907c1cc06429c58b3d9dd7a4"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "item_kind": "fn",
+      "line": 67,
+      "symbol": "vibe_spec::compiler::trace::tests::refusals::a_segment_input_refusal_is_not_fabricated_into_a_pass_event",
+      "end_line": 93,
+      "fingerprint": "tok1:c9b400d0cfb5cb4e9a39aa3353a7552b60a011d47a281049d8d966fd7ca2eb6a"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "item_kind": "fn",
+      "line": 131,
+      "symbol": "vibe_spec::compiler::trace::tests::refusals::a_semantic_refusal_records_verification_failed_after_the_earlier_pass_was_certified",
+      "end_line": 164,
+      "fingerprint": "tok1:014aba346fd231c447b4b8037bd73f30aeaf0b0b8d69a86d6cc144715e9a94b5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_spec::compiler::trace::tests::refusals::a_wrong_runtime_shape_records_verification_failed_without_a_snapshot",
+      "end_line": 129,
+      "fingerprint": "tok1:bf1bdf823eb985bc454c13dad5f59e0b098259354d545eaf84f11cc9e63adfe3"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "item_kind": "fn",
+      "line": 166,
+      "symbol": "vibe_spec::compiler::trace::tests::refusals::an_encoder_refusal_is_diagnostic_and_leaves_the_successful_output_alone",
+      "end_line": 199,
+      "fingerprint": "tok1:ea2bc09096bbaada2956739af4f21b35ef2e6a9739e0469490ceb1a6ae672b20"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/verify.rs",
       "item_kind": "mod",
       "line": 10,
@@ -29367,6 +29502,126 @@
       "line": 389,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace.rs",
+      "from_symbol": "vibe_spec::compiler::trace",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_before_snapshot_falls_back_to_the_default_encode_decision",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_before_snapshot_is_an_observer_defect_not_a_compile_outcome",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_record_cannot_replace_a_real_pass_error",
+      "line": 63,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/defects.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::defects::a_panic_in_record_is_contained_on_a_successful_compile",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::observed::a_sink_that_stands_down_on_budget_costs_the_compiler_no_encode_at_all",
+      "line": 128,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::observed::an_untraced_compile_encodes_nothing_and_keeps_its_bytes_and_errors",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::observed::every_certified_snapshot_decodes_through_the_strict_reader_at_its_own_shape",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::observed::the_default_pre_encode_decision_still_certifies_every_snapshot",
+      "line": 160,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/observed.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::observed::the_observed_names_equal_the_declared_schedule_with_one_parse_per_document",
+      "line": 57,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::refusals::a_real_pass_failure_records_one_event_and_keeps_the_error_identity",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::refusals::a_segment_input_refusal_is_not_fabricated_into_a_pass_event",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::refusals::a_semantic_refusal_records_verification_failed_after_the_earlier_pass_was_certified",
+      "line": 132,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::refusals::a_wrong_runtime_shape_records_verification_failed_without_a_snapshot",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/compiler/trace/tests/refusals.rs",
+      "from_symbol": "vibe_spec::compiler::trace::tests::refusals::an_encoder_refusal_is_diagnostic_and_leaves_the_successful_output_alone",
+      "line": 167,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE",
       "verb": "verifies"
     },
     {
