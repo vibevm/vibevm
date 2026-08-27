@@ -154,8 +154,8 @@ than depending on untracked `cache/` archaeology.
   37 tracked slots to strict ownership records with 1,354 independently
   rehashed rows; subsequent install materialised 0/37 and the boot tree was
   byte-identical (`BOOT_BYTE_NOOP=True`).
-- Publication: `cargo xtask mirror` fanned `main` at `bcba4290` plus tags to
-  GitVerse and GitHub successfully on 2026-08-27.
+- Publication: `cargo xtask mirror` fanned the complete R3.4 checkpoint
+  `2bb53f95` plus tags to GitVerse and GitHub successfully on 2026-08-28.
 
 ## 3. Granular R1–R8 ledger
 
@@ -511,9 +511,9 @@ continuation. They are not silently reduced to the old three-line R8 minimum.
 - `cache/` is untracked and unignored. It is not a product home. Important
   decisions from its R3.3, R4–R5 and R6–R8 reports are now represented in this
   ledger; future accepted decisions go directly here/spec-debt/code comments.
-- `main` was mirrored at `bcba4290` after the R6.2b atom; it must not
-  remain single-box-only across another long wave. Build caches are reclaimed
-  continuously: the first cleanup returned 164.6 GiB from root plus roughly
+- `main` was mirrored at `2bb53f95` after the final R3.4 docs/specmap
+  checkpoint. Build caches are reclaimed continuously: the first cleanup
+  returned 164.6 GiB from root plus roughly
   372 GiB from inactive worktrees, and accepted R6.2a/R7.2 worktrees returned a
   further roughly 53 GiB immediately after integration. R6.2b then returned
   another 10,977,020,458 bytes immediately after its equivalent branch commit

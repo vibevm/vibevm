@@ -125,9 +125,9 @@
       Published history is not rewritten; the harvest is the durable
       correction and future commits resolve anchors before citing them.
       </WAL-I-CITATION>
-      <WAL-I-PUBLICATION fact="true" status="impl/work">The accumulated
-      all-green R3.4 batch is single-box until this docs/specmap checkpoint is
-      committed and `cargo xtask mirror` completes to both source mirrors.
+      <WAL-I-PUBLICATION fact="true" status="impl/done">The complete R3.4
+      checkpoint `2bb53f95` plus tags is mirrored ff-only to GitVerse and
+      GitHub. The next batch repeats the same rollout after its green panel.
       </WAL-I-PUBLICATION>
     </facts>
   </known-issues>
