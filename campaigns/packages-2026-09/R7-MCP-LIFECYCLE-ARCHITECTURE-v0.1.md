@@ -420,8 +420,11 @@ projection; no surface-conditional wire member or shell subprocess is added.
 
 1. Two workspace members with identical requested phase/chain never adopt one
    another's parked run.
-2. The original member adopts its exact run and start; `--force`, CLI mode,
-   changed chain or changed selected node allocates fresh identity.
+2. The original member adopts its exact run and start. On that same selected
+   node, `--force`, CLI mode or a changed chain allocates fresh identity. A
+   different selected node allocates fresh only when no live delegated row is
+   owned elsewhere; a foreign live park is the ownership refusal in §2.3,
+   even under force.
 3. Delegated legacy state without selected identity refuses; nondelegated
    legacy state remains readable and upgrades on begin.
 
