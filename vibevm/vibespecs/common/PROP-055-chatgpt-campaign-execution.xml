@@ -325,6 +325,19 @@
       turns. Same-cwd `-c` preserves the subscription-paid context and is the
       default recovery from a turn-cap boundary. `max_turns` exhaustion
       preserves the worktree but is never PASS.</CLAUDEZ-TURN-BUDGET>
+      <CLAUDEZ-QUOTA-BOUNDARY-2026-08-27 fact="true" status="spec/done">Two
+      concurrent broad R3.4 continuations (147 and 111 turns) reached green
+      focused/parent gates and then both received 429 with the **same**
+      advertised reset instant before either wrote its mandated report. They
+      resolved to `glm-5.3[1m]`; the worktrees/logs remained complete. This
+      proves the five-hour allowance is account-wide, not per process:
+      parallel claudez jobs increase throughput but consume one shared window
+      concurrently. An uncapped run therefore does not license report-last
+      execution. Create the report skeleton after the first product slice,
+      update evidence incrementally before long parent gates, and treat quota
+      exhaustion as a preserved handoff to root/Opus rather than retrying
+      against the published reset. The hourly probe observes recovery; it does
+      not estimate remaining quota.</CLAUDEZ-QUOTA-BOUNDARY-2026-08-27>
       <CLAUDEZ-HOURLY-PROBE fact="true" status="spec/done">While this campaign
       is active, the ChatGPT thread owns an hourly heartbeat named «Проверка
       доступности claudez». It starts one fresh isolated `claudez -p` elementary
@@ -425,10 +438,13 @@ known positive control demonstrates the instrument can fire.
 
 ## Deliverable report — draft within 140 lines
 
-Do not spend turns repeatedly trimming a long report. Start concise (140-line
-target leaves headroom under a 150-line hard cap). Write/update the durable
-report before the final two allowed turns; a worker that reaches `max_turns`
-without it has failed its deliverable even when useful edits remain.
+Do not spend turns repeatedly trimming a long report. Create its concise
+skeleton after the first product slice, then update decisions/evidence
+incrementally before long parent gates (140-line target leaves headroom under a
+150-line hard cap). Never defer the first durable report write to the final two
+turns: `max_turns`, network loss and the account-wide five-hour quota can all
+end the next call, and a worker without the report has failed its deliverable
+even when useful edits remain.
 
 ```markdown
 # WORKER-REPORT — &lt;task-id&gt;
