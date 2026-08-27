@@ -2823,6 +2823,195 @@
       "fingerprint": "tok1:991b8a166e7e51824906407bd2b92292c9025a2539219415e9232ca2df092790"
     },
     {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/lib.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "vibe_agent_projection",
+      "end_line": 25,
+      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/agents.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_agent_projection::agents",
+      "end_line": 8,
+      "fingerprint": "tok1:98ea4728e671f90ea50b7009aebb706100abb3b5eaa8dda3220ff8610ee77611"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/agents.rs",
+      "item_kind": "fn",
+      "line": 546,
+      "symbol": "vibe_agent_projection::agents::detect_agents",
+      "end_line": 556,
+      "fingerprint": "tok1:6e215c645e52009cc72098ae3e54ca4d7f3b0f6c5788c119ef2bd855228f37da"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_agent_projection::pkgskill",
+      "end_line": 12,
+      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "enum",
+      "line": 45,
+      "symbol": "vibe_agent_projection::pkgskill::PackageSkillError",
+      "end_line": 105,
+      "fingerprint": "tok1:cd1e9e911115ffcecf2cf6d45c8c1b8d2e83d2ba434c0b6b264af1aac6ebbead"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "struct",
+      "line": 107,
+      "symbol": "vibe_agent_projection::pkgskill::PackageSkillReport",
+      "end_line": 133,
+      "fingerprint": "tok1:bc415d479e0f05a27171e37150e5879bf37dd1676bcd9b618365e9b74c054ce9"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/exact_path.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "vibe_agent_projection::pkgskill::exact_path",
+      "end_line": 17,
+      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 135,
+      "symbol": "vibe_agent_projection::pkgskill::install_package_skill",
+      "end_line": 154,
+      "fingerprint": "tok1:d640819f4cbecc751b8189b08226926d9f2165bcbd7ad7ab96986505b85b33d4"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 156,
+      "symbol": "vibe_agent_projection::pkgskill::install_package_skill_selecting",
+      "end_line": 267,
+      "fingerprint": "tok1:8c9bb99257e367a79379740ea164d6384f8249c0a7305dbbf27cf739b86d14dd"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_agent_projection::pkgskill::projection",
+      "end_line": 7,
+      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 33,
+      "symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkill",
+      "end_line": 47,
+      "fingerprint": "tok1:f8a4592881f4f764f03a3cb2f5367a20710904a0f1dba50c82fad8b497341607"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 87,
+      "symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillFilter",
+      "end_line": 93,
+      "fingerprint": "tok1:5a122c338be8beec1a88c54b4e97bf2032b66c22248c59f27bddb66c2b2ca965"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "item_kind": "struct",
+      "line": 208,
+      "symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillProjection",
+      "end_line": 216,
+      "fingerprint": "tok1:72d1af57a07076c3085113f8617e6561534b6ff16436680240d93bd896fad581"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "item_kind": "enum",
+      "line": 49,
+      "symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillProvider",
+      "end_line": 69,
+      "fingerprint": "tok1:7c91c165b90feaa10cb27f3711b9b3da522d49ce24e15c7bca3350c6adc6bc45"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "item_kind": "mod",
+      "line": 1,
+      "symbol": "vibe_agent_projection::pkgskill::projection::binding",
+      "end_line": 1,
+      "fingerprint": "tok1:03ac2a8c54d7c3a6acdb258127217748d006b672ac22f063ab6f67c12f411790"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "item_kind": "struct",
+      "line": 39,
+      "symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillBinding",
+      "end_line": 49,
+      "fingerprint": "tok1:40258f3c3b523f66944ef87ff808cd09c2a8fbae9c50949f05d623ea5bb773ce"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "item_kind": "struct",
+      "line": 21,
+      "symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillProviderInput",
+      "end_line": 29,
+      "fingerprint": "tok1:3d885d7d803903a81c6e17836b066d90dcd24daf655dd8659430b37241d37433"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "item_kind": "struct",
+      "line": 31,
+      "symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillTarget",
+      "end_line": 37,
+      "fingerprint": "tok1:b8a205c01ac98298f94c5d7ba311cc5309c82b7586d913da9cce6f63adbc1e26"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/tests.rs",
+      "item_kind": "fn",
+      "line": 189,
+      "symbol": "vibe_agent_projection::pkgskill::tests::include_projects_only_matching_files",
+      "end_line": 223,
+      "fingerprint": "tok1:54a1d055b321bd3fed1c0c72b99f89312abe67b46c928c4621f4748823dc85f8"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill/tests.rs",
+      "item_kind": "fn",
+      "line": 22,
+      "symbol": "vibe_agent_projection::pkgskill::tests::projects_dir_skill_and_is_idempotent",
+      "end_line": 60,
+      "fingerprint": "tok1:f77d87256d009ce49cb5a453b0797e3154c941ad325e78569b442993fa27efec"
+    },
+    {
+      "crate_name": "vibe-agent-projection",
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 269,
+      "symbol": "vibe_agent_projection::pkgskill::uninstall_package_skill",
+      "end_line": 340,
+      "fingerprint": "tok1:22d663c097aecb4c703544f7edb4857c317783a9664f1f193c2a561fd2e26d9c"
+    },
+    {
       "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/lib.rs",
       "item_kind": "mod",
@@ -11887,24 +12076,6 @@
     },
     {
       "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/agents.rs",
-      "item_kind": "mod",
-      "line": 8,
-      "symbol": "vibe_mcp::agents",
-      "end_line": 8,
-      "fingerprint": "tok1:98ea4728e671f90ea50b7009aebb706100abb3b5eaa8dda3220ff8610ee77611"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/agents.rs",
-      "item_kind": "fn",
-      "line": 546,
-      "symbol": "vibe_mcp::agents::detect_agents",
-      "end_line": 556,
-      "fingerprint": "tok1:6e215c645e52009cc72098ae3e54ca4d7f3b0f6c5788c119ef2bd855228f37da"
-    },
-    {
-      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "mod",
       "line": 8,
@@ -11916,27 +12087,27 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "struct",
-      "line": 23,
+      "line": 27,
       "symbol": "vibe_mcp::install::AgentInstallReport",
-      "end_line": 47,
+      "end_line": 51,
       "fingerprint": "tok1:98b3f144f9ef26331f71c2284c451d22e4c9e5e6b315bd691b408de1dc5a7344"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "struct",
-      "line": 49,
+      "line": 53,
       "symbol": "vibe_mcp::install::SkillInstallReport",
-      "end_line": 70,
+      "end_line": 74,
       "fingerprint": "tok1:58f3f9788bdf6152a2b8518ce14516039a3010166adcc025c801ac628c232e06"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "fn",
-      "line": 72,
+      "line": 76,
       "symbol": "vibe_mcp::install::install_skill",
-      "end_line": 121,
+      "end_line": 125,
       "fingerprint": "tok1:40164bd516d653849d1b0d2ae01d8e0a9904a29610bf7c511690fc2e1bfc8cd9"
     },
     {
@@ -11965,168 +12136,6 @@
       "symbol": "vibe_mcp::pkg_servers",
       "end_line": 12,
       "fingerprint": "tok1:a553b3b61d08fca530ea57d5d742cf61da7ba6272a018b5054242070ae5785eb"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "mod",
-      "line": 12,
-      "symbol": "vibe_mcp::pkgskill",
-      "end_line": 12,
-      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "enum",
-      "line": 45,
-      "symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "end_line": 105,
-      "fingerprint": "tok1:3068f5caf6be122907b5c82939157c0dcd6dacc32982adb92df776321c5fd037"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "struct",
-      "line": 107,
-      "symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "end_line": 133,
-      "fingerprint": "tok1:415119c3f214e33f346ac73019a5c29591662591213a3aee47b6e5d3b97c0508"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/exact_path.rs",
-      "item_kind": "mod",
-      "line": 17,
-      "symbol": "vibe_mcp::pkgskill::exact_path",
-      "end_line": 17,
-      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "fn",
-      "line": 135,
-      "symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "end_line": 154,
-      "fingerprint": "tok1:d640819f4cbecc751b8189b08226926d9f2165bcbd7ad7ab96986505b85b33d4"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "fn",
-      "line": 156,
-      "symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "end_line": 267,
-      "fingerprint": "tok1:76dd69d858d8c518d4a5e1f9c2a483969f60eefcbab416c7604dad08609326dc"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "item_kind": "mod",
-      "line": 7,
-      "symbol": "vibe_mcp::pkgskill::projection",
-      "end_line": 7,
-      "fingerprint": "tok1:f27c05524e8c657415593b259d1567cb09ce7f0f981a2cf3c3fc1f584d93b355"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "item_kind": "struct",
-      "line": 33,
-      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkill",
-      "end_line": 47,
-      "fingerprint": "tok1:f8a4592881f4f764f03a3cb2f5367a20710904a0f1dba50c82fad8b497341607"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "item_kind": "struct",
-      "line": 87,
-      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillFilter",
-      "end_line": 93,
-      "fingerprint": "tok1:5a122c338be8beec1a88c54b4e97bf2032b66c22248c59f27bddb66c2b2ca965"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "item_kind": "struct",
-      "line": 208,
-      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProjection",
-      "end_line": 216,
-      "fingerprint": "tok1:72d1af57a07076c3085113f8617e6561534b6ff16436680240d93bd896fad581"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "item_kind": "enum",
-      "line": 49,
-      "symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProvider",
-      "end_line": 69,
-      "fingerprint": "tok1:7c91c165b90feaa10cb27f3711b9b3da522d49ce24e15c7bca3350c6adc6bc45"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "item_kind": "mod",
-      "line": 1,
-      "symbol": "vibe_mcp::pkgskill::projection::binding",
-      "end_line": 1,
-      "fingerprint": "tok1:03ac2a8c54d7c3a6acdb258127217748d006b672ac22f063ab6f67c12f411790"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "item_kind": "struct",
-      "line": 39,
-      "symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillBinding",
-      "end_line": 49,
-      "fingerprint": "tok1:40258f3c3b523f66944ef87ff808cd09c2a8fbae9c50949f05d623ea5bb773ce"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "item_kind": "struct",
-      "line": 21,
-      "symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillProviderInput",
-      "end_line": 29,
-      "fingerprint": "tok1:3d885d7d803903a81c6e17836b066d90dcd24daf655dd8659430b37241d37433"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "item_kind": "struct",
-      "line": 31,
-      "symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillTarget",
-      "end_line": 37,
-      "fingerprint": "tok1:b8a205c01ac98298f94c5d7ba311cc5309c82b7586d913da9cce6f63adbc1e26"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/tests.rs",
-      "item_kind": "fn",
-      "line": 189,
-      "symbol": "vibe_mcp::pkgskill::tests::include_projects_only_matching_files",
-      "end_line": 223,
-      "fingerprint": "tok1:54a1d055b321bd3fed1c0c72b99f89312abe67b46c928c4621f4748823dc85f8"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill/tests.rs",
-      "item_kind": "fn",
-      "line": 22,
-      "symbol": "vibe_mcp::pkgskill::tests::projects_dir_skill_and_is_idempotent",
-      "end_line": 60,
-      "fingerprint": "tok1:f77d87256d009ce49cb5a453b0797e3154c941ad325e78569b442993fa27efec"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "item_kind": "fn",
-      "line": 269,
-      "symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "end_line": 340,
-      "fingerprint": "tok1:22d663c097aecb4c703544f7edb4857c317783a9664f1f193c2a561fd2e26d9c"
     },
     {
       "crate_name": "vibe-mcp",
@@ -14067,54 +14076,54 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 35,
+      "line": 36,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 47,
+      "end_line": 48,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 269,
+      "line": 270,
       "symbol": "vibe_safefs::file::Project::preflight",
-      "end_line": 305,
+      "end_line": 306,
       "fingerprint": "tok1:2fed38a4e1398cb1633e57f48985dee983e44940e96c28c0174ea26e3a76d101"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 161,
+      "line": 162,
       "symbol": "vibe_safefs::file::Project::preflight_set",
-      "end_line": 172,
+      "end_line": 173,
       "fingerprint": "tok1:95a4abadfbfffff5184905be7cfcd30ba8267376624f33a067ceabce35ce326d"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 174,
+      "line": 175,
       "symbol": "vibe_safefs::file::Project::preflight_set_against",
-      "end_line": 220,
+      "end_line": 221,
       "fingerprint": "tok1:3d436c74c8cccd0eeddbfa1a5e6f95e69f659eeeb3a34dc39b083649106cda1a"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 335,
+      "line": 336,
       "symbol": "vibe_safefs::file::Project::probe_regular_nonempty",
-      "end_line": 363,
+      "end_line": 364,
       "fingerprint": "tok1:ecdf841d67491327751ea1257be4c4e85180f16ec32c23937c7a383b65ebad28"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 59,
+      "line": 60,
       "symbol": "vibe_safefs::file::Project::write_atomic_in",
-      "end_line": 159,
+      "end_line": 160,
       "fingerprint": "tok1:eaffd5f00818e106a520769f785876e12c7e24ee0ae7e6029d3c5f9766d058b9"
     },
     {
@@ -19169,6 +19178,177 @@
       "line": 22,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#search-everywhere",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/lib.rs",
+      "from_symbol": "vibe_agent_projection",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/agents.rs",
+      "from_symbol": "vibe_agent_projection::agents",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/agents.rs",
+      "from_symbol": "vibe_agent_projection::agents::detect_agents",
+      "line": 549,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-detection",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::PackageSkillError",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::PackageSkillReport",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/exact_path.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::exact_path",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::install_package_skill",
+      "line": 144,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::install_package_skill_selecting",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkill",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillFilter",
+      "line": 89,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillProjection",
+      "line": 212,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::DeclaredSkillProvider",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::binding",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillBinding",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillProviderInput",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::projection::binding::ProjectSkillTarget",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/tests.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::tests::include_projects_only_matching_files",
+      "line": 190,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill/tests.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::tests::projects_dir_skill_and_is_idempotent",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "from_symbol": "vibe_agent_projection::pkgskill::uninstall_package_skill",
+      "line": 273,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
     },
     {
@@ -27580,22 +27760,6 @@
       "pinned_r": 2
     },
     {
-      "file": "crates/vibe-mcp/src/agents.rs",
-      "from_symbol": "vibe_mcp::agents",
-      "line": 8,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/agents.rs",
-      "from_symbol": "vibe_mcp::agents::detect_agents",
-      "line": 549,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-detection",
-      "verb": "implements"
-    },
-    {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install",
       "line": 8,
@@ -27606,7 +27770,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::AgentInstallReport",
-      "line": 38,
+      "line": 42,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "verb": "implements"
@@ -27614,7 +27778,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::SkillInstallReport",
-      "line": 63,
+      "line": 67,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "verb": "implements"
@@ -27622,7 +27786,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::install_skill",
-      "line": 77,
+      "line": 81,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill",
       "verb": "implements"
@@ -27649,153 +27813,6 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#registration",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill",
-      "line": 12,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "line": 55,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "line": 123,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/exact_path.rs",
-      "from_symbol": "vibe_mcp::pkgskill::exact_path",
-      "line": 17,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "line": 144,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "line": 161,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
-      "verb": "implements",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection",
-      "line": 7,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkill",
-      "line": 36,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillFilter",
-      "line": 89,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProjection",
-      "line": 212,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::DeclaredSkillProvider",
-      "line": 52,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::binding",
-      "line": 1,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillBinding",
-      "line": 41,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillProviderInput",
-      "line": 25,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/projection/binding.rs",
-      "from_symbol": "vibe_mcp::pkgskill::projection::binding::ProjectSkillTarget",
-      "line": 33,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/tests.rs",
-      "from_symbol": "vibe_mcp::pkgskill::tests::include_projects_only_matching_files",
-      "line": 190,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
-      "verb": "verifies",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill/tests.rs",
-      "from_symbol": "vibe_mcp::pkgskill::tests::projects_dir_skill_and_is_idempotent",
-      "line": 23,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
-      "verb": "verifies",
-      "pinned_r": 3
-    },
-    {
-      "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "from_symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "line": 273,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
     },
     {
@@ -29631,7 +29648,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 37,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -29639,7 +29656,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight",
-      "line": 276,
+      "line": 277,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -29647,7 +29664,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight_set",
-      "line": 169,
+      "line": 170,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -29655,7 +29672,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::preflight_set_against",
-      "line": 189,
+      "line": 190,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -29663,7 +29680,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::probe_regular_nonempty",
-      "line": 339,
+      "line": 340,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-FINGERPRINT",
       "verb": "implements"
@@ -29671,7 +29688,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Project::write_atomic_in",
-      "line": 64,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
